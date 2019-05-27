@@ -53,6 +53,15 @@ end
 local root = nil
 function draw.set_root(drawable)
    root = drawable
+   if root and root.focus then root:focus() end
+end
+
+function draw.update_root()
+   if root and root.update then root:update() end
+end
+
+function draw.draw_root()
+   if root and root.draw then root:draw() end
 end
 
 --
@@ -141,6 +150,7 @@ function draw.load_image(filename, keycolor)
    end)
 
    image_cache[filename] = love.graphics.newImage(image_data)
+   image_cache[filename]:setFilter("nearest", "linear")
    return image_cache[filename]
 end
 

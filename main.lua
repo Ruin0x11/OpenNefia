@@ -32,7 +32,7 @@ inspect = require("inspect")
 _DEBUG = false
 
 -- no more globals.
-setmetatable(_G, { __newindex = function() error("Globals are not allowed.") end})
+setmetatable(_G, { __newindex = function(t, k, v) error(string.format("Globals are not allowed. (%s : %s)", tostring(k), tostring(v))) end})
 
 local loop = nil
 
@@ -64,6 +64,8 @@ function love.draw()
 
    local msg, err = coroutine.resume(loop)
    if err then
+      print("Error in loop: " .. debug.traceback(loop, err))
+      print()
       error(err)
    end
 
@@ -80,7 +82,7 @@ function love.draw()
       local now = internal.get_timestamp()
       ms = ms + (now - last) * 1000
       last = now
-      Draw.text(fps, 5, Draw.get_height() - 12 - 5)
+      Draw.text(fps, 5, Draw.get_height() - Draw.text_height() - 5)
    end
 
    internal.draw.draw_end()

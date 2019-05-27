@@ -54,5 +54,9 @@ function input.keyreleased(key)
    end
 end
 
+function input.set_keyrepeat(enabled)
+   love.keyboard.setKeyRepeat(enabled)
+end
+
 
 return input

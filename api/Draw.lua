@@ -16,6 +16,7 @@ Draw.image_region = draw.image_region
 Draw.image_stretched = draw.image_stretched
 Draw.image_region_stretched = draw.image_region_stretched
 Draw.line = draw.line
+Draw.set_root = draw.set_root
 
 function Draw.text_shadowed(str, x, y, color, shadow_color)
    Draw.set_color(shadow_color[1], shadow_color[2], shadow_color[3], shadow_color[4])
