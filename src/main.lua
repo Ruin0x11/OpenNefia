@@ -32,7 +32,11 @@ inspect = require("inspect")
 _DEBUG = false
 
 -- no more globals.
-setmetatable(_G, { __newindex = function(t, k, v) error(string.format("Globals are not allowed. (%s : %s)", tostring(k), tostring(v))) end})
+setmetatable(_G, {
+                __newindex = function(t, k, v)
+                   error(string.format("Globals are not allowed. (%s : %s)", tostring(k), tostring(v)))
+                end
+})
 
 local loop = nil
 

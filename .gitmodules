@@ -1,0 +1,4 @@
+[submodule "lib/love"]
+	path = lib/love
+	url = https://bitbucket.org/ruin0x11/love
+	branch = elona-next
