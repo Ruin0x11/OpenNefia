@@ -73,12 +73,12 @@ function draw.set_font(filename, size)
    love.graphics.setFont(love.graphics.newFont(filename, size, "mono"))
 end
 
-function draw.set_color(r, g, b)
-   love.graphics.setColor(r, g, b)
+function draw.set_color(r, g, b, a)
+   love.graphics.setColor(r / 255, g / 255, b / 255, (a or 255) / 255)
 end
 
-function draw.set_background_color(r, g, b)
-   love.graphics.setBackgroundColor(r, g, b)
+function draw.set_background_color(r, g, b, a)
+   love.graphics.setBackgroundColor(r, g, b, a)
 end
 
 function draw.text(str, x, y, color)
@@ -88,8 +88,24 @@ function draw.text(str, x, y, color)
    love.graphics.print(str, x, y)
 end
 
-function draw.load_image(filename)
-   return love.graphics.newImage(filename)
+function draw.string_width(str)
+   return love.graphics.getFont():getWidth(str)
+end
+
+function draw.load_image(filename, keycolor)
+   if not keycolor then keycolor = {0, 0, 0} end
+   local image_data = love.image.newImageData(filename)
+
+   local function trans(x,y,r,g,b,a)
+      if r == keycolor[1] and g == keycolor[2] and b == keycolor[3] then a = 0 end
+      return r,g,b,a
+   end
+
+   mobdebug.scope(function()
+         image_data:mapPixel(trans)
+   end)
+
+   return love.graphics.newImage(image_data)
 end
 
 function draw.image(image, x, y, tx, ty)

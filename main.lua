@@ -1,3 +1,5 @@
+package.path = package.path .. ";./thirdparty/?.lua"
+
 local socket = require("socket")
 
 local Draw = require("api.Draw")
@@ -5,11 +7,43 @@ local Draw = require("api.Draw")
 local internal = require("internal")
 local game = require("game")
 
+
+-- globals that will be used very often.
+require("boot")
+mobdebug = require("mobdebug")
+mobdebug.is_running = function()
+   local _, mask = debug.gethook(coroutine.running())
+   return mask == "crl"
+end
+mobdebug.scope = function(f)
+   local set = false
+   if _DEBUG and mobdebug.is_running() then
+      set = true
+      mobdebug.off()
+   end
+
+   f()
+
+   if set then
+      mobdebug.on()
+   end
+end
+inspect = require("inspect")
+_DEBUG = false
+
 local loop = nil
 
-function love.load()
+function love.load(arg)
    internal.draw.init()
-   Draw.set_font("MS-Gothic.ttf", 12)
+   Draw.set_font("data/MS-Gothic.ttf", 12)
+
+   if arg[#arg] == "-debug" then
+      _DEBUG = true
+      require("mobdebug").start()
+      require("mobdebug").off()
+      require("mobdebug").coro()
+   end
+
    loop = coroutine.create(game.loop)
 end
 

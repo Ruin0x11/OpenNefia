@@ -1,0 +1,1 @@
+-- these are the only non-function globals, save for love.
