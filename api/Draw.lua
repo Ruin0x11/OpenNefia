@@ -2,6 +2,8 @@ local draw = require("internal.draw")
 
 local Draw = {}
 
+Draw.get_width = draw.get_width
+Draw.get_height = draw.get_height
 Draw.set_font = draw.set_font
 Draw.set_color = draw.set_color
 Draw.text = draw.text
