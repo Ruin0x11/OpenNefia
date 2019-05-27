@@ -38,6 +38,7 @@ function Window:init()
    end
 
    self.data = { quad = quad, batch = function() return love.graphics.newSpriteBatch(img, iw * ih) end }
+
 end
 
 function Window:new(x, y, width, height)

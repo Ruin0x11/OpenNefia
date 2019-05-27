@@ -50,6 +50,11 @@ function draw.draw_end()
    love.graphics.setBlendMode("alpha")
 end
 
+local root = nil
+function draw.set_root(drawable)
+   root = drawable
+end
+
 --
 --
 -- Event callbacks
@@ -58,6 +63,10 @@ end
 
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
+
+   if root and root.relayout then
+      root:relayout()
+   end
 end
 
 --
@@ -69,8 +78,14 @@ end
 draw.get_width = love.graphics.getWidth
 draw.get_height = love.graphics.getHeight
 
-function draw.set_font(filename, size)
-   love.graphics.setFont(love.graphics.newFont(filename, size, "mono"))
+local font_cache = setmetatable({}, { __mode = "v" })
+function draw.set_font(size, filename)
+   local font
+   filename = filename or "data/MS-Gothic.ttf"
+   if not font_cache[size] then font_cache[size] = {} end
+   font_cache[size][filename] = font_cache[size][filename]
+      or love.graphics.newFont(filename, size, "mono")
+   love.graphics.setFont(font_cache[size][filename])
 end
 
 function draw.set_color(r, g, b, a)
@@ -83,17 +98,37 @@ end
 
 function draw.text(str, x, y, color)
    if color then
-      draw.set_color(color[1], color[2], color[3])
+      draw.set_color(color[1], color[2], color[3], color[4])
    end
    love.graphics.print(str, x, y)
 end
 
-function draw.string_width(str)
+function draw.filled_rect(x, y, width, height, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   love.graphics.polygon("fill", x, y, x + width, y, x + width, y + height, x, y + height)
+end
+
+function draw.line(x1, y1, x2, y2, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   love.graphics.line(x1, y1, x2, y2)
+end
+
+function draw.text_width(str)
    return love.graphics.getFont():getWidth(str)
 end
 
+function draw.text_height(str)
+   return love.graphics.getFont():getHeight()
+end
+
+local image_cache = setmetatable({}, { __mode = "v" })
 function draw.load_image(filename, keycolor)
    if not keycolor then keycolor = {0, 0, 0} end
+   if image_cache[filename] then return image_cache[filename] end
    local image_data = love.image.newImageData(filename)
 
    local function trans(x,y,r,g,b,a)
@@ -105,10 +140,41 @@ function draw.load_image(filename, keycolor)
          image_data:mapPixel(trans)
    end)
 
-   return love.graphics.newImage(image_data)
+   image_cache[filename] = love.graphics.newImage(image_data)
+   return image_cache[filename]
 end
 
-function draw.image(image, x, y, tx, ty)
+function draw.image(image, x, y, width, height, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   local sx = 1
+   local sy = 1
+   if width and height then
+      sx = width / image:getWidth()
+      sy = height / image:getHeight()
+   end
+   return love.graphics.draw(image, x, y, 0, sx, sy)
+end
+
+function draw.image_region(image, quad, x, y, width, height, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   local sx = 1
+   local sy = 1
+   local _, _, qw, qh = quad:getViewport()
+   if width and height then
+      sx = width / qw
+      sy = height / qh
+   end
+   return love.graphics.draw(image, quad, x, y, 0, sx, sy)
+end
+
+function draw.image_stretched(image, x, y, tx, ty, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
    local sx = 1
    local sy = 1
    if tx and ty then
@@ -116,6 +182,20 @@ function draw.image(image, x, y, tx, ty)
       sy = (ty - y) / image:getHeight()
    end
    return love.graphics.draw(image, x, y, 0, sx, sy)
+end
+
+function draw.image_region_stretched(image, quad, x, y, tx, ty, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   local sx = 1
+   local sy = 1
+   local _, _, qw, qh = quad:getViewport()
+   if tx and ty then
+      sx = (tx - x) / qw
+      sy = (ty - y) / qh
+   end
+   return love.graphics.draw(image, quad, x, y, 0, sx, sy)
 end
 
 

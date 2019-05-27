@@ -31,11 +31,14 @@ end
 inspect = require("inspect")
 _DEBUG = false
 
+-- no more globals.
+setmetatable(_G, { __newindex = function() error("Globals are not allowed.") end})
+
 local loop = nil
 
 function love.load(arg)
    internal.draw.init()
-   Draw.set_font("data/MS-Gothic.ttf", 12)
+   Draw.set_font(12)
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
@@ -65,6 +68,8 @@ function love.draw()
    end
 
    if show_fps then
+      Draw.set_color(255, 255, 255)
+      Draw.set_font(14)
       if ms >= 1000 then
          fps = string.format("FPS: %02.2f", frames / (ms / 1000))
          frames = 0
