@@ -1,4 +1,5 @@
 local input = require("internal.input")
+local IUiLayer = require("api.gui.IUiLayer")
 
 local Input = {}
 
@@ -6,15 +7,20 @@ Input.set_key_handler = input.set_key_handler
 Input.set_mouse_handler = input.set_mouse_handler
 
 function Input.query(ui)
-   -- internal.draw.push_ui(ui)
-   if not ui.update then
-      error("Not a UI object: " .. tostring(ui))
+   if not (ui and ui.is_an and ui:is_an(IUiLayer)) then
+      error("Not a UI layer: " .. tostring(ui))
    end
+
+   local dt = 0
+
+   -- internal.draw.push_ui(ui)
+
    if ui.focus then ui:focus() end
+
    while true do
-      local res = ui:update()
+      local res = ui:update(dt)
       if res then return res end
-      coroutine.yield()
+      dt = coroutine.yield()
    end
    -- internal.draw.pop_ui(ui)
 end

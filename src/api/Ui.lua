@@ -15,13 +15,17 @@ function Ui.params_centered(width, height, in_game)
    return x, y, width, height
 end
 
-local topic_icon
+local topic_quad
 function Ui.draw_topic(topic, x, y)
-   topic_icon = topic_icon or Draw.load_image("graphic/temp/topic_icon.bmp")
+   local icons = Draw.load_image("graphic/temp/tip_icons.bmp")
+   topic_quad = topic_quad or love.graphics.newQuad(24, 0, 24, 16, icons:getWidth(), icons:getHeight())
    Draw.set_font(12, "bold")
-   Draw.image(topic_icon, x, y + 7)
+   Draw.set_color(255, 255, 255)
+   Draw.image_region(icons, topic_quad, x, y + 7)
+   Draw.set_color(0, 0, 0)
    Draw.text(topic, x + 26, y + 8) -- y + vfix + 8
    Draw.line(x + 22, y + 21, x + Draw.text_width(topic) + 36, y + 21)
+   Draw.set_color(255, 255, 255)
 end
 
 return Ui

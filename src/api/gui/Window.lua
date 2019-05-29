@@ -5,7 +5,7 @@ local Window = class("Window", IUiElement)
 
 local data
 
-function init_data()
+local function init_data()
    local img = Draw.load_image("graphic/temp/window.bmp")
    local quad = {}
    local iw = img:getWidth()
@@ -48,12 +48,12 @@ function Window:init(x, y, width, height)
       init_data()
    end
 
-   self.x = x,
-   self.y = y,
-   self.width = width,
-   self.height = height,
-   self.data = data,
-   self.image = data.batch(),
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+   self.data = data
+   self.image = data.batch()
 end
 
 function Window:draw()

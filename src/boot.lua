@@ -90,6 +90,20 @@ function table.contains(tbl, value)
    return table.find(tbl, predicate)
 end
 
+function table.of(item, count)
+   local tbl = {}
+   if type(item) == "function" then
+      for i=0,count do
+         tbl[#tbl+1] = item(i)
+      end
+   else
+      for i=0,count do
+         tbl[#tbl+1] = item
+      end
+   end
+   return tbl
+end
+
 mobdebug = require("mobdebug")
 mobdebug.is_running = function()
    local _, mask = debug.gethook(coroutine.running())
@@ -113,14 +127,17 @@ inspect = require("inspect")
 
 local class_ = require("util.class")
 interface = class_.interface
+print(tostring(interface))
 class = class_.class
 
 _DEBUG = false
 
--- no more globals.
+-- prevent new globals from here on out.
+
 local function deny (t, k, v)
-   error(string.format("Globals are not allowed. (%s : %s)",
-                       tostring(k),
-                       tostring(v)))
+   local trace = debug.traceback()
+   local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
+   error(err)
 end
+
 setmetatable(_G, {__newindex = deny})

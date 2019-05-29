@@ -1,11 +1,14 @@
 local IUiElement = require("api.gui.IUiElement")
 local IFocusable = require("api.gui.IFocusable")
+local ISettable = require("api.gui.ISettable")
 
 return interface("IUiList",
                  {
-                    selected_item = "function"
+                    changed = "boolean",
+                    selected = "number",
                     items = "table",
+                    selected_item = "function",
                     select_next = "function",
                     select_previous = "function",
                  },
-                 {IUiElement, IFocusable})
+                 {IUiElement, IFocusable, ISettable})

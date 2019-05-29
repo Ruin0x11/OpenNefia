@@ -7,17 +7,17 @@ local IUiLayer = require("api.gui.IUiLayer")
 
 local MainTitleMenu = class("MainTitleMenu", {IUiLayer})
 
-delegate(MainTitleMenu, "list", "focus")
+MainTitleMenu:delegate("list", "focus")
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
-function MainTitleMenu:new()
-   self.t = 0,
-   self.bg = Draw.load_image("graphic/title.bmp"),
-   self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl"),
-   self.window_bg = load_cm_bg(4),
+function MainTitleMenu:init()
+   self.t = 0
+   self.bg = Draw.load_image("graphic/title.bmp")
+   self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl")
+   self.window_bg = load_cm_bg(4)
 
    local title_str, key_help
    if I18N.language() == "jp" then
@@ -27,7 +27,7 @@ function MainTitleMenu:new()
    end
    key_help = I18N.get("ui.hint.cursor")
 
-   self.win = UiWindow:new(80, (Draw.get_height() - 308) / 2, 320, 355, true, title_str, key_help)
+   self.win = UiWindow:new(title_str, 80, (Draw.get_height() - 308) / 2, 320, 355, true, key_help)
 
    self.list = UiList:new(self.win.x + 40,
                           self.win.y + 50,

@@ -40,12 +40,12 @@ function TopicWindow:init(x, y, width, height, frame_style, fill_style)
    self.width = math.max(width, 32)
    self.height = math.max(height, 24)
 
-   self.x = x,
-   self.y = y,
-   self.width = width,
-   self.height = height,
-   self.frame_style = frame_style,
-   self.fill_style = fill_style,
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+   self.frame_style = frame_style
+   self.fill_style = fill_style
 end
 
 function TopicWindow:draw()
@@ -78,7 +78,7 @@ function TopicWindow:draw()
       -- end
    end
 
-   Draw.set_color(255, 255, 255)
+   Draw.set_color()
    Draw.image(self.data.frame.batch)
 
    if fill_style == 5 then
@@ -100,7 +100,7 @@ function TopicWindow:update()
    local height = self.height
    local fill_style = self.fill_style
 
-   Draw.set_color(255, 255, 255)
+   Draw.set_color()
 
    local frame = self.data.frame
    for i=0, width / 16 - 2 do

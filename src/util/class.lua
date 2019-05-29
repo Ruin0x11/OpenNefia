@@ -38,7 +38,7 @@ function class.interface(name, reqs, parents)
          if not _interfaces[p] then
             error(string.format("%s must be an interface", tostring(p)))
          end
-         i.reqs = table.merge(p.reqs, i.reqs)
+         i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
       end
       i.parents = parents
    end
@@ -84,6 +84,7 @@ function class.class(name, ifaces)
    c.__tostring = root_mt.__tostring
 
    c._delegates = {}
+   c._memoized = setmetatable({}, { __mode = "v" })
    c.__index = function(t, k)
       local d = rawget(c, "_delegates")
       if not d then
@@ -94,7 +95,14 @@ function class.class(name, ifaces)
       if field_name then
          local field = t[field_name]
          if field then
-            return field[k]
+            if type(field[k]) == "function" then
+               local f = field[k]
+               local _memoized = rawget(t, "_memoized")
+               _memoized[k] = _memoized[k] or function(self, ...) return f(field, ...) end
+               return _memoized[k]
+            else
+               return field[k]
+            end
          end
       end
 
@@ -111,12 +119,25 @@ function class.class(name, ifaces)
    c.delegate = delegate
 
    c.new = function(self, ...)
-      if self.name ~= name then
+      if type(self) ~= "table" or self.name ~= name then
          error("Call new() with colon (:) syntax.")
       end
 
       local instance = {class = c}
       _instances[instance] = tostring(instance)
+
+      instance.is_an = function(self, interface)
+         return verify(self, interface) == nil
+      end
+
+      instance.assert_is_an = function(self, interface)
+         local err = verify(self, interface)
+         if err then
+            error(string.format("%s should implement %s: %s", self, interface, err))
+         end
+      end
+
+      instance._memoized = {}
 
       setmetatable(instance, c)
 
@@ -126,10 +147,7 @@ function class.class(name, ifaces)
 
       if c.__verify and c.interfaces then
          for _, i in ipairs(c.interfaces) do
-            local err = verify(instance, i)
-            if err then
-               error(string.format("%s should implement %s: %s", instance, i, err))
-            end
+            instance:assert_is_an(i)
          end
       end
 

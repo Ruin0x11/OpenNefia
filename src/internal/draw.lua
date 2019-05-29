@@ -32,6 +32,9 @@ function draw.init()
    end
 
    canvas = create_canvas(width, height)
+
+   love.graphics.setLineStyle("rough")
+   love.graphics.setDefaultFilter("nearest", "nearest", 1)
 end
 
 function draw.draw()
@@ -52,6 +55,7 @@ end
 
 local root = nil
 function draw.set_root(ui_layer)
+   -- checks(ui_layer, UiLayer)
    root = ui_layer
    root:relayout()
    if root then root:focus() end
@@ -89,17 +93,22 @@ draw.get_width = love.graphics.getWidth
 draw.get_height = love.graphics.getHeight
 
 local font_cache = setmetatable({}, { __mode = "v" })
-function draw.set_font(size, filename)
+function draw.set_font(size, kind, filename)
    local font
+   kind = kind or "normal"
    filename = filename or "data/MS-Gothic.ttf"
-   if not font_cache[size] then font_cache[size] = {} end
+   if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
    font_cache[size][filename] = font_cache[size][filename]
       or love.graphics.newFont(filename, size, "mono")
    love.graphics.setFont(font_cache[size][filename])
 end
 
 function draw.set_color(r, g, b, a)
-   love.graphics.setColor(r / 255, g / 255, b / 255, (a or 255) / 255)
+   love.graphics.setColor(
+      (r or 255) / 255,
+      (g or 255) / 255,
+      (b or 255) / 255,
+      (a or 255) / 255)
 end
 
 function draw.set_background_color(r, g, b, a)
@@ -124,7 +133,7 @@ function draw.line(x1, y1, x2, y2, color)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
-   love.graphics.line(x1, y1, x2, y2)
+   love.graphics.line(x1, y1 + 1, x2, y2 + 1)
 end
 
 function draw.text_width(str)
@@ -151,7 +160,6 @@ function draw.load_image(filename, keycolor)
    end)
 
    image_cache[filename] = love.graphics.newImage(image_data)
-   image_cache[filename]:setFilter("nearest", "linear")
    return image_cache[filename]
 end
 
@@ -170,7 +178,7 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
-function draw.image(image, x, y, width, height, color)
+function draw.image(image, x, y, width, height, color, centered)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
@@ -180,10 +188,14 @@ function draw.image(image, x, y, width, height, color)
       sx = width / image:getWidth()
       sy = height / image:getHeight()
    end
+   if centered then
+      x = x - (image:getWidth() / 2)
+      y = y - (image:getHeight() / 2)
+   end
    return love.graphics.draw(image, x, y, 0, sx, sy)
 end
 
-function draw.image_region(image, quad, x, y, width, height, color)
+function draw.image_region(image, quad, x, y, width, height, color, centered)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
@@ -193,6 +205,10 @@ function draw.image_region(image, quad, x, y, width, height, color)
    if width and height then
       sx = width / qw
       sy = height / qh
+   end
+   if centered then
+      x = x - (qw / 2)
+      y = y - (qh / 2)
    end
    return love.graphics.draw(image, quad, x, y, 0, sx, sy)
 end

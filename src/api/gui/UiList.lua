@@ -7,31 +7,37 @@ local UiList = class("UiList", IUiList)
 
 local keys = "abcdefghijklmnopqr"
 
-function UiList:init(x, y, items)
-      self.x = x
-      self.y = y
-      self.items = items
-      self.selected = 1,
-      self.chosen = false,
-      self.select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") },
-      self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") },
+function UiList:init(x, y, items, item_height, item_offset_x, item_offset_y)
+   self.x = x
+   self.y = y
+   self.items = items
+   self.item_height = item_height or 19
+   self.item_offset_x = item_offset_x or -1
+   self.item_offset_y = item_offset_y or -2
+   self.selected = 1
+   self.chosen = false
+   self.changed = true
+   self.select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") }
+   self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
 
-      self.keys = {}
-      self.keys["return"] = function(p)
-         if p then
-            self.chosen = true
-         end
+   self:set_data()
+
+   self.keys = {}
+   self.keys["return"] = function(p)
+      if p then
+         self.chosen = true
       end
-      self.keys.up = function(p)
-         if p then
-            self:select_previous()
-         end
-      end,
-      self.keys.down = function(p)
-         if p then
-            self:select_next()
-         end
+   end
+   self.keys.up = function(p)
+      if p then
+         self:select_previous()
       end
+   end
+   self.keys.down = function(p)
+      if p then
+         self:select_next()
+      end
+   end
 
    for i=1,#keys do
       local key = keys:sub(i, i)
@@ -51,11 +57,17 @@ end
 function UiList:relayout()
 end
 
+function UiList:set_data(items)
+   self.items = items or self.items
+   self.selected = math.min(self.selected, #self.items)
+end
+
 function UiList:select_next()
    self.selected = self.selected + 1
    if self.selected > #self.items then
       self.selected = 1
    end
+   self.changed = true
 end
 
 function UiList:select_previous()
@@ -66,6 +78,7 @@ function UiList:select_previous()
          self.selected = 1
       end
    end
+   self.changed = true
 end
 
 function UiList:selected_item()
@@ -84,30 +97,32 @@ function UiList:draw()
       Draw.text(text, x + 4 + x_offset, y + 3, {0, 0, 0})
    end
 
-   for i, item in ipairs(self.items) do
-      local x = self.x
-      local y = (i - 1) * 35 + self.y
+   local function draw_select_key(key_name, x, y)
       Draw.image(self.select_key.image, x, y, nil, nil, {255, 255, 255})
-      local key = keys:sub(i, i)
-      Draw.text_shadowed(key,
-                         x + (self.select_key.image:getWidth() - Draw.text_width(key)) / 2 - 2,
+      Draw.set_font(13)
+      Draw.text_shadowed(key_name,
+                         x + (self.select_key.image:getWidth() - Draw.text_width(key_name)) / 2 - 2,
                          y + (self.select_key.image:getHeight() - Draw.text_height()) / 2,
                          {250, 240, 230},
                          {50, 60, 80})
-      if I18N.language == "en" then
-         Draw.set_font(14 - 2)
-         cs_list(i == self.selected, item, x + 40, y + 1)
-      else
-         Draw.set_font(11)
-         Draw.text(item, x + 40, y - 4, {0, 0, 0})
-         Draw.set_font(14)
-         cs_list(i == self.selected, item, x + 40, y + 8)
-      end
+   end
+
+   for i, item in ipairs(self.items) do
+      local x = self.x + self.item_offset_x
+      local y = (i - 1) * self.item_height + self.y + self.item_offset_y
+      local key_name = keys:sub(i, i)
+
+      draw_select_key(key_name, x, y)
+
+      Draw.set_font(14)
+
+      cs_list(i == self.selected, item, x + 26, y + 1)
    end
 end
 
 function UiList:update()
    self.chosen = false
+   self.changed = false
 end
 
 return UiList

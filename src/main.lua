@@ -1,13 +1,11 @@
 package.path = package.path .. ";./thirdparty/?.lua"
 
-local socket = require("socket")
+require("boot")
 
 local Draw = require("api.Draw")
 
 local internal = require("internal")
 local game = require("game")
-
-require("boot")
 
 local loop = nil
 local draw = nil
@@ -33,7 +31,7 @@ end
 function love.update(dt)
    local msg, err = coroutine.resume(loop, dt)
    if err then
-      print("Error in loop: " .. debug.traceback(loop, err))
+      print("Error in loop:\n\t" .. debug.traceback(loop, err))
       print()
       error(err)
    end
@@ -47,7 +45,7 @@ function love.draw()
    local going = true
    local msg, err = coroutine.resume(draw, going)
    if err then
-      print("Error in draw: " .. debug.traceback(draw, err))
+      print("Error in draw:\n\t" .. debug.traceback(draw, err))
       print()
       error(err)
    end

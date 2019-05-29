@@ -7,18 +7,18 @@ local IUiElement = require("api.gui.IUiElement")
 local UiWindow = class("UiWindow", IUiElement)
 
 local image
-function UiWindow:init(x, y, width, height, shadow, title, key_help)
+function UiWindow:init(title, x, y, width, height, shadow, key_help)
    image = image or Draw.load_image("graphic/temp/tip_icons.bmp")
    local quad = love.graphics.newQuad(0, 0, 24, 16, image:getWidth(), image:getHeight())
 
-   self.x = x,
-   self.y = y,
-   self.x_offset = 0,
-   self.y_offset = 0,
-   self.width = width,
-   self.height = height,
-   self.title = title or "",
-   self.key_help = key_help or "",
+   self.x = x
+   self.y = y
+   self.x_offset = 0
+   self.y_offset = 0
+   self.width = width
+   self.height = height
+   self.title = title or ""
+   self.key_help = key_help or ""
    self.tip_icon = { image = image, quad = quad }
 
    if shadow then
@@ -33,6 +33,7 @@ function UiWindow:init(x, y, width, height, shadow, title, key_help)
    end
 
    self.image = Window:new(x, y, width, height)
+   print(tostring(self.image))
 end
 
 function UiWindow:relayout()
@@ -50,7 +51,7 @@ function UiWindow:draw()
       Draw.set_color(31, 31, 31, 127)
       self.shadow:draw()
    end
-   Draw.set_color(255, 255, 255)
+   Draw.set_color()
    self.image:draw()
    if self.topic_window then
       self.topic_window:draw()

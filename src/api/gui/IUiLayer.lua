@@ -1,6 +1,6 @@
-local IUiElement = require("api.gui.IUiElement")
+local IDrawable = require("api.gui.IDrawable")
 local IFocusable = require("api.gui.IFocusable")
 
 return interface("IUiLayer",
-                 { layout = "function" },
-                 { IUiElement, IFocusable })
+                 { relayout = "function" },
+                 { IDrawable, IFocusable })

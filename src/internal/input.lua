@@ -15,6 +15,8 @@ function input.mousemoved(x, y, dx, dy, istouch)
 end
 
 function input.mousepressed(x, y, button, istouch)
+   if not mouse_handler then return end
+
    local func = mouse_handler[button]
    if func then
       func(x, y, true, istouch)
@@ -22,6 +24,8 @@ function input.mousepressed(x, y, button, istouch)
 end
 
 function input.mousereleased(x, y, button, istouch)
+   if not mouse_handler then return end
+
    local func = mouse_handler[button]
    if func then
       func(x, y, false, istouch)
@@ -41,6 +45,8 @@ function input.reset_key_handler()
 end
 
 function input.keypressed(key)
+   if not key_handler then return end
+
    local func = key_handler[key]
    if func then
       func(true)
@@ -48,6 +54,8 @@ function input.keypressed(key)
 end
 
 function input.keyreleased(key)
+   if not key_handler then return end
+
    local func = key_handler[key]
    if func then
       func(false)
