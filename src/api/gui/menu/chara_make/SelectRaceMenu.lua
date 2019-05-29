@@ -53,6 +53,8 @@ function SelectRaceMenu:draw()
 end
 
 function SelectRaceMenu:update()
+   self.win:update()
+
    if self.pages.chosen then
       return self.pages:selected_item()
    elseif self.pages.changed then
