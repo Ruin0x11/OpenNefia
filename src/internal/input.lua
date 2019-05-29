@@ -12,6 +12,12 @@ function input.reset_mouse_handler()
 end
 
 function input.mousemoved(x, y, dx, dy, istouch)
+   if not mouse_handler then return end
+
+   local func = mouse_handler["moved"]
+   if func then
+      func(x, y, dx, dy, istouch)
+   end
 end
 
 function input.mousepressed(x, y, button, istouch)

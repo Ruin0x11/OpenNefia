@@ -6,14 +6,14 @@ local UiPages = require("api.gui.UiPages")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
 
-local function random_cm_bg()
-   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
-end
-
 local SelectRaceMenu = class("SelectRaceMenu", IUiLayer)
 
 SelectRaceMenu:delegate("pages", "focus")
 SelectRaceMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
+
+local function random_cm_bg()
+   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
+end
 
 function SelectRaceMenu:init()
    local races = table.of(function(i) return "race" .. i end, 100)
@@ -34,9 +34,12 @@ end
 function SelectRaceMenu:draw()
    self.win:draw()
    Draw.image(self.bg,
+              self.x + self.width / 4,
+              self.y + self.height / 2,
               self.width / 5 * 2,
               self.height - 80,
-              {255, 255, 255, 80})
+              {255, 255, 255, 80},
+              true)
    Draw.set_color()
    Ui.draw_topic("chara_make.select_race.race", self.x + 28, self.y + 30)
    Ui.draw_topic("chara_make.select_race.detail", self.x + 188, self.y + 30)
@@ -50,11 +53,13 @@ function SelectRaceMenu:draw()
 end
 
 function SelectRaceMenu:update()
-   if self.pages.selected then
+   if self.pages.chosen then
       return self.pages:selected_item()
    elseif self.pages.changed then
       local race = self.pages:selected_item()
       self.race_info:set_data(race)
+
+      self.win:set_pages(self.pages)
    end
 
    self.pages:update()

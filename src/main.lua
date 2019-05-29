@@ -13,6 +13,9 @@ local draw = nil
 local fps = require("util.fps"):new()
 fps.show_fps = true
 
+local mx = 0
+local my = 0
+
 function love.load(arg)
    internal.draw.init()
    Draw.set_font(12)
@@ -26,6 +29,13 @@ function love.load(arg)
 
    loop = coroutine.create(game.loop)
    draw = coroutine.create(game.draw)
+
+   internal.input.set_mouse_handler {
+      moved = function(x, y)
+         mx = x
+         my = y
+      end
+   }
 end
 
 function love.update(dt)
@@ -51,6 +61,8 @@ function love.draw()
    end
 
    fps:draw()
+
+   Draw.text(string.format("%d, %d", mx, my), 5, Draw.get_height() - Draw.text_height() * 2- 5)
 
    internal.draw.draw_end()
 end

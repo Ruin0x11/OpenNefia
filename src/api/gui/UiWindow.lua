@@ -3,6 +3,7 @@ local Draw = require("api.Draw")
 local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
+local IUiPages = require("api.gui.IUiPages")
 
 local UiWindow = class("UiWindow", IUiElement)
 
@@ -20,7 +21,10 @@ function UiWindow:init(title, x, y, width, height, shadow, key_help)
    self.title = title or ""
    self.key_help = key_help or ""
    self.tip_icon = { image = image, quad = quad }
+   self.page = 0
+   self.page_max = 0
 
+   shadow = shadow or true
    if shadow then
       self.shadow = Window:new(x + 4, y + 4, width, height - height % 8)
    end
@@ -92,13 +96,17 @@ function UiWindow:draw()
    Draw.set_font(12) -- 12 + sizefix - en * 2
    Draw.text(self.key_help, x + 58 + x_offset, y + height - 43 - height % 8)
 
-   if true then
-      Draw.set_font(12) -- 12 + sizefix - en * 2, bold
-      local page = 0
-      local page_max = 10
-      local page_str = "Page." .. tostring(page + 1) .. "/" .. tostring(page_max + 1)
+   if self.page > 0 and self.page_max > 0 then
+      Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
+      local page_str = "Page." .. tostring(self.page + 1) .. "/" .. tostring(self.page_max + 1)
       Draw.text(page_str, x + width - Draw.text_width(page_str) - 40 - y_offset, y + height - 65 - height % 8)
    end
+end
+
+function UiWindow:set_pages(pages)
+   pages:assert_is_an(IUiPages)
+   self.page = pages.page
+   self.page_max = pages.page_max
 end
 
 function UiWindow:update()

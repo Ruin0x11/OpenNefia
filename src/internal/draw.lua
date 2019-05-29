@@ -129,6 +129,13 @@ function draw.filled_rect(x, y, width, height, color)
    love.graphics.polygon("fill", x, y, x + width, y, x + width, y + height, x, y + height)
 end
 
+function draw.line_rect(x, y, width, height, color)
+   if color then
+      draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
+end
+
 function draw.line(x1, y1, x2, y2, color)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
@@ -189,8 +196,8 @@ function draw.image(image, x, y, width, height, color, centered)
       sy = height / image:getHeight()
    end
    if centered then
-      x = x - (image:getWidth() / 2)
-      y = y - (image:getHeight() / 2)
+      x = x - ((width or image:getWidth()) / 2)
+      y = y - ((height or image:getHeight()) / 2)
    end
    return love.graphics.draw(image, x, y, 0, sx, sy)
 end
@@ -240,5 +247,23 @@ function draw.image_region_stretched(image, quad, x, y, tx, ty, color)
    return love.graphics.draw(image, quad, x, y, 0, sx, sy)
 end
 
+function draw.debug_pos(x, y)
+   draw.set_color(255, 0, 0)
+   draw.text(string.format("%d/%d", x, y), x, y)
+   draw.filled_rect(x - 4, y - 4, 8, 8)
+end
+
+function draw.debug_rect(x, y, w, h)
+   local p = {
+      {x, y},
+      {x+w, y},
+      {x, y+h},
+      {x+w, y+h}
+   }
+   for _, pos in ipairs(p) do
+      draw.debug_pos(pos[1], pos[2])
+   end
+   draw.line_rect(x, y, w, h)
+end
 
 return draw
