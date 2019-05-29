@@ -2,46 +2,47 @@ local Draw = require("api.Draw")
 
 local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
+local IUiElement = require("api.gui.IUiElement")
 
-local UiWindow = {}
-local UiWindow_mt = { __index = UiWindow }
+local UiWindow = class("UiWindow", IUiElement)
 
 local image
-function UiWindow:new(x, y, width, height, shadow, title, key_help)
+function UiWindow:init(x, y, width, height, shadow, title, key_help)
    image = image or Draw.load_image("graphic/temp/tip_icons.bmp")
    local quad = love.graphics.newQuad(0, 0, 24, 16, image:getWidth(), image:getHeight())
 
-   local w = {
-      x = x,
-      y = y,
-      x_offset = 0,
-      y_offset = 0,
-      width = width,
-      height = height,
-      title = title or "",
-      key_help = key_help or "",
-      tip_icon = { image = image, quad = quad }
-   }
+   self.x = x,
+   self.y = y,
+   self.x_offset = 0,
+   self.y_offset = 0,
+   self.width = width,
+   self.height = height,
+   self.title = title or "",
+   self.key_help = key_help or "",
+   self.tip_icon = { image = image, quad = quad }
 
    if shadow then
-      w.shadow = Window:new(x + 4, y + 4, width, height - height % 8)
+      self.shadow = Window:new(x + 4, y + 4, width, height - height % 8)
    end
 
    if string.nonempty(title) then
-      w.topic_window = TopicWindow:new(x + 34,
-                                       y - 4,
-                                       45 * width / 100 + math.clamp(Draw.text_width(title) - 120, 0, 200),
-                                       32, 1, 1)
+      self.topic_window = TopicWindow:new(x + 34,
+                                          y - 4,
+                                          45 * width / 100 + math.clamp(Draw.text_width(title) - 120, 0, 200),
+                                          32, 1, 1)
    end
 
-   w.image = Window:new(x, y, width, height)
-
-   setmetatable(w, UiWindow_mt)
-
-   return w
+   self.image = Window:new(x, y, width, height)
 end
 
 function UiWindow:relayout()
+   if self.shadow then
+      self.shadow:relayout()
+   end
+   self.image:relayout()
+   if self.topic_window then
+      self.topic_window:relayout()
+   end
 end
 
 function UiWindow:draw()

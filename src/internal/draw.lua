@@ -51,17 +51,18 @@ function draw.draw_end()
 end
 
 local root = nil
-function draw.set_root(drawable)
-   root = drawable
-   if root and root.focus then root:focus() end
+function draw.set_root(ui_layer)
+   root = ui_layer
+   root:relayout()
+   if root then root:focus() end
 end
 
-function draw.update_root()
-   if root and root.update then root:update() end
+function draw.update_root(dt)
+   if root then root:update(dt) end
 end
 
 function draw.draw_root()
-   if root and root.draw then root:draw() end
+   if root then root:draw() end
 end
 
 --
@@ -152,6 +153,21 @@ function draw.load_image(filename, keycolor)
    image_cache[filename] = love.graphics.newImage(image_data)
    image_cache[filename]:setFilter("nearest", "linear")
    return image_cache[filename]
+end
+
+function draw.load_shader(filename)
+   local function read_all(file)
+      local f = assert(io.open(file, "rb"))
+      local content = f:read("*all")
+      f:close()
+      return content
+   end
+
+   return love.graphics.newShader(read_all(filename))
+end
+
+function draw.use_shader(filename)
+   love.graphics.setShader(filename)
 end
 
 function draw.image(image, x, y, width, height, color)

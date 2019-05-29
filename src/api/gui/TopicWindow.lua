@@ -1,11 +1,9 @@
 local Draw = require("api.Draw")
+local IUiElement = require("api.gui.IUiElement")
 
-local TopicWindow = {}
-local TopicWindow_mt = { __index = TopicWindow }
-
+local TopicWindow = class("TopicWindow", IUiElement)
 
 local function gen_data(width, height, frame_style, fill_style)
-
    local img = Draw.load_image("graphic/temp/window.bmp")
    local iw = img:getWidth()
    local ih = img:getHeight()
@@ -38,24 +36,16 @@ local function gen_data(width, height, frame_style, fill_style)
    }
 end
 
-function TopicWindow:new(x, y, width, height, frame_style, fill_style)
-   width = math.max(width, 32)
-   height = math.max(height, 24)
+function TopicWindow:init(x, y, width, height, frame_style, fill_style)
+   self.width = math.max(width, 32)
+   self.height = math.max(height, 24)
 
-   local data = gen_data(width, height, frame_style, fill_style)
-
-   local w = {
-      x = x,
-      y = y,
-      width = width,
-      height = height,
-      frame_style = frame_style,
-      fill_style = fill_style,
-      data = data
-   }
-
-   setmetatable(w, TopicWindow_mt)
-   return w
+   self.x = x,
+   self.y = y,
+   self.width = width,
+   self.height = height,
+   self.frame_style = frame_style,
+   self.fill_style = fill_style,
 end
 
 function TopicWindow:draw()
@@ -98,7 +88,7 @@ function TopicWindow:draw()
 end
 
 function TopicWindow:relayout()
-   self.finished = false
+   self.data = gen_data(self.width, self.height, self.frame_style, self.fill_style)
 end
 
 function TopicWindow:update()

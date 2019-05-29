@@ -1,9 +1,11 @@
 local Draw = require("api.Draw")
+local IUiElement = require("api.gui.IUiElement")
 
-local Window = {}
-local Window_mt = { __index = Window }
+local Window = class("Window", IUiElement)
 
-function Window:init()
+local data
+
+function init_data()
    local img = Draw.load_image("graphic/temp/window.bmp")
    local quad = {}
    local iw = img:getWidth()
@@ -37,34 +39,28 @@ function Window:init()
       table.insert(quad["mid_right"], love.graphics.newQuad(208, j * 8 + 48, 56, 8, iw, ih))
    end
 
-   self.data = { quad = quad, batch = function() return love.graphics.newSpriteBatch(img, iw * ih) end }
+   data = { quad = quad, batch = function() return love.graphics.newSpriteBatch(img, iw * ih) end }
 
 end
 
-function Window:new(x, y, width, height)
-   if not Window.data then
-      Window:init()
+function Window:init(x, y, width, height)
+   if not data then
+      init_data()
    end
 
-   local w = {
-      x = x,
-      y = y,
-      width = width,
-      height = height,
-      data = Window.data,
-      image = Window.data.batch(),
-   }
-   setmetatable(w, Window_mt)
-   return w
+   self.x = x,
+   self.y = y,
+   self.width = width,
+   self.height = height,
+   self.data = data,
+   self.image = data.batch(),
 end
 
 function Window:draw()
    Draw.image(self.image)
 end
 
-function Window:update()
-   if self.finished then return end
-
+function Window:relayout()
    local x = self.x
    local y = self.y
    local width = self.width
@@ -106,8 +102,9 @@ function Window:update()
    end
 
    self.image:flush()
+end
 
-   self.finished = true
+function Window:update()
 end
 
 return Window

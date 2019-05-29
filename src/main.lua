@@ -7,38 +7,13 @@ local Draw = require("api.Draw")
 local internal = require("internal")
 local game = require("game")
 
-
--- globals that will be used very often.
 require("boot")
-mobdebug = require("mobdebug")
-mobdebug.is_running = function()
-   local _, mask = debug.gethook(coroutine.running())
-   return mask == "crl"
-end
-mobdebug.scope = function(f)
-   local set = false
-   if _DEBUG and mobdebug.is_running() then
-      set = true
-      mobdebug.off()
-   end
-
-   f()
-
-   if set then
-      mobdebug.on()
-   end
-end
-inspect = require("inspect")
-_DEBUG = false
-
--- no more globals.
-setmetatable(_G, {
-                __newindex = function(t, k, v)
-                   error(string.format("Globals are not allowed. (%s : %s)", tostring(k), tostring(v)))
-                end
-})
 
 local loop = nil
+local draw = nil
+
+local fps = require("util.fps"):new()
+fps.show_fps = true
 
 function love.load(arg)
    internal.draw.init()
@@ -52,42 +27,32 @@ function love.load(arg)
    end
 
    loop = coroutine.create(game.loop)
+   draw = coroutine.create(game.draw)
 end
 
 function love.update(dt)
-end
-
-local show_fps = true
-local ms = 0
-local frames = 0
-local fps = ""
-local last = internal.get_timestamp()
-
-function love.draw()
-   internal.draw.draw()
-
-   local msg, err = coroutine.resume(loop)
+   local msg, err = coroutine.resume(loop, dt)
    if err then
       print("Error in loop: " .. debug.traceback(loop, err))
       print()
       error(err)
    end
 
-   if show_fps then
-      Draw.set_color(255, 255, 255)
-      Draw.set_font(14)
-      if ms >= 1000 then
-         fps = string.format("FPS: %02.2f", frames / (ms / 1000))
-         frames = 0
-         ms = 0
-         last = internal.get_timestamp()
-      end
-      frames = frames + 1
-      local now = internal.get_timestamp()
-      ms = ms + (now - last) * 1000
-      last = now
-      Draw.text(fps, 5, Draw.get_height() - Draw.text_height() - 5)
+   fps:update(dt)
+end
+
+function love.draw()
+   internal.draw.draw()
+
+   local going = true
+   local msg, err = coroutine.resume(draw, going)
+   if err then
+      print("Error in draw: " .. debug.traceback(draw, err))
+      print()
+      error(err)
    end
+
+   fps:draw()
 
    internal.draw.draw_end()
 end

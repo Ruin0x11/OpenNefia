@@ -3,18 +3,21 @@ local I18N = require("api.I18N")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
 
-local MainTitleMenu = {}
-local MainTitleMenu_mt = { __index = MainTitleMenu }
+local IUiLayer = require("api.gui.IUiLayer")
+
+local MainTitleMenu = class("MainTitleMenu", {IUiLayer})
+
+delegate(MainTitleMenu, "list", "focus")
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
 function MainTitleMenu:new()
-   local m = {
-      bg = Draw.load_image("graphic/title.bmp"),
-      window_bg = load_cm_bg(4),
-   }
+   self.t = 0,
+   self.bg = Draw.load_image("graphic/title.bmp"),
+   self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl"),
+   self.window_bg = load_cm_bg(4),
 
    local title_str, key_help
    if I18N.language() == "jp" then
@@ -24,32 +27,31 @@ function MainTitleMenu:new()
    end
    key_help = I18N.get("ui.hint.cursor")
 
-   m.win = UiWindow:new(80, (Draw.get_height() - 308) / 2, 320, 355, true, title_str, key_help)
-   m.list = UiList:new(m.win.x + 40,
-                       m.win.y + 50,
-                       {
-                          "Restore an Adventurer",
-                          "Generate an Adventurer",
-                          "Incarnate an Adventurer",
-                          "About",
-                          "Options",
-                          "Mods",
-                          "Exit"
-                       })
+   self.win = UiWindow:new(80, (Draw.get_height() - 308) / 2, 320, 355, true, title_str, key_help)
 
-   setmetatable(m, MainTitleMenu_mt)
-   return m
+   self.list = UiList:new(self.win.x + 40,
+                          self.win.y + 50,
+                          {
+                             "Restore an Adventurer",
+                             "Generate an Adventurer",
+                             "Incarnate an Adventurer",
+                             "About",
+                             "Options",
+                             "Mods",
+                             "Exit"
+   })
 end
 
 function MainTitleMenu:relayout()
-end
-
-function MainTitleMenu:focus()
-   self.list:focus()
+   self.win:relayout()
+   self.list:relayout()
 end
 
 function MainTitleMenu:draw()
+   Draw.use_shader(self.shader)
+   self.shader:send("time", self.t)
    Draw.image(self.bg, 0, 0, Draw.get_width(), Draw.get_height())
+   Draw.use_shader()
 
    local version = "1.22"
    Draw.text("Elona version " .. version .. "  Developed by Noa", 20, 20)
@@ -73,9 +75,14 @@ function MainTitleMenu:draw()
               {255, 255, 255, 50})
 end
 
-function MainTitleMenu:update()
+function MainTitleMenu:update(dt)
+   self.t = self.t + dt
    self.win:update()
    self.list:update()
+
+   if self.list.chosen then
+      return self.list:selected_item()
+   end
 end
 
 return MainTitleMenu

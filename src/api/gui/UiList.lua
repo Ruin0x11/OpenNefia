@@ -1,62 +1,47 @@
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
+local IUiList = require("api.gui.IUiList")
 
-local UiList = {}
-local UiList_mt = { __index = UiList }
+local UiList = class("UiList", IUiList)
 
 local keys = "abcdefghijklmnopqr"
 
-function UiList:new(x, y, items)
-   local l = {
-      x = x,
-      y = y,
-      items = items,
-      selected = 1,
-      chosen = false,
-      select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") },
-      list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") },
-   }
+function UiList:init(x, y, items)
+      self.x = x
+      self.y = y
+      self.items = items
+      self.selected = 1,
+      self.chosen = false,
+      self.select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") },
+      self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") },
 
-   l.keys = {
-      ["return"] = function(p)
+      self.keys = {}
+      self.keys["return"] = function(p)
          if p then
-            l.chosen = true
-         end
-      end,
-      up = function(p)
-         if p then
-            l.selected = l.selected - 1
-            if l.selected < 1 then
-               l.selected = #l.items
-               if l.selected < 1 then
-                  l.selected = 1
-               end
-            end
-         end
-      end,
-      down = function(p)
-         if p then
-            l.selected = l.selected + 1
-            if l.selected > #l.items then
-               l.selected = 1
-            end
+            self.chosen = true
          end
       end
-   }
+      self.keys.up = function(p)
+         if p then
+            self:select_previous()
+         end
+      end,
+      self.keys.down = function(p)
+         if p then
+            self:select_next()
+         end
+      end
 
    for i=1,#keys do
       local key = keys:sub(i, i)
-      l.keys[key] = function(p)
+      self.keys[key] = function(p)
          if p then
-            l.selected = i
-            l.chosen = true
+            self.selected = i
+            self.chosen = true
          end
       end
    end
-
-   setmetatable(l, UiList_mt)
-   return l
 end
 
 function UiList:focus()
@@ -64,6 +49,27 @@ function UiList:focus()
 end
 
 function UiList:relayout()
+end
+
+function UiList:select_next()
+   self.selected = self.selected + 1
+   if self.selected > #self.items then
+      self.selected = 1
+   end
+end
+
+function UiList:select_previous()
+   self.selected = self.selected - 1
+   if self.selected < 1 then
+      self.selected = #self.items
+      if self.selected < 1 then
+         self.selected = 1
+      end
+   end
+end
+
+function UiList:selected_item()
+   return self.items[self.selected]
 end
 
 function UiList:draw()
