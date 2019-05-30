@@ -14,9 +14,9 @@ ChangeAppearanceList:delegate("inner", {
                          "select",
                          "select_next",
                          "select_previous",
+                         "draw",
                          "relayout",
                          "update",
-                         "draw",
                          "focus",
                          "set_data"
 })

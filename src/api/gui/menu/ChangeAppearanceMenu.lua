@@ -3,13 +3,14 @@ local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
+local UiPagedList = require("api.gui.UiPagedList")
 local TopicWindow = require("api.gui.TopicWindow")
-local ChangeAppearanceList = require("api.gui.ChangeAppearanceList")
-local ChangeAppearancePreview = require("api.gui.ChangeAppearancePreview")
+local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
+local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
 
 local ChangeAppearanceMenu = class("ChangeAppearanceMenu", IUiLayer)
 
-ChangeAppearanceMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
+ChangeAppearanceMenu:delegate("win", {"x", "y", "width", "height"})
 ChangeAppearanceMenu:delegate("pages", {"focus", "bind"})
 
 local function make_deco()
@@ -28,7 +29,7 @@ function ChangeAppearanceMenu:init()
    self.y = self.y - 12
 
    self.deco = make_deco()
-   self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height, "", true)
+   self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height, true, "")
 
    local data = {
         { category = "done", value = 10, kind = "number" },
@@ -50,15 +51,25 @@ function ChangeAppearanceMenu:init()
         { category = "eyes", value = 10, kind = "number" },
         { category = "set_basic", value = 10, kind = "number" },
    }
-   local list = ChangeAppearanceList:new(self.x + 60, self.y + 66, data)
-   self.pages = UiPages:new(list, 10)
+   self.pages = UiPagedList:new(self.x + 60, self.y + 66, data, 10)
+
+   self.pages.get_item_text = function(l, item)
+      return item.category
+   end
 
    self.preview = ChangeAppearancePreview:new(self.x + 234, self.y + 71)
 end
 
+function ChangeAppearanceMenu:relayout()
+   self.win:relayout()
+   self.preview:relayout()
+   self.pages:relayout()
+end
+
 function ChangeAppearanceMenu:draw()
    self.win:draw()
-   Draw.image_region(self.deco.image, self.deco.quad["a"], self.x + self.width - 40, self.y)
+   Ui.draw_topic("category", self.x + 34, self.y + 36)
+   Draw.image_region(self.deco.image, self.deco.quad["a"], self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
 
    self.preview:draw()
    self.pages:draw()

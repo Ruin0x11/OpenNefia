@@ -25,8 +25,7 @@ function SelectClassMenu:init(race)
    self.y = self.y + 20
 
    self.win = UiWindow:new("chara_make.select_class.title", self.x, self.y, self.width, self.height)
-   local list = UiList:new(self.x + 38, self.y + 66, classes)
-   self.pages = UiPagedList:new(list, 16)
+   self.pages = UiPagedList:new(self.x + 38, self.y + 66, classes, 16)
    self.bg = random_cm_bg()
 
    self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")

@@ -89,10 +89,6 @@ end
 
 function TopicWindow:relayout()
    self.data = gen_data(self.width, self.height, self.frame_style, self.fill_style)
-end
-
-function TopicWindow:update()
-   if self.finished then return end
 
    local x = self.x
    local y = self.y
@@ -126,8 +122,9 @@ function TopicWindow:update()
    frame.batch:add(frame.quad["bottom_left"], x, y + height - 16)
    frame.batch:add(frame.quad["top_right"], x + width - 16, y)
    frame.batch:add(frame.quad["bottom_right"], x + width - 16, y + height - 16)
+end
 
-   self.finished = true
+function TopicWindow:update()
 end
 
 return TopicWindow

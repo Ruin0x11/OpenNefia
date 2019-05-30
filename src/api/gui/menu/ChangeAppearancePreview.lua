@@ -15,9 +15,9 @@ function ChangeAppearancePreview:init(x, y)
 end
 
 function ChangeAppearancePreview:update()
-   self.frame = frame + 1
+   self.frame = self.frame + 1
    if self.frame % 100 < 45 then
-      self.direction = i % 16
+      self.direction = self.frame % 16
    else
       self.direction = self.direction + 1
    end
@@ -26,13 +26,14 @@ function ChangeAppearancePreview:update()
 end
 
 function ChangeAppearancePreview:draw()
+   self.topic_window:draw()
    if self.show_portrait then
       Draw.image(self.portrait, self.x + 4, self.y + 4)
    else
       local has_own_sprite = false
       if has_own_sprite then
       else
-         Draw.image(self.chip, self.x + 46, self.y + 42)
+         Draw.image(self.chip, self.x + 46, self.y + 59, nil, nil, nil, true)
       end
    end
 end

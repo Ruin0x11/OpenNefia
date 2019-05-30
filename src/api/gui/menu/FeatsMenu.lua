@@ -80,14 +80,13 @@ function FeatsMenu:init(chara_make)
          },
          20))
 
-   local alist = UiList:new(self.x + 58, self.y + 66, self.data, 19)
-   self.pages = UiPagedList:new(alist, 15)
+   self.pages = UiPagedList:new(self.x + 58, self.y + 66, self.data, 15)
 
    --------------------
-   alist.get_item_text = function(l, item)
+   self.pages.get_item_text = function(l, item)
       return item.text
    end
-   alist.draw_select_key = function(l, i, item, key_name, x, y)
+   self.pages.draw_select_key = function(l, i, item, key_name, x, y)
       if item.kind ~= "feat" then
          return
       end
@@ -101,7 +100,7 @@ function FeatsMenu:init(chara_make)
       UiList.draw_select_key(l, i, item, key_name, x, y)
    end
 
-   alist.draw_item_text = function(l, text, i, item, x, y, x_offset)
+   self.pages.draw_item_text = function(l, text, i, item, x, y, x_offset)
       if item.value < 10 then
          UiList.draw_item_text(l, text, i, item, x, y, x_offset)
          return

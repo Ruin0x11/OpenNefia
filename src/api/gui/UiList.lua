@@ -2,32 +2,38 @@ local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
 local IUiList = require("api.gui.IUiList")
+local ListModel = require("api.gui.ListModel")
 
 local UiList = class("UiList", IUiList)
+UiList:delegate("model", {
+                   "changed",
+                   "selected",
+                   "items",
+                   "selected_item",
+                   "select",
+                   "select_next",
+                   "select_previous",
+                   "can_select",
+                   "get_item_text",
+                   "set_data",
+                   "choose"
+})
 
 local keys = "abcdefghijklmnopqr"
 
 function UiList:init(x, y, items, item_height, item_offset_x, item_offset_y)
    self.x = x
    self.y = y
-   self.items = items
+   self.model = ListModel:new(items)
    self.item_height = item_height or 19
    self.item_offset_x = item_offset_x or 0
    self.item_offset_y = item_offset_y or -2
-   self.selected = 1
-   self.chosen = false
-   self.changed = true
    self.select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") }
    self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
 
    self:set_data()
 
    self.keys = {}
-end
-
-function UiList:choose(i)
-   self:select(i)
-   self.chosen = true
 end
 
 function UiList:bind()
@@ -63,47 +69,6 @@ function UiList:focus()
 end
 
 function UiList:relayout()
-end
-
-function UiList:set_data(items)
-   self.items = items or self.items
-   self:select()
-end
-
-function UiList:select(i)
-   if not self:can_select(i) then return end
-
-   self.changed = self.selected ~= i
-
-   self.selected = i or self.selected
-   if self.selected > #self.items then
-      self.selected = 1
-   elseif self.selected < 1 then
-      self.selected = #self.items
-      if self.selected < 1 then
-         self.selected = 1
-      end
-   end
-end
-
-function UiList:select_next()
-   self:select(self.selected + 1)
-end
-
-function UiList:select_previous()
-   self:select(self.selected - 1)
-end
-
-function UiList:selected_item()
-   return self.items[self.selected]
-end
-
-function UiList:get_item_text(item)
-   return item
-end
-
-function UiList:can_select(i)
-   return true
 end
 
 function UiList:draw_select_key(i, item, key_name, x, y)

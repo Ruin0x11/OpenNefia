@@ -7,7 +7,7 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
-   local title = require("api.gui.menu.FeatsMenu"):new()
+   local title = require("api.gui.menu.chara_make.SelectAliasMenu"):new()
    internal.input.set_keyrepeat(true)
    Draw.set_root(title)
 
