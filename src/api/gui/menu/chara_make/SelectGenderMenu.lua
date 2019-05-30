@@ -7,6 +7,7 @@ local UiWindow = require("api.gui.UiWindow")
 
 local SelectGenderMenu = class("SelectGenderMenu", IUiLayer)
 
+SelectGenderMenu:delegate("list", {"focus"})
 SelectGenderMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
 
 local function load_cm_bg(id)
@@ -21,9 +22,6 @@ function SelectGenderMenu:init()
    self.list = UiList:new(self.x + 38, self.y + 66, {"ui.gender3.male", "ui.gender3.female"})
 
    self.bg = load_cm_bg(1)
-end
-
-function SelectGenderMenu:focus()
 end
 
 function SelectGenderMenu:draw()

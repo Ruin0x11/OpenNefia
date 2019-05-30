@@ -3,19 +3,18 @@ local Draw = require("api.Draw")
 local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
-local IUiPages = require("api.gui.IUiPages")
+local IPaged = require("api.gui.IPaged")
 
 local UiWindow = class("UiWindow", IUiElement)
 
-local image
-function UiWindow:init(title, x, y, width, height, shadow, key_help)
-   image = image or Draw.load_image("graphic/temp/tip_icons.bmp")
+function UiWindow:init(title, x, y, width, height, shadow, key_help, x_offset, y_offset)
+   local image = Draw.load_image("graphic/temp/tip_icons.bmp")
    local quad = love.graphics.newQuad(0, 0, 24, 16, image:getWidth(), image:getHeight())
 
    self.x = x
    self.y = y
-   self.x_offset = 0
-   self.y_offset = 0
+   self.x_offset = x_offset or 0
+   self.y_offset = y_offset or 0
    self.width = width
    self.height = height
    self.title = title or ""
@@ -104,7 +103,7 @@ function UiWindow:draw()
 end
 
 function UiWindow:set_pages(pages)
-   pages:assert_is_an(IUiPages)
+   assert_is_an(IPaged, pages)
    self.page = pages.page
    self.page_max = pages.page_max
 end

@@ -6,9 +6,11 @@ local Draw = require("api.Draw")
 
 local internal = require("internal")
 local game = require("game")
+local debug_server = require("util.debug_server")
 
 local loop = nil
 local draw = nil
+local server = nil
 
 local fps = require("util.fps"):new()
 fps.show_fps = true
@@ -19,6 +21,8 @@ local my = 0
 function love.load(arg)
    internal.draw.init()
    Draw.set_font(12)
+
+   server = debug_server(4567)
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
@@ -39,6 +43,15 @@ function love.load(arg)
 end
 
 function love.update(dt)
+   if server then
+      local msg, err = coroutine.resume(server, dt)
+      if err then
+         print("Error in server:\n\t" .. debug.traceback(server, err))
+         print()
+         error(err)
+      end
+   end
+
    local msg, err = coroutine.resume(loop, dt)
    if err then
       print("Error in loop:\n\t" .. debug.traceback(loop, err))

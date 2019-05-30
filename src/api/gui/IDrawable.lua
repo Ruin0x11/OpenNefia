@@ -1,2 +1,2 @@
 return interface("IDrawable",
-                 { draw = "function", update = "function" })
+                 { update = "function", draw = "function" })

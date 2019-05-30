@@ -77,6 +77,17 @@ local function delegate(c, field, params)
    end
 end
 
+function is_an(interface, obj)
+   return verify(obj, interface) == nil
+end
+
+function assert_is_an(interface, obj)
+   local err = verify(obj, interface)
+   if err then
+      error(string.format("%s should implement %s: %s", obj, interface, err))
+   end
+end
+
 function class.class(name, ifaces)
    local c = {}
    _classes[c] = tostring(c)
@@ -126,17 +137,6 @@ function class.class(name, ifaces)
       local instance = {class = c}
       _instances[instance] = tostring(instance)
 
-      instance.is_an = function(self, interface)
-         return verify(self, interface) == nil
-      end
-
-      instance.assert_is_an = function(self, interface)
-         local err = verify(self, interface)
-         if err then
-            error(string.format("%s should implement %s: %s", self, interface, err))
-         end
-      end
-
       instance._memoized = {}
 
       setmetatable(instance, c)
@@ -147,7 +147,7 @@ function class.class(name, ifaces)
 
       if c.__verify and c.interfaces then
          for _, i in ipairs(c.interfaces) do
-            instance:assert_is_an(i)
+            assert_is_an(i, instance)
          end
       end
 

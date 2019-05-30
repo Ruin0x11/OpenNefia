@@ -7,7 +7,7 @@ Input.set_key_handler = input.set_key_handler
 Input.set_mouse_handler = input.set_mouse_handler
 
 function Input.query(ui)
-   if not (ui and ui.is_an and ui:is_an(IUiLayer)) then
+   if not is_an(IUiLayer, ui) then
       error("Not a UI layer: " .. tostring(ui))
    end
 

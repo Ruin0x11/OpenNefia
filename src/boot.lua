@@ -1,5 +1,7 @@
 -- globals that will be used very often.
 
+_DEBUG = false
+
 function string.nonempty(s)
    return type(s) == "string" and s ~= ""
 end
@@ -104,6 +106,20 @@ function table.of(item, count)
    return tbl
 end
 
+function table.map(tbl, f, array)
+   local t = {}
+   if array then
+      for i, v in ipairs(tbl) do
+         t[i] = f(v)
+      end
+   else
+      for k, v in pairs(tbl) do
+         t[k] = f(v)
+      end
+   end
+   return t
+end
+
 mobdebug = require("mobdebug")
 mobdebug.is_running = function()
    local _, mask = debug.gethook(coroutine.running())
@@ -130,14 +146,72 @@ interface = class_.interface
 print(tostring(interface))
 class = class_.class
 
-_DEBUG = false
+if not love then
+   _DEBUG = true
+   love = require("util.automagic")()
+
+   love.graphics.getWidth = function() return 800 end
+   love.graphics.getHeight = function() return 600 end
+   love.graphics.getFont = function()
+      return
+         {
+            getWidth = function(s) return #s * 8 end,
+            getHeight = function() return 14 end,
+         }
+   end
+   love.graphics.setFont = function() end
+   love.graphics.setColor = function() end
+   love.graphics.setBlendMode = function() end
+   love.graphics.line = function() end
+   love.graphics.polygon = function() end
+   love.graphics.print = function() end
+   love.graphics.newSpriteBatch = function()
+      return {
+         clear = function() end,
+         add = function() end,
+         flush = function() end,
+      }
+   end
+   love.graphics.newQuad = function()
+      return {
+         getViewport = function() return 0, 0, 100, 100 end
+      }
+   end
+   love.graphics.newFont = function()
+      return {}
+   end
+   love.graphics.newImage = function()
+      return {
+         getWidth = function() return 100 end,
+         getHeight = function() return 100 end,
+         setFilter = function() end,
+      }
+   end
+   love.graphics.draw = function() end
+   love.image.newImageData = function(fn)
+      return {
+         mapPixel = function() end
+      }
+   end
+   print("ty", type(love.graphics.getWidth))
+end
+
+function _p(it)
+   print(inspect(it))
+   return it
+end
 
 -- prevent new globals from here on out.
 
-local function deny (t, k, v)
-   local trace = debug.traceback()
-   local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
-   error(err)
-end
+if false then
+   local function deny(t, k, v)
+      if type(v) ~= "function" then
+         local trace = debug.traceback()
+         local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
+         error(err)
+      end
+      rawset(t, k, v)
+   end
 
-setmetatable(_G, {__newindex = deny})
+   setmetatable(_G, {__newindex = deny})
+end

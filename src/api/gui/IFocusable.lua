@@ -1,1 +1,2 @@
-return interface("IFocusable", { focus = "function" })
+return interface("IFocusable",
+                 { bind = "function", focus = "function" })

@@ -7,7 +7,8 @@ function Ui.params_centered(width, height, in_game)
 
    local y
    if in_game then
-      y = 0
+      local inf_screenh = Draw.get_height() / 48
+      y = ((inf_screenh + 1) * 48 - height) / 2 + 8
    else
       y = (Draw.get_height() - height) / 2
    end
@@ -26,6 +27,14 @@ function Ui.draw_topic(topic, x, y)
    Draw.text(topic, x + 26, y + 8) -- y + vfix + 8
    Draw.line(x + 22, y + 21, x + Draw.text_width(topic) + 36, y + 21)
    Draw.set_color(255, 255, 255)
+end
+
+function Ui.draw_note(text, x, y, width, height, x_offset)
+   Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
+   Draw.text(text,
+             x + width - Draw.text_width(text) - 140 - x_offset,
+             y + height - 65 - height * 8,
+             {0, 0, 0})
 end
 
 return Ui

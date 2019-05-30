@@ -7,7 +7,7 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
-   local title = require("api.gui.menu.chara_make.SelectRaceMenu"):new()
+   local title = require("api.gui.menu.chara_make.RollAttributesMenu"):new()
    internal.input.set_keyrepeat(true)
    Draw.set_root(title)
 
@@ -17,6 +17,8 @@ local function main_title()
 
       if choice == 1 then
          going = chara_make.query()
+      else
+         error("no choice handler " .. tostring(choice))
       end
    end
 
