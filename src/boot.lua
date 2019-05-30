@@ -120,6 +120,22 @@ function table.map(tbl, f, array)
    return t
 end
 
+function table.flatten(arr)
+   local result = {}
+
+   local function flatten(arr)
+      for _, v in ipairs(arr) do
+         table.insert(result, v)
+      end
+   end
+
+   for _, v in ipairs(arr) do
+      flatten(v)
+   end
+
+   return result
+end
+
 mobdebug = require("mobdebug")
 mobdebug.is_running = function()
    local _, mask = debug.gethook(coroutine.running())

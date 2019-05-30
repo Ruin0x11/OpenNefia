@@ -3,7 +3,6 @@ local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
-local UiActionList = require("api.gui.UiActionList")
 local UiList = require("api.gui.UiList")
 
 local RollAttributesMenu = class("RollAttributesMenu", IUiLayer)
@@ -42,7 +41,10 @@ function RollAttributesMenu:init()
       self.data[#self.data + 1] = { text = v, on_choose = lock(v), locked = false, value = 0 }
    end
 
-   self.alist = UiActionList:new(self.x + 38, self.y + 66, self.data, 23)
+   self.alist = UiList:new(self.x + 38, self.y + 66, self.data, 23)
+   self.alist.get_item_text = function(l, item)
+      return item.text
+   end
 
    ---------------------------------------- dupe
    self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")

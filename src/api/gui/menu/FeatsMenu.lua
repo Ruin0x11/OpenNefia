@@ -3,8 +3,8 @@ local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiPagedList = require("api.gui.UiPagedList")
-local UiActionList = require("api.gui.UiActionList")
 local UiWindow = require("api.gui.UiWindow")
+local UiList = require("api.gui.UiList")
 
 local FeatsMenu = class("FeatsMenu", IUiLayer)
 
@@ -44,6 +44,18 @@ local function make_inventory_icon()
    return { image = image, quad = quad }
 end
 
+local function make_trait_icons()
+   local image = Draw.load_image("graphic/temp/trait_icons.bmp")
+   local iw = image:getWidth()
+   local ih = image:getHeight()
+
+   local quad = {}
+   for i=1,6 do
+      quad[i] = love.graphics.newQuad(24 * (i-1), 0, 24, 24, iw, ih)
+   end
+   return { image = image, quad = quad }
+end
+
 function FeatsMenu:init(chara_make)
    self.x, self.y, self.width, self.height = Ui.params_centered(730, 430)
 
@@ -55,46 +67,52 @@ function FeatsMenu:init(chara_make)
 
    self.inventory_icon = make_inventory_icon()
    self.deco = make_deco()
+   self.trait_icons = make_trait_icons()
 
-   self.data = {
-      { kind = "feat", value = 10 },
-      { kind = "blank", value = 1 },
-      { kind = "feat", value = 10000 },
-      { kind = "trait", value = 10000 },
-   }
+   self.data = table.flatten(
+      table.of(
+         {
+            { text = "Header.", kind = "text", value = 1 },
+            { text = "Feat", kind = "feat", value = 10 },
+            { text = "", kind = "feat", value = 1 },
+            { text = "Feat", kind = "feat", value = 10000 },
+            { text = "Trait", kind = "feat", value = 10000 },
+         },
+         20))
 
-   local alist = UiActionList:new(self.x + 64, self.y + 66, self.data, 23)
+   local alist = UiList:new(self.x + 58, self.y + 66, self.data, 19)
    self.pages = UiPagedList:new(alist, 15)
 
-   -------------------- WARNING this will bug.
-   local super = UiActionList.draw_select_key
-   self.pages.draw_select_key = function(l, i, item, key_name, x, y)
+   --------------------
+   alist.get_item_text = function(l, item)
+      return item.text
+   end
+   alist.draw_select_key = function(l, i, item, key_name, x, y)
       if item.kind ~= "feat" then
          return
       end
-      if i % 2 then -- i % 2 == 0
-         Draw.filled_rect(x - 7, y, 640, 18, {12, 14, 16, 16})
+      if i % 2 == 0 then
+         Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16, 16})
       end
       if item.value >= 10000 then
          return
       end
 
-      super(l, key_name, x, y)
+      UiList.draw_select_key(l, i, item, key_name, x, y)
    end
 
-   super = UiActionList.draw_item_text
-   self.pages.draw_item_text = function(l, selected, text, i, item, x, y, x_offset)
+   alist.draw_item_text = function(l, text, i, item, x, y, x_offset)
       if item.value < 10 then
-         super(l, selected, text, i, item, x, y, x_offset)
+         UiList.draw_item_text(l, text, i, item, x, y, x_offset)
          return
       end
 
       local color = {10, 10, 10}
-      local trait_icon = "first"
+      local trait_icon = 1
       if item.kind == "trait" then
          local trait = "base.some_trait"
          color = trait_color(trait)
-         trait_icon = "second"
+         trait_icon = 5
       end
 
       local draw_name = item.kind == "feat"
@@ -102,17 +120,21 @@ function FeatsMenu:init(chara_make)
       local new_x_offset, name_x_offset
       if draw_name then
          new_x_offset = 84 - 64
-         name_x_offset = 30 - 64
+         name_x_offset = 30 - 64 - 20
       else
          new_x_offset = 70 - 64
-         name_x_offset = 45 - 64
+         name_x_offset = 45 - 64 - 20
       end
-      Draw.image_region(self.trait_icons, self.quad[trait_icon], x + name_x_offset, y - 5)
 
-      super(l, selected, text, i, item, x + new_x_offset, y, x_offset)
+      local quad = self.trait_icons.quad[trait_icon]
+      if quad then
+         Draw.image_region(self.trait_icons.image, quad, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
+      end
+
+      UiList.draw_item_text(l, text, i, item, x + new_x_offset, y, x_offset)
 
       if draw_name then
-         Draw.text("(Trait name.)", x + 206, y + 2, color)
+         Draw.text("(Trait name.)", x + 186, y + 2, color, {0, 0, 0})
       end
    end
    --------------------

@@ -26,9 +26,9 @@ function love.load(arg)
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
-      require("mobdebug").start()
-      require("mobdebug").off()
-      require("mobdebug").coro()
+      mobdebug.start()
+      mobdebug.off()
+      mobdebug.coro()
    end
 
    loop = coroutine.create(game.loop)

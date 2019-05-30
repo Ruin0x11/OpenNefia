@@ -120,6 +120,29 @@ function class.class(name, ifaces)
       return rawget(c, k)
    end
 
+   -- c.__newindex = function(t, k, v)
+   --    print("newindex " .. k .. " " .. tostring(v) .. " " .. name)
+   --    local d = rawget(c, "_delegates")
+   --    if not d or type(v) ~= "function" then
+   --       rawset(t, k, v)
+   --       return
+   --    end
+
+   --    local field_name = d[k]
+   --    if field_name then
+   --       local field = t[field_name]
+   --       if field then
+   --          if type(field[k]) == "function" then
+   --             print("Overwrite delegate " .. name .. " " .. k)
+   --             rawset(field, k, v)
+   --             return
+   --          end
+   --       end
+   --    end
+
+   --    rawset(t, k, v)
+   -- end
+
    c.__verify = true
 
    c.name = name
