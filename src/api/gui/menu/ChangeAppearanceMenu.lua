@@ -11,7 +11,7 @@ local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
 local ChangeAppearanceMenu = class("ChangeAppearanceMenu", IUiLayer)
 
 ChangeAppearanceMenu:delegate("win", {"x", "y", "width", "height"})
-ChangeAppearanceMenu:delegate("pages", {"focus", "bind"})
+ChangeAppearanceMenu:delegate("list", {"focus", "bind"})
 
 local function make_deco()
    local image = Draw.load_image("graphic/deco_mirror.bmp")
@@ -29,10 +29,10 @@ function ChangeAppearanceMenu:init()
    self.y = self.y - 12
 
    self.deco = make_deco()
-   self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height, true, "")
+   self.win = UiWindow:new("appearance", self.x, self.y, self.width, self.height, true, "key_help")
 
    local data = {
-        { category = "done", value = 10, kind = "number" },
+        { category = "done" },
         { category = "portrait", value = 10, kind = "number" },
         { category = "hair", value = 10, kind = "number" },
         { category = "sub_hair", value = 10, kind = "number" },
@@ -51,9 +51,9 @@ function ChangeAppearanceMenu:init()
         { category = "eyes", value = 10, kind = "number" },
         { category = "set_basic", value = 10, kind = "number" },
    }
-   self.pages = UiPagedList:new(self.x + 60, self.y + 66, data, 10)
+   self.list = ChangeAppearanceList:new(self.x + 60, self.y + 66, data)
 
-   self.pages.get_item_text = function(l, item)
+   self.list.get_item_text = function(l, item)
       return item.category
    end
 
@@ -63,7 +63,7 @@ end
 function ChangeAppearanceMenu:relayout()
    self.win:relayout()
    self.preview:relayout()
-   self.pages:relayout()
+   self.list:relayout()
 end
 
 function ChangeAppearanceMenu:draw()
@@ -72,13 +72,13 @@ function ChangeAppearanceMenu:draw()
    Draw.image_region(self.deco.image, self.deco.quad["a"], self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
 
    self.preview:draw()
-   self.pages:draw()
+   self.list:draw()
 end
 
 function ChangeAppearanceMenu:update()
    self.win:update()
    self.preview:update()
-   self.pages:update()
+   self.list:update()
 end
 
 return ChangeAppearanceMenu

@@ -58,7 +58,7 @@ function TopicWindow:draw()
 
    if fill_style == 6 then
       Draw.image(self.data.window.batch, x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
-   elseif fill_style ~= 5 then
+   elseif fill_style < 5 then
       local rect = true
       if fill_style == 0 then
          rect = false

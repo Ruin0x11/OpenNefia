@@ -2,13 +2,12 @@ local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
-local UiBuffList = require("api.gui.UiBuffList")
+local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
+local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
 
 local CharacterSheetMenu = class("CharacterSheetMenu", IUiLayer)
-
-CharacterSheetMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
 
 local function potential_string(pot)
    if pot >= 200 then
@@ -27,10 +26,10 @@ function CharacterSheetMenu:init(behavior)
    self.x, self.y, self.width, self.height = Ui.params_centered(700, 400)
    self.y = self.y - 10
 
-   self.win = UiWindow:new("title", self.x, self.y, self.width, self.height)
+   self.win = Draw.load_image("graphic/ie_sheet.bmp")
 
    self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
-   self.chip = Draw.load_image("graphic/temp/chip_female.bmp")
+   self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.topic_win = TopicWindow:new(self.x + 557, self.y + 23, 87, 120, 1, 10)
 
@@ -41,7 +40,7 @@ function CharacterSheetMenu:init(behavior)
    -------------------- dupe
    self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
    local skills = {
-      "base.strength",
+      "STR",
    }
 
    local iw = self.skill_icons:getWidth()
@@ -62,15 +61,14 @@ function CharacterSheetMenu:text_level()
    local guild_name = "fighters"
 
    self.texts["level"] =
-      UiTextList:new(self.x + 355,
+      UiTextGroup:new(self.x + 355,
                      self.y + 46,
                      {"level", "exp", "gold", "god", "guild"},
-                     {20, 10, 0},
-                     4, 4)
-   self.text["level_val"] =
-      UiTextList:new(self.x + 410,
-                     self.y + 45,
-                     {tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name}
+                     {20, 10, 0})
+   self.texts["level_val"] =
+      UiTextGroup:new(self.x + 410,
+                      self.y + 45,
+                      {tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name}
       )
 
 end
@@ -86,14 +84,14 @@ function CharacterSheetMenu:text_name()
    local weight = 100 .. " kg"
 
    self.texts["name"] =
-      UiTextList:new(self.x + 30,
+      UiTextGroup:new(self.x + 30,
                      self.y + 61,
                      {"name", "aka", "race", "sex", "class", "age", "height", "weight"},
                      {20, 10, 0},
                      4, 4)
    text = {name, title, race, gender, class, age, height, weight}
    self.texts["name_val"] =
-      UiTextList:new(self.x + 68, -- + en * ((i > 3) * 12)
+      UiTextGroup:new(self.x + 68, -- + en * ((i > 3) * 12)
                      self.y + 60,
                      {name, title, race, gender, class, age, height, weight},
                      {20, 10, 0},
@@ -102,26 +100,25 @@ end
 
 function CharacterSheetMenu:text_attr()
    self.texts["attr"] =
-      UiTextList:new(
+      UiTextGroup:new(
          self.x + 54,
          self.y + 151,
-         table.of("base.strength", 8),
-         {20, 10, 0},
-         4, 4)
+         table.of("STR", 7),
+         {20, 10, 0})
 end
 
 function CharacterSheetMenu:text_time()
    local turns = tostring(1000)
    local days = tostring(1)
    local kills = tostring(100)
-   local time = string(100)
+   local time = tostring(100)
 
    self.texts["time"] =
-      UiTextList:new(self.x + 32,
+      UiTextGroup:new(self.x + 32,
                      self.y + 301,
                      {"turns", "days", "kills", "time"})
    self.texts["time_val"] =
-      UiTextList:new(self.x + 80,
+      UiTextGroup:new(self.x + 80,
                      self.y + 299,
                      {turns, days, kills, time})
 
@@ -134,36 +131,35 @@ function CharacterSheetMenu:text_weight()
    local deepest_level = tostring(100)
 
    self.texts["weight"] =
-      UiTextList:new(self.x + 224,
+      UiTextGroup:new(self.x + 224,
                      self.y + 301,
                      {"cargo_weight", "cargo_limit", "equip_weight", "deepest_level"})
    self.texts["weight_val"] =
-      UiTextList:new(self.x + 287,
+      UiTextGroup:new(self.x + 287,
                      self.y + 299,
                      {cargo_weight, cargo_limit, equip_weight, deepest_level})
 end
 
 function CharacterSheetMenu:text_fame()
-   local life = "%d(%d)":format(100, 120)
-   local mana = "%d(%d)":format(100, 120)
+   local life = string.format("%d(%d)", 100, 120)
+   local mana = string.format("%d(%d)", 100, 120)
    local insanity = tostring(100)
-   local speed = "%d(%d)":format(100, 120)
+   local speed = string.format("%d(%d)", 100, 120)
    local fame = tostring(1000)
    local karma = tostring(5)
 
    self.texts["fame"] =
-      UiTextList:new(self.x + 255,
+      UiTextGroup:new(self.x + 255,
                      self.y + 151,
-                     {"life", "mana", "sanity", "speed", "", "fame", "karma", "", "melee", "shoot"}
+                     {"life", "mana", "sanity", "speed", "", "fame", "karma"}
       )
    self.texts["fame_val"] =
-      UiTextList:new(self.x + 310,
+      UiTextGroup:new(self.x + 310,
                      self.y + 151,
-                     {life, mana, insanity, speed, "", fame, karma, "", ""})
+                     {life, mana, insanity, speed, "", fame, karma})
 end
 
 function CharacterSheetMenu:relayout()
-   self.win:relayout()
    self.topic_win:relayout()
    self.buff_list:relayout()
 
@@ -180,6 +176,9 @@ end
 function CharacterSheetMenu:focus()
 end
 
+function CharacterSheetMenu:bind()
+end
+
 function CharacterSheetMenu:draw_text()
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
 
@@ -189,12 +188,15 @@ function CharacterSheetMenu:draw_text()
    local attr = self.texts["attr"]
    attr:draw()
    for i, t in ipairs(attr.list) do
-      Draw.image_region(self.attribute_icons.image,
-                        self.attribute_icons.quad[text],
+      Draw.image_region(self.skill_icons,
+                        self.quad[t],
                         attr.x - 17,
                         attr.y + 6 + (i-1) * attr.item_height,
-                        nil, nil, true)
+                        nil, nil,
+                        {255, 255, 255},
+                        true)
    end
+   Draw.set_color(0, 0, 0)
 
    self.texts["time"]:draw()
    self.texts["weight"]:draw()
@@ -202,36 +204,40 @@ function CharacterSheetMenu:draw_text()
 end
 
 function CharacterSheetMenu:draw_attributes()
-   local attrs = table.of("attr", 8)
+   local attrs = table.of("123", 7)
    for i, a in ipairs(attrs) do
-      local level = "(%d)":format(10)
+      local level = string.format("(%d)", 10)
       local ench = true
       if ench then
          level = level .. "*"
       end
-      Draw.text(self.x + 92, self.y + 151 + i * 15, a)
-      Draw.text(self.x + 124, self.y + 151 + i * 15, level)
+      Draw.text(a, self.x + 92, self.y + 151 + (i - 1) * 15)
+      Draw.text(level, self.x + 124, self.y + 151 + (i - 1) * 15)
       --------------------
       local pot = potential_string(100)
-      Draw.text(self.x + 176, self.y + 152 + (i - 1) * 15, pot)
+      Draw.text(pot, self.x + 176, self.y + 152 + (i - 1) * 15)
    end
 end
 
-function CharacterSheetMenu:draw_weapon_info
+function CharacterSheetMenu:draw_weapon_info()
    Draw.set_font(12, "bold") -- sizefix - en * 2
-   Draw.text(self.x + 417,
-             self.y + 281, -- + p(2) * 16
-             "protect")
-   Draw.text(self.x + 590, -- - en * 16
-             self.y + 281, -- + p(2) * 16
-             "evade")
+   Draw.text("protect",
+             self.x + 417,
+             self.y + 281 -- + p(2) * 16
+             )
+   Draw.text("evade",
+             self.x + 590, -- - en * 16
+             self.y + 281 -- + p(2) * 16
+             )
    Draw.set_font(14)
-   Draw.text(self.x + 460, -- + en * 8
-             self.y + 279, -- + p(2) * 16
-             "10% + 1d2")
-   Draw.text(self.x + 625, -- + en * 8
-             self.y + 279, -- + p(2) * 16
-             "10%")
+   Draw.text("10% + 1d2",
+             self.x + 460, -- + en * 8
+             self.y + 279 -- + p(2) * 16
+             )
+   Draw.text("10%",
+             self.x + 625, -- + en * 8
+             self.y + 279 -- + p(2) * 16
+             )
 end
 
 function CharacterSheetMenu:draw_buffs()
@@ -258,11 +264,11 @@ function CharacterSheetMenu:draw_values()
    self:draw_weapon_info()
    self.texts["time_val"]:draw()
    self.texts["weight_val"]:draw()
-   self.draw_buffs()
+   self:draw_buffs()
 end
 
 function CharacterSheetMenu:draw()
-   self.win:draw()
+   Draw.image(self.win, self.x, self.y)
 
    Ui.draw_topic("ui.chara_sheet.attributes",    self.x + 28,  self.y + 122)
    Ui.draw_topic("ui.chara_sheet.combat_rolls",  self.x + 400, self.y + 253)
@@ -270,16 +276,17 @@ function CharacterSheetMenu:draw()
    Ui.draw_topic("ui.chara_sheet.blessing",      self.x + 400, self.y + 122)
    Ui.draw_topic("ui.chara_sheet.extra_info",    self.x + 220, self.y + 273)
 
-   Draw.image(self.portrait, self.x + 560, self.y + 27)
+   Draw.image(self.portrait, self.x + 560, self.y + 27, 80, 112, nil)
    self.topic_win:draw()
-   Draw.image(self.chip, self.x + 596 + 22, self.y + 86 + 24)
+   Draw.image(self.chip, self.x + 596 + 22, self.y + 86 + 24, nil, nil, nil, true)
+
+   Draw.set_color(0, 0, 0)
 
    self:draw_text()
    self:draw_values()
 end
 
 function CharacterSheetMenu:update()
-   self.win:update()
    self.topic_win:update()
    self.buff_list:update()
 end

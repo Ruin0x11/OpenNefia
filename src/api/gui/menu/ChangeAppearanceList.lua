@@ -1,12 +1,12 @@
 local Draw = require("api.Draw")
 local IUiList = require("api.gui.IUiList")
 local UiList = require("api.gui.UiList")
+local UiPagedList = require("api.gui.UiPagedList")
+local PagedListModel = require("api.gui.PagedListModel")
 
 local ChangeAppearanceList = class("ChangeAppearanceList", IUiList)
 
-ChangeAppearanceList:delegate("inner", {
-                         "x",
-                         "y",
+ChangeAppearanceList:delegate("model", {
                          "items",
                          "changed",
                          "selected",
@@ -14,10 +14,6 @@ ChangeAppearanceList:delegate("inner", {
                          "select",
                          "select_next",
                          "select_previous",
-                         "draw",
-                         "relayout",
-                         "update",
-                         "focus",
                          "set_data"
 })
 
@@ -34,8 +30,12 @@ local function make_arrows()
 end
 
 function ChangeAppearanceList:init(x, y, items)
-   self.inner = UiList:new(x, y, items, 21)
+   self.x = x
+   self.y = y
+   self.model = PagedListModel:new(items, 9)
    self.arrows = make_arrows()
+   self.item_height = 21
+   self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
 end
 
 function ChangeAppearanceList:get_item_text(item)
@@ -53,16 +53,36 @@ end
 function ChangeAppearanceList:draw_item(i, item, x, y)
    local text = self:get_item_text(item)
 
-   inner:draw_item_text(text, i, item, x, y - 1)
+   UiList.draw_item_text(self, text, i, item, x, y - 1)
 
    if item.kind then
-      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_left"], x - 30, y - 5)
-      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_right"], x + 115, y - 5)
+      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_left"], x - 30, y - 5, nil, nil, {255, 255, 255})
+      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_right"], x + 115, y - 5, nil, nil, {255, 255, 255})
    end
 end
 
+function ChangeAppearanceList:draw()
+   Draw.set_font(14) -- 14 - en * 2
+   for i, item in ipairs(self.items) do
+      if self:can_select(i) then
+         local x = self.x
+         local y = (i - 1) * self.item_height + self.y
+         self:draw_item(i, item, x, y)
+      end
+   end
+end
+
+function ChangeAppearanceList:update()
+end
+
+function ChangeAppearanceList:relayout()
+end
+
+function ChangeAppearanceList:focus()
+end
+
 function ChangeAppearanceList:can_select(i)
-   return true
+   return i ~= 10
 end
 
 function ChangeAppearanceList:bind()
