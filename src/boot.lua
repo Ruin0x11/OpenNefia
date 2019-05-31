@@ -146,6 +146,9 @@ function table.pop(tbl)
    return it
 end
 
+table.unpack = unpack
+unpack = nil
+
 mobdebug = require("mobdebug")
 mobdebug.is_running = function()
    local _, mask = debug.gethook(coroutine.running())

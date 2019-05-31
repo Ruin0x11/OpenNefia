@@ -18,8 +18,8 @@ function Input.query(ui)
    if ui.focus then ui:focus() end
 
    while true do
-      local res = ui:update(dt)
-      if res then return res end
+      local res, canceled = ui:update(dt)
+      if res or canceled then return res, canceled end
       dt = coroutine.yield()
    end
    -- internal.draw.pop_ui(ui)

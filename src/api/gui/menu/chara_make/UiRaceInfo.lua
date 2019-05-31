@@ -59,7 +59,7 @@ end
 function UiRaceInfo:draw()
    Draw.set_font(14) -- 14 - en * 2
 
-   local text = "(race description.)"
+   local text = "(race description.) " .. self.race
    Draw.text(text, self.x + 230, self.y + 62, {0, 0, 0})
 
    Ui.draw_topic("chara_make.select_race.race_info.bonus.text", self.x + 200, self.y + 166)

@@ -10,7 +10,7 @@ local IKeyInput = require("api.gui.IKeyInput")
 
 local FeatsMenu = class("FeatsMenu", ICharaMakeSection)
 
-FeatsMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
+FeatsMenu:delegate("win", {"x", "y", "width", "height"})
 FeatsMenu:delegate("keys", IKeyInput)
 
 local function trait_color(trait)
@@ -79,6 +79,7 @@ function FeatsMenu:init(chara_make)
             { text = "", kind = "feat", value = 1 },
             { text = "Feat", kind = "feat", value = 10000 },
             { text = "Trait", kind = "feat", value = 10000 },
+            { text = "Trait", kind = "feat", value = 10000 },
          },
          20))
 
@@ -87,6 +88,9 @@ function FeatsMenu:init(chara_make)
    --------------------
    self.pages.get_item_text = function(l, item)
       return item.text
+   end
+   self.pages.can_choose = function(l, i, item)
+      return item.kind == "feat"
    end
    self.pages.draw_select_key = function(l, i, item, key_name, x, y)
       if item.kind ~= "feat" then
@@ -144,6 +148,17 @@ function FeatsMenu:init(chara_make)
 
    self.keys = KeyHandler:new()
    self.keys:forward_to(self.pages)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
+end
+
+FeatsMenu.query = require("api.Input").query
+
+function FeatsMenu:relayout()
+   self.win:relayout()
+   self.pages:relayout()
+   self.win:set_pages(self.pages)
 end
 
 function FeatsMenu:get_result()
@@ -178,12 +193,18 @@ end
 function FeatsMenu:update()
    self.keys:run_actions()
 
-   self.win:update()
-   self.pages:update()
-
-   if self.pages.chosen then
+   if self.pages.changed then
+      self.win:set_pages(self.pages)
+   elseif self.pages.chosen then
       print("chosen")
    end
+
+   if self.canceled then
+      return nil, "canceled"
+   end
+
+   self.win:update()
+   self.pages:update()
 end
 
 return FeatsMenu

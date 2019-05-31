@@ -75,6 +75,7 @@ end
 local function delegate(c, field, params)
    local set = {}
 
+   if params == nil or _classes[params] then error("Invalid delegate parameter: " .. tostring(params)) end
    if _interfaces[params] or type(params) == "string" then params = {params} end
    for _, v in ipairs(params) do
       if _interfaces[v] then
@@ -114,7 +115,28 @@ function class.class(name, ifaces)
 
       local field_name = d[k]
       if field_name then
-         local field = t[field_name]
+         local going = true
+         local field = t
+         -- recurse trying to find the delegate at the very bottom of
+         -- the chain
+         while going do
+            if field_name == nil then break end
+            t = field
+            field = t[field_name]
+            if field == nil then break end
+            local cl = rawget(field, "class")
+            if cl then
+               d = rawget(cl, "_delegates")
+               if d and d[k] then
+                  field_name = d[k]
+               else
+                  going = false
+               end
+            else
+               going = false
+            end
+         end
+
          if field then
             if type(field[k]) == "function" then
                local f = field[k]
@@ -122,6 +144,7 @@ function class.class(name, ifaces)
                _memoized[k] = _memoized[k] or function(self, ...) return f(field, ...) end
                return _memoized[k]
             else
+               -- print("rawget " .. k .. " " .. tostring(field[k]) .. " " .. name .. " " .. field_name)
                return field[k]
             end
          end
@@ -130,28 +153,53 @@ function class.class(name, ifaces)
       return rawget(c, k)
    end
 
-   -- c.__newindex = function(t, k, v)
-   --    print("newindex " .. k .. " " .. tostring(v) .. " " .. name)
-   --    local d = rawget(c, "_delegates")
-   --    if not d or type(v) ~= "function" then
-   --       rawset(t, k, v)
-   --       return
-   --    end
+   c.__newindex = function(t, k, v)
+      local d = rawget(c, "_delegates")
+      if not d then
+         rawset(t, k, v)
+         return
+      end
 
-   --    local field_name = d[k]
-   --    if field_name then
-   --       local field = t[field_name]
-   --       if field then
-   --          if type(field[k]) == "function" then
-   --             print("Overwrite delegate " .. name .. " " .. k)
-   --             rawset(field, k, v)
-   --             return
-   --          end
-   --       end
-   --    end
+      local field_name = d[k]
+      if field_name then
+         local going = true
+         local field = t
+         -- recurse trying to find the delegate at the very bottom of
+         -- the chain
+         while going do
+            if field_name == nil then break end
+            t = field
+            field = t[field_name]
+            if field == nil then break end
+            local cl = rawget(field, "class")
+            if cl then
+               d = rawget(cl, "_delegates")
+               if d and d[k] then
+                  field_name = d[k]
+               else
+                  going = false
+               end
+            else
+               going = false
+            end
+         end
 
-   --    rawset(t, k, v)
-   -- end
+         if field then
+            if type(field[k]) == "function" then
+               rawset(field, k, v)
+               local f = field[k]
+               local _memoized = rawget(t, "_memoized")
+               _memoized[k] = v
+            else
+               -- print("rawset " .. k .. " " .. tostring(v) .. " " .. name .. " " .. field_name .. " " .. tostring(field))
+               rawset(field, k, v)
+            end
+            return
+         end
+      end
+
+      rawset(t, k, v)
+   end
 
    c.__verify = true
 

@@ -1,17 +1,24 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
+local IKeyInput = require("api.gui.IKeyInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
+local KeyHandler = require("api.gui.KeyHandler")
 
 local SelectGenderMenu = class("SelectGenderMenu", ICharaMakeSection)
 
-SelectGenderMenu:delegate("list", {"focus"})
-SelectGenderMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
+SelectGenderMenu:delegate("keys", IKeyInput)
+SelectGenderMenu:delegate("win", {"x", "y", "width", "height"})
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
+end
+
+SelectGenderMenu.query = require("api.Input").query
+
+function SelectGenderMenu:get_result()
 end
 
 function SelectGenderMenu:init()
@@ -22,6 +29,19 @@ function SelectGenderMenu:init()
    self.list = UiList:new(self.x + 38, self.y + 66, {"ui.gender3.male", "ui.gender3.female"})
 
    self.bg = load_cm_bg(1)
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.list)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
+
+   self.caption = "There is no difference in the genders."
+end
+
+function SelectGenderMenu:relayout()
+   self.win:relayout()
+   self.list:relayout()
 end
 
 function SelectGenderMenu:draw()
@@ -40,6 +60,14 @@ function SelectGenderMenu:draw()
 end
 
 function SelectGenderMenu:update()
+   if self.list.chosen then
+      return self.list:selected_item()
+   end
+
+   if self.canceled then
+      return nil, "canceled"
+   end
+
    self.win:update()
    self.list:update()
 end

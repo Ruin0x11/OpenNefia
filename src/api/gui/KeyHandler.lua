@@ -20,6 +20,7 @@ end
 
 function KeyHandler:forward_to(handler, keys)
    assert_is_an(IKeyInput, handler)
+   self.forwards = {}
    if type(keys) == "table" then
       local it = {}
       for _, v in ipairs(keys) do
@@ -38,6 +39,9 @@ end
 
 function KeyHandler:bind_actions(bindings)
    self.bindings = bindings
+end
+
+function KeyHandler:halt_input()
 end
 
 function KeyHandler:run_action(key)

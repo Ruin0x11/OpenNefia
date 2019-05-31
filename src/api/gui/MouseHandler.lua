@@ -18,7 +18,7 @@ function MouseHandler:receive_mouse_movement(x, y, dx, dy)
    self.movement = {x = x, y = y, dx = dx, dy = dy}
 end
 
-function MouseHandler:bind_keys(bindings)
+function MouseHandler:bind_actions(bindings)
    self.bindings = bindings
 end
 

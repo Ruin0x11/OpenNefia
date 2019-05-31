@@ -11,11 +11,15 @@ local function main_title()
    Draw.set_root(title)
 
    local going = true
+   local canceled
    while going do
       local choice = Input.query(title)
 
-      if choice == 1 then
-         going = chara_make.query()
+      if true then
+         going, canceled = chara_make.query()
+         if canceled then
+            going = false
+         end
       else
          error("no choice handler for " .. tostring(choice))
       end

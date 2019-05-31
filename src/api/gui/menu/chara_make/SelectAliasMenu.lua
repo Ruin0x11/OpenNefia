@@ -38,8 +38,14 @@ function SelectAliasMenu:init()
    self.keys:bind_actions {
       ["*"] = function()
          print("But I'm in my own. Locking!")
-      end
+      end,
+      shift = function() self.canceled = true end
    }
+end
+
+SelectAliasMenu.query = require("api.Input").query
+
+function SelectAliasMenu:get_result()
 end
 
 function SelectAliasMenu:draw()
@@ -59,12 +65,16 @@ end
 function SelectAliasMenu:update()
    self.keys:run_actions()
 
-   self.win:update()
-   self.list:update()
-
    if self.list.chosen then
       return self.list:selected_item()
    end
+
+   if self.canceled then
+      return nil, "canceled"
+   end
+
+   self.win:update()
+   self.list:update()
 end
 
 return SelectAliasMenu

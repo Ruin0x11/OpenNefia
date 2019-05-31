@@ -6,11 +6,12 @@ local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
 local KeyHandler = require("api.gui.KeyHandler")
+local IKeyInput = require("api.gui.IKeyInput")
 
 local SelectRaceMenu = class("SelectRaceMenu", ICharaMakeSection)
 
-SelectRaceMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
-SelectRaceMenu:delegate("pages", "focus")
+SelectRaceMenu:delegate("win", {"x", "y", "width", "height"})
+SelectRaceMenu:delegate("keys", IKeyInput)
 
 local function random_cm_bg()
    return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
@@ -33,6 +34,22 @@ function SelectRaceMenu:init()
 
    self.keys = KeyHandler:new()
    self.keys:forward_to(self.pages)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
+
+   self.caption = "Yaa. I've been waiting for you."
+end
+
+SelectRaceMenu.query = require("api.Input").query
+
+function SelectRaceMenu:get_result()
+end
+
+function SelectRaceMenu:relayout()
+   self.win:relayout()
+   self.pages:relayout()
+   self.win:set_pages(self.pages)
 end
 
 function SelectRaceMenu:draw()
@@ -66,7 +83,12 @@ function SelectRaceMenu:update()
       local race = self.pages:selected_item()
       self.race_info:set_data(race)
 
+      print("pages")
       self.win:set_pages(self.pages)
+   end
+
+   if self.canceled then
+      return nil, "canceled"
    end
 
    self.pages:update()

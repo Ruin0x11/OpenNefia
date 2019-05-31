@@ -51,6 +51,11 @@ function love.update(dt)
    end
 
    fps:update(dt)
+
+   if coroutine.status(loop) == "dead" then
+      print("Finished.")
+      love.event.quit()
+   end
 end
 
 function love.draw()

@@ -39,10 +39,10 @@ end
 function CharaMakeCaption:draw()
    Draw.set_font(16) -- 16 - en * 2
 
-   local step = self.width / 128 + 1
-   for i=1,step do
+   local step = self.width / 128
+   for i=0,step do
       local q
-      if i == self.width / 128 then
+      if i == self.width / 128 - 1 then
          step = self.width % 128
          q = 3
       else

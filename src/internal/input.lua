@@ -44,15 +44,28 @@ function input.set_key_handler(tbl)
    key_handler = tbl
 end
 
+local function translate_scancode(scancode)
+   if scancode == "lshift" or scancode == "rshift" then
+      return "shift"
+   elseif scancode == "lctrl" or scancode == "rctrl" then
+      return "ctrl"
+   elseif scancode == "lalt" or scancode == "ralt" then
+      return "alt"
+   elseif scancode == "lgui" or scancode == "rgui" then
+      return "ctrl"
+   end
+   return scancode
+end
+
 function input.keypressed(key, scancode, isrepeat)
    if key_handler then
-      key_handler:receive_key(scancode, true)
+      key_handler:receive_key(translate_scancode(scancode), true)
    end
 end
 
 function input.keyreleased(key, scancode)
    if key_handler then
-      key_handler:receive_key(scancode, false)
+      key_handler:receive_key(translate_scancode(scancode), false)
    end
 end
 

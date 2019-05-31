@@ -64,6 +64,9 @@ function ChangeAppearanceMenu:init()
 
    self.keys = KeyHandler:new()
    self.keys:forward_to(self.list)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -83,6 +86,10 @@ end
 
 function ChangeAppearanceMenu:update()
    self.keys:run_actions()
+
+   if self.canceled then
+      return nil, "canceled"
+   end
 
    self.win:update()
    self.preview:update()

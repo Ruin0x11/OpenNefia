@@ -4,17 +4,21 @@ local Ui = require("api.Ui")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
+local IKeyInput = require("api.gui.IKeyInput")
+local KeyHandler = require("api.gui.KeyHandler")
 
 local RollAttributesMenu = class("RollAttributesMenu", ICharaMakeSection)
 
 RollAttributesMenu:delegate("win", {"x", "y", "width", "height"})
-RollAttributesMenu:delegate("alist", "focus")
+RollAttributesMenu:delegate("keys", IKeyInput)
 
 ---------------------------------------- dupe
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 ----------------------------------------
+
+RollAttributesMenu.query = require("api.Input").query
 
 function RollAttributesMenu:init()
    self.x, self.y, self.width, self.height = Ui.params_centered(360, 352)
@@ -45,6 +49,23 @@ function RollAttributesMenu:init()
    self.alist.get_item_text = function(l, item)
       return item.text
    end
+   self.alist.on_choose = function(l, item)
+      if item.on_choose then
+         item.on_choose()
+      end
+   end
+   self.alist.draw_item = function(l, i, item, x, y)
+      UiList.draw_item(l, i, item, x, y)
+      if item.value then
+         self:draw_attribute(i, item, x, y)
+      end
+   end
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.alist)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
 
    ---------------------------------------- dupe
    self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
@@ -58,22 +79,20 @@ function RollAttributesMenu:init()
    end
    ----------------------------------------
 
-   self.win = UiWindow:new("chara_make.roll_attributes.reroll", self.x, self.y, self.width, self.height)
+   self.win = UiWindow:new("roll_attributes.title", self.x, self.y, self.width, self.height)
 
    self.bg = load_cm_bg(1)
 
-   local super = UiList.draw_item
-   self.alist.draw_item = function(l, i, item, x, y)
-      super(l, i, item, x, y)
-      if item.value then
-         self:draw_attribute(i, item, x, y)
-      end
-   end
+   self.caption = "Roll your attributes."
 
    self:reroll()
 end
 
+function RollAttributesMenu:get_result()
+end
+
 function RollAttributesMenu:reroll()
+   print("reroll")
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
          v.value = math.random(1, 15)
@@ -84,7 +103,14 @@ end
 function RollAttributesMenu:lock(attr)
    local a = table.find(self.data, function(i) return i.text == attr end)
    if not a or a.locked == nil then return end
-   a.locked = not a.locked
+   if a.locked == true then
+      a.locked = false
+      self.locks_left = self.locks_left + 1
+   else
+      if self.locks_left == 0 then return end
+      a.locked = true
+      self.locks_left = self.locks_left - 1
+   end
 end
 
 function RollAttributesMenu:draw_attribute(i, item, x, y)
@@ -95,10 +121,9 @@ function RollAttributesMenu:draw_attribute(i, item, x, y)
       Draw.image_region(self.skill_icons, quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
    end
 
-   Draw.text("123", x + 172, y, {0, 0, 0})
+   Draw.text(tostring(item.value), x + 172, y, {0, 0, 0})
 
-   local is_locked = true
-   if is_locked then
+   if item.locked == true then
       Draw.set_font(12, "bold") -- 12 - en * 2
       Draw.text("Locked!", x + 202, y + 2, {20, 20, 140})
    end
@@ -111,7 +136,7 @@ end
 
 function RollAttributesMenu:draw()
    self.win:draw()
-   Draw.image(self.bg, self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30})
+   Draw.image(self.bg, self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
 
    Draw.set_color()
    Ui.draw_topic("chara_making.roll_attributes.title", self.x + 28, self.y + 30)
@@ -127,11 +152,16 @@ end
 
 function RollAttributesMenu:update()
    if self.finished then
+      self.finished = false
       return true
    end
 
    self.win:update()
    self.alist:update()
+
+   if self.canceled then
+      return nil, "canceled"
+   end
 end
 
 return RollAttributesMenu

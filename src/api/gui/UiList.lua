@@ -19,9 +19,11 @@ UiList:delegate("model", {
                    "select_next",
                    "select_previous",
                    "can_select",
+                   "can_choose",
                    "get_item_text",
                    "set_data",
                    "choose",
+                   "on_choose",
 
                    "select_page",
                    "next_page",
@@ -58,13 +60,13 @@ function UiList:init(x, y, items, item_height, item_offset_x, item_offset_y)
          self:choose(i)
       end
    end
-   thing.up = function() print("Prev."); self:select_previous() end
-   thing.down = function() print("Next."); self:select_next() end
-   thing["return"] = function() print("I'm choosing."); self:choose() end
+   thing.up = function() self:select_previous() end
+   thing.down = function() self:select_next() end
+   thing["return"] = function() self:choose() end
 
    if is_an(IPaged, self.model) then
-      thing.left = function() print("Page Prev."); self:next_page() end
-      thing.right = function() print("Page Next."); self:previous_page() end
+      thing.left = function()  self:previous_page();print("Page Prev." .. self.page); end
+      thing.right = function()  self:next_page();print("Page Next." .. self.page); end
    end
 
    self.keys = KeyHandler:new()
@@ -76,6 +78,8 @@ function UiList:new_paged(x, y, items, page_max, item_height, item_offset_x, ite
 end
 
 function UiList:relayout()
+   self.changed = false
+   self.chosen = false
 end
 
 function UiList:draw_select_key(i, item, key_name, x, y)
@@ -120,9 +124,10 @@ function UiList:draw()
 end
 
 function UiList:update()
-   self.keys:run_actions()
-
    self.changed = false
+   self.chosen = false
+
+   self.keys:run_actions()
 end
 
 return UiList

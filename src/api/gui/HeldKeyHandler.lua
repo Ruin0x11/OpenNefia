@@ -27,7 +27,7 @@ function HeldKeyHandler:receive_key(key, pressed)
    table.insert(self.queue, { key = key, pressed = pressed })
 end
 
-function HeldKeyHandler:bind_keys(bindings)
+function HeldKeyHandler:bind_actions(bindings)
    self.bindings = bindings
 end
 

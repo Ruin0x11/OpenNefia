@@ -13,7 +13,7 @@ function ListModel:set_data(items)
 end
 
 function ListModel:select(i)
-   if not self:can_select(i) then return end
+   if not self:can_select(i, self.items[i]) then return end
 
    self.changed = self.selected ~= i
 
@@ -44,13 +44,24 @@ function ListModel:get_item_text(item)
    return item
 end
 
-function ListModel:can_select(i)
+function ListModel:can_select(i, item)
+   return true
+end
+
+function ListModel:can_choose(i, item)
    return true
 end
 
 function ListModel:choose(i)
+   i = i or self.selected
+   if i < 1 or i > #self.items then return end
+   if not self:can_choose(i, self.items[i]) then return end
    self:select(i)
    self.chosen = true
+   self:on_choose(self:selected_item())
+end
+
+function ListModel:on_choose(item)
 end
 
 return ListModel

@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local ISettable = require("api.gui.ISettable")
+local IKeyInput = require("api.gui.IKeyInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
@@ -12,48 +12,62 @@ local Prompt = require("api.gui.Prompt")
 
 local CharaMakeWrapper = class("CharaMakeWrapper", IUiLayer)
 
-CharaMakeWrapper:delegate("submenu", {"focus", "bind"})
+CharaMakeWrapper:delegate("keys", IKeyInput)
 
-function CharaMakeWrapper:init(submenu)
+function CharaMakeWrapper:init(menus)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
    self.height = Draw.get_height()
-   self.submenu = submenu
+   self.menus = menus
    self.trail = {}
    self.results = {}
    self.gene_used = "gene"
 
-   self.bg = Draw.load_image("graphic/void.bmp")
+   self.bg = Draw.load_image("graphic/core/void.png")
    self.caption = CharaMakeCaption:new(20, 30, "")
 
    self.keys = KeyHandler:new()
 
-   self:proceed(submenu)
+   self:proceed()
 end
 
-function CharaMakeWrapper:proceed(submenu)
+CharaMakeWrapper.query = require("api.Input").query
+
+function CharaMakeWrapper:proceed()
    if self.submenu then
       table.push(self.trail, self.submenu)
    end
 
-   self.submenu = submenu
+   local menu_id = self.menus[#self.trail+1]
+   local success, class, err = pcall(function() return require(menu_id) end)
+
+   if not success or class == nil then
+      if not success then
+         error("Error loading menu " .. menu_id .. ": \n\t" .. class)
+      else
+         error("Cannot find menu " .. menu_id)
+      end
+   end
+
+   self.submenu = class:new()
+   assert_is_an(ICharaMakeSection, self.submenu)
 
    self.caption.caption = self.submenu.caption
-   self.caption:relayout()
 
-   assert_is_an(ICharaMakeSection, self.submenu)
+   self:relayout()
 
    self.keys:forward_to(self.submenu)
 end
 
 function CharaMakeWrapper:go_back()
-   if #self.trail <= 1 then return end
+   if #self.trail == 0 then return end
 
    self.submenu = table.pop(self.trail)
 
    self.caption.caption = self.submenu.caption
-   self.caption:relayout()
+
+   self:relayout()
 
    self.keys:forward_to(self.submenu)
 end
@@ -100,16 +114,24 @@ end
 function CharaMakeWrapper:update()
    self.keys:run_actions()
 
-   local result = self.submenu:update()
-   if result then
+   local result, canceled = self.submenu:update()
+   if canceled then
+      if #self.trail == 0 then
+         print("cancel")
+         return nil, "canceled"
+      else
+         print("goback")
+         self:go_back()
+      end
+   elseif result then
       self.results[self.submenu.name] = result
-   end
 
-   local has_next = true
-   if has_next then
-      self:proceed()
-   else
-      local final = self:final_query()
+      local has_next = true
+      if has_next then
+         self:proceed()
+      else
+         local final = self:final_query()
+      end
    end
 end
 

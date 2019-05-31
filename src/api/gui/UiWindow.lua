@@ -95,7 +95,7 @@ function UiWindow:draw()
    Draw.set_font(12) -- 12 + sizefix - en * 2
    Draw.text(self.key_help, x + 58 + x_offset, y + height - 43 - height % 8)
 
-   if self.page > 0 and self.page_max > 0 then
+   if self.page_max > 0 then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local page_str = "Page." .. tostring(self.page + 1) .. "/" .. tostring(self.page_max + 1)
       Draw.text(page_str, x + width - Draw.text_width(page_str) - 40 - y_offset, y + height - 65 - height % 8)
@@ -104,6 +104,7 @@ end
 
 function UiWindow:set_pages(pages)
    assert_is_an(IPaged, pages)
+   print(pages.page)
    self.page = pages.page
    self.page_max = pages.page_max
 end

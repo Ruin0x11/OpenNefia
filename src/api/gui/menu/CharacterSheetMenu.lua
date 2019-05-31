@@ -57,6 +57,9 @@ function CharacterSheetMenu:init(behavior)
 
    self.keys = KeyHandler:new()
    self.keys:forward_to(self.buff_list)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
 
    self.caption = "Summary."
 end
@@ -294,6 +297,10 @@ end
 
 function CharacterSheetMenu:update()
    self.keys:run_actions()
+
+   if self.canceled then
+      return nil, "canceled"
+   end
 
    self.topic_win:update()
    self.buff_list:update()

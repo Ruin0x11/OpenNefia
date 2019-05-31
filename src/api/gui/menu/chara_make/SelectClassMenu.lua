@@ -6,14 +6,15 @@ local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
 local KeyHandler = require("api.gui.KeyHandler")
+local IKeyInput = require("api.gui.IKeyInput")
 
 local SelectClassMenu = class("SelectClassMenu", ICharaMakeSection)
 
-SelectClassMenu:delegate("keys", "focus")
-SelectClassMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
+SelectClassMenu:delegate("keys", IKeyInput)
+SelectClassMenu:delegate("win", {"x", "y", "width", "height"})
 
 local function random_cm_bg()
-   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
+   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4)))
 end
 
 function SelectClassMenu:init(race)
@@ -24,7 +25,7 @@ function SelectClassMenu:init(race)
    self.x, self.y, self.width, self.height = Ui.params_centered(680, 500)
    self.y = self.y + 20
 
-   self.win = UiWindow:new("chara_make.select_class.title", self.x, self.y, self.width, self.height)
+   self.win = UiWindow:new("select_class.title", self.x, self.y, self.width, self.height)
    self.pages = UiList:new_paged(self.x + 38, self.y + 66, classes, 16)
    self.bg = random_cm_bg()
 
@@ -35,6 +36,22 @@ function SelectClassMenu:init(race)
 
    self.keys = KeyHandler:new()
    self.keys:forward_to(self.pages)
+   self.keys:bind_actions {
+      shift = function() self.canceled = true end
+   }
+
+   self.caption = "Choose a class."
+end
+
+SelectClassMenu.query = require("api.Input").query
+
+function SelectClassMenu:get_result()
+end
+
+function SelectClassMenu:relayout()
+   self.win:relayout()
+   self.pages:relayout()
+   self.win:set_pages(self.pages)
 end
 
 function SelectClassMenu:draw()
@@ -48,8 +65,8 @@ function SelectClassMenu:draw()
               true)
 
    Draw.set_color()
-   Ui.draw_topic("chara_make.select_class.race", self.x + 28, self.y + 30)
-   Ui.draw_topic("chara_make.select_class.detail", self.x + 188, self.y + 30)
+   Ui.draw_topic("race", self.x + 28, self.y + 30)
+   Ui.draw_topic("detail", self.x + 188, self.y + 30)
 
    self.pages:draw()
 
@@ -58,15 +75,13 @@ function SelectClassMenu:draw()
    Draw.image(self.chip_female, self.x + 350, self.y - self.chip_female:getHeight() + 60)
 
    Draw.set_color(0, 0, 0)
-   Draw.text("chara_making.select_race.race_info.race" .. ": " .. self.race, self.x + 460, self.y + 38)
+   Draw.text("race" .. ": " .. self.race, self.x + 460, self.y + 38)
 
    self.race_info:draw()
 end
 
 function SelectClassMenu:update()
    self.keys:run_actions()
-
-   self.win:update()
 
    if self.pages.chosen then
       return self.pages:selected_item()
@@ -77,10 +92,11 @@ function SelectClassMenu:update()
       self.win:set_pages(self.pages)
    end
 
+   self.win:update()
    self.pages:update()
 
-   if self.pages.chosen then
-      return self.pages:selected_item()
+   if self.canceled then
+      return nil, "canceled"
    end
 end
 
