@@ -64,8 +64,6 @@ function UiBuffList:draw()
 end
 
 function UiBuffList:update()
-   self.keys:run_actions()
-
    self.list:update()
 end
 

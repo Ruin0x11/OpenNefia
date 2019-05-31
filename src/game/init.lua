@@ -7,8 +7,7 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
-   local title = require("api.gui.Prompt"):new({"ああ", "いや…"})
-   Draw.set_root(title)
+   local title = require("api.gui.menu.chara_make.SelectBalanceMenu"):new({"ああ", "いや…"})
 
    local going = true
    local canceled
@@ -36,7 +35,7 @@ function game.draw()
    local going = true
 
    while going do
-      internal.draw.draw_root()
+      internal.draw.draw_layers()
 
       going = coroutine.yield()
    end

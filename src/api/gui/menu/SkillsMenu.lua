@@ -156,8 +156,6 @@ function SkillsMenu:draw()
 end
 
 function SkillsMenu:update()
-   self.keys:run_actions()
-
    self.pages:update()
 end
 

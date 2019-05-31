@@ -296,8 +296,6 @@ function CharacterSheetMenu:draw()
 end
 
 function CharacterSheetMenu:update()
-   self.keys:run_actions()
-
    if self.canceled then
       return nil, "canceled"
    end

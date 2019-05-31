@@ -40,11 +40,12 @@ function CharaMakeWrapper:proceed()
    end
 
    local menu_id = self.menus[#self.trail+1]
-   local success, class, err = pcall(function() return require(menu_id) end)
+   local success, class = pcall(function() return require(menu_id) end)
 
    if not success or class == nil then
       if not success then
-         error("Error loading menu " .. menu_id .. ": \n\t" .. class)
+         local err = class
+         error("Error loading menu " .. menu_id .. ":\n\t" .. err)
       else
          error("Cannot find menu " .. menu_id)
       end
@@ -112,8 +113,6 @@ function CharaMakeWrapper:final_query()
 end
 
 function CharaMakeWrapper:update()
-   self.keys:run_actions()
-
    local result, canceled = self.submenu:update()
    if canceled then
       if #self.trail == 0 then

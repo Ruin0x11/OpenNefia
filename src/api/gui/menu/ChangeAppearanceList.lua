@@ -79,7 +79,6 @@ function ChangeAppearanceList:draw()
 end
 
 function ChangeAppearanceList:update()
-   self.keys:run_actions()
 end
 
 function ChangeAppearanceList:relayout()

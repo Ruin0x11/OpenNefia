@@ -3,6 +3,7 @@ local I18N = require("api.I18N")
 local Input = require("api.Input")
 local IUiList = require("api.gui.IUiList")
 local ListModel = require("api.gui.ListModel")
+local IKeyInput = require("api.gui.IKeyInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local IList = require("api.gui.IList")
 local IPaged = require("api.gui.IPaged")
@@ -32,7 +33,7 @@ UiList:delegate("model", {
                    "page_max",
                    "page_size",
 })
-UiList:delegate("keys", {"focus", "receive_key", "forward_to", "run_action"})
+UiList:delegate("keys", IKeyInput)
 
 local keys = "abcdefghijklmnopqr"
 
@@ -126,8 +127,6 @@ end
 function UiList:update()
    self.changed = false
    self.chosen = false
-
-   self.keys:run_actions()
 end
 
 return UiList

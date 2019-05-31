@@ -1,5 +1,7 @@
 local draw = {}
 
+local IUiLayer = require("api.gui.IUiLayer")
+
 local width = 800
 local height = 600
 
@@ -54,20 +56,28 @@ function draw.draw_end()
    love.graphics.setBlendMode("alpha")
 end
 
-local root = nil
+local layers = {}
 function draw.set_root(ui_layer)
-   -- checks(ui_layer, UiLayer)
-   root = ui_layer
-   root:relayout()
-   if root then root:focus() end
+   assert_is_an(IUiLayer, ui_layer)
+   layers = {ui_layer}
+   ui_layer:relayout()
 end
 
-function draw.update_root(dt)
-   if root then root:update(dt) end
+function draw.push_layer(ui_layer)
+   assert_is_an(IUiLayer, ui_layer)
+   table.push(layers, ui_layer)
+   ui_layer:relayout()
 end
 
-function draw.draw_root()
-   if root then root:draw() end
+function draw.push_pop(ui_layer)
+   assert_is_an(IUiLayer, ui_layer)
+   table.pop(layers)
+end
+
+function draw.draw_layers()
+   for _, layer in ipairs(layers) do
+      layer:draw()
+   end
 end
 
 --

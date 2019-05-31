@@ -81,11 +81,9 @@ function SelectClassMenu:draw()
 end
 
 function SelectClassMenu:update()
-   self.keys:run_actions()
-
    if self.pages.chosen then
       return self.pages:selected_item()
-   elseif self.pages.changed then
+   elseif self.pages.changed then -- TODO remove
       local class = self.pages:selected_item()
       self.race_info:set_data(class)
 

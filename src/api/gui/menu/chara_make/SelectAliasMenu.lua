@@ -63,8 +63,6 @@ function SelectAliasMenu:draw()
 end
 
 function SelectAliasMenu:update()
-   self.keys:run_actions()
-
    if self.list.chosen then
       return self.list:selected_item()
    end

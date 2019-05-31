@@ -1,6 +1,8 @@
 local input = require("internal.input")
 local IUiLayer = require("api.gui.IUiLayer")
 
+local internal = require("internal")
+
 local Input = {}
 
 Input.set_key_handler = input.set_key_handler
@@ -13,16 +15,18 @@ function Input.query(ui)
 
    local dt = 0
 
-   -- internal.draw.push_ui(ui)
+   internal.draw.push_layer(ui)
 
-   if ui.focus then ui:focus() end
+   ui:focus()
 
    while true do
+      ui:run_actions()
       local res, canceled = ui:update(dt)
       if res or canceled then return res, canceled end
       dt = coroutine.yield()
    end
-   -- internal.draw.pop_ui(ui)
+
+   internal.draw.pop_layer()
 end
 
 return Input

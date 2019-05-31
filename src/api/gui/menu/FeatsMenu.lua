@@ -191,8 +191,6 @@ function FeatsMenu:draw()
 end
 
 function FeatsMenu:update()
-   self.keys:run_actions()
-
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then

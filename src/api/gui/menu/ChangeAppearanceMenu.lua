@@ -85,8 +85,6 @@ function ChangeAppearanceMenu:draw()
 end
 
 function ChangeAppearanceMenu:update()
-   self.keys:run_actions()
-
    if self.canceled then
       return nil, "canceled"
    end
