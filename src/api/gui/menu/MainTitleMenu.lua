@@ -2,12 +2,15 @@ local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
+local IKeyInput = require("api.gui.IKeyInput")
+local IMouseInput = require("api.gui.IMouseInput")
+local InputHandler = require("api.gui.InputHandler")
 
 local IUiLayer = require("api.gui.IUiLayer")
 
-local MainTitleMenu = class("MainTitleMenu", {IUiLayer})
+local MainTitleMenu = class("MainTitleMenu", IUiLayer)
 
-MainTitleMenu:delegate("list", "focus")
+MainTitleMenu:delegate("input", {IKeyInput, IMouseInput})
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
@@ -40,7 +43,12 @@ function MainTitleMenu:init()
                              "Mods",
                              "Exit"
    })
+
+   self.input = InputHandler:new()
+   self.input.keys:forward_to(self.list)
 end
+
+MainTitleMenu.query = require("api.Input").query
 
 function MainTitleMenu:relayout()
    self.win:relayout()
@@ -77,12 +85,14 @@ end
 
 function MainTitleMenu:update(dt)
    self.t = self.t + dt
+
+   if self.list.chosen then
+      return self.list.selected
+   end
+
    self.win:update()
    self.list:update()
 
-   if self.list.chosen then
-      return self.list:selected_item()
-   end
 end
 
 return MainTitleMenu

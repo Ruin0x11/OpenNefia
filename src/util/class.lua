@@ -108,6 +108,8 @@ function class.class(name, ifaces)
    c._delegates = {}
    c._memoized = setmetatable({}, { __mode = "v" })
    c.__index = function(t, k)
+      local i = c[k]
+      if i then return i end
       local d = rawget(c, "_delegates")
       if not d then
          return rawget(c, k)

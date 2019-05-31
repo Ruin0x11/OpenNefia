@@ -7,20 +7,19 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
-   local title = require("api.gui.menu.chara_make.SelectBalanceMenu"):new({"ああ", "いや…"})
+   local title = require("api.gui.menu.MainTitleMenu"):new()
 
    local going = true
-   local canceled
    while going do
       local choice = Input.query(title)
 
-      if true then
-         going, canceled = chara_make.query()
-         if canceled then
+      if choice == 2 then
+         local _, canceled = chara_make.query()
+         if not canceled then
             going = false
          end
-      else
-         error("no choice handler for " .. tostring(choice))
+      elseif choice == 7 then
+         going = false
       end
    end
 
