@@ -1,5 +1,3 @@
-package.path = package.path .. ";./thirdparty/?.lua"
-
 require("boot")
 
 local Draw = require("api.Draw")
@@ -33,13 +31,6 @@ function love.load(arg)
 
    loop = coroutine.create(game.loop)
    draw = coroutine.create(game.draw)
-
-   internal.input.set_mouse_handler {
-      moved = function(x, y)
-         mx = x
-         my = y
-      end
-   }
 end
 
 function love.update(dt)

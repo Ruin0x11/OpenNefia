@@ -1,14 +1,14 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
 
-local RollAttributesMenu = class("RollAttributesMenu", IUiLayer)
+local RollAttributesMenu = class("RollAttributesMenu", ICharaMakeSection)
 
 RollAttributesMenu:delegate("win", {"x", "y", "width", "height"})
-RollAttributesMenu:delegate("alist", {"focus", "bind"})
+RollAttributesMenu:delegate("alist", "focus")
 
 ---------------------------------------- dupe
 local function load_cm_bg(id)
@@ -102,12 +102,6 @@ function RollAttributesMenu:draw_attribute(i, item, x, y)
       Draw.set_font(12, "bold") -- 12 - en * 2
       Draw.text("Locked!", x + 202, y + 2, {20, 20, 140})
    end
-end
-
-function RollAttributesMenu:restore(data)
-   self.locks_left = data.locks_left
-   self.locks = data.locks
-   self.finished = false
 end
 
 function RollAttributesMenu:relayout()

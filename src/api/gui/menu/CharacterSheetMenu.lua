@@ -1,13 +1,16 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
 local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
+local KeyHandler = require("api.gui.KeyHandler")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 
-local CharacterSheetMenu = class("CharacterSheetMenu", IUiLayer)
+local CharacterSheetMenu = class("CharacterSheetMenu", ICharaMakeSection)
+
+CharacterSheetMenu:delegate("keys", "focus")
 
 local function potential_string(pot)
    if pot >= 200 then
@@ -51,6 +54,16 @@ function CharacterSheetMenu:init(behavior)
       self.quad[s] = love.graphics.newQuad(i * 48, 0, 48, 48, iw, ih)
    end
    --------------------
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.buff_list)
+
+   self.caption = "Summary."
+end
+
+CharacterSheetMenu.query = require("api.Input").query
+
+function CharacterSheetMenu:get_result()
 end
 
 function CharacterSheetMenu:text_level()
@@ -89,7 +102,6 @@ function CharacterSheetMenu:text_name()
                      {"name", "aka", "race", "sex", "class", "age", "height", "weight"},
                      {20, 10, 0},
                      4, 4)
-   text = {name, title, race, gender, class, age, height, weight}
    self.texts["name_val"] =
       UiTextGroup:new(self.x + 68, -- + en * ((i > 3) * 12)
                      self.y + 60,
@@ -171,12 +183,6 @@ function CharacterSheetMenu:relayout()
    self:text_time()
    self:text_weight()
    self:text_fame()
-end
-
-function CharacterSheetMenu:focus()
-end
-
-function CharacterSheetMenu:bind()
 end
 
 function CharacterSheetMenu:draw_text()
@@ -287,6 +293,8 @@ function CharacterSheetMenu:draw()
 end
 
 function CharacterSheetMenu:update()
+   self.keys:run_actions()
+
    self.topic_win:update()
    self.buff_list:update()
 end

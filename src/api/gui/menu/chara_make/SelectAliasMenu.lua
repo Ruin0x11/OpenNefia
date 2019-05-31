@@ -1,14 +1,15 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
+local KeyHandler = require("api.gui.KeyHandler")
 
 local SelectAliasMenu = class("SelectAliasMenu", IUiLayer)
 
 SelectAliasMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
-SelectAliasMenu:delegate("list", {"focus", "bind"})
+SelectAliasMenu:delegate("keys", "focus")
 
 local function random_cm_bg()
    return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
@@ -31,9 +32,14 @@ function SelectAliasMenu:init()
          Draw.text("Locked!", x + 216, y + 2, {20, 20, 140})
       end
    end
-end
 
-function SelectAliasMenu:restore(data)
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.list)
+   self.keys:bind_actions {
+      ["*"] = function()
+         print("But I'm in my own. Locking!")
+      end
+   }
 end
 
 function SelectAliasMenu:draw()
@@ -51,8 +57,14 @@ function SelectAliasMenu:draw()
 end
 
 function SelectAliasMenu:update()
+   self.keys:run_actions()
+
    self.win:update()
    self.list:update()
+
+   if self.list.chosen then
+      return self.list:selected_item()
+   end
 end
 
 return SelectAliasMenu

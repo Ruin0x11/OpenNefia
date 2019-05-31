@@ -7,8 +7,7 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
-   local title = require("api.gui.menu.CharacterSheetMenu"):new()
-   internal.input.set_keyrepeat(true)
+   local title = require("api.gui.Prompt"):new({"ああ", "いや…"})
    Draw.set_root(title)
 
    local going = true
@@ -18,7 +17,7 @@ local function main_title()
       if choice == 1 then
          going = chara_make.query()
       else
-         error("no choice handler " .. tostring(choice))
+         error("no choice handler for " .. tostring(choice))
       end
    end
 

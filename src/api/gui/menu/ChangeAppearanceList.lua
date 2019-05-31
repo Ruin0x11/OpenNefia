@@ -1,8 +1,10 @@
 local Draw = require("api.Draw")
 local IUiList = require("api.gui.IUiList")
 local UiList = require("api.gui.UiList")
-local UiPagedList = require("api.gui.UiPagedList")
+local UiList = require("api.gui.UiList")
 local PagedListModel = require("api.gui.PagedListModel")
+local IKeyInput = require("api.gui.IKeyInput")
+local KeyHandler = require("api.gui.KeyHandler")
 
 local ChangeAppearanceList = class("ChangeAppearanceList", IUiList)
 
@@ -14,8 +16,11 @@ ChangeAppearanceList:delegate("model", {
                          "select",
                          "select_next",
                          "select_previous",
-                         "set_data"
+                         "set_data",
+                         "chosen"
 })
+
+ChangeAppearanceList:delegate("keys", IKeyInput)
 
 local function make_arrows()
    local image = Draw.load_image("graphic/temp/arrows.bmp")
@@ -36,6 +41,7 @@ function ChangeAppearanceList:init(x, y, items)
    self.arrows = make_arrows()
    self.item_height = 21
    self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
+   self.keys = KeyHandler:new()
 end
 
 function ChangeAppearanceList:get_item_text(item)
@@ -73,12 +79,10 @@ function ChangeAppearanceList:draw()
 end
 
 function ChangeAppearanceList:update()
+   self.keys:run_actions()
 end
 
 function ChangeAppearanceList:relayout()
-end
-
-function ChangeAppearanceList:focus()
 end
 
 function ChangeAppearanceList:can_select(i)

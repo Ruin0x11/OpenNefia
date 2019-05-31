@@ -1,15 +1,17 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
-local UiPagedList = require("api.gui.UiPagedList")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
+local KeyHandler = require("api.gui.KeyHandler")
+local IKeyInput = require("api.gui.IKeyInput")
 
-local FeatsMenu = class("FeatsMenu", IUiLayer)
+local FeatsMenu = class("FeatsMenu", ICharaMakeSection)
 
 FeatsMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
-FeatsMenu:delegate("pages", {"focus", "bind"})
+FeatsMenu:delegate("keys", IKeyInput)
 
 local function trait_color(trait)
    if true then
@@ -80,7 +82,7 @@ function FeatsMenu:init(chara_make)
          },
          20))
 
-   self.pages = UiPagedList:new(self.x + 58, self.y + 66, self.data, 15)
+   self.pages = UiList:new_paged(self.x + 58, self.y + 66, self.data, 15)
 
    --------------------
    self.pages.get_item_text = function(l, item)
@@ -137,6 +139,15 @@ function FeatsMenu:init(chara_make)
       end
    end
    --------------------
+
+   self.caption = "Your caption here."
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.pages)
+end
+
+function FeatsMenu:get_result()
+   return {}
 end
 
 function FeatsMenu:draw()
@@ -156,7 +167,7 @@ function FeatsMenu:draw()
    local is_player = true
    local text
    if is_player then
-      text = "ui.feat.you_can_aquire" .. " " .. tostring(5)
+      text = "ui.feat.you_can_acquire" .. " " .. tostring(5)
    else
       text = "ui.feat.your_trait" .. " " .. "name"
    end
@@ -165,8 +176,14 @@ function FeatsMenu:draw()
 end
 
 function FeatsMenu:update()
+   self.keys:run_actions()
+
    self.win:update()
    self.pages:update()
+
+   if self.pages.chosen then
+      print("chosen")
+   end
 end
 
 return FeatsMenu

@@ -1,17 +1,18 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
-local UiPagedList = require("api.gui.UiPagedList")
 local TopicWindow = require("api.gui.TopicWindow")
 local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
 local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
+local KeyHandler = require("api.gui.KeyHandler")
 
-local ChangeAppearanceMenu = class("ChangeAppearanceMenu", IUiLayer)
+local ChangeAppearanceMenu = class("ChangeAppearanceMenu", ICharaMakeSection)
 
 ChangeAppearanceMenu:delegate("win", {"x", "y", "width", "height"})
-ChangeAppearanceMenu:delegate("list", {"focus", "bind"})
+ChangeAppearanceMenu:delegate("list", "focus")
+ChangeAppearanceMenu:delegate("keys", {"receive_key", "run_action", "forward_to"})
 
 local function make_deco()
    local image = Draw.load_image("graphic/deco_mirror.bmp")
@@ -58,6 +59,11 @@ function ChangeAppearanceMenu:init()
    end
 
    self.preview = ChangeAppearancePreview:new(self.x + 234, self.y + 71)
+
+   self.caption = "Change appearance."
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.list)
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -76,6 +82,8 @@ function ChangeAppearanceMenu:draw()
 end
 
 function ChangeAppearanceMenu:update()
+   self.keys:run_actions()
+
    self.win:update()
    self.preview:update()
    self.list:update()

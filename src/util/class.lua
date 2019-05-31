@@ -34,6 +34,9 @@ function class.interface(name, reqs, parents)
 
    if parents then
       if _interfaces[parents] then parents = {parents} end
+      if parents[1] == nil then
+         error("Parent interface list must be a list")
+      end
       for _, p in ipairs(parents) do
          if not _interfaces[p] then
             error(string.format("%s must be an interface", tostring(p)))
@@ -71,8 +74,15 @@ end
 
 local function delegate(c, field, params)
    local set = {}
-   if type(params) == "string" then params = {params} end
+
+   if _interfaces[params] or type(params) == "string" then params = {params} end
    for _, v in ipairs(params) do
+      if _interfaces[v] then
+         for r, _ in pairs(v.reqs) do
+            c._delegates[r] = field
+         end
+      end
+
       c._delegates[v] = field
    end
 end

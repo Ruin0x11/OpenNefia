@@ -35,6 +35,7 @@ function draw.init()
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
+   love.graphics.setBlendMode("alpha")
 end
 
 function draw.draw()
@@ -249,6 +250,7 @@ end
 
 function draw.debug_pos(x, y)
    draw.set_color(255, 0, 0)
+   draw.set_font(11)
    draw.text(string.format("%d/%d", x, y), x, y)
    draw.filled_rect(x - 4, y - 4, 8, 8)
 end

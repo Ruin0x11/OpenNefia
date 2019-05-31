@@ -1,16 +1,16 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
-local UiPagedList = require("api.gui.UiPagedList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
+local KeyHandler = require("api.gui.KeyHandler")
 
-local SelectRaceMenu = class("SelectRaceMenu", IUiLayer)
+local SelectRaceMenu = class("SelectRaceMenu", ICharaMakeSection)
 
 SelectRaceMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
-SelectRaceMenu:delegate("pages", {"focus", "bind"})
+SelectRaceMenu:delegate("pages", "focus")
 
 local function random_cm_bg()
    return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
@@ -23,13 +23,16 @@ function SelectRaceMenu:init()
    self.y = self.y + 20
 
    self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height)
-   self.pages = UiPagedList:new(self.x + 38, self.y + 66, races, 16)
+   self.pages = UiList:new_paged(self.x + 38, self.y + 66, races, 16)
    self.bg = random_cm_bg()
 
    self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
    self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.race_info = UiRaceInfo:new(self.x, self.y, races[1])
+
+   self.keys = KeyHandler:new()
+   self.keys:forward_to(self.pages)
 end
 
 function SelectRaceMenu:draw()

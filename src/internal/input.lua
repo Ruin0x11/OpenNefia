@@ -1,9 +1,14 @@
+local IMouseInput = require("api.gui.IMouseInput")
+local IKeyInput = require("api.gui.IKeyInput")
+
 local input = {}
 
-local default_mouse_handler = {}
-local mouse_handler = default_mouse_handler
+local mouse_handler = nil
 
 function input.set_mouse_handler(tbl)
+   if tbl ~= nil then
+      assert_is_an(IMouseInput, tbl)
+   end
    mouse_handler = tbl
 end
 
@@ -12,59 +17,42 @@ function input.reset_mouse_handler()
 end
 
 function input.mousemoved(x, y, dx, dy, istouch)
-   if not mouse_handler then return end
-
-   local func = mouse_handler["moved"]
-   if func then
-      func(x, y, dx, dy, istouch)
+   if mouse_handler then
+      mouse_handler:receive_mouse_movement(x, y, dx, dy)
    end
 end
 
 function input.mousepressed(x, y, button, istouch)
-   if not mouse_handler then return end
-
-   local func = mouse_handler[button]
-   if func then
-      func(x, y, true, istouch)
+   if mouse_handler then
+      mouse_handler:receive_mouse_button(x, y, button, true)
    end
 end
 
 function input.mousereleased(x, y, button, istouch)
-   if not mouse_handler then return end
-
-   local func = mouse_handler[button]
-   if func then
-      func(x, y, false, istouch)
+   if mouse_handler then
+      mouse_handler:receive_mouse_button(x, y, button, false)
    end
 end
 
 
-local default_key_handler = {}
-local key_handler = default_key_handler
+local key_handler = nil
 
 function input.set_key_handler(tbl)
+   if tbl ~= nil then
+      assert_is_an(IKeyInput, tbl)
+   end
    key_handler = tbl
 end
 
-function input.reset_key_handler()
-   key_handler = default_key_handler
-end
-
-function input.keypressed(key)
-   if not key_handler then return end
-
-   local func = key_handler[key]
-   if func then
-      func(true)
+function input.keypressed(key, scancode, isrepeat)
+   if key_handler then
+      key_handler:receive_key(scancode, true)
    end
 end
 
-function input.keyreleased(key)
-   if not key_handler then return end
-
-   local func = key_handler[key]
-   if func then
-      func(false)
+function input.keyreleased(key, scancode)
+   if key_handler then
+      key_handler:receive_key(scancode, false)
    end
 end
 

@@ -4,6 +4,7 @@ return interface("IList",
                  {
                     changed = "boolean",
                     selected = "number",
+                    chosen = "boolean",
                     items = "table",
                     selected_item = "function",
                     select = "function",

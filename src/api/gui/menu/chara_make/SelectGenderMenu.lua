@@ -1,11 +1,11 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IUiLayer = require("api.gui.IUiLayer")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 
-local SelectGenderMenu = class("SelectGenderMenu", IUiLayer)
+local SelectGenderMenu = class("SelectGenderMenu", ICharaMakeSection)
 
 SelectGenderMenu:delegate("list", {"focus"})
 SelectGenderMenu:delegate("win", {"x", "y", "width", "height", "relayout"})
