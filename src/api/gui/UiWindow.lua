@@ -104,7 +104,6 @@ end
 
 function UiWindow:set_pages(pages)
    assert_is_an(IPaged, pages)
-   print(pages.page)
    self.page = pages.page
    self.page_max = pages.page_max
 end

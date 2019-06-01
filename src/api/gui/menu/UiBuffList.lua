@@ -1,12 +1,12 @@
 local Draw = require("api.Draw")
 local IUiList = require("api.gui.IUiList")
-local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
+local ListModel = require("api.gui.ListModel")
 
 local UiBuffList = class("UiBuffList", IUiList)
 
-UiBuffList:delegate("list", {
+UiBuffList:delegate("model", {
                        "items",
                        "changed",
                        "selected",
@@ -26,7 +26,7 @@ UiBuffList:delegate("list", {
 UiBuffList:delegate("input", IInput)
 
 function UiBuffList:init()
-   self.list = UiList:new(table.of("buff", 13))
+   self.model = ListModel:new(table.of("buff", 13))
    self.rows = 3
    self.columns = 3
    self.item_width = 32
@@ -40,13 +40,15 @@ function UiBuffList:init()
    end
 
    self.input = InputHandler:new()
-   self.input:forward_to(self.list, {"up", "down"})
+   self.input:bind_keys {
+      up = function() self:select_previous() end,
+      down = function() self:select_next() end,
+   }
 end
 
 function UiBuffList:relayout(x, y)
    self.x = x
    self.y = y
-   self.list:relayout(self.x, self.y)
 end
 
 function UiBuffList:draw_item(item, i, x, y)
@@ -70,7 +72,6 @@ function UiBuffList:draw()
 end
 
 function UiBuffList:update()
-   self.list:update()
 end
 
 function UiBuffList:get_hint()
