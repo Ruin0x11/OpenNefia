@@ -24,6 +24,7 @@ UiList:delegate("model", {
                    "set_data",
                    "choose",
                    "on_choose",
+                   "on_select",
 
                    "select_page",
                    "next_page",

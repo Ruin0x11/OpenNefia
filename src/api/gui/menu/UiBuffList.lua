@@ -20,7 +20,8 @@ UiBuffList:delegate("model", {
                        "get_item_text",
                        "chosen",
                        "on_choose",
-                       "can_choose"
+                       "can_choose",
+                       "on_select"
 })
 
 UiBuffList:delegate("input", IInput)

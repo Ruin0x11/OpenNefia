@@ -25,6 +25,16 @@ local function make_deco()
    return { image = image, quad = quad }
 end
 
+ChangeAppearanceListExt = function(change_appearance_menu)
+   local E = {}
+
+   function E:on_select(item)
+      change_appearance_menu.preview.show_portrait = item.type == "portrait"
+   end
+
+   return E
+end
+
 function ChangeAppearanceMenu:init()
    self.width = 380
    self.height = 340
@@ -32,33 +42,11 @@ function ChangeAppearanceMenu:init()
    self.deco = make_deco()
    self.win = UiWindow:new("appearance", true, "key_help")
 
-   local data = {
-        { category = "done" },
-        { category = "portrait", value = 10, kind = "number" },
-        { category = "hair", value = 10, kind = "number" },
-        { category = "sub_hair", value = 10, kind = "number" },
-        { category = "hair_color", value = 10, kind = "number" },
-        { category = "body", value = 10, kind = "number" },
-        { category = "cloth", value = 10, kind = "number" },
-        { category = "pants", value = 10, kind = "number" },
-        { category = "set_detail", value = 10, kind = "number" },
-        { category = "riding", value = 10, kind = "number" },
-        { category = "body_color", value = 10, kind = "number" },
-        { category = "cloth_color", value = 10, kind = "number" },
-        { category = "pants_color", value = 10, kind = "number" },
-        { category = "etc_1", value = 10, kind = "number" },
-        { category = "etc_2", value = 10, kind = "number" },
-        { category = "etc_3", value = 10, kind = "number" },
-        { category = "eyes", value = 10, kind = "number" },
-        { category = "set_basic", value = 10, kind = "number" },
-   }
-   self.list = ChangeAppearanceList:new(data)
-
-   self.list.get_item_text = function(l, item)
-      return item.category
-   end
+   self.list = ChangeAppearanceList:new()
 
    self.preview = ChangeAppearancePreview:new()
+
+   table.merge(self.list, ChangeAppearanceListExt(self))
 
    self.caption = "Change appearance."
 

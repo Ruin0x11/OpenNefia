@@ -76,13 +76,12 @@ function CharacterSheetMenu:text_level()
    local guild_name = "fighters"
 
    self.texts["level"] =
-      UiTextGroup:new({"level", "exp", "gold", "god", "guild"},
-                     {20, 10, 0})
+      UiTextGroup:new({"level", "exp", "gold", "god", "guild"}, { size = 12, style = "bold"})
    self.texts["level"]:relayout(self.x + 355, self.y + 46)
 
    self.texts["level_val"] =
-      UiTextGroup:new({tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name}
-      )
+      UiTextGroup:new({tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name},
+         14)
    self.texts["level_val"]:relayout(self.x + 410, self.y + 45)
 
 end
@@ -99,11 +98,13 @@ function CharacterSheetMenu:text_name()
 
    self.texts["name"] =
       UiTextGroup:new({"name", "aka", "race", "sex", "class", "age", "height", "weight"},
-                     {20, 10, 0},
-                     4, 4)
+         { size = 12, style = "bold"},
+         {20, 10, 0},
+         4, 4)
    self.texts["name"]:relayout(self.x + 30, self.y + 61)
    self.texts["name_val"] =
       UiTextGroup:new({name, title, race, gender, class, age, height, weight},
+         14,
          {20, 10, 0},
          4, 4)
 
@@ -113,9 +114,7 @@ end
 
 function CharacterSheetMenu:text_attr()
    self.texts["attr"] =
-      UiTextGroup:new(
-         table.of("STR", 7),
-         {20, 10, 0})
+      UiTextGroup:new(table.of("STR", 7), 12)
    self.texts["attr"]:relayout(self.x + 54, self.y + 151)
 end
 
@@ -126,11 +125,11 @@ function CharacterSheetMenu:text_time()
    local time = tostring(100)
 
    self.texts["time"] =
-      UiTextGroup:new({"turns", "days", "kills", "time"})
+      UiTextGroup:new({"turns", "days", "kills", "time"}, {size = 12, style = "bold"})
    self.texts["time"]:relayout(self.x + 32, self.y + 301)
 
    self.texts["time_val"] =
-      UiTextGroup:new({turns, days, kills, time})
+      UiTextGroup:new({turns, days, kills, time}, 14)
    self.texts["time_val"]:relayout(self.x + 80, self.y + 299)
 
 end
@@ -142,11 +141,11 @@ function CharacterSheetMenu:text_weight()
    local deepest_level = tostring(193)
 
    self.texts["weight"] =
-      UiTextGroup:new({"cargo_weight", "cargo_limit", "equip_weight", "deepest_level"})
+      UiTextGroup:new({"cargo_weight", "cargo_limit", "equip_weight", "deepest_level"}, {size = 12, style = "bold"})
    self.texts["weight"]:relayout(self.x + 224, self.y + 301)
 
    self.texts["weight_val"] =
-      UiTextGroup:new({cargo_weight, cargo_limit, equip_weight, deepest_level})
+      UiTextGroup:new({cargo_weight, cargo_limit, equip_weight, deepest_level}, 14)
    self.texts["weight_val"]:relayout(self.x + 287, self.y + 299)
 end
 
@@ -159,14 +158,11 @@ function CharacterSheetMenu:text_fame()
    local karma = tostring(5)
 
    self.texts["fame"] =
-      UiTextGroup:new(
-                     {"life", "mana", "sanity", "speed", "", "fame", "karma"}
-      )
+      UiTextGroup:new({"life", "mana", "sanity", "speed", "", "fame", "karma"}, {size = 12, style = "bold"})
    self.texts["fame"]:relayout(self.x + 255, self.y + 151)
 
    self.texts["fame_val"] =
-      UiTextGroup:new(
-                     {life, mana, insanity, speed, "", fame, karma})
+      UiTextGroup:new({life, mana, insanity, speed, "", fame, karma}, 14)
    self.texts["fame_val"]:relayout(self.x + 310, self.y + 151)
 end
 
@@ -188,13 +184,12 @@ function CharacterSheetMenu:relayout()
 end
 
 function CharacterSheetMenu:draw_text()
-   Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-
    self.texts["level"]:draw()
    self.texts["name"]:draw()
 
    local attr = self.texts["attr"]
    attr:draw()
+   Draw.set_color(255, 255, 255)
    for i, t in ipairs(attr.texts) do
       Draw.image_region(self.skill_icons,
                         self.quad[t],
@@ -204,7 +199,6 @@ function CharacterSheetMenu:draw_text()
                         {255, 255, 255},
                         true)
    end
-   Draw.set_color(0, 0, 0)
 
    self.texts["time"]:draw()
    self.texts["weight"]:draw()
@@ -212,6 +206,8 @@ function CharacterSheetMenu:draw_text()
 end
 
 function CharacterSheetMenu:draw_attributes()
+   Draw.set_font(14)
+
    local attrs = table.of("123", 7)
    for i, a in ipairs(attrs) do
       local level = string.format("(%d)", 10)
@@ -288,8 +284,6 @@ function CharacterSheetMenu:draw()
    Draw.image(self.portrait, self.x + 560, self.y + 27, 80, 112, nil)
    self.topic_win:draw()
    Draw.image(self.chip, self.x + 596 + 22, self.y + 86 + 24, nil, nil, nil, true)
-
-   Draw.set_color(0, 0, 0)
 
    self:draw_text()
    self:draw_values()

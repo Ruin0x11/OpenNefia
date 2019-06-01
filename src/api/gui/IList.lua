@@ -15,5 +15,6 @@ return interface("IList",
                     get_item_text = "function",
                     choose = "function",
                     on_choose = "function",
+                    on_select = "function",
                  },
                  ISettable)

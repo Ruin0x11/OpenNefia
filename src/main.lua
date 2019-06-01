@@ -90,3 +90,5 @@ love.mousereleased = internal.input.mousereleased
 
 love.keypressed = internal.input.keypressed
 love.keyreleased = internal.input.keyreleased
+
+love.textinput = internal.input.textinput

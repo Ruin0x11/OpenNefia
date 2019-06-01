@@ -37,7 +37,7 @@ end
 function ChangeAppearancePreview:draw()
    self.topic_window:draw()
    if self.show_portrait then
-      Draw.image(self.portrait, self.x + 4, self.y + 4)
+      Draw.image(self.portrait, self.x + 4, self.y + 4, 80, 112)
    else
       local has_own_sprite = false
       if has_own_sprite then

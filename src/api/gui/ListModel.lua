@@ -28,6 +28,8 @@ function ListModel:select(i)
          self.selected = 1
       end
    end
+
+   self:on_select(self:selected_item(), i)
 end
 
 function ListModel:select_next()
@@ -65,6 +67,9 @@ function ListModel:choose(i)
 end
 
 function ListModel:on_choose(item, i)
+end
+
+function ListModel:on_select(item, i)
 end
 
 return ListModel

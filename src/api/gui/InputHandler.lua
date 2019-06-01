@@ -18,8 +18,8 @@ InputHandler:delegate("mouse", {
                          "run_mouse_movement_action"
 })
 
-function InputHandler:init()
-   self.keys = KeyHandler:new()
+function InputHandler:init(keys)
+   self.keys = keys or KeyHandler:new()
    self.mouse = MouseHandler:new()
 end
 

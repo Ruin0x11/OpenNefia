@@ -33,6 +33,8 @@ function Prompt:init(choices, width)
    self.width = width or 160
    self.can_cancel = true
 
+   self.autocenter = true
+
    self.list = UiList:new(choices, 20)
    table.merge(self.list, UiListExt())
 
@@ -62,12 +64,15 @@ function Prompt:focus()
    self.input:focus()
 end
 
-function Prompt:relayout()
-   local inf_verh = 16 + 72
-   local prompt_x = (Draw.get_width() - 10) / 2 + 3
-   local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
-   self.x = prompt_x - self.width / 2
-   self.y = prompt_y - #self.list.items * 10
+function Prompt:relayout(x, y)
+   if self.autocenter then
+      local inf_verh = 16 + 72
+      local prompt_x = (Draw.get_width() - 10) / 2 + 3
+      local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
+      self.x = prompt_x - self.width / 2
+      self.y = prompt_y - #self.list.items * 10
+   end
+
    self.height = #self.list.items * 20 + 42
 
    self.win:relayout(self.x + 8, self.y + 8, self.width - 16, self.height - 16)

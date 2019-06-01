@@ -130,9 +130,12 @@ function draw.set_background_color(r, g, b, a)
    love.graphics.setBackgroundColor(r, g, b, a)
 end
 
-function draw.text(str, x, y, color)
+function draw.text(str, x, y, color, size)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
+   end
+   if size then
+      draw.set_font(size)
    end
    love.graphics.print(str, x, y)
 end

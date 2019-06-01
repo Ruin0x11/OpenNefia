@@ -15,6 +15,7 @@ ChangeAppearanceList:delegate("model", {
                          "selected",
                          "selected_item",
                          "select",
+                         "on_select",
                          "select_next",
                          "select_previous",
                          "set_data",
@@ -106,9 +107,6 @@ function ChangeAppearanceList:decrement(item)
    else
       item.value = "base.0"
    end
-end
-
-function ChangeAppearanceList:on_select(item)
 end
 
 function ChangeAppearanceList:choose(item)

@@ -41,4 +41,12 @@ function Ui.random_cm_bg()
    return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4)))
 end
 
+function Ui.unpack_font_desc(font)
+   if type(font) == "number" then
+      return font, nil
+   else
+      return font.size, font.style
+   end
+end
+
 return Ui

@@ -59,19 +59,24 @@ end
 
 function input.keypressed(key, scancode, isrepeat)
    if key_handler then
-      key_handler:receive_key(translate_scancode(scancode), true)
+      key_handler:receive_key(translate_scancode(scancode), true, false)
    end
 end
 
 function input.keyreleased(key, scancode)
    if key_handler then
-      key_handler:receive_key(translate_scancode(scancode), false)
+      key_handler:receive_key(translate_scancode(scancode), false, false)
    end
 end
 
-function input.set_key_repeat(enabled)
-   love.keyboard.setKeyRepeat(enabled)
+function input.textinput(text)
+   if key_handler then
+      key_handler:receive_key(text, true, true)
+   end
 end
+
+input.set_key_repeat = love.keyboard.setKeyRepeat
+input.set_text_input = love.keyboard.setTextInput
 
 
 return input

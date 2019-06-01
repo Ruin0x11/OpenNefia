@@ -12,8 +12,8 @@ function KeyHandler:init()
    self.forwards = nil
 end
 
-function KeyHandler:receive_key(key, pressed)
-   if pressed then
+function KeyHandler:receive_key(key, pressed, text)
+   if pressed and not text then
       self.this_frame[key] = true
    end
 end
@@ -24,7 +24,10 @@ function KeyHandler:forward_to(handler)
 end
 
 function KeyHandler:focus()
+   -- BUG: will not take into account forwards. If there is a child
+   -- element with a TextHandler, then text input could get messed up.
    internal.input.set_key_repeat(true)
+   internal.input.set_text_input(false)
    internal.input.set_key_handler(self)
 end
 

@@ -15,7 +15,9 @@ function HeldKeyHandler:init()
    self.once = {}
 end
 
-function HeldKeyHandler:receive_key(key, pressed)
+function HeldKeyHandler:receive_key(key, pressed, text)
+   if text then return end
+
    if self.this_frame[key] == true then
       self.once[key] = true
    end
@@ -41,6 +43,7 @@ end
 
 function HeldKeyHandler:focus()
    internal.input.set_key_repeat(false)
+   internal.input.set_text_input(false)
    internal.input.set_key_handler(self)
 end
 
