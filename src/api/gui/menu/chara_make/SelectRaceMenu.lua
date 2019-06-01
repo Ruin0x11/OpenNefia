@@ -5,50 +5,47 @@ local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
-local KeyHandler = require("api.gui.KeyHandler")
-local IKeyInput = require("api.gui.IKeyInput")
+local InputHandler = require("api.gui.InputHandler")
+local IInput = require("api.gui.IInput")
 
 local SelectRaceMenu = class("SelectRaceMenu", ICharaMakeSection)
 
-SelectRaceMenu:delegate("win", {"x", "y", "width", "height"})
-SelectRaceMenu:delegate("keys", IKeyInput)
-
-local function random_cm_bg()
-   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4) - 1))
-end
+SelectRaceMenu:delegate("input", IInput)
 
 function SelectRaceMenu:init()
+   self.width = 680
+   self.height = 500
+
    local races = table.of(function(i) return "race" .. i end, 100)
 
-   self.x, self.y, self.width, self.height = Ui.params_centered(680, 500)
-   self.y = self.y + 20
-
-   self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height)
-   self.pages = UiList:new_paged(self.x + 38, self.y + 66, races, 16)
-   self.bg = random_cm_bg()
+   self.win = UiWindow:new("chara_make.select_race.title")
+   self.pages = UiList:new_paged(races, 16)
+   self.bg = Ui.random_cm_bg()
 
    self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
    self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
 
-   self.race_info = UiRaceInfo:new(self.x, self.y, races[1])
+   self.race_info = UiRaceInfo:new(races[1])
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.pages)
-   self.keys:bind_actions {
+   self.input = InputHandler:new()
+   self.input:forward_to(self.pages)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 
    self.caption = "Yaa. I've been waiting for you."
 end
 
-SelectRaceMenu.query = require("api.Input").query
-
-function SelectRaceMenu:get_result()
+function SelectRaceMenu:on_charamake_finish()
 end
 
 function SelectRaceMenu:relayout()
-   self.win:relayout()
-   self.pages:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y + 20
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.pages:relayout(self.x + 38, self.y + 66)
+   self.race_info:relayout(self.x, self.y)
    self.win:set_pages(self.pages)
 end
 
@@ -75,8 +72,6 @@ function SelectRaceMenu:draw()
 end
 
 function SelectRaceMenu:update()
-   self.win:update()
-
    if self.pages.chosen then
       return self.pages:selected_item()
    elseif self.pages.changed then
@@ -92,6 +87,8 @@ function SelectRaceMenu:update()
    end
 
    self.pages:update()
+   self.win:update()
+   self.race_info:update()
 end
 
 return SelectRaceMenu

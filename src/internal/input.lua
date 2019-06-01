@@ -69,7 +69,7 @@ function input.keyreleased(key, scancode)
    end
 end
 
-function input.set_keyrepeat(enabled)
+function input.set_key_repeat(enabled)
    love.keyboard.setKeyRepeat(enabled)
 end
 

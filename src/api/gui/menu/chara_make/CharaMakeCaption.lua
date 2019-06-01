@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 
-local CharaMakeCaption = class("CharaMakeCaption", IUiElement)
+local CharaMakeCaption = class("CharaMakeCaption", {IUiElement, ISettable})
 
 function make_caption(width)
    local image = Draw.load_image("graphic/temp/caption.bmp")
@@ -20,17 +20,30 @@ function make_caption(width)
    return { image = image, quad = quad }
 end
 
-function CharaMakeCaption:init(x, y, caption)
-   self.x = x
-   self.y = y
+function CharaMakeCaption:init(caption)
    self.width = 760
    self.height = 24
-   self.caption = caption
+
+   self.caption = caption or ""
 end
 
-function CharaMakeCaption:relayout()
-   self.width = math.min(Draw.text_width(self.caption) + 45, 760)
-   self.image = make_caption(self.width)
+function CharaMakeCaption:set_data(caption)
+   self.caption = caption or self.caption
+   self:relayout()
+end
+
+function CharaMakeCaption:relayout(x, y)
+   self.x = x or self.x
+   self.y = y or self.y
+
+   local width = math.min(Draw.text_width(self.caption) + 45, 760)
+   local regen = self.image == nil or width % 128 ~= self.width % 128
+
+   self.width = width
+
+   if regen then
+      self.image = make_caption(self.width)
+   end
 end
 
 function CharaMakeCaption:update()
@@ -50,9 +63,9 @@ function CharaMakeCaption:draw()
          q = 0
       end
 
-      Draw.image_region(self.image.image, self.image.quad[1 + q], i * 128 + self.x, self.y)
-      Draw.image_region(self.image.image, self.image.quad[2 + q], i * 128 + self.x, self.y + 2)
-      Draw.image_region(self.image.image, self.image.quad[3 + q], i * 128 + self.x, self.y + 22)
+      Draw.image_region(self.image.image, self.image.quad[1 + q], i * 128 + self.x, self.y, nil, nil, {255, 255, 255})
+      Draw.image_region(self.image.image, self.image.quad[2 + q], i * 128 + self.x, self.y + 2, nil, nil, {255, 255, 255})
+      Draw.image_region(self.image.image, self.image.quad[3 + q], i * 128 + self.x, self.y + 22, nil, nil, {255, 255, 255})
    end
 
    Draw.text(self.caption, self.x + 18, self.y + 4, {245, 245, 245}) -- y + vfix + 4

@@ -22,8 +22,8 @@ function PagedListModel:update_selected_index()
    self.selected_ = self.page_size * self.page + self.model.selected
 end
 
-function PagedListModel:get_item_text(i)
-   return i
+function PagedListModel:get_item_text(item)
+   return item
 end
 
 function PagedListModel:select_page(page)

@@ -48,8 +48,8 @@ function UiPagedContainer:focus()
    self:current_sublayer():focus()
 end
 
-function UiPagedContainer:relayout()
-   self:current_sublayer():relayout()
+function UiPagedContainer:relayout(x, y, width, height)
+   self:current_sublayer():relayout(x, y, width, height)
 end
 
 function UiPagedContainer:set_data(sublayers)
@@ -86,7 +86,7 @@ function UiPagedContainer:select_page(page)
    self.page = page or self.page
 
    local layer, inner_page = self:current_sublayer()
-   layer:relayout()
+   layer:relayout(self.x, self.y, self.width, self.height)
 
    if is_an(IPaged, layer) then
       layer:select_page(inner_page)

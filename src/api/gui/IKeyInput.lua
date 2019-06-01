@@ -1,10 +1,10 @@
-local IFocusable = require("api.gui.IFocusable")
+local IInputHandler = require("api.gui.IInputHandler")
 
 return interface("IKeyInput",
                  {
                     receive_key = "function",
-                    forward_to = "function",
-                    run_action = "function",
-                    run_actions = "function"
+                    run_key_action = "function",
+                    bind_keys = "function",
+                    unbind_keys = "function",
                  },
-                 IFocusable)
+                 IInputHandler)

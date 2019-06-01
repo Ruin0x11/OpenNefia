@@ -1,10 +1,9 @@
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
-local Input = require("api.Input")
 local IUiList = require("api.gui.IUiList")
 local ListModel = require("api.gui.ListModel")
-local IKeyInput = require("api.gui.IKeyInput")
-local KeyHandler = require("api.gui.KeyHandler")
+local IInput = require("api.gui.IInput")
+local InputHandler = require("api.gui.InputHandler")
 local IList = require("api.gui.IList")
 local IPaged = require("api.gui.IPaged")
 local PagedListModel = require("api.gui.PagedListModel")
@@ -33,13 +32,11 @@ UiList:delegate("model", {
                    "page_max",
                    "page_size",
 })
-UiList:delegate("keys", IKeyInput)
+UiList:delegate("input", IInput)
 
 local keys = "abcdefghijklmnopqr"
 
-function UiList:init(x, y, items, item_height, item_offset_x, item_offset_y)
-   self.x = x
-   self.y = y
+function UiList:init(items, item_height, item_offset_x, item_offset_y)
    if is_an(IList, items) then
       self.model = items
    else
@@ -70,20 +67,22 @@ function UiList:init(x, y, items, item_height, item_offset_x, item_offset_y)
       thing.right = function()  self:next_page();print("Page Next." .. self.page); end
    end
 
-   self.keys = KeyHandler:new()
-   self.keys:bind_actions(thing)
+   self.input = InputHandler:new()
+   self.input:bind_keys(thing)
 end
 
-function UiList:new_paged(x, y, items, page_max, item_height, item_offset_x, item_offset_y)
-   return UiList:new(x, y, PagedListModel:new(items, page_max), item_height, item_offset_x, item_offset_y)
+function UiList:new_paged(items, page_max, item_height, item_offset_x, item_offset_y)
+   return UiList:new(PagedListModel:new(items, page_max), item_height, item_offset_x, item_offset_y)
 end
 
-function UiList:relayout()
+function UiList:relayout(x, y)
+   self.x = x
+   self.y = y
    self.changed = false
    self.chosen = false
 end
 
-function UiList:draw_select_key(i, item, key_name, x, y)
+function UiList:draw_select_key(item, i, key_name, x, y)
    Draw.image(self.select_key.image, x, y, nil, nil, {255, 255, 255})
    Draw.set_font(13)
    Draw.text_shadowed(key_name,
@@ -93,7 +92,7 @@ function UiList:draw_select_key(i, item, key_name, x, y)
                       {50, 60, 80})
 end
 
-function UiList:draw_item_text(text, i, item, x, y, x_offset)
+function UiList:draw_item_text(text, item, i, x, y, x_offset)
    local selected = i == self.selected
 
    x_offset = x_offset or 0
@@ -105,22 +104,22 @@ function UiList:draw_item_text(text, i, item, x, y, x_offset)
    Draw.text(text, x + 4 + x_offset, y + 1, {0, 0, 0})
 end
 
-function UiList:draw_item(i, item, x, y)
+function UiList:draw_item(item, i, x, y)
    local key_name = keys:sub(i, i)
 
-   self:draw_select_key(i, item, key_name, x, y)
+   self:draw_select_key(item, i, key_name, x, y)
 
    Draw.set_font(14) -- 14 - en * 2
 
-   local text = self:get_item_text(item)
-   self:draw_item_text(text, i, item, x + 26, y + 1)
+   local text = self:get_item_text(item, i)
+   self:draw_item_text(text, item, i, x + 26, y + 1)
 end
 
 function UiList:draw()
    for i, item in ipairs(self.items) do
       local x = self.x + self.item_offset_x
       local y = (i - 1) * self.item_height + self.y + self.item_offset_y
-      self:draw_item(i, item, x, y)
+      self:draw_item(item, i, x, y)
    end
 end
 

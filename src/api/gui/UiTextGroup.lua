@@ -3,9 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 
 local UiTextGroup = class("UiTextGroup", {IUiElement, ISettable})
 
-function UiTextGroup:init(x, y, texts, color, rows, columns, item_width, item_height)
-   self.x = x
-   self.y = y
+function UiTextGroup:init(texts, color, rows, columns, item_width, item_height)
    self.texts = texts
    self.color = color or {20, 10, 0}
    self.rows = rows or 1
@@ -16,7 +14,9 @@ function UiTextGroup:init(x, y, texts, color, rows, columns, item_width, item_he
    self:set_data()
 end
 
-function UiTextGroup:relayout()
+function UiTextGroup:relayout(x, y)
+   self.x = x
+   self.y = y
 end
 
 function UiTextGroup:update()

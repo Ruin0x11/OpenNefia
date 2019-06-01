@@ -1,48 +1,89 @@
 local Draw = require("api.Draw")
 local IUiLayer = require("api.gui.IUiLayer")
 local TopicWindow = require("api.gui.TopicWindow")
-local KeyHandler = require("api.gui.KeyHandler")
-local MouseHandler = require("api.gui.MouseHandler")
+local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
-local IKeyInput = require("api.gui.IKeyInput")
+local IInput = require("api.gui.IInput")
 
 local Prompt = class("Prompt", IUiLayer)
 
-Prompt:delegate("list", IKeyInput)
+Prompt:delegate("input", IInput)
+
+UiListExt = function()
+   local E = {}
+
+   function E:get_item_text(item)
+      if type(item) == "table" and item.text then
+         return item.text
+      else
+         return tostring(item)
+      end
+   end
+   function E:draw_select_key(item, i, key_name, x, y)
+      if item.key then
+         key_name = item.key
+      end
+      UiList.draw_select_key(self, item, i, key_name, x, y)
+   end
+
+   return E
+end
 
 function Prompt:init(choices, width)
    self.width = width or 160
-   self.height = #choices * 20 + 42
+   self.can_cancel = true
+
+   self.list = UiList:new(choices, 20)
+   table.merge(self.list, UiListExt())
+
+   for i, v in ipairs(choices) do
+      if type(v) == "table" and v.key then
+         print("bind",v.key)
+         self.list:unbind_keys({v.key})
+         self.list:bind_keys {
+            [v.key] = function()
+               self.list:choose(i)
+            end
+         }
+      end
+   end
+
+   self.win = TopicWindow:new(0, 0)
+   self.radar_deco = Draw.load_image("graphic/temp/radar_deco.bmp")
+
+   self.input = InputHandler:new()
+   self.input:forward_to(self.list)
+   self.input:bind_keys {
+      shift = function() if self.can_cancel then self.canceled = true end end,
+   }
+end
+
+function Prompt:focus()
+   self.input:focus()
+end
+
+function Prompt:relayout()
    local inf_verh = 16 + 72
    local prompt_x = (Draw.get_width() - 10) / 2 + 3
    local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
    self.x = prompt_x - self.width / 2
-   self.y = prompt_y - #choices * 10
-   self.keys = KeyHandler:new()
-   self.mouse = MouseHandler:new()
-   self.win = TopicWindow:new(self.x + 8, self.y + 8, self.width - 16, self.height - 16, 0, 0)
-   self.radar_deco = Draw.load_image("graphic/temp/radar_deco.bmp")
-   self.list = UiList:new(self.x + 30, self.y + 24, choices, 20)
-end
+   self.y = prompt_y - #self.list.items * 10
+   self.height = #self.list.items * 20 + 42
 
-Prompt.query = require("api.Input").query
-
-function Prompt:focus()
-   self.keys:focus()
-   self.mouse:focus()
-end
-
-function Prompt:relayout()
-   self.win:relayout()
-   self.list:relayout()
+   self.win:relayout(self.x + 8, self.y + 8, self.width - 16, self.height - 16)
+   self.list:relayout(self.x + 30, self.y + 24)
 end
 
 function Prompt:update()
-   self.list:update()
-
    if self.list.chosen then
-      return self.list:selected_item()
+      return { index = self.list.selected, item = self.list:selected_item() }
    end
+
+   if self.canceled then
+      return {}, "canceled"
+   end
+
+   self.list:update()
 end
 
 function Prompt:draw()

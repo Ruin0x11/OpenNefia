@@ -63,8 +63,25 @@ local function verify(instance, interface)
       return string.format("%s must be an interface", tostring(interface))
    end
    local err
+
+   -- At this point the instance must have all the fields specified in
+   -- the interface. It is nothing but a dumb runtime type check and
+   -- can be easily subverted after the fact.
    for name, kind in pairs(interface.reqs) do
-      if type(instance[name]) ~= kind then
+      local required_type
+      if type(kind) == "table" then
+         -- Default prototype parameter. If none exists on the
+         -- instance, set it now.
+         if instance[name] == nil then
+            instance[name] = kind.default
+         end
+         -- If the type differs from the default, produce an error.
+         required_type = type(kind.default)
+      else
+         required_type = kind
+      end
+
+      if type(instance[name]) ~= required_type then
          err = (err or "") .. string.format("\n    %s (%s)", name, kind)
       end
    end
@@ -75,7 +92,7 @@ end
 local function delegate(c, field, params)
    local set = {}
 
-   if params == nil or _classes[params] then error("Invalid delegate parameter: " .. tostring(params)) end
+   if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
    if _interfaces[params] or type(params) == "string" then params = {params} end
    for _, v in ipairs(params) do
       if _interfaces[v] then

@@ -1,18 +1,18 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IKeyInput = require("api.gui.IKeyInput")
+local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
-local KeyHandler = require("api.gui.KeyHandler")
+local InputHandler = require("api.gui.InputHandler")
 local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
 local Prompt = require("api.gui.Prompt")
 
 local CharaMakeWrapper = class("CharaMakeWrapper", IUiLayer)
 
-CharaMakeWrapper:delegate("keys", IKeyInput)
+CharaMakeWrapper:delegate("input", IInput)
 
 function CharaMakeWrapper:init(menus)
    self.x = 0
@@ -25,14 +25,12 @@ function CharaMakeWrapper:init(menus)
    self.gene_used = "gene"
 
    self.bg = Draw.load_image("graphic/core/void.png")
-   self.caption = CharaMakeCaption:new(20, 30, "")
+   self.caption = CharaMakeCaption:new()
 
-   self.keys = KeyHandler:new()
+   self.input = InputHandler:new()
 
    self:proceed()
 end
-
-CharaMakeWrapper.query = require("api.Input").query
 
 function CharaMakeWrapper:proceed()
    if self.submenu then
@@ -54,11 +52,10 @@ function CharaMakeWrapper:proceed()
    self.submenu = class:new()
    assert_is_an(ICharaMakeSection, self.submenu)
 
-   self.caption.caption = self.submenu.caption
-
+   self.caption:set_data(self.submenu.caption)
    self:relayout()
 
-   self.keys:forward_to(self.submenu)
+   self.input:forward_to(self.submenu)
 end
 
 function CharaMakeWrapper:go_back()
@@ -66,16 +63,25 @@ function CharaMakeWrapper:go_back()
 
    self.submenu = table.pop(self.trail)
 
-   self.caption.caption = self.submenu.caption
-
+   self.caption:set_data(self.submenu.caption)
    self:relayout()
 
-   self.keys:forward_to(self.submenu)
+   self.input:forward_to(self.submenu)
 end
 
-function CharaMakeWrapper:relayout()
-   self.caption:relayout()
-   self.submenu:relayout()
+function CharaMakeWrapper:go_to_start()
+   while #self.trail > 0 do
+      self:go_back()
+   end
+end
+
+function CharaMakeWrapper:relayout(x, y, width, height)
+   self.x = x or 0
+   self.y = y or 0
+   self.width = width or Draw.get_width()
+   self.height = height or Draw.get_height()
+   self.caption:relayout(self.x + 20, self.y + 30)
+   self.submenu:relayout(self.x, self.y, self.width, self.height)
 end
 
 function CharaMakeWrapper:draw()
@@ -93,35 +99,23 @@ function CharaMakeWrapper:draw()
    self.submenu:draw()
 end
 
-function CharaMakeWrapper:final_query()
-   local d = Prompt:new("yes", "no", "go back", "return"):query()
-   if r == "yes" then
-      local canceled
-      -- r, canceled = TextDialog:new():query()
-      -- if canceled then
-      --    return false
-      -- else
-      --    return r
-      -- end
-   elseif r == "no" then
-      return false
-   elseif r == "go back" then
-      return false
-   elseif r == "return" then
-      return false
+function CharaMakeWrapper:handle_action(act)
+   if act == "go_to_start" then
+      self:go_to_start()
+   else
+      if #self.trail == 0 then
+         self.canceled = true
+      else
+         self:go_back()
+      end
    end
 end
 
 function CharaMakeWrapper:update()
    local result, canceled = self.submenu:update()
    if canceled then
-      if #self.trail == 0 then
-         print("cancel")
-         return nil, "canceled"
-      else
-         print("goback")
-         self:go_back()
-      end
+      local act = table.maybe(result, "chara_make_action")
+      self:handle_action(act)
    elseif result then
       self.results[self.submenu.name] = result
 
@@ -131,6 +125,10 @@ function CharaMakeWrapper:update()
       else
          local final = self:final_query()
       end
+   end
+
+   if self.canceled then
+      return nil, "canceled"
    end
 end
 

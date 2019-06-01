@@ -1,17 +1,17 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local IUiLayer = require("api.gui.IUiLayer")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
-local KeyHandler = require("api.gui.KeyHandler")
-local IKeyInput = require("api.gui.IKeyInput")
+local InputHandler = require("api.gui.InputHandler")
+local IInput = require("api.gui.IInput")
 
-local FeatsMenu = class("FeatsMenu", ICharaMakeSection)
+local FeatsMenu = class("FeatsMenu", IUiLayer)
 
-FeatsMenu:delegate("win", {"x", "y", "width", "height"})
-FeatsMenu:delegate("keys", IKeyInput)
+FeatsMenu:delegate("pages", "chosen")
+FeatsMenu:delegate("input", IInput)
 
 local function trait_color(trait)
    if true then
@@ -21,6 +21,10 @@ local function trait_color(trait)
    end
 
    return {10, 10, 10}
+end
+
+local function trait_icon(trait)
+   return 5
 end
 
 local function make_deco()
@@ -58,69 +62,39 @@ local function make_trait_icons()
    return { image = image, quad = quad }
 end
 
-function FeatsMenu:init(chara_make)
-   self.x, self.y, self.width, self.height = Ui.params_centered(730, 430)
+UiListExt = function(feats_menu)
+   local E = {}
 
-   if chara_make then
-      self.y = self.y + 15
-   end
-
-   self.win = UiWindow:new("ui.feat.title", self.x, self.y, self.width, self.height, true, "key help", 55, 40)
-
-   self.inventory_icon = make_inventory_icon()
-   self.deco = make_deco()
-   self.trait_icons = make_trait_icons()
-
-   self.data = table.flatten(
-      table.of(
-         {
-            { text = "Header.", kind = "text", value = 1 },
-            { text = "Feat", kind = "feat", value = 10 },
-            { text = "", kind = "feat", value = 1 },
-            { text = "Feat", kind = "feat", value = 10000 },
-            { text = "Trait", kind = "feat", value = 10000 },
-            { text = "Trait", kind = "feat", value = 10000 },
-         },
-         20))
-
-   self.pages = UiList:new_paged(self.x + 58, self.y + 66, self.data, 15)
-
-   --------------------
-   self.pages.get_item_text = function(l, item)
+   function E:get_item_text(item)
       return item.text
    end
-   self.pages.can_choose = function(l, i, item)
-      return item.kind == "feat"
+   function E:can_choose(item)
+      return item.type == "can_acquire"
    end
-   self.pages.draw_select_key = function(l, i, item, key_name, x, y)
-      if item.kind ~= "feat" then
+   function E:draw_select_key(item, i, key_name, x, y)
+      if item.type == "header" then
          return
       end
       if i % 2 == 0 then
          Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16, 16})
       end
-      if item.value >= 10000 then
+      if item.type ~= "can_acquire" then
          return
       end
 
-      UiList.draw_select_key(l, i, item, key_name, x, y)
+      UiList.draw_select_key(self, item, i, key_name, x, y)
    end
 
-   self.pages.draw_item_text = function(l, text, i, item, x, y, x_offset)
-      if item.value < 10 then
-         UiList.draw_item_text(l, text, i, item, x, y, x_offset)
+   function E:draw_item_text(text, item, i, x, y, x_offset)
+      if item.type == "header" then
+         UiList.draw_item_text(self, text, item, i, x, y, x_offset)
          return
       end
 
-      local color = {10, 10, 10}
-      local trait_icon = 1
-      if item.kind == "trait" then
-         local trait = "base.some_trait"
-         color = trait_color(trait)
-         trait_icon = 5
-      end
+      local color = trait_color(item.trait)
+      local trait_icon = trait_icon(item.trait)
 
-      local draw_name = item.kind == "feat"
+      local draw_name = item.type == "can_acquire"
 
       local new_x_offset, name_x_offset
       if draw_name then
@@ -131,12 +105,12 @@ function FeatsMenu:init(chara_make)
          name_x_offset = 45 - 64 - 20
       end
 
-      local quad = self.trait_icons.quad[trait_icon]
+      local quad = feats_menu.trait_icons.quad[trait_icon]
       if quad then
-         Draw.image_region(self.trait_icons.image, quad, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
+         Draw.image_region(feats_menu.trait_icons.image, quad, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
       end
 
-      UiList.draw_item_text(l, text, i, item, x + new_x_offset, y, x_offset)
+      UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
 
       if draw_name then
          Draw.text("(Trait name.)", x + 186, y + 2, color, {0, 0, 0})
@@ -144,20 +118,47 @@ function FeatsMenu:init(chara_make)
    end
    --------------------
 
-   self.caption = "Your caption here."
+   return E
+end
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.pages)
-   self.keys:bind_actions {
+function FeatsMenu:init()
+   self.width = 730
+   self.height = 430
+   self.chara_make = false
+
+   self.win = UiWindow:new("ui.feat.title", true, "key help", 55, 40)
+
+   self.inventory_icon = make_inventory_icon()
+   self.deco = make_deco()
+   self.trait_icons = make_trait_icons()
+
+   self.data = table.flatten({
+      {{ text = "Available feats", type = "header" }},
+      table.of({ text = "Trait name", trait = "base.sometrait", type = "can_acquire" }, 20),
+      {{ text = "Feats and traits", type = "header"}},
+      {{ text = "Your body is complicated.", trait = "base.complicated", type = "description" }},
+      table.of({ text = "Your trait is this.", trait = "base.othertrait", type = "description" }, 20),
+   })
+
+   self.pages = UiList:new_paged(self.data, 15)
+   table.merge(self.pages, UiListExt(self))
+
+   self.input = InputHandler:new()
+   self.input:forward_to(self.pages)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 end
 
-FeatsMenu.query = require("api.Input").query
+function FeatsMenu:relayout(x, y)
+   self.x, self.y = Ui.params_centered(self.width, self.height)
 
-function FeatsMenu:relayout()
-   self.win:relayout()
-   self.pages:relayout()
+   if self.chara_make then
+      self.y = self.y + 15
+   end
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.pages:relayout(self.x + 58, self.y + 66)
    self.win:set_pages(self.pages)
 end
 

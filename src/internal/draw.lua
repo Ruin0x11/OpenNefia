@@ -1,7 +1,5 @@
 local draw = {}
 
-local IUiLayer = require("api.gui.IUiLayer")
-
 local width = 800
 local height = 600
 
@@ -58,24 +56,28 @@ end
 
 local layers = {}
 function draw.set_root(ui_layer)
-   assert_is_an(IUiLayer, ui_layer)
+   assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
-   ui_layer:relayout()
+   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
+   ui_layer:focus()
 end
 
 function draw.push_layer(ui_layer)
-   assert_is_an(IUiLayer, ui_layer)
+   assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    table.push(layers, ui_layer)
-   ui_layer:relayout()
+   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
+   ui_layer:focus()
 end
 
-function draw.push_pop(ui_layer)
-   assert_is_an(IUiLayer, ui_layer)
+function draw.pop_layer()
    table.pop(layers)
+   if layers[#layers] then
+      layers[#layers]:focus()
+   end
 end
 
 function draw.draw_layers()
-   for _, layer in ipairs(layers) do
+   for i, layer in ipairs(layers) do
       layer:draw()
    end
 end
@@ -89,9 +91,11 @@ end
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
 
-   if root and root.relayout then
-      root:relayout()
+   for _, layer in ipairs(layers) do
+      layer:relayout(0, 0, w, h)
    end
+
+   collectgarbage()
 end
 
 --
@@ -164,18 +168,23 @@ end
 
 local image_cache = setmetatable({}, { __mode = "v" })
 function draw.load_image(filename, keycolor)
-   if not keycolor then keycolor = {0, 0, 0} end
+   if keycolor == nil then keycolor = {0, 0, 0} end
    if image_cache[filename] then return image_cache[filename] end
    local image_data = love.image.newImageData(filename)
 
-   local function trans(x,y,r,g,b,a)
-      if r == keycolor[1] and g == keycolor[2] and b == keycolor[3] then a = 0 end
-      return r,g,b,a
-   end
+   if type(keycolor) == "table" then
+      -- HACK: Horrendous. This takes an obscene amount of time. The
+      -- images should be preprocessed instead with libVIPS or
+      -- something as a compile step...
+      local function trans(x,y,r,g,b,a)
+         if r == keycolor[1] and g == keycolor[2] and b == keycolor[3] then a = 0 end
+         return r,g,b,a
+      end
 
-   mobdebug.scope(function()
-         image_data:mapPixel(trans)
-   end)
+      mobdebug.scope(function()
+            image_data:mapPixel(trans)
+      end)
+   end
 
    image_cache[filename] = love.graphics.newImage(image_data)
    return image_cache[filename]

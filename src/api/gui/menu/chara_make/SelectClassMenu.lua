@@ -5,52 +5,49 @@ local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiRaceInfo = require("api.gui.menu.chara_make.UiRaceInfo")
 local UiWindow = require("api.gui.UiWindow")
-local KeyHandler = require("api.gui.KeyHandler")
-local IKeyInput = require("api.gui.IKeyInput")
+local InputHandler = require("api.gui.InputHandler")
+local IInput = require("api.gui.IInput")
 
 local SelectClassMenu = class("SelectClassMenu", ICharaMakeSection)
 
-SelectClassMenu:delegate("keys", IKeyInput)
-SelectClassMenu:delegate("win", {"x", "y", "width", "height"})
-
-local function random_cm_bg()
-   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4)))
-end
+SelectClassMenu:delegate("input", IInput)
 
 function SelectClassMenu:init(race)
+   self.width = 680
+   self.height = 500
+
    self.race = race or "race"
 
    local classes = table.of(function(i) return "class" .. i end, 100)
 
-   self.x, self.y, self.width, self.height = Ui.params_centered(680, 500)
-   self.y = self.y + 20
-
-   self.win = UiWindow:new("select_class.title", self.x, self.y, self.width, self.height)
-   self.pages = UiList:new_paged(self.x + 38, self.y + 66, classes, 16)
-   self.bg = random_cm_bg()
+   self.win = UiWindow:new("select_class.title")
+   self.pages = UiList:new_paged(classes, 16)
+   self.bg = Ui.random_cm_bg()
 
    self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
    self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
 
-   self.race_info = UiRaceInfo:new(self.x, self.y, classes[1])
+   self.race_info = UiRaceInfo:new(classes[1])
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.pages)
-   self.keys:bind_actions {
+   self.input = InputHandler:new()
+   self.input:forward_to(self.pages)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 
    self.caption = "Choose a class."
 end
 
-SelectClassMenu.query = require("api.Input").query
-
-function SelectClassMenu:get_result()
+function SelectClassMenu:on_charamake_finish()
 end
 
 function SelectClassMenu:relayout()
-   self.win:relayout()
-   self.pages:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y + 20
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.pages:relayout(self.x + 38, self.y + 66)
+   self.race_info:relayout(self.x, self.y)
    self.win:set_pages(self.pages)
 end
 
@@ -90,12 +87,13 @@ function SelectClassMenu:update()
       self.win:set_pages(self.pages)
    end
 
-   self.win:update()
-   self.pages:update()
-
    if self.canceled then
       return nil, "canceled"
    end
+
+   self.win:update()
+   self.pages:update()
+   self.race_info:update()
 end
 
 return SelectClassMenu

@@ -3,15 +3,24 @@ local IUiElement = require("api.gui.IUiElement")
 local TopicWindow = require("api.gui.TopicWindow")
 
 local ChangeAppearancePreview = class("ChangeAppearancePreview", IUiElement)
-ChangeAppearancePreview:delegate("topic_window", {"x", "y", "width", "height", "relayout"})
 
-function ChangeAppearancePreview:init(x, y)
-   self.topic_window = TopicWindow:new(x, y, 88, 120, 1, 1)
+function ChangeAppearancePreview:init()
+   self.width = 88
+   self.height = 120
+
+   self.topic_window = TopicWindow:new(1, 1)
    self.show_portrait = false
    self.frame = 0
    self.direction = 0
    self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
+   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp", false)
+end
+
+function ChangeAppearancePreview:relayout(x, y)
+   self.x = x
+   self.y = y
+
+   self.topic_window:relayout(self.x, self.y, self.width, self.height)
 end
 
 function ChangeAppearancePreview:update()

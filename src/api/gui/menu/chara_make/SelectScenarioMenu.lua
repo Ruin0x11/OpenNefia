@@ -8,21 +8,24 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
-local SelectBalanceMenu = class("SelectBalanceMenu", ICharaMakeSection)
+local SelectScenarioMenu = class("SelectScenarioMenu", ICharaMakeSection)
 
-SelectBalanceMenu:delegate("input", IInput)
+SelectScenarioMenu:delegate("input", IInput)
 
-function SelectBalanceMenu:init()
+function SelectScenarioMenu:get_result()
+end
+
+function SelectScenarioMenu:init()
    self.width = 680
    self.height = 500
 
-   self.win = UiWindow:new("select_balance.title")
-   self.list = UiList:new({"Normal", "Overdose"})
+   self.win = UiWindow:new("select_scenario.title")
+   self.list = UiList:new({"Normal", "Test"})
 
    self.text = UiTextGroup:new({}, nil, nil, nil, 15)
    self.texts = {
-      {"Normal mode is normal.", "It is a normal mode."},
-      {"Overdose is another mode.", "Stats are gained by 3."},
+      {"The original game scenario.", "Get to the 45th level of Lesmias and beat Zeome to a pulp."},
+      {"A test scenario.", "Here we can test out the scenario addition capabilities of this variant."},
    }
 
    self.input = InputHandler:new()
@@ -31,14 +34,14 @@ function SelectBalanceMenu:init()
       shift = function() self.canceled = true end
    }
 
-   self.caption = "Choose a balance."
+   self.caption = "Choose a scenario. It will change the start location and win conditions."
 end
 
-function SelectBalanceMenu:on_charamake_finish()
+function SelectScenarioMenu:on_charamake_finish()
    return self.list:selected_item()
 end
 
-function SelectBalanceMenu:relayout()
+function SelectScenarioMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y + 20
 
@@ -49,7 +52,7 @@ function SelectBalanceMenu:relayout()
    self.text:relayout(self.x + 165, self.y + 66)
 end
 
-function SelectBalanceMenu:draw()
+function SelectScenarioMenu:draw()
    self.win:draw()
 
    Ui.draw_topic("Mode", self.x + 28, self.y + 30)
@@ -61,7 +64,7 @@ function SelectBalanceMenu:draw()
    self.list:draw()
 end
 
-function SelectBalanceMenu:update()
+function SelectScenarioMenu:update()
    if self.list.chosen then
       return true
    elseif self.list.changed then -- TODO remove
@@ -76,4 +79,4 @@ function SelectBalanceMenu:update()
    self.list:update()
 end
 
-return SelectBalanceMenu
+return SelectScenarioMenu

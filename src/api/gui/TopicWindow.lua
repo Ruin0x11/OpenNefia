@@ -36,14 +36,7 @@ local function gen_data(width, height, frame_style, fill_style)
    }
 end
 
-function TopicWindow:init(x, y, width, height, frame_style, fill_style)
-   self.width = math.max(width, 32)
-   self.height = math.max(height, 24)
-
-   self.x = x
-   self.y = y
-   self.width = width
-   self.height = height
+function TopicWindow:init(frame_style, fill_style)
    self.frame_style = frame_style
    self.fill_style = fill_style
 end
@@ -87,18 +80,29 @@ function TopicWindow:draw()
    end
 end
 
-function TopicWindow:relayout()
-   self.data = gen_data(self.width, self.height, self.frame_style, self.fill_style)
+function TopicWindow:relayout(x, y, width, height)
+   width = math.max(width, 32)
+   height = math.max(height, 24)
 
-   local x = self.x
-   local y = self.y
-   local width = self.width
-   local height = self.height
+   local regen = self.data == nil
+      or width % 16 ~= self.width % 16
+      or height % 16 ~= self.height % 16
+
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+
+   if regen then
+      self.data = gen_data(self.width, self.height, self.frame_style, self.fill_style)
+   end
+
    local fill_style = self.fill_style
 
    Draw.set_color()
 
    local frame = self.data.frame
+   frame.batch:clear()
    for i=0, width / 16 - 2 do
       frame.batch:add(frame.quad["top_mid"], i * 16 + x + 16, y)
       frame.batch:add(frame.quad["bottom_mid"], i * 16 + x + 16, y + height - 16)
@@ -122,6 +126,8 @@ function TopicWindow:relayout()
    frame.batch:add(frame.quad["bottom_left"], x, y + height - 16)
    frame.batch:add(frame.quad["top_right"], x + width - 16, y)
    frame.batch:add(frame.quad["bottom_right"], x + width - 16, y + height - 16)
+
+   frame.batch:flush()
 end
 
 function TopicWindow:update()

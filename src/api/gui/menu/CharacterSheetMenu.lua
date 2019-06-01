@@ -1,16 +1,18 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
+local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
+local IInput = require("api.gui.IInput")
+local IUiLayer = require("api.gui.IUiLayer")
+local InputHandler = require("api.gui.InputHandler")
+local TopicWindow = require("api.gui.TopicWindow")
 local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
-local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
-local KeyHandler = require("api.gui.KeyHandler")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 
-local CharacterSheetMenu = class("CharacterSheetMenu", ICharaMakeSection)
+local CharacterSheetMenu = class("CharacterSheetMenu", IUiLayer)
 
-CharacterSheetMenu:delegate("keys", "focus")
+CharacterSheetMenu:delegate("input", IInput)
 
 local function potential_string(pot)
    if pot >= 200 then
@@ -26,17 +28,17 @@ local function potential_string(pot)
 end
 
 function CharacterSheetMenu:init(behavior)
-   self.x, self.y, self.width, self.height = Ui.params_centered(700, 400)
-   self.y = self.y - 10
+   self.width = 700
+   self.height = 400
 
    self.win = Draw.load_image("graphic/ie_sheet.bmp")
 
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
+   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp", false)
    self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
 
-   self.topic_win = TopicWindow:new(self.x + 557, self.y + 23, 87, 120, 1, 10)
+   self.topic_win = TopicWindow:new(1, 10)
 
-   self.buff_list = UiBuffList:new(self.x + 430, self.y + 151)
+   self.buff_list = UiBuffList:new()
 
    self.texts = {}
 
@@ -55,18 +57,15 @@ function CharacterSheetMenu:init(behavior)
    end
    --------------------
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.buff_list)
-   self.keys:bind_actions {
-      shift = function() self.canceled = true end
+   self.input = InputHandler:new()
+   self.input:forward_to(self.buff_list)
+   self.input:bind_keys {
+      p = function()
+         ChangeAppearanceMenu:new():query()
+      end
    }
 
    self.caption = "Summary."
-end
-
-CharacterSheetMenu.query = require("api.Input").query
-
-function CharacterSheetMenu:get_result()
 end
 
 function CharacterSheetMenu:text_level()
@@ -77,15 +76,14 @@ function CharacterSheetMenu:text_level()
    local guild_name = "fighters"
 
    self.texts["level"] =
-      UiTextGroup:new(self.x + 355,
-                     self.y + 46,
-                     {"level", "exp", "gold", "god", "guild"},
+      UiTextGroup:new({"level", "exp", "gold", "god", "guild"},
                      {20, 10, 0})
+   self.texts["level"]:relayout(self.x + 355, self.y + 46)
+
    self.texts["level_val"] =
-      UiTextGroup:new(self.x + 410,
-                      self.y + 45,
-                      {tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name}
+      UiTextGroup:new({tostring(level), tostring(exp), tostring(required_exp), god_name, guild_name}
       )
+   self.texts["level_val"]:relayout(self.x + 410, self.y + 45)
 
 end
 
@@ -100,26 +98,25 @@ function CharacterSheetMenu:text_name()
    local weight = 100 .. " kg"
 
    self.texts["name"] =
-      UiTextGroup:new(self.x + 30,
-                     self.y + 61,
-                     {"name", "aka", "race", "sex", "class", "age", "height", "weight"},
+      UiTextGroup:new({"name", "aka", "race", "sex", "class", "age", "height", "weight"},
                      {20, 10, 0},
                      4, 4)
+   self.texts["name"]:relayout(self.x + 30, self.y + 61)
    self.texts["name_val"] =
-      UiTextGroup:new(self.x + 68, -- + en * ((i > 3) * 12)
-                     self.y + 60,
-                     {name, title, race, gender, class, age, height, weight},
-                     {20, 10, 0},
-                     4, 4)
+      UiTextGroup:new({name, title, race, gender, class, age, height, weight},
+         {20, 10, 0},
+         4, 4)
+
+   self.texts["name_val"]:relayout(self.x + 68, -- + en * ((i > 3) * 12)
+                                   self.y + 60)
 end
 
 function CharacterSheetMenu:text_attr()
    self.texts["attr"] =
       UiTextGroup:new(
-         self.x + 54,
-         self.y + 151,
          table.of("STR", 7),
          {20, 10, 0})
+   self.texts["attr"]:relayout(self.x + 54, self.y + 151)
 end
 
 function CharacterSheetMenu:text_time()
@@ -129,30 +126,28 @@ function CharacterSheetMenu:text_time()
    local time = tostring(100)
 
    self.texts["time"] =
-      UiTextGroup:new(self.x + 32,
-                     self.y + 301,
-                     {"turns", "days", "kills", "time"})
+      UiTextGroup:new({"turns", "days", "kills", "time"})
+   self.texts["time"]:relayout(self.x + 32, self.y + 301)
+
    self.texts["time_val"] =
-      UiTextGroup:new(self.x + 80,
-                     self.y + 299,
-                     {turns, days, kills, time})
+      UiTextGroup:new({turns, days, kills, time})
+   self.texts["time_val"]:relayout(self.x + 80, self.y + 299)
 
 end
 
 function CharacterSheetMenu:text_weight()
-   local cargo_weight = tostring(100)
-   local cargo_limit = tostring(100)
-   local equip_weight = tostring(100)
-   local deepest_level = tostring(100)
+   local cargo_weight = tostring(1234)
+   local cargo_limit = tostring(12)
+   local equip_weight = tostring(12593)
+   local deepest_level = tostring(193)
 
    self.texts["weight"] =
-      UiTextGroup:new(self.x + 224,
-                     self.y + 301,
-                     {"cargo_weight", "cargo_limit", "equip_weight", "deepest_level"})
+      UiTextGroup:new({"cargo_weight", "cargo_limit", "equip_weight", "deepest_level"})
+   self.texts["weight"]:relayout(self.x + 224, self.y + 301)
+
    self.texts["weight_val"] =
-      UiTextGroup:new(self.x + 287,
-                     self.y + 299,
-                     {cargo_weight, cargo_limit, equip_weight, deepest_level})
+      UiTextGroup:new({cargo_weight, cargo_limit, equip_weight, deepest_level})
+   self.texts["weight_val"]:relayout(self.x + 287, self.y + 299)
 end
 
 function CharacterSheetMenu:text_fame()
@@ -164,19 +159,23 @@ function CharacterSheetMenu:text_fame()
    local karma = tostring(5)
 
    self.texts["fame"] =
-      UiTextGroup:new(self.x + 255,
-                     self.y + 151,
+      UiTextGroup:new(
                      {"life", "mana", "sanity", "speed", "", "fame", "karma"}
       )
+   self.texts["fame"]:relayout(self.x + 255, self.y + 151)
+
    self.texts["fame_val"] =
-      UiTextGroup:new(self.x + 310,
-                     self.y + 151,
+      UiTextGroup:new(
                      {life, mana, insanity, speed, "", fame, karma})
+   self.texts["fame_val"]:relayout(self.x + 310, self.y + 151)
 end
 
 function CharacterSheetMenu:relayout()
-   self.topic_win:relayout()
-   self.buff_list:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y - 10
+
+   self.topic_win:relayout(self.x + 557, self.y + 23, 87, 120)
+   self.buff_list:relayout(self.x + 430, self.y + 151)
 
    self.texts = {}
 
@@ -196,7 +195,7 @@ function CharacterSheetMenu:draw_text()
 
    local attr = self.texts["attr"]
    attr:draw()
-   for i, t in ipairs(attr.list) do
+   for i, t in ipairs(attr.texts) do
       Draw.image_region(self.skill_icons,
                         self.quad[t],
                         attr.x - 17,
@@ -256,11 +255,12 @@ function CharacterSheetMenu:draw_buffs()
    local hint = self.buff_list:get_hint()
 
    Draw.set_font(13)
-   Draw.text(buff_desc, self.x + 108, self.y + 366)
+   Draw.text(buff_desc, self.x + 108, self.y + 366, {0, 0, 0})
    Draw.set_font(11, "bold") -- + sizefix * 2 - en * 2
    Draw.text(hint,
              self.x + 70,
-             self.y + 369) -- - en * 3
+             self.y + 369, -- - en * 3
+             {0, 0, 0})
 end
 
 function CharacterSheetMenu:draw_values()
@@ -277,7 +277,7 @@ function CharacterSheetMenu:draw_values()
 end
 
 function CharacterSheetMenu:draw()
-   Draw.image(self.win, self.x, self.y)
+   Draw.image(self.win, self.x, self.y, nil, nil, {255, 255, 255})
 
    Ui.draw_topic("ui.chara_sheet.attributes",    self.x + 28,  self.y + 122)
    Ui.draw_topic("ui.chara_sheet.combat_rolls",  self.x + 400, self.y + 253)

@@ -4,17 +4,18 @@ local Ui = require("api.Ui")
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
-local KeyHandler = require("api.gui.KeyHandler")
+local IInput = require("api.gui.IInput")
+local InputHandler = require("api.gui.InputHandler")
 
 local SkillsMenu = class("SkillsMenu", IUiLayer)
 
 SkillsMenu:delegate("pages", {"page", "page_max"})
-SkillsMenu:delegate("keys", {"focus"})
+SkillsMenu:delegate("input", IInput)
 
 local UiListExt = function(skills_menu)
    local E = {}
 
-   function E:draw_select_key(i, item, key_name, x, y)
+   function E:draw_select_key(item, i, key_name, x, y)
       if item.kind == "header" then
          skills_menu.item_count = 1
          return
@@ -38,13 +39,13 @@ local UiListExt = function(skills_menu)
          return
       end
 
-      UiList.draw_select_key(self, i, item, key_name, x, y)
+      UiList.draw_select_key(self, item, i, key_name, x, y)
    end
 
-   function E:draw_item_text(text, i, item, x, y, x_offset)
+   function E:draw_item_text(text, item, i, x, y, x_offset)
       if item.kind == "header" then
          Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-         UiList.draw_item_text(self, text, i, item, x + 30, y, x_offset)
+         UiList.draw_item_text(self, text, item, i, x + 30, y, x_offset)
       else
          Draw.set_font(14) -- 14 - en * 2
 
@@ -71,7 +72,7 @@ local UiListExt = function(skills_menu)
             skill_name = "*" .. skill_name
          end
 
-         UiList.draw_item_text(self, text, i, item, x + new_x, y + 2 - 1, x_offset)
+         UiList.draw_item_text(self, text, item, i, x + new_x, y + 2 - 1, x_offset)
 
          local skill_power = "1.4(99%)"
          Draw.text(skill_power, x + 222 - Draw.text_width(skill_power), y + 2)
@@ -96,8 +97,8 @@ local UiListExt = function(skills_menu)
 end
 
 function SkillsMenu:init(show_bonus)
-   self.x, self.y, self.width, self.height = Ui.params_centered(700, 400)
-   self.y = self.y - 10
+   self.width = 700
+   self.height = 400
 
    self.show_bonus = show_bonus or true
 
@@ -110,7 +111,7 @@ function SkillsMenu:init(show_bonus)
             { name = "skill" .. i, kind = "skill" }
                            end,
       100)
-   self.pages = UiList:new_paged(self.x + 58, self.y + 64, skills, 16)
+   self.pages = UiList:new_paged(skills, 16)
 
    -------------------- dupe
    self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
@@ -129,12 +130,15 @@ function SkillsMenu:init(show_bonus)
 
    table.merge(self.pages, UiListExt(self))
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.pages)
+   self.input = InputHandler:new()
+   self.input:forward_to(self.pages)
 end
 
 function SkillsMenu:relayout()
-   self.pages:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y - 10
+
+   self.pages:relayout(self.x + 58, self.y + 64)
 end
 
 function SkillsMenu:draw()

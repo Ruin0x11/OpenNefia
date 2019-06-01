@@ -3,6 +3,6 @@ local IUiLayer = require("api.gui.IUiLayer")
 return interface("ICharaMakeSection",
                  {
                     caption = "string",
-                    get_result = "function",
+                    on_charamake_finish = "function",
                  },
-                 { IUiLayer, IKeyInput })
+                 { IUiLayer })

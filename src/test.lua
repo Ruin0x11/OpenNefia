@@ -1,7 +1,6 @@
 require("boot")
 
-local s = require("api.gui.menu.FeatsMenu"):new()
-local m = require("api.gui.menu.chara_make.CharaMakeWrapper"):new(s)
+local m = require("api.gui.menu.chara_make.SelectBalanceMenu"):new()
 local input = require("internal.input")
 
 m:focus()
@@ -11,32 +10,32 @@ print("--------- press once")
 input.keypressed(nil, "up")
 input.keyreleased(nil, "up")
 
-m:update()
-m:update()
-m:update()
+m:run_actions()
+m:run_actions()
+m:run_actions()
 
 print("--------- hold")
 input.keypressed(nil, "up")
 
-m:update()
+m:run_actions()
 input.keypressed(nil, "up", true)
-m:update()
+m:run_actions()
 input.keypressed(nil, "up", true)
-m:update()
+m:run_actions()
 
 print("--------- release")
 input.keyreleased(nil, "up")
 
-m:update()
+m:run_actions()
 
-input.keypressed(nil, "left")
-input.keyreleased(nil, "left")
+-- input.keypressed(nil, "left")
+-- input.keyreleased(nil, "left")
+--
+-- m:run_actions()
 
-m:update()
-
-input.keypressed(nil, "b")
-input.keyreleased(nil, "b")
-m:update()
+input.keypressed(nil, "c")
+input.keyreleased(nil, "c")
+m:run_actions()
 
 print("--------- choose")
 input.keypressed(nil, "*")
@@ -44,5 +43,8 @@ input.keyreleased(nil, "*")
 input.keypressed(nil, "return")
 input.keyreleased(nil, "return")
 
-print(m:update())
+m:run_actions()
+m:update()
 m:draw()
+
+m:update()

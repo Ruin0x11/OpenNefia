@@ -149,6 +149,17 @@ end
 table.unpack = unpack
 unpack = nil
 
+function table.maybe(obj, field)
+   return type(obj) == "table" and obj[field]
+end
+
+function table.append(a, b)
+   for _, v in ipairs(b) do
+      table.insert(a, v)
+   end
+   return a
+end
+
 mobdebug = require("mobdebug")
 mobdebug.is_running = function()
    local _, mask = debug.gethook(coroutine.running())

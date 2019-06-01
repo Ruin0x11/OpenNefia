@@ -1,8 +1,11 @@
-local IFocusable = require("api.gui.IFocusable")
+local IInputHandler = require("api.gui.IInputHandler")
 
 return interface("IMouseInput",
                  {
                     receive_mouse_movement = "function",
                     receive_mouse_button = "function",
+                    run_mouse_action = "function",
+                    run_mouse_movement_action = "function",
+                    bind_mouse = "function",
                  },
-                 IFocusable)
+                 IInputHandler)

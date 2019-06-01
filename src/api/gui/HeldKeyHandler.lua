@@ -27,16 +27,24 @@ function HeldKeyHandler:receive_key(key, pressed)
    table.insert(self.queue, { key = key, pressed = pressed })
 end
 
-function HeldKeyHandler:bind_actions(bindings)
-   self.bindings = bindings
+function HeldKeyHandler:bind_keys(bindings)
+   for k, v in pairs(bindings) do
+      self.bindings[k] = v
+   end
+end
+
+function HeldKeyHandler:unbind_keys(bindings)
+   for _, k in ipairs(bindings) do
+      self.bindings[k] = nil
+   end
 end
 
 function HeldKeyHandler:focus()
-   internal.input.set_keyrepeat(false)
+   internal.input.set_key_repeat(false)
    internal.input.set_key_handler(self)
 end
 
-function HeldKeyHandler:run_action(key)
+function HeldKeyHandler:run_key_action(key)
    local func = self.bindings[k.key]
    if func then func() end
 end
@@ -45,7 +53,7 @@ function HeldKeyHandler:run_actions()
    local ran = {}
    for _, k in ipairs(self.queue) do
       if self.once[k.key] then
-         self:run_action(k.key)
+         self:run_key_action(k.key)
          ran[k.key] = true
          self.once[k.key] = false
       end
@@ -53,7 +61,7 @@ function HeldKeyHandler:run_actions()
 
    for key, p in pairs(self.pressed) do
       if p and not ran[key] then
-         self:run_action(key)
+         self:run_key_action(key)
       end
    end
 

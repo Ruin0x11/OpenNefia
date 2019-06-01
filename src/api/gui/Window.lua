@@ -39,34 +39,25 @@ local function init_data()
       table.insert(quad["mid_right"], love.graphics.newQuad(208, j * 8 + 48, 56, 8, iw, ih))
    end
 
-   data = { quad = quad, batch = function() return love.graphics.newSpriteBatch(img, iw * ih) end }
+   return { quad = quad, batch = love.graphics.newSpriteBatch(img, iw * ih) }
 
 end
 
-function Window:init(x, y, width, height)
-   if not data then
-      init_data()
-   end
+function Window:init()
+end
 
+function Window:draw()
+   Draw.image(self.data.batch)
+end
+
+function Window:relayout(x, y, width, height)
+   self.data = self.data or init_data()
    self.x = x
    self.y = y
    self.width = width
    self.height = height
-   self.data = data
-   self.image = data.batch()
-end
 
-function Window:draw()
-   Draw.image(self.image)
-end
-
-function Window:relayout()
-   local x = self.x
-   local y = self.y
-   local width = self.width
-   local height = self.height
-
-   self.image:clear()
+   self.data.batch:clear()
 
    local x_inner = width + x - width % 8 - 64
    local y_inner = height + y - height % 8 - 64
@@ -74,34 +65,34 @@ function Window:relayout()
    y_inner = math.max(y_inner, y + 14)
 
    if not shadow then
-      self.image:add(self.data.quad["top_left"], x, y)
+      self.data.batch:add(self.data.quad["top_left"], x, y)
    end
-   self.image:add(self.data.quad["top_right"], x_inner, y)
-   self.image:add(self.data.quad["bottom_left"], x, y_inner)
-   self.image:add(self.data.quad["bottom_right"], x_inner, y_inner)
+   self.data.batch:add(self.data.quad["top_right"], x_inner, y)
+   self.data.batch:add(self.data.quad["bottom_left"], x, y_inner)
+   self.data.batch:add(self.data.quad["bottom_right"], x_inner, y_inner)
 
    for dx=8, width / 8 - 8 - 1 do
       local tile = (dx - 8) % 18 + 1
       if not shadow then
-         self.image:add(self.data.quad["top_mid"][tile], dx * 8 + x, y)
+         self.data.batch:add(self.data.quad["top_mid"][tile], dx * 8 + x, y)
       end
-      self.image:add(self.data.quad["bottom_mid"][tile], dx * 8 + x, y_inner)
+      self.data.batch:add(self.data.quad["bottom_mid"][tile], dx * 8 + x, y_inner)
    end
 
    for dy=0, height / 8 - 14 do
       local tile_y = dy % 12 + 1
       if not shadow then
-         self.image:add(self.data.quad["mid_left"][tile_y], x, dy * 8 + y + 48)
+         self.data.batch:add(self.data.quad["mid_left"][tile_y], x, dy * 8 + y + 48)
 
          for dx=1, width / 8 - 15 do
             local tile_x = (dx - 8) % 18 + 1
-            self.image:add(self.data.quad["mid_mid"][tile_y][tile_x], dx * 8 + x + 56, dy * 8 + y + 48)
+            self.data.batch:add(self.data.quad["mid_mid"][tile_y][tile_x], dx * 8 + x + 56, dy * 8 + y + 48)
          end
       end
-      self.image:add(self.data.quad["mid_right"][tile_y], x_inner, dy * 8 + y + 48)
+      self.data.batch:add(self.data.quad["mid_right"][tile_y], x_inner, dy * 8 + y + 48)
    end
 
-   self.image:flush()
+   self.data.batch:flush()
 end
 
 function Window:update()

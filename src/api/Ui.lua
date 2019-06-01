@@ -37,4 +37,8 @@ function Ui.draw_note(text, x, y, width, height, x_offset)
              {0, 0, 0})
 end
 
+function Ui.random_cm_bg()
+   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4)))
+end
+
 return Ui

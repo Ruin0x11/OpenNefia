@@ -4,13 +4,12 @@ local Ui = require("api.Ui")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
-local IKeyInput = require("api.gui.IKeyInput")
-local KeyHandler = require("api.gui.KeyHandler")
+local IInput = require("api.gui.IInput")
+local InputHandler = require("api.gui.InputHandler")
 
 local RollAttributesMenu = class("RollAttributesMenu", ICharaMakeSection)
 
-RollAttributesMenu:delegate("win", {"x", "y", "width", "height"})
-RollAttributesMenu:delegate("keys", IKeyInput)
+RollAttributesMenu:delegate("input", IInput)
 
 ---------------------------------------- dupe
 local function load_cm_bg(id)
@@ -18,11 +17,32 @@ local function load_cm_bg(id)
 end
 ----------------------------------------
 
-RollAttributesMenu.query = require("api.Input").query
+UiListExt = function(roll_attributes_menu)
+   local E = {}
+
+   function E:get_item_text(item)
+      return item.text
+   end
+   function E:on_choose(item)
+      if item.on_choose then
+         self.chosen = false
+         item.on_choose()
+      end
+   end
+   function E:draw_item(item, i, x, y)
+      UiList.draw_item(l, item, i, x, y)
+      if item.value then
+         self:draw_attribute(item, i, x, y)
+      end
+   end
+
+   return E
+end
 
 function RollAttributesMenu:init()
-   self.x, self.y, self.width, self.height = Ui.params_centered(360, 352)
-   self.y = self.y - 20
+   self.width = 360
+   self.height = 352
+
    self.locks_left = 2
    self.locks = {}
    self.finished = false
@@ -45,25 +65,12 @@ function RollAttributesMenu:init()
       self.data[#self.data + 1] = { text = v, on_choose = lock(v), locked = false, value = 0 }
    end
 
-   self.alist = UiList:new(self.x + 38, self.y + 66, self.data, 23)
-   self.alist.get_item_text = function(l, item)
-      return item.text
-   end
-   self.alist.on_choose = function(l, item)
-      if item.on_choose then
-         item.on_choose()
-      end
-   end
-   self.alist.draw_item = function(l, i, item, x, y)
-      UiList.draw_item(l, i, item, x, y)
-      if item.value then
-         self:draw_attribute(i, item, x, y)
-      end
-   end
+   self.alist = UiList:new(self.data, 23)
+   table.merge(self.alist, UiListExt(self))
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.alist)
-   self.keys:bind_actions {
+   self.input = InputHandler:new()
+   self.input:forward_to(self.alist)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 
@@ -79,7 +86,7 @@ function RollAttributesMenu:init()
    end
    ----------------------------------------
 
-   self.win = UiWindow:new("roll_attributes.title", self.x, self.y, self.width, self.height)
+   self.win = UiWindow:new("roll_attributes.title")
 
    self.bg = load_cm_bg(1)
 
@@ -88,7 +95,7 @@ function RollAttributesMenu:init()
    self:reroll()
 end
 
-function RollAttributesMenu:get_result()
+function RollAttributesMenu:on_charamake_finish()
 end
 
 function RollAttributesMenu:reroll()
@@ -113,7 +120,7 @@ function RollAttributesMenu:lock(attr)
    end
 end
 
-function RollAttributesMenu:draw_attribute(i, item, x, y)
+function RollAttributesMenu:draw_attribute(item, i, x, y)
    Draw.set_font(15, "bold")
 
    local quad = self.quad[item.text]
@@ -130,8 +137,11 @@ function RollAttributesMenu:draw_attribute(i, item, x, y)
 end
 
 function RollAttributesMenu:relayout()
-   self.win:relayout()
-   self.alist:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y - 20
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.alist:relayout(self.x + 38, self.y + 66)
 end
 
 function RollAttributesMenu:draw()
@@ -151,8 +161,7 @@ function RollAttributesMenu:draw()
 end
 
 function RollAttributesMenu:update()
-   if self.finished then
-      self.finished = false
+   if self.alist.chosen then
       return true
    end
 

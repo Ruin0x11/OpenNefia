@@ -2,15 +2,14 @@ local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
-local IKeyInput = require("api.gui.IKeyInput")
-local IMouseInput = require("api.gui.IMouseInput")
+local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 
 local IUiLayer = require("api.gui.IUiLayer")
 
 local MainTitleMenu = class("MainTitleMenu", IUiLayer)
 
-MainTitleMenu:delegate("input", {IKeyInput, IMouseInput})
+MainTitleMenu:delegate("input", IInput)
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
@@ -18,7 +17,7 @@ end
 
 function MainTitleMenu:init()
    self.t = 0
-   self.bg = Draw.load_image("graphic/title.bmp")
+   self.bg = Draw.load_image("graphic/title.bmp", false)
    self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl")
    self.window_bg = load_cm_bg(4)
 
@@ -30,11 +29,9 @@ function MainTitleMenu:init()
    end
    key_help = I18N.get("ui.hint.cursor")
 
-   self.win = UiWindow:new(title_str, 80, (Draw.get_height() - 308) / 2, 320, 355, true, key_help)
+   self.win = UiWindow:new(title_str, true, key_help)
 
-   self.list = UiList:new(self.win.x + 40,
-                          self.win.y + 50,
-                          {
+   self.list = UiList:new({
                              "Restore an Adventurer",
                              "Generate an Adventurer",
                              "Incarnate an Adventurer",
@@ -48,18 +45,20 @@ function MainTitleMenu:init()
    self.input.keys:forward_to(self.list)
 end
 
-MainTitleMenu.query = require("api.Input").query
-
-function MainTitleMenu:relayout()
-   self.win:relayout()
-   self.list:relayout()
+function MainTitleMenu:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+   self.win:relayout(self.x + 80, (self.height - 308) / 2, 320, 355)
+   self.list:relayout(self.win.x + 40, self.win.y + 50)
 end
 
 function MainTitleMenu:draw()
-   Draw.use_shader(self.shader)
-   self.shader:send("time", self.t)
-   Draw.image(self.bg, 0, 0, Draw.get_width(), Draw.get_height())
-   Draw.use_shader()
+   -- Draw.use_shader(self.shader)
+   -- self.shader:send("time", self.t)
+   Draw.image(self.bg, 0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
+   -- Draw.use_shader()
 
    local version = "1.22"
    Draw.text("Elona version " .. version .. "  Developed by Noa", 20, 20)

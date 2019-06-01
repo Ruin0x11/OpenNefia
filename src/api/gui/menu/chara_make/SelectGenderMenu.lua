@@ -1,38 +1,35 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
-local IKeyInput = require("api.gui.IKeyInput")
+local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
-local KeyHandler = require("api.gui.KeyHandler")
+local InputHandler = require("api.gui.InputHandler")
 
 local SelectGenderMenu = class("SelectGenderMenu", ICharaMakeSection)
 
-SelectGenderMenu:delegate("keys", IKeyInput)
-SelectGenderMenu:delegate("win", {"x", "y", "width", "height"})
+SelectGenderMenu:delegate("input", IInput)
 
 local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
-SelectGenderMenu.query = require("api.Input").query
-
-function SelectGenderMenu:get_result()
+function SelectGenderMenu:on_charamake_finish()
 end
 
 function SelectGenderMenu:init()
-   self.x, self.y, self.width, self.height = Ui.params_centered(370, 168)
-   self.y = self.y - 20
+   self.width = 370
+   self.height = 168
 
-   self.win = UiWindow:new("chara_make.select_gender.title", self.x, self.y, self.width, self.height)
-   self.list = UiList:new(self.x + 38, self.y + 66, {"ui.gender3.male", "ui.gender3.female"})
+   self.win = UiWindow:new("chara_make.select_gender.title")
+   self.list = UiList:new({"ui.gender3.male", "ui.gender3.female"})
 
    self.bg = load_cm_bg(1)
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.list)
-   self.keys:bind_actions {
+   self.input = InputHandler:new()
+   self.input:forward_to(self.list)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 
@@ -40,8 +37,11 @@ function SelectGenderMenu:init()
 end
 
 function SelectGenderMenu:relayout()
-   self.win:relayout()
-   self.list:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.y = self.y - 20
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.list:relayout(self.x + 38, self.y + 66)
 end
 
 function SelectGenderMenu:draw()

@@ -9,7 +9,7 @@ local KeyHandler = class("KeyHandler", IKeyInput)
 function KeyHandler:init()
    self.bindings = {}
    self.this_frame = {}
-   self.forwards = {}
+   self.forwards = nil
 end
 
 function KeyHandler:receive_key(key, pressed)
@@ -18,50 +18,44 @@ function KeyHandler:receive_key(key, pressed)
    end
 end
 
-function KeyHandler:forward_to(handler, keys)
+function KeyHandler:forward_to(handler)
    assert_is_an(IKeyInput, handler)
-   self.forwards = {}
-   if type(keys) == "table" then
-      local it = {}
-      for _, v in ipairs(keys) do
-         it[v] = true
-      end
-      table.insert(self.forwards, { handler = handler, keys = it })
-   else
-      table.insert(self.forwards, { handler = handler })
-   end
+   self.forwards = handler
 end
 
 function KeyHandler:focus()
-   internal.input.set_keyrepeat(true)
+   internal.input.set_key_repeat(true)
    internal.input.set_key_handler(self)
 end
 
-function KeyHandler:bind_actions(bindings)
-   self.bindings = bindings
+function KeyHandler:bind_keys(bindings)
+   for k, v in pairs(bindings) do
+      self.bindings[k] = v
+   end
+end
+
+function KeyHandler:unbind_keys(bindings)
+   for _, k in ipairs(bindings) do
+      self.bindings[k] = nil
+   end
 end
 
 function KeyHandler:halt_input()
 end
 
-function KeyHandler:run_action(key)
+function KeyHandler:run_key_action(key)
    local func = self.bindings[key]
    if func then
       func()
-   else
-      for _, f in ipairs(self.forwards) do
-         if not f.keys or f.keys[key] then
-            f.handler:run_action(key)
-            break
-         end
-      end
+   elseif self.forwards then
+      self.forwards:run_key_action(key)
    end
 end
 
 function KeyHandler:run_actions()
    local ran = {}
    for key, _ in pairs(self.this_frame) do
-      self:run_action(key)
+      self:run_key_action(key)
    end
 
    self.this_frame = {}

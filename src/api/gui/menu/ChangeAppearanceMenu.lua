@@ -1,18 +1,18 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
+local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
 local TopicWindow = require("api.gui.TopicWindow")
 local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
 local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
-local KeyHandler = require("api.gui.KeyHandler")
+local InputHandler = require("api.gui.InputHandler")
 
 local ChangeAppearanceMenu = class("ChangeAppearanceMenu", ICharaMakeSection)
 
-ChangeAppearanceMenu:delegate("win", {"x", "y", "width", "height"})
 ChangeAppearanceMenu:delegate("list", "focus")
-ChangeAppearanceMenu:delegate("keys", {"receive_key", "run_action", "forward_to"})
+ChangeAppearanceMenu:delegate("input", IInput)
 
 local function make_deco()
    local image = Draw.load_image("graphic/deco_mirror.bmp")
@@ -26,11 +26,11 @@ local function make_deco()
 end
 
 function ChangeAppearanceMenu:init()
-   self.x, self.y, self.width, self.height = Ui.params_centered(380, 340, false)
-   self.y = self.y - 12
+   self.width = 380
+   self.height = 340
 
    self.deco = make_deco()
-   self.win = UiWindow:new("appearance", self.x, self.y, self.width, self.height, true, "key_help")
+   self.win = UiWindow:new("appearance", true, "key_help")
 
    local data = {
         { category = "done" },
@@ -52,27 +52,33 @@ function ChangeAppearanceMenu:init()
         { category = "eyes", value = 10, kind = "number" },
         { category = "set_basic", value = 10, kind = "number" },
    }
-   self.list = ChangeAppearanceList:new(self.x + 60, self.y + 66, data)
+   self.list = ChangeAppearanceList:new(data)
 
    self.list.get_item_text = function(l, item)
       return item.category
    end
 
-   self.preview = ChangeAppearancePreview:new(self.x + 234, self.y + 71)
+   self.preview = ChangeAppearancePreview:new()
 
    self.caption = "Change appearance."
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.list)
-   self.keys:bind_actions {
+   self.input = InputHandler:new()
+   self.input:forward_to(self.list)
+   self.input:bind_keys {
       shift = function() self.canceled = true end
    }
 end
 
+function ChangeAppearanceMenu:on_charamake_finish()
+end
+
 function ChangeAppearanceMenu:relayout()
-   self.win:relayout()
-   self.preview:relayout()
-   self.list:relayout()
+   self.x, self.y = Ui.params_centered(self.width, self.height, false)
+   self.y = self.y - 12
+
+   self.win:relayout(self.x, self.y, self.width, self.height)
+   self.preview:relayout(self.x + 234, self.y + 71)
+   self.list:relayout(self.x + 60, self.y + 66)
 end
 
 function ChangeAppearanceMenu:draw()
@@ -85,6 +91,11 @@ function ChangeAppearanceMenu:draw()
 end
 
 function ChangeAppearanceMenu:update()
+   if self.list.chosen then
+      self.list.chosen = false
+      return true
+   end
+
    if self.canceled then
       return nil, "canceled"
    end

@@ -5,9 +5,7 @@ local ISettable = require("api.gui.ISettable")
 
 local UiRaceInfo = class("UiRaceInfo", {IUiElement, ISettable})
 
-function UiRaceInfo:init(x, y, race)
-   self.x = x
-   self.y = y
+function UiRaceInfo:init(race)
    self.race = race
 
    self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
@@ -30,7 +28,9 @@ function UiRaceInfo:set_data(race)
    self.race = race or self.race
 end
 
-function UiRaceInfo:relayout()
+function UiRaceInfo:relayout(x, y)
+   self.x = x
+   self.y = y
 end
 
 function UiRaceInfo:update()

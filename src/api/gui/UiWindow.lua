@@ -7,16 +7,12 @@ local IPaged = require("api.gui.IPaged")
 
 local UiWindow = class("UiWindow", IUiElement)
 
-function UiWindow:init(title, x, y, width, height, shadow, key_help, x_offset, y_offset)
+function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    local image = Draw.load_image("graphic/temp/tip_icons.bmp")
    local quad = love.graphics.newQuad(0, 0, 24, 16, image:getWidth(), image:getHeight())
 
-   self.x = x
-   self.y = y
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
-   self.width = width
-   self.height = height
    self.title = title or ""
    self.key_help = key_help or ""
    self.tip_icon = { image = image, quad = quad }
@@ -25,27 +21,31 @@ function UiWindow:init(title, x, y, width, height, shadow, key_help, x_offset, y
 
    shadow = shadow or true
    if shadow then
-      self.shadow = Window:new(x + 4, y + 4, width, height - height % 8)
+      self.shadow = Window:new()
    end
 
    if string.nonempty(title) then
-      self.topic_window = TopicWindow:new(x + 34,
-                                          y - 4,
-                                          45 * width / 100 + math.clamp(Draw.text_width(title) - 120, 0, 200),
-                                          32, 1, 1)
+      self.topic_window = TopicWindow:new(1, 1)
    end
 
-   self.image = Window:new(x, y, width, height)
-   print(tostring(self.image))
+   self.image = Window:new()
 end
 
-function UiWindow:relayout()
+function UiWindow:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+
    if self.shadow then
-      self.shadow:relayout()
+      self.shadow:relayout(x + 4, y + 4, width, height - height % 8)
    end
-   self.image:relayout()
+   self.image:relayout(x, y, width, height)
    if self.topic_window then
-      self.topic_window:relayout()
+      self.topic_window:relayout(x + 34,
+                                 y - 4,
+                                 45 * width / 100 + math.clamp(Draw.text_width(self.title) - 120, 0, 200),
+                                 32)
    end
 end
 

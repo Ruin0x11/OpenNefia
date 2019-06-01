@@ -1,12 +1,22 @@
-local IKeyInput = require("api.gui.IKeyInput")
-local IMouseInput = require("api.gui.IMouseInput")
+local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local MouseHandler = require("api.gui.MouseHandler")
 
-local InputHandler = class("InputHandler", {IKeyInput, IMouseInput})
+local InputHandler = class("InputHandler", IInput)
 
-InputHandler:delegate("keys", {"receive_key", "run_action"})
-InputHandler:delegate("mouse", {"receive_mouse_movement", "receive_mouse_button"})
+InputHandler:delegate("keys", {
+                         "bind_keys",
+                         "unbind_keys",
+                         "receive_key",
+                         "run_key_action",
+})
+InputHandler:delegate("mouse", {
+                         "bind_mouse",
+                         "receive_mouse_movement",
+                         "receive_mouse_button",
+                         "run_mouse_action",
+                         "run_mouse_movement_action"
+})
 
 function InputHandler:init()
    self.keys = KeyHandler:new()
@@ -20,6 +30,12 @@ end
 
 function InputHandler:forward_to(handler, keys)
    self.keys:forward_to(handler, keys)
+   self.mouse:forward_to(handler)
+end
+
+function InputHandler:halt_input()
+   self.keys:halt_input()
+   self.mouse:halt_input()
 end
 
 function InputHandler:run_actions()

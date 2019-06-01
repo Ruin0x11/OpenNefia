@@ -11,7 +11,7 @@ local function main_title()
 
    local going = true
    while going do
-      local choice = Input.query(title)
+      local choice = title:query()
 
       if choice == 2 then
          local _, canceled = chara_make.query()

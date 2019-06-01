@@ -13,4 +13,9 @@ function stopwatch:measure()
    return result
 end
 
+function stopwatch:p(t)
+   t = t or ""
+   print(string.format("[%s] %02.02f", t, self:measure()))
+end
+
 return stopwatch

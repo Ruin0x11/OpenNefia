@@ -1,13 +1,12 @@
 local Draw = require("api.Draw")
 local IUiList = require("api.gui.IUiList")
 local UiList = require("api.gui.UiList")
-local KeyHandler = require("api.gui.KeyHandler")
+local IInput = require("api.gui.IInput")
+local InputHandler = require("api.gui.InputHandler")
 
 local UiBuffList = class("UiBuffList", IUiList)
 
 UiBuffList:delegate("list", {
-                       "x",
-                       "y",
                        "items",
                        "changed",
                        "selected",
@@ -17,16 +16,17 @@ UiBuffList:delegate("list", {
                        "select_previous",
                        "choose",
                        "can_select",
-                       "relayout",
                        "set_data",
                        "get_item_text",
-                       "chosen"
+                       "chosen",
+                       "on_choose",
+                       "can_choose"
 })
 
-UiBuffList:delegate("keys", {"focus", "receive_key", "run_action", "forward_to"})
+UiBuffList:delegate("input", IInput)
 
-function UiBuffList:init(x, y)
-   self.list = UiList:new(x, y, table.of("buff", 13))
+function UiBuffList:init()
+   self.list = UiList:new(table.of("buff", 13))
    self.rows = 3
    self.columns = 3
    self.item_width = 32
@@ -39,11 +39,17 @@ function UiBuffList:init(x, y)
       self.quad[i] = love.graphics.newQuad((i-1) * 32, 0, 32, 32, self.buff_icon:getWidth(), self.buff_icon:getHeight())
    end
 
-   self.keys = KeyHandler:new()
-   self.keys:forward_to(self.list, {"up", "down"})
+   self.input = InputHandler:new()
+   self.input:forward_to(self.list, {"up", "down"})
 end
 
-function UiBuffList:draw_item(i, item, x, y)
+function UiBuffList:relayout(x, y)
+   self.x = x
+   self.y = y
+   self.list:relayout(self.x, self.y)
+end
+
+function UiBuffList:draw_item(item, i, x, y)
    local has_buff = i % 2 == 0
    if has_buff then
       Draw.image_region(self.buff_icon, self.quad[3], x, y, nil, nil, {255, 255, 255, 255})
@@ -59,7 +65,7 @@ function UiBuffList:draw()
    for i=1,15 do
       local x = self.x + math.floor((i-1) / 3) * (self.item_width + 8)
       local y = self.y + (i-1) % 3 * self.item_height
-      self:draw_item(i, self.items[i], x, y)
+      self:draw_item(self.items[i], i, x, y)
    end
 end
 
@@ -68,7 +74,7 @@ function UiBuffList:update()
 end
 
 function UiBuffList:get_hint()
-   return "hint" .. ": " .. "hint"
+   return "hint:"
 end
 
 return UiBuffList
