@@ -1,3 +1,6 @@
+local IList = require("api.gui.IList")
+local ISettable = require("api.gui.ISettable")
+
 local ListModel = class("ListModel", {IList, ISettable})
 
 function ListModel:init(items)
@@ -63,7 +66,6 @@ function ListModel:choose(i)
    self:select(i)
    self.chosen = true
    self:on_choose(self:selected_item(), i)
-   print("choose",self.chosen,tostring(self))
 end
 
 function ListModel:on_choose(item, i)

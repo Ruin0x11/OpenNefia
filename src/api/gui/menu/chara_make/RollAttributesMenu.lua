@@ -29,8 +29,8 @@ local UiListExt = function(roll_attributes_menu)
          item.on_choose()
       end
    end
-   function E:draw_item(item, i, x, y)
-      UiList.draw_item(self, item, i, x, y)
+   function E:draw_item(item, i, x, y, key_name)
+      UiList.draw_item(self, item, i, x, y, key_name)
       if item.value then
          roll_attributes_menu:draw_attribute(item, i, x, y)
       end

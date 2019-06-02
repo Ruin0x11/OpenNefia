@@ -6,6 +6,7 @@ local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
+local IUiLayer = require("api.gui.IUiLayer")
 
 local SelectAliasMenu = class("SelectAliasMenu", IUiLayer)
 

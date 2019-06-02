@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 local IUiElement = require("api.gui.IUiElement")
+local ISettable = require("api.gui.ISettable")
 
 local UiTextGroup = class("UiTextGroup", {IUiElement, ISettable})
 

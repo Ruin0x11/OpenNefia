@@ -341,11 +341,4 @@ function _p(it)
 end
 
 -- prevent new globals from here on out.
-
-local function deny(t, k, v)
-   local trace = debug.traceback()
-   local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
-   error(err)
-end
-
-setmetatable(_G, {__newindex = deny})
+require("util.strict")

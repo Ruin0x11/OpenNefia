@@ -21,7 +21,7 @@ function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
 
    shadow = shadow or true
    if shadow then
-      self.shadow = Window:new()
+      self.shadow = Window:new(true)
    end
 
    if string.nonempty(title) then

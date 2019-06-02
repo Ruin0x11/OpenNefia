@@ -7,6 +7,7 @@ local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTextGroup = require("api.gui.UiTextGroup")
+local IUiLayer = require("api.gui.IUiLayer")
 
 local RollBackgroundMenu = class("RollBackgroundMenu", IUiLayer)
 

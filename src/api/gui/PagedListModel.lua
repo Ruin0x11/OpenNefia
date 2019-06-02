@@ -4,7 +4,17 @@ local ISettable = require("api.gui.ISettable")
 local ListModel = require("api.gui.ListModel")
 
 local PagedListModel = class("PagedListModel", {IList, IPaged, ISettable})
-PagedListModel:delegate("model", {"items", "selected_item", "choose", "chosen", "select", "selected", "on_choose", "can_select", "can_choose", "on_select"})
+PagedListModel:delegate("model",
+                        {"items",
+                         "selected_item",
+                         "choose",
+                         "chosen",
+                         "select",
+                         "selected",
+                         "on_choose",
+                         "can_select",
+                         "can_choose",
+                         "on_select"})
 
 function PagedListModel:init(items, page_size)
    self.items_ = items

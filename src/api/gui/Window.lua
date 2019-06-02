@@ -43,7 +43,8 @@ local function init_data()
 
 end
 
-function Window:init()
+function Window:init(shadow)
+   self.shadow = shadow or false
 end
 
 function Window:draw()
@@ -64,7 +65,7 @@ function Window:relayout(x, y, width, height)
 
    y_inner = math.max(y_inner, y + 14)
 
-   if not shadow then
+   if not self.shadow then
       self.data.batch:add(self.data.quad["top_left"], x, y)
    end
    self.data.batch:add(self.data.quad["top_right"], x_inner, y)
@@ -73,7 +74,7 @@ function Window:relayout(x, y, width, height)
 
    for dx=8, width / 8 - 8 - 1 do
       local tile = (dx - 8) % 18 + 1
-      if not shadow then
+      if not self.shadow then
          self.data.batch:add(self.data.quad["top_mid"][tile], dx * 8 + x, y)
       end
       self.data.batch:add(self.data.quad["bottom_mid"][tile], dx * 8 + x, y_inner)
@@ -81,7 +82,7 @@ function Window:relayout(x, y, width, height)
 
    for dy=0, height / 8 - 14 do
       local tile_y = dy % 12 + 1
-      if not shadow then
+      if not self.shadow then
          self.data.batch:add(self.data.quad["mid_left"][tile_y], x, dy * 8 + y + 48)
 
          for dx=1, width / 8 - 15 do

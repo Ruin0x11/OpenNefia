@@ -43,6 +43,7 @@ function CharaMakeWrapper:proceed()
    if not success or class == nil then
       if not success then
          local err = class
+         -- TODO turn this into a log warning
          error("Error loading menu " .. menu_id .. ":\n\t" .. err)
       else
          error("Cannot find menu " .. menu_id)
@@ -75,6 +76,10 @@ function CharaMakeWrapper:go_to_start()
    while #self.trail > 0 do
       self:go_back()
    end
+
+   -- call the constructor of the first menu again.
+   self.submenu = nil
+   self:proceed()
 end
 
 function CharaMakeWrapper:get_section_result(fq_name)

@@ -15,6 +15,28 @@ local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
+local UiListExt = function()
+   local E = {}
+
+   function E:draw_item(item, i, x, y, key_name)
+      UiList.draw_select_key(self, item, i, key_name, x, y)
+
+      Draw.set_color(0, 0, 0)
+
+      if I18N.is_fullwidth() then
+         Draw.set_font(11)
+         Draw.text(item.subtext, x + 40, y - 4)
+         Draw.set_font(13)
+         UiList.draw_item_text(self, item.text, item, i, x + 40, y + 8)
+      else
+         Draw.set_font(14)
+         UiList.draw_item_text(self, x + 40, y + 1, item.text)
+      end
+   end
+
+   return E
+end
+
 function MainTitleMenu:init()
    self.t = 0
    self.bg = Draw.load_image("graphic/title.bmp", false)
@@ -31,15 +53,19 @@ function MainTitleMenu:init()
 
    self.win = UiWindow:new(title_str, true, key_help)
 
-   self.list = UiList:new({
-                             "Restore an Adventurer",
-                             "Generate an Adventurer",
-                             "Incarnate an Adventurer",
-                             "About",
-                             "Options",
-                             "Mods",
-                             "Exit"
-   })
+   local data = {
+      { text = "Restore an Adventurer" },
+      { text = "Generate an Adventurer" },
+      { text = "Incarnate an Adventurer" },
+      { text = "About" },
+      { text = "Options" },
+      { text = "Mods" },
+      { text = "Exit" }
+   }
+   data = table.map(data, function(o) o.subtext = o.text; return o end, true)
+
+   self.list = UiList:new(data, 35)
+   table.merge(self.list, UiListExt())
 
    self.input = InputHandler:new()
    self.input.keys:forward_to(self.list)

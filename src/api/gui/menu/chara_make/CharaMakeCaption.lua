@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
+local ISettable = require("api.gui.ISettable")
 
 local CharaMakeCaption = class("CharaMakeCaption", {IUiElement, ISettable})
 

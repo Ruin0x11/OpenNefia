@@ -1,3 +1,1 @@
-return interface("IFocusable",
-                 { focus = "function" },
-                 IKeyInput)
+return interface("IFocusable", { focus = "function" })

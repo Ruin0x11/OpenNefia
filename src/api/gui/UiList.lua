@@ -54,10 +54,7 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
    local thing = {}
    for i=1,#keys do
       local key = keys:sub(i, i)
-      thing[key] = function()
-         print("Alright. " .. key)
-         self:choose(i)
-      end
+      thing[key] = function() self:choose(i) end
    end
    thing.up = function() self:select_previous() end
    thing.down = function() self:select_next() end
@@ -105,9 +102,7 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset)
    Draw.text(text, x + 4 + x_offset, y + 1, {0, 0, 0})
 end
 
-function UiList:draw_item(item, i, x, y)
-   local key_name = keys:sub(i, i)
-
+function UiList:draw_item(item, i, x, y, key_name)
    self:draw_select_key(item, i, key_name, x, y)
 
    Draw.set_font(14) -- 14 - en * 2
@@ -120,7 +115,8 @@ function UiList:draw()
    for i, item in ipairs(self.items) do
       local x = self.x + self.item_offset_x
       local y = (i - 1) * self.item_height + self.y + self.item_offset_y
-      self:draw_item(item, i, x, y)
+      local key_name = keys:sub(i, i)
+      self:draw_item(item, i, x, y, key_name)
    end
 end
 
