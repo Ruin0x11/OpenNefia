@@ -94,6 +94,18 @@ function table.contains(tbl, value)
    return table.find(tbl, predicate)
 end
 
+--- Returns the number of items in a dictionary-like table.
+-- @tparam table tbl
+-- @treturn int
+function table.count(tbl)
+   local count = 0
+   for _, _ in pairs(tbl) do
+      count = count + 1
+   end
+   return count
+end
+
+
 --- Produces a table of count references of item.
 -- @tparam any item
 -- @tparam int count

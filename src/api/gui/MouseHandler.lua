@@ -36,7 +36,7 @@ function MouseHandler:halt_input()
 end
 
 function MouseHandler:run_mouse_action(button, x, y, pressed)
-   local func = self.bindings[k]
+   local func = self.bindings[button]
    if func then
       func(v.x, v.y, v.pressed)
    elseif self.forwards then

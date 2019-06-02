@@ -26,7 +26,13 @@ end
 
 function draw.init()
    love.window.setTitle("Elona_next")
-   local success = love.window.setMode(width, height, {})
+   local window_mode = {
+      resizable = true,
+      minwidth = 800,
+      minheight = 600,
+      vsync = true
+   }
+   local success = love.window.setMode(width, height, window_mode)
    if not success then
       error("Could not initialize display.")
    end
@@ -55,11 +61,19 @@ function draw.draw_end()
 end
 
 local layers = {}
+local handler = nil
 function draw.set_root(ui_layer)
    assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
+end
+
+function draw.set_root_input_handler(input)
+   assert_is_an(require("api.gui.IInput"), input)
+   handler = input
+   handler:focus()
+   handler:halt_input()
 end
 
 function draw.push_layer(ui_layer)
@@ -73,6 +87,10 @@ function draw.pop_layer()
    table.pop(layers)
    if layers[#layers] then
       layers[#layers]:focus()
+      layers[#layers]:halt_input()
+   elseif handler then
+      handler:focus()
+      handler:halt_input()
    end
 end
 

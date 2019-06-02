@@ -1,13 +1,13 @@
-local internal = require("internal")
+local socket = require("socket")
 
 local stopwatch = class("stopwatch")
 
 function stopwatch:init()
-   self.time = internal.get_timestamp()
+   self.time = socket.gettime()
 end
 
 function stopwatch:measure()
-   local new = internal.get_timestamp()
+   local new = socket.gettime()
    local result = new - self.time
    self.time = new
    return result

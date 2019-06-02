@@ -137,12 +137,8 @@ function TextPrompt:draw()
 end
 
 function TextPrompt:update(dt)
-   self.frames = self.frames + 1
-   if self.frames % 20 < 10 then
-      self.caret_alpha = self.caret_alpha * 2
-   else
-      self.caret_alpha = self.caret_alpha / 2
-   end
+   self.frames = self.frames + dt * 6
+   self.caret_alpha = math.sin(self.frames) * 255 * 2 -- TODO
 
    if self.finished then
       self.finished = false

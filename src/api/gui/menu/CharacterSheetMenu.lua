@@ -14,19 +14,6 @@ local CharacterSheetMenu = class("CharacterSheetMenu", IUiLayer)
 
 CharacterSheetMenu:delegate("input", IInput)
 
-local function potential_string(pot)
-   if pot >= 200 then
-      return "Superb"
-   elseif pot >= 150 then
-      return "Great"
-   elseif pot >= 100 then
-      return "Good"
-   elseif pot >= 50 then
-      return "Bad"
-   end
-   return "Hopeless"
-end
-
 function CharacterSheetMenu:init(behavior)
    self.width = 700
    self.height = 400
@@ -205,21 +192,44 @@ function CharacterSheetMenu:draw_text()
    self.texts["fame"]:draw()
 end
 
+function CharacterSheetMenu:potential_string(pot)
+   if pot >= 200 then
+      return "Superb"
+   elseif pot >= 150 then
+      return "Great"
+   elseif pot >= 100 then
+      return "Good"
+   elseif pot >= 50 then
+      return "Bad"
+   end
+   return "Hopeless"
+end
+
+function CharacterSheetMenu:draw_attribute_name(attr, x, y)
+   local level = string.format("(%d)", 10)
+   local ench = true
+   if ench then
+      level = level .. "*"
+   end
+   Draw.text(attr, x, y)
+   Draw.text(level, x + 32, y)
+end
+
+function CharacterSheetMenu:draw_attribute_potential(attr, x, y)
+   local pot = potential_string(100)
+   Draw.text(pot, x, y)
+end
+
 function CharacterSheetMenu:draw_attributes()
    Draw.set_font(14)
 
    local attrs = table.of("123", 7)
-   for i, a in ipairs(attrs) do
-      local level = string.format("(%d)", 10)
-      local ench = true
-      if ench then
-         level = level .. "*"
-      end
-      Draw.text(a, self.x + 92, self.y + 151 + (i - 1) * 15)
-      Draw.text(level, self.x + 124, self.y + 151 + (i - 1) * 15)
-      --------------------
-      local pot = potential_string(100)
-      Draw.text(pot, self.x + 176, self.y + 152 + (i - 1) * 15)
+   for i, attr in ipairs(attrs) do
+      Draw.set_color(0, 0, 0)
+      local x = self.x + 92
+      local y = self.y + 152 + (i - 1) * 15
+      self:draw_attribute_name(attr, x, y)
+      self:draw_attribute_potential(attr, x + 84, y)
    end
 end
 

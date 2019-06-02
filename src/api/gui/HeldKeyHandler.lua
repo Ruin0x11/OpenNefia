@@ -13,6 +13,7 @@ function HeldKeyHandler:init()
    self.pressed = {}
    self.this_frame = {}
    self.once = {}
+   self.halted = false
 end
 
 function HeldKeyHandler:receive_key(key, pressed, text)
@@ -25,8 +26,23 @@ function HeldKeyHandler:receive_key(key, pressed, text)
       self.this_frame[key] = true
    end
 
-   self.pressed[key] = pressed
+   if pressed == false then
+      -- This is so table.count(self.pressed) can return 0 to
+      -- determine when key halt should stop.
+      self.pressed[key] = nil
+   else
+      self.pressed[key] = true
+   end
+
    table.insert(self.queue, { key = key, pressed = pressed })
+end
+
+function HeldKeyHandler:forward_to()
+end
+
+function HeldKeyHandler:halt_input()
+   self.halted = true
+   self.pressed = {}
 end
 
 function HeldKeyHandler:bind_keys(bindings)
@@ -48,7 +64,8 @@ function HeldKeyHandler:focus()
 end
 
 function HeldKeyHandler:run_key_action(key)
-   local func = self.bindings[k.key]
+   if self.halted then return end
+   local func = self.bindings[key]
    if func then func() end
 end
 
@@ -68,6 +85,7 @@ function HeldKeyHandler:run_actions()
       end
    end
 
+   self.halted = self.halted and (table.count(self.pressed) ~= 0)
    self.queue = {}
    self.this_frame = {}
    self.once = {}
