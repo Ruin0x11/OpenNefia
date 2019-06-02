@@ -25,7 +25,7 @@ local function make_deco()
    return { image = image, quad = quad }
 end
 
-ChangeAppearanceListExt = function(change_appearance_menu)
+local ChangeAppearanceListExt = function(change_appearance_menu)
    local E = {}
 
    function E:on_select(item)

@@ -62,6 +62,8 @@ function CharaMakeWrapper:go_back()
    if #self.trail == 0 then return end
 
    self.submenu = table.pop(self.trail)
+   self.submenu:on_charamake_go_back()
+   print(self.submenu:get_fq_name())
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -73,6 +75,17 @@ function CharaMakeWrapper:go_to_start()
    while #self.trail > 0 do
       self:go_back()
    end
+end
+
+function CharaMakeWrapper:get_section_result(fq_name)
+   for _, menu in ipairs(self.trail) do
+      print("look",menu:get_fq_name(),fq_name)
+      if menu:get_fq_name() == fq_name then
+         return menu:charamake_result()
+      end
+   end
+
+   return nil
 end
 
 function CharaMakeWrapper:relayout(x, y, width, height)
@@ -119,11 +132,15 @@ function CharaMakeWrapper:update()
    elseif result then
       self.results[self.submenu.name] = result
 
-      local has_next = true
+      local has_next = self.menus[#self.trail+1] ~= nil
       if has_next then
          self:proceed()
       else
-         local final = self:final_query()
+         for _, menu in ipairs(self.trail) do
+            local result = menu:charamake_result()
+            menu:on_charamake_finish(result)
+         end
+         return true
       end
    end
 

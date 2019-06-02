@@ -9,7 +9,7 @@ local Prompt = class("Prompt", IUiLayer)
 
 Prompt:delegate("input", IInput)
 
-UiListExt = function()
+local UiListExt = function()
    local E = {}
 
    function E:get_item_text(item)

@@ -8,7 +8,7 @@ local function make_tostring(kind, tbl)
    return function(self, ...)
       if _instances[self] then
          return string.format("instance of '%s' (%s)",
-                              rawget(self.class,'name') or '?',
+                              rawget(self.__class,'name') or '?',
                               _instances[self])
       end
       return tbl[self]
@@ -97,11 +97,11 @@ local function delegate(c, field, params)
    for _, v in ipairs(params) do
       if _interfaces[v] then
          for r, _ in pairs(v.reqs) do
-            c._delegates[r] = field
+            c.__delegates[r] = field
          end
       end
 
-      c._delegates[v] = field
+      c.__delegates[v] = field
    end
 end
 
@@ -122,12 +122,12 @@ function class.class(name, ifaces)
 
    c.__tostring = root_mt.__tostring
 
-   c._delegates = {}
-   c._memoized = setmetatable({}, { __mode = "v" })
+   c.__delegates = {}
+   c.__memoized = setmetatable({}, { __mode = "v" })
    c.__index = function(t, k)
       local i = c[k]
       if i then return i end
-      local d = rawget(c, "_delegates")
+      local d = rawget(c, "__delegates")
       if not d then
          return rawget(c, k)
       end
@@ -143,9 +143,9 @@ function class.class(name, ifaces)
             t = field
             field = t[field_name]
             if field == nil then break end
-            local cl = rawget(field, "class")
+            local cl = rawget(field, "__class")
             if cl then
-               d = rawget(cl, "_delegates")
+               d = rawget(cl, "__delegates")
                if d and d[k] then
                   field_name = d[k]
                else
@@ -159,9 +159,9 @@ function class.class(name, ifaces)
          if field then
             if type(field[k]) == "function" then
                local f = field[k]
-               local _memoized = rawget(t, "_memoized")
-               _memoized[k] = _memoized[k] or function(self, ...) return f(field, ...) end
-               return _memoized[k]
+               local __memoized = rawget(t, "__memoized")
+               __memoized[k] = __memoized[k] or function(self, ...) return f(field, ...) end
+               return __memoized[k]
             else
                -- print("rawget " .. k .. " " .. tostring(field[k]) .. " " .. name .. " " .. field_name)
                return field[k]
@@ -173,7 +173,7 @@ function class.class(name, ifaces)
    end
 
    c.__newindex = function(t, k, v)
-      local d = rawget(c, "_delegates")
+      local d = rawget(c, "__delegates")
       if not d then
          rawset(t, k, v)
          return
@@ -190,9 +190,9 @@ function class.class(name, ifaces)
             t = field
             field = t[field_name]
             if field == nil then break end
-            local cl = rawget(field, "class")
+            local cl = rawget(field, "__class")
             if cl then
-               d = rawget(cl, "_delegates")
+               d = rawget(cl, "__delegates")
                if d and d[k] then
                   field_name = d[k]
                else
@@ -207,8 +207,8 @@ function class.class(name, ifaces)
             if type(field[k]) == "function" then
                rawset(field, k, v)
                local f = field[k]
-               local _memoized = rawget(t, "_memoized")
-               _memoized[k] = v
+               local __memoized = rawget(t, "__memoized")
+               __memoized[k] = v
             else
                -- print("rawset " .. k .. " " .. tostring(v) .. " " .. name .. " " .. field_name .. " " .. tostring(field))
                rawset(field, k, v)
@@ -234,10 +234,10 @@ function class.class(name, ifaces)
          error("Call new() with colon (:) syntax.")
       end
 
-      local instance = {class = c}
+      local instance = {__class = c}
       _instances[instance] = tostring(instance)
 
-      instance._memoized = {}
+      instance.__memoized = {}
 
       setmetatable(instance, c)
 
@@ -252,6 +252,17 @@ function class.class(name, ifaces)
       end
 
       return instance
+   end
+
+   c.get_fq_name = function(self)
+      local class = self
+      if self.__class then class = self.__class end
+      for k, v in pairs(package.loaded) do
+         if class == v then
+            return k
+         end
+      end
+      return nil
    end
 
    return setmetatable(c, root_mt)

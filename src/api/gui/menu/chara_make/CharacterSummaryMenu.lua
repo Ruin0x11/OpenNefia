@@ -17,6 +17,7 @@ local CharacterSummaryMenu = class("CharacterSummaryMenu", ICharaMakeSection)
 CharacterSummaryMenu:delegate("input", IInput)
 
 function CharacterSummaryMenu:init(chara)
+   print("theinit")
    self.inner = CharacterSheetMenu:new(chara)
 
    self.input = InputHandler:new()

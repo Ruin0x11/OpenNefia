@@ -12,7 +12,7 @@ local TextPrompt = class("TextPrompt", IUiLayer)
 
 TextPrompt:delegate("input", IInput)
 
-function make_ime_status()
+local function make_ime_status()
    local image = Draw.load_image("graphic/temp/ime_status.bmp")
    local iw = image:getWidth()
    local ih = image:getHeight()

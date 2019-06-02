@@ -3,7 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 
 local CharaMakeCaption = class("CharaMakeCaption", {IUiElement, ISettable})
 
-function make_caption(width)
+local function make_caption(width)
    local image = Draw.load_image("graphic/temp/caption.bmp")
    local quad = {}
    local iw = image:getWidth()

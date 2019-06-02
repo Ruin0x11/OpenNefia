@@ -7,6 +7,8 @@ local game = {}
 local chara_make = require("game.chara_make")
 
 local function main_title()
+   internal.mod.load_mods()
+
    local title = require("api.gui.menu.MainTitleMenu"):new()
 
    local going = true

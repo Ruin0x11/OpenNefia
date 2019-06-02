@@ -37,8 +37,11 @@ end
 function SelectFeatsMenu:update()
    if self.inner.chosen then
       -- if self.chara.feats_learnable == 0
-      print("Ai amu choosinger nano desu")
       return true
+   end
+
+   if self.inner.canceled then
+      return nil, "canceled"
    end
 
    self.inner:update()

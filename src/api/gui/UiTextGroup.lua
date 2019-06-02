@@ -6,7 +6,7 @@ local UiTextGroup = class("UiTextGroup", {IUiElement, ISettable})
 
 function UiTextGroup:init(texts, font, color, rows, columns, item_width, item_height)
    self.texts = texts
-   self.font_width, self.font_style = Ui.unpack_font_desc(font)
+   self.font_width, self.font_style = Ui.unpack_font_desc(font or 14)
    self.color = color or {20, 10, 0}
    self.rows = rows or 1
    self.columns = columns

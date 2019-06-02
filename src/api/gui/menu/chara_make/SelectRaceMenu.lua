@@ -36,9 +36,6 @@ function SelectRaceMenu:init()
    self.caption = "Yaa. I've been waiting for you."
 end
 
-function SelectRaceMenu:on_charamake_finish()
-end
-
 function SelectRaceMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y + 20
@@ -71,14 +68,16 @@ function SelectRaceMenu:draw()
    self.race_info:draw()
 end
 
+function SelectRaceMenu:on_charamake_finish()
+end
+
 function SelectRaceMenu:update()
-   if self.pages.chosen then
+   if self.pages.model.chosen then
       return self.pages:selected_item()
    elseif self.pages.changed then
       local race = self.pages:selected_item()
       self.race_info:set_data(race)
 
-      print("pages")
       self.win:set_pages(self.pages)
    end
 

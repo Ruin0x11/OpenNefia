@@ -60,10 +60,10 @@ function ListModel:choose(i)
    i = i or self.selected
    if i < 1 or i > #self.items then return false end
    if not self:can_choose(self.items[i], i) then return false end
-   print("ch")
    self:select(i)
    self.chosen = true
    self:on_choose(self:selected_item(), i)
+   print("choose",self.chosen,tostring(self))
 end
 
 function ListModel:on_choose(item, i)

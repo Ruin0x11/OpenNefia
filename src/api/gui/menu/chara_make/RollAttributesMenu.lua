@@ -17,7 +17,7 @@ local function load_cm_bg(id)
 end
 ----------------------------------------
 
-UiListExt = function(roll_attributes_menu)
+local UiListExt = function(roll_attributes_menu)
    local E = {}
 
    function E:get_item_text(item)
@@ -30,9 +30,9 @@ UiListExt = function(roll_attributes_menu)
       end
    end
    function E:draw_item(item, i, x, y)
-      UiList.draw_item(l, item, i, x, y)
+      UiList.draw_item(self, item, i, x, y)
       if item.value then
-         self:draw_attribute(item, i, x, y)
+         roll_attributes_menu:draw_attribute(item, i, x, y)
       end
    end
 
@@ -54,7 +54,7 @@ function RollAttributesMenu:init()
    }
    self.data = {
       { text = "Reroll", on_choose = function() self:reroll() end },
-      { text = "Proceed", on_choose = function() self.finished = true end },
+      { text = "Proceed" },
    }
    local function lock(attr)
       return function()
@@ -96,6 +96,10 @@ function RollAttributesMenu:init()
 end
 
 function RollAttributesMenu:on_charamake_finish()
+end
+
+function RollAttributesMenu:on_charamake_go_back()
+   self.alist.chosen = false
 end
 
 function RollAttributesMenu:reroll()

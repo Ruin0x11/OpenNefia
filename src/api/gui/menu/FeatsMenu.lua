@@ -62,7 +62,7 @@ local function make_trait_icons()
    return { image = image, quad = quad }
 end
 
-UiListExt = function(feats_menu)
+local UiListExt = function(feats_menu)
    local E = {}
 
    function E:get_item_text(item)
@@ -86,6 +86,7 @@ UiListExt = function(feats_menu)
    end
 
    function E:draw_item_text(text, item, i, x, y, x_offset)
+      print(tostring(self.draw_item_text))
       if item.type == "header" then
          UiList.draw_item_text(self, text, item, i, x, y, x_offset)
          return
@@ -113,7 +114,7 @@ UiListExt = function(feats_menu)
       UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
 
       if draw_name then
-         Draw.text("(Trait name.)", x + 186, y + 2, color, {0, 0, 0})
+         Draw.text("(Trait name.)", x + 186, y + 2, color)
       end
    end
    --------------------
@@ -141,7 +142,9 @@ function FeatsMenu:init()
    })
 
    self.pages = UiList:new_paged(self.data, 15)
+   print("State of uilist",tostring(UiList.draw_item_text))
    table.merge(self.pages, UiListExt(self))
+   print("after",tostring(UiList.draw_item_text))
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -192,14 +195,14 @@ function FeatsMenu:draw()
 end
 
 function FeatsMenu:update()
+   if self.canceled then
+      return nil, "canceled"
+   end
+
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then
       print("chosen")
-   end
-
-   if self.canceled then
-      return nil, "canceled"
    end
 
    self.win:update()

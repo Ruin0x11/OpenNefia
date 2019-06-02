@@ -101,11 +101,11 @@ end
 function table.of(item, count)
    local tbl = {}
    if type(item) == "function" then
-      for i=0,count do
+      for i=1,count do
          tbl[#tbl+1] = item(i)
       end
    else
-      for i=0,count do
+      for i=1,count do
          tbl[#tbl+1] = item
       end
    end
@@ -161,8 +161,18 @@ end
 table.unpack = unpack
 unpack = nil
 
-function table.maybe(obj, field)
-   return type(obj) == "table" and obj[field]
+function table.maybe(obj, ...)
+   local arg = {...}
+   local len = #arg
+   local t = obj
+   for i, k in ipairs(arg) do
+      if not t then
+         return nil
+      end
+      if i > len then break end
+      t = t[k]
+   end
+   return t
 end
 
 --- Concatenates two array-like tables.
@@ -333,12 +343,9 @@ end
 -- prevent new globals from here on out.
 
 local function deny(t, k, v)
-   if type(v) ~= "function" then
-      local trace = debug.traceback()
-      local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
-      error(err)
-   end
-   rawset(t, k, v)
+   local trace = debug.traceback()
+   local err = string.format("Globals are not allowed. (%s : %s)\n\t%s", tostring(k), tostring(v), trace)
+   error(err)
 end
 
 setmetatable(_G, {__newindex = deny})

@@ -22,7 +22,7 @@ function SelectScenarioMenu:init()
    self.win = UiWindow:new("select_scenario.title")
    self.list = UiList:new({"Normal", "Test"})
 
-   self.text = UiTextGroup:new({}, nil, nil, nil, 15)
+   self.text = UiTextGroup:new({}, 14, {0, 0, 0}, nil, nil, 15)
    self.texts = {
       {"The original game scenario.", "Get to the 45th level of Lesmias and beat Zeome to a pulp."},
       {"A test scenario.", "Here we can test out the scenario addition capabilities of this variant."},
