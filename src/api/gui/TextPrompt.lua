@@ -60,12 +60,17 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
          self:update_display_text()
       end,
       text_submitted = function() self.finished = true end,
-      ["\t"] = function() if self.can_cancel then self.canceled = true end end,
+      ["\t"] = function() self:cancel() end,
+      text_canceled = function() self:cancel() end,
    }
 end
 
 function TextPrompt:focus()
    self.input:focus()
+end
+
+function TextPrompt:cancel()
+   if self.can_cancel then self.canceled = true end
 end
 
 function TextPrompt:relayout(x, y)

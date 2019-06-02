@@ -57,6 +57,7 @@ function Prompt:init(choices, width)
    self.input:forward_to(self.list)
    self.input:bind_keys {
       shift = function() if self.can_cancel then self.canceled = true end end,
+      escape = function() if self.can_cancel then self.canceled = true end end,
    }
 end
 

@@ -43,6 +43,7 @@ local SAFE_REQUIRE_PREFIXES = {
 local function safe_require(path)
    for _, v in ipairs(SAFE_REQUIRE_PREFIXES) do
       if string.match(path, v) then
+         -- BUG won't work. needs to call loadfile/setfenv directly
          return require(path)
       end
    end
@@ -50,12 +51,15 @@ local function safe_require(path)
    return nil
 end
 
-local function generate_sandbox()
+local function generate_sandbox(mod_name)
    local sandbox = {}
 
    for _, k in ipairs(SANDBOX_GLOBALS) do
       sandbox[k] = _G[k]
    end
+
+   print(mod_name)
+   sandbox["MOD_NAME"] = mod_name
 
    sandbox["require"] = safe_require
 
@@ -64,9 +68,9 @@ end
 
 local sandbox = generate_sandbox()
 
-local function load_mod(init_lua_path)
+local function load_mod(mod_name, init_lua_path)
    local chunk = loadfile(init_lua_path)
-   local env = generate_sandbox()
+   local env = generate_sandbox(mod_name)
    setfenv(chunk, env)
    local success, err = pcall(chunk)
    if not success then
@@ -80,7 +84,7 @@ function mod.load_mods()
    for _, mod in ipairs(fs.get_directory_items("mod/")) do
       local init = fs.join("mod", mod, "init.lua")
       if fs.exists(init) then
-         local success, chunk = load_mod(init)
+         local success, chunk = load_mod(mod, init)
          if not success then
             local err = chunk
             error(string.format("Error initializing %s:\n\t%s", mod, err))

@@ -9,6 +9,7 @@ function TextHandler:init()
    self.forwards = nil
    self.chars = {}
    self.finished = false
+   self.canceled = false
 end
 
 local function translate(char, text)
@@ -39,6 +40,10 @@ function TextHandler:receive_key(char, pressed, text)
       -- If "return" was received earlier this frame, this prevents
       -- text submission.
       self.finished = false
+   end
+
+   if pressed and char == "escape" then
+      self.canceled = true
    end
 
    char = translate(char, text)
@@ -95,9 +100,14 @@ function TextHandler:run_actions()
       self.bindings["text_submitted"]()
    end
 
+   if self.canceled and self.bindings["text_canceled"] then
+      self.bindings["text_canceled"]()
+   end
+
    self.chars = {}
 
    self.finished = false
+   self.canceled = false
 end
 
 return TextHandler

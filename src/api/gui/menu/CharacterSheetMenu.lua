@@ -31,7 +31,7 @@ function CharacterSheetMenu:init(behavior)
    self.width = 700
    self.height = 400
 
-   self.win = Draw.load_image("graphic/ie_sheet.bmp")
+   self.win = Draw.load_image("graphic/temp/ie_sheet.png", false) -- HACK
 
    self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp", false)
    self.chip = Draw.load_image("graphic/temp/chara_female.bmp")

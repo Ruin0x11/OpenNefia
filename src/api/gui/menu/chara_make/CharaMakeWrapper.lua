@@ -79,7 +79,6 @@ end
 
 function CharaMakeWrapper:get_section_result(fq_name)
    for _, menu in ipairs(self.trail) do
-      print("look",menu:get_fq_name(),fq_name)
       if menu:get_fq_name() == fq_name then
          return menu:charamake_result()
       end
