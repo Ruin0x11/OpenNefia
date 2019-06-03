@@ -21,6 +21,8 @@ Draw.line = draw.line
 Draw.set_root = draw.set_root
 
 function Draw.text_shadowed(str, x, y, color, shadow_color)
+   color = color or {255, 255, 255}
+   shadow_color = shadow_color or {0, 0, 0}
    Draw.set_color(shadow_color[1], shadow_color[2], shadow_color[3], shadow_color[4])
    for dx=-1,1 do
       for dy=-1,1 do

@@ -29,7 +29,7 @@ function fps:draw()
    Draw.set_color()
    Draw.set_font(14)
 
-   Draw.text(self.text, 5, Draw.get_height() - Draw.text_height() - 5)
+   Draw.text(self.text, Draw.get_width() - Draw.text_width(self.text) - 5, 5)
 end
 
 return fps

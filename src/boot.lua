@@ -228,7 +228,7 @@ function utf8.sub(t, i, j)
    return string.sub(t, start, finish)
 end
 
--- True if cp is a fullwidth codepoint.
+-- Returns true if cp is a fullwidth UTF-8 codepoint.
 -- @tparam int cp utf8 codepoint
 -- @treturn bool
 function utf8.is_fullwidth(cp)

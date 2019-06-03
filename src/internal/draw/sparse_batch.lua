@@ -13,6 +13,8 @@ function sparse_batch:init(width, height, atlas)
    self.yoffs = {}
    self.colors = {}
 
+   self.free_indices = {}
+
    self.batch = love.graphics.newSpriteBatch(atlas.image)
    self.updated = true
    self.tile_width = self.atlas.tile_width
@@ -42,6 +44,22 @@ function sparse_batch:find_tile_at(x, y)
    end
 
    return ind
+end
+
+function sparse_batch:add_tile(params)
+   -- TODO: needs z-ordering...
+   local ind = table.pop(self.free_indices) or #self.tiles + 1
+   self.tiles[ind] = params.tile or 0
+   self.xcoords[ind] = params.x or 0
+   self.ycoords[ind] = params.y or 0
+   self.xoffs[ind] = params.x_offset or 0
+   self.yoffs[ind] = params.y_offset or 0
+end
+
+function sparse_batch:remove_tile(ind)
+   self.tiles[ind] = 0
+   -- TODO: keep this array sorted from smallest to largest.
+   table.insert(self.free_indices, ind)
 end
 
 function sparse_batch:update_tile(pos, params)

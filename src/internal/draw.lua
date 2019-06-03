@@ -62,11 +62,24 @@ end
 
 local layers = {}
 local handler = nil
+local hud = nil
+
 function draw.set_root(ui_layer)
    assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
+end
+
+function draw.set_hud(new_hud)
+   if new_hud == nil then
+      hud = nil
+      return
+   end
+
+   assert_is_an(require("api.gui.hud.IHud"), new_hud)
+   hud = new_hud
+   hud:relayout(0, 0, draw.get_width(), draw.get_height())
 end
 
 function draw.set_root_input_handler(input)
@@ -94,6 +107,10 @@ function draw.pop_layer()
    end
 end
 
+function draw.draw_hud()
+   if hud then hud:draw() end
+end
+
 function draw.draw_layers()
    for i, layer in ipairs(layers) do
       layer:draw()
@@ -108,6 +125,8 @@ end
 
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
+
+   if hud then hud:relayout(0, 0, w, h) end
 
    for _, layer in ipairs(layers) do
       layer:relayout(0, 0, w, h)
@@ -226,42 +245,48 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
-function draw.image(image, x, y, width, height, color, centered)
+function draw.image(image, x, y, width, height, color, centered, rotation)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
    local sx = 1
    local sy = 1
-   if width and height then
+   if width then
       sx = width / image:getWidth()
+   end
+   if height then
       sy = height / image:getHeight()
    end
+   local ox, oy
    if centered then
-      x = x - ((width or image:getWidth()) / 2)
-      y = y - ((height or image:getHeight()) / 2)
+      ox = (width or image:getWidth() / 2)
+      oy = (height or image:getHeight()) / 2
    end
-   return love.graphics.draw(image, x, y, 0, sx, sy)
+   return love.graphics.draw(image, x, y, rotation or 0, sx, sy, ox, oy)
 end
 
-function draw.image_region(image, quad, x, y, width, height, color, centered)
+function draw.image_region(image, quad, x, y, width, height, color, centered, rotation)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
    local sx = 1
    local sy = 1
    local _, _, qw, qh = quad:getViewport()
-   if width and height then
+   if width then
       sx = width / qw
+   end
+   if height then
       sy = height / qh
    end
+   local ox, oy
    if centered then
-      x = x - (qw / 2)
-      y = y - (qh / 2)
+      ox = (width or qw) / 2
+      oy = (width or qh) / 2
    end
-   return love.graphics.draw(image, quad, x, y, 0, sx, sy)
+   return love.graphics.draw(image, quad, x, y, 0, sx, sy, ox, oy)
 end
 
-function draw.image_stretched(image, x, y, tx, ty, color)
+function draw.image_stretched(image, x, y, tx, ty, color, rotation)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end
@@ -274,7 +299,7 @@ function draw.image_stretched(image, x, y, tx, ty, color)
    return love.graphics.draw(image, x, y, 0, sx, sy)
 end
 
-function draw.image_region_stretched(image, quad, x, y, tx, ty, color)
+function draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
    end

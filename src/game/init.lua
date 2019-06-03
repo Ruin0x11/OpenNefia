@@ -43,7 +43,8 @@ function game.loop()
 
    local going = true
    while going do
-      local action = main_title()
+      -- local action = main_title()
+      local action = "start"
 
       if action == "start" then
          field.query()
