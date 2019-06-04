@@ -41,13 +41,16 @@ end
 function game.loop()
    startup.run()
 
+   local cb = main_title
+
    local going = true
    while going do
-      -- local action = main_title()
-      local action = "start"
+      local action = cb()
 
       if action == "start" then
-         field.query()
+         cb = field.query
+      elseif action == "title" then
+         cb = main_title
       elseif action == "quit" then
          going = false
       end

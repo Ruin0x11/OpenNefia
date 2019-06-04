@@ -4,6 +4,7 @@ local startup = require("game.startup")
 local Command = require("api.Command")
 local Draw = require("api.Draw")
 local Map = require("api.Map")
+local Input = require("api.Input")
 local InputHandler = require("api.gui.InputHandler")
 local GameKeyHandler = require("api.gui.GameKeyHandler")
 
@@ -14,23 +15,24 @@ field.draw_y = 0
 
 local batches = {}
 
-local hud
-
-local me = {
-   batch_ind = 0,
-   tile = 3,
-   x = 0,
-   y = 0
-}
-
+local me
 local Chara = require("api.Chara")
 
 function field.query()
    local dt = 0
    local going = true
+
    field.active = true
-   hud = require("api.gui.hud.MainHud"):new()
+
+   local hud = require("api.gui.hud.MainHud"):new()
    internal.draw.set_hud(hud)
+
+   me = {
+      batch_ind = 0,
+      tile = 3,
+      x = 0,
+      y = 0
+   }
 
    batches = startup.load_batches()
    local keys = InputHandler:new()
@@ -59,6 +61,11 @@ function field.query()
          batches["map"].updated = true
          batches["chara"].updated = true
       end,
+      escape = function()
+         if Input.yes_no() then
+            going = false
+         end
+      end,
       ["return"] = function()
          print(require("api.gui.TextPrompt"):new(16):query())
       end,
@@ -76,6 +83,8 @@ function field.query()
    end
 
    field.active = false
+
+   return "title"
 end
 
 local px = -1

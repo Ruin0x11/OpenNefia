@@ -113,6 +113,7 @@ end
 
 function draw.draw_layers()
    for i, layer in ipairs(layers) do
+      print(i, layer)
       layer:draw()
    end
 end
@@ -267,8 +268,8 @@ function draw.image(image, x, y, width, height, color, centered, rotation)
    end
    local ox, oy
    if centered then
-      ox = (width or image:getWidth() / 2)
-      oy = (height or image:getHeight()) / 2
+      ox = (image:getWidth()) / 2
+      oy = (image:getHeight()) / 2
    end
    return love.graphics.draw(image, x, y, rotation or 0, sx, sy, ox, oy)
 end
@@ -329,7 +330,11 @@ function draw.debug_pos(x, y)
    draw.set_color(255, 255, 255)
 end
 
-function draw.debug_rect(x, y, w, h)
+function draw.debug_rect(x, y, w, h, centered)
+   if centered then
+      x = x - w / 2
+      y = y - h / 2
+   end
    local p = {
       {x, y},
       {x+w, y},

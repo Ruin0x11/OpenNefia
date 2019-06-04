@@ -23,7 +23,6 @@ end
 
 function chara_make.query()
    chara_make.wrapper = CharaMakeWrapper:new(chara_make.sections)
-   Draw.set_root(chara_make.wrapper)
 
    local res, canceled = chara_make.wrapper:query()
 
