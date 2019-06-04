@@ -1,5 +1,7 @@
 local draw = require("internal.draw")
 
+-- Functions for drawing things on the screen.
+-- @module Draw
 local Draw = {}
 
 Draw.get_width = draw.get_width

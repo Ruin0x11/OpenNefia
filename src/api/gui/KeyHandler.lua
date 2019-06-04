@@ -18,14 +18,19 @@ function KeyHandler:init()
    self.bindings = {}
    self.this_frame = {}
    self.pressed = {}
+   self.repeat_delays = {}
    self.forwards = nil
+   self.halted = false
+   self.stop_halt = true
 end
 
-function KeyHandler:receive_key(key, pressed, text)
-   if text then return end
+function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
+   if is_text then return end
+   if self.halted and is_repeat then return end
 
    if pressed and not repeats[key] and not self.pressed[key] then
       self.this_frame[key] = true
+      self.stop_halt = true
    end
 
    if pressed then
@@ -63,6 +68,10 @@ end
 
 function KeyHandler:halt_input()
    self.repeat_delays = {}
+   self.pressed = {}
+   self.halted = true
+   self.stop_halt = false
+   print("halt")
 end
 
 function KeyHandler:run_key_action(key)
@@ -78,8 +87,8 @@ function KeyHandler:handle_repeat(key)
    local it = self.repeat_delays[key] or {}
 
    if it.wait_remain == nil then
-      it.wait_remain = 2
-      it.delay = 8
+      it.wait_remain = 1
+      it.delay = 10
       it.pressed = true
    else
       it.pressed = false
@@ -89,7 +98,7 @@ function KeyHandler:handle_repeat(key)
          if it.fast then
             it.delay = 2
          else
-            it.delay = 8
+            it.delay = 10
          end
          it.pressed = true
          if it.wait_remain == 0 then
@@ -108,9 +117,16 @@ function KeyHandler:run_actions()
       end
    end
    for key, v in pairs(self.repeat_delays) do
+      -- TODO determine what movement actions should be triggered. If
+      -- two movement keys can form a diagonal, they should be fired
+      -- instead of each one individually.
       if v.pressed then
          self:run_key_action(key)
       end
+
+      -- only run the first action
+      break
+      -- TODO do not run the below key actions either
    end
    for key, _ in pairs(self.this_frame) do
       self:run_key_action(key)
@@ -119,6 +135,7 @@ function KeyHandler:run_actions()
       break
    end
 
+   self.halted = self.halted and not self.stop_halt
    self.this_frame = {}
 end
 

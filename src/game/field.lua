@@ -1,6 +1,7 @@
 local internal = require("internal")
 local startup = require("game.startup")
 
+local Command = require("api.Command")
 local Draw = require("api.Draw")
 local Map = require("api.Map")
 local InputHandler = require("api.gui.InputHandler")
@@ -39,23 +40,22 @@ function field.query()
          print("do")
       end,
       up = function()
-         Chara.move(me, "North")
+         Command.move(me, "North")
          batches["map"].updated = true
          batches["chara"].updated = true
       end,
       down = function()
-         Chara.move(me, "South")
-         batches["map"].updated = true
+         Command.move(me, "South")
          batches["map"].updated = true
          batches["chara"].updated = true
       end,
       left = function()
-         Chara.move(me, "East")
+         Command.move(me, "East")
          batches["map"].updated = true
          batches["chara"].updated = true
       end,
       right = function()
-         Chara.move(me, "West")
+         Command.move(me, "West")
          batches["map"].updated = true
          batches["chara"].updated = true
       end,

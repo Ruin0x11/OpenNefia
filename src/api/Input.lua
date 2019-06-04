@@ -1,9 +1,12 @@
 local input = require("internal.input")
 
-local Input = {}
 local IUiLayer = require("api.gui.IUiLayer")
 local Prompt = require("api.gui.Prompt")
 local TextPrompt = require("api.gui.TextPrompt")
+
+-- Functions for receiving input from the player.
+-- @module Input
+local Input = {}
 
 Input.set_key_handler = input.set_key_handler
 Input.set_mouse_handler = input.set_mouse_handler

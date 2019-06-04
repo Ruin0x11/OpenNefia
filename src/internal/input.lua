@@ -59,7 +59,7 @@ end
 
 function input.keypressed(key, scancode, isrepeat)
    if key_handler then
-      key_handler:receive_key(translate_scancode(scancode), true, false)
+      key_handler:receive_key(translate_scancode(scancode), true, false, isrepeat)
    end
 end
 

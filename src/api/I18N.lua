@@ -1,3 +1,5 @@
+-- Interface to the text localization system.
+-- @module I18N
 local I18N = {}
 
 function I18N.language()

@@ -63,6 +63,7 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
       ["\t"] = function() self:cancel() end,
       text_canceled = function() self:cancel() end,
    }
+   self.input:halt_input()
 end
 
 function TextPrompt:focus()

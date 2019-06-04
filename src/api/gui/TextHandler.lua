@@ -10,6 +10,7 @@ function TextHandler:init()
    self.chars = {}
    self.finished = false
    self.canceled = false
+   self.halted = false
 end
 
 local function translate(char, text)
@@ -24,7 +25,9 @@ local function translate(char, text)
    return nil
 end
 
-function TextHandler:receive_key(char, pressed, text)
+function TextHandler:receive_key(char, pressed, text, is_repeat)
+   if pressed and not is_repeat then self.halted = false end
+
    if not pressed then return end
 
    -- When IME input is sent, love first sends the keypress event of
@@ -33,7 +36,7 @@ function TextHandler:receive_key(char, pressed, text)
    -- frame. Therefore, text shouldn't be submitted if a "return"
    -- keypress event is not the very last event received in this
    -- frame.
-   if not text and char == "return" and pressed then
+   if not text and char == "return" and pressed and not self.halted then
       self.finished = true
       return
    else
@@ -80,6 +83,7 @@ function TextHandler:focus()
 end
 
 function TextHandler:halt_input()
+   self.halted = true
 end
 
 function TextHandler:run_key_action(key)

@@ -1,3 +1,4 @@
+-- @module Log
 local Log = {}
 
 function Log.info(s, ...)

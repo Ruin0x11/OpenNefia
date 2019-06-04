@@ -1,5 +1,7 @@
 local Draw = require("api.Draw")
 
+-- Commonly used functions for UI rendering.
+-- @module Ui
 local Ui = {}
 
 function Ui.params_centered(width, height, in_game)

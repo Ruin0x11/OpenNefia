@@ -59,10 +59,7 @@ function Prompt:init(choices, width)
       shift = function() if self.can_cancel then self.canceled = true end end,
       escape = function() if self.can_cancel then self.canceled = true end end,
    }
-end
-
-function Prompt:focus()
-   self.input:focus()
+   self.input:halt_input()
 end
 
 function Prompt:relayout(x, y)
