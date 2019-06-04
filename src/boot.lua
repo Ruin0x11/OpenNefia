@@ -222,6 +222,18 @@ function table.append(a, b)
    return a
 end
 
+--- Converts an array to a set, with all keys set to "true".
+-- @tparam array arr
+-- @treturn table
+function table.set(arr)
+   local tbl = {}
+   for _, k in ipairs(arr) do
+      tbl[k] = true
+   end
+   return tbl
+end
+
+
 local function try_require(mod)
    local success, obj = pcall(function() return require(mod) end)
    if success then

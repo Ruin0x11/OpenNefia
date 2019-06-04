@@ -64,21 +64,28 @@ function startup.load_batches()
 
    sw:p("load_batches.chara")
 
-   local map_size = 100
-   local tiles = table.of(450, map_size * map_size)
+   local map_size = 40
+   local tiles = table.of(451, map_size * map_size)
    local map_batch = tile_batch:new(map_size, map_size, atlas)
    map_batch:set_tiles(tiles)
+   for x=0,map_size-1 do
+      for y=0,map_size-1 do
+         if x == 0 or y == 0 or x == map_size-1 or y == map_size - 1 then
+            map_batch:update_tile(x, y, 300)
+         end
+      end
+   end
 
    local chara_batch = sparse_batch:new(map_size, map_size, chara_atlas)
-   for i=1,5000 do
-      chara_batch:add_tile {
-         tile = math.random(1, #chara_atlas.tiles),
-         x = math.random(0, map_size - 1),
-         y = math.random(0, map_size - 1),
-         x_offset = math.random(-24,24),
-         y_offset = math.random(-24,24),
-      }
-   end
+   -- for i=1,5000 do
+   --    chara_batch:add_tile {
+   --       tile = math.random(1, #chara_atlas.tiles),
+   --       x = math.random(0, map_size - 1),
+   --       y = math.random(0, map_size - 1),
+   --       x_offset = math.random(-24,24),
+   --       y_offset = math.random(-24,24),
+   --    }
+   -- end
 
    sw:p("load_batches.update")
 

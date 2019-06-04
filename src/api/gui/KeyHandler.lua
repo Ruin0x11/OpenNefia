@@ -2,6 +2,14 @@ local IKeyInput = require("api.gui.IKeyInput")
 
 local internal = require("internal")
 
+-- TODO: needs to handle direction keypress combinations
+local repeats = table.set {
+   "up",
+   "down",
+   "left",
+   "right"
+}
+
 -- A key handler that will fire actions only on the same frame a
 -- keypressed event is received. For use when key repeat is *on*.
 local KeyHandler = class("KeyHandler", IKeyInput)
@@ -9,12 +17,22 @@ local KeyHandler = class("KeyHandler", IKeyInput)
 function KeyHandler:init()
    self.bindings = {}
    self.this_frame = {}
+   self.pressed = {}
    self.forwards = nil
 end
 
 function KeyHandler:receive_key(key, pressed, text)
-   if pressed and not text then
+   if text then return end
+
+   if pressed and not repeats[key] and not self.pressed[key] then
       self.this_frame[key] = true
+   end
+
+   if pressed then
+      self.pressed[key] = true
+   else
+      self.pressed[key] = nil
+      self.repeat_delays[key] = nil
    end
 end
 
@@ -44,6 +62,7 @@ function KeyHandler:unbind_keys(bindings)
 end
 
 function KeyHandler:halt_input()
+   self.repeat_delays = {}
 end
 
 function KeyHandler:run_key_action(key)
@@ -55,10 +74,49 @@ function KeyHandler:run_key_action(key)
    end
 end
 
+function KeyHandler:handle_repeat(key)
+   local it = self.repeat_delays[key] or {}
+
+   if it.wait_remain == nil then
+      it.wait_remain = 2
+      it.delay = 8
+      it.pressed = true
+   else
+      it.pressed = false
+      it.delay = it.delay - 1
+      if it.delay <= 0 then
+         it.wait_remain = it.wait_remain - 1
+         if it.fast then
+            it.delay = 2
+         else
+            it.delay = 8
+         end
+         it.pressed = true
+         if it.wait_remain == 0 then
+            it.fast = true
+         end
+      end
+   end
+
+   self.repeat_delays[key] = it
+end
+
 function KeyHandler:run_actions()
-   local ran = {}
+   for key, v in pairs(self.pressed) do
+      if repeats[key] then
+         self:handle_repeat(key)
+      end
+   end
+   for key, v in pairs(self.repeat_delays) do
+      if v.pressed then
+         self:run_key_action(key)
+      end
+   end
    for key, _ in pairs(self.this_frame) do
       self:run_key_action(key)
+
+      -- only run the first action
+      break
    end
 
    self.this_frame = {}

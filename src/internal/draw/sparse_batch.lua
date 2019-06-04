@@ -54,12 +54,15 @@ function sparse_batch:add_tile(params)
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
    self.yoffs[ind] = params.y_offset or 0
+   self.updated = true
+   return ind
 end
 
 function sparse_batch:remove_tile(ind)
    self.tiles[ind] = 0
    -- TODO: keep this array sorted from smallest to largest.
-   table.insert(self.free_indices, ind)
+   table.push(self.free_indices, ind)
+   self.updated = true
 end
 
 function sparse_batch:set_tiles(tiles)
@@ -93,8 +96,8 @@ function sparse_batch:draw(x, y)
             local cx = xc[ind]
             local cy = yc[ind]
             if cx >= tx - 1 and cx < tdx and cy >= ty - 1 and cy < tdy then
-               local x = (cx - tx) * tw + xo[ind]
-               local y = (cy - ty) * th + yo[ind]
+               local x = (cx - tx - 1) * tw + xo[ind]
+               local y = (cy - ty - 1) * th + yo[ind]
                -- if color then
                -- batch.setColor(self.colors[ind])
                -- color_set = true
@@ -112,7 +115,7 @@ function sparse_batch:draw(x, y)
       self.updated = false
    end
 
-   love.graphics.draw(batch, ox, oy)
+   love.graphics.draw(batch, ox - tw, oy - th)
 end
 
 return sparse_batch

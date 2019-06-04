@@ -326,6 +326,7 @@ function draw.debug_pos(x, y)
    draw.set_font(11)
    draw.text(string.format("%d/%d", x, y), x, y)
    draw.filled_rect(x - 4, y - 4, 8, 8)
+   draw.set_color(255, 255, 255)
 end
 
 function draw.debug_rect(x, y, w, h)

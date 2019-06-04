@@ -28,10 +28,10 @@ function tile_batch:set_tiles(tiles)
 end
 
 function tile_batch:update_tile(x, y, tile)
-   -- if x >= 0 and y >= 0 and x < self.width and y < self.height then
-   self.tiles[(y-1)*self.width+x] = tile
-   self.updated = true
-   --end
+   if x >= 0 and y >= 0 and x < self.width and y < self.height then
+      self.tiles[y*self.width+x+1] = tile
+      self.updated = true
+   end
 end
 
 function tile_batch:draw(x, y)
@@ -55,11 +55,11 @@ function tile_batch:draw(x, y)
 
       for y=ty,tdy do
          i = -tw
-         if y > 0 and y <= self.height then
+         if y >= 0 and y < self.height then
             for x=tx,tdx do
-               if x > 0 and x <= self.width then
-                  local tile = self_tiles[(y-1)*self.width+x]
-                  if tile ~= 0 then
+               if x >= 0 and x < self.width then
+                  local tile = self_tiles[y*self.width+x+1]
+                  if tile and tile ~= 0 then
                      batch:add(tiles[tile], i, j)
                   end
                end
@@ -74,7 +74,7 @@ function tile_batch:draw(x, y)
       self.updated = false
    end
 
-   love.graphics.draw(batch, ox, oy)
+   love.graphics.draw(batch, ox - tw, oy - th)
 end
 
 return tile_batch
