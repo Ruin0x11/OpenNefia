@@ -61,6 +61,25 @@ function table.merge(tblA, tblB, array_merge)
    return tblA
 end
 
+--- Merges two tables, where values from b are overridden by values
+--- already in a.
+-- @tparam table a
+-- @tparam table b
+-- @treturn table
+function table.merge_missing(a, b)
+   if not b then
+      return a
+   end
+
+   for k, v in pairs(b) do
+      if a[k] == nil then
+         a[k] = v
+      end
+   end
+
+   return a
+end
+
 --- Creates a deep copy of table without copying userdata objects.
 -- @tparam table object the table to copy
 -- @treturn table a copy of the table
@@ -173,6 +192,11 @@ end
 table.unpack = unpack
 unpack = nil
 
+--- Tries to obtain a nested value in a table.
+-- @tparam table obj
+-- @param ... a list of keys
+-- @treturn[1] any
+-- @treturn[2] nil
 function table.maybe(obj, ...)
    local arg = {...}
    local len = #arg
@@ -198,7 +222,20 @@ function table.append(a, b)
    return a
 end
 
-utf8 = require("utf8")
+local function try_require(mod)
+   local success, obj = pcall(function() return require(mod) end)
+   if success then
+      return obj
+   end
+
+   return nil
+end
+
+utf8 = try_require("utf8")
+if love == nil and (utf8 == nil or utf8.codes == nil) then
+   -- require the luarocks version (starwing/utf8)
+   utf8 = require("lua-utf8")
+end
 
 --- Returns a new string with the last UTF-8 codepoint removed.
 -- @tparam string t
@@ -229,6 +266,11 @@ function utf8.sub(t, i, j)
 end
 
 -- Returns true if cp is a fullwidth UTF-8 codepoint.
+--
+-- NOTE: This function isn't completely accurate. It ought to use the
+-- UCD East Asian Width table instead.
+-- (https://www.unicode.org/Public/UCD/latest/ucd/EastAsianWidth.txt)
+--
 -- @tparam int cp utf8 codepoint
 -- @treturn bool
 function utf8.is_fullwidth(cp)
@@ -265,8 +307,8 @@ function utf8.is_fullwidth(cp)
    return false
 end
 
---- Returns the length of the string in terms of character width.
---- Halfwidth counts as 1, fullwidth 2.
+--- Returns the length of the string in terms of widthness. Halfwidth
+--- counts as 1, fullwidth 2.
 -- @tparam string t
 -- @treturn int
 function utf8.wide_len(t)
@@ -281,7 +323,7 @@ function utf8.wide_len(t)
    return len
 end
 
---- Analogous to string.sub, but operates on the "widthness" of
+--- Analogous to string.sub, but operates on the widthness of
 --- characters. Halfwidth counts as length 1, fullwidth 2.
 -- @see string.sub
 -- @tparam string t
@@ -353,4 +395,4 @@ function _p(it)
 end
 
 -- prevent new globals from here on out.
-require("util.strict")
+require("thirdparty.strict")

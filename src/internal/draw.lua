@@ -156,11 +156,19 @@ function draw.set_font(size, kind, filename)
 end
 
 function draw.set_color(r, g, b, a)
-   love.graphics.setColor(
-      (r or 255) / 255,
-      (g or 255) / 255,
-      (b or 255) / 255,
-      (a or 255) / 255)
+   if type(r) == "table" then
+      love.graphics.setColor(
+         (r[1] or 255) / 255,
+         (r[2] or 255) / 255,
+         (r[3] or 255) / 255,
+         (r[4] or 255) / 255)
+   else
+      love.graphics.setColor(
+         (r or 255) / 255,
+         (g or 255) / 255,
+         (b or 255) / 255,
+         (a or 255) / 255)
+   end
 end
 
 function draw.set_background_color(r, g, b, a)

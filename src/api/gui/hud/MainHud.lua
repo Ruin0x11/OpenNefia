@@ -7,6 +7,7 @@ local InputHandler = require("api.gui.InputHandler")
 local UiClock = require("api.gui.hud.UiClock")
 local UiLevel = require("api.gui.hud.UiLevel")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
+local UiTheme = require("api.gui.UiTheme")
 
 local MainHud = class("MainHud", IHud)
 
@@ -36,45 +37,20 @@ local function make_message_window(width)
    return { image = image, quad = quad }
 end
 
-local function make_skill_icons()
-   local image = Draw.load_image("graphic/temp/hud_skill_icons.bmp")
-
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   for i=1,10 do
-      quad[i] = love.graphics.newQuad((i-1) * 16, 0, 16, 48, iw, ih)
-   end
-
-   return { image = image, quad = quad }
-end
-
 function MainHud:init()
    self.input = InputHandler:new()
 
-   self.bar = nil
-   self.message_window = nil
-   self.minimap = Draw.load_image("graphic/temp/hud_minimap.bmp")
-   self.map_name_icon = Draw.load_image("graphic/temp/map_name_icon.bmp")
-   self.skill_icons = make_skill_icons()
    self.clock = UiClock:new()
    self.gold_platinum = UiGoldPlatinum:new()
    self.level = UiLevel:new()
 end
 
 function MainHud:relayout(x, y, width, height)
-   local regen = self.bar == nil or self.message_window == nil or width % 128 ~= self.width % 128
-
    self.width = width
    self.height = height
    self.x = x
    self.y = y
-
-   if regen then
-      self.bar = make_bar(self.width)
-      self.message_window = make_message_window(self.width)
-   end
+   self.t = UiTheme.load(self)
 
    self.clock:relayout(self.x, self.y)
    self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16))
@@ -92,38 +68,20 @@ function MainHud:register_widget(widget)
 end
 
 function MainHud:draw_bar_message_window()
-   local step = self.width / 192
-   for i=0,step do
-      local q
-      if i == self.width / 192 - 1 then
-         step = self.width % 192
-         q = 2
-      else
-         step = 128
-         q = 1
-      end
+   Draw.set_color(255, 255, 255)
 
-      Draw.image_region(self.bar.image,
-                        self.bar.quad[q],
-                        i * 192 + self.x,
-                        self.height - 16,
-                        nil, nil, {255, 255, 255})
-      Draw.image_region(self.message_window.image,
-                        self.message_window.quad[q],
-                        i * 192 + self.x,
-                        self.height - (72 + 16),
-                        nil, nil, {255, 255, 255})
-   end
+   self.t.bar:draw_bar(self.x, self.height - 16, self.width)
+   self.t.message_window:draw_bar(self.x, self.height - (72 + 16), self.width)
 
-   Draw.image(self.map_name_icon, 136 + 6, self.height - 16)
+   self.t.map_name_icon:draw(136 + 6, self.height - 16)
 end
 
 function MainHud:draw_minimap()
-   Draw.image(self.minimap, 0, self.height - (16 + 72), 136, 16 + 72)
+   self.t.minimap:draw(0, self.height - (16 + 72), 136, 16 + 72)
 end
 
 function MainHud:draw_map_name()
-   Draw.set_font(12) -- 12 + sizefix - en * 2
+   Draw.set_font(self.t.map_name_font) -- 12 + sizefix - en * 2
 
    local map_name = "some_map_name"
    local map_level = "B.12"
@@ -132,22 +90,20 @@ function MainHud:draw_map_name()
    if string.nonempty(map_level) then
       max_width = 12
    end
+   Draw.set_color(self.t.text_color)
    if utf8.wide_len(map_name) > max_width then
       Draw.text(utf8.wide_sub(map_name, 0, max_width),
                 136 + 24,
-                self.height - 16 + 3, -- inf_bary + 3 + vfix - en
-                {0, 0, 0})
+                self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    else
       Draw.text(map_name,
                 136 + 24,
-                self.height - 16 + 3, -- inf_bary + 3 + vfix - en
-                {0, 0, 0})
+                self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    end
    if string.nonempty(map_level) then
       Draw.text(map_level,
                 136 + 114,
-                self.height - 16 + 3, -- inf_bary + 3 + vfix - en
-                {0, 0, 0})
+                self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    end
 end
 
@@ -170,6 +126,7 @@ function MainHud:draw_attributes()
    }
 
    -- icons
+   Draw.set_color(255, 255, 255)
    for i, a in ipairs(attrs) do
       local offset_x = 0
       if a == "base.speed" then
@@ -177,30 +134,27 @@ function MainHud:draw_attributes()
       elseif a == "dv" then
          offset_x = 14
       end
-      Draw.image_region(self.skill_icons.image,
-                        self.skill_icons.quad[i],
-                        136 + (i - 1) * item_width + 148 + offset_x,
-                        self.height - 16 + 1,
-                        nil,
-                        nil,
-                        {255, 255, 255})
+      self.t.skill_icons:draw_region(
+         i,
+         136 + (i - 1) * item_width + 148 + offset_x,
+         self.height - 16 + 1)
    end
 
    -- values
-   Draw.set_font(13) -- 13 - en * 2
+   Draw.set_font(self.t.attribute_font) -- 13 - en * 2
    local values = table.of(function() return math.random(1000) end, 10)
    local x
    local y = self.height - 16 + 2 -- + vfix
    for i, a in ipairs(attrs) do
       x = 136 + item_width * (i - 1) + 166
+      local color = self.t.text_color
+
       if a == "base.speed" then
-         local color = {0, 0, 0}
          Draw.text(tostring(100), x + 8, y, color)
       elseif a == "dv" then
          local dv_pv = string.format("%d/%d", 40, 60)
-         Draw.text(dv_pv, x + 14, y, {0, 0, 0})
+         Draw.text(dv_pv, x + 14, y, color)
       else
-         local color = {0, 0, 0}
          Draw.text(tostring(100), x, y, color)
       end
    end

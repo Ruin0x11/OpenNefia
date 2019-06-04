@@ -1,11 +1,11 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiLevel = class("UiLevel", {IUiElement, ISettable})
 
 function UiLevel:init()
-   self.character_level_icon = Draw.load_image("graphic/temp/character_level_icon.bmp")
    self.level = math.random(1, 20)
    self.exp = math.random(100000)
 end
@@ -18,11 +18,16 @@ end
 function UiLevel:relayout(x, y)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 end
 
 function UiLevel:draw()
-   Draw.image(self.character_level_icon, self.x + 4, self.y)
-   Draw.text_shadowed(string.format("Lv%s/%d", self.level, self.exp), self.x + 32, self.y + 2)
+   self.t.character_level_icon:draw(self.x + 4, self.y)
+   Draw.text_shadowed(string.format("Lv%s/%d", self.level, self.exp),
+                      self.x + 32,
+                      self.y + 2,
+                      self.t.text_color_light,
+                      self.t.text_color_light_shadow)
 end
 
 function UiLevel:update()

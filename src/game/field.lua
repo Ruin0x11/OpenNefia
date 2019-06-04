@@ -3,7 +3,7 @@ local startup = require("game.startup")
 
 local Draw = require("api.Draw")
 local InputHandler = require("api.gui.InputHandler")
-local HeldKeyHandler = require("api.gui.HeldKeyHandler")
+local KeyHandler = require("api.gui.KeyHandler")
 
 local field = {}
 field.active = false
@@ -22,7 +22,7 @@ function field.query()
    internal.draw.set_hud(hud)
 
    batches = startup.load_batches()
-   local keys = InputHandler:new(HeldKeyHandler:new())
+   local keys = InputHandler:new(KeyHandler:new())
    keys:focus()
    keys:bind_keys {
       up = function()
@@ -65,9 +65,16 @@ function field.draw()
    local draw_x = field.draw_x
    local draw_y = field.draw_y
 
-   -- TODO slow?
    batches["map"]:draw(draw_x, draw_y)
+   -- blood, fragments
+   -- efmap
+   -- nefia icons
+   -- mefs
+   -- items
    batches["chara"]:draw(draw_x, draw_y)
+   -- light
+   -- cloud
+   -- shadow
 
    internal.draw.draw_hud()
 end

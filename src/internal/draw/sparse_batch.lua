@@ -62,33 +62,6 @@ function sparse_batch:remove_tile(ind)
    table.insert(self.free_indices, ind)
 end
 
-function sparse_batch:update_tile(pos, params)
-   local ind
-   if type(pos) == "table" then
-      local x = pos.x
-      local y = pos.y
-      if not x or y then error("missing x or y") end
-
-      ind = self:find_tile_at(x, y)
-
-      if not ind then
-         error(string.format("no tile at %d,%d", x, y))
-      end
-   else
-      ind = pos
-   end
-
-   if self.tiles[ind] then
-      if params.tile  then self.tiles[ind]   = params.tile end
-      if params.x     then self.xcoords[ind] = params.x end
-      if params.y     then self.ycoords[ind] = params.y end
-      if params.xoff  then self.xoffs[ind]   = params.xoff end
-      if params.yoff  then self.yoffs[ind]   = params.yoff end
-      if params.color then self.colors[ind]  = params.color end
-      self.updated = true
-   end
-end
-
 function sparse_batch:set_tiles(tiles)
    self.tiles = tiles
    self.updated = true

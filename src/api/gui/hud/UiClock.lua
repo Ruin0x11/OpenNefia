@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local ISettable = require("api.gui.ISettable")
 local IHudElement = require("api.gui.hud.IHudElement")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiClock = class("UiClock", {IHudElement, ISettable})
 
@@ -23,10 +24,6 @@ function UiClock:init()
       month = 6,
       day = 2,
    }
-
-   self.clock = Draw.load_image("graphic/temp/clock.bmp")
-   self.clock_hand = Draw.load_image("graphic/temp/clock_hand.bmp")
-   self.date_label_frame = Draw.load_image("graphic/temp/date_label_frame.bmp")
 end
 
 function UiClock:set_data(date)
@@ -39,20 +36,25 @@ end
 function UiClock:relayout(x, y)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 end
 
 function UiClock:draw()
    Draw.set_color(255, 255, 255)
-   Draw.image(self.clock, self.x, self.y)
-   Draw.image(self.date_label_frame, self.x + 78, self.y + 8)
-   Draw.image(self.clock_hand, self.x + 62, self.y + 48, nil, nil, nil, true, self.date.hour * 30 + self.date.minute / 2)
-   Draw.image(self.clock_hand, self.x + 62, self.y + 48, self.clock_hand:getWidth() / 2, nil, nil, true, self.date.minute * 6)
+   self.t.clock:draw(self.x, self.y)
+   self.t.date_label_frame:draw(self.x + 78, self.y + 8)
+   self.t.clock_hand:draw(self.x + 62, self.y + 48, nil, nil, nil, true, self.date.hour * 30 + self.date.minute / 2)
+   self.t.clock_hand:draw(self.x + 62, self.y + 48, self.t.clock_hand:get_height() / 2, nil, nil, true, self.date.minute * 6)
 
    Draw.text(string.format("%d/%d/%d", self.date.year, self.date.month, self.date.day),
              self.x + 120,
              self.y + 17, -- + vfix
-             {0, 0, 0})
-   Draw.text_shadowed(times[self.date.hour / 4 + 1] or "", self.x + 120 + 6, self.y + 35)
+             self.t.text_color)
+   Draw.text_shadowed(times[self.date.hour / 4 + 1] or "",
+                      self.x + 120 + 6,
+                      self.y + 35,
+                      self.t.text_color_light,
+                      self.t.text_color_light_shadow)
 end
 
 function UiClock:update()
