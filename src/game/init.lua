@@ -12,7 +12,6 @@ game.in_game = false
 
 local function main_title()
    game.in_game = false
-   internal.mod.load_mods()
 
    local title = require("api.gui.menu.MainTitleMenu"):new()
 
@@ -40,6 +39,7 @@ end
 
 function game.loop()
    startup.run()
+   internal.mod.load_mods()
 
    local cb = field.query
 

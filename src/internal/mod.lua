@@ -62,6 +62,8 @@ local function generate_sandbox(mod_name)
    sandbox["MOD_NAME"] = mod_name
 
    sandbox["require"] = safe_require
+   sandbox["data"] = require("internal.data")
+   sandbox["schema"] = require("thirdparty.schema")
 
    return sandbox
 end
@@ -81,6 +83,7 @@ local function load_mod(mod_name, init_lua_path)
 end
 
 function mod.load_mods()
+   print("LOAD MODS")
    for _, mod in ipairs(fs.get_directory_items("mod/")) do
       local init = fs.join("mod", mod, "init.lua")
       if fs.exists(init) then

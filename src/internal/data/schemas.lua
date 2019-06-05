@@ -4,8 +4,8 @@ local schema = require ("thirdparty.schema")
 local chara = {
    schema = schema.Record {
       name = schema.String,
-      image = schema.String,
-      hp = schema.Number,
+      image = schema.Number,
+      max_hp = schema.Number,
    },
    index_on = "name"
 }

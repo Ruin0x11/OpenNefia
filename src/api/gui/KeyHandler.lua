@@ -111,6 +111,8 @@ function KeyHandler:handle_repeat(key)
 end
 
 function KeyHandler:run_actions()
+   local ran = false
+
    for key, v in pairs(self.pressed) do
       if repeats[key] then
          self:handle_repeat(key)
@@ -122,21 +124,25 @@ function KeyHandler:run_actions()
       -- instead of each one individually.
       if v.pressed then
          self:run_key_action(key)
+         ran = true
+         -- only run the first action
+         break
       end
-
-      -- only run the first action
-      break
-      -- TODO do not run the below key actions either
    end
-   for key, _ in pairs(self.this_frame) do
-      self:run_key_action(key)
+   if not ran then
+      for key, _ in pairs(self.this_frame) do
+         self:run_key_action(key)
+         ran = true
 
-      -- only run the first action
-      break
+         -- only run the first action
+         break
+      end
    end
 
    self.halted = self.halted and not self.stop_halt
    self.this_frame = {}
+
+   return ran
 end
 
 return KeyHandler

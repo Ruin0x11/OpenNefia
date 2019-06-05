@@ -22,6 +22,10 @@ function sparse_batch:init(width, height, atlas, coords)
    self.tile_height = self.atlas.tile_height
 end
 
+function sparse_batch:get_tile(ind)
+   return self.tiles[ind], self.xcoords[ind], self.ycoords[ind]
+end
+
 function sparse_batch:find_tile_at(x, y)
    local ind
    local xc = self.xcoords

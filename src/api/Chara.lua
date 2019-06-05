@@ -35,4 +35,21 @@ end
 function Chara.vanquish(c)
 end
 
+function Chara.create(id, x, y)
+   local data = require("internal.data")
+   local map = require("internal.map")
+
+   local proto = data["base.chara"][id]
+   if proto == nil then return nil end
+
+   local chara = map.get():create_object(proto, x, y)
+
+   -- TODO remove
+   chara.hp = chara.max_hp
+   chara.batch_ind = 0
+   chara.tile = chara.image
+
+   return chara
+end
+
 return Chara

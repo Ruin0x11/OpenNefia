@@ -91,6 +91,9 @@ function startup.load_batches(coords)
 
    sw:p("load_batches.update")
 
+   local atlases = require("internal.global.atlases")
+   atlases.set(atlas, chara_atlas)
+
    return {
       map = map_batch,
       chara = chara_batch,

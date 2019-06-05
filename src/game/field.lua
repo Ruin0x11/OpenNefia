@@ -9,6 +9,9 @@ local Input = require("api.Input")
 local InputHandler = require("api.gui.InputHandler")
 local GameKeyHandler = require("api.gui.GameKeyHandler")
 
+local map = require("internal.map")
+local field_renderer = require("internal.field_renderer")
+
 local field = {}
 field.active = false
 field.draw_x = 0
@@ -20,6 +23,8 @@ local me
 
 local tile_size = 48
 
+local m
+
 function field.query()
    local dt = 0
    local going = true
@@ -29,19 +34,14 @@ function field.query()
    local hud = require("api.gui.hud.MainHud"):new()
    internal.draw.set_hud(hud)
 
-   local coords = require("internal.draw.coords.tiled_coords"):new()
+   startup.load_batches(require("internal.draw.coords.tiled_coords"):new())
 
-   local uid = require("internal.uid_tracker"):new()
-   local pool = require("internal.pool"):new("base.chara", uid)
+   map.create()
 
-   me = pool:generate {
-      batch_ind = 0,
-      tile = 3,
-      x = 0,
-      y = 0
-   }
+   field_renderer.create()
 
-   batches = startup.load_batches(coords)
+   me = Chara.create("base.player", 25, 25)
+
    local keys = InputHandler:new()
    keys:focus()
    keys:bind_keys {
@@ -50,23 +50,15 @@ function field.query()
       end,
       up = function()
          Command.move(me, "North")
-         batches["map"].updated = true
-         batches["chara"].updated = true
       end,
       down = function()
          Command.move(me, "South")
-         batches["map"].updated = true
-         batches["chara"].updated = true
       end,
       left = function()
          Command.move(me, "East")
-         batches["map"].updated = true
-         batches["chara"].updated = true
       end,
       right = function()
          Command.move(me, "West")
-         batches["map"].updated = true
-         batches["chara"].updated = true
       end,
       escape = function()
          if Input.yes_no() then
@@ -80,10 +72,14 @@ function field.query()
 
    internal.draw.set_root_input_handler(keys)
 
-   while going do
-      keys:run_actions()
+   field_renderer.get():update_draw_pos(me.x, me.y)
 
-      field.draw_x, field.draw_y = coords:get_draw_pos(me.x, me.y, Map.width(), Map.height())
+   while going do
+      local ran = keys:run_actions()
+
+      if ran then
+         field_renderer.get():update_draw_pos(me.x, me.y)
+      end
 
       dt = coroutine.yield()
    end
@@ -93,41 +89,8 @@ function field.query()
    return "title"
 end
 
-local px = -1
-local py = -1
-
-local function update_chara_batch(chara)
-   if chara.x ~= px or chara.y ~= py then
-      if chara.batch_ind > 0 then
-         batches["chara"]:remove_tile(chara.batch_ind)
-      end
-      chara.batch_ind = batches["chara"]:add_tile {
-         tile = chara.tile,
-         x = chara.x,
-         y = chara.y
-                                                  }
-
-      px = chara.x
-      py = chara.y
-   end
-end
-
 function field.draw()
-   update_chara_batch(me)
-
-   local draw_x = field.draw_x
-   local draw_y = field.draw_y
-
-   batches["map"]:draw(draw_x, draw_y)
-   -- blood, fragments
-   -- efmap
-   -- nefia icons
-   -- mefs
-   -- items
-   batches["chara"]:draw(draw_x, draw_y)
-   -- light
-   -- cloud
-   -- shadow
+   field_renderer.get():draw()
 
    internal.draw.draw_hud()
 end

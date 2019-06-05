@@ -42,7 +42,11 @@ function pool:generate(proto)
 
    rawset(data, "uid", uid)
 
-   local entry = { data = data, array_index = #self.uids + 1 }
+   return data
+end
+
+function pool:add_object(obj, uid)
+   local entry = { data = obj, array_index = #self.uids + 1 }
 
    table.insert(self.uids, uid)
    self.content[uid] = entry
@@ -69,6 +73,21 @@ function pool:insert(obj, uid)
    obj.array_index = self.uids
 
    self.content[uid] = obj
+end
+
+local function iter(a, i)
+   if i > #a.uids then
+      return nil
+   end
+
+   local d = a.content[a.uids[i]].data
+   i = i + 1
+
+   return i, d
+end
+
+function pool:iter()
+   return iter, {uids=self.uids, content=self.content}, 1
 end
 
 function pool:transfer_to(pool_to, uid)

@@ -56,7 +56,7 @@ function tile_batch:draw(x, y)
             for x=tx,tdx do
                if x >= 0 and x < self.width then
                   local tile = self_tiles[y*self.width+x+1]
-                  if tile and tile ~= 0 then
+                  if tile ~= 0 then
                      local i, j = self.coords:tile_to_screen(x - tx, y - ty)
                      batch:add(tiles[tile], i, j)
                   end

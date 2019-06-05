@@ -1,7 +1,6 @@
 local schema = require ("thirdparty.schema")
 
 local data = {
-   schemas = require("internal.data.schemas"),
    errors = {}
 }
 
@@ -39,7 +38,12 @@ end
 
 local stage = nil
 local inner = {}
+local schemas = {}
 local strict = false
+
+function data:add_type(schema)
+   schemas["base." .. schema.name] = schema
+end
 
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
@@ -52,7 +56,7 @@ function data:add(dat)
       return
    end
 
-   local _schema = self.schemas[_type]
+   local _schema = schemas[_type]
 
    if _schema == nil then
       data:error("No type registered for " .. _type)
@@ -145,6 +149,7 @@ end
 function proxy:__index(k)
    local exist = rawget(proxy, k)
    if exist then return exist end
+   if not inner[self._type] then return nil end
 
    return inner[self._type][k]
 end
