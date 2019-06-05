@@ -1,0 +1,54 @@
+* Summary
+Mod for designating a map as "my home", also setting it as the default spawn location.
+* Usage
+#+BEGIN_SRC lua
+MyHome.set(map)
+
+-- Internally runs Map.replace(map_id, function() ... end) for moving everything.
+MyHome.upgrade(map_id)
+
+-- Calculates and modifies the rank for your home.
+MyHome.recalc_rank()
+
+#+END_SRC
+* Events
+** Depends
+- base.on_enter_map
+- base.on_item_dropped
+- base.on_item_picked_up
+- house_board.on_use
+** Adds
+- my_home.on_enter
+- my_home.on_upgrade
+  + prev: Map
+  + new: Map
+- my_home.on_rank_change
+  + decor_value: int
+  + heirloom_value: int
+- my_home.on_calc_item_value
+  + item: OItem
+  + value: int
+* Data
+- base.map
+  + is_home: bool|nil
+  + on_home_upgrade: function()|nil
+* Config
+(none)
+* Serialization
+- Flag for designating map as my home. There can be more than one depending on the circumstances.
+* Requirements
+- Adds a rank option for my home
+- Adds furniture value for furnishing items
+- There must be all the house board features expected in my home.
+- The home rank must be updated when the map is entered or an item is dropped/picked up.
+- The home rank must be modified based on the categories of items dropped in the map, but not in containers.
+* Questions
+- The item category system should probably be a string list, but it is undecided as of now.
+- What if a user wants a map to "act like" my home but not actually set it as the respawn point? There would need to be multiple home maps. The respawn logic should probably be handled by ~elona~ as hooked into functionality provided by ~base~.
+* Depends
+- base - map management
+- rank - add home ranking
+- house_board
+- servants
+- stayers
+- tile_edit

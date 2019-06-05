@@ -1,0 +1,19 @@
+* Summary
+Mod that provides a tile editor function.
+* Usage
+#+BEGIN_SRC lua
+TileEdit.query()
+#+END_SRC
+* Events
+** Depends
+(none)
+** Adds
+(none)
+* Data
+(none)
+* Config
+(none)
+* Requirements
+- Acts exactly like the my home tile editing interface.
+* Depends
+- base

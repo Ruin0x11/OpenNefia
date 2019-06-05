@@ -1,0 +1,30 @@
+* Summary
+Mod for showing damage popups.
+* Usage
+#+BEGIN_SRC lua
+DamagePopups.create(chara, amount, kind)
+DamagePopups.step()
+DamagePopups.clear()
+IDamagePopup
+#+END_SRC
+* Events
+** Depends
+- base.on_damaged
+- base.on_screen_scroll
+- base.on_draw_overlays
+** Adds
+- damage_popups.on_create
+* Config
+- enable/disable
+- select implementation
+* Requirements
+- create() will try to create a new popup, if it is below the maximum.
+- step() steps all popups by calling their step() coroutines and then yielding.
+- clear() clears everything.
+- popups must move as the screen scrolls.
+- popups should fulfill an interface for providing the exact drawing function to use.
+- the popup event should receive the exact contents of on_damaged, including changes by mods.
+- if other damage things have been added then the damaged event should be modified before the callback to add the popup.
+* Depends
+- base for hooking into damage event
+- NOT elona as it hooks into a more fundamental mechanic

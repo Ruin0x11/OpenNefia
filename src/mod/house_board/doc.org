@@ -1,0 +1,28 @@
+* Summary
+Mod for enabling desired house board features.
+* Usage
+#+BEGIN_SRC lua
+HouseBoard.query()
+HouseBoard.enabled_features(map)
+HouseBoard.run_feature(id)
+#+END_SRC
+* Events
+** Depends
+(none)
+** Adds
+- house_board.on_use
+  + features: array
+  + map: Map
+* Data
+- house_board.feature
+  + name: I18NFormatter
+  + callback: function()
+* Config
+(none)
+* Requirements
+- Conditional enabling of features with event callback
+- If no features returned, acts as disabled
+- Does not actually provide the house board item, instead the on_use callback is expected to be implanted in the desired object
+  + Only real reason is theming. It's weird to edit the chip for "house_board.house_board" when it should really be "elona.house_board".
+* Depends
+- base

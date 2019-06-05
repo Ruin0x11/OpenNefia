@@ -1,0 +1,22 @@
+* Summary
+Collects all the base mods needed for the ~elona~ mod.
+
+Mod dependencies here should never be more than 3 layers deep, and preferably only 1 layer deep (only dependency is base)
+* Usage
+User requires this mod to build a mod based on all elona mechanics, while lacking all the data instances that elona provides.
+* Events
+** Depends
+(various)
+** Adds
+(various)
+* Data
+(none)
+* Config
+(various)
+* Requirements
+- This should be the only mod necessary to implement ~elona~ on top of.
+* Depends
+- house_board
+- servants
+- damage_popups
+- my_home

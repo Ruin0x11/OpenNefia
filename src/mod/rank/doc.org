@@ -1,0 +1,43 @@
+* Summary
+Mod that provides the ranking/title system.
+* Usage
+#+BEGIN_SRC lua
+-- Gains experience in a rank.
+Rank.gain_exp(id, exp)
+
+-- Sets a rank's level.
+Rank.set_level(id, exp)
+
+-- Gets a rank's experience.
+Rank.exp(id)
+
+-- Gets a rank's level.
+Rank.level(id)
+#+END_SRC
+* Events
+** Depends
+- base.on_save_creation
+- base.on_data_check
+** Adds
+- rank.on_level_change
+  + id: rank.rank
+  + prev_rank: int
+  + new_rank: int
+* Data
+- rank.rank
+  + progression: table
+    - { { min = 100, title = "..." } }
+* Config
+(none)
+* Serialization
+- Rank information.
+* Requirements
+- Ranks are initialized on game start.
+- Ranks can be dynamically added using the data system.
+- Ranks should show up in the journal.
+* Questions
+- Should it be global to the current save?
+- Should the journal feature be added in ~elona~ or this mod?
+  + Elona. Many of the features there are Elona-specific. All this is concerned with is providing rank access.
+* Depends
+- base

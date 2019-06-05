@@ -1,0 +1,49 @@
+* Summary
+Mod that provides house visitors.
+* Usage
+#+BEGIN_SRC lua
+-- Generates a house visitor.
+HouseVisitor.generate(generator)
+
+-- Enqueues a house visitor.
+HouseVisitor.enqueue(map)
+
+-- Tries to visit the next visitor if there are any. Returns true/false based on success.
+HouseVisitor.visit_next(map)
+#+END_SRC
+* Events
+** Depends
+- base.on_data_check
+- base.on_map_entered (?)
+** Adds
+- house_visitor.on_generate
+  + visitor: OChara
+- house_visitor.on_create
+  + visitor: OChara
+* Data
+- house_visitor.visitor
+  + prototype: base.chara
+  + dialog: base.dialog
+  + on_create: func[opt]
+- house_visitor.generator
+  + generate: func
+- base.map
+  + number_of_waiting_visitors: int[opt]
+* Config
+(none)
+* Serialization
+- Number of waiting visitors per map.
+* Requirements
+- Visitors are generated as characters, then placed in the map.
+- Visitors are temporary.
+- There must be a way to set the visitor generation logic, and that method must be further moddable.
+  + It must not be a plain function, as it would require copying the whole thing.
+  + Users may want to add their own visitors.
+- It must support adventurers. This support could be added by ~elona~ itself with no further dependencies in this mod.
+- The "my chair" function needs supporting. This could be added as a callback on top of ~house_visitor.on_create~.
+- The visitor must be talked to after creation.
+- The visitor's dialog must be branchable and returnable to, like if it were a shop role with sub choices.
+* Questions
+- How is the generation logic determined? In the original code it is completely procedural based on sequential random probabilities.
+* Depends
+- base
