@@ -1,10 +1,11 @@
 local IBatch = require("internal.draw.IBatch")
 local sparse_batch = class("sparse_batch", IBatch)
 
-function sparse_batch:init(width, height, atlas)
+function sparse_batch:init(width, height, atlas, coords)
    self.width = width
    self.height = height
    self.atlas = atlas
+   self.coords = coords
 
    self.tiles = {}
    self.xcoords = {}
@@ -19,16 +20,6 @@ function sparse_batch:init(width, height, atlas)
    self.updated = true
    self.tile_width = self.atlas.tile_width
    self.tile_height = self.atlas.tile_height
-end
-
-function sparse_batch:find_bounds(x, y)
-   local draw_width = love.graphics.getWidth()
-   local draw_height = love.graphics.getHeight()
-   local tx = math.floor(x / self.tile_width) - 1
-   local ty = math.floor(y / self.tile_height) - 1
-   local tdx = math.min(math.ceil((x + draw_width) / self.tile_width), self.width)
-   local tdy = math.min(math.ceil((y + draw_height) / self.tile_height), self.height)
-   return tx, ty, tdx, tdy
 end
 
 function sparse_batch:find_tile_at(x, y)
@@ -76,11 +67,10 @@ function sparse_batch:draw(x, y)
    local tw = self.tile_width
    local th = self.tile_height
 
-   local ox = tw - (x % tw)
-   local oy = th - (y % th)
+   local sx, sy, ox, oy = self.coords:get_start_offset(x, y)
 
    if self.updated then
-      local tx, ty, tdx, tdy = self:find_bounds(x, y)
+      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
 
       local tiles = self.atlas.tiles
       local self_tiles = self.tiles
@@ -96,8 +86,9 @@ function sparse_batch:draw(x, y)
             local cx = xc[ind]
             local cy = yc[ind]
             if cx >= tx - 1 and cx < tdx and cy >= ty - 1 and cy < tdy then
-               local x = (cx - tx - 1) * tw + xo[ind]
-               local y = (cy - ty - 1) * th + yo[ind]
+               local i, j = self.coords:tile_to_screen(cx - tx, cy - ty)
+               local x = i + xo[ind]
+               local y = j + yo[ind]
                -- if color then
                -- batch.setColor(self.colors[ind])
                -- color_set = true
@@ -115,7 +106,7 @@ function sparse_batch:draw(x, y)
       self.updated = false
    end
 
-   love.graphics.draw(batch, ox - tw, oy - th)
+   love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
 end
 
 return sparse_batch

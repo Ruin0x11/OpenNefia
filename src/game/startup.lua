@@ -53,11 +53,11 @@ local function get_chara_tiles()
    return files
 end
 
-function startup.load_batches()
+function startup.load_batches(coords)
    sw:measure()
 
    local atlas = atlas:new(tile_size, tile_size, 48, 48)
-   atlas:load(get_map_tiles())
+   atlas:load(get_map_tiles(), coords)
 
    sw:p("load_batches.map")
 
@@ -68,7 +68,7 @@ function startup.load_batches()
 
    local map_size = 40
    local tiles = table.of(451, map_size * map_size)
-   local map_batch = tile_batch:new(map_size, map_size, atlas)
+   local map_batch = tile_batch:new(map_size, map_size, atlas, coords)
    map_batch:set_tiles(tiles)
    for x=0,map_size-1 do
       for y=0,map_size-1 do
@@ -78,7 +78,7 @@ function startup.load_batches()
       end
    end
 
-   local chara_batch = sparse_batch:new(map_size, map_size, chara_atlas)
+   local chara_batch = sparse_batch:new(map_size, map_size, chara_atlas, coords)
    -- for i=1,5000 do
    --    chara_batch:add_tile {
    --       tile = math.random(1, #chara_atlas.tiles),

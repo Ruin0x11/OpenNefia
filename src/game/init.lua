@@ -41,7 +41,7 @@ end
 function game.loop()
    startup.run()
 
-   local cb = main_title
+   local cb = field.query
 
    local going = true
    while going do

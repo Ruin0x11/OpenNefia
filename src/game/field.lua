@@ -29,14 +29,19 @@ function field.query()
    local hud = require("api.gui.hud.MainHud"):new()
    internal.draw.set_hud(hud)
 
-   me = {
+   local coords = require("internal.draw.coords.tiled_coords"):new()
+
+   local uid = require("internal.uid_tracker"):new()
+   local pool = require("internal.pool"):new("base.chara", uid)
+
+   me = pool:generate {
       batch_ind = 0,
       tile = 3,
       x = 0,
       y = 0
    }
 
-   batches = startup.load_batches()
+   batches = startup.load_batches(coords)
    local keys = InputHandler:new()
    keys:focus()
    keys:bind_keys {
@@ -78,8 +83,7 @@ function field.query()
    while going do
       keys:run_actions()
 
-      field.draw_x = math.clamp(me.x * tile_size - Draw.get_width() / 2 + (tile_size / 2), 0, Map.width() * tile_size - Draw.get_width())
-      field.draw_y = math.clamp(me.y * tile_size - Draw.get_height() / 2 + (tile_size / 2), 0, Map.width() * tile_size - Draw.get_height() + (72 + 16))
+      field.draw_x, field.draw_y = coords:get_draw_pos(me.x, me.y, Map.width(), Map.height())
 
       dt = coroutine.yield()
    end

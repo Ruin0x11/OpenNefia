@@ -12,7 +12,7 @@ function atlas:init(tile_count_x, tile_count_y, tile_width, tile_height)
    self.batch = nil
 end
 
-function atlas:load(files)
+function atlas:load(files, coords)
    self.tiles = {}
 
    local canvas = love.graphics.newCanvas(self.image_width, self.image_height)
@@ -28,7 +28,11 @@ function atlas:load(files)
 
       self.tiles[i + 1] = love.graphics.newQuad(x, y, self.tile_width, self.tile_height, self.image_width, self.image_height)
 
-      love.graphics.draw(tile, x, y)
+      if coords then
+         coords:load_tile(tile, x, y)
+      else
+         love.graphics.draw(tile, x, y)
+      end
 
       tile:release()
    end

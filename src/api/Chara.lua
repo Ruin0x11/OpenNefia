@@ -29,4 +29,10 @@ function Chara.is_player(c)
    return true
 end
 
+function Chara.set_player(c)
+end
+
+function Chara.vanquish(c)
+end
+
 return Chara
