@@ -20,6 +20,8 @@ function pool:get(uid)
 
    local mt = {
       __index = function(t, k)
+         -- BUG Does not preserve the validity of references that are
+         -- moved between maps when they're supposed to stay valid.
          if k == "is_valid" then
             return self.content[uid] ~= nil
          end
@@ -46,6 +48,8 @@ function pool:generate(proto)
 end
 
 function pool:add_object(obj, uid)
+   assert(self.content[uid] == nil)
+
    local entry = { data = obj, array_index = #self.uids + 1 }
 
    table.insert(self.uids, uid)
@@ -73,6 +77,10 @@ function pool:insert(obj, uid)
    obj.array_index = self.uids
 
    self.content[uid] = obj
+end
+
+function pool:has(uid)
+   return self.content[uid] ~= nil
 end
 
 local function iter(a, i)

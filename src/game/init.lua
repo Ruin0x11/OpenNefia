@@ -61,7 +61,7 @@ function game.draw()
    local going = true
 
    while going do
-      if field.active then
+      if field.is_active then
          field.draw()
       end
 

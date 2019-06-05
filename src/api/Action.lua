@@ -9,9 +9,6 @@ local Chara = require("api.Chara")
 local Action = {}
 
 function Action.move(chara, x, y)
-   if type(x) == "string" then
-      x, y = Pos.add_direction(x, chara.x, chara.y)
-   end
 
    -- EVENT: before_character_movement
    -- ally direction

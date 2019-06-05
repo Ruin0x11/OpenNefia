@@ -13,9 +13,7 @@ local map = require("internal.map")
 local field_renderer = require("internal.field_renderer")
 
 local field = {}
-field.active = false
-field.draw_x = 0
-field.draw_y = 0
+field.is_active = false
 
 local batches = {}
 
@@ -29,7 +27,7 @@ function field.query()
    local dt = 0
    local going = true
 
-   field.active = true
+   field.is_active = true
 
    local hud = require("api.gui.hud.MainHud"):new()
    internal.draw.set_hud(hud)
@@ -60,6 +58,9 @@ function field.query()
       right = function()
          Command.move(me, "West")
       end,
+      ["`"] = function()
+         require("api.gui.menu.Repl"):new({}):query()
+      end,
       escape = function()
          if Input.yes_no() then
             going = false
@@ -84,7 +85,7 @@ function field.query()
       dt = coroutine.yield()
    end
 
-   field.active = false
+   field.is_active = false
 
    return "title"
 end

@@ -22,6 +22,10 @@ function OMap:set_tile(id, x, y)
    self.tiles[y*self.width+x+1] = tile
 end
 
+function OMap:get_tile(x, y)
+   return self.tiles[y*self.width+x+1]
+end
+
 function OMap:get_pool(type_id)
    self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids)
    return self.pools[type_id]
@@ -53,7 +57,7 @@ function OMap:add_object(obj, x, y)
 end
 
 function OMap:move_object(obj, x, y)
-   local uid = obj.uid
+   assert(self:has(obj._type, obj.uid))
 
    obj.x = x
    obj.y = y
@@ -65,6 +69,10 @@ end
 
 function OMap:iter_objects(type_id)
    return self:get_pool(type_id):iter()
+end
+
+function OMap:has(type_id, uid)
+   return self:get_pool(type_id):has(uid)
 end
 
 function map.get()

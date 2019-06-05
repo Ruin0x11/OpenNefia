@@ -12,6 +12,7 @@ data:add_type {
    name = "map_tile",
    schema = schema.Record {
       image = schema.Number,
+      is_solid = schema.Boolean,
    },
 }
 
@@ -42,14 +43,16 @@ data:add {
    _type = "base.map_tile",
    _id = "floor",
 
-   image = 451
+   image = 451,
+   is_solid = false
 }
 
 data:add {
    _type = "base.map_tile",
    _id = "wall",
 
-   image = 300
+   image = 300,
+   is_solid = true
 }
 
 data:add_multi(

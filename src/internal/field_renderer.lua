@@ -61,14 +61,14 @@ function field_renderer:update_draw_pos(player_x, player_y)
       self.chara_batch.updated = true
    end
 
-   self.draw_x, self.draw_y = draw_x, draw_y
-
-   self:update()
+   self:set_draw_pos(draw_x, draw_y)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)
    self.draw_x = draw_x
    self.draw_y = draw_y
+
+   self:update()
 end
 
 function field_renderer:draw()
