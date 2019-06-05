@@ -106,10 +106,21 @@ local function delegate(c, field, params)
 end
 
 function is_an(interface, obj)
+   if _classes[interface] then
+      return type(obj) == "table" and obj.__class == interface
+   end
+
    return verify(obj, interface) == nil
 end
 
 function assert_is_an(interface, obj)
+   if _classes[interface] then
+      if type(obj) ~= "table" or obj.__class ~= interface then
+         error(string.format("%s is not an instance of %s", obj, interface))
+      end
+      return
+   end
+
    local err = verify(obj, interface)
    if err then
       error(string.format("%s should implement %s: %s", obj, interface, err))

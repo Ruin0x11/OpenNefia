@@ -77,14 +77,16 @@ function MainTitleMenu:relayout(x, y, width, height)
    self.width = width
    self.height = height
    self.win:relayout(self.x + 80, (self.height - 308) / 2, 320, 355)
-   self.list:relayout(self.win.x + 40, self.win.y + 50)
+   self.list:relayout(self.win.x + 40, self.win.y + 48)
 end
 
 function MainTitleMenu:draw()
-   -- Draw.use_shader(self.shader)
-   -- self.shader:send("time", self.t)
+   Draw.use_shader(self.shader)
+   self.shader:send("time", self.t)
    Draw.image(self.bg, 0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
-   -- Draw.use_shader()
+   Draw.use_shader()
+
+   Draw.set_font(13)
 
    local version = "1.22"
    Draw.text("Elona version " .. version .. "  Developed by Noa", 20, 20)

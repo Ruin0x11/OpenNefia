@@ -1,6 +1,7 @@
 local internal = require("internal")
 local startup = require("game.startup")
 
+local Chara = require("api.Chara")
 local Command = require("api.Command")
 local Draw = require("api.Draw")
 local Map = require("api.Map")
@@ -16,7 +17,8 @@ field.draw_y = 0
 local batches = {}
 
 local me
-local Chara = require("api.Chara")
+
+local tile_size = 48
 
 function field.query()
    local dt = 0
@@ -76,8 +78,8 @@ function field.query()
    while going do
       keys:run_actions()
 
-      field.draw_x = math.clamp(me.x * 48 - Draw.get_width() / 2 + (48 / 2), 0, Map.width() * 48 - Draw.get_width())
-      field.draw_y = math.clamp(me.y * 48 - Draw.get_height() / 2 + (48 / 2), 0, Map.width() * 48 - Draw.get_height() + (72 + 16))
+      field.draw_x = math.clamp(me.x * tile_size - Draw.get_width() / 2 + (tile_size / 2), 0, Map.width() * tile_size - Draw.get_width())
+      field.draw_y = math.clamp(me.y * tile_size - Draw.get_height() / 2 + (tile_size / 2), 0, Map.width() * tile_size - Draw.get_height() + (72 + 16))
 
       dt = coroutine.yield()
    end

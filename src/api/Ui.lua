@@ -4,13 +4,15 @@ local Draw = require("api.Draw")
 -- @module Ui
 local Ui = {}
 
+local tile_size = 48
+
 function Ui.params_centered(width, height, in_game)
    local x = (Draw.get_width() - width) / 2
 
    local y
    if in_game then
-      local inf_screenh = Draw.get_height() / 48
-      y = ((inf_screenh + 1) * 48 - height) / 2 + 8
+      local tiled_height = Draw.get_height() / tile_size
+      y = ((tiled_height + 1) * tile_size - height) / 2 + 8
    else
       y = (Draw.get_height() - height) / 2
    end

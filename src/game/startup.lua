@@ -6,6 +6,8 @@ local startup = {}
 
 local sw
 
+local tile_size = 48
+
 function startup.run()
    math.randomseed(internal.get_timestamp())
    sw = stopwatch:new()
@@ -43,7 +45,7 @@ local function get_chara_tiles()
    for _, f in ipairs(fs.get_directory_items(dir)) do
       local file = fs.join(dir, f)
       local tile = love.image.newImageData(file)
-      if tile:getHeight() == 48 then
+      if tile:getHeight() == tile_size then
          files[#files+1] = file
       end
       tile:release()
@@ -52,14 +54,14 @@ local function get_chara_tiles()
 end
 
 function startup.load_batches()
-   sw:p("load_batches")
+   sw:measure()
 
-   local atlas = atlas:new(48, 48, 48, 48)
+   local atlas = atlas:new(tile_size, tile_size, 48, 48)
    atlas:load(get_map_tiles())
 
    sw:p("load_batches.map")
 
-   local chara_atlas = atlas:new(48, 48, 48, 48)
+   local chara_atlas = atlas:new(tile_size, tile_size, 48, 48)
    chara_atlas:load(get_chara_tiles())
 
    sw:p("load_batches.chara")

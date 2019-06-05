@@ -11,6 +11,8 @@ local canvas = nil
 --
 --
 
+local gamma_correct = nil
+
 local function create_canvas(w, h)
    canvas = love.graphics.newCanvas(w, h)
 
@@ -42,6 +44,8 @@ function draw.init()
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
    love.graphics.setBlendMode("alpha")
+
+   gamma_correct = love.graphics.newShader("graphic/shader/gamma.frag.glsl")
 end
 
 function draw.draw()
@@ -55,7 +59,9 @@ function draw.draw_end()
    love.graphics.setColor(1, 1, 1, 1)
    love.graphics.setBlendMode("alpha", "premultiplied")
 
+   love.graphics.setShader(gamma_correct)
    love.graphics.draw(canvas)
+   love.graphics.setShader()
 
    love.graphics.setBlendMode("alpha")
 end
@@ -113,7 +119,6 @@ end
 
 function draw.draw_layers()
    for i, layer in ipairs(layers) do
-      print(i, layer)
       layer:draw()
    end
 end
