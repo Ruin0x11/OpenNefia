@@ -8,6 +8,11 @@ function string.nonempty(s)
    return type(s) == "string" and s ~= ""
 end
 
+function string.lines(s)
+   if string.sub(s, -1) ~= "\n" then s = s .. "\n" end
+   return string.gmatch(s, "(.-)\n")
+end
+
 function math.clamp(i, min, max)
    return math.min(max, math.max(min, i))
 end
@@ -143,6 +148,58 @@ function table.of(item, count)
    return tbl
 end
 
+function table.of_2d(item, width, height, zero_indexed)
+   local tbl = {}
+   local add = 0
+   if zero_indexed then
+      add = -1
+   end
+   if type(item) == "function" then
+      for j=1+add,height+add do
+         tbl[j] = {}
+         for i=1+add,width+add do
+            tbl[j][i] = item(i, j)
+         end
+      end
+   else
+      for j=1+add,height+add do
+         tbl[j] = {}
+         for i=1+add,width+add do
+            tbl[j][i] = item
+         end
+      end
+   end
+   return tbl
+end
+
+function table.remove_value(tbl, value, array)
+   local result
+
+   if array then
+      local ind
+      for i, v in ipairs(tbl) do
+         if v == value then
+            ind = i
+            break
+         end
+      end
+      if ind then
+         result = table.remove(tbl, ind)
+      end
+   else
+      for k, v in pairs(tbl) do
+         if v == value then
+            ind = k
+            result = v
+            break
+         end
+      end
+      tbl[k] = nil
+   end
+
+   return result
+end
+
 --- Maps a function over tbl.
 -- @tparam table tbl
 -- @tparam func f
@@ -182,12 +239,6 @@ function table.flatten(arr)
 end
 
 table.push = table.insert
-
-function table.pop(tbl)
-   local it = tbl[#tbl]
-   tbl[#tbl] = nil
-   return it
-end
 
 table.unpack = unpack
 unpack = nil

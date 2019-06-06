@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
+local circular_buffer = require("thirdparty.circular_buffer")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -18,6 +19,10 @@ function Repl:init(env)
    self.caret = "> "
    self.env = env or {}
    self.result = ""
+   self.size = 200
+   self.scrollback = circular_buffer:new(self.size)
+   self.history = {}
+   self.history_index = 0
 
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys {
@@ -33,8 +38,26 @@ function Repl:init(env)
          self.input:halt_input()
       end,
       text_canceled = function() self.finished = true end,
+      up = function()
+         self:history_next()
+      end,
+      down = function()
+         self:history_prev()
+      end
    }
    self.input:halt_input()
+end
+
+function Repl:history_prev()
+   print("prev")
+   self.history_index = math.max(self.history_index - 1, 0)
+   self.text = self.history[self.history_index] or ""
+end
+
+function Repl:history_next()
+   print("next")
+   self.history_index = math.min(self.history_index + 1, #self.history)
+   self.text = self.history[self.history_index] or ""
 end
 
 function Repl:relayout(x, y, width, height)
@@ -44,11 +67,19 @@ function Repl:relayout(x, y, width, height)
    self.height = Draw.get_height() / 3
    self.color = {17, 17, 65, 192}
    self.font_size = 15
+   Draw.set_font(self.font_size)
+   self.max_lines = (self.height - 5) / Draw.text_height() - 1
 end
 
 function Repl:submit()
    local text = self.text
    self.text = ""
+   self.history_index = 0
+
+   self.scrollback:push(self.caret .. text)
+   if string.nonempty(text) then
+      table.insert(self.history, text)
+   end
 
    local chunk, err = loadstring("return " .. text)
 
@@ -56,13 +87,16 @@ function Repl:submit()
       chunk, err = loadstring(text)
 
       if chunk == nil then
-         self.result = err
+         self.scrollback:push(err)
          return
       end
    end
    -- setfenv(chunk, self.env)
    local success, result = pcall(chunk)
-   self.result = tostring(result)
+
+   for line in string.lines(tostring(result)) do
+      self.scrollback:push(line)
+   end
 end
 
 function Repl:draw()
@@ -70,9 +104,16 @@ function Repl:draw()
 
    Draw.set_font(self.font_size)
    Draw.set_color(255, 255, 255)
-   Draw.text(self.caret, self.x + 5, self.y + 5)
-   Draw.text(self.text, self.x + 5 + Draw.text_width(self.caret), self.y + 5)
-   Draw.text(self.result, self.x + 5, self.y + 5 + Draw.text_height())
+   Draw.text(self.caret, self.x + 5, self.y + self.height - Draw.text_height() - 5)
+   Draw.text(self.text, self.x + 5 + Draw.text_width(self.caret), self.y + self.height - Draw.text_height() - 5)
+
+   for i=1,self.max_lines do
+      local t = self.scrollback[i]
+      if t == nil then
+         break
+      end
+      Draw.text(t, self.x + 5, self.y + self.height - 5 - Draw.text_height() * (i+1))
+   end
 end
 
 function Repl:update(dt)

@@ -8,6 +8,7 @@ function TextHandler:init()
    self.bindings = {}
    self.forwards = nil
    self.chars = {}
+   self.this_frame = {}
    self.finished = false
    self.canceled = false
    self.halted = false
@@ -15,10 +16,6 @@ end
 
 local function translate(char, text)
    if text then
-      return char
-   elseif char == "tab" then
-      return "\t"
-   elseif char == "backspace" then
       return char
    end
 
@@ -49,11 +46,16 @@ function TextHandler:receive_key(char, pressed, text, is_repeat)
       self.canceled = true
    end
 
+   if not text then
+      self.this_frame[char] = true
+      return
+   end
+
    char = translate(char, text)
    if not char then return end
 
    if self.forwards then
-      self.forwards:receive_text(char, pressed, text)
+      self.forwards:receive_key(char, pressed, text, is_repeat)
    else
       table.insert(self.chars, char)
    end
@@ -96,8 +98,18 @@ function TextHandler:run_key_action(key)
 end
 
 function TextHandler:run_actions()
+   local ran = {}
    for _, c in ipairs(self.chars) do
       self:run_key_action(c)
+      ran[c] = true
+   end
+
+   for c, _ in pairs(self.this_frame) do
+      if not ran[c] then
+         if self.bindings[c] then
+            self.bindings[c]()
+         end
+      end
    end
 
    if self.finished and self.bindings["text_submitted"] then
@@ -109,6 +121,7 @@ function TextHandler:run_actions()
    end
 
    self.chars = {}
+   self.this_frame = {}
 
    self.finished = false
    self.canceled = false

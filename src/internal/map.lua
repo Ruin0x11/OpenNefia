@@ -1,5 +1,6 @@
 local pool = require("internal.pool")
 local bresenham = require("thirdparty.bresenham")
+
 local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 
@@ -79,7 +80,7 @@ function OMap:tile(x, y)
 end
 
 function OMap:get_pool(type_id)
-   self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids)
+   self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids, self.width, self.height)
    return self.pools[type_id]
 end
 
@@ -88,9 +89,7 @@ function OMap:create_object(proto, x, y)
    if not _type then error("no type") end
 
    local pool = self:get_pool(_type)
-   local obj = pool:generate(proto)
-
-   return self:add_object(obj, x, y)
+   return pool:create_object(proto, x, y)
 end
 
 function OMap:get_batch(type_id)
@@ -100,19 +99,16 @@ end
 
 function OMap:add_object(obj, x, y)
    local pool = self:get_pool(obj._type)
-   pool:add_object(obj, obj.uid)
-
-   obj.x = x
-   obj.y = y
+   pool:add_object(obj, x, y)
 
    return obj
 end
 
 function OMap:move_object(obj, x, y)
-   assert(self:has(obj._type, obj.uid))
+   assert(self:exists(obj))
 
-   obj.x = x
-   obj.y = y
+   local pool = self:get_pool(obj._type)
+   pool:move_object(obj, x, y)
 end
 
 function OMap:has_los(x1, y1, x2, y2)
@@ -262,8 +258,8 @@ function OMap:iter_objects(type_id)
    return self:get_pool(type_id):iter()
 end
 
-function OMap:has(type_id, uid)
-   return self:get_pool(type_id):has(uid)
+function OMap:exists(obj)
+   return self:get_pool(obj._type):exists(obj)
 end
 
 function OMap:is_in_bounds(x, y)

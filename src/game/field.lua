@@ -1,105 +1,76 @@
 local internal = require("internal")
 local startup = require("game.startup")
 
-local Chara = require("api.Chara")
-local Gui = require("api.Gui")
-local Command = require("api.Command")
 local Draw = require("api.Draw")
-local Map = require("api.Map")
-local Input = require("api.Input")
 local InputHandler = require("api.gui.InputHandler")
 local GameKeyHandler = require("api.gui.GameKeyHandler")
+local IUiLayer = require("api.gui.IUiLayer")
 
 local map = require("internal.map")
 local field_renderer = require("internal.field_renderer")
 
-local field = {}
-field.is_active = false
+local field_layer = class("field_layer", IUiLayer)
 
-local batches = {}
-
-local tile_size = 48
-
-local m
-
-function field.query()
-   local dt = 0
-   local going = true
-
-   field.is_active = true
-
-   local hud = require("api.gui.hud.MainHud"):new()
-   internal.draw.set_hud(hud)
+function field_layer:init()
+   self.is_active = false
 
    startup.load_batches(require("internal.draw").get_coords())
 
-   map.create(20, 20)
+   self.hud = require("api.gui.hud.MainHud"):new()
 
-   field_renderer.create()
+   self.map = nil
+   self.renderer = nil
+   self.player = nil
 
-   do
-      local me = Chara.create("base.player", 10, 10)
-      Chara.set_player(me)
-   end
-
-   local keys = InputHandler:new()
+   self.keys = InputHandler:new()
    keys:focus()
-   keys:bind_keys {
-      a = function()
-         print("do")
-      end,
-      up = function()
-         local p = Chara.player()
-         Command.move(p, "North")
-      end,
-      down = function()
-         local p = Chara.player()
-         Command.move(p, "South")
-      end,
-      left = function()
-         local p = Chara.player()
-         Command.move(p, "East")
-      end,
-      right = function()
-         local p = Chara.player()
-         Command.move(p, "West")
-      end,
-      ["`"] = function()
-         require("api.gui.menu.Repl"):new({}):query()
-      end,
-      escape = function()
-         if Input.yes_no() then
-            going = false
-         end
-      end,
-      ["return"] = function()
-         print(require("api.gui.TextPrompt"):new(16):query())
-      end,
-   }
+end
 
-   internal.draw.set_root_input_handler(keys)
+function field_layer:set_map(map)
+   self.map = map
+   self.renderer = field_renderer:new(map.width, map.height)
+end
 
-   Gui.redraw_screen()
-
-   while going do
-      local ran = keys:run_actions(dt)
-
-      if ran then
-         Gui.redraw_screen()
-      end
-
-      dt = coroutine.yield()
+function field_layer:draw()
+   if self.renderer then
+      self.renderer:draw()
    end
 
-   field.is_active = false
-
-   return "title"
+   self.hud:draw()
 end
 
-function field.draw()
-   field_renderer.get():draw()
-
-   internal.draw.draw_hud()
+function field_layer:exists(obj)
+   return self.map and self.map:exists(obj)
 end
 
-return field
+function field_layer:redraw_screen()
+   if not self.is_active or not self.renderer then return end
+
+   local player = self.player
+   if player then
+      self.renderer:update_draw_pos(player.x, player.y)
+   end
+   self.renderer:update(self.map)
+end
+
+function field_layer:update(dt, ran_action)
+   if ran_action then
+      self:redraw_screen()
+   end
+end
+
+-- HACK should be a better way to get default interface implementation
+do
+   local super = field_layer.query
+   function field_layer:query()
+      self.is_active = true
+
+      self:redraw_screen()
+
+      super(self)
+
+      self.is_active = false
+   end
+end
+
+return field_layer:new()

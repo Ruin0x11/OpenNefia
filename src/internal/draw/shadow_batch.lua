@@ -86,7 +86,7 @@ function shadow_batch:init(width, height, coords)
 
    iw = self.edge_image:getWidth()
    ih = self.edge_image:getHeight()
-   for i=1,16 do
+   for i=1,17 do
       self.edge_quad[i] = love.graphics.newQuad((i-1) * 48, 0, 48, 48, iw, ih)
    end
 
@@ -230,10 +230,7 @@ function shadow_batch:add_one(shadow, x, y, batch)
    if not is_shadow then
       -- Tile is lighted. Draw the fancy quarter-size shadow corners
       -- depending on the directions that border a shadow.
-      --local d = deco[sl+1]
-      --local deco2 = 0
-      --return decot[sl+1]
-      --self:add_deco(shadow, x, y)
+      self:add_deco(shadow, x, y)
       return
    end
 

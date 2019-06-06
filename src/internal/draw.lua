@@ -103,7 +103,7 @@ function draw.push_layer(ui_layer)
 end
 
 function draw.pop_layer()
-   table.pop(layers)
+   layers[#layers] = nil
    if layers[#layers] then
       layers[#layers]:focus()
       layers[#layers]:halt_input()

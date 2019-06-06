@@ -37,18 +37,22 @@ local function main_title()
    return action
 end
 
+local function run_field()
+   return field:query()
+end
+
 function game.loop()
    startup.run()
    internal.mod.load_mods()
 
-   local cb = field.query
+   local cb = run_field
 
    local going = true
    while going do
       local action = cb()
 
       if action == "start" then
-         cb = field.query
+         cb = run_field
       elseif action == "title" then
          cb = main_title
       elseif action == "quit" then
@@ -61,10 +65,6 @@ function game.draw()
    local going = true
 
    while going do
-      if field.is_active then
-         field.draw()
-      end
-
       internal.draw.draw_layers()
 
       going = coroutine.yield()

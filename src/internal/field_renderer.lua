@@ -97,15 +97,15 @@ function field_renderer:draw()
    self.shadow_batch:draw(draw_x, draw_y)
 end
 
-function field_renderer:update()
+function field_renderer:update(map)
    -- HACK don't do this.
-   for i, t in ipairs(map.get().tiles) do
-      local x = (i-1) % map.get().width
-      local y = math.floor((i-1) / map.get().height)
+   for i, t in ipairs(map.tiles) do
+      local x = (i-1) % map.width
+      local y = math.floor((i-1) / map.height)
       self:set_tile(t.image, x, y)
    end
 
-   for _, c in map.get():iter_charas() do
+   for _, c in map:iter_charas() do
       -- HACK replace as batch_ind shouldn't be stored on character
       -- local batch_ind = self.chara_batch_inds[c.uid]
       local batch_ind = c.batch_ind
@@ -132,30 +132,11 @@ function field_renderer:update()
 
    local p = chara.player()
    if p then
-      local shadow_map = map.get():calc_screen_sight(p.x, p.y, 15)
+      local shadow_map = map:calc_screen_sight(p.x, p.y, 15)
       if #shadow_map > 0 then
          self.shadow_batch:set_tiles(shadow_map)
       end
    end
 end
 
-
-local singleton
-
-local api = {}
-
-function api.create(width, height)
-   width = width or map.get().width
-   height = height or map.get().height
-   singleton = field_renderer:new(width, height)
-end
-
-function api.set(s)
-   singleton = s
-end
-
-function api.get()
-   return singleton
-end
-
-return api
+return field_renderer

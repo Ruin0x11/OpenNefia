@@ -1,17 +1,16 @@
 local uid_tracker = class("uid_tracker")
 
 function uid_tracker:init()
-   self.uids = {}
+   self.uid = 1
 end
 
-function uid_tracker:get_next(type_id)
-   self.uids[type_id] = self.uids[type_id] or 1
-   return self.uids[type_id]
+function uid_tracker:get_next()
+   return self.uid
 end
 
-function uid_tracker:get_next_and_increment(type_id)
-   local uid = self:get_next(type_id)
-   self.uids[type_id] = self.uids[type_id] + 1
+function uid_tracker:get_next_and_increment()
+   local uid = self:get_next()
+   self.uid = self.uid + 1
    return uid
 end
 

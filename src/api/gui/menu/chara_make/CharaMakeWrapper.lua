@@ -62,7 +62,7 @@ end
 function CharaMakeWrapper:go_back()
    if #self.trail == 0 then return end
 
-   self.submenu = table.pop(self.trail)
+   self.submenu = table.remove(self.trail)
    self.submenu:on_charamake_go_back()
    print(self.submenu:get_fq_name())
 
