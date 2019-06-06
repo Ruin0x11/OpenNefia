@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -28,7 +29,7 @@ function Repl:init(env)
       end,
       text_submitted = function()
          self:submit()
-         Draw.redraw_screen()
+         Gui.redraw_screen()
          self.input:halt_input()
       end,
       text_canceled = function() self.finished = true end,
@@ -49,10 +50,10 @@ function Repl:submit()
    local text = self.text
    self.text = ""
 
-   local chunk, err = loadstring(text)
+   local chunk, err = loadstring("return " .. text)
 
    if chunk == nil then
-      chunk, err = loadstring("return " .. text)
+      chunk, err = loadstring(text)
 
       if chunk == nil then
          self.result = err

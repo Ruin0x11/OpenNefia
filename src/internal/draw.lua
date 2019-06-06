@@ -32,7 +32,7 @@ function draw.init()
       resizable = true,
       minwidth = 800,
       minheight = 600,
-      vsync = false
+      vsync = true
    }
    local success = love.window.setMode(width, height, window_mode)
    if not success then

@@ -44,18 +44,18 @@ function tiled_coords:get_start_offset(x, y, width, height)
    local sx = 0
    local sy = 0
    if x < 0 then
-      sx = x / 2
+      sx = math.floor(x / 2)
    end
    if y < 0 then
-      sy = y / 2
+      sy = math.floor(y / 2)
    end
    return sx, sy, 48 - (x % 48), 48 - (y % 48)
 end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local tile_size = 48
-   local x = math.clamp(tx * tile_size - width / 2 + (tile_size / 2), 0, mw * tile_size - width)
-   local y = math.clamp(ty * tile_size - height / 2 + (tile_size / 2), 0, mh * tile_size - height + (72 + 16))
+   local x = math.clamp(tx * tile_size - math.floor(width / 2) + math.floor(tile_size / 2), 0, mw * tile_size - width)
+   local y = math.clamp(ty * tile_size - math.floor(height / 2) + math.floor(tile_size / 2), 0, mh * tile_size - height + (72 + 16))
    return x, y
 end
 

@@ -233,7 +233,7 @@ function shadow_batch:add_one(shadow, x, y, batch)
       --local d = deco[sl+1]
       --local deco2 = 0
       --return decot[sl+1]
-      self:add_deco(shadow, x, y)
+      --self:add_deco(shadow, x, y)
       return
    end
 
@@ -242,32 +242,32 @@ function shadow_batch:add_one(shadow, x, y, batch)
 
    -- extract the cardinal part (NSEW)
    -- 00001111
-   p2 = bit.band(p2, 0x0F)
+   local p3 = bit.band(p2, 0x0F)
 
    local tile = 0
-   if p2 == 0xF then -- 1111
+   if p3 == 0x0F then
       -- All four cardinal directions border a shadow. Check the
       -- corner directions.
 
       -- extract the intercardinal part
       -- 11110000
-      p2 = bit.band(p2, 0xF0)
+      p3 = bit.band(p2, 0xF0)
 
-      if     p2 == 0x70 then -- 0111     SW SE SW
+      if     p3 == 0x70 then -- 0111     SW SE SW
          tile = 13
-      elseif p2 == 0xD0 then -- 1101  NE SW    NW
+      elseif p3 == 0xD0 then -- 1101  NE SW    NW
          tile = 14
-      elseif p2 == 0xB0 then -- 1011  NE    SE NW
+      elseif p3 == 0xB0 then -- 1011  NE    SE NW
          tile = 15
-      elseif p2 == 0xE0 then -- 1110  NE SW SE
+      elseif p3 == 0xE0 then -- 1110  NE SW SE
          tile = 16
-      elseif p2 == 0xC0 then -- 1100  NE SW
+      elseif p3 == 0xC0 then -- 1100  NE SW
          tile = 17
-      elseif p2 == 0x30 then -- 0011        SE NW
+      elseif p3 == 0x30 then -- 0011        SE NW
          tile = 17
       end
    else
-      tile = shadowmap[p2+1]
+      tile = shadowmap[p3+1]
    end
 
    if tile == 0 then
@@ -283,11 +283,16 @@ function shadow_batch:draw(x, y)
    local th = self.tile_height
 
    local sx, sy, ox, oy = self.coords:get_start_offset(x, y, draw.get_width(), draw.get_height())
-   ox = 48 - x % 48
-   oy = 48 - y % 48
 
    sx = -sx
    sy = -sy
+
+   if x < 0 then
+      ox = 48
+   end
+   if y < 0 then
+      oy = 48
+   end
 
    if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(0, 0, self.width, self.height)
@@ -296,7 +301,6 @@ function shadow_batch:draw(x, y)
       self.batch:clear()
       self.edge_batch:clear()
 
-      print(ty,tx)
       for y=ty,tdy do
          if y >= 0 and y <= self.height then
             for x=tx,tdx do

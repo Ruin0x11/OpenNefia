@@ -125,6 +125,7 @@ function OMap:has_los(x1, y1, x2, y2)
 end
 
 local function pp(ar)
+   print("==============")
    for i=0, #ar do
       for j=0,#ar do
          local o = ar[j][i] or 0
@@ -160,7 +161,7 @@ function OMap:calc_screen_sight(player_x, player_y, fov_size)
    local max_dist = math.floor(fov_size / 2)
 
    local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self.width - stw)
-   local start_y = math.clamp(player_y - math.floor(sth / 2), 0, self.height - sth)
+   local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self.height - sth)
    local end_x = (start_x + stw)
    local end_y = (start_y + sth)
 
@@ -209,6 +210,7 @@ function OMap:calc_screen_sight(player_x, player_y, fov_size)
    end
 
 
+   print(start_x,start_y,end_x,end_y)
    for j=start_y,end_y do
       lx = 1
 
@@ -247,7 +249,7 @@ function OMap:calc_screen_sight(player_x, player_y, fov_size)
       end
       ly = ly + 1
    end
-   pp(self.shadow_map)
+   --pp(self.shadow_map)
 
    return self.shadow_map
 end
