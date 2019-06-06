@@ -83,22 +83,22 @@ function KeyHandler:run_key_action(key)
    end
 end
 
-function KeyHandler:handle_repeat(key)
+function KeyHandler:handle_repeat(key, dt)
    local it = self.repeat_delays[key] or {}
 
    if it.wait_remain == nil then
       it.wait_remain = 1
-      it.delay = 10
+      it.delay = 100
       it.pressed = true
    else
       it.pressed = false
-      it.delay = it.delay - 1
+      it.delay = it.delay - dt * 1000
       if it.delay <= 0 then
          it.wait_remain = it.wait_remain - 1
          if it.fast then
-            it.delay = 2
+            it.delay = 40
          else
-            it.delay = 10
+            it.delay = 200
          end
          it.pressed = true
          if it.wait_remain == 0 then
@@ -110,12 +110,12 @@ function KeyHandler:handle_repeat(key)
    self.repeat_delays[key] = it
 end
 
-function KeyHandler:run_actions()
+function KeyHandler:run_actions(dt)
    local ran = false
 
    for key, v in pairs(self.pressed) do
       if repeats[key] then
-         self:handle_repeat(key)
+         self:handle_repeat(key, dt)
       end
    end
    for key, v in pairs(self.repeat_delays) do

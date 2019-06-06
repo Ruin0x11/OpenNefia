@@ -34,7 +34,7 @@ function Command.move(player, x, y)
       -- Can access spot, so try moving.
       -- Runs the general-purpose movement command.
       return Action.move(player, next_pos.x, next_pos.y)
-   elseif not Map.in_bounds(next_pos.x, next_pos.y) then
+   elseif not Map.is_in_bounds(next_pos.x, next_pos.y) then
       -- Player is trying to move out of the map.
 
       -- EVENT: before_player_map_leave

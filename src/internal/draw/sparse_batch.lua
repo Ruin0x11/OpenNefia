@@ -1,4 +1,5 @@
 local IBatch = require("internal.draw.IBatch")
+local draw = require("internal.draw")
 local sparse_batch = class("sparse_batch", IBatch)
 
 function sparse_batch:init(width, height, atlas, coords)
@@ -71,7 +72,7 @@ function sparse_batch:draw(x, y)
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x, y)
+   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, draw.get_width(), draw.get_height())
 
    if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)

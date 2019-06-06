@@ -6,6 +6,8 @@ local Draw = {}
 
 Draw.get_width = draw.get_width
 Draw.get_height = draw.get_height
+Draw.get_tiled_width = draw.get_tiled_width
+Draw.get_tiled_height = draw.get_tiled_height
 Draw.set_font = draw.set_font
 Draw.set_color = draw.set_color
 Draw.load_image = draw.load_image

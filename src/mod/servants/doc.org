@@ -36,6 +36,8 @@ Servants.default_choices = {
   + base_cost: int
 * Config
 (none)
+* Serialization
+- Flag for if the character is a servant.
 * Requirements
 - Servants must be persisted after death.
 - Generation routine must be modifiable.

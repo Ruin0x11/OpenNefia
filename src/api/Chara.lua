@@ -2,6 +2,7 @@ local Pos = require("api.Pos")
 local Map = require("api.Map")
 local Log = require("api.Log")
 
+local chara = require("internal.chara")
 local data = require("internal.data")
 local map = require("internal.map")
 
@@ -19,7 +20,7 @@ function Chara.set_pos(c, x, y)
       return false
    end
 
-   if not Map.in_bounds(x, y) then
+   if not Map.is_in_bounds(x, y) then
       return false
    end
 
@@ -36,7 +37,12 @@ function Chara.is_player(c)
    return true
 end
 
+function Chara.player()
+   return chara.player()
+end
+
 function Chara.set_player(c)
+   chara.set_player(c)
 end
 
 function Chara.vanquish(c)

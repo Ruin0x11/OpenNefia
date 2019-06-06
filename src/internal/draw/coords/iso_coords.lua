@@ -1,5 +1,3 @@
-local Draw = require("api.Draw")
-
 local iso_coords = class("iso_coords")
 
 function iso_coords:load_tile(tile, x, y)
@@ -8,6 +6,15 @@ end
 
 function iso_coords:get_size()
    return 64, 64
+end
+
+
+function iso_coords:get_tiled_width(w)
+   return math.floor(w / 64)
+end
+
+function iso_coords:get_tiled_height(h)
+   return math.floor(h / 64)
 end
 
 function iso_coords:tile_to_screen(tx, ty)
@@ -28,14 +35,14 @@ function iso_coords:find_bounds(x, y, width, height)
    return tx, ty, tdx, tdy
 end
 
-function iso_coords:get_start_offset(x, y)
-   return Draw.get_width() / 2, 64, 0, 0
+function iso_coords:get_start_offset(x, y, width, height)
+   return width / 2, 64, 0, 0
 end
 
-function iso_coords:get_draw_pos(tx, ty, mw, mh)
+function iso_coords:get_draw_pos(tx, ty, mw, mh, width, height)
    local tile_size = 64
-   local x = tx * 64 - Draw.get_width() / 2 - 64 - 48
-   local y = ty * 64 - Draw.get_height() / 2 - (72 + 16) - 64*2 - 48
+   local x = tx * 64 - width / 2 - 64 - 48
+   local y = ty * 64 - height / 2 - (72 + 16) - 64*2 - 48
    return x, y
 end
 

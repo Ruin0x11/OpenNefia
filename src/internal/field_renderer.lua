@@ -1,14 +1,19 @@
 local sparse_batch = require("internal.draw.sparse_batch")
 local tile_batch = require("internal.draw.tile_batch")
+local shadow_batch = require("internal.draw.shadow_batch")
+local draw = require("internal.draw")
+local map = require("internal.map")
+local chara = require("internal.chara")
 
 local field_renderer = class("field_renderer")
 
 function field_renderer:init(width, height)
-   local coords = require("internal.draw.coords.tiled_coords"):new()
+   local coords = draw.get_coords()
    local tile_atlas, chara_atlas = require("internal.global.atlases").get()
 
    self.tile_batch = tile_batch:new(width, height, tile_atlas, coords)
    self.chara_batch = sparse_batch:new(width, height, chara_atlas, coords)
+   self.shadow_batch = shadow_batch:new(width, height, coords)
 
    self.width = width
    self.height = height
@@ -54,7 +59,12 @@ function field_renderer:move_object(_type, batch_ind, x, y)
 end
 
 function field_renderer:update_draw_pos(player_x, player_y)
-   local draw_x, draw_y = self.coords:get_draw_pos(player_x, player_y, self.width, self.height)
+   local draw_x, draw_y = self.coords:get_draw_pos(player_x,
+                                                   player_y,
+                                                   self.width,
+                                                   self.height,
+                                                   draw.get_width(),
+                                                   draw.get_height())
 
    if draw_x ~= self.draw_x or draw_y ~= self.draw_y then
       self.tile_batch.updated = true
@@ -65,6 +75,7 @@ function field_renderer:update_draw_pos(player_x, player_y)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)
+   print(draw_x,draw_y)
    self.draw_x = draw_x
    self.draw_y = draw_y
 
@@ -84,10 +95,8 @@ function field_renderer:draw()
    self.chara_batch:draw(draw_x, draw_y)
    -- light
    -- cloud
-   -- shadow
+   self.shadow_batch:draw(draw_x, draw_y)
 end
-
-local map = require("internal.map")
 
 function field_renderer:update()
    -- HACK don't do this.
@@ -119,6 +128,14 @@ function field_renderer:update()
                y = c.y
             }
          end
+      end
+   end
+
+   local p = chara.player()
+   if p then
+      local shadow_map = map.get():calc_screen_sight(p.x, p.y, 15)
+      if #shadow_map > 0 then
+         self.shadow_batch:set_tiles(shadow_map)
       end
    end
 end

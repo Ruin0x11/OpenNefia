@@ -53,7 +53,10 @@ local function get_chara_tiles()
    return files
 end
 
-function startup.load_batches(coords)
+function startup.load_batches()
+   local coords = require("internal.draw.coords.tiled_coords"):new()
+   internal.draw.set_coords(coords)
+
    sw:measure()
 
    local atlas = atlas:new(tile_size, tile_size, 48, 48)

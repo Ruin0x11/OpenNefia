@@ -17,8 +17,6 @@ field.is_active = false
 
 local batches = {}
 
-local me
-
 local tile_size = 48
 
 local m
@@ -32,13 +30,16 @@ function field.query()
    local hud = require("api.gui.hud.MainHud"):new()
    internal.draw.set_hud(hud)
 
-   startup.load_batches(require("internal.draw.coords.tiled_coords"):new())
+   startup.load_batches(require("internal.draw").get_coords())
 
-   map.create()
+   map.create(40, 40)
 
    field_renderer.create()
 
-   me = Chara.create("base.player", 25, 25)
+   do
+      local me = Chara.create("base.player", 25, 25)
+      Chara.set_player(me)
+   end
 
    local keys = InputHandler:new()
    keys:focus()
@@ -47,16 +48,20 @@ function field.query()
          print("do")
       end,
       up = function()
-         Command.move(me, "North")
+         local p = Chara.player()
+         Command.move(p, "North")
       end,
       down = function()
-         Command.move(me, "South")
+         local p = Chara.player()
+         Command.move(p, "South")
       end,
       left = function()
-         Command.move(me, "East")
+         local p = Chara.player()
+         Command.move(p, "East")
       end,
       right = function()
-         Command.move(me, "West")
+         local p = Chara.player()
+         Command.move(p, "West")
       end,
       ["`"] = function()
          require("api.gui.menu.Repl"):new({}):query()
@@ -73,13 +78,15 @@ function field.query()
 
    internal.draw.set_root_input_handler(keys)
 
-   field_renderer.get():update_draw_pos(me.x, me.y)
+   local p = Chara.player()
+   field_renderer.get():update_draw_pos(p.x, p.y)
 
    while going do
-      local ran = keys:run_actions()
+      local ran = keys:run_actions(dt)
 
       if ran then
-         field_renderer.get():update_draw_pos(me.x, me.y)
+         p = Chara.player()
+         field_renderer.get():update_draw_pos(p.x, p.y)
       end
 
       dt = coroutine.yield()

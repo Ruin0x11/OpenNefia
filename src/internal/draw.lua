@@ -32,7 +32,7 @@ function draw.init()
       resizable = true,
       minwidth = 800,
       minheight = 600,
-      vsync = true
+      vsync = false
    }
    local success = love.window.setMode(width, height, window_mode)
    if not success then
@@ -149,6 +149,24 @@ end
 
 draw.get_width = love.graphics.getWidth
 draw.get_height = love.graphics.getHeight
+
+local coords = nil
+
+function draw.get_coords()
+   return coords
+end
+
+function draw.set_coords(c)
+   coords = c
+end
+
+function draw.get_tiled_width()
+   return coords:get_tiled_width(draw.get_width())
+end
+
+function draw.get_tiled_height()
+   return coords:get_tiled_height(draw.get_height() - (72 + 16))
+end
 
 local font_cache = setmetatable({}, { __mode = "v" })
 function draw.set_font(size, kind, filename)

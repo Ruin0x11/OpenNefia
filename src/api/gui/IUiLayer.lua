@@ -14,7 +14,7 @@ local function query(self)
 
    local res, canceled
    while true do
-      self:run_actions()
+      self:run_actions(dt)
       res, canceled = self:update(dt)
       if res or canceled then break end
       dt = coroutine.yield()
