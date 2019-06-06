@@ -118,8 +118,24 @@ end
 function OMap:has_los(x1, y1, x2, y2)
    local cb = function(x, y)
       return self:can_access(x, y)
+      -- in Elona, the final tile is visible even if it is solid.
+         or (x == x2 and y == y2)
    end
    return bresenham.los(x1, y1, x2, y2, cb)
+end
+
+local function pp(ar)
+   for i=0, #ar do
+      for j=0,#ar do
+         local o = ar[j][i] or 0
+         local i = "."
+         if bit.band(o, 0x100) > 0 then
+            i = "#"
+         end
+         io.write(i)
+      end
+      io.write("\n")
+   end
 end
 
 --- Calculates the positions that can be seen by the player and are
@@ -128,10 +144,13 @@ end
 -- @tparam int player_y
 -- @tparam int fov_radius
 function OMap:calc_screen_sight(player_x, player_y, fov_size)
+   local stw = math.min(Draw.get_tiled_width(), self.width)
+   local sth = math.min(Draw.get_tiled_height(), self.height)
+
    self.shadow_map = {}
-   for i=0,Draw.get_tiled_width() + 4 - 1 do
+   for i=0,stw + 4 - 1 do
       self.shadow_map[i] = {}
-      for j=0,Draw.get_tiled_height() + 4 - 1 do
+      for j=0,sth + 4 - 1 do
          self.shadow_map[i][j] = 0
       end
    end
@@ -139,9 +158,6 @@ function OMap:calc_screen_sight(player_x, player_y, fov_size)
    local fov_radius = gen_fov_radius(fov_size)
    local radius = math.floor((fov_size + 2) / 2)
    local max_dist = math.floor(fov_size / 2)
-
-   local stw = Draw.get_tiled_width()
-   local sth = Draw.get_tiled_height()
 
    local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self.width - stw)
    local start_y = math.clamp(player_y - math.floor(sth / 2), 0, self.height - sth)
@@ -231,6 +247,7 @@ function OMap:calc_screen_sight(player_x, player_y, fov_size)
       end
       ly = ly + 1
    end
+   pp(self.shadow_map)
 
    return self.shadow_map
 end
@@ -257,10 +274,9 @@ function OMap:can_access(x, y)
 end
 
 -- NOTE: This function returns false for any positions that are not
--- contained in the game window. This is the same behavior as vanilla
--- Elona. For game calculations depending on LoS outside of the game
--- window, use OMap:has_los combined with a maximum distance check
--- instead.
+-- contained in the game window. This is the same behavior as vanilla.
+-- For game calculations depending on LoS outside of the game window,
+-- use OMap:has_los combined with a maximum distance check instead.
 function OMap:is_in_fov(x, y)
    return self.in_sight[y*self.width+x+1] == self.last_sight_id
 end

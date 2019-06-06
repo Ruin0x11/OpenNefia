@@ -36,12 +36,4 @@ function Draw.text_shadowed(str, x, y, color, shadow_color)
    Draw.text(str, x, y, color)
 end
 
-function Draw.redraw_screen()
-   local field = require("game.field")
-   if field.is_active then
-      local field_renderer = require("internal.field_renderer")
-      field_renderer.get():update()
-   end
-end
-
 return Draw

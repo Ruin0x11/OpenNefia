@@ -2,6 +2,7 @@ local internal = require("internal")
 local startup = require("game.startup")
 
 local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 local Command = require("api.Command")
 local Draw = require("api.Draw")
 local Map = require("api.Map")
@@ -32,12 +33,12 @@ function field.query()
 
    startup.load_batches(require("internal.draw").get_coords())
 
-   map.create(40, 40)
+   map.create(20, 20)
 
    field_renderer.create()
 
    do
-      local me = Chara.create("base.player", 25, 25)
+      local me = Chara.create("base.player", 10, 10)
       Chara.set_player(me)
    end
 
@@ -78,15 +79,13 @@ function field.query()
 
    internal.draw.set_root_input_handler(keys)
 
-   local p = Chara.player()
-   field_renderer.get():update_draw_pos(p.x, p.y)
+   Gui.redraw_screen()
 
    while going do
       local ran = keys:run_actions(dt)
 
       if ran then
-         p = Chara.player()
-         field_renderer.get():update_draw_pos(p.x, p.y)
+         Gui.redraw_screen()
       end
 
       dt = coroutine.yield()

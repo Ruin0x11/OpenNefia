@@ -41,7 +41,15 @@ function tiled_coords:find_bounds(x, y, width, height)
 end
 
 function tiled_coords:get_start_offset(x, y, width, height)
-   return 0, 0, 48 - (x % 48), 48 - (y % 48)
+   local sx = 0
+   local sy = 0
+   if x < 0 then
+      sx = x / 2
+   end
+   if y < 0 then
+      sy = y / 2
+   end
+   return sx, sy, 48 - (x % 48), 48 - (y % 48)
 end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)

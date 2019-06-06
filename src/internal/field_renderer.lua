@@ -75,7 +75,6 @@ function field_renderer:update_draw_pos(player_x, player_y)
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)
-   print(draw_x,draw_y)
    self.draw_x = draw_x
    self.draw_y = draw_y
 

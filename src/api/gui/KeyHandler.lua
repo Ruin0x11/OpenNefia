@@ -88,7 +88,7 @@ function KeyHandler:handle_repeat(key, dt)
 
    if it.wait_remain == nil then
       it.wait_remain = 1
-      it.delay = 100
+      it.delay = 200
       it.pressed = true
    else
       it.pressed = false

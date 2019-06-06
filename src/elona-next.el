@@ -11,6 +11,7 @@
     ;(define-key map "\C-c\C-n" 'elona-next-eval-form-and-next)
     ;(define-key map "\C-c\C-p" 'elona-next-eval-paragraph)
     ;(define-key map "\C-c\C-s" 'elona-next-connect)
+    (define-key map "\C-c\C-b" 'elona-next-send-buffer)
     ;(define-key map "\C-c\C-d" 'elona-next-describe-sym)
     ;(define-key map "\C-c\C-f" 'elona-next-show-function-documentation)
     ;(define-key map "\C-c\C-v" 'elona-next-show-variable-documentation)

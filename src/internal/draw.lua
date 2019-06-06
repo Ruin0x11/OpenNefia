@@ -138,6 +138,8 @@ function draw.resize(w, h)
       layer:relayout(0, 0, w, h)
    end
 
+   require("api.Gui").redraw_screen()
+
    collectgarbage()
 end
 
