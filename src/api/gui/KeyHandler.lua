@@ -28,10 +28,10 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
    if is_text then return end
    if self.halted and is_repeat then return end
 
-   if pressed and not repeats[key] and not self.pressed[key] then
-      self.this_frame[key] = true
-      self.stop_halt = true
-   end
+   -- if pressed and not repeats[key] and not self.pressed[key] then
+   --    self.this_frame[key] = true
+   --    self.stop_halt = true
+   -- end
 
    if pressed then
       self.pressed[key] = true
@@ -74,12 +74,12 @@ function KeyHandler:halt_input()
    print("halt")
 end
 
-function KeyHandler:run_key_action(key)
+function KeyHandler:run_key_action(key, ...)
    local func = self.bindings[key]
    if func then
-      func()
+      return func(...)
    elseif self.forwards then
-      self.forwards:run_key_action(key)
+      return self.forwards:run_key_action(key, ...)
    end
 end
 
@@ -87,43 +87,49 @@ function KeyHandler:handle_repeat(key, dt)
    local it = self.repeat_delays[key] or {}
 
    if it.wait_remain == nil then
-      it.wait_remain = 1
-      it.delay = 200
+      if repeats[key] then
+         it.wait_remain = 2
+         it.delay = 200
+      else
+         it.wait_remain = 0
+         it.delay = 600
+      end
       it.pressed = true
    else
       it.pressed = false
       it.delay = it.delay - dt * 1000
       if it.delay <= 0 then
          it.wait_remain = it.wait_remain - 1
+         if it.wait_remain <= 0 then
+            it.fast = true
+         end
          if it.fast then
-            it.delay = 40
+            it.delay = 20
          else
             it.delay = 200
          end
          it.pressed = true
-         if it.wait_remain == 0 then
-            it.fast = true
-         end
       end
    end
 
    self.repeat_delays[key] = it
 end
 
-function KeyHandler:run_actions(dt)
+function KeyHandler:run_actions(dt, ...)
    local ran = false
+   local result
 
    for key, v in pairs(self.pressed) do
-      if repeats[key] then
+      -- if repeats[key] then
          self:handle_repeat(key, dt)
-      end
+      -- end
    end
    for key, v in pairs(self.repeat_delays) do
       -- TODO determine what movement actions should be triggered. If
       -- two movement keys can form a diagonal, they should be fired
       -- instead of each one individually.
       if v.pressed then
-         self:run_key_action(key)
+         result = self:run_key_action(key, ...)
          ran = true
          -- only run the first action
          break
@@ -131,7 +137,7 @@ function KeyHandler:run_actions(dt)
    end
    if not ran then
       for key, _ in pairs(self.this_frame) do
-         self:run_key_action(key)
+         result = self:run_key_action(key, ...)
          ran = true
 
          -- only run the first action
@@ -142,7 +148,7 @@ function KeyHandler:run_actions(dt)
    self.halted = self.halted and not self.stop_halt
    self.this_frame = {}
 
-   return ran
+   return ran, result
 end
 
 return KeyHandler

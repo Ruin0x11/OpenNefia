@@ -61,7 +61,7 @@ function shadow_batch:init(width, height, coords)
    self.height = height
    self.coords = coords
 
-   self.tiles = table.of(0, width * height)
+   self.tiles = table.of_2d(0, width + 4, height + 4, true)
 
    self.image = draw.load_image("graphic/temp/shadow.png")
    self.edge_image = draw.load_image("graphic/temp/shadow_edge.png")

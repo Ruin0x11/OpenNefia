@@ -34,7 +34,7 @@ function Repl:init(env)
       end,
       text_submitted = function()
          self:submit()
-         Gui.redraw_screen()
+         Gui.update_screen()
          self.input:halt_input()
       end,
       text_canceled = function() self.finished = true end,

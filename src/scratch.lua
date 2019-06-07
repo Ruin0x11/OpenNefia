@@ -11,4 +11,4 @@ for i=5,30 do
 end
 
 
-Gui.redraw_screen()
+Gui.update_screen()

@@ -22,42 +22,6 @@ function field_renderer:init(width, height)
    self.draw_y = 0
 end
 
-function field_renderer:add_object(_type, tile, x, y)
-   print("add",_type,tile,x,y)
-   if _type == "base.chara" then
-      return self.chara_batch:add_tile {
-         tile = tile,
-         x = x,
-         y = y,
-      }
-   end
-end
-
-function field_renderer:set_tile(tile, x, y)
-   self.tile_batch:update_tile(x, y, tile)
-end
-
-function field_renderer:move_object(_type, batch_ind, x, y)
-   print("mov",_type,batch_ind,x,y)
-   assert(batch_ind ~= nil and batch_ind ~= 0)
-
-   if _type == "base.chara" then
-      local tile, px, py = self.chara_batch:get_tile(batch_ind)
-      assert(tile ~= nil and tile ~= 0)
-
-      if px ~= x or py ~= y then
-         self.chara_batch:remove_tile(batch_ind)
-         return self.chara_batch:add_tile {
-            tile = tile,
-            x = x,
-            y = y
-         }
-      end
-   end
-
-   return nil
-end
-
 function field_renderer:update_draw_pos(player_x, player_y)
    local draw_x, draw_y = self.coords:get_draw_pos(player_x,
                                                    player_y,
@@ -74,11 +38,13 @@ function field_renderer:update_draw_pos(player_x, player_y)
    self:set_draw_pos(draw_x, draw_y)
 end
 
+function field_renderer:set_tile(tile, x, y)
+   self.tile_batch:update_tile(x, y, tile)
+end
+
 function field_renderer:set_draw_pos(draw_x, draw_y)
    self.draw_x = draw_x
    self.draw_y = draw_y
-
-   self:update()
 end
 
 function field_renderer:draw()
@@ -98,7 +64,6 @@ function field_renderer:draw()
 end
 
 function field_renderer:update(map)
-   -- HACK don't do this.
    for i, t in ipairs(map.tiles) do
       local x = (i-1) % map.width
       local y = math.floor((i-1) / map.height)
@@ -106,27 +71,32 @@ function field_renderer:update(map)
    end
 
    for _, c in map:iter_charas() do
-      -- HACK replace as batch_ind shouldn't be stored on character
-      -- local batch_ind = self.chara_batch_inds[c.uid]
-      local batch_ind = c.batch_ind
-      if c.batch_ind == nil or c.batch_ind == 0 then
-         c.batch_ind = self.chara_batch:add_tile {
-            tile = c.image,
-            x = c.x,
-            y = c.y
-         }
-      else
-         local tile, px, py = self.chara_batch:get_tile(batch_ind)
-
-         if px ~= c.x or py ~= c.y then
-            self.chara_batch:remove_tile(batch_ind)
-            --self.chara_batch_inds[c.uid] = self.chara_batch:add_tile {
+      if c.state == "Alive" then
+         -- HACK replace as batch_ind shouldn't be stored on character
+         -- local batch_ind = self.chara_batch_inds[c.uid]
+         local batch_ind = c.batch_ind
+         if c.batch_ind == nil or c.batch_ind == 0 then
             c.batch_ind = self.chara_batch:add_tile {
-               tile = tile,
+               tile = c.image,
                x = c.x,
                y = c.y
             }
+         else
+            local tile, px, py = self.chara_batch:get_tile(batch_ind)
+
+            if px ~= c.x or py ~= c.y then
+               self.chara_batch:remove_tile(batch_ind)
+               --self.chara_batch_inds[c.uid] = self.chara_batch:add_tile {
+               c.batch_ind = self.chara_batch:add_tile {
+                  tile = tile,
+                  x = c.x,
+                  y = c.y
+               }
+            end
          end
+      elseif c.state ~= "Alive" and c.batch_ind ~= 0 then
+         self.chara_batch:remove_tile(c.batch_ind)
+         c.batch_ind = 0
       end
    end
 

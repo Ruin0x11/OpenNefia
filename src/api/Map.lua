@@ -36,4 +36,10 @@ function Map.set_tile(id, x, y)
    return field.map:set_tile(id, x, y)
 end
 
+function Map.iter_charas()
+   return field.map:iter_charas()
+end
+
+-- TODO: way of accessing map variables without exposing internals
+
 return Map

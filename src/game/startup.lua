@@ -4,13 +4,10 @@ local stopwatch = require("util.stopwatch")
 
 local startup = {}
 
-local sw
-
 local tile_size = 48
 
 function startup.run()
    math.randomseed(internal.get_timestamp())
-   sw = stopwatch:new()
 end
 
 local tile_batch = require("internal.draw.tile_batch")
@@ -57,6 +54,7 @@ function startup.load_batches()
    local coords = require("internal.draw.coords.tiled_coords"):new()
    internal.draw.set_coords(coords)
 
+   local sw = stopwatch:new()
    sw:measure()
 
    local atlas = atlas:new(tile_size, tile_size, 48, 48)

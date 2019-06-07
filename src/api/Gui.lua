@@ -3,8 +3,8 @@ local field = require("game.field")
 
 local Gui = {}
 
-function Gui.redraw_screen()
-   field:redraw_screen()
+function Gui.update_screen()
+   field:update_screen()
 end
 
 return Gui

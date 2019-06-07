@@ -19,10 +19,14 @@ function run_tests(path)
             run_tests(f)
          else
             if f ~= "./test/init.lua" then
-               print ("\t " .. f)
-               local chunk = loadfile(f)
+               print("\t " .. f)
+               local chunk, err = loadfile(f)
+               if not chunk or err then
+                  error(err)
+               end
                setfenv(chunk, _G)
                chunk()
+               print()
             end
          end
       end

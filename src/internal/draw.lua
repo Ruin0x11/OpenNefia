@@ -68,24 +68,12 @@ end
 
 local layers = {}
 local handler = nil
-local hud = nil
 
 function draw.set_root(ui_layer)
    assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
-end
-
-function draw.set_hud(new_hud)
-   if new_hud == nil then
-      hud = nil
-      return
-   end
-
-   assert_is_an(require("api.gui.hud.IHud"), new_hud)
-   hud = new_hud
-   hud:relayout(0, 0, draw.get_width(), draw.get_height())
 end
 
 function draw.set_root_input_handler(input)
@@ -113,10 +101,6 @@ function draw.pop_layer()
    end
 end
 
-function draw.draw_hud()
-   if hud then hud:draw() end
-end
-
 function draw.draw_layers()
    for i, layer in ipairs(layers) do
       layer:draw()
@@ -132,13 +116,11 @@ end
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
 
-   if hud then hud:relayout(0, 0, w, h) end
-
    for _, layer in ipairs(layers) do
       layer:relayout(0, 0, w, h)
    end
 
-   require("api.Gui").redraw_screen()
+   require("api.Gui").update_screen()
 
    collectgarbage()
 end

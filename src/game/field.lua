@@ -5,11 +5,15 @@ local Draw = require("api.Draw")
 local InputHandler = require("api.gui.InputHandler")
 local GameKeyHandler = require("api.gui.GameKeyHandler")
 local IUiLayer = require("api.gui.IUiLayer")
+local LDateTime = require("api.LDateTime")
+local IInput = require("api.gui.IInput")
 
 local map = require("internal.map")
 local field_renderer = require("internal.field_renderer")
 
 local field_layer = class("field_layer", IUiLayer)
+
+field_layer:delegate("keys", IInput)
 
 function field_layer:init()
    self.is_active = false
@@ -22,8 +26,19 @@ function field_layer:init()
    self.renderer = nil
    self.player = nil
 
+   self:init_global_data()
+
    self.keys = InputHandler:new()
-   keys:focus()
+   self.keys:focus()
+end
+
+function field_layer:init_global_data()
+   -- TEMP: temporary storage for save-global variables. needs to be
+   -- moved a public store API.
+   self.data = {}
+   self.data.date = LDateTime:new(517, 8, 12, 16, 10, 0)
+   self.data.play_turns = 0
+   self.data.play_days = 0
 end
 
 function field_layer:set_map(map)
@@ -39,37 +54,46 @@ function field_layer:draw()
    self.hud:draw()
 end
 
+function field_layer:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+   self.hud:relayout(x, y, width, height)
+end
+
+function field_layer:turn_cost()
+   return self.map.turn_cost
+end
+
 function field_layer:exists(obj)
    return self.map and self.map:exists(obj)
 end
 
-function field_layer:redraw_screen()
+function field_layer:update_screen()
    if not self.is_active or not self.renderer then return end
+
+   assert(self.map ~= nil)
 
    local player = self.player
    if player then
       self.renderer:update_draw_pos(player.x, player.y)
    end
    self.renderer:update(self.map)
+
+   self:update_hud()
 end
 
-function field_layer:update(dt, ran_action)
-   if ran_action then
-      self:redraw_screen()
-   end
+function field_layer:update_hud()
+   -- HACK there is a better way of doing this. It almost certainly
+   -- has to do with the event system.
+   self.hud.clock:set_data(self.data.date)
 end
 
--- HACK should be a better way to get default interface implementation
-do
-   local super = field_layer.query
-   function field_layer:query()
-      self.is_active = true
-
-      self:redraw_screen()
-
-      super(self)
-
-      self.is_active = false
+function field_layer:update(dt, ran_action, result)
+   if ran_action ~= nil then
+      self:update_screen()
+      return result
    end
 end
 

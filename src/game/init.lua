@@ -5,7 +5,7 @@ local internal = require("internal")
 
 local chara_make = require("game.chara_make")
 local startup = require("game.startup")
-local field = require("game.field")
+local field_logic = require("game.field_logic")
 
 local game = {}
 game.in_game = false
@@ -38,7 +38,7 @@ local function main_title()
 end
 
 local function run_field()
-   return field:query()
+   return field_logic.query()
 end
 
 function game.loop()
