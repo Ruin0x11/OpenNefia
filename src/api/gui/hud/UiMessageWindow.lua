@@ -11,11 +11,15 @@ function UiMessageWindow:init()
 
    self.max_log = 200
    self.history = circular_buffer:new(self.max_log)
-   self.each_line = circular_buffer:new(6)
+   self.max_lines = 4
+   self.each_line = circular_buffer:new(self.max_lines)
 
+   self.y_offset = 0
    self.current_width = 0
    self.canvas = nil
    self.redraw = true
+
+   self:recalc_lines()
 end
 
 function UiMessageWindow:relayout(x, y, width, height)
@@ -32,6 +36,10 @@ function UiMessageWindow:relayout(x, y, width, height)
    self.cutoff = { text = "" }
    self.first_index = 1
    self.the_width = 0
+
+   Draw.set_font(14) -- 14 - en * 2
+   self.max_lines = math.floor(self.height / Draw.text_height()) - 1
+   self.y_offset = -(self.height % Draw.text_height())
 
    self:recalc_lines()
 end
@@ -60,9 +68,10 @@ function UiMessageWindow:draw_one_text(text, color, x, y)
 end
 
 function UiMessageWindow:push_text(text, color)
-   -- NOTE: The global font has to be set now for the text widths to
-   -- be correct.
+   -- NOTE: The global font has to be set now for the text width
+   -- calculation to be correct.
    Draw.set_font(14) -- 14 - en * 2
+   color = color or {255, 255, 255}
 
    if self.each_line:len() == 0 then
       self.each_line:push({text = {}, width = 0})
@@ -71,13 +80,14 @@ function UiMessageWindow:push_text(text, color)
    local first = self.each_line[1]
    local work = ""
 
-   -- love2d's text wrapping doesn't work with CJK, so we have to do
-   -- it ourselves...
+   -- HACK: love2d's text wrapping doesn't work with CJK, because it
+   -- uses the last position of an ASCII halfwidth character to do
+   -- wrapping. But this solution is really inefficient...
    for _, s in utf8.chars(text) do
       -- TODO: handle halfwidth text wrapping (English)
       local width = Draw.text_width(s)
       if first.width + width > self.width then
-         first.text[#first.text+1] = work
+         first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
          self.each_line:push({text = {}, width = 0})
          first = self.each_line[1]
          work = ""
@@ -87,14 +97,16 @@ function UiMessageWindow:push_text(text, color)
       first.width = first.width + width
    end
 
-   first.text[#first.text+1] = work
+   first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
 end
 
 function UiMessageWindow:draw_one_line(x, y, line)
-   for _, text in ipairs(line.text) do
-      _p("drawone",text,line.width)
-      Draw.text(text, x, y)
-      x = x + Draw.text_width(text)
+   for _, item in ipairs(line.text) do
+      -- love.graphics.print() accepts arguments like
+      --   {color, text, color, text...}
+      Draw.set_color(item.color)
+      Draw.text(item.text, x, y)
+      x = x + item.width
    end
 end
 
@@ -111,8 +123,8 @@ end
 --     \____cutoff    \______index_of_first_text
 --
 function UiMessageWindow:calc_start_offset()
-   -- NOTE: The global font has to be set now for the text widths to
-   -- be correct.
+   -- NOTE: The global font has to be set now for the text width
+   -- calculation to be correct.
    Draw.set_font(14) -- 14 - en * 2
 
    local width_remain = self.width
@@ -122,22 +134,30 @@ function UiMessageWindow:calc_start_offset()
    local found
 
    -- start from the most recent text fragment and wrap text backwards
-   -- until the wrapped line overflows the start of the text box. The
-   -- second part of the overflow is the text to print at the
-   -- beginning of the message window.
+   -- (bottom of message window to top) until the wrapped line
+   -- overflows into the offscreen portion of the message window. The
+   -- overflowed text that can fit into the visible message window
+   -- area is the text to print at the beginning of the message
+   -- window.
    for i=1,self.history:len() do
       local t = self.history[i]
       local text = t.text
       cutoff = text
       local tw = Draw.text_width(text)
       while tw > width_remain do
+         -- Amount of width (in pixels) the text goes over by.
          local diff = tw - width_remain
+
          width_remain = self.width - tw
+
          local max_width, wrapped = Draw.wrap_text(t.text, diff)
 
          -- Text that fit in the previous line before wrapping.
          local first = wrapped[1]
+
+         -- The text that overflowed into the next line.
          local rest = wrapped[2]
+
          lines = lines + 1
          text = first
          found = rest
@@ -166,11 +186,13 @@ function UiMessageWindow:recalc_lines()
    local cutoff, index_of_first_text = self:calc_start_offset()
 
    print("clearm",index_of_first_text)
-   self.each_line:clear()
+
+   self.each_line = circular_buffer:new(self.max_lines)
 
    for i=index_of_first_text,1,-1 do
       local t = self.history[i]
-      self:push_text(t.text)
+      _p(t)
+      self:push_text(t.text, t.color)
    end
 end
 
@@ -192,8 +214,8 @@ function UiMessageWindow:draw()
          self.the_width = 0
 
          Draw.set_font(14) -- 14 - en * 2
-         local x = 5
-         local y = self.height - Draw.text_height() - 5
+         local x = 6
+         local y = 5 + (self.each_line:len() - 1) * Draw.text_height()
          for i=1,self.each_line:len() do
             local line = self.each_line[i]
             self:draw_one_line(x, y, line)

@@ -250,7 +250,7 @@ function field_logic.player_turn_query()
 
       dt = coroutine.yield()
    end
-   field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ")
+   field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ", {math.random(255),math.random(255),math.random(255)})
 
    -- TODO: convert public to internal event
 
