@@ -134,3 +134,22 @@ function utf8.wide_sub(t, i, j)
 
    return string.sub(t, start, finish)
 end
+
+local function iter(state, prev_index)
+   if prev_index == -1 then
+      return nil
+   end
+   local next_index = state.iter(state.inner_state, state.inner_index)
+   if next_index == nil then
+      return -1, string.sub(state.str, prev_index)
+   end
+   state.inner_index = next_index
+   return next_index, string.sub(state.str, prev_index, next_index-1)
+end
+
+--- Iterates the characters of a string as UTF-8 substrings.
+-- @tparam string str
+function utf8.chars(str)
+   local inner_iter, inner_state, inner_first = utf8.codes(str)
+   return iter, {str=str, iter=inner_iter,inner_state=inner_state,inner_index=inner_first+1}, inner_first+1
+end

@@ -61,6 +61,21 @@ function field_logic.setup()
          return "player_turn_query"
       end,
    }
+
+   --   local history = {
+   --    "I am testinger nanodesu",
+   --    -- { icon = "heart" },
+   --    -- { icon = "note" },
+   --    "dood",
+   --    " doods",
+   --    " doodity",
+   -- }
+   -- field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ")
+   -- history = table.merge(history, table.of(function(i) return "あいうえおかきくけこさしすせそたちつてと" .. tostring(i) .. " " end, 5), true)
+
+   -- for _, v in ipairs(history) do
+   --    field.hud.message_window:message(v)
+   -- end
 end
 
 local function calc_speed(chara)
@@ -210,7 +225,6 @@ function field_logic.pass_turns()
 end
 
 function field_logic.player_turn()
-   field.hud.message_window:message("a")
    return "player_turn_query"
 end
 
@@ -236,6 +250,7 @@ function field_logic.player_turn_query()
 
       dt = coroutine.yield()
    end
+   field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ")
 
    -- TODO: convert public to internal event
 

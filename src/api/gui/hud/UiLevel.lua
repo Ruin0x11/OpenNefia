@@ -22,6 +22,7 @@ function UiLevel:relayout(x, y)
 end
 
 function UiLevel:draw()
+   Draw.set_font(13) -- 13 - en * 2
    self.t.character_level_icon:draw(self.x + 4, self.y)
    Draw.text_shadowed(string.format("Lv%s/%d", self.level, self.exp),
                       self.x + 32,

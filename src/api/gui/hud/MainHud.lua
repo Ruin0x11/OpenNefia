@@ -57,6 +57,7 @@ function MainHud:relayout(x, y, width, height)
    self.clock:relayout(self.x, self.y)
    self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16) - 16)
    self.level:relayout(self.x + 4, self.height - (72 + 16) - 16)
+   print(self.width)
    self.message_window:relayout(self.x + 126, self.height - (72 + 16), self.width - 126, 72)
 end
 

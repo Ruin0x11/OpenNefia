@@ -183,6 +183,8 @@ function draw.set_background_color(r, g, b, a)
    love.graphics.setBackgroundColor(r, g, b, a)
 end
 
+draw.clear = love.graphics.clear
+
 function draw.text(str, x, y, color, size)
    if color then
       draw.set_color(color[1], color[2], color[3], color[4])
@@ -331,6 +333,15 @@ function draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
       sy = (ty - y) / qh
    end
    return love.graphics.draw(image, quad, x, y, 0, sx, sy)
+end
+
+function draw.with_canvas(other_canvas, f)
+   love.graphics.setCanvas(other_canvas)
+   love.graphics.setBlendMode("alpha")
+
+   f()
+
+   love.graphics.setCanvas(canvas)
 end
 
 function draw.debug_pos(x, y)

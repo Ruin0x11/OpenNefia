@@ -24,6 +24,8 @@ Draw.image_stretched = draw.image_stretched
 Draw.image_region_stretched = draw.image_region_stretched
 Draw.line = draw.line
 Draw.set_root = draw.set_root
+Draw.with_canvas = draw.with_canvas
+Draw.clear = draw.clear
 
 function Draw.text_shadowed(str, x, y, color, shadow_color)
    color = color or {255, 255, 255}
