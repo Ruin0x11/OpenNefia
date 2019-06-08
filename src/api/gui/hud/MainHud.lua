@@ -55,9 +55,9 @@ function MainHud:relayout(x, y, width, height)
    self.t = UiTheme.load(self)
 
    self.clock:relayout(self.x, self.y)
-   self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16))
+   self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16) - 16)
    self.level:relayout(self.x + 4, self.height - (72 + 16) - 16)
-   self.message_window:relayout(self.x + 136, self.height - (72 + 16), self.width - 136 - 28, 72)
+   self.message_window:relayout(self.x + 126, self.height - (72 + 16), self.width - 126, 72)
 end
 
 function MainHud:set_date(date)

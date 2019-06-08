@@ -41,8 +41,10 @@ end
 
 function _p(...)
    for _, v in ipairs({...}) do
-      print(inspect(v))
+      io.write(inspect(v))
+      io.write("\t")
    end
+   io.write("\n")
    return ...
 end
 

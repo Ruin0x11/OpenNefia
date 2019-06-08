@@ -210,6 +210,7 @@ function field_logic.pass_turns()
 end
 
 function field_logic.player_turn()
+   field.hud.message_window:message("a")
    return "player_turn_query"
 end
 

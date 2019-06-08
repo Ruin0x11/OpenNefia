@@ -14,7 +14,7 @@ function UiMessageWindow:init()
       {text = " doods"},
       {text = " doodity"},
    }
-   history = table.merge(history, table.of({text="doodsあ"}, 300), true)
+   history = table.merge(history, table.of(function(i) return {text="あいうえおかきくけこさしすせそたちつてと" .. tostring(i) .. " "} end, 300), true)
 
    self.max_log = 200
    self.history = circular_buffer:new(self.max_log)
@@ -38,15 +38,87 @@ function UiMessageWindow:relayout(x, y, width, height)
    self.width = width
    self.height = height
    self.t = UiTheme.load(self)
+   self.cutoff = { text = "" }
+   self.first_index = 1
+   self.the_width = 0
+end
+
+function UiMessageWindow:calc_start_offset()
+   local width_remain = self.width
+   local lines = 0
+   local cutoff
+   local index_of_next_text
+   local found
+
+   -- start from the most recent text fragment and wrap text backwards
+   -- until the wrapped line overflows the start of the text box. The
+   -- second part of the overflow is the text to print at the
+   -- beginning of the message window.
+   for i=1,self.history:len() do
+      local t = self.history[i]
+      local text = t.text
+      cutoff = text
+      local tw = Draw.text_width(text)
+      while tw > width_remain do
+         local diff = tw - width_remain
+         width_remain = self.width - tw
+         local max_width, wrapped = Draw.wrap_text(t.text, diff)
+         local first = wrapped[1]
+         local rest = wrapped[2]
+         _p("wrap",t.text,wrapped)
+         lines = lines + 1
+         text = first
+         found = rest
+         tw = Draw.text_width(text)
+         if lines > 3 then
+            break
+         end
+      end
+      width_remain = width_remain - tw
+      if lines > 3 then
+         index_of_next_text = i
+         cutoff = found
+         _p("get",index_of_next_text, cutoff)
+         break
+      end
+   end
+
+   return cutoff, index_of_next_text
+end
+
+function UiMessageWindow:draw_one_text(text, color, x, y)
+   local max_width, wrapped = Draw.wrap_text(text, self.width - self.the_width)
+   _p(text, max_width, wrapped)
+   Draw.text(wrapped[1], x, y)
+   self.the_width = self.the_width + Draw.text_width(wrapped[1])
+   x = self.the_width
+   local width_remain = self.width - self.the_width
+
+   if #wrapped > 1 then
+      local rest = string.strip_prefix(text, wrapped[1])
+      self.the_width = 0
+      max_width, wrapped = Draw.wrap_text(rest, self.width - self.the_width)
+      for i=1,#wrapped do
+         x = 0
+         y = y + Draw.text_height()
+         Draw.text(wrapped[i], x, y)
+         self.the_width = self.the_width + Draw.text_width(wrapped[1])
+         x = self.the_width
+      end
+   end
+
+   return x, y
 end
 
 function UiMessageWindow:draw()
    Draw.set_color(255, 255, 255)
 
+   Draw.image(self.canvas, self.x, self.y)
    if not self.redraw then
-      Draw.image(self.canvas, self.x, self.y)
       return
    end
+
+   local cutoff, index_of_next_text = self:calc_start_offset()
 
    love.graphics.setCanvas(self.canvas)
    love.graphics.clear()
@@ -54,36 +126,22 @@ function UiMessageWindow:draw()
 
    self.t.message_window:draw_bar(0, 0, self.width)
 
-   local width = 0
+   self.the_width = 0
+
+   Draw.set_font(14) -- 14 - en * 2
    local x = 0
-   local y = 0
-   for i=1,self.history:len() do
-      local width_remain = self.width - width
+   local y = 5
+   x, y = self:draw_one_text(cutoff, {255, 255, 255}, x, y)
+   print(index_of_next_text,cutoff)
+   for i=-index_of_next_text,-1-1 do
       local t = self.history[i]
-      print("line " .. t.text)
-      local text = {}
-      local work = t.text
-      local max_width, wrapped = Draw.wrap_text(t.text, width_remain)
-      Draw.text(wrapped[1], x, y)
-      width = width + Draw.text_width(wrapped[1])
-      x = width
-      if #wrapped > 1 and wrapped[2] ~= "\n" then
-         for i=2,#wrapped do
-            x = 0
-            y = y + Draw.text_height()
-            Draw.text(wrapped[i], x, y)
-            width = width + Draw.text_width(wrapped[1])
-            x = width
-         end
-      end
+      print(i,t.text)
+      x, y = self:draw_one_text(t.text, t.color, x, y)
    end
 
    love.graphics.setCanvas()
 
    self.redraw = false
-
-   Draw.set_color(255, 255, 255)
-   Draw.image(self.canvas, self.x, self.y)
 end
 
 function UiMessageWindow:newline()
@@ -104,8 +162,8 @@ function UiMessageWindow:message(text, color)
       self.current_width = 2
    end
 
-   -- HACK
-   table.insert(self.history, 1, text)
+   self.history:push({text = text, color = color})
+   self.redraw = true
 end
 
 function UiMessageWindow:update()
