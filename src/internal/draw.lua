@@ -214,12 +214,16 @@ function draw.line(x1, y1, x2, y2, color)
    love.graphics.line(x1, y1 + 1, x2, y2 + 1)
 end
 
-function draw.text_width(str)
-   return love.graphics.getFont():getWidth(str)
+function draw.text_width(text)
+   return love.graphics.getFont():getWidth(text)
 end
 
-function draw.text_height(str)
+function draw.text_height()
    return love.graphics.getFont():getHeight()
+end
+
+function draw.wrap_text(text, wraplimit)
+   return love.graphics.getFont():getWrap(text, wraplimit)
 end
 
 local image_cache = setmetatable({}, { __mode = "v" })

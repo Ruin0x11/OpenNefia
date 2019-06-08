@@ -8,6 +8,7 @@ local UiClock = require("api.gui.hud.UiClock")
 local UiLevel = require("api.gui.hud.UiLevel")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
 local UiTheme = require("api.gui.UiTheme")
+local UiMessageWindow = require("api.gui.hud.UiMessageWindow")
 
 local MainHud = class("MainHud", IHud)
 
@@ -43,6 +44,7 @@ function MainHud:init()
    self.clock = UiClock:new()
    self.gold_platinum = UiGoldPlatinum:new()
    self.level = UiLevel:new()
+   self.message_window = UiMessageWindow:new()
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -55,6 +57,7 @@ function MainHud:relayout(x, y, width, height)
    self.clock:relayout(self.x, self.y)
    self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16))
    self.level:relayout(self.x + 4, self.height - (72 + 16) - 16)
+   self.message_window:relayout(self.x + 136, self.height - (72 + 16), self.width - 136 - 28, 72)
 end
 
 function MainHud:set_date(date)
@@ -67,11 +70,10 @@ end
 function MainHud:register_widget(widget)
 end
 
-function MainHud:draw_bar_message_window()
+function MainHud:draw_bar()
    Draw.set_color(255, 255, 255)
 
    self.t.bar:draw_bar(self.x, self.height - 16, self.width)
-   self.t.message_window:draw_bar(self.x, self.height - (72 + 16), self.width)
 
    self.t.map_name_icon:draw(136 + 6, self.height - 16)
 end
@@ -160,6 +162,10 @@ function MainHud:draw_attributes()
    end
 end
 
+function MainHud:draw_message_window()
+   self.message_window:draw()
+end
+
 function MainHud:draw_clock()
    self.clock:draw()
 end
@@ -172,16 +178,13 @@ function MainHud:draw_player_level()
    self.level:draw()
 end
 
-function MainHud:draw_message_window()
-   self.message_window:draw()
-end
-
 function MainHud:draw()
-   self:draw_bar_message_window()
+   self:draw_bar()
    self:draw_minimap()
    self:draw_map_name()
    self:draw_hp_mp_bars()
    self:draw_attributes()
+   self:draw_message_window()
    self:draw_clock()
    self:draw_gold_platinum()
    self:draw_player_level()

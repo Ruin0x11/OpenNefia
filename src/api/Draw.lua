@@ -15,6 +15,7 @@ Draw.load_shader = draw.load_shader
 Draw.use_shader = draw.use_shader
 Draw.text_width = draw.text_width
 Draw.text_height = draw.text_height
+Draw.wrap_text = draw.wrap_text
 Draw.text = draw.text
 Draw.filled_rect = draw.filled_rect
 Draw.image = draw.image

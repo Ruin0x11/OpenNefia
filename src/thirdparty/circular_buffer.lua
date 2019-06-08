@@ -13,6 +13,10 @@ function circular_buffer:filled()
     return #(self.history) == self.max_length
 end
 
+function circular_buffer:len()
+    return #(self.history)
+end
+
 function circular_buffer:push(value)
     if self:filled() then
         local value_to_be_removed = self.history[self.oldest]
@@ -55,6 +59,7 @@ function circular_buffer:new(max_length)
         max_length = max_length,
         push = circular_buffer.push,
         filled = circular_buffer.filled,
+        len = circular_buffer.len,
     }
     setmetatable(instance, circular_buffer.metatable)
     return instance

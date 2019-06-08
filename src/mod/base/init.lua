@@ -81,7 +81,6 @@ data:add_multi(
             minimap = "graphic/temp/hud_minimap.bmp",
             map_name_icon = "graphic/temp/map_name_icon.bmp",
             bar = "graphic/temp/hud_bar.bmp",
-            message_window = "graphic/temp/message_window.bmp",
             skill_icons = {
                type = "asset",
                value = {
@@ -97,6 +96,9 @@ data:add_multi(
                type = "font",
                value = 12
             }
+         },
+         ["api.gui.hud.UiMessageWindow"] = {
+            message_window = "graphic/temp/message_window.bmp",
          },
          ["api.gui.hud.UiGoldPlatinum"] = {
             gold_coin = "graphic/temp/gold_coin.bmp",
