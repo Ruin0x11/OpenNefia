@@ -23,14 +23,14 @@ local function debug_server(port)
             print("[Server] GET " .. text)
             local s, err = loadstring(text)
             if s then
-               local success, res = pcall(s)
+               local success, res = xpcall(s, function(err) return err .. "\n" .. debug.traceback(2) end)
                if success then
                   print("[Server] Result: " .. tostring(res))
                else
-                  print("[Server] Exec error: " .. tostring(res))
+                  print("[Server] Exec error:\n\t" .. tostring(res))
                end
             else
-               print("[Server] Compile error: " .. err)
+               print("[Server] Compile error:\n\t" .. err)
             end
          end
 

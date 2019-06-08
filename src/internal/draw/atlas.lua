@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local atlas = class("atlas")
 
 function atlas:init(tile_count_x, tile_count_y, tile_width, tile_height)
@@ -20,7 +21,11 @@ function atlas:load(files, coords)
 
    for i, filepath in ipairs(files) do
       i = i - 1
-      assert(i < self.tile_count_x * self.tile_count_y)
+      -- assert(i < self.tile_count_x * self.tile_count_y)
+      if i >= self.tile_count_x * self.tile_count_y then
+         Log.warn("Cannot load past " .. i .. " tiles.")
+         break
+      end
 
       local tile = love.graphics.newImage(filepath)
       local x = (i % self.tile_count_x) * self.tile_width

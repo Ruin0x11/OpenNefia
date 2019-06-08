@@ -31,14 +31,19 @@ local class_ = require("util.class")
 interface = class_.interface
 class = class_.class
 
-if not love then
+if love ~= nil then
+   IS_LOVE = true
+else
    _DEBUG = true
+   IS_LOVE = false
    love = require("util.lovemock")
 end
 
-function _p(it)
-   print(inspect(it))
-   return it
+function _p(...)
+   for _, v in ipairs({...}) do
+      print(inspect(v))
+   end
+   return ...
 end
 
 -- prevent new globals from here on out.

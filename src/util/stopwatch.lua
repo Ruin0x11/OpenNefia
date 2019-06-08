@@ -15,7 +15,7 @@ end
 
 function stopwatch:p(t)
    t = t or ""
-   print(string.format("[%s] %02.02f", t, self:measure()))
+   print(string.format("[%s] %04.04f", t, self:measure()))
 end
 
 return stopwatch

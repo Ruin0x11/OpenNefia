@@ -1,4 +1,3 @@
-local Chara = require("api.Chara")
 local field = require("game.field")
 
 local Gui = {}

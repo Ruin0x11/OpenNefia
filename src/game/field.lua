@@ -8,6 +8,7 @@ local IUiLayer = require("api.gui.IUiLayer")
 local LDateTime = require("api.LDateTime")
 local IInput = require("api.gui.IInput")
 
+local env = require("internal.env")
 local map = require("internal.map")
 local field_renderer = require("internal.field_renderer")
 
@@ -25,11 +26,24 @@ function field_layer:init()
    self.map = nil
    self.renderer = nil
    self.player = nil
+   self.repl = nil
 
    self:init_global_data()
 
    self.keys = InputHandler:new()
    self.keys:focus()
+end
+
+function field_layer:setup_repl()
+   -- avoid circular requires that depend on internal.field, since
+   -- this auto-requires the full public API.
+   local Repl = require("api.gui.menu.Repl")
+
+   local repl_env = env.generate_sandbox("repl")
+   local apis = env.require_all_apis()
+   repl_env = table.merge(repl_env, apis)
+
+   self.repl = Repl:new(repl_env)
 end
 
 function field_layer:init_global_data()
@@ -70,6 +84,10 @@ function field_layer:exists(obj)
    return self.map and self.map:exists(obj)
 end
 
+function field_layer:get_object(_type, uid)
+   return self.map and self.map:get_object(_type, uid)
+end
+
 function field_layer:update_screen()
    if not self.is_active or not self.renderer then return end
 
@@ -79,7 +97,7 @@ function field_layer:update_screen()
    if player then
       self.renderer:update_draw_pos(player.x, player.y)
    end
-   self.renderer:update(self.map)
+   self.renderer:update(self.map, self.player)
 
    self:update_hud()
 end
@@ -91,10 +109,13 @@ function field_layer:update_hud()
 end
 
 function field_layer:update(dt, ran_action, result)
-   if ran_action ~= nil then
-      self:update_screen()
-      return result
+end
+
+function field_layer:query_repl()
+   if self.repl == nil then
+      self:setup_repl()
    end
+   self.repl:query()
 end
 
 return field_layer:new()

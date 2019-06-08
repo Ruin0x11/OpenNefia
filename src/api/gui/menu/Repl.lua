@@ -49,13 +49,11 @@ function Repl:init(env)
 end
 
 function Repl:history_prev()
-   print("prev")
    self.history_index = math.max(self.history_index - 1, 0)
    self.text = self.history[self.history_index] or ""
 end
 
 function Repl:history_next()
-   print("next")
    self.history_index = math.min(self.history_index + 1, #self.history)
    self.text = self.history[self.history_index] or ""
 end
@@ -78,9 +76,10 @@ function Repl:submit()
 
    self.scrollback:push(self.caret .. text)
    if string.nonempty(text) then
-      table.insert(self.history, text)
+      table.insert(self.history, 1, text)
    end
 
+   -- WARNING: massive backdoor waiting to happen.
    local chunk, err = loadstring("return " .. text)
 
    if chunk == nil then
@@ -91,10 +90,17 @@ function Repl:submit()
          return
       end
    end
-   -- setfenv(chunk, self.env)
+   setfenv(chunk, self.env)
    local success, result = pcall(chunk)
 
-   for line in string.lines(tostring(result)) do
+   local result_text
+   if type(result) == "table" then
+      result_text = inspect(result)
+   else
+      result_text = tostring(result)
+   end
+
+   for line in string.lines(result_text) do
       self.scrollback:push(line)
    end
 end
@@ -118,6 +124,7 @@ end
 
 function Repl:update(dt)
    if self.finished then
+      self.finished = false
       return true
    end
 end

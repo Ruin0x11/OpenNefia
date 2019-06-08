@@ -2,13 +2,16 @@ local Input = require("api.Input")
 local Chara = require("api.Chara")
 
 local Pos = require("api.Pos")
-local Chara = require("api.Chara")
+local Map = require("api.Map")
 
 -- General-purpose logic that is meant to be shared by the PC and all
 -- NPCs.
 local Action = {}
 
 function Action.move(chara, x, y)
+   if not Map.can_access(x, y) then
+      return "turn_end"
+   end
 
    -- EVENT: before_character_movement
    -- ally direction
@@ -32,7 +35,7 @@ function Action.move(chara, x, y)
    -- proc world map encounters
    --   how to handle entering a new map here? defer it?
 
-   return "ContinueTurn"
+   return "turn_end"
 end
 
 return Action

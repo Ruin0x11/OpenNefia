@@ -39,10 +39,10 @@ function InputHandler:halt_input()
 end
 
 function InputHandler:run_actions(dt, ...)
-   local ran = self.keys:run_actions(dt, ...)
+   local ran, result = self.keys:run_actions(dt, ...)
    self.mouse:run_actions()
 
-   return ran
+   return ran, result
 end
 
 return InputHandler

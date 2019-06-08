@@ -11,6 +11,7 @@ love.graphics.getFont = function()
 end
 love.graphics.setFont = function() end
 love.graphics.setColor = function() end
+love.graphics.setCanvas = function() end
 love.graphics.setBlendMode = function() end
 love.graphics.line = function() end
 love.graphics.polygon = function() end
@@ -27,6 +28,12 @@ love.graphics.newQuad = function()
       getViewport = function() return 0, 0, 100, 100 end
    }
 end
+love.graphics.newCanvas = function()
+   return {
+      newImageData = function() return {} end,
+      release = function() end
+   }
+end
 love.graphics.newFont = function()
    return {}
 end
@@ -35,14 +42,20 @@ love.graphics.newImage = function()
       getWidth = function() return 100 end,
       getHeight = function() return 100 end,
       setFilter = function() end,
+      release = function() end,
    }
 end
 love.graphics.draw = function() end
 love.image.newImageData = function(fn)
    return {
-      mapPixel = function() end
+      mapPixel = function() end,
+      getPixel = function() return 1, 0, 0 end,
+      getWidth = function() return 100 end,
+      getHeight = function() return 100 end,
+      release = function() end,
    }
 end
 love.keyboard.setKeyRepeat = function() end
+love.keyboard.setTextInput = function() end
 
 return love

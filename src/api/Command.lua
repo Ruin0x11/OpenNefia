@@ -48,7 +48,7 @@ function Command.move(player, x, y)
 
    -- proc confusion text
 
-   return "StopTurn"
+   return "turn_end"
 end
 
 return Command

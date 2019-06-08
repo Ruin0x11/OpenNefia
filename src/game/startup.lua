@@ -21,7 +21,7 @@ local function get_map_tiles()
    if not fs.exists(dir) then
       error("not exist " .. dir)
    end
-   for _, f in ipairs(fs.get_directory_items(dir)) do
+   for _, f in fs.iter_directory_items(dir) do
       local file = fs.join(dir, f)
       local tile = love.image.newImageData(file)
       local r, g, b = tile:getPixel(0, 0)
@@ -39,7 +39,7 @@ local function get_chara_tiles()
    if not fs.exists(dir) then
       error("not exist " .. dir)
    end
-   for _, f in ipairs(fs.get_directory_items(dir)) do
+   for _, f in fs.iter_directory_items(dir) do
       local file = fs.join(dir, f)
       local tile = love.image.newImageData(file)
       if tile:getHeight() == tile_size then

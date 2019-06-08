@@ -63,15 +63,28 @@ function field_renderer:draw()
    self.shadow_batch:draw(draw_x, draw_y)
 end
 
-function field_renderer:update(map)
-   for i, t in ipairs(map.tiles) do
-      local x = (i-1) % map.width
-      local y = math.floor((i-1) / map.height)
-      self:set_tile(t.image, x, y)
+function field_renderer:update(map, player)
+   if map.tiles_dirty then
+      for i, t in ipairs(map.tiles) do
+         local x = (i-1) % map.width
+         local y = math.floor((i-1) / map.height)
+         self:set_tile(t.image, x, y)
+      end
+      map.tiles_dirty = false
+   end
+
+   if player ~= nil then
+      local shadow_map = map:calc_screen_sight(player.x, player.y, 35)
+      if #shadow_map > 0 then
+         self.shadow_batch:set_tiles(shadow_map)
+      end
    end
 
    for _, c in map:iter_charas() do
-      if c.state == "Alive" then
+      local show = c.state == "Alive" and map:is_in_fov(c.x, c.y)
+      local hide = not show and c.batch_ind ~= 0
+
+      if show then
          -- HACK replace as batch_ind shouldn't be stored on character
          -- local batch_ind = self.chara_batch_inds[c.uid]
          local batch_ind = c.batch_ind
@@ -94,17 +107,9 @@ function field_renderer:update(map)
                }
             end
          end
-      elseif c.state ~= "Alive" and c.batch_ind ~= 0 then
+      elseif hide then
          self.chara_batch:remove_tile(c.batch_ind)
          c.batch_ind = 0
-      end
-   end
-
-   local p = chara.player()
-   if p then
-      local shadow_map = map:calc_screen_sight(p.x, p.y, 15)
-      if #shadow_map > 0 then
-         self.shadow_batch:set_tiles(shadow_map)
       end
    end
 end

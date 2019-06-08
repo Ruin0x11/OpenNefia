@@ -1,10 +1,57 @@
 local fs = {}
 
-fs.get_directory_items = love.filesystem.getDirectoryItems
-fs.get_info = love.filesystem.getInfo
+-- TODO: stub out with lfs if not running with love runtime
+
+if IS_LOVE then
+   fs.get_directory_items = love.filesystem.getDirectoryItems
+   fs.get_info = love.filesystem.getInfo
+else
+   local lfs = require("lfs")
+   fs.get_directory_items = function(dir)
+      local items = {}
+      for path in lfs.dir(dir) do
+         items[#items+1] = path
+      end
+      return items
+   end
+   fs.get_info = function(path)
+      local attrs = lfs.attributes(path)
+      if attrs == nil then return nil end
+
+      return {
+         type = attrs.mode
+      }
+   end
+end
+
+function fs.iter_directory_items(dir)
+   return ipairs(fs.get_directory_items(dir))
+end
 
 function fs.exists(path)
    return fs.get_info(path) ~= nil
+end
+
+function fs.is_directory(path)
+   local info = fs.get_info(path)
+   return info ~= nil and info.type == "directory"
+end
+
+function fs.is_file(path)
+   local info = fs.get_info(path)
+   return info ~= nil and info.type == "file"
+end
+
+function fs.basename(path)
+   return string.gsub(path, "(.*/)(.*)", "%2")
+end
+
+function fs.filename_part(path)
+   return string.gsub(fs.basename(path), "(.*)%.(.*)", "%1")
+end
+
+function fs.extension_part(path)
+   return string.gsub(fs.basename(path), "(.*)%.(.*)", "%2")
 end
 
 

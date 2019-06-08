@@ -62,6 +62,7 @@ function instanced_map:init(width, height, uids)
    self.shadow_map = {}
 
    self.tiles = table.of({}, width * height)
+   self.tiles_dirty = true
    self.uids = uids
 
    self:init_map_data()
@@ -78,6 +79,8 @@ function instanced_map:set_tile(x, y, tile)
    end
 
    self.tiles[y*self.width+x+1] = tile
+
+   self.tiles_dirty = true
 end
 
 function instanced_map:tile(x, y)
@@ -128,6 +131,11 @@ function instanced_map:objects_at(type_id, x, y)
    local pool = self:get_pool(type_id)
    if not pool then return {} end
    return pool:objects_at(x, y)
+end
+
+function instanced_map:get_object(_type, uid)
+   local pool = self:get_pool(_type)
+   return pool:get(uid)
 end
 
 function instanced_map:exists(obj)
@@ -283,6 +291,8 @@ function instanced_map:is_in_bounds(x, y)
    return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
 
+-- TODO: Need to handle depending on what is querying. People may want
+-- things that can pass through walls, etc.
 function instanced_map:can_access(x, y)
    local tile = self:tile(x, y)
    return self:is_in_bounds(x, y) and not tile.is_solid

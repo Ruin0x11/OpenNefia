@@ -32,8 +32,10 @@ end
 
 function tile_batch:update_tile(x, y, tile)
    if x >= 0 and y >= 0 and x < self.width and y < self.height then
-      self.tiles[y*self.width+x+1] = tile
-      self.updated = true
+      if self.atlas.tiles[tile] ~= nil then
+         self.tiles[y*self.width+x+1] = tile
+         self.updated = true
+      end
    end
 end
 

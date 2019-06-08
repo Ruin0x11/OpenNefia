@@ -11,11 +11,17 @@ local map = require("internal.map")
 local field_logic = {}
 
 function field_logic.setup()
-   field:set_map(map.create(20, 20))
+   field:set_map(map.create(200, 200))
 
    do
       local me = Chara.create("base.player", 10, 10)
       Chara.set_player(me)
+   end
+
+   for i=1,20 do
+      for j=1,20 do
+         Chara.create("base.player", i+100, j+100)
+      end
    end
 
    -- TODO: make bind_keys have callbacks that pass in player as
@@ -25,34 +31,34 @@ function field_logic.setup()
          print("do")
       end,
       up = function(me)
-         local p = Chara.player()
-         Command.move(p, "North")
+         return Command.move(me, "North")
       end,
       down = function(me)
-         local p = Chara.player()
-         Command.move(p, "South")
+         return Command.move(me, "South")
       end,
       left = function(me)
-         local p = Chara.player()
-         Command.move(p, "East")
+         return Command.move(me, "East")
       end,
       right = function(me)
-         local p = Chara.player()
-         Command.move(p, "West")
+         return Command.move(me, "West")
       end,
       ["."] = function(me)
          World.pass_time_in_seconds(600)
+         return "turn_end"
       end,
       ["`"] = function(me)
-         require("api.gui.menu.Repl"):new({}):query()
+         field:query_repl()
+         return "player_turn_query"
       end,
       escape = function(me)
          if Input.yes_no() then
-            going = false
+            return "quit"
          end
+         return "player_turn_query"
       end,
       ["return"] = function()
          print(require("api.gui.TextPrompt"):new(16):query())
+         return "player_turn_query"
       end,
    }
 end
@@ -78,7 +84,9 @@ function field_logic.update_chara_time_this_turn(time_this_turn)
 end
 
 local player_finished_turn = false
-local uids_this_turn = table.set {}
+local chara_iter = nil
+local chara_iter_state = nil
+local chara_iter_index = 0
 
 function field_logic.turn_begin()
    local player = Chara.player()
@@ -96,7 +104,7 @@ function field_logic.turn_begin()
    -- index 1-15, adventurers 15-56, and so on.
    player_finished_turn = false
 
-   uids_this_turn = table.set {}
+   chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
 
    local speed = calc_speed(player)
    if speed < 10 then
@@ -121,6 +129,8 @@ function field_logic.turn_begin()
    return "pass_turns"
 end
 
+local sw = require("util.stopwatch"):new()
+
 function field_logic.determine_turn()
    local player = Chara.player()
    assert(player ~= nil)
@@ -133,16 +143,15 @@ function field_logic.determine_turn()
 
    -- HACK: use a better way that also orders allies first
    local found = nil
-   for _, c in Map.iter_charas() do
-      if not uids_this_turn[c.uid] then
-         if Chara.is_alive(c) then
-            if c.time_this_turn >= field:turn_cost() then
-               found = c
-               break
-            end
-         end
+   local chara
+   repeat
+      chara_iter_index, chara = chara_iter(chara_iter_state, chara_iter_index)
+
+      if chara ~= nil and chara.time_this_turn >= field:turn_cost() then
+         chara.time_this_turn = chara.time_this_turn - field:turn_cost()
+         found = chara
       end
-   end
+   until found ~= nil or chara_iter_index == nil
 
    return found
 end
@@ -154,8 +163,6 @@ function field_logic.pass_turns()
       -- Start a new turn.
       return "turn_begin"
    end
-
-   uids_this_turn[chara.uid] = true
 
    chara.time_this_turn = chara.time_this_turn - field:turn_cost()
 
@@ -195,7 +202,7 @@ function field_logic.pass_turns()
       if Chara.is_player(chara) then
          return "player_turn"
       else
-         return "npc_turn"
+         return "npc_turn", chara
       end
    end
 
@@ -214,12 +221,14 @@ function field_logic.player_turn_query()
    local player = Chara.player()
    assert(Chara.is_alive(player))
 
+   Gui.update_screen()
+
    while going do
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
 
       if ran == true then
-         result = turn_result or "turn_end"
+         result = turn_result or "player_turn_query"
          going = false
          break
       end
@@ -232,8 +241,19 @@ function field_logic.player_turn_query()
    return result
 end
 
-function field_logic.npc_turn()
-   return "turn_end"
+function field_logic.npc_turn(npc)
+   local npc_ai = require("game.npc_ai")
+   local action = npc_ai.decide_action(npc)
+   assert(action ~= nil)
+
+   if action == "turn_end" then
+      return "turn_end"
+   end
+
+   local result = npc_ai.handle_ai_action(npc, action)
+   assert(result ~= nil)
+
+   return result
 end
 
 function field_logic.turn_end()
@@ -244,11 +264,17 @@ function field_logic.turn_end()
    return "pass_turns"
 end
 
+function field_logic.player_died()
+   error("player died")
+   return "pass_turns"
+end
+
 function field_logic.query()
    field_logic.setup()
 
    local event = "turn_begin"
    local going = true
+   local target_chara
 
    field.is_active = true
 
@@ -256,8 +282,6 @@ function field_logic.query()
 
    while going do
       local cb = nil
-
-      Gui.update_screen()
 
       if event == "turn_begin" then
          cb = field_logic.turn_begin
@@ -273,18 +297,22 @@ function field_logic.query()
          cb = field_logic.npc_turn
       elseif event == "pass_turns" then
          cb = field_logic.pass_turns
+      elseif event == "quit" then
+         break
       end
 
       if type(cb) ~= "function" then
          error("Unknown turn event " .. tostring(event))
       end
 
-      event = cb()
+      event, target_chara = cb(target_chara)
    end
 
    draw.pop_layer()
 
    field.is_active = false
+
+   return "title"
 end
 
 return field_logic

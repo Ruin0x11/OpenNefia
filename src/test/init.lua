@@ -6,6 +6,7 @@ test = require("thirdparty.gambiarra")
 ok = nil
 spy = nil
 eq = nil
+t = require("test.test_helper")
 
 require("boot")
 
@@ -18,7 +19,7 @@ function run_tests(path)
          if attr.mode == "directory" then
             run_tests(f)
          else
-            if f ~= "./test/init.lua" then
+            if f ~= "./test/init.lua" and f ~= "./test/test_helper.lua" then
                print("\t " .. f)
                local chunk, err = loadfile(f)
                if not chunk or err then
