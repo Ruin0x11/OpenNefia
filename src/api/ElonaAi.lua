@@ -404,11 +404,28 @@ function ElonaAi:do_noncombat_action(chara, target, retreat)
    return "turn_end"
 end
 
+function ElonaAi:run_custom_actions(type_, chara, target)
+   for _, cb in ipairs(self:enabled_actions("ally")) do
+      local act = cb({ai=self, chara=chara, target=target})
+      if act ~= nil then
+         return act
+      end
+   end
+end
+
+function ElonaAi:enable_action(id)
+end
+
 function ElonaAi:decide_ally_targeted_action(ally, target)
    if Chara.is_alive(target) then
       -- item on space
 
       -- EVENT: on_decide_ally_action
+
+      local act = self:run_custom_actions("ally", ally, target)
+      if act ~= nil then
+         return act
+      end
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
