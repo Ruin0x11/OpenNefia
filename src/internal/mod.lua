@@ -1,3 +1,4 @@
+local data = require("internal.data")
 local fs = require("internal.fs")
 local env = require("internal.env")
 

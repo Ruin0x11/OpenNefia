@@ -1,8 +1,10 @@
 local Chara = require("api.Chara")
 local Command = require("api.Command")
+local Event = require("api.Event")
+local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
-local Gui = require("api.Gui")
+local StatusEffect = require("api.StatusEffect")
 local World = require("api.World")
 local draw = require("internal.draw")
 local field = require("game.field")
@@ -18,8 +20,8 @@ function field_logic.setup()
       Chara.set_player(me)
    end
 
-   for i=1,20 do
-      for j=1,20 do
+   for i=1,2 do
+      for j=1,2 do
          Chara.create("base.player", i+8, j+11)
       end
    end
@@ -215,7 +217,7 @@ function field_logic.pass_turns()
 
    if Chara.is_alive(chara) then
       if Chara.is_player(chara) then
-         return "player_turn"
+         return "player_turn", chara
       else
          return "npc_turn", chara
       end
@@ -253,7 +255,7 @@ function field_logic.player_turn_query()
 
    -- TODO: convert public to internal event
 
-   return result
+   return result, player
 end
 
 function field_logic.npc_turn(npc)
@@ -262,17 +264,35 @@ function field_logic.npc_turn(npc)
    assert(action ~= nil)
 
    if action == "turn_end" then
-      return "turn_end"
+      return "turn_end", npc
    end
 
    local result = npc_ai.handle_ai_action(npc, action)
    assert(result ~= nil)
 
-   return result
+   return result, npc
 end
 
-function field_logic.turn_end()
-   -- EVENT: on_turn_end
+function field_logic.turn_end(chara)
+   if not Chara.is_alive(chara) then
+      return "pass_turns"
+   end
+
+   Event.trigger("base.on_turn_end", {chara=chara})
+
+   local regen = StatusEffect.proc_turn_end(chara)
+   if Chara.is_player(chara) then
+      -- hunger
+      -- sleep
+   else
+      -- quest delivery flag
+   end
+
+   -- party time emoicon
+
+   if regen then
+      Chara.regen_hp_mp(chara)
+   end
 
    -- proc timestop
 

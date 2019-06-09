@@ -36,6 +36,7 @@ data:add_type {
       target = schema.String,
    }
 }
+
 data:add_type {
    name = "element",
    schema = schema.Record {
@@ -48,14 +49,25 @@ data:add_type {
    }
 }
 
+data:add_type {
+   name = "status_effect",
+   schema = schema.Record {
+      related_element = schema.Optional(schema.String),
+      before_apply = schema.Optional(schema.Function),
+      power_reduction_factor = schema.Optional(schema.Number),
+      additive_power = schema.Optional(schema.Function),
+      on_turn_end = schema.Optional(schema.Function),
+   }
+}
+
 data:add {
    _type = "base.chara",
    _id = "player",
 
    name = "player",
    image = 4,
-   max_hp = 5,
-   max_mp = 1
+   max_hp = 50,
+   max_mp = 10
 }
 
 data:add {
@@ -105,6 +117,277 @@ data:add_multi(
    },
    {
       _id = "on_calc_kill_exp"
+   },
+   {
+      _id = "on_turn_end"
+   }
+)
+
+-- TODO: emotion icon as field
+data:add_multi(
+   "base.status_effect",
+   {
+      _id = "blindness",
+
+      related_element = "base.darkness",
+      before_apply = nil,
+      power_reduction_factor = 6,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.blindness", 1)
+         if StatusEffect.get_turns(p.victim, "base.blindness" > 1) then
+            -- emotion icon
+         end
+      end
+   },
+   {
+      _id = "confusion",
+
+      related_element = "base.mind",
+      before_apply = nil,
+      power_reduction_factor = 7,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.confusion", 1)
+         if StatusEffect.get_turns(p.victim, "base.confusion" > 1) then
+            -- emotion icon
+         end
+      end
+   },
+   {
+      _id = "paralysis",
+
+      related_element = "base.darkness",
+      before_apply = nil,
+      power_reduction_factor = 6,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.paralysis", 1)
+         if StatusEffect.get_turns(p.victim, "base.paralysis" > 1) then
+            -- emotion icon
+         end
+         p.regeneration = false
+      end
+   },
+   {
+      _id = "poison",
+
+      related_element = "base.poison",
+      before_apply = nil,
+      power_reduction_factor = 5,
+      additive_power = function(p) return p.turns / 3 + 3 end,
+      on_turn_end = function(p)
+         local Chara = require("api.Chara")
+         local Rand = require("api.Rand")
+         local StatusEffect = require("api.StatusEffect")
+         local constitution = 100
+         -- TODO: acts as damage source (self?)
+         Chara.damage_hp(p.victim, Rand.rnd(2 + math.floor(constitution / 10)), { kind = -4 })
+         StatusEffect.heal(p.victim, "base.poison", 1)
+         if StatusEffect.get_turns(p.victim, "base.poison") > 1 then
+            -- emotion icon
+         end
+
+         p.regeneration = false
+      end
+   },
+   {
+      _id = "choked",
+
+      before_apply = nil,
+      power_reduction_factor = nil,
+      additive_power = nil,
+      on_turn_end = function(p)
+         local Chara = require("api.Chara")
+         local Rand = require("api.Rand")
+         local Map = require("api.Map")
+         local Gui = require("api.Gui")
+         local StatusEffect = require("api.StatusEffect")
+         if p.turns % 3 == 0 then
+            if Map.is_in_fov(p.victim.x, p.victim.y) then
+               Gui.mes(p.victim.uid .. ": Being choked.")
+            end
+         end
+         StatusEffect.apply(p.victim, "base.choked", 1)
+         if StatusEffect.get_turns(p.victim, "base.choked") > 15 then
+            Chara.damage_hp(p.victim, 500, { kind = -21 })
+         end
+
+         p.regeneration = false
+      end
+   },
+   {
+      _id = "sleep",
+
+      related_element = "base.nerve",
+      before_apply = nil,
+      power_reduction_factor = 4,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local Chara = require("api.Chara")
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.sleep", 1)
+         if StatusEffect.get_turns(p.victim, "base.sleep") > 1 then
+            -- emotion icon
+         end
+         Chara.heal_hp(p.victim, 1)
+         Chara.heal_mp(p.victim, 1)
+      end
+   },
+   {
+      _id = "gravity",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = nil,
+      additive_power = nil,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.gravity", 1)
+      end
+   },
+   {
+      _id = "furious",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = nil,
+      additive_power = nil,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.furious", 1)
+      end
+   },
+   {
+      _id = "fear",
+
+      related_element = "base.mind",
+      before_apply = nil,
+      power_reduction_factor = 7,
+      additive_power = 0,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.fear", 1)
+         -- emotion icon
+      end
+   },
+   {
+      _id = "dimming",
+
+      related_element = "base.sound",
+      before_apply = nil,
+      power_reduction_factor = 8,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.dimming", 1)
+         -- emotion icon
+      end
+   },
+   {
+      _id = "bleeding",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = 25,
+      additive_power = function(p) return p.turns end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         local Chara = require("api.Chara")
+         local Rand = require("api.Rand")
+
+         Chara.damage_hp(p.victim, Rand.rnd(math.floor(p.victim.hp * (1 + p.turns / 4) / 100 + 3) + 1), { kind = -13 })
+         StatusEffect.heal(p.victim, "base.bleeding", 1)
+         -- emotion icon
+         p.regeneration = false
+      end
+   },
+   {
+      _id = "wetness",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = nil,
+      additive_power = nil,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.wetness", 1)
+      end
+   },
+   {
+      _id = "drunkeness",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = 10,
+      additive_power = function(p) return p.turns end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         StatusEffect.heal(p.victim, "base.drunkenness", 1)
+         -- emotion icon
+      end
+   },
+   {
+      _id = "insanity",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = 8,
+      additive_power = function(p) return p.turns / 3 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         local Gui = require("api.Gui")
+         local Rand = require("api.Rand")
+         local Map = require("api.Map")
+         if Map.is_in_fov(p.victim.x, p.victim.y) then
+            if Rand.one_in(3) then
+               Gui.txt("Insane.")
+            end
+         end
+         if Rand.one_in(5) then
+            StatusEffect.apply(p.victim, "base.confusion", Rand.rnd(10))
+         end
+         if Rand.one_in(5) then
+            StatusEffect.apply(p.victim, "base.dimming", Rand.rnd(10))
+         end
+         if Rand.one_in(5) then
+            StatusEffect.apply(p.victim, "base.sleep", Rand.rnd(5))
+         end
+         if Rand.one_in(5) then
+            StatusEffect.apply(p.victim, "base.fear", Rand.rnd(10))
+         end
+         StatusEffect.heal(p.victim, "base.insanity", 1)
+         -- emotion icon
+      end
+   },
+   {
+      _id = "sickness",
+
+      related_element = nil,
+      before_apply = nil,
+      power_reduction_factor = 10,
+      additive_power = function(p) return p.turns / 10 + 1 end,
+      on_turn_end = function(p)
+         local StatusEffect = require("api.StatusEffect")
+         local Rand = require("api.Rand")
+         local Chara = require("api.Chara")
+         if Rand.one_in(80) then
+            -- local random_stat = ...
+            -- Chara.debuff()
+         end
+         if Rand.one_in(5) then
+            p.regeneration = false
+         end
+         if not Chara.is_ally(p.victim) then
+            -- if p.victim.quality >= "miracle"
+            if Rand.one_in(200) then
+               StatusEffect.heal(p.victim, "base.sickness")
+            end
+         end
+      end
    }
 )
 
@@ -209,3 +492,12 @@ local Event = require("api.Event")
 
 -- TODO: if set, prevent hooks with 'name' being run:
 --   params.blocked = { "other_hook" }
+
+Event.register(
+"base.on_player_bumped_into_chara",
+"nande POISON nan dayo",
+function(params)
+   local StatusEffect = require("api.StatusEffect")
+   StatusEffect.apply(params.on_cell, "base.poison", 100)
+   return true
+end)

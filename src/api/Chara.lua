@@ -124,6 +124,8 @@ local function init_chara(chara)
    chara.original_relation = "enemy"
    chara.relation = chara.original_relation
 
+   chara.status_effects = {}
+
    local IAi = require("api.IAi")
    local ElonaAi = require("api.ElonaAi")
    chara.ai = ElonaAi:new(chara.ai_config)
@@ -397,6 +399,25 @@ function Chara.damage_hp(victim, amount, source, params)
    Event.trigger("base.after_damage_hp", event_params)
 
    return killed
+end
+
+function Chara.heal_hp(chara, add)
+   chara.hp = math.min(chara.hp + math.max(add, 0), chara.max_hp)
+end
+
+function Chara.heal_mp(chara, add)
+   chara.mp = math.min(chara.mp + math.max(add, 0), chara.max_mp)
+end
+
+function Chara.regen_hp_mp(chara)
+   if Rand.one_in(6) then
+      local level = 10
+      Chara.heal_hp(chara, Rand.rnd(math.floor(level / 3) + 1) + 1)
+   end
+   if Rand.one_in(5) then
+      local level = 10
+      Chara.heal_mp(chara, Rand.rnd(math.floor(level / 2) + 1) + 1)
+   end
 end
 
 return Chara

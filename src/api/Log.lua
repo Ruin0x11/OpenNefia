@@ -1,19 +1,28 @@
 -- @module Log
 local Log = {}
 
-function Log.info(s, ...)
+local function format(kind, s, ...)
    local out = string.format(s, ...)
-   print(string.format("[INFO]  %s", out))
+   local trace = debug.getinfo(3, "S")
+   local source = ""
+   if trace then
+      local file = trace.source:sub(2)
+      local line = trace.linedefined
+      source = string.format("%s:%d: ", file, line)
+   end
+   print(string.format("[%s] %s%s", kind, source, out))
+end
+
+function Log.info(s, ...)
+   format("INFO", s, ...)
 end
 
 function Log.warn(s, ...)
-   local out = string.format(s, ...)
-   print(string.format("[WARN]  %s", out))
+   format("WARN", s, ...)
 end
 
 function Log.error(s, ...)
-   local out = string.format(s, ...)
-   print(string.format("[ERROR] %s", out))
+   format("ERROR", s, ...)
 end
 
 return Log
