@@ -7,7 +7,7 @@ local chara = require("internal.chara")
 
 local field_renderer = class("field_renderer")
 
-function field_renderer:init(width, height)
+function field_renderer:init(width, height, layers)
    local coords = draw.get_coords()
    local tile_atlas, chara_atlas = require("internal.global.atlases").get()
 
@@ -22,6 +22,23 @@ function field_renderer:init(width, height)
    self.draw_y = 0
 
    self.draw_coroutines = {}
+   self.layers = {}
+
+   for _, require_path in ipairs(layers) do
+      local layer, err = package.try_require(require_path)
+      if layer == nil then
+         error("Could not load draw layer " .. require_path .. ":\n\t" .. err)
+      end
+      local IDrawLayer = require("api.gui.IDrawLayer")
+
+      local instance = layer:new(width, height)
+      assert_is_an(IDrawLayer, instance)
+
+      -- TODO
+      instance:relayout()
+
+      self.layers[#self.layers+1] = instance
+   end
 end
 
 function field_renderer:update_draw_pos(player_x, player_y)
@@ -68,6 +85,10 @@ function field_renderer:draw()
    -- cloud
    self.shadow_batch:draw(draw_x, draw_y)
 
+   for _, l in ipairs(self.layers) do
+      l:draw(draw_x, draw_y)
+   end
+
    local dead = {}
    for i, co in ipairs(self.draw_coroutines) do
       local msg, err = coroutine.resume(co, draw_x, draw_y)
@@ -81,7 +102,7 @@ function field_renderer:draw()
    end
 end
 
-function field_renderer:update(map, player)
+function field_renderer:update_tile_layer(map, player)
    if map.tiles_dirty then
       for i, t in ipairs(map.tiles) do
          local x = (i-1) % map.width
@@ -90,14 +111,18 @@ function field_renderer:update(map, player)
       end
       map.tiles_dirty = false
    end
+end
 
+function field_renderer:update_shadow_layer(map, player)
    if player ~= nil then
-      local shadow_map = map:calc_screen_sight(player.x, player.y, 35)
+      local shadow_map = map.shadow_map
       if #shadow_map > 0 then
          self.shadow_batch:set_tiles(shadow_map)
       end
    end
+end
 
+function field_renderer:update_chara_layer(map, player)
    for _, c in map:iter_charas() do
       local show = c.state == "Alive" and map:is_in_fov(c.x, c.y)
       local hide = not show and c.batch_ind ~= 0
@@ -129,6 +154,16 @@ function field_renderer:update(map, player)
          self.chara_batch:remove_tile(c.batch_ind)
          c.batch_ind = 0
       end
+   end
+end
+
+function field_renderer:update(map, player)
+   self:update_tile_layer(map, player)
+   self:update_shadow_layer(map, player)
+   self:update_chara_layer(map, player)
+
+   for _, l in ipairs(self.layers) do
+      l:update(0, true)
    end
 end
 

@@ -244,6 +244,21 @@ function table.map(tbl, f, array)
    return t
 end
 
+--- Reduces an array-like table over a function.
+-- @tparam array arr
+-- @tparam func f
+-- @tparam any start
+-- @treturn any
+function table.reduce(arr, f, start)
+   local result = start
+
+   for _, v in ipairs(arr) do
+      result = f(result, v)
+   end
+
+   return result
+end
+
 --- Flattens an array-like table one layer down.
 -- @tparam array arr
 -- @treturn array

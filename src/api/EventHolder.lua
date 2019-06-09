@@ -98,7 +98,11 @@ local function run_event(priority, callbacks, args)
    for _, cb in ipairs(callbacks) do
       local result = cb(args)
 
-      if args.stop then
+      if type(result) == "table" then
+         args = table.merge(args, result)
+      end
+
+      if args._stop then
          return false
       end
    end

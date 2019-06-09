@@ -255,7 +255,7 @@ function instanced_map:calc_screen_sight(player_x, player_y, fov_size)
                local shadow = true
 
                if fov_y_start <= j and j <= fov_y_end then
-                  if i >= fov_radius[j + cy][1] + cx and i < fov_radius[j+cy][2] + cx then
+                  if i >= fov_radius[j+cy][1] + cx and i < fov_radius[j+cy][2] + cx then
                      if self:has_los(player_x, player_y, i, j) then
                         self.in_sight[j*self.width+i+1] = self.last_sight_id
                         shadow = false
@@ -274,7 +274,7 @@ function instanced_map:calc_screen_sight(player_x, player_y, fov_size)
       end
       ly = ly + 1
    end
-   --pp(self.shadow_map)
+   -- pp(self.shadow_map)
 
    return self.shadow_map, start_x, start_y
 end

@@ -1,3 +1,4 @@
+require("ext.package")
 require("ext.math")
 require("ext.string")
 require("ext.table")

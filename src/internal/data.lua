@@ -45,6 +45,9 @@ function data:add_type(schema)
    schemas["base." .. schema.name] = schema
 end
 
+function data:edit_type(type_id, delta)
+end
+
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
 
@@ -152,6 +155,29 @@ function proxy:__index(k)
    if not inner[self._type] then return nil end
 
    return inner[self._type][k]
+end
+
+local function iter(state, prev_index)
+   if state.iter == nil then
+      return nil
+   end
+
+   local next_index, dat = state.iter(state.state, prev_index)
+
+   if next_index == nil then
+      return nil
+   end
+
+   return next_index, dat
+end
+
+function proxy:iter()
+   local inner_iter, inner_state, inner_index
+   if inner[self._type] ~= nil then
+      inner_iter, inner_state, inner_index = pairs(inner[self._type])
+   end
+   print("dood")
+   return iter, {iter=inner_iter,state=inner_state}, inner_index
 end
 
 setmetatable(data, {

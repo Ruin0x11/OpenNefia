@@ -33,7 +33,11 @@ function field_layer:init()
 
    self.keys = InputHandler:new()
    self.keys:focus()
+
+   self.layers = {}
 end
+
+local global_require = require
 
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
@@ -46,7 +50,7 @@ function field_layer:setup_repl()
 
    -- WARNING: for development only.
    if _DEBUG then
-      repl_env["require"] = require
+      repl_env["require"] = global_require
    end
 
    self.repl = Repl:new(repl_env)
@@ -63,7 +67,7 @@ end
 
 function field_layer:set_map(map)
    self.map = map
-   self.renderer = field_renderer:new(map.width, map.height)
+   self.renderer = field_renderer:new(map.width, map.height, self.layers)
 end
 
 function field_layer:relayout(x, y, width, height)
@@ -94,6 +98,7 @@ function field_layer:update_screen()
    local player = self.player
    if player then
       self.renderer:update_draw_pos(player.x, player.y)
+      self.map:calc_screen_sight(player.x, player.y, 15)
    end
    self.renderer:update(self.map, self.player)
 
@@ -134,6 +139,10 @@ function field_layer:query_repl()
       self:setup_repl()
    end
    self.repl:query()
+end
+
+function field_layer:register_draw_layer(require_path)
+   self.layers[#self.layers+1] = require_path
 end
 
 return field_layer:new()

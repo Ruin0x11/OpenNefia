@@ -1,5 +1,6 @@
 local data = require("internal.data")
 local Chara = require("api.Chara")
+local Map = require("api.Map")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
 local Rand = require("api.Rand")

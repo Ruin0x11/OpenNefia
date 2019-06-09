@@ -1,7 +1,7 @@
 local function insert(node, k, v)
    if node.key == k then
       node.value[#node.value + 1] = v
-   elseif k > node.key then
+   elseif k < node.key then
       local next_node = node.left
       if not next_node then
          node.left = { key = k, value = {v}, parent = node }

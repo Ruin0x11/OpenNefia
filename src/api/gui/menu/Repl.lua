@@ -7,6 +7,7 @@ local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local UiWindow = require("api.gui.UiWindow")
+local LuaReplMode = require("api.gui.menu.LuaReplMode")
 local UiList = require("api.gui.UiList")
 local TextHandler = require("api.gui.TextHandler")
 
@@ -16,7 +17,6 @@ Repl:delegate("input", IInput)
 
 function Repl:init(env)
    self.text = ""
-   self.caret = "> "
    self.env = env or {}
    self.result = ""
    self.size = 10000
@@ -24,6 +24,8 @@ function Repl:init(env)
    self.scrollback_index = 0
    self.history = {}
    self.history_index = 0
+
+   self.mode = LuaReplMode:new(env)
 
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys {
@@ -92,24 +94,12 @@ function Repl:submit()
    self.scrollback_index = 0
    self.history_index = 0
 
-   self.scrollback:push(self.caret .. text)
+   self.scrollback:push(self.mode.caret .. text)
    if string.nonempty(text) then
       table.insert(self.history, 1, text)
    end
 
-   -- WARNING: massive backdoor waiting to happen.
-   local chunk, err = loadstring("return " .. text)
-
-   if chunk == nil then
-      chunk, err = loadstring(text)
-
-      if chunk == nil then
-         self.scrollback:push(err)
-         return
-      end
-   end
-   setfenv(chunk, self.env)
-   local success, result = pcall(chunk)
+   local success, result = self.mode:submit(text)
 
    local result_text
    if type(result) == "table" then
@@ -128,8 +118,8 @@ function Repl:draw()
 
    Draw.set_font(self.font_size)
    Draw.set_color(255, 255, 255)
-   Draw.text(self.caret, self.x + 5, self.y + self.height - Draw.text_height() - 5)
-   Draw.text(self.text, self.x + 5 + Draw.text_width(self.caret), self.y + self.height - Draw.text_height() - 5)
+   Draw.text(self.mode.caret, self.x + 5, self.y + self.height - Draw.text_height() - 5)
+   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + self.height - Draw.text_height() - 5)
 
    if self.scrollback_index > 0 then
       local scrollback_count = string.format("%d/%d",self.scrollback_index + self.max_lines, self.scrollback:len())

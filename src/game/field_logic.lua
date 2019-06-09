@@ -13,7 +13,7 @@ local map = require("internal.map")
 local field_logic = {}
 
 function field_logic.setup()
-   field:set_map(map.create(200, 200))
+   field:set_map(map.create(50, 50))
 
    do
       local me = Chara.create("base.player", 10, 10)
@@ -21,8 +21,9 @@ function field_logic.setup()
    end
 
    for i=1,2 do
-      for j=1,2 do
-         Chara.create("base.player", i+8, j+11)
+      for j=1,1 do
+         local i = Chara.create("base.player", i+8, j+11)
+         i.emotion_icon = "base.paralysis"
       end
    end
 
@@ -63,21 +64,6 @@ function field_logic.setup()
          return "player_turn_query"
       end,
    }
-
-   --   local history = {
-   --    "I am testinger nanodesu",
-   --    -- { icon = "heart" },
-   --    -- { icon = "note" },
-   --    "dood",
-   --    " doods",
-   --    " doodity",
-   -- }
-   -- field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ")
-   -- history = table.merge(history, table.of(function(i) return "あいうえおかきくけこさしすせそたちつてと" .. tostring(i) .. " " end, 5), true)
-
-   -- for _, v in ipairs(history) do
-   --    field.hud.message_window:message(v)
-   -- end
 end
 
 local function calc_speed(chara)

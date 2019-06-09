@@ -1,6 +1,8 @@
 local UiTheme = {}
 
 local Asset = require("api.Asset")
+local Log = require("api.Log")
+
 local data = require("internal.data")
 local asset_drawable = require("internal.draw.asset_drawable")
 
@@ -46,6 +48,7 @@ function UiTheme.load(instance)
       dat = table.maybe(theme_table, "items", fq_name)
       if not dat then
          -- TODO: fallback to base.default here, and warn if still not found
+         Log.warn("No theme data for %s was configured.", fq_name)
          return base
       end
 

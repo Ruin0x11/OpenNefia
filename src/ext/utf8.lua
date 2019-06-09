@@ -1,13 +1,4 @@
-local function try_require(mod)
-   local success, obj = pcall(function() return require(mod) end)
-   if success then
-      return obj
-   end
-
-   return nil
-end
-
-utf8 = try_require("utf8")
+utf8 = package.try_require("utf8")
 if love == nil and (utf8 == nil or utf8.codes == nil) then
    -- require the luarocks version (starwing/utf8)
    utf8 = require("lua-utf8")

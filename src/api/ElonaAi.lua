@@ -6,8 +6,34 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local Event = require("api.Event")
+local EventHolder = require("api.EventHolder")
+local StatusEffect = require("api.StatusEffect")
 
 local ElonaAi = class("ElonaAi", IAi)
+
+local global_actions = EventHolder:new()
+
+function ElonaAi.install_global_action(id, name, callback, priority)
+   assert(type(id) == "string")
+   assert(type(name) == "string")
+   assert(type(callback) == "function")
+   global_actions:register(id, name, callback, { priority = priority })
+end
+
+function ElonaAi.install()
+   local data = require("internal.data")
+   for k, v in data["base.status_effect"]:iter() do
+      if type(v.elona_ai_handler) == "function" then
+         local priority = v.elona_ai_priority or 10000
+         local cb = function(p)
+            if StatusEffect.get_turns(p.chara, k) > 0 then
+               return v.elona_ai_handler(p)
+            end
+         end
+         ElonaAi.install_global_action("on_status_effect", k, cb, priority)
+      end
+   end
+end
 
 function ElonaAi:init(params)
    params = params or {}
@@ -24,6 +50,7 @@ function ElonaAi:init(params)
    -- custom callbacks
    self.on_low_hp = params.on_low_hp or nil
    self.on_idle_action = params.on_idle_action or nil
+   self.actions = EventHolder:new()
 
    -- internal variables
    self.target = nil
@@ -405,24 +432,24 @@ function ElonaAi:do_noncombat_action(chara, target, retreat)
 end
 
 function ElonaAi:run_custom_actions(type_, chara, target)
-   for _, cb in ipairs(self:enabled_actions("ally")) do
-      local act = cb({ai=self, chara=chara, target=target})
-      if act ~= nil then
-         return act
-      end
+   local args = self.actions:trigger(type_, {ai=self, chara=chara, target=target})
+   if type(args.action) == "table" then
+      return args.action
    end
-end
 
-function ElonaAi:enable_action(id)
+   args = global_actions:trigger(type_, {ai=self, chara=chara, target=target})
+   if type(args.action) == "table" then
+      return args.action
+   end
+
+   return nil
 end
 
 function ElonaAi:decide_ally_targeted_action(ally, target)
    if Chara.is_alive(target) then
       -- item on space
 
-      -- EVENT: on_decide_ally_action
-
-      local act = self:run_custom_actions("ally", ally, target)
+      local act = self:run_custom_actions("on_ally", ally, target)
       if act ~= nil then
          return act
       end
@@ -443,6 +470,11 @@ function ElonaAi:decide_targeted_action(chara, target)
    -- EVENT: if blocked, proc map events
    -- blind
    -- confused
+
+   local act = self:run_custom_actions("on_status_effect", chara, target)
+   if act ~= nil then
+      return act
+   end
 
    if chara.relation == "friendly" then
       local act = self:decide_ally_targeted_action(chara, target)

@@ -38,12 +38,50 @@ local SAFE_REQUIRE_PREFIXES = {
    -- "^game%."
 }
 
-local function safe_require(path)
-   for _, v in ipairs(SAFE_REQUIRE_PREFIXES) do
-      if string.match(path, v) then
-         -- BUG won't work. needs to call loadfile/setfenv directly
-         return require(path)
-      end
+function env.load_sandboxed_chunk(path, mod_name)
+   if package.loaded[path] then
+      return package.loaded[path]
+   end
+
+   local resolved = package.searchpath(path, package.path)
+   if resolved == nil then
+      error("Cannot find path " .. path)
+   end
+
+   local chunk, err = loadfile(resolved)
+   if chunk == nil then
+      error(err)
+   end
+   local mod_env = env.generate_sandbox(mod_name)
+   setfenv(chunk, mod_env)
+
+   local success, err = pcall(chunk)
+
+   if success == false then
+      error("\n\t" .. err)
+   end
+
+   local result = err
+   package.loaded[path] = result
+
+   return result
+end
+
+local global_require = require
+
+function env.safe_require(path)
+   local load_type
+
+   if string.match(path, "^api%.") then
+      load_type = "api"
+   elseif string.match(path, "^mod%.") then
+      load_type = "mod"
+   end
+
+   if load_type == "api" then
+      return global_require(path)
+   elseif load_type == "mod" then
+      return package.loaded[path] or env.load_sandboxed_chunk(path, "base")
    end
 
    return nil
@@ -57,9 +95,9 @@ function env.generate_sandbox(mod_name)
    end
 
    print(mod_name)
-   sandbox["MOD_NAME"] = mod_name
+   sandbox["_MOD_NAME"] = mod_name
 
-   sandbox["require"] = safe_require
+   sandbox["require"] = env.safe_require
    sandbox["data"] = require("internal.data")
    sandbox["schema"] = require("thirdparty.schema")
 
