@@ -66,14 +66,6 @@ function field_layer:set_map(map)
    self.renderer = field_renderer:new(map.width, map.height)
 end
 
-function field_layer:draw()
-   if self.renderer then
-      self.renderer:draw()
-   end
-
-   self.hud:draw()
-end
-
 function field_layer:relayout(x, y, width, height)
    self.x = x
    self.y = y
@@ -123,6 +115,18 @@ function field_layer:update_hud()
 end
 
 function field_layer:update(dt, ran_action, result)
+end
+
+function field_layer:add_async_draw_callback(cb)
+   self.renderer:add_async_draw_callback(cb)
+end
+
+function field_layer:draw()
+   if self.renderer then
+      self.renderer:draw()
+   end
+
+   self.hud:draw()
 end
 
 function field_layer:query_repl()

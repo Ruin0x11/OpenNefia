@@ -20,6 +20,8 @@ function Chara.at(x, y)
    local objs = field.map:objects_at("base.chara", x, y)
    assert(objs ~= nil, string.format("%d,%d", x, y))
 
+   -- TODO: clean up dead characters when map is left, if not meant to
+   -- be persisted.
    local chara
    local count = 0
    for _, id in ipairs(objs) do

@@ -20,6 +20,8 @@ function field_renderer:init(width, height)
    self.coords = coords
    self.draw_x = 0
    self.draw_y = 0
+
+   self.draw_coroutines = {}
 end
 
 function field_renderer:update_draw_pos(player_x, player_y)
@@ -47,6 +49,10 @@ function field_renderer:set_draw_pos(draw_x, draw_y)
    self.draw_y = draw_y
 end
 
+function field_renderer:add_async_draw_callback(cb)
+   self.draw_coroutines[#self.draw_coroutines+1] = coroutine.create(cb)
+end
+
 function field_renderer:draw()
    local draw_x = self.draw_x
    local draw_y = self.draw_y
@@ -61,6 +67,18 @@ function field_renderer:draw()
    -- light
    -- cloud
    self.shadow_batch:draw(draw_x, draw_y)
+
+   local dead = {}
+   for i, co in ipairs(self.draw_coroutines) do
+      local msg, err = coroutine.resume(co, draw_x, draw_y)
+      if err then
+         dead[#dead+1] = i
+      end
+   end
+
+   for _, i in ipairs(dead) do
+      table.remove(self.draw_coroutines, i)
+   end
 end
 
 function field_renderer:update(map, player)

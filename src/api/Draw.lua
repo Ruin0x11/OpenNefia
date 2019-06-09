@@ -27,6 +27,22 @@ Draw.set_root = draw.set_root
 Draw.with_canvas = draw.with_canvas
 Draw.clear = draw.clear
 
+function Draw.add_async_callback(cb)
+   if type(cb) ~= "function" then
+      error("Callback must be a function.")
+   end
+
+   local field = require("game.field")
+   if not field.is_active then
+      error("Must be in-game.")
+   end
+
+   field:add_async_draw_callback(cb)
+end
+
+-- TODO: sanitize
+Draw.yield = coroutine.yield
+
 function Draw.text_shadowed(str, x, y, color, shadow_color)
    color = color or {255, 255, 255}
    shadow_color = shadow_color or {0, 0, 0}
