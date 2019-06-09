@@ -2,7 +2,7 @@ package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua"
 
 -- globals that will be used very often.
 
-_DEBUG = false
+_DEBUG = true
 
 require("ext")
 

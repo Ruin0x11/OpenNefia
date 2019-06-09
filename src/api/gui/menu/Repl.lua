@@ -21,6 +21,7 @@ function Repl:init(env)
    self.result = ""
    self.size = 200
    self.scrollback = circular_buffer:new(self.size)
+   self.scrollback_index = 0
    self.history = {}
    self.history_index = 0
 
@@ -33,6 +34,10 @@ function Repl:init(env)
          self.text = utf8.pop(self.text)
       end,
       text_submitted = function()
+         if self.scrollback_index ~= 0 then
+            self.scrollback_index = 0
+            return
+         end
          self:submit()
          Gui.update_screen()
          self.input:halt_input()
@@ -43,19 +48,35 @@ function Repl:init(env)
       end,
       down = function()
          self:history_prev()
+      end,
+      pageup = function()
+         self:scrollback_up()
+      end,
+      pagedown = function()
+         self:scrollback_down()
       end
    }
    self.input:halt_input()
 end
 
 function Repl:history_prev()
+   self.scrollback_index = 0
    self.history_index = math.max(self.history_index - 1, 0)
    self.text = self.history[self.history_index] or ""
 end
 
 function Repl:history_next()
+   self.scrollback_index = 0
    self.history_index = math.min(self.history_index + 1, #self.history)
    self.text = self.history[self.history_index] or ""
+end
+
+function Repl:scrollback_up()
+   self.scrollback_index = math.clamp(self.scrollback_index + math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
+end
+
+function Repl:scrollback_down()
+   self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
 function Repl:relayout(x, y, width, height)
@@ -66,12 +87,13 @@ function Repl:relayout(x, y, width, height)
    self.color = {17, 17, 65, 192}
    self.font_size = 15
    Draw.set_font(self.font_size)
-   self.max_lines = (self.height - 5) / Draw.text_height() - 1
+   self.max_lines = math.floor((self.height - 5) / Draw.text_height()) - 1
 end
 
 function Repl:submit()
    local text = self.text
    self.text = ""
+   self.scrollback_index = 0
    self.history_index = 0
 
    self.scrollback:push(self.caret .. text)
@@ -113,8 +135,13 @@ function Repl:draw()
    Draw.text(self.caret, self.x + 5, self.y + self.height - Draw.text_height() - 5)
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.caret), self.y + self.height - Draw.text_height() - 5)
 
+   if self.scrollback_index > 0 then
+      local scrollback_count = string.format("%d/%d",self.scrollback_index + self.max_lines, self.scrollback:len())
+      Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + self.height - Draw.text_height() - 5)
+   end
+
    for i=1,self.max_lines do
-      local t = self.scrollback[i]
+      local t = self.scrollback[self.scrollback_index + i]
       if t == nil then
          break
       end

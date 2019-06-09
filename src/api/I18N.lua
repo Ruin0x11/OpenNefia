@@ -6,6 +6,10 @@ function I18N.language()
    return "jp"
 end
 
+function I18N.quote_character()
+   return "「"
+end
+
 function I18N.is_fullwidth()
    return true
 end

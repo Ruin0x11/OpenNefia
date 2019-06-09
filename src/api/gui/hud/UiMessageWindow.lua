@@ -18,6 +18,7 @@ function UiMessageWindow:init()
    self.current_width = 0
    self.canvas = nil
    self.redraw = true
+   self.is_new_turn = true
 
    self:recalc_lines()
 end
@@ -74,7 +75,7 @@ function UiMessageWindow:push_text(text, color)
    color = color or {255, 255, 255}
 
    if self.each_line:len() == 0 then
-      self.each_line:push({text = {}, width = 0})
+      self:newline()
    end
 
    local first = self.each_line[1]
@@ -88,7 +89,7 @@ function UiMessageWindow:push_text(text, color)
       local width = Draw.text_width(s)
       if first.width + width > self.width then
          first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
-         self.each_line:push({text = {}, width = 0})
+         self:newline()
          first = self.each_line[1]
          work = ""
       end
@@ -227,22 +228,32 @@ function UiMessageWindow:draw()
    self.redraw = false
 end
 
-function UiMessageWindow:newline()
-   self.current_width = 0
+function UiMessageWindow:newline(text)
+   text = text or ""
+
+   Draw.set_font(14)
+   self.add_width = 2
+   local width = Draw.text_width(text)
+   self.each_line:push({text = {color = {255, 255, 255}, text = text, width = width}, width = width})
+end
+
+function UiMessageWindow:new_turn()
+   self.is_new_turn = true
 end
 
 function UiMessageWindow:message(text, color)
    text = tostring(text)
 
-   local new_turn = false
-   if new_turn then
-   end
-   local add_timestamps = true
-   if add_timestamps then
-      local minute = require("game.field").data.date.minute
-      text = string.format("[%d] %s", minute, text)
-   else
-      self.current_width = 2
+   if self.is_new_turn then
+      self.is_new_turn = false
+      local add_timestamps = true
+      if add_timestamps then
+         local minute = require("game.field").data.date.minute
+         text = string.format("[%d] %s", minute, text)
+      else
+         text = string.format("  %s", minute, text)
+      end
+      self:newline(text)
    end
 
    self.history:push({text = text, color = color})

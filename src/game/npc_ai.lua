@@ -1,5 +1,6 @@
 local Map = require("api.Map")
 local Pos = require("api.Pos")
+local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Action = require("api.Action")
 local Ai = require("api.Ai")
@@ -27,10 +28,12 @@ handlers["base.move"] = function(chara, params)
 end
 
 handlers["base.melee"] = function(chara, params)
+   Gui.mes("「I'm a melee " .. tostring(chara.uid) .. ".」")
    return "turn_end"
 end
 
 handlers["base.ranged"] = function(chara, params)
+   Gui.mes("「I'm a ranged " .. tostring(chara.uid) .. ".」")
    return "turn_end"
 end
 

@@ -20,7 +20,7 @@ function field_logic.setup()
 
    for i=1,20 do
       for j=1,20 do
-         Chara.create("base.player", i+100, j+100)
+         Chara.create("base.player", i+20, j+20)
       end
    end
 
@@ -139,7 +139,7 @@ function field_logic.turn_begin()
 
    World.pass_time_in_seconds(starting_turn_time / 5 + 1)
 
-   -- TODO: message new turn
+   Gui.mes_new_turn()
 
    return "pass_turns"
 end
@@ -250,7 +250,6 @@ function field_logic.player_turn_query()
 
       dt = coroutine.yield()
    end
-   field.hud.message_window:message("あいうえおかきくけこさしすせそたちつてと1 ", {math.random(255),math.random(255),math.random(255)})
 
    -- TODO: convert public to internal event
 

@@ -43,6 +43,11 @@ function field_layer:setup_repl()
    local apis = env.require_all_apis()
    repl_env = table.merge(repl_env, apis)
 
+   -- WARNING: for development only.
+   if _DEBUG then
+      repl_env["require"] = require
+   end
+
    self.repl = Repl:new(repl_env)
 end
 

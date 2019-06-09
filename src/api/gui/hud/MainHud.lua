@@ -71,6 +71,15 @@ end
 function MainHud:register_widget(widget)
 end
 
+function MainHud:find_widget(path)
+   -- TODO
+   if path == "api.gui.hud.UiMessageWindow" then
+      return self.message_window
+   end
+
+   return nil
+end
+
 function MainHud:draw_bar()
    Draw.set_color(255, 255, 255)
 
