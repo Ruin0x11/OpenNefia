@@ -192,7 +192,6 @@ function UiMessageWindow:recalc_lines()
 
    for i=index_of_first_text,1,-1 do
       local t = self.history[i]
-      _p(t)
       self:push_text(t.text, t.color)
    end
 end

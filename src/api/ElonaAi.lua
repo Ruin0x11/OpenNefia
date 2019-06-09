@@ -5,6 +5,7 @@ local Log = require("api.Log")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
+local Event = require("api.Event")
 
 local ElonaAi = class("ElonaAi", IAi)
 
@@ -35,8 +36,8 @@ function ElonaAi:init(params)
    self.being_attacked_by_enemy = false
 end
 
-function ElonaAi:aggro_towards(chara)
-   if self.target.uid == chara.uid then
+function ElonaAi:hate_towards(chara, target)
+   if self.target and self.target.uid == target.uid then
       return self.hate
    end
 
@@ -404,7 +405,7 @@ function ElonaAi:do_noncombat_action(chara, target, retreat)
 end
 
 function ElonaAi:decide_ally_targeted_action(ally, target)
-   if target == nil then
+   if Chara.is_alive(target) then
       -- item on space
 
       -- EVENT: on_decide_ally_action
@@ -559,12 +560,20 @@ function ElonaAi:decide_action(chara)
       self.hate = 0
    end
 
+   local ev = Event.trigger("base.before_ai_decide_action", { chara = chara })
+   if ev.action then
+      return ev.action
+   end
    -- EVENT: on_decide_action
    -- pet arena
    -- noyel
    -- mount
    -- custom talk
    -- choked
+
+   if self:get_target() == nil then
+      self:set_target(Chara.player())
+   end
 
    if type(self.on_low_hp) == "function" then
       if chara.hp < chara.max_hp / 4 then
@@ -580,13 +589,15 @@ function ElonaAi:decide_action(chara)
 
    self.item_to_be_used = nil
 
-   if self.hate > 0 or self.relation == "friendly" then
-      local target = self:get_target()
+   local target = self:get_target()
+   if Chara.is_alive(target) and (self.hate > 0 or self.relation == "friendly") then
 
       return self:decide_targeted_action(chara, target)
    end
 
-   if chara.turns_alive % 10 == 1 then
+   -- HACK: don't make enemies all scan on the same turn since it's
+   -- slow.
+   if (chara.turns_alive + chara.uid) % 10 == 1 then
       local new_target = self:search_surroundings_for_target(chara)
       if new_target ~= nil then
          self:set_target(new_target)
@@ -607,6 +618,12 @@ end
 function ElonaAi:event(id, params)
    if id == "base.player_attacked" then
       self.player_attacker = params.player_attacker
+   elseif id == "base.turn_hostile" then
+      self.relation = "enemy"
+      self.hate = params.hate
+      self:set_target(params.target)
+   elseif id == "base.modify_hate" then
+      self.hate = self.hate + params.hate_delta
    end
 end
 

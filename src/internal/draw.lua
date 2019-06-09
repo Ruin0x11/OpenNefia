@@ -101,6 +101,10 @@ function draw.pop_layer()
    end
 end
 
+function draw.top_layer()
+   return layers[#layers]
+end
+
 function draw.draw_layers()
    for i, layer in ipairs(layers) do
       layer:draw()

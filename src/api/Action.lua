@@ -38,4 +38,9 @@ function Action.move(chara, x, y)
    return "turn_end"
 end
 
+function Action.melee(chara, target)
+   Chara.damage_hp(target, 1, chara, { damage_text_type = "damage" })
+   return "turn_end"
+end
+
 return Action

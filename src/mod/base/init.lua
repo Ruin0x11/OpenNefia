@@ -4,6 +4,7 @@ data:add_type {
       name = schema.String,
       image = schema.Number,
       max_hp = schema.Number,
+      on_death = schema.Optional(schema.Function),
    },
    index_on = "name"
 }
@@ -13,6 +14,12 @@ data:add_type {
    schema = schema.Record {
       image = schema.Number,
       is_solid = schema.Boolean,
+   },
+}
+
+data:add_type {
+   name = "event",
+   schema = schema.Record {
    },
 }
 
@@ -29,6 +36,17 @@ data:add_type {
       target = schema.String,
    }
 }
+data:add_type {
+   name = "element",
+   schema = schema.Record {
+      can_resist = schema.Boolean,
+      can_be_immune_to = schema.Boolean,
+      on_damage_hp = schema.Optional(schema.Function),
+      on_kill = schema.Optional(schema.Function),
+      kill_animation = schema.Optional(schema.String),
+      sound = schema.Optional(schema.String),
+   }
+}
 
 data:add {
    _type = "base.chara",
@@ -36,7 +54,8 @@ data:add {
 
    name = "player",
    image = 4,
-   max_hp = 100
+   max_hp = 5,
+   max_mp = 1
 }
 
 data:add {
@@ -53,6 +72,54 @@ data:add {
 
    image = 300,
    is_solid = true
+}
+
+data:add_multi(
+   "base.event",
+   {
+      _id = "before_ai_decide_action"
+   },
+   {
+      _id = "after_apply_damage"
+   },
+   {
+      _id = "on_calc_damage"
+   },
+   {
+      _id = "after_damage_hp"
+   },
+   {
+      _id = "on_player_bumped_into_nonhostile_chara"
+   },
+   {
+      _id = "before_player_map_leave"
+   },
+   {
+      _id = "on_player_bumped_into_object"
+   },
+   {
+      _id = "on_chara_hostile_action"
+   },
+   {
+      _id = "on_chara_killed"
+   },
+   {
+      _id = "on_calc_kill_exp"
+   }
+)
+
+function register_enum()
+end
+
+register_enum {
+   _id = "relation",
+
+   values = {
+      "friendly",
+      "neutral",
+      "citizen",
+      "enemy",
+   }
 }
 
 data:add_multi(
@@ -107,6 +174,11 @@ data:add_multi(
          ["api.gui.hud.UiLevel"] = {
             character_level_icon = "graphic/temp/character_level_icon.bmp",
          },
+         ["api.gui.hud.UiBar"] = {
+            hp_bar_frame = "graphic/temp/hp_bar_frame.bmp",
+            hud_hp_bar = "graphic/temp/hud_hp_bar.bmp",
+            hud_mp_bar = "graphic/temp/hud_mp_bar.bmp",
+         },
          ["api.gui.hud.UiClock"] = {
             clock = "graphic/temp/clock.bmp",
             clock_hand = "graphic/temp/clock_hand.bmp",
@@ -125,3 +197,15 @@ data:add_multi(
       count_x = 10
    }
 )
+
+local Event = require("api.Event")
+-- Event.register(
+-- "base.before_ai_decide_action",
+-- "nope",
+-- function(params)
+--    params.action = "turn_end"
+--    return true
+-- end)
+
+-- TODO: if set, prevent hooks with 'name' being run:
+--   params.blocked = { "other_hook" }

@@ -5,6 +5,7 @@ local Draw = require("api.Draw")
 local internal = require("internal")
 local game = require("game")
 local debug_server = require("util.debug_server")
+local profile = require("thirdparty.profile")
 
 local loop = nil
 local draw = nil
@@ -30,6 +31,8 @@ function love.load(arg)
    draw = coroutine.create(game.draw)
 end
 
+local frame = 0
+
 function love.update(dt)
    if server then
       local msg, err = coroutine.resume(server, dt)
@@ -37,6 +40,13 @@ function love.update(dt)
          print("Error in server:\n\t" .. debug.traceback(server, err))
          print()
          error(err)
+      end
+   end
+
+   if _DEBUG and profile.running then
+      frame = frame + 1
+      if frame % 60 == 1 then
+         print(profile.report("time", 100))
       end
    end
 

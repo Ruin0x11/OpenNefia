@@ -116,11 +116,13 @@ end
 
 --- Starts collecting data.
 function profile.start()
+  profile.running = true
   sethook(_hooker, "cr")
 end
 
 --- Stops collecting data.
 function profile.stop()
+  profile.running = false
   sethook()
   local t1 = clock()
   for f, t2 in pairs(_tcalled) do

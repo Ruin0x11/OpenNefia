@@ -20,6 +20,8 @@ local function query(self)
       dt = coroutine.yield()
    end
 
+   self:halt_input()
+
    internal.draw.pop_layer()
 
    return res, canceled

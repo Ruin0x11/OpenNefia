@@ -1,8 +1,10 @@
-local Input = require("api.Input")
-local Chara = require("api.Chara")
-local Pos = require("api.Pos")
-local Map = require("api.Map")
 local Action = require("api.Action")
+local Ai = require("api.Ai")
+local Chara = require("api.Chara")
+local Event = require("api.Event")
+local Input = require("api.Input")
+local Map = require("api.Map")
+local Pos = require("api.Pos")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -24,10 +26,29 @@ function Command.move(player, x, y)
 
    -- At this point the next position is final.
 
-   if Chara.at(next_pos.x, next_pos.y) then
-      -- EVENT: on_player_bumped_into_character
+   local on_cell = Chara.at(next_pos.x, next_pos.y)
+   if on_cell then
+      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell})
+
       local result
-      return result
+
+      local relation = Ai.relation_towards(player, on_cell)
+
+      if relation == "friendly"
+         or relation == "citizen"
+         or relation == "neutral"
+      then
+         Event.trigger("base.on_player_bumped_into_nonhostile_chara", {player=player,on_cell=on_cell})
+         return "turn_end"
+      end
+
+      -- TODO: relation as -1
+      if relation == "enemy" then
+         Ai.set_target(player, on_cell)
+         return Action.melee(player, on_cell)
+      end
+
+      return "turn_end"
    end
 
    if Map.can_access(next_pos.x, next_pos.y) then
@@ -37,13 +58,13 @@ function Command.move(player, x, y)
    elseif not Map.is_in_bounds(next_pos.x, next_pos.y) then
       -- Player is trying to move out of the map.
 
-      -- EVENT: before_player_map_leave
+      Event.trigger("base.before_player_map_leave", {player=player})
       -- quest abandonment warning
 
       Input.yes_no()
    else
       -- Player bumped into something solid. Is it a map object?
-      -- EVENT: on_player_bumped_into_object
+      Event.trigger("base.on_player_bumped_into_object", {player=player})
    end
 
    -- proc confusion text

@@ -29,7 +29,7 @@ end
 
 handlers["base.melee"] = function(chara, params)
    Gui.mes("「I'm a melee " .. tostring(chara.uid) .. ".」")
-   return "turn_end"
+   return Action.melee(chara, params.target)
 end
 
 handlers["base.ranged"] = function(chara, params)

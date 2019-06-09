@@ -84,6 +84,21 @@ function asset_drawable:draw_bar(x, y, width)
    end
 end
 
+function asset_drawable:draw_percentage_bar(x, y, width)
+   local iw = self:get_width()
+   local ih = self:get_height()
+
+   local last_width = width % iw;
+   local last_quad = self.bar_quads[last_width]
+   if last_quad == nil then
+      self.bar_quads = {} -- TODO
+      self.bar_quads[last_width] = love.graphics.newQuad(iw - width, 0, last_width, ih, iw, ih)
+      last_quad = self.bar_quads[last_width]
+   end
+
+   draw.image_region(self.image, last_quad, x, y)
+end
+
 function asset_drawable:release()
    for _, q in ipairs(self.quads) do
       q:release()

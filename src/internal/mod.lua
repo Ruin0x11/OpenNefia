@@ -6,7 +6,10 @@ local mod = {}
 local chunks = {}
 
 local function load_mod(mod_name, init_lua_path)
-   local chunk = loadfile(init_lua_path)
+   local chunk, err = loadfile(init_lua_path)
+   if chunk == nil then
+      error(err)
+   end
    local mod_env = env.generate_sandbox(mod_name)
    setfenv(chunk, mod_env)
    local success, err = pcall(chunk)

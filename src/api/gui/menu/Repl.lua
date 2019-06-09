@@ -19,7 +19,7 @@ function Repl:init(env)
    self.caret = "> "
    self.env = env or {}
    self.result = ""
-   self.size = 200
+   self.size = 10000
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
    self.history = {}
@@ -34,10 +34,6 @@ function Repl:init(env)
          self.text = utf8.pop(self.text)
       end,
       text_submitted = function()
-         if self.scrollback_index ~= 0 then
-            self.scrollback_index = 0
-            return
-         end
          self:submit()
          Gui.update_screen()
          self.input:halt_input()

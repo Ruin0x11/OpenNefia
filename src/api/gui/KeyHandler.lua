@@ -69,9 +69,9 @@ end
 function KeyHandler:halt_input()
    self.repeat_delays = {}
    self.pressed = {}
+   self.this_frame = {}
    self.halted = true
    self.stop_halt = false
-   print("halt")
 end
 
 function KeyHandler:run_key_action(key, ...)

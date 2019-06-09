@@ -4,11 +4,12 @@ local Ui = require("api.Ui")
 local IHud = require("api.gui.hud.IHud")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
+local UiBar = require("api.gui.hud.UiBar")
 local UiClock = require("api.gui.hud.UiClock")
-local UiLevel = require("api.gui.hud.UiLevel")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
-local UiTheme = require("api.gui.UiTheme")
+local UiLevel = require("api.gui.hud.UiLevel")
 local UiMessageWindow = require("api.gui.hud.UiMessageWindow")
+local UiTheme = require("api.gui.UiTheme")
 
 local MainHud = class("MainHud", IHud)
 
@@ -45,6 +46,8 @@ function MainHud:init()
    self.gold_platinum = UiGoldPlatinum:new()
    self.level = UiLevel:new()
    self.message_window = UiMessageWindow:new()
+   self.hp_bar = UiBar:new("hud_hp_bar", 0, 0, true)
+   self.mp_bar = UiBar:new("hud_mp_bar", 0, 0, true)
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -59,6 +62,8 @@ function MainHud:relayout(x, y, width, height)
    self.level:relayout(self.x + 4, self.height - (72 + 16) - 16)
    print(self.width)
    self.message_window:relayout(self.x + 126, self.height - (72 + 16), self.width - 126, 72)
+   self.hp_bar:relayout(math.floor((self.width - 84) / 2) - 100, self.height - (72 + 16) - 12)
+   self.mp_bar:relayout(math.floor((self.width - 84) / 2) + 40, self.height - (72 + 16) - 12)
 end
 
 function MainHud:set_date(date)
@@ -120,6 +125,8 @@ function MainHud:draw_map_name()
 end
 
 function MainHud:draw_hp_mp_bars()
+   self.hp_bar:draw()
+   self.mp_bar:draw()
 end
 
 function MainHud:draw_attributes()
@@ -192,9 +199,9 @@ function MainHud:draw()
    self:draw_bar()
    self:draw_minimap()
    self:draw_map_name()
+   self:draw_message_window()
    self:draw_hp_mp_bars()
    self:draw_attributes()
-   self:draw_message_window()
    self:draw_clock()
    self:draw_gold_platinum()
    self:draw_player_level()

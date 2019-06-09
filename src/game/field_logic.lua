@@ -20,7 +20,7 @@ function field_logic.setup()
 
    for i=1,20 do
       for j=1,20 do
-         Chara.create("base.player", i+20, j+20)
+         Chara.create("base.player", i+8, j+11)
       end
    end
 
@@ -280,8 +280,23 @@ function field_logic.turn_end()
 end
 
 function field_logic.player_died()
-   error("player died")
-   return "pass_turns"
+   -- Gui.mes_clear()
+   Gui.mes("You died. ")
+   Gui.update_screen()
+
+   Gui.mes("Last words? ")
+   local last_words = Input.prompt_text(16, true)
+   if last_words == nil then
+      last_words = "Scut!"
+   end
+
+   Gui.mes("Bury? ")
+   local bury = Input.yes_no()
+   if bury then
+      return "quit"
+   end
+
+   return "quit"
 end
 
 function field_logic.query()
