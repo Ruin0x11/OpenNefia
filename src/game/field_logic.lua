@@ -23,7 +23,7 @@ function field_logic.setup()
    for i=1,2 do
       for j=1,1 do
          local i = Chara.create("base.player", i+8, j+11)
-         i.emotion_icon = "base.paralysis"
+         i.emotion_icon = { id = "base.paralysis", turns = 10 }
       end
    end
 
@@ -167,6 +167,8 @@ function field_logic.pass_turns()
       return "turn_begin"
    end
 
+   Event.trigger("base.before_chara_turn_start", {chara=chara})
+
    chara.time_this_turn = chara.time_this_turn - field:turn_cost()
 
    chara.turns_alive = chara.turns_alive + 1
@@ -188,12 +190,17 @@ function field_logic.pass_turns()
    -- end
 
    if Chara.is_player(chara) and not Chara.is_alive(chara) then
-      return "player_died"
+      return "player_died", chara
    end
 
    -- proc mef
    -- proc buff
-   -- RETURN: proc status effect
+
+   local result = StatusEffect.proc_turn_begin(chara)
+   if result ~= nil then
+      return result, chara
+   end
+
    -- RETURN: proc drunk
    -- proc stopping activity if damaged
    -- proc turn % 25
@@ -264,7 +271,7 @@ function field_logic.turn_end(chara)
       return "pass_turns"
    end
 
-   Event.trigger("base.on_turn_end", {chara=chara})
+   Event.trigger("base.on_chara_turn_end", {chara=chara})
 
    local regen = StatusEffect.proc_turn_end(chara)
    if Chara.is_player(chara) then

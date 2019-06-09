@@ -1,5 +1,6 @@
 local data = require("internal.data")
 local Chara = require("api.Chara")
+local Event = require("api.Event")
 local Map = require("api.Map")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
@@ -128,6 +129,25 @@ function StatusEffect.heal(victim, id, power)
    return true
 end
 
+function StatusEffect.proc_turn_begin(victim)
+   local params = { victim = victim, turn_result = nil }
+
+   for id, turns in pairs(victim.status_effects) do
+      local status_effect = data["base.status_effect"][id]
+      if status_effect == nil then
+         Log.warn("Unknown status effect %s", id)
+      elseif status_effect.on_turn_end and Chara.is_alive(victim) then
+         params.turns = turns or 0
+         params.status_effect = status_effect
+
+         -- HACK
+         params = table.merge(params, status_effect.on_turn_begin(params))
+      end
+   end
+
+   return params.turn_result
+end
+
 function StatusEffect.proc_turn_end(victim)
    local params = { regeneration = true, victim = victim }
 
@@ -137,7 +157,11 @@ function StatusEffect.proc_turn_end(victim)
          Log.warn("Unknown status effect %s", id)
       elseif status_effect.on_turn_end and Chara.is_alive(victim) then
          params.turns = turns or 0
-         status_effect.on_turn_end(params)
+         params.status_effect = status_effect
+
+         -- TODO: unify these two.
+         params = table.merge(params, status_effect.on_turn_end(params))
+         Event.trigger("base.on_proc_status_effect", params)
       end
    end
 

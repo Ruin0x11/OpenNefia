@@ -1,5 +1,4 @@
 local event_tree = require("internal.event_tree")
-local data = require("internal.data")
 
 local loaded = false
 
@@ -9,12 +8,6 @@ function EventHolder:init()
    self.hooks = {}
    self.reg = {}
    self.priorities = {}
-end
-
-local function check_event(event_id)
-   if data["base.event"][event_id] == nil then
-      error("Unknown event type \"" .. event_id .. "\"")
-   end
 end
 
 function EventHolder:is_registered(event_id, cb)
@@ -60,10 +53,6 @@ function EventHolder:register(event_id, name, cb, opts)
       return
    end
 
-   if loaded then
-      check_event(event_id)
-   end
-
    self.priorities[event_id] = self.priorities[event_id] or 10000
 
    local priority = opts.priority or self.priorities[event_id]
@@ -78,9 +67,6 @@ end
 function EventHolder:unregister(event_id, cb, opts)
    if opts == nil then
       opts = {}
-   end
-   if loaded then
-      check_event(event_id)
    end
 
    if not self:is_registered(event_id, cb) then
@@ -119,9 +105,6 @@ function EventHolder:trigger(event_id, args, opts)
    end
    if opts == nil then
       opts = {}
-   end
-   if loaded then
-      check_event(event_id)
    end
 
    local events = self:get_events(event_id)

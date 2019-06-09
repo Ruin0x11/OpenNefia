@@ -23,13 +23,13 @@ end
 function EmotionIconLayer:update(dt, screen_updated)
    if not (screen_updated or self.reupdate) then return end
 
+   self.icons = {}
+
    for _, c in Map.iter_charas() do
       if Chara.is_alive(c) and Map.is_in_fov(c.x, c.y) then
-         if c.emotion_icon ~= nil then
-            self.icons[c.uid] = { id = c.emotion_icon, x = c.x, y = c.y }
+         if type(c.emotion_icon) == "table" and c.emotion_icon.turns > 0 then
+            self.icons[c.uid] = { id = c.emotion_icon.id, x = c.x, y = c.y }
          end
-      else
-         self.icons[c.uid] = nil
       end
    end
 

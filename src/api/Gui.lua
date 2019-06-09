@@ -7,6 +7,9 @@ function Gui.update_screen()
    field:update_screen()
 end
 
+function Gui.wait(wait)
+end
+
 local function get_message_window()
    return field.hud:find_widget("api.gui.hud.UiMessageWindow")
 end

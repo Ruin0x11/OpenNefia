@@ -56,6 +56,7 @@ data:add_type {
       before_apply = schema.Optional(schema.Function),
       power_reduction_factor = schema.Optional(schema.Number),
       additive_power = schema.Optional(schema.Function),
+      on_turn_begin = schema.Optional(schema.Function),
       on_turn_end = schema.Optional(schema.Function),
       elona_ai_handler = schema.Optional(schema.Function),
       elona_ai_priority = schema.Optional(schema.Number),
@@ -129,6 +130,52 @@ data:add {
    _id = "exchange_crawl_up_and_buried",
 }
 
+
+data:add_multi(
+   "base.event",
+   {
+      _id = "before_ai_decide_action"
+   },
+   {
+      _id = "after_apply_damage"
+   },
+   {
+      _id = "on_calc_damage"
+   },
+   {
+      _id = "after_damage_hp"
+   },
+   {
+      _id = "on_player_bumped_into_chara"
+   },
+   {
+      _id = "on_player_bumped_into_nonhostile_chara"
+   },
+   {
+      _id = "before_player_map_leave"
+   },
+   {
+      _id = "on_player_bumped_into_object"
+   },
+   {
+      _id = "on_chara_hostile_action"
+   },
+   {
+      _id = "on_chara_killed"
+   },
+   {
+      _id = "on_calc_kill_exp"
+   },
+   {
+      _id = "on_chara_turn_end"
+   },
+   {
+      _id = "on_proc_status_effect"
+   },
+   {
+      _id = "before_chara_turn_start"
+   }
+)
 
 function register_enum()
 end
