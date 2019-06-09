@@ -26,6 +26,7 @@ function field_layer:init()
    self.map = nil
    self.renderer = nil
    self.player = nil
+   self.allies = {}
    self.repl = nil
 
    self:init_global_data()
