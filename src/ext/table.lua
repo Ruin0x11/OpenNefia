@@ -18,6 +18,15 @@ function table.find(tbl, func, ...)
    return nil
 end
 
+function table.find_index_of(arr, value)
+   for i, v in ipairs(arr) do
+      if v == value then
+         return i
+      end
+   end
+   return nil
+end
+
 --- Merges two tables &mdash; values from first get overwritten by the second.
 --- @usage
 -- function some_func(x, y, args)

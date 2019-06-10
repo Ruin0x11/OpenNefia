@@ -9,6 +9,7 @@ local UiClock = require("api.gui.hud.UiClock")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
 local UiLevel = require("api.gui.hud.UiLevel")
 local UiMessageWindow = require("api.gui.hud.UiMessageWindow")
+local UiStatusEffects = require("api.gui.hud.UiStatusEffects")
 local UiTheme = require("api.gui.UiTheme")
 
 local MainHud = class("MainHud", IHud)
@@ -48,6 +49,7 @@ function MainHud:init()
    self.message_window = UiMessageWindow:new()
    self.hp_bar = UiBar:new("hud_hp_bar", 0, 0, true)
    self.mp_bar = UiBar:new("hud_mp_bar", 0, 0, true)
+   self.status_effects = UiStatusEffects:new()
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -64,6 +66,7 @@ function MainHud:relayout(x, y, width, height)
    self.message_window:relayout(self.x + 126, self.height - (72 + 16), self.width - 126, 72)
    self.hp_bar:relayout(math.floor((self.width - 84) / 2) - 100, self.height - (72 + 16) - 12)
    self.mp_bar:relayout(math.floor((self.width - 84) / 2) + 40, self.height - (72 + 16) - 12)
+   self.status_effects:relayout(8, self.height - (72 + 16) - 50)
 end
 
 function MainHud:set_date(date)
@@ -80,6 +83,8 @@ function MainHud:find_widget(path)
    -- TODO
    if path == "api.gui.hud.UiMessageWindow" then
       return self.message_window
+   elseif path == "api.gui.hud.UiStatusEffects" then
+      return self.status_effects
    end
 
    return nil
@@ -195,6 +200,10 @@ function MainHud:draw_player_level()
    self.level:draw()
 end
 
+function MainHud:draw_status_effects()
+   self.status_effects:draw()
+end
+
 function MainHud:draw()
    self:draw_bar()
    self:draw_minimap()
@@ -205,6 +214,7 @@ function MainHud:draw()
    self:draw_clock()
    self:draw_gold_platinum()
    self:draw_player_level()
+   self:draw_status_effects()
 end
 
 function MainHud:update()

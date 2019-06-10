@@ -36,6 +36,9 @@ function pool:get(uid)
          if k ~= "uid" then
             d[k] = v
          end
+      end,
+      __eq = function(a, b)
+         return type(a) == "table" and type(b) == "table" and a.uid == b.uid
       end
    }
    return setmetatable({}, mt)

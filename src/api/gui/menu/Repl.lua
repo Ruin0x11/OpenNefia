@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Env = require("api.Env")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local circular_buffer = require("thirdparty.circular_buffer")
@@ -15,15 +16,19 @@ local Repl = class("Repl", IUiLayer)
 
 Repl:delegate("input", IInput)
 
-function Repl:init(env)
+function Repl:init(env, history)
    self.text = ""
    self.env = env or {}
    self.result = ""
    self.size = 10000
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
-   self.history = {}
+   self.history = history or {}
    self.history_index = 0
+   self.pulldown = true
+   self.pulldown_y = 0
+   self.pulldown_speed = 8
+   self.frames = 0
 
    self.mode = LuaReplMode:new(env)
 
@@ -55,6 +60,9 @@ function Repl:init(env)
       end
    }
    self.input:halt_input()
+
+   self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  OS: %s",
+                            Env.version(), Env.love_version(), Env.os()))
 end
 
 function Repl:history_prev()
@@ -86,6 +94,17 @@ function Repl:relayout(x, y, width, height)
    self.font_size = 15
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height()) - 1
+
+   if self.pulldown then
+      self.pulldown = false
+      self.pulldown_y = self.max_lines
+   end
+end
+
+function Repl:print(text)
+   for line in string.lines(text) do
+      self.scrollback:push(line)
+   end
 end
 
 function Repl:submit()
@@ -94,7 +113,7 @@ function Repl:submit()
    self.scrollback_index = 0
    self.history_index = 0
 
-   self.scrollback:push(self.mode.caret .. text)
+   self:print(self.mode.caret .. text)
    if string.nonempty(text) then
       table.insert(self.history, 1, text)
    end
@@ -108,22 +127,28 @@ function Repl:submit()
       result_text = tostring(result)
    end
 
-   for line in string.lines(result_text) do
-      self.scrollback:push(line)
-   end
+   self:print(result_text)
 end
 
 function Repl:draw()
-   Draw.filled_rect(self.x, self.y, self.width, self.height, self.color)
-
    Draw.set_font(self.font_size)
+
+   local top = self.height - self.pulldown_y * Draw.text_height()
+   Draw.filled_rect(self.x, self.y, self.width, top, self.color)
+
    Draw.set_color(255, 255, 255)
-   Draw.text(self.mode.caret, self.x + 5, self.y + self.height - Draw.text_height() - 5)
-   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + self.height - Draw.text_height() - 5)
+   Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
+   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height( )- 5)
+
+   if math.floor(self.frames * 2) % 2 == 1 then
+      local x = self.x + 5 + Draw.text_width(self.mode.caret) + Draw.text_width(self.text) + 4
+      local y = self.y + top - Draw.text_height() - 5
+      Draw.line(x, y, x, y + Draw.text_height() - 1)
+   end
 
    if self.scrollback_index > 0 then
       local scrollback_count = string.format("%d/%d",self.scrollback_index + self.max_lines, self.scrollback:len())
-      Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + self.height - Draw.text_height() - 5)
+      Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + top - 5)
    end
 
    for i=1,self.max_lines do
@@ -131,14 +156,28 @@ function Repl:draw()
       if t == nil then
          break
       end
-      Draw.text(t, self.x + 5, self.y + self.height - 5 - Draw.text_height() * (i+1))
+      Draw.text(t, self.x + 5, self.y + top - Draw.text_height() * (i+1) - 5)
    end
 end
 
 function Repl:update(dt)
+   self.frames = self.frames + dt
+
    if self.finished then
-      self.finished = false
-      return true
+      self.pulldown = true
+      if self.pulldown_y > self.max_lines then
+         self.finished = false
+         self.pulldown = true
+         return true
+      end
+   end
+
+   if self.finished then
+      self.pulldown_y = math.min(self.pulldown_y + self.pulldown_speed, self.max_lines + 1)
+   else
+      if self.pulldown_y > 0 then
+         self.pulldown_y = math.max(self.pulldown_y - self.pulldown_speed, 0)
+      end
    end
 end
 

@@ -373,4 +373,12 @@ function draw.debug_rect(x, y, w, h, centered)
    draw.line_rect(x, y, w, h)
 end
 
+local framerate = 60
+
+function draw.wait(msecs)
+   local msecs_per_frame = (1 / framerate) / 1000
+   local frames = msecs / msecs_per_frame
+   love.timer.sleep(frames)
+end
+
 return draw

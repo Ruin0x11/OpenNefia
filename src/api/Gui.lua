@@ -1,3 +1,4 @@
+local draw = require("internal.draw")
 local field = require("game.field")
 local I18N = require("api.I18N")
 
@@ -8,6 +9,8 @@ function Gui.update_screen()
 end
 
 function Gui.wait(wait)
+   Gui.update_screen()
+   draw.wait(wait)
 end
 
 local function get_message_window()
@@ -15,7 +18,6 @@ local function get_message_window()
 end
 
 local Color = {
-   None =          { 255, 255, 255 },
    White =         { 255, 255, 255 },
    Green =         { 175, 255, 175 },
    Red =           { 255, 155, 155 },
@@ -27,7 +29,6 @@ local Color = {
    Cyan =          { 155, 205, 205 },
    LightRed =      { 255, 195, 185 },
    Gold =          { 235, 215, 155 },
-   White2 =        { 255, 255, 255 },
    LightBrown =    { 225, 215, 185 },
    DarkGreen =     { 105, 235, 105 },
    LightGrey =     { 205, 205, 205 },

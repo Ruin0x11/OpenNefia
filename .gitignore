@@ -1,3 +1,4 @@
 bin/
 graphic/
 *.ttf
+/src/repl_history.txt

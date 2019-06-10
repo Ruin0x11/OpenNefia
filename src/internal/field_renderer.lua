@@ -140,11 +140,11 @@ function field_renderer:update_chara_layer(map, player)
          else
             local tile, px, py = self.chara_batch:get_tile(batch_ind)
 
-            if px ~= c.x or py ~= c.y then
+            if px ~= c.x or py ~= c.y or tile ~= c.image then
                self.chara_batch:remove_tile(batch_ind)
                --self.chara_batch_inds[c.uid] = self.chara_batch:add_tile {
                c.batch_ind = self.chara_batch:add_tile {
-                  tile = tile,
+                  tile = c.image,
                   x = c.x,
                   y = c.y
                }

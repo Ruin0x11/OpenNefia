@@ -53,7 +53,25 @@ function field_layer:setup_repl()
       repl_env["require"] = global_require
    end
 
-   self.repl = Repl:new(repl_env)
+   local history = {}
+   local file = io.open("repl_history.txt", "r")
+   if file ~= nil then
+      for line in file:lines() do
+         history[#history + 1] = line
+      end
+   end
+
+   self.repl = Repl:new(repl_env, history)
+end
+
+function field_layer:save_repl_history()
+   -- HACK: this must go through the config API eventually.
+   local file = io.open("repl_history.txt", "w")
+   for i, v in ipairs(self.repl.history) do
+      file:write(v)
+      file:write("\n")
+   end
+   file:close()
 end
 
 function field_layer:init_global_data()
@@ -98,7 +116,7 @@ function field_layer:update_screen()
    local player = self.player
    if player then
       self.renderer:update_draw_pos(player.x, player.y)
-      self.map:calc_screen_sight(player.x, player.y, 15)
+      self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
    end
    self.renderer:update(self.map, self.player)
 
@@ -114,6 +132,7 @@ function field_layer:update_hud()
       self.hud.hp_bar:set_data(self.player.hp, self.player.max_hp)
       self.hud.mp_bar:set_data(self.player.mp, self.player.max_mp)
       self.hud.level:set_data(self.player.level, self.player.experience)
+      self.hud.status_effects:set_data(self.player.status_effects)
    end
 
    self.hud:update()
@@ -139,6 +158,7 @@ function field_layer:query_repl()
       self:setup_repl()
    end
    self.repl:query()
+   self:save_repl_history()
 end
 
 function field_layer:register_draw_layer(require_path)

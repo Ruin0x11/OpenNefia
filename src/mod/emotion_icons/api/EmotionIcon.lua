@@ -30,6 +30,7 @@ function EmotionIcon.install(ui_theme)
    end
    tab["mod.emotion_icons.api.gui.EmotionIconLayer"] = icons
 
+   Event.register("base.on_apply_status_effect", "status effect create emoicon", on_proc_status_effect)
    Event.register("base.on_proc_status_effect", "status effect emoicon", on_proc_status_effect)
    Event.register("base.before_chara_turn_start", "emoicon turn decay", update_emotion_icon)
 end

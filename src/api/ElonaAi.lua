@@ -124,16 +124,19 @@ end
 function ElonaAi:calculate_ally_target(chara)
    self.hate = self.hate - 1
 
-   local target = self.target()
+   local target = self:get_target()
    local target_not_important = target ~= nil
-      and self:relation_towards(target) ~= "enemy"
+      and self:relation_towards(chara, target) ~= "enemy"
    -- TODO will want proper character equality, by UID
       and target.ai:get_target() ~= chara
 
-   if target == nil or self.hate <= 0 or target_not_important then
-      self:set_target(nil)
+   if target == nil or Chara.is_player(target) or self.hate <= 0 or target_not_important then
+
+      -- Follow the player.
+      self:set_target(Chara.player())
+
       if self.player_attacker ~= nil then
-         if self:relation_towards(self.player_attacker) == "enemy" then
+         if self:relation_towards(chara, self.player_attacker) == "enemy" then
             if Chara.is_alive(self.player_attacker) then
                if Map.has_los(chara.x, chara.y, self.player_attacker.x, self.player_attacker.y) then
                   self.hate = 5
@@ -142,11 +145,12 @@ function ElonaAi:calculate_ally_target(chara)
             end
          end
       end
-      if self:get_target() == nil then
+
+      if self:get_target() == nil or Chara.is_player(self:get_target()) then
          local player = Chara.player()
 
          if Chara.is_alive(player) then
-            local target = Ai.get_target(other)
+            local target = Ai.get_target(player)
             if target ~= nil and Ai.relation_towards(player, target) == "enemy" then
                if Map.has_los(chara.x, chara.y, target.x, target.y) then
                   self.hate = 5
@@ -193,9 +197,9 @@ end
 
 function ElonaAi:decide_basic(chara, target)
    if Chara.is_player(target) then
-      -- for all allies
-      --   Ai.send_event(ally, "base.player_attacked", { player_attacker = chara })
-      -- end
+      for _, ally in Chara.iter_allies() do
+         Ai.send_event(ally, "base.player_attacked", { player_attacker = chara })
+      end
    end
 
    local choosing_sub_act = Rand.percent_chance(self.sub_act_chance_percent)
@@ -337,7 +341,7 @@ function ElonaAi:do_noncombat_action(chara, target, retreat)
    -- sell items
 
    if chara == target then
-      self:set_target(nil)
+      self:set_target(Chara.player())
       return "turn_end"
    end
 
@@ -384,7 +388,7 @@ function ElonaAi:do_noncombat_action(chara, target, retreat)
    end
 
    if not Chara.is_ally(chara) then
-      if chara.quality > Great and self.relation == "enemy" then -- or -2
+      if chara.quality > Great and chara.relation == "enemy" then -- or -2
          if Map.is_in_bounds(nx, ny) then
             -- crush if wall
             if Rand.one_in(4) then
@@ -445,11 +449,11 @@ function ElonaAi:run_custom_actions(type_, chara, target)
    return nil
 end
 
-function ElonaAi:decide_ally_targeted_action(ally, target)
+function ElonaAi:decide_ally_targeted_action(chara, target)
    if Chara.is_alive(target) then
       -- item on space
 
-      local act = self:run_custom_actions("on_ally", ally, target)
+      local act = self:run_custom_actions("on_ally", chara, target)
       if act ~= nil then
          return act
       end
@@ -457,10 +461,10 @@ function ElonaAi:decide_ally_targeted_action(ally, target)
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
       if dist > 2 or Rand.one_in(3) then
-         return self:do_noncombat_action(ally, target, false)
+         return self:do_noncombat_action(chara, target, false)
       end
 
-      return self:do_idle_action(ally, target)
+      return self:do_idle_action(chara, target)
    end
 
    return nil
@@ -599,13 +603,13 @@ function ElonaAi:do_idle_action(chara, target)
 end
 
 function ElonaAi:decide_action(chara)
-   if self.relation == "friendly" then
+   if chara.relation == "friendly" then
       self:calculate_ally_target(chara)
    end
 
    local target = self:get_target()
-   if target ~= nil and not Chara.is_alive(target) then
-      self:set_target(nil)
+   if target == nil or not Chara.is_alive(target) then
+      self:set_target(Chara.player())
       self.hate = 0
    end
 
@@ -619,10 +623,6 @@ function ElonaAi:decide_action(chara)
    -- mount
    -- custom talk
    -- choked
-
-   if self:get_target() == nil then
-      self:set_target(Chara.player())
-   end
 
    if type(self.on_low_hp) == "function" then
       if chara.hp < chara.max_hp / 4 then
@@ -639,7 +639,7 @@ function ElonaAi:decide_action(chara)
    self.item_to_be_used = nil
 
    local target = self:get_target()
-   if Chara.is_alive(target) and (self.hate > 0 or self.relation == "friendly") then
+   if Chara.is_alive(target) and (self.hate > 0 or chara.relation == "friendly") then
 
       return self:decide_targeted_action(chara, target)
    end
@@ -654,11 +654,15 @@ function ElonaAi:decide_action(chara)
       end
    end
 
-   -- EVENT: on_something
+   -- EVENT: on_search_for_target
    -- try to perceive player
    local target = self:get_target()
    if Chara.is_player(target) then
       -- perceive
+      local perceived = true
+      if perceived and self:relation_towards(chara, target) == "enemy" then
+         self.hate = 30
+      end
    end
 
    return self:do_idle_action(chara, self:get_target())
@@ -668,7 +672,6 @@ function ElonaAi:event(id, params)
    if id == "base.player_attacked" then
       self.player_attacker = params.player_attacker
    elseif id == "base.turn_hostile" then
-      self.relation = "enemy"
       self.hate = params.hate
       self:set_target(params.target)
    elseif id == "base.modify_hate" then

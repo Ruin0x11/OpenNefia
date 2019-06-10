@@ -28,17 +28,19 @@ function Command.move(player, x, y)
 
    local on_cell = Chara.at(next_pos.x, next_pos.y)
    if on_cell then
-      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell})
 
       local result
 
       local relation = Ai.relation_towards(player, on_cell)
+      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell,relation=relation})
 
       if relation == "friendly"
          or relation == "citizen"
          or relation == "neutral"
       then
-         Event.trigger("base.on_player_bumped_into_nonhostile_chara", {player=player,on_cell=on_cell})
+         if relation == "friendly" or relation == "citizen" then
+            Chara.swap_places(player, on_cell)
+         end
          return "turn_end"
       end
 

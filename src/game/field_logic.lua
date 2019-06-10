@@ -18,12 +18,17 @@ function field_logic.setup()
    do
       local me = Chara.create("base.player", 10, 10)
       Chara.set_player(me)
+      StatusEffect.apply(me, "base.gravity", 10)
+   end
+
+   for i=1,4 do
+      local a = Chara.create("base.ally", i+8, 3)
+      Chara.recruit_as_ally(a)
    end
 
    for i=1,2 do
       for j=1,1 do
-         local i = Chara.create("base.player", i+8, j+11)
-         i.emotion_icon = { id = "base.paralysis", turns = 10 }
+         local i = Chara.create("base.enemy", i+8, j+11)
       end
    end
 

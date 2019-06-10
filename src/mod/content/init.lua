@@ -9,6 +9,26 @@ data:add {
 }
 
 data:add {
+   _type = "base.chara",
+   _id = "ally",
+
+   name = "ally",
+   image = 10,
+   max_hp = 100,
+   max_mp = 20
+}
+
+data:add {
+   _type = "base.chara",
+   _id = "enemy",
+
+   name = "enemy",
+   image = 50,
+   max_hp = 10,
+   max_mp = 2
+}
+
+data:add {
    _type = "base.map_tile",
    _id = "floor",
 
@@ -36,9 +56,9 @@ local function prevent_turn(threshold)
 
       if Chara.is_player(p.chara) then
          if p.status_ailment._type == "base.choked" then
-            Gui.wait(9)
+            Gui.wait(9 * 30)
          else
-            Gui.wait(3)
+            Gui.wait(3 * 30)
          end
          Gui.update_screen()
       end
@@ -70,7 +90,8 @@ data:add_multi(
             return { action = ElonaAi.do_idle_action(p.ai, p.chara, p.target) }
          end
       end,
-      elona_ai_priority = 7000
+      elona_ai_priority = 7000,
+      ui_indicator = { text = "Blind", color = {100, 100, 0} },
    },
    {
       _id = "confusion",
@@ -93,7 +114,8 @@ data:add_multi(
             return { action = ElonaAi.do_idle_action(p.ai, p.chara, p.target) }
          end
       end,
-      elona_ai_priority = 8000
+      elona_ai_priority = 8000,
+      ui_indicator = { text = "Confused", color = {100, 0, 100} },
    },
    {
       _id = "paralysis",
@@ -111,7 +133,8 @@ data:add_multi(
             regeneration = false
          }
       end,
-      emotion_icon = "base.paralysis"
+      emotion_icon = "base.paralysis",
+      ui_indicator = { text = "Paralyzed", color = {0, 100, 100} },
    },
    {
       _id = "poison",
@@ -163,7 +186,8 @@ data:add_multi(
          return {
             regeneration = false
          }
-      end
+      end,
+      ui_indicator = { text = "Choked", color = {0, 100, 100} },
    },
    {
       _id = "sleep",
@@ -194,7 +218,8 @@ data:add_multi(
       on_turn_end = function(p)
          local StatusEffect = require("api.StatusEffect")
          StatusEffect.heal(p.victim, "base.gravity", 1)
-      end
+      end,
+      ui_indicator = { text = "Gravity", color = {0, 80, 80} },
    },
    {
       _id = "furious",
@@ -206,7 +231,7 @@ data:add_multi(
       on_turn_end = function(p)
          local StatusEffect = require("api.StatusEffect")
          StatusEffect.heal(p.victim, "base.furious", 1)
-      end
+      end,
    },
    {
       _id = "fear",
@@ -226,7 +251,8 @@ data:add_multi(
             return { action = ElonaAi.do_noncombat_action(p.ai, p.chara, p.target, true) }
          end
       end,
-      elona_ai_priority = 11000
+      elona_ai_priority = 11000,
+      ui_indicator = { text = "Fear", color = {100, 0, 100} },
    },
    {
       _id = "dimming",
@@ -259,7 +285,7 @@ data:add_multi(
          return {
             regeneration = false
          }
-      end
+      end,
    },
    {
       _id = "wetness",
@@ -271,7 +297,8 @@ data:add_multi(
       on_turn_end = function(p)
          local StatusEffect = require("api.StatusEffect")
          StatusEffect.heal(p.victim, "base.wetness", 1)
-      end
+      end,
+      ui_indicator = { text = "Wet", color = {0, 0, 160} },
    },
    {
       _id = "drunkeness",
@@ -288,7 +315,8 @@ data:add_multi(
          local StatusEffect = require("api.StatusEffect")
          StatusEffect.heal(p.victim, "base.drunkenness", 1)
          -- emotion icon
-      end
+      end,
+      ui_indicator = { text = "Drunk", color = {100, 0, 100} },
    },
    {
       _id = "insanity",
@@ -383,8 +411,9 @@ Event.register(
    "base.on_player_bumped_into_chara",
    "nande POISON nan dayo",
    function(params)
-      local StatusEffect = require("api.StatusEffect")
-      local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
-      StatusEffect.apply(params.on_cell, "base.paralysis", 100)
-      return true
+      if params.relation == "enemy" then
+         local StatusEffect = require("api.StatusEffect")
+         local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
+         StatusEffect.apply(params.on_cell, "base.paralysis", 100)
+      end
 end)

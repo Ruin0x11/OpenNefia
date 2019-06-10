@@ -12,7 +12,7 @@ function Ai.set_target(chara, target)
 end
 
 function Ai.get_target(chara)
-   return chara.ai:target()
+   return chara.ai:get_target()
 end
 
 function Ai.relation_towards(chara, target)
@@ -39,7 +39,7 @@ function Ai.act_hostile_towards(chara, target)
          Gui.mes(target.uid .. " gets furious at " .. chara.uid)
          -- TODO: Ai.set_relation_towards(chara, target, "enemy")
          target.relation = "enemy"
-         Ai.send_event(chara, "base.turn_hostile", {target = target, hate = 80})
+         Ai.send_event(chara, "base.turn_hostile", {target = chara, hate = 80})
       end
    end
 

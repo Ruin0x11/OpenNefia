@@ -125,6 +125,7 @@ local function init_chara(chara)
    }
    chara.original_relation = "enemy"
    chara.relation = chara.original_relation
+   chara.fov = 15
 
    chara.status_effects = {}
 
@@ -177,14 +178,44 @@ function Chara.stat(c, stat_id)
 end
 
 function Chara.is_ally(c)
-   return false
+   return table.find_index_of(field.allies, chara.uid) ~= nil
 end
 
 function Chara.is_in_party(c)
    return Chara.is_player(c) or Chara.is_ally(c)
 end
 
-function Chara.swap_positions(a, b)
+function Chara.recruit_as_ally(chara)
+   -- TODO: generalize to "teams" of characters?
+   if Chara.is_ally(chara) then
+      return false
+   end
+   field.allies[#field.allies+1] = chara.uid
+   chara.relation = "friendly"
+   chara.original_relation = "friendly"
+   Gui.mes(chara.uid .. " joins as an ally! ", "Orange")
+   return true
+end
+
+local function iter(a, i)
+   if i > #a.uids then
+      return nil
+   end
+   if field.map == nil then
+      return nil
+   end
+
+   local d = field.map:get_object("base.chara", a.uids[i])
+   i = i + 1
+
+   return i, d
+end
+
+function Chara.iter_allies()
+   return iter, {uids = field.allies}, 1
+end
+
+function Chara.swap_places(a, b)
    -- EVENT: on_swap_chara_positions
 
    local ax, ay = a.x, a.y
@@ -345,7 +376,7 @@ function Chara.damage_hp(victim, amount, source, params)
 
          if apply_hate then
             if Ai.hate_towards(victim, attacker) == 0 then
-               Ai.send_event(victim, "base.turn_hostile", { hate = 20 })
+               Ai.send_event(victim, "base.turn_hostile", { target = attacker, hate = 20 })
             else
                Ai.send_event(victim, "base.modify_hate", { hate_delta = 2 })
             end

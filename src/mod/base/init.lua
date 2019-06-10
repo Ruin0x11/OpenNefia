@@ -24,6 +24,13 @@ data:add_type {
 }
 
 data:add_type {
+   name = "sound",
+   schema = schema.Record {
+      file = schema.String
+   },
+}
+
+data:add_type {
    name = "ui_theme",
    schema = schema.Record {
       target = schema.String,
@@ -60,6 +67,7 @@ data:add_type {
       on_turn_end = schema.Optional(schema.Function),
       elona_ai_handler = schema.Optional(schema.Function),
       elona_ai_priority = schema.Optional(schema.Number),
+      ui_indicator = schema.Table, -- { string, color } or { [int] = { string, color }, ... }
    }
 }
 
@@ -149,9 +157,6 @@ data:add_multi(
       _id = "on_player_bumped_into_chara"
    },
    {
-      _id = "on_player_bumped_into_nonhostile_chara"
-   },
-   {
       _id = "before_player_map_leave"
    },
    {
@@ -168,6 +173,9 @@ data:add_multi(
    },
    {
       _id = "on_chara_turn_end"
+   },
+   {
+      _id = "on_apply_status_effect"
    },
    {
       _id = "on_proc_status_effect"
@@ -254,6 +262,13 @@ data:add_multi(
             clock = "graphic/temp/clock.bmp",
             clock_hand = "graphic/temp/clock_hand.bmp",
             date_label_frame = "graphic/temp/date_label_frame.bmp",
+         },
+         ["api.gui.hud.UiStatusEffects"] = {
+            status_effect_bar = "graphic/temp/status_effect_bar.bmp",
+            indicator_font = {
+               type = "font",
+               value = 13 -- 13 - en * 2
+            },
          },
       }
    }

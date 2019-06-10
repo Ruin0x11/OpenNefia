@@ -95,6 +95,7 @@ function StatusEffect.apply(victim, id, power)
       StatusEffect.set_turns(victim, id, current + additive)
    end
 
+   Event.trigger("base.on_apply_status_effect", {victim=victim,status_effect=status_effect,turns=turns,prev_turns=current})
    -- TODO: interrupt activity
 
    return true
@@ -136,7 +137,7 @@ function StatusEffect.proc_turn_begin(victim)
       local status_effect = data["base.status_effect"][id]
       if status_effect == nil then
          Log.warn("Unknown status effect %s", id)
-      elseif status_effect.on_turn_end and Chara.is_alive(victim) then
+      elseif status_effect.on_turn_begin and Chara.is_alive(victim) then
          params.turns = turns or 0
          params.status_effect = status_effect
 
