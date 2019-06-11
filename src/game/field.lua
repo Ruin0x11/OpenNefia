@@ -29,6 +29,8 @@ function field_layer:init()
    self.allies = {}
    self.repl = nil
 
+   self.map_changed = false
+
    self:init_global_data()
 
    self.keys = InputHandler:new()
@@ -64,16 +66,6 @@ function field_layer:setup_repl()
    self.repl = Repl:new(repl_env, history)
 end
 
-function field_layer:save_repl_history()
-   -- HACK: this must go through the config API eventually.
-   local file = io.open("repl_history.txt", "w")
-   for i, v in ipairs(self.repl.history) do
-      file:write(v)
-      file:write("\n")
-   end
-   file:close()
-end
-
 function field_layer:init_global_data()
    -- TEMP: temporary storage for save-global variables. needs to be
    -- moved a public store API.
@@ -86,6 +78,7 @@ end
 function field_layer:set_map(map)
    self.map = map
    self.renderer = field_renderer:new(map.width, map.height, self.layers)
+   self.map_changed = true
 end
 
 function field_layer:relayout(x, y, width, height)
@@ -158,7 +151,7 @@ function field_layer:query_repl()
       self:setup_repl()
    end
    self.repl:query()
-   self:save_repl_history()
+   self.repl:save_history()
 end
 
 function field_layer:register_draw_layer(require_path)

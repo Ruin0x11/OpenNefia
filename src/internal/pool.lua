@@ -98,7 +98,13 @@ function pool:remove(uid)
    end
 
    -- HACK terribly inefficient for over 100 elements.
-   table.remove(self.uids, entry.array_index)
+   local ind = entry.array_index
+   table.remove(self.uids, ind)
+   for k, v in pairs(self.content) do
+      if v.array_index >= ind then
+         v.array_index = v.array_index - 1
+      end
+   end
 
    self.content[uid] = nil
 

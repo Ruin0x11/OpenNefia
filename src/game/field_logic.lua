@@ -13,7 +13,7 @@ local map = require("internal.map")
 local field_logic = {}
 
 function field_logic.setup()
-   field:set_map(map.create(50, 50))
+   field:set_map(Map.generate("base.test", {}))
 
    do
       local me = Chara.create("base.player", 10, 10)
@@ -330,6 +330,11 @@ function field_logic.query()
 
    while going do
       local cb = nil
+
+      if field.map_changed == true then
+         event = "turn_begin"
+         field.map_changed = false
+      end
 
       if event == "turn_begin" then
          cb = field_logic.turn_begin

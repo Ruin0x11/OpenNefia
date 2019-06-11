@@ -157,6 +157,14 @@ function proxy:__index(k)
    return inner[self._type][k]
 end
 
+function proxy:ensure(k)
+   local it = self[k]
+   if it == nil then
+      error(string.format("No instance of %s with ID %s was found.", self._type, k))
+   end
+   return it
+end
+
 local function iter(state, prev_index)
    if state.iter == nil then
       return nil

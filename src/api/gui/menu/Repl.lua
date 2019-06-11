@@ -127,7 +127,23 @@ function Repl:submit()
       result_text = tostring(result)
    end
 
+   if not success then
+      print(result_text)
+   end
+
    self:print(result_text)
+
+   self:save_history()
+end
+
+function Repl:save_history()
+   -- HACK: this must go through the config API eventually.
+   local file = io.open("repl_history.txt", "w")
+   for i, v in ipairs(self.history) do
+      file:write(v)
+      file:write("\n")
+   end
+   file:close()
 end
 
 function Repl:draw()

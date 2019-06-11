@@ -33,7 +33,8 @@ data:add {
    _id = "floor",
 
    image = 451,
-   is_solid = false
+   is_solid = false,
+   is_opaque = false
 }
 
 data:add {
@@ -41,7 +42,8 @@ data:add {
    _id = "wall",
 
    image = 300,
-   is_solid = true
+   is_solid = true,
+   is_opaque = true
 }
 
 local function prevent_turn(threshold)
@@ -417,3 +419,30 @@ Event.register(
          StatusEffect.apply(params.on_cell, "base.paralysis", 100)
       end
 end)
+
+data:add {
+   _type = "base.map_generator",
+   _id = "test",
+
+   generate = function(self, p)
+      local InstancedMap = require("api.InstancedMap")
+      local Map = require("api.Map")
+
+      print(inspect(p))
+      local width = p.width or 50
+      local height = p.height or 50
+      local map = InstancedMap:new(width, height)
+
+      for y=0,width-1 do
+         for x=0,height-1 do
+            if x == 0 or y == 0 or x == width-1 or y == height-1 then
+               map:set_tile(x, y, "base.wall")
+            end
+         end
+      end
+
+      map.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2)}
+
+      return map
+   end
+}

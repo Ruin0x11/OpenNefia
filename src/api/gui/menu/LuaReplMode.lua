@@ -24,7 +24,7 @@ function LuaReplMode:submit(text)
 
    setfenv(chunk, self.env)
 
-   local success, result = pcall(chunk)
+   local success, result = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
 
    return success, result
 end

@@ -1,6 +1,6 @@
 local uid_tracker = require("internal.uid_tracker")
 local draw = require("internal.draw")
-local instanced_map = require("internal.instanced_map")
+local InstancedMap = require("api.InstancedMap")
 
 local tiles = {
    floor = {
@@ -24,7 +24,7 @@ local charas = {
 
 test("map - is in bounds", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, tiles)
 
         ok(m:is_in_bounds(10, 10))
 
@@ -42,7 +42,7 @@ end)
 
 test("map - can access", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, tiles)
 
         ok(m:can_access(10, 10))
 
@@ -94,7 +94,7 @@ end
 
 test("map - calc screen sight", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(10, 10, u, tiles)
+        local m = InstancedMap:new(10, 10, u, tiles)
 
         m:set_tile(5, 5, tiles["wall"])
 
@@ -124,7 +124,7 @@ end)
 
 test("map - chara lifecycle", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, tiles)
 
         local c = m:create_object(charas["player"], 5, 5)
 
@@ -141,7 +141,7 @@ end)
 
 test("map - chara position", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, tiles)
 
         local c = m:create_object(charas["player"], 5, 5)
 
@@ -156,7 +156,7 @@ end)
 
 test("map - positional query", function()
         local u = uid_tracker:new()
-        local m = instanced_map:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, tiles)
 
         local c = m:create_object(charas["player"], 5, 5)
 

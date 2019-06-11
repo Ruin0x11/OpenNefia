@@ -9,7 +9,7 @@ function test_helper.mock_map()
 
    local field = require("game.field")
    local uids = require("internal.uid_tracker"):new()
-   local map = require("internal.instanced_map"):new(20, 20, uids)
+   local map = require("api.InstancedMap"):new(20, 20, uids)
    field:set_map(map)
 
    local Chara = require("api.Chara")

@@ -23,6 +23,7 @@ function field_renderer:init(width, height, layers)
 
    self.draw_coroutines = {}
    self.layers = {}
+   self.scroll_info = {}
 
    for _, require_path in ipairs(layers) do
       local layer, err = package.try_require(require_path)

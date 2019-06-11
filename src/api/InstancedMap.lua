@@ -1,3 +1,4 @@
+local data = require("internal.data")
 local pool = require("internal.pool")
 local bresenham = require("thirdparty.bresenham")
 
@@ -5,7 +6,7 @@ local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 local IObject = require("api.IObject")
 
-local instanced_map = class("instanced_map")
+local InstancedMap = class("InstancedMap")
 
 local fov_cache = {}
 
@@ -48,7 +49,13 @@ local function gen_fov_radius(fov_max)
    return fov_cache[fov_max]
 end
 
-function instanced_map:init(width, height, uids)
+function InstancedMap:init(width, height, uids)
+   uids = uids or require("internal.global.uids")
+
+   if width <= 0 or height <= 0 then
+      error("Maps must be at least 1 tile wide and long.")
+   end
+
    self.width = width
    self.height = height
 
@@ -61,19 +68,42 @@ function instanced_map:init(width, height, uids)
    -- upper left corner of the game window.
    self.shadow_map = {}
 
+   -- Locations that are treated as solid. Can be changed by mods to
+   -- make objects that act solid, like map features.
+   self.solid = table.of(false, width * height)
+
+   -- Locations that are treated as opaque. Can be changed by mods to
+   -- make objects that act opaque.
+   self.opaque = table.of(false, width * height)
+
    self.tiles = table.of({}, width * height)
    self.tiles_dirty = true
    self.uids = uids
 
    self:init_map_data()
+
+   self:clear("base.floor")
 end
 
-function instanced_map:init_map_data()
+function InstancedMap:init_map_data()
    self.turn_cost = 1000
 end
 
-function instanced_map:set_tile(x, y, tile)
+function InstancedMap:clear(tile)
+   for x=0,self.width-1 do
+      for y=0,self.height-1 do
+         self:set_tile(x, y, tile)
+      end
+   end
+end
+
+function InstancedMap:set_tile(x, y, tile)
+   if type(tile) == "string" then
+      tile = data["base.map_tile"][tile]
+   end
+
    assert(tile ~= nil)
+
    if not self:is_in_bounds(x, y) then
       return
    end
@@ -83,16 +113,16 @@ function instanced_map:set_tile(x, y, tile)
    self.tiles_dirty = true
 end
 
-function instanced_map:tile(x, y)
+function InstancedMap:tile(x, y)
    return self.tiles[y*self.width+x+1]
 end
 
-function instanced_map:get_pool(type_id)
+function InstancedMap:get_pool(type_id)
    self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids, self.width, self.height)
    return self.pools[type_id]
 end
 
-function instanced_map:create_object(proto, x, y)
+function InstancedMap:create_object(proto, x, y)
    local _type = proto._type
    if not _type then error("no type") end
 
@@ -100,12 +130,12 @@ function instanced_map:create_object(proto, x, y)
    return pool:create_object(proto, x, y)
 end
 
-function instanced_map:get_batch(type_id)
+function InstancedMap:get_batch(type_id)
    self.batches[type_id] = self.batches[type_id] or sparse_batch:new(type_id)
    return self.batches[type_id]
 end
 
-function instanced_map:add_object(obj, x, y)
+function InstancedMap:add_object(obj, x, y)
    assert_is_an(IObject, obj)
    local pool = self:get_pool(obj._type)
    pool:add_object(obj, x, y)
@@ -113,7 +143,7 @@ function instanced_map:add_object(obj, x, y)
    return obj
 end
 
-function instanced_map:move_object(obj, x, y)
+function InstancedMap:move_object(obj, x, y)
    assert_is_an(IObject, obj)
    assert(self:exists(obj))
 
@@ -121,30 +151,37 @@ function instanced_map:move_object(obj, x, y)
    pool:move_object(obj, x, y)
 end
 
-function instanced_map:remove_object(obj)
+function InstancedMap:remove_object(obj)
    assert_is_an(IObject, obj)
    local pool = self:get_pool(obj._type)
    pool:remove(obj.uid)
 end
 
-function instanced_map:objects_at(type_id, x, y)
+function InstancedMap:objects_at(type_id, x, y)
    local pool = self:get_pool(type_id)
    if not pool then return {} end
    return pool:objects_at(x, y)
 end
 
-function instanced_map:get_object(_type, uid)
+function InstancedMap:get_object(_type, uid)
    local pool = self:get_pool(_type)
    return pool:get(uid)
 end
 
-function instanced_map:exists(obj)
+function InstancedMap:transfer_to(map, _type, uid, x, y)
+   local from = self:get_pool(_type)
+   local to = map:get_pool(_type)
+   return from:transfer_to(to, uid, x, y)
+end
+
+function InstancedMap:exists(obj)
    return is_an(IObject, obj) and self:get_pool(obj._type):exists(obj.uid)
 end
 
-function instanced_map:has_los(x1, y1, x2, y2)
+function InstancedMap:has_los(x1, y1, x2, y2)
    local cb = function(x, y)
       return self:can_access(x, y)
+         and not self.opaque[y*self.width+x+1]
       -- in Elona, the final tile is visible even if it is solid.
          or (x == x2 and y == y2)
    end
@@ -171,7 +208,7 @@ end
 -- @tparam int player_x
 -- @tparam int player_y
 -- @tparam int fov_radius
-function instanced_map:calc_screen_sight(player_x, player_y, fov_size)
+function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local stw = math.min(Draw.get_tiled_width(), self.width)
    local sth = math.min(Draw.get_tiled_height(), self.height)
 
@@ -279,31 +316,48 @@ function instanced_map:calc_screen_sight(player_x, player_y, fov_size)
    return self.shadow_map, start_x, start_y
 end
 
-function instanced_map:iter_charas()
+function InstancedMap:iter_charas()
    return self:iter_objects("base.chara")
 end
 
-function instanced_map:iter_objects(type_id)
+function InstancedMap:iter_objects(type_id)
    return self:get_pool(type_id):iter()
 end
 
-function instanced_map:is_in_bounds(x, y)
+function InstancedMap:is_in_bounds(x, y)
    return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
 
 -- TODO: Need to handle depending on what is querying. People may want
 -- things that can pass through walls, etc.
-function instanced_map:can_access(x, y)
+function InstancedMap:can_access(x, y)
+   -- TODO: Perhaps make one source of truth.
    local tile = self:tile(x, y)
-   return self:is_in_bounds(x, y) and not tile.is_solid
+   return self:is_in_bounds(x, y)
+      and not tile.is_solid
+      and not self.solid[y*self.width+x+1]
+end
+
+function InstancedMap:can_see_through(x, y)
+   -- TODO: Perhaps make one source of truth.
+   local tile = self:tile(x, y)
+   return self:is_in_bounds(x, y)
+      and not tile.is_opaque
+      and not self.opaque[y*self.width+x+1]
+end
+
+function InstancedMap:calculate_opaqueness(x, y)
+end
+
+function InstancedMap:calculate_accessibility(x, y)
 end
 
 -- NOTE: This function returns false for any positions that are not
 -- contained in the game window. This is the same behavior as vanilla.
 -- For game calculations depending on LoS outside of the game window,
--- use instanced_map:has_los combined with a maximum distance check instead.
-function instanced_map:is_in_fov(x, y)
+-- use InstancedMap:has_los combined with a maximum distance check instead.
+function InstancedMap:is_in_fov(x, y)
    return self.in_sight[y*self.width+x+1] == self.last_sight_id
 end
 
-return instanced_map
+return InstancedMap

@@ -13,11 +13,14 @@ local field = require("game.field")
 -- Functions for manipulating characters.
 local Chara = {}
 
-function Chara.at(x, y)
-   if not Map.is_in_bounds(x, y) then
+function Chara.at(x, y, map)
+   map = map or field.map
+
+   if not Map.is_in_bounds(x, y, map) then
       return nil
    end
-   local objs = field.map:objects_at("base.chara", x, y)
+
+   local objs = map:objects_at("base.chara", x, y)
    assert(objs ~= nil, string.format("%d,%d", x, y))
 
    -- TODO: clean up dead characters when map is left, if not meant to
@@ -25,7 +28,7 @@ function Chara.at(x, y)
    local chara
    local count = 0
    for _, id in ipairs(objs) do
-      local v = field.map:get_object("base.chara", id)
+      local v = map:get_object("base.chara", id)
       if Chara.is_alive(v) then
          chara = v
          count = count + 1
@@ -39,7 +42,7 @@ end
 
 function Chara.set_pos(c, x, y)
    if type(c) ~= "table" or not field:exists(c) then
-      Log.warn("Chara.set_pos: Not setting position of %s to %d,%d", tostring(c), x, y)
+      Log.warn("Chara.set_pos: Not setting position of %s to %d,%d\n\t%s", tostring(c), x, y, debug.traceback(""))
       return false
    end
 
@@ -81,8 +84,8 @@ function Chara.set_player(c)
    c.mp = c.max_mp
 end
 
-function Chara.delete(c)
-   field.map:remove_object(c)
+function Chara.delete(c, map)
+   (map or field.map):remove_object(c)
 end
 
 function Chara.kill(c)
@@ -135,14 +138,16 @@ local function init_chara(chara)
    assert_is_an(IAi, chara.ai)
 end
 
-function Chara.create(id, x, y)
-   if field.map == nil then return nil end
+function Chara.create(id, x, y, params, map)
+   map = map or field.map
 
-   if not Map.is_in_bounds(x, y) then
+   if map == nil then return nil end
+
+   if not Map.is_in_bounds(x, y, map) then
       return nil
    end
 
-   if Chara.at(x, y) ~= nil then
+   if Chara.at(x, y, map) ~= nil then
       return nil
    end
 
@@ -151,7 +156,7 @@ function Chara.create(id, x, y)
 
    assert(type(proto) == "table")
 
-   local chara = field.map:create_object(proto, x, y)
+   local chara = map:create_object(proto, x, y)
 
    -- TODO remove
    init_chara(chara)
@@ -201,18 +206,18 @@ local function iter(a, i)
    if i > #a.uids then
       return nil
    end
-   if field.map == nil then
+   if a.map == nil then
       return nil
    end
 
-   local d = field.map:get_object("base.chara", a.uids[i])
+   local d = a.map:get_object("base.chara", a.uids[i])
    i = i + 1
 
    return i, d
 end
 
 function Chara.iter_allies()
-   return iter, {uids = field.allies}, 1
+   return iter, {map = field.map, uids = field.allies}, 1
 end
 
 function Chara.swap_places(a, b)

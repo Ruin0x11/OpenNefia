@@ -45,6 +45,13 @@ data:add_type {
 }
 
 data:add_type {
+   name = "map_generator",
+   schema = schema.Record {
+      generate = schema.Function,
+   }
+}
+
+data:add_type {
    name = "element",
    schema = schema.Record {
       can_resist = schema.Boolean,
