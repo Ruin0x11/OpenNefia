@@ -3,7 +3,7 @@ local data = require("internal.data")
 
 local Event = {}
 
-local global_events = EventHolder:new()
+local global_events = require ("internal.global.global_events")
 
 local function check_event(event_id)
    if data["base.event"][event_id] == nil then

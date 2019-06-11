@@ -1,8 +1,15 @@
 local test_helper = {}
 
 function test_helper.mock_map()
+   local global = require("internal.global")
+   global.clear()
+
    local mod = require("internal.mod")
    mod.load_mods()
+
+   local startup = require("game.startup")
+   startup.load_batches(require("internal.draw").get_coords())
+   startup.run()
 
    local Rand = require("api.Rand")
    Rand.set_seed(0)

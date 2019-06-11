@@ -112,8 +112,8 @@ local function chara_get_place_pos(chara, x, y, map)
       return nil
    end
 
-   for i=0,map.width-1 do
-      for j=0,map.height-1 do
+   for x=0,map.width-1 do
+      for y=0,map.height-1 do
          if can_place_chara_at(chara, x, y, map) then
             return x, y
          end
@@ -138,8 +138,9 @@ local function try_place(chara, x, y, current, map)
    local real_x, real_y = chara_get_place_pos(chara, x, y, map)
 
    if real_x ~= nil then
-      return current:transfer_to(map, chara._type, chara.uid, real_x, real_y)
+      return current:transfer_to_with_pos(map, chara._type, chara.uid, real_x, real_y)
    end
+
    return nil
 end
 
@@ -167,6 +168,7 @@ function Map.travel_to(map)
 
    field.player = try_place(field.player, x, y, current, map)
    assert(field.player ~= nil)
+
    for _, uid in ipairs(allies) do
       -- TODO: try to find a place to put the ally. If they can't fit,
       -- then delay adding them to the map until the player moves. If

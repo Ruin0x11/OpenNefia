@@ -41,6 +41,11 @@ local inner = {}
 local schemas = {}
 local strict = false
 
+-- HACK: separate into Data API and internal.data
+function data:clear()
+   inner = {}
+end
+
 function data:add_type(schema)
    schemas["base." .. schema.name] = schema
 end

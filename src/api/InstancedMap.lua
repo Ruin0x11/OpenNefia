@@ -172,7 +172,7 @@ end
 function InstancedMap:transfer_to(map, _type, uid, x, y)
    local from = self:get_pool(_type)
    local to = map:get_pool(_type)
-   return from:transfer_to(to, uid, x, y)
+   return from:transfer_to_with_pos(to, uid, x, y)
 end
 
 function InstancedMap:exists(obj)

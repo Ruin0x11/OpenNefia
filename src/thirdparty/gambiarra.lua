@@ -98,13 +98,16 @@ return function(name, f, async)
       env.eq = deepeq
       env.spy = spy
       env.ok = function(cond, msg)
-         if not msg then
-            msg = debug.getinfo(2, 'S').short_src..":"..debug.getinfo(2, 'l').currentline
-         end
          if cond then
-            handler('pass', name, msg)
+            handler('pass', name, "")
          else
-            handler('fail', name, msg)
+            local msg_ = debug.getinfo(2, 'S').short_src..":"..debug.getinfo(2, 'l').currentline
+
+            if msg then
+               msg_ = msg_ .. ":\n" .. msg
+            end
+
+            handler('fail', name, msg_)
          end
       end
 

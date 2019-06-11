@@ -1,6 +1,7 @@
 local uid_tracker = require("internal.uid_tracker")
+local IPool = require("internal.IPool")
 
-local pool = class("pool")
+local pool = class("pool", IPool)
 
 function pool:init(type_id, tracker, width, height)
    assert_is_an(uid_tracker, tracker)
@@ -118,6 +119,15 @@ function pool:objects_at(x, y)
    return self.positional[y][x]
 end
 
+function pool:at(index)
+   local i = self.uids[index]
+   if i == nil then
+      return nil
+   end
+
+   return self.content[i] and self.content[i].data
+end
+
 function pool:exists(uid)
    return self.content[uid] ~= nil
 end
@@ -133,11 +143,18 @@ local function iter(a, i)
    return i, d
 end
 
-function pool:iter()
-   return iter, {uids=self.uids, content=self.content}, 1
+function pool:iter(ordering)
+   return iter, {uids=ordering or self.uids, content=self.content}, 1
 end
 
-function pool:transfer_to(pool_to, uid, x, y)
+function pool:transfer_to(pool_to, uid)
+end
+
+function pool:len()
+   return #self.uids
+end
+
+function pool:transfer_to_with_pos(pool_to, uid, x, y)
    assert(self.content[uid] ~= nil)
    assert(pool_to.content[uid] == nil)
    local ind = self.content[uid].array_index

@@ -94,7 +94,7 @@ test("pool - transfer", function()
         ok(o.thing == "hoge")
         -- ok(o.is_valid == true)
 
-        from:transfer_to(to, uid, 5, 5)
+        from:transfer_to_with_pos(to, uid, 5, 5)
 
         ok(from:get(uid) == nil)
         ok(to:get(uid).uid == o.uid)

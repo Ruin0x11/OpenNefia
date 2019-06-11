@@ -10,6 +10,12 @@ function EventHolder:init()
    self.priorities = {}
 end
 
+function EventHolder:clear()
+   self.hooks = {}
+   self.reg = {}
+   self.priorities = {}
+end
+
 function EventHolder:is_registered(event_id, cb)
    if self.reg[event_id] == nil then
       self.reg[event_id] = {}

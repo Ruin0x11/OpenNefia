@@ -73,7 +73,7 @@ local function shadows_match(shadows, s)
 end
 
 local function print_shadows(shadows)
-   print("==============")
+   local s = ""
    for i=0, #shadows do
       for j=0,#shadows do
          local o = shadows[j][i] or 0
@@ -81,22 +81,23 @@ local function print_shadows(shadows)
          if bit.band(o, 0x100) > 0 then
             i = "#"
          end
-         io.write(i)
+         s = s .. i
       end
-      io.write("\n")
+      s = s .. "\n"
    end
+   return s
 end
 
 local function assert_shadows_match(m, x, y, f, s)
    local shadows = m:calc_screen_sight(x, y, f)
-   ok(shadows_match(shadows, s))
+   ok(shadows_match(shadows, s), print_shadows(shadows) .. "\n=====\n" .. s)
 end
 
 test("map - calc screen sight", function()
         local u = uid_tracker:new()
         local m = InstancedMap:new(10, 10, u, tiles)
 
-        m:set_tile(5, 5, tiles["wall"])
+        m:set_tile(5, 5, "base.wall")
 
         local coords = require("internal.draw.coords.tiled_coords"):new()
         draw.set_coords(coords)
