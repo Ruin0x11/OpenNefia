@@ -27,11 +27,23 @@ function atlas:load(files, coords)
          break
       end
 
+      local id = i + 1
+      -- HACK
+      if type(filepath) == "table" then
+         -- data prototype
+         id = filepath._id
+         filepath = filepath.image
+         if type(filepath) == "table" then
+            -- first animation frame
+            filepath = filepath[1]
+         end
+      end
+
       local tile = love.graphics.newImage(filepath)
       local x = (i % self.tile_count_x) * self.tile_width
       local y = (math.floor(i / self.tile_count_y)) * self.tile_height
 
-      self.tiles[i + 1] = love.graphics.newQuad(x, y, self.tile_width, self.tile_height, self.image_width, self.image_height)
+      self.tiles[id] = love.graphics.newQuad(x, y, self.tile_width, self.tile_height, self.image_width, self.image_height)
 
       if coords then
          coords:load_tile(tile, x, y)

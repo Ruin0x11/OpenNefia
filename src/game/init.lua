@@ -42,8 +42,9 @@ local function run_field()
 end
 
 function game.loop()
-   startup.run()
    internal.mod.load_mods()
+   startup.load_batches(require("internal.draw").get_coords())
+   startup.run()
 
    local cb = run_field
 

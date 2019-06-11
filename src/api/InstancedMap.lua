@@ -87,6 +87,7 @@ end
 
 function InstancedMap:init_map_data()
    self.turn_cost = 1000
+   self.is_outdoors = true
 end
 
 function InstancedMap:clear(tile)
@@ -180,8 +181,7 @@ end
 
 function InstancedMap:has_los(x1, y1, x2, y2)
    local cb = function(x, y)
-      return self:can_access(x, y)
-         and not self.opaque[y*self.width+x+1]
+      return self:can_see_through(x, y)
       -- in Elona, the final tile is visible even if it is solid.
          or (x == x2 and y == y2)
    end

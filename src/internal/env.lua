@@ -13,9 +13,11 @@ local SANDBOX_GLOBALS = {
    "pairs",
    "pcall",
    "print",
+   "select",
    "tonumber",
    "tostring",
    "type",
+   "unpack",
    "xpcall",
 
    -- Lua stdlib

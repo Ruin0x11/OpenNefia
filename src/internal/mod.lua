@@ -27,7 +27,6 @@ local function load_manifest(manifest_path)
    end
    setfenv(chunk, {})
    local success, manifest = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
-   print(success,manifest)
    if success == false then
       local err = manifest
       return success, err
@@ -53,9 +52,10 @@ function mod.calculate_load_order()
 
          if type(manifest.dependencies) == "table" then
             for dep_id, version in pairs(manifest.dependencies) do
-               print(dep_id,mod_id)
                graph:add(dep_id, mod_id)
             end
+         else
+            error("Manifest must specify dependencies. " .. mod_id)
          end
       end
    end
@@ -64,12 +64,11 @@ function mod.calculate_load_order()
 end
 
 function mod.load_mods()
-   print("LOAD MODS")
-
    local load_order = mod.calculate_load_order()
 
+   _p(load_order)
+
    for _, mod_id in ipairs(load_order) do
-      print("Load " .. mod_id)
       local init = fs.join("mod", mod_id, "init.lua")
       if fs.is_file(init) then
          local success, chunk = load_mod(mod_id, init)

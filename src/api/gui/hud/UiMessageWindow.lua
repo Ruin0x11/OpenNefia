@@ -196,6 +196,11 @@ function UiMessageWindow:recalc_lines()
    end
 end
 
+function UiMessageWindow:clear()
+   self.history = circular_buffer:new(self.max_log)
+   self.each_line = circular_buffer:new(self.max_lines)
+end
+
 function UiMessageWindow:draw()
    Draw.set_color(255, 255, 255)
 

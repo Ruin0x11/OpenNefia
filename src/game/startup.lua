@@ -16,21 +16,12 @@ local atlas = require("internal.draw.atlas")
 local batches = {}
 
 local function get_map_tiles()
-   local files = {}
-   local dir = "graphic/temp/map_tile"
-   if not fs.exists(dir) then
-      error("not exist " .. dir)
+   local data = require("internal.data")
+   local it = {}
+   for _, v in data["base.map_tile"]:iter() do
+      it[#it+1] = v
    end
-   for _, f in fs.iter_directory_items(dir) do
-      local file = fs.join(dir, f)
-      local tile = love.image.newImageData(file)
-      local r, g, b = tile:getPixel(0, 0)
-      if r ~= 0 or g ~= 0 or b ~= 0 then
-         files[#files+1] = file
-      end
-      tile:release()
-   end
-   return files
+   return it
 end
 
 local function get_chara_tiles()

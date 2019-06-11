@@ -63,8 +63,10 @@ function shadow_batch:init(width, height, coords)
 
    self.tiles = table.of_2d(0, width + 4, height + 4, true)
 
-   self.image = draw.load_image("graphic/temp/shadow.png")
-   self.edge_image = draw.load_image("graphic/temp/shadow_edge.png")
+   -- self.image = draw.load_image("graphic/temp/shadow.png")
+   -- self.edge_image = draw.load_image("graphic/temp/shadow_edge.png")
+   self.image = draw.load_image("graphic/temp/shadow_nonalpha.bmp")
+   self.edge_image = draw.load_image("graphic/temp/shadow_edges_nonalpha.bmp")
    self.quad = {}
    self.corner_quad = {}
    self.edge_quad = {}
@@ -96,6 +98,8 @@ function shadow_batch:init(width, height, coords)
    self.updated = true
    self.tile_width = 48
    self.tile_height = 48
+
+   self.light = 50
 end
 
 function shadow_batch:find_bounds(x, y)
@@ -316,9 +320,11 @@ function shadow_batch:draw(x, y)
       self.updated = false
    end
 
-   love.graphics.setColor(0, 0, 0, 80 / 255)
+   draw.set_color(255, 255, 255, self.light)
+   love.graphics.setBlendMode("subtract")
    love.graphics.draw(self.batch, sx + ox - tw, sy + oy - th)
    love.graphics.draw(self.edge_batch, sx + ox - tw, sy + oy - th)
+   love.graphics.setBlendMode("alpha")
 end
 
 return shadow_batch

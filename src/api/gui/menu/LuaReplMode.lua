@@ -8,6 +8,7 @@ function LuaReplMode:init(env)
 
    -- HACK
    self.env.Debug = require("mod.debug.api.Debug")
+   self.env.Tools = require("mod.tools.api.Tools")
 end
 
 function LuaReplMode:submit(text)

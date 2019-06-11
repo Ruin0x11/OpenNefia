@@ -154,7 +154,7 @@ function Repl:draw()
 
    Draw.set_color(255, 255, 255)
    Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
-   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height( )- 5)
+   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
 
    if math.floor(self.frames * 2) % 2 == 1 then
       local x = self.x + 5 + Draw.text_width(self.mode.caret) + Draw.text_width(self.text) + 4
@@ -164,7 +164,7 @@ function Repl:draw()
 
    if self.scrollback_index > 0 then
       local scrollback_count = string.format("%d/%d",self.scrollback_index + self.max_lines, self.scrollback:len())
-      Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + top - 5)
+      Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + top - Draw.text_height() - 5)
    end
 
    for i=1,self.max_lines do

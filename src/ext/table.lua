@@ -290,7 +290,6 @@ end
 table.push = table.insert
 
 table.unpack = unpack
-unpack = nil
 
 --- Tries to obtain a nested value in a table.
 -- @tparam table obj

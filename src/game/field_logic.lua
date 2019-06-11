@@ -15,10 +15,14 @@ local field_logic = {}
 function field_logic.setup()
    field:set_map(Map.generate("base.test", {}))
 
+   Gui.mes_clear()
+
    do
       local me = Chara.create("base.player", 10, 10)
       Chara.set_player(me)
       StatusEffect.apply(me, "base.gravity", 10)
+      -- TODO
+      field.allies = {}
    end
 
    for i=1,4 do

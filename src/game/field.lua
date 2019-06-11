@@ -19,8 +19,6 @@ field_layer:delegate("keys", IInput)
 function field_layer:init()
    self.is_active = false
 
-   startup.load_batches(require("internal.draw").get_coords())
-
    self.hud = require("api.gui.hud.MainHud"):new()
 
    self.map = nil

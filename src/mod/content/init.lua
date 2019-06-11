@@ -32,7 +32,7 @@ data:add {
    _type = "base.map_tile",
    _id = "floor",
 
-   image = 451,
+   image = "graphic/temp/map_tile/1_221.png",
    is_solid = false,
    is_opaque = false
 }
@@ -41,7 +41,7 @@ data:add {
    _type = "base.map_tile",
    _id = "wall",
 
-   image = 300,
+   image = "graphic/temp/map_tile/1_399.png",
    is_solid = true,
    is_opaque = true
 }
@@ -429,7 +429,7 @@ data:add {
       local Map = require("api.Map")
 
       print(inspect(p))
-      local width = p.width or 50
+      local width = p.width or 30
       local height = p.height or 50
       local map = InstancedMap:new(width, height)
 

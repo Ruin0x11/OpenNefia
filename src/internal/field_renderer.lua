@@ -103,15 +103,55 @@ function field_renderer:draw()
    end
 end
 
+local function calc_map_shadow(map, hour)
+   if not map.is_outdoors then
+      return 0
+   end
+
+   local shadow = 0
+
+   if hour >= 24 or (hour >= 0 and hour < 4) then
+      shadow = 110
+   elseif hour >= 4 and hour < 10 then
+      shadow = math.max(10, 70 - (hour - 3) * 10)
+   elseif hour >= 10 and hour < 12 then
+      shadow = 10
+   elseif hour >= 12 and hour < 17 then
+      shadow = 1
+   elseif hour >= 17 and hour < 21 then
+      shadow = (hour - 17) * 20
+   elseif hour >= 21 and hour < 24 then
+      shadow = 80 + (hour - 21) * 10
+   end
+
+   -- TODO weather, noyel
+
+   return shadow
+end
+
 function field_renderer:update_tile_layer(map, player)
    if map.tiles_dirty then
       for i, t in ipairs(map.tiles) do
          local x = (i-1) % map.width
-         local y = math.floor((i-1) / map.height)
-         self:set_tile(t.image, x, y)
+         local y = math.floor((i-1) / map.width)
+         local id = t._id
+
+         if t.wall then
+            local one_tile_down = map.tiles[(y+1)*map.width+x+1]
+            if one_tile_down ~= nil and not one_tile_down.wall then
+               id = t.wall
+            end
+         end
+         self:set_tile(id, x, y)
       end
       map.tiles_dirty = false
    end
+
+   -- TODO: maybe have this field accessable somewhere better?
+   local field = require("game.field")
+   local date = field.data.date
+
+   self.tile_batch.shadow = calc_map_shadow(map, date.hour)
 end
 
 function field_renderer:update_shadow_layer(map, player)

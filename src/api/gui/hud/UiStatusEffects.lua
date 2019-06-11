@@ -26,7 +26,15 @@ function UiStatusEffects:set_data(status_effects)
       end
    end
 
-   self:relayout(self.x, self.y, self.width, self.height)
+   self:calc_max_width()
+end
+
+function UiStatusEffects:calc_max_width()
+   self.max_width = 50
+   Draw.set_font(self.t.indicator_font)
+   for _, indicator in ipairs(self.indicators) do
+      self.max_width = math.max(self.max_width, Draw.text_width(indicator.text) + 20)
+   end
 end
 
 function UiStatusEffects:relayout(x, y, width, height)
@@ -36,11 +44,7 @@ function UiStatusEffects:relayout(x, y, width, height)
    self.y = y - self.height
    self.t = UiTheme.load(self)
 
-   self.max_width = 50
-   Draw.set_font(self.t.indicator_font)
-   for _, indicator in ipairs(self.indicators) do
-      self.max_width = math.max(self.max_width, Draw.text_width(indicator.text) + 20)
-   end
+   self:calc_max_width()
 end
 
 function UiStatusEffects:draw()

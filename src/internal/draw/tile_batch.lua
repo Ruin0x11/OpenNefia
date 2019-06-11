@@ -1,5 +1,5 @@
 local IBatch = require("internal.draw.IBatch")
-local draw = require("internal.draw")
+local Draw = require("api.Draw")
 local tile_batch = class("tile_batch", IBatch)
 
 function tile_batch:init(width, height, atlas, coords)
@@ -7,6 +7,8 @@ function tile_batch:init(width, height, atlas, coords)
    self.height = height
    self.atlas = atlas
    self.coords = coords
+
+   self.shadow = 0
 
    self.tiles = table.of(0, width * height)
    self.batch = love.graphics.newSpriteBatch(atlas.image)
@@ -45,7 +47,7 @@ function tile_batch:draw(x, y)
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, draw.get_width(), draw.get_height())
+   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
 
    if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
@@ -73,7 +75,11 @@ function tile_batch:draw(x, y)
       self.updated = false
    end
 
+   Draw.set_color(255 - self.shadow, 255 - self.shadow, 255 - self.shadow)
+
    love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
+
+   Draw.set_color(255, 255, 255)
 end
 
 return tile_batch

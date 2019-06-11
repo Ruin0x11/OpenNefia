@@ -49,6 +49,10 @@ function Gui.mes(text, color)
    get_message_window():message(text, color)
 end
 
+function Gui.mes_clear()
+   get_message_window():clear()
+end
+
 function Gui.mes_newline()
    get_message_window():newline()
 end

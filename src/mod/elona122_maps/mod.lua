@@ -1,5 +1,5 @@
 return {
-   requirements = {
+   dependencies = {
       base = "> 0"
    }
 }
