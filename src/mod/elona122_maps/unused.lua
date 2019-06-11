@@ -4243,82 +4243,6 @@ return { {
     id = "1_527",
     image = "graphic/temp/map_tile/1_527.png",
     wall_kind = 1
-  }, {
-    _id = "1_528",
-    effect = 5,
-    id = "1_528",
-    image = "graphic/temp/map_tile/1_528.png"
-  }, {
-    _id = "1_529",
-    effect = 5,
-    id = "1_529",
-    image = "graphic/temp/map_tile/1_529.png"
-  }, {
-    _id = "1_530",
-    effect = 5,
-    id = "1_530",
-    image = "graphic/temp/map_tile/1_530.png"
-  }, {
-    _id = "1_531",
-    effect = 5,
-    id = "1_531",
-    image = "graphic/temp/map_tile/1_531.png"
-  }, {
-    _id = "1_532",
-    effect = 5,
-    id = "1_532",
-    image = "graphic/temp/map_tile/1_532.png"
-  }, {
-    _id = "1_533",
-    effect = 5,
-    id = "1_533",
-    image = "graphic/temp/map_tile/1_533.png"
-  }, {
-    _id = "1_534",
-    effect = 5,
-    id = "1_534",
-    image = "graphic/temp/map_tile/1_534.png"
-  }, {
-    _id = "1_535",
-    effect = 5,
-    id = "1_535",
-    image = "graphic/temp/map_tile/1_535.png"
-  }, {
-    _id = "1_536",
-    effect = 5,
-    id = "1_536",
-    image = "graphic/temp/map_tile/1_536.png"
-  }, {
-    _id = "1_537",
-    effect = 5,
-    id = "1_537",
-    image = "graphic/temp/map_tile/1_537.png"
-  }, {
-    _id = "1_538",
-    effect = 5,
-    id = "1_538",
-    image = "graphic/temp/map_tile/1_538.png"
-  }, {
-    _id = "1_539",
-    effect = 5,
-    id = "1_539",
-    image = "graphic/temp/map_tile/1_539.png"
-  }, {
-    _id = "1_540",
-    effect = 5,
-    id = "1_540",
-    image = "graphic/temp/map_tile/1_540.png"
-  }, {
-    _id = "1_541",
-    effect = 5,
-    id = "1_541",
-    image = "graphic/temp/map_tile/1_541.png"
-  }, {
-    _id = "1_542",
-    effect = 5,
-    id = "1_542",
-    image = "graphic/temp/map_tile/1_542.png"
-  }, {
     _id = "1_544",
     effect = 5,
     id = "1_544",
@@ -4988,54 +4912,6 @@ return { {
     effect = 5,
     id = "1_725",
     image = "graphic/temp/map_tile/1_725.png"
-  }, {
-    _id = "1_726",
-    effect = 5,
-    id = "1_726",
-    image = "graphic/temp/map_tile/1_726.png",
-    is_feat = true
-  }, {
-    _id = "1_727",
-    effect = 5,
-    id = "1_727",
-    image = "graphic/temp/map_tile/1_727.png",
-    is_feat = true
-  }, {
-    _id = "1_728",
-    effect = 5,
-    id = "1_728",
-    image = "graphic/temp/map_tile/1_728.png",
-    is_feat = true
-  }, {
-    _id = "1_729",
-    effect = 5,
-    id = "1_729",
-    image = "graphic/temp/map_tile/1_729.png",
-    is_feat = true
-  }, {
-    _id = "1_730",
-    effect = 5,
-    id = "1_730",
-    image = "graphic/temp/map_tile/1_730.png",
-    is_feat = true
-  }, {
-    _id = "1_731",
-    effect = 5,
-    id = "1_731",
-    image = "graphic/temp/map_tile/1_731.png",
-    is_feat = true
-  }, {
-    _id = "1_732",
-    effect = 5,
-    id = "1_732",
-    image = "graphic/temp/map_tile/1_732.png",
-    is_feat = true
-  }, {
-    _id = "1_733",
-    effect = 4,
-    id = "1_733",
-    image = "graphic/temp/map_tile/1_733.png",
-    is_feat = true
   }, {
     _id = "1_734",
     effect = 5,
