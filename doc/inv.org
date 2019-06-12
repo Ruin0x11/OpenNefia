@@ -7,6 +7,7 @@ _on_filter_
 - Include items on chara.
 - Include items on the ground.
 - Include equipped items.
+- Permit own_state 5.
 - Permit harvest items.
 _when item is chosen after filter_
 - Sort equipped items first, but after items on ground.
@@ -127,6 +128,28 @@ _on_item_selected_
   + Also print buying prompt.
   + Fail if player/chara doesn't have enough money.
 - Try to move the item to the player/chara's inventory.
+  + If failed, print player's inventory is full. (usual case)
+  + Update some expiration if food. (on_sell_to_shop)
+#+BEGIN_SRC c++
+if (inv[ti].param3 != 0 && inv[ti].material == 35)
+{
+    inv[ti].param3 = game_data.date.hours() +
+        the_item_db[inv[ti].id]->expiration_date;
+    if (inv[ti].param2 != 0)
+    {
+        inv[ti].param3 += 72;
+    }
+}
+#+END_SRC
+  + On success, print message/play sound/modify gold.
+    - If item is cargo, calc value.
+#+BEGIN_SRC c++
+if (the_item_db[inv[ti].id]->category == 92000)
+{
+    inv[ti].param2 = calcitemvalue(ti, 0);
+}
+#+END_SRC
+  + Gain negotiation experience.
 _before_menu_exit_
 - Load shoptemp.
 ** 12 - shop selling (uses tc?)
@@ -154,6 +177,35 @@ _on_item_selected_
   + Also print selling prompt.
   + Fail if shopkeeper doesn't have enough money and shopkeeper role is not cargo trader.
 - Try to move the item to the player/chara's inventory.
+  + If failed, print shopkeeper's inventory is full.
+  + On success, print message/play sound/modify gold.
+    - Logic differs if item is stolen.
+  + Gain negotiation experience.
+#+BEGIN_SRC c++
+if (!inv[ti].is_stolen())
+{
+    txt(i18n::s.get(
+        "core.locale.action.pick_up.you_sell", itemname(ti, in)));
+}
+else
+{
+    inv[ti].is_stolen() = false;
+    txt(i18n::s.get(
+        "core.locale.action.pick_up.you_sell_stolen",
+        itemname(ti, in)));
+    if (game_data.guild.thieves_guild_quota > 0)
+    {
+        game_data.guild.thieves_guild_quota -= sellgold;
+        if (game_data.guild.thieves_guild_quota < 0)
+        {
+            game_data.guild.thieves_guild_quota = 0;
+        }
+        txt(i18n::s.get(
+            "core.locale.action.pick_up.thieves_guild_quota",
+            game_data.guild.thieves_guild_quota));
+    }
+}
+#+END_SRC
 _before_menu_exit_
 - Load shoptemp.
 ** 13 - identifying
@@ -162,9 +214,8 @@ _on filter_
 - Include items on the ground.
 - Include equipped items.
 - Remove if item is completely identified.
-
 _when item is chosen after filter_
-- Sort equipped items first, but after items on ground
+- Sort equipped items first, but after items on ground.
 _on_item_selected_
 - Try to identify. Print a message depending on the result.
 - Stack the item.
@@ -176,6 +227,7 @@ _on filter_
 - Include items on chara.
 - Include items on the ground.
 - Include equipped items.
+- Permit own_state 5.
 - Remove if item is not usable and item is not alive.
 _on_item_selected_
 - Try to use the item. Return the result.
@@ -269,6 +321,10 @@ _on_item_selected_
 - Fail if item not owned/harvested.
 - Do not query amount. Amount becomes equal to item.number.
 - Try to move the item to the player/chara's inventory.
+  + Update some expiration if food. (on_sell_to_shop).
+    - Same as shop selling.
+    - However, logic is different in sub 3.
+  + Play sound/print message.
 _before_menu_exit_
 - Load shoptemp.
 *** sub 0 - boxes/casino (invfile = inv[ci].param1)
@@ -284,6 +340,14 @@ _on_item_selected_
 - On success, decrement rights to succeed to and print message.
 *** sub 2 - general container? (invsubroutine = 1)
 *** sub 3 - cooler box/general container (inv[ci].param1 == 6)
+- When successfully moved item:
+  + Update some expiration if food. (on_take_from_container)
+#+BEGIN_SRC c++
+if (inv[ti].param3 > 0)
+{
+    inv[ti].param3 += game_data.date.hours();
+}
+#+END_SRC
 *** sub 4 - strange scientist rewards
 _on_item_selected_
 - On success, increment gift count of little sister quest and return success.
@@ -334,6 +398,9 @@ _on filter_
 _on filtering_
 - Include items on chara.
 - Remove if type is 72000 (containers).
+_on_item_selected_
+- Move item into item's inventory.
+- Play sound/print message.
 *** sub 0 - master's delivery chest
 _on filtering_
 - If current map is Lumiest:
@@ -372,6 +439,13 @@ _on_item_selected_
 - Fail if item not owned/harvested.
 - Query amount if mode is 6 and number > 1. If canceled, fail.
 - Try to move the item to the item's inventory.
+  + On success, update expiration.
+#+BEGIN_SRC c++
+if (inv[ti].param3 > 0)
+{
+    inv[ti].param3 = inv[ti].param3 - game_data.date.hours();
+}
+#+END_SRC
 *** sub 5 - four dimensional pocket
 _on_item_selected_
 - Fail if item is no-drop.
