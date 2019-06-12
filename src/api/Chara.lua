@@ -132,6 +132,8 @@ local function init_chara(chara)
    chara.fov = 15
 
    chara.inv = Inventory:new(200)
+   chara.gold = 0
+   chara.platinum = 0
 
    chara.status_effects = {}
 

@@ -55,6 +55,11 @@ local function init_item(item)
    item.inv = nil
    item.ownership = "none"
 
+   item.curse_state = "cursed"
+   item.identify_state = "completely"
+
+   item.flags = {}
+
    -- item:send("base.on_item_create")
 end
 

@@ -84,6 +84,8 @@ function mod.load_mods()
 
          print(string.format("Loaded mod %s.", mod_id))
          chunks[mod_id] = chunk
+      else
+         error("Cannot find mod dependency " .. mod_id)
       end
    end
 end
