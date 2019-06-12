@@ -19,6 +19,14 @@ data:add {
 }
 
 data:add {
+   _type = "base.item",
+   _id = "test",
+
+   name = "test",
+   image = 101,
+}
+
+data:add {
    _type = "base.chara",
    _id = "enemy",
 
@@ -447,3 +455,22 @@ data:add {
       return map
    end
 }
+
+Event.register("base.on_game_start",
+"game start",
+function()
+   local Chara = require("api.Chara")
+   local Item = require("api.Item")
+   for i=1,4 do
+      local a = Chara.create("base.ally", i+8, 3)
+      Chara.recruit_as_ally(a)
+   end
+
+   for i=1,2 do
+      for j=1,1 do
+         local i = Chara.create("base.enemy", i+8, j+11)
+      end
+   end
+
+   Item.create("base.test", 10, 11)
+end)

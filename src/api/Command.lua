@@ -1,5 +1,7 @@
 local Action = require("api.Action")
+local Gui = require("api.Gui")
 local Ai = require("api.Ai")
+local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Input = require("api.Input")
@@ -40,6 +42,7 @@ function Command.move(player, x, y)
       then
          if relation == "friendly" or relation == "citizen" then
             Chara.swap_places(player, on_cell)
+            Gui.mes("You switch places with " .. on_cell.uid .. ".")
          end
          return "turn_end"
       end
@@ -72,6 +75,33 @@ function Command.move(player, x, y)
    -- proc confusion text
 
    return "turn_end"
+end
+
+function Command.get(player)
+   -- TODO: plants
+   -- traps
+   -- buildings
+   -- snow
+
+   local items = Item.at(player.x, player.y)
+   if #items == 0 then
+      Gui.mes("You grasp at air.")
+      return "turn_end"
+   end
+
+   if #items > 1 then
+      Gui.mes("More than one item.")
+      return "turn_end"
+   end
+
+   local item = items[1]
+
+   if item.ownership ~= "none" then
+      Gui.mes("It's not yours.")
+      return "turn_end"
+   end
+
+   return Action.get(player, item)
 end
 
 return Command

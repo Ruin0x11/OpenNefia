@@ -16,6 +16,35 @@ function Inventory:init(max_size, type_id, x, y)
    self.filters = {}
 end
 
+function Inventory:put(obj)
+   if self:is_full() then
+      return false
+   end
+
+   if obj.pool ~= nil then
+      obj.pool:remove(item.uid)
+   end
+
+   assert(obj.pool == nil)
+   self.pool:add_object(obj, 0, 0)
+
+   return true
+end
+
+function Inventory:is_full()
+   return self.pool:len() >= self.max_size
+end
+
+function Inventory:create_object(proto)
+   if self.is_full() then
+      return nil
+   end
+
+   assert(proto._type == self.type_id)
+
+   return self.pool:create_object(proto, 0, 0)
+end
+
 function Inventory:take_from(uid, other)
    -- HACK
    other:transfer_to_with_pos(self.pool, uid, 0, 0)
@@ -27,7 +56,7 @@ function Inventory:give_to(uid, other)
 end
 
 function Inventory:take(uid, map)
-   if self.pool:len() >= self.max_size then
+   if self.is_full() then
       return false
    end
 
@@ -40,6 +69,8 @@ end
 function Inventory:drop(uid, x, y, map)
    map = map or Map.current()
    self.pool:transfer_to_with_pos(map:get_pool(self.type_id), uid, x or self.x, y or self.y)
+
+   return true
 end
 
 function Inventory:sorted_by(comparator)

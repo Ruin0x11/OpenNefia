@@ -1,5 +1,7 @@
 local Input = require("api.Input")
 local Chara = require("api.Chara")
+local Gui = require("api.Gui")
+local Item = require("api.Item")
 
 local Pos = require("api.Pos")
 local Map = require("api.Map")
@@ -34,6 +36,25 @@ function Action.move(chara, x, y)
    -- sense feats
    -- proc world map encounters
    --   how to handle entering a new map here? defer it?
+
+   return "turn_end"
+end
+
+function Action.get(chara, item)
+   if item == nil then
+      local items = Item.at(chara.x, chara.y)
+      if #items == 0 then
+         Gui.mes(chara.uid .. " grasps at air.")
+         return "turn_end"
+      end
+      item = items[#items]
+   end
+
+   local picked_up = Chara.receive_item(chara, item)
+   if picked_up then
+      Gui.mes(chara.uid .. " picks up " .. item.uid)
+      return "turn_end"
+   end
 
    return "turn_end"
 end

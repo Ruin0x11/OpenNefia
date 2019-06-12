@@ -1,6 +1,7 @@
 local Ai = require("api.Ai")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
+local Inventory = require("api.Inventory")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
@@ -130,6 +131,8 @@ local function init_chara(chara)
    chara.relation = chara.original_relation
    chara.fov = 15
 
+   chara.inv = Inventory:new(200)
+
    chara.status_effects = {}
 
    local IAi = require("api.IAi")
@@ -139,6 +142,7 @@ local function init_chara(chara)
 end
 
 function Chara.create(id, x, y, params, map)
+   params = params or {}
    map = map or field.map
 
    if map == nil then return nil end
@@ -456,6 +460,29 @@ function Chara.regen_hp_mp(chara)
       local level = 10
       Chara.heal_mp(chara, Rand.rnd(math.floor(level / 2) + 1) + 1)
    end
+end
+
+function Chara.receive_item(chara, item)
+   if item.pool ~= nil then
+      item.pool:remove(item.uid)
+   end
+
+   assert(chara.inv ~= nil)
+
+   local success = chara.inv:put(item)
+
+   return success
+end
+
+function Chara.drop_item(chara, item, map)
+   map = map or field.map
+
+   assert(item.pool == chara.inv.pool)
+   assert(chara.inv ~= nil)
+
+   local success = chara.inv:drop(item.uid, chara.x, chara.y, map)
+
+   return success
 end
 
 return Chara

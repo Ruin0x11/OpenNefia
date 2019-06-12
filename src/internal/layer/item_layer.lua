@@ -1,4 +1,5 @@
 local Map = require("api.Map")
+local Item = require("api.Item")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local sparse_batch = require("internal.draw.sparse_batch")
@@ -28,9 +29,14 @@ function item_layer:update(dt, screen_updated)
    local map = Map.current()
    assert(map ~= nil)
 
+   local found = {}
+
    for _, i in map:iter_items() do
-      local show = i.state == "Alive" and map:is_in_fov(i.x, i.y)
-      local hide = not show and self.batch_inds[i.uid] ~= 0
+      found[i.uid] = true
+      local show = Item.is_alive(i) and map:is_in_fov(i.x, i.y)
+      local hide = not show
+         and self.batch_inds[i.uid] ~= nil
+         and self.batch_inds[i.uid] ~= 0
 
       if show then
          local batch_ind = self.batch_inds[i.uid]
@@ -55,6 +61,13 @@ function item_layer:update(dt, screen_updated)
       elseif hide then
          self.item_batch:remove_tile(self.batch_inds[i.uid])
          self.batch_inds[i.uid] = 0
+      end
+   end
+
+   for uid, _ in pairs(self.batch_inds) do
+      if not found[uid] then
+         self.item_batch:remove_tile(self.batch_inds[uid])
+         self.batch_inds[uid] = nil
       end
    end
 end

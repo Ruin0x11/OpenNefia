@@ -61,6 +61,10 @@ function Map.iter_charas(map)
    return (map or field.map):iter_charas()
 end
 
+function Map.iter_items(map)
+   return (map or field.map):iter_items()
+end
+
 --- Creates a new blank map.
 function Map.create(width, height)
    return InstancedMap:new(width, height)

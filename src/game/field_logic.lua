@@ -23,17 +23,6 @@ function field_logic.setup()
       field.allies = {}
    end
 
-   for i=1,4 do
-      local a = Chara.create("base.ally", i+8, 3)
-      Chara.recruit_as_ally(a)
-   end
-
-   for i=1,2 do
-      for j=1,1 do
-         local i = Chara.create("base.enemy", i+8, j+11)
-      end
-   end
-
    -- TODO: make bind_keys have callbacks that pass in player as
    -- argument
    field:bind_keys {
@@ -51,6 +40,20 @@ function field_logic.setup()
       end,
       right = function(me)
          return Command.move(me, "West")
+      end,
+      g = function(me)
+         return Command.get(me)
+      end,
+      d = function(me)
+         if me.inv:len() == 0 then
+            Gui.mes("No items.")
+            return "turn_end"
+         end
+
+         local item = me.inv:at(me.inv:len())
+         Chara.drop_item(me, item)
+         Gui.mes("You drop " .. item._id)
+         return "turn_end"
       end,
       ["."] = function(me)
          World.pass_time_in_seconds(600)
@@ -71,6 +74,8 @@ function field_logic.setup()
          return "player_turn_query"
       end,
    }
+
+   Event.trigger("base.on_game_start")
 end
 
 local function calc_speed(chara)

@@ -24,9 +24,8 @@ local function get_map_tiles()
    return it
 end
 
-local function get_chara_tiles()
+local function get_tiles(dir)
    local files = {}
-   local dir = "graphic/temp/chara"
    if not fs.exists(dir) then
       error("not exist " .. dir)
    end
@@ -39,6 +38,14 @@ local function get_chara_tiles()
       tile:release()
    end
    return files
+end
+
+local function get_chara_tiles()
+   return get_tiles("graphic/temp/chara")
+end
+
+local function get_item_tiles()
+   return get_tiles("graphic/temp/item")
 end
 
 function startup.load_batches()
@@ -58,37 +65,15 @@ function startup.load_batches()
 
    sw:p("load_batches.chara")
 
-   local map_size = 40
-   local tiles = table.of(451, map_size * map_size)
-   local map_batch = tile_batch:new(map_size, map_size, atlas, coords)
-   map_batch:set_tiles(tiles)
-   for x=0,map_size-1 do
-      for y=0,map_size-1 do
-         if x == 0 or y == 0 or x == map_size-1 or y == map_size - 1 then
-            map_batch:update_tile(x, y, 300)
-         end
-      end
-   end
+   local item_atlas = atlas:new(tile_size, tile_size, 48, 48)
+   item_atlas:load(get_item_tiles())
 
-   local chara_batch = sparse_batch:new(map_size, map_size, chara_atlas, coords)
-   -- for i=1,5000 do
-   --    chara_batch:add_tile {
-   --       tile = math.random(1, #chara_atlas.tiles),
-   --       x = math.random(0, map_size - 1),
-   --       y = math.random(0, map_size - 1),
-   --       x_offset = math.random(-24,24),
-   --       y_offset = math.random(-24,24),
-   --    }
-   -- end
-
-   sw:p("load_batches.update")
+   sw:p("load_batches.item")
 
    local atlases = require("internal.global.atlases")
-   atlases.set(atlas, chara_atlas)
+   atlases.set(atlas, chara_atlas, item_atlas)
 
    return {
-      map = map_batch,
-      chara = chara_batch,
    }
 end
 

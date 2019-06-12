@@ -65,11 +65,13 @@ function pool:add_object(obj, x, y)
    assert(self.content[obj.uid] == nil)
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
+   assert(obj.pool == nil)
 
    local entry = { data = obj, array_index = #self.uids + 1 }
 
    obj.x = x
    obj.y = y
+   obj.pool = self
 
    table.insert(self.uids, obj.uid)
    self.content[obj.uid] = entry
@@ -82,6 +84,7 @@ function pool:move_object(obj, x, y)
    assert(self:exists(obj.uid))
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
+   assert(obj.pool == self)
 
    table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
    table.insert(self.positional[y][x], obj.uid)
@@ -111,6 +114,9 @@ function pool:remove(uid)
 
    local obj = entry.data
    table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
+
+   assert(obj.pool == self)
+   obj.pool = nil
 
    return obj
 end

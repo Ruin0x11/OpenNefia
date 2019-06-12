@@ -6,7 +6,17 @@ data:add_type {
       max_hp = schema.Number,
       on_death = schema.Optional(schema.Function),
    },
-   index_on = "name"
+}
+
+data:add_type {
+   name = "item",
+   schema = schema.Record {
+      name = schema.String,
+      image = schema.Number,
+      weight = schema.Number,
+      value = schema.Number,
+      quality = schema.Number,
+   },
 }
 
 data:add_type {
@@ -177,6 +187,9 @@ data:add_multi(
    },
    {
       _id = "on_chara_pass_turn"
+   },
+   {
+      _id = "on_game_start"
    }
 )
 
