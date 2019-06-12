@@ -1,0 +1,516 @@
+* invctrl ops
+NOTE: on_item_selected and on_filter must be extracted as separate components. This is to allow shortcuts.
+** 1 - general inventory ("X")
+_properties_
+- Supports tagging as no-drop.
+_on_filter_
+- Include items on chara.
+- Include items on the ground.
+- Include equipped items.
+- Permit harvest items.
+_when item is chosen after filter_
+- Sort equipped items first, but after items on ground.
+_on_item_selected_
+- Display item description. Jump back to start.
+  + vanilla re-runs filtering everything after this, but it may not be necessary now.
+_keybinds_
+- x: mark no-drop
+** 2 - dropping
+_properties_
+- If multidrop disabled, supports enabling multidrop.
+_on_filter_
+- Include items on chara.
+- Permit harvest items.
+_on_item_selected_
+- Fail if item is no-drop.
+- Fail if map is full (technical limitation).
+- Fail if map is full (declared item limit on map) and category != 60000 (furniture).
+- If number of items > 1, ask how many items to drop. If canceled, fail.
+- Drop the item.
+- If multi-drop is on, don't exit the menu. Else, exit the menu as turn_end.
+_keybinds_
+- x: turn on multidrop
+_on_menu_exit_
+- If multidrop enabled, return turn_end.
+** 3 - picking up multiple
+_on_draw_
+- Do not distinguish items on ground.
+_on_filter_
+- Include items on the ground.
+- Reject items on chara.
+_after sorting_
+- Return turn_end if no items (safe fallback, should have been caught earlier by Command.get)
+_on_item_selected_
+- Permit if item is no-drop.
+- Fail if item not owned/harvested.
+- Query amount if mode is 6 and number > 1. If canceled, fail.
+- Try to move the item to the player/chara's inventory.
+  + NOTE: This needs to stop the inventory menu and return turn_end if harvesting and picking up succeeded.
+- Try to move the item to the player/chara's inventory.
+** 5 - eating
+_properties_
+- Supports shortcuts.
+_on_filter_
+- Include items on chara.
+- Include items on the ground.
+- Include equipped items.
+- Remove if item type != 57000 (food) and type != 91000 (traveler's food) and item material is not raw.
+_on_item_selected_
+- Fail if item is no-drop.
+- Fail if nutrition > 10000.
+- Try to eat the item. Return the result.
+** 6 - equipping
+- Include items on chara.
+_on_item_selected_
+- Fail if player has the fairy trait and the item is too heavy.
+- Equip the item. (always succeeds)
+- Control jumps back to calling equipment menu.
+_before_menu_exit_
+- Control jumps back to equipment menu. (no-op)
+** 7 - reading
+_properties_
+- Supports shortcuts.
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if item is not readable.
+- If map is a world map:
+  + Remove if subcategory != 53100 (deed) and item is not treasure map.
+_on_item_selected_
+- Try to read the item. Return the result.
+** 8 - drinking
+_properties_
+- Supports shortcuts.
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if item is not drinkable.
+_on_item_selected_
+- Try to drink the item. Return the result.
+** 9 - zapping
+_properties_
+- Supports shortcuts.
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if item is not zappable.
+_on shortcut_
+- Fails if in world map.
+_on_item_selected_
+- Try to zap the item. Return the result.
+** 10 - giving/taking ally items (invally = 1)
+_on_filter_
+- Include items on chara.
+_on_item_selected_
+- Fail if item is no-drop.
+- Fail if target is sleeping.
+- Fail if target's inventory is full.
+- Run the ally item giving logic. Depending on the result, continue the menu or return turn_end (or similar).
+** 11 - shop buying (uses tc?, invfile = cdata[tc].shop_store_id)
+_on_draw_
+- Subtext is price.
+- Do not distinguish items on ground. (temporary inventory)
+_on filter_
+- Include items on the ground. (actually the temp inventory loaded in)
+- Reject items on chara. (inventory is not on chara, it is in tempinv)
+- Show money.
+- Everything from shop selling.
+- Remove if item is gold piece or platinum coin.
+- If item is on ground:
+  + Permit if item position differs from character position.
+_on_item_selected_
+- Fail if item is no-drop.
+- Fail if item not owned/harvested.
+- Query amount if mode is 6 and number > 1. If canceled, fail.
+  + Also print buying amount message.
+- Prompt if mode == 6 and is configured. If no, fail.
+  + Also print buying prompt.
+  + Fail if player/chara doesn't have enough money.
+- Try to move the item to the player/chara's inventory.
+_before_menu_exit_
+- Load shoptemp.
+** 12 - shop selling (uses tc?)
+_on_draw_
+- Subtext is price.
+_on filter_
+- Include items on chara.
+- Show money.
+- If user is trading:
+  + Remove if item weight >= 0 (cargo indication).
+  + Remove if type is not 92000 (cargo).
+- Else:
+  + Remove if item weight < 0 (cargo indication) and item type is 92000 (cargo).
+- Remove if item value <= 1.
+- Remove if item is precious.
+- Remove if item.param3 < 0.
+- Remove if item quality is special.
+_on_item_selected_
+- Character using becomes -1.
+- Fail if item is no-drop.
+- Fail if item not owned/harvested.
+- Query amount if mode is 6 and number > 1. If canceled, fail.
+  + Also print selling amount message.
+- Prompt if mode == 6 and is configured. If no, fail.
+  + Also print selling prompt.
+  + Fail if shopkeeper doesn't have enough money and shopkeeper role is not cargo trader.
+- Try to move the item to the player/chara's inventory.
+_before_menu_exit_
+- Load shoptemp.
+** 13 - identifying
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Include equipped items.
+- Remove if item is completely identified.
+
+_when item is chosen after filter_
+- Sort equipped items first, but after items on ground
+_on_item_selected_
+- Try to identify. Print a message depending on the result.
+- Stack the item.
+- Return success.
+** 14 - using
+_properties_
+- Supports shortcuts.
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Include equipped items.
+- Remove if item is not usable and item is not alive.
+_on_item_selected_
+- Try to use the item. Return the result.
+** 15 - opening
+_properties_
+- Supports shortcuts.
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if type is not 72000 (container) or is not one of the following.
+  + deck
+_on shortcut_
+- Fails if in world map.
+_on_item_selected_
+- Try to open the item. Return the result.
+** 16 - cooking
+_on filter_
+- Include items on chara.
+- Remove if type is not 57000 (food).
+- Remove if item is already cooked (item.param2 != 0).
+_on_item_selected_
+- Return success. (?)
+** 17 - dipping
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if type is not 52000 (bottle of liquid) or is not one of the following.
+  + bait
+_on_item_selected_
+- Save selected item.
+- Push inventory context 18 (dipping target).
+** 18 - dipping target
+chained from 17
+
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Include equipped items.
+- If dipping item is bait:
+  + Remove if target is not fishing pole.
+- Remove if target is the same as the current dipping item.
+- Remove if the target is bottle of water.
+_on menu enter_
+- Print I18N formatted message with dipping item name.
+_on_item_selected_
+- Try to dip dipping target into item. Return result.
+** 19 - offering
+_on filter_
+- Include items on chara.
+- Include items on the ground.
+- Remove if item cannot be offered to god.
+_after filter_
+- Fail if no altar in player inventory or on ground.
+_on_item_selected_
+- Fail if item is no-drop.
+- Try to offer item. Return result.
+** 20 - trading
+_on filter_
+- Set inventory to target chara.
+- Include equipped items.
+- Remove if item is gold piece or platinum coin.
+_on_item_selected_
+- Save selected item.
+- Push inventory context 21 (trading target).
+** 21 - trading target
+chained from 20
+
+_on filter_
+- Include items on chara.
+- Remove if item isn't valuable enough for trading.
+  + (item.value * item.number < trade.value * trade.number / 2 * 3)
+- Remove if item is stolen.
+_when no items_
+- Display message and fail.
+_on menu enter_
+- Print I18N formatted message with trading item name.
+_on_item_selected_
+- Fail if item is no-drop.
+- Clear target character's continuous action.
+- Run trading logic. Return success.
+** 22 - take from container
+_on_draw_
+- Do not distinguish items on ground. (temp inventory)
+_on_filter_
+- Include items on the ground. (temp inventory)
+- Reject items on chara. (temp inventory)
+- If item is on ground:
+  + Permit if item position differs from character position.
+_on_item_selected_
+- Permit if item is no-drop.
+- Fail if item not owned/harvested.
+- Do not query amount. Amount becomes equal to item.number.
+- Try to move the item to the player/chara's inventory.
+_before_menu_exit_
+- Load shoptemp.
+*** sub 0 - boxes/casino (invfile = inv[ci].param1)
+- invsubroutine 1: casino
+
+_before_menu_exit_
+- If item count > 0, prompt leaving leftover items.
+*** sub 1 - inheritance chest
+_on_filter_
+- Delete cards and figures from the container.
+_on_item_selected_
+- Fail if no inheritance claim.
+- On success, decrement rights to succeed to and print message.
+*** sub 2 - general container? (invsubroutine = 1)
+*** sub 3 - cooler box/general container (inv[ci].param1 == 6)
+*** sub 4 - strange scientist rewards
+_on_item_selected_
+- On success, increment gift count of little sister quest and return success.
+*** sub 5 - four dimensional pocket
+_on_item_selected_
+- Fail if player does not have at least 10 SP.
+** 23 - equipment
+_on_filter_
+- Include items on chara.
+- Include equipped items.
+*** sub 0 - general
+(scroll of name, scroll of change material)
+
+_on filter_
+- Remove if type >= 50000 (non-equipment) and type != 60000 (furniture).
+*** sub 1 - weapons
+(scroll of enchant weapon)
+
+_on filter_
+- Remove if type != 10000 (melee weapon) and type != 24000 (ranged weapon)
+*** sub 2 - armor
+(scroll of enchant armor)
+
+_on filter_
+- Remove if (type < 12000 (helm) or type >= 24000 (ranged)) and (type < 30000 (ring) or type >= 50000 (non-equipment))
+*** sub 3 - fill charge
+_on filter_
+- Remove if item does not have charge.
+*** sub 4 - alchemy
+_on filter_
+- Remove if item is equipped.
+_on_item_selected_
+- Fail if item is no-drop.
+- Separate one item off stack.
+- Return success.
+*** sub 5 - draw charge
+_on filter_
+- Remove if type != 56000 (wands).
+*** sub 6 - flying
+_on filter_
+- Remove if item weight <= 0.
+- Remove if item is cooler box.
+*** sub 7 - garok's hammer
+_on filter_
+- Remove if item quality is miracle or greater.
+- Remove if type >= 50000 (non-equip).
+** 24 - put into container
+_on filtering_
+- Include items on chara.
+- Remove if type is 72000 (containers).
+*** sub 0 - master's delivery chest
+_on filtering_
+- If current map is Lumiest:
+  + (Guild logic) Update quota.
+- Else:
+  + (Harvest quest) Update quest data.
+- Remove item. Continue menu.
+_after filtering_
+- If current map is Lumiest:
+  + (Guild logic) Fail if no quota.
+_on_menu_open_
+- Print current guild quota. (was checked for >= 0 earlier)
+_on_item_selected_
+- If current map is Lumiest:
+  + (Guild logic) Remove if item is not ancient book or it is not decoded.
+- Else:
+  + (Harvest quest) Remove if item is not harvested.
+*** sub 2 - tax master's tax box
+_on filtering_
+- Remove if item is not bill.
+- Remove if own state is 4 (being harvested). [unnecessary]
+_on_item_selected_
+- Character using becomes -1.
+- Fail if not enough money as listed on selected bill.
+- Fail if no bills are outsanding.
+- Decrement gold and left bills.
+- Decrement item count.
+- Continue menu.
+*** sub 3 - cooler box/general container
+_on filtering_
+- Remove if type is not 57000 (seed/herb).
+_on_item_selected_
+- Character using becomes -1.
+- Fail if item is no-drop.
+- Fail if container is full.
+- Fail if item not owned/harvested.
+- Query amount if mode is 6 and number > 1. If canceled, fail.
+- Try to move the item to the item's inventory.
+*** sub 5 - four dimensional pocket
+_on_item_selected_
+- Fail if item is no-drop.
+- Fail if container is full.
+- Fail if container is too heavy (based on efp).
+- Fail if item is cargo.
+- Fail if player does not have at least 10 SP.
+- Fail if item not owned/harvested.
+- Query amount if mode is 6 and number > 1. If canceled, fail.
+- Try to move the item to the item's inventory.
+*** sub 8 - deck
+_on filtering_
+- Remove if item is not card.
+- Remove if item is not owned.
+- Remove if item doesn't have a character (subname).
+- Remove if card is already collected in global collection.
+_on_item_selected_
+- Character using becomes -1.
+- Put card in deck.
+- Decrement item number.
+- Continue menu.
+** 25 - take from ally inventory
+_on_draw_
+- Hides player's total weight note.
+- Draws ally body parts.
+_on_filter_
+- Set inventory to target chara.
+- Show money.
+- Include equipped items (on target chara).
+_on_item_selected_
+- Fail if player's inventory is full.
+- Fail with refusal if category is 77000 (ore).
+- Fail if item is cursed and equipped.
+- If wedding ring/band, decrement and continue menu.
+- If gold piece, set number to item number. Else, set number to 1.
+- Copy and transfer item to player. Stack item. Convert artifact.
+- Make ally wear most valuable equipment.
+- Refresh chara.
+- Refresh PCC.
+- Continue menu.
+** 26 - throwing
+_properties_
+- Supports shortcuts.
+_on filtering_
+- Include items on chara.
+- Include items on the ground.
+- Remove if type is not 52000 or is not one of the following items.
+  + kitty bank
+  + monster ball
+  + little ball
+  + tomato
+- Remove if item is monster ball and it is not empty (subname != 0)
+_on shortcut_
+- Fails if in world map.
+_on_item_selected_
+- Fail if target cannot be seen/route cannot be calculated.
+- Fail if target location is blocked. (FOV usually counts the target cell as unblocked even if solid)
+- Try to throw item. Return result.
+** 27 - stealing (uses tc)
+_on_draw_
+- Do not distinguish items on ground. (either from chara or ground but not both)
+_on filtering_
+- Add items from inventory of chara standing on target position.
+- Skip entirely if target chara is player or nonexistent.
+- Include items on the ground.
+- Include equipped items.
+- Show money.
+- Remove if on ground and own state is not 1.
+- When item is on ground:
+  + Remove if item position is not the same as targeting position.
+_when no items_
+- Display message and fail.
+  + If there is a target selected.
+  + If there is no target selected (items on square).
+_after filtering_
+- Fail if target is selected and target is ally.
+_on_item_selected_
+- Start stealing continuous action.
+- Return success.
+** (skill_shortcut / 10000): run skill shortcut (invsc = skill_shortcut % 10000)
+** 28 - buying with small medals
+_on_draw_
+- Subtext is medal cost.
+- Do not distinguish items on ground. (temp inv)
+_on_filter_
+- Reject items on chara. (temp inv)
+- If item is on ground: (temp inv)
+  + Permit if item position differs from character position.
+_when item is chosen after filter_
+- Set sort value to the item's value in medals
+_on_menu_open_
+- Print message with number of small medals in player inventory (or 0)
+_on_item_selected_
+- Fail if player's inventory is full.
+- Fail if not enough medals.
+- Subtact medals. Copy item. Convert artifact.
+- Continue menu.
+_before_menu_exit_
+- Load shoptemp.
+* The Law of (Inventory) Cycles
+The available actions in the inventory menu are dynamic depending on the context. This gets hard to support. There may be a need to pass the target of an action like stealing/chest opening to more than one menu context. Also the "drop" action is not mutually exclusive with the ones requiring a container and the ones that don't, due to the temporary inventory system.
+** 0 - General
+1 (general)
+2 (drop)
+5 (eat)
+7 (read)
+8 (drink)
+9 (zap)
+14 (use)
+15 (open)
+17 (dip)
+26 (throw)
+** 1 - World map
+1 (general)
+5 (eat)
+7 (read)
+8 (drink)
+14 (use)
+** 2 - Ally
+10 (give/take ally items)
+25 (ally body parts)
+** 3 - invcontainer > 0
+22 (take from chest)
+24 (put into chest)
+** 4 - Multidrop
+2 (drop)
+* Special item handling
+_when item is chosen after filter_
+- music disc: sort by BGM number in addition to type/ID
+** Shortcuts
+- Item to run is applied AFTER filtering. If it can be found in the player's inventory but was filtered out, the game assumes it was an item that couldn't be used in the global map (scrolls).
+  + To support, probably best to give a filtering API to get the list of items an inventory filter would apply if the screen were opened. Currently shortcuts are tied to the massive ctrl_inventory function.
+  + Shortcuts have to save the inventory context used to reapply the filter when the shortcut is ran. The shortcuts are tied to the invctrl they were set in.
+* invfile
+3: inheritance chest
+4: income box
+6: cooler box/container
+8: four dimensional pocket
+(other): shop id/shopkeeper's trunk/inv[ci].count
+
+* invcontainer
+maximum items that can be stored
