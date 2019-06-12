@@ -4319,7 +4319,6 @@ local tiles = {
 
 local packed = {}
 for _, v in ipairs(tiles) do
-   print(v.id)
    packed[v.id] = v
 end
 

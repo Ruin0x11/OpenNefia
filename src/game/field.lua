@@ -34,7 +34,12 @@ function field_layer:init()
    self.keys = InputHandler:new()
    self.keys:focus()
 
-   self.layers = {}
+   self.layers = {
+      "internal.layer.tile_layer",
+      "internal.layer.item_layer",
+      "internal.layer.chara_layer",
+      "internal.layer.shadow_layer",
+   }
 end
 
 local global_require = require
@@ -109,7 +114,9 @@ function field_layer:update_screen()
       self.renderer:update_draw_pos(player.x, player.y)
       self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
    end
-   self.renderer:update(self.map, self.player)
+
+   local dt = 0
+   self.renderer:update(dt)
 
    self:update_hud()
 end
@@ -130,6 +137,7 @@ function field_layer:update_hud()
 end
 
 function field_layer:update(dt, ran_action, result)
+   self.renderer:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb)

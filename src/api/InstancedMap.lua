@@ -3,6 +3,7 @@ local pool = require("internal.pool")
 local bresenham = require("thirdparty.bresenham")
 
 local Pos = require("api.Pos")
+local Log = require("api.Log")
 local Draw = require("api.Draw")
 local IObject = require("api.IObject")
 
@@ -99,11 +100,14 @@ function InstancedMap:clear(tile)
 end
 
 function InstancedMap:set_tile(x, y, tile)
-   if type(tile) == "string" then
-      tile = data["base.map_tile"][tile]
+   local id = tile
+   if type(id) == "string" then
+      tile = data["base.map_tile"][id]
    end
 
-   assert(tile ~= nil)
+   if tile == nil then
+      tile = {}
+   end
 
    if not self:is_in_bounds(x, y) then
       return
@@ -318,6 +322,10 @@ end
 
 function InstancedMap:iter_charas()
    return self:iter_objects("base.chara")
+end
+
+function InstancedMap:iter_items()
+   return self:iter_objects("base.item")
 end
 
 function InstancedMap:iter_objects(type_id)

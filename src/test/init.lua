@@ -10,6 +10,8 @@ t = require("test.test_helper")
 
 require("boot")
 
+t.mock_map()
+
 function run_tests(path)
    for file in lfs.dir(path) do
       if file ~= "." and file ~= ".." then

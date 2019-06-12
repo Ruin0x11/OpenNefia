@@ -331,3 +331,16 @@ function table.set(arr)
    end
    return tbl
 end
+
+--- Removes the specified indices from an array-like table. The
+--- indices must be an array of integers with no duplicates sorted in
+--- ascending order.
+function table.remove_indices(arr, inds)
+   local offset = 0
+   for _, ind in ipairs(inds) do
+      print(ind-offset,arr[ind-offset])
+      table.remove(arr, ind-offset)
+      offset = offset + 1
+   end
+   return arr
+end

@@ -23,6 +23,10 @@ end
 
 local handlers = {}
 
+handlers["base.wait"] = function(chara, params)
+   return "turn_end"
+end
+
 handlers["base.move"] = function(chara, params)
    return Action.move(chara, params.x, params.y)
 end

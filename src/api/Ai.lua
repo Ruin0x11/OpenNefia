@@ -1,7 +1,19 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
+local IAi = require("api.IAi")
 
 local Ai = {}
+
+local default_module
+
+function Ai.get_default_module()
+   return default_module
+end
+
+function Ai.set_default_module(ai)
+   assert_is_an(IAi, ai)
+   default_module = ai
+end
 
 function Ai.send_event(chara, event, params)
    return chara.ai:event(event, params)

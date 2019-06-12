@@ -13,8 +13,10 @@ local function load_mod(mod_name, init_lua_path)
    init_lua_path = string.gsub(init_lua_path, "/", ".")
    init_lua_path = string.strip_suffix(init_lua_path, ".lua")
 
+   local mod_env = env.generate_sandbox(mod_name)
+
    local success, chunk = xpcall(
-      function() return env.load_sandboxed_chunk(init_lua_path, mod_name) end,
+      function() return env.load_sandboxed_chunk(init_lua_path, mod_env) end,
       function(err) return debug.traceback(err, 2) end
    )
    return success, chunk
@@ -51,6 +53,7 @@ function mod.calculate_load_order()
          end
 
          if type(manifest.dependencies) == "table" then
+            graph:add(0, mod_id) -- root
             for dep_id, version in pairs(manifest.dependencies) do
                graph:add(dep_id, mod_id)
             end
@@ -60,7 +63,9 @@ function mod.calculate_load_order()
       end
    end
 
-   return graph:sort()
+   local order = graph:sort()
+   table.remove(order, 1)
+   return order
 end
 
 function mod.load_mods()

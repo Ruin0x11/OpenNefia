@@ -138,7 +138,7 @@ local function try_place(chara, x, y, current, map)
    local real_x, real_y = chara_get_place_pos(chara, x, y, map)
 
    if real_x ~= nil then
-      return current:transfer_to_with_pos(map, chara._type, chara.uid, real_x, real_y)
+      return current:transfer_to(map, chara._type, chara.uid, real_x, real_y)
    end
 
    return nil

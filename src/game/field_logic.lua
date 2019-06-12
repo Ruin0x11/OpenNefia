@@ -4,7 +4,6 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
-local StatusEffect = require("api.StatusEffect")
 local World = require("api.World")
 local draw = require("internal.draw")
 local field = require("game.field")
@@ -20,7 +19,6 @@ function field_logic.setup()
    do
       local me = Chara.create("base.player", 10, 10)
       Chara.set_player(me)
-      StatusEffect.apply(me, "base.gravity", 10)
       -- TODO
       field.allies = {}
    end
@@ -205,9 +203,9 @@ function field_logic.pass_turns()
    -- proc mef
    -- proc buff
 
-   local result = StatusEffect.proc_turn_begin(chara)
-   if result ~= nil then
-      return result, chara
+   local result = Event.trigger("base.on_chara_pass_turn", {chara=chara})
+   if result.turn_result ~= nil then
+      return result.turn_result, chara
    end
 
    -- RETURN: proc drunk
@@ -265,10 +263,6 @@ function field_logic.npc_turn(npc)
    local action = npc_ai.decide_action(npc)
    assert(action ~= nil)
 
-   if action == "turn_end" then
-      return "turn_end", npc
-   end
-
    local result = npc_ai.handle_ai_action(npc, action)
    assert(result ~= nil)
 
@@ -280,9 +274,9 @@ function field_logic.turn_end(chara)
       return "pass_turns"
    end
 
-   Event.trigger("base.on_chara_turn_end", {chara=chara})
+   local result = Event.trigger("base.on_chara_turn_end", {chara=chara, regeneration=true})
+   local regen = result.regeneration
 
-   local regen = StatusEffect.proc_turn_end(chara)
    if Chara.is_player(chara) then
       -- hunger
       -- sleep

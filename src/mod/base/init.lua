@@ -64,21 +64,6 @@ data:add_type {
 }
 
 data:add_type {
-   name = "status_effect",
-   schema = schema.Record {
-      related_element = schema.Optional(schema.String),
-      before_apply = schema.Optional(schema.Function),
-      power_reduction_factor = schema.Optional(schema.Number),
-      additive_power = schema.Optional(schema.Function),
-      on_turn_begin = schema.Optional(schema.Function),
-      on_turn_end = schema.Optional(schema.Function),
-      elona_ai_handler = schema.Optional(schema.Function),
-      elona_ai_priority = schema.Optional(schema.Number),
-      ui_indicator = schema.Table, -- { string, color } or { [int] = { string, color }, ... }
-   }
-}
-
-data:add_type {
    name = "config_option_boolean",
    schema = schema.Record {
       default = schema.Boolean,
@@ -189,6 +174,9 @@ data:add_multi(
    },
    {
       _id = "before_chara_turn_start"
+   },
+   {
+      _id = "on_chara_pass_turn"
    }
 )
 

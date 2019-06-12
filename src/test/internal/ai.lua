@@ -1,5 +1,5 @@
 local Chara = require("api.Chara")
-local ElonaAi = require("api.ElonaAi")
+local ElonaAi = require("mod.elona_ai.api.ElonaAi")
 
 test("AI idle", function()
         t.mock_map()

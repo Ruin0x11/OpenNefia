@@ -133,8 +133,8 @@ local function init_chara(chara)
    chara.status_effects = {}
 
    local IAi = require("api.IAi")
-   local ElonaAi = require("api.ElonaAi")
-   chara.ai = ElonaAi:new(chara.ai_config)
+   local ai_module = Ai.get_default_module()
+   chara.ai = ai_module:new(chara.ai_config)
    assert_is_an(IAi, chara.ai)
 end
 
@@ -255,7 +255,7 @@ function Chara.damage_hp(victim, amount, source, params)
    params = params or {}
 
    local event_params = {
-      victim = victim,
+      chara = victim,
       amount = amount,
       source = source,
       params = params

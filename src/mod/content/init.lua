@@ -69,6 +69,16 @@ local function prevent_turn(threshold)
    end
 end
 
+local Event = require("api.Event")
+
+local ElonaAi = require("mod.elona_ai.api.ElonaAi")
+local Ai = require("api.Ai")
+ElonaAi.install()
+Ai.set_default_module(ElonaAi)
+
+local StatusEffect = require("mod.status_effects.api.StatusEffect")
+StatusEffect.install()
+
 data:add_multi(
    "base.status_effect",
    {
@@ -79,14 +89,12 @@ data:add_multi(
       power_reduction_factor = 6,
       additive_power = function(p) return p.turns / 3 + 1 end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.blindness", 1)
-         if StatusEffect.get_turns(p.victim, "base.blindness" > 1) then
+         StatusEffect.heal(p.chara, "base.blindness", 1)
+         if StatusEffect.get_turns(p.chara, "base.blindness" > 1) then
             -- emotion icon
          end
       end,
       elona_ai_handler = function(p)
-         local ElonaAi = require("api.ElonaAi")
          local Rand = require("api.Rand")
          if Rand.percent_chance(70) then
             return { action = ElonaAi.do_idle_action(p.ai, p.chara, p.target) }
@@ -103,14 +111,12 @@ data:add_multi(
       power_reduction_factor = 7,
       additive_power = function(p) return p.turns / 3 + 1 end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.confusion", 1)
-         if StatusEffect.get_turns(p.victim, "base.confusion" > 1) then
+         StatusEffect.heal(p.chara, "base.confusion", 1)
+         if StatusEffect.get_turns(p.chara, "base.confusion" > 1) then
             -- emotion icon
          end
       end,
       elona_ai_handler = function(p)
-         local ElonaAi = require("api.ElonaAi")
          local Rand = require("api.Rand")
          if Rand.percent_chance(60) then
             return { action = ElonaAi.do_idle_action(p.ai, p.chara, p.target) }
@@ -128,8 +134,7 @@ data:add_multi(
       additive_power = function(p) return p.turns / 3 + 1 end,
       on_turn_begin = prevent_turn(),
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.paralysis", 1)
+         StatusEffect.heal(p.chara, "base.paralysis", 1)
 
          return {
             regeneration = false
@@ -148,12 +153,11 @@ data:add_multi(
       on_turn_end = function(p)
          local Chara = require("api.Chara")
          local Rand = require("api.Rand")
-         local StatusEffect = require("api.StatusEffect")
          local constitution = 100
          -- TODO: acts as damage source (self?)
-         Chara.damage_hp(p.victim, Rand.rnd(2 + math.floor(constitution / 10)), { kind = -4 })
-         StatusEffect.heal(p.victim, "base.poison", 1)
-         if StatusEffect.get_turns(p.victim, "base.poison") > 1 then
+         Chara.damage_hp(p.chara, Rand.rnd(2 + math.floor(constitution / 10)), { kind = -4 })
+         StatusEffect.heal(p.chara, "base.poison", 1)
+         if StatusEffect.get_turns(p.chara, "base.poison") > 1 then
             -- emotion icon
          end
 
@@ -174,15 +178,14 @@ data:add_multi(
          local Rand = require("api.Rand")
          local Map = require("api.Map")
          local Gui = require("api.Gui")
-         local StatusEffect = require("api.StatusEffect")
          if p.turns % 3 == 0 then
-            if Map.is_in_fov(p.victim.x, p.victim.y) then
-               Gui.mes(p.victim.uid .. ": Being choked.")
+            if Map.is_in_fov(p.chara.x, p.chara.y) then
+               Gui.mes(p.chara.uid .. ": Being choked.")
             end
          end
-         StatusEffect.apply(p.victim, "base.choked", 1)
-         if StatusEffect.get_turns(p.victim, "base.choked") > 15 then
-            Chara.damage_hp(p.victim, 500, { kind = -21 })
+         StatusEffect.apply(p.chara, "base.choked", 1)
+         if StatusEffect.get_turns(p.chara, "base.choked") > 15 then
+            Chara.damage_hp(p.chara, 500, { kind = -21 })
          end
 
          return {
@@ -201,13 +204,12 @@ data:add_multi(
       on_turn_begin = prevent_turn(),
       on_turn_end = function(p)
          local Chara = require("api.Chara")
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.sleep", 1)
-         if StatusEffect.get_turns(p.victim, "base.sleep") > 1 then
+         StatusEffect.heal(p.chara, "base.sleep", 1)
+         if StatusEffect.get_turns(p.chara, "base.sleep") > 1 then
             -- emotion icon
          end
-         Chara.heal_hp(p.victim, 1)
-         Chara.heal_mp(p.victim, 1)
+         Chara.heal_hp(p.chara, 1)
+         Chara.heal_mp(p.chara, 1)
       end
    },
    {
@@ -218,8 +220,7 @@ data:add_multi(
       power_reduction_factor = nil,
       additive_power = nil,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.gravity", 1)
+         StatusEffect.heal(p.chara, "base.gravity", 1)
       end,
       ui_indicator = { text = "Gravity", color = {0, 80, 80} },
    },
@@ -231,8 +232,7 @@ data:add_multi(
       power_reduction_factor = nil,
       additive_power = nil,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.furious", 1)
+         StatusEffect.heal(p.chara, "base.furious", 1)
       end,
    },
    {
@@ -243,11 +243,9 @@ data:add_multi(
       power_reduction_factor = 7,
       additive_power = 0,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.fear", 1)
+         StatusEffect.heal(p.chara, "base.fear", 1)
       end,
       elona_ai_handler = function(p)
-         local ElonaAi = require("api.ElonaAi")
          local Chara = require("api.Chara")
          if not (Chara.is_ally(p.chara) and Chara.is_player(p.target)) then
             return { action = ElonaAi.do_noncombat_action(p.ai, p.chara, p.target, true) }
@@ -265,8 +263,7 @@ data:add_multi(
       additive_power = function(p) return p.turns / 3 + 1 end,
       on_turn_begin = prevent_turn(60),
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.dimming", 1)
+         StatusEffect.heal(p.chara, "base.dimming", 1)
          -- emotion icon
       end
    },
@@ -278,12 +275,11 @@ data:add_multi(
       power_reduction_factor = 25,
       additive_power = function(p) return p.turns end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
          local Chara = require("api.Chara")
          local Rand = require("api.Rand")
 
-         Chara.damage_hp(p.victim, Rand.rnd(math.floor(p.victim.hp * (1 + p.turns / 4) / 100 + 3) + 1), { kind = -13 })
-         StatusEffect.heal(p.victim, "base.bleeding", 1)
+         Chara.damage_hp(p.chara, Rand.rnd(math.floor(p.chara.hp * (1 + p.turns / 4) / 100 + 3) + 1), { kind = -13 })
+         StatusEffect.heal(p.chara, "base.bleeding", 1)
          return {
             regeneration = false
          }
@@ -297,8 +293,7 @@ data:add_multi(
       power_reduction_factor = nil,
       additive_power = nil,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.wetness", 1)
+         StatusEffect.heal(p.chara, "base.wetness", 1)
       end,
       ui_indicator = { text = "Wet", color = {0, 0, 160} },
    },
@@ -314,8 +309,7 @@ data:add_multi(
          Gui.mes("*hic* ")
       end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
-         StatusEffect.heal(p.victim, "base.drunkenness", 1)
+         StatusEffect.heal(p.chara, "base.drunkenness", 1)
          -- emotion icon
       end,
       ui_indicator = { text = "Drunk", color = {100, 0, 100} },
@@ -328,28 +322,27 @@ data:add_multi(
       power_reduction_factor = 8,
       additive_power = function(p) return p.turns / 3 + 1 end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
          local Gui = require("api.Gui")
          local Rand = require("api.Rand")
          local Map = require("api.Map")
-         if Map.is_in_fov(p.victim.x, p.victim.y) then
+         if Map.is_in_fov(p.chara.x, p.chara.y) then
             if Rand.one_in(3) then
                Gui.txt("Insane.")
             end
          end
          if Rand.one_in(5) then
-            StatusEffect.apply(p.victim, "base.confusion", Rand.rnd(10))
+            StatusEffect.apply(p.chara, "base.confusion", Rand.rnd(10))
          end
          if Rand.one_in(5) then
-            StatusEffect.apply(p.victim, "base.dimming", Rand.rnd(10))
+            StatusEffect.apply(p.chara, "base.dimming", Rand.rnd(10))
          end
          if Rand.one_in(5) then
-            StatusEffect.apply(p.victim, "base.sleep", Rand.rnd(5))
+            StatusEffect.apply(p.chara, "base.sleep", Rand.rnd(5))
          end
          if Rand.one_in(5) then
-            StatusEffect.apply(p.victim, "base.fear", Rand.rnd(10))
+            StatusEffect.apply(p.chara, "base.fear", Rand.rnd(10))
          end
-         StatusEffect.heal(p.victim, "base.insanity", 1)
+         StatusEffect.heal(p.chara, "base.insanity", 1)
          -- emotion icon
       end
    },
@@ -361,7 +354,6 @@ data:add_multi(
       power_reduction_factor = 10,
       additive_power = function(p) return p.turns / 10 + 1 end,
       on_turn_end = function(p)
-         local StatusEffect = require("api.StatusEffect")
          local Rand = require("api.Rand")
          local Chara = require("api.Chara")
          local result = {}
@@ -372,19 +364,16 @@ data:add_multi(
          if Rand.one_in(5) then
             result.regeneration = false
          end
-         if not Chara.is_ally(p.victim) then
-            -- if p.victim.quality >= "miracle"
+         if not Chara.is_ally(p.chara) then
+            -- if p.chara.quality >= "miracle"
             if Rand.one_in(200) then
-               StatusEffect.heal(p.victim, "base.sickness")
+               StatusEffect.heal(p.chara, "base.sickness")
             end
          end
          return result
       end
    }
 )
-
-local ElonaAi = require("api.ElonaAi")
-ElonaAi.install()
 
 local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
 
@@ -397,7 +386,20 @@ data:add {
 
 EmotionIcon.install("base.default")
 
-local Event = require("api.Event")
+
+local DamagePopup = require("mod.damage_popups.api.DamagePopup")
+
+DamagePopup.install()
+
+Event.register("base.after_damage_hp",
+"damage popups",
+function(p)
+   local Map = require("api.Map")
+   if Map.is_in_fov(p.chara.x, p.chara.y) then
+      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
+   end
+end)
+
 -- Event.register(
 -- "base.before_ai_decide_action",
 -- "nope",
@@ -407,16 +409,16 @@ local Event = require("api.Event")
 -- end)
 
 -- TODO: if set, prevent hooks with 'name' being run:
---   params.blocked = { "other_hook" }
+--   params._blocked = { "other_hook" }
 
 Event.register(
    "base.on_player_bumped_into_chara",
    "nande POISON nan dayo",
    function(params)
       if params.relation == "enemy" then
-         local StatusEffect = require("api.StatusEffect")
+         local StatusEffect = require("mod.status_effects.api.StatusEffect")
          local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
-         StatusEffect.apply(params.on_cell, "base.paralysis", 100)
+         StatusEffect.apply(params.on_cell, "base.poison", 100)
       end
 end)
 
@@ -428,7 +430,6 @@ data:add {
       local InstancedMap = require("api.InstancedMap")
       local Map = require("api.Map")
 
-      print(inspect(p))
       local width = p.width or 30
       local height = p.height or 50
       local map = InstancedMap:new(width, height)

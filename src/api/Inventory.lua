@@ -14,7 +14,6 @@ function Inventory:init(max_size, type_id, x, y)
    self.pool = pool:new(self.type_id, uids, 1, 1)
 
    self.filters = {}
-   self.sorted_indices = nil
 end
 
 function Inventory:take_from(uid, other)
@@ -43,12 +42,7 @@ function Inventory:drop(uid, x, y, map)
    self.pool:transfer_to_with_pos(map:get_pool(self.type_id), uid, x or self.x, y or self.y)
 end
 
-function Inventory:sort_by(comparator)
-   if comparator == nil then
-      self.sorted_indices = nil
-      return
-   end
-
+function Inventory:sorted_by(comparator)
    local indices = table.of(function(i) return i end, self.pool:len())
 
    local comp = function(i, j)
@@ -56,7 +50,7 @@ function Inventory:sort_by(comparator)
    end
 
    table.sort(indices, comp)
-   self.sorted_indices = indices
+   return table.map(indices, function(ind) return self:at(ind) end, true)
 end
 
 function Inventory:contains(uid)
@@ -72,9 +66,6 @@ function Inventory:len()
 end
 
 function Inventory:at(i)
-   if self.sorted_indices then
-      i = self.sorted_indices[i]
-   end
    return self.pool:at(i)
 end
 

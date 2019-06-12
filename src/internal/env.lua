@@ -96,7 +96,6 @@ function env.generate_sandbox(mod_name)
       sandbox[k] = _G[k]
    end
 
-   print(mod_name)
    sandbox["_MOD_NAME"] = mod_name
 
    sandbox["require"] = env.safe_require

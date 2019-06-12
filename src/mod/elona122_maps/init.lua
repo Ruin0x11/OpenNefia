@@ -35,7 +35,6 @@ function convert_122(gen, params)
    local size = width * height
    local tile_ids = unp(size, map)
 
-   print(width,height)
    local i = 1
    for y=0,height-1 do
       for x=0,width-1 do
@@ -44,7 +43,6 @@ function convert_122(gen, params)
          local new_tile = tiles[string.format("%s_%s", atlas_no, tile_id)]
 
          if new_tile == nil then
-            print("missing",atlas_no, tile_id)
             assert(atlas_no == 2)
             assert(same[tile_id])
 

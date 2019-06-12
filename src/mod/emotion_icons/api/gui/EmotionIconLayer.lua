@@ -7,6 +7,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local EmotionIconLayer = class("EmotionIconLayer", IDrawLayer)
 
 function EmotionIconLayer:init()
+   self.coords = Draw.get_coords()
    self.icons = {}
    self.reupdate = true
 end
@@ -41,7 +42,8 @@ function EmotionIconLayer:draw(draw_x, draw_y)
    for k, v in pairs(self.icons) do
       local i = self.t[v.id]
       if i ~= nil then
-         i:draw(v.x * 48 + 4 + 16 - draw_x, v.y * 48 - 16 - draw_y)
+         local x, y = self.coords:tile_to_screen(v.x, v.y)
+         i:draw(x + 4 + 16 - draw_x, y - 16 - draw_y)
       end
    end
 end

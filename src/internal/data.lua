@@ -189,7 +189,6 @@ function proxy:iter()
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])
    end
-   print("dood")
    return iter, {iter=inner_iter,state=inner_state}, inner_index
 end
 
