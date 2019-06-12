@@ -27,6 +27,7 @@ Draw.line = draw.line
 Draw.set_root = draw.set_root
 Draw.with_canvas = draw.with_canvas
 Draw.clear = draw.clear
+Draw.wait = draw.wait
 
 function Draw.add_async_callback(cb)
    if type(cb) ~= "function" then

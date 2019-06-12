@@ -112,6 +112,10 @@ function KeyHandler:handle_repeat(key, dt)
       end
    end
 
+   if self.pressed["shift"] then
+      it.delay = 10
+   end
+
    self.repeat_delays[key] = it
 end
 

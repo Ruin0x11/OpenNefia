@@ -47,12 +47,11 @@ function chara_layer:calc_scroll(map)
 end
 
 function chara_layer:scroll_one()
-   if self.scroll_frames % 1 == 0 then
+   local tw, th = self.coords:get_size()
    for _, scroll in ipairs(self.scroll) do
-      local p = 1 - (self.scroll_frames/self.scroll_max_frames)
-      local sx, sy = (scroll.dx - (p * scroll.dx)) * 48, (scroll.dy - (p * scroll.dy)) * 48
+      local p = 1 - ((self.scroll_frames-1)/self.scroll_max_frames)
+      local sx, sy = (scroll.dx - (p * scroll.dx)) * tw, (scroll.dy - (p * scroll.dy)) * th
       self.chara_batch:set_tile_offsets(scroll.ind, sx, sy)
-   end
    end
    self.scroll_frames = self.scroll_frames - 1
 
@@ -60,7 +59,6 @@ function chara_layer:scroll_one()
 end
 
 function chara_layer:update(dt, screen_updated)
-   print("upd",screen_updated,self.scroll_consecutive)
    if not screen_updated then
       self.scroll_consecutive = 0
       return false
@@ -90,6 +88,14 @@ function chara_layer:update(dt, screen_updated)
    -- sprites are updated.
    local scroll = self:calc_scroll(map)
 
+   -- TODO: This has to be deferred to the final scroll frame, because
+   -- the shadow map has already been updated by this point. This can
+   -- cause the rendering order to differ from vanilla:
+   --
+   --   - In vanilla, the screen is first scrolled before the FOV map
+   --     is updated. This will cause items to only appear after the
+   --     scroll is finished.
+   --   - In Next, the
    for _, c in map:iter_charas() do
       local show = c.state == "Alive" and map:is_in_fov(c.x, c.y)
       local hide = not show
@@ -128,7 +134,8 @@ function chara_layer:update(dt, screen_updated)
       self.scroll_consecutive = self.scroll_consecutive + 1
       self.scroll = scroll
 
-      local max = 10
+      local max = 12
+      max = 6
 
       self.scroll_max_frames = max
       self.scroll_frames = self.scroll_max_frames

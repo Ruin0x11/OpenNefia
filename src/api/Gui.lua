@@ -8,6 +8,10 @@ function Gui.update_screen()
    field:update_screen()
 end
 
+function Gui.scroll_screen()
+   field:update_screen()
+end
+
 function Gui.wait(wait)
    Gui.update_screen()
    draw.wait(wait)

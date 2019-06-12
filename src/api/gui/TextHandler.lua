@@ -88,13 +88,15 @@ function TextHandler:halt_input()
    self.halted = true
 end
 
+function TextHandler:update_repeats()
+end
+
 function TextHandler:run_key_action(key)
    if self.bindings[key] then
       self.bindings[key]()
    elseif self.bindings["text_entered"] then
       self.bindings["text_entered"](key)
    end
-
 end
 
 function TextHandler:run_actions()

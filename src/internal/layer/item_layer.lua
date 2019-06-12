@@ -21,7 +21,7 @@ function item_layer:reset()
    self.batch_inds = {}
 end
 
-function item_layer:update(dt, screen_updated)
+function item_layer:update(dt, screen_updated, scroll_frames)
    if not screen_updated then return end
 
    self.item_batch.updated = true

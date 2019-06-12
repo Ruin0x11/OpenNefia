@@ -9,6 +9,7 @@ function shadow_layer:init(width, height, coords)
    local coords = Draw.get_coords()
 
    self.shadow_batch = shadow_batch:new(width, height, coords)
+   self.reupdate = true
 end
 
 function shadow_layer:relayout()
@@ -18,8 +19,14 @@ function shadow_layer:reset()
    self.batch_inds = {}
 end
 
-function shadow_layer:update(dt, screen_updated)
-   if not screen_updated then return end
+function shadow_layer:update(dt, screen_updated, scroll_frames)
+   if not (screen_updated or self.reupdate) then return false end
+
+   -- In vanilla, the shadow map is only updated after the screen
+   -- finishes scrolling. The following code simulates this.
+   if not self.reupdate and scroll_frames > 0 then
+      return true
+   end
 
    self.shadow_batch.updated = true
 
@@ -32,6 +39,8 @@ function shadow_layer:update(dt, screen_updated)
    end
 
    self.reupdate = false
+
+   return false
 end
 
 function shadow_layer:draw(draw_x, draw_y)

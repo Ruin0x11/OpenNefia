@@ -18,7 +18,12 @@ function field_renderer:init(width, height, layers)
 
    self.draw_coroutines = {}
    self.layers = {}
-   self.scroll_info = {}
+
+   self.scroll = nil
+   self.scroll_frames = 0
+   self.scroll_max_frames = 0
+   self.scroll_x = 0
+   self.scroll_y = 0
 
    for _, require_path in ipairs(layers) do
       local layer, err = package.try_require(require_path)
@@ -37,7 +42,13 @@ function field_renderer:init(width, height, layers)
    end
 end
 
-function field_renderer:update_draw_pos(player_x, player_y)
+function field_renderer:set_scroll(dx, dy)
+   self.scroll = { dx = dx, dy = dy }
+   self.scroll_max_frames = 6
+   self.scroll_frames = self.scroll_max_frames
+end
+
+function field_renderer:update_draw_pos(player_x, player_y, no_scroll)
    local draw_x, draw_y = self.coords:get_draw_pos(player_x,
                                                    player_y,
                                                    self.width,
@@ -45,8 +56,8 @@ function field_renderer:update_draw_pos(player_x, player_y)
                                                    Draw.get_width(),
                                                    Draw.get_height())
 
-   -- TODO: handle scrolling
-   if draw_x ~= self.draw_x or draw_y ~= self.draw_y then
+   if not no_scroll then
+      self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y)
    end
 
    self:set_draw_pos(draw_x, draw_y)
@@ -63,8 +74,8 @@ function field_renderer:add_async_draw_callback(cb)
 end
 
 function field_renderer:draw()
-   local draw_x = self.draw_x
-   local draw_y = self.draw_y
+   local draw_x = self.draw_x + self.scroll_x
+   local draw_y = self.draw_y + self.scroll_y
 
    for _, l in ipairs(self.layers) do
       l:draw(draw_x, draw_y)
@@ -84,9 +95,23 @@ function field_renderer:draw()
 end
 
 function field_renderer:update(dt)
+   if self.scroll then
+      self.scroll_frames = self.scroll_frames - 1
+      if self.scroll_frames == 0 then
+         self.scroll = nil
+         self.scroll_x = 0
+         self.scroll_y = 0
+      else
+         local tw, th = self.coords:get_size()
+         local p = 1 - (self.scroll_frames/self.scroll_max_frames)
+         self.scroll_x = (self.scroll.dx - (p * self.scroll.dx))
+         self.scroll_y = (self.scroll.dy - (p * self.scroll.dy))
+      end
+   end
+
    local going = false
    for _, l in ipairs(self.layers) do
-      local result = l:update(dt, self.screen_updated)
+      local result = l:update(dt, self.screen_updated, self.scroll_frames)
       if result then -- not nil or false
          going = true
       end

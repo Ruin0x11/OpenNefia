@@ -376,8 +376,9 @@ end
 local framerate = 60
 
 function draw.wait(msecs)
-   local msecs_per_frame = (1 / framerate) / 1000
-   local frames = msecs / msecs_per_frame
+   local msecs_per_frame = (1 / framerate) * 1000
+   local frames = msecs / msecs_per_frame / 1000
+   print(msecs,msecs_per_frame,frames)
    love.timer.sleep(frames)
 end
 

@@ -50,6 +50,11 @@ function npc_ai.handle_ai_action(chara, action)
    local id = action[1]
    local params = action[2]
 
+   if id ~= "base.move" and id ~= "base.wait" then
+      print(id)
+      Gui.scroll_screen()
+   end
+
    local handler = handlers[id]
    if handler then
       return handler(chara, params)

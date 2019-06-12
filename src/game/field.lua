@@ -28,6 +28,7 @@ function field_layer:init()
    self.repl = nil
 
    self.map_changed = false
+   self.no_scroll = true
 
    self:init_global_data()
 
@@ -82,6 +83,7 @@ function field_layer:set_map(map)
    self.map = map
    self.renderer = field_renderer:new(map.width, map.height, self.layers)
    self.map_changed = true
+   self.no_scroll = true
 end
 
 function field_layer:relayout(x, y, width, height)
@@ -104,14 +106,16 @@ function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object(_type, uid)
 end
 
-function field_layer:update_screen()
+function field_layer:update_screen(no_scroll)
    if not self.is_active or not self.renderer then return end
+
+   no_scroll = no_scroll or self.no_scroll
 
    assert(self.map ~= nil)
 
    local player = self.player
    if player then
-      self.renderer:update_draw_pos(player.x, player.y)
+      self.renderer:update_draw_pos(player.x, player.y, no_scroll)
       self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
    end
 
@@ -121,10 +125,12 @@ function field_layer:update_screen()
    while going do
       self.keys:update_repeats(dt)
       going = self.renderer:update(dt)
-      dt = coroutine.yield()
+      dt = coroutine.yield() or 0
    end
 
    self:update_hud()
+
+   self.no_scroll = false
 end
 
 function field_layer:update_hud()

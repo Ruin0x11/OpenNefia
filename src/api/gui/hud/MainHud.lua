@@ -62,11 +62,10 @@ function MainHud:relayout(x, y, width, height)
    self.clock:relayout(self.x, self.y)
    self.gold_platinum:relayout(self.width - 240, self.height - (72 + 16) - 16)
    self.level:relayout(self.x + 4, self.height - (72 + 16) - 16)
-   print(self.width)
    self.message_window:relayout(self.x + 126, self.height - (72 + 16), self.width - 126, 72)
    self.hp_bar:relayout(math.floor((self.width - 84) / 2) - 100, self.height - (72 + 16) - 12)
    self.mp_bar:relayout(math.floor((self.width - 84) / 2) + 40, self.height - (72 + 16) - 12)
-   self.status_effects:relayout(8, self.height - (72 + 16) - 50)
+   self.status_effects:relayout(self.x + 8, self.height - (72 + 16) - 50)
 end
 
 function MainHud:set_date(date)
@@ -95,11 +94,11 @@ function MainHud:draw_bar()
 
    self.t.bar:draw_bar(self.x, self.height - 16, self.width)
 
-   self.t.map_name_icon:draw(136 + 6, self.height - 16)
+   self.t.map_name_icon:draw(self.x + 136 + 6, self.height - 16)
 end
 
 function MainHud:draw_minimap()
-   self.t.minimap:draw(0, self.height - (16 + 72), 136, 16 + 72)
+   self.t.minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
 end
 
 function MainHud:draw_map_name()
@@ -115,16 +114,16 @@ function MainHud:draw_map_name()
    Draw.set_color(self.t.text_color)
    if utf8.wide_len(map_name) > max_width then
       Draw.text(utf8.wide_sub(map_name, 0, max_width),
-                136 + 24,
+                self.x + 136 + 24,
                 self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    else
       Draw.text(map_name,
-                136 + 24,
+                self.x + 136 + 24,
                 self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    end
    if string.nonempty(map_level) then
       Draw.text(map_level,
-                136 + 114,
+                self.x + 136 + 114,
                 self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    end
 end
@@ -160,7 +159,7 @@ function MainHud:draw_attributes()
       end
       self.t.skill_icons:draw_region(
          i,
-         136 + (i - 1) * item_width + 148 + offset_x,
+         self.x + 136 + (i - 1) * item_width + 148 + offset_x,
          self.height - 16 + 1)
    end
 
@@ -170,7 +169,7 @@ function MainHud:draw_attributes()
    local x
    local y = self.height - 16 + 2 -- + vfix
    for i, a in ipairs(attrs) do
-      x = 136 + item_width * (i - 1) + 166
+      x = self.x + 136 + item_width * (i - 1) + 166
       local color = self.t.text_color
 
       if a == "base.speed" then
