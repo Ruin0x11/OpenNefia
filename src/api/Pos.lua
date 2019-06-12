@@ -15,6 +15,12 @@ local directions = {
    Southwest = {  1,  1 },
 }
 
+local directions_rev = {
+   [-1] = { [-1] = "Northwest", [0] = "North", [1] = "Northeast" },
+   [0]  = { [-1] = "West",                     [1] = "East"      },
+   [1]  = { [-1] = "Southwest", [0] = "South", [1] = "Southeast" },
+}
+
 function Pos.unpack_direction(dir)
    local dir = directions[dir]
    if dir then
@@ -22,6 +28,14 @@ function Pos.unpack_direction(dir)
    else
       return 0, 0
    end
+end
+
+function Pos.pack_direction(dx, dy)
+   local it = directions_rev[dy]
+   if not it then
+      return nil
+   end
+   return it[dx]
 end
 
 function Pos.add_direction(dir, x, y)

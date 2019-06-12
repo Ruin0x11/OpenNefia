@@ -45,6 +45,9 @@ function HeldKeyHandler:halt_input()
    self.pressed = {}
 end
 
+function HeldKeyHandler:update_repeats()
+end
+
 function HeldKeyHandler:bind_keys(bindings)
    for k, v in pairs(bindings) do
       self.bindings[k] = v

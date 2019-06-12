@@ -66,6 +66,12 @@ function sparse_batch:set_tiles(tiles)
    self.updated = true
 end
 
+function sparse_batch:set_tile_offsets(ind, ox, oy)
+   self.xoffs[ind] = ox
+   self.yoffs[ind] = oy
+   self.updated = true
+end
+
 function sparse_batch:draw(x, y)
    -- slight speedup
    local batch = self.batch

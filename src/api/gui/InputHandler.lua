@@ -38,6 +38,11 @@ function InputHandler:halt_input()
    self.mouse:halt_input()
 end
 
+function InputHandler:update_repeats(dt)
+   self.keys:update_repeats(dt)
+   self.mouse:update_repeats(dt)
+end
+
 function InputHandler:run_actions(dt, ...)
    local ran, result = self.keys:run_actions(dt, ...)
    self.mouse:run_actions()

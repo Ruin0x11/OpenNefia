@@ -55,7 +55,7 @@ end
 function field_renderer:set_draw_pos(draw_x, draw_y)
    self.draw_x = draw_x
    self.draw_y = draw_y
-      self.screen_updated = true
+   self.screen_updated = true
 end
 
 function field_renderer:add_async_draw_callback(cb)
@@ -84,11 +84,19 @@ function field_renderer:draw()
 end
 
 function field_renderer:update(dt)
+   local going = false
    for _, l in ipairs(self.layers) do
-      l:update(dt, self.screen_updated)
+      local result = l:update(dt, self.screen_updated)
+      if result then -- not nil or false
+         going = true
+      end
    end
 
-   self.screen_updated = false
+   if not going then
+      self.screen_updated = false
+   end
+
+   return going
 end
 
 return field_renderer

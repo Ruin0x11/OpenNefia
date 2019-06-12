@@ -115,15 +115,20 @@ function KeyHandler:handle_repeat(key, dt)
    self.repeat_delays[key] = it
 end
 
-function KeyHandler:run_actions(dt, ...)
-   local ran = false
-   local result
-
+function KeyHandler:update_repeats(dt)
    for key, v in pairs(self.pressed) do
       -- if repeats[key] then
          self:handle_repeat(key, dt)
       -- end
    end
+end
+
+function KeyHandler:run_actions(dt, ...)
+   local ran = false
+   local result
+
+   self:update_repeats(dt)
+
    for key, v in pairs(self.repeat_delays) do
       -- TODO determine what movement actions should be triggered. If
       -- two movement keys can form a diagonal, they should be fired

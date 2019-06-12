@@ -116,7 +116,13 @@ function field_layer:update_screen()
    end
 
    local dt = 0
-   self.renderer:update(dt)
+
+   local going = true
+   while going do
+      self.keys:update_repeats(dt)
+      going = self.renderer:update(dt)
+      dt = coroutine.yield()
+   end
 
    self:update_hud()
 end

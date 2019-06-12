@@ -1,10 +1,9 @@
-local Input = require("api.Input")
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
+local Input = require("api.Input")
 local Item = require("api.Item")
-
-local Pos = require("api.Pos")
 local Map = require("api.Map")
+local Pos = require("api.Pos")
 
 -- General-purpose logic that is meant to be shared by the PC and all
 -- NPCs.
@@ -20,6 +19,8 @@ function Action.move(chara, x, y)
    -- solid feats (doors, jail cell)
    -- proc currently standing mef
    -- proc world map weather events
+
+   chara.last_move_direction = Pos.pack_direction(Pos.direction_in(chara.x, chara.y, x, y))
 
    Chara.set_pos(chara, x, y)
 
