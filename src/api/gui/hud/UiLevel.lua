@@ -11,8 +11,8 @@ function UiLevel:init()
 end
 
 function UiLevel:set_data(level, exp)
-   self.level = level
-   self.exp = exp
+   self.level = level or -1
+   self.exp = exp or -1
 end
 
 function UiLevel:relayout(x, y)

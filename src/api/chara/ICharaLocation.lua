@@ -9,7 +9,7 @@ ICharaLocation:delegate("inv",
                            "is_positional",
                            "move_object",
                            "remove_object",
-                           "put_object_into",
+                           "put_into",
                            "move_object",
                            "objects_at_pos",
                            "get_object",
@@ -20,6 +20,7 @@ ICharaLocation:delegate("inv",
 function ICharaLocation:take_object(obj)
    self.inv:take_object(obj)
    obj.location = self
+   return obj
 end
 
 
@@ -29,11 +30,11 @@ function ICharaLocation:drop_item(item)
       return
    end
 
-   self:put_object_into(self.map, item, self.x, self.y)
+   return self:put_into(self.map, item, self.x, self.y)
 end
 
 function ICharaLocation:take_item(item)
-   self:take_object(item)
+   return self:take_object(item)
 end
 
 return ICharaLocation

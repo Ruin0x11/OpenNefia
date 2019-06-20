@@ -342,6 +342,7 @@ end
 function InstancedMap:take_object(obj, x, y)
    self:get_pool(obj._type):take_object(obj, x, y)
    obj.location = self
+   return obj
 end
 
 function InstancedMap:remove_object(obj)
@@ -349,19 +350,19 @@ function InstancedMap:remove_object(obj)
 end
 
 function InstancedMap:put_into(other, obj, x, y)
-   self:get_pool(obj._type):put_into(other, obj, x, y)
+   return self:get_pool(obj._type):put_into(other, obj, x, y)
 end
 
 function InstancedMap:move_object(obj, x, y)
-   self:get_pool(obj._type):move_object(obj, x, y)
+   return self:get_pool(obj._type):move_object(obj, x, y)
 end
 
 function InstancedMap:objects_at_pos(_type, x, y)
    return self:get_pool(_type):objects_at_pos(x, y)
 end
 
-function InstancedMap:get_object(uid)
-   return self:get_pool(obj._type):get_object(uid)
+function InstancedMap:get_object(_type, uid)
+   return self:get_pool(_type):get_object(uid)
 end
 
 function InstancedMap:has_object(obj)

@@ -146,7 +146,7 @@ function field_layer:update_hud()
       self.hud.hp_bar:set_data(self.player.hp, self.player.max_hp)
       self.hud.mp_bar:set_data(self.player.mp, self.player.max_mp)
       self.hud.level:set_data(self.player.level, self.player.experience)
-      self.hud.status_effects:set_data(self.player.status_effects)
+      self.hud.status_effects:set_data({}) -- TODO
    end
 
    self.hud:update()

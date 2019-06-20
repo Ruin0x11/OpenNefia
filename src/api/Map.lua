@@ -112,7 +112,7 @@ local function chara_get_place_pos(chara, x, y, map)
       tries = tries + 1
    until tries == 100
 
-   if not Chara.is_in_party(chara) then
+   if not chara:is_in_party() then
       return nil
    end
 
@@ -124,7 +124,7 @@ local function chara_get_place_pos(chara, x, y, map)
       end
    end
 
-   if not Chara.is_player(chara) then
+   if not chara:is_player() then
       return nil
    end
 
@@ -142,7 +142,7 @@ local function try_place(chara, x, y, current, map)
    local real_x, real_y = chara_get_place_pos(chara, x, y, map)
 
    if real_x ~= nil then
-      return current:transfer_to(map, chara._type, chara.uid, real_x, real_y)
+      return map:take_object(chara, real_x, real_y)
    end
 
    return nil

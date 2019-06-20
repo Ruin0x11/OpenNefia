@@ -12,6 +12,8 @@ function startup.run()
    require("internal.data.schemas")
 
    internal.mod.load_mods()
+
+   startup.load_batches()
 end
 
 local tile_batch = require("internal.draw.tile_batch")

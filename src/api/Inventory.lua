@@ -69,6 +69,7 @@ end
 function Inventory:take_object(obj)
    self.pool:take_object(obj)
    obj.location = self
+   return obj
 end
 
 return Inventory

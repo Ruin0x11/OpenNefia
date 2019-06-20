@@ -173,6 +173,6 @@ function StatusEffect.proc_turn_end(params)
    return params
 end
 
-StatusEffect.install()
+-- StatusEffect.install()
 
 return StatusEffect

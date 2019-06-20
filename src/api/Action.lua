@@ -22,7 +22,7 @@ function Action.move(chara, x, y)
 
    chara.last_move_direction = Pos.pack_direction(Pos.direction_in(chara.x, chara.y, x, y))
 
-   Chara.set_pos(chara, x, y)
+   chara:set_pos(x, y)
 
    -- EVENT: on_character_movement
    -- mount update
@@ -51,7 +51,7 @@ function Action.get(chara, item)
       item = items[#items]
    end
 
-   local picked_up = Chara.receive_item(chara, item)
+   local picked_up = chara:take_item(item)
    if picked_up then
       Gui.mes(chara.uid .. " picks up " .. item.uid)
       return true
@@ -61,7 +61,7 @@ function Action.get(chara, item)
 end
 
 function Action.melee(chara, target)
-   Chara.damage_hp(target, 1, chara, { damage_text_type = "damage" })
+   target:damage_hp(1, chara, { damage_text_type = "damage" })
    return true
 end
 

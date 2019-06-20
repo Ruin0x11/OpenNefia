@@ -41,7 +41,7 @@ function Command.move(player, x, y)
          or relation == "neutral"
       then
          if relation == "friendly" or relation == "citizen" then
-            Chara.swap_places(player, on_cell)
+            player:swap_places(on_cell)
             Gui.mes("You switch places with " .. on_cell.uid .. ".")
          end
          return "turn_end"

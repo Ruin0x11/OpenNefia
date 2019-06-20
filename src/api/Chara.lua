@@ -58,8 +58,9 @@ function Chara.set_player(c)
 
    c.max_hp = 500
    c.max_mp = 100
-   c.hp = c.max_hp
-   c.mp = c.max_mp
+
+   c:heal_to_max()
+   c:refresh()
 end
 
 function Chara.is_alive(c)

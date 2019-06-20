@@ -50,8 +50,8 @@ function field_logic.setup()
             return "turn_end"
          end
 
-         local item = me.inv:at(me.inv:len())
-         Chara.drop_item(me, item)
+         -- local item = me.inv:at(me.inv:len())
+         -- me:drop_item(item)
          Gui.mes("You drop " .. item._id)
          return "turn_end"
       end,
@@ -215,7 +215,7 @@ sキー		降伏
 end
 
 local function calc_speed(chara)
-   return Chara.stat(chara, "base.speed")
+   return 100 -- TODO
 end
 
 function field_logic.update_chara_time_this_turn(time_this_turn)
@@ -337,7 +337,7 @@ function field_logic.pass_turns()
       -- ether disease
    -- end
 
-   if Chara.is_player(chara) and not Chara.is_alive(chara) then
+   if chara:is_player() and not Chara.is_alive(chara) then
       return "player_died", chara
    end
 
@@ -357,7 +357,7 @@ function field_logic.pass_turns()
    -- proc refresh if transferred
 
    if Chara.is_alive(chara) then
-      if Chara.is_player(chara) then
+      if chara:is_player() then
          return "player_turn", chara
       else
          return "npc_turn", chara
@@ -428,7 +428,7 @@ function field_logic.turn_end(chara)
    -- party time emoicon
 
    if regen then
-      Chara.regen_hp_mp(chara)
+      -- Chara.regen_hp_mp(chara)
    end
 
    -- proc timestop

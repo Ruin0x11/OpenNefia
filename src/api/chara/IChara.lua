@@ -16,6 +16,7 @@ function IChara:build()
    self.time_this_turn = 0
    self.turns_alive = 0
    self.level = 1
+   self.experience = 0
 
    self.initial_x = 0
    self.initial_y = 0
@@ -88,6 +89,11 @@ end
 
 function IChara:heal_mp(add)
    self.mp = math.min(self.mp + math.max(add, 0), self.max_mp)
+end
+
+function IChara:heal_to_max()
+   self.hp = self.max_hp
+   self.mp = self.max_mp
 end
 
 function IChara:kill()

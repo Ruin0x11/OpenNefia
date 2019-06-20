@@ -34,6 +34,10 @@ local SANDBOX_GLOBALS = {
    "inspect",
 }
 
+if _DEBUG then
+   SANDBOX_GLOBALS[#SANDBOX_GLOBALS+1] = "_p"
+end
+
 local SAFE_REQUIRE_PREFIXES = {
    "^api%.",
    "^mod%.",
