@@ -53,12 +53,12 @@ function Chara.set_player(c)
    assert(type(c) == "table")
    field.player = c
 
-   c.original_relation = "friendly"
-   c.relation = chara.original_relation
+   c.faction = "base.friendly"
 
    c.max_hp = 500
    c.max_mp = 100
 
+   c:reset_all_reactions()
    c:heal_to_max()
    c:refresh()
 end

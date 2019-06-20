@@ -21,10 +21,16 @@ function Tools.spawn_allies(count)
       local y = Rand.rnd(Map.height())
       if Map.can_access(x, y) then
          local c = Chara.create("base.ally", x, y)
-         if not Chara.recruit_as_ally(c) then
+         if not c:recruit_as_ally() then
             return
          end
       end
+   end
+end
+
+function Tools.ally()
+   for _, c in Chara.iter_allies() do
+      return c
    end
 end
 

@@ -3,6 +3,7 @@ data:add {
    _id = "player",
 
    name = "player",
+   faction = "base.enemy",
    image = 4,
    max_hp = 50,
    max_mp = 10
@@ -13,6 +14,7 @@ data:add {
    _id = "ally",
 
    name = "ally",
+   faction = "base.enemy",
    image = 10,
    max_hp = 100,
    max_mp = 20
@@ -31,6 +33,7 @@ data:add {
    _id = "enemy",
 
    name = "enemy",
+   faction = "base.enemy",
    image = 50,
    max_hp = 10,
    max_mp = 2
@@ -54,7 +57,35 @@ data:add {
    is_opaque = true
 }
 
+
 local Event = require("api.Event")
+
+
+local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
+
+data:add {
+   _type = "base.emotion_icon",
+   _id = "paralysis",
+
+   image = "mod/content/graphic/paralysis.bmp"
+}
+
+EmotionIcon.install("base.default")
+
+
+local DamagePopup = require("mod.damage_popups.api.DamagePopup")
+
+DamagePopup.install()
+
+Event.register("base.after_damage_hp",
+"damage popups",
+function(p)
+   local Map = require("api.Map")
+   if Map.is_in_fov(p.chara.x, p.chara.y) then
+      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
+   end
+end)
+
 
 data:add {
    _type = "base.map_generator",

@@ -37,21 +37,23 @@ end
 -- some_func(1,2,{option1=true}) -- returns 1
 -- @tparam table tblA first table
 -- @tparam table tblB second table
--- @tparam[opt=false] boolean array_merge set to true to merge the tables as an array or false for an associative array
 -- @treturn array|table an array or an associated array where tblA and tblB have been merged
-function table.merge(tblA, tblB, array_merge)
+function table.merge(tblA, tblB)
    if not tblB then
       return tblA
    end
-   if array_merge then
-      for _, v in pairs(tblB) do
-         table.insert(tblA, v)
-      end
+   for k, v in pairs(tblB) do
+      tblA[k] = v
+   end
+   return tblA
+end
 
-   else
-      for k, v in pairs(tblB) do
-         tblA[k] = v
-      end
+function table.imerge(tblA, tblB)
+   if not tblB then
+      return tblA
+   end
+   for _, v in ipairs(tblB) do
+      table.insert(tblA, v)
    end
    return tblA
 end
@@ -253,6 +255,16 @@ function table.map(tbl, f, array)
    return t
 end
 
+function table.ifilter(tbl, f)
+   local t = {}
+   for i, v in ipairs(tbl) do
+      if f(v) then
+         t[#t+1] = v
+      end
+   end
+   return t
+end
+
 --- Reduces an array-like table over a function.
 -- @tparam array arr
 -- @tparam func f
@@ -338,7 +350,6 @@ end
 function table.remove_indices(arr, inds)
    local offset = 0
    for _, ind in ipairs(inds) do
-      print(ind-offset,arr[ind-offset])
       table.remove(arr, ind-offset)
       offset = offset + 1
    end

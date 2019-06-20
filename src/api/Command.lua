@@ -33,24 +33,22 @@ function Command.move(player, x, y)
 
       local result
 
-      -- local relation = Ai.relation_towards(player, on_cell)
-      local relation = 0
-      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell,relation=relation})
+      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell})
 
-      if relation == "friendly"
-         or relation == "citizen"
-         or relation == "neutral"
-      then
-         if relation == "friendly" or relation == "citizen" then
-            player:swap_places(on_cell)
-            Gui.mes("You switch places with " .. on_cell.uid .. ".")
+      local reaction = player:reaction_towards(on_cell)
+
+      if reaction > 0 then
+         if true then
+            if player:swap_places(on_cell) then
+               Gui.mes("You switch places with " .. on_cell.uid .. ".")
+            end
          end
          return "turn_end"
       end
 
       -- TODO: relation as -1
-      if relation == "enemy" then
-         Ai.set_target(player, on_cell)
+      if reaction < 0 then
+         player:set_target(on_cell)
          Action.melee(player, on_cell)
          return "turn_end"
       end

@@ -68,6 +68,20 @@ data:add_type {
 }
 
 data:add_type {
+   name = "faction",
+   schema = schema.Record {
+      reactions = schema.Table,
+   },
+}
+
+data:add_type {
+   name = "ai_action",
+   schema = schema.Record {
+      act = schema.Function
+   }
+}
+
+data:add_type {
    name = "element",
    schema = schema.Record {
       can_resist = schema.Boolean,
@@ -154,7 +168,4 @@ data:add_type {
    }
 }
 
-data:add {
-   _type = "base.config_option_boolean",
-   _id = "exchange_crawl_up_and_buried",
-}
+require("internal.data.ai")

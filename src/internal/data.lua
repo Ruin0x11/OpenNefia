@@ -159,9 +159,19 @@ function proxy:find_by(index, value)
 end
 
 function proxy:__index(k)
+   if not inner[self._type] then return nil end
+
    local exist = rawget(proxy, k)
    if exist then return exist end
-   if not inner[self._type] then return nil end
+
+   -- Permit substituting an instance of a data type if it is passed
+   -- in instead of a string key.
+   if type(k) == "table"
+      and k._type == self._type
+      and inner[self._type][k._id]
+   then
+      return k
+   end
 
    return inner[self._type][k]
 end

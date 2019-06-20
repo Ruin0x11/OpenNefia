@@ -50,6 +50,46 @@ data:add_multi(
    }
 )
 
+data:add {
+   _type = "base.config_option_boolean",
+   _id = "exchange_crawl_up_and_buried",
+}
+
+data:add_multi(
+   "base.faction",
+   {
+      _id = "friendly",
+      reactions = {
+         ["base.citizen"] = 100,
+         ["base.neutral"] = 50,
+         ["base.enemy"] =  -100,
+      }
+   },
+   {
+      _id = "citizen",
+      reactions = {
+         ["base.friendly"] = 100,
+         ["base.neutral"] = 50,
+         ["base.enemy"] =  -100,
+      }
+   },
+   {
+      _id = "neutral",
+      reactions = {
+         ["base.friendly"] = 50,
+         ["base.citizen"] = 50,
+         ["base.enemy"] =  -100,
+      }
+   },
+   {
+      _id = "enemy",
+      reactions = {
+         ["base.friendly"] = -100,
+         ["base.citizen"] = -100,
+         ["base.neutral"] = -100,
+      }
+   }
+)
 
 data:add_multi(
    "base.ui_theme",
