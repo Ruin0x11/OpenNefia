@@ -54,7 +54,6 @@ function mod.calculate_load_order()
 
          if type(manifest.dependencies) == "table" then
             graph:add(0, mod_id) -- root
-            _p(mod_id,manifest.dependencies)
             for dep_id, version in pairs(manifest.dependencies) do
                graph:add(dep_id, mod_id)
             end

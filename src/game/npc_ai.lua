@@ -55,7 +55,6 @@ function npc_ai.handle_ai_action(chara, action)
    local params = action[2]
 
    if id ~= "base.move" and id ~= "base.wait" then
-      print(id)
       Gui.scroll_screen()
    end
 

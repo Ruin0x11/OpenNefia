@@ -5,7 +5,6 @@ local draw = require("internal.draw")
 local shadow_batch = class("shadow_batch", IBatch)
 
 local deco = {
-
 --                 W           E            WE          S            S E          SW           SWE
 -- 0000         0001         0010         0011         0100         0101         0110         0111
    { 0, 0,  0}, { 0, 1,  0}, { 1, 2,  0}, { 0, 0,  0}, { 1, 0,  0}, { 0, 0,  0}, {-1, 21, 0}, {-1, 30, 0},  --  00000000
@@ -290,10 +289,21 @@ function shadow_batch:draw(x, y)
 
    if x < 0 then
       ox = 48
+   elseif x > 0 then
+      if ox == 48 then
+         ox = 0
+      end
    end
    if y < 0 then
       oy = 48
+   elseif y > 0 then
+      if oy == 48 then
+         oy = 0
+      end
    end
+
+   ox = ox - 48
+   oy = oy - 48
 
    if self.updated then
       local tx, ty, tdx, tdy = self.coords:find_bounds(0, 0, self.width, self.height)
@@ -302,10 +312,10 @@ function shadow_batch:draw(x, y)
       self.batch:clear()
       self.edge_batch:clear()
 
-      for y=ty,tdy do
-         if y >= 0 and y <= self.height then
-            for x=tx,tdx do
-               if x >= 0 and x <= self.width then
+      for y=ty-1,tdy do
+         if y >= -1 and y <= self.height then
+            for x=tx-1,tdx do
+               if x >= -1 and x <= self.width then
                   local tile = self_tiles[x+1][y+1]
                   local i, j = self.coords:tile_to_screen(x - tx, y - ty)
                   self:add_one(tile, i, j)

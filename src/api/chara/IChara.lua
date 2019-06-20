@@ -1,8 +1,9 @@
 local field = require("game.field")
+local Chara = require("api.Chara")
 local Gui = require("api.Gui")
-local Inventory = require("api.Inventory")
-local IMapObject = require("api.IMapObject")
 local ICharaLocation = require("api.chara.ICharaLocation")
+local IMapObject = require("api.IMapObject")
+local Inventory = require("api.Inventory")
 
 -- TODO: move out of api
 local IChara = interface("IChara", {}, {IMapObject, ICharaLocation})

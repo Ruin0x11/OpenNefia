@@ -1,4 +1,5 @@
 local IOwned = require("api.IOwned")
+local Log = require("api.Log")
 
 local IMapObject = interface("IMapObject",
                              {
@@ -25,18 +26,21 @@ function IMapObject:calc(key, ...)
 end
 
 function IMapObject:set_pos(x, y)
-   local map = self.map
+   local InstancedMap = require("api.InstancedMap")
+   local location = self.location
 
-   if not map or not map:exists(self) then
+   if not is_an(InstancedMap, location) then
       Log.warn("IMapObject.set_pos: Not setting position of %s to %d,%d\n\t%s", tostring(self), x, y, debug.traceback(""))
       return false
    end
 
-   if not self.map:is_in_bounds(x, y) then
+   assert(location:has_object(self))
+
+   if not location:is_in_bounds(x, y) then
       return false
    end
 
-   self.map:move_object(self, x, y)
+   location:move_object(self, x, y)
 
    return true
 end

@@ -33,7 +33,8 @@ function Command.move(player, x, y)
 
       local result
 
-      local relation = Ai.relation_towards(player, on_cell)
+      -- local relation = Ai.relation_towards(player, on_cell)
+      local relation = 0
       Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell,relation=relation})
 
       if relation == "friendly"
@@ -50,7 +51,8 @@ function Command.move(player, x, y)
       -- TODO: relation as -1
       if relation == "enemy" then
          Ai.set_target(player, on_cell)
-         return Action.melee(player, on_cell)
+         Action.melee(player, on_cell)
+         return "turn_end"
       end
 
       return "turn_end"
@@ -59,7 +61,8 @@ function Command.move(player, x, y)
    if Map.can_access(next_pos.x, next_pos.y) then
       -- Can access spot, so try moving.
       -- Runs the general-purpose movement command.
-      return Action.move(player, next_pos.x, next_pos.y)
+      Action.move(player, next_pos.x, next_pos.y)
+      return "turn_end"
    elseif not Map.is_in_bounds(next_pos.x, next_pos.y) then
       -- Player is trying to move out of the map.
 

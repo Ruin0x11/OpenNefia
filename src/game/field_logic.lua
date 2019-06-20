@@ -400,12 +400,12 @@ function field_logic.player_turn_query()
 end
 
 function field_logic.npc_turn(npc)
-   local npc_ai = require("game.npc_ai")
-   local action = npc_ai.decide_action(npc)
-   assert(action ~= nil)
+   -- local npc_ai = require("game.npc_ai")
+   -- local action = npc_ai.decide_action(npc)
+   -- assert(action ~= nil)
 
-   local result = npc_ai.handle_ai_action(npc, action)
-   assert(result ~= nil)
+   -- local result = npc_ai.handle_ai_action(npc, action)
+   -- assert(result ~= nil)
 
    return "turn_end", npc
 end

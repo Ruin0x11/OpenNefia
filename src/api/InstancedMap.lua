@@ -128,18 +128,6 @@ function InstancedMap:get_pool(type_id)
    return self.pools[type_id]
 end
 
-function InstancedMap:create_object(proto, x, y)
-   local _type = proto._type
-   if not _type then error("no type") end
-
-   local pool = self:get_pool(_type)
-   local obj = pool:create_object(proto, x, y)
-
-   obj._owner = self
-
-   return obj
-end
-
 function InstancedMap:get_batch(type_id)
    self.batches[type_id] = self.batches[type_id] or sparse_batch:new(type_id)
    return self.batches[type_id]
@@ -194,10 +182,10 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local radius = math.floor((fov_size + 2) / 2)
    local max_dist = math.floor(fov_size / 2)
 
-   local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self.width - stw)
-   local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self.height - sth)
-   local end_x = (start_x + stw)
-   local end_y = (start_y + sth)
+   local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self.width - stw) - 1
+   local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self.height - sth) - 1
+   local end_x = (start_x + stw) + 1
+   local end_y = (start_y + sth) + 1
 
    local fov_y_start = player_y - math.floor(fov_size / 2)
    local fov_y_end = player_y + math.floor(fov_size / 2)
@@ -243,6 +231,8 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       set_shadow_border(lx - 1, ly + 1, 0x80) -- NE
    end
 
+   print(start_y,end_y,start_x,end_x)
+
    for j=start_y,end_y do
       lx = 1
 
@@ -281,7 +271,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       end
       ly = ly + 1
    end
-   -- pp(self.shadow_map)
 
    return self.shadow_map, start_x, start_y
 end
@@ -337,6 +326,16 @@ end
 
 function InstancedMap:is_positional()
    return true
+end
+
+function InstancedMap:create_object(proto, x, y)
+   local _type = proto._type
+   if not _type then error("no type") end
+
+   local pool = self:get_pool(_type)
+   local obj = pool:create_object(proto, x, y)
+   obj.location = self
+   return obj
 end
 
 function InstancedMap:take_object(obj, x, y)
