@@ -157,9 +157,13 @@ function draw.get_tiled_height()
 end
 
 local font_cache = setmetatable({}, { __mode = "v" })
-function draw.set_font(size, kind, filename)
-   local font
-   kind = kind or "normal"
+function draw.set_font(size, style, filename)
+   if type(size) == "table" then
+      filename = size.filename
+      style = size.style
+      size = size.size
+   end
+   style = style or "normal"
    filename = filename or "data/MS-Gothic.ttf"
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
    font_cache[size][filename] = font_cache[size][filename]

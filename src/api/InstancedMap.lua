@@ -6,8 +6,9 @@ local Pos = require("api.Pos")
 local Log = require("api.Log")
 local Draw = require("api.Draw")
 local IObject = require("api.IObject")
+local ILocation = require("api.ILocation")
 
-local InstancedMap = class("InstancedMap")
+local InstancedMap = class("InstancedMap", ILocation)
 
 local fov_cache = {}
 
@@ -132,7 +133,11 @@ function InstancedMap:create_object(proto, x, y)
    if not _type then error("no type") end
 
    local pool = self:get_pool(_type)
-   return pool:create_object(proto, x, y)
+   local obj = pool:create_object(proto, x, y)
+
+   obj._owner = self
+
+   return obj
 end
 
 function InstancedMap:get_batch(type_id)
@@ -140,47 +145,8 @@ function InstancedMap:get_batch(type_id)
    return self.batches[type_id]
 end
 
-function InstancedMap:add_object(obj, x, y)
-   assert_is_an(IObject, obj)
-   local pool = self:get_pool(obj._type)
-   pool:add_object(obj, x, y)
-
-   return obj
-end
-
-function InstancedMap:move_object(obj, x, y)
-   assert_is_an(IObject, obj)
-   assert(self:exists(obj))
-
-   local pool = self:get_pool(obj._type)
-   pool:move_object(obj, x, y)
-end
-
-function InstancedMap:remove_object(obj)
-   assert_is_an(IObject, obj)
-   local pool = self:get_pool(obj._type)
-   pool:remove(obj.uid)
-end
-
-function InstancedMap:objects_at(type_id, x, y)
-   local pool = self:get_pool(type_id)
-   if not pool then return {} end
-   return pool:objects_at(x, y)
-end
-
-function InstancedMap:get_object(_type, uid)
-   local pool = self:get_pool(_type)
-   return pool:get(uid)
-end
-
-function InstancedMap:transfer_to(map, _type, uid, x, y)
-   local from = self:get_pool(_type)
-   local to = map:get_pool(_type)
-   return from:transfer_to_with_pos(to, uid, x, y)
-end
-
-function InstancedMap:exists(obj)
-   return is_an(IObject, obj) and self:get_pool(obj._type):exists(obj.uid)
+function InstancedMap:has_object(obj)
+   return is_an(IObject, obj) and self:get_pool(obj._type):has_object(obj)
 end
 
 function InstancedMap:has_los(x1, y1, x2, y2)
@@ -328,10 +294,6 @@ function InstancedMap:iter_items()
    return self:iter_objects("base.item")
 end
 
-function InstancedMap:iter_objects(type_id)
-   return self:get_pool(type_id):iter()
-end
-
 function InstancedMap:is_in_bounds(x, y)
    return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
@@ -367,5 +329,48 @@ end
 function InstancedMap:is_in_fov(x, y)
    return self.in_sight[y*self.width+x+1] == self.last_sight_id
 end
+
+
+--
+-- ILocation impl
+--
+
+function InstancedMap:is_positional()
+   return true
+end
+
+function InstancedMap:take_object(obj, x, y)
+   self:get_pool(obj._type):take_object(obj, x, y)
+   obj.location = self
+end
+
+function InstancedMap:remove_object(obj)
+   return self:get_pool(obj._type):remove_object(obj)
+end
+
+function InstancedMap:put_into(other, obj, x, y)
+   self:get_pool(obj._type):put_into(other, obj, x, y)
+end
+
+function InstancedMap:move_object(obj, x, y)
+   self:get_pool(obj._type):move_object(obj, x, y)
+end
+
+function InstancedMap:objects_at_pos(_type, x, y)
+   return self:get_pool(_type):objects_at_pos(x, y)
+end
+
+function InstancedMap:get_object(uid)
+   return self:get_pool(obj._type):get_object(uid)
+end
+
+function InstancedMap:has_object(obj)
+   return self:get_pool(obj._type):has_object(obj)
+end
+
+function InstancedMap:iter_objects(_type)
+   return self:get_pool(_type):iter_objects()
+end
+
 
 return InstancedMap

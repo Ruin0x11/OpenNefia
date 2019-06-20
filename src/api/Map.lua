@@ -186,7 +186,7 @@ function Map.travel_to(map)
    end
 
    field:set_map(map)
-   field:update_screen(true)
+   field:update_screen()
 
    return "turn_begin"
 end

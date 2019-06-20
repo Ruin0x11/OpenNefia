@@ -8,6 +8,10 @@ local tile_size = 48
 
 function startup.run()
    math.randomseed(internal.get_timestamp())
+
+   require("internal.data.schemas")
+
+   internal.mod.load_mods()
 end
 
 local tile_batch = require("internal.draw.tile_batch")
@@ -72,9 +76,6 @@ function startup.load_batches()
 
    local atlases = require("internal.global.atlases")
    atlases.set(atlas, chara_atlas, item_atlas)
-
-   return {
-   }
 end
 
 return startup

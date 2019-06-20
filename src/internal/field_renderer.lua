@@ -48,7 +48,7 @@ function field_renderer:set_scroll(dx, dy)
    self.scroll_frames = self.scroll_max_frames
 end
 
-function field_renderer:update_draw_pos(player_x, player_y, no_scroll)
+function field_renderer:update_draw_pos(player_x, player_y, scroll)
    local draw_x, draw_y = self.coords:get_draw_pos(player_x,
                                                    player_y,
                                                    self.width,
@@ -56,8 +56,11 @@ function field_renderer:update_draw_pos(player_x, player_y, no_scroll)
                                                    Draw.get_width(),
                                                    Draw.get_height())
 
-   if not no_scroll then
+   if scroll then
       self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y)
+   else
+      self.scroll = nil
+      self.scroll_frames = 0
    end
 
    self:set_draw_pos(draw_x, draw_y)

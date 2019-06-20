@@ -114,6 +114,8 @@ function Item.create(id, x, y, number, params, map)
 end
 
 function Item.create_in(id, chara, number, params)
+   -- WARNING: This should be generalized to create_in(chara),
+   -- create_in(map), create_in(party)
    if not Chara.is_alive(chara) then
       return
    end

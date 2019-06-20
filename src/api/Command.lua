@@ -104,4 +104,10 @@ function Command.get(player)
    return Action.get(player, item)
 end
 
+function Command.inventory(player)
+   Input.query_inventory(player, true)
+
+   return "player_turn_query"
+end
+
 return Command

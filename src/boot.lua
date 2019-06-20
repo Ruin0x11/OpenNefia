@@ -44,6 +44,9 @@ function _p(...)
       io.write(inspect(v))
       io.write("\t")
    end
+   if #{...} == 0 then
+      io.write("nil")
+   end
    io.write("\n")
    return ...
 end

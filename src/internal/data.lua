@@ -34,11 +34,13 @@ function data:error(mes)
                    message = mes
                 }
    )
+   error("data: " .. mes)
 end
 
 local stage = nil
 local inner = {}
 local schemas = {}
+local metatables = {}
 local strict = false
 
 -- HACK: separate into Data API and internal.data
@@ -46,8 +48,13 @@ function data:clear()
    inner = {}
 end
 
-function data:add_type(schema)
-   schemas["base." .. schema.name] = schema
+function data:add_type(schema, metatable)
+   local _type = "base." .. schema.name
+   metatable = metatable or {}
+   metatable._type = _type
+
+   schemas[_type] = schema
+   metatables[_type] = metatable
 end
 
 function data:edit_type(type_id, delta)
@@ -89,7 +96,7 @@ function data:add(dat)
 
       if add then
          failed = true
-         self:error(tostring(err))
+         -- self:error(tostring(err))
       end
    end
 
@@ -123,11 +130,8 @@ function data:add(dat)
       end
    end
 
-   dat._id = nil
-   dat._type = nil
-   dat._index_on = nil
-   setmetatable(dat, { __index = { _id = full_id, _type = _type },
-                       __newindex = function() end }) -- TODO verify new schema field
+   dat._id = full_id
+   setmetatable(dat, metatables[_type])
 end
 
 function data:add_multi(_type, ...)

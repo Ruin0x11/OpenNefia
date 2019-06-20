@@ -26,4 +26,8 @@ function Event.trigger(event_id, args, opts)
    return global_events:trigger(event_id, args, opts)
 end
 
+function Event.list(event_id)
+   -- TODO: print name, file/line number defined, allow jump to
+end
+
 return Event

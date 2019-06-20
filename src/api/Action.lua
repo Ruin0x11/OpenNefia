@@ -11,7 +11,7 @@ local Action = {}
 
 function Action.move(chara, x, y)
    if not Map.can_access(x, y) then
-      return "turn_end"
+      return false
    end
 
    -- EVENT: before_character_movement
@@ -38,7 +38,7 @@ function Action.move(chara, x, y)
    -- proc world map encounters
    --   how to handle entering a new map here? defer it?
 
-   return "turn_end"
+   return true
 end
 
 function Action.get(chara, item)
@@ -46,7 +46,7 @@ function Action.get(chara, item)
       local items = Item.at(chara.x, chara.y)
       if #items == 0 then
          Gui.mes(chara.uid .. " grasps at air.")
-         return "turn_end"
+         return false
       end
       item = items[#items]
    end
@@ -54,15 +54,15 @@ function Action.get(chara, item)
    local picked_up = Chara.receive_item(chara, item)
    if picked_up then
       Gui.mes(chara.uid .. " picks up " .. item.uid)
-      return "turn_end"
+      return true
    end
 
-   return "turn_end"
+   return false
 end
 
 function Action.melee(chara, target)
    Chara.damage_hp(target, 1, chara, { damage_text_type = "damage" })
-   return "turn_end"
+   return true
 end
 
 return Action

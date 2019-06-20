@@ -1,6 +1,8 @@
+local Map = require("api.Map")
 local input = require("internal.input")
 
 local IUiLayer = require("api.gui.IUiLayer")
+local InventoryMenu = require("api.gui.menu.InventoryMenu")
 local Prompt = require("api.gui.Prompt")
 local TextPrompt = require("api.gui.TextPrompt")
 
@@ -16,8 +18,20 @@ function Input.yes_no()
    return res.index == 1
 end
 
-function Input.prompt_text(length, can_cancel, limit_length)
+function Input.query_text(length, can_cancel, limit_length)
    return TextPrompt:new(length, can_cancel, limit_length):query()
+end
+
+function Input.query_inventory(chara, can_cancel)
+   local ctxt = {
+      chara = chara,
+      target = nil,
+      container = nil,
+      map = Map.current(),
+      stack = {},
+      sources = { "chara", "ground" }
+   }
+   return InventoryMenu:new(ctxt, can_cancel):query()
 end
 
 return Input

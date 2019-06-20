@@ -16,7 +16,7 @@ PagedListModel:delegate("model",
                          "can_choose",
                          "on_select"})
 
-function PagedListModel:init(items, page_size)
+function PagedListModel:init(items, page_size, wrapping)
    self.items_ = items
    self.model = ListModel:new({})
    self.changed = true
@@ -24,8 +24,16 @@ function PagedListModel:init(items, page_size)
    self.page = 0
    self.page_size = page_size
    self.page_max = math.floor(#items / page_size)
+   self.wrapping = wrapping
+   if self.wrapping == nil then
+      self.wrapping = true
+   end
 
    self:set_data()
+end
+
+function PagedListModel:iter()
+   return self.model:iter()
 end
 
 function PagedListModel:update_selected_index()
@@ -65,7 +73,11 @@ end
 function PagedListModel:next_page()
    local page = self.page + 1
    if page > self.page_max then
-      page = 0
+      if self.wrapping then
+         page = 0
+      else
+         page = self.page_max
+      end
    end
    self:select_page(page)
 end
@@ -73,7 +85,11 @@ end
 function PagedListModel:previous_page()
    local page = self.page - 1
    if page < 0 then
-      page = self.page_max
+      if self.wrapping then
+         page = self.page_max
+      else
+         page = 0
+      end
    end
    self:select_page(page)
 end

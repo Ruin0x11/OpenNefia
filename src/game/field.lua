@@ -106,16 +106,20 @@ function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object(_type, uid)
 end
 
-function field_layer:update_screen(no_scroll)
+function field_layer:update_screen(scroll)
    if not self.is_active or not self.renderer then return end
 
-   no_scroll = no_scroll or self.no_scroll
+   if scroll == nil then
+      scroll = false
+   end
+
+   scroll = scroll and (not self.no_scroll)
 
    assert(self.map ~= nil)
 
    local player = self.player
    if player then
-      self.renderer:update_draw_pos(player.x, player.y, no_scroll)
+      self.renderer:update_draw_pos(player.x, player.y, scroll)
       self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
    end
 

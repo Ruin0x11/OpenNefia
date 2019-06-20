@@ -2480,7 +2480,7 @@ local tiles = {
       image = "graphic/temp/map_tile/1_224.png"
    },
    {
-      _id = "carpet_1",
+      _id = "carpet_2",
       id = "1_225",
       image = "graphic/temp/map_tile/1_225.png"
    },
@@ -3073,11 +3073,11 @@ local tiles = {
       wall_kind = 2
    },
    {
-      _id = "wall_stone_10_top",
+      _id = "wall_stone_11_top",
       effect = 5,
       id = "1_486",
       image = "graphic/temp/map_tile/1_486.png",
-      wall = "base.wall_stone_10_bottom",
+      wall = "base.wall_stone_11_bottom",
       wall_kind = 2
    },
    {
@@ -3089,11 +3089,11 @@ local tiles = {
       wall_kind = 2
    },
    {
-      _id = "wall_stone_11_top",
+      _id = "wall_stone_12_top",
       effect = 5,
       id = "1_488",
       image = "graphic/temp/map_tile/1_488.png",
-      wall = "base.wall_stone_11_bottom",
+      wall = "base.wall_stone_12_bottom",
       wall_kind = 2
    },
    {
@@ -3313,7 +3313,7 @@ local tiles = {
       wall_kind = 1
    },
    {
-      _id = "wall_stone_10_bottom",
+      _id = "wall_stone_11_bottom",
       effect = 5,
       id = "1_519",
       image = "graphic/temp/map_tile/1_519.png",
@@ -3327,7 +3327,7 @@ local tiles = {
       wall_kind = 1
    },
    {
-      _id = "wall_stone_11_bottom",
+      _id = "wall_stone_12_bottom",
       effect = 5,
       id = "1_521",
       image = "graphic/temp/map_tile/1_521.png",

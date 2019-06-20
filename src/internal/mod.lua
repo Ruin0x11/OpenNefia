@@ -54,6 +54,7 @@ function mod.calculate_load_order()
 
          if type(manifest.dependencies) == "table" then
             graph:add(0, mod_id) -- root
+            _p(mod_id,manifest.dependencies)
             for dep_id, version in pairs(manifest.dependencies) do
                graph:add(dep_id, mod_id)
             end
@@ -85,7 +86,10 @@ function mod.load_mods()
          print(string.format("Loaded mod %s.", mod_id))
          chunks[mod_id] = chunk
       else
-         error("Cannot find mod dependency " .. mod_id)
+         local manifest = fs.join("mod", mod_id, "mod.lua")
+         if not fs.is_file(manifest) then
+            error("Cannot find mod dependency " .. mod_id)
+         end
       end
    end
 end

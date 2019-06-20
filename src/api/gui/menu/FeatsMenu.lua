@@ -123,8 +123,6 @@ local UiListExt = function(feats_menu)
 end
 
 function FeatsMenu:init()
-   self.width = 730
-   self.height = 430
    self.chara_make = false
 
    self.win = UiWindow:new("ui.feat.title", true, "key help", 55, 40)
@@ -154,6 +152,8 @@ function FeatsMenu:init()
 end
 
 function FeatsMenu:relayout(x, y)
+   self.width = 730
+   self.height = 430
    self.x, self.y = Ui.params_centered(self.width, self.height)
 
    if self.chara_make then

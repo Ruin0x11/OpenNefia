@@ -13,7 +13,7 @@ _when item is chosen after filter_
 - Sort equipped items first, but after items on ground.
 _on_item_selected_
 - Display item description. Jump back to start.
-  + vanilla re-runs filtering everything after this, but it may not be necessary now.
+  + vanilla re-runs filtering after this, but it may not be necessary now.
 _keybinds_
 - x: mark no-drop
 ** 2 - dropping
@@ -40,7 +40,7 @@ _on_filter_
 - Include items on the ground.
 - Reject items on chara.
 _after sorting_
-- Return turn_end if no items (safe fallback, should have been caught earlier by Command.get)
+- Return turn_end if no items.
 _on_item_selected_
 - Permit if item is no-drop.
 - Fail if item not owned/harvested.
@@ -61,7 +61,9 @@ _on_item_selected_
 - Fail if nutrition > 10000.
 - Try to eat the item. Return the result.
 ** 6 - equipping
+_on_filter_
 - Include items on chara.
+- Remove if item is equipped.
 _on_item_selected_
 - Fail if player has the fairy trait and the item is too heavy.
 - Equip the item. (always succeeds)
@@ -158,8 +160,8 @@ _on_draw_
 _on filter_
 - Include items on chara.
 - Show money.
-- If user is trading:
-  + Remove if item weight >= 0 (cargo indication).
+- If user is trading cargo:
+  + Remove if item weight >= 0 (not-cargo indication).
   + Remove if type is not 92000 (cargo).
 - Else:
   + Remove if item weight < 0 (cargo indication) and item type is 92000 (cargo).
@@ -576,7 +578,7 @@ The available actions in the inventory menu are dynamic depending on the context
 _when item is chosen after filter_
 - music disc: sort by BGM number in addition to type/ID
 ** Shortcuts
-- Item to run is applied AFTER filtering. If it can be found in the player's inventory but was filtered out, the game assumes it was an item that couldn't be used in the global map (scrolls).
+- Item to use is applied AFTER filtering. If it can be found in the player's inventory but was filtered out, the game assumes it was an item that couldn't be used in the global map (scrolls).
   + To support, probably best to give a filtering API to get the list of items an inventory filter would apply if the screen were opened. Currently shortcuts are tied to the massive ctrl_inventory function.
   + Shortcuts have to save the inventory context used to reapply the filter when the shortcut is ran. The shortcuts are tied to the invctrl they were set in.
 * invfile

@@ -23,6 +23,10 @@ end
 
 local handlers = {}
 
+-- BAD: not helpful. All these just return "turn_end" anyway. It would
+-- be far better if the AI could just do multiple things per round
+-- instead of deciding on just one thing.
+
 handlers["base.wait"] = function(chara, params)
    return "turn_end"
 end

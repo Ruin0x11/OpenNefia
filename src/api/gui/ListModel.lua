@@ -17,6 +17,10 @@ function ListModel:set_data(items)
    self:select()
 end
 
+function ListModel:iter()
+   return ipairs(self.items)
+end
+
 function ListModel:select(i)
    if not self:can_select(self.items[i], i) then return end
 

@@ -62,7 +62,7 @@ function CharacterSummaryMenu:update()
       if res.index == 1 then
          self.caption_box:set_data("Last question. What's your name?")
 
-         local name, canceled = Input.prompt_text(10)
+         local name, canceled = Input.query_text(10)
          print(name,canceled)
       elseif res.index == 2 then
       elseif res.index == 3 then

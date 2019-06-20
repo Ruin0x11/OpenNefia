@@ -18,7 +18,24 @@ local function make_tostring(kind, tbl)
 end
 
 local iface_mt = {
-   __tostring = make_tostring("Interface", _interfaces)
+   __tostring = make_tostring("Interface", _interfaces),
+   __index = function(t, k)
+      local m = rawget(t, "methods")
+      if m then
+         local meth = rawget(m, k)
+         if meth then
+            return meth
+         end
+      end
+      return rawget(t, k)
+   end,
+   __newindex = function(t, k, v)
+      if type(v) == "function" then
+         t.methods[k] = v
+         return
+      end
+      rawset(t, k ,v)
+   end
 }
 
 _interfaces[iface_mt] = tostring(iface_mt)
@@ -31,6 +48,17 @@ function class.interface(name, reqs, parents)
    i.__index = i
    i.name = name
    i.reqs = reqs
+   i.methods = {}
+
+   i.delegate = function(field, params)
+      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
+      if _interfaces[params] or type(params) == "string" then params = {params} end
+      for k, v in ipairs(params) do
+         i.methods[k] = function(self, ...)
+            return self[k](...)
+         end
+      end
+   end
 
    if parents then
       if _interfaces[parents] then parents = {parents} end
@@ -42,8 +70,9 @@ function class.interface(name, reqs, parents)
             error(string.format("%s must be an interface", tostring(p)))
          end
          i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
+         i.methods = table.merge(table.deepcopy(p.methods), i.methods)
       end
-      i.parents = parents
+      i.parents = table.map(parents, function(p) return p.name end)
    end
 
    i.__tostring = iface_mt.__tostring
@@ -237,6 +266,14 @@ function class.class(name, ifaces)
 
    if _interfaces[ifaces] then ifaces = {ifaces} end
    c.interfaces = ifaces
+
+   if c.interfaces ~= nil then
+      for _, i in ipairs(c.interfaces) do
+         for k, v in pairs(i.methods) do
+            c[k] = v
+         end
+      end
+   end
 
    c.delegate = delegate
 

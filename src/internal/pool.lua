@@ -1,7 +1,8 @@
 local uid_tracker = require("internal.uid_tracker")
-local IPool = require("internal.IPool")
+local ILocation = require("api.ILocation")
+local MapObject = require("api.MapObject")
 
-local pool = class("pool", IPool)
+local pool = class("pool", ILocation)
 
 function pool:init(type_id, tracker, width, height)
    assert_is_an(uid_tracker, tracker)
@@ -16,75 +17,54 @@ function pool:init(type_id, tracker, width, height)
    self.positional = table.of_2d(function() return {} end, width, height, true)
 end
 
-function pool:get(uid)
+function pool:get_object(uid)
    if self.content[uid] == nil then
       return nil
    end
 
    local d = self.content[uid].data
 
-   local mt = {
-      __index = function(t, k)
-         -- BUG Does not preserve the validity of references that are
-         -- moved between maps when they're supposed to stay valid.
-         if k == "is_valid" then
-            return self.content[uid] ~= nil
-         end
-
-         return d[k]
-      end,
-      __newindex = function(t, k, v)
-         if k ~= "uid" then
-            d[k] = v
-         end
-      end,
-      __eq = function(a, b)
-         return type(a) == "table" and type(b) == "table" and a.uid == b.uid
-      end
-   }
-   return setmetatable({}, mt)
-end
-
-local function pool_generate(self, proto)
-   local uid = self.uid_tracker:get_next_and_increment(self.type_id)
-
-   local data = setmetatable({}, { __index = proto })
-
-   rawset(data, "uid", uid)
-
-   return data
+   return d
 end
 
 function pool:create_object(proto, x, y)
-   local raw = pool_generate(self, proto)
-
-   return self:add_object(raw, x, y)
+   local raw = MapObject.generate(proto, self.uid_tracker)
+   return self:take_object(raw, x, y)
 end
 
-function pool:add_object(obj, x, y)
+function pool:take_object(obj, x, y)
    assert(self.content[obj.uid] == nil)
+   x = x or 0
+   y = y or 0
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
-   assert(obj.pool == nil)
 
-   local entry = { data = obj, array_index = #self.uids + 1 }
+   -- obj:remove_ownership()
+   if obj.location then
+      obj.location:remove_object(obj)
+      obj.location = nil
+   end
 
    obj.x = x
    obj.y = y
-   obj.pool = self
+   obj.location = self
+
+   local entry = { data = obj, array_index = #self.uids + 1 }
 
    table.insert(self.uids, obj.uid)
    self.content[obj.uid] = entry
    table.insert(self.positional[y][x], obj.uid)
 
-   return self:get(obj.uid)
+   return self:get_object(obj.uid)
+end
+
+local function get_uid(obj)
 end
 
 function pool:move_object(obj, x, y)
-   assert(self:exists(obj.uid))
+   assert(self:has_object(obj))
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
-   assert(obj.pool == self)
 
    table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
    table.insert(self.positional[y][x], obj.uid)
@@ -93,7 +73,16 @@ function pool:move_object(obj, x, y)
    obj.y = y
 end
 
-function pool:remove(uid)
+function pool:remove_object(obj)
+   local uid
+   if type(obj) == "table" then
+      uid = obj.uid
+   elseif type(obj) == "number" then
+      uid = obj
+   else
+      error(string.format("remove_object takes an object or UID (got: %s)", obj))
+   end
+
    local entry = self.content[uid]
 
    if entry == nil then
@@ -110,32 +99,23 @@ function pool:remove(uid)
       end
    end
 
-   self.content[uid] = nil
+   local obj = self.content[uid].data
 
-   local obj = entry.data
+   self.content[obj.uid] = nil
+
    table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
 
-   assert(obj.pool == self)
-   obj.pool = nil
+   obj.location = nil
 
    return obj
 end
 
-function pool:objects_at(x, y)
+function pool:objects_at_pos(x, y)
    return self.positional[y][x]
 end
 
-function pool:at(index)
-   local i = self.uids[index]
-   if i == nil then
-      return nil
-   end
-
-   return self.content[i] and self.content[i].data
-end
-
-function pool:exists(uid)
-   return self.content[uid] ~= nil
+function pool:has_object(obj)
+   return self.content[obj.uid] ~= nil
 end
 
 local function iter(a, i)
@@ -149,21 +129,25 @@ local function iter(a, i)
    return i, d
 end
 
-function pool:iter(ordering)
+function pool:iter_objects(ordering)
    return iter, {uids=ordering or self.uids, content=self.content}, 1
 end
 
-function pool:transfer_to(pool_to, uid)
-   -- TODO
-end
-
-function pool:len()
+function pool:object_count()
    return #self.uids
 end
 
-function pool:transfer_to_with_pos(pool_to, uid, x, y)
-   assert(self.content[uid] ~= nil)
-   assert(pool_to.content[uid] == nil)
+function pool:is_positional()
+   return true
+end
+
+function pool:put_into(pool_to, obj, x, y)
+   x = x or 0
+   y = y or 0
+   local uid = obj.uid
+
+   assert(self:has_object(obj))
+   assert(not pool_to:has_object(obj))
    local ind = self.content[uid].array_index
    assert(ind ~= nil)
    assert(ind <= #self.uids)
@@ -171,8 +155,7 @@ function pool:transfer_to_with_pos(pool_to, uid, x, y)
    assert(type(x) == "number")
    assert(type(y) == "number")
 
-   local obj = self:remove(uid)
-   return pool_to:add_object(obj, x, y)
+   return pool_to:take_object(obj, x, y)
 end
 
 return pool
