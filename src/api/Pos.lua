@@ -74,4 +74,10 @@ function Pos.direction_in(start_x, start_y, finish_x, finish_y)
    return nx, ny
 end
 
+function Pos.is_in_square(x, y, center_x, center_y, perimeter)
+   local half = math.floor(perimeter / 2)
+   return x > center_x - half and x < center_x + half
+      and y > center_y - half and y < center_y + half
+end
+
 return Pos

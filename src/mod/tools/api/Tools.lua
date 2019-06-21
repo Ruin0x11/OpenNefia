@@ -34,4 +34,12 @@ function Tools.ally()
    end
 end
 
+function Tools.enemy()
+   for _, c in Map.iter_charas() do
+      if Chara.is_alive(c) and not c:is_in_party() then
+         return c
+      end
+   end
+end
+
 return Tools

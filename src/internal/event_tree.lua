@@ -1,206 +1,145 @@
-local function insert(node, k, v)
-   if node.key == k then
-      node.value[#node.value + 1] = v
-   elseif k < node.key then
-      local next_node = node.left
-      if not next_node then
-         node.left = { key = k, value = {v}, parent = node }
-      else
-         insert(next_node, k, v)
-      end
+local event_tree = class("event_tree")
+
+function event_tree:init()
+   self.dirty = true
+   self.cbs = {}
+   self.cache = {}
+   self.disabled = {}
+   self.disabled_inds = {}
+   self.name_to_ind = {}
+end
+
+function event_tree:count()
+   return #self.cbs
+end
+
+function event_tree:has_handler(name)
+   return self.name_to_ind[name] ~= nil
+end
+
+function event_tree:insert(priority, cb, name)
+   if self.name_to_ind[name] then
+      return false
+   end
+
+   assert(type(name) == "string")
+   self.dirty = true
+   self.cbs[#self.cbs+1] = { priority = priority, cb = cb, name = name }
+
+   -- In order to check for existence, but before sorting
+   self.name_to_ind[name] = -1
+
+   return true
+end
+
+function event_tree:disable(name)
+   self.disabled[name] = true
+
+   if self.dirty then
+      self:sort()
    else
-      local next_node = node.right
-      if not next_node then
-         node.right = { key = k, value = {v}, parent = node }
-      else
-         insert(next_node, k, v)
+      local ind = self.name_to_ind[name]
+      if ind ~= nil then
+         self.disabled_inds[ind] = true
       end
    end
 end
 
-local function traverse(node, cb, args)
-   if node.left then
-      if not traverse(node.left, cb, args) then
-         return false
+function event_tree:enable(name)
+   self.disabled[name] = nil
+
+   if self.dirty then
+      self:sort()
+   else
+      local ind = self.name_to_ind[name]
+      if ind ~= nil then
+         self.disabled_inds[ind] = nil
       end
    end
+end
 
-   if not cb(node.key, node.value, args) then
-      return false
+function event_tree:unregister(name)
+   local ind = self.name_to_ind[name]
+   if not ind then
+      return
    end
 
-   if node.right then
-      if not traverse(node.right, cb, args) then
-         return false
+   table.remove_by(self.cbs, function(v) return v.name == name end)
+
+   self.disabled_inds[ind] = nil
+   self.name_to_ind[name] = nil
+   self.dirty = true
+end
+
+function event_tree:sort()
+   table.sort(self.cbs, function(a, b) return a.priority < b.priority end)
+   self.cache = {}
+   for _, v in ipairs(self.cbs) do
+      local i = #self.cache+1
+      self.cache[i] = v.cb
+      self.name_to_ind[v.name] = i
+      if self.disabled[v.name] then
+         self.disabled_inds[i] = true
+      end
+   end
+   self.dirty = false
+end
+
+function event_tree:traverse(f, args)
+   if self.dirty then
+      self:sort()
+   end
+
+   local disabled = {}
+   local disabled_inds = self.disabled_inds
+
+   for i, cb in ipairs(self.cache) do
+      if not self.disabled_inds[i] or disabled[i] then
+         local result = cb(args)
+
+         if type(result) == "table" then
+            args = table.merge(args, result)
+         end
+
+         if args.blocked then
+            return false
+         end
+
+         if args.disabled then
+            for _, name in ipairs(args.disabled) do
+               local ind = self.name_to_ind[name]
+               if ind ~= nil then
+                  disabled[ind] = true
+               end
+            end
+         end
       end
    end
 
    return true
 end
 
-local function find_minimum(node)
-   local node = node
-   while node.left do
-      node = node.left
-   end
-   return node
-end
-
-local function replace(node, new_node)
-   if node.parent then
-      if node == node.parent.left then
-         node.parent.left = new_node
-      else
-         node.parent.right = new_node
-      end
-   end
-   if new_node then
-      new_node.parent = node.parent
-   end
-end
-
-local function find(tbl, value)
-   for i, v in ipairs(tbl) do
-      if v == value then
-         return v, i
-      end
-   end
-
-   return nil
-end
-
-local function remove_value(node, value)
-   if node.left then
-      if remove_value(node.left, value) then
-         return true
-      end
-   end
-
-   local it, index = find(node.value, value)
-
-   if index then
-      table.remove(node.value, index)
-      if #node.value > 0 then
-         return true
-      end
-
-      if node.left and node.right then
-         local min = find_minimum(node.right)
-         node.value = min.value
-
-         if min.left then
-            replace(min, min.left)
-         elseif min.right then
-            replace(min, min.right)
-         else
-            replace(min)
-         end
-      elseif node.left then
-         replace(node, node.left)
-      elseif node.right then
-         replace(node, node.right)
-      else
-         replace(node)
-      end
-      return true
-   end
-
-   if node.right then
-      if remove_value(node.right, value) then
-         return true
-      end
-   end
-
-   return false
-end
-
-local function print_tree(node, prefix, tail)
-   if tail then
-      print(prefix .. "└── " .. node.key .. " " .. inspect(node.value))
-   else
-      print(prefix .. "├── " .. node.key .. " " .. inspect(node.value))
-   end
-
-   local bit = "│   "
-   if tail then
-      bit = "    "
-   end
-
-   if node.left and node.right then
-      print_tree(node.left, prefix .. bit, false)
-      print_tree(node.right, prefix .. bit, true)
-   elseif node.left then
-      print_tree(node.left, prefix .. bit, true)
-   elseif node.right then
-      print_tree(node.right, prefix .. bit, true)
-   end
-end
-
-local event_tree = class("event_tree")
-
-function event_tree:insert(k, v)
-   if self.tree == nil then
-      self.tree = { key = k, value = {v} }
-   else
-      insert(self.tree, k, v)
-   end
-end
-
-function event_tree:traverse(cb, args)
-   if self.tree ~= nil then
-      traverse(self.tree, cb, args)
-   end
-end
-
-function event_tree:remove_value(value)
-   if self.tree ~= nil then
-      if self.tree.left then
-         if remove_value(self.tree.left, value) then
-            return true
-         end
-      end
-
-      local it, index = find(self.tree.value, value)
-
-      if index then
-         table.remove(self.tree.value, index)
-         if #self.tree.value > 0 then
-            return true
-         end
-
-         if self.tree.left and self.tree.right then
-            local min = find_minimum(self.tree.right)
-            self.tree.value = min.value
-
-            if min.left then
-               replace(min, min.left)
-            elseif min.right then
-               replace(min, min.right)
-            else
-               replace(min)
-            end
-         elseif self.tree.left then
-            self.tree = self.tree.left
-         elseif self.tree.right then
-            self.tree = self.tree.right
-         else
-            self.tree = nil
-         end
-         return true
-      end
-
-      if self.tree.right then
-         if remove_value(self.tree.right, value) then
-            return true
-         end
-      end
-   end
-end
-
 function event_tree:print()
-   if self.tree ~= nil then
-      print_tree(self.tree, "", true)
+   if self.dirty then
+      self:sort()
    end
+
+   local arr = {}
+   for _, v in ipairs(self.cbs) do
+      local disabled = ""
+      if self.disabled[v.name] then
+         disabled = "Yes"
+      end
+
+      arr[#arr+1] = { v.name, v.priority, disabled }
+   end
+
+   return table.print(arr,
+                      {
+                         header = { "Name", "Priority", "Disabled" },
+                         spacing = 2
+                      }
+   )
 end
 
 return event_tree

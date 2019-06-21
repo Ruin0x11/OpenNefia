@@ -13,3 +13,13 @@ end
 function math.percent_dec(v, per)
    return v - math.percent(v, per)
 end
+
+function math.sign(v)
+   if v < 0 then
+      return -1
+   elseif v > 0 then
+      return 1
+   else
+   end
+   return 0
+end

@@ -424,7 +424,6 @@ local function decide_ally_target(chara, params)
          if chara:reaction_towards(chara.ai_state.player_attacker) < 0 then
             if Chara.is_alive(chara.ai_state.player_attacker) then
                if Map.has_los(chara.x, chara.y, chara.ai_state.player_attacker.x, chara.ai_state.player_attacker.y) then
-                  print("Get target ", chara.uid)
                   chara.ai_state.hate = 5
                   chara:set_target(chara.ai_state.player_attacker)
                end
@@ -439,7 +438,6 @@ local function decide_ally_target(chara, params)
             local target = player:get_target()
             if target ~= nil and player:reaction_towards(target) < 0 then
                if Map.has_los(chara.x, chara.y, target.x, target.y) then
-                  print("Get target ", chara.uid)
                   chara.ai_state.hate = 5
                   chara:set_target(target)
                end
@@ -448,6 +446,7 @@ local function decide_ally_target(chara, params)
       end
       -- EVENT: base.on_calculate_ally_target
       -- wet/invisible
+      -- EVENT: on_set_target?
    end
 end
 
@@ -515,6 +514,23 @@ local function decide_targeted_action(chara, params)
    return Ai.run("base.basic_action", chara)
 end
 
+local function ai_talk(chara, params)
+   if not chara:calc("is_talk_silenced") then
+      if chara.turns_alive % 5 == 0 then
+         if Rand.one_in(4) then
+            local player = Chara.player()
+            if Pos.is_in_square(chara.x, chara.y, player.x, player.y, 20) then
+               if chara.ai_state.hate <= 0 then
+                  chara:say("base.ai_calm")
+               else
+                  chara:say("base.ai_aggro")
+               end
+            end
+         end
+      end
+   end
+end
+
 local function elona_default_ai(chara, params)
    if chara:is_in_party() then
       Ai.run("base.decide_ally_target", chara)
@@ -530,7 +546,9 @@ local function elona_default_ai(chara, params)
    -- pet arena
    -- noyel
    -- mount
-   -- custom talk
+
+   Ai.run("base.ai_talk", chara)
+
    -- choked
 
    if Ai.run("base.try_to_heal", chara) then
@@ -542,9 +560,7 @@ local function elona_default_ai(chara, params)
       return Ai.run("base.decide_targeted_action", chara)
    end
 
-   -- HACK: don't make enemies all scan on the same turn since it's
-   -- slow.
-   if chara.turns_alive % 10 == 1 then
+   if chara.turns_alive % 10 == 0 then
       Ai.run("base.search_for_target", chara)
    end
 
@@ -577,6 +593,7 @@ data:add_multi(
    { _id = "basic_action",                act = basic_action },
    { _id = "search_for_target",           act = search_for_target },
    { _id = "decide_ally_target",          act = decide_ally_target },
+   { _id = "ai_talk",                     act = ai_talk },
    { _id = "try_to_heal",                 act = try_to_heal },
    { _id = "idle_action",                 act = idle_action },
    { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },

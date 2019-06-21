@@ -29,6 +29,8 @@ local SANDBOX_GLOBALS = {
    -- OOP generators
    "interface",
    "class",
+   "is_an",
+   "assert_is_an",
 
    -- misc. globals
    "inspect",

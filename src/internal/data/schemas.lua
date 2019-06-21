@@ -36,6 +36,7 @@ data:add_type {
 data:add_type {
    name = "event",
    schema = schema.Record {
+      observer = schema.Optional(schema.String)
    },
 }
 
@@ -82,27 +83,16 @@ data:add_type {
 }
 
 data:add_type {
-   name = "element",
+   name = "talk",
    schema = schema.Record {
-      can_resist = schema.Boolean,
-      can_be_immune_to = schema.Boolean,
-      on_damage_hp = schema.Optional(schema.Function),
-      on_kill = schema.Optional(schema.Function),
-      kill_animation = schema.Optional(schema.String),
-      sound = schema.Optional(schema.String),
+      messages = schema.Table
    }
 }
 
 data:add_type {
-   name = "status_effect",
+   name = "talk_event",
    schema = schema.Record {
-      related_element = schema.Optional(schema.String),
-      before_apply = schema.Optional(schema.Function),
-      power_reduction_factor = schema.Optional(schema.Number),
-      additive_power = schema.Optional(schema.Function),
-      on_turn_begin = schema.Optional(schema.Function),
-      on_turn_end = schema.Optional(schema.Function),
-      ui_indicator = schema.Table, -- { string, color } or { [int] = { string, color }, ... }
+      params = schema.Table
    }
 }
 

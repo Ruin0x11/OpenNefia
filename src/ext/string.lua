@@ -15,6 +15,14 @@ local function escape_for_gsub(s)
    return string.gsub(s, "([^%w])", "%%%1")
 end
 
+function string.has_prefix(s, prefix)
+   return string.find(s, "^" .. escape_for_gsub(prefix))
+end
+
+function string.has_suffix(s, suffix)
+   return string.find(s, escape_for_gsub(suffix) .. "$")
+end
+
 function string.strip_prefix(s, prefix)
    return string.gsub(s, "^" .. escape_for_gsub(prefix), "")
 end
@@ -29,4 +37,10 @@ function string.split(str, sep)
    local pattern = string.format("([^%s]+)", sep)
    string.gsub(str, pattern, function(c) fields[#fields+1] = c end)
    return fields
+end
+
+function string.split_at_pos(str, pos)
+   local a = string.sub(str, 0, pos)
+   local b = string.sub(str, pos+1)
+   return a, b
 end

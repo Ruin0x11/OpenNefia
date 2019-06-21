@@ -10,10 +10,12 @@ data:add_multi(
       _id = "on_calc_damage"
    },
    {
-      _id = "after_damage_hp"
+      _id = "after_damage_hp",
+      observer = "chara"
    },
    {
-      _id = "on_player_bumped_into_chara"
+      _id = "on_player_bumped_into_chara",
+      observer = "chara"
    },
    {
       _id = "before_player_map_leave"
@@ -22,10 +24,12 @@ data:add_multi(
       _id = "on_player_bumped_into_object"
    },
    {
-      _id = "on_chara_hostile_action"
+      _id = "on_chara_hostile_action",
+      observer = "chara"
    },
    {
-      _id = "on_chara_killed"
+      _id = "on_chara_killed",
+      observer = "chara"
    },
    {
       _id = "on_calc_kill_exp"
@@ -47,6 +51,24 @@ data:add_multi(
    },
    {
       _id = "on_apply_status_effect"
+   },
+   {
+      _id = "on_chara_revived",
+      observer = "chara"
+   },
+   {
+      _id = "on_talk",
+      observer = "chara"
+   }
+)
+
+data:add_multi(
+   "base.talk_event",
+   {
+      _id = "ai_aggro"
+   },
+   {
+      _id = "ai_calm"
    }
 )
 

@@ -6,8 +6,11 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local ICharaLocation = require("api.chara.ICharaLocation")
 local ICharaFaction = require("api.chara.ICharaFaction")
+local ICharaTalk = require("api.chara.ICharaTalk")
 local IMapObject = require("api.IMapObject")
+local IObserver = require("api.IObserver")
 local Inventory = require("api.Inventory")
+local InstancedMap = require("api.InstancedMap")
 
 -- TODO: move out of api
 local IChara = interface("IChara",
@@ -15,10 +18,14 @@ local IChara = interface("IChara",
                          {
                             IMapObject,
                             ICharaLocation,
-                            ICharaFaction
+                            ICharaFaction,
+                            ICharaTalk,
+                            IObserver
                          })
 
 function IChara:build()
+   IMapObject.init(self)
+
    self.hp = self.max_hp
    self.mp = self.max_mp
    self.batch_ind = 0
@@ -51,7 +58,7 @@ function IChara:build()
       last_target_y = 0,
       anchor_x = nil,
       anchor_y = nil,
-      is_anchored = false
+      is_anchored = false,
    }
 
    -- TODO schema
@@ -67,6 +74,9 @@ function IChara:build()
       }
 
    self.known_abilities = self.known_abilities or {}
+
+   IObserver.init(self)
+   ICharaTalk.init(self)
 end
 
 function IChara:refresh()
@@ -241,20 +251,7 @@ function IChara:damage_hp(amount, source, params)
    if victim.hp < 0 then
       killed = true
 
-      if attacker then
-         local death_type = Rand.rnd(4)
-         Gui.mes(victim.uid .. " was killed.")
-      else
-         if source.get_death_cause then
-            local death_cause = source.get_death_cause()
-         else
-            Gui.mes(victim.uid .. " dies.")
-         end
-      end
-
-      victim:kill()
-
-      Event.trigger("base.on_chara_killed", event_params)
+      victim:kill(source)
 
       if attacker then
          local gained_exp = calc_kill_exp(attacker, victim)
@@ -294,9 +291,60 @@ function IChara:heal_to_max()
    self.mp = self.max_mp
 end
 
-function IChara:kill()
-   -- Persist based on character type.
+function IChara:kill(source)
+   if not Chara.is_alive(self) then
+      return
+   end
+
+   if is_an(IChara, source) then
+      local death_type = Rand.rnd(4)
+      Gui.mes(self.uid .. " was killed.")
+   else
+      if source and source.get_death_cause then
+         local death_cause = source.get_death_cause()
+      else
+         Gui.mes(self.uid .. " dies.")
+      end
+   end
+
    self.state = "Dead"
+
+   Event.trigger("base.on_chara_killed", {chara=self,source=source})
+end
+
+function IChara:current_map()
+   if is_an(InstancedMap, self.location) then
+      return self.location
+   end
+
+   return nil
+end
+
+function IChara:revive()
+   if Chara.is_alive(self) then
+      return
+   end
+
+   local map = self:current_map()
+   if map == nil then
+      return false
+   end
+
+   local nx, ny = Map.find_position_for_chara(self, self.x, self.y, map)
+
+   if nx == nil then
+      return false
+   end
+
+   self.state = "Alive"
+   self:set_pos(nx, ny)
+   self:heal_to_max()
+
+   Gui.mes(self.uid .. " has revived!")
+
+   Event.trigger("base.on_chara_revived", {chara=self})
+
+   return true
 end
 
 function IChara:set_target(target)

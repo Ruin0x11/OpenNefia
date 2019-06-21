@@ -26,8 +26,18 @@ function Event.trigger(event_id, args, opts)
    return global_events:trigger(event_id, args, opts)
 end
 
+function Event.add_observer(event_id, observer)
+   check_event(event_id)
+   return global_events:add_observer(event_id, observer)
+end
+
+function Event.remove_observer(event_id, observer)
+   check_event(event_id)
+   return global_events:remove_observer(event_id, observer)
+end
+
 function Event.list(event_id)
-   -- TODO: print name, file/line number defined, allow jump to
+   return global_events:print(event_id)
 end
 
 return Event

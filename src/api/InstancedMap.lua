@@ -234,8 +234,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       set_shadow_border(lx - 1, ly + 1, 0x80) -- NE
    end
 
-   print(start_y,end_y,start_x,end_x)
-
    for j=start_y,end_y do
       lx = 1
 

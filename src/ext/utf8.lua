@@ -25,6 +25,8 @@ end
 -- @treturn string
 function utf8.sub(t, i, j)
    local len = utf8.len(t)
+   i = i or 0
+   j = j or len
 
    local start = utf8.offset(t, i) or 0
    local finish = (utf8.offset(t, j + 1) or (#t + 1)) - 1
@@ -143,4 +145,42 @@ end
 function utf8.chars(str)
    local inner_iter, inner_state, inner_first = utf8.codes(str)
    return iter, {str=str, iter=inner_iter,inner_state=inner_state,inner_index=inner_first+1}, inner_first+1
+end
+
+local function is_first_byte_of_utf8(byte)
+   return (byte >= 0 and byte <= 0x7F)
+      or (byte >= 0xC2 and byte <= 0xF4)
+end
+
+--- Gets the byte pos in str at delta codepoints over. Assumes str is
+--- valid Unicode.
+-- @tparam string str
+-- @tparam int pos byte position
+-- @tparam int delta can be negative
+function utf8.find_next_pos(str, pos, delta)
+   if delta == 0 then
+      return pos
+   end
+   local old = pos
+
+   local d = math.sign(delta)
+
+   local b = string.byte(str, pos)
+
+   local remain = delta + d
+
+   while b ~= nil do
+      if is_first_byte_of_utf8(b) then
+         remain = remain - d
+         if remain == 0 then
+            break
+         end
+      end
+      pos = pos + d
+      b = string.byte(str, pos)
+   end
+
+   _p(old,pos,delta,str)
+
+   return pos
 end

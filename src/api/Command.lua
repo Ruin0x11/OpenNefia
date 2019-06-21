@@ -33,7 +33,7 @@ function Command.move(player, x, y)
 
       local result
 
-      Event.trigger("base.on_player_bumped_into_chara", {player=player,on_cell=on_cell})
+      Event.trigger("base.on_player_bumped_into_chara", {player=player,chara=on_cell})
 
       local reaction = player:reaction_towards(on_cell)
 

@@ -97,7 +97,7 @@ local function can_place_chara_at(chara, x, y, map)
    return Map.can_access(x, y, map)
 end
 
-local function chara_get_place_pos(chara, x, y, map)
+function Map.find_position_for_chara(chara, x, y, map)
    local Chara = require("api.Chara")
 
    local tries = 0
@@ -131,17 +131,21 @@ local function chara_get_place_pos(chara, x, y, map)
    cx = Rand.rnd(map.width)
    cy = Rand.rnd(map.height)
 
-   Map.force_clear_pos(cx, cy, map)
-
-   assert(can_place_chara_at(chara, cx, cy, map))
-
    return cx, cy
 end
 
 local function try_place(chara, x, y, current, map)
-   local real_x, real_y = chara_get_place_pos(chara, x, y, map)
+   local real_x, real_y = Map.find_position_for_chara(chara, x, y, map)
 
    if real_x ~= nil then
+      if not can_place_chara_at(chara, real_x, real_y, map) then
+         assert(chara:is_player())
+
+         Map.force_clear_pos(real_x, real_y, map)
+
+         assert(can_place_chara_at(chara, real_x, real_y, map))
+      end
+
       return map:take_object(chara, real_x, real_y)
    end
 

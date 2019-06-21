@@ -57,7 +57,6 @@ function Window:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
-   print(self.x,self.y,self.width,self.height)
 
    self.data.batch:clear()
 

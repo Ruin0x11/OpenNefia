@@ -27,7 +27,7 @@ function Inventory:sorted_by(comparator)
    end
 
    table.sort(indices, comp)
-   return table.map(indices, function(ind) return self:at(ind) end, true)
+   return table.imap(indices, function(ind) return self:at(ind) end)
 end
 
 function Inventory:contains(item)

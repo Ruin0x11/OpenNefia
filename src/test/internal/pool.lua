@@ -151,3 +151,17 @@ test("pool - positional move", function()
 
         ok(not pcall(function() p:move_object(a, 5, 5) end))
 end)
+
+test("pool - gc", function()
+        local u = uid_tracker:new()
+        local p = pool:new("test", u, 10, 10)
+        local a = p:create_object({thing = "hoge"}, 5, 5)
+
+        local t = setmetatable({a}, { __mode = "v" })
+
+        p:remove_object(a)
+        a = nil
+        collectgarbage()
+
+        ok(t[1] == nil)
+end)

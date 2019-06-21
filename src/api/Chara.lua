@@ -7,7 +7,6 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 
-local chara = require("internal.chara")
 local data = require("internal.data")
 local field = require("game.field")
 
@@ -87,7 +86,7 @@ function Chara.create(id, x, y, params, map)
 
    assert(type(proto) == "table")
 
-   chara = map:create_object(proto, x, y)
+   local chara = map:create_object(proto, x, y)
 
    return chara
 end

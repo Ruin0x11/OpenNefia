@@ -17,6 +17,8 @@ ICharaLocation:delegate("inv",
                            "iter_objects"
                         })
 
+_p("getobject", ICharaLocation.get_object)
+
 function ICharaLocation:take_object(obj)
    self.inv:take_object(obj)
    obj.location = self

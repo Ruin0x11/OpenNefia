@@ -47,13 +47,13 @@ function class.interface(name, reqs, parents)
 
    i.__index = i
    i.name = name
-   i.reqs = reqs
+   i.reqs = reqs or {}
    i.methods = {}
 
-   i.delegate = function(field, params)
+   i.delegate = function(i, field, params)
       if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
       if _interfaces[params] or type(params) == "string" then params = {params} end
-      for k, v in ipairs(params) do
+      for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)
             return self[k](...)
          end
@@ -98,6 +98,7 @@ local function verify(instance, interface)
    -- can be easily subverted after the fact.
    for name, kind in pairs(interface.reqs) do
       local required_type
+      local optional = false
       if type(kind) == "table" then
          -- Default prototype parameter. If none exists on the
          -- instance, set it now.
@@ -106,12 +107,13 @@ local function verify(instance, interface)
          end
          -- If the type differs from the default, produce an error.
          required_type = type(kind.default)
+         optional = kind.optional
       else
          required_type = kind
       end
 
-      if type(instance[name]) ~= required_type then
-         err = (err or "") .. string.format("\n    %s (%s)", name, kind)
+      if type(instance[name]) ~= required_type and not optional then
+         err = (err or "") .. string.format("\n    %s (%s)", name, required_type)
       end
    end
 
@@ -135,11 +137,17 @@ local function delegate(c, field, params)
 end
 
 function is_an(interface, obj)
+   if obj == nil then
+      return false
+   end
+
    if _classes[interface] then
       return type(obj) == "table" and obj.__class == interface
    end
 
-   return verify(obj, interface) == nil
+   local err = verify(obj, interface)
+
+   return err == nil, err
 end
 
 function assert_is_an(interface, obj)

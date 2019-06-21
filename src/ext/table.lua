@@ -77,6 +77,25 @@ function table.merge_missing(a, b)
    return a
 end
 
+--- Merges two tables, where keys from b that are not in a will have
+--- their values discarded.
+-- @tparam table a
+-- @tparam table b
+-- @treturn table
+function table.merge_existing(a, b)
+   if not b then
+      return a
+   end
+
+   for k, v in pairs(b) do
+      if a[k] ~= nil then
+         a[k] = v
+      end
+   end
+
+   return a
+end
+
 local function cycle_aware_copy(t, cache)
     if type(t) ~= 'table' then return t end
     if cache[t] then return cache[t] end
@@ -239,18 +258,36 @@ end
 --- Maps a function over tbl.
 -- @tparam table tbl
 -- @tparam func f
--- @tparam bool array set to true if tbl is an array
 -- @treturn table
-function table.map(tbl, f, array)
+function table.map(tbl, f)
    local t = {}
-   if array then
-      for i, v in ipairs(tbl) do
-         t[i] = f(v)
-      end
-   else
-      for k, v in pairs(tbl) do
-         t[k] = f(v)
-      end
+   for k, v in pairs(tbl) do
+      t[k] = f(v)
+   end
+   return t
+end
+
+--- Maps a function over the keys of tbl.
+-- @tparam table tbl
+-- @tparam func f
+-- @treturn table
+function table.map_keys(tbl, f)
+   local t = {}
+   for k, v in pairs(tbl) do
+      t[k] = nil
+      t[f(k)] = v
+   end
+   return t
+end
+
+--- Maps a function over arr.
+-- @tparam array tbl
+-- @tparam func f
+-- @treturn array
+function table.imap(tbl, f, array)
+   local t = {}
+   for i, v in ipairs(tbl) do
+      t[i] = f(v)
    end
    return t
 end
@@ -354,4 +391,65 @@ function table.remove_indices(arr, inds)
       offset = offset + 1
    end
    return arr
+end
+
+function table.remove_by(arr, f)
+   local inds = {}
+   for i, v in ipairs(arr) do
+      if f(v) then
+         inds[#inds+1] = i
+      end
+   end
+   return table.remove_indices(arr, inds)
+end
+
+local function right_pad(str, len)
+    return str .. string.rep(' ', len - #str)
+end
+
+--- Formats a 2-dimensional array-like table in a printable manner.
+-- @tparam array t
+-- @tparam[opt] array params.header
+-- @tparam[opt] array params.spacing
+-- @treturn string
+function table.print(t, params)
+   if not (t[1] ~= nil and t[1][1] ~= nil) then
+      return "(empty)"
+   end
+
+   local columns = #t[1]
+   local widths = table.of(0, columns)
+   local spacing = params.spacing or 1
+
+   if params.header then
+      for j, item in ipairs(params.header) do
+         widths[j] = math.max(widths[j], utf8.wide_len(item) + spacing)
+      end
+   end
+
+   for i, row in ipairs(t) do
+      for j, item in ipairs(row) do
+         widths[j] = math.max(widths[j], utf8.wide_len(tostring(item)) + spacing)
+      end
+   end
+
+   local total_width = table.reduce(widths, function(sum, n) return sum + n + 1 end, 0)
+
+   local s = ""
+
+   if params.header then
+      for j, item in ipairs(params.header) do
+         s = s .. string.format("%s", right_pad(item, widths[j] + spacing))
+      end
+      s = s .. "\n" .. string.rep('-', total_width) .. "\n"
+   end
+
+   for i, row in ipairs(t) do
+      for j, item in ipairs(row) do
+         s = s .. string.format("%s", right_pad(tostring(item), widths[j] + spacing))
+      end
+      s = s .. "\n"
+   end
+
+   return s
 end

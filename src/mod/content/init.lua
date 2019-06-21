@@ -17,7 +17,9 @@ data:add {
    faction = "base.enemy",
    image = 10,
    max_hp = 100,
-   max_mp = 20
+   max_mp = 20,
+
+   talk = "base.test"
 }
 
 data:add {
@@ -55,6 +57,42 @@ data:add {
    image = "graphic/temp/map_tile/1_399.png",
    is_solid = true,
    is_opaque = true
+}
+
+data:add {
+   _type = "base.talk",
+   _id = "test",
+
+   messages = {
+      jp = {
+         ["event:base.on_chara_killed"] = {
+            "「と、取り返しのつかない事を…取り返しのつかない事をしてしまった…」",
+            "「自信があってやる訳じゃないのに」",
+            ""
+         },
+
+         ["event:base.after_damage_hp"] = {
+            "Ow.",
+            "Eek!",
+            "It hurts.",
+         },
+
+         ["event:base.on_chara_revived"] = "I'm revived.",
+
+         ["base.ai_aggro"] = {
+            "「こいつ、動くよ」",
+            "「戦いが終わったらぐっすり眠れるっていう保証がある？」",
+            "「見える。動きが見える！」",
+            ""
+         },
+
+         ["base.ai_calm"] = {
+            "「誰だ？誰かが私を見ている」",
+            "「悔しいけど…」",
+            ""
+         }
+      }
+   }
 }
 
 
