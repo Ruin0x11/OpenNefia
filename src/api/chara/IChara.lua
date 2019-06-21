@@ -183,7 +183,7 @@ function IChara:damage_hp(amount, source, params)
 
    victim.hp = math.min(victim.hp - damage, victim.max_hp)
 
-   Event.trigger("base.after_apply_damage", event_params)
+   Event.trigger("base.after_chara_damaged", event_params)
 
    local damage_level
    if damage <= 0 then
@@ -307,9 +307,9 @@ function IChara:kill(source)
       end
    end
 
-   self.state = "Dead"
-
    Event.trigger("base.on_chara_killed", {chara=self,source=source})
+
+   self.state = "Dead"
 end
 
 function IChara:current_map()

@@ -4,7 +4,8 @@ data:add_multi(
       _id = "before_ai_decide_action"
    },
    {
-      _id = "after_apply_damage"
+      _id = "after_chara_damaged",
+      observer = "chara"
    },
    {
       _id = "on_calc_damage"
@@ -69,6 +70,12 @@ data:add_multi(
    },
    {
       _id = "ai_calm"
+   },
+   {
+      _id = "ai_melee"
+   },
+   {
+      _id = "ai_ranged"
    }
 )
 

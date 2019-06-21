@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -53,7 +54,7 @@ function RollAttributesMenu:init()
       "Charisma"
    }
    self.data = {
-      { text = "Reroll", on_choose = function() self:reroll() end },
+      { text = "Reroll", on_choose = function() self:reroll(true) end },
       { text = "Proceed" },
    }
    local function lock(attr)
@@ -91,6 +92,7 @@ function RollAttributesMenu:init()
    self.bg = load_cm_bg(1)
 
    self.caption = "Roll your attributes."
+   self.intro_sound = "base.skill"
 
    self:reroll()
 end
@@ -102,12 +104,15 @@ function RollAttributesMenu:on_charamake_go_back()
    self.alist.chosen = false
 end
 
-function RollAttributesMenu:reroll()
-   print("reroll")
+function RollAttributesMenu:reroll(play_sound)
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
          v.value = math.random(1, 15)
       end
+   end
+
+   if play_sound then
+      Gui.play_sound("base.dice")
    end
 end
 
@@ -122,6 +127,8 @@ function RollAttributesMenu:lock(attr)
       a.locked = true
       self.locks_left = self.locks_left - 1
    end
+
+   Gui.play_sound("base.ok1")
 end
 
 function RollAttributesMenu:draw_attribute(item, i, x, y)

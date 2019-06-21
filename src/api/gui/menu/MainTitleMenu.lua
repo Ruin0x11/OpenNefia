@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
@@ -114,6 +115,9 @@ function MainTitleMenu:update(dt)
    self.t = self.t + dt
 
    if self.list.chosen then
+      if self.list.selected ~= 2 then
+         Gui.play_sound("base.ok1")
+      end
       return self.list.selected
    end
 

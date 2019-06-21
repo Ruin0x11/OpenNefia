@@ -147,9 +147,7 @@ function Repl:delete_char()
       self.text = utf8.sub(self.text, 2)
    else
       local a, b = string.split_at_pos(self.text, self.cursor_pos)
-      print(a,b)
       a = utf8.sub(a, 1, utf8.len(a)-1)
-      print(a, "|||", b)
       self.text = a .. b
    end
 
@@ -162,6 +160,7 @@ function Repl:set_cursor_pos(byte)
    Draw.set_font(self.font_size)
    local rest = string.sub(self.text, 0, self.cursor_pos)
    self.cursor_x = Draw.text_width(rest)
+   self.frames = 0
 end
 
 function Repl:relayout(x, y, width, height)
@@ -237,7 +236,7 @@ function Repl:draw()
    Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
 
-   if math.floor(self.frames * 2) % 2 == 1 then
+   if math.floor(self.frames * 2) % 2 == 0 then
       local x = self.x + 5 + Draw.text_width(self.mode.caret) + self.cursor_x + 1
       local y = self.y + top - Draw.text_height() - 5
       Draw.line(x, y, x, y + Draw.text_height() - 1)

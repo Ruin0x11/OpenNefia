@@ -35,6 +35,7 @@ function SelectScenarioMenu:init()
    }
 
    self.caption = "Choose a scenario. It will change the start location and win conditions."
+   self.intro_sound = "base.ok1"
 end
 
 function SelectScenarioMenu:on_charamake_finish()

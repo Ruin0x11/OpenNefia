@@ -21,6 +21,7 @@ function SelectFeatsMenu:init(chara)
    self.input:forward_to(self.inner)
 
    self.caption = "Your caption here."
+   self.intro_sound = "base.feat"
 end
 
 function SelectFeatsMenu:relayout()

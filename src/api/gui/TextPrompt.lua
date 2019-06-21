@@ -1,5 +1,6 @@
 local I18N = require("api.I18N")
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -68,6 +69,10 @@ end
 
 function TextPrompt:focus()
    self.input:focus()
+end
+
+function TextPrompt:on_query()
+   Gui.play_sound("base.ok1")
 end
 
 function TextPrompt:cancel()

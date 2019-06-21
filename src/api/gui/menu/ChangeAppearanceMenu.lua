@@ -48,13 +48,14 @@ function ChangeAppearanceMenu:init()
 
    table.merge(self.list, ChangeAppearanceListExt(self))
 
-   self.caption = "Change appearance."
-
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
    self.input:bind_keys {
       shift = function() self.canceled = true end
    }
+
+   self.caption = "Change appearance."
+   self.intro_sound = "base.port"
 end
 
 function ChangeAppearanceMenu:on_charamake_finish()

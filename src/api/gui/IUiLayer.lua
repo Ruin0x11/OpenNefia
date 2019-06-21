@@ -12,6 +12,8 @@ local function query(self)
 
    internal.draw.push_layer(self)
 
+   self:on_query()
+
    local res, canceled
    while true do
       local ran = self:run_actions(dt)
@@ -31,6 +33,7 @@ IUiLayer = interface("IUiLayer",
                  {
                     relayout = "function",
                     query = { default = query },
+                    on_query = { default = function() end },
                  },
                  { IDrawable, IInput })
 

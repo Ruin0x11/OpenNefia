@@ -411,6 +411,7 @@ end
 -- @tparam array t
 -- @tparam[opt] array params.header
 -- @tparam[opt] array params.spacing
+-- @tparam[opt] array params.sort
 -- @treturn string
 function table.print(t, params)
    if not (t[1] ~= nil and t[1][1] ~= nil) then
@@ -420,6 +421,10 @@ function table.print(t, params)
    local columns = #t[1]
    local widths = table.of(0, columns)
    local spacing = params.spacing or 1
+
+   if params.sort then
+      table.sort(t, function(a, b) return a[params.sort] < b[params.sort] end)
+   end
 
    if params.header then
       for j, item in ipairs(params.header) do

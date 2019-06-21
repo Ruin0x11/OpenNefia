@@ -67,6 +67,7 @@ function KeyHandler:unbind_keys(bindings)
 end
 
 function KeyHandler:halt_input()
+   print("halt")
    self.repeat_delays = {}
    self.pressed = {}
    self.this_frame = {}
@@ -104,7 +105,7 @@ function KeyHandler:handle_repeat(key, dt)
             it.fast = true
          end
          if it.fast then
-            it.delay = 20
+            it.delay = 18
          else
             it.delay = 200
          end

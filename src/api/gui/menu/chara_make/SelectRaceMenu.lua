@@ -34,6 +34,7 @@ function SelectRaceMenu:init()
    }
 
    self.caption = "Yaa. I've been waiting for you."
+   self.intro_sound = "base.ok1"
 end
 
 function SelectRaceMenu:relayout()
@@ -67,6 +68,9 @@ function SelectRaceMenu:draw()
    Draw.image(self.chip_female, self.x + 350, self.y + 96, 96, 96, {255, 255, 255, 40})
 
    self.race_info:draw()
+end
+
+function SelectRaceMenu:on_query()
 end
 
 function SelectRaceMenu:on_charamake_finish()

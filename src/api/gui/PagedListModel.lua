@@ -72,26 +72,34 @@ end
 
 function PagedListModel:next_page()
    local page = self.page + 1
+   local turned = true
    if page > self.page_max then
       if self.wrapping then
          page = 0
       else
          page = self.page_max
+         turned = false
       end
    end
    self:select_page(page)
+
+   return turned
 end
 
 function PagedListModel:previous_page()
    local page = self.page - 1
+   local turned = true
    if page < 0 then
       if self.wrapping then
          page = self.page_max
       else
          page = 0
+         turned = false
       end
    end
    self:select_page(page)
+
+   return turned
 end
 
 function PagedListModel:select_next()

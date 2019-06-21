@@ -42,7 +42,7 @@ function DamagePopupLayer:draw(draw_x, draw_y)
       local font_size = v.font
 
       Draw.set_font(font_size)
-      x = x - math.floor(Draw.text_width(v.text) / 2) - draw_x
+      x = x - math.floor(Draw.text_width(v.text)) - draw_x
       y = y - math.floor(Draw.text_height() / 2) - 2 * v.frame - draw_y
 
       Draw.text_shadowed(v.text, x, y, v.color)

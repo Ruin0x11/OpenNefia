@@ -36,6 +36,7 @@ function SelectClassMenu:init(race)
    }
 
    self.caption = "Choose a class."
+   self.intro_sound = "base.ok1"
 end
 
 function SelectClassMenu:on_charamake_finish()

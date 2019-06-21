@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -28,8 +29,16 @@ function BookMenu:init(text, elona_compat)
    self.input:bind_keys {
       escape = function() self.canceled = true end,
       shift = function() self.canceled = true end,
-      left = function() self.model:previous_page() end,
-      right = function() self.model:next_page() end,
+      left = function()
+         if self.model:previous_page() then
+            Gui.play_sound("base.card1")
+         end
+      end,
+      right = function()
+         if self.model:next_page() then
+            Gui.play_sound("base.card1")
+         end
+      end,
       ["return"] = function() self.canceled = true end
    }
 end
@@ -70,6 +79,10 @@ local function parse_params(line)
    end
 
    return line, params
+end
+
+function BookMenu:on_query()
+   Gui.play_sound("base.book1")
 end
 
 function BookMenu:set_data(text)

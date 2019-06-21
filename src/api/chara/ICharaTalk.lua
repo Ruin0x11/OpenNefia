@@ -1,3 +1,4 @@
+local Chara = require("api.Chara")
 local Talk = require("api.Talk")
 
 local ICharaTalk = interface("ICharaTalk")
@@ -13,6 +14,10 @@ function ICharaTalk:set_talk(talk)
 end
 
 function ICharaTalk:say(talk_id, args)
+   if not Chara.is_alive(self) then
+      return
+   end
+
    Talk.say(self, talk_id, args)
 end
 

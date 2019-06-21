@@ -180,7 +180,5 @@ function utf8.find_next_pos(str, pos, delta)
       b = string.byte(str, pos)
    end
 
-   _p(old,pos,delta,str)
-
    return pos
 end

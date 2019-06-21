@@ -1,4 +1,5 @@
 bin/
 graphic/
+sound/
 *.ttf
 /src/repl_history.txt

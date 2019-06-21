@@ -13,7 +13,7 @@ function Item.at(x, y, map)
       return {}
    end
 
-   local objs = map:objects_at("base.item", x, y)
+   local objs = map:objects_at_pos("base.item", x, y)
 
    local items = {}
    for _, id in ipairs(objs) do

@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
@@ -56,7 +57,10 @@ function CharaMakeWrapper:proceed()
    self.caption:set_data(self.submenu.caption)
    self:relayout()
 
+   Gui.play_sound(self.submenu.intro_sound)
+
    self.input:forward_to(self.submenu)
+   self.input:halt_input()
 end
 
 function CharaMakeWrapper:go_back()
@@ -70,6 +74,7 @@ function CharaMakeWrapper:go_back()
    self:relayout()
 
    self.input:forward_to(self.submenu)
+   self.input:halt_input()
 end
 
 function CharaMakeWrapper:go_to_start()

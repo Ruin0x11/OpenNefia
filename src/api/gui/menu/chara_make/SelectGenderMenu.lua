@@ -34,6 +34,7 @@ function SelectGenderMenu:init()
    }
 
    self.caption = "There is no difference in the genders."
+   self.intro_sound = "base.spell"
 end
 
 function SelectGenderMenu:relayout()

@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local IUiList = require("api.gui.IUiList")
 local ListModel = require("api.gui.ListModel")
@@ -54,15 +55,29 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
    local thing = {}
    for i=1,#keys do
       local key = keys:sub(i, i)
-      thing[key] = function() self:choose(i) end
+      thing[key] = function()
+         self:choose(i)
+      end
    end
-   thing.up = function() self:select_previous() end
-   thing.down = function() self:select_next() end
+   thing.up = function()
+      self:select_previous()
+      Gui.play_sound("base.cursor1")
+   end
+   thing.down = function()
+      self:select_next()
+      Gui.play_sound("base.cursor1")
+   end
    thing["return"] = function() self:choose() end
 
    if is_an(IPaged, self.model) then
-      thing.left = function()  self:previous_page();print("Page Prev." .. self.page); end
-      thing.right = function()  self:next_page();print("Page Next." .. self.page); end
+      thing.left = function()
+         self:previous_page()
+         Gui.play_sound("base.pop1")
+      end
+      thing.right = function()
+         self:next_page()
+         Gui.play_sound("base.pop1")
+      end
    end
 
    self.input = InputHandler:new()

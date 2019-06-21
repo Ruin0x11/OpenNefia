@@ -69,4 +69,28 @@ function Gui.mes_continue_sentence()
    get_message_window():new_turn()
 end
 
+function Gui.play_sound(sound_id, x, y, channel)
+   local sound_manager = require("internal.global.sound_manager")
+   local coords = draw.get_coords()
+
+   if x ~= nil and y ~= nil then
+      local sx, sy = coords:tile_to_screen(x, y)
+      sound_manager:play(sound_id, sx, sy, channel)
+   else
+      sound_manager:play(sound_id, nil, nil, channel)
+   end
+end
+
+function Gui.play_background_sound(sound_id)
+   local sound_manager = require("internal.global.sound_manager")
+
+   sound_manager:play_looping(sound_id)
+end
+
+function Gui.stop_background_sound(sound_id)
+   local sound_manager = require("internal.global.sound_manager")
+
+   sound_manager:stop_looping(sound_id)
+end
+
 return Gui

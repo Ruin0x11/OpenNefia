@@ -15,7 +15,7 @@ function Tools.spawn_foes(count)
 end
 
 function Tools.spawn_allies(count)
-   count = count or 100
+   count = count or 16
    for i=0,count do
       local x = Rand.rnd(Map.width())
       local y = Rand.rnd(Map.height())

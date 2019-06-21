@@ -27,6 +27,7 @@ function CharacterSummaryMenu:init(chara)
    }
 
    self.caption = "Here is the final summary."
+   self.intro_sound = "base.skill"
 
    self.caption_box = CharaMakeCaption:new() -- cheat a bit
 end

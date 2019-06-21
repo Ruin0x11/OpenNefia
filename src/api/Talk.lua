@@ -31,10 +31,12 @@ function Talk.message(talk_id, event_id, chara, args, source)
    end
 
    local lang = "jp"
-   local mes = talk.messages[lang][event_id]
+   local talk_entry = talk.messages[lang][event_id]
+   local mes = talk_entry
 
    if type(mes) == "table" and mes[1] ~= nil then
       mes = Rand.choice(mes)
+      talk_entry = mes
    end
 
    if type(mes) == "table" and mes[1] == nil then
@@ -46,19 +48,23 @@ function Talk.message(talk_id, event_id, chara, args, source)
       mes = mes(chara, args)
    end
 
-   return mes
+   return mes, talk_entry
 end
 
 function Talk.say(chara, event_id, args, source)
-   local message = Talk.message(chara.talk, event_id, chara, args, source)
+   local message, talk_entry = Talk.message(chara.talk, event_id, chara, args, source)
 
-   if not message then
+   if not string.nonempty(message) then
       return
    end
 
    Gui.mes(message)
 
-   Event.trigger("base.on_talk", {chara=chara})
+   if type(talk_entry) == "table" and talk_entry.voice then
+      Gui.play_sound(talk_entry.voice, chara.x, chara.y)
+   end
+
+   Event.trigger("base.on_talk", {chara=chara,event_id=event_id,message=message,talk_entry=talk_entry})
 end
 
 function Talk.setup(chara)

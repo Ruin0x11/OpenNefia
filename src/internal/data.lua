@@ -206,6 +206,14 @@ function proxy:iter()
    return iter, {iter=inner_iter,state=inner_state}, inner_index
 end
 
+function proxy:print()
+   local list = {}
+   for _, v in self:iter() do
+      list[#list+1] = { v._id }
+   end
+   return table.print(list, { header = { "ID" }, sort = 1 })
+end
+
 setmetatable(data, {
                 __index = function(t, k)
                    return proxy:new(k)

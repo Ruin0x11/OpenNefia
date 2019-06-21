@@ -59,6 +59,31 @@ data:add {
    is_opaque = true
 }
 
+require("mod.content.sound")
+
+data:add_multi("base.sound",
+               {
+                  _id = "voice1",
+                  file = "sound/temp/voice1.wav"
+               },
+               {
+                  _id = "voice2",
+                  file = "sound/temp/voice2.wav"
+               },
+               {
+                  _id = "voice3",
+                  file = "sound/temp/voice3.wav"
+               },
+               {
+                  _id = "voice4",
+                  file = "sound/temp/voice4.wav"
+               },
+               {
+                  _id = "voice5",
+                  file = "sound/temp/voice5.wav"
+               }
+)
+
 data:add {
    _type = "base.talk",
    _id = "test",
@@ -71,7 +96,7 @@ data:add {
             ""
          },
 
-         ["event:base.after_damage_hp"] = {
+         ["event:base.after_chara_damaged"] = {
             "Ow.",
             "Eek!",
             "It hurts.",
@@ -80,16 +105,27 @@ data:add {
          ["event:base.on_chara_revived"] = "I'm revived.",
 
          ["base.ai_aggro"] = {
-            "「こいつ、動くよ」",
-            "「戦いが終わったらぐっすり眠れるっていう保証がある？」",
-            "「見える。動きが見える！」",
-            ""
+            { talk = "「負けるもんか！」", voice = "base.voice5" },
+            { talk = "「うしゃー、やるぞ！」", voice = "base.voice3" },
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
          },
 
          ["base.ai_calm"] = {
             "「誰だ？誰かが私を見ている」",
             "「悔しいけど…」",
             ""
+         },
+
+         ["base.ai_melee"] = {
+            { talk = "「よっ、よ！」", voice = "base.voice2" },
+            { talk = "「うしゅっ」", voice = "base.voice4" },
+            "",
+            "",
          }
       }
    }

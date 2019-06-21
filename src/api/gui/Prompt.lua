@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local IUiLayer = require("api.gui.IUiLayer")
 local TopicWindow = require("api.gui.TopicWindow")
 local InputHandler = require("api.gui.InputHandler")
@@ -60,6 +61,10 @@ function Prompt:init(choices, width)
       escape = function() if self.can_cancel then self.canceled = true end end,
    }
    self.input:halt_input()
+end
+
+function Prompt:on_query()
+   Gui.play_sound("base.pop2")
 end
 
 function Prompt:relayout(x, y)

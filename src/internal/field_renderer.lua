@@ -1,6 +1,7 @@
 local shadow_batch = require("internal.draw.shadow_batch")
 local sparse_batch = require("internal.draw.sparse_batch")
 local tile_batch = require("internal.draw.tile_batch")
+local sound_manager = require("internal.global.sound_manager")
 local Draw = require("api.Draw")
 
 local field_renderer = class("field_renderer")
@@ -64,6 +65,8 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll)
    end
 
    self:set_draw_pos(draw_x, draw_y)
+
+   sound_manager:set_listener_pos(self.coords:tile_to_screen(player_x, player_y))
 end
 
 function field_renderer:set_draw_pos(draw_x, draw_y)

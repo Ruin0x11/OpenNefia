@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local IUiList = require("api.gui.IUiList")
 local UiList = require("api.gui.UiList")
 local ListModel = require("api.gui.ListModel")
@@ -46,8 +47,14 @@ function ChangeAppearanceList:init(items)
 
    self.input = InputHandler:new()
    self.input:bind_keys {
-      up = function() self:select_previous() end,
-      down = function() self:select_next() end,
+      up = function()
+         self:select_previous()
+         Gui.play_sound("base.cursor1")
+      end,
+      down = function()
+         self:select_next()
+         Gui.play_sound("base.cursor1")
+      end,
       ["return"] = function() self:choose(self.model:selected_item()) end,
       left = function() self:decrement(self.model:selected_item()) end,
       right = function() self:increment(self.model:selected_item()) end,
@@ -99,6 +106,7 @@ function ChangeAppearanceList:increment(item)
    else
       item.value = "base.1"
    end
+   Gui.play_sound("base.cursor1")
 end
 
 function ChangeAppearanceList:decrement(item)
@@ -107,6 +115,7 @@ function ChangeAppearanceList:decrement(item)
    else
       item.value = "base.0"
    end
+   Gui.play_sound("base.cursor1")
 end
 
 function ChangeAppearanceList:choose(item)

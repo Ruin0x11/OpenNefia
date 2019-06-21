@@ -63,6 +63,7 @@ function SelectAliasMenu:init()
    }
 
    self.caption = "Choose an alias."
+   self.intro_sound = "base.ok1"
 end
 
 function SelectAliasMenu:lock(i)

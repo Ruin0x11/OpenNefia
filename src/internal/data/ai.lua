@@ -315,11 +315,13 @@ local function default_action(chara, params)
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
    if dist == 1 then
+      chara:say("base.ai_melee")
       Action.melee(chara, target)
       return true
    end
 
    if dist < 6 and Map.has_los(chara.x, chara.y, target.x, target.y) then
+      chara:say("base.ai_ranged")
       local can_do_ranged_attack = false
       if can_do_ranged_attack then
          Action.ranged(chara, target)

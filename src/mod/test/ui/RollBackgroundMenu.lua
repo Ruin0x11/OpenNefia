@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -41,9 +42,9 @@ function RollBackgroundMenu:init()
    local items = {
       { text = "Proceed", type = "proceed" },
       { text = "Keep secret", type = "keep_secret" },
-      { text = "Reroll all", type = "reroll", on_choose = function() self:reroll() end },
-      { text = "Reroll first half", type = "reroll", on_choose = function() self:reroll() end },
-      { text = "Reroll second half", type = "reroll", on_choose = function() self:reroll() end }
+      { text = "Reroll all", type = "reroll", on_choose = function() self:reroll(true) end },
+      { text = "Reroll first half", type = "reroll", on_choose = function() self:reroll(true) end },
+      { text = "Reroll second half", type = "reroll", on_choose = function() self:reroll(true) end }
    }
 
    self.list = UiList:new(items, 23)
@@ -61,10 +62,15 @@ function RollBackgroundMenu:init()
    }
 
    self.caption = "Can you tell me the history of you?"
+   self.intro_sound = "base.ok1"
 end
 
-function RollBackgroundMenu:reroll()
+function RollBackgroundMenu:reroll(play_sound)
    self.texts:set_data(table.of(function(i) return "the history " .. math.random(100) end, 5))
+
+   if play_sound then
+      Gui.play_sound("base.dice")
+   end
 end
 
 function RollBackgroundMenu:relayout(x, y)
