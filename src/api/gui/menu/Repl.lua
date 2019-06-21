@@ -21,36 +21,54 @@ function Repl:init(env, history)
    self.env = env or {}
    self.result = ""
    self.size = 10000
+
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
+
    self.history = history or {}
    self.history_index = 0
+
+   -- quake pulldown
    self.pulldown = true
    self.pulldown_y = 0
    self.pulldown_speed = 8
    self.frames = 0
 
+   -- line editing support
+   self.cursor_pos = 0
+   self.cursor_x = 0
+
+   -- mode of operation. could implement Elona-style console if
+   -- desired.
    self.mode = LuaReplMode:new(env)
 
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys {
       text_entered = function(t)
-         self.text = self.text .. t
+         self:insert_text(t)
       end,
       backspace = function()
-         self.text = utf8.pop(self.text)
+         self:delete_char()
       end,
       text_submitted = function()
          self:submit()
          Gui.update_screen()
          self.input:halt_input()
       end,
-      text_canceled = function() self.finished = true end,
+      text_canceled = function()
+         self.finished = true
+      end,
       up = function()
          self:history_next()
       end,
       down = function()
          self:history_prev()
+      end,
+      left = function()
+         self:move_cursor(-1)
+      end,
+      right = function()
+         self:move_cursor(1)
       end,
       pageup = function()
          self:scrollback_up()
@@ -68,13 +86,19 @@ end
 function Repl:history_prev()
    self.scrollback_index = 0
    self.history_index = math.max(self.history_index - 1, 0)
-   self.text = self.history[self.history_index] or ""
+   self:set_text(self.history[self.history_index])
 end
 
 function Repl:history_next()
    self.scrollback_index = 0
    self.history_index = math.min(self.history_index + 1, #self.history)
-   self.text = self.history[self.history_index] or ""
+   self:set_text(self.history[self.history_index])
+end
+
+function Repl:set_text(text)
+   self.text = text or ""
+
+   self:set_cursor_pos(#self.text)
 end
 
 function Repl:scrollback_up()
@@ -83,6 +107,61 @@ end
 
 function Repl:scrollback_down()
    self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
+end
+
+function Repl:move_cursor(codepoints)
+   local pos = utf8.find_next_pos(self.text, self.cursor_pos, codepoints)
+   if codepoints > 0 and pos == 0 then
+      pos = utf8.offset(self.text, 1)
+   end
+   if pos < 1 then
+      self.cursor_pos = 0
+      self.cursor_x = 0
+      return
+   end
+
+   self:set_cursor_pos(pos)
+end
+
+function Repl:insert_text(t)
+   if self.cursor_pos == #self.text then
+      self.text = self.text .. t
+   elseif self.cursor_pos == 0 then
+      self.text = t .. self.text
+   else
+      local a, b = string.split_at_pos(self.text, self.cursor_pos)
+      self.text = a .. t .. b
+   end
+
+   self:move_cursor(utf8.len(t))
+end
+
+function Repl:delete_char()
+   if self.cursor_pos == 0 then
+      return
+   end
+
+   if self.cursor_pos == #self.text then
+      self.text = utf8.pop(self.text)
+   elseif self.cursor_pos == 1 then
+      self.text = utf8.sub(self.text, 2)
+   else
+      local a, b = string.split_at_pos(self.text, self.cursor_pos)
+      print(a,b)
+      a = utf8.sub(a, 1, utf8.len(a)-1)
+      print(a, "|||", b)
+      self.text = a .. b
+   end
+
+   self:move_cursor(-1)
+end
+
+function Repl:set_cursor_pos(byte)
+   self.cursor_pos = math.clamp(0, byte, #self.text)
+
+   Draw.set_font(self.font_size)
+   local rest = string.sub(self.text, 0, self.cursor_pos)
+   self.cursor_x = Draw.text_width(rest)
 end
 
 function Repl:relayout(x, y, width, height)
@@ -112,6 +191,8 @@ function Repl:submit()
    self.text = ""
    self.scrollback_index = 0
    self.history_index = 0
+   self.cursor_pos = 0
+   self.cursor_x = 0
 
    self:print(self.mode.caret .. text)
    if string.nonempty(text) then
@@ -157,7 +238,7 @@ function Repl:draw()
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
 
    if math.floor(self.frames * 2) % 2 == 1 then
-      local x = self.x + 5 + Draw.text_width(self.mode.caret) + Draw.text_width(self.text) + 4
+      local x = self.x + 5 + Draw.text_width(self.mode.caret) + self.cursor_x + 1
       local y = self.y + top - Draw.text_height() - 5
       Draw.line(x, y, x, y + Draw.text_height() - 1)
    end
@@ -180,6 +261,7 @@ function Repl:update(dt)
    self.frames = self.frames + dt
 
    if self.finished then
+      -- delay closing until pullup finishes
       self.pulldown = true
       if self.pulldown_y > self.max_lines then
          self.finished = false
