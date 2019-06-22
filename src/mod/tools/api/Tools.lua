@@ -28,6 +28,12 @@ function Tools.spawn_allies(count)
    end
 end
 
+function Tools.item()
+   for _, i in Map.iter_items() do
+      return i
+   end
+end
+
 function Tools.ally()
    for _, c in Chara.iter_allies() do
       return c

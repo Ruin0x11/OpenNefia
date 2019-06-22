@@ -75,6 +75,12 @@ function Repl:init(env, history)
       end,
       pagedown = function()
          self:scrollback_down()
+      end,
+      home = function()
+         self:set_cursor_pos(0)
+      end,
+      ["end"] = function()
+         self:set_cursor_pos(#self.text)
       end
    }
    self.input:halt_input()

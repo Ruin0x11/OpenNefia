@@ -6,7 +6,11 @@ data:add {
    faction = "base.enemy",
    image = 4,
    max_hp = 50,
-   max_mp = 10
+   max_mp = 10,
+
+   body_parts = {
+      "content.chest"
+   }
 }
 
 data:add {
@@ -27,7 +31,19 @@ data:add {
    _id = "test",
 
    name = "test",
-   image = 101,
+   image = 5,
+}
+
+data:add {
+   _type = "base.item",
+   _id = "armor",
+
+   name = "armor",
+   image = 143,
+
+   equip_slots = {
+      "content.chest"
+   }
 }
 
 data:add {
@@ -39,6 +55,13 @@ data:add {
    image = 50,
    max_hp = 10,
    max_mp = 2
+}
+
+data:add {
+   _type = "base.body_part",
+   _id = "chest",
+
+   name = "Chest"
 }
 
 data:add {
@@ -206,4 +229,6 @@ function()
    for i=1,50 do
       Item.create("content.test", 0, 0, 1, {}, Chara.player())
    end
+
+   Item.create("content.armor")
 end)

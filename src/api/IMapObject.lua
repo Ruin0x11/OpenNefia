@@ -116,4 +116,13 @@ function IMapObject:move(dx, dy)
    return self:set_pos(self.x + dx, self.y + dy)
 end
 
+function IMapObject:current_map()
+   local InstancedMap = require("api.InstancedMap")
+   if is_an(InstancedMap, self.location) then
+      return self.location
+   end
+
+   return nil
+end
+
 return IMapObject

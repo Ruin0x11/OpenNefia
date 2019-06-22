@@ -201,7 +201,21 @@ data:add_multi(
             gold_count_font = {
                type = "font",
                value = 13
-            }
+            },
+            equipped_icon = "graphic/temp/equipped_icon.bmp"
+         },
+         ["api.gui.menu.InventoryWrapper"] = {
+            -- TODO dedupe
+            inventory_icons = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/inventory_icons.bmp",
+                  count_x = 22
+               }
+            },
+         },
+         ["api.gui.menu.IconBar"] = {
+            radar_deco = "graphic/temp/radar_deco.bmp",
          },
          ["api.gui.hud.UiStatusEffects"] = {
             status_effect_bar = "graphic/temp/status_effect_bar.bmp",

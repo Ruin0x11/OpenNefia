@@ -15,13 +15,16 @@ function IItem:build()
    self.location = nil
    self.ownership = "none"
 
-   self.curse_state = "cursed"
+   local Rand = require("api.Rand")
+   self.curse_state = Rand.choice({"cursed", "blessed", "none", "doomed"})
    self.identify_state = "completely"
 
    self.flags = {}
 
    self.name = self._id
    self.weight = 10
+
+   self.types = {}
 
    -- item:send("base.on_item_create")
 end

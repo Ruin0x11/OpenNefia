@@ -319,14 +319,6 @@ function IChara:kill(source)
    self.state = "Dead"
 end
 
-function IChara:current_map()
-   if is_an(InstancedMap, self.location) then
-      return self.location
-   end
-
-   return nil
-end
-
 function IChara:revive()
    if Chara.is_alive(self) then
       return

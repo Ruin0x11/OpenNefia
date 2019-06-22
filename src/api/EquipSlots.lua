@@ -147,6 +147,10 @@ end
 function EquipSlots:is_equipped_at(slot)
 end
 
+function EquipSlots:make_list()
+   return self.pool:make_list()
+end
+
 --
 -- ILocation impl
 --

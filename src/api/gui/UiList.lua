@@ -117,7 +117,7 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset, color)
       Draw.filled_rect(x, y - 2, width, 19, {127, 191, 255, 63})
       Draw.image(self.list_bullet.image, x + width - 20, y + 2, nil, nil, {255, 255, 255})
    end
-   Draw.text(text, x + 4 + x_offset, y + 1, color)
+   Draw.text(text, x + 4 + x_offset, y + 1, color or {0, 0, 0})
 end
 
 function UiList:get_item_color()

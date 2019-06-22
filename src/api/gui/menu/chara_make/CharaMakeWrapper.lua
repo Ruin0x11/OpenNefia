@@ -41,14 +41,12 @@ function CharaMakeWrapper:proceed()
    local menu_id = self.menus[#self.trail+1]
    local success, class = pcall(function() return require(menu_id) end)
 
-   if not success or class == nil then
-      if not success then
-         local err = class
-         -- TODO turn this into a log warning
-         error("Error loading menu " .. menu_id .. ":\n\t" .. err)
-      else
-         error("Cannot find menu " .. menu_id)
-      end
+   if not success then
+      local err = class
+      -- TODO turn this into a log warning
+      error("Error loading menu " .. menu_id .. ":\n\t" .. err)
+   elseif class == nil then
+      error("Cannot find menu " .. menu_id)
    end
 
    self.submenu = class:new()

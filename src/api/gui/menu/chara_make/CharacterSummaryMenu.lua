@@ -29,7 +29,9 @@ function CharacterSummaryMenu:init(chara)
    self.caption = "Here is the final summary."
    self.intro_sound = "base.skill"
 
-   self.caption_box = CharaMakeCaption:new() -- cheat a bit
+   -- cheat a bit. this gets drawn over the one in the charamake
+   -- wrapper.
+   self.caption_box = CharaMakeCaption:new()
 end
 
 function CharacterSummaryMenu:relayout(x, y, width, height)

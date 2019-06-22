@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local Item = require("api.Item")
 local Inventory = require("api.Inventory")
@@ -64,7 +65,9 @@ local UiListExt = function(inventory_menu)
 
       inventory_menu.item_icons[i]:draw(x - 21, y + 11, nil, nil, nil, true)
 
-      -- Draw.image(x - 21, y + 9 + 2)
+      if entry.source == "equipment" then
+         inventory_menu.t.equipped_icon:draw(x - 12, y + 14)
+      end
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       -- on_display_item_value
@@ -73,12 +76,11 @@ local UiListExt = function(inventory_menu)
       local weight = "1.2s"
       local value = "12345 gp"
 
-      local is_on_ground = true
-      if is_on_ground then
-         weight = weight .. "(Ground)"
+      if entry.source == "ground" then
+         item_name = item_name .. " (Ground)"
       end
 
-      if entry.equipped then
+      if entry.source == "equipment" then
          local main_hand = true
          if main_hand then
             item_name = item_name .. " " .. "(main hand)"
@@ -126,21 +128,15 @@ function InventoryMenu:init(ctxt, can_cancel)
          self:show_item_description(item)
       end,
       shift = function() self.canceled = true end,
-      escape = function() self.canceled = true end
+      escape = function() self.canceled = true end,
    }
 
    self:update_filtering()
 end
 
-function InventoryMenu:show_item_description(item)
-   print("Item description " .. item.uid)
-end
-
-function InventoryMenu:on_item_selected(item)
-   -- HACK: bad. Shortcuts need to be able to run this callback
-   -- without being coupled to building a new inventory menu just to
-   -- get at the item filtering to ensure the item can be used.
-   return nil
+function InventoryMenu:on_select()
+   local item = self.pages:selected_item().item
+   return self.ctxt:on_select(item)
 end
 
 function InventoryMenu:relayout(x, y)
@@ -174,12 +170,12 @@ local function source_ground(ctxt)
    return Item.at(ctxt.chara.x, ctxt.chara.y)
 end
 
+local function source_equipment(ctxt)
+   return ctxt.chara.equip:make_list()
+end
+
 function InventoryMenu:update_filtering()
    local filtered = {}
-
-   local filter = function(item)
-      return true
-   end
 
    local all = {}
 
@@ -194,8 +190,15 @@ function InventoryMenu:update_filtering()
          items = source_chara(self.ctxt)
       elseif source == "ground" then
          items = source_ground(self.ctxt)
+      elseif source == "equipment" then
+         items = source_equipment(self.ctxt)
+      else
+         error("unknown source " .. source)
       end
-      items = table.map(items, function(i) return { item = i, source = source } end)
+      items = table.map(items,
+                        function(i)
+                           return { item = i, source = source }
+                        end)
       all = table.append(all, items)
    end
 
@@ -204,11 +207,13 @@ function InventoryMenu:update_filtering()
       if not Item.is_alive(item) then
          Item.delete(item)
       else
-         if filter(item) then
+         if self.ctxt:filter(item) then
             filtered[#filtered+1] = entry
          end
       end
    end
+
+   table.sort(filtered, function(a, b) return self.ctxt:sort(a.item, b.item) end)
 
    self.pages:set_data(filtered)
    self:reload_item_icons()
@@ -267,9 +272,8 @@ function InventoryMenu:update()
       return nil, "canceled"
    end
 
-   -- HACK
    if self.pages.chosen then
-      local result = self:on_item_selected()
+      local result = self:on_select()
       if result then return result end
    elseif self.pages.changed then
       self:reload_item_icons()

@@ -2,7 +2,7 @@ local Map = require("api.Map")
 local input = require("internal.input")
 
 local IUiLayer = require("api.gui.IUiLayer")
-local InventoryMenu = require("api.gui.menu.InventoryMenu")
+local InventoryWrapper = require("api.gui.menu.InventoryWrapper")
 local Prompt = require("api.gui.Prompt")
 local TextPrompt = require("api.gui.TextPrompt")
 
@@ -22,8 +22,8 @@ function Input.query_text(length, can_cancel, limit_length)
    return TextPrompt:new(length, can_cancel, limit_length):query()
 end
 
-function Input.query_inventory(chara, can_cancel)
-   local ctxt = {
+function Input.query_inventory(chara)
+   local params = {
       chara = chara,
       target = nil,
       container = nil,
@@ -31,7 +31,7 @@ function Input.query_inventory(chara, can_cancel)
       stack = {},
       sources = { "chara", "ground" }
    }
-   return InventoryMenu:new(ctxt, can_cancel):query()
+   return InventoryWrapper:new(params):query()
 end
 
 return Input
