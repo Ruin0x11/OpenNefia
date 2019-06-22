@@ -1,21 +1,21 @@
 local setmetatable = setmetatable
 local pairs = pairs
 local type = type
-local function visit(k, n, m, s)
-    if m[k] == 0 then return 1 end
-    if m[k] == 1 then return end
-    m[k] = 0
-    local f = n[k]
-    for i=1, #f do
-        if visit(f[i], n, m, s) then return 1 end
+local function visit(node, graph, visited, ordered)
+    if visited[node] == 0 then return 1 end
+    if visited[node] == 1 then return end
+    visited[node] = 0
+    local deps = graph[node]
+    for i=1, #deps do
+        if visit(deps[i], graph, visited, ordered) then return 1 end
     end
-    m[k] = 1
-    s[#s+1] = k
+    visited[node] = 1
+    ordered[#ordered+1] = node
 end
 local tsort = {}
 tsort.__index = tsort
 function tsort.new()
-    return setmetatable({ n = {} }, tsort)
+    return setmetatable({ graph = {} }, tsort)
 end
 function tsort:add(...)
     local p = { ... }
@@ -29,30 +29,30 @@ function tsort:add(...)
             p = { p }
         end
     end
-    local n = self.n
+    local graph = self.graph
     for i=1, c do
         local f = p[i]
-        if n[f] == nil then n[f] = {} end
+        if graph[f] == nil then graph[f] = {} end
     end
     for i=2, c, 1 do
         local f = p[i]
         local t = p[i-1]
-        local o = n[f]
+        local o = graph[f]
         o[#o+1] = t
     end
     return self
 end
 function tsort:sort()
-    local n  = self.n
-    local s = {}
-    local m  = {}
-    for k in pairs(n) do
-        if m[k] == nil then
-            if visit(k, n, m, s) then
+    local graph = self.graph
+    local ordered = {}
+    local visited = {}
+    for node in pairs(graph) do
+        if visited[node] == nil then
+            if visit(node, graph, visited, ordered) then
                 return nil, "There is a circular dependency in the graph. It is not possible to derive a topological sort."
             end
         end
     end
-    return s
+    return ordered
 end
 return tsort

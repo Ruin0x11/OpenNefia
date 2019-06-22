@@ -159,7 +159,7 @@ function RollAttributesMenu:draw()
    self.win:draw()
    Draw.image(self.bg, self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    Ui.draw_topic("chara_making.roll_attributes.title", self.x + 28, self.y + 30)
 
    Draw.set_color(0, 0, 0)

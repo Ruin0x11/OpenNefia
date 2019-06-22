@@ -7,7 +7,6 @@ function LuaReplMode:init(env)
    self.env = env
 
    -- HACK
-   self.env.Debug = require("mod.debug.api.Debug")
    self.env.Tools = require("mod.tools.api.Tools")
 end
 

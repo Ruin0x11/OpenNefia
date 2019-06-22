@@ -62,13 +62,13 @@ function SelectClassMenu:draw()
               {255, 255, 255, 80},
               true)
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    Ui.draw_topic("race", self.x + 28, self.y + 30)
    Ui.draw_topic("detail", self.x + 188, self.y + 30)
 
    self.pages:draw()
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    Draw.image(self.chip_male, self.x + 380, self.y - self.chip_male:getHeight() + 60)
    Draw.image(self.chip_female, self.x + 350, self.y - self.chip_female:getHeight() + 60)
 

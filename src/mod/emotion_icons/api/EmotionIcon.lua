@@ -25,7 +25,7 @@ function EmotionIcon.install(ui_theme)
 
    local tab = data["base.ui_theme"][ui_theme].items
    local icons = {}
-   for k, v in data["base.emotion_icon"]:iter() do -- HACK
+   for k, v in data["emotion_icons.emotion_icon"]:iter() do
       icons[k] = v.image
    end
    tab["mod.emotion_icons.api.gui.EmotionIconLayer"] = icons
@@ -40,7 +40,7 @@ function EmotionIcon.set(chara, id, turns)
       return
    end
 
-   if not data["base.emotion_icon"][id] then
+   if not data["emotion_icons.emotion_icon"][id] then
       Log.warn("Unknown emotion_icon %s", id)
       return
    end

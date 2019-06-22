@@ -99,8 +99,6 @@ function UiRaceInfo:draw()
       ty = ty + Draw.text_height() + 2
    end
 
-   Draw.set_color()
-
    Ui.draw_topic("chara_make.select_race.race_info.skill.text",
                  self.x + 200,
                  self.y + 260)

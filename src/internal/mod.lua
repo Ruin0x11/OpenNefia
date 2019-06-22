@@ -6,6 +6,7 @@ local tsort = require("thirdparty.resty.tsort")
 local mod = {}
 
 local chunks = {}
+local to_load = {}
 
 local function load_mod(mod_name, init_lua_path)
    -- Convert the filename to the dot syntax expected by
@@ -16,7 +17,7 @@ local function load_mod(mod_name, init_lua_path)
    local mod_env = env.generate_sandbox(mod_name)
 
    local success, chunk = xpcall(
-      function() return env.load_sandboxed_chunk(init_lua_path, mod_env) end,
+      function() return env.load_sandboxed_chunk(init_lua_path, mod_name) end,
       function(err) return debug.traceback(err, 2) end
    )
    return success, chunk
@@ -40,54 +41,98 @@ local function load_manifest(manifest_path)
    return true, manifest
 end
 
+local function extract_mod_id(manifest_file)
+   local r, count = string.gsub(manifest_file, ".+/([^/]+)/mod.%lua$", "%1")
+   if count == 0 then
+      return nil
+   end
+
+   return r
+end
+
 function mod.calculate_load_order()
    local graph = tsort.new()
+
+   local mods = to_load
+   to_load = {}
 
    for _, mod_id in fs.iter_directory_items("mod/") do
       local manifest_file = fs.join("mod", mod_id, "mod.lua")
       if fs.is_file(manifest_file) then
-         local success, manifest = load_manifest(manifest_file)
-         if not success then
-            local err = manifest
-            error(string.format("Error initializing %s:\n\t%s", mod_id, err))
-         end
-
-         if type(manifest.dependencies) == "table" then
-            graph:add(0, mod_id) -- root
-            for dep_id, version in pairs(manifest.dependencies) do
-               graph:add(dep_id, mod_id)
-            end
-         else
-            error("Manifest must specify dependencies. " .. mod_id)
-         end
+         mods[#mods+1] = manifest_file
       end
    end
 
+   -- topsort sorts by mod ID (a string), but we also need to preserve
+   -- the file location of each manifest, so reassociate them after
+   -- sorting.
+   local paths = {}
+
+   for _, manifest_file in ipairs(mods) do
+      local success, manifest = load_manifest(manifest_file)
+      if not success then
+         local err = manifest
+         error(string.format("Error initializing %s:\n\t%s", mod_id, err))
+      end
+
+      local mod_id = manifest.id
+      if type(mod_id) ~= "string" then
+         error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
+      end
+
+      if type(manifest.dependencies) == "table" then
+         graph:add(0, mod_id) -- root
+         for dep_id, version in pairs(manifest.dependencies) do
+            graph:add(dep_id, mod_id)
+         end
+      else
+         error("Manifest must specify dependencies. " .. mod_id)
+      end
+
+      paths[mod_id] = { root_path = fs.parent(manifest_file), id = mod_id }
+   end
+
    local order = graph:sort()
+   if order == nil then
+      error("Circular dependency")
+   end
+
    table.remove(order, 1)
-   return order
+
+   -- Associate mod IDs with the root path containing mod.lua/init.lua
+   -- while preserving load order
+   local final = {}
+   for i, mod_id in ipairs(order) do
+      final[i] = paths[mod_id]
+   end
+
+   return final
+end
+
+function mod.add_mod_to_load(manifest_file)
+   if fs.is_file(manifest_file) then
+      to_load[#to_load+1] = manifest_file
+   end
 end
 
 function mod.load_mods()
    local load_order = mod.calculate_load_order()
 
-   _p(load_order)
-
-   for _, mod_id in ipairs(load_order) do
-      local init = fs.join("mod", mod_id, "init.lua")
+   for _, mod in ipairs(load_order) do
+      local init = fs.join(mod.root_path, "init.lua")
       if fs.is_file(init) then
-         local success, chunk = load_mod(mod_id, init)
+         local success, chunk = load_mod(mod.id, init)
          if not success then
             local err = chunk
-            error(string.format("Error initializing %s:\n\t%s", mod_id, err))
+            error(string.format("Error initializing %s:\n\t%s", mod.id, err))
          end
 
-         print(string.format("Loaded mod %s.", mod_id))
-         chunks[mod_id] = chunk
+         print(string.format("Loaded mod %s.", mod.id))
+         chunks[mod.id] = chunk
       else
-         local manifest = fs.join("mod", mod_id, "mod.lua")
+         local manifest = fs.join(mod.root_path, "mod.lua")
          if not fs.is_file(manifest) then
-            error("Cannot find mod dependency " .. mod_id)
+            error("Cannot find mod dependency " .. mod.id)
          end
       end
    end

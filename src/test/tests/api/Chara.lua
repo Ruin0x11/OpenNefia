@@ -1,5 +1,6 @@
 local MapObject = require("api.MapObject")
 local Chara = require("api.Chara")
+local Item = require("api.Item")
 local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
 local InstancedMap = require("api.InstancedMap")
@@ -20,7 +21,7 @@ end)
 test("chara - gc", function()
         local u = uid_tracker:new()
         local map = InstancedMap:new(20, 20, u)
-        local c = Chara.create("base.player", 12, 10, {}, map)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
 
         local t = setmetatable({c}, { __mode = "v" })
 
@@ -35,9 +36,9 @@ test("chara - observer", function()
         local u = uid_tracker:new()
         local events = EventHolder:new()
         local map = InstancedMap:new(20, 20, u)
-        local a = Chara.create("base.player", 10, 10, {}, map)
-        local b = Chara.create("base.player", 11, 10, {}, map)
-        local c = Chara.create("base.player", 12, 10, {}, map)
+        local a = Chara.create("test.chara", 10, 10, {}, map)
+        local b = Chara.create("test.chara", 11, 10, {}, map)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
 
         local tally = 0
 
@@ -69,8 +70,8 @@ test("chara - observer instanced", function()
         local u = uid_tracker:new()
         local events = EventHolder:new()
         local map = InstancedMap:new(20, 20, u)
-        local a = Chara.create("base.player", 10, 10, {}, map)
-        local b = Chara.create("base.player", 10, 11, {}, map)
+        local a = Chara.create("test.chara", 10, 10, {}, map)
+        local b = Chara.create("test.chara", 10, 11, {}, map)
 
         local tally = 0
 
@@ -93,7 +94,7 @@ test("chara - observer gc", function()
         local u = uid_tracker:new()
         local events = EventHolder:new()
         local map = InstancedMap:new(20, 20, u)
-        local c = Chara.create("base.player", 12, 10, {}, map)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
 
         local tally = 0
 
@@ -107,4 +108,60 @@ test("chara - observer gc", function()
 
         events:trigger("base.notify_test")
         ok(tally == 0)
+end)
+
+test("chara - equip", function()
+        local map = InstancedMap:new(20, 20)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
+        local i = Item.create("test.sword", 12, 10, 1, {}, map)
+
+        ok(i.location == map)
+        ok(not c:equip_item(i))
+        ok(i.location == map)
+
+        ok(c:take_item(i))
+        ok(i.location == c)
+        ok(not c:take_item(i))
+
+        ok(c:equip_item(i))
+        ok(i.location == c.equip)
+        ok(not c:equip_item(i))
+        ok(c:is_equipped(i))
+
+        ok(c:unequip_item(i))
+        ok(i.location == c)
+        ok(not c:unequip_item(i))
+        ok(not c:is_equipped(i))
+end)
+
+test("chara - equip then drop", function()
+        local map = InstancedMap:new(20, 20)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
+        local i = Item.create("test.sword", 12, 10, 1, {}, map)
+
+        ok(c:take_item(i))
+        ok(i.location == c)
+
+        ok(c:drop_item(i))
+        ok(i.location == map)
+        ok(not c:is_equipped(i))
+end)
+
+test("chara - equip gc", function()
+        local map = InstancedMap:new(20, 20)
+        local c = Chara.create("test.chara", 12, 10, {}, map)
+        local i = Item.create("test.sword", 12, 10, 1, {}, map)
+
+        ok(c:take_item(i))
+        ok(c:equip_item(i))
+
+        local t = setmetatable({c, i}, { __mode = "v" })
+
+        c:remove_ownership()
+        c = nil
+        i = nil
+        collectgarbage()
+
+        ok(t[1] == nil)
+        ok(t[2] == nil)
 end)

@@ -6,20 +6,20 @@ test("pool - generation", function()
         local p = pool:new("test", u, 10, 10)
         local o = p:create_object({thing = "hoge"}, 5, 5)
 
-        ok(assert.are_same("hoge", o.thing))
-        ok(assert.are_same(1, o.uid))
+        ok(t.are_same("hoge", o.thing))
+        ok(t.are_same(1, o.uid))
 
         o.thing = "zxc"
-        ok(assert.are_same("zxc", o.thing))
+        ok(t.are_same("zxc", o.thing))
 
         o.thing = nil
-        ok(assert.are_same("hoge", o.thing))
+        ok(t.are_same("hoge", o.thing))
 
         -- o.uid = 2
-        -- ok(assert.are_same(1, o.uid))
+        -- ok(t.are_same(1, o.uid))
 
         -- o.uid = nil
-        -- ok(assert.are_same(1, o.uid))
+        -- ok(t.are_same(1, o.uid))
 end)
 
 test("pool - uid increment", function()
@@ -29,15 +29,15 @@ test("pool - uid increment", function()
         local a = p:create_object({thing = "hoge"}, 5, 5)
         local b = p:create_object({thing = "fuga"}, 5, 5)
 
-        ok(assert.are_same(1, a.uid))
-        ok(assert.are_same(2, b.uid))
+        ok(t.are_same(1, a.uid))
+        ok(t.are_same(2, b.uid))
 
-        p:remove_object(b)
+        ok(p:remove_object(b))
         local c = p:create_object({thing = "piyo"}, 5, 5)
 
-        ok(assert.are_same(1, a.uid))
-        ok(assert.are_same(2, b.uid))
-        ok(assert.are_same(3, c.uid))
+        ok(t.are_same(1, a.uid))
+        ok(t.are_same(2, b.uid))
+        ok(t.are_same(3, c.uid))
 end)
 
 test("pool - removal", function()
@@ -68,7 +68,7 @@ test("pool - ref removal", function()
         ok(o.thing == "hoge")
         -- ok(o.is_valid == true)
 
-        p:remove_object(o)
+        ok(p:remove_object(o))
         collectgarbage()
 
         ok(p:get_object(uid) == nil)
@@ -93,7 +93,7 @@ test("pool - transfer", function()
         ok(o.thing == "hoge")
         -- ok(o.is_valid == true)
 
-        from:put_into(to, o, 5, 5)
+        ok(from:put_into(to, o, 5, 5))
 
         ok(from:get_object(uid) == nil)
         ok(to:get_object(uid).uid == o.uid)
@@ -112,15 +112,15 @@ test("pool - positional", function()
         local p = pool:new("test", u, 10, 10)
         local a = p:create_object({thing = "hoge"}, 5, 5)
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid }))
 
         local b = p:create_object({thing = "fuga"}, 5, 5)
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), { a.uid, b.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid, b.uid }))
 
-        p:remove_object(a.uid)
+        ok(p:remove_object(a.uid))
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), { b.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5), { b.uid }))
 end)
 
 test("pool - positional move", function()
@@ -128,26 +128,26 @@ test("pool - positional move", function()
         local p = pool:new("test", u, 10, 10)
         local a = p:create_object({thing = "hoge"}, 5, 5)
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), { a.uid }))
-        ok(assert.are_same(p:objects_at_pos(4, 5), {}))
+        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(4, 5), {}))
 
-        p:move_object(a, 4, 5)
+        ok(p:move_object(a, 4, 5))
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), {}))
-        ok(assert.are_same(p:objects_at_pos(4, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5), { a.uid }))
 
-        p:move_object(a, 4, 5)
+        ok(p:move_object(a, 4, 5))
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), {}))
-        ok(assert.are_same(p:objects_at_pos(4, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5), { a.uid }))
 
         ok(not pcall(function() p:move_object(a, 1000, 5) end))
         ok(not pcall(function() p:move_object(a, -1, 5) end))
 
-        p:remove_object(a)
+        ok(p:remove_object(a))
 
-        ok(assert.are_same(p:objects_at_pos(5, 5), {}))
-        ok(assert.are_same(p:objects_at_pos(4, 5), {}))
+        ok(t.are_same(p:objects_at_pos(5, 5), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5), {}))
 
         ok(not pcall(function() p:move_object(a, 5, 5) end))
 end)
@@ -159,7 +159,7 @@ test("pool - gc", function()
 
         local t = setmetatable({a}, { __mode = "v" })
 
-        p:remove_object(a)
+        ok(p:remove_object(a))
         a = nil
         collectgarbage()
 

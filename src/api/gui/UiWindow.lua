@@ -54,7 +54,7 @@ function UiWindow:draw()
       Draw.set_color(31, 31, 31, 127)
       self.shadow:draw()
    end
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    self.image:draw()
    if self.topic_window then
       self.topic_window:draw()

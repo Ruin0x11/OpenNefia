@@ -1,16 +1,16 @@
 local verbose = false
 
 local function TERMINAL_HANDLER(e, test, msg)
-   if e == 'pass' then
+   if e == "pass" then
       if verbose then
          print("[32m✔[0m " .. test)
       else
          io.write("[32m✔[0m")
       end
-   elseif e == 'fail' then
-      print("[31m✘[0m "..test..':\n\t'..msg..": assertion failed")
-   elseif e == 'except' then
-      print("[31m✘[0m "..test..':\n\t'..msg..": assertion failed")
+   elseif e == "fail" then
+      io.write("[31m✘[0m\nFAIL: "..test.."\n\t"..msg..":\n")
+   elseif e == "except" then
+      io.write("[31m✘[0m\nFAIL: "..test.."\n\t"..msg..":\n")
    end
 end
 
@@ -18,13 +18,13 @@ local function deepeq(a, b)
    -- Different types: false
    if type(a) ~= type(b) then return false end
    -- Functions
-   if type(a) == 'function' then
+   if type(a) == "function" then
       return string.dump(a) == string.dump(b)
    end
    -- Primitives and equal pointers
    if a == b then return true end
    -- Only equal tables could have passed previous tests
-   if type(a) ~= 'table' then return false end
+   if type(a) ~= "table" then return false end
    -- Compare tables field by field
    for k,v in pairs(a) do
       if b[k] == nil or not deepeq(v, b[k]) then return false end
@@ -37,7 +37,7 @@ end
 
 -- Compatibility for Lua 5.1 and Lua 5.2
 local function args(...)
-   return {n=select('#', ...), ...}
+   return {n=select("#", ...), ...}
 end
 
 local function spy(f)
@@ -69,7 +69,7 @@ local function runpending()
 end
 
 return function(name, f, async)
-   if type(name) == 'function' then
+   if type(name) == "function" then
       gambiarrahandler = name
       env = f or _G
       return
@@ -87,7 +87,7 @@ return function(name, f, async)
          env.ok = prev.ok
          env.spy = prev.spy
          env.eq = prev.eq
-         gambiarrahandler('end', name)
+         gambiarrahandler("end", name)
          table.remove(pendingtests, 1)
          if next then next() end
          return debug.traceback(err)
@@ -99,26 +99,26 @@ return function(name, f, async)
       env.spy = spy
       env.ok = function(cond, msg)
          if cond then
-            handler('pass', name, "")
+            handler("pass", name, "")
          else
-            local msg_ = debug.getinfo(2, 'S').short_src..":"..debug.getinfo(2, 'l').currentline
+            local msg_ = debug.getinfo(2, "S").short_src..":"..debug.getinfo(2, "l").currentline
 
             if msg then
                msg_ = msg_ .. ":\n" .. msg
             end
 
-            handler('fail', name, msg_)
+            handler("fail", name, msg_)
          end
       end
 
-      handler('begin', name);
+      handler("begin", name);
       local ok, err = xpcall(f, restore)
       if not ok then
-         handler('except', name, err)
+         handler("except", name, err)
       end
 
       if not async then
-         handler('end', name);
+         handler("end", name);
          env.ok = prev.ok;
          env.spy = prev.spy;
          env.eq = prev.eq;

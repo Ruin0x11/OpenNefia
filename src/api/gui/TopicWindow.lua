@@ -71,7 +71,7 @@ function TopicWindow:draw()
       -- end
    end
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    Draw.image(self.data.frame.batch)
 
    if fill_style == 5 then
@@ -99,7 +99,7 @@ function TopicWindow:relayout(x, y, width, height)
 
    local fill_style = self.fill_style
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
 
    local frame = self.data.frame
    frame.batch:clear()

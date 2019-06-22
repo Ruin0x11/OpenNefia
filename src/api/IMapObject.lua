@@ -7,7 +7,7 @@ local IMapObject = interface("IMapObject",
                                 x = "number",
                                 y = "number",
                                 build = { type = "function", default = function() end },
-                                refresh = { type = "function", default = function() self.temp = {} end },
+                                refresh = { type = "function", default = function(self) self.temp = {} end },
                              },
                              IOwned)
 
@@ -76,7 +76,7 @@ function IMapObject:mod(prop, v, meth)
 
    if type(v) == "table" then
       self.temp[prop] = self.temp[prop] or {}
-      table.merge_ex(self.temp[prop], v, meth, self)
+      merge_ex(self.temp[prop], v, meth, self)
    else
       local base = self.temp[prop]
       if base == nil then

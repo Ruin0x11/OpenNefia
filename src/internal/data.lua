@@ -46,6 +46,44 @@ local strict = false
 -- HACK: separate into Data API and internal.data
 function data:clear()
    inner = {}
+   schemas = {}
+   metatables = {}
+end
+
+local function extract_mod_name(path)
+   local r, count = string.gsub(path, "%./mod/([^/]+)/.+%lua$", "%1")
+   if count == 0 then
+      return nil
+   end
+
+   return r
+end
+
+local function find_calling_mod()
+   local stack = 1
+   local info = debug.getinfo(stack, "S")
+
+   while info do
+      local env = getfenv(stack)
+      local success, mod_name = pcall(function()
+            return env._MOD_NAME
+      end)
+
+      if success then
+         return mod_name
+      end
+
+      -- local file = info.source:sub(2)
+      -- local mod_name = extract_mod_name(file)
+      -- if mod_name then
+      --    return mod_name
+      -- end
+
+      stack = stack + 1
+      info = debug.getinfo(stack, "S")
+   end
+
+   return "base"
 end
 
 function data:add_type(schema, metatable)
@@ -62,6 +100,8 @@ end
 
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
+
+   local mod_name = find_calling_mod()
 
    local _id = dat._id
    local _type = dat._type
@@ -102,8 +142,7 @@ function data:add(dat)
 
    if strict and failed then return end
 
-   local mod = "base"
-   local full_id = mod .. "." .. _id
+   local full_id = mod_name .. "." .. _id
 
    inner[_type] = inner[_type] or {}
 

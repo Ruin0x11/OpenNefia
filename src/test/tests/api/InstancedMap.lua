@@ -1,34 +1,15 @@
 local uid_tracker = require("internal.uid_tracker")
 local draw = require("internal.draw")
+local MapObject = require("api.MapObject")
 local InstancedMap = require("api.InstancedMap")
-
-local tiles = {
-   floor = {
-      image = 451,
-      is_solid = false
-   },
-   wall = {
-      image = 300,
-      is_solid = true
-   }
-}
-
-local charas = {
-   player = {
-      _id = "base.player",
-      _type = "base.chara",
-
-      image = 4,
-   },
-}
 
 test("map - is in bounds", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
 
         ok(m:is_in_bounds(10, 10))
 
-        m:set_tile(10, 10, tiles["wall"])
+        m:set_tile(10, 10, "test.wall")
 
         ok(m:is_in_bounds(10, 10))
         ok(m:is_in_bounds(0, 0))
@@ -42,11 +23,11 @@ end)
 
 test("map - can access", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
 
         ok(m:can_access(10, 10))
 
-        m:set_tile(10, 10, tiles["wall"])
+        m:set_tile(10, 10, "test.wall")
 
         ok(not m:can_access(10, 10))
 end)
@@ -95,9 +76,9 @@ end
 
 test("map - calc screen sight", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(10, 10, u, tiles)
+        local m = InstancedMap:new(10, 10, u, "test.floor")
 
-        m:set_tile(5, 5, "base.wall")
+        m:set_tile(5, 5, "test.wall")
 
         local coords = require("internal.draw.coords.tiled_coords"):new()
         draw.set_coords(coords)
@@ -125,32 +106,34 @@ end)
 
 test("map - chara lifecycle", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
 
-        local c = m:create_object(charas["player"], 5, 5)
+        local o = MapObject.generate_from("base.chara", "test.chara")
+        local c = m:take_object(o, 5, 5)
 
         ok(m:has_object(c))
 
-        m:remove_object(c)
+        ok(m:remove_object(c))
 
         ok(not m:has_object(c))
 
-        m:take_object(c, 5, 5)
+        ok(m:take_object(c, 5, 5))
 
         ok(m:has_object(c))
 end)
 
 test("map - chara position", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
 
-        local c = m:create_object(charas["player"], 5, 5)
+        local o = MapObject.generate_from("base.chara", "test.chara")
+        local c = m:take_object(o, 5, 5)
 
         ok(m:has_object(c))
         ok(c.x == 5)
         ok(c.y == 5)
 
-        m:move_object(c, 1, 1)
+        ok(m:move_object(c, 1, 1))
         ok(m:has_object(c))
         ok(c.x == 1)
         ok(c.y == 1)
@@ -158,19 +141,20 @@ end)
 
 test("map - positional query", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
 
-        local c = m:create_object(charas["player"], 5, 5)
+        local o = MapObject.generate_from("base.chara", "test.chara")
+        local c = m:take_object(o, 5, 5)
 
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 5), { c.uid }))
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 4), {}))
 
-        m:move_object(c, 5, 4)
+        ok(m:move_object(c, 5, 4))
 
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 5), {}))
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 4), { c.uid }))
 
-        m:remove_object(c, 5, 4)
+        ok(m:remove_object(c, 5, 4))
 
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 5), {}))
         ok(table.deepcompare(m:objects_at_pos("base.chara", 5, 4), {}))
@@ -178,12 +162,14 @@ end)
 
 test("map - gc", function()
         local u = uid_tracker:new()
-        local m = InstancedMap:new(20, 20, u, tiles)
-        local c = m:create_object(charas["player"], 5, 5)
+        local m = InstancedMap:new(20, 20, u, "test.floor")
+        local o = MapObject.generate_from("base.chara", "test.chara")
+        local c = m:take_object(o, 5, 5)
 
         local t = setmetatable({c}, { __mode = "v" })
 
-        m:remove_object(c)
+        ok(m:remove_object(c))
+        o = nil
         c = nil
         collectgarbage()
 

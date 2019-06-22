@@ -55,7 +55,8 @@ function class.interface(name, reqs, parents)
       if _interfaces[params] or type(params) == "string" then params = {params} end
       for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)
-            return self[k](...)
+            local delegate_self = self[field]
+            return delegate_self[k](delegate_self, ...)
          end
       end
    end

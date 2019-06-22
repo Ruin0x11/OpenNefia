@@ -2,6 +2,7 @@ local schema = require("thirdparty.schema")
 local data = require("internal.data")
 
 local IChara = require("api.chara.IChara")
+local IItem = require("api.item.IItem")
 
 data:add_type({
       name = "chara",
@@ -14,15 +15,23 @@ data:add_type({
               },
    IChara)
 
+data:add_type({
+      name = "item",
+      schema = schema.Record {
+         name = schema.String,
+         image = schema.Number,
+         weight = schema.Number,
+         value = schema.Number,
+         quality = schema.Number,
+      },
+              },
+   IItem)
+
 data:add_type {
-   name = "item",
+   name = "body_part",
    schema = schema.Record {
-      name = schema.String,
-      image = schema.Number,
-      weight = schema.Number,
-      value = schema.Number,
-      quality = schema.Number,
-   },
+      name = schema.String
+   }
 }
 
 data:add_type {

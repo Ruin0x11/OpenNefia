@@ -1,4 +1,7 @@
+local ILocation = require("api.ILocation")
+local Chara = require("api.Chara")
 local Map = require("api.Map")
+local MapObject = require("api.MapObject")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -49,20 +52,6 @@ function Item.is_alive(item)
    return type(item) == "table" and item.number > 0
 end
 
-local function init_item(item)
-   -- TODO remove and place in schema as defaults
-
-   item.inv = nil
-   item.ownership = "none"
-
-   item.curse_state = "cursed"
-   item.identify_state = "completely"
-
-   item.flags = {}
-
-   -- item:send("base.on_item_create")
-end
-
 function Item.almost_equals(a, b)
    local comparators = {
       "weight",
@@ -83,59 +72,42 @@ function Item.stack(item)
    return item
 end
 
-function Item.create(id, x, y, number, params, map)
+function Item.create(id, x, y, number, params, where)
+   if x == nil then
+      local player = Chara.player()
+      if Chara.is_alive(player) then
+         x = player.x
+         y = player.y
+      end
+   end
+
    number = number or 1
    params = params or {}
 
-   map = map or field.map
+   where = where or field.map
 
-   if map == nil then return nil end
+   if not is_an(ILocation, where) then return nil end
 
-   if not Map.is_in_bounds(x, y, map) then
-      return nil
+   -- TODO: if where:is_positional()
+   local InstancedMap = require("api.InstancedMap")
+   if is_an(InstancedMap, where) then
+      if not Map.is_in_bounds(x, y, where) then
+         return nil
+      end
    end
 
-   local proto = data["base.item"][id]
-   if proto == nil then return nil end
-
-   assert(type(proto) == "table")
-
-   local item = map:create_object(proto, x, y)
-
-   -- TODO remove
+   local item = MapObject.generate_from("base.item", id)
    item.number = number
-   init_item(item)
 
-   if not params.no_stack then
-      item = Item.stack(item)
-   end
+   item = where:take_object(item, x, y)
 
-   return item
-end
+   if item then
+      if not params.no_stack then
+         item = Item.stack(item)
+         assert(item)
+      end
 
-function Item.create_in(id, chara, number, params)
-   -- WARNING: This should be generalized to create_in(chara),
-   -- create_in(map), create_in(party)
-   if not Chara.is_alive(chara) then
-      return
-   end
-
-   local proto = data["base.item"][id]
-   if proto == nil then return nil end
-
-   assert(type(proto) == "table")
-
-   local item = chara.inv:create_object(proto)
-   if item == nil then
-      return nil
-   end
-
-   -- TODO remove
-   item.number = number
-   init_item(item)
-
-   if not params.no_stack then
-      item = Item.stack(item)
+      item:refresh()
    end
 
    return item

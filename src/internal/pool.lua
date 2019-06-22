@@ -33,7 +33,10 @@ function pool:create_object(proto, x, y)
 end
 
 function pool:take_object(obj, x, y)
-   assert(self.content[obj.uid] == nil)
+   if self.content[obj.uid] ~= nil then
+      return nil
+   end
+
    x = x or 0
    y = y or 0
    assert(x >= 0 and x < self.width)
@@ -41,7 +44,9 @@ function pool:take_object(obj, x, y)
 
    -- obj:remove_ownership()
    if obj.location then
-      obj.location:remove_object(obj)
+      if not obj.location:remove_object(obj) then
+         return nil
+      end
       obj.location = nil
    end
 
@@ -71,6 +76,8 @@ function pool:move_object(obj, x, y)
 
    obj.x = x
    obj.y = y
+
+   return obj
 end
 
 function pool:remove_object(obj)
@@ -115,7 +122,7 @@ function pool:objects_at_pos(x, y)
 end
 
 function pool:has_object(obj)
-   return self.content[obj.uid] ~= nil
+   return obj ~= nil and self.content[obj.uid] ~= nil
 end
 
 local function iter(a, i)
@@ -133,6 +140,14 @@ function pool:iter_objects(ordering)
    return iter, {uids=ordering or self.uids, content=self.content}, 1
 end
 
+function pool:make_list()
+   local t = {}
+   for _, v in self:iter_objects() do
+      t[#t+1] = v
+   end
+   return t
+end
+
 function pool:object_count()
    return #self.uids
 end
@@ -141,10 +156,18 @@ function pool:is_positional()
    return true
 end
 
+function pool:can_take_object(obj)
+   return true
+end
+
 function pool:put_into(pool_to, obj, x, y)
    x = x or 0
    y = y or 0
    local uid = obj.uid
+
+   if not pool_to:can_take_object(obj, x, y) then
+      return nil
+   end
 
    assert(self:has_object(obj))
    assert(not pool_to:has_object(obj))

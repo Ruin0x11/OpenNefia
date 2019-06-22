@@ -7,7 +7,12 @@ function asset_drawable:init(data_inst)
       data_inst = { image = data_inst }
    end
 
-   self.image = draw.load_image(data_inst.image)
+   if type(data_inst) == "userdata" and data_inst.typeOf and data_inst:typeOf("Image") then
+      self.image = data_inst
+   else
+      self.image = draw.load_image(data_inst.image)
+   end
+
    self.quads = {}
    self.bar_quads = {}
 

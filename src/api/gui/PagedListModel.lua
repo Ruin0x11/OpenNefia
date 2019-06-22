@@ -36,6 +36,10 @@ function PagedListModel:iter()
    return self.model:iter()
 end
 
+function PagedListModel:len()
+   return #self.items_
+end
+
 function PagedListModel:update_selected_index()
    self.selected_ = self.page_size * self.page + self.model.selected
 end

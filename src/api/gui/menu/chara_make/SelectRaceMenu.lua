@@ -58,7 +58,7 @@ function SelectRaceMenu:draw()
               {255, 255, 255, 80},
               true)
 
-   Draw.set_color()
+   Draw.set_color(255, 255, 255)
    Ui.draw_topic("chara_make.select_race.race", self.x + 28, self.y + 30)
    Ui.draw_topic("chara_make.select_race.detail", self.x + 188, self.y + 30)
 

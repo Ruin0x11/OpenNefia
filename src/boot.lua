@@ -25,7 +25,7 @@ mobdebug.scope = function(f)
    end
 end
 
-inspect = require("inspect")
+inspect = require("thirdparty.inspect")
 
 local class_ = require("util.class")
 interface = class_.interface

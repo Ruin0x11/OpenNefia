@@ -135,16 +135,16 @@ data:add {
 local Event = require("api.Event")
 
 
-local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
-
-data:add {
-   _type = "base.emotion_icon",
-   _id = "paralysis",
-
-   image = "mod/content/graphic/paralysis.bmp"
-}
-
-EmotionIcon.install("base.default")
+-- local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
+--
+-- data:add {
+--    _type = "emotion_icons.emotion_icon",
+--    _id = "paralysis",
+--
+--    image = "mod/content/graphic/paralysis.bmp"
+-- }
+--
+-- EmotionIcon.install("base.default")
 
 
 local DamagePopup = require("mod.damage_popups.api.DamagePopup")
@@ -171,12 +171,12 @@ data:add {
 
       local width = p.width or 30
       local height = p.height or 50
-      local map = InstancedMap:new(width, height)
+      local map = InstancedMap:new(width, height, nil, "content.floor")
 
       for y=0,width-1 do
          for x=0,height-1 do
             if x == 0 or y == 0 or x == width-1 or y == height-1 then
-               map:set_tile(x, y, "base.wall")
+               map:set_tile(x, y, "content.wall")
             end
          end
       end
@@ -191,14 +191,19 @@ Event.register("base.on_game_start",
 "game start",
 function()
    local Chara = require("api.Chara")
+   local Item = require("api.Item")
    for i=1,4 do
-      local a = Chara.create("base.ally", i+8, 3)
+      local a = Chara.create("content.ally", i+8, 3)
       a:recruit_as_ally()
    end
 
    for i=1,2 do
       for j=1,1 do
-         local i = Chara.create("base.enemy", i+8, j+11)
+         local i = Chara.create("content.enemy", i+8, j+11)
       end
+   end
+
+   for i=1,50 do
+      Item.create("content.test", 0, 0, 1, {}, Chara.player())
    end
 end)

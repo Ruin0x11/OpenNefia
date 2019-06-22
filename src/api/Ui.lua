@@ -37,7 +37,7 @@ function Ui.draw_note(text, x, y, width, height, x_offset)
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
    Draw.text(text,
              x + width - Draw.text_width(text) - 140 - x_offset,
-             y + height - 65 - height * 8,
+             y + height - 65 - height % 8,
              {0, 0, 0})
 end
 

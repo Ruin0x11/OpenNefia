@@ -21,6 +21,10 @@ function ListModel:iter()
    return ipairs(self.items)
 end
 
+function ListModel:len()
+   return #self.items
+end
+
 function ListModel:select(i)
    if not self:can_select(self.items[i], i) then return end
 

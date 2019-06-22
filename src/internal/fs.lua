@@ -24,6 +24,9 @@ else
    end
 end
 
+local dir_sep = package.config:sub(1,1)
+local is_windows = dir_sep == "\\"
+
 function fs.iter_directory_items(dir)
    return ipairs(fs.get_directory_items(dir))
 end
@@ -54,13 +57,14 @@ function fs.extension_part(path)
    return string.gsub(fs.basename(path), "(.*)%.(.*)", "%2")
 end
 
+function fs.parent(path)
+   return string.match(path, "^(.+)" .. dir_sep)
+end
+
 
 --
 -- These functions are from luacheck.
 --
-
-local dir_sep = package.config:sub(1,1)
-local is_windows = dir_sep == "\\"
 
 local function ensure_dir_sep(path)
    if string.sub(path, -1) ~= dir_sep then

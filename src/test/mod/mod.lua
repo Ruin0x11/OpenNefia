@@ -1,5 +1,6 @@
 return {
+   id = "test",
    dependencies = {
-      base = "> 0"
+      base = ">= 0"
    }
 }

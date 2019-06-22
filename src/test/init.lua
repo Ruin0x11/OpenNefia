@@ -21,19 +21,17 @@ function run_tests(path)
          if attr.mode == "directory" then
             run_tests(f)
          else
-            if f ~= "./test/init.lua" and f ~= "./test/test_helper.lua" then
-               print("\t " .. f)
-               local chunk, err = loadfile(f)
-               if not chunk or err then
-                  error(err)
-               end
-               setfenv(chunk, _G)
-               chunk()
-               print()
+            print("\n=========\n= SUITE = " .. f .. "\n=========")
+            local chunk, err = loadfile(f)
+            if not chunk or err then
+               error(err)
             end
+            setfenv(chunk, _G)
+            chunk()
+            print()
          end
       end
    end
 end
 
-run_tests("./test")
+run_tests("./test/tests")

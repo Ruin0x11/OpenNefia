@@ -9,6 +9,7 @@ local ILocation = interface("ILocation",
 
                     get_object = "function",
                     has_object = "function",
+                    can_take_object = "function",
                     iter_objects = "function",
                  })
 
@@ -19,5 +20,14 @@ function ILocation:object_list(ordering)
    end
    return list
 end
+
+--- Attempts to take ownership of map object. This function may fail.
+--- If it fails, no state in the location is expected to be changed.
+--- Returns the map object on success or nil on failure.
+-- @function take_object
+-- @tparam ILocation self
+-- @tparam IMapObject obj
+-- @treturn[1] IMapObject obj
+-- @treturn[2] nil
 
 return ILocation

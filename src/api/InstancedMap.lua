@@ -51,8 +51,9 @@ local function gen_fov_radius(fov_max)
    return fov_cache[fov_max]
 end
 
-function InstancedMap:init(width, height, uids)
+function InstancedMap:init(width, height, uids, tile)
    uids = uids or require("internal.global.uids")
+   tile = tile or "base.floor"
 
    if width <= 0 or height <= 0 then
       error("Maps must be at least 1 tile wide and long.")
@@ -84,7 +85,7 @@ function InstancedMap:init(width, height, uids)
 
    self:init_map_data()
 
-   self:clear("base.floor")
+   self:clear(tile)
 end
 
 function InstancedMap:init_map_data()
@@ -100,15 +101,8 @@ function InstancedMap:clear(tile)
    end
 end
 
-function InstancedMap:set_tile(x, y, tile)
-   local id = tile
-   if type(id) == "string" then
-      tile = data["base.map_tile"][id]
-   end
-
-   if tile == nil then
-      tile = {}
-   end
+function InstancedMap:set_tile(x, y, id)
+   local tile = data["base.map_tile"]:ensure(id)
 
    if not self:is_in_bounds(x, y) then
       return
@@ -371,6 +365,10 @@ end
 
 function InstancedMap:iter_objects(_type)
    return self:get_pool(_type):iter_objects()
+end
+
+function InstancedMap:can_take_object(obj)
+   return true
 end
 
 

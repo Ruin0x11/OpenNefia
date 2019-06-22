@@ -5,7 +5,9 @@ local MapObject = {}
 local uids = require("internal.global.uids")
 
 function MapObject.generate_from(_type, id, uid_tracker)
-   return MapObject.generate(data[_type][id], uid_tracker)
+   local data = require("internal.data")
+   local proto = data[_type]:ensure(id)
+   return MapObject.generate(proto, uid_tracker)
 end
 
 local function makeindex(proto)

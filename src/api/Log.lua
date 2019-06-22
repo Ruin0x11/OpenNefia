@@ -13,6 +13,10 @@ local function format(kind, s, ...)
    print(string.format("[%s] %s%s", kind, source, out))
 end
 
+function Log.debug(s, ...)
+   format("DEBUG", s, ...)
+end
+
 function Log.info(s, ...)
    format("INFO", s, ...)
 end

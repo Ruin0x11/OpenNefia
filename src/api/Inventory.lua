@@ -16,7 +16,7 @@ function Inventory:init(max_size, type_id)
 end
 
 function Inventory:is_full()
-   return self.pool:len() >= self.max_size
+   return self.pool:object_count() >= self.max_size
 end
 
 function Inventory:sorted_by(comparator)
@@ -55,7 +55,6 @@ Inventory:delegate("pool",
                       "move_object",
                       "remove_object",
                       "put_into",
-                      "move_object",
                       "objects_at_pos",
                       "get_object",
                       "has_object",
@@ -66,8 +65,19 @@ function Inventory:is_positional()
    return false
 end
 
+function Inventory:can_take_object(obj)
+   return not self:is_full() and obj._type == self.type_id
+end
+
 function Inventory:take_object(obj)
-   self.pool:take_object(obj)
+   if not self:can_take_object(obj) then
+      return nil
+   end
+
+   if not self.pool:take_object(obj) then
+      return nil
+   end
+
    obj.location = self
    return obj
 end

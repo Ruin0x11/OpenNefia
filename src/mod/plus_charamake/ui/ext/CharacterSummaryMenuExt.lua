@@ -15,7 +15,7 @@ do
    local super = CharacterSheetMenu.init
    function CharacterSheetMenuExt:init(...)
       super(self, ...)
-      local history = CharaMake.get_section_result("mod.test.ui.RollBackgroundMenu")
+      local history = CharaMake.get_section_result("mod.plus_charamake.ui.RollBackgroundMenu")
       Extend.extend(self, MOD_NAME, "data", UiTextGroup:new(history))
       Extend.extend(self, MOD_NAME, "x", math.random(800))
    end

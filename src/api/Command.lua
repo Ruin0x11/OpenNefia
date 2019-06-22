@@ -102,7 +102,8 @@ function Command.get(player)
       return "turn_end"
    end
 
-   return Action.get(player, item)
+   assert(Action.get(player, item))
+   return "turn_end"
 end
 
 function Command.inventory(player)

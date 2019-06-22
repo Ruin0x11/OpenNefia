@@ -96,6 +96,8 @@ function env.safe_require(path)
 end
 
 function env.generate_sandbox(mod_name)
+   assert(type(mod_name) == "string")
+
    local sandbox = {}
 
    for _, k in ipairs(SANDBOX_GLOBALS) do

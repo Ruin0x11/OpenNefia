@@ -1,3 +1,4 @@
 return {
+   id = "base",
    dependencies = {}
 }

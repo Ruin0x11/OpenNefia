@@ -7,6 +7,7 @@ local Map = require("api.Map")
 local ICharaLocation = require("api.chara.ICharaLocation")
 local ICharaFaction = require("api.chara.ICharaFaction")
 local ICharaTalk = require("api.chara.ICharaTalk")
+local ICharaEquip = require("api.chara.ICharaEquip")
 local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
 local Inventory = require("api.Inventory")
@@ -20,6 +21,7 @@ local IChara = interface("IChara",
                             ICharaLocation,
                             ICharaFaction,
                             ICharaTalk,
+                            ICharaEquip,
                             IObserver
                          })
 
@@ -76,11 +78,16 @@ function IChara:build()
    self.known_abilities = self.known_abilities or {}
 
    IObserver.init(self)
+   ICharaEquip.init(self)
    ICharaTalk.init(self)
 end
 
 function IChara:refresh()
    self.temp = {}
+
+   ICharaEquip.refresh(self)
+
+   self:refresh_weight()
 end
 
 function IChara:set_pos(x, y)

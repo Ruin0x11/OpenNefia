@@ -33,6 +33,9 @@ UiList:delegate("model", {
                    "page",
                    "page_max",
                    "page_size",
+
+                   "len",
+                   "iter",
 })
 UiList:delegate("input", IInput)
 
@@ -105,7 +108,7 @@ function UiList:draw_select_key(item, i, key_name, x, y)
                       {50, 60, 80})
 end
 
-function UiList:draw_item_text(text, item, i, x, y, x_offset)
+function UiList:draw_item_text(text, item, i, x, y, x_offset, color)
    local selected = i == self.selected
 
    x_offset = x_offset or 0
@@ -114,7 +117,11 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset)
       Draw.filled_rect(x, y - 2, width, 19, {127, 191, 255, 63})
       Draw.image(self.list_bullet.image, x + width - 20, y + 2, nil, nil, {255, 255, 255})
    end
-   Draw.text(text, x + 4 + x_offset, y + 1, {0, 0, 0})
+   Draw.text(text, x + 4 + x_offset, y + 1, color)
+end
+
+function UiList:get_item_color()
+   return {0, 0, 0}
 end
 
 function UiList:draw_item(item, i, x, y, key_name)
@@ -123,7 +130,8 @@ function UiList:draw_item(item, i, x, y, key_name)
    Draw.set_font(14) -- 14 - en * 2
 
    local text = self:get_item_text(item, i)
-   self:draw_item_text(text, item, i, x + 26, y + 1)
+   local color = self:get_item_color(item)
+   self:draw_item_text(text, item, i, x + 26, y + 1, 0, color)
 end
 
 function UiList:draw()

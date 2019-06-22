@@ -1,7 +1,9 @@
 local Ai = require("api.Ai")
 local Event = require("api.Event")
+local MapObject = require("api.MapObject")
 local Gui = require("api.Gui")
 local Inventory = require("api.Inventory")
+local ILocation = require("api.ILocation")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
@@ -14,6 +16,7 @@ local field = require("game.field")
 local Chara = {}
 
 function Chara.at(x, y, map)
+   -- TODO: ILocation instead of map
    map = map or field.map
 
    if not Map.is_in_bounds(x, y, map) then
@@ -67,26 +70,38 @@ function Chara.is_alive(c)
    return type(c) == "table" and c.state == "Alive"
 end
 
-function Chara.create(id, x, y, params, map)
+function Chara.create(id, x, y, params, where)
+   if x == nil then
+      local player = Chara.player()
+      if Chara.is_alive(player) then
+         x = player.x
+         y = player.y
+      end
+   end
+
    params = params or {}
-   map = map or field.map
+   where = where or field.map
 
-   if map == nil then return nil end
+   if not is_an(ILocation, where) then return nil end
 
-   if not Map.is_in_bounds(x, y, map) then
-      return nil
+   -- TODO: if where:is_positional()
+   local InstancedMap = require("api.InstancedMap")
+   if is_an(InstancedMap, where) then
+      if not Map.is_in_bounds(x, y, where) then
+         return nil
+      end
+
+      if Chara.at(x, y, where) ~= nil then
+         return nil
+      end
    end
 
-   if Chara.at(x, y, map) ~= nil then
-      return nil
+   local chara = MapObject.generate_from("base.chara", id)
+   chara = where:take_object(chara, x, y)
+
+   if chara then
+      chara:refresh()
    end
-
-   local proto = data["base.chara"][id]
-   if proto == nil then return nil end
-
-   assert(type(proto) == "table")
-
-   local chara = map:create_object(proto, x, y)
 
    return chara
 end

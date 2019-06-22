@@ -39,8 +39,8 @@ end
 local ResistanceLayout = class("ResistanceLayout")
 
 function ResistanceLayout:draw_row(item, text, subtext, x, y)
-   Draw.filled_rect(x, y, x + 400, y + 16, {200, 0, 0})
-   text = utf8.wide_sub(text, 0, 24)
+   Draw.filled_rect(x, y, 400, 16, {200, 0, 0})
+   text = utf8.wide_sub(text, 0, 22)
    return text, subtext
 end
 
@@ -49,21 +49,25 @@ local rl = ResistanceLayout:new()
 local UiListExt = function(inventory_menu)
    local E = {}
 
-   function E:get_item_text(item)
-      return "dood"
+   function E:get_item_text(entry)
+      return entry.item:build_name()
    end
-   function E:draw_select_key(item, i, key_name, x, y)
+   function E:get_item_color(entry)
+      return get_item_color(entry.item)
+   end
+   function E:draw_select_key(entry, i, key_name, x, y)
       if i % 2 == 0 then
          Draw.filled_rect(x - 1, y, 540, 18, {12, 14, 16, 16})
       end
 
-      UiList.draw_select_key(self, item, i, key_name, x, y)
+      UiList.draw_select_key(self, entry, i, key_name, x, y)
+
+      inventory_menu.item_icons[i]:draw(x - 21, y + 11, nil, nil, nil, true)
 
       -- Draw.image(x - 21, y + 9 + 2)
    end
-   function E:draw_item_text(text, item, i, x, y, x_offset)
+   function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       -- on_display_item_value
-      local itemname = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
       local subtext = "1.2s"
 
       local weight = "1.2s"
@@ -74,22 +78,20 @@ local UiListExt = function(inventory_menu)
          weight = weight .. "(Ground)"
       end
 
-      local equipped = true
-      if equipped then
+      if entry.equipped then
          local main_hand = true
          if main_hand then
-            itemname = itemname .. " " .. "(main hand)"
+            item_name = item_name .. " " .. "(main hand)"
          end
       end
 
-      rl:draw_row(item, text, subtext, x, y)
+      if inventory_menu.layout then
+         item_name, subtext = inventory_menu.layout:draw_row(entry.item, item_name, subtext, x, y)
+      end
 
-      UiList.draw_item_text(self, itemname, item, i, x, y, x_offset)
+      UiList.draw_item_text(self, item_name, entry, i, x, y, x_offset, color)
 
-      -- TODO: memoize and update inside update()
-      local color = get_item_color(item)
-
-      Draw.text(subtext, x + 600 - Draw.text_width(subtext), y + 2, color)
+      Draw.text(subtext, x + 516 - Draw.text_width(subtext), y + 2, color)
    end
 
    return E
@@ -108,6 +110,12 @@ function InventoryMenu:init(ctxt, can_cancel)
    self.pages = UiList:new_paged(table.of("hoge", 100), 16)
    table.merge(self.pages, UiListExt(self))
 
+   self.total_weight = 0
+   self.max_weight = 0
+   self.layout = nil
+   self.subtext_column = "subtext"
+   self.item_icons = {}
+
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    -- TODO
@@ -117,7 +125,8 @@ function InventoryMenu:init(ctxt, can_cancel)
          local item = self.pages:selected_item()
          self:show_item_description(item)
       end,
-      shift = function() self.canceled = true end
+      shift = function() self.canceled = true end,
+      escape = function() self.canceled = true end
    }
 
    self:update_filtering()
@@ -142,7 +151,8 @@ function InventoryMenu:relayout(x, y)
 
    print(self.x,self.y,self.width,self.height)
    self.win:relayout(self.x, self.y, self.width, self.height)
-   self.pages:relayout(self.x + 70, self.y + 60)
+   self.pages:relayout(self.x + 58, self.y + 60)
+   self.win:set_pages(self.pages)
 end
 
 local function draw_ally_weight(self)
@@ -178,35 +188,63 @@ function InventoryMenu:update_filtering()
       sources = {sources}
    end
 
-   for _, v in ipairs(self.ctxt.sources) do
-      if v == "chara" then
-         all = table.append(all, source_chara(self.ctxt))
-      elseif v == "ground" then
-         all = table.append(all, source_ground(self.ctxt))
+   for _, source in ipairs(self.ctxt.sources) do
+      local items
+      if source == "chara" then
+         items = source_chara(self.ctxt)
+      elseif source == "ground" then
+         items = source_ground(self.ctxt)
       end
+      items = table.map(items, function(i) return { item = i, source = source } end)
+      all = table.append(all, items)
    end
 
-   for _, item in ipairs(all) do
+   for _, entry in ipairs(all) do
+      local item = entry.item
       if not Item.is_alive(item) then
          Item.delete(item)
       else
          if filter(item) then
-            filtered[#filtered+1] = "filtered " .. item.uid
+            filtered[#filtered+1] = entry
          end
       end
    end
 
    self.pages:set_data(filtered)
+   self:reload_item_icons()
+
+   self.total_weight = self.ctxt.chara:calc("inventory_weight")
+   self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
+end
+
+function InventoryMenu:reload_item_icons()
+   self.item_icons = {}
+   for _, entry in self.pages:iter() do
+      self.item_icons[#self.item_icons+1] = entry.item:copy_image()
+   end
+   self.win:set_pages(self.pages)
 end
 
 function InventoryMenu:draw()
    self.win:draw()
 
-   local topic = "a topic"
-   Ui.draw_topic(topic, self.x + 526, self.y + 30)
+   Draw.set_color(255, 255, 255)
+   self.t.inventory_icons:draw_region(5, self.x + 46, self.y - 14)
 
-   local note = "total_weight"
-   Ui.draw_note(note, self.x, self.y, self.width, self.height, 0)
+   self.t.deco_a:draw(self.x + self.width - 136, self.y - 6)
+   if self.layout == nil then
+      self.t.deco_b:draw(self.x + self.width - 186, self.y - 6)
+   end
+   self.t.deco_c:draw(self.x + self.width - 246, self.y - 6)
+   self.t.deco_d:draw(self.x - 6, self.y - 6)
+
+   local topic = "window items"
+   Ui.draw_topic(topic, self.x + 28, self.y + 30)
+
+   Ui.draw_topic(self.subtext_column, self.x + 526, self.y + 30)
+
+   local weight_note = string.format("%d items  (%s/%ss)", self.pages:len(), self.total_weight, self.max_weight)
+   Ui.draw_note(weight_note, self.x, self.y, self.width, self.height, 0)
 
    -- on_draw
    if true then
@@ -233,6 +271,8 @@ function InventoryMenu:update()
    if self.pages.chosen then
       local result = self:on_item_selected()
       if result then return result end
+   elseif self.pages.changed then
+      self:reload_item_icons()
    end
 
    self.pages:update()

@@ -162,13 +162,6 @@ data:add_multi(
                value = 12
             }
          },
-         ["api.gui.menu.InventoryMenu"] = {
-            gold_coin = "graphic/temp/gold_coin.bmp",
-            gold_count_font = {
-               type = "font",
-               value = 13
-            }
-         },
          ["api.gui.hud.UiMessageWindow"] = {
             message_window = "graphic/temp/message_window.bmp",
          },
@@ -191,6 +184,24 @@ data:add_multi(
          },
          ["api.gui.menu.BookMenu"] = {
             book = "graphic/book.bmp",
+         },
+         ["api.gui.menu.InventoryMenu"] = {
+            deco_a = "graphic/temp/deco_inv_a.bmp",
+            deco_b = "graphic/temp/deco_inv_b.bmp",
+            deco_c = "graphic/temp/deco_inv_c.bmp",
+            deco_d = "graphic/temp/deco_inv_d.bmp",
+            inventory_icons = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/inventory_icons.bmp",
+                  count_x = 22
+               }
+            },
+            gold_coin = "graphic/temp/gold_coin.bmp",
+            gold_count_font = {
+               type = "font",
+               value = 13
+            }
          },
          ["api.gui.hud.UiStatusEffects"] = {
             status_effect_bar = "graphic/temp/status_effect_bar.bmp",

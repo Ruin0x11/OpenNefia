@@ -26,7 +26,7 @@ end
 function fps:draw()
    if not self.show_fps then return end
 
-   Draw.set_color()
+   Draw.set_color(0, 0, 0)
    Draw.set_font(14)
 
    Draw.text(self.text, Draw.get_width() - Draw.text_width(self.text) - 5, 5)

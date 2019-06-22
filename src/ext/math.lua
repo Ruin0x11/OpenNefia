@@ -19,7 +19,6 @@ function math.sign(v)
       return -1
    elseif v > 0 then
       return 1
-   else
    end
    return 0
 end

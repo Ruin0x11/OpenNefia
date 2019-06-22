@@ -1,6 +1,6 @@
 return {
+   id = "content",
    dependencies = {
       base = ">= 0",
-      hunger = ">= 0",
    }
 }

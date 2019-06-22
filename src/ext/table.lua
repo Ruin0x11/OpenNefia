@@ -18,6 +18,15 @@ function table.find(tbl, func, ...)
    return nil
 end
 
+function table.ifind(arr, func, ...)
+   for i, v in ipairs(arr) do
+      if func(v, i, ...) then
+         return v, i
+      end
+   end
+   return nil
+end
+
 function table.find_index_of(arr, value)
    for i, v in ipairs(arr) do
       if v == value then
@@ -292,6 +301,16 @@ function table.imap(tbl, f, array)
    return t
 end
 
+function table.ireduce(arr, f, start)
+   local result = start
+
+   for _, v in ipairs(arr) do
+      result = f(result, v)
+   end
+
+   return result
+end
+
 function table.ifilter(tbl, f)
    local t = {}
    for i, v in ipairs(tbl) do
@@ -438,7 +457,7 @@ function table.print(t, params)
       end
    end
 
-   local total_width = table.reduce(widths, function(sum, n) return sum + n + 1 end, 0)
+   local total_width = table.ireduce(widths, function(sum, n) return sum + n + 1 end, 0)
 
    local s = ""
 

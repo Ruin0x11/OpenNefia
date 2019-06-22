@@ -46,7 +46,7 @@ love.graphics.newImage = function()
    }
 end
 love.graphics.draw = function() end
-love.image.newImageData = function(fn)
+love.image.newImageData = function()
    return {
       mapPixel = function() end,
       getPixel = function() return 1, 0, 0 end,
@@ -55,6 +55,7 @@ love.image.newImageData = function(fn)
       release = function() end,
    }
 end
+love.audio.setDistanceModel = function() end
 love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
 
