@@ -51,7 +51,9 @@ function PagedListModel:select_page(page)
    self:update_selected_index()
 
    local contents = {}
-   for i=self.selected_, self.selected_ + self.page_size - 1 do
+   local index_at_top = self.page * self.page_size + 1
+
+   for i=index_at_top, index_at_top + self.page_size - 1 do
       if self.items_[i] == nil then
          break
       end
