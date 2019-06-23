@@ -1,12 +1,72 @@
+local Item = require("api.Item")
 local InputHandler = require("api.gui.InputHandler")
 
 local InventoryContext = class("InventoryContext")
+
+local function source_chara(ctxt)
+   return ctxt.chara:iter_items()
+end
+
+local function source_ground(ctxt)
+   return Item.at(ctxt.ground_x, ctxt.ground_y)
+end
+
+local function source_equipment(ctxt)
+   return ctxt.chara:iter_equipment()
+end
+
+local sources = {
+   {
+      name = "chara",
+      getter = source_chara,
+      order = 10000
+   },
+   {
+      name = "ground",
+      getter = source_ground,
+      order = 9000,
+      on_get_name = function(self, name, item, menu)
+         return name .. " (Ground)"
+      end
+   },
+   {
+      name = "equipment",
+      getter = source_equipment,
+      order = 8000,
+      on_get_name = function(self, name, item, menu)
+         return name .. " (main hand)"
+      end,
+      on_draw = function(self, x, y, item, menu)
+         menu.t.equipped_icon:draw(x - 12, y + 14)
+      end
+   },
+}
+
+sources = fun.iter(sources):map(function(s) return s.name, s end):to_map()
+
+local function gen_default_sort(user_sort)
+   return function(a, b)
+      if a.source == b.source then
+         return user_sort(a, b)
+      end
+
+      return a.source.order < b.source.order
+   end
+end
 
 function InventoryContext:init(proto, params)
    self.proto = proto
    self.input = InputHandler:new()
 
-   self.sources = self.proto.sources
+   self.sources = {}
+   for _, source_name in ipairs(self.proto.sources) do
+      local source = sources[source_name]
+      if source == nil then
+         error("unknown source " .. source_name)
+      end
+      self.sources[#self.sources+1] = source
+   end
+
    self.query_amount = self.proto.query_amount
    self.show_money = self.proto.show_money
    self.shortcuts = self.proto.shortcuts
@@ -35,12 +95,14 @@ function InventoryContext:can_select(item)
    return true
 end
 
-function InventoryContext:sort(item)
+function InventoryContext:gen_sort(a, b)
+   local f = function() return true end
+
    if self.proto.sort then
-      return self.proto.sort(self, item)
+      f = function(a, b) return self.proto.sort(self, a, b) end
    end
 
-   return true
+   return gen_default_sort(f)
 end
 
 function InventoryContext:filter(item)

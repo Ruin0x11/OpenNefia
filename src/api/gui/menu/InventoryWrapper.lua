@@ -18,26 +18,7 @@ local InventoryWrapper = class("InventoryWrapper", IUiLayer)
 
 InventoryWrapper:delegate("input", IInput)
 
-local inv_general = {
-   keybinds = {
-      x = function(ctxt, item)
-         item.flags.no_drop = not item.flags.no_drop
-         print("nodrop toggle")
-      end
-   },
-
-   sources = { "chara", "equipment", "ground" },
-   shortcuts = true,
-   sort = function(ctxt, a, b)
-      return a:current_map() ~= nil -- or a:get_equipper()
-   end,
-   on_select = function(ctxt, item)
-      -- ItemDescriptionMenu:new(item):query()
-      Gui.mes(item.name)
-
-      return "inventory_continue"
-   end
-}
+local protos = require("api.gui.menu.InventoryProtos")
 
 function InventoryWrapper:init(params)
    self.x = 0
@@ -54,7 +35,7 @@ function InventoryWrapper:init(params)
 end
 
 function InventoryWrapper:switch_context()
-   local ctxt = InventoryContext:new(inv_general, self.params)
+   local ctxt = InventoryContext:new(protos.inv_general, self.params)
    self.submenu = InventoryMenu:new(ctxt)
    self.input:forward_to(self.submenu)
 

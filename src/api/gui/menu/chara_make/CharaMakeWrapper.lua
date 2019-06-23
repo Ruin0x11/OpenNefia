@@ -35,7 +35,7 @@ end
 
 function CharaMakeWrapper:proceed()
    if self.submenu then
-      table.push(self.trail, self.submenu)
+      table.insert(self.trail, self.submenu)
    end
 
    local menu_id = self.menus[#self.trail+1]

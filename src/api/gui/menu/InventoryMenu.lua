@@ -63,10 +63,10 @@ local UiListExt = function(inventory_menu)
 
       UiList.draw_select_key(self, entry, i, key_name, x, y)
 
-      inventory_menu.item_icons[i]:draw(x - 21, y + 11, nil, nil, nil, true)
+      entry.icon:draw(x - 21, y + 11, nil, nil, nil, true)
 
-      if entry.source == "equipment" then
-         inventory_menu.t.equipped_icon:draw(x - 12, y + 14)
+      if entry.source.on_draw then
+         entry.source:on_draw(x, y, entry.item, inventory_menu)
       end
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
@@ -76,15 +76,8 @@ local UiListExt = function(inventory_menu)
       local weight = "1.2s"
       local value = "12345 gp"
 
-      if entry.source == "ground" then
-         item_name = item_name .. " (Ground)"
-      end
-
-      if entry.source == "equipment" then
-         local main_hand = true
-         if main_hand then
-            item_name = item_name .. " " .. "(main hand)"
-         end
+      if entry.source.on_get_name then
+         entry.source:on_get_name(item_name, entry.item, inventory_menu)
       end
 
       if inventory_menu.layout then
@@ -116,7 +109,6 @@ function InventoryMenu:init(ctxt, can_cancel)
    self.max_weight = 0
    self.layout = nil
    self.subtext_column = "subtext"
-   self.item_icons = {}
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -125,7 +117,7 @@ function InventoryMenu:init(ctxt, can_cancel)
    self.input:bind_keys {
       x = function()
          local item = self.pages:selected_item()
-         self:show_item_description(item)
+         -- self:show_item_description(item)
       end,
       shift = function() self.canceled = true end,
       escape = function() self.canceled = true end,
@@ -162,18 +154,6 @@ local function draw_ally_weight(self)
    -- Draw.text("ally equip", window.x + 40, window.y + window.height - 65 - window.height % 8)
 end
 
-local function source_chara(ctxt)
-   return ctxt.chara:iter_items()
-end
-
-local function source_ground(ctxt)
-   return Item.at(ctxt.ground_x, ctxt.ground_y)
-end
-
-local function source_equipment(ctxt)
-   return ctxt.chara:iter_equipment()
-end
-
 function InventoryMenu:update_filtering()
    local filtered = {}
 
@@ -184,17 +164,8 @@ function InventoryMenu:update_filtering()
       sources = {sources}
    end
 
-   for _, source in ipairs(self.ctxt.sources) do
-      local items
-      if source == "chara" then
-         items = source_chara(self.ctxt)
-      elseif source == "ground" then
-         items = source_ground(self.ctxt)
-      elseif source == "equipment" then
-         items = source_equipment(self.ctxt)
-      else
-         error("unknown source " .. source)
-      end
+   for _, source in pairs(self.ctxt.sources) do
+      local items = source.getter(self.ctxt)
       items = items:map(function(item)
                            return { item = item, source = source }
       end)
@@ -202,6 +173,7 @@ function InventoryMenu:update_filtering()
       all[#all+1] = items
    end
 
+   -- Combine each source iterator into one chained iterator.
    local iter = fun.chain(table.unpack(all))
 
    for _, entry in iter:unwrap() do
@@ -215,21 +187,12 @@ function InventoryMenu:update_filtering()
       end
    end
 
-   table.sort(filtered, function(a, b) return self.ctxt:sort(a.item, b.item) end)
+   table.sort(filtered, self.ctxt:gen_sort())
 
    self.pages:set_data(filtered)
-   self:reload_item_icons()
 
    self.total_weight = self.ctxt.chara:calc("inventory_weight")
    self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
-end
-
-function InventoryMenu:reload_item_icons()
-   self.item_icons = {}
-   for _, entry in self.pages:iter() do
-      self.item_icons[#self.item_icons+1] = entry.item:copy_image()
-   end
-   self.win:set_pages(self.pages)
 end
 
 function InventoryMenu:draw()
@@ -274,11 +237,17 @@ function InventoryMenu:update()
       return nil, "canceled"
    end
 
+   if self.pages.changed_page then
+      for _, entry in self.pages:iter() do
+         if not entry.icon then
+            entry.icon = entry.item:copy_image()
+         end
+      end
+   end
+
    if self.pages.chosen then
       local result = self:on_select()
       if result then return result end
-   elseif self.pages.changed then
-      self:reload_item_icons()
    end
 
    self.pages:update()

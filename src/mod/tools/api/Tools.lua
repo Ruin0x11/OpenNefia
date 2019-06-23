@@ -1,5 +1,6 @@
 local Chara = require("api.Chara")
 local Map = require("api.Map")
+local Item = require("api.Item")
 local Rand = require("api.Rand")
 local Tools = {}
 
@@ -9,7 +10,7 @@ function Tools.spawn_foes(count)
       local x = Rand.rnd(Map.width())
       local y = Rand.rnd(Map.height())
       if Map.can_access(x, y) then
-         Chara.create("base.enemy", x, y)
+         Chara.create("content.enemy", x, y)
       end
    end
 end
@@ -20,10 +21,21 @@ function Tools.spawn_allies(count)
       local x = Rand.rnd(Map.width())
       local y = Rand.rnd(Map.height())
       if Map.can_access(x, y) then
-         local c = Chara.create("base.ally", x, y)
+         local c = Chara.create("content.ally", x, y)
          if not c:recruit_as_ally() then
             return
          end
+      end
+   end
+end
+
+function Tools.spawn_items(count)
+   count = count or 100
+   for i=0,count do
+      local x = Rand.rnd(Map.width())
+      local y = Rand.rnd(Map.height())
+      if Map.can_access(x, y) then
+         Item.create("content.armor", x, y)
       end
    end
 end

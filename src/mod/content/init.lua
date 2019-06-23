@@ -231,4 +231,6 @@ function()
    end
 
    Item.create("content.armor")
+
+   Chara.player():equip_item(Item.create("content.armor"), true)
 end)

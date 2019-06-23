@@ -33,6 +33,7 @@ UiList:delegate("model", {
                    "page",
                    "page_max",
                    "page_size",
+                   "changed_page",
 
                    "len",
                    "iter",
@@ -94,8 +95,12 @@ end
 function UiList:relayout(x, y)
    self.x = x
    self.y = y
-   self.changed = false
+   -- HACK: shouldn't have to keep track of update here.
+   self.changed = true
    self.chosen = false
+   if is_an(IPaged, self.model) then
+      self.changed_page = true
+   end
 end
 
 function UiList:draw_select_key(item, i, key_name, x, y)
@@ -144,8 +149,12 @@ function UiList:draw()
 end
 
 function UiList:update()
+   -- HACK: shouldn't have to keep track of update here.
    self.changed = false
    self.chosen = false
+   if is_an(IPaged, self.model) then
+      self.changed_page = false
+   end
 end
 
 return UiList

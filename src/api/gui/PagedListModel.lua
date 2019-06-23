@@ -20,6 +20,7 @@ function PagedListModel:init(items, page_size, wrapping)
    self.items_ = items
    self.model = ListModel:new({})
    self.changed = true
+   self.changed_page = true
    self.selected_ = 1
    self.page = 0
    self.page_size = page_size
@@ -49,7 +50,8 @@ function PagedListModel:get_item_text(item)
 end
 
 function PagedListModel:select_page(page)
-   self.changed = page ~= self.page
+   self.changed_page = page ~= self.page
+   self.changed = self.changed or self.changed_page
 
    self.page = page or self.page
    self:update_selected_index()
