@@ -12,10 +12,13 @@ function InventoryContext:init(proto, params)
    self.shortcuts = self.proto.shortcuts
    self.stack = {}
 
-   self.chara = params.chara
+   self.chara = params.chara or nil
    self.target = params.target or nil
    self.container = params.container or nil
    self.map = params.map or nil
+
+   self.ground_x = (self.chara and self.chara.x) or 0
+   self.ground_y = (self.chara and self.chara.y) or 0
 
    self.icon = 5
 

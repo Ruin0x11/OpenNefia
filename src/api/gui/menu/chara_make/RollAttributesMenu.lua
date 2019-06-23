@@ -117,7 +117,7 @@ function RollAttributesMenu:reroll(play_sound)
 end
 
 function RollAttributesMenu:lock(attr)
-   local a = table.find(self.data, function(i) return i.text == attr end)
+   local a = fun.iter(self.data):filter(function(i) return i.text == attr end):nth(1)
    if not a or a.locked == nil then return end
    if a.locked == true then
       a.locked = false

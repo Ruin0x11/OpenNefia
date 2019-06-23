@@ -14,7 +14,7 @@ ICharaLocation:delegate("inv",
                            "objects_at_pos",
                            "get_object",
                            "has_object",
-                           "iter_objects"
+                           "iter"
                         })
 
 function ICharaLocation:init()
@@ -76,7 +76,7 @@ function ICharaLocation:has_item(item)
 end
 
 function ICharaLocation:iter_items()
-   return self.inv:iter_objects()
+   return self.inv:iter()
 end
 
 return ICharaLocation

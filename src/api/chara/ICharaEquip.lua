@@ -41,7 +41,7 @@ function ICharaEquip:unequip_item(item)
 end
 
 function ICharaEquip:iter_equipment()
-   return self.equip:iter_objects()
+   return self.equip:iter()
 end
 
 return ICharaEquip

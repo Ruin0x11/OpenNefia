@@ -163,15 +163,15 @@ local function draw_ally_weight(self)
 end
 
 local function source_chara(ctxt)
-   return ctxt.chara.inv:make_list()
+   return ctxt.chara:iter_items()
 end
 
 local function source_ground(ctxt)
-   return Item.at(ctxt.chara.x, ctxt.chara.y)
+   return Item.at(ctxt.ground_x, ctxt.ground_y)
 end
 
 local function source_equipment(ctxt)
-   return ctxt.chara.equip:make_list()
+   return ctxt.chara:iter_equipment()
 end
 
 function InventoryMenu:update_filtering()
@@ -195,17 +195,19 @@ function InventoryMenu:update_filtering()
       else
          error("unknown source " .. source)
       end
-      items = table.map(items,
-                        function(i)
-                           return { item = i, source = source }
-                        end)
-      all = table.append(all, items)
+      items = items:map(function(item)
+                           return { item = item, source = source }
+      end)
+
+      all[#all+1] = items
    end
 
-   for _, entry in ipairs(all) do
+   local iter = fun.chain(table.unpack(all))
+
+   for _, entry in iter:unwrap() do
       local item = entry.item
       if not Item.is_alive(item) then
-         Item.delete(item)
+         item:delete()
       else
          if self.ctxt:filter(item) then
             filtered[#filtered+1] = entry

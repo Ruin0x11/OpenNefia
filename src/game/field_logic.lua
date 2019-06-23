@@ -50,7 +50,7 @@ function field_logic.setup()
             return "turn_end"
          end
 
-         local item = me.inv:make_list()[1]
+         local item = me.inv:iter():to_list()[1]
          me:drop_item(item)
          Gui.mes("You drop " .. item._id)
          return "turn_end"

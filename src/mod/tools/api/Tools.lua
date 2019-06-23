@@ -29,41 +29,34 @@ function Tools.spawn_allies(count)
 end
 
 function Tools.item()
-   for _, i in Map.iter_items() do
-      return i
-   end
+   return Map.iter_items():nth(1)
 end
 
 function Tools.ally()
-   for _, c in Chara.iter_allies() do
-      return c
-   end
+   return Chara.iter_allies():nth(1)
 end
 
 function Tools.enemy()
-   for _, c in Map.iter_charas() do
-      if Chara.is_alive(c) and not c:is_in_party() then
-         return c
-      end
+   local pred = function(c)
+      return Chara.is_alive(c) and not c:is_in_party()
    end
+   return Map.iter_charas():filter(pred):nth(1)
 end
 
 function Tools.dump_charas()
-   local t = {}
-   for _, c in Map.iter_charas() do
-      t[#t+1] = { tostring(c.uid), c.x, c.y }
-   end
+   local t = Map.iter_charas()
+   :map(function(c) return { tostring(c.uid), c.x, c.y } end)
+      :to_list()
 
-   return table.print(t, {"UID", "X", "Y"})
+   return table.print(t, {header = {"UID", "X", "Y"}})
 end
 
 function Tools.dump_items()
-   local t = {}
-   for _, i in Map.iter_items() do
-      t[#t+1] = { tostring(i.uid), i.x, i.y }
-   end
+   local t = Map.iter_items()
+   :map(function(i) return { tostring(i.uid), i.x, i.y } end)
+      :to_list()
 
-   return table.print(t, {"UID", "X", "Y"})
+   return table.print(t, {header = {"UID", "X", "Y"}})
 end
 
 return Tools

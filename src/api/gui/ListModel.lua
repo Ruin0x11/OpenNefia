@@ -18,7 +18,7 @@ function ListModel:set_data(items)
 end
 
 function ListModel:iter()
-   return ipairs(self.items)
+   return fun.iter(self.items)
 end
 
 function ListModel:len()

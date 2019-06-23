@@ -43,7 +43,7 @@ end
 
 function Action.get(chara, item)
    if item == nil then
-      local items = Item.at(chara.x, chara.y)
+      local items = Item.at(chara.x, chara.y):to_list()
       if #items == 0 then
          Gui.mes(chara.uid .. " grasps at air.")
          return false

@@ -112,15 +112,15 @@ test("pool - positional", function()
         local p = pool:new("test", u, 10, 10)
         local a = p:create_object({thing = "hoge"}, 5, 5)
 
-        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), { a }))
 
         local b = p:create_object({thing = "fuga"}, 5, 5)
 
-        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid, b.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), { a, b }))
 
-        ok(p:remove_object(a.uid))
+        ok(p:remove_object(a))
 
-        ok(t.are_same(p:objects_at_pos(5, 5), { b.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), { b }))
 end)
 
 test("pool - positional move", function()
@@ -128,26 +128,26 @@ test("pool - positional move", function()
         local p = pool:new("test", u, 10, 10)
         local a = p:create_object({thing = "hoge"}, 5, 5)
 
-        ok(t.are_same(p:objects_at_pos(5, 5), { a.uid }))
-        ok(t.are_same(p:objects_at_pos(4, 5), {}))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), { a }))
+        ok(t.are_same(p:objects_at_pos(4, 5):to_list(), {}))
 
         ok(p:move_object(a, 4, 5))
 
-        ok(t.are_same(p:objects_at_pos(5, 5), {}))
-        ok(t.are_same(p:objects_at_pos(4, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5):to_list(), { a }))
 
         ok(p:move_object(a, 4, 5))
 
-        ok(t.are_same(p:objects_at_pos(5, 5), {}))
-        ok(t.are_same(p:objects_at_pos(4, 5), { a.uid }))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5):to_list(), { a }))
 
         ok(not pcall(function() p:move_object(a, 1000, 5) end))
         ok(not pcall(function() p:move_object(a, -1, 5) end))
 
         ok(p:remove_object(a))
 
-        ok(t.are_same(p:objects_at_pos(5, 5), {}))
-        ok(t.are_same(p:objects_at_pos(4, 5), {}))
+        ok(t.are_same(p:objects_at_pos(5, 5):to_list(), {}))
+        ok(t.are_same(p:objects_at_pos(4, 5):to_list(), {}))
 
         ok(not pcall(function() p:move_object(a, 5, 5) end))
 end)

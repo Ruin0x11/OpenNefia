@@ -10,16 +10,8 @@ local ILocation = interface("ILocation",
                     get_object = "function",
                     has_object = "function",
                     can_take_object = "function",
-                    iter_objects = "function",
+                    iter = "function",
                  })
-
-function ILocation:object_list(ordering)
-   local list = {}
-   for _, o in self:iter_objects(ordering) do
-      list[#list+1] = o
-   end
-   return list
-end
 
 --- Attempts to take ownership of map object. This function may fail.
 --- If it fails, no state in the location is expected to be changed.

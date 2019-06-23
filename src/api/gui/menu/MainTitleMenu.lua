@@ -63,7 +63,7 @@ function MainTitleMenu:init()
       { text = "Mods" },
       { text = "Exit" }
    }
-   data = table.imap(data, function(o) o.subtext = o.text; return o end)
+   data = fun.iter(data):map(function(o) o.subtext = o.text; return o end):to_list()
 
    self.list = UiList:new(data, 35)
    table.merge(self.list, UiListExt())

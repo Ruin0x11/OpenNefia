@@ -85,7 +85,7 @@ end
 
 function draw.push_layer(ui_layer)
    assert_is_an(require("api.gui.IUiLayer"), ui_layer)
-   table.push(layers, ui_layer)
+   table.insert(layers, ui_layer)
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
 end

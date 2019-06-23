@@ -34,6 +34,7 @@ local SANDBOX_GLOBALS = {
 
    -- misc. globals
    "inspect",
+   "fun",
 }
 
 if _DEBUG then

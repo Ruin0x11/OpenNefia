@@ -1,4 +1,5 @@
 local schema = require ("thirdparty.schema")
+local fun = require ("thirdparty.fun")
 
 local data = {
    errors = {}
@@ -242,7 +243,7 @@ function proxy:iter()
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])
    end
-   return iter, {iter=inner_iter,state=inner_state}, inner_index
+   return fun.wrap(iter, {iter=inner_iter,state=inner_state}, inner_index)
 end
 
 function proxy:print()

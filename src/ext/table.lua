@@ -1,41 +1,3 @@
---- Given a candidate search function, iterates over the table, calling the function
---- for each element in the table, and returns the first element the search function returned true.
---- Passes the index as second argument to the function.
---- @usage a= { 1, 2, 3, 4, 5}
----table.find(a, function(v) return v % 2 == 0 end) --produces: 2
---- @usage a = {1, 2, 3, 4, 5}
----table.find(a, function(v, k, x) return k % 2 == 1 end) --produces: 1
--- @tparam table tbl the table to be searched
--- @tparam function func the function to use to search for any matching element
--- @param[opt] ... additional arguments passed to the function
--- @treturn ?|nil|Mixed the first found value, or nil if none was found
-function table.find(tbl, func, ...)
-   for k, v in pairs(tbl) do
-      if func(v, k, ...) then
-         return v, k
-      end
-   end
-   return nil
-end
-
-function table.ifind(arr, func, ...)
-   for i, v in ipairs(arr) do
-      if func(v, i, ...) then
-         return v, i
-      end
-   end
-   return nil
-end
-
-function table.find_index_of(arr, value)
-   for i, v in ipairs(arr) do
-      if v == value then
-         return i
-      end
-   end
-   return nil
-end
-
 --- Merges two tables &mdash; values from first get overwritten by the second.
 --- @usage
 -- function some_func(x, y, args)
@@ -172,16 +134,6 @@ function table.deepcompare(t1,t2,ignore_mt,eps)
     return cycle_aware_compare(t1,t2,ignore_mt,eps,{})
 end
 
---- Returns true if the table contains a given value.
--- @tparam table tbl the table to search
--- @param value the value to search for
-function table.contains(tbl, value)
-   local function predicate(v)
-      return v == value
-   end
-   return table.find(tbl, predicate)
-end
-
 --- Returns the number of items in a dictionary-like table.
 -- @tparam table tbl
 -- @treturn int
@@ -264,78 +216,6 @@ function table.remove_value(tbl, value, array)
    return result
 end
 
---- Maps a function over tbl.
--- @tparam table tbl
--- @tparam func f
--- @treturn table
-function table.map(tbl, f)
-   local t = {}
-   for k, v in pairs(tbl) do
-      t[k] = f(v)
-   end
-   return t
-end
-
---- Maps a function over the keys of tbl.
--- @tparam table tbl
--- @tparam func f
--- @treturn table
-function table.map_keys(tbl, f)
-   local t = {}
-   for k, v in pairs(tbl) do
-      t[k] = nil
-      t[f(k)] = v
-   end
-   return t
-end
-
---- Maps a function over arr.
--- @tparam array tbl
--- @tparam func f
--- @treturn array
-function table.imap(tbl, f, array)
-   local t = {}
-   for i, v in ipairs(tbl) do
-      t[i] = f(v)
-   end
-   return t
-end
-
-function table.ireduce(arr, f, start)
-   local result = start
-
-   for _, v in ipairs(arr) do
-      result = f(result, v)
-   end
-
-   return result
-end
-
-function table.ifilter(tbl, f)
-   local t = {}
-   for i, v in ipairs(tbl) do
-      if f(v) then
-         t[#t+1] = v
-      end
-   end
-   return t
-end
-
---- Reduces an array-like table over a function.
--- @tparam array arr
--- @tparam func f
--- @tparam any start
--- @treturn any
-function table.reduce(arr, f, start)
-   local result = start
-
-   for _, v in ipairs(arr) do
-      result = f(result, v)
-   end
-
-   return result
-end
-
 --- Flattens an array-like table one layer down.
 -- @tparam array arr
 -- @treturn array
@@ -354,8 +234,6 @@ function table.flatten(arr)
 
    return result
 end
-
-table.push = table.insert
 
 table.unpack = unpack
 

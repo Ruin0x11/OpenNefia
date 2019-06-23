@@ -20,14 +20,14 @@ function Inventory:is_full()
 end
 
 function Inventory:sorted_by(comparator)
-   local indices = table.of(function(i) return i end, self.pool:len())
+   local indices = fun.range(self.pool:len()):to_list()
 
    local comp = function(i, j)
       return comparator(self.pool:at(i), self.pool:at(j))
    end
 
    table.sort(indices, comp)
-   return table.imap(indices, function(ind) return self:at(ind) end)
+   return fun.iter(indices):map(function(ind) return self:at(ind) end)
 end
 
 function Inventory:contains(item)
@@ -35,11 +35,7 @@ function Inventory:contains(item)
 end
 
 function Inventory:iter()
-   return self.pool:iter_objects()
-end
-
-function Inventory:make_list()
-   return self.pool:make_list()
+   return self.pool:iter()
 end
 
 function Inventory:len()
@@ -58,7 +54,7 @@ Inventory:delegate("pool",
                       "objects_at_pos",
                       "get_object",
                       "has_object",
-                      "iter_objects"
+                      "iter"
                    })
 
 function Inventory:is_positional()

@@ -179,14 +179,11 @@ function UiMessageWindow:calc_start_offset()
 end
 
 function UiMessageWindow:recalc_lines()
-   print("recalc",self.history:len(),self.each_line:len())
    if self.history:len() == 0 then
       return
    end
 
    local cutoff, index_of_first_text = self:calc_start_offset()
-
-   print("clearm",index_of_first_text)
 
    self.each_line = circular_buffer:new(self.max_lines)
 

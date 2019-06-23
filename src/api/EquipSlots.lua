@@ -7,10 +7,8 @@ local EquipSlots = class("EquipSlots", ILocation)
 function EquipSlots:init(body_parts)
    body_parts = body_parts or {}
 
-   self.body_parts = table.imap(body_parts,
-                                function(i)
-                                   return { type = i }
-                                end)
+   self.body_parts = fun.iter(body_parts):map(function(i) return { type = i } end) :to_list()
+   _p(self.body_parts)
 
    local uids = require("internal.global.uids")
    self.pool = pool:new("base.item", uids, 1, 1)
@@ -33,16 +31,17 @@ function EquipSlots:find_free_slot(obj, body_part_type)
          return nil
       end
 
-      pred = function(part, slot)
+      pred = function(part)
          return part.type == body_part_type and not part.equipped
       end
    else
-      pred = function(part, slot)
+      pred = function(part)
          return can_equip[part.type] and not part.equipped
       end
    end
 
-   local _, slot = table.ifind(self.body_parts, pred)
+   local part = fun.iter(self.body_parts):filter(pred):nth(1)
+   local slot = fun.index(part, self.body_parts)
 
    return slot
 end
@@ -147,10 +146,6 @@ end
 function EquipSlots:is_equipped_at(slot)
 end
 
-function EquipSlots:make_list()
-   return self.pool:make_list()
-end
-
 --
 -- ILocation impl
 --
@@ -161,7 +156,7 @@ EquipSlots:delegate("pool",
                       "objects_at_pos",
                       "get_object",
                       "has_object",
-                      "iter_objects"
+                      "iter"
                    })
 
 function EquipSlots:is_positional()

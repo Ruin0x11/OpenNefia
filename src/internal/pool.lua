@@ -118,7 +118,7 @@ function pool:remove_object(obj)
 end
 
 function pool:objects_at_pos(x, y)
-   return self.positional[y][x]
+   return fun.iter(self.positional[y][x]):map(function(uid) return self:get_object(uid) end)
 end
 
 function pool:has_object(obj)
@@ -136,16 +136,8 @@ local function iter(a, i)
    return i, d
 end
 
-function pool:iter_objects(ordering)
-   return iter, {uids=ordering or self.uids, content=self.content}, 1
-end
-
-function pool:make_list()
-   local t = {}
-   for _, v in self:iter_objects() do
-      t[#t+1] = v
-   end
-   return t
+function pool:iter(ordering)
+   return fun.wrap(iter, {uids=ordering or self.uids, content=self.content}, 1)
 end
 
 function pool:object_count()

@@ -84,7 +84,7 @@ function Command.get(player)
    -- buildings
    -- snow
 
-   local items = Item.at(player.x, player.y)
+   local items = Item.at(player.x, player.y):to_list()
    if #items == 0 then
       Gui.mes("You grasp at air.")
       return "turn_end"

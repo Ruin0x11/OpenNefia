@@ -349,7 +349,7 @@ end
 local function get_actions(chara, _type)
    local pred = function(a) return a.type == _type end
 
-   return table.ifilter(chara:calc("known_abilities"), pred)
+   return fun.iter(chara:calc("known_abilities")):filter(pred):to_list()
 end
 
 local function basic_action(chara, params)

@@ -23,24 +23,11 @@ function Chara.at(x, y, map)
       return nil
    end
 
-   local objs = map:objects_at_pos("base.chara", x, y)
-   assert(objs ~= nil, string.format("%d,%d", x, y))
+   local objs = map:get_pool("base.chara"):objects_at_pos(x, y):filter(Chara.is_alive)
 
-   -- TODO: clean up dead characters when map is left, if not meant to
-   -- be persisted.
-   local chara
-   local count = 0
-   for _, id in ipairs(objs) do
-      local v = map:get_object("base.chara", id)
-      if Chara.is_alive(v) then
-         chara = v
-         count = count + 1
-      end
-   end
+   assert(objs:length() <= 1, string.format("More than one live character on tile %d,%d", x, y))
 
-   assert(count <= 1, "More than one live character on tile: " .. inspect(objs))
-
-   return chara
+   return objs:nth(1)
 end
 
 function Chara.is_player(c)

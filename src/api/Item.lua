@@ -16,17 +16,7 @@ function Item.at(x, y, map)
       return {}
    end
 
-   local objs = map:objects_at_pos("base.item", x, y)
-
-   local items = {}
-   for _, id in ipairs(objs) do
-      local v = map:get_object("base.item", id)
-      if Item.is_alive(v) then
-         items[#items+1] = v
-      end
-   end
-
-   return items
+   return map:get_pool("base.item"):objects_at_pos(x, y):filter(Item.is_alive)
 end
 
 function Item.set_pos(i, x, y)
@@ -42,10 +32,6 @@ function Item.set_pos(i, x, y)
    field.map:move_object(i, x, y)
 
    return true
-end
-
-function Item.delete(i, map)
-   (map or field.map):remove_object(i)
 end
 
 function Item.is_alive(item)

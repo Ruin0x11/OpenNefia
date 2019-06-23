@@ -73,7 +73,10 @@ function class.interface(name, reqs, parents)
          i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
          i.methods = table.merge(table.deepcopy(p.methods), i.methods)
       end
-      i.parents = table.map(parents, function(p) return p.name end)
+      i.parents = {}
+      for _, p in ipairs(parents) do
+         i.parents[#i.parents+1] = p.name
+      end
    end
 
    i.__tostring = iface_mt.__tostring
@@ -121,6 +124,11 @@ local function verify(instance, interface)
    return err
 end
 
+-- TODO: this system is really bloated and doesn't preserve "self"
+-- inside nested delegated calls, leading to much confusion. All that
+-- is actually needed is generating a function call that calls the
+-- delegate's version of the method, but instead passing the parent
+-- "self".
 local function delegate(c, field, params)
    local set = {}
 

@@ -103,7 +103,7 @@ function IChara:is_player()
 end
 
 function IChara:is_ally()
-   return table.find_index_of(field.allies, self.uid) ~= nil
+   return fun.iter(field.allies):index(self.uid) ~= nil
 end
 
 function IChara:is_in_party()

@@ -8,7 +8,7 @@ local Rand = require("api.Rand")
 local Map = {}
 
 function Map.is_world_map(map)
-   return table.contains((map or field.map).types, "base.world_map")
+   return fun.iter((map or field.map).types):index("base.world_map") ~= nil
 end
 
 function Map.current()

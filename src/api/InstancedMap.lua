@@ -271,11 +271,11 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
 end
 
 function InstancedMap:iter_charas()
-   return self:iter_objects("base.chara")
+   return self:iter("base.chara")
 end
 
 function InstancedMap:iter_items()
-   return self:iter_objects("base.item")
+   return self:iter("base.item")
 end
 
 function InstancedMap:is_in_bounds(x, y)
@@ -351,6 +351,7 @@ function InstancedMap:move_object(obj, x, y)
    return self:get_pool(obj._type):move_object(obj, x, y)
 end
 
+-- TODO: These should not have _type in the signature...
 function InstancedMap:objects_at_pos(_type, x, y)
    return self:get_pool(_type):objects_at_pos(x, y)
 end
@@ -363,8 +364,8 @@ function InstancedMap:has_object(obj)
    return self:get_pool(obj._type):has_object(obj)
 end
 
-function InstancedMap:iter_objects(_type)
-   return self:get_pool(_type):iter_objects()
+function InstancedMap:iter(_type)
+   return self:get_pool(_type):iter()
 end
 
 function InstancedMap:can_take_object(obj)

@@ -57,7 +57,7 @@ end
 function sparse_batch:remove_tile(ind)
    self.tiles[ind] = 0
    -- TODO: keep this array sorted from smallest to largest.
-   table.push(self.free_indices, ind)
+   table.insert(self.free_indices, ind)
    self.updated = true
 end
 
