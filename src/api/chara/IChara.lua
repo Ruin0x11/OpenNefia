@@ -8,6 +8,7 @@ local ICharaLocation = require("api.chara.ICharaLocation")
 local ICharaFaction = require("api.chara.ICharaFaction")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local ICharaEquip = require("api.chara.ICharaEquip")
+local ICharaParty = require("api.chara.ICharaParty")
 local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
 local Inventory = require("api.Inventory")
@@ -22,6 +23,7 @@ local IChara = interface("IChara",
                             ICharaFaction,
                             ICharaTalk,
                             ICharaEquip,
+                            ICharaParty,
                             IObserver
                          })
 
@@ -53,7 +55,7 @@ function IChara:build()
    self.ai = "base.elona_default_ai"
    self.ai_state = {
       hate = 0,
-      player_attacker = nil,
+      leader_attacker = nil,
       item_to_be_used = nil,
       wants_movement = 0,
       last_target_x = 0,
@@ -104,14 +106,6 @@ end
 
 function IChara:is_ally()
    return fun.iter(field.allies):index(self.uid) ~= nil
-end
-
-function IChara:is_in_party()
-   return self:is_player() or self:is_ally()
-end
-
-function IChara:get_party()
-   return nil
 end
 
 function IChara:recruit_as_ally()
@@ -267,7 +261,7 @@ function IChara:damage_hp(amount, source, params)
          -- TODO sleep exp
          if attacker:is_in_party() then
             attacker:set_target(nil)
-            Chara.player():set_target(nil)
+            attacker:get_party_leader():set_target(nil)
          end
       end
 

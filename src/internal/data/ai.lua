@@ -6,6 +6,10 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 
+local function default_target(chara)
+   return chara:get_party_leader() or Chara.player()
+end
+
 local function on_ai_calm_actions(chara)
    return chara:calc("on_ai_calm_action")
 end
@@ -206,7 +210,7 @@ local function move_towards_target(chara, params)
    assert(target ~= nil)
 
    if chara == target then
-      chara:set_target(Chara.player())
+      chara:set_target(default_target(chara))
       return true
    end
 
@@ -417,28 +421,28 @@ local function decide_ally_target(chara, params)
       and chara:reaction_towards(target) >= 0
       and not being_targeted
 
-   if target == nil or Chara.is_player(target) or chara.ai_state.hate <= 0 or target_not_important then
+   if target == nil or target:is_party_leader_of(chara) or chara.ai_state.hate <= 0 or target_not_important then
 
-      -- Follow the player.
-      chara:set_target(Chara.player())
+      -- Follow the leader.
+      chara:set_target(chara:get_party_leader())
 
-      if chara.ai_state.player_attacker ~= nil then
-         if chara:reaction_towards(chara.ai_state.player_attacker) < 0 then
-            if Chara.is_alive(chara.ai_state.player_attacker) then
-               if Map.has_los(chara.x, chara.y, chara.ai_state.player_attacker.x, chara.ai_state.player_attacker.y) then
+      if chara.ai_state.leader_attacker ~= nil then
+         if chara:reaction_towards(chara.ai_state.leader_attacker) < 0 then
+            if Chara.is_alive(chara.ai_state.leader_attacker) then
+               if Map.has_los(chara.x, chara.y, chara.ai_state.leader_attacker.x, chara.ai_state.leader_attacker.y) then
                   chara.ai_state.hate = 5
-                  chara:set_target(chara.ai_state.player_attacker)
+                  chara:set_target(chara.ai_state.leader_attacker)
                end
             end
          end
       end
 
-      if chara:get_target() == nil or Chara.is_player(chara:get_target()) then
-         local player = Chara.player()
+      if chara:get_target() == nil or chara:get_target():is_party_leader_of(chara) then
+         local leader = chara:get_party_leader()
 
-         if Chara.is_alive(player) then
-            local target = player:get_target()
-            if target ~= nil and player:reaction_towards(target) < 0 then
+         if Chara.is_alive(leader) then
+            local target = leader:get_target()
+            if target ~= nil and leader:reaction_towards(target) < 0 then
                if Map.has_los(chara.x, chara.y, target.x, target.y) then
                   chara.ai_state.hate = 5
                   chara:set_target(target)
@@ -520,8 +524,8 @@ local function ai_talk(chara, params)
    if not chara:calc("is_talk_silenced") then
       if chara.turns_alive % 5 == 0 then
          if Rand.one_in(4) then
-            local player = Chara.player()
-            if Pos.is_in_square(chara.x, chara.y, player.x, player.y, 20) then
+            local leader = chara:get_party_leader()
+            if leader and Pos.is_in_square(chara.x, chara.y, leader.x, leader.y, 20) then
                if chara.ai_state.hate <= 0 then
                   chara:say("base.ai_calm")
                else
@@ -540,7 +544,7 @@ local function elona_default_ai(chara, params)
 
    local target = chara:get_target()
    if target == nil or not Chara.is_alive(target) then
-      chara:set_target(Chara.player())
+      chara:set_target(default_target(chara))
       chara.ai_state.hate = 0
    end
 

@@ -8,7 +8,6 @@ function EquipSlots:init(body_parts)
    body_parts = body_parts or {}
 
    self.body_parts = fun.iter(body_parts):map(function(i) return { type = i } end) :to_list()
-   _p(self.body_parts)
 
    local uids = require("internal.global.uids")
    self.pool = pool:new("base.item", uids, 1, 1)

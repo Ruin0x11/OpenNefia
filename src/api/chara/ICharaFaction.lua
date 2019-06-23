@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local Faction = require("api.Faction")
 
-local ICharaFaction = interface("ICharaFaction", {})
+local ICharaFaction = interface("ICharaFaction")
 
 function ICharaFaction:reset_reaction_at(other)
    self.personal_reactions[other.uid] = nil
@@ -38,15 +38,6 @@ end
 
 function ICharaFaction:get_hate_at(other, delta)
    return 0
-end
-
-function ICharaFaction:act_hostile_towards(other)
-   if other:is_player() then
-      -- HACK use party system instead
-      for _, c in Chara.iter_allies() do
-         c.ai_state.player_attacker = self
-      end
-   end
 end
 
 return ICharaFaction
