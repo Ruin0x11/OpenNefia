@@ -32,11 +32,8 @@ local class_ = require("util.class")
 interface = class_.interface
 class = class_.class
 
-if love ~= nil then
-   IS_LOVE = true
-else
+if love == nil then
    _DEBUG = true
-   IS_LOVE = false
    love = require("util.lovemock")
 end
 

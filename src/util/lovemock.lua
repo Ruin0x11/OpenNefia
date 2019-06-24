@@ -1,4 +1,4 @@
-local love = require("util.automagic")()
+local love = require("thirdparty.automagic")()
 
 love.graphics.getWidth = function() return 800 end
 love.graphics.getHeight = function() return 600 end
@@ -58,5 +58,7 @@ end
 love.audio.setDistanceModel = function() end
 love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
+
+love.getVersion = function() return "lovemock" end
 
 return love

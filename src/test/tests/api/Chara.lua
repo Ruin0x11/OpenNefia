@@ -5,10 +5,11 @@ local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
 local InstancedMap = require("api.InstancedMap")
 local uid_tracker = require("internal.uid_tracker")
+local MockObject = require("test.support.MockObject")
 
 test("mapobject - gc", function()
         local u = uid_tracker:new()
-        local o = MapObject.generate({}, u)
+        local o = MapObject.generate(MockObject:new(), u)
 
         local t = setmetatable({o}, { __mode = "v" })
 

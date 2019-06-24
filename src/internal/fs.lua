@@ -1,11 +1,6 @@
 local fs = {}
 
--- TODO: stub out with lfs if not running with love runtime
-
-if IS_LOVE then
-   fs.get_directory_items = love.filesystem.getDirectoryItems
-   fs.get_info = love.filesystem.getInfo
-else
+if love.getVersion() == "lovemock" then
    local lfs = require("lfs")
    fs.get_directory_items = function(dir)
       local items = {}
@@ -22,6 +17,9 @@ else
          type = attrs.mode
       }
    end
+else
+   fs.get_directory_items = love.filesystem.getDirectoryItems
+   fs.get_info = love.filesystem.getInfo
 end
 
 local dir_sep = package.config:sub(1,1)

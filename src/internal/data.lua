@@ -202,18 +202,19 @@ function proxy:__index(k)
    local exist = rawget(proxy, k)
    if exist then return exist end
 
-   if not inner[self._type] then return nil end
+   local for_type = rawget(inner, self._type)
+   if not for_type then return nil end
 
    -- Permit substituting an instance of a data type if it is passed
    -- in instead of a string key.
    if type(k) == "table"
       and k._type == self._type
-      and inner[self._type][k._id]
+      and for_type[k._id]
    then
       return k
    end
 
-   return inner[self._type][k]
+   return for_type[k]
 end
 
 function proxy:ensure(k)

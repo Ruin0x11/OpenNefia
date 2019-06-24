@@ -22,6 +22,10 @@ function UiTextGroup:relayout(x, y)
    self.y = y
 end
 
+function UiTextGroup:iter()
+   return fun.iter(self.texts)
+end
+
 function UiTextGroup:update()
 end
 

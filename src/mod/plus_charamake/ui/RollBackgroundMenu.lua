@@ -43,8 +43,8 @@ function RollBackgroundMenu:init()
       { text = "Proceed", type = "proceed" },
       { text = "Keep secret", type = "keep_secret" },
       { text = "Reroll all", type = "reroll", on_choose = function() self:reroll(true) end },
-      { text = "Reroll first half", type = "reroll", on_choose = function() self:reroll(true) end },
-      { text = "Reroll second half", type = "reroll", on_choose = function() self:reroll(true) end }
+      { text = "Reroll first half", type = "reroll", on_choose = function() self:reroll(true, "first") end },
+      { text = "Reroll second half", type = "reroll", on_choose = function() self:reroll(true, "second") end }
    }
 
    self.list = UiList:new(items, 23)
@@ -65,8 +65,22 @@ function RollBackgroundMenu:init()
    self.intro_sound = "base.ok1"
 end
 
-function RollBackgroundMenu:reroll(play_sound)
-   self.texts:set_data(table.of(function(i) return "the history " .. math.random(100) end, 5))
+function RollBackgroundMenu:reroll(play_sound, which_part)
+   local generator = function(i) return "the history " .. math.random(100) end
+   local first, second = self.texts:iter():split(2)
+   local gen = fun.tabulate(generator)
+
+   if which_part == "first" then
+      first = gen:take(2)
+   elseif which_part == "second" then
+      second = gen:take(3)
+   else
+      first = gen:take(2)
+      second = gen:take(3)
+   end
+
+   local data = fun.chain(first, second):to_list()
+   self.texts:set_data(data)
 
    if play_sound then
       Gui.play_sound("base.dice")
@@ -100,8 +114,10 @@ end
 function RollBackgroundMenu:update()
    if self.list.chosen then
       if self.list.chosen == "keep_secret" then
+         self.keep_secret = true
          return true
       else
+         self.keep_secret = false
          return true
       end
    end
