@@ -83,7 +83,7 @@ end
 
 --
 --
--- LOVE callbacks
+-- LÖVE callbacks
 --
 --
 
