@@ -23,7 +23,7 @@ data:add {
    max_hp = 100,
    max_mp = 20,
 
-   talk = "base.test"
+   talk = "content.test"
 }
 
 data:add {
@@ -128,8 +128,8 @@ data:add {
          ["event:base.on_chara_revived"] = "I'm revived.",
 
          ["base.ai_aggro"] = {
-            { talk = "「負けるもんか！」", voice = "base.voice5" },
-            { talk = "「うしゃー、やるぞ！」", voice = "base.voice3" },
+            { talk = "「負けるもんか！」", voice = "content.voice5" },
+            { talk = "「うしゃー、やるぞ！」", voice = "content.voice3" },
             "",
             "",
             "",
@@ -145,8 +145,8 @@ data:add {
          },
 
          ["base.ai_melee"] = {
-            { talk = "「よっ、よ！」", voice = "base.voice2" },
-            { talk = "「うしゅっ」", voice = "base.voice4" },
+            { talk = "「よっ、よ！」", voice = "content.voice2" },
+            { talk = "「うしゅっ」", voice = "content.voice4" },
             "",
             "",
          }

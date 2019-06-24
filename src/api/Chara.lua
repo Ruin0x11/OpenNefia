@@ -108,7 +108,7 @@ local function iter(a, i)
 end
 
 function Chara.iter_allies()
-   return iter, {map = field.map, uids = field.allies}, 1
+   return fun.wrap(iter, {map = field.map, uids = field.allies}, 1)
 end
 
 return Chara

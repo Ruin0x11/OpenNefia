@@ -11,9 +11,9 @@ end
 
 function DateTime:hours()
    return self.hour
-      + (self.day * 24)
-      + (self.month * 24 * 30)
-      + (self.year * 24 * 30 * 12)
+      + self.day * 24
+      + self.month * 24 * 30
+      + self.year * 24 * 30 * 12
 end
 
 return DateTime

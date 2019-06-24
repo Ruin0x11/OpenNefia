@@ -1455,7 +1455,6 @@ return {
       _id = "blank",
       effect = 5,
       id = "0_434",
-      image = "graphic/temp/map_tile/0_434.png"
    },
    {
       _id = "blank",
