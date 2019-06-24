@@ -119,6 +119,11 @@ function mod.load_mods()
    local load_order = mod.calculate_load_order()
 
    for _, mod in ipairs(load_order) do
+      local manifest = fs.join(mod.root_path, "mod.lua")
+      if not fs.is_file(manifest) then
+         error("Cannot find mod dependency " .. mod.id)
+      end
+
       local init = fs.join(mod.root_path, "init.lua")
       if fs.is_file(init) then
          local success, chunk = load_mod(mod.id, init)
@@ -129,11 +134,6 @@ function mod.load_mods()
 
          print(string.format("Loaded mod %s.", mod.id))
          chunks[mod.id] = chunk
-      else
-         local manifest = fs.join(mod.root_path, "mod.lua")
-         if not fs.is_file(manifest) then
-            error("Cannot find mod dependency " .. mod.id)
-         end
       end
    end
 end
