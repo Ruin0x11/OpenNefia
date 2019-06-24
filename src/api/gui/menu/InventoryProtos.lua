@@ -71,4 +71,13 @@ InventoryProtos.inv_drop = {
    end
 }
 
+local general_actions = {
+   "inv_general",
+   "inv_drop"
+}
+
+local multidrop_actions = {
+   "inv_drop"
+}
+
 return InventoryProtos

@@ -1,7 +1,8 @@
 local EquipSlots = require("api.EquipSlots")
+local ICharaInventory = require("api.chara.ICharaInventory")
 local ILocation = require("api.ILocation")
 
-local ICharaEquip = interface("ICharaEquip")
+local ICharaEquip = interface("ICharaEquip", {}, ICharaInventory)
 
 function ICharaEquip:init()
    -- TODO resolver

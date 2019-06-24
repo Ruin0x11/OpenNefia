@@ -1,3 +1,4 @@
+local Inventory = require("api.Inventory")
 local ILocation = require("api.ILocation")
 
 --- Interface for character inventory. Allows characters to store map
@@ -18,8 +19,7 @@ ICharaInventory:delegate("inv",
                         })
 
 function ICharaInventory:init()
-   self.inventory_weight = 0
-   self.max_inventory_weight = 1000
+   self.inv = Inventory:new(200)
 end
 
 function ICharaInventory:take_object(obj)
@@ -45,18 +45,6 @@ function ICharaInventory:put_into(other, obj, x, y)
 end
 
 
-function ICharaInventory:refresh_weight()
-   local weight = 0
-   for _, i in self:iter_items() do
-      weight = weight + i:calc("weight")
-   end
-   for _, i in self:iter_equipment() do
-      weight = weight + i:calc("weight")
-   end
-   self.inventory_weight = weight
-   self.max_inventory_weight = 1000
-end
-
 function ICharaInventory:drop_item(item, amount)
    if not self:has_item(item) then
       error("Character " .. self.uid .. " does not own item " .. item.uid)
@@ -81,6 +69,10 @@ end
 
 function ICharaInventory:iter_items()
    return self.inv:iter()
+end
+
+function ICharaInventory:stack_items()
+   -- TODO
 end
 
 return ICharaInventory

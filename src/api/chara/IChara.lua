@@ -11,7 +11,6 @@ local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaParty = require("api.chara.ICharaParty")
 local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
-local Inventory = require("api.Inventory")
 local InstancedMap = require("api.InstancedMap")
 
 -- TODO: move out of api
@@ -46,8 +45,6 @@ function IChara:build()
 
    self.fov = 15
 
-   self.inv = Inventory:new(200)
-
    self.personal_reactions = {}
 
    self.target = nil
@@ -80,6 +77,7 @@ function IChara:build()
    self.known_abilities = self.known_abilities or {}
 
    IObserver.init(self)
+   ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)
 end
@@ -90,6 +88,18 @@ function IChara:refresh()
    ICharaEquip.refresh(self)
 
    self:refresh_weight()
+end
+
+function IChara:refresh_weight()
+   local weight = 0
+   for _, i in self:iter_items() do
+      weight = weight + i:calc("weight")
+   end
+   for _, i in self:iter_equipment() do
+      weight = weight + i:calc("weight")
+   end
+   self:mod("inventory_weight", weight)
+   self:mod("max_inventory_weight", 1000)
 end
 
 function IChara:set_pos(x, y)
