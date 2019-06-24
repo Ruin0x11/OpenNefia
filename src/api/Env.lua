@@ -1,7 +1,7 @@
 local Env = {}
 
 function Env.version()
-   return "0.0.0"
+   return "0.0.1"
 end
 
 function Env.love_version()

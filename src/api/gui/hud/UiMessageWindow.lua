@@ -123,6 +123,9 @@ end
 --    \              \
 --     \____cutoff    \______index_of_first_text
 --
+--
+-- BUG: This will not respect newlines, so the minute prefix ([10])
+-- will not display properly if the window is resized.
 function UiMessageWindow:calc_start_offset()
    -- NOTE: The global font has to be set now for the text width
    -- calculation to be correct.
