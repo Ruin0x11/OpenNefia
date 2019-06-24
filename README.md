@@ -7,15 +7,16 @@ The title `Elona_next` is temporary since nothing better has been decided yet. (
 
 ## Requirements
 - [LÖVE](https://love2d.org) 0.10.0
-  + NOTE: At some point the project will move to a custom build of the LÖVE runtime due to missing features (font styling, MIDI playback, CJK text wrapping, etc.)
+    + NOTE: At some point the project will move to a custom build of the LÖVE runtime due to missing features (font styling, MIDI playback, CJK text wrapping, etc.)
 
 ### Test Requirements
 To run tests, these additional dependencies are needed.
+
 - [LuaJIT](http://luajit.org) 2.0.5
 - [luautf8](https://github.com/starwing/luautf8)
-  + Replacement for LÖVE's `utf8` module.
+    + Replacement for LÖVE's `utf8` module.
 - [luafilesystem](https://keplerproject.github.io/luafilesystem)
-  + Replacement for LÖVE's `love.filesystem` module.
+    + Replacement for LÖVE's `love.filesystem` module.
 
 ## Setup
 No out-of-the-box option is available yet, since assets referencing images are currently cropped out of the original vanilla atlases by hand. When the asset system is finalized a tool will need to be written to automate this process as a compile step.
@@ -27,12 +28,14 @@ cd elona-next/
 ```
 
 ## Running
+
 ```bash
 cd src/
 love .
 ```
 
 ## Running tests
+
 ```bash
 cd src/
 luajit -l boot -e "require 'test'"
@@ -53,8 +56,8 @@ Some of the code in this repository has been taken or adapted from the following
 - [luacheck](https://github.com/mpeterv/luacheck) (MIT) [excerpts]
 - [luafun](https://github.com/luafun/luafun) (MIT/X11) [modified]
 - [mobdebug](https://github.com/pkulchenko/MobDebug) (MIT) [modified]
-  + Based on [RemDebug](https://web.archive.org/web/20140928055353/http://www.keplerproject.org/remdebug). (MIT/X11)
-  + Uses [serpent](https://github.com/pkulchenko/serpent). (MIT)
+    + Based on [RemDebug](https://web.archive.org/web/20140928055353/http://www.keplerproject.org/remdebug). (MIT/X11)
+    + Uses [serpent](https://github.com/pkulchenko/serpent). (MIT)
 - [Penlight](https://github.com/stevedonovan/Penlight) (MIT) [excerpts]
 - [profile.lua](https://bitbucket.org/itraykov/profile.lua) (unlicensed) [modified]
 - [strict.lua](http://lua-users.org/lists/lua-l/2005-08/msg00737.html) (unlicensed)
