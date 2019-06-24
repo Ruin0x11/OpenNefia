@@ -2,6 +2,8 @@ local uid_tracker = require("internal.uid_tracker")
 local ILocation = require("api.ILocation")
 local MapObject = require("api.MapObject")
 
+-- Low-level storage for map objects of the same types. Pretty much
+-- anything that needs to store map objects uses this internally.
 local pool = class("pool", ILocation)
 
 function pool:init(type_id, tracker, width, height)
@@ -117,8 +119,13 @@ function pool:remove_object(obj)
    return obj
 end
 
+-- HACK: This should really be extracted into its own class.
 function pool:objects_at_pos(x, y)
    return fun.iter(self.positional[y][x]):map(function(uid) return self:get_object(uid) end)
+end
+
+function pool:is_in_bounds(x, y)
+   return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
 
 function pool:has_object(obj)

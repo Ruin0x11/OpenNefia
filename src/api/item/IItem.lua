@@ -102,7 +102,12 @@ end
 function IItem:move_some(amount, where, x, y)
    local separated = self:separate(amount)
 
+   if separated == nil then
+      return nil
+   end
+
    if not where:can_take_object(separated, x, y) then
+      self.amount = self.amount + amount
       separated:remove_ownership()
       return nil
    end

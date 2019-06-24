@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
+local Gui = require("api.Gui")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -36,21 +37,29 @@ function NumberPrompt:init(max, initial, autocenter)
    self.input:bind_keys {
       up = function()
          self:set_number(self.max)
+         Gui.play_sound("base.cursor1")
       end,
       down = function()
          self:set_number(1)
+         Gui.play_sound("base.cursor1")
       end,
       left = function()
          self:modify_number(-1)
+         Gui.play_sound("base.cursor1")
       end,
       right = function()
          self:modify_number(1)
+         Gui.play_sound("base.cursor1")
       end,
       -- TODO: intercardinal actions
       shift = function() self.canceled = true end,
       esc = function() self.canceled = true end,
       ["return"] = function() self.finished = true end,
    }
+end
+
+function NumberPrompt:on_query()
+   Gui.play_sound("base.pop2")
 end
 
 function NumberPrompt:modify_number(delta)

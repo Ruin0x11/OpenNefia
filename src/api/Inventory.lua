@@ -61,6 +61,10 @@ function Inventory:is_positional()
    return false
 end
 
+function Inventory:is_in_bounds()
+   return true
+end
+
 function Inventory:can_take_object(obj)
    return not self:is_full() and obj._type == self.type_id
 end

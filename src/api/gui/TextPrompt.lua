@@ -72,7 +72,7 @@ function TextPrompt:focus()
 end
 
 function TextPrompt:on_query()
-   Gui.play_sound("base.ok1")
+   Gui.play_sound("base.pop2")
 end
 
 function TextPrompt:cancel()
@@ -123,7 +123,7 @@ function TextPrompt:ime_status_quad()
 end
 
 function TextPrompt:draw()
-   Draw.line_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
+   Draw.filled_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
 
    self.win:draw()
    Draw.image(self.label_input, self.x + self.width / 2 - 60, self.y - 32)

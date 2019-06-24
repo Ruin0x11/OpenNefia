@@ -2,6 +2,7 @@ local IOwned = require("api.IOwned")
 local Log = require("api.Log")
 local MapObject = require("api.MapObject")
 
+-- Base interface for any object that can be displayed on the tilemap.
 local IMapObject = interface("IMapObject",
                              {
                                 uid = "number",
@@ -72,6 +73,8 @@ local function merge_ex(base, add, meth, default)
    return base
 end
 
+--- Modifies a temporary value. This will be cleared when refresh() is
+--- called on the object.
 function IMapObject:mod(prop, v, meth)
    meth = meth or "set"
 
@@ -94,10 +97,9 @@ function IMapObject:mod(prop, v, meth)
 end
 
 function IMapObject:set_pos(x, y)
-   local InstancedMap = require("api.InstancedMap")
    local location = self.location
 
-   if not is_an(InstancedMap, location) then
+   if not location:is_positional() then
       Log.warn("IMapObject.set_pos: Not setting position of %s to %d,%d\n\t%s", tostring(self), x, y, debug.traceback(""))
       return false
    end

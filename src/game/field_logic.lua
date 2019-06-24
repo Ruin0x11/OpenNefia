@@ -65,7 +65,7 @@ function field_logic.setup()
          return "player_turn_query"
       end,
       ["return"] = function()
-         print(require("api.gui.TextPrompt"):new(16):query())
+         Gui.mes(require("api.gui.TextPrompt"):new(16):query())
          return "player_turn_query"
       end,
    }
@@ -292,6 +292,7 @@ function field_logic.turn_end(chara)
 end
 
 function field_logic.player_died()
+   Gui.play_sound("base.dead1")
    -- Gui.mes_clear()
    Gui.mes("You died. ")
    Gui.update_screen()

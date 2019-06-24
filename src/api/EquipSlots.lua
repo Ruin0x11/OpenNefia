@@ -162,6 +162,10 @@ function EquipSlots:is_positional()
    return false
 end
 
+function EquipSlots:is_in_bounds(x, y)
+   return true
+end
+
 function EquipSlots:remove_object(obj)
    return self:unequip(obj)
 end

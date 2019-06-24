@@ -63,11 +63,11 @@ end
 
 function ItemDescriptionMenu:update_desc()
    if self.list then
-      self.win:set_title("item desc" .. string.rep(" ", 4) .. string.format("(%d/%d)", self.list_index, #self.list))
+      self.win:set_title("item desc " .. string.format("(%d/%d)", self.list_index, #self.list))
    end
 
    local data = {
-      { text = "This item is in index " .. tostring(self.list_index) .. "." },
+      { text = "This item is in index " .. tostring(self.list_index) .. ": " .. self.item._id },
       { text = "A test description." },
       { text = "Another test description.", color = {80, 100, 0} },
       { text = "Yet another test description.", color = {180, 0, 0}, inherited = true },
@@ -86,6 +86,8 @@ function ItemDescriptionMenu:previous_item()
    if not self.list then return end
 
    self.list_index = math.max(1, self.list_index - 1)
+   self.item = self.list[self.list_index].item
+
    Gui.play_sound("base.pop1")
    self:update_desc()
 end
@@ -94,6 +96,8 @@ function ItemDescriptionMenu:next_item()
    if not self.list then return end
 
    self.list_index = math.min(#self.list, self.list_index + 1)
+   self.item = self.list[self.list_index].item
+
    Gui.play_sound("base.pop1")
    self:update_desc()
 end
