@@ -1,3 +1,4 @@
+-- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
 local class = {}
 
 local _instances = setmetatable({}, { __mode = "k"})

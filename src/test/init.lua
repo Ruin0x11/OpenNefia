@@ -1,7 +1,5 @@
 local lfs = require("lfs")
 
-assert = require("luassert") -- from luarocks
-
 test = require("thirdparty.gambiarra")
 ok = nil
 spy = nil
