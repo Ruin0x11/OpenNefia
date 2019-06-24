@@ -26,9 +26,31 @@ function MapObject.generate(proto, uid_tracker)
 
    local uid = uid_tracker:get_next_and_increment()
 
+   -- if the passed object was a previously instantiated one, take its
+   -- proto field and merge the rest of the fields after building
+   -- TODO: prefix proto as __proto since it serves a special purpose
+   local used_proto = proto
+   local merge_rest = false
+
+   -- HACK: there needs to be a better way of telling "is/was this a
+   -- map object instance?"
+   local is_instance = used_proto.uid ~= nil
+
+   if is_instance then
+      assert(used_proto.location == nil)
+
+      local data = require("internal.data")
+      used_proto = data[used_proto._type][used_proto._id]
+      merge_rest = true
+
+      -- remove fields that shouldn't be merged into the new instance
+      proto.proto = nil
+      proto.uid = nil
+   end
+
    local tbl = {
       temp = {},
-      proto = proto
+      proto = used_proto
    }
 
    local data = setmetatable(tbl, { __index = makeindex(proto) })
@@ -39,11 +61,16 @@ function MapObject.generate(proto, uid_tracker)
 
    data:build()
 
+   if merge_rest then
+      data = table.merge(data, proto)
+   end
+
    return data
 end
 
 -- Modification of penlight's algorithm to ignore class fields
 local function cycle_aware_copy(t, cache)
+   -- TODO: standardize no-save fields
    if type(t) == "table" and t.__class then
       return
    end
@@ -54,9 +81,13 @@ local function cycle_aware_copy(t, cache)
    cache[t] = res
    local mt = getmetatable(t)
    for k,v in pairs(t) do
-      k = cycle_aware_copy(k, cache)
-      v = cycle_aware_copy(v, cache)
-      res[k] = v
+      -- TODO: standardize no-save fields
+      -- NOTE: preserves the UID for now.
+      if k ~= "location" then
+         k = cycle_aware_copy(k, cache)
+         v = cycle_aware_copy(v, cache)
+         res[k] = v
+      end
    end
    setmetatable(res,mt)
    return res
@@ -95,6 +126,10 @@ function MapObject.clone(object, owned)
    local new_object = MapObject.generate(proto)
 
    if owned and object.location then
+      -- HACK: This makes cloning characters harder, since the
+      -- location also has to be changed manually, or there will be
+      -- more than one character on the same square. Perhaps
+      -- IMapObject:find_free_pos(x, y) would help.
       local x = new_object.x or 0
       local y = new_object.y or 0
 

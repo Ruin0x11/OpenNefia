@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Env = require("api.Env")
 local Gui = require("api.Gui")
+local MapObject = require("api.MapObject")
 local Ui = require("api.Ui")
 local circular_buffer = require("thirdparty.circular_buffer")
 
@@ -208,7 +209,13 @@ function Repl:submit()
 
    local result_text
    if type(result) == "table" then
-      result_text = inspect(result)
+      -- HACK: Don't print out unnecessary class fields. In the future
+      -- `inspect` should be modified to account for this.
+      if result._type then
+         result_text = inspect(MapObject.make_prototype(result))
+      else
+         result_text = inspect(result)
+      end
    else
       result_text = tostring(result)
    end

@@ -58,13 +58,17 @@ function ICharaInventory:refresh_weight()
 end
 
 function ICharaInventory:drop_item(item, amount)
+   if not self:has_item(item) then
+      error("Character " .. self.uid .. " does not own item " .. item.uid)
+   end
+
    local map = self:current_map()
    if not map then
       Log.warn("Character tried dropping item, but was not in map. %d", self.uid)
       return nil
    end
 
-   return self:put_into(map, item, self.x, self.y)
+   return item:move_some(amount, map, self.x, self.y)
 end
 
 function ICharaInventory:take_item(item)

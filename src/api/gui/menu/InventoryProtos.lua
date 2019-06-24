@@ -15,6 +15,7 @@ InventoryProtos.inv_general = {
 
    sources = { "chara", "equipment", "ground" },
    shortcuts = true,
+   icon = 6,
    on_select = function(ctxt, item, amount, rest)
       local list = rest:to_list()
       ItemDescriptionMenu:new(item, list):query()
@@ -33,6 +34,7 @@ InventoryProtos.inv_drop = {
    },
 
    sources = { "chara" },
+   icon = 5,
    can_select = function(ctxt, item)
       if item.flags.is_no_drop then
          return false, "marked as no drop"

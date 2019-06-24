@@ -80,7 +80,7 @@ function InventoryContext:init(proto, params)
    self.ground_x = (self.chara and self.chara.x) or 0
    self.ground_y = (self.chara and self.chara.y) or 0
 
-   self.icon = 5
+   self.icon = self.proto.icon or 1
 
    if self.proto.keybinds then
       self.input:bind_keys(self.proto.keybinds)

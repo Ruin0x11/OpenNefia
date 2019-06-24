@@ -56,49 +56,56 @@ function IItem:has_type(_type)
    return self.types[_type] == true
 end
 
---- Separates one copy of this item from the stack. The new item will
---- have no owner, so it is the caller's responsibility to give it
---- one.
+--- Separates some of this item from its stack. If `owned` is true,
+--- also attempts to move the item into the original item's location.
+--- If this fails, return nil. If unsuccessful, no state is changed.
+-- @tparam int amount
+-- @tparam bool owned
 -- @treturn IItem
--- @retval_ownership nil
-function IItem:separate_one()
-   if self.amount <= 1 then
+-- @retval_ownership[owned=false] nil
+-- @retval_ownership[owned=true] self.location
+function IItem:separate(amount, owned)
+   amount = math.clamp(amount or 1, 0, self.amount)
+   owned = owned or false
+
+   if amount == 0 then
+      return nil
+   end
+
+   if self.amount <= 1 or amount >= self.amount then
       return self
    end
 
-   local separated = self:clone()
-   separated.amount = 1
-   self.amount = self.amount - 1
+   local separated = self:clone(owned)
+
+   if separated == nil then
+      return nil
+   end
+
+   separated.amount = amount
+   self.amount = self.amount - amount
+   assert(self.amount >= 1)
 
    return separated
 end
 
---- Tries to move a given amount of this item to another location.
---- Returns the object if successful, nil otherwise. If unsuccessful,
---- no state is changed.
+--- Tries to move a given amount of this item to another location,
+--- accounting for item stacking. Returns the stacked item if
+--- successful, nil otherwise. If unsuccessful, no state is changed.
 -- @tparam int amount
 -- @tparam ILocation where
 -- @tparam[opt] int x
 -- @tparam[opt] int y
 -- @treturn[1] IItem
 -- @treturn[2] nil
--- @ownership self where
+-- @retval_ownership self where
 function IItem:move_some(amount, where, x, y)
-   amount = math.clamp(amount, 0, self.amount)
+   local separated = self:separate(amount)
 
-   if amount == 0 then
-      return self
-   end
-
-   if amount == self.amount then
-      return where:take_object(self, x, y)
-   end
-
-   if not where:can_take_object(self, x, y) then
+   if not where:can_take_object(separated, x, y) then
+      separated:remove_ownership()
       return nil
    end
-
-   local separated = self:separate_one()
 
    assert(where:take_object(separated, x ,y))
 
