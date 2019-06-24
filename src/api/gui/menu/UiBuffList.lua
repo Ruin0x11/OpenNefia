@@ -21,7 +21,8 @@ UiBuffList:delegate("model", {
                        "chosen",
                        "on_choose",
                        "can_choose",
-                       "on_select"
+                       "on_select",
+                       "iter"
 })
 
 UiBuffList:delegate("input", IInput)
@@ -45,6 +46,10 @@ function UiBuffList:init()
       up = function() self:select_previous() end,
       down = function() self:select_next() end,
    }
+end
+
+function UiBuffList:get_item_color(item)
+   return {0, 0, 0}
 end
 
 function UiBuffList:relayout(x, y)

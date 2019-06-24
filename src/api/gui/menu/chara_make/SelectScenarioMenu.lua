@@ -24,8 +24,8 @@ function SelectScenarioMenu:init()
 
    self.text = UiTextGroup:new({}, 14, {0, 0, 0}, nil, nil, 15)
    self.texts = {
-      {"The original game scenario.", "Get to the 45th level of Lesmias and beat Zeome to a pulp."},
-      {"A test scenario.", "Here we can test out the scenario addition capabilities of this variant."},
+      {"The original game scenario.", "Play the original game scenario of Elona."},
+      {"A test scenario.", "Description for a test scenario."},
    }
 
    self.input = InputHandler:new()

@@ -86,7 +86,6 @@ local UiListExt = function(feats_menu)
    end
 
    function E:draw_item_text(text, item, i, x, y, x_offset)
-      print(tostring(self.draw_item_text))
       if item.type == "header" then
          UiList.draw_item_text(self, text, item, i, x, y, x_offset)
          return
@@ -140,9 +139,7 @@ function FeatsMenu:init()
    })
 
    self.pages = UiList:new_paged(self.data, 15)
-   print("State of uilist",tostring(UiList.draw_item_text))
    table.merge(self.pages, UiListExt(self))
-   print("after",tostring(UiList.draw_item_text))
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -202,7 +199,6 @@ function FeatsMenu:update()
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then
-      print("chosen")
    end
 
    self.win:update()

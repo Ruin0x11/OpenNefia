@@ -5,7 +5,6 @@ local bresenham = require("thirdparty.bresenham")
 local Pos = require("api.Pos")
 local Log = require("api.Log")
 local Draw = require("api.Draw")
-local IObject = require("api.IObject")
 local ILocation = require("api.ILocation")
 
 local InstancedMap = class("InstancedMap", ILocation)
@@ -128,7 +127,7 @@ function InstancedMap:get_batch(type_id)
 end
 
 function InstancedMap:has_object(obj)
-   return is_an(IObject, obj) and self:get_pool(obj._type):has_object(obj)
+   return self:get_pool(obj._type):has_object(obj)
 end
 
 function InstancedMap:has_los(x1, y1, x2, y2)

@@ -6,18 +6,43 @@ local Draw = require("api.Draw")
 local Extend = require("api.Extend")
 local CharaMake = require("api.CharaMake")
 
+local IUiElement = require("api.gui.IUiElement")
+local Window = require("api.gui.Window")
 local UiTextGroup = require("api.gui.UiTextGroup")
 
--- HACK remove
-local MOD_NAME = "test"
+local ProfileWindow = class("ProfileWindow", IUiElement)
+
+function ProfileWindow:init(history)
+   self.history = history
+   self.window = Window:new()
+   self.text = UiTextGroup:new(history)
+end
+
+function ProfileWindow:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width
+   self.height = height
+
+   self.window:relayout(x, y, width, height)
+   self.text:relayout(x + 15, y + 15, width, height)
+end
+
+function ProfileWindow:draw()
+   Draw.set_color(255, 255, 255)
+   self.window:draw()
+   self.text:draw()
+end
+
+function ProfileWindow:update()
+end
 
 do
    local super = CharacterSheetMenu.init
    function CharacterSheetMenuExt:init(...)
       super(self, ...)
       local history = CharaMake.get_section_result("mod.plus_charamake.ui.RollBackgroundMenu")
-      Extend.extend(self, MOD_NAME, "data", UiTextGroup:new(history))
-      Extend.extend(self, MOD_NAME, "x", math.random(800))
+      Extend.extend(self, _MOD_NAME, "data", ProfileWindow:new(history))
    end
 end
 
@@ -25,7 +50,7 @@ do
    local super = CharacterSheetMenu.draw
    function CharacterSheetMenuExt:draw()
       super(self)
-      local it = Extend.get(self, MOD_NAME, "data")
+      local it = Extend.get(self, _MOD_NAME, "data")
       if it then it:draw() end
    end
 end
@@ -34,8 +59,10 @@ do
    local super = CharacterSheetMenu.relayout
    function CharacterSheetMenuExt:relayout(...)
       super(self, ...)
-      local it = Extend.get(self, MOD_NAME, "data")
-      if it then it:relayout(self.x + Extend.get(self, MOD_NAME, "x"), self.y + 100) end
+      local it = Extend.get(self, _MOD_NAME, "data")
+      if it then
+         it:relayout(self.x + self.width - 70, self.y + self.height - 60, 140, 120)
+      end
    end
 end
 

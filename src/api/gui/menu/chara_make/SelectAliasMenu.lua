@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
+local Gui = require("api.Gui")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
@@ -44,7 +45,7 @@ function SelectAliasMenu:init()
    self.win = UiWindow:new("alias")
 
    local items = {
-      { text = "Reroll", type = "reroll", on_choose = function() self:reroll() end }
+      { text = "Reroll", type = "reroll", on_choose = function() self:reroll(true) end }
    }
    table.append(items, table.of(function(i) return { text = "alias" .. i, type = "alias" } end, 16))
 
@@ -56,7 +57,7 @@ function SelectAliasMenu:init()
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
    self.input:bind_keys {
-      ["kp*"] = function() -- BUG stopgap for now
+      ["kp*"] = function()
          self:lock(self.list.selected)
       end,
       shift = function() self.canceled = true end
@@ -76,12 +77,15 @@ function SelectAliasMenu:lock(i)
    end
 end
 
-function SelectAliasMenu:reroll()
-   print("reroll")
+function SelectAliasMenu:reroll(play_sound)
    for _, v in ipairs(self.items) do
       if v.type == "alias" and not v.locked then
          v.text = "alias" .. math.random(1, 15)
       end
+   end
+
+   if play_sound then
+      Gui.play_sound("base.dice")
    end
 end
 

@@ -22,6 +22,7 @@ ChangeAppearanceList:delegate("model", {
                          "set_data",
                          "can_choose",
                          "on_choose",
+                         "iter",
 })
 
 ChangeAppearanceList:delegate("input", IInput)
@@ -129,6 +130,10 @@ end
 function ChangeAppearanceList:relayout(x, y)
    self.x = x
    self.y = y
+end
+
+function ChangeAppearanceList:get_item_color(item)
+   return {0, 0, 0}
 end
 
 function ChangeAppearanceList:draw_item(item, i, x, y)
