@@ -20,7 +20,7 @@ InventoryWrapper:delegate("input", IInput)
 
 local protos = require("api.gui.menu.InventoryProtos")
 
-function InventoryWrapper:init(params)
+function InventoryWrapper:init(kind, params)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
@@ -31,15 +31,22 @@ function InventoryWrapper:init(params)
    self.submenu = nil
    self.icon_bar = IconBar:new()
 
-   self:switch_context()
+   self:switch_context(kind)
 end
 
-function InventoryWrapper:switch_context()
+function InventoryWrapper:switch_context(kind)
    Gui.play_sound("base.inv");
 
-   local ctxt = InventoryContext:new(protos.inv_general, self.params)
+   local proto = protos[kind]
+   if not proto then
+      error("unknown context type " .. kind)
+   end
+
+   local ctxt = InventoryContext:new(proto, self.params)
    self.submenu = InventoryMenu:new(ctxt)
    self.input:forward_to(self.submenu)
+
+   self.icon_bar:select(ctxt.icon)
 
    self.submenu:relayout(self.x, self.y, self.width, self.height)
 end

@@ -123,6 +123,8 @@ function TextPrompt:ime_status_quad()
 end
 
 function TextPrompt:draw()
+   Draw.line_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
+
    self.win:draw()
    Draw.image(self.label_input, self.x + self.width / 2 - 60, self.y - 32)
    local ime_status = self:ime_status_quad()

@@ -355,3 +355,31 @@ function table.print(t, params)
 
    return s
 end
+
+--- Sorts a table in O(n^2) time in a stable manner. Ported from Elona
+--- 1.22 to preserve correctness.
+-- @tparam array arr
+-- @tparam[opt] func f
+function table.insertion_sort(arr, f)
+   local found_unsorted = true
+
+   if f == nil then
+      f = function(a, b) return a > b end
+   end
+
+   local last = #arr - 1
+   while found_unsorted do
+      found_unsorted = false
+
+      for i=1,last do
+         local va, vb = arr[i], arr[i+1]
+         if f(vb, va) then
+            arr[i] = vb
+            arr[i+1] = va
+            found_unsorted = true
+         end
+      end
+
+      last = last - 1
+   end
+end

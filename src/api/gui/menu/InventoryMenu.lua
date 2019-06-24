@@ -3,20 +3,24 @@ local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local Item = require("api.Item")
 local Inventory = require("api.Inventory")
+local Input = require("api.Input")
 
 local IInput = require("api.gui.IInput")
 local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local Window = require("api.gui.Window")
+local IPaged = require("api.gui.IPaged")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
 local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
+local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
-local InventoryMenu = class("InventoryMenu", IUiLayer)
+local InventoryMenu = class("InventoryMenu", {IUiLayer, IPaged})
 
 InventoryMenu:delegate("input", IInput)
+InventoryMenu:delegate("pages", IPaged)
 
 local function get_item_color(item)
    -- TODO: keep list of known flags?
@@ -116,8 +120,9 @@ function InventoryMenu:init(ctxt, can_cancel)
    -- self.pages:register("on_chosen", self.on_chosen)
    self.input:bind_keys {
       x = function()
-         local item = self.pages:selected_item()
-         -- self:show_item_description(item)
+         local item = self.pages:selected_item().item
+         local rest = self.pages:iter_all_pages():to_list()
+         ItemDescriptionMenu:new(item, rest):query()
       end,
       shift = function() self.canceled = true end,
       escape = function() self.canceled = true end,
@@ -126,9 +131,31 @@ function InventoryMenu:init(ctxt, can_cancel)
    self:update_filtering()
 end
 
+function InventoryMenu:can_select(item)
+   local item = self.pages:selected_item().item
+   return self.ctxt:can_select(item)
+end
+
 function InventoryMenu:on_select()
    local item = self.pages:selected_item().item
-   return self.ctxt:on_select(item, self.pages:iter_all_pages())
+
+   local amount = item.amount
+
+   if amount > 1 and self.ctxt.query_amount then
+      local canceled
+
+      Gui.mes("How many? ")
+      amount, canceled = Input.query_number(item.amount)
+      if canceled then
+         return nil, canceled
+      end
+   end
+
+   return self.ctxt:on_select(item, amount, self.pages:iter_all_pages())
+end
+
+function InventoryMenu:on_menu_exit()
+   return self.ctxt:on_menu_exit()
 end
 
 function InventoryMenu:relayout(x, y)
@@ -187,7 +214,9 @@ function InventoryMenu:update_filtering()
       end
    end
 
-   table.sort(filtered, self.ctxt:gen_sort())
+   -- NOTE: This needs to be a stable sort, which table.sort isn't. If
+   -- corectness is not important, it should use merge sort...
+   table.insertion_sort(filtered, self.ctxt:gen_sort())
 
    self.pages:set_data(filtered)
 
@@ -199,7 +228,7 @@ function InventoryMenu:draw()
    self.win:draw()
 
    Draw.set_color(255, 255, 255)
-   self.t.inventory_icons:draw_region(5, self.x + 46, self.y - 14)
+   self.t.inventory_icons:draw_region(self.ctxt.icon, self.x + 46, self.y - 14)
 
    self.t.deco_a:draw(self.x + self.width - 136, self.y - 6)
    if self.layout == nil then
@@ -234,7 +263,8 @@ end
 
 function InventoryMenu:update()
    if self.canceled then
-      return nil, "canceled"
+      local result = self:on_menu_exit()
+      return result
    end
 
    if self.pages.changed_page then
@@ -243,15 +273,23 @@ function InventoryMenu:update()
             entry.icon = entry.item:copy_image()
          end
       end
+      self.win:set_pages(self)
    end
 
    if self.pages.chosen then
-      local result = self:on_select()
-      if result == "inventory_continue" then
-      elseif result == "turn_end" then
-         return result
+      local can_select, reason = self:can_select()
+      if not can_select then
+         Gui.mes("Can't select: " .. reason)
       else
-         error("unknown inventory result " .. result)
+         local result, canceled = self:on_select()
+         if not canceled then
+            if result == "inventory_continue" then
+            elseif result == "turn_end" then
+               return result
+            else
+               error("unknown inventory result " .. result)
+            end
+         end
       end
    end
 

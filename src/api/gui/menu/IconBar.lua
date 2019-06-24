@@ -26,6 +26,10 @@ function IconBar:relayout(x, y, width, height)
    self.bar:relayout(x, y, width, height)
 end
 
+function IconBar:select(index)
+   self.index = index
+end
+
 function IconBar:draw()
    self.bar:draw()
    self.t.radar_deco:draw(self.x - 28, self.y - 8, nil, nil, {255, 255, 255})

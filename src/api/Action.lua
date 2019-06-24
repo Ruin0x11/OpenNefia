@@ -62,12 +62,12 @@ function Action.get(chara, item)
    return false
 end
 
-function Action.drop(chara, item)
+function Action.drop(chara, item, amount)
    if item == nil then
       return false
    end
 
-   local dropped = chara:drop_item(item)
+   local dropped = chara:drop_item(item, amount)
    if dropped then
       Gui.mes(chara.uid .. " drops " .. item.uid)
       Gui.play_sound("base.drop1", chara.x, chara.y)

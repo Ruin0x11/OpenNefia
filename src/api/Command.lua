@@ -112,16 +112,11 @@ function Command.drop(player)
       return "turn_end"
    end
 
-   local item = player:iter_items():nth(1)
-
-   assert(Action.drop(player, item))
-   return "turn_end"
+   return Input.query_inventory(player, "inv_drop")
 end
 
 function Command.inventory(player)
-   Input.query_inventory(player, true)
-
-   return "player_turn_query"
+   return Input.query_inventory(player, "inv_general")
 end
 
 return Command

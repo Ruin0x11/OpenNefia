@@ -4,7 +4,7 @@ local Rand = require("api.Rand")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
-local ICharaLocation = require("api.chara.ICharaLocation")
+local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaFaction = require("api.chara.ICharaFaction")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local ICharaEquip = require("api.chara.ICharaEquip")
@@ -19,7 +19,7 @@ local IChara = interface("IChara",
                          {},
                          {
                             IMapObject,
-                            ICharaLocation,
+                            ICharaInventory,
                             ICharaFaction,
                             ICharaTalk,
                             ICharaEquip,

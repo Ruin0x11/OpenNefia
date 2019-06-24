@@ -19,6 +19,7 @@ Draw.text_height = draw.text_height
 Draw.wrap_text = draw.wrap_text
 Draw.text = draw.text
 Draw.filled_rect = draw.filled_rect
+Draw.line_rect = draw.line_rect
 Draw.image = draw.image
 Draw.image_region = draw.image_region
 Draw.image_stretched = draw.image_stretched

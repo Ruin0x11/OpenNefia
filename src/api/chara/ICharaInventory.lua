@@ -2,9 +2,9 @@ local ILocation = require("api.ILocation")
 
 --- Interface for character inventory. Allows characters to store map
 --- objects.
-local ICharaLocation = interface("ICharaLocation", {}, {ILocation})
+local ICharaInventory = interface("ICharaInventory", {}, {ILocation})
 
-ICharaLocation:delegate("inv",
+ICharaInventory:delegate("inv",
                         {
                            "is_positional",
                            "move_object",
@@ -17,12 +17,12 @@ ICharaLocation:delegate("inv",
                            "iter"
                         })
 
-function ICharaLocation:init()
+function ICharaInventory:init()
    self.inventory_weight = 0
    self.max_inventory_weight = 1000
 end
 
-function ICharaLocation:take_object(obj)
+function ICharaInventory:take_object(obj)
    if not self:can_take_object(obj) then
       return nil
    end
@@ -37,7 +37,7 @@ function ICharaLocation:take_object(obj)
    return obj
 end
 
-function ICharaLocation:put_into(other, obj, x, y)
+function ICharaInventory:put_into(other, obj, x, y)
    local result = self.inv:put_into(other, obj, x, y)
    self:refresh_weight()
 
@@ -45,7 +45,7 @@ function ICharaLocation:put_into(other, obj, x, y)
 end
 
 
-function ICharaLocation:refresh_weight()
+function ICharaInventory:refresh_weight()
    local weight = 0
    for _, i in self:iter_items() do
       weight = weight + i:calc("weight")
@@ -57,7 +57,7 @@ function ICharaLocation:refresh_weight()
    self.max_inventory_weight = 1000
 end
 
-function ICharaLocation:drop_item(item)
+function ICharaInventory:drop_item(item, amount)
    local map = self:current_map()
    if not map then
       Log.warn("Character tried dropping item, but was not in map. %d", self.uid)
@@ -67,16 +67,16 @@ function ICharaLocation:drop_item(item)
    return self:put_into(map, item, self.x, self.y)
 end
 
-function ICharaLocation:take_item(item)
+function ICharaInventory:take_item(item)
    return self:take_object(item)
 end
 
-function ICharaLocation:has_item(item)
+function ICharaInventory:has_item(item)
    return self:has_object(item)
 end
 
-function ICharaLocation:iter_items()
+function ICharaInventory:iter_items()
    return self.inv:iter()
 end
 
-return ICharaLocation
+return ICharaInventory

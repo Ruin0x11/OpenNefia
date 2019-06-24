@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 local Gui = require("api.Gui")
+local Log = require("api.Log")
 
 local IInput = require("api.gui.IInput")
 local IPaged = require("api.gui.IPaged")
@@ -23,10 +24,10 @@ function ItemDescriptionMenu:init(item, list)
    self.list = list
 
    if self.list then
-      self.list_index = fun.iter(self.list):index_by(function(entry) return entry.item == item end)
-      _p(item.uid, fun.iter(self.list):map(function(i)return i.uid end):to_list())
+      self.list_index = fun.iter(self.list):index_by(function(entry) return entry.item.uid == item.uid end)
       if self.list_index == nil then
-         error("Could not find item in provided list.")
+         Log.warn("Could not find item in provided list, disabling selection feature.")
+         self.list = nil
       end
    end
 

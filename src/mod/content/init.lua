@@ -227,7 +227,7 @@ function()
    end
 
    for i=1,50 do
-      Item.create("content.test", 0, 0, 1, {}, Chara.player())
+      Item.create("content.test", 0, 0, 2, {}, Chara.player())
    end
 
    Item.create("content.armor")

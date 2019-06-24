@@ -1,5 +1,6 @@
 local IOwned = require("api.IOwned")
 local Log = require("api.Log")
+local MapObject = require("api.MapObject")
 
 local IMapObject = interface("IMapObject",
                              {
@@ -123,6 +124,10 @@ function IMapObject:current_map()
    end
 
    return nil
+end
+
+function IMapObject:clone(owned)
+   return MapObject.clone(self, owned)
 end
 
 return IMapObject

@@ -56,6 +56,9 @@ function class.interface(name, reqs, parents)
       for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)
             local delegate_self = self[field]
+            if delegate_self == nil then
+               error("Cannot find method " .. k)
+            end
             return delegate_self[k](delegate_self, ...)
          end
       end

@@ -35,7 +35,7 @@ function Item.set_pos(i, x, y)
 end
 
 function Item.is_alive(item)
-   return type(item) == "table" and item.number > 0
+   return type(item) == "table" and item.amount > 0
 end
 
 function Item.almost_equals(a, b)
@@ -58,7 +58,7 @@ function Item.stack(item)
    return item
 end
 
-function Item.create(id, x, y, number, params, where)
+function Item.create(id, x, y, amount, params, where)
    if x == nil then
       local player = Chara.player()
       if Chara.is_alive(player) then
@@ -67,7 +67,7 @@ function Item.create(id, x, y, number, params, where)
       end
    end
 
-   number = number or 1
+   amount = amount or 1
    params = params or {}
 
    where = where or field.map
@@ -83,7 +83,7 @@ function Item.create(id, x, y, number, params, where)
    end
 
    local item = MapObject.generate_from("base.item", id)
-   item.number = number
+   item.amount = amount
 
    item = where:take_object(item, x, y)
 

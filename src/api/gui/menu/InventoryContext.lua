@@ -95,8 +95,12 @@ function InventoryContext:can_select(item)
    return true
 end
 
+local function default_sort(a, b)
+   return a.item._id > b.item._id
+end
+
 function InventoryContext:gen_sort(a, b)
-   local f = function() return true end
+   local f = default_sort
 
    if self.proto.sort then
       f = function(a, b) return self.proto.sort(self, a, b) end
@@ -121,9 +125,9 @@ function InventoryContext:after_filter(item)
    return true
 end
 
-function InventoryContext:on_select(item, rest)
+function InventoryContext:on_select(item, amount, rest)
    if self.proto.on_select then
-      return self.proto.on_select(self, item, rest)
+      return self.proto.on_select(self, item, amount, rest)
    end
 
    return "inventory_continue"
@@ -131,13 +135,13 @@ end
 
 function InventoryContext:on_menu_enter()
    if self.proto.on_menu_enter then
-      self.proto.on_menu_enter(self, item)
+      self.proto.on_menu_enter(self)
    end
 end
 
 function InventoryContext:on_menu_exit()
    if self.proto.on_menu_exit then
-      return self.proto.on_menu_exit(self, item)
+      return self.proto.on_menu_exit(self)
    end
 
    return "player_turn_query"

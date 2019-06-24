@@ -224,7 +224,10 @@ function draw.line(x1, y1, x2, y2, color)
    love.graphics.line(x1, y1 + 1, x2, y2 + 1)
 end
 
-function draw.text_width(text)
+function draw.text_width(text, size)
+   if size then
+      draw.set_font(size)
+   end
    return love.graphics.getFont():getWidth(text)
 end
 

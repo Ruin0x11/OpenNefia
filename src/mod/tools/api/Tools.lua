@@ -71,4 +71,17 @@ function Tools.dump_items()
    return table.print(t, {header = {"UID", "X", "Y"}})
 end
 
+function Tools.clone_me(times)
+   times = times or 50
+
+   local p = Chara.player()
+   for i in fun.range(times) do
+      local x, y = Map.find_position_for_chara(p.x, p.y)
+      if x ~= nil then
+         local c = p:clone()
+         Map.current():take_object(c, x, y)
+      end
+   end
+end
+
 return Tools

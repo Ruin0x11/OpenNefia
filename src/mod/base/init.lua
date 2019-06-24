@@ -214,6 +214,16 @@ data:add_multi(
                }
             },
          },
+         ["api.gui.NumberPrompt"] = {
+            label_input = "graphic/temp/label_input.bmp",
+            arrows = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/arrows.bmp",
+                  count_x = 2
+               }
+            }
+         },
          ["api.gui.menu.ItemDescriptionMenu"] = {
             enchantment_icons = {
                type = "asset",

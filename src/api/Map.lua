@@ -39,6 +39,10 @@ function Map.is_floor(x, y, map)
    return (map or field.map):can_access(x, y)
 end
 
+function Map.can_drop_items(map)
+   return true
+end
+
 function Map.can_access(x, y, map)
    local Chara = require("api.Chara")
    return Map.is_in_bounds(x, y, map)
@@ -93,12 +97,23 @@ function Map.force_clear_pos(x, y, map)
    -- TODO: on_force_clear_pos
 end
 
-local function can_place_chara_at(chara, x, y, map)
+local function can_place_chara_at(x, y, map)
    return Map.can_access(x, y, map)
 end
 
-function Map.find_position_for_chara(chara, x, y, map)
-   local Chara = require("api.Chara")
+--- Tries to find an open tile to place a character.
+-- @tparam int x
+-- @tparam int y
+-- @tparam string scope Determines how hard to try.
+--  - "npc" - Find a random position nearby. Give up after 100 tries.
+--            (default)
+--  - "ally" - Same as "npc", but keep looking across the entire map
+--             for an open space. Give up if not found.
+-- @treturn[1][1] int
+-- @treturn[1][2] int
+-- @treturn[2] nil
+function Map.find_position_for_chara(x, y, scope, map)
+   scope = scope or "npc"
 
    local tries = 0
    local cx, cy
@@ -106,13 +121,13 @@ function Map.find_position_for_chara(chara, x, y, map)
    repeat
       cx = x + Rand.rnd(tries + 1) - Rand.rnd(tries + 1)
       cy = y + Rand.rnd(tries + 1) - Rand.rnd(tries + 1)
-      if can_place_chara_at(chara, cx, cy, map) then
+      if can_place_chara_at(cx, cy, map) then
          return cx, cy
       end
       tries = tries + 1
    until tries == 100
 
-   if not chara:is_in_party() then
+   if scope ~= "ally" and scope ~= "player" then
       return nil
    end
 
@@ -124,27 +139,26 @@ function Map.find_position_for_chara(chara, x, y, map)
       end
    end
 
-   if not chara:is_player() then
-      return nil
-   end
-
-   cx = Rand.rnd(map.width)
-   cy = Rand.rnd(map.height)
-
-   return cx, cy
+   return nil
 end
 
 local function try_place(chara, x, y, current, map)
-   local real_x, real_y = Map.find_position_for_chara(chara, x, y, map)
+   local scope = "npc"
+   if chara:is_in_party() then
+      scope = "ally"
+   end
+
+   local real_x, real_y = Map.find_position_for_chara(x, y, scope, map)
+
+   if real_x == nil and chara:is_player() then
+      real_x = Rand.rnd(map.width)
+      real_y = Rand.rnd(map.height)
+
+      Map.force_clear_pos(real_x, real_y, map)
+   end
 
    if real_x ~= nil then
-      if not can_place_chara_at(chara, real_x, real_y, map) then
-         assert(chara:is_player())
-
-         Map.force_clear_pos(real_x, real_y, map)
-
-         assert(can_place_chara_at(chara, real_x, real_y, map))
-      end
+      assert(can_place_chara_at(chara, real_x, real_y, map))
 
       return map:take_object(chara, real_x, real_y)
    end

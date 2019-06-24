@@ -1036,7 +1036,7 @@ methods.op = operator
 -- Elona_next modifications
 --------------------------------------------------------------------------------
 
--- aliases for consistent naming
+-- aliases for consistent naming (underscored)
 -- the originals shouldn't be deleted to be able to use the existing
 -- ecosystem of code that uses luafun
 exports.to_table = exports.totable
@@ -1046,7 +1046,7 @@ methods.to_map = methods.tomap
 exports.to_list = exports.totable
 methods.to_list = methods.totable
 
--- Finds the index in an iterator that satisfies a predicate.
+-- Finds the first index in an iterator that satisfies a predicate.
 local index_by = function(fun, gen, param, state)
     local i = 1
     for _k, r in gen, param, state do
