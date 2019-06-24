@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local ISettable = require("api.gui.ISettable")
 local IHudElement = require("api.gui.hud.IHudElement")
 local UiTheme = require("api.gui.UiTheme")
-local LDateTime = require("api.LDateTime")
+local DateTime = require("api.DateTime")
 
 local UiClock = class("UiClock", {IHudElement, ISettable})
 
@@ -18,7 +18,7 @@ local times = {
 }
 
 function UiClock:init()
-   self.date = LDateTime:new()
+   self.date = DateTime:new()
 end
 
 function UiClock:set_data(date)

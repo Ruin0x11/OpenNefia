@@ -5,7 +5,7 @@ local Draw = require("api.Draw")
 local InputHandler = require("api.gui.InputHandler")
 local GameKeyHandler = require("api.gui.GameKeyHandler")
 local IUiLayer = require("api.gui.IUiLayer")
-local LDateTime = require("api.LDateTime")
+local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
 
 local env = require("internal.env")
@@ -74,7 +74,7 @@ function field_layer:init_global_data()
    -- TEMP: temporary storage for save-global variables. needs to be
    -- moved a public store API.
    self.data = {}
-   self.data.date = LDateTime:new(517, 8, 12, 16, 10, 0)
+   self.data.date = DateTime:new(517, 8, 12, 16, 10, 0)
    self.data.play_turns = 0
    self.data.play_days = 0
 end

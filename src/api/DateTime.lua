@@ -1,6 +1,6 @@
-local LDateTime = class("LDateTime")
+local DateTime = class("DateTime")
 
-function LDateTime:init(year, month, day, hour, minute, second)
+function DateTime:init(year, month, day, hour, minute, second)
    self.year = year or 0
    self.month = month or 0
    self.day = day or 0
@@ -9,11 +9,11 @@ function LDateTime:init(year, month, day, hour, minute, second)
    self.second = second or 0
 end
 
-function LDateTime:hours()
+function DateTime:hours()
    return self.hour
       + (self.day * 24)
       + (self.month * 24 * 30)
       + (self.year * 24 * 30 * 12)
 end
 
-return LDateTime
+return DateTime
