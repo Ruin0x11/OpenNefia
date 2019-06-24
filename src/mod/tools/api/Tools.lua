@@ -84,4 +84,7 @@ function Tools.clone_me(times)
    end
 end
 
+local print_flat = require("mod.tools.lib.print_flat")
+Tools.print_flat = print_flat.print_flat
+
 return Tools
