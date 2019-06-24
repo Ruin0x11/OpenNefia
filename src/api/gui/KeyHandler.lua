@@ -105,7 +105,7 @@ function KeyHandler:handle_repeat(key, dt)
             it.fast = true
          end
          if it.fast then
-            it.delay = 18
+            it.delay = 36
          else
             it.delay = 200
          end

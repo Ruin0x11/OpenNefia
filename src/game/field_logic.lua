@@ -45,15 +45,7 @@ function field_logic.setup()
          return Command.get(me)
       end,
       d = function(me)
-         if me.inv:len() == 0 then
-            Gui.mes("No items.")
-            return "turn_end"
-         end
-
-         local item = me.inv:iter():to_list()[1]
-         me:drop_item(item)
-         Gui.mes("You drop " .. item._id)
-         return "turn_end"
+         return Command.drop(me)
       end,
       x = function(me)
          return Command.inventory(me)

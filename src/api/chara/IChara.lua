@@ -184,6 +184,10 @@ function IChara:damage_hp(amount, source, params)
 
    victim.hp = math.min(victim.hp - damage, victim.max_hp)
 
+   if attacker and attacker:is_player() then
+      Gui.play_sound("base.atk1")
+   end
+
    Event.trigger("base.after_chara_damaged", event_params)
 
    local damage_level
@@ -253,6 +257,7 @@ function IChara:damage_hp(amount, source, params)
       killed = true
 
       victim:kill(source)
+      Gui.play_sound(Rand.choice("base.kill1", "base.kill2"))
 
       if attacker then
          local gained_exp = calc_kill_exp(attacker, victim)

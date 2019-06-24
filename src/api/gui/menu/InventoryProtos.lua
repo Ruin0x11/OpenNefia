@@ -1,4 +1,5 @@
 local Gui = require("api.Gui")
+local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
 local InventoryProtos = {}
 
@@ -15,9 +16,9 @@ InventoryProtos.inv_general = {
    sort = function(ctxt, a, b)
       return a.item._id > b.item._id
    end,
-   on_select = function(ctxt, item)
-      -- ItemDescriptionMenu:new(item):query()
-      Gui.mes(item.name)
+   on_select = function(ctxt, item, rest)
+      local list = rest:to_list()
+      ItemDescriptionMenu:new(item, list):query()
 
       return "inventory_continue"
    end

@@ -24,7 +24,7 @@ function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
       self.shadow = Window:new(true)
    end
 
-   if string.nonempty(title) then
+   if string.nonempty(self.title) then
       self.topic_window = TopicWindow:new(1, 1)
    end
 
@@ -46,6 +46,21 @@ function UiWindow:relayout(x, y, width, height)
                                  y - 4,
                                  45 * width / 100 + math.clamp(Draw.text_width(self.title) - 120, 0, 200),
                                  32)
+   end
+end
+
+function UiWindow:set_title(title)
+   self.title = title
+   if string.nonempty(self.title) then
+      if self.topic_window == nil then
+         self.topic_window = TopicWindow:new(1, 1)
+      end
+   else
+      self.topic_window = nil
+   end
+
+   if self.x ~= nil then
+      self:relayout(self.x, self.y, self.width, self.height)
    end
 end
 

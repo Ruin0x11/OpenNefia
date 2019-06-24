@@ -16,5 +16,8 @@ return interface("IList",
                     choose = "function",
                     on_choose = "function",
                     on_select = "function",
+
+                    iter = "function",
+                    iter_all_pages = { type = "function", default = function(self) return self:iter() end },
                  },
                  ISettable)

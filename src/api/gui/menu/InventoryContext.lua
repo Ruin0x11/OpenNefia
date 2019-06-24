@@ -121,12 +121,12 @@ function InventoryContext:after_filter(item)
    return true
 end
 
-function InventoryContext:on_select(item)
+function InventoryContext:on_select(item, rest)
    if self.proto.on_select then
-      return self.proto.on_select(self, item)
+      return self.proto.on_select(self, item, rest)
    end
 
-   return "player_turn_query"
+   return "inventory_continue"
 end
 
 function InventoryContext:on_menu_enter()

@@ -1,5 +1,6 @@
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
+local Rand = require("api.Rand")
 local Input = require("api.Input")
 local Item = require("api.Item")
 local Map = require("api.Map")
@@ -54,6 +55,22 @@ function Action.get(chara, item)
    local picked_up = chara:take_item(item)
    if picked_up then
       Gui.mes(chara.uid .. " picks up " .. item.uid)
+      Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
+      return true
+   end
+
+   return false
+end
+
+function Action.drop(chara, item)
+   if item == nil then
+      return false
+   end
+
+   local dropped = chara:drop_item(item)
+   if dropped then
+      Gui.mes(chara.uid .. " drops " .. item.uid)
+      Gui.play_sound("base.drop1", chara.x, chara.y)
       return true
    end
 
@@ -61,7 +78,7 @@ function Action.get(chara, item)
 end
 
 function Action.melee(chara, target)
-   target:damage_hp(1, chara, { damage_text_type = "damage" })
+   target:damage_hp(Rand.rnd(5), chara, { damage_text_type = "damage" })
    return true
 end
 

@@ -35,6 +35,8 @@ function InventoryWrapper:init(params)
 end
 
 function InventoryWrapper:switch_context()
+   Gui.play_sound("base.inv");
+
    local ctxt = InventoryContext:new(protos.inv_general, self.params)
    self.submenu = InventoryMenu:new(ctxt)
    self.input:forward_to(self.submenu)

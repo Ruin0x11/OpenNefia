@@ -214,6 +214,16 @@ data:add_multi(
                }
             },
          },
+         ["api.gui.menu.ItemDescriptionMenu"] = {
+            enchantment_icons = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/enchantment_icons.bmp",
+                  count_x = 9
+               }
+            },
+            inheritance_icon = "graphic/temp/inheritance_icon.bmp"
+         },
          ["api.gui.menu.IconBar"] = {
             radar_deco = "graphic/temp/radar_deco.bmp",
          },

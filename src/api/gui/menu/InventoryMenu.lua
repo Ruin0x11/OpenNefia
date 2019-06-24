@@ -77,7 +77,7 @@ local UiListExt = function(inventory_menu)
       local value = "12345 gp"
 
       if entry.source.on_get_name then
-         entry.source:on_get_name(item_name, entry.item, inventory_menu)
+         item_name = entry.source:on_get_name(item_name, entry.item, inventory_menu)
       end
 
       if inventory_menu.layout then
@@ -128,7 +128,7 @@ end
 
 function InventoryMenu:on_select()
    local item = self.pages:selected_item().item
-   return self.ctxt:on_select(item)
+   return self.ctxt:on_select(item, self.pages:iter_all_pages())
 end
 
 function InventoryMenu:relayout(x, y)
@@ -247,7 +247,12 @@ function InventoryMenu:update()
 
    if self.pages.chosen then
       local result = self:on_select()
-      if result then return result end
+      if result == "inventory_continue" then
+      elseif result == "turn_end" then
+         return result
+      else
+         error("unknown inventory result " .. result)
+      end
    end
 
    self.pages:update()

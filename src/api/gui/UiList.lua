@@ -37,6 +37,7 @@ UiList:delegate("model", {
 
                    "len",
                    "iter",
+                   "iter_all_pages",
 })
 UiList:delegate("input", IInput)
 

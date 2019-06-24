@@ -9,10 +9,12 @@ local PagedListModel = require("api.gui.PagedListModel")
 local UiTheme = require("api.gui.UiTheme")
 local UiList = require("api.gui.UiList")
 local ISettable = require("api.gui.ISettable")
+local IPaged = require("api.gui.IPaged")
 
-local BookMenu = class("BookMenu", {IUiLayer, ISettable})
+local BookMenu = class("BookMenu", {IUiLayer, ISettable, IPaged})
 
 BookMenu:delegate("input", IInput)
+BookMenu:delegate("model", IPaged)
 
 function BookMenu:init(text, elona_compat)
    self.max_page_text = 20
@@ -30,12 +32,12 @@ function BookMenu:init(text, elona_compat)
       escape = function() self.canceled = true end,
       shift = function() self.canceled = true end,
       left = function()
-         if self.model:previous_page() then
+         if self:previous_page() then
             Gui.play_sound("base.card1")
          end
       end,
       right = function()
-         if self.model:next_page() then
+         if self:next_page() then
             Gui.play_sound("base.card1")
          end
       end,

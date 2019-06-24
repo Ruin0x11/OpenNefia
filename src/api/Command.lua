@@ -106,6 +106,18 @@ function Command.get(player)
    return "turn_end"
 end
 
+function Command.drop(player)
+   if player.inv:len() == 0 then
+      Gui.mes("No items.")
+      return "turn_end"
+   end
+
+   local item = player:iter_items():nth(1)
+
+   assert(Action.drop(player, item))
+   return "turn_end"
+end
+
 function Command.inventory(player)
    Input.query_inventory(player, true)
 

@@ -37,6 +37,10 @@ function PagedListModel:iter()
    return self.model:iter()
 end
 
+function PagedListModel:iter_all_pages()
+   return fun.iter(self.items_)
+end
+
 function PagedListModel:len()
    return #self.items_
 end

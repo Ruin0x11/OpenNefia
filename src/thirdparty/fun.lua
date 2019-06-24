@@ -1046,12 +1046,18 @@ methods.to_map = methods.tomap
 exports.to_list = exports.totable
 methods.to_list = methods.totable
 
---- Takes a list of wrapped iterators and returns the result of
---- chaining all of them. This is normally cumbersome because the iterators have to be unwrapped
-local function chain_all(iters)
-   local triples = {}
-   for _, iter in ipairs(iters) do
-   end
+-- Finds the index in an iterator that satisfies a predicate.
+local index_by = function(fun, gen, param, state)
+    local i = 1
+    for _k, r in gen, param, state do
+        if fun(r) then
+            return i
+        end
+        i = i + 1
+    end
+    return nil
 end
+methods.index_by = method1(index_by)
+exports.index_by = export1(index_by)
 
 return exports
