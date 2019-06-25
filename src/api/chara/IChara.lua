@@ -88,6 +88,15 @@ function IChara:refresh()
    ICharaEquip.refresh(self)
 
    self:refresh_weight()
+
+   local map = self:current_map()
+   if map then
+      map:refresh_tile(self.x, self.y)
+   end
+end
+
+function IChara:produce_memory()
+   return nil
 end
 
 function IChara:refresh_weight()

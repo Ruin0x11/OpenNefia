@@ -9,7 +9,7 @@ test("EquipSlots - free slot", function()
            "test.hand"
         }
         local eq = EquipSlots:new(bp)
-        local i = Item.create("test.sword", 0, 0, 1, {}, map)
+        local i = Item.create("test.sword", 0, 0, {}, map)
 
         ok(t.are_same(1, eq:find_free_slot(i)))
 end)
@@ -20,7 +20,7 @@ test("EquipSlots - take and remove", function()
            "test.hand"
         }
         local eq = EquipSlots:new(bp)
-        local i = Item.create("test.sword", 0, 0, 1, {}, map)
+        local i = Item.create("test.sword", 0, 0, {}, map)
 
         ok(not eq:has_object(i))
 
@@ -41,9 +41,9 @@ test("EquipSlots - no free slots", function()
         }
         local eq = EquipSlots:new(bp)
 
-        local a = Item.create("test.sword", 0, 0, 1, {}, map)
-        local b = Item.create("test.sword", 0, 0, 2, {}, map)
-        local c = Item.create("test.sword", 0, 0, 3, {}, map)
+        local a = Item.create("test.sword", 0, 0, {}, map)
+        local b = Item.create("test.sword", 0, 1, {}, map)
+        local c = Item.create("test.sword", 0, 2, {}, map)
 
         ok(eq:equip(a))
         ok(eq:equip(b))
@@ -62,7 +62,7 @@ test("EquipSlots - wrong slot type", function()
         }
         local eq = EquipSlots:new(bp)
 
-        local i = Item.create("test.sword", 0, 0, 1, {}, map)
+        local i = Item.create("test.sword", 0, 0, {}, map)
 
         i:mod("equip_slots", { "test.chest" })
 
@@ -82,9 +82,9 @@ test("EquipSlots - items for type", function()
         }
         local eq = EquipSlots:new(bp)
 
-        local a = Item.create("test.sword", 0, 0, 1, {}, map)
-        local b = Item.create("test.sword", 0, 0, 2, {}, map)
-        local c = Item.create("test.armor", 0, 0, 3, {}, map)
+        local a = Item.create("test.sword", 0, 0, {}, map)
+        local b = Item.create("test.sword", 0, 1, {}, map)
+        local c = Item.create("test.armor", 0, 2, {}, map)
 
         ok(eq:equip(a))
         ok(eq:equip(b))

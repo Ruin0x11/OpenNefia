@@ -6,10 +6,14 @@ local MapObject = require("api.MapObject")
 local IMapObject = interface("IMapObject",
                              {
                                 uid = "number",
-                                x = "number",
-                                y = "number",
                                 build = { type = "function", default = function() end },
                                 refresh = { type = "function", default = function(self) self.temp = {} end },
+
+                                -- TODO: Map parts. These should
+                                -- really be in another interface.
+                                x = "number",
+                                y = "number",
+                                produce_memory = "function"
                              },
                              IOwned)
 
@@ -106,6 +110,8 @@ function IMapObject:set_pos(x, y)
 
    assert(location:has_object(self))
 
+   -- HACK: secretly assumes location is an InstancedMap. is_in_bounds
+   -- needs to be on the interface.
    if not location:is_in_bounds(x, y) then
       return false
    end
@@ -128,8 +134,16 @@ function IMapObject:current_map()
    return nil
 end
 
+function IMapObject:produce_memory()
+   return nil
+end
+
 function IMapObject:clone(owned)
    return MapObject.clone(self, owned)
+end
+
+function IMapObject:is_a(_type)
+   return self._type == _type
 end
 
 return IMapObject

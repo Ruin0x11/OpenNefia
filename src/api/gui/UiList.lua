@@ -93,9 +93,16 @@ function UiList:new_paged(items, page_max, item_height, item_offset_x, item_offs
    return UiList:new(PagedListModel:new(items, page_max), item_height, item_offset_x, item_offset_y)
 end
 
-function UiList:relayout(x, y)
+function UiList:relayout(x, y, width, height)
    self.x = x
    self.y = y
+
+   -- TODO: use width/height fields for tracking list component
+   -- boundaries. currently max entry width is calculated by hand for
+   -- every extension of UiList, since that's how vanilla does it.
+   self.width = width
+   self.height = height
+
    -- HACK: shouldn't have to keep track of update here.
    self.changed = true
    self.chosen = false

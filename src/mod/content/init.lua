@@ -9,7 +9,17 @@ data:add {
    max_mp = 10,
 
    body_parts = {
-      "content.chest"
+      "content.head",
+      "content.neck",
+      "content.back",
+      "content.body",
+      "content.hand",
+      "content.ring",
+      "content.arm",
+      "content.waist",
+      "content.leg",
+      "content.ranged",
+      "content.ammo"
    }
 }
 
@@ -42,7 +52,7 @@ data:add {
    image = 143,
 
    equip_slots = {
-      "content.chest"
+      "content.body"
    }
 }
 
@@ -57,12 +67,75 @@ data:add {
    max_mp = 2
 }
 
-data:add {
-   _type = "base.body_part",
-   _id = "chest",
+data:add_multi(
+   "base.body_part",
+   {
+      _id = "head",
 
-   name = "Chest"
-}
+      name = "Head",
+      icon = 1
+   },
+   {
+      _id = "neck",
+
+      name = "Neck",
+      icon = 2
+   },
+   {
+      _id = "back",
+
+      name = "Back",
+      icon = 3
+   },
+   {
+      _id = "body",
+
+      name = "Body",
+      icon = 4
+   },
+   {
+      _id = "hand",
+
+      name = "Hand",
+      icon = 5
+   },
+   {
+      _id = "ring",
+
+      name = "Ring",
+      icon = 6
+   },
+   {
+      _id = "arm",
+
+      name = "Arm",
+      icon = 7
+   },
+   {
+      _id = "waist",
+
+      name = "Waist",
+      icon = 8
+   },
+   {
+      _id = "leg",
+
+      name = "Leg",
+      icon = 9
+   },
+   {
+      _id = "ranged",
+
+      name = "Shoot",
+      icon = 10
+   },
+   {
+      _id = "ammo",
+
+      name = "Ammo",
+      icon = 11
+   }
+)
 
 data:add {
    _type = "base.map_tile",
@@ -175,12 +248,12 @@ local DamagePopup = require("mod.damage_popups.api.DamagePopup")
 DamagePopup.install()
 
 Event.register("base.after_damage_hp",
-"damage popups",
-function(p)
-   local Map = require("api.Map")
-   if Map.is_in_fov(p.chara.x, p.chara.y) then
-      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
-   end
+               "damage popups",
+               function(p)
+                  local Map = require("api.Map")
+                  if Map.is_in_fov(p.chara.x, p.chara.y) then
+                     DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
+                  end
 end)
 
 
@@ -211,26 +284,28 @@ data:add {
 }
 
 Event.register("base.on_game_start",
-"game start",
-function()
-   local Chara = require("api.Chara")
-   local Item = require("api.Item")
-   for i=1,4 do
-      local a = Chara.create("content.ally", i+8, 3)
-      a:recruit_as_ally()
-   end
+               "game start",
+               function()
+                  local Chara = require("api.Chara")
+                  local Item = require("api.Item")
+                  for i=1,4 do
+                     local a = Chara.create("content.ally", i+8, 3)
+                     a:recruit_as_ally()
+                  end
 
-   for i=1,2 do
-      for j=1,1 do
-         local i = Chara.create("content.enemy", i+8, j+11)
-      end
-   end
+                  for i=1,2 do
+                     for j=1,1 do
+                        local i = Chara.create("content.enemy", i+8, j+11)
+                     end
+                  end
 
-   for i=1,50 do
-      Item.create("content.test", 0, 0, 2, {}, Chara.player())
-   end
+                  for i=1,50 do
+                     Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
+                  end
 
-   Item.create("content.armor")
+                  Item.create("content.armor")
 
-   Chara.player():equip_item(Item.create("content.armor"), true)
+                  local armor = Item.create("content.armor")
+                  armor.curse_state = "blessed"
+                  Chara.player():equip_item(armor, true)
 end)

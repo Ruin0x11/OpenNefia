@@ -234,6 +234,25 @@ data:add_multi(
             },
             inheritance_icon = "graphic/temp/inheritance_icon.bmp"
          },
+         ["api.gui.menu.EquipmentMenu"] = {
+            body_part_icons = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/body_part_icons.bmp",
+                  count_x = 11
+               }
+            },
+            deco_a = "graphic/temp/deco_wear_a.bmp",
+            deco_b = "graphic/temp/deco_wear_b.bmp",
+            -- TODO dedupe
+            inventory_icons = {
+               type = "asset",
+               value = {
+                  image = "graphic/temp/inventory_icons.bmp",
+                  count_x = 22
+               }
+            },
+         },
          ["api.gui.menu.IconBar"] = {
             radar_deco = "graphic/temp/radar_deco.bmp",
          },

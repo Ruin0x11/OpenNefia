@@ -47,8 +47,9 @@ end
 
 
 function ICharaInventory:drop_item(item, amount)
-   if not self:has_item(item) then
-      error("Character " .. self.uid .. " does not own item " .. item.uid)
+   if not self:has_item_in_inventory(item) then
+      Log.warn("Character %d tried dropping item, but it was not in their inventory. %d", self.uid, item.uid)
+      return nil
    end
 
    local map = self:current_map()
@@ -60,20 +61,16 @@ function ICharaInventory:drop_item(item, amount)
    return item:move_some(amount, map, self.x, self.y)
 end
 
+function ICharaInventory:has_item_in_inventory(item)
+   return self.inv:has_object(item)
+end
+
 function ICharaInventory:take_item(item)
    return self:take_object(item)
 end
 
-function ICharaInventory:has_item(item)
-   return self:has_object(item)
-end
-
 function ICharaInventory:iter_items()
    return self.inv:iter()
-end
-
-function ICharaInventory:stack_items()
-   -- TODO
 end
 
 return ICharaInventory

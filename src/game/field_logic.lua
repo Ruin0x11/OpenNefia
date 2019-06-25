@@ -44,6 +44,9 @@ function field_logic.setup()
       g = function(me)
          return Command.get(me)
       end,
+      w = function(me)
+         return Command.wear(me)
+      end,
       d = function(me)
          return Command.drop(me)
       end,

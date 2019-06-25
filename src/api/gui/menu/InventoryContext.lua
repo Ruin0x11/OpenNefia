@@ -1,4 +1,4 @@
-local Item = require("api.Item")
+local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
 
 local InventoryContext = class("InventoryContext")
@@ -8,7 +8,16 @@ local function source_chara(ctxt)
 end
 
 local function source_ground(ctxt)
-   return Item.at(ctxt.ground_x, ctxt.ground_y)
+   local Item = require("api.Item")
+
+   local ground_x = ctxt.ground_x or (ctxt.chara and ctxt.chara.x)
+   local ground_y = ctxt.ground_y or (ctxt.chara and ctxt.chara.y)
+
+   if type(ground_x) ~= "number" or type(ground_y) ~= "number" then
+      Log.warn("Inventory ground position was invalid: %s,%s", tostring(ground_x), tostring(ground_y))
+   end
+
+   return Item.at(ground_x, ground_y)
 end
 
 local function source_equipment(ctxt)
@@ -19,7 +28,10 @@ local sources = {
    {
       name = "chara",
       getter = source_chara,
-      order = 10000
+      order = 10000,
+      params = {
+         chara = "IChara"
+      }
    },
    {
       name = "ground",
@@ -27,7 +39,12 @@ local sources = {
       order = 9000,
       on_get_name = function(self, name, item, menu)
          return name .. " (Ground)"
-      end
+      end,
+      params = {
+         ground_x = { type = "number", optional = true },
+         ground_y = { type = "number", optional = true },
+         chara_y  = { type = "IChara", optional = true },
+      }
    },
    {
       name = "equipment",
@@ -38,7 +55,10 @@ local sources = {
       end,
       on_draw = function(self, x, y, item, menu)
          menu.t.equipped_icon:draw(x - 12, y + 14)
-      end
+      end,
+      params = {
+         chara = "IChara"
+      }
    },
 }
 
@@ -73,17 +93,38 @@ function InventoryContext:init(proto, params)
    self.stack = {}
 
    self.chara = params.chara or nil
-   self.target = params.target or nil
-   self.container = params.container or nil
-   self.map = params.map or nil
-
-   self.ground_x = (self.chara and self.chara.x) or 0
-   self.ground_y = (self.chara and self.chara.y) or 0
+   -- self.target = params.target or nil
+   -- self.container = params.container or nil
+   -- self.map = params.map or nil
 
    self.icon = self.proto.icon or 1
 
    if self.proto.keybinds then
       self.input:bind_keys(self.proto.keybinds)
+   end
+
+   if self.proto.params then
+      for name, required_type in pairs(self.proto.params) do
+         local val = params[name]
+
+         local ok = type(val) == required_type
+
+         if not ok then
+            ok = type(val) == "table"
+               and val.is_a
+               and val:is_a(required_type)
+         end
+
+         if not ok then
+            error(string.format("Inventory context expects parameter %s (%s) to be passed.", name, required_type))
+         end
+
+         if self[name] ~= nil then
+            error(string.format("Inventory context parameter has a name conflict: %s", name))
+         end
+
+         self[name] = val
+      end
    end
 end
 

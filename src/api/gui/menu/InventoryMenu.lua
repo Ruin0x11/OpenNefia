@@ -17,39 +17,12 @@ local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
+local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
+
 local InventoryMenu = class("InventoryMenu", {IUiLayer, IPaged})
 
 InventoryMenu:delegate("input", IInput)
 InventoryMenu:delegate("pages", IPaged)
-
-local function get_item_color(item)
-   -- TODO: keep list of known flags?
-   if item.flags.is_no_drop then
-        return {120, 80, 0}
-   end
-
-   if item.identify_state == "completely" then
-      if     item.curse_state == "doomed"  then return {100, 10, 100}
-      elseif item.curse_state == "cursed"  then return {150, 10, 10}
-      elseif item.curse_state == "none"    then return {10, 40, 120}
-      elseif item.curse_state == "blessed" then return {10, 110, 30}
-      end
-   end
-
-   -- EVENT: on calc_item_color
-
-    return {0, 0, 0}
-end
-
-local ResistanceLayout = class("ResistanceLayout")
-
-function ResistanceLayout:draw_row(item, text, subtext, x, y)
-   Draw.filled_rect(x, y, 400, 16, {200, 0, 0})
-   text = utf8.wide_sub(text, 0, 22)
-   return text, subtext
-end
-
-local rl = ResistanceLayout:new()
 
 local UiListExt = function(inventory_menu)
    local E = {}
@@ -58,7 +31,7 @@ local UiListExt = function(inventory_menu)
       return entry.item:build_name()
    end
    function E:get_item_color(entry)
-      return get_item_color(entry.item)
+      return entry.item:get_ui_color()
    end
    function E:draw_select_key(entry, i, key_name, x, y)
       if i % 2 == 0 then
@@ -99,11 +72,9 @@ end
 -- TODO: Needs to remember position based on context
 --   except 11 and 12 (shops)
 
-function InventoryMenu:init(ctxt, can_cancel)
-   assert(ctxt.chara ~= nil)
-   assert_is_an(Inventory, ctxt.chara.inv)
-
+function InventoryMenu:init(ctxt, returns_item)
    self.ctxt = ctxt
+   self.returns_item = returns_item
 
    self.win = UiWindow:new("ui.inv.window", true, "key help")
    self.pages = UiList:new_paged(table.of("hoge", 100), 16)
@@ -111,7 +82,7 @@ function InventoryMenu:init(ctxt, can_cancel)
 
    self.total_weight = 0
    self.max_weight = 0
-   self.layout = nil
+   self.layout = nil -- ResistanceLayout:new()
    self.subtext_column = "subtext"
 
    self.input = InputHandler:new()
@@ -120,7 +91,7 @@ function InventoryMenu:init(ctxt, can_cancel)
    -- self.pages:register("on_chosen", self.on_chosen)
    self.input:bind_keys {
       x = function()
-         local item = self.pages:selected_item().item
+         local item = self:selected_item_object()
          local rest = self.pages:iter_all_pages():to_list()
          ItemDescriptionMenu:new(item, rest):query()
       end,
@@ -131,13 +102,19 @@ function InventoryMenu:init(ctxt, can_cancel)
    self:update_filtering()
 end
 
+-- TODO: IList needs refactor to "selected_entry" to avoid naming
+-- confusion
+function InventoryMenu:selected_item_object()
+   return self.pages:selected_item().item
+end
+
 function InventoryMenu:can_select(item)
-   local item = self.pages:selected_item().item
-   return self.ctxt:can_select(item)
+   local item = self:selected_item_object()
+   return self.ctxt:can_select()
 end
 
 function InventoryMenu:on_select()
-   local item = self.pages:selected_item().item
+   local item = self:selected_item_object()
 
    local amount = item.amount
 
@@ -191,6 +168,7 @@ function InventoryMenu:update_filtering()
       sources = {sources}
    end
 
+   _p(self.ctxt.sources)
    for _, source in pairs(self.ctxt.sources) do
       local items = source.getter(self.ctxt)
       items = items:map(function(item)
@@ -220,6 +198,9 @@ function InventoryMenu:update_filtering()
 
    self.pages:set_data(filtered)
 
+   -- TODO: Determine when to display weight. Inventory contexts can
+   -- be created out of any number of sources that might exclude a
+   -- character, like a spot on the map.
    self.total_weight = self.ctxt.chara:calc("inventory_weight")
    self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
 end
@@ -263,6 +244,10 @@ end
 
 function InventoryMenu:update()
    if self.canceled then
+      if self.returns_item then
+         return nil, "canceled"
+      end
+
       local result = self:on_menu_exit()
       return result
    end
@@ -281,6 +266,10 @@ function InventoryMenu:update()
       if not can_select then
          Gui.mes("Can't select: " .. reason)
       else
+         if self.returns_item then
+            return self:selected_item_object()
+         end
+
          local result, canceled = self:on_select()
          if not canceled then
             if result == "inventory_continue" then

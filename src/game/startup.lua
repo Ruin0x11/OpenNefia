@@ -6,12 +6,12 @@ local startup = {}
 
 local tile_size = 48
 
-function startup.run()
+function startup.run(mods)
    math.randomseed(internal.get_timestamp())
 
    require("internal.data.base")
 
-   internal.mod.load_mods()
+   internal.mod.load_mods(mods)
 
    startup.load_batches()
 end

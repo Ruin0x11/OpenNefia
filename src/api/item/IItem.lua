@@ -1,12 +1,11 @@
-local field = require("game.field")
 local IMapObject = require("api.IMapObject")
+local IStackableObject = require("api.IStackableObject")
+local field = require("game.field")
 
 -- TODO: move out of api
 local IItem = interface("IItem",
                          {},
-                         {
-                            IMapObject,
-                         })
+                         IStackableObject)
 
 function IItem:build()
    -- TODO remove and place in schema as defaults
@@ -41,10 +40,53 @@ function IItem:refresh()
    self.temp = {}
 end
 
+function IItem:get_owning_chara()
+   local IChara = require("api.chara.IChara")
+
+   if is_an(IChara, self.location) then
+      if self.location:has_item(self) then
+         return self.location
+      end
+   end
+
+   return nil
+end
+
+function IItem:produce_memory()
+   return { image = self.image, color = {0, 0, 0} }
+end
+
+function IItem:is_cursed()
+   local curse_state = self:calc("curse_state")
+   return curse_state == "cursed" or curse_state == "doomed"
+end
+
+function IItem:current_map()
+   -- BUG: Needs to be generalized to allow nesting.
+   local Chara = require("api.Chara")
+   local chara = self:get_owning_chara()
+   if Chara.is_alive(chara) then
+      return chara:current_map()
+   end
+
+   return IMapObject.current_map(self)
+end
+
 function IItem:get_equip_slots()
    local base = self:calc("equip_slots") or {}
 
    return base
+end
+
+function IItem:can_equip_at(body_part_type)
+   local equip_slots = self:get_equip_slots()
+   if #equip_slots == 0 then
+      return nil
+   end
+
+   local can_equip = table.set(equip_slots)
+
+   return can_equip[body_part_type] == true
 end
 
 function IItem:copy_image()
@@ -56,65 +98,50 @@ function IItem:has_type(_type)
    return self.types[_type] == true
 end
 
---- Separates some of this item from its stack. If `owned` is true,
---- also attempts to move the item into the original item's location.
---- If this fails, return nil. If unsuccessful, no state is changed.
--- @tparam int amount
--- @tparam bool owned
--- @treturn IItem
--- @retval_ownership[owned=false] nil
--- @retval_ownership[owned=true] self.location
-function IItem:separate(amount, owned)
-   amount = math.clamp(amount or 1, 0, self.amount)
-   owned = owned or false
-
-   if amount == 0 then
-      return nil
+function IItem:can_stack_with(other)
+   -- TODO: this gets super complicated when adding new fields. There
+   -- should be a way to specify a field will not have any effect on
+   -- the stacking behavior between two objects.
+   if not IStackableObject.can_stack_with(self, other) then
+      return false
    end
 
-   if self.amount <= 1 or amount >= self.amount then
-      return self
+   local ignored_fields = table.set {
+      "uid",
+      "amount"
+   }
+
+   for field, my_val in pairs(self) do
+      if not ignored_fields[field] then
+         local their_val = other[field]
+         if not table.deepcompare(my_val, their_val) then
+            return false, field
+         end
+      end
    end
 
-   local separated = self:clone(owned)
-
-   if separated == nil then
-      return nil
-   end
-
-   separated.amount = amount
-   self.amount = self.amount - amount
-   assert(self.amount >= 1)
-
-   return separated
+   return true
 end
 
---- Tries to move a given amount of this item to another location,
---- accounting for item stacking. Returns the stacked item if
---- successful, nil otherwise. If unsuccessful, no state is changed.
--- @tparam int amount
--- @tparam ILocation where
--- @tparam[opt] int x
--- @tparam[opt] int y
--- @treturn[1] IItem
--- @treturn[2] nil
--- @retval_ownership self where
-function IItem:move_some(amount, where, x, y)
-   local separated = self:separate(amount)
-
-   if separated == nil then
-      return nil
+-- TODO: does this belong here?
+function IItem:get_ui_color()
+   -- TODO: keep list of known flags?
+   if self:calc("flags").is_no_drop then
+        return {120, 80, 0}
    end
 
-   if not where:can_take_object(separated, x, y) then
-      self.amount = self.amount + amount
-      separated:remove_ownership()
-      return nil
+   if self:calc("identify_state") == "completely" then
+      local curse_state = self:calc("curse_state")
+      if     curse_state == "doomed"  then return {100, 10, 100}
+      elseif curse_state == "cursed"  then return {150, 10, 10}
+      elseif curse_state == "none"    then return {10, 40, 120}
+      elseif curse_state == "blessed" then return {10, 110, 30}
+      end
    end
 
-   assert(where:take_object(separated, x ,y))
+   -- EVENT: on calc_item_color
 
-   return separated
+    return {0, 0, 0}
 end
 
 return IItem

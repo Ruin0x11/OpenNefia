@@ -2,6 +2,7 @@ local ILocation = require("api.ILocation")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
+local InventoryContext = require("api.gui.menu.InventoryContext")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -53,12 +54,7 @@ function Item.almost_equals(a, b)
    return true
 end
 
-function Item.stack(item)
-   -- TODO: have to find where item is first.
-   return item
-end
-
-function Item.create(id, x, y, amount, params, where)
+function Item.create(id, x, y, params, where)
    if x == nil then
       local player = Chara.player()
       if Chara.is_alive(player) then
@@ -67,8 +63,8 @@ function Item.create(id, x, y, amount, params, where)
       end
    end
 
-   amount = amount or 1
    params = params or {}
+   local amount = params.amount or 1
 
    where = where or field.map
 
@@ -89,14 +85,65 @@ function Item.create(id, x, y, amount, params, where)
 
    if item then
       if not params.no_stack then
-         item = Item.stack(item)
-         assert(item)
+         -- item:stack()
       end
 
       item:refresh()
    end
 
    return item
+end
+
+--- Causes the same behavior as selecting the given item in its
+--- owner's inventory. The item must be owned by a character and
+--- selectable in the character's inventory.
+-- @tparam IItem item
+-- @tparam string operation
+-- @tparam table params
+-- @treturn[1][1] IItem
+-- @treturn[2][1] nil
+-- @treturn[2][2] string error kind
+function Item.activate_shortcut(item, operation, params)
+   if type(operation) ~= "string" then
+      error(string.format("Invalid inventory operation: %s", operation))
+   end
+
+   local chara = item:get_owning_chara()
+
+   if not chara then
+      return nil, "not_owned"
+   end
+
+   if not Item.is_alive(item) then
+      return nil, "item_dead"
+   end
+
+   local protos = require("api.gui.menu.InventoryProtos")
+   local proto = protos[operation]
+   if not proto then
+      error("unknown context type " .. operation)
+   end
+
+   params = params or {}
+   params.chara = chara
+   params.map = chara:current_map()
+
+   local ctxt = InventoryContext:new(proto, params)
+
+   -- TODO: include specific reason, like "is_in_world_map"
+   if not ctxt:filter(item) then
+      return nil, "filtered_out"
+   end
+
+   if not ctxt:after_filter(item) then
+      return nil, "after_filter_failed"
+   end
+
+   if not ctxt:can_select(item) then
+      return nil, "cannot_select"
+   end
+
+   return ctxt:on_select(item)
 end
 
 return Item

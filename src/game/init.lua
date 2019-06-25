@@ -42,7 +42,8 @@ local function run_field()
 end
 
 function game.loop()
-   startup.run()
+   local mods = internal.mod.scan_mod_dir()
+   startup.run(mods)
 
    local cb = run_field
 

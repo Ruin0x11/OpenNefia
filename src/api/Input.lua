@@ -26,21 +26,33 @@ function Input.query_number(max, initial)
    return NumberPrompt:new(max, initial):query()
 end
 
-function Input.query_inventory(chara, operation)
+local function query_inventory(chara, operation, params, returns_item)
    local InventoryWrapper = require("api.gui.menu.InventoryWrapper")
 
    operation = operation or "inv_general"
 
-   local params = {
-      chara = chara,
-      target = nil,
-      container = nil,
-      map = Map.current(),
-   }
+   params = params or {}
+   params.chara = chara
+   params.map = chara:current_map()
 
-   local result, canceled = InventoryWrapper:new(operation, params):query()
+   local result, canceled = InventoryWrapper:new(operation, params, returns_item):query()
 
-   return (result or "player_turn_query"), canceled
+   return result, canceled
+end
+
+--- Queries a character to run an inventory operation. This will run
+--- the associated selection action in the inventory context if an
+--- item is selected, and may return accordingly.
+function Input.query_inventory(chara, operation, params)
+   return query_inventory(chara, operation, params, false)
+end
+
+--- Queries for an item in a character's inventory according to the
+--- rules of the provided inventory operation. Instead of running the
+--- defined selection action when an item is selected, the selected
+--- item is returned.
+function Input.query_item(chara, operation, params)
+   return query_inventory(chara, operation, params, true)
 end
 
 return Input

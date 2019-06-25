@@ -56,6 +56,16 @@ love.image.newImageData = function()
    }
 end
 love.audio.setDistanceModel = function() end
+love.audio.newSource = function()
+   return {
+      setLooping = function() end,
+      setPosition = function() end,
+      setRelative = function() end,
+      setAttenuationDistances = function() end,
+      getChannelCount = function() return 1 end,
+   }
+end
+love.audio.play = function() end
 love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
 

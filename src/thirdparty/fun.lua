@@ -1060,4 +1060,16 @@ end
 methods.index_by = method1(index_by)
 exports.index_by = export1(index_by)
 
+local filter_by_field = function(field, x, gen, param, state)
+   return fun.filter(function(i) return i[field] == x end, gen, param, state)
+end
+methods.filter_by_field = method2(filter_by_field)
+exports.filter_by_field = export2(filter_by_field)
+
+local extract = function(field, gen, param, state)
+   return fun.map(function(i) return i[field] end, gen, param, state)
+end
+methods.extract = method1(extract)
+exports.extract = export1(extract)
+
 return exports

@@ -30,7 +30,8 @@ data:add_type({
 data:add_type {
    name = "body_part",
    schema = schema.Record {
-      name = schema.String
+      name = schema.String,
+      icon = schema.Number -- TODO: needs to be themable
    }
 }
 

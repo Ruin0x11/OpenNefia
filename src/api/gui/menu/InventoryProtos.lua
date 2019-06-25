@@ -36,7 +36,7 @@ InventoryProtos.inv_drop = {
    sources = { "chara" },
    icon = 5,
    can_select = function(ctxt, item)
-      if item.flags.is_no_drop then
+      if item:calc("flags").is_no_drop then
          return false, "marked as no drop"
       end
 
@@ -68,6 +68,20 @@ InventoryProtos.inv_drop = {
       end
 
       return "player_turn_query"
+   end
+}
+
+InventoryProtos.inv_equip = {
+   params = { body_part_id = "string" },
+   sources = { "chara" },
+   icon = 4,
+   filter = function(ctxt, item)
+      return item:can_equip_at(ctxt.body_part_id)
+   end,
+   can_select = function(ctxt, item)
+      -- TODO: fairy trait
+      -- return ctxt.chara:can_equip(item)
+      return true
    end
 }
 

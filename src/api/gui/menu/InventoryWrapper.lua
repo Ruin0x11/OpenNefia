@@ -20,12 +20,16 @@ InventoryWrapper:delegate("input", IInput)
 
 local protos = require("api.gui.menu.InventoryProtos")
 
-function InventoryWrapper:init(kind, params)
+function InventoryWrapper:init(kind, params, returns_item)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
    self.height = Draw.get_height()
    self.params = params
+   self.returns_item = returns_item
+   if self.returns_item == nil then
+      self.returns_item = false
+   end
 
    self.input = InputHandler:new()
    self.submenu = nil
@@ -43,7 +47,7 @@ function InventoryWrapper:switch_context(kind)
    end
 
    local ctxt = InventoryContext:new(proto, self.params)
-   self.submenu = InventoryMenu:new(ctxt)
+   self.submenu = InventoryMenu:new(ctxt, self.returns_item)
    self.input:forward_to(self.submenu)
 
    self.icon_bar:select(ctxt.icon)
@@ -68,18 +72,6 @@ end
 function InventoryWrapper:draw()
    self.icon_bar:draw()
    self.submenu:draw()
-end
-
-function InventoryWrapper:handle_action(act)
-   if act == "go_to_start" then
-      self:go_to_start()
-   else
-      if #self.trail == 0 then
-         self.canceled = true
-      else
-         self:go_back()
-      end
-   end
 end
 
 function InventoryWrapper:update()

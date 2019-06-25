@@ -35,7 +35,7 @@ function pool:create_object(proto, x, y)
 end
 
 function pool:take_object(obj, x, y)
-   if self.content[obj.uid] ~= nil then
+   if self:has_object(obj) then
       return nil
    end
 
@@ -120,7 +120,11 @@ function pool:remove_object(obj)
 end
 
 -- HACK: This should really be extracted into its own class.
+-- TODO: rename to iter_objects_at_pos
 function pool:objects_at_pos(x, y)
+   if not self:is_in_bounds(x, y) then
+      return fun.iter({})
+   end
    return fun.iter(self.positional[y][x]):map(function(uid) return self:get_object(uid) end)
 end
 
@@ -132,15 +136,15 @@ function pool:has_object(obj)
    return obj ~= nil and self.content[obj.uid] ~= nil
 end
 
-local function iter(a, i)
-   if i > #a.uids then
+local function iter(state, index)
+   if index > #state.uids then
       return nil
    end
 
-   local d = a.content[a.uids[i]].data
-   i = i + 1
+   local data = state.content[state.uids[index]].data
+   index = index + 1
 
-   return i, d
+   return index, data
 end
 
 function pool:iter(ordering)

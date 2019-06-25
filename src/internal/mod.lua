@@ -6,7 +6,6 @@ local tsort = require("thirdparty.resty.tsort")
 local mod = {}
 
 local chunks = {}
-local to_load = {}
 
 local function load_mod(mod_name, init_lua_path)
    -- Convert the filename to the dot syntax expected by
@@ -50,18 +49,8 @@ local function extract_mod_id(manifest_file)
    return r
 end
 
-function mod.calculate_load_order()
+function mod.calculate_load_order(mods)
    local graph = tsort.new()
-
-   local mods = to_load
-   to_load = {}
-
-   for _, mod_id in fs.iter_directory_items("mod/") do
-      local manifest_file = fs.join("mod", mod_id, "mod.lua")
-      if fs.is_file(manifest_file) then
-         mods[#mods+1] = manifest_file
-      end
-   end
 
    -- topsort sorts by mod ID (a string), but we also need to preserve
    -- the file location of each manifest, so reassociate them after
@@ -103,20 +92,27 @@ function mod.calculate_load_order()
    -- while preserving load order
    local final = {}
    for i, mod_id in ipairs(order) do
-      final[i] = paths[mod_id]
+      final[#final+1] = paths[mod_id]
    end
 
    return final
 end
 
-function mod.add_mod_to_load(manifest_file)
-   if fs.is_file(manifest_file) then
-      to_load[#to_load+1] = manifest_file
+function mod.scan_mod_dir()
+   local mods = {}
+
+   for _, mod_id in fs.iter_directory_items("mod/") do
+      local manifest_file = fs.join("mod", mod_id, "mod.lua")
+      if fs.is_file(manifest_file) then
+         mods[#mods+1] = manifest_file
+      end
    end
+
+   return mods
 end
 
-function mod.load_mods()
-   local load_order = mod.calculate_load_order()
+function mod.load_mods(mods)
+   local load_order = mod.calculate_load_order(mods)
 
    for _, mod in ipairs(load_order) do
       local manifest = fs.join(mod.root_path, "mod.lua")
@@ -134,6 +130,8 @@ function mod.load_mods()
 
          print(string.format("Loaded mod %s.", mod.id))
          chunks[mod.id] = chunk
+      else
+         print(string.format("No init.lua for mod %s.", mod.id))
       end
    end
 end

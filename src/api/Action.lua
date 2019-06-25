@@ -7,7 +7,10 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 
 -- General-purpose logic that is meant to be shared by the PC and all
--- NPCs.
+-- NPCs. These functions obey game rules such as curse state for
+-- unequipping items. Each function will return two values, a boolean
+-- indicating if the action was successful and a string indicating any
+-- errors.
 local Action = {}
 
 function Action.move(chara, x, y)
@@ -75,6 +78,32 @@ function Action.drop(chara, item, amount)
    end
 
    return false
+end
+
+function Action.unequip(chara, item)
+   if not chara:has_item_equipped(item) then
+      return false, "not_equipped_by_chara"
+   end
+
+   if item:is_cursed() then
+      return false, "cursed"
+   end
+
+   chara:unequip_item(item)
+   Gui.play_sound("base.equip1");
+
+   return true
+end
+
+function Action.equip(chara, item)
+   if not chara:has_item(item) then
+      return false, "not_owned_by_chara"
+   end
+
+   chara:equip_item(item)
+   Gui.play_sound("base.equip1");
+
+   return true
 end
 
 function Action.melee(chara, target)

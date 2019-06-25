@@ -78,6 +78,10 @@ function InstancedMap:init(width, height, uids, tile)
    -- make objects that act opaque.
    self.opaque = table.of(false, width * height)
 
+   -- Memory data produced by map objects. These are expected to be
+   -- interpreted by each rendering layer.
+   self.memory = table.of({}, width * height)
+
    self.tiles = table.of({}, width * height)
    self.tiles_dirty = true
    self.uids = uids
@@ -107,7 +111,11 @@ function InstancedMap:set_tile(x, y, id)
       return
    end
 
+   local prev = self:tile(x, y)
+
    self.tiles[y*self.width+x+1] = tile
+
+   self:refresh_tile(x, y)
 
    self.tiles_dirty = true
 end
@@ -119,11 +127,6 @@ end
 function InstancedMap:get_pool(type_id)
    self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids, self.width, self.height)
    return self.pools[type_id]
-end
-
-function InstancedMap:get_batch(type_id)
-   self.batches[type_id] = self.batches[type_id] or sparse_batch:new(type_id)
-   return self.batches[type_id]
 end
 
 function InstancedMap:has_object(obj)
@@ -248,7 +251,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
                if fov_y_start <= j and j <= fov_y_end then
                   if i >= fov_radius[j+cy][1] + cx and i < fov_radius[j+cy][2] + cx then
                      if self:has_los(player_x, player_y, i, j) then
-                        self.in_sight[j*self.width+i+1] = self.last_sight_id
+                        self:memorize_tile(i, j)
                         shadow = false
                      end
                   end
@@ -269,6 +272,27 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    return self.shadow_map, start_x, start_y
 end
 
+function InstancedMap:memorize_tile(x, y)
+   local ind = y * self.width + x + 1;
+
+   self.in_sight[ind] = self.last_sight_id
+
+   local memory = {
+      ["base.map_tile"] = self:tile(x, y)
+   }
+
+   for _, obj in self:iter_all_objects_at_pos(x, y) do
+      memory[obj._type] = memory[obj._type] or {}
+      table.insert(memory[obj._type], obj:produce_memory())
+   end
+
+   self.memory[ind] = memory
+end
+
+function InstancedMap:iter_memory(_type)
+   return fun.iter(self.memory[_type] or {})
+end
+
 function InstancedMap:iter_charas()
    return self:iter("base.chara")
 end
@@ -284,25 +308,13 @@ end
 -- TODO: Need to handle depending on what is querying. People may want
 -- things that can pass through walls, etc.
 function InstancedMap:can_access(x, y)
-   -- TODO: Perhaps make one source of truth.
-   local tile = self:tile(x, y)
    return self:is_in_bounds(x, y)
-      and not tile.is_solid
       and not self.solid[y*self.width+x+1]
 end
 
 function InstancedMap:can_see_through(x, y)
-   -- TODO: Perhaps make one source of truth.
-   local tile = self:tile(x, y)
    return self:is_in_bounds(x, y)
-      and not tile.is_opaque
       and not self.opaque[y*self.width+x+1]
-end
-
-function InstancedMap:calculate_opaqueness(x, y)
-end
-
-function InstancedMap:calculate_accessibility(x, y)
 end
 
 -- NOTE: This function returns false for any positions that are not
@@ -311,6 +323,38 @@ end
 -- use InstancedMap:has_los combined with a maximum distance check instead.
 function InstancedMap:is_in_fov(x, y)
    return self.in_sight[y*self.width+x+1] == self.last_sight_id
+end
+
+function InstancedMap:iter_all_objects_at_pos(x, y)
+   local all = {}
+
+   for _, pool in pairs(self.pools) do
+      all[#all+1] = pool:objects_at_pos(x, y)
+   end
+
+   return fun.chain(table.unpack(all))
+end
+
+function InstancedMap:refresh_tile(x, y)
+   local tile = self:tile(x, y)
+
+   -- TODO: maybe map tiles should be map objects, or at least support
+   -- IMapObject:calc() by extracting its interface.
+   local solid = tile.is_solid
+   local opaque = tile.is_opaque
+
+   for _, obj in self:iter_all_objects_at_pos(x, y) do
+      solid = solid or obj:calc("is_solid")
+      opaque = opaque or obj:calc("is_opaque")
+
+      if solid and opaque then
+         break
+      end
+   end
+
+   local ind = y * self.width + x + 1
+   self.solid[ind] = solid
+   self.opaque[ind] = opaque
 end
 
 
@@ -329,17 +373,26 @@ function InstancedMap:create_object(proto, x, y)
    local pool = self:get_pool(_type)
    local obj = pool:create_object(proto, x, y)
    obj.location = self
+   self:refresh_tile(x, y)
    return obj
 end
 
 function InstancedMap:take_object(obj, x, y)
    self:get_pool(obj._type):take_object(obj, x, y)
    obj.location = self
+   self:refresh_tile(x, y)
    return obj
 end
 
 function InstancedMap:remove_object(obj)
-   return self:get_pool(obj._type):remove_object(obj)
+   local prev_x, prev_y = obj.x, obj.y
+   local success = self:get_pool(obj._type):remove_object(obj)
+
+   if success then
+      self:refresh_tile(prev_x, prev_y)
+   end
+
+   return success
 end
 
 function InstancedMap:put_into(other, obj, x, y)
@@ -347,7 +400,14 @@ function InstancedMap:put_into(other, obj, x, y)
 end
 
 function InstancedMap:move_object(obj, x, y)
-   return self:get_pool(obj._type):move_object(obj, x, y)
+   local prev_x, prev_y = obj.x, obj.y
+   local success = self:get_pool(obj._type):move_object(obj, x, y)
+
+   if success then
+      self:refresh_tile(x, y)
+   end
+
+   return success
 end
 
 -- TODO: These should not have _type in the signature...

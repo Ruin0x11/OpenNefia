@@ -7,6 +7,7 @@ local Event = require("api.Event")
 local Input = require("api.Input")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
+local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -117,6 +118,10 @@ end
 
 function Command.inventory(player)
    return Input.query_inventory(player, "inv_general")
+end
+
+function Command.wear(player)
+   return EquipmentMenu:new(player):query()
 end
 
 return Command

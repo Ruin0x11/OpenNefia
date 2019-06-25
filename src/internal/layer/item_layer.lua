@@ -12,6 +12,7 @@ function item_layer:init(width, height)
 
    self.item_batch = sparse_batch:new(width, height, item_atlas, coords)
    self.batch_inds = {}
+   self.batch_inds_memory = {}
 end
 
 function item_layer:relayout()

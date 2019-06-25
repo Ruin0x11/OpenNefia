@@ -1,5 +1,6 @@
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
+local data = require("internal.data")
 
 --- Equipment slots for characters.
 local EquipSlots = class("EquipSlots", ILocation)
@@ -7,7 +8,13 @@ local EquipSlots = class("EquipSlots", ILocation)
 function EquipSlots:init(body_parts)
    body_parts = body_parts or {}
 
-   self.body_parts = fun.iter(body_parts):map(function(i) return { type = i } end) :to_list()
+   local init = function(i)
+      return {
+         type = i,
+         equipped = nil
+      }
+   end
+   self.body_parts = fun.iter(body_parts):map(init):to_list()
 
    local uids = require("internal.global.uids")
    self.pool = pool:new("base.item", uids, 1, 1)
@@ -15,18 +22,21 @@ function EquipSlots:init(body_parts)
    self.equipped = {}
 end
 
-function EquipSlots:find_free_slot(obj, body_part_type)
-   local equip_slots = obj:get_equip_slots()
-   if #equip_slots == 0 then
-      return nil
-   end
+-- Returns true if there is a compatible slot for an item, even if
+-- something is already equipped at the slot.
+-- @tparam IItem item
+-- @treturn bool
+function EquipSlots:has_body_part_for(item)
+   pred = function(part) return item:can_equip_at(part) end
 
-   local can_equip = table.set(equip_slots)
+   return fun.iter(self.body_parts):filter(pred):any()
+end
 
+function EquipSlots:find_free_slot(item, body_part_type)
    local pred
 
    if body_part_type then
-      if not can_equip[body_part_type] then
+      if not item:can_equip_at(body_part_type) then
          return nil
       end
 
@@ -35,7 +45,7 @@ function EquipSlots:find_free_slot(obj, body_part_type)
       end
    else
       pred = function(part)
-         return can_equip[part.type] and not part.equipped
+         return item:can_equip_at(part.type) and not part.equipped
       end
    end
 
@@ -143,6 +153,25 @@ function EquipSlots:items_for_type(body_part_type)
 end
 
 function EquipSlots:is_equipped_at(slot)
+end
+
+local function iter_body_parts(state, index)
+   if index > #state.body_parts then
+      return nil
+   end
+
+   local body_part = state.body_parts[index]
+   local data = {
+      body_part = data["base.body_part"]:ensure(body_part.type),
+      equipped = state.pool:get_object(body_part.equipped)
+   }
+   index = index + 1
+
+   return index, data
+end
+
+function EquipSlots:iter_body_parts()
+   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,pool=self.pool}, 1)
 end
 
 --

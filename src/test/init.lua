@@ -10,6 +10,9 @@ require("boot")
 
 t.mock_map()
 
+local sw = require("util.stopwatch"):new()
+local total = require("util.stopwatch"):new()
+
 function run_tests(path)
    for file in lfs.dir(path) do
       if file ~= "." and file ~= ".." then
@@ -25,11 +28,18 @@ function run_tests(path)
                error(err)
             end
             setfenv(chunk, _G)
+
+            sw:measure()
             chunk()
+
             print()
+            sw:p("time")
          end
       end
    end
 end
 
+total:measure()
 run_tests("./test/tests")
+print()
+total:p("TOTAL")
