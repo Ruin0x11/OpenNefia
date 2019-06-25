@@ -188,29 +188,18 @@ function table.of_2d(item, width, height, zero_indexed)
    return tbl
 end
 
-function table.remove_value(tbl, value, array)
+function table.iremove_value(tbl, value, array)
    local result
 
-   if array then
-      local ind
-      for i, v in ipairs(tbl) do
-         if v == value then
-            ind = i
-            break
-         end
+   local ind
+   for i, v in ipairs(tbl) do
+      if v == value then
+         ind = i
+         break
       end
-      if ind then
-         result = table.remove(tbl, ind)
-      end
-   else
-      for k, v in pairs(tbl) do
-         if v == value then
-            ind = k
-            result = v
-            break
-         end
-      end
-      tbl[k] = nil
+   end
+   if ind then
+      result = table.remove(tbl, ind)
    end
 
    return result
@@ -312,7 +301,7 @@ function table.remove_by(arr, f)
 end
 
 local function right_pad(str, len)
-    return str .. string.rep(' ', len - #str)
+   return str .. string.rep(' ', len - #str)
 end
 
 --- Formats a 2-dimensional array-like table in a printable manner.

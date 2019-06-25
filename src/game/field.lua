@@ -102,7 +102,7 @@ function field_layer:exists(obj)
 end
 
 function field_layer:get_object(_type, uid)
-   return self.map and self.map:get_object(_type, uid)
+   return self.map and self.map:get_object_of_type(_type, uid)
 end
 
 function field_layer:update_screen(scroll)

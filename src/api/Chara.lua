@@ -23,7 +23,7 @@ function Chara.at(x, y, map)
       return nil
    end
 
-   local objs = map:get_pool("base.chara"):objects_at_pos(x, y):filter(Chara.is_alive)
+   local objs = map:iter_type_at_pos("base.chara", x, y):filter(Chara.is_alive)
 
    assert(objs:length() <= 1, string.format("More than one live character on tile %d,%d", x, y))
 
@@ -101,7 +101,7 @@ local function iter(a, i)
       return nil
    end
 
-   local d = a.map:get_object("base.chara", a.uids[i])
+   local d = a.map:get_object_of_type("base.chara", a.uids[i])
    i = i + 1
 
    return i, d

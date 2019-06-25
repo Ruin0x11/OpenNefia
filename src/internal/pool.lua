@@ -65,15 +65,12 @@ function pool:take_object(obj, x, y)
    return self:get_object(obj.uid)
 end
 
-local function get_uid(obj)
-end
-
 function pool:move_object(obj, x, y)
    assert(self:has_object(obj))
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
 
-   table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
+   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
    table.insert(self.positional[y][x], obj.uid)
 
    obj.x = x
@@ -112,7 +109,7 @@ function pool:remove_object(obj)
 
    self.content[obj.uid] = nil
 
-   table.remove_value(self.positional[obj.y][obj.x], obj.uid, true)
+   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
 
    obj.location = nil
 

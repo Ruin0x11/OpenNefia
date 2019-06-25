@@ -17,7 +17,7 @@ function Item.at(x, y, map)
       return {}
    end
 
-   return map:get_pool("base.item"):objects_at_pos(x, y):filter(Item.is_alive)
+   return map:iter_type_at_pos("base.item", x, y):filter(Item.is_alive)
 end
 
 function Item.set_pos(i, x, y)

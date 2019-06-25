@@ -18,6 +18,7 @@ function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    self.tip_icon = { image = image, quad = quad }
    self.page = 0
    self.page_max = 0
+   self.show_page = false
 
    shadow = shadow or true
    if shadow then
@@ -110,7 +111,7 @@ function UiWindow:draw()
    Draw.set_font(12) -- 12 + sizefix - en * 2
    Draw.text(self.key_help, x + 58 + x_offset, y + height - 43 - height % 8)
 
-   if self.page_max > 0 then
+   if self.show_page then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local page_str = "Page." .. tostring(self.page + 1) .. "/" .. tostring(self.page_max + 1)
       Draw.text(page_str, x + width - Draw.text_width(page_str) - 40 - y_offset, y + height - 65 - height % 8)
@@ -118,9 +119,15 @@ function UiWindow:draw()
 end
 
 function UiWindow:set_pages(pages)
+   if pages == nil then
+      self.show_page = false
+      return
+   end
+
    assert_is_an(IPaged, pages)
    self.page = pages.page
    self.page_max = pages.page_max
+   self.show_page = true
 end
 
 function UiWindow:update()

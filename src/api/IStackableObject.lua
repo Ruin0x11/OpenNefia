@@ -101,10 +101,10 @@ function IStackableObject:stack()
    local iter
    local did_stack = false
 
-   -- HACK: really needs a uniform interface. type may need to be a
-   -- required parameter.
    if self.location:is_positional() then
-      iter = self.location:objects_at_pos(self._type, self.x, self.y)
+      -- HACK: really needs a uniform interface. type may need to be a
+      -- required parameter.
+      iter = self.location:iter_type_at_pos(self._type, self.x, self.y)
    else
       iter = self.location:iter()
    end

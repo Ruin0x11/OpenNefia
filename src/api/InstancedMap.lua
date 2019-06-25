@@ -1,13 +1,13 @@
 local data = require("internal.data")
-local pool = require("internal.pool")
+local multi_pool = require("internal.multi_pool")
 local bresenham = require("thirdparty.bresenham")
 
 local Pos = require("api.Pos")
 local Log = require("api.Log")
 local Draw = require("api.Draw")
-local ILocation = require("api.ILocation")
+local ITypedLocation = require("api.ITypedLocation")
 
-local InstancedMap = class("InstancedMap", ILocation)
+local InstancedMap = class("InstancedMap", ITypedLocation)
 
 local fov_cache = {}
 
@@ -61,7 +61,7 @@ function InstancedMap:init(width, height, uids, tile)
    self.width = width
    self.height = height
 
-   self.pools = {}
+   self.multi_pool = multi_pool:new(width, height, uids)
    self.last_sight_id = 0
    self.in_sight = table.of(self.last_sight_id, width * height)
 
@@ -122,15 +122,6 @@ end
 
 function InstancedMap:tile(x, y)
    return self.tiles[y*self.width+x+1]
-end
-
-function InstancedMap:get_pool(type_id)
-   self.pools[type_id] = self.pools[type_id] or pool:new(type_id, self.uids, self.width, self.height)
-   return self.pools[type_id]
-end
-
-function InstancedMap:has_object(obj)
-   return self:get_pool(obj._type):has_object(obj)
 end
 
 function InstancedMap:has_los(x1, y1, x2, y2)
@@ -277,16 +268,16 @@ function InstancedMap:memorize_tile(x, y)
 
    self.in_sight[ind] = self.last_sight_id
 
-   local memory = {
-      ["base.map_tile"] = self:tile(x, y)
-   }
+   local memory = self.memory
+   memory["base.map_tile"] = memory["base.map_tile"] or {}
+   memory["base.map_tile"][ind] = { self:tile(x, y) }
 
-   for _, obj in self:iter_all_objects_at_pos(x, y) do
+   -- HACK: amazingly slow. need multi_pool.
+   for _, obj in self.multi_pool:objects_at_pos(x, y) do
       memory[obj._type] = memory[obj._type] or {}
-      table.insert(memory[obj._type], obj:produce_memory())
+      memory[obj._type][ind] = memory[obj._type][ind] or {}
+      table.insert(memory[obj._type][ind], obj:produce_memory())
    end
-
-   self.memory[ind] = memory
 end
 
 function InstancedMap:iter_memory(_type)
@@ -294,11 +285,11 @@ function InstancedMap:iter_memory(_type)
 end
 
 function InstancedMap:iter_charas()
-   return self:iter("base.chara")
+   return self:iter_type("base.chara")
 end
 
 function InstancedMap:iter_items()
-   return self:iter("base.item")
+   return self:iter_type("base.item")
 end
 
 function InstancedMap:is_in_bounds(x, y)
@@ -325,16 +316,6 @@ function InstancedMap:is_in_fov(x, y)
    return self.in_sight[y*self.width+x+1] == self.last_sight_id
 end
 
-function InstancedMap:iter_all_objects_at_pos(x, y)
-   local all = {}
-
-   for _, pool in pairs(self.pools) do
-      all[#all+1] = pool:objects_at_pos(x, y)
-   end
-
-   return fun.chain(table.unpack(all))
-end
-
 function InstancedMap:refresh_tile(x, y)
    local tile = self:tile(x, y)
 
@@ -343,7 +324,7 @@ function InstancedMap:refresh_tile(x, y)
    local solid = tile.is_solid
    local opaque = tile.is_opaque
 
-   for _, obj in self:iter_all_objects_at_pos(x, y) do
+   for _, obj in self.multi_pool:objects_at_pos(x, y) do
       solid = solid or obj:calc("is_solid")
       opaque = opaque or obj:calc("is_opaque")
 
@@ -362,23 +343,25 @@ end
 -- ILocation impl
 --
 
+InstancedMap:delegate("multi_pool",
+{
+   "is_positional",
+   "put_into",
+   "objects_at_pos",
+   "iter_type_at_pos",
+   "iter_type",
+   "iter",
+   "has_object",
+   "get_object",
+   "get_object_of_type",
+})
+
 function InstancedMap:is_positional()
    return true
 end
 
-function InstancedMap:create_object(proto, x, y)
-   local _type = proto._type
-   if not _type then error("no type") end
-
-   local pool = self:get_pool(_type)
-   local obj = pool:create_object(proto, x, y)
-   obj.location = self
-   self:refresh_tile(x, y)
-   return obj
-end
-
 function InstancedMap:take_object(obj, x, y)
-   self:get_pool(obj._type):take_object(obj, x, y)
+   self.multi_pool:take_object(obj, x, y)
    obj.location = self
    self:refresh_tile(x, y)
    return obj
@@ -386,7 +369,7 @@ end
 
 function InstancedMap:remove_object(obj)
    local prev_x, prev_y = obj.x, obj.y
-   local success = self:get_pool(obj._type):remove_object(obj)
+   local success = self.multi_pool:remove_object(obj)
 
    if success then
       self:refresh_tile(prev_x, prev_y)
@@ -395,36 +378,15 @@ function InstancedMap:remove_object(obj)
    return success
 end
 
-function InstancedMap:put_into(other, obj, x, y)
-   return self:get_pool(obj._type):put_into(other, obj, x, y)
-end
-
 function InstancedMap:move_object(obj, x, y)
    local prev_x, prev_y = obj.x, obj.y
-   local success = self:get_pool(obj._type):move_object(obj, x, y)
+   local success = self.multi_pool:move_object(obj, x, y)
 
    if success then
       self:refresh_tile(x, y)
    end
 
    return success
-end
-
--- TODO: These should not have _type in the signature...
-function InstancedMap:objects_at_pos(_type, x, y)
-   return self:get_pool(_type):objects_at_pos(x, y)
-end
-
-function InstancedMap:get_object(_type, uid)
-   return self:get_pool(_type):get_object(uid)
-end
-
-function InstancedMap:has_object(obj)
-   return self:get_pool(obj._type):has_object(obj)
-end
-
-function InstancedMap:iter(_type)
-   return self:get_pool(_type):iter()
 end
 
 function InstancedMap:can_take_object(obj)

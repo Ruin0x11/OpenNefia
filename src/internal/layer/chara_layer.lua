@@ -29,7 +29,7 @@ function chara_layer:calc_scroll(map)
    local scroll = {}
 
    for uid, dat in pairs(self.batch_inds) do
-      local c = map:get_object("base.chara", uid)
+      local c = map:get_object_of_type("base.chara", uid)
       if c.x ~= dat.x or c.y ~= dat.y then
          local dx = c.x - dat.x
          local dy = c.y - dat.y

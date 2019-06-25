@@ -190,7 +190,14 @@ function InventoryContext:query_item_amount(item)
 end
 
 function InventoryContext:on_select(item, amount, rest)
-   local amount = amount or self:query_item_amount(item)
+   if amount == nil then
+      local canceled
+      amount, canceled = self:query_item_amount(item)
+      if canceled then
+         print("can")
+         return nil, canceled
+      end
+   end
 
    if self.proto.on_select then
       return self.proto.on_select(self, item, amount, rest)
