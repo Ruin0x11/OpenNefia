@@ -188,7 +188,7 @@ function table.of_2d(item, width, height, zero_indexed)
    return tbl
 end
 
-function table.iremove_value(tbl, value, array)
+function table.iremove_value(tbl, value)
    local result
 
    local ind

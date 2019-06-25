@@ -55,9 +55,7 @@ end
 function multi_pool:put_into(other, obj, x, y)
    local obj = self:get_subpool(obj._type):put_into(other, obj, x, y)
 
-   if obj then
-      table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
-   end
+   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
 
    return obj
 end
@@ -67,8 +65,8 @@ function multi_pool:move_object(obj, x, y)
 
    local obj = self:get_subpool(obj._type):move_object(obj, x, y)
 
-   table.iremove_value(self.positional[prev_x][prev_y], obj.uid)
-   table.insert(self.positional[obj.y][obj.x], obj.uid)
+   table.iremove_value(self.positional[prev_y][prev_x], obj.uid)
+   table.insert(self.positional[y][x], obj.uid)
 
    return obj
 end

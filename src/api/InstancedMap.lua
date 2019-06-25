@@ -272,7 +272,6 @@ function InstancedMap:memorize_tile(x, y)
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { self:tile(x, y) }
 
-   -- HACK: amazingly slow. need multi_pool.
    for _, obj in self.multi_pool:objects_at_pos(x, y) do
       memory[obj._type] = memory[obj._type] or {}
       memory[obj._type][ind] = memory[obj._type][ind] or {}

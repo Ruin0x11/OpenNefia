@@ -145,7 +145,7 @@ local function iter(state, index)
 end
 
 function pool:iter(ordering)
-   return fun.wrap(iter, {uids=ordering or self.uids, content=self.content}, 1)
+   return fun.wrap(iter, {uids=ordering or table.deepcopy(self.uids), content=self.content}, 1)
 end
 
 function pool:object_count()
