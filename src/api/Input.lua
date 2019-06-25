@@ -33,7 +33,7 @@ local function query_inventory(chara, operation, params, returns_item)
 
    params = params or {}
    params.chara = chara
-   params.map = chara:current_map()
+   params.map = chara and chara:current_map()
 
    local result, canceled = InventoryWrapper:new(operation, params, returns_item):query()
 
@@ -44,6 +44,10 @@ end
 --- the associated selection action in the inventory context if an
 --- item is selected, and may return accordingly.
 function Input.query_inventory(chara, operation, params)
+   -- TODO: this can get confusing because not all contexts
+   -- necessarily receive a character, and besides the "chara" field
+   -- is treated specially in some parts. The interface should be
+   -- uniform between this and Input.activate_shortcut.
    return query_inventory(chara, operation, params, false)
 end
 

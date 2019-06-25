@@ -54,7 +54,6 @@ function field_logic.setup()
          return Command.inventory(me)
       end,
       ["."] = function(me)
-         World.pass_time_in_seconds(600)
          return "turn_end"
       end,
       ["`"] = function(me)
@@ -62,6 +61,8 @@ function field_logic.setup()
          return "player_turn_query"
       end,
       escape = function(me)
+         Gui.mes_newline()
+         Gui.mes("Do you want to save the game and exit? ")
          if Input.yes_no() then
             return "quit"
          end

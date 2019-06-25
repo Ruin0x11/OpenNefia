@@ -43,17 +43,27 @@ function IStackableObject:separate(amount, owned)
    return separated
 end
 
+function IStackableObject:stack_with(other)
+   assert(self._type == other._type)
+
+   self.amount = self.amount + other.amount
+   other.amount = 0
+   other:remove_ownership()
+end
+
 --- Tries to move a given amount of this object to another location,
---- accounting for stacking. Returns the stacked object if successful,
---- nil otherwise. If unsuccessful, no state is changed.
+--- accounting for stacking unless `no_stack` is true. Returns the
+--- stacked object if successful, nil otherwise. If unsuccessful, no
+--- state is changed.
 -- @tparam int amount
 -- @tparam ILocation where
 -- @tparam[opt] int x
 -- @tparam[opt] int y
+-- @tparam[opt] bool no_stack
 -- @treturn[1] IItem
 -- @treturn[2] nil
 -- @retval_ownership self where
-function IStackableObject:move_some(amount, where, x, y)
+function IStackableObject:move_some(amount, where, x, y, no_stack)
    local separated = self:separate(amount)
 
    if separated == nil then
@@ -61,22 +71,17 @@ function IStackableObject:move_some(amount, where, x, y)
    end
 
    if not where:can_take_object(separated, x, y) then
-      self.amount = self.amount + amount
-      separated:remove_ownership()
+      self:stack_with(separated)
       return nil
    end
 
    assert(where:take_object(separated, x, y))
 
+   if not no_stack then
+      separated:stack()
+   end
+
    return separated
-end
-
-function IStackableObject:stack_with(other)
-   assert(self._type == other._type)
-
-   self.amount = self.amount + other.amount
-   other.amount = 0
-   other:remove_ownership()
 end
 
 function IStackableObject:can_stack_with(other)

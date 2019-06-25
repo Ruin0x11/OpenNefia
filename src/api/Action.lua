@@ -45,7 +45,7 @@ function Action.move(chara, x, y)
    return true
 end
 
-function Action.get(chara, item)
+function Action.get(chara, item, amount)
    if item == nil then
       local items = Item.at(chara.x, chara.y):to_list()
       if #items == 0 then
@@ -55,9 +55,9 @@ function Action.get(chara, item)
       item = items[#items]
    end
 
-   local picked_up = chara:take_item(item)
+   local picked_up = chara:take_item(item, amount)
    if picked_up then
-      Gui.mes(chara.uid .. " picks up " .. item.uid)
+      Gui.mes(chara.uid .. " picks up " .. item:build_name(amount))
       Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
       return true
    end
@@ -72,7 +72,7 @@ function Action.drop(chara, item, amount)
 
    local dropped = chara:drop_item(item, amount)
    if dropped then
-      Gui.mes(chara.uid .. " drops " .. item.uid)
+      Gui.mes(chara.uid .. " drops " .. item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
       return true
    end

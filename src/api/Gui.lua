@@ -43,6 +43,7 @@ local Color = {
    YellowGreen =   { 210, 250, 160 },
 }
 
+-- TODO: inline colors
 function Gui.mes(text, color)
    if color == nil and string.find(text, I18N.quote_character()) then
       color = {210, 250, 160}
@@ -57,6 +58,7 @@ function Gui.mes_clear()
    get_message_window():clear()
 end
 
+-- TODO: just use \n inline
 function Gui.mes_newline()
    get_message_window():newline()
 end

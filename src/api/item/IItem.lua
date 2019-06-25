@@ -28,12 +28,13 @@ function IItem:build()
    -- item:send("base.on_item_create")
 end
 
-function IItem:build_name()
-   if self.amount == 1 then
+function IItem:build_name(amount)
+   amount = amount or self.amount
+   if amount == 1 then
       return self.name
    end
 
-   return string.format("%d %s", self.amount, self.name)
+   return string.format("%d %s", amount, self.name)
 end
 
 function IItem:refresh()
@@ -114,8 +115,20 @@ function IItem:can_stack_with(other)
    for field, my_val in pairs(self) do
       if not ignored_fields[field] then
          local their_val = other[field]
-         if not table.deepcompare(my_val, their_val) then
-            return false, field
+
+         -- TODO: is_class, is_object
+         local do_deepcompare = type(my_val) == "table"
+            and my_val.__class == nil
+            and my_val.uid == nil
+
+         if do_deepcompare then
+            if not table.deepcompare(my_val, their_val) then
+               return false, field
+            end
+         else
+            if my_val ~= their_val then
+               return false, field
+            end
          end
       end
    end

@@ -65,12 +65,37 @@ function ICharaInventory:has_item_in_inventory(item)
    return self.inv:has_object(item)
 end
 
-function ICharaInventory:take_item(item)
-   return self:take_object(item)
+function ICharaInventory:take_item(item, amount)
+   amount = amount or item.amount
+
+   local success
+
+   if amount == item.amount then
+      success = self:take_object(item)
+
+      if success then
+         item:stack()
+      end
+
+      return success
+   else
+      local separated = item:move_some(amount, self)
+
+      if separated then
+         separated:stack()
+      end
+
+      return separated
+   end
 end
 
 function ICharaInventory:iter_items()
    return self.inv:iter()
+end
+
+function ICharaInventory:owns_item(item)
+   -- TODO
+   return item.ownership == "none"
 end
 
 return ICharaInventory

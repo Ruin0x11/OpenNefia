@@ -24,6 +24,24 @@ InventoryProtos.inv_general = {
    end
 }
 
+InventoryProtos.inv_get = {
+   sources = { "ground" },
+   icon = 7,
+   on_select = function(ctxt, item, amount)
+      if not ctxt.chara:owns_item(item) then
+         Gui.play_sound("base.fail1");
+         Gui.mes("It's not yours.")
+         return "turn_end"
+      end
+
+      local result = Action.get(ctxt.chara, item, amount)
+
+      -- TODO: handle harvest action
+
+      return "inventory_continue"
+   end
+}
+
 InventoryProtos.inv_drop = {
    keybinds = {
       x = function(ctxt, item)

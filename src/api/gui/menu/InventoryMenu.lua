@@ -110,25 +110,12 @@ end
 
 function InventoryMenu:can_select(item)
    local item = self:selected_item_object()
-   return self.ctxt:can_select()
+   return self.ctxt:can_select(item)
 end
 
 function InventoryMenu:on_select()
    local item = self:selected_item_object()
-
-   local amount = item.amount
-
-   if amount > 1 and self.ctxt.query_amount then
-      local canceled
-
-      Gui.mes("How many? ")
-      amount, canceled = Input.query_number(item.amount)
-      if canceled then
-         return nil, canceled
-      end
-   end
-
-   return self.ctxt:on_select(item, amount, self.pages:iter_all_pages())
+   return self.ctxt:on_select(item, nil, self.pages:iter_all_pages())
 end
 
 function InventoryMenu:on_menu_exit()
@@ -158,6 +145,14 @@ local function draw_ally_weight(self)
    -- Draw.text("ally equip", window.x + 40, window.y + window.height - 65 - window.height % 8)
 end
 
+function InventoryMenu:update_icons_this_page()
+   for _, entry in self.pages:iter() do
+      if not entry.icon then
+         entry.icon = entry.item:copy_image()
+      end
+   end
+end
+
 function InventoryMenu:update_filtering()
    local filtered = {}
 
@@ -168,7 +163,6 @@ function InventoryMenu:update_filtering()
       sources = {sources}
    end
 
-   _p(self.ctxt.sources)
    for _, source in pairs(self.ctxt.sources) do
       local items = source.getter(self.ctxt)
       items = items:map(function(item)
@@ -197,6 +191,7 @@ function InventoryMenu:update_filtering()
    table.insertion_sort(filtered, self.ctxt:gen_sort())
 
    self.pages:set_data(filtered)
+   self:update_icons_this_page()
 
    -- TODO: Determine when to display weight. Inventory contexts can
    -- be created out of any number of sources that might exclude a
@@ -243,21 +238,8 @@ function InventoryMenu:draw()
 end
 
 function InventoryMenu:update()
-   if self.canceled then
-      if self.returns_item then
-         return nil, "canceled"
-      end
-
-      local result = self:on_menu_exit()
-      return result
-   end
-
    if self.pages.changed_page then
-      for _, entry in self.pages:iter() do
-         if not entry.icon then
-            entry.icon = entry.item:copy_image()
-         end
-      end
+      self:update_icons_this_page()
       self.win:set_pages(self)
    end
 
@@ -266,13 +248,15 @@ function InventoryMenu:update()
       if not can_select then
          Gui.mes("Can't select: " .. reason)
       else
-         if self.returns_item then
-            return self:selected_item_object()
-         end
-
          local result, canceled = self:on_select()
+
          if not canceled then
+            if self.returns_item then
+               return self:selected_item_object()
+            end
+
             if result == "inventory_continue" then
+               self:update_filtering()
             elseif result == "turn_end" then
                return result
             else
@@ -280,6 +264,15 @@ function InventoryMenu:update()
             end
          end
       end
+   end
+
+   if self.pages:len() == 0 or self.canceled then
+      if self.returns_item then
+         return nil, "canceled"
+      end
+
+      local result = self:on_menu_exit()
+      return result
    end
 
    self.pages:update()

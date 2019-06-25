@@ -3,7 +3,6 @@ local startup = require("game.startup")
 
 local Draw = require("api.Draw")
 local InputHandler = require("api.gui.InputHandler")
-local GameKeyHandler = require("api.gui.GameKeyHandler")
 local IUiLayer = require("api.gui.IUiLayer")
 local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")

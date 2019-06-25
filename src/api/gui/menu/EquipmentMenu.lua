@@ -114,6 +114,10 @@ function EquipmentMenu:update_from_chara()
    self:refresh_item_icons()
 end
 
+function EquipmentMenu:on_query()
+   Gui.play_sound("base.wear");
+end
+
 function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
@@ -164,7 +168,6 @@ function EquipmentMenu:update()
          end
       else
          local selected_item, canceled = Input.query_item(self.chara, "inv_equip", { body_part_id = entry.body_part._id })
-         _p(tostring(selected_item))
          if not canceled then
             assert(Action.equip(self.chara, selected_item))
             self.changed_equipment = true

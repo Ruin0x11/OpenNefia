@@ -1,3 +1,5 @@
+local Gui = require("api.Gui")
+local Input = require("api.Input")
 local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
 
@@ -166,7 +168,30 @@ function InventoryContext:after_filter(item)
    return true
 end
 
+function InventoryContext:query_item_amount(item)
+   local amount = item.amount
+   local can_query = false
+
+   if self.chara and self.chara:is_player() then
+      can_query = true
+   end
+
+   if amount > 1 and self.query_amount and can_query then
+      local canceled
+
+      Gui.mes("How many? ")
+      amount, canceled = Input.query_number(item.amount)
+      if canceled then
+         return nil, canceled
+      end
+   end
+
+   return amount
+end
+
 function InventoryContext:on_select(item, amount, rest)
+   local amount = amount or self:query_item_amount(item)
+
    if self.proto.on_select then
       return self.proto.on_select(self, item, amount, rest)
    end

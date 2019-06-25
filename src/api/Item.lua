@@ -85,7 +85,7 @@ function Item.create(id, x, y, params, where)
 
    if item then
       if not params.no_stack then
-         -- item:stack()
+         item:stack()
       end
 
       item:refresh()
@@ -94,9 +94,9 @@ function Item.create(id, x, y, params, where)
    return item
 end
 
---- Causes the same behavior as selecting the given item in its
---- owner's inventory. The item must be owned by a character and
---- selectable in the character's inventory.
+--- Causes the same behavior as selecting the given item in a given
+--- inventory context. The item must be contained in the inventory's
+--- sources and selectable.
 -- @tparam IItem item
 -- @tparam string operation
 -- @tparam table params
@@ -106,12 +106,6 @@ end
 function Item.activate_shortcut(item, operation, params)
    if type(operation) ~= "string" then
       error(string.format("Invalid inventory operation: %s", operation))
-   end
-
-   local chara = item:get_owning_chara()
-
-   if not chara then
-      return nil, "not_owned"
    end
 
    if not Item.is_alive(item) then
@@ -125,8 +119,8 @@ function Item.activate_shortcut(item, operation, params)
    end
 
    params = params or {}
-   params.chara = chara
-   params.map = chara:current_map()
+   params.chara = params.chara or item:get_owning_chara() or nil
+   params.map = (params.chara and params.chara:current_map()) or nil
 
    local ctxt = InventoryContext:new(proto, params)
 

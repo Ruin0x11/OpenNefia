@@ -91,20 +91,13 @@ function Command.get(player)
       return "turn_end"
    end
 
-   if #items > 1 then
-      Gui.mes("More than one item.")
+   if #items == 1 then
+      local item = items[1]
+      Item.activate_shortcut(item, "inv_get", { chara = player })
       return "turn_end"
    end
 
-   local item = items[1]
-
-   if item.ownership ~= "none" then
-      Gui.mes("It's not yours.")
-      return "turn_end"
-   end
-
-   assert(Action.get(player, item))
-   return "turn_end"
+   return Input.query_inventory(player, "inv_get")
 end
 
 function Command.drop(player)
