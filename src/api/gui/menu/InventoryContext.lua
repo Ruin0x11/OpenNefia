@@ -6,7 +6,7 @@ local InputHandler = require("api.gui.InputHandler")
 local InventoryContext = class("InventoryContext")
 
 local function source_chara(ctxt)
-   return ctxt.chara:iter_items()
+   return ctxt.chara:iter_inventory()
 end
 
 local function source_ground(ctxt)

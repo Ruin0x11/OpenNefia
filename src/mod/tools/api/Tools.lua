@@ -1,3 +1,4 @@
+local Action = require("api.Action")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Item = require("api.Item")
@@ -82,6 +83,23 @@ function Tools.clone_me(times)
          Map.current():take_object(c, x, y)
       end
    end
+end
+
+function Tools.take_all()
+   Map.iter_items():each(function(item) Action.get(Chara.player(), item) end)
+end
+
+function Tools.drop_all()
+   local drop = function(item)
+      local success = Action.drop(Chara.player(), item)
+      if success then
+         local nx, ny = Map.find_position_for_chara(item.x, item.y)
+         if nx then
+            item:set_pos(nx, ny)
+         end
+      end
+   end
+   Chara.player():iter_inventory():each(drop)
 end
 
 local print_flat = require("mod.tools.lib.print_flat")

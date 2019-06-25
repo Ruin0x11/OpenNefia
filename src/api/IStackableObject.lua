@@ -19,7 +19,7 @@ local IStackableObject = interface("IStackableObject",
 -- @retval_ownership[owned=false] nil
 -- @retval_ownership[owned=true] self.location
 function IStackableObject:separate(amount, owned)
-   amount = math.clamp(amount or 1, 0, self.amount)
+   amount = math.clamp(amount or self.amount, 0, self.amount)
    owned = owned or false
 
    if amount == 0 then
@@ -49,39 +49,6 @@ function IStackableObject:stack_with(other)
    self.amount = self.amount + other.amount
    other.amount = 0
    other:remove_ownership()
-end
-
---- Tries to move a given amount of this object to another location,
---- accounting for stacking unless `no_stack` is true. Returns the
---- stacked object if successful, nil otherwise. If unsuccessful, no
---- state is changed.
--- @tparam int amount
--- @tparam ILocation where
--- @tparam[opt] int x
--- @tparam[opt] int y
--- @tparam[opt] bool no_stack
--- @treturn[1] IItem
--- @treturn[2] nil
--- @retval_ownership self where
-function IStackableObject:move_some(amount, where, x, y, no_stack)
-   local separated = self:separate(amount)
-
-   if separated == nil then
-      return nil
-   end
-
-   if not where:can_take_object(separated, x, y) then
-      self:stack_with(separated)
-      return nil
-   end
-
-   assert(where:take_object(separated, x, y))
-
-   if not no_stack then
-      separated:stack()
-   end
-
-   return separated
 end
 
 function IStackableObject:can_stack_with(other)
@@ -118,6 +85,39 @@ function IStackableObject:stack()
    end
 
    return did_stack
+end
+
+--- Tries to move a given amount of this object to another location,
+--- accounting for stacking unless `no_stack` is true. Returns the
+--- stacked object if successful, nil otherwise. If unsuccessful, no
+--- state is changed.
+-- @tparam int amount
+-- @tparam ILocation where
+-- @tparam[opt] int x
+-- @tparam[opt] int y
+-- @tparam[opt] bool no_stack
+-- @treturn[1] IItem
+-- @treturn[2] nil
+-- @retval_ownership self where
+function IStackableObject:move_some(amount, where, x, y, no_stack)
+   local separated = self:separate(amount)
+
+   if separated == nil then
+      return nil
+   end
+
+   if not where:can_take_object(separated, x, y) then
+      self:stack_with(separated)
+      return nil
+   end
+
+   assert(where:take_object(separated, x, y))
+
+   if not no_stack then
+      separated:stack()
+   end
+
+   return separated
 end
 
 return IStackableObject

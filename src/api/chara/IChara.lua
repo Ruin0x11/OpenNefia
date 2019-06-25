@@ -99,12 +99,14 @@ function IChara:produce_memory()
    return nil
 end
 
+-- Iterates both the character's inventory and equipment.
+function IChara:iter_all_items()
+   return fun.chain(self:iter_inventory(), self:iter_equipment())
+end
+
 function IChara:refresh_weight()
    local weight = 0
-   for _, i in self:iter_items() do
-      weight = weight + i:calc("weight")
-   end
-   for _, i in self:iter_equipment() do
+   for _, i in self:iter_all_items() do
       weight = weight + i:calc("weight")
    end
    self:mod("inventory_weight", weight)

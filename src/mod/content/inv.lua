@@ -1,5 +1,5 @@
 local source_chara = function(ctxt)
-   return ctxt.chara:iter_items()
+   return ctxt.chara:iter_inventory()
 end
 
 local source_equipment = function(ctxt)

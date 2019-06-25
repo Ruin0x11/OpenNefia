@@ -240,7 +240,9 @@ function field_logic.player_turn_query()
    local dt = 0
 
    local player = Chara.player()
-   assert(Chara.is_alive(player))
+   if not Chara.is_alive(player) then
+      return "player_died"
+   end
 
    Gui.update_screen()
 

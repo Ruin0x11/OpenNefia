@@ -107,7 +107,10 @@ function sparse_batch:draw(x, y)
                -- batch.setColor(1, 1, 1)
                -- color_set = false
                -- end
-               batch:add(tiles[tile], x, y)
+               local tile = tiles[tile]
+               if tile ~= nil then
+                  batch:add(tile, x, y)
+               end
             end
          end
       end

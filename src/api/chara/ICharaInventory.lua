@@ -89,7 +89,7 @@ function ICharaInventory:take_item(item, amount)
    end
 end
 
-function ICharaInventory:iter_items()
+function ICharaInventory:iter_inventory()
    return self.inv:iter()
 end
 

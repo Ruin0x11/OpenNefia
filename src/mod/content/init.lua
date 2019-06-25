@@ -1,3 +1,9 @@
+--
+--
+-- Charas
+--
+--
+
 data:add {
    _type = "base.chara",
    _id = "player",
@@ -14,7 +20,10 @@ data:add {
       "content.back",
       "content.body",
       "content.hand",
+      "content.hand",
       "content.ring",
+      "content.ring",
+      "content.arm",
       "content.arm",
       "content.waist",
       "content.leg",
@@ -37,6 +46,23 @@ data:add {
 }
 
 data:add {
+   _type = "base.chara",
+   _id = "enemy",
+
+   name = "enemy",
+   faction = "base.enemy",
+   image = 50,
+   max_hp = 10,
+   max_mp = 2
+}
+
+--
+--
+-- Items
+--
+--
+
+data:add {
    _type = "base.item",
    _id = "test",
 
@@ -57,15 +83,70 @@ data:add {
 }
 
 data:add {
-   _type = "base.chara",
-   _id = "enemy",
+   _type = "base.item",
+   _id = "ring",
 
-   name = "enemy",
-   faction = "base.enemy",
-   image = 50,
-   max_hp = 10,
-   max_mp = 2
+   name = "ring",
+   image = 19,
+
+   equip_slots = {
+      "content.ring"
+   }
 }
+
+data:add {
+   _type = "base.item",
+   _id = "arrow",
+
+   name = "arrow",
+   image = 20,
+
+   equip_slots = {
+      "content.ammo"
+   }
+}
+
+data:add {
+   _type = "base.item",
+   _id = "axe",
+
+   name = "axe",
+   image = 33,
+
+   equip_slots = {
+      "content.hand"
+   }
+}
+
+data:add {
+   _type = "base.item",
+   _id = "amulet",
+
+   name = "amulet",
+   image = 36,
+
+   equip_slots = {
+      "content.neck"
+   }
+}
+
+data:add {
+   _type = "base.item",
+   _id = "shoes",
+
+   name = "shoes",
+   image = 58,
+
+   equip_slots = {
+      "content.leg"
+   }
+}
+
+--
+--
+-- Body Parts
+--
+--
 
 data:add_multi(
    "base.body_part",
@@ -303,7 +384,25 @@ Event.register("base.on_game_start",
                      Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
                   end
 
-                  Item.create("content.armor")
+                  local Map = require("api.Map")
+                  local Rand = require("api.Rand")
+                  local rand_pos = function()
+                     local nx, ny
+                     local tries = 100
+                     while tries > 0 do
+                        nx, ny = Rand.rnd(Map.width()), Rand.rnd(Map.height())
+                        if Map.can_access(nx, ny) then
+                           return nx, ny
+                        end
+                        tries = tries - 1
+                     end
+                     return nx, ny
+                  end
+
+                  local keys = data["base.item"]:iter():extract("_id"):to_list()
+                  for i=1,50 do
+                     Item.create(Rand.choice(keys), rand_pos())
+                  end
 
                   local armor = Item.create("content.armor")
                   armor.curse_state = "blessed"
