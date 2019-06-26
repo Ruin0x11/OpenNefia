@@ -13,7 +13,7 @@ local function load_mod(mod_name, init_lua_path)
    init_lua_path = string.gsub(init_lua_path, "/", ".")
    init_lua_path = string.strip_suffix(init_lua_path, ".lua")
 
-   local mod_env = env.generate_sandbox(mod_name)
+   local mod_env = env.generate_sandbox(mod_name, true)
 
    local success, chunk = xpcall(
       function() return env.load_sandboxed_chunk(init_lua_path, mod_name) end,

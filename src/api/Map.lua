@@ -158,7 +158,7 @@ local function try_place(chara, x, y, current, map)
    end
 
    if real_x ~= nil then
-      assert(can_place_chara_at(chara, real_x, real_y, map))
+      assert(can_place_chara_at(real_x, real_y, map))
 
       return map:take_object(chara, real_x, real_y)
    end
@@ -196,7 +196,7 @@ function Map.travel_to(map)
       -- then delay adding them to the map until the player moves. If
       -- the player moves back before the allies have a chance to
       -- spawn, be sure they are still preserved.
-      local ally = current:get_object("base.chara", uid)
+      local ally = current:get_object_of_type("base.chara", uid)
       assert(ally ~= nil)
 
       local new_ally = try_place(ally, x, y, current, map)

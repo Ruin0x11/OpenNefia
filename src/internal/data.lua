@@ -1,3 +1,4 @@
+local env = require ("internal.env")
 local schema = require ("thirdparty.schema")
 local fun = require ("thirdparty.fun")
 
@@ -51,44 +52,9 @@ function data:clear()
    metatables = {}
 end
 
-local function extract_mod_name(path)
-   local r, count = string.gsub(path, "%./mod/([^/]+)/.+%lua$", "%1")
-   if count == 0 then
-      return nil
-   end
-
-   return r
-end
-
-local function find_calling_mod()
-   local stack = 1
-   local info = debug.getinfo(stack, "S")
-
-   while info do
-      local env = getfenv(stack)
-      local success, mod_name = pcall(function()
-            return env._MOD_NAME
-      end)
-
-      if success then
-         return mod_name
-      end
-
-      -- local file = info.source:sub(2)
-      -- local mod_name = extract_mod_name(file)
-      -- if mod_name then
-      --    return mod_name
-      -- end
-
-      stack = stack + 1
-      info = debug.getinfo(stack, "S")
-   end
-
-   return "base"
-end
-
 function data:add_type(schema, metatable)
-   local _type = "base." .. schema.name
+   local mod_name = env.find_calling_mod()
+   local _type = mod_name .. "." .. schema.name
    metatable = metatable or {}
    metatable._type = _type
 
@@ -102,7 +68,7 @@ end
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
 
-   local mod_name = find_calling_mod()
+   local mod_name = env.find_calling_mod()
 
    local _id = dat._id
    local _type = dat._type

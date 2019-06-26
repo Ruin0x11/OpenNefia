@@ -92,7 +92,7 @@ end
 
 function IItem:copy_image()
    local _, _, item_atlas = require("internal.global.atlases").get()
-   return item_atlas:copy_tile_image(self.image)
+   return item_atlas:copy_tile_image(self:calc("image"))
 end
 
 function IItem:has_type(_type)

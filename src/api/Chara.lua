@@ -111,4 +111,12 @@ function Chara.iter_allies()
    return fun.wrap(iter, {map = field.map, uids = field.allies}, 1)
 end
 
+function Chara.find(id, kind)
+   if kind == "ally" then
+      return Chara.iter_allies():filter(function(i) return i._id == id end):nth(1)
+   end
+
+   return nil
+end
+
 return Chara

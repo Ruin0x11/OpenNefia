@@ -27,6 +27,8 @@ function field_renderer:init(width, height, layers)
    self.scroll_y = 0
 
    for _, require_path in ipairs(layers) do
+      -- WARNING: This needs to be sanitized by moving all the layers
+      -- to the public API, to prevent usage of the global require.
       local layer, err = package.try_require(require_path)
       if layer == nil then
          error("Could not load draw layer " .. require_path .. ":\n\t" .. err)

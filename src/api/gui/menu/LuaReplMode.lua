@@ -1,13 +1,15 @@
+local env = require("internal.env")
 local IReplMode = require("api.gui.menu.IReplMode")
 
 local LuaReplMode = class("LuaReplMode", IReplMode)
 
-function LuaReplMode:init(env)
+function LuaReplMode:init(mod_env)
    self.caret = "> "
-   self.env = env
+   self.env = mod_env
 
    -- HACK
-   self.env.Tools = require("mod.tools.api.Tools")
+   self.env.Tools = env.safe_require("mod.tools.api.Tools")
+   self.env.Dialog = env.safe_require("mod.elona_sys.dialog.Dialog")
 end
 
 function LuaReplMode:submit(text)

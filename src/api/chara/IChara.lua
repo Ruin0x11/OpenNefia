@@ -40,6 +40,9 @@ function IChara:build()
    self.experience = 0
    self.quality = 2
 
+   self.image = nil
+   self.portrait = nil
+
    self.initial_x = 0
    self.initial_y = 0
 
@@ -97,6 +100,11 @@ end
 
 function IChara:produce_memory()
    return nil
+end
+
+function IChara:copy_image()
+   local _, chara_atlas = require("internal.global.atlases").get()
+   return chara_atlas:copy_tile_image(self:calc("image"))
 end
 
 -- Iterates both the character's inventory and equipment.

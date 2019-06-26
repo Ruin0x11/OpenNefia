@@ -1,7 +1,7 @@
 # Elona_next (仮
 Moddable rewrite of Elona 1.22 in Lua/Love2D.
 
-It is in a **very early** stage of development.
+It is in a **very early** stage of development. There is not yet a stable modding API since the best ways of modding various parts of the system are still being figured out through trial and error. Also, there are currently no guarantees of save compatibility between versions of `Elona_next`.
 
 The title `Elona_next` is temporary since nothing better has been decided yet. (There actually was a variant named `Elona_next` at some point.)
 

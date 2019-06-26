@@ -276,3 +276,5 @@ data:add_multi(
       count_x = 10
    }
 )
+
+require("mod.base.sound")

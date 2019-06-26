@@ -47,6 +47,43 @@ local SAFE_REQUIRE_PREFIXES = {
    -- "^game%."
 }
 
+
+local function extract_mod_name(path)
+   local r, count = string.gsub(path, "^mod%.([^.]+)%..+$", "%1")
+   if count == 0 then
+      return nil
+   end
+
+   return r
+end
+
+function env.find_calling_mod()
+   local stack = 1
+   local info = debug.getinfo(stack, "S")
+
+   while info do
+      local env = getfenv(stack)
+      local success, mod_name = pcall(function()
+            return env._MOD_NAME
+      end)
+
+      if success then
+         return mod_name
+      end
+
+      -- local file = info.source:sub(2)
+      -- local mod_name = extract_mod_name(file)
+      -- if mod_name then
+      --    return mod_name
+      -- end
+
+      stack = stack + 1
+      info = debug.getinfo(stack, "S")
+   end
+
+   return "base"
+end
+
 function env.load_sandboxed_chunk(path, mod_name)
    if package.loaded[path] then
       return package.loaded[path]
@@ -61,7 +98,9 @@ function env.load_sandboxed_chunk(path, mod_name)
    if chunk == nil then
       error(err)
    end
-   local mod_env = env.generate_sandbox(mod_name)
+
+   mod_name = mod_name or env.find_calling_mod()
+   local mod_env = env.generate_sandbox(mod_name, true)
    setfenv(chunk, mod_env)
 
    local success, err = pcall(chunk)
@@ -90,13 +129,20 @@ function env.safe_require(path)
    if load_type == "api" then
       return global_require(path)
    elseif load_type == "mod" then
-      return package.loaded[path] or env.load_sandboxed_chunk(path, "base")
+      local mod_name = extract_mod_name(path)
+
+      --
+      -- TODO: prevent require if mod is not loaded, or is loading but
+      --       is not the calling mod.
+      --
+
+      return env.load_sandboxed_chunk(path, mod_name)
    end
 
    return nil
 end
 
-function env.generate_sandbox(mod_name)
+function env.generate_sandbox(mod_name, is_strict)
    assert(type(mod_name) == "string")
 
    local sandbox = {}
@@ -110,6 +156,12 @@ function env.generate_sandbox(mod_name)
    sandbox["require"] = env.safe_require
    sandbox["data"] = require("internal.data")
    sandbox["schema"] = require("thirdparty.schema")
+
+   if is_strict then
+      -- copy the strict metatable from the global environment
+      local strict = getmetatable(_G)
+      setmetatable(sandbox, strict)
+   end
 
    return sandbox
 end

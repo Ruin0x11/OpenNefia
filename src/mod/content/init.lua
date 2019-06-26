@@ -236,8 +236,6 @@ data:add {
    is_opaque = true
 }
 
-require("mod.content.sound")
-
 data:add_multi("base.sound",
                {
                   _id = "voice1",
@@ -384,27 +382,8 @@ Event.register("base.on_game_start",
                      Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
                   end
 
-                  local Map = require("api.Map")
-                  local Rand = require("api.Rand")
-                  local rand_pos = function()
-                     local nx, ny
-                     local tries = 100
-                     while tries > 0 do
-                        nx, ny = Rand.rnd(Map.width()), Rand.rnd(Map.height())
-                        if Map.can_access(nx, ny) then
-                           return nx, ny
-                        end
-                        tries = tries - 1
-                     end
-                     return nx, ny
-                  end
-
-                  local keys = data["base.item"]:iter():extract("_id"):to_list()
-                  for i=1,50 do
-                     Item.create(Rand.choice(keys), rand_pos())
-                  end
-
                   local armor = Item.create("content.armor")
                   armor.curse_state = "blessed"
                   Chara.player():equip_item(armor, true)
 end)
+require("mod.content.dialog")

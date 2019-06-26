@@ -2,6 +2,8 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
+local env = require("internal.env")
+
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local UiWindow = require("api.gui.UiWindow")
@@ -39,7 +41,7 @@ function CharaMakeWrapper:proceed()
    end
 
    local menu_id = self.menus[#self.trail+1]
-   local success, class = pcall(function() return require(menu_id) end)
+   local success, class = pcall(function() return env.safe_require(menu_id) end)
 
    if not success then
       local err = class

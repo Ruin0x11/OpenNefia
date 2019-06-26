@@ -18,4 +18,8 @@ function I18N.get(key, ...)
    return key
 end
 
+function I18N.get_optional(key, ...)
+   return key
+end
+
 return I18N

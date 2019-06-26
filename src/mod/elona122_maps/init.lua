@@ -16,7 +16,7 @@ function convert_122(gen, params)
    local base = Fs.join("mod/elona122_maps/map", params.name)
 
    if not Fs.exists(base .. ".map") then
-      error("Map doesn't exist.")
+      error(string.format("Map doesn't exist: %s", base .. ".map"))
    end
 
    local idx = Fs.open(base .. ".idx")
@@ -91,7 +91,7 @@ function convert_122(gen, params)
       end
    end
 
-   result.player_start_pos = { x = 20, y = 20 }
+   result.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2) }
 
    return result
 end

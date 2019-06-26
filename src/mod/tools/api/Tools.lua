@@ -30,14 +30,26 @@ function Tools.spawn_allies(count)
    end
 end
 
+
+local function rand_pos()
+   local nx, ny
+   local tries = 100
+   while tries > 0 do
+      nx, ny = Rand.rnd(Map.width()), Rand.rnd(Map.height())
+      if Map.can_access(nx, ny) then
+         return nx, ny
+      end
+      tries = tries - 1
+   end
+   return nx, ny
+end
+
 function Tools.spawn_items(count)
    count = count or 100
-   for i=0,count do
-      local x = Rand.rnd(Map.width())
-      local y = Rand.rnd(Map.height())
-      if Map.can_access(x, y) then
-         Item.create("content.armor", x, y)
-      end
+
+   local keys = data["base.item"]:iter():extract("_id"):to_list()
+   for i=1,count do
+      Item.create(Rand.choice(keys), rand_pos())
    end
 end
 
