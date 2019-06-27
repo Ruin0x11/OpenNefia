@@ -79,7 +79,6 @@ end
 -- @tparam string path
 -- @tparam[opt] table mod_env
 local function env_loadfile(path, mod_env)
-   Log.debug("LOADFILE %s", path)
    local resolved = package.searchpath(path, package.path)
    if resolved == nil then
       return nil, "Cannot find path " .. path
@@ -104,6 +103,8 @@ end
 
 function env.load_sandboxed_chunk(path, mod_name)
    mod_name = mod_name or env.find_calling_mod()
+
+   -- TODO: cache this somewhere.
    local mod_env = env.generate_sandbox(mod_name, true)
 
    return env_loadfile(path, mod_env)

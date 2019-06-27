@@ -394,7 +394,7 @@ Event.register("base.on_game_start",
                function()
                   local Chara = require("api.Chara")
                   local Item = require("api.Item")
-                  local Feat = require("api.Item")
+                  local Feat = require("api.Feat")
                   for i=1,4 do
                      local a = Chara.create("content.ally", i+8, 3)
                      a:recruit_as_ally()

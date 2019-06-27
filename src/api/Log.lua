@@ -13,7 +13,7 @@ local function format(kind, s, ...)
    print(string.format("[%s] %s%s", kind, source, out))
 end
 
-local level = 4
+local level = 3
 
 function Log.debug(s, ...)
    if level < 4 then
