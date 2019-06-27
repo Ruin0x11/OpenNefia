@@ -41,19 +41,20 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
       if show then
          local batch_ind = self.batch_inds[i.uid]
+         local image = i:calc("image")
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[i.uid] = self.item_batch:add_tile {
-               tile = i.image,
+               tile = image,
                x = i.x,
                y = i.y
             }
          else
             local tile, px, py = self.item_batch:get_tile(batch_ind)
 
-            if px ~= i.x or py ~= i.y or tile ~= i.image then
+            if px ~= i.x or py ~= i.y or tile ~= image then
                self.item_batch:remove_tile(batch_ind)
                self.batch_inds[i.uid] = self.item_batch:add_tile {
-                  tile = i.image,
+                  tile = image,
                   x = i.x,
                   y = i.y
                }

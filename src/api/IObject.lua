@@ -21,7 +21,7 @@ function IObject:calc(key, ...)
    elseif self[key] ~= nil then
       local can_call = type(self[key]) == "function"
       if can_call then
-         return self[key](...)
+         return self[key](self, ...)
       else
          return self[key]
       end

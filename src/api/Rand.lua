@@ -1,9 +1,14 @@
 local Rand = {}
 
-function Rand.rnd(i)
+function Rand.rnd(a, b)
+   if b == nil then
+      b = a
+      a = 0
+   end
+
    -- TODO: replace with same rng method as hsp
    -- TODO: alias math.random to this function
-   return math.random(0, i - 1)
+   return math.random(a, b - 1)
 end
 
 function Rand.one_in(n)

@@ -43,6 +43,15 @@ function Feat.create(id, x, y, params, where)
    return feat
 end
 
+local function feat_bumped_into_handler(p)
+   for _, feat in Feat.at(p.x, p.y) do
+      if feat:calc("is_solid") then
+         feat:on_bumped_into(p.chara)
+         p.blocked = true
+      end
+   end
+end
+
 local function feat_stepped_on_handler(p)
    for _, feat in Feat.at(p.x, p.y, p.chara:current_map()) do
       if feat.on_stepped_on then
@@ -53,5 +62,6 @@ end
 
 local Event = require("api.Event")
 Event.register("base.on_chara_moved", "feat handler", feat_stepped_on_handler)
+Event.register("base.before_chara_moved", "before move feat handler", feat_bumped_into_handler)
 
 return Feat

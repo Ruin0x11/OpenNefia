@@ -60,6 +60,7 @@ function MapObject.generate(proto, uid_tracker)
    data.y = 0
 
    data:build()
+   data:refresh()
 
    if merge_rest then
       data = table.merge(data, proto)
@@ -82,7 +83,7 @@ function MapObject.clone(object, owned)
 
    -- TODO: the nomenclature is confusing. things like
    -- data["mytype"]["id"] are named 'prototypes', but there are also
-   -- tables with a backing prototype set that are also called
+   -- tables with a backing data prototype set that are also called
    -- 'prototypes'.
    local proto = Object.make_prototype(object)
    assert(proto.location == nil)

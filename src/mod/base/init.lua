@@ -25,6 +25,9 @@ data:add_multi(
       _id = "on_player_bumped_into_object"
    },
    {
+      _id = "before_chara_moved"
+   },
+   {
       _id = "on_chara_moved"
    },
    {

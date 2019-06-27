@@ -59,4 +59,7 @@ function Input.query_item(chara, operation, params)
    return query_inventory(chara, operation, params, true)
 end
 
+function Input.query_direction()
+end
+
 return Input

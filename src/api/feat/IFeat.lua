@@ -9,6 +9,12 @@ end
 
 function IFeat:refresh()
    self.temp = {}
+
+   if self.on_refresh then
+      self:on_refresh()
+   end
+
+   IMapObject.refresh(self)
 end
 
 function IFeat:on_stepped_on(obj)
@@ -17,10 +23,13 @@ end
 function IFeat:on_bumped_into(obj)
 end
 
-function IFeat:on_open()
+function IFeat:on_open(opener)
 end
 
-function IFeat:on_close()
+function IFeat:on_close(closer)
+end
+
+function IFeat:on_activate(closer)
 end
 
 return IFeat

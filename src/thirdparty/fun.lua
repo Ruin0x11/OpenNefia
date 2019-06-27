@@ -1072,4 +1072,23 @@ end
 methods.extract = method1(extract)
 exports.extract = export1(extract)
 
+local tuples = function(gen, param, state)
+   return fun.map(function(...) return {...} end, gen, param, state)
+end
+methods.tuples = method0(tuples)
+exports.tuples = export0(tuples)
+
+local flatmap = function(fun, gen, param, state)
+    local all = map(fun, gen, param, state):totable()
+    return chain(unpack(all))
+end
+methods.flatmap = method1(flatmap)
+exports.flatmap = export1(flatmap)
+
+local each_with_self = function(the_self, field, gen, param, state)
+   return each(function(...) return the_self[field](the_self, ...) end, gen, param, state)
+end
+methods.each_with_self = method2(each_with_self)
+exports.each_with_self = export2(each_with_self)
+
 return exports

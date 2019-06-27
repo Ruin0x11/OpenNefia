@@ -103,10 +103,11 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
          and self.batch_inds[c.uid].ind ~= 0
 
       if show then
+         local image = c:calc("image")
          local batch_ind = self.batch_inds[c.uid]
          if batch_ind == nil or batch_ind.ind == 0 then
             local ind = self.chara_batch:add_tile {
-               tile = c.image,
+               tile = image,
                x = c.x,
                y = c.y
             }
@@ -114,10 +115,10 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
          else
             local tile, px, py = self.chara_batch:get_tile(batch_ind)
 
-            if px ~= c.x or py ~= c.y or tile ~= c.image then
+            if px ~= c.x or py ~= c.y or tile ~= image then
                self.chara_batch:remove_tile(batch_ind.ind)
                local ind = self.chara_batch:add_tile {
-                  tile = c.image,
+                  tile = image,
                   x = c.x,
                   y = c.y
                }

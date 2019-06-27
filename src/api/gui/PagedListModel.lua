@@ -24,7 +24,7 @@ function PagedListModel:init(items, page_size, wrapping)
    self.selected_ = 1
    self.page = 0
    self.page_size = page_size
-   self.page_max = math.floor(#items / page_size)
+   self.page_max = math.max(0, math.ceil(#items / self.page_size) - 1)
    self.wrapping = wrapping
    if self.wrapping == nil then
       self.wrapping = true
@@ -77,7 +77,7 @@ function PagedListModel:set_data(items)
    self.items_ = items or self.items_
    self.selected_ = 1
    self.page = 0
-   self.page_max = math.floor(#self.items_ / self.page_size)
+   self.page_max = math.max(0, math.ceil(#self.items_ / self.page_size) - 1)
 
    self:select_page()
 end

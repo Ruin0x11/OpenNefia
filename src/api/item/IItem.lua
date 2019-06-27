@@ -40,6 +40,8 @@ end
 
 function IItem:refresh()
    self.temp = {}
+
+   IMapObject.refresh(self)
 end
 
 function IItem:get_owning_chara()

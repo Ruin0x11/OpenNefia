@@ -15,10 +15,6 @@ local Pos = require("api.Pos")
 local Action = {}
 
 function Action.move(chara, x, y)
-   if not Map.can_access(x, y) then
-      return false
-   end
-
    local params = {
       chara = chara,
       prev_x = chara.x,
@@ -32,8 +28,16 @@ function Action.move(chara, x, y)
    -- solid feats (doors, jail cell)
    -- proc currently standing mef
    -- proc world map weather events
+   local result = Event.trigger("base.before_chara_moved", params)
+   if result.blocked then
+      return false
+   end
 
    chara.last_move_direction = Pos.pack_direction(Pos.direction_in(chara.x, chara.y, x, y))
+
+   if not Map.can_access(x, y, chara:current_map()) then
+      return false
+   end
 
    chara:set_pos(x, y)
 

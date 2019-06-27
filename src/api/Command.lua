@@ -57,12 +57,7 @@ function Command.move(player, x, y)
       return "turn_end"
    end
 
-   if Map.can_access(next_pos.x, next_pos.y) then
-      -- Can access spot, so try moving.
-      -- Runs the general-purpose movement command.
-      Action.move(player, next_pos.x, next_pos.y)
-      return "turn_end"
-   elseif not Map.is_in_bounds(next_pos.x, next_pos.y) then
+   if not Map.is_in_bounds(next_pos.x, next_pos.y) then
       -- Player is trying to move out of the map.
 
       Event.trigger("base.before_player_map_leave", {player=player})
@@ -70,8 +65,10 @@ function Command.move(player, x, y)
 
       Input.yes_no()
    else
-      -- Player bumped into something solid. Is it a map object?
-      Event.trigger("base.on_player_bumped_into_object", {player=player})
+      -- Run the general-purpose movement command. This will also
+      -- handle blocked tiles.
+      Action.move(player, next_pos.x, next_pos.y)
+      return "turn_end"
    end
 
    -- proc confusion text
@@ -115,6 +112,33 @@ end
 
 function Command.wear(player)
    return EquipmentMenu:new(player):query()
+end
+
+local function get_feats(player, field)
+   local Feat = require("api.Feat")
+   return Pos.iter_surrounding(player.x, player.y):flatmap(Feat.at):filter(function(f) return f:calc(field) end)
+end
+
+function Command.close(player)
+   for _, f in get_feats(player, "can_close") do
+      Gui.mes(player.name .. " closes the " .. f.uid .. " ")
+      f:calc("on_close", player)
+   end
+end
+
+function Command.open(player)
+   for _, f in get_feats(player, "can_open") do
+      Gui.mes(player.name .. " opens the " .. f.uid .. " ")
+      f:calc("on_open", player)
+   end
+end
+
+function Command.activate(player)
+   local Feat = require("api.Feat")
+   for _, f in Feat.at(player.x, player.y):filter(function(f) return f:calc("can_activate") end) do
+      Gui.mes(player.name .. " activates the " .. f.uid .. " ")
+      f:calc("on_activate", player)
+   end
 end
 
 return Command

@@ -77,9 +77,12 @@ end
 function Map.generate(generator_id, params)
    params = params or {}
    local generator = data["base.map_generator"]:ensure(generator_id)
-   local map = generator:generate(params)
-   assert_is_an(InstancedMap, map)
-   return map
+   local success, result = pcall(function() return generator:generate(params) end)
+   if not success then
+      return nil, result
+   end
+   assert_is_an(InstancedMap, result)
+   return result
 end
 
 function Map.force_clear_pos(x, y, map)

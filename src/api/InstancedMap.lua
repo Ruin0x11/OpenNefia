@@ -1,6 +1,5 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
-local bresenham = require("thirdparty.bresenham")
 
 local Pos = require("api.Pos")
 local Log = require("api.Log")
@@ -130,7 +129,7 @@ function InstancedMap:has_los(x1, y1, x2, y2)
       -- in Elona, the final tile is visible even if it is solid.
          or (x == x2 and y == y2)
    end
-   return bresenham.los(x1, y1, x2, y2, cb)
+   return Pos.iter_line(x1, y1, x2, y2):all(cb)
 end
 
 local function pp(ar)

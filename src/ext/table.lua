@@ -110,6 +110,14 @@ function table.deepcopy(t)
     return cycle_aware_copy(t,{})
 end
 
+function table.copy(tbl)
+   local new = {}
+   for k, v in pairs(tbl) do
+      new[k] = v
+   end
+   return new
+end
+
 local abs = math.abs
 
 local function cycle_aware_compare(t1,t2,ignore_mt,eps,cache)

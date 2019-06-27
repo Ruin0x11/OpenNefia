@@ -16,6 +16,13 @@ function IMapObject:init()
    IObject.init(self)
 end
 
+function IMapObject:refresh()
+   local map = self:current_map()
+   if map then
+      map:refresh_tile(self.x, self.y)
+   end
+end
+
 function IMapObject:set_pos(x, y)
    local location = self.location
 

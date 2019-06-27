@@ -39,20 +39,21 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
          and self.batch_inds[f.uid] ~= 0
 
       if show then
+         local image = f:calc("image")
          local batch_ind = self.batch_inds[f.uid]
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[f.uid] = self.feat_batch:add_tile {
-               tile = f.image,
+               tile = image,
                x = f.x,
                y = f.y
             }
          else
             local tile, px, py = self.feat_batch:get_tile(batch_ind)
 
-            if px ~= f.x or py ~= f.y or tile ~= f.image then
+            if px ~= f.x or py ~= f.y or tile ~= image then
                self.feat_batch:remove_tile(batch_ind)
                self.batch_inds[f.uid] = self.feat_batch:add_tile {
-                  tile = f.image,
+                  tile = image,
                   x = f.x,
                   y = f.y
                }

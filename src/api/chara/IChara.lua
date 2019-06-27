@@ -92,11 +92,6 @@ function IChara:refresh()
 
    self:refresh_weight()
 
-   local map = self:current_map()
-   if map then
-      map:refresh_tile(self.x, self.y)
-   end
-
    self:mod(
       "memory",
       {
@@ -105,6 +100,8 @@ function IChara:refresh()
          y = self.y
       }
    )
+
+   IMapObject.refresh(self)
 end
 
 function IChara:produce_memory()

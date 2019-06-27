@@ -42,10 +42,11 @@ if _DEBUG then
    SANDBOX_GLOBALS[#SANDBOX_GLOBALS+1] = "_p"
 end
 
-local SAFE_REQUIRE_PREFIXES = {
+local SAFE_HOTLOAD_PREFIXES = {
    "^api%.",
    "^mod%.",
-   -- "^game%."
+   "^ext%.",
+   "^thirdparty%.",
 }
 
 
@@ -120,6 +121,16 @@ local function get_load_type(path)
    return nil
 end
 
+local function can_hotload(path)
+   for _, patt in ipairs(SAFE_HOTLOAD_PREFIXES) do
+      if string.match(path, patt) then
+         return true
+      end
+   end
+
+   return false
+end
+
 local function extract_mod_name(path)
    local r, count = string.gsub(path, "^mod%.([^.]+)%..+$", "%1")
    if count == 0 then
@@ -183,7 +194,7 @@ local function gen_require(chunk_loader)
       -- Only paths under "mod.*" and "api.*" should be hotloaded.
       -- (For example, hotloading "internal.data" would overwrite all
       -- data prototypes, which would break many things.)
-      if hotload and not get_load_type(path) then
+      if hotload and not can_hotload(path) then
          hotload = false
       end
 
@@ -244,6 +255,10 @@ env.require = gen_require(env_loadfile)
 -- @treturn table
 function env.hotload(path, also_deps)
    HOTLOADED = {}
+
+   if not can_hotload(path) then
+      error("Can't hotload the path " .. path)
+   end
 
    local loaded = package.loaded[path]
    if not loaded then

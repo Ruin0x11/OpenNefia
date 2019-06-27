@@ -53,6 +53,15 @@ function field_logic.setup()
       x = function(me)
          return Command.inventory(me)
       end,
+      c = function(me)
+         return Command.close(me)
+      end,
+      o = function(me)
+         return Command.open(me)
+      end,
+      ["return"] = function(me)
+         return Command.activate(me)
+      end,
       ["."] = function(me)
          return "turn_end"
       end,
@@ -68,7 +77,7 @@ function field_logic.setup()
          end
          return "player_turn_query"
       end,
-      ["return"] = function()
+      n = function()
          Gui.mes(require("api.gui.TextPrompt"):new(16):query())
          return "player_turn_query"
       end,
@@ -208,8 +217,8 @@ function field_logic.pass_turns()
    -- proc buff
 
    local result = Event.trigger("base.on_chara_pass_turn", {chara=chara})
-   if result.turn_result ~= nil then
-      return result.turn_result, chara
+   if result.blocked then
+      return result.turn_result or "turn_end", chara
    end
 
    -- RETURN: proc drunk

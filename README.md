@@ -49,7 +49,6 @@ Some of the code in this repository has been taken or adapted from the following
 - [Elona_foobar](https://github.com/ElonaFoobar/ElonaFoobar) (MIT) [excerpts]
 - [30log](https://github.com/Yonaba/30log) (MIT) [excerpts]
 - [automagic.lua](http://lua-users.org/wiki/AutomagicTables) (unlicensed) [excerpts]
-- [bresenham.lua](https://github.com/kikito/bresenham.lua) (MIT)
 - [circular_buffer](https://gist.github.com/johndgiese/3e1c6d6e0535d4536692) (unlicensed) [modified]
 - [gambiarra](https://bitbucket.org/zserge/gambiarra) (MIT) [modified]
 - [inspect](https://github.com/kikito/inspect.lua) (MIT)

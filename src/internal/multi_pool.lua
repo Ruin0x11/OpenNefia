@@ -67,7 +67,7 @@ function multi_pool:objects_at_pos(x, y)
    if not self:is_in_bounds(x, y) then
       return fun.iter({})
    end
-   return fun.iter(self.positional[y*self.width+x+1])
+   return fun.iter(table.copy(self.positional[y*self.width+x+1]))
 end
 
 function multi_pool:get_object(uid)

@@ -86,9 +86,13 @@ function Repl:init(env, history)
       end
    }
    self.input:halt_input()
+end
 
-   self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
-                            Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
+function Repl:on_query()
+   if self.scrollback:len() == 0 then
+      self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
+                               Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
+   end
 end
 
 function Repl:history_prev()
@@ -187,7 +191,9 @@ function Repl:relayout(x, y, width, height)
 end
 
 function Repl:print(text)
-   for line in string.lines(text) do
+   Draw.set_font(self.font_size)
+   local _, wrapped = Draw.wrap_text(text, self.width)
+   for _, line in ipairs(wrapped) do
       self.scrollback:push(line)
    end
 end
