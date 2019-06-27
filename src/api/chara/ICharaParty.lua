@@ -1,8 +1,8 @@
 local Chara = require("api.Chara")
 local Faction = require("api.Faction")
-local ICharaFaction = require("api.chara.ICharaFaction")
+local IFactioned = require("api.IFactioned")
 
-local ICharaParty = interface("ICharaParty", {}, ICharaFaction)
+local ICharaParty = interface("ICharaParty", {}, IFactioned)
 
 function ICharaParty:is_party_leader()
    return self:is_player()

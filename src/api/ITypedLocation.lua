@@ -1,5 +1,6 @@
 local ILocation = require("api.ILocation")
 
+-- A location that can store objects of more than one type.
 return interface("ITypedLocation",
                  {
                     iter_type = "function",

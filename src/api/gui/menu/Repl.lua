@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local Env = require("api.Env")
 local Gui = require("api.Gui")
-local MapObject = require("api.MapObject")
+local Object = require("api.Object")
 local Ui = require("api.Ui")
 local circular_buffer = require("thirdparty.circular_buffer")
 
@@ -22,6 +22,7 @@ function Repl:init(env, history)
    self.env = env or {}
    self.result = ""
    self.size = 10000
+   self.color = {17, 17, 65, 192}
 
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
@@ -86,8 +87,8 @@ function Repl:init(env, history)
    }
    self.input:halt_input()
 
-   self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  OS: %s",
-                            Env.version(), Env.love_version(), Env.os()))
+   self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
+                            Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
 end
 
 function Repl:history_prev()
@@ -175,7 +176,6 @@ function Repl:relayout(x, y, width, height)
    self.y = 0
    self.width = Draw.get_width()
    self.height = Draw.get_height() / 3
-   self.color = {17, 17, 65, 192}
    self.font_size = 15
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height()) - 1
@@ -212,7 +212,7 @@ function Repl:submit()
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
       if result._type then
-         result_text = inspect(MapObject.make_prototype(result))
+         result_text = inspect(Object.make_prototype(result))
       else
          result_text = inspect(result)
       end

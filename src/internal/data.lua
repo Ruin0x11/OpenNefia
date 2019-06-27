@@ -43,6 +43,7 @@ local stage = nil
 local inner = {}
 local schemas = {}
 local metatables = {}
+local generates = {}
 local strict = false
 
 -- HACK: separate into Data API and internal.data
@@ -52,17 +53,23 @@ function data:clear()
    metatables = {}
 end
 
-function data:add_type(schema, metatable)
+function data:add_type(schema, params)
+   params = params or {}
+
    local mod_name = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
-   metatable = metatable or {}
+
+   local metatable = params.interface or {}
    metatable._type = _type
+
+   local generate = params.generates or nil
 
    schemas[_type] = schema
    metatables[_type] = metatable
+   generates[_type] = generate
 end
 
-function data:edit_type(type_id, delta)
+function data:extend_type(type_id, delta)
 end
 
 function data:add(dat)
@@ -114,7 +121,11 @@ function data:add(dat)
    inner[_type] = inner[_type] or {}
 
    if inner[_type][full_id] ~= nil then
-      self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
+      if env.is_hotloading() then
+         table.replace_with(inner[_type][full_id], dat)
+      else
+         self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
+      end
       return
    end
 

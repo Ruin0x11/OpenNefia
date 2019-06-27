@@ -3,6 +3,10 @@ local Input = require("api.Input")
 local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
 
+--- The underlying behavior of an inventory screen. Separating it like
+--- this allows trivial creation of item shortcuts, since all that is
+--- needed is creating the context and running its methods without
+--- needing to open any windows.
 local InventoryContext = class("InventoryContext")
 
 local function source_chara(ctxt)
@@ -17,6 +21,7 @@ local function source_ground(ctxt)
 
    if type(ground_x) ~= "number" or type(ground_y) ~= "number" then
       Log.warn("Inventory ground position was invalid: %s,%s", tostring(ground_x), tostring(ground_y))
+      return fun.iter({})
    end
 
    return Item.at(ground_x, ground_y)
@@ -45,7 +50,7 @@ local sources = {
       params = {
          ground_x = { type = "number", optional = true },
          ground_y = { type = "number", optional = true },
-         chara_y  = { type = "IChara", optional = true },
+         chara    = { type = "IChara", optional = true },
       }
    },
    {
@@ -194,7 +199,6 @@ function InventoryContext:on_select(item, amount, rest)
       local canceled
       amount, canceled = self:query_item_amount(item)
       if canceled then
-         print("can")
          return nil, canceled
       end
    end

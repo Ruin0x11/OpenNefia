@@ -67,6 +67,24 @@ function table.merge_existing(a, b)
    return a
 end
 
+--- Replaces one table with another such that existing
+--- globals/upvalues pointing to the table will also be updated
+--- in-place.
+-- @tparam table tbl
+-- @tparam table other
+-- @treturn table
+function table.replace_with(tbl, other)
+   for k, _ in pairs(tbl) do
+      tbl[k] = nil
+   end
+
+   for k, v in pairs(other) do
+      tbl[k] = v
+   end
+
+   return tbl
+end
+
 local function cycle_aware_copy(t, cache)
     if type(t) ~= 'table' then return t end
     if cache[t] then return cache[t] end

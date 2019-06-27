@@ -19,7 +19,7 @@ function Chara.at(x, y, map)
    -- TODO: ILocation instead of map
    map = map or field.map
 
-   if not Map.is_in_bounds(x, y, map) then
+   if not map:is_in_bounds(x, y) then
       return nil
    end
 
@@ -71,10 +71,8 @@ function Chara.create(id, x, y, params, where)
 
    if not is_an(ILocation, where) then return nil end
 
-   -- TODO: if where:is_positional()
-   local InstancedMap = require("api.InstancedMap")
-   if is_an(InstancedMap, where) then
-      if not Map.is_in_bounds(x, y, where) then
+   if where:is_positional() then
+      if not where:is_in_bounds(x, y) then
          return nil
       end
 

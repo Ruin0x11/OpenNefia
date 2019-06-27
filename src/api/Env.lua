@@ -8,6 +8,14 @@ function Env.love_version()
    return love.getVersion()
 end
 
+function Env.lua_version()
+   if jit then
+      return string.format("%s %s", jit.version, jit.arch)
+   end
+
+   return _VERSION
+end
+
 function Env.os()
    return love.system.getOS()
 end

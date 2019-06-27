@@ -50,7 +50,6 @@ Inventory:delegate("pool",
                    {
                       "move_object",
                       "remove_object",
-                      "put_into",
                       "objects_at_pos",
                       "get_object",
                       "has_object",

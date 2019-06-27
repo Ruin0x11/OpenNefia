@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
-local DialogMenu = require("mod.elona_sys.dialog.DialogMenu")
+local DialogMenu = require("mod.elona_sys.dialog.api.DialogMenu")
 
 local Dialog = {}
 

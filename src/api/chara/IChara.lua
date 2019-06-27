@@ -4,11 +4,11 @@ local Rand = require("api.Rand")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
-local ICharaInventory = require("api.chara.ICharaInventory")
-local ICharaFaction = require("api.chara.ICharaFaction")
-local ICharaTalk = require("api.chara.ICharaTalk")
 local ICharaEquip = require("api.chara.ICharaEquip")
+local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
+local ICharaTalk = require("api.chara.ICharaTalk")
+local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
 local InstancedMap = require("api.InstancedMap")
@@ -19,7 +19,7 @@ local IChara = interface("IChara",
                          {
                             IMapObject,
                             ICharaInventory,
-                            ICharaFaction,
+                            IFactioned,
                             ICharaTalk,
                             ICharaEquip,
                             ICharaParty,
@@ -47,8 +47,6 @@ function IChara:build()
    self.initial_y = 0
 
    self.fov = 15
-
-   self.personal_reactions = {}
 
    self.target = nil
 
@@ -79,7 +77,9 @@ function IChara:build()
 
    self.known_abilities = self.known_abilities or {}
 
+   IMapObject.init(self)
    IObserver.init(self)
+   IFactioned.init(self)
    ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)

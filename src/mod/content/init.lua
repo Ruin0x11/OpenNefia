@@ -32,6 +32,10 @@ data:add {
    }
 }
 
+-- TODO: This must fail, since prototypes should only be modifiable in
+-- transactions to support hotloading.
+data["base.chara"]["content.player"].max_hp = 50
+
 data:add {
    _type = "base.chara",
    _id = "ally",
@@ -218,6 +222,12 @@ data:add_multi(
    }
 )
 
+--
+--
+-- Map tiles
+--
+--
+
 data:add {
    _type = "base.map_tile",
    _id = "floor",
@@ -236,27 +246,44 @@ data:add {
    is_opaque = true
 }
 
-data:add_multi("base.sound",
-               {
-                  _id = "voice1",
-                  file = "sound/temp/voice1.wav"
-               },
-               {
-                  _id = "voice2",
-                  file = "sound/temp/voice2.wav"
-               },
-               {
-                  _id = "voice3",
-                  file = "sound/temp/voice3.wav"
-               },
-               {
-                  _id = "voice4",
-                  file = "sound/temp/voice4.wav"
-               },
-               {
-                  _id = "voice5",
-                  file = "sound/temp/voice5.wav"
-               }
+
+data:add {
+   _type = "base.feat",
+   _id = "test",
+
+   image = 194,
+   is_solid = false,
+   is_opaque = false
+}
+
+--
+--
+-- Feats
+--
+--
+
+data:add_multi(
+   "base.sound",
+   {
+      _id = "voice1",
+      file = "sound/temp/voice1.wav"
+   },
+   {
+      _id = "voice2",
+      file = "sound/temp/voice2.wav"
+   },
+   {
+      _id = "voice3",
+      file = "sound/temp/voice3.wav"
+   },
+   {
+      _id = "voice4",
+      file = "sound/temp/voice4.wav"
+   },
+   {
+      _id = "voice5",
+      file = "sound/temp/voice5.wav"
+   }
 )
 
 data:add {
@@ -367,6 +394,7 @@ Event.register("base.on_game_start",
                function()
                   local Chara = require("api.Chara")
                   local Item = require("api.Item")
+                  local Feat = require("api.Item")
                   for i=1,4 do
                      local a = Chara.create("content.ally", i+8, 3)
                      a:recruit_as_ally()
@@ -385,5 +413,7 @@ Event.register("base.on_game_start",
                   local armor = Item.create("content.armor")
                   armor.curse_state = "blessed"
                   Chara.player():equip_item(armor, true)
+
+                  Feat.create("content.test", 11, 11)
 end)
 require("mod.content.dialog")

@@ -5,14 +5,14 @@ data:add_type {
    },
 }
 
-data:edit_type(
+data:extend_type(
    "base.chara",
    {
       emotion_icon = schema.Optional(schema.String),
    }
 )
 
-data:edit_type(
+data:extend_type(
    "base.status_ailment",
    {
       emotion_icon = schema.Optional(schema.String),

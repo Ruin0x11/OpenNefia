@@ -1,10 +1,11 @@
 local Draw = require("api.Draw")
+local Env = require("api.Env")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
-local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
+local UiList = require("api.gui.UiList")
+local UiWindow = require("api.gui.UiWindow")
 
 local IUiLayer = require("api.gui.IUiLayer")
 
@@ -43,6 +44,7 @@ function MainTitleMenu:init()
    self.bg = Draw.load_image("graphic/title.bmp", false)
    self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl")
    self.window_bg = load_cm_bg(4)
+   self.version = Env.version()
 
    local title_str, key_help
    if I18N.language() == "jp" then
@@ -63,7 +65,7 @@ function MainTitleMenu:init()
       { text = "Mods" },
       { text = "Exit" }
    }
-   data = fun.iter(data):map(function(o) o.subtext = o.text; return o end):to_list()
+   fun.iter(data):each(function(o) o.subtext = o.text end)
 
    self.list = UiList:new(data, 35)
    table.merge(self.list, UiListExt())
@@ -97,6 +99,8 @@ function MainTitleMenu:draw()
    else
       Draw.text("Contributor f1r3fly, Sunstrike, Schmidt, Elvenspirit / View the credits for more", 20, 38)
    end
+
+   Draw.text("Elona_next version " .. self.version .. "  Developed by Ruin0x11", 20, 56)
 
    self.win:draw()
    self.list:draw()

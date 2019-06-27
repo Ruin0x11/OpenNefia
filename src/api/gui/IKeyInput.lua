@@ -1,4 +1,5 @@
 local IInputHandler = require("api.gui.IInputHandler")
+assert(type(IInputHandler) == "table")
 
 return interface("IKeyInput",
                  {

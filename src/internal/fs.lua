@@ -48,11 +48,11 @@ function fs.basename(path)
 end
 
 function fs.filename_part(path)
-   return string.gsub(fs.basename(path), "(.*)%.(.*)", "%1")
+   return string.gsub(fs.basename(path), "(.*)%..*", "%1")
 end
 
 function fs.extension_part(path)
-   return string.gsub(fs.basename(path), "(.*)%.(.*)", "%2")
+   return string.gsub(fs.basename(path), ".*%.(.*)", "%1")
 end
 
 function fs.parent(path)

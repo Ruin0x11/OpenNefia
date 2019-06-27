@@ -146,18 +146,18 @@ test("map - positional query", function()
         local o = MapObject.generate_from("base.chara", "test.chara")
         local c = m:take_object(o, 5, 5)
 
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 5):to_list(), { c }))
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 4):to_list(), {}))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 5):to_list(), { c }))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 4):to_list(), {}))
 
         ok(m:move_object(c, 5, 4))
 
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 5):to_list(), {}))
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 4):to_list(), { c }))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 5):to_list(), {}))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 4):to_list(), { c }))
 
         ok(m:remove_object(c, 5, 4))
 
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 5):to_list(), {}))
-        ok(t.are_same(m:objects_at_pos("base.chara", 5, 4):to_list(), {}))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 5):to_list(), {}))
+        ok(t.are_same(m:iter_type_at_pos("base.chara", 5, 4):to_list(), {}))
 end)
 
 test("map - gc", function()

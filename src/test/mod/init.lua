@@ -1,3 +1,18 @@
+local dangerous = {
+   "load",
+   "loadfile",
+   "dofile",
+   "package",
+   "jit",
+   "os"
+}
+
+for _, name in ipairs(dangerous) do
+   local success, exists = pcall(function() return _G[name] ~= nil end)
+   assert(not success)
+   assert(exists ~= true)
+end
+
 data:add {
    _type = "base.chara",
    _id = "chara",

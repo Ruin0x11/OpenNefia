@@ -27,7 +27,7 @@ test("EquipSlots - take and remove", function()
         ok(eq:take_object(i))
         ok(eq:has_object(i))
 
-        ok(eq:put_into(map, i, 5, 6))
+        ok(map:take_object(i, 5, 6))
         ok(not eq:has_object(i))
         ok(i.x == 5)
         ok(i.y == 6)

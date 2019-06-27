@@ -345,7 +345,6 @@ end
 InstancedMap:delegate("multi_pool",
 {
    "is_positional",
-   "put_into",
    "objects_at_pos",
    "iter_type_at_pos",
    "iter_type",

@@ -36,13 +36,12 @@ function field_layer:init()
 
    self.layers = {
       "internal.layer.tile_layer",
+      "internal.layer.feat_layer",
       "internal.layer.item_layer",
       "internal.layer.chara_layer",
       "internal.layer.shadow_layer",
    }
 end
-
-local global_require = require
 
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
@@ -55,7 +54,7 @@ function field_layer:setup_repl()
 
    -- WARNING: for development only.
    if _DEBUG then
-      repl_env["require"] = global_require
+      repl_env["require"] = env.require
    end
 
    local history = {}
@@ -95,10 +94,6 @@ end
 
 function field_layer:turn_cost()
    return self.map.turn_cost
-end
-
-function field_layer:exists(obj)
-   return self.map and self.map:exists(obj)
 end
 
 function field_layer:get_object(_type, uid)
@@ -175,6 +170,7 @@ function field_layer:query_repl()
    self.repl:save_history()
 end
 
+-- HACK: Needs to be replaced with resource system.
 function field_layer:register_draw_layer(require_path)
    self.layers[#self.layers+1] = require_path
 end

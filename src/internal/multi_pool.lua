@@ -52,14 +52,6 @@ function multi_pool:remove_object(obj)
    return obj
 end
 
-function multi_pool:put_into(other, obj, x, y)
-   local obj = self:get_subpool(obj._type):put_into(other, obj, x, y)
-
-   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
-
-   return obj
-end
-
 function multi_pool:move_object(obj, x, y)
    local prev_x, prev_y = obj.x, obj.y
 

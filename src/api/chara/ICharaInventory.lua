@@ -38,13 +38,6 @@ function ICharaInventory:take_object(obj)
    return obj
 end
 
-function ICharaInventory:put_into(other, obj, x, y)
-   local result = self.inv:put_into(other, obj, x, y)
-   self:refresh_weight()
-
-   return result
-end
-
 
 function ICharaInventory:drop_item(item, amount)
    if not self:has_item_in_inventory(item) then

@@ -33,7 +33,9 @@
 (defun elona-next--send (str)
   (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
     (comint-send-string proc str)
-    (process-send-eof proc)))
+    (process-send-eof proc)
+    (with-current-buffer (process-buffer proc)
+      (buffer-string))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
@@ -50,17 +52,40 @@
   (interactive)
   (elona-next-send-region (line-beginning-position) (line-end-position)))
 
-(defun elona-next-send-defun (pos)
-  (interactive "d")
+(defun elona-next--bounds-of-last-defun (pos)
   (save-excursion
     (let ((start (if (save-match-data (looking-at "^function[ \t]"))
                      (point)
-                   (elona-next-beginning-of-proc)
+                   (lua-beginning-of-proc)
                    (point)))
-          (end (progn (elona-next-end-of-proc) (point))))
+          (end (progn (lua-end-of-proc) (point))))
 
       (if (and (>= pos start) (< pos end))
-          (elona-next-send-region start end)
-        (error "Not on a function definition")))))
+          (cons start end)
+        (cons 0 1)))))
+
+(defun elona-next--bounds-of-buffer ()
+  (cons (point-min) (point-max)))
+
+(defun elona-next-send-defun (pos)
+  (interactive "d")
+  (let ((bounds (elona-next--bounds-of-last-defun pos)))
+    (elona-next-send-region (car pos) (cdr pos))))
+
+(defun elona-next-hotload-this-file ()
+  (interactive)
+  (let* ((prefix
+          (file-relative-name
+           (file-name-sans-extension (buffer-file-name))
+           (concat (getenv "HOME") "/build/next/src/src")))
+         (lua-path (replace-regexp-in-string "/" "." prefix)))
+    (elona-next--send (format "require('internal.env').hotload('%s')" lua-path))
+    (message "Hotloaded %s." lua-path)))
+
+(defun elona-next-eval-sexp-fu-setup ()
+  (define-eval-sexp-fu-flash-command elona-next-send-defun
+    (eval-sexp-fu-flash (elona-next--bounds-of-last-defun)))
+  (define-eval-sexp-fu-flash-command elona-next-hotload-this-file
+    (eval-sexp-fu-flash (elona-next--bounds-of-buffer))))
 
 (provide 'elona-next)

@@ -26,6 +26,7 @@ function IItem:build()
    self.types = {}
 
    -- item:send("base.on_item_create")
+   IMapObject.init(self)
 end
 
 function IItem:build_name(amount)

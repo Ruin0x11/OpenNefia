@@ -7,9 +7,11 @@ function LuaReplMode:init(mod_env)
    self.caret = "> "
    self.env = mod_env
 
+   self.env.hotload = env.hotload
+
    -- HACK
    self.env.Tools = env.safe_require("mod.tools.api.Tools")
-   self.env.Dialog = env.safe_require("mod.elona_sys.dialog.Dialog")
+   self.env.Dialog = env.safe_require("mod.elona_sys.dialog.api.Dialog")
 end
 
 function LuaReplMode:submit(text)

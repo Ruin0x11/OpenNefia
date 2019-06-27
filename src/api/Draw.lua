@@ -58,6 +58,7 @@ function Draw.text_shadowed(str, x, y, color, shadow_color)
    Draw.text(str, x, y, color)
 end
 
+-- HACK: Needs to be replaced with resource system.
 function Draw.register_draw_layer(layer)
    local field = require("game.field")
    field:register_draw_layer(layer)

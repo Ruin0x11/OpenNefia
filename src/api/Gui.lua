@@ -1,6 +1,7 @@
+local I18N = require("api.I18N")
+local Map = require("api.Map")
 local draw = require("internal.draw")
 local field = require("game.field")
-local I18N = require("api.I18N")
 
 local Gui = {}
 
@@ -52,6 +53,12 @@ function Gui.mes(text, color)
       color = Color[color] or {255, 255, 255}
    end
    get_message_window():message(text, color)
+end
+
+function Gui.mes_visible(text, x, y, color)
+   if Map.is_in_fov(x, y) then
+      Gui.mes(text, color)
+   end
 end
 
 function Gui.mes_clear()

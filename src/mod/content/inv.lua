@@ -167,9 +167,9 @@ local inv_zap = {
 }
 
 local function prevent_if_sleep(ctxt, item)
-   if StatusEffect.get_turns("base.sleep", ctxt.target) > 0 then
-      return false, "target is asleep"
-   end
+   -- if StatusEffect.get_turns("base.sleep", ctxt.target) > 0 then
+   --    return false, "target is asleep"
+   -- end
 
    return true
 end

@@ -1,9 +1,15 @@
-local Gui = require("api.Gui")
+require("boot")
+
+local env = require("internal.env")
+
+require("internal.data.schemas")
+local data = require("internal.data")
 local Chara = require("api.Chara")
 
-for i=0,10 do
-   local x = i * 1
-   Gui.mes(tostring(x) .. " ")
-   Gui.play_sound("base.ball1", Chara.player().x - 5 + x, Chara.player().y+3)
-   Gui.wait(3000)
-end
+Chara.at = nil
+
+Chara = env.hotload("api.Chara", true)
+Chara = env.hotload("api.Chara", true)
+
+print(inspect(data["base.chara"]["base.me"].name))
+_p(Chara.iter_allies():to_list())

@@ -120,6 +120,34 @@ data:add_multi(
    }
 )
 
+-- TODO: theming should be supported as follows.
+--
+-- 1. Data compatible with theming are registered. The data specifies
+--    the fallback to use if no theme is available. For UI elements,
+--    this would be "base.ui_element_theme" or similar.
+-- 2. To add a new theme, a "base.ui_theme" is created. In `items`,
+--    the types and IDs of the theme-supported data are put, along
+--    with a delta of modifications. Not all themable items have to be
+--    supported at once.
+-- 3. APIs supporting theming will use an underlying Theme API to
+--    resolve the correct resource. This value will be cached. It is
+--    essentially a layer of indirection over data[] that allows
+--    substituting a constant value at runtime.
+--
+-- This should allow more than one theme (or no theme at all) to be
+-- applied in an atomic manner, and with instant update on switch.
+-- Also, this could allow applying temporary theme modifiers, where
+-- images/sounds are altered temporarily until the change is
+-- reverted/popped off.
+--
+-- The reason for each type needing specific compatibility for theming
+-- is the fact that typical theme resources are not incrementable
+-- numbers but instead constant values like paths. This is a different
+-- paradigm than allowing a stat to be incremented by a percentage.
+-- Since the only operation supported is setting a field to a constant
+-- value, it is possible to apply atomically. So, the supported types
+-- need to be able to be modified in only this way, which works out
+-- for themes.
 data:add_multi(
    "base.ui_theme",
 

@@ -25,4 +25,4 @@ local theme = {
    ie_chat = "graphic/ie_chat.bmp"
 }
 
-data["base.ui_theme"]["base.default"].items["mod.elona_sys.dialog.DialogMenu"] = theme
+data["base.ui_theme"]["base.default"].items["mod.elona_sys.dialog.api.DialogMenu"] = theme

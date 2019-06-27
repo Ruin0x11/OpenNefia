@@ -4,7 +4,6 @@ local ILocation = interface("ILocation",
                     move_object = "function",
                     remove_object = "function",
                     take_object = "function",
-                    put_into = "function",
                     objects_at_pos = "function",
                     is_in_bounds = "function",
 

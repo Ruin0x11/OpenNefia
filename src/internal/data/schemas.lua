@@ -3,8 +3,11 @@ local data = require("internal.data")
 
 local IChara = require("api.chara.IChara")
 local IItem = require("api.item.IItem")
+local IFeat = require("api.feat.IFeat")
+local ITrap = require("api.feat.ITrap")
 
-data:add_type({
+data:add_type(
+   {
       name = "chara",
       schema = schema.Record {
          name = schema.String,
@@ -12,10 +15,12 @@ data:add_type({
          max_hp = schema.Number,
          on_death = schema.Optional(schema.Function),
       },
-              },
-   IChara)
+   },
+   { interface = IChara }
+)
 
-data:add_type({
+data:add_type(
+   {
       name = "item",
       schema = schema.Record {
          name = schema.String,
@@ -24,8 +29,33 @@ data:add_type({
          value = schema.Number,
          quality = schema.Number,
       },
-              },
-   IItem)
+   },
+   { interface = IItem }
+)
+
+data:add_type(
+   {
+      name = "feat",
+      schema = schema.Record {
+         name = schema.String,
+         image = schema.Number,
+         params = schema.Table,
+      },
+   },
+   { interface = IFeat }
+)
+
+data:add_type(
+   {
+      name = "trap",
+      schema = schema.Record {
+         name = schema.String,
+         image = schema.Number,
+         params = schema.Table,
+      },
+   },
+   { interface = ITrap, generates = "base.feat" }
+)
 
 data:add_type {
    name = "body_part",

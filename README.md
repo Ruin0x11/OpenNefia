@@ -13,6 +13,8 @@ The title `Elona_next` is temporary since nothing better has been decided yet. (
 To run tests, these additional dependencies are needed.
 
 - [LuaJIT](http://luajit.org) 2.0.5
+- [luasocket]()
+    + Provided by LÖVE.
 - [luautf8](https://github.com/starwing/luautf8)
     + Replacement for LÖVE's `utf8` module.
 - [luafilesystem](https://keplerproject.github.io/luafilesystem)

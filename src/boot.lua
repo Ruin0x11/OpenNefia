@@ -51,3 +51,6 @@ end
 
 -- prevent new globals from here on out.
 require("thirdparty.strict")
+
+-- Hook the global `require` to support hotloading.
+require("internal.env").hook_global_require()

@@ -160,25 +160,4 @@ function pool:can_take_object(obj)
    return true
 end
 
-function pool:put_into(pool_to, obj, x, y)
-   x = x or 0
-   y = y or 0
-   local uid = obj.uid
-
-   if not pool_to:can_take_object(obj, x, y) then
-      return nil
-   end
-
-   assert(self:has_object(obj))
-   assert(not pool_to:has_object(obj))
-   local ind = self.content[uid].array_index
-   assert(ind ~= nil)
-   assert(ind <= #self.uids)
-   assert(self.uids[ind] == uid)
-   assert(type(x) == "number")
-   assert(type(y) == "number")
-
-   return pool_to:take_object(obj, x, y)
-end
-
 return pool

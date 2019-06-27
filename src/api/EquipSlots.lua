@@ -199,14 +199,6 @@ function EquipSlots:remove_object(obj)
    return self:unequip(obj)
 end
 
-function EquipSlots:put_into(other, obj, x, y)
-   if not self:unequip(obj) then
-      return nil
-   end
-
-   return other:take_object(obj, x, y)
-end
-
 function EquipSlots:can_take_object(obj)
    return self:find_free_slot(obj) ~= nil
 end

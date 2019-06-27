@@ -95,7 +95,7 @@ test("pool - transfer", function()
         ok(o.thing == "hoge")
         -- ok(o.is_valid == true)
 
-        ok(from:put_into(to, o, 5, 5))
+        ok(to:take_object(o, 5, 5))
 
         ok(from:get_object(uid) == nil)
         ok(to:get_object(uid).uid == o.uid)

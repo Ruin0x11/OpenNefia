@@ -11,7 +11,7 @@ local loop = nil
 local draw = nil
 local server = nil
 
-local fps = require("util.fps"):new()
+local fps = require("internal.fps"):new()
 fps.show_fps = true
 
 function love.load(arg)

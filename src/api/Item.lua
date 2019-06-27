@@ -13,26 +13,11 @@ local Item = {}
 function Item.at(x, y, map)
    map = map or field.map
 
-   if not Map.is_in_bounds(x, y, map) then
-      return {}
+   if not map:is_in_bounds(x, y) then
+      return fun.iter({})
    end
 
    return map:iter_type_at_pos("base.item", x, y):filter(Item.is_alive)
-end
-
-function Item.set_pos(i, x, y)
-   if type(i) ~= "table" or not field:exists(i) then
-      Log.warn("Item.set_pos: Not setting position of %s to %d,%d\n\t%s", tostring(i), x, y, debug.traceback(""))
-      return false
-   end
-
-   if not Map.is_in_bounds(x, y) then
-      return false
-   end
-
-   field.map:move_object(i, x, y)
-
-   return true
 end
 
 function Item.is_alive(item)
@@ -70,10 +55,8 @@ function Item.create(id, x, y, params, where)
 
    if not is_an(ILocation, where) then return nil end
 
-   -- TODO: if where:is_positional()
-   local InstancedMap = require("api.InstancedMap")
-   if is_an(InstancedMap, where) then
-      if not Map.is_in_bounds(x, y, where) then
+   if where:is_positional() then
+      if not where:is_in_bounds(x, y) then
          return nil
       end
    end
@@ -96,10 +79,10 @@ end
 
 --- Causes the same behavior as selecting the given item in a given
 --- inventory context. The item must be contained in the inventory's
---- sources and selectable.
+--- sources and be selectable.
 -- @tparam IItem item
 -- @tparam string operation
--- @tparam table params
+-- @tparam[opt] table params
 -- @treturn[1][1] IItem
 -- @treturn[2][1] nil
 -- @treturn[2][2] string error kind

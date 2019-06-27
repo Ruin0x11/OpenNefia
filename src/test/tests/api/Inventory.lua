@@ -13,7 +13,7 @@ test("Inventory - take and remove", function()
         ok(i:take_object(c))
         ok(i:contains(c))
 
-        i:put_into(map, c, 5, 6)
+        map:take_object(c, 5, 6)
         ok(not i:contains(c))
         ok(c.x == 5)
         ok(c.y == 6)
@@ -34,7 +34,7 @@ test("Inventory - drop position", function()
         local c = Item.create("test.sword", 0, 0, {}, map)
 
         ok(i:take_object(c))
-        ok(i:put_into(map, c, 4, 5))
+        ok(map:take_object(c, 4, 5))
 
         ok(c.x == 4)
         ok(c.y == 5)
@@ -84,7 +84,7 @@ test("Inventory - iter", function()
         ok(found[a.uid])
         ok(found[b.uid])
 
-        ok(i:put_into(map, a, 0, 0))
+        ok(map:take_object(a, 0, 0))
         found = {}
 
         for _, c in i:iter() do
