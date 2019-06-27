@@ -130,7 +130,6 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
       end
    end
 
-   print(scroll_frames)
    if scroll_frames > 0 and #scroll > 0 then
       self.scroll_consecutive = self.scroll_consecutive + 1
       self.scroll = scroll
@@ -142,7 +141,6 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
       self.scroll_max_frames = max
       self.scroll_frames = self.scroll_max_frames
       self:scroll_one()
-      print("scrollone",self.scroll_consecutive)
       return true
    else
       self.scroll_consecutive = 0

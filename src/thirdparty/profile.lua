@@ -270,6 +270,26 @@ function profile.report(s, n)
     i = i + 1
     out[i] = { i, f, c, t, d }
   end
+  local total = {}
+  for _, v in ipairs(out) do
+     if not total[v[5]] then
+        total[v[5]] = v
+     else
+        if total[v[5]][2] == v[2] then
+           total[v[5]][4] = total[v[5]][4] + v[4]
+        end
+     end
+  end
+  _p(total)
+  out = {}
+  for _, v in pairs(total) do
+     out[#out+1] = v
+  end
+  if s == "time" then
+     table.sort(out, function(a, b) return a[4] > b[4] end)
+  else
+     table.sort(out, function(a, b) return a[3] > b[3] end)
+  end
   return 'Profilling report:\n'..pretty(out)
 end
 

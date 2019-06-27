@@ -96,10 +96,19 @@ function IChara:refresh()
    if map then
       map:refresh_tile(self.x, self.y)
    end
+
+   self:mod(
+      "memory",
+      {
+         image = self:calc("image"),
+         x = self.x,
+         y = self.y
+      }
+   )
 end
 
 function IChara:produce_memory()
-   return nil
+   return self:calc("memory")
 end
 
 function IChara:copy_image()

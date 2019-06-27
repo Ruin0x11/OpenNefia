@@ -252,8 +252,12 @@ data:add {
    _id = "test",
 
    image = 194,
-   is_solid = false,
-   is_opaque = false
+   is_solid = true,
+   is_opaque = true,
+
+   on_stepped_on = function(chara)
+      require("api.Gui").mes("dood")
+   end
 }
 
 --
@@ -371,8 +375,8 @@ data:add {
       local InstancedMap = require("api.InstancedMap")
       local Map = require("api.Map")
 
-      local width = p.width or 30
-      local height = p.height or 50
+      local width = p.width or 100
+      local height = p.height or 100
       local map = InstancedMap:new(width, height, nil, "content.floor")
 
       for y=0,width-1 do

@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Input = require("api.Input")
@@ -18,6 +19,14 @@ function Action.move(chara, x, y)
       return false
    end
 
+   local params = {
+      chara = chara,
+      prev_x = chara.x,
+      prev_y = chara.y,
+      x = x,
+      y = y
+   }
+
    -- EVENT: before_character_movement
    -- ally direction
    -- solid feats (doors, jail cell)
@@ -28,6 +37,7 @@ function Action.move(chara, x, y)
 
    chara:set_pos(x, y)
 
+   Event.trigger("base.on_chara_moved", params)
    -- EVENT: on_character_movement
    -- mount update
    -- proc trap

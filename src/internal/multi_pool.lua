@@ -14,7 +14,7 @@ function multi_pool:init(width, height, uids)
    self.subpools = {}
    self.refs = setmetatable({}, { __mode = "v" })
 
-   self.positional = table.of_2d(function() return {} end, width, height, true)
+   self.positional = table.of(function() return {} end, width * height)
 end
 
 function multi_pool:get_subpool(type_id)
@@ -37,7 +37,7 @@ function multi_pool:take_object(obj, x, y)
    obj.location = self
 
    self.refs[obj.uid] = subpool:get_object(obj.uid)
-   table.insert(self.positional[obj.y][obj.x], obj.uid)
+   table.insert(self.positional[obj.y*self.width+obj.x+1], obj)
 
    return obj
 end
@@ -47,7 +47,7 @@ function multi_pool:remove_object(obj)
    assert(obj.location == nil)
 
    self.refs[obj.uid] = nil
-   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
+   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
 
    return obj
 end
@@ -57,8 +57,8 @@ function multi_pool:move_object(obj, x, y)
 
    local obj = self:get_subpool(obj._type):move_object(obj, x, y)
 
-   table.iremove_value(self.positional[prev_y][prev_x], obj.uid)
-   table.insert(self.positional[y][x], obj.uid)
+   table.iremove_value(self.positional[prev_y*self.width+prev_x+1], obj)
+   table.insert(self.positional[y*self.width+x+1], obj)
 
    return obj
 end
@@ -67,7 +67,7 @@ function multi_pool:objects_at_pos(x, y)
    if not self:is_in_bounds(x, y) then
       return fun.iter({})
    end
-   return fun.iter(self.positional[y][x]):map(function(uid) return self:get_object(uid) end)
+   return fun.iter(self.positional[y*self.width+x+1])
 end
 
 function multi_pool:get_object(uid)

@@ -16,7 +16,7 @@ function pool:init(type_id, tracker, width, height)
    self.width = width
    self.height = height
 
-   self.positional = table.of_2d(function() return {} end, width, height, true)
+   self.positional = table.of(function() return {} end, width * height)
 end
 
 function pool:get_object(uid)
@@ -60,7 +60,7 @@ function pool:take_object(obj, x, y)
 
    table.insert(self.uids, obj.uid)
    self.content[obj.uid] = entry
-   table.insert(self.positional[y][x], obj.uid)
+   table.insert(self.positional[y*self.width+x+1], obj)
 
    return self:get_object(obj.uid)
 end
@@ -70,8 +70,8 @@ function pool:move_object(obj, x, y)
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
 
-   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
-   table.insert(self.positional[y][x], obj.uid)
+   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
+   table.insert(self.positional[y*self.width+x+1], obj)
 
    obj.x = x
    obj.y = y
@@ -109,7 +109,7 @@ function pool:remove_object(obj)
 
    self.content[obj.uid] = nil
 
-   table.iremove_value(self.positional[obj.y][obj.x], obj.uid)
+   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
 
    obj.location = nil
 
@@ -122,7 +122,7 @@ function pool:objects_at_pos(x, y)
    if not self:is_in_bounds(x, y) then
       return fun.iter({})
    end
-   return fun.iter(self.positional[y][x]):map(function(uid) return self:get_object(uid) end)
+   return fun.iter(self.positional[y*self.width+x+1])
 end
 
 function pool:is_in_bounds(x, y)

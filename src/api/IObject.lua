@@ -92,8 +92,8 @@ function IObject:mod(prop, v, meth)
 end
 
 function IObject:clone(owned)
-   local Object = require("api.Object")
-   return Object.clone(self, owned)
+   local MapObject = require("api.MapObject")
+   return MapObject.clone(self, owned)
 end
 
 function IObject:is_a(_type)

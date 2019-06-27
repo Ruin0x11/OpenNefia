@@ -165,7 +165,6 @@ function MainHud:draw_attributes()
 
    -- values
    Draw.set_font(self.t.attribute_font) -- 13 - en * 2
-   local values = table.of(function() return math.random(1000) end, 10)
    local x
    local y = self.height - 16 + 2 -- + vfix
    for i, a in ipairs(attrs) do
