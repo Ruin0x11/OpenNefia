@@ -1,0 +1,22 @@
+* TODO map/outer map handling (base)
+* TODO continuous action (base)
+* TODO schematize prototypes (base)
+* TODO add fields to prototypes (elona_sys)
+* TODO hook prototype into object system (base)
+* TODO equipment properties on equip (base)
+* TODO enchantments (elona_sys)
+* TODO support all elona characters (elona)
+* TODO strip all mods and run base with fallbacks (base)
+determine which values should be set as defaults
+* TODO NPC dialog (elona_sys)
+* TODO dungeon generation (elona_sys)
+* TODO applied effects (base/IObject)
+* TODO timed effects (base)
+* TODO move menus to elona_sys
+* TODO display timed effect as status effect (base?)
+* TODO damage handler/projector
+* TODO additional AI actions (elona_sys)
+* TODO data schema
+* TODO pcc support
+* TODO final graphical polish
+spotlight, animated tiles, tall/large tiles

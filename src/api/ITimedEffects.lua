@@ -1,0 +1,2 @@
+--local IObject = require("api.IObject")
+--local ITimedEffects = interface("ITimedEffects", {}, IObject)
