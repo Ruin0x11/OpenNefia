@@ -5,12 +5,23 @@ local field = require("game.field")
 
 local Gui = {}
 
+local scroll = false
+
 function Gui.update_screen()
-   field:update_screen(true)
+   field:update_screen(scroll)
+   scroll = false
+end
+
+function Gui.update_hud()
+   field:update_hud()
 end
 
 function Gui.scroll_screen()
    field:update_screen(true)
+end
+
+function Gui.set_scroll()
+   scroll = true
 end
 
 function Gui.wait(wait)

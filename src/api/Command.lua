@@ -9,6 +9,8 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 
+local field = require("game.field")
+
 --- Game logic intended for the player only.
 local Command = {}
 
@@ -42,6 +44,7 @@ function Command.move(player, x, y)
          if true then
             if player:swap_places(on_cell) then
                Gui.mes("You switch places with " .. on_cell.uid .. ".")
+               Gui.set_scroll()
             end
          end
          return "turn_end"
@@ -51,6 +54,7 @@ function Command.move(player, x, y)
       if reaction < 0 then
          player:set_target(on_cell)
          Action.melee(player, on_cell)
+         Gui.set_scroll()
          return "turn_end"
       end
 
@@ -67,7 +71,9 @@ function Command.move(player, x, y)
    else
       -- Run the general-purpose movement command. This will also
       -- handle blocked tiles.
+
       Action.move(player, next_pos.x, next_pos.y)
+      Gui.set_scroll()
       return "turn_end"
    end
 
@@ -121,8 +127,12 @@ end
 
 function Command.close(player)
    for _, f in get_feats(player, "can_close") do
-      Gui.mes(player.name .. " closes the " .. f.uid .. " ")
-      f:calc("on_close", player)
+      if Chara.at(f.x, f.y) then
+         Gui.mes("Someone is in the way.")
+      else
+         Gui.mes(player.name .. " closes the " .. f.uid .. " ")
+         f:calc("on_close", player)
+      end
    end
 end
 

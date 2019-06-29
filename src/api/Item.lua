@@ -53,18 +53,28 @@ function Item.create(id, x, y, params, where)
 
    where = where or field.map
 
-   if not is_an(ILocation, where) then return nil end
-
-   if where:is_positional() then
-      if not where:is_in_bounds(x, y) then
+   if not is_an(ILocation, where) then
+      if params.ownerless then
+         where = nil
+      else
          return nil
+      end
+   end
+
+   if where then
+      if where:is_positional() then
+         if not where:is_in_bounds(x, y) then
+            return nil
+         end
       end
    end
 
    local item = MapObject.generate_from("base.item", id)
    item.amount = amount
 
-   item = where:take_object(item, x, y)
+   if where then
+      item = where:take_object(item, x, y)
+   end
 
    if item then
       if not params.no_stack then

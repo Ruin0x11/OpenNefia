@@ -66,6 +66,10 @@ data:add_multi(
    {
       _id = "on_talk",
       observer = "chara"
+   },
+   {
+      _id = "on_calc_chara_equipment_stats",
+      observer = "chara" -- { "chara", "item" }
    }
 )
 
@@ -312,3 +316,4 @@ data:add_multi(
 )
 
 require("mod.base.sound")
+require("mod.base.resolver")

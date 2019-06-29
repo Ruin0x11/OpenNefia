@@ -15,6 +15,10 @@ end
 
 local level = 3
 
+function Log.set_level(l)
+   level = l
+end
+
 function Log.debug(s, ...)
    if level < 4 then
       return

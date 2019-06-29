@@ -38,8 +38,23 @@ if love == nil then
 end
 
 function _p(...)
-   for _, v in ipairs({...}) do
-      io.write(inspect(v))
+   local t = {...}
+   local max = 0
+
+   -- nil values in varargs will mess up ipairs, so iterate by the
+   -- largest array index found instead and assume everything in
+   -- between was passed as nil
+   for k, v in pairs(t) do
+      max = math.max(max, k)
+   end
+
+   for i=1,max do
+      local v = t[i]
+      if v == nil then
+         io.write("nil")
+      else
+         io.write(inspect(v))
+      end
       io.write("\t")
    end
    if #{...} == 0 then

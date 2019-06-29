@@ -56,7 +56,7 @@ local high_resistances = {
 
    orientation = "beneficial",
 
-   delta = {
+   effects = {
       stat = {
          [60] = 150,
          [52] = 100,

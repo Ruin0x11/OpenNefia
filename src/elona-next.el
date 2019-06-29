@@ -84,7 +84,7 @@
 
 (defun elona-next-eval-sexp-fu-setup ()
   (define-eval-sexp-fu-flash-command elona-next-send-defun
-    (eval-sexp-fu-flash (elona-next--bounds-of-last-defun)))
+    (eval-sexp-fu-flash (elona-next--bounds-of-last-defun (point))))
   (define-eval-sexp-fu-flash-command elona-next-hotload-this-file
     (eval-sexp-fu-flash (elona-next--bounds-of-buffer))))
 

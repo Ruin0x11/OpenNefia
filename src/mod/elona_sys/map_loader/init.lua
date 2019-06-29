@@ -78,29 +78,29 @@ function convert_122(gen, params)
 
       if data[1] ~= 0 then
          if data[5] == 0 then
-            local id = Compat.convert_122_id(v[1], "base.item")
-            assert(id, "Unknown 1.22 ID " .. id)
+            local id = Compat.convert_122_id("base.item", data[1])
+            assert(id, "unknown 1.22 item ID " .. data[1])
 
-            local x = v[2]
-            local y = v[3]
-            local own_state = own_states(v[4])
+            local x = data[2]
+            local y = data[3]
+            local own_state = own_states[data[4]]
             assert(own_state == "none" or own_state == "not_owned")
 
             local item = Item.create(id, x, y, {}, result)
-            item.own_state = own_state
+            item.ownership = own_state
          elseif data[5] == 1 then
-            local id = Compat.convert_122_id(v[1], "base.chara")
-            assert(id, "Unknown 1.22 ID " .. id)
+            local id = Compat.convert_122_id("base.chara", data[1])
+            assert(id, "unknown 1.22 character ID " .. data[1])
 
-            local x = v[2]
-            local y = v[3]
+            local x = data[2]
+            local y = data[3]
 
             Chara.create(id, x, y, {}, result)
          elseif data[5] == 2 then
             -- cmap.objects[#cmap.objects+1] = {
-            --    id = v[1],
-            --    x = v[2],
-            --    y = v[3],
+            --    id = data[1],
+            --    x = data[2],
+            --    y = data[3],
             --    feat_param_a = v[4] % 1000,
             --    feat_param_b = math.floor(v[4] / 1000)
             -- }

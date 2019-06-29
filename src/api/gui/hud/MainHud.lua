@@ -50,6 +50,11 @@ function MainHud:init()
    self.hp_bar = UiBar:new("hud_hp_bar", 0, 0, true)
    self.mp_bar = UiBar:new("hud_mp_bar", 0, 0, true)
    self.status_effects = UiStatusEffects:new()
+
+   self.stats = {
+      dv = 0,
+      pv = 0
+   }
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -76,6 +81,23 @@ function MainHud:set_target(chara)
 end
 
 function MainHud:register_widget(widget)
+end
+
+function MainHud:refresh(player)
+   -- HACK there is a better way of doing this. It almost certainly
+   -- has to do with the event system.
+
+   self.stats = {}
+
+   if player ~= nil then
+      self.stats["dv"] = player:calc("dv")
+      self.stats["pv"] = player:calc("pv")
+
+      self.hp_bar:set_data(player.hp, player:calc("max_hp"))
+      self.mp_bar:set_data(player.mp, player:calc("max_mp"))
+      self.level:set_data(player.level, player.experience)
+      self.status_effects:set_data({}) -- TODO
+   end
 end
 
 function MainHud:find_widget(path)
@@ -145,7 +167,7 @@ function MainHud:draw_attributes()
       "base.magic",
       "base.charisma",
       "base.speed",
-      "dv"
+      "dv_pv"
    }
 
    -- icons
@@ -173,8 +195,8 @@ function MainHud:draw_attributes()
 
       if a == "base.speed" then
          Draw.text(tostring(100), x + 8, y, color)
-      elseif a == "dv" then
-         local dv_pv = string.format("%d/%d", 40, 60)
+      elseif a == "dv_pv" then
+         local dv_pv = string.format("%d/%d", self.stats["dv"], self.stats["pv"])
          Draw.text(dv_pv, x + 14, y, color)
       else
          Draw.text(tostring(100), x, y, color)

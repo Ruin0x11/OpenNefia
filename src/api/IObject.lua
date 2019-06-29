@@ -1,14 +1,19 @@
 -- An object instance backed by a data prototype.
 local IObject = interface("IObject",
                           {
-                             build = { type = "function", default = function() end },
-                             refresh = { type = "function", default = function(self) self.temp = {} end },
                              _id = "string",
                              _type = "string",
+                             build = "function",
+                             refresh = "function",
+                             temp = "table"
                           }
 )
 
 function IObject:init()
+   self.temp = {}
+end
+
+function IObject:on_refresh()
    self.temp = {}
 end
 
@@ -30,65 +35,26 @@ function IObject:calc(key, ...)
    end
 end
 
-local function merge_recurse(base, add, meth, default, key)
-   if type(base) ~= type(add) then
-      error("wrong types")
-   end
-
-   if type(add[key]) == "table" then
-      if base[key] == nil then
-         base[key] = {}
-      end
-      for k, v in pairs(add[key]) do
-         merge_recurse(base[key], add[key], meth, default and default[key], k)
-      end
-   else
-      local val = add[key]
-      if default and base[key] == nil then
-         base[key] = default[key]
-      end
-
-      if meth == "add" then
-         base[key] = (base[key] or 0) + val
-      elseif meth == "set" then
-         base[key] = val
-      else
-         error("unknown merge method " .. meth)
-      end
-   end
-
-   return base
-end
-
-local function merge_ex(base, add, meth, default)
-   meth = meth or "set"
-   for k, v in pairs(add) do
-      merge_recurse(base, add, meth, default, k)
-   end
-   return base
-end
-
 --- Modifies a temporary value. This will be cleared when refresh() is
 --- called on the object.
-function IObject:mod(prop, v, meth)
-   meth = meth or "set"
-
-   if type(v) == "table" then
-      self.temp[prop] = self.temp[prop] or {}
-      merge_ex(self.temp[prop], v, meth, self)
-   else
-      local base = self.temp[prop]
-      if base == nil then
-         base = self[prop]
-      end
-      if meth == "add" then
-         self.temp[prop] = (base or 0) + v
-      elseif meth == "set" then
-         self.temp[prop] = v
-      end
-   end
-
+function IObject:mod(prop, v, method)
+   table.merge_ex_single(self.temp, v, method or "add", self, prop)
    return self.temp[prop]
+end
+
+function IObject:mod_base(prop, v, method)
+   table.merge_ex_single(self, v, method or "add", self.proto, prop)
+   return self[prop]
+end
+
+function IObject:mod_with(tbl, method)
+   return table.merge_ex(self.temp, tbl, self, method or "add")
+end
+
+-- TODO: allow option to skip merging if value exists in base, or
+-- exists in prototype
+function IObject:mod_base_with(tbl, method)
+   return table.merge_ex(self, tbl, self.proto, method or "add")
 end
 
 function IObject:clone(owned)

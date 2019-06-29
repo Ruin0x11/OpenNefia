@@ -106,6 +106,7 @@ function Action.unequip(chara, item)
    end
 
    chara:unequip_item(item)
+   chara:refresh()
    Gui.play_sound("base.equip1");
 
    return true
@@ -117,6 +118,7 @@ function Action.equip(chara, item)
    end
 
    chara:equip_item(item)
+   chara:refresh()
    Gui.play_sound("base.equip1");
 
    return true

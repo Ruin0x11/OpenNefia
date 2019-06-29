@@ -15,11 +15,13 @@ local function load_mod(mod_name, init_lua_path)
 
    local mod_env = env.generate_sandbox(mod_name, true)
 
-   local success, chunk = xpcall(
-      function() return env.load_sandboxed_chunk(init_lua_path, mod_name) end,
-      function(err) return debug.traceback(err, 2) end
-   )
-   return success, chunk
+   local chunk, err = env.load_sandboxed_chunk(init_lua_path, mod_name)
+
+   if err then
+      error(err, 0)
+   end
+
+   return chunk
 end
 
 local function load_manifest(manifest_path)
@@ -122,11 +124,7 @@ function mod.load_mods(mods)
 
       local init = fs.join(mod.root_path, "init.lua")
       if fs.is_file(init) then
-         local success, chunk = load_mod(mod.id, init)
-         if not success then
-            local err = chunk
-            error(string.format("Error initializing %s:\n\t%s", mod.id, err))
-         end
+         local chunk = load_mod(mod.id, init)
 
          print(string.format("Loaded mod %s.", mod.id))
          chunks[mod.id] = chunk

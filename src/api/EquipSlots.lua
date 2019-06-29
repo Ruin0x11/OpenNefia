@@ -32,6 +32,8 @@ function EquipSlots:has_body_part_for(item)
    return fun.iter(self.body_parts):filter(pred):any()
 end
 
+-- @tparam IItem item
+-- @tparam[opt] id[base.body_part] body_part_type
 function EquipSlots:find_free_slot(item, body_part_type)
    local pred
 
@@ -67,19 +69,19 @@ function EquipSlots:equip(obj, slot)
    end
 
    if obj == nil or type(slot) ~= "number" then
-      return nil
+      return nil, "invalid_params"
    end
 
    if slot <= 0 or slot > #self.body_parts then
-      return nil
+      return nil, "slot_out_of_range"
    end
 
    if self.equipped[obj.uid] then
-      return nil
+      return nil, "is_equipped"
    end
 
    if not self.pool:take_object(obj) then
-      return nil
+      return nil, "cannot_own"
    end
 
    obj.location = self

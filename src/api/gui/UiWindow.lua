@@ -113,7 +113,7 @@ function UiWindow:draw()
 
    if self.show_page then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-      local page_str = "Page." .. tostring(self.page + 1) .. "/" .. tostring(self.page_max)
+      local page_str = "Page." .. tostring(self.page + 1) .. "/" .. tostring(self.page_max + 1)
       Draw.text(page_str, x + width - Draw.text_width(page_str) - 40 - y_offset, y + height - 65 - height % 8)
    end
 end

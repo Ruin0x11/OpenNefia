@@ -9,28 +9,31 @@ data:add {
    _id = "player",
 
    name = "player",
+   race = "elona.norland",
+   class = "elona.gunner",
    faction = "base.enemy",
    image = 4,
    max_hp = 50,
    max_mp = 10,
 
    body_parts = {
-      "content.head",
-      "content.neck",
-      "content.back",
-      "content.body",
-      "content.hand",
-      "content.hand",
-      "content.ring",
-      "content.ring",
-      "content.arm",
-      "content.arm",
-      "content.waist",
-      "content.leg",
-      "content.ranged",
-      "content.ammo"
+      "elona.head",
+      "elona.neck",
+      "elona.back",
+      "elona.body",
+      "elona.hand",
+      "elona.hand",
+      "elona.ring",
+      "elona.ring",
+      "elona.arm",
+      "elona.arm",
+      "elona.waist",
+      "elona.leg",
+      "elona.ranged",
+      "elona.ammo"
    }
 }
+print("go")
 
 -- TODO: This must fail, since prototypes should only be modifiable in
 -- transactions to support hotloading.
@@ -41,6 +44,8 @@ data:add {
    _id = "ally",
 
    name = "ally",
+   race = "elona.norland",
+   class = "elona.gunner",
    faction = "base.enemy",
    image = 10,
    max_hp = 100,
@@ -54,10 +59,23 @@ data:add {
    _id = "enemy",
 
    name = "enemy",
+   race = "elona.norland",
+   class = "elona.gunner",
    faction = "base.enemy",
    image = 50,
    max_hp = 10,
-   max_mp = 2
+   max_mp = 2,
+
+   body_parts = {
+      "elona.head",
+      "elona.neck",
+      "elona.body",
+      "elona.hand",
+      "elona.ring",
+      "elona.arm",
+      "elona.waist",
+      "elona.leg"
+   }
 }
 
 --
@@ -82,7 +100,7 @@ data:add {
    image = 143,
 
    equip_slots = {
-      "content.body"
+      "elona.body"
    }
 }
 
@@ -94,7 +112,7 @@ data:add {
    image = 19,
 
    equip_slots = {
-      "content.ring"
+      "elona.ring"
    }
 }
 
@@ -106,7 +124,7 @@ data:add {
    image = 20,
 
    equip_slots = {
-      "content.ammo"
+      "elona.ammo"
    }
 }
 
@@ -118,7 +136,7 @@ data:add {
    image = 33,
 
    equip_slots = {
-      "content.hand"
+      "elona.hand"
    }
 }
 
@@ -130,7 +148,7 @@ data:add {
    image = 36,
 
    equip_slots = {
-      "content.neck"
+      "elona.neck"
    }
 }
 
@@ -142,85 +160,19 @@ data:add {
    image = 58,
 
    equip_slots = {
-      "content.leg"
+      "elona.leg"
    }
 }
 
---
---
--- Body Parts
---
---
 
-data:add_multi(
-   "base.body_part",
-   {
-      _id = "head",
+data:add {
+   _type = "base.enchantment",
+   _id = "increase_pv",
 
-      name = "Head",
-      icon = 1
-   },
-   {
-      _id = "neck",
-
-      name = "Neck",
-      icon = 2
-   },
-   {
-      _id = "back",
-
-      name = "Back",
-      icon = 3
-   },
-   {
-      _id = "body",
-
-      name = "Body",
-      icon = 4
-   },
-   {
-      _id = "hand",
-
-      name = "Hand",
-      icon = 5
-   },
-   {
-      _id = "ring",
-
-      name = "Ring",
-      icon = 6
-   },
-   {
-      _id = "arm",
-
-      name = "Arm",
-      icon = 7
-   },
-   {
-      _id = "waist",
-
-      name = "Waist",
-      icon = 8
-   },
-   {
-      _id = "leg",
-
-      name = "Leg",
-      icon = 9
-   },
-   {
-      _id = "ranged",
-
-      name = "Shoot",
-      icon = 10
-   },
-   {
-      _id = "ammo",
-
-      name = "Ammo",
-      icon = 11
+   wielder = {
+      pv = 50
    }
-)
+}
 
 --
 --
@@ -251,6 +203,7 @@ data:add {
 -- Feats
 --
 --
+print("go")
 
 data:add {
    _type = "base.feat",
@@ -268,10 +221,13 @@ data:add {
    opened_tile = 195,
 
    on_refresh = function(self)
-      self:mod("can_open", not self.opened)
-      self:mod("can_close", self.opened)
-      self:mod("is_solid", not self.opened)
-      self:mod("is_opaque", not self.opened)
+      -- HACK
+      self.opened = not not self.opened
+
+      self:mod("can_open", not self.opened, "set")
+      self:mod("can_close", self.opened, "set")
+      self:mod("is_solid", not self.opened, "set")
+      self:mod("is_opaque", not self.opened, "set")
       if self.opened then
          self:mod("image", self.opened_tile)
       else
@@ -349,6 +305,7 @@ data:add {
       return "player_turn_query"
    end
 }
+print("go")
 
 data:add_multi(
    "base.sound",
@@ -395,8 +352,8 @@ data:add {
          ["event:base.on_chara_revived"] = "I'm revived.",
 
          ["base.ai_aggro"] = {
-            { talk = "「負けるもんか！」", voice = "content.voice5" },
-            { talk = "「うしゃー、やるぞ！」", voice = "content.voice3" },
+            { talk = "「負けるもんか！」"},
+            { talk = "「うしゃー、やるぞ！」"},
             "",
             "",
             "",
@@ -412,14 +369,15 @@ data:add {
          },
 
          ["base.ai_melee"] = {
-            { talk = "「よっ、よ！」", voice = "content.voice2" },
-            { talk = "「うしゅっ」", voice = "content.voice4" },
+            { talk = "「よっ、よ！」"},
+            { talk = "「うしゅっ」"},
             "",
             "",
          }
       }
    }
 }
+print("go")
 
 
 local Event = require("api.Event")
@@ -451,6 +409,7 @@ Event.register("base.after_damage_hp",
 end)
 
 
+print("go")
 data:add {
    _type = "base.map_generator",
    _id = "test",
@@ -501,11 +460,12 @@ Event.register("base.on_game_start",
                   local armor = Item.create("content.armor")
                   armor.curse_state = "blessed"
                   Chara.player():equip_item(armor, true)
+                  Chara.player():refresh()
 
                   Feat.create("content.door", 11, 11)
 
                   local stair = Feat.create("content.stair", 12, 11)
-                  stair.generator = "elona122_maps.elona122"
+                  stair.generator = "elona_sys.elona122"
                   stair.generator_params = { name = "sister" }
 end)
 require("mod.content.dialog")

@@ -167,6 +167,7 @@ local function safe_load_chunk(path)
 end
 
 local IS_HOTLOADING = false
+local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 
@@ -189,7 +190,7 @@ local function gen_require(chunk_loader)
          error("Loop while loading " .. path)
       end
 
-      hotload = hotload or IS_HOTLOADING
+      hotload = hotload or HOTLOAD_DEPS
 
       -- Only paths under "mod.*" and "api.*" should be hotloaded.
       -- (For example, hotloading "internal.data" would overwrite all
@@ -214,6 +215,7 @@ local function gen_require(chunk_loader)
       LOADING[path] = false
 
       if err then
+         IS_HOTLOADING = false
          error("\n\t" .. err, 0)
       end
 
@@ -221,6 +223,8 @@ local function gen_require(chunk_loader)
          and type(chunk) == "table"
       then
          table.replace_with(package.loaded[path], chunk)
+      elseif chunk == nil then
+         package.loaded[path] = true
       else
          package.loaded[path] = chunk
       end
@@ -268,14 +272,16 @@ function env.hotload(path, also_deps)
    if also_deps then
       -- Enable hotloading for any call to a hooked `require` until
       -- the top-level `hotload` call finishes.
-      IS_HOTLOADING = true
+      HOTLOAD_DEPS = true
    end
 
    print("Begin hotload " .. path)
+   IS_HOTLOADING = true
    local loaded = env.safe_require(path, true)
+   IS_HOTLOADING = false
 
    if also_deps then
-      IS_HOTLOADING = false
+      HOTLOAD_DEPS = false
    end
 
    return loaded

@@ -57,6 +57,32 @@ data:add_type(
    { interface = ITrap, generates = "base.feat" }
 )
 
+data:add_type(
+   {
+      name = "class",
+      schema = schema.Record {
+         on_generate = schema.Optional(schema.Function),
+      },
+   }
+)
+
+data:add_type(
+   {
+      name = "race",
+      schema = schema.Record {
+      },
+   }
+)
+
+data:add_type(
+   {
+      name = "element",
+      schema = schema.Record {
+         resistance_skills = schema.Optional(schema.Table),
+      },
+   }
+)
+
 data:add_type {
    name = "body_part",
    schema = schema.Record {
@@ -81,9 +107,47 @@ data:add_type {
 }
 
 data:add_type {
+   name = "enchantment",
+   schema = schema.Record {
+      item_method = schema.String,
+      item = schema.Table,
+      wielder_method = schema.String,
+      wielder = schema.Table,
+      orientation = schema.String,
+   },
+}
+
+data:add_type {
+   name = "skill",
+   schema = schema.Record {
+      skill_type = schema.String,
+   },
+}
+
+data:add_type {
    name = "sound",
    schema = schema.Record {
       file = schema.String
+   },
+}
+
+data:add_type(
+   {
+      name = "resolver",
+      schema = schema.Record {
+         invariants = schema.Table,
+         params = schema.Table,
+         resolve = schema.Function,
+      },
+   }
+)
+
+data:add_type {
+   name = "scenario",
+   schema = schema.Record {
+      name = schema.String,
+      starting_map = schema.Table,
+      on_game_begin = schema.Function,
    },
 }
 

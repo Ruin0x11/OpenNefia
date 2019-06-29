@@ -1,6 +1,7 @@
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
+local Resolver = require("api.Resolver")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
@@ -29,16 +30,22 @@ local IChara = interface("IChara",
 function IChara:build()
    IMapObject.init(self)
 
-   self.hp = self.max_hp
-   self.mp = self.max_mp
    self.batch_ind = 0
    self.tile = self.image
    self.state = "Alive"
    self.time_this_turn = 0
    self.turns_alive = 0
-   self.level = 1
+   self.level = self.level or 1
    self.experience = 0
    self.quality = 2
+
+   self.dv = self.dv or 0
+   self.pv = self.pv or 0
+   self.hit_bonus = self.hit_bonus or 0
+   self.damage_bonus = self.damage_bonus or 0
+   self.curse_power = self.curse_power or 0
+   self.number_of_weapons = 0
+   self.ether_disease_speed = 0
 
    self.image = nil
    self.portrait = nil
@@ -75,6 +82,7 @@ function IChara:build()
          on_idle_action = nil
       }
 
+   self.skills = {}
    self.known_abilities = self.known_abilities or {}
 
    IMapObject.init(self)
@@ -83,12 +91,25 @@ function IChara:build()
    ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)
+
+   -- TEMP
+   self.max_hp = self.max_hp or 10
+   self.max_mp = self.max_mp or 2
+
+   local class_data = Resolver.run("base.class", {}, { chara = self })
+   local race_data = Resolver.run("base.race", {}, { chara = self })
+
+   self:mod_base_with(class_data, "merge")
+   self:mod_base_with(race_data, "merge")
+
+   self:refresh()
+
+   self:heal_to_max()
 end
 
 function IChara:refresh()
-   self.temp = {}
-
-   ICharaEquip.refresh(self)
+   IMapObject.on_refresh(self)
+   ICharaEquip.on_refresh(self)
 
    self:refresh_weight()
 
@@ -101,7 +122,15 @@ function IChara:refresh()
       }
    )
 
-   IMapObject.refresh(self)
+   if self:calc("max_hp") < 0 then
+      self:mod("max_hp", 1, "set")
+   end
+   if self:calc("max_mp") < 0 then
+      self:mod("max_mp", 1, "set")
+   end
+end
+
+function IChara:on_refresh()
 end
 
 function IChara:produce_memory()

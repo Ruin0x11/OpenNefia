@@ -1,3 +1,4 @@
+local Event = require("api.Event")
 local EquipSlots = require("api.EquipSlots")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local ILocation = require("api.ILocation")
@@ -5,28 +6,73 @@ local ILocation = require("api.ILocation")
 local ICharaEquip = interface("ICharaEquip", {}, ICharaInventory)
 
 function ICharaEquip:init()
+   self.body_parts = self.body_parts or {}
    -- TODO resolver
-   self.equip = EquipSlots:new(self.body_parts or {})
-   self.body_parts = nil
+   self.equip = EquipSlots:new(self.body_parts)
+   self.equipment_weight = 0
 end
 
-function ICharaEquip:refresh()
+function ICharaEquip:on_refresh()
+   for _, part in self:iter_body_parts() do
+      local item = part.equipped
+      if item then
+         item:refresh()
+
+         self:apply_item_stats(item)
+      end
+   end
+end
+
+function ICharaEquip:apply_item_stats(item)
+   self:mod("equipment_weight", item:calc("weight"))
+   self:mod("dv", item:calc("dv"))
+   self:mod("pv", item:calc("pv"))
+   self:mod("hit_bonus", item:calc("hit_bonus"))
+   self:mod("damage_bonus", item:calc("damage_bonus"))
+
+   if item:calc("is_weapon") then
+      self:mod("number_of_weapons", 1)
+   elseif item:calc("is_armor") then
+      local bonus = 0
+      if item:is_blessed() then
+         bonus = 2
+      end
+      self:mod("pv", item:calc("bonus") * 2 + bonus)
+   end
+
+   local curse_state = item:calc("curse_state")
+   if curse_state == "cursed" then
+      self:mod("curse_power", 20)
+   elseif curse_state == "cursed" then
+      self:mod("curse_power", 100)
+   end
+
+   local is_ether = false
+   if is_ether then
+      self:mod("ether_disease_speed", 5)
+   end
+
+   item:apply_enchantments_to_wielder(self)
+
+   Event.trigger("base.on_calc_chara_equipment_stats", {chara=self,item=item})
 end
 
 function ICharaEquip:equip_item(item, force)
    if not (self:has_item(item) or force) then
-      return nil
+      return nil, "not_owned"
    end
 
    local result = self.equip:equip(item)
-
-   self:refresh()
 
    return result
 end
 
 function ICharaEquip:has_item_equipped(item)
    return self.equip:has_object(item)
+end
+
+function ICharaEquip:find_equip_slot_for(item, body_part_type)
+   return self.equip:find_free_slot(item, body_part_type)
 end
 
 -- Returns true if the given item is equipped or in the character's
@@ -41,8 +87,6 @@ function ICharaEquip:unequip_item(item)
    end
 
    local result = self:take_item(item)
-
-   self:refresh()
 
    return result
 end

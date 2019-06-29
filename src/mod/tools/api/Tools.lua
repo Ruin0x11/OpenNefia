@@ -16,6 +16,34 @@ function Tools.spawn_foes(count)
    end
 end
 
+function Tools.spawn_equipped_foes(count)
+   local keys = data["base.item"]:iter():extract("_id"):to_list()
+   count = count or 100
+   for i=0,count do
+      local x = Rand.rnd(Map.width())
+      local y = Rand.rnd(Map.height())
+      if Map.can_access(x, y) then
+         local c = Chara.create("content.enemy", x, y)
+
+         local gen = function() return Item.create(Rand.choice(keys), 0, 0, { ownerless = true }) end
+         local iter = fun.tabulate(gen)
+
+         for _, i in iter:take(17) do
+            local slot = c:find_equip_slot_for(i)
+            if slot then
+               assert(c:equip_item(i, true))
+            end
+         end
+
+         c:refresh()
+      end
+   end
+end
+
+function Tools.show_equipment(chara)
+   return require("api.gui.menu.EquipmentMenu"):new(chara):query()
+end
+
 function Tools.spawn_allies(count)
    count = count or 16
    for i=0,count do
@@ -53,19 +81,19 @@ function Tools.spawn_items(count)
    end
 end
 
-function Tools.item()
-   return Map.iter_items():nth(1)
+function Tools.items()
+   return Map.iter_items()
 end
 
-function Tools.ally()
-   return Chara.iter_allies():nth(1)
+function Tools.allies()
+   return Chara.iter_allies()
 end
 
-function Tools.enemy()
+function Tools.enemies()
    local pred = function(c)
       return Chara.is_alive(c) and not c:is_in_party()
    end
-   return Map.iter_charas():filter(pred):nth(1)
+   return Map.iter_charas():filter(pred)
 end
 
 function Tools.dump_charas()
@@ -112,6 +140,10 @@ function Tools.drop_all()
       end
    end
    Chara.player():iter_inventory():each(drop)
+end
+
+function Tools.goto_map(name)
+   return Map.travel_to(Map.generate("elona_sys.elona122", { name = name }))
 end
 
 local print_flat = require("mod.tools.lib.print_flat")

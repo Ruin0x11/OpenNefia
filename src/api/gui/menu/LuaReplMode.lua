@@ -30,6 +30,8 @@ function LuaReplMode:submit(text)
 
    local success, result = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
 
+   self.env._1 = result
+
    return success, result
 end
 

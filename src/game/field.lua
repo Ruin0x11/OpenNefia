@@ -132,17 +132,10 @@ function field_layer:update_screen(scroll)
 end
 
 function field_layer:update_hud()
-   -- HACK there is a better way of doing this. It almost certainly
-   -- has to do with the event system.
+   -- HACK due to global data
    self.hud.clock:set_data(self.data.date)
 
-   if self.player ~= nil then
-      self.hud.hp_bar:set_data(self.player.hp, self.player.max_hp)
-      self.hud.mp_bar:set_data(self.player.mp, self.player.max_mp)
-      self.hud.level:set_data(self.player.level, self.player.experience)
-      self.hud.status_effects:set_data({}) -- TODO
-   end
-
+   self.hud:refresh(self.player)
    self.hud:update()
 end
 

@@ -1,7 +1,6 @@
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
 local Log = require("api.Log")
-local MapObject = require("api.MapObject")
 
 -- An IObject that can be displayed on a tilemap.
 local IMapObject = interface("IMapObject",

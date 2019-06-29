@@ -409,3 +409,87 @@ function table.insertion_sort(arr, f)
       last = last - 1
    end
 end
+
+
+local function mod_value(tbl, add, meth, default, prop)
+   if default and tbl[prop] == nil then
+      tbl[prop] = default[prop]
+   end
+   if meth == "add" then
+      local _type = type(add)
+      if _type == "boolean" or _type == "string" then
+         tbl[prop] = tbl[prop] or add
+      else
+         tbl[prop] = (tbl[prop] or 0) + add
+      end
+   elseif meth == "set" then
+      tbl[prop] = add
+   elseif meth == "merge" then
+      if not tbl[prop] then
+         tbl[prop] = add
+      end
+   else
+      error("unknown merge method " .. meth)
+   end
+end
+
+function table.merge_ex_single(base, value, meth, default, key)
+   assert(type(base) == "table", key)
+
+   if type(value) == "table" then
+      if value.__method then
+         -- specific method
+         meth = value.__method
+         value = value.__value
+      end
+   end
+
+   if type(value) == "table" then
+      -- Actual table
+      if base[key] == nil then
+         if default and default[key] then
+            base[key] = table.deepcopy(default[key])
+         else
+            base[key] = {}
+         end
+      end
+      for k, v in pairs(value) do
+         table.merge_ex_single(base[key], v, meth, default and default[key], k)
+      end
+   else
+      mod_value(base, value, meth, default, key)
+   end
+
+   return base
+end
+
+--- Configurable merge. Individual values can be merged in specific
+--- ways by annotating them with the special __method and __value
+--- fields.
+-- @tparam table tbl Table to merge values onto.
+-- @tparam any add Value to merge. If the field __multi is non-nil,
+-- treat this table as an array, each containing another table to run
+-- merge_ex on in the order listed.
+-- @tparam[opt] table defaults Default table to take values from if any
+-- are missing in `tbl` but present in `add`.
+-- @tparam[opt] string method Merge method. Supported methods are:
+-- set: sets values to a fixed amount. (default)
+-- add: adds values. For non-number values, same as `set`.
+-- merge: same as `set`, but do not overwrite values already existing
+-- in `tbl`.
+function table.merge_ex(tbl, add, defaults, method)
+   assert(type(tbl) == "table")
+   method = method or "set"
+
+   if add.__multi then
+      for _, t in ipairs(add) do
+         table.merge_ex(tbl, t, defaults, method)
+      end
+   else
+      for k, v in pairs(add) do
+         table.merge_ex_single(tbl, v, method, defaults, k)
+      end
+   end
+
+   return tbl
+end

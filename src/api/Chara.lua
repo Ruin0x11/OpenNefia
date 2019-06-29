@@ -82,6 +82,7 @@ function Chara.create(id, x, y, params, where)
    end
 
    local chara = MapObject.generate_from("base.chara", id)
+
    chara = where:take_object(chara, x, y)
 
    if chara then

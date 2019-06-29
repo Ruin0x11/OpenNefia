@@ -1,11 +1,12 @@
 local IMapObject = require("api.IMapObject")
 local IStackableObject = require("api.IStackableObject")
+local IItemEnchantments = require("api.item.IItemEnchantments")
 local field = require("game.field")
 
 -- TODO: move out of api
 local IItem = interface("IItem",
                          {},
-                         IStackableObject)
+                         {IStackableObject, IItemEnchantments})
 
 function IItem:build()
    -- TODO remove and place in schema as defaults
@@ -18,30 +19,54 @@ function IItem:build()
    self.curse_state = Rand.choice({"cursed", "blessed", "none", "doomed"})
    self.identify_state = "completely"
 
-   self.flags = {}
-
    self.name = self._id
-   self.weight = 10
 
-   self.types = {}
+   self.weight = self.weight or 10
+   self.dv = self.dv or 4
+   self.pv = self.pv or 4
+   self.hit_bonus = self.hit_bonus or 3
+   self.damage_bonus = self.damage_bonus or 2
+   self.bonus = self.bonus or 1
+
+   self.flags = self.flags or {}
+   self.types = self.types or {}
 
    -- item:send("base.on_item_create")
    IMapObject.init(self)
+   IItemEnchantments.init(self)
 end
 
 function IItem:build_name(amount)
    amount = amount or self.amount
-   if amount == 1 then
-      return self.name
+
+   local s = self.name
+   if amount ~= 1 then
+      s = string.format("%d %s", amount, self.name)
    end
 
-   return string.format("%d %s", amount, self.name)
+   local b = self:calc("bonus")
+   if b > 0 then
+      s = s .. " +" .. b
+   elseif b < 0 then
+      s = s .. " " .. b
+   end
+
+   return s
 end
 
 function IItem:refresh()
-   self.temp = {}
+   IMapObject.on_refresh(self)
+   IItemEnchantments.on_refresh(self)
 
-   IMapObject.refresh(self)
+   if self:can_equip_at("base.hand") then
+      self:mod("is_weapon", true)
+   end
+   if self:calc("dice_x") == 0 then
+      self:mod("is_armor", true)
+   end
+end
+
+function IItem:on_refresh()
 end
 
 function IItem:get_owning_chara()
@@ -58,6 +83,10 @@ end
 
 function IItem:produce_memory()
    return { image = self.image, color = {0, 0, 0} }
+end
+
+function IItem:is_blessed()
+   return self:calc("curse_state") == "blessed"
 end
 
 function IItem:is_cursed()
@@ -139,9 +168,7 @@ function IItem:can_stack_with(other)
    return true
 end
 
--- TODO: does this belong here?
-function IItem:get_ui_color()
-   -- TODO: keep list of known flags?
+IItem.ui_color = function(self)
    if self:calc("flags").is_no_drop then
         return {120, 80, 0}
    end
@@ -154,8 +181,6 @@ function IItem:get_ui_color()
       elseif curse_state == "blessed" then return {10, 110, 30}
       end
    end
-
-   -- EVENT: on calc_item_color
 
     return {0, 0, 0}
 end

@@ -26,14 +26,15 @@ function script_path()
    return str, info.linedefined
 end
 
-function data:error(mes)
+function data:error(mes, ...)
    local file, line = script_path()
+   mes = string.format(mes, ...)
    table.insert(self.errors,
                 {
                    file = file,
                    line = line,
                    level = "error",
-                   message = mes
+                   message = mes,
                 }
    )
    error("data: " .. mes)
@@ -53,11 +54,47 @@ function data:clear()
    metatables = {}
 end
 
+local function add_index_field(dat, _type, field)
+   if type(field) == "string" then field = {field} end
+   for _, v in ipairs(field) do
+      local index_key = dat[v]
+
+      -- NOTE: If the field is missing, it is skipped for indexing.
+      -- However, if it is specified and not unique, then an error is
+      -- raised.
+      if index_key ~= nil then
+         local key = "by_" .. v
+         inner[_type][key] = inner[_type][key] or {}
+
+         if inner[_type][key][index_key] ~= nil then
+            self:error(string.format("Index key '%s' on '%s' is not unique: '%s'", v, full_id, index_key))
+         else
+            inner[_type][key][index_key] = dat
+         end
+      end
+   end
+end
+
+function data:add_index(_type, field)
+   if schemas[_type].indexes[field] then
+      return
+   end
+
+   -- TODO: verify is a valid field for this type
+   schemas[_type].indexes[field] = true
+
+   for _, dat in data[_type]:iter() do
+      add_index_field(dat, _type, field)
+   end
+end
+
 function data:add_type(schema, params)
    params = params or {}
 
    local mod_name = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
+
+   schema.indexes = {}
 
    local metatable = params.interface or {}
    metatable._type = _type
@@ -81,7 +118,7 @@ function data:add(dat)
    local _type = dat._type
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
-      data:error("Missing _id or _type")
+      data:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
       return
    end
 
@@ -101,8 +138,8 @@ function data:add(dat)
       if string.match(err.message, "^Superfluous value: ") then
          local path = tostring(err.path)
          if path == "_id"
-         or path == "_type"
-         or path == "_index_on"
+            or path == "_type"
+            or path == "_index_on"
          then
             add = false
          end
@@ -131,20 +168,8 @@ function data:add(dat)
 
    inner[_type][full_id] = dat
 
-   if _schema.index_on then
-      local i = _schema.index_on
-      if type(i) == "string" then i = {i} end
-      for _, v in ipairs(i) do
-         local index_key = dat[v]
-         local key = "by_" .. v
-         inner[_type][key] = inner[_type][key] or {}
-
-         if inner[_type][key][index_key] ~= nil then
-            self:error(string.format("Index key '%s' on '%s' is not unique: '%s'", v, full_id, index_key))
-         else
-            inner[_type][key][index_key] = dat
-         end
-      end
+   for field, _ in pairs(_schema.indexes) do
+      add_index_field(dat, _type, field)
    end
 
    dat._id = full_id
@@ -179,13 +204,14 @@ function proxy:__index(k)
    local exist = rawget(proxy, k)
    if exist then return exist end
 
-   local for_type = rawget(inner, self._type)
+   local _type = rawget(self, "_type")
+   local for_type = rawget(inner, _type)
    if not for_type then return nil end
 
    -- Permit substituting an instance of a data type if it is passed
    -- in instead of a string key.
    if type(k) == "table"
-      and k._type == self._type
+      and k._type == _type
       and for_type[k._id]
    then
       return k

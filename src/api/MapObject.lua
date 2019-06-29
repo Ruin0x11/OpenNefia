@@ -10,6 +10,7 @@ function MapObject.generate_from(_type, id, uid_tracker)
    return MapObject.generate(proto, uid_tracker)
 end
 
+-- TODO: set prototype in metatable
 local function makeindex(proto)
    return function(t, k)
       local v = rawget(t, k)
@@ -59,8 +60,9 @@ function MapObject.generate(proto, uid_tracker)
    data.x = 0
    data.y = 0
 
+   -- assert_is_an(IMapObject, data)
+
    data:build()
-   data:refresh()
 
    if merge_rest then
       data = table.merge(data, proto)
@@ -91,7 +93,8 @@ function MapObject.clone(object, owned)
    -- Generate a new object using the stripped object as a prototype.
    local new_object = MapObject.generate(proto)
 
-   if owned and is_an(IObject, object) then
+   local IMapObject = require("api.IMapObject")
+   if owned and is_an(IMapObject, object) then
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps

@@ -73,6 +73,7 @@ function EquipmentMenu:init(chara)
       escape = function() self.canceled = true end,
    }
 
+   self.stats = {}
    self.changed_equipment = false
 
    self:update_from_chara()
@@ -101,7 +102,7 @@ function EquipmentMenu:update_from_chara()
       if i.equipped then
          entry.equipped = i.equipped
          entry.icon = i.equipped:copy_image()
-         entry.color = i.equipped:get_ui_color()
+         entry.color = i.equipped:calc("ui_color")
          entry.text = i.equipped:build_name()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
       end
@@ -112,6 +113,16 @@ function EquipmentMenu:update_from_chara()
    self.pages:set_data(data)
    self.win:set_pages(self.pages)
    self:refresh_item_icons()
+
+   self.stats = {
+      dv = self.chara:calc("dv"),
+      pv = self.chara:calc("pv"),
+      weight = self.chara:calc("equipment_weight"),
+      hit_bonus = self.chara:calc("hit_bonus"),
+      damage_bonus = self.chara:calc("damage_bonus"),
+   }
+
+   Gui.update_hud()
 end
 
 function EquipmentMenu:on_query()
@@ -138,7 +149,13 @@ function EquipmentMenu:draw()
    self.t.deco_b:draw(self.x, self.y + self.height - 164)
 
    local weight = Ui.display_weight(100)
-   local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d", weight, "med", 10, 20, 10, 20)
+   local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d",
+                              self.stats.weight,
+                              "med",
+                              self.stats.hit_bonus,
+                              self.stats.damage_bonus,
+                              self.stats.dv,
+                              self.stats.pv)
    Ui.draw_note(note, self.x, self.y, self.width, self.height, 0)
 
    self.pages:draw()
