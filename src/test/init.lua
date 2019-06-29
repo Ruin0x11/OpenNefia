@@ -10,10 +10,10 @@ require("boot")
 
 t.mock_map()
 
-local stopwatch = require("util.stopwatch")
+local Stopwatch = require("api.Stopwatch")
 
 function run_tests(path)
-   local sw = stopwatch:new()
+   local sw = Stopwatch:new()
 
    for file in lfs.dir(path) do
       if file ~= "." and file ~= ".." then
@@ -41,7 +41,7 @@ function run_tests(path)
 end
 
 function run_all_tests()
-   local total = stopwatch:new()
+   local total = Stopwatch:new()
 
    total:measure()
    run_tests("./test/tests")

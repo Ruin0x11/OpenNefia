@@ -1,6 +1,6 @@
 local fs = require("internal.fs")
 local internal = require("internal")
-local stopwatch = require("util.stopwatch")
+local stopwatch = require("api.Stopwatch")
 
 local startup = {}
 

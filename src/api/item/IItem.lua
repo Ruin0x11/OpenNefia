@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local IMapObject = require("api.IMapObject")
 local IStackableObject = require("api.IStackableObject")
 local IItemEnchantments = require("api.item.IItemEnchantments")
@@ -10,6 +11,7 @@ local IItem = interface("IItem",
 
 function IItem:build()
    -- TODO remove and place in schema as defaults
+   IMapObject.init(self)
 
    self.amount = self.amount or 1
    self.location = nil
@@ -32,7 +34,6 @@ function IItem:build()
    self.types = self.types or {}
 
    -- item:send("base.on_item_create")
-   IMapObject.init(self)
    IItemEnchantments.init(self)
 end
 
@@ -152,8 +153,16 @@ function IItem:can_stack_with(other)
          local do_deepcompare = type(my_val) == "table"
             and my_val.__class == nil
             and my_val.uid == nil
+            and field ~= "temp"
 
          if do_deepcompare then
+            if not type(their_val) == "table" then
+               return false, field
+            end
+            if not #my_val == #their_val then
+               return false, field
+            end
+            Log.debug("Stack: deepcomparing %s", field)
             if not table.deepcompare(my_val, their_val) then
                return false, field
             end

@@ -2,7 +2,7 @@ local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 
 local function calc_potential(skill, level, knows_skill)
-   local p = 0
+   local p
 
    if skill.skill_type == "stat" then
       p = math.min(level * 20, 400)
@@ -80,6 +80,7 @@ data:add {
    resolve    = init_skill,
 }
 
+
 local init_skill_list = function(self, params)
    self.resolver = "elona.skill"
 
@@ -91,7 +92,6 @@ local init_skill_list = function(self, params)
 
    return skills
 end
-
 
 data:add {
    _type = "base.resolver",

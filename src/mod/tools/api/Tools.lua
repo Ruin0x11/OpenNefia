@@ -96,6 +96,8 @@ function Tools.enemies()
    return Map.iter_charas():filter(pred)
 end
 
+Tools.foes = Tools.enemies
+
 function Tools.dump_charas()
    local t = Map.iter_charas()
    :map(function(c) return { tostring(c.uid), c.x, c.y } end)

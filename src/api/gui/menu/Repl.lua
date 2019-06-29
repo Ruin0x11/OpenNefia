@@ -220,7 +220,7 @@ function Repl:submit()
       if result._type then
          result_text = inspect(Object.make_prototype(result))
       elseif tostring(result) == "<generator>" then
-         result_text = "(iterator): " .. inspect(result:to_list())
+         result_text = "(iterator): " .. inspect(result:take(50):to_list())
       else
          result_text = inspect(result)
       end

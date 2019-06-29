@@ -44,7 +44,7 @@ function _p(...)
    -- nil values in varargs will mess up ipairs, so iterate by the
    -- largest array index found instead and assume everything in
    -- between was passed as nil
-   for k, v in pairs(t) do
+   for k, _ in pairs(t) do
       max = math.max(max, k)
    end
 

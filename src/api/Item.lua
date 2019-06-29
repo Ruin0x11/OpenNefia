@@ -40,6 +40,7 @@ function Item.almost_equals(a, b)
 end
 
 function Item.create(id, x, y, params, where)
+   local sw = require("api.Stopwatch"):new()
    if x == nil then
       local player = Chara.player()
       if Chara.is_alive(player) then
@@ -51,14 +52,14 @@ function Item.create(id, x, y, params, where)
    params = params or {}
    local amount = params.amount or 1
 
-   where = where or field.map
+   if params.ownerless then
+      where = nil
+   else
+      where = where or field.map
+   end
 
-   if not is_an(ILocation, where) then
-      if params.ownerless then
-         where = nil
-      else
-         return nil
-      end
+   if not is_an(ILocation, where) and not params.ownerless then
+      return nil
    end
 
    if where then

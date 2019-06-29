@@ -152,8 +152,6 @@ function field_logic.turn_begin()
    return "pass_turns"
 end
 
-local sw = require("util.stopwatch"):new()
-
 function field_logic.determine_turn()
    local player = Chara.player()
    assert(player ~= nil)
