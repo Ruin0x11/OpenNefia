@@ -14,6 +14,17 @@ local field = require("game.field")
 --- Game logic intended for the player only.
 local Command = {}
 
+local travel_to_map = Event.hook("travel_to_map",
+                                 "Hook when traveling to a new map.",
+                                 {nil, "No map configured"},
+                                 function(result, default)
+                                    if type(result) == "table" then
+                                       return table.unpack(result)
+                                    end
+
+                                    return table.unpack(default)
+                                 end)
+
 function Command.move(player, x, y)
    if type(x) == "string" then
       x, y = Pos.add_direction(x, player.x, player.y)
@@ -67,7 +78,16 @@ function Command.move(player, x, y)
       Event.trigger("base.before_player_map_leave", {player=player})
       -- quest abandonment warning
 
-      Input.yes_no()
+      if Input.yes_no() then
+         local map, err = travel_to_map()
+         if not map then
+            Gui.mes("Error loading map: " .. err)
+         else
+            Map.travel_to(map)
+         end
+      end
+
+      return "player_turn_query"
    else
       -- Run the general-purpose movement command. This will also
       -- handle blocked tiles.

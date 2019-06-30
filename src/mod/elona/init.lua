@@ -6,4 +6,4 @@ require("mod.elona.data.race")
 require("mod.elona.data.chara")
 require("mod.elona.data.item")
 require("mod.elona.data.effects")
-
+require("mod.elona.data.feat")

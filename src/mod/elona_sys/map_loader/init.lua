@@ -97,6 +97,10 @@ function convert_122(gen, params)
 
             Chara.create(id, x, y, {}, result)
          elseif data[5] == 2 then
+            local id = Compat.convert_122_id("base.feat", data[1])
+            local x = data[2]
+            local y = data[3]
+
             -- cmap.objects[#cmap.objects+1] = {
             --    id = data[1],
             --    x = data[2],

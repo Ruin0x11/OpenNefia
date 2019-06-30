@@ -22,6 +22,13 @@ data:extend_type(
    }
 )
 
+data:extend_type(
+   "base.feat",
+   {
+      elona_id = schema.Optional(schema.Number),
+   }
+)
+
 data:add_index("base.chara", "elona_id")
 data:add_index("base.item", "elona_id")
 

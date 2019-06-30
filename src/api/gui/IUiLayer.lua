@@ -17,8 +17,10 @@ local function query(self)
 
    local success, res, canceled
    while true do
-      local ran = self:run_actions(dt)
-      success, res, canceled = pcall(function() return self:update(dt, ran) end)
+      success, res, canceled = pcall(function()
+            local ran = self:run_actions(dt)
+            return self:update(dt, ran)
+      end)
       if not success then
          Log.error("Error on query: %s", res)
          break

@@ -242,7 +242,15 @@ function ReplLayer:submit()
       if result._type then
          result_text = inspect(Object.make_prototype(result))
       elseif tostring(result) == "<generator>" then
-         result_text = "(iterator): " .. inspect(result:take(10):to_list())
+         local max = 10
+         local list = result:take(max + 1)
+         if list:length() == max + 1 then
+            result_text = "(iterator): " .. inspect(list:take(10):to_list())
+            result_text = string.strip_suffix(result_text, " }")
+            result_text = result_text .. ", <...> }"
+         else
+            result_text = "(iterator): " .. inspect(list:to_list())
+         end
       else
          result_text = inspect(result)
       end

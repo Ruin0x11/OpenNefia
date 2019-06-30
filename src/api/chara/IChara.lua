@@ -300,7 +300,9 @@ function IChara:damage_hp(amount, source, params)
          end
       end
 
-      attacker:act_hostile_towards(victim)
+      if attacker then
+         attacker:act_hostile_towards(victim)
+      end
 
       if attacker and not Chara.is_player(victim) then
          local apply_hate

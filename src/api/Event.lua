@@ -70,13 +70,13 @@ function Event.hook(id, desc, default, field, cb)
       if access_field then
          cb = function() return {} end
       else
-         cb = function() return nil end
+         cb = function() return default end
       end
    end
 
    local dat = data:add {
       _type = "base.event",
-      _id = id
+      _id = "hook_" .. id
    }
 
    local full_id = (dat and dat._id) or nil
@@ -86,40 +86,34 @@ function Event.hook(id, desc, default, field, cb)
       full_id = dat._id
    end
 
+   local result_extractor
+   if type(field) == "function" then
+      result_extractor = field
+   else
+      result_extractor = function(result, default)
+         if field == nil then
+            return result
+         elseif type(result) == "table" and access_field then
+            return result[field] or default
+         end
+
+         return default
+      end
+   end
+
    local func = function(params, _default)
       _default = _default or default
       local success, result = pcall(function() return Event.trigger(full_id, params, _default) end)
       if not success then
          Log.error("Error running hook: %s", result)
-         return default
+         result = _default
       end
 
-      local final
-
-      if field == nil then
-         final = result
-      elseif type(result) == "table" and access_field then
-         final = result[field]
-      else
-         final = nil
-      end
-
-      if final == nil then
-         final = _default
-      end
-      _p(final,default,_default,full_id)
-
-      return final
+      return result_extractor(result, _default)
    end
 
    local name = string.format("Default hook handler (%s)", full_id)
-   if env.is_hotloading() then
-      Log.info("In-place hook update for %s", name)
-      Event.replace(full_id, name, cb, {priority=100000})
-   else
-      Log.info("Registering new hook: %s", tostring(full_id))
-      Event.register(full_id, name, cb, {priority=100000})
-   end
+   Event.register(full_id, name, cb, {priority=100000})
 
    return func
 end

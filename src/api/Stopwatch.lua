@@ -38,4 +38,10 @@ function Stopwatch:p(text)
    print(self:measure_and_format(text))
 end
 
+function Stopwatch:bench(f, ...)
+   self:measure()
+   f(...)
+   return self:measure_and_format()
+end
+
 return Stopwatch

@@ -191,7 +191,8 @@ function data:add(dat)
          self:run_edits_for(_type, full_id)
          return dat
       else
-         self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
+         Log.error("ID is already taken on type '%s': '%s'", _type, full_id)
+         -- self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
          return nil
       end
    end

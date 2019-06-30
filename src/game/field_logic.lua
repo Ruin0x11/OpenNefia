@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Log = require("api.Log")
 local Command = require("api.Command")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -366,7 +367,16 @@ function field_logic.query()
          error("Unknown turn event " .. tostring(event))
       end
 
-      event, target_chara = cb(target_chara)
+      local success
+      success, event, target_chara = pcall(function() return cb(target_chara) end)
+
+      if not success then
+         local err = event
+         Gui.mes(string.format("Error in turn sequence: %s", err), "Red")
+         Log.error("Error in turn sequence: %s", err)
+         event = "player_turn_query"
+         target_chara = nil
+      end
    end
 
    draw.pop_layer()

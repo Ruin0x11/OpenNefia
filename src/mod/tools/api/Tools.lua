@@ -166,6 +166,10 @@ function Tools.msecs_to_frames(msecs, framerate)
    return frames
 end
 
+function Tools.data_keys(_type)
+   return data[_type]:iter():extract("_id")
+end
+
 local print_flat = require("mod.tools.lib.print_flat")
 Tools.print_flat = print_flat.print_flat
 

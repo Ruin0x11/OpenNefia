@@ -183,6 +183,10 @@ end
 
 -- HACK: Needs to be replaced with resource system.
 function field_layer:register_draw_layer(require_path)
+   if env.is_hotloading() then
+      Log.warn("Skipping draw layer register of '%s'", require_path)
+      return
+   end
    self.layers[#self.layers+1] = require_path
 end
 

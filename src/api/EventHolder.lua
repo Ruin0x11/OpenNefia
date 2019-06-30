@@ -4,13 +4,11 @@ local EventHolder = class.class("EventHolder")
 
 function EventHolder:init()
    self.hooks = {}
-   self.priorities = {}
    self.observers = {}
 end
 
 function EventHolder:clear()
    self.hooks = {}
-   self.priorities = {}
    self.observers = {}
 end
 
@@ -28,13 +26,7 @@ function EventHolder:register(event_id, name, cb, opts)
    end
 
    -- TODO: unnecessary if the sort is stable, and incorrect anyways
-   self.priorities[event_id] = self.priorities[event_id] or 100000
-
-   local priority = opts.priority or self.priorities[event_id]
-
-   if not opts.priority then
-      self.priorities[event_id] = self.priorities[event_id] + 100000
-   end
+   local priority = opts.priority or 200000
 
    self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
 
