@@ -14,8 +14,8 @@ function Repl.get()
    return field.repl
 end
 
-function Repl.copy_last_line()
-   return Repl.get():copy_last_line()
+function Repl.copy_last_input()
+   return Repl.get():copy_last_input()
 end
 
 return Repl

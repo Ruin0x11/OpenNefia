@@ -28,7 +28,7 @@ function Action.move(chara, x, y)
    -- solid feats (doors, jail cell)
    -- proc currently standing mef
    -- proc world map weather events
-   local result = Event.trigger("base.before_chara_moved", params)
+   local result = Event.trigger("base.before_chara_moved", params, {blocked=false})
    if result.blocked then
       return false
    end

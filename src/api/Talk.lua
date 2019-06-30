@@ -1,11 +1,13 @@
+local Even = require("api.Event")
 local Rand = require("api.Rand")
+local Log = require("api.Log")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local data = require("internal.data")
 
 local Talk = {}
 
-function Talk.message(talk_id, event_id, chara, args, source)
+function Talk.message(talk_id, talk_event_id, chara, args)
    if not talk_id then
       return
    end
@@ -16,22 +18,19 @@ function Talk.message(talk_id, event_id, chara, args, source)
    end
 
    args = args or {}
-   source = source or "talk"
+   local is_event = string.has_prefix(talk_event_id, "event:")
 
-   if source == "event" then
-      event_id = "event:" .. event_id
-   elseif source == "talk" then
-      local ev = data["base.talk_event"][event_id]
+   if not is_event then
+      local ev = data["base.talk_event"][talk_event_id]
       if not ev then
+         Log.warn("Unknown talk event %s for talk %s", talk_event_id, talk_id)
          return nil
       end
       args = table.merge_existing(table.deepcopy(ev.params) or {}, args)
-   else
-      error("unknown talk source " .. source)
    end
 
    local lang = "jp"
-   local talk_entry = talk.messages[lang][event_id]
+   local talk_entry = talk.messages[lang][talk_event_id]
    local mes = talk_entry
 
    if type(mes) == "table" and mes[1] ~= nil then
@@ -51,8 +50,8 @@ function Talk.message(talk_id, event_id, chara, args, source)
    return mes, talk_entry
 end
 
-function Talk.say(chara, event_id, args, source)
-   local message, talk_entry = Talk.message(chara.talk, event_id, chara, args, source)
+function Talk.say(chara, talk_event_id, args, source)
+   local message, talk_entry = Talk.message(chara.talk, talk_event_id, chara, args, source)
 
    if not string.nonempty(message) then
       return
@@ -60,12 +59,18 @@ function Talk.say(chara, event_id, args, source)
 
    Gui.mes(message)
 
-   if type(talk_entry) == "table" and talk_entry.voice then
-      Gui.play_sound(talk_entry.voice, chara.x, chara.y)
-   end
-
-   Event.trigger("base.on_talk", {chara=chara,event_id=event_id,message=message,talk_entry=talk_entry})
+   chara:emit("base.on_talk", {talk_event_id=talk_event_id,message=message,talk_entry=talk_entry})
 end
+
+local function talk_voice_handler(chara, params)
+   print("handler2")
+   if type(params.talk_entry) == "table" and params.talk_entry.voice then
+      Gui.play_sound(params.talk_entry.voice, chara.x, chara.y)
+   end
+end
+
+Event.register("base.on_talk", "talk voice handler2", talk_voice_handler)
+
 
 function Talk.setup(chara)
    if not chara.talk then
@@ -74,28 +79,29 @@ function Talk.setup(chara)
 
    local talk = data["base.talk"][chara.talk]
    if not talk then
-      chara.events:unregister("on_event", "talk handler")
+      chara:disconnect_self("base.before_handle_self_event", "talk handler")
       return
    end
 
    local lang = "jp"
-   for event_id, v in pairs(talk.messages[lang]) do
+   for event_id, _ in pairs(talk.messages[lang]) do
+      -- TODO: unify talk and base events
       if string.has_prefix(event_id, "event:") then
-         local event_id = string.strip_prefix(event_id, "event:")
+         event_id = string.strip_prefix(event_id, "event:")
          if data["base.event"][event_id] then
-            Event.add_observer(event_id, chara)
+            -- Event.add_observer(event_id, chara)
          end
       end
    end
 
-   if not chara.events:has_handler("on_event", "talk handler") then
-      chara.events:register("on_event", "talk handler",
-                            function(params)
+   if not chara:has_event_handler("base.before_handle_self_event", "talk handler") then
+      chara:connect_self("base.before_handle_self_event", "talk handler",
+                            function(self, params)
                                if params.event_id == "base.on_talk" then
                                   return
                                end
 
-                               Talk.say(chara, params.event_id, params.args, "event")
+                               Talk.say(self, "event:" .. params.event_id, params.args)
                             end
       )
    end

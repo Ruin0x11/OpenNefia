@@ -43,9 +43,7 @@ function EventHolder:register(event_id, name, cb, opts)
    end
 end
 
-function EventHolder:unregister(event_id, name, opts)
-   opts = opts or {}
-
+function EventHolder:unregister(event_id, name)
    local events = self.hooks[event_id]
    if events then
       events:unregister(name)
@@ -117,7 +115,10 @@ end
 
 function EventHolder:print(event_id)
    if event_id ~= nil then
-      return self.hooks[event_id]:print()
+      if self.hooks[event_id] ~= nil then
+         return self.hooks[event_id]:print()
+      end
+      return "(empty)"
    end
 
    local s = ""

@@ -216,7 +216,7 @@ local function calc_kill_exp(attacker, victim)
       gained_exp = gained_exp / 4
    end
 
-   local result = Event.trigger("base.on_calc_kill_exp", {attacker=attacker,victim=victim,gained_exp=gained_exp})
+   local result = Event.trigger("base.on_calc_kill_exp", {attacker=attacker,victim=victim},{gained_exp=gained_exp})
    if result.gained_exp then
       gained_exp = gained_exp
    end
@@ -249,7 +249,7 @@ function IChara:damage_hp(amount, source, params)
    local damage = amount
    event_params.damage = damage
 
-   local result = Event.trigger("base.on_calc_damage", event_params)
+   local result = Event.trigger("base.on_calc_damage", event_params, {damage=damage})
    if type(result.damage) == "number" then
       damage = result.damage
    end

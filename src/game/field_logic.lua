@@ -214,7 +214,7 @@ function field_logic.pass_turns()
    -- proc mef
    -- proc buff
 
-   local result = Event.trigger("base.on_chara_pass_turn", {chara=chara})
+   local result = Event.trigger("base.on_chara_pass_turn", {chara=chara}, {blocked=false})
    if result.blocked then
       return result.turn_result or "turn_end", chara
    end
@@ -283,7 +283,7 @@ function field_logic.turn_end(chara)
       return "pass_turns"
    end
 
-   local result = Event.trigger("base.on_chara_turn_end", {chara=chara, regeneration=true})
+   local result = Event.trigger("base.on_chara_turn_end", {chara=chara}, {regeneration=true})
    local regen = result.regeneration
 
    if Chara.is_player(chara) then

@@ -349,7 +349,7 @@ data:add {
          ["event:base.on_chara_revived"] = "I'm revived.",
 
          ["base.ai_aggro"] = {
-            { talk = "「負けるもんか！」"},
+            { talk = "「負けるもんか！」", voice = "content.voice5" },
             { talk = "「うしゃー、やるぞ！」"},
             "",
             "",
@@ -397,7 +397,7 @@ DamagePopup.install()
 
 Event.register("base.after_damage_hp",
                "damage popups",
-               function(p)
+               function(source, p)
                   local Map = require("api.Map")
                   if Map.is_in_fov(p.chara.x, p.chara.y) then
                      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))

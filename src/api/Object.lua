@@ -17,7 +17,7 @@ local function cycle_aware_copy(t, cache)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
       -- NOTE: preserves the UID for now.
-      if k ~= "location" then
+      if k ~= "location" and k ~= "proto" then
          k = cycle_aware_copy(k, cache)
          v = cycle_aware_copy(v, cache)
          res[k] = v

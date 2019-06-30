@@ -47,21 +47,25 @@ function Feat.create(id, x, y, params, where)
    return feat
 end
 
-local function feat_bumped_into_handler(p)
+local function feat_bumped_into_handler(source, p, result)
    for _, feat in Feat.at(p.x, p.y) do
       if feat:calc("is_solid") then
          feat:on_bumped_into(p.chara)
-         p.blocked = true
+         result.blocked = true
       end
    end
+
+   return result
 end
 
-local function feat_stepped_on_handler(p)
+local function feat_stepped_on_handler(source, p, result)
    for _, feat in Feat.at(p.x, p.y, p.chara:current_map()) do
       if feat.on_stepped_on then
          feat:on_stepped_on(p.chara)
       end
    end
+
+   return result
 end
 
 local Event = require("api.Event")

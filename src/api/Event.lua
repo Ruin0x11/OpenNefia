@@ -8,8 +8,10 @@ local Event = {}
 local global_events = require("internal.global.global_events")
 
 local function check_event(event_id)
-   if data["base.event"][event_id] == nil then
-      error("Unknown event type \"" .. event_id .. "\"")
+   if env.is_loaded("internal.data.base") then
+      if data["base.event"][event_id] == nil then
+         error("Unknown event type \"" .. event_id .. "\"")
+      end
    end
 end
 
@@ -19,8 +21,12 @@ end
 
 function Event.register(event_id, name, cb, opts)
    if env.is_hotloading() then
-      Log.warn("Skipping Event.register for %s - \":%s\"", event_id, name)
-      return
+      if global_events:has_handler(event_id, name) then
+         Log.warn("Skipping Event.register for %s - \":%s\"", event_id, name)
+         return
+      else
+         Log.warn("New event callback hotloaded for %s - \":%s\"", event_id, name)
+      end
    end
 
    check_event(event_id)

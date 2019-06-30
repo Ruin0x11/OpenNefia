@@ -124,6 +124,16 @@ function ReplLayer:scrollback_down()
    self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
+function ReplLayer:clear()
+   self.scrollback = circular_buffer:new(self.size)
+   self.scrollback_index = 0
+
+   self.history = {}
+   self.history_index = 0
+
+   self:set_text("")
+end
+
 function ReplLayer:move_cursor(codepoints)
    local pos = utf8.find_next_pos(self.text, self.cursor_pos, codepoints)
    if codepoints > 0 and pos == 0 then
@@ -259,7 +269,7 @@ function ReplLayer:save_history()
    file:close()
 end
 
-function ReplLayer:copy_last_line()
+function ReplLayer:copy_last_input()
    local line = self.history[2]
    if line then
       Env.set_clipboard_text(line)

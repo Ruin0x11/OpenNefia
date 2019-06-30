@@ -479,4 +479,8 @@ function env.get_require_path(tbl)
    return path
 end
 
+function env.is_loaded(path)
+   return package.loaded[path] ~= nil
+end
+
 return env
