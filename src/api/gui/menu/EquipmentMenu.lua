@@ -42,6 +42,8 @@ local UiListExt = function(equipment_menu)
       Draw.text(entry.body_part.name, x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
+      local subtext = entry.subtext
+
       if entry.equipped then
          entry.icon:draw(x + 12, y + 10, nil, nil, {255, 255, 255}, true)
 
@@ -52,7 +54,7 @@ local UiListExt = function(equipment_menu)
 
       UiList.draw_item_text(self, item_name, entry, i, x, y, 30, color)
 
-      Draw.text(entry.subtext, x + 590 - Draw.text_width(entry.subtext), y + 2, color)
+      Draw.text(subtext, x + 590 - Draw.text_width(subtext), y + 2, color)
 
    end
 
@@ -79,6 +81,10 @@ function EquipmentMenu:init(chara)
    self.changed_equipment = false
 
    self:update_from_chara()
+end
+
+function EquipmentMenu:on_hotload_layer()
+   table.merge(self.pages, UiListExt(self))
 end
 
 function EquipmentMenu:show_item_description()
@@ -136,10 +142,6 @@ end
 function EquipmentMenu:on_query()
    self.canceled = false
    Gui.play_sound("base.wear");
-end
-
-function EquipmentMenu:on_hotload_layer()
-   table.merge(self.pages, UiListExt(self))
 end
 
 function EquipmentMenu:relayout()

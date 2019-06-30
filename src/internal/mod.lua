@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local data = require("internal.data")
 local fs = require("internal.fs")
 local env = require("internal.env")
@@ -8,18 +9,20 @@ local mod = {}
 local chunks = {}
 
 local function load_mod(mod_name, init_lua_path)
-   -- Convert the filename to the dot syntax expected by
-   -- package.searchpath.
-   init_lua_path = string.gsub(init_lua_path, "/", ".")
-   init_lua_path = string.strip_suffix(init_lua_path, ".lua")
+   local req_path = env.convert_to_require_path(init_lua_path)
 
    local mod_env = env.generate_sandbox(mod_name, true)
 
-   local chunk, err = env.load_sandboxed_chunk(init_lua_path, mod_name)
+   local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
 
    if err then
       error(err, 0)
    end
+
+   Log.info("Loaded mod %s to %s.", mod_name, req_path)
+
+   -- Mods are not expected to return anything in init.lua.
+   package.loaded[req_path] = true
 
    return chunk
 end
@@ -126,10 +129,9 @@ function mod.load_mods(mods)
       if fs.is_file(init) then
          local chunk = load_mod(mod.id, init)
 
-         print(string.format("Loaded mod %s.", mod.id))
          chunks[mod.id] = chunk
       else
-         print(string.format("No init.lua for mod %s.", mod.id))
+         Log.info("No init.lua for mod %s.", mod.id)
       end
    end
 end

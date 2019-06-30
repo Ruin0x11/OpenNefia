@@ -63,10 +63,23 @@ function env.hotloaded_this_frame()
    return hotloaded_this_frame
 end
 
+local function path_is_in_mod(path)
+   return string.match(path, "^mod%.([^.]+)")
+end
+
 -- Tries to find the mod that is calling the current function by
 -- looking up the stack for an environment with the _MOD_NAME global
 -- variable. If not found, returns "base".
+--
+-- When hotloading, this uses the currently hotloading require path to
+-- see if a mod is being hotloaded at the top level instead, since the
+-- caller of this function will be the debug server or REPL.
 function env.find_calling_mod()
+   local hotload_path = env.is_hotloading()
+   if hotload_path then
+      return path_is_in_mod(hotload_path)
+   end
+
    local stack = 1
    local info = debug.getinfo(stack, "S")
 
@@ -127,7 +140,7 @@ end
 local function get_load_type(path)
    if string.match(path, "^api%.") then
       return "api"
-   elseif string.match(path, "^mod%.") then
+   elseif path_is_in_mod(path) then
       return "mod"
    end
 
@@ -162,6 +175,7 @@ local function safe_load_chunk(path)
    local load_type = get_load_type(path)
 
    if load_type == "api" then
+      Log.debug("Loading chunk %s with global env.", path)
       return env_loadfile(path)
    elseif load_type == "mod" then
       local mod_name = extract_mod_name(path)
@@ -171,10 +185,19 @@ local function safe_load_chunk(path)
       --       is not the calling mod.
       --
 
+      Log.debug("Loading chunk %s with mod sandbox for %s.", path, mod_name)
       return env.load_sandboxed_chunk(path, mod_name)
    end
 
    return nil
+end
+
+local function env_loadfile_or_safe_load(path)
+   if path_is_in_mod(path) then
+      return safe_load_chunk(path)
+   end
+
+   return env_loadfile(path)
 end
 
 local IS_HOTLOADING = false
@@ -183,7 +206,7 @@ local HOTLOADED = {}
 local LOADING = {}
 
 -- api/chara/IChara.lua -> api.chara.IChara
-local function convert_to_require_path(path)
+function env.convert_to_require_path(path)
    local path = path
 
    -- HACK: needs better normalization to prevent duplicate chunks. If
@@ -194,41 +217,39 @@ local function convert_to_require_path(path)
    path = string.strip_suffix(path, ".lua")
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
+   path = string.strip_suffix(path, ".init")
 
    return path
 end
 
 local function gen_require(chunk_loader)
    return function(path, hotload)
-      path = convert_to_require_path(path)
+      local req_path = env.convert_to_require_path(path)
 
-      if LOADING[path] then
-         error("Loop while loading " .. path)
+      if LOADING[req_path] then
+         error("Loop while loading " .. req_path)
       end
 
       hotload = hotload or HOTLOAD_DEPS
 
-      -- Only paths under "mod.*" and "api.*" should be hotloaded.
-      -- (For example, hotloading "internal.data" would overwrite all
-      -- data prototypes, which would break many things.)
-      if hotload and not can_hotload(path) then
+      if hotload and not can_hotload(req_path) then
          hotload = false
       end
 
-      -- Don't hotload again if the path was already hotloaded
+      -- Don't hotload again if the req_path was already hotloaded
       -- earlier.
-      if hotload and HOTLOADED[path] then
+      if hotload and HOTLOADED[req_path] then
          hotload = false
       end
 
-      if not hotload and package.loaded[path] then
-         return package.loaded[path]
+      if not hotload and package.loaded[req_path] then
+         return package.loaded[req_path]
       end
 
-      Log.debug("HOTLOAD %s", path)
-      LOADING[path] = true
-      local result, err = chunk_loader(path)
-      LOADING[path] = false
+      Log.debug("HOTLOAD %s", req_path)
+      LOADING[req_path] = true
+      local result, err = chunk_loader(req_path)
+      LOADING[req_path] = false
       Log.debug("HOTLOAD RESULT %s", tostring(result))
 
       if err then
@@ -237,39 +258,39 @@ local function gen_require(chunk_loader)
       end
 
       if IS_HOTLOADING and result == "no_hotload" then
-         Log.info("Not hotloading: %s", path)
-         return package.loaded[path]
+         Log.info("Not hotloading: %s", req_path)
+         return package.loaded[req_path]
       end
 
-      if type(package.loaded[path]) == "table"
+      if type(package.loaded[req_path]) == "table"
          and type(result) == "table"
       then
-         Log.info("Hotload: %s %s <- %s", path, string.tostring_raw(package.loaded[path]), string.tostring_raw(result))
+         Log.info("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
          if class.is_class_or_interface(result) then
-            class.hotload(package.loaded[path], result)
+            class.hotload(package.loaded[req_path], result)
          else
             if result.on_hotload then
-               result.on_hotload(package.loaded[path], result)
+               result.on_hotload(package.loaded[req_path], result)
             else
-               table.replace_with(package.loaded[path], result)
+               table.replace_with(package.loaded[req_path], result)
             end
          end
-         Log.info("Hotload result: %s", string.tostring_raw(package.loaded[path]))
+         Log.info("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
       elseif result == nil then
-         package.loaded[path] = true
+         package.loaded[req_path] = true
       else
-         package.loaded[path] = result
+         package.loaded[req_path] = result
       end
 
       if hotload then
-         HOTLOADED[path] = true
+         HOTLOADED[req_path] = true
       end
 
       if type(result) == "table" then
-         require_path_cache[result] = path
+         require_path_cache[result] = req_path
       end
 
-      return package.loaded[path]
+      return package.loaded[req_path]
    end
 end
 
@@ -280,9 +301,10 @@ end
 env.safe_require = gen_require(safe_load_chunk)
 
 --- Version of `require` for the global environment that will respect
---- hotloading and also permit requiring non-public files.
+--- hotloading and mod environments, and also allow requiring
+--- non-public files.
 -- @function env.require
-env.require = gen_require(env_loadfile)
+env.require = gen_require(env_loadfile_or_safe_load)
 
 --- Reloads a path that has been required already by updating its
 --- table in-place. If either the result of `require` or the existing
@@ -294,6 +316,12 @@ env.require = gen_require(env_loadfile)
 -- to load.
 -- @treturn table
 function env.hotload(path, also_deps)
+   -- The require path can come from an editor that looks at the
+   -- filename in a dumb manner, which means that "init.lua" might not
+   -- be removed. We still need to strip ".init" from the end if
+   -- that's the case.
+   path = env.convert_to_require_path(path)
+
    HOTLOADED = {}
 
    if not can_hotload(path) then
@@ -302,6 +330,7 @@ function env.hotload(path, also_deps)
 
    local loaded = package.loaded[path]
    if not loaded then
+      Log.warn("Tried to hotload '%s', but path was not yet loaded. Requiring normally.", path)
       return env.safe_require(path, false)
    end
 
@@ -312,7 +341,7 @@ function env.hotload(path, also_deps)
    end
 
    Log.info("Begin hotload: %s", path)
-   IS_HOTLOADING = true
+   IS_HOTLOADING = path
    local result = env.require(path, true)
    IS_HOTLOADING = false
 
@@ -325,9 +354,14 @@ function env.hotload(path, also_deps)
    return result
 end
 
---- Returns true if hotloading is ongoing. Used to implement specific
---- support for hotloading in global variables besides the entries in
---- package.loaded.
+-- Redefines a single function on an API table by loading its chunk
+-- and copying only it to the currently loaded table.
+function env.redefine(path, name)
+end
+
+--- Returns the currently hotloading path if hotloading is ongoing.
+--- Used to implement specific support for hotloading in global
+--- variables besides the entries in package.loaded.
 -- @treturn bool
 function env.is_hotloading()
    return IS_HOTLOADING

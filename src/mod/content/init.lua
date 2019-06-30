@@ -33,7 +33,6 @@ data:add {
       "elona.ammo"
    }
 }
-print("go")
 
 -- TODO: This must fail, since prototypes should only be modifiable in
 -- transactions to support hotloading.
@@ -203,7 +202,6 @@ data:add {
 -- Feats
 --
 --
-print("go")
 
 data:add {
    _type = "base.feat",
@@ -305,7 +303,6 @@ data:add {
       return "player_turn_query"
    end
 }
-print("go")
 
 data:add_multi(
    "base.sound",
@@ -377,7 +374,6 @@ data:add {
       }
    }
 }
-print("go")
 
 
 local Event = require("api.Event")
@@ -409,7 +405,6 @@ Event.register("base.after_damage_hp",
 end)
 
 
-print("go")
 data:add {
    _type = "base.map_generator",
    _id = "test",
@@ -468,4 +463,8 @@ Event.register("base.on_game_start",
                   stair.generator = "elona_sys.elona122"
                   stair.generator_params = { name = "sister" }
 end)
+
 require("mod.content.dialog")
+
+local Log = require("api.Log")
+Log.set_level(4)

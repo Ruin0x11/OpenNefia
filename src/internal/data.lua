@@ -1,3 +1,4 @@
+local Log = require ("api.Log")
 local env = require ("internal.env")
 local schema = require ("thirdparty.schema")
 local fun = require ("thirdparty.fun")
@@ -163,6 +164,7 @@ function data:add(dat)
 
    if inner[_type][full_id] ~= nil then
       if env.is_hotloading() then
+         Log.debug("In-place update of %s:%s", _type, full_id)
          dat._id = full_id
          table.replace_with(inner[_type][full_id], dat)
       else

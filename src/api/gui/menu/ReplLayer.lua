@@ -13,11 +13,11 @@ local LuaReplMode = require("api.gui.menu.LuaReplMode")
 local UiList = require("api.gui.UiList")
 local TextHandler = require("api.gui.TextHandler")
 
-local Repl = class.class("Repl", IUiLayer)
+local ReplLayer = class.class("ReplLayer", IUiLayer)
 
-Repl:delegate("input", IInput)
+ReplLayer:delegate("input", IInput)
 
-function Repl:init(env, history)
+function ReplLayer:init(env, history)
    self.text = ""
    self.env = env or {}
    self.result = ""
@@ -91,40 +91,40 @@ function Repl:init(env, history)
    self.input:halt_input()
 end
 
-function Repl:on_query()
+function ReplLayer:on_query()
    if self.scrollback:len() == 0 then
       self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
                                Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
    end
 end
 
-function Repl:history_prev()
+function ReplLayer:history_prev()
    self.scrollback_index = 0
    self.history_index = math.max(self.history_index - 1, 0)
    self:set_text(self.history[self.history_index])
 end
 
-function Repl:history_next()
+function ReplLayer:history_next()
    self.scrollback_index = 0
    self.history_index = math.min(self.history_index + 1, #self.history)
    self:set_text(self.history[self.history_index])
 end
 
-function Repl:set_text(text)
+function ReplLayer:set_text(text)
    self.text = text or ""
 
    self:set_cursor_pos(#self.text)
 end
 
-function Repl:scrollback_up()
+function ReplLayer:scrollback_up()
    self.scrollback_index = math.clamp(self.scrollback_index + math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
-function Repl:scrollback_down()
+function ReplLayer:scrollback_down()
    self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
-function Repl:move_cursor(codepoints)
+function ReplLayer:move_cursor(codepoints)
    local pos = utf8.find_next_pos(self.text, self.cursor_pos, codepoints)
    if codepoints > 0 and pos == 0 then
       pos = utf8.offset(self.text, 1)
@@ -138,7 +138,7 @@ function Repl:move_cursor(codepoints)
    self:set_cursor_pos(pos)
 end
 
-function Repl:insert_text(t)
+function ReplLayer:insert_text(t)
    if self.cursor_pos == #self.text then
       self.text = self.text .. t
    elseif self.cursor_pos == 0 then
@@ -151,7 +151,7 @@ function Repl:insert_text(t)
    self:move_cursor(utf8.len(t))
 end
 
-function Repl:delete_char()
+function ReplLayer:delete_char()
    if self.cursor_pos == 0 then
       return
    end
@@ -169,7 +169,7 @@ function Repl:delete_char()
    self:move_cursor(-1)
 end
 
-function Repl:set_cursor_pos(byte)
+function ReplLayer:set_cursor_pos(byte)
    self.cursor_pos = math.clamp(0, byte, #self.text)
 
    Draw.set_font(self.font_size)
@@ -178,7 +178,7 @@ function Repl:set_cursor_pos(byte)
    self.frames = 0
 end
 
-function Repl:relayout(x, y, width, height)
+function ReplLayer:relayout(x, y, width, height)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
@@ -193,7 +193,7 @@ function Repl:relayout(x, y, width, height)
    end
 end
 
-function Repl:print(text)
+function ReplLayer:print(text)
    Draw.set_font(self.font_size)
    local success, err, wrapped = pcall(function() return Draw.wrap_text(text, self.width) end)
    if not success then
@@ -205,7 +205,12 @@ function Repl:print(text)
    end
 end
 
-function Repl:submit()
+function ReplLayer:execute(code)
+   self:set_text(code)
+   self:submit()
+end
+
+function ReplLayer:submit()
    local text = self.text
    self.text = ""
    self.scrollback_index = 0
@@ -244,7 +249,7 @@ function Repl:submit()
    self:save_history()
 end
 
-function Repl:save_history()
+function ReplLayer:save_history()
    -- HACK: this must go through the config API eventually.
    local file = io.open("repl_history.txt", "w")
    for i, v in ipairs(self.history) do
@@ -254,7 +259,17 @@ function Repl:save_history()
    file:close()
 end
 
-function Repl:draw()
+function ReplLayer:copy_last_line()
+   local line = self.history[2]
+   if line then
+      Env.set_clipboard_text(line)
+      return line
+   end
+
+   return nil
+end
+
+function ReplLayer:draw()
    Draw.set_font(self.font_size)
 
    local top = self.height - self.pulldown_y * Draw.text_height()
@@ -284,7 +299,7 @@ function Repl:draw()
    end
 end
 
-function Repl:update(dt)
+function ReplLayer:update(dt)
    self.frames = self.frames + dt
 
    if self.finished then
@@ -306,4 +321,4 @@ function Repl:update(dt)
    end
 end
 
-return Repl
+return ReplLayer

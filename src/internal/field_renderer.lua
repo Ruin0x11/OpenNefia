@@ -60,7 +60,7 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll)
                                                    Draw.get_height())
 
    if scroll then
-      self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y)
+      -- self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y)
    else
       self.scroll = nil
       self.scroll_frames = 0

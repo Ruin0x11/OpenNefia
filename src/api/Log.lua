@@ -19,6 +19,13 @@ function Log.set_level(l)
    level = l
 end
 
+function Log.trace(s, ...)
+   if level < 5 then
+      return
+   end
+   format("TRACE", s, ...)
+end
+
 function Log.debug(s, ...)
    if level < 4 then
       return

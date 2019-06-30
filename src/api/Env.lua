@@ -20,4 +20,12 @@ function Env.os()
    return love.system.getOS()
 end
 
+function Env.clipboard_text()
+   return love.system.getClipboardText()
+end
+
+function Env.set_clipboard_text(text)
+   return love.system.setClipboardText(text)
+end
+
 return Env

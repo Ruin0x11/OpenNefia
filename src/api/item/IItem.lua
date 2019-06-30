@@ -161,7 +161,7 @@ function IItem:can_stack_with(other)
                print("notmy")
                return false, field
             end
-            Log.debug("Stack: deepcomparing %s", field)
+            Log.trace("Stack: deepcomparing %s", field)
             if not table.deepcompare(my_val, their_val) then
                print("fail")
                return false, field
