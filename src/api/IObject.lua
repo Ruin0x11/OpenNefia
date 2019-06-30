@@ -1,5 +1,5 @@
 -- An object instance backed by a data prototype.
-local IObject = interface("IObject",
+local IObject= class.interface("IObject",
                           {
                              _id = "string",
                              _type = "string",
@@ -42,17 +42,19 @@ function IObject:mod(prop, v, method)
    return self.temp[prop]
 end
 
+-- Modifies a base value. This will persist if refresh() is called,
+-- and is the same as regular assignment.
 function IObject:mod_base(prop, v, method)
    table.merge_ex_single(self, v, method or "add", self.proto, prop)
    return self[prop]
 end
 
+-- Modifies this object's temporary values by merging them with `tbl`.
 function IObject:mod_with(tbl, method)
    return table.merge_ex(self.temp, tbl, self, method or "add")
 end
 
--- TODO: allow option to skip merging if value exists in base, or
--- exists in prototype
+-- Modifies this object's base values by merging them with `tbl`.
 function IObject:mod_base_with(tbl, method)
    return table.merge_ex(self, tbl, self.proto, method or "add")
 end

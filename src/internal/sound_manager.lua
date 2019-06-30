@@ -1,7 +1,7 @@
 local Log = require("api.Log")
 
 -- Borrowed from https://love2d.org/wiki/Minimalist_Sound_Manager
-local sound_manager = class("sound_manager")
+local sound_manager = class.class("sound_manager")
 
 function sound_manager:init(data)
    self.data = data

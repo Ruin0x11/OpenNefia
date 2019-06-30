@@ -2,7 +2,7 @@ local IKeyInput = require("api.gui.IKeyInput")
 
 local internal = require("internal")
 
-local TextHandler = class("TextHandler", IKeyInput)
+local TextHandler = class.class("TextHandler", IKeyInput)
 
 function TextHandler:init()
    self.bindings = {}
@@ -74,7 +74,7 @@ function TextHandler:unbind_keys(bindings)
 end
 
 function TextHandler:forward_to(handler)
-   assert_is_an(IKeyInput, handler)
+   class.assert_is_an(IKeyInput, handler)
    self.forwards = handler
 end
 

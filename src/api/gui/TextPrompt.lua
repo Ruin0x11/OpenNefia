@@ -9,7 +9,7 @@ local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local TextHandler = require("api.gui.TextHandler")
 
-local TextPrompt = class("TextPrompt", IUiLayer)
+local TextPrompt = class.class("TextPrompt", IUiLayer)
 
 TextPrompt:delegate("input", IInput)
 

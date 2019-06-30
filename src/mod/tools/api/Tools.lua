@@ -26,7 +26,8 @@ function Tools.spawn_equipped_foes(count)
          local c = Chara.create("content.enemy", x, y)
 
          local gen = function() return Item.create(Rand.choice(keys), 0, 0, { ownerless = true }) end
-         local iter = fun.tabulate(gen)
+         local pred = function(i) return i.equip_slots ~= nil end
+         local iter = fun.tabulate(gen):filter(pred)
 
          for _, i in iter:take(17) do
             local slot = c:find_equip_slot_for(i)
@@ -146,6 +147,12 @@ end
 
 function Tools.goto_map(name)
    return Map.travel_to(Map.generate("elona_sys.elona122", { name = name }))
+end
+
+function Tools.checktalk()
+   print(require("api.chara.ICharaTalk").say)
+   print(require("api.chara.IChara").say)
+   print(Chara.player().say)
 end
 
 local print_flat = require("mod.tools.lib.print_flat")

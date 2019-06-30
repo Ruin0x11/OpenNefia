@@ -9,7 +9,7 @@ local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
 local ChangeAppearancePreview = require("api.gui.menu.ChangeAppearancePreview")
 local InputHandler = require("api.gui.InputHandler")
 
-local ChangeAppearanceMenu = class("ChangeAppearanceMenu", ICharaMakeSection)
+local ChangeAppearanceMenu = class.class("ChangeAppearanceMenu", ICharaMakeSection)
 
 ChangeAppearanceMenu:delegate("list", "focus")
 ChangeAppearanceMenu:delegate("input", IInput)

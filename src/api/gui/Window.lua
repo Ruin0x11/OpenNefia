@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 
-local Window = class("Window", IUiElement)
+local Window = class.class("Window", IUiElement)
 
 local data
 

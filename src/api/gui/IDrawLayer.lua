@@ -1,6 +1,6 @@
 local IUiElement = require("api.gui.IUiElement")
 
-return interface("IDrawLayer",
+return class.interface("IDrawLayer",
                  {
                     reset = "function",
                  },

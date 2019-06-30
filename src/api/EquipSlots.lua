@@ -3,7 +3,7 @@ local pool = require("internal.pool")
 local data = require("internal.data")
 
 --- Equipment slots for characters.
-local EquipSlots = class("EquipSlots", ILocation)
+local EquipSlots = class.class("EquipSlots", ILocation)
 
 function EquipSlots:init(body_parts)
    body_parts = body_parts or {}

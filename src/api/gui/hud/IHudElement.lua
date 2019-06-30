@@ -1,5 +1,5 @@
 local IUiElement = require("api.gui.IUiElement")
 
-return interface("IHudElement",
+return class.interface("IHudElement",
                  { set_transparency = "function" },
                  IUiElement)

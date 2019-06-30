@@ -1,4 +1,4 @@
-return interface("IPaged",
+return class.interface("IPaged",
                  {
                     select_page = "function",
                     next_page = "function",

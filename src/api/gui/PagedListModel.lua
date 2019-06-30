@@ -3,7 +3,7 @@ local IPaged = require("api.gui.IPaged")
 local ISettable = require("api.gui.ISettable")
 local ListModel = require("api.gui.ListModel")
 
-local PagedListModel = class("PagedListModel", {IList, IPaged, ISettable})
+local PagedListModel = class.class("PagedListModel", {IList, IPaged, ISettable})
 PagedListModel:delegate("model",
                         {"items",
                          "selected_item",

@@ -1,7 +1,7 @@
 local env = require("internal.env")
 local IReplMode = require("api.gui.menu.IReplMode")
 
-local LuaReplMode = class("LuaReplMode", IReplMode)
+local LuaReplMode = class.class("LuaReplMode", IReplMode)
 
 function LuaReplMode:init(mod_env)
    self.caret = "> "

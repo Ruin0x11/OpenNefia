@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 
-local CharaMakeCaption = class("CharaMakeCaption", {IUiElement, ISettable})
+local CharaMakeCaption = class.class("CharaMakeCaption", {IUiElement, ISettable})
 
 local function make_caption(width)
    local image = Draw.load_image("graphic/temp/caption.bmp")

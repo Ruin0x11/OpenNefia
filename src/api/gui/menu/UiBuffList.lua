@@ -4,7 +4,7 @@ local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local ListModel = require("api.gui.ListModel")
 
-local UiBuffList = class("UiBuffList", IUiList)
+local UiBuffList = class.class("UiBuffList", IUiList)
 
 UiBuffList:delegate("model", {
                        "items",

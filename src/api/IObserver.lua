@@ -3,7 +3,7 @@ local EventHolder = require("api.EventHolder")
 
 --- Interface for adding observer capabilities to an object. This
 --- allows them to be notified of any global events that happen.
-local IObserver = interface("IObserver")
+local IObserver= class.interface("IObserver")
 
 function IObserver:init()
    self.events = EventHolder:new()

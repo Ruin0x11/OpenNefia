@@ -6,7 +6,7 @@ local Log = require("api.Log")
 local Draw = require("api.Draw")
 local ITypedLocation = require("api.ITypedLocation")
 
-local InstancedMap = class("InstancedMap", ITypedLocation)
+local InstancedMap = class.class("InstancedMap", ITypedLocation)
 
 local fov_cache = {}
 

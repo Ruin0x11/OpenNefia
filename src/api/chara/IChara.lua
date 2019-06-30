@@ -12,10 +12,9 @@ local ICharaTalk = require("api.chara.ICharaTalk")
 local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
-local InstancedMap = require("api.InstancedMap")
 
 -- TODO: move out of api
-local IChara = interface("IChara",
+local IChara= class.interface("IChara",
                          {},
                          {
                             IMapObject,
@@ -26,6 +25,8 @@ local IChara = interface("IChara",
                             ICharaParty,
                             IObserver
                          })
+
+IChara._type = "base.chara"
 
 function IChara:build()
    IMapObject.init(self)
@@ -96,6 +97,10 @@ function IChara:build()
    self.max_hp = self.max_hp or 10
    self.max_mp = self.max_mp or 2
 
+   -- these need to be available in refresh()
+   self.hp = 1
+   self.mp = 1
+
    local class_data = Resolver.run("base.class", {}, { chara = self })
    local race_data = Resolver.run("base.race", {}, { chara = self })
 
@@ -128,6 +133,9 @@ function IChara:refresh()
    if self:calc("max_mp") < 0 then
       self:mod("max_mp", 1, "set")
    end
+
+   self.hp = math.min(self.hp, self:calc("max_hp"))
+   self.mp = math.min(self.mp, self:calc("max_mp"))
 end
 
 function IChara:on_refresh()
@@ -357,8 +365,8 @@ function IChara:heal_mp(add)
 end
 
 function IChara:heal_to_max()
-   self.hp = self.max_hp
-   self.mp = self.max_mp
+   self.hp = self:calc("max_hp")
+   self.mp = self:calc("max_mp")
 end
 
 function IChara:kill(source)
@@ -366,7 +374,7 @@ function IChara:kill(source)
       return
    end
 
-   if is_an(IChara, source) then
+   if class.is_an(IChara, source) then
       local death_type = Rand.rnd(4)
       Gui.mes(self.uid .. " was killed.")
    else

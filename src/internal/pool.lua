@@ -4,10 +4,10 @@ local MapObject = require("api.MapObject")
 
 -- Low-level storage for map objects of the same types. Pretty much
 -- anything that needs to store map objects uses this internally.
-local pool = class("pool", ILocation)
+local pool = class.class("pool", ILocation)
 
 function pool:init(type_id, tracker, width, height)
-   assert_is_an(uid_tracker, tracker)
+   class.assert_is_an(uid_tracker, tracker)
 
    self.type_id = type_id
    self.content = {}

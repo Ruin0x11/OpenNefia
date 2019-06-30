@@ -1,6 +1,6 @@
 local Draw = require("api.Draw")
 
-local ResistanceLayout = class("ResistanceLayout")
+local ResistanceLayout = class.class("ResistanceLayout")
 
 function ResistanceLayout:draw_row(item, text, subtext, x, y)
    Draw.filled_rect(x, y, 400, 16, {200, 0, 0})

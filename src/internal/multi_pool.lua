@@ -2,7 +2,7 @@ local pool = require("internal.pool")
 local ITypedLocation = require("api.ITypedLocation")
 
 -- A pool that stores objects of multiple types.
-local multi_pool = class("multi_pool", ITypedLocation)
+local multi_pool = class.class("multi_pool", ITypedLocation)
 
 function multi_pool:init(width, height, uids)
    uids = uids or require("internal.global.uids")

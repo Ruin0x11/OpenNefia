@@ -4,7 +4,7 @@ local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
 
-local IconBar = class("IconBar", {IUiElement, ISettable})
+local IconBar = class.class("IconBar", {IUiElement, ISettable})
 
 function IconBar:init()
    self.icon_set = nil

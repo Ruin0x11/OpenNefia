@@ -1,3 +1,10 @@
+* TODO rebooting is dying
+** TODO hotload ui layer
+** TODO hotload interface
+** TODO hotload class
+** TODO data:edit
+** TODO Hook.add()
+** TODO Hook.add()
 * TODO map/outer map handling (base)
 * TODO continuous action (base)
 * TODO schematize prototypes (base)

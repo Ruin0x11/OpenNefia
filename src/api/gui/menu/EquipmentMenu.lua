@@ -1,18 +1,19 @@
+local Action = require("api.Action")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
-local Action = require("api.Action")
 local IInput = require("api.gui.IInput")
 local IPaged = require("api.gui.IPaged")
 local IUiLayer = require("api.gui.IUiLayer")
 local Input = require("api.Input")
 local InputHandler = require("api.gui.InputHandler")
+local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 
-local EquipmentMenu = class("EquipmentMenu", {IUiLayer, IPaged})
+local EquipmentMenu = class.class("EquipmentMenu", {IUiLayer, IPaged})
 
 EquipmentMenu:delegate("input", IInput)
 EquipmentMenu:delegate("pages", IPaged)
@@ -69,6 +70,7 @@ function EquipmentMenu:init(chara)
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys {
+      x = function() self:show_item_description() end,
       shift = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
@@ -77,6 +79,12 @@ function EquipmentMenu:init(chara)
    self.changed_equipment = false
 
    self:update_from_chara()
+end
+
+function EquipmentMenu:show_item_description()
+   local item = self:selected_item_object()
+   local rest = self.pages:iter_all_pages():to_list()
+   ItemDescriptionMenu:new(item, rest):query()
 end
 
 function EquipmentMenu:refresh_item_icons()
@@ -126,12 +134,14 @@ function EquipmentMenu:update_from_chara()
 end
 
 function EquipmentMenu:on_query()
+   self.canceled = false
    Gui.play_sound("base.wear");
 end
 
 function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
+   print("relayout " .. tostring(self.t))
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 88, self.y + 60, self.width, self.height)

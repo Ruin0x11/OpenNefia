@@ -2,7 +2,7 @@ local Map = require("api.Map")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 
-local Inventory = class("Inventory", ILocation)
+local Inventory = class.class("Inventory", ILocation)
 
 function Inventory:init(max_size, type_id)
    self.max_size = max_size or 200

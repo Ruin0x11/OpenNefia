@@ -1,4 +1,4 @@
-local DateTime = class("DateTime")
+local DateTime = class.class("DateTime")
 
 function DateTime:init(year, month, day, hour, minute, second)
    self.year = year or 0

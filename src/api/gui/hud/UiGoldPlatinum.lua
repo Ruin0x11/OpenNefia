@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiGoldPlatinum = class("UiGoldPlatinum", IUiElement)
+local UiGoldPlatinum = class.class("UiGoldPlatinum", IUiElement)
 
 function UiGoldPlatinum:init()
 end

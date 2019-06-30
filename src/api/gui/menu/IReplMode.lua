@@ -1,4 +1,4 @@
-return interface("IReplMode",
+return class.interface("IReplMode",
                  {
                     submit = "function",
                     caret = "string"

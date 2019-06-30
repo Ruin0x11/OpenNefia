@@ -1,7 +1,7 @@
 local IEffects = require("api.IEffects")
 local IObject = require("api.IObject")
 
-local OEffect = interface("OEffect", {}, {IObject, IEffects})
+local OEffect= class.interface("OEffect", {}, {IObject, IEffects})
 
 OEffect._type = "base.effect"
 

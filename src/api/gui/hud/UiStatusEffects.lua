@@ -4,7 +4,7 @@ local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiStatusEffects = class("UiStatusEffects", {ISettable, IUiElement})
+local UiStatusEffects = class.class("UiStatusEffects", {ISettable, IUiElement})
 
 function UiStatusEffects:init()
    self.indicators = {}

@@ -6,7 +6,7 @@ local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 
-local Prompt = class("Prompt", IUiLayer)
+local Prompt = class.class("Prompt", IUiLayer)
 
 Prompt:delegate("input", IInput)
 

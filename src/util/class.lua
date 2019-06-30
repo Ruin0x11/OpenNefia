@@ -1,16 +1,16 @@
 -- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
 local class = {}
 
-local _instances = setmetatable({}, { __mode = "k"})
-local _interfaces = setmetatable({}, { __mode = "k"})
-local _classes = setmetatable({}, { __mode = "k"})
+local _interfaces = setmetatable({}, { __mode = "k" })
+local _classes = setmetatable({}, { __mode = "k" })
+local _iface_children = setmetatable({}, { __mode = "k" })
 
 local function make_tostring(kind, tbl)
-   return function(self, ...)
-      if _instances[self] then
+   return function(self)
+      if self.__class then
          return string.format("instance of '%s' (%s)",
                               rawget(self.__class,'name') or '?',
-                              _instances[self])
+                              tostring(self))
       end
       return tbl[self]
          and string.format("%s '%s'", kind, rawget(self, "name") or "?")
@@ -21,7 +21,7 @@ end
 local iface_mt = {
    __tostring = make_tostring("Interface", _interfaces),
    __index = function(t, k)
-      local m = rawget(t, "methods")
+      local m = rawget(t, "all_methods")
       if m then
          local meth = rawget(m, k)
          if meth then
@@ -33,6 +33,7 @@ local iface_mt = {
    __newindex = function(t, k, v)
       if type(v) == "function" then
          t.methods[k] = v
+         t.all_methods[k] = v
          return
       end
       rawset(t, k ,v)
@@ -50,6 +51,7 @@ function class.interface(name, reqs, parents)
    i.name = name
    i.reqs = reqs or {}
    i.methods = {}
+   i.all_methods = {}
 
    i.delegate = function(i, field, params)
       if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
@@ -62,9 +64,11 @@ function class.interface(name, reqs, parents)
             end
             return delegate_self[k](delegate_self, ...)
          end
+         i.all_methods[k] = i.methods[k]
       end
    end
 
+   i.parents = {}
    if parents then
       if _interfaces[parents] then parents = {parents} end
       if parents[1] == nil then
@@ -75,15 +79,17 @@ function class.interface(name, reqs, parents)
             error(string.format("%s must be an interface", tostring(p)))
          end
          i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
-         i.methods = table.merge(table.deepcopy(p.methods), i.methods)
+         i.all_methods = table.merge(table.deepcopy(p.all_methods), i.all_methods)
       end
-      i.parents = {}
       for _, p in ipairs(parents) do
-         i.parents[#i.parents+1] = p.name
+         i.parents[#i.parents+1] = p
+         _iface_children[p][i] = true
       end
    end
 
    i.__tostring = iface_mt.__tostring
+
+   _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
 
    return setmetatable(i, iface_mt)
 end
@@ -149,7 +155,7 @@ local function delegate(c, field, params)
    end
 end
 
-function is_an(interface, obj)
+function class.is_an(interface, obj)
    if obj == nil then
       return false
    end
@@ -163,7 +169,7 @@ function is_an(interface, obj)
    return err == nil, err
 end
 
-function assert_is_an(interface, obj)
+function class.assert_is_an(interface, obj)
    if _classes[interface] then
       if type(obj) ~= "table" or obj.__class ~= interface then
          error(string.format("%s is not an instance of %s", obj, interface))
@@ -174,6 +180,18 @@ function assert_is_an(interface, obj)
    local err = verify(obj, interface)
    if err then
       error(string.format("%s should implement %s: %s", obj, interface, err))
+   end
+end
+
+local function copy_all_interface_methods_to_class(klass)
+   klass.__interface_methods = {}
+
+   for _, iface in ipairs(klass.interfaces) do
+      for k, v in pairs(iface.all_methods) do
+         if not klass.__interface_methods[k] then
+            klass.__interface_methods[k] = v
+         end
+      end
    end
 end
 
@@ -188,6 +206,13 @@ function class.class(name, ifaces)
    c.__index = function(t, k)
       local i = c[k]
       if i then return i end
+      local im = rawget(c, "__interface_methods")
+      if im then
+         local imf = rawget(im, k)
+         if imf then
+            return imf
+         end
+      end
       local d = rawget(c, "__delegates")
       if not d then
          return rawget(c, k)
@@ -267,7 +292,6 @@ function class.class(name, ifaces)
          if field then
             if type(field[k]) == "function" then
                rawset(field, k, v)
-               local f = field[k]
                local __memoized = rawget(t, "__memoized")
                __memoized[k] = v
             else
@@ -286,15 +310,10 @@ function class.class(name, ifaces)
    c.name = name
 
    if _interfaces[ifaces] then ifaces = {ifaces} end
-   c.interfaces = ifaces
+   c.interfaces = ifaces or {}
+   c.__interface_methods = {}
 
-   if c.interfaces ~= nil then
-      for _, i in ipairs(c.interfaces) do
-         for k, v in pairs(i.methods) do
-            c[k] = v
-         end
-      end
-   end
+   copy_all_interface_methods_to_class(c)
 
    c.delegate = delegate
 
@@ -304,7 +323,6 @@ function class.class(name, ifaces)
       end
 
       local instance = {__class = c}
-      _instances[instance] = tostring(instance)
 
       instance.__memoized = {}
 
@@ -316,25 +334,117 @@ function class.class(name, ifaces)
 
       if c.__verify and c.interfaces then
          for _, i in ipairs(c.interfaces) do
-            assert_is_an(i, instance)
+            class.assert_is_an(i, instance)
          end
       end
 
       return instance
    end
 
-   c.get_fq_name = function(self)
-      local class = self
-      if self.__class then class = self.__class end
-      for k, v in pairs(package.loaded) do
-         if class == v then
-            return k
-         end
-      end
-      return nil
+   return setmetatable(c, root_mt)
+end
+
+function class.is_class_or_interface(tbl)
+   return _classes[tbl] or _interfaces[tbl]
+end
+
+function class.uses_interface(klass_or_iface, iface)
+   local ifaces
+   if _interfaces[klass_or_iface] then
+      ifaces = klass_or_iface.parents
+   else
+      ifaces = klass_or_iface.interfaces
    end
 
-   return setmetatable(c, root_mt)
+   for _, i in ipairs(ifaces) do
+      if iface == i then
+         print("find " .. " " .. klass_or_iface.name .. " " .. iface.name .. " " .. i.name)
+         return true
+      end
+
+      local children = _iface_children[iface] or {}
+      for _, child in ipairs(children) do
+         if class.uses_interface(klass_or_iface, child) then
+            print("find " .. " " .. klass_or_iface.name .. " " .. iface.name .. " " .. i.name)
+            return true
+         end
+      end
+   end
+
+   return false
+end
+
+local function copy_all_interface_methods_to_children(iface)
+   -- NOTE: order may become important in the future
+   for child, _ in pairs(_iface_children[iface]) do
+      child.reqs = table.merge(table.deepcopy(iface.reqs), child.reqs)
+
+      child.all_methods = {}
+      for _, parent in ipairs(child.parents) do
+         for k, v in pairs(parent.all_methods) do
+            child.all_methods[k] = v
+         end
+      end
+      child.all_methods = table.merge(child.all_methods, table.deepcopy(child.methods))
+
+      copy_all_interface_methods_to_children(child)
+   end
+end
+
+function class.hotload(old, new)
+   if _interfaces[old] then
+      -- The interface system works in a sort of abstract class/mixin
+      -- manner. Interfaces can specify parent interfaces, and on
+      -- creation all the parent's declared methods are copied to the
+      -- interface's `all_methods` table. This is to prevent having to
+      -- look up the method all the way up the inheritance tree every
+      -- time an interface method is used. In this way, interfaces
+      -- with parents can choose to define methods of the same name,
+      -- overwriting any methods inherited from any parent. Due to
+      -- this, the order in which the methods are copied matters.
+      --
+      -- For classes, all methods from used interfaces are collected
+      -- in an __interface_methods table by copying. The principle is
+      -- similar.
+      --
+      -- When hotloading an interface, the current mechanism is to
+      -- first rebuild the inheritance tree of parent/child
+      -- interfaces, update the interface table in-place, then to copy
+      -- and overwrite all methods for all the children of the
+      -- hotloaded interface recursively. Afterwards, any classes that
+      -- use interfaces will also have the methods from each interface
+      -- they use copied also.
+
+      for _, iface in ipairs(old.parents) do
+         _iface_children[iface][old] = nil
+      end
+
+      for k, _ in pairs(old) do
+         rawset(old, k, nil)
+      end
+      for k, v in pairs(new) do
+         rawset(old, k, v)
+      end
+
+      for _, iface in ipairs(old.parents) do
+         _iface_children[iface][old] = true
+      end
+
+      copy_all_interface_methods_to_children(old)
+
+      local iface_classes = {}
+      for klass, name in pairs(_classes) do
+         if klass ~= root_mt then
+            if class.uses_interface(klass, old) then
+               iface_classes[#iface_classes] = klass
+            end
+         end
+      end
+
+      for _, c in ipairs(iface_classes) do
+         copy_all_interface_methods_to_class(c)
+      end
+   end
 end
 
 return class

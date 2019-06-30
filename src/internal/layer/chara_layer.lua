@@ -3,7 +3,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local sparse_batch = require("internal.draw.sparse_batch")
 
-local chara_layer = class("chara_layer", IDrawLayer)
+local chara_layer = class.class("chara_layer", IDrawLayer)
 
 function chara_layer:init(width, height)
    local coords = Draw.get_coords()

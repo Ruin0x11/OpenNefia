@@ -37,7 +37,10 @@ data:add {
    invariants = { race = "string" },
 
    resolve = function(self, params)
-      local race = data["base.race"]:ensure(self.race or params.chara.race)
+      local race = data["base.race"][self.race or params.chara.race]
+      if not race then
+         return {}
+      end
       return Resolver.resolve(race.copy_to_chara, params)
    end
 }
@@ -51,7 +54,10 @@ data:add {
    invariants = { class = "string" },
 
    resolve = function(self, params)
-      local class = data["base.class"]:ensure(self.class or params.chara.class)
+      local class = data["base.class"][self.class or params.chara.class]
+      if not class then
+         return {}
+      end
       return Resolver.resolve(class.copy_to_chara, params)
    end
 }

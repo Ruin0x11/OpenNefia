@@ -4,7 +4,7 @@ local tile_batch = require("internal.draw.tile_batch")
 local sound_manager = require("internal.global.sound_manager")
 local Draw = require("api.Draw")
 
-local field_renderer = class("field_renderer")
+local field_renderer = class.class("field_renderer")
 
 function field_renderer:init(width, height, layers)
    local coords = Draw.get_coords()
@@ -36,7 +36,7 @@ function field_renderer:init(width, height, layers)
       local IDrawLayer = require("api.gui.IDrawLayer")
 
       local instance = layer:new(width, height)
-      assert_is_an(IDrawLayer, instance)
+      class.assert_is_an(IDrawLayer, instance)
 
       -- TODO
       instance:relayout()

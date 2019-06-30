@@ -1,6 +1,6 @@
 local IBatch = require("internal.draw.IBatch")
 local Draw = require("api.Draw")
-local tile_batch = class("tile_batch", IBatch)
+local tile_batch = class.class("tile_batch", IBatch)
 
 function tile_batch:init(width, height, atlas, coords)
    self.width = width

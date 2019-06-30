@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local TopicWindow = require("api.gui.TopicWindow")
 
-local ChangeAppearancePreview = class("ChangeAppearancePreview", IUiElement)
+local ChangeAppearancePreview = class.class("ChangeAppearancePreview", IUiElement)
 
 function ChangeAppearancePreview:init()
    self.width = 88

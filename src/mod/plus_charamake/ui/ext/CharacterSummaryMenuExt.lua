@@ -10,7 +10,7 @@ local IUiElement = require("api.gui.IUiElement")
 local Window = require("api.gui.Window")
 local UiTextGroup = require("api.gui.UiTextGroup")
 
-local ProfileWindow = class("ProfileWindow", IUiElement)
+local ProfileWindow = class.class("ProfileWindow", IUiElement)
 
 function ProfileWindow:init(history)
    self.history = history

@@ -1,4 +1,4 @@
-return interface("IAi",
+return class.interface("IAi",
                       {
                          hate_towards = "function",
                          relation_towards = "function",

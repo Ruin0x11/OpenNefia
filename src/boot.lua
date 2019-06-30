@@ -28,9 +28,7 @@ end
 inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")
 
-local class_ = require("util.class")
-interface = class_.interface
-class = class_.class
+class = require("util.class")
 
 if love == nil then
    _DEBUG = true

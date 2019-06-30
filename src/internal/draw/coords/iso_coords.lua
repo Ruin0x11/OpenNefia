@@ -1,4 +1,4 @@
-local iso_coords = class("iso_coords")
+local iso_coords = class.class("iso_coords")
 
 function iso_coords:load_tile(tile, x, y)
    love.graphics.draw(tile, x, y)

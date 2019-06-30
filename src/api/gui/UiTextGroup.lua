@@ -3,7 +3,7 @@ local Ui = require("api.Ui")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 
-local UiTextGroup = class("UiTextGroup", {IUiElement, ISettable})
+local UiTextGroup = class.class("UiTextGroup", {IUiElement, ISettable})
 
 function UiTextGroup:init(texts, font, color, rows, columns, item_width, item_height)
    self.texts = texts

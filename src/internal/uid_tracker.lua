@@ -1,4 +1,4 @@
-local uid_tracker = class("uid_tracker")
+local uid_tracker = class.class("uid_tracker")
 
 function uid_tracker:init()
    self.uid = 1

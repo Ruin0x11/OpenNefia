@@ -7,7 +7,7 @@ local mouse_handler = nil
 
 function input.set_mouse_handler(tbl)
    if tbl ~= nil then
-      assert_is_an(IMouseInput, tbl)
+      class.assert_is_an(IMouseInput, tbl)
    end
    mouse_handler = tbl
 end
@@ -39,7 +39,7 @@ local key_handler = nil
 
 function input.set_key_handler(tbl)
    if tbl ~= nil then
-      assert_is_an(IKeyInput, tbl)
+      class.assert_is_an(IKeyInput, tbl)
    end
    key_handler = tbl
 end

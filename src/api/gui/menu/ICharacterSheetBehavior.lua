@@ -1,4 +1,4 @@
-return interface("ICharacterSheetBehavior",
+return class.interface("ICharacterSheetBehavior",
                  {
                     on_select_skill = "function",
                     on_cancel = "function",

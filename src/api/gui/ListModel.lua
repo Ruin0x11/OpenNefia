@@ -1,7 +1,7 @@
 local IList = require("api.gui.IList")
 local ISettable = require("api.gui.ISettable")
 
-local ListModel = class("ListModel", {IList, ISettable})
+local ListModel = class.class("ListModel", {IList, ISettable})
 
 function ListModel:init(items)
    self.items = items

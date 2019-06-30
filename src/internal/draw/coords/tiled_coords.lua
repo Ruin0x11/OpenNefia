@@ -1,4 +1,4 @@
-local tiled_coords = class("tiled_coords")
+local tiled_coords = class.class("tiled_coords")
 
 function tiled_coords:load_tile(tile, x, y)
    love.graphics.draw(tile, x, y)

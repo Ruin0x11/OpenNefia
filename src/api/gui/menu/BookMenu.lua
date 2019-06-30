@@ -11,7 +11,7 @@ local UiList = require("api.gui.UiList")
 local ISettable = require("api.gui.ISettable")
 local IPaged = require("api.gui.IPaged")
 
-local BookMenu = class("BookMenu", {IUiLayer, ISettable, IPaged})
+local BookMenu = class.class("BookMenu", {IUiLayer, ISettable, IPaged})
 
 BookMenu:delegate("input", IInput)
 BookMenu:delegate("model", IPaged)

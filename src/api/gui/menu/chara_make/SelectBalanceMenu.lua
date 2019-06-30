@@ -8,7 +8,7 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
-local SelectBalanceMenu = class("SelectBalanceMenu", ICharaMakeSection)
+local SelectBalanceMenu = class.class("SelectBalanceMenu", ICharaMakeSection)
 
 SelectBalanceMenu:delegate("input", IInput)
 

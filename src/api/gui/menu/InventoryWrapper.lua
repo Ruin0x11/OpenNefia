@@ -14,7 +14,7 @@ local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 
-local InventoryWrapper = class("InventoryWrapper", IUiLayer)
+local InventoryWrapper = class.class("InventoryWrapper", IUiLayer)
 
 InventoryWrapper:delegate("input", IInput)
 

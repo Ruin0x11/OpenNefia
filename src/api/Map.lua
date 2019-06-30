@@ -81,7 +81,7 @@ function Map.generate(generator_id, params)
    if not success then
       return nil, result
    end
-   assert_is_an(InstancedMap, result)
+   class.assert_is_an(InstancedMap, result)
    return result
 end
 

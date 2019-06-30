@@ -70,21 +70,21 @@ local layers = {}
 local handler = nil
 
 function draw.set_root(ui_layer)
-   assert_is_an(require("api.gui.IUiLayer"), ui_layer)
+   class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()
 end
 
 function draw.set_root_input_handler(input)
-   assert_is_an(require("api.gui.IInput"), input)
+   class.assert_is_an(require("api.gui.IInput"), input)
    handler = input
    handler:focus()
    handler:halt_input()
 end
 
 function draw.push_layer(ui_layer)
-   assert_is_an(require("api.gui.IUiLayer"), ui_layer)
+   class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    table.insert(layers, ui_layer)
    ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
    ui_layer:focus()

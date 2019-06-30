@@ -5,7 +5,7 @@ local IItemEnchantments = require("api.item.IItemEnchantments")
 local field = require("game.field")
 
 -- TODO: move out of api
-local IItem = interface("IItem",
+local IItem= class.interface("IItem",
                          {},
                          {IStackableObject, IItemEnchantments})
 
@@ -73,7 +73,7 @@ end
 function IItem:get_owning_chara()
    local IChara = require("api.chara.IChara")
 
-   if is_an(IChara, self.location) then
+   if class.is_an(IChara, self.location) then
       if self.location:has_item(self) then
          return self.location
       end
@@ -142,7 +142,8 @@ function IItem:can_stack_with(other)
 
    local ignored_fields = table.set {
       "uid",
-      "amount"
+      "amount",
+      "temp"
    }
 
    for field, my_val in pairs(self) do
@@ -151,19 +152,18 @@ function IItem:can_stack_with(other)
 
          -- TODO: is_class, is_object
          local do_deepcompare = type(my_val) == "table"
+            and type(their_val) == "table"
             and my_val.__class == nil
             and my_val.uid == nil
-            and field ~= "temp"
 
          if do_deepcompare then
-            if not type(their_val) == "table" then
-               return false, field
-            end
             if not #my_val == #their_val then
+               print("notmy")
                return false, field
             end
             Log.debug("Stack: deepcomparing %s", field)
             if not table.deepcompare(my_val, their_val) then
+               print("fail")
                return false, field
             end
          else

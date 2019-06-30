@@ -11,7 +11,7 @@ local PagedListModel = require("api.gui.PagedListModel")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 
-local ItemDescriptionMenu = class("ItemDescriptionMenu", {IUiLayer, IPaged})
+local ItemDescriptionMenu = class.class("ItemDescriptionMenu", {IUiLayer, IPaged})
 
 ItemDescriptionMenu:delegate("input", IInput)
 ItemDescriptionMenu:delegate("model", IPaged)

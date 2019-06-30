@@ -4,6 +4,7 @@ local Asset = require("api.Asset")
 local Log = require("api.Log")
 
 local data = require("internal.data")
+local env = require("internal.env")
 local asset_drawable = require("internal.draw.asset_drawable")
 
 local current_theme = "base.default"
@@ -27,10 +28,15 @@ function UiTheme.set_theme(id)
 end
 
 function UiTheme.load(instance)
-   local fq_name = instance
-   if instance.get_fq_name then
-      fq_name = instance:get_fq_name()
+   local fq_name
+
+   if type(instance) == "string" then
+      fq_name = instance
+   else
+      fq_name = env.get_fq_name(instance)
    end
+
+   print(tostring(fq_name) .. " " .. tostring(cache[fq_name]))
 
    if cache[fq_name] then
       return cache[fq_name]

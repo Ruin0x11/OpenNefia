@@ -60,7 +60,7 @@ function MapObject.generate(proto, uid_tracker)
    data.x = 0
    data.y = 0
 
-   -- assert_is_an(IMapObject, data)
+   -- class.assert_is_an(IMapObject, data)
 
    data:build()
 
@@ -94,7 +94,7 @@ function MapObject.clone(object, owned)
    local new_object = MapObject.generate(proto)
 
    local IMapObject = require("api.IMapObject")
-   if owned and is_an(IMapObject, object) then
+   if owned and class.is_an(IMapObject, object) then
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps

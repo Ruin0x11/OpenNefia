@@ -9,7 +9,7 @@ local UiList = require("api.gui.UiList")
 local FeatsMenu = require("api.gui.menu.FeatsMenu")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 
-local SelectFeatsMenu = class("SelectFeatsMenu", ICharaMakeSection)
+local SelectFeatsMenu = class.class("SelectFeatsMenu", ICharaMakeSection)
 
 SelectFeatsMenu:delegate("input", IInput)
 

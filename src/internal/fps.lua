@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IDrawable = require("api.gui.IDrawable")
 
-local fps = class("fps", IDrawable)
+local fps = class.class("fps", IDrawable)
 
 function fps:init()
    self.show_fps = true

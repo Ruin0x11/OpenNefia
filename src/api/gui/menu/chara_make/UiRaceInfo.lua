@@ -3,7 +3,7 @@ local Ui = require("api.Ui")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 
-local UiRaceInfo = class("UiRaceInfo", {IUiElement, ISettable})
+local UiRaceInfo = class.class("UiRaceInfo", {IUiElement, ISettable})
 
 function UiRaceInfo:init(race)
    self.race = race

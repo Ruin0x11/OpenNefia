@@ -7,7 +7,7 @@ local InputHandler = require("api.gui.InputHandler")
 --- this allows trivial creation of item shortcuts, since all that is
 --- needed is creating the context and running its methods without
 --- needing to open any windows.
-local InventoryContext = class("InventoryContext")
+local InventoryContext = class.class("InventoryContext")
 
 local function source_chara(ctxt)
    return ctxt.chara:iter_inventory()

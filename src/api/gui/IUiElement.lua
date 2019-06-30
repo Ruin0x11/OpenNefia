@@ -1,6 +1,6 @@
 local IDrawable = require("api.gui.IDrawable")
 
-return interface("IUiElement",
+return class.interface("IUiElement",
                  {
                     x = { default = 0 },
                     y = { default = 0 },

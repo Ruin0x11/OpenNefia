@@ -19,7 +19,7 @@ local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
 local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
 
-local InventoryMenu = class("InventoryMenu", {IUiLayer, IPaged})
+local InventoryMenu = class.class("InventoryMenu", {IUiLayer, IPaged})
 
 InventoryMenu:delegate("input", IInput)
 InventoryMenu:delegate("pages", IPaged)
@@ -90,11 +90,7 @@ function InventoryMenu:init(ctxt, returns_item)
    -- TODO
    -- self.pages:register("on_chosen", self.on_chosen)
    self.input:bind_keys {
-      x = function()
-         local item = self:selected_item_object()
-         local rest = self.pages:iter_all_pages():to_list()
-         ItemDescriptionMenu:new(item, rest):query()
-      end,
+      x = function() self:show_item_description() end,
       shift = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
@@ -106,6 +102,12 @@ end
 -- confusion
 function InventoryMenu:selected_item_object()
    return self.pages:selected_item().item
+end
+
+function InventoryMenu:show_item_description()
+   local item = self:selected_item_object()
+   local rest = self.pages:iter_all_pages():to_list()
+   ItemDescriptionMenu:new(item, rest):query()
 end
 
 function InventoryMenu:can_select(item)

@@ -2,7 +2,7 @@ local IEffects = require("api.IEffects")
 local IObject = require("api.IObject")
 local Object = require("api.Object")
 
-local OEnchantment = interface("OEnchantment", {}, IObject)
+local OEnchantment= class.interface("OEnchantment", {}, IObject)
 
 OEnchantment._type = "base.enchantment"
 

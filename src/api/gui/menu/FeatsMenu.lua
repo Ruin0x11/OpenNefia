@@ -8,7 +8,7 @@ local UiList = require("api.gui.UiList")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 
-local FeatsMenu = class("FeatsMenu", IUiLayer)
+local FeatsMenu = class.class("FeatsMenu", IUiLayer)
 
 FeatsMenu:delegate("pages", "chosen")
 FeatsMenu:delegate("input", IInput)

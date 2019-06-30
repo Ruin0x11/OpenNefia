@@ -3,7 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 local ISettable = require("api.gui.ISettable")
 
-local UiBar = class("UiBar", {IUiElement, ISettable})
+local UiBar = class.class("UiBar", {IUiElement, ISettable})
 
 function UiBar:init(bar_kind, max, value, show_digit)
    value = value or max

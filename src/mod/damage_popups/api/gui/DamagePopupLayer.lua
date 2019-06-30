@@ -3,7 +3,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 
 local easing = require("mod.damage_popups.lib.easing")
 
-local DamagePopupLayer = class("DamagePopupLayer", IDrawLayer)
+local DamagePopupLayer = class.class("DamagePopupLayer", IDrawLayer)
 
 function DamagePopupLayer:init()
    self.coords = Draw.get_coords()

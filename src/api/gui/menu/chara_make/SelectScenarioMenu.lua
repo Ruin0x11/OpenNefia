@@ -8,7 +8,7 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
-local SelectScenarioMenu = class("SelectScenarioMenu", ICharaMakeSection)
+local SelectScenarioMenu = class.class("SelectScenarioMenu", ICharaMakeSection)
 
 SelectScenarioMenu:delegate("input", IInput)
 

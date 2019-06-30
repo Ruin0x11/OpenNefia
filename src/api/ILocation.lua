@@ -1,4 +1,4 @@
-local ILocation = interface("ILocation",
+local ILocation= class.interface("ILocation",
                  {
                     is_positional = "function",
                     move_object = "function",

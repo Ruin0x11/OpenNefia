@@ -10,7 +10,7 @@ local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 
-local CharacterSheetMenu = class("CharacterSheetMenu", IUiLayer)
+local CharacterSheetMenu = class.class("CharacterSheetMenu", IUiLayer)
 
 CharacterSheetMenu:delegate("input", IInput)
 

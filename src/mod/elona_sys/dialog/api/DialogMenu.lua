@@ -8,7 +8,7 @@ local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 
-local DialogMenu = class("DialogMenu", IUiLayer)
+local DialogMenu = class.class("DialogMenu", IUiLayer)
 
 DialogMenu:delegate("input", IInput)
 

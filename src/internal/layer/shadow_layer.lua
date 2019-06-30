@@ -3,7 +3,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local shadow_batch = require("internal.draw.shadow_batch")
 
-local shadow_layer = class("shadow_layer", IDrawLayer)
+local shadow_layer = class.class("shadow_layer", IDrawLayer)
 
 function shadow_layer:init(width, height, coords)
    local coords = Draw.get_coords()

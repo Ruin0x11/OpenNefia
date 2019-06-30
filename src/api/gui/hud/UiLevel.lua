@@ -3,7 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiLevel = class("UiLevel", {IUiElement, ISettable})
+local UiLevel = class.class("UiLevel", {IUiElement, ISettable})
 
 function UiLevel:init()
    self.level = math.random(1, 20)

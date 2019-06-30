@@ -1,6 +1,6 @@
 local ISettable = require("api.gui.ISettable")
 
-return interface("IList",
+return class.interface("IList",
                  {
                     changed = "boolean",
                     selected = "number",

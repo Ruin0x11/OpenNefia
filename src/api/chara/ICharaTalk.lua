@@ -1,7 +1,7 @@
 local Chara = require("api.Chara")
 local Talk = require("api.Talk")
 
-local ICharaTalk = interface("ICharaTalk")
+local ICharaTalk= class.interface("ICharaTalk")
 
 function ICharaTalk:init()
    self:set_talk(self.talk)

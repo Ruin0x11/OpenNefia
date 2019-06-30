@@ -1,6 +1,6 @@
 local IInputHandler = require("api.gui.IInputHandler")
 
-return interface("IMouseInput",
+return class.interface("IMouseInput",
                  {
                     receive_mouse_movement = "function",
                     receive_mouse_button = "function",

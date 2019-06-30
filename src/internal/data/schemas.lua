@@ -83,6 +83,15 @@ data:add_type(
    }
 )
 
+data:add_type(
+   {
+      name = "map",
+      schema = schema.Record {
+         name = schema.String
+      },
+   }
+)
+
 data:add_type {
    name = "body_part",
    schema = schema.Record {

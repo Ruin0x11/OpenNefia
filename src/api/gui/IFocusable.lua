@@ -1,1 +1,1 @@
-return interface("IFocusable", { focus = "function" })
+return class.interface("IFocusable", { focus = "function" })

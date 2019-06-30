@@ -4,7 +4,7 @@ local IPaged = require("api.gui.IPaged")
 local ISettable = require("api.gui.ISettable")
 local IUiLayer = require("api.gui.IUiLayer")
 
-local UiPagedContainer = class("UiPagedContainer", {ISettable, IPaged, IUiLayer})
+local UiPagedContainer = class.class("UiPagedContainer", {ISettable, IPaged, IUiLayer})
 
 -- @return a mapping from page number to the sublayer layer and its
 -- inner page, if any.
@@ -13,7 +13,7 @@ local function calculate_page_handlers(sublayers)
    local index = 1
    for _, layer in ipairs(sublayers) do
       local size
-      if is_an(IPaged, layer) then
+      if class.is_an(IPaged, layer) then
          size = layer.page_max
       else
          size = 1
@@ -56,7 +56,7 @@ function UiPagedContainer:set_data(sublayers)
    self.sublayers = sublayers or self.sublayers
 
    for _, layer in pairs(sublayers) do
-      assert_is_an(IUiLayer, layer)
+      class.assert_is_an(IUiLayer, layer)
       layer.x = self.x
       layer.y = self.y
       layer.width = self.width
@@ -88,7 +88,7 @@ function UiPagedContainer:select_page(page)
    local layer, inner_page = self:current_sublayer()
    layer:relayout(self.x, self.y, self.width, self.height)
 
-   if is_an(IPaged, layer) then
+   if class.is_an(IPaged, layer) then
       layer:select_page(inner_page)
    end
 end

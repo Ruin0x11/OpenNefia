@@ -1,6 +1,6 @@
 local IObject = require("api.IObject")
 
-local IEffects = interface("IEffects", {}, IObject)
+local IEffects= class.interface("IEffects", {}, IObject)
 
 function IEffects:init()
    self.effects = {}

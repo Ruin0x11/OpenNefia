@@ -3,7 +3,7 @@ local IObject = require("api.IObject")
 local Log = require("api.Log")
 
 -- An IObject that can be displayed on a tilemap.
-local IMapObject = interface("IMapObject",
+local IMapObject = class.interface("IMapObject",
                              {
                                 x = "number",
                                 y = "number",
@@ -42,7 +42,7 @@ end
 
 function IMapObject:current_map()
    local InstancedMap = require("api.InstancedMap")
-   if is_an(InstancedMap, self.location) then
+   if class.is_an(InstancedMap, self.location) then
       return self.location
    end
 

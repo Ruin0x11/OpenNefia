@@ -12,7 +12,7 @@ local repeats = table.set {
 
 -- A key handler that will fire actions only on the same frame a
 -- keypressed event is received. For use when key repeat is *on*.
-local KeyHandler = class("KeyHandler", IKeyInput)
+local KeyHandler = class.class("KeyHandler", IKeyInput)
 
 function KeyHandler:init()
    self.bindings = {}
@@ -42,7 +42,7 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
 end
 
 function KeyHandler:forward_to(handler)
-   assert_is_an(IKeyInput, handler)
+   class.assert_is_an(IKeyInput, handler)
    self.forwards = handler
 end
 

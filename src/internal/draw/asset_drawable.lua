@@ -1,6 +1,6 @@
 local draw = require("internal.draw")
 
-local asset_drawable = class("asset_drawable")
+local asset_drawable = class.class("asset_drawable")
 
 function asset_drawable:init(data_inst)
    if type(data_inst) == "string" then

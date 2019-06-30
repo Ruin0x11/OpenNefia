@@ -4,7 +4,7 @@ local IHudElement = require("api.gui.hud.IHudElement")
 local UiTheme = require("api.gui.UiTheme")
 local DateTime = require("api.DateTime")
 
-local UiClock = class("UiClock", {IHudElement, ISettable})
+local UiClock = class.class("UiClock", {IHudElement, ISettable})
 
 local times = {
    "Midnight",

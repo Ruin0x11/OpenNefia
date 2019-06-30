@@ -12,7 +12,7 @@ local UiMessageWindow = require("api.gui.hud.UiMessageWindow")
 local UiStatusEffects = require("api.gui.hud.UiStatusEffects")
 local UiTheme = require("api.gui.UiTheme")
 
-local MainHud = class("MainHud", IHud)
+local MainHud = class.class("MainHud", IHud)
 
 local function make_bar(width)
    local image = Draw.load_image("graphic/temp/hud_bar.bmp")

@@ -422,7 +422,7 @@ local function mod_value(tbl, add, meth, default, prop)
       else
          tbl[prop] = (tbl[prop] or 0) + add
       end
-   elseif meth == "set" then
+   elseif meth == "set" or meth == "replace" then
       tbl[prop] = add
    elseif meth == "merge" then
       if not tbl[prop] then
@@ -444,7 +444,7 @@ function table.merge_ex_single(base, value, meth, default, key)
       end
    end
 
-   if type(value) == "table" then
+   if type(value) == "table" and meth ~= "replace" then
       -- Actual table
       if base[key] == nil then
          if default and default[key] then
@@ -476,6 +476,7 @@ end
 -- set: sets values to a fixed amount. (default)
 -- add: adds values. For non-number values, same as `set`.
 -- merge: same as `set`, but do not overwrite values already existing
+-- replace: do not attempt to merge tables, only assign.
 -- in `tbl`.
 function table.merge_ex(tbl, add, defaults, method)
    assert(type(tbl) == "table")

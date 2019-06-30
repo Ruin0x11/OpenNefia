@@ -7,7 +7,7 @@ local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 
-local SkillsMenu = class("SkillsMenu", IUiLayer)
+local SkillsMenu = class.class("SkillsMenu", IUiLayer)
 
 SkillsMenu:delegate("pages", {"page", "page_max"})
 SkillsMenu:delegate("input", IInput)

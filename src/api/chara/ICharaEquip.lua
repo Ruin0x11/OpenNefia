@@ -3,7 +3,7 @@ local EquipSlots = require("api.EquipSlots")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local ILocation = require("api.ILocation")
 
-local ICharaEquip = interface("ICharaEquip", {}, ICharaInventory)
+local ICharaEquip= class.interface("ICharaEquip", {}, ICharaInventory)
 
 function ICharaEquip:init()
    self.body_parts = self.body_parts or {}

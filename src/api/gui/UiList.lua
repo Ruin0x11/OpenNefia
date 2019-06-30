@@ -9,7 +9,7 @@ local IList = require("api.gui.IList")
 local IPaged = require("api.gui.IPaged")
 local PagedListModel = require("api.gui.PagedListModel")
 
-local UiList = class("UiList", IUiList)
+local UiList = class.class("UiList", IUiList)
 UiList:delegate("model", {
                    "changed",
                    "selected",
@@ -44,7 +44,7 @@ UiList:delegate("input", IInput)
 local keys = "abcdefghijklmnopqr"
 
 function UiList:init(items, item_height, item_offset_x, item_offset_y)
-   if is_an(IList, items) then
+   if class.is_an(IList, items) then
       self.model = items
    else
       self.model = ListModel:new(items)
@@ -74,7 +74,7 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
    end
    thing["return"] = function() self:choose() end
 
-   if is_an(IPaged, self.model) then
+   if class.is_an(IPaged, self.model) then
       thing.left = function()
          self:previous_page()
          Gui.play_sound("base.pop1")
@@ -106,7 +106,7 @@ function UiList:relayout(x, y, width, height)
    -- HACK: shouldn't have to keep track of update here.
    self.changed = true
    self.chosen = false
-   if is_an(IPaged, self.model) then
+   if class.is_an(IPaged, self.model) then
       self.changed_page = true
    end
 end
@@ -160,7 +160,7 @@ function UiList:update()
    -- HACK: shouldn't have to keep track of update here.
    self.changed = false
    self.chosen = false
-   if is_an(IPaged, self.model) then
+   if class.is_an(IPaged, self.model) then
       self.changed_page = false
    end
 end

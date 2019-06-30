@@ -13,7 +13,7 @@ local LuaReplMode = require("api.gui.menu.LuaReplMode")
 local UiList = require("api.gui.UiList")
 local TextHandler = require("api.gui.TextHandler")
 
-local Repl = class("Repl", IUiLayer)
+local Repl = class.class("Repl", IUiLayer)
 
 Repl:delegate("input", IInput)
 
@@ -54,7 +54,10 @@ function Repl:init(env, history)
       end,
       text_submitted = function()
          self:submit()
-         Gui.update_screen()
+         local res, err = pcall(Gui.update_screen)
+         if not res then
+            self:print("[DRAW ERROR] " .. err)
+         end
          self.input:halt_input()
       end,
       text_canceled = function()
@@ -220,7 +223,7 @@ function Repl:submit()
       if result._type then
          result_text = inspect(Object.make_prototype(result))
       elseif tostring(result) == "<generator>" then
-         result_text = "(iterator): " .. inspect(result:take(50):to_list())
+         result_text = "(iterator): " .. inspect(result:take(10):to_list())
       else
          result_text = inspect(result)
       end

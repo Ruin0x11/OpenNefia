@@ -27,11 +27,8 @@ local SANDBOX_GLOBALS = {
    "utf8",
    "math",
 
-   -- OOP generators
-   "interface",
+   -- OOP library
    "class",
-   "is_an",
-   "assert_is_an",
 
    -- misc. globals
    "inspect",
@@ -171,10 +168,15 @@ local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 
+-- api/chara/IChara.lua -> api.chara.IChara
 local function convert_to_require_path(path)
    local path = path
 
-   -- HACK: needs better normalization to prevent duplicate chunks.
+   -- HACK: needs better normalization to prevent duplicate chunks. If
+   -- this is not completely unique then two require paths could end
+   -- up referring to the same file, breaking hotloading. The
+   -- intention is any require path uniquely identifies a return value
+   -- from `require`.
    path = string.strip_suffix(path, ".lua")
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
@@ -214,6 +216,10 @@ local function gen_require(chunk_loader)
       local chunk, err = chunk_loader(path)
       LOADING[path] = false
 
+      if chunk == "no_hotload" then
+         return package.loaded[path]
+      end
+
       if err then
          IS_HOTLOADING = false
          error("\n\t" .. err, 0)
@@ -222,7 +228,11 @@ local function gen_require(chunk_loader)
       if type(package.loaded[path]) == "table"
          and type(chunk) == "table"
       then
-         table.replace_with(package.loaded[path], chunk)
+         if class.is_class_or_interface(chunk) then
+            class.hotload(package.loaded[path], chunk)
+         else
+            table.replace_with(package.loaded[path], chunk)
+         end
       elseif chunk == nil then
          package.loaded[path] = true
       else
@@ -335,18 +345,43 @@ function env.generate_sandbox(mod_name, is_strict)
    return sandbox
 end
 
-function env.require_all_apis()
+function env.require_all_apis(dir)
+   dir = dir or "api"
+
    local api_env = {}
 
-   for _, api in fs.iter_directory_items("api/") do
-      local file = fs.join("api", api)
-      if fs.is_file(file) then
-         local name = fs.filename_part(file)
-         api_env[name] = env.require(file)
+   for _, api in fs.iter_directory_items(dir .. "/") do
+      local path = fs.join(dir, api)
+      if fs.is_file(path) then
+         local name = fs.filename_part(path)
+         if api_env[name] then
+            Log.warn("Duplicate API required in environment: %s", name)
+         end
+         api_env[name] = env.require(path)
+      elseif fs.is_directory(path) then
+         table.merge(api_env, env.require_all_apis(path))
       end
    end
 
    return api_env
+end
+
+-- Given a table loaded with require, class/interface table or class
+-- instance, returns its fully qualified name.
+function env.get_fq_name(tbl)
+   assert(type(tbl) == "table")
+
+   if tbl.__class then
+      tbl = tbl.__class
+   end
+
+   for k, v in pairs(package.loaded) do
+      if tbl == v then
+         return k
+      end
+   end
+
+   return nil
 end
 
 return env

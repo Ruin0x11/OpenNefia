@@ -1,7 +1,7 @@
 local IInputHandler = require("api.gui.IInputHandler")
 assert(type(IInputHandler) == "table")
 
-return interface("IKeyInput",
+return class.interface("IKeyInput",
                  {
                     receive_key = "function",
                     run_key_action = "function",

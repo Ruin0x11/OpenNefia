@@ -6,7 +6,7 @@ local internal = require("internal")
 local IUiLayer
 
 local function query(self)
-   assert_is_an(IUiLayer, self)
+   class.assert_is_an(IUiLayer, self)
 
    local dt = 0
 
@@ -29,7 +29,7 @@ local function query(self)
    return res, canceled
 end
 
-IUiLayer = interface("IUiLayer",
+IUiLayer= class.interface("IUiLayer",
                  {
                     relayout = "function",
                     query = { default = query },

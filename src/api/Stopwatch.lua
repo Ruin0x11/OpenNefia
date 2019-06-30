@@ -1,6 +1,6 @@
 local socket = require("socket")
 
-local Stopwatch = class("Stopwatch")
+local Stopwatch = class.class("Stopwatch")
 
 function Stopwatch:init()
    self.time = socket.gettime()

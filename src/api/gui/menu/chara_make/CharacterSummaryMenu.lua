@@ -12,7 +12,7 @@ local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
 
-local CharacterSummaryMenu = class("CharacterSummaryMenu", ICharaMakeSection)
+local CharacterSummaryMenu = class.class("CharacterSummaryMenu", ICharaMakeSection)
 
 CharacterSummaryMenu:delegate("input", IInput)
 

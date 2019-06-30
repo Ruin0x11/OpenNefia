@@ -10,7 +10,7 @@ local IInput = require("api.gui.IInput")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local IUiLayer = require("api.gui.IUiLayer")
 
-local RollBackgroundMenu = class("RollBackgroundMenu", IUiLayer)
+local RollBackgroundMenu = class.class("RollBackgroundMenu", IUiLayer)
 
 RollBackgroundMenu:delegate("input", IInput)
 RollBackgroundMenu:delegate("list", "items")

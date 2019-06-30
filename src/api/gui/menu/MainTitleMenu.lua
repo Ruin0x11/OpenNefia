@@ -9,7 +9,7 @@ local UiWindow = require("api.gui.UiWindow")
 
 local IUiLayer = require("api.gui.IUiLayer")
 
-local MainTitleMenu = class("MainTitleMenu", IUiLayer)
+local MainTitleMenu = class.class("MainTitleMenu", IUiLayer)
 
 MainTitleMenu:delegate("input", IInput)
 

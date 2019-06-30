@@ -1,7 +1,7 @@
 local Log = require("api.Log")
 local asset_drawable = require("internal.draw.asset_drawable")
 
-local atlas = class("atlas")
+local atlas = class.class("atlas")
 
 function atlas:init(tile_count_x, tile_count_y, tile_width, tile_height)
    self.tile_width = tile_width

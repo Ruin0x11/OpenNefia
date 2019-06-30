@@ -7,7 +7,7 @@ local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
-local SelectGenderMenu = class("SelectGenderMenu", ICharaMakeSection)
+local SelectGenderMenu = class.class("SelectGenderMenu", ICharaMakeSection)
 
 SelectGenderMenu:delegate("input", IInput)
 

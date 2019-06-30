@@ -1,2 +1,2 @@
 --local IObject = require("api.IObject")
---local ITimedEffects = interface("ITimedEffects", {}, IObject)
+--local ITimedEffects= class.interface("ITimedEffects", {}, IObject)

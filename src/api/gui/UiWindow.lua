@@ -5,7 +5,7 @@ local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
 local IPaged = require("api.gui.IPaged")
 
-local UiWindow = class("UiWindow", IUiElement)
+local UiWindow = class.class("UiWindow", IUiElement)
 
 function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    local image = Draw.load_image("graphic/temp/tip_icons.bmp")
@@ -124,7 +124,7 @@ function UiWindow:set_pages(pages)
       return
    end
 
-   assert_is_an(IPaged, pages)
+   class.assert_is_an(IPaged, pages)
    self.page = pages.page
    self.page_max = pages.page_max
    self.show_page = true

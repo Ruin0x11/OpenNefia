@@ -2,6 +2,10 @@ local env = require ("internal.env")
 local schema = require ("thirdparty.schema")
 local fun = require ("thirdparty.fun")
 
+if env.is_hotloading() then
+   return "no_hotload"
+end
+
 local data = {
    errors = {}
 }
@@ -159,6 +163,7 @@ function data:add(dat)
 
    if inner[_type][full_id] ~= nil then
       if env.is_hotloading() then
+         dat._id = full_id
          table.replace_with(inner[_type][full_id], dat)
       else
          self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
@@ -183,7 +188,7 @@ function data:add_multi(_type, ...)
    end
 end
 
-local proxy = class("proxy")
+local proxy = class.class("proxy")
 
 function proxy:init(_type)
    rawset(self, "_type", _type)

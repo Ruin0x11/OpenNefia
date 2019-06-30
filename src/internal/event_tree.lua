@@ -1,4 +1,4 @@
-local event_tree = class("event_tree")
+local event_tree = class.class("event_tree")
 
 function event_tree:init()
    self.dirty = true

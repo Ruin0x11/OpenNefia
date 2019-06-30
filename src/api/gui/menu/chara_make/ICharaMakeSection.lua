@@ -1,6 +1,6 @@
 local IUiLayer = require("api.gui.IUiLayer")
 
-return interface("ICharaMakeSection",
+return class.interface("ICharaMakeSection",
                  {
                     caption = "string",
                     intro_sound = "string",

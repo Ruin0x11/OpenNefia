@@ -9,7 +9,7 @@ local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 
-local SelectAliasMenu = class("SelectAliasMenu", IUiLayer)
+local SelectAliasMenu = class.class("SelectAliasMenu", IUiLayer)
 
 SelectAliasMenu:delegate("input", IInput)
 SelectAliasMenu:delegate("list", "items")

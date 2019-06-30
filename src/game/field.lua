@@ -11,7 +11,7 @@ local env = require("internal.env")
 local map = require("internal.map")
 local field_renderer = require("internal.field_renderer")
 
-local field_layer = class("field_layer", IUiLayer)
+local field_layer = class.class("field_layer", IUiLayer)
 
 field_layer:delegate("keys", IInput)
 
@@ -54,7 +54,7 @@ function field_layer:setup_repl()
 
    -- WARNING: for development only.
    if _DEBUG then
-      repl_env["require"] = env.require
+      repl_env = table.merge(repl_env, _G)
    end
 
    local history = {}

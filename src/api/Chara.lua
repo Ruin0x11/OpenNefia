@@ -69,7 +69,7 @@ function Chara.create(id, x, y, params, where)
    params = params or {}
    where = where or field.map
 
-   if not is_an(ILocation, where) then return nil end
+   if not class.is_an(ILocation, where) then return nil end
 
    if where:is_positional() then
       if not where:is_in_bounds(x, y) then

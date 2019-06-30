@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 
-local TopicWindow = class("TopicWindow", IUiElement)
+local TopicWindow = class.class("TopicWindow", IUiElement)
 
 local function gen_data(width, height, frame_style, fill_style)
    local img = Draw.load_image("graphic/temp/window.bmp")

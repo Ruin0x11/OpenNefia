@@ -1,2 +1,2 @@
-return interface("IDrawable",
+return class.interface("IDrawable",
                  { update = "function", draw = "function" })

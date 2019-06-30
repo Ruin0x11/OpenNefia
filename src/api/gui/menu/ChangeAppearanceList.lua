@@ -6,7 +6,7 @@ local ListModel = require("api.gui.ListModel")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 
-local ChangeAppearanceList = class("ChangeAppearanceList", IUiList)
+local ChangeAppearanceList = class.class("ChangeAppearanceList", IUiList)
 
 ChangeAppearanceList:delegate("model", {
                          "items",

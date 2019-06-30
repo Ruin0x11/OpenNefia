@@ -8,7 +8,7 @@ local TopicWindow = require("api.gui.TopicWindow")
 local UiTheme = require("api.gui.UiTheme")
 local InputHandler = require("api.gui.InputHandler")
 
-local NumberPrompt = class("NumberPrompt", IUiLayer)
+local NumberPrompt = class.class("NumberPrompt", IUiLayer)
 
 NumberPrompt:delegate("input", IInput)
 

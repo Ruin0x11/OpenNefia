@@ -8,7 +8,7 @@ local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 
-local SelectClassMenu = class("SelectClassMenu", ICharaMakeSection)
+local SelectClassMenu = class.class("SelectClassMenu", ICharaMakeSection)
 
 SelectClassMenu:delegate("input", IInput)
 

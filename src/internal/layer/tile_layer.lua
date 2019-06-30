@@ -3,7 +3,7 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 
-local tile_layer = class("tile_layer", IDrawLayer)
+local tile_layer = class.class("tile_layer", IDrawLayer)
 
 function tile_layer:init(width, height, coords)
    local coords = Draw.get_coords()

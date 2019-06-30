@@ -4,7 +4,7 @@ local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 
 -- Draws the "overhang" parts of walls.
-local tile_overhang_layer = class("tile_overhang_layer", IDrawLayer)
+local tile_overhang_layer = class.class("tile_overhang_layer", IDrawLayer)
 
 function tile_overhang_layer:init(width, height, coords)
    local coords = Draw.get_coords()

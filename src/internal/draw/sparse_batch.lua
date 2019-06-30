@@ -1,6 +1,6 @@
 local IBatch = require("internal.draw.IBatch")
 local draw = require("internal.draw")
-local sparse_batch = class("sparse_batch", IBatch)
+local sparse_batch = class.class("sparse_batch", IBatch)
 
 function sparse_batch:init(width, height, atlas, coords)
    self.width = width

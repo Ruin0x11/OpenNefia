@@ -86,14 +86,14 @@ function Object.generate(proto, mt)
 
    local data = setmetatable(tbl, { __index = makeindex(proto, mt) })
 
-   assert_is_an(IObject, data)
+   class.assert_is_an(IObject, data)
 
    data:build()
 
    return data
 end
 
-local IMockObject = interface("IMockObject", {}, IObject)
+local IMockObject= class.interface("IMockObject", {}, IObject)
 function IMockObject.build()
    IObject.init(self)
 end
@@ -106,7 +106,7 @@ function Object.mock_interface(mt)
    local obj = setmetatable(tbl, mt)
    obj:build()
 
-   assert_is_an(IObject, obj)
+   class.assert_is_an(IObject, obj)
 
    obj:refresh()
    return obj
@@ -120,7 +120,7 @@ function Object.mock(mt, tbl)
    local obj = setmetatable(tbl, mt)
    obj:build()
 
-   assert_is_an(IObject, obj)
+   class.assert_is_an(IObject, obj)
 
    obj:refresh()
    return obj

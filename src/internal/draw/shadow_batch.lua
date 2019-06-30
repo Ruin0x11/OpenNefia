@@ -2,7 +2,7 @@ local IBatch = require("internal.draw.IBatch")
 local atlas = require("internal.draw.atlas")
 local draw = require("internal.draw")
 
-local shadow_batch = class("shadow_batch", IBatch)
+local shadow_batch = class.class("shadow_batch", IBatch)
 
 local deco = {
 --                 W           E            WE          S            S E          SW           SWE

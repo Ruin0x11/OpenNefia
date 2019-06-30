@@ -8,7 +8,7 @@ local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 
-local RollAttributesMenu = class("RollAttributesMenu", ICharaMakeSection)
+local RollAttributesMenu = class.class("RollAttributesMenu", ICharaMakeSection)
 
 RollAttributesMenu:delegate("input", IInput)
 

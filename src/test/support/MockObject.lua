@@ -1,4 +1,4 @@
-local MockObject = class("MockObject")
+local MockObject = class.class("MockObject")
 
 function MockObject:init(rest)
    table.merge(self, rest)

@@ -1,6 +1,6 @@
 local IUiElement = require("api.gui.IUiElement")
 
-return interface("IHud",
+return class.interface("IHud",
                  {
                     set_date = "function",
                     set_target = "function",

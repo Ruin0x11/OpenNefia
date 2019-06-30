@@ -13,7 +13,7 @@ local InputHandler = require("api.gui.InputHandler")
 local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
 local Prompt = require("api.gui.Prompt")
 
-local CharaMakeWrapper = class("CharaMakeWrapper", IUiLayer)
+local CharaMakeWrapper = class.class("CharaMakeWrapper", IUiLayer)
 
 CharaMakeWrapper:delegate("input", IInput)
 
@@ -52,7 +52,7 @@ function CharaMakeWrapper:proceed()
    end
 
    self.submenu = class:new()
-   assert_is_an(ICharaMakeSection, self.submenu)
+   class.assert_is_an(ICharaMakeSection, self.submenu)
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()

@@ -1,6 +1,6 @@
 local IFocusable = require("api.gui.IFocusable")
 
-return interface("IInputHandler",
+return class.interface("IInputHandler",
                  {
                     forward_to = "function",
                     run_actions = "function",

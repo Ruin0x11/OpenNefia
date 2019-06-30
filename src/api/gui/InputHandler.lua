@@ -2,7 +2,7 @@ local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local MouseHandler = require("api.gui.MouseHandler")
 
-local InputHandler = class("InputHandler", IInput)
+local InputHandler = class.class("InputHandler", IInput)
 
 InputHandler:delegate("keys", {
                          "bind_keys",

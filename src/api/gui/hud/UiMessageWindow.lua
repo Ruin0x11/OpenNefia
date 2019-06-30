@@ -3,7 +3,7 @@ local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 local circular_buffer = require("thirdparty.circular_buffer")
 
-local UiMessageWindow = class("UiMessageWindow", IUiElement)
+local UiMessageWindow = class.class("UiMessageWindow", IUiElement)
 
 function UiMessageWindow:init()
    self.width = 800

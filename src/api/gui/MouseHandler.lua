@@ -2,7 +2,7 @@ local IMouseInput = require("api.gui.IMouseInput")
 
 local internal = require("internal")
 
-local MouseHandler = class("MouseHandler", IMouseInput)
+local MouseHandler = class.class("MouseHandler", IMouseInput)
 
 function MouseHandler:init()
    self.bindings = {}
@@ -24,7 +24,7 @@ function MouseHandler:bind_mouse(bindings)
 end
 
 function MouseHandler:forward_to(handler)
-   assert_is_an(IMouseInput, handler)
+   class.assert_is_an(IMouseInput, handler)
    self.forwards = handler
 end
 

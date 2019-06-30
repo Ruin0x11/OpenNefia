@@ -2,7 +2,7 @@ local event_tree = require("internal.event_tree")
 
 local loaded = false
 
-local EventHolder = class("EventHolder")
+local EventHolder = class.class("EventHolder")
 
 function EventHolder:init()
    self.hooks = {}
@@ -129,7 +129,7 @@ end
 
 function EventHolder:add_observer(event_id, observer)
    local IObserver = require("api.IObserver")
-   assert_is_an(IObserver, observer)
+   class.assert_is_an(IObserver, observer)
 
    self.observers[event_id] = self.observers[event_id] or setmetatable({}, { __mode = "k" })
    self.observers[event_id][observer] = true

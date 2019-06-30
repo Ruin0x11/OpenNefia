@@ -1,1 +1,1 @@
-return interface("ISettable", {set_data = "function"})
+return class.interface("ISettable", {set_data = "function"})

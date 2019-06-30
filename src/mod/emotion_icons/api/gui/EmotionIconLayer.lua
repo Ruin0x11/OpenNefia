@@ -4,7 +4,7 @@ local Map = require("api.Map")
 local UiTheme = require("api.gui.UiTheme")
 local IDrawLayer = require("api.gui.IDrawLayer")
 
-local EmotionIconLayer = class("EmotionIconLayer", IDrawLayer)
+local EmotionIconLayer = class.class("EmotionIconLayer", IDrawLayer)
 
 function EmotionIconLayer:init()
    self.coords = Draw.get_coords()
