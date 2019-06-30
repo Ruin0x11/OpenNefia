@@ -431,46 +431,40 @@ data:add {
    end
 }
 
-Event.register("base.on_game_start",
-               "game start",
-               function()
-                  local Chara = require("api.Chara")
-                  local Item = require("api.Item")
-                  local Feat = require("api.Feat")
-                  for i=1,4 do
-                     local a = Chara.create("content.ally", i+8, 3)
-                     a:recruit_as_ally()
-                  end
+local function my_start()
+   local Chara = require("api.Chara")
+   local Item = require("api.Item")
+   local Feat = require("api.Feat")
+   for i=1,4 do
+      local a = Chara.create("content.ally", i+8, 3)
+      a:recruit_as_ally()
+   end
 
-                  for i=1,2 do
-                     for j=1,1 do
-                        local i = Chara.create("content.enemy", i+8, j+11)
-                     end
-                  end
+   for i=1,2 do
+      for j=1,1 do
+         local i = Chara.create("content.enemy", i+8, j+11)
+      end
+   end
 
-                  for i=1,50 do
-                     Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
-                  end
+   for i=1,50 do
+      Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
+   end
 
-                  local armor = Item.create("content.armor")
-                  armor.curse_state = "blessed"
-                  Chara.player():equip_item(armor, true)
-                  Chara.player():refresh()
+   local armor = Item.create("content.armor")
+   armor.curse_state = "blessed"
+   Chara.player():equip_item(armor, true)
+   Chara.player():refresh()
 
-                  Feat.create("content.door", 11, 11)
+   Feat.create("content.door", 11, 11)
 
-                  local stair = Feat.create("content.stair", 12, 11)
-                  stair.generator = "elona_sys.elona122"
-                  stair.generator_params = { name = "sister" }
-end)
+   local stair = Feat.create("content.stair", 12, 11)
+   stair.generator = "elona_sys.elona122"
+   stair.generator_params = { name = "sister" }
+end
+
+Event.register("base.on_game_start", "game start", my_start)
 
 require("mod.content.dialog")
 
 local Log = require("api.Log")
 Log.set_level(4)
-
-data["base.chara"]:edit("test edit",
-   function(chara)
-      chara.image = 3
-   end
-)

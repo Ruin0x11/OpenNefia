@@ -74,6 +74,10 @@ end
 -- @tparam table other
 -- @treturn table
 function table.replace_with(tbl, other)
+   if tbl == other then
+      return tbl
+   end
+
    for k, _ in pairs(tbl) do
       tbl[k] = nil
    end

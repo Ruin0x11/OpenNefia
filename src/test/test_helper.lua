@@ -40,7 +40,47 @@ end
 function test_helper.fails_with(f, msg)
    local result, err = pcall(f)
 
-   return err ~= nil and string.find(err, msg) ~= nil
+   return not result and err ~= nil and string.find(err, msg) ~= nil
+end
+
+local function mock(mocks, t)
+   t = t or _G
+   local save = {}
+
+   for k, m in pairs(mocks) do
+      if type(m) == "table" then
+         save[k] = mock(m, t[k])
+      else
+         save[k] = t[k]
+         t[k] = m
+      end
+   end
+
+   return save
+end
+
+local function unmock(mocks, save, t)
+   t = t or _G
+
+   for k, m in pairs(mocks) do
+      if type(m) == "table" then
+         unmock(m, save[k], t[k])
+      else
+         t[k] = save[k]
+      end
+   end
+
+   return save
+end
+
+function test_helper.with_mocks(mocks, f)
+   local save = mock(mocks)
+
+   local result, err = pcall(f)
+
+   unmock(mocks, save)
+
+   return result, err
 end
 
 return test_helper

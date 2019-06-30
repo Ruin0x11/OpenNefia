@@ -90,7 +90,7 @@ test("item - activate shortcut", function()
         local result, err = Item.activate_shortcut(i, "inv_drop")
 
         ok(t.are_same("turn_end", result))
-        ok(err == nil)
+        ok(err == nil, err)
         ok(i:get_owning_chara() == nil)
         ok(t.are_same(map, i:current_map()))
         ok(t.are_same(5, i.x))

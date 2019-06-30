@@ -326,10 +326,6 @@ function class.class(name, ifaces)
 
       instance.__memoized = {}
 
-      if c.name == "EquipmentMenu" then
-         _p("new", string.tostring_raw(c.new))
-         _p("setmetatable", string.tostring_raw(c))
-      end
       setmetatable(instance, c)
 
       if c.init then
@@ -400,15 +396,16 @@ function class.hotload(old, new)
       -- These functions capture the class table inside the hotloaded
       -- chunk. To make sure they point to the hotloaded methods,
       -- discard the ones in the hotloaded chunk since they reference
-      -- its table internal to the chunk. Example:
+      -- the newly created table internal to the hotloaded chunk.
+      -- Example:
       --
-      -- - File is loaded, producing Chunk A with Class v1.
-      -- - File is hotloaded, producing Chunk B with Class v2.
+      -- - File is loaded, producing a chunk with Class v1.
+      -- - File is hotloaded, producing another chunk with Class v2.
       -- - All methods from Class v2 are merged onto Class v1.
-      --   However, Class v2's :new() captures Class v2 in the closure
-      --   when using setmetatable.
+      --   However, Class v2's :new() captures the Class v2 metatable
+      --   in the :new() closure when using setmetatable.
       -- - When calling :new on Class v1 after merging, it will set
-      --   the metatable of Class v2 on the base table instead of
+      --   the metatable of Class v2 on the created table instead of
       --   Class v1. The changes merged onto Class v1 will not be
       --   reflected in this object.
       local method_new = old.new
@@ -430,25 +427,28 @@ function class.hotload(old, new)
    elseif _interfaces[old] then
       -- The interface system works in a sort of abstract class/mixin
       -- manner. Interfaces can specify parent interfaces, and on
-      -- creation all the parent's declared methods are copied to the
+      -- creation each parent's declared methods are copied to the
       -- interface's `all_methods` table. This is to prevent having to
       -- look up the method all the way up the inheritance tree every
       -- time an interface method is used. In this way, interfaces
       -- with parents can choose to define methods of the same name,
       -- overwriting any methods inherited from any parent. Due to
-      -- this, the order in which the methods are copied matters.
+      -- this, the copied functions can't be modified directly with
+      -- hotloading as it is a value copy into a different table and
+      -- the order of copying is important (parent-to-child). Instead
+      -- all of them have to be copied again to see changes.
       --
       -- For classes, all methods from used interfaces are collected
       -- in an __interface_methods table by copying. The principle is
       -- similar.
       --
       -- When hotloading an interface, the current mechanism is to
-      -- first rebuild the inheritance tree of parent/child
-      -- interfaces, update the interface table in-place, then to copy
-      -- and overwrite all methods for all the children of the
-      -- hotloaded interface recursively. Afterwards, any classes that
-      -- use interfaces will also have the methods from each interface
-      -- they use copied also.
+      -- first update the inheritance tree of parent/child interfaces,
+      -- update the interface table in-place, then to copy and
+      -- overwrite all methods for all the children of the hotloaded
+      -- interface recursively. Afterwards, any classes that use
+      -- interfaces will also have the methods from each interface
+      -- they use regenerated from scratch also.
 
       for _, iface in ipairs(old.parents) do
          _iface_children[iface][old] = nil
@@ -468,6 +468,7 @@ function class.hotload(old, new)
       copy_all_interface_methods_to_children(old)
 
       local iface_classes = {}
+      -- NOTE: the ordering of pairs is unspecified
       for klass, name in pairs(_classes) do
          if klass ~= root_mt then
             if class.uses_interface(klass, old) then

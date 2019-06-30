@@ -96,13 +96,26 @@ function Action.drop(chara, item, amount)
    return false
 end
 
+local hook = function(name, f) return f end
+
+local can_unequip = hook("can_unequip",
+                         function(item)
+                            if item:is_cursed() then
+                               return false, "cursed"
+                            end
+
+                            return true
+                         end
+)
+
 function Action.unequip(chara, item)
    if not chara:has_item_equipped(item) then
       return false, "not_equipped_by_chara"
    end
 
-   if item:is_cursed() then
-      return false, "cursed"
+   local able, reason = can_unequip(item)
+   if not able then
+      return able,reason
    end
 
    chara:unequip_item(item)

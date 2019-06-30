@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
 
@@ -14,10 +15,14 @@ local function query(self)
 
    self:on_query()
 
-   local res, canceled
+   local success, res, canceled
    while true do
       local ran = self:run_actions(dt)
-      res, canceled = self:update(dt, ran)
+      success, res, canceled = pcall(function() return self:update(dt, ran) end)
+      if not success then
+         Log.error("Error on query: %s", res)
+         break
+      end
       if res or canceled then break end
       dt = coroutine.yield()
    end

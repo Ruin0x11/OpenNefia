@@ -1,5 +1,27 @@
 local Log = require("api.Log")
 
+--- Module and mod environment functions. This module implements
+--- seamless hotloading by replacing the global `require` with one
+--- that can update the result of `require` in-place if a hotload is
+--- requested. This is not without some caveats though:
+---
+--- 1. The results of `require` should be a table to enable hotloading.
+--- 2. All local upvalues inside the chunk will be lost on hotloading.
+---    To support hotloading, code should minimize the usage of
+---    top-level locals or otherwise provide support for hotloading by
+---    calling env.is_hotloading() in the appropriate places.
+--- 4. For now it is assumed that any require path starting with `mod`
+---    will be a part of a mod's code, so a mod sandbox should be
+---    applied to it. Any other path will use the global environment.
+---
+--- The goal is to be able to completely reload a mod's code at
+--- runtime without any significant side effects warranting a full
+--- restart (save for user code).
+---
+--- If a hotloaded chunk returns "no_hotload" instead of a table, the
+--- existing table will be preserved. This is so those chunks can
+--- custom implement hotloading support. See `internal.data` for an
+--- example.
 local env = {}
 
 --- Globals for use inside mods. All of these should be loaded by the
@@ -46,14 +68,17 @@ local UNSAFE_HOTLOAD_PATHS = {
 -- To determine the require path of a chunk, it is necessary to keep a
 -- cache. If a chunk is hotloaded, the table it returns will be merged
 -- into the one already existing in any upvalues, but the table
--- upvalue that was returned inside the chunk itself will still
+-- upvalue that was created inside the chunk itself will still
 -- reference a completely different table (the one that was merged
 -- into the existing one). Since this upvalue can be local there may
 -- be no way to access it, so in the end there can be more than one
--- table at the same require path.
+-- table at the same require path. This cache table is a mapping from
+-- a table to its require path.
 local require_path_cache = setmetatable({}, { __mode = "k" })
 
 
+-- This flag is used for e.g. relayouting all UI layers on hotload so
+-- the changes are visible immediately and on_hotload() can be called.
 local hotloaded_this_frame = false
 function env.set_hotloaded_this_frame(val)
    hotloaded_this_frame = val
@@ -100,6 +125,8 @@ function env.find_calling_mod()
    return "base"
 end
 
+local global_require = require
+
 --- Loads a chunk from a package search path ignoring
 --- `package.loaded`. If no environment is passed, the returned chunk
 --- will have access to the global environment.
@@ -107,8 +134,23 @@ end
 -- @tparam[opt] table mod_env
 local function env_loadfile(path, mod_env)
    local resolved = package.searchpath(path, package.path)
+
+   if resolved == nil and not mod_env and _DEBUG then
+      -- Also try cpath, but only when not using the love runtime
+      -- (tests). Mods shouldn't be able to load arbitrary native
+      -- libraries.
+      resolved = package.searchpath(path, package.cpath)
+      if resolved then
+         return global_require(path)
+      end
+   end
+
    if resolved == nil then
-      return nil, "Cannot find path " .. path
+      local paths = ""
+      for _, s in ipairs(string.split(package.path, ";")) do
+         paths = paths .. "\n" .. s
+      end
+      return nil, "Cannot find path " .. path .. paths
    end
 
    local chunk, err = loadfile(resolved)
@@ -192,6 +234,8 @@ local function safe_load_chunk(path)
    return nil
 end
 
+--- Requires a path with either the mod environment or the global
+--- environment depending on its prefix.
 local function env_loadfile_or_safe_load(path)
    if path_is_in_mod(path) then
       return safe_load_chunk(path)
@@ -205,7 +249,10 @@ local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 
+-- Converts a filepath to a uniquely identifying Lua require path.
+-- Examples:
 -- api/chara/IChara.lua -> api.chara.IChara
+-- mod/elona/init.lua   -> mod.elona
 function env.convert_to_require_path(path)
    local path = path
 
@@ -296,7 +343,7 @@ end
 
 --- Version of `require` that will load sandboxed mod environments if
 --- the path is prefixed with "mod", and will update the table in
---- place if hotloading.
+--- place if hotloading, but disallow loading non-public files.
 -- @function env.safe_require
 env.safe_require = gen_require(safe_load_chunk)
 
@@ -316,10 +363,10 @@ env.require = gen_require(env_loadfile_or_safe_load)
 -- to load.
 -- @treturn table
 function env.hotload(path, also_deps)
-   -- The require path can come from an editor that looks at the
-   -- filename in a dumb manner, which means that "init.lua" might not
-   -- be removed. We still need to strip ".init" from the end if
-   -- that's the case.
+   -- The require path can come from an editor that preserves an
+   -- "init.lua" at the end. We still need to strip "init.lua" from
+   -- the end if that's the case, in order to make the paths
+   -- "api/Api.lua" and "api/Api/init.lua" resolve to the same thing.
    path = env.convert_to_require_path(path)
 
    HOTLOADED = {}
@@ -356,6 +403,10 @@ end
 
 -- Redefines a single function on an API table by loading its chunk
 -- and copying only it to the currently loaded table.
+-- NOTE: The function cannot reference any chunk-local upvalues, or
+-- the behavior will not work as expected if used along with the other
+-- values in the table, since they may reference the same-named
+-- upvalue but in the original chunk.
 function env.redefine(path, name)
 end
 

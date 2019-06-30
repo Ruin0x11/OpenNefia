@@ -123,7 +123,7 @@ function Item.activate_shortcut(item, operation, params)
       return nil, "filtered_out"
    end
 
-   if not ctxt:after_filter(item) then
+   if ctxt:after_filter({item}) then
       return nil, "after_filter_failed"
    end
 

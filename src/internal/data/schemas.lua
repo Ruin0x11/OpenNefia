@@ -8,6 +8,16 @@ local ITrap = require("api.feat.ITrap")
 
 data:add_type(
    {
+      name = "resource",
+      schema = schema.Record {
+         type = schema.String,
+         value = schema.Any
+      }
+   }
+)
+
+data:add_type(
+   {
       name = "chara",
       schema = schema.Record {
          name = schema.String,

@@ -125,6 +125,8 @@ function Tools.clone_me(times)
       if x ~= nil then
          local c = p:clone()
          Map.current():take_object(c, x, y)
+         -- TODO inventory, equip
+         c:refresh()
       end
    end
 end
@@ -136,18 +138,22 @@ end
 function Tools.drop_all()
    local drop = function(item)
       local success = Action.drop(Chara.player(), item)
-      if success then
-         local nx, ny = Map.find_position_for_chara(item.x, item.y)
-         if nx then
-            item:set_pos(nx, ny)
-         end
-      end
+      -- if success then
+      --    local nx, ny = Map.find_position_for_chara(item.x, item.y)
+      --    if nx then
+      --       item:set_pos(nx, ny)
+      --    end
+      -- end
    end
    Chara.player():iter_inventory():each(drop)
 end
 
 function Tools.goto_map(name)
-   return Map.travel_to(Map.generate("elona_sys.elona122", { name = name }))
+   local map, err = Map.generate("elona_sys.elona122", { name = name })
+   if not map then
+      error(err)
+   end
+   return Map.travel_to(map)
 end
 
 function Tools.layer()

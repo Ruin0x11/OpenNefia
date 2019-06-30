@@ -40,6 +40,10 @@ function Feat.create(id, x, y, params, where)
 
    feat = where:take_object(feat, x, y)
 
+   if feat then
+      feat:refresh()
+   end
+
    return feat
 end
 
