@@ -74,6 +74,9 @@ local UNSAFE_HOTLOAD_PATHS = {
 -- be no way to access it, so in the end there can be more than one
 -- table at the same require path. This cache table is a mapping from
 -- a table to its require path.
+--
+-- TODO: actually you can use a function called debug.setupvalue to
+-- modify upvalues. it should be used instead.
 local require_path_cache = setmetatable({}, { __mode = "k" })
 
 

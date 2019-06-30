@@ -334,6 +334,16 @@ local function right_pad(str, len)
    return str .. string.rep(' ', len - #str)
 end
 
+local function ireduce(arr, f, start)
+   local result = start
+
+   for _, v in ipairs(arr) do
+      result = f(result, v)
+   end
+
+   return result
+end
+
 --- Formats a 2-dimensional array-like table in a printable manner.
 -- @tparam array t
 -- @tparam[opt] array params.header
@@ -365,7 +375,7 @@ function table.print(t, params)
       end
    end
 
-   local total_width = table.ireduce(widths, function(sum, n) return sum + n + 1 end, 0)
+   local total_width = ireduce(widths, function(sum, n) return sum + n + 1 end, 0)
 
    local s = ""
 

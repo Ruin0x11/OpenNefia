@@ -1,53 +1,42 @@
 local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
 
---- Interface for adding observer capabilities to an object. This
---- allows them to be notified of any global events that happen.
 local IObserver = class.interface("IObserver")
 
 function IObserver:init()
    self.events = EventHolder:new()
+   self.global_events = EventHolder:new()
 end
 
-function IObserver:observes(event_id)
-   return self.events:count(event_id) > 0
-      or self.events:count("on_event") >= 0
+function IObserver:emit(event_id, params, result)
+   return self.events:trigger(event_id, self, params, result)
 end
 
-function IObserver:send_event(event_id, params, events)
-   if not self:observes(event_id) then
-      if events then
-         events:remove_observer(event_id, self)
-      else
-         Event.remove_observer(event_id, self)
+function IObserver:trigger_global(event_id, params, result)
+   return self.global_events:trigger(event_id, self, params, result)
+end
+
+local cache = {}
+
+function IObserver:connect_self(event_id, name, cb, opts, global_events)
+   global_events = global_events or Event.global()
+
+   if self.events:count(event_id) == 0 then
+      if not cache[event_id] then
+         cache[event_id] = function(source, params, result)
+            return global_events:trigger(event_id, source, params, result)
+         end
       end
 
-      return
+      self.events:register(event_id, string.format("Global event handler (%s)", event_id), cache[event_id], { priority = 0 })
    end
 
-   return self.events:trigger(event_id, params)
+   self.events:register(event_id, name, cb, opts)
 end
 
-function IObserver:observe_event(event_id, name, cb, priority, events)
-   if events then
-      events:add_observer(event_id, self)
-   else
-      Event.add_observer(event_id, self)
-   end
-
-   self.events:register(event_id, name, cb, priority)
-end
-
-function IObserver:unobserve_event(event_id, name, events)
-   self.events:unregister(event_id, name)
-
-   if not self:observes(event_id) then
-      if events then
-         events:remove_observer(event_id, self)
-      else
-         Event.remove_observer(event_id, self)
-      end
-   end
+function IObserver:connect_global(event_id, name, cb, opts, global_events)
+   (global_events or Event.global()):add_observer(event_id, self)
+   self.global_events:register(event_id, name, cb, opts)
 end
 
 return IObserver

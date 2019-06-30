@@ -160,6 +160,12 @@ function Tools.layer()
    return Draw.get_layer(Draw.layer_count()-1)
 end
 
+function Tools.msecs_to_frames(msecs, framerate)
+   local msecs_per_frame = (1 / framerate or 60) * 1000
+   local frames = msecs / msecs_per_frame
+   return frames
+end
+
 local print_flat = require("mod.tools.lib.print_flat")
 Tools.print_flat = print_flat.print_flat
 

@@ -7,11 +7,11 @@ function Stopwatch:init()
    self.framerate = 60
 end
 
-function Stopwatch:measure()
+function Stopwatch:measure(precision)
    local new = socket.gettime()
    local result = new - self.time
    self.time = new
-   return result * 1000
+   return math.round(result * 1000, precision or 5)
 end
 
 local function msecs_to_frames(msecs, framerate)
@@ -20,7 +20,7 @@ local function msecs_to_frames(msecs, framerate)
    return frames
 end
 
-function Stopwatch:p(text)
+function Stopwatch:measure_and_format(text)
    if text then
       text = string.format("[%s]", text)
    else
@@ -28,10 +28,14 @@ function Stopwatch:p(text)
    end
 
    local msecs = self:measure()
-   print(string.format("%s\t%02.02fms\t(%02.02f frames)",
-                       text,
-                       msecs,
-                       msecs_to_frames(msecs, self.framerate)))
+   return string.format("%s\t%02.02fms\t(%02.02f frames)",
+                        text,
+                        msecs,
+                        msecs_to_frames(msecs, self.framerate))
+end
+
+function Stopwatch:p(text)
+   print(self:measure_and_format(text))
 end
 
 return Stopwatch

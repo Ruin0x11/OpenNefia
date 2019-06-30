@@ -408,6 +408,9 @@ function class.hotload(old, new)
       --   the metatable of Class v2 on the created table instead of
       --   Class v1. The changes merged onto Class v1 will not be
       --   reflected in this object.
+      --
+      -- TODO: actually you can use a function called debug.setupvalue
+      -- to modify upvalues. it should be used instead.
       local method_new = old.new
       local method___index = old.__index
       local method___newindex = old.__newindex

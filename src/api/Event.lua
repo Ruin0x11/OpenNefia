@@ -13,6 +13,10 @@ local function check_event(event_id)
    end
 end
 
+function Event.global()
+   return global_events
+end
+
 function Event.register(event_id, name, cb, opts)
    if env.is_hotloading() then
       Log.warn("Skipping Event.register for %s - \":%s\"", event_id, name)
@@ -33,34 +37,14 @@ function Event.unregister(event_id, cb, opts)
    global_events:unregister(event_id, cb, opts)
 end
 
-function Event.trigger(event_id, args, opts)
+function Event.trigger(event_id, args, default)
    if env.is_hotloading() then
       Log.warn("Skipping Event.trigger for %s - \":%s\"", event_id, name)
       return
    end
 
    check_event(event_id)
-   return global_events:trigger(event_id, args, opts)
-end
-
-function Event.add_observer(event_id, observer)
-   if env.is_hotloading() then
-      Log.warn("Skipping Event.add_observer for %s - \":%s\"", event_id, name)
-      return
-   end
-
-   check_event(event_id)
-   return global_events:add_observer(event_id, observer)
-end
-
-function Event.remove_observer(event_id, observer)
-   if env.is_hotloading() then
-      Log.warn("Skipping Event.remove_observer for %s - \":%s\"", event_id, name)
-      return
-   end
-
-   check_event(event_id)
-   return global_events:remove_observer(event_id, observer)
+   return global_events:trigger(event_id, "global", args, default)
 end
 
 function Event.list(event_id)

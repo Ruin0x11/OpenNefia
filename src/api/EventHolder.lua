@@ -60,51 +60,23 @@ function EventHolder:count(event_id)
    return events:count()
 end
 
-function EventHolder:trigger(event_id, args, opts)
+function EventHolder:trigger(event_id, source, args, default)
    args = args or {}
-   opts = opts or {}
-   if type(args) ~= "table" then
-      error("Event.register must be passed a table of event arguments as a second argument (got: " .. type(args) .. ").")
-   end
-
-   if event_id ~= "on_event" then
-      self:trigger("on_event", { event_id = event_id, args = args })
-   end
+   local result = default
 
    local events = self.hooks[event_id]
    if events then
-      events:trigger(args)
+      result = events:trigger(source, args, result)
    end
 
-   if self.observers[event_id] then
-      local data = require("internal.data")
-      local event = data["base.event"][event_id]
-      local field = opts.observer or (event and event.observer)
-      local run_all = true
-
-      if field then
-         local observer = args[field]
-         local strict = false
-
-         -- Send the event even if the value of the designated field
-         -- is not registered as an observer for this event.
-         local should_send = observer ~= nil
-            and (not strict or self.observers[event_id][observer] == true)
-
-         if should_send then
-            run_all = false
-            observer:send_event(event_id, args)
-         end
-      end
-
-      if run_all then
-         for observer, _ in pairs(self.observers[event_id]) do
-            observer:send_event(event_id, args)
-         end
+   local observers = self.observers[event_id]
+   if observers then
+      for observer, _ in pairs(observers) do
+         result = observer:trigger_global(event_id, args, result)
       end
    end
 
-   return args
+   return result, args
 end
 
 function EventHolder:add_observer(event_id, observer)

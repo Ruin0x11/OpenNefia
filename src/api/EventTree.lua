@@ -110,46 +110,29 @@ function EventTree:sort()
    self.dirty = false
 end
 
-function EventTree:traverse(args)
+function EventTree:traverse(source, args, default)
    if self.dirty then
       self:sort()
    end
 
    local disabled = {}
    local disabled_inds = self.disabled_inds
+   local cache = self.cache
 
-   for i, cb in ipairs(self.cache) do
-      if not self.disabled_inds[i] or disabled[i] then
-         local result = cb(args)
-
-         if type(result) == "table" then
-            args = table.merge(args, result)
-
-            if args.blocked then
-               return false
-            end
-
-            if args.disabled then
-               for _, name in ipairs(args.disabled) do
-                  local ind = self.name_to_ind[name]
-                  if ind ~= nil then
-                     disabled[ind] = true
-                  end
-               end
-            end
-         end
-      end
+   local result = default
+   for i, cb in ipairs(cache) do
+      result = cb(source, args, result)
    end
 
-   return true
+   return result
 end
 
-function EventTree:trigger(args)
-   return self:traverse(args)
+function EventTree:trigger(source, args, default)
+   return self:traverse(source, args, default)
 end
 
-function EventTree:__call(args)
-   return self:traverse(args)
+function EventTree:__call(source, args, default)
+   return self:traverse(source, args, default)
 end
 
 function EventTree:print()

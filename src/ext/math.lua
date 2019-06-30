@@ -15,10 +15,11 @@ function math.percent_dec(v, per)
 end
 
 function math.sign(v)
-   if v < 0 then
-      return -1
-   elseif v > 0 then
-      return 1
-   end
-   return 0
+   return (v >= 0 and 1) or -1
+end
+
+function math.round(v, digits)
+   digits = digits or 0
+   local bracket = 1 / (10 ^ digits)
+   return math.floor(v/bracket + math.sign(v) * 0.5) * bracket
 end
