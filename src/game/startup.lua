@@ -1,4 +1,5 @@
 local fs = require("internal.fs")
+local mod = require("internal.mod")
 local internal = require("internal")
 local data = require("internal.data")
 local stopwatch = require("api.Stopwatch")
@@ -12,7 +13,7 @@ function startup.run(mods)
 
    require("internal.data.base")
 
-   internal.mod.load_mods(mods)
+   mod.load_mods(mods)
    data:run_all_edits()
 
    startup.load_batches()

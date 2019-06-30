@@ -1,9 +1,14 @@
+-- We need to load all data fallbacks here so there are no issues with
+-- missing data, since internal code can add its own data inline.
+require("internal.data.base")
+
 local MainTitleMenu = require("api.gui.menu.MainTitleMenu")
 local Draw = require("api.Draw")
 local Input = require("api.Input")
 local internal = require("internal")
 
 local chara_make = require("game.chara_make")
+local mod = require("internal.mod")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
 
@@ -42,7 +47,7 @@ local function run_field()
 end
 
 function game.loop()
-   local mods = internal.mod.scan_mod_dir()
+   local mods = mod.scan_mod_dir()
    startup.run(mods)
 
    local cb = run_field

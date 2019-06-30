@@ -1,9 +1,9 @@
 local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
 
-local IObserver = class.interface("IObserver")
+local IEventEmitter = class.interface("IEventEmitter")
 
-function IObserver:init()
+function IEventEmitter:init()
    self.events = EventHolder:new()
    self.global_events = EventHolder:new()
 end
@@ -23,7 +23,7 @@ local function register_global_handler_if_needed(self, event_id, global_events)
    end
 end
 
-function IObserver:emit(event_id, params, result, global_events)
+function IEventEmitter:emit(event_id, params, result, global_events)
    register_global_handler_if_needed(self, event_id, global_events)
 
    if event_id == "base.before_handle_self_event" then
@@ -35,21 +35,21 @@ function IObserver:emit(event_id, params, result, global_events)
    return self.events:trigger(event_id, self, params, result)
 end
 
-function IObserver:trigger_global(event_id, params, result)
+function IEventEmitter:trigger_global(event_id, params, result)
    return self.global_events:trigger(event_id, self, params, result)
 end
 
-function IObserver:has_event_handler(event_id, name)
+function IEventEmitter:has_event_handler(event_id, name)
    return self.events:has_handler(event_id, name)
 end
 
-function IObserver:connect_self(event_id, name, cb, opts, global_events)
+function IEventEmitter:connect_self(event_id, name, cb, opts, global_events)
    register_global_handler_if_needed(self, event_id, global_events)
 
    self.events:register(event_id, name, cb, opts)
 end
 
-function IObserver:disconnect_self(event_id, name)
+function IEventEmitter:disconnect_self(event_id, name)
    self.events:unregister(event_id, name)
 
    if self.events:count(event_id) == 0 then
@@ -57,7 +57,7 @@ function IObserver:disconnect_self(event_id, name)
    end
 end
 
-function IObserver:connect_global(event_id, name, cb, opts, global_events)
+function IEventEmitter:connect_global(event_id, name, cb, opts, global_events)
    (global_events or Event.global()):add_observer(event_id, self)
    self.global_events:register(event_id, name, cb, opts)
 end
@@ -65,15 +65,15 @@ end
 -- Disconnects all self event handlers across all event types that
 -- match `name`.
 -- @tparam string name a string or regex
-function IObserver:disconnect_self_matching(name)
+function IEventEmitter:disconnect_self_matching(name)
    -- TODO
 end
 
 -- Disconnects all global event handlers across all event types that
 -- match `name`.
 -- @tparam string name a string or regex
-function IObserver:disconnect_global_matching(name)
+function IEventEmitter:disconnect_global_matching(name)
    -- TODO
 end
 
-return IObserver
+return IEventEmitter

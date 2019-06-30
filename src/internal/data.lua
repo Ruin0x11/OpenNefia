@@ -145,14 +145,14 @@ function data:add(dat)
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
       data:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
-      return
+      return nil
    end
 
    local _schema = schemas[_type]
 
    if _schema == nil then
       data:error("No type registered for " .. _type)
-      return
+      return nil
    end
 
    local errs = schema.CheckSchema(dat, _schema.schema)
@@ -177,7 +177,7 @@ function data:add(dat)
       end
    end
 
-   if strict and failed then return end
+   if strict and failed then return nil end
 
    local full_id = mod_name .. "." .. _id
 
@@ -189,10 +189,11 @@ function data:add(dat)
          dat._id = full_id
          table.replace_with(inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
+         return dat
       else
          self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
+         return nil
       end
-      return
    end
 
    inner[_type][full_id] = dat
@@ -203,6 +204,7 @@ function data:add(dat)
 
    dat._id = full_id
    setmetatable(dat, metatables[_type])
+   return dat
 end
 
 function data:add_multi(_type, ...)
@@ -232,7 +234,7 @@ function proxy:edit(name, func)
    if env.is_hotloading() then
       -- TODO: determine edit order and recalculate prototype
       Log.info("In-place edit update of %s", full_name)
-      global_edits[self._type]:replace(full_name, func)
+      assert(global_edits[self._type]:replace(full_name, func))
 
       -- TODO: rerun all edits at end of hotload
       data:run_all_edits()

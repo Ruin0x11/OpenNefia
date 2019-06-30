@@ -11,7 +11,7 @@ local ICharaParty = require("api.chara.ICharaParty")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
-local IObserver = require("api.IObserver")
+local IEventEmitter = require("api.IEventEmitter")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -23,7 +23,7 @@ local IChara = class.interface("IChara",
                             ICharaTalk,
                             ICharaEquip,
                             ICharaParty,
-                            IObserver
+                            IEventEmitter
                          })
 
 IChara._type = "base.chara"
@@ -87,7 +87,7 @@ function IChara:build()
    self.known_abilities = self.known_abilities or {}
 
    IMapObject.init(self)
-   IObserver.init(self)
+   IEventEmitter.init(self)
    IFactioned.init(self)
    ICharaInventory.init(self)
    ICharaEquip.init(self)
@@ -224,6 +224,8 @@ local function calc_kill_exp(attacker, victim)
    return gained_exp
 end
 
+local calc_damage = Event.hook("calc_damage", "Calculates damage.", 0, "damage")
+
 function IChara:damage_hp(amount, source, params)
    params = params or {}
 
@@ -249,10 +251,8 @@ function IChara:damage_hp(amount, source, params)
    local damage = amount
    event_params.damage = damage
 
-   local result = Event.trigger("base.on_calc_damage", event_params, {damage=damage})
-   if type(result.damage) == "number" then
-      damage = result.damage
-   end
+   damage = calc_damage(event_params, damage)
+   event_params.damage = damage
 
    victim.hp = math.min(victim.hp - damage, victim.max_hp)
 

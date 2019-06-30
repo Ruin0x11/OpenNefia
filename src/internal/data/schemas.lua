@@ -1,6 +1,13 @@
 local schema = require("thirdparty.schema")
 local data = require("internal.data")
 
+data:add_type {
+   name = "event",
+   schema = schema.Record {
+      observer = schema.Optional(schema.String)
+   },
+}
+
 local IChara = require("api.chara.IChara")
 local IItem = require("api.item.IItem")
 local IFeat = require("api.feat.IFeat")
@@ -115,13 +122,6 @@ data:add_type {
    schema = schema.Record {
       image = schema.Number,
       is_solid = schema.Boolean,
-   },
-}
-
-data:add_type {
-   name = "event",
-   schema = schema.Record {
-      observer = schema.Optional(schema.String)
    },
 }
 

@@ -115,8 +115,8 @@ function EventTree:traverse(source, args, default)
       self:sort()
    end
 
-   local disabled = {}
-   local disabled_inds = self.disabled_inds
+   -- local disabled = {}
+   -- local disabled_inds = self.disabled_inds
    local cache = self.cache
 
    local result = default

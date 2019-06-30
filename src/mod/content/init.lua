@@ -402,7 +402,8 @@ Event.register("base.after_damage_hp",
                   if Map.is_in_fov(p.chara.x, p.chara.y) then
                      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
                   end
-end)
+               end,
+               {priority=500000})
 
 
 data:add {
@@ -467,4 +468,4 @@ Event.register("base.on_game_start", "game start", my_start)
 require("mod.content.dialog")
 
 local Log = require("api.Log")
-Log.set_level(4)
+Log.set_level(3)

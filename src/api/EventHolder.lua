@@ -27,12 +27,13 @@ function EventHolder:register(event_id, name, cb, opts)
       return
    end
 
-   self.priorities[event_id] = self.priorities[event_id] or 10000
+   -- TODO: unnecessary if the sort is stable, and incorrect anyways
+   self.priorities[event_id] = self.priorities[event_id] or 100000
 
    local priority = opts.priority or self.priorities[event_id]
 
    if not opts.priority then
-      self.priorities[event_id] = self.priorities[event_id] + 10000
+      self.priorities[event_id] = self.priorities[event_id] + 100000
    end
 
    self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
@@ -41,6 +42,17 @@ function EventHolder:register(event_id, name, cb, opts)
    if not events:insert(priority, cb, name) then
       error(string.format("Name is already taken: %s %s", event_id, name))
    end
+end
+
+function EventHolder:replace(event_id, name, cb, opts)
+   opts = opts or {}
+   local events = self.hooks[event_id]
+
+   if not events then
+      return
+   end
+
+   self.hooks[event_id]:replace(name, cb, opts.priority)
 end
 
 function EventHolder:unregister(event_id, name)
@@ -78,8 +90,8 @@ function EventHolder:trigger(event_id, source, args, default)
 end
 
 function EventHolder:add_observer(event_id, observer)
-   local IObserver = require("api.IObserver")
-   class.assert_is_an(IObserver, observer)
+   local IEventEmitter = require("api.IEventEmitter")
+   class.assert_is_an(IEventEmitter, observer)
 
    self.observers[event_id] = self.observers[event_id] or setmetatable({}, { __mode = "k" })
    self.observers[event_id][observer] = true
