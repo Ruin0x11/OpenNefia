@@ -165,12 +165,12 @@ function InventoryContext:filter(item)
    return true
 end
 
-function InventoryContext:after_filter(item)
-   if self.proto.filter then
-      return self.proto.filter(self, item)
+function InventoryContext:after_filter(filtered)
+   if self.proto.after_filter then
+      return self.proto.after_filter(self, filtered)
    end
 
-   return true
+   return nil
 end
 
 function InventoryContext:query_item_amount(item)

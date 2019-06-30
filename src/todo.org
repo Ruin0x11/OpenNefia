@@ -1,9 +1,11 @@
 * TODO rebooting is dying
-** TODO hotload ui layer
-** TODO hotload interface
-** TODO hotload class
+** DONE hotload ui layer
+CLOSED: [2019-06-29 Sat 23:15]
+** DONE hotload interface
+CLOSED: [2019-06-29 Sat 23:15]
+** DONE hotload class
+CLOSED: [2019-06-29 Sat 23:15]
 ** TODO data:edit
-** TODO Hook.add()
 ** TODO Hook.add()
 * TODO map/outer map handling (base)
 * TODO continuous action (base)

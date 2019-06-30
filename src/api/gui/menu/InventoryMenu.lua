@@ -85,6 +85,8 @@ function InventoryMenu:init(ctxt, returns_item)
    self.layout = nil -- ResistanceLayout:new()
    self.subtext_column = "subtext"
 
+   self.result = nil
+
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    -- TODO
@@ -96,6 +98,15 @@ function InventoryMenu:init(ctxt, returns_item)
    }
 
    self:update_filtering()
+end
+
+function InventoryMenu:on_query()
+   self.canceled = false
+   self.result = nil
+end
+
+function InventoryMenu:on_hotload()
+   table.merge(self.pages, UiListExt(self))
 end
 
 -- TODO: IList needs refactor to "selected_entry" to avoid naming
@@ -200,6 +211,11 @@ function InventoryMenu:update_filtering()
    -- character, like a spot on the map.
    self.total_weight = self.ctxt.chara:calc("inventory_weight")
    self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
+
+   local result = self.ctxt:after_filter(filtered)
+   if result then
+      self.result = result
+   end
 end
 
 function InventoryMenu:draw()
@@ -268,7 +284,13 @@ function InventoryMenu:update()
       end
    end
 
-   if self.pages:len() == 0 or self.canceled then
+   if self.result and self.result ~= "inventory_continue" then
+      return self.result
+   end
+
+   self.result = nil
+
+   if self.canceled then
       if self.returns_item then
          return nil, "canceled"
       end

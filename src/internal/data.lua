@@ -1,4 +1,5 @@
 local Log = require ("api.Log")
+local EventTree = require ("api.EventTree")
 local env = require ("internal.env")
 local schema = require ("thirdparty.schema")
 local fun = require ("thirdparty.fun")
@@ -51,6 +52,9 @@ local schemas = {}
 local metatables = {}
 local generates = {}
 local strict = false
+
+local global_edits = {}
+local single_edits = {}
 
 -- HACK: separate into Data API and internal.data
 function data:clear()
@@ -109,9 +113,26 @@ function data:add_type(schema, params)
    schemas[_type] = schema
    metatables[_type] = metatable
    generates[_type] = generate
+
+   global_edits[_type] = EventTree:new()
 end
 
 function data:extend_type(type_id, delta)
+end
+
+function data:run_all_edits()
+   Log.info("Running all data edits.")
+   for _type, tree in pairs(global_edits) do
+      for k, v in self[_type]:iter() do
+         -- TODO: store base separately
+         -- TODO: this does not deepcopy proto, so originals are lost
+         self[_type][k] = tree(v) -- TODO modify event tree for args
+      end
+   end
+end
+
+function data:run_edits_for(_type, _id)
+   self[_type][_id] = global_edits[_type](self[_type][_id])
 end
 
 function data:add(dat)
@@ -167,6 +188,7 @@ function data:add(dat)
          Log.debug("In-place update of %s:%s", _type, full_id)
          dat._id = full_id
          table.replace_with(inner[_type][full_id], dat)
+         self:run_edits_for(_type, full_id)
       else
          self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
       end
@@ -197,6 +219,27 @@ function proxy:init(_type)
 end
 
 function proxy:__newindex(k, v)
+end
+
+function proxy:edit(name, func)
+   assert(type(name) == "string", "edit() must be passed a unique descriptor")
+   assert(type(func) == "function", "edit() must be passed a function")
+
+   local mod_name = env.find_calling_mod()
+
+   local full_name = mod_name .. ": " .. name
+
+   if env.is_hotloading() then
+      -- TODO: determine edit order and recalculate prototype
+      Log.info("In-place edit update of %s", full_name)
+      global_edits[self._type]:replace(full_name, func)
+
+      -- TODO: rerun all edits at end of hotload
+      data:run_all_edits()
+   else
+      assert(global_edits[self._type]:insert(10000, func, full_name),
+             "Edit name is already taken: " .. full_name)
+   end
 end
 
 function proxy:find_by(index, value)

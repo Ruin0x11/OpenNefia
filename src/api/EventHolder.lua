@@ -1,6 +1,4 @@
-local event_tree = require("internal.event_tree")
-
-local loaded = false
+local EventTree = require("api.EventTree")
 
 local EventHolder = class.class("EventHolder")
 
@@ -37,7 +35,7 @@ function EventHolder:register(event_id, name, cb, opts)
       self.priorities[event_id] = self.priorities[event_id] + 10000
    end
 
-   self.hooks[event_id] = self.hooks[event_id] or event_tree:new()
+   self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
 
    local events = self.hooks[event_id]
    if not events:insert(priority, cb, name) then
@@ -46,9 +44,7 @@ function EventHolder:register(event_id, name, cb, opts)
 end
 
 function EventHolder:unregister(event_id, name, opts)
-   if opts == nil then
-      opts = {}
-   end
+   opts = opts or {}
 
    local events = self.hooks[event_id]
    if events then
@@ -64,22 +60,6 @@ function EventHolder:count(event_id)
    return events:count()
 end
 
-local function run_event(priority, callbacks, args)
-   for _, cb in ipairs(callbacks) do
-      local result = cb(args)
-
-      if type(result) == "table" then
-         args = table.merge(args, result)
-      end
-
-      if args._stop then
-         return false
-      end
-   end
-
-   return true
-end
-
 function EventHolder:trigger(event_id, args, opts)
    args = args or {}
    opts = opts or {}
@@ -93,7 +73,7 @@ function EventHolder:trigger(event_id, args, opts)
 
    local events = self.hooks[event_id]
    if events then
-      events:traverse(run_event, args)
+      events:trigger(args)
    end
 
    if self.observers[event_id] then

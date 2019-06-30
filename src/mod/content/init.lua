@@ -468,3 +468,9 @@ require("mod.content.dialog")
 
 local Log = require("api.Log")
 Log.set_level(4)
+
+data["base.chara"]:edit("test edit",
+   function(chara)
+      chara.image = 3
+   end
+)

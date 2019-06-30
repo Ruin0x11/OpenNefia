@@ -77,7 +77,7 @@ end
 function env.find_calling_mod()
    local hotload_path = env.is_hotloading()
    if hotload_path then
-      return path_is_in_mod(hotload_path)
+      return path_is_in_mod(hotload_path) or "base"
    end
 
    local stack = 1

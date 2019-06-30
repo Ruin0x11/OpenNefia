@@ -1,6 +1,6 @@
-local event_tree = class.class("event_tree")
+local EventTree = class.class("EventTree")
 
-function event_tree:init()
+function EventTree:init()
    self.dirty = true
    self.cbs = {}
    self.cache = {}
@@ -9,16 +9,41 @@ function event_tree:init()
    self.name_to_ind = {}
 end
 
-function event_tree:count()
+function EventTree:count()
    return #self.cbs
 end
 
-function event_tree:has_handler(name)
+function EventTree:has_handler(name)
    return self.name_to_ind[name] ~= nil
 end
 
-function event_tree:insert(priority, cb, name)
+function EventTree:replace(name, cb, priority)
+   local ind = self.name_to_ind[name]
+   if not (name or ind) then
+      error("No such callback with name " .. tostring(name))
+   end
+
+   local found
+   for _, v in ipairs(self.cbs) do
+      if v.name == name then
+         found = v
+         break
+      end
+   end
+
+   assert(found)
+
+   found.priority = priority or found.priority
+   found.cb = cb
+   if ind ~= -1 then
+      self.cache[ind] = cb
+   end
+end
+
+function EventTree:insert(priority, cb, name)
    if self.name_to_ind[name] then
+      -- Caller should raise an error with more information that is
+      -- not contained here, such as event ID.
       return false
    end
 
@@ -32,7 +57,7 @@ function event_tree:insert(priority, cb, name)
    return true
 end
 
-function event_tree:disable(name)
+function EventTree:disable(name)
    self.disabled[name] = true
 
    if self.dirty then
@@ -45,7 +70,7 @@ function event_tree:disable(name)
    end
 end
 
-function event_tree:enable(name)
+function EventTree:enable(name)
    self.disabled[name] = nil
 
    if self.dirty then
@@ -58,7 +83,7 @@ function event_tree:enable(name)
    end
 end
 
-function event_tree:unregister(name)
+function EventTree:unregister(name)
    local ind = self.name_to_ind[name]
    if not ind then
       return
@@ -71,7 +96,7 @@ function event_tree:unregister(name)
    self.dirty = true
 end
 
-function event_tree:sort()
+function EventTree:sort()
    table.sort(self.cbs, function(a, b) return a.priority < b.priority end)
    self.cache = {}
    for _, v in ipairs(self.cbs) do
@@ -85,7 +110,7 @@ function event_tree:sort()
    self.dirty = false
 end
 
-function event_tree:traverse(f, args)
+function EventTree:traverse(args)
    if self.dirty then
       self:sort()
    end
@@ -99,17 +124,17 @@ function event_tree:traverse(f, args)
 
          if type(result) == "table" then
             args = table.merge(args, result)
-         end
 
-         if args.blocked then
-            return false
-         end
+            if args.blocked then
+               return false
+            end
 
-         if args.disabled then
-            for _, name in ipairs(args.disabled) do
-               local ind = self.name_to_ind[name]
-               if ind ~= nil then
-                  disabled[ind] = true
+            if args.disabled then
+               for _, name in ipairs(args.disabled) do
+                  local ind = self.name_to_ind[name]
+                  if ind ~= nil then
+                     disabled[ind] = true
+                  end
                end
             end
          end
@@ -119,7 +144,15 @@ function event_tree:traverse(f, args)
    return true
 end
 
-function event_tree:print()
+function EventTree:trigger(args)
+   return self:traverse(args)
+end
+
+function EventTree:__call(args)
+   return self:traverse(args)
+end
+
+function EventTree:print()
    if self.dirty then
       self:sort()
    end
@@ -142,4 +175,4 @@ function event_tree:print()
    )
 end
 
-return event_tree
+return EventTree

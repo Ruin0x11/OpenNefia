@@ -39,6 +39,12 @@ InventoryProtos.inv_get = {
       -- TODO: handle harvest action
 
       return "inventory_continue"
+   end,
+
+   after_filter = function(ctxt, filtered)
+      if #filtered == 0 then
+         return "player_turn_query"
+      end
    end
 }
 
