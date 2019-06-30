@@ -1,5 +1,5 @@
 -- An object instance backed by a data prototype.
-local IObject= class.interface("IObject",
+local IObject = class.interface("IObject",
                           {
                              _id = "string",
                              _type = "string",

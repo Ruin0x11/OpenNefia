@@ -2,7 +2,7 @@ local Chara = require("api.Chara")
 local Faction = require("api.Faction")
 local IObject = require("api.IObject")
 
-local IFactioned= class.interface("IFactioned", {}, IObject)
+local IFactioned = class.interface("IFactioned", {}, IObject)
 
 function IFactioned:init()
    self.personal_reactions = {}

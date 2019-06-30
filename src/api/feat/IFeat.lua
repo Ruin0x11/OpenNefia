@@ -2,7 +2,7 @@ local IMapObject = require("api.IMapObject")
 
 -- A feat is anything that is a part of the map with a position. Feats
 -- also include traps.
-local IFeat= class.interface("IFeat", {}, IMapObject)
+local IFeat = class.interface("IFeat", {}, IMapObject)
 
 function IFeat:build()
 end

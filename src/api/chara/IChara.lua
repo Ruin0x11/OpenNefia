@@ -14,7 +14,7 @@ local IMapObject = require("api.IMapObject")
 local IObserver = require("api.IObserver")
 
 -- TODO: move out of api
-local IChara= class.interface("IChara",
+local IChara = class.interface("IChara",
                          {},
                          {
                             IMapObject,

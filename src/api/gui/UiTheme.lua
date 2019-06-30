@@ -33,10 +33,8 @@ function UiTheme.load(instance)
    if type(instance) == "string" then
       fq_name = instance
    else
-      fq_name = env.get_fq_name(instance)
+      fq_name = env.get_require_path(instance)
    end
-
-   print(tostring(fq_name) .. " " .. tostring(cache[fq_name]))
 
    if cache[fq_name] then
       return cache[fq_name]

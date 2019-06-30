@@ -117,6 +117,7 @@ function Command.inventory(player)
 end
 
 function Command.wear(player)
+   _p("wear",string.tostring_raw(EquipmentMenu))
    return EquipmentMenu:new(player):query()
 end
 

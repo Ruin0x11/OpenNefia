@@ -8,9 +8,8 @@ local _iface_children = setmetatable({}, { __mode = "k" })
 local function make_tostring(kind, tbl)
    return function(self)
       if self.__class then
-         return string.format("instance of '%s' (%s)",
-                              rawget(self.__class,'name') or '?',
-                              tostring(self))
+         return string.format("instance of '%s'",
+                              rawget(self.__class,'name') or '?')
       end
       return tbl[self]
          and string.format("%s '%s'", kind, rawget(self, "name") or "?")
@@ -246,6 +245,7 @@ function class.class(name, ifaces)
             if type(field[k]) == "function" then
                local f = field[k]
                local __memoized = rawget(t, "__memoized")
+               -- TODO: this will not play well with hotloading.
                __memoized[k] = __memoized[k] or function(self, ...) return f(field, ...) end
                return __memoized[k]
             else
@@ -326,6 +326,10 @@ function class.class(name, ifaces)
 
       instance.__memoized = {}
 
+      if c.name == "EquipmentMenu" then
+         _p("new", string.tostring_raw(c.new))
+         _p("setmetatable", string.tostring_raw(c))
+      end
       setmetatable(instance, c)
 
       if c.init then
@@ -392,7 +396,38 @@ local function copy_all_interface_methods_to_children(iface)
 end
 
 function class.hotload(old, new)
-   if _interfaces[old] then
+   if _classes[old] then
+      -- These functions capture the class table inside the hotloaded
+      -- chunk. To make sure they point to the hotloaded methods,
+      -- discard the ones in the hotloaded chunk since they reference
+      -- its table internal to the chunk. Example:
+      --
+      -- - File is loaded, producing Chunk A with Class v1.
+      -- - File is hotloaded, producing Chunk B with Class v2.
+      -- - All methods from Class v2 are merged onto Class v1.
+      --   However, Class v2's :new() captures Class v2 in the closure
+      --   when using setmetatable.
+      -- - When calling :new on Class v1 after merging, it will set
+      --   the metatable of Class v2 on the base table instead of
+      --   Class v1. The changes merged onto Class v1 will not be
+      --   reflected in this object.
+      local method_new = old.new
+      local method___index = old.__index
+      local method___newindex = old.__newindex
+
+      for k, _ in pairs(old) do
+         rawset(old, k, nil)
+      end
+      for k, v in pairs(new) do
+         rawset(old, k, v)
+      end
+
+      rawset(old, "new", method_new)
+      rawset(old, "__index", method___index)
+      rawset(old, "__newindex", method___newindex)
+
+      print("Hotload onto " .. string.tostring_raw(old))
+   elseif _interfaces[old] then
       -- The interface system works in a sort of abstract class/mixin
       -- manner. Interfaces can specify parent interfaces, and on
       -- creation all the parent's declared methods are copied to the

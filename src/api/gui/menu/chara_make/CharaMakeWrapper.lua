@@ -1,17 +1,13 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Ui = require("api.Ui")
 
 local env = require("internal.env")
 
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
-local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local InputHandler = require("api.gui.InputHandler")
 local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
-local Prompt = require("api.gui.Prompt")
 
 local CharaMakeWrapper = class.class("CharaMakeWrapper", IUiLayer)
 
@@ -41,17 +37,17 @@ function CharaMakeWrapper:proceed()
    end
 
    local menu_id = self.menus[#self.trail+1]
-   local success, class = pcall(function() return env.safe_require(menu_id) end)
+   local success, layer_class = pcall(function() return env.safe_require(menu_id) end)
 
    if not success then
-      local err = class
+      local err = layer_class
       -- TODO turn this into a log warning
       error("Error loading menu " .. menu_id .. ":\n\t" .. err)
    elseif class == nil then
       error("Cannot find menu " .. menu_id)
    end
 
-   self.submenu = class:new()
+   self.submenu = layer_class:new()
    class.assert_is_an(ICharaMakeSection, self.submenu)
 
    self.caption:set_data(self.submenu.caption)
@@ -68,7 +64,6 @@ function CharaMakeWrapper:go_back()
 
    self.submenu = table.remove(self.trail)
    self.submenu:on_charamake_go_back()
-   print(self.submenu:get_fq_name())
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -89,7 +84,7 @@ end
 
 function CharaMakeWrapper:get_section_result(fq_name)
    for _, menu in ipairs(self.trail) do
-      if menu:get_fq_name() == fq_name then
+      if env.get_require_path(menu) == fq_name then
          return menu:charamake_result()
       end
    end

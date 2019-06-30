@@ -22,6 +22,12 @@ function KeyHandler:init()
    self.forwards = nil
    self.halted = false
    self.stop_halt = true
+
+   self:bind_keys {
+      ["`"] = function()
+         require("game.field"):query_repl()
+      end
+   }
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
@@ -67,7 +73,6 @@ function KeyHandler:unbind_keys(bindings)
 end
 
 function KeyHandler:halt_input()
-   print("halt")
    self.repeat_delays = {}
    self.pressed = {}
    self.this_frame = {}

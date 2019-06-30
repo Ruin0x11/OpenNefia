@@ -2,6 +2,7 @@ require("boot")
 
 local Draw = require("api.Draw")
 
+local env = require("internal.env")
 local internal = require("internal")
 local game = require("game")
 local debug_server = require("util.debug_server")
@@ -79,6 +80,8 @@ function love.draw()
    fps:draw()
 
    internal.draw.draw_end()
+
+   env.set_hotloaded_this_frame(false)
 end
 
 --

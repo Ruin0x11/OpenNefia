@@ -1,4 +1,3 @@
-local fs = require("internal.fs")
 local Log = require("api.Log")
 
 local env = {}
@@ -39,13 +38,30 @@ if _DEBUG then
    SANDBOX_GLOBALS[#SANDBOX_GLOBALS+1] = "_p"
 end
 
-local SAFE_HOTLOAD_PREFIXES = {
-   "^api%.",
-   "^mod%.",
-   "^ext%.",
-   "^thirdparty%.",
+local UNSAFE_HOTLOAD_PATHS = {
+   "internal.env",
+   "util.class",
 }
 
+-- To determine the require path of a chunk, it is necessary to keep a
+-- cache. If a chunk is hotloaded, the table it returns will be merged
+-- into the one already existing in any upvalues, but the table
+-- upvalue that was returned inside the chunk itself will still
+-- reference a completely different table (the one that was merged
+-- into the existing one). Since this upvalue can be local there may
+-- be no way to access it, so in the end there can be more than one
+-- table at the same require path.
+local require_path_cache = setmetatable({}, { __mode = "k" })
+
+
+local hotloaded_this_frame = false
+function env.set_hotloaded_this_frame(val)
+   hotloaded_this_frame = val
+end
+
+function env.hotloaded_this_frame()
+   return hotloaded_this_frame
+end
 
 -- Tries to find the mod that is calling the current function by
 -- looking up the stack for an environment with the _MOD_NAME global
@@ -119,13 +135,13 @@ local function get_load_type(path)
 end
 
 local function can_hotload(path)
-   for _, patt in ipairs(SAFE_HOTLOAD_PREFIXES) do
+   for _, patt in ipairs(UNSAFE_HOTLOAD_PATHS) do
       if string.match(path, patt) then
-         return true
+         return false
       end
    end
 
-   return false
+   return true
 end
 
 local function extract_mod_name(path)
@@ -143,8 +159,6 @@ end
 --- environment.
 -- @tparam string path
 local function safe_load_chunk(path)
-   local load_type
-
    local load_type = get_load_type(path)
 
    if load_type == "api" then
@@ -213,37 +227,49 @@ local function gen_require(chunk_loader)
 
       Log.debug("HOTLOAD %s", path)
       LOADING[path] = true
-      local chunk, err = chunk_loader(path)
+      local result, err = chunk_loader(path)
       LOADING[path] = false
-
-      if chunk == "no_hotload" then
-         return package.loaded[path]
-      end
+      Log.debug("HOTLOAD RESULT %s", tostring(result))
 
       if err then
          IS_HOTLOADING = false
          error("\n\t" .. err, 0)
       end
 
+      if IS_HOTLOADING and result == "no_hotload" then
+         Log.info("Not hotloading: %s", path)
+         return package.loaded[path]
+      end
+
       if type(package.loaded[path]) == "table"
-         and type(chunk) == "table"
+         and type(result) == "table"
       then
-         if class.is_class_or_interface(chunk) then
-            class.hotload(package.loaded[path], chunk)
+         Log.info("Hotload: %s %s <- %s", path, string.tostring_raw(package.loaded[path]), string.tostring_raw(result))
+         if class.is_class_or_interface(result) then
+            class.hotload(package.loaded[path], result)
          else
-            table.replace_with(package.loaded[path], chunk)
+            if result.on_hotload then
+               result.on_hotload(package.loaded[path], result)
+            else
+               table.replace_with(package.loaded[path], result)
+            end
          end
-      elseif chunk == nil then
+         Log.info("Hotload result: %s", string.tostring_raw(package.loaded[path]))
+      elseif result == nil then
          package.loaded[path] = true
       else
-         package.loaded[path] = chunk
+         package.loaded[path] = result
       end
 
       if hotload then
          HOTLOADED[path] = true
       end
 
-      return chunk
+      if type(result) == "table" then
+         require_path_cache[result] = path
+      end
+
+      return package.loaded[path]
    end
 end
 
@@ -285,16 +311,18 @@ function env.hotload(path, also_deps)
       HOTLOAD_DEPS = true
    end
 
-   print("Begin hotload " .. path)
+   Log.info("Begin hotload: %s", path)
    IS_HOTLOADING = true
-   local loaded = env.safe_require(path, true)
+   local result = env.require(path, true)
    IS_HOTLOADING = false
 
    if also_deps then
       HOTLOAD_DEPS = false
    end
 
-   return loaded
+   hotloaded_this_frame = true
+
+   return result
 end
 
 --- Returns true if hotloading is ongoing. Used to implement specific
@@ -345,43 +373,22 @@ function env.generate_sandbox(mod_name, is_strict)
    return sandbox
 end
 
-function env.require_all_apis(dir)
-   dir = dir or "api"
-
-   local api_env = {}
-
-   for _, api in fs.iter_directory_items(dir .. "/") do
-      local path = fs.join(dir, api)
-      if fs.is_file(path) then
-         local name = fs.filename_part(path)
-         if api_env[name] then
-            Log.warn("Duplicate API required in environment: %s", name)
-         end
-         api_env[name] = env.require(path)
-      elseif fs.is_directory(path) then
-         table.merge(api_env, env.require_all_apis(path))
-      end
-   end
-
-   return api_env
-end
-
--- Given a table loaded with require, class/interface table or class
--- instance, returns its fully qualified name.
-function env.get_fq_name(tbl)
+-- Given a table loaded with require, a class/interface table or a
+-- class instance, returns its require path.
+function env.get_require_path(tbl)
    assert(type(tbl) == "table")
 
    if tbl.__class then
       tbl = tbl.__class
    end
 
-   for k, v in pairs(package.loaded) do
-      if tbl == v then
-         return k
-      end
+   local path = require_path_cache[tbl]
+
+   if path == nil then
+      Log.warn("Cannot find require path for %s (%s)", tostring(tbl), string.tostring_raw(tbl))
    end
 
-   return nil
+   return path
 end
 
 return env

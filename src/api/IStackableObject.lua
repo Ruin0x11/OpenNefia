@@ -1,7 +1,7 @@
 local IOwned = require("api.IOwned")
 local IMapObject = require("api.IMapObject")
 
-local IStackableObject= class.interface("IStackableObject",
+local IStackableObject = class.interface("IStackableObject",
                                  {
                                     amount = "number",
                                     can_stack_with = "function",

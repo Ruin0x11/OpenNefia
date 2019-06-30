@@ -1,6 +1,6 @@
 local ILocation = require("api.ILocation")
 
-local IOwned= class.interface("IOwned",
+local IOwned = class.interface("IOwned",
                          {
                             uid = "number",
                             location = { type = ILocation, optional = true }

@@ -93,7 +93,7 @@ function Object.generate(proto, mt)
    return data
 end
 
-local IMockObject= class.interface("IMockObject", {}, IObject)
+local IMockObject = class.interface("IMockObject", {}, IObject)
 function IMockObject.build()
    IObject.init(self)
 end

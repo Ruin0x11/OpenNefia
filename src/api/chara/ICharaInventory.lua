@@ -3,7 +3,7 @@ local ILocation = require("api.ILocation")
 
 --- Interface for character inventory. Allows characters to store map
 --- objects.
-local ICharaInventory= class.interface("ICharaInventory", {}, {ILocation})
+local ICharaInventory = class.interface("ICharaInventory", {}, {ILocation})
 
 ICharaInventory:delegate("inv",
                         {

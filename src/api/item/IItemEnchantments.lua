@@ -1,7 +1,7 @@
 local IObject = require("api.IObject")
 local OEnchantment = require("api.OEnchantment")
 
-local IItemEnchantments= class.interface("IItemEnchantments", {}, IObject)
+local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 
 function IItemEnchantments:init()
    local enchantments = {}

@@ -5,7 +5,7 @@ local IItemEnchantments = require("api.item.IItemEnchantments")
 local field = require("game.field")
 
 -- TODO: move out of api
-local IItem= class.interface("IItem",
+local IItem = class.interface("IItem",
                          {},
                          {IStackableObject, IItemEnchantments})
 

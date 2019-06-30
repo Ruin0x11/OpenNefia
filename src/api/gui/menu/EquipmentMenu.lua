@@ -138,10 +138,13 @@ function EquipmentMenu:on_query()
    Gui.play_sound("base.wear");
 end
 
+function EquipmentMenu:on_hotload_layer()
+   table.merge(self.pages, UiListExt(self))
+end
+
 function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
-   print("relayout " .. tostring(self.t))
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 88, self.y + 60, self.width, self.height)
@@ -158,7 +161,6 @@ function EquipmentMenu:draw()
    self.t.deco_a:draw(self.x + self.width - 106, self.y)
    self.t.deco_b:draw(self.x, self.y + self.height - 164)
 
-   local weight = Ui.display_weight(100)
    local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d",
                               self.stats.weight,
                               "med",

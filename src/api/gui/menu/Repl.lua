@@ -195,9 +195,13 @@ end
 
 function Repl:print(text)
    Draw.set_font(self.font_size)
-   local _, wrapped = Draw.wrap_text(text, self.width)
-   for _, line in ipairs(wrapped) do
-      self.scrollback:push(line)
+   local success, err, wrapped = pcall(function() return Draw.wrap_text(text, self.width) end)
+   if not success then
+      self.scrollback:push("<error printing result: " .. err .. ">")
+   else
+      for _, line in ipairs(wrapped) do
+         self.scrollback:push(line)
+      end
    end
 end
 

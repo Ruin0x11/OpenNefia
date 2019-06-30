@@ -79,6 +79,7 @@
            (file-name-sans-extension (buffer-file-name))
            (concat (getenv "HOME") "/build/next/src/src")))
          (lua-path (replace-regexp-in-string "/" "." prefix)))
+    (save-buffer)
     (elona-next--send (format "require('internal.env').hotload('%s')" lua-path))
     (message "Hotloaded %s." lua-path)))
 

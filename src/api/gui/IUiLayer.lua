@@ -29,11 +29,12 @@ local function query(self)
    return res, canceled
 end
 
-IUiLayer= class.interface("IUiLayer",
+IUiLayer = class.interface("IUiLayer",
                  {
                     relayout = "function",
                     query = { default = query },
                     on_query = { default = function() end },
+                    on_hotload_layer = { default = function() end },
                  },
                  { IDrawable, IInput })
 

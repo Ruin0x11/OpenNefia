@@ -1,5 +1,6 @@
 local Action = require("api.Action")
 local Chara = require("api.Chara")
+local Draw = require("api.Draw")
 local Map = require("api.Map")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
@@ -149,10 +150,8 @@ function Tools.goto_map(name)
    return Map.travel_to(Map.generate("elona_sys.elona122", { name = name }))
 end
 
-function Tools.checktalk()
-   print(require("api.chara.ICharaTalk").say)
-   print(require("api.chara.IChara").say)
-   print(Chara.player().say)
+function Tools.layer()
+   return Draw.get_layer(Draw.layer_count()-1)
 end
 
 local print_flat = require("mod.tools.lib.print_flat")

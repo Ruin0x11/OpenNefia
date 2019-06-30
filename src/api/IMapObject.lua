@@ -3,7 +3,7 @@ local IObject = require("api.IObject")
 local Log = require("api.Log")
 
 -- An IObject that can be displayed on a tilemap.
-local IMapObject = class.interface("IMapObject",
+local IMapObject  = class.interface("IMapObject",
                              {
                                 x = "number",
                                 y = "number",

@@ -1,9 +1,18 @@
+local env = require("internal.env")
+
+if env.is_hotloading() then
+   return "no_hotload"
+end
+
 local draw = {}
 
 local width = 800
 local height = 600
 
 local canvas = nil
+local layers = {}
+local handler = nil
+local gamma_correct = nil
 
 --
 --
@@ -11,7 +20,6 @@ local canvas = nil
 --
 --
 
-local gamma_correct = nil
 
 local function create_canvas(w, h)
    canvas = love.graphics.newCanvas(w, h)
@@ -66,9 +74,6 @@ function draw.draw_end()
    love.graphics.setBlendMode("alpha")
 end
 
-local layers = {}
-local handler = nil
-
 function draw.set_root(ui_layer)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
@@ -101,11 +106,24 @@ function draw.pop_layer()
    end
 end
 
-function draw.top_layer()
-   return layers[#layers]
+function draw.get_layer(i)
+   return layers[i]
+end
+
+function draw.layer_count()
+   return #layers
 end
 
 function draw.draw_layers()
+   if env.hotloaded_this_frame() then
+      for _, layer in ipairs(layers) do
+         if layer.on_hotload_layer then
+            layer:on_hotload_layer()
+         end
+         layer:relayout(0, 0, draw.get_width(), draw.get_height())
+      end
+   end
+
    for i, layer in ipairs(layers) do
       layer:draw()
    end

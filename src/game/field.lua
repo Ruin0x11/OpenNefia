@@ -1,14 +1,11 @@
-local internal = require("internal")
-local startup = require("game.startup")
-
-local Draw = require("api.Draw")
 local InputHandler = require("api.gui.InputHandler")
 local IUiLayer = require("api.gui.IUiLayer")
 local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
+local Log = require("api.Log")
 
 local env = require("internal.env")
-local map = require("internal.map")
+local fs = require("internal.fs")
 local field_renderer = require("internal.field_renderer")
 
 local field_layer = class.class("field_layer", IUiLayer)
@@ -43,13 +40,34 @@ function field_layer:init()
    }
 end
 
+local function require_all_apis(dir)
+   dir = dir or "api"
+
+   local api_env = {}
+
+   for _, api in fs.iter_directory_items(dir .. "/") do
+      local path = fs.join(dir, api)
+      if fs.is_file(path) then
+         local name = fs.filename_part(path)
+         if api_env[name] then
+            Log.warn("Duplicate API required in environment: %s", name)
+         end
+         api_env[name] = env.require(path)
+      elseif fs.is_directory(path) then
+         table.merge(api_env, require_all_apis(path))
+      end
+   end
+
+   return api_env
+end
+
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
    -- this auto-requires the full public API.
    local Repl = require("api.gui.menu.Repl")
 
    local repl_env = env.generate_sandbox("repl")
-   local apis = env.require_all_apis()
+   local apis = require_all_apis()
    repl_env = table.merge(repl_env, apis)
 
    -- WARNING: for development only.
