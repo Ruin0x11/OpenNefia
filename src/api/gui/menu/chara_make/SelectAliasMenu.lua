@@ -9,7 +9,7 @@ local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 
-local SelectAliasMenu = class.class("SelectAliasMenu", IUiLayer)
+local SelectAliasMenu = class.class("SelectAliasMenu", ICharaMakeSection)
 
 SelectAliasMenu:delegate("input", IInput)
 SelectAliasMenu:delegate("list", "items")
@@ -67,6 +67,10 @@ function SelectAliasMenu:init()
    self.intro_sound = "base.ok1"
 end
 
+function SelectAliasMenu:on_make_chara(chara)
+   chara.alias = self.list:selected_item()
+end
+
 function SelectAliasMenu:lock(i)
    if not self.items[i] then return end
 
@@ -95,9 +99,6 @@ function SelectAliasMenu:relayout(x, y)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.list:relayout(self.x + 38, self.y + 66)
-end
-
-function SelectAliasMenu:on_charamake_finish()
 end
 
 function SelectAliasMenu:draw()

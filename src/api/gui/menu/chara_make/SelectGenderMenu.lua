@@ -15,9 +15,6 @@ local function load_cm_bg(id)
    return Draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
-function SelectGenderMenu:on_charamake_finish()
-end
-
 function SelectGenderMenu:init()
    self.width = 370
    self.height = 168
@@ -35,6 +32,10 @@ function SelectGenderMenu:init()
 
    self.caption = "There is no difference in the genders."
    self.intro_sound = "base.spell"
+end
+
+function SelectGenderMenu:on_make_chara(chara)
+   chara.gender = self.list:selected_item()
 end
 
 function SelectGenderMenu:relayout()

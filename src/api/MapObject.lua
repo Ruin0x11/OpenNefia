@@ -4,10 +4,10 @@ local uids = require("internal.global.uids")
 
 local MapObject = {}
 
-function MapObject.generate_from(_type, id, uid_tracker)
+function MapObject.generate_from(_type, id, params, uid_tracker)
    local data = require("internal.data")
    local proto = data[_type]:ensure(id)
-   return MapObject.generate(proto, uid_tracker)
+   return MapObject.generate(proto, params, uid_tracker)
 end
 
 -- TODO: set prototype in metatable
@@ -22,7 +22,8 @@ local function makeindex(proto)
    end
 end
 
-function MapObject.generate(proto, uid_tracker)
+function MapObject.generate(proto, params, uid_tracker)
+   params = params or {}
    uid_tracker = uid_tracker or uids
 
    local uid = uid_tracker:get_next_and_increment()
@@ -62,7 +63,12 @@ function MapObject.generate(proto, uid_tracker)
 
    -- class.assert_is_an(IMapObject, data)
 
-   data:build()
+   data:pre_build()
+
+   if not params.no_build then
+      data:normal_build()
+      data:build()
+   end
 
    if merge_rest then
       data = table.merge(data, proto)

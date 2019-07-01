@@ -4,8 +4,12 @@ local Talk = require("api.Talk")
 local ICharaTalk = class.interface("ICharaTalk")
 
 function ICharaTalk:init()
-   self:set_talk(self.talk)
+   self.talk = nil
    self.is_talk_silenced = false
+end
+
+function ICharaTalk:on_build()
+   self:set_talk(self.talk)
 end
 
 function ICharaTalk:set_talk(talk)

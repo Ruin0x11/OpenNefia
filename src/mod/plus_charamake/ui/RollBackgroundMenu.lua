@@ -100,7 +100,12 @@ function RollBackgroundMenu:charamake_result()
    return self.texts.texts
 end
 
-function RollBackgroundMenu:on_charamake_finish(result)
+function RollBackgroundMenu:on_make_chara(result)
+end
+
+function RollBackgroundMenu:on_query()
+   self.canceled = false
+   self.list:update()
 end
 
 function RollBackgroundMenu:draw()

@@ -489,7 +489,7 @@ end
 -- @tparam[opt] string method Merge method. Supported methods are:
 -- set: sets values to a fixed amount. (default)
 -- add: adds values. For non-number values, same as `set`.
--- merge: same as `set`, but do not overwrite values already existing
+-- merge: same as `set`, but do not overwrite values already existing.
 -- replace: do not attempt to merge tables, only assign.
 -- in `tbl`.
 function table.merge_ex(tbl, add, defaults, method)

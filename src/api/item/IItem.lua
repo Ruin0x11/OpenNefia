@@ -9,7 +9,7 @@ local IItem = class.interface("IItem",
                          {},
                          {IStackableObject, IItemEnchantments})
 
-function IItem:build()
+function IItem:pre_build()
    -- TODO remove and place in schema as defaults
    IMapObject.init(self)
 
@@ -35,6 +35,12 @@ function IItem:build()
 
    -- item:send("base.on_item_create")
    IItemEnchantments.init(self)
+end
+
+function IItem:normal_build()
+end
+
+function IItem:build()
 end
 
 function IItem:build_name(amount)

@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Map = require("api.Map")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
@@ -8,12 +9,11 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
+local data = require("internal.data")
+
 local SelectScenarioMenu = class.class("SelectScenarioMenu", ICharaMakeSection)
 
 SelectScenarioMenu:delegate("input", IInput)
-
-function SelectScenarioMenu:get_result()
-end
 
 function SelectScenarioMenu:init()
    self.width = 680
@@ -38,8 +38,19 @@ function SelectScenarioMenu:init()
    self.intro_sound = "base.ok1"
 end
 
+function SelectScenarioMenu:on_make_chara()
+   self.list:selected_item()
+end
+
 function SelectScenarioMenu:on_charamake_finish()
-   return self.list:selected_item()
+   local scenario = data["base.scenario"]:ensure("elona.elona")
+
+   local map, err = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
+   if err then
+      error(err)
+   end
+
+   Map.set_map(map)
 end
 
 function SelectScenarioMenu:relayout()

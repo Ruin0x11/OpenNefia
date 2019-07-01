@@ -10,6 +10,7 @@ local function query(self)
    class.assert_is_an(IUiLayer, self)
 
    local dt = 0
+   local abort = false
 
    internal.draw.push_layer(self)
 
@@ -17,16 +18,25 @@ local function query(self)
 
    local success, res, canceled
    while true do
-      success, res, canceled = pcall(function()
+      if abort then
+         Log.error("Draw error encountered, removing layer.")
+         break
+      end
+
+      success, res, canceled = xpcall(
+         function()
             local ran = self:run_actions(dt)
             return self:update(dt, ran)
-      end)
+         end,
+         function(err)
+            return debug.traceback(err)
+         end)
       if not success then
          Log.error("Error on query: %s", res)
          break
       end
       if res or canceled then break end
-      dt = coroutine.yield()
+      dt, abort = coroutine.yield()
    end
 
    self:halt_input()

@@ -69,9 +69,17 @@ function Chara.create(id, x, y, params, where)
    params = params or {}
    where = where or field.map
 
-   if not class.is_an(ILocation, where) then return nil end
+   if params.ownerless then
+      where = nil
+   else
+      where = where or field.map
+   end
 
-   if where:is_positional() then
+   if not class.is_an(ILocation, where) and not params.ownerless then
+      return nil
+   end
+
+   if where and where:is_positional() then
       if not where:is_in_bounds(x, y) then
          return nil
       end
@@ -81,11 +89,16 @@ function Chara.create(id, x, y, params, where)
       end
    end
 
-   local chara = MapObject.generate_from("base.chara", id)
+   local gen_params = {
+      no_build = params.no_build
+   }
+   local chara = MapObject.generate_from("base.chara", id, gen_params)
 
-   chara = where:take_object(chara, x, y)
+   if where then
+      chara = where:take_object(chara, x, y)
+   end
 
-   if chara then
+   if chara and not params.no_build then
       chara:refresh()
    end
 

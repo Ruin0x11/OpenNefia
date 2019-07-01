@@ -32,27 +32,20 @@ function love.load(arg)
    draw = coroutine.create(game.draw)
 end
 
-local frame = 0
+local abort = false
 
 function love.update(dt)
    if server then
-      local msg, err = coroutine.resume(server, dt)
-      if err then
+      local ok, err = coroutine.resume(server, dt)
+      if not ok then
          print("Error in server:\n\t" .. debug.traceback(server, err))
          print()
          error(err)
       end
    end
 
-   if _DEBUG and profile.running then
-      frame = frame + 1
-      if frame % 60 == 1 then
-         print(profile.report("time", 100))
-      end
-   end
-
-   local msg, err = coroutine.resume(loop, dt)
-   if err then
+   local ok, err = coroutine.resume(loop, dt, abort)
+   if not ok then
       print("Error in loop:\n\t" .. debug.traceback(loop, err))
       print()
       error(err)
@@ -64,17 +57,24 @@ function love.update(dt)
       print("Finished.")
       love.event.quit()
    end
+
+   abort = false
 end
 
 function love.draw()
    internal.draw.draw()
 
    local going = true
-   local msg, err = coroutine.resume(draw, going)
-   if err then
+   local ok, err = coroutine.resume(draw, going)
+   if not ok or err then
       print("Error in draw:\n\t" .. debug.traceback(draw, err))
       print()
-      error(err)
+      if not ok then
+         -- Coroutine is dead.
+         error(err)
+      else
+         abort = true
+      end
    end
 
    fps:draw()

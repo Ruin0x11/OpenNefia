@@ -6,8 +6,8 @@ local OEnchantment = class.interface("OEnchantment", {}, IObject)
 
 OEnchantment._type = "base.enchantment"
 
-function OEnchantment:create(proto)
-   return Object.generate_from(proto, OEnchantment)
+function OEnchantment:create(proto, params)
+   return Object.generate_from(proto, OEnchantment, params)
 end
 
 function OEnchantment:build()

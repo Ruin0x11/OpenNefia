@@ -4,6 +4,12 @@ local IMapObject = require("api.IMapObject")
 -- also include traps.
 local IFeat = class.interface("IFeat", {}, IMapObject)
 
+function IFeat:pre_build()
+end
+
+function IFeat:normal_build()
+end
+
 function IFeat:build()
 end
 

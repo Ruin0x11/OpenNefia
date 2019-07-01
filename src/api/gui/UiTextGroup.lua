@@ -6,7 +6,7 @@ local ISettable = require("api.gui.ISettable")
 local UiTextGroup = class.class("UiTextGroup", {IUiElement, ISettable})
 
 function UiTextGroup:init(texts, font, color, rows, columns, item_width, item_height)
-   self.texts = texts
+   self.texts = texts or {}
    self.font_width, self.font_style = Ui.unpack_font_desc(font or 14)
    self.color = color or {20, 10, 0}
    self.rows = rows or 1

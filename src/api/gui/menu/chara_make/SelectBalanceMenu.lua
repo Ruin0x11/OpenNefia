@@ -34,7 +34,7 @@ function SelectBalanceMenu:init()
    self.caption = "Choose a balance."
 end
 
-function SelectBalanceMenu:on_charamake_finish()
+function SelectBalanceMenu:on_make_chara()
    return self.list:selected_item()
 end
 

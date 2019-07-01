@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 local Input = require("api.Input")
 
@@ -17,12 +18,12 @@ local CharacterSummaryMenu = class.class("CharacterSummaryMenu", ICharaMakeSecti
 CharacterSummaryMenu:delegate("input", IInput)
 
 function CharacterSummaryMenu:init(chara)
-   print("theinit")
    self.inner = CharacterSheetMenu:new(chara)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
    self.input:bind_keys {
+      ["return"] = function() self:reroll(true) end,
       shift = function() self.canceled = true end,
    }
 
@@ -32,6 +33,29 @@ function CharacterSummaryMenu:init(chara)
    -- cheat a bit. this gets drawn over the one in the charamake
    -- wrapper.
    self.caption_box = CharaMakeCaption:new()
+
+   self:reroll()
+end
+
+function CharacterSummaryMenu:on_query()
+   self.canceled = false
+   self.name = "????"
+end
+
+function CharacterSummaryMenu:on_make_chara(chara)
+   if string.nonempty(self.name) then
+      chara.name = self.name
+   else
+      chara.name = "name"
+   end
+end
+
+function CharacterSummaryMenu:reroll(play_sound)
+   self.chara = require("api.CharaMake").make_chara()
+
+   if play_sound then
+      Gui.play_sound("base.dice")
+   end
 end
 
 function CharacterSummaryMenu:relayout(x, y, width, height)
@@ -51,9 +75,6 @@ function CharacterSummaryMenu:draw()
    end
 end
 
-function CharacterSummaryMenu:on_charamake_finish(chara)
-end
-
 local function prompt_final()
    return Prompt:new({"ああ", "いや...", "最初から", "前に戻る"}):query()
 end
@@ -66,7 +87,10 @@ function CharacterSummaryMenu:update()
          self.caption_box:set_data("Last question. What's your name?")
 
          local name, canceled = Input.query_text(10)
-         print(name,canceled)
+         if not canceled then
+            self.name = name
+            return self.chara
+         end
       elseif res.index == 2 then
       elseif res.index == 3 then
          return { chara_make_action = "go_to_start" }, "canceled"

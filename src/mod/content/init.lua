@@ -356,6 +356,17 @@ local function my_start()
    Chara.player():refresh()
 end
 
+data:add {
+   _type = "base.scenario",
+   _id = "my_scenario",
+
+   name = "My Scenario",
+
+   starting_map = { generator = "elona_sys.elona122", params = { name = "sister" }},
+
+   on_game_start = my_start
+}
+
 Event.register("base.on_game_start", "game start", my_start)
 
 require("mod.content.dialog")

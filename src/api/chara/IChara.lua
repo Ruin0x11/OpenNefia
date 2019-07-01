@@ -28,48 +28,32 @@ local IChara = class.interface("IChara",
 
 IChara._type = "base.chara"
 
-function IChara:build()
+--- Initializes the bare minimum values on this character. All
+--- characters must run this function on creation.
+function IChara:pre_build()
    IMapObject.init(self)
 
-   self.batch_ind = 0
-   self.tile = self.image
-   self.state = "Alive"
-   self.time_this_turn = 0
-   self.turns_alive = 0
+   self.state = "Dead"
    self.level = self.level or 1
-   self.experience = 0
-   self.quality = 2
+   self.experience = self.experience or 0
+   self.quality = self.quality or 2
 
    self.dv = self.dv or 0
    self.pv = self.pv or 0
    self.hit_bonus = self.hit_bonus or 0
    self.damage_bonus = self.damage_bonus or 0
    self.curse_power = self.curse_power or 0
-   self.number_of_weapons = 0
-   self.ether_disease_speed = 0
-
-   self.image = nil
-   self.portrait = nil
-
-   self.initial_x = 0
-   self.initial_y = 0
 
    self.fov = 15
 
-   self.target = nil
+   self.time_this_turn = 0
+   self.turns_alive = 0
 
-   self.ai = "base.elona_default_ai"
-   self.ai_state = {
-      hate = 0,
-      leader_attacker = nil,
-      item_to_be_used = nil,
-      wants_movement = 0,
-      last_target_x = 0,
-      last_target_y = 0,
-      anchor_x = nil,
-      anchor_y = nil,
-      is_anchored = false,
-   }
+   self.number_of_weapons = 0
+   self.ether_disease_speed = 0
+
+   self.initial_x = 0
+   self.initial_y = 0
 
    -- TODO schema
    self.ai_config = self.ai_config or
@@ -83,31 +67,64 @@ function IChara:build()
          on_idle_action = nil
       }
 
-   self.skills = {}
+   self.skills = self.skills or {}
    self.known_abilities = self.known_abilities or {}
 
-   IMapObject.init(self)
    IEventEmitter.init(self)
    IFactioned.init(self)
    ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)
 
-   -- TEMP
-   self.max_hp = self.max_hp or 10
-   self.max_mp = self.max_mp or 2
+   self.ai = self.ai or "base.elona_default_ai"
+end
+
+--- The default initialization logic for characters created through
+--- Chara.create(). You can skip this by passing `no_build = true` in
+--- the parameters to Chara.create(), but it becomes the caller's
+--- responsibility to ensure that IChara:build() is also called at
+--- some later point.
+function IChara:normal_build()
+   local class_data = Resolver.run("base.class", {}, { chara = self })
+   local race_data = Resolver.run("base.race", {}, { chara = self })
+
+   self:mod_base_with(class_data, "add")
+   self:mod_base_with(race_data, "add")
+end
+
+--- Finishes initializing this character. All characters must run this
+--- function sometime after running pre_build() before being used.
+function IChara:build()
+   self.tile = self.image
+   self.state = "Alive"
+
+   self.target = nil
+   self.image = nil
+   self.portrait = nil
+
+   self.ai_state = {
+      hate = 0,
+      leader_attacker = nil,
+      item_to_be_used = nil,
+      wants_movement = 0,
+      last_target_x = 0,
+      last_target_y = 0,
+      anchor_x = nil,
+      anchor_y = nil,
+      is_anchored = false,
+   }
 
    -- these need to be available in refresh()
    self.hp = 1
    self.mp = 1
 
-   local class_data = Resolver.run("base.class", {}, { chara = self })
-   local race_data = Resolver.run("base.race", {}, { chara = self })
-
-   self:mod_base_with(class_data, "merge")
-   self:mod_base_with(race_data, "merge")
+   ICharaTalk.on_build(self)
 
    self:refresh()
+
+   -- TEMP
+   self.max_hp = self.max_hp or 10
+   self.max_mp = self.max_mp or 2
 
    self:heal_to_max()
 end

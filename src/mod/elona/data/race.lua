@@ -250,6 +250,9 @@ local race =
                ["elona.negotiation"] = 2,
                ["elona.throwing"] = 3,
             },
+            traits = {
+               [154] = 1,
+            },
 
             breed_power = 220,
             image = Resolver.make("elona.by_gender", { male = 1, female = 2 }),
@@ -348,6 +351,9 @@ local race =
                ["elona.literacy"] = 3,
                ["elona.magic_device"] = 3,
             },
+            traits = {
+               [153] = 1,
+            },
 
             breed_power = 180,
             image = Resolver.make("elona.by_gender", { male = 5, female = 6 }),
@@ -393,6 +399,10 @@ local race =
                ["elona.casting"] = 5,
                ["elona.pickpocket"] = 3,
                ["elona.light_armor"] = 3,
+            },
+            traits = {
+               [160] = 1,
+               [161] = 1,
             },
 
             breed_power = 180,
@@ -568,6 +578,10 @@ local race =
                ["elona.jeweler"] = 3,
                ["elona.mining"] = 4,
             },
+            traits = {
+               [152] = 2,
+               [155] = 1,
+            },
 
             breed_power = 150,
             image = Resolver.make("elona.by_gender", { male = 66, female = 66 }),
@@ -614,6 +628,10 @@ local race =
                ["elona.lock_picking"] = 2,
                ["elona.negotiation"] = 2,
                ["elona.throwing"] = 3,
+            },
+            traits = {
+               [158] = 1,
+               [159] = 1,
             },
 
             breed_power = 210,
@@ -708,6 +726,10 @@ local race =
                ["elona.magic_capacity"] = 5,
                ["elona.casting"] = 2,
                ["elona.memorization"] = 3,
+            },
+            traits = {
+               [168] = 1,
+               [156] = 1,
             },
 
             breed_power = 120,
@@ -1121,6 +1143,11 @@ local race =
                ["elona.meditation"] = 5,
                ["elona.magic_device"] = 3,
                ["elona.casting"] = 3,
+            },
+            traits = {
+               [151] = 1,
+               [155] = 2,
+               [152] = 1
             },
 
             breed_power = 25,
@@ -1616,6 +1643,10 @@ local race =
                ["elona.mining"] = 2,
                ["elona.eye_of_mind"] = 3,
             },
+            traits = {
+               [155] = 1,
+               [159] = 1
+            },
 
             breed_power = 290,
             image = Resolver.make("elona.by_gender", { male = 220, female = 220 }),
@@ -2082,6 +2113,10 @@ local race =
                ["elona.martial_arts"] = 4,
                ["elona.weight_lifting"] = 5,
                ["elona.mining"] = 3,
+            },
+            traits = {
+               [157] = 1,
+               [152] = 2,
             },
 
             breed_power = 40,
@@ -2859,6 +2894,9 @@ local race =
                ["elona.martial_arts"] = 2,
                ["elona.magic_capacity"] = 3,
                ["elona.healing"] = 4,
+            },
+            traits = {
+               [0] = 1,
             },
 
             breed_power = 50,

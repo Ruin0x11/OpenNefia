@@ -1,5 +1,9 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
+local Event = require("api.Event")
 local Gui = require("api.Gui")
+local IChara = require("api.chara.IChara")
+local Log = require("api.Log")
 
 local env = require("internal.env")
 
@@ -32,23 +36,45 @@ function CharaMakeWrapper:init(menus)
 end
 
 function CharaMakeWrapper:proceed()
+   local menu_id
    if self.submenu then
-      table.insert(self.trail, self.submenu)
+      menu_id = self.menus[#self.trail+2]
+   else
+      menu_id = self.menus[#self.trail+1]
    end
 
-   local menu_id = self.menus[#self.trail+1]
-   local success, layer_class = pcall(function() return env.safe_require(menu_id) end)
+   local success, layer_class = xpcall(function() return env.safe_require(menu_id) end,
+      function(err) return debug.traceback(err) end)
 
    if not success then
       local err = layer_class
       -- TODO turn this into a log warning
-      error("Error loading menu " .. menu_id .. ":\n\t" .. err)
+      Log.error("Error loading menu %s:\n\t%s", menu_id, err)
+      return
    elseif class == nil then
-      error("Cannot find menu " .. menu_id)
+      Log.error("Cannot find menu %s", menu_id)
+      return
    end
 
-   self.submenu = layer_class:new()
-   class.assert_is_an(ICharaMakeSection, self.submenu)
+   local submenu
+   success, submenu = xpcall(function()
+         local sm = layer_class:new()
+         class.assert_is_an(ICharaMakeSection, sm)
+         return sm
+   end,
+      function(err)
+         return debug.traceback(err)
+   end)
+   if not success then
+      local err = submenu
+      Log.error("Error instantiating charamake menu:\n\t%s:", err)
+      return
+   end
+
+   if self.submenu then
+      table.insert(self.trail, self.submenu)
+   end
+   self.submenu = submenu
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -63,7 +89,7 @@ function CharaMakeWrapper:go_back()
    if #self.trail == 0 then return end
 
    self.submenu = table.remove(self.trail)
-   self.submenu:on_charamake_go_back()
+   -- TODO: self.submenu:on_resume_query(), to reset canceled state
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -92,13 +118,42 @@ function CharaMakeWrapper:get_section_result(fq_name)
    return nil
 end
 
+local on_initialize_player = Event.create(
+   "on_initialize_player",
+   { chara = "IChara", results = "{any,...}" },
+   [[
+Called when the player character's stats have finished being rerolled.
+]]
+)
+
+function CharaMakeWrapper:make_chara()
+   local default_id = "content.player" -- TODO
+   local chara = Chara.create(default_id, nil, nil, {no_build = true, ownerless = true})
+
+   local make_pairs = function(menu) print(menu.name); return env.get_require_path(menu), menu:charamake_result() end
+   local results = fun.iter(self.trail):map(make_pairs):to_map()
+
+   for _, menu in ipairs(self.trail) do
+      menu:on_make_chara(chara, results)
+   end
+
+   on_initialize_player({chara=chara})
+
+   chara:build()
+
+   return chara
+end
+
 function CharaMakeWrapper:relayout(x, y, width, height)
    self.x = x or 0
    self.y = y or 0
    self.width = width or Draw.get_width()
    self.height = height or Draw.get_height()
    self.caption:relayout(self.x + 20, self.y + 30)
-   self.submenu:relayout(self.x, self.y, self.width, self.height)
+
+   if self.submenu then
+      self.submenu:relayout(self.x, self.y, self.width, self.height)
+   end
 end
 
 function CharaMakeWrapper:draw()
@@ -113,7 +168,9 @@ function CharaMakeWrapper:draw()
       Draw.text("Gene from " .. self.gene_used, self.x + 20, self.height - 36)
    end
 
-   self.submenu:draw()
+   if self.submenu then
+      self.submenu:draw()
+   end
 end
 
 function CharaMakeWrapper:handle_action(act)
@@ -129,6 +186,10 @@ function CharaMakeWrapper:handle_action(act)
 end
 
 function CharaMakeWrapper:update()
+   if not self.submenu then
+      return nil, "canceled"
+   end
+
    local result, canceled = self.submenu:update()
    if canceled then
       local act = table.maybe(result, "chara_make_action")
@@ -136,15 +197,26 @@ function CharaMakeWrapper:update()
    elseif result then
       self.results[self.submenu.name] = result
 
-      local has_next = self.menus[#self.trail+1] ~= nil
+      local has_next = self.menus[#self.trail+2] ~= nil
       if has_next then
          self:proceed()
-      else
-         for _, menu in ipairs(self.trail) do
-            local result = menu:charamake_result()
-            menu:on_charamake_finish(result)
+      elseif class.is_an(IChara, result) then
+         local success, err = xpcall(
+            function()
+               for _, menu in ipairs(self.trail) do
+                  menu:on_charamake_finish(result)
+               end
+            end,
+            debug.traceback)
+
+         if not success then
+            Log.error("Error running final character making step:\n\t%s", err)
+            self.submenu:on_query() -- reset canceled
+         else
+            return result
          end
-         return true
+      else
+         Log.error("No character was returned by the final character making screen.")
       end
    end
 

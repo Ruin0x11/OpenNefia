@@ -58,7 +58,7 @@ function ChangeAppearanceMenu:init()
    self.intro_sound = "base.port"
 end
 
-function ChangeAppearanceMenu:on_charamake_finish()
+function ChangeAppearanceMenu:on_make_chara()
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -77,6 +77,11 @@ function ChangeAppearanceMenu:draw()
 
    self.preview:draw()
    self.list:draw()
+end
+
+function ChangeAppearanceMenu:on_query()
+   self.canceled = false
+   self.list:update()
 end
 
 function ChangeAppearanceMenu:update()

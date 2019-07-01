@@ -156,7 +156,7 @@ function Tools.goto_map(name)
    return Map.travel_to(map)
 end
 
-function Tools.layer()
+function Tools.top_layer()
    return Draw.get_layer(Draw.layer_count()-1)
 end
 

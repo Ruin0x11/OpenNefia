@@ -39,7 +39,8 @@ function SelectClassMenu:init(race)
    self.intro_sound = "base.ok1"
 end
 
-function SelectClassMenu:on_charamake_finish()
+function SelectClassMenu:on_make_chara(chara)
+   chara.class = self.pages:selected_item()
 end
 
 function SelectClassMenu:relayout()

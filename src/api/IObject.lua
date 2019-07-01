@@ -4,6 +4,8 @@ local IObject = class.interface("IObject",
                              _id = "string",
                              _type = "string",
                              build = "function",
+                             pre_build = "function",
+                             normal_build = "function",
                              refresh = "function",
                              temp = "table"
                           }

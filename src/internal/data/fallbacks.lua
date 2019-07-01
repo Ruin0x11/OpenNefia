@@ -107,7 +107,7 @@ data:add {
    invariants = { race = "string" },
 
    resolve = function(self, params)
-      local race = data["base.race"][self.race or params.chara.race]
+      local race = data["base.race"][self.race or params.chara.race or ""]
       if not race then
          return {}
       end
@@ -124,7 +124,7 @@ data:add {
    invariants = { class = "string" },
 
    resolve = function(self, params)
-      local class = data["base.class"][self.class or params.chara.class]
+      local class = data["base.class"][self.class or params.chara.class or ""]
       if not class then
          return {}
       end

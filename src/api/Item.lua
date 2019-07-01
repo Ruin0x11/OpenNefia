@@ -62,15 +62,16 @@ function Item.create(id, x, y, params, where)
       return nil
    end
 
-   if where then
-      if where:is_positional() then
-         if not where:is_in_bounds(x, y) then
-            return nil
-         end
+   if where and where:is_positional() then
+      if not where:is_in_bounds(x, y) then
+         return nil
       end
    end
 
-   local item = MapObject.generate_from("base.item", id)
+   local gen_params = {
+      no_build = params.no_build
+   }
+   local item = MapObject.generate_from("base.item", id, gen_params)
    item.amount = amount
 
    if where then

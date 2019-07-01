@@ -32,6 +32,9 @@ function SelectFeatsMenu:draw()
    self.inner:draw()
 end
 
+function SelectFeatsMenu:on_make_chara(chara)
+end
+
 function SelectFeatsMenu:on_charamake_finish(chara)
 end
 

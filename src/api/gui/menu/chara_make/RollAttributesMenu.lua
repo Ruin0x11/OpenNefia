@@ -63,7 +63,7 @@ function RollAttributesMenu:init()
       end
    end
    for _, v in ipairs(texts) do
-      self.data[#self.data + 1] = { text = v, on_choose = lock(v), locked = false, value = 0 }
+      self.data[#self.data + 1] = { text = v, on_choose = lock(v), locked = false, value = {} }
    end
 
    self.alist = UiList:new(self.data, 23)
@@ -97,17 +97,22 @@ function RollAttributesMenu:init()
    self:reroll()
 end
 
-function RollAttributesMenu:on_charamake_finish()
+function RollAttributesMenu:on_make_chara(chara)
+   for _, v in ipairs(self.data) do
+      if v.value then
+         chara.skills["elona.stat_strength"] = v.value
+      end
+   end
 end
 
-function RollAttributesMenu:on_charamake_go_back()
+function RollAttributesMenu:on_query()
    self.alist.chosen = false
 end
 
 function RollAttributesMenu:reroll(play_sound)
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
-         v.value = math.random(1, 15)
+         v.value = { level = math.random(1, 15), potential = math.random(1, 100), experience = 1000 }
       end
    end
 
@@ -139,7 +144,7 @@ function RollAttributesMenu:draw_attribute(item, i, x, y)
       Draw.image_region(self.skill_icons, quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
    end
 
-   Draw.text(tostring(item.value), x + 172, y, {0, 0, 0})
+   Draw.text(tostring(item.value.level), x + 172, y, {0, 0, 0})
 
    if item.locked == true then
       Draw.set_font(12, "bold") -- 12 - en * 2

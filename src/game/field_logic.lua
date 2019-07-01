@@ -12,17 +12,22 @@ local map = require("internal.map")
 
 local field_logic = {}
 
-function field_logic.setup()
+function field_logic.setup_new_game(player)
+   assert(Map.current():take_object(player, 10, 10))
+   Chara.set_player(player)
+   -- TODO
+   field.allies = {}
+end
+
+function field_logic.quickstart()
    field:set_map(Map.generate("content.test", {}))
 
-   Gui.mes_clear()
+   local me = Chara.create("content.player", nil, nil, {ownerless=true})
+   field_logic.setup_new_game(me)
+end
 
-   do
-      local me = Chara.create("content.player", 10, 10)
-      Chara.set_player(me)
-      -- TODO
-      field.allies = {}
-   end
+function field_logic.setup()
+   Gui.mes_clear()
 
    -- TODO: make bind_keys have callbacks that pass in player as
    -- argument

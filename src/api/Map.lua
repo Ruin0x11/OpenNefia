@@ -7,6 +7,11 @@ local Rand = require("api.Rand")
 -- @module Map
 local Map = {}
 
+function Map.set_map(map)
+   field:set_map(map)
+   return field.map
+end
+
 function Map.is_world_map(map)
    return fun.iter((map or field.map).types):index("base.world_map") ~= nil
 end

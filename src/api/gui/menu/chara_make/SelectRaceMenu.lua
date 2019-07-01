@@ -73,7 +73,8 @@ end
 function SelectRaceMenu:on_query()
 end
 
-function SelectRaceMenu:on_charamake_finish()
+function SelectRaceMenu:on_make_chara(chara)
+   chara.race = self.pages:selected_item()
 end
 
 function SelectRaceMenu:update()

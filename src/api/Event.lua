@@ -63,6 +63,20 @@ function Event.list(event_id)
    return global_events:print(event_id)
 end
 
+function Event.create(id, types, desc)
+   local dat = data:add {
+      _type = "base.event",
+      _id = id
+   }
+
+   assert(dat)
+   local full_id = dat._id
+
+   return function(params)
+      return Event.trigger(full_id, params)
+   end
+end
+
 function Event.hook(id, desc, default, field, cb)
    local access_field = type(field) == "string"
 
