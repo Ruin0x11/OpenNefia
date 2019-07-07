@@ -6,6 +6,8 @@ local Log = require("api.Log")
 local Draw = require("api.Draw")
 local ITypedLocation = require("api.ITypedLocation")
 
+-- TODO: add map data object from protoype and forward :emit(),
+-- :mod(), :calc(), etc. to it.
 local InstancedMap = class.class("InstancedMap", ITypedLocation)
 
 local fov_cache = {}
@@ -50,6 +52,8 @@ local function gen_fov_radius(fov_max)
 end
 
 function InstancedMap:init(width, height, uids, tile)
+   self.uid = require("internal.global.map_uids"):get_next_and_increment()
+
    uids = uids or require("internal.global.uids")
    tile = tile or "base.floor"
 

@@ -9,17 +9,34 @@ local World = require("api.World")
 local draw = require("internal.draw")
 local field = require("game.field")
 local map = require("internal.map")
+local data = require("internal.data")
 
 local field_logic = {}
 
 function field_logic.setup_new_game(player)
+   local scenario = data["base.scenario"]:ensure(field.data.scenario)
+
+   local map, err = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
+   if err then
+      error(err)
+   end
+
+   Map.set_map(map)
+
    assert(Map.current():take_object(player, 10, 10))
    Chara.set_player(player)
    -- TODO
    field.allies = {}
+
+   if scenario.on_game_start then
+      scenario.on_game_start()
+   end
 end
 
 function field_logic.quickstart()
+   field:init_global_data()
+
+   field.data.scenario = "content.my_scenario"
    field:set_map(Map.generate("content.test", {}))
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})

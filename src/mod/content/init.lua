@@ -367,8 +367,6 @@ data:add {
    on_game_start = my_start
 }
 
-Event.register("base.on_game_start", "game start", my_start)
-
 require("mod.content.dialog")
 
 local Log = require("api.Log")

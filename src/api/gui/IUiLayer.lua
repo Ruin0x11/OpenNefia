@@ -19,6 +19,8 @@ local function query(self)
    local success, res, canceled
    while true do
       if abort then
+         -- BUG: This should remove the layer with the error instead
+         -- of the topmost layer always.
          Log.error("Draw error encountered, removing layer.")
          break
       end

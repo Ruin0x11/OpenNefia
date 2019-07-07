@@ -120,11 +120,11 @@ function IChara:build()
 
    ICharaTalk.on_build(self)
 
-   self:refresh()
-
    -- TEMP
    self.max_hp = self.max_hp or 10
    self.max_mp = self.max_mp or 2
+
+   self:refresh()
 
    self:heal_to_max()
 end
@@ -241,7 +241,7 @@ local function calc_kill_exp(attacker, victim)
    return gained_exp
 end
 
-local calc_damage = Event.hook("calc_damage", "Calculates damage.", 0, "damage")
+local calc_damage = Event.define_hook("calc_damage", "Calculates damage.", 0, "damage")
 
 function IChara:damage_hp(amount, source, params)
    params = params or {}

@@ -14,6 +14,10 @@ function Repl.get()
    return field.repl
 end
 
+function Repl.clear()
+   return Repl.get():clear()
+end
+
 function Repl.copy_last_input()
    return Repl.get():copy_last_input()
 end

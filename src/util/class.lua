@@ -1,3 +1,5 @@
+local binser = require("thirdparty.binser")
+
 -- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
 local class = {}
 
@@ -89,6 +91,8 @@ function class.interface(name, reqs, parents)
    i.__tostring = iface_mt.__tostring
 
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
+
+   binser.registerClass(i)
 
    return setmetatable(i, iface_mt)
 end
@@ -340,6 +344,8 @@ function class.class(name, ifaces)
 
       return instance
    end
+
+   binser.registerClass(c)
 
    return setmetatable(c, root_mt)
 end

@@ -27,7 +27,7 @@ end
 -- @tparam IItem item
 -- @treturn bool
 function EquipSlots:has_body_part_for(item)
-   pred = function(part) return item:can_equip_at(part) end
+   local pred = function(part) return item:can_equip_at(part) end
 
    return fun.iter(self.body_parts):filter(pred):any()
 end

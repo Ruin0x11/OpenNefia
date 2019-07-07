@@ -43,14 +43,8 @@ function SelectScenarioMenu:on_make_chara()
 end
 
 function SelectScenarioMenu:on_charamake_finish()
-   local scenario = data["base.scenario"]:ensure("elona.elona")
-
-   local map, err = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
-   if err then
-      error(err)
-   end
-
-   Map.set_map(map)
+   -- HACK
+   require("game.field").data.scenario = "elona.elona"
 end
 
 function SelectScenarioMenu:relayout()

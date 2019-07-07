@@ -1,6 +1,8 @@
 local Draw = require("api.Draw")
 local CharaMakeWrapper = require("api.gui.menu.chara_make.CharaMakeWrapper")
 
+local field = require("game.field")
+
 local chara_make = {}
 
 chara_make.sections = {
@@ -26,6 +28,9 @@ function chara_make.make_chara()
 end
 
 function chara_make.query()
+   -- create a new save data so mods can access it
+   field:init_global_data()
+
    chara_make.wrapper = CharaMakeWrapper:new(chara_make.sections)
 
    local res, canceled = chara_make.wrapper:query()

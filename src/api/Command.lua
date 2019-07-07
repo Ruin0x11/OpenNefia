@@ -14,16 +14,16 @@ local field = require("game.field")
 --- Game logic intended for the player only.
 local Command = {}
 
-local travel_to_map = Event.hook("travel_to_map",
-                                 "Hook when traveling to a new map.",
-                                 {nil, "No map configured"},
-                                 function(result, default)
-                                    if type(result) == "table" then
-                                       return table.unpack(result)
-                                    end
+local travel_to_map = Event.define_hook("travel_to_map",
+                                        "Hook when traveling to a new map.",
+                                        {nil, "No map configured"},
+                                        function(result, default)
+                                           if type(result) == "table" then
+                                              return table.unpack(result)
+                                           end
 
-                                    return table.unpack(default)
-                                 end)
+                                           return table.unpack(default)
+end)
 
 function Command.move(player, x, y)
    if type(x) == "string" then

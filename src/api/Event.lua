@@ -77,7 +77,7 @@ function Event.create(id, types, desc)
    end
 end
 
-function Event.hook(id, desc, default, field, cb)
+function Event.define_hook(id, desc, default, field, cb)
    local access_field = type(field) == "string"
 
    if cb == nil then

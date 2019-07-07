@@ -128,9 +128,6 @@ function ReplLayer:clear()
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
 
-   self.history = {}
-   self.history_index = 0
-
    self:set_text("")
 end
 

@@ -3,18 +3,7 @@
 
 (defvar elona-next-minor-mode-map
   (let ((map (make-sparse-keymap)))
-    ;(define-key map "\M-:"  'elona-next-eval-expression)
-    ;(define-key map "\M-\C-x"  'elona-next-eval-defun)
-    ;(define-key map "\C-x\C-e" 'elona-next-eval-last-sexp)
-    ;(define-key map "\C-c\C-e" 'elona-next-eval-defun)
-    ;(define-key map "\C-c\C-r" 'elona-next-eval-region)
-    ;(define-key map "\C-c\C-n" 'elona-next-eval-form-and-next)
-    ;(define-key map "\C-c\C-p" 'elona-next-eval-paragraph)
-    ;(define-key map "\C-c\C-s" 'elona-next-connect)
     (define-key map "\C-c\C-l" 'elona-next-send-buffer)
-    ;(define-key map "\C-c\C-d" 'elona-next-describe-sym)
-    ;(define-key map "\C-c\C-f" 'elona-next-show-function-documentation)
-    ;(define-key map "\C-c\C-v" 'elona-next-show-variable-documentation)
     map))
 
 ;;;###autoload
