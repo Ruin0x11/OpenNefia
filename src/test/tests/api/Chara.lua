@@ -44,7 +44,7 @@ test("chara - observer", function()
         local tally = 0
 
         for _, ch in ipairs({a, b, c}) do
-           ch:observe_event("base.notify_test", "test", function()
+           ch:connect_self("base.notify_test", "test", function()
                                tally = tally + 1
            end, nil, events)
         end
@@ -54,7 +54,7 @@ test("chara - observer", function()
 
         tally = 0
 
-        b:unobserve_event("base.notify_test", "test")
+        b:disconnect_self("base.notify_test", "test")
 
         events:trigger("base.notify_test")
         ok(tally == 2)
@@ -77,7 +77,7 @@ test("chara - observer instanced", function()
         local tally = 0
 
         for _, ch in ipairs({a, b}) do
-           ch:observe_event("base.notify_test", "test", function()
+           ch:connect_self("base.notify_test", "test", function()
                                tally = tally + 1
            end, nil, events)
         end
@@ -99,7 +99,7 @@ test("chara - observer gc", function()
 
         local tally = 0
 
-        c:observe_event("base.notify_test", "test", function()
+        c:connect_self("base.notify_test", "test", function()
                            tally = tally + 1
         end, nil, events)
 

@@ -29,11 +29,6 @@ function pool:get_object(uid)
    return d
 end
 
-function pool:create_object(proto, x, y)
-   local raw = MapObject.generate(proto, self.uid_tracker)
-   return self:take_object(raw, x, y)
-end
-
 function pool:take_object(obj, x, y)
    if self:has_object(obj) then
       return nil

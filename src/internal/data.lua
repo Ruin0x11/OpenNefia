@@ -204,7 +204,6 @@ function data:add(dat)
    end
 
    dat._id = full_id
-   setmetatable(dat, metatables[_type])
    return dat
 end
 
@@ -271,6 +270,10 @@ function proxy:__index(k)
    end
 
    return for_type[k]
+end
+
+function proxy:interface()
+   return metatables[self._type]
 end
 
 function proxy:ensure(k)

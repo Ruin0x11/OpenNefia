@@ -1,3 +1,5 @@
+local object = require("internal.object")
+
 local IObject = require("api.IObject")
 
 local Object = {}
@@ -33,8 +35,8 @@ end
 --- object, as MapObject.clone does.
 -- @tparam IObject object
 -- @treturn table
-function Object.make_prototype(object)
-   return cycle_aware_copy(object, {})
+function Object.make_prototype(obj)
+   return cycle_aware_copy(obj, {})
 end
 
 local mock = function(mt)
@@ -56,35 +58,9 @@ local mock = function(mt)
    return mock
 end
 
-local function makeindex(proto, mt)
-   return function(t, k)
-      local v = rawget(t, k)
-      if v ~= nil then
-         return v
-      end
-
-      v = proto[k]
-      if v ~= nil then
-         return v
-      end
-
-      return mt[k]
-   end
-end
-
-function Object.generate_from(id, mt)
-   local data = require("internal.data")
-   local proto = data[mt._type]:ensure(id)
-   return Object.generate(proto, mt)
-end
-
-function Object.generate(proto, mt)
-   local tbl = {
-      temp = {},
-      proto = proto
-   }
-
-   local data = setmetatable(tbl, { __index = makeindex(proto, mt) })
+function Object.generate_from(_type, id)
+   local data = {}
+   object.deserialize(data, _type, id)
 
    class.assert_is_an(IObject, data)
 
@@ -93,8 +69,13 @@ function Object.generate(proto, mt)
    return data
 end
 
+function Object.generate(proto)
+   error("broken")
+   return {}
+end
+
 local IMockObject = class.interface("IMockObject", {}, IObject)
-function IMockObject.build()
+function IMockObject.build(self)
    IObject.init(self)
 end
 function IMockObject.refresh(self)

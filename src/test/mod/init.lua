@@ -17,6 +17,8 @@ data:add {
    _type = "base.chara",
    _id = "chara",
 
+   image = 3,
+
    body_parts = {
       "test.hand",
       "test.hand",

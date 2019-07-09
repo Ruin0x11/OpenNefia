@@ -70,6 +70,8 @@ function IChara:pre_build()
    self.skills = self.skills or {}
    self.known_abilities = self.known_abilities or {}
 
+   -- NOTE: to add new interfaces/behaviors, connect_self to
+   -- on_instantiate and run them there.
    IEventEmitter.init(self)
    IFactioned.init(self)
    ICharaInventory.init(self)

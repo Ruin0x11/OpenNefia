@@ -13,6 +13,9 @@ local IMapObject  = class.interface("IMapObject",
 
 function IMapObject:init()
    IObject.init(self)
+
+   self.x = 0
+   self.y = 0
 end
 
 function IMapObject:refresh()

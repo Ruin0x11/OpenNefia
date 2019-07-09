@@ -321,6 +321,10 @@ function class.class(name, ifaces)
 
    c.delegate = delegate
 
+   c._deserialize = function(self)
+      self.__memoized = {}
+   end
+
    c.new = function(self, ...)
       if type(self) ~= "table" or self.name ~= name then
          error("Call new() with colon (:) syntax.")
