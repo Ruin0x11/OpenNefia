@@ -36,7 +36,17 @@ end
 -- @tparam IObject object
 -- @treturn table
 function Object.make_prototype(obj)
-   return cycle_aware_copy(obj, {})
+   local _type = obj.proto._type
+   local _id = obj.proto._id
+
+   local copy = cycle_aware_copy(obj, {})
+   setmetatable(copy, nil)
+
+   -- for deserialization, removed afterward
+   copy._type = _type
+   copy._id = _id
+
+   return copy
 end
 
 local mock = function(mt)

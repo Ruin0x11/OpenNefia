@@ -569,6 +569,10 @@ local function newbinser()
         return resource
     end
 
+    local function hasResource(name)
+        return resources_by_name[name] ~= nil
+    end
+
     -- Templating
 
     local function normalize_template(template)
@@ -743,6 +747,7 @@ local function newbinser()
         unregister = unregister,
         registerResource = registerResource,
         unregisterResource = unregisterResource,
+        hasResource = hasResource,
         registerClass = registerClass,
 
         newbinser = newbinser

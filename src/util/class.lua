@@ -92,7 +92,9 @@ function class.interface(name, reqs, parents)
 
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
 
-   binser.registerClass(i)
+   if not binser.hasResource(name) then
+      binser.registerClass(i)
+   end
 
    return setmetatable(i, iface_mt)
 end
@@ -349,7 +351,9 @@ function class.class(name, ifaces)
       return instance
    end
 
-   binser.registerClass(c)
+   if not binser.hasResource(name) then
+      binser.registerClass(c)
+   end
 
    return setmetatable(c, root_mt)
 end

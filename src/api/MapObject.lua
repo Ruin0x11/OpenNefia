@@ -29,8 +29,28 @@ function MapObject.generate_from(_type, id, params, uid_tracker)
    return data
 end
 
-function MapObject.generate(proto, params, uid_tracker)
-   error("broken")
+function MapObject.generate(data, params, uid_tracker)
+   params = params or {}
+   uid_tracker = uid_tracker or uids
+
+   local uid = uid_tracker:get_next_and_increment()
+
+   assert(data._type)
+   assert(data._id)
+   object.deserialize(data)
+
+   rawset(data, "uid", uid)
+
+   -- class.assert_is_an(IMapObject, data)
+
+   data:pre_build()
+
+   if not params.no_build then
+      data:normal_build()
+      data:build()
+   end
+
+   return data
 end
 
 --- Copies all non-class fields in an object to a new object, giving
@@ -42,22 +62,21 @@ end
 -- @tparam bool owned
 -- @treturn[1] IMapObject
 -- @treturn[2] nil
-function MapObject.clone(object, owned)
-   error("broken")
+function MapObject.clone(obj, owned)
    owned = owned or false
 
    -- TODO: the nomenclature is confusing. things like
    -- data["mytype"]["id"] are named 'prototypes', but there are also
    -- tables with a backing data prototype set that are also called
    -- 'prototypes'.
-   local proto = Object.make_prototype(object)
+   local proto = Object.make_prototype(obj)
    assert(proto.location == nil)
 
    -- Generate a new object using the stripped object as a prototype.
    local new_object = MapObject.generate(proto)
 
    local IMapObject = require("api.IMapObject")
-   if owned and class.is_an(IMapObject, object) then
+   if owned and class.is_an(IMapObject, obj) then
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps
@@ -65,14 +84,14 @@ function MapObject.clone(object, owned)
       local x = new_object.x or 0
       local y = new_object.y or 0
 
-      if not object.location.can_take_object(new_object, x, y) then
+      if not obj.location.can_take_object(new_object, x, y) then
          Log.warn("Tried to clone object %d (%s), but the location %s couldn't take the object.",
-                  object.uid, object._type, tostring(object.location))
+                  obj.uid, obj._type, tostring(obj.location))
          new_object:remove_ownership()
          return nil
       end
 
-      assert(object.location:take_object(new_object, x, y))
+      assert(obj.location:take_object(new_object, x, y))
    end
 
    return new_object
