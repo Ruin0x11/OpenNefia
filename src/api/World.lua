@@ -52,4 +52,8 @@ function World.pass_time_in_seconds(seconds)
    end
 end
 
+function World.date()
+   return save.date
+end
+
 return World

@@ -52,9 +52,9 @@ local function gen_fov_radius(fov_max)
 end
 
 function InstancedMap:init(width, height, uids, tile)
-   self.uid = require("internal.global.map_uids"):get_next_and_increment()
+   self.uid = require("internal.global.save").map_uids:get_next_and_increment()
 
-   uids = uids or require("internal.global.uids")
+   uids = uids or require("internal.global.save").uids
    tile = tile or "base.floor"
 
    if width <= 0 or height <= 0 then

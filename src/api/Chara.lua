@@ -1,16 +1,9 @@
-local Ai = require("api.Ai")
-local Event = require("api.Event")
 local MapObject = require("api.MapObject")
-local Gui = require("api.Gui")
-local Inventory = require("api.Inventory")
 local ILocation = require("api.ILocation")
-local Log = require("api.Log")
 local Map = require("api.Map")
-local Pos = require("api.Pos")
-local Rand = require("api.Rand")
 
-local data = require("internal.data")
 local field = require("game.field")
+local save = require("internal.global.save")
 
 -- Functions for manipulating characters.
 local Chara = {}
@@ -128,7 +121,7 @@ local function iter(a, i)
 end
 
 function Chara.iter_allies()
-   return fun.wrap(iter, {map = field.map, uids = field.allies}, 1)
+   return fun.wrap(iter, {map = field.map, uids = save.allies}, 1)
 end
 
 function Chara.find(id, kind)

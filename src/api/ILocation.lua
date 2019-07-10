@@ -27,7 +27,9 @@ end
 
 function ILocation:deserialize()
    for _, v in self:iter() do
-      v.location = self
+      if type(v) == "table" and v._type then
+         v.location = self
+      end
    end
 end
 

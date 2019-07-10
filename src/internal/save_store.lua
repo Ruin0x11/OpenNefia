@@ -1,6 +1,6 @@
 local env = require ("internal.env")
 
-local Save = require("api.Save")
+local SaveFs = require("api.SaveFs")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -19,11 +19,11 @@ function save_store.for_mod(mod_id)
 end
 
 function save_store.save()
-   return Save.write("global", save_data)
+   return SaveFs.write("global", save_data)
 end
 
 function save_store.load()
-   local success, from_disk = Save.read("global")
+   local success, from_disk = SaveFs.read("global")
    if not success then
       return false, from_disk
    end

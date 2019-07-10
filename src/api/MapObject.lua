@@ -2,13 +2,12 @@ local object = require("internal.object")
 
 local Object = require("api.Object")
 local Log = require("api.Log")
-local uids = require("internal.global.uids")
 
 local MapObject = {}
 
 function MapObject.generate_from(_type, id, params, uid_tracker)
    params = params or {}
-   uid_tracker = uid_tracker or uids
+   uid_tracker = uid_tracker or require("internal.global.save").uids
 
    local uid = uid_tracker:get_next_and_increment()
 
@@ -31,7 +30,7 @@ end
 
 function MapObject.generate(data, params, uid_tracker)
    params = params or {}
-   uid_tracker = uid_tracker or uids
+   uid_tracker = uid_tracker or require("internal.global.save").uids
 
    local uid = uid_tracker:get_next_and_increment()
 

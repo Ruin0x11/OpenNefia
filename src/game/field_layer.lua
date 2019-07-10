@@ -7,6 +7,7 @@ local Log = require("api.Log")
 local area_mapping = require("internal.area_mapping")
 local env = require("internal.env")
 local field_renderer = require("internal.field_renderer")
+local uid_tracker = require("internal.uid_tracker")
 local fs = require("internal.fs")
 local save = require("internal.global.save")
 
@@ -54,6 +55,7 @@ function field_layer:setup_repl()
       repl_env = table.merge(repl_env, _G)
       repl_env = table.merge(repl_env, env.require_all_apis("internal"))
       repl_env = table.merge(repl_env, env.require_all_apis("game"))
+      repl_env["save"] = save
    end
 
    -- HACK: remove
@@ -82,6 +84,8 @@ function field_layer:init_global_data()
    save.area_mapping = area_mapping:new()
    save.player = nil
    save.allies = {}
+   save.uids = uid_tracker:new()
+   save.map_uids = uid_tracker:new()
 end
 
 function field_layer:set_map(map)

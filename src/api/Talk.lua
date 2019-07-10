@@ -94,6 +94,7 @@ function Talk.setup(chara)
    end
 
    if not chara:has_event_handler("base.before_handle_self_event", "talk handler") then
+      print("talksetup")
       chara:connect_self("base.before_handle_self_event", "talk handler",
                             function(self, params)
                                if params.event_id == "base.on_talk" then

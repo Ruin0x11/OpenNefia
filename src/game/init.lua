@@ -12,6 +12,7 @@ local chara_make = require("game.chara_make")
 local mod = require("internal.mod")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
+local save = require("internal.global.save")
 
 -- TODO: this module isn't hotloadable since game.loop gets run in a
 -- coroutine. Would be better to just put game.loop() into a
@@ -27,6 +28,9 @@ local function main_title()
    local action
    local going = true
    while going do
+      -- Clear the global save.
+      table.replace_with(save, {})
+
       local choice = title:query()
 
       if choice == 1 then

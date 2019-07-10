@@ -14,9 +14,9 @@ end
 function SaveFile:load()
 end
 
-local Save = {}
+local SaveFs = {}
 
-function Save.current()
+function SaveFs.current()
    return SaveFile:new()
 end
 
@@ -36,7 +36,7 @@ local function deserialize(str)
    return binser.deserialize(decompress(str))[1]
 end
 
-function Save.write(path, obj)
+function SaveFs.write(path, obj)
    local str = serialize(obj)
    local dirs = fs.parent(path)
    if dirs then
@@ -45,7 +45,7 @@ function Save.write(path, obj)
    return fs.write(path, str)
 end
 
-function Save.read(path)
+function SaveFs.read(path)
    if not fs.exists(path) then
       return false, "file does not exist"
    end
@@ -56,4 +56,4 @@ function Save.read(path)
    return true, deserialize(content)
 end
 
-return Save
+return SaveFs

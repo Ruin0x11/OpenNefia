@@ -16,7 +16,7 @@ function EquipSlots:init(body_parts)
    end
    self.body_parts = fun.iter(body_parts):map(init):to_list()
 
-   local uids = require("internal.global.uids")
+   local uids = require("internal.global.save").uids
    self.pool = pool:new("base.item", uids, 1, 1)
 
    self.equipped = {}

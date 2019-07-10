@@ -1,7 +1,5 @@
 local Action = require("api.Action")
 local Gui = require("api.Gui")
-local Ai = require("api.Ai")
-local Save = require("api.Save")
 local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Event = require("api.Event")

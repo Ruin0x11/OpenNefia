@@ -26,8 +26,6 @@ function field_logic.setup_new_game(player)
 
    assert(Map.current():take_object(player, 10, 10))
    Chara.set_player(player)
-   -- TODO
-   field.allies = {}
 
    if scenario.on_game_start then
       scenario.on_game_start()

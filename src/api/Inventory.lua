@@ -9,7 +9,7 @@ function Inventory:init(max_size, type_id)
    self.type_id = type_id or "base.item"
 
    -- TODO: UID generation and positional access aren't necessary here.
-   local uids = require("internal.global.uids")
+   local uids = require("internal.global.save").uids
    self.pool = pool:new(self.type_id, uids, 1, 1)
 
    self.filters = {}

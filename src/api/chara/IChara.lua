@@ -12,6 +12,7 @@ local ICharaTalk = require("api.chara.ICharaTalk")
 local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IEventEmitter = require("api.IEventEmitter")
+local save = require("internal.global.save")
 
 -- TODO: move out of api
 local IChara = class.interface("IChara",
@@ -196,14 +197,14 @@ function IChara:is_player()
 end
 
 function IChara:is_ally()
-   return fun.iter(field.allies):index(self.uid) ~= nil
+   return fun.iter(save.allies):index(self.uid) ~= nil
 end
 
 function IChara:recruit_as_ally()
    if self:is_ally() then
       return false
    end
-   field.allies[#field.allies+1] = self.uid
+   save.allies[#save.allies+1] = self.uid
 
    self.faction = "base.friendly"
    self:refresh()

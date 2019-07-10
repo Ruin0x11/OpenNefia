@@ -3,7 +3,8 @@ local data = require("internal.data")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Fs = require("api.Fs")
-local Save = require("api.Save")
+local save = require("internal.global.save")
+local SaveFs = require("api.SaveFs")
 
 -- Concerns anything that has to do with map querying/manipulation.
 -- @module Map
@@ -17,7 +18,7 @@ end
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
-   return Save.write(path, map)
+   return SaveFs.write(path, map)
 end
 
 function Map.load(uid)
@@ -27,7 +28,7 @@ function Map.load(uid)
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))
-   return Save.read(path)
+   return SaveFs.read(path)
 end
 
 function Map.is_world_map(map)
@@ -193,6 +194,8 @@ local function try_place(chara, x, y, current, map)
 end
 
 function Map.travel_to(map)
+   local Chara = require("api.Chara")
+
    local current = field.map
    local x, y = 0, 0
 
@@ -209,7 +212,7 @@ function Map.travel_to(map)
    -- player) and persistable (remains in the map even after it is
    -- deleted and the map is exited).
    local player = Chara.player()
-   local allies = field.allies
+   local allies = save.allies
    -- TODO: items
 
    -- Transfer each to the new map.
