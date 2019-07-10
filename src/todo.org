@@ -106,7 +106,7 @@ the ones that could apply are:
   local primary = Area.get_primary_map()
   Map.travel_to(primary)
 
-  local map = Map.generate("elona_sys.elona122", { name = "sqRogue" })
+  local success, map = Map.generate("elona_sys.elona122", { name = "sqRogue" })
   Area.add_submap(map, 24, 45)
 
   -- groups this map into a new area and sets primary_map on it.

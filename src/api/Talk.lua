@@ -63,7 +63,6 @@ function Talk.say(chara, talk_event_id, args, source)
 end
 
 local function talk_voice_handler(chara, params)
-   print("handler2")
    if type(params.talk_entry) == "table" and params.talk_entry.voice then
       Gui.play_sound(params.talk_entry.voice, chara.x, chara.y)
    end

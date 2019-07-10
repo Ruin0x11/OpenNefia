@@ -33,7 +33,7 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    local map = Map.current()
    assert(map ~= nil)
 
-   local shadow_map = map.shadow_map
+   local shadow_map = map:shadow_map()
    if #shadow_map > 0 then
       self.shadow_batch:set_tiles(shadow_map)
    end

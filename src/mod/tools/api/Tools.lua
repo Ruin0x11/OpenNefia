@@ -149,9 +149,9 @@ function Tools.drop_all()
 end
 
 function Tools.goto_map(name)
-   local map, err = Map.generate("elona_sys.elona122", { name = name })
-   if not map then
-      error(err)
+   local success, map = Map.generate("elona_sys.elona122", { name = name })
+   if not success then
+      error(map)
    end
    return Map.travel_to(map)
 end

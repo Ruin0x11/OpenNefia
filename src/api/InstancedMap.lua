@@ -61,33 +61,33 @@ function InstancedMap:init(width, height, uids, tile)
       error("Maps must be at least 1 tile wide and long.")
    end
 
-   self.width = width
-   self.height = height
+   self._width = width
+   self._height = height
 
-   self.multi_pool = multi_pool:new(width, height, uids)
-   self.last_sight_id = 0
-   self.in_sight = table.of(self.last_sight_id, width * height)
+   self._multi_pool = multi_pool:new(width, height, uids)
+   self._last_sight_id = 0
+   self._in_sight = table.of(self._last_sight_id, width * height)
 
    -- Map of shadows to be drawn. This is coordinate-local to the
    -- visible screen area only, with (1, 1) being the tile at the
    -- upper left corner of the game window.
-   self.shadow_map = {}
+   self._shadow_map = {}
 
    -- Locations that are treated as solid. Can be changed by mods to
    -- make objects that act solid, like map features.
-   self.solid = table.of(false, width * height)
+   self._solid = table.of(false, width * height)
 
    -- Locations that are treated as opaque. Can be changed by mods to
    -- make objects that act opaque.
-   self.opaque = table.of(false, width * height)
+   self._opaque = table.of(false, width * height)
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
-   self.memory = table.of({}, width * height)
+   self._memory = table.of({}, width * height)
 
-   self.tiles = table.of({}, width * height)
-   self.tiles_dirty = true
-   self.uids = uids
+   self._tiles = table.of({}, width * height)
+   self._tiles_dirty = true
+   self._uids = uids
 
    self:init_map_data()
 
@@ -99,12 +99,28 @@ function InstancedMap:init_map_data()
    self.is_outdoors = true
 end
 
+function InstancedMap:width()
+   return self._width
+end
+
+function InstancedMap:height()
+   return self._height
+end
+
+function InstancedMap:shadow_map()
+   return self._shadow_map
+end
+
 function InstancedMap:clear(tile)
-   for x=0,self.width-1 do
-      for y=0,self.height-1 do
+   for x=0,self._width-1 do
+      for y=0,self._height-1 do
          self:set_tile(x, y, tile)
       end
    end
+end
+
+function InstancedMap:iter_tiles()
+   return fun.iter(self._tiles)
 end
 
 function InstancedMap:set_tile(x, y, id)
@@ -116,15 +132,15 @@ function InstancedMap:set_tile(x, y, id)
 
    local prev = self:tile(x, y)
 
-   self.tiles[y*self.width+x+1] = tile
+   self._tiles[y*self._width+x+1] = tile
 
    self:refresh_tile(x, y)
 
-   self.tiles_dirty = true
+   self._tiles_dirty = true
 end
 
 function InstancedMap:tile(x, y)
-   return self.tiles[y*self.width+x+1]
+   return self._tiles[y*self._width+x+1]
 end
 
 function InstancedMap:has_los(x1, y1, x2, y2)
@@ -157,14 +173,14 @@ end
 -- @tparam int player_y
 -- @tparam int fov_radius
 function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
-   local stw = math.min(Draw.get_tiled_width(), self.width)
-   local sth = math.min(Draw.get_tiled_height(), self.height)
+   local stw = math.min(Draw.get_tiled_width(), self._width)
+   local sth = math.min(Draw.get_tiled_height(), self._height)
 
-   self.shadow_map = {}
+   self._shadow_map = {}
    for i=0,stw + 4 - 1 do
-      self.shadow_map[i] = {}
+      self._shadow_map[i] = {}
       for j=0,sth + 4 - 1 do
-         self.shadow_map[i][j] = 0
+         self._shadow_map[i][j] = 0
       end
    end
 
@@ -175,8 +191,8 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    -- The shadowmap has extra space at the edges, to make shadows at
    -- the edge of the map display correctly, so offset the start and
    -- end positions by 1..
-   local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self.width - stw) - 1
-   local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self.height - sth) - 1
+   local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self._width - stw) - 1
+   local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self._height - sth) - 1
    local end_x = (start_x + stw) + 1
    local end_y = (start_y + sth) + 1
 
@@ -187,7 +203,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    lx = 1
    ly = 1
 
-   self.last_sight_id = self.last_sight_id + 1
+   self._last_sight_id = self._last_sight_id + 1
 
    --
    -- Bits indicate directions that border a shadow.
@@ -210,7 +226,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    -- 0x100000000
    --
    local function set_shadow_border(x, y, v)
-      self.shadow_map[x][y] = bit.bor(self.shadow_map[x][y], v)
+      self._shadow_map[x][y] = bit.bor(self._shadow_map[x][y], v)
    end
 
    local function mark_shadow(lx, ly)
@@ -230,14 +246,14 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       local cx = player_x - radius
       local cy = radius - player_y
 
-      if j < 0 or j >= self.height then
+      if j < 0 or j >= self._height then
          for i=start_x,end_x do
             mark_shadow(lx, ly)
             lx = lx + 1
          end
       else
          for i=start_x,end_x do
-            if i < 0 or i >= self.width then
+            if i < 0 or i >= self._width then
                mark_shadow(lx, ly)
             else
                local shadow = true
@@ -263,19 +279,19 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       ly = ly + 1
    end
 
-   return self.shadow_map, start_x, start_y
+   return self._shadow_map, start_x, start_y
 end
 
 function InstancedMap:memorize_tile(x, y)
-   local ind = y * self.width + x + 1;
+   local ind = y * self._width + x + 1;
 
-   self.in_sight[ind] = self.last_sight_id
+   self._in_sight[ind] = self._last_sight_id
 
-   local memory = self.memory
+   local memory = self._memory
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { self:tile(x, y) }
 
-   for _, obj in self.multi_pool:objects_at_pos(x, y) do
+   for _, obj in self._multi_pool:objects_at_pos(x, y) do
       memory[obj._type] = memory[obj._type] or {}
       memory[obj._type][ind] = memory[obj._type][ind] or {}
       table.insert(memory[obj._type][ind], obj:produce_memory())
@@ -283,7 +299,7 @@ function InstancedMap:memorize_tile(x, y)
 end
 
 function InstancedMap:iter_memory(_type)
-   return fun.iter(self.memory[_type] or {})
+   return fun.iter(self._memory[_type] or {})
 end
 
 function InstancedMap:iter_charas()
@@ -295,19 +311,19 @@ function InstancedMap:iter_items()
 end
 
 function InstancedMap:is_in_bounds(x, y)
-   return x >= 0 and y >= 0 and x < self.width and y < self.height
+   return x >= 0 and y >= 0 and x < self._width and y < self._height
 end
 
 -- TODO: Need to handle depending on what is querying. People may want
 -- things that can pass through walls, etc.
 function InstancedMap:can_access(x, y)
    return self:is_in_bounds(x, y)
-      and not self.solid[y*self.width+x+1]
+      and not self._solid[y*self._width+x+1]
 end
 
 function InstancedMap:can_see_through(x, y)
    return self:is_in_bounds(x, y)
-      and not self.opaque[y*self.width+x+1]
+      and not self._opaque[y*self._width+x+1]
 end
 
 -- NOTE: This function returns false for any positions that are not
@@ -315,7 +331,7 @@ end
 -- For game calculations depending on LoS outside of the game window,
 -- use InstancedMap:has_los combined with a maximum distance check instead.
 function InstancedMap:is_in_fov(x, y)
-   return self.in_sight[y*self.width+x+1] == self.last_sight_id
+   return self._in_sight[y*self._width+x+1] == self._last_sight_id
 end
 
 function InstancedMap:refresh_tile(x, y)
@@ -326,7 +342,7 @@ function InstancedMap:refresh_tile(x, y)
    local solid = tile.is_solid
    local opaque = tile.is_opaque
 
-   for _, obj in self.multi_pool:objects_at_pos(x, y) do
+   for _, obj in self._multi_pool:objects_at_pos(x, y) do
       solid = solid or obj:calc("is_solid")
       opaque = opaque or obj:calc("is_opaque")
 
@@ -335,9 +351,9 @@ function InstancedMap:refresh_tile(x, y)
       end
    end
 
-   local ind = y * self.width + x + 1
-   self.solid[ind] = solid
-   self.opaque[ind] = opaque
+   local ind = y * self._width + x + 1
+   self._solid[ind] = solid
+   self._opaque[ind] = opaque
 end
 
 
@@ -345,7 +361,7 @@ end
 -- ILocation impl
 --
 
-InstancedMap:delegate("multi_pool",
+InstancedMap:delegate("_multi_pool",
 {
    "is_positional",
    "objects_at_pos",
@@ -362,7 +378,7 @@ function InstancedMap:is_positional()
 end
 
 function InstancedMap:take_object(obj, x, y)
-   self.multi_pool:take_object(obj, x, y)
+   self._multi_pool:take_object(obj, x, y)
    obj.location = self
    self:refresh_tile(x, y)
    return obj
@@ -370,7 +386,7 @@ end
 
 function InstancedMap:remove_object(obj)
    local prev_x, prev_y = obj.x, obj.y
-   local success = self.multi_pool:remove_object(obj)
+   local success = self._multi_pool:remove_object(obj)
 
    if success then
       self:refresh_tile(prev_x, prev_y)
@@ -381,7 +397,7 @@ end
 
 function InstancedMap:move_object(obj, x, y)
    local prev_x, prev_y = obj.x, obj.y
-   local success = self.multi_pool:move_object(obj, x, y)
+   local success = self._multi_pool:move_object(obj, x, y)
 
    if success then
       self:refresh_tile(x, y)

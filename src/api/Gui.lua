@@ -1,7 +1,10 @@
+local Env = require("api.Env")
 local I18N = require("api.I18N")
 local Map = require("api.Map")
 local draw = require("internal.draw")
 local field = require("game.field")
+
+local headless = Env.love_version() == "lovemock"
 
 local Gui = {}
 
@@ -65,7 +68,7 @@ function Gui.mes(text, color)
    end
    get_message_window():message(text, color)
 
-   if _DEBUG then
+   if headless then
       print("<mes> " .. text)
    end
 end

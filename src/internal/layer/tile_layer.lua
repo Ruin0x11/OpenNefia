@@ -54,13 +54,13 @@ function tile_layer:update(dt, screen_updated)
    assert(map ~= nil)
 
    if map.tiles_dirty then
-      for i, t in ipairs(map.tiles) do
-         local x = (i-1) % map.width
-         local y = math.floor((i-1) / map.width)
+      for i, t in map:iter_tiles() do
+         local x = (i-1) % map:width()
+         local y = math.floor((i-1) / map:width())
          local id = t._id
 
          if t.wall then
-            local one_tile_down = map.tiles[(y+1)*map.width+x+1]
+            local one_tile_down = map:tile(x, y+1)
             if one_tile_down ~= nil and not one_tile_down.wall then
                id = t.wall
             end

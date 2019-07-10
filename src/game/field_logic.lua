@@ -16,9 +16,9 @@ local field_logic = {}
 function field_logic.setup_new_game(player)
    local scenario = data["base.scenario"]:ensure(field.data.scenario)
 
-   local map, err = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
-   if err then
-      error(err)
+   local success, map = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
+   if not success then
+      error(map)
    end
 
    Map.set_map(map)
@@ -37,7 +37,9 @@ function field_logic.quickstart()
    field:init_global_data()
 
    field.data.scenario = "content.my_scenario"
-   field:set_map(Map.generate("content.test", {}))
+   local success, map = Map.generate("content.test", {})
+   assert(success, map)
+   field:set_map(map)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
    field_logic.setup_new_game(me)

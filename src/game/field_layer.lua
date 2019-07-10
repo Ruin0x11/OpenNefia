@@ -87,6 +87,7 @@ function field_layer:init_global_data()
 end
 
 function field_layer:set_map(map)
+   assert(type(map) == "table")
    assert(map.uid, "Map must have UID")
 
    if self.data.area_mapping:maybe_generate_area_for_map(map.uid) then
@@ -95,7 +96,7 @@ function field_layer:set_map(map)
 
    self.map = map
    self.map.tiles_dirty = true
-   self.renderer = field_renderer:new(map.width, map.height, self.layers)
+   self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
    self.map_changed = true
    self.no_scroll = true
 end

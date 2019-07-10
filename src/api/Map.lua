@@ -39,11 +39,11 @@ function Map.current()
 end
 
 function Map.width(map)
-   return (map or field.map).width
+   return (map or field.map):width()
 end
 
 function Map.height(map)
-   return (map or field.map).height
+   return (map or field.map):height()
 end
 
 function Map.is_in_bounds(x, y, map)
@@ -100,12 +100,12 @@ end
 function Map.generate(generator_id, params)
    params = params or {}
    local generator = data["base.map_generator"]:ensure(generator_id)
-   local success, result = pcall(function() return generator:generate(params) end)
+   local success, result = xpcall(function() return generator:generate(params) end, debug.traceback)
    if not success then
       return nil, result
    end
    class.assert_is_an(InstancedMap, result)
-   return result
+   return success, result
 end
 
 function Map.force_clear_pos(x, y, map)
@@ -157,8 +157,8 @@ function Map.find_position_for_chara(x, y, scope, map)
       return nil
    end
 
-   for x=0,map.width-1 do
-      for y=0,map.height-1 do
+   for x=0,map:width()-1 do
+      for y=0,map:height()-1 do
          if can_place_chara_at(chara, x, y, map) then
             return x, y
          end
@@ -177,8 +177,8 @@ local function try_place(chara, x, y, current, map)
    local real_x, real_y = Map.find_position_for_chara(x, y, scope, map)
 
    if real_x == nil and chara:is_player() then
-      real_x = Rand.rnd(map.width)
-      real_y = Rand.rnd(map.height)
+      real_x = Rand.rnd(map:width())
+      real_y = Rand.rnd(map:height())
 
       Map.force_clear_pos(real_x, real_y, map)
    end

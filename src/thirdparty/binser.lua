@@ -673,7 +673,6 @@ local function newbinser()
             name = name or metatable.name
             serialize = serialize or metatable._serialize
             deserialize = deserialize or metatable._deserialize
-            print("reg" .. tostring(name) .. " " .. tostring(deserialize).." "..tostring(serialize))
             if (not serialize) or (not deserialize) then
                 if metatable._template then
                     -- Register as template

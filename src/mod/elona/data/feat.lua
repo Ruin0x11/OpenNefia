@@ -92,10 +92,10 @@ local function gen_stair(down)
 
          local map
          if self.map_uid == nil then
-            local err
-            map, err = Map.generate(self.generator, self.generator_params)
-            if err then
-               Gui.mes("Couldn't load map: " .. err)
+            local success
+            success, map = Map.generate(self.generator, self.generator_params)
+            if not success then
+               Gui.mes("Couldn't load map: " .. map)
                return "player_turn_query"
             end
          end

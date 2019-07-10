@@ -18,7 +18,7 @@ local Command = {}
 
 local travel_to_map = Event.define_hook("travel_to_map",
                                         "Hook when traveling to a new map.",
-                                        {nil, "No map configured"},
+                                        {false, "No map configured"},
                                         function(result, default)
                                            if type(result) == "table" then
                                               return table.unpack(result)
@@ -86,9 +86,9 @@ function Command.move(player, x, y)
       -- quest abandonment warning
 
       if Input.yes_no() then
-         local map, err = travel_to_map()
-         if not map then
-            Gui.mes("Error loading map: " .. err)
+         local success, map = travel_to_map()
+         if not success then
+            Gui.mes("Error loading map: " .. map)
          else
             Map.travel_to(map)
          end
