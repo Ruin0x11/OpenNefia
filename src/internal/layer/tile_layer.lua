@@ -54,7 +54,7 @@ function tile_layer:update(dt, screen_updated)
    local map = Map.current()
    assert(map ~= nil)
 
-   if map.tiles_dirty then
+   if map._tiles_dirty then
       for i, t in map:iter_tiles() do
          local x = (i-1) % map:width()
          local y = math.floor((i-1) / map:width())
@@ -69,7 +69,7 @@ function tile_layer:update(dt, screen_updated)
 
          self.tile_batch:update_tile(x, y, id)
       end
-      map.tiles_dirty = false
+      map._tiles_dirty = false
    end
 
    self.tile_batch.shadow = calc_map_shadow(map, save.date.hour)

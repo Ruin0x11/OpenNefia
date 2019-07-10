@@ -95,10 +95,7 @@ function Map.tile(x, y, map)
 end
 
 function Map.set_tile(x, y, id, map)
-   local tile = data["base.map_tile"][id]
-   if tile == nil then return end
-
-   return (map or field.map):set_tile(x, y, tile)
+   return (map or field.map):set_tile(x, y, id)
 end
 
 function Map.iter_charas(map)

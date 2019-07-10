@@ -131,8 +131,6 @@ function InstancedMap:set_tile(x, y, id)
       return
    end
 
-   local prev = self:tile(x, y)
-
    self._tiles[y*self._width+x+1] = tile
 
    self:refresh_tile(x, y)

@@ -97,7 +97,7 @@ function field_layer:set_map(map)
    end
 
    self.map = map
-   self.map.tiles_dirty = true
+   self.map._tiles_dirty = true
    self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
    self.map_changed = true
    self.no_scroll = true

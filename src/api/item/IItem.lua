@@ -16,11 +16,11 @@ function IItem:pre_build()
 
    self.amount = self.amount or 1
    self.location = nil
-   self.ownership = "none"
+   self.ownership = self.ownership or "none"
 
    local Rand = require("api.Rand")
-   self.curse_state = Rand.choice({"cursed", "blessed", "none", "doomed"})
-   self.identify_state = "completely"
+   self.curse_state = self.curse_state or Rand.choice({"cursed", "blessed", "none", "doomed"})
+   self.identify_state = self.identify_state or "completely"
 
    self.name = self._id
 

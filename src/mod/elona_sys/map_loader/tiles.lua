@@ -2614,7 +2614,7 @@ local tiles = {
       effect = 5,
       id = "1_396",
       image = "graphic/temp/map_tile/1_396.png",
-      wall = "base.wall_oriental_bottom",
+      wall = "elona_sys.wall_oriental_bottom",
       wall_kind = 2
    },
    {
@@ -2622,7 +2622,7 @@ local tiles = {
       effect = 5,
       id = "1_397",
       image = "graphic/temp/map_tile/1_397.png",
-      wall = "base.wall_brick_bottom",
+      wall = "elona_sys.wall_brick_bottom",
       wall_kind = 2
    },
    {
@@ -2630,7 +2630,7 @@ local tiles = {
       effect = 5,
       id = "1_398",
       image = "graphic/temp/map_tile/1_398.png",
-      wall = "base.wall_regal_bottom",
+      wall = "elona_sys.wall_regal_bottom",
       wall_kind = 2
    },
    {
@@ -2638,7 +2638,7 @@ local tiles = {
       effect = 5,
       id = "1_399",
       image = "graphic/temp/map_tile/1_399.png",
-      wall = "base.wall_pillar_bottom",
+      wall = "elona_sys.wall_pillar_bottom",
       wall_kind = 2
    },
    {
@@ -2646,7 +2646,7 @@ local tiles = {
       effect = 5,
       id = "1_400",
       image = "graphic/temp/map_tile/1_400.png",
-      wall = "base.wall_log_bottom",
+      wall = "elona_sys.wall_log_bottom",
       wall_kind = 2
    },
    {
@@ -2654,7 +2654,7 @@ local tiles = {
       effect = 5,
       id = "1_401",
       image = "graphic/temp/map_tile/1_401.png",
-      wall = "base.wall_wood_bottom",
+      wall = "elona_sys.wall_wood_bottom",
       wall_kind = 2
    },
    {
@@ -2662,7 +2662,7 @@ local tiles = {
       effect = 5,
       id = "1_402",
       image = "graphic/temp/map_tile/1_402.png",
-      wall = "base.wall_plank_bottom",
+      wall = "elona_sys.wall_plank_bottom",
       wall_kind = 2
    },
    {
@@ -2670,7 +2670,7 @@ local tiles = {
       effect = 5,
       id = "1_403",
       image = "graphic/temp/map_tile/1_403.png",
-      wall = "base.wall_shingle_bottom",
+      wall = "elona_sys.wall_shingle_bottom",
       wall_kind = 2
    },
    {
@@ -2678,7 +2678,7 @@ local tiles = {
       effect = 5,
       id = "1_404",
       image = "graphic/temp/map_tile/1_404.png",
-      wall = "base.wall_smooth_bottom",
+      wall = "elona_sys.wall_smooth_bottom",
       wall_kind = 2
    },
    {
@@ -2686,7 +2686,7 @@ local tiles = {
       effect = 5,
       id = "1_405",
       image = "graphic/temp/map_tile/1_405.png",
-      wall = "base.wall_curtain_bottom",
+      wall = "elona_sys.wall_curtain_bottom",
       wall_kind = 2
    },
    {
@@ -2694,7 +2694,7 @@ local tiles = {
       effect = 5,
       id = "1_406",
       image = "graphic/temp/map_tile/1_406.png",
-      wall = "base.wall_moss_bottom",
+      wall = "elona_sys.wall_moss_bottom",
       wall_kind = 2
    },
    {
@@ -2702,7 +2702,7 @@ local tiles = {
       effect = 5,
       id = "1_407",
       image = "graphic/temp/map_tile/1_407.png",
-      wall = "base.wall_crypt_bottom",
+      wall = "elona_sys.wall_crypt_bottom",
       wall_kind = 2
    },
    {
@@ -2710,7 +2710,7 @@ local tiles = {
       effect = 5,
       id = "1_408",
       image = "graphic/temp/map_tile/1_408.png",
-      wall = "base.wall_ice_1_bottom",
+      wall = "elona_sys.wall_ice_1_bottom",
       wall_kind = 2
    },
    {
@@ -2718,7 +2718,7 @@ local tiles = {
       effect = 5,
       id = "1_409",
       image = "graphic/temp/map_tile/1_409.png",
-      wall = "base.wall_ice_2_bottom",
+      wall = "elona_sys.wall_ice_2_bottom",
       wall_kind = 2
    },
    {
@@ -2726,7 +2726,7 @@ local tiles = {
       effect = 5,
       id = "1_410",
       image = "graphic/temp/map_tile/1_410.png",
-      wall = "base.wall_ice_3_bottom",
+      wall = "elona_sys.wall_ice_3_bottom",
       wall_kind = 2
    },
    {
@@ -2734,7 +2734,7 @@ local tiles = {
       effect = 5,
       id = "1_411",
       image = "graphic/temp/map_tile/1_411.png",
-      wall = "base.wall_snow_1_bottom",
+      wall = "elona_sys.wall_snow_1_bottom",
       wall_kind = 2
    },
    {
@@ -2742,7 +2742,7 @@ local tiles = {
       effect = 5,
       id = "1_412",
       image = "graphic/temp/map_tile/1_412.png",
-      wall = "base.wall_snow_2_bottom",
+      wall = "elona_sys.wall_snow_2_bottom",
       wall_kind = 2
    },
    {
@@ -2750,7 +2750,7 @@ local tiles = {
       effect = 5,
       id = "1_413",
       image = "graphic/temp/map_tile/1_413.png",
-      wall = "base.wall_snow_3_bottom",
+      wall = "elona_sys.wall_snow_3_bottom",
       wall_kind = 2
    },
    {
@@ -2884,7 +2884,7 @@ local tiles = {
       effect = 5,
       id = "1_462",
       image = "graphic/temp/map_tile/1_462.png",
-      wall = "base.wall_stone_1_bottom",
+      wall = "elona_sys.wall_stone_1_bottom",
       wall_kind = 2
    },
    {
@@ -2892,7 +2892,7 @@ local tiles = {
       effect = 5,
       id = "1_463",
       image = "graphic/temp/map_tile/1_463.png",
-      wall = "base.wall_stone_2_bottom",
+      wall = "elona_sys.wall_stone_2_bottom",
       wall_kind = 2
    },
    {
@@ -2901,7 +2901,7 @@ local tiles = {
       id = "1_464",
       image = "graphic/temp/map_tile/1_464.png",
       kind = 6,
-      wall = "base.wall_stone_3_bottom",
+      wall = "elona_sys.wall_stone_3_bottom",
       wall_kind = 2
    },
    {
@@ -2909,7 +2909,7 @@ local tiles = {
       effect = 5,
       id = "1_465",
       image = "graphic/temp/map_tile/1_465.png",
-      wall = "base.wall_stone_4_bottom",
+      wall = "elona_sys.wall_stone_4_bottom",
       wall_kind = 2
    },
    {
@@ -2917,7 +2917,7 @@ local tiles = {
       effect = 5,
       id = "1_466",
       image = "graphic/temp/map_tile/1_466.png",
-      wall = "base.wall_stone_5_bottom",
+      wall = "elona_sys.wall_stone_5_bottom",
       wall_kind = 2
    },
    {
@@ -2925,7 +2925,7 @@ local tiles = {
       effect = 5,
       id = "1_467",
       image = "graphic/temp/map_tile/1_467.png",
-      wall = "base.wall_wooden_bottom",
+      wall = "elona_sys.wall_wooden_bottom",
       wall_kind = 2
    },
    {
@@ -2933,7 +2933,7 @@ local tiles = {
       effect = 5,
       id = "1_468",
       image = "graphic/temp/map_tile/1_468.png",
-      wall = "base.wall_dirt_bottom",
+      wall = "elona_sys.wall_dirt_bottom",
       wall_kind = 2
    },
    {
@@ -2941,7 +2941,7 @@ local tiles = {
       effect = 5,
       id = "1_469",
       image = "graphic/temp/map_tile/1_469.png",
-      wall = "base.wall_dirt_dark_bottom",
+      wall = "elona_sys.wall_dirt_dark_bottom",
       wall_kind = 2
    },
    {
@@ -2949,7 +2949,7 @@ local tiles = {
       effect = 5,
       id = "1_470",
       image = "graphic/temp/map_tile/1_470.png",
-      wall = "base.wall_pyramid_bottom",
+      wall = "elona_sys.wall_pyramid_bottom",
       wall_kind = 2
    },
    {
@@ -2957,7 +2957,7 @@ local tiles = {
       effect = 5,
       id = "1_471",
       image = "graphic/temp/map_tile/1_471.png",
-      wall = "base.wall_shingled_bottom",
+      wall = "elona_sys.wall_shingled_bottom",
       wall_kind = 2
    },
    {
@@ -2965,7 +2965,7 @@ local tiles = {
       effect = 5,
       id = "1_472",
       image = "graphic/temp/map_tile/1_472.png",
-      wall = "base.wall_concrete_bottom",
+      wall = "elona_sys.wall_concrete_bottom",
       wall_kind = 2
    },
    {
@@ -2973,7 +2973,7 @@ local tiles = {
       effect = 5,
       id = "1_473",
       image = "graphic/temp/map_tile/1_473.png",
-      wall = "base.wall_concrete_light_bottom",
+      wall = "elona_sys.wall_concrete_light_bottom",
       wall_kind = 2
    },
    {
@@ -2981,7 +2981,7 @@ local tiles = {
       effect = 5,
       id = "1_474",
       image = "graphic/temp/map_tile/1_474.png",
-      wall = "base.wall_tower_of_fire_bottom",
+      wall = "elona_sys.wall_tower_of_fire_bottom",
       wall_kind = 2
    },
    {
@@ -2989,7 +2989,7 @@ local tiles = {
       effect = 5,
       id = "1_475",
       image = "graphic/temp/map_tile/1_475.png",
-      wall = "base.wall_forest_bottom",
+      wall = "elona_sys.wall_forest_bottom",
       wall_kind = 2
    },
    {
@@ -2997,7 +2997,7 @@ local tiles = {
       effect = 5,
       id = "1_476",
       image = "graphic/temp/map_tile/1_476.png",
-      wall = "base.wall_stone_6_bottom",
+      wall = "elona_sys.wall_stone_6_bottom",
       wall_kind = 2
    },
    {
@@ -3005,7 +3005,7 @@ local tiles = {
       effect = 5,
       id = "1_477",
       image = "graphic/temp/map_tile/1_477.png",
-      wall = "base.wall_stone_7_bottom",
+      wall = "elona_sys.wall_stone_7_bottom",
       wall_kind = 2
    },
    {
@@ -3013,7 +3013,7 @@ local tiles = {
       effect = 5,
       id = "1_478",
       image = "graphic/temp/map_tile/1_478.png",
-      wall = "base.wall_stone_8_bottom",
+      wall = "elona_sys.wall_stone_8_bottom",
       wall_kind = 2
    },
    {
@@ -3021,7 +3021,7 @@ local tiles = {
       effect = 5,
       id = "1_479",
       image = "graphic/temp/map_tile/1_479.png",
-      wall = "base.wall_stone_9_bottom",
+      wall = "elona_sys.wall_stone_9_bottom",
       wall_kind = 2
    },
    {
@@ -3029,7 +3029,7 @@ local tiles = {
       effect = 5,
       id = "1_480",
       image = "graphic/temp/map_tile/1_480.png",
-      wall = "base.wall_stone_10_bottom",
+      wall = "elona_sys.wall_stone_10_bottom",
       wall_kind = 2
    },
    {
@@ -3037,7 +3037,7 @@ local tiles = {
       effect = 5,
       id = "1_481",
       image = "graphic/temp/map_tile/1_481.png",
-      wall = "base.wall_hay_bottom",
+      wall = "elona_sys.wall_hay_bottom",
       wall_kind = 2
    },
    {
@@ -3045,7 +3045,7 @@ local tiles = {
       effect = 5,
       id = "1_482",
       image = "graphic/temp/map_tile/1_482.png",
-      wall = "base.wall_decor_bottom",
+      wall = "elona_sys.wall_decor_bottom",
       wall_kind = 2
    },
    {
@@ -3053,7 +3053,7 @@ local tiles = {
       effect = 5,
       id = "1_483",
       image = "graphic/temp/map_tile/1_483.png",
-      wall = "base.wall_palace_1_bottom",
+      wall = "elona_sys.wall_palace_1_bottom",
       wall_kind = 2
    },
    {
@@ -3061,7 +3061,7 @@ local tiles = {
       effect = 5,
       id = "1_484",
       image = "graphic/temp/map_tile/1_484.png",
-      wall = "base.wall_palace_2_bottom",
+      wall = "elona_sys.wall_palace_2_bottom",
       wall_kind = 2
    },
    {
@@ -3069,7 +3069,7 @@ local tiles = {
       effect = 5,
       id = "1_485",
       image = "graphic/temp/map_tile/1_485.png",
-      wall = "base.wall_palace_3_bottom",
+      wall = "elona_sys.wall_palace_3_bottom",
       wall_kind = 2
    },
    {
@@ -3077,7 +3077,7 @@ local tiles = {
       effect = 5,
       id = "1_486",
       image = "graphic/temp/map_tile/1_486.png",
-      wall = "base.wall_stone_11_bottom",
+      wall = "elona_sys.wall_stone_11_bottom",
       wall_kind = 2
    },
    {
@@ -3085,7 +3085,7 @@ local tiles = {
       effect = 5,
       id = "1_487",
       image = "graphic/temp/map_tile/1_487.png",
-      wall = "base.wall_cyber_bottom",
+      wall = "elona_sys.wall_cyber_bottom",
       wall_kind = 2
    },
    {
@@ -3093,7 +3093,7 @@ local tiles = {
       effect = 5,
       id = "1_488",
       image = "graphic/temp/map_tile/1_488.png",
-      wall = "base.wall_stone_12_bottom",
+      wall = "elona_sys.wall_stone_12_bottom",
       wall_kind = 2
    },
    {
@@ -3101,7 +3101,7 @@ local tiles = {
       effect = 5,
       id = "1_489",
       image = "graphic/temp/map_tile/1_489.png",
-      wall = "base.wall_white_bottom",
+      wall = "elona_sys.wall_white_bottom",
       wall_kind = 2
    },
    {
@@ -3109,7 +3109,7 @@ local tiles = {
       effect = 5,
       id = "1_490",
       image = "graphic/temp/map_tile/1_490.png",
-      wall = "base.wall_decor_2_bottom",
+      wall = "elona_sys.wall_decor_2_bottom",
       wall_kind = 2
    },
    {
@@ -3117,7 +3117,7 @@ local tiles = {
       effect = 5,
       id = "1_491",
       image = "graphic/temp/map_tile/1_491.png",
-      wall = "base.wall_concrete_2_bottom",
+      wall = "elona_sys.wall_concrete_2_bottom",
       wall_kind = 2
    },
    {
@@ -3125,7 +3125,7 @@ local tiles = {
       effect = 5,
       id = "1_492",
       image = "graphic/temp/map_tile/1_492.png",
-      wall = "base.wall_concrete_3_bottom",
+      wall = "elona_sys.wall_concrete_3_bottom",
       wall_kind = 2
    },
    {
@@ -3133,7 +3133,7 @@ local tiles = {
       effect = 5,
       id = "1_493",
       image = "graphic/temp/map_tile/1_493.png",
-      wall = "base.wall_concrete_dark_1_bottom",
+      wall = "elona_sys.wall_concrete_dark_1_bottom",
       wall_kind = 2
    },
    {
@@ -3141,7 +3141,7 @@ local tiles = {
       effect = 5,
       id = "1_494",
       image = "graphic/temp/map_tile/1_494.png",
-      wall = "base.wall_concrete_dark_2_bottom",
+      wall = "elona_sys.wall_concrete_dark_2_bottom",
       wall_kind = 2
    },
    {

@@ -36,8 +36,10 @@ end
 -- @tparam IObject object
 -- @treturn table
 function Object.make_prototype(obj)
-   local _type = obj.type
-   local _id = obj.id
+   local _type = obj._type
+   local _id = obj._id
+   assert(_type)
+   assert(_id)
 
    local copy = cycle_aware_copy(obj, {})
    setmetatable(copy, nil)

@@ -42,11 +42,14 @@ function MapObject.generate(data, params, uid_tracker)
 
    -- class.assert_is_an(IMapObject, data)
 
-   data:pre_build()
+   -- TODO
+   if not params.no_pre_build then
+      data:pre_build()
 
-   if not params.no_build then
-      data:normal_build()
-      data:finalize()
+      if not params.no_build then
+         data:normal_build()
+         data:finalize()
+      end
    end
 
    return data
@@ -72,7 +75,7 @@ function MapObject.clone(obj, owned)
    assert(proto.location == nil)
 
    -- Generate a new object using the stripped object as a prototype.
-   local new_object = MapObject.generate(proto)
+   local new_object = MapObject.generate(proto, {no_pre_build=true})
 
    -- TODO: move
    local IMapObject = require("api.IMapObject")
