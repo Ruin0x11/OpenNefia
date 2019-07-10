@@ -26,6 +26,10 @@ function Gui.set_scroll()
    scroll = true
 end
 
+function Gui.key_held_frames()
+   return field:key_held_frames()
+end
+
 function Gui.wait(wait)
    Gui.update_screen()
    draw.wait(wait)

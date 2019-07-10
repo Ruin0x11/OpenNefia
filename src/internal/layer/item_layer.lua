@@ -27,6 +27,10 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
    self.item_batch.updated = true
 
+   if scroll_frames > 0 then
+      return true
+   end
+
    local map = Map.current()
    assert(map ~= nil)
 
@@ -74,8 +78,8 @@ function item_layer:update(dt, screen_updated, scroll_frames)
    end
 end
 
-function item_layer:draw(draw_x, draw_y)
-   self.item_batch:draw(draw_x, draw_y)
+function item_layer:draw(draw_x, draw_y, offx, offy)
+   self.item_batch:draw(draw_x + offx, draw_y + offy)
 end
 
 return item_layer

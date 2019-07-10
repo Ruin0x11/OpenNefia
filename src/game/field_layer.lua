@@ -2,6 +2,7 @@ local InputHandler = require("api.gui.InputHandler")
 local IUiLayer = require("api.gui.IUiLayer")
 local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
+local KeyHandler = require("api.gui.KeyHandler")
 local Log = require("api.Log")
 
 local area_mapping = require("internal.area_mapping")
@@ -29,7 +30,8 @@ function field_layer:init()
 
    self:init_global_data()
 
-   self.keys = InputHandler:new()
+   local keys = KeyHandler:new(true)
+   self.keys = InputHandler:new(keys)
    self.keys:focus()
 
    self.layers = {
@@ -131,9 +133,14 @@ function field_layer:update_screen(scroll)
    assert(self.map ~= nil)
 
    local player = self.map:get_object(self.player)
+   local scroll_frames
    if player then
-      self.renderer:update_draw_pos(player.x, player.y, scroll)
-      self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
+      if scroll then
+         scroll_frames = player:calc("scroll") or 3
+      end
+
+      self.renderer:update_draw_pos(player.x, player.y, scroll_frames)
+      self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
 
    local dt = 0
@@ -148,6 +155,10 @@ function field_layer:update_screen(scroll)
    self:update_hud()
 
    self.no_scroll = false
+end
+
+function field_layer:key_held_frames()
+   return self.keys:key_held_frames()
 end
 
 function field_layer:update_hud()

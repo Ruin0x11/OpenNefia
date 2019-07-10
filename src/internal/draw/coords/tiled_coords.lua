@@ -49,7 +49,7 @@ function tiled_coords:get_start_offset(x, y, width, height)
    if y < 0 then
       sy = math.floor(y / 2)
    end
-   return sx, sy, 48 - (x % 48), 48 - (y % 48)
+   return sx, sy, math.floor(48 - (x % 48)), math.floor(48 - (y % 48))
 end
 
 function tiled_coords:get_draw_pos(tx, ty, mw, mh, width, height)

@@ -45,13 +45,13 @@ function field_renderer:init(width, height, layers)
    end
 end
 
-function field_renderer:set_scroll(dx, dy)
+function field_renderer:set_scroll(dx, dy, scroll_frames)
    self.scroll = { dx = dx, dy = dy }
-   self.scroll_max_frames = 6
+   self.scroll_max_frames = scroll_frames
    self.scroll_frames = self.scroll_max_frames
 end
 
-function field_renderer:update_draw_pos(player_x, player_y, scroll)
+function field_renderer:update_draw_pos(player_x, player_y, scroll_frames)
    local draw_x, draw_y = self.coords:get_draw_pos(player_x,
                                                    player_y,
                                                    self.width,
@@ -59,8 +59,8 @@ function field_renderer:update_draw_pos(player_x, player_y, scroll)
                                                    Draw.get_width(),
                                                    Draw.get_height())
 
-   if scroll then
-      -- self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y)
+   if scroll_frames then
+      self:set_scroll(self.draw_x - draw_x, self.draw_y - draw_y, scroll_frames)
    else
       self.scroll = nil
       self.scroll_frames = 0
@@ -82,11 +82,11 @@ function field_renderer:add_async_draw_callback(cb)
 end
 
 function field_renderer:draw()
-   local draw_x = self.draw_x + self.scroll_x
-   local draw_y = self.draw_y + self.scroll_y
+   local draw_x = self.draw_x
+   local draw_y = self.draw_y
 
    for _, l in ipairs(self.layers) do
-      l:draw(draw_x, draw_y)
+      l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y)
    end
 
    local dead = {}
@@ -104,13 +104,12 @@ end
 
 function field_renderer:update(dt)
    if self.scroll then
-      self.scroll_frames = self.scroll_frames - 1
-      if self.scroll_frames == 0 then
+      self.scroll_frames = self.scroll_frames - Draw.msecs_to_frames(dt*1000)
+      if self.scroll_frames <= 0 then
          self.scroll = nil
          self.scroll_x = 0
          self.scroll_y = 0
       else
-         local tw, th = self.coords:get_size()
          local p = 1 - (self.scroll_frames/self.scroll_max_frames)
          self.scroll_x = (self.scroll.dx - (p * self.scroll.dx))
          self.scroll_y = (self.scroll.dy - (p * self.scroll.dy))

@@ -91,6 +91,10 @@ end
 function TextHandler:update_repeats()
 end
 
+function TextHandler:key_held_frames()
+   return 0
+end
+
 function TextHandler:run_key_action(key)
    if self.bindings[key] then
       self.bindings[key]()

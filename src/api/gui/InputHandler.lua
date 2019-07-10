@@ -9,6 +9,7 @@ InputHandler:delegate("keys", {
                          "unbind_keys",
                          "receive_key",
                          "run_key_action",
+                         "key_held_frames",
 })
 InputHandler:delegate("mouse", {
                          "bind_mouse",

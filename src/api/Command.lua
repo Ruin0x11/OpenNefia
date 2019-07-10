@@ -30,6 +30,19 @@ local player_move = Event.define_hook("player_move",
                                       nil,
                                       "pos")
 
+Event.register("base.hook_player_move", "Player scroll speed",
+               function(_, params, result)
+                  local scroll = 10
+                  local start_run_wait = 2
+                  if Gui.key_held_frames() > start_run_wait then
+                     scroll = 6
+                  end
+
+                  params.chara:mod("scroll", scroll, "set")
+
+                  return result
+               end)
+
 function Command.move(player, x, y)
    if type(x) == "string" then
       x, y = Pos.add_direction(x, player.x, player.y)

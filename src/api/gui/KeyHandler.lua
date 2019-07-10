@@ -14,7 +14,7 @@ local repeats = table.set {
 -- keypressed event is received. For use when key repeat is *on*.
 local KeyHandler = class.class("KeyHandler", IKeyInput)
 
-function KeyHandler:init()
+function KeyHandler:init(no_repeat_delay)
    self.bindings = {}
    self.this_frame = {}
    self.pressed = {}
@@ -22,6 +22,9 @@ function KeyHandler:init()
    self.forwards = nil
    self.halted = false
    self.stop_halt = true
+   self.frames_held = 0
+
+   self.no_repeat_delay = no_repeat_delay
 
    self:bind_keys {
       ["`"] = function()
@@ -78,9 +81,28 @@ function KeyHandler:halt_input()
    self.this_frame = {}
    self.halted = true
    self.stop_halt = false
+   self.frames_held = 0
 end
 
 function KeyHandler:run_key_action(key, ...)
+   print(self.frames_held)
+   local it = self.repeat_delays[key]
+   if it then
+      it.wait_remain = it.wait_remain - 1
+      if it.wait_remain <= 0 then
+         it.fast = true
+      elseif it.fast then
+         if repeats[key] then
+            it.delay = 40
+         else
+            it.delay = 10
+         end
+      else
+         it.delay = 200
+      end
+      it.pressed = false
+   end
+
    local func = self.bindings[key]
    if func then
       return func(...)
@@ -94,30 +116,23 @@ function KeyHandler:handle_repeat(key, dt)
 
    if it.wait_remain == nil then
       if repeats[key] then
-         it.wait_remain = 2
-         it.delay = 200
+         if self.no_repeat_delay then
+            it.wait_remain = 0
+            it.delay = 40
+         else
+            it.wait_remain = 2
+            it.delay = 200
+         end
       else
          it.wait_remain = 0
          it.delay = 600
       end
       it.pressed = true
    else
-      it.pressed = false
       it.delay = it.delay - dt * 1000
       if it.delay <= 0 then
-         it.wait_remain = it.wait_remain - 1
-         if it.wait_remain <= 0 then
-            it.fast = true
-         end
-         if it.fast then
-            if repeats[key] then
-               it.delay = 36
-            else
-               it.delay = 12
-            end
-         else
-            it.delay = 200
-         end
+         -- Wait until a key action is fired for this key to remove
+         -- pressed state.
          it.pressed = true
       end
    end
@@ -131,10 +146,12 @@ end
 
 function KeyHandler:update_repeats(dt)
    for key, v in pairs(self.pressed) do
-      -- if repeats[key] then
-         self:handle_repeat(key, dt)
-      -- end
+      self:handle_repeat(key, dt)
    end
+end
+
+function KeyHandler:key_held_frames()
+   return self.frames_held
 end
 
 function KeyHandler:run_actions(dt, ...)
@@ -144,7 +161,7 @@ function KeyHandler:run_actions(dt, ...)
    self:update_repeats(dt)
 
    for key, v in pairs(self.repeat_delays) do
-      -- TODO determine what movement actions should be triggered. If
+      -- TODO: determine what movement actions should be triggered. If
       -- two movement keys can form a diagonal, they should be fired
       -- instead of each one individually.
       if v.pressed then
@@ -166,6 +183,14 @@ function KeyHandler:run_actions(dt, ...)
 
    self.halted = self.halted and not self.stop_halt
    self.this_frame = {}
+
+   if next(self.pressed) then
+      if ran then
+         self.frames_held = self.frames_held + 1
+      end
+   else
+      self.frames_held = 0
+   end
 
    return ran, result
 end

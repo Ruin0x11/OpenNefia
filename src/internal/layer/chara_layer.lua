@@ -34,7 +34,7 @@ function chara_layer:calc_scroll(map)
          local dx = c.x - dat.x
          local dy = c.y - dat.y
 
-         if math.abs(dx) <= 1 and math.abs(dy) <= 1 then
+         if math.abs(dx) <= 1 and math.abs(dy) <= 1 and c:is_player() then
             scroll[#scroll+1] = { ind = self.batch_inds[uid].ind, dx = -dx, dy = -dy}
          end
 
@@ -46,16 +46,16 @@ function chara_layer:calc_scroll(map)
    return scroll
 end
 
-function chara_layer:scroll_one()
+function chara_layer:scroll_one(dt)
    local tw, th = self.coords:get_size()
+   self.scroll_frames = self.scroll_frames - Draw.msecs_to_frames(dt*1000)
    for _, scroll in ipairs(self.scroll) do
-      local p = 1 - ((self.scroll_frames-1)/self.scroll_max_frames)
+      local p = 1 - ((self.scroll_frames)/self.scroll_max_frames)
       local sx, sy = (scroll.dx - (p * scroll.dx)) * tw, (scroll.dy - (p * scroll.dy)) * th
       self.chara_batch:set_tile_offsets(scroll.ind, sx, sy)
    end
-   self.scroll_frames = self.scroll_frames - 1
 
-   return self.scroll_frames == 0
+   return self.scroll_frames <= 0
 end
 
 function chara_layer:update(dt, screen_updated, scroll_frames)
@@ -64,13 +64,15 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
       return false
    end
 
-   self.chara_batch.updated = true
+   if scroll_frames <= 0 then
+      self.chara_batch.updated = true
+   end
 
    local map = Map.current()
    assert(map ~= nil)
 
    if self.scroll then
-      local finished = self:scroll_one()
+      local finished = self:scroll_one(dt)
 
       if finished then
          for _, scroll in ipairs(self.scroll) do
@@ -95,7 +97,9 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    --   - In vanilla, the screen is first scrolled before the FOV map
    --     is updated. This will cause items to only appear after the
    --     scroll is finished.
-   --   - In Next, the
+   --   - In Elona_next, the FOV map is calculated by the time the
+   --   - screen is scrolled, but the FOV map from the previous turn
+   --   - will still be displayed.
    for _, c in map:iter_charas() do
       local show = c.state == "Alive" and map:is_in_fov(c.x, c.y)
       local hide = not show
@@ -139,9 +143,9 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
       max = 6
       max = 3
 
-      self.scroll_max_frames = max
-      self.scroll_frames = self.scroll_max_frames
-      self:scroll_one()
+      self.scroll_max_frames = scroll_frames
+      self.scroll_frames = scroll_frames
+      self:scroll_one(dt)
       return true
    else
       self.scroll_consecutive = 0
@@ -150,8 +154,8 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    return false
 end
 
-function chara_layer:draw(draw_x, draw_y)
-   self.chara_batch:draw(draw_x, draw_y)
+function chara_layer:draw(draw_x, draw_y, offx, offy)
+   self.chara_batch:draw(draw_x + offx, draw_y + offy)
 end
 
 return chara_layer

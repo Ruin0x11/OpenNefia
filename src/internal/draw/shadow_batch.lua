@@ -277,12 +277,14 @@ function shadow_batch:add_one(shadow, x, y, batch)
    end
 end
 
-function shadow_batch:draw(x, y)
+function shadow_batch:draw(x, y, offx, offy)
+   x = x + offx
+   y = y + offy
    -- slight speedup
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x, y, draw.get_width(), draw.get_height())
+   local sx, sy, ox, oy = self.coords:get_start_offset(x-offx, y-offy, draw.get_width(), draw.get_height())
 
    sx = -sx
    sy = -sy

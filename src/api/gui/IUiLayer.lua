@@ -30,9 +30,7 @@ local function query(self)
             local ran = self:run_actions(dt)
             return self:update(dt, ran)
          end,
-         function(err)
-            return debug.traceback(err)
-         end)
+         debug.traceback)
       if not success then
          Log.error("Error on query: %s", res)
          break

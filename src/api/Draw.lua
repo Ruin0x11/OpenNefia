@@ -66,4 +66,11 @@ function Draw.register_draw_layer(layer)
    field:register_draw_layer(layer)
 end
 
+function Draw.msecs_to_frames(msecs, framerate)
+   framerate = framerate or 60
+   local msecs_per_frame = (1 / framerate or 60) * 1000
+   local frames = msecs / msecs_per_frame
+   return frames
+end
+
 return Draw
