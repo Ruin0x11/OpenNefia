@@ -53,7 +53,7 @@ end
 local function feat_bumped_into_handler(source, p, result)
    for _, feat in Feat.at(p.x, p.y) do
       if feat:calc("is_solid") then
-         feat:on_bumped_into(p.chara)
+         feat:on_bumped_into(source)
          result.blocked = true
       end
    end
@@ -62,9 +62,9 @@ local function feat_bumped_into_handler(source, p, result)
 end
 
 local function feat_stepped_on_handler(source, p, result)
-   for _, feat in Feat.at(p.x, p.y, p.chara:current_map()) do
+   for _, feat in Feat.at(p.x, p.y, source:current_map()) do
       if feat.on_stepped_on then
-         feat:on_stepped_on(p.chara)
+         feat:on_stepped_on(source)
       end
    end
 

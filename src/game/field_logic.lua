@@ -113,7 +113,7 @@ function field_logic.setup()
       end
    }
 
-   Event.trigger("base.on_game_start")
+   Event.trigger("base.on_game_initialize")
 end
 
 local function calc_speed(chara)

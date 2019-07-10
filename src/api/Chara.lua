@@ -54,7 +54,6 @@ function Chara.set_player(uid_or_chara)
 end
 
 function Chara.is_alive(c)
-   -- Persist based on character type.
    return type(c) == "table" and c.state == "Alive"
 end
 
@@ -69,6 +68,13 @@ function Chara.create(id, x, y, params, where)
 
    params = params or {}
    where = where or field.map
+
+   if not params.ownerless then
+      x, y = Map.find_position_for_chara(x, y)
+      if not x then
+         return nil
+      end
+   end
 
    if params.ownerless then
       where = nil

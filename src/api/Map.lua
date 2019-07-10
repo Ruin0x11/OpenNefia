@@ -1,5 +1,7 @@
 local field = require("game.field")
 local data = require("internal.data")
+local Event = require("api.Event")
+local Gui = require("api.Gui")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Fs = require("api.Fs")
@@ -21,6 +23,13 @@ function Map.save(map)
    return SaveFs.write(path, map)
 end
 
+Event.register("base.on_map_loaded", "instantiate all map objects",
+               function(_, params)
+                  for _, v in params.map:iter() do
+                     v:instantiate()
+                  end
+               end)
+
 function Map.load(uid)
    if type(uid) == "table" then
       uid = uid.uid
@@ -28,7 +37,14 @@ function Map.load(uid)
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))
-   return SaveFs.read(path)
+   local success, map = SaveFs.read(path)
+   if not success then
+      return false, map
+   end
+
+   Event.trigger("base.on_map_loaded", {map=map})
+
+   return success, map
 end
 
 function Map.is_world_map(map)
@@ -105,7 +121,13 @@ function Map.generate(generator_id, params)
    if not success then
       return nil, result
    end
-   class.assert_is_an(InstancedMap, result)
+   if not class.is_an(InstancedMap, result) then
+      return nil, "result of Map.generate must be a map"
+   end
+
+   Event.trigger("base.on_map_generated", {map=result})
+   Event.trigger("base.on_map_loaded", {map=result})
+
    return success, result
 end
 
@@ -193,11 +215,27 @@ local function try_place(chara, x, y, current, map)
    return nil
 end
 
-function Map.travel_to(map)
+function Map.travel_to(map_or_uid)
    local Chara = require("api.Chara")
+
+   local success, map
+   if type(map_or_uid) == "number" then
+      local uid = map_or_uid
+      success, map = Map.load(uid)
+      if not success then
+         error(string.format("Error loading map %d: %s", uid, map))
+      end
+   else
+      class.assert_is_an(InstancedMap, map_or_uid)
+      map = map_or_uid
+   end
 
    local current = field.map
    local x, y = 0, 0
+
+   if map.uid == current.uid then
+      error("Map cannot be the same as the one being traveled to.")
+   end
 
    if type(map.player_start_pos) == "table" then
       x = map.player_start_pos.x or x
@@ -217,7 +255,7 @@ function Map.travel_to(map)
 
    -- Transfer each to the new map.
 
-   local success = try_place(player, x, y, current, map)
+   success = try_place(player, x, y, current, map)
    assert(success)
 
    for _, uid in ipairs(allies) do
@@ -232,8 +270,12 @@ function Map.travel_to(map)
       assert(new_ally ~= nil)
    end
 
-   field:set_map(map)
-   field:update_screen()
+   if not current.is_temporary then
+      Map.save(current)
+   end
+
+   Map.set_map(map)
+   Gui.update_screen()
 
    return "turn_begin"
 end

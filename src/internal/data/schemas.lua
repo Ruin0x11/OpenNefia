@@ -31,6 +31,7 @@ data:add_type(
          image = schema.Number,
          max_hp = schema.Number,
          on_death = schema.Optional(schema.Function),
+         on_instantiate = schema.Optional(schema.Function),
       },
    },
    { interface = IChara }
@@ -45,6 +46,7 @@ data:add_type(
          weight = schema.Number,
          value = schema.Number,
          quality = schema.Number,
+         on_instantiate = schema.Optional(schema.Function),
       },
    },
    { interface = IItem }
@@ -57,6 +59,7 @@ data:add_type(
          name = schema.String,
          image = schema.Number,
          params = schema.Table,
+         on_instantiate = schema.Optional(schema.Function),
       },
    },
    { interface = IFeat }
@@ -69,9 +72,10 @@ data:add_type(
          name = schema.String,
          image = schema.Number,
          params = schema.Table,
+         on_instantiate = schema.Optional(schema.Function),
       },
    },
-   { interface = ITrap, generates = "base.feat" }
+   { interface = ITrap }
 )
 
 data:add_type(

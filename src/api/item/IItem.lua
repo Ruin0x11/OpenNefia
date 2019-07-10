@@ -1,8 +1,9 @@
 local Log = require("api.Log")
+local Event = require("api.Event")
+local IObject = require("api.IObject")
 local IMapObject = require("api.IMapObject")
 local IStackableObject = require("api.IStackableObject")
 local IItemEnchantments = require("api.item.IItemEnchantments")
-local field = require("game.field")
 
 -- TODO: move out of api
 local IItem = class.interface("IItem",
@@ -33,7 +34,6 @@ function IItem:pre_build()
    self.flags = self.flags or {}
    self.types = self.types or {}
 
-   -- item:send("base.on_item_create")
    IItemEnchantments.init(self)
 end
 
@@ -41,6 +41,11 @@ function IItem:normal_build()
 end
 
 function IItem:build()
+end
+
+function IItem:instantiate()
+   IObject.instantiate(self)
+   Event.trigger("base.on_item_instantiated", {item=self})
 end
 
 function IItem:build_name(amount)

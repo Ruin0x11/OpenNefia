@@ -1,74 +1,27 @@
-require("boot")
+local Map = require("api.Map")
+local SaveFs = require("api.SaveFs")
 
-local IEffects = require("api.IEffects")
-local Object = require("api.Object")
-local IObject = require("api.IObject")
-
-local o = Object.mock_interface(IEffects)
-
-o:mod("dood", 2)
-o:mod("dood", -12, "add")
-
-o.flags = { test = { dood = true }}
-o.it = 50
-o.dood = 24
-o:refresh()
-
-local OEffect = require("api.OEffect")
-
-local e2 = Object.mock(OEffect)
-
-e2.method = "set"
-e2.delta = {
-   delta = {
-      dood = 1100
-   }
-}
-
-local e = Object.mock(OEffect)
-
-e.method = "add"
-e.delta = {
-   dood = 11,
-   it = -10,
-   flags = {
-      test = {
-         dood = false
-      }
-   }
-}
-
-e:add_effect(e2)
-e:refresh()
-_p(e:calc("delta"))
-
-o:add_effect(e)
-o:add_effect(e)
-o:refresh()
-
-print(inspect(o.temp))
-print()
-
-local buff = Object.mock(OEffect)
-
-buff.method = "add"
-buff.delta = { stats = {} }
-buff.power = 120
-buff.stat = "base.test"
-buff.on_refresh = function(self)
-   self.delta.stats[self.stat] = self.power * 4
+print("===== normal")
+for i, v, c in Map.current():iter():take(4) do
+   print(i, tostring(v), tostring(c))
 end
 
-local c = Object.mock(OEffect)
-IObject.init(c)
+local _, m = SaveFs.read("map/3")
 
-c.stats = { ["base.test"] = 20 }
-c:add_effect(buff)
-c:add_effect(buff)
-c:add_effect(buff)
-c:remove_effect(1)
-c:remove_effect(2)
-c:add_effect(buff)
-c:refresh()
+print("===== iter")
+for i, v, c in m:iter() do
+   print(i, tostring(v), tostring(c))
+end
 
-print(inspect(c:calc("stats")))
+print("===== multi pool")
+for i, v, c in fun.iter(m._multi_pool.refs) do
+   print(i, tostring(v), tostring(c))
+end
+
+print("===== pairs")
+for i, v, c in pairs(m._multi_pool.refs) do
+   print(i, tostring(v), tostring(c))
+end
+
+_p(Map.current()._multi_pool.refs[52].name)
+_p(m._multi_pool.refs[52].name)

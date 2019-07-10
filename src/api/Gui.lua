@@ -1,6 +1,5 @@
 local Env = require("api.Env")
 local I18N = require("api.I18N")
-local Map = require("api.Map")
 local draw = require("internal.draw")
 local field = require("game.field")
 
@@ -74,6 +73,7 @@ function Gui.mes(text, color)
 end
 
 function Gui.mes_visible(text, x, y, color)
+   local Map = require("api.Map")
    if Map.is_in_fov(x, y) then
       Gui.mes(text, color)
    end

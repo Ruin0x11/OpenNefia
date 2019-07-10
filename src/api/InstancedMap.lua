@@ -97,6 +97,7 @@ end
 function InstancedMap:init_map_data()
    self.turn_cost = 1000
    self.is_outdoors = true
+   self.is_temporary = false
 end
 
 function InstancedMap:width()

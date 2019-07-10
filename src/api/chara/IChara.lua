@@ -8,6 +8,7 @@ local Map = require("api.Map")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
+local IObject = require("api.IObject")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
@@ -93,6 +94,11 @@ function IChara:normal_build()
 
    self:mod_base_with(class_data, "add")
    self:mod_base_with(race_data, "add")
+end
+
+function IChara:instantiate()
+   IObject.instantiate(self)
+   Event.trigger("base.on_chara_instantiated", {chara=self})
 end
 
 --- Finishes initializing this character. All characters must run this

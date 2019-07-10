@@ -82,8 +82,23 @@ function multi_pool:has_object(uid_or_obj)
    return self.refs[uid] ~= nil
 end
 
+local function iter(state, index)
+   if index > #state.uids then
+      return nil
+   end
+
+   local data = state.refs[state.uids[index]]
+   index = index + 1
+   return index, data
+end
+
 function multi_pool:iter()
-   return fun.iter(self.refs)
+   -- luafun will try to iterate self.refs as an array if #self.refs >
+   -- 0 (e.g. UID 1 exists), but it's always meant to be a map, so
+   -- wrap it manually.
+   local ordering = table.keys(self.refs)
+   table.sort(ordering)
+   return fun.wrap(iter, {uids=ordering, refs=self.refs}, 1)
 end
 
 function multi_pool:iter_type(_type)

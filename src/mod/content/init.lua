@@ -34,6 +34,11 @@ data:add {
    }
 }
 
+local function move_indicate(self, params)
+   local Gui = require("api.Gui")
+   Gui.mes("I'm move " .. tostring(self.x) .. " " .. tostring(self.y))
+end
+
 -- TODO: This must fail, since prototypes should only be modifiable in
 -- transactions to support hotloading.
 data["base.chara"]["content.player"].max_hp = 50
@@ -50,7 +55,11 @@ data:add {
    max_hp = 100,
    max_mp = 20,
 
-   talk = "content.test"
+   talk = "content.test",
+
+   on_instantiate = function(chara)
+      chara:connect_self("base.on_chara_moved", "chara move indicate2", move_indicate)
+   end
 }
 
 data:add {

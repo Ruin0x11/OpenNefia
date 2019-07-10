@@ -16,7 +16,6 @@ local Action = {}
 
 function Action.move(chara, x, y)
    local params = {
-      chara = chara,
       prev_x = chara.x,
       prev_y = chara.y,
       x = x,
@@ -28,7 +27,7 @@ function Action.move(chara, x, y)
    -- solid feats (doors, jail cell)
    -- proc currently standing mef
    -- proc world map weather events
-   local result = Event.trigger("base.before_chara_moved", params, {blocked=false})
+   local result = chara:emit("base.before_chara_moved", params, {blocked=false})
    if result.blocked then
       return false
    end
@@ -41,7 +40,7 @@ function Action.move(chara, x, y)
 
    chara:set_pos(x, y)
 
-   Event.trigger("base.on_chara_moved", params)
+   chara:emit("base.on_chara_moved", params)
    -- EVENT: on_character_movement
    -- mount update
    -- proc trap

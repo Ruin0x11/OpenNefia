@@ -74,7 +74,7 @@ function Object.generate_from(_type, id)
 
    class.assert_is_an(IObject, data)
 
-   data:build()
+   data:finalize()
 
    return data
 end
@@ -95,7 +95,7 @@ end
 function Object.mock_interface(mt)
    local tbl = mock(mt)
    local obj = setmetatable(tbl, mt)
-   obj:build()
+   obj:finalize()
 
    class.assert_is_an(IObject, obj)
 
@@ -109,7 +109,7 @@ function Object.mock(mt, tbl)
    tbl._id = tbl._id or "none"
 
    local obj = setmetatable(tbl, mt)
-   obj:build()
+   obj:finalize()
 
    class.assert_is_an(IObject, obj)
 

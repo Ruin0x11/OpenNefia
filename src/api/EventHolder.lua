@@ -8,8 +8,14 @@ function EventHolder:init()
 end
 
 function EventHolder:clear()
-   self.hooks = {}
-   self.observers = {}
+   self:init()
+end
+
+function EventHolder:serialize()
+end
+
+function EventHolder:deserialize()
+   self:init()
 end
 
 function EventHolder:register(event_id, name, cb, opts)

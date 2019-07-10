@@ -1,11 +1,13 @@
+local Event = require("api.Event")
+
 -- An object instance backed by a data prototype.
 local IObject = class.interface("IObject",
                           {
                              _id = "string",
                              _type = "string",
-                             build = "function",
                              pre_build = "function",
                              normal_build = "function",
+                             build = "function",
                              refresh = "function",
                              temp = "table"
                           }
@@ -17,6 +19,16 @@ end
 
 function IObject:on_refresh()
    self.temp = {}
+end
+
+function IObject:finalize()
+   self:build()
+   self:instantiate()
+end
+
+function IObject:instantiate()
+   self:calc("on_instantiate")
+   Event.trigger("base.on_object_instantiated", {object=self})
 end
 
 --- Obtains a property or calls a function to compute something. Using

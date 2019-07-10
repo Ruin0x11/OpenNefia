@@ -145,13 +145,18 @@ function Command.wear(player)
    return EquipmentMenu:new(player):query()
 end
 
-local function get_feats(player, field)
+local function feats_surrounding(player, field)
    local Feat = require("api.Feat")
    return Pos.iter_surrounding(player.x, player.y):flatmap(Feat.at):filter(function(f) return f:calc(field) end)
 end
 
+local function feats_under(player, field)
+   local Feat = require("api.Feat")
+   return Feat.at(player.x, player.y):filter(function(f) return f:calc(field) end)
+end
+
 function Command.close(player)
-   for _, f in get_feats(player, "can_close") do
+   for _, f in feats_surrounding(player, "can_close") do
       if Chara.at(f.x, f.y) then
          Gui.mes("Someone is in the way.")
       else
@@ -162,15 +167,14 @@ function Command.close(player)
 end
 
 function Command.open(player)
-   for _, f in get_feats(player, "can_open") do
+   for _, f in feats_surrounding(player, "can_open") do
       Gui.mes(player.name .. " opens the " .. f.uid .. " ")
       f:calc("on_open", player)
    end
 end
 
 function Command.activate(player)
-   local Feat = require("api.Feat")
-   for _, f in Feat.at(player.x, player.y):filter(function(f) return f:calc("can_activate") end) do
+   for _, f in feats_under(player, "can_activate") do
       Gui.mes(player.name .. " activates the " .. f.uid .. " ")
       f:calc("on_activate", player)
    end
@@ -207,10 +211,30 @@ function Command.load_game()
    Map.set_map(map)
    Chara.set_player(player_uid)
 
+   -- BUG: events registered with Event.register since the game has
+   -- started will be left over when a save is reloaded.
+   --
+   -- TODO: should it be an error to register events outside
+   -- on_game_initialize? then on_game_initialize becomes
+   -- special-cased to avoid clearing it when a save is loaded. it
+   -- might be better to restrict calling of Event.register to the mod
+   -- startup stage.
+   --
+   -- an interface for creating global events that are cleaned up when
+   -- a save is loaded could be used. or maybe that could become the
+   -- main interface of Event anyway. a flag could be set if a global
+   -- event is temporary, and it could be forced to true if mods
+   -- aren't loading.
+   --
+   -- local global_events = require("internal.global.global_events")
+   -- global_events:clear()
+
    Gui.mes_clear()
    Gui.mes("Game loaded.")
 
-   return "player_turn_query"
+   Event.trigger("base.on_game_initialize")
+
+   return "turn_begin"
 end
 
 return Command

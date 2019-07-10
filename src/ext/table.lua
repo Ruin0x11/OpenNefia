@@ -308,6 +308,17 @@ function table.keys(tbl)
    return arr
 end
 
+-- Returns the values of a dictionary-like table.
+-- @tparam table tbl
+-- @treturn array
+function table.values(tbl)
+   local arr = {}
+   for _, v in pairs(tbl) do
+      arr[#arr+1] = v
+   end
+   return arr
+end
+
 --- Removes the specified indices from an array-like table. The
 --- indices must be an array of integers with no duplicates sorted in
 --- ascending order.

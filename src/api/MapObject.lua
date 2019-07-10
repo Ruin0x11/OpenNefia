@@ -22,7 +22,7 @@ function MapObject.generate_from(_type, id, params, uid_tracker)
 
    if not params.no_build then
       data:normal_build()
-      data:build()
+      data:finalize()
    end
 
    return data
@@ -46,7 +46,7 @@ function MapObject.generate(data, params, uid_tracker)
 
    if not params.no_build then
       data:normal_build()
-      data:build()
+      data:finalize()
    end
 
    return data

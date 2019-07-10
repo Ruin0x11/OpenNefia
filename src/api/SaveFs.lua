@@ -1,5 +1,6 @@
 local binser = require("thirdparty.binser")
 local fs = require("internal.fs")
+local Log = require("api.Log")
 
 local SaveFile = class.class("SaveFile")
 
@@ -42,6 +43,7 @@ function SaveFs.write(path, obj)
    if dirs then
       fs.create_directory(dirs)
    end
+   Log.info("Writing data to %s", path)
    return fs.write(path, str)
 end
 
@@ -49,6 +51,7 @@ function SaveFs.read(path)
    if not fs.exists(path) then
       return false, "file does not exist"
    end
+   Log.info("Reading data from %s", path)
    local content, err = fs.read(path)
    if not content then
       return false, err

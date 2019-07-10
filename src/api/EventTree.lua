@@ -9,6 +9,13 @@ function EventTree:init()
    self.name_to_ind = {}
 end
 
+function EventTree:serialize()
+end
+
+function EventTree:deserialize()
+   self:init()
+end
+
 function EventTree:count()
    return #self.cbs
 end

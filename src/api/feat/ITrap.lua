@@ -1,9 +1,7 @@
 local IFeat = require("api.feat.IFeat")
 local IFactioned = require("api.IFactioned")
 
--- TODO: need an "acts_as" field to be able to use as "base.feat". But
--- also the original type should be accessible.
-local ITrap = class.interface("ITrap", {}, IFactioned)
+local ITrap = class.interface("ITrap", {}, {IFeat, IFactioned})
 
 function ITrap:build()
    IFeat.build(self)

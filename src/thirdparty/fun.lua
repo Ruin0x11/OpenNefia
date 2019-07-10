@@ -1091,4 +1091,10 @@ end
 methods.each_with_self = method2(each_with_self)
 exports.each_with_self = export2(each_with_self)
 
+local select_retval = function(n, gen, param, state)
+   return fun.map(function(...) return select(n, ...) end, gen, param, state)
+end
+methods.select_retval = method1(select_retval)
+exports.select_retval = export1(select_retval)
+
 return exports

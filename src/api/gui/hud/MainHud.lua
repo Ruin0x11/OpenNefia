@@ -87,7 +87,7 @@ function MainHud:refresh(player)
    -- HACK there is a better way of doing this. It almost certainly
    -- has to do with the event system.
 
-   self.stats = {}
+   self.stats = { dv = -1, pv = -1 }
 
    if player ~= nil then
       self.stats["dv"] = player:calc("dv")

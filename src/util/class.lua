@@ -156,6 +156,7 @@ local function delegate(c, field, params)
          end
       end
 
+      -- BUG: doesn't respect hotloading
       c.__delegates[v] = field
    end
 end
