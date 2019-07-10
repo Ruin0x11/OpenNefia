@@ -22,4 +22,13 @@ local ILocation = class.interface("ILocation",
 -- @treturn[1] IMapObject obj
 -- @treturn[2] nil
 
+function ILocation:serialize()
+end
+
+function ILocation:deserialize()
+   for _, v in self:iter() do
+      v.location = self
+   end
+end
+
 return ILocation

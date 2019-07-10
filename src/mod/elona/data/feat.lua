@@ -61,7 +61,7 @@ data:add {
    end
 }
 
-local function gen_stair(id, down)
+local function gen_stair(down)
    local field = (down and "on_descend") or "on_ascend"
    local id = (down and "stairs_down") or "stairs_up"
    local elona_id = (down and 11) or 10

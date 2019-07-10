@@ -2,6 +2,8 @@ local field = require("game.field")
 local data = require("internal.data")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
+local Fs = require("api.Fs")
+local Save = require("api.Save")
 
 -- Concerns anything that has to do with map querying/manipulation.
 -- @module Map
@@ -10,6 +12,22 @@ local Map = {}
 function Map.set_map(map)
    field:set_map(map)
    return field.map
+end
+
+function Map.save(map)
+   class.assert_is_an(InstancedMap, map)
+   local path = Fs.join("map", tostring(map.uid))
+   return Save.write(path, map)
+end
+
+function Map.load(uid)
+   if type(uid) == "table" then
+      uid = uid.uid
+   end
+   assert(type(uid) == "number")
+
+   local path = Fs.join("map", tostring(uid))
+   return Save.read(path)
 end
 
 function Map.is_world_map(map)
@@ -182,7 +200,7 @@ function Map.travel_to(map)
       x = map.player_start_pos.x or x
       y = map.player_start_pos.y or y
    elseif type(map.player_start_pos) == "function" then
-      x, y = map.player_start_pos(field.player)
+      x, y = map.player_start_pos(Chara.player())
    end
 
    -- take the player, allies and any items they carry.
@@ -190,14 +208,14 @@ function Map.travel_to(map)
    -- TODO: map objects should be transferrable (moves maps with the
    -- player) and persistable (remains in the map even after it is
    -- deleted and the map is exited).
-   local player = field.player
+   local player = Chara.player()
    local allies = field.allies
    -- TODO: items
 
    -- Transfer each to the new map.
 
-   field.player = try_place(field.player, x, y, current, map)
-   assert(field.player ~= nil)
+   local success = try_place(player, x, y, current, map)
+   assert(success)
 
    for _, uid in ipairs(allies) do
       -- TODO: try to find a place to put the ally. If they can't fit,

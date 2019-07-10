@@ -31,12 +31,17 @@ function string.strip_suffix(s, suffix)
    return string.gsub(s, escape_for_gsub(suffix) .. "$", "")
 end
 
-function string.split(str, sep)
-   sep = sep or ","
-   local fields = {}
-   local pattern = string.format("([^%s]+)", sep)
-   string.gsub(str, pattern, function(c) fields[#fields+1] = c end)
-   return fields
+function string.split(str,sep)
+   sep = sep or "\n"
+   local ret={}
+   local n=1
+   for w in str:gmatch("([^"..sep.."]*)") do
+      ret[n] = ret[n] or w
+      if w=="" then
+         n = n + 1
+      end
+   end
+   return ret
 end
 
 function string.split_at_pos(str, pos)

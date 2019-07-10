@@ -260,17 +260,17 @@ local function newbinser()
             return true
         end
         local mt = getmetatable(x)
-        local id = mt and ids[mt]
+        local id = mt and (ids[mt] or (mt.__id and ids[mt.__id]))
         if id then
             local constructing = visited[CTORSTACK]
             if constructing[x] then
-                error("Infinite loop in constructor.")
+                -- error("Infinite loop in constructor.")
+               return false
             end
             constructing[x] = true
             accum[#accum + 1] = "\209"
             types[type(id)](id, visited, accum)
-            local serializer = serializers[id] or mts[id]["_serialize"]
-            local args, len = pack(serializer(x))
+            local args, len = pack(serializers[id](x))
             accum[#accum + 1] = number_to_str(len)
             for i = 1, len do
                 local arg = args[i]
@@ -285,13 +285,14 @@ local function newbinser()
     end
 
     function types.userdata(x, visited, accum)
-        if visited[x] then
-            accum[#accum + 1] = "\208"
-            accum[#accum + 1] = number_to_str(visited[x])
-        else
-            if check_custom_type(x, visited, accum) then return end
-            error("Cannot serialize this userdata.")
-        end
+        -- if visited[x] then
+        --     accum[#accum + 1] = "\208"
+        --     accum[#accum + 1] = number_to_str(visited[x])
+        -- else
+        --     if check_custom_type(x, visited, accum) then return end
+        --     error("Cannot serialize this userdata.")
+        -- end
+        accum[#accum + 1] = "\202"
     end
 
     function types.table(x, visited, accum)
@@ -332,28 +333,30 @@ local function newbinser()
     end
 
     types["function"] = function(x, visited, accum)
-        if visited[x] then
-            accum[#accum + 1] = "\208"
-            accum[#accum + 1] = number_to_str(visited[x])
-        else
-            if check_custom_type(x, visited, accum) then return end
-            visited[x] = visited[NEXT]
-            visited[NEXT] =  visited[NEXT] + 1
-            local str = dump(x)
-            accum[#accum + 1] = "\210"
-            accum[#accum + 1] = number_to_str(#str)
-            accum[#accum + 1] = str
-        end
+        -- if visited[x] then
+        --     accum[#accum + 1] = "\208"
+        --     accum[#accum + 1] = number_to_str(visited[x])
+        -- else
+        --     if check_custom_type(x, visited, accum) then return end
+        --     visited[x] = visited[NEXT]
+        --     visited[NEXT] =  visited[NEXT] + 1
+        --     local str = dump(x)
+        --     accum[#accum + 1] = "\210"
+        --     accum[#accum + 1] = number_to_str(#str)
+        --     accum[#accum + 1] = str
+        -- end
+        accum[#accum + 1] = "\202"
     end
 
     types.cdata = function(x, visited, accum)
-        if visited[x] then
-            accum[#accum + 1] = "\208"
-            accum[#accum + 1] = number_to_str(visited[x])
-        else
-            if check_custom_type(x, visited, #accum) then return end
-            error("Cannot serialize this cdata.")
-        end
+        -- if visited[x] then
+        --     accum[#accum + 1] = "\208"
+        --     accum[#accum + 1] = number_to_str(visited[x])
+        -- else
+        --     if check_custom_type(x, visited, #accum) then return end
+        --     error("Cannot serialize this cdata.")
+        -- end
+        accum[#accum + 1] = "\202"
     end
 
     types.thread = function() error("Cannot serialize threads.") end
@@ -425,11 +428,10 @@ local function newbinser()
                 args[i], nextindex = deserialize_value(str, nextindex, visited)
                 if nextindex == oldindex then error("Expected more bytes of input.") end
             end
-            local deserializer = deserializers[name] or mts[name]["_deserialize"]
-            if not name or not deserializer then
+            if not name or not deserializers[name] then
                 error(("Cannot deserialize class '%s'"):format(tostring(name)))
             end
-            local ret = deserializer(unpack(args))
+            local ret = deserializers[name](unpack(args))
             visited[#visited + 1] = ret
             return ret, nextindex
         elseif t == 210 then
@@ -570,7 +572,7 @@ local function newbinser()
     end
 
     local function hasResource(name)
-        return resources_by_name[name] ~= nil
+       return resources_by_name[name] ~= nil or mts[name] ~= nil
     end
 
     -- Templating
@@ -665,10 +667,13 @@ local function newbinser()
     -- If no _serialize or _deserialize (or no _template) value is found in the
     -- metatable, then the metatable is registered as a resources.
     local function register(metatable, name, serialize, deserialize)
+        local id = metatable
         if type(metatable) == "table" then
+            id = metatable.__id or id
             name = name or metatable.name
             serialize = serialize or metatable._serialize
             deserialize = deserialize or metatable._deserialize
+            print("reg" .. tostring(name) .. " " .. tostring(deserialize).." "..tostring(serialize))
             if (not serialize) or (not deserialize) then
                 if metatable._template then
                     -- Register as template
@@ -687,15 +692,19 @@ local function newbinser()
         type_check(name, "string", "name")
         type_check(serialize, "function", "serialize")
         type_check(deserialize, "function", "deserialize")
-        assert((not ids[metatable]) and (not resources[metatable]),
+        assert((not ids[id]) and (not resources[metatable]),
             "Metatable already registered.")
         assert((not mts[name]) and (not resources_by_name[name]),
             ("Name %q already registered."):format(name))
         mts[name] = metatable
-        ids[metatable] = name
+        ids[id] = name
         serializers[name] = serialize
         deserializers[name] = deserialize
         return metatable
+    end
+
+    local function hasRegistry(id)
+        return ids[id] ~= nil
     end
 
     local function unregister(item)
@@ -748,6 +757,7 @@ local function newbinser()
         registerResource = registerResource,
         unregisterResource = unregisterResource,
         hasResource = hasResource,
+        hasRegistry = hasRegistry,
         registerClass = registerClass,
 
         newbinser = newbinser

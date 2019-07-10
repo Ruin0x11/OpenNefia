@@ -28,4 +28,8 @@ function Env.set_clipboard_text(text)
    return love.system.setClipboardText(text)
 end
 
+function Env.real_time(format, time)
+   return os.date(format, time)
+end
+
 return Env

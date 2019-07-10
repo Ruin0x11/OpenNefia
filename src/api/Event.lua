@@ -81,11 +81,7 @@ function Event.define_hook(id, desc, default, field, cb)
    local access_field = type(field) == "string"
 
    if cb == nil then
-      if access_field then
-         cb = function() return {} end
-      else
-         cb = function() return default end
-      end
+      cb = function(_, _, result) return result end
    end
 
    local dat = data:add {
@@ -117,6 +113,10 @@ function Event.define_hook(id, desc, default, field, cb)
 
    local func = function(params, _default)
       _default = _default or default
+      if _default == nil then
+         error("Default value must be provided.")
+      end
+
       local success, result = pcall(function() return Event.trigger(full_id, params, _default) end)
       if not success then
          Log.error("Error running hook: %s", result)

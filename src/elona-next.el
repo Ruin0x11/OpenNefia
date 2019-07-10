@@ -20,11 +20,13 @@
                         :coding 'utf-8))
 
 (defun elona-next--send (str)
-  (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
-    (comint-send-string proc str)
-    (process-send-eof proc)
-    (with-current-buffer (process-buffer proc)
-      (buffer-string))))
+  (if (buffer-live-p lua-process-buffer)
+      (lua-send-string str)
+    (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
+      (comint-send-string proc str)
+      (process-send-eof proc)
+      (with-current-buffer (process-buffer proc)
+        (buffer-string)))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
@@ -67,9 +69,12 @@
           (file-relative-name
            (file-name-sans-extension (buffer-file-name))
            (concat (getenv "HOME") "/build/next/src/src")))
-         (lua-path (replace-regexp-in-string "/" "." prefix)))
+         (lua-path (replace-regexp-in-string "/" "." prefix))
+         (cmd (if (buffer-live-p lua-process-buffer)
+                  "h('%s')"
+                "require('internal.env').hotload('%s')")))
     (save-buffer)
-    (elona-next--send (format "require('internal.env').hotload('%s')" lua-path))
+    (elona-next--send (format cmd lua-path))
     (message "Hotloaded %s." lua-path)))
 
 (defun elona-next-eval-sexp-fu-setup ()

@@ -64,6 +64,10 @@ function Gui.mes(text, color)
       color = Color[color] or {255, 255, 255}
    end
    get_message_window():message(text, color)
+
+   if _DEBUG then
+      print("<mes> " .. text)
+   end
 end
 
 function Gui.mes_visible(text, x, y, color)

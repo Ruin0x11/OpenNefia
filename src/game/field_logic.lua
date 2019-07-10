@@ -104,6 +104,12 @@ function field_logic.setup()
          Gui.mes(require("api.gui.TextPrompt"):new(16):query())
          return "player_turn_query"
       end,
+      f2 = function()
+         return Command.save_game()
+      end,
+      f3 = function()
+         return Command.load_game()
+      end
    }
 
    Event.trigger("base.on_game_start")
@@ -390,12 +396,12 @@ function field_logic.query()
       end
 
       local success
-      success, event, target_chara = pcall(function() return cb(target_chara) end)
+      success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
 
       if not success then
          local err = event
-         Gui.mes(string.format("Error in turn sequence: %s", err), "Red")
-         Log.error("Error in turn sequence: %s", err)
+         Gui.mes(string.format("Error in turn sequence: %s", string.split(err)[1]), "Red")
+         Log.error("Error in turn sequence:\n\t%s", err)
          event = "player_turn_query"
          target_chara = nil
       end

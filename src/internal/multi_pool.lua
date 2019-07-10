@@ -74,8 +74,12 @@ function multi_pool:get_object(uid)
    return self.refs[uid]
 end
 
-function multi_pool:has_object(obj)
-   return self.refs[obj.uid] ~= nil
+function multi_pool:has_object(uid_or_obj)
+   local uid = uid_or_obj
+   if type(uid_or_obj) == "table" then
+      uid = uid_or_obj.uid
+   end
+   return self.refs[uid] ~= nil
 end
 
 function multi_pool:iter()
@@ -92,6 +96,7 @@ end
 
 function multi_pool:get_object_of_type(_type, uid)
    local obj = self.refs[uid]
+   assert(obj ~= nil, uid)
    assert(obj._type == _type)
    return obj
 end

@@ -1,11 +1,16 @@
 local fs = {}
 
+local dir_sep = package.config:sub(1,1)
+local is_windows = dir_sep == "\\"
+
 if love.getVersion() == "lovemock" then
    local lfs = require("lfs")
    fs.get_directory_items = function(dir)
       local items = {}
       for path in lfs.dir(dir) do
-         items[#items+1] = path
+         if path ~= "." and path ~= ".." then
+            items[#items+1] = path
+         end
       end
       return items
    end
@@ -17,13 +22,40 @@ if love.getVersion() == "lovemock" then
          type = attrs.mode
       }
    end
+   fs.get_save_directory = function()
+      return "/tmp/save"
+   end
+   fs.create_directory = function(name)
+      name = fs.join(fs.get_save_directory(), name)
+      local path = string.split(name, dir_sep)[1] .. dir_sep
+      for dir in string.gmatch(name, "[^\"" .. dir_sep .. "\"]+") do
+         path = path .. dir .. dir_sep
+         lfs.mkdir(path)
+      end
+      return path
+   end
+   fs.read = function(name, size)
+      name = fs.join(fs.get_save_directory(), name)
+      local f = io.open(name, "r")
+      local data = f:read(size or "*all")
+      f:close()
+      return data, nil
+   end
+   fs.write = function(name, data, size)
+      name = fs.join(fs.get_save_directory(), name)
+      local f = io.open(name, "w")
+      f:write(data)
+      f:close()
+      return true, nil
+   end
 else
    fs.get_directory_items = love.filesystem.getDirectoryItems
    fs.get_info = love.filesystem.getInfo
+   fs.get_save_directory = love.filesystem.getSaveDirectory
+   fs.create_directory = love.filesystem.createDirectory
+   fs.write = love.filesystem.write
+   fs.read = love.filesystem.read
 end
-
-local dir_sep = package.config:sub(1,1)
-local is_windows = dir_sep == "\\"
 
 function fs.iter_directory_items(dir)
    return ipairs(fs.get_directory_items(dir))

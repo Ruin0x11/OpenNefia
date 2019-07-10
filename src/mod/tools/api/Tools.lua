@@ -170,6 +170,10 @@ function Tools.data_keys(_type)
    return data[_type]:iter():extract("_id")
 end
 
+function Tools.by_uid(uid)
+   return Map.current():get_object(uid)
+end
+
 local print_flat = require("mod.tools.lib.print_flat")
 Tools.print_flat = print_flat.print_flat
 

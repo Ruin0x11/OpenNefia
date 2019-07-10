@@ -31,16 +31,24 @@ function Chara.at(x, y, map)
 end
 
 function Chara.is_player(c)
-   return type(c) == "table" and field.player.uid == c.uid
+   return type(c) == "table" and field.player == c.uid
 end
 
 function Chara.player()
-   return field.player
+   return Map.current():get_object(field.player)
 end
 
-function Chara.set_player(c)
-   assert(type(c) == "table")
-   field.player = c
+function Chara.set_player(uid_or_chara)
+   local uid = uid_or_chara
+   if type(uid_or_chara) == "table" then
+      uid = uid_or_chara.uid
+   end
+
+   assert(type(uid) == "number")
+   assert(Map.current():has_object(uid))
+   field.player = uid
+
+   local c = Chara.player()
 
    c.faction = "base.friendly"
 

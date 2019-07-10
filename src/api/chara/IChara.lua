@@ -192,7 +192,7 @@ function IChara:set_pos(x, y)
 end
 
 function IChara:is_player()
-   return field.player.uid == self.uid
+   return field.player == self.uid
 end
 
 function IChara:is_ally()

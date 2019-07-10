@@ -16,6 +16,7 @@ local fps = require("internal.fps"):new()
 fps.show_fps = true
 
 function love.load(arg)
+   love.filesystem.setIdentity("Elona_next")
    internal.draw.init()
    Draw.set_font(12)
 

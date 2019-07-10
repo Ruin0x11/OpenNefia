@@ -1,6 +1,7 @@
 local Action = require("api.Action")
 local Gui = require("api.Gui")
 local Ai = require("api.Ai")
+local Save = require("api.Save")
 local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -9,6 +10,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 
+local save_store = require("internal.save_store")
 local field = require("game.field")
 
 --- Game logic intended for the player only.
@@ -25,13 +27,18 @@ local travel_to_map = Event.define_hook("travel_to_map",
                                            return table.unpack(default)
 end)
 
+local player_move = Event.define_hook("player_move",
+                                      "Hook when the player moves.",
+                                      nil,
+                                      "pos")
+
 function Command.move(player, x, y)
    if type(x) == "string" then
       x, y = Pos.add_direction(x, player.x, player.y)
    end
-   local next_pos = { x = x, y = y }
 
    -- Try to modify the final position.
+   local next_pos = player_move({chara=player}, {pos={x=x,y=y}})
 
    -- EVENT: before_player_move_check (player)
    -- dimmed
@@ -94,7 +101,6 @@ function Command.move(player, x, y)
 
       Action.move(player, next_pos.x, next_pos.y)
       Gui.set_scroll()
-      return "turn_end"
    end
 
    -- proc confusion text
@@ -170,6 +176,43 @@ function Command.activate(player)
       Gui.mes(player.name .. " activates the " .. f.uid .. " ")
       f:calc("on_activate", player)
    end
+end
+
+function Command.save_game()
+   local map = Map.current()
+   assert(Map.save(map))
+
+   do
+      local global = save_store.for_mod("base")
+      global.map = map.uid
+      global.player = field.player
+   end
+
+   assert(save_store.save())
+
+   Gui.mes("Game saved.")
+   return "player_turn_query"
+end
+
+function Command.load_game()
+   local success, map
+
+   assert(save_store.load())
+
+   local base = save_store.for_mod("base")
+   local map_uid = base.map
+   local player_uid = base.player
+
+   success, map = Map.load(map_uid)
+   assert(success)
+
+   Map.set_map(map)
+   Chara.set_player(player_uid)
+
+   Gui.mes_clear()
+   Gui.mes("Game loaded.")
+
+   return "player_turn_query"
 end
 
 return Command

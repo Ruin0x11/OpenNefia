@@ -1,12 +1,20 @@
 local uid_tracker = require("internal.uid_tracker")
 local ILocation = require("api.ILocation")
 local MapObject = require("api.MapObject")
+local binser = require("thirdparty.binser")
 
 -- Low-level storage for map objects of the same types. Pretty much
 -- anything that needs to store map objects uses this internally.
 local pool = class.class("pool", ILocation)
 
+-- serialization ID for binser
+pool.__id = "pool"
+
 function pool:init(type_id, tracker, width, height)
+   tracker = tracker or uid_tracker:new()
+   width = width or 1
+   height = height or 1
+
    class.assert_is_an(uid_tracker, tracker)
 
    self.type_id = type_id
@@ -16,7 +24,7 @@ function pool:init(type_id, tracker, width, height)
    self.width = width
    self.height = height
 
-   self.positional = table.of(function() return {} end, width * height)
+   self.positional = table.of(function() return {} end, self.width * self.height)
 end
 
 function pool:get_object(uid)
@@ -135,7 +143,6 @@ local function iter(state, index)
 
    local data = state.content[state.uids[index]].data
    index = index + 1
-
    return index, data
 end
 

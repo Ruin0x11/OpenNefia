@@ -75,6 +75,7 @@ function MapObject.clone(obj, owned)
    -- Generate a new object using the stripped object as a prototype.
    local new_object = MapObject.generate(proto)
 
+   -- TODO: move
    local IMapObject = require("api.IMapObject")
    if owned and class.is_an(IMapObject, obj) then
       -- HACK: This makes cloning characters harder, since the

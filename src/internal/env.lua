@@ -356,6 +356,28 @@ env.safe_require = gen_require(safe_load_chunk)
 -- @function env.require
 env.require = gen_require(env_loadfile_or_safe_load)
 
+--- Reloads a path or a class required from a path that has been
+--- required already by updating its table in-place. If either the
+--- result of `require` or the existing item in package.loaded are not
+--- tables, the existing item is overwritten instead.
+-- @tparam string|table path
+-- @tparam bool also_deps If true, also hotload any nested
+-- dependencies loaded with `require` that any hotloaded chunk tries
+-- to load.
+-- @treturn table
+function env.hotload(path_or_class, also_deps)
+   if type(path_or_class) == "table" then
+      local path = env.get_require_path(path_or_class)
+      if path == nil then
+         error("Unknown require path for " .. tostring(path_or_class))
+      end
+
+      path_or_class = path
+   end
+
+   return env.hotload_path(path_or_class, also_deps)
+end
+
 --- Reloads a path that has been required already by updating its
 --- table in-place. If either the result of `require` or the existing
 --- item in package.loaded are not tables, the existing item is
@@ -365,7 +387,7 @@ env.require = gen_require(env_loadfile_or_safe_load)
 -- dependencies loaded with `require` that any hotloaded chunk tries
 -- to load.
 -- @treturn table
-function env.hotload(path, also_deps)
+function env.hotload_path(path, also_deps)
    -- The require path can come from an editor that preserves an
    -- "init.lua" at the end. We still need to strip "init.lua" from
    -- the end if that's the case, in order to make the paths
@@ -481,6 +503,29 @@ end
 
 function env.is_loaded(path)
    return package.loaded[path] ~= nil
+end
+
+function env.require_all_apis(dir, recurse)
+   local fs = require("internal.fs")
+
+   dir = dir or "api"
+
+   local api_env = {}
+
+   for _, api in fs.iter_directory_items(dir .. "/") do
+      local path = fs.join(dir, api)
+      if fs.is_file(path) then
+         local name = fs.filename_part(path)
+         if api_env[name] then
+            Log.warn("Duplicate API required in environment: %s", name)
+         end
+         api_env[name] = env.require(path)
+      elseif fs.is_directory(path) and recurse then
+         table.merge(api_env, env.require_all_apis(path))
+      end
+   end
+
+   return api_env
 end
 
 return env

@@ -41,47 +41,36 @@ function field_layer:init()
    }
 end
 
-local function require_all_apis(dir)
-   dir = dir or "api"
-
-   local api_env = {}
-
-   for _, api in fs.iter_directory_items(dir .. "/") do
-      local path = fs.join(dir, api)
-      if fs.is_file(path) then
-         local name = fs.filename_part(path)
-         if api_env[name] then
-            Log.warn("Duplicate API required in environment: %s", name)
-         end
-         api_env[name] = env.require(path)
-      elseif fs.is_directory(path) then
-         table.merge(api_env, require_all_apis(path))
-      end
-   end
-
-   return api_env
-end
-
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
    -- this auto-requires the full public API.
    local ReplLayer = require("api.gui.menu.ReplLayer")
 
    local repl_env = env.generate_sandbox("repl")
-   local apis = require_all_apis()
+   local apis = env.require_all_apis("api", true)
    repl_env = table.merge(repl_env, apis)
 
    -- WARNING: for development only.
    if _DEBUG then
       repl_env = table.merge(repl_env, _G)
+      repl_env = table.merge(repl_env, env.require_all_apis("internal"))
+      repl_env = table.merge(repl_env, env.require_all_apis("game"))
    end
 
+   -- HACK: remove
    local history = {}
    local file = io.open("repl_history.txt", "r")
    if file ~= nil then
       for line in file:lines() do
          history[#history + 1] = line
       end
+   end
+
+   if fs.exists("repl_startup.lua") then
+      local chunk = loadfile("repl_startup.lua")
+      setfenv(chunk, repl_env)
+      chunk()
+      print("OK")
    end
 
    self.repl = ReplLayer:new(repl_env, history)
@@ -105,6 +94,7 @@ function field_layer:set_map(map)
    end
 
    self.map = map
+   self.map.tiles_dirty = true
    self.renderer = field_renderer:new(map.width, map.height, self.layers)
    self.map_changed = true
    self.no_scroll = true
@@ -137,7 +127,7 @@ function field_layer:update_screen(scroll)
 
    assert(self.map ~= nil)
 
-   local player = self.player
+   local player = self.map:get_object(self.player)
    if player then
       self.renderer:update_draw_pos(player.x, player.y, scroll)
       self.map:calc_screen_sight(player.x, player.y, player.fov or 15)
@@ -161,7 +151,8 @@ function field_layer:update_hud()
    -- HACK due to global data
    self.hud.clock:set_data(self.data.date)
 
-   self.hud:refresh(self.player)
+   local player = self.map:get_object(self.player)
+   self.hud:refresh(player)
    self.hud:update()
 end
 

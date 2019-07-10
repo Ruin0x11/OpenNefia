@@ -1,15 +1,45 @@
 local env = require("internal.env")
 local data = require("internal.data")
+local binser = require("thirdparty.binser")
 
 local object = {}
 
+-- Modification of penlight's algorithm to ignore class fields
+local function cycle_aware_copy(t, cache)
+   if type(t) ~= 'table' then return t end
+   if cache[t] then return cache[t] end
+   local res = {}
+   cache[t] = res
+   local mt = getmetatable(t)
+   for k,v in pairs(t) do
+      -- TODO: standardize no-save fields
+      -- NOTE: preserves the UID for now.
+      if k ~= "location" then
+         k = cycle_aware_copy(k, cache)
+         v = cycle_aware_copy(v, cache)
+         res[k] = v
+      end
+   end
+   setmetatable(res,mt)
+   return res
+end
+
+-- ignores location field only, unlike Object.make_prototype
+function object.make_prototype(obj)
+   local _type = obj.proto._type
+   local _id = obj.proto._id
+
+   local copy = cycle_aware_copy(obj, {})
+   setmetatable(copy, nil)
+
+   -- for deserialization, removed afterward
+   copy._type = _type
+   copy._id = _id
+
+   return copy
+end
+
 function object.__index(t, k)
-   if k == "_serialize" then
-      return object.serialize
-   end
-   if k == "_deserialize" then
-      return object.deserialize
-   end
    if k == "_mt" then
       local mt = getmetatable(t)
       return env.get_require_path(mt.__iface)
@@ -34,12 +64,8 @@ function object.__index(t, k)
 end
 
 function object.serialize(self)
-   local ret = table.deepcopy(self)
-   ret._type = ret.proto._type
-   ret._id = ret.proto._id
+   local ret = object.make_prototype(self)
    assert(ret._id, "serialization currently assumes there is a prototype in data[] to load")
-   ret.proto = nil
-   setmetatable(ret, {})
    return ret
 end
 
@@ -58,7 +84,21 @@ function object.deserialize(self, _type, _id)
    end
    local iface = data[_type]:interface()
    assert(iface)
-   setmetatable(self, { __index = object.__index, __proto = proto, __iface = iface })
+
+   assert(self.location == nil)
+
+   setmetatable(self,
+                {
+                   __id = "object",
+                   __index = object.__index,
+                   __proto = proto,
+                   __iface = iface
+                })
+   return self
+end
+
+if not binser.hasRegistry("object") then
+   binser.register("object", "object", object.serialize, object.deserialize)
 end
 
 return object

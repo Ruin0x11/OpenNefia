@@ -92,7 +92,7 @@ function class.interface(name, reqs, parents)
 
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
 
-   if not binser.hasResource(name) then
+   if not binser.hasResource(name) and not binser.hasRegistry(name) then
       binser.registerClass(i)
    end
 
@@ -176,8 +176,9 @@ end
 
 function class.assert_is_an(interface, obj)
    if _classes[interface] then
-      if type(obj) ~= "table" or obj.__class ~= interface then
-         error(string.format("%s is not an instance of %s", obj, interface))
+      local klass = interface
+      if type(obj) ~= "table" or obj.__class ~= klass then
+         error(string.format("%s is not an instance of %s", obj, klass))
       end
       return
    end
@@ -323,8 +324,21 @@ function class.class(name, ifaces)
 
    c.delegate = delegate
 
+   c._serialize = function(self)
+      if self.serialize then
+         self:serialize()
+      end
+      return self
+   end
+
    c._deserialize = function(self)
       self.__memoized = {}
+      self.__class = c
+      setmetatable(self, c)
+      if self.deserialize then
+         self:deserialize()
+      end
+      return self
    end
 
    c.new = function(self, ...)
@@ -351,7 +365,7 @@ function class.class(name, ifaces)
       return instance
    end
 
-   if not binser.hasResource(name) then
+   if not binser.hasResource(name) and not binser.hasRegistry(name) then
       binser.registerClass(c)
    end
 

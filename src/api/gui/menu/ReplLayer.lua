@@ -12,6 +12,7 @@ local UiWindow = require("api.gui.UiWindow")
 local LuaReplMode = require("api.gui.menu.LuaReplMode")
 local UiList = require("api.gui.UiList")
 local TextHandler = require("api.gui.TextHandler")
+local ReplCompletion = require("api.gui.menu.ReplCompletion")
 
 local ReplLayer = class.class("ReplLayer", IUiLayer)
 
@@ -39,6 +40,10 @@ function ReplLayer:init(env, history)
    -- line editing support
    self.cursor_pos = 0
    self.cursor_x = 0
+
+   -- tab completion
+   self.completion_candidates = nil
+   self.selected_candidate = 1
 
    -- mode of operation. could implement Elona-style console if
    -- desired.
@@ -86,12 +91,23 @@ function ReplLayer:init(env, history)
       end,
       ["end"] = function()
          self:set_cursor_pos(#self.text)
+      end,
+      tab = function()
+         if not self.completion_candidates then
+            local cp = ReplCompletion:new()
+            self.completion_candidates = cp:complete(self.text, self.env)
+            self.selected_candidate = 1
+         else
+            self.selected_candidate =
+               (self.selected_candidate + 1) % #self.completion_candidates
+         end
       end
    }
    self.input:halt_input()
 end
 
 function ReplLayer:on_query()
+   self.completion_candidates = nil
    if self.scrollback:len() == 0 then
       self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
                                Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
@@ -117,11 +133,15 @@ function ReplLayer:set_text(text)
 end
 
 function ReplLayer:scrollback_up()
-   self.scrollback_index = math.clamp(self.scrollback_index + math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
+   self.scrollback_index = math.clamp(self.scrollback_index + math.floor(self.max_lines / 2),
+                                      0,
+                                      math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
 function ReplLayer:scrollback_down()
-   self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2), 0, math.max(self.scrollback:len() - self.max_lines, 0))
+   self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2),
+                                      0,
+                                      math.max(self.scrollback:len() - self.max_lines, 0))
 end
 
 function ReplLayer:clear()
@@ -218,6 +238,12 @@ function ReplLayer:execute(code)
 end
 
 function ReplLayer:submit()
+   -- if self.completion_candidates then
+   --    self:insert_text(self.completion_candidates[self.selected_candidate])
+   --    self.completion_candidates = nil
+   --    return
+   -- end
+
    local text = self.text
    self.text = ""
    self.scrollback_index = 0
@@ -287,24 +313,29 @@ end
 function ReplLayer:draw()
    Draw.set_font(self.font_size)
 
+   -- background
    local top = self.height - self.pulldown_y * Draw.text_height()
    Draw.filled_rect(self.x, self.y, self.width, top, self.color)
 
+   -- caret
    Draw.set_color(255, 255, 255)
    Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
 
+   -- blinking cursor
    if math.floor(self.frames * 2) % 2 == 0 then
       local x = self.x + 5 + Draw.text_width(self.mode.caret) + self.cursor_x + 1
       local y = self.y + top - Draw.text_height() - 5
       Draw.line(x, y, x, y + Draw.text_height() - 1)
    end
 
+   -- scrollback counter
    if self.scrollback_index > 0 then
       local scrollback_count = string.format("%d/%d",self.scrollback_index + self.max_lines, self.scrollback:len())
       Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + top - Draw.text_height() - 5)
    end
 
+   -- scrollback display
    for i=1,self.max_lines do
       local t = self.scrollback[self.scrollback_index + i]
       if t == nil then
