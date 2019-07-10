@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 local circular_buffer = require("thirdparty.circular_buffer")
+local save = require("internal.global.save")
 
 local UiMessageWindow = class.class("UiMessageWindow", IUiElement)
 
@@ -252,7 +253,7 @@ function UiMessageWindow:message(text, color)
       self.is_new_turn = false
       local add_timestamps = true
       if add_timestamps then
-         local minute = require("game.field").data.date.minute
+         local minute = save.date.minute
          text = string.format("[%d] %s", minute, text)
       else
          text = string.format("  %s", minute, text)

@@ -72,10 +72,6 @@ function tile_overhang_layer:update(dt, screen_updated)
       map.tiles_dirty = false
    end
 
-   -- TODO: maybe have this field accessable somewhere better?
-   local field = require("game.field")
-   local date = field.data.date
-
    self.tile_batch.shadow = calc_map_shadow(map, date.hour)
 end
 

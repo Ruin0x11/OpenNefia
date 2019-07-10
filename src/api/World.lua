@@ -1,17 +1,15 @@
-local field = require("game.field")
+local save = require("internal.global.save")
 
 local World = {}
 
 function World.pass_time_in_seconds(seconds)
-   local data = field.data
-
-   local date = data.date
+   local date = save.date
 
    -- EVENT: on_second_passed
 
    date.second = date.second + seconds
    if date.second >= 60 then
-      data.play_turns = data.play_turns + 1
+      save.play_turns = save.play_turns + 1
 
       local minutes_passed = math.floor(date.second / 60)
 
@@ -32,7 +30,7 @@ function World.pass_time_in_seconds(seconds)
             -- events before
 
             local days_passed = math.floor(date.hour / 24)
-            data.play_days = data.play_days + days_passed
+            save.play_days = save.play_days + days_passed
             date.day = date.day + days_passed
             date.hour = date.hour % 24
             -- EVENT: on_day_passed

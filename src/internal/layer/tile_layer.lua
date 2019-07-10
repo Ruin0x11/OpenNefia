@@ -2,6 +2,7 @@ local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
+local save = require("internal.global.save")
 
 local tile_layer = class.class("tile_layer", IDrawLayer)
 
@@ -71,11 +72,7 @@ function tile_layer:update(dt, screen_updated)
       map.tiles_dirty = false
    end
 
-   -- TODO: maybe have this field accessable somewhere better?
-   local field = require("game.field")
-   local date = field.data.date
-
-   self.tile_batch.shadow = calc_map_shadow(map, date.hour)
+   self.tile_batch.shadow = calc_map_shadow(map, save.date.hour)
 end
 
 function tile_layer:draw(draw_x, draw_y)

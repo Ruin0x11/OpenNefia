@@ -4,10 +4,11 @@ local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
 local Log = require("api.Log")
 
-local env = require("internal.env")
-local fs = require("internal.fs")
-local field_renderer = require("internal.field_renderer")
 local area_mapping = require("internal.area_mapping")
+local env = require("internal.env")
+local field_renderer = require("internal.field_renderer")
+local fs = require("internal.fs")
+local save = require("internal.global.save")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
@@ -20,8 +21,6 @@ function field_layer:init()
 
    self.map = nil
    self.renderer = nil
-   self.player = nil
-   self.allies = {}
    self.repl = nil
 
    self.map_changed = false
@@ -77,20 +76,19 @@ function field_layer:setup_repl()
 end
 
 function field_layer:init_global_data()
-   -- TEMP: temporary storage for save-global variables. needs to be
-   -- moved a public store API.
-   self.data = {}
-   self.data.date = DateTime:new(517, 8, 12, 16, 10, 0)
-   self.data.play_turns = 0
-   self.data.play_days = 0
-   self.data.area_mapping = area_mapping:new()
+   save.date = DateTime:new(517, 8, 12, 16, 10, 0)
+   save.play_turns = 0
+   save.play_days = 0
+   save.area_mapping = area_mapping:new()
+   save.player = nil
+   save.allies = {}
 end
 
 function field_layer:set_map(map)
    assert(type(map) == "table")
    assert(map.uid, "Map must have UID")
 
-   if self.data.area_mapping:maybe_generate_area_for_map(map.uid) then
+   if save.area_mapping:maybe_generate_area_for_map(map.uid) then
       Log.warn("Generating new area for map %d", map.uid)
    end
 
@@ -150,7 +148,7 @@ end
 
 function field_layer:update_hud()
    -- HACK due to global data
-   self.hud.clock:set_data(self.data.date)
+   self.hud.clock:set_data(save.date)
 
    local player = self.map:get_object(self.player)
    self.hud:refresh(player)

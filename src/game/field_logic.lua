@@ -10,11 +10,12 @@ local draw = require("internal.draw")
 local field = require("game.field")
 local map = require("internal.map")
 local data = require("internal.data")
+local save = require("internal.global.save")
 
 local field_logic = {}
 
 function field_logic.setup_new_game(player)
-   local scenario = data["base.scenario"]:ensure(field.data.scenario)
+   local scenario = data["base.scenario"]:ensure(save.scenario)
 
    local success, map = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
    if not success then
@@ -36,7 +37,7 @@ end
 function field_logic.quickstart()
    field:init_global_data()
 
-   field.data.scenario = "content.my_scenario"
+   save.scenario = "content.my_scenario"
    local success, map = Map.generate("content.test", {})
    assert(success, map)
    field:set_map(map)
