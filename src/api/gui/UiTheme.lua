@@ -1,91 +1,96 @@
 local UiTheme = {}
 
-local Asset = require("api.Asset")
 local Log = require("api.Log")
 
+local fs = require("util.fs")
 local data = require("internal.data")
-local env = require("internal.env")
 local asset_drawable = require("internal.draw.asset_drawable")
 
-local current_theme = "base.default"
-local theme_table = nil
+local active_themes = {}
 local cache = setmetatable({}, { __mode = "v" })
-local asset_used = {}
 
-function UiTheme.reload()
-   theme_table = table.maybe(data, "base.ui_theme", current_theme)
+local theme_proxy = class.class("theme_proxy")
+
+function theme_proxy:init(namespace)
+   assert(type(namespace) == "string")
+   self.namespace = namespace
 end
 
-function UiTheme.set_theme(id)
-   for k, _ in pairs(asset_used) do
-      Asset.mark_outdated(k)
+local function find_asset(namespace, asset)
+   for i = #active_themes, 1, -1 do
+      local theme = active_themes[i]
+      local ns = theme.assets[namespace]
+      if ns then
+         local proto = ns[asset]
+         if proto then
+            return proto, theme
+         end
+      end
    end
 
-   current_theme = id
-   theme_table = nil
+   return nil
+end
+
+function theme_proxy:__index(asset)
+   local id = self.namespace .. "." .. asset
+   if cache[id] then
+      return cache[id]
+   end
+
+   local proto, theme = find_asset(self.namespace, asset)
+   if not proto then
+      error("Cannot find asset " .. id)
+   end
+
+   local root = theme.root
+   local obj
+
+   if type(proto) == "string" then
+      obj = asset_drawable:new(fs.join(root, proto))
+   elseif type(proto) == "table" then
+      local _type = proto.type
+
+      if _type == nil or _type == "asset" then
+         local copy = {
+            image = fs.join(root, proto.image),
+            count_x = proto.count_x
+         }
+         obj = asset_drawable:new(copy)
+      elseif _type == "font" then
+         obj = { size = proto.size }
+      elseif _type == "color" then
+         obj = proto.color
+      else
+         error("invalid asset type " .. id .. " " .. tostring(_type))
+      end
+   else
+      error("invalid asset " .. id)
+   end
+
+   Log.debug("Load new asset: %s", id)
+
+   cache[id] = obj
+
+   return cache[id]
+end
+
+function UiTheme.load_theme(id)
+   active_themes = { data["base.theme"]:ensure(id) }
    cache = setmetatable({}, { __mode = "v" })
-   asset_used = {}
+end
+
+function UiTheme.theme_id()
+   return active_themes[1] and active_themes[1]._id
 end
 
 function UiTheme.load(instance)
-   local fq_name
+   return theme_proxy:new("elona")
+end
 
-   if type(instance) == "string" then
-      fq_name = instance
-   else
-      fq_name = env.get_require_path(instance)
-   end
-
-   if cache[fq_name] then
-      return cache[fq_name]
-   end
-
-   if theme_table == nil then
-      UiTheme.reload()
-   end
-
-   local dat = nil
-
-   if string.nonempty(fq_name) then
-      local base = table.maybe(theme_table, "base") or {}
-
-      dat = table.maybe(theme_table, "items", fq_name)
-      if not dat then
-         -- TODO: fallback to base.default here, and warn if still not found
-         Log.warn("No theme data for %s was configured.", fq_name)
-         return base
-      end
-
-      cache[fq_name] = cache[fq_name] or {}
-
-      dat = table.merge_missing(dat, base)
-
-      for k, v in pairs(dat) do
-         local _type
-         local _value
-         if type(v) == "string" then
-            _type = "image"
-            _value = v
-         else
-            _type = v.type
-            _value = v.value
-         end
-
-         if _type == "color" or _type == "font" then
-            cache[fq_name][k] = _value
-         elseif type == "asset" then
-            -- will be cached inside Asset
-            cache[fq_name][k] = Asset.load(_value)
-            asset_used[k] = true
-         else
-            -- cache is managed by UiTheme as there is no asset ID to
-            -- provide to Asset for caching
-            cache[fq_name][k] = cache[fq_name][k] or asset_drawable:new(_value)
-         end
-      end
-   end
-
-   return cache[fq_name]
+function UiTheme.hotload(old, new)
+   local id = old.theme_id()
+   assert(id)
+   new.load_theme(id)
 end
 
 return UiTheme

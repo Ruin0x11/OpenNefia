@@ -38,6 +38,10 @@ Event.register("base.hook_player_move", "Player scroll speed",
                      scroll = 6
                   end
 
+                  if Gui.player_is_running() then
+                     scroll = 1
+                  end
+
                   params.chara:mod("scroll", scroll, "set")
 
                   return result

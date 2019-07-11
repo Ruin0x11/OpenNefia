@@ -85,11 +85,13 @@ function KeyHandler:halt_input()
 end
 
 function KeyHandler:run_key_action(key, ...)
-   print(self.frames_held)
    local it = self.repeat_delays[key]
    if it then
       it.wait_remain = it.wait_remain - 1
       if it.wait_remain <= 0 then
+         if repeats[key] then
+            it.delay = 40
+         end
          it.fast = true
       elseif it.fast then
          if repeats[key] then
@@ -120,7 +122,7 @@ function KeyHandler:handle_repeat(key, dt)
             it.wait_remain = 0
             it.delay = 40
          else
-            it.wait_remain = 2
+            it.wait_remain = 3
             it.delay = 200
          end
       else

@@ -1,5 +1,5 @@
 local binser = require("thirdparty.binser")
-local fs = require("internal.fs")
+local fs = require("util.fs")
 local Log = require("api.Log")
 
 local SaveFile = class.class("SaveFile")

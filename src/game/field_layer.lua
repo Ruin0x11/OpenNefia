@@ -9,7 +9,7 @@ local area_mapping = require("internal.area_mapping")
 local env = require("internal.env")
 local field_renderer = require("internal.field_renderer")
 local uid_tracker = require("internal.uid_tracker")
-local fs = require("internal.fs")
+local fs = require("util.fs")
 local save = require("internal.global.save")
 
 local field_layer = class.class("field_layer", IUiLayer)
@@ -159,6 +159,11 @@ end
 
 function field_layer:key_held_frames()
    return self.keys:key_held_frames()
+end
+
+function field_layer:player_is_running()
+   -- HACK
+   return self.keys.keys.pressed["shift"]
 end
 
 function field_layer:update_hud()

@@ -1,4 +1,4 @@
-local fs = require("internal.fs")
+local fs = require("util.fs")
 
 local Fs = {}
 

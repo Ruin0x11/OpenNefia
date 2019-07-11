@@ -12,7 +12,7 @@ data:add {
    race = "elona.norland",
    class = "elona.gunner",
    faction = "base.enemy",
-   image = 4,
+   image = "elona.chara_rabbit",
    max_hp = 50,
    max_mp = 10,
 
@@ -51,7 +51,7 @@ data:add {
    race = "elona.norland",
    class = "elona.gunner",
    faction = "base.enemy",
-   image = 10,
+   image = "elona.chara_snail",
    max_hp = 100,
    max_mp = 20,
 
@@ -70,7 +70,7 @@ data:add {
    race = "elona.norland",
    class = "elona.gunner",
    faction = "base.enemy",
-   image = 50,
+   image = "elona.chara_kobold",
    max_hp = 10,
    max_mp = 2,
 
@@ -97,7 +97,7 @@ data:add {
    _id = "test",
 
    name = "test",
-   image = 5,
+   image = "elona.item_melon",
 }
 
 data:add {
@@ -105,7 +105,7 @@ data:add {
    _id = "armor",
 
    name = "armor",
-   image = 143,
+   image = "elona.item_armored_cloak",
 
    equip_slots = {
       "elona.body"
@@ -117,7 +117,7 @@ data:add {
    _id = "ring",
 
    name = "ring",
-   image = 19,
+   image = "elona.item_engagement_ring",
 
    equip_slots = {
       "elona.ring"
@@ -129,7 +129,7 @@ data:add {
    _id = "arrow",
 
    name = "arrow",
-   image = 20,
+   image = "elona.item_bolt",
 
    equip_slots = {
       "elona.ammo"
@@ -141,7 +141,7 @@ data:add {
    _id = "axe",
 
    name = "axe",
-   image = 33,
+   image = "elona.item_hand_axe",
 
    equip_slots = {
       "elona.hand"
@@ -153,7 +153,7 @@ data:add {
    _id = "amulet",
 
    name = "amulet",
-   image = 36,
+   image = "elona.item_neck_guard",
 
    equip_slots = {
       "elona.neck"
@@ -165,7 +165,7 @@ data:add {
    _id = "shoes",
 
    name = "shoes",
-   image = 58,
+   image = "elona.item_heavy_boots",
 
    equip_slots = {
       "elona.leg"
@@ -215,24 +215,26 @@ data:add {
 data:add_multi(
    "base.sound",
    {
-      _id = "voice1",
-      file = "sound/temp/voice1.wav"
-   },
-   {
-      _id = "voice2",
-      file = "sound/temp/voice2.wav"
-   },
-   {
-      _id = "voice3",
-      file = "sound/temp/voice3.wav"
-   },
-   {
-      _id = "voice4",
-      file = "sound/temp/voice4.wav"
-   },
-   {
-      _id = "voice5",
-      file = "sound/temp/voice5.wav"
+      {
+         _id = "voice1",
+         file = "sound/temp/voice1.wav"
+      },
+      {
+         _id = "voice2",
+         file = "sound/temp/voice2.wav"
+      },
+      {
+         _id = "voice3",
+         file = "sound/temp/voice3.wav"
+      },
+      {
+         _id = "voice4",
+         file = "sound/temp/voice4.wav"
+      },
+      {
+         _id = "voice5",
+         file = "sound/temp/voice5.wav"
+      }
    }
 )
 

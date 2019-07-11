@@ -45,7 +45,7 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
       if show then
          local batch_ind = self.batch_inds[i.uid]
-         local image = i:calc("image")
+         local image = i:calc("image") .. "#1"
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[i.uid] = self.item_batch:add_tile {
                tile = image,

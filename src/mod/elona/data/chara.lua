@@ -6460,4 +6460,4 @@ local chara = {
    -- },
 }
 
-data:add_multi("base.chara", table.unpack(chara))
+data:add_multi("base.chara", chara)

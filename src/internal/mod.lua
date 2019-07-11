@@ -1,6 +1,6 @@
 local Log = require("api.Log")
 local data = require("internal.data")
-local fs = require("internal.fs")
+local fs = require("util.fs")
 local env = require("internal.env")
 local tsort = require("thirdparty.resty.tsort")
 

@@ -21,18 +21,18 @@ local function update_emotion_icon(p)
 end
 
 function EmotionIcon.install(ui_theme)
-   Draw.register_draw_layer("mod.emotion_icons.api.gui.EmotionIconLayer")
+   -- Draw.register_draw_layer("mod.emotion_icons.api.gui.EmotionIconLayer")
 
-   local tab = data["base.ui_theme"][ui_theme].items
-   local icons = {}
-   for k, v in data["emotion_icons.emotion_icon"]:iter() do
-      icons[k] = v.image
-   end
-   tab["mod.emotion_icons.api.gui.EmotionIconLayer"] = icons
+   -- local tab = data["base.ui_theme"][ui_theme].items
+   -- local icons = {}
+   -- for k, v in data["emotion_icons.emotion_icon"]:iter() do
+   --    icons[k] = v.image
+   -- end
+   -- tab["mod.emotion_icons.api.gui.EmotionIconLayer"] = icons
 
-   Event.register("base.on_apply_status_effect", "status effect create emoicon", on_proc_status_effect)
-   Event.register("base.on_proc_status_effect", "status effect emoicon", on_proc_status_effect)
-   Event.register("base.before_chara_turn_start", "emoicon turn decay", update_emotion_icon)
+   -- Event.register("base.on_apply_status_effect", "status effect create emoicon", on_proc_status_effect)
+   -- Event.register("base.on_proc_status_effect", "status effect emoicon", on_proc_status_effect)
+   -- Event.register("base.before_chara_turn_start", "emoicon turn decay", update_emotion_icon)
 end
 
 function EmotionIcon.set(chara, id, turns)

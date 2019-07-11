@@ -1,6 +1,14 @@
 -- @module Log
 local Log = {}
 
+local levels = {
+   trace = 5,
+   debug = 4,
+   info = 3,
+   warn = 2,
+   error = 1
+}
+
 local function format(kind, s, ...)
    local out = string.format(s, ...)
    local trace = debug.getinfo(3, "S")
@@ -16,6 +24,9 @@ end
 local level = 3
 
 function Log.set_level(l)
+   if type(l) == "string" then
+      l = levels[l] or 3
+   end
    level = l
 end
 

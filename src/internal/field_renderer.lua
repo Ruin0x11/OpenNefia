@@ -103,6 +103,13 @@ function field_renderer:draw()
 end
 
 function field_renderer:update(dt)
+   -- BUG: this really doesn't look like the original Elona's
+   -- scrolling. The issue is here it is based on dt. In vanilla
+   -- scrolling would always scroll by a fixed amount of pixels
+   -- between 40ms pauses, regardless of framerate. This meant the
+   -- framerate the game ran at affected the speed of scrolling, but
+   -- the effect ends up being different. There should be a
+   -- compatability option for vanilla.
    if self.scroll then
       self.scroll_frames = self.scroll_frames - Draw.msecs_to_frames(dt*1000)
       if self.scroll_frames <= 0 then

@@ -1,12 +1,11 @@
-local fs = require("internal.fs")
+local fs = require("util.fs")
 local mod = require("internal.mod")
 local internal = require("internal")
 local data = require("internal.data")
 local stopwatch = require("api.Stopwatch")
+local UiTheme = require("api.gui.UiTheme")
 
 local startup = {}
-
-local tile_size = 48
 
 function startup.run(mods)
    math.randomseed(internal.get_timestamp())
@@ -16,7 +15,12 @@ function startup.run(mods)
    mod.load_mods(mods)
    data:run_all_edits()
 
+   -- data is finalized at this point.
+
    startup.load_batches()
+
+   local default_theme = "elona_sys.default"
+   UiTheme.load_theme(default_theme)
 end
 
 local tile_batch = require("internal.draw.tile_batch")
@@ -25,37 +29,23 @@ local atlas = require("internal.draw.atlas")
 local batches = {}
 
 local function get_map_tiles()
-   local data = require("internal.data")
-   local it = {}
-   for _, v in data["base.map_tile"]:iter() do
-      it[#it+1] = v
-   end
-   return it
+   return data["base.map_tile"]:iter()
 end
 
-local function get_tiles(dir)
-   local files = {}
-   if not fs.exists(dir) then
-      error("not exist " .. dir)
-   end
-   for _, f in fs.iter_directory_items(dir) do
-      local file = fs.join(dir, f)
-      local tile = love.image.newImageData(file)
-      if tile:getHeight() == tile_size then
-         files[#files+1] = file
-      end
-      tile:release()
-   end
-   return files
+local mkpred = function(group)
+   return function(i) return i.group == group end
 end
 
 local function get_chara_tiles()
-   return get_tiles("graphic/temp/chara")
+   return data["base.chip"]:iter():filter(mkpred("chara"))
 end
 
 local function get_item_tiles()
-   return get_tiles("graphic/temp/item")
+   return data["base.chip"]:iter():filter(mkpred("item"))
 end
+
+local tile_size = 48
+local atlas_size = 96
 
 function startup.load_batches()
    local coords = require("internal.draw.coords.tiled_coords"):new()
@@ -64,17 +54,17 @@ function startup.load_batches()
    local sw = stopwatch:new()
    sw:measure()
 
-   local atlas = atlas:new(tile_size, tile_size, 48, 48)
+   local atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    atlas:load(get_map_tiles(), coords)
 
    sw:p("load_batches.map")
 
-   local chara_atlas = atlas:new(tile_size, tile_size, 48, 48)
+   local chara_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    chara_atlas:load(get_chara_tiles())
 
    sw:p("load_batches.chara")
 
-   local item_atlas = atlas:new(tile_size, tile_size, 48, 48)
+   local item_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    item_atlas:load(get_item_tiles())
 
    sw:p("load_batches.item")

@@ -8,7 +8,7 @@ data:add {
    _id = "little_sister",
 
    name = "little sister",
-   image = 52,
+   image = "elona.chara_little_sister",
    max_hp = 10,
    max_mp = 2
 }
@@ -18,7 +18,7 @@ data:add {
    _id = "little_ball",
 
    name = "little ball",
-   image = 190,
+   image = "elona.item_little_ball",
 }
 
 local function can_receive_reward()

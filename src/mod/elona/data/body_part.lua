@@ -67,4 +67,4 @@ local body_part = {
    }
 }
 
-data:add_multi("base.body_part", table.unpack(body_part))
+data:add_multi("base.body_part", body_part)

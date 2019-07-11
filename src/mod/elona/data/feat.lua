@@ -3,7 +3,7 @@ data:add {
    _id = "door",
 
    elona_id = 21,
-   image = 194,
+   image = "elona.feat_1_231",
    is_solid = true,
    is_opaque = true,
 

@@ -29,7 +29,6 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
    end
 
    self.shadow_batch.updated = true
-   print("setnow")
 
    local map = Map.current()
    assert(map ~= nil)

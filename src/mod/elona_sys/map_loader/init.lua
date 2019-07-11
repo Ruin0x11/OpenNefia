@@ -2,13 +2,9 @@ local Chara = require("api.Chara")
 local Fs = require("api.Fs")
 local InstancedMap = require("api.InstancedMap")
 local Item = require("api.Item")
-local Map = require("api.Map")
 local Compat = require("mod.elona_sys.api.Compat")
 
 local struct = require("mod.elona_sys.map_loader.thirdparty.struct")
-local t = require("mod.elona_sys.map_loader.tiles")
-local tiles = t[1]
-local same = t[2]
 
 local own_states = {
    [-2] = "inherited",
@@ -18,7 +14,79 @@ local own_states = {
    [4]  = "harvested",
 }
 
-function convert_122(gen, params)
+-- Map chips which are exactly the same in image and parameters between atlases 1 and 2.
+
+local same = {
+   0, 6, 10, 11, 19, 45, 47, 48, 49, 50,
+   66, 67, 68, 69, 70, 71, 72, 73, 74, 75,
+   76, 77, 78, 79, 80, 81, 99, 100, 101, 102,
+   103, 104, 105, 106, 107, 108, 109, 110, 111, 112,
+   113, 114, 115, 116, 117, 118, 132, 133, 134, 135,
+   136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+   146, 147, 148, 149, 150, 151, 165, 166, 167, 168,
+   169, 170, 171, 172, 173, 198, 199, 200, 201, 202,
+   203, 204, 205, 206, 207, 208, 209, 211, 212, 213,
+   214, 215, 216, 217, 264, 266, 267, 268, 269, 270,
+   271, 272, 273, 274, 276, 277, 278, 279, 280, 281,
+   282, 283, 302, 303, 304, 305, 306, 307, 308, 309,
+   310, 311, 312, 313, 314, 315, 316, 330, 331, 332,
+   336, 340, 341, 343, 344, 345, 346, 363, 364, 365,
+   366, 367, 368, 369, 370, 371, 372, 373, 374, 375,
+   376, 377, 378, 379, 380, 381, 382, 396, 397, 398,
+   414, 415, 416, 417, 418, 419, 420, 421, 422, 423,
+   424, 425, 426, 427, 428, 429, 430, 431, 447, 448,
+   449, 450, 451, 452, 453, 454, 455, 456, 457, 458,
+   459, 460, 461, 462, 463, 465, 466, 467, 468, 469,
+   470, 471, 472, 473, 474, 475, 477, 478, 479, 480,
+   481, 482, 483, 484, 485, 486, 487, 488, 489, 490,
+   491, 492, 495, 496, 497, 498, 499, 500, 501, 502,
+   503, 504, 505, 506, 507, 508, 510, 511, 512, 513,
+   514, 515, 516, 517, 518, 519, 520, 521, 522, 523,
+   524, 525, 528, 529, 530, 532, 533, 534, 535, 536,
+   537, 538, 539, 540, 541, 542, 545, 546, 547, 548,
+   549, 550, 551, 552, 553, 554, 555, 556, 557, 558,
+   561, 562, 563, 570, 571, 573, 578, 579, 580, 581,
+   582, 583, 584, 585, 586, 587, 588, 589, 590, 591,
+   592, 593, 594, 595, 596, 597, 598, 599, 600, 601,
+   602, 603, 604, 605, 606, 607, 608, 609, 610, 611,
+   612, 613, 614, 615, 616, 617, 618, 619, 620, 621,
+   622, 623, 624, 625, 626, 631, 632, 633, 634, 639,
+   640, 642, 643, 644, 645, 646, 647, 648, 649, 650,
+   651, 652, 653, 654, 655, 656, 657, 658, 659, 660,
+   661, 662, 663, 664, 665, 666, 670, 671, 672, 673,
+   674, 675, 676, 677, 678, 679, 680, 681, 682, 683,
+   684, 685, 686, 687, 688, 689, 690, 691, 693, 694,
+   695, 696, 697, 698, 699, 700, 701, 702, 703, 704,
+   705, 706, 707, 708, 709, 710, 711, 712, 713, 714,
+   715, 716, 717, 718, 719, 720, 721, 722, 757, 758,
+   759, 760, 761, 762, 763, 764, 765, 767, 768, 769,
+   770, 771, 772, 773, 774, 775, 776, 777, 778, 779,
+   780, 781, 782, 783, 784, 785, 786, 787, 788, 789,
+   790, 791, 792, 793, 794, 795, 796, 797, 798, 799,
+   800, 801, 802, 803, 804, 805, 806, 807, 808, 809,
+   810, 811, 812, 813, 814, 815, 816, 817, 818, 819,
+   820, 821, 822, 823, 824
+}
+
+local function build_mapping()
+   local mapping = { [0] = {}, [1] = {}, [2] = {} }
+
+   for _, v in data["base.map_tile"]:iter() do
+      if v.elona_atlas and v.elona_id then
+         mapping[v.elona_atlas][v.elona_id] = v._id
+      end
+   end
+
+   return mapping
+end
+
+local mapping
+
+local function convert_122(gen, params)
+   if mapping == nil then
+      mapping = build_mapping()
+   end
+
    if not params.name then
       error("Map name must be provided.")
    end
@@ -51,7 +119,7 @@ function convert_122(gen, params)
       for x=0,width-1 do
          local tile_id = tile_ids[i]
 
-         local new_tile = tiles[string.format("%s_%s", atlas_no, tile_id)]
+         local new_tile = mapping[atlas_no][tile_id]
 
          if new_tile == nil then
             assert(atlas_no == 2)
@@ -59,7 +127,7 @@ function convert_122(gen, params)
 
             -- Find the corresponding tile in atlas 1, since this one
             -- is a duplicate in atlas 2.
-            new_tile = tiles[string.format("%s_%s", 1, tile_id)]
+            new_tile = mapping[1][tile_id]
             assert(new_tile ~= nil)
          end
 
@@ -123,17 +191,3 @@ data:add {
 
    generate = convert_122,
 }
-
-for _, t in pairs(tiles) do
-   t._type = "base.map_tile"
-   t.id = nil
-   if t.effect == 5 then
-      t.is_solid = true
-      t.is_opaque = true
-   elseif t.effect == 4 then
-      t.is_solid = true
-      t.is_opaque = false
-   end
-   t.effect = nil
-   data:add(t)
-end

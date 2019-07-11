@@ -398,4 +398,4 @@ local class = {
    },
 }
 
-data:add_multi("base.class", table.unpack(class))
+data:add_multi("base.class", class)

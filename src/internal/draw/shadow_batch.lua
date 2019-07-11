@@ -45,14 +45,11 @@ local shadowmap = {
     0, 9, 10, 5, 12, 7, 0, 1, 11, 0, 6, 3, 8, 4, 2, 0, 0,
 };
 
-local function generate_deco()
-   deco[0] = {}
-   deco[1] = {}
-   deco[2] = {}
-   for i=0,15 do
-      deco[0][i * 0x10 + 0x01] = 0
-      deco[1][i * 0x10 + 0x01] = 1
-   end
+function shadow_batch:relayout()
+   self.image = draw.load_image("mod/elona/graphic/asset/shadow.png")
+   self.edge_image = draw.load_image("mod/elona/graphic/asset/shadow_edges.png")
+   self.batch = love.graphics.newSpriteBatch(self.image)
+   self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
 end
 
 function shadow_batch:init(width, height, coords)
@@ -62,10 +59,8 @@ function shadow_batch:init(width, height, coords)
 
    self.tiles = table.of_2d(0, width + 4, height + 4, true)
 
-   -- self.image = draw.load_image("graphic/temp/shadow.png")
-   -- self.edge_image = draw.load_image("graphic/temp/shadow_edge.png")
-   self.image = draw.load_image("graphic/temp/shadow_nonalpha.bmp")
-   self.edge_image = draw.load_image("graphic/temp/shadow_edges_nonalpha.bmp")
+   self:relayout()
+
    self.quad = {}
    self.corner_quad = {}
    self.edge_quad = {}
@@ -90,9 +85,6 @@ function shadow_batch:init(width, height, coords)
    for i=1,17 do
       self.edge_quad[i] = love.graphics.newQuad((i-1) * 48, 0, 48, 48, iw, ih)
    end
-
-   self.batch = love.graphics.newSpriteBatch(self.image)
-   self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
 
    self.updated = true
    self.tile_width = 48
@@ -160,7 +152,6 @@ function shadow_batch:add_one_deco(d, x, y)
       -- lower-right inner
       self.batch:add(self.quad[7][2], x + 24, y)
       self.batch:add(self.quad[7][1], x + 24, y + 24)
-
    elseif d == 20 then
       -- left border
       -- right border
@@ -175,21 +166,18 @@ function shadow_batch:add_one_deco(d, x, y)
       self.batch:add(self.quad[4][1], x + 24, y)
       self.batch:add(self.quad[3][6], x, y + 24)
       self.batch:add(self.quad[4][6], x + 24, y + 24)
-
    elseif d == 30 then
       -- right outer dart
       self.batch:add(self.quad[1][1], x, y)
       self.batch:add(self.quad[2][1], x + 24, y)
       self.batch:add(self.quad[1][6], x, y + 24)
       self.batch:add(self.quad[2][6], x + 24, y + 24)
-
    elseif d == 31 then
       -- left outer dart
       self.batch:add(self.quad[5][1], x, y)
       self.batch:add(self.quad[6][1], x + 24, y)
       self.batch:add(self.quad[5][6], x, y + 24)
       self.batch:add(self.quad[6][6], x + 24, y + 24)
-
    elseif d == 32 then
       self.batch:add(self.quad[1][1], x, y)
       -- upper outer dart
@@ -223,7 +211,7 @@ function shadow_batch:add_deco(shadow, x, y)
    end
 end
 
-function shadow_batch:add_one(shadow, x, y, batch)
+function shadow_batch:add_one(shadow, x, y)
    if shadow <= 0 then
       return
    end

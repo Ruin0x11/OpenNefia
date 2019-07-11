@@ -107,7 +107,7 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
          and self.batch_inds[c.uid].ind ~= 0
 
       if show then
-         local image = c:calc("image")
+         local image = c:calc("image") .. "#1"
          local batch_ind = self.batch_inds[c.uid]
          if batch_ind == nil or batch_ind.ind == 0 then
             local ind = self.chara_batch:add_tile {

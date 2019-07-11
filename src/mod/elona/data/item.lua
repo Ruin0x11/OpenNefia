@@ -13752,4 +13752,4 @@ local item =
       }
    }
 
-data:add_multi("base.item", table.unpack(item))
+data:add_multi("base.item", item)

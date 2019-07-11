@@ -207,8 +207,8 @@ function data:add(dat)
    return dat
 end
 
-function data:add_multi(_type, ...)
-   for _, dat in ipairs({...}) do
+function data:add_multi(_type, list)
+   for _, dat in ipairs(list) do
       dat._type = _type
       self:add(dat)
    end
@@ -300,6 +300,7 @@ end
 
 function proxy:iter()
    local inner_iter, inner_state, inner_index
+   print(tostring(self._type))
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])
    end

@@ -67,7 +67,7 @@ function tile_layer:update(dt, screen_updated)
             end
          end
 
-         self.tile_batch:update_tile(x, y, id)
+         self.tile_batch:update_tile(x, y, id .. "#1")
       end
       map._tiles_dirty = false
    end

@@ -65,4 +65,4 @@ local stat = {
    }
 }
 
-data:add_multi("base.stat", table.unpack(stat))
+data:add_multi("base.stat", stat)

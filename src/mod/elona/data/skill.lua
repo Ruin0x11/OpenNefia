@@ -629,4 +629,4 @@ local skill = {
    },
 }
 
-data:add_multi("base.skill", table.unpack(skill))
+data:add_multi("base.skill", skill)

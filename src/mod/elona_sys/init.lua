@@ -32,5 +32,6 @@ data:extend_type(
 data:add_index("base.chara", "elona_id")
 data:add_index("base.item", "elona_id")
 
+require("mod.elona_sys.theme.init")
 require("mod.elona_sys.map_loader.init")
 require("mod.elona_sys.dialog.init")

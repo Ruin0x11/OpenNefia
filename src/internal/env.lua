@@ -509,7 +509,7 @@ function env.is_loaded(path)
 end
 
 function env.require_all_apis(dir, recurse)
-   local fs = require("internal.fs")
+   local fs = require("util.fs")
 
    dir = dir or "api"
 

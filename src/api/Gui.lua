@@ -30,6 +30,10 @@ function Gui.key_held_frames()
    return field:key_held_frames()
 end
 
+function Gui.player_is_running()
+   return field:player_is_running()
+end
+
 function Gui.wait(wait)
    Gui.update_screen()
    draw.wait(wait)

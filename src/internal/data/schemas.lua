@@ -175,9 +175,16 @@ data:add_type {
 }
 
 data:add_type {
-   name = "ui_theme",
+   name = "theme",
    schema = schema.Record {
-      target = schema.String,
+      target = schema.Optional(schema.String),
+      assets = schema.Table,
+   },
+}
+
+data:add_type {
+   name = "chip",
+   schema = schema.Record {
    },
 }
 

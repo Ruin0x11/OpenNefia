@@ -7,12 +7,10 @@ local mod = require("internal.mod")
 local env = require("internal.env")
 local data = require("internal.data")
 local startup = require("game.startup")
-local fs = require("internal.fs")
+local fs = require("util.fs")
 
 local mods = mod.scan_mod_dir()
 startup.run(mods)
-
-field_logic.quickstart()
 
 local apis = env.require_all_apis()
 apis = table.merge(apis, env.require_all_apis("internal"))
@@ -25,6 +23,8 @@ end
 rawset(_G, "_PROMPT", "> ")
 rawset(_G, "_PROMPT2", ">> ")
 rawset(_G, "data", data)
+rawset(_G, "h", env.hotload)
+rawset(_G, "load_game", field_logic.quickstart)
 
 if fs.exists("repl_startup.lua") then
    local chunk = loadfile("repl_startup.lua")

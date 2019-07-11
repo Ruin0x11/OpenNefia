@@ -588,22 +588,24 @@ local data = require("internal.data")
 
 data:add_multi(
    "base.ai_action",
-   { _id = "on_ai_calm_actions",          act = on_ai_calm_actions },
-   { _id = "on_ai_ally_actions",          act = on_ai_ally_actions },
-   { _id = "go_to_position",              act = go_to_position },
-   { _id = "wander",                      act = wander },
-   { _id = "go_to_preset_anchor",         act = go_to_preset_anchor },
-   { _id = "follow_player",               act = follow_player },
-   { _id = "move_towards_target",         act = move_towards_target },
-   { _id = "default_action",              act = default_action },
-   { _id = "basic_action",                act = basic_action },
-   { _id = "search_for_target",           act = search_for_target },
-   { _id = "decide_ally_target",          act = decide_ally_target },
-   { _id = "ai_talk",                     act = ai_talk },
-   { _id = "try_to_heal",                 act = try_to_heal },
-   { _id = "idle_action",                 act = idle_action },
-   { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },
-   { _id = "on_status_effect",            act = on_status_effect },
-   { _id = "decide_targeted_action",      act = decide_targeted_action },
-   { _id = "elona_default_ai",            act = elona_default_ai }
+   {
+      { _id = "on_ai_calm_actions",          act = on_ai_calm_actions },
+      { _id = "on_ai_ally_actions",          act = on_ai_ally_actions },
+      { _id = "go_to_position",              act = go_to_position },
+      { _id = "wander",                      act = wander },
+      { _id = "go_to_preset_anchor",         act = go_to_preset_anchor },
+      { _id = "follow_player",               act = follow_player },
+      { _id = "move_towards_target",         act = move_towards_target },
+      { _id = "default_action",              act = default_action },
+      { _id = "basic_action",                act = basic_action },
+      { _id = "search_for_target",           act = search_for_target },
+      { _id = "decide_ally_target",          act = decide_ally_target },
+      { _id = "ai_talk",                     act = ai_talk },
+      { _id = "try_to_heal",                 act = try_to_heal },
+      { _id = "idle_action",                 act = idle_action },
+      { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },
+      { _id = "on_status_effect",            act = on_status_effect },
+      { _id = "decide_targeted_action",      act = decide_targeted_action },
+      { _id = "elona_default_ai",            act = elona_default_ai }
+   }
 )

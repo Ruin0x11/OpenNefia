@@ -45,7 +45,7 @@ end
 function sparse_batch:add_tile(params)
    -- TODO: needs z-ordering...
    local ind = table.remove(self.free_indices) or #self.tiles + 1
-   self.tiles[ind] = params.tile or 0
+   self.tiles[ind] = params.tile or ""
    self.xcoords[ind] = params.x or 0
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
