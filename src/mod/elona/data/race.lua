@@ -678,22 +678,27 @@ local race =
          ordering = 20100,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 2,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 1,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 45,
-               ["elona.martial_arts"] = 3,
-               ["elona.cooking"] = 3,
-               ["elona.fishing"] = 3,
-            },
+            skills = Resolver.make(
+               "elona.skills",
+               {
+                  skills = {
+                     ["elona.stat_life"] = 120,
+                     ["elona.stat_mana"] = 100,
+                     ["elona.stat_strength"] = 10,
+                     ["elona.stat_constitution"] = 8,
+                     ["elona.stat_dexterity"] = 2,
+                     ["elona.stat_perception"] = 2,
+                     ["elona.stat_learning"] = 1,
+                     ["elona.stat_will"] = 6,
+                     ["elona.stat_magic"] = 6,
+                     ["elona.stat_charisma"] = 2,
+                     ["elona.stat_speed"] = 45,
+                     ["elona.martial_arts"] = 3,
+                     ["elona.cooking"] = 3,
+                     ["elona.fishing"] = 3,
+                  },
+               }
+            ),
 
             breed_power = 100,
             image = "elona.chara_zombie",

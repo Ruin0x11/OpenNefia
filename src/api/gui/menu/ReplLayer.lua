@@ -31,6 +31,8 @@ function ReplLayer:init(env, history)
    self.history = history or {}
    self.history_index = 0
 
+   self.output = {}
+
    -- quake pulldown
    self.pulldown = true
    self.pulldown_y = 0
@@ -267,6 +269,10 @@ function ReplLayer:submit()
       elseif tostring(result) == "<generator>" then
          local max = 10
          local list = result:take(max + 1)
+         local first = list:nth(1)
+         if type(first) == "table" and first._type then
+            list = list:map(Object.make_prototype)
+         end
          if list:length() == max + 1 then
             result_text = "(iterator): " .. inspect(list:take(10):to_list())
             result_text = string.strip_suffix(result_text, " }")
@@ -284,6 +290,8 @@ function ReplLayer:submit()
    if not success then
       print(result_text)
    end
+
+   self.output[#self.output+1] = result_text
 
    self:print(result_text)
 
@@ -305,6 +313,16 @@ function ReplLayer:copy_last_input()
    if line then
       Env.set_clipboard_text(line)
       return line
+   end
+
+   return nil
+end
+
+function ReplLayer:copy_last_output()
+   local output = self.output[#self.output]
+   if output then
+      Env.set_clipboard_text(output)
+      return output
    end
 
    return nil

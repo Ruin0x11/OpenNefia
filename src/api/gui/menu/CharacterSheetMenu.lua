@@ -18,9 +18,9 @@ function CharacterSheetMenu:init(behavior)
    self.width = 700
    self.height = 400
 
-   self.win = Draw.load_image("graphic/temp/ie_sheet.png", false) -- HACK
+   self.win = Draw.load_image("graphic/temp/ie_sheet.png")
 
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp", false)
+   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
    self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.topic_win = TopicWindow:new(1, 10)

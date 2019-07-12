@@ -7,7 +7,7 @@ local chara_layer = class.class("chara_layer", IDrawLayer)
 
 function chara_layer:init(width, height)
    local coords = Draw.get_coords()
-   local tile_atlas, chara_atlas, item_atlas = require("internal.global.atlases").get()
+   local chara_atlas = require("internal.global.atlases").get().chara
 
    self.chara_batch = sparse_batch:new(width, height, chara_atlas, coords)
    self.batch_inds = {}

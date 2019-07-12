@@ -102,7 +102,7 @@ function SkillsMenu:init(show_bonus)
 
    self.show_bonus = show_bonus or true
 
-   self.win = Draw.load_image("graphic/temp/ie_sheet.png", false) -- HACK
+   self.win = Draw.load_image("graphic/temp/ie_sheet.png")
 
    self.item_count = 0
 

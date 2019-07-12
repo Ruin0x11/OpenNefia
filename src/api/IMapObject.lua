@@ -25,12 +25,12 @@ function IMapObject:refresh()
    end
 end
 
-function IMapObject:set_pos(x, y)
+function IMapObject:set_pos(x, y, force)
    local location = self.location
 
    assert(location:has_object(self))
 
-   if not location:is_in_bounds(x, y) then
+   if not location:is_in_bounds(x, y) and not force then
       Log.warn("IMapObject.set_pos: Not setting position of %s to %d,%d\n\t%s", tostring(self), x, y, debug.traceback(""))
       return false
    end

@@ -88,8 +88,8 @@ function NumberPrompt:draw()
 
    Draw.set_color(255, 255, 255)
    self.t.label_input:draw(self.x + math.floor(self.width / 2) - 56, self.y - 32)
-   self.t.arrows:draw_region(1, self.x + 28, self.y + 4)
-   self.t.arrows:draw_region(2, self.x + self.width - 51, self.y + 4)
+   self.t.arrow_left:draw(self.x + 28, self.y + 4)
+   self.t.arrow_right:draw(self.x + self.width - 51, self.y + 4)
 
    local text = string.format("%d(%d)", self.number, self.max)
    Draw.text(text, self.x + self.width - 70 - Draw.text_width(text) + 8,

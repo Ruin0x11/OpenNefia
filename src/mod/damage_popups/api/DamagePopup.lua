@@ -4,13 +4,13 @@ local DamagePopup = {}
 
 local max = 20
 
-local g_popups = require("mod.damage_popups.g_popups")
-
 function DamagePopup.install()
    Draw.register_draw_layer("mod.damage_popups.api.gui.DamagePopupLayer")
 end
 
 function DamagePopup.add(tx, ty, text, color, font)
+   local g_popups = require("mod.damage_popups.g_popups")
+
    color = color or {255, 255, 255}
    font = font or 24
 
@@ -31,6 +31,7 @@ function DamagePopup.add(tx, ty, text, color, font)
 end
 
 function DamagePopup.clear()
+   local g_popups = require("mod.damage_popups.g_popups")
    table.replace_with(g_popups, { count = 0 })
 end
 

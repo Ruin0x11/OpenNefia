@@ -1,6 +1,7 @@
 local field = require("game.field")
 local data = require("internal.data")
 local Event = require("api.Event")
+local Log = require("api.Log")
 local Gui = require("api.Gui")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
@@ -20,6 +21,7 @@ end
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
+   Log.info("Saving map %d to %s", map.uid, path)
    return SaveFs.write(path, map)
 end
 
@@ -31,12 +33,13 @@ Event.register("base.on_map_loaded", "instantiate all map objects",
                end)
 
 function Map.load(uid)
-   if type(uid) == "table" then
-      uid = uid.uid
+   if type(uid) == "table" and uid.uid then
+      return uid
    end
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))
+   Log.info("Loading map %d from %s", uid, path)
    local success, map = SaveFs.read(path)
    if not success then
       return false, map
@@ -45,6 +48,26 @@ function Map.load(uid)
    Event.trigger("base.on_map_loaded", {map=map})
 
    return success, map
+end
+
+function Map.edit(uid, cb)
+   if Map.current().uid == uid then
+      return false, "Map.edit should only be called for maps besides the currently loaded one"
+   end
+
+   local ok, map = Map.load(uid)
+   if not ok then
+      return false, map
+   end
+
+   local err
+   ok, err = xpcall(function() return cb(map) end, debug.traceback)
+
+   if not ok then
+      return false, err
+   end
+
+   return Map.save(map)
 end
 
 function Map.is_world_map(map)
@@ -106,6 +129,10 @@ function Map.iter_items(map)
    return (map or field.map):iter_items()
 end
 
+function Map.iter_feats(map)
+   return (map or field.map):iter_feats()
+end
+
 --- Creates a new blank map.
 function Map.create(width, height)
    return InstancedMap:new(width, height)
@@ -113,19 +140,23 @@ end
 
 function Map.generate(generator_id, params)
    params = params or {}
+   local opts = {}
+
    local generator = data["base.map_generator"]:ensure(generator_id)
-   local success, result = xpcall(function() return generator:generate(params) end, debug.traceback)
+   local success, map = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
    if not success then
-      return nil, result
+      return nil, map
    end
-   if not class.is_an(InstancedMap, result) then
-      return nil, "result of Map.generate must be a map"
+   if not class.is_an(InstancedMap, map) then
+      return nil, "result of map_generator:generate must be a map"
    end
 
-   Event.trigger("base.on_map_generated", {map=result})
-   Event.trigger("base.on_map_loaded", {map=result})
+   map.generated_with = { generator = generator_id, params = params }
 
-   return success, result
+   Event.trigger("base.on_map_generated", {map=map})
+   Event.trigger("base.on_map_loaded", {map=map})
+
+   return success, map
 end
 
 function Map.force_clear_pos(x, y, map)
@@ -212,7 +243,9 @@ local function try_place(chara, x, y, current, map)
    return nil
 end
 
-function Map.travel_to(map_or_uid)
+function Map.travel_to(map_or_uid, params)
+   params = params or {}
+
    local Chara = require("api.Chara")
 
    local success, map
@@ -234,11 +267,16 @@ function Map.travel_to(map_or_uid)
       error("Map cannot be the same as the one being traveled to.")
    end
 
-   if type(map.player_start_pos) == "table" then
-      x = map.player_start_pos.x or x
-      y = map.player_start_pos.y or y
-   elseif type(map.player_start_pos) == "function" then
-      x, y = map.player_start_pos(Chara.player())
+   if params.start_x and params.start_y then
+      x = params.start_x
+      y = params.start_y
+   else
+      if type(map.player_start_pos) == "table" then
+         x = map.player_start_pos.x or x
+         y = map.player_start_pos.y or y
+      elseif type(map.player_start_pos) == "function" then
+         x, y = map.player_start_pos(Chara.player())
+      end
    end
 
    -- take the player, allies and any items they carry.
@@ -274,7 +312,7 @@ function Map.travel_to(map_or_uid)
    Map.set_map(map)
    Gui.update_screen()
 
-   return "turn_begin"
+   return true
 end
 
 -- TODO: way of accessing map variables without exposing internals

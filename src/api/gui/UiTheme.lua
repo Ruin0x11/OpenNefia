@@ -7,7 +7,7 @@ local data = require("internal.data")
 local asset_drawable = require("internal.draw.asset_drawable")
 
 local active_themes = {}
-local cache = setmetatable({}, { __mode = "v" })
+local cache = {}
 
 local theme_proxy = class.class("theme_proxy")
 
@@ -46,14 +46,18 @@ function theme_proxy:__index(asset)
    local obj
 
    if type(proto) == "string" then
-      obj = asset_drawable:new(fs.join(root, proto))
-   elseif type(proto) == "table" then
+      proto = { image = proto }
+   end
+
+   if type(proto) == "table" then
       local _type = proto.type
 
       if _type == nil or _type == "asset" then
          local copy = {
             image = fs.join(root, proto.image),
-            count_x = proto.count_x
+            count_x = proto.count_x,
+            count_y = proto.count_y,
+            regions = proto.regions
          }
          obj = asset_drawable:new(copy)
       elseif _type == "font" then
@@ -74,9 +78,18 @@ function theme_proxy:__index(asset)
    return cache[id]
 end
 
-function UiTheme.load_theme(id)
-   active_themes = { data["base.theme"]:ensure(id) }
-   cache = setmetatable({}, { __mode = "v" })
+function UiTheme.clear_cache()
+   cache = {}
+end
+
+function UiTheme.clear()
+   active_themes = {}
+   cache = {}
+end
+
+function UiTheme.add_theme(id)
+   active_themes[#active_themes+1] = data["base.theme"]:ensure(id)
+   cache = {}
 end
 
 function UiTheme.theme_id()

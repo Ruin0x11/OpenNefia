@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local data = require("internal.data")
 
 -- Allows deferring the generation of random parameters until object

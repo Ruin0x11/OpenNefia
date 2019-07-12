@@ -1,6 +1,7 @@
 local Action = require("api.Action")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
+local Feat = require("api.Feat")
 local Map = require("api.Map")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
@@ -166,6 +167,41 @@ end
 
 function Tools.by_uid(uid)
    return Map.current():get_object(uid)
+end
+
+function Tools.feats_under()
+   local player = Chara.player()
+   return Feat.at(player.x, player.y)
+end
+
+function Tools.items_under()
+   local player = Chara.player()
+   return Item.at(player.x, player.y)
+end
+
+function Tools.draw_debug_pos(x, y, color)
+   Draw.set_color(color or {255, 0, 0})
+   Draw.set_font(11)
+   Draw.text(string.format("%d/%d", x, y), x, y)
+   Draw.filled_rect(x - 4, y - 4, 8, 8)
+   Draw.set_color(255, 255, 255)
+end
+
+function Tools.draw_debug_rect(x, y, w, h, centered)
+   if centered then
+      x = x - w / 2
+      y = y - h / 2
+   end
+   local p = {
+      {x, y},
+      {x+w, y},
+      {x, y+h},
+      {x+w, y+h}
+   }
+   for _, pos in ipairs(p) do
+      Tools.draw_debug_pos(pos[1], pos[2])
+   end
+   Tools.draw_line_rect(x, y, w, h)
 end
 
 local print_flat = require("mod.tools.lib.print_flat")

@@ -342,29 +342,60 @@ data:add {
    end
 }
 
-local function my_start()
+local function my_start(self, player)
    local Chara = require("api.Chara")
    local Item = require("api.Item")
-   local Feat = require("api.Feat")
+   local Map = require("api.Map")
+   local MapArea = require("api.MapArea")
+
+   do
+      local success, world_map, map
+      success, world_map = Map.generate("elona_sys.map_template", { id = "elona.north_tyris" })
+      if not success then
+         error(world_map)
+      end
+
+      local find_home = function(i)
+         return i.generator_params.generator == "elona_sys.map_template"
+            and i.generator_params.params.id == "elona.your_home"
+      end
+      local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
+      _p(MapArea.iter_map_entrances("any", world_map):extract("generator_params"):to_list())
+      assert(home_entrance)
+
+      success, map = MapArea.load_map_of_entrance(home_entrance)
+      if not success then
+         error(map)
+      end
+
+      MapArea.set_entrance(map, world_map, 20, 20)
+
+      Map.save(world_map)
+      Map.save(map)
+
+      Map.set_map(map)
+
+      assert(map:take_object(player, 10, 10))
+      Chara.set_player(player)
+   end
+
    for i=1,4 do
       local a = Chara.create("content.ally", i+8, 3)
       a:recruit_as_ally()
    end
 
    for i=1,2 do
-      for j=1,1 do
-         local i = Chara.create("content.enemy", i+8, j+11)
-      end
+      Chara.create("content.enemy", i+8, 11)
    end
 
-   for i=1,50 do
+   for _=1,50 do
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
 
    local armor = Item.create("content.armor")
    armor.curse_state = "blessed"
-   Chara.player():equip_item(armor, true)
-   Chara.player():refresh()
+   player:equip_item(armor, true)
+   player:refresh()
 end
 
 data:add {
@@ -373,18 +404,10 @@ data:add {
 
    name = "My Scenario",
 
-   starting_map = { generator = "elona_sys.elona122", params = { name = "sister" }},
-
    on_game_start = my_start
 }
 
 require("mod.content.dialog")
 
 local Log = require("api.Log")
-Log.set_level(3)
-
-Event.register("base.hook_travel_to_map", "north tyris",
-               function(source, params, result)
-                  local Map = require("api.Map")
-                  return {Map.generate("elona_sys.elona122", { name = "ntyris" })}
-               end)
+Log.set_level("debug")

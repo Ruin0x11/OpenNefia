@@ -125,8 +125,8 @@ local function gen_portraits(portraits)
       l[#l + 1] = {
          type = "crop",
          id = id,
-         source = "deps/elona/graphic/face1.bmp",
-         output = string.format("mod/elona/graphic/face/%s.png", v.name),
+         source = "graphic/face1.bmp",
+         output = string.format("graphic/face/%s.png", v.name),
          x = (id % 15) * 48,
          y = math.floor(id / 15) * 48,
          width = 48,

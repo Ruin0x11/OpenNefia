@@ -300,7 +300,6 @@ end
 
 function proxy:iter()
    local inner_iter, inner_state, inner_index
-   print(tostring(self._type))
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])
    end

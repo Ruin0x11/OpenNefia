@@ -6,6 +6,7 @@ local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
+local UiTheme = require("api.gui.UiTheme")
 
 local IUiLayer = require("api.gui.IUiLayer")
 
@@ -40,8 +41,7 @@ local UiListExt = function()
 end
 
 function MainTitleMenu:init()
-   self.t = 0
-   self.bg = Draw.load_image("graphic/title.bmp", false)
+   self.time = 0
    self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl")
    self.window_bg = load_cm_bg(4)
    self.version = Env.version()
@@ -79,14 +79,15 @@ function MainTitleMenu:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
+   self.t = UiTheme.load()
    self.win:relayout(self.x + 80, (self.height - 308) / 2, 320, 355)
    self.list:relayout(self.win.x + 40, self.win.y + 48)
 end
 
 function MainTitleMenu:draw()
    Draw.use_shader(self.shader)
-   self.shader:send("time", self.t)
-   Draw.image(self.bg, 0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
+   self.shader:send("time", self.time)
+   self.t.title:draw(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
    Draw.use_shader()
 
    Draw.set_font(13)
@@ -116,7 +117,7 @@ function MainTitleMenu:draw()
 end
 
 function MainTitleMenu:update(dt)
-   self.t = self.t + dt
+   self.time = self.time + dt
 
    if self.list.chosen then
       if self.list.selected ~= 2 then

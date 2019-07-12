@@ -16,11 +16,12 @@ function asset_drawable:init(data_inst)
    self.quads = {}
    self.bar_quads = {}
 
+   local iw = self.image:getWidth()
+   local ih = self.image:getHeight()
+
    local count_x = data_inst.count_x or 1
    local count_y = data_inst.count_y or 1
    if count_x ~= 1 or count_y ~= 1 then
-      local iw = self.image:getWidth()
-      local ih = self.image:getHeight()
       local w = iw / count_x
       local h = ih / count_y
       for j=1,count_y do
@@ -31,6 +32,35 @@ function asset_drawable:init(data_inst)
          end
       end
    end
+
+   self.regions = data_inst.regions
+end
+
+function asset_drawable:make_batch(parts, width, height)
+   self.batch = self.batch or love.graphics.newSpriteBatch(self.image, self.image:getWidth() * self.image:getHeight())
+   self.batch:clear()
+
+   local regions = {}
+   local region_quads = {}
+   if self.regions then
+      regions = self.regions
+      if type(regions) == "function" then
+         assert(width and height, "width and height must be provided with region generator function")
+         regions = regions(width, height)
+      end
+
+      for k, v in pairs(regions) do
+         region_quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
+      end
+   end
+
+   for _, part in ipairs(parts) do
+      self.batch:add(self.quads[part[1]] or region_quads[part[1]], part[2], part[3])
+   end
+
+   self.batch:flush()
+
+   return self.batch
 end
 
 function asset_drawable:get_width()

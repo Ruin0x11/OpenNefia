@@ -119,7 +119,7 @@ local item =
       {
          _id = "bug",
          elona_id = 0,
-         image = 33,
+         image = "elona.item_worthless_fake_gold_bar",
          value = 1,
          weight = 1,
          fltselect = 1,
@@ -131,7 +131,7 @@ local item =
       {
          _id = "long_sword",
          elona_id = 1,
-         image = 405,
+         image = "elona.item_long_sword",
          value = 500,
          weight = 1500,
          dice_x = 2,
@@ -150,7 +150,7 @@ local item =
       {
          _id = "dagger",
          elona_id = 2,
-         image = 400,
+         image = "elona.item_dagger",
          value = 500,
          weight = 600,
          dice_x = 2,
@@ -170,7 +170,7 @@ local item =
       {
          _id = "hand_axe",
          elona_id = 3,
-         image = 499,
+         image = "elona.item_hand_axe",
          value = 500,
          weight = 900,
          dice_x = 2,
@@ -189,7 +189,7 @@ local item =
       {
          _id = "club",
          elona_id = 4,
-         image = 427,
+         image = "elona.item_club",
          value = 500,
          weight = 1000,
          dice_x = 3,
@@ -208,7 +208,7 @@ local item =
       {
          _id = "magic_hat",
          elona_id = 5,
-         image = 477,
+         image = "elona.item_magic_hat",
          value = 1400,
          weight = 600,
          pv = 4,
@@ -223,7 +223,7 @@ local item =
       {
          _id = "fairy_hat",
          elona_id = 6,
-         image = 478,
+         image = "elona.item_fairy_hat",
          value = 7200,
          weight = 400,
          pv = 5,
@@ -242,7 +242,7 @@ local item =
       {
          _id = "breastplate",
          elona_id = 7,
-         image = 396,
+         image = "elona.item_breastplate",
          value = 600,
          weight = 4500,
          pv = 10,
@@ -257,7 +257,7 @@ local item =
       {
          _id = "robe",
          elona_id = 8,
-         image = 408,
+         image = "elona.item_robe",
          value = 450,
          weight = 800,
          pv = 3,
@@ -272,7 +272,7 @@ local item =
       {
          _id = "decorated_gloves",
          elona_id = 9,
-         image = 449,
+         image = "elona.item_decorated_gloves",
          value = 1400,
          weight = 700,
          hit_bonus = 6,
@@ -290,7 +290,7 @@ local item =
       {
          _id = "thick_gauntlets",
          elona_id = 10,
-         image = 450,
+         image = "elona.item_thick_gauntlets",
          value = 400,
          weight = 1100,
          hit_bonus = 2,
@@ -307,7 +307,7 @@ local item =
       {
          _id = "heavy_boots",
          elona_id = 11,
-         image = 418,
+         image = "elona.item_heavy_boots",
          value = 480,
          weight = 950,
          pv = 3,
@@ -322,7 +322,7 @@ local item =
       {
          _id = "composite_boots",
          elona_id = 12,
-         image = 460,
+         image = "elona.item_composite_boots",
          value = 2200,
          weight = 720,
          pv = 5,
@@ -338,7 +338,7 @@ local item =
       {
          _id = "decorative_ring",
          elona_id = 13,
-         image = 407,
+         image = "elona.item_decorative_ring",
          value = 450,
          weight = 50,
          material = 1001,
@@ -351,7 +351,7 @@ local item =
       {
          _id = "scroll_of_identify",
          elona_id = 14,
-         image = 470,
+         image = "elona.item_scroll",
          value = 480,
          weight = 20,
          on_read = function() end,
@@ -369,7 +369,7 @@ local item =
       {
          _id = "scroll_of_oracle",
          elona_id = 15,
-         image = 470,
+         image = "elona.item_scroll",
          value = 12000,
          weight = 20,
          on_read = function() end,
@@ -387,7 +387,7 @@ local item =
       {
          _id = "scroll_of_teleportation",
          elona_id = 16,
-         image = 470,
+         image = "elona.item_scroll",
          value = 200,
          weight = 20,
          on_read = function() end,
@@ -405,7 +405,7 @@ local item =
       {
          _id = "scroll_of_incognito",
          elona_id = 17,
-         image = 470,
+         image = "elona.item_scroll",
          value = 3500,
          weight = 20,
          on_read = function() end,
@@ -424,7 +424,7 @@ local item =
       {
          _id = "rod_of_identify",
          elona_id = 18,
-         image = 471,
+         image = "elona.item_rod",
          value = 1080,
          weight = 800,
          chargelevel = 8,
@@ -447,7 +447,7 @@ local item =
       {
          _id = "rod_of_teleportation",
          elona_id = 19,
-         image = 471,
+         image = "elona.item_rod",
          value = 840,
          weight = 800,
          chargelevel = 12,
@@ -469,7 +469,7 @@ local item =
       {
          _id = "spellbook_of_teleportation",
          elona_id = 20,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3200,
          weight = 380,
          chargelevel = 5,
@@ -492,7 +492,7 @@ local item =
       {
          _id = "spellbook_of_identify",
          elona_id = 21,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5600,
          weight = 380,
          chargelevel = 4,
@@ -516,7 +516,7 @@ local item =
       {
          _id = "spellbook_of_uncurse",
          elona_id = 22,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
          chargelevel = 4,
@@ -540,7 +540,7 @@ local item =
       {
          _id = "book_a",
          elona_id = 23,
-         image = 333,
+         image = "elona.item_book",
          value = 100,
          weight = 80,
          on_read = function() end,
@@ -555,7 +555,7 @@ local item =
       {
          _id = "book_b",
          elona_id = 24,
-         image = 333,
+         image = "elona.item_book",
          value = 500,
          weight = 80,
          on_read = function() end,
@@ -572,7 +572,7 @@ local item =
       {
          _id = "bugged_book",
          elona_id = 25,
-         image = 333,
+         image = "elona.item_book",
          value = 100,
          weight = 80,
          on_read = function() end,
@@ -588,7 +588,7 @@ local item =
       {
          _id = "bottle_of_dirty_water",
          elona_id = 26,
-         image = 354,
+         image = "elona.item_potion",
          value = 100,
          weight = 120,
          on_drink = function() end,
@@ -603,7 +603,7 @@ local item =
       {
          _id = "potion_of_blindness",
          elona_id = 27,
-         image = 354,
+         image = "elona.item_potion",
          value = 20,
          weight = 120,
          on_drink = function() end,
@@ -622,7 +622,7 @@ local item =
       {
          _id = "potion_of_confusion",
          elona_id = 28,
-         image = 354,
+         image = "elona.item_potion",
          value = 30,
          weight = 120,
          on_drink = function() end,
@@ -641,7 +641,7 @@ local item =
       {
          _id = "potion_of_paralysis",
          elona_id = 29,
-         image = 354,
+         image = "elona.item_potion",
          value = 40,
          weight = 120,
          on_drink = function() end,
@@ -660,7 +660,7 @@ local item =
       {
          _id = "sleeping_drug",
          elona_id = 30,
-         image = 354,
+         image = "elona.item_potion",
          value = 120,
          weight = 120,
          on_drink = function() end,
@@ -678,7 +678,7 @@ local item =
       {
          _id = "bottle_of_crim_ale",
          elona_id = 31,
-         image = 354,
+         image = "elona.item_potion",
          value = 280,
          weight = 50,
          on_drink = function() end,
@@ -695,7 +695,7 @@ local item =
       {
          _id = "spellbook_of_ice_bolt",
          elona_id = 32,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
          chargelevel = 4,
@@ -718,7 +718,7 @@ local item =
       {
          _id = "spellbook_of_fire_bolt",
          elona_id = 33,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
          chargelevel = 4,
@@ -741,7 +741,7 @@ local item =
       {
          _id = "spellbook_of_lightning_bolt",
          elona_id = 34,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
          chargelevel = 4,
@@ -764,7 +764,7 @@ local item =
       {
          _id = "earth_crystal",
          elona_id = 35,
-         image = 211,
+         image = "elona.item_crystal",
          value = 450,
          weight = 1600,
          category = 77000,
@@ -778,7 +778,7 @@ local item =
       {
          _id = "mana_crystal",
          elona_id = 36,
-         image = 211,
+         image = "elona.item_crystal",
          value = 470,
          weight = 900,
          category = 77000,
@@ -792,7 +792,7 @@ local item =
       {
          _id = "sun_crystal",
          elona_id = 37,
-         image = 211,
+         image = "elona.item_crystal",
          value = 450,
          weight = 1200,
          category = 77000,
@@ -807,7 +807,7 @@ local item =
       {
          _id = "gold_bar",
          elona_id = 38,
-         image = 33,
+         image = "elona.item_worthless_fake_gold_bar",
          value = 2000,
          weight = 1100,
          category = 77000,
@@ -822,7 +822,7 @@ local item =
       {
          _id = "raw_ore_of_rubynus",
          elona_id = 39,
-         image = 212,
+         image = "elona.item_raw_ore",
          value = 1400,
          weight = 240,
          category = 77000,
@@ -840,7 +840,7 @@ local item =
       {
          _id = "raw_ore_of_mica",
          elona_id = 40,
-         image = 212,
+         image = "elona.item_raw_ore",
          value = 720,
          weight = 70,
          category = 77000,
@@ -855,7 +855,7 @@ local item =
       {
          _id = "raw_ore_of_emerald",
          elona_id = 41,
-         image = 213,
+         image = "elona.item_raw_ore_of_diamond",
          value = 2450,
          weight = 380,
          category = 77000,
@@ -873,7 +873,7 @@ local item =
       {
          _id = "raw_ore_of_diamond",
          elona_id = 42,
-         image = 213,
+         image = "elona.item_raw_ore_of_diamond",
          value = 4200,
          weight = 320,
          category = 77000,
@@ -891,7 +891,7 @@ local item =
       {
          _id = "wood_piece",
          elona_id = 43,
-         image = 239,
+         image = "elona.item_wood_piece",
          value = 10,
          weight = 120,
          category = 64000,
@@ -902,7 +902,7 @@ local item =
       {
          _id = "junk_stone",
          elona_id = 44,
-         image = 238,
+         image = "elona.item_junk_stone",
          value = 10,
          weight = 450,
          category = 77000,
@@ -916,7 +916,7 @@ local item =
       {
          _id = "garbage",
          elona_id = 45,
-         image = 240,
+         image = "elona.item_garbage",
          value = 8,
          weight = 80,
          category = 64000,
@@ -927,7 +927,7 @@ local item =
       {
          _id = "broken_vase",
          elona_id = 46,
-         image = 241,
+         image = "elona.item_broken_vase",
          value = 6,
          weight = 800,
          category = 64000,
@@ -937,7 +937,7 @@ local item =
       {
          _id = "washing",
          elona_id = 47,
-         image = 204,
+         image = "elona.item_washing",
          value = 140,
          weight = 250,
          category = 64000,
@@ -947,7 +947,7 @@ local item =
       {
          _id = "bonfire",
          elona_id = 48,
-         image = 242,
+         image = "elona.item_bonfire",
          value = 170,
          weight = 3200,
          category = 64000,
@@ -957,7 +957,7 @@ local item =
       {
          _id = "flag",
          elona_id = 49,
-         image = 243,
+         image = "elona.item_flag",
          value = 130,
          weight = 1400,
          category = 64000,
@@ -966,7 +966,7 @@ local item =
       {
          _id = "broken_sword",
          elona_id = 50,
-         image = 244,
+         image = "elona.item_broken_sword",
          value = 10,
          weight = 1050,
          category = 64000,
@@ -976,7 +976,7 @@ local item =
       {
          _id = "bone_fragment",
          elona_id = 51,
-         image = 245,
+         image = "elona.item_bone_fragment",
          value = 10,
          weight = 80,
          category = 64000,
@@ -986,7 +986,7 @@ local item =
       {
          _id = "skeleton",
          elona_id = 52,
-         image = 246,
+         image = "elona.item_skeleton",
          value = 10,
          weight = 80,
          category = 64000,
@@ -995,7 +995,7 @@ local item =
       {
          _id = "tombstone",
          elona_id = 53,
-         image = 247,
+         image = "elona.item_tombstone",
          value = 10,
          weight = 12000,
          category = 64000,
@@ -1004,7 +1004,7 @@ local item =
       {
          _id = "gold_piece",
          elona_id = 54,
-         image = 433,
+         image = "elona.item_gold_piece",
          value = 1,
          weight = 0,
          category = 68000,
@@ -1051,7 +1051,7 @@ local item =
       {
          _id = "platinum_coin",
          elona_id = 55,
-         image = 437,
+         image = "elona.item_platinum_coin",
          value = 1,
          weight = 1,
          category = 69000,
@@ -1066,7 +1066,7 @@ local item =
       {
          _id = "diablo",
          elona_id = 56,
-         image = 405,
+         image = "elona.item_long_sword",
          value = 40000,
          weight = 2200,
          dice_x = 4,
@@ -1099,7 +1099,7 @@ local item =
       {
          _id = "zantetsu",
          elona_id = 57,
-         image = 501,
+         image = "elona.item_zantetsu",
          value = 40000,
          weight = 1400,
          dice_x = 7,
@@ -1129,7 +1129,7 @@ local item =
       {
          _id = "long_bow",
          elona_id = 58,
-         image = 404,
+         image = "elona.item_long_bow",
          value = 500,
          weight = 1200,
          dice_x = 2,
@@ -1151,7 +1151,7 @@ local item =
       {
          _id = "knight_shield",
          elona_id = 59,
-         image = 411,
+         image = "elona.item_knight_shield",
          value = 4800,
          weight = 2200,
          pv = 8,
@@ -1169,7 +1169,7 @@ local item =
       {
          _id = "pistol",
          elona_id = 60,
-         image = 419,
+         image = "elona.item_pistol",
          value = 500,
          weight = 800,
          dice_x = 1,
@@ -1192,7 +1192,7 @@ local item =
       {
          _id = "arrow",
          elona_id = 61,
-         image = 412,
+         image = "elona.item_bolt",
          value = 150,
          weight = 1200,
          dice_x = 1,
@@ -1211,7 +1211,7 @@ local item =
       {
          _id = "bullet",
          elona_id = 62,
-         image = 420,
+         image = "elona.item_bullet",
          value = 150,
          weight = 2400,
          dice_x = 2,
@@ -1231,7 +1231,7 @@ local item =
       {
          _id = "scythe_of_void",
          elona_id = 63,
-         image = 421,
+         image = "elona.item_scythe",
          value = 50000,
          weight = 9000,
          dice_x = 1,
@@ -1262,7 +1262,7 @@ local item =
       {
          _id = "mournblade",
          elona_id = 64,
-         image = 405,
+         image = "elona.item_long_sword",
          value = 60000,
          weight = 4000,
          dice_x = 3,
@@ -1297,7 +1297,7 @@ local item =
       {
          _id = "light_cloak",
          elona_id = 65,
-         image = 422,
+         image = "elona.item_light_cloak",
          value = 250,
          weight = 700,
          pv = 3,
@@ -1312,7 +1312,7 @@ local item =
       {
          _id = "girdle",
          elona_id = 66,
-         image = 423,
+         image = "elona.item_girdle",
          value = 300,
          weight = 900,
          pv = 3,
@@ -1327,7 +1327,7 @@ local item =
       {
          _id = "decorative_amulet",
          elona_id = 67,
-         image = 398,
+         image = "elona.item_decorative_amulet",
          value = 200,
          weight = 50,
          material = 1001,
@@ -1340,7 +1340,7 @@ local item =
       {
          _id = "potion_of_cure_minor_wound",
          elona_id = 68,
-         image = 354,
+         image = "elona.item_potion",
          value = 150,
          weight = 120,
          on_drink = function() end,
@@ -1359,7 +1359,7 @@ local item =
       {
          _id = "potion_of_cure_major_wound",
          elona_id = 69,
-         image = 354,
+         image = "elona.item_potion",
          value = 300,
          weight = 120,
          on_drink = function() end,
@@ -1379,7 +1379,7 @@ local item =
       {
          _id = "potion_of_cure_critical_wound",
          elona_id = 70,
-         image = 354,
+         image = "elona.item_potion",
          value = 1280,
          weight = 120,
          on_drink = function() end,
@@ -1399,7 +1399,7 @@ local item =
       {
          _id = "potion_of_healing",
          elona_id = 71,
-         image = 354,
+         image = "elona.item_potion",
          value = 3000,
          weight = 120,
          on_drink = function() end,
@@ -1420,7 +1420,7 @@ local item =
       {
          _id = "potion_of_healer",
          elona_id = 72,
-         image = 354,
+         image = "elona.item_potion",
          value = 5000,
          weight = 120,
          on_drink = function() end,
@@ -1441,7 +1441,7 @@ local item =
       {
          _id = "ragnarok",
          elona_id = 73,
-         image = 405,
+         image = "elona.item_long_sword",
          value = 20000,
          weight = 4200,
          dice_x = 2,
@@ -1471,7 +1471,7 @@ local item =
       {
          _id = "potion_of_healer_odina",
          elona_id = 74,
-         image = 354,
+         image = "elona.item_potion",
          value = 7500,
          weight = 120,
          on_drink = function() end,
@@ -1492,7 +1492,7 @@ local item =
       {
          _id = "potion_of_healer_eris",
          elona_id = 75,
-         image = 354,
+         image = "elona.item_potion",
          value = 10000,
          weight = 120,
          on_drink = function() end,
@@ -1513,7 +1513,7 @@ local item =
       {
          _id = "potion_of_healer_jure",
          elona_id = 76,
-         image = 354,
+         image = "elona.item_potion",
          value = 15000,
          weight = 120,
          on_drink = function() end,
@@ -1534,7 +1534,7 @@ local item =
       {
          _id = "round_chair",
          elona_id = 77,
-         image = 237,
+         image = "elona.item_round_chair",
          value = 80,
          weight = 900,
          category = 60000,
@@ -1546,7 +1546,7 @@ local item =
       {
          _id = "bookshelf",
          elona_id = 78,
-         image = 235,
+         image = "elona.item_bookshelf",
          value = 1800,
          weight = 10200,
          level = 12,
@@ -1557,7 +1557,7 @@ local item =
       {
          _id = "luxury_drawer",
          elona_id = 79,
-         image = 234,
+         image = "elona.item_luxury_drawer",
          value = 6400,
          weight = 8900,
          level = 20,
@@ -1568,7 +1568,7 @@ local item =
       {
          _id = "boring_bed",
          elona_id = 80,
-         image = 66,
+         image = "elona.item_bed",
          value = 1400,
          weight = 15000,
          on_use = function() end,
@@ -1586,7 +1586,7 @@ local item =
       {
          _id = "rag_doll",
          elona_id = 81,
-         image = 67,
+         image = "elona.item_rag_doll",
          value = 240,
          weight = 350,
          category = 60000,
@@ -1602,7 +1602,7 @@ local item =
       {
          _id = "toy",
          elona_id = 82,
-         image = 68,
+         image = "elona.item_noble_toy",
          value = 320,
          weight = 320,
          category = 60000,
@@ -1614,7 +1614,7 @@ local item =
       {
          _id = "modern_table",
          elona_id = 83,
-         image = 69,
+         image = "elona.item_modern_table",
          value = 2400,
          weight = 6800,
          level = 7,
@@ -1629,7 +1629,7 @@ local item =
       {
          _id = "dining_table",
          elona_id = 84,
-         image = 70,
+         image = "elona.item_dining_table",
          value = 3800,
          weight = 7000,
          level = 18,
@@ -1643,7 +1643,7 @@ local item =
       {
          _id = "armor",
          elona_id = 85,
-         image = 73,
+         image = "elona.item_armor",
          value = 1600,
          weight = 8400,
          level = 15,
@@ -1657,7 +1657,7 @@ local item =
       {
          _id = "lot_of_goods",
          elona_id = 86,
-         image = 74,
+         image = "elona.item_lot_of_goods",
          value = 450,
          weight = 800,
          level = 5,
@@ -1671,7 +1671,7 @@ local item =
       {
          _id = "lot_of_accessories",
          elona_id = 87,
-         image = 75,
+         image = "elona.item_lot_of_accessories",
          value = 720,
          weight = 750,
          level = 5,
@@ -1685,7 +1685,7 @@ local item =
       {
          _id = "grand_piano",
          elona_id = 88,
-         image = 76,
+         image = "elona.item_goulds_piano",
          value = 15000,
          weight = 45000,
          level = 20,
@@ -1703,7 +1703,7 @@ local item =
       {
          _id = "bar_table_alpha",
          elona_id = 89,
-         image = 78,
+         image = "elona.item_bar_table_alpha",
          value = 1200,
          weight = 7900,
          level = 12,
@@ -1717,7 +1717,7 @@ local item =
       {
          _id = "bar_table_beta",
          elona_id = 90,
-         image = 80,
+         image = "elona.item_bar_table_beta",
          value = 1200,
          weight = 7900,
          level = 12,
@@ -1731,7 +1731,7 @@ local item =
       {
          _id = "barrel",
          elona_id = 91,
-         image = 72,
+         image = "elona.item_barrel",
          value = 180,
          weight = 3400,
          category = 60000,
@@ -1740,7 +1740,7 @@ local item =
       {
          _id = "modern_chair",
          elona_id = 92,
-         image = 84,
+         image = "elona.item_modern_chair",
          value = 750,
          weight = 1100,
          level = 3,
@@ -1758,7 +1758,7 @@ local item =
       {
          _id = "pick",
          elona_id = 93,
-         image = 85,
+         image = "elona.item_pick",
          value = 160,
          weight = 1200,
          category = 60000,
@@ -1770,7 +1770,7 @@ local item =
       {
          _id = "lantern",
          elona_id = 94,
-         image = 86,
+         image = "elona.item_lantern",
          value = 120,
          weight = 400,
          category = 60000,
@@ -1783,7 +1783,7 @@ local item =
       {
          _id = "decorative_armor",
          elona_id = 95,
-         image = 87,
+         image = "elona.item_decorative_armor",
          value = 4200,
          weight = 3800,
          level = 7,
@@ -1797,7 +1797,7 @@ local item =
       {
          _id = "anvil",
          elona_id = 96,
-         image = 88,
+         image = "elona.item_anvil",
          value = 3500,
          weight = 9500,
          level = 9,
@@ -1811,7 +1811,7 @@ local item =
       {
          _id = "closed_pot",
          elona_id = 97,
-         image = 89,
+         image = "elona.item_closed_pot",
          value = 140,
          weight = 420,
          category = 60000,
@@ -1823,7 +1823,7 @@ local item =
       {
          _id = "open_pot",
          elona_id = 98,
-         image = 90,
+         image = "elona.item_open_pot",
          value = 120,
          weight = 540,
          category = 60000,
@@ -1835,7 +1835,7 @@ local item =
       {
          _id = "academic_table",
          elona_id = 99,
-         image = 91,
+         image = "elona.item_academic_table",
          value = 1050,
          weight = 4200,
          category = 60000,
@@ -1848,7 +1848,7 @@ local item =
       {
          _id = "rack_of_potions",
          elona_id = 100,
-         image = 580,
+         image = "elona.item_rack_of_potions",
          value = 3800,
          weight = 80,
          level = 13,
@@ -1860,7 +1860,7 @@ local item =
       {
          _id = "square_chair",
          elona_id = 101,
-         image = 93,
+         image = "elona.item_square_chair",
          value = 360,
          weight = 1200,
          category = 60000,
@@ -1875,7 +1875,7 @@ local item =
       {
          _id = "cheap_chair",
          elona_id = 102,
-         image = 94,
+         image = "elona.item_cheap_chair",
          value = 120,
          weight = 6800,
          category = 60000,
@@ -1890,7 +1890,7 @@ local item =
       {
          _id = "cupboard",
          elona_id = 103,
-         image = 95,
+         image = "elona.item_cupboard",
          value = 2400,
          weight = 7300,
          level = 11,
@@ -1901,7 +1901,7 @@ local item =
       {
          _id = "barn",
          elona_id = 104,
-         image = 96,
+         image = "elona.item_barn",
          value = 750,
          weight = 8200,
          category = 60000,
@@ -1910,7 +1910,7 @@ local item =
       {
          _id = "neat_shelf",
          elona_id = 105,
-         image = 97,
+         image = "elona.item_neat_shelf",
          value = 1800,
          weight = 7600,
          level = 7,
@@ -1921,7 +1921,7 @@ local item =
       {
          _id = "closet",
          elona_id = 106,
-         image = 98,
+         image = "elona.item_closet",
          value = 1500,
          weight = 6800,
          level = 7,
@@ -1935,7 +1935,7 @@ local item =
       {
          _id = "variety_of_tools",
          elona_id = 107,
-         image = 99,
+         image = "elona.item_variety_of_tools",
          value = 1050,
          weight = 750,
          category = 60000,
@@ -1946,7 +1946,7 @@ local item =
       {
          _id = "variety_of_goods",
          elona_id = 108,
-         image = 100,
+         image = "elona.item_variety_of_goods",
          value = 1300,
          weight = 820,
          level = 3,
@@ -1958,7 +1958,7 @@ local item =
       {
          _id = "well",
          elona_id = 109,
-         image = 101,
+         image = "elona.item_well",
          value = 1800,
          weight = 350000,
          on_drink = function() end,
@@ -1976,7 +1976,7 @@ local item =
       {
          _id = "variety_of_clothes",
          elona_id = 110,
-         image = 102,
+         image = "elona.item_variety_of_clothes",
          value = 1800,
          weight = 950,
          level = 5,
@@ -1991,7 +1991,7 @@ local item =
       {
          _id = "furnace",
          elona_id = 111,
-         image = 103,
+         image = "elona.item_furnace",
          value = 4400,
          weight = 45800,
          level = 17,
@@ -2003,7 +2003,7 @@ local item =
       {
          _id = "oven",
          elona_id = 112,
-         image = 104,
+         image = "elona.item_oven",
          value = 8500,
          weight = 14000,
          level = 22,
@@ -2019,7 +2019,7 @@ local item =
       {
          _id = "sign",
          elona_id = 113,
-         image = 105,
+         image = "elona.item_sign",
          value = 100,
          weight = 3200,
          category = 60000,
@@ -2028,7 +2028,7 @@ local item =
       {
          _id = "crossroad_sign",
          elona_id = 114,
-         image = 106,
+         image = "elona.item_crossroad_sign",
          value = 120,
          weight = 3500,
          category = 60000,
@@ -2037,7 +2037,7 @@ local item =
       {
          _id = "board",
          elona_id = 115,
-         image = 381,
+         image = "elona.item_board",
          value = 240,
          weight = 9500,
          category = 60000,
@@ -2046,7 +2046,7 @@ local item =
       {
          _id = "spellbook_of_minor_teleportation",
          elona_id = 116,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2400,
          weight = 380,
          chargelevel = 4,
@@ -2069,7 +2069,7 @@ local item =
       {
          _id = "empty_basket",
          elona_id = 117,
-         image = 109,
+         image = "elona.item_empty_basket",
          value = 20,
          weight = 80,
          category = 64000,
@@ -2082,7 +2082,7 @@ local item =
       {
          _id = "spellbook_of_summon_monsters",
          elona_id = 118,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6000,
          weight = 380,
          chargelevel = 4,
@@ -2106,7 +2106,7 @@ local item =
       {
          _id = "rod_of_cure_minor_wound",
          elona_id = 119,
-         image = 471,
+         image = "elona.item_rod",
          value = 650,
          weight = 800,
          chargelevel = 8,
@@ -2129,7 +2129,7 @@ local item =
       {
          _id = "rod_of_magic_missile",
          elona_id = 120,
-         image = 471,
+         image = "elona.item_rod",
          value = 800,
          weight = 800,
          chargelevel = 10,
@@ -2152,7 +2152,7 @@ local item =
       {
          _id = "rod_of_summon_monsters",
          elona_id = 121,
-         image = 471,
+         image = "elona.item_rod",
          value = 700,
          weight = 800,
          chargelevel = 8,
@@ -2174,7 +2174,7 @@ local item =
       {
          _id = "rod_of_ice_bolt",
          elona_id = 122,
-         image = 471,
+         image = "elona.item_rod",
          value = 1460,
          weight = 800,
          chargelevel = 8,
@@ -2197,7 +2197,7 @@ local item =
       {
          _id = "rod_of_fire_bolt",
          elona_id = 123,
-         image = 471,
+         image = "elona.item_rod",
          value = 1600,
          weight = 800,
          chargelevel = 10,
@@ -2220,7 +2220,7 @@ local item =
       {
          _id = "show_case_of_breads",
          elona_id = 124,
-         image = 116,
+         image = "elona.item_show_case_of_breads",
          value = 1400,
          weight = 7800,
          category = 60000,
@@ -2231,7 +2231,7 @@ local item =
       {
          _id = "rod_of_heal",
          elona_id = 125,
-         image = 471,
+         image = "elona.item_rod",
          value = 4800,
          weight = 800,
          chargelevel = 4,
@@ -2255,7 +2255,7 @@ local item =
       {
          _id = "beaker",
          elona_id = 126,
-         image = 118,
+         image = "elona.item_beaker",
          value = 80,
          weight = 210,
          category = 60000,
@@ -2267,7 +2267,7 @@ local item =
       {
          _id = "alchemy_kit",
          elona_id = 127,
-         image = 119,
+         image = "elona.item_alchemy_kit",
          value = 1960,
          weight = 900,
          on_use = function() end,
@@ -2283,7 +2283,7 @@ local item =
       {
          _id = "pentagram",
          elona_id = 128,
-         image = 120,
+         image = "elona.item_pentagram",
          value = 3500,
          weight = 1840,
          category = 60000,
@@ -2297,7 +2297,7 @@ local item =
       {
          _id = "small_foliage_plant",
          elona_id = 129,
-         image = 121,
+         image = "elona.item_small_foliage_plant",
          value = 850,
          weight = 420,
          level = 7,
@@ -2311,7 +2311,7 @@ local item =
       {
          _id = "rose",
          elona_id = 130,
-         image = 122,
+         image = "elona.item_rose",
          value = 1050,
          weight = 400,
          level = 9,
@@ -2325,7 +2325,7 @@ local item =
       {
          _id = "large_foliage_plant",
          elona_id = 131,
-         image = 123,
+         image = "elona.item_large_foliage_plant",
          value = 1800,
          weight = 380,
          level = 11,
@@ -2339,7 +2339,7 @@ local item =
       {
          _id = "sage",
          elona_id = 132,
-         image = 124,
+         image = "elona.item_sage",
          value = 650,
          weight = 320,
          category = 60000,
@@ -2351,7 +2351,7 @@ local item =
       {
          _id = "gazania",
          elona_id = 133,
-         image = 125,
+         image = "elona.item_gazania",
          value = 750,
          weight = 350,
          category = 60000,
@@ -2363,7 +2363,7 @@ local item =
       {
          _id = "nerine",
          elona_id = 134,
-         image = 126,
+         image = "elona.item_nerine",
          value = 880,
          weight = 400,
          category = 60000,
@@ -2375,7 +2375,7 @@ local item =
       {
          _id = "anemos",
          elona_id = 135,
-         image = 127,
+         image = "elona.item_anemos",
          value = 920,
          weight = 300,
          category = 60000,
@@ -2388,7 +2388,7 @@ local item =
       {
          _id = "foxtail_grass",
          elona_id = 136,
-         image = 128,
+         image = "elona.item_foxtail_grass",
          value = 1500,
          weight = 240,
          category = 60000,
@@ -2401,7 +2401,7 @@ local item =
       {
          _id = "carnation",
          elona_id = 137,
-         image = 129,
+         image = "elona.item_carnation",
          value = 780,
          weight = 250,
          category = 60000,
@@ -2413,7 +2413,7 @@ local item =
       {
          _id = "statue_ornamented_with_plants",
          elona_id = 138,
-         image = 525,
+         image = "elona.item_statue_ornamented_with_plants",
          value = 3400,
          weight = 32000,
          level = 18,
@@ -2424,7 +2424,7 @@ local item =
       {
          _id = "statue_ornamented_with_flowers",
          elona_id = 139,
-         image = 526,
+         image = "elona.item_statue_ornamented_with_flowers",
          value = 3900,
          weight = 32000,
          level = 20,
@@ -2435,7 +2435,7 @@ local item =
       {
          _id = "canvas",
          elona_id = 140,
-         image = 132,
+         image = "elona.item_canvas",
          value = 830,
          weight = 1100,
          category = 59000,
@@ -2447,7 +2447,7 @@ local item =
       {
          _id = "map",
          elona_id = 141,
-         image = 133,
+         image = "elona.item_map",
          value = 450,
          weight = 240,
          category = 60000,
@@ -2459,7 +2459,7 @@ local item =
       {
          _id = "food_maker",
          elona_id = 142,
-         image = 523,
+         image = "elona.item_food_maker",
          value = 7800,
          weight = 17400,
          level = 14,
@@ -2474,7 +2474,7 @@ local item =
       {
          _id = "bundle_of_bows",
          elona_id = 143,
-         image = 135,
+         image = "elona.item_bundle_of_bows",
          value = 240,
          weight = 1500,
          category = 60000,
@@ -2484,7 +2484,7 @@ local item =
       {
          _id = "bundle_of_weapons",
          elona_id = 144,
-         image = 136,
+         image = "elona.item_bundle_of_weapons",
          value = 940,
          weight = 2400,
          category = 60000,
@@ -2497,7 +2497,7 @@ local item =
       {
          _id = "decorated_cloth",
          elona_id = 145,
-         image = 137,
+         image = "elona.item_decorated_cloth",
          value = 1400,
          weight = 860,
          category = 60000,
@@ -2510,7 +2510,7 @@ local item =
       {
          _id = "decorated_armor",
          elona_id = 146,
-         image = 138,
+         image = "elona.item_decorated_armor",
          value = 1900,
          weight = 4400,
          category = 60000,
@@ -2523,7 +2523,7 @@ local item =
       {
          _id = "statue_of_armor",
          elona_id = 147,
-         image = 139,
+         image = "elona.item_statue_of_armor",
          value = 3600,
          weight = 7500,
          category = 60000,
@@ -2537,7 +2537,7 @@ local item =
       {
          _id = "disorderly_book",
          elona_id = 148,
-         image = 140,
+         image = "elona.item_disorderly_book",
          value = 240,
          weight = 830,
          category = 60000,
@@ -2546,7 +2546,7 @@ local item =
       {
          _id = "lot_of_books",
          elona_id = 149,
-         image = 141,
+         image = "elona.item_lot_of_books",
          value = 320,
          weight = 940,
          category = 60000,
@@ -2556,7 +2556,7 @@ local item =
       {
          _id = "craft_rack",
          elona_id = 150,
-         image = 142,
+         image = "elona.item_craft_rack",
          value = 4500,
          weight = 8700,
          level = 17,
@@ -2570,7 +2570,7 @@ local item =
       {
          _id = "craft_book_shelf",
          elona_id = 151,
-         image = 143,
+         image = "elona.item_craft_book_shelf",
          value = 4400,
          weight = 8600,
          level = 17,
@@ -2584,7 +2584,7 @@ local item =
       {
          _id = "lot_of_alcohols",
          elona_id = 152,
-         image = 144,
+         image = "elona.item_lot_of_alcohols",
          value = 350,
          weight = 320,
          category = 60000,
@@ -2597,7 +2597,7 @@ local item =
       {
          _id = "kitchen",
          elona_id = 153,
-         image = 145,
+         image = "elona.item_kitchen",
          value = 1200,
          weight = 14000,
          level = 4,
@@ -2615,7 +2615,7 @@ local item =
       {
          _id = "washstand",
          elona_id = 154,
-         image = 146,
+         image = "elona.item_washstand",
          value = 1100,
          weight = 15000,
          level = 4,
@@ -2633,7 +2633,7 @@ local item =
       {
          _id = "kitchen_oven",
          elona_id = 155,
-         image = 147,
+         image = "elona.item_kitchen_oven",
          value = 1500,
          weight = 14000,
          level = 4,
@@ -2651,7 +2651,7 @@ local item =
       {
          _id = "narrow_dining_table",
          elona_id = 156,
-         image = 148,
+         image = "elona.item_narrow_dining_table",
          value = 1200,
          weight = 9700,
          category = 60000,
@@ -2660,7 +2660,7 @@ local item =
       {
          _id = "elegant_table",
          elona_id = 157,
-         image = 149,
+         image = "elona.item_elegant_table",
          value = 3500,
          weight = 8600,
          level = 14,
@@ -2674,7 +2674,7 @@ local item =
       {
          _id = "gorgeous_candlestick",
          elona_id = 158,
-         image = 150,
+         image = "elona.item_gorgeous_candlestick",
          value = 800,
          weight = 860,
          category = 60000,
@@ -2684,7 +2684,7 @@ local item =
       {
          _id = "simple_shelf",
          elona_id = 159,
-         image = 151,
+         image = "elona.item_simple_shelf",
          value = 1200,
          weight = 11000,
          category = 60000,
@@ -2697,7 +2697,7 @@ local item =
       {
          _id = "sewing_kit",
          elona_id = 160,
-         image = 152,
+         image = "elona.item_sewing_kit",
          value = 780,
          weight = 500,
          on_use = function() end,
@@ -2713,7 +2713,7 @@ local item =
       {
          _id = "carpenters_tool",
          elona_id = 161,
-         image = 153,
+         image = "elona.item_carpenters_tool",
          value = 1250,
          weight = 500,
          on_use = function() end,
@@ -2729,7 +2729,7 @@ local item =
       {
          _id = "messy_cloth",
          elona_id = 162,
-         image = 154,
+         image = "elona.item_messy_cloth",
          value = 430,
          weight = 1200,
          category = 60000,
@@ -2741,7 +2741,7 @@ local item =
       {
          _id = "silk_cloth",
          elona_id = 163,
-         image = 155,
+         image = "elona.item_silk_cloth",
          value = 1400,
          weight = 340,
          level = 4,
@@ -2755,7 +2755,7 @@ local item =
       {
          _id = "collapsed_grave",
          elona_id = 164,
-         image = 156,
+         image = "elona.item_collapsed_grave",
          value = 1800,
          weight = 400000,
          category = 60000,
@@ -2766,7 +2766,7 @@ local item =
       {
          _id = "crumbled_grave",
          elona_id = 165,
-         image = 157,
+         image = "elona.item_crumbled_grave",
          value = 1700,
          weight = 400000,
          category = 60000,
@@ -2777,7 +2777,7 @@ local item =
       {
          _id = "grave_of_ornamented_with_flowers",
          elona_id = 166,
-         image = 158,
+         image = "elona.item_grave_of_ornamented_with_flowers",
          value = 3250,
          weight = 650000,
          level = 5,
@@ -2790,7 +2790,7 @@ local item =
       {
          _id = "brand_new_grave",
          elona_id = 167,
-         image = 159,
+         image = "elona.item_brand_new_grave",
          value = 2500,
          weight = 650000,
          level = 5,
@@ -2801,7 +2801,7 @@ local item =
       {
          _id = "solemn_tomb",
          elona_id = 168,
-         image = 160,
+         image = "elona.item_solemn_tomb",
          value = 4400,
          weight = 650000,
          level = 10,
@@ -2812,7 +2812,7 @@ local item =
       {
          _id = "ancient_tomb",
          elona_id = 169,
-         image = 161,
+         image = "elona.item_grave",
          value = 6500,
          weight = 650000,
          level = 20,
@@ -2823,7 +2823,7 @@ local item =
       {
          _id = "old_grave",
          elona_id = 170,
-         image = 162,
+         image = "elona.item_old_grave",
          value = 2400,
          weight = 650000,
          level = 10,
@@ -2834,7 +2834,7 @@ local item =
       {
          _id = "altar",
          elona_id = 171,
-         image = 163,
+         image = "elona.item_ceremony_altar",
          value = 1500,
          weight = 500000,
          fltselect = 1,
@@ -2846,7 +2846,7 @@ local item =
       {
          _id = "ceremony_altar",
          elona_id = 172,
-         image = 163,
+         image = "elona.item_ceremony_altar",
          value = 1600,
          weight = 500000,
          fltselect = 1,
@@ -2858,7 +2858,7 @@ local item =
       {
          _id = "fountain",
          elona_id = 173,
-         image = 355,
+         image = "elona.item_fountain",
          value = 2400,
          weight = 600000,
          on_drink = function() end,
@@ -2876,7 +2876,7 @@ local item =
       {
          _id = "bunk_bed",
          elona_id = 174,
-         image = 166,
+         image = "elona.item_bunk_bed",
          value = 2200,
          weight = 12400,
          on_use = function() end,
@@ -2892,7 +2892,7 @@ local item =
       {
          _id = "rod_of_lightning_bolt",
          elona_id = 175,
-         image = 471,
+         image = "elona.item_rod",
          value = 1900,
          weight = 800,
          chargelevel = 10,
@@ -2915,7 +2915,7 @@ local item =
       {
          _id = "rod_of_slow",
          elona_id = 176,
-         image = 471,
+         image = "elona.item_rod",
          value = 1500,
          weight = 800,
          chargelevel = 8,
@@ -2938,7 +2938,7 @@ local item =
       {
          _id = "quwapana",
          elona_id = 177,
-         image = 169,
+         image = "elona.item_quwapana",
          value = 80,
          weight = 160,
          material = 35,
@@ -2954,7 +2954,7 @@ local item =
       {
          _id = "aloe",
          elona_id = 178,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 70,
          weight = 170,
          material = 35,
@@ -2970,7 +2970,7 @@ local item =
       {
          _id = "edible_wild_plant",
          elona_id = 179,
-         image = 171,
+         image = "elona.item_edible_wild_plant",
          value = 60,
          weight = 100,
          material = 35,
@@ -2989,7 +2989,7 @@ local item =
       {
          _id = "apple",
          elona_id = 180,
-         image = 172,
+         image = "elona.item_happy_apple",
          value = 180,
          weight = 720,
          material = 35,
@@ -3005,7 +3005,7 @@ local item =
       {
          _id = "grape",
          elona_id = 181,
-         image = 173,
+         image = "elona.item_grape",
          value = 220,
          weight = 510,
          material = 35,
@@ -3021,7 +3021,7 @@ local item =
       {
          _id = "kiwi",
          elona_id = 182,
-         image = 174,
+         image = "elona.item_kiwi",
          value = 190,
          weight = 440,
          material = 35,
@@ -3037,7 +3037,7 @@ local item =
       {
          _id = "cherry",
          elona_id = 183,
-         image = 175,
+         image = "elona.item_cherry",
          value = 170,
          weight = 220,
          material = 35,
@@ -3053,7 +3053,7 @@ local item =
       {
          _id = "guava",
          elona_id = 184,
-         image = 176,
+         image = "elona.item_guava",
          value = 80,
          weight = 620,
          material = 35,
@@ -3069,7 +3069,7 @@ local item =
       {
          _id = "carrot",
          elona_id = 185,
-         image = 177,
+         image = "elona.item_carrot",
          value = 40,
          weight = 420,
          material = 35,
@@ -3088,7 +3088,7 @@ local item =
       {
          _id = "radish",
          elona_id = 186,
-         image = 178,
+         image = "elona.item_radish",
          value = 50,
          weight = 950,
          material = 35,
@@ -3107,7 +3107,7 @@ local item =
       {
          _id = "sweet_potato",
          elona_id = 187,
-         image = 179,
+         image = "elona.item_sweet_potato",
          value = 40,
          weight = 790,
          category = 57000,
@@ -3124,7 +3124,7 @@ local item =
       {
          _id = "lettuce",
          elona_id = 188,
-         image = 180,
+         image = "elona.item_lettuce",
          value = 50,
          weight = 650,
          material = 35,
@@ -3143,7 +3143,7 @@ local item =
       {
          _id = "stack_of_dishes",
          elona_id = 189,
-         image = 181,
+         image = "elona.item_stack_of_dishes",
          value = 120,
          weight = 450,
          category = 60000,
@@ -3152,7 +3152,7 @@ local item =
       {
          _id = "imo",
          elona_id = 190,
-         image = 182,
+         image = "elona.item_imo",
          value = 70,
          weight = 650,
          category = 57000,
@@ -3168,7 +3168,7 @@ local item =
       {
          _id = "api_nut",
          elona_id = 191,
-         image = 183,
+         image = "elona.item_api_nut",
          value = 80,
          weight = 40,
          category = 57000,
@@ -3181,7 +3181,7 @@ local item =
       {
          _id = "strawberry",
          elona_id = 192,
-         image = 184,
+         image = "elona.item_strawberry",
          value = 260,
          weight = 720,
          material = 35,
@@ -3197,7 +3197,7 @@ local item =
       {
          _id = "healthy_leaf",
          elona_id = 193,
-         image = 185,
+         image = "elona.item_healthy_leaf",
          value = 240,
          weight = 90,
          category = 57000,
@@ -3213,7 +3213,7 @@ local item =
       {
          _id = "rainbow_fruit",
          elona_id = 194,
-         image = 186,
+         image = "elona.item_rainbow_fruit",
          value = 220,
          weight = 1070,
          material = 35,
@@ -3229,7 +3229,7 @@ local item =
       {
          _id = "qucche",
          elona_id = 195,
-         image = 187,
+         image = "elona.item_qucche",
          value = 100,
          weight = 560,
          material = 35,
@@ -3245,7 +3245,7 @@ local item =
       {
          _id = "tangerine",
          elona_id = 196,
-         image = 188,
+         image = "elona.item_tangerine",
          value = 130,
          weight = 880,
          material = 35,
@@ -3261,7 +3261,7 @@ local item =
       {
          _id = "lemon",
          elona_id = 197,
-         image = 189,
+         image = "elona.item_magic_fruit",
          value = 240,
          weight = 440,
          material = 35,
@@ -3277,7 +3277,7 @@ local item =
       {
          _id = "green_pea",
          elona_id = 198,
-         image = 164,
+         image = "elona.item_green_pea",
          value = 260,
          weight = 360,
          material = 35,
@@ -3296,7 +3296,7 @@ local item =
       {
          _id = "cbocchi",
          elona_id = 199,
-         image = 191,
+         image = "elona.item_cbocchi",
          value = 80,
          weight = 970,
          material = 35,
@@ -3315,7 +3315,7 @@ local item =
       {
          _id = "melon",
          elona_id = 200,
-         image = 192,
+         image = "elona.item_melon",
          value = 30,
          weight = 840,
          material = 35,
@@ -3334,7 +3334,7 @@ local item =
       {
          _id = "leccho",
          elona_id = 201,
-         image = 193,
+         image = "elona.item_leccho",
          value = 70,
          weight = 550,
          material = 35,
@@ -3353,7 +3353,7 @@ local item =
       {
          _id = "rod_of_magic_mapping",
          elona_id = 202,
-         image = 471,
+         image = "elona.item_rod",
          value = 3250,
          weight = 800,
          chargelevel = 9,
@@ -3376,7 +3376,7 @@ local item =
       {
          _id = "rod_of_cure",
          elona_id = 203,
-         image = 471,
+         image = "elona.item_rod",
          value = 2600,
          weight = 800,
          chargelevel = 8,
@@ -3400,7 +3400,7 @@ local item =
       {
          _id = "corpse",
          elona_id = 204,
-         image = 196,
+         image = "elona.item_corpse",
          value = 80,
          weight = 2000,
          material = 35,
@@ -3418,7 +3418,7 @@ local item =
       {
          _id = "bottle_of_whisky",
          elona_id = 205,
-         image = 210,
+         image = "elona.item_bottle_of_whisky",
          value = 180,
          weight = 50,
          on_drink = function() end,
@@ -3435,7 +3435,7 @@ local item =
       {
          _id = "ether_dagger",
          elona_id = 206,
-         image = 400,
+         image = "elona.item_dagger",
          value = 60000,
          weight = 600,
          dice_x = 5,
@@ -3473,7 +3473,7 @@ local item =
       {
          _id = "bow_of_vinderre",
          elona_id = 207,
-         image = 404,
+         image = "elona.item_long_bow",
          value = 60000,
          weight = 1200,
          dice_x = 2,
@@ -3511,7 +3511,7 @@ local item =
       {
          _id = "worthless_fake_gold_bar",
          elona_id = 208,
-         image = 33,
+         image = "elona.item_worthless_fake_gold_bar",
          value = 1,
          weight = 1,
          category = 77000,
@@ -3521,7 +3521,7 @@ local item =
       {
          _id = "scroll_of_uncurse",
          elona_id = 209,
-         image = 470,
+         image = "elona.item_scroll",
          value = 1050,
          weight = 20,
          on_read = function() end,
@@ -3539,7 +3539,7 @@ local item =
       {
          _id = "stone",
          elona_id = 210,
-         image = 424,
+         image = "elona.item_stone",
          value = 180,
          weight = 2000,
          dice_x = 1,
@@ -3556,7 +3556,7 @@ local item =
       {
          _id = "sickle",
          elona_id = 211,
-         image = 421,
+         image = "elona.item_scythe",
          value = 500,
          weight = 1400,
          dice_x = 2,
@@ -3581,7 +3581,7 @@ local item =
       {
          _id = "staff",
          elona_id = 212,
-         image = 425,
+         image = "elona.item_staff",
          value = 500,
          weight = 900,
          dice_x = 1,
@@ -3604,7 +3604,7 @@ local item =
       {
          _id = "spear",
          elona_id = 213,
-         image = 401,
+         image = "elona.item_spear",
          value = 500,
          weight = 2500,
          dice_x = 3,
@@ -3624,7 +3624,7 @@ local item =
       {
          _id = "ore_piece",
          elona_id = 214,
-         image = 209,
+         image = "elona.item_ore_piece",
          value = 180,
          weight = 12000,
          category = 64000,
@@ -3638,7 +3638,7 @@ local item =
       {
          _id = "lot_of_empty_bottles",
          elona_id = 215,
-         image = 208,
+         image = "elona.item_whisky",
          value = 10,
          weight = 220,
          category = 64000,
@@ -3652,7 +3652,7 @@ local item =
       {
          _id = "basket",
          elona_id = 216,
-         image = 207,
+         image = "elona.item_basket",
          value = 40,
          weight = 80,
          category = 64000,
@@ -3665,7 +3665,7 @@ local item =
       {
          _id = "empty_bowl",
          elona_id = 217,
-         image = 206,
+         image = "elona.item_empty_bowl",
          value = 25,
          weight = 90,
          category = 64000,
@@ -3677,7 +3677,7 @@ local item =
       {
          _id = "bowl",
          elona_id = 218,
-         image = 203,
+         image = "elona.item_bowl",
          value = 30,
          weight = 80,
          category = 64000,
@@ -3689,7 +3689,7 @@ local item =
       {
          _id = "tight_rope",
          elona_id = 219,
-         image = 202,
+         image = "elona.item_rope",
          value = 180,
          weight = 340,
          category = 59000,
@@ -3705,7 +3705,7 @@ local item =
       {
          _id = "dead_fish",
          elona_id = 220,
-         image = 201,
+         image = "elona.item_bomb_fish",
          value = 4,
          weight = 50,
          category = 64000,
@@ -3716,7 +3716,7 @@ local item =
       {
          _id = "straw",
          elona_id = 221,
-         image = 200,
+         image = "elona.item_straw",
          value = 7,
          weight = 70,
          category = 64000,
@@ -3725,7 +3725,7 @@ local item =
       {
          _id = "animal_bone",
          elona_id = 222,
-         image = 199,
+         image = "elona.item_animal_bone",
          value = 8,
          weight = 40,
          category = 64000,
@@ -3735,7 +3735,7 @@ local item =
       {
          _id = "pot",
          elona_id = 223,
-         image = 198,
+         image = "elona.item_pot",
          value = 150,
          weight = 15000,
          category = 59000,
@@ -3748,7 +3748,7 @@ local item =
       {
          _id = "katana",
          elona_id = 224,
-         image = 431,
+         image = "elona.item_katana",
          value = 500,
          weight = 1200,
          dice_x = 4,
@@ -3766,7 +3766,7 @@ local item =
       {
          _id = "scimitar",
          elona_id = 225,
-         image = 502,
+         image = "elona.item_scimitar",
          value = 500,
          weight = 900,
          dice_x = 3,
@@ -3786,7 +3786,7 @@ local item =
       {
          _id = "battle_axe",
          elona_id = 226,
-         image = 500,
+         image = "elona.item_battle_axe",
          value = 500,
          weight = 3700,
          dice_x = 1,
@@ -3805,7 +3805,7 @@ local item =
       {
          _id = "hammer",
          elona_id = 227,
-         image = 504,
+         image = "elona.item_hammer",
          value = 500,
          weight = 4200,
          dice_x = 2,
@@ -3824,7 +3824,7 @@ local item =
       {
          _id = "trident",
          elona_id = 228,
-         image = 494,
+         image = "elona.item_trident",
          value = 500,
          weight = 1800,
          dice_x = 4,
@@ -3844,7 +3844,7 @@ local item =
       {
          _id = "long_staff",
          elona_id = 229,
-         image = 505,
+         image = "elona.item_long_staff",
          value = 500,
          weight = 800,
          dice_x = 2,
@@ -3867,7 +3867,7 @@ local item =
       {
          _id = "short_bow",
          elona_id = 230,
-         image = 404,
+         image = "elona.item_long_bow",
          value = 500,
          weight = 800,
          dice_x = 3,
@@ -3889,7 +3889,7 @@ local item =
       {
          _id = "machine_gun",
          elona_id = 231,
-         image = 547,
+         image = "elona.item_machine_gun",
          value = 500,
          weight = 1800,
          dice_x = 10,
@@ -3912,7 +3912,7 @@ local item =
       {
          _id = "claymore",
          elona_id = 232,
-         image = 503,
+         image = "elona.item_claymore",
          value = 500,
          weight = 4000,
          dice_x = 3,
@@ -3931,7 +3931,7 @@ local item =
       {
          _id = "ration",
          elona_id = 233,
-         image = 233,
+         image = "elona.item_sack",
          value = 280,
          weight = 400,
          level = 3,
@@ -3944,7 +3944,7 @@ local item =
       {
          _id = "bardiche",
          elona_id = 234,
-         image = 399,
+         image = "elona.item_bardiche",
          value = 500,
          weight = 3500,
          dice_x = 1,
@@ -3963,7 +3963,7 @@ local item =
       {
          _id = "halberd",
          elona_id = 235,
-         image = 426,
+         image = "elona.item_halberd",
          value = 500,
          weight = 3800,
          dice_x = 2,
@@ -3982,7 +3982,7 @@ local item =
       {
          _id = "scroll_of_return",
          elona_id = 236,
-         image = 470,
+         image = "elona.item_scroll",
          value = 750,
          weight = 20,
          on_read = function() end,
@@ -4001,7 +4001,7 @@ local item =
       {
          _id = "figurine_of_warrior",
          elona_id = 237,
-         image = 222,
+         image = "elona.item_figurine_of_warrior",
          value = 2000,
          weight = 240,
          category = 60000,
@@ -4015,7 +4015,7 @@ local item =
       {
          _id = "figurine_of_sword",
          elona_id = 238,
-         image = 221,
+         image = "elona.item_figurine_of_sword",
          value = 2000,
          weight = 240,
          category = 60000,
@@ -4029,7 +4029,7 @@ local item =
       {
          _id = "bejeweled_chest",
          elona_id = 239,
-         image = 220,
+         image = "elona.item_small_gamble_chest",
          value = 3000,
          weight = 3000,
          category = 72000,
@@ -4043,7 +4043,7 @@ local item =
       {
          _id = "chest",
          elona_id = 240,
-         image = 220,
+         image = "elona.item_small_gamble_chest",
          value = 1200,
          weight = 300000,
          category = 72000,
@@ -4057,7 +4057,7 @@ local item =
       {
          _id = "safe",
          elona_id = 241,
-         image = 197,
+         image = "elona.item_shop_strongbox",
          value = 1000,
          weight = 300000,
          category = 72000,
@@ -4071,7 +4071,7 @@ local item =
       {
          _id = "scroll_of_magical_map",
          elona_id = 242,
-         image = 470,
+         image = "elona.item_scroll",
          value = 480,
          weight = 20,
          on_read = function() end,
@@ -4089,7 +4089,7 @@ local item =
       {
          _id = "scroll_of_gain_attribute",
          elona_id = 243,
-         image = 470,
+         image = "elona.item_scroll",
          value = 240000,
          weight = 20,
          on_read = function() end,
@@ -4110,7 +4110,7 @@ local item =
       {
          _id = "scroll_of_wonder",
          elona_id = 244,
-         image = 470,
+         image = "elona.item_scroll",
          value = 8000,
          weight = 20,
          on_read = function() end,
@@ -4130,7 +4130,7 @@ local item =
       {
          _id = "scroll_of_minor_teleportation",
          elona_id = 245,
-         image = 470,
+         image = "elona.item_scroll",
          value = 200,
          weight = 20,
          on_read = function() end,
@@ -4148,7 +4148,7 @@ local item =
       {
          _id = "spellbook_of_magic_mapping",
          elona_id = 246,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
          chargelevel = 4,
@@ -4173,7 +4173,7 @@ local item =
       {
          _id = "spellbook_of_oracle",
          elona_id = 247,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 25000,
          weight = 380,
          chargelevel = 2,
@@ -4198,7 +4198,7 @@ local item =
       {
          _id = "spellbook_of_return",
          elona_id = 248,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8900,
          weight = 380,
          chargelevel = 3,
@@ -4223,7 +4223,7 @@ local item =
       {
          _id = "spellbook_of_cure_minor_wound",
          elona_id = 249,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
          chargelevel = 5,
@@ -4246,7 +4246,7 @@ local item =
       {
          _id = "spellbook_of_cure_critical_wound",
          elona_id = 250,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 9000,
          weight = 380,
          chargelevel = 4,
@@ -4270,7 +4270,7 @@ local item =
       {
          _id = "spellbook_of_cure_eris",
          elona_id = 251,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 15000,
          weight = 380,
          chargelevel = 3,
@@ -4295,7 +4295,7 @@ local item =
       {
          _id = "spellbook_of_cure_jure",
          elona_id = 252,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 35000,
          weight = 380,
          chargelevel = 2,
@@ -4320,7 +4320,7 @@ local item =
       {
          _id = "bottle_of_beer",
          elona_id = 253,
-         image = 223,
+         image = "elona.item_molotov",
          value = 280,
          weight = 50,
          on_drink = function() end,
@@ -4337,7 +4337,7 @@ local item =
       {
          _id = "horn",
          elona_id = 254,
-         image = 224,
+         image = "elona.item_horn",
          value = 2500,
          weight = 6500,
          level = 5,
@@ -4355,7 +4355,7 @@ local item =
       {
          _id = "campfire",
          elona_id = 255,
-         image = 349,
+         image = "elona.item_campfire",
          value = 1860,
          weight = 12000,
          category = 59000,
@@ -4369,7 +4369,7 @@ local item =
       {
          _id = "portable_cooking_tool",
          elona_id = 256,
-         image = 226,
+         image = "elona.item_portable_cooking_tool",
          value = 1860,
          weight = 1200,
          category = 59000,
@@ -4382,7 +4382,7 @@ local item =
       {
          _id = "spellbook_of_magic_arrow",
          elona_id = 257,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2500,
          weight = 380,
          chargelevel = 5,
@@ -4405,7 +4405,7 @@ local item =
       {
          _id = "stick_bread",
          elona_id = 258,
-         image = 117,
+         image = "elona.item_stick_bread",
          value = 280,
          weight = 350,
          level = 3,
@@ -4418,7 +4418,7 @@ local item =
       {
          _id = "raw_noodle",
          elona_id = 259,
-         image = 233,
+         image = "elona.item_sack",
          value = 280,
          weight = 400,
          material = 35,
@@ -4436,7 +4436,7 @@ local item =
       {
          _id = "sack_of_flour",
          elona_id = 260,
-         image = 233,
+         image = "elona.item_sack",
          value = 280,
          weight = 800,
          expiration_date = 240,
@@ -4454,7 +4454,7 @@ local item =
       {
          _id = "bomb_fish",
          elona_id = 261,
-         image = 201,
+         image = "elona.item_bomb_fish",
          value = 280,
          weight = 350,
          material = 35,
@@ -4474,7 +4474,7 @@ local item =
       {
          _id = "poison",
          elona_id = 262,
-         image = 354,
+         image = "elona.item_potion",
          value = 120,
          weight = 120,
          on_drink = function() end,
@@ -4492,7 +4492,7 @@ local item =
       {
          _id = "spellbook_of_nether_eye",
          elona_id = 263,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 7200,
          weight = 380,
          chargelevel = 3,
@@ -4516,7 +4516,7 @@ local item =
       {
          _id = "spellbook_of_chaos_eye",
          elona_id = 264,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 9600,
          weight = 380,
          chargelevel = 3,
@@ -4541,7 +4541,7 @@ local item =
       {
          _id = "spellbook_of_nerve_eye",
          elona_id = 265,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
          chargelevel = 3,
@@ -4565,7 +4565,7 @@ local item =
       {
          _id = "wakizashi",
          elona_id = 266,
-         image = 432,
+         image = "elona.item_wakizashi",
          value = 500,
          weight = 700,
          dice_x = 4,
@@ -4585,7 +4585,7 @@ local item =
       {
          _id = "spellbook_of_darkness_beam",
          elona_id = 267,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
          chargelevel = 4,
@@ -4609,7 +4609,7 @@ local item =
       {
          _id = "spellbook_of_illusion_beam",
          elona_id = 268,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5500,
          weight = 380,
          chargelevel = 4,
@@ -4633,7 +4633,7 @@ local item =
       {
          _id = "spellbook_of_ice_ball",
          elona_id = 269,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5400,
          weight = 380,
          chargelevel = 4,
@@ -4657,7 +4657,7 @@ local item =
       {
          _id = "spellbook_of_fire_ball",
          elona_id = 270,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5400,
          weight = 380,
          chargelevel = 4,
@@ -4681,7 +4681,7 @@ local item =
       {
          _id = "spellbook_of_sound_ball",
          elona_id = 271,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8400,
          weight = 380,
          chargelevel = 4,
@@ -4706,7 +4706,7 @@ local item =
       {
          _id = "spellbook_of_chaos_ball",
          elona_id = 272,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 12000,
          weight = 380,
          chargelevel = 4,
@@ -4731,7 +4731,7 @@ local item =
       {
          _id = "fire_wood",
          elona_id = 273,
-         image = 231,
+         image = "elona.item_fire_wood",
          value = 10,
          weight = 1500,
          category = 64000,
@@ -4743,7 +4743,7 @@ local item =
       {
          _id = "scarecrow",
          elona_id = 274,
-         image = 232,
+         image = "elona.item_scarecrow",
          value = 10,
          weight = 4800,
          category = 64000,
@@ -4755,7 +4755,7 @@ local item =
       {
          _id = "broom",
          elona_id = 275,
-         image = 248,
+         image = "elona.item_broom",
          value = 100,
          weight = 800,
          category = 64000,
@@ -4764,7 +4764,7 @@ local item =
       {
          _id = "long_pillar",
          elona_id = 276,
-         image = 524,
+         image = "elona.item_long_pillar",
          value = 2600,
          weight = 350000,
          level = 8,
@@ -4775,7 +4775,7 @@ local item =
       {
          _id = "broken_pillar",
          elona_id = 277,
-         image = 82,
+         image = "elona.item_broken_pillar",
          value = 1300,
          weight = 300000,
          level = 4,
@@ -4786,7 +4786,7 @@ local item =
       {
          _id = "street_lamp",
          elona_id = 278,
-         image = 585,
+         image = "elona.item_street_lamp",
          value = 1200,
          weight = 300000,
          level = 10,
@@ -4799,7 +4799,7 @@ local item =
       {
          _id = "water_tub",
          elona_id = 279,
-         image = 249,
+         image = "elona.item_water_tub",
          value = 380,
          weight = 300000,
          category = 60000,
@@ -4808,7 +4808,7 @@ local item =
       {
          _id = "comfortable_table",
          elona_id = 280,
-         image = 250,
+         image = "elona.item_comfortable_table",
          value = 1800,
          weight = 9800,
          category = 60000,
@@ -4818,7 +4818,7 @@ local item =
       {
          _id = "inner_tube",
          elona_id = 281,
-         image = 251,
+         image = "elona.item_inner_tube",
          value = 380,
          weight = 1500,
          category = 60000,
@@ -4828,7 +4828,7 @@ local item =
       {
          _id = "mysterious_map",
          elona_id = 282,
-         image = 252,
+         image = "elona.item_treasure_map",
          value = 380,
          weight = 180,
          category = 60000,
@@ -4837,7 +4837,7 @@ local item =
       {
          _id = "suitcase",
          elona_id = 283,
-         image = 253,
+         image = "elona.item_heir_trunk",
          value = 380,
          weight = 1200,
          fltselect = 1,
@@ -4855,7 +4855,7 @@ local item =
       {
          _id = "wallet",
          elona_id = 284,
-         image = 254,
+         image = "elona.item_wallet",
          value = 380,
          weight = 250,
          fltselect = 1,
@@ -4867,7 +4867,7 @@ local item =
       {
          _id = "potion_of_restore_body",
          elona_id = 285,
-         image = 354,
+         image = "elona.item_potion",
          value = 280,
          weight = 120,
          on_drink = function() end,
@@ -4886,7 +4886,7 @@ local item =
       {
          _id = "potion_of_restore_spirit",
          elona_id = 286,
-         image = 354,
+         image = "elona.item_potion",
          value = 280,
          weight = 120,
          on_drink = function() end,
@@ -4905,7 +4905,7 @@ local item =
       {
          _id = "potion_of_potential",
          elona_id = 287,
-         image = 354,
+         image = "elona.item_potion",
          value = 50000,
          weight = 120,
          on_drink = function() end,
@@ -4926,7 +4926,7 @@ local item =
       {
          _id = "scroll_of_curse",
          elona_id = 288,
-         image = 470,
+         image = "elona.item_scroll",
          value = 150,
          weight = 20,
          on_read = function() end,
@@ -4945,7 +4945,7 @@ local item =
       {
          _id = "spellbook_of_wishing",
          elona_id = 289,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 40000,
          weight = 380,
          on_read = function() end,
@@ -4969,7 +4969,7 @@ local item =
       {
          _id = "rod_of_wishing",
          elona_id = 290,
-         image = 471,
+         image = "elona.item_rod",
          value = 300000,
          weight = 800,
          on_zap = function() end,
@@ -4993,7 +4993,7 @@ local item =
       {
          _id = "well_kept_armor",
          elona_id = 291,
-         image = 255,
+         image = "elona.item_well_kept_armor",
          value = 1500,
          weight = 12000,
          category = 60000,
@@ -5003,7 +5003,7 @@ local item =
       {
          _id = "rack_of_good",
          elona_id = 292,
-         image = 256,
+         image = "elona.item_rack_of_good",
          value = 1800,
          weight = 6800,
          category = 60000,
@@ -5014,7 +5014,7 @@ local item =
       {
          _id = "rack_of_accessories",
          elona_id = 293,
-         image = 257,
+         image = "elona.item_rack_of_accessories",
          value = 2000,
          weight = 7500,
          category = 60000,
@@ -5025,7 +5025,7 @@ local item =
       {
          _id = "towel",
          elona_id = 294,
-         image = 258,
+         image = "elona.item_towel",
          value = 320,
          weight = 1080,
          category = 60000,
@@ -5035,7 +5035,7 @@ local item =
       {
          _id = "ragged_table",
          elona_id = 295,
-         image = 259,
+         image = "elona.item_ragged_table",
          value = 890,
          weight = 4500,
          category = 60000,
@@ -5044,7 +5044,7 @@ local item =
       {
          _id = "cabinet",
          elona_id = 296,
-         image = 260,
+         image = "elona.item_cabinet",
          value = 2400,
          weight = 15000,
          level = 18,
@@ -5055,7 +5055,7 @@ local item =
       {
          _id = "luxury_bed",
          elona_id = 297,
-         image = 261,
+         image = "elona.item_luxury_bed",
          value = 4500,
          weight = 17500,
          on_use = function() end,
@@ -5071,7 +5071,7 @@ local item =
       {
          _id = "vase",
          elona_id = 298,
-         image = 262,
+         image = "elona.item_vase",
          value = 2000,
          weight = 2400,
          level = 7,
@@ -5083,7 +5083,7 @@ local item =
       {
          _id = "high_grade_dresser",
          elona_id = 299,
-         image = 263,
+         image = "elona.item_high_grade_dresser",
          value = 5500,
          weight = 9000,
          level = 14,
@@ -5098,7 +5098,7 @@ local item =
       {
          _id = "neat_bar_table",
          elona_id = 300,
-         image = 264,
+         image = "elona.item_neat_bar_table",
          value = 1900,
          weight = 8500,
          level = 7,
@@ -5109,7 +5109,7 @@ local item =
       {
          _id = "large_bouquet",
          elona_id = 301,
-         image = 265,
+         image = "elona.item_large_bouquet",
          value = 240,
          weight = 1400,
          category = 64000,
@@ -5118,7 +5118,7 @@ local item =
       {
          _id = "chest_of_clothes",
          elona_id = 302,
-         image = 266,
+         image = "elona.item_chest_of_clothes",
          value = 1500,
          weight = 6800,
          level = 4,
@@ -5130,7 +5130,7 @@ local item =
       {
          _id = "giant_bed",
          elona_id = 303,
-         image = 267,
+         image = "elona.item_giant_bed",
          value = 3800,
          weight = 15000,
          on_use = function() end,
@@ -5146,7 +5146,7 @@ local item =
       {
          _id = "plain_bed",
          elona_id = 304,
-         image = 268,
+         image = "elona.item_plain_bed",
          value = 1200,
          weight = 13000,
          on_use = function() end,
@@ -5160,7 +5160,7 @@ local item =
       {
          _id = "coffin",
          elona_id = 305,
-         image = 269,
+         image = "elona.item_coffin",
          value = 2400,
          weight = 8900,
          on_use = function() end,
@@ -5176,7 +5176,7 @@ local item =
       {
          _id = "food_processor",
          elona_id = 306,
-         image = 270,
+         image = "elona.item_food_processor",
          value = 5200,
          weight = 34000,
          category = 60000,
@@ -5191,7 +5191,7 @@ local item =
       {
          _id = "soft_bed",
          elona_id = 307,
-         image = 271,
+         image = "elona.item_soft_bed",
          value = 2200,
          weight = 12000,
          on_use = function() end,
@@ -5206,7 +5206,7 @@ local item =
       {
          _id = "cheap_rack",
          elona_id = 308,
-         image = 272,
+         image = "elona.item_cheap_rack",
          value = 1200,
          weight = 9000,
          category = 60000,
@@ -5216,7 +5216,7 @@ local item =
       {
          _id = "dresser",
          elona_id = 309,
-         image = 273,
+         image = "elona.item_dresser",
          value = 2400,
          weight = 8000,
          level = 7,
@@ -5231,7 +5231,7 @@ local item =
       {
          _id = "clean_bed",
          elona_id = 310,
-         image = 274,
+         image = "elona.item_clean_bed",
          value = 1500,
          weight = 9500,
          on_use = function() end,
@@ -5246,7 +5246,7 @@ local item =
       {
          _id = "bathtub",
          elona_id = 311,
-         image = 275,
+         image = "elona.item_bathtub",
          value = 4800,
          weight = 28000,
          level = 19,
@@ -5258,7 +5258,7 @@ local item =
       {
          _id = "pachisuro_machine",
          elona_id = 312,
-         image = 276,
+         image = "elona.item_pachisuro_machine",
          value = 2800,
          weight = 14000,
          on_use = function() end,
@@ -5271,7 +5271,7 @@ local item =
       {
          _id = "casino_table",
          elona_id = 313,
-         image = 277,
+         image = "elona.item_casino_table",
          value = 2800,
          weight = 24000,
          on_use = function() end,
@@ -5283,7 +5283,7 @@ local item =
       {
          _id = "slot_machine",
          elona_id = 314,
-         image = 278,
+         image = "elona.item_slot_machine",
          value = 2000,
          weight = 12000,
          on_use = function() end,
@@ -5296,7 +5296,7 @@ local item =
       {
          _id = "darts_board",
          elona_id = 315,
-         image = 279,
+         image = "elona.item_darts_board",
          value = 1800,
          weight = 8900,
          on_use = function() end,
@@ -5308,7 +5308,7 @@ local item =
       {
          _id = "big_foliage_plant",
          elona_id = 316,
-         image = 280,
+         image = "elona.item_big_foliage_plant",
          value = 3200,
          weight = 1200,
          level = 18,
@@ -5319,7 +5319,7 @@ local item =
       {
          _id = "old_shelf",
          elona_id = 317,
-         image = 281,
+         image = "elona.item_old_shelf",
          value = 890,
          weight = 7600,
          category = 60000,
@@ -5329,7 +5329,7 @@ local item =
       {
          _id = "old_bookshelf",
          elona_id = 318,
-         image = 282,
+         image = "elona.item_old_bookshelf",
          value = 1020,
          weight = 8900,
          category = 60000,
@@ -5339,7 +5339,7 @@ local item =
       {
          _id = "cheap_bed",
          elona_id = 319,
-         image = 283,
+         image = "elona.item_cheap_bed",
          value = 880,
          weight = 2800,
          on_use = function() end,
@@ -5354,7 +5354,7 @@ local item =
       {
          _id = "cheap_table",
          elona_id = 320,
-         image = 284,
+         image = "elona.item_cheap_table",
          value = 900,
          weight = 6800,
          category = 60000,
@@ -5364,7 +5364,7 @@ local item =
       {
          _id = "neat_rack",
          elona_id = 321,
-         image = 285,
+         image = "elona.item_neat_rack",
          value = 1480,
          weight = 8800,
          category = 60000,
@@ -5374,7 +5374,7 @@ local item =
       {
          _id = "simple_dresser",
          elona_id = 322,
-         image = 286,
+         image = "elona.item_simple_dresser",
          value = 2200,
          weight = 12000,
          level = 4,
@@ -5389,7 +5389,7 @@ local item =
       {
          _id = "big_cupboard",
          elona_id = 323,
-         image = 586,
+         image = "elona.item_big_cupboard",
          value = 2800,
          weight = 8900,
          level = 7,
@@ -5400,7 +5400,7 @@ local item =
       {
          _id = "sacred_altar",
          elona_id = 324,
-         image = 288,
+         image = "elona.item_sacred_altar",
          value = 1500,
          weight = 15000,
          category = 60000,
@@ -5411,7 +5411,7 @@ local item =
       {
          _id = "comfortable_bed",
          elona_id = 325,
-         image = 289,
+         image = "elona.item_comfortable_bed",
          value = 2800,
          weight = 10000,
          on_use = function() end,
@@ -5427,7 +5427,7 @@ local item =
       {
          _id = "simple_rack",
          elona_id = 326,
-         image = 290,
+         image = "elona.item_simple_rack",
          value = 1400,
          weight = 8900,
          category = 60000,
@@ -5437,7 +5437,7 @@ local item =
       {
          _id = "wide_chair",
          elona_id = 327,
-         image = 291,
+         image = "elona.item_wide_chair",
          value = 600,
          weight = 6400,
          category = 60000,
@@ -5450,7 +5450,7 @@ local item =
       {
          _id = "upright_piano",
          elona_id = 328,
-         image = 292,
+         image = "elona.item_piano",
          value = 4600,
          weight = 29000,
          level = 18,
@@ -5466,7 +5466,7 @@ local item =
       {
          _id = "statue_of_cross",
          elona_id = 329,
-         image = 293,
+         image = "elona.item_statue_of_cross",
          value = 1500,
          weight = 15600,
          category = 60000,
@@ -5477,7 +5477,7 @@ local item =
       {
          _id = "stump",
          elona_id = 330,
-         image = 294,
+         image = "elona.item_stump",
          value = 250,
          weight = 3500,
          category = 64000,
@@ -5489,7 +5489,7 @@ local item =
       {
          _id = "dress",
          elona_id = 331,
-         image = 295,
+         image = "elona.item_dress",
          value = 1440,
          weight = 1050,
          level = 3,
@@ -5500,7 +5500,7 @@ local item =
       {
          _id = "table",
          elona_id = 332,
-         image = 296,
+         image = "elona.item_table",
          value = 1200,
          weight = 4900,
          level = 3,
@@ -5511,7 +5511,7 @@ local item =
       {
          _id = "cargo_travelers_food",
          elona_id = 333,
-         image = 297,
+         image = "elona.item_travelers_food",
          value = 40,
          weight = -2000,
          is_cargo = true,
@@ -5524,7 +5524,7 @@ local item =
       {
          _id = "throne",
          elona_id = 334,
-         image = 579,
+         image = "elona.item_throne",
          value = 6800,
          weight = 35000,
          level = 22,
@@ -5539,7 +5539,7 @@ local item =
       {
          _id = "golden_pedestal",
          elona_id = 335,
-         image = 299,
+         image = "elona.item_golden_pedestal",
          value = 1200,
          weight = 15000,
          level = 8,
@@ -5551,7 +5551,7 @@ local item =
       {
          _id = "golden_statue",
          elona_id = 336,
-         image = 300,
+         image = "elona.item_golden_statue",
          value = 3200,
          weight = 21000,
          level = 18,
@@ -5562,7 +5562,7 @@ local item =
       {
          _id = "remains_skin",
          elona_id = 337,
-         image = 301,
+         image = "elona.item_rabbits_tail",
          value = 100,
          weight = 1500,
          category = 62000,
@@ -5571,7 +5571,7 @@ local item =
       {
          _id = "remains_blood",
          elona_id = 338,
-         image = 302,
+         image = "elona.item_remains_blood",
          value = 100,
          weight = 1500,
          category = 62000,
@@ -5581,7 +5581,7 @@ local item =
       {
          _id = "remains_eye",
          elona_id = 339,
-         image = 303,
+         image = "elona.item_remains_eye",
          value = 100,
          weight = 1500,
          category = 62000,
@@ -5591,7 +5591,7 @@ local item =
       {
          _id = "remains_heart",
          elona_id = 340,
-         image = 304,
+         image = "elona.item_remains_heart",
          value = 100,
          weight = 1500,
          category = 62000,
@@ -5601,7 +5601,7 @@ local item =
       {
          _id = "remains_bone",
          elona_id = 341,
-         image = 305,
+         image = "elona.item_remains_bone",
          value = 100,
          weight = 1500,
          category = 62000,
@@ -5610,7 +5610,7 @@ local item =
       {
          _id = "fishing_pole",
          elona_id = 342,
-         image = 306,
+         image = "elona.item_fishing_pole",
          value = 1200,
          weight = 2400,
          category = 59000,
@@ -5623,7 +5623,7 @@ local item =
       {
          _id = "rune",
          elona_id = 343,
-         image = 307,
+         image = "elona.item_rune",
          value = 780,
          weight = 500,
          on_use = function() end,
@@ -5637,7 +5637,7 @@ local item =
       {
          _id = "deed",
          elona_id = 344,
-         image = 308,
+         image = "elona.item_deed",
          value = 50000,
          weight = 500,
          on_read = function() end,
@@ -5669,7 +5669,7 @@ local item =
       {
          _id = "moonfish",
          elona_id = 345,
-         image = 309,
+         image = "elona.item_moonfish",
          value = 900,
          weight = 800,
          material = 35,
@@ -5691,7 +5691,7 @@ local item =
       {
          _id = "sardine",
          elona_id = 346,
-         image = 310,
+         image = "elona.item_fish",
          value = 1200,
          weight = 1250,
          material = 35,
@@ -5713,7 +5713,7 @@ local item =
       {
          _id = "flatfish",
          elona_id = 347,
-         image = 311,
+         image = "elona.item_flatfish",
          value = 700,
          weight = 900,
          material = 35,
@@ -5735,7 +5735,7 @@ local item =
       {
          _id = "manboo",
          elona_id = 348,
-         image = 312,
+         image = "elona.item_manboo",
          value = 1500,
          weight = 2400,
          material = 35,
@@ -5757,7 +5757,7 @@ local item =
       {
          _id = "seabream",
          elona_id = 349,
-         image = 313,
+         image = "elona.item_seabream",
          value = 150,
          weight = 800,
          material = 35,
@@ -5778,7 +5778,7 @@ local item =
       {
          _id = "salmon",
          elona_id = 350,
-         image = 314,
+         image = "elona.item_salmon",
          value = 170,
          weight = 600,
          material = 35,
@@ -5799,7 +5799,7 @@ local item =
       {
          _id = "globefish",
          elona_id = 351,
-         image = 315,
+         image = "elona.item_globefish",
          value = 320,
          weight = 550,
          material = 35,
@@ -5821,7 +5821,7 @@ local item =
       {
          _id = "tuna",
          elona_id = 352,
-         image = 316,
+         image = "elona.item_tuna_fish",
          value = 640,
          weight = 700,
          material = 35,
@@ -5843,7 +5843,7 @@ local item =
       {
          _id = "cutlassfish",
          elona_id = 353,
-         image = 317,
+         image = "elona.item_cutlassfish",
          value = 620,
          weight = 600,
          material = 35,
@@ -5865,7 +5865,7 @@ local item =
       {
          _id = "sandborer",
          elona_id = 354,
-         image = 318,
+         image = "elona.item_sandborer",
          value = 380,
          weight = 450,
          material = 35,
@@ -5887,7 +5887,7 @@ local item =
       {
          _id = "gloves_of_vesda",
          elona_id = 355,
-         image = 414,
+         image = "elona.item_plate_gauntlets",
          value = 40000,
          weight = 1200,
          pv = 30,
@@ -5918,7 +5918,7 @@ local item =
       {
          _id = "blood_moon",
          elona_id = 356,
-         image = 427,
+         image = "elona.item_club",
          value = 30000,
          weight = 1800,
          dice_x = 3,
@@ -5956,7 +5956,7 @@ local item =
       {
          _id = "ring_of_steel_dragon",
          elona_id = 357,
-         image = 407,
+         image = "elona.item_decorative_ring",
          value = 30000,
          weight = 1200,
          pv = 50,
@@ -5990,7 +5990,7 @@ local item =
       {
          _id = "staff_of_insanity",
          elona_id = 358,
-         image = 425,
+         image = "elona.item_staff",
          value = 30000,
          weight = 2500,
          dice_x = 1,
@@ -6029,7 +6029,7 @@ local item =
       {
          _id = "rankis",
          elona_id = 359,
-         image = 426,
+         image = "elona.item_halberd",
          value = 30000,
          weight = 2000,
          dice_x = 8,
@@ -6061,7 +6061,7 @@ local item =
       {
          _id = "palmia_pride",
          elona_id = 360,
-         image = 407,
+         image = "elona.item_decorative_ring",
          value = 30000,
          weight = 500,
          pv = 5,
@@ -6090,7 +6090,7 @@ local item =
       {
          _id = "shopkeepers_trunk",
          elona_id = 361,
-         image = 253,
+         image = "elona.item_heir_trunk",
          value = 380,
          weight = 1200,
          fltselect = 1,
@@ -6100,7 +6100,7 @@ local item =
       {
          _id = "scroll_of_greater_identify",
          elona_id = 362,
-         image = 470,
+         image = "elona.item_scroll",
          value = 3500,
          weight = 20,
          on_read = function() end,
@@ -6120,7 +6120,7 @@ local item =
       {
          _id = "scroll_of_vanish_curse",
          elona_id = 363,
-         image = 470,
+         image = "elona.item_scroll",
          value = 4400,
          weight = 20,
          on_read = function() end,
@@ -6140,7 +6140,7 @@ local item =
       {
          _id = "potion_of_defender",
          elona_id = 364,
-         image = 354,
+         image = "elona.item_potion",
          value = 150,
          weight = 120,
          on_drink = function() end,
@@ -6158,7 +6158,7 @@ local item =
       {
          _id = "spellbook_of_holy_shield",
          elona_id = 365,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2800,
          weight = 380,
          chargelevel = 5,
@@ -6182,7 +6182,7 @@ local item =
       {
          _id = "rod_of_silence",
          elona_id = 366,
-         image = 471,
+         image = "elona.item_rod",
          value = 1080,
          weight = 800,
          chargelevel = 7,
@@ -6205,7 +6205,7 @@ local item =
       {
          _id = "spellbook_of_silence",
          elona_id = 367,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8400,
          weight = 380,
          chargelevel = 3,
@@ -6230,7 +6230,7 @@ local item =
       {
          _id = "potion_of_silence",
          elona_id = 368,
-         image = 354,
+         image = "elona.item_potion",
          value = 40,
          weight = 120,
          on_drink = function() end,
@@ -6249,7 +6249,7 @@ local item =
       {
          _id = "spellbook_of_regeneration",
          elona_id = 369,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4400,
          weight = 380,
          chargelevel = 4,
@@ -6274,7 +6274,7 @@ local item =
       {
          _id = "potion_of_troll_blood",
          elona_id = 370,
-         image = 354,
+         image = "elona.item_potion",
          value = 800,
          weight = 120,
          on_drink = function() end,
@@ -6293,7 +6293,7 @@ local item =
       {
          _id = "spellbook_of_resistance",
          elona_id = 371,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 7500,
          weight = 380,
          chargelevel = 3,
@@ -6318,7 +6318,7 @@ local item =
       {
          _id = "potion_of_resistance",
          elona_id = 372,
-         image = 354,
+         image = "elona.item_potion",
          value = 700,
          weight = 120,
          on_drink = function() end,
@@ -6337,7 +6337,7 @@ local item =
       {
          _id = "spellbook_of_speed",
          elona_id = 373,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 12000,
          weight = 380,
          chargelevel = 3,
@@ -6362,7 +6362,7 @@ local item =
       {
          _id = "spellbook_of_slow",
          elona_id = 374,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4800,
          weight = 380,
          chargelevel = 4,
@@ -6387,7 +6387,7 @@ local item =
       {
          _id = "potion_of_speed",
          elona_id = 375,
-         image = 354,
+         image = "elona.item_potion",
          value = 850,
          weight = 120,
          on_drink = function() end,
@@ -6406,7 +6406,7 @@ local item =
       {
          _id = "potion_of_slow",
          elona_id = 376,
-         image = 354,
+         image = "elona.item_potion",
          value = 30,
          weight = 120,
          on_drink = function() end,
@@ -6425,7 +6425,7 @@ local item =
       {
          _id = "rod_of_speed",
          elona_id = 377,
-         image = 471,
+         image = "elona.item_rod",
          value = 4200,
          weight = 800,
          chargelevel = 8,
@@ -6448,7 +6448,7 @@ local item =
       {
          _id = "spellbook_of_hero",
          elona_id = 378,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2600,
          weight = 380,
          chargelevel = 5,
@@ -6472,7 +6472,7 @@ local item =
       {
          _id = "potion_of_hero",
          elona_id = 379,
-         image = 354,
+         image = "elona.item_potion",
          value = 450,
          weight = 120,
          on_drink = function() end,
@@ -6490,7 +6490,7 @@ local item =
       {
          _id = "spellbook_of_weakness",
          elona_id = 380,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2500,
          weight = 380,
          chargelevel = 3,
@@ -6514,7 +6514,7 @@ local item =
       {
          _id = "spellbook_of_elemental_scar",
          elona_id = 381,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
          chargelevel = 3,
@@ -6539,7 +6539,7 @@ local item =
       {
          _id = "potion_of_weakness",
          elona_id = 382,
-         image = 354,
+         image = "elona.item_potion",
          value = 30,
          weight = 120,
          on_drink = function() end,
@@ -6558,7 +6558,7 @@ local item =
       {
          _id = "spellbook_of_holy_veil",
          elona_id = 383,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 11000,
          weight = 380,
          chargelevel = 4,
@@ -6583,7 +6583,7 @@ local item =
       {
          _id = "scroll_of_holy_veil",
          elona_id = 384,
-         image = 470,
+         image = "elona.item_scroll",
          value = 1500,
          weight = 20,
          on_read = function() end,
@@ -6603,7 +6603,7 @@ local item =
       {
          _id = "rod_of_holy_light",
          elona_id = 385,
-         image = 471,
+         image = "elona.item_rod",
          value = 3600,
          weight = 800,
          chargelevel = 6,
@@ -6627,7 +6627,7 @@ local item =
       {
          _id = "spellbook_of_holy_light",
          elona_id = 386,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3500,
          weight = 380,
          chargelevel = 3,
@@ -6652,7 +6652,7 @@ local item =
       {
          _id = "spellbook_of_holy_rain",
          elona_id = 387,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 9800,
          weight = 380,
          chargelevel = 3,
@@ -6677,7 +6677,7 @@ local item =
       {
          _id = "scroll_of_holy_light",
          elona_id = 388,
-         image = 470,
+         image = "elona.item_scroll",
          value = 350,
          weight = 20,
          on_read = function() end,
@@ -6696,7 +6696,7 @@ local item =
       {
          _id = "scroll_of_holy_rain",
          elona_id = 389,
-         image = 470,
+         image = "elona.item_scroll",
          value = 1400,
          weight = 20,
          on_read = function() end,
@@ -6716,7 +6716,7 @@ local item =
       {
          _id = "scroll_of_mana",
          elona_id = 390,
-         image = 470,
+         image = "elona.item_scroll",
          value = 2400,
          weight = 20,
          on_read = function() end,
@@ -6736,7 +6736,7 @@ local item =
       {
          _id = "rod_of_mana",
          elona_id = 391,
-         image = 471,
+         image = "elona.item_rod",
          value = 4100,
          weight = 800,
          chargelevel = 4,
@@ -6760,7 +6760,7 @@ local item =
       {
          _id = "bottle_of_sulfuric",
          elona_id = 392,
-         image = 223,
+         image = "elona.item_molotov",
          value = 800,
          weight = 50,
          on_drink = function() end,
@@ -6777,7 +6777,7 @@ local item =
       {
          _id = "gem_cutter",
          elona_id = 393,
-         image = 319,
+         image = "elona.item_gem_cutter",
          value = 2000,
          weight = 500,
          on_use = function() end,
@@ -6793,7 +6793,7 @@ local item =
       {
          _id = "material_box",
          elona_id = 394,
-         image = 438,
+         image = "elona.item_material_box",
          value = 500,
          weight = 1200,
          category = 72000,
@@ -6802,7 +6802,7 @@ local item =
       {
          _id = "scroll_of_gain_material",
          elona_id = 395,
-         image = 470,
+         image = "elona.item_scroll",
          value = 3800,
          weight = 20,
          on_read = function() end,
@@ -6822,7 +6822,7 @@ local item =
       {
          _id = "spellbook_of_nightmare",
          elona_id = 396,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3400,
          weight = 380,
          chargelevel = 4,
@@ -6847,7 +6847,7 @@ local item =
       {
          _id = "spellbook_of_knowledge",
          elona_id = 397,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
          chargelevel = 5,
@@ -6872,7 +6872,7 @@ local item =
       {
          _id = "scroll_of_knowledge",
          elona_id = 398,
-         image = 470,
+         image = "elona.item_scroll",
          value = 1800,
          weight = 20,
          on_read = function() end,
@@ -6892,7 +6892,7 @@ local item =
       {
          _id = "cargo_rag_doll",
          elona_id = 399,
-         image = 67,
+         image = "elona.item_rag_doll",
          value = 700,
          weight = -6500,
          is_cargo = true,
@@ -6905,7 +6905,7 @@ local item =
       {
          _id = "cargo_barrel",
          elona_id = 400,
-         image = 72,
+         image = "elona.item_barrel",
          value = 420,
          weight = -10000,
          is_cargo = true,
@@ -6918,7 +6918,7 @@ local item =
       {
          _id = "cargo_piano",
          elona_id = 401,
-         image = 292,
+         image = "elona.item_piano",
          value = 4000,
          weight = -50000,
          is_cargo = true,
@@ -6932,7 +6932,7 @@ local item =
       {
          _id = "cargo_rope",
          elona_id = 402,
-         image = 202,
+         image = "elona.item_rope",
          value = 550,
          weight = -4800,
          is_cargo = true,
@@ -6945,7 +6945,7 @@ local item =
       {
          _id = "cargo_coffin",
          elona_id = 403,
-         image = 269,
+         image = "elona.item_coffin",
          value = 2200,
          weight = -12000,
          is_cargo = true,
@@ -6959,7 +6959,7 @@ local item =
       {
          _id = "cargo_manboo",
          elona_id = 404,
-         image = 312,
+         image = "elona.item_manboo",
          value = 800,
          weight = -10000,
          is_cargo = true,
@@ -6973,7 +6973,7 @@ local item =
       {
          _id = "cargo_grave",
          elona_id = 405,
-         image = 161,
+         image = "elona.item_grave",
          value = 2800,
          weight = -48000,
          is_cargo = true,
@@ -6987,7 +6987,7 @@ local item =
       {
          _id = "cargo_tuna_fish",
          elona_id = 406,
-         image = 316,
+         image = "elona.item_tuna_fish",
          value = 350,
          weight = -7500,
          is_cargo = true,
@@ -7001,7 +7001,7 @@ local item =
       {
          _id = "cargo_whisky",
          elona_id = 407,
-         image = 208,
+         image = "elona.item_whisky",
          value = 1400,
          weight = -16000,
          is_cargo = true,
@@ -7015,7 +7015,7 @@ local item =
       {
          _id = "cargo_noble_toy",
          elona_id = 408,
-         image = 68,
+         image = "elona.item_noble_toy",
          value = 1200,
          weight = -32000,
          is_cargo = true,
@@ -7029,7 +7029,7 @@ local item =
       {
          _id = "cargo_inner_tube",
          elona_id = 409,
-         image = 251,
+         image = "elona.item_inner_tube",
          value = 340,
          weight = -1500,
          is_cargo = true,
@@ -7043,7 +7043,7 @@ local item =
       {
          _id = "spellbook_of_detect_objects",
          elona_id = 410,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4000,
          weight = 380,
          chargelevel = 4,
@@ -7067,7 +7067,7 @@ local item =
       {
          _id = "scroll_of_detect_objects",
          elona_id = 411,
-         image = 470,
+         image = "elona.item_scroll",
          value = 350,
          weight = 20,
          on_read = function() end,
@@ -7085,7 +7085,7 @@ local item =
       {
          _id = "rod_of_uncurse",
          elona_id = 412,
-         image = 471,
+         image = "elona.item_rod",
          value = 3800,
          weight = 800,
          chargelevel = 3,
@@ -7111,7 +7111,7 @@ local item =
       {
          _id = "red_treasure_machine",
          elona_id = 413,
-         image = 320,
+         image = "elona.item_red_treasure_machine",
          value = 15000,
          weight = 140000,
          on_use = function() end,
@@ -7124,7 +7124,7 @@ local item =
       {
          _id = "blue_treasure_machine",
          elona_id = 414,
-         image = 321,
+         image = "elona.item_blue_treasure_machine",
          value = 30000,
          weight = 140000,
          on_use = function() end,
@@ -7137,7 +7137,7 @@ local item =
       {
          _id = "treasure_ball",
          elona_id = 415,
-         image = 322,
+         image = "elona.item_rare_treasure_ball",
          value = 4000,
          weight = 500,
          category = 72000,
@@ -7149,7 +7149,7 @@ local item =
       {
          _id = "rare_treasure_ball",
          elona_id = 416,
-         image = 322,
+         image = "elona.item_rare_treasure_ball",
          value = 12000,
          weight = 500,
          category = 72000,
@@ -7162,7 +7162,7 @@ local item =
       {
          _id = "vegetable_seed",
          elona_id = 417,
-         image = 323,
+         image = "elona.item_seed",
          value = 240,
          weight = 40,
          material = 36,
@@ -7183,7 +7183,7 @@ local item =
       {
          _id = "fruit_seed",
          elona_id = 418,
-         image = 323,
+         image = "elona.item_seed",
          value = 280,
          weight = 40,
          material = 37,
@@ -7203,7 +7203,7 @@ local item =
       {
          _id = "herb_seed",
          elona_id = 419,
-         image = 323,
+         image = "elona.item_seed",
          value = 1800,
          weight = 40,
          material = 38,
@@ -7223,7 +7223,7 @@ local item =
       {
          _id = "unknown_seed",
          elona_id = 420,
-         image = 323,
+         image = "elona.item_seed",
          value = 2500,
          weight = 40,
          material = 39,
@@ -7245,7 +7245,7 @@ local item =
       {
          _id = "artifact_seed",
          elona_id = 421,
-         image = 323,
+         image = "elona.item_seed",
          value = 120000,
          weight = 40,
          material = 40,
@@ -7266,7 +7266,7 @@ local item =
       {
          _id = "morgia",
          elona_id = 422,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 1050,
          weight = 250,
          category = 57000,
@@ -7280,7 +7280,7 @@ local item =
       {
          _id = "mareilon",
          elona_id = 423,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 800,
          weight = 210,
          category = 57000,
@@ -7294,7 +7294,7 @@ local item =
       {
          _id = "spenseweed",
          elona_id = 424,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 900,
          weight = 220,
          category = 57000,
@@ -7308,7 +7308,7 @@ local item =
       {
          _id = "curaria",
          elona_id = 425,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 680,
          weight = 260,
          category = 57000,
@@ -7321,7 +7321,7 @@ local item =
       {
          _id = "alraunia",
          elona_id = 426,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 1200,
          weight = 120,
          category = 57000,
@@ -7335,7 +7335,7 @@ local item =
       {
          _id = "stomafillia",
          elona_id = 427,
-         image = 170,
+         image = "elona.item_stomafillia",
          value = 800,
          weight = 480,
          category = 57000,
@@ -7348,7 +7348,7 @@ local item =
       {
          _id = "sleeping_bag",
          elona_id = 428,
-         image = 324,
+         image = "elona.item_sleeping_bag",
          value = 800,
          weight = 2400,
          on_use = function() end,
@@ -7362,7 +7362,7 @@ local item =
       {
          _id = "potion_of_weaken_resistance",
          elona_id = 429,
-         image = 354,
+         image = "elona.item_potion",
          value = 150,
          weight = 120,
          on_drink = function() end,
@@ -7381,7 +7381,7 @@ local item =
       {
          _id = "scroll_of_growth",
          elona_id = 430,
-         image = 470,
+         image = "elona.item_scroll",
          value = 15000,
          weight = 20,
          on_read = function() end,
@@ -7402,7 +7402,7 @@ local item =
       {
          _id = "scroll_of_faith",
          elona_id = 431,
-         image = 470,
+         image = "elona.item_scroll",
          value = 12000,
          weight = 20,
          on_read = function() end,
@@ -7423,7 +7423,7 @@ local item =
       {
          _id = "potion_of_mutation",
          elona_id = 432,
-         image = 354,
+         image = "elona.item_potion",
          value = 5000,
          weight = 120,
          on_drink = function() end,
@@ -7444,7 +7444,7 @@ local item =
       {
          _id = "potion_of_cure_mutation",
          elona_id = 433,
-         image = 354,
+         image = "elona.item_potion",
          value = 4000,
          weight = 120,
          on_drink = function() end,
@@ -7464,7 +7464,7 @@ local item =
       {
          _id = "spellbook_of_mutation",
          elona_id = 434,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 20000,
          weight = 380,
          chargelevel = 2,
@@ -7489,7 +7489,7 @@ local item =
       {
          _id = "banded_mail",
          elona_id = 435,
-         image = 409,
+         image = "elona.item_banded_mail",
          value = 1500,
          weight = 6500,
          pv = 12,
@@ -7505,7 +7505,7 @@ local item =
       {
          _id = "plate_mail",
          elona_id = 436,
-         image = 410,
+         image = "elona.item_plate_mail",
          value = 12500,
          weight = 7500,
          pv = 21,
@@ -7521,7 +7521,7 @@ local item =
       {
          _id = "ring_mail",
          elona_id = 437,
-         image = 440,
+         image = "elona.item_ring_mail",
          value = 2400,
          weight = 5000,
          pv = 14,
@@ -7537,7 +7537,7 @@ local item =
       {
          _id = "composite_mail",
          elona_id = 438,
-         image = 441,
+         image = "elona.item_composite_mail",
          value = 4500,
          weight = 5500,
          pv = 17,
@@ -7553,7 +7553,7 @@ local item =
       {
          _id = "chain_mail",
          elona_id = 439,
-         image = 442,
+         image = "elona.item_chain_mail",
          value = 8000,
          weight = 5200,
          pv = 19,
@@ -7569,7 +7569,7 @@ local item =
       {
          _id = "pope_robe",
          elona_id = 440,
-         image = 443,
+         image = "elona.item_pope_robe",
          value = 9500,
          weight = 1200,
          pv = 8,
@@ -7585,7 +7585,7 @@ local item =
       {
          _id = "light_mail",
          elona_id = 441,
-         image = 444,
+         image = "elona.item_light_mail",
          value = 1200,
          weight = 1800,
          pv = 8,
@@ -7601,7 +7601,7 @@ local item =
       {
          _id = "coat",
          elona_id = 442,
-         image = 445,
+         image = "elona.item_coat",
          value = 2000,
          weight = 1500,
          pv = 9,
@@ -7617,7 +7617,7 @@ local item =
       {
          _id = "breast_plate",
          elona_id = 443,
-         image = 446,
+         image = "elona.item_breast_plate",
          value = 5500,
          weight = 2800,
          pv = 11,
@@ -7633,7 +7633,7 @@ local item =
       {
          _id = "bulletproof_jacket",
          elona_id = 444,
-         image = 447,
+         image = "elona.item_bulletproof_jacket",
          value = 7200,
          weight = 1600,
          pv = 15,
@@ -7649,7 +7649,7 @@ local item =
       {
          _id = "gloves",
          elona_id = 445,
-         image = 448,
+         image = "elona.item_gloves",
          value = 800,
          weight = 450,
          hit_bonus = 5,
@@ -7667,7 +7667,7 @@ local item =
       {
          _id = "plate_gauntlets",
          elona_id = 446,
-         image = 414,
+         image = "elona.item_plate_gauntlets",
          value = 1800,
          weight = 1800,
          hit_bonus = 3,
@@ -7685,7 +7685,7 @@ local item =
       {
          _id = "light_gloves",
          elona_id = 447,
-         image = 451,
+         image = "elona.item_light_gloves",
          value = 280,
          weight = 200,
          hit_bonus = 3,
@@ -7701,7 +7701,7 @@ local item =
       {
          _id = "composite_gauntlets",
          elona_id = 448,
-         image = 452,
+         image = "elona.item_composite_gauntlets",
          value = 950,
          weight = 1300,
          hit_bonus = 4,
@@ -7719,7 +7719,7 @@ local item =
       {
          _id = "small_shield",
          elona_id = 449,
-         image = 453,
+         image = "elona.item_small_shield",
          value = 500,
          weight = 1200,
          pv = 4,
@@ -7736,7 +7736,7 @@ local item =
       {
          _id = "round_shield",
          elona_id = 450,
-         image = 454,
+         image = "elona.item_round_shield",
          value = 1200,
          weight = 1500,
          pv = 5,
@@ -7754,7 +7754,7 @@ local item =
       {
          _id = "shield",
          elona_id = 451,
-         image = 455,
+         image = "elona.item_shield",
          value = 2500,
          weight = 1000,
          pv = 6,
@@ -7772,7 +7772,7 @@ local item =
       {
          _id = "large_shield",
          elona_id = 452,
-         image = 456,
+         image = "elona.item_large_shield",
          value = 7500,
          weight = 1400,
          pv = 8,
@@ -7790,7 +7790,7 @@ local item =
       {
          _id = "kite_shield",
          elona_id = 453,
-         image = 457,
+         image = "elona.item_kite_shield",
          value = 10000,
          weight = 3500,
          pv = 13,
@@ -7808,7 +7808,7 @@ local item =
       {
          _id = "tower_shield",
          elona_id = 454,
-         image = 458,
+         image = "elona.item_tower_shield",
          value = 18000,
          weight = 2400,
          pv = 10,
@@ -7826,7 +7826,7 @@ local item =
       {
          _id = "shoes",
          elona_id = 455,
-         image = 473,
+         image = "elona.item_boots",
          value = 260,
          weight = 250,
          pv = 1,
@@ -7841,7 +7841,7 @@ local item =
       {
          _id = "boots",
          elona_id = 456,
-         image = 473,
+         image = "elona.item_boots",
          value = 1500,
          weight = 450,
          pv = 2,
@@ -7857,7 +7857,7 @@ local item =
       {
          _id = "tight_boots",
          elona_id = 457,
-         image = 459,
+         image = "elona.item_tight_boots",
          value = 3500,
          weight = 650,
          pv = 3,
@@ -7873,7 +7873,7 @@ local item =
       {
          _id = "armored_boots",
          elona_id = 458,
-         image = 461,
+         image = "elona.item_armored_boots",
          value = 4800,
          weight = 1400,
          pv = 6,
@@ -7888,7 +7888,7 @@ local item =
       {
          _id = "composite_girdle",
          elona_id = 459,
-         image = 474,
+         image = "elona.item_composite_girdle",
          value = 2400,
          weight = 650,
          pv = 3,
@@ -7904,7 +7904,7 @@ local item =
       {
          _id = "plate_girdle",
          elona_id = 460,
-         image = 474,
+         image = "elona.item_composite_girdle",
          value = 3900,
          weight = 1400,
          pv = 6,
@@ -7920,7 +7920,7 @@ local item =
       {
          _id = "armored_cloak",
          elona_id = 461,
-         image = 475,
+         image = "elona.item_armored_cloak",
          value = 1400,
          weight = 1800,
          pv = 4,
@@ -7936,7 +7936,7 @@ local item =
       {
          _id = "cloak",
          elona_id = 462,
-         image = 476,
+         image = "elona.item_cloak",
          value = 3500,
          weight = 1500,
          pv = 3,
@@ -7952,7 +7952,7 @@ local item =
       {
          _id = "feather_hat",
          elona_id = 463,
-         image = 413,
+         image = "elona.item_feather_hat",
          value = 400,
          weight = 500,
          pv = 1,
@@ -7966,7 +7966,7 @@ local item =
       {
          _id = "heavy_helm",
          elona_id = 464,
-         image = 481,
+         image = "elona.item_heavy_helm",
          value = 4800,
          weight = 2400,
          pv = 7,
@@ -7981,7 +7981,7 @@ local item =
       {
          _id = "knight_helm",
          elona_id = 465,
-         image = 480,
+         image = "elona.item_knight_helm",
          value = 2200,
          weight = 2000,
          pv = 7,
@@ -7996,7 +7996,7 @@ local item =
       {
          _id = "helm",
          elona_id = 466,
-         image = 479,
+         image = "elona.item_helm",
          value = 600,
          weight = 1600,
          pv = 5,
@@ -8010,7 +8010,7 @@ local item =
       {
          _id = "composite_helm",
          elona_id = 467,
-         image = 482,
+         image = "elona.item_composite_helm",
          value = 9600,
          weight = 1800,
          pv = 8,
@@ -8025,7 +8025,7 @@ local item =
       {
          _id = "peridot",
          elona_id = 468,
-         image = 488,
+         image = "elona.item_peridot",
          value = 4400,
          weight = 50,
          hit_bonus = 4,
@@ -8040,7 +8040,7 @@ local item =
       {
          _id = "talisman",
          elona_id = 469,
-         image = 487,
+         image = "elona.item_talisman",
          value = 4400,
          weight = 50,
          dv = 4,
@@ -8055,7 +8055,7 @@ local item =
       {
          _id = "neck_guard",
          elona_id = 470,
-         image = 486,
+         image = "elona.item_neck_guard",
          value = 2200,
          weight = 50,
          pv = 3,
@@ -8070,7 +8070,7 @@ local item =
       {
          _id = "charm",
          elona_id = 471,
-         image = 485,
+         image = "elona.item_charm",
          value = 2000,
          weight = 50,
          damage_bonus = 3,
@@ -8086,7 +8086,7 @@ local item =
       {
          _id = "bejeweled_amulet",
          elona_id = 472,
-         image = 484,
+         image = "elona.item_bejeweled_amulet",
          value = 1800,
          weight = 50,
          material = 1000,
@@ -8100,7 +8100,7 @@ local item =
       {
          _id = "engagement_amulet",
          elona_id = 473,
-         image = 483,
+         image = "elona.item_engagement_amulet",
          value = 5000,
          weight = 50,
          material = 1000,
@@ -8114,7 +8114,7 @@ local item =
       {
          _id = "composite_ring",
          elona_id = 474,
-         image = 492,
+         image = "elona.item_composite_ring",
          value = 450,
          weight = 50,
          damage_bonus = 2,
@@ -8129,7 +8129,7 @@ local item =
       {
          _id = "armored_ring",
          elona_id = 475,
-         image = 491,
+         image = "elona.item_armored_ring",
          value = 450,
          weight = 50,
          pv = 2,
@@ -8144,7 +8144,7 @@ local item =
       {
          _id = "ring",
          elona_id = 476,
-         image = 490,
+         image = "elona.item_ring",
          value = 450,
          weight = 50,
          material = 1000,
@@ -8158,7 +8158,7 @@ local item =
       {
          _id = "engagement_ring",
          elona_id = 477,
-         image = 489,
+         image = "elona.item_engagement_ring",
          value = 5200,
          weight = 50,
          material = 1000,
@@ -8172,7 +8172,7 @@ local item =
       {
          _id = "stethoscope",
          elona_id = 478,
-         image = 493,
+         image = "elona.item_stethoscope",
          value = 1200,
          weight = 250,
          on_use = function() end,
@@ -8185,7 +8185,7 @@ local item =
       {
          _id = "scroll_of_ally",
          elona_id = 479,
-         image = 470,
+         image = "elona.item_scroll",
          value = 9000,
          weight = 20,
          on_read = function() end,
@@ -8205,7 +8205,7 @@ local item =
       {
          _id = "rod_of_domination",
          elona_id = 480,
-         image = 471,
+         image = "elona.item_rod",
          value = 16000,
          weight = 800,
          chargelevel = 2,
@@ -8230,7 +8230,7 @@ local item =
       {
          _id = "spellbook_of_domination",
          elona_id = 481,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 28000,
          weight = 380,
          chargelevel = 2,
@@ -8255,7 +8255,7 @@ local item =
       {
          _id = "crossbow",
          elona_id = 482,
-         image = 498,
+         image = "elona.item_crossbow",
          value = 500,
          weight = 2800,
          dice_x = 1,
@@ -8277,7 +8277,7 @@ local item =
       {
          _id = "bolt",
          elona_id = 483,
-         image = 412,
+         image = "elona.item_bolt",
          value = 150,
          weight = 3500,
          dice_x = 1,
@@ -8296,7 +8296,7 @@ local item =
       {
          _id = "spellbook_of_web",
          elona_id = 484,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
          chargelevel = 4,
@@ -8320,7 +8320,7 @@ local item =
       {
          _id = "rod_of_web",
          elona_id = 485,
-         image = 471,
+         image = "elona.item_rod",
          value = 3500,
          weight = 800,
          chargelevel = 8,
@@ -8344,7 +8344,7 @@ local item =
       {
          _id = "machine",
          elona_id = 486,
-         image = 507,
+         image = "elona.item_machine",
          value = 3600,
          weight = 150000,
          level = 5,
@@ -8360,7 +8360,7 @@ local item =
       {
          _id = "computer",
          elona_id = 487,
-         image = 508,
+         image = "elona.item_computer",
          value = 4400,
          weight = 45000,
          level = 12,
@@ -8376,7 +8376,7 @@ local item =
       {
          _id = "training_machine",
          elona_id = 488,
-         image = 506,
+         image = "elona.item_training_machine",
          value = 2400,
          weight = 120000,
          level = 11,
@@ -8394,7 +8394,7 @@ local item =
       {
          _id = "camera",
          elona_id = 489,
-         image = 509,
+         image = "elona.item_camera",
          value = 1600,
          weight = 1500,
          category = 60000,
@@ -8408,7 +8408,7 @@ local item =
       {
          _id = "microwave_oven",
          elona_id = 490,
-         image = 510,
+         image = "elona.item_microwave_oven",
          value = 3200,
          weight = 150000,
          level = 15,
@@ -8423,7 +8423,7 @@ local item =
       {
          _id = "server",
          elona_id = 491,
-         image = 511,
+         image = "elona.item_server",
          value = 2400,
          weight = 95000,
          level = 18,
@@ -8438,7 +8438,7 @@ local item =
       {
          _id = "storage",
          elona_id = 492,
-         image = 512,
+         image = "elona.item_storage",
          value = 3100,
          weight = 14000,
          level = 11,
@@ -8453,7 +8453,7 @@ local item =
       {
          _id = "trash_can",
          elona_id = 493,
-         image = 513,
+         image = "elona.item_trash_can",
          value = 1000,
          weight = 8000,
          category = 60000,
@@ -8464,7 +8464,7 @@ local item =
       {
          _id = "chip",
          elona_id = 494,
-         image = 515,
+         image = "elona.item_chip",
          value = 1200,
          weight = 800,
          category = 60000,
@@ -8478,7 +8478,7 @@ local item =
       {
          _id = "blank_disc",
          elona_id = 495,
-         image = 516,
+         image = "elona.item_playback_disc",
          value = 1000,
          weight = 500,
          category = 60000,
@@ -8493,7 +8493,7 @@ local item =
       {
          _id = "shot_gun",
          elona_id = 496,
-         image = 514,
+         image = "elona.item_shot_gun",
          value = 800,
          weight = 1500,
          dice_x = 4,
@@ -8517,7 +8517,7 @@ local item =
       {
          _id = "pop_corn",
          elona_id = 497,
-         image = 517,
+         image = "elona.item_pop_corn",
          value = 440,
          weight = 200,
          level = 3,
@@ -8532,7 +8532,7 @@ local item =
       {
          _id = "fried_potato",
          elona_id = 498,
-         image = 518,
+         image = "elona.item_fried_potato",
          value = 350,
          weight = 180,
          level = 3,
@@ -8547,7 +8547,7 @@ local item =
       {
          _id = "cyber_snack",
          elona_id = 499,
-         image = 519,
+         image = "elona.item_cyber_snack",
          value = 750,
          weight = 500,
          level = 3,
@@ -8562,7 +8562,7 @@ local item =
       {
          _id = "scroll_of_inferior_material",
          elona_id = 500,
-         image = 470,
+         image = "elona.item_scroll",
          value = 600,
          weight = 20,
          on_read = function() end,
@@ -8581,7 +8581,7 @@ local item =
       {
          _id = "scroll_of_change_material",
          elona_id = 501,
-         image = 470,
+         image = "elona.item_scroll",
          value = 5000,
          weight = 20,
          on_read = function() end,
@@ -8601,7 +8601,7 @@ local item =
       {
          _id = "scroll_of_superior_material",
          elona_id = 502,
-         image = 470,
+         image = "elona.item_scroll",
          value = 20000,
          weight = 20,
          on_read = function() end,
@@ -8622,7 +8622,7 @@ local item =
       {
          _id = "figurine",
          elona_id = 503,
-         image = 531,
+         image = "elona.item_figurine",
          value = 1000,
          weight = 2500,
          fltselect = 1,
@@ -8633,7 +8633,7 @@ local item =
       {
          _id = "card",
          elona_id = 504,
-         image = 528,
+         image = "elona.item_card",
          value = 500,
          weight = 200,
          fltselect = 1,
@@ -8644,7 +8644,7 @@ local item =
       {
          _id = "little_sisters_diary",
          elona_id = 505,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8000,
          weight = 380,
          on_read = function() end,
@@ -8666,7 +8666,7 @@ local item =
       {
          _id = "scroll_of_enchant_weapon",
          elona_id = 506,
-         image = 470,
+         image = "elona.item_scroll",
          value = 8000,
          weight = 20,
          on_read = function() end,
@@ -8685,7 +8685,7 @@ local item =
       {
          _id = "scroll_of_greater_enchant_weapon",
          elona_id = 507,
-         image = 470,
+         image = "elona.item_scroll",
          value = 14000,
          weight = 20,
          on_read = function() end,
@@ -8705,7 +8705,7 @@ local item =
       {
          _id = "scroll_of_enchant_armor",
          elona_id = 508,
-         image = 470,
+         image = "elona.item_scroll",
          value = 8000,
          weight = 20,
          on_read = function() end,
@@ -8724,7 +8724,7 @@ local item =
       {
          _id = "scroll_of_greater_enchant_armor",
          elona_id = 509,
-         image = 470,
+         image = "elona.item_scroll",
          value = 14000,
          weight = 20,
          on_read = function() end,
@@ -8744,7 +8744,7 @@ local item =
       {
          _id = "heir_trunk",
          elona_id = 510,
-         image = 253,
+         image = "elona.item_heir_trunk",
          value = 4500,
          weight = 20000,
          fltselect = 1,
@@ -8754,7 +8754,7 @@ local item =
       {
          _id = "deed_of_heirship",
          elona_id = 511,
-         image = 308,
+         image = "elona.item_deed",
          value = 10000,
          weight = 500,
          on_read = function()
@@ -8774,7 +8774,7 @@ local item =
       {
          _id = "laser_gun",
          elona_id = 512,
-         image = 520,
+         image = "elona.item_laser_gun",
          value = 1500,
          weight = 1200,
          dice_x = 2,
@@ -8798,7 +8798,7 @@ local item =
       {
          _id = "energy_cell",
          elona_id = 513,
-         image = 521,
+         image = "elona.item_energy_cell",
          value = 150,
          weight = 800,
          dice_x = 2,
@@ -8817,7 +8817,7 @@ local item =
       {
          _id = "rail_gun",
          elona_id = 514,
-         image = 520,
+         image = "elona.item_laser_gun",
          value = 60000,
          weight = 8500,
          dice_x = 4,
@@ -8850,7 +8850,7 @@ local item =
       {
          _id = "scroll_of_recharge",
          elona_id = 515,
-         image = 470,
+         image = "elona.item_scroll",
          value = 2500,
          weight = 20,
          on_read = function() end,
@@ -8870,7 +8870,7 @@ local item =
       {
          _id = "bottle_of_water",
          elona_id = 516,
-         image = 354,
+         image = "elona.item_potion",
          value = 280,
          weight = 50,
          on_drink = function() end,
@@ -8887,7 +8887,7 @@ local item =
       {
          _id = "rod_of_change_creature",
          elona_id = 517,
-         image = 471,
+         image = "elona.item_rod",
          value = 4500,
          weight = 800,
          chargelevel = 4,
@@ -8911,7 +8911,7 @@ local item =
       {
          _id = "rod_of_alchemy",
          elona_id = 518,
-         image = 471,
+         image = "elona.item_rod",
          value = 6000,
          weight = 800,
          chargelevel = 3,
@@ -8935,7 +8935,7 @@ local item =
       {
          _id = "bottle_of_dye",
          elona_id = 519,
-         image = 354,
+         image = "elona.item_potion",
          value = 500,
          weight = 120,
          on_drink = function() end,
@@ -8955,7 +8955,7 @@ local item =
       {
          _id = "wing",
          elona_id = 520,
-         image = 522,
+         image = "elona.item_wing",
          value = 4500,
          weight = 500,
          dv = 9,
@@ -8975,7 +8975,7 @@ local item =
       {
          _id = "deed_of_museum",
          elona_id = 521,
-         image = 308,
+         image = "elona.item_deed",
          value = 140000,
          weight = 500,
          on_read = function() end,
@@ -8996,7 +8996,7 @@ local item =
       {
          _id = "deed_of_shop",
          elona_id = 522,
-         image = 308,
+         image = "elona.item_deed",
          value = 200000,
          weight = 500,
          on_read = function() end,
@@ -9017,7 +9017,7 @@ local item =
       {
          _id = "tree_of_beech",
          elona_id = 523,
-         image = 527,
+         image = "elona.item_tree_of_beech",
          value = 700,
          weight = 45000,
          category = 80000,
@@ -9028,7 +9028,7 @@ local item =
       {
          _id = "tree_of_cedar",
          elona_id = 524,
-         image = 593,
+         image = "elona.item_tree_of_cedar",
          value = 500,
          weight = 38000,
          category = 80000,
@@ -9039,7 +9039,7 @@ local item =
       {
          _id = "tree_of_fruitless",
          elona_id = 525,
-         image = 592,
+         image = "elona.item_tree_of_fruitless",
          value = 500,
          weight = 35000,
          fltselect = 1,
@@ -9051,7 +9051,7 @@ local item =
       {
          _id = "tree_of_fruits",
          elona_id = 526,
-         image = 591,
+         image = "elona.item_tree_of_fruits",
          value = 2000,
          weight = 42000,
          category = 80000,
@@ -9066,7 +9066,7 @@ local item =
       {
          _id = "dead_tree",
          elona_id = 527,
-         image = 590,
+         image = "elona.item_dead_tree",
          value = 500,
          weight = 20000,
          category = 80000,
@@ -9076,7 +9076,7 @@ local item =
       {
          _id = "tree_of_zelkova",
          elona_id = 528,
-         image = 589,
+         image = "elona.item_tree_of_zelkova",
          value = 800,
          weight = 28000,
          category = 80000,
@@ -9087,7 +9087,7 @@ local item =
       {
          _id = "tree_of_palm",
          elona_id = 529,
-         image = 588,
+         image = "elona.item_tree_of_palm",
          value = 1000,
          weight = 39000,
          category = 80000,
@@ -9098,7 +9098,7 @@ local item =
       {
          _id = "tree_of_ash",
          elona_id = 530,
-         image = 587,
+         image = "elona.item_tree_of_ash",
          value = 900,
          weight = 28000,
          category = 80000,
@@ -9109,7 +9109,7 @@ local item =
       {
          _id = "furnance",
          elona_id = 531,
-         image = 583,
+         image = "elona.item_furnance",
          value = 8500,
          weight = 68000,
          level = 19,
@@ -9121,7 +9121,7 @@ local item =
       {
          _id = "fireplace",
          elona_id = 532,
-         image = 584,
+         image = "elona.item_fireplace",
          value = 9400,
          weight = 45000,
          level = 23,
@@ -9133,7 +9133,7 @@ local item =
       {
          _id = "stove",
          elona_id = 533,
-         image = 581,
+         image = "elona.item_stove",
          value = 7500,
          weight = 85000,
          level = 22,
@@ -9145,7 +9145,7 @@ local item =
       {
          _id = "giant_foliage_plant",
          elona_id = 534,
-         image = 582,
+         image = "elona.item_giant_foliage_plant",
          value = 4500,
          weight = 15000,
          level = 18,
@@ -9156,7 +9156,7 @@ local item =
       {
          _id = "big_table",
          elona_id = 535,
-         image = 83,
+         image = "elona.item_big_table",
          value = 2400,
          weight = 5800,
          level = 5,
@@ -9167,7 +9167,7 @@ local item =
       {
          _id = "painting_of_madam",
          elona_id = 536,
-         image = 81,
+         image = "elona.item_painting_of_madam",
          value = 8500,
          weight = 2000,
          level = 15,
@@ -9179,7 +9179,7 @@ local item =
       {
          _id = "painting_of_landscape",
          elona_id = 537,
-         image = 92,
+         image = "elona.item_painting_of_landscape",
          value = 8200,
          weight = 500,
          level = 14,
@@ -9191,7 +9191,7 @@ local item =
       {
          _id = "painting_of_sunflower",
          elona_id = 538,
-         image = 131,
+         image = "elona.item_painting_of_sunflower",
          value = 12000,
          weight = 450,
          level = 28,
@@ -9203,7 +9203,7 @@ local item =
       {
          _id = "statue_of_cat",
          elona_id = 539,
-         image = 578,
+         image = "elona.item_statue_of_cat",
          value = 25000,
          weight = 48000,
          level = 30,
@@ -9215,7 +9215,7 @@ local item =
       {
          _id = "black_crystal",
          elona_id = 540,
-         image = 130,
+         image = "elona.item_black_crystal",
          value = 7000,
          weight = 2500,
          level = 20,
@@ -9227,7 +9227,7 @@ local item =
       {
          _id = "snow_man",
          elona_id = 541,
-         image = 134,
+         image = "elona.item_snow_man",
          value = 200,
          weight = 8500,
          category = 60000,
@@ -9238,7 +9238,7 @@ local item =
       {
          _id = "deed_of_farm",
          elona_id = 542,
-         image = 308,
+         image = "elona.item_deed",
          value = 45000,
          weight = 500,
          on_read = function() end,
@@ -9256,7 +9256,7 @@ local item =
       {
          _id = "deed_of_storage_house",
          elona_id = 543,
-         image = 308,
+         image = "elona.item_deed",
          value = 10000,
          weight = 500,
          on_read = function() end,
@@ -9274,7 +9274,7 @@ local item =
       {
          _id = "disc",
          elona_id = 544,
-         image = 516,
+         image = "elona.item_playback_disc",
          value = 1000,
          weight = 500,
          on_use = function() end,
@@ -9294,7 +9294,7 @@ local item =
       {
          _id = "rod_of_wall_creation",
          elona_id = 545,
-         image = 471,
+         image = "elona.item_rod",
          value = 4000,
          weight = 800,
          chargelevel = 7,
@@ -9318,7 +9318,7 @@ local item =
       {
          _id = "spellbook_of_wall_creation",
          elona_id = 546,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6800,
          weight = 380,
          chargelevel = 4,
@@ -9343,7 +9343,7 @@ local item =
       {
          _id = "salary_chest",
          elona_id = 547,
-         image = 325,
+         image = "elona.item_salary_chest",
          value = 6400,
          weight = 20000,
          fltselect = 1,
@@ -9353,7 +9353,7 @@ local item =
       {
          _id = "spellbook_of_healing_rain",
          elona_id = 548,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 9500,
          weight = 380,
          chargelevel = 3,
@@ -9378,7 +9378,7 @@ local item =
       {
          _id = "scroll_of_healing_rain",
          elona_id = 549,
-         image = 470,
+         image = "elona.item_scroll",
          value = 3500,
          weight = 20,
          on_read = function() end,
@@ -9399,7 +9399,7 @@ local item =
       {
          _id = "spellbook_of_healing_hands",
          elona_id = 550,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5800,
          weight = 380,
          chargelevel = 4,
@@ -9424,7 +9424,7 @@ local item =
       {
          _id = "rod_of_healing_hands",
          elona_id = 551,
-         image = 471,
+         image = "elona.item_rod",
          value = 5600,
          weight = 800,
          chargelevel = 3,
@@ -9448,7 +9448,7 @@ local item =
       {
          _id = "feather",
          elona_id = 552,
-         image = 326,
+         image = "elona.item_feather",
          value = 18000,
          weight = 500,
          pv = 6,
@@ -9469,7 +9469,7 @@ local item =
       {
          _id = "gem_seed",
          elona_id = 553,
-         image = 323,
+         image = "elona.item_seed",
          value = 4500,
          weight = 40,
          material = 41,
@@ -9489,7 +9489,7 @@ local item =
       {
          _id = "magical_seed",
          elona_id = 554,
-         image = 323,
+         image = "elona.item_seed",
          value = 3500,
          weight = 40,
          material = 42,
@@ -9509,7 +9509,7 @@ local item =
       {
          _id = "shelter",
          elona_id = 555,
-         image = 330,
+         image = "elona.item_shelter",
          value = 6500,
          weight = 12500,
          on_use = function() end,
@@ -9525,7 +9525,7 @@ local item =
       {
          _id = "seven_league_boots",
          elona_id = 556,
-         image = 460,
+         image = "elona.item_composite_boots",
          value = 24000,
          weight = 300,
          pv = 2,
@@ -9546,7 +9546,7 @@ local item =
       {
          _id = "vindale_cloak",
          elona_id = 557,
-         image = 422,
+         image = "elona.item_light_cloak",
          value = 18000,
          weight = 400,
          pv = 3,
@@ -9567,7 +9567,7 @@ local item =
       {
          _id = "aurora_ring",
          elona_id = 558,
-         image = 489,
+         image = "elona.item_engagement_ring",
          value = 17000,
          weight = 50,
          pv = 2,
@@ -9589,7 +9589,7 @@ local item =
       {
          _id = "potion_of_cure_corruption",
          elona_id = 559,
-         image = 354,
+         image = "elona.item_potion",
          value = 100000,
          weight = 120,
          on_drink = function() end,
@@ -9608,7 +9608,7 @@ local item =
       {
          _id = "masters_delivery_chest",
          elona_id = 560,
-         image = 331,
+         image = "elona.item_masters_delivery_chest",
          value = 380,
          weight = 20000,
          fltselect = 1,
@@ -9621,7 +9621,7 @@ local item =
       {
          _id = "shop_strongbox",
          elona_id = 561,
-         image = 197,
+         image = "elona.item_shop_strongbox",
          value = 7200,
          weight = 20000,
          fltselect = 1,
@@ -9631,7 +9631,7 @@ local item =
       {
          _id = "register",
          elona_id = 562,
-         image = 332,
+         image = "elona.item_register",
          value = 1500,
          weight = 20000,
          on_use = function() end,
@@ -9645,7 +9645,7 @@ local item =
       {
          _id = "textbook",
          elona_id = 563,
-         image = 334,
+         image = "elona.item_textbook",
          value = 4800,
          weight = 80,
          on_read = function() end,
@@ -9662,7 +9662,7 @@ local item =
       {
          _id = "spellbook_of_acid_ground",
          elona_id = 564,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 7500,
          weight = 380,
          chargelevel = 4,
@@ -9687,7 +9687,7 @@ local item =
       {
          _id = "rod_of_acid_ground",
          elona_id = 565,
-         image = 471,
+         image = "elona.item_rod",
          value = 4400,
          weight = 800,
          chargelevel = 4,
@@ -9711,7 +9711,7 @@ local item =
       {
          _id = "acidproof_liquid",
          elona_id = 566,
-         image = 354,
+         image = "elona.item_potion",
          value = 1900,
          weight = 120,
          on_drink = function() end,
@@ -9730,7 +9730,7 @@ local item =
       {
          _id = "fireproof_blanket",
          elona_id = 567,
-         image = 335,
+         image = "elona.item_blanket",
          value = 2400,
          weight = 800,
          chargelevel = 12,
@@ -9746,7 +9746,7 @@ local item =
       {
          _id = "coldproof_blanket",
          elona_id = 568,
-         image = 335,
+         image = "elona.item_blanket",
          value = 2400,
          weight = 800,
          chargelevel = 12,
@@ -9762,7 +9762,7 @@ local item =
       {
          _id = "spellbook_of_fire_wall",
          elona_id = 569,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 5800,
          weight = 380,
          chargelevel = 4,
@@ -9787,7 +9787,7 @@ local item =
       {
          _id = "rod_of_fire_wall",
          elona_id = 570,
-         image = 471,
+         image = "elona.item_rod",
          value = 3800,
          weight = 800,
          chargelevel = 4,
@@ -9811,7 +9811,7 @@ local item =
       {
          _id = "jerky",
          elona_id = 571,
-         image = 337,
+         image = "elona.item_jerky",
          value = 640,
          weight = 450,
          level = 3,
@@ -9825,7 +9825,7 @@ local item =
       {
          _id = "deed_of_ranch",
          elona_id = 572,
-         image = 308,
+         image = "elona.item_deed",
          value = 80000,
          weight = 500,
          on_read = function() end,
@@ -9843,7 +9843,7 @@ local item =
       {
          _id = "egg",
          elona_id = 573,
-         image = 338,
+         image = "elona.item_egg",
          value = 500,
          weight = 300,
          expiration_date = 240,
@@ -9858,7 +9858,7 @@ local item =
       {
          _id = "bottle_of_milk",
          elona_id = 574,
-         image = 339,
+         image = "elona.item_bottle_of_milk",
          value = 1000,
          weight = 300,
          on_drink = function() end,
@@ -9875,7 +9875,7 @@ local item =
       {
          _id = "shit",
          elona_id = 575,
-         image = 340,
+         image = "elona.item_shit",
          value = 25,
          weight = 80,
          category = 64000,
@@ -9885,7 +9885,7 @@ local item =
       {
          _id = "playback_disc",
          elona_id = 576,
-         image = 516,
+         image = "elona.item_playback_disc",
          value = 1000,
          weight = 500,
          on_use = function() end,
@@ -9902,7 +9902,7 @@ local item =
       {
          _id = "molotov",
          elona_id = 577,
-         image = 223,
+         image = "elona.item_molotov",
          value = 400,
          weight = 50,
          on_drink = function() end,
@@ -9921,7 +9921,7 @@ local item =
       {
          _id = "kitty_bank",
          elona_id = 578,
-         image = 348,
+         image = "elona.item_kitty_bank",
          value = 1400,
          weight = 500,
          on_use = function() end,
@@ -9936,7 +9936,7 @@ local item =
       {
          _id = "freezer",
          elona_id = 579,
-         image = 577,
+         image = "elona.item_freezer",
          value = 3800,
          weight = 15000,
          level = 30,
@@ -9948,7 +9948,7 @@ local item =
       {
          _id = "modern_rack",
          elona_id = 580,
-         image = 236,
+         image = "elona.item_modern_rack",
          value = 1600,
          weight = 10200,
          level = 12,
@@ -9959,7 +9959,7 @@ local item =
       {
          _id = "rod_of_make_door",
          elona_id = 581,
-         image = 471,
+         image = "elona.item_rod",
          value = 2000,
          weight = 800,
          chargelevel = 6,
@@ -9982,7 +9982,7 @@ local item =
       {
          _id = "spellbook_of_make_door",
          elona_id = 582,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2000,
          weight = 380,
          chargelevel = 4,
@@ -10006,7 +10006,7 @@ local item =
       {
          _id = "torch",
          elona_id = 583,
-         image = 352,
+         image = "elona.item_torch",
          value = 200,
          weight = 150,
          on_use = function() end,
@@ -10021,7 +10021,7 @@ local item =
       {
          _id = "candle",
          elona_id = 584,
-         image = 353,
+         image = "elona.item_candle",
          value = 1500,
          weight = 200,
          category = 60000,
@@ -10035,7 +10035,7 @@ local item =
       {
          _id = "fancy_lamp",
          elona_id = 585,
-         image = 364,
+         image = "elona.item_fancy_lamp",
          value = 4500,
          weight = 1500,
          level = 20,
@@ -10047,7 +10047,7 @@ local item =
       {
          _id = "modern_lamp_a",
          elona_id = 586,
-         image = 576,
+         image = "elona.item_modern_lamp_a",
          value = 7200,
          weight = 250000,
          level = 30,
@@ -10060,7 +10060,7 @@ local item =
       {
          _id = "handful_of_snow",
          elona_id = 587,
-         image = 365,
+         image = "elona.item_handful_of_snow",
          value = 10,
          weight = 50,
          on_drink = function() end,
@@ -10081,7 +10081,7 @@ local item =
       {
          _id = "tree_of_naked",
          elona_id = 588,
-         image = 575,
+         image = "elona.item_tree_of_naked",
          value = 500,
          weight = 14000,
          fltselect = 8,
@@ -10093,7 +10093,7 @@ local item =
       {
          _id = "tree_of_fir",
          elona_id = 589,
-         image = 574,
+         image = "elona.item_tree_of_fir",
          value = 1800,
          weight = 28000,
          fltselect = 8,
@@ -10105,7 +10105,7 @@ local item =
       {
          _id = "snow_scarecrow",
          elona_id = 590,
-         image = 367,
+         image = "elona.item_snow_scarecrow",
          value = 10,
          weight = 4800,
          category = 64000,
@@ -10117,7 +10117,7 @@ local item =
       {
          _id = "mini_snow_man",
          elona_id = 591,
-         image = 366,
+         image = "elona.item_mini_snow_man",
          value = 400,
          weight = 8500,
          category = 60000,
@@ -10128,7 +10128,7 @@ local item =
       {
          _id = "snow_barrel",
          elona_id = 592,
-         image = 368,
+         image = "elona.item_snow_barrel",
          value = 180,
          weight = 3400,
          category = 60000,
@@ -10138,7 +10138,7 @@ local item =
       {
          _id = "modern_lamp_b",
          elona_id = 593,
-         image = 573,
+         image = "elona.item_modern_lamp_b",
          value = 7200,
          weight = 250000,
          level = 30,
@@ -10151,7 +10151,7 @@ local item =
       {
          _id = "statue_of_holy_cross",
          elona_id = 594,
-         image = 572,
+         image = "elona.item_statue_of_holy_cross",
          value = 18000,
          weight = 12000,
          level = 40,
@@ -10164,7 +10164,7 @@ local item =
       {
          _id = "pillar",
          elona_id = 595,
-         image = 571,
+         image = "elona.item_pillar",
          value = 2500,
          weight = 16000,
          level = 20,
@@ -10175,7 +10175,7 @@ local item =
       {
          _id = "stained_glass_window",
          elona_id = 596,
-         image = 369,
+         image = "elona.item_stained_glass_window",
          value = 1800,
          weight = 4800,
          level = 10,
@@ -10187,7 +10187,7 @@ local item =
       {
          _id = "cargo_christmas_tree",
          elona_id = 597,
-         image = 570,
+         image = "elona.item_christmas_tree",
          value = 3500,
          weight = -60000,
          is_cargo = true,
@@ -10202,7 +10202,7 @@ local item =
       {
          _id = "cargo_snow_man",
          elona_id = 598,
-         image = 134,
+         image = "elona.item_snow_man",
          value = 1200,
          weight = -11000,
          is_cargo = true,
@@ -10217,7 +10217,7 @@ local item =
       {
          _id = "christmas_tree",
          elona_id = 599,
-         image = 570,
+         image = "elona.item_christmas_tree",
          value = 4800,
          weight = 35000,
          level = 30,
@@ -10230,7 +10230,7 @@ local item =
       {
          _id = "giants_shackle",
          elona_id = 600,
-         image = 370,
+         image = "elona.item_giants_shackle",
          value = 1800,
          weight = 150000,
          level = 10,
@@ -10246,7 +10246,7 @@ local item =
       {
          _id = "empty_bottle",
          elona_id = 601,
-         image = 371,
+         image = "elona.item_empty_bottle",
          value = 100,
          weight = 120,
          category = 52000,
@@ -10256,7 +10256,7 @@ local item =
       {
          _id = "holy_well",
          elona_id = 602,
-         image = 372,
+         image = "elona.item_holy_well",
          value = 185000,
          weight = 350000,
          on_drink = function() end,
@@ -10276,7 +10276,7 @@ local item =
       {
          _id = "presidents_chair",
          elona_id = 603,
-         image = 373,
+         image = "elona.item_presidents_chair",
          value = 12000,
          weight = 2400,
          level = 35,
@@ -10292,7 +10292,7 @@ local item =
       {
          _id = "green_plant",
          elona_id = 604,
-         image = 374,
+         image = "elona.item_green_plant",
          value = 400,
          weight = 800,
          category = 60000,
@@ -10302,7 +10302,7 @@ local item =
       {
          _id = "money_tree",
          elona_id = 605,
-         image = 375,
+         image = "elona.item_money_tree",
          value = 2200,
          weight = 1200,
          level = 15,
@@ -10313,7 +10313,7 @@ local item =
       {
          _id = "barbecue_set",
          elona_id = 606,
-         image = 376,
+         image = "elona.item_barbecue_set",
          value = 9500,
          weight = 8250,
          level = 25,
@@ -10328,7 +10328,7 @@ local item =
       {
          _id = "giant_cactus",
          elona_id = 607,
-         image = 377,
+         image = "elona.item_giant_cactus",
          value = 2600,
          weight = 4200,
          category = 60000,
@@ -10338,7 +10338,7 @@ local item =
       {
          _id = "square_window",
          elona_id = 608,
-         image = 378,
+         image = "elona.item_square_window",
          value = 500,
          weight = 1500,
          category = 60000,
@@ -10349,7 +10349,7 @@ local item =
       {
          _id = "window",
          elona_id = 609,
-         image = 379,
+         image = "elona.item_window",
          value = 700,
          weight = 1600,
          category = 60000,
@@ -10360,7 +10360,7 @@ local item =
       {
          _id = "triangle_plant",
          elona_id = 610,
-         image = 380,
+         image = "elona.item_triangle_plant",
          value = 1500,
          weight = 5600,
          level = 18,
@@ -10371,7 +10371,7 @@ local item =
       {
          _id = "house_board",
          elona_id = 611,
-         image = 107,
+         image = "elona.item_house_board",
          value = 3500,
          weight = 1200,
          category = 59000,
@@ -10384,7 +10384,7 @@ local item =
       {
          _id = "nice_window",
          elona_id = 612,
-         image = 382,
+         image = "elona.item_nice_window",
          value = 1000,
          weight = 2000,
          category = 60000,
@@ -10395,7 +10395,7 @@ local item =
       {
          _id = "kings_bed",
          elona_id = 613,
-         image = 569,
+         image = "elona.item_bait",
          value = 35000,
          weight = 24000,
          on_use = function() end,
@@ -10411,7 +10411,7 @@ local item =
       {
          _id = "flower_arch",
          elona_id = 614,
-         image = 568,
+         image = "elona.item_flower_arch",
          value = 2000,
          weight = 8000,
          level = 15,
@@ -10422,7 +10422,7 @@ local item =
       {
          _id = "bill",
          elona_id = 615,
-         image = 383,
+         image = "elona.item_bill",
          value = 100,
          weight = 100,
          fltselect = 1,
@@ -10441,7 +10441,7 @@ local item =
       {
          _id = "tax_masters_tax_box",
          elona_id = 616,
-         image = 384,
+         image = "elona.item_tax_masters_tax_box",
          value = 14500,
          weight = 6500,
          level = 30,
@@ -10456,7 +10456,7 @@ local item =
       {
          _id = "bait",
          elona_id = 617,
-         image = 569,
+         image = "elona.item_bait",
          value = 1000,
          weight = 250,
          fltselect = 1,
@@ -10478,7 +10478,7 @@ local item =
       {
          _id = "fish_a",
          elona_id = 618,
-         image = 310,
+         image = "elona.item_fish",
          value = 1200,
          weight = 1250,
          material = 35,
@@ -10500,7 +10500,7 @@ local item =
       {
          _id = "fish_b",
          elona_id = 619,
-         image = 310,
+         image = "elona.item_fish",
          value = 1200,
          weight = 1250,
          level = 15,
@@ -10512,7 +10512,7 @@ local item =
       {
          _id = "love_potion",
          elona_id = 620,
-         image = 354,
+         image = "elona.item_potion",
          value = 4500,
          weight = 50,
          on_drink = function() end,
@@ -10530,7 +10530,7 @@ local item =
       {
          _id = "treasure_map",
          elona_id = 621,
-         image = 252,
+         image = "elona.item_treasure_map",
          value = 10000,
          weight = 20,
          on_read = function() end,
@@ -10548,7 +10548,7 @@ local item =
       {
          _id = "small_medal",
          elona_id = 622,
-         image = 165,
+         image = "elona.item_small_medal",
          value = 1,
          weight = 1,
          category = 77000,
@@ -10568,7 +10568,7 @@ local item =
       {
          _id = "cat_sisters_diary",
          elona_id = 623,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 15000,
          weight = 380,
          on_read = function() end,
@@ -10590,7 +10590,7 @@ local item =
       {
          _id = "girls_diary",
          elona_id = 624,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 10000,
          weight = 380,
          on_read = function() end,
@@ -10612,7 +10612,7 @@ local item =
       {
          _id = "shrine_gate",
          elona_id = 625,
-         image = 627,
+         image = "elona.item_shrine_gate",
          value = 7500,
          weight = 8000,
          fltselect = 1,
@@ -10626,7 +10626,7 @@ local item =
       {
          _id = "bottle_of_hermes_blood",
          elona_id = 626,
-         image = 354,
+         image = "elona.item_potion",
          value = 50000,
          weight = 120,
          on_drink = function() end,
@@ -10650,7 +10650,7 @@ local item =
       {
          _id = "sages_helm",
          elona_id = 627,
-         image = 480,
+         image = "elona.item_knight_helm",
          value = 40000,
          weight = 1500,
          pv = 15,
@@ -10680,7 +10680,7 @@ local item =
       {
          _id = "spellbook_of_incognito",
          elona_id = 628,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 7000,
          weight = 380,
          chargelevel = 4,
@@ -10705,7 +10705,7 @@ local item =
       {
          _id = "disguise_set",
          elona_id = 629,
-         image = 628,
+         image = "elona.item_disguise_set",
          value = 7200,
          weight = 3500,
          chargelevel = 4,
@@ -10723,7 +10723,7 @@ local item =
       {
          _id = "material_kit",
          elona_id = 630,
-         image = 629,
+         image = "elona.item_material_kit",
          value = 2500,
          weight = 5000,
          on_use = function() end,
@@ -10738,7 +10738,7 @@ local item =
       {
          _id = "moon_gate",
          elona_id = 631,
-         image = 566,
+         image = "elona.item_moon_gate",
          value = 50,
          weight = 5000000,
          level = 15,
@@ -10751,7 +10751,7 @@ local item =
       {
          _id = "flying_scroll",
          elona_id = 632,
-         image = 470,
+         image = "elona.item_scroll",
          value = 40000,
          weight = 5,
          on_read = function() end,
@@ -10769,7 +10769,7 @@ local item =
       {
          _id = "panty",
          elona_id = 633,
-         image = 630,
+         image = "elona.item_panty",
          value = 25000,
          weight = 500,
          dice_x = 1,
@@ -10790,7 +10790,7 @@ local item =
       {
          _id = "leash",
          elona_id = 634,
-         image = 631,
+         image = "elona.item_leash",
          value = 1200,
          weight = 1200,
          on_use = function() end,
@@ -10804,7 +10804,7 @@ local item =
       {
          _id = "mine",
          elona_id = 635,
-         image = 632,
+         image = "elona.item_mine",
          value = 7500,
          weight = 9800,
          on_use = function() end,
@@ -10820,7 +10820,7 @@ local item =
       {
          _id = "lockpick",
          elona_id = 636,
-         image = 634,
+         image = "elona.item_lockpick",
          value = 800,
          weight = 400,
          category = 59000,
@@ -10830,7 +10830,7 @@ local item =
       {
          _id = "skeleton_key",
          elona_id = 637,
-         image = 633,
+         image = "elona.item_skeleton_key",
          value = 150000,
          weight = 400,
          level = 20,
@@ -10846,7 +10846,7 @@ local item =
       {
          _id = "scroll_of_escape",
          elona_id = 638,
-         image = 470,
+         image = "elona.item_scroll",
          value = 450,
          weight = 20,
          on_read = function() end,
@@ -10865,7 +10865,7 @@ local item =
       {
          _id = "happy_apple",
          elona_id = 639,
-         image = 172,
+         image = "elona.item_happy_apple",
          value = 100000,
          weight = 720,
          fltselect = 3,
@@ -10882,7 +10882,7 @@ local item =
       {
          _id = "unicorn_horn",
          elona_id = 640,
-         image = 635,
+         image = "elona.item_unicorn_horn",
          value = 8000,
          weight = 2000,
          category = 59000,
@@ -10896,7 +10896,7 @@ local item =
       {
          _id = "cooler_box",
          elona_id = 641,
-         image = 636,
+         image = "elona.item_cooler_box",
          value = 7500,
          weight = 2500,
          level = 30,
@@ -10912,7 +10912,7 @@ local item =
       {
          _id = "rice_barrel",
          elona_id = 642,
-         image = 637,
+         image = "elona.item_rice_barrel",
          value = 500,
          weight = 4800,
          category = 60000,
@@ -10921,7 +10921,7 @@ local item =
       {
          _id = "eastern_bed",
          elona_id = 643,
-         image = 638,
+         image = "elona.item_eastern_bed",
          value = 2500,
          weight = 2000,
          on_use = function() end,
@@ -10936,7 +10936,7 @@ local item =
       {
          _id = "decorated_window",
          elona_id = 644,
-         image = 639,
+         image = "elona.item_decorated_window",
          value = 2400,
          weight = 2000,
          category = 60000,
@@ -10947,7 +10947,7 @@ local item =
       {
          _id = "king_drawer",
          elona_id = 645,
-         image = 640,
+         image = "elona.item_king_drawer",
          value = 9500,
          weight = 11000,
          level = 35,
@@ -10958,7 +10958,7 @@ local item =
       {
          _id = "menu_board",
          elona_id = 646,
-         image = 641,
+         image = "elona.item_menu_board",
          value = 1800,
          weight = 4500,
          level = 5,
@@ -10969,7 +10969,7 @@ local item =
       {
          _id = "black_board",
          elona_id = 647,
-         image = 642,
+         image = "elona.item_black_board",
          value = 5000,
          weight = 7800,
          level = 18,
@@ -10980,7 +10980,7 @@ local item =
       {
          _id = "sofa",
          elona_id = 648,
-         image = 643,
+         image = "elona.item_sofa",
          value = 2500,
          weight = 5000,
          level = 5,
@@ -10997,7 +10997,7 @@ local item =
       {
          _id = "flowerbed",
          elona_id = 649,
-         image = 644,
+         image = "elona.item_flowerbed",
          value = 1500,
          weight = 4000,
          level = 10,
@@ -11011,7 +11011,7 @@ local item =
       {
          _id = "toilet",
          elona_id = 650,
-         image = 645,
+         image = "elona.item_toilet",
          value = 1000,
          weight = 12000,
          on_drink = function() end,
@@ -11030,7 +11030,7 @@ local item =
       {
          _id = "craft_cupboard",
          elona_id = 651,
-         image = 646,
+         image = "elona.item_craft_cupboard",
          value = 4800,
          weight = 8400,
          level = 25,
@@ -11041,7 +11041,7 @@ local item =
       {
          _id = "sink",
          elona_id = 652,
-         image = 647,
+         image = "elona.item_sink",
          value = 3500,
          weight = 15000,
          level = 15,
@@ -11052,7 +11052,7 @@ local item =
       {
          _id = "junk",
          elona_id = 653,
-         image = 648,
+         image = "elona.item_junk",
          value = 600,
          weight = 150000,
          category = 60000,
@@ -11062,7 +11062,7 @@ local item =
       {
          _id = "double_bed",
          elona_id = 654,
-         image = 261,
+         image = "elona.item_luxury_bed",
          value = 7500,
          weight = 16000,
          on_use = function() end,
@@ -11081,7 +11081,7 @@ local item =
       {
          _id = "hero_cheese",
          elona_id = 655,
-         image = 168,
+         image = "elona.item_hero_cheese",
          value = 100000,
          weight = 500,
          fltselect = 3,
@@ -11097,7 +11097,7 @@ local item =
       {
          _id = "eastern_lamp",
          elona_id = 656,
-         image = 650,
+         image = "elona.item_eastern_lamp",
          value = 3000,
          weight = 7900,
          level = 12,
@@ -11109,7 +11109,7 @@ local item =
       {
          _id = "eastern_window",
          elona_id = 657,
-         image = 651,
+         image = "elona.item_eastern_window",
          value = 3500,
          weight = 1200,
          level = 14,
@@ -11121,7 +11121,7 @@ local item =
       {
          _id = "chochin",
          elona_id = 658,
-         image = 652,
+         image = "elona.item_chochin",
          value = 2500,
          weight = 500,
          level = 14,
@@ -11133,7 +11133,7 @@ local item =
       {
          _id = "partition",
          elona_id = 659,
-         image = 653,
+         image = "elona.item_partition",
          value = 1000,
          weight = 1000,
          level = 5,
@@ -11147,7 +11147,7 @@ local item =
       {
          _id = "spellbook_of_darkness_arrow",
          elona_id = 660,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 3500,
          weight = 380,
          chargelevel = 5,
@@ -11171,7 +11171,7 @@ local item =
       {
          _id = "dal_i_thalion",
          elona_id = 661,
-         image = 459,
+         image = "elona.item_tight_boots",
          value = 25000,
          weight = 650,
          pv = 7,
@@ -11200,7 +11200,7 @@ local item =
       {
          _id = "magic_fruit",
          elona_id = 662,
-         image = 189,
+         image = "elona.item_magic_fruit",
          value = 100000,
          weight = 440,
          fltselect = 3,
@@ -11217,7 +11217,7 @@ local item =
       {
          _id = "monster_heart",
          elona_id = 663,
-         image = 654,
+         image = "elona.item_monster_heart",
          value = 25000,
          weight = 2500,
          fltselect = 3,
@@ -11233,7 +11233,7 @@ local item =
       {
          _id = "speed_ring",
          elona_id = 664,
-         image = 489,
+         image = "elona.item_engagement_ring",
          value = 50000,
          weight = 50,
          material = 1000,
@@ -11256,7 +11256,7 @@ local item =
       {
          _id = "statue_of_opatos",
          elona_id = 665,
-         image = 680,
+         image = "elona.item_statue_of_opatos",
          value = 100000,
          weight = 15000,
          expiration_date = 240,
@@ -11276,7 +11276,7 @@ local item =
       {
          _id = "statue_of_lulwy",
          elona_id = 666,
-         image = 692,
+         image = "elona.item_statue_of_lulwy",
          value = 100000,
          weight = 14000,
          expiration_date = 120,
@@ -11296,7 +11296,7 @@ local item =
       {
          _id = "sisters_love_fueled_lunch",
          elona_id = 667,
-         image = 391,
+         image = "elona.item_gift",
          value = 900,
          weight = 500,
          level = 3,
@@ -11313,7 +11313,7 @@ local item =
       {
          _id = "book_of_rachel",
          elona_id = 668,
-         image = 333,
+         image = "elona.item_book",
          value = 4000,
          weight = 80,
          on_read = function() end,
@@ -11332,7 +11332,7 @@ local item =
       {
          _id = "cargo_art",
          elona_id = 669,
-         image = 92,
+         image = "elona.item_painting_of_landscape",
          value = 3800,
          weight = -35000,
          is_cargo = true,
@@ -11346,7 +11346,7 @@ local item =
       {
          _id = "cargo_canvas",
          elona_id = 670,
-         image = 132,
+         image = "elona.item_canvas",
          value = 750,
          weight = -7000,
          is_cargo = true,
@@ -11359,7 +11359,7 @@ local item =
       {
          _id = "nuclear_bomb",
          elona_id = 671,
-         image = 632,
+         image = "elona.item_mine",
          value = 10000,
          weight = 120000,
          on_use = function() end,
@@ -11377,7 +11377,7 @@ local item =
       {
          _id = "secret_treasure",
          elona_id = 672,
-         image = 656,
+         image = "elona.item_secret_treasure",
          value = 5000,
          weight = 1000,
          fltselect = 3,
@@ -11393,7 +11393,7 @@ local item =
       {
          _id = "wind_bow",
          elona_id = 673,
-         image = 404,
+         image = "elona.item_long_bow",
          value = 35000,
          weight = 800,
          dice_x = 2,
@@ -11424,7 +11424,7 @@ local item =
       {
          _id = "winchester_premium",
          elona_id = 674,
-         image = 514,
+         image = "elona.item_shot_gun",
          value = 35000,
          weight = 2800,
          dice_x = 8,
@@ -11455,7 +11455,7 @@ local item =
       {
          _id = "kumiromi_scythe",
          elona_id = 675,
-         image = 421,
+         image = "elona.item_scythe",
          value = 35000,
          weight = 850,
          dice_x = 1,
@@ -11489,7 +11489,7 @@ local item =
       {
          _id = "elemental_staff",
          elona_id = 676,
-         image = 425,
+         image = "elona.item_staff",
          value = 35000,
          weight = 900,
          dice_x = 1,
@@ -11525,7 +11525,7 @@ local item =
       {
          _id = "holy_lance",
          elona_id = 677,
-         image = 415,
+         image = "elona.item_holy_lance",
          value = 35000,
          weight = 4400,
          dice_x = 7,
@@ -11557,7 +11557,7 @@ local item =
       {
          _id = "lucky_dagger",
          elona_id = 678,
-         image = 400,
+         image = "elona.item_dagger",
          value = 35000,
          weight = 400,
          dice_x = 4,
@@ -11591,7 +11591,7 @@ local item =
       {
          _id = "gaia_hammer",
          elona_id = 679,
-         image = 504,
+         image = "elona.item_hammer",
          value = 35000,
          weight = 6500,
          dice_x = 2,
@@ -11623,7 +11623,7 @@ local item =
       {
          _id = "lulwys_gem_stone_of_god_speed",
          elona_id = 680,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 12,
@@ -11646,7 +11646,7 @@ local item =
       {
          _id = "jures_gem_stone_of_holy_rain",
          elona_id = 681,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 8,
@@ -11669,7 +11669,7 @@ local item =
       {
          _id = "kumiromis_gem_stone_of_rejuvenation",
          elona_id = 682,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 72,
@@ -11690,7 +11690,7 @@ local item =
       {
          _id = "gem_stone_of_mani",
          elona_id = 683,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 24,
@@ -11713,7 +11713,7 @@ local item =
       {
          _id = "gene_machine",
          elona_id = 684,
-         image = 691,
+         image = "elona.item_gene_machine",
          value = 20000,
          weight = 25000,
          level = 15,
@@ -11728,7 +11728,7 @@ local item =
       {
          _id = "monster_ball",
          elona_id = 685,
-         image = 658,
+         image = "elona.item_monster_ball",
          value = 4500,
          weight = 1400,
          on_use = function() end,
@@ -11746,7 +11746,7 @@ local item =
       {
          _id = "statue_of_jure",
          elona_id = 686,
-         image = 690,
+         image = "elona.item_statue_of_jure",
          value = 100000,
          weight = 12000,
          expiration_date = 720,
@@ -11766,7 +11766,7 @@ local item =
       {
          _id = "ancient_book",
          elona_id = 687,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 2000,
          weight = 380,
          chargelevel = 2,
@@ -11793,7 +11793,7 @@ local item =
       {
          _id = "iron_maiden",
          elona_id = 688,
-         image = 689,
+         image = "elona.item_iron_maiden",
          value = 7500,
          weight = 26000,
          category = 59000,
@@ -11806,7 +11806,7 @@ local item =
       {
          _id = "guillotine",
          elona_id = 689,
-         image = 688,
+         image = "elona.item_guillotine",
          value = 5000,
          weight = 22000,
          category = 59000,
@@ -11819,7 +11819,7 @@ local item =
       {
          _id = "pan_flute",
          elona_id = 690,
-         image = 392,
+         image = "elona.item_pan_flute",
          value = 4500,
          weight = 18000,
          level = 15,
@@ -11837,7 +11837,7 @@ local item =
       {
          _id = "lute",
          elona_id = 691,
-         image = 393,
+         image = "elona.item_alud",
          value = 3800,
          weight = 8500,
          level = 10,
@@ -11855,7 +11855,7 @@ local item =
       {
          _id = "harmonica",
          elona_id = 692,
-         image = 394,
+         image = "elona.item_harmonica",
          value = 1500,
          weight = 850,
          category = 60000,
@@ -11872,7 +11872,7 @@ local item =
       {
          _id = "harp",
          elona_id = 693,
-         image = 395,
+         image = "elona.item_harp",
          value = 7500,
          weight = 30000,
          level = 10,
@@ -11889,7 +11889,7 @@ local item =
       {
          _id = "eastern_partition",
          elona_id = 694,
-         image = 659,
+         image = "elona.item_eastern_partition",
          value = 2000,
          weight = 1200,
          level = 10,
@@ -11900,7 +11900,7 @@ local item =
       {
          _id = "axe_of_destruction",
          elona_id = 695,
-         image = 399,
+         image = "elona.item_bardiche",
          value = 50000,
          weight = 14000,
          dice_x = 1,
@@ -11927,7 +11927,7 @@ local item =
       {
          _id = "spellbook_of_magic_ball",
          elona_id = 696,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 14200,
          weight = 380,
          chargelevel = 2,
@@ -11952,7 +11952,7 @@ local item =
       {
          _id = "spellbook_of_magic_laser",
          elona_id = 697,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 12500,
          weight = 380,
          chargelevel = 2,
@@ -11977,7 +11977,7 @@ local item =
       {
          _id = "potion_of_salt_solution",
          elona_id = 698,
-         image = 365,
+         image = "elona.item_handful_of_snow",
          value = 10,
          weight = 50,
          on_drink = function() end,
@@ -11994,7 +11994,7 @@ local item =
       {
          _id = "little_ball",
          elona_id = 699,
-         image = 658,
+         image = "elona.item_monster_ball",
          value = 10,
          weight = 3000,
          category = 59000,
@@ -12009,7 +12009,7 @@ local item =
       {
          _id = "town_book",
          elona_id = 700,
-         image = 532,
+         image = "elona.item_town_book",
          value = 750,
          weight = 20,
          on_read = function()
@@ -12024,7 +12024,7 @@ local item =
       {
          _id = "deck",
          elona_id = 701,
-         image = 533,
+         image = "elona.item_deck",
          value = 2200,
          weight = 20,
          category = 59000,
@@ -12037,7 +12037,7 @@ local item =
       {
          _id = "rabbits_tail",
          elona_id = 702,
-         image = 301,
+         image = "elona.item_rabbits_tail",
          value = 10000,
          weight = 150,
          fltselect = 3,
@@ -12053,7 +12053,7 @@ local item =
       {
          _id = "whistle",
          elona_id = 703,
-         image = 534,
+         image = "elona.item_whistle",
          value = 1400,
          weight = 20,
          category = 59000,
@@ -12066,7 +12066,7 @@ local item =
       {
          _id = "vomit",
          elona_id = 704,
-         image = 535,
+         image = "elona.item_vomit",
          value = 400,
          weight = 100,
          on_drink = function() end,
@@ -12082,7 +12082,7 @@ local item =
       {
          _id = "beggars_pendant",
          elona_id = 705,
-         image = 486,
+         image = "elona.item_neck_guard",
          value = 50,
          weight = 250,
          dv = 8,
@@ -12107,7 +12107,7 @@ local item =
       {
          _id = "potion_of_descent",
          elona_id = 706,
-         image = 354,
+         image = "elona.item_potion",
          value = 4500,
          weight = 120,
          on_drink = function() end,
@@ -12126,7 +12126,7 @@ local item =
       {
          _id = "stradivarius",
          elona_id = 707,
-         image = 699,
+         image = "elona.item_stradivarius",
          value = 35000,
          weight = 4500,
          fltselect = 3,
@@ -12148,7 +12148,7 @@ local item =
       {
          _id = "book_of_resurrection",
          elona_id = 708,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 6000,
          weight = 380,
          on_read = function() end,
@@ -12168,7 +12168,7 @@ local item =
       {
          _id = "scroll_of_contingency",
          elona_id = 709,
-         image = 470,
+         image = "elona.item_scroll",
          value = 3500,
          weight = 20,
          on_read = function() end,
@@ -12189,7 +12189,7 @@ local item =
       {
          _id = "spellbook_of_contingency",
          elona_id = 710,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
          chargelevel = 3,
@@ -12214,7 +12214,7 @@ local item =
       {
          _id = "potion_of_evolution",
          elona_id = 711,
-         image = 354,
+         image = "elona.item_potion",
          value = 12000,
          weight = 120,
          on_drink = function() end,
@@ -12233,7 +12233,7 @@ local item =
       {
          _id = "deed_of_dungeon",
          elona_id = 712,
-         image = 308,
+         image = "elona.item_deed",
          value = 500000,
          weight = 500,
          on_read = function() end,
@@ -12251,7 +12251,7 @@ local item =
       {
          _id = "shuriken",
          elona_id = 713,
-         image = 536,
+         image = "elona.item_shuriken",
          value = 750,
          weight = 400,
          dice_x = 1,
@@ -12273,7 +12273,7 @@ local item =
       {
          _id = "grenade",
          elona_id = 714,
-         image = 537,
+         image = "elona.item_grenade",
          value = 550,
          weight = 850,
          dice_x = 1,
@@ -12294,7 +12294,7 @@ local item =
       {
          _id = "secret_experience_of_kumiromi",
          elona_id = 715,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 6800,
          weight = 1200,
          category = 59000,
@@ -12310,7 +12310,7 @@ local item =
       {
          _id = "vanilla_rock",
          elona_id = 716,
-         image = 424,
+         image = "elona.item_stone",
          value = 9500,
          weight = 7500,
          dice_x = 1,
@@ -12333,7 +12333,7 @@ local item =
       {
          _id = "secret_experience_of_lomias",
          elona_id = 717,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 6800,
          weight = 1200,
          fltselect = 1,
@@ -12349,7 +12349,7 @@ local item =
       {
          _id = "shenas_panty",
          elona_id = 718,
-         image = 630,
+         image = "elona.item_panty",
          value = 94000,
          weight = 250,
          dice_x = 1,
@@ -12381,7 +12381,7 @@ local item =
       {
          _id = "claymore_unique",
          elona_id = 719,
-         image = 698,
+         image = "elona.item_claymore_unique",
          value = 45000,
          weight = 6500,
          dice_x = 3,
@@ -12410,7 +12410,7 @@ local item =
       {
          _id = "happy_bed",
          elona_id = 720,
-         image = 261,
+         image = "elona.item_luxury_bed",
          value = 25000,
          weight = 31000,
          on_use = function() end,
@@ -12431,7 +12431,7 @@ local item =
       {
          _id = "statue_of_ehekatl",
          elona_id = 721,
-         image = 687,
+         image = "elona.item_statue_of_ehekatl",
          value = 100000,
          weight = 12000,
          expiration_date = 480,
@@ -12451,7 +12451,7 @@ local item =
       {
          _id = "arbalest",
          elona_id = 722,
-         image = 486,
+         image = "elona.item_neck_guard",
          value = 9500,
          weight = 400,
          hit_bonus = 12,
@@ -12476,7 +12476,7 @@ local item =
       {
          _id = "twin_edge",
          elona_id = 723,
-         image = 486,
+         image = "elona.item_neck_guard",
          value = 9500,
          weight = 400,
          damage_bonus = 4,
@@ -12501,7 +12501,7 @@ local item =
       {
          _id = "music_ticket",
          elona_id = 724,
-         image = 538,
+         image = "elona.item_token_of_friendship",
          value = 1,
          weight = 1,
          fltselect = 1,
@@ -12522,7 +12522,7 @@ local item =
       {
          _id = "kill_kill_piano",
          elona_id = 725,
-         image = 76,
+         image = "elona.item_goulds_piano",
          value = 25000,
          weight = 75000,
          dice_x = 1,
@@ -12551,7 +12551,7 @@ local item =
       {
          _id = "alud",
          elona_id = 726,
-         image = 393,
+         image = "elona.item_alud",
          value = 7500,
          weight = 2850,
          pv = 35,
@@ -12579,7 +12579,7 @@ local item =
       {
          _id = "shield_of_thorn",
          elona_id = 727,
-         image = 453,
+         image = "elona.item_small_shield",
          value = 17500,
          weight = 950,
          damage_bonus = 14,
@@ -12606,7 +12606,7 @@ local item =
       {
          _id = "crimson_plate",
          elona_id = 728,
-         image = 474,
+         image = "elona.item_composite_girdle",
          value = 15000,
          weight = 1250,
          pv = 15,
@@ -12634,7 +12634,7 @@ local item =
       {
          _id = "gift",
          elona_id = 729,
-         image = 391,
+         image = "elona.item_gift",
          value = 2500,
          weight = 1000,
          category = 60000,
@@ -12645,7 +12645,7 @@ local item =
       {
          _id = "token_of_friendship",
          elona_id = 730,
-         image = 538,
+         image = "elona.item_token_of_friendship",
          value = 1,
          weight = 1,
          fltselect = 1,
@@ -12667,7 +12667,7 @@ local item =
       {
          _id = "spellbook_of_4_dimensional_pocket",
          elona_id = 731,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
          chargelevel = 3,
@@ -12692,7 +12692,7 @@ local item =
       {
          _id = "spellbook_of_harvest",
          elona_id = 732,
-         image = 429,
+         image = "elona.item_spellbook",
          value = 4000,
          weight = 380,
          chargelevel = 3,
@@ -12717,7 +12717,7 @@ local item =
       {
          _id = "sand_bag",
          elona_id = 733,
-         image = 563,
+         image = "elona.item_sand_bag",
          value = 4800,
          weight = 8500,
          category = 59000,
@@ -12730,7 +12730,7 @@ local item =
       {
          _id = "small_gamble_chest",
          elona_id = 734,
-         image = 220,
+         image = "elona.item_small_gamble_chest",
          value = 1200,
          weight = 3400,
          category = 72000,
@@ -12747,7 +12747,7 @@ local item =
       {
          _id = "scythe",
          elona_id = 735,
-         image = 421,
+         image = "elona.item_scythe",
          value = 500,
          weight = 4000,
          dice_x = 1,
@@ -12768,7 +12768,7 @@ local item =
       {
          _id = "fireproof_liquid",
          elona_id = 736,
-         image = 354,
+         image = "elona.item_potion",
          value = 1500,
          weight = 120,
          on_drink = function() end,
@@ -12787,7 +12787,7 @@ local item =
       {
          _id = "scroll_of_name",
          elona_id = 737,
-         image = 470,
+         image = "elona.item_scroll",
          value = 7500,
          weight = 20,
          on_read = function() end,
@@ -12808,7 +12808,7 @@ local item =
       {
          _id = "fortune_cookie",
          elona_id = 738,
-         image = 539,
+         image = "elona.item_fortune_cookie",
          value = 250,
          weight = 50,
          category = 57000,
@@ -12822,7 +12822,7 @@ local item =
       {
          _id = "frisias_tail",
          elona_id = 739,
-         image = 425,
+         image = "elona.item_staff",
          value = 30000,
          weight = 376500,
          dice_x = 25,
@@ -12854,7 +12854,7 @@ local item =
       {
          _id = "unknown_shell",
          elona_id = 740,
-         image = 488,
+         image = "elona.item_peridot",
          value = 1200,
          weight = 150,
          pv = 14,
@@ -12881,7 +12881,7 @@ local item =
       {
          _id = "hiryu_to",
          elona_id = 741,
-         image = 501,
+         image = "elona.item_zantetsu",
          value = 40000,
          weight = 2500,
          dice_x = 6,
@@ -12912,7 +12912,7 @@ local item =
       {
          _id = "license_of_the_void_explorer",
          elona_id = 742,
-         image = 308,
+         image = "elona.item_deed",
          value = 15000,
          weight = 500,
          on_read = function() end,
@@ -12932,7 +12932,7 @@ local item =
       {
          _id = "plank_of_carneades",
          elona_id = 743,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 24,
@@ -12954,7 +12954,7 @@ local item =
       {
          _id = "schrodingers_cat",
          elona_id = 744,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 24,
@@ -12975,7 +12975,7 @@ local item =
       {
          _id = "heart",
          elona_id = 745,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 24,
@@ -12996,7 +12996,7 @@ local item =
       {
          _id = "tamers_whip",
          elona_id = 746,
-         image = 657,
+         image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
          expiration_date = 24,
@@ -13017,7 +13017,7 @@ local item =
       {
          _id = "book_of_bokonon",
          elona_id = 747,
-         image = 333,
+         image = "elona.item_book",
          value = 4000,
          weight = 80,
          on_read = function() end,
@@ -13037,7 +13037,7 @@ local item =
       {
          _id = "summoning_crystal",
          elona_id = 748,
-         image = 662,
+         image = "elona.item_summoning_crystal",
          value = 4500,
          weight = 7500,
          on_use = function() end,
@@ -13054,7 +13054,7 @@ local item =
       {
          _id = "statue_of_creator",
          elona_id = 749,
-         image = 686,
+         image = "elona.item_statue_of_creator",
          value = 50,
          weight = 15000,
          category = 59000,
@@ -13069,7 +13069,7 @@ local item =
       {
          _id = "upstairs",
          elona_id = 750,
-         image = 665,
+         image = "elona.item_upstairs",
          value = 150000,
          weight = 7500,
          fltselect = 1,
@@ -13080,7 +13080,7 @@ local item =
       {
          _id = "downstairs",
          elona_id = 751,
-         image = 664,
+         image = "elona.item_downstairs",
          value = 150000,
          weight = 7500,
          fltselect = 1,
@@ -13091,7 +13091,7 @@ local item =
       {
          _id = "new_years_gift",
          elona_id = 752,
-         image = 666,
+         image = "elona.item_new_years_gift",
          value = 1650,
          weight = 80,
          fltselect = 1,
@@ -13102,7 +13102,7 @@ local item =
       {
          _id = "kotatsu",
          elona_id = 753,
-         image = 667,
+         image = "elona.item_kotatsu",
          value = 7800,
          weight = 9800,
          level = 28,
@@ -13117,7 +13117,7 @@ local item =
       {
          _id = "daruma",
          elona_id = 754,
-         image = 668,
+         image = "elona.item_daruma",
          value = 3200,
          weight = 720,
          fltselect = 1,
@@ -13127,7 +13127,7 @@ local item =
       {
          _id = "kagami_mochi",
          elona_id = 755,
-         image = 669,
+         image = "elona.item_kagami_mochi",
          value = 2500,
          weight = 800,
          fltselect = 1,
@@ -13141,7 +13141,7 @@ local item =
       {
          _id = "mochi",
          elona_id = 756,
-         image = 670,
+         image = "elona.item_mochi",
          value = 800,
          weight = 350,
          category = 57000,
@@ -13155,7 +13155,7 @@ local item =
       {
          _id = "five_horned_helm",
          elona_id = 757,
-         image = 480,
+         image = "elona.item_knight_helm",
          value = 15000,
          weight = 2400,
          damage_bonus = 8,
@@ -13185,7 +13185,7 @@ local item =
       {
          _id = "mauser_c96_custom",
          elona_id = 758,
-         image = 419,
+         image = "elona.item_pistol",
          value = 25000,
          weight = 950,
          dice_x = 1,
@@ -13213,7 +13213,7 @@ local item =
       {
          _id = "lightsabre",
          elona_id = 759,
-         image = 671,
+         image = "elona.item_lightsabre",
          value = 4800,
          weight = 600,
          dice_x = 2,
@@ -13235,7 +13235,7 @@ local item =
       {
          _id = "garoks_hammer",
          elona_id = 760,
-         image = 629,
+         image = "elona.item_material_kit",
          value = 75000,
          weight = 5000,
          on_use = function() end,
@@ -13254,7 +13254,7 @@ local item =
       {
          _id = "goulds_piano",
          elona_id = 761,
-         image = 76,
+         image = "elona.item_goulds_piano",
          value = 35000,
          weight = 45000,
          level = 20,
@@ -13278,7 +13278,7 @@ local item =
       {
          _id = "festival_wreath",
          elona_id = 762,
-         image = 672,
+         image = "elona.item_festival_wreath",
          value = 760,
          weight = 280,
          level = 25,
@@ -13292,7 +13292,7 @@ local item =
       {
          _id = "pedestal",
          elona_id = 763,
-         image = 673,
+         image = "elona.item_pedestal",
          value = 3600,
          weight = 85000,
          level = 15,
@@ -13306,7 +13306,7 @@ local item =
       {
          _id = "counter",
          elona_id = 764,
-         image = 674,
+         image = "elona.item_counter",
          value = 1200,
          weight = 9900,
          level = 5,
@@ -13317,7 +13317,7 @@ local item =
       {
          _id = "red_stall",
          elona_id = 765,
-         image = 685,
+         image = "elona.item_red_stall",
          value = 3800,
          weight = 48500,
          level = 30,
@@ -13328,7 +13328,7 @@ local item =
       {
          _id = "blue_stall",
          elona_id = 766,
-         image = 684,
+         image = "elona.item_blue_stall",
          value = 3800,
          weight = 48500,
          level = 30,
@@ -13339,7 +13339,7 @@ local item =
       {
          _id = "jures_body_pillow",
          elona_id = 767,
-         image = 675,
+         image = "elona.item_jures_body_pillow",
          value = 250,
          weight = 800,
          on_use = function() end,
@@ -13356,7 +13356,7 @@ local item =
       {
          _id = "new_years_decoration",
          elona_id = 768,
-         image = 676,
+         image = "elona.item_new_years_decoration",
          value = 400,
          weight = 150,
          level = 10,
@@ -13369,7 +13369,7 @@ local item =
       {
          _id = "miniature_tree",
          elona_id = 769,
-         image = 677,
+         image = "elona.item_miniature_tree",
          value = 1650,
          weight = 530,
          level = 10,
@@ -13382,7 +13382,7 @@ local item =
       {
          _id = "bottle_of_soda",
          elona_id = 770,
-         image = 678,
+         image = "elona.item_bottle_of_soda",
          value = 500,
          weight = 50,
          on_drink = function() end,
@@ -13401,7 +13401,7 @@ local item =
       {
          _id = "blue_capsule_drug",
          elona_id = 771,
-         image = 679,
+         image = "elona.item_blue_capsule_drug",
          value = 7500,
          weight = 100,
          on_drink = function() end,
@@ -13421,7 +13421,7 @@ local item =
       {
          _id = "tomato",
          elona_id = 772,
-         image = 540,
+         image = "elona.item_tomato",
          value = 90,
          weight = 330,
          material = 35,
@@ -13437,7 +13437,7 @@ local item =
       {
          _id = "large_bookshelf",
          elona_id = 773,
-         image = 541,
+         image = "elona.item_large_bookshelf",
          value = 2400,
          weight = 15000,
          level = 18,
@@ -13448,7 +13448,7 @@ local item =
       {
          _id = "luxury_cabinet",
          elona_id = 774,
-         image = 683,
+         image = "elona.item_luxury_cabinet",
          value = 7200,
          weight = 23800,
          level = 24,
@@ -13459,7 +13459,7 @@ local item =
       {
          _id = "special_steamed_meat_bun",
          elona_id = 775,
-         image = 542,
+         image = "elona.item_special_steamed_meat_bun",
          value = 160,
          weight = 250,
          level = 3,
@@ -13474,7 +13474,7 @@ local item =
       {
          _id = "statue_of_kumiromi",
          elona_id = 776,
-         image = 681,
+         image = "elona.item_statue_of_kumiromi",
          value = 100000,
          weight = 15000,
          expiration_date = 240,
@@ -13494,7 +13494,7 @@ local item =
       {
          _id = "statue_of_mani",
          elona_id = 777,
-         image = 682,
+         image = "elona.item_statue_of_mani",
          value = 100000,
          weight = 15000,
          expiration_date = 240,
@@ -13514,7 +13514,7 @@ local item =
       {
          _id = "luxury_sofa",
          elona_id = 778,
-         image = 543,
+         image = "elona.item_luxury_sofa",
          value = 4900,
          weight = 9000,
          level = 15,
@@ -13531,7 +13531,7 @@ local item =
       {
          _id = "deer_head",
          elona_id = 779,
-         image = 544,
+         image = "elona.item_deer_head",
          value = 16000,
          weight = 1800,
          level = 32,
@@ -13542,7 +13542,7 @@ local item =
       {
          _id = "fur_carpet",
          elona_id = 780,
-         image = 545,
+         image = "elona.item_fur_carpet",
          value = 23000,
          weight = 4200,
          level = 45,
@@ -13553,7 +13553,7 @@ local item =
       {
          _id = "kitchen_knife",
          elona_id = 781,
-         image = 546,
+         image = "elona.item_kitchen_knife",
          value = 2400,
          weight = 400,
          dice_x = 1,
@@ -13573,7 +13573,7 @@ local item =
       {
          _id = "dish",
          elona_id = 782,
-         image = 360,
+         image = "elona.item_dish",
          value = 100,
          weight = 150,
          category = 60000,
@@ -13583,7 +13583,7 @@ local item =
       {
          _id = "recipe",
          elona_id = 783,
-         image = 550,
+         image = "elona.item_recipe",
          value = 1000,
          weight = 50,
          on_read = function() end,
@@ -13597,7 +13597,7 @@ local item =
       {
          _id = "recipe_holder",
          elona_id = 784,
-         image = 549,
+         image = "elona.item_recipe_holder",
          value = 2500,
          weight = 550,
          category = 72000,
@@ -13607,7 +13607,7 @@ local item =
       {
          _id = "bottle_of_salt",
          elona_id = 785,
-         image = 553,
+         image = "elona.item_bottle_of_salt",
          value = 80,
          weight = 80,
          category = 57000,
@@ -13622,7 +13622,7 @@ local item =
       {
          _id = "sack_of_sugar",
          elona_id = 786,
-         image = 551,
+         image = "elona.item_sack_of_sugar",
          value = 50,
          weight = 120,
          category = 57000,
@@ -13637,7 +13637,7 @@ local item =
       {
          _id = "puff_puff_bread",
          elona_id = 787,
-         image = 552,
+         image = "elona.item_puff_puff_bread",
          value = 350,
          weight = 350,
          expiration_date = 720,
@@ -13653,7 +13653,7 @@ local item =
       {
          _id = "skull_bow",
          elona_id = 788,
-         image = 402,
+         image = "elona.item_skull_bow",
          value = 2000,
          weight = 700,
          dice_x = 1,
@@ -13677,7 +13677,7 @@ local item =
       {
          _id = "pot_for_testing",
          elona_id = 789,
-         image = 554,
+         image = "elona.item_pot_for_testing",
          value = 1000,
          weight = 500,
          on_use = function() end,
@@ -13694,7 +13694,7 @@ local item =
       {
          _id = "frying_pan_for_testing",
          elona_id = 790,
-         image = 555,
+         image = "elona.item_frying_pan_for_testing",
          value = 1000,
          weight = 500,
          on_use = function() end,
@@ -13711,7 +13711,7 @@ local item =
       {
          _id = "dragon_slayer",
          elona_id = 791,
-         image = 697,
+         image = "elona.item_dragon_slayer",
          value = 72000,
          weight = 22500,
          dice_x = 3,
@@ -13740,7 +13740,7 @@ local item =
       {
          _id = "putitoro",
          elona_id = 792,
-         image = 695,
+         image = "elona.item_putitoro",
          value = 2000,
          weight = 200,
          fltselect = 1,

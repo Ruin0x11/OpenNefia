@@ -258,24 +258,9 @@ function draw.wrap_text(text, wraplimit)
 end
 
 local image_cache = setmetatable({}, { __mode = "v" })
-function draw.load_image(filename, keycolor)
-   if keycolor == nil then keycolor = {0, 0, 0} end
+function draw.load_image(filename)
    if image_cache[filename] then return image_cache[filename] end
    local image_data = love.image.newImageData(filename)
-
-   if type(keycolor) == "table" then
-      -- HACK: Horrendous. This takes an obscene amount of time. The
-      -- images should be preprocessed instead with libVIPS or
-      -- something as a compile step...
-      local function trans(x,y,r,g,b,a)
-         if r == keycolor[1] and g == keycolor[2] and b == keycolor[3] then a = 0 end
-         return r,g,b,a
-      end
-
-      mobdebug.scope(function()
-            image_data:mapPixel(trans)
-      end)
-   end
 
    image_cache[filename] = love.graphics.newImage(image_data)
    return image_cache[filename]
@@ -371,31 +356,6 @@ function draw.with_canvas(other_canvas, f)
    f()
 
    love.graphics.setCanvas(canvas)
-end
-
-function draw.debug_pos(x, y)
-   draw.set_color(255, 0, 0)
-   draw.set_font(11)
-   draw.text(string.format("%d/%d", x, y), x, y)
-   draw.filled_rect(x - 4, y - 4, 8, 8)
-   draw.set_color(255, 255, 255)
-end
-
-function draw.debug_rect(x, y, w, h, centered)
-   if centered then
-      x = x - w / 2
-      y = y - h / 2
-   end
-   local p = {
-      {x, y},
-      {x+w, y},
-      {x, y+h},
-      {x+w, y+h}
-   }
-   for _, pos in ipairs(p) do
-      draw.debug_pos(pos[1], pos[2])
-   end
-   draw.line_rect(x, y, w, h)
 end
 
 local framerate = 20

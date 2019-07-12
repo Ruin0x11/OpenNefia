@@ -4,6 +4,7 @@ local internal = require("internal")
 local data = require("internal.data")
 local stopwatch = require("api.Stopwatch")
 local UiTheme = require("api.gui.UiTheme")
+local Event = require("api.Event")
 
 local startup = {}
 
@@ -20,7 +21,9 @@ function startup.run(mods)
    startup.load_batches()
 
    local default_theme = "elona_sys.default"
-   UiTheme.load_theme(default_theme)
+   UiTheme.add_theme(default_theme)
+
+   Event.trigger("base.on_game_startup")
 end
 
 local tile_batch = require("internal.draw.tile_batch")
@@ -44,6 +47,10 @@ local function get_item_tiles()
    return data["base.chip"]:iter():filter(mkpred("item"))
 end
 
+local function get_feat_tiles()
+   return data["base.chip"]:iter():filter(mkpred("feat"))
+end
+
 local tile_size = 48
 local atlas_size = 96
 
@@ -54,8 +61,8 @@ function startup.load_batches()
    local sw = stopwatch:new()
    sw:measure()
 
-   local atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
-   atlas:load(get_map_tiles(), coords)
+   local tile_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   tile_atlas:load(get_map_tiles(), coords)
 
    sw:p("load_batches.map")
 
@@ -69,8 +76,13 @@ function startup.load_batches()
 
    sw:p("load_batches.item")
 
+   local feat_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   feat_atlas:load(get_feat_tiles())
+
+   sw:p("load_batches.feat")
+
    local atlases = require("internal.global.atlases")
-   atlases.set(atlas, chara_atlas, item_atlas)
+   atlases.set(tile_atlas, chara_atlas, item_atlas, feat_atlas)
 end
 
 return startup

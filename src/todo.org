@@ -152,10 +152,12 @@ determine which values should be set as defaults
 * TODO additional AI actions (elona_sys)
 * TODO data schema
 * TODO pcc support
+* TODO make Log support log tags
 * TODO final graphical polish
 spotlight, animated tiles, tall/large tiles
 
 * TODO decide on the name
 Elona_next
 Elona_macs
-Elona_
+Elona_evo
+Elona_evol

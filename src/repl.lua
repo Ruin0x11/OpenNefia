@@ -32,3 +32,7 @@ if fs.exists("repl_startup.lua") then
    chunk()
    print("OK")
 end
+
+-- local repl = require("thirdparty.repl.console")
+-- print("Lua REPL " .. tostring(repl.VERSION))
+-- repl:run()

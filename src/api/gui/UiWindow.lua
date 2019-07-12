@@ -4,18 +4,15 @@ local Window = require("api.gui.Window")
 local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
 local IPaged = require("api.gui.IPaged")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiWindow = class.class("UiWindow", IUiElement)
 
 function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
-   local image = Draw.load_image("graphic/temp/tip_icons.bmp")
-   local quad = love.graphics.newQuad(0, 0, 24, 16, image:getWidth(), image:getHeight())
-
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
    self.title = title or ""
    self.key_help = key_help or ""
-   self.tip_icon = { image = image, quad = quad }
    self.page = 0
    self.page_max = 0
    self.show_page = false
@@ -37,6 +34,7 @@ function UiWindow:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
+   self.t = UiTheme.load()
 
    if self.shadow then
       self.shadow:relayout(x + 4, y + 4, width, height - height % 8)
@@ -84,7 +82,7 @@ function UiWindow:draw()
    local y_offset = self.y_offset
    local title = self.title
 
-   Draw.image_region(self.tip_icon.image, self.tip_icon.quad, x + 30 + x_offset, y + height - 47 - height % 8)
+   self.t.tip_icons:draw_region(1, x + 30 + x_offset, y + height - 47 - height % 8)
 
    Draw.line(x + 50 + x_offset,
              y + height - 48 - self.height % 8,

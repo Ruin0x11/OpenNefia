@@ -173,15 +173,15 @@ function MainHud:draw_attributes()
    -- icons
    Draw.set_color(255, 255, 255)
    for i, a in ipairs(attrs) do
-      local offset_x = 0
+      local x_offset = 0
       if a == "base.speed" then
-         offset_x = 8
+         x_offset = 8
       elseif a == "dv" then
-         offset_x = 14
+         x_offset = 14
       end
       self.t.skill_icons:draw_region(
          i,
-         self.x + 136 + (i - 1) * item_width + 148 + offset_x,
+         self.x + 136 + (i - 1) * item_width + 148 + x_offset,
          self.height - 16 + 1)
    end
 

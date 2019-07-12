@@ -4,6 +4,7 @@ local IObject = require("api.IObject")
 local IMapObject = require("api.IMapObject")
 local IStackableObject = require("api.IStackableObject")
 local IItemEnchantments = require("api.item.IItemEnchantments")
+local data = require("internal.data")
 
 -- TODO: move out of api
 local IItem = class.interface("IItem",
@@ -34,6 +35,8 @@ function IItem:pre_build()
    self.flags = self.flags or {}
    self.types = self.types or {}
 
+   self:set_image()
+
    IItemEnchantments.init(self)
 end
 
@@ -46,6 +49,18 @@ end
 function IItem:instantiate()
    IObject.instantiate(self)
    Event.trigger("base.on_item_instantiated", {item=self})
+end
+
+function IItem:set_image(image)
+   if image then
+      self.image = image
+      local chip = data["base.chip"][self.image]
+      self.y_offset = chip.y_offset
+   else
+      self.image = nil
+      local chip = data["base.chip"][self.proto.image]
+      self.y_offset = chip.y_offset
+   end
 end
 
 function IItem:build_name(amount)
@@ -135,8 +150,8 @@ function IItem:can_equip_at(body_part_type)
 end
 
 function IItem:copy_image()
-   local _, _, item_atlas = require("internal.global.atlases").get()
-   return item_atlas:copy_tile_image(self:calc("image"))
+   local item_atlas = require("internal.global.atlases").get().item
+   return item_atlas:copy_tile_image(self:calc("image") .. "#1")
 end
 
 function IItem:has_type(_type)

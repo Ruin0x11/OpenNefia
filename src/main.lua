@@ -11,7 +11,6 @@ local profile = require("thirdparty.profile")
 local loop = nil
 local draw = nil
 local server = nil
-local next_time
 
 local fps = require("internal.fps"):new()
 fps.show_fps = true
@@ -32,8 +31,6 @@ function love.load(arg)
 
    loop = coroutine.create(game.loop)
    draw = coroutine.create(game.draw)
-
-   next_time = love.timer.getTime()
 end
 
 local abort = false
@@ -63,8 +60,6 @@ function love.update(dt)
    end
 
    abort = false
-
-   next_time = next_time + 1/60
 end
 
 function love.draw()
@@ -88,13 +83,6 @@ function love.draw()
    internal.draw.draw_end()
 
    env.set_hotloaded_this_frame(false)
-
-   local cur_time = love.timer.getTime()
-   if next_time <= cur_time then
-      next_time = cur_time
-      return
-   end
-   love.timer.sleep(next_time - cur_time)
 end
 
 --

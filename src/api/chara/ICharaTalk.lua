@@ -8,7 +8,7 @@ function ICharaTalk:init()
    self.is_talk_silenced = false
 end
 
-function ICharaTalk:on_build()
+function ICharaTalk:instantiate()
    self:set_talk(self.talk)
 end
 

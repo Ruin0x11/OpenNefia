@@ -22,4 +22,8 @@ function Repl.copy_last_input()
    return Repl.get():copy_last_input()
 end
 
+function Repl.copy_last_output()
+   return Repl.get():copy_last_output()
+end
+
 return Repl

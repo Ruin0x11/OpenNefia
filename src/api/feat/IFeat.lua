@@ -7,6 +7,7 @@ local IMapObject = require("api.IMapObject")
 local IFeat = class.interface("IFeat", {}, IMapObject)
 
 function IFeat:pre_build()
+   IMapObject.init(self)
 end
 
 function IFeat:normal_build()

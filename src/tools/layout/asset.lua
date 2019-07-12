@@ -1,7 +1,7 @@
 local crop = {
    {
       name = "select_key",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 30,
       width = 24,
@@ -9,7 +9,7 @@ local crop = {
    },
    {
       name = "tip_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 96,
       y = 360,
       width = 24,
@@ -18,7 +18,7 @@ local crop = {
    },
    {
       name = "topic_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 120,
       y = 360,
       width = 24,
@@ -26,7 +26,7 @@ local crop = {
    },
    {
       name = "input_caret",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 336,
       width = 12,
@@ -34,7 +34,7 @@ local crop = {
    },
    {
       name = "gold_coin",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 392,
       width = 24,
@@ -42,7 +42,7 @@ local crop = {
    },
    {
       name = "equipped",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 12,
       y = 348,
       width = 12,
@@ -50,7 +50,7 @@ local crop = {
    },
    {
       name = "label_input",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 128,
       y = 288,
       width = 128,
@@ -58,7 +58,7 @@ local crop = {
    },
    {
       name = "minimap_position",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 15,
       y = 338,
       width = 6,
@@ -66,7 +66,7 @@ local crop = {
    },
    {
       name = "interest_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 16,
       y = 360,
       width = 16,
@@ -74,7 +74,7 @@ local crop = {
    },
    {
       name = "casino_title_decoration_left",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 192,
       y = 360,
       width = 24,
@@ -82,7 +82,7 @@ local crop = {
    },
    {
       name = "casino_title_decoration_right",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 216,
       y = 360,
       width = 24,
@@ -90,7 +90,7 @@ local crop = {
    },
    {
       name = "map_name_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 208,
       y = 376,
       width = 16,
@@ -98,7 +98,7 @@ local crop = {
    },
    {
       name = "ime_status_english",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 24,
       y = 336,
       width = 24,
@@ -106,7 +106,7 @@ local crop = {
    },
    {
       name = "ime_status_japanese",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 48,
       y = 336,
       width = 24,
@@ -114,7 +114,7 @@ local crop = {
    },
    {
       name = "character_shadow",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 240,
       y = 384,
       width = 32,
@@ -122,7 +122,7 @@ local crop = {
    },
    {
       name = "camera",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 240,
       y = 410,
       width = 24,
@@ -130,7 +130,7 @@ local crop = {
    },
    {
       name = "hp_bar_frame",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 312,
       y = 504,
       width = 104,
@@ -138,7 +138,7 @@ local crop = {
    },
    {
       name = "furious_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 32,
       y = 608,
       width = 16,
@@ -146,7 +146,7 @@ local crop = {
    },
    {
       name = "conquered_nefia_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 32,
       y = 624,
       width = 16,
@@ -154,7 +154,7 @@ local crop = {
    },
    {
       name = "invaded_nefia_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 48,
       y = 624,
       width = 16,
@@ -162,7 +162,7 @@ local crop = {
    },
    {
       name = "buff_icon_none",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 320,
       y = 160,
       width = 32,
@@ -170,7 +170,7 @@ local crop = {
    },
    {
       name = "quickmenu_action",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 360,
       y = 144,
       width = 48,
@@ -178,7 +178,7 @@ local crop = {
    },
    {
       name = "quickmenu_submenu",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 360,
       y = 192,
       width = 48,
@@ -186,7 +186,7 @@ local crop = {
    },
    {
       name = "inheritance_mark",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 384,
       y = 360,
       width = 24,
@@ -194,7 +194,7 @@ local crop = {
    },
    {
       name = "date_label_frame",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 448,
       y = 376,
       width = 128,
@@ -202,7 +202,7 @@ local crop = {
    },
    {
       name = "character_level_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 48,
       y = 392,
       width = 24,
@@ -210,7 +210,7 @@ local crop = {
    },
    {
       name = "platinum_coin",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 24,
       y = 392,
       width = 24,
@@ -218,7 +218,7 @@ local crop = {
    },
    {
       name = "title_label_frame",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 496,
       y = 581,
       width = 192,
@@ -226,7 +226,7 @@ local crop = {
    },
    {
       name = "label_more",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 552,
       y = 504,
       width = 120,
@@ -234,7 +234,7 @@ local crop = {
    },
    {
       name = "label_more_scratch",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 672,
       y = 504,
       width = 120,
@@ -242,7 +242,7 @@ local crop = {
    },
    {
       name = "direction_arrow",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 212,
       y = 432,
       width = 28,
@@ -250,7 +250,7 @@ local crop = {
    },
    {
       name = "clock_hand",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 288,
       width = 48,
@@ -258,7 +258,7 @@ local crop = {
    },
    {
       name = "hourglass",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 72,
       y = 392,
       width = 24,
@@ -266,7 +266,7 @@ local crop = {
    },
    {
       name = "failure_to_cast_effect",
-      source = "deps/elona/graphic/item.bmp",
+      source = "graphic/item.bmp",
       x = 480,
       y = 0,
       width = 48,
@@ -274,7 +274,7 @@ local crop = {
    },
    {
       name = "swarm_effect",
-      source = "deps/elona/graphic/item.bmp",
+      source = "graphic/item.bmp",
       x = 816,
       y = 0,
       width = 48,
@@ -282,7 +282,7 @@ local crop = {
    },
    {
       name = "breaking_effect",
-      source = "deps/elona/graphic/item.bmp",
+      source = "graphic/item.bmp",
       x = 864,
       y = 0,
       width = 48,
@@ -291,7 +291,7 @@ local crop = {
 
    {
       name = "emotion_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 32,
       y = 608,
       width = 16,
@@ -300,7 +300,7 @@ local crop = {
    },
    {
       name = "blend_ingredient",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 336,
       y = 360,
       width = 24,
@@ -308,7 +308,7 @@ local crop = {
    },
    {
       name = "recipe_difficulty",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 64,
       y = 624,
       width = 16,
@@ -317,7 +317,7 @@ local crop = {
    },
    {
       name = "card_front",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 672,
       y = 216,
       width = 64,
@@ -325,7 +325,7 @@ local crop = {
    },
    {
       name = "card_back",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 736,
       y = 216,
       width = 64,
@@ -333,7 +333,7 @@ local crop = {
    },
    {
       name = "card_scratch",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 608,
       y = 216,
       width = 64,
@@ -341,7 +341,7 @@ local crop = {
    },
    {
       name = "card_suit",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 864,
       y = 533,
       width = 24,
@@ -350,7 +350,7 @@ local crop = {
    },
    {
       name = "card_rank",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 864,
       y = 565,
       width = 24,
@@ -359,7 +359,7 @@ local crop = {
    },
    {
       name = "card_pile",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 528,
       y = 216,
       width = 80,
@@ -367,7 +367,7 @@ local crop = {
    },
    {
       name = "anim_bash",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 816,
       y = 432,
       width = 48,
@@ -376,7 +376,7 @@ local crop = {
    },
    {
       name = "anim_slash",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 1008,
       y = 432,
       width = 48,
@@ -385,7 +385,7 @@ local crop = {
    },
    {
       name = "arrow_left",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 312,
       y = 336,
       width = 24,
@@ -393,7 +393,7 @@ local crop = {
    },
    {
       name = "arrow_right",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 336,
       y = 336,
       width = 24,
@@ -401,7 +401,7 @@ local crop = {
    },
    {
       name = "ime_status_none",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 72,
       y = 336,
       width = 24,
@@ -409,7 +409,7 @@ local crop = {
    },
    {
       name = "ally_health_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 432,
       y = 517,
       width = 48,
@@ -417,7 +417,7 @@ local crop = {
    },
    {
       name = "shadow",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 656,
       width = 24,
@@ -427,7 +427,7 @@ local crop = {
    },
    {
       name = "shadow_spot",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 144,
       y = 656,
       width = 24,
@@ -437,7 +437,7 @@ local crop = {
    },
    {
       name = "shadow_edges",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 192,
       y = 752,
       width = 48,
@@ -446,7 +446,7 @@ local crop = {
    },
    {
       name = "politics_law",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 288,
       y = 360,
       width = 24,
@@ -455,15 +455,15 @@ local crop = {
    },
    {
       name = "radar_deco",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 64,
       y = 288,
       width = 50,
       height = 32,
    },
    {
-      name = "inventory_icon",
-      source = "deps/elona/graphic/interface.bmp",
+      name = "inventory_icons",
+      source = "graphic/interface.bmp",
       x = 288,
       y = 48,
       width = 48,
@@ -472,7 +472,7 @@ local crop = {
    },
    {
       name = "message_symbol",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 600,
       y = 360,
       width = 16,
@@ -481,7 +481,7 @@ local crop = {
    },
    {
       name = "message_window",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 496,
       y = 528,
       width = 192,
@@ -489,7 +489,7 @@ local crop = {
    },
    {
       name = "message_window_contents",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 496,
       y = 536,
       width = 192,
@@ -497,7 +497,7 @@ local crop = {
    },
    {
       name = "message_window_border",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 496,
       y = 528,
       width = 192,
@@ -505,7 +505,7 @@ local crop = {
    },
    {
       name = "mef_subref",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 144,
       y = 624,
       width = 32,
@@ -514,7 +514,7 @@ local crop = {
    },
    {
       name = "light",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 192,
       y = 704,
       width = 48,
@@ -523,7 +523,7 @@ local crop = {
    },
    {
       name = "body_part_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 600,
       y = 336,
       width = 24,
@@ -532,7 +532,7 @@ local crop = {
    },
    {
       name = "trait_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 384,
       y = 336,
       width = 24,
@@ -541,7 +541,7 @@ local crop = {
    },
    {
       name = "hud_skill_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 376,
       width = 16,
@@ -550,7 +550,7 @@ local crop = {
    },
    {
       name = "hud_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 440,
       width = 192,
@@ -558,7 +558,7 @@ local crop = {
    },
    {
       name = "hud_minimap",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 120,
       y = 504,
       width = 136,
@@ -566,7 +566,7 @@ local crop = {
    },
    {
       name = "weather_particle",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 600,
       width = 8,
@@ -576,7 +576,7 @@ local crop = {
    },
    {
       name = "minimap_scratch",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 688,
       y = 528,
       width = 120,
@@ -584,7 +584,7 @@ local crop = {
    },
    {
       name = "window",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 48,
       width = 264,
@@ -592,7 +592,7 @@ local crop = {
    },
    {
       name = "window_1",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 240,
       width = 16,
@@ -600,7 +600,7 @@ local crop = {
    },
    {
       name = "window_2",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 48,
       y = 240,
       width = 16,
@@ -608,7 +608,7 @@ local crop = {
    },
    {
       name = "window_3",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 96,
       y = 240,
       width = 16,
@@ -616,7 +616,7 @@ local crop = {
    },
    {
       name = "window_4",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 144,
       y = 240,
       width = 16,
@@ -624,7 +624,7 @@ local crop = {
    },
    {
       name = "window_5",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 192,
       y = 240,
       width = 16,
@@ -632,7 +632,7 @@ local crop = {
    },
    {
       name = "window_6",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 240,
       y = 240,
       width = 16,
@@ -640,7 +640,7 @@ local crop = {
    },
    {
       name = "hp_bar_ally",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 432,
       y = 517,
       width = 48,
@@ -648,7 +648,7 @@ local crop = {
    },
    {
       name = "hp_bar_other",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 432,
       y = 513,
       width = 48,
@@ -656,7 +656,7 @@ local crop = {
    },
    {
       name = "spot_light",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 800,
       y = 112,
       width = 144,
@@ -664,7 +664,7 @@ local crop = {
    },
    {
       name = "hud_hp_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 312,
       y = 520,
       width = 100,
@@ -672,7 +672,7 @@ local crop = {
    },
    {
       name = "hud_mp_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 432,
       y = 520,
       width = 100,
@@ -680,7 +680,7 @@ local crop = {
    },
    {
       name = "attributes_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 440,
       width = 64,
@@ -688,7 +688,7 @@ local crop = {
    },
    {
       name = "clock",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 448,
       y = 408,
       width = 120,
@@ -696,7 +696,7 @@ local crop = {
    },
    {
       name = "status_ailment_bar",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 0,
       y = 416,
       width = 80,
@@ -704,7 +704,7 @@ local crop = {
    },
    {
       name = "caption",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 672,
       y = 477,
       width = 128,
@@ -712,7 +712,7 @@ local crop = {
    },
    {
       name = "list_scratch",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 264,
       y = 96,
       width = 480,
@@ -720,7 +720,7 @@ local crop = {
    },
    {
       name = "list_bullet",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 48,
       y = 360,
       width = 16,
@@ -728,7 +728,7 @@ local crop = {
    },
    {
       name = "enchantment_icons",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 72,
       y = 336,
       width = 24,
@@ -737,7 +737,7 @@ local crop = {
    },
    {
       name = "skill_icons",
-      source = "deps/elona/graphic/item.bmp",
+      source = "graphic/item.bmp",
       x = 0,
       y = 672,
       width = 48,
@@ -746,7 +746,7 @@ local crop = {
    },
    {
       name = "scene_title",
-      source = "deps/elona/graphic/interface.bmp",
+      source = "graphic/interface.bmp",
       x = 456,
       y = 144,
       width = 344,
@@ -755,7 +755,7 @@ local crop = {
 
    {
       name = "deco_cm",
-      source = "deps/elona/graphic/deco_cm.bmp",
+      source = "graphic/deco_cm.bmp",
       x = 0,
       y = 0,
       width = 240,
@@ -764,7 +764,7 @@ local crop = {
 
    {
       name = "cloud1",
-      source = "deps/elona/graphic/map0.bmp",
+      source = "graphic/map0.bmp",
       x = 288,
       y = 1040,
       width = 208,
@@ -772,7 +772,7 @@ local crop = {
    },
    {
       name = "cloud2",
-      source = "deps/elona/graphic/map0.bmp",
+      source = "graphic/map0.bmp",
       x = 0,
       y = 976,
       width = 288,
@@ -781,7 +781,7 @@ local crop = {
 
    {
       name = "deco_blend_a",
-      source = "deps/elona/graphic/deco_blend.bmp",
+      source = "graphic/deco_blend.bmp",
       x = 0,
       y = 192,
       width = 480,
@@ -789,7 +789,7 @@ local crop = {
    },
    {
       name = "deco_blend_b",
-      source = "deps/elona/graphic/deco_blend.bmp",
+      source = "graphic/deco_blend.bmp",
       x = 80,
       y = 0,
       width = 160,
@@ -797,7 +797,7 @@ local crop = {
    },
    {
       name = "deco_blend_c",
-      source = "deps/elona/graphic/deco_blend.bmp",
+      source = "graphic/deco_blend.bmp",
       x = 0,
       y = 0,
       width = 80,
@@ -806,7 +806,7 @@ local crop = {
 
    {
       name = "deco_inv_a",
-      source = "deps/elona/graphic/deco_inv.bmp",
+      source = "graphic/deco_inv.bmp",
       x = 0,
       y = 0,
       width = 144,
@@ -814,7 +814,7 @@ local crop = {
    },
    {
       name = "deco_inv_b",
-      source = "deps/elona/graphic/deco_inv.bmp",
+      source = "graphic/deco_inv.bmp",
       x = 0,
       y = 48,
       width = 48,
@@ -822,7 +822,7 @@ local crop = {
    },
    {
       name = "deco_inv_c",
-      source = "deps/elona/graphic/deco_inv.bmp",
+      source = "graphic/deco_inv.bmp",
       x = 48,
       y = 48,
       width = 48,
@@ -830,7 +830,7 @@ local crop = {
    },
    {
       name = "deco_inv_d",
-      source = "deps/elona/graphic/deco_inv.bmp",
+      source = "graphic/deco_inv.bmp",
       x = 0,
       y = 120,
       width = 48,
@@ -839,7 +839,7 @@ local crop = {
 
    {
       name = "deco_help_a",
-      source = "deps/elona/graphic/deco_help.bmp",
+      source = "graphic/deco_help.bmp",
       x = 0,
       y = 0,
       width = 48,
@@ -847,7 +847,7 @@ local crop = {
    },
    {
       name = "deco_help_b",
-      source = "deps/elona/graphic/deco_help.bmp",
+      source = "graphic/deco_help.bmp",
       x = 0,
       y = 48,
       width = 96,
@@ -856,7 +856,7 @@ local crop = {
 
    {
       name = "deco_mirror_a",
-      source = "deps/elona/graphic/deco_mirror.bmp",
+      source = "graphic/deco_mirror.bmp",
       x = 0,
       y = 0,
       width = 48,
@@ -865,7 +865,7 @@ local crop = {
 
    {
       name = "deco_politics_a",
-      source = "deps/elona/graphic/deco_politics.bmp",
+      source = "graphic/deco_politics.bmp",
       x = 0,
       y = 0,
       width = 128,
@@ -873,7 +873,7 @@ local crop = {
    },
    {
       name = "deco_politics_b",
-      source = "deps/elona/graphic/deco_politics.bmp",
+      source = "graphic/deco_politics.bmp",
       x = 0,
       y = 192,
       width = 144,
@@ -882,7 +882,7 @@ local crop = {
 
    {
       name = "deco_board_a",
-      source = "deps/elona/graphic/deco_board.bmp",
+      source = "graphic/deco_board.bmp",
       x = 0,
       y = 0,
       width = 128,
@@ -890,7 +890,7 @@ local crop = {
    },
    {
       name = "deco_board_b",
-      source = "deps/elona/graphic/deco_board.bmp",
+      source = "graphic/deco_board.bmp",
       x = 0,
       y = 144,
       width = 48,
@@ -899,7 +899,7 @@ local crop = {
 
    {
       name = "deco_wear_a",
-      source = "deps/elona/graphic/deco_wear.bmp",
+      source = "graphic/deco_wear.bmp",
       x = 0,
       y = 0,
       width = 96,
@@ -907,7 +907,7 @@ local crop = {
    },
    {
       name = "deco_wear_b",
-      source = "deps/elona/graphic/deco_wear.bmp",
+      source = "graphic/deco_wear.bmp",
       x = 0,
       y = 120,
       width = 72,
@@ -916,7 +916,7 @@ local crop = {
 
    {
       name = "deco_feat_a",
-      source = "deps/elona/graphic/deco_feat.bmp",
+      source = "graphic/deco_feat.bmp",
       x = 0,
       y = 0,
       width = 48,
@@ -924,7 +924,7 @@ local crop = {
    },
    {
       name = "deco_feat_b",
-      source = "deps/elona/graphic/deco_feat.bmp",
+      source = "graphic/deco_feat.bmp",
       x = 48,
       y = 0,
       width = 48,
@@ -932,7 +932,7 @@ local crop = {
    },
    {
       name = "deco_feat_c",
-      source = "deps/elona/graphic/deco_feat.bmp",
+      source = "graphic/deco_feat.bmp",
       x = 0,
       y = 192,
       width = 96,
@@ -940,7 +940,7 @@ local crop = {
    },
    {
       name = "deco_feat_d",
-      source = "deps/elona/graphic/deco_feat.bmp",
+      source = "graphic/deco_feat.bmp",
       x = 48,
       y = 144,
       width = 96,
@@ -949,7 +949,7 @@ local crop = {
 
    {
       name = "deco_skill_a",
-      source = "deps/elona/graphic/deco_skill.bmp",
+      source = "graphic/deco_skill.bmp",
       x = 0,
       y = 0,
       width = 72,
@@ -957,7 +957,7 @@ local crop = {
    },
    {
       name = "deco_skill_b",
-      source = "deps/elona/graphic/deco_skill.bmp",
+      source = "graphic/deco_skill.bmp",
       x = 72,
       y = 0,
       width = 102,
@@ -966,7 +966,7 @@ local crop = {
 
    {
       name = "deco_spell_a",
-      source = "deps/elona/graphic/deco_spell.bmp",
+      source = "graphic/deco_spell.bmp",
       x = 0,
       y = 0,
       width = 72,
@@ -974,7 +974,7 @@ local crop = {
    },
    {
       name = "deco_spell_b",
-      source = "deps/elona/graphic/deco_spell.bmp",
+      source = "graphic/deco_spell.bmp",
       x = 72,
       y = 0,
       width = 72,
@@ -983,7 +983,7 @@ local crop = {
 
    {
       name = "buff_icon",
-      source = "deps/elona/graphic/character.bmp",
+      source = "graphic/character.bmp",
       x = 0,
       y = 1120,
       width = 32,
@@ -992,7 +992,7 @@ local crop = {
    },
    -- {
    --   name = "growth_buff_icon",
-   --    source = "deps/elona/graphic/character.bmp",
+   --    source = "graphic/character.bmp",
    --    x = 640,
    --    y = 1120,
    --    width = 32,
@@ -1002,7 +1002,7 @@ local crop = {
 
    {
       name = "deco_card_a",
-      source = "deps/elona/graphic/deco_card.bmp",
+      source = "graphic/deco_card.bmp",
       x = 0,
       y = 0,
       width = 128,
@@ -1013,7 +1013,7 @@ local crop = {
 local function gen_crop_list(list)
    for _, v in ipairs(list) do
       v.type = "crop"
-      v.output = string.format("mod/elona/graphic/asset/%s.png", v.name)
+      v.output = string.format("graphic/asset/%s.png", v.name)
       v.combine_multiple = true
    end
 end
@@ -1021,12 +1021,13 @@ end
 gen_crop_list(crop)
 
 
-local function gen_convert(name)
+local function gen_convert(name, no_alpha)
    return {
       name = name,
       type = "convert",
-      source = string.format("deps/elona/graphic/%s.bmp", name),
-      output = string.format("mod/elona/graphic/asset/%s.png", name)
+      no_alpha = no_alpha,
+      source = string.format("graphic/%s.bmp", name),
+      output = string.format("graphic/asset/%s.png", name)
    }
 end
 
@@ -1066,8 +1067,8 @@ local convert = {
    gen_convert("bg_altar"),
    gen_convert("bg_card"),
    gen_convert("bg_night"),
-   gen_convert("title"),
-   gen_convert("void"),
+   gen_convert("title", true),
+   gen_convert("void", true),
    gen_convert("paper"),
    gen_convert("book"),
 

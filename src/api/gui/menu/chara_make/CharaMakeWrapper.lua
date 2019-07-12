@@ -7,11 +7,12 @@ local Log = require("api.Log")
 
 local env = require("internal.env")
 
+local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local InputHandler = require("api.gui.InputHandler")
-local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
+local UiTheme = require("api.gui.UiTheme")
 
 local CharaMakeWrapper = class.class("CharaMakeWrapper", IUiLayer)
 
@@ -27,7 +28,6 @@ function CharaMakeWrapper:init(menus)
    self.results = {}
    self.gene_used = "gene"
 
-   self.bg = Draw.load_image("graphic/core/void.png")
    self.caption = CharaMakeCaption:new()
 
    self.input = InputHandler:new()
@@ -149,6 +149,7 @@ function CharaMakeWrapper:relayout(x, y, width, height)
    self.y = y or 0
    self.width = width or Draw.get_width()
    self.height = height or Draw.get_height()
+   self.t = UiTheme.load()
    self.caption:relayout(self.x + 20, self.y + 30)
 
    if self.submenu then
@@ -157,7 +158,7 @@ function CharaMakeWrapper:relayout(x, y, width, height)
 end
 
 function CharaMakeWrapper:draw()
-   Draw.image(self.bg, self.x, self.y, self.width, self.height, {255, 255, 255})
+   self.t.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
 
    self.caption:draw()
 

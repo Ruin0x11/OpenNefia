@@ -1,5 +1,6 @@
 local Env = require("api.Env")
 local I18N = require("api.I18N")
+local Log = require("api.Log")
 local draw = require("internal.draw")
 local field = require("game.field")
 
@@ -32,6 +33,12 @@ end
 
 function Gui.player_is_running()
    return field:player_is_running()
+end
+
+function Gui.report_error(err, msg)
+   msg = msg or "Error"
+   Gui.mes(string.format("%s: %s", msg, string.split(err)[1]), "Red")
+   Log.error("%s:\n\t%s", msg, err)
 end
 
 function Gui.wait(wait)

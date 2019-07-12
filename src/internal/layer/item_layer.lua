@@ -8,7 +8,7 @@ local item_layer = class.class("item_layer", IDrawLayer)
 
 function item_layer:init(width, height)
    local coords = Draw.get_coords()
-   local tile_atlas, chara_atlas, item_atlas = require("internal.global.atlases").get()
+   local item_atlas = require("internal.global.atlases").get().item
 
    self.item_batch = sparse_batch:new(width, height, item_atlas, coords)
    self.batch_inds = {}
@@ -46,11 +46,15 @@ function item_layer:update(dt, screen_updated, scroll_frames)
       if show then
          local batch_ind = self.batch_inds[i.uid]
          local image = i:calc("image") .. "#1"
+         local x_offset = i:calc("x_offset") or 0
+         local y_offset = i:calc("y_offset") or 0
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[i.uid] = self.item_batch:add_tile {
                tile = image,
                x = i.x,
-               y = i.y
+               y = i.y,
+               x_offset = x_offset,
+               y_offset = y_offset,
             }
          else
             local tile, px, py = self.item_batch:get_tile(batch_ind)
@@ -60,7 +64,9 @@ function item_layer:update(dt, screen_updated, scroll_frames)
                self.batch_inds[i.uid] = self.item_batch:add_tile {
                   tile = image,
                   x = i.x,
-                  y = i.y
+                  y = i.y,
+                  x_offset = x_offset,
+                  y_offset = y_offset,
                }
             end
          end

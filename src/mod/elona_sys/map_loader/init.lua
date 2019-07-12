@@ -1,5 +1,6 @@
 local Chara = require("api.Chara")
 local Fs = require("api.Fs")
+local Log = require("api.Log")
 local InstancedMap = require("api.InstancedMap")
 local Item = require("api.Item")
 local Compat = require("mod.elona_sys.api.Compat")
@@ -88,7 +89,7 @@ local function convert_122(gen, params)
    end
 
    if not params.name then
-      error("Map name must be provided.")
+      error("Map name must be provided")
    end
 
    -- HACK
@@ -152,10 +153,16 @@ local function convert_122(gen, params)
             local x = data[2]
             local y = data[3]
             local own_state = own_states[data[4]]
+            Log.trace("item: %s %d %d %d", id, x, y, data[4])
+
             assert(own_state == "none" or own_state == "not_owned")
 
-            local item = Item.create(id, x, y, {}, result)
-            item.ownership = own_state
+            local item, err = Item.create(id, x, y, {}, result)
+            if not item then
+               Log.warn("Failed to create item %s (%d) at (%d, %d): %s", id, data[1], x, y, err)
+            else
+               item.ownership = own_state
+            end
          elseif data[5] == 1 then
             local id = Compat.convert_122_id("base.chara", data[1])
             assert(id, "unknown 1.22 character ID " .. data[1])
@@ -163,12 +170,18 @@ local function convert_122(gen, params)
             local x = data[2]
             local y = data[3]
 
-            Chara.create(id, x, y, {}, result)
+            Log.trace("chara: %s %d %d", id, x, y)
+            local chara = Chara.create(id, x, y, {}, result)
+            if not chara then
+               Log.warn("Failed to create chara %s (%d) at (%d, %d)", id, data[1], x, y)
+            end
          elseif data[5] == 2 then
             local id = Compat.convert_122_id("base.feat", data[1])
             local x = data[2]
             local y = data[3]
+            local param = data[4]
 
+            Log.trace("feat: %s %d %d %d", id, x, y, param)
             -- cmap.objects[#cmap.objects+1] = {
             --    id = data[1],
             --    x = data[2],
@@ -190,4 +203,9 @@ data:add {
    _id = "elona122",
 
    generate = convert_122,
+   params = { name = "string" },
+
+   almost_equals = function(a, b)
+      return a.name == b.name
+   end
 }

@@ -7,9 +7,9 @@ local feat_layer = class.class("feat_layer", IDrawLayer)
 
 function feat_layer:init(width, height)
    local coords = Draw.get_coords()
-   local tile_atlas, chara_atlas, item_atlas = require("internal.global.atlases").get()
+   local feat_atlas = require("internal.global.atlases").get().feat
 
-   self.feat_batch = sparse_batch:new(width, height, item_atlas, coords)
+   self.feat_batch = sparse_batch:new(width, height, feat_atlas, coords)
    self.batch_inds = {}
    self.batch_inds_memory = {}
 end
@@ -26,6 +26,10 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
 
    self.feat_batch.updated = true
 
+   if scroll_frames > 0 then
+      return true
+   end
+
    local map = Map.current()
    assert(map ~= nil)
 
@@ -39,7 +43,7 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
          and self.batch_inds[f.uid] ~= 0
 
       if show then
-         local image = f:calc("image")
+         local image = f:calc("image") .. "#1"
          local batch_ind = self.batch_inds[f.uid]
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[f.uid] = self.feat_batch:add_tile {
@@ -73,8 +77,8 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
    end
 end
 
-function feat_layer:draw(draw_x, draw_y)
-   self.feat_batch:draw(draw_x, draw_y)
+function feat_layer:draw(draw_x, draw_y, offx, offy)
+   self.feat_batch:draw(draw_x + offx, draw_y + offy)
 end
 
 return feat_layer

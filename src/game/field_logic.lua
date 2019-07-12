@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Log = require("api.Log")
 local Command = require("api.Command")
+local SaveFs = require("api.SaveFs")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
@@ -17,19 +18,7 @@ local field_logic = {}
 function field_logic.setup_new_game(player)
    local scenario = data["base.scenario"]:ensure(save.scenario)
 
-   local success, map = Map.generate(scenario.starting_map.generator, scenario.starting_map.params)
-   if not success then
-      error(map)
-   end
-
-   Map.set_map(map)
-
-   assert(Map.current():take_object(player, 10, 10))
-   Chara.set_player(player)
-
-   if scenario.on_game_start then
-      scenario.on_game_start()
-   end
+   scenario:on_game_start(player)
 end
 
 function field_logic.quickstart()
@@ -84,7 +73,7 @@ function field_logic.setup()
          return Command.open(me)
       end,
       ["return"] = function(me)
-         return Command.activate(me)
+         return Command.enter_action(me)
       end,
       ["."] = function(me)
          return "turn_end"
@@ -393,16 +382,14 @@ function field_logic.query()
       end
 
       if type(cb) ~= "function" then
-         error("Unknown turn event " .. tostring(event))
+         error("Unknown turn event " .. inspect(event))
       end
 
       local success
       success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
 
       if not success then
-         local err = event
-         Gui.mes(string.format("Error in turn sequence: %s", string.split(err)[1]), "Red")
-         Log.error("Error in turn sequence:\n\t%s", err)
+         Gui.report_error(event)
          event = "player_turn_query"
          target_chara = nil
       end

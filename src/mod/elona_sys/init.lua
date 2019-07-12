@@ -34,4 +34,5 @@ data:add_index("base.item", "elona_id")
 
 require("mod.elona_sys.theme.init")
 require("mod.elona_sys.map_loader.init")
+require("mod.elona_sys.map_template.init")
 require("mod.elona_sys.dialog.init")

@@ -152,121 +152,140 @@ data:add_multi(
          _id = "world_trees_1",
          elona_id = 4,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_4.png"
+         image = "mod/elona/graphic/map_tile/0_4.png",
+         field_type = "elona.elona.forest",
       },
       {
          _id = "world_trees_2",
          elona_id = 5,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_5.png"
+         image = "mod/elona/graphic/map_tile/0_5.png",
+         field_type = "elona.elona.forest",
       },
       {
          _id = "world_trees_3",
          elona_id = 6,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_6.png"
+         image = "mod/elona/graphic/map_tile/0_6.png",
+         field_type = "elona.elona.forest",
       },
       {
          _id = "world_trees_4",
          elona_id = 7,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_7.png"
+         image = "mod/elona/graphic/map_tile/0_7.png",
+         field_type = "elona.elona.forest",
       },
       {
          _id = "world_trees_5",
          elona_id = 8,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_8.png"
+         image = "mod/elona/graphic/map_tile/0_8.png",
+         field_type = "elona.elona.forest",
       },
       {
          _id = "world_trees_6",
          elona_id = 9,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_9.png"
+         image = "mod/elona/graphic/map_tile/0_9.png",
+         field_type = "elona.grassland",
       },
       {
          _id = "world_plants_1",
          elona_id = 10,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_10.png"
+         image = "mod/elona/graphic/map_tile/0_10.png",
+         field_type = "elona.grassland",
       },
       {
          _id = "world_plants_2",
          elona_id = 11,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_11.png"
+         image = "mod/elona/graphic/map_tile/0_11.png",
+         field_type = "elona.grassland",
       },
       {
          _id = "world_plants_3",
          elona_id = 12,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_12.png"
+         image = "mod/elona/graphic/map_tile/0_12.png",
+         field_type = "elona.grassland",
       },
       {
          _id = "world_dirt_1",
          elona_id = 13,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_13.png"
+         image = "mod/elona/graphic/map_tile/0_13.png",
+         field_type = "elona.desert",
       },
       {
          _id = "world_dirt_2",
          elona_id = 14,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_14.png"
+         image = "mod/elona/graphic/map_tile/0_14.png",
+         field_type = "elona.desert",
       },
       {
          _id = "world_dirt_3",
          elona_id = 15,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_15.png"
+         image = "mod/elona/graphic/map_tile/0_15.png",
+         field_type = "elona.desert",
       },
       {
          _id = "world_dirt_4",
          elona_id = 16,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_16.png"
+         image = "mod/elona/graphic/map_tile/0_16.png",
+         field_type = "elona.desert",
       },
       {
          _id = "world_snow_cross",
          elona_id = 26,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_26.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow",
          elona_id = 27,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_27.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_trees_1",
          elona_id = 29,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_29.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_trees_2",
          elona_id = 30,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_30.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_crater",
          elona_id = 31,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_31.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_mounds",
          elona_id = 32,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_32.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_road_ns",
@@ -693,28 +712,32 @@ data:add_multi(
          elona_id = 199,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_199.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_trees_3",
          elona_id = 200,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_200.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_trees_4",
          elona_id = 201,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_201.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_trees_5",
          elona_id = 202,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_202.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_w",
@@ -722,7 +745,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_206.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_e",
@@ -730,7 +754,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_207.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_n",
@@ -738,7 +763,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_208.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_s",
@@ -746,7 +772,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_209.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_corner_ne",
@@ -754,7 +781,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_210.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_corner_nw",
@@ -762,7 +790,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_211.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_corner_se",
@@ -770,7 +799,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_212.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_corner_sw",
@@ -778,7 +808,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_213.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_ne",
@@ -786,7 +817,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_214.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_nw",
@@ -794,7 +826,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_215.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_se",
@@ -802,7 +835,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_216.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_border_sw",
@@ -810,7 +844,8 @@ data:add_multi(
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_217.png",
          kind = 4,
-         kind2 = 9
+         kind2 = 9,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_water",
@@ -818,7 +853,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 264,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_264.png"
+         image = "mod/elona/graphic/map_tile/0_264.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_rocks",
@@ -826,7 +862,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 265,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_265.png"
+         image = "mod/elona/graphic/map_tile/0_265.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_2",
@@ -834,7 +871,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 266,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_266.png"
+         image = "mod/elona/graphic/map_tile/0_266.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_pole",
@@ -842,7 +880,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 267,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_267.png"
+         image = "mod/elona/graphic/map_tile/0_267.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_iceberg",
@@ -850,7 +889,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 268,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_268.png"
+         image = "mod/elona/graphic/map_tile/0_268.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_rock",
@@ -858,7 +898,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 269,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_269.png"
+         image = "mod/elona/graphic/map_tile/0_269.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_water_shadow",
@@ -866,7 +907,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 270,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_270.png"
+         image = "mod/elona/graphic/map_tile/0_270.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_w",
@@ -874,7 +916,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 285,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_285.png"
+         image = "mod/elona/graphic/map_tile/0_285.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_e",
@@ -882,7 +925,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 286,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_286.png"
+         image = "mod/elona/graphic/map_tile/0_286.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_n",
@@ -890,7 +934,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 287,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_287.png"
+         image = "mod/elona/graphic/map_tile/0_287.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_s",
@@ -898,7 +943,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 288,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_288.png"
+         image = "mod/elona/graphic/map_tile/0_288.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_corner_ne",
@@ -906,7 +952,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 289,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_289.png"
+         image = "mod/elona/graphic/map_tile/0_289.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_corner_nw",
@@ -914,7 +961,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 290,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_290.png"
+         image = "mod/elona/graphic/map_tile/0_290.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_corner_se",
@@ -922,7 +970,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 291,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_291.png"
+         image = "mod/elona/graphic/map_tile/0_291.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_corner_sw",
@@ -930,7 +979,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 292,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_292.png"
+         image = "mod/elona/graphic/map_tile/0_292.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_ne",
@@ -938,7 +988,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 293,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_293.png"
+         image = "mod/elona/graphic/map_tile/0_293.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_nw",
@@ -946,7 +997,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 294,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_294.png"
+         image = "mod/elona/graphic/map_tile/0_294.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_se",
@@ -954,7 +1006,8 @@ data:add_multi(
          is_opaque = false,
          elona_id = 295,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_295.png"
+         image = "mod/elona/graphic/map_tile/0_295.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_grass_water_border_sw",
@@ -962,151 +1015,176 @@ data:add_multi(
          is_opaque = false,
          elona_id = 296,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_296.png"
+         image = "mod/elona/graphic/map_tile/0_296.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_w",
          elona_id = 297,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_297.png"
+         image = "mod/elona/graphic/map_tile/0_297.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_e",
          elona_id = 298,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_298.png"
+         image = "mod/elona/graphic/map_tile/0_298.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_n",
          elona_id = 299,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_299.png"
+         image = "mod/elona/graphic/map_tile/0_299.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_s",
          elona_id = 300,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_300.png"
+         image = "mod/elona/graphic/map_tile/0_300.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_corner_ne",
          elona_id = 301,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_301.png"
+         image = "mod/elona/graphic/map_tile/0_301.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_corner_nw",
          elona_id = 302,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_302.png"
+         image = "mod/elona/graphic/map_tile/0_302.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_corner_se",
          elona_id = 303,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_303.png"
+         image = "mod/elona/graphic/map_tile/0_303.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_corner_sw",
          elona_id = 304,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_304.png"
+         image = "mod/elona/graphic/map_tile/0_304.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_ne",
          elona_id = 305,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_305.png"
+         image = "mod/elona/graphic/map_tile/0_305.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_nw",
          elona_id = 306,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_306.png"
+         image = "mod/elona/graphic/map_tile/0_306.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_se",
          elona_id = 307,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_307.png"
+         image = "mod/elona/graphic/map_tile/0_307.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_snow_water_border_sw",
          elona_id = 308,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_308.png"
+         image = "mod/elona/graphic/map_tile/0_308.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_w",
          elona_id = 309,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_309.png"
+         image = "mod/elona/graphic/map_tile/0_309.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_e",
          elona_id = 310,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_310.png"
+         image = "mod/elona/graphic/map_tile/0_310.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_n",
          elona_id = 311,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_311.png"
+         image = "mod/elona/graphic/map_tile/0_311.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_s",
          elona_id = 312,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_312.png"
+         image = "mod/elona/graphic/map_tile/0_312.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_corner_ne",
          elona_id = 313,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_313.png"
+         image = "mod/elona/graphic/map_tile/0_313.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_corner_nw",
          elona_id = 314,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_314.png"
+         image = "mod/elona/graphic/map_tile/0_314.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_corner_se",
          elona_id = 315,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_315.png"
+         image = "mod/elona/graphic/map_tile/0_315.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_corner_sw",
          elona_id = 316,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_316.png"
+         image = "mod/elona/graphic/map_tile/0_316.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_ne",
          elona_id = 317,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_317.png"
+         image = "mod/elona/graphic/map_tile/0_317.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_nw",
          elona_id = 318,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_318.png"
+         image = "mod/elona/graphic/map_tile/0_318.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_se",
          elona_id = 319,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_319.png"
+         image = "mod/elona/graphic/map_tile/0_319.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_desert_water_border_sw",
          elona_id = 320,
          elona_atlas = 0,
-         image = "mod/elona/graphic/map_tile/0_320.png"
+         image = "mod/elona/graphic/map_tile/0_320.png",
+         field_type = "elona.sea",
       },
       {
          _id = "world_cliff_nw",
@@ -1259,7 +1337,8 @@ data:add_multi(
          elona_id = 568,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_568.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_mountain_2",
@@ -1268,7 +1347,8 @@ data:add_multi(
          elona_id = 569,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_569.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_snow_mountain_3",
@@ -1277,7 +1357,8 @@ data:add_multi(
          elona_id = 570,
          elona_atlas = 0,
          image = "mod/elona/graphic/map_tile/0_570.png",
-         kind = 4
+         kind = 4,
+         field_type = "elona.snow_field",
       },
       {
          _id = "world_desert_mountain_1",

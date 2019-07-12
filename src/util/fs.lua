@@ -121,6 +121,21 @@ function fs.is_root(path)
    end
 end
 
+function fs.copy(from, to)
+   if not fs.is_file(from) then
+      return false, string.format("file not found or is directory: %s", from)
+   end
+
+   local content, err = fs.read(from)
+   if not content then
+      return false, string.format("error reading file %s: %s", from, err)
+   end
+
+   fs.create_directory(fs.parent(to))
+
+   return fs.write(to, content)
+end
+
 
 --
 -- These functions are from luacheck.

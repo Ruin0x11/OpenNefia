@@ -44,7 +44,7 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
 end
 
 function shadow_layer:draw(draw_x, draw_y, offx, offy)
-   self.shadow_batch:draw(draw_x, draw_y, offx, offy)
+   self.shadow_batch:draw(draw_x, draw_y, 0, 0)
 end
 
 return shadow_layer

@@ -98,6 +98,8 @@ end
 
 function IChara:instantiate()
    IObject.instantiate(self)
+   ICharaTalk.instantiate(self)
+
    Event.trigger("base.on_chara_instantiated", {chara=self})
 end
 
@@ -126,8 +128,6 @@ function IChara:build()
    -- these need to be available in refresh()
    self.hp = 1
    self.mp = 1
-
-   ICharaTalk.on_build(self)
 
    -- TEMP
    self.max_hp = self.max_hp or 10
@@ -172,8 +172,8 @@ function IChara:produce_memory()
 end
 
 function IChara:copy_image()
-   local _, chara_atlas = require("internal.global.atlases").get()
-   return chara_atlas:copy_tile_image(self:calc("image"))
+   local chara_atlas = require("internal.global.atlases").get().chara
+   return chara_atlas:copy_tile_image(self:calc("image") .. "#1")
 end
 
 -- Iterates both the character's inventory and equipment.

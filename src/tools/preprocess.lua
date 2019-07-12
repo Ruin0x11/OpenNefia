@@ -10,18 +10,27 @@ local fs = require("util.fs")
 
 local atlas_cache = {}
 
+local elona_root = arg[1]
+local mod_root = arg[2]
+assert(elona_root, "Provide the root of an elona install.")
+assert(mod_root, "Provide the root of a mod to output to.")
+
 local function remove_key_color(image, key_color)
+   if image:bands() == 4 then
+      key_color[4] = 0
+   end
    local alpha = image:equal(key_color):ifthenelse(0, 255):extract_band(1)
    return image:bandjoin(alpha)
 end
 
 local function crop(i)
-   if not atlas_cache[i.source] then
-      local atlas = vips.Image.new_from_file(i.source)
+   local source = fs.join(elona_root, i.source)
+   if not atlas_cache[source] then
+      local atlas = vips.Image.new_from_file(source)
       if not i.no_alpha then
          atlas = remove_key_color(atlas, {0, 0, 0})
       end
-      atlas_cache[i.source] = atlas
+      atlas_cache[source] = atlas
    end
 
    local width = i.width
@@ -31,19 +40,25 @@ local function crop(i)
       height = height * (i.count_y or 1)
    end
 
-   local cropped = atlas_cache[i.source]:extract_area(i.x,
+   local cropped = atlas_cache[source]:extract_area(i.x,
                                                       i.y,
                                                       width,
                                                       height)
 
-   fs.create_directory(fs.parent(i.output))
-   cropped:pngsave(i.output)
+   local output = fs.join(mod_root, i.output)
+   fs.create_directory(fs.parent(output))
+   cropped:pngsave(output)
 end
 
 local function convert(i)
-   local image = vips.Image.new_from_file(i.source)
-   image = remove_key_color(image, {0, 0, 0})
-   image:pngsave(i.output)
+   local source = fs.join(elona_root, i.source)
+   local image = vips.Image.new_from_file(source)
+   if not i.no_alpha then
+      image = remove_key_color(image, {0, 0, 0})
+   end
+   local output = fs.join(mod_root, i.output)
+   fs.create_directory(fs.parent(output))
+   image:pngsave(output)
 end
 
 local function preprocess_one(i)

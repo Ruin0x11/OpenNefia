@@ -13,7 +13,7 @@ function ChangeAppearancePreview:init()
    self.frame = 0
    self.direction = 0
    self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp", false)
+   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
 end
 
 function ChangeAppearancePreview:relayout(x, y)

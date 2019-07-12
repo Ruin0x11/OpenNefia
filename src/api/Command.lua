@@ -1,10 +1,13 @@
 local Action = require("api.Action")
-local Gui = require("api.Gui")
-local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
+local Gui = require("api.Gui")
 local Input = require("api.Input")
+local Item = require("api.Item")
+local Log = require("api.Log")
 local Map = require("api.Map")
+local SaveFs = require("api.SaveFs")
+local MapArea = require("api.MapArea")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 
@@ -14,16 +17,28 @@ local field = require("game.field")
 --- Game logic intended for the player only.
 local Command = {}
 
+local function travel_to_map_hook(source, params, result)
+   local cur = Map.current()
+   local success, map_result = MapArea.load_outer_map(cur)
+
+   if not success then
+      return {false, "Could not load outer map: " .. map_result}
+   end
+
+   local map = map_result.map
+   map_result.map = nil
+
+   Gui.play_sound("base.exitmap1")
+   assert(Map.travel_to(map, map_result))
+
+   return {true, "player_turn_query"}
+end
+
 local travel_to_map = Event.define_hook("travel_to_map",
                                         "Hook when traveling to a new map.",
-                                        {false, "No map configured"},
-                                        function(result, default)
-                                           if type(result) == "table" then
-                                              return table.unpack(result)
-                                           end
-
-                                           return table.unpack(default)
-end)
+                                        { true, "player_turn_query" },
+                                        nil,
+                                        travel_to_map_hook)
 
 local player_move = Event.define_hook("player_move",
                                       "Hook when the player moves.",
@@ -101,12 +116,7 @@ function Command.move(player, x, y)
       -- quest abandonment warning
 
       if Input.yes_no() then
-         local success, map = travel_to_map()
-         if not success then
-            Gui.mes("Error loading map: " .. map)
-         else
-            Map.travel_to(map)
-         end
+         return table.unpack(travel_to_map())
       end
 
       return "player_turn_query"
@@ -190,25 +200,61 @@ function Command.open(player)
    end
 end
 
-function Command.activate(player)
-   for _, f in feats_under(player, "can_activate") do
-      Gui.mes(player.name .. " activates the " .. f.uid .. " ")
-      f:calc("on_activate", player)
+local function activate(player, feat)
+   Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
+   feat:calc("on_activate", player)
+end
+
+function Command.enter_action(player)
+   local f = feats_under(player, "can_activate"):nth(1)
+   if f then
+      activate(player, f)
+      return "player_turn_query" -- TODO could differ per feat
    end
+
+   -- HACK
+   local is_world_map = Map.current().generated_with.params.id == "elona.north_tyris"
+
+   if is_world_map then
+      local params = {
+         stood_x = player.x,
+         stood_y = player.y,
+      }
+      local ok, map = Map.generate("elona.field", params)
+      if not ok then
+         Gui.report_error(map)
+         return "player_turn_query"
+      end
+
+      assert(Map.travel_to(map))
+
+      return "turn_begin"
+   end
+
+   return "player_turn_query"
 end
 
 function Command.save_game()
    local map = Map.current()
-   assert(Map.save(map))
 
    do
       local global = save_store.for_mod("base")
       global.map = map.uid
       global.player = field.player
+
+      Log.info("Saving game.")
+      Log.trace("save map: %d  player %d", global.map, global.player)
    end
+
+   assert(Map.save(map))
+
+   _p(map:iter_charas():extract("uid"):to_list())
 
    assert(save_store.save())
 
+   SaveFs.save_game("test")
+
+   Gui.play_sound("base.write1")
    Gui.mes("Game saved.")
    return "player_turn_query"
 end
@@ -216,14 +262,21 @@ end
 function Command.load_game()
    local success, map
 
+   SaveFs.load_game("test")
+
    assert(save_store.load())
 
    local base = save_store.for_mod("base")
    local map_uid = base.map
    local player_uid = base.player
 
+   Log.info("Loading game.")
+   Log.trace("load map: %d  player %d", map_uid, player_uid)
+
    success, map = Map.load(map_uid)
-   assert(success)
+   if not success then
+      error("Load error: " .. map)
+   end
 
    Map.set_map(map)
    Chara.set_player(player_uid)

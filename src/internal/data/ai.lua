@@ -427,13 +427,15 @@ local function decide_ally_target(chara, params)
       chara:set_target(chara:get_party_leader())
 
       if chara.ai_state.leader_attacker ~= nil then
-         if chara:reaction_towards(chara.ai_state.leader_attacker) < 0 then
-            if Chara.is_alive(chara.ai_state.leader_attacker) then
+         if Chara.is_alive(chara.ai_state.leader_attacker) then
+            if chara:reaction_towards(chara.ai_state.leader_attacker) < 0 then
                if Map.has_los(chara.x, chara.y, chara.ai_state.leader_attacker.x, chara.ai_state.leader_attacker.y) then
                   chara.ai_state.hate = 5
                   chara:set_target(chara.ai_state.leader_attacker)
                end
             end
+         else
+            chara.ai_state.leader_attacker = nil
          end
       end
 

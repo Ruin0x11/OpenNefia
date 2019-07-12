@@ -54,7 +54,16 @@ function Chara.set_player(uid_or_chara)
 end
 
 function Chara.is_alive(c)
-   return type(c) == "table" and c.state == "Alive"
+   if type(c) ~= "table" or c.state ~= "Alive" then
+      return false
+   end
+
+   local map = c:current_map()
+   if not map then
+      return false
+   end
+
+   return map.uid == Map.current().uid
 end
 
 function Chara.create(id, x, y, params, where)

@@ -89,6 +89,9 @@ data:add_multi(
       },
       {
          _id = "on_calc_chara_equipment_stats",
+      },
+      {
+         _id = "on_game_startup",
       }
    }
 )

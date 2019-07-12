@@ -18,7 +18,7 @@ local function format(kind, s, ...)
       local line = trace.linedefined
       -- source = string.format("%s:%d: ", file, line)
    end
-   print(string.format("[%s] %s%s", kind, source, out))
+   print(string.format("%s %s%s", kind, source, out))
 end
 
 local level = 3
@@ -30,39 +30,46 @@ function Log.set_level(l)
    level = l
 end
 
+function Log.has_level(l)
+   if type(l) == "string" then
+      l = levels[l] or 3
+   end
+   return level >= l
+end
+
 function Log.trace(s, ...)
    if level < 5 then
       return
    end
-   format("TRACE", s, ...)
+   format("[TRACE]", s, ...)
 end
 
 function Log.debug(s, ...)
    if level < 4 then
       return
    end
-   format("DEBUG", s, ...)
+   format("[DEBUG]", s, ...)
 end
 
 function Log.info(s, ...)
    if level < 3 then
       return
    end
-   format("INFO", s, ...)
+   format("[INFO] ", s, ...)
 end
 
 function Log.warn(s, ...)
    if level < 2 then
       return
    end
-   format("WARN", s, ...)
+   format("[WARN] ", s, ...)
 end
 
 function Log.error(s, ...)
    if level < 1 then
       return
    end
-   format("ERROR", s, ...)
+   format("[ERROR]", s, ...)
 end
 
 return Log

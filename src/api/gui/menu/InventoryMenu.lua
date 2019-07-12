@@ -224,12 +224,12 @@ function InventoryMenu:draw()
    Draw.set_color(255, 255, 255)
    self.t.inventory_icons:draw_region(self.ctxt.icon, self.x + 46, self.y - 14)
 
-   self.t.deco_a:draw(self.x + self.width - 136, self.y - 6)
+   self.t.deco_inv_a:draw(self.x + self.width - 136, self.y - 6)
    if self.layout == nil then
-      self.t.deco_b:draw(self.x + self.width - 186, self.y - 6)
+      self.t.deco_inv_b:draw(self.x + self.width - 186, self.y - 6)
    end
-   self.t.deco_c:draw(self.x + self.width - 246, self.y - 6)
-   self.t.deco_d:draw(self.x - 6, self.y - 6)
+   self.t.deco_inv_c:draw(self.x + self.width - 246, self.y - 6)
+   self.t.deco_inv_d:draw(self.x - 6, self.y - 6)
 
    local topic = "window items"
    Ui.draw_topic(topic, self.x + 28, self.y + 30)

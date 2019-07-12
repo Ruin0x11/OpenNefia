@@ -160,8 +160,8 @@ function EquipmentMenu:draw()
 
    Draw.set_color(255, 255, 255)
    self.t.inventory_icons:draw_region(10, self.x + 46, self.y - 16)
-   self.t.deco_a:draw(self.x + self.width - 106, self.y)
-   self.t.deco_b:draw(self.x, self.y + self.height - 164)
+   self.t.deco_wear_a:draw(self.x + self.width - 106, self.y)
+   self.t.deco_wear_b:draw(self.x, self.y + self.height - 164)
 
    local note = string.format("weight: %s(%s) hit_bonus: %d damage_bonus: %d  DV/PV: %d/%d",
                               self.stats.weight,

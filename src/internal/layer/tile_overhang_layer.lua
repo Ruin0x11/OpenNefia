@@ -8,7 +8,7 @@ local tile_overhang_layer = class.class("tile_overhang_layer", IDrawLayer)
 
 function tile_overhang_layer:init(width, height, coords)
    local coords = Draw.get_coords()
-   local tile_atlas, chara_atlas, item_atlas = require("internal.global.atlases").get()
+   local tile_atlas = require("internal.global.atlases").get().tile
 
    self.tile_batch = tile_batch:new(width, height, tile_atlas, coords)
 end

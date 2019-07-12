@@ -1,3 +1,7 @@
+local Gui = require("api.Gui")
+local MapArea = require("api.MapArea")
+local Map = require("api.Map")
+
 data:add {
    _type = "base.feat",
    _id = "door",
@@ -65,7 +69,7 @@ local function gen_stair(down)
    local field = (down and "on_descend") or "on_ascend"
    local id = (down and "stairs_down") or "stairs_up"
    local elona_id = (down and 11) or 10
-   local image = (down and 196) or 195
+   local image = (down and "elona.feat_stairs_down") or "elona.feat_stairs_up"
 
    return {
       _type = "base.feat",
@@ -76,7 +80,10 @@ local function gen_stair(down)
       is_solid = false,
       is_opaque = false,
 
-      params = { generator = "string", generator_params = "table", map_uid = "number" },
+      params = {
+         generator_params = "table",
+         map_uid = "number"
+      },
 
       on_refresh = function(self)
          self:mod("can_activate", true)
@@ -87,17 +94,10 @@ local function gen_stair(down)
             return
          end
 
-         local Gui = require("api.Gui")
-         local Map = require("api.Map")
-
-         local map
-         if self.map_uid == nil then
-            local success
-            success, map = Map.generate(self.generator, self.generator_params)
-            if not success then
-               Gui.mes("Couldn't load map: " .. map)
-               return "player_turn_query"
-            end
+         local success, map = MapArea.load_map_of_entrance(self)
+         if not success then
+            Gui.report_error(map)
+            return "player_turn_query"
          end
 
          Gui.play_sound("base.exitmap1")

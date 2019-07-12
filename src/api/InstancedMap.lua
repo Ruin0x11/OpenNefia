@@ -309,8 +309,24 @@ function InstancedMap:iter_items()
    return self:iter_type("base.item")
 end
 
+function InstancedMap:iter_feats()
+   return self:iter_type("base.feat")
+end
+
 function InstancedMap:is_in_bounds(x, y)
    return x >= 0 and y >= 0 and x < self._width and y < self._height
+end
+
+function InstancedMap:set_outer_map(map_or_uid, x, y)
+   local uid = map_or_uid
+   if type(map_or_uid) == "table" then
+      class.assert_is_an(InstancedMap, map_or_uid)
+      uid = map_or_uid.uid
+   end
+
+   self._outer_map_uid = uid
+   self._outer_map_x = x or nil
+   self._outer_map_y = y or nil
 end
 
 -- TODO: Need to handle depending on what is querying. People may want

@@ -631,8 +631,8 @@ local function gen_map_tiles(tiles)
          local x = (id % 33) * 48
          local y = math.floor(id / 33) * 48
 
-         local source = string.format("deps/elona/graphic/map%d.bmp", v.atlas)
-         local output = string.format("mod/elona/graphic/%s/%d_%d.png", "map_tile", v.atlas, id)
+         local source = string.format("graphic/map%d.bmp", v.atlas)
+         local output = string.format("graphic/%s/%d_%d.png", "map_tile", v.atlas, id)
 
          l[#l+1] = {
             type = "crop",

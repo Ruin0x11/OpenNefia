@@ -977,8 +977,8 @@ local item = {
    { id = 654, name = "monster_heart" },
    { id = 655, name = "_655" },
    { id = 656, name = "secret_treasure" },
-   { id = 657, name = "tamers_whip" },
-   { id = 658, name = "little_ball" },
+   { id = 657, name = "gemstone" },
+   { id = 658, name = "monster_ball" },
    { id = 659, name = "eastern_partition" },
    { id = 662, name = "summoning_crystal" },
    { id = 663, name = "_663" },
@@ -1019,79 +1019,79 @@ local item = {
 }
 
 local feat = {
-   { id = 231, name = "feat_231" },
-   { id = 232, name = "feat_232" },
-   { id = 233, name = "feat_233" },
-   { id = 234, name = "feat_234" },
-   { id = 235, name = "feat_235" },
-   { id = 236, name = "feat_236" },
-   { id = 237, name = "feat_237" },
-   { id = 238, name = "feat_238" },
-   { id = 239, name = "feat_239" },
-   { id = 240, name = "feat_240" },
-   { id = 241, name = "feat_241" },
-   { id = 242, name = "feat_242" },
-   { id = 243, name = "feat_243" },
-   { id = 244, name = "feat_244" },
-   { id = 245, name = "feat_245" },
-   { id = 246, name = "feat_246" },
-   { id = 247, name = "feat_247" },
-   { id = 248, name = "feat_248" },
-   { id = 249, name = "feat_249" },
-   { id = 250, name = "feat_250" },
-   { id = 251, name = "feat_251" },
-   { id = 252, name = "feat_252" },
-   { id = 264, name = "feat_264" },
-   { id = 265, name = "feat_265" },
-   { id = 284, name = "feat_284" },
-   { id = 285, name = "feat_285" },
-   { id = 726, name = "feat_726" },
-   { id = 727, name = "feat_727" },
-   { id = 728, name = "feat_728" },
-   { id = 729, name = "feat_729" },
-   { id = 730, name = "feat_730" },
-   { id = 731, name = "feat_731" },
-   { id = 732, name = "feat_732" },
-   { id = 733, name = "feat_733" }
+   { id = 231, name = "stairs_down" },
+   { id = 232, name = "stairs_up" },
+   { id = 233, name = "hidden" },
+   { id = 234, name = "trap" },
+   { id = 235, name = "bar" },
+   { id = 236, name = "door_wooden_open" },
+   { id = 237, name = "hatch" },
+   { id = 238, name = "material_dig" },
+   { id = 239, name = "material_gem" },
+   { id = 240, name = "material_wood" },
+   { id = 241, name = "door_sf_open" },
+   { id = 242, name = "pot" },
+   { id = 243, name = "material_crafting" },
+   { id = 244, name = "material_mine" },
+   { id = 245, name = "material_fish" },
+   { id = 246, name = "material_plant" },
+   { id = 247, name = "plant_1" },
+   { id = 248, name = "plant_2" },
+   { id = 249, name = "plant_3" },
+   { id = 250, name = "ant" },
+   -- { id = 251, name = "feat_251" },
+   -- { id = 252, name = "feat_252" },
+   { id = 284, name = "moongate", tall = true, count_x = 2 },
+   -- { id = 285, name = "feat_285" },
+   { id = 264, name = "door_eastern_open" },
+   { id = 265, name = "door_jail_open" },
+   { id = 726, name = "door_wooden_closed" },
+   { id = 727, name = "quest_board" },
+   { id = 728, name = "door_sf_closed" },
+   { id = 729, name = "voting_box" },
+   { id = 730, name = "door_eastern_closed" },
+   { id = 731, name = "tomb" },
+   { id = 732, name = "politics_board" },
+   { id = 733, name = "door_jail_closed" }
 }
 
 local area = {
-   { id = 132, name = "area_132" },
-   { id = 133, name = "area_133" },
-   { id = 134, name = "area_134" },
-   { id = 135, name = "area_135" },
-   { id = 136, name = "area_136" },
-   { id = 137, name = "area_137" },
-   { id = 138, name = "area_138" },
-   { id = 139, name = "area_139" },
-   { id = 140, name = "area_140" },
-   { id = 141, name = "area_141" },
-   { id = 142, name = "area_142" },
-   { id = 143, name = "area_143" },
-   { id = 144, name = "area_144" },
-   { id = 145, name = "area_145" },
-   { id = 146, name = "area_146" },
-   { id = 147, name = "area_147" },
-   { id = 148, name = "area_148" },
-   { id = 149, name = "area_149" },
-   { id = 150, name = "area_150" },
-   { id = 151, name = "area_151" },
-   { id = 152, name = "area_152" },
-   { id = 153, name = "area_153" },
-   { id = 154, name = "area_154" },
-   { id = 155, name = "area_155" },
-   { id = 156, name = "area_156" },
-   { id = 157, name = "area_157" },
-   { id = 158, name = "area_158" },
-   { id = 159, name = "area_159" },
-   { id = 160, name = "area_160" },
-   { id = 161, name = "area_161" },
-   { id = 363, name = "area_363" },
-   { id = 364, name = "area_364" },
-   { id = 365, name = "area_365" },
-   { id = 366, name = "area_366" },
-   { id = 367, name = "area_367" },
-   { id = 368, name = "area_368" },
+   { id = 132, name = "area_town" },
+   { id = 133, name = "area_cave" },
+   { id = 134, name = "area_rock" },
+   { id = 135, name = "area_tree" },
+   { id = 136, name = "area_palace" },
+   { id = 137, name = "area_tower" },
+   { id = 138, name = "area_your_dungeon" },
+   { id = 139, name = "area_lesimas" },
+   { id = 140, name = "area_temple" },
+   { id = 141, name = "area_crypt" },
+   { id = 142, name = "area_village" },
+   { id = 143, name = "area_town" },
+   { id = 144, name = "area_castle" },
+   { id = 145, name = "area_tower_of_fire" },
+   { id = 146, name = "area_dungeon" },
+   { id = 147, name = "area_truce_ground" },
+   { id = 148, name = "area_tent" },
+   { id = 149, name = "area_god" },
+   { id = 150, name = "area_museum" },
+   { id = 151, name = "area_shop" },
+   { id = 152, name = "area_crop" },
+   { id = 153, name = "area_storage_house" },
+   { id = 154, name = "area_ranch" },
+   { id = 155, name = "area_embassy" },
+   { id = 156, name = "area_village_snow" },
+   { id = 157, name = "area_miral_and_garoks_workshop" },
+   { id = 158, name = "area_border_tent" },
+   { id = 159, name = "area_the_smoke_and_pipe" },
+   { id = 160, name = "area_pyramid" },
+   { id = 161, name = "area_jail" },
+   { id = 363, name = "building_mountain" },
+   { id = 364, name = "building_crop" },
+   { id = 365, name = "building_house_1" },
+   { id = 366, name = "building_house_2" },
+   { id = 367, name = "building_house_3" },
+   { id = 368, name = "building_lighthouse" },
 }
 
 local function gen_crop(list, source, folder)
@@ -1108,7 +1108,7 @@ local function gen_crop(list, source, folder)
       local x = (id % 33) * 48
       local y = math.floor(id / 33) * 48
 
-      local output = string.format("mod/elona/graphic/%s/%s.png", folder, v.name)
+      local output = string.format("graphic/%s/%s.png", folder, v.name)
 
       l[#l+1] = {
          type = "crop",
@@ -1126,11 +1126,11 @@ local function gen_crop(list, source, folder)
    return l
 end
 
-chara = gen_crop(chara, "deps/elona/graphic/character.bmp", "chara")
-item = gen_crop(item, "deps/elona/graphic/item.bmp", "item")
-misc = gen_crop(misc, "deps/elona/graphic/item.bmp", "misc")
-feat = gen_crop(feat, "deps/elona/graphic/map1.bmp", "feat")
-area = gen_crop(area, "deps/elona/graphic/map0.bmp", "feat")
+chara = gen_crop(chara, "graphic/character.bmp", "chara")
+item = gen_crop(item, "graphic/item.bmp", "item")
+misc = gen_crop(misc, "graphic/item.bmp", "misc")
+feat = gen_crop(feat, "graphic/map1.bmp", "feat")
+area = gen_crop(area, "graphic/map0.bmp", "feat")
 
 return {
    chara = chara,

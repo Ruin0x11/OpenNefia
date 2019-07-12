@@ -1,15 +1,18 @@
-local tile_atlas, chara_atlas, item_atlas
+local _atlases = {}
 
 local atlases = {}
 
-function atlases.set(tile, chara, item)
-   tile_atlas = tile
-   chara_atlas = chara
-   item_atlas = item
+function atlases.set(tile, chara, item, feat)
+   _atlases = {
+      tile = tile,
+      chara = chara,
+      item = item,
+      feat = feat,
+   }
 end
 
 function atlases.get()
-   return tile_atlas, chara_atlas, item_atlas
+   return _atlases
 end
 
 return atlases

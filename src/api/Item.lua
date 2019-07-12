@@ -21,7 +21,16 @@ function Item.at(x, y, map)
 end
 
 function Item.is_alive(item)
-   return type(item) == "table" and item.amount > 0
+   if type(item) ~= "table" or item.amount <= 0 then
+      return false
+   end
+
+   local map = item:current_map()
+   if not map then
+      return false
+   end
+
+   return map.uid == Map.current().uid
 end
 
 function Item.almost_equals(a, b)
@@ -59,12 +68,12 @@ function Item.create(id, x, y, params, where)
    end
 
    if not class.is_an(ILocation, where) and not params.ownerless then
-      return nil
+      return nil, "invalid location"
    end
 
    if where and where:is_positional() then
       if not where:is_in_bounds(x, y) then
-         return nil
+         return nil, "out of bounds"
       end
    end
 
@@ -76,15 +85,17 @@ function Item.create(id, x, y, params, where)
 
    if where then
       item = where:take_object(item, x, y)
-   end
 
-   if item then
-      if not params.no_stack then
-         item:stack()
+      if not item then
+         return nil, "location failed to receive object"
       end
-
-      item:refresh()
    end
+
+   if not params.no_stack then
+      item:stack()
+   end
+
+   item:refresh()
 
    return item
 end
