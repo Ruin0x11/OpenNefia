@@ -20,13 +20,17 @@
                         :coding 'utf-8))
 
 (defun elona-next--send (str)
-  (if (buffer-live-p lua-process-buffer)
-      (lua-send-string str)
-    (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
-      (comint-send-string proc str)
-      (process-send-eof proc)
-      (with-current-buffer (process-buffer proc)
-        (buffer-string)))))
+  (when (buffer-live-p lua-process-buffer)
+      (lua-send-string str))
+  (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
+    (comint-send-string proc str)
+    (process-send-eof proc)
+    (with-current-buffer (process-buffer proc)
+      (buffer-string)))
+  (when (not (or (get-buffer-window compilation-last-buffer) (get-buffer-window lua-process-buffer)))
+    (let ((buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
+      (if (and (buffer-live-p buf) (not (get-buffer-window buf)))
+          (popwin:display-buffer buf)))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
@@ -68,13 +72,14 @@
   (let* ((prefix
           (file-relative-name
            (file-name-sans-extension (buffer-file-name))
-           (concat (getenv "HOME") "/build/next/src/src")))
+           (projectile-project-root)))
          (lua-path (replace-regexp-in-string "/" "." prefix))
-         (cmd (if (buffer-live-p lua-process-buffer)
-                  "h('%s')"
-                "require('internal.env').hotload('%s')")))
+         (cmd (format
+               "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.env').hotload('%s') end"
+               lua-path
+               lua-path)))
     (save-buffer)
-    (elona-next--send (format cmd lua-path))
+    (elona-next--send cmd)
     (message "Hotloaded %s." lua-path)))
 
 (defun elona-next-eval-sexp-fu-setup ()

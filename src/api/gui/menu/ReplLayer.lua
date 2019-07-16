@@ -224,9 +224,10 @@ end
 
 function ReplLayer:print(text)
    Draw.set_font(self.font_size)
-   local success, err, wrapped = pcall(function() return Draw.wrap_text(text, self.width) end)
+   local success, err, wrapped = xpcall(function() return Draw.wrap_text(text, self.width) end, debug.traceback)
    if not success then
-      self.scrollback:push("<error printing result: " .. err .. ">")
+      self.scrollback:push("[REPL] error printing result: " .. string.split(err)[1])
+      print(err)
    else
       for _, line in ipairs(wrapped) do
          self.scrollback:push(line)
@@ -239,28 +240,9 @@ function ReplLayer:execute(code)
    self:submit()
 end
 
-function ReplLayer:submit()
-   -- if self.completion_candidates then
-   --    self:insert_text(self.completion_candidates[self.selected_candidate])
-   --    self.completion_candidates = nil
-   --    return
-   -- end
-
-   local text = self.text
-   self.text = ""
-   self.scrollback_index = 0
-   self.history_index = 0
-   self.cursor_pos = 0
-   self.cursor_x = 0
-
-   self:print(self.mode.caret .. text)
-   if string.nonempty(text) then
-      table.insert(self.history, 1, text)
-   end
-
-   local success, result = self.mode:submit(text)
-
+function ReplLayer.format_repl_result(result)
    local result_text
+
    if type(result) == "table" then
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
@@ -287,6 +269,48 @@ function ReplLayer:submit()
       result_text = tostring(result)
    end
 
+   return result_text
+end
+
+local function join_results(acc, x)
+   if not acc then
+      return x
+   end
+
+   return acc .. "\t" .. x
+end
+
+function ReplLayer:submit()
+   -- if self.completion_candidates then
+   --    self:insert_text(self.completion_candidates[self.selected_candidate])
+   --    self.completion_candidates = nil
+   --    return
+   -- end
+
+   local text = self.text
+   self.text = ""
+   self.scrollback_index = 0
+   self.history_index = 0
+   self.cursor_pos = 0
+   self.cursor_x = 0
+
+   self:print(self.mode.caret .. text)
+   if string.nonempty(text) then
+      table.insert(self.history, 1, text)
+   end
+
+   local success, results = self.mode:submit(text)
+
+   local result_text
+   if success then
+      result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results)
+      if result_text == nil then
+         result_text = tostring(result_text)
+      end
+   else
+      result_text = results
+   end
+
    if not success then
       print(result_text)
    end
@@ -308,20 +332,18 @@ function ReplLayer:save_history()
    file:close()
 end
 
-function ReplLayer:copy_last_input()
+function ReplLayer:last_input()
    local line = self.history[2]
    if line then
-      Env.set_clipboard_text(line)
       return line
    end
 
    return nil
 end
 
-function ReplLayer:copy_last_output()
+function ReplLayer:last_output()
    local output = self.output[#self.output]
    if output then
-      Env.set_clipboard_text(output)
       return output
    end
 

@@ -93,8 +93,8 @@ end
 -- snapshot undoing the map saves that have happened since the last
 -- snapshot.
 
--- An enhancement to support smart loading without copying all the
--- save files at once goes something like this:
+-- This is enhanced to support smart loading without copying all the
+-- files touched on every save.
 --
 -- 1. Keep track of everything saved so far.
 -- 2. When a load is requested, wipe the list of known save items.
@@ -127,7 +127,7 @@ function SaveFs.load_game(save)
 end
 
 function SaveFs.clear()
-   Log.info("Clearing save cache.")
+   Log.info("Clearing save cache")
 
    current_save = nil
    touched_paths = {}

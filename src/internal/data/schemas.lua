@@ -143,7 +143,12 @@ data:add_type {
 data:add_type {
    name = "skill",
    schema = schema.Record {
-      skill_type = schema.String,
+   },
+}
+
+data:add_type {
+   name = "trait",
+   schema = schema.Record {
    },
 }
 

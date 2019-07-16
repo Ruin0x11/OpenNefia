@@ -119,7 +119,8 @@ function Event.define_hook(id, desc, default, field, cb)
 
       local success, result = pcall(function() return Event.trigger(full_id, params, _default) end)
       if not success then
-         Log.error("Error running hook: %s", result)
+         local Gui = require("api.Gui")
+         Gui.report_error(result, "Error running hook")
          result = _default
       end
 

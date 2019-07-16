@@ -11,11 +11,33 @@ local IItem = class.interface("IItem",
                          {},
                          {IStackableObject, IItemEnchantments})
 
+-- TODO: schema
+local defaults = {
+   amount = 1,
+   dice_x = 0,
+   dice_y = 0,
+   ownership = "none",
+   curse_state = "none",
+   identify_state = "completely",
+   weight = 0,
+   dv = 0,
+   pv = 0,
+   hit_bonus = 0,
+   damage_bonus = 0,
+   bonus = 0,
+   flags = {},
+   types = {},
+   name = "item",
+   pierce_rate = 0,
+   effective_range = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
+   ammo_type = ""
+}
+table.merge(IItem, defaults)
+
 function IItem:pre_build()
    -- TODO remove and place in schema as defaults
    IMapObject.init(self)
 
-   self.amount = self.amount or 1
    self.location = nil
    self.ownership = self.ownership or "none"
 
@@ -25,15 +47,12 @@ function IItem:pre_build()
 
    self.name = self._id
 
-   self.weight = self.weight or 10
-   self.dv = self.dv or 4
-   self.pv = self.pv or 4
-   self.hit_bonus = self.hit_bonus or 3
-   self.damage_bonus = self.damage_bonus or 2
-   self.bonus = self.bonus or 1
-
-   self.flags = self.flags or {}
-   self.types = self.types or {}
+   self.weight = 10
+   self.dv = 4
+   self.pv = 4
+   self.hit_bonus = 3
+   self.damage_bonus = 2
+   self.bonus = 1
 
    self:set_image()
 
@@ -201,6 +220,25 @@ function IItem:can_stack_with(other)
    end
 
    return true
+end
+
+function IItem:calc_effective_range(dist)
+   dist = math.max(math.floor(dist), 0)
+   local result
+   local effective_range = self:calc("effective_range")
+   if type(effective_range) == "function" then
+      result = effective_range(self, dist)
+      assert(type(result) == "number", "effective_range must return a number")
+   elseif type(effective_range) == "table" then
+      result = effective_range[dist]
+      if not result then
+         -- vanilla compat
+         result = effective_range[math.min(dist, 9)]
+      end
+   elseif type(effective_range) == "number" then
+      result = effective_range
+   end
+   return result or 100
 end
 
 IItem.ui_color = function(self)

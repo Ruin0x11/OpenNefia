@@ -127,8 +127,12 @@ function EventTree:traverse(source, args, default)
    local cache = self.cache
 
    local result = default
+   local status
    for i, cb in ipairs(cache) do
-      result = cb(source, args, result)
+      result, status = cb(source, args, result)
+      if status == "blocked" then
+         break
+      end
    end
 
    return result

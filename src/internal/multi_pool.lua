@@ -109,6 +109,11 @@ function multi_pool:iter_type_at_pos(_type, x, y)
    return self:get_subpool(_type):objects_at_pos(x, y)
 end
 
+function multi_pool:has_object_of_type(_type, uid)
+   local obj = self.refs[uid]
+   return obj and obj._type == _type
+end
+
 function multi_pool:get_object_of_type(_type, uid)
    local obj = self.refs[uid]
    assert(obj ~= nil, uid)

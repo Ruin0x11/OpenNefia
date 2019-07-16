@@ -5,6 +5,9 @@ local DialogMenu = require("mod.elona_sys.dialog.api.DialogMenu")
 
 local Dialog = {}
 
+-- TODO to allow new dialog menus
+local DialogLogic = class.class("DialogLogic")
+
 local function dialog_error(talk, msg, err)
    if err ~= nil then
       error("Dialog error in " .. talk.id .. ": " .. msg .. ":\n    " .. err)

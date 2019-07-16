@@ -16,6 +16,20 @@ data:extend_type(
 )
 
 data:extend_type(
+   "base.skill",
+   {
+      elona_id = schema.Number,
+   }
+)
+
+data:extend_type(
+   "base.trait",
+   {
+      elona_id = schema.Number,
+   }
+)
+
+data:extend_type(
    "base.scenario",
    {
       restrictions = schema.Table,
@@ -31,6 +45,7 @@ data:extend_type(
 
 data:add_index("base.chara", "elona_id")
 data:add_index("base.item", "elona_id")
+data:add_index("base.skill", "elona_id")
 
 require("mod.elona_sys.theme.init")
 require("mod.elona_sys.map_loader.init")

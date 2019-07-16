@@ -206,6 +206,31 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      calc_damage_params = function(self, chara, weapon, target)
+         local related = "elona.strength"
+         local dmgfix = chara:stat_level(related) / 8 + chara:stat_level(self._id) / 8 + chara:calc("damage_bonus")
+         local dice_x = 2
+         local dice_y = chara:stat_level(self._id) /8 + 5
+         local multiplier = 0.5
+            + (chara:stat_level(related)
+                  + chara:skill_level(self._id) / 5
+                  + chara:skill_level("elona.tactics"))
+            / 40
+         local pierce_rate = math.clamp(chara:skill_level(self._id) / 5, 5, 50)
+         return {
+            dmgfix = dmgfix,
+            dice_x = dice_x,
+            dice_y = dice_y,
+            multiplier = multiplier,
+            pierce_rate = pierce_rate
+         }
+      end,
+
+      calc_critical_damage = function(self, damage_params)
+         damage_params.multiplier = damage_params.multiplier * 1.25
+         return damage_params
+      end
    },
    {
       _id = "shield",
@@ -378,6 +403,10 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      calc_armor_penalty = function(self, chara)
+         return 17 - chara:skill_level(self._id) / 5
+      end
    },
    {
       _id = "medium_armor",
@@ -386,6 +415,10 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      calc_armor_penalty = function(self, chara)
+         return 12 - chara:skill_level(self._id) / 5
+      end
    },
    {
       _id = "light_armor",

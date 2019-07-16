@@ -45,15 +45,12 @@ function DamagePopupLayer:draw(draw_x, draw_y)
       local x, y = self.coords:tile_to_screen(v.x+1, v.y+1)
       local font_size = v.font
 
-      require("mod.tools.api.Tools").draw_debug_pos(x - sx, y - sy, {255, 0, 0})
       Draw.set_font(font_size)
       x = x - math.floor(Draw.text_width(v.text)) - sx + self.w
       y = y - math.floor(Draw.text_height() / 2) - 2 * v.frame - sy + self.h
       Draw.text_shadowed(v.text, x, y, v.color)
 
       local cx, cy = self.coords:tile_to_screen(0, 0)
-      require("mod.tools.api.Tools").draw_debug_pos(cx - sx, cy - sy, {0, 255, 0})
-      require("mod.tools.api.Tools").draw_debug_pos(x, y, {0, 0, 255})
    end
 end
 

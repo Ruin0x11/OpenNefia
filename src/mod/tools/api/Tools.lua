@@ -88,8 +88,16 @@ function Tools.items()
    return Map.iter_items()
 end
 
+function Tools.item()
+   return Tools.items():nth(1)
+end
+
 function Tools.allies()
    return Chara.iter_allies()
+end
+
+function Tools.ally()
+   return Tools.allies():nth(1)
 end
 
 function Tools.enemies()
@@ -97,6 +105,10 @@ function Tools.enemies()
       return Chara.is_alive(c) and not c:is_in_party()
    end
    return Map.iter_charas():filter(pred)
+end
+
+function Tools.enemy()
+   return Tools.enemies():nth(1)
 end
 
 Tools.foes = Tools.enemies
@@ -179,6 +191,14 @@ function Tools.items_under()
    return Item.at(player.x, player.y)
 end
 
+function Tools.warp_to(x, y)
+   local player = Chara.player()
+   local x, y = Map.find_position_for_chara(x, y, "ally")
+   if x then
+      player:set_pos(x, y)
+   end
+end
+
 function Tools.draw_debug_pos(x, y, color)
    Draw.set_color(color or {255, 0, 0})
    Draw.set_font(11)
@@ -206,5 +226,20 @@ end
 
 local print_flat = require("mod.tools.lib.print_flat")
 Tools.print_flat = print_flat.print_flat
+
+function Tools.graph()
+   local function random_point()
+      return { Rand.rnd(100), Rand.rnd(100) }
+   end
+
+   local graph = {
+      {
+         color = { 255, 0, 0 },
+         data = fun.tabulate(random_point):take(20):to_list(),
+      }
+   }
+
+   require("mod.graphs.api.gui.menu.GraphMenu"):new(graph):query()
+end
 
 return Tools

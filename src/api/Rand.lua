@@ -8,7 +8,7 @@ function Rand.rnd(a, b)
 
    -- TODO: replace with same rng method as hsp
    -- TODO: alias math.random to this function
-   return math.random(a, b - 1)
+   return math.random(math.floor(a), math.floor(b) - 1)
 end
 
 function Rand.one_in(n)
@@ -30,6 +30,20 @@ end
 
 function Rand.percent_chance(percent)
    return Rand.rnd(100) < percent
+end
+
+function Rand.roll_dice(dice_x, dice_y, add)
+   dice_x = math.max(dice_x, 1)
+   dice_y = math.max(dice_y, 1)
+   local result = 0
+   for _ in fun.range(1, dice_x) do
+      result = result + Rand.rnd(dice_y) + 1
+   end
+   return result + add
+end
+
+function Rand.dice_max(dice_x, dice_y, add)
+   return dice_x * dice_y + add
 end
 
 return Rand

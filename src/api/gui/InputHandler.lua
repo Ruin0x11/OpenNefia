@@ -29,6 +29,8 @@ function InputHandler:focus()
    self.mouse:focus()
 end
 
+-- TODO: instead expose a "bind_keys" function in IUiElement so
+-- elements can register keybinds directly on the parent
 function InputHandler:forward_to(handler, keys)
    self.keys:forward_to(handler, keys)
    self.mouse:forward_to(handler)

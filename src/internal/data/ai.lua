@@ -412,7 +412,7 @@ local function decide_ally_target(chara, params)
    chara.ai_state.hate = chara.ai_state.hate - 1
 
    local target = chara:get_target()
-   local being_targeted = target ~= nil
+   local being_targeted = Chara.is_alive(target)
       and target:get_target() ~= nil
    -- TODO will want proper character equality, by UID
       and target:get_target().uid == chara.uid
@@ -421,8 +421,11 @@ local function decide_ally_target(chara, params)
       and chara:reaction_towards(target) >= 0
       and not being_targeted
 
-   if target == nil or target:is_party_leader_of(chara) or chara.ai_state.hate <= 0 or target_not_important then
-
+   if not Chara.is_alive(target)
+      or target:is_party_leader_of(chara)
+      or chara.ai_state.hate <= 0
+      or target_not_important
+   then
       -- Follow the leader.
       chara:set_target(chara:get_party_leader())
 
@@ -443,11 +446,11 @@ local function decide_ally_target(chara, params)
          local leader = chara:get_party_leader()
 
          if Chara.is_alive(leader) then
-            local target = leader:get_target()
-            if target ~= nil and leader:reaction_towards(target) < 0 then
-               if Map.has_los(chara.x, chara.y, target.x, target.y) then
+            local leader_target = leader:get_target()
+            if Chara.is_alive(leader_target) and leader:reaction_towards(leader_target) < 0 then
+               if Map.has_los(chara.x, chara.y, leader_target.x, leader_target.y) then
                   chara.ai_state.hate = 5
-                  chara:set_target(target)
+                  chara:set_target(leader_target)
                end
             end
          end

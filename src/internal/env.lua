@@ -164,7 +164,7 @@ local function env_loadfile(path, mod_env)
    mod_env = mod_env or _G
    setfenv(chunk, mod_env)
 
-   local success, err = xpcall(chunk, function(err) return debug.traceback(err) end)
+   local success, err = xpcall(chunk, debug.traceback)
    if not success then
       return nil, err
    end
@@ -272,9 +272,13 @@ function env.convert_to_require_path(path)
    return path
 end
 
-local function gen_require(chunk_loader)
+local function gen_require(chunk_loader, can_load_path)
    return function(path, hotload)
       local req_path = env.convert_to_require_path(path)
+
+      if can_load_path and not can_load_path(req_path) then
+         return nil
+      end
 
       if LOADING[req_path] then
          error("Loop while loading " .. req_path)
@@ -348,7 +352,7 @@ end
 --- the path is prefixed with "mod", and will update the table in
 --- place if hotloading, but disallow loading non-public files.
 -- @function env.safe_require
-env.safe_require = gen_require(safe_load_chunk)
+env.safe_require = gen_require(safe_load_chunk, get_load_type)
 
 --- Version of `require` for the global environment that will respect
 --- hotloading and mod environments, and also allow requiring
@@ -433,6 +437,7 @@ end
 -- values in the table, since they may reference the same-named
 -- upvalue but in the original chunk.
 function env.redefine(path, name)
+   -- TODO
 end
 
 --- Returns the currently hotloading path if hotloading is ongoing.

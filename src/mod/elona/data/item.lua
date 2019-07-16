@@ -145,6 +145,7 @@ local item =
          coefficient = 100,
 
          skill = 100,
+         pierce_rate = 5
 
       },
       {
@@ -165,6 +166,7 @@ local item =
          coefficient = 100,
 
          skill = 101,
+         pierce_rate = 10
 
       },
       {
@@ -236,7 +238,6 @@ local item =
          coefficient = 100,
 
          { id = 33, power = 100 },
-
 
       },
       {
@@ -439,7 +440,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
 
-
          efid = 411,
          efp = 100,
 
@@ -461,7 +461,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 12 }),
          has_charge = true,
 
-
          efid = 409,
          efp = 100,
 
@@ -482,7 +481,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
-
 
          efid = 408,
          efp = 100,
@@ -507,7 +505,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 411,
          efp = 100,
          elona_type = "book",
@@ -530,7 +527,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 412,
          efp = 100,
@@ -565,7 +561,6 @@ local item =
 
          param1 = 0,
 
-
          elona_type = "normal_book",
 
       },
@@ -579,7 +574,6 @@ local item =
          fltselect = 1,
          category = 55000,
          coefficient = 100,
-
 
          param1 = 2,
          elona_type = "normal_book",
@@ -709,7 +703,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 419,
          efp = 100,
          elona_type = "book",
@@ -732,7 +725,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 420,
          efp = 100,
          elona_type = "book",
@@ -754,7 +746,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 421,
          efp = 100,
@@ -1095,6 +1086,7 @@ local item =
          fixlv = "special",
 
          color = { 155, 154, 153 },
+         pierce_rate = 10
       },
       {
          _id = "zantetsu",
@@ -1125,6 +1117,7 @@ local item =
          fixlv = "special",
 
          color = { 175, 175, 255 },
+         pierce_rate = 25
       },
       {
          _id = "long_bow",
@@ -1144,8 +1137,11 @@ local item =
 
          skill = 108,
 
-
          gods = { "elona.lulwy" },
+
+         effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
+
+         pierce_rate = 20
 
       },
       {
@@ -1184,10 +1180,12 @@ local item =
 
          skill = 110,
 
-
          gods = { "elona.mani" },
 
          tags = { "sf" },
+
+         effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 10
       },
       {
          _id = "arrow",
@@ -1258,6 +1256,7 @@ local item =
          fixlv = "special",
 
          color = { 255, 155, 155 },
+         pierce_rate = 15
       },
       {
          _id = "mournblade",
@@ -1293,6 +1292,7 @@ local item =
          fixlv = "special",
 
          color = { 175, 175, 255 },
+         pierce_rate = 15
       },
       {
          _id = "light_cloak",
@@ -1467,6 +1467,7 @@ local item =
          fixlv = "special",
 
          color = { 155, 154, 153 },
+         pierce_rate = 20
       },
       {
          _id = "potion_of_healer_odina",
@@ -1969,7 +1970,6 @@ local item =
 
          param2 = 100,
 
-
          elona_type = "well",
 
       },
@@ -2060,7 +2060,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 410,
          efp = 100,
          elona_type = "book",
@@ -2097,7 +2096,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 424,
          efp = 100,
          elona_type = "book",
@@ -2121,7 +2119,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
 
-
          efid = 400,
          efp = 100,
 
@@ -2144,7 +2141,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
 
-
          efid = 414,
          efp = 100,
 
@@ -2165,7 +2161,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
-
 
          efid = 424,
          efp = 100,
@@ -2189,7 +2184,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
 
-
          efid = 419,
          efp = 100,
 
@@ -2211,7 +2205,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
-
 
          efid = 420,
          efp = 100,
@@ -2246,7 +2239,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 402,
          efp = 100,
@@ -2869,7 +2861,6 @@ local item =
 
          param2 = 100,
 
-
          elona_type = "well",
 
       },
@@ -2907,7 +2898,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
 
-
          efid = 421,
          efp = 100,
 
@@ -2929,7 +2919,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
-
 
          efid = 447,
          efp = 100,
@@ -2981,7 +2970,6 @@ local item =
 
          param1 = 2000,
          param3 = 48,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3081,7 +3069,6 @@ local item =
          param1 = 2000,
          param3 = 72,
 
-
          gods = { "elona.kumiromi" },
 
       },
@@ -3100,7 +3087,6 @@ local item =
          param1 = 2000,
          param3 = 72,
 
-
          gods = { "elona.kumiromi" },
 
       },
@@ -3115,7 +3101,6 @@ local item =
          coefficient = 100,
 
          param1 = 2000,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3135,7 +3120,6 @@ local item =
 
          param1 = 2000,
          param3 = 72,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3160,7 +3144,6 @@ local item =
          coefficient = 100,
 
          param1 = 2000,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3205,7 +3188,6 @@ local item =
          coefficient = 100,
 
          param1 = 2000,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3289,7 +3271,6 @@ local item =
          param1 = 2000,
          param3 = 72,
 
-
          gods = { "elona.kumiromi" },
 
       },
@@ -3307,7 +3288,6 @@ local item =
 
          param1 = 2000,
          param3 = 72,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3327,7 +3307,6 @@ local item =
          param1 = 2000,
          param3 = 72,
 
-
          gods = { "elona.kumiromi" },
 
       },
@@ -3345,7 +3324,6 @@ local item =
 
          param1 = 2000,
          param3 = 2,
-
 
          gods = { "elona.kumiromi" },
 
@@ -3367,7 +3345,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 9 }),
          has_charge = true,
-
 
          efid = 429,
          efp = 100,
@@ -3392,7 +3369,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
 
-
          efid = 401,
          efp = 100,
 
@@ -3412,7 +3388,6 @@ local item =
          param3 = 4,
 
          gods = { "any" },
-
 
       },
       {
@@ -3469,6 +3444,7 @@ local item =
          fixlv = "special",
 
          color = { 175, 175, 255 },
+         pierce_rate = 20
       },
       {
          _id = "bow_of_vinderre",
@@ -3507,6 +3483,9 @@ local item =
          fixlv = "special",
 
          color = { 155, 154, 153 },
+
+         effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
+         pierce_rate = 20
       },
       {
          _id = "worthless_fake_gold_bar",
@@ -3552,6 +3531,9 @@ local item =
 
          skill = 111,
 
+         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 5
+
       },
       {
          _id = "sickle",
@@ -3575,7 +3557,8 @@ local item =
             enchantments = {
                { id = 80025, power = 100 },
             }
-         }
+         },
+         pierce_rate = 5
 
       },
       {
@@ -3596,7 +3579,6 @@ local item =
          coefficient = 100,
 
          skill = 105,
-
 
          gods = { "elona.itzpalt" },
 
@@ -3619,6 +3601,7 @@ local item =
          coefficient = 100,
 
          skill = 104,
+         pierce_rate = 25
 
       },
       {
@@ -3761,6 +3744,7 @@ local item =
          coefficient = 100,
 
          skill = 100,
+         pierce_rate = 20
 
       },
       {
@@ -3781,6 +3765,7 @@ local item =
          coefficient = 100,
 
          skill = 101,
+         pierce_rate = 10
 
       },
       {
@@ -3839,6 +3824,7 @@ local item =
          coefficient = 100,
 
          skill = 104,
+         pierce_rate = 25
 
       },
       {
@@ -3859,7 +3845,6 @@ local item =
          coefficient = 100,
 
          skill = 105,
-
 
          gods = { "elona.itzpalt" },
 
@@ -3882,8 +3867,11 @@ local item =
 
          skill = 108,
 
-
          gods = { "elona.lulwy" },
+
+         effective_range = { 70, 100, 100, 80, 60, 20, 20, 20, 20, 20 },
+
+         pierce_rate = 15
 
       },
       {
@@ -3904,10 +3892,12 @@ local item =
 
          skill = 110,
 
-
          gods = { "elona.mani" },
 
          tags = { "sf" },
+
+         effective_range = { 80, 100, 100, 90, 80, 70, 20, 20, 20, 20 },
+         pierce_rate = 0
       },
       {
          _id = "claymore",
@@ -3977,6 +3967,7 @@ local item =
          coefficient = 100,
 
          skill = 104,
+         pierce_rate = 30
 
       },
       {
@@ -4164,7 +4155,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 429,
          efp = 100,
          elona_type = "book",
@@ -4188,7 +4178,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
-
 
          efid = 413,
          efp = 100,
@@ -4214,7 +4203,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 428,
          efp = 100,
          elona_type = "book",
@@ -4236,7 +4224,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
-
 
          efid = 400,
          efp = 100,
@@ -4260,7 +4247,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 401,
          efp = 100,
@@ -4286,7 +4272,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 402,
          efp = 100,
          elona_type = "book",
@@ -4310,7 +4295,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
-
 
          efid = 403,
          efp = 100,
@@ -4396,7 +4380,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
 
-
          efid = 414,
          efp = 100,
          elona_type = "book",
@@ -4467,7 +4450,6 @@ local item =
          param1 = 6000,
          param3 = 6,
 
-
          gods = { "elona.ehekatl" },
 
       },
@@ -4507,7 +4489,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 415,
          efp = 100,
          elona_type = "book",
@@ -4532,7 +4513,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 417,
          efp = 100,
          elona_type = "book",
@@ -4555,7 +4535,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 416,
          efp = 100,
@@ -4580,6 +4559,7 @@ local item =
          coefficient = 100,
 
          skill = 101,
+         pierce_rate = 5
 
       },
       {
@@ -4599,7 +4579,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 422,
          efp = 100,
@@ -4624,7 +4603,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 423,
          efp = 100,
          elona_type = "book",
@@ -4648,7 +4626,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 431,
          efp = 100,
          elona_type = "book",
@@ -4671,7 +4648,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 432,
          efp = 100,
@@ -4697,7 +4673,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 434,
          efp = 100,
          elona_type = "book",
@@ -4721,7 +4696,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 433,
          efp = 100,
@@ -4960,7 +4934,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 1 }),
          has_charge = true,
 
-
          efid = 441,
          efp = 100,
          elona_type = "book",
@@ -4982,7 +4955,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 1 }),
          has_charge = true,
-
 
          efid = 441,
          efp = 100,
@@ -5682,7 +5654,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5703,7 +5674,6 @@ local item =
 
          param1 = 6000,
          param3 = 4,
-
 
          gods = { "elona.ehekatl" },
 
@@ -5726,7 +5696,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5748,7 +5717,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5769,7 +5737,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5789,7 +5756,6 @@ local item =
 
          param1 = 6000,
          param3 = 4,
-
 
          gods = { "elona.ehekatl" },
 
@@ -5812,7 +5778,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5833,7 +5798,6 @@ local item =
 
          param1 = 6000,
          param3 = 4,
-
 
          gods = { "elona.ehekatl" },
 
@@ -5856,7 +5820,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          tags = { "fish" },
@@ -5877,7 +5840,6 @@ local item =
 
          param1 = 6000,
          param3 = 4,
-
 
          gods = { "elona.ehekatl" },
 
@@ -6057,6 +6019,7 @@ local item =
          fixlv = "special",
 
          color = { 255, 155, 155 },
+         pierce_rate = 40
       },
       {
          _id = "palmia_pride",
@@ -6173,7 +6136,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
 
-
          efid = 442,
          efp = 100,
          elona_type = "book",
@@ -6197,7 +6159,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 7 }),
          has_charge = true,
 
-
          efid = 443,
          efp = 100,
 
@@ -6220,7 +6181,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 443,
          efp = 100,
@@ -6265,7 +6225,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 444,
          efp = 100,
          elona_type = "book",
@@ -6308,7 +6267,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 445,
          efp = 100,
@@ -6353,7 +6311,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 446,
          efp = 100,
          elona_type = "book",
@@ -6377,7 +6334,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 447,
          efp = 100,
@@ -6440,7 +6396,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
 
-
          efid = 446,
          efp = 100,
 
@@ -6462,7 +6417,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
-
 
          efid = 448,
          efp = 100,
@@ -6505,7 +6459,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 449,
          efp = 100,
          elona_type = "book",
@@ -6529,7 +6482,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 450,
          efp = 100,
@@ -6573,7 +6525,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 451,
          efp = 100,
@@ -6619,7 +6570,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 6 }),
          has_charge = true,
 
-
          efid = 407,
          efp = 100,
 
@@ -6642,7 +6592,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 406,
          efp = 100,
@@ -6667,7 +6616,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 407,
          efp = 100,
@@ -6751,7 +6699,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 621,
          efp = 100,
@@ -6838,7 +6785,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 452,
          efp = 100,
          elona_type = "book",
@@ -6862,7 +6808,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
-
 
          efid = 453,
          efp = 100,
@@ -7058,7 +7003,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 430,
          efp = 100,
          elona_type = "book",
@@ -7175,7 +7119,6 @@ local item =
             param2 = 1,
          },
 
-
          gods = { "elona.kumiromi" },
 
          color = { 175, 255, 175 },
@@ -7195,7 +7138,6 @@ local item =
 
          param2 = 1,
 
-
          gods = { "elona.kumiromi" },
 
          color = { 255, 255, 175 },
@@ -7214,7 +7156,6 @@ local item =
          coefficient = 100,
 
          param2 = 1,
-
 
          gods = { "elona.kumiromi" },
 
@@ -7238,7 +7179,6 @@ local item =
 
          param2 = 1,
 
-
          gods = { "elona.kumiromi" },
 
       },
@@ -7256,7 +7196,6 @@ local item =
          coefficient = 100,
 
          param2 = 1,
-
 
          gods = { "elona.kumiromi" },
 
@@ -7479,7 +7418,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
-
 
          efid = 454,
          efp = 100,
@@ -8220,7 +8158,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
 
-
          efid = 435,
          efp = 100,
 
@@ -8246,7 +8183,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
 
-
          efid = 435,
          efp = 100,
          elona_type = "book",
@@ -8270,8 +8206,11 @@ local item =
 
          skill = 109,
 
-
          gods = { "elona.lulwy" },
+
+         effective_range = { 80, 100, 90, 80, 70, 60, 50, 20, 20, 20 },
+
+         pierce_rate = 25
 
       },
       {
@@ -8311,7 +8250,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 436,
          efp = 100,
          elona_type = "book",
@@ -8335,7 +8273,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
-
 
          efid = 436,
          efp = 100,
@@ -8385,7 +8322,6 @@ local item =
          coefficient = 100,
 
          elona_function = 9,
-
 
          gods = { "elona.mani" },
 
@@ -8509,10 +8445,12 @@ local item =
 
          skill = 110,
 
-
          gods = { "elona.mani" },
 
          tags = { "sf" },
+
+         effective_range = { 100, 60, 20, 20, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 30
       },
       {
          _id = "pop_corn",
@@ -8657,7 +8595,6 @@ local item =
 
          is_precious = true,
 
-
          efid = 1123,
          efp = 100,
          elona_type = "scroll",
@@ -8790,10 +8727,12 @@ local item =
 
          skill = 110,
 
-
          gods = { "elona.mani" },
 
          tags = { "sf" },
+
+         effective_range = { 100, 100, 100, 100, 100, 100, 100, 20, 20, 20 },
+         pierce_rate = 5
       },
       {
          _id = "energy_cell",
@@ -8846,6 +8785,9 @@ local item =
          fixlv = "special",
 
          tags = { "sf" },
+
+         effective_range = { 100, 100, 100, 100, 100, 100, 100, 50, 20, 20 },
+         pierce_rate = 5
       },
       {
          _id = "scroll_of_recharge",
@@ -8903,7 +8845,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 628,
          efp = 100,
 
@@ -8926,7 +8867,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 1132,
          efp = 100,
@@ -8970,7 +8910,6 @@ local item =
 
          { id = 32, power = 100 },
 
-
       },
       {
          _id = "deed_of_museum",
@@ -8987,7 +8926,6 @@ local item =
          originalnameref2 = "deed",
 
          param1 = 1,
-
 
          efid = 1115,
 
@@ -9008,7 +8946,6 @@ local item =
          originalnameref2 = "deed",
 
          param1 = 1,
-
 
          efid = 1115,
 
@@ -9310,7 +9247,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 7 }),
          has_charge = true,
 
-
          efid = 438,
          efp = 100,
 
@@ -9333,7 +9269,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 438,
          efp = 100,
@@ -9368,7 +9303,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 404,
          efp = 100,
@@ -9415,7 +9349,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 405,
          efp = 100,
          elona_type = "book",
@@ -9440,7 +9373,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 405,
          efp = 100,
 
@@ -9464,7 +9396,6 @@ local item =
 
          { id = 32, power = 100 },
 
-
       },
       {
          _id = "gem_seed",
@@ -9480,7 +9411,6 @@ local item =
          coefficient = 100,
 
          param2 = 1,
-
 
          gods = { "elona.kumiromi" },
 
@@ -9500,7 +9430,6 @@ local item =
          coefficient = 100,
 
          param2 = 1,
-
 
          gods = { "elona.kumiromi" },
 
@@ -9541,7 +9470,6 @@ local item =
 
          { id = 29, power = 500 },
 
-
       },
       {
          _id = "vindale_cloak",
@@ -9561,7 +9489,6 @@ local item =
          coefficient = 100,
 
          { id = 30, power = 100 },
-
 
       },
       {
@@ -9583,7 +9510,6 @@ local item =
 
          { id = 31, power = 100 },
          { id = 20057, power = 100 },
-
 
       },
       {
@@ -9655,7 +9581,6 @@ local item =
 
          param1 = 0,
 
-
          elona_type = "normal_book",
 
       },
@@ -9677,7 +9602,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 455,
          efp = 100,
@@ -9702,7 +9626,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 455,
          efp = 100,
@@ -9778,7 +9701,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
 
-
          efid = 456,
          efp = 100,
          elona_type = "book",
@@ -9802,7 +9724,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 456,
          efp = 100,
@@ -9974,7 +9895,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 6 }),
          has_charge = true,
 
-
          efid = 457,
          efp = 100,
 
@@ -9996,7 +9916,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 457,
          efp = 100,
@@ -10071,7 +9990,6 @@ local item =
          originalnameref2 = "handful",
 
          elona_function = 14,
-
 
          efid = 1103,
          efp = 100,
@@ -10268,7 +10186,6 @@ local item =
          light = 9,
 
          param2 = 100,
-
 
          elona_type = "well",
 
@@ -10492,7 +10409,6 @@ local item =
          param1 = 6000,
          param3 = 4,
 
-
          gods = { "elona.ehekatl" },
 
          rftags = { "fish" },
@@ -10581,7 +10497,6 @@ local item =
 
          is_precious = true,
 
-
          efid = 1138,
          efp = 100,
          elona_type = "scroll",
@@ -10602,7 +10517,6 @@ local item =
          color = "RandomSeeded",
 
          is_precious = true,
-
 
          efid = 1137,
          efp = 100,
@@ -10638,7 +10552,6 @@ local item =
          has_random_name = true,
 
          is_precious = true,
-
 
          efid = 1139,
          efp = 500,
@@ -10695,7 +10608,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
-
 
          efid = 458,
          efp = 100,
@@ -10784,7 +10696,7 @@ local item =
 
          skill = 111,
          { id = 70054, power = 800 },
-
+         effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 5
 
       },
       {
@@ -11162,7 +11074,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
 
-
          efid = 418,
          efp = 100,
          elona_type = "book",
@@ -11324,7 +11235,6 @@ local item =
          param1 = 1,
          param2 = Resolver.make("base.between", { min = 1, coefficient = 4 }),
 
-
          elona_type = "normal_book",
 
          tags = { "noshop" },
@@ -11420,6 +11330,9 @@ local item =
          fixlv = "special",
 
          color = { 225, 225, 255 },
+
+         effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
+         pierce_rate = 20
       },
       {
          _id = "winchester_premium",
@@ -11451,6 +11364,9 @@ local item =
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         effective_range = { 100, 40, 20, 20, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 30
       },
       {
          _id = "kumiromi_scythe",
@@ -11485,6 +11401,7 @@ local item =
          fixlv = "special",
 
          color = { 175, 255, 175 },
+         pierce_rate = 15
       },
       {
          _id = "elemental_staff",
@@ -11551,7 +11468,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         fixlv = "special",pierce_rate = 30
 
       },
       {
@@ -11587,6 +11504,7 @@ local item =
          fixlv = "special",
 
          color = { 255, 215, 175 },
+         pierce_rate = 10
       },
       {
          _id = "gaia_hammer",
@@ -11943,7 +11861,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
 
-
          efid = 460,
          efp = 100,
          elona_type = "book",
@@ -11967,7 +11884,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
-
 
          efid = 459,
          efp = 100,
@@ -12205,7 +12121,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 462,
          efp = 100,
          elona_type = "book",
@@ -12267,7 +12182,7 @@ local item =
 
          skill = 111,
          { id = 70061, power = 100 },
-
+         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 15
 
       },
       {
@@ -12288,7 +12203,7 @@ local item =
 
          skill = 111,
          { id = 80024, power = 100 },
-
+         effective_range = { 80, 100, 90, 80, 60, 20, 20, 20, 20, 20 },pierce_rate = 0
 
       },
       {
@@ -12328,6 +12243,7 @@ local item =
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
+         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 50
 
       },
       {
@@ -12377,6 +12293,9 @@ local item =
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 5
       },
       {
          _id = "claymore_unique",
@@ -12547,6 +12466,9 @@ local item =
          fixlv = "special",
 
          color = { 255, 215, 175 },
+
+         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
+         pierce_rate = 0
       },
       {
          _id = "alud",
@@ -12683,7 +12605,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
 
-
          efid = 463,
          efp = 100,
          elona_type = "book",
@@ -12707,7 +12628,6 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
-
 
          efid = 464,
          efp = 100,
@@ -12761,8 +12681,7 @@ local item =
          coefficient = 100,
 
          skill = 107,
-         { id = 80025, power = 100 },
-
+         { id = 80025, power = 100 },pierce_rate = 5
 
       },
       {
@@ -12848,7 +12767,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         fixlv = "special",pierce_rate = 65
 
       },
       {
@@ -12908,6 +12827,7 @@ local item =
          fixlv = "special",
 
          color = { 255, 155, 155 },
+         pierce_rate = 20
       },
       {
          _id = "license_of_the_void_explorer",
@@ -12924,7 +12844,6 @@ local item =
 
          is_precious = true,
          fixlv = "special",
-
 
          elona_type = "normal_book",
 
@@ -13209,6 +13128,7 @@ local item =
 
          tags = { "sf" },
          color = { 155, 154, 153 },
+         effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },pierce_rate = 35
       },
       {
          _id = "lightsabre",
@@ -13230,6 +13150,7 @@ local item =
          },
 
          skill = 100,
+         pierce_rate = 100
 
       },
       {
@@ -13412,7 +13333,6 @@ local item =
 
          fixlv = "special",
 
-
          efid = 1147,
          efp = 100,
          elona_type = "potion",
@@ -13568,6 +13488,7 @@ local item =
          coefficient = 100,
 
          skill = 101,
+         pierce_rate = 40
 
       },
       {
@@ -13670,8 +13591,11 @@ local item =
 
          skill = 108,
 
-
          gods = { "elona.lulwy" },
+
+         effective_range = { 60, 90, 100, 100, 80, 60, 20, 20, 20, 20 },
+
+         pierce_rate = 15
 
       },
       {

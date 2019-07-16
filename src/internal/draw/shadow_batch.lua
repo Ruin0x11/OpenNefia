@@ -1,5 +1,6 @@
 local IBatch = require("internal.draw.IBatch")
 local atlas = require("internal.draw.atlas")
+local Draw = require("api.Draw")
 local draw = require("internal.draw")
 
 local shadow_batch = class.class("shadow_batch", IBatch)
@@ -272,7 +273,7 @@ function shadow_batch:draw(x, y, offx, offy)
    local tw = self.tile_width
    local th = self.tile_height
 
-   local sx, sy, ox, oy = self.coords:get_start_offset(x-offx, y-offy, draw.get_width(), draw.get_height())
+   local sx, sy, ox, oy = self.coords:get_start_offset(x-offx, y-offy, Draw.get_width(), Draw.get_height())
 
    sx = -sx
    sy = -sy
@@ -320,7 +321,7 @@ function shadow_batch:draw(x, y, offx, offy)
       self.updated = false
    end
 
-   draw.set_color(255, 255, 255, self.light)
+   Draw.set_color(255, 255, 255, self.light)
    love.graphics.setBlendMode("subtract")
    love.graphics.draw(self.batch, sx + ox - tw, sy + oy - th)
    love.graphics.draw(self.edge_batch, sx + ox - tw, sy + oy - th)

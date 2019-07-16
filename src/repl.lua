@@ -23,8 +23,17 @@ end
 rawset(_G, "_PROMPT", "> ")
 rawset(_G, "_PROMPT2", ">> ")
 rawset(_G, "data", data)
+rawset(_G, "hotload", env.hotload)
 rawset(_G, "h", env.hotload)
 rawset(_G, "load_game", field_logic.quickstart)
+
+local function register_thirdparty_module(name)
+   local paths = string.format("./thirdparty/%s/?.lua;./thirdparty/%s/?/init.lua", name, name)
+   package.path = package.path .. ";" .. paths
+end
+
+register_thirdparty_module("repl")
+register_thirdparty_module("yalf")
 
 if fs.exists("repl_startup.lua") then
    local chunk = loadfile("repl_startup.lua")

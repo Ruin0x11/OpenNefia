@@ -12,10 +12,12 @@ local IUiLayer = require("api.gui.IUiLayer")
 
 local MainTitleMenu = class.class("MainTitleMenu", IUiLayer)
 
+local draw = require("internal.draw")
+
 MainTitleMenu:delegate("input", IInput)
 
 local function load_cm_bg(id)
-   return Draw.load_image(string.format("graphic/g%d.bmp", id))
+   return draw.load_image(string.format("graphic/g%d.bmp", id))
 end
 
 local UiListExt = function()
@@ -42,7 +44,6 @@ end
 
 function MainTitleMenu:init()
    self.time = 0
-   self.shader = Draw.load_shader("graphic/shader/ripple2.frag.glsl")
    self.window_bg = load_cm_bg(4)
    self.version = Env.version()
 
@@ -85,10 +86,7 @@ function MainTitleMenu:relayout(x, y, width, height)
 end
 
 function MainTitleMenu:draw()
-   Draw.use_shader(self.shader)
-   self.shader:send("time", self.time)
    self.t.title:draw(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
-   Draw.use_shader()
 
    Draw.set_font(13)
 

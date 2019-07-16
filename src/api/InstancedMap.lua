@@ -386,6 +386,7 @@ InstancedMap:delegate("_multi_pool",
    "has_object",
    "get_object",
    "get_object_of_type",
+   "has_object_of_type",
 })
 
 function InstancedMap:is_positional()

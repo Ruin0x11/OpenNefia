@@ -34,13 +34,13 @@ local function travel_to_map_hook(source, params, result)
    return {true, "player_turn_query"}
 end
 
-local travel_to_map = Event.define_hook("travel_to_map",
+local hook_travel_to_map = Event.define_hook("travel_to_map",
                                         "Hook when traveling to a new map.",
                                         { true, "player_turn_query" },
                                         nil,
                                         travel_to_map_hook)
 
-local player_move = Event.define_hook("player_move",
+local hook_player_move = Event.define_hook("player_move",
                                       "Hook when the player moves.",
                                       nil,
                                       "pos")
@@ -68,7 +68,7 @@ function Command.move(player, x, y)
    end
 
    -- Try to modify the final position.
-   local next_pos = player_move({chara=player}, {pos={x=x,y=y}})
+   local next_pos = hook_player_move({chara=player}, {pos={x=x,y=y}})
 
    -- EVENT: before_player_move_check (player)
    -- dimmed
@@ -116,7 +116,7 @@ function Command.move(player, x, y)
       -- quest abandonment warning
 
       if Input.yes_no() then
-         return table.unpack(travel_to_map())
+         return table.unpack(hook_travel_to_map())
       end
 
       return "player_turn_query"

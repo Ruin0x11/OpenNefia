@@ -103,6 +103,10 @@ function data:add_type(schema, params)
    local mod_name = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
 
+   if env.is_hotloading() and schemas[_type] then
+      return
+   end
+
    schema.indexes = {}
 
    local metatable = params.interface or {}

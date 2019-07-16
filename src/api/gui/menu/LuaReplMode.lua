@@ -22,11 +22,12 @@ function LuaReplMode:submit(text)
 
    setfenv(chunk, self.env)
 
-   local success, result = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
+   -- capture (status, varags...) as a table
+   local results = { xpcall(chunk, function(err) return debug.traceback(err, 2) end) }
 
-   self.env._1 = result
-
-   return success, result
+   local ok = results[1]
+   table.remove(results, 1)
+   return ok, results
 end
 
 return LuaReplMode

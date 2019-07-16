@@ -22,6 +22,3 @@ print("===== pairs")
 for i, v, c in pairs(m._multi_pool.refs) do
    print(i, tostring(v), tostring(c))
 end
-
-_p(Map.current()._multi_pool.refs[52].name)
-_p(m._multi_pool.refs[52].name)

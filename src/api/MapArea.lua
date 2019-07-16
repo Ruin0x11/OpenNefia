@@ -5,14 +5,14 @@ local InstancedMap = require("api.InstancedMap")
 
 -- Functions dealing with the connections between maps.
 --
--- In Elona_next, maps are linked to each other by keeping an
--- outer_uid field on maps with entrances from a map one level up, and
--- through feats on overworlds that hold map UIDs to child maps. To
--- know which map is a parent of another map and where the player
--- should arrive when traveling up a level, it is necessary to find
--- the corresponding feat with an entrance to the inner map in the
--- outer map. To go the other direction, you only have to find the an
--- in the inner map leading to the outer map.
+-- In Elona_next, maps are linked to each other by keeping a private
+-- _outer_map_uid field on maps with entrances from a map one level
+-- up, and through feats on overworlds that hold map UIDs to child
+-- maps. To know which map is a parent of another map and where the
+-- player should arrive when traveling up a level, it is necessary to
+-- find the corresponding feat with an entrance to the inner map in
+-- the outer map. To go the other direction, you only have to find the
+-- an in the inner map leading to the outer map.
 --
 -- It is possible for the connection between two maps to go out of
 -- sync since there is no global array of connections to maps.
@@ -150,25 +150,25 @@ function MapArea.set_entrance(inner_map, outer_map, x, y)
          entrance = MapArea.find_entrance_in_outer_map(inner_map, outer_map)
          if entrance then
             entrance:set_pos(x, y)
+            return
          else
             Log.warn("Could not find entrance in outer map %d", outer_map.uid)
+            -- Fall through and create the entrance below.
+         end
+      else
+         local function remove_entrance(map)
+            entrance = MapArea.find_entrance_in_outer_map(inner_map, map)
+            if entrance then
+               entrance:remove_ownership()
+            else
+               Log.warn("Could not find entrance in existing outer map %d", map.uid)
+            end
          end
 
-         return
-      end
-
-      local function remove_entrance(map)
-         entrance = MapArea.find_entrance_in_outer_map(inner_map, map)
-         if entrance then
-            entrance:remove_ownership()
-         else
-            Log.warn("Could not find entrance in existing outer map %d", map.uid)
+         local ok, err = Map.edit(existing, remove_entrance)
+         if not ok then
+            Log.warn("Could not remove existing entrance: %s", err)
          end
-      end
-
-      local ok, err = Map.edit(existing, remove_entrance)
-      if not ok then
-         Log.warn("Could not remove existing entrance: %s", err)
       end
    end
 

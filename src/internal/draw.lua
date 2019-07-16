@@ -22,7 +22,7 @@ local gamma_correct = nil
 
 
 local function create_canvas(w, h)
-   canvas = love.graphics.newCanvas(w, h)
+   local canvas = love.graphics.newCanvas(w, h)
 
    love.graphics.setCanvas(canvas)
 
@@ -77,7 +77,7 @@ end
 function draw.set_root(ui_layer)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    layers = {ui_layer}
-   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
+   ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
 end
 
@@ -91,7 +91,7 @@ end
 function draw.push_layer(ui_layer)
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
    table.insert(layers, ui_layer)
-   ui_layer:relayout(0, 0, draw.get_width(), draw.get_height())
+   ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
 end
 
@@ -120,7 +120,7 @@ function draw.draw_layers()
          if layer.on_hotload_layer then
             layer:on_hotload_layer()
          end
-         layer:relayout(0, 0, draw.get_width(), draw.get_height())
+         layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
       end
    end
 
@@ -128,33 +128,6 @@ function draw.draw_layers()
       layer:draw()
    end
 end
-
---
---
--- Event callbacks
---
---
-
-function draw.resize(w, h)
-   canvas = create_canvas(w, h)
-
-   for _, layer in ipairs(layers) do
-      layer:relayout(0, 0, w, h)
-   end
-
-   require("api.Gui").update_screen()
-
-   collectgarbage()
-end
-
---
---
--- API functions
---
---
-
-draw.get_width = love.graphics.getWidth
-draw.get_height = love.graphics.getHeight
 
 local coords = nil
 
@@ -167,94 +140,20 @@ function draw.set_coords(c)
 end
 
 function draw.get_tiled_width()
-   return coords:get_tiled_width(draw.get_width())
+   return coords:get_tiled_width(love.graphics.getWidth())
 end
 
 function draw.get_tiled_height()
-   return coords:get_tiled_height(draw.get_height() - (72 + 16))
+   return coords:get_tiled_height(love.graphics.getHeight() - (72 + 16))
 end
 
-local font_cache = setmetatable({}, { __mode = "v" })
-function draw.set_font(size, style, filename)
-   if type(size) == "table" then
-      filename = size.filename
-      style = size.style
-      size = size.size
-   end
-   style = style or "normal"
-   filename = filename or "data/MS-Gothic.ttf"
-   if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
-   font_cache[size][filename] = font_cache[size][filename]
-      or love.graphics.newFont(filename, size, "mono")
-   love.graphics.setFont(font_cache[size][filename])
-end
+function draw.with_canvas(other_canvas, f)
+   love.graphics.setCanvas(other_canvas)
+   love.graphics.setBlendMode("alpha")
 
-function draw.set_color(r, g, b, a)
-   if type(r) == "table" then
-      love.graphics.setColor(
-         r[1] / 255,
-         r[2] / 255,
-         r[3] / 255,
-         (r[4] or 255) / 255)
-   else
-      love.graphics.setColor(
-         r / 255,
-         g / 255,
-         b / 255,
-         (a or 255) / 255)
-   end
-end
+   f()
 
-function draw.set_background_color(r, g, b, a)
-   love.graphics.setBackgroundColor(r, g, b, a)
-end
-
-draw.clear = love.graphics.clear
-
-function draw.text(str, x, y, color, size)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   if size then
-      draw.set_font(size)
-   end
-   love.graphics.print(str, x, y)
-end
-
-function draw.filled_rect(x, y, width, height, color)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   love.graphics.polygon("fill", x, y, x + width, y, x + width, y + height, x, y + height)
-end
-
-function draw.line_rect(x, y, width, height, color)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
-end
-
-function draw.line(x1, y1, x2, y2, color)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   love.graphics.line(x1, y1 + 1, x2, y2 + 1)
-end
-
-function draw.text_width(text, size)
-   if size then
-      draw.set_font(size)
-   end
-   return love.graphics.getFont():getWidth(text)
-end
-
-function draw.text_height()
-   return love.graphics.getFont():getHeight()
-end
-
-function draw.wrap_text(text, wraplimit)
-   return love.graphics.getFont():getWrap(text, wraplimit)
+   love.graphics.setCanvas(canvas)
 end
 
 local image_cache = setmetatable({}, { __mode = "v" })
@@ -281,89 +180,37 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
-function draw.image(image, x, y, width, height, color, centered, rotation)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
+local font_cache = setmetatable({}, { __mode = "v" })
+function draw.set_font(size, style, filename)
+   if type(size) == "table" then
+      filename = size.filename
+      style = size.style
+      size = size.size
    end
-   local sx = 1
-   local sy = 1
-   if width then
-      sx = width / image:getWidth()
-   end
-   if height then
-      sy = height / image:getHeight()
-   end
-   local ox, oy
-   if centered then
-      ox = (image:getWidth()) / 2
-      oy = (image:getHeight()) / 2
-   end
-   return love.graphics.draw(image, x, y, rotation or 0, sx, sy, ox, oy)
+   style = style or "normal"
+   filename = filename or "data/MS-Gothic.ttf"
+   if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
+   font_cache[size][filename] = font_cache[size][filename]
+      or love.graphics.newFont(filename, size, "mono")
+   love.graphics.setFont(font_cache[size][filename])
 end
 
-function draw.image_region(image, quad, x, y, width, height, color, centered, rotation)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   local sx = 1
-   local sy = 1
-   local _, _, qw, qh = quad:getViewport()
-   if width then
-      sx = width / qw
-   end
-   if height then
-      sy = height / qh
-   end
-   local ox, oy
-   if centered then
-      ox = (width or qw) / 2
-      oy = (width or qh) / 2
-   end
-   return love.graphics.draw(image, quad, x, y, 0, sx, sy, ox, oy)
-end
+--
+--
+-- Event callbacks
+--
+--
 
-function draw.image_stretched(image, x, y, tx, ty, color, rotation)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
+function draw.resize(w, h)
+   canvas = create_canvas(w, h)
+
+   for _, layer in ipairs(layers) do
+      layer:relayout(0, 0, w, h)
    end
-   local sx = 1
-   local sy = 1
-   if tx and ty then
-      sx = (tx - x) / image:getWidth()
-      sy = (ty - y) / image:getHeight()
-   end
-   return love.graphics.draw(image, x, y, 0, sx, sy)
-end
 
-function draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
-   if color then
-      draw.set_color(color[1], color[2], color[3], color[4])
-   end
-   local sx = 1
-   local sy = 1
-   local _, _, qw, qh = quad:getViewport()
-   if tx and ty then
-      sx = (tx - x) / qw
-      sy = (ty - y) / qh
-   end
-   return love.graphics.draw(image, quad, x, y, 0, sx, sy)
-end
+   require("api.Gui").update_screen()
 
-function draw.with_canvas(other_canvas, f)
-   love.graphics.setCanvas(other_canvas)
-   love.graphics.setBlendMode("alpha")
-
-   f()
-
-   love.graphics.setCanvas(canvas)
-end
-
-local framerate = 20
-
-function draw.wait(msecs)
-   local msecs_per_frame = (1 / framerate) * 1000
-   local frames = msecs / msecs_per_frame
-   love.timer.sleep(frames / 1000)
+   collectgarbage()
 end
 
 return draw

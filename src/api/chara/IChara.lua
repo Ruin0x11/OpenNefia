@@ -1,5 +1,6 @@
 local field = require("game.field")
 local Chara = require("api.Chara")
+local Codegen = require("api.Codegen")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local Event = require("api.Event")
@@ -8,6 +9,7 @@ local Map = require("api.Map")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
+local ICharaSkills = require("api.chara.ICharaSkills")
 local IObject = require("api.IObject")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IFactioned = require("api.IFactioned")
@@ -25,10 +27,54 @@ local IChara = class.interface("IChara",
                             ICharaTalk,
                             ICharaEquip,
                             ICharaParty,
+                            ICharaSkills,
                             IEventEmitter
                          })
 
 IChara._type = "base.chara"
+
+-- TODO schema
+local defaults = {
+   level = 1,
+   state = "Dead",
+   experience = 0,
+   quality = 2,
+   dv = 0,
+   pv = 0,
+   hit_bonus = 0,
+   damage_bonus = 0,
+   curse_power = 0,
+   critical_rate = 0,
+   fov = 15,
+   time_this_turn = 0,
+   turns_alive = 0,
+   armor_class = "",
+
+   number_of_weapons = 0,
+   ether_disease_speed = 0,
+   initial_x = 0,
+   initial_y = 0,
+   ai_config = {
+      min_distance = 1,
+      move_chance_percent = 100,
+      sub_act_chance_percent = 10,
+      follow_player_when_calm = false,
+
+      on_low_hp = nil,
+      on_idle_action = nil
+   },
+
+   known_abilities = {},
+
+   hp = 1,
+   mp = 1,
+   max_hp = 1,
+   max_mp = 1,
+
+   pierce_chance = 0,
+   physical_damage_reduction = 0,
+}
+table.merge(IChara, defaults)
 
 --- Initializes the bare minimum values on this character. All
 --- characters must run this function on creation.
@@ -36,41 +82,6 @@ function IChara:pre_build()
    IMapObject.init(self)
 
    self.state = "Dead"
-   self.level = self.level or 1
-   self.experience = self.experience or 0
-   self.quality = self.quality or 2
-
-   self.dv = self.dv or 0
-   self.pv = self.pv or 0
-   self.hit_bonus = self.hit_bonus or 0
-   self.damage_bonus = self.damage_bonus or 0
-   self.curse_power = self.curse_power or 0
-
-   self.fov = 15
-
-   self.time_this_turn = 0
-   self.turns_alive = 0
-
-   self.number_of_weapons = 0
-   self.ether_disease_speed = 0
-
-   self.initial_x = 0
-   self.initial_y = 0
-
-   -- TODO schema
-   self.ai_config = self.ai_config or
-      {
-         min_distance = 1,
-         move_chance_percent = 100,
-         sub_act_chance_percent = 10,
-         follow_player_when_calm = false,
-
-         on_low_hp = nil,
-         on_idle_action = nil
-      }
-
-   self.skills = self.skills or {}
-   self.known_abilities = self.known_abilities or {}
 
    -- NOTE: to add new interfaces/behaviors, connect_self to
    -- on_instantiate and run them there.
@@ -79,6 +90,7 @@ function IChara:pre_build()
    ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)
+   ICharaSkills.init(self)
 
    self.ai = self.ai or "base.elona_default_ai"
 end
@@ -162,6 +174,17 @@ function IChara:refresh()
 
    self.hp = math.min(self.hp, self:calc("max_hp"))
    self.mp = math.min(self.mp, self:calc("max_mp"))
+
+   local total_weight = self:calc("equipment_weight")
+   local armor_class
+   if total_weight >= 35000 then
+      armor_class = "elona.heavy_armor"
+   elseif total_weight >= 15000 then
+      armor_class = "elona.medium_armor"
+   else
+      armor_class = "elona.light_armor"
+   end
+   self:mod("armor_class", armor_class)
 end
 
 function IChara:on_refresh()
@@ -451,6 +474,44 @@ end
 
 function IChara:get_target()
    return self.target
+end
+
+--
+--
+-- Elona
+--
+--
+
+-- TEMP
+function IChara:status_ailment_turns(status_ailment)
+   return 0
+end
+
+-- TEMP
+function IChara:has_status_ailment(status_ailment)
+   return self:status_ailment_turns(status_ailment) > 0
+end
+
+-- TEMP
+function IChara:has_trait(trait)
+   return false
+end
+
+Codegen.generate_object_getter(IChara, "ammo", "base.item")
+
+function IChara:armor_skill_level()
+   local armor_class = self:calc("armor_class")
+   return self:skill_level(armor_class)
+end
+
+function IChara:armor_penalty()
+   local armor_class = self:calc("armor_class")
+   local skill = data["base.skill"][armor_class]
+   local penalty = 0
+   if skill and skill.calc_armor_penalty then
+      penalty = skill:calc_armor_penalty(self)
+   end
+   return penalty
 end
 
 return IChara

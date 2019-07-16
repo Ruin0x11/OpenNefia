@@ -1,4 +1,4 @@
-local draw = require("internal.draw")
+local Draw = require("api.Draw")
 
 local asset_drawable = class.class("asset_drawable")
 
@@ -10,7 +10,7 @@ function asset_drawable:init(data_inst)
    if type(data_inst) == "userdata" and data_inst.typeOf and data_inst:typeOf("Image") then
       self.image = data_inst
    else
-      self.image = draw.load_image(data_inst.image)
+      self.image = Draw.load_image(data_inst.image)
    end
 
    self.quads = {}
@@ -72,7 +72,7 @@ function asset_drawable:get_height()
 end
 
 function asset_drawable:draw(x, y, width, height, color, centered, rotation)
-   draw.image(self.image, x, y, width, height, color, centered, rotation)
+   Draw.image(self.image, x, y, width, height, color, centered, rotation)
 end
 
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
@@ -80,11 +80,11 @@ function asset_drawable:draw_region(quad, x, y, width, height, color, centered, 
       error(string.format("Quad ID %d is not in range 1,%d", quad, #self.quads))
       return
    end
-   draw.image_region(self.image, self.quads[quad], x, y, width, height, color, centered, rotation)
+   Draw.image_region(self.image, self.quads[quad], x, y, width, height, color, centered, rotation)
 end
 
 function asset_drawable:draw_stretched(x, y, tx, ty, color, centered, rotation)
-   draw.image_stretched(self.image, x, y, tx, ty, color, centered, rotation)
+   Draw.image_stretched(self.image, x, y, tx, ty, color, centered, rotation)
 end
 
 function asset_drawable:draw_region_stretched(quad, x, y, tx, ty, color, centered, rotation)
@@ -92,7 +92,7 @@ function asset_drawable:draw_region_stretched(quad, x, y, tx, ty, color, centere
       error(string.format("Quad ID %d is not in range 1,%d", quad, #self.quads))
       return
    end
-   draw.image_region_stretched(self.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
+   Draw.image_region_stretched(self.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
 end
 
 function asset_drawable:draw_bar(x, y, width)
@@ -111,10 +111,10 @@ function asset_drawable:draw_bar(x, y, width)
    for i=0,step do
       if i == step - 1 then
          step = width % iw
-         draw.image_region(self.image, last_quad, i * iw + x, y)
+         Draw.image_region(self.image, last_quad, i * iw + x, y)
       else
          step = iw
-         draw.image(self.image, i * iw + x, y)
+         Draw.image(self.image, i * iw + x, y)
       end
    end
 end
@@ -131,7 +131,7 @@ function asset_drawable:draw_percentage_bar(x, y, width)
       last_quad = self.bar_quads[last_width]
    end
 
-   draw.image_region(self.image, last_quad, x, y)
+   Draw.image_region(self.image, last_quad, x, y)
 end
 
 function asset_drawable:release()

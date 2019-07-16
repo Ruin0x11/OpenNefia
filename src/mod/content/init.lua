@@ -360,7 +360,6 @@ local function my_start(self, player)
             and i.generator_params.params.id == "elona.your_home"
       end
       local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
-      _p(MapArea.iter_map_entrances("any", world_map):extract("generator_params"):to_list())
       assert(home_entrance)
 
       success, map = MapArea.load_map_of_entrance(home_entrance)
@@ -368,14 +367,13 @@ local function my_start(self, player)
          error(map)
       end
 
-      MapArea.set_entrance(map, world_map, 20, 20)
-
       Map.save(world_map)
       Map.save(map)
 
       Map.set_map(map)
 
-      assert(map:take_object(player, 10, 10))
+      print("gonow")
+      assert(map:take_object(player, 15, 12))
       Chara.set_player(player)
    end
 

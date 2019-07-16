@@ -26,7 +26,7 @@ end
 
 function UiMessageWindow:relayout(x, y, width, height)
    if self.canvas == nil or width ~= self.width or height ~= self.height then
-      self.canvas = love.graphics.newCanvas(width, height)
+      self.canvas = Draw.create_canvas(width, height)
       self.redraw = true
    end
 
@@ -202,35 +202,33 @@ function UiMessageWindow:clear()
    self.each_line = circular_buffer:new(self.max_lines)
 end
 
+function UiMessageWindow:redraw_window()
+   Draw.clear()
+
+   self.t.message_window:draw_bar(0, 0, self.width)
+
+   self.the_width = 0
+
+   Draw.set_font(14) -- 14 - en * 2
+   local x = 6
+   local y = 5 + (self.each_line:len() - 1) * Draw.text_height()
+   for i=1,self.each_line:len() do
+      local line = self.each_line[i]
+      self:draw_one_line(x, y, line)
+      y = y - Draw.text_height()
+   end
+
+end
+
 function UiMessageWindow:draw()
    Draw.set_color(255, 255, 255)
 
-   Draw.image(self.canvas, self.x, self.y)
-   if not self.redraw then
-      return
+   if self.redraw then
+      Draw.with_canvas(self.canvas, function() self:redraw_window() end)
+      self.redraw = false
    end
 
-   Draw.with_canvas(
-      self.canvas,
-      function()
-         Draw.clear()
-
-         self.t.message_window:draw_bar(0, 0, self.width)
-
-         self.the_width = 0
-
-         Draw.set_font(14) -- 14 - en * 2
-         local x = 6
-         local y = 5 + (self.each_line:len() - 1) * Draw.text_height()
-         for i=1,self.each_line:len() do
-            local line = self.each_line[i]
-            self:draw_one_line(x, y, line)
-            y = y - Draw.text_height()
-         end
-
-   end)
-
-   self.redraw = false
+   Draw.image(self.canvas, self.x, self.y)
 end
 
 function UiMessageWindow:newline(text)

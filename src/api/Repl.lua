@@ -1,3 +1,5 @@
+local Codegen = require("api.Codegen")
+local Env = require("api.Env")
 local field = require("game.field")
 
 local Repl = {}
@@ -19,11 +21,30 @@ function Repl.clear()
 end
 
 function Repl.copy_last_input()
-   return Repl.get():copy_last_input()
+   local line = Repl.get():last_input()
+   Env.set_clipboard_text(line)
+   return line
 end
 
 function Repl.copy_last_output()
-   return Repl.get():copy_last_output()
+   local line = Repl.get():last_output()
+   Env.set_clipboard_text(line)
+   return line
+end
+
+function Repl.wrap_last_input_as_function()
+   local line = Repl.get():last_input()
+   if not line then return end
+
+   line = "return " .. line
+
+   -- HACK instead save mod sandbox somewhere
+   local env = Repl.get().env
+   local f, err = Codegen.loadstring(line)
+   if f then
+      setfenv(f, env)
+   end
+   return f, err
 end
 
 return Repl
