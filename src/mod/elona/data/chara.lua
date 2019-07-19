@@ -573,6 +573,8 @@ local chara = {
       coefficient = 400,
       drops = { "elona.lomias" },
       dialog = "elona.lomias",
+      eqammo = { 25001, 3 },
+      eqrange = 207
    },
    {
       _id = "slan",
@@ -4449,6 +4451,7 @@ local chara = {
       cspecialeq = 1,
       eqrange_0 = 210,
       coefficient = 400,
+      eqrange = 210
    },
    {
       _id = "cat",
@@ -4676,6 +4679,7 @@ local chara = {
       cspecialeq = 1,
       eqrange_0 = 210,
       coefficient = 400,
+      eqrange = 210
    },
    {
       _id = "frisia",
@@ -4784,6 +4788,8 @@ local chara = {
       fltselect = 3,
       coefficient = 400,
       drops = { "elona.god_boss" },
+      eqammo = { 25030, 3 },
+      eqrange = 514
    },
    {
       _id = "azzrssil",
@@ -6252,6 +6258,8 @@ local chara = {
          -- iron
       end,
    },
+      eqammo = { 25020, 3 },
+      eqrange = { 496, 4 }
    {
       _id = "little_sister",
       elona_id = 319,

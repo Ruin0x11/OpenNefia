@@ -1,7 +1,4 @@
-local Resolver = {
-   make = function() end,
-   resolve = function() end
-}
+local Resolver = require("api.Resolver")
 
 local categories = {
    {
@@ -236,9 +233,9 @@ local item =
          equip_slots = { "elona.head" },
          subcategory = 12002,
          coefficient = 100,
-
-         { id = 33, power = 100 },
-
+         enchantments = {
+            { id = 33, power = 100 }
+         }
       },
       {
          _id = "breastplate",
@@ -1076,17 +1073,20 @@ local item =
          light = 9,
 
          skill = 100,
-         { id = 40, power = 300 },
-         { id = 70058, power = 400 },
-         { id = 10018, power = 300 },
-         { id = 24, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 155, 154, 153 },
-         pierce_rate = 10
+         pierce_rate = 10,
+         enchantments = {
+            { id = 40, power = 300 },
+            { id = 70058, power = 400 },
+            { id = 10018, power = 300 },
+            { id = 24, power = 100 }
+         },
+         medal_value = 65
       },
       {
          _id = "zantetsu",
@@ -1107,17 +1107,19 @@ local item =
          light = 9,
 
          skill = 100,
-         { id = 39, power = 400 },
-         { id = 25, power = 100 },
-         { id = 10010, power = 300 },
-         { id = 20058, power = 200 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 175, 175, 255 },
-         pierce_rate = 25
+         pierce_rate = 25,
+         enchantments = {
+            { id = 39, power = 400 },
+            { id = 25, power = 100 },
+            { id = 10010, power = 300 },
+            { id = 20058, power = 200 }
+         }
       },
       {
          _id = "long_bow",
@@ -1245,18 +1247,20 @@ local item =
          light = 9,
 
          skill = 107,
-         { id = 32, power = 100 },
-         { id = 38, power = 500 },
-         { id = 34, power = 450 },
-         { id = 20060, power = 250 },
-         { id = 80025, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
-         pierce_rate = 15
+         pierce_rate = 15,
+         enchantments = {
+            { id = 32, power = 100 },
+            { id = 38, power = 500 },
+            { id = 34, power = 450 },
+            { id = 20060, power = 250 },
+            { id = 80025, power = 100 }
+         }
       },
       {
          _id = "mournblade",
@@ -1280,19 +1284,21 @@ local item =
          light = 9,
 
          skill = 100,
-         { id = 36, power = 300 },
-         { id = 70059, power = 300 },
-         { id = 70056, power = 250 },
-         { id = 30166, power = 300 },
-         { id = 20059, power = 250 },
-         { id = 20056, power = 200 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 175, 175, 255 },
-         pierce_rate = 15
+         pierce_rate = 15,
+         enchantments = {
+            { id = 36, power = 300 },
+            { id = 70059, power = 300 },
+            { id = 70056, power = 250 },
+            { id = 30166, power = 300 },
+            { id = 20059, power = 250 },
+            { id = 20056, power = 200 }
+         }
       },
       {
          _id = "light_cloak",
@@ -5863,19 +5869,21 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 39, power = 150 },
-         { id = 20050, power = 550 },
-         { id = 10010, power = 400 },
-         { id = 20057, power = 200 },
-         { id = 30166, power = 450 },
-         { id = 10019, power = 500 },
-         { id = 25, power = 100 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         enchantments = {
+            { id = 39, power = 150 },
+            { id = 20050, power = 550 },
+            { id = 10010, power = 400 },
+            { id = 20057, power = 200 },
+            { id = 30166, power = 450 },
+            { id = 10019, power = 500 },
+            { id = 25, power = 100 }
+         }
       },
       {
          _id = "blood_moon",
@@ -6009,17 +6017,19 @@ local item =
          light = 9,
 
          skill = 104,
-         { id = 40, power = 400 },
-         { id = 70056, power = 400 },
-         { id = 20056, power = 300 },
-         { id = 26, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
-         pierce_rate = 40
+         pierce_rate = 40,
+         enchantments = {
+            { id = 40, power = 400 },
+            { id = 70056, power = 400 },
+            { id = 20056, power = 300 },
+            { id = 26, power = 100 }
+         }
       },
       {
          _id = "palmia_pride",
@@ -6038,17 +6048,17 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 41, power = 100 },
-         { id = 10019, power = 700 },
-         { id = 10018, power = 350 },
-         { id = 10017, power = 550 },
-         { id = 20053, power = 200 },
-         { id = 20059, power = 200 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
-
+         enchantments = {
+            { id = 41, power = 100 },
+            { id = 10019, power = 700 },
+            { id = 10018, power = 350 },
+            { id = 10017, power = 550 },
+            { id = 20053, power = 200 },
+            { id = 20059, power = 200 }
+         }
       },
       {
          _id = "shopkeepers_trunk",
@@ -7201,6 +7211,7 @@ local item =
 
          tags = { "noshop", "spshop" },
          color = { 255, 215, 175 },
+         medal_value = 15
       },
       {
          _id = "morgia",
@@ -7337,6 +7348,7 @@ local item =
 
          tags = { "noshop" },
          color = "RandomSeeded",
+         medal_value = 5
       },
       {
          _id = "scroll_of_faith",
@@ -7358,6 +7370,7 @@ local item =
 
          tags = { "noshop" },
          color = "RandomSeeded",
+         medal_value = 8
       },
       {
          _id = "potion_of_mutation",
@@ -8163,6 +8176,7 @@ local item =
 
          tags = { "noshop" },
          color = "RandomSeeded",
+         medal_value = 20
       },
       {
          _id = "spellbook_of_domination",
@@ -8556,6 +8570,7 @@ local item =
 
          tags = { "spshop" },
          color = "RandomSeeded",
+         medal_value = 7
       },
       {
          _id = "figurine",
@@ -8598,6 +8613,7 @@ local item =
          efid = 1123,
          efp = 100,
          elona_type = "scroll",
+         medal_value = 12
 
       },
       {
@@ -8774,11 +8790,6 @@ local item =
          light = 9,
 
          skill = 110,
-         { id = 80003, power = 350 },
-         { id = 80004, power = 300 },
-         { id = 70058, power = 300 },
-         { id = 20057, power = 300 },
-         { id = 20059, power = 300 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -8787,7 +8798,14 @@ local item =
          tags = { "sf" },
 
          effective_range = { 100, 100, 100, 100, 100, 100, 100, 50, 20, 20 },
-         pierce_rate = 5
+         pierce_rate = 5,
+         enchantments = {
+            { id = 80003, power = 350 },
+            { id = 80004, power = 300 },
+            { id = 70058, power = 300 },
+            { id = 20057, power = 300 },
+            { id = 20059, power = 300 }
+         }
       },
       {
          _id = "scroll_of_recharge",
@@ -8824,6 +8842,7 @@ local item =
          efid = 1103,
          efp = 100,
          elona_type = "potion",
+         medal_value = 3
 
       },
       {
@@ -8907,9 +8926,9 @@ local item =
          subcategory = 20001,
          rarity = 500000,
          coefficient = 100,
-
-         { id = 32, power = 100 },
-
+         enchantments = {
+            { id = 32, power = 100 }
+         }
       },
       {
          _id = "deed_of_museum",
@@ -9393,8 +9412,9 @@ local item =
          subcategory = 20001,
          rarity = 100000,
          coefficient = 100,
-
-         { id = 32, power = 100 },
+         enchantments = {
+            { id = 32, power = 100 }
+         }
 
       },
       {
@@ -9467,8 +9487,9 @@ local item =
          subcategory = 18002,
          rarity = 25000,
          coefficient = 100,
-
-         { id = 29, power = 500 },
+         enchantments = {
+            { id = 29, power = 500 }
+         }
 
       },
       {
@@ -9487,8 +9508,9 @@ local item =
          subcategory = 20001,
          rarity = 10000,
          coefficient = 100,
-
-         { id = 30, power = 100 },
+         enchantments = {
+            { id = 30, power = 100 }
+         }
 
       },
       {
@@ -9507,9 +9529,10 @@ local item =
          rarity = 25000,
          coefficient = 100,
          has_random_name = true,
-
-         { id = 31, power = 100 },
-         { id = 20057, power = 100 },
+         enchantments = {
+            { id = 31, power = 100 },
+            { id = 20057, power = 100 }
+         }
 
       },
       {
@@ -9529,6 +9552,7 @@ local item =
          efid = 1131,
          efp = 200,
          elona_type = "potion",
+         medal_value = 10
 
       },
       {
@@ -10204,6 +10228,7 @@ local item =
 
          elona_function = 44,
          is_precious = true,
+         medal_value = 20
 
       },
       {
@@ -10354,6 +10379,8 @@ local item =
 
          is_precious = true,
 
+         medal_value = 5
+
       },
       {
          _id = "tax_masters_tax_box",
@@ -10368,6 +10395,8 @@ local item =
          coefficient = 100,
 
          is_precious = true,
+
+         medal_value = 18
 
       },
       {
@@ -10500,6 +10529,7 @@ local item =
          efid = 1138,
          efp = 100,
          elona_type = "scroll",
+         medal_value = 85
 
       },
       {
@@ -10521,6 +10551,7 @@ local item =
          efid = 1137,
          efp = 100,
          elona_type = "scroll",
+         medal_value = 25
 
       },
       {
@@ -10535,6 +10566,8 @@ local item =
          coefficient = 100,
 
          is_precious = true,
+
+         medal_value = 11
 
       },
       {
@@ -10559,6 +10592,7 @@ local item =
 
          tags = { "spshop" },
          color = "RandomSeeded",
+         medal_value = 30
       },
       {
          _id = "sages_helm",
@@ -10577,18 +10611,22 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 25, power = 100 },
-         { id = 35, power = 100 },
-         { id = 10016, power = 200 },
-         { id = 20054, power = 250 },
-         { id = 20060, power = 150 },
-         { id = 30161, power = 300 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 215, 175 },
+
+         enchantments = {
+            { id = 25, power = 100 },
+            { id = 35, power = 100 },
+            { id = 10016, power = 200 },
+            { id = 20054, power = 250 },
+            { id = 20060, power = 150 },
+            { id = 30161, power = 300 }
+         },
+
+         medal_value = 55
       },
       {
          _id = "spellbook_of_incognito",
@@ -10695,9 +10733,10 @@ local item =
          coefficient = 100,
 
          skill = 111,
-         { id = 70054, power = 800 },
-         effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 5
-
+         effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 5,
+         enchantments = {
+            { id = 70054, power = 800 }
+         }
       },
       {
          _id = "leash",
@@ -11097,16 +11136,18 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 43, power = 100 },
-         { id = 29, power = 100 },
-         { id = 10012, power = 250 },
-         { id = 30182, power = 200 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         enchantments = {
+            { id = 43, power = 100 },
+            { id = 29, power = 100 },
+            { id = 10012, power = 250 },
+            { id = 30182, power = 200 }
+         }
       },
       {
          _id = "magic_fruit",
@@ -11320,10 +11361,6 @@ local item =
          light = 9,
 
          skill = 108,
-         { id = 80014, power = 200 },
-         { id = 80005, power = 200 },
-         { id = 10018, power = 250 },
-         { id = 20052, power = 300 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -11332,7 +11369,13 @@ local item =
          color = { 225, 225, 255 },
 
          effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
-         pierce_rate = 20
+         pierce_rate = 20,
+         enchantments = {
+            { id = 80014, power = 200 },
+            { id = 80005, power = 200 },
+            { id = 10018, power = 250 },
+            { id = 20052, power = 300 }
+         }
       },
       {
          _id = "winchester_premium",
@@ -11354,10 +11397,6 @@ local item =
          light = 9,
 
          skill = 110,
-         { id = 80017, power = 350 },
-         { id = 43, power = 200 },
-         { id = 30110, power = 450 },
-         { id = 20057, power = 350 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -11366,7 +11405,13 @@ local item =
          color = { 255, 155, 155 },
 
          effective_range = { 100, 40, 20, 20, 20, 20, 20, 20, 20, 20 },
-         pierce_rate = 30
+         pierce_rate = 30,
+         enchantments = {
+            { id = 80017, power = 350 },
+            { id = 43, power = 200 },
+            { id = 30110, power = 450 },
+            { id = 20057, power = 350 }
+         }
       },
       {
          _id = "kumiromi_scythe",
@@ -11388,20 +11433,22 @@ local item =
          light = 9,
 
          skill = 107,
-         { id = 30184, power = 600 },
-         { id = 42, power = 100 },
-         { id = 30180, power = 1100 },
-         { id = 30163, power = 800 },
-         { id = 10010, power = 550 },
-         { id = 20059, power = 400 },
-         { id = 80025, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 175, 255, 175 },
-         pierce_rate = 15
+         pierce_rate = 15,
+         enchantments = {
+            { id = 30184, power = 600 },
+            { id = 42, power = 100 },
+            { id = 30180, power = 1100 },
+            { id = 30163, power = 800 },
+            { id = 10010, power = 550 },
+            { id = 20059, power = 400 },
+            { id = 80025, power = 100 }
+         }
       },
       {
          _id = "elemental_staff",
@@ -11425,19 +11472,22 @@ local item =
          light = 9,
 
          skill = 105,
-         { id = 80000, power = 400 },
-         { id = 70050, power = 350 },
-         { id = 70051, power = 350 },
-         { id = 70052, power = 350 },
-         { id = 20050, power = 250 },
-         { id = 20051, power = 250 },
-         { id = 20052, power = 250 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 215, 255, 215 },
+
+         enchantments = {
+            { id = 80000, power = 400 },
+            { id = 70050, power = 350 },
+            { id = 70051, power = 350 },
+            { id = 70052, power = 350 },
+            { id = 20050, power = 250 },
+            { id = 20051, power = 250 },
+            { id = 20052, power = 250 }
+         }
       },
       {
          _id = "holy_lance",
@@ -11460,15 +11510,18 @@ local item =
          light = 9,
 
          skill = 104,
-         { id = 80023, power = 350 },
-         { id = 80012, power = 450 },
-         { id = 10015, power = 650 },
-         { id = 20053, power = 200 },
-         { id = 20056, power = 150 },
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",pierce_rate = 30
+         fixlv = "special",
+         pierce_rate = 30,
+         enchantments = {
+            { id = 80023, power = 350 },
+            { id = 80012, power = 450 },
+            { id = 10015, power = 650 },
+            { id = 20053, power = 200 },
+            { id = 20056, power = 150 }
+         }
 
       },
       {
@@ -11493,18 +11546,20 @@ local item =
          light = 9,
 
          skill = 101,
-         { id = 41, power = 100 },
-         { id = 35, power = 100 },
-         { id = 10019, power = 1500 },
-         { id = 36, power = 400 },
-         { id = 30185, power = 600 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 215, 175 },
-         pierce_rate = 10
+         pierce_rate = 10,
+         enchantments = {
+            { id = 41, power = 100 },
+            { id = 35, power = 100 },
+            { id = 10019, power = 1500 },
+            { id = 36, power = 400 },
+            { id = 30185, power = 600 }
+         }
       },
       {
          _id = "gaia_hammer",
@@ -11526,17 +11581,20 @@ local item =
          light = 9,
 
          skill = 103,
-         { id = 39, power = 350 },
-         { id = 80013, power = 500 },
-         { id = 10010, power = 600 },
-         { id = 30167, power = 450 },
-         { id = 20054, power = 400 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 215, 175 },
+
+         enchantments = {
+            { id = 39, power = 350 },
+            { id = 80013, power = 500 },
+            { id = 10010, power = 600 },
+            { id = 30167, power = 450 },
+            { id = 20054, power = 400 }
+         }
       },
       {
          _id = "lulwys_gem_stone_of_god_speed",
@@ -11834,13 +11892,16 @@ local item =
          light = 9,
 
          skill = 102,
-         { id = 44, power = 750 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         enchantments = {
+            { id = 44, power = 750 }
+         }
       },
       {
          _id = "spellbook_of_magic_ball",
@@ -12011,14 +12072,14 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 48, power = 100 },
-         { id = 10017, power = 450 },
-         { id = 41, power = 100 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
-
+         enchantments = {
+            { id = 48, power = 100 },
+            { id = 10017, power = 450 },
+            { id = 41, power = 100 }
+         }
       },
       {
          _id = "potion_of_descent",
@@ -12053,13 +12114,14 @@ local item =
          light = 9,
 
          skill = 183,
-         { id = 49, power = 100 },
 
          elona_function = 17,
          is_precious = true,
          param1 = 180,
          fixlv = "special",
-
+         enchantments = {
+            { id = 49, power = 100 }
+         }
       },
       {
          _id = "book_of_resurrection",
@@ -12181,9 +12243,10 @@ local item =
          coefficient = 100,
 
          skill = 111,
-         { id = 70061, power = 100 },
-         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 15
-
+         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 15,
+         enchantments = {
+            { id = 70061, power = 100 }
+         }
       },
       {
          _id = "grenade",
@@ -12202,9 +12265,11 @@ local item =
          coefficient = 100,
 
          skill = 111,
-         { id = 80024, power = 100 },
-         effective_range = { 80, 100, 90, 80, 60, 20, 20, 20, 20, 20 },pierce_rate = 0
-
+         effective_range = { 80, 100, 90, 80, 60, 20, 20, 20, 20, 20 },
+         pierce_rate = 0,
+         enchantments = {
+            { id = 80024, power = 100 }
+         }
       },
       {
          _id = "secret_experience_of_kumiromi",
@@ -12282,11 +12347,6 @@ local item =
          light = 9,
 
          skill = 111,
-         { id = 40, power = 350 },
-         { id = 70054, power = 1200 },
-         { id = 10017, power = 450 },
-         { id = 48, power = 100 },
-         { id = 30, power = 500 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -12295,7 +12355,14 @@ local item =
          color = { 255, 155, 155 },
 
          effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },
-         pierce_rate = 5
+         pierce_rate = 5,
+         enchantments = {
+            { id = 40, power = 350 },
+            { id = 70054, power = 1200 },
+            { id = 10017, power = 450 },
+            { id = 48, power = 100 },
+            { id = 30, power = 500 }
+         }
       },
       {
          _id = "claymore_unique",
@@ -12317,13 +12384,15 @@ local item =
          light = 9,
 
          skill = 100,
-         { id = 44, power = 250 },
-         { id = 39, power = 200 },
-         { id = 33, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
+         enchantments = {
+            { id = 44, power = 250 },
+            { id = 39, power = 200 },
+            { id = 33, power = 100 }
+         }
 
       },
       {
@@ -12383,14 +12452,16 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 51, power = 600 },
-         { id = 30109, power = 700 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 185, 155, 215 },
+
+         enchantments = {
+            { id = 51, power = 600 },
+            { id = 30109, power = 700 }
+         }
       },
       {
          _id = "twin_edge",
@@ -12408,14 +12479,16 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 50, power = 600 },
-         { id = 30166, power = 650 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 215, 175 },
+
+         enchantments = {
+            { id = 50, power = 600 },
+            { id = 30166, power = 650 }
+         }
       },
       {
          _id = "music_ticket",
@@ -12457,9 +12530,6 @@ local item =
          light = 9,
 
          skill = 111,
-         { id = 70059, power = 400 },
-         { id = 30183, power = -700 },
-         { id = 44, power = 450 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -12468,7 +12538,12 @@ local item =
          color = { 255, 215, 175 },
 
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
-         pierce_rate = 0
+         pierce_rate = 0,
+         enchantments = {
+            { id = 70059, power = 400 },
+            { id = 30183, power = -700 },
+            { id = 44, power = 450 }
+         }
       },
       {
          _id = "alud",
@@ -12488,15 +12563,18 @@ local item =
          light = 9,
 
          skill = 168,
-         { id = 30183, power = -450 },
-         { id = 52, power = 400 },
-         { id = 53, power = 400 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 255, 175 },
+
+         enchantments = {
+            { id = 30183, power = -450 },
+            { id = 52, power = 400 },
+            { id = 53, power = 400 }
+         }
       },
       {
          _id = "shield_of_thorn",
@@ -12516,14 +12594,17 @@ local item =
          light = 9,
 
          skill = 168,
-         { id = 54, power = 1000 },
-         { id = 20058, power = 450 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         enchantments = {
+            { id = 54, power = 1000 },
+            { id = 20058, power = 450 }
+         }
       },
       {
          _id = "crimson_plate",
@@ -12543,15 +12624,17 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 55, power = 100 },
-         { id = 20056, power = 450 },
-         { id = 20050, power = 350 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
+
+         enchantments = {
+            { id = 55, power = 100 },
+            { id = 20056, power = 450 },
+            { id = 20050, power = 350 }
+         }
       },
       {
          _id = "gift",
@@ -12680,8 +12763,9 @@ local item =
          subcategory = 10011,
          coefficient = 100,
 
-         skill = 107,
-         { id = 80025, power = 100 },pierce_rate = 5
+         skill = 107,pierce_rate = 5,enchantments = {
+            { id = 80025, power = 100 }
+         }
 
       },
       {
@@ -12758,16 +12842,17 @@ local item =
          light = 9,
 
          skill = 107,
-         { id = 80002, power = 400 },
-         { id = 70054, power = 850 },
-         { id = 10016, power = 34500 },
-         { id = 80025, power = 100 },
-         { id = 37, power = 100 },
-         { id = 80003, power = 350 },
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",pierce_rate = 65
+         fixlv = "special",pierce_rate = 65,enchantments = {
+            { id = 80002, power = 400 },
+            { id = 70054, power = 850 },
+            { id = 10016, power = 34500 },
+            { id = 80025, power = 100 },
+            { id = 37, power = 100 },
+            { id = 80003, power = 350 }
+         }
 
       },
       {
@@ -12787,15 +12872,17 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 56, power = 100 },
-         { id = 30181, power = 550 },
-         { id = 20057, power = 400 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 175, 175, 255 },
+
+         enchantments = {
+            { id = 56, power = 100 },
+            { id = 30181, power = 550 },
+            { id = 20057, power = 400 }
+         }
       },
       {
          _id = "hiryu_to",
@@ -12817,17 +12904,19 @@ local item =
          light = 9,
 
          skill = 100,
-         { id = 20050, power = 550 },
-         { id = 70052, power = 400 },
-         { id = 57, power = 1150 },
-         { id = 10011, power = 720 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 255, 155, 155 },
-         pierce_rate = 20
+         pierce_rate = 20,
+         enchantments = {
+            { id = 20050, power = 550 },
+            { id = 70052, power = 400 },
+            { id = 57, power = 1150 },
+            { id = 10011, power = 720 }
+         }
       },
       {
          _id = "license_of_the_void_explorer",
@@ -12846,6 +12935,8 @@ local item =
          fixlv = "special",
 
          elona_type = "normal_book",
+
+         medal_value = 72
 
       },
       {
@@ -13089,17 +13180,19 @@ local item =
          coefficient = 100,
          light = 9,
 
-         { id = 59, power = 100 },
-         { id = 50, power = 200 },
-         { id = 51, power = 150 },
-         { id = 54, power = 180 },
-         { id = 33, power = 100 },
-
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
 
          color = { 175, 175, 255 },
+
+         enchantments = {
+            { id = 59, power = 100 },
+            { id = 50, power = 200 },
+            { id = 51, power = 150 },
+            { id = 54, power = 180 },
+            { id = 33, power = 100 }
+         }
       },
       {
          _id = "mauser_c96_custom",
@@ -13120,7 +13213,6 @@ local item =
          light = 9,
 
          skill = 110,
-         { id = 35, power = 100 },
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13128,7 +13220,10 @@ local item =
 
          tags = { "sf" },
          color = { 155, 154, 153 },
-         effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },pierce_rate = 35
+         effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },pierce_rate = 35,
+         enchantments = {
+            { id = 35, power = 100 }
+         }
       },
       {
          _id = "lightsabre",
@@ -13170,6 +13265,7 @@ local item =
          is_precious = true,
          param1 = Resolver.make("base.between", { min = 1, coefficient = 20000 }),
          fixlv = "special",
+         medal_value = 94
 
       },
       {
@@ -13187,7 +13283,6 @@ local item =
          light = 10,
 
          skill = 183,
-         { id = 60, power = 100 },
 
          elona_function = 17,
          is_precious = true,
@@ -13195,6 +13290,10 @@ local item =
          fixlv = "special",
 
          color = { 255, 255, 255 },
+
+         enchantments = {
+            { id = 60, power = 100 }
+         }
       },
       {
          _id = "festival_wreath",
@@ -13653,12 +13752,14 @@ local item =
          coefficient = 100,
 
          skill = 100,
-         { id = 57, power = 300 },
-         { id = 61, power = 200 },
 
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
+         enchantments = {
+            { id = 57, power = 300 },
+            { id = 61, power = 200 }
+         }
 
       },
       {
