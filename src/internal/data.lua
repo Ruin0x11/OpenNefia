@@ -249,6 +249,9 @@ function proxy:edit(name, func)
 end
 
 function proxy:find_by(index, value)
+   if not inner[self._type] then
+      error("Unknown type " .. self._type)
+   end
    if inner[self._type]["by_" .. index] ~= nil then
       return inner[self._type]["by_" .. index][value]
    end
@@ -262,7 +265,9 @@ function proxy:__index(k)
 
    local _type = rawget(self, "_type")
    local for_type = rawget(inner, _type)
-   if not for_type then return nil end
+   if not for_type then
+      error("Unknown type " .. _type)
+   end
 
    -- Permit substituting an instance of a data type if it is passed
    -- in instead of a string key.

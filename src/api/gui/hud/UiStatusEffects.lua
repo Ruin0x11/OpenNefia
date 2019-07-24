@@ -1,5 +1,6 @@
 local data = require("internal.data")
 local Draw = require("api.Draw")
+local Event = require("api.Event")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
@@ -11,21 +12,39 @@ function UiStatusEffects:init()
    self.max_width = 50
 end
 
-function UiStatusEffects:set_data(status_effects)
-   self.indicators = {}
+local function make_status_indicators(_, params, result)
+   local chara = params.chara
 
-   for id, turns in pairs(status_effects) do
-      local status_effect = data["base.status_effect"][id]
-      assert(status_effect ~= nil)
-
-      if type(status_effect.ui_indicator) == "table" then
-         if turns > 0 then
-            -- TODO: ordering
-            self.indicators[#self.indicators + 1] = status_effect.ui_indicator
-         end
+   -- TODO ordering
+   for _, v in data["base.ui_indicator"]:iter() do
+      if v.indicator then
+         result[#result+1] = v.indicator(chara)
       end
    end
 
+   return result
+end
+
+local hook_make_status_indicators =
+   Event.define_hook("make_status_indicators",
+                     "Gets the list of status indicators to display.",
+                     {},
+   nil,
+   make_status_indicators)
+
+function UiStatusEffects:set_data()
+   self.indicators = {}
+    -- TODO: allow source in hook
+   local Chara = require("api.Chara")
+   local raw = hook_make_status_indicators({chara=Chara.player()})
+
+   for _, ind in ipairs(raw) do
+      if type(ind) == "table" then
+         self.indicators[#self.indicators + 1] = ind
+      end
+   end
+
+   print("setd",#self.indicators,#raw)
    self:calc_max_width()
 end
 
@@ -35,13 +54,16 @@ function UiStatusEffects:calc_max_width()
    for _, indicator in ipairs(self.indicators) do
       self.max_width = math.max(self.max_width, Draw.text_width(indicator.text) + 20)
    end
+
+   self.height = math.min(#self.indicators * 20, self.base_height or 10000)
+   self.y = self.base_y - self.height
 end
 
 function UiStatusEffects:relayout(x, y, width, height)
    self.width = width
-   self.height = math.min(#self.indicators * 20, height or 10000)
+   self.base_height = height
    self.x = x
-   self.y = y - self.height
+   self.base_y = y
    self.t = UiTheme.load(self)
 
    self:calc_max_width()
@@ -51,11 +73,12 @@ function UiStatusEffects:draw()
    Draw.set_font(self.t.status_indicator_font)
    local y = self.y
    for _, indicator in ipairs(self.indicators) do
-      self.t.status_effect_bar:draw(self.x, y, self.max_width)
+      Draw.set_color({255, 255, 255})
+      self.t.status_effect_bar:draw(self.x, y, self.max_width, nil, nil)
       Draw.text(indicator.text,
                 self.x + 6,
                 y + 1, -- y + vfix + 1
-                indicator.color)
+                indicator.color or {0, 0, 0})
       y = y + 20
    end
 end

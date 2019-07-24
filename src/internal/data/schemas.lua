@@ -99,7 +99,6 @@ data:add_type(
    {
       name = "element",
       schema = schema.Record {
-         resistance_skills = schema.Optional(schema.Table),
       },
    }
 )
@@ -141,7 +140,19 @@ data:add_type {
 }
 
 data:add_type {
+   name = "stat",
+   schema = schema.Record {
+   },
+}
+
+data:add_type {
    name = "skill",
+   schema = schema.Record {
+   },
+}
+
+data:add_type {
+   name = "magic",
    schema = schema.Record {
    },
 }
@@ -156,6 +167,13 @@ data:add_type {
    name = "sound",
    schema = schema.Record {
       file = schema.String
+   },
+}
+
+data:add_type {
+   name = "ui_indicator",
+   schema = schema.Record {
+      indicator = schema.Function
    },
 }
 

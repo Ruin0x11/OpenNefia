@@ -6,14 +6,19 @@ local data = require("internal.data")
 local Resolver = {}
 
 function Resolver.make(id, params)
+   if not id or type(id) ~= "string" then
+      error(string.format("Resolver is not an ID (%s)", id))
+   end
+
+   params = params or {}
    params.__resolver = id
    return params
 end
 
 function Resolver.resolve_one(tbl, params)
    local id = tbl.__resolver
-   if not id then
-      error("Table is not a resolver")
+   if not id or type(id) ~= "string" then
+      error(string.format("Table is not a resolver (%s)", id))
    end
 
    local resolver = data["base.resolver"]:ensure(id)

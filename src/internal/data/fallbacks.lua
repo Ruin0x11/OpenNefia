@@ -22,6 +22,12 @@ data:add_multi(
          _id = "after_damage_hp",
       },
       {
+         _id = "on_damage_chara",
+      },
+      {
+         _id = "on_kill_chara",
+      },
+      {
          _id = "on_player_bumped_into_chara",
       },
       {
@@ -79,9 +85,6 @@ data:add_multi(
          _id = "on_feat_instantiated"
       },
       {
-         _id = "on_apply_status_effect"
-      },
-      {
          _id = "on_chara_revived",
       },
       {
@@ -92,6 +95,21 @@ data:add_multi(
       },
       {
          _id = "on_game_startup",
+      },
+      {
+         _id = "on_data_add"
+      },
+      {
+         _id = "on_build"
+      },
+      {
+         _id = "on_pre_build"
+      },
+      {
+         _id = "calc_status_indicators"
+      },
+      {
+         _id = "on_refresh"
       }
    }
 )
@@ -120,39 +138,4 @@ data:add {
          self.stats[stat._id] = 50
       end
    end,
-}
-
-
-data:add {
-   _type = "base.resolver",
-   _id = "race",
-
-   ordering = 100000,
-   method = "add",
-   invariants = { race = "string" },
-
-   resolve = function(self, params)
-      local race = data["base.race"][self.race or params.chara.race or ""]
-      if not race then
-         return {}
-      end
-      return Resolver.resolve(race.copy_to_chara, params)
-   end
-}
-
-data:add {
-   _type = "base.resolver",
-   _id = "class",
-
-   ordering = 200000,
-   method = "add",
-   invariants = { class = "string" },
-
-   resolve = function(self, params)
-      local class = data["base.class"][self.class or params.chara.class or ""]
-      if not class then
-         return {}
-      end
-      return Resolver.resolve(class.copy_to_chara, params)
-   end
 }

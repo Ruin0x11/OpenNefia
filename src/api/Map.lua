@@ -71,7 +71,7 @@ function Map.edit(uid, cb)
 end
 
 function Map.is_world_map(map)
-   return fun.iter((map or field.map).types):index("base.world_map") ~= nil
+   return (map or field.map).is_world_map
 end
 
 function Map.current()

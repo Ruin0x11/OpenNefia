@@ -96,7 +96,7 @@ function MainHud:refresh(player)
       self.hp_bar:set_data(player.hp, player:calc("max_hp"))
       self.mp_bar:set_data(player.mp, player:calc("max_mp"))
       self.level:set_data(player.level, player.experience)
-      self.status_effects:set_data({}) -- TODO
+      self.status_effects:set_data()
    end
 end
 
@@ -129,7 +129,6 @@ function MainHud:draw_map_name()
    local map_name = "some_map_name"
    local map_level = "B.12"
    local max_width = 16
-   local has_map_level = true
    if string.nonempty(map_level) then
       max_width = 12
    end

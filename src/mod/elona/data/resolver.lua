@@ -27,7 +27,7 @@ local function calc_decayed_potential(base_potential, chara_level)
 end
 
 local init_skill = function(self, params)
-   local my_skill = params.chara.skills[self.skill] or { level = 0, potential = 0 }
+   local my_skill = params.chara:calc("skills")[self.skill] or { level = 0, potential = 0 }
 
    local potential
    local level
@@ -104,7 +104,6 @@ data:add {
    resolve    = init_skill_list,
 }
 
-
 data:add {
    _type = "base.resolver",
    _id = "gender",
@@ -155,5 +154,63 @@ data:add {
 
    resolve = function()
       return 12
+   end
+}
+
+local base_resolvers = {
+   skills = "elona.skills",
+}
+
+data:add {
+   _type = "base.resolver",
+   _id = "race",
+
+   ordering = 100000,
+   method = "add",
+   invariants = { race = "string" },
+   params = { chara = "table" },
+
+   resolve = function(self, params)
+      local race = data["base.race"][self.race or params.chara.race or ""]
+      if not race then
+         return {}
+      end
+      local copy_to_chara = table.deepcopy(race.copy_to_chara)
+      if race.base then
+         for k, v in pairs(race.base) do
+            local resolver = base_resolvers[k]
+            if resolver then
+               copy_to_chara[k] = Resolver.run(base_resolvers[k], race.base, params)
+            end
+         end
+      end
+      return Resolver.resolve(copy_to_chara, params)
+   end
+}
+
+data:add {
+   _type = "base.resolver",
+   _id = "class",
+
+   ordering = 200000,
+   method = "add",
+   invariants = { class = "string" },
+   params = { chara = "table" },
+
+   resolve = function(self, params)
+      local class = data["base.class"][self.class or params.chara.class or ""]
+      if not class then
+         return {}
+      end
+      local copy_to_chara = table.deepcopy(class.copy_to_chara)
+      if class.base then
+         for k, v in pairs(class.base) do
+            local resolver = base_resolvers[k]
+            if resolver then
+               copy_to_chara[k] = Resolver.run(base_resolvers[k], class.base, params)
+            end
+         end
+      end
+      return Resolver.resolve(copy_to_chara, params)
    end
 }

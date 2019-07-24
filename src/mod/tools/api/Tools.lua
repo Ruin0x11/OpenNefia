@@ -1,10 +1,12 @@
 local Action = require("api.Action")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
+local Event = require("api.Event")
 local Feat = require("api.Feat")
-local Map = require("api.Map")
 local Item = require("api.Item")
+local Map = require("api.Map")
 local Rand = require("api.Rand")
+
 local Tools = {}
 
 function Tools.spawn_foes(count)
@@ -240,6 +242,18 @@ function Tools.graph()
    }
 
    require("mod.graphs.api.gui.menu.GraphMenu"):new(graph):query()
+end
+
+function Tools.bench(cb, ...)
+   local sw = require("api.Stopwatch"):new()
+
+   return sw:bench(cb, ...)
+end
+
+function Tools.wrap_event(event_id)
+   return function(params, result)
+      return Event.trigger(event_id, params, result)
+   end
 end
 
 return Tools

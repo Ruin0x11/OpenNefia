@@ -204,7 +204,7 @@ function field_logic.pass_turns()
       return "turn_begin"
    end
 
-   Event.trigger("base.before_chara_turn_start", {chara=chara})
+   chara:emit("base.before_chara_turn_start")
 
    chara.time_this_turn = chara.time_this_turn - field:turn_cost()
 
@@ -233,7 +233,7 @@ function field_logic.pass_turns()
    -- proc mef
    -- proc buff
 
-   local result = Event.trigger("base.on_chara_pass_turn", {chara=chara}, {blocked=false})
+   local result = chara:emit("base.on_chara_pass_turn", {}, {blocked=false})
    if result.blocked then
       return result.turn_result or "turn_end", chara
    end
@@ -302,7 +302,7 @@ function field_logic.turn_end(chara)
       return "pass_turns"
    end
 
-   local result = Event.trigger("base.on_chara_turn_end", {chara=chara}, {regeneration=true})
+   local result = chara:emit("base.on_chara_turn_end", {}, {regeneration=true})
    local regen = result.regeneration
 
    if Chara.is_player(chara) then

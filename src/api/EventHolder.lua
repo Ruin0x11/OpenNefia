@@ -47,10 +47,10 @@ function EventHolder:replace(event_id, name, cb, opts)
    local events = self.hooks[event_id]
 
    if not events then
-      return
+      return false
    end
 
-   self.hooks[event_id]:replace(name, cb, opts.priority)
+   return self.hooks[event_id]:replace(name, cb, opts.priority)
 end
 
 function EventHolder:unregister(event_id, name)

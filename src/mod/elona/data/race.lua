@@ -16,23 +16,6 @@ local race =
          ordering = 20010,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 3,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.pickpocket"] = 3,
-               ["elona.stealth"] = 2,
-               ["elona.magic_device"] = 3,
-            },
 
             breed_power = 250,
             image = "elona.chara_kobold",
@@ -54,6 +37,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 3,
+               ["elona.stat_learning"] = 2,
+               ["elona.stat_will"] = 2,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.pickpocket"] = 3,
+               ["elona.stealth"] = 2,
+               ["elona.magic_device"] = 3,
+            }
+         }
+
       },
       {
          _id = "orc",
@@ -61,23 +64,6 @@ local race =
          ordering = 20020,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 130,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 3,
-               ["elona.heavy_armor"] = 3,
-               ["elona.shield"] = 3,
-            },
 
             breed_power = 300,
             image = "elona.chara_orc",
@@ -98,6 +84,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 130,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 3,
+               ["elona.stat_perception"] = 2,
+               ["elona.stat_learning"] = 2,
+               ["elona.stat_will"] = 3,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 1,
+               ["elona.healing"] = 3,
+               ["elona.heavy_armor"] = 3,
+               ["elona.shield"] = 3,
+            }
+         }
+
       },
       {
          _id = "troll",
@@ -105,21 +111,6 @@ local race =
          ordering = 20030,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 1,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 3,
-               ["elona.healing"] = 40,
-            },
 
             breed_power = 250,
             image = "elona.chara_troll",
@@ -139,6 +130,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 10,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 1,
+               ["elona.stat_perception"] = 2,
+               ["elona.stat_learning"] = 2,
+               ["elona.stat_will"] = 2,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 3,
+               ["elona.healing"] = 40,
+            }
+         }
+
       },
       {
          _id = "lizardman",
@@ -146,23 +155,6 @@ local race =
          ordering = 20040,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.polearm"] = 3,
-               ["elona.shield"] = 3,
-               ["elona.evasion"] = 2,
-            },
 
             breed_power = 300,
             image = "elona.chara_lizardman",
@@ -184,6 +176,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 70,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 5,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 80,
+               ["elona.martial_arts"] = 2,
+               ["elona.polearm"] = 3,
+               ["elona.shield"] = 3,
+               ["elona.evasion"] = 2,
+            }
+         }
+
       },
       {
          _id = "minotaur",
@@ -191,22 +203,6 @@ local race =
          ordering = 20050,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 60,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 65,
-               ["elona.martial_arts"] = 3,
-               ["elona.tactics"] = 4,
-               ["elona.eye_of_mind"] = 3,
-            },
 
             breed_power = 300,
             image = "elona.chara_minotaur",
@@ -225,6 +221,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 160,
+               ["elona.stat_mana"] = 60,
+               ["elona.stat_strength"] = 12,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 3,
+               ["elona.stat_perception"] = 4,
+               ["elona.stat_learning"] = 3,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 65,
+               ["elona.martial_arts"] = 3,
+               ["elona.tactics"] = 4,
+               ["elona.eye_of_mind"] = 3,
+            }
+         }
+
       },
       {
          _id = "yerles",
@@ -232,24 +247,6 @@ local race =
          ordering = 10010,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 110,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 12,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.firearm"] = 5,
-               ["elona.literacy"] = 3,
-               ["elona.negotiation"] = 2,
-               ["elona.throwing"] = 3,
-            },
             traits = {
                [154] = 1,
             },
@@ -259,7 +256,7 @@ local race =
                                   {
                                      male = "elona.chara_human_male",
                                      female = "elona.chara_human_female"
-                                  }),
+            }),
             age = Resolver.make("base.between", { min = 15, max = 34 }),
             height = 165,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
@@ -279,6 +276,27 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 110,
+               ["elona.stat_mana"] = 90,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 12,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 7,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.firearm"] = 5,
+               ["elona.literacy"] = 3,
+               ["elona.negotiation"] = 2,
+               ["elona.throwing"] = 3,
+            }
+         }
+
       },
       {
          _id = "norland",
@@ -286,36 +304,13 @@ local race =
          ordering = 20060,
 
          copy_to_chara = {
-            skills = Resolver.make(
-               "elona.skills",
-               {
-                  skills = {
-                     ["elona.stat_life"] = 100,
-                     ["elona.stat_mana"] = 90,
-                     ["elona.stat_strength"] = 8,
-                     ["elona.stat_constitution"] = 8,
-                     ["elona.stat_dexterity"] = 6,
-                     ["elona.stat_perception"] = 6,
-                     ["elona.stat_learning"] = 7,
-                     ["elona.stat_will"] = 9,
-                     ["elona.stat_magic"] = 7,
-                     ["elona.stat_charisma"] = 6,
-                     ["elona.stat_speed"] = 70,
-                     ["elona.martial_arts"] = 2,
-                     ["elona.casting"] = 3,
-                     ["elona.tactics"] = 3,
-                     ["elona.two_hand"] = 3,
-                     ["elona.control_magic"] = 3,
-                  }
-               }
-            ),
 
             breed_power = 220,
             image = Resolver.make("elona.by_gender",
                                   {
                                      male = "elona.chara_human_male",
                                      female = "elona.chara_human_female"
-                                  }),
+            }),
             age = Resolver.make("base.between", { min = 15, max = 34 }),
             height = 170,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
@@ -335,6 +330,27 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 90,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.casting"] = 3,
+               ["elona.tactics"] = 3,
+               ["elona.two_hand"] = 3,
+               ["elona.control_magic"] = 3,
+            }
+         }
+
       },
       {
          _id = "eulderna",
@@ -342,23 +358,6 @@ local race =
          ordering = 10020,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.casting"] = 5,
-               ["elona.literacy"] = 3,
-               ["elona.magic_device"] = 3,
-            },
             traits = {
                [153] = 1,
             },
@@ -368,7 +367,7 @@ local race =
                                   {
                                      male = "elona.chara_eulderna_male",
                                      female = "elona.chara_eulderna_female"
-                                  }),
+            }),
             age = Resolver.make("base.between", { min = 16, max = 35 }),
             height = 175,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
@@ -388,6 +387,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 10,
+               ["elona.stat_magic"] = 12,
+               ["elona.stat_charisma"] = 8,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.casting"] = 5,
+               ["elona.literacy"] = 3,
+               ["elona.magic_device"] = 3,
+            }
+         }
+
       },
       {
          _id = "fairy",
@@ -395,23 +414,6 @@ local race =
          ordering = 10030,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 40,
-               ["elona.stat_mana"] = 130,
-               ["elona.stat_strength"] = 3,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 12,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 1,
-               ["elona.casting"] = 5,
-               ["elona.pickpocket"] = 3,
-               ["elona.light_armor"] = 3,
-            },
             traits = {
                [160] = 1,
                [161] = 1,
@@ -448,6 +450,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 40,
+               ["elona.stat_mana"] = 130,
+               ["elona.stat_strength"] = 3,
+               ["elona.stat_constitution"] = 4,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 13,
+               ["elona.stat_charisma"] = 12,
+               ["elona.stat_speed"] = 120,
+               ["elona.martial_arts"] = 1,
+               ["elona.casting"] = 5,
+               ["elona.pickpocket"] = 3,
+               ["elona.light_armor"] = 3,
+            }
+         }
+
       },
       {
          _id = "asura",
@@ -455,23 +477,6 @@ local race =
          ordering = 20070,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 14,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.dual_wield"] = 30,
-               ["elona.greater_evasion"] = 6,
-               ["elona.anatomy"] = 4,
-            },
 
             breed_power = 100,
             image = "elona.chara_asura",
@@ -489,6 +494,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 70,
+               ["elona.stat_strength"] = 11,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 14,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 5,
+               ["elona.stat_charisma"] = 5,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.dual_wield"] = 30,
+               ["elona.greater_evasion"] = 6,
+               ["elona.anatomy"] = 4,
+            }
+         }
+
       },
       {
          _id = "slime",
@@ -496,6 +521,20 @@ local race =
          ordering = 20080,
 
          copy_to_chara = {
+
+            breed_power = 700,
+            image = "elona.chara_slime",
+            special_attack_type = 2,
+            age = Resolver.make("base.between", { min = 1, max = 10 }),
+            height = 40,
+            gender = Resolver.make("elona.gender", { male_ratio = 54 }),
+            body_parts = {
+               "elona.head"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 80,
                ["elona.stat_mana"] = 100,
@@ -511,19 +550,8 @@ local race =
                ["elona.martial_arts"] = 2,
                ["elona.evasion"] = 2,
                ["elona.performer"] = 3,
-            },
-
-            breed_power = 700,
-            image = "elona.chara_slime",
-            special_attack_type = 2,
-            age = Resolver.make("base.between", { min = 1, max = 10 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 54 }),
-            body_parts = {
-               "elona.head"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -532,22 +560,6 @@ local race =
          ordering = 20090,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.evasion"] = 2,
-               ["elona.greater_evasion"] = 2,
-            },
 
             breed_power = 800,
             image = "elona.chara_wolf",
@@ -566,6 +578,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 11,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 80,
+               ["elona.martial_arts"] = 2,
+               ["elona.evasion"] = 2,
+               ["elona.greater_evasion"] = 2,
+            }
+         }
+
       },
       {
          _id = "dwarf",
@@ -573,23 +604,6 @@ local race =
          ordering = 10040,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 11,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.cooking"] = 4,
-               ["elona.jeweler"] = 3,
-               ["elona.mining"] = 4,
-            },
             traits = {
                [152] = 2,
                [155] = 1,
@@ -616,6 +630,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 10,
+               ["elona.stat_constitution"] = 11,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 7,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.cooking"] = 4,
+               ["elona.jeweler"] = 3,
+               ["elona.mining"] = 4,
+            }
+         }
+
       },
       {
          _id = "juere",
@@ -623,24 +657,6 @@ local race =
          ordering = 10050,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 12,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.performer"] = 4,
-               ["elona.lock_picking"] = 2,
-               ["elona.negotiation"] = 2,
-               ["elona.throwing"] = 3,
-            },
             traits = {
                [158] = 1,
                [159] = 1,
@@ -651,7 +667,7 @@ local race =
                                   {
                                      male = "elona.chara_juere_male",
                                      female = "elona.chara_juere_female"
-                                  }),
+            }),
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 165,
             gender = Resolver.make("elona.gender", { male_ratio = 50 }),
@@ -671,6 +687,27 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 12,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 10,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 11,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.performer"] = 4,
+               ["elona.lock_picking"] = 2,
+               ["elona.negotiation"] = 2,
+               ["elona.throwing"] = 3,
+            }
+         }
+
       },
       {
          _id = "zombie",
@@ -678,27 +715,6 @@ local race =
          ordering = 20100,
 
          copy_to_chara = {
-            skills = Resolver.make(
-               "elona.skills",
-               {
-                  skills = {
-                     ["elona.stat_life"] = 120,
-                     ["elona.stat_mana"] = 100,
-                     ["elona.stat_strength"] = 10,
-                     ["elona.stat_constitution"] = 8,
-                     ["elona.stat_dexterity"] = 2,
-                     ["elona.stat_perception"] = 2,
-                     ["elona.stat_learning"] = 1,
-                     ["elona.stat_will"] = 6,
-                     ["elona.stat_magic"] = 6,
-                     ["elona.stat_charisma"] = 2,
-                     ["elona.stat_speed"] = 45,
-                     ["elona.martial_arts"] = 3,
-                     ["elona.cooking"] = 3,
-                     ["elona.fishing"] = 3,
-                  },
-               }
-            ),
 
             breed_power = 100,
             image = "elona.chara_zombie",
@@ -724,6 +740,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 10,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 2,
+               ["elona.stat_perception"] = 2,
+               ["elona.stat_learning"] = 1,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 45,
+               ["elona.martial_arts"] = 3,
+               ["elona.cooking"] = 3,
+               ["elona.fishing"] = 3,
+            }
+         }
+
       },
       {
          _id = "elea",
@@ -731,23 +766,6 @@ local race =
          ordering = 10060,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 110,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 12,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 5,
-               ["elona.casting"] = 2,
-               ["elona.memorization"] = 3,
-            },
             traits = {
                [168] = 1,
                [156] = 1,
@@ -758,7 +776,7 @@ local race =
                                   {
                                      male = "elona.chara_eulderna_male",
                                      female = "elona.chara_eulderna_female"
-                                  }),
+            }),
             age = Resolver.make("base.between", { min = 10, max = 209 }),
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
@@ -778,6 +796,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 110,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 12,
+               ["elona.stat_magic"] = 13,
+               ["elona.stat_charisma"] = 10,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.magic_capacity"] = 5,
+               ["elona.casting"] = 2,
+               ["elona.memorization"] = 3,
+            }
+         }
+
       },
       {
          _id = "rabbit",
@@ -785,21 +823,6 @@ local race =
          ordering = 20110,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 1,
-               ["elona.riding"] = 3,
-            },
 
             breed_power = 800,
             image = "elona.chara_rabbit",
@@ -816,6 +839,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 4,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 11,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 10,
+               ["elona.stat_speed"] = 100,
+               ["elona.martial_arts"] = 1,
+               ["elona.riding"] = 3,
+            }
+         }
+
       },
       {
          _id = "sheep",
@@ -823,22 +864,6 @@ local race =
          ordering = 20120,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 130,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 3,
-               ["elona.anatomy"] = 3,
-            },
 
             breed_power = 1000,
             image = "elona.chara_sheep",
@@ -856,6 +881,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 130,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 5,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 8,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 1,
+               ["elona.healing"] = 3,
+               ["elona.anatomy"] = 3,
+            }
+         }
+
       },
       {
          _id = "frog",
@@ -863,6 +907,17 @@ local race =
          ordering = 20130,
 
          copy_to_chara = {
+
+            breed_power = 600,
+            image = "elona.chara_frog",
+            age = Resolver.make("base.between", { min = 2, max = 6 }),
+            height = 10,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {4},
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 80,
                ["elona.stat_mana"] = 80,
@@ -878,16 +933,8 @@ local race =
                ["elona.martial_arts"] = 1,
                ["elona.performer"] = 3,
                ["elona.investing"] = 2,
-            },
-
-            breed_power = 600,
-            image = "elona.chara_frog",
-            age = Resolver.make("base.between", { min = 2, max = 6 }),
-            height = 10,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {4},
-
-         },
+            }
+         }
 
       },
       {
@@ -896,21 +943,6 @@ local race =
          ordering = 20140,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 2,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 1,
-               ["elona.eye_of_mind"] = 3,
-            },
 
             breed_power = 400,
             image = "elona.chara_centipede",
@@ -925,6 +957,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 3,
+               ["elona.stat_will"] = 2,
+               ["elona.stat_magic"] = 2,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 1,
+               ["elona.eye_of_mind"] = 3,
+            }
+         }
+
       },
       {
          _id = "snail",
@@ -932,6 +982,19 @@ local race =
          ordering = 10070,
 
          copy_to_chara = {
+
+            breed_power = 500,
+            image = "elona.chara_snail",
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 8,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {
+               "elona.back"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 100,
                ["elona.stat_mana"] = 80,
@@ -946,18 +1009,8 @@ local race =
                ["elona.stat_speed"] = 25,
                ["elona.martial_arts"] = 1,
                ["elona.throwing"] = 5,
-            },
-
-            breed_power = 500,
-            image = "elona.chara_snail",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 8,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.back"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -966,6 +1019,20 @@ local race =
          ordering = 20150,
 
          copy_to_chara = {
+
+            breed_power = 80,
+            image = "elona.chara_mandrake",
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 25,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {
+               "elona.head",
+               "elona.back"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 70,
                ["elona.stat_mana"] = 80,
@@ -982,19 +1049,8 @@ local race =
                ["elona.memorization"] = 3,
                ["elona.literacy"] = 2,
                ["elona.magic_capacity"] = 3,
-            },
-
-            breed_power = 80,
-            image = "elona.chara_mandrake",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 25,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.back"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -1003,6 +1059,20 @@ local race =
          ordering = 20160,
 
          copy_to_chara = {
+
+            breed_power = 750,
+            image = "elona.chara_beetle",
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 10,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            pv_correction = 140,
+            body_parts = {
+               "elona.neck"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 80,
                ["elona.stat_mana"] = 80,
@@ -1018,19 +1088,8 @@ local race =
                ["elona.martial_arts"] = 2,
                ["elona.detection"] = 3,
                ["elona.stealth"] = 3,
-            },
-
-            breed_power = 750,
-            image = "elona.chara_beetle",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 10,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            pv_correction = 140,
-            body_parts = {
-               "elona.neck"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -1039,22 +1098,6 @@ local race =
          ordering = 20170,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.tailoring"] = 3,
-               ["elona.alchemy"] = 2,
-            },
 
             breed_power = 440,
             image = "elona.chara_mushroom",
@@ -1070,6 +1113,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 50,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 4,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 10,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 1,
+               ["elona.tailoring"] = 3,
+               ["elona.alchemy"] = 2,
+            }
+         }
+
       },
       {
          _id = "bat",
@@ -1077,21 +1139,6 @@ local race =
          ordering = 20180,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 10,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 3,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 140,
-               ["elona.martial_arts"] = 2,
-               ["elona.greater_evasion"] = 3,
-            },
 
             breed_power = 350,
             image = "elona.chara_bat",
@@ -1106,6 +1153,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 10,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 3,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 9,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 3,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 140,
+               ["elona.martial_arts"] = 2,
+               ["elona.greater_evasion"] = 3,
+            }
+         }
+
       },
       {
          _id = "ent",
@@ -1113,22 +1178,6 @@ local race =
          ordering = 20190,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 170,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 12,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 50,
-               ["elona.martial_arts"] = 3,
-               ["elona.healing"] = 2,
-               ["elona.carpentry"] = 4,
-            },
 
             breed_power = 35,
             image = "elona.chara_ent",
@@ -1145,6 +1194,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 170,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 12,
+               ["elona.stat_dexterity"] = 4,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 2,
+               ["elona.stat_will"] = 3,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 50,
+               ["elona.martial_arts"] = 3,
+               ["elona.healing"] = 2,
+               ["elona.carpentry"] = 4,
+            }
+         }
+
       },
       {
          _id = "lich",
@@ -1152,23 +1220,6 @@ local race =
          ordering = 10080,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 140,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 13,
-               ["elona.stat_magic"] = 15,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.meditation"] = 5,
-               ["elona.magic_device"] = 3,
-               ["elona.casting"] = 3,
-            },
             traits = {
                [151] = 1,
                [155] = 2,
@@ -1204,6 +1255,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 80,
+               ["elona.stat_mana"] = 140,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 10,
+               ["elona.stat_will"] = 13,
+               ["elona.stat_magic"] = 15,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 3,
+               ["elona.meditation"] = 5,
+               ["elona.magic_device"] = 3,
+               ["elona.casting"] = 3,
+            }
+         }
+
       },
       {
          _id = "hound",
@@ -1211,22 +1282,6 @@ local race =
          ordering = 20200,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 90,
-               ["elona.martial_arts"] = 2,
-               ["elona.detection"] = 4,
-               ["elona.performer"] = 2,
-            },
 
             breed_power = 540,
             image = "elona.chara_hound",
@@ -1245,6 +1300,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 11,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 90,
+               ["elona.martial_arts"] = 2,
+               ["elona.detection"] = 4,
+               ["elona.performer"] = 2,
+            }
+         }
+
       },
       {
          _id = "ghost",
@@ -1252,22 +1326,6 @@ local race =
          ordering = 20210,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 14,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 4,
-               ["elona.magic_device"] = 2,
-            },
 
             breed_power = 30,
             image = "elona.chara_ghost",
@@ -1295,6 +1353,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 60,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 4,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 14,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 11,
+               ["elona.stat_charisma"] = 11,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 2,
+               ["elona.magic_capacity"] = 4,
+               ["elona.magic_device"] = 2,
+            }
+         }
+
       },
       {
          _id = "spirit",
@@ -1302,22 +1379,6 @@ local race =
          ordering = 20220,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 2,
-               ["elona.casting"] = 3,
-               ["elona.control_magic"] = 2,
-            },
 
             breed_power = 25,
             image = "elona.chara_spirit",
@@ -1337,6 +1398,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 10,
+               ["elona.stat_magic"] = 13,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 2,
+               ["elona.casting"] = 3,
+               ["elona.control_magic"] = 2,
+            }
+         }
+
       },
       {
          _id = "eye",
@@ -1344,6 +1424,20 @@ local race =
          ordering = 20230,
 
          copy_to_chara = {
+
+            breed_power = 50,
+            image = "elona.chara_eye",
+            melee_attack_type = 4,
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 40,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {
+               "elona.head"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 100,
                ["elona.stat_mana"] = 80,
@@ -1359,19 +1453,8 @@ local race =
                ["elona.martial_arts"] = 2,
                ["elona.detection"] = 3,
                ["elona.anatomy"] = 3,
-            },
-
-            breed_power = 50,
-            image = "elona.chara_eye",
-            melee_attack_type = 4,
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -1380,22 +1463,6 @@ local race =
          ordering = 20240,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 190,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.literacy"] = 3,
-               ["elona.traveling"] = 3,
-            },
 
             breed_power = 100,
             image = "elona.chara_wyvern",
@@ -1412,6 +1479,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 190,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 11,
+               ["elona.stat_constitution"] = 13,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 9,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 7,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 3,
+               ["elona.literacy"] = 3,
+               ["elona.traveling"] = 3,
+            }
+         }
+
       },
       {
          _id = "wasp",
@@ -1419,21 +1505,6 @@ local race =
          ordering = 20250,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 13,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 2,
-               ["elona.greater_evasion"] = 2,
-            },
 
             breed_power = 580,
             image = "elona.chara_wasp",
@@ -1448,6 +1519,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 50,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 13,
+               ["elona.stat_perception"] = 11,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 100,
+               ["elona.martial_arts"] = 2,
+               ["elona.greater_evasion"] = 2,
+            }
+         }
+
       },
       {
          _id = "giant",
@@ -1455,23 +1544,6 @@ local race =
          ordering = 20260,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 200,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 4,
-               ["elona.anatomy"] = 3,
-               ["elona.magic_device"] = 2,
-               ["elona.carpentry"] = 3,
-            },
 
             breed_power = 60,
             image = "elona.chara_giant",
@@ -1489,6 +1561,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 200,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 12,
+               ["elona.stat_constitution"] = 14,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 4,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 5,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 60,
+               ["elona.martial_arts"] = 4,
+               ["elona.anatomy"] = 3,
+               ["elona.magic_device"] = 2,
+               ["elona.carpentry"] = 3,
+            }
+         }
+
       },
       {
          _id = "imp",
@@ -1496,22 +1588,6 @@ local race =
          ordering = 20270,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 70,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.memorization"] = 3,
-               ["elona.control_magic"] = 3,
-            },
 
             breed_power = 240,
             image = "elona.chara_imp",
@@ -1532,6 +1608,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 70,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.memorization"] = 3,
+               ["elona.control_magic"] = 3,
+            }
+         }
+
       },
       {
          _id = "hand",
@@ -1539,21 +1634,6 @@ local race =
          ordering = 20280,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.eye_of_mind"] = 4,
-            },
 
             breed_power = 160,
             image = "elona.chara_hand",
@@ -1570,6 +1650,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 4,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 5,
+               ["elona.stat_charisma"] = 2,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.eye_of_mind"] = 4,
+            }
+         }
+
       },
       {
          _id = "snake",
@@ -1577,6 +1675,18 @@ local race =
          ordering = 20290,
 
          copy_to_chara = {
+
+            breed_power = 430,
+            image = "elona.chara_snake",
+            melee_attack_type = 3,
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 50,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {4},
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 100,
                ["elona.stat_mana"] = 80,
@@ -1591,17 +1701,8 @@ local race =
                ["elona.stat_speed"] = 70,
                ["elona.martial_arts"] = 2,
                ["elona.stealth"] = 4,
-            },
-
-            breed_power = 430,
-            image = "elona.chara_snake",
-            melee_attack_type = 3,
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 50,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {4},
-
-         },
+            }
+         }
 
       },
       {
@@ -1610,22 +1711,6 @@ local race =
          ordering = 20300,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 12,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 3,
-               ["elona.traveling"] = 3,
-               ["elona.fishing"] = 2,
-            },
 
             breed_power = 120,
             image = "elona.chara_drake",
@@ -1643,6 +1728,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 160,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 11,
+               ["elona.stat_constitution"] = 12,
+               ["elona.stat_dexterity"] = 11,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 7,
+               ["elona.stat_speed"] = 85,
+               ["elona.martial_arts"] = 3,
+               ["elona.traveling"] = 3,
+               ["elona.fishing"] = 2,
+            }
+         }
+
       },
       {
          _id = "goblin",
@@ -1650,24 +1754,6 @@ local race =
          ordering = 10090,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 110,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.healing"] = 5,
-               ["elona.fishing"] = 2,
-               ["elona.mining"] = 2,
-               ["elona.eye_of_mind"] = 3,
-            },
             traits = {
                [155] = 1,
                [159] = 1
@@ -1694,6 +1780,27 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 110,
+               ["elona.stat_mana"] = 90,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 5,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 7,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.healing"] = 5,
+               ["elona.fishing"] = 2,
+               ["elona.mining"] = 2,
+               ["elona.eye_of_mind"] = 3,
+            }
+         }
+
       },
       {
          _id = "bear",
@@ -1701,23 +1808,6 @@ local race =
          ordering = 20310,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.healing"] = 3,
-               ["elona.performer"] = 2,
-               ["elona.eye_of_mind"] = 3,
-            },
 
             breed_power = 350,
             image = "elona.chara_bear",
@@ -1737,6 +1827,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 160,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 10,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 5,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.healing"] = 3,
+               ["elona.performer"] = 2,
+               ["elona.eye_of_mind"] = 3,
+            }
+         }
+
       },
       {
          _id = "armor",
@@ -1744,22 +1854,6 @@ local race =
          ordering = 20320,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 40,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 50,
-               ["elona.martial_arts"] = 2,
-               ["elona.lock_picking"] = 3,
-               ["elona.magic_device"] = 2,
-            },
 
             breed_power = 40,
             image = "elona.chara_armor",
@@ -1781,6 +1875,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 40,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 4,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 5,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 50,
+               ["elona.martial_arts"] = 2,
+               ["elona.lock_picking"] = 3,
+               ["elona.magic_device"] = 2,
+            }
+         }
+
       },
       {
          _id = "medusa",
@@ -1788,22 +1901,6 @@ local race =
          ordering = 20330,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 110,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.magic_capacity"] = 3,
-               ["elona.control_magic"] = 3,
-            },
 
             breed_power = 180,
             image = "elona.chara_medusa",
@@ -1823,6 +1920,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 110,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 11,
+               ["elona.stat_charisma"] = 5,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 3,
+               ["elona.magic_capacity"] = 3,
+               ["elona.control_magic"] = 3,
+            }
+         }
+
       },
       {
          _id = "cupid",
@@ -1830,22 +1946,6 @@ local race =
          ordering = 20340,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 130,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.literacy"] = 4,
-               ["elona.control_magic"] = 3,
-            },
 
             breed_power = 350,
             image = "elona.chara_cupid",
@@ -1865,28 +1965,31 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 80,
+               ["elona.stat_mana"] = 130,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 8,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 7,
+               ["elona.stat_magic"] = 12,
+               ["elona.stat_charisma"] = 8,
+               ["elona.stat_speed"] = 80,
+               ["elona.martial_arts"] = 2,
+               ["elona.literacy"] = 4,
+               ["elona.control_magic"] = 3,
+            }
+         }
+
       },
       {
          _id = "phantom",
          is_extra = true,
          ordering = 20350,
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 2,
-               ["elona.stealth"] = 3,
-               ["elona.disarm_trap"] = 3,
-            },
 
             breed_power = 35,
             image = "elona.chara_phantom",
@@ -1912,6 +2015,24 @@ local race =
             },
 
          },
+         base = {
+            skills = {
+               ["elona.stat_life"] = 60,
+               ["elona.stat_mana"] = 90,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 9,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 85,
+               ["elona.martial_arts"] = 2,
+               ["elona.stealth"] = 3,
+               ["elona.disarm_trap"] = 3,
+            }
+         }
 
       },
       {
@@ -1919,22 +2040,6 @@ local race =
          is_extra = true,
          ordering = 20360,
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 3,
-               ["elona.magic_device"] = 2,
-            },
 
             breed_power = 420,
             image = "elona.chara_harpy",
@@ -1954,6 +2059,24 @@ local race =
             },
 
          },
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 9,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 9,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 80,
+               ["elona.martial_arts"] = 2,
+               ["elona.magic_capacity"] = 3,
+               ["elona.magic_device"] = 2,
+            }
+         }
 
       },
       {
@@ -1962,22 +2085,6 @@ local race =
          ordering = 20370,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 220,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 13,
-               ["elona.stat_constitution"] = 15,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 9,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.traveling"] = 3,
-               ["elona.jeweler"] = 3,
-            },
 
             breed_power = 20,
             image = "elona.chara_dragon",
@@ -1995,6 +2102,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 220,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 13,
+               ["elona.stat_constitution"] = 15,
+               ["elona.stat_dexterity"] = 10,
+               ["elona.stat_perception"] = 9,
+               ["elona.stat_learning"] = 10,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 13,
+               ["elona.stat_charisma"] = 9,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 3,
+               ["elona.traveling"] = 3,
+               ["elona.jeweler"] = 3,
+            }
+         }
+
       },
       {
          _id = "dinosaur",
@@ -2002,22 +2128,6 @@ local race =
          ordering = 20380,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 140,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 4,
-               ["elona.traveling"] = 3,
-               ["elona.greater_evasion"] = 2,
-            },
 
             breed_power = 100,
             image = "elona.chara_dinosaur",
@@ -2035,6 +2145,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 140,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 10,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 5,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 5,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 5,
+               ["elona.stat_speed"] = 120,
+               ["elona.martial_arts"] = 4,
+               ["elona.traveling"] = 3,
+               ["elona.greater_evasion"] = 2,
+            }
+         }
+
       },
       {
          _id = "cerberus",
@@ -2042,22 +2171,6 @@ local race =
          ordering = 20390,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 3,
-               ["elona.detection"] = 3,
-               ["elona.tailoring"] = 3,
-            },
 
             breed_power = 80,
             image = "elona.chara_cerberus",
@@ -2077,6 +2190,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 160,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 11,
+               ["elona.stat_constitution"] = 9,
+               ["elona.stat_dexterity"] = 10,
+               ["elona.stat_perception"] = 11,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 85,
+               ["elona.martial_arts"] = 3,
+               ["elona.detection"] = 3,
+               ["elona.tailoring"] = 3,
+            }
+         }
+
       },
       {
          _id = "spider",
@@ -2084,22 +2216,6 @@ local race =
          ordering = 20400,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 12,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 2,
-               ["elona.stealth"] = 3,
-               ["elona.anatomy"] = 5,
-            },
 
             breed_power = 560,
             image = "elona.chara_spider",
@@ -2116,6 +2232,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 50,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 12,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 120,
+               ["elona.martial_arts"] = 2,
+               ["elona.stealth"] = 3,
+               ["elona.anatomy"] = 5,
+            }
+         }
+
       },
       {
          _id = "golem",
@@ -2123,22 +2258,6 @@ local race =
          ordering = 10100,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 45,
-               ["elona.martial_arts"] = 4,
-               ["elona.weight_lifting"] = 5,
-               ["elona.mining"] = 3,
-            },
             traits = {
                [157] = 1,
                [152] = 2,
@@ -2167,6 +2286,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 150,
+               ["elona.stat_mana"] = 70,
+               ["elona.stat_strength"] = 10,
+               ["elona.stat_constitution"] = 14,
+               ["elona.stat_dexterity"] = 4,
+               ["elona.stat_perception"] = 5,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 45,
+               ["elona.martial_arts"] = 4,
+               ["elona.weight_lifting"] = 5,
+               ["elona.mining"] = 3,
+            }
+         }
+
       },
       {
          _id = "rock",
@@ -2174,6 +2312,21 @@ local race =
          ordering = 20410,
 
          copy_to_chara = {
+
+            breed_power = 200,
+            image = "elona.chara_rock",
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 500,
+            breaks_into_debris = true,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            pv_correction = 200,
+            body_parts = {
+               "elona.head"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 40,
                ["elona.stat_mana"] = 50,
@@ -2189,20 +2342,8 @@ local race =
                ["elona.martial_arts"] = 1,
                ["elona.weight_lifting"] = 3,
                ["elona.mining"] = 3,
-            },
-
-            breed_power = 200,
-            image = "elona.chara_rock",
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 500,
-            breaks_into_debris = true,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            pv_correction = 200,
-            body_parts = {
-               "elona.head"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -2211,22 +2352,6 @@ local race =
          ordering = 20420,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.disarm_trap"] = 2,
-               ["elona.shield"] = 3,
-            },
 
             breed_power = 420,
             image = "elona.chara_crab",
@@ -2246,6 +2371,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 60,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 3,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.disarm_trap"] = 2,
+               ["elona.shield"] = 3,
+            }
+         }
+
       },
       {
          _id = "skeleton",
@@ -2253,23 +2397,6 @@ local race =
          ordering = 20430,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.long_sword"] = 3,
-               ["elona.shield"] = 2,
-               ["elona.lock_picking"] = 3,
-            },
 
             breed_power = 30,
             image = "elona.chara_skeleton",
@@ -2299,6 +2426,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 8,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 9,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.long_sword"] = 3,
+               ["elona.shield"] = 2,
+               ["elona.lock_picking"] = 3,
+            }
+         }
+
       },
       {
          _id = "piece",
@@ -2306,22 +2453,6 @@ local race =
          ordering = 20440,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 2,
-               ["elona.literacy"] = 3,
-            },
 
             breed_power = 25,
             image = "elona.chara_piece",
@@ -2345,6 +2476,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 4,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 10,
+               ["elona.stat_charisma"] = 4,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.magic_capacity"] = 2,
+               ["elona.literacy"] = 3,
+            }
+         }
+
       },
       {
          _id = "cat",
@@ -2352,23 +2502,6 @@ local race =
          ordering = 20450,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 120,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 12,
-               ["elona.stat_speed"] = 110,
-               ["elona.martial_arts"] = 2,
-               ["elona.performer"] = 2,
-               ["elona.greater_evasion"] = 3,
-               ["elona.evasion"] = 2,
-            },
 
             breed_power = 950,
             image = "elona.chara_cat",
@@ -2389,6 +2522,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 120,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 12,
+               ["elona.stat_speed"] = 110,
+               ["elona.martial_arts"] = 2,
+               ["elona.performer"] = 2,
+               ["elona.greater_evasion"] = 3,
+               ["elona.evasion"] = 2,
+            }
+         }
+
       },
       {
          _id = "dog",
@@ -2396,23 +2549,6 @@ local race =
          ordering = 20460,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 2,
-               ["elona.weight_lifting"] = 3,
-               ["elona.performer"] = 2,
-               ["elona.detection"] = 3,
-            },
 
             breed_power = 920,
             image = "elona.chara_dog",
@@ -2432,6 +2568,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 7,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 7,
+               ["elona.stat_speed"] = 85,
+               ["elona.martial_arts"] = 2,
+               ["elona.weight_lifting"] = 3,
+               ["elona.performer"] = 2,
+               ["elona.detection"] = 3,
+            }
+         }
+
       },
       {
          _id = "roran",
@@ -2439,23 +2595,6 @@ local race =
          ordering = 20470,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 95,
-               ["elona.martial_arts"] = 2,
-               ["elona.meditation"] = 3,
-               ["elona.literacy"] = 4,
-               ["elona.investing"] = 2,
-            },
 
             breed_power = 220,
             image = "elona.chara_roran",
@@ -2479,6 +2618,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 4,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 10,
+               ["elona.stat_speed"] = 95,
+               ["elona.martial_arts"] = 2,
+               ["elona.meditation"] = 3,
+               ["elona.literacy"] = 4,
+               ["elona.investing"] = 2,
+            }
+         }
+
       },
       {
          _id = "rat",
@@ -2486,22 +2645,6 @@ local race =
          ordering = 20480,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 2,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 75,
-               ["elona.martial_arts"] = 1,
-               ["elona.stealth"] = 3,
-               ["elona.anatomy"] = 2,
-            },
 
             breed_power = 1100,
             image = "elona.chara_rat",
@@ -2518,6 +2661,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 80,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 5,
+               ["elona.stat_constitution"] = 4,
+               ["elona.stat_dexterity"] = 8,
+               ["elona.stat_perception"] = 10,
+               ["elona.stat_learning"] = 3,
+               ["elona.stat_will"] = 3,
+               ["elona.stat_magic"] = 2,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 75,
+               ["elona.martial_arts"] = 1,
+               ["elona.stealth"] = 3,
+               ["elona.anatomy"] = 2,
+            }
+         }
+
       },
       {
          _id = "shell",
@@ -2525,6 +2687,21 @@ local race =
          ordering = 20490,
 
          copy_to_chara = {
+
+            breed_power = 450,
+            image = "elona.chara_shell",
+            melee_attack_type = 1,
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 120,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            pv_correction = 340,
+            body_parts = {
+               "elona.leg"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 100,
                ["elona.stat_mana"] = 80,
@@ -2540,20 +2717,8 @@ local race =
                ["elona.martial_arts"] = 1,
                ["elona.meditation"] = 3,
                ["elona.sense_quality"] = 3,
-            },
-
-            breed_power = 450,
-            image = "elona.chara_shell",
-            melee_attack_type = 1,
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 120,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            pv_correction = 340,
-            body_parts = {
-               "elona.leg"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -2562,23 +2727,6 @@ local race =
          ordering = 20500,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 21,
-               ["elona.stat_perception"] = 28,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 13,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 25,
-               ["elona.stat_speed"] = 500,
-               ["elona.martial_arts"] = 3,
-               ["elona.evasion"] = 3,
-               ["elona.greater_evasion"] = 3,
-               ["elona.eye_of_mind"] = 2,
-            },
 
             breed_power = 5,
             image = "elona.chara_catgod",
@@ -2599,6 +2747,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 12,
+               ["elona.stat_constitution"] = 13,
+               ["elona.stat_dexterity"] = 21,
+               ["elona.stat_perception"] = 28,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 13,
+               ["elona.stat_magic"] = 12,
+               ["elona.stat_charisma"] = 25,
+               ["elona.stat_speed"] = 500,
+               ["elona.martial_arts"] = 3,
+               ["elona.evasion"] = 3,
+               ["elona.greater_evasion"] = 3,
+               ["elona.eye_of_mind"] = 2,
+            }
+         }
+
       },
       {
          _id = "machinegod",
@@ -2606,21 +2774,6 @@ local race =
          ordering = 20510,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 200,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 15,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 24,
-               ["elona.stat_learning"] = 12,
-               ["elona.stat_will"] = 15,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 5,
-               ["elona.firearm"] = 30,
-            },
 
             breed_power = 5,
             image = "elona.chara_machinegod",
@@ -2642,6 +2795,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 200,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 15,
+               ["elona.stat_constitution"] = 14,
+               ["elona.stat_dexterity"] = 11,
+               ["elona.stat_perception"] = 24,
+               ["elona.stat_learning"] = 12,
+               ["elona.stat_will"] = 15,
+               ["elona.stat_magic"] = 8,
+               ["elona.stat_charisma"] = 10,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 5,
+               ["elona.firearm"] = 30,
+            }
+         }
+
       },
       {
          _id = "undeadgod",
@@ -2649,22 +2820,6 @@ local race =
          ordering = 20520,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 500,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 14,
-               ["elona.stat_perception"] = 18,
-               ["elona.stat_learning"] = 16,
-               ["elona.stat_will"] = 18,
-               ["elona.stat_magic"] = 28,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 110,
-               ["elona.martial_arts"] = 4,
-               ["elona.control_magic"] = 3,
-               ["elona.magic_capacity"] = 5,
-            },
 
             breed_power = 5,
             image = "elona.chara_undeadgod",
@@ -2683,6 +2838,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 150,
+               ["elona.stat_mana"] = 500,
+               ["elona.stat_strength"] = 10,
+               ["elona.stat_constitution"] = 13,
+               ["elona.stat_dexterity"] = 14,
+               ["elona.stat_perception"] = 18,
+               ["elona.stat_learning"] = 16,
+               ["elona.stat_will"] = 18,
+               ["elona.stat_magic"] = 28,
+               ["elona.stat_charisma"] = 7,
+               ["elona.stat_speed"] = 110,
+               ["elona.martial_arts"] = 4,
+               ["elona.control_magic"] = 3,
+               ["elona.magic_capacity"] = 5,
+            }
+         }
+
       },
       {
          _id = "machine",
@@ -2690,23 +2864,6 @@ local race =
          ordering = 20530,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 12,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 65,
-               ["elona.martial_arts"] = 2,
-               ["elona.meditation"] = 3,
-               ["elona.lock_picking"] = 3,
-               ["elona.disarm_trap"] = 3,
-            },
 
             breed_power = 15,
             image = "elona.chara_machine",
@@ -2731,6 +2888,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 80,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 10,
+               ["elona.stat_dexterity"] = 7,
+               ["elona.stat_perception"] = 9,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 12,
+               ["elona.stat_magic"] = 5,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 65,
+               ["elona.martial_arts"] = 2,
+               ["elona.meditation"] = 3,
+               ["elona.lock_picking"] = 3,
+               ["elona.disarm_trap"] = 3,
+            }
+         }
+
       },
       {
          _id = "wisp",
@@ -2738,6 +2915,20 @@ local race =
          ordering = 20540,
 
          copy_to_chara = {
+
+            breed_power = 25,
+            image = "elona.chara_wisp",
+            melee_attack_type = 4,
+            age = Resolver.make("base.between", { min = 10, max = 19 }),
+            height = 40,
+            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
+            body_parts = {
+               "elona.head"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 150,
                ["elona.stat_mana"] = 150,
@@ -2753,11 +2944,20 @@ local race =
                ["elona.martial_arts"] = 1,
                ["elona.control_magic"] = 3,
                ["elona.magic_capacity"] = 5,
-            },
+            }
+         }
 
-            breed_power = 25,
-            image = "elona.chara_wisp",
-            melee_attack_type = 4,
+      },
+      {
+         _id = "chicken",
+         is_extra = true,
+         ordering = 20550,
+
+         copy_to_chara = {
+
+            breed_power = 1000,
+            image = "elona.chara_chicken",
+            melee_attack_type = 3,
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
@@ -2767,13 +2967,7 @@ local race =
 
          },
 
-      },
-      {
-         _id = "chicken",
-         is_extra = true,
-         ordering = 20550,
-
-         copy_to_chara = {
+         base = {
             skills = {
                ["elona.stat_life"] = 80,
                ["elona.stat_mana"] = 80,
@@ -2789,19 +2983,8 @@ local race =
                ["elona.martial_arts"] = 1,
                ["elona.anatomy"] = 3,
                ["elona.meditation"] = 3,
-            },
-
-            breed_power = 1000,
-            image = "elona.chara_chicken",
-            melee_attack_type = 3,
-            age = Resolver.make("base.between", { min = 10, max = 19 }),
-            height = 40,
-            gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -2810,22 +2993,6 @@ local race =
          ordering = 20560,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 140,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 2,
-               ["elona.eye_of_mind"] = 3,
-               ["elona.stealth"] = 4,
-            },
 
             breed_power = 25,
             image = "elona.chara_stalker",
@@ -2851,6 +3018,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 120,
+               ["elona.stat_mana"] = 140,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 11,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 9,
+               ["elona.stat_charisma"] = 3,
+               ["elona.stat_speed"] = 100,
+               ["elona.martial_arts"] = 2,
+               ["elona.eye_of_mind"] = 3,
+               ["elona.stealth"] = 4,
+            }
+         }
+
       },
       {
          _id = "catsister",
@@ -2858,22 +3044,6 @@ local race =
          ordering = 20570,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 30,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 13,
-               ["elona.stat_perception"] = 15,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 22,
-               ["elona.stat_speed"] = 200,
-               ["elona.martial_arts"] = 4,
-               ["elona.two_hand"] = 6,
-               ["elona.tactics"] = 4,
-            },
 
             breed_power = 5,
             image = "elona.chara_catsister",
@@ -2897,6 +3067,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 30,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 7,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 13,
+               ["elona.stat_perception"] = 15,
+               ["elona.stat_learning"] = 8,
+               ["elona.stat_will"] = 10,
+               ["elona.stat_magic"] = 13,
+               ["elona.stat_charisma"] = 22,
+               ["elona.stat_speed"] = 200,
+               ["elona.martial_arts"] = 4,
+               ["elona.two_hand"] = 6,
+               ["elona.tactics"] = 4,
+            }
+         }
+
       },
       {
          _id = "mutant",
@@ -2904,22 +3093,6 @@ local race =
          ordering = 10110,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 1,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 3,
-               ["elona.healing"] = 4,
-            },
             traits = {
                [0] = 1,
             },
@@ -2936,6 +3109,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 100,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 5,
+               ["elona.stat_dexterity"] = 5,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 7,
+               ["elona.stat_will"] = 9,
+               ["elona.stat_magic"] = 7,
+               ["elona.stat_charisma"] = 1,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 2,
+               ["elona.magic_capacity"] = 3,
+               ["elona.healing"] = 4,
+            }
+         }
+
       },
       {
          _id = "yeek",
@@ -2943,22 +3135,6 @@ local race =
          ordering = 20580,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 90,
-               ["elona.martial_arts"] = 1,
-               ["elona.meditation"] = 3,
-               ["elona.negotiation"] = 4,
-            },
 
             breed_power = 500,
             image = "elona.chara_yeek",
@@ -2981,6 +3157,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 80,
+               ["elona.stat_mana"] = 90,
+               ["elona.stat_strength"] = 4,
+               ["elona.stat_constitution"] = 7,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 7,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 90,
+               ["elona.martial_arts"] = 1,
+               ["elona.meditation"] = 3,
+               ["elona.negotiation"] = 4,
+            }
+         }
+
       },
       {
          _id = "yith",
@@ -2988,23 +3183,6 @@ local race =
          ordering = 20590,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 200,
-               ["elona.stat_strength"] = 13,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 15,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.control_magic"] = 4,
-               ["elona.meditation"] = 3,
-               ["elona.faith"] = 4,
-            },
 
             breed_power = 25,
             image = "elona.chara_yith",
@@ -3026,6 +3204,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 150,
+               ["elona.stat_mana"] = 200,
+               ["elona.stat_strength"] = 13,
+               ["elona.stat_constitution"] = 14,
+               ["elona.stat_dexterity"] = 9,
+               ["elona.stat_perception"] = 15,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 5,
+               ["elona.stat_magic"] = 11,
+               ["elona.stat_charisma"] = 11,
+               ["elona.stat_speed"] = 70,
+               ["elona.martial_arts"] = 3,
+               ["elona.control_magic"] = 4,
+               ["elona.meditation"] = 3,
+               ["elona.faith"] = 4,
+            }
+         }
+
       },
       {
          _id = "servant",
@@ -3033,27 +3231,6 @@ local race =
          ordering = 20600,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 150,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 3,
-               ["elona.tactics"] = 3,
-               ["elona.casting"] = 4,
-               ["elona.negotiation"] = 3,
-               ["elona.throwing"] = 3,
-               ["elona.dual_wield"] = 4,
-               ["elona.firearm"] = 4,
-               ["elona.two_hand"] = 3,
-            },
 
             breed_power = 5,
             image = "elona.chara_servant",
@@ -3076,6 +3253,30 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 90,
+               ["elona.stat_mana"] = 150,
+               ["elona.stat_strength"] = 6,
+               ["elona.stat_constitution"] = 6,
+               ["elona.stat_dexterity"] = 6,
+               ["elona.stat_perception"] = 6,
+               ["elona.stat_learning"] = 6,
+               ["elona.stat_will"] = 6,
+               ["elona.stat_magic"] = 6,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 100,
+               ["elona.martial_arts"] = 3,
+               ["elona.tactics"] = 3,
+               ["elona.casting"] = 4,
+               ["elona.negotiation"] = 3,
+               ["elona.throwing"] = 3,
+               ["elona.dual_wield"] = 4,
+               ["elona.firearm"] = 4,
+               ["elona.two_hand"] = 3,
+            }
+         }
+
       },
       {
          _id = "horse",
@@ -3083,21 +3284,6 @@ local race =
          ordering = 20610,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 50,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 125,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 4,
-            },
 
             breed_power = 1000,
             image = "elona.chara_horse",
@@ -3113,6 +3299,24 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 150,
+               ["elona.stat_mana"] = 50,
+               ["elona.stat_strength"] = 9,
+               ["elona.stat_constitution"] = 8,
+               ["elona.stat_dexterity"] = 4,
+               ["elona.stat_perception"] = 5,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 6,
+               ["elona.stat_speed"] = 125,
+               ["elona.martial_arts"] = 1,
+               ["elona.healing"] = 4,
+            }
+         }
+
       },
       {
          _id = "god",
@@ -3120,6 +3324,22 @@ local race =
          ordering = 20620,
 
          copy_to_chara = {
+
+            breed_power = 1,
+            image = "elona.chara_god",
+            age = Resolver.make("base.between", { min = 999999, max = 999999 }),
+            height = 180,
+            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
+            dv_correction = 300,
+            pv_correction = 200,
+            body_parts = {
+               "elona.hand",
+               "elona.hand"
+            },
+
+         },
+
+         base = {
             skills = {
                ["elona.stat_life"] = 200,
                ["elona.stat_mana"] = 100,
@@ -3141,21 +3361,8 @@ local race =
                ["elona.dual_wield"] = 7,
                ["elona.two_hand"] = 5,
                ["elona.tactics"] = 7,
-            },
-
-            breed_power = 1,
-            image = "elona.chara_god",
-            age = Resolver.make("base.between", { min = 999999, max = 999999 }),
-            height = 180,
-            gender = Resolver.make("elona.gender", { male_ratio = 0 }),
-            dv_correction = 300,
-            pv_correction = 200,
-            body_parts = {
-               "elona.hand",
-               "elona.hand"
-            },
-
-         },
+            }
+         }
 
       },
       {
@@ -3164,23 +3371,6 @@ local race =
          ordering = 20630,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 3,
-               ["elona.stat_mana"] = 40,
-               ["elona.stat_strength"] = 2,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 18,
-               ["elona.stat_perception"] = 16,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 750,
-               ["elona.martial_arts"] = 1,
-               ["elona.stealth"] = 3,
-               ["elona.evasion"] = 7,
-               ["elona.greater_evasion"] = 6,
-            },
 
             breed_power = 1,
             image = "elona.chara_quickling",
@@ -3205,6 +3395,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 3,
+               ["elona.stat_mana"] = 40,
+               ["elona.stat_strength"] = 2,
+               ["elona.stat_constitution"] = 4,
+               ["elona.stat_dexterity"] = 18,
+               ["elona.stat_perception"] = 16,
+               ["elona.stat_learning"] = 5,
+               ["elona.stat_will"] = 8,
+               ["elona.stat_magic"] = 9,
+               ["elona.stat_charisma"] = 7,
+               ["elona.stat_speed"] = 750,
+               ["elona.martial_arts"] = 1,
+               ["elona.stealth"] = 3,
+               ["elona.evasion"] = 7,
+               ["elona.greater_evasion"] = 6,
+            }
+         }
+
       },
       {
          _id = "metal",
@@ -3212,22 +3422,6 @@ local race =
          ordering = 20640,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 1,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 1,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 32,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 16,
-               ["elona.stat_speed"] = 640,
-               ["elona.martial_arts"] = 1,
-               ["elona.magic_capacity"] = 4,
-               ["elona.greater_evasion"] = 6,
-            },
 
             breed_power = 1,
             image = "elona.chara_metal",
@@ -3248,6 +3442,25 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 1,
+               ["elona.stat_mana"] = 100,
+               ["elona.stat_strength"] = 4,
+               ["elona.stat_constitution"] = 1,
+               ["elona.stat_dexterity"] = 3,
+               ["elona.stat_perception"] = 32,
+               ["elona.stat_learning"] = 2,
+               ["elona.stat_will"] = 4,
+               ["elona.stat_magic"] = 4,
+               ["elona.stat_charisma"] = 16,
+               ["elona.stat_speed"] = 640,
+               ["elona.martial_arts"] = 1,
+               ["elona.magic_capacity"] = 4,
+               ["elona.greater_evasion"] = 6,
+            }
+         }
+
       },
       {
          _id = "bike",
@@ -3255,23 +3468,6 @@ local race =
          ordering = 20650,
 
          copy_to_chara = {
-            skills = {
-               ["elona.stat_life"] = 170,
-               ["elona.stat_mana"] = 60,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 3,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 155,
-               ["elona.martial_arts"] = 2,
-               ["elona.evasion"] = 11,
-               ["elona.lock_picking"] = 3,
-               ["elona.disarm_trap"] = 3,
-            },
 
             breed_power = 15,
             image = "elona.chara_bike",
@@ -3294,6 +3490,26 @@ local race =
 
          },
 
+         base = {
+            skills = {
+               ["elona.stat_life"] = 170,
+               ["elona.stat_mana"] = 60,
+               ["elona.stat_strength"] = 11,
+               ["elona.stat_constitution"] = 13,
+               ["elona.stat_dexterity"] = 4,
+               ["elona.stat_perception"] = 3,
+               ["elona.stat_learning"] = 4,
+               ["elona.stat_will"] = 5,
+               ["elona.stat_magic"] = 3,
+               ["elona.stat_charisma"] = 11,
+               ["elona.stat_speed"] = 155,
+               ["elona.martial_arts"] = 2,
+               ["elona.evasion"] = 11,
+               ["elona.lock_picking"] = 3,
+               ["elona.disarm_trap"] = 3,
+            }
+         }
+
       },
       -- For debug
       {
@@ -3301,25 +3517,6 @@ local race =
          ordering = 0,
 
          copy_to_chara = {
-            skills = Resolver.make(
-               "elona.skills",
-               {
-                  skills = {
-                     ["elona.stat_life"] = 1000,
-                     ["elona.stat_mana"] = 1000,
-                     ["elona.stat_strength"] = 100,
-                     ["elona.stat_constitution"] = 100,
-                     ["elona.stat_dexterity"] = 100,
-                     ["elona.stat_perception"] = 100,
-                     ["elona.stat_learning"] = 100,
-                     ["elona.stat_will"] = 100,
-                     ["elona.stat_magic"] = 100,
-                     ["elona.stat_charisma"] = 100,
-                     ["elona.stat_speed"] = 500,
-                     ["elona.mining"] = 100,
-                  }
-               }
-            ),
 
             pv_correction = 1000,
             dv_correction = 1000,
@@ -3337,6 +3534,23 @@ local race =
                "elona.leg"
             },
          },
+
+         base = {
+            skills = {
+               ["elona.stat_life"] = 1000,
+               ["elona.stat_mana"] = 1000,
+               ["elona.stat_strength"] = 100,
+               ["elona.stat_constitution"] = 100,
+               ["elona.stat_dexterity"] = 100,
+               ["elona.stat_perception"] = 100,
+               ["elona.stat_learning"] = 100,
+               ["elona.stat_will"] = 100,
+               ["elona.stat_magic"] = 100,
+               ["elona.stat_charisma"] = 100,
+               ["elona.stat_speed"] = 500,
+               ["elona.mining"] = 100,
+            }
+         }
       },
    }
 

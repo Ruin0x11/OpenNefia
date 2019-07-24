@@ -5,6 +5,22 @@ data:extend_type(
    }
 )
 
+data:extend_type(
+   "base.element",
+   {
+      preserves_sleep = schema.Boolean,
+   }
+)
+
+data:extend_type(
+   "base.chara",
+   {
+      splits = schema.Boolean,
+      splits2 = schema.Boolean,
+      is_quick_tempered = schema.Boolean,
+   }
+)
+
 require("mod.elona.data.resolver")
 require("mod.elona.data.skill")
 require("mod.elona.data.body_part")
@@ -19,3 +35,7 @@ require("mod.elona.data.chip")
 require("mod.elona.data.map_tile")
 require("mod.elona.data.map_template")
 require("mod.elona.data.map_generator")
+require("mod.elona.data.element")
+require("mod.elona.data.effect")
+
+require("mod.elona.events")

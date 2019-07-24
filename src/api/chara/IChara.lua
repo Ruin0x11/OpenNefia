@@ -1,3 +1,4 @@
+local data = require("internal.data")
 local field = require("game.field")
 local Chara = require("api.Chara")
 local Codegen = require("api.Codegen")
@@ -34,8 +35,14 @@ local IChara = class.interface("IChara",
 IChara._type = "base.chara"
 
 -- TODO schema
+
+-- Must be available before generation.
 local defaults = {
    level = 1,
+}
+
+-- Must be available after instantiation.
+local fallbacks = {
    state = "Dead",
    experience = 0,
    quality = 2,
@@ -49,6 +56,8 @@ local defaults = {
    time_this_turn = 0,
    turns_alive = 0,
    armor_class = "",
+
+   image = "",
 
    number_of_weapons = 0,
    ether_disease_speed = 0,
@@ -68,13 +77,18 @@ local defaults = {
 
    hp = 1,
    mp = 1,
+   stamina = 1,
    max_hp = 1,
    max_mp = 1,
+   max_stamina = 1,
+
+   nutrition = 0;
 
    pierce_chance = 0,
    physical_damage_reduction = 0,
+
+   ai = "base.elona_default_ai"
 }
-table.merge(IChara, defaults)
 
 --- Initializes the bare minimum values on this character. All
 --- characters must run this function on creation.
@@ -92,7 +106,9 @@ function IChara:pre_build()
    ICharaTalk.init(self)
    ICharaSkills.init(self)
 
-   self.ai = self.ai or "base.elona_default_ai"
+   self:emit("base.on_pre_build")
+
+   self:mod_base_with(defaults, "merge")
 end
 
 --- The default initialization logic for characters created through
@@ -101,29 +117,21 @@ end
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
 function IChara:normal_build()
-   local class_data = Resolver.run("base.class", {}, { chara = self })
-   local race_data = Resolver.run("base.race", {}, { chara = self })
+   local class_data = Resolver.run("elona.class", {}, { chara = self })
+   local race_data = Resolver.run("elona.race", {}, { chara = self })
 
-   self:mod_base_with(class_data, "add")
-   self:mod_base_with(race_data, "add")
-end
-
-function IChara:instantiate()
-   IObject.instantiate(self)
-   ICharaTalk.instantiate(self)
-
-   Event.trigger("base.on_chara_instantiated", {chara=self})
+   self:mod_base_with(class_data, "merge")
+   self:mod_base_with(race_data, "merge")
 end
 
 --- Finishes initializing this character. All characters must run this
 --- function sometime after running pre_build() before being used.
 function IChara:build()
-   self.tile = self.image
+   self:mod_base_with(fallbacks, "merge")
+
    self.state = "Alive"
 
    self.target = nil
-   self.image = nil
-   self.portrait = nil
 
    self.ai_state = {
       hate = 0,
@@ -137,17 +145,18 @@ function IChara:build()
       is_anchored = false,
    }
 
-   -- these need to be available in refresh()
-   self.hp = 1
-   self.mp = 1
-
-   -- TEMP
-   self.max_hp = self.max_hp or 10
-   self.max_mp = self.max_mp or 2
+   self:emit("base.on_build")
 
    self:refresh()
 
    self:heal_to_max()
+end
+
+function IChara:instantiate()
+   IObject.instantiate(self)
+   ICharaTalk.instantiate(self)
+
+   Event.trigger("base.on_chara_instantiated", {chara=self})
 end
 
 function IChara:refresh()
@@ -174,6 +183,7 @@ function IChara:refresh()
 
    self.hp = math.min(self.hp, self:calc("max_hp"))
    self.mp = math.min(self.mp, self:calc("max_mp"))
+   self.stamina = math.min(self.stamina, self:calc("max_stamina"))
 
    local total_weight = self:calc("equipment_weight")
    local armor_class
@@ -185,6 +195,8 @@ function IChara:refresh()
       armor_class = "elona.light_armor"
    end
    self:mod("armor_class", armor_class)
+
+   self:emit("base.on_refresh")
 end
 
 function IChara:on_refresh()
@@ -278,19 +290,28 @@ local calc_damage = Event.define_hook("calc_damage", "Calculates damage.", 0, "d
 function IChara:damage_hp(amount, source, params)
    params = params or {}
 
-   local victim = self
+   local element = nil
+   if type(params.element) == "string" then
+      element = data["base.element"][params.element]
+   end
 
-   local event_params = {
-      chara = victim,
-      amount = amount,
-      source = source,
-      params = params
-   }
+   local victim = self
 
    local attacker = nil
    if type(source) == "table" and source._type == "base.chara" then
       attacker = source
    end
+
+   local event_params = {
+      chara = victim,
+      amount = amount,
+      source = source,
+      attacker = attacker, -- TODO remove/replace with source
+      element = element,
+
+      element_power = params.element_power or 0,
+      damage_text_type = params.damage_text_type
+   }
 
    if not Chara.is_alive(victim) then
       Event.trigger("base.after_damage_hp", event_params)
@@ -309,103 +330,131 @@ function IChara:damage_hp(amount, source, params)
       Gui.play_sound("base.atk1", attacker.x, attacker.y)
    end
 
-   Event.trigger("base.after_chara_damaged", event_params)
-
-   local damage_level
-   if damage <= 0 then
-      damage_level = -1
-   else
-      damage_level = math.floor(damage * 6 / victim.max_hp)
-   end
+   victim:emit("base.after_chara_damaged", event_params)
 
    if victim.hp >= 0 then
-      if params.element and params.damage_text_type == "element" then
-         show_element_text_damage(victim, source, victim, params.element)
-      elseif params.damage_text_type == "damage" then
-         Gui.mes_continue_sentence()
-         if damage_level == -1 then
-            Gui.mes(victim.uid .. " is scratched.")
-         elseif damage_level == 0 then
-            Gui.mes(victim.uid .. " is slightly wounded.", "Orange")
-         elseif damage_level == 1 then
-            Gui.mes(victim.uid .. " is moderately wounded.", "Gold")
-         elseif damage_level == 2 then
-            Gui.mes(victim.uid .. " is severely wounded.", "LightRed")
-         elseif damage_level >= 3 then
-            Gui.mes(victim.uid .. " is critically wounded.", "Red")
-         end
-      end
-
-      if Map.is_in_fov(victim.x, victim.y) then
-         if damage_level == 1 then
-            Gui.mes(victim.uid .. " screams.")
-         elseif damage_level == 2 then
-            Gui.mes(victim.uid .. " writhes in pain.")
-         elseif damage_level >= 3 then
-            Gui.mes(victim.uid .. " is severely hurt.")
-         end
-         if damage < 0 then
-            Gui.mes(victim.uid .. " is healed.")
-         end
-      end
-
-      if attacker then
-         attacker:act_hostile_towards(victim)
-      end
-
-      if attacker and not Chara.is_player(victim) then
-         local apply_hate
-         if victim:reaction_towards(attacker) < 0 or attacker:reaction_towards(victim, "original") < 0 then
-            if victim.ai_state.hate == 0 and Rand.one_in(4) then
-               apply_hate = true
-            end
-         end
-         if not attacker:is_player() and attacker:get_target() == victim and Rand.one_in(3) then
-            apply_hate = true
-         end
-
-         if apply_hate then
-            if victim:get_hate_at(attacker) == 0 then
-               victim.ai_state.hate = 20
-               victim:set_target(attacker)
-            else
-               victim.ai_state.hate = victim.ai_state.hate + 2
-            end
-         end
-      end
+      victim:emit("base.on_damage_chara", event_params)
    end
 
    local killed = false
    if victim.hp < 0 then
-      killed = true
-
       victim:kill(source)
-      Gui.play_sound(Rand.choice("base.kill1", "base.kill2"), victim.x, victim.y)
 
-      if attacker then
-         local gained_exp = calc_kill_exp(attacker, victim)
+      victim:emit("base.on_kill_chara", event_params)
 
-         attacker.experience = attacker.experience + gained_exp
-         -- TODO sleep exp
-         if attacker:is_in_party() then
-            attacker:set_target(nil)
-            attacker:get_party_leader():set_target(nil)
-         end
-      end
-
-      -- on kill quest chara
-      -- TODO: block if void/showroom
-      if not victim:is_player() then
-         if victim.on_death then
-            victim.on_death(damage, source)
-         end
-      end
+      killed = not Chara.is_alive(victim)
    end
 
    Event.trigger("base.after_damage_hp", event_params)
 
    return killed
 end
+
+function IChara.after_chara_damaged(victim, params)
+   local element = params.element
+   if element and element.after_apply_damage then
+      element.after_apply_damage(victim, params)
+   end
+end
+Event.register("base.after_chara_damaged", "Apply element damage.", IChara.after_chara_damaged)
+
+function IChara.on_kill_chara(victim, params)
+   local attacker = params.attacker
+   Gui.play_sound(Rand.choice("base.kill1", "base.kill2"), victim.x, victim.y)
+
+   if attacker then
+      local gained_exp = calc_kill_exp(attacker, victim)
+
+      attacker.experience = attacker.experience + gained_exp
+      -- TODO sleep exp
+      if attacker:is_in_party() then
+         attacker:set_target(nil)
+         attacker:get_party_leader():set_target(nil)
+      end
+   end
+
+   -- on kill quest chara
+   -- TODO: block if void/showroom
+end
+Event.register("base.on_kill_chara", "Default death handler.", IChara.on_kill_chara)
+
+function IChara.show_damage_text(victim, params)
+   local source = params.source
+   local damage = params.damage
+   local damage_level
+   if damage <= 0 then
+      damage_level = -1
+   else
+      damage_level = math.floor(damage * 6 / victim.max_hp)
+   end
+   if params.element and params.damage_text_type == "element" then
+      show_element_text_damage(victim, source, victim, params.element)
+   elseif params.damage_text_type == "damage" then
+      Gui.mes_continue_sentence()
+      if damage_level == -1 then
+         Gui.mes(victim.uid .. " is scratched.")
+      elseif damage_level == 0 then
+         Gui.mes(victim.uid .. " is slightly wounded.", "Orange")
+      elseif damage_level == 1 then
+         Gui.mes(victim.uid .. " is moderately wounded.", "Gold")
+      elseif damage_level == 2 then
+         Gui.mes(victim.uid .. " is severely wounded.", "LightRed")
+      elseif damage_level >= 3 then
+         Gui.mes(victim.uid .. " is critically wounded.", "Red")
+      end
+   end
+
+   if Map.is_in_fov(victim.x, victim.y) then
+      if damage_level == 1 then
+         Gui.mes(victim.uid .. " screams.")
+      elseif damage_level == 2 then
+         Gui.mes(victim.uid .. " writhes in pain.")
+      elseif damage_level >= 3 then
+         Gui.mes(victim.uid .. " is severely hurt.")
+      end
+      if damage < 0 then
+         Gui.mes(victim.uid .. " is healed.")
+      end
+   end
+end
+Event.register("base.on_damage_chara", "Damage text.", IChara.show_damage_text)
+
+function IChara.apply_hostile_action(victim, params)
+   local attacker = params.attacker
+
+   if attacker then
+      attacker:act_hostile_towards(victim)
+   end
+
+   if attacker and not Chara.is_player(victim) then
+      local apply_hate
+      if victim:reaction_towards(attacker) < 0 or attacker:reaction_towards(victim, "original") < 0 then
+         if victim.ai_state.hate == 0 and Rand.one_in(4) then
+            apply_hate = true
+         end
+      end
+      if not attacker:is_player() and attacker:get_target() == victim and Rand.one_in(3) then
+         apply_hate = true
+      end
+
+      if apply_hate then
+         if victim:get_hate_at(attacker) == 0 then
+            victim.ai_state.hate = 20
+            victim:set_target(attacker)
+         else
+            victim.ai_state.hate = victim.ai_state.hate + 2
+         end
+      end
+   end
+end
+Event.register("base.on_damage_chara", "Hostile action towards AI", IChara.apply_hostile_action)
+
+function IChara.apply_element_on_damage(victim, params)
+   if params.element and params.element.on_damage then
+      params.element.on_damage(victim, params)
+   end
+end
+Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
 function IChara:heal_hp(add)
    self.hp = math.min(self.hp + math.max(add, 0), self.max_hp)
@@ -512,6 +561,10 @@ function IChara:armor_penalty()
       penalty = skill:calc_armor_penalty(self)
    end
    return penalty
+end
+
+function IChara:calc_initial_gold()
+   return Rand.rnd(self:calc("level") * 25 + 10) + 1
 end
 
 return IChara

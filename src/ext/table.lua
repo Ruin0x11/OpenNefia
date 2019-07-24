@@ -288,11 +288,23 @@ end
 
 --- Converts an array to a set, with all keys set to "true".
 -- @tparam array arr
+-- @tparam bool keep_map_part if true, also keep any existing entries
+-- in the map part of the table.
 -- @treturn table
-function table.set(arr)
+function table.set(arr, keep_map_part)
    local tbl = {}
-   for _, k in ipairs(arr) do
-      tbl[k] = true
+   if keep_map_part then
+      for k, v in pairs(arr) do
+         if type(k) == "number" then
+            tbl[v] = true
+         else
+            tbl[k] = v
+         end
+      end
+   else
+      for _, k in ipairs(arr) do
+         tbl[k] = true
+      end
    end
    return tbl
 end

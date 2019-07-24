@@ -91,6 +91,8 @@ function Item.create(id, x, y, params, where)
       end
    end
 
+   item:calc("on_generate")
+
    if not params.no_stack then
       item:stack()
    end

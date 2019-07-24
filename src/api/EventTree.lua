@@ -28,6 +28,7 @@ function EventTree:replace(name, cb, priority)
    local ind = self.name_to_ind[name]
    if not (name or ind) then
       error("No such callback with name " .. tostring(name))
+      return false
    end
 
    local found
@@ -45,6 +46,8 @@ function EventTree:replace(name, cb, priority)
    if ind ~= -1 then
       self.cache[ind] = cb
    end
+
+   return true
 end
 
 function EventTree:insert(priority, cb, name)

@@ -1,3 +1,5 @@
+local Rand = require("api.Rand")
+
 local chara = {
    {
       _id = "bug",
@@ -4922,6 +4924,10 @@ local chara = {
       fltselect = 7,
       rarity = 20000,
       coefficient = 400,
+
+      calc_initial_gold = function()
+         return 5000 + Rand.rnd(11000)
+      end
    },
    {
       _id = "noble_child",
@@ -4939,6 +4945,10 @@ local chara = {
       fltselect = 7,
       rarity = 40000,
       coefficient = 400,
+
+      calc_initial_gold = function()
+         return 2000 + Rand.rnd(5000)
+      end
    },
    {
       _id = "tourist",
@@ -4956,6 +4966,10 @@ local chara = {
       female_image = 129,
       fltselect = 7,
       coefficient = 400,
+
+      calc_initial_gold = function()
+         return 1000 + Rand.rnd(3000)
+      end
    },
    {
       _id = "festival_tourist",
@@ -6257,9 +6271,9 @@ local chara = {
       on_eat_corpse = function()
          -- iron
       end,
-   },
       eqammo = { 25020, 3 },
       eqrange = { 496, 4 }
+   },
    {
       _id = "little_sister",
       elona_id = 319,
@@ -6443,7 +6457,7 @@ local chara = {
    --     faction = "base.enemy",
    --     race = "elona.slime",
    --     class = "elona.wizard",
-   --     resistances = {
+   --     eesistances = {
    --        ["elona.mind"] = 500,
    --     },
    --     image = 430,

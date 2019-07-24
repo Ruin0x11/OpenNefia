@@ -47,6 +47,8 @@ function ReplLayer:init(env, history)
    self.completion_candidates = nil
    self.selected_candidate = 1
 
+   self.print_varargs = false
+
    -- mode of operation. could implement Elona-style console if
    -- desired.
    self.mode = LuaReplMode:new(env)
@@ -242,11 +244,12 @@ end
 
 function ReplLayer.format_repl_result(result)
    local result_text
+   local stop = false
 
    if type(result) == "table" then
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
-      if result._type then
+      if result._type and result._id then
          result_text = inspect(Object.make_prototype(result))
       elseif tostring(result) == "<generator>" then
          local max = 10
@@ -262,6 +265,7 @@ function ReplLayer.format_repl_result(result)
          else
             result_text = "(iterator): " .. inspect(list:to_list())
          end
+         stop = true
       else
          result_text = inspect(result)
       end
@@ -269,15 +273,24 @@ function ReplLayer.format_repl_result(result)
       result_text = tostring(result)
    end
 
-   return result_text
+   return result_text, stop
 end
 
-local function join_results(acc, x)
-   if not acc then
-      return x
+local function join_results(acc, x, stop)
+   if acc.stop then
+      return acc
    end
 
-   return acc .. "\t" .. x
+   if stop then
+      acc.stop = true
+   end
+   if not acc.text then
+      acc.text = x
+   else
+      acc.text = acc.text .. "\t" .. x
+   end
+
+   return acc
 end
 
 function ReplLayer:submit()
@@ -303,7 +316,12 @@ function ReplLayer:submit()
 
    local result_text
    if success then
-      result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results)
+      if self.print_varargs then
+         result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results, {}).text
+      else
+         result_text = ReplLayer.format_repl_result(results[1])
+      end
+
       if result_text == nil then
          result_text = tostring(result_text)
       end

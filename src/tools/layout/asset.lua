@@ -695,7 +695,7 @@ local crop = {
       height = 96,
    },
    {
-      name = "status_ailment_bar",
+      name = "status_effect_bar",
       source = "graphic/interface.bmp",
       x = 0,
       y = 416,

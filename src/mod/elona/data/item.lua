@@ -1,3 +1,5 @@
+local Event = require("api.Event")
+local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 
 local categories = {
@@ -107,6 +109,46 @@ local categories = {
       ordering = 68000,
    }
 }
+
+local function calc_initial_gold(item, owner)
+   local amount
+   if owner then
+      amount = owner:calc("calc_initial_gold")
+   else
+      local dungeon_level = 1
+      local base = dungeon_level * 25
+      local is_shelter = false
+      if is_shelter then
+         base = 1
+      end
+
+      amount = Rand.rnd(base + 10) + 1
+   end
+
+   if item then
+      local quality = item:calc("quality")
+
+      -- TODO make number instead of enum
+      if quality == "great" then
+         amount = amount * 2
+      end
+
+      if quality == "miracle" or quality == "godly" or quality == "special" then
+         amount = amount * 4
+      end
+   end
+
+   return amount
+end
+
+local hook_calc_initial_gold =
+   Event.define_hook("calc_initial_gold",
+                     "Initial gold amount.",
+                     1,
+                     nil,
+                     function(_, params, result)
+                        return calc_initial_gold(params.item, params.owner)
+                     end)
 
 -- TODO: Some fields should not be stored on the prototype as
 -- defaults, but instead copied on generation.
@@ -1004,36 +1046,18 @@ local item =
          end,
 
          _copy = {
-            amount = "" -- TODO
+            amount = 0 -- TODO
          },
 
          on_generate = function(self, is_shop, owner)
             local Rand = require("api.Rand")
 
-            if owner then
-               self.amount = data["base.chara"][owner._id]:calc("on_gold_amount")
-               if not self.amount then
-                  self.amount = Rand.rnd(owner:calc("level") * 25 + 10) + 1
-               end
-            else
-               -- TODO make configurable
-               self.amount = Rand.rnd(1000)
-            end
-
-            if self.quality == "great" then
-               self.number = self.number * 2
-            end
-
-            -- TODO make number instead of enum
-            if self.quality == "miracle" or self.quality == "godly" or self.quality == "special" then
-               self.number = self.number * 4
-            end
+            self.amount = hook_calc_initial_gold({item=item,owner=owner})
 
             if owner then
-
+               owner.gold = owner.gold + self.amount
+               self:remove_ownership()
             end
-
-            -- return amount
          end
       },
       {

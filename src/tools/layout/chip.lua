@@ -1056,7 +1056,7 @@ local feat = {
 }
 
 local area = {
-   { id = 132, name = "area_town" },
+   { id = 132, name = "area_city" },
    { id = 133, name = "area_cave" },
    { id = 134, name = "area_rock" },
    { id = 135, name = "area_tree" },

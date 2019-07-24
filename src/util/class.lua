@@ -69,6 +69,16 @@ function class.interface(name, reqs, parents)
       end
    end
 
+   i.add_interface = function(p)
+      if not _interfaces[p] then
+         error(string.format("%s must be an interface", tostring(p)))
+      end
+      i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
+      i.all_methods = table.merge(table.deepcopy(p.all_methods), i.all_methods)
+      i.parents[#i.parents+1] = p
+      _iface_children[p][i] = true
+   end
+
    i.parents = {}
    if parents then
       if _interfaces[parents] then parents = {parents} end
@@ -76,15 +86,7 @@ function class.interface(name, reqs, parents)
          error("Parent interface list must be a list")
       end
       for _, p in ipairs(parents) do
-         if not _interfaces[p] then
-            error(string.format("%s must be an interface", tostring(p)))
-         end
-         i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
-         i.all_methods = table.merge(table.deepcopy(p.all_methods), i.all_methods)
-      end
-      for _, p in ipairs(parents) do
-         i.parents[#i.parents+1] = p
-         _iface_children[p][i] = true
+         i.add_interface(p)
       end
    end
 

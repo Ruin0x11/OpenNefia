@@ -13,7 +13,7 @@ data:extend_type(
 )
 
 data:extend_type(
-   "base.status_ailment",
+   "base.effect",
    {
       emotion_icon = schema.Optional(schema.String),
    }

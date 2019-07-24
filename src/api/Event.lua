@@ -41,7 +41,7 @@ end
 
 function Event.unregister(event_id, cb, opts)
    if env.is_hotloading() then
-      Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id, name)
+      Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id)
       return
    end
 
@@ -51,7 +51,7 @@ end
 
 function Event.trigger(event_id, args, default)
    if env.is_hotloading() then
-      Log.warn("Skipping Event.trigger for %s - \":%s\"", event_id, name)
+      Log.warn("Skipping Event.trigger for %s - \":%s\"", event_id)
       return
    end
 
@@ -115,6 +115,9 @@ function Event.define_hook(id, desc, default, field, cb)
       _default = _default or default
       if _default == nil then
          error("Default value must be provided.")
+      end
+      if type(_default) == "table" then
+         _default = table.deepcopy(_default)
       end
 
       local success, result = pcall(function() return Event.trigger(full_id, params, _default) end)

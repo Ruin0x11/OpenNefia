@@ -1194,7 +1194,7 @@ local feat_chips = {
 
 local area_chips = {
    {
-      name = "area_town",
+      name = "area_city",
       elona_id = 132,
       elona_atlas = 0,
    },
