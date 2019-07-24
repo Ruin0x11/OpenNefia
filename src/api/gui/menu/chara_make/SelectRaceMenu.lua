@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
+local data = require("internal.data")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
@@ -16,7 +17,7 @@ function SelectRaceMenu:init()
    self.width = 680
    self.height = 500
 
-   local races = table.of(function(i) return "race" .. i end, 100)
+   local races = data["base.race"]:iter():extract("_id"):to_list()
 
    self.win = UiWindow:new("chara_make.select_race.title")
    self.pages = UiList:new_paged(races, 16)
@@ -74,7 +75,11 @@ function SelectRaceMenu:on_query()
 end
 
 function SelectRaceMenu:on_make_chara(chara)
-   chara.race = self.pages:selected_item()
+   chara.race = self:charamake_result()
+end
+
+function SelectRaceMenu:charamake_result()
+   return self.pages:selected_item()
 end
 
 function SelectRaceMenu:update()

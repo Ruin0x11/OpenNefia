@@ -28,6 +28,9 @@ function Chara.is_player(c)
 end
 
 function Chara.player()
+   if not field.is_active then
+      return nil
+   end
    return Map.current():get_object(field.player)
 end
 

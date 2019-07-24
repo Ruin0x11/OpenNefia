@@ -164,7 +164,7 @@ local function delegate(c, field, params)
 end
 
 function class.is_an(interface, obj)
-   if obj == nil then
+   if type(obj) ~= "table" then
       return false
    end
 

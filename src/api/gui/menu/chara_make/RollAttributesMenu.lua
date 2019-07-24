@@ -1,9 +1,14 @@
+local Chara = require("api.Chara")
+local CharaMake = require("api.CharaMake")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local Resolver = require("api.Resolver")
+local Rand = require("api.Rand")
 local Ui = require("api.Ui")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
+local UiTheme = require("api.gui.UiTheme")
 local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
@@ -49,9 +54,14 @@ function RollAttributesMenu:init()
    self.finished = false
 
    local texts = {
-      "Strength",
-      "Endurance",
-      "Charisma"
+      { id = "elona.stat_strength", text = "Strength" },
+      { id = "elona.stat_constitution", text = "Constitution" },
+      { id = "elona.stat_dexterity", text = "Dexterity" },
+      { id = "elona.stat_perception", text = "Perception" },
+      { id = "elona.stat_learning", text = "Learning" },
+      { id = "elona.stat_will", text = "Will" },
+      { id = "elona.stat_magic", text = "Magic" },
+      { id = "elona.stat_charisma", text = "Charisma" },
    }
    self.data = {
       { text = "Reroll", on_choose = function() self:reroll(true) end },
@@ -59,11 +69,11 @@ function RollAttributesMenu:init()
    }
    local function lock(attr)
       return function()
-         self:lock(attr)
+         self:lock(attr.id)
       end
    end
    for _, v in ipairs(texts) do
-      self.data[#self.data + 1] = { text = v, on_choose = lock(v), locked = false, value = {} }
+      self.data[#self.data + 1] = { id = v.id, text = v.text, on_choose = lock(v), locked = false, value = {} }
    end
 
    self.alist = UiList:new(self.data, 23)
@@ -72,20 +82,9 @@ function RollAttributesMenu:init()
    self.input = InputHandler:new()
    self.input:forward_to(self.alist)
    self.input:bind_keys {
-      shift = function() self.canceled = true end
+      shift = function() self.canceled = true end,
+      ["kp*"] = function() self:reroll(true, true) end
    }
-
-   ---------------------------------------- dupe
-   self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
-
-   local iw = self.skill_icons:getWidth()
-   local ih = self.skill_icons:getHeight()
-
-   self.quad = {}
-   for i, s in ipairs(texts) do
-      self.quad[s] = love.graphics.newQuad(i * 48, 0, 48, 48, iw, ih)
-   end
-   ----------------------------------------
 
    self.win = UiWindow:new("roll_attributes.title")
 
@@ -100,7 +99,7 @@ end
 function RollAttributesMenu:on_make_chara(chara)
    for _, v in ipairs(self.data) do
       if v.value then
-         chara.skills["elona.stat_strength"] = v.value
+         chara.skills[v.id] = v.value
       end
    end
 end
@@ -109,10 +108,38 @@ function RollAttributesMenu:on_query()
    self.alist.chosen = false
 end
 
-function RollAttributesMenu:reroll(play_sound)
+local function calc_rolled_attributes(race, class)
+   print(race, class)
+   -- TODO
+   local temp = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
+   temp.level = 0
+
+   local race_data = Resolver.run("elona.race", { race = race }, { chara = temp })
+   local class_data = Resolver.run("elona.class", { class = class }, { chara = temp })
+
+   temp:mod_base_with(race_data, "merge")
+   temp:mod_base_with(class_data, "merge")
+
+   return temp.skills
+end
+
+function RollAttributesMenu:reroll(play_sound, minimum)
+   local race = CharaMake.get_section_result("api.gui.menu.chara_make.SelectRaceMenu")
+   local class = CharaMake.get_section_result("api.gui.menu.chara_make.SelectClassMenu")
+
+   local skills = calc_rolled_attributes(race, class)
+   _p(skills)
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
-         v.value = { level = math.random(1, 15), potential = math.random(1, 100), experience = 1000 }
+         local skill = skills[v.id]
+         if skill then
+            if minimum then
+               skill.level = skill.level - math.floor(skill.level / 2)
+            else
+               skill.level = skill.level - Rand.rnd(skill.level / 2 + 1)
+            end
+            v.value = skill
+         end
       end
    end
 
@@ -122,7 +149,7 @@ function RollAttributesMenu:reroll(play_sound)
 end
 
 function RollAttributesMenu:lock(attr)
-   local a = fun.iter(self.data):filter(function(i) return i.text == attr end):nth(1)
+   local a = fun.iter(self.data):filter(function(i) return i.id == attr end):nth(1)
    if not a or a.locked == nil then return end
    if a.locked == true then
       a.locked = false
@@ -136,12 +163,23 @@ function RollAttributesMenu:lock(attr)
    Gui.play_sound("base.ok1")
 end
 
+local quads = {
+      ["elona.stat_strength"] = 1,
+      ["elona.stat_constitution"] = 3,
+      ["elona.stat_dexterity"] = 4,
+      ["elona.stat_perception"] = 5,
+      ["elona.stat_learning"] = 6,
+      ["elona.stat_will"] = 7,
+      ["elona.stat_magic"] = 8,
+      ["elona.stat_charisma"] = 9,
+}
+
 function RollAttributesMenu:draw_attribute(item, i, x, y)
    Draw.set_font(15, "bold")
 
-   local quad = self.quad[item.text]
+   local quad = quads[item.id]
    if quad then
-      Draw.image_region(self.skill_icons, quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
+      self.t.skill_icons:draw_region(quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
    end
 
    Draw.text(tostring(item.value.level), x + 172, y, {0, 0, 0})
@@ -155,6 +193,7 @@ end
 function RollAttributesMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 20
+   self.t = UiTheme.load(self)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.alist:relayout(self.x + 38, self.y + 66)

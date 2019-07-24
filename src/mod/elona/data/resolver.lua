@@ -27,7 +27,7 @@ local function calc_decayed_potential(base_potential, chara_level)
 end
 
 local init_skill = function(self, params)
-   local my_skill = params.chara:calc("skills")[self.skill] or { level = 0, potential = 0 }
+   local my_skill = params.chara:calc("skills")[self.skill] or { level = self.level or 0, potential = 0 }
 
    local potential
    local level

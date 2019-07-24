@@ -117,11 +117,10 @@ end
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
 function IChara:normal_build()
-   local class_data = Resolver.run("elona.class", {}, { chara = self })
    local race_data = Resolver.run("elona.race", {}, { chara = self })
-
-   self:mod_base_with(class_data, "merge")
+   local class_data = Resolver.run("elona.class", {}, { chara = self })
    self:mod_base_with(race_data, "merge")
+   self:mod_base_with(class_data, "merge")
 end
 
 --- Finishes initializing this character. All characters must run this

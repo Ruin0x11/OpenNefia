@@ -93,6 +93,22 @@ function MainHud:refresh(player)
       self.stats["dv"] = player:calc("dv")
       self.stats["pv"] = player:calc("pv")
 
+      local attrs = {
+         "elona.stat_strength",
+         "elona.stat_constitution",
+         "elona.stat_dexterity",
+         "elona.stat_perception",
+         "elona.stat_learning",
+         "elona.stat_will",
+         "elona.stat_magic",
+         "elona.stat_charisma",
+         "elona.stat_speed",
+      }
+
+      for _, id in ipairs(attrs) do
+         self.stats[id] = player:skill_level(id)
+      end
+
       self.hp_bar:set_data(player.hp, player:calc("max_hp"))
       self.mp_bar:set_data(player.mp, player:calc("max_mp"))
       self.level:set_data(player.level, player.experience)
@@ -157,15 +173,15 @@ end
 function MainHud:draw_attributes()
    local item_width = math.max((Draw.get_width() - 148 - 136) / 11, 47)
    local attrs = {
-      "base.strength",
-      "base.constitution",
-      "base.dexterity",
-      "base.perception",
-      "base.learning",
-      "base.will",
-      "base.magic",
-      "base.charisma",
-      "base.speed",
+      "elona.stat_strength",
+      "elona.stat_constitution",
+      "elona.stat_dexterity",
+      "elona.stat_perception",
+      "elona.stat_learning",
+      "elona.stat_will",
+      "elona.stat_magic",
+      "elona.stat_charisma",
+      "elona.stat_speed",
       "dv_pv"
    }
 
@@ -173,9 +189,9 @@ function MainHud:draw_attributes()
    Draw.set_color(255, 255, 255)
    for i, a in ipairs(attrs) do
       local x_offset = 0
-      if a == "base.speed" then
+      if a == "elona.stat_speed" then
          x_offset = 8
-      elseif a == "dv" then
+      elseif a == "dv_pv" then
          x_offset = 14
       end
       self.t.skill_icons:draw_region(
@@ -192,13 +208,13 @@ function MainHud:draw_attributes()
       x = self.x + 136 + item_width * (i - 1) + 166
       local color = self.t.text_color
 
-      if a == "base.speed" then
-         Draw.text(tostring(100), x + 8, y, color)
+      if a == "elona.stat_speed" then
+         Draw.text(tostring(self.stats[a]), x + 8, y, color)
       elseif a == "dv_pv" then
          local dv_pv = string.format("%d/%d", self.stats["dv"], self.stats["pv"])
          Draw.text(dv_pv, x + 14, y, color)
       else
-         Draw.text(tostring(100), x, y, color)
+         Draw.text(tostring(self.stats[a]), x, y, color)
       end
    end
 end

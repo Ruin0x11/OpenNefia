@@ -50,9 +50,11 @@ function CharaMakeWrapper:proceed()
       local err = layer_class
       -- TODO turn this into a log warning
       Log.error("Error loading menu %s:\n\t%s", menu_id, err)
+      self:go_back()
       return
    elseif class == nil then
       Log.error("Cannot find menu %s", menu_id)
+      self:go_back()
       return
    end
 
@@ -68,6 +70,7 @@ function CharaMakeWrapper:proceed()
    if not success then
       local err = submenu
       Log.error("Error instantiating charamake menu:\n\t%s:", err)
+      self:go_back()
       return
    end
 

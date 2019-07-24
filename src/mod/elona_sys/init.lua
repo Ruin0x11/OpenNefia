@@ -89,7 +89,8 @@ data["elona_sys.effect"]:edit("register status effect indicator",
            _type = "base.ui_indicator",
            _id = "effect_" .. string.split(dat._id, ".")[2],
 
-           indicator = f
+           indicator = f,
+           ordering = dat.ordering
         }
         end
       return dat
