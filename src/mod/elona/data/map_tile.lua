@@ -3049,7 +3049,10 @@ data:add_multi(
          image = "mod/elona/graphic/map_tile/1_464.png",
          kind = 6,
          wall = "elona.wall_stone_3_bottom",
-         wall_kind = 2
+         wall_kind = 2,
+
+         mining_difficulty = 12000,
+         mining_difficulty_coefficient = 30
       },
       {
          _id = "wall_stone_4_top",

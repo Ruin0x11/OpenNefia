@@ -10,10 +10,12 @@ local function generate_methods(iface, name, field)
    local subfields = { "level", "potential", "experience" }
 
    iface["has_" .. name] = function(self, skill)
-      return self[name .. "_level"](self, skill) > 0
+      -- This checks base, not temporary
+      return self[field][skill] and self[field][skill].level > 0
    end
 
    iface["set_base_" .. name] = function(self, skill, level, potential, experience)
+      print("setbase",skill,level,potential,experience)
       self[field][skill] = self[field][skill] or
          {
             level = 0,
@@ -22,15 +24,18 @@ local function generate_methods(iface, name, field)
          }
 
       local s = self[field][skill]
-      s.level = math.floor(level) or s.level
-      s.potential = math.floor(potential) or s.potential
-      s.experience = math.floor(experience) or s.experience
+      s.level = math.floor(level or s.level)
+      s.potential = math.floor(potential or s.potential)
+      s.experience = math.floor(experience or s.experience)
    end
 
    for _, subfield in ipairs(subfields) do
       -- self:skill_level(skill)
       iface[name .. "_" .. subfield] = function(self, skill)
          local it = self:calc(field)[skill]
+         if not it or not it[subfield] then
+            it = self[field][skill]
+         end
          if not it then return 0 end
          return it[subfield] or 0
       end

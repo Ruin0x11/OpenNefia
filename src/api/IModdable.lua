@@ -29,25 +29,25 @@ end
 --- Modifies a temporary value. This will be cleared when refresh() is
 --- called on the object.
 function IModdable:mod(prop, v, method)
-   table.merge_ex_single(self.temp, v, method or "add", self, prop)
+   table.merge_ex_single(self.temp, v, method or "add", nil, prop)
    return self.temp[prop]
 end
 
 -- Modifies a base value. This will persist if refresh() is called,
 -- and is the same as regular assignment.
 function IModdable:mod_base(prop, v, method)
-   table.merge_ex_single(self, v, method or "add", self.proto, prop)
+   table.merge_ex_single(self, v, method or "add", nil, prop)
    return self[prop]
 end
 
 -- Modifies this object's temporary values by merging them with `tbl`.
 function IModdable:mod_with(tbl, method)
-   return table.merge_ex(self.temp, tbl, self, method or "add")
+   return table.merge_ex(self.temp, tbl, nil, method or "add")
 end
 
 -- Modifies this object's base values by merging them with `tbl`.
 function IModdable:mod_base_with(tbl, method)
-   return table.merge_ex(self, tbl, self.proto, method or "add")
+   return table.merge_ex(self, tbl, nil, method or "add")
 end
 
 --- Clears a temporary value and sets a base value at the same time.

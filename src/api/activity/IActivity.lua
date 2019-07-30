@@ -56,6 +56,7 @@ function IActivity:proc_interrupted()
 end
 
 function IActivity:pass_turn()
+   -- TODO pcall
    local result = self:emit("base.on_activity_pass_turns", {chara=self.chara}, {turn_result="turn_end"})
    self.turns = self.turns - 1
    return result

@@ -19,6 +19,9 @@ Gui.bind_keys {
    end,
    e = function(me)
       return ElonaCommand.eat(me)
+   end,
+   i = function(me)
+      return ElonaCommand.dig(me)
    end
 }
 

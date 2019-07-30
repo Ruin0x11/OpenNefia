@@ -3,6 +3,37 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 
+local function calc_dig_success(chara, x, y, dig_count)
+   local success = false
+   local flag = false -- kind == 6
+
+   local tile = chara:current_map():tile(x, y)
+
+   -- TODO config difficulty
+   local difficulty = tile.mining_difficulty or 1500
+   local coefficient = tile.mining_difficulty_coefficient or 20
+
+   if Rand.rnd(difficulty) < chara:skill_level("elona.stat_strength") + chara:skill_level("elona.mining") * 10 then
+      success = true
+   end
+   local p = math.floor(coefficient - chara:skill_level("elona.mining") / 2)
+   if p > 0 and dig_count <= p then
+      success = false
+   end
+
+   return success
+end
+
+local function do_dig_success(chara, x, y)
+   -- TODO hidden path
+
+   print(x,y,"dood")
+   chara:current_map():set_tile(x, y, "elona.wood_floor_5")
+   Gui.play_sound("base.crush1")
+   Gui.mes("finish mining wall")
+   Skill.gain_skill_exp(chara, "elona.mining", 100)
+end
+
 local activity = {
    {
       _id = "eating",
@@ -107,7 +138,7 @@ local activity = {
    {
       _id = "fishing",
 
-      params = { item = "table" },
+      params = {},
       default_turns = 100,
 
       animation_wait = 2,
@@ -119,6 +150,7 @@ local activity = {
             name = "start",
 
             callback = function(self, params)
+               Gui.mes("start fishing")
             end
          },
          {
@@ -169,7 +201,7 @@ local activity = {
                   Gui.mes("fishwait5")
                   Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
                   Skill.gain_skill_exp(params.chara, "elona.fishing", 100)
-                  return { action = "stop" }
+                  return { turn_result = "turn_end", action = "stop" }
                end
                if Rand.one_in(10) then
                   params.chara:damage_sp(1)
@@ -184,6 +216,58 @@ local activity = {
 
             callback = function(self, params)
                Gui.mes("fishing failed")
+            end
+         }
+      }
+   },
+   {
+      _id = "dig_wall",
+
+      params = { x = "number", y = "number" },
+      default_turns = 40,
+
+      animation_wait = 2,
+
+      on_interrupt = "stop",
+      events = {
+         {
+            id = "base.on_activity_start",
+            name = "start",
+
+            callback = function(self, params)
+               Gui.mes("start digging")
+               self.dig_count = 0
+            end
+         },
+         {
+            id = "base.on_activity_pass_turns",
+            name = "pass turns",
+
+            callback = function(self, params)
+               local chara = params.chara
+               if Rand.one_in(5) then
+                  chara:damage_sp(1)
+               end
+               self.dig_count = self.dig_count + 1
+
+               local success = calc_dig_success(chara, self.x, self.y, self.dig_count)
+
+               if success then
+                  do_dig_success(chara, self.x, self.y)
+                  return { turn_result = "turn_end", action = "stop" }
+               elseif chara.turns_alive % 5 == 0 then
+                  Gui.mes("*clang*")
+               end
+
+               return { turn_result = "turn_end" }
+            end
+         },
+         {
+            id = "base.on_activity_finish",
+            name = "finish",
+
+            callback = function(self, params)
+               Gui.mes("digging failed")
             end
          }
       }

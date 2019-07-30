@@ -21,7 +21,7 @@ function DirectionPrompt:init(x, y)
    self.input = InputHandler:new()
    self.input:bind_keys {
       ["return"] = function()
-         self.result = { self.center_x, self.center_y }
+         self.result = "Center"
       end,
       up = function()
          if self.cardinal then

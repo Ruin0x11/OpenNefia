@@ -13,6 +13,7 @@ local directions = {
    Southeast = {  1,  1 },
    Northwest = { -1, -1 },
    Southwest = { -1,  1 },
+   Center    = {  0,  0 },
 }
 
 local directions_rev = { [-1] = {}, [0] = {}, [1] = {} }
