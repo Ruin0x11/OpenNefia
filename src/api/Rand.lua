@@ -19,10 +19,6 @@ function Rand.one_in_percent(n)
    return 100 / n
 end
 
-function Rand.coinflip()
-   return Rand.rnd(2) == 0
-end
-
 function Rand.set_seed(seed)
    math.randomseed(seed)
 end

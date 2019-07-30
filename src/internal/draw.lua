@@ -114,6 +114,8 @@ function draw.layer_count()
    return #layers
 end
 
+local coroutines = {}
+
 function draw.draw_layers()
    if env.hotloaded_this_frame() then
       for _, layer in ipairs(layers) do
@@ -126,6 +128,64 @@ function draw.draw_layers()
 
    for i, layer in ipairs(layers) do
       layer:draw()
+   end
+
+   local dead = {}
+   for i, entry in ipairs(coroutines) do
+      local ok, err = coroutine.resume(entry.thread)
+      if not ok then
+         print("Error in draw coroutine: " .. err)
+         dead[#dead+1] = i
+      end
+
+      if coroutine.status(entry.thread) == "dead" then
+         dead[#dead+1] = i
+      end
+
+      if entry.wait then
+         break
+      end
+   end
+
+   table.remove_indices(coroutines, dead)
+end
+
+function draw.needs_wait()
+   for _, v in ipairs(coroutines) do
+      if v.wait then
+         return true
+      end
+   end
+
+   return false
+end
+
+function draw.run(cb, state, wait)
+   assert(type(cb) == "function")
+
+   local f = function()
+      local s = state
+      while true do
+         s = cb(s)
+         if s == nil then
+            break
+         end
+         coroutine.yield()
+      end
+   end
+
+   local co = coroutine.create(f)
+
+   coroutines[#coroutines+1] = {
+      thread = co,
+      wait = wait
+   }
+
+   if wait == true then
+      -- yield out of the update thread and into the draw thread,
+      -- which will prevent the update thread from running until all
+      -- coroutines with wait set are finished
+      coroutine.yield()
    end
 end
 

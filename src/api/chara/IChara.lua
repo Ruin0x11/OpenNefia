@@ -412,11 +412,15 @@ function IChara:damage_sp(amount)
 end
 
 function IChara:heal_hp(add)
-   self.hp = math.min(self.hp + math.max(add, 0), self.max_hp)
+   self.hp = math.min(self.hp + math.max(add, 0), self:calc("max_hp"))
 end
 
 function IChara:heal_mp(add)
-   self.mp = math.min(self.mp + math.max(add, 0), self.max_mp)
+   self.mp = math.min(self.mp + math.max(add, 0), self:calc("max_mp"))
+end
+
+function IChara:heal_sp(add)
+   self.stamina = math.max(self.stamina + math.max(add, 0), self:calc("max_stamina"))
 end
 
 function IChara:heal_to_max()

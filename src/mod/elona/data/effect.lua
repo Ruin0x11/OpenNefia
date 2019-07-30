@@ -38,6 +38,25 @@ data:add {
    indicator = indicator_stamina
 }
 
+local function indicator_awake_hours()
+   local hours = save.elona_sys.awake_hours
+
+   if hours >= 50 then
+      return { text = "very sleepy" }
+   elseif hours >= 30 then
+      return { text = "sleepy" }
+   end
+
+   return nil
+end
+data:add {
+   _type = "base.ui_indicator",
+   _id = "awake_hours",
+
+   ordering = 170000,
+   indicator = indicator_awake_hours
+}
+
 local effect = {
    {
       _id = "sick",

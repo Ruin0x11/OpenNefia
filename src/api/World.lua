@@ -14,7 +14,7 @@ local event_types = {
 }
 
 function World.pass_time_in_seconds(seconds, events)
-   events = events or event_types.second
+   events = event_types[events or "second"] or event_types.second
    local date = save.base.date
 
    if events >= 5 then

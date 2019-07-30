@@ -134,6 +134,7 @@ data:add {
          },
          title = "asset/title.png",
          void = "asset/void.png",
+         bg_night = "asset/bg_night.png",
 
          attribute_font = {
             type = "font",

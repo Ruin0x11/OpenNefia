@@ -100,6 +100,10 @@ function UiTheme.load(instance)
    return theme_proxy:new("elona")
 end
 
+function UiTheme.load_asset(id)
+   return UiTheme.load(nil)[id]
+end
+
 function UiTheme.hotload(old, new)
    local id = old.theme_id()
    assert(id)

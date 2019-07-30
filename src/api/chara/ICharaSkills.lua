@@ -56,6 +56,8 @@ local function generate_methods(iface, name, field)
    end
 end
 
+-- TODO: keep eveything in one "skills" field, to prevent needing to
+-- distinguish by type, and instead prefix each ID with the type name
 generate_methods(ICharaSkills, "skill", "skills")
 generate_methods(ICharaSkills, "magic", "magic")
 generate_methods(ICharaSkills, "resist", "resists")

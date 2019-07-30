@@ -12,6 +12,7 @@ Draw.get_tiled_width = draw.get_tiled_width
 Draw.get_tiled_height = draw.get_tiled_height
 Draw.with_canvas = draw.with_canvas
 Draw.set_font = draw.set_font
+Draw.run = draw.run
 
 -- TODO remove
 Draw.load_image = draw.load_image

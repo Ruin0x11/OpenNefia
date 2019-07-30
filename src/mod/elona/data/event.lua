@@ -8,6 +8,7 @@ local event = {
    { _id = "on_eat_item_begin" },
    { _id = "on_eat_item_effect" },
    { _id = "on_eat_item_finish" },
+   { _id = "on_sleep" },
 }
 
 data:add_multi("base.event", event)

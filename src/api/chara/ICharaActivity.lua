@@ -86,6 +86,8 @@ function ICharaActivity:start_activity(id, params, turns, force)
    if self.activity:start(self) == "stop" then
       self:remove_activity()
    end
+
+   Gui.update_screen()
 end
 
 -- Creates and immediately finishes an activity without firing start

@@ -16,14 +16,14 @@ end
 local function drift_towards_pos(x, y, initial_x, initial_y)
    local add_x = 0
    local add_y = 0
-   if Rand.coinflip() then
+   if Rand.one_in(2) then
       if x > initial_x then
          add_x = -1
       elseif x < initial_x then
          add_x = 1
       end
    end
-   if Rand.coinflip() then
+   if Rand.one_in(2) then
       if y > initial_y then
          add_y = -1
       elseif y < initial_x then

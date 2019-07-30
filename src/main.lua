@@ -36,6 +36,12 @@ end
 local abort = false
 
 function love.update(dt)
+   fps:update(dt)
+
+   if internal.draw.needs_wait() then
+      return
+   end
+
    if server then
       local ok, err = coroutine.resume(server, dt)
       if not ok then
@@ -51,8 +57,6 @@ function love.update(dt)
       print()
       error(err)
    end
-
-   fps:update(dt)
 
    if coroutine.status(loop) == "dead" then
       print("Finished.")
@@ -71,7 +75,6 @@ function love.draw()
       print("Error in draw:\n\t" .. debug.traceback(draw, err))
       print()
       if not ok then
-         -- Coroutine is dead.
          error(err)
       else
          abort = true

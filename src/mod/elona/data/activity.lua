@@ -1,5 +1,6 @@
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
+local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 
@@ -268,6 +269,67 @@ local activity = {
 
             callback = function(self, params)
                Gui.mes("digging failed")
+            end
+         }
+      }
+   },
+   {
+      _id = "resting",
+
+      params = { bed = "table" },
+      default_turns = 50,
+
+      animation_wait = 2,
+
+      on_interrupt = "stop",
+      events = {
+         {
+            id = "base.on_activity_start",
+            name = "start",
+
+            callback = function(self, params)
+               Gui.mes("start resting")
+            end
+         },
+         {
+            id = "base.on_activity_pass_turns",
+            name = "pass turns",
+
+            callback = function(self, params)
+               local chara = params.chara
+
+               if self.turns % 2 == 0 then
+                  chara:heal_sp(1)
+               end
+               if self.turns % 3 == 0 then
+                  chara:heal_hp(1)
+                  chara:heal_mp(1)
+               end
+
+               if save.elona_sys.awake_hours >= 30 then
+                  local do_sleep = false
+                  if save.elona_sys.awake_hours >= 50 then
+                     do_sleep = true
+                  elseif Rand.one_in(2) then
+                     do_sleep = true
+                  end
+                  if do_sleep then
+                     Gui.mes("drift off to sleep")
+                     ElonaCommand.do_sleep(chara, self.bed)
+
+                     return { turn_result = "turn_end", action = "stop" }
+                  end
+               end
+
+               return { turn_result = "turn_end" }
+            end
+         },
+         {
+            id = "base.on_activity_finish",
+            name = "finish",
+
+            callback = function(self, params)
+               Gui.mes("rest finish")
             end
          }
       }

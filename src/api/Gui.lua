@@ -121,6 +121,9 @@ end
 function Gui.mes_continue_sentence()
 end
 
+function Gui.mes_halt()
+end
+
 function Gui.play_sound(sound_id, x, y, channel)
    local sound_manager = require("internal.global.sound_manager")
    local coords = draw.get_coords()
@@ -143,6 +146,9 @@ function Gui.stop_background_sound(sound_id)
    local sound_manager = require("internal.global.sound_manager")
 
    sound_manager:stop_looping(sound_id)
+end
+
+function Gui.play_music(music_id)
 end
 
 function Gui.bind_keys(keys)
