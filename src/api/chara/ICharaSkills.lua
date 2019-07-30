@@ -15,7 +15,6 @@ local function generate_methods(iface, name, field)
    end
 
    iface["set_base_" .. name] = function(self, skill, level, potential, experience)
-      print("setbase",skill,level,potential,experience)
       self[field][skill] = self[field][skill] or
          {
             level = 0,

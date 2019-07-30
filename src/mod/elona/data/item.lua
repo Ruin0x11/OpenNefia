@@ -111,6 +111,29 @@ local categories = {
       end
    },
    {
+      _id = "bed",
+      ordering = 60004,
+
+      on_add_data = function(self)
+         local event = {
+            id = "base.on_use_item",
+            name = "Use bed",
+
+            callback = function(self, params)
+               if save.elona_sys.awake_hours < 15 then
+                  Gui.mes("not sleepy.")
+                  return false
+               end
+
+               params.chara:start_activity("elona.prepare_to_sleep", {bed=self})
+
+               return true
+            end
+         }
+         table.insert(self.events, event)
+      end
+   },
+   {
       _id = "gold",
       ordering = 68000,
    }

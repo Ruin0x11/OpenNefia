@@ -333,6 +333,52 @@ local activity = {
             end
          }
       }
+   },
+   {
+      _id = "preparing_to_sleep",
+
+      params = { bed = "table" },
+      default_turns = 20,
+
+      animation_wait = 2,
+
+      on_interrupt = "stop",
+      events = {
+         {
+            id = "base.on_activity_start",
+            name = "start",
+
+            callback = function(self, params)
+               Gui.mes("start resting")
+               -- TODO
+               local is_town_or_guild = false
+               if is_town_or_guild then
+                  Gui.mes("sleep start other")
+                  self.turns = 5
+               else
+                  Gui.mes("sleep start global")
+                  self.turns = 20
+               end
+            end
+         },
+         {
+            id = "base.on_activity_pass_turns",
+            name = "pass turns",
+
+            callback = function(self, params)
+               return { turn_result = "turn_end" }
+            end
+         },
+         {
+            id = "base.on_activity_finish",
+            name = "finish",
+
+            callback = function(self, params)
+               Gui.mes("finish preparations")
+               ElonaCommand.do_sleep(params.chara, self.bed)
+            end
+         }
+      }
    }
 }
 
