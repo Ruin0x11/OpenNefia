@@ -32,13 +32,13 @@ local function generate_methods(iface, name, field)
       iface[name .. "_" .. subfield] = function(self, skill)
          local it = self:calc(field)[skill]
          if not it then return 0 end
-         return it[subfield]
+         return it[subfield] or 0
       end
       -- self:base_skill_level(skill)
       iface["base_" .. name .. "_" .. subfield] = function(self, skill)
          local it = self[field][skill]
          if not it then return 0 end
-         return it[subfield]
+         return it[subfield] or 0
       end
       -- self:mod_skill_level(skill, level, "add")
       iface["mod_" .. name .. "_" .. subfield] = function(self, skill, amount, op)

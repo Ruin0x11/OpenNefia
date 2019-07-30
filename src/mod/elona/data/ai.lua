@@ -308,7 +308,6 @@ local idle_action = {
 
 local function on_ai_calm_actions(chara, params)
    local i =  chara:emit("elona.on_ai_calm_action", params, false)
-   _p(i,"get")
    return i
 end
 

@@ -138,17 +138,7 @@ function IChara:build()
 
    self.target = nil
 
-   self.ai_state = {
-      hate = 0,
-      leader_attacker = nil,
-      item_to_be_used = nil,
-      wants_movement = 0,
-      last_target_x = 0,
-      last_target_y = 0,
-      anchor_x = nil,
-      anchor_y = nil,
-      is_anchored = false,
-   }
+   self:reset_ai()
 
    self:emit("base.on_build_chara")
 
@@ -351,6 +341,8 @@ function IChara:damage_hp(amount, source, params)
    return killed, base_damage, damage
 end
 
+Event.register("base.on_damage_chara", "Interrupt activity", function(chara) chara:interrupt_activity() end)
+
 function IChara.after_chara_damaged(victim, params)
    local element = params.element
    if element and element.after_apply_damage then
@@ -415,6 +407,9 @@ function IChara.apply_element_on_damage(victim, params)
 end
 Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
+function IChara:damage_sp(amount)
+   self.stamina = math.max(self.stamina - amount, -100)
+end
 
 function IChara:heal_hp(add)
    self.hp = math.min(self.hp + math.max(add, 0), self.max_hp)
@@ -427,6 +422,7 @@ end
 function IChara:heal_to_max()
    self.hp = self:calc("max_hp")
    self.mp = self:calc("max_mp")
+   self.stamina = self:calc("max_stamina")
 end
 
 function IChara:kill(source)
@@ -477,6 +473,22 @@ end
 
 function IChara:set_target(target)
    self.target = target
+end
+
+function IChara:reset_ai()
+   self.target = nil
+
+   self.ai_state = {
+      hate = 0,
+      leader_attacker = nil,
+      item_to_be_used = nil,
+      wants_movement = 0,
+      last_target_x = 0,
+      last_target_y = 0,
+      anchor_x = nil,
+      anchor_y = nil,
+      is_anchored = false,
+   }
 end
 
 function IChara:get_target()

@@ -165,6 +165,22 @@ function field_logic.pass_turns()
    -- RETURN: proc activity
    -- proc refresh if transferred
 
+   if chara:has_activity() then
+      chara:_proc_activity_interrupted()
+   end
+
+   if chara.turns_alive % 25 == 0 then
+      -- TODO curse_power
+      -- TODO pregnant
+   end
+
+   if chara:has_activity() then
+      local turn_result = chara:pass_activity_turn()
+      if turn_result then
+         return turn_result
+      end
+   end
+
    if Chara.is_alive(chara) then
       if chara:is_player() then
          return "player_turn", chara

@@ -69,6 +69,8 @@ local effect = {
 
       ordering = 30000,
 
+      stops_activity = true,
+
       on_turn_end = function(chara)
          chara:damage_hp(Rand.rnd(2 + chara:skill_level("elona.stat_constitution") / 10), "elona.poison")
          return { regeneration = false }
@@ -79,6 +81,8 @@ local effect = {
 
       ordering = 40000,
 
+      stops_activity = true,
+
       on_turn_end = function(chara)
          chara:heal_hp(1)
          chara:heal_mp(1)
@@ -87,10 +91,14 @@ local effect = {
    {
       _id = "blindness",
       ordering = 50000,
+
+      stops_activity = true,
    },
    {
       _id = "paralysis",
       ordering = 60000,
+
+      stops_activity = true,
    },
    {
       _id = "choking",
@@ -113,6 +121,8 @@ local effect = {
    {
       _id = "confusion",
       ordering = 80000,
+
+      stops_activity = true,
    },
    {
       _id = "fear",
@@ -121,6 +131,8 @@ local effect = {
    {
       _id = "dimming",
       ordering = 100000,
+
+      stops_activity = true,
    },
    {
       _id = "fury",
@@ -129,6 +141,8 @@ local effect = {
    {
       _id = "bleeding",
       ordering = 120000,
+
+      stops_activity = true,
 
       on_turn_end = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
@@ -143,6 +157,8 @@ local effect = {
    {
       _id = "insanity",
       ordering = 130000,
+
+      stops_activity = true,
 
       on_turn_end = function(chara)
          if Rand.one_in(3) then

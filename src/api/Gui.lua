@@ -2,6 +2,7 @@ local Env = require("api.Env")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
 local draw = require("internal.draw")
+local Draw = require("api.Draw")
 local field = require("game.field")
 
 local Gui = {}
@@ -53,7 +54,7 @@ end
 
 function Gui.wait(wait)
    Gui.update_screen()
-   draw.wait(wait)
+   Draw.wait(wait)
 end
 
 local function get_message_window()

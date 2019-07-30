@@ -156,12 +156,8 @@ function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
    return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy)
 end
 
-local framerate = 20
-
 function Draw.wait(msecs)
-   local msecs_per_frame = (1 / framerate) * 1000
-   local frames = msecs / msecs_per_frame
-   love.timer.sleep(frames / 1000)
+   love.timer.sleep(msecs / 1000)
 end
 
 function Draw.add_async_callback(cb)

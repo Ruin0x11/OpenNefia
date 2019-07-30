@@ -104,6 +104,10 @@ local categories = {
          else
             self.params.subtitle = nil
          end
+      end,
+
+      on_add_data = function(self)
+         self.prevent_sell_in_own_shop = true
       end
    },
    {
@@ -604,6 +608,7 @@ local item =
 
          elona_type = "normal_book",
 
+         prevent_sell_in_own_shop = true,
       },
       {
          _id = "bugged_book",
@@ -1041,6 +1046,8 @@ local item =
          weight = 0,
          category = 68000,
          coefficient = 100,
+
+         prevent_sell_in_own_shop = true,
 
          on_get = function(self, getter)
             getter.gold = getter.gold + self.amount
@@ -5685,6 +5692,8 @@ local item =
          subcategory = 53100,
          coefficient = 100,
 
+         prevent_sell_in_own_shop = true,
+
          param1 = 1,
 
          params = { building_id = "" },
@@ -9709,6 +9718,7 @@ local item =
 
          elona_function = 7,
 
+         prevent_sell_in_own_shop = true,
       },
       {
          _id = "seven_league_boots",
@@ -9816,6 +9826,8 @@ local item =
          fltselect = 1,
          category = 72000,
          coefficient = 100,
+
+         prevent_sell_in_own_shop = true,
       },
       {
          _id = "register",
@@ -9830,6 +9842,7 @@ local item =
 
          elona_function = 8,
 
+         prevent_sell_in_own_shop = true,
       },
       {
          _id = "textbook",
@@ -13430,6 +13443,22 @@ local item =
 
          food_rank = 6,
 
+         events = {
+            {
+               id = "elona.on_eat_item_finish",
+               name = "Choking behavior",
+
+               callback = function(self, params)
+                  local chance = 3
+                  if Rand.one_in(chance) then
+                     local chara = params.chara
+                     Gui.mes_visible(chara.uid .. " chokes ", chara.x, chara.y, "Purple")
+                     Gui.mes_visible("'oeh'", chara.x, chara.y, "Purple")
+                     chara:add_effect_turns("elona.choked", 1)
+                  end
+               end
+            }
+         }
       },
       {
          _id = "mochi",
@@ -13444,6 +13473,21 @@ local item =
          food_rank = 7,
 
          tags = { "fest" },
+
+         {
+            id = "elona.on_eat_item_finish",
+            name = "Choking behavior",
+
+            callback = function(self, params)
+               local chance = 10
+               if Rand.one_in(chance) then
+                  local chara = params.chara
+                  Gui.mes_visible(chara.uid .. " chokes ", chara.x, chara.y, "Purple")
+                  Gui.mes_visible("'oeh'", chara.x, chara.y, "Purple")
+                  chara:add_effect_turns("elona.choked", 1)
+               end
+            end
+         }
       },
       {
          _id = "five_horned_helm",

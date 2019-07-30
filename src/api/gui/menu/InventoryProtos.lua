@@ -1,5 +1,6 @@
 local Gui = require("api.Gui")
 local Action = require("api.Action")
+local ElonaCommand = require("mod.elona.api.ElonaCommand") -- TODO
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
 
@@ -106,6 +107,22 @@ InventoryProtos.inv_equip = {
       -- TODO: fairy trait
       -- return ctxt.chara:can_equip(item)
       return true
+   end
+}
+
+InventoryProtos.inv_eat = {
+   sources = { "chara", "equipment", "ground" },
+   shortcuts = true,
+   icon = 5,
+   can_select = function(ctxt, item)
+      if item:calc("flags").is_no_drop then
+         return false, "marked as no drop"
+      end
+
+      return true
+   end,
+   on_select = function(ctxt, item)
+      return ElonaCommand.do_eat(ctxt.chara, item)
    end
 }
 

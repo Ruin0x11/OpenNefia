@@ -186,6 +186,15 @@ function IItem:is_equipped_at(body_part_type)
    return slot and slot.type == body_part_type
 end
 
+function IItem:remove_activity()
+   if not self.chara_using then
+      return
+   end
+
+   self.chara_using:remove_activity()
+   self.chara_using = nil
+end
+
 function IItem:copy_image()
    local item_atlas = require("internal.global.atlases").get().item
    return item_atlas:copy_tile_image(self:calc("image") .. "#1")
@@ -221,12 +230,10 @@ function IItem:can_stack_with(other)
 
          if do_deepcompare then
             if not #my_val == #their_val then
-               print("notmy")
                return false, field
             end
             Log.trace("Stack: deepcomparing %s", field)
             if not table.deepcompare(my_val, their_val) then
-               print("fail")
                return false, field
             end
          else

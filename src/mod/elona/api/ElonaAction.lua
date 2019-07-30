@@ -322,4 +322,21 @@ function ElonaAction.bash(chara, x, y)
    return true
 end
 
+function ElonaAction.eat(chara, item)
+   if chara:is_player() then
+      if item.chara_using and item.chara_using.uid ~= chara.uid then
+         Gui.mes("someone else is using")
+         return false
+      end
+   elseif item.chara_using then
+      item.chara_using:finish_activity()
+      assert(item.chara_using == nil)
+      Gui.mes_visible(chara.uid .. "snatches food.")
+   end
+
+   chara:start_activity("elona.eating", {food=item})
+
+   return true
+end
+
 return ElonaAction

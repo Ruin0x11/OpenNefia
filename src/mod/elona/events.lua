@@ -16,6 +16,9 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 Gui.bind_keys {
    b = function(me)
       return ElonaCommand.bash(me)
+   end,
+   e = function(me)
+      return ElonaCommand.eat(me)
    end
 }
 

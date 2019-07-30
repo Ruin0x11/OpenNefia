@@ -344,6 +344,9 @@ function Map.travel_to(map_or_uid, params)
 
    -- Transfer each to the new map.
 
+   player:remove_activity()
+   player:reset_ai()
+
    success = try_place(player, x, y, current, map)
    assert(success)
 
@@ -354,6 +357,9 @@ function Map.travel_to(map_or_uid, params)
       -- spawn, be sure they are still preserved.
       local ally = current:get_object_of_type("base.chara", uid)
       assert(ally ~= nil)
+
+      ally:remove_activity()
+      ally:reset_ai()
 
       local new_ally = try_place(ally, x, y, current, map)
       assert(new_ally ~= nil)

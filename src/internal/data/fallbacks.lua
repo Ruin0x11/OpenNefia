@@ -143,6 +143,12 @@ data:add_multi(
       },
       {
          _id = "on_activity_finish"
+      },
+      {
+         _id = "on_activity_interrupt"
+      },
+      {
+         _id = "on_activity_cleanup"
       }
    }
 )

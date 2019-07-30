@@ -23,4 +23,24 @@ function ElonaCommand.bash(player)
    return "turn_end"
 end
 
+function ElonaCommand.do_eat(player, item)
+   if player:calc("nutrition") > 10000 then
+      Gui.mes("too bloated.")
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+
+   local result = ElonaAction.eat(player, item)
+
+   if not result then
+      return "player_turn_query"
+   end
+
+   return "turn_end"
+end
+
+function ElonaCommand.eat(player)
+   return Input.query_inventory(player, "inv_eat")
+end
+
 return ElonaCommand

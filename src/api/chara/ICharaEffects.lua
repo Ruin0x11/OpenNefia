@@ -127,10 +127,17 @@ function ICharaEffects:apply_effect(id, power, params)
       success = self:set_effect_turns(id, turns)
    end
 
+   -- TODO
    self:emit("elona_sys.on_apply_effect", {effect=effect,turns=turns,prev_turns=current,immune=(not success)})
 
    return true
 end
+
+Event.register("elona_sys.on_apply_effect", "Stop activity", function(chara, params)
+                  if params.effect.stops_activity then
+                     chara:remove_activity()
+                  end
+end)
 
 function ICharaEffects:heal_effect(id, power, params)
    params = params or {}
