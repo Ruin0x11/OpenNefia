@@ -2,9 +2,6 @@
 -- missing data, since internal code can add its own data inline.
 require("internal.data.base")
 
-local MainTitleMenu = require("api.gui.menu.MainTitleMenu")
-local Draw = require("api.Draw")
-local Input = require("api.Input")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 local internal = require("internal")
@@ -13,7 +10,7 @@ local chara_make = require("game.chara_make")
 local mod = require("internal.mod")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
-local save = require("internal.global.save")
+local save_store = require("internal.save_store")
 
 -- TODO: this module isn't hotloadable since game.loop gets run in a
 -- coroutine. Would be better to just put game.loop() into a
@@ -31,7 +28,7 @@ local function main_title()
    while going do
       -- Clear the global save.
       SaveFs.clear()
-      table.replace_with(save, {})
+      save_store.clear()
 
       local choice = title:query()
 

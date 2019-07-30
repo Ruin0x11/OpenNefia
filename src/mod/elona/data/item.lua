@@ -1,4 +1,6 @@
 local Event = require("api.Event")
+local Gui = require("api.Gui")
+local Item = require("api.Item")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 
@@ -1052,7 +1054,7 @@ local item =
          on_generate = function(self, is_shop, owner)
             local Rand = require("api.Rand")
 
-            self.amount = hook_calc_initial_gold({item=item,owner=owner})
+            self.amount = hook_calc_initial_gold({item=self,owner=owner})
 
             if owner then
                owner.gold = owner.gold + self.amount
@@ -1069,6 +1071,7 @@ local item =
          category = 69000,
          coefficient = 100,
          tags = { "noshop" },
+         always_drop = true,
 
          on_get = function(self, getter)
             getter.platinum = getter.platinum + self.amount
@@ -3419,6 +3422,41 @@ local item =
 
          gods = { "any" },
 
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "corpse effects",
+
+               callback = function(self, params, result)
+                  local chara = self.params.chara_id
+                  if not chara then
+                     return
+                  end
+
+                  local dat = data["base.chara"]:ensure(chara)
+
+                  if fun.iter(dat.tags or {}):index("man") then
+                     if chara:has_trait("elona.can_eat_human_flesh") then
+                        Gui.mes("can eat human flesh")
+                     else
+                        Gui.mes("cannot eat human flesh")
+                        -- TODO damage insanity
+                        chara:apply_effect("elona.insanity", 150)
+                        -- TODO add trait
+                     end
+                  elseif chara:has_trait("elona.can_eat_human_flesh") then
+                     Gui.mes("would have rather eaten human flesh")
+                     result.nutrition = result.nutrition * 2 / 3
+                  end
+
+                  if dat.on_eat_corpse then
+                     dat:on_eat_corpse(self, params, result)
+                  end
+
+                  return result
+               end
+            },
+         }
       },
       {
          _id = "bottle_of_whisky",
@@ -3958,7 +3996,7 @@ local item =
          category = 57000,
          coefficient = 100,
 
-         param2 = 3,
+         food_rank = 3,
 
       },
       {
@@ -4425,7 +4463,7 @@ local item =
          category = 57000,
          coefficient = 100,
 
-         param2 = 3,
+         food_rank = 3,
 
       },
       {
@@ -4850,8 +4888,7 @@ local item =
 
          param2 = Resolver.make("base.random", { rnd = 15 }),
 
-         on_generate = function()
-            local Rand = require("api.Rand")
+         on_generate = function(self)
             local Chara = require("api.Chara")
             self.param1 = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
          end
@@ -5520,7 +5557,7 @@ local item =
          category = 91000,
          coefficient = 100,
 
-         param2 = 3,
+         food_rank = 3,
 
       },
       {
@@ -7150,7 +7187,7 @@ local item =
          coefficient = 100,
 
          _copy = {
-            param2 = 1,
+            food_rank = 1,
          },
 
          gods = { "elona.kumiromi" },
@@ -7170,7 +7207,7 @@ local item =
          rarity = 800000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -7189,7 +7226,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -7211,7 +7248,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -7229,7 +7266,7 @@ local item =
          rarity = 20000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -7248,8 +7285,34 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
+         nutrition = 500,
+         food_buffs = {
+            { id = 10, power = 900 },
+            { id = 11, power = 700 },
+            { id = 17, power = 10 },
+            { id = 16, power = 10 },
+            { id = 12, power = 10 },
+            { id = 13, power = 10 },
+            { id = 14, power = 10 },
+            { id = 15, power = 10 },
+         },
+
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "morgia effects",
+
+               callback = function(self, params)
+                  params.chara:mod_base_skill_potential(10, 2)
+                  params.chara:mod_base_skill_potential(11, 2)
+                  if params.chara:is_player() then
+                     Gui.mes("food special: morgia")
+                  end
+               end
+            }
+         }
       },
       {
          _id = "mareilon",
@@ -7262,8 +7325,34 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         param2 = 4,
+         food_rank = 4,
 
+         nutrition = 500,
+         food_buffs = {
+            { id = 10, power = 10 },
+            { id = 11, power = 10 },
+            { id = 17, power = 10 },
+            { id = 16, power = 800 },
+            { id = 12, power = 10 },
+            { id = 13, power = 10 },
+            { id = 14, power = 10 },
+            { id = 15, power = 800 },
+         },
+
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "marelion effects",
+
+               callback = function(self, params)
+                  params.chara:mod_base_skill_potential(16, 2)
+                  params.chara:mod_base_skill_potential(15, 2)
+                  if params.chara:is_player() then
+                     Gui.mes("food special: marelion")
+                  end
+               end
+            }
+         }
       },
       {
          _id = "spenseweed",
@@ -7276,8 +7365,34 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         param2 = 3,
+         food_rank = 3,
 
+         nutrition = 500,
+         food_buffs = {
+            { id = 10, power = 10 },
+            { id = 11, power = 10 },
+            { id = 17, power = 10 },
+            { id = 16, power = 10 },
+            { id = 12, power = 750 },
+            { id = 13, power = 800 },
+            { id = 14, power = 10 },
+            { id = 15, power = 10 },
+         },
+
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "spenseweed effects",
+
+               callback = function(self, params)
+                  params.chara:mod_base_skill_potential(12, 2)
+                  params.chara:mod_base_skill_potential(13, 2)
+                  if params.chara:is_player() then
+                     Gui.mes("food special: spenseweed")
+                  end
+               end
+            }
+         }
       },
       {
          _id = "curaria",
@@ -7289,8 +7404,32 @@ local item =
          subcategory = 58005,
          coefficient = 100,
 
-         param2 = 6,
+         food_rank = 6,
 
+         nutrition = 2500,
+         food_buffs = {
+            { id = 10, power = 100 },
+            { id = 11, power = 100 },
+            { id = 17, power = 100 },
+            { id = 16, power = 100 },
+            { id = 12, power = 100 },
+            { id = 13, power = 100 },
+            { id = 14, power = 100 },
+            { id = 15, power = 100 },
+         },
+
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "curaria effects",
+
+               callback = function(self, params)
+                  if params.chara:is_player() then
+                     Gui.mes("food special: curaria")
+                  end
+               end
+            }
+         }
       },
       {
          _id = "alraunia",
@@ -7303,8 +7442,33 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         param2 = 3,
+         food_rank = 3,
 
+         nutrition = 500,
+         food_buffs = {
+            { id = 10, power = 10 },
+            { id = 11, power = 10 },
+            { id = 17, power = 850 },
+            { id = 16, power = 10 },
+            { id = 12, power = 10 },
+            { id = 13, power = 10 },
+            { id = 14, power = 700 },
+            { id = 15, power = 10 },
+         },
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "alraunia effects",
+
+               callback = function(self, params)
+                  params.chara:mod_base_skill_potential(17, 2)
+                  params.chara:mod_base_skill_potential(14, 2)
+                  if params.chara:is_player() then
+                     Gui.mes("food special: alarunia")
+                  end
+               end
+            }
+         }
       },
       {
          _id = "stomafillia",
@@ -7316,8 +7480,19 @@ local item =
          subcategory = 58005,
          coefficient = 100,
 
-         param2 = 7,
+         food_rank = 7,
 
+         nutrition = 20000,
+         food_buffs = {
+            { id = 10, power = 50 },
+            { id = 11, power = 50 },
+            { id = 17, power = 50 },
+            { id = 16, power = 50 },
+            { id = 12, power = 50 },
+            { id = 13, power = 50 },
+            { id = 14, power = 50 },
+            { id = 15, power = 50 },
+         },
       },
       {
          _id = "sleeping_bag",
@@ -8501,7 +8676,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         param2 = 5,
+         food_rank = 5,
 
          tags = { "sf", "fest" },
       },
@@ -8516,7 +8691,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         param2 = 6,
+         food_rank = 6,
 
          tags = { "sf", "fest" },
       },
@@ -8531,7 +8706,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         param2 = 7,
+         food_rank = 7,
 
          tags = { "sf", "fest" },
       },
@@ -9042,6 +9217,46 @@ local item =
          param1 = Resolver.make("base.between", { min = 2, coefficient = 5 }),
          param2 = Resolver.make("elona.fruit_tree"),
 
+         events = {
+            {
+               id = "base.on_build_item",
+               name = "Generate fruit.",
+
+               callback = function(self)
+                  self.params = {
+                     fruits = 5,
+                     fruit_id = "elona.lemon"
+                  }
+               end
+            },
+            {
+               id = "elona.on_bash",
+               name = "Fruit tree bash behavior",
+
+               callback = function(self)
+                  self = self:separate()
+                  Gui.play_sound("base.bash1")
+                  Gui.mes("Tree bashed. ")
+                  local fruits = self:calc("params").fruits or 0
+                  if self:calc("own_state") == "unobtainable" or fruits <= 0 then
+                     Gui.mes("No fruits.")
+                     return true
+                  end
+                  self.params.fruits = self.params.fruits - 1
+                  if self.params.fruits <= 0 then
+                     self.image = "elona.item_tree_of_fruitless"
+                  end
+
+                  local x = self.x
+                  local y = self.y
+                  local map = self:current_map()
+                  if y + 1 < map:height() and map:can_access(x, y + 1) then
+                     y = y + 1
+                  end
+                  Item.create(self.params.fruit_id, x, y, {amount=0})
+               end
+            }
+         }
       },
       {
          _id = "dead_tree",
@@ -9454,7 +9669,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -9473,7 +9688,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         param2 = 1,
+         food_rank = 1,
 
          gods = { "elona.kumiromi" },
 
@@ -9788,8 +10003,29 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         param2 = 5,
+         food_rank = 5,
 
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "egg effects",
+
+               callback = function(self, params, result)
+                  local chara = self.params.chara_id
+                  if not chara then
+                     return
+                  end
+
+                  local dat = data["base.chara"]:ensure(chara)
+
+                  if dat.on_eat_corpse and Rand.one_in(3) then
+                     dat:on_eat_corpse(self, params, result)
+                  end
+
+                  return result
+               end
+            },
+         }
       },
       {
          _id = "deed_of_ranch",
@@ -9823,6 +10059,27 @@ local item =
          param1 = 8000,
          param3 = 240,
 
+         events = {
+            {
+               id = "elona.on_item_eat_effects",
+               name = "egg effects",
+
+               callback = function(self, params, result)
+                  local chara = self.params.chara_id
+                  if not chara then
+                     return
+                  end
+
+                  local dat = data["base.chara"]:ensure(chara)
+
+                  if dat.on_eat_corpse and Rand.one_in(3) then
+                     dat:on_eat_corpse(self, params, result)
+                  end
+
+                  return result
+               end
+            },
+         }
       },
       {
          _id = "bottle_of_milk",
@@ -10849,7 +11106,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         param2 = 7,
+         food_rank = 7,
          fixlv = "special",
 
          color = { 225, 225, 255 },
@@ -11064,7 +11321,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         param2 = 7,
+         food_rank = 7,
          fixlv = "special",
 
          color = { 175, 175, 255 },
@@ -11185,7 +11442,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         param2 = 7,
+         food_rank = 7,
          fixlv = "special",
 
          color = { 255, 155, 155 },
@@ -11283,7 +11540,7 @@ local item =
 
          is_handmade = true,
 
-         param2 = 7,
+         food_rank = 7,
 
       },
       {
@@ -11781,7 +12038,7 @@ local item =
             has_charge = true,
          },
 
-         on_generate = function()
+         on_generate = function(self)
             local Rand = require("api.Rand")
             self.param1 = Rand.rnd(Rand.rnd(math.clamp(math.floor(self:calc("objlv") / 2), 1, 15)) + 1)
          end,
@@ -12046,7 +12303,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         param2 = 4,
+         food_rank = 4,
          fixlv = "special",
 
          color = { 255, 155, 155 },
@@ -12842,7 +13099,9 @@ local item =
          rarity = 400000,
          coefficient = 0,
 
-         param2 = 6,
+         food_rank = 6,
+
+         nutrition = 750,
 
          tags = { "fest" },
       },
@@ -13169,7 +13428,7 @@ local item =
          rarity = 400000,
          coefficient = 0,
 
-         param2 = 6,
+         food_rank = 6,
 
       },
       {
@@ -13182,7 +13441,7 @@ local item =
          rarity = 150000,
          coefficient = 0,
 
-         param2 = 7,
+         food_rank = 7,
 
          tags = { "fest" },
       },
@@ -13511,7 +13770,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         param2 = 8,
+         food_rank = 8,
 
       },
       {
@@ -13659,7 +13918,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         param2 = 1,
+         food_rank = 1,
 
          rftags = { "flavor" },
       },
@@ -13674,7 +13933,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "sack",
 
-         param2 = 4,
+         food_rank = 4,
 
          rftags = { "flavor" },
       },
@@ -13690,7 +13949,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         param2 = 5,
+         food_rank = 5,
          param3 = 720,
 
       },
@@ -13797,7 +14056,7 @@ local item =
          rarity = 150000,
          coefficient = 0,
 
-         param2 = 8,
+         food_rank = 8,
       }
    }
 

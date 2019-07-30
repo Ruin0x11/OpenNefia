@@ -34,11 +34,6 @@ data:add {
    }
 }
 
-local function move_indicate(self, params)
-   local Gui = require("api.Gui")
-   Gui.mes("I'm move " .. tostring(self.x) .. " " .. tostring(self.y))
-end
-
 -- TODO: This must fail, since prototypes should only be modifiable in
 -- transactions to support hotloading.
 data["base.chara"]["content.player"].max_hp = 50
@@ -55,11 +50,7 @@ data:add {
    max_hp = 100,
    max_mp = 20,
 
-   talk = "content.test",
-
-   on_instantiate = function(chara)
-      chara:connect_self("base.on_chara_moved", "chara move indicate2", move_indicate)
-   end
+   talk = "content.test"
 }
 
 data:add {
@@ -142,6 +133,10 @@ data:add {
 
    name = "axe",
    image = "elona.item_hand_axe",
+   skill = "elona.axe",
+
+   dice_x = 10,
+   dice_y = 10,
 
    equip_slots = {
       "elona.hand"
@@ -259,7 +254,7 @@ data:add {
          ["event:base.on_chara_revived"] = "I'm revived.",
 
          ["base.ai_aggro"] = {
-            { talk = "「負けるもんか！」", voice = "content.voice5" },
+            { talk = "「負けるもんか！」" },
             { talk = "「うしゃー、やるぞ！」"},
             "",
             "",
@@ -311,6 +306,20 @@ Event.register("base.after_damage_hp",
                   local Map = require("api.Map")
                   if Map.is_in_fov(p.chara.x, p.chara.y) then
                      DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
+                  end
+               end,
+               {priority=500000})
+
+Event.register("elona.on_physical_attack_miss",
+               "damage popups",
+               function(source, p)
+                  local Map = require("api.Map")
+                  if Map.is_in_fov(source.x, source.y) then
+                     if p.hit == "evade" then
+                        DamagePopup.add(source.x, source.y, "evade!!")
+                     else
+                        DamagePopup.add(source.x, source.y, "miss")
+                     end
                   end
                end,
                {priority=500000})
@@ -390,9 +399,12 @@ local function my_start(self, player)
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
 
-   local armor = Item.create("content.armor")
+   local armor = Item.create("content.armor", nil, nil, {}, player)
    armor.curse_state = "blessed"
-   player:equip_item(armor, true)
+   assert(player:equip_item(armor))
+
+   local axe = Item.create("content.axe", nil, nil, {}, player)
+   assert(player:equip_item(axe))
    player:refresh()
 end
 

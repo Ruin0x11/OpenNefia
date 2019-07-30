@@ -77,6 +77,10 @@ function field_renderer:set_draw_pos(draw_x, draw_y)
    self.screen_updated = true
 end
 
+function field_renderer:draw_pos()
+   return self.draw_x, self.draw_y
+end
+
 function field_renderer:add_async_draw_callback(cb)
    self.draw_coroutines[#self.draw_coroutines+1] = coroutine.create(cb)
 end
@@ -86,7 +90,10 @@ function field_renderer:draw()
    local draw_y = self.draw_y
 
    for _, l in ipairs(self.layers) do
-      l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y)
+      local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
+      if not ok then
+         print(result)
+      end
    end
 
    local dead = {}
@@ -125,9 +132,13 @@ function field_renderer:update(dt)
 
    local going = false
    for _, l in ipairs(self.layers) do
-      local result = l:update(dt, self.screen_updated, self.scroll_frames)
-      if result then -- not nil or false
-         going = true
+      local ok, result = xpcall(function() return l:update(dt, self.screen_updated, self.scroll_frames) end, debug.traceback)
+      if not ok then
+         print(result)
+      else
+         if result then -- not nil or false
+            going = true
+         end
       end
    end
 

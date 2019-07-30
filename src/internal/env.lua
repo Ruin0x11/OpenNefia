@@ -478,8 +478,7 @@ function env.generate_sandbox(mod_name, is_strict)
    sandbox["schema"] = require("thirdparty.schema")
    sandbox["_G"] = sandbox
 
-   local save_store = require("internal.save_store")
-   sandbox["save"] = save_store.for_mod(mod_name)
+   sandbox["save"] = require("internal.global.save")
 
    if is_strict then
       -- copy the strict metatable from the global environment

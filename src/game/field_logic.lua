@@ -1,7 +1,4 @@
 local Chara = require("api.Chara")
-local Log = require("api.Log")
-local Command = require("api.Command")
-local SaveFs = require("api.SaveFs")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
@@ -9,14 +6,13 @@ local Map = require("api.Map")
 local World = require("api.World")
 local draw = require("internal.draw")
 local field = require("game.field")
-local map = require("internal.map")
 local data = require("internal.data")
 local save = require("internal.global.save")
 
 local field_logic = {}
 
 function field_logic.setup_new_game(player)
-   local scenario = data["base.scenario"]:ensure(save.scenario)
+   local scenario = data["base.scenario"]:ensure(save.base.scenario)
 
    scenario:on_game_start(player)
 end
@@ -24,7 +20,7 @@ end
 function field_logic.quickstart()
    field:init_global_data()
 
-   save.scenario = "content.my_scenario"
+   save.base.scenario = "content.my_scenario"
    local success, map = Map.generate("content.test", {})
    assert(success, map)
    field:set_map(map)
@@ -36,77 +32,7 @@ end
 function field_logic.setup()
    Gui.mes_clear()
 
-   -- TODO: make bind_keys have callbacks that pass in player as
-   -- argument
-   field:bind_keys {
-      a = function(me)
-         print("do")
-      end,
-      up = function(me)
-         return Command.move(me, "North")
-      end,
-      down = function(me)
-         return Command.move(me, "South")
-      end,
-      left = function(me)
-         return Command.move(me, "East")
-      end,
-      right = function(me)
-         return Command.move(me, "West")
-      end,
-      g = function(me)
-         return Command.get(me)
-      end,
-      w = function(me)
-         return Command.wear(me)
-      end,
-      d = function(me)
-         return Command.drop(me)
-      end,
-      x = function(me)
-         return Command.inventory(me)
-      end,
-      c = function(me)
-         return Command.close(me)
-      end,
-      o = function(me)
-         return Command.open(me)
-      end,
-      ["return"] = function(me)
-         return Command.enter_action(me)
-      end,
-      ["."] = function(me)
-         return "turn_end"
-      end,
-      ["`"] = function(me)
-         field:query_repl()
-         return "player_turn_query"
-      end,
-      escape = function(me)
-         Gui.mes_newline()
-         Gui.mes("Do you want to save the game and exit? ")
-         if Input.yes_no() then
-            return "quit"
-         end
-         return "player_turn_query"
-      end,
-      n = function()
-         Gui.mes(require("api.gui.TextPrompt"):new(16):query())
-         return "player_turn_query"
-      end,
-      f2 = function()
-         return Command.save_game()
-      end,
-      f3 = function()
-         return Command.load_game()
-      end
-   }
-
    Event.trigger("base.on_game_initialize")
-end
-
-local function calc_speed(chara)
-   return 100 -- TODO
 end
 
 function field_logic.update_chara_time_this_turn(time_this_turn)
@@ -116,10 +42,7 @@ function field_logic.update_chara_time_this_turn(time_this_turn)
          -- turn cost at least as much as the player's starting
          -- turn cost, since the player always goes first at the
          -- beginning of a turn.
-         local speed = calc_speed(chara)
-         if speed < 10 then
-            speed = 10
-         end
+         local speed = math.max(chara:skill_level("elona.stat_speed"), 10)
          chara.time_this_turn = chara.time_this_turn + speed * time_this_turn
       end
    end
@@ -148,10 +71,7 @@ function field_logic.turn_begin()
 
    chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
 
-   local speed = calc_speed(player)
-   if speed < 10 then
-      speed = 10
-   end
+   local speed = math.max(player:skill_level("elona.stat_speed"), 10)
 
    -- All characters will start with at least this much time during
    -- this turn.

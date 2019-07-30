@@ -1,10 +1,13 @@
+local Chara = require("api.Chara")
 local Map = require("api.Map")
+local Pos = require("api.Pos")
 local input = require("internal.input")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local Prompt = require("api.gui.Prompt")
 local TextPrompt = require("api.gui.TextPrompt")
 local NumberPrompt = require("api.gui.NumberPrompt")
+local DirectionPrompt = require("api.gui.DirectionPrompt")
 
 -- Functions for receiving input from the player.
 -- @module Input
@@ -59,7 +62,19 @@ function Input.query_item(chara, operation, params)
    return query_inventory(chara, operation, params, true)
 end
 
-function Input.query_direction()
+function Input.query_direction(chara)
+   chara = chara or Chara.player()
+   local result, canceled = DirectionPrompt:new(chara.x, chara.y):query()
+   if canceled then
+      return result, canceled
+   end
+
+   local x, y = Pos.add_direction(result, chara.x, chara.y)
+   if not Map.is_in_bounds(x, y, chara:current_map()) then
+      return nil, "out_of_bounds"
+   end
+
+   return result
 end
 
 return Input

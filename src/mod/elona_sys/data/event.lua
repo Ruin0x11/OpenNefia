@@ -8,6 +8,15 @@ local event = {
       {
          _id = "calc_effect_power"
       },
+      {
+         _id = "on_player_bumped_into_chara",
+      },
+      {
+         _id = "before_player_map_leave"
+      },
+      {
+         _id = "on_bump_into"
+      },
 }
 
 data:add_multi("base.event", event)

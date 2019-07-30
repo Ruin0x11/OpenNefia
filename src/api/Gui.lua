@@ -4,8 +4,6 @@ local Log = require("api.Log")
 local draw = require("internal.draw")
 local field = require("game.field")
 
-local headless = Env.love_version() == "lovemock"
-
 local Gui = {}
 
 local scroll = false
@@ -17,6 +15,18 @@ end
 
 function Gui.update_hud()
    field:update_hud()
+end
+
+function Gui.field_draw_pos()
+   return field.renderer:draw_pos()
+end
+
+function Gui.tile_to_screen(tx, ty)
+   local x, y = draw.get_coords():tile_to_screen(tx + 1, ty + 1)
+   local tile_width, tile_height = draw.get_coords():get_size()
+   x = x + tile_width / 2
+   y = y + tile_height / 2
+   return x, y
 end
 
 function Gui.scroll_screen()
@@ -82,7 +92,7 @@ function Gui.mes(text, color)
    end
    get_message_window():message(text, color)
 
-   if headless then
+   if Env.is_headless() then
       print("<mes> " .. text)
    end
 end
@@ -108,7 +118,6 @@ function Gui.mes_new_turn()
 end
 
 function Gui.mes_continue_sentence()
-   get_message_window():new_turn()
 end
 
 function Gui.play_sound(sound_id, x, y, channel)
@@ -133,6 +142,10 @@ function Gui.stop_background_sound(sound_id)
    local sound_manager = require("internal.global.sound_manager")
 
    sound_manager:stop_looping(sound_id)
+end
+
+function Gui.bind_keys(keys)
+   field:bind_keys(keys)
 end
 
 return Gui

@@ -72,7 +72,7 @@ function tile_layer:update(dt, screen_updated)
       map._tiles_dirty = false
    end
 
-   self.tile_batch.shadow = calc_map_shadow(map, save.date.hour)
+   self.tile_batch.shadow = calc_map_shadow(map, save.base.date.hour)
 end
 
 function tile_layer:draw(draw_x, draw_y, offx, offy)

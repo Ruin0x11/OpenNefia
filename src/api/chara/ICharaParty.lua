@@ -24,17 +24,17 @@ function ICharaParty:is_in_party()
    return self:is_player() or self:is_ally()
 end
 
-function ICharaParty:get_party()
+function ICharaParty:iter_party()
    if self:is_in_party() then
       return Chara.iter_allies()
    end
 
-   return nil
+   return fun.iter({})
 end
 
 function ICharaParty:act_hostile_towards(other)
    if other:is_party_leader() then
-      for _, c in other:get_party() do
+      for _, c in other:iter_party() do
          c.ai_state.leader_attacker = self
       end
    end

@@ -1,8 +1,11 @@
 local Log = require("api.Log")
-local data = require("internal.data")
 local fs = require("util.fs")
 local env = require("internal.env")
 local tsort = require("thirdparty.resty.tsort")
+
+if env.is_hotloading() then
+   return "no_hotload"
+end
 
 local mod = {}
 
@@ -10,8 +13,6 @@ local chunks = {}
 
 local function load_mod(mod_name, init_lua_path)
    local req_path = env.convert_to_require_path(init_lua_path)
-
-   local mod_env = env.generate_sandbox(mod_name, true)
 
    local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
 

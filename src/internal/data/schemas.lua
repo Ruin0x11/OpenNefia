@@ -12,6 +12,7 @@ local IChara = require("api.chara.IChara")
 local IItem = require("api.item.IItem")
 local IFeat = require("api.feat.IFeat")
 local ITrap = require("api.feat.ITrap")
+local IActivity = require("api.activity.IActivity")
 
 data:add_type(
    {
@@ -101,6 +102,22 @@ data:add_type(
       schema = schema.Record {
       },
    }
+)
+
+data:add_type{
+   name = "effect",
+   schema = {
+      indicator = schema.Function,
+   }
+}
+
+data:add_type(
+   {
+      name = "activity",
+      schema = {
+      },
+   },
+   { interface = IActivity }
 )
 
 data:add_type(
@@ -314,5 +331,3 @@ data:add_type {
       options = schema.Table
    }
 }
-
-require("internal.data.ai")

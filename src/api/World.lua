@@ -1,21 +1,37 @@
+local Event = require("api.Event")
 local save = require("internal.global.save")
 
 local World = {}
 
-function World.pass_time_in_seconds(seconds)
-   local date = save.date
+local event_types = {
+   second = 5,
+   minute = 4,
+   hour = 3,
+   day = 2,
+   month = 1,
+   year = 0,
+   none = -1,
+}
 
-   -- EVENT: on_second_passed
+function World.pass_time_in_seconds(seconds, events)
+   events = events or event_types.second
+   local date = save.base.date
+
+   if events >= 5 then
+      Event.trigger("base.on_second_passed", {seconds=seconds})
+   end
 
    date.second = date.second + seconds
    if date.second >= 60 then
-      save.play_turns = save.play_turns + 1
+      save.base.play_turns = save.base.play_turns + 1
 
       local minutes_passed = math.floor(date.second / 60)
 
       date.minute = date.minute + minutes_passed
 
-      -- EVENT: on_minute_passed
+      if events >= 4 then
+         Event.trigger("base.on_minute_passed", {minutes=minutes_passed})
+      end
 
       date.second = date.second % 60
 
@@ -24,25 +40,37 @@ function World.pass_time_in_seconds(seconds)
 
          date.hour = date.hour + hours_passed
          date.minute = date.minute % 60
-         -- EVENT: on_hour_passed
+
+         if events >= 3 then
+            Event.trigger("base.on_hour_passed", {hours=hours_passed})
+         end
 
          if date.hour >= 24 then
             -- events before
 
             local days_passed = math.floor(date.hour / 24)
-            save.play_days = save.play_days + days_passed
+            save.base.play_days = save.base.play_days + days_passed
             date.day = date.day + days_passed
             date.hour = date.hour % 24
-            -- EVENT: on_day_passed
+
+            if events >= 2 then
+               Event.trigger("base.on_day_passed", {days=days_passed})
+            end
 
             if date.day >= 31 then
                date.month = date.month + 1
-               -- EVENT: on_month_passed
+
+               if events >= 1 then
+                  Event.trigger("base.on_month_passed")
+               end
 
                if date.month >= 13 then
                   date.year = date.year + 1
                   date.month = 1
-                  -- EVENT: on_year_passed
+
+                  if events >= 0 then
+                     Event.trigger("base.on_year_passed")
+                  end
                end
             end
 
@@ -53,7 +81,7 @@ function World.pass_time_in_seconds(seconds)
 end
 
 function World.date()
-   return save.date
+   return save.base.date
 end
 
 return World

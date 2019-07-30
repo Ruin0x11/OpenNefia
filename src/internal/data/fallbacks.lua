@@ -28,15 +28,6 @@ data:add_multi(
          _id = "on_kill_chara",
       },
       {
-         _id = "on_player_bumped_into_chara",
-      },
-      {
-         _id = "before_player_map_leave"
-      },
-      {
-         _id = "on_player_bumped_into_object"
-      },
-      {
          _id = "before_chara_moved"
       },
       {
@@ -100,16 +91,58 @@ data:add_multi(
          _id = "on_data_add"
       },
       {
-         _id = "on_build"
+         _id = "on_build_chara"
+      },
+      {
+         _id = "on_build_item"
+      },
+      {
+         _id = "on_build_feat"
       },
       {
          _id = "on_pre_build"
+      },
+      {
+         _id = "on_normal_build"
       },
       {
          _id = "calc_status_indicators"
       },
       {
          _id = "on_refresh"
+      },
+      {
+         _id = "on_second_passed"
+      },
+      {
+         _id = "on_minute_passed"
+      },
+      {
+         _id = "on_hour_passed"
+      },
+      {
+         _id = "on_day_passed"
+      },
+      {
+         _id = "on_month_passed"
+      },
+      {
+         _id = "on_year_passed"
+      },
+      {
+         _id = "on_init_save"
+      },
+      {
+         _id = "on_build_map"
+      },
+      {
+         _id = "on_activity_start"
+      },
+      {
+         _id = "on_activity_pass_turns"
+      },
+      {
+         _id = "on_activity_finish"
       }
    }
 )

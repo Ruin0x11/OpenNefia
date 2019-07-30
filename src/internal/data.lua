@@ -63,6 +63,10 @@ function data:clear()
    metatables = {}
 end
 
+function data:types()
+   return table.keys(inner)
+end
+
 local function add_index_field(dat, _type, field)
    if type(field) == "string" then field = {field} end
    for _, v in ipairs(field) do
@@ -114,6 +118,7 @@ function data:add_type(schema, params)
 
    local generate = params.generates or nil
 
+   inner[_type] = {}
    schemas[_type] = schema
    metatables[_type] = metatable
    generates[_type] = generate
@@ -184,8 +189,6 @@ function data:add(dat)
    if strict and failed then return nil end
 
    local full_id = mod_name .. "." .. _id
-
-   inner[_type] = inner[_type] or {}
 
    if inner[_type][full_id] ~= nil then
       if env.is_hotloading() then

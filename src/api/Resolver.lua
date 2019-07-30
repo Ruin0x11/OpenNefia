@@ -25,7 +25,14 @@ function Resolver.resolve_one(tbl, params)
 
    -- if not Schema.check(resolver.params, params) then error() end
 
-   return resolver.resolve(tbl, params)
+   local result = resolver.resolve(tbl, params)
+   if resolver.method then
+      result = {
+         __method = resolver.method,
+         __value = result
+      }
+   end
+   return result
 end
 
 local function resolve_recurse(result, proto, params, key)

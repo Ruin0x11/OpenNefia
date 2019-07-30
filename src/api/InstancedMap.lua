@@ -1,14 +1,14 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
+local save = require("internal.global.save")
 
 local Pos = require("api.Pos")
-local Log = require("api.Log")
+local IEventEmitter = require("api.IEventEmitter")
+local IModdable = require("api.IModdable")
 local Draw = require("api.Draw")
 local ITypedLocation = require("api.ITypedLocation")
 
--- TODO: add map data object from protoype and forward :emit(),
--- :mod(), :calc(), etc. to it.
-local InstancedMap = class.class("InstancedMap", ITypedLocation)
+local InstancedMap = class.class("InstancedMap", { ITypedLocation, IModdable, IEventEmitter })
 
 local fov_cache = {}
 
@@ -52,9 +52,12 @@ local function gen_fov_radius(fov_max)
 end
 
 function InstancedMap:init(width, height, uids, tile)
-   self.uid = require("internal.global.save").map_uids:get_next_and_increment()
+   IModdable.init(self)
+   IEventEmitter.init(self)
 
-   uids = uids or require("internal.global.save").uids
+   self.uid = save.base.map_uids:get_next_and_increment()
+
+   uids = uids or save.base.uids
    tile = tile or "base.floor"
 
    if width <= 0 or height <= 0 then
@@ -94,10 +97,19 @@ function InstancedMap:init(width, height, uids, tile)
    self:clear(tile)
 end
 
+function InstancedMap:on_refresh()
+   IModdable.on_refresh(self)
+end
+
+local fallbacks = {
+   turn_cost = 1000,
+   is_outdoors = true,
+   is_temporary = false
+}
+
 function InstancedMap:init_map_data()
-   self.turn_cost = 1000
-   self.is_outdoors = true
-   self.is_temporary = false
+   self:mod_base_with(fallbacks, "merge")
+   self:emit("base.on_build_map")
 end
 
 function InstancedMap:width()

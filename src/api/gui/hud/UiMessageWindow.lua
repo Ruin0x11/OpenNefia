@@ -251,7 +251,7 @@ function UiMessageWindow:message(text, color)
       self.is_new_turn = false
       local add_timestamps = true
       if add_timestamps then
-         local minute = save.date.minute
+         local minute = save.base.date.minute
          text = string.format("[%d] %s", minute, text)
       else
          text = string.format("  %s", minute, text)

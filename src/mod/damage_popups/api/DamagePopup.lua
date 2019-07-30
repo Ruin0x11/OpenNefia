@@ -6,20 +6,21 @@ local max = 20
 
 function DamagePopup.install()
    Draw.register_draw_layer("mod.damage_popups.api.gui.DamagePopupLayer")
+   save.damage_popups.popups = { count = 0 }
 end
 
 function DamagePopup.add(tx, ty, text, color, font)
-   local g_popups = require("mod.damage_popups.g_popups")
+   local popups = save.damage_popups.popups
 
    color = color or {255, 255, 255}
    font = font or 24
 
-   if g_popups.count > max then
+   if popups.count > max then
       -- TODO remove earliest
       return
    end
 
-   g_popups[#g_popups + 1] = {
+   popups[#popups + 1] = {
       x = tx,
       y = ty,
       text = text,
@@ -27,12 +28,12 @@ function DamagePopup.add(tx, ty, text, color, font)
       font = font,
       frame = 0
    }
-   g_popups.count = g_popups.count + 1
+   popups.count = popups.count + 1
 end
 
 function DamagePopup.clear()
-   local g_popups = require("mod.damage_popups.g_popups")
-   table.replace_with(g_popups, { count = 0 })
+   local popups = save.damage_popups.popups
+   table.replace_with(popups, { count = 0 })
 end
 
 function DamagePopup.on_hotload(old, new)

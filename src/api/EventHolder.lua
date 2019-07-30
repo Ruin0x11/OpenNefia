@@ -22,6 +22,9 @@ function EventHolder:register(event_id, name, cb, opts)
    if opts == nil then
       opts = {}
    end
+   if type(opts) == "number" then
+      opts = { priority = opts }
+   end
    if name == nil then
       error("Hook name must be provided. (" .. event_id .. ")")
       return
@@ -43,7 +46,12 @@ function EventHolder:register(event_id, name, cb, opts)
 end
 
 function EventHolder:replace(event_id, name, cb, opts)
-   opts = opts or {}
+   if opts == nil then
+      opts = {}
+   end
+   if type(opts) == "number" then
+      opts = { priority = opts }
+   end
    local events = self.hooks[event_id]
 
    if not events then
@@ -85,6 +93,11 @@ function EventHolder:trigger(event_id, source, args, default)
    end
 
    return result, args
+end
+
+function EventHolder:responds_to(event_id)
+   local hooks = self.hooks[event_id]
+   return hooks and hooks:count() > 0
 end
 
 function EventHolder:add_observer(event_id, observer)

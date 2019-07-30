@@ -91,12 +91,12 @@ test("EquipSlots - items for type", function()
         ok(eq:equip(b))
         ok(eq:equip(c))
 
-        local items = eq:items_for_type("test.hand")
+        local items = eq:items_equipped_at("test.hand")
 
         ok(t.are_same(items[1].uid, a.uid))
         ok(t.are_same(items[2].uid, b.uid))
 
-        items = eq:items_for_type("test.chest")
+        items = eq:items_equipped_at("test.chest")
 
         ok(t.are_same(items[1].uid, c.uid))
 end)

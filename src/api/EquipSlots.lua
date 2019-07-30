@@ -16,7 +16,7 @@ function EquipSlots:init(body_parts)
    end
    self.body_parts = fun.iter(body_parts):map(init):to_list()
 
-   local uids = require("internal.global.save").uids
+   local uids = require("internal.global.save").base.uids
    self.pool = pool:new("base.item", uids, 1, 1)
 
    self.equipped = {}
@@ -144,17 +144,11 @@ function EquipSlots:remove_body_part(slot)
    return true
 end
 
-function EquipSlots:items_for_type(body_part_type)
-   local r = {}
-   for _, v in ipairs(self.body_parts) do
-      if v.equipped and v.type == body_part_type then
-         r[#r+1] = self.pool:get_object(v.equipped)
-      end
+function EquipSlots:items_equipped_at(body_part_type)
+   local pred = function(v)
+      return v.equipped and v.body_part._id == body_part_type
    end
-   return r
-end
-
-function EquipSlots:is_equipped_at(slot)
+   return self:iter_body_parts(false):filter(pred):extract("equipped")
 end
 
 local function iter_body_parts(state, index)
@@ -162,18 +156,34 @@ local function iter_body_parts(state, index)
       return nil
    end
 
-   local body_part = state.body_parts[index]
-   local data = {
-      body_part = data["base.body_part"]:ensure(body_part.type),
-      equipped = state.pool:get_object(body_part.equipped)
-   }
-   index = index + 1
+   local entry
 
-   return index, data
+   repeat
+      local body_part = state.body_parts[index]
+      entry = {
+         body_part = data["base.body_part"]:ensure(body_part.type),
+         equipped = state.pool:get_object(body_part.equipped)
+      }
+      index = index + 1
+   until (entry.equipped ~= nil or state.also_empty)
+      or index > #state.body_parts
+
+   if index > #state.body_parts then
+      return nil
+   end
+
+   return index, entry
 end
 
-function EquipSlots:iter_body_parts()
-   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,pool=self.pool}, 1)
+function EquipSlots:iter_body_parts(also_empty)
+   return fun.wrap(iter_body_parts, {body_parts=self.body_parts,pool=self.pool,also_empty=also_empty or false}, 1)
+end
+
+function EquipSlots:equip_slot_of(item)
+   local slot = self.equipped[item.uid]
+   if slot == nil then return nil end
+
+   return self.body_parts[slot]
 end
 
 --

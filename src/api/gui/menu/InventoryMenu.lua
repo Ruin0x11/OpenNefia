@@ -191,7 +191,7 @@ function InventoryMenu:update_filtering()
    for _, entry in iter:unwrap() do
       local item = entry.item
       if not Item.is_alive(item) then
-         item:delete()
+         item:remove_ownership()
       else
          if self.ctxt:filter(item) then
             filtered[#filtered+1] = entry

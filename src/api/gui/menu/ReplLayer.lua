@@ -314,9 +314,16 @@ function ReplLayer:submit()
 
    local success, results = self.mode:submit(text)
 
+   local print_varargs
+   if self.print_varargs then
+      local print_varargs = true
+   else
+      print_varargs = fun.iter(results):all(function(r) return type(r) ~= "table" end)
+   end
+
    local result_text
    if success then
-      if self.print_varargs then
+      if print_varargs then
          result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results, {}).text
       else
          result_text = ReplLayer.format_repl_result(results[1])

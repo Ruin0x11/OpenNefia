@@ -54,9 +54,9 @@ function Ui.unpack_font_desc(font)
 end
 
 function Ui.display_weight(weight)
-   return string.format("%d%d%s",
+   return string.format("%d.%d%s",
                         math.abs(math.floor(weight / 1000)),
-                        math.abs(math.floor((weight % 1000) / 1000)),
+                        math.abs(math.floor((weight % 1000) / 100)),
                         "s")
 end
 

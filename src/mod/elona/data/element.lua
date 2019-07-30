@@ -8,6 +8,7 @@ local element = {
       elona_id = 50,
       color = { 150, 0, 0 },
       can_resist = true,
+      sound = "base.atk_fire",
 
       on_modify_damage = function(chara, damage)
          if chara:has_effect("elona.wet") then
@@ -33,12 +34,14 @@ local element = {
       _id = "cold",
       elona_id = 51,
       color = { 0, 0, 150 },
+      sound = "base.atk_ice",
    },
    {
       _id = "lightning",
       elona_id = 52,
       color = { 150, 150, 0 },
       can_resist = true,
+      sound = "base.atk_elec",
 
       on_modify_damage = function(chara, damage)
          if chara:has_effect("elona.wet") > 0 then
@@ -63,6 +66,7 @@ local element = {
       elona_id = 53,
       color = { 100, 80, 80 },
       can_resist = true,
+      sound = "base.atk_dark",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.blindness",
@@ -74,7 +78,8 @@ local element = {
       elona_id = 54,
       color = { 150, 100, 50 },
       can_resist = true,
-      preserves_sleep = false,
+      preserves_sleep = true,
+      sound = "base.atk_mind",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.confusion",
@@ -86,6 +91,7 @@ local element = {
       elona_id = 56,
       color = { 150, 50, 0 },
       can_resist = true,
+      sound = "base.atk_hell",
 
       after_apply_damage = function(chara, params)
          Gui.mes("after")
@@ -112,6 +118,7 @@ local element = {
       elona_id = 55,
       color = { 0, 150, 0 },
       can_resist = true,
+      sound = "base.atk_poison",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.poison",
@@ -123,6 +130,7 @@ local element = {
       elona_id = 57,
       color = { 50, 100, 150 },
       can_resist = true,
+      sound = "base.atk_sound",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.confusion",
@@ -134,7 +142,8 @@ local element = {
       elona_id = 59,
       color = { 150, 0, 150 },
       can_resist = true,
-      preserves_sleep = false,
+      preserves_sleep = true,
+      sound = "base.atk_chaos",
 
       on_damage = function(chara, params)
          local elep = params.element_power
@@ -164,7 +173,8 @@ local element = {
       elona_id = 58,
       color = { 100, 150, 50 },
       can_resist = true,
-      preserves_sleep = false,
+      preserves_sleep = true,
+      sound = "base.atk_nerve",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.paralysis",
@@ -175,7 +185,14 @@ local element = {
       _id = "magic",
       elona_id = 60,
       color = { 150, 100, 100 },
-      can_resist = true
+      can_resist = true,
+
+      calc_initial_resist_level = function(chara, level)
+         if level < 500 then
+            return 100
+         end
+         return level
+      end
    },
    {
       _id = "cut",
@@ -197,6 +214,7 @@ local element = {
    {
       _id = "acid",
       elona_id = 63,
+      sound = "base.atk_poison",
    },
    {
       _id = "hunger",

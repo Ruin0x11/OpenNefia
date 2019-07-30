@@ -137,7 +137,7 @@ function Action.equip(chara, item)
 end
 
 function Action.melee(chara, target)
-   target:damage_hp(Rand.rnd(10), chara, { damage_text_type = "damage" })
+   target:damage_hp(Rand.rnd(10), chara, {})
    return true
 end
 

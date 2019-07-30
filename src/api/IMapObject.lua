@@ -18,7 +18,7 @@ function IMapObject:init()
    self.y = 0
 end
 
-function IMapObject:refresh()
+function IMapObject:on_refresh()
    local map = self:current_map()
    if map then
       map:refresh_tile(self.x, self.y)

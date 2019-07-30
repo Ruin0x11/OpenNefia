@@ -18,16 +18,16 @@ end
 
 function DamagePopupLayer:reset()
    self.icons = {}
+   save.damage_popups.popups = { count = 0 }
 end
 
 local max_frame = 40
 
-local g_popups = require("mod.damage_popups.g_popups")
-
 function DamagePopupLayer:update(dt, screen_updated)
    local dead = {}
+   local popups = save.damage_popups.popups or {}
 
-   for i, v in ipairs(g_popups) do
+   for i, v in ipairs(popups) do
       v.frame = v.frame + dt * 50
       if v.frame > max_frame then
          dead[#dead+1] = i
@@ -35,22 +35,22 @@ function DamagePopupLayer:update(dt, screen_updated)
    end
 
    if #dead > 0 then
-      g_popups = table.remove_indices(g_popups, dead)
+      popups.count = popups.count - #dead
+      table.remove_indices(popups, dead)
    end
 end
 
 function DamagePopupLayer:draw(draw_x, draw_y)
+   local popups = save.damage_popups.popups
    local sx, sy = self.coords:get_start_offset(draw_x, draw_y)
-   for _, v in ipairs(g_popups) do
+   for _, v in ipairs(popups) do
       local x, y = self.coords:tile_to_screen(v.x+1, v.y+1)
       local font_size = v.font
 
       Draw.set_font(font_size)
-      x = x - math.floor(Draw.text_width(v.text)) - sx + self.w
-      y = y - math.floor(Draw.text_height() / 2) - 2 * v.frame - sy + self.h
+      x = x - draw_x - math.floor(Draw.text_width(v.text)) + sx + self.w
+      y = y - draw_y - math.floor(Draw.text_height() / 2) - 2 * v.frame + sy + self.h
       Draw.text_shadowed(v.text, x, y, v.color)
-
-      local cx, cy = self.coords:tile_to_screen(0, 0)
    end
 end
 

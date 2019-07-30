@@ -4,15 +4,11 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Item = require("api.Item")
-local Log = require("api.Log")
 local Map = require("api.Map")
-local SaveFs = require("api.SaveFs")
 local MapArea = require("api.MapArea")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
-
-local save_store = require("internal.save_store")
-local field = require("game.field")
+local Save = require("api.Save")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -45,7 +41,7 @@ local hook_player_move = Event.define_hook("player_move",
                                       nil,
                                       "pos")
 
-Event.register("base.hook_player_move", "Player scroll speed",
+Event.register("elona_sys.hook_player_move", "Player scroll speed",
                function(_, params, result)
                   local scroll = 10
                   local start_run_wait = 2
@@ -82,37 +78,15 @@ function Command.move(player, x, y)
    local on_cell = Chara.at(next_pos.x, next_pos.y)
    if on_cell then
 
-      local result
+      local result = player:emit("elona_sys.on_player_bumped_into_chara", {chara=on_cell}, "turn_end")
 
-      Event.trigger("base.on_player_bumped_into_chara", {player=player,chara=on_cell})
-
-      local reaction = player:reaction_towards(on_cell)
-
-      if reaction > 0 then
-         if true then
-            if player:swap_places(on_cell) then
-               Gui.mes("You switch places with " .. on_cell.uid .. ".")
-               Gui.set_scroll()
-            end
-         end
-         return "turn_end"
-      end
-
-      -- TODO: relation as -1
-      if reaction < 0 then
-         player:set_target(on_cell)
-         Action.melee(player, on_cell)
-         Gui.set_scroll()
-         return "turn_end"
-      end
-
-      return "turn_end"
+      return result
    end
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y) then
       -- Player is trying to move out of the map.
 
-      Event.trigger("base.before_player_map_leave", {player=player})
+      Event.trigger("elona_sys.before_player_map_leave", {player=player})
       -- quest abandonment warning
 
       if Input.yes_no() then
@@ -121,6 +95,11 @@ function Command.move(player, x, y)
 
       return "player_turn_query"
    else
+      for _, obj in Map.current():objects_at_pos(next_pos.x, next_pos.y) do
+         local result = obj:emit("elona_sys.on_bump_into", {chara=player}, nil)
+         if result then return "turn_end" end
+      end
+
       -- Run the general-purpose movement command. This will also
       -- handle blocked tiles.
 
@@ -168,7 +147,6 @@ function Command.inventory(player)
 end
 
 function Command.wear(player)
-   _p("wear",string.tostring_raw(EquipmentMenu))
    return EquipmentMenu:new(player):query()
 end
 
@@ -206,6 +184,7 @@ local function activate(player, feat)
 end
 
 function Command.enter_action(player)
+   -- TODO iter objects on square, emit get_enter_action
    local f = feats_under(player, "can_activate"):nth(1)
    if f then
       activate(player, f)
@@ -235,76 +214,22 @@ function Command.enter_action(player)
 end
 
 function Command.save_game()
-   local map = Map.current()
-
-   do
-      local global = save_store.for_mod("base")
-      global.map = map.uid
-      global.player = field.player
-
-      Log.info("Saving game.")
-      Log.trace("save map: %d  player %d", global.map, global.player)
-   end
-
-   assert(Map.save(map))
-
-   _p(map:iter_charas():extract("uid"):to_list())
-
-   assert(save_store.save())
-
-   SaveFs.save_game("test")
-
-   Gui.play_sound("base.write1")
-   Gui.mes("Game saved.")
+   Save.save_game()
    return "player_turn_query"
 end
 
 function Command.load_game()
-   local success, map
-
-   SaveFs.load_game("test")
-
-   assert(save_store.load())
-
-   local base = save_store.for_mod("base")
-   local map_uid = base.map
-   local player_uid = base.player
-
-   Log.info("Loading game.")
-   Log.trace("load map: %d  player %d", map_uid, player_uid)
-
-   success, map = Map.load(map_uid)
-   if not success then
-      error("Load error: " .. map)
-   end
-
-   Map.set_map(map)
-   Chara.set_player(player_uid)
-
-   -- BUG: events registered with Event.register since the game has
-   -- started will be left over when a save is reloaded.
-   --
-   -- TODO: should it be an error to register events outside
-   -- on_game_initialize? then on_game_initialize becomes
-   -- special-cased to avoid clearing it when a save is loaded. it
-   -- might be better to restrict calling of Event.register to the mod
-   -- startup stage.
-   --
-   -- an interface for creating global events that are cleaned up when
-   -- a save is loaded could be used. or maybe that could become the
-   -- main interface of Event anyway. a flag could be set if a global
-   -- event is temporary, and it could be forced to true if mods
-   -- aren't loading.
-   --
-   -- local global_events = require("internal.global.global_events")
-   -- global_events:clear()
-
-   Gui.mes_clear()
-   Gui.mes("Game loaded.")
-
-   Event.trigger("base.on_game_initialize")
-
+   Save.load_game()
    return "turn_begin"
+end
+
+function Command.quit_game()
+   Gui.mes_newline()
+   Gui.mes("Do you want to save the game and exit? ")
+   if Input.yes_no() then
+      return "quit"
+   end
+   return "player_turn_query"
 end
 
 return Command

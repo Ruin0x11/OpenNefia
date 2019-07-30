@@ -7,7 +7,25 @@ function ICharaSkills:init()
 end
 
 local function generate_methods(iface, name, field)
-   local subfields = { "level", "potential" }
+   local subfields = { "level", "potential", "experience" }
+
+   iface["has_" .. name] = function(self, skill)
+      return self[name .. "_level"](self, skill) > 0
+   end
+
+   iface["set_base_" .. name] = function(self, skill, level, potential, experience)
+      self[field][skill] = self[field][skill] or
+         {
+            level = 0,
+            potential = 0,
+            experience = 0,
+         }
+
+      local s = self[field][skill]
+      s.level = math.floor(level) or s.level
+      s.potential = math.floor(potential) or s.potential
+      s.experience = math.floor(experience) or s.experience
+   end
 
    for _, subfield in ipairs(subfields) do
       -- self:skill_level(skill)
@@ -24,11 +42,11 @@ local function generate_methods(iface, name, field)
       end
       -- self:mod_skill_level(skill, level, "add")
       iface["mod_" .. name .. "_" .. subfield] = function(self, skill, amount, op)
-         return self:mod(field, { [skill] = { [subfield] = amount } }, op)
+         return self:mod(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
       end
       -- self:base_skill_level()
       iface["mod_base_" .. name .. "_" .. subfield] = function(self, skill, amount, op)
-         return self:mod_base(field, { [skill] = { [subfield] = amount } }, op)
+         return self:mod_base(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
       end
    end
 end

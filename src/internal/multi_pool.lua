@@ -5,7 +5,7 @@ local ITypedLocation = require("api.ITypedLocation")
 local multi_pool = class.class("multi_pool", ITypedLocation)
 
 function multi_pool:init(width, height, uids)
-   uids = uids or require("internal.global.save").uids
+   uids = uids or require("internal.global.save").base.uids
 
    self.width = width
    self.height = height

@@ -454,8 +454,10 @@ local function mod_value(tbl, add, meth, default, prop)
    end
    if meth == "add" then
       local _type = type(add)
-      if _type == "boolean" or _type == "string" then
+      if _type == "boolean" then
          tbl[prop] = tbl[prop] or add
+      elseif _type == "string" then
+         tbl[prop] = add
       else
          tbl[prop] = (tbl[prop] or 0) + add
       end

@@ -12,14 +12,14 @@ local IStackableObject = class.interface("IStackableObject",
 --- Separates some of this object from its stack. If `owned` is true,
 --- also attempts to move the object into the original object's
 --- location. If this fails, return nil. If unsuccessful, no state is
---- changed.
+--- changed. Returns the separated item.
 -- @tparam int amount
 -- @tparam bool owned
 -- @treturn IItem
 -- @retval_ownership[owned=false] nil
 -- @retval_ownership[owned=true] self.location
 function IStackableObject:separate(amount, owned)
-   amount = math.clamp(amount or self.amount, 0, self.amount)
+   amount = math.clamp(amount or 1, 0, self.amount)
    owned = owned or false
 
    if amount == 0 then

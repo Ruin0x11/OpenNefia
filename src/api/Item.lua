@@ -49,7 +49,6 @@ function Item.almost_equals(a, b)
 end
 
 function Item.create(id, x, y, params, where)
-   local sw = require("api.Stopwatch"):new()
    if x == nil then
       local player = Chara.player()
       if Chara.is_alive(player) then
@@ -59,7 +58,6 @@ function Item.create(id, x, y, params, where)
    end
 
    params = params or {}
-   local amount = params.amount or 1
 
    if params.ownerless then
       where = nil
@@ -77,11 +75,16 @@ function Item.create(id, x, y, params, where)
       end
    end
 
+   local copy = params.copy or {}
+   copy.fix_level = params.fix_level or nil
+   copy.quality = params.quality or nil
+   copy.amount = math.max(1, params.amount or 1)
+
    local gen_params = {
-      no_build = params.no_build
+      no_build = params.no_build,
+      copy = copy
    }
    local item = MapObject.generate_from("base.item", id, gen_params)
-   item.amount = amount
 
    if where then
       item = where:take_object(item, x, y)

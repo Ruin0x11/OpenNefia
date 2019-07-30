@@ -209,11 +209,11 @@ local skill = {
 
       calc_damage_params = function(self, chara, weapon, target)
          local related = "elona.strength"
-         local dmgfix = chara:stat_level(related) / 8 + chara:stat_level(self._id) / 8 + chara:calc("damage_bonus")
+         local dmgfix = chara:skill_level(related) / 8 + chara:skill_level(self._id) / 8 + chara:calc("damage_bonus")
          local dice_x = 2
-         local dice_y = chara:stat_level(self._id) /8 + 5
+         local dice_y = chara:skill_level(self._id) /8 + 5
          local multiplier = 0.5
-            + (chara:stat_level(related)
+            + (chara:skill_level(related)
                   + chara:skill_level(self._id) / 5
                   + chara:skill_level("elona.tactics"))
             / 40

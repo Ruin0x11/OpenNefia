@@ -79,6 +79,7 @@ data:add {
          label_input = "asset/label_input.png",
          arrow_left = "asset/arrow_left.png",
          arrow_right = "asset/arrow_right.png",
+         direction_arrow = "asset/direction_arrow.png",
          enchantment_icons = {
             image = "asset/enchantment_icons.png",
             count_x = 9

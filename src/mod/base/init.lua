@@ -109,3 +109,33 @@ local music_loader = {
 
 require("mod.base.sound")
 require("mod.base.resolver")
+
+data["base.effect"]:edit("register status effect indicator",
+   function(dat)
+      local f = dat.indicator
+      if f == nil then
+         f = { text = dat._id }
+      end
+      if type(f) == "table" and type(f.text) == "string" then
+         -- Create a basic indicator that appears if the effect turns
+         -- are above zero.
+         local indicator = f
+         f = function(player)
+            if player:has_effect(dat._id) then
+               return indicator
+            end
+
+            return nil
+         end
+      end
+      if type(f) == "function" then
+        data:add {
+           _type = "base.ui_indicator",
+           _id = "effect_" .. string.split(dat._id, ".")[2],
+
+           indicator = f,
+           ordering = dat.ordering
+        }
+        end
+      return dat
+                             end)

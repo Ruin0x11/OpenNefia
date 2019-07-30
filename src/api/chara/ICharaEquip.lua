@@ -71,6 +71,10 @@ function ICharaEquip:has_item_equipped(item)
    return self.equip:has_object(item)
 end
 
+function ICharaEquip:items_equipped_at(body_part_type)
+   return self.equip:items_equipped_at(body_part_type)
+end
+
 function ICharaEquip:find_equip_slot_for(item, body_part_type)
    return self.equip:find_free_slot(item, body_part_type)
 end
@@ -93,8 +97,8 @@ end
 
 -- Iterates all body parts on this character, including empty slots.
 -- @treturn iterator
-function ICharaEquip:iter_body_parts()
-   return self.equip:iter_body_parts()
+function ICharaEquip:iter_body_parts(also_empty)
+   return self.equip:iter_body_parts(also_empty)
 end
 
 -- Iterates the items that are equipped on this character.

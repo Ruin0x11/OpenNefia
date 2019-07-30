@@ -15,6 +15,10 @@ function Rand.one_in(n)
    return Rand.rnd(n) == 0
 end
 
+function Rand.one_in_percent(n)
+   return 100 / n
+end
+
 function Rand.coinflip()
    return Rand.rnd(2) == 0
 end
@@ -24,12 +28,13 @@ function Rand.set_seed(seed)
 end
 
 function Rand.choice(array)
-   if type(array) ~= "table" then return array end
-   return array[Rand.rnd(#array)+1]
+   assert(type(array) == "table")
+   local i = array[Rand.rnd(#array)+1]
+   return i
 end
 
 function Rand.percent_chance(percent)
-   return Rand.rnd(100) < percent
+   return math.random() < (percent / 100)
 end
 
 function Rand.roll_dice(dice_x, dice_y, add)

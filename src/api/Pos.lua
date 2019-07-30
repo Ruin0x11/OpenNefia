@@ -7,19 +7,19 @@ local Pos = {}
 local directions = {
    North     = {  0, -1 },
    South     = {  0,  1 },
-   East      = { -1,  0 },
-   West      = {  1,  0 },
-   Northeast = { -1, -1 },
-   Southeast = { -1,  1 },
-   Northwest = {  1, -1 },
-   Southwest = {  1,  1 },
+   East      = {  1,  0 },
+   West      = { -1,  0 },
+   Northeast = {  1, -1 },
+   Southeast = {  1,  1 },
+   Northwest = { -1, -1 },
+   Southwest = { -1,  1 },
 }
 
-local directions_rev = {
-   [-1] = { [-1] = "Northwest", [0] = "North", [1] = "Northeast" },
-   [0]  = { [-1] = "West",                     [1] = "East"      },
-   [1]  = { [-1] = "Southwest", [0] = "South", [1] = "Southeast" },
-}
+local directions_rev = { [-1] = {}, [0] = {}, [1] = {} }
+
+for name, pos in pairs(directions) do
+   directions_rev[pos[1]][pos[2]] = name
+end
 
 function Pos.unpack_direction(dir)
    local dir = directions[dir]

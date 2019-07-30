@@ -10,4 +10,5 @@ globals = {
    "inspect",
    "fun",
    "_p",
+   "save",
 }

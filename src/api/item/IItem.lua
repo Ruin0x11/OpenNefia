@@ -1,15 +1,18 @@
-local Log = require("api.Log")
+local EquipSlots = require("api.EquipSlots")
 local Event = require("api.Event")
-local IObject = require("api.IObject")
-local IMapObject = require("api.IMapObject")
-local IStackableObject = require("api.IStackableObject")
 local IItemEnchantments = require("api.item.IItemEnchantments")
+local IMapObject = require("api.IMapObject")
+local IObject = require("api.IObject")
+local IModdable = require("api.IModdable")
+local IEventEmitter = require("api.IEventEmitter")
+local IStackableObject = require("api.IStackableObject")
+local Log = require("api.Log")
 local data = require("internal.data")
 
 -- TODO: move out of api
 local IItem = class.interface("IItem",
                          {},
-                         {IStackableObject, IItemEnchantments})
+                         {IStackableObject, IModdable, IItemEnchantments, IEventEmitter})
 
 -- TODO: schema
 local defaults = {
@@ -30,13 +33,16 @@ local defaults = {
    name = "item",
    pierce_rate = 0,
    effective_range = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
-   ammo_type = ""
+   ammo_type = "",
+   params = {}
 }
 table.merge(IItem, defaults)
 
 function IItem:pre_build()
    -- TODO remove and place in schema as defaults
+   IModdable.init(self)
    IMapObject.init(self)
+   IEventEmitter.init(self)
 
    self.location = nil
    self.ownership = self.ownership or "none"
@@ -63,6 +69,7 @@ function IItem:normal_build()
 end
 
 function IItem:build()
+   self:emit("base.on_build_item")
 end
 
 function IItem:instantiate()
@@ -100,16 +107,19 @@ function IItem:build_name(amount)
    return s
 end
 
+local function is_weapon(item)
+   return not item:is_equipped_at("elona.ranged")
+      and not item:is_equipped_at("elona.ammo")
+      and item:calc("dice_x") > 0
+end
+
 function IItem:refresh()
+   IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
 
-   if self:can_equip_at("base.hand") then
-      self:mod("is_weapon", true)
-   end
-   if self:calc("dice_x") == 0 then
-      self:mod("is_armor", true)
-   end
+   self:mod("is_weapon", is_weapon(self))
+   self:mod("is_armor", self:calc("dice_x") == 0)
 end
 
 function IItem:on_refresh()
@@ -151,14 +161,8 @@ function IItem:current_map()
    return IMapObject.current_map(self)
 end
 
-function IItem:get_equip_slots()
-   local base = self:calc("equip_slots") or {}
-
-   return base
-end
-
 function IItem:can_equip_at(body_part_type)
-   local equip_slots = self:get_equip_slots()
+   local equip_slots = self:calc("equip_slots") or {}
    if #equip_slots == 0 then
       return nil
    end
@@ -166,6 +170,20 @@ function IItem:can_equip_at(body_part_type)
    local can_equip = table.set(equip_slots)
 
    return can_equip[body_part_type] == true
+end
+
+function IItem:is_equipped()
+   return class.is_an(EquipSlots, self.location)
+end
+
+function IItem:is_equipped_at(body_part_type)
+   if not self:is_equipped() then
+      return false
+   end
+
+   local slot = self.location:equip_slot_of(self)
+
+   return slot and slot.type == body_part_type
 end
 
 function IItem:copy_image()

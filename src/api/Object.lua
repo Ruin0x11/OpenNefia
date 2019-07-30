@@ -42,6 +42,10 @@ function Object.make_prototype(obj)
    assert(_id)
 
    local copy = cycle_aware_copy(obj, {})
+   if type(copy) ~= "table" then
+      return obj
+   end
+
    setmetatable(copy, nil)
 
    -- for deserialization, removed afterward
@@ -74,6 +78,7 @@ function Object.generate_from(_type, id)
    local data = {}
    object.deserialize(data, _type, id)
 
+   _p(_type, id)
    class.assert_is_an(IObject, data)
 
    data:finalize()

@@ -132,7 +132,7 @@ local effect = {
 
       on_turn_end = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
-         chara:damage_hp(Rand.rnd(chara:calc("hp") * (1 + turns / 4) / 100 + 3) + 1, "elona.bleeding")
+         chara:damage_hp(Rand.rnd(chara.hp * (1 + turns / 4) / 100 + 3) + 1, "elona.bleeding")
          if chara:calc("cures_bleeding_quickly") then
             chara:heal_effect("elona.bleeding", 3)
          end
@@ -176,4 +176,4 @@ local effect = {
    },
 }
 
-data:add_multi("elona_sys.effect", effect)
+data:add_multi("base.effect", effect)

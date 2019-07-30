@@ -28,9 +28,6 @@ function Chara.is_player(c)
 end
 
 function Chara.player()
-   if not field.is_active then
-      return nil
-   end
    return Map.current():get_object(field.player)
 end
 
@@ -108,8 +105,13 @@ function Chara.create(id, x, y, params, where)
       end
    end
 
+   local copy = params.copy or {}
+   copy.level = params.level or nil
+   copy.quality = params.quality or nil
+
    local gen_params = {
-      no_build = params.no_build
+      no_build = params.no_build,
+      copy = copy
    }
    local chara = MapObject.generate_from("base.chara", id, gen_params)
 
@@ -139,7 +141,7 @@ local function iter(a, i)
 end
 
 function Chara.iter_allies()
-   return fun.wrap(iter, {map = field.map, uids = save.allies}, 1)
+   return fun.wrap(iter, {map = field.map, uids = save.base.allies}, 1)
 end
 
 function Chara.find(id, kind)

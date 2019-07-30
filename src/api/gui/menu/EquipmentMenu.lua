@@ -54,7 +54,7 @@ local UiListExt = function(equipment_menu)
 
       UiList.draw_item_text(self, item_name, entry, i, x, y, 30, color)
 
-      Draw.text(subtext, x + 590 - Draw.text_width(subtext), y + 2, color)
+      Draw.text(subtext, x + 530 - Draw.text_width(subtext), y + 2, color)
 
    end
 
@@ -103,7 +103,7 @@ end
 
 function EquipmentMenu:update_from_chara()
    local data = {}
-   for _, i in self.chara:iter_body_parts() do
+   for _, i in self.chara:iter_body_parts(true) do
       local entry = {}
 
       entry.body_part = i.body_part

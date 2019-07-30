@@ -7,7 +7,7 @@ local MapObject = {}
 
 function MapObject.generate_from(_type, id, params, uid_tracker)
    params = params or {}
-   uid_tracker = uid_tracker or require("internal.global.save").uids
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
@@ -30,7 +30,7 @@ end
 
 function MapObject.generate(data, params, uid_tracker)
    params = params or {}
-   uid_tracker = uid_tracker or require("internal.global.save").uids
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
@@ -41,6 +41,12 @@ function MapObject.generate(data, params, uid_tracker)
    rawset(data, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
+
+   if params.copy then
+      for k, v in pairs(params.copy) do
+         data[k] = v
+      end
+   end
 
    -- TODO
    if not params.no_pre_build then

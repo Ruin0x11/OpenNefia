@@ -1,4 +1,102 @@
-* TODO rebooting is dying
+* major systems
+** critical
+*** effects
+*** TODO activity
+*** TODO actions
+**** TODO skill window
+***** TODO trainer behaviors
+**** TODO inventory screen
+***** TODO menu switching
+***** TODO item ordering/filtering
+***** TODO item weight display
+*** TODO i18n
+**** TODO i18n porting
+**** TODO object descriptions
+*** TODO cell memory
+*** TODO mef (use as feat?)
+*** TODO chara generation
+**** TODO quality enum
+use number here
+**** TODO supply initial equipments
+*** TODO item generation
+**** TODO generation behavior
+**** TODO item material
+*** TODO localized item name
+*** TODO map refresh logic
+*** TODO move into elona mod
+** content
+*** TODO status effects impl
+*** TODO food
+**** TODO hunger
+**** TODO food effects
+***** TODO base
+***** TODO impl
+***** TODO corpses
+**** TODO cooking
+**** TODO anorexia
+*** TODO god
+**** TODO custom god compat
+**** TODO offer command
+**** TODO pray command
+*** TODO magic
+**** TODO base
+**** TODO impl
+**** TODO magic route/area of effect
+**** TODO magic items
+**** TODO casting
+*** TODO main quest
+*** TODO material system
+**** TODO crafting
+*** TODO trait
+**** TODO base
+**** TODO impl
+*** TODO spact
+*** TODO ammo system
+*** TODO interact menu
+*** TODO commands
+**** TODO dig
+**** TODO give
+**** TODO search
+**** TODO throw
+**** TODO dip
+**** TODO use (impl)
+*** TODO blending
+*** TODO journal
+*** TODO servants
+*** TODO guilds
+*** TODO enchantments
+**** TODO base
+**** TODO impl
+*** TODO building
+**** TODO shop
+**** TODO museum
+**** TODO ranch
+*** TODO scene playback
+*** TODO random title system
+port from 1.22 by reusing same RNG engine. convert 1.22 saves by using that engine.
+*** TODO nefia generation
+*** TODO shop system
+*** TODO quest system
+**** TODO base
+**** TODO impl
+*** TODO wish system
+*** TODO casino
+*** TODO buffs
+*** TODO adventurer
+** aesthetic
+*** TODO wall overhang
+*** TODO blood and fragments
+*** TODO correct scrolling
+*** TODO item shining
+*** TODO light
+*** TODO pcc
+** extend behavior
+*** plus
+**** TODO standing character portrait
+**** TODO plus character sheet
+**** TODO pet evolution
+* main list
+** TODO rebooting is dying
 ** DONE hotload ui layer
 CLOSED: [2019-06-29 Sat 23:15]
 ** DONE hotload interface
@@ -9,7 +107,7 @@ CLOSED: [2019-06-29 Sat 23:15]
 CLOSED: [2019-07-04 Thu 11:08]
 ** DONE Hook.add()
 CLOSED: [2019-07-04 Thu 11:08]
-* TODO map/outer map handling (base)
+** TODO map/outer map handling (base)
 when is it necessary to iterate all maps?
 - when updating the world map with mapupdate=1 (the map exists or is being reset via diastrophism).
 - when getting a list of locations to return to. it checks if the area is visited, if it can be returned to, and the deepest level. this means that when traveling somewhere, it is necessary to know where to set the area's deepest level.
@@ -133,30 +231,30 @@ the ones that could apply are:
 - when doing world map earthquake:
   + if force is set, wipe all nefias. conquered == -1 means the map is conquered.
   + otherwise, randomly remove nefias if less than 25 nefias have been conquered, or 1 in 150 times.
-* TODO continuous action (base)
-* TODO schematize prototypes (base)
-* TODO add fields to prototypes (elona_sys)
-* TODO hook prototype into object system (base)
-* TODO equipment properties on equip (base)
-* TODO enchantments (elona_sys)
-* TODO support all elona characters (elona)
-* TODO strip all mods and run base with fallbacks (base)
+** TODO continuous action (base)
+** TODO schematize prototypes (base)
+** TODO add fields to prototypes (elona_sys)
+** TODO hook prototype into object system (base)
+** TODO equipment properties on equip (base)
+** TODO enchantments (elona_sys)
+** TODO support all elona characters (elona)
+** TODO strip all mods and run base with fallbacks (base)
 determine which values should be set as defaults
-* TODO NPC dialog (elona_sys)
-* TODO dungeon generation (elona_sys)
-* TODO applied effects (base/IObject)
-* TODO timed effects (base)
-* TODO move menus to elona_sys
-* TODO display timed effect as status effect (base?)
-* TODO damage handler/projector
-* TODO additional AI actions (elona_sys)
-* TODO data schema
-* TODO pcc support
-* TODO make Log support log tags
-* TODO final graphical polish
+** TODO NPC dialog (elona_sys)
+** TODO dungeon generation (elona_sys)
+** TODO applied effects (base/IObject)
+** TODO timed effects (base)
+** TODO move menus to elona_sys
+** TODO display timed effect as status effect (base?)
+** TODO damage handler/projector
+** TODO additional AI actions (elona_sys)
+** TODO data schema
+** TODO pcc support
+** TODO make Log support log tags
+** TODO final graphical polish
 spotlight, animated tiles, tall/large tiles
 
-* TODO decide on the name
+** TODO decide on the name
 Elona_next
 Elona_macs
 Elona_evo

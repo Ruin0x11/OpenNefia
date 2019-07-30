@@ -59,43 +59,6 @@ add_elona_id("base.element")
 add_elona_id("base.feat")
 add_elona_id("base.element")
 
-data:add_type{
-   name = "effect",
-   schema = {
-      indicator = schema.Function,
-   }
-}
-
-data["elona_sys.effect"]:edit("register status effect indicator",
-   function(dat)
-      local f = dat.indicator
-      if f == nil then
-         f = { text = dat._id }
-      end
-      if type(f) == "table" and type(f.text) == "string" then
-         -- Create a basic indicator that appears if the effect turns
-         -- are above zero.
-         local indicator = f
-         f = function(player)
-            if player:has_effect(dat._id) then
-               return indicator
-            end
-
-            return nil
-         end
-      end
-      if type(f) == "function" then
-        data:add {
-           _type = "base.ui_indicator",
-           _id = "effect_" .. string.split(dat._id, ".")[2],
-
-           indicator = f,
-           ordering = dat.ordering
-        }
-        end
-      return dat
-                             end)
-
 require("mod.elona_sys.data.event")
 
 require("mod.elona_sys.theme.init")
@@ -105,21 +68,67 @@ require("mod.elona_sys.dialog.init")
 
 require("mod.elona_sys.events")
 
-local Event = require("api.Event")
+--
+--
+-- keybinds
+--
+--
 
-local function register_interface(iface, name)
-   Event.register("base.on_pre_build", name .. " methods",
-                  function(source)
-                     if source and source._type == "base.chara" then
-                        for k, v in pairs(iface) do
-                           source[k] = v
-                        end
-                        if iface.init then
-                           iface.init(source)
-                        end
-                     end
-                  end)
-end
-
-local ICharaEffects = require("mod.elona_sys.api.chara.ICharaEffects")
-register_interface(ICharaEffects, "ICharaEffects")
+local Command = require("mod.elona_sys.api.Command")
+local Gui = require("api.Gui")
+local Repl = require("api.Repl")
+Gui.bind_keys {
+   up = function(me)
+      return Command.move(me, "North")
+   end,
+   down = function(me)
+      return Command.move(me, "South")
+   end,
+   left = function(me)
+      return Command.move(me, "West")
+   end,
+   right = function(me)
+      return Command.move(me, "East")
+   end,
+   g = function(me)
+      return Command.get(me)
+   end,
+   w = function(me)
+      return Command.wear(me)
+   end,
+   d = function(me)
+      return Command.drop(me)
+   end,
+   x = function(me)
+      return Command.inventory(me)
+   end,
+   c = function(me)
+      return Command.close(me)
+   end,
+   o = function(me)
+      return Command.open(me)
+   end,
+   ["return"] = function(me)
+      return Command.enter_action(me)
+   end,
+   ["."] = function(me)
+      return "turn_end"
+   end,
+   ["`"] = function(me)
+      Repl.query()
+      return "player_turn_query"
+   end,
+   escape = function(me)
+      return Command.quit_game()
+   end,
+   n = function()
+      Gui.mes(require("api.gui.TextPrompt"):new(16):query())
+      return "player_turn_query"
+   end,
+   f2 = function()
+      return Command.save_game()
+   end,
+   f3 = function()
+      return Command.load_game()
+   end
+}

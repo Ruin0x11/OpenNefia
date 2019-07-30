@@ -105,7 +105,7 @@ function Draw.image(image, x, y, width, height, color, centered, rotation)
       ox = (image:getWidth()) / 2
       oy = (image:getHeight()) / 2
    end
-   return love.graphics.draw(image, x, y, rotation or 0, sx, sy, ox, oy)
+   return love.graphics.draw(image, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
 end
 
 function Draw.image_region(image, quad, x, y, width, height, color, centered, rotation)
@@ -126,7 +126,7 @@ function Draw.image_region(image, quad, x, y, width, height, color, centered, ro
       ox = (width or qw) / 2
       oy = (width or qh) / 2
    end
-   return love.graphics.draw(image, quad, x, y, 0, sx, sy, ox, oy)
+   return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
 end
 
 function Draw.image_stretched(image, x, y, tx, ty, color, rotation)
@@ -139,7 +139,7 @@ function Draw.image_stretched(image, x, y, tx, ty, color, rotation)
       sx = (tx - x) / image:getWidth()
       sy = (ty - y) / image:getHeight()
    end
-   return love.graphics.draw(image, x, y, 0, sx, sy)
+   return love.graphics.draw(image, x, y, math.rad(rotation or 0), sx, sy)
 end
 
 function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
@@ -153,7 +153,7 @@ function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
       sx = (tx - x) / qw
       sy = (ty - y) / qh
    end
-   return love.graphics.draw(image, quad, x, y, 0, sx, sy)
+   return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy)
 end
 
 local framerate = 20

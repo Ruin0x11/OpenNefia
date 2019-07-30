@@ -7,12 +7,15 @@ local Resolver = require("api.Resolver")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
+local ICharaEffects = require("api.chara.ICharaEffects")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
+local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
 local IObject = require("api.IObject")
 local ICharaTalk = require("api.chara.ICharaTalk")
+local IModdable = require("api.IModdable")
 local IFactioned = require("api.IFactioned")
 local IMapObject = require("api.IMapObject")
 local IEventEmitter = require("api.IEventEmitter")
@@ -23,12 +26,15 @@ local IChara = class.interface("IChara",
                          {},
                          {
                             IMapObject,
+                            IModdable,
                             ICharaInventory,
                             IFactioned,
                             ICharaTalk,
                             ICharaEquip,
                             ICharaParty,
                             ICharaSkills,
+                            ICharaEffects,
+                            ICharaActivity,
                             IEventEmitter
                          })
 
@@ -39,13 +45,14 @@ IChara._type = "base.chara"
 -- Must be available before generation.
 local defaults = {
    level = 1,
+   quality = 2,
 }
 
 -- Must be available after instantiation.
 local fallbacks = {
    state = "Dead",
    experience = 0,
-   quality = 2,
+   sleep_experience = 0,
    dv = 0,
    pv = 0,
    hit_bonus = 0,
@@ -87,7 +94,7 @@ local fallbacks = {
    pierce_chance = 0,
    physical_damage_reduction = 0,
 
-   ai = "base.elona_default_ai"
+   ai = "elona.elona_default_ai"
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -99,12 +106,14 @@ function IChara:pre_build()
 
    -- NOTE: to add new interfaces/behaviors, connect_self to
    -- on_instantiate and run them there.
+   IModdable.init(self)
    IEventEmitter.init(self)
    IFactioned.init(self)
    ICharaInventory.init(self)
    ICharaEquip.init(self)
    ICharaTalk.init(self)
    ICharaSkills.init(self)
+   ICharaEffects.init(self)
 
    self:emit("base.on_pre_build")
 
@@ -117,10 +126,7 @@ end
 --- responsibility to ensure that IChara:build() is also called at
 --- some later point.
 function IChara:normal_build()
-   local race_data = Resolver.run("elona.race", {}, { chara = self })
-   local class_data = Resolver.run("elona.class", {}, { chara = self })
-   self:mod_base_with(race_data, "merge")
-   self:mod_base_with(class_data, "merge")
+   self:emit("base.on_normal_build")
 end
 
 --- Finishes initializing this character. All characters must run this
@@ -144,7 +150,7 @@ function IChara:build()
       is_anchored = false,
    }
 
-   self:emit("base.on_build")
+   self:emit("base.on_build_chara")
 
    self:refresh()
 
@@ -159,6 +165,7 @@ function IChara:instantiate()
 end
 
 function IChara:refresh()
+   IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
 
@@ -211,13 +218,13 @@ function IChara:copy_image()
 end
 
 -- Iterates both the character's inventory and equipment.
-function IChara:iter_all_items()
+function IChara:iter_items()
    return fun.chain(self:iter_inventory(), self:iter_equipment())
 end
 
 function IChara:refresh_weight()
    local weight = 0
-   for _, i in self:iter_all_items() do
+   for _, i in self:iter_items() do
       weight = weight + i:calc("weight")
    end
    self:mod("inventory_weight", weight)
@@ -237,19 +244,20 @@ function IChara:is_player()
 end
 
 function IChara:is_ally()
-   return fun.iter(save.allies):index(self.uid) ~= nil
+   return fun.iter(save.base.allies):index(self.uid) ~= nil
 end
 
 function IChara:recruit_as_ally()
    if self:is_ally() then
       return false
    end
-   save.allies[#save.allies+1] = self.uid
+   save.base.allies[#save.base.allies+1] = self.uid
 
    self.faction = "base.friendly"
    self:refresh()
 
    Gui.mes(self.uid .. " joins as an ally! ", "Orange")
+   Gui.play_sound("base.pray1");
    return true
 end
 
@@ -267,24 +275,13 @@ function IChara:swap_places(other)
    return true
 end
 
-local function calc_kill_exp(attacker, victim)
-   local gained_exp = math.clamp(victim.level, 1, 200)
-      * math.clamp(victim.level + 1, 1, 200)
-      * math.clamp(victim.level + 2, 1, 100)
-      / 20 + 8;
-   if victim.level > attacker.level then
-      gained_exp = gained_exp / 4
-   end
+local calc_damage = Event.define_hook("calc_damage", "Calculates damage.", 0)
 
-   local result = Event.trigger("base.on_calc_kill_exp", {attacker=attacker,victim=victim},{gained_exp=gained_exp})
-   if result.gained_exp then
-      gained_exp = gained_exp
-   end
-
-   return gained_exp
-end
-
-local calc_damage = Event.define_hook("calc_damage", "Calculates damage.", 0, "damage")
+local calc_applied_damage = Event.define_hook("calc_applied_damage",
+[[
+Calculates the actual damage dealt, separate from base damage which is used to calculate things like gained skill experience.
+]] ,
+                                              0)
 
 function IChara:damage_hp(amount, source, params)
    params = params or {}
@@ -303,31 +300,36 @@ function IChara:damage_hp(amount, source, params)
 
    local event_params = {
       chara = victim,
-      amount = amount,
+      original_damage = amount,
       source = source,
       attacker = attacker, -- TODO remove/replace with source
       element = element,
 
       element_power = params.element_power or 0,
-      damage_text_type = params.damage_text_type
+
+      -- only required for message printing
+      message_tense = params.message_tense or "passive",
+      extra_attacks = params.extra_attacks or 0,
+      weapon = params.weapon or nil,
    }
 
    if not Chara.is_alive(victim) then
-      Event.trigger("base.after_damage_hp", event_params)
-      return true
+      victim:emit("base.after_damage_hp", event_params)
+      return true, 0
    end
 
    local damage = amount
    event_params.damage = damage
 
-   damage = calc_damage(event_params, damage)
+   damage = victim:emit("base.hook_calc_damage", event_params, damage)
    event_params.damage = damage
 
-   victim.hp = math.min(victim.hp - damage, victim.max_hp)
+   local base_damage = damage
+   event_params.base_damage = base_damage
+   damage = victim:emit("base.hook_calc_applied_damage", event_params, damage)
+   event_params.damage = damage
 
-   if attacker and attacker:is_player() then
-      Gui.play_sound("base.atk1", attacker.x, attacker.y)
-   end
+   victim.hp = math.min(victim.hp - math.floor(damage), victim.max_hp)
 
    victim:emit("base.after_chara_damaged", event_params)
 
@@ -344,9 +346,9 @@ function IChara:damage_hp(amount, source, params)
       killed = not Chara.is_alive(victim)
    end
 
-   Event.trigger("base.after_damage_hp", event_params)
+   victim:emit("base.after_damage_hp", event_params)
 
-   return killed
+   return killed, base_damage, damage
 end
 
 function IChara.after_chara_damaged(victim, params)
@@ -359,64 +361,22 @@ Event.register("base.after_chara_damaged", "Apply element damage.", IChara.after
 
 function IChara.on_kill_chara(victim, params)
    local attacker = params.attacker
-   Gui.play_sound(Rand.choice("base.kill1", "base.kill2"), victim.x, victim.y)
+   Gui.play_sound(Rand.choice({"base.kill1", "base.kill2"}), victim.x, victim.y)
 
    if attacker then
-      local gained_exp = calc_kill_exp(attacker, victim)
+      local gained_exp = victim:emit("base.on_calc_kill_exp", params, 0)
 
       attacker.experience = attacker.experience + gained_exp
-      -- TODO sleep exp
+      if attacker:is_player() then
+         attacker.sleep_experience = attacker.sleep_experience + gained_exp
+      end
       if attacker:is_in_party() then
          attacker:set_target(nil)
          attacker:get_party_leader():set_target(nil)
       end
    end
-
-   -- on kill quest chara
-   -- TODO: block if void/showroom
 end
-Event.register("base.on_kill_chara", "Default death handler.", IChara.on_kill_chara)
-
-function IChara.show_damage_text(victim, params)
-   local source = params.source
-   local damage = params.damage
-   local damage_level
-   if damage <= 0 then
-      damage_level = -1
-   else
-      damage_level = math.floor(damage * 6 / victim.max_hp)
-   end
-   if params.element and params.damage_text_type == "element" then
-      show_element_text_damage(victim, source, victim, params.element)
-   elseif params.damage_text_type == "damage" then
-      Gui.mes_continue_sentence()
-      if damage_level == -1 then
-         Gui.mes(victim.uid .. " is scratched.")
-      elseif damage_level == 0 then
-         Gui.mes(victim.uid .. " is slightly wounded.", "Orange")
-      elseif damage_level == 1 then
-         Gui.mes(victim.uid .. " is moderately wounded.", "Gold")
-      elseif damage_level == 2 then
-         Gui.mes(victim.uid .. " is severely wounded.", "LightRed")
-      elseif damage_level >= 3 then
-         Gui.mes(victim.uid .. " is critically wounded.", "Red")
-      end
-   end
-
-   if Map.is_in_fov(victim.x, victim.y) then
-      if damage_level == 1 then
-         Gui.mes(victim.uid .. " screams.")
-      elseif damage_level == 2 then
-         Gui.mes(victim.uid .. " writhes in pain.")
-      elseif damage_level >= 3 then
-         Gui.mes(victim.uid .. " is severely hurt.")
-      end
-      if damage < 0 then
-         Gui.mes(victim.uid .. " is healed.")
-      end
-   end
-end
-Event.register("base.on_damage_chara", "Damage text.", IChara.show_damage_text)
+Event.register("base.on_kill_chara", "Default kill handler.", IChara.on_kill_chara)
 
 function IChara.apply_hostile_action(victim, params)
    local attacker = params.attacker
@@ -455,6 +415,7 @@ function IChara.apply_element_on_damage(victim, params)
 end
 Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
+
 function IChara:heal_hp(add)
    self.hp = math.min(self.hp + math.max(add, 0), self.max_hp)
 end
@@ -475,12 +436,10 @@ function IChara:kill(source)
 
    if class.is_an(IChara, source) then
       local death_type = Rand.rnd(4)
-      Gui.mes(self.uid .. " was killed.")
    else
       if source and source.get_death_cause then
          local death_cause = source.get_death_cause()
       else
-         Gui.mes(self.uid .. " dies.")
       end
    end
 
@@ -545,22 +504,16 @@ function IChara:has_trait(trait)
    return false
 end
 
-Codegen.generate_object_getter(IChara, "ammo", "base.item")
-
-function IChara:armor_skill_level()
-   local armor_class = self:calc("armor_class")
-   return self:skill_level(armor_class)
-end
-
-function IChara:armor_penalty()
-   local armor_class = self:calc("armor_class")
-   local skill = data["base.skill"][armor_class]
-   local penalty = 0
-   if skill and skill.calc_armor_penalty then
-      penalty = skill:calc_armor_penalty(self)
+function IChara:is_in_fov()
+   local map = self:current_map()
+   if not map then
+      return false
    end
-   return penalty
+
+   return map:is_in_fov(self.x, self.y)
 end
+
+Codegen.generate_object_getter(IChara, "ammo", "base.item")
 
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1

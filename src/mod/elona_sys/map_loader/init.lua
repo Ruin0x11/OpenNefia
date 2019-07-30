@@ -13,6 +13,7 @@ local own_states = {
    [1]  = "not_owned",
    [3]  = "shelter",
    [4]  = "harvested",
+   [5]  = "unobtainable",
 }
 
 -- Map chips which are exactly the same in image and parameters between atlases 1 and 2.

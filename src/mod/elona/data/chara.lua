@@ -964,6 +964,7 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       flags = { "Splits" },
+      splits = true
    },
    {
       _id = "blue_bubble",
@@ -983,6 +984,7 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       flags = { "Splits" },
+      splits = true
    },
    {
       _id = "mass_monster",
@@ -1000,6 +1002,7 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       flags = { "Splits" },
+      splits = true
    },
    {
       _id = "cube",
@@ -1017,6 +1020,8 @@ local chara = {
       rarity = 15000,
       coefficient = 400,
       flags = { "Splits2", "IsImmuneToElementalDamage" },
+      splits2 = true,
+      is_immune_to_elemental_damage = true
    },
    {
       _id = "rabbit",
@@ -1574,6 +1579,7 @@ local chara = {
       rarity = 150000,
       coefficient = 400,
       flags = { "Explodes" },
+      explodes = true
    },
    {
       _id = "kamikaze_samurai",
@@ -1591,6 +1597,7 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       flags = { "Explodes" },
+      explodes = true
    },
    {
       _id = "bomb_rock",
@@ -1609,6 +1616,7 @@ local chara = {
       rarity = 20000,
       coefficient = 400,
       flags = { "Explodes" },
+      explodes = true
    },
    {
       _id = "hard_gay",
@@ -1625,6 +1633,7 @@ local chara = {
       rarity = 15000,
       coefficient = 200,
       flags = { "Explodes" },
+      explodes = true
    },
    {
       _id = "rodlob",
@@ -5960,6 +5969,7 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       flags = { "IsFloating", "HasLayHand" },
+      has_lay_hand = true
    },
    {
       _id = "lame_horse",

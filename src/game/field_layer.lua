@@ -1,5 +1,6 @@
 local InputHandler = require("api.gui.InputHandler")
 local IUiLayer = require("api.gui.IUiLayer")
+local Event = require("api.Event")
 local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
@@ -27,8 +28,6 @@ function field_layer:init()
 
    self.map_changed = false
    self.no_scroll = true
-
-   self:init_global_data()
 
    local keys = KeyHandler:new(true)
    self.keys = InputHandler:new(keys)
@@ -80,21 +79,24 @@ function field_layer:setup_repl()
 end
 
 function field_layer:init_global_data()
-   save.date = DateTime:new(517, 8, 12, 16, 10, 0)
-   save.play_turns = 0
-   save.play_days = 0
-   save.area_mapping = area_mapping:new()
-   save.player = nil
-   save.allies = {}
-   save.uids = uid_tracker:new()
-   save.map_uids = uid_tracker:new()
+   local s = save.base
+   s.date = DateTime:new(517, 8, 12, 16, 10, 0)
+   s.play_turns = 0
+   s.play_days = 0
+   s.area_mapping = area_mapping:new()
+   s.player = nil
+   s.allies = {}
+   s.uids = uid_tracker:new()
+   s.map_uids = uid_tracker:new()
+
+   Event.trigger("base.on_init_save")
 end
 
 function field_layer:set_map(map)
    assert(type(map) == "table")
    assert(map.uid, "Map must have UID")
 
-   if save.area_mapping:maybe_generate_area_for_map(map.uid) then
+   if save.base.area_mapping:maybe_generate_area_for_map(map.uid) then
       Log.warn("Generating new area for map %d", map.uid)
    end
 
@@ -168,7 +170,7 @@ end
 
 function field_layer:update_hud()
    -- HACK due to global data
-   self.hud.clock:set_data(save.date)
+   self.hud.clock:set_data(save.base.date)
 
    local player = self.map:get_object(self.player)
    self.hud:refresh(player)

@@ -71,7 +71,7 @@ function Map.edit(uid, cb)
 end
 
 function Map.is_world_map(map)
-   return (map or field.map).is_world_map
+   return (map or field.map):calc("is_world_map")
 end
 
 function Map.current()
@@ -119,6 +119,10 @@ end
 
 function Map.set_tile(x, y, id, map)
    return (map or field.map):set_tile(x, y, id)
+end
+
+function Map.iter_objects_at(x, y, map)
+   return (map or field.map):iter_objects_at(x, y)
 end
 
 function Map.iter_charas(map)
@@ -178,6 +182,52 @@ local function can_place_chara_at(x, y, map)
    return Map.can_access(x, y, map)
 end
 
+function Map.free_position(x, y, params, map)
+   params = params or {}
+   map = map or Map.current()
+
+   if x and Map.is_in_bounds(x, y, map) then
+      return x, y
+   end
+
+   local tries = 0
+   local sx, sy
+
+   repeat
+      local ok = true
+      if not x then
+         sx = Rand.rnd(map:width() - 2) + 2
+         sy = Rand.rnd(map:height() - 2) + 2
+         if not params.allow_stacking then
+            local Item = require("api.Item")
+            if Item.at(sx, sy):length() > 0 then
+               ok = false
+            end
+         end
+      else
+         if tries == 0 then
+            sx = x
+            sy = y
+         else
+            sx = x + Rand.rnd(tries + 1) - Rand.rnd(tries + 1)
+            sy = y + Rand.rnd(tries + 1) - Rand.rnd(tries + 1)
+         end
+      end
+
+      if not Map.can_access(sx, sy, map) then
+         ok = false
+      end
+
+      if ok then
+         return sx, sy
+      end
+
+      tries = tries + 1
+   until tries == 100
+
+   return nil
+end
+
 --- Tries to find an open tile to place a character.
 -- @tparam int x
 -- @tparam int y
@@ -190,6 +240,10 @@ end
 -- @treturn[1][2] int
 -- @treturn[2] nil
 function Map.find_position_for_chara(x, y, scope, map)
+   map = map or Map.current()
+   x = x or Rand.rnd(map:width())
+   y = y or Rand.rnd(map:height())
+
    scope = scope or "npc"
 
    local tries = 0
@@ -285,7 +339,7 @@ function Map.travel_to(map_or_uid, params)
    -- player) and persistable (remains in the map even after it is
    -- deleted and the map is exited).
    local player = Chara.player()
-   local allies = save.allies
+   local allies = save.base.allies
    -- TODO: items
 
    -- Transfer each to the new map.

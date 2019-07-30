@@ -1,4 +1,7 @@
 local Action = require("api.Action")
+local Item = require("api.Item")
+local Event = require("api.Event")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 local Ai = require("api.Ai")
 local Chara = require("api.Chara")
 local Log = require("api.Log")
@@ -10,28 +13,20 @@ local function default_target(chara)
    return chara:get_party_leader() or Chara.player()
 end
 
-local function on_ai_calm_actions(chara)
-   return chara:calc("on_ai_calm_action")
-end
-
-local function on_ai_ally_actions(chara)
-   return chara:calc("on_ai_ally_action")
-end
-
 local function drift_towards_pos(x, y, initial_x, initial_y)
    local add_x = 0
    local add_y = 0
    if Rand.coinflip() then
-      if chara.x > chara.initial_x then
+      if x > initial_x then
          add_x = -1
-      elseif chara.x < chara.initial_x then
+      elseif x < initial_x then
          add_x = 1
       end
    end
    if Rand.coinflip() then
-      if chara.y > chara.initial_y then
+      if y > initial_y then
          add_y = -1
-      elseif chara.y < chara.initial_x then
+      elseif y < initial_x then
          add_y = 1
       end
    end
@@ -73,7 +68,7 @@ end
 
 local function go_to_preset_anchor(chara, params)
    if chara.ai_state.is_anchored then
-      return Ai.run("base.go_to_position", { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
+      return Ai.run("elona.go_to_position", { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
    end
 
    return false
@@ -83,7 +78,7 @@ local function follow_player(chara, params)
    if chara.ai_config.follow_player_when_calm then
       local target = Chara.player()
       if Chara.is_alive(target) then
-         return Ai.run("base.go_to_position", chara, { x = target.x, y = target.y })
+         return Ai.run("elona.go_to_position", chara, { x = target.x, y = target.y })
       end
    end
 end
@@ -175,14 +170,15 @@ local function dir_check_north_south(chara)
       end
       dir = "north"
    end
-   local nx, ny,blocked_by_chara = dir_check(chara, dir, reverse)
+   local nx, ny, blocked_by_chara = dir_check(chara, dir, reverse)
    return nx, ny, blocked_by_chara, {"south", "north"}
 end
 
 local function find_position_for_movement(chara)
    local dir_x = math.abs(chara.ai_state.last_target_x - chara.x)
    local dir_y = math.abs(chara.ai_state.last_target_y - chara.y)
-   local nx, ny, blocked_by_chara, dirs
+   local nx, ny, blocked_by_chara
+   local dirs = {}
    local order = {}
    if dir_x >= dir_y then
       order[1] = dir_check_east_west
@@ -195,7 +191,7 @@ local function find_position_for_movement(chara)
    for i=1,2 do
       nx, ny, blocked_by_chara, dirs = order[i](chara)
       if nx ~= nil and ny ~= nil then
-         return {"base.move", { x = nx, y = ny } }
+         return {"elona.move", { x = nx, y = ny } }, false, {}
       end
    end
 
@@ -243,7 +239,7 @@ local function move_towards_target(chara, params)
       if chara:reaction_towards(on_cell) < 0 then
          chara:set_target(on_cell)
          chara.ai_state.hate = chara.ai_state.hate + 4
-         return Ai.run("base.basic_action", chara)
+         return Ai.run("elona.basic_action", chara)
       elseif on_cell.quality > Great and on_cell.level > target.level then
          if on_cell:get_target() ~= chara:get_target() then
             return Chara.swap_positions(chara, chara:get_target())
@@ -301,18 +297,95 @@ local function move_towards_target(chara, params)
 end
 
 local idle_action = {
-   "base.follow_player",
+   "elona.follow_player",
    function()
       if Rand.one_in(5) then return true end
    end,
-   "base.on_ai_calm_actions",
-   "base.go_to_preset_anchor",
-   "base.wander",
+   "elona.on_ai_calm_actions",
+   "elona.go_to_preset_anchor",
+   "elona.wander",
 }
+
+local function on_ai_calm_actions(chara, params)
+   local i =  chara:emit("elona.on_ai_calm_action", params, false)
+   _p(i,"get")
+   return i
+end
+
+local function on_ai_ally_actions(chara, params)
+   return chara:emit("elona.on_ai_ally_action", params, false)
+end
+
+local function do_sleep(chara, _, result)
+   if chara:is_ally() then
+      return
+   end
+
+   chara:current_map():mod("is_town", true)
+   if chara:current_map():calc("is_town") then
+      local hour = save.base.date.hour
+      if hour >= 22 or hour < 7 then
+         -- TODO has activity
+         if Rand.one_in(100) then
+            chara:apply_effect("elona.sleep", 4000)
+         end
+      end
+   end
+
+   return result
+end
+
+Event.register("elona.on_ai_calm_action", "Sleep if nighttime", do_sleep)
+
+local function do_eat(chara, _, result)
+   if not Item.is_alive(chara.item_to_use) then
+      return
+   end
+   if chara:is_ally() then
+      return
+   end
+
+   if chara.nutrition <= 6000 then
+      if not Map.is_in_fov(chara.x, chara.y) or Rand.one_in(5) then
+         if chara:calc("has_anorexia") then
+            chara.nutrition = chara.nutrition - 5000
+         else
+            chara.nutrition = chara.nutrition + 5000
+         end
+      end
+   end
+
+   return result
+end
+
+Event.register("elona.on_ai_calm_action", "Eat if hungry", do_eat)
+
+local function attempt_melee_attack(chara, params)
+   local target_damage_reaction = nil
+   local target = params.target or chara:get_target()
+   if not Chara.is_alive(target) then return false end
+
+   if target_damage_reaction then
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+      local can_do_ranged_attack = false
+      if can_do_ranged_attack and dist < 6 and Map.has_los(chara.x, chara.y, target.x, target.y) then
+         Action.ranged(chara, target)
+      end
+
+      local element
+      if element == "elona.cut" and chara.hp < chara:calc("max_hp") / 2 then
+         return false
+      end
+   end
+
+   ElonaAction.melee_attack(chara, target)
+
+   return true
+end
 
 local function default_action(chara, params)
    local target = params.target or chara:get_target()
-   if target == nil then
+   if not Chara.is_alive(target) then
       return false
    end
 
@@ -320,8 +393,7 @@ local function default_action(chara, params)
 
    if dist == 1 then
       chara:say("base.ai_melee")
-      Action.melee(chara, target)
-      return true
+      return Ai.run("elona.attempt_melee_attack", chara)
    end
 
    if dist < 6 and Map.has_los(chara.x, chara.y, target.x, target.y) then
@@ -344,7 +416,7 @@ local function default_action(chara, params)
    end
 
    if Rand.percent_chance(chara.ai_config.move_chance_percent) then
-      return Ai.run("base.idle_action", chara)
+      return Ai.run("elona.idle_action", chara)
    end
 
    return true
@@ -371,7 +443,7 @@ local function basic_action(chara, params)
    end
 
    if not choice then
-      return Ai.run("base.default_action", chara)
+      return Ai.run("elona.default_action", chara)
    end
 
    return Ai.run(choice.id, choice.params)
@@ -478,17 +550,17 @@ local function decide_ally_targeted_action(chara, params)
    if Chara.is_alive(target) then
       -- item on space
 
-      if Ai.run("base.on_ai_ally_actions", chara) then
+      if Ai.run("elona.on_ai_ally_actions", chara) then
          return true
       end
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
       if dist > 2 or Rand.one_in(3) then
-         return Ai.run("base.move_towards_target", chara)
+         return Ai.run("elona.move_towards_target", chara)
       end
 
-      return Ai.run("base.idle_action", chara)
+      return Ai.run("elona.idle_action", chara)
    end
 
    return false
@@ -499,30 +571,45 @@ end
 
 local function decide_targeted_action(chara, params)
    -- EVENT: if blocked, proc map events
-   -- blind
-   -- confused
+   if chara:has_effect("elona.blindness") then
+      if Rand.rnd(10) > 2 then
+         return Ai.run("elona.idle_action", chara)
+      end
+   end
+   if chara:has_effect("elona.confusion") then
+      if Rand.rnd(10) > 3 then
+         return Ai.run("elona.idle_action", chara)
+      end
+   end
 
-   if Ai.run("base.on_status_effect", chara) then
+   if Ai.run("elona.on_status_effect", chara) then
       return true
    end
 
    if chara:is_in_party() then
-      return Ai.run("base.decide_ally_targeted_action", chara)
+      return Ai.run("elona.decide_ally_targeted_action", chara)
    end
 
    -- EVENT: proc status effect
-   -- fear
-   -- blind
+   if chara:has_effect("elona.fear") then
+      return Ai.run("elona.move_towards_target", chara, {retreat=true})
+   end
+
+   if chara:has_effect("elona.blindness") then
+      if Rand.one_in(3) then
+         return Ai.run("elona.idle_action", chara)
+      end
+   end
 
    local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
    if dist ~= chara.ai_config.min_distance then
       if Rand.percent_chance(chara.ai_config.move_chance_percent) then
-         return Ai.run("base.move_towards_target", chara)
+         return Ai.run("elona.move_towards_target", chara)
       end
    end
 
-   return Ai.run("base.basic_action", chara)
+   return Ai.run("elona.basic_action", chara)
 end
 
 local function ai_talk(chara, params)
@@ -544,7 +631,7 @@ end
 
 local function elona_default_ai(chara, params)
    if chara:is_in_party() then
-      Ai.run("base.decide_ally_target", chara)
+      Ai.run("elona.decide_ally_target", chara)
    end
 
    local target = chara:get_target()
@@ -558,21 +645,27 @@ local function elona_default_ai(chara, params)
    -- noyel
    -- mount
 
-   Ai.run("base.ai_talk", chara)
+   Ai.run("elona.ai_talk", chara)
 
    -- choked
+   local leader = chara:get_party_leader()
+   if Chara.is_alive(leader) and leader:has_effect("elona.choking") then
+      if Pos.dist(chara.x, chara.y, leader.x, leader.y) == 1 then
+         ElonaAction.bash(chara, leader.x, leader.y)
+      end
+   end
 
-   if Ai.run("base.try_to_heal", chara) then
+   if Ai.run("elona.try_to_heal", chara) then
       return true
    end
 
-   local target = chara:get_target()
+   target = chara:get_target()
    if Chara.is_alive(target) and (chara.ai_state.hate > 0 or chara:is_in_party()) then
-      return Ai.run("base.decide_targeted_action", chara)
+      return Ai.run("elona.decide_targeted_action", chara)
    end
 
    if chara.turns_alive % 10 == 0 then
-      Ai.run("base.search_for_target", chara)
+      Ai.run("elona.search_for_target", chara)
    end
 
    -- EVENT: on_search_for_target
@@ -586,10 +679,8 @@ local function elona_default_ai(chara, params)
       end
    end
 
-   return Ai.run("base.idle_action", chara)
+   return Ai.run("elona.idle_action", chara)
 end
-
-local data = require("internal.data")
 
 data:add_multi(
    "base.ai_action",
@@ -599,6 +690,7 @@ data:add_multi(
       { _id = "go_to_position",              act = go_to_position },
       { _id = "wander",                      act = wander },
       { _id = "go_to_preset_anchor",         act = go_to_preset_anchor },
+      { _id = "attempt_melee_attack",        act = attempt_melee_attack },
       { _id = "follow_player",               act = follow_player },
       { _id = "move_towards_target",         act = move_towards_target },
       { _id = "default_action",              act = default_action },

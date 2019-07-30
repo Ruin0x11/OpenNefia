@@ -12,9 +12,8 @@ local Tools = {}
 function Tools.spawn_foes(count)
    count = count or 100
    for i=0,count do
-      local x = Rand.rnd(Map.width())
-      local y = Rand.rnd(Map.height())
-      if Map.can_access(x, y) then
+      local x, y = Map.find_position_for_chara()
+      if x then
          Chara.create("content.enemy", x, y)
       end
    end
@@ -24,9 +23,8 @@ function Tools.spawn_equipped_foes(count)
    local keys = data["base.item"]:iter():extract("_id"):to_list()
    count = count or 100
    for i=0,count do
-      local x = Rand.rnd(Map.width())
-      local y = Rand.rnd(Map.height())
-      if Map.can_access(x, y) then
+      local x, y = Map.find_position_for_chara()
+      if x then
          local c = Chara.create("content.enemy", x, y)
 
          local gen = function() return Item.create(Rand.choice(keys), 0, 0, { ownerless = true }) end
@@ -52,9 +50,8 @@ end
 function Tools.spawn_allies(count)
    count = count or 16
    for i=0,count do
-      local x = Rand.rnd(Map.width())
-      local y = Rand.rnd(Map.height())
-      if Map.can_access(x, y) then
+      local x, y = Map.find_position_for_chara()
+      if x then
          local c = Chara.create("content.ally", x, y)
          if not c:recruit_as_ally() then
             return
@@ -63,26 +60,15 @@ function Tools.spawn_allies(count)
    end
 end
 
-
-local function rand_pos()
-   local nx, ny
-   local tries = 100
-   while tries > 0 do
-      nx, ny = Rand.rnd(Map.width()), Rand.rnd(Map.height())
-      if Map.can_access(nx, ny) then
-         return nx, ny
-      end
-      tries = tries - 1
-   end
-   return nx, ny
-end
-
 function Tools.spawn_items(count)
    count = count or 100
 
    local keys = data["base.item"]:iter():extract("_id"):to_list()
-   for i=1,count do
-      Item.create(Rand.choice(keys), rand_pos())
+   for _=1,count do
+      local x, y = Map.free_position(nil, nil, {allow_stacking=true})
+      if x then
+         Item.create(Rand.choice(keys), x, y)
+      end
    end
 end
 

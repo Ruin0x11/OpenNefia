@@ -6,9 +6,9 @@ local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 function IItemEnchantments:init()
    local enchantments = {}
 
-   for _, enc in ipairs(self.enchantments or {}) do
-      enchantments[#enchantments+1] = OEnchantment:create(enc)
-   end
+   -- for _, enc in ipairs(self.enchantments or {}) do
+   --    enchantments[#enchantments+1] = OEnchantment:create(enc)
+   -- end
 
    self.enchantments = enchantments
 end

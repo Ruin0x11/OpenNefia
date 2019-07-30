@@ -76,8 +76,8 @@ function object.deserialize(self, _type, _id)
       self._type = nil
       self._id = nil
    end
-   assert(_type)
-   assert(_id)
+   assert(type(_type) == "string")
+   assert(type(_id) == "string")
    local proto = data[_type][_id]
    if not proto then
       error("no proto " .. tostring(_type) .. " " .. tostring(_id))

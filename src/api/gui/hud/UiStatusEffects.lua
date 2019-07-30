@@ -51,7 +51,6 @@ function UiStatusEffects:set_data()
 
    table.sort(raw, function(a, b) return a.ordering < b.ordering end)
 
-   print("setd",#self.indicators,#raw)
    self:calc_max_width()
 end
 
