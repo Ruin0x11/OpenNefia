@@ -55,10 +55,10 @@ function object.__index(t, k)
    end
 
    local mt = getmetatable(t)
-   v = mt.__proto[k]
-   if v ~= nil then
-      return v
-   end
+   -- v = mt.__proto[k]
+   -- if v ~= nil then
+   --    return v
+   -- end
 
    return mt.__iface[k]
 end
@@ -73,8 +73,6 @@ function object.deserialize(self, _type, _id)
    if self._type and self._id then
       _type = self._type
       _id = self._id
-      self._type = nil
-      self._id = nil
    end
    assert(type(_type) == "string")
    assert(type(_id) == "string")
@@ -86,6 +84,9 @@ function object.deserialize(self, _type, _id)
    assert(iface)
 
    assert(self.location == nil)
+
+   self._type = _type
+   self._id = _id
 
    setmetatable(self,
                 {

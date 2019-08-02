@@ -74,21 +74,28 @@ local mock = function(mt)
    return mock
 end
 
-function Object.generate_from(_type, id)
-   local data = {}
-   object.deserialize(data, _type, id)
-
-   _p(_type, id)
-   class.assert_is_an(IObject, data)
-
-   data:finalize()
-
-   return data
+function Object.generate_from(_type, id, params)
+   local proto = table.deepcopy(data[_type]:ensure(id))
+   setmetatable(proto, nil)
+   return Object.generate(proto, params)
 end
 
-function Object.generate(proto)
-   error("broken")
-   return {}
+function Object.generate(proto, params)
+   params = params or {}
+   assert(proto._type)
+   assert(proto._id)
+   local obj = object.deserialize(proto)
+
+   if not params.no_pre_build then
+      obj:pre_build()
+
+      if not params.no_build then
+         obj:normal_build()
+         obj:finalize()
+      end
+   end
+
+   return obj
 end
 
 local IMockObject = class.interface("IMockObject", {}, IObject)

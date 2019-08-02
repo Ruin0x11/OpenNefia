@@ -11,54 +11,52 @@ function MapObject.generate_from(_type, id, params, uid_tracker)
 
    local uid = uid_tracker:get_next_and_increment()
 
-   local data = {}
-   object.deserialize(data, _type, id)
+   local obj = Object.generate_from(_type, id, {no_pre_build=true})
 
-   rawset(data, "uid", uid)
+   rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
 
-   data:pre_build()
+   if not params.no_pre_build then
+      obj:pre_build()
 
-   if not params.no_build then
-      data:normal_build()
-      data:finalize()
+      if not params.no_build then
+         obj:normal_build()
+         obj:finalize()
+      end
    end
 
-   return data
+   return obj
 end
 
-function MapObject.generate(data, params, uid_tracker)
+function MapObject.generate(proto, params, uid_tracker)
    params = params or {}
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
-   assert(data._type)
-   assert(data._id)
-   object.deserialize(data)
+   local obj = Object.generate(proto, {no_pre_build=true})
 
-   rawset(data, "uid", uid)
+   rawset(obj, "uid", uid)
 
-   -- class.assert_is_an(IMapObject, data)
+   -- class.assert_is_an(IMapObject, obj)
 
    if params.copy then
       for k, v in pairs(params.copy) do
-         data[k] = v
+         obj[k] = v
       end
    end
 
-   -- TODO
    if not params.no_pre_build then
-      data:pre_build()
+      obj:pre_build()
 
       if not params.no_build then
-         data:normal_build()
-         data:finalize()
+         obj:normal_build()
+         obj:finalize()
       end
    end
 
-   return data
+   return obj
 end
 
 --- Copies all non-class fields in an object to a new object, giving
