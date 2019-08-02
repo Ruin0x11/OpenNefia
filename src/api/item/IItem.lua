@@ -29,12 +29,12 @@ local defaults = {
    damage_bonus = 0,
    bonus = 0,
    flags = {},
-   types = {},
    name = "item",
    pierce_rate = 0,
    effective_range = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
    ammo_type = "",
-   params = {}
+   params = {},
+   types = {}
 }
 table.merge(IItem, defaults)
 
@@ -85,7 +85,9 @@ function IItem:set_image(image)
    else
       self.image = nil
       local chip = data["base.chip"][self.proto.image]
-      self.y_offset = chip.y_offset
+      if chip then
+         self.y_offset = chip.y_offset
+      end
    end
 end
 
@@ -200,10 +202,6 @@ function IItem:copy_image()
    return item_atlas:copy_tile_image(self:calc("image") .. "#1")
 end
 
-function IItem:has_type(_type)
-   return self.types[_type] == true
-end
-
 function IItem:can_stack_with(other)
    -- TODO: this gets super complicated when adding new fields. There
    -- should be a way to specify a field will not have any effect on
@@ -247,6 +245,15 @@ function IItem:can_stack_with(other)
    return true
 end
 
+function IItem:has_type(_type)
+   for _, v in ipairs(self:calc("types")) do
+      if v == _type then
+         return true
+      end
+   end
+   return false
+end
+
 function IItem:calc_effective_range(dist)
    dist = math.max(math.floor(dist), 0)
    local result
@@ -266,7 +273,10 @@ function IItem:calc_effective_range(dist)
    return result or 100
 end
 
-IItem.ui_color = function(self)
+function IItem:calc_ui_color()
+   local color = self:calc("ui_color")
+   if color then return color end
+
    if self:calc("flags").is_no_drop then
         return {120, 80, 0}
    end

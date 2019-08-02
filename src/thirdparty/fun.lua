@@ -1039,8 +1039,6 @@ methods.op = operator
 -- aliases for consistent naming (underscored)
 -- the originals shouldn't be deleted to be able to use the existing
 -- ecosystem of code that uses luafun
-exports.to_table = exports.totable
-methods.to_table = methods.totable
 exports.to_map = exports.tomap
 methods.to_map = methods.tomap
 exports.to_list = exports.totable
@@ -1090,5 +1088,23 @@ local select_retval = function(n, gen, param, state)
 end
 methods.select_retval = method1(select_retval)
 exports.select_retval = export1(select_retval)
+
+local group_by = function(f, default, gen, param, state)
+   if type(f) ~= "function" then
+      f = function(i)
+         return i[f] or default
+      end
+   end
+
+   local function group_by_x(acc, x)
+      local field = f(x)
+      acc[field] = acc[field] or {}
+      table.insert(acc[field], x)
+      return acc
+   end
+   return fun.foldl(group_by_x, {}, gen, param, state)
+end
+methods.group_by = method2(group_by)
+exports.group_by = export2(group_by)
 
 return exports

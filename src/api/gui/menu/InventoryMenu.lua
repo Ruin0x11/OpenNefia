@@ -31,7 +31,7 @@ local UiListExt = function(inventory_menu)
       return entry.item:build_name()
    end
    function E:get_item_color(entry)
-      return entry.item:calc("ui_color")
+      return entry.item:calc_ui_color()
    end
    function E:draw_select_key(entry, i, key_name, x, y)
       if i % 2 == 0 then

@@ -1,4 +1,3 @@
-local fs = require("util.fs")
 local mod = require("internal.mod")
 local internal = require("internal")
 local data = require("internal.data")

@@ -84,4 +84,8 @@ function World.date()
    return save.base.date
 end
 
+function World.date_hours()
+   return save.base.date:hours()
+end
+
 return World

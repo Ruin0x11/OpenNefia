@@ -149,6 +149,9 @@ data:add_multi(
       },
       {
          _id = "on_activity_cleanup"
+      },
+      {
+         _id = "on_generate"
       }
    }
 )

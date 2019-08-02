@@ -33,6 +33,10 @@ function IItemEnchantments:on_refresh()
    end
 end
 
+function IItemEnchantments:has_enchantment(id)
+   return false
+end
+
 function IItemEnchantments:apply_enchantments_to_wielder(wielder)
    for _, enc in ipairs(self.enchantments) do
       enc:when_wielding(wielder)

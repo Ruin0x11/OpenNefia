@@ -5,27 +5,31 @@ local data = require("internal.data")
 -- creation. The idea was borrowed from ToME.
 local Resolver = {}
 
-function Resolver.make(id, params)
-   if not id or type(id) ~= "string" then
-      error(string.format("Resolver is not an ID (%s)", id))
+function Resolver.make(id, params, target_field)
+   if not id or not (type(id) == "string" or type(id) == "table") then
+      error(string.format("Resolver is not valid (%s)", id))
    end
 
    params = params or {}
    params.__resolver = id
+   params.__target_field = target_field or nil
    return params
 end
 
-function Resolver.resolve_one(tbl, params)
+function Resolver.resolve_one(tbl, params, final)
    local id = tbl.__resolver
-   if not id or type(id) ~= "string" then
-      error(string.format("Table is not a resolver (%s)", id))
+
+   local resolver
+   if type(id) == "string" then
+      resolver = data["base.resolver"]:ensure(id)
+   elseif type(id) == "table" then
+      resolver = id
+   else
+      error(string.format("Resolver is not valid (%s)", id))
    end
-
-   local resolver = data["base.resolver"]:ensure(id)
-
    -- if not Schema.check(resolver.params, params) then error() end
 
-   local result = resolver.resolve(tbl, params)
+   local result = resolver.resolve(tbl, params, final)
    if resolver.method then
       result = {
          __method = resolver.method,
@@ -35,14 +39,14 @@ function Resolver.resolve_one(tbl, params)
    return result
 end
 
-local function resolve_recurse(result, proto, params, key)
+local function resolve_recurse(result, proto, params, key, final)
    if type(proto) == "table" then
       if proto.__resolver then
-         result[key] = Resolver.resolve_one(proto, params)
+         result[key] = Resolver.resolve_one(proto, params, final)
       else
          for k, v in pairs(proto) do
             result[key] = result[key] or {}
-            resolve_recurse(result[key], v, params, k)
+            resolve_recurse(result[key], v, params, k, final)
          end
       end
    else
@@ -56,10 +60,19 @@ function Resolver.resolve(proto, params)
 
    if type(proto) == "table" then
       if proto.__resolver then
-         result = Resolver.resolve_one(proto, params)
+         result = Resolver.resolve_one(proto, params, result)
       else
+         -- resolve key-value first, then array values, to allow
+         -- specifying the order of resolving if one resolver modifies
+         -- a value that is depended on for a later resolver.
          for k, v in pairs(proto) do
-            resolve_recurse(result, v, params, k)
+            if type(k) ~= "number" then
+               resolve_recurse(result, v, params, k)
+            end
+         end
+         for _, v in ipairs(proto) do
+            assert(type(v) == "table" and v.__resolver)
+            result = Resolver.resolve_one(v, params, result)
          end
       end
    else

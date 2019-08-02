@@ -182,7 +182,7 @@ local function can_place_chara_at(x, y, map)
    return Map.can_access(x, y, map)
 end
 
-function Map.free_position(x, y, params, map)
+function Map.find_free_position(x, y, params, map)
    params = params or {}
    map = map or Map.current()
 

@@ -198,7 +198,7 @@ local effect = {
       end
    },
    {
-      _id = "drunkenness",
+      _id = "drunk",
       ordering = 140000,
    },
    {

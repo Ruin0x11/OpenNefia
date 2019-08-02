@@ -108,7 +108,6 @@ function field_logic.determine_turn()
       chara_iter_index, chara = chara_iter(chara_iter_state, chara_iter_index)
 
       if chara ~= nil and chara.time_this_turn >= field:turn_cost() then
-         chara.time_this_turn = chara.time_this_turn - field:turn_cost()
          found = chara
       end
    until found ~= nil or chara_iter_index == nil
@@ -162,9 +161,6 @@ function field_logic.pass_turns()
    -- proc stopping activity if damaged
    -- proc turn % 25
 
-   -- RETURN: proc activity
-   -- proc refresh if transferred
-
    if chara:has_activity() then
       chara:_proc_activity_interrupted()
    end
@@ -173,6 +169,9 @@ function field_logic.pass_turns()
       -- TODO curse_power
       -- TODO pregnant
    end
+
+   -- RETURN: proc activity
+   -- proc refresh if transferred
 
    if chara:has_activity() then
       local turn_result = chara:pass_activity_turn()
@@ -280,6 +279,48 @@ function field_logic.player_died()
    return "quit"
 end
 
+function field_logic.run_one_event(event, target_chara)
+   local cb = nil
+
+   if field.map_changed == true then
+      event = "turn_begin"
+      field.map_changed = false
+   end
+
+   if event == "turn_begin" then
+      cb = field_logic.turn_begin
+   elseif event == "turn_end" then
+      cb = field_logic.turn_end
+   elseif event == "player_died" then
+      cb = field_logic.player_died
+   elseif event == "player_turn" then
+      cb = field_logic.player_turn
+   elseif event == "player_turn_query" then
+      cb = field_logic.player_turn_query
+   elseif event == "npc_turn" then
+      cb = field_logic.npc_turn
+   elseif event == "pass_turns" then
+      cb = field_logic.pass_turns
+   elseif event == "quit" then
+      return false
+   end
+
+   if type(cb) ~= "function" then
+      error("Unknown turn event " .. inspect(event))
+   end
+
+   local success
+   success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
+
+   if not success then
+      Gui.report_error(event)
+      event = "player_turn_query"
+      target_chara = nil
+   end
+
+   return true, event, target_chara
+end
+
 function field_logic.query()
    field_logic.setup()
 
@@ -292,43 +333,7 @@ function field_logic.query()
    draw.push_layer(field)
 
    while going do
-      local cb = nil
-
-      if field.map_changed == true then
-         event = "turn_begin"
-         field.map_changed = false
-      end
-
-      if event == "turn_begin" then
-         cb = field_logic.turn_begin
-      elseif event == "turn_end" then
-         cb = field_logic.turn_end
-      elseif event == "player_died" then
-         cb = field_logic.player_died
-      elseif event == "player_turn" then
-         cb = field_logic.player_turn
-      elseif event == "player_turn_query" then
-         cb = field_logic.player_turn_query
-      elseif event == "npc_turn" then
-         cb = field_logic.npc_turn
-      elseif event == "pass_turns" then
-         cb = field_logic.pass_turns
-      elseif event == "quit" then
-         break
-      end
-
-      if type(cb) ~= "function" then
-         error("Unknown turn event " .. inspect(event))
-      end
-
-      local success
-      success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
-
-      if not success then
-         Gui.report_error(event)
-         event = "player_turn_query"
-         target_chara = nil
-      end
+      going, event, target_chara = field_logic.run_one_event(event, target_chara)
    end
 
    draw.pop_layer()

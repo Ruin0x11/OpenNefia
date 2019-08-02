@@ -116,7 +116,7 @@ function EquipmentMenu:update_from_chara()
       if i.equipped then
          entry.equipped = i.equipped
          entry.icon = i.equipped:copy_image()
-         entry.color = i.equipped:calc("ui_color")
+         entry.color = i.equipped:calc_ui_color()
          entry.text = i.equipped:build_name()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
       end

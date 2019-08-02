@@ -1,5 +1,9 @@
+local Chara = require("api.Chara")
+local Pos = require("api.Pos")
+local World = require("api.World")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
+local Calc = require("mod.elona_sys.api.Calc")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
@@ -35,351 +39,927 @@ local function do_dig_success(chara, x, y)
    Skill.gain_skill_exp(chara, "elona.mining", 100)
 end
 
-local activity = {
-   {
-      _id = "eating",
-      params = { food = "table", no_message = "boolean" },
-      default_turns = 8,
+local function sex_check_end(chara, partner)
+   if not Chara.is_alive(partner)
+   or not partner:has_activity("elona.sex") then
+      Gui.mes_visible("partner: spare life", partner.x, partner.y)
+      partner:remove_activity()
+      chara:remove_activity()
+      return true
+   end
 
-      animation_wait = 5,
+   if chara:is_player() then
+      if not Calc.do_stamina_action(chara, 1 + Rand.rnd(2)) then
+         Gui.mes("player too exhausted")
+         partner:remove_activity()
+         chara:remove_activity()
+         return true
+      end
+   end
 
-      on_interrupt = "prompt",
+   return false
+end
 
-      events = {
-         {
-            id = "base.on_activity_start",
-            name = "start",
+local function sex_apply_effect(chara, is_partner)
+   chara:remove_effect("elona.drunk")
 
-            callback = function(self, params)
-               -- TODO error handling
-               local chara = params.chara
-               if chara:is_in_fov() then
-                  Gui.play_sound("base.eat1")
-                  if self.food.own_state == "not_owned" and chara:is_ally() then
-                     Gui.mes(chara.uid .. ": start eat in secret ")
-                  else
-                     Gui.mes(chara.uid .. ": start eat normal ")
-                  end
-               end
+   local exp = 250
+   if not chara:is_ally() then
+      exp = exp + 1000
+   end
 
-               self.food.chara_using = chara
-               self.food:emit("elona.on_eat_item_begin", {chara=chara})
-            end
-         },
-         {
-            id = "base.on_activity_pass_turns",
-            name = "pass turns",
+   if is_partner then
+      if Rand.one_in(3) then
+         chara:apply_effect("elona.insanity", 500)
+      end
+      if Rand.one_in(5) then
+         chara:apply_effect("elona.paralysis", 500)
+      end
+      chara:apply_effect("elona.insanity", 300)
+      chara:add_effect_turns(chara, -10)
+      Skill.gain_skill_exp(chara, "elona.stat_constitution", exp)
+      Skill.gain_skill_exp(chara, "elona.stat_will", exp)
+   end
+   if Rand.one_in(15) then
+      chara:apply_effect("elona.sickness", 200)
+   end
+   Skill.gain_skill_exp(chara, "elona.stat_charisma", exp)
+end
 
-            callback = function(self, params)
-               if not Item.is_alive(self.food) then
-                  return { action = "stop" }
-               end
+data:add {
+   _type = "base.activity",
+   _id = "eating",
+   params = { food = "table", no_message = "boolean" },
+   default_turns = 8,
 
-               -- TODO cargo check
+   animation_wait = 5,
 
-               self.food.chara_using = params.chara
+   on_interrupt = "prompt",
 
-               return { turn_result = "turn_end" }
-            end
-         },
-         {
-            id = "base.on_activity_cleanup",
-            name = "start",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
 
-            callback = function(self)
-               if not Item.is_alive(self.food) then
-                  return
-               end
-               self.food.chara_using = nil
-            end
-         },
-         {
-            id = "base.on_activity_finish",
-            name = "finish",
-
-            callback = function(self, params)
-               local chara = params.chara
-               if not self.no_message then
-                  Gui.mes_visible(chara.uid .. ": Eat act finish.", chara.x, chara.y)
-               end
-
-               -- apply general eating effect
-               self.food:emit("elona.on_eat_item_effect", {chara=chara})
-
-               if chara:is_player() then
-                  -- partly identify
-               end
-
-               if chara:unequip_item(self.food) then
-                  chara:refresh()
-               end
-
-               self.food.amount = self.food.amount - 1
-
-               if chara:is_player() then
-                  Gui.mes("Show eating message")
+         callback = function(self, params)
+            -- TODO error handling
+            local chara = params.chara
+            if chara:is_in_fov() then
+               Gui.play_sound("base.eat1")
+               if self.food.own_state == "not_owned" and chara:is_ally() then
+                  Gui.mes(chara.uid .. ": start eat in secret ")
                else
-                  if chara.item_to_be_used
-                     and chara.item_to_be_used.uid == self.food
-                  then
-                     chara.item_to_be_used = nil
-                  end
+                  Gui.mes(chara.uid .. ": start eat normal ")
+               end
+            end
 
-                  -- quest
+            self.food.chara_using = chara
+            self.food:emit("elona.on_eat_item_begin", {chara=chara})
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            if not Item.is_alive(self.food) then
+               params.chara:remove_activity()
+               return "turn_end"
+            end
+
+            -- TODO cargo check
+
+            self.food.chara_using = params.chara
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_cleanup",
+         name = "start",
+
+         callback = function(self)
+            if not Item.is_alive(self.food) then
+               return
+            end
+            self.food.chara_using = nil
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            local chara = params.chara
+            if not self.no_message then
+               Gui.mes_visible(chara.uid .. ": Eat act finish.", chara.x, chara.y)
+            end
+
+            -- apply general eating effect
+            self.food:emit("elona.on_eat_item_effect", {chara=chara})
+
+            if chara:is_player() then
+               -- partly identify
+            end
+
+            if chara:unequip_item(self.food) then
+               chara:refresh()
+            end
+
+            self.food.amount = self.food.amount - 1
+
+            if chara:is_player() then
+               Gui.mes("Show eating message")
+            else
+               if chara.item_to_be_used
+                  and chara.item_to_be_used.uid == self.food
+               then
+                  chara.item_to_be_used = nil
                end
 
-               -- anorexia
-
-               -- mochi
-               self.food:emit("elona.on_eat_item_finish", {chara=chara})
+               -- quest
             end
-         }
+
+            -- anorexia
+
+            -- mochi
+            self.food:emit("elona.on_eat_item_finish", {chara=chara})
+         end
       }
-   },
-   {
-      _id = "fishing",
+   }
+}
+data:add {
+   _type = "base.activity",
+   _id = "fishing",
 
-      params = {},
-      default_turns = 100,
+   params = {},
+   default_turns = 100,
 
-      animation_wait = 2,
+   animation_wait = 2,
 
-      on_interrupt = "stop",
-      events = {
-         {
-            id = "base.on_activity_start",
-            name = "start",
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
 
-            callback = function(self, params)
-               Gui.mes("start fishing")
+         callback = function(self, params)
+            Gui.mes("start fishing")
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            if Rand.one_in(5) then
+               self.state = 1
+               self.fish = "the fish"
             end
-         },
-         {
-            id = "base.on_activity_pass_turns",
-            name = "pass turns",
 
-            callback = function(self, params)
+            if self.state == 1 then
                if Rand.one_in(5) then
-                  self.state = 1
-                  self.fish = "the fish"
-               end
-
-               if self.state == 1 then
-                  if Rand.one_in(5) then
-                     Gui.mes("fishwait")
-                     if Rand.one_in(3) then
-                        self.state = 2
-                     end
-                     if Rand.one_in(6) then
-                        self.state = 0
-                     end
-                     self.animation = 0
+                  Gui.mes("fishwait")
+                  if Rand.one_in(3) then
+                     self.state = 2
                   end
-               end
-               if self.state == 2 then
-                  self.animation = 2
-                  Gui.play_sound("base.water2")
-                  Gui.mes("fishwait2")
-                  if Rand.one_in(10) then
-                     self.state = 3
-                  else
+                  if Rand.one_in(6) then
                      self.state = 0
                   end
                   self.animation = 0
                end
-               if self.state == 3 then
-                  self.animation = 3
-                  Gui.mes("fishwait3")
-                  local difficulty = 10
-                  if difficulty >= Rand.rnd(params.chara:skill_level("elona.fishing") + 1) then
-                     self.state = 0
-                  else
-                     self.state = 4
-                  end
-               end
-               if self.state == 4 then
-                  Gui.play_sound("base.fish_get")
-                  Gui.mes("fishwait5")
-                  Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
-                  Skill.gain_skill_exp(params.chara, "elona.fishing", 100)
-                  return { turn_result = "turn_end", action = "stop" }
-               end
+            end
+            if self.state == 2 then
+               self.animation = 2
+               Gui.play_sound("base.water2")
+               Gui.mes("fishwait2")
                if Rand.one_in(10) then
-                  params.chara:damage_sp(1)
-               end
-
-               return { turn_result = "turn_end" }
-            end
-         },
-         {
-            id = "base.on_activity_finish",
-            name = "finish",
-
-            callback = function(self, params)
-               Gui.mes("fishing failed")
-            end
-         }
-      }
-   },
-   {
-      _id = "dig_wall",
-
-      params = { x = "number", y = "number" },
-      default_turns = 40,
-
-      animation_wait = 2,
-
-      on_interrupt = "stop",
-      events = {
-         {
-            id = "base.on_activity_start",
-            name = "start",
-
-            callback = function(self, params)
-               Gui.mes("start digging")
-               self.dig_count = 0
-            end
-         },
-         {
-            id = "base.on_activity_pass_turns",
-            name = "pass turns",
-
-            callback = function(self, params)
-               local chara = params.chara
-               if Rand.one_in(5) then
-                  chara:damage_sp(1)
-               end
-               self.dig_count = self.dig_count + 1
-
-               local success = calc_dig_success(chara, self.x, self.y, self.dig_count)
-
-               if success then
-                  do_dig_success(chara, self.x, self.y)
-                  return { turn_result = "turn_end", action = "stop" }
-               elseif chara.turns_alive % 5 == 0 then
-                  Gui.mes("*clang*")
-               end
-
-               return { turn_result = "turn_end" }
-            end
-         },
-         {
-            id = "base.on_activity_finish",
-            name = "finish",
-
-            callback = function(self, params)
-               Gui.mes("digging failed")
-            end
-         }
-      }
-   },
-   {
-      _id = "resting",
-
-      params = { bed = "table" },
-      default_turns = 50,
-
-      animation_wait = 2,
-
-      on_interrupt = "stop",
-      events = {
-         {
-            id = "base.on_activity_start",
-            name = "start",
-
-            callback = function(self, params)
-               Gui.mes("start resting")
-            end
-         },
-         {
-            id = "base.on_activity_pass_turns",
-            name = "pass turns",
-
-            callback = function(self, params)
-               local chara = params.chara
-
-               if self.turns % 2 == 0 then
-                  chara:heal_sp(1)
-               end
-               if self.turns % 3 == 0 then
-                  chara:heal_hp(1)
-                  chara:heal_mp(1)
-               end
-
-               if save.elona_sys.awake_hours >= 30 then
-                  local do_sleep = false
-                  if save.elona_sys.awake_hours >= 50 then
-                     do_sleep = true
-                  elseif Rand.one_in(2) then
-                     do_sleep = true
-                  end
-                  if do_sleep then
-                     Gui.mes("drift off to sleep")
-                     ElonaCommand.do_sleep(chara, self.bed)
-
-                     return { turn_result = "turn_end", action = "stop" }
-                  end
-               end
-
-               return { turn_result = "turn_end" }
-            end
-         },
-         {
-            id = "base.on_activity_finish",
-            name = "finish",
-
-            callback = function(self, params)
-               Gui.mes("rest finish")
-            end
-         }
-      }
-   },
-   {
-      _id = "preparing_to_sleep",
-
-      params = { bed = "table" },
-      default_turns = 20,
-
-      animation_wait = 2,
-
-      on_interrupt = "stop",
-      events = {
-         {
-            id = "base.on_activity_start",
-            name = "start",
-
-            callback = function(self, params)
-               Gui.mes("start resting")
-               -- TODO
-               local is_town_or_guild = false
-               if is_town_or_guild then
-                  Gui.mes("sleep start other")
-                  self.turns = 5
+                  self.state = 3
                else
-                  Gui.mes("sleep start global")
-                  self.turns = 20
+                  self.state = 0
+               end
+               self.animation = 0
+            end
+            if self.state == 3 then
+               self.animation = 3
+               Gui.mes("fishwait3")
+               local difficulty = 10
+               if difficulty >= Rand.rnd(params.chara:skill_level("elona.fishing") + 1) then
+                  self.state = 0
+               else
+                  self.state = 4
                end
             end
-         },
-         {
-            id = "base.on_activity_pass_turns",
-            name = "pass turns",
-
-            callback = function(self, params)
-               return { turn_result = "turn_end" }
+            if self.state == 4 then
+               Gui.play_sound("base.fish_get")
+               Gui.mes("fishwait5")
+               Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
+               Skill.gain_skill_exp(params.chara, "elona.fishing", 100)
+               params.chara:remove_activity()
+               return "turn_end"
             end
-         },
-         {
-            id = "base.on_activity_finish",
-            name = "finish",
-
-            callback = function(self, params)
-               Gui.mes("finish preparations")
-               ElonaCommand.do_sleep(params.chara, self.bed)
+            if Rand.one_in(10) then
+               params.chara:damage_sp(1)
             end
-         }
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            Gui.mes("fishing failed")
+         end
+      }
+   }
+}
+data:add {
+   _type = "base.activity",
+   _id = "dig_wall",
+
+   params = { x = "number", y = "number" },
+   default_turns = 40,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            Gui.mes("start digging")
+            self.dig_count = 0
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local chara = params.chara
+            if Rand.one_in(5) then
+               chara:damage_sp(1)
+            end
+            self.dig_count = self.dig_count + 1
+
+            local success = calc_dig_success(chara, self.x, self.y, self.dig_count)
+
+            if success then
+               do_dig_success(chara, self.x, self.y)
+               chara:remove_activity()
+               return "turn_end"
+            elseif chara.turns_alive % 5 == 0 then
+               Gui.mes("*clang*")
+            end
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            Gui.mes("digging failed")
+         end
+      }
+   }
+}
+data:add {
+   _type = "base.activity",
+   _id = "resting",
+
+   params = { bed = "table" },
+   default_turns = 50,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            Gui.mes("start resting")
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local chara = params.chara
+
+            if self.turns % 2 == 0 then
+               chara:heal_sp(1)
+            end
+            if self.turns % 3 == 0 then
+               chara:heal_hp(1)
+               chara:heal_mp(1)
+            end
+
+            if save.elona_sys.awake_hours >= 30 then
+               local do_sleep = false
+               if save.elona_sys.awake_hours >= 50 then
+                  do_sleep = true
+               elseif Rand.one_in(2) then
+                  do_sleep = true
+               end
+               if do_sleep then
+                  Gui.mes("drift off to sleep")
+                  ElonaCommand.do_sleep(chara, self.bed)
+                  chara:remove_activity()
+                  return "turn_end"
+               end
+            end
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            Gui.mes("rest finish")
+         end
+      }
+   }
+}
+data:add {
+   _type = "base.activity",
+   _id = "preparing_to_sleep",
+
+   params = { bed = "table" },
+   default_turns = 20,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            Gui.mes("start resting")
+            -- TODO
+            local is_town_or_guild = false
+            if is_town_or_guild then
+               Gui.mes("sleep start other")
+               self.turns = 5
+            else
+               Gui.mes("sleep start global")
+               self.turns = 20
+            end
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            Gui.mes("finish preparations")
+            ElonaCommand.do_sleep(params.chara, self.bed)
+         end
+      }
+   }
+}
+data:add {
+   _type = "base.activity",
+   _id = "sex",
+
+   params = { partner = "table", is_host = "boolean" },
+   default_turns = function()
+      return 25 + Rand.rnd(10)
+   end,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            if not Chara.is_alive(self.partner) then
+               return "stop"
+            end
+
+            if self.is_host then
+               Gui.mes("start sex", params.chara.x, params.chara.y)
+               self.partner:start_activity("elona.sex", {partner=params.chara}, self.turns * 2)
+            end
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local r = sex_check_end(params.chara, self.partner)
+            if r then
+               return "turn_end"
+            end
+
+            if not self.is_host and self.turns % 5 == 0 then
+               Gui.mes_visible("*noise*", params.chara.x, params.chara.y, "Cyan")
+            end
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            local r = sex_check_end(params.chara, self.partner)
+            if r then
+               return "turn_end"
+            end
+
+            if not self.is_host then
+               return "turn_end"
+            end
+
+            sex_apply_effect(params.chara)
+            sex_apply_effect(self.partner)
+
+            local gold_earned = params.chara:skill_level("elona.stat_charisma") * (50 + Rand.rnd(50)) + 100
+
+            Gui.mes_visible("take money", params.chara.x, params.chara.y)
+
+            self.partner.gold = self.partner.gold - gold_earned
+
+            if params.chara:is_player() then
+               -- TODO modify_impression
+               Item.create("elona.gold_piece", params.chara.x, params.chara.y, {amount = gold_earned})
+               -- TODO modify_karma
+            else
+               params.chara.gold = params.chara.gold + gold_earned
+            end
+
+            self.partner:remove_activity()
+            return "turn_end"
+         end
       }
    }
 }
 
-data:add_multi("base.activity", activity)
+local function performance_calc_earned_gold(chara, instrument, audience, activity)
+      local gold = math.floor(activity.performance_quality * activity.performance_quality * (100 + (instrument:calc("performance_quality") or 0) / 5) / 100 / 1000 + Rand.rnd(10))
+      gold = math.clamp(gold, 1, 100)
+      gold = math.clamp(audience.gold * gold / 125, 0, chara:skill_level("elona.performer") * 100)
+      if chara:is_party_leader_of(audience) then
+         gold = Rand.rnd(math.clamp(gold, 1, 100)) + 1
+      end
+      -- TODO character_role
+
+      return math.min(gold, audience.gold)
+end
+
+local function performance_bad(chara, instrument, audience, activity)
+   activity.performace_quality = activity.performance_quality - math.floor(audience:calc("level") / 2)
+
+   Gui.mes_visible("angry ", chara.x, chara.y, "Cyan")
+   Gui.mes_visible("throws rock ", chara.x, chara.y)
+   local damage = audience:emit("elona.calc_bad_performance_damage", {chara=chara,instrument=instrument,activity=activity}, Rand.rnd(audience:calc("level") + 1) + 1)
+   chara:damage_hp(damage, "elona.performer")
+end
+
+local function pos_nearby(x, y, map)
+   x = math.clamp(x - 1 + Rand.rnd(3), 0, map:width() - 1)
+   y = math.clamp(x - 1 + Rand.rnd(3), 0, map:height() - 1)
+   if not map:can_access(x, y) then
+      return nil
+   end
+
+   return x, y
+end
+
+local function performance_throw_item(chara, instrument, audience, activity, x, y)
+   if instrument:has_enchantment("elona.increases_performer_rewards") then
+   else
+   end
+   print("throwitem", x, y)
+   local item = Item.create("elona.putitoro", x, y)
+   if item then
+      activity.number_of_tips = activity.number_of_tips + 1
+   end
+end
+
+local function performance_good(chara, instrument, audience, activity)
+   local level = audience:calc("level")
+   local quality_delta = Rand.rnd(level + 1) + 1
+   if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 2 + 1) then
+      -- TODO party quest
+      if Rand.one_in(2) then
+         activity.performance_quality = activity.performance_quality + quality_delta
+      elseif Rand.one_in(2) then
+         activity.performance_quality = activity.performance_quality - quality_delta
+      end
+   end
+
+   -- TODO enchantment
+
+   if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 5 + 1) then
+      if Rand.one_in(3) then
+         Gui.mes_visible("perform interest ", chara.x, chara.y, "Cyan")
+         activity.performance_quality = activity.performance_quality + level + 5
+
+         local receive_goods = chara:calc("perform_receives_goods")
+         if receive_goods == nil then
+            receive_goods = chara:is_player()
+         end
+         if receive_goods and not chara:is_party_leader_of(audience) then
+            local get_goods = Rand.one_in(activity.number_of_tips * 2 + 2)
+            if get_goods then
+               local map = audience:current_map()
+               local x, y = pos_nearby(chara.x, chara.y, map)
+
+               if x and map:has_los(audience.x, audience.y, x, y) then
+                  performance_throw_item(chara, instrument, audience, activity, x, y)
+               end
+            end
+         end
+      end
+   end
+end
+
+local function performance_apply(chara, instrument, audience, activity)
+   local gold_earned = 0
+
+   if not Chara.is_alive(audience) then
+      return
+   end
+
+   local date = audience:calc("performance_interest_revive_date")
+   if World.date_hours() >= date then
+      audience.performance_interest = 100
+   end
+
+   if chara:is_in_fov() then
+      if not audience:is_in_fov() then
+         return
+      end
+   elseif Pos.dist(chara.x, chara.y, audience.x, audience.y) > 3 then
+      return
+   end
+
+   if audience:calc("performance_interest") <= 0 then
+      return
+   end
+
+   if audience:has_effect("elona.sleep") then
+      return
+   end
+
+   if chara.uid == audience.uid then
+      return
+   end
+
+   if audience:reaction_towards(chara) <= 0 then -- TODO == -3
+      if audience:get_hate_at(chara) == 0 then
+         Gui.mes_visible("perform gets angry", audience.x, audience.y)
+      end
+      audience.ai_state.hate = 30
+      return
+   end
+
+   if chara:is_player() then
+      -- TODO: if temp is active, modify temp. Else, modify base.
+      -- audience:change("performance_interest", -Rand.rnd(15))
+      audience.performance_interest = audience.performance_interest - Rand.rnd(15)
+      audience.performance_interest_revive_date = World.date_hours() + 12
+   end
+
+   if audience:calc("performance_interest") <= 0 then
+      Gui.mes_visible("disinterest", audience.x, audience.y, "Cyan")
+      audience:reset("performance_interest", 0)
+      return
+   end
+
+   if chara:skill_level("elona.performer") < audience:calc("level") then
+      if Rand.one_in(3) then
+         performance_bad(chara, instrument, audience, activity)
+         return
+      end
+   end
+
+   if Rand.one_in(3) then
+      local gold = performance_calc_earned_gold(chara, instrument, audience, activity)
+      audience.gold = audience.gold - gold
+      chara.gold = chara.gold + gold
+      gold_earned = gold_earned + gold
+   end
+
+   if audience:calc("level") > chara:skill_level("elona.performer") then
+      return
+   end
+
+   performance_good(chara, instrument, audience, activity)
+
+   if gold_earned > 0 then
+      activity.tip_gold = activity.tip_gold + gold_earned
+      if chara:is_in_fov() then
+         Gui.play_sound("base.getgold1")
+      end
+   end
+end
+
+data:add {
+   _type = "base.activity",
+   _id = "performance",
+
+   params = { instrument = "table", impressions = "table", performace_quality = "number", tip_gold = "number", number_of_tips = "number" },
+   default_turns = 61,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            self.performance_quality = 40
+            self.tip_gold = 0
+            self.number_of_tips = 0
+
+            if not Item.is_alive(self.instrument) then
+               return "stop"
+            end
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local chara = params.chara
+            if self.turns % 10 == 0 then
+               if Rand.one_in(10) then
+                  Gui.mes_visible("*sound*", chara.x, chara.y, "Blue")
+               end
+               Gui.mes("*cha*", "Blue")
+            end
+            if self.turns % 20 == 0 then
+               Calc.make_sound(chara.x, chara.y, 5, 1, 1, chara)
+
+               for _, audience in chara:current_map():iter_charas() do
+                  performance_apply(chara, self.instrument, audience, self)
+                  if not Chara.is_alive(chara) then
+                     return "turn_end"
+                  end
+               end
+            end
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            local quality = self.performance_quality
+
+            if params.chara:is_player() then
+               local mes
+               if quality < 0 then
+                  mes = 0
+               elseif quality < 20 then
+                  mes = 1
+               elseif quality < 40 then
+                  mes = 2
+               elseif quality == 40 then
+                  mes = 3
+               elseif quality < 60 then
+                  mes = 4
+               elseif quality < 80 then
+                  mes = 5
+               elseif quality < 100 then
+                  mes = 6
+               elseif quality < 120 then
+                  mes = 7
+               elseif quality < 150 then
+                  mes = 8
+               else
+                  mes = 9
+               end
+               Gui.mes("perform finish: " .. mes)
+            end
+
+            if quality > 40 then
+               quality = math.floor(quality * (100 + (self.instrument:calc("performance_quality") or 0) / 5) / 100)
+            end
+
+            if self.tip_gold ~= 0 then
+               Gui.mes_visible("total tips: " .. self.tip_gold, params.chara.x, params.chara.y)
+            end
+
+            local exp = quality - params.chara:skill_level("elona.performer") + 50
+            if exp > 0 then
+               Skill.gain_skill_exp(params.chara, "elona.performer", exp, 0, 0)
+            end
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "stealing",
+
+   params = { item = "table" },
+   default_turns = function(self, params)
+      return 2 + math.clamp(self.item:calc("weight") / 500, 0, 50)
+   end,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            if not Item.is_alive(self.item) then
+               return "stop"
+            end
+            Gui.mes("steal start")
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local chara = params.chara
+
+            local result = self.item:emit("elona.on_steal_attempt", params)
+            if result then
+               return result
+            end
+
+            local from_enemy = false
+            local owner = self.item:current_owner()
+            if owner and owner:reaction_towards(chara) < 0 then -- TODO == -3
+               from_enemy = true
+            end
+
+            local chance = chara:skill_level("elona.pickpocket") * 5 + chara:skill_level("elona.stat_dexterity") + 25
+
+            local hour = World.date().hour
+            if hour >= 19 or hour < 7 then
+               chance = chance * 15 / 10
+            end
+            if self.item:calc("quality") == 3 then
+               chance = chance * 8 / 10
+            end
+            if self.item:calc("quality") >= 4 then
+               chance = chance * 5 / 10
+            end
+
+            Calc.make_sound(chara.x, chara.y, 5, 8)
+
+            local found = false
+
+            for _, other in chara:current_map():iter_charas() do
+               local dist = Pos.dist(other.x, other.y, chara.x, chara.y)
+               local do_apply = Chara.is_alive(other)
+                  and not chara:has_effect("elona.sleep")
+                  and dist <= 5
+
+               if owner then
+                  do_apply = do_apply and owner.uid == other.uid
+               end
+
+               if do_apply then
+                  local coef = 80 + dist * 20
+                  if other:is_in_fov() then
+                     coef = coef + 50
+                  end
+                  local p = Rand.rnd(chance + 1) * (coef / 100)
+
+                  -- TODO adventurer
+
+                  if Rand.rnd(other:skill_level("elona.stat_perception") + 1) > p then
+                     if other:is_in_fov() then
+                        Gui.mes("steal notice in fov")
+                     else
+                        Gui.mes("steal notice out of fov")
+                     end
+
+                     -- TODO guard
+                     -- TODO modify_impression
+
+                     found = true
+                  end
+               end
+            end
+
+            local succeeded = true
+
+            if found then
+               succeeded = false
+
+               Gui.mes("you are found")
+               -- TODO modify_karma
+               if owner then
+                  -- TODO ebon
+                  if not owner:has_effect("elona.sleep") then
+                     -- TODO relationship = -2
+                     chara:act_hostile_towards(owner)
+                     -- TODO modify_impression
+                  end
+               end
+
+               Calc.make_guards_hostile()
+            end
+
+            if owner then
+               if not Chara.is_alive(owner) then
+                  if succeeded then
+                     Gui.mes("target is dead")
+                     succeeded = false
+                  end
+               end
+
+               -- TODO character role
+
+               if Pos.dist(chara.x, chara.y, owner.x, owner.y) >= 3 then
+                  if succeeded then
+                     Gui.mes("target is lost")
+                     succeeded = false -- NOTE: was true in vanilla?
+                  end
+               end
+            end
+
+            if not Item.is_alive(self.item) then
+               succeeded = false
+            end
+            if self.item:calc("is_precious") then
+               if succeeded then
+                  Gui.mes("cannot be stolen")
+                  succeeded = false
+               end
+            end
+            if self.item:calc("weight") >= chara:skill_level("elona.stat_strength") * 500 then
+               if succeeded then
+                  Gui.mes("too heavy")
+                  succeeded = false
+               end
+            end
+            if Chara.is_alive(self.item.chara_using) then
+               if succeeded then
+                  Gui.mes("someone else is using")
+                  succeeded = false
+               end
+            else
+               self.item.chara_using = nil
+            end
+
+            if not succeeded then
+               Gui.mes("you stop stealing")
+               chara:remove_activity()
+            end
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            local chara = params.chara
+            local owner = self.item:get_owner()
+            if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
+               Gui.mes("you stop stealing")
+               chara:remove_activity()
+               return
+            end
+
+            Gui.mes("steal")
+         end
+      }
+   }
+}

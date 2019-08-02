@@ -82,6 +82,10 @@
     (elona-next--send cmd)
     (message "Hotloaded %s." lua-path)))
 
+(defun elona-next-run-this-file ()
+  (interactive)
+  (lua-send-string (format "dofile \"%s\"" (buffer-file-name))))
+
 (defun elona-next-eval-sexp-fu-setup ()
   (define-eval-sexp-fu-flash-command elona-next-send-defun
     (eval-sexp-fu-flash (elona-next--bounds-of-last-defun (point))))

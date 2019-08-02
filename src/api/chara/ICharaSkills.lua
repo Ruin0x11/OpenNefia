@@ -46,10 +46,16 @@ local function generate_methods(iface, name, field)
       end
       -- self:mod_skill_level(skill, level, "add")
       iface["mod_" .. name .. "_" .. subfield] = function(self, skill, amount, op)
+         if not self:has_skill(skill) then
+            return
+         end
          return self:mod(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
       end
-      -- self:base_skill_level()
+      -- self:mod_base_skill_level(skill, level, "add")
       iface["mod_base_" .. name .. "_" .. subfield] = function(self, skill, amount, op)
+         if not self:has_skill(skill) then
+            return
+         end
          return self:mod_base(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
       end
    end

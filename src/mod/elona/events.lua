@@ -274,6 +274,14 @@ end
 Event.register("base.on_build_chara",
                "Init lay hand", init_lay_hand)
 
+local function init_chara_defaults(chara)
+   chara.performance_interest = chara.performance_interest or 0
+   chara.performance_interest_revive_date = chara.performance_interest_revive_date or 0
+end
+
+Event.register("base.on_build_chara",
+               "Init chara_defaults", init_chara_defaults)
+
 
 local function calc_damage_fury(chara, params, result)
    if chara:has_effect("elona.fury") then

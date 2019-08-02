@@ -109,8 +109,7 @@ function Hunger.calc_nutrition(item)
 
    local nutrition = item:calc("base_nutrition") or 2500
 
-   local is_food_category = true
-   local apply_nutrition_buff = is_food_category
+   local apply_nutrition_buff = item:has_type("elona.food")
    if apply_nutrition_buff then
       nutrition = nutrition * (100 + quality * 15) / 100
    end

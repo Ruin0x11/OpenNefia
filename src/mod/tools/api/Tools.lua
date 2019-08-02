@@ -65,7 +65,7 @@ function Tools.spawn_items(count)
 
    local keys = data["base.item"]:iter():extract("_id"):to_list()
    for _=1,count do
-      local x, y = Map.free_position(nil, nil, {allow_stacking=true})
+      local x, y = Map.find_free_position(nil, nil, {allow_stacking=true})
       if x then
          Item.create(Rand.choice(keys), x, y)
       end
@@ -240,6 +240,53 @@ function Tools.wrap_event(event_id)
    return function(params, result)
       return Event.trigger(event_id, params, result)
    end
+end
+
+function Tools.with_without()
+   -- determine subcategories that have at least one item with no
+   -- subcategory and at least one item with the subcategory the same
+   -- as the category.
+   local categories = table.keys(table.set(data["base.item"]:iter():filter(function(i) return i.subcategory == nil end):extract("category"):to_list()))
+   local result = {}
+   for _, c in ipairs(categories) do
+      local found = data["base.item"]:iter():filter(function(i) return i.category ~= c and i.subcategory == c end):nth(1)
+      if found then
+         result[#result+1] = { c, found }
+      end
+   end
+   return result
+end
+
+function Tools.categories_flt_differ()
+   -- determine major categories with at least one item with the same
+   -- subcategory and one item with a different subcategory.
+   local categories = table.unique(data["base.item"]:iter():filter(function(i) return i.category == i.subcategory end):extract("category"):to_list())
+   local result = {}
+   for _, c in ipairs(categories) do
+      local found = data["base.item"]:iter():filter(function(i) return i.category == c and i.subcategory ~= c end)
+      if found:length() > 0 then
+         result[#result+1] = { c, found:extract("_id"):to_list() }
+      end
+   end
+   return result
+end
+
+function Tools.partition(tbl, key, extract)
+   extract = extract or "_id"
+   local f = function(i)
+      return tostring(i[key])
+   end
+
+   local i
+   if tostring(tbl) == "<generator>" then
+      i = tbl
+   elseif tbl.iter then
+      i = tbl:iter()
+   else
+      i = fun.iter(tbl)
+   end
+   local g = i:group_by(f)
+   return fun.iter(g):map(function(k, v) return k, fun.iter(v):extract(extract):to_list() end):to_map()
 end
 
 return Tools

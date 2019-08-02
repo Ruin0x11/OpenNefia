@@ -70,7 +70,10 @@ love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
 love.data.compress = function(_, _, obj) return obj end
 love.data.decompress = function(_, _, str) return str end
+love.timer.sleep = function() end
 
 love.getVersion = function() return "lovemock" end
+
+love.on_hotload = table.replace_with
 
 return love

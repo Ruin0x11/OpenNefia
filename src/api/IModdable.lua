@@ -26,28 +26,45 @@ function IModdable:calc(key, ...)
    end
 end
 
+
 --- Modifies a temporary value. This will be cleared when refresh() is
 --- called on the object.
-function IModdable:mod(prop, v, method)
-   table.merge_ex_single(self.temp, v, method or "add", nil, prop)
+function IModdable:mod(prop, v, method, params)
+   local defaults = self
+   if params and params.no_default then
+      defaults = nil
+   end
+   table.merge_ex_single(self.temp, v, method or "add", defaults, prop)
    return self.temp[prop]
 end
 
 -- Modifies a base value. This will persist if refresh() is called,
 -- and is the same as regular assignment.
-function IModdable:mod_base(prop, v, method)
-   table.merge_ex_single(self, v, method or "add", nil, prop)
+function IModdable:mod_base(prop, v, method, params)
+   local defaults = self.proto
+   if params and params.no_default then
+      defaults = nil
+   end
+   table.merge_ex_single(self, v, method or "add", defaults, prop)
    return self[prop]
 end
 
 -- Modifies this object's temporary values by merging them with `tbl`.
-function IModdable:mod_with(tbl, method)
-   return table.merge_ex(self.temp, tbl, nil, method or "add")
+function IModdable:mod_with(tbl, method, params)
+   local defaults = self
+   if params and params.no_default then
+      defaults = nil
+   end
+   return table.merge_ex(self.temp, tbl, defaults, method or "add")
 end
 
 -- Modifies this object's base values by merging them with `tbl`.
-function IModdable:mod_base_with(tbl, method)
-   return table.merge_ex(self, tbl, nil, method or "add")
+function IModdable:mod_base_with(tbl, method, params)
+   local defaults = self.proto
+   if params and params.no_default then
+      defaults = nil
+   end
+   return table.merge_ex(self, tbl, defaults, method or "add")
 end
 
 --- Clears a temporary value and sets a base value at the same time.

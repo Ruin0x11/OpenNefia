@@ -1,24 +1,26 @@
-local Map = require("api.Map")
-local SaveFs = require("api.SaveFs")
+local Resolver = require("api.Resolver")
 
-print("===== normal")
-for i, v, c in Map.current():iter():take(4) do
-   print(i, tostring(v), tostring(c))
-end
+local resolver = {
+   resolve = function(self, params)
+      return "female" .. self.text .. params.asd
+   end,
+   params = { text = "string" }
+}
 
-local _, m = SaveFs.read("map/3")
+local arr = {
+   resolve = function(self, params, result)
+      result.gender = result.gender .. "dood"
+      return result
+   end,
+   params = { text = "string" }
+}
 
-print("===== iter")
-for i, v, c in m:iter() do
-   print(i, tostring(v), tostring(c))
-end
+local proto = {
+   param1 = 10,
+   gender = Resolver.make(resolver, {text="a"}),
+   Resolver.make(arr),
+   Resolver.make(arr),
+}
 
-print("===== multi pool")
-for i, v, c in fun.iter(m._multi_pool.refs) do
-   print(i, tostring(v), tostring(c))
-end
-
-print("===== pairs")
-for i, v, c in pairs(m._multi_pool.refs) do
-   print(i, tostring(v), tostring(c))
-end
+print("go")
+print(inspect(Resolver.resolve(proto, {asd="g"})))

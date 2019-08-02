@@ -2,15 +2,12 @@ local Draw = require("api.Draw")
 local Env = require("api.Env")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
-local Ui = require("api.Ui")
 local circular_buffer = require("thirdparty.circular_buffer")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local UiWindow = require("api.gui.UiWindow")
 local LuaReplMode = require("api.gui.menu.LuaReplMode")
-local UiList = require("api.gui.UiList")
 local TextHandler = require("api.gui.TextHandler")
 local ReplCompletion = require("api.gui.menu.ReplCompletion")
 
@@ -293,6 +290,26 @@ local function join_results(acc, x, stop)
    return acc
 end
 
+function ReplLayer.format_results(results, print_varargs)
+   local result_text
+
+   if type(results) == "table" then
+      if print_varargs then
+         result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results, {}).text
+      else
+         result_text = ReplLayer.format_repl_result(results[1])
+      end
+
+      if result_text == nil then
+         result_text = tostring(result_text)
+      end
+   else
+      result_text = results
+   end
+
+   return result_text
+end
+
 function ReplLayer:submit()
    -- if self.completion_candidates then
    --    self:insert_text(self.completion_candidates[self.selected_candidate])
@@ -321,20 +338,7 @@ function ReplLayer:submit()
       print_varargs = fun.iter(results):all(function(r) return type(r) ~= "table" end)
    end
 
-   local result_text
-   if success then
-      if print_varargs then
-         result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results, {}).text
-      else
-         result_text = ReplLayer.format_repl_result(results[1])
-      end
-
-      if result_text == nil then
-         result_text = tostring(result_text)
-      end
-   else
-      result_text = results
-   end
+   local result_text = ReplLayer.format_results(results, print_varargs)
 
    if not success then
       print(result_text)

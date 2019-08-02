@@ -13,6 +13,7 @@ local ICharaInventory = require("api.chara.ICharaInventory")
 local ICharaParty = require("api.chara.ICharaParty")
 local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
+local ICharaTraits = require("api.chara.ICharaTraits")
 local IObject = require("api.IObject")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IModdable = require("api.IModdable")
@@ -33,6 +34,7 @@ local IChara = class.interface("IChara",
                             ICharaEquip,
                             ICharaParty,
                             ICharaSkills,
+                            ICharaTraits,
                             ICharaEffects,
                             ICharaActivity,
                             IEventEmitter
@@ -65,6 +67,9 @@ local fallbacks = {
    armor_class = "",
 
    image = "",
+
+   gold = 0,
+   platinum = 0,
 
    number_of_weapons = 0,
    ether_disease_speed = 0,
@@ -114,6 +119,7 @@ function IChara:pre_build()
    ICharaTalk.init(self)
    ICharaSkills.init(self)
    ICharaEffects.init(self)
+   ICharaTraits.init(self)
 
    self:emit("base.on_pre_build")
 
@@ -158,6 +164,7 @@ function IChara:refresh()
    IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
+   ICharaTraits.on_refresh(self)
 
    self:refresh_weight()
 
@@ -358,6 +365,8 @@ function IChara.on_kill_chara(victim, params)
    if attacker then
       local gained_exp = victim:emit("base.on_calc_kill_exp", params, 0)
 
+      -- TODO chara:gain_experience() to allow global experience
+      -- modifier
       attacker.experience = attacker.experience + gained_exp
       if attacker:is_player() then
          attacker.sleep_experience = attacker.sleep_experience + gained_exp
@@ -513,11 +522,6 @@ end
 -- TEMP
 function IChara:has_status_ailment(status_ailment)
    return self:status_ailment_turns(status_ailment) > 0
-end
-
--- TEMP
-function IChara:has_trait(trait)
-   return false
 end
 
 function IChara:is_in_fov()

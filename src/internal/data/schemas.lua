@@ -53,6 +53,13 @@ data:add_type(
    { interface = IItem }
 )
 
+data:add_type {
+   name = "item_type",
+   schema = schema.Record {
+      no_generate = schema.Optional(schema.Boolean)
+   }
+}
+
 data:add_type(
    {
       name = "feat",

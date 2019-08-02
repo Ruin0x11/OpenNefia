@@ -5,8 +5,10 @@ local data = require("internal.data")
 --- Equipment slots for characters.
 local EquipSlots = class.class("EquipSlots", ILocation)
 
-function EquipSlots:init(body_parts)
+function EquipSlots:init(body_parts, owner_uid)
    body_parts = body_parts or {}
+
+   self.owner_uid = owner_uid
 
    local init = function(i)
       return {

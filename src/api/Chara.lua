@@ -47,6 +47,7 @@ function Chara.set_player(uid_or_chara)
 
    c.max_hp = 500
    c.max_mp = 100
+   c.max_stamina = 10000
 
    c:reset_all_reactions()
    c:heal_to_max()

@@ -8,8 +8,12 @@ function ICharaActivity:init()
    self.activity = nil
 end
 
-function ICharaActivity:has_activity()
-   return self.activity ~= nil
+function ICharaActivity:has_activity(id)
+   if id == nil then
+      return self.activity ~= nil
+   end
+
+   return self.activity ~= nil and self.activity._id == id
 end
 
 function ICharaActivity:interrupt_activity()
@@ -45,17 +49,14 @@ function ICharaActivity:pass_activity_turn()
    Gui.wait(5 * self.activity.animation_wait)
    Gui.update_screen()
 
-   local result = self.activity:pass_turn()
-   if result and result.action == "stop" then
-      self:remove_activity()
-      return
-   end
-
-   if self.activity.turns <= 0 then
+   if self.activity and self.activity.turns <= 0 then
       self:finish_activity()
+      return "turn_end"
    end
 
-   return (result and result.turn_result) or nil
+   local result = self.activity:pass_turn()
+
+   return result
 end
 
 local function make_activity(id, params)
@@ -70,18 +71,28 @@ local function make_activity(id, params)
    return obj
 end
 
-function ICharaActivity:start_activity(id, params, turns, force)
+function ICharaActivity:start_activity(id, params, turns)
    if self.activity then
-      if not force then
-         error("activity already active")
-      else
-         self:remove_activity()
-      end
+      self:remove_activity()
    end
 
    params = params or {}
    self.activity = make_activity(id, params)
-   self.activity.turns = turns or self.activity.default_turns or 10
+
+   if turns then
+      self.activity.turns = turns
+   elseif self.activity.default_turns then
+      local d = self.activity.default_turns
+      if type(d) == "function" then
+         self.activity.turns = d(self.activity, params)
+      elseif type(d) == "number" then
+         self.activity.turns = d
+      else
+         error("invalid activity default_turns")
+      end
+   else
+      self.activity.turns = 10
+   end
 
    if self.activity:start(self) == "stop" then
       self:remove_activity()

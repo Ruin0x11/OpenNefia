@@ -331,6 +331,11 @@ function table.values(tbl)
    return arr
 end
 
+--- Returns the unique values in a table.
+function table.unique(tbl)
+   return table.keys(table.set(tbl))
+end
+
 --- Removes the specified indices from an array-like table. The
 --- indices must be an array of integers with no duplicates sorted in
 --- ascending order.
@@ -341,6 +346,13 @@ function table.remove_indices(arr, inds)
       offset = offset + 1
    end
    return arr
+end
+
+function table.remove_keys(map, keys)
+   for _, key in ipairs(keys) do
+      map[key] = nil
+   end
+   return map
 end
 
 function table.remove_by(arr, f)
@@ -483,7 +495,9 @@ function table.merge_ex_single(base, value, meth, default, key)
       end
    end
 
-   if type(value) == "table" and meth ~= "replace" then
+   if meth == "replace" then
+      mod_value(base, value, meth, default, key)
+   elseif type(value) == "table" then
       -- Actual table
       if base[key] == nil then
          if default and default[key] then
@@ -492,8 +506,15 @@ function table.merge_ex_single(base, value, meth, default, key)
             base[key] = {}
          end
       end
-      for k, v in pairs(value) do
-         table.merge_ex_single(base[key], v, meth, default and default[key], k)
+      if meth == "insert" then
+         print(inspect(value))
+         for _, v in ipairs(value) do
+            table.insert(base[key], v)
+         end
+      else
+         for k, v in pairs(value) do
+            table.merge_ex_single(base[key], v, meth, default and default[key], k)
+         end
       end
    else
       mod_value(base, value, meth, default, key)

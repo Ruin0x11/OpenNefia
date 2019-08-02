@@ -49,6 +49,7 @@ data:add {
    image = "elona.chara_snail",
    max_hp = 100,
    max_mp = 20,
+   max_stamina = 10000,
 
    talk = "content.test"
 }

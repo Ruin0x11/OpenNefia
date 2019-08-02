@@ -1,4 +1,5 @@
 Tools = require("mod.tools.api.Tools")
+Itemgen = require("mod.tools.api.Itemgen")
 Compat = require("mod.elona_sys.api.Compat")
 Combat = require("mod.elona.api.Combat")
 ElonaAction = require("mod.elona.api.ElonaAction")

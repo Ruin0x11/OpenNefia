@@ -28,8 +28,17 @@ if not love or love.getVersion() == "lovemock" then
       return items
    end
    fs.get_info = function(path)
-      local attrs = lfs.attributes(path)
-      if attrs == nil then return nil end
+      local other_path = path
+      if love then
+         other_path = fs.join(fs.get_save_directory(), path)
+      end
+      local attrs = lfs.attributes(other_path)
+      if attrs == nil then
+         attrs = lfs.attributes(path)
+         if attrs == nil then
+            return nil
+         end
+      end
 
       return {
          type = attrs.mode
