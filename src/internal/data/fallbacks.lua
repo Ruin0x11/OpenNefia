@@ -152,6 +152,9 @@ data:add_multi(
       },
       {
          _id = "on_generate"
+      },
+      {
+         _id = "on_hotload_prototype"
       }
    }
 )

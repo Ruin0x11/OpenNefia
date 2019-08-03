@@ -1,8 +1,7 @@
-local Log = require ("api.Log")
 local EventTree = require ("api.EventTree")
+local Log = require ("api.Log")
 local env = require ("internal.env")
 local schema = require ("thirdparty.schema")
-local fun = require ("thirdparty.fun")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -194,6 +193,10 @@ function data:add(dat)
       if env.is_hotloading() then
          Log.debug("In-place update of %s:%s", _type, full_id)
          dat._id = full_id
+
+         local Event = require("api.Event")
+         Event.trigger("base.on_hotload_prototype", {old=inner[_type][full_id], new=dat})
+
          table.replace_with(inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
          return dat

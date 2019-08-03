@@ -7,8 +7,8 @@ function IEventEmitter:init()
    self._events = EventHolder:new()
    self.global_events = EventHolder:new()
 
-   if self.events then
-      for _, event in ipairs(self.events) do
+   if self.proto and self.proto._events then
+      for _, event in ipairs(self.proto._events) do
          self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
       end
    end

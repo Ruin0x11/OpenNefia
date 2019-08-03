@@ -50,11 +50,6 @@ function Event.unregister(event_id, cb, opts)
 end
 
 function Event.trigger(event_id, args, default)
-   if env.is_hotloading() then
-      Log.warn("Skipping Event.trigger for %s - \":%s\"", event_id)
-      return
-   end
-
    check_event(event_id)
    return global_events:trigger(event_id, "global", args, default)
 end

@@ -242,7 +242,7 @@ function Tools.wrap_event(event_id)
    end
 end
 
-function Tools.with_without()
+function Tools.categories_with_without()
    -- determine subcategories that have at least one item with no
    -- subcategory and at least one item with the subcategory the same
    -- as the category.
@@ -269,6 +269,20 @@ function Tools.categories_flt_differ()
       end
    end
    return result
+end
+
+function Tools.categories_for_subcategories()
+   -- extract the primary category for each subcategory.
+   local cat = Tools.partition(data["base.item"], "subcategory", "category")
+   cat[64000] = nil
+   cat["nil"] = nil
+
+   local map = function(k, v)
+      local subcategory = data["base.item_type"]:iter():filter(function(i) return i.ordering == tonumber(k) end):nth(1)
+      local item_type = table.unique(v)
+      return (subcategory and subcategory._id) or k, item_type
+   end
+   return fun.iter(cat):map(map):filter(function(k, v) return #v > 1 end):to_map()
 end
 
 function Tools.partition(tbl, key, extract)

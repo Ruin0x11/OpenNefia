@@ -1,6 +1,7 @@
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Map = require("api.Map")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 data:add_type {
    name = "field_type",
@@ -10,6 +11,12 @@ data:add_type {
 }
 
 local function create_junk_items(map)
+   local stood_map_tile = true
+   if stood_map_tile then
+      for _=1,4+Rand.rnd(5) do
+         Itemgen.create(nil, nil, {categories={"elona.junk_in_field"}})
+      end
+   end
 end
 
 local function spray_tile(map, tile_id, density)

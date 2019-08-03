@@ -16,11 +16,11 @@ local function decompress(dat)
    return love.data.decompress("string", "gzip", dat)
 end
 
-local function serialize(obj)
+function SaveFs.serialize(obj)
    return compress(binser.serialize(obj))
 end
 
-local function deserialize(str)
+function SaveFs.deserialize(str)
    return binser.deserialize(decompress(str))[1]
 end
 
@@ -52,7 +52,7 @@ end
 function SaveFs.write(path, obj, save)
    local full_path = save_path(path, save)
 
-   local str = serialize(obj)
+   local str = SaveFs.serialize(obj)
    local dirs = fs.parent(full_path)
    if dirs then
       fs.create_directory(dirs)
@@ -78,7 +78,7 @@ function SaveFs.read(path, save)
       return false, err
    end
 
-   local result = deserialize(content)
+   local result = SaveFs.deserialize(content)
 
    return true, result
 end

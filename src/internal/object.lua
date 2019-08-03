@@ -63,9 +63,63 @@ function object.__index(t, k)
    return mt.__iface[k]
 end
 
+local function extract_functions(instance, serial, proto, cache)
+   if type(proto) ~= "table" then
+      return
+   end
+
+   -- protect against recursive tables
+   if cache[instance] or cache[proto] then
+      return
+   end
+   cache[instance] = true
+   cache[proto] = true
+
+   for k, v in pairs(instance) do
+      if type(k) == "string" then
+         -- Skip non-copiable fields (prefixed with '_')
+         if string.sub(k, 1, 1) ~= "_" then
+            if type(v) == "function" and proto[k] == v then
+               serial[k] = "copy_from_proto"
+            elseif type(v) == "table" and type(instance) == "table" then
+               serial[k] = {}
+               extract_functions(serial[k], v, proto[k], cache)
+            end
+         end
+      end
+   end
+end
+
+local function copy_functions(instance, serial, proto, cache)
+   if type(proto) ~= "table" then
+      return
+   end
+
+   -- protect against recursive tables
+   if cache[instance] or cache[proto] then
+      return
+   end
+   cache[instance] = true
+   cache[proto] = true
+
+   for k, v in pairs(serial) do
+      if v == "copy_from_proto" then
+         instance[k] = proto[k]
+      elseif type(v) == "table" and type(instance[k]) == "table" then
+         copy_functions(instance[k], v, proto[k], cache)
+      end
+   end
+end
+
 function object.serialize(self)
+   local proto = self.proto
+
    local ret = object.make_prototype(self)
    assert(ret._id, "serialization currently assumes there is a prototype in data[] to load")
+
+   local serial = {}
+   extract_functions(self, serial, proto, {})
+   ret.__serial = serial
    return ret
 end
 
@@ -88,13 +142,23 @@ function object.deserialize(self, _type, _id)
    self._type = _type
    self._id = _id
 
+   -- functions on the prototype table are not serialized, so they
+   -- must be copied from the prototype to the instance on
+   -- deserialization if they were unchanged from the prototype's
+   -- version on save.
+   local serial = self.__serial
+   if serial then
+      self.__serial = nil
+      copy_functions(self, serial, proto, {})
+   end
+
    setmetatable(self,
                 {
                    __id = "object",
                    __index = object.__index,
                    __proto = proto,
                    __iface = iface
-                })
+   })
    return self
 end
 

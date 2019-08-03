@@ -126,6 +126,9 @@ local categories = {
    {
       _id = "bug",
       ordering = 99999999,
+      parents = {
+         "elona.bug"
+      }
    },
 }
 
@@ -133,196 +136,334 @@ local subcategories = {
    {
       _id = "equip_melee_broadsword",
       ordering = 10001,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_long_sword",
       ordering = 10002,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_short_sword",
       ordering = 10003,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_club",
       ordering = 10004,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_hammer",
       ordering = 10005,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_staff",
       ordering = 10006,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_lance",
       ordering = 10007,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_halberd",
       ordering = 10008,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_hand_axe",
       ordering = 10009,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_axe",
       ordering = 10010,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_melee_scythe",
       ordering = 10011,
+      parents = {
+         "elona.equip_melee"
+      }
    },
    {
       _id = "equip_head_helm",
       ordering = 12001,
+      parents = {
+         "elona.equip_head"
+      }
    },
    {
       _id = "equip_head_hat",
       ordering = 12002,
+      parents = {
+         "elona.equip_head"
+      }
    },
    {
       _id = "equip_shield_shield",
       ordering = 14003,
+      parents = {
+         "elona.equip_shield"
+      }
    },
    {
       _id = "equip_body_mail",
       ordering = 16001,
+      parents = {
+         "elona.equip_body"
+      }
    },
    {
       _id = "equip_body_robe",
       ordering = 16003,
+      parents = {
+         "elona.equip_body"
+      }
    },
    {
       _id = "equip_leg_heavy_boots",
       ordering = 18001,
+      parents = {
+         "elona.equip_leg"
+      }
    },
    {
       _id = "equip_leg_shoes",
       ordering = 18002,
+      parents = {
+         "elona.equip_leg"
+      }
    },
    {
       _id = "equip_back_girdle",
       ordering = 19001,
+      parents = {
+         "elona.equip_cloak"
+      }
    },
    {
       _id = "equip_back_cloak",
       ordering = 20001,
+      parents = {
+         "elona.equip_back"
+      }
    },
    {
       _id = "equip_wrist_gauntlet",
       ordering = 22001,
+      parents = {
+         "elona.equip_wrist"
+      }
    },
    {
       _id = "equip_wrist_glove",
       ordering = 22003,
+      parents = {
+         "elona.equip_wrist"
+      }
    },
    {
       _id = "equip_ranged_bow",
       ordering = 24001,
+      parents = {
+         "elona.equip_ranged"
+      }
    },
    {
       _id = "equip_ranged_crossbow",
       ordering = 24003,
+      parents = {
+         "elona.equip_ranged"
+      }
    },
    {
       _id = "equip_ranged_gun",
       ordering = 24020,
+      parents = {
+         "elona.equip_ranged"
+      }
    },
    {
       _id = "equip_ranged_laser_gun",
       ordering = 24021,
+      parents = {
+         "elona.equip_ranged"
+      }
    },
    {
       _id = "equip_ranged_thrown",
       ordering = 24030,
+      parents = {
+         "elona.equip_ranged"
+      }
    },
    {
       _id = "equip_ammo_arrow",
       ordering = 25001,
+      parents = {
+         "elona.equip_ammo"
+      }
    },
    {
       _id = "equip_ammo_bolt",
       ordering = 25002,
+      parents = {
+         "elona.equip_ammo"
+      }
    },
    {
       _id = "equip_ammo_bullet",
       ordering = 25020,
+      parents = {
+         "elona.equip_ammo"
+      }
    },
    {
       _id = "equip_ammo_energy_cell",
       ordering = 25030,
+      parents = {
+         "elona.equip_ammo"
+      }
    },
    {
       _id = "equip_ring_ring",
       ordering = 32001,
+      parents = {
+         "elona.equip_ring"
+      }
    },
    {
       _id = "equip_neck_armor",
       ordering = 34001,
+      parents = {
+         "elona.equip_neck"
+      }
    },
    {
       _id = "drink_potion",
       ordering = 52001,
+      parents = {
+         "elona.drink"
+      }
    },
    {
       _id = "drink_alcohol",
       ordering = 52002,
+      parents = {
+         "elona.drink"
+      }
    },
    {
       _id = "scroll_deed",
       ordering = 53100,
+      parents = {
+         "elona.scroll"
+      }
    },
    {
       _id = "food_flour",
       ordering = 57001,
+      parents = {
+         "elona.food"
+      }
    },
    {
       _id = "food_noodle",
       ordering = 57002,
+      parents = {
+         "elona.food"
+      }
    },
    {
       _id = "food_vegetable",
       ordering = 57003,
+      parents = {
+         "elona.food"
+      }
    },
    {
       _id = "food_fruit",
       ordering = 57004,
+      parents = {
+         "elona.food"
+      }
    },
    {
       _id = "crop_herb",
       ordering = 58005,
+      parents = {
+         "elona.food"
+      }
    },
    {
-      _id = "crop_herb",
+      _id = "crop_seed",
       ordering = 58500,
+      parents = {
+         "elona.food"
+      }
    },
    {
       _id = "misc_item_crafting",
       ordering = 59500,
+      parents = {
+         "elona.misc_item"
+      }
    },
    {
       _id = "furniture_bed", -- sleeping bag/furniture
-      ordering = 60004,
+      ordering = 60004, -- sleeping bag/furniture
    },
    {
       _id = "furniture_instrument",
       ordering = 60005,
+      parents = {
+         "elona.furniture"
+      }
    },
    {
       -- This is only used to generate items that appear in random
       -- overworld field maps.
       _id = "junk_in_field", -- subcategory 64000
-      ordering = 64000,
+      ordering = 64000, -- subcategory 64000
    },
    {
       _id = "junk_town",
       ordering = 64100,
+      parents = {
+         "elona.junk"
+      }
    },
    {
       _id = "ore_valuable",
       ordering = 77001,
+      parents = {
+         "elona.ore"
+      }
    },
 }
 

@@ -84,7 +84,6 @@ local item =
          skill = 100,
          pierce_rate = 5,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword"
          }
       },
@@ -108,7 +107,6 @@ local item =
          skill = 101,
          pierce_rate = 10,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword"
          }
       },
@@ -131,7 +129,6 @@ local item =
          skill = 102,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_hand_axe"
          }
       },
@@ -154,7 +151,6 @@ local item =
          skill = 103,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_club"
          }
       },
@@ -173,7 +169,6 @@ local item =
          subcategory = 12002,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_hat"
          }
       },
@@ -195,7 +190,6 @@ local item =
             { id = 33, power = 100 }
          },
          categories = {
-            "elona.equip_head",
             "elona.equip_head_hat"
          }
       },
@@ -214,7 +208,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -233,7 +226,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -255,7 +247,6 @@ local item =
          subcategory = 22003,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_glove"
          }
       },
@@ -276,7 +267,6 @@ local item =
          subcategory = 22001,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_gauntlet"
          }
       },
@@ -295,7 +285,6 @@ local item =
          subcategory = 18001,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_heavy_boots"
          }
       },
@@ -315,7 +304,6 @@ local item =
          subcategory = 18001,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_heavy_boots"
          }
       },
@@ -332,7 +320,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -353,7 +340,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -373,7 +359,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -393,7 +378,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -414,7 +398,6 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -615,7 +598,6 @@ local item =
          efid = 1130,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -637,7 +619,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -660,7 +641,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -683,7 +663,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -705,7 +684,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -725,7 +703,6 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -815,7 +792,6 @@ local item =
          rftags = { "ore" },
          color = { 255, 255, 175 },
          categories = {
-            "elona.ore"
          }
       },
       {
@@ -832,7 +808,6 @@ local item =
          rftags = { "ore" },
          color = { 255, 155, 155 },
          categories = {
-            "elona.ore"
          }
       },
       {
@@ -850,7 +825,6 @@ local item =
          rftags = { "ore" },
          color = { 255, 215, 175 },
          categories = {
-            "elona.ore"
          }
       },
       {
@@ -869,7 +843,6 @@ local item =
          rftags = { "ore" },
 
          categories = {
-            "elona.ore"
          }
       },
       {
@@ -890,7 +863,6 @@ local item =
          rftags = { "ore" },
          color = { 255, 155, 155 },
          categories = {
-            "elona.ore",
             "elona.ore_valuable"
          }
       },
@@ -910,7 +882,6 @@ local item =
          rftags = { "ore" },
 
          categories = {
-            "elona.ore",
             "elona.ore_valuable"
          }
       },
@@ -932,7 +903,6 @@ local item =
          rftags = { "ore" },
          color = { 175, 255, 175 },
          categories = {
-            "elona.ore",
             "elona.ore_valuable"
          }
       },
@@ -954,7 +924,6 @@ local item =
          rftags = { "ore" },
          color = { 175, 175, 255 },
          categories = {
-            "elona.ore",
             "elona.ore_valuable"
          }
       },
@@ -969,7 +938,6 @@ local item =
          coefficient = 100,
          tags = { "fish" },
          categories = {
-            "elona.junk",
             "elona.tag_fish"
          }
       },
@@ -988,8 +956,8 @@ local item =
          rftags = { "ore" },
 
          categories = {
-            "elona.ore",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.ore"
          }
       },
       {
@@ -1003,7 +971,6 @@ local item =
          coefficient = 100,
          tags = { "fish" },
          categories = {
-            "elona.junk",
             "elona.tag_fish"
          }
       },
@@ -1017,7 +984,6 @@ local item =
          subcategory = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1030,7 +996,6 @@ local item =
          subcategory = 64100,
          coefficient = 100,
          categories = {
-            "elona.junk",
             "elona.junk_town"
          }
       },
@@ -1044,7 +1009,6 @@ local item =
          coefficient = 100,
          light = 2,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1056,7 +1020,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1069,7 +1032,6 @@ local item =
          subcategory = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1082,7 +1044,6 @@ local item =
          subcategory = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1094,7 +1055,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1106,7 +1066,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -1202,7 +1161,6 @@ local item =
          },
          medal_value = 65,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword",
             "elona.unique_item"
          }
@@ -1240,7 +1198,6 @@ local item =
             { id = 20058, power = 200 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword",
             "elona.unique_weapon"
          }
@@ -1270,7 +1227,6 @@ local item =
          pierce_rate = 20,
 
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_bow"
          }
       },
@@ -1292,7 +1248,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -1321,7 +1276,6 @@ local item =
          effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },
          pierce_rate = 10,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_gun",
             "elona.tag_sf"
          }
@@ -1345,7 +1299,6 @@ local item =
          skill = 108,
 
          categories = {
-            "elona.equip_ammo",
             "elona.equip_ammo_arrow"
          }
       },
@@ -1370,7 +1323,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.equip_ammo",
             "elona.equip_ammo_bullet",
             "elona.tag_sf"
          }
@@ -1409,7 +1361,6 @@ local item =
             { id = 80025, power = 100 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_scythe",
             "elona.unique_item"
          }
@@ -1452,7 +1403,6 @@ local item =
             { id = 20056, power = 200 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword",
             "elona.unique_item"
          }
@@ -1472,7 +1422,6 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -1491,7 +1440,6 @@ local item =
          subcategory = 19001,
          coefficient = 100,
          categories = {
-            "elona.equip_cloak",
             "elona.equip_back_girdle"
          }
       },
@@ -1508,7 +1456,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -1530,7 +1477,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1553,7 +1499,6 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1576,7 +1521,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1600,7 +1544,6 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1624,7 +1567,6 @@ local item =
          efp = 400,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1659,7 +1601,6 @@ local item =
          color = { 155, 154, 153 },
          pierce_rate = 20,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword",
             "elona.unique_item"
          }
@@ -1684,7 +1625,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1708,7 +1648,6 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1732,7 +1671,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1748,7 +1686,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1762,7 +1699,6 @@ local item =
          rarity = 600000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1776,7 +1712,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1797,7 +1732,6 @@ local item =
          param1 = 100,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -1817,7 +1751,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture",
             "elona.tag_fest"
          }
       },
@@ -1833,7 +1766,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1851,7 +1783,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1868,7 +1799,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1885,7 +1815,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1902,7 +1831,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1919,7 +1847,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1939,7 +1866,6 @@ local item =
          elona_function = 17,
          param1 = 200,
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument"
          }
       },
@@ -1957,7 +1883,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1974,7 +1899,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -1986,7 +1910,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2007,7 +1930,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -2023,7 +1945,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2039,7 +1960,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2056,7 +1976,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2073,7 +1992,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2088,7 +2006,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2103,7 +2020,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2119,7 +2035,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2134,7 +2049,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "rack",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2152,7 +2066,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2170,7 +2083,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2184,7 +2096,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2196,7 +2107,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2210,7 +2120,6 @@ local item =
          rarity = 300000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2227,7 +2136,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2241,7 +2149,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "variety",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2256,7 +2163,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "variety",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2294,7 +2200,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2309,7 +2214,6 @@ local item =
          coefficient = 100,
          light = 2,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2329,7 +2233,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -2342,7 +2245,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2354,7 +2256,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2366,7 +2267,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2406,7 +2306,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk",
             "elona.tag_fish"
          }
       },
@@ -2565,7 +2464,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "show case",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2605,7 +2503,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2624,7 +2521,6 @@ local item =
          elona_function = 2,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -2641,7 +2537,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2658,7 +2553,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2675,7 +2569,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2692,7 +2585,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2707,7 +2599,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2722,7 +2613,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2737,7 +2627,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2753,7 +2642,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2769,7 +2657,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2784,7 +2671,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2798,7 +2684,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2812,7 +2697,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2827,7 +2711,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -2842,7 +2725,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2859,7 +2741,6 @@ local item =
          elona_function = 15,
          param1 = 200,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2872,7 +2753,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "bundle",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2888,7 +2768,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2904,7 +2783,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2920,7 +2798,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2937,7 +2814,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2949,7 +2825,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2962,7 +2837,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "lot",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2979,7 +2853,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -2996,7 +2869,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3012,7 +2884,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3032,7 +2903,6 @@ local item =
          elona_function = 15,
          param1 = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3052,7 +2922,6 @@ local item =
          elona_function = 15,
          param1 = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3072,7 +2941,6 @@ local item =
          elona_function = 15,
          param1 = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3084,7 +2952,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3101,7 +2968,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3114,7 +2980,6 @@ local item =
          coefficient = 100,
          light = 3,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3130,7 +2995,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3149,7 +3013,6 @@ local item =
          elona_function = 4,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -3168,7 +3031,6 @@ local item =
          elona_function = 1,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -3183,7 +3045,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3200,7 +3061,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3214,8 +3074,8 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.furniture"
          }
       },
       {
@@ -3229,8 +3089,8 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.furniture"
          }
       },
       {
@@ -3246,8 +3106,8 @@ local item =
          coefficient = 100,
          originalnameref2 = "grave",
          categories = {
-            "elona.furniture",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.furniture"
          }
       },
       {
@@ -3261,7 +3121,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3275,7 +3134,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3289,7 +3147,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3303,7 +3160,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3375,7 +3231,6 @@ local item =
          param1 = 110,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -3442,7 +3297,6 @@ local item =
          param1 = 3000,
          param3 = 72,
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3461,7 +3315,6 @@ local item =
          param1 = 3000,
          param3 = 72,
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3483,8 +3336,8 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.food"
          }
       },
       {
@@ -3502,7 +3355,6 @@ local item =
          param1 = 3000,
          param3 = 16,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3521,7 +3373,6 @@ local item =
          param1 = 3000,
          param3 = 16,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3540,7 +3391,6 @@ local item =
          param1 = 3000,
          param3 = 12,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3559,7 +3409,6 @@ local item =
          param1 = 3000,
          param3 = 16,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3578,7 +3427,6 @@ local item =
          param1 = 3000,
          param3 = 8,
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3600,7 +3448,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3622,7 +3469,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3643,7 +3489,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable",
             "elona.tag_fest"
          }
@@ -3666,7 +3511,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3679,7 +3523,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -3697,7 +3540,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3714,8 +3556,8 @@ local item =
          param1 = 4000,
 
          categories = {
-            "elona.food",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.food"
          }
       },
       {
@@ -3733,7 +3575,6 @@ local item =
          param1 = 3000,
          param3 = 16,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3752,8 +3593,8 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.food"
          }
       },
       {
@@ -3771,7 +3612,6 @@ local item =
          param1 = 3000,
          param3 = 8,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3790,7 +3630,6 @@ local item =
          param1 = 3000,
          param3 = 12,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3809,7 +3648,6 @@ local item =
          param1 = 3000,
          param3 = 8,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3828,7 +3666,6 @@ local item =
          param1 = 3000,
          param3 = 12,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -3850,7 +3687,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3872,7 +3708,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3894,7 +3729,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -3916,7 +3750,6 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
             "elona.food_vegetable"
          }
       },
@@ -4022,7 +3855,6 @@ local item =
          },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -4041,7 +3873,6 @@ local item =
          efp = 500,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -4084,7 +3915,6 @@ local item =
          color = { 175, 175, 255 },
          pierce_rate = 20,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword",
             "elona.unique_weapon"
          }
@@ -4130,7 +3960,6 @@ local item =
          effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
          pierce_rate = 20,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_bow",
             "elona.unique_weapon"
          }
@@ -4145,7 +3974,6 @@ local item =
          coefficient = 100,
          rftags = { "ore" },
          categories = {
-            "elona.ore"
          }
       },
       {
@@ -4165,7 +3993,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -4187,7 +4014,6 @@ local item =
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
          pierce_rate = 5,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown"
          }
       },
@@ -4216,7 +4042,6 @@ local item =
          },
          pierce_rate = 5,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_scythe"
          }
       },
@@ -4242,7 +4067,6 @@ local item =
          gods = { "elona.itzpalt" },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_staff"
          }
       },
@@ -4266,7 +4090,6 @@ local item =
          skill = 104,
          pierce_rate = 25,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_lance"
          }
       },
@@ -4285,7 +4108,6 @@ local item =
          },
 
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -4302,7 +4124,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk",
             "elona.junk_town"
          }
       },
@@ -4319,7 +4140,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk",
             "elona.tag_fest"
          }
       },
@@ -4335,7 +4155,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -4350,7 +4169,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -4369,8 +4187,8 @@ local item =
          elona_function = 46,
 
          categories = {
-            "elona.misc_item",
-            "elona.junk_in_field"
+            "elona.junk_in_field",
+            "elona.misc_item"
          }
       },
       {
@@ -4384,7 +4202,6 @@ local item =
          coefficient = 100,
          tags = { "fish" },
          categories = {
-            "elona.junk",
             "elona.tag_fish"
          }
       },
@@ -4397,7 +4214,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -4410,7 +4226,6 @@ local item =
          subcategory = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -4425,7 +4240,6 @@ local item =
          elona_function = 15,
          param1 = 60,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -4446,7 +4260,6 @@ local item =
          skill = 100,
          pierce_rate = 20,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword"
          }
       },
@@ -4470,7 +4283,6 @@ local item =
          skill = 101,
          pierce_rate = 10,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword"
          }
       },
@@ -4493,7 +4305,6 @@ local item =
          skill = 102,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_axe"
          }
       },
@@ -4516,7 +4327,6 @@ local item =
          skill = 103,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_hammer"
          }
       },
@@ -4540,7 +4350,6 @@ local item =
          skill = 104,
          pierce_rate = 25,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_lance"
          }
       },
@@ -4566,7 +4375,6 @@ local item =
          gods = { "elona.itzpalt" },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_staff"
          }
       },
@@ -4595,7 +4403,6 @@ local item =
          pierce_rate = 15,
 
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_bow"
          }
       },
@@ -4624,7 +4431,6 @@ local item =
          effective_range = { 80, 100, 100, 90, 80, 70, 20, 20, 20, 20 },
          pierce_rate = 0,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_gun",
             "elona.tag_sf"
          }
@@ -4648,7 +4454,6 @@ local item =
          skill = 100,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_broadsword"
          }
       },
@@ -4665,7 +4470,6 @@ local item =
          food_rank = 3,
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -4687,7 +4491,6 @@ local item =
          skill = 102,
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_axe"
          }
       },
@@ -4710,7 +4513,6 @@ local item =
          skill = 104,
          pierce_rate = 30,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_halberd"
          }
       },
@@ -4732,7 +4534,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -4749,7 +4550,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -4766,7 +4566,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -4837,7 +4636,6 @@ local item =
          efp = 500,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -4861,7 +4659,6 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -4884,7 +4681,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -4904,7 +4700,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -5102,7 +4897,6 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -5125,7 +4919,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.tag_fest"
          }
@@ -5143,7 +4936,6 @@ local item =
          elona_function = 15,
          param1 = 40,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -5158,7 +4950,6 @@ local item =
          elona_function = 15,
          param1 = 80,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -5198,7 +4989,6 @@ local item =
          food_rank = 3,
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -5218,7 +5008,6 @@ local item =
          param1 = 5000,
          param3 = 24,
          categories = {
-            "elona.food",
             "elona.food_noodle"
          }
       },
@@ -5239,7 +5028,6 @@ local item =
          param1 = 7000,
          param3 = 240,
          categories = {
-            "elona.food",
             "elona.food_flour"
          }
       },
@@ -5262,7 +5050,6 @@ local item =
          gods = { "elona.ehekatl" },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -5283,7 +5070,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -5383,7 +5169,6 @@ local item =
          skill = 101,
          pierce_rate = 5,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword"
          }
       },
@@ -5551,7 +5336,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -5566,7 +5350,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -5578,7 +5361,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -5592,7 +5374,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5606,7 +5387,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5622,7 +5402,6 @@ local item =
          light = 5,
          tags = { "sf" },
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -5635,7 +5414,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5648,7 +5426,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5661,7 +5438,6 @@ local item =
          coefficient = 100,
          tags = { "fish" },
          categories = {
-            "elona.furniture",
             "elona.tag_fish"
          }
       },
@@ -5674,7 +5450,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5734,7 +5509,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -5756,7 +5530,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -5781,7 +5554,6 @@ local item =
          tags = { "spshop" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_spshop"
          }
       },
@@ -5804,7 +5576,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_neg"
          }
       },
@@ -5870,7 +5641,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5884,7 +5654,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "rack",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5898,7 +5667,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "rack",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5911,7 +5679,6 @@ local item =
          coefficient = 100,
          tags = { "fest" },
          categories = {
-            "elona.furniture",
             "elona.tag_fest"
          }
       },
@@ -5924,7 +5691,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5938,7 +5704,6 @@ local item =
          rarity = 250000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5957,7 +5722,6 @@ local item =
          param1 = 150,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -5973,7 +5737,6 @@ local item =
          coefficient = 100,
          light = 10,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -5991,7 +5754,6 @@ local item =
          elona_function = 19,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6005,7 +5767,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6017,7 +5778,6 @@ local item =
          category = 64000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -6032,7 +5792,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "chest",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6051,7 +5810,6 @@ local item =
          param1 = 120,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6069,7 +5827,6 @@ local item =
          param1 = 100,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6089,7 +5846,6 @@ local item =
          param1 = 130,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6109,7 +5865,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -6128,7 +5883,6 @@ local item =
          param1 = 130,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6142,7 +5896,6 @@ local item =
          rarity = 800000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6160,7 +5913,6 @@ local item =
          elona_function = 19,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6178,7 +5930,6 @@ local item =
          param1 = 130,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6194,7 +5945,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6210,7 +5960,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -6226,7 +5975,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -6243,7 +5991,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -6259,7 +6006,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -6274,7 +6020,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6287,7 +6032,6 @@ local item =
          rarity = 600000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6300,7 +6044,6 @@ local item =
          rarity = 600000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6318,7 +6061,6 @@ local item =
          param1 = 0,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6332,7 +6074,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6345,7 +6086,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6363,7 +6103,6 @@ local item =
          elona_function = 19,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6377,7 +6116,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6391,7 +6129,6 @@ local item =
          coefficient = 100,
          light = 7,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6410,7 +6147,6 @@ local item =
          param1 = 130,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -6424,7 +6160,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6440,7 +6175,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6458,7 +6192,6 @@ local item =
          elona_function = 17,
          param1 = 150,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6472,7 +6205,6 @@ local item =
          light = 10,
          originalnameref2 = "statue",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6487,7 +6219,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -6501,7 +6232,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6515,7 +6245,6 @@ local item =
          rarity = 20000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6549,7 +6278,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6564,7 +6292,6 @@ local item =
          coefficient = 100,
          light = 3,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6578,7 +6305,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6656,7 +6382,6 @@ local item =
          elona_function = 16,
          param1 = 60,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -6673,7 +6398,6 @@ local item =
          elona_function = 22,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -6711,7 +6435,6 @@ local item =
          color = { 175, 255, 175 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -6737,7 +6460,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6762,7 +6484,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6787,7 +6508,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6812,7 +6532,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6836,7 +6555,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6860,7 +6578,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6885,7 +6602,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6910,7 +6626,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6935,7 +6650,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6960,7 +6674,6 @@ local item =
          tags = { "fish" },
          rftags = { "fish" },
          categories = {
-            "elona.food",
             "elona.tag_fish"
          }
       },
@@ -6998,7 +6711,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_glove",
             "elona.unique_item"
          }
@@ -7042,7 +6754,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_club",
             "elona.unique_item"
          }
@@ -7080,7 +6791,6 @@ local item =
          identify_difficulty = 500,
          fixlv = "special",
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring",
             "elona.unique_item"
          }
@@ -7123,7 +6833,6 @@ local item =
          identify_difficulty = 500,
          fixlv = "special",
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_staff",
             "elona.unique_item"
          }
@@ -7163,7 +6872,6 @@ local item =
             { id = 26, power = 100 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_lance",
             "elona.unique_item"
          }
@@ -7197,7 +6905,6 @@ local item =
             { id = 20059, power = 200 }
          },
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring",
             "elona.unique_item"
          }
@@ -7235,7 +6942,6 @@ local item =
          efp = 2000,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7257,7 +6963,6 @@ local item =
          efp = 2500,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7277,7 +6982,6 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -7374,7 +7078,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7422,7 +7125,6 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -7469,7 +7171,6 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -7542,7 +7243,6 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -7564,7 +7264,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7634,7 +7333,6 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -7707,7 +7405,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7756,7 +7453,6 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7854,7 +7550,6 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7876,7 +7571,6 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7898,7 +7592,6 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -7944,7 +7637,6 @@ local item =
          tags = { "nogive" },
 
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -7964,7 +7656,6 @@ local item =
          elona_function = 3,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -7998,7 +7689,6 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -8072,7 +7762,6 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -8301,7 +7990,6 @@ local item =
          efp = 500,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -8345,7 +8033,6 @@ local item =
          rarity = 50000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -8362,7 +8049,6 @@ local item =
          rarity = 50000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -8421,8 +8107,7 @@ local item =
          color = { 175, 255, 175 },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -8445,8 +8130,7 @@ local item =
          color = { 255, 255, 175 },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -8469,8 +8153,7 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -8494,8 +8177,7 @@ local item =
          gods = { "elona.kumiromi" },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -8519,8 +8201,7 @@ local item =
          color = { 255, 215, 175 },
          medal_value = 15,
          categories = {
-            "elona.food",
-            "elona.crop_herb",
+            "elona.crop_seed",
             "elona.tag_noshop",
             "elona.tag_spshop"
          }
@@ -8566,7 +8247,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8611,7 +8291,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8656,7 +8335,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8698,7 +8376,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8741,7 +8418,6 @@ local item =
             }
          },
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8769,7 +8445,6 @@ local item =
             { id = 15, power = 50 },
          },
          categories = {
-            "elona.food",
             "elona.crop_herb"
          }
       },
@@ -8787,9 +8462,10 @@ local item =
          param1 = 0,
 
          categories = {
-            "elona.misc_item",
+            no_implicit = true,
+            "elona.misc_item"
             "elona.furniture_bed"
-         }
+         },
       },
       {
          _id = "potion_of_weaken_resistance",
@@ -8810,7 +8486,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -8836,7 +8511,6 @@ local item =
          color = "RandomSeeded",
          medal_value = 5,
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -8862,7 +8536,6 @@ local item =
          color = "RandomSeeded",
          medal_value = 8,
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -8887,7 +8560,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -8910,7 +8582,6 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -8955,7 +8626,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -8975,7 +8645,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -8995,7 +8664,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -9015,7 +8683,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -9035,7 +8702,6 @@ local item =
          subcategory = 16001,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_mail"
          }
       },
@@ -9055,7 +8721,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -9075,7 +8740,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -9095,7 +8759,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -9115,7 +8778,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -9135,7 +8797,6 @@ local item =
          subcategory = 16003,
          coefficient = 100,
          categories = {
-            "elona.equip_body",
             "elona.equip_body_robe"
          }
       },
@@ -9157,7 +8818,6 @@ local item =
          subcategory = 22003,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_glove"
          }
       },
@@ -9179,7 +8839,6 @@ local item =
          subcategory = 22001,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_gauntlet"
          }
       },
@@ -9199,7 +8858,6 @@ local item =
          subcategory = 22003,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_glove"
          }
       },
@@ -9221,7 +8879,6 @@ local item =
          subcategory = 22001,
          coefficient = 100,
          categories = {
-            "elona.equip_wrist",
             "elona.equip_wrist_gauntlet"
          }
       },
@@ -9242,7 +8899,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9264,7 +8920,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9286,7 +8941,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9308,7 +8962,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9330,7 +8983,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9352,7 +9004,6 @@ local item =
          skill = 168,
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield"
          }
       },
@@ -9371,7 +9022,6 @@ local item =
          subcategory = 18002,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_shoes"
          }
       },
@@ -9391,7 +9041,6 @@ local item =
          subcategory = 18002,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_shoes"
          }
       },
@@ -9411,7 +9060,6 @@ local item =
          subcategory = 18002,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_shoes"
          }
       },
@@ -9430,7 +9078,6 @@ local item =
          subcategory = 18001,
          coefficient = 100,
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_heavy_boots"
          }
       },
@@ -9450,7 +9097,6 @@ local item =
          subcategory = 19001,
          coefficient = 100,
          categories = {
-            "elona.equip_cloak",
             "elona.equip_back_girdle"
          }
       },
@@ -9470,7 +9116,6 @@ local item =
          subcategory = 19001,
          coefficient = 100,
          categories = {
-            "elona.equip_cloak",
             "elona.equip_back_girdle"
          }
       },
@@ -9490,7 +9135,6 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -9510,7 +9154,6 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -9528,7 +9171,6 @@ local item =
          subcategory = 12002,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_hat"
          }
       },
@@ -9547,7 +9189,6 @@ local item =
          subcategory = 12001,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm"
          }
       },
@@ -9566,7 +9207,6 @@ local item =
          subcategory = 12001,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm"
          }
       },
@@ -9584,7 +9224,6 @@ local item =
          subcategory = 12001,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm"
          }
       },
@@ -9603,7 +9242,6 @@ local item =
          subcategory = 12001,
          coefficient = 100,
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm"
          }
       },
@@ -9622,7 +9260,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -9641,7 +9278,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -9660,7 +9296,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -9680,7 +9315,6 @@ local item =
          has_random_name = true,
          tags = { "fest" },
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor",
             "elona.tag_fest"
          }
@@ -9699,7 +9333,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -9717,7 +9350,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor"
          }
       },
@@ -9736,7 +9368,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -9755,7 +9386,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -9773,7 +9403,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -9791,7 +9420,6 @@ local item =
          coefficient = 100,
          has_random_name = true,
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -9808,7 +9436,6 @@ local item =
          elona_function = 5,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -9830,7 +9457,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -9913,7 +9539,6 @@ local item =
          pierce_rate = 25,
 
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_crossbow"
          }
       },
@@ -9936,7 +9561,6 @@ local item =
          skill = 109,
 
          categories = {
-            "elona.equip_ammo",
             "elona.equip_ammo_bolt"
          }
       },
@@ -10007,7 +9631,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10028,7 +9651,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10050,7 +9672,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10069,7 +9690,6 @@ local item =
          tags = { "sf", "fest" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf",
             "elona.tag_fest"
          }
@@ -10090,7 +9710,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10110,7 +9729,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10130,7 +9748,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10145,7 +9762,6 @@ local item =
          coefficient = 100,
          tags = { "sf" },
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10164,7 +9780,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10184,7 +9799,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -10214,7 +9828,6 @@ local item =
          effective_range = { 100, 60, 20, 20, 20, 20, 20, 20, 20, 20 },
          pierce_rate = 30,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_gun",
             "elona.tag_sf"
          }
@@ -10235,7 +9848,6 @@ local item =
          tags = { "sf", "fest" },
 
          categories = {
-            "elona.food",
             "elona.tag_sf",
             "elona.tag_fest"
          }
@@ -10256,7 +9868,6 @@ local item =
          tags = { "sf", "fest" },
 
          categories = {
-            "elona.food",
             "elona.tag_sf",
             "elona.tag_fest"
          }
@@ -10277,7 +9888,6 @@ local item =
          tags = { "sf", "fest" },
 
          categories = {
-            "elona.food",
             "elona.tag_sf",
             "elona.tag_fest"
          }
@@ -10301,7 +9911,6 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_neg"
          }
       },
@@ -10324,7 +9933,6 @@ local item =
          efp = 180,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10349,7 +9957,6 @@ local item =
          color = "RandomSeeded",
          medal_value = 7,
          categories = {
-            "elona.scroll",
             "elona.tag_spshop"
          }
       },
@@ -10425,7 +10032,6 @@ local item =
          efp = 200,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10447,7 +10053,6 @@ local item =
          efp = 400,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10468,7 +10073,6 @@ local item =
          efp = 200,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10490,7 +10094,6 @@ local item =
          efp = 400,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10528,7 +10131,6 @@ local item =
          elona_type = "scroll",
 
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10557,7 +10159,6 @@ local item =
          effective_range = { 100, 100, 100, 100, 100, 100, 100, 20, 20, 20 },
          pierce_rate = 5,
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_laser_gun",
             "elona.tag_sf"
          }
@@ -10582,7 +10183,6 @@ local item =
          tags = { "sf" },
 
          categories = {
-            "elona.equip_ammo",
             "elona.equip_ammo_energy_cell",
             "elona.tag_sf"
          }
@@ -10625,7 +10225,6 @@ local item =
             { id = 20059, power = 300 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_laser_gun",
             "elona.tag_sf",
             "elona.unique_item"
@@ -10650,7 +10249,6 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -10670,7 +10268,6 @@ local item =
          elona_type = "potion",
          medal_value = 3,
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -10743,7 +10340,6 @@ local item =
          tags = { "nogive" },
          color = "RandomAny",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -10766,7 +10362,6 @@ local item =
             { id = 32, power = 100 }
          },
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -10791,7 +10386,6 @@ local item =
          color = { 255, 215, 175 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10817,7 +10411,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10992,7 +10585,6 @@ local item =
          coefficient = 100,
          light = 6,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11007,7 +10599,6 @@ local item =
          coefficient = 100,
          light = 6,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11022,7 +10613,6 @@ local item =
          coefficient = 100,
          light = 6,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11036,7 +10626,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11050,7 +10639,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11065,7 +10653,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "painting",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11080,7 +10667,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "painting",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11095,7 +10681,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "painting",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11110,7 +10695,6 @@ local item =
          coefficient = 100,
          originalnameref2 = "statue",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11125,7 +10709,6 @@ local item =
          coefficient = 100,
          light = 7,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11139,7 +10722,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -11161,7 +10743,6 @@ local item =
          color = { 225, 225, 255 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -11185,7 +10766,6 @@ local item =
          color = { 255, 225, 225 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -11210,7 +10790,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.misc_item",
             "elona.tag_sf"
          }
       },
@@ -11326,7 +10905,6 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -11401,7 +10979,6 @@ local item =
             { id = 32, power = 100 }
          },
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -11425,8 +11002,7 @@ local item =
          color = { 185, 155, 215 },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -11449,8 +11025,7 @@ local item =
          color = { 155, 205, 205 },
 
          categories = {
-            "elona.food",
-            "elona.crop_herb"
+            "elona.crop_seed"
          }
       },
       {
@@ -11471,7 +11046,6 @@ local item =
          prevent_sell_in_own_shop = true,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -11494,7 +11068,6 @@ local item =
             { id = 29, power = 500 }
          },
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_shoes"
          }
       },
@@ -11518,7 +11091,6 @@ local item =
             { id = 30, power = 100 }
          },
          categories = {
-            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -11543,7 +11115,6 @@ local item =
             { id = 20057, power = 100 }
          },
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -11566,7 +11137,6 @@ local item =
          elona_type = "potion",
          medal_value = 10,
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -11619,7 +11189,6 @@ local item =
          prevent_sell_in_own_shop = true,
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -11712,7 +11281,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -11733,7 +11301,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -11753,7 +11320,6 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -11843,7 +11409,6 @@ local item =
          },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -11865,7 +11430,6 @@ local item =
          color = { 235, 215, 155 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -11907,7 +11471,6 @@ local item =
          },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -11926,7 +11489,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -11939,7 +11501,6 @@ local item =
          rarity = 250000,
          coefficient = 100,
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -11959,7 +11520,6 @@ local item =
          tags = { "sf" },
          color = { 255, 155, 155 },
          categories = {
-            "elona.misc_item",
             "elona.tag_sf"
          }
       },
@@ -11982,7 +11542,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -12001,7 +11560,6 @@ local item =
          elona_function = 11,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -12031,7 +11589,6 @@ local item =
          rarity = 600000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12097,7 +11654,6 @@ local item =
          elona_function = 13,
          param1 = 100,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -12114,7 +11670,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12129,7 +11684,6 @@ local item =
          coefficient = 100,
          light = 3,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12145,7 +11699,6 @@ local item =
          light = 14,
          tags = { "sf" },
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -12168,7 +11721,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -12215,7 +11767,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.junk"
          }
       },
       {
@@ -12229,7 +11780,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12242,7 +11792,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12258,7 +11807,6 @@ local item =
          light = 15,
          tags = { "sf" },
          categories = {
-            "elona.furniture",
             "elona.tag_sf"
          }
       },
@@ -12275,7 +11823,6 @@ local item =
          light = 15,
          originalnameref2 = "statue",
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12289,7 +11836,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12304,7 +11850,6 @@ local item =
          coefficient = 100,
          light = 9,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12390,7 +11935,6 @@ local item =
          rarity = 800000,
          coefficient = 100,
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -12432,7 +11976,6 @@ local item =
          is_precious = true,
          medal_value = 20,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12445,7 +11988,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12459,7 +12001,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12476,7 +12017,6 @@ local item =
          elona_function = 15,
          param1 = 225,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12489,7 +12029,6 @@ local item =
          rarity = 300000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12503,7 +12042,6 @@ local item =
          coefficient = 100,
          light = 17,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12517,7 +12055,6 @@ local item =
          coefficient = 100,
          light = 17,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12531,7 +12068,6 @@ local item =
          rarity = 600000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12547,7 +12083,6 @@ local item =
          elona_function = 8,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -12561,7 +12096,6 @@ local item =
          coefficient = 100,
          light = 17,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12580,7 +12114,6 @@ local item =
          param1 = 180,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -12595,7 +12128,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -12619,7 +12151,6 @@ local item =
          medal_value = 5,
 
          categories = {
-            "elona.scroll",
             "elona.no_generate"
          }
       },
@@ -12667,7 +12198,6 @@ local item =
          end,
 
          categories = {
-            "elona.junk",
             "elona.no_generate"
          }
       },
@@ -12693,7 +12223,6 @@ local item =
          rftags = { "fish" },
 
          categories = {
-            "elona.food",
             "elona.no_generate"
          }
       },
@@ -12709,7 +12238,6 @@ local item =
          rarity = 300000,
          coefficient = 100,
          categories = {
-            "elona.junk",
             "elona.no_generate"
          }
       },
@@ -12732,7 +12260,6 @@ local item =
          tags = { "nogive" },
 
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -12755,7 +12282,6 @@ local item =
          tags = { "noshop", "spshop" },
 
          categories = {
-            "elona.scroll",
             "elona.tag_noshop",
             "elona.tag_spshop"
          }
@@ -12780,7 +12306,6 @@ local item =
          tags = { "noshop" },
          rftags = { "ore" },
          categories = {
-            "elona.ore",
             "elona.tag_noshop"
          }
       },
@@ -12848,7 +12373,6 @@ local item =
          medal_value = 11,
 
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -12876,7 +12400,6 @@ local item =
          color = "RandomSeeded",
          medal_value = 30,
          categories = {
-            "elona.drink",
             "elona.tag_spshop"
          }
       },
@@ -12915,7 +12438,6 @@ local item =
          medal_value = 55,
 
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm",
             "elona.unique_item"
          }
@@ -12963,7 +12485,6 @@ local item =
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -12982,7 +12503,6 @@ local item =
          tags = { "noshop", "spshop" },
 
          categories = {
-            "elona.misc_item",
             "elona.tag_noshop",
             "elona.tag_spshop"
          }
@@ -13000,7 +12520,6 @@ local item =
          coefficient = 100,
          light = 18,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -13021,7 +12540,6 @@ local item =
          efp = 150,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -13046,7 +12564,6 @@ local item =
             { id = 70054, power = 800 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown"
          }
       },
@@ -13064,7 +12581,6 @@ local item =
          elona_function = 23,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -13084,7 +12600,6 @@ local item =
          tags = { "spshop" },
 
          categories = {
-            "elona.misc_item",
             "elona.tag_spshop"
          }
       },
@@ -13098,7 +12613,6 @@ local item =
          rarity = 2000000,
          coefficient = 0,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -13116,7 +12630,6 @@ local item =
          is_precious = true,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_weapon"
          }
       },
@@ -13138,7 +12651,6 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
-            "elona.scroll"
          }
       },
       {
@@ -13159,7 +12671,6 @@ local item =
          color = { 225, 225, 255 },
 
          categories = {
-            "elona.food",
             "elona.food_fruit",
             "elona.unique_item"
          }
@@ -13179,7 +12690,6 @@ local item =
          tags = { "noshop", "spshop" },
 
          categories = {
-            "elona.misc_item",
             "elona.tag_noshop",
             "elona.tag_spshop"
          }
@@ -13212,7 +12722,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13230,7 +12739,6 @@ local item =
          param1 = 130,
 
          categories = {
-            "elona.misc_item",
             "elona.furniture_bed"
          }
       },
@@ -13245,7 +12753,6 @@ local item =
          coefficient = 100,
          light = 17,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13259,7 +12766,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13273,7 +12779,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13287,7 +12792,6 @@ local item =
          rarity = 200000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13307,7 +12811,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13324,7 +12827,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13360,7 +12862,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13374,7 +12875,6 @@ local item =
          rarity = 500000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13387,7 +12887,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13409,7 +12908,6 @@ local item =
          param1 = 160,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed"
          }
       },
@@ -13430,7 +12928,6 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
-            "elona.food",
             "elona.unique_item"
          }
       },
@@ -13446,7 +12943,6 @@ local item =
          coefficient = 100,
          light = 13,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13461,7 +12957,6 @@ local item =
          coefficient = 100,
          light = 17,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13476,7 +12971,6 @@ local item =
          coefficient = 100,
          light = 19,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13493,7 +12987,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -13553,7 +13046,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_leg",
             "elona.equip_leg_shoes",
             "elona.unique_item"
          }
@@ -13576,7 +13068,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.food",
             "elona.food_fruit",
             "elona.unique_item"
          }
@@ -13596,7 +13087,6 @@ local item =
          is_precious = true,
          fixlv = "special",
          categories = {
-            "elona.junk",
             "elona.unique_item"
          }
       },
@@ -13624,7 +13114,6 @@ local item =
          end,
 
          categories = {
-            "elona.equip_ring",
             "elona.equip_ring_ring"
          }
       },
@@ -13647,7 +13136,6 @@ local item =
          param3 = 240,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -13670,7 +13158,6 @@ local item =
          param3 = 120,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -13691,7 +13178,6 @@ local item =
          food_rank = 7,
 
          categories = {
-            "elona.food",
             "elona.no_generate"
          }
       },
@@ -13768,7 +13254,6 @@ local item =
          is_precious = true,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -13787,7 +13272,6 @@ local item =
          is_precious = true,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -13827,7 +13311,6 @@ local item =
             { id = 20052, power = 300 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_bow",
             "elona.unique_item"
          }
@@ -13868,7 +13351,6 @@ local item =
             { id = 20057, power = 350 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_gun",
             "elona.unique_item"
          }
@@ -13910,7 +13392,6 @@ local item =
             { id = 80025, power = 100 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_scythe",
             "elona.unique_item"
          }
@@ -13955,7 +13436,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_staff",
             "elona.unique_item"
          }
@@ -13994,7 +13474,6 @@ local item =
             { id = 20056, power = 150 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_lance",
             "elona.unique_item"
          }
@@ -14036,7 +13515,6 @@ local item =
             { id = 30185, power = 600 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword",
             "elona.unique_item"
          }
@@ -14077,7 +13555,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_hammer",
             "elona.unique_item"
          }
@@ -14106,7 +13583,6 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -14134,7 +13610,6 @@ local item =
          color = { 225, 225, 255 },
 
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -14160,7 +13635,6 @@ local item =
          color = { 175, 255, 175 },
 
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -14188,7 +13662,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -14206,7 +13679,6 @@ local item =
          elona_function = 32,
          is_precious = true,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14228,7 +13700,6 @@ local item =
          end,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14250,7 +13721,6 @@ local item =
          param3 = 720,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -14299,7 +13769,6 @@ local item =
          elona_function = 35,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14315,7 +13784,6 @@ local item =
          elona_function = 36,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14337,7 +13805,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.tag_fest"
          }
@@ -14361,7 +13828,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.tag_fest"
          }
@@ -14384,7 +13850,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.tag_fest"
          }
@@ -14405,7 +13870,6 @@ local item =
          elona_function = 17,
          param1 = 175,
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument"
          }
       },
@@ -14420,7 +13884,6 @@ local item =
          rarity = 800000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -14454,7 +13917,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_axe",
             "elona.unique_item"
          }
@@ -14527,7 +13989,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -14546,7 +14007,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14579,7 +14039,6 @@ local item =
          elona_function = 37,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14599,7 +14058,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.food",
             "elona.unique_item"
          }
       },
@@ -14616,7 +14074,6 @@ local item =
          elona_function = 39,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -14634,7 +14091,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -14662,7 +14118,6 @@ local item =
             { id = 41, power = 100 }
          },
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor",
             "elona.unique_item"
          }
@@ -14685,7 +14140,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -14711,7 +14165,6 @@ local item =
             { id = 49, power = 100 }
          },
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.unique_item"
          }
@@ -14761,7 +14214,6 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -14809,7 +14261,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink"
          }
       },
       {
@@ -14831,7 +14282,6 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
-            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -14859,7 +14309,6 @@ local item =
             { id = 70061, power = 100 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown"
          }
       },
@@ -14886,7 +14335,6 @@ local item =
             { id = 80024, power = 100 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown"
          }
       },
@@ -14906,7 +14354,6 @@ local item =
          tags = { "noshop" },
          color = { 155, 205, 205 },
          categories = {
-            "elona.misc_item",
             "elona.tag_noshop"
          }
       },
@@ -14932,7 +14379,6 @@ local item =
          identify_difficulty = 500,
          fixlv = "special",
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 50,categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown",
             "elona.unique_item"
          }
@@ -14954,7 +14400,6 @@ local item =
          color = { 155, 205, 205 },
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -14995,7 +14440,6 @@ local item =
             { id = 30, power = 500 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown",
             "elona.unique_item"
          }
@@ -15030,7 +14474,6 @@ local item =
             { id = 33, power = 100 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_broadsword",
             "elona.unique_item"
          }
@@ -15056,7 +14499,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture",
             "elona.furniture_bed",
             "elona.tag_noshop"
          }
@@ -15080,7 +14522,6 @@ local item =
          param3 = 480,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -15112,7 +14553,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor",
             "elona.unique_item"
          }
@@ -15145,7 +14585,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor",
             "elona.unique_item"
          }
@@ -15171,7 +14610,6 @@ local item =
          tags = { "noshop" },
          rftags = { "ore" },
          categories = {
-            "elona.ore",
             "elona.tag_noshop",
             "elona.no_generate"
          }
@@ -15210,7 +14648,6 @@ local item =
             { id = 44, power = 450 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_thrown",
             "elona.unique_item"
          }
@@ -15247,7 +14684,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield",
             "elona.unique_item"
          }
@@ -15283,7 +14719,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_shield",
             "elona.equip_shield_shield",
             "elona.unique_weapon"
          }
@@ -15319,7 +14754,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_cloak",
             "elona.equip_back_girdle",
             "elona.unique_item"
          }
@@ -15335,7 +14769,6 @@ local item =
          coefficient = 0,
          tags = { "spshop" },
          categories = {
-            "elona.furniture",
             "elona.tag_spshop"
          }
       },
@@ -15361,7 +14794,6 @@ local item =
          tags = { "noshop" },
          rftags = { "ore" },
          categories = {
-            "elona.ore",
             "elona.tag_noshop",
             "elona.no_generate"
          }
@@ -15431,7 +14863,6 @@ local item =
          elona_function = 45,
 
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -15474,7 +14905,6 @@ local item =
          skill = 107,pierce_rate = 5,enchantments = {
             { id = 80025, power = 100 }
          },categories = {
-            "elona.equip_melee",
             "elona.equip_melee_scythe"
          }
       },
@@ -15497,7 +14927,6 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
-            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -15522,7 +14951,6 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
-            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -15543,7 +14971,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.food",
             "elona.tag_fest"
          }
       },
@@ -15578,7 +15005,6 @@ local item =
             { id = 37, power = 100 },
             { id = 80003, power = 350 }
          },categories = {
-            "elona.equip_melee",
             "elona.equip_melee_scythe",
             "elona.unique_item"
          }
@@ -15613,7 +15039,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_neck",
             "elona.equip_neck_armor",
             "elona.unique_item"
          }
@@ -15652,7 +15077,6 @@ local item =
             { id = 10011, power = 720 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword",
             "elona.unique_weapon"
          }
@@ -15678,7 +15102,6 @@ local item =
          medal_value = 72,
 
          categories = {
-            "elona.scroll",
             "elona.unique_item"
          }
       },
@@ -15705,7 +15128,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -15731,7 +15153,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -15757,7 +15178,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -15783,7 +15203,6 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
-            "elona.misc_item",
             "elona.no_generate"
          }
       },
@@ -15829,7 +15248,6 @@ local item =
          is_precious = true,
          is_showroom_only = true,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -15846,7 +15264,6 @@ local item =
          elona_function = 48,
          is_precious = true,
          categories = {
-            "elona.misc_item"
          }
       },
       {
@@ -15860,7 +15277,6 @@ local item =
          rarity = 20000,
          coefficient = 0,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -15875,7 +15291,6 @@ local item =
          rarity = 20000,
          coefficient = 0,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -15909,7 +15324,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -15923,7 +15337,6 @@ local item =
          category = 60000,
          coefficient = 100,
          categories = {
-            "elona.furniture",
             "elona.no_generate"
          }
       },
@@ -15958,7 +15371,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.no_generate"
          }
       },
@@ -15992,7 +15404,6 @@ local item =
          },
 
          categories = {
-            "elona.food",
             "elona.tag_fest"
          }
       },
@@ -16029,7 +15440,6 @@ local item =
          },
 
          categories = {
-            "elona.equip_head",
             "elona.equip_head_helm",
             "elona.unique_item"
          }
@@ -16065,7 +15475,6 @@ local item =
             { id = 35, power = 100 }
          },
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_gun",
             "elona.tag_sf",
             "elona.unique_item"
@@ -16093,7 +15502,6 @@ local item =
          skill = 100,
          pierce_rate = 100,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_long_sword"
          }
       },
@@ -16116,7 +15524,6 @@ local item =
          fixlv = "special",
          medal_value = 94,
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -16148,7 +15555,6 @@ local item =
          },
 
          categories = {
-            "elona.furniture",
             "elona.furniture_instrument",
             "elona.unique_item"
          }
@@ -16167,7 +15573,6 @@ local item =
          light = 16,
          tags = { "fest" },
          categories = {
-            "elona.furniture",
             "elona.tag_fest",
             "elona.no_generate"
          }
@@ -16186,7 +15591,6 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16200,7 +15604,6 @@ local item =
          rarity = 25000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16214,7 +15617,6 @@ local item =
          rarity = 10000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16228,7 +15630,6 @@ local item =
          rarity = 10000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16248,7 +15649,6 @@ local item =
          param1 = 0,
 
          categories = {
-            "elona.furniture",
             "elona.furniture_bed",
             "elona.no_generate"
          }
@@ -16266,7 +15666,6 @@ local item =
          coefficient = 100,
          tags = { "fest" },
          categories = {
-            "elona.furniture",
             "elona.tag_fest",
             "elona.no_generate"
          }
@@ -16284,7 +15683,6 @@ local item =
          coefficient = 100,
          tags = { "fest" },
          categories = {
-            "elona.furniture",
             "elona.tag_fest",
             "elona.no_generate"
          }
@@ -16309,7 +15707,6 @@ local item =
          tags = { "fest" },
 
          categories = {
-            "elona.drink",
             "elona.tag_fest",
             "elona.no_generate"
          }
@@ -16332,7 +15729,6 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
-            "elona.drink",
             "elona.unique_item"
          }
       },
@@ -16351,7 +15747,6 @@ local item =
          param1 = 2000,
          param3 = 32,
          categories = {
-            "elona.food",
             "elona.food_fruit"
          }
       },
@@ -16366,7 +15761,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16380,7 +15774,6 @@ local item =
          rarity = 150000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16397,7 +15790,6 @@ local item =
          is_precious = true,
          food_rank = 8,
          categories = {
-            "elona.food"
          }
       },
       {
@@ -16419,7 +15811,6 @@ local item =
          param3 = 240,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -16442,7 +15833,6 @@ local item =
          param3 = 240,
          fixlv = "special",
          categories = {
-            "elona.misc_item",
             "elona.unique_item"
          }
       },
@@ -16463,7 +15853,6 @@ local item =
          elona_function = 44,
 
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16477,7 +15866,6 @@ local item =
          rarity = 10000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16491,7 +15879,6 @@ local item =
          rarity = 10000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16514,7 +15901,6 @@ local item =
          skill = 101,
          pierce_rate = 40,
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_short_sword"
          }
       },
@@ -16528,7 +15914,6 @@ local item =
          rarity = 250000,
          coefficient = 100,
          categories = {
-            "elona.furniture"
          }
       },
       {
@@ -16577,7 +15962,6 @@ local item =
          rftags = { "flavor" },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -16596,7 +15980,6 @@ local item =
          rftags = { "flavor" },
 
          categories = {
-            "elona.food"
          }
       },
       {
@@ -16614,7 +15997,6 @@ local item =
          food_rank = 5,
          param3 = 720,
          categories = {
-            "elona.food"
          }
       },
       {
@@ -16644,7 +16026,6 @@ local item =
          pierce_rate = 15,
 
          categories = {
-            "elona.equip_ranged",
             "elona.equip_ranged_bow"
          }
       },
@@ -16665,7 +16046,6 @@ local item =
          elona_function = 15,
 
          categories = {
-            "elona.misc_item",
             "elona.misc_item_crafting"
          }
       },
@@ -16686,7 +16066,6 @@ local item =
          elona_function = 15,
 
          categories = {
-            "elona.misc_item",
             "elona.misc_item_crafting"
          }
       },
@@ -16720,7 +16099,6 @@ local item =
             { id = 61, power = 200 }
          },
          categories = {
-            "elona.equip_melee",
             "elona.equip_melee_broadsword",
             "elona.unique_item"
          }
@@ -16739,7 +16117,6 @@ local item =
          food_rank = 8,
 
          categories = {
-            "elona.food",
             "elona.no_generate"
          }
       }

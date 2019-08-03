@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Item = require("api.Item")
 local InstancedMap = require("api.InstancedMap")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
@@ -28,22 +29,27 @@ local function item_gen_weight(item, objlv)
    return math.floor((item.rarity or 0) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
 end
 
-local bug_id = "elona.bug"
-
-function Itemgen.random_item_id(objlv, fltselect, categories)
+function Itemgen.random_item_id(objlv, categories)
    objlv = objlv or 0
-   fltselect = fltselect or 0
+   categories = categories or {}
+   if categories[1] then
+      categories = table.set(categories)
+   end
+
    local filter = function(item)
       if (item.level or 0) > objlv then
          return false
       end
-      if (item.fltselect or 0) ~= fltselect then
-         return false
-      end
 
-      if categories then
-         for cat, _ in pairs(categories) do
-            if not item:has_type(cat) then
+      if next(categories) then
+         local found = {}
+         for _, v in ipairs(item.categories or {}) do
+            if categories[v] then
+               found[v] = true
+            end
+         end
+         for k, _ in pairs(categories) do
+            if not found[k] then
                return false
             end
          end
@@ -52,7 +58,7 @@ function Itemgen.random_item_id(objlv, fltselect, categories)
       -- fltselect compatibility - item types with no_generate set to
       -- true means they will not be randomly generated unless
       -- explicitly asked for.
-      for _, cat in ipairs(item.categories) do
+      for _, cat in ipairs(item.categories or {}) do
          if data["base.item_type"]:ensure(cat).no_generate then
             if not categories[cat] then
                return false
@@ -71,7 +77,7 @@ function Itemgen.random_item_id(objlv, fltselect, categories)
       sampler:add(item._id, weight)
    end
 
-   return sampler:sample() or bug_id
+   return sampler:sample()
 end
 
 local function set_fltselect(categories, _type)
@@ -107,30 +113,31 @@ local function do_generate_item_id(params)
       end
    end
 
-   local id = Itemgen.random_item_id(params.objlv, fltselect, params.categories)
+   local id = Itemgen.random_item_id(params.objlv, params.categories)
 
-   if id == bug_id then
+   if id == nil then
       if get_fltselect(params.categories) == "elona.unique_item" then
          params.quality = 4
       end
       params.objlv = params.objlv + 10
       set_fltselect(params.categories, nil)
-      id = Itemgen.random_item_id(params.objlv, fltselect, params.categories)
+      id = Itemgen.random_item_id(params.objlv, params.categories)
    end
 
-   if id == bug_id and params.categories["elona.furniture_altar"] then
+   if id == nil and params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
    end
 
    return id
 end
 
-function Itemgen.generate_item(x, y, params, where)
+function Itemgen.create(x, y, params, where)
    params = params or {}
 
    params.quality = params.quality or 0
    params.level = params.level or 0
    params.categories = table.set(params.categories or {})
+   params.create_params = params.create_params or {}
 
    if params.ownerless then
       where = nil
@@ -153,7 +160,7 @@ function Itemgen.generate_item(x, y, params, where)
    --
 
    if where and where:is_positional() then
-      x, y = Map.find_free_position(x, y)
+      x, y = Map.find_free_position(x, y, {}, where)
       if not x then
          return nil
       end
@@ -164,6 +171,11 @@ function Itemgen.generate_item(x, y, params, where)
       -- EVENT: generate_item_id
       id = do_generate_item_id(params)
    end
+
+   local bug_id = "elona.bug"
+   id = id or bug_id
+
+   return Item.create(id, x, y, params.create_params, where)
 end
 
 return Itemgen
