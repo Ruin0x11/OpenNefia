@@ -29,7 +29,7 @@ local function item_gen_weight(item, objlv)
    return math.floor((item.rarity or 0) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
 end
 
-function Itemgen.random_item_id(objlv, categories)
+function Itemgen.random_item_id_raw(objlv, categories)
    objlv = objlv or 0
    categories = categories or {}
    if categories[1] then
@@ -80,6 +80,12 @@ function Itemgen.random_item_id(objlv, categories)
    return sampler:sample()
 end
 
+-- fltselect is always active in vanilla, so setting it to 0 will
+-- still exclude items with a different fltselect, unlike flttypemajor
+-- and flttypeminor, which are ignored if 0. To emulate this behavior,
+-- the `categories` table has to be modified such that at most one
+-- fltselect category is included at a time.
+
 local function set_fltselect(categories, _type)
    local remove = {}
    for cat, _ in ipairs(categories) do
@@ -113,7 +119,7 @@ local function do_generate_item_id(params)
       end
    end
 
-   local id = Itemgen.random_item_id(params.objlv, params.categories)
+   local id = Itemgen.random_item_id_raw(params.objlv, params.categories)
 
    if id == nil then
       if get_fltselect(params.categories) == "elona.unique_item" then
@@ -121,7 +127,7 @@ local function do_generate_item_id(params)
       end
       params.objlv = params.objlv + 10
       set_fltselect(params.categories, nil)
-      id = Itemgen.random_item_id(params.objlv, params.categories)
+      id = Itemgen.random_item_id_raw(params.objlv, params.categories)
    end
 
    if id == nil and params.categories["elona.furniture_altar"] then

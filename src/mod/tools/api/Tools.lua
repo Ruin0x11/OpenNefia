@@ -236,12 +236,6 @@ function Tools.bench(cb, ...)
    return sw:bench(cb, ...)
 end
 
-function Tools.wrap_event(event_id)
-   return function(params, result)
-      return Event.trigger(event_id, params, result)
-   end
-end
-
 function Tools.categories_with_without()
    -- determine subcategories that have at least one item with no
    -- subcategory and at least one item with the subcategory the same

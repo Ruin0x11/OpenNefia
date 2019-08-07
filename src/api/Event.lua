@@ -131,4 +131,12 @@ function Event.define_hook(id, desc, default, field, cb)
    return func
 end
 
+-- Generates a function that returns the result of triggering
+-- `event_id` with two arguments, params and result.
+function Event.generate_function(event_id)
+   return function(params, result)
+      return Event.trigger(event_id, params, result)
+   end
+end
+
 return Event
