@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
 local IUiLayer = require("api.gui.IUiLayer")
-local UiWindow = require("api.gui.UiWindow")
+local UiTheme = require("api.gui.UiTheme")
 local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
@@ -57,7 +57,7 @@ local UiListExt = function(skills_menu)
             icon = "STR"
          end
 
-         Draw.image_region(skills_menu.skill_icons, skills_menu.quad[icon], x - 20, y + 9, nil, nil, {255, 255, 255}, true)
+         skills_menu.t.skill_icons:draw_region(icon, x - 20, y + 9, nil, nil, {255, 255, 255}, true)
 
          local new_x
          if is_basic then
@@ -102,8 +102,6 @@ function SkillsMenu:init(show_bonus)
 
    self.show_bonus = show_bonus or true
 
-   self.win = Draw.load_image("graphic/temp/ie_sheet.png")
-
    self.item_count = 0
 
    local skills = table.of(function(i)
@@ -112,21 +110,6 @@ function SkillsMenu:init(show_bonus)
                            end,
       100)
    self.pages = UiList:new_paged(skills, 16)
-
-   -------------------- dupe
-   self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
-   local skills = {
-      "STR",
-   }
-
-   local iw = self.skill_icons:getWidth()
-   local ih = self.skill_icons:getHeight()
-
-   self.quad = {}
-   for i, s in ipairs(skills) do
-      self.quad[s] = love.graphics.newQuad(i * 48, 0, 48, 48, iw, ih)
-   end
-   --------------------
 
    table.merge(self.pages, UiListExt(self))
 
@@ -137,12 +120,13 @@ end
 function SkillsMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 10
+   self.t = UiTheme.load(self)
 
    self.pages:relayout(self.x + 58, self.y + 64)
 end
 
 function SkillsMenu:draw()
-   Draw.image(self.win, self.x, self.y)
+   self.t.ie_sheet:draw(self.x, self.y)
    if self.show_bonus then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local tips = "You can spend " .. 10 .. " bonus points."

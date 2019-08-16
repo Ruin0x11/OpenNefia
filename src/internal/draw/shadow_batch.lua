@@ -1,7 +1,7 @@
 local IBatch = require("internal.draw.IBatch")
-local atlas = require("internal.draw.atlas")
 local Draw = require("api.Draw")
 local draw = require("internal.draw")
+local UiTheme = require("api.gui.UiTheme")
 
 local shadow_batch = class.class("shadow_batch", IBatch)
 
@@ -47,8 +47,9 @@ local shadowmap = {
 };
 
 function shadow_batch:relayout()
-   self.image = draw.load_image("mod/elona/graphic/asset/shadow.png")
-   self.edge_image = draw.load_image("mod/elona/graphic/asset/shadow_edges.png")
+   self.t = UiTheme.load(self)
+   self.image = self.t.shadow.image
+   self.edge_image = self.t.shadow_edges.image
    self.batch = love.graphics.newSpriteBatch(self.image)
    self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
 end

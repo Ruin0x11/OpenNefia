@@ -3,6 +3,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
+local UiTheme = require("api.gui.UiTheme")
 local IUiLayer = require("api.gui.IUiLayer")
 local TopicWindow = require("api.gui.TopicWindow")
 local InputHandler = require("api.gui.InputHandler")
@@ -12,19 +13,6 @@ local TextHandler = require("api.gui.TextHandler")
 local TextPrompt = class.class("TextPrompt", IUiLayer)
 
 TextPrompt:delegate("input", IInput)
-
-local function make_ime_status()
-   local image = Draw.load_image("graphic/temp/ime_status.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   quad["english"] = love.graphics.newQuad(0, 0, 24, 24, iw, ih)
-   quad["japanese"] = love.graphics.newQuad(24, 0, 24, 24, iw, ih)
-   quad["none"] = love.graphics.newQuad(48, 0, 24, 24, iw, ih)
-
-   return { image = image, quad = quad }
-end
 
 function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    self.length = length or 16
@@ -45,10 +33,6 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    self.caret_alpha = 2
 
    self.win = TopicWindow:new(0, 2)
-
-   self.input_caret = Draw.load_image("graphic/temp/input_caret.bmp")
-   self.ime_status = make_ime_status()
-   self.label_input = Draw.load_image("graphic/temp/label_input.bmp")
 
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys {
@@ -85,6 +69,7 @@ function TextPrompt:relayout(x, y)
    end
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
    self.win:relayout(self.x, self.y, self.width, self.height)
 end
 
@@ -115,9 +100,9 @@ function TextPrompt:update_display_text()
 end
 
 function TextPrompt:ime_status_quad()
-   local stat = "english"
+   local stat = "ime_status_english"
    if self.cut_off then
-      stat = "none"
+      stat = "ime_status_none"
    end
    return stat
 end
@@ -126,9 +111,9 @@ function TextPrompt:draw()
    Draw.filled_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
 
    self.win:draw()
-   Draw.image(self.label_input, self.x + self.width / 2 - 60, self.y - 32)
+   self.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)
    local ime_status = self:ime_status_quad()
-   Draw.image_region(self.ime_status.image, self.ime_status.quad[ime_status], self.x + 8, self.y + 4)
+   self.t[ime_status]:draw(self.x + 8, self.y + 4)
 
    Draw.text(self.display_text,
              self.x + 36,
@@ -136,7 +121,7 @@ function TextPrompt:draw()
              {255, 255, 255},
              16) -- 16 - en * 2
 
-   Draw.image(self.input_caret,
+   self.t.input_caret:draw(
               self.x + Draw.text_width(self.display_text) + 34,
               self.y + 5,
               nil,

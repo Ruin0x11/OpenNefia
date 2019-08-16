@@ -2,24 +2,12 @@ local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiRaceInfo = class.class("UiRaceInfo", {IUiElement, ISettable})
 
 function UiRaceInfo:init(race)
    self.race = race
-
-   self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
-   local skills = {
-      "base.strength",
-   }
-
-   local iw = self.skill_icons:getWidth()
-   local ih = self.skill_icons:getHeight()
-
-   self.quad = {}
-   for i, s in ipairs(skills) do
-      self.quad[s] = love.graphics.newQuad(i * 48, 0, 48, 48, iw, ih)
-   end
 
    self:set_data()
 end
@@ -31,6 +19,7 @@ end
 function UiRaceInfo:relayout(x, y)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 end
 
 function UiRaceInfo:update()
@@ -81,16 +70,14 @@ function UiRaceInfo:draw()
 
          local text_color = skill_color(skill_level)
 
-         Draw.image_region(
-            self.skill_icons,
-            self.quad[skill_name],
+         self.t.skill_icons:draw_region(
+            1,
             j * 150 + self.x + 200 + 13,
             self.y + ty + 7,
             nil,
             nil,
             {255, 255, 255},
-            true
-         )
+            true)
          Draw.text(skill_text,
                    j * 150 + self.x + 200 + 32,
                    self.y + ty,

@@ -125,6 +125,10 @@ function data:add_type(schema, params)
    global_edits[_type] = EventTree:new()
 end
 
+-- TODO: metatable indexing could create a system for indexing
+-- sandboxed properties partitioned by each mod. For example the
+-- underlying table would contain { base = {...}, mod = {...} } and
+-- indexing obj.field might actually index obj.base.field.
 function data:extend_type(type_id, delta)
 end
 

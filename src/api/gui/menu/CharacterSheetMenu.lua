@@ -8,7 +8,7 @@ local InputHandler = require("api.gui.InputHandler")
 local TopicWindow = require("api.gui.TopicWindow")
 local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
-local UiWindow = require("api.gui.UiWindow")
+local UiTheme = require("api.gui.UiTheme")
 
 local CharacterSheetMenu = class.class("CharacterSheetMenu", IUiLayer)
 
@@ -18,31 +18,14 @@ function CharacterSheetMenu:init(behavior)
    self.width = 700
    self.height = 400
 
-   self.win = Draw.load_image("graphic/temp/ie_sheet.png")
-
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
-   self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
+   -- self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
+   -- self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.topic_win = TopicWindow:new(1, 10)
 
    self.buff_list = UiBuffList:new()
 
    self.texts = {}
-
-   -------------------- dupe
-   self.skill_icons = Draw.load_image("graphic/temp/skill_icons.bmp")
-   local skills = {
-      "STR",
-   }
-
-   local iw = self.skill_icons:getWidth()
-   local ih = self.skill_icons:getHeight()
-
-   self.quad = {}
-   for i, s in ipairs(skills) do
-      self.quad[s] = love.graphics.newQuad(i * 48, 0, 48, 48, iw, ih)
-   end
-   --------------------
 
    self.input = InputHandler:new()
    self.input:forward_to(self.buff_list)
@@ -100,8 +83,7 @@ function CharacterSheetMenu:text_name()
 end
 
 function CharacterSheetMenu:text_attr()
-   self.texts["attr"] =
-      UiTextGroup:new(table.of("STR", 7), 12)
+   self.texts["attr"] = UiTextGroup:new(table.of("STR", 7), 12)
    self.texts["attr"]:relayout(self.x + 54, self.y + 151)
 end
 
@@ -156,6 +138,7 @@ end
 function CharacterSheetMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 10
+   self.t = UiTheme.load(self)
 
    self.topic_win:relayout(self.x + 557, self.y + 23, 87, 120)
    self.buff_list:relayout(self.x + 430, self.y + 151)
@@ -178,8 +161,8 @@ function CharacterSheetMenu:draw_text()
    attr:draw()
    Draw.set_color(255, 255, 255)
    for i, t in ipairs(attr.texts) do
-      Draw.image_region(self.skill_icons,
-                        self.quad[t],
+      self.t.skill_icons:draw_region(
+                        t,
                         attr.x - 17,
                         attr.y + 6 + (i-1) * attr.item_height,
                         nil, nil,
@@ -283,7 +266,7 @@ function CharacterSheetMenu:draw_values()
 end
 
 function CharacterSheetMenu:draw()
-   Draw.image(self.win, self.x, self.y, nil, nil, {255, 255, 255})
+   self.t.ie_sheet:draw(self.x, self.y, nil, nil, {255, 255, 255})
 
    Ui.draw_topic("ui.chara_sheet.attributes",    self.x + 28,  self.y + 122)
    Ui.draw_topic("ui.chara_sheet.combat_rolls",  self.x + 400, self.y + 253)
@@ -291,9 +274,9 @@ function CharacterSheetMenu:draw()
    Ui.draw_topic("ui.chara_sheet.blessing",      self.x + 400, self.y + 122)
    Ui.draw_topic("ui.chara_sheet.extra_info",    self.x + 220, self.y + 273)
 
-   Draw.image(self.portrait, self.x + 560, self.y + 27, 80, 112, nil)
+   -- Draw.image(self.portrait, self.x + 560, self.y + 27, 80, 112, nil)
    self.topic_win:draw()
-   Draw.image(self.chip, self.x + 596 + 22, self.y + 86 + 24, nil, nil, nil, true)
+   -- Draw.image(self.chip, self.x + 596 + 22, self.y + 86 + 24, nil, nil, nil, true)
 
    self:draw_text()
    self:draw_values()

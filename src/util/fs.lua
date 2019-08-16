@@ -18,6 +18,7 @@ end
 
 if not love or love.getVersion() == "lovemock" then
    local lfs = require("lfs")
+   assert(lfs, "luafilesystem not installed")
    fs.get_directory_items = function(dir)
       local items = {}
       for path in lfs.dir(dir) do
@@ -45,7 +46,7 @@ if not love or love.getVersion() == "lovemock" then
       }
    end
    fs.get_save_directory = function()
-      return "/tmp/save"
+      return fs.join(fs.get_temporary_directory(), "save")
    end
    fs.create_directory = function(name)
       if love then
@@ -79,6 +80,13 @@ if not love or love.getVersion() == "lovemock" then
       f:close()
       return true, nil
    end
+   fs.remove = function(name)
+      if love then
+         name = fs.join(fs.get_save_directory(), name)
+      end
+
+      return os.remove(name)
+   end
 else
    fs.get_directory_items = love.filesystem.getDirectoryItems
    fs.get_info = love.filesystem.getInfo
@@ -86,6 +94,7 @@ else
    fs.create_directory = love.filesystem.createDirectory
    fs.write = love.filesystem.write
    fs.read = love.filesystem.read
+   fs.remove = love.filesystem.remove
 end
 
 function fs.iter_directory_items(dir)
@@ -143,6 +152,10 @@ function fs.copy(from, to)
    fs.create_directory(fs.parent(to))
 
    return fs.write(to, content)
+end
+
+function fs.get_temporary_directory()
+   return fs.parent(os.tmpname())
 end
 
 

@@ -12,8 +12,8 @@ function ChangeAppearancePreview:init()
    self.show_portrait = false
    self.frame = 0
    self.direction = 0
-   self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
-   self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
+   -- self.chip = Draw.load_image("graphic/temp/chara_female.bmp")
+   -- self.portrait = Draw.load_image("graphic/temp/portrait_female.bmp")
 end
 
 function ChangeAppearancePreview:relayout(x, y)
@@ -37,12 +37,12 @@ end
 function ChangeAppearancePreview:draw()
    self.topic_window:draw()
    if self.show_portrait then
-      Draw.image(self.portrait, self.x + 4, self.y + 4, 80, 112)
+      -- Draw.image(self.portrait, self.x + 4, self.y + 4, 80, 112)
    else
       local has_own_sprite = false
       if has_own_sprite then
       else
-         Draw.image(self.chip, self.x + 46, self.y + 59, nil, nil, nil, true)
+         -- Draw.image(self.chip, self.x + 46, self.y + 59, nil, nil, nil, true)
       end
    end
 end

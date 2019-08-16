@@ -33,10 +33,8 @@ data:add {
          },
          equipped_icon = "asset/equipped_icon.png",
          label_input = "asset/label_input.png",
-         arrows = {
-            image = "asset/arrows.png",
-            count_x = 2
-         },
+         arrow_left = "asset/arrow_left.png",
+         arrow_right = "asset/arrow_right.png",
          enchantment_icons = {
             image = "asset/enchantment_icons.png",
             count_x = 9

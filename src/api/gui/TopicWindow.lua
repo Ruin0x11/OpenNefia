@@ -3,39 +3,6 @@ local IUiElement = require("api.gui.IUiElement")
 
 local TopicWindow = class.class("TopicWindow", IUiElement)
 
-local function gen_data(width, height, frame_style, fill_style)
-   local img = Draw.load_image("graphic/temp/window.bmp")
-   local iw = img:getWidth()
-   local ih = img:getHeight()
-   local quad = {}
-
-   quad["fill"] = love.graphics.newQuad(24, 24, 228, 144, iw, ih)
-
-
-   local frame_img = Draw.load_image(string.format("graphic/temp/window%d.bmp", frame_style))
-   local fw = frame_img:getWidth()
-   local fh = frame_img:getHeight()
-   local frame_quad = {}
-
-   frame_quad["top_mid"] = love.graphics.newQuad(16, 0, 16, 16, fw, fh)
-   frame_quad["bottom_mid"] = love.graphics.newQuad(16, 32, 16, 16, fw, fh)
-   frame_quad["top_mid2"] = love.graphics.newQuad(16, 0, width % 16, 16, fw, fh)
-   frame_quad["bottom_mid2"] = love.graphics.newQuad(16, 32, width % 16, 16, fw, fh)
-   frame_quad["left_mid"] = love.graphics.newQuad(0, 16, 16, 16, fw, fh)
-   frame_quad["right_mid"] = love.graphics.newQuad(32, 16, 16, 16, fw, fh)
-   frame_quad["left_mid2"] = love.graphics.newQuad(0, 16, 16, height % 16, fw, fh)
-   frame_quad["right_mid2"] = love.graphics.newQuad(32, 16, 16, height % 16, fw, fh)
-   frame_quad["top_left"] = love.graphics.newQuad(0, 0, 16, 16, fw, fh)
-   frame_quad["bottom_left"] = love.graphics.newQuad(0, 32, 16, 16, fw, fh)
-   frame_quad["top_right"] = love.graphics.newQuad(32, 0, 16, 16, fw, fh)
-   frame_quad["bottom_right"] = love.graphics.newQuad(32, 32, 16, 16, fw, fh)
-
-   return {
-      window = { quad = quad, batch = img },
-      frame = { quad = frame_quad, batch = love.graphics.newSpriteBatch(frame_img, fw * fh) },
-   }
-end
-
 function TopicWindow:init(frame_style, fill_style)
    self.frame_style = frame_style
    self.fill_style = fill_style
@@ -50,7 +17,7 @@ function TopicWindow:draw()
    local color = {255, 255, 255}
 
    if fill_style == 6 then
-      Draw.image(self.data.window.batch, x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
+      Draw.image(self.batch, x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
    elseif fill_style < 5 then
       local rect = true
       if fill_style == 0 then
@@ -65,17 +32,17 @@ function TopicWindow:draw()
          color = {255-195, 255-205, 255-195}
       end
 
-      Draw.image_region(self.data.window.batch, self.data.window.quad["fill"], x + 4, y + 4, width - 6, height - 8, color)
+      Draw.image_region(self.batch, "fill", x + 4, y + 4, width - 6, height - 8, color)
       -- if rect then
       --    Draw.filled_rect(x + 4, y + 4, width - 4, height - 4, )
       -- end
    end
 
    Draw.set_color(255, 255, 255)
-   Draw.image(self.data.frame.batch)
+   Draw.image(self.batch)
 
    if fill_style == 5 then
-      Draw.image(self.data.window.batch, x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
+      Draw.image(self.batch, x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
       -- Draw.filled_rect(x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
    end
 end
@@ -84,50 +51,39 @@ function TopicWindow:relayout(x, y, width, height)
    width = math.max(width, 32)
    height = math.max(height, 24)
 
-   local regen = self.data == nil
-      or width % 16 ~= self.width % 16
-      or height % 16 ~= self.height % 16
-
    self.x = x
    self.y = y
    self.width = width
    self.height = height
 
-   if regen then
-      self.data = gen_data(self.width, self.height, self.frame_style, self.fill_style)
-   end
-
-   local fill_style = self.fill_style
-
    Draw.set_color(255, 255, 255)
 
-   local frame = self.data.frame
-   frame.batch:clear()
+   local parts = {}
    for i=0, width / 16 - 2 do
-      frame.batch:add(frame.quad["top_mid"], i * 16 + x + 16, y)
-      frame.batch:add(frame.quad["bottom_mid"], i * 16 + x + 16, y + height - 16)
+      parts[#parts+1] = { "top_mid", i * 16 + x + 16, y }
+      parts[#parts+1] = { "bottom_mid", i * 16 + x + 16, y + height - 16 }
    end
 
    local x_inner = x + width / 16 * 16 - 16
    local y_inner = y + height / 16 * 16 - 16
 
-   frame.batch:add(frame.quad["top_mid2"], x_inner, y)
-   frame.batch:add(frame.quad["bottom_mid2"], x_inner, y + height - 16)
+   parts[#parts+1] = { "top_mid2", x_inner, y }
+   parts[#parts+1] = { "bottom_mid2", x_inner, y + height - 16 }
 
    for i=0, height / 16 - 2 do
-      frame.batch:add(frame.quad["left_mid"], x, i * 16 + y + 16)
-      frame.batch:add(frame.quad["right_mid"], x + width - 16, i * 16 + y + 16)
+      parts[#parts+1] = { "left_mid", x, i * 16 + y + 16 }
+      parts[#parts+1] = { "right_mid", x + width - 16, i * 16 + y + 16 }
    end
 
-   frame.batch:add(frame.quad["left_mid2"], x, y_inner)
-   frame.batch:add(frame.quad["right_mid2"], x + width - 16, y_inner)
+   parts[#parts+1] = { "left_mid2", x, y_inner }
+   parts[#parts+1] = { "right_mid2", x + width - 16, y_inner }
 
-   frame.batch:add(frame.quad["top_left"], x, y)
-   frame.batch:add(frame.quad["bottom_left"], x, y + height - 16)
-   frame.batch:add(frame.quad["top_right"], x + width - 16, y)
-   frame.batch:add(frame.quad["bottom_right"], x + width - 16, y + height - 16)
+   parts[#parts+1] = { "top_left", x, y }
+   parts[#parts+1] = { "bottom_left", x, y + height - 16 }
+   parts[#parts+1] = { "top_right", x + width - 16, y }
+   parts[#parts+1] = { "bottom_right", x + width - 16, y + height - 16 }
 
-   frame.batch:flush()
+   self.batch = self.t["window_" .. self.fill_style]:make_batch(parts)
 end
 
 function TopicWindow:update()

@@ -88,8 +88,14 @@ function UiTheme.clear()
 end
 
 function UiTheme.add_theme(id)
-   active_themes[#active_themes+1] = data["base.theme"]:ensure(id)
+   local theme = data["base.theme"]:ensure(id)
+   active_themes[#active_themes+1] = theme
    cache = {}
+   -- TEMP: validate file existence
+   local p = theme_proxy:new("elona")
+   for k, _ in pairs(theme.assets.elona) do
+      assert(p[k])
+   end
 end
 
 function UiTheme.theme_id()

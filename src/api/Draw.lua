@@ -14,9 +14,6 @@ Draw.with_canvas = draw.with_canvas
 Draw.set_font = draw.set_font
 Draw.run = draw.run
 
--- TODO remove
-Draw.load_image = draw.load_image
-
 Draw.get_width = love.graphics.getWidth
 Draw.get_height = love.graphics.getHeight
 Draw.create_canvas = love.graphics.newCanvas

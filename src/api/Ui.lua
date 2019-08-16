@@ -1,4 +1,5 @@
 local UiTheme = require("api.gui.UiTheme")
+local Rand = require("api.Rand")
 local Draw = require("api.Draw")
 
 -- Commonly used functions for UI rendering.
@@ -42,7 +43,9 @@ function Ui.draw_note(text, x, y, width, height, x_offset)
 end
 
 function Ui.random_cm_bg()
-   return Draw.load_image(string.format("graphic/g%d.bmp", math.random(4)))
+   t = t or UiTheme.load()
+   local bg = Rand.rnd(4)
+   return t[string.format("graphic/g%d.bmp", bg)]
 end
 
 function Ui.unpack_font_desc(font)

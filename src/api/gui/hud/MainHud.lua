@@ -14,32 +14,6 @@ local UiTheme = require("api.gui.UiTheme")
 
 local MainHud = class.class("MainHud", IHud)
 
-local function make_bar(width)
-   local image = Draw.load_image("graphic/temp/hud_bar.bmp")
-   local quad = {}
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   quad[1] = love.graphics.newQuad(0, 0, 192, 16, iw, ih)
-
-   quad[2] = love.graphics.newQuad(0, 0, width % 192, 16, iw, ih)
-
-   return { image = image, quad = quad }
-end
-
-local function make_message_window(width)
-   local image = Draw.load_image("graphic/temp/message_window.bmp")
-   local quad = {}
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   quad[1] = love.graphics.newQuad(0, 0, 192, 72, iw, ih)
-
-   quad[2] = love.graphics.newQuad(0, 0, width % 192, 72, iw, ih)
-
-   return { image = image, quad = quad }
-end
-
 function MainHud:init()
    self.input = InputHandler:new()
 

@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local IUiList = require("api.gui.IUiList")
 local UiList = require("api.gui.UiList")
+local UiTheme = require("api.gui.UiTheme")
 local ListModel = require("api.gui.ListModel")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
@@ -27,23 +28,9 @@ ChangeAppearanceList:delegate("model", {
 
 ChangeAppearanceList:delegate("input", IInput)
 
-local function make_arrows()
-   local image = Draw.load_image("graphic/temp/arrows.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   quad["arrow_left"] = love.graphics.newQuad(0, 0, 24, 24, iw, ih)
-   quad["arrow_right"] = love.graphics.newQuad(24, 0, 24, 24, iw, ih)
-
-   return { image = image, quad = quad }
-end
-
 function ChangeAppearanceList:init(items)
    self.model = ListModel:new({})
-   self.arrows = make_arrows()
    self.item_height = 21
-   self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
    self.chosen = false
 
    self.input = InputHandler:new()
@@ -130,6 +117,7 @@ end
 function ChangeAppearanceList:relayout(x, y)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 end
 
 function ChangeAppearanceList:get_item_color(item)
@@ -147,8 +135,8 @@ function ChangeAppearanceList:draw_item(item, i, x, y)
    UiList.draw_item_text(self, text, item, i, x, y - 1)
 
    if item.type ~= "confirm" then
-      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_left"], x - 30, y - 5, nil, nil, {255, 255, 255})
-      Draw.image_region(self.arrows.image, self.arrows.quad["arrow_right"], x + 115, y - 5, nil, nil, {255, 255, 255})
+      self.t.arrow_left:draw(x - 30, y - 5, nil, nil, {255, 255, 255})
+      self.t.arrow_right:draw(x + 115, y - 5, nil, nil, {255, 255, 255})
    end
 end
 

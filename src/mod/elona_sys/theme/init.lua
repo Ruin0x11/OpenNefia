@@ -1,4 +1,4 @@
-local function window_regions()
+local function gen_window_regions()
    local quad = {}
 
    quad["top_left"] = { 0, 0, 64, 48 }
@@ -71,15 +71,43 @@ data:add {
          deco_inv_b = "asset/deco_inv_b.png",
          deco_inv_c = "asset/deco_inv_c.png",
          deco_inv_d = "asset/deco_inv_d.png",
+         deco_mirror_a = "asset/deco_mirror_a.png",
+         deco_feat_a = "asset/deco_feat_a.png",
+         deco_feat_b = "asset/deco_feat_b.png",
+         deco_feat_c = "asset/deco_feat_c.png",
+         deco_feat_d = "asset/deco_feat_d.png",
          inventory_icons = {
             image = "asset/inventory_icons.png",
             count_x = 22
          },
+         trait_icons = {
+            image = "asset/trait_icons.png",
+            count_x = 6
+         },
          equipped_icon = "asset/equipped_icon.png",
          label_input = "asset/label_input.png",
+         input_caret = "asset/input_caret.png",
+         buff_icon = {
+            image = "asset/buff_icon.png",
+            count_x = 19
+         },
+         buff_icon_none = "asset/buff_icon_none.png",
          arrow_left = "asset/arrow_left.png",
          arrow_right = "asset/arrow_right.png",
          direction_arrow = "asset/direction_arrow.png",
+         caption = {
+            image = "asset/caption.png",
+            regions = function(width, height)
+               local quad = {}
+               quad[1] =  { 0, 0, 128, 3 }
+               quad[2] =  { 0, 3, 128, 22 }
+               quad[3] =  { 0, 0, 128, 2 }
+               quad[4] =  { 0, 0, width % 128, 3 }
+               quad[5] =  { 0, 3, width % 128, 22 }
+               quad[6] =  { 0, 0, width % 128, 2 }
+               return quad
+            end
+         },
          enchantment_icons = {
             image = "asset/enchantment_icons.png",
             count_x = 9
@@ -98,34 +126,38 @@ data:add {
          radar_deco = "asset/radar_deco.png",
          status_effect_bar = "asset/status_effect_bar.png",
          ie_chat = "asset/ie_chat.png",
+         ie_sheet = "asset/ie_sheet.png",
+         ime_status_english = "asset/ime_status_english.png",
+         ime_status_japanese = "asset/ime_status_japanese.png",
+         ime_status_none = "asset/ime_status_none.png",
          window = {
             image = "asset/window.png",
-            regions = window_regions() -- ()
+            regions = gen_window_regions() -- ()
          },
-         -- window_1 = {
-         --    image = "asset/window_1.png",
-         --    regions = topic_window_regions
-         -- },
-         -- window_2 = {
-         --    image = "asset/window_2.png",
-         --    regions = topic_window_regions
-         -- },
-         -- window_3 = {
-         --    image = "asset/window_3.png",
-         --    regions = topic_window_regions
-         -- },
-         -- window_4 = {
-         --    image = "asset/window_4.png",
-         --    regions = topic_window_regions
-         -- },
-         -- window_5 = {
-         --    image = "asset/window_5.png",
-         --    regions = topic_window_regions
-         -- },
-         -- window_6 = {
-         --    image = "asset/window_6.png",
-         --    regions = topic_window_regions
-         -- },
+         window_1 = {
+            image = "asset/window_1.png",
+            regions = topic_window_regions
+         },
+         window_2 = {
+            image = "asset/window_2.png",
+            regions = topic_window_regions
+         },
+         window_3 = {
+            image = "asset/window_3.png",
+            regions = topic_window_regions
+         },
+         window_4 = {
+            image = "asset/window_4.png",
+            regions = topic_window_regions
+         },
+         window_5 = {
+            image = "asset/window_5.png",
+            regions = topic_window_regions
+         },
+         window_6 = {
+            image = "asset/window_6.png",
+            regions = topic_window_regions
+         },
          topic_window = {
             image = "asset/window.png",
             regions = {
@@ -135,6 +167,15 @@ data:add {
          title = "asset/title.png",
          void = "asset/void.png",
          bg_night = "asset/bg_night.png",
+         g1 = "asset/g1.png",
+         g2 = "asset/g2.png",
+         g3 = "asset/g3.png",
+         g4 = "asset/g4.png",
+         select_key = "asset/select_key.png",
+         list_bullet = "asset/list_bullet.png",
+
+         shadow = "asset/shadow.png",
+         shadow_edges = "asset/shadow_edges.png",
 
          attribute_font = {
             type = "font",

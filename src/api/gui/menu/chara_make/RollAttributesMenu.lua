@@ -17,12 +17,6 @@ local RollAttributesMenu = class.class("RollAttributesMenu", ICharaMakeSection)
 
 RollAttributesMenu:delegate("input", IInput)
 
----------------------------------------- dupe
-local function load_cm_bg(id)
-   return Draw.load_image(string.format("graphic/g%d.bmp", id))
-end
-----------------------------------------
-
 local UiListExt = function(roll_attributes_menu)
    local E = {}
 
@@ -87,8 +81,6 @@ function RollAttributesMenu:init()
    }
 
    self.win = UiWindow:new("roll_attributes.title")
-
-   self.bg = load_cm_bg(1)
 
    self.caption = "Roll your attributes."
    self.intro_sound = "base.skill"
@@ -201,7 +193,7 @@ end
 
 function RollAttributesMenu:draw()
    self.win:draw()
-   Draw.image(self.bg, self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
+   self.t.g1:draw(self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
 
    Draw.set_color(255, 255, 255)
    Ui.draw_topic("chara_making.roll_attributes.title", self.x + 28, self.y + 30)

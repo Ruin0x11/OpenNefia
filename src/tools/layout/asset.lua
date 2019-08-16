@@ -41,7 +41,7 @@ local crop = {
       height = 24,
    },
    {
-      name = "equipped",
+      name = "equipped_icon",
       source = "graphic/interface.bmp",
       x = 12,
       y = 348,
@@ -109,6 +109,22 @@ local crop = {
       source = "graphic/interface.bmp",
       x = 48,
       y = 336,
+      width = 24,
+      height = 24,
+   },
+   {
+      name = "ime_status_none",
+      source = "graphic/interface.bmp",
+      x = 72,
+      y = 336,
+      width = 24,
+      height = 24,
+   },
+   {
+      name = "inheritance_icon",
+      source = "graphic/interface.bmp",
+      x = 384,
+      y = 360,
       width = 24,
       height = 24,
    },
@@ -1012,6 +1028,7 @@ local crop = {
 
 local function gen_crop_list(list)
    for _, v in ipairs(list) do
+      assert(v.name)
       v.type = "crop"
       v.output = string.format("graphic/asset/%s.png", v.name)
       v.combine_multiple = true

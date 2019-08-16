@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local UiTheme = require("api.gui.UiTheme")
 local IUiLayer = require("api.gui.IUiLayer")
 local TopicWindow = require("api.gui.TopicWindow")
 local InputHandler = require("api.gui.InputHandler")
@@ -52,7 +53,6 @@ function Prompt:init(choices, width)
    end
 
    self.win = TopicWindow:new(0, 0)
-   self.radar_deco = Draw.load_image("graphic/temp/radar_deco.bmp")
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -78,6 +78,8 @@ function Prompt:relayout(x, y)
 
    self.height = #self.list.items * 20 + 42
 
+   self.t = UiTheme.load(self)
+
    self.win:relayout(self.x + 8, self.y + 8, self.width - 16, self.height - 16)
    self.list:relayout(self.x + 30, self.y + 24)
 end
@@ -97,7 +99,7 @@ end
 function Prompt:draw()
    Draw.filled_rect(self.x + 12, self.y + 12, self.width - 17, self.height - 16, {60, 60, 60, 128})
    self.win:draw()
-   Draw.image(self.radar_deco, self.x - 16, self.y)
+   self.t.radar_deco:draw(self.x - 16, self.y)
    Draw.set_font(14) -- 14 - en * 2
    self.list:draw()
 end

@@ -3,6 +3,7 @@ local IUiList = require("api.gui.IUiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local ListModel = require("api.gui.ListModel")
+local UiTheme = require("api.gui.UiTheme")
 
 local UiBuffList = class.class("UiBuffList", IUiList)
 
@@ -34,13 +35,6 @@ function UiBuffList:init()
    self.item_width = 32
    self.item_height = 32
 
-   self.buff_icon = Draw.load_image("graphic/temp/buff_icon.png")
-   self.buff_icon_none = Draw.load_image("graphic/temp/charasheet_buff.png")
-   self.quad = {}
-   for i=1,19 do
-      self.quad[i] = love.graphics.newQuad((i-1) * 32, 0, 32, 32, self.buff_icon:getWidth(), self.buff_icon:getHeight())
-   end
-
    self.input = InputHandler:new()
    self.input:bind_keys {
       up = function() self:select_previous() end,
@@ -55,17 +49,18 @@ end
 function UiBuffList:relayout(x, y)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 end
 
 function UiBuffList:draw_item(item, i, x, y)
    local has_buff = i % 2 == 0
    if has_buff then
-      Draw.image_region(self.buff_icon, self.quad[3], x, y, nil, nil, {255, 255, 255, 255})
+      self.t.buff_icon:draw_region(3, x, y, nil, nil, {255, 255, 255, 255})
       if self.selected == i then
          Draw.filled_rect(x, y, 32, 32, {200, 200, 225, 63})
       end
    else
-      Draw.image(self.buff_icon_none, x, y, nil, nil, {255, 255, 255, 120})
+      self.t.buff_icon_none:draw(x, y, nil, nil, {255, 255, 255, 120})
    end
 end
 

@@ -16,10 +16,6 @@ local draw = require("internal.draw")
 
 MainTitleMenu:delegate("input", IInput)
 
-local function load_cm_bg(id)
-   return draw.load_image(string.format("graphic/g%d.bmp", id))
-end
-
 local UiListExt = function()
    local E = {}
 
@@ -44,7 +40,6 @@ end
 
 function MainTitleMenu:init()
    self.time = 0
-   self.window_bg = load_cm_bg(4)
    self.version = Env.version()
 
    local title_str, key_help
@@ -80,7 +75,7 @@ function MainTitleMenu:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
-   self.t = UiTheme.load()
+   self.t = UiTheme.load(self)
    self.win:relayout(self.x + 80, (self.height - 308) / 2, 320, 355)
    self.list:relayout(self.win.x + 40, self.win.y + 48)
 end
@@ -106,7 +101,7 @@ function MainTitleMenu:draw()
 
    local w = self.win.width / 5 * 4
    local h = self.win.height - 80
-   Draw.image(self.window_bg,
+   self.t.g4:draw(
               self.win.x + 160 - (w / 2),
               self.win.y + self.win.height / 2 - (h / 2),
               w,

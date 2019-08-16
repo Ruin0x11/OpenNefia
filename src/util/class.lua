@@ -1,6 +1,19 @@
 local binser = require("thirdparty.binser")
 
 -- OOP wrapper. Based on 30log (https://github.com/Yonaba/30log)
+--
+-- TODOs:
+-- + Delegation is far too complex and confusing. It should not be
+--   possible to delegate non-function fields and they should be
+--   functions instead. Delegating function fields should be the same
+--   as generating a new function that preserves the current self of
+--   the object.
+-- + Hotloading is overly complicated, buggy and unreliable, because
+--   of the need for manually copying all combined interface fields.
+--   There could be a toggle for development which will use lookup
+--   tables (the same tables as contained on the interface itself) to
+--   find the correct function to call, so there is no need to copy
+--   anything.
 local class = {}
 
 local _interfaces = setmetatable({}, { __mode = "k" })
@@ -464,8 +477,9 @@ function class.hotload(old, new)
       -- creation each parent's declared methods are copied to the
       -- interface's `all_methods` table. This is to prevent having to
       -- look up the method all the way up the inheritance tree every
-      -- time an interface method is used. In this way, interfaces
-      -- with parents can choose to define methods of the same name,
+      -- time an interface method is used. (In hindsight, likely a
+      -- premature optimization...) In this way, interfaces with
+      -- parents can choose to define methods of the same name,
       -- overwriting any methods inherited from any parent. Due to
       -- this, the copied functions can't be modified directly with
       -- hotloading as it is a value copy into a different table and

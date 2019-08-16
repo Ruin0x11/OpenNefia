@@ -4,9 +4,9 @@ local Ui = require("api.Ui")
 local IUiLayer = require("api.gui.IUiLayer")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
+local UiTheme = require("api.gui.UiTheme")
 
 local FeatsMenu = class.class("FeatsMenu", IUiLayer)
 
@@ -25,41 +25,6 @@ end
 
 local function trait_icon(trait)
    return 5
-end
-
-local function make_deco()
-   local image = Draw.load_image("graphic/deco_feat.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   quad["a"] = love.graphics.newQuad(0, 0, 48, 192, iw, ih)
-   quad["b"] = love.graphics.newQuad(48, 0, 48, 144, iw, ih)
-   quad["c"] = love.graphics.newQuad(0, 192, 96, 72, iw, ih)
-   quad["d"] = love.graphics.newQuad(48, 192, 96, 48, iw, ih)
-
-   return { image = image, quad = quad }
-end
-
-local function make_inventory_icon()
-   local image = Draw.load_image("graphic/deco_feat.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = love.graphics.newQuad(48 * 11, 0, 48, 48, iw, ih)
-   return { image = image, quad = quad }
-end
-
-local function make_trait_icons()
-   local image = Draw.load_image("graphic/temp/trait_icons.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   for i=1,6 do
-      quad[i] = love.graphics.newQuad(24 * (i-1), 0, 24, 24, iw, ih)
-   end
-   return { image = image, quad = quad }
 end
 
 local UiListExt = function(feats_menu)
@@ -105,10 +70,7 @@ local UiListExt = function(feats_menu)
          name_x_offset = 45 - 64 - 20
       end
 
-      local quad = feats_menu.trait_icons.quad[trait_icon]
-      if quad then
-         Draw.image_region(feats_menu.trait_icons.image, quad, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
-      end
+      feats_menu.trait_icons:draw_region(trait_icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
 
       UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
 
@@ -125,10 +87,6 @@ function FeatsMenu:init()
    self.chara_make = false
 
    self.win = UiWindow:new("ui.feat.title", true, "key help", 55, 40)
-
-   self.inventory_icon = make_inventory_icon()
-   self.deco = make_deco()
-   self.trait_icons = make_trait_icons()
 
    self.data = table.flatten({
       {{ text = "Available feats", type = "header" }},
@@ -157,6 +115,8 @@ function FeatsMenu:relayout(x, y)
       self.y = self.y + 15
    end
 
+   self.t = UiTheme.load(self)
+
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 66)
    self.win:set_pages(self.pages)
@@ -172,11 +132,11 @@ function FeatsMenu:draw()
    Ui.draw_topic("trait.window.name", self.x + 46, self.y + 36)
    -- UNUSED trait.window.level
    Ui.draw_topic("trait.window.detail", self.x + 255, self.y + 36)
-   Draw.image_region(self.inventory_icon.image, self.inventory_icon.quad, self.x + 46, self.y - 16)
-   Draw.image_region(self.deco.image, self.deco.quad["a"], self.x + self.width - 56, self.y + self.height - 198)
-   Draw.image_region(self.deco.image, self.deco.quad["b"], self.x, self.y)
-   Draw.image_region(self.deco.image, self.deco.quad["c"], self.x + self.width - 108, self.y)
-   Draw.image_region(self.deco.image, self.deco.quad["d"], self.x, self.y + self.height - 70)
+   self.t.inventory_icons:draw_region(11, self.x + 46, self.y - 16)
+   self.t.deco_feat_a:draw(self.x + self.width - 56, self.y + self.height - 198)
+   self.t.deco_feat_b:draw(self.x, self.y)
+   self.t.deco_feat_c:draw(self.x + self.width - 108, self.y)
+   self.t.deco_feat_d:draw(self.x, self.y + self.height - 70)
 
    self.pages:draw()
 

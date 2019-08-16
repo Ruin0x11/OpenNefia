@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local draw = require("internal.draw")
 
 local asset_drawable = class.class("asset_drawable")
 
@@ -10,7 +11,7 @@ function asset_drawable:init(data_inst)
    if type(data_inst) == "userdata" and data_inst.typeOf and data_inst:typeOf("Image") then
       self.image = data_inst
    else
-      self.image = Draw.load_image(data_inst.image)
+      self.image = draw.load_image(data_inst.image)
    end
 
    self.quads = {}

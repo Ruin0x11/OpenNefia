@@ -25,8 +25,8 @@ function SelectClassMenu:init(race)
    self.pages = UiList:new_paged(classes, 16)
    self.bg = Ui.random_cm_bg()
 
-   self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
-   self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
+   -- self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
+   -- self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.race_info = UiRaceInfo:new(classes[1])
 
@@ -75,8 +75,8 @@ function SelectClassMenu:draw()
    self.pages:draw()
 
    Draw.set_color(255, 255, 255)
-   Draw.image(self.chip_male, self.x + 380, self.y - self.chip_male:getHeight() + 60)
-   Draw.image(self.chip_female, self.x + 350, self.y - self.chip_female:getHeight() + 60)
+   -- Draw.image(self.chip_male, self.x + 380, self.y - self.chip_male:getHeight() + 60)
+   -- Draw.image(self.chip_female, self.x + 350, self.y - self.chip_female:getHeight() + 60)
 
    Draw.set_color(0, 0, 0)
    Draw.text("race" .. ": " .. self.race, self.x + 460, self.y + 38)

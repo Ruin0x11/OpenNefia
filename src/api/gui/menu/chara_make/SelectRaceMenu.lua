@@ -23,8 +23,8 @@ function SelectRaceMenu:init()
    self.pages = UiList:new_paged(races, 16)
    self.bg = Ui.random_cm_bg()
 
-   self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
-   self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
+   -- self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
+   -- self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
 
    self.race_info = UiRaceInfo:new(races[1])
 
@@ -65,8 +65,8 @@ function SelectRaceMenu:draw()
 
    self.pages:draw()
 
-   Draw.image(self.chip_male, self.x + 480, self.y + 96, 96, 96, {255, 255, 255, 40})
-   Draw.image(self.chip_female, self.x + 350, self.y + 96, 96, 96, {255, 255, 255, 40})
+   -- Draw.image(self.chip_male, self.x + 480, self.y + 96, 96, 96, {255, 255, 255, 40})
+   -- Draw.image(self.chip_female, self.x + 350, self.y + 96, 96, 96, {255, 255, 255, 40})
 
    self.race_info:draw()
 end

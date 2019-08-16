@@ -3,6 +3,7 @@ local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local TopicWindow = require("api.gui.TopicWindow")
 local ChangeAppearanceList = require("api.gui.menu.ChangeAppearanceList")
@@ -13,17 +14,6 @@ local ChangeAppearanceMenu = class.class("ChangeAppearanceMenu", ICharaMakeSecti
 
 ChangeAppearanceMenu:delegate("list", "focus")
 ChangeAppearanceMenu:delegate("input", IInput)
-
-local function make_deco()
-   local image = Draw.load_image("graphic/deco_mirror.bmp")
-   local iw = image:getWidth()
-   local ih = image:getHeight()
-
-   local quad = {}
-   quad["a"] = love.graphics.newQuad(0, 0, 48, 120, iw, ih)
-
-   return { image = image, quad = quad }
-end
 
 local ChangeAppearanceListExt = function(change_appearance_menu)
    local E = {}
@@ -39,7 +29,6 @@ function ChangeAppearanceMenu:init()
    self.width = 380
    self.height = 340
 
-   self.deco = make_deco()
    self.win = UiWindow:new("appearance", true, "key_help")
 
    self.list = ChangeAppearanceList:new()
@@ -65,6 +54,8 @@ function ChangeAppearanceMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height, false)
    self.y = self.y - 12
 
+   self.t = UiTheme.load(self)
+
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.preview:relayout(self.x + 234, self.y + 71)
    self.list:relayout(self.x + 60, self.y + 66)
@@ -73,7 +64,7 @@ end
 function ChangeAppearanceMenu:draw()
    self.win:draw()
    Ui.draw_topic("category", self.x + 34, self.y + 36)
-   Draw.image_region(self.deco.image, self.deco.quad["a"], self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
+   self.t.deco_mirror_a:draw(self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
 
    self.preview:draw()
    self.list:draw()

@@ -1,9 +1,9 @@
-local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
+local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
@@ -11,18 +11,12 @@ local SelectGenderMenu = class.class("SelectGenderMenu", ICharaMakeSection)
 
 SelectGenderMenu:delegate("input", IInput)
 
-local function load_cm_bg(id)
-   return Draw.load_image(string.format("graphic/g%d.bmp", id))
-end
-
 function SelectGenderMenu:init()
    self.width = 370
    self.height = 168
 
    self.win = UiWindow:new("chara_make.select_gender.title")
    self.list = UiList:new({"ui.gender3.male", "ui.gender3.female"})
-
-   self.bg = load_cm_bg(1)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
@@ -41,6 +35,7 @@ end
 function SelectGenderMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 20
+   self.t = UiTheme.load(self)
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.list:relayout(self.x + 38, self.y + 66)
@@ -48,7 +43,7 @@ end
 
 function SelectGenderMenu:draw()
    self.win:draw()
-   Draw.image(self.bg,
+   self.t.g1:draw(
               self.x + self.width / 2,
               self.y + self.height / 2,
               self.width / 2,

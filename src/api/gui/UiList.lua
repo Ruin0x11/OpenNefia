@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
+local UiTheme = require("api.gui.UiTheme")
 local IUiList = require("api.gui.IUiList")
 local ListModel = require("api.gui.ListModel")
 local IInput = require("api.gui.IInput")
@@ -52,8 +53,6 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
    self.item_height = item_height or 19
    self.item_offset_x = item_offset_x or 0
    self.item_offset_y = item_offset_y or -2
-   self.select_key = { image = Draw.load_image("graphic/temp/select_key.bmp") }
-   self.list_bullet = { image = Draw.load_image("graphic/temp/list_bullet.bmp") }
 
    self:set_data()
 
@@ -96,6 +95,7 @@ end
 function UiList:relayout(x, y, width, height)
    self.x = x
    self.y = y
+   self.t = UiTheme.load(self)
 
    -- TODO: use width/height fields for tracking list component
    -- boundaries. currently max entry width is calculated by hand for
@@ -112,11 +112,11 @@ function UiList:relayout(x, y, width, height)
 end
 
 function UiList:draw_select_key(item, i, key_name, x, y)
-   Draw.image(self.select_key.image, x, y, nil, nil, {255, 255, 255})
+   self.t.select_key:draw(x, y, nil, nil, {255, 255, 255})
    Draw.set_font(13)
    Draw.text_shadowed(key_name,
-                      x + (self.select_key.image:getWidth() - Draw.text_width(key_name)) / 2 - 2,
-                      y + (self.select_key.image:getHeight() - Draw.text_height()) / 2,
+                      x + (self.t.select_key:get_width() - Draw.text_width(key_name)) / 2 - 2,
+                      y + (self.t.select_key:get_height() - Draw.text_height()) / 2,
                       {250, 240, 230},
                       {50, 60, 80})
 end
@@ -128,7 +128,7 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset, color)
    if selected then
       local width = math.clamp(Draw.text_width(text) + 32 + x_offset, 10, 400)
       Draw.filled_rect(x, y - 2, width, 19, {127, 191, 255, 63})
-      Draw.image(self.list_bullet.image, x + width - 20, y + 2, nil, nil, {255, 255, 255})
+      self.t.list_bullet:draw(x + width - 20, y + 2, nil, nil, {255, 255, 255})
    end
    Draw.text(text, x + 4 + x_offset, y + 1, color or {0, 0, 0})
 end
