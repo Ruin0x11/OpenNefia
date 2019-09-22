@@ -2304,7 +2304,7 @@ data:add_multi(
          _id = "anime_water_shallow",
          elona_id = 165,
          elona_atlas = 1,
-         image = { "mod/elona/graphic/map_tile/1_165.png", "graphic/temp/map_tile/1_166.png", "graphic/temp/map_tile/1_167.png" },
+         image = { "mod/elona/graphic/map_tile/1_165.png", "mod/elona/graphic/map_tile/1_166.png", "mod/elona/graphic/map_tile/1_167.png" },
          kind = 3
       },
       {
@@ -2312,7 +2312,7 @@ data:add_multi(
          anime_frame = 3,
          elona_id = 168,
          elona_atlas = 1,
-         image = { "mod/elona/graphic/map_tile/1_168.png", "graphic/temp/map_tile/1_169.png", "graphic/temp/map_tile/1_170.png" },
+         image = { "mod/elona/graphic/map_tile/1_168.png", "mod/elona/graphic/map_tile/1_169.png", "mod/elona/graphic/map_tile/1_170.png" },
          kind = 3
       },
       {
@@ -2320,7 +2320,7 @@ data:add_multi(
          anime_frame = 3,
          elona_id = 171,
          elona_atlas = 1,
-         image = { "mod/elona/graphic/map_tile/1_171.png", "graphic/temp/map_tile/1_172.png", "graphic/temp/map_tile/1_173.png" },
+         image = { "mod/elona/graphic/map_tile/1_171.png", "mod/elona/graphic/map_tile/1_172.png", "mod/elona/graphic/map_tile/1_173.png" },
          kind = 3,
          kind2 = 5
       },

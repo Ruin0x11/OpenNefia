@@ -128,7 +128,7 @@ local function gen_portraits(portraits)
          source = "graphic/face1.bmp",
          output = string.format("graphic/face/%s.png", v.name),
          x = (id % 15) * 48,
-         y = math.floor(id / 15) * 48,
+         y = math.floor(id / 15) * 72,
          width = 48,
          height = 72,
          no_alpha = true

@@ -300,7 +300,7 @@ local map_tile = {
    { atlas = 1, id = 161, name = "carpet_se" },
    { atlas = 1, id = 163, name = "rough_11" },
    { atlas = 1, id = 164, name = "rough_12" },
-   { atlas = 1, id = 165, name = "anime_water_shallow" },
+   { atlas = 1, id = 165, name = "anime_water_shallow", count_x = 3 },
    { atlas = 1, id = 168, name = "anime_water_sea", count_x = 3 },
    { atlas = 1, id = 171, name = "anime_water_hot_spring", count_x = 3 },
    { atlas = 1, id = 177, name = "cobble_wall_top" },

@@ -9,7 +9,7 @@ function Env.love_version()
 end
 
 function Env.is_headless()
-   return Env.love_version() == "lovemock"
+   return (not love) or Env.love_version() == "lovemock"
 end
 
 local ui_result = {}
@@ -39,7 +39,18 @@ function Env.lua_version()
 end
 
 function Env.os()
-   return love.system.getOS()
+   if not Env.is_headless() then
+      return love.system.getOS()
+   end
+
+   local dir_sep = package.config:sub(1,1)
+   local is_windows = dir_sep == "\\"
+
+   if is_windows then
+      return "Windows"
+   else
+      return "Unix"
+   end
 end
 
 function Env.clipboard_text()

@@ -66,10 +66,10 @@ data:add {
    }
 }
 
-local Event = require("api.Event")
-local UiTheme = require("api.gui.UiTheme")
-
-Event.register("base.on_game_startup", "add beautify",
-               function()
-                  UiTheme.add_theme("beautify.beautify")
-               end)
+-- local Event = require("api.Event")
+-- local UiTheme = require("api.gui.UiTheme")
+--
+-- Event.register("base.on_game_startup", "add beautify",
+--                function()
+--                   UiTheme.add_theme("beautify.beautify")
+--                end)

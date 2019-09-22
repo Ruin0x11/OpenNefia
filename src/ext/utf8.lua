@@ -1,7 +1,8 @@
 utf8 = package.try_require("utf8")
-if love == nil and (utf8 == nil or utf8.codes == nil) then
+if love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil) then
    -- require the luarocks version (starwing/utf8)
    utf8 = require("lua-utf8")
+   assert(utf8, "lua-utf8 not installed")
 end
 
 --- Returns a new string with the last UTF-8 codepoint removed.

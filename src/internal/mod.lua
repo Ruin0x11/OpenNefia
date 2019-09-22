@@ -120,6 +120,8 @@ end
 function mod.load_mods(mods)
    local load_order = mod.calculate_load_order(mods)
 
+   Log.info("Loading mods: %s", inspect(load_order))
+
    for _, mod in ipairs(load_order) do
       local manifest = fs.join(mod.root_path, "mod.lua")
       if not fs.is_file(manifest) then
@@ -128,6 +130,10 @@ function mod.load_mods(mods)
 
       local init = fs.join(mod.root_path, "init.lua")
       if fs.is_file(init) then
+         if chunks[mod.id] then
+            error("Mod '" .. mod.id .. "' is already loaded.")
+         end
+
          local chunk = load_mod(mod.id, init)
 
          chunks[mod.id] = chunk

@@ -116,7 +116,7 @@ function fs.is_file(path)
 end
 
 function fs.basename(path)
-   return string.gsub(path, "(.*/)(.*)", "%2")
+   return string.gsub(path, "(.*" .. dir_sep .. ")(.*)", "%2")
 end
 
 function fs.filename_part(path)
@@ -154,8 +154,43 @@ function fs.copy(from, to)
    return fs.write(to, content)
 end
 
+function fs.copy_directory(from, to)
+   if not fs.is_directory(from) then
+      return false, string.format("file not found or is not directory: %s", from)
+   end
+
+   local last_dir = fs.basename(from)
+   local to = fs.join(to, last_dir)
+   fs.create_directory(to)
+
+   for _, entry in fs.iter_directory_items(from) do
+      local from_item = fs.join(from, entry)
+      local to_item = fs.join(to, entry)
+
+      if fs.is_file(from_item) then
+         local success, err = fs.copy(from_item, to_item)
+         if not success then
+            return success, err
+         end
+      elseif fs.is_directory(from_item) then
+         fs.create_directory(to_item)
+         local success, err = fs.copy_directory(from_item, to_item)
+         if not success then
+            return success, err
+         end
+      end
+   end
+
+   return true, nil
+end
+
 function fs.get_temporary_directory()
-   return fs.parent(os.tmpname())
+   if is_windows then
+      -- os.tmpname() doesn't include %TEMP% on Windows
+      return os.getenv("TEMP")
+   else
+      return fs.parent(os.tmpname())
+   end
 end
 
 
@@ -204,12 +239,40 @@ local function join_two_paths(base, path)
    end
 end
 
+function fs.normalize(path)
+   -- if is_windows then
+   --    path = path:lower()
+   -- end
+   local base, rest = fs.split_base(path)
+   rest = rest:gsub("[/\\]", dir_sep)
+
+   local parts = {}
+
+   for part in rest:gmatch("[^"..dir_sep.."]+") do
+      if part ~= "." then
+         if part == ".." and #parts > 0 and parts[#parts] ~= ".." then
+            parts[#parts] = nil
+         else
+            parts[#parts + 1] = part
+         end
+      end
+   end
+
+   if base == "" and #parts == 0 then
+      return "."
+   else
+      return base..table.concat(parts, dir_sep)
+   end
+end
+
 function fs.join(base, ...)
    local res = base
 
    for i = 1, select("#", ...) do
       res = join_two_paths(res, select(i, ...))
    end
+
+   res = fs.normalize(res)
 
    return res
 end

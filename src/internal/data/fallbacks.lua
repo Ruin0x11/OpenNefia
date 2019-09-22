@@ -166,7 +166,7 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   image = "mod/base/graphic/map_tile/floor.png"
+   image = "graphic/default/floor.png"
 }
 
 data:add {

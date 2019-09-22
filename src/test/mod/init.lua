@@ -58,7 +58,7 @@ data:add {
    _type = "base.map_tile",
    _id = "floor",
 
-   image = "graphic/temp/map_tile/1_207.png",
+   image = "graphic/default/floor.png",
    is_solid = false,
    is_opaque = false
 }
@@ -67,7 +67,7 @@ data:add {
    _type = "base.map_tile",
    _id = "wall",
 
-   image = "graphic/temp/map_tile/1_399.png",
+   image = "graphic/default/floor.png",
    is_solid = true,
    is_opaque = true
 }

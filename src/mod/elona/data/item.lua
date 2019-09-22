@@ -8463,8 +8463,8 @@ local item =
 
          categories = {
             no_implicit = true,
-            "elona.misc_item"
-            "elona.furniture_bed"
+            "elona.misc_item",
+            "elona.furniture_bed",
          },
       },
       {

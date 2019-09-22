@@ -1,5 +1,18 @@
 package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua"
 
+local dir_sep = package.config:sub(1,1)
+local is_windows = dir_sep == "\\"
+
+if love == nil then
+   if is_windows then
+      package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
+      package.path = package.path .. ";..\\lib\\luasocket\\?.lua"
+   end
+
+   _DEBUG = true
+   love = require("util.lovemock")
+end
+
 -- globals that will be used very often.
 
 _DEBUG = true
@@ -29,11 +42,6 @@ inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")
 
 class = require("util.class")
-
-if love == nil then
-   _DEBUG = true
-   love = require("util.lovemock")
-end
 
 function _p(...)
    local t = {...}

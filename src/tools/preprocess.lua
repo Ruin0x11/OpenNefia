@@ -10,11 +10,6 @@ local fs = require("util.fs")
 
 local atlas_cache = {}
 
-local elona_root = arg[1]
-local mod_root = arg[2]
-assert(elona_root, "Provide the root of an elona install.")
-assert(mod_root, "Provide the root of a mod to output to.")
-
 local function remove_key_color(image, key_color)
    if image:bands() == 4 then
       key_color[4] = 0
@@ -23,7 +18,7 @@ local function remove_key_color(image, key_color)
    return image:bandjoin(alpha)
 end
 
-local function crop(i)
+local function crop(i, elona_root, mod_root)
    local source = fs.join(elona_root, i.source)
    if not atlas_cache[source] then
       local atlas = vips.Image.new_from_file(source)
@@ -50,7 +45,7 @@ local function crop(i)
    cropped:pngsave(output)
 end
 
-local function convert(i)
+local function convert(i, elona_root, mod_root)
    local source = fs.join(elona_root, i.source)
    local image = vips.Image.new_from_file(source)
    if not i.no_alpha then
@@ -61,38 +56,48 @@ local function convert(i)
    image:pngsave(output)
 end
 
-local function preprocess_one(i)
+local function preprocess_one(i, elona_root, mod_root)
    if i.type == "crop" then
-      crop(i)
+      crop(i, elona_root, mod_root)
    elseif i.type == "convert" then
-      convert(i)
+      convert(i, elona_root, mod_root)
    else
       error("unknown type " .. tostring(i.type))
    end
 end
 
-local function preprocess(list)
+local function preprocess(list, elona_root, mod_root)
    local count = #list
    io.write(string.format("\r%d/%d", 0, count))
 
    for i, v in ipairs(list) do
-      preprocess_one(v)
+      preprocess_one(v, elona_root, mod_root)
       io.write(string.format("\r%d/%d", i, count))
    end
    io.write("\n")
 end
 
-preprocess(layout.chara)
-preprocess(layout.item)
-preprocess(layout.feat)
-preprocess(layout.area)
-preprocess(layout.misc)
+local targets = {
+   layout.chara,
+   layout.item,
+   layout.feat,
+   layout.area,
+   layout.misc,
 
-preprocess(map_tile.map_tile)
+   map_tile.map_tile,
 
-preprocess(portrait.portrait)
+   portrait.portrait,
 
-preprocess(asset.crop)
-preprocess(asset.convert)
+   asset.crop,
+   asset.convert,
+}
 
-print("Finished.")
+local function preprocess_all(elona_root, mod_root)
+   for _, target in ipairs(targets) do
+      preprocess(target, elona_root, mod_root)
+   end
+
+   print("Finished.")
+end
+
+return preprocess_all

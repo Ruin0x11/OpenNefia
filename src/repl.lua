@@ -1,3 +1,6 @@
+local Log = require("api.Log")
+Log.set_level("debug")
+
 require("boot")
 
 require("internal.data.base")
@@ -63,16 +66,15 @@ local function register_thirdparty_module(name)
 end
 
 register_thirdparty_module("repl")
-register_thirdparty_module("yalf")
 
 if fs.exists("repl_startup.lua") then
    local chunk = loadfile("repl_startup.lua")
    setfenv(chunk, _G)
    chunk()
-   print("OK")
 end
 
 
+print("===================")
 local console_repl = require 'thirdparty.repl.console'
 local elona_repl   = console_repl:clone()
 

@@ -240,6 +240,8 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
+local default_font = "kochi-gothic-subst.ttf"
+
 local font_cache = setmetatable({}, { __mode = "v" })
 function draw.set_font(size, style, filename)
    if type(size) == "table" then
@@ -248,7 +250,7 @@ function draw.set_font(size, style, filename)
       size = size.size
    end
    style = style or "normal"
-   filename = filename or "data/MS-Gothic.ttf"
+   filename = filename or "data/font/" .. default_font
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
    font_cache[size][filename] = font_cache[size][filename]
       or love.graphics.newFont(filename, size, "mono")

@@ -72,6 +72,7 @@ local function feat_stepped_on_handler(source, p, result)
 end
 
 local Event = require("api.Event")
+print("LOADF " .. tostring(require("internal.env").is_hotloading()))
 Event.register("base.on_chara_moved", "feat handler", feat_stepped_on_handler)
 Event.register("base.before_chara_moved", "before move feat handler", feat_bumped_into_handler)
 

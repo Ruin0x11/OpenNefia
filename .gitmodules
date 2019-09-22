@@ -2,3 +2,6 @@
 	path = lib/love
 	url = https://bitbucket.org/ruin0x11/love
 	branch = elona-next
+[submodule "lib/luajit-2.0"]
+	path = lib/luajit-2.0
+	url = http://luajit.org/git/luajit-2.0.git

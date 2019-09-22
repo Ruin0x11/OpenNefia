@@ -21,7 +21,7 @@ local function format(kind, s, ...)
    print(string.format("%s %s%s", kind, source, out))
 end
 
-local level = 3
+local level = levels.info
 
 function Log.set_level(l)
    if type(l) == "string" then
