@@ -13,14 +13,6 @@ if love == nil then
    love = require("util.lovemock")
 end
 
--- windows has no stdout on console, so we have to redirect it to a
--- file. `print` does not respect io.output however, so it has to be
--- redefined.
-if is_windows and love.getVersion() ~= "lovemock" then
-   io.output("log.txt")
-   print = function(...) io.write(table.concat({...}, "\t") .. "\n") end
-end
-
 -- globals that will be used very often.
 
 _DEBUG = true

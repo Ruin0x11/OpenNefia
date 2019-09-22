@@ -1,0 +1,35 @@
+clone_folder: C:\projects\elona-next
+
+os:
+  - Visual Studio 2017
+
+environment:
+  matrix:
+  - PREFIX: C:\SDK
+
+build:
+  verbosity: detailed
+
+configuration:
+  - Debug
+
+for:
+-
+  branches:
+    only:
+      - master
+
+  configuration:
+    - Release
+
+
+cache:
+  C:\SDK -> appveyor.yml
+
+before_build:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+  - git submodule update --init --recursive
+
+build_script:
+  - chcp 65001
+  - build.bat

@@ -1,3 +1,3 @@
 pushd src
-"%programfiles%\LOVE\love.exe" .
+"%programfiles%\LOVE\love.exe" --console .
 popd
