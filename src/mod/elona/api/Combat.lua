@@ -523,8 +523,8 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
 
    damage = pierce_damage + normal_damage
 
-   if target:has_trait(164) then
-      damage = damage - 1
+   if target:has_trait("elona.opatos") then
+      damage = damage * 95 / 100
    end
 
    local damage_reduction = target:calc("physical_damage_reduction")

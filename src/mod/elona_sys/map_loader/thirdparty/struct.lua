@@ -131,6 +131,9 @@ function struct.unpack(format, stream)
       local val = 0
       for j = 1, n do
         local byte = string.byte(stream:sub(iterator, iterator))
+        if byte == nil then
+           error("Exhausted buffer at position " .. tostring(iterator))
+        end
         if endianness then
           val = val + byte * (2 ^ ((j - 1) * 8))
         else

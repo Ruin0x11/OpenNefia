@@ -71,6 +71,7 @@ function sound_manager:play(id, x, y, channel)
       return
    end
 
+   print(sound.file)
    local src = love.audio.newSource(sound.file, "static")
    src:setLooping(false)
 

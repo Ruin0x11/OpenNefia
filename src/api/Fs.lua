@@ -7,6 +7,7 @@ Fs.join = fs.join
 
 function Fs.open(file, mode)
    -- TODO: needs to use physfs
+   assert(mode, "mode is required")
    return io.open(file, mode)
 end
 

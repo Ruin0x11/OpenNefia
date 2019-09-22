@@ -1,4 +1,5 @@
 local object = require("internal.object")
+local data = require("internal.data")
 
 local IObject = require("api.IObject")
 

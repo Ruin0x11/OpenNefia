@@ -3,6 +3,9 @@ local fs = {}
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 
+-- LOVE always expects the directory separator to be forward slash ('/').
+dir_sep = "/"
+
 local function string_split(str,sep)
    sep = sep or "\n"
    local ret={}
@@ -57,8 +60,13 @@ if not love or love.getVersion() == "lovemock" then
          path = ""
       end
       for dir in string.gmatch(name, "[^\"" .. dir_sep .. "\"]+") do
-         path = path .. dir .. dir_sep
-         lfs.mkdir(path)
+         -- avoid appending the root directory ("C:") on windows; it results in "C:\C:\the\path"
+         local do_create = not is_windows or (is_windows and not string.match(dir, "^[a-zA-Z]:$"))
+
+         if do_create then
+            path = path .. dir .. dir_sep
+            lfs.mkdir(path)
+         end
       end
       return path
    end
@@ -66,7 +74,7 @@ if not love or love.getVersion() == "lovemock" then
       if love then
          name = fs.join(fs.get_save_directory(), name)
       end
-      local f = io.open(name, "r")
+      local f = io.open(name, "rb")
       local data = f:read(size or "*all")
       f:close()
       return data, nil
@@ -75,7 +83,7 @@ if not love or love.getVersion() == "lovemock" then
       if love then
          name = fs.join(fs.get_save_directory(), name)
       end
-      local f = io.open(name, "w")
+      local f = io.open(name, "wb")
       f:write(data)
       f:close()
       return true, nil

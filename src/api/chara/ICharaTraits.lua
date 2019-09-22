@@ -1,5 +1,6 @@
 local Gui = require("api.Gui")
 local ICharaTraits = class.interface("ICharaTraits")
+local data = require("internal.data")
 
 function ICharaTraits:init()
    self.traits = self.traits or {}

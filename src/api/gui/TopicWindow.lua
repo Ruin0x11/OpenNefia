@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
+local UiTheme = require("api.gui.UiTheme")
 
 local TopicWindow = class.class("TopicWindow", IUiElement)
 
@@ -17,7 +18,7 @@ function TopicWindow:draw()
    local color = {255, 255, 255}
 
    if fill_style == 6 then
-      Draw.image(self.batch, x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
+      self.batch:draw(x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
    elseif fill_style < 5 then
       local rect = true
       if fill_style == 0 then
@@ -32,7 +33,7 @@ function TopicWindow:draw()
          color = {255-195, 255-205, 255-195}
       end
 
-      Draw.image_region(self.batch, "fill", x + 4, y + 4, width - 6, height - 8, color)
+      -- self.t.fill:draw(x + 4, y + 4, width - 6, height - 8, color)
       -- if rect then
       --    Draw.filled_rect(x + 4, y + 4, width - 4, height - 4, )
       -- end
@@ -42,7 +43,7 @@ function TopicWindow:draw()
    Draw.image(self.batch)
 
    if fill_style == 5 then
-      Draw.image(self.batch, x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
+      self.batch:draw(x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
       -- Draw.filled_rect(x + 2, y + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
    end
 end
@@ -55,6 +56,7 @@ function TopicWindow:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
+   self.t = UiTheme.load(self)
 
    Draw.set_color(255, 255, 255)
 
@@ -83,7 +85,7 @@ function TopicWindow:relayout(x, y, width, height)
    parts[#parts+1] = { "top_right", x + width - 16, y }
    parts[#parts+1] = { "bottom_right", x + width - 16, y + height - 16 }
 
-   self.batch = self.t["window_" .. self.fill_style]:make_batch(parts)
+   self.batch = self.t["window_" .. self.fill_style]:make_batch(parts, self.width, self.height)
 end
 
 function TopicWindow:update()
