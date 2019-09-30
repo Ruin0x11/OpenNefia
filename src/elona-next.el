@@ -72,7 +72,7 @@
   (let* ((prefix
           (file-relative-name
            (file-name-sans-extension (buffer-file-name))
-           (projectile-project-root)))
+           (string-join (list (projectile-project-root) "src/"))))
          (lua-path (replace-regexp-in-string "/" "." prefix))
          (cmd (format
                "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.env').hotload('%s') end"

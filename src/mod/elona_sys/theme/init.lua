@@ -98,6 +98,7 @@ data:add {
          caption = {
             image = "asset/caption.png",
             regions = function(width, height)
+               print"cap"
                local quad = {}
                quad[1] =  { 0, 0, 128, 3 }
                quad[2] =  { 0, 3, 128, 22 }
@@ -134,6 +135,10 @@ data:add {
             image = "asset/window.png",
             regions = gen_window_regions() -- ()
          },
+         window_0 = {
+            image = "asset/window_0.png",
+            regions = topic_window_regions
+         },
          window_1 = {
             image = "asset/window_1.png",
             regions = topic_window_regions
@@ -152,10 +157,6 @@ data:add {
          },
          window_5 = {
             image = "asset/window_5.png",
-            regions = topic_window_regions
-         },
-         window_6 = {
-            image = "asset/window_6.png",
             regions = topic_window_regions
          },
          topic_window = {

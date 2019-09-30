@@ -28,7 +28,8 @@ function Chara.is_player(c)
 end
 
 function Chara.player()
-   return Map.current():get_object(field.player)
+   local map = Map.current()
+   return map and map:get_object(field.player)
 end
 
 function Chara.set_player(uid_or_chara)

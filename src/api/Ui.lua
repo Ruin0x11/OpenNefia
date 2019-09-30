@@ -45,7 +45,7 @@ end
 function Ui.random_cm_bg()
    t = t or UiTheme.load()
    local bg = Rand.rnd(4)
-   return t[string.format("graphic/g%d.bmp", bg)]
+   return t[string.format("g%d", bg)]
 end
 
 function Ui.unpack_font_desc(font)

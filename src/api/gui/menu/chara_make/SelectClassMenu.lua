@@ -60,13 +60,13 @@ end
 
 function SelectClassMenu:draw()
    self.win:draw()
-   Draw.image(self.bg,
-              self.x + self.width / 4,
-              self.y + self.height / 2,
-              self.width / 5 * 2,
-              self.height - 80,
-              {255, 255, 255, 80},
-              true)
+   self.bg:draw(
+      self.x + self.width / 4,
+      self.y + self.height / 2,
+      self.width / 5 * 2,
+      self.height - 80,
+      {255, 255, 255, 80},
+      true)
 
    Draw.set_color(255, 255, 255)
    Ui.draw_topic("race", self.x + 28, self.y + 30)

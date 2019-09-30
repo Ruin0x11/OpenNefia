@@ -51,7 +51,7 @@ end
 function SelectRaceMenu:draw()
    self.win:draw()
 
-   Draw.image(self.bg,
+   self.bg:draw(
               self.x + self.width / 4,
               self.y + self.height / 2,
               self.width / 5 * 2,

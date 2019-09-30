@@ -607,7 +607,7 @@ local crop = {
       height = 192,
    },
    {
-      name = "window_1",
+      name = "window_0",
       source = "graphic/interface.bmp",
       x = 0,
       y = 240,
@@ -615,7 +615,7 @@ local crop = {
       height = 16,
    },
    {
-      name = "window_2",
+      name = "window_1",
       source = "graphic/interface.bmp",
       x = 48,
       y = 240,
@@ -623,7 +623,7 @@ local crop = {
       height = 16,
    },
    {
-      name = "window_3",
+      name = "window_2",
       source = "graphic/interface.bmp",
       x = 96,
       y = 240,
@@ -631,7 +631,7 @@ local crop = {
       height = 16,
    },
    {
-      name = "window_4",
+      name = "window_3",
       source = "graphic/interface.bmp",
       x = 144,
       y = 240,
@@ -639,7 +639,7 @@ local crop = {
       height = 16,
    },
    {
-      name = "window_5",
+      name = "window_4",
       source = "graphic/interface.bmp",
       x = 192,
       y = 240,
@@ -647,7 +647,7 @@ local crop = {
       height = 16,
    },
    {
-      name = "window_6",
+      name = "window_5",
       source = "graphic/interface.bmp",
       x = 240,
       y = 240,

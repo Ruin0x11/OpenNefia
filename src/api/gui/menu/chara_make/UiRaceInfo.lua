@@ -108,9 +108,8 @@ function UiRaceInfo:draw()
    local rows = 0
 
    if skill_text then
-      Draw.image_region(
-         self.skill_icons,
-         self.quad["base.strength"],
+      self.t.skill_icons:draw_region(
+         1,
          self.x + 200 + 13,
          self.y + 260 + 34 + 6,
          nil,
@@ -126,9 +125,8 @@ function UiRaceInfo:draw()
       local skill_name = "Cooking"
       local related_skill = "base.strength"
 
-      Draw.image_region(
-         self.skill_icons,
-         self.quad[related_skill],
+      self.t.skill_icons:draw_region(
+         1,
          self.x + 200 + 13,
          self.y + 260 + 34 + rows*14 + 6,
          nil,

@@ -111,6 +111,7 @@ local function calc_rolled_attributes(race, class)
 
    temp:mod_base_with(race_data, "merge")
    temp:mod_base_with(class_data, "merge")
+   _p(temp)
 
    return temp.skills
 end
@@ -131,6 +132,7 @@ function RollAttributesMenu:reroll(play_sound, minimum)
                skill.level = skill.level - Rand.rnd(skill.level / 2 + 1)
             end
             v.value = skill
+            _p(skill)
          end
       end
    end
