@@ -507,7 +507,6 @@ function table.merge_ex_single(base, value, meth, default, key)
          end
       end
       if meth == "insert" then
-         print(inspect(value))
          for _, v in ipairs(value) do
             table.insert(base[key], v)
          end
@@ -540,6 +539,13 @@ end
 -- in `tbl`.
 function table.merge_ex(tbl, add, defaults, method)
    assert(type(tbl) == "table")
+
+   if add.__method or add.__value then
+      assert(add.__method)
+      assert(add.__value)
+      return table.merge_ex(tbl, add.__value, defaults, add.__method)
+   end
+
    method = method or "set"
 
    if add.__multi then

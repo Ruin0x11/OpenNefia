@@ -234,7 +234,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 
 local function init_skills_from_table(chara, tbl)
    for skill_id, level in pairs(tbl) do
-      local init = Skill.calc_initial_skill_level(skill_id, level, chara:has_skill(skill_id), chara:calc("level"), chara)
+      local init = Skill.calc_initial_skill_level(skill_id, level, chara:base_skill_level(skill_id), chara:calc("level"), chara)
       chara:set_base_skill(skill_id, init.level, init.potential, 0)
    end
 end
@@ -257,9 +257,6 @@ local function apply_race_class(chara)
    local class_data = Resolver.run("elona.class", {}, { chara = chara })
    chara:mod_base_with(race_data, "merge")
    chara:mod_base_with(class_data, "merge")
-
-   -- TODO
-   init_skills_from_table(chara, data["base.class"][chara.class].skills or {})
 end
 
 Event.register("base.on_normal_build",

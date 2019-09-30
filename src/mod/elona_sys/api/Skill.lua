@@ -29,7 +29,7 @@ function Skill.calc_initial_decayed_potential(base_potential, chara_level)
    return math.floor(math.exp(math.log(0.9) * chara_level) * base_potential)
 end
 
-function Skill.calc_initial_skill_level(skill, initial_level, knows_skill, chara_level, chara)
+function Skill.calc_initial_skill_level(skill, initial_level, original_level, chara_level, chara)
    local sk = data["base.skill"]:ensure(skill)
 
    -- if not chara:has_skill(skill) then
@@ -38,12 +38,12 @@ function Skill.calc_initial_skill_level(skill, initial_level, knows_skill, chara
    -- local my_skill = chara:calc("skills")[skill]
 
    local potential
-   local level
+   local level = original_level
 
    if sk.calc_initial_potential then
       potential = sk.calc_initial_potential(initial_level, chara)
    else
-      potential = Skill.calc_initial_potential(sk, initial_level, knows_skill)
+      potential = Skill.calc_initial_potential(sk, initial_level, original_level == 0)
    end
    if sk.calc_initial_level then
       level = sk.calc_initial_level(initial_level, chara)

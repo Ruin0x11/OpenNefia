@@ -12,18 +12,18 @@ data:add {
    params     = { chara = "IChara", },
    resolve    = function(self, params)
       local chara = params.chara
-      return Skill.calc_initial_skill_level(self.skill, self.level, chara:has_skill(self.skill), chara:calc("level"), chara)
+      local skill = Skill.calc_initial_skill_level(self.skill, self.level, chara:base_skill_level(self.skill), chara:calc("level"), chara)
+      skill.experience = 0
+      return skill
    end,
 }
 
 
 local init_skill_list = function(self, params)
-   self.resolver = "elona.skill"
-
    local skills = {}
 
    for skill_id, level in pairs(self.skills) do
-      skills[skill_id] = Resolver.run(self.resolver, { skill = skill_id, level = level }, { chara = params.chara })
+      skills[skill_id] = Resolver.run("elona.skill", { skill = skill_id, level = level }, { chara = params.chara })
    end
 
    return skills
@@ -34,9 +34,8 @@ data:add {
    _id = "skills",
 
    ordering = 300000,
-   method = "add",
-   invariants = { skills = "table", resolver = "string", },
-   params     = { chara = "IChara", },
+   invariants = { skills = "table" },
+   params     = { chara = "IChara" },
    resolve    = init_skill_list,
 }
 
@@ -93,10 +92,6 @@ data:add {
    end
 }
 
-local base_resolvers = {
-   skills = "elona.skills",
-}
-
 data:add {
    _type = "base.resolver",
    _id = "race",
@@ -113,16 +108,12 @@ data:add {
       end
       local copy_to_chara = table.deepcopy(race.copy_to_chara)
       if race.base then
-         for k, v in pairs(race.base) do
-            local resolver = base_resolvers[k]
-            if resolver then
-               copy_to_chara[k] = Resolver.run(base_resolvers[k], race.base, params)
-            end
+         if race.base.skills then
+            copy_to_chara.skills = Resolver.make("elona.skills", {skills = race.base.skills})
          end
       end
       return Resolver.resolve(copy_to_chara, params)
-   end
-}
+end}
 
 data:add {
    _type = "base.resolver",
@@ -139,6 +130,9 @@ data:add {
          return {}
       end
       local copy_to_chara = table.deepcopy(class.copy_to_chara)
+
+      copy_to_chara.skills = Resolver.make("elona.skills", {skills = class.skills})
+
       return Resolver.resolve(copy_to_chara, params)
    end
 }

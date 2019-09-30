@@ -1,7 +1,6 @@
 bin/
 graphic/
 sound/
-*.ttf
 /src/repl_history.txt
 /src/mod/elona/data/map
-/src/deps
+/deps
