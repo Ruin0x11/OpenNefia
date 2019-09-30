@@ -100,5 +100,7 @@ function elona_repl:displayresults(results)
    end
 end
 
-print("Lua REPL " .. tostring(elona_repl.VERSION))
-elona_repl:run()
+if arg[1] ~= "test" then
+   print("Lua REPL " .. tostring(elona_repl.VERSION))
+   elona_repl:run()
+end

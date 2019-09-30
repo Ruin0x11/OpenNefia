@@ -1,6 +1,12 @@
 local fs = require("util.fs")
 local love = require("thirdparty.automagic")()
 
+local function check_path(path)
+   if type(path) == "string" then
+      assert(fs.is_file(path), "File does not exist: " .. path)
+   end
+end
+
 love.graphics.getWidth = function() return 800 end
 love.graphics.getHeight = function() return 600 end
 love.graphics.getFont = function()
@@ -36,15 +42,11 @@ love.graphics.newCanvas = function()
    }
 end
 love.graphics.newFont = function(path)
-   if type(path) == "string" then
-      assert(fs.is_file(path), path)
-   end
+   check_path(path)
    return {}
 end
 love.graphics.newImage = function(path)
-   if type(path) == "string" then
-      assert(fs.is_file(path), path)
-   end
+   check_path(path)
    return {
       getWidth = function() return 100 end,
       getHeight = function() return 100 end,
@@ -54,9 +56,7 @@ love.graphics.newImage = function(path)
 end
 love.graphics.draw = function() end
 love.image.newImageData = function(path)
-   if type(path) == "string" then
-      assert(fs.is_file(path), path)
-   end
+   check_path(path)
    return {
       mapPixel = function() end,
       getPixel = function() return 1, 0, 0 end,
@@ -67,9 +67,7 @@ love.image.newImageData = function(path)
 end
 love.audio.setDistanceModel = function() end
 love.audio.newSource = function(path)
-   if type(path) == "string" then
-      assert(fs.is_file(path), path)
-   end
+   check_path(path)
    return {
       setLooping = function() end,
       setPosition = function() end,

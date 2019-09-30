@@ -224,7 +224,7 @@ function fs.split_base(path)
       end
    else
       if string.match(path, "^/") then
-         if string:match(path, "^//") then
+         if string.match(path, "^//") then
             return "//", string.sub(path, 3)
          else
             return "/", string.sub(path, 2)

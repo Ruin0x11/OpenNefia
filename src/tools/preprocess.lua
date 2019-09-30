@@ -93,6 +93,7 @@ local targets = {
 }
 
 local function preprocess_all(elona_root, mod_root)
+   print(string.format("Cropping image files from %s -> %s", elona_root, mod_root))
    for _, target in ipairs(targets) do
       preprocess(target, elona_root, mod_root)
    end

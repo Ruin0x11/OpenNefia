@@ -8,10 +8,6 @@ The title `Elona_next` is temporary since nothing better has been decided yet. (
 ## Requirements
 - [LÖVE](https://love2d.org) 0.10.0
     + NOTE: At some point the project will move to a custom build of the LÖVE runtime due to missing features (font styling, MIDI playback, CJK text wrapping, etc.)
-
-### Test Requirements
-To run tests, these additional dependencies are needed.
-
 - [LuaJIT](http://luajit.org) 2.0.5
 - [luasocket]()
     + Provided by LÖVE.
@@ -20,27 +16,42 @@ To run tests, these additional dependencies are needed.
 - [luafilesystem](https://keplerproject.github.io/luafilesystem)
     + Replacement for LÖVE's `love.filesystem` module.
 
-## Setup
-No out-of-the-box option is available yet, since assets referencing images are currently cropped out of the original vanilla atlases by hand. When the asset system is finalized a tool will need to be written to automate this process as a compile step.
+If using a Unix-based operating system and are installing dependencies with `luarocks`, then `luarocks` must be configured to use `luajit` or `lua5.1` as its interpreter, as the build process uses `luajit`.
 
-```bash
-git clone https://bitbucket.org/Ruin0x11/elona-next
-cd elona-next/
-# (TODO: asset preprocessing)
+If using Windows, all dependencies needed for building are already included.
+
+## Build
+
+### Windows
+
+Run the following under a Visual Studio x64 command prompt.
+```
+build.bat
+```
+
+### macOS
+
+Ensure all dependencies are installed.
+
+Run the following in `bash` or similar.
+```
+./build.sh
+```
+
+### Linux
+
+Ensure all dependencies are installed.
+
+Run the following in `bash` or similar.
+```
+./build.sh
 ```
 
 ## Running
 
-```bash
-cd src/
-love .
-```
+Ensure the `love` binary is on your `PATH`.
 
-## Running tests
-
-```bash
-cd src/
-luajit -l boot -e "require 'test'"
+Run `elona-next.bat` on Windows or `elona-next.sh` on macOS/Linux.
 ```
 
 ## Credits

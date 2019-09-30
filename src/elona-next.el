@@ -21,7 +21,7 @@
 
 (defun elona-next--send (str)
   (when (buffer-live-p lua-process-buffer)
-      (lua-send-string str))
+    (lua-send-string str))
   (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
     (comint-send-string proc str)
     (process-send-eof proc)
@@ -91,5 +91,38 @@
     (eval-sexp-fu-flash (elona-next--bounds-of-last-defun (point))))
   (define-eval-sexp-fu-flash-command elona-next-hotload-this-file
     (eval-sexp-fu-flash (elona-next--bounds-of-buffer))))
+
+(defvar elona-next--repl-errors-buffer "*elona-next-repl-errors*")
+(defvar elona-next--repl-name "elona-next-repl")
+
+(defun elona-next--repl-file ()
+(string-join (list (projectile-project-root) "src/repl.lua")))
+
+(defun elona-next--test-repl ()
+  (with-current-buffer (get-buffer-create elona-next--repl-errors-buffer)
+    (delete-region (point-min) (point-max))
+    (let ((result (apply 'call-process "luajit" nil
+                         (current-buffer)
+                         nil
+                         (list (elona-next--repl-file) "test"))))
+      (equal 0 result))))
+
+(defun elona-next-start-repl ()
+  (interactive)
+  (let* ((buffer-name (string-join (list "*" elona-next--repl-name "*")))
+         (buffer (get-buffer buffer-name)))
+    (if (buffer-live-p buffer)
+        (progn
+          (setq next-error-last-buffer (get-buffer buffer-name))
+          (pop-to-buffer buffer)
+          (comint-goto-process-mark))
+      (if (elona-next--test-repl)
+          (progn
+            (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file))
+            (setq next-error-last-buffer (get-buffer buffer-name))
+            (pop-to-buffer buffer-name))
+        (progn
+          (pop-to-buffer elona-next--repl-errors-buffer)
+          (error "REPL startup failed."))))))
 
 (provide 'elona-next)
