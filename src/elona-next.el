@@ -101,17 +101,18 @@
 (defun elona-next--test-repl ()
   (with-current-buffer (get-buffer-create elona-next--repl-errors-buffer)
     (delete-region (point-min) (point-max))
-    (let ((result (apply 'call-process "luajit" nil
-                         (current-buffer)
-                         nil
-                         (list (elona-next--repl-file) "test"))))
-      (equal 0 result))))
+      (let ((result (apply 'call-process "luajit" nil
+                           (current-buffer)
+                           nil
+                           (list (elona-next--repl-file) "test"))))
+        (equal 0 result))))
 
 (defun elona-next-start-repl ()
   (interactive)
   (let* ((buffer-name (string-join (list "*" elona-next--repl-name "*")))
-         (buffer (get-buffer buffer-name)))
-    (if (buffer-live-p buffer)
+         (buffer (get-buffer buffer-name))
+         (default-directory (file-name-directory (directory-file-name (elona-next--repl-file)))))
+    (if (and (buffer-live-p buffer) (process-live-p (get-buffer-process buffer)))
         (progn
           (setq next-error-last-buffer (get-buffer buffer-name))
           (pop-to-buffer buffer)

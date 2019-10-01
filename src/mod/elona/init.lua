@@ -49,5 +49,6 @@ require("mod.elona.data.effect")
 require("mod.elona.data.god")
 require("mod.elona.data.ai")
 require("mod.elona.data.activity")
+require("mod.elona.data.dungeon_template")
 
 require("mod.elona.events")

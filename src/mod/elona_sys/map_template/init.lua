@@ -3,6 +3,7 @@ local Resolver = require("api.Resolver")
 local Map = require("api.Map")
 local MapArea = require("api.MapArea")
 
+--- An Elona 1.22-style map template which uses a static map file.
 data:add_type {
    name = "map_template",
    schema = schema.Record {
@@ -10,6 +11,7 @@ data:add_type {
       copy_to_map = schema.Optional(schema.Table),
       areas = schema.Optional(schema.Table),
       objects = schema.Optional(schema.Table),
+      on_generate = schema.Optional(schema.Function),
    }
 }
 
@@ -46,6 +48,8 @@ local function migrate_map_entrances(template, outer_map, existing)
 
    local area_index_to_found_map = {}
 
+   -- determines if two entrances are equivalent and should be
+   -- considered a valid target for entrance relinking.
    local function almost_equals(a, b)
       if a.generator ~= b.generator then
          return false
@@ -71,6 +75,16 @@ local function migrate_map_entrances(template, outer_map, existing)
 
    for uid, entrance in pairs(entrances) do
       if not entrance.found then
+         -- The new map's entrance layout differs from the old map -
+         -- it isn't deterministically generated or a breaking change
+         -- was made. There was a map entrance on the old map leading
+         -- somewhere that has been generated, but the entrance for
+         -- that map is missing in the new map, so the subarea will
+         -- become inaccessible.
+         --
+         -- TODO: it should be possible specify the entrances so they
+         -- can be linked without using partial equivalence, perhaps
+         -- by adding a unique ID on the entrance.
          Log.warn("Generated map is missing entrance for map %d", uid)
       end
    end
@@ -105,6 +119,13 @@ local function load_map_template(self, params, opts)
 
    if template.areas then
       if opts.existing then
+         -- The map is being refreshed, so any entrances leading to
+         -- other maps on the old map should be linked to the new map.
+         -- For example, if Vernis is being generated and the Rogue's
+         -- Den entrance was previously visited on the old copy of
+         -- Vernis, then the entrance to Rogue's Den should be linked
+         -- to the new copy of Vernis. If this isn't done then then
+         -- that copy of the Rogue's Den will become inaccessible.
          migrate_map_entrances(template, map, opts.existing)
       else
          for _, area in ipairs(template.areas) do

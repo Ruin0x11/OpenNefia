@@ -100,7 +100,12 @@ function elona_repl:displayresults(results)
    end
 end
 
-if arg[1] ~= "test" then
-   print("Lua REPL " .. tostring(elona_repl.VERSION))
-   elona_repl:run()
+if arg[1] == "test" then
+   os.exit(0)
 end
+
+local Env = require("api.Env")
+
+print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
+                    Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
+elona_repl:run()

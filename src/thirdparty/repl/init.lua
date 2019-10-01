@@ -109,6 +109,7 @@ function repl:handleline(line)
       self._buffer = chunk .. '\n'
       return 2
     else
+      self._buffer = ''
       self:displayerror(err)
     end
   end

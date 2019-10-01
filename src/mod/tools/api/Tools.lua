@@ -5,6 +5,7 @@ local Event = require("api.Event")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Map = require("api.Map")
+local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 
 local Tools = {}
@@ -299,6 +300,48 @@ end
 
 function Tools.mkplayer(id)
    return Chara.create(id or "content.player", nil, nil, {ownerless=true})
+end
+
+function Tools.print_map(map)
+   local res = ""
+   for _, x, y in Pos.iter_rect(0, 0, map:width()-1, map:height()-1) do
+      local c
+      if Map.is_floor(x, y, map) then
+         local chara = Chara.at(x, y, map)
+         if chara then
+            if chara:is_player() then
+               c = "@"
+            else
+               c = "c"
+            end
+         elseif Item.at(x, y, map):length() > 0 then
+            c = "!"
+         elseif Feat.at(x, y, map):length() > 0 then
+            c = "^"
+         else
+            c = "."
+         end
+      else
+         c = "#"
+      end
+
+      res = res .. c
+      if x == map:width() - 1 then
+         res = res .. "\n"
+      end
+   end
+
+   return res
+end
+
+local Dungeon = require("mod.elona_sys.api.Dungeon")
+
+function Tools.dungeon(kind, params)
+   local success, map = Map.generate("elona_sys.dungeon_template")
+
+   assert(success, map)
+
+   return Tools.print_map(map)
 end
 
 return Tools

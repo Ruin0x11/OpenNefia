@@ -144,7 +144,7 @@ end
 
 function Map.generate(generator_id, params)
    params = params or {}
-   local opts = {}
+   local opts = { outer_map = Map.current() }
 
    local generator = data["base.map_generator"]:ensure(generator_id)
    local success, map = xpcall(function() return generator:generate(params, opts) end, debug.traceback)

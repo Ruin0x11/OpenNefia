@@ -104,7 +104,9 @@ end
 local fallbacks = {
    turn_cost = 1000,
    is_outdoors = true,
-   is_temporary = false
+   is_temporary = false,
+   dungeon_level = 1,
+   deepest_dungeon_level = 10,
 }
 
 function InstancedMap:init_map_data()

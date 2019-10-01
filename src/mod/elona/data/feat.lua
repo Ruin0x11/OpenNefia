@@ -5,6 +5,7 @@ local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local SkillCheck = require("mod.elona.api.SkillCheck")
 
 data:add {
    _type = "base.feat",
@@ -15,7 +16,7 @@ data:add {
    is_solid = true,
    is_opaque = true,
 
-   params = { opened = "boolean", open_sound = "string", close_sound = "string", opened_tile = "string", closed_tile = "string" },
+   params = { opened = "boolean", open_sound = "string", close_sound = "string", opened_tile = "string", closed_tile = "string", difficulty = "number" },
    open_sound = "base.door1",
    close_sound = nil,
 
@@ -214,4 +215,26 @@ data:add {
          end
       }
    }
+}
+
+
+data:add {
+   _type = "base.feat",
+   _id = "hidden_path",
+
+   elona_id = 22,
+   image = "elona.feat_hidden",
+   is_solid = false,
+   is_opaque = false,
+
+   on_search = function(self, chara)
+      if SkillCheck.try_to_reveal(chara) then
+         Gui.mes("reveal hidden path")
+         Map.set_tile(self.x, self.y, "elona.hardwood_floor_1", chara:current_map())
+         self:remove_ownership()
+      end
+   end,
+
+   params = {},
+   events = {}
 }

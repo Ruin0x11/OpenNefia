@@ -47,4 +47,17 @@ function Rand.dice_max(dice_x, dice_y, add)
    return dice_x * dice_y + add
 end
 
+function Rand.shuffle(tbl)
+   local res = table.deepcopy(tbl)
+
+   for i=1, #res do
+      local j = Rand.rnd(#res-i+1) + i
+      local tmp = res[j]
+      res[j] = res[i]
+      res[i] = tmp
+   end
+
+   return res
+end
+
 return Rand

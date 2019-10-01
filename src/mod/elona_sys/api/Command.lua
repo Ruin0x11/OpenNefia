@@ -171,6 +171,12 @@ function Command.close(player)
    end
 end
 
+function Command.search(player)
+   for _, f in feats_surrounding(player, "can_open") do
+      f:calc("on_search", player)
+   end
+end
+
 function Command.open(player)
    for _, f in feats_surrounding(player, "can_open") do
       Gui.mes(player.name .. " opens the " .. f.uid .. " ")

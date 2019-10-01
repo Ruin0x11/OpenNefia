@@ -52,6 +52,10 @@ function Pos.random_direction(x, y)
    return Rand.rnd(3) - 1 + x, Rand.rnd(3) - 1 + y
 end
 
+function Pos.random_cardinal_direction(x, y)
+   return Rand.rnd(3) - 1 + x, Rand.rnd(3) - 1 + y
+end
+
 function Pos.dist(x1, y1, x2, y2)
    local dx = x1 - x2
    local dy = y1 - y2
@@ -98,7 +102,7 @@ local function iter_rect(state, pos)
    local old = pos
    pos.x = pos.x + 1
    if pos.x == state.end_x then
-      pos.x = state.x
+      pos.x = state.start_x
       pos.y = pos.y + 1
       if pos.y == state.end_y then
          return nil, nil

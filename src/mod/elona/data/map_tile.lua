@@ -1,5 +1,6 @@
 local unseen_tiles = {
    {
+      -- fog
       _id = "1_528",
       is_solid = true,
       is_opaque = true,
