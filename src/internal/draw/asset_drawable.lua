@@ -77,17 +77,20 @@ function asset_drawable:draw(x, y, width, height, color, centered, rotation)
 end
 
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
-   if type(self.regions) == "function" and (#self.quads == 0 or width or height) then
-      local width = width or self.image:getWidth()
-      local height = height or self.image:getHeight()
-      local regions = self.regions(width, height)
+   if (table.count(self.quads) == 0 or width or height) then
+      local regions = self.regions
+      if type(self.regions) == "function" then
+         local width = width or self.image:getWidth()
+         local height = height or self.image:getHeight()
+         regions = self.regions(width, height)
+      end
 
       for k, v in pairs(regions) do
          self.quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
       end
    end
-   if quad < 1 or quad > #self.quads then
-      error(string.format("Quad ID %d is not in range 1,%d", quad, #self.quads))
+   if not self.quads[quad] then
+      error(string.format("Quad ID '%s' not found", tostring(quad)))
       return
    end
    Draw.image_region(self.image, self.quads[quad], x, y, width, height, color, centered, rotation)

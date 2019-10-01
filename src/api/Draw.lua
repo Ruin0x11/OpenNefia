@@ -92,10 +92,10 @@ function Draw.image(image, x, y, width, height, color, centered, rotation)
    end
    local sx = 1
    local sy = 1
-   if width then
+   if width and image.getWidth then
       sx = width / image:getWidth()
    end
-   if height then
+   if height and image.getHeight then
       sy = height / image:getHeight()
    end
    local ox, oy

@@ -130,7 +130,7 @@ function field_layer:update_screen(scroll)
       scroll = false
    end
 
-   scroll = scroll and (not self.no_scroll)
+   scroll = scroll and (not self.no_scroll) and false
 
    assert(self.map ~= nil)
 

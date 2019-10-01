@@ -1,6 +1,7 @@
 local function gen_window_regions()
    local quad = {}
 
+   quad["fill"] = { 24, 24, 228, 144 }
    quad["top_left"] = { 0, 0, 64, 48 }
    quad["top_right"] = { 208, 0, 56, 48 }
    quad["bottom_left"] = { 0, 144, 64, 48 }

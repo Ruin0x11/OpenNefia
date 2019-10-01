@@ -87,6 +87,7 @@ function Object.generate(proto, params)
    assert(proto._type)
    assert(proto._id)
    local obj = object.deserialize(proto)
+   assert(obj.proto)
 
    if not params.no_pre_build then
       obj:pre_build()

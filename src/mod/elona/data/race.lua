@@ -273,7 +273,6 @@ local race =
                "elona.waist",
                "elona.leg"
             },
-
          },
 
          base = {
@@ -523,7 +522,7 @@ local race =
          copy_to_chara = {
 
             breed_power = 700,
-            image = "elona.chara_slime",
+            image = "elona.chara_race_slime",
             special_attack_type = 2,
             age = Resolver.make("base.between", { min = 1, max = 10 }),
             height = 40,
