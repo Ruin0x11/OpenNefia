@@ -334,10 +334,10 @@ function Tools.print_map(map)
    return res
 end
 
-local Dungeon = require("mod.elona_sys.api.Dungeon")
+local Dungeon = require("mod.elona.api.Dungeon")
 
 function Tools.dungeon(kind, params)
-   local success, map = Map.generate("elona_sys.dungeon_template")
+   local success, map = Map.generate("elona.dungeon_template")
 
    assert(success, map)
 

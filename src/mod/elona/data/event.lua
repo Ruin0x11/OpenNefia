@@ -9,6 +9,7 @@ local event = {
    { _id = "on_eat_item_effect" },
    { _id = "on_eat_item_finish" },
    { _id = "on_sleep" },
+   { _id = "calc_dialog_choices" },
    { _id = "calc_bad_performance_damage" },
 }
 

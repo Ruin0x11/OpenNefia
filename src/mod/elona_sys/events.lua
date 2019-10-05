@@ -58,6 +58,7 @@ Event.register("base.on_hour_passed", "Update awake hours", update_awake_hours)
 local function init_save()
    local s = save.elona_sys
    s.awake_hours = 0
+   s.npc_memory = { killed = {}, generated = {} }
 end
 
 Event.register("base.on_init_save", "Init save", init_save)

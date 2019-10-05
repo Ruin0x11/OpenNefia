@@ -20,7 +20,8 @@ local function query(self)
    local success, res, canceled
 
    if Env.is_headless() then
-      res, canceled = Env.ui_result()
+      res, canceled = Env.pop_ui_result()
+      Log.info("Returning UI result: %s %s", inspect(res), tostring(canceled))
    else
       while true do
          if abort then

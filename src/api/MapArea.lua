@@ -12,7 +12,7 @@ local InstancedMap = require("api.InstancedMap")
 -- player should arrive when traveling up a level, it is necessary to
 -- find the corresponding feat with an entrance to the inner map in
 -- the outer map. To go the other direction, you only have to find the
--- an in the inner map leading to the outer map.
+-- entrance in the inner map leading to the outer map.
 --
 -- It is possible for the connection between two maps to go out of
 -- sync since there is no global array of connections to maps.
@@ -113,26 +113,22 @@ end
 --- Creates a new entrance leading to an ungenerated map on an outer
 --- map.
 -- @tparam {id=string,params={...}} generator_params
+-- @tparam int|table area_params An area UID or data table.
 -- @tparam int x
 -- @tparam int y
 -- @tparam InstancedMap outer_map
-function MapArea.create_entrance(generator_params, x, y, outer_map)
+function MapArea.create_entrance(generator_params, area_params, x, y, outer_map)
    outer_map = outer_map or Map.current()
+
+   if type(area_params) == "table" then
+      assert(area_params.id, "area must have ID")
+   end
 
    local entrance = Feat.create("elona.stairs_down", x, y, {}, outer_map)
    entrance.generator_params = generator_params
+   entrance.area_params = area_params
 
    return entrance
-end
-
---- Generates a map and creates a new entrance leading to it.
--- @tparam {id=string,params={...}} generator_params
--- @tparam int x
--- @tparam int y
--- @tparam InstancedMap outer_map
-function MapArea.generate_map_and_entrance(generator_params, x, y, outer_map)
-   local entrance = MapArea.create_entrance(generator_params, x, y, outer_map)
-   return MapArea.load_map_of_entrance(entrance)
 end
 
 --- Sets the entrance of an existing map to an outer map. If an
@@ -200,6 +196,8 @@ function MapArea.load_map_of_entrance(feat)
    if feat.map_uid == nil then
       local gen_id = feat.generator_params.generator
       local gen_params = feat.generator_params.params
+      gen_params.area_params = feat.area_params
+
       success, map = Map.generate(gen_id, gen_params)
 
       if not success then

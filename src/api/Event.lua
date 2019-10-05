@@ -108,9 +108,6 @@ function Event.define_hook(id, desc, default, field, cb)
 
    local func = function(params, _default)
       _default = _default or default
-      if _default == nil then
-         error("Default value must be provided.")
-      end
       if type(_default) == "table" then
          _default = table.deepcopy(_default)
       end

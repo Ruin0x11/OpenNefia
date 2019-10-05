@@ -96,10 +96,6 @@ function field_layer:set_map(map)
    assert(type(map) == "table")
    assert(map.uid, "Map must have UID")
 
-   if save.base.area_mapping:maybe_generate_area_for_map(map.uid) then
-      Log.warn("Generating new area for map %d", map.uid)
-   end
-
    self.map = map
    self.map._tiles_dirty = true
    self.renderer = field_renderer:new(map:width(), map:height(), self.layers)

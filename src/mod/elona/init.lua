@@ -27,6 +27,8 @@ data:extend_type(
 
 require("mod.elona.init.god")
 
+require("mod.elona.dungeon_template")
+
 require("mod.elona.data.event")
 require("mod.elona.data.resolver")
 require("mod.elona.data.skill")
@@ -50,5 +52,7 @@ require("mod.elona.data.god")
 require("mod.elona.data.ai")
 require("mod.elona.data.activity")
 require("mod.elona.data.dungeon_template")
+require("mod.elona.data.dialog")
+require("mod.elona.data.role")
 
 require("mod.elona.events")

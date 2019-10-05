@@ -102,6 +102,11 @@ end
 
 if arg[1] == "test" then
    os.exit(0)
+elseif arg[1] == "batch" then
+   local chunk, err = loadfile(arg[2])
+   assert(chunk, err)
+   chunk()
+   os.exit(0)
 end
 
 local Env = require("api.Env")

@@ -10,20 +10,11 @@ local WeightedSampler = require("mod.tools.api.WeightedSampler")
 local Itemgen = {}
 
 -- fltselects:
---  character:
---    1: at, younger_sister_of_mansion, maid, moyer, bug, younger_sister
---    2: isca, mad_scientist, goda
---    3: little_sister, cacy, ebon, noel, loyter, big_daddy, poppy
---    4: silver_wolf, twintail
---    5: town_child, mercenary, old_person, beggar
---    7: elder, citizen, citizen_of_cyber_dome, wizard, bard, hot_spring_maniac
---    9: guard, fairy, acid_slime, bat, rook, gagu, artist, prisoner
---  item:
---    nil: vegetable_seed, long_staff, scroll_of_greater_identify
---    1: bug, fountain, tamers_whip, wallet, putitoro
---    2: shield_of_thorn, hiryu_to, skeleton_key, bow_of_vinderre, zantetsu, ether_dagger
---    3: gem_stone_of_mani, wind_bow, magic_fruit, statue_of_jure, diablo
---    8: tree_of_naked, tree_of_fir, christmas_tree
+--  nil: vegetable_seed, long_staff, scroll_of_greater_identify
+--  1: bug, fountain, tamers_whip, wallet, putitoro
+--  2: shield_of_thorn, hiryu_to, skeleton_key, bow_of_vinderre, zantetsu, ether_dagger
+--  3: gem_stone_of_mani, wind_bow, magic_fruit, statue_of_jure, diablo
+--  8: tree_of_naked, tree_of_fir, christmas_tree
 
 local function item_gen_weight(item, objlv)
    return math.floor((item.rarity or 0) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
@@ -119,15 +110,15 @@ local function do_generate_item_id(params)
       end
    end
 
-   local id = Itemgen.random_item_id_raw(params.objlv, params.categories)
+   local id = Itemgen.random_item_id_raw(params.level, params.categories)
 
    if id == nil then
       if get_fltselect(params.categories) == "elona.unique_item" then
          params.quality = 4
       end
-      params.objlv = params.objlv + 10
+      params.level = params.level + 10
       set_fltselect(params.categories, nil)
-      id = Itemgen.random_item_id_raw(params.objlv, params.categories)
+      id = Itemgen.random_item_id_raw(params.level, params.categories)
    end
 
    if id == nil and params.categories["elona.furniture_altar"] then
@@ -145,31 +136,8 @@ function Itemgen.create(x, y, params, where)
    params.categories = table.set(params.categories or {})
    params.create_params = params.create_params or {}
 
-   if params.ownerless then
-      where = nil
-   else
-      where = where or Map.current()
-   end
-
-   -- EVENT: before_generate_item
-   local chara
-   if class.is_an(InstancedMap, where) then
-      chara = Chara.player()
-   elseif type(where) == "table" and where._type == "base.chara" then
-      if where:is_player() or params.always_mod_fixlv then
-         chara = where
-      end
-   end
    if params.quality < 5 and chara and chara:skill_level("elona.stat_luck") > Rand.rnd(5000) then
       params.quality = params.quality + 1
-   end
-   --
-
-   if where and where:is_positional() then
-      x, y = Map.find_free_position(x, y, {}, where)
-      if not x then
-         return nil
-      end
    end
 
    local id = params.id or nil
@@ -181,7 +149,12 @@ function Itemgen.create(x, y, params, where)
    local bug_id = "elona.bug"
    id = id or bug_id
 
-   return Item.create(id, x, y, params.create_params, where)
+   local item = Item.create(id, x, y, params.create_params, where)
+   if item then
+      item.quality = params.quality
+   end
+
+   return item
 end
 
 return Itemgen

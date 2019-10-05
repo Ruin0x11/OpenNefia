@@ -1,10 +1,13 @@
 local Chara = require("api.Chara")
 local Event = require("api.Event")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local NpcMemory = require("mod.elona_sys.api.NpcMemory")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local MapObject = require("api.MapObject")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 
 --
@@ -33,7 +36,6 @@ Gui.bind_keys {
 
 local function retreat_in_fear(chara, params)
    if chara.hp < chara:calc("max_hp") / 5 then
-
       if chara:is_player() or chara:has_effect("elona.fear") then
          return
       end
@@ -382,19 +384,76 @@ end
 Event.register("base.on_calc_kill_exp",
                "Kill experience formula", calc_kill_exp)
 
+Event.register(
+   "base.hook_generate_chara",
+   "Shade generation",
+   function(_, params, result)
+      if params.id ~= "elona.shade" then
+         return result
+      end
+
+      if not Rand.one_in(5) then
+         return result
+      end
+
+      params.level = params.level * 2
+      if params.quality > 3 then
+         params.quality = 3
+      end
+      local Charagen = require("mod.tools.api.Charagen")
+      params.id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
+
+      -- using Chara.create would cause recursion
+      local chara = MapObject.generate_from("base.chara", params.id, params.gen_params)
+
+      chara.title = "shade"
+      chara.image = "elona.chara_shade"
+
+      return chara
+end)
+
+Event.register("base.on_chara_generated", "npc memory", function(chara) NpcMemory.on_generated(chara._id) end)
+Event.register("base.on_object_cloned", "npc memory",
+               function(_, params)
+                  if params.object._type == "base.chara" then
+                     NpcMemory.on_generated(params.object._id)
+                  end
+               end)
+Event.register("base.on_kill_chara", "npc memory",
+               function(victim, params)
+                  NpcMemory.on_killed(params.victim._id)
+               end)
+Event.register("base.on_map_leave", "npc memory",
+               function(map)
+                  if map.is_temporary then
+                     for _, v in map:iter_charas() do
+                        if Chara.is_alive(v) then
+                           print( "forget " .. v._id)
+                           NpcMemory.forget_generated(v._id)
+                        end
+                     end
+                  end
+               end)
+
+
+---
+--- Dialog
+---
 
 local function bump_into_chara(player, params, result)
    local on_cell = params.chara
    local reaction = player:reaction_towards(on_cell)
 
    if reaction > 0 then
-      if true then
+      if on_cell:is_ally() then
          if player:swap_places(on_cell) then
             Gui.mes("You switch places with " .. on_cell.uid .. ".")
             Gui.set_scroll()
          end
+         return "turn_end"
       end
-      return "turn_end"
+
+      return start_dialog(player, on_cell)
    end
 
    -- TODO: relation as -1
@@ -410,3 +469,28 @@ end
 
 Event.register("elona_sys.on_player_bumped_into_chara",
                "Attack/swap position", bump_into_chara)
+
+
+local function calc_dialog_choices(speaker, params, result)
+   table.insert(result, {"talk", "talk"})
+
+   if speaker.roles then
+      for _, role in ipairs(speaker.roles) do
+         local role_data = data["elona.role"]:ensure(role.id)
+         if role_data.dialog_choices then
+            for _, choice in ipairs(role_data.dialog_choices) do
+               table.insert(result, choice)
+            end
+         end
+      end
+   end
+
+   return result
+end
+
+Event.register("elona.calc_dialog_choices", "Default NPC dialog", calc_dialog_choices)
+
+local function start_dialog(on_cell)
+   Dialog.start(on_cell, "elona.default")
+   return "player_turn_query"
+end

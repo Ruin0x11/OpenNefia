@@ -459,6 +459,16 @@ function table.insertion_sort(arr, f)
    end
 end
 
+function table.has_value(tbl, value)
+   for _, v in ipairs(tbl) do
+      if v == value then
+         return true
+      end
+   end
+
+   return false
+end
+
 
 local function mod_value(tbl, add, meth, default, prop)
    if default and tbl[prop] == nil then

@@ -70,8 +70,9 @@ function Item.create(id, x, y, params, where)
    end
 
    if where and where:is_positional() then
-      if not where:is_in_bounds(x, y) then
-         return nil, "out of bounds"
+      x, y = Map.find_free_position(x, y, {}, where)
+      if not x then
+         return nil
       end
    end
 
