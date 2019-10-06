@@ -1,3 +1,6 @@
+local Chara = require("api.Chara")
+local Input = require("api.Input")
+
 data:add {
    _type = "elona_sys.dialog",
    _id = "default",
@@ -34,10 +37,12 @@ data:add {
       __start = function()
       end,
 
-      buy = function()
+      buy = function(t)
+         Input.query_inventory(Chara.player(), "inv_buy", {target=t.speaker})
          return "elona.default:talk"
       end,
-      sell = function()
+      sell = function(t)
+         Input.query_inventory(Chara.player(), "inv_sell", {target=t.speaker})
          return "elona.default:talk"
       end,
    }

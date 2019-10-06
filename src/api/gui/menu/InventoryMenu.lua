@@ -19,6 +19,7 @@ local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
 local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
 
+--- A menu for a single inventory action, like getting or eating.
 local InventoryMenu = class.class("InventoryMenu", {IUiLayer, IPaged})
 
 InventoryMenu:delegate("input", IInput)
@@ -176,6 +177,8 @@ function InventoryMenu:update_filtering()
       sources = {sources}
    end
 
+   -- Obtain an iterator of IItem for each source. For example, calls
+   -- IChara:iter_inventory() for the "chara" and "target" sources.
    for _, source in pairs(self.ctxt.sources) do
       local items = source.getter(self.ctxt)
       items = items:map(function(item)
@@ -188,6 +191,8 @@ function InventoryMenu:update_filtering()
    -- Combine each source iterator into one chained iterator.
    local iter = fun.chain(table.unpack(all))
 
+   -- Filter invalid items and items that do not pass the filter
+   -- configured for the inventory action.
    for _, entry in iter:unwrap() do
       local item = entry.item
       if not Item.is_alive(item) then
@@ -200,18 +205,24 @@ function InventoryMenu:update_filtering()
    end
 
    -- NOTE: This needs to be a stable sort, which table.sort isn't. If
-   -- corectness is not important, it should use merge sort...
+   -- correctness is not important, it should use merge sort...
    table.insertion_sort(filtered, self.ctxt:gen_sort())
 
    self.pages:set_data(filtered)
    self:update_icons_this_page()
 
+   -- Sort everything. Defaults to item ID but can be configured per
+   -- inventory context.
+   --
    -- TODO: Determine when to display weight. Inventory contexts can
    -- be created out of any number of sources that might exclude a
    -- character, like a spot on the map.
    self.total_weight = self.ctxt.chara:calc("inventory_weight")
    self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
 
+   -- Run after filter actions that can return a turn result, like
+   -- exiting the menu preemptively if a condition is false (for
+   -- example, an altar is not on ground when praying).
    local result = self.ctxt:after_filter(filtered)
    if result then
       self.result = result

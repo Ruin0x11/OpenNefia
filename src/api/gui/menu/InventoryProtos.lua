@@ -1,5 +1,7 @@
 local Gui = require("api.Gui")
+local Rand = require("api.Rand")
 local Action = require("api.Action")
+local Input = require("api.Input")
 local ElonaCommand = require("mod.elona.api.ElonaCommand") -- TODO
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
@@ -36,6 +38,11 @@ InventoryProtos.inv_get = {
       end
 
       local result = Action.get(ctxt.chara, item, amount)
+
+      if result then
+         Gui.mes(chara.uid .. " picks up " .. item:build_name(amount))
+         Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
+      end
 
       -- TODO: handle harvest action
 
@@ -123,6 +130,87 @@ InventoryProtos.inv_eat = {
    end,
    on_select = function(ctxt, item)
       return ElonaCommand.do_eat(ctxt.chara, item)
+   end
+}
+
+InventoryProtos.inv_buy = {
+   sources = { "target" },
+   shortcuts = false,
+   icon = 6,
+   query_amount = true,
+   can_select = function(ctxt, item)
+      if item:calc("flags").is_no_drop then
+         return false, "marked as no drop"
+      end
+
+      return true
+   end,
+   on_select = function(ctxt, item, amount)
+      if not Input.yes_no("Really buy?") then
+         return "inventory_continue"
+      end
+
+      local cost = item:calc("value") * amount
+
+      if cost > ctxt.chara.gold then -- TODO
+         Gui.print("not enough money")
+         return "inventory_continue"
+      end
+
+      local separated = Action.get(ctxt.chara, item, amount)
+      if not separated then
+         Gui.print("inventory is full")
+         return "inventory_continue"
+      end
+
+      Gui.mes(ctxt.chara.uid .. " buys " .. item:build_name(amount))
+      Gui.play_sound("base.paygold1", ctxt.chara.x, ctxt.chara.y)
+      ctxt.chara.gold = ctxt.chara.gold - cost
+      ctxt.target.gold = ctxt.target.gold + cost
+
+      return "inventory_continue"
+   end
+}
+
+InventoryProtos.inv_sell = {
+   sources = { "chara" },
+   shortcuts = false,
+   icon = 7,
+   query_amount = true,
+   can_select = function(ctxt, item)
+      if item:calc("flags").is_no_drop then
+         return false, "marked as no drop"
+      end
+
+      return true
+   end,
+   on_select = function(ctxt, item, amount)
+      if not Input.yes_no("Really sell?") then
+         return "inventory_continue"
+      end
+
+      local cost = math.floor(item:calc("value") * amount) / 5
+
+      if cost > ctxt.target.gold then -- TODO
+         Gui.print("shopkeeper doesn't have enough money")
+         return "inventory_continue"
+      end
+
+      local separated = Action.get(ctxt.target, item, amount)
+      if not separated then
+         Gui.print("shopkeeper's inventory is full")
+         return "inventory_continue"
+      end
+
+      Gui.mes(ctxt.chara.uid .. " sells " .. item:build_name(amount))
+      Gui.play_sound("base.getgold1", ctxt.chara.x, ctxt.chara.y)
+      ctxt.target.gold = ctxt.target.gold - cost
+      ctxt.chara.gold = ctxt.chara.gold + cost
+
+      separated.own_state = "none"
+      separated.identify_state = "completely"
+
+      return "inventory_continue"
    end
 }
 

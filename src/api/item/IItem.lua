@@ -83,7 +83,7 @@ function IItem:set_image(image)
       local chip = data["base.chip"][self.image]
       self.y_offset = chip.y_offset
    else
-      self.image = nil
+      self.image = self.proto.image
       local chip = data["base.chip"][self.proto.image]
       if chip then
          self.y_offset = chip.y_offset

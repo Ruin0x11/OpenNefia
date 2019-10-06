@@ -37,6 +37,7 @@ local function query_inventory(chara, operation, params, returns_item)
    params = params or {}
    params.chara = chara
    params.map = chara and chara:current_map()
+   params.target = params.target or nil
 
    local result, canceled = InventoryWrapper:new(operation, params, returns_item):query()
 
