@@ -1,5 +1,6 @@
 local object = require("internal.object")
 
+local Event = require("api.Event")
 local Object = require("api.Object")
 local Log = require("api.Log")
 
@@ -100,6 +101,8 @@ function MapObject.clone(obj, owned)
 
       assert(obj.location:take_object(new_object, x, y))
    end
+
+   Event.trigger("base.on_object_cloned", {object=obj})
 
    return new_object
 end

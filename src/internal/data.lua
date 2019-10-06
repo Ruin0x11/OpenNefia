@@ -47,6 +47,7 @@ end
 
 local stage = nil
 local inner = {}
+local index = {}
 local schemas = {}
 local metatables = {}
 local generates = {}
@@ -58,6 +59,7 @@ local single_edits = {}
 -- HACK: separate into Data API and internal.data
 function data:clear()
    inner = {}
+   index = {}
    schemas = {}
    metatables = {}
 end
@@ -76,12 +78,12 @@ local function add_index_field(dat, _type, field)
       -- raised.
       if index_key ~= nil then
          local key = "by_" .. v
-         inner[_type][key] = inner[_type][key] or {}
+         index[_type][key] = index[_type][key] or {}
 
-         if inner[_type][key][index_key] ~= nil then
+         if index[_type][key][index_key] ~= nil then
             self:error(string.format("Index key '%s' on '%s' is not unique: '%s'", v, full_id, index_key))
          else
-            inner[_type][key][index_key] = dat
+            index[_type][key][index_key] = dat
          end
       end
    end
@@ -118,6 +120,7 @@ function data:add_type(schema, params)
    local generate = params.generates or nil
 
    inner[_type] = {}
+   index[_type] = {}
    schemas[_type] = schema
    metatables[_type] = metatable
    generates[_type] = generate
@@ -258,12 +261,12 @@ function proxy:edit(name, func)
    end
 end
 
-function proxy:find_by(index, value)
-   if not inner[self._type] then
+function proxy:find_by(index_field, value)
+   if not index[self._type] then
       error("Unknown type " .. self._type)
    end
-   if inner[self._type]["by_" .. index] ~= nil then
-      return inner[self._type]["by_" .. index][value]
+   if index[self._type]["by_" .. index_field] ~= nil then
+      return index[self._type]["by_" .. index_field][value]
    end
 
    return nil
@@ -309,6 +312,10 @@ local function iter(state, prev_index)
    end
 
    local next_index, dat = state.iter(state.state, prev_index)
+   if dat and not dat._id then
+      print"die"
+      _p(next_index, dat)
+   end
 
    if next_index == nil then
       return nil
@@ -318,6 +325,9 @@ local function iter(state, prev_index)
 end
 
 function proxy:iter()
+   for _, v in pairs(inner[self._type]) do
+      assert(v._id, inspect(v))
+   end
    local inner_iter, inner_state, inner_index
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])

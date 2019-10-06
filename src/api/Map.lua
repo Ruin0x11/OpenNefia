@@ -137,14 +137,26 @@ function Map.iter_feats(map)
    return (map or field.map):iter_feats()
 end
 
---- Creates a new blank map.
-function Map.create(width, height)
-   return InstancedMap:new(width, height)
-end
-
-function Map.generate(generator_id, params)
+function Map.generate(generator_id, params, opts)
    params = params or {}
-   local opts = { outer_map = Map.current() }
+
+   opts = opts or {}
+   opts.outer_map = opts.outer_map or Map.current()
+
+   if not opts.no_generate_area and not opts.area then
+      local area_uid
+      if type(params.area_params) == "number" then
+         area_uid = params.area_params
+         opts.area = save.base.area_mapping:get_data_of_area(area_uid).data
+         Log.warn("Reusing area for map: %s", inspect(opts.area))
+      else
+         area_uid = save.base.area_mapping:generate_area()
+
+         opts.area = save.base.area_mapping:get_data_of_area(area_uid).data
+         table.merge_missing(opts.area, params.area_params)
+         Log.warn("Generating new area for map: %s", inspect(opts.area))
+      end
+   end
 
    local generator = data["base.map_generator"]:ensure(generator_id)
    local success, map = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
@@ -365,7 +377,9 @@ function Map.travel_to(map_or_uid, params)
       assert(new_ally ~= nil)
    end
 
-   if not current.is_temporary then
+   current:emit("base.on_map_leave")
+
+   if current.is_temporary then
       Map.save(current)
    end
 

@@ -130,7 +130,16 @@ local function load_map_template(self, params, opts)
       else
          for _, area in ipairs(template.areas) do
             local area_generator_params = generator_for_area(area)
-            MapArea.create_entrance(area_generator_params, area.x, area.y, map)
+            local area_params = {}
+
+            if params.area_uid then
+               -- reuse existing area
+               area_params = params.area_uid
+            else
+               -- generate new area
+               area_params = { id = params.id }
+            end
+            MapArea.create_entrance(area_generator_params, area_params, area.x, area.y, map)
          end
       end
    end

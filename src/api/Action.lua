@@ -70,10 +70,7 @@ function Action.get(chara, item, amount)
 
    local picked_up = chara:take_item(item, amount)
    if picked_up then
-      Gui.mes(chara.uid .. " picks up " .. item:build_name(amount))
-      Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
-      print("get " .. tostring(item.uid))
-      return true
+      return picked_up
    end
    print("fail " .. tostring(item.uid))
 

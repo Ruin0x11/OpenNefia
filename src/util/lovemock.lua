@@ -52,6 +52,7 @@ love.graphics.newImage = function(path)
       getHeight = function() return 100 end,
       setFilter = function() end,
       release = function() end,
+      typeOf = function(self, ty) return ty == "Image" end
    }
 end
 love.graphics.draw = function() end

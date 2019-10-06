@@ -1,6 +1,7 @@
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
+local Event = require("api.Event")
 
 local field = require("game.field")
 local save = require("internal.global.save")
@@ -65,8 +66,13 @@ function Chara.is_alive(c)
       return false
    end
 
+   -- NOTE: fails if the map is not current.
    return map.uid == Map.current().uid
 end
+
+local hook_generate_chara =
+   Event.define_hook("generate_chara",
+                     "Overrides the behavior for character generation.")
 
 function Chara.create(id, x, y, params, where)
    if x == nil then
@@ -78,10 +84,12 @@ function Chara.create(id, x, y, params, where)
    end
 
    params = params or {}
+   params.level = params.level or 1
+   params.quality = params.quality or 0
    where = where or field.map
 
    if not params.ownerless then
-      x, y = Map.find_position_for_chara(x, y)
+      x, y = Map.find_position_for_chara(x, y, where)
       if not x then
          return nil
       end
@@ -108,14 +116,25 @@ function Chara.create(id, x, y, params, where)
    end
 
    local copy = params.copy or {}
-   copy.level = params.level or nil
-   copy.quality = params.quality or nil
+   copy.level = params.level
+   copy.quality = params.quality
 
    local gen_params = {
       no_build = params.no_build,
       copy = copy
    }
-   local chara = MapObject.generate_from("base.chara", id, gen_params)
+
+   params.id = id
+   params.x = x
+   params.y = y
+   params.where = where
+   params.gen_params = gen_params
+
+   local chara = hook_generate_chara(params)
+
+   if chara == nil then
+      chara = MapObject.generate_from("base.chara", id, gen_params)
+   end
 
    if where then
       chara = where:take_object(chara, x, y)
@@ -124,6 +143,8 @@ function Chara.create(id, x, y, params, where)
    if chara and not params.no_build then
       chara:refresh()
    end
+
+   chara:emit("base.on_chara_generated")
 
    return chara
 end

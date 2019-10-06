@@ -13,6 +13,10 @@ local function source_chara(ctxt)
    return ctxt.chara:iter_inventory()
 end
 
+local function source_target(ctxt)
+   return ctxt.target:iter_inventory()
+end
+
 local function source_ground(ctxt)
    local Item = require("api.Item")
 
@@ -36,6 +40,14 @@ local sources = {
       name = "chara",
       getter = source_chara,
       order = 10000,
+      params = {
+         chara = "IChara"
+      }
+   },
+   {
+      name = "target",
+      getter = source_target,
+      order = 11000,
       params = {
          chara = "IChara"
       }

@@ -14,6 +14,11 @@ local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
 
+--- Wraps an InventoryMenu such that multiple inventory actions can be
+--- switched between by pressing Tab. A single InventoryMenu will
+--- handle a single action, like getting or eating, and this class
+--- aggregates them all and shows an IconBar to display the current
+--- action.
 local InventoryWrapper = class.class("InventoryWrapper", IUiLayer)
 
 InventoryWrapper:delegate("input", IInput)

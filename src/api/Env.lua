@@ -1,3 +1,5 @@
+local queue = require("util.queue")
+
 local Env = {}
 
 function Env.version()
@@ -12,22 +14,20 @@ function Env.is_headless()
    return (not love) or Env.love_version() == "lovemock"
 end
 
-local ui_result = {}
+local ui_results = queue:new()
 
-function Env.set_ui_result(result)
+function Env.push_ui_result(result)
    if not Env.is_headless() then
       error("This function can only be used in headless mode.")
    end
-   ui_result = result
+   ui_results:push(result)
 end
 
-function Env.ui_result()
+function Env.pop_ui_result()
    if not Env.is_headless() then
       error("This function can only be used in headless mode.")
    end
-   local result = ui_result
-   ui_result = {}
-   return result
+   return ui_results:pop()
 end
 
 function Env.lua_version()

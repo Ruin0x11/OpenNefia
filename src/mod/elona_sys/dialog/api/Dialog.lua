@@ -132,10 +132,76 @@ local function jump_to_dialog(talk, new_dialog_id, node)
       error("No such dialog " .. new_dialog_id)
    end
    talk.dialog = dialog
-   return {choice = node, opts = {}}
+   return talk.dialog.nodes[node]
 end
 
-local function step_dialog(dialog, node_data, talk, state)
+-- Looks for a dialog given an ID like "mod.dialog_id:node_id" or
+-- "mod.dialog_id" (implicitly using __start as the first node)
+local function find_dialog(cur, id)
+   local arr = string.split(id, ":")
+
+   local dialog_id, node_id
+
+   if #arr == 1 then
+      if string.find(id, "%.") then
+         -- "mod.dialog_id"
+         dialog_id = arr[1]
+         node_id = "__start"
+      else
+         -- "node_id"
+         dialog_id = cur._id
+         node_id = arr[1]
+      end
+   elseif #arr == 2 then
+      -- "mod.dialog_id:node_id"
+      dialog_id = arr[1]
+      node_id = arr[2]
+   else
+      return nil, nil
+   end
+
+   local dialog_data = data["elona_sys.dialog"][dialog_id]
+   if not dialog_data then
+      return nil, nil
+   end
+
+   if not dialog_data.nodes[node_id] then
+      return nil, nil
+   end
+
+   return dialog_id, node_id
+end
+
+local get_choices
+get_choices = function(node, talk, state, node_data, choice_key, found)
+   found = found or {}
+   local choices = node.choices
+   if choices == nil then
+      choices = {{"__END__", choice_key}}
+   elseif type(choices) == "function" then
+      local ok
+      ok, choices = pcall(choices, talk, state, node_data.opts)
+      if not ok then
+         dialog_error(talk, "Error running choices function", choices)
+      end
+   elseif type(choices) == "string" then
+      local dialog_id, node_id = find_dialog(talk.dialog, choices)
+      if dialog_id then
+         if found[choices] then
+            dialog_error(talk, "Infinite recursion when retrieving external node for dialog choices", choices)
+         end
+         found[choices] = true
+         local new_node = data["elona_sys.dialog"]:ensure(dialog_id).nodes[node_id]
+         choices = get_choices(new_node, talk, state, node_data, choice_key, found) -- recurse
+      else
+         dialog_error(talk, "Cannot find external node for dialog choices", choices)
+      end
+   end
+
+   return choices
+end
+
+local function step_dialog(node_data, talk, state)
    if node_data.choice == "__END__" then
       return nil
    end
@@ -147,9 +213,16 @@ local function step_dialog(dialog, node_data, talk, state)
       return nil
    end
 
-   local node = dialog.nodes[node_data.choice]
+   local node = talk.dialog.nodes[node_data.choice]
    if node == nil then
-      dialog_error(talk, "No node with ID " .. node_data.choice .. " found")
+      -- try to jump to another dialog, like "mod.dialog_id:node_name"
+      local dialog_id, node_id = find_dialog(talk.dialog, node_data.choice)
+
+      if dialog_id and node_id then
+         node = jump_to_dialog(talk, dialog_id, node_id)
+      else
+         dialog_error(talk, "No node with ID " .. node_data.choice .. " found")
+      end
    end
 
    local next_node = nil
@@ -199,16 +272,6 @@ local function step_dialog(dialog, node_data, talk, state)
                end
             end
 
-            -- Get localization key of default response ("more", "bye").
-            local choice_key = text.choice
-            if choice_key == nil then
-               if texts[i+1] == nil then
-                  choice_key = "__BYE__"
-               else
-                  choice_key = "__MORE__"
-               end
-            end
-
             -- Change speaking character.
             if text.speaker ~= nil then
                local found = Chara.find(text.speaker, "Others")
@@ -220,17 +283,18 @@ local function step_dialog(dialog, node_data, talk, state)
                end
             end
 
-            -- Build choices. Default to ending the dialog.
-            local choices = node.choices
-            if choices == nil then
-               choices = {{"__END__", choice_key}}
-            elseif type(choices) == "function" then
-               local ok
-               ok, choices = pcall(choices, talk, state, node_data.opts)
-               if not ok then
-                  dialog_error(talk, "Error running choices function", choices)
+            -- Get localization key of default response ("more", "bye").
+            local choice_key = text.choice
+            if choice_key == nil then
+               if texts[i+1] == nil then
+                  choice_key = "__BYE__"
+               else
+                  choice_key = "__MORE__"
                end
             end
+
+            -- Build choices. Default to ending the dialog.
+            local choices = get_choices(node, talk, state, node_data, choice_key)
 
             -- Set the default choice to select if window is
             -- cancelled. If nil, prevent cancellation.
@@ -253,8 +317,8 @@ local function step_dialog(dialog, node_data, talk, state)
                tex = I18N.get(text[1], table.unpack(args))
             end
 
-            -- Prompt for choice if on the last text entry, otherwise
-            -- show single choice.
+            -- Prompt for choice if on the last text entry or
+            -- `next_node` is non-nil, otherwise show single choice.
             if texts[i+1] == nil then
                local choice = query(talk, tex, choices, default_choice)
                next_node = {choice = choice, opts = {}}
@@ -300,7 +364,7 @@ function Dialog.start(chara, dialog_id)
    local next_node = {choice = "__start", opts = {}}
 
    while next_node ~= nil do
-      next_node = step_dialog(talk.dialog, next_node, talk, state)
+      next_node = step_dialog(next_node, talk, state)
    end
 end
 

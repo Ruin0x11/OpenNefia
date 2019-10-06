@@ -1,3 +1,4 @@
+local Env = require("api.Env")
 local Draw = require("api.Draw")
 local draw = require("internal.draw")
 
@@ -8,7 +9,7 @@ function asset_drawable:init(data_inst)
       data_inst = { image = data_inst }
    end
 
-   if type(data_inst) == "userdata" and data_inst.typeOf and data_inst:typeOf("Image") then
+   if (type(data_inst) == "userdata" or Env.is_headless()) and data_inst.typeOf and data_inst:typeOf("Image") then
       self.image = data_inst
    else
       self.image = draw.load_image(data_inst.image)

@@ -13,8 +13,11 @@ data:add {
    class = "elona.gunner",
    faction = "base.enemy",
    image = "elona.chara_rabbit",
+   level = 1,
    max_hp = 50,
    max_mp = 10,
+   rarity = 0,
+   coefficient = 400,
 
    body_parts = {
       "elona.head",
@@ -47,9 +50,12 @@ data:add {
    class = "elona.gunner",
    faction = "base.enemy",
    image = "elona.chara_snail",
+   level = 1,
    max_hp = 100,
    max_mp = 20,
    max_stamina = 10000,
+   rarity = 0,
+   coefficient = 0,
 
    talk = "content.test"
 }
@@ -63,8 +69,11 @@ data:add {
    class = "elona.gunner",
    faction = "base.enemy",
    image = "elona.chara_kobold",
+   level = 1,
    max_hp = 10,
    max_mp = 2,
+   rarity = 0,
+   coefficient = 0,
 
    body_parts = {
       "elona.head",

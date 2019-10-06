@@ -9,9 +9,7 @@
 ***** TODO menu switching
 ***** TODO item ordering/filtering
 ***** TODO item weight display
-*** TODO i18n
-**** TODO i18n porting
-**** TODO object descriptions
+*** TODO dialogue
 *** TODO cell memory
 *** TODO mef (use as feat?)
 *** TODO chara generation
@@ -23,8 +21,11 @@ use number here
 **** TODO item material
 *** TODO localized item name
 *** TODO map refresh logic
-*** TODO move into elona mod
 ** content
+*** TODO i18n
+**** TODO i18n porting
+**** TODO object descriptions
+*** TODO move into elona mod
 *** TODO status effects impl
 *** TODO food
 **** TODO hunger

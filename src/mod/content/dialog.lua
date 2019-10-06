@@ -3,24 +3,6 @@ local Gui = require("api.Gui")
 local Item = require("api.Item")
 local I18N = require("api.I18N")
 
-data:add {
-   _type = "base.chara",
-   _id = "little_sister",
-
-   name = "little sister",
-   image = "elona.chara_little_sister",
-   max_hp = 10,
-   max_mp = 2
-}
-
-data:add {
-   _type = "base.item",
-   _id = "little_ball",
-
-   name = "little ball",
-   image = "elona.item_little_ball",
-}
-
 local function can_receive_reward()
    return true
 end
@@ -50,7 +32,7 @@ data:add {
             {"__END__", "__MORE__"},
          },
          on_finish = function()
-            Item.create("core.little_ball")
+            Item.create("elona.little_ball")
 
             Gui.mes(I18N.get("common.something_is_put_on_the_ground"))
             -- Gui.show_journal_update_message()
@@ -69,7 +51,7 @@ data:add {
                {"replenish", "choices.replenish"}
             }
 
-            if Chara.find("content.little_sister", "ally") ~= nil then
+            if Chara.find("elona.little_sister", "ally") ~= nil then
                table.insert(choices, {"turn_over", "choices.turn_over"})
             end
             table.insert(choices, {"__END__", "__BYE__"})
@@ -103,7 +85,7 @@ data:add {
             {"replenish"},
          },
          on_finish = function()
-            Item.create("content.little_ball")
+            Item.create("elona.little_ball")
             Gui.mes(I18N.get("core.locale.common.something_is_put_on_the_ground"))
          end
       },

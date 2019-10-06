@@ -146,6 +146,7 @@ local function gen_stair(down)
 
       params = {
          generator_params = "table",
+         area_params = "table",
          map_uid = "number"
       },
 
