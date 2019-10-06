@@ -33,6 +33,7 @@ local defaults = {
    pierce_rate = 0,
    effective_range = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
    ammo_type = "",
+   value = 1,
    params = {},
    types = {}
 }

@@ -14,7 +14,10 @@ end
 
 function ListModel:set_data(items)
    self.items = items or self.items
+   local old_selected = self.selected
    self:select()
+   self.selected = math.min(old_selected, #self.items)
+   self.selected = math.max(self.selected, 1)
 end
 
 function ListModel:iter()

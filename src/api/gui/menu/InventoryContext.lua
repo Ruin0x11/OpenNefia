@@ -28,7 +28,8 @@ local function source_ground(ctxt)
       return fun.iter({})
    end
 
-   return Item.at(ground_x, ground_y)
+   local map = ctxt.map or Map.current()
+   return Item.at(ground_x, ground_y, map)
 end
 
 local function source_equipment(ctxt)
@@ -112,9 +113,9 @@ function InventoryContext:init(proto, params)
    self.stack = {}
 
    self.chara = params.chara or nil
-   -- self.target = params.target or nil
-   -- self.container = params.container or nil
-   -- self.map = params.map or nil
+   self.target = params.target or nil
+   self.container = params.container or nil
+   self.map = params.map or nil
 
    self.icon = self.proto.icon or 1
 

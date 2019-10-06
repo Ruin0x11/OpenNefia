@@ -153,13 +153,13 @@ InventoryProtos.inv_buy = {
       local cost = item:calc("value") * amount
 
       if cost > ctxt.chara.gold then -- TODO
-         Gui.print("not enough money")
+         Gui.mes("not enough money")
          return "inventory_continue"
       end
 
       local separated = Action.get(ctxt.chara, item, amount)
       if not separated then
-         Gui.print("inventory is full")
+         Gui.mes("inventory is full")
          return "inventory_continue"
       end
 
@@ -189,16 +189,16 @@ InventoryProtos.inv_sell = {
          return "inventory_continue"
       end
 
-      local cost = math.floor(item:calc("value") * amount) / 5
+      local cost = math.floor((item:calc("value") * amount) / 5)
 
       if cost > ctxt.target.gold then -- TODO
-         Gui.print("shopkeeper doesn't have enough money")
+         Gui.mes("shopkeeper doesn't have enough money")
          return "inventory_continue"
       end
 
       local separated = Action.get(ctxt.target, item, amount)
       if not separated then
-         Gui.print("shopkeeper's inventory is full")
+         Gui.mes("shopkeeper's inventory is full")
          return "inventory_continue"
       end
 
