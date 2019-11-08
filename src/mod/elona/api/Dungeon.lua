@@ -52,7 +52,7 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
       y = math.floor(Rand.rnd(map_height) / 3 * 3) + 2
    elseif pos == "2" then
       -- room on the edge
-      local dir = Rand.rnd(4)
+      dir = Rand.rnd(4)
       if dir == 3 or dir == 0 then
          x = Rand.rnd(math.floor(map_width - min_size * 3 / 2 - 2)) + math.floor(min_size / 2)
          w = Rand.rnd(min_size) + math.floor(min_size / 2) + 3
@@ -108,7 +108,7 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
       local success = false
 
       while true do
-         x, y, w, h = Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
+         x, y, w, h, dir = Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
 
          if x == nil then
             return nil, "could not fit generated room"
@@ -257,32 +257,37 @@ function Dungeon.create_room_door(room, dir, place_door, map)
    end
 
    door_positions = Rand.shuffle(door_positions)
-   local dirs = {}
+   local dirs1 = {}
+   local dirs2 = {}
    local x, y
 
    for _, pos in ipairs(door_positions) do
       if dir == 3 then
          x = pos + room.x + 1
          y = room.y + room.height - 1
-         dirs = { 0, 0, -1, 1 }
+         dirs1 = { 0, 0 }
+         dirs2 = {-1, 1 }
       elseif dir == 0 then
          x = pos + room.x + 1
          y = room.y
-         dirs = { 0, 0, -1, 1 }
+         dirs1 = { 0, 0 }
+         dirs2 = {-1, 1 }
       elseif dir == 1 then
          x = room.x + room.width - 1
          y = pos + room.y + 1
-         dirs = { -1, 1, 0, 0 }
+         dirs1 = {-1, 1 }
+         dirs2 = { 0, 0 }
       elseif dir == 2 then
          x = room.x
          y = pos + room.y + 1
-         dirs = { -1, 1, 0, 0 }
+         dirs1 = {-1, 1 }
+         dirs2 = { 0, 0 }
       end
 
       local success = true
       for i=1, 2 do
-         local dx = x + dirs[i]
-         local dy = y + dirs[i+2]
+         local dx = x + dirs1[i]
+         local dy = y + dirs2[i]
          if dx < 0 or dy < 0 or dx >= map:width() or dy >= map:height() then
             success = false
             break
@@ -352,12 +357,12 @@ local function calc_room_entrance(room, map)
          y = room.y + room.height - 1
       end
       if x ~= 0 then
-         if Map.tile(x, y - 1, map) == "elona.mapgen_room" or Map.tile(x, y + 1, map) == "elona.mapgen_room" then
+         if Map.tile(x, y - 1, map)._id == "elona.mapgen_room" or Map.tile(x, y + 1, map)._id == "elona.mapgen_room" then
             found = false
          end
       end
       if y ~= 0 then
-         if Map.tile(x - 1, y, map) == "elona.mapgen_room" or Map.tile(x + 1, y, map) == "elona.mapgen_room" then
+         if Map.tile(x - 1, y, map)._id == "elona.mapgen_room" or Map.tile(x + 1, y, map)._id == "elona.mapgen_room" then
             found = false
          end
       end

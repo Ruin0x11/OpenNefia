@@ -1,3 +1,4 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
@@ -14,8 +15,9 @@ function UiGoldPlatinum:relayout(x, y)
 end
 
 function UiGoldPlatinum:draw()
-   local gold = 10000
-   local plat = 10
+   local chara = Chara.player()
+   local gold = chara.gold
+   local plat = chara.platinum
 
    self.t.gold_coin:draw(self.x, self.y, nil, nil, {255, 255, 255})
    Draw.text_shadowed(string.format("%d gp", gold),

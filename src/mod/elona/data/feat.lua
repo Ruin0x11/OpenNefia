@@ -46,6 +46,8 @@ data:add {
       end
 
       self.opened = true
+      self.is_solid = false
+      self.is_opaque = false
 
       Gui.mes("Open the door.")
       if self.open_sound then
@@ -60,6 +62,8 @@ data:add {
       end
 
       self.opened = false
+      self.is_solid = true
+      self.is_opaque = true
 
       Gui.mes("Close the door.")
       if self.close_sound then

@@ -397,12 +397,12 @@ local function my_start(self, player)
    end
 
    for i=1,4 do
-      local a = Chara.create("content.ally", i+8, 3)
+      local a = Chara.create("elona.putit", i+8, 3)
       a:recruit_as_ally()
    end
 
-   for i=1,2 do
-      Chara.create("content.enemy", i+8, 11)
+   for i=1,10 do
+      Chara.create("elona.snail", i+8, 11)
    end
 
    for _=1,50 do

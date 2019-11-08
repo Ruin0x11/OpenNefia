@@ -90,12 +90,12 @@ function KeyHandler:run_key_action(key, ...)
       it.wait_remain = it.wait_remain - 1
       if it.wait_remain <= 0 then
          if repeats[key] then
-            it.delay = 40
+            it.delay = 40 * 2
          end
          it.fast = true
       elseif it.fast then
          if repeats[key] then
-            it.delay = 40
+            it.delay = 40 * 2
          else
             it.delay = 10
          end
