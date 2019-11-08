@@ -140,7 +140,13 @@ function IItem:get_owning_chara()
 end
 
 function IItem:produce_memory()
-   return { image = self.image, color = {0, 0, 0} }
+   return {
+      uid = self.uid,
+      image = self.image .. "#1",
+      color = {0, 0, 0},
+      x_offset = self:calc("x_offset") or 0,
+      y_offset = self:calc("y_offset") or 0
+   }
 end
 
 function IItem:is_blessed()

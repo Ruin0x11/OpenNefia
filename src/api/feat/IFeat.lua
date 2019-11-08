@@ -34,6 +34,14 @@ function IFeat:refresh()
    end
 end
 
+function IFeat:produce_memory()
+   return {
+      uid = self.uid,
+      is_invisible = self:calc("is_invisible"),
+      image = self:calc("image") .. "#1"
+   }
+end
+
 function IFeat:on_stepped_on(obj)
 end
 

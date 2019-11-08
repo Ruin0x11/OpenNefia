@@ -86,11 +86,13 @@ function InstancedMap:init(width, height, uids, tile)
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
-   self._memory = table.of({}, width * height)
+   self._memory = {}
 
    self._tiles = table.of({}, width * height)
    self._tiles_dirty = true
    self._uids = uids
+
+   self._default_tile = "base.floor"
 
    self:init_map_data()
 
@@ -138,6 +140,10 @@ function InstancedMap:iter_tiles()
    return fun.iter(self._tiles)
 end
 
+function InstancedMap:iter_tile_memory()
+   return fun.range(self._width * self._height):map(function(i) return (self._memory["base.map_tile"] or {})[i] end)
+end
+
 function InstancedMap:set_tile(x, y, id)
    local tile = data["base.map_tile"]:ensure(id)
 
@@ -154,6 +160,10 @@ end
 
 function InstancedMap:tile(x, y)
    return self._tiles[y*self._width+x+1]
+end
+
+function InstancedMap:memory(x, y, kind)
+   return self._memory[kind][y*self._width+x+1]
 end
 
 function InstancedMap:has_los(x1, y1, x2, y2)
@@ -309,6 +319,8 @@ function InstancedMap:memorize_tile(x, y)
       memory[obj._type][ind] = memory[obj._type][ind] or {}
       table.insert(memory[obj._type][ind], obj:produce_memory())
    end
+
+   self._tiles_dirty = true
 end
 
 function InstancedMap:iter_memory(_type)

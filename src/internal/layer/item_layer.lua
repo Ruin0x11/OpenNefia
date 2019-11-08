@@ -36,7 +36,9 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   for _, i in map:iter_items() do
+   for ind, i in map:iter_memory("base.item") do
+      local x = (ind-1) % map:width()
+      local y = math.floor((ind-1) / map:width())
       found[i.uid] = true
       local show = Item.is_alive(i) and map:is_in_fov(i.x, i.y)
       local hide = not show
@@ -45,26 +47,26 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
       if show then
          local batch_ind = self.batch_inds[i.uid]
-         local image = i:calc("image") .. "#1"
-         local x_offset = i:calc("x_offset") or 0
-         local y_offset = i:calc("y_offset") or 0
+         local image = i.image
+         local x_offset = i.x_offset
+         local y_offset = i.y_offset
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[i.uid] = self.item_batch:add_tile {
                tile = image,
-               x = i.x,
-               y = i.y,
+               x = x,
+               y = y,
                x_offset = x_offset,
                y_offset = y_offset,
             }
          else
             local tile, px, py = self.item_batch:get_tile(batch_ind)
 
-            if px ~= i.x or py ~= i.y or tile ~= image then
+            if px ~= x or py ~= i or tile ~= image then
                self.item_batch:remove_tile(batch_ind)
                self.batch_inds[i.uid] = self.item_batch:add_tile {
                   tile = image,
-                  x = i.x,
-                  y = i.y,
+                  x = x,
+                  y = y,
                   x_offset = x_offset,
                   y_offset = y_offset,
                }

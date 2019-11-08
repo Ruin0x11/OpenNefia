@@ -67,6 +67,7 @@ love.image.newImageData = function(path)
    }
 end
 love.audio.setDistanceModel = function() end
+love.audio.setPosition= function() end
 love.audio.newSource = function(path)
    check_path(path)
    return {

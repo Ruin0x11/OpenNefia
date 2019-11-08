@@ -11,7 +11,6 @@ function feat_layer:init(width, height)
 
    self.feat_batch = sparse_batch:new(width, height, feat_atlas, coords)
    self.batch_inds = {}
-   self.batch_inds_memory = {}
 end
 
 function feat_layer:relayout()
@@ -35,31 +34,33 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   for _, f in map:iter_type("base.feat") do
+   for i, f in map:iter_memory("base.feat") do
+      local x = (i-1) % map:width()
+      local y = math.floor((i-1) / map:width())
       found[f.uid] = true
-      local show = not f:calc("is_invisible") and map:is_in_fov(f.x, f.y)
+      local show = not f.is_invisible and map:is_in_fov(x, y)
       local hide = not show
          and self.batch_inds[f.uid] ~= nil
          and self.batch_inds[f.uid] ~= 0
 
       if show then
-         local image = f:calc("image") .. "#1"
+         local image = f.image
          local batch_ind = self.batch_inds[f.uid]
          if batch_ind == nil or batch_ind == 0 then
             self.batch_inds[f.uid] = self.feat_batch:add_tile {
                tile = image,
-               x = f.x,
-               y = f.y
+               x = x,
+               y = y
             }
          else
             local tile, px, py = self.feat_batch:get_tile(batch_ind)
 
-            if px ~= f.x or py ~= f.y or tile ~= image then
+            if px ~= x or py ~= y or tile ~= image then
                self.feat_batch:remove_tile(batch_ind)
                self.batch_inds[f.uid] = self.feat_batch:add_tile {
                   tile = image,
-                  x = f.x,
-                  y = f.y
+                  x = x,
+                  y = y
                }
             end
          end

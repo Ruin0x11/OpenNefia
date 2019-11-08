@@ -6,6 +6,7 @@ require("boot")
 require("internal.data.base")
 
 local field_logic = require("game.field_logic")
+local field = require("game.field")
 local mod = require("internal.mod")
 local env = require("internal.env")
 local data = require("internal.data")
@@ -13,6 +14,7 @@ local startup = require("game.startup")
 local fs = require("util.fs")
 local save = require("internal.global.save")
 local ReplLayer = require("api.gui.menu.ReplLayer")
+local Gui = require("api.Gui")
 
 local mods = mod.scan_mod_dir()
 startup.run(mods)
@@ -30,7 +32,6 @@ rawset(_G, "_PROMPT2", ">> ")
 rawset(_G, "data", data)
 rawset(_G, "hotload", env.hotload)
 rawset(_G, "h", env.hotload)
-rawset(_G, "load_game", field_logic.quickstart)
 rawset(_G, "save", save)
 
 local function pass_one_turn(turns)
@@ -59,6 +60,14 @@ local function pass_one_turn(turns)
 end
 
 rawset(_G, "turn", pass_one_turn)
+
+local function load_game()
+   field_logic.quickstart()
+   field.is_active = true
+   Gui.update_screen()
+end
+
+rawset(_G, "load_game", load_game)
 
 local function register_thirdparty_module(name)
    local paths = string.format("./thirdparty/%s/?.lua;./thirdparty/%s/?/init.lua", name, name)

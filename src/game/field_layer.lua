@@ -5,6 +5,7 @@ local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Log = require("api.Log")
+local Env = require("api.Env")
 
 local area_mapping = require("internal.area_mapping")
 local env = require("internal.env")
@@ -143,14 +144,16 @@ function field_layer:update_screen(scroll)
 
    local dt = 0
 
-   local going = true
-   while going do
-      self.keys:update_repeats(dt)
-      going = self.renderer:update(dt)
-      dt = coroutine.yield() or 0
-   end
+   if not Env.is_headless() then
+      local going = true
+      while going do
+         self.keys:update_repeats(dt)
+         going = self.renderer:update(dt)
+         dt = coroutine.yield() or 0
+      end
 
-   self:update_hud()
+      self:update_hud()
+   end
 
    self.no_scroll = false
 end

@@ -7,6 +7,7 @@ local Item = require("api.Item")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
+local Gui = require("api.Gui")
 
 local Tools = {}
 
@@ -303,6 +304,7 @@ function Tools.mkplayer(id)
 end
 
 function Tools.print_map(map)
+   map = map or Map.current()
    local res = ""
    for _, x, y in Pos.iter_rect(0, 0, map:width()-1, map:height()-1) do
       local c
@@ -323,6 +325,47 @@ function Tools.print_map(map)
          end
       else
          c = "#"
+      end
+
+      res = res .. c
+      if x == map:width() - 1 then
+         res = res .. "\n"
+      end
+   end
+
+   return res
+end
+
+function Tools.print_memory(map)
+   Gui.update_screen()
+   map = map or Map.current()
+   local res = ""
+   for i, m in map:iter_tile_memory("base.map_tile") do
+      _p(i, m)
+      local c = " "
+      local x = (i-1) % map:width()
+      local y = math.floor((i-1) / map:width())
+
+      if m then
+         local t = m[1]
+         local tile = data["base.map_tile"][t._id]
+         if map:is_in_fov(x, y) then
+            if tile.is_opaque then
+               c = '#'
+            else
+               c = '.'
+            end
+         else
+            if tile.is_opaque then
+               c = '0'
+            else
+               c = '-'
+            end
+         end
+         local chara = Chara.at(x, y, map)
+         if chara and chara:is_player() then
+            c = "@"
+         end
       end
 
       res = res .. c

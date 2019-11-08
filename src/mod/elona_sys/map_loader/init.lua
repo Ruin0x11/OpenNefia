@@ -17,7 +17,6 @@ local own_states = {
 }
 
 -- Map chips which are exactly the same in image and parameters between atlases 1 and 2.
-
 local same = {
    0, 6, 10, 11, 19, 45, 47, 48, 49, 50,
    66, 67, 68, 69, 70, 71, 72, 73, 74, 75,

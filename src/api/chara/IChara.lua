@@ -206,7 +206,11 @@ function IChara:on_refresh()
 end
 
 function IChara:produce_memory()
-   return self:calc("memory")
+   return {
+      uid = self.uid,
+      state = self.state,
+      image = self:calc("image") .. "#1"
+   }
 end
 
 function IChara:copy_image()

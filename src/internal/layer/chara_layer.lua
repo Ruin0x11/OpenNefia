@@ -100,33 +100,35 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    --   - In Elona_next, the FOV map is calculated by the time the
    --   - screen is scrolled, but the FOV map from the previous turn
    --   - will still be displayed.
-   for _, c in map:iter_charas() do
-      local show = c.state == "Alive" and map:is_in_fov(c.x, c.y)
+   for ind, c in map:iter_memory("base.chara") do
+      local x = (ind-1) % map:width()
+      local y = math.floor((ind-1) / map:width())
+      local show = c.state == "Alive" and map:is_in_fov(x, y)
       local hide = not show
          and self.batch_inds[c.uid] ~= nil
          and self.batch_inds[c.uid].ind ~= 0
 
       if show then
-         local image = c:calc("image") .. "#1"
+         local image = c.image
          local batch_ind = self.batch_inds[c.uid]
          if batch_ind == nil or batch_ind.ind == 0 then
             local ind = self.chara_batch:add_tile {
                tile = image,
-               x = c.x,
-               y = c.y
+               x = x,
+               y = y
             }
-            self.batch_inds[c.uid] = { ind = ind, x = c.x, y = c.y }
+            self.batch_inds[c.uid] = { ind = ind, x = x, y = y }
          else
             local tile, px, py = self.chara_batch:get_tile(batch_ind)
 
-            if px ~= c.x or py ~= c.y or tile ~= image then
+            if px ~= x or py ~= y or tile ~= image then
                self.chara_batch:remove_tile(batch_ind.ind)
                local ind = self.chara_batch:add_tile {
                   tile = image,
-                  x = c.x,
-                  y = c.y
+                  x = x,
+                  y = y
                }
-               self.batch_inds[c.uid] = { ind = ind, x = c.x, y = c.y }
+               self.batch_inds[c.uid] = { ind = ind, x = x, y = y }
             end
          end
       elseif hide then

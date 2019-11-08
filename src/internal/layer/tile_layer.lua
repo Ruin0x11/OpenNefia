@@ -55,19 +55,24 @@ function tile_layer:update(dt, screen_updated)
    assert(map ~= nil)
 
    if map._tiles_dirty then
-      for i, t in map:iter_tiles() do
+      for i, m in map:iter_tile_memory() do
          local x = (i-1) % map:width()
          local y = math.floor((i-1) / map:width())
-         local id = t._id
 
-         if t.wall then
-            local one_tile_down = map:tile(x, y+1)
-            if one_tile_down ~= nil and not one_tile_down.wall then
-               id = t.wall
+         if m then
+            local t = m[1]
+            local id = t._id
+            if t.wall then
+               local one_tile_down = map:tile(x, y+1)
+               if one_tile_down ~= nil and not one_tile_down.wall then
+                  id = t.wall
+               end
             end
-         end
 
-         self.tile_batch:update_tile(x, y, id .. "#1")
+            self.tile_batch:update_tile(x, y, id .. "#1")
+         else
+            self.tile_batch:update_tile(x, y, map._default_tile .. "#1")
+         end
       end
       map._tiles_dirty = false
    end

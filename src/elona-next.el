@@ -23,10 +23,11 @@
   (when (buffer-live-p lua-process-buffer)
     (lua-send-string str))
   (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
-    (comint-send-string proc str)
-    (process-send-eof proc)
-    (with-current-buffer (process-buffer proc)
-      (buffer-string)))
+    (when (process-live-p proc)
+      (comint-send-string proc str)
+      (process-send-eof proc)
+      (with-current-buffer (process-buffer proc)
+        (buffer-string))))
   (when (not (or (get-buffer-window compilation-last-buffer) (get-buffer-window lua-process-buffer)))
     (let ((buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
       (if (and (buffer-live-p buf) (not (get-buffer-window buf)))
@@ -81,6 +82,22 @@
     (save-buffer)
     (elona-next--send cmd)
     (message "Hotloaded %s." lua-path)))
+
+(defun elona-next-require-this-file ()
+  (interactive)
+  (let* ((prefix
+          (file-relative-name
+           (file-name-sans-extension (buffer-file-name))
+           (string-join (list (projectile-project-root) "src/"))))
+         (lua-path (replace-regexp-in-string "/" "." prefix))
+         (lua-name (car (last (split-string lua-path "\\."))))
+         (cmd (format
+               "%s = require('%s')"
+               lua-name
+               lua-path)))
+    (save-buffer)
+    (elona-next--send cmd)
+    (message "%s" cmd)))
 
 (defun elona-next-run-this-file ()
   (interactive)
