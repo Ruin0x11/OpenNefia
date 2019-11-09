@@ -62,6 +62,8 @@ local function run_field()
    return field_logic.query()
 end
 
+-- This loop should never throw an error, to support resuming using
+-- the debug server.
 function game.loop()
    local mods = mod.scan_mod_dir()
    startup.run(mods)
@@ -79,13 +81,7 @@ function game.loop()
       local success, action = xpcall(cb, debug.traceback)
       if not success then
          local err = action
-         if action == "title" then
-            error(err)
-            going = false
-         else
-            Log.error("Error in loop:\n\t%s", err)
-            action = "title"
-         end
+         coroutine.yield(err)
       end
 
       if action == "start" then

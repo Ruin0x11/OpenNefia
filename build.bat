@@ -14,7 +14,7 @@ set ELONA_DIR=deps\\elona
 if not exist %ELONA_DIR% (
 pushd deps
 powershell -Command "Invoke-WebRequest http://ylvania.style.coocan.jp/file/elona122.zip -OutFile elona122.zip"
-powershell -Command "Expand-Archive -Path elona122.zip -DestinationPath ."
+powershell -Command "Expand-Archive -Path elona122.zip -DestinationPath (Resolve-Path .)"
 popd
 )
 

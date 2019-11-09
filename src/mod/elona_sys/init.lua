@@ -58,6 +58,7 @@ add_elona_id("base.skill")
 add_elona_id("base.element")
 add_elona_id("base.feat")
 add_elona_id("base.element")
+add_elona_id("base.sound")
 
 require("mod.elona_sys.data.event")
 

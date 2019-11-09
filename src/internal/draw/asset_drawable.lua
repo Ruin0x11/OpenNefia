@@ -148,6 +148,17 @@ function asset_drawable:draw_percentage_bar(x, y, width)
    Draw.image_region(self.image, last_quad, x, y)
 end
 
+function asset_drawable:draw_tiled()
+   local iw = self:get_width()
+   local ih = self:get_height()
+
+   for j = 1, Draw.height() / iw do
+      for i = 1, Draw.width() / ih do
+         self:draw(i * iw, j * ih)
+      end
+   end
+end
+
 function asset_drawable:release()
    for _, q in ipairs(self.quads) do
       q:release()

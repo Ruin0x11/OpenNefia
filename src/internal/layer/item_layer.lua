@@ -36,33 +36,22 @@ function item_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   for ind, i in map:iter_memory("base.item") do
+   for ind, stack in map:iter_memory("base.item") do
       local x = (ind-1) % map:width()
       local y = math.floor((ind-1) / map:width())
-      found[i.uid] = true
-      local show = Item.is_alive(i) and map:is_in_fov(i.x, i.y)
-      local hide = not show
-         and self.batch_inds[i.uid] ~= nil
-         and self.batch_inds[i.uid] ~= 0
+      for _, i in ipairs(stack) do
+         found[i.uid] = true
+         local show = i.show and map:is_in_fov(x, y)
+         local hide = not show
+            and self.batch_inds[i.uid] ~= nil
+            and self.batch_inds[i.uid] ~= 0
 
-      if show then
-         local batch_ind = self.batch_inds[i.uid]
-         local image = i.image
-         local x_offset = i.x_offset
-         local y_offset = i.y_offset
-         if batch_ind == nil or batch_ind == 0 then
-            self.batch_inds[i.uid] = self.item_batch:add_tile {
-               tile = image,
-               x = x,
-               y = y,
-               x_offset = x_offset,
-               y_offset = y_offset,
-            }
-         else
-            local tile, px, py = self.item_batch:get_tile(batch_ind)
-
-            if px ~= x or py ~= i or tile ~= image then
-               self.item_batch:remove_tile(batch_ind)
+         if show then
+            local batch_ind = self.batch_inds[i.uid]
+            local image = i.image
+            local x_offset = i.x_offset
+            local y_offset = i.y_offset
+            if batch_ind == nil or batch_ind == 0 then
                self.batch_inds[i.uid] = self.item_batch:add_tile {
                   tile = image,
                   x = x,
@@ -70,11 +59,24 @@ function item_layer:update(dt, screen_updated, scroll_frames)
                   x_offset = x_offset,
                   y_offset = y_offset,
                }
+            else
+               local tile, px, py = self.item_batch:get_tile(batch_ind)
+
+               if px ~= x or py ~= i or tile ~= image then
+                  self.item_batch:remove_tile(batch_ind)
+                  self.batch_inds[i.uid] = self.item_batch:add_tile {
+                     tile = image,
+                     x = x,
+                     y = y,
+                     x_offset = x_offset,
+                     y_offset = y_offset,
+                  }
+               end
             end
+         elseif hide then
+            self.item_batch:remove_tile(self.batch_inds[i.uid])
+            self.batch_inds[i.uid] = 0
          end
-      elseif hide then
-         self.item_batch:remove_tile(self.batch_inds[i.uid])
-         self.batch_inds[i.uid] = 0
       end
    end
 

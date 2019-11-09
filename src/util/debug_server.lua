@@ -17,6 +17,8 @@ local function debug_server(port)
             error(err)
          end
 
+         local result = "waiting"
+
          if client then
             print("client")
             local text = client:receive("*a")
@@ -26,15 +28,18 @@ local function debug_server(port)
                local success, res = xpcall(s, function(err) return err .. "\n" .. debug.traceback(2) end)
                if success then
                   print("[Server] Result: " .. tostring(res))
+                  result = "success"
                else
                   print("[Server] Exec error:\n\t" .. tostring(res))
+                  result = "exec_error"
                end
             else
                print("[Server] Compile error:\n\t" .. err)
+               result = "compile_error"
             end
          end
 
-         coroutine.yield()
+         coroutine.yield(result)
       end
    end
 

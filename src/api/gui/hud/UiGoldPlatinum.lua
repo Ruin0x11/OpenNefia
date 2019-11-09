@@ -1,4 +1,3 @@
-local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
@@ -15,6 +14,7 @@ function UiGoldPlatinum:relayout(x, y)
 end
 
 function UiGoldPlatinum:draw()
+   local Chara = require("api.Chara")
    local chara = Chara.player()
    local gold = chara.gold
    local plat = chara.platinum

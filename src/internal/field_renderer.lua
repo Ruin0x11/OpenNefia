@@ -132,13 +132,9 @@ function field_renderer:update(dt)
 
    local going = false
    for _, l in ipairs(self.layers) do
-      local ok, result = xpcall(function() return l:update(dt, self.screen_updated, self.scroll_frames) end, debug.traceback)
-      if not ok then
-         print(result)
-      else
-         if result then -- not nil or false
-            going = true
-         end
+      local result = l:update(dt, self.screen_updated, self.scroll_frames)
+      if result then -- not nil or false
+         going = true
       end
    end
 

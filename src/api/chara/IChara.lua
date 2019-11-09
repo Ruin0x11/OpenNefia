@@ -208,7 +208,7 @@ end
 function IChara:produce_memory()
    return {
       uid = self.uid,
-      state = self.state,
+      show = Chara.is_alive(self),
       image = self:calc("image") .. "#1"
    }
 end

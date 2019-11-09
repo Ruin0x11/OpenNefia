@@ -42,7 +42,7 @@ UiList:delegate("model", {
 })
 UiList:delegate("input", IInput)
 
-local keys = "abcdefghijklmnopqr"
+local KEYS = "abcdefghijklmnopqr"
 
 function UiList:init(items, item_height, item_offset_x, item_offset_y)
    if class.is_an(IList, items) then
@@ -57,8 +57,8 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
    self:set_data()
 
    local thing = {}
-   for i=1,#keys do
-      local key = keys:sub(i, i)
+   for i=1,#KEYS do
+      local key = KEYS:sub(i, i)
       thing[key] = function()
          self:choose(i)
       end
@@ -151,7 +151,7 @@ function UiList:draw()
    for i, item in ipairs(self.items) do
       local x = self.x + self.item_offset_x
       local y = (i - 1) * self.item_height + self.y + self.item_offset_y
-      local key_name = keys:sub(i, i)
+      local key_name = KEYS:sub(i, i)
       self:draw_item(item, i, x, y, key_name)
    end
 end

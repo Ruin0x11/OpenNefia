@@ -34,39 +34,41 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   for i, f in map:iter_memory("base.feat") do
+   for i, stack in map:iter_memory("base.feat") do
       local x = (i-1) % map:width()
       local y = math.floor((i-1) / map:width())
-      found[f.uid] = true
-      local show = not f.is_invisible and map:is_in_fov(x, y)
-      local hide = not show
-         and self.batch_inds[f.uid] ~= nil
-         and self.batch_inds[f.uid] ~= 0
+      for _, f in ipairs(stack) do
+         found[f.uid] = true
+         local show = not f.show and map:is_in_fov(x, y)
+         local hide = not show
+            and self.batch_inds[f.uid] ~= nil
+            and self.batch_inds[f.uid] ~= 0
 
-      if show then
-         local image = f.image
-         local batch_ind = self.batch_inds[f.uid]
-         if batch_ind == nil or batch_ind == 0 then
-            self.batch_inds[f.uid] = self.feat_batch:add_tile {
-               tile = image,
-               x = x,
-               y = y
-            }
-         else
-            local tile, px, py = self.feat_batch:get_tile(batch_ind)
-
-            if px ~= x or py ~= y or tile ~= image then
-               self.feat_batch:remove_tile(batch_ind)
+         if show then
+            local image = f.image
+            local batch_ind = self.batch_inds[f.uid]
+            if batch_ind == nil or batch_ind == 0 then
                self.batch_inds[f.uid] = self.feat_batch:add_tile {
                   tile = image,
                   x = x,
                   y = y
                }
+            else
+               local tile, px, py = self.feat_batch:get_tile(batch_ind)
+
+               if px ~= x or py ~= y or tile ~= image then
+                  self.feat_batch:remove_tile(batch_ind)
+                  self.batch_inds[f.uid] = self.feat_batch:add_tile {
+                     tile = image,
+                     x = x,
+                     y = y
+                  }
+               end
             end
+         elseif hide then
+            self.feat_batch:remove_tile(self.batch_inds[f.uid])
+            self.batch_inds[f.uid] = 0
          end
-      elseif hide then
-         self.feat_batch:remove_tile(self.batch_inds[f.uid])
-         self.batch_inds[f.uid] = 0
       end
    end
 

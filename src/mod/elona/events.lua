@@ -421,7 +421,7 @@ Event.register("base.on_object_cloned", "npc memory",
                end)
 Event.register("base.on_kill_chara", "npc memory",
                function(victim, params)
-                  NpcMemory.on_killed(params.victim._id)
+                  NpcMemory.on_killed(victim._id)
                end)
 Event.register("base.on_map_leave", "npc memory",
                function(map)

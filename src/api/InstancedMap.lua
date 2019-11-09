@@ -311,20 +311,25 @@ function InstancedMap:memorize_tile(x, y)
    self._in_sight[ind] = self._last_sight_id
 
    local memory = self._memory
+   for m, _ in pairs(memory) do
+      memory[m][ind] = nil
+   end
+
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { self:tile(x, y) }
 
    for _, obj in self._multi_pool:objects_at_pos(x, y) do
+      local m = obj:produce_memory()
       memory[obj._type] = memory[obj._type] or {}
       memory[obj._type][ind] = memory[obj._type][ind] or {}
-      table.insert(memory[obj._type][ind], obj:produce_memory())
+      table.insert(memory[obj._type][ind], m)
    end
 
    self._tiles_dirty = true
 end
 
 function InstancedMap:iter_memory(_type)
-   return fun.iter(self._memory[_type] or {})
+   return fun.iter(pairs(self._memory[_type] or {}))
 end
 
 function InstancedMap:iter_charas()

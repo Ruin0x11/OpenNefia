@@ -10,6 +10,7 @@ local width = 800
 local height = 600
 
 local canvas = nil
+local error_canvas = nil
 local layers = {}
 local handler = nil
 local gamma_correct = nil
@@ -48,6 +49,7 @@ function draw.init()
    end
 
    canvas = create_canvas(width, height)
+   error_canvas = create_canvas(width, height)
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
@@ -56,19 +58,19 @@ function draw.init()
    gamma_correct = love.graphics.newShader("graphic/shader/gamma.frag.glsl")
 end
 
-function draw.draw()
-   love.graphics.setCanvas(canvas)
+function draw.draw_start(c)
+   love.graphics.setCanvas(c or canvas)
    love.graphics.clear()
 end
 
-function draw.draw_end()
+function draw.draw_end(c)
    love.graphics.setCanvas()
 
    love.graphics.setColor(1, 1, 1, 1)
    love.graphics.setBlendMode("alpha", "premultiplied")
 
    love.graphics.setShader(gamma_correct)
-   love.graphics.draw(canvas)
+   love.graphics.draw(c or canvas)
    love.graphics.setShader()
 
    love.graphics.setBlendMode("alpha")
@@ -257,6 +259,24 @@ function draw.set_font(size, style, filename)
    love.graphics.setFont(font_cache[size][filename])
 end
 
+-- Function called when an error is caught by the main loop.
+function draw.draw_error(err)
+   draw.draw_start(error_canvas)
+   love.graphics.draw(canvas)
+   love.graphics.setColor(0, 0, 0, 128/256)
+   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+   err = err .. "\n\nPress enter or send code to continue."
+
+   local pos = 70
+   draw.set_font(14)
+   love.graphics.origin()
+   love.graphics.setColor(1, 1, 1, 1)
+   love.graphics.print(err, pos, pos)
+
+   draw.draw_end(error_canvas)
+end
+
 --
 --
 -- Event callbacks
@@ -265,6 +285,7 @@ end
 
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
+   error_canvas = create_canvas(w, h)
 
    for _, layer in ipairs(layers) do
       layer:relayout(0, 0, w, h)

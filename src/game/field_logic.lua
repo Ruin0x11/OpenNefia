@@ -313,7 +313,9 @@ function field_logic.run_one_event(event, target_chara)
    success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
 
    if not success then
-      Gui.report_error(event)
+      -- pass the error up to the main loop so the handler can run
+      coroutine.yield(event)
+
       event = "player_turn_query"
       target_chara = nil
    end

@@ -204,15 +204,15 @@ function InventoryMenu:update_filtering()
       end
    end
 
+   -- Sort everything. Defaults to item ID but can be configured per
+   -- inventory context.
+
    -- NOTE: This needs to be a stable sort, which table.sort isn't. If
    -- correctness is not important, it should use merge sort...
    table.insertion_sort(filtered, self.ctxt:gen_sort())
 
    self.pages:set_data(filtered)
    self:update_icons_this_page()
-
-   -- Sort everything. Defaults to item ID but can be configured per
-   -- inventory context.
    --
    -- TODO: Determine when to display weight. Inventory contexts can
    -- be created out of any number of sources that might exclude a

@@ -34,6 +34,26 @@ function love.load(arg)
 end
 
 local abort = false
+local halt = false
+local halt_error = ""
+
+local function stop_halt()
+   love.keypressed = internal.input.keypressed
+
+   halt = false
+end
+
+local function start_halt()
+   love.keypressed = function(key, scancode, isrepeat)
+      print(key,scancode,isrepeat)
+      local keys = table.set {"return", "escape", "space"}
+      if keys[key] then
+         stop_halt()
+      end
+   end
+
+   halt = true
+end
 
 function love.update(dt)
    fps:update(dt)
@@ -48,14 +68,30 @@ function love.update(dt)
          print("Error in server:\n\t" .. debug.traceback(server, err))
          print()
          error(err)
+      else
+         local result = err
+         if halt and result == "success" then
+            stop_halt()
+         end
       end
    end
 
+   if halt then
+      return
+   end
+
    local ok, err = coroutine.resume(loop, dt, abort)
-   if not ok then
+   if not ok or err ~= nil then
       print("Error in loop:\n\t" .. debug.traceback(loop, err))
       print()
-      error(err)
+      if not ok then
+         -- Coroutine is dead. No choice but to throw.
+         error(err)
+      else
+         -- We can continue executing since game.loop is still alive.
+         start_halt()
+         halt_error = err
+      end
    end
 
    if coroutine.status(loop) == "dead" then
@@ -63,11 +99,18 @@ function love.update(dt)
       love.event.quit()
    end
 
-   abort = false
+   if halt then
+      print("== Execution paused. Awaiting debug server command. ==")
+   end
 end
 
 function love.draw()
-   internal.draw.draw()
+   if halt then
+      internal.draw.draw_error(halt_error)
+      return
+   end
+
+   internal.draw.draw_start()
 
    local going = true
    local ok, err = coroutine.resume(draw, going)
@@ -75,9 +118,12 @@ function love.draw()
       print("Error in draw:\n\t" .. debug.traceback(draw, err))
       print()
       if not ok then
+         -- Coroutine is dead. No choice but to throw.
          error(err)
       else
-         abort = true
+         -- We can continue executing since game.loop is still alive.
+         start_halt()
+         halt_error = err
       end
    end
 
@@ -86,6 +132,10 @@ function love.draw()
    internal.draw.draw_end()
 
    env.set_hotloaded_this_frame(false)
+
+   if halt then
+      print("== Execution paused. Awaiting debug server command. ==")
+   end
 end
 
 --

@@ -251,6 +251,7 @@ local IS_HOTLOADING = false
 local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
+local LOADING_STACK = {}
 
 -- Converts a filepath to a uniquely identifying Lua require path.
 -- Examples:
@@ -281,7 +282,17 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if LOADING[req_path] then
-         error("Loop while loading " .. req_path)
+         local loop = {}
+         local found = false
+         for _, p in ipairs(LOADING_STACK) do
+            if p == req_path then
+               found = true
+            end
+            if found then
+               loop[#loop+1] = p
+            end
+         end
+         error("Loop while loading " .. req_path .. ":\n" .. inspect(loop))
       end
 
       hotload = hotload or HOTLOAD_DEPS
@@ -302,7 +313,9 @@ local function gen_require(chunk_loader, can_load_path)
 
       Log.debug("HOTLOAD %s", req_path)
       LOADING[req_path] = true
+      LOADING_STACK[#LOADING_STACK+1] = req_path
       local result, err = chunk_loader(req_path)
+      LOADING_STACK[#LOADING_STACK] = nil
       LOADING[req_path] = false
       Log.debug("HOTLOAD RESULT %s", tostring(result))
 
@@ -312,7 +325,7 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if IS_HOTLOADING and result == "no_hotload" then
-         Log.info("Not hotloading: %s", req_path)
+         Log.warn("!!! Not hotloading: %s", req_path)
          return package.loaded[req_path]
       end
 
