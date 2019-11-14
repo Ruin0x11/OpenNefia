@@ -83,25 +83,36 @@ local Color = {
    YellowGreen =   { 210, 250, 160 },
 }
 
--- TODO: inline colors
-function Gui.mes(text, color)
+function Gui.mes(text, ...)
+   Gui.mes_c(text, nil, ...)
+end
+
+function Gui.mes_c(text, color, ...)
+   local t = I18N.get(text, ...)
+   if t then text = t end
+
    if color == nil and string.find(text, I18N.quote_character()) then
       color = {210, 250, 160}
    end
    if type(color) == "string" then
       color = Color[color] or {255, 255, 255}
    end
-   get_message_window():message(text, color)
 
    if Env.is_headless() then
       print("<mes> " .. text)
+   else
+      get_message_window():message(text, color)
    end
 end
 
-function Gui.mes_visible(text, x, y, color)
+function Gui.mes_visible(text, x, y, ...)
+   Gui.mes_c_visible(text, x, y, nil, ...)
+end
+
+function Gui.mes_c_visible(text, x, y, color, ...)
    local Map = require("api.Map")
    if Map.is_in_fov(x, y) then
-      Gui.mes(text, color)
+      Gui.mes_c(text, color, ...)
    end
 end
 

@@ -1,5 +1,7 @@
 local Chara = require("api.Chara")
 local Event = require("api.Event")
+local Save = require("api.Save")
+local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
@@ -8,6 +10,8 @@ local draw = require("internal.draw")
 local field = require("game.field")
 local data = require("internal.data")
 local save = require("internal.global.save")
+
+local DeathMenu = require("api.gui.menu.DeathMenu")
 
 local field_logic = {}
 
@@ -260,20 +264,24 @@ end
 
 function field_logic.player_died()
    Gui.play_sound("base.dead1")
-   -- Gui.mes_clear()
-   Gui.mes("You died. ")
+   Gui.mes("misc.death.good_bye")
+   Gui.mes("misc.death.you_leave_dying_message")
    Gui.update_screen()
 
    Gui.mes("Last words? ")
    local last_words = Input.query_text(16, true)
    if last_words == nil then
-      last_words = "Scut!"
+      last_words = I18N.get("system.last_words")
+   else
+      last_words = I18N.get("misc.death.dying_message", last_words)
    end
 
-   Gui.mes("Bury? ")
-   local bury = Input.yes_no()
-   if bury then
-      return "quit"
+   local result, canceled = DeathMenu:new({{ last_words = last_words, death_cause = "death cause", icon = Chara.player():copy_image() }}):query()
+   if canceled or result.index == 0 then
+      return "turn_begin"
+   elseif result.index == 1 then
+      Save.load_game()
+      return "turn_begin"
    end
 
    return "quit"

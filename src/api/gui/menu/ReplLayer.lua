@@ -3,6 +3,7 @@ local Env = require("api.Env")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
 local circular_buffer = require("thirdparty.circular_buffer")
+local queue = require("util.queue")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -43,6 +44,8 @@ function ReplLayer:init(env, history)
    -- tab completion
    self.completion_candidates = nil
    self.selected_candidate = 1
+
+   self.deferred = queue:new()
 
    self.print_varargs = false
 
@@ -379,6 +382,20 @@ function ReplLayer:last_output()
    return nil
 end
 
+function ReplLayer:defer_execute(code)
+   self.deferred:push(code)
+end
+
+function ReplLayer:execute_all_deferred()
+   local code = self.deferred:pop()
+   local success, results
+   while code do
+      success, results = self.mode:submit(code)
+      code = self.deferred:pop()
+   end
+   return success, results
+end
+
 function ReplLayer:draw()
    Draw.set_font(self.font_size)
 
@@ -434,6 +451,11 @@ function ReplLayer:update(dt)
          self.pulldown_y = math.max(self.pulldown_y - self.pulldown_speed, 0)
       end
    end
+end
+
+function ReplLayer.on_hotload(old, new)
+   require("game.field").repl = nil
+   class.hotload(old, new)
 end
 
 return ReplLayer

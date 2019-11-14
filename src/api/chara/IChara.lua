@@ -3,7 +3,6 @@ local field = require("game.field")
 local Chara = require("api.Chara")
 local Codegen = require("api.Codegen")
 local Rand = require("api.Rand")
-local Resolver = require("api.Resolver")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
@@ -15,6 +14,7 @@ local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
 local ICharaTraits = require("api.chara.ICharaTraits")
 local IObject = require("api.IObject")
+local ILocalizable = require("api.ILocalizable")
 local ICharaTalk = require("api.chara.ICharaTalk")
 local IModdable = require("api.IModdable")
 local IFactioned = require("api.IFactioned")
@@ -28,16 +28,17 @@ local IChara = class.interface("IChara",
                          {
                             IMapObject,
                             IModdable,
-                            ICharaInventory,
+                            ILocalizable,
                             IFactioned,
+                            IEventEmitter,
+                            ICharaInventory,
                             ICharaTalk,
                             ICharaEquip,
                             ICharaParty,
                             ICharaSkills,
                             ICharaTraits,
                             ICharaEffects,
-                            ICharaActivity,
-                            IEventEmitter
+                            ICharaActivity
                          })
 
 IChara._type = "base.chara"
@@ -53,6 +54,8 @@ local defaults = {
 -- Must be available after instantiation.
 local fallbacks = {
    state = "Dead",
+   name = "",
+   gender = "female",
    experience = 0,
    sleep_experience = 0,
    dv = 0,
@@ -108,6 +111,7 @@ function IChara:pre_build()
    IMapObject.init(self)
 
    self.state = "Dead"
+   self.name = self._id
 
    -- NOTE: to add new interfaces/behaviors, connect_self to
    -- on_instantiate and run them there.
@@ -210,6 +214,16 @@ function IChara:produce_memory()
       uid = self.uid,
       show = Chara.is_alive(self),
       image = self:calc("image") .. "#1"
+   }
+end
+
+function IChara:produce_locale_data()
+   return {
+      name = self:calc("name"),
+      gender = self:calc("gender"),
+      is_player = self:is_player(),
+      is_visible = self:is_in_fov(),
+      has_own_name = self:calc("has_own_name")
    }
 end
 
@@ -526,15 +540,6 @@ end
 -- TEMP
 function IChara:has_status_ailment(status_ailment)
    return self:status_ailment_turns(status_ailment) > 0
-end
-
-function IChara:is_in_fov()
-   local map = self:current_map()
-   if not map then
-      return false
-   end
-
-   return map:is_in_fov(self.x, self.y)
 end
 
 Codegen.generate_object_getter(IChara, "ammo", "base.item")

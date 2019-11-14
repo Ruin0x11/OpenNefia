@@ -47,4 +47,11 @@ function Repl.wrap_last_input_as_function()
    return f, err
 end
 
+--- Queues a code block that runs the next time execution enters the
+--- player's control. If the code returns a turn result, it is used as
+--- the player's turn.
+function Repl.defer_execute(code)
+   field.repl:defer_execute(code)
+end
+
 return Repl

@@ -52,6 +52,15 @@ function IMapObject:current_map()
    return nil
 end
 
+function IMapObject:is_in_fov()
+   local map = self:current_map()
+   if not map then
+      return false
+   end
+
+   return map:is_in_fov(self.x, self.y)
+end
+
 --- Produces the data used to display this object in a draw layer.
 --- Each draw layer is intended to interpret this data differently
 --- depending on what drawing logic is needed.

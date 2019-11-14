@@ -80,8 +80,9 @@ local function add_index_field(dat, _type, field)
          local key = "by_" .. v
          index[_type][key] = index[_type][key] or {}
 
-         if index[_type][key][index_key] ~= nil then
-            self:error(string.format("Index key '%s' on '%s' is not unique: '%s'", v, full_id, index_key))
+         local exist = index[_type][key][index_key]
+         if exist ~= nil then
+            data:error(string.format("Index value on '%s' is not unique: '%s:%s = %s'", _type, v, index_key, exist._id))
          else
             index[_type][key][index_key] = dat
          end

@@ -62,7 +62,7 @@ function Action.get(chara, item, amount)
    if item == nil then
       local items = Item.at(chara.x, chara.y):to_list()
       if #items == 0 then
-         Gui.mes(chara.uid .. " grasps at air.")
+         Gui.mes("action.get.air")
          return false
       end
       item = items[#items]
@@ -72,7 +72,10 @@ function Action.get(chara, item, amount)
    if picked_up then
       return picked_up
    end
-   print("fail " .. tostring(item.uid))
+
+   if chara:is_player() then
+      Gui.mes("action.get.cannot_carry")
+   end
 
    return false
 end
@@ -84,7 +87,7 @@ function Action.drop(chara, item, amount)
 
    local dropped = chara:drop_item(item, amount)
    if dropped then
-      Gui.mes(chara.uid .. " drops " .. item:build_name(amount))
+      Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
       return true
    end

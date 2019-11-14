@@ -6,13 +6,14 @@ local IObject = require("api.IObject")
 local IModdable = require("api.IModdable")
 local IEventEmitter = require("api.IEventEmitter")
 local IStackableObject = require("api.IStackableObject")
+local ILocalizable = require("api.ILocalizable")
 local Log = require("api.Log")
 local data = require("internal.data")
 
 -- TODO: move out of api
 local IItem = class.interface("IItem",
                          {},
-                         {IStackableObject, IModdable, IItemEnchantments, IEventEmitter})
+                         {IStackableObject, IModdable, IItemEnchantments, IEventEmitter, ILocalizable})
 
 -- TODO: schema
 local defaults = {
@@ -148,6 +149,15 @@ function IItem:produce_memory()
       color = {0, 0, 0},
       x_offset = self:calc("x_offset") or 0,
       y_offset = self:calc("y_offset") or 0
+   }
+end
+
+function IItem:produce_locale_data()
+   return {
+      name = self:build_name(),
+      basename = self:calc("name"),
+      amount = self.amount,
+      is_visible = self:is_in_fov(),
    }
 end
 

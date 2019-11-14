@@ -1,5 +1,6 @@
 local mod = require("internal.mod")
 local internal = require("internal")
+local i18n = require("internal.i18n")
 local data = require("internal.data")
 local stopwatch = require("api.Stopwatch")
 local UiTheme = require("api.gui.UiTheme")
@@ -18,6 +19,8 @@ function startup.run(mods)
    -- data is finalized at this point.
 
    startup.load_batches()
+
+   i18n.switch_language("en")
 
    local default_theme = "elona_sys.default"
    UiTheme.add_theme(default_theme)

@@ -9,7 +9,7 @@ end
 
 local mod = {}
 
-local chunks = {}
+local loaded = {}
 
 local function load_mod(mod_name, init_lua_path)
    local req_path = env.convert_to_require_path(init_lua_path)
@@ -130,17 +130,24 @@ function mod.load_mods(mods)
 
       local init = fs.join(mod.root_path, "init.lua")
       if fs.is_file(init) then
-         if chunks[mod.id] then
+         if loaded[mod.id] then
             error("Mod '" .. mod.id .. "' is already loaded.")
          end
 
-         local chunk = load_mod(mod.id, init)
+         load_mod(mod.id, init)
 
-         chunks[mod.id] = chunk
+         loaded[mod.id] = true
       else
          Log.info("No init.lua for mod %s.", mod.id)
       end
    end
+end
+
+function mod.iter_loaded()
+   local all = mod.scan_mod_dir()
+   local load_order = mod.calculate_load_order(all)
+   local mods_loaded = fun.iter(load_order):filter(function(mod) return loaded[mod.id] end):to_list()
+   return fun.iter(mods_loaded)
 end
 
 return mod

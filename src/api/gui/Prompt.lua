@@ -31,11 +31,8 @@ local UiListExt = function()
    return E
 end
 
-function Prompt:init(choices, width)
-   self.width = width or 160
+function Prompt:init(choices)
    self.can_cancel = true
-
-   self.autocenter = true
 
    self.list = UiList:new(choices, 20)
    table.merge(self.list, UiListExt())
@@ -67,15 +64,14 @@ function Prompt:on_query()
    Gui.play_sound("base.pop2")
 end
 
-function Prompt:relayout(x, y)
-   if self.autocenter then
-      local inf_verh = 16 + 72
-      local prompt_x = (Draw.get_width() - 10) / 2 + 3
-      local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
-      self.x = prompt_x - self.width / 2
-      self.y = prompt_y - #self.list.items * 10
-   end
+function Prompt:relayout(x, y, width)
+   local inf_verh = 16 + 72
+   local prompt_x = (Draw.get_width() - 10) / 2 + 3
+   local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
+   self.x = x or prompt_x - self.width / 2
+   self.y = y or prompt_y - #self.list.items * 10
 
+   self.width = width or 160
    self.height = #self.list.items * 20 + 42
 
    self.t = UiTheme.load(self)

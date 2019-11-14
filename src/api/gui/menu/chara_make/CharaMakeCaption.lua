@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
+local I18N = require("api.I18N")
 
 local CharaMakeCaption = class.class("CharaMakeCaption", {IUiElement, ISettable})
 
@@ -9,7 +10,7 @@ function CharaMakeCaption:init(caption)
    self.width = 760
    self.height = 24
 
-   self.caption = caption or ""
+   self.caption = I18N.get(caption) or caption
 end
 
 function CharaMakeCaption:set_data(caption)

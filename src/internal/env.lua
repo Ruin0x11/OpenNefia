@@ -333,11 +333,11 @@ local function gen_require(chunk_loader, can_load_path)
          and type(result) == "table"
       then
          Log.info("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
-         if class.is_class_or_interface(result) then
-            class.hotload(package.loaded[req_path], result)
+         if result.on_hotload then
+            result.on_hotload(package.loaded[req_path], result)
          else
-            if result.on_hotload then
-               result.on_hotload(package.loaded[req_path], result)
+            if class.is_class_or_interface(result) then
+               class.hotload(package.loaded[req_path], result)
             else
                table.replace_with(package.loaded[req_path], result)
             end

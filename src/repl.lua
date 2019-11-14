@@ -1,5 +1,5 @@
 local Log = require("api.Log")
-Log.set_level("debug")
+Log.set_level("info")
 
 require("boot")
 
@@ -30,7 +30,6 @@ end
 rawset(_G, "_PROMPT", "> ")
 rawset(_G, "_PROMPT2", ">> ")
 rawset(_G, "data", data)
-rawset(_G, "hotload", env.hotload)
 rawset(_G, "h", env.hotload)
 rawset(_G, "save", save)
 
@@ -59,7 +58,7 @@ local function pass_one_turn(turns)
    return going, ev, target_chara
 end
 
-rawset(_G, "turn", pass_one_turn)
+rawset(_G, "tu", pass_one_turn)
 
 local function load_game()
    field_logic.quickstart()
@@ -67,7 +66,7 @@ local function load_game()
    Gui.update_screen()
 end
 
-rawset(_G, "load_game", load_game)
+rawset(_G, "lo", load_game)
 
 local function register_thirdparty_module(name)
    local paths = string.format("./thirdparty/%s/?.lua;./thirdparty/%s/?/init.lua", name, name)
@@ -98,8 +97,23 @@ function elona_repl:compilechunk(text)
    return chunk, err
 end
 
+local function gather_results(success, ...)
+  local n = select('#', ...)
+  return success, { n = n, ... }
+end
+
 -- @see repl:displayresults(results)
 function elona_repl:displayresults(results)
+   -- omit parens (elona console style)
+   if results.n == 1 and type(results[1]) == "function" then
+      local success
+      success, results = gather_results(xpcall(results[1], function(...) return self:traceback(...) end))
+      if not success then
+         self:displayerror(results[1])
+         return
+      end
+   end
+
    local result_text = ReplLayer.format_results(results)
    for line in string.lines(result_text) do
       if #line > 2500 then

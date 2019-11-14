@@ -45,7 +45,6 @@ end
 
 local function start_halt()
    love.keypressed = function(key, scancode, isrepeat)
-      print(key,scancode,isrepeat)
       local keys = table.set {"return", "escape", "space"}
       if keys[key] then
          stop_halt()
@@ -98,10 +97,6 @@ function love.update(dt)
       print("Finished.")
       love.event.quit()
    end
-
-   if halt then
-      print("== Execution paused. Awaiting debug server command. ==")
-   end
 end
 
 function love.draw()
@@ -132,10 +127,6 @@ function love.draw()
    internal.draw.draw_end()
 
    env.set_hotloaded_this_frame(false)
-
-   if halt then
-      print("== Execution paused. Awaiting debug server command. ==")
-   end
 end
 
 --
