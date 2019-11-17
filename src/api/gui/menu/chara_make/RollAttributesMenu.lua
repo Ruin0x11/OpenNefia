@@ -111,7 +111,6 @@ local function calc_rolled_attributes(race, class)
 
    temp:mod_base_with(race_data, "merge")
    temp:mod_base_with(class_data, "merge")
-   _p(temp)
 
    return temp.skills
 end
@@ -121,7 +120,6 @@ function RollAttributesMenu:reroll(play_sound, minimum)
    local class = CharaMake.get_section_result("api.gui.menu.chara_make.SelectClassMenu")
 
    local skills = calc_rolled_attributes(race, class)
-   _p(skills)
    for _, v in ipairs(self.data) do
       if v.value and not v.locked then
          local skill = skills[v.id]
@@ -132,7 +130,6 @@ function RollAttributesMenu:reroll(play_sound, minimum)
                skill.level = skill.level - Rand.rnd(skill.level / 2 + 1)
             end
             v.value = skill
-            _p(skill)
          end
       end
    end

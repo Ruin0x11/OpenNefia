@@ -92,7 +92,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._tiles_dirty = true
    self._uids = uids
 
-   self._default_tile = "base.floor"
+   self.default_tile = "base.floor"
 
    self:init_map_data()
 
@@ -109,6 +109,15 @@ local fallbacks = {
    is_temporary = false,
    dungeon_level = 1,
    deepest_dungeon_level = 10,
+   danger_level = 1,
+   player_start_pos = { x = 0, y = 0 },
+   types = {},
+   appearance = "",
+   tile_set = "Normal",
+   tile_type = 2,
+   default_ai_calm = 1,
+   max_crowd_density = 40,
+   is_user_map = false
 }
 
 function InstancedMap:init_map_data()
@@ -136,8 +145,31 @@ function InstancedMap:clear(tile)
    end
 end
 
+local function _iter_tiles(state, prev_index)
+   if state.iter == nil then
+      return nil
+   end
+
+   local next_index, dat = state.iter(state.state, prev_index)
+
+   if next_index == nil then
+      return nil
+   end
+
+   local x = (next_index-1) % state.width
+   local y = math.floor((next_index-1) / state.width)
+
+   return next_index, x, y, dat
+end
+
 function InstancedMap:iter_tiles()
-   return fun.iter(self._tiles)
+   local inner_iter, inner_state, inner_index = pairs(self._tiles)
+   local state = {
+      iter = inner_iter,
+      state = inner_state,
+      width = self:width(),
+   }
+   return fun.wrap(_iter_tiles, state, inner_index)
 end
 
 function InstancedMap:iter_tile_memory()
@@ -326,6 +358,14 @@ function InstancedMap:memorize_tile(x, y)
    end
 
    self._tiles_dirty = true
+end
+
+function InstancedMap:reveal_tile(x, y)
+   local memory = self._memory
+   local ind = y * self._width + x + 1;
+
+   memory["base.map_tile"] = memory["base.map_tile"] or {}
+   memory["base.map_tile"][ind] = { self:tile(x, y) }
 end
 
 function InstancedMap:iter_memory(_type)

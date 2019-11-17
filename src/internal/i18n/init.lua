@@ -53,7 +53,10 @@ end
 
 function i18n.switch_language(lang, force)
    i18n.language = lang
-   i18n.env = require("internal.i18n.env." .. lang)
+   i18n.env = package.try_require("internal.i18n.env." .. lang)
+   if not i18n.env then
+      error(string.format("Language %s does not exist.", lang))
+   end
 
    if i18n.db[lang] == nil or force then
       i18n.db[lang] = {}
@@ -92,6 +95,11 @@ function i18n.get(key, ...)
    end
 
    return nil
+end
+
+function i18n.on_hotload(old, new)
+   table.replace_with(old, new)
+   i18n.switch_language(old.language or "en")
 end
 
 return i18n

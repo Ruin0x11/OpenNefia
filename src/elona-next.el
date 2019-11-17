@@ -63,10 +63,13 @@
 (defun elona-next--bounds-of-buffer ()
   (cons (point-min) (point-max)))
 
+(defun elona-next--bounds-of-line ()
+  (cons (point-at-bol) (point-at-eol)))
+
 (defun elona-next-send-defun (pos)
   (interactive "d")
   (let ((bounds (elona-next--bounds-of-last-defun pos)))
-    (elona-next-send-region (car pos) (cdr pos))))
+    (elona-next-send-region (car bounds) (cdr bounds))))
 
 (defun elona-next-hotload-this-file ()
   (interactive)
@@ -90,9 +93,15 @@
            (file-name-sans-extension (buffer-file-name))
            (string-join (list (projectile-project-root) "src/"))))
          (lua-path (replace-regexp-in-string "/" "." prefix))
-         (lua-name (car (last (split-string lua-path "\\."))))
+         (lua-name (let ((it (car (last (split-string lua-path "\\.")))))
+                     (if (string-equal it "init")
+                         (car (last (butlast
+                                     (split-string lua-path "\\."))))
+                       it)))
          (cmd (format
-               "%s = require('%s')"
+               "%s = require('%s'); require('api.Repl').send('%s = require \"%s\"')"
+               lua-name
+               lua-path
                lua-name
                lua-path)))
     (save-buffer)
@@ -107,7 +116,11 @@
   (define-eval-sexp-fu-flash-command elona-next-send-defun
     (eval-sexp-fu-flash (elona-next--bounds-of-last-defun (point))))
   (define-eval-sexp-fu-flash-command elona-next-hotload-this-file
-    (eval-sexp-fu-flash (elona-next--bounds-of-buffer))))
+    (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
+  (define-eval-sexp-fu-flash-command elona-next-require-this-file
+    (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
+  (define-eval-sexp-fu-flash-command elona-next-send-current-line
+    (eval-sexp-fu-flash (elona-next--bounds-of-line))))
 
 (defvar elona-next--repl-errors-buffer "*elona-next-repl-errors*")
 (defvar elona-next--repl-name "elona-next-repl")

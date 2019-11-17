@@ -31,6 +31,11 @@ function string.strip_suffix(s, suffix)
    return string.gsub(s, escape_for_gsub(suffix) .. "$", "")
 end
 
+function string.strip_whitespace(s)
+   local from = s:match"^%s*()"
+   return from > #s and "" or s:match(".*%S", from)
+end
+
 function string.split(str,sep)
    sep = sep or "\n"
    local ret={}

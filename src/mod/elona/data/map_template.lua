@@ -1,3 +1,7 @@
+local Chara = require("api.Chara")
+local Rand = require("api.Rand")
+local I18N = require("api.I18N")
+
 data:add {
    _type = "elona_sys.map_template",
    _id = "north_tyris",
@@ -41,10 +45,170 @@ data:add {
    }
 }
 
+local MapEntrance = {}
+function MapEntrance.directional(chara, map)
+   local pos = save.base.player_pos_on_map_leave
+   if pos then
+      return pos.x, pos.y
+   end
+   local next_dir = chara.last_move_direction
+   local x = 0
+   local y = 0
+
+   if next_dir == "West" then
+      x = map:width() - 2
+      y = math.floor(map:width() / 2)
+   elseif next_dir == "East" then
+      x = 1
+      y = math.floor(map:width() / 2)
+   elseif next_dir == "North" then
+      x = math.floor(map:width() / 2)
+      y = map:height() - 2
+   else
+      x = math.floor(map:width() / 2)
+      y = 1
+   end
+
+   return x, y
+end
+
+local function chara_filter_town(callbacks)
+   return function(self)
+      local opts = { level = 10, quality = 1, fltselect = 5 }
+
+      if callbacks == nil then
+         return opts
+      end
+
+      local result = {}
+      local level = 1 -- map.dungeon_level
+      local callback = callbacks[level]
+
+      if callback then
+         local result_ = callback(self)
+         if result_ ~= nil and type(result_) == "table" then
+            result = result_
+         end
+      end
+
+      return table.merge(opts, result)
+   end
+end
+
+local function create_charas(map, charas)
+   for _, data in ipairs(charas) do
+      local x, y, id, opts = table.unpack(data)
+
+      local count = (opts and opts["_count"]) or 1
+
+      for i=1,count do
+         local chara = Chara.create(id, x, y, {}, map)
+         assert(chara, ("%s:%s:%s"):format(x, y, id))
+
+         if opts then
+            for k, v in pairs(opts) do
+               if k == "_name" then
+                  chara.name = I18N.get(v, chara.name)
+               elseif k ~= "_count" then
+                  chara[k] = v
+               end
+            end
+         end
+      end
+   end
+end
+
+local function update_quests_in_map(map)
+end
+
+local function generate_chara(map)
+   local params = {}
+   if map.chara_filter then
+      params = map.chara_filter()
+      assert(type(params) == "table")
+   end
+   -- TODO
+   local Charagen = require("mod.tools.api.Charagen")
+   return Charagen.create(nil, nil, params, map)
+end
+
+local vernis = {
+   _type = "elona_sys.map_template",
+   _id = "vernis",
+
+   elona_id = 5,
+   map = "vernis",
+
+   copy = {
+      appearance = 132,
+      types = { "town" },
+      player_start_pos = MapEntrance.directional,
+      tile_set = "Normal",
+      tile_type = 2,
+      turn_cost = 10000,
+      danger_level = 1,
+      deepest_dungeon_level = 999,
+      is_outdoors = true,
+      is_temporary = false,
+      default_ai_calm = 1,
+      -- quest_town_id = 1,
+      -- quest_custom_map = "vernis",
+      max_crowd_density = 40,
+
+      chara_filter = chara_filter_town {
+         [1] = function()
+            if Rand.one_in(2) then
+               return { id = "elona.miner" }
+            end
+
+            return nil
+         end
+      }
+   },
+
+   on_generate = function(map)
+      local charas = {
+         { 39, 3, "elona.whom_dwell_in_the_vanity" },
+         { 42, 23, "elona.loyter", { role = 3 } },
+         { 24, 5, "elona.miches", { role = 3 } },
+         { 40, 24, "elona.shena", { role = 3 } },
+         { 40, 25, "elona.dungeon_cleaner", { role = 3 } },
+         { 30, 5, "elona.rilian", { role = 3 } },
+         { 42, 24, "elona.bard", { role = 3 } },
+         { 47, 9, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1014 } }}, shop_rank = 5, _name = "chara.job.fisher" } },
+         { 14, 12, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1001 } }}, shop_rank = 12, _name = "chara.job.blacksmith" } },
+         { 39, 27, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1009 } }}, shop_rank = 12, _name = "chara.job.trader" } },
+         { 10, 15, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1006 } }}, shop_rank = 10, _name = "chara.job.general_vendor" } },
+         { 7, 26, "elona.wizard", { roles = {{ id = "elona.shopkeeper", params = { 1004 } }}, shop_rank = 11, _name = "chara.job.magic_vendor" } },
+         { 14, 25, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1005 } }}, shop_rank = 8, _name = "chara.job.innkeeper" } },
+         { 22, 26, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1003 } }}, shop_rank = 9, _name = "chara.job.baker", image = "elona.baker" } },
+         { 28, 16, "elona.wizard", { role = 5 } },
+         { 38, 27, "elona.bartender", { role = 9 } },
+         { 6, 25, "elona.healer", { role = 12 } },
+         { 10, 7, "elona.elder", { role = 6, _name = "chara.job.of_vernis" } },
+         { 27, 16, "elona.trainer", { role = 7, _name = "chara.job.trainer" } },
+         { 25, 16, "elona.informer", { role = 8 } },
+         { nil, nil, "elona.citizen", { _count = 4, role = 4 } },
+         { nil, nil, "elona.citizen2", { _count = 4, role = 4 } },
+         { nil, nil, "elona.guard", { _count = 4, role = 14 } },
+      }
+
+      create_charas(map, charas)
+
+      update_quests_in_map(map)
+
+      for i=0,25 do
+         generate_chara(map)
+      end
+   end
+}
+data:add(vernis)
+
+--- unfinished
+
 local dungeon = "dungeon1"
 
 local temp = {
-   vernis = "vernis",
    yowyn = "yowyn",
    palmia = "palmia",
    derphy = "derphy",

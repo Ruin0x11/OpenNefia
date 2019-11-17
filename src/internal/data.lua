@@ -313,10 +313,6 @@ local function iter(state, prev_index)
    end
 
    local next_index, dat = state.iter(state.state, prev_index)
-   if dat and not dat._id then
-      print"die"
-      _p(next_index, dat)
-   end
 
    if next_index == nil then
       return nil

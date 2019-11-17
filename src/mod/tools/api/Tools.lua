@@ -341,7 +341,6 @@ function Tools.print_memory(map)
    map = map or Map.current()
    local res = ""
    for i, m in map:iter_tile_memory("base.map_tile") do
-      _p(i, m)
       local c = " "
       local x = (i-1) % map:width()
       local y = math.floor((i-1) / map:width())

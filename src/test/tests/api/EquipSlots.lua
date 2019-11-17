@@ -65,7 +65,6 @@ test("EquipSlots - wrong slot type", function()
         local i = Item.create("test.sword", 0, 0, {}, map)
 
         i:mod("equip_slots", { "test.chest" })
-        _p(i:calc("equip_slots"))
 
         ok(not eq:equip(i))
 

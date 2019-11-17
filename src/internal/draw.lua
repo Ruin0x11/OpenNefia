@@ -266,7 +266,7 @@ function draw.draw_error(err)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
-   err = err .. "\n\nPress enter or send code to continue."
+   err = err .. "\n\nStrike [Enter] or send code to continue, [Backspace] to exit current layer."
 
    local pos = 70
    draw.set_font(14)

@@ -2,9 +2,11 @@ local mod = require("internal.mod")
 local internal = require("internal")
 local i18n = require("internal.i18n")
 local data = require("internal.data")
+local field = require("game.field")
 local stopwatch = require("api.Stopwatch")
 local UiTheme = require("api.gui.UiTheme")
 local Event = require("api.Event")
+local Log = require("api.Log")
 
 local startup = {}
 
@@ -24,6 +26,8 @@ function startup.run(mods)
 
    local default_theme = "elona_sys.default"
    UiTheme.add_theme(default_theme)
+
+   field:setup_repl()
 
    Event.trigger("base.on_game_startup")
 end
@@ -57,6 +61,8 @@ local tile_size = 48
 local atlas_size = 96
 
 function startup.load_batches()
+   Log.info("Loading tile batches.")
+
    local coords = require("internal.draw.coords.tiled_coords"):new()
    internal.draw.set_coords(coords)
 

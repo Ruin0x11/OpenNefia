@@ -17,7 +17,7 @@ function Chara.at(x, y, map)
       return nil
    end
 
-   local objs = map:iter_type_at_pos("base.chara", x, y):filter(Chara.is_alive)
+   local objs = map:iter_type_at_pos("base.chara", x, y):filter(function(c) return Chara.is_alive(c, map) end)
 
    assert(objs:length() <= 1, string.format("More than one live character on tile %d,%d", x, y))
 
@@ -56,18 +56,19 @@ function Chara.set_player(uid_or_chara)
    c:refresh()
 end
 
-function Chara.is_alive(c)
+function Chara.is_alive(c, map)
+   map = map or Map.current()
+
    if type(c) ~= "table" or c.state ~= "Alive" then
       return false
    end
 
-   local map = c:current_map()
-   if not map then
+   local their_map = c:current_map()
+   if not their_map then
       return false
    end
 
-   -- NOTE: fails if the map is not current.
-   return map.uid == Map.current().uid
+   return their_map.uid == map.uid
 end
 
 local hook_generate_chara =
@@ -75,25 +76,10 @@ local hook_generate_chara =
                      "Overrides the behavior for character generation.")
 
 function Chara.create(id, x, y, params, where)
-   if x == nil then
-      local player = Chara.player()
-      if Chara.is_alive(player) then
-         x = player.x
-         y = player.y
-      end
-   end
-
    params = params or {}
    params.level = params.level or 1
    params.quality = params.quality or 0
    where = where or field.map
-
-   if not params.ownerless then
-      x, y = Map.find_position_for_chara(x, y, where)
-      if not x then
-         return nil
-      end
-   end
 
    if params.ownerless then
       where = nil
@@ -103,16 +89,6 @@ function Chara.create(id, x, y, params, where)
 
    if not class.is_an(ILocation, where) and not params.ownerless then
       return nil
-   end
-
-   if where and where:is_positional() then
-      if not where:is_in_bounds(x, y) then
-         return nil
-      end
-
-      if Chara.at(x, y, where) ~= nil then
-         return nil
-      end
    end
 
    local copy = params.copy or {}
@@ -137,7 +113,8 @@ function Chara.create(id, x, y, params, where)
    end
 
    if where then
-      chara = where:take_object(chara, x, y)
+      -- TODO: may want to return status
+      Map.try_place_chara(chara, x, y, where)
    end
 
    if chara and not params.no_build then

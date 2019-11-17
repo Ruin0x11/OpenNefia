@@ -50,7 +50,6 @@ function area_mapping:get_area_of_map(map)
 end
 
 function area_mapping:get_data_of_area(area)
-   _p(self.area_to_maps, area)
    return self.area_to_maps[area]
 end
 

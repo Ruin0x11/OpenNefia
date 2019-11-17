@@ -169,7 +169,6 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
       return false
    end
 
-   _p(room, params.pos)
    table.insert(rooms, room)
 
    local tile1 = 0

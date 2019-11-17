@@ -6,6 +6,7 @@ local Input = require("api.Input")
 local Item = require("api.Item")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
+local save = require("internal.global.save")
 
 -- General-purpose logic that is meant to be shared by the PC and all
 -- NPCs. These functions obey game rules such as curse state for
@@ -38,8 +39,6 @@ function Action.move(chara, x, y)
       return false
    end
 
-   chara:set_pos(x, y)
-
    chara:emit("base.on_chara_moved", params)
    -- EVENT: on_character_movement
    -- mount update
@@ -49,7 +48,16 @@ function Action.move(chara, x, y)
    --   re-procs everything including traps on the newly
    --   teleported-to position.
 
+   chara:set_pos(x, y)
+
+
    -- EVENT: after_character_movement
+   local function sense_map_feats_on_move()
+      if chara:is_player() then
+         save.base.player_pos_on_map_leave = nil
+      end
+   end
+   sense_map_feats_on_move()
    -- proc water
    -- sense feats
    -- proc world map encounters

@@ -374,24 +374,30 @@ local function my_start(self, player)
          error(world_map)
       end
 
-      local find_home = function(i)
-         return i.generator_params.generator == "elona_sys.map_template"
-            and i.generator_params.params.id == "elona.your_home"
-      end
-      local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
-      assert(home_entrance)
+      local load_map = function(id)
+         local find_home = function(i)
+            return i.generator_params.generator == "elona_sys.map_template"
+               and i.generator_params.params.id == id
+         end
+         local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
+         assert(home_entrance)
 
-      success, map = MapArea.load_map_of_entrance(home_entrance)
-      if not success then
-         error(map)
+         success, map = MapArea.load_map_of_entrance(home_entrance)
+         if not success then
+            error(map)
+         end
+         return map
       end
+
+      local home = load_map("elona.your_home")
+      local vernis = load_map("elona.vernis")
 
       Map.save(world_map)
-      Map.save(map)
+      Map.save(home)
+      Map.save(vernis)
 
-      Map.set_map(map)
+      Map.set_map(vernis)
 
-      print("gonow")
       assert(map:take_object(player, 15, 12))
       Chara.set_player(player)
    end

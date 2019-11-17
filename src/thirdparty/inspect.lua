@@ -250,7 +250,11 @@ function Inspector:putTable(t)
       local count = 0
       for i=1, sequenceLength do
         if count > 0 then self:puts(',') end
-        self:puts(' ')
+        if self.always_tabify then
+           self:tabify()
+        else
+           self:puts(' ')
+        end
         self:putValue(t[i])
         count = count + 1
       end
@@ -301,12 +305,13 @@ end
 -------------------------------------------------------------------
 
 function inspect.inspect(root, options)
-  options       = options or {}
+  options             = options or {}
 
-  local depth   = options.depth   or math.huge
-  local newline = options.newline or '\n'
-  local indent  = options.indent  or '  '
-  local process = options.process
+  local depth         = options.depth   or math.huge
+  local newline       = options.newline or '\n'
+  local indent        = options.indent  or '  '
+  local process       = options.process
+  local always_tabify = options.always_tabify
 
   if process then
     root = processRecursive(process, root, {}, {})
@@ -320,6 +325,7 @@ function inspect.inspect(root, options)
     maxIds           = {},
     newline          = newline,
     indent           = indent,
+    always_tabify    = always_tabify,
     tableAppearances = countTableAppearances(root)
   }, Inspector_mt)
 

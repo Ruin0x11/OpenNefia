@@ -453,6 +453,11 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
+      local function start_dialog(on_cell)
+         Dialog.start(on_cell, "elona.default")
+         return "player_turn_query"
+      end
+
       return start_dialog(player, on_cell)
    end
 
@@ -472,7 +477,7 @@ Event.register("elona_sys.on_player_bumped_into_chara",
 
 
 local function calc_dialog_choices(speaker, params, result)
-   table.insert(result, {"talk", "talk"})
+   table.insert(result, {"talk", "talk.npc.common.choices.talk"})
 
    if speaker.roles then
       for _, role in ipairs(speaker.roles) do
@@ -489,8 +494,3 @@ local function calc_dialog_choices(speaker, params, result)
 end
 
 Event.register("elona.calc_dialog_choices", "Default NPC dialog", calc_dialog_choices)
-
-local function start_dialog(on_cell)
-   Dialog.start(on_cell, "elona.default")
-   return "player_turn_query"
-end

@@ -19,7 +19,7 @@ local directions = {
 local directions_rev = { [-1] = {}, [0] = {}, [1] = {} }
 
 for name, pos in pairs(directions) do
-   directions_rev[pos[1]][pos[2]] = name
+   directions_rev[pos[2]][pos[1]] = name
 end
 
 function Pos.unpack_direction(dir)

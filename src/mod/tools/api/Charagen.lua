@@ -14,6 +14,8 @@ local Charagen = {}
 --  5: town_child, mercenary, old_person, beggar
 --  7: elder, citizen, citizen_of_cyber_dome, wizard, bard, hot_spring_maniac
 --  9: guard, fairy, acid_slime, bat, rook, gagu, artist, prisoner
+-- quality:
+--  1 is bad, 6 is special
 
 local function chara_gen_weight(chara, objlv)
    return math.floor((chara.rarity or 100000) / (500 + math.abs(chara.level - objlv) * chara.coefficient))

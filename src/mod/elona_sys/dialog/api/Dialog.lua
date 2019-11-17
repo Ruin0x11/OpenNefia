@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
 local DialogMenu = require("mod.elona_sys.dialog.api.DialogMenu")
@@ -16,12 +17,25 @@ local function dialog_error(talk, msg, err)
    end
 end
 
+--- Converts a root and key suffix to a full i18n key.
+--- "talk.root" + "key"   = "talk.root.key"
+--- "" + "talk.other.key" = "talk.other.key"
+local function resolve_translated_text(root, key, args)
+   local full_key = key
+
+   if root and root ~= "" then
+      full_key = root .. "." .. key
+   end
+
+   return I18N.get(full_key, table.unpack(args or {})) or full_key
+end
+
 --- Convert a response localization key to the full localization key.
---- It can be one of the following.
+--- obj can be one of the following.
 ---  * __MORE__                - "(More)"
 ---  * __BYE__                 - "Bye bye."
----  * key.fragment            - core.locale.dialog.root.key.fragment
----  * core.locale.dialog.key  - core.locale.dialog.key
+---  * key.fragment            - dialog.root.key.fragment
+---  * dialog.key              - dialog.key
 ---  * {"key.fragment", args = {"arg1", "arg2"}}  - (localized with arguments)
 local function resolve_response(obj, talk)
    local args = {}
@@ -37,18 +51,17 @@ local function resolve_response(obj, talk)
       key = obj
    end
 
+   local root = talk.dialog.root
+
    if key == "__BYE__" then
-      return "core.locale.ui.bye", args
+      root = ""
+      key = "ui.bye"
    elseif key == "__MORE__" then
-      return "core.locale.ui.more", args
+      root = ""
+      key = "ui.more"
    end
 
-   get = talk.dialog.root .. "." .. key
-
-   if I18N.get_optional(get) == nil then
-      get = key
-   end
-   return get, args
+   return resolve_translated_text(talk.dialog.root, key, args)
 end
 
 local function speaker_name(chara)
@@ -73,12 +86,13 @@ local function query(talk, text, choices, default_choice)
 
    local the_choices = {}
    for i, choice in ipairs(choices) do
-      local response, args = resolve_response(choice[2], talk)
-      the_choices[i] = I18N.get(response, table.unpack(args))
+      the_choices[i] =  resolve_response(choice[2], talk)
       if default_choice == nil and choice[1] == "__END__" then
          default_choice = i
       end
    end
+
+   _p("Choices:", choices, the_choices)
 
    local menu
    if show_impress then
@@ -311,11 +325,7 @@ local function step_dialog(node_data, talk, state)
             end
 
             -- Resolve localized text.
-            local key = talk.dialog.root .. "." .. text[1]
-            local tex = I18N.get_optional(key, table.unpack(args))
-            if tex == nil then
-               tex = I18N.get(text[1], table.unpack(args))
-            end
+            local tex = resolve_translated_text(talk.dialog.root, text[1])
 
             -- Prompt for choice if on the last text entry or
             -- `next_node` is non-nil, otherwise show single choice.
@@ -362,6 +372,8 @@ function Dialog.start(chara, dialog_id)
    local talk = make_talk(chara, dialog, dialog_id)
    local state = {}
    local next_node = {choice = "__start", opts = {}}
+
+   Gui.play_sound("base.chat")
 
    while next_node ~= nil do
       next_node = step_dialog(next_node, talk, state)

@@ -137,7 +137,7 @@ local chara = {
    { id = 135, name = "citizen2_female" },
    { id = 136, name = "citizen_male" },
    { id = 137, name = "citizen_female" },
-   { id = 138, name = "_138" },
+   { id = 138, name = "baker" },
    { id = 139, name = "mercenary_male" },
    { id = 140, name = "shopkeeper_male" },
    { id = 141, name = "shopkeeper_female" },

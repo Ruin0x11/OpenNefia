@@ -95,7 +95,7 @@ local function migrate_map_entrances(template, outer_map, existing)
    end
 end
 
-local function load_map_template(self, params, opts)
+local function generate_from_map_template(self, params, opts)
    if not params.id then
       error("Map template ID must be provided")
    end
@@ -148,7 +148,31 @@ local function load_map_template(self, params, opts)
       template.on_generate(map)
    end
 
+   if template.copy then
+      for k, v in pairs(template.copy) do
+         if type(k) == "string" and k:sub(1, 1) ~= "_" then
+            map[k] = v
+         end
+      end
+   end
+
    return map
+end
+
+local function load_map_template(map, params, opts)
+   local template = data["elona_sys.map_template"]:ensure(params.id)
+
+   -- Copy functions in the "copy" subtable back to the map, since
+   -- they will not be serialized (they become nil).
+   if template.copy then
+      for k, v in pairs(template.copy) do
+         if type(k) == "string" and k:sub(1, 1) ~= "_" then
+            if type(v) == "function" and map[k] == nil then
+               map[k] = v
+            end
+         end
+      end
+   end
 end
 
 data:add {
@@ -156,7 +180,8 @@ data:add {
    _id = "map_template",
 
    params = { id = "string" },
-   generate = load_map_template,
+   generate = generate_from_map_template,
+   load = load_map_template,
 
    almost_equals = function(self, other)
       return self.id == other.id

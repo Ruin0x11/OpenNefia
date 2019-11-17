@@ -27,6 +27,7 @@ function field_layer:init()
    self.renderer = nil
    self.repl = nil
 
+   self.loaded = false
    self.map_changed = false
    self.no_scroll = true
 

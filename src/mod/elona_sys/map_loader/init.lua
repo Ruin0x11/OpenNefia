@@ -195,6 +195,7 @@ local function convert_122(gen, params)
    end
 
    result.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2) }
+   result.default_tile = Compat.convert_122_map_chip(1, 396)
 
    return result
 end

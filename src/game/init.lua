@@ -82,14 +82,14 @@ function game.loop()
       if not success then
          local err = action
          coroutine.yield(err)
-      end
-
-      if action == "start" then
-         cb = run_field
-      elseif action == "title" then
-         cb = main_title
-      elseif action == "quit" then
-         going = false
+      else
+         if action == "start" then
+            cb = run_field
+         elseif action == "title" then
+            cb = main_title
+         elseif action == "quit" then
+            going = false
+         end
       end
    end
 end

@@ -28,7 +28,7 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
       self.choices = { "__MORE__" }
    end
 
-   self.pages = UiList:new_paged(choices, 8)
+   self.pages = UiList:new_paged(self.choices, 8)
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys {
@@ -90,10 +90,12 @@ end
 
 function DialogMenu:update()
    if self.pages.chosen then
+      Gui.play_sound("base.more1")
       return self.pages.selected, self.pages:selected_item()
    end
 
    if self.default_choice and self.canceled then
+      Gui.play_sound("base.more1")
       return self.default_choice
    end
 

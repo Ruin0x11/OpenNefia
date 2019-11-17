@@ -56,9 +56,9 @@ end
 
 function en.he(obj)
    if type(obj) == "table" then
-      if obj.gender == "male" then
+      if obj.gender == "Male" then
          return "he"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "she"
       else
          return "it"
@@ -70,9 +70,9 @@ end
 
 function en.his(obj)
    if type(obj) == "table" then
-      if obj.gender == "male" then
+      if obj.gender == "Male" then
          return "his"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "her"
       else
          return "its"
@@ -161,9 +161,9 @@ function en.he(obj, ignore_sight)
    end
 
    if ignore_sight then
-      if obj.gender == "male" then
+      if obj.gender == "Male" then
          return "he"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "she"
       else
          return "it"
@@ -176,9 +176,9 @@ function en.he(obj, ignore_sight)
 
    if obj.is_player then
       return "you"
-   elseif obj.gender == "male" then
+   elseif obj.gender == "Male" then
       return "he"
-   elseif obj.gender == "female" then
+   elseif obj.gender == "Female" then
       return "she"
    end
 
@@ -191,9 +191,9 @@ function en.his(obj, ignore_sight)
    end
 
    if ignore_sight then
-      if obj.gender == "male" then
+      if obj.gender == "Male" then
          return "his"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "hers"
       else
          return "its"
@@ -206,9 +206,9 @@ function en.his(obj, ignore_sight)
 
    if obj.is_player then
       return "your"
-   elseif obj.gender == "male" then
+   elseif obj.gender == "Male" then
       return "his"
-   elseif obj.gender == "female" then
+   elseif obj.gender == "Female" then
       return "her"
    end
 
@@ -221,9 +221,9 @@ function en.him(obj, ignore_sight)
    end
 
    if ignore_sight then
-      if obj.gender == "male" then
+      if obj.gender == "Male" then
          return "him"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "her"
       else
          return "it"
@@ -236,9 +236,9 @@ function en.him(obj, ignore_sight)
 
    if obj.is_player then
       return "yourself"
-   elseif obj.gender == "male" then
+   elseif obj.gender == "Male" then
       return "him"
-   elseif obj.gender == "female" then
+   elseif obj.gender == "Female" then
       return "her"
    end
 
@@ -262,9 +262,9 @@ function en.himself(obj)
       end
       if obj.is_player then
          return "yourself"
-      elseif obj.gender == "male" then
+      elseif obj.gender == "Male" then
          return "himself"
-      elseif obj.gender == "female" then
+      elseif obj.gender == "Female" then
          return "herself"
       end
    end

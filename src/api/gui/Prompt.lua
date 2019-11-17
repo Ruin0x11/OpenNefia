@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local I18N = require("api.I18N")
 local UiTheme = require("api.gui.UiTheme")
 local IUiLayer = require("api.gui.IUiLayer")
 local TopicWindow = require("api.gui.TopicWindow")
@@ -31,8 +32,19 @@ local UiListExt = function()
    return E
 end
 
-function Prompt:init(choices)
+local KEYS = "abcdefghijklmnopqr"
+
+function Prompt:init(choices, width)
    self.can_cancel = true
+   self.width = width or 160
+
+   for i, choice in ipairs(choices) do
+      if type(choice) == "string" then
+         choice = { text = choice, key = KEYS:sub(i, i) }
+         choices[i] = choice
+      end
+      choice.text = I18N.get(choice.text) or choice.text
+   end
 
    self.list = UiList:new(choices, 20)
    table.merge(self.list, UiListExt())
@@ -64,15 +76,23 @@ function Prompt:on_query()
    Gui.play_sound("base.pop2")
 end
 
-function Prompt:relayout(x, y, width)
+function Prompt:relayout(x, y)
    local inf_verh = 16 + 72
-   local prompt_x = (Draw.get_width() - 10) / 2 + 3
-   local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
-   self.x = x or prompt_x - self.width / 2
-   self.y = y or prompt_y - #self.list.items * 10
 
-   self.width = width or 160
    self.height = #self.list.items * 20 + 42
+
+   if x == nil or x == 0 then
+      local prompt_x = (Draw.get_width() - 10) / 2 + 3
+      self.x = prompt_x - self.width / 2
+   else
+      self.x = x
+   end
+   if y == nil or y == 0 then
+      local prompt_y = (Draw.get_height() - inf_verh - 30) / 2 - 4 -- inf_verh
+      self.y = prompt_y - #self.list.items * 10
+   else
+      self.y = y
+   end
 
    self.t = UiTheme.load(self)
 

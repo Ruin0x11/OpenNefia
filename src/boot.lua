@@ -43,7 +43,7 @@ fun = require("thirdparty.fun")
 
 class = require("util.class")
 
-function _p(...)
+function _ppr(...)
    local t = {...}
    local max = 0
 
@@ -68,6 +68,14 @@ function _p(...)
    end
    io.write("\n")
    return ...
+end
+
+if is_windows then
+   -- Do not buffer stdout for Emacs compatibility.
+   -- Requires LOVE's source to be modified to use stdin/stdout pipes
+   -- on Windows.
+   io.stdout:setvbuf("no")
+   io.stderr:setvbuf("no")
 end
 
 -- prevent new globals from here on out.

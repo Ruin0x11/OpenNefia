@@ -35,4 +35,6 @@ function I18N.get_optional(key, ...)
    return key
 end
 
+I18N.switch_language = i18n.switch_language
+
 return I18N

@@ -1,2 +1,2 @@
-((nil (projectile-project-compilation-cmd . "start elona-next")
-      (projectile-project-run-cmd . "start elona-next")))
+((nil (projectile-project-compilation-cmd . "elona-next")
+      (projectile-project-run-cmd . "elona-next")))

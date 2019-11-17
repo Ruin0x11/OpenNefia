@@ -24,6 +24,8 @@ local function travel_to_map_hook(source, params, result)
    local map = map_result.map
    map_result.map = nil
 
+   save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
+
    Gui.play_sound("base.exitmap1")
    assert(Map.travel_to(map, map_result))
 
@@ -32,7 +34,7 @@ end
 
 local hook_travel_to_map = Event.define_hook("travel_to_map",
                                         "Hook when traveling to a new map.",
-                                        { true, "player_turn_query" },
+                                        { false, "Error running hook." },
                                         nil,
                                         travel_to_map_hook)
 
@@ -90,7 +92,14 @@ function Command.move(player, x, y)
       -- quest abandonment warning
 
       if Input.yes_no() then
-         return table.unpack(hook_travel_to_map())
+         local success, result = table.unpack(hook_travel_to_map())
+
+         if not success then
+            Gui.report_error(result)
+            return "player_turn_query"
+         end
+
+         return result
       end
 
       return "player_turn_query"

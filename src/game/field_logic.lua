@@ -6,6 +6,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
 local World = require("api.World")
+local Log = require("api.Log")
 local draw = require("internal.draw")
 local field = require("game.field")
 local data = require("internal.data")
@@ -19,6 +20,9 @@ function field_logic.setup_new_game(player)
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
 
    scenario:on_game_start(player)
+
+   save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
+   assert(save.base.home_map_uid)
 end
 
 function field_logic.quickstart()
@@ -36,7 +40,11 @@ end
 function field_logic.setup()
    Gui.mes_clear()
 
-   Event.trigger("base.on_game_initialize")
+   -- This function gets called again if field_logic.query() throws an
+   -- error, so don't rerun base.on_game_initialize.
+   if not field.is_active then
+      Event.trigger("base.on_game_initialize")
+   end
 end
 
 function field_logic.update_chara_time_this_turn(time_this_turn)
@@ -215,6 +223,15 @@ function field_logic.player_turn_query()
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
 
+      if field.repl then
+         local success, turn_result = field.repl:execute_all_deferred()
+         if success and turn_result then
+            result = turn_result
+            going = false
+            break
+         end
+      end
+
       if ran == true then
          result = turn_result or "player_turn_query"
          going = false
@@ -262,6 +279,15 @@ function field_logic.turn_end(chara)
    return "pass_turns"
 end
 
+local function revive_player()
+   local player = Chara.player()
+   assert(player:revive())
+
+   local success, map = Map.load(save.base.home_map_uid)
+   assert(success, map)
+   Map.travel_to(map)
+end
+
 function field_logic.player_died()
    Gui.play_sound("base.dead1")
    Gui.mes("misc.death.good_bye")
@@ -276,11 +302,9 @@ function field_logic.player_died()
       last_words = I18N.get("misc.death.dying_message", last_words)
    end
 
-   local result, canceled = DeathMenu:new({{ last_words = last_words, death_cause = "death cause", icon = Chara.player():copy_image() }}):query()
-   if canceled or result.index == 0 then
-      return "turn_begin"
-   elseif result.index == 1 then
-      Save.load_game()
+   local result, canceled = DeathMenu:new({{ last_words = last_words, death_cause = "death cause", image = Chara.player():copy_image() }}):query()
+   if canceled or result.index == 1 then
+      revive_player()
       return "turn_begin"
    end
 
@@ -332,6 +356,8 @@ function field_logic.run_one_event(event, target_chara)
 end
 
 function field_logic.query()
+   Log.info("Entered main loop.")
+
    field_logic.setup()
 
    local event = "turn_begin"

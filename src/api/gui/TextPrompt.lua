@@ -111,7 +111,7 @@ function TextPrompt:draw()
    Draw.filled_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
 
    self.win:draw()
-   self.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)
+   self.t.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)
    local ime_status = self:ime_status_quad()
    self.t[ime_status]:draw(self.x + 8, self.y + 4)
 

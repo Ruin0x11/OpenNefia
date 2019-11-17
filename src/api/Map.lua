@@ -13,7 +13,20 @@ local SaveFs = require("api.SaveFs")
 -- @module Map
 local Map = {}
 
+Event.register("base.on_map_enter", "reveal fog",
+               function(map, params)
+                  if table.has_value(map.types or {}, "town") then
+                     map:mod("reveals_fog", true)
+                  end
+                  if map:calc("reveals_fog") then
+                     for _, x, y in map:iter_tiles() do
+                        map:reveal_tile(x, y)
+                     end
+                  end
+end)
+
 function Map.set_map(map)
+   map:emit("base.on_map_enter")
    field:set_map(map)
    return field.map
 end
@@ -24,6 +37,16 @@ function Map.save(map)
    Log.info("Saving map %d to %s", map.uid, path)
    return SaveFs.write(path, map)
 end
+
+Event.register("base.on_map_loaded", "apply template options",
+               function(_, params)
+                  if params.map.generated_with then
+                     local generator = data["base.map_generator"][params.map.generated_with.generator]
+                     if generator and generator.load then
+                        generator.load(params.map, params.map.generated_with.params)
+                     end
+                  end
+end)
 
 Event.register("base.on_map_loaded", "instantiate all map objects",
                function(_, params)
@@ -191,6 +214,7 @@ function Map.force_clear_pos(x, y, map)
 end
 
 local function can_place_chara_at(x, y, map)
+   local Chara = require("api.Chara")
    return Map.can_access(x, y, map)
 end
 
@@ -253,8 +277,8 @@ end
 -- @treturn[2] nil
 function Map.find_position_for_chara(x, y, scope, map)
    map = map or Map.current()
-   x = x or Rand.rnd(map:width())
-   y = y or Rand.rnd(map:height())
+   x = x or Rand.rnd(map:width() - 4) + 2
+   y = y or Rand.rnd(map:height() - 4) + 2
 
    scope = scope or "npc"
 
@@ -285,13 +309,33 @@ function Map.find_position_for_chara(x, y, scope, map)
    return nil
 end
 
-local function try_place(chara, x, y, current, map)
+local function failed_to_place(chara)
+   assert(not chara:is_player())
+
+   if chara:is_ally() then
+      chara.state = "OtherMap"
+      Gui.mes("chara.place_failure.ally", chara)
+   else
+      chara.state = "Dead"
+      Gui.mes("chara.place_failure.other", chara)
+   end
+   if chara.role ~= nil then
+      chara.state = "CitizenDead"
+   end
+
+   chara:emit("base.on_chara_place_failure")
+end
+
+function Map.try_place_chara(chara, x, y, map)
    local scope = "npc"
    if chara:is_in_party() then
       scope = "ally"
    end
+   if chara:is_player() then
+      scope = "player"
+   end
 
-   local real_x, real_y = Map.find_position_for_chara(x, y, scope, map)
+   local real_x, real_y = Map.find_position_for_chara(x, y, nil, map)
 
    if real_x == nil and chara:is_player() then
       real_x = Rand.rnd(map:width())
@@ -306,6 +350,7 @@ local function try_place(chara, x, y, current, map)
       return map:take_object(chara, real_x, real_y)
    end
 
+   failed_to_place(chara)
    return nil
 end
 
@@ -330,7 +375,8 @@ function Map.travel_to(map_or_uid, params)
    local x, y = 0, 0
 
    if map.uid == current.uid then
-      error("Map cannot be the same as the one being traveled to.")
+      -- Nothing to do.
+      return
    end
 
    if params.start_x and params.start_y then
@@ -341,7 +387,7 @@ function Map.travel_to(map_or_uid, params)
          x = map.player_start_pos.x or x
          y = map.player_start_pos.y or y
       elseif type(map.player_start_pos) == "function" then
-         x, y = map.player_start_pos(Chara.player())
+         x, y = map.player_start_pos(Chara.player(), map)
       end
    end
 
@@ -359,7 +405,7 @@ function Map.travel_to(map_or_uid, params)
    player:remove_activity()
    player:reset_ai()
 
-   success = try_place(player, x, y, current, map)
+   success = Map.try_place_chara(player, x, y, map)
    assert(success)
 
    for _, uid in ipairs(allies) do
@@ -373,13 +419,13 @@ function Map.travel_to(map_or_uid, params)
       ally:remove_activity()
       ally:reset_ai()
 
-      local new_ally = try_place(ally, x, y, current, map)
+      local new_ally = Map.try_place_chara(ally, x, y, map)
       assert(new_ally ~= nil)
    end
 
    current:emit("base.on_map_leave")
 
-   if current.is_temporary then
+   if not current.is_temporary then
       Map.save(current)
    end
 

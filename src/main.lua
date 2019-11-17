@@ -33,8 +33,8 @@ function love.load(arg)
    draw = coroutine.create(game.draw)
 end
 
-local abort = false
 local halt = false
+local pop_draw_layer = false
 local halt_error = ""
 
 local function stop_halt()
@@ -47,6 +47,9 @@ local function start_halt()
    love.keypressed = function(key, scancode, isrepeat)
       local keys = table.set {"return", "escape", "space"}
       if keys[key] then
+         stop_halt()
+      elseif key == "backspace" then
+         pop_draw_layer = true
          stop_halt()
       end
    end
@@ -79,7 +82,8 @@ function love.update(dt)
       return
    end
 
-   local ok, err = coroutine.resume(loop, dt, abort)
+   local ok, err = coroutine.resume(loop, dt, pop_draw_layer)
+   pop_draw_layer = false
    if not ok or err ~= nil then
       print("Error in loop:\n\t" .. debug.traceback(loop, err))
       print()

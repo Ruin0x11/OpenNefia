@@ -68,6 +68,7 @@ local fallbacks = {
    time_this_turn = 0,
    turns_alive = 0,
    armor_class = "",
+   last_move_direction = "South",
 
    image = "",
 
@@ -223,7 +224,8 @@ function IChara:produce_locale_data()
       gender = self:calc("gender"),
       is_player = self:is_player(),
       is_visible = self:is_in_fov(),
-      has_own_name = self:calc("has_own_name")
+      has_own_name = self:calc("has_own_name"),
+      talk_type = self:calc("talk_type")
    }
 end
 
@@ -477,27 +479,31 @@ end
 
 function IChara:revive()
    if Chara.is_alive(self) then
-      return
-   end
-
-   local map = self:current_map()
-   if map == nil then
-      return false
-   end
-
-   local nx, ny = Map.find_position_for_chara(self, self.x, self.y, map)
-
-   if nx == nil then
       return false
    end
 
    self.state = "Alive"
-   self:set_pos(nx, ny)
    self:heal_to_max()
 
-   Gui.mes(self.uid .. " has revived!")
-
    Event.trigger("base.on_chara_revived", {chara=self})
+
+   return true
+end
+
+function IChara:revive_and_place(map)
+   if not self:revive() then
+      return false
+   end
+
+   map = map or Map.current()
+   if map == nil then
+      return false
+   end
+
+   Map.try_place_chara(self, nil, nil, map)
+
+   Gui.play_sound("base.pray1")
+   Gui.mes(self.uid .. " has revived!")
 
    return true
 end

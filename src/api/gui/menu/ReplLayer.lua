@@ -42,8 +42,7 @@ function ReplLayer:init(env, history)
    self.cursor_x = 0
 
    -- tab completion
-   self.completion_candidates = nil
-   self.selected_candidate = 1
+   self.completion = nil
 
    self.deferred = queue:new()
 
@@ -57,9 +56,11 @@ function ReplLayer:init(env, history)
    self.input:bind_keys {
       text_entered = function(t)
          self:insert_text(t)
+         self.completion = nil
       end,
       backspace = function()
          self:delete_char()
+         self.completion = nil
       end,
       text_submitted = function()
          self:submit()
@@ -97,13 +98,31 @@ function ReplLayer:init(env, history)
          self:set_cursor_pos(#self.text)
       end,
       tab = function()
-         if not self.completion_candidates then
+         local function complete(cand)
+            local text = self.completion.base .. cand.text
+            if cand.type == "function" then
+               text = text .. "("
+            end
+            self:set_text(text)
+         end
+
+         if not self.completion then
             local cp = ReplCompletion:new()
-            self.completion_candidates = cp:complete(self.text, self.env)
-            self.selected_candidate = 1
+            self.completion = cp:complete(self.text, self.env)
+            if self.completion then
+               local complete_single = true
+               if #self.completion.candidates == 1 and complete_single then
+                  complete(self.completion.candidates[1])
+                  self.completion = nil
+               else
+                  self:print(inspect(fun.iter(self.completion.candidates):extract("text"):to_list()))
+               end
+            end
          else
-            self.selected_candidate =
-               (self.selected_candidate + 1) % #self.completion_candidates
+            self.completion.selected =
+               (self.completion.selected + 1) % #self.completion.candidates
+            local cand = self.completion.candidates[self.completion.selected+1]
+            complete(cand)
          end
       end
    }
@@ -111,7 +130,7 @@ function ReplLayer:init(env, history)
 end
 
 function ReplLayer:on_query()
-   self.completion_candidates = nil
+   self.completion = nil
    if self.scrollback:len() == 0 then
       self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
                                Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
@@ -122,12 +141,14 @@ function ReplLayer:history_prev()
    self.scrollback_index = 0
    self.history_index = math.max(self.history_index - 1, 0)
    self:set_text(self.history[self.history_index])
+   self.completion = nil
 end
 
 function ReplLayer:history_next()
    self.scrollback_index = 0
    self.history_index = math.min(self.history_index + 1, #self.history)
    self:set_text(self.history[self.history_index])
+   self.completion = nil
 end
 
 function ReplLayer:set_text(text)
@@ -314,18 +335,13 @@ function ReplLayer.format_results(results, print_varargs)
 end
 
 function ReplLayer:submit()
-   -- if self.completion_candidates then
-   --    self:insert_text(self.completion_candidates[self.selected_candidate])
-   --    self.completion_candidates = nil
-   --    return
-   -- end
-
    local text = self.text
    self.text = ""
    self.scrollback_index = 0
    self.history_index = 0
    self.cursor_pos = 0
    self.cursor_x = 0
+   self.completion = nil
 
    self:print(self.mode.caret .. text)
    if string.nonempty(text) then
@@ -390,8 +406,16 @@ function ReplLayer:execute_all_deferred()
    local code = self.deferred:pop()
    local success, results
    while code do
-      success, results = self.mode:submit(code)
+      if type(code) == "function" then
+         success, results = xpcall(code, debug.traceback)
+      else
+         success, results = self.mode:submit(code)
+      end
       code = self.deferred:pop()
+
+      if not success then
+         error(results[1])
+      end
    end
    return success, results
 end
@@ -422,12 +446,17 @@ function ReplLayer:draw()
    end
 
    -- scrollback display
+   local offset = 0
+   if self.completion and #self.completion.candidates > 1 then
+      offset = 1
+   end
+
    for i=1,self.max_lines do
       local t = self.scrollback[self.scrollback_index + i]
       if t == nil then
          break
       end
-      Draw.text(t, self.x + 5, self.y + top - Draw.text_height() * (i+1) - 5)
+      Draw.text(t, self.x + 5, self.y + top - Draw.text_height() * (i+1+offset) - 5)
    end
 end
 
