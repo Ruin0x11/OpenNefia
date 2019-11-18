@@ -20,7 +20,7 @@ local function cycle_aware_copy(t, cache)
    for k,v in pairs(t) do
       -- TODO: standardize no-save fields
       -- NOTE: preserves the UID for now.
-      if k ~= "location" and k ~= "proto" and string.sub(k, 1, 1) ~= "_" then
+      if k ~= "location" and k ~= "proto" and (string.sub(k, 1, 1) ~= "_" or k == "__resolver" or k == "__method" or k == "__value") then
          k = cycle_aware_copy(k, cache)
          v = cycle_aware_copy(v, cache)
          res[k] = v

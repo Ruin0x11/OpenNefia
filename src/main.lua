@@ -44,6 +44,7 @@ local function stop_halt()
 end
 
 local function start_halt()
+   internal.input.halt_input()
    love.keypressed = function(key, scancode, isrepeat)
       local keys = table.set {"return", "escape", "space"}
       if keys[key] then

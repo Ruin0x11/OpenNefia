@@ -17,6 +17,7 @@ function DirectionPrompt:init(x, y)
    self.frame = 0
    self.cardinal = true
    self.result = nil
+   self.canceled = false
 
    self.input = InputHandler:new()
    self.input:bind_keys {

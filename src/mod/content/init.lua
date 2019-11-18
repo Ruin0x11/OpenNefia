@@ -361,46 +361,58 @@ data:add {
    end
 }
 
-local function my_start(self, player)
-   local Chara = require("api.Chara")
-   local Item = require("api.Item")
-   local Map = require("api.Map")
-   local MapArea = require("api.MapArea")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
+local Map = require("api.Map")
+local MapArea = require("api.MapArea")
 
+local load_map = function(world_map, id)
+   local find_home = function(i)
+      return i.generator_params.generator == "elona_sys.map_template"
+         and i.generator_params.params.id == id
+   end
+   local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
+   assert(home_entrance)
+
+   local success, map = MapArea.load_map_of_entrance(home_entrance)
+   if not success then
+      error(map)
+   end
+   return map
+end
+
+local function base_init(self, player)
    do
-      local success, world_map, map
+      local success, world_map
       success, world_map = Map.generate("elona_sys.map_template", { id = "elona.north_tyris" })
       if not success then
          error(world_map)
       end
 
-      local load_map = function(id)
-         local find_home = function(i)
-            return i.generator_params.generator == "elona_sys.map_template"
-               and i.generator_params.params.id == id
-         end
-         local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
-         assert(home_entrance)
-
-         success, map = MapArea.load_map_of_entrance(home_entrance)
-         if not success then
-            error(map)
-         end
-         return map
-      end
-
-      local home = load_map("elona.your_home")
-      local vernis = load_map("elona.vernis")
+      local home = load_map(world_map, "elona.your_home")
+      local vernis = load_map(world_map, "elona.vernis")
 
       Map.save(world_map)
       Map.save(home)
       Map.save(vernis)
 
-      Map.set_map(vernis)
+      Map.set_map(home)
 
-      assert(map:take_object(player, 15, 12))
+      assert(Map.current():take_object(player, 15, 12))
       Chara.set_player(player)
    end
+
+   local armor = Item.create("content.armor", nil, nil, {}, player)
+   armor.curse_state = "blessed"
+   assert(player:equip_item(armor))
+
+   local axe = Item.create("content.axe", nil, nil, {}, player)
+   assert(player:equip_item(axe))
+   player:refresh()
+end
+
+local function my_start(self, player)
+   base_init(self, player)
 
    for i=1,4 do
       local a = Chara.create("elona.putit", i+8, 3)
@@ -414,15 +426,8 @@ local function my_start(self, player)
    for _=1,50 do
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
-
-   local armor = Item.create("content.armor", nil, nil, {}, player)
-   armor.curse_state = "blessed"
-   assert(player:equip_item(armor))
-
-   local axe = Item.create("content.axe", nil, nil, {}, player)
-   assert(player:equip_item(axe))
-   player:refresh()
 end
+
 
 data:add {
    _type = "base.scenario",
@@ -430,7 +435,7 @@ data:add {
 
    name = "My Scenario",
 
-   on_game_start = my_start
+   on_game_start = base_init
 }
 
 require("mod.content.dialog")

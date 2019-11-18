@@ -2,6 +2,7 @@ local Feat = require("api.Feat")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
+local data = require("internal.data")
 
 -- Functions dealing with the connections between maps.
 --
@@ -121,12 +122,20 @@ function MapArea.create_entrance(generator_params, area_params, x, y, outer_map)
    outer_map = outer_map or Map.current()
 
    if type(area_params) == "table" then
-      assert(area_params.id, "area must have ID")
+      assert(area_params.outer_map_id, "area must have outer map ID")
    end
 
    local entrance = Feat.create("elona.stairs_down", x, y, {}, outer_map)
    entrance.generator_params = generator_params
    entrance.area_params = area_params
+
+   local generator = data["base.map_generator"]:ensure(generator_params.generator)
+   if generator.get_image then
+      local image = generator.get_image(generator_params.params)
+      if image then
+         entrance.image = image
+      end
+   end
 
    return entrance
 end

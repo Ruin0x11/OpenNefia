@@ -90,6 +90,20 @@ local function add_index_field(dat, _type, field)
    end
 end
 
+local function remove_index_field(dat, _type, field)
+   if type(field) == "string" then field = {field} end
+   for _, v in ipairs(field) do
+      local index_key = dat[v]
+
+      if index_key ~= nil then
+         local key = "by_" .. v
+         index[_type][key] = index[_type][key] or {}
+
+         index[_type][key][index_key] = nil
+      end
+   end
+end
+
 function data:add_index(_type, field)
    if schemas[_type].indexes[field] then
       return
@@ -207,6 +221,12 @@ function data:add(dat)
 
          table.replace_with(inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
+
+         for field, _ in pairs(_schema.indexes) do
+            remove_index_field(dat, _type, field)
+            add_index_field(dat, _type, field)
+         end
+
          return dat
       else
          Log.error("ID is already taken on type '%s': '%s'", _type, full_id)

@@ -14,6 +14,11 @@ function Gui.update_screen()
    scroll = false
 end
 
+function Gui.set_camera_pos(x, y)
+   field:set_camera_pos(x, y)
+   scroll = false
+end
+
 function Gui.update_hud()
    field:update_hud()
 end

@@ -55,7 +55,7 @@ function DialogMenu:draw()
    self.t.ie_chat:draw(self.x, self.y - 20, nil, nil, {255, 255, 255})
 
    if self.portrait then
-      self.portrait:draw(self.x + 42, self.y + 42)
+      self.portrait:draw(self.x + 42, self.y + 42, 80, 112)
    elseif self.chara_image then
       self.chara_image:draw(self.x + 82,
                             self.y + 125, -- TODO offset_y

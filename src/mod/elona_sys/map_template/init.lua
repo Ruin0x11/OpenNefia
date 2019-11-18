@@ -137,15 +137,11 @@ local function generate_from_map_template(self, params, opts)
                area_params = params.area_uid
             else
                -- generate new area
-               area_params = { id = params.id }
+               area_params = { outer_map_id = params.id }
             end
             MapArea.create_entrance(area_generator_params, area_params, area.x, area.y, map)
          end
       end
-   end
-
-   if template.on_generate then
-      template.on_generate(map)
    end
 
    if template.copy then
@@ -154,6 +150,10 @@ local function generate_from_map_template(self, params, opts)
             map[k] = v
          end
       end
+   end
+
+   if template.on_generate then
+      template.on_generate(map)
    end
 
    return map
@@ -173,6 +173,18 @@ local function load_map_template(map, params, opts)
          end
       end
    end
+
+   if template.on_load then
+      template.on_load(map)
+   end
+end
+
+local function on_enter(map, params, previous_map)
+   local template = data["elona_sys.map_template"]:ensure(params.id)
+
+   if template.on_enter then
+      template.on_enter(map, previous_map)
+   end
 end
 
 data:add {
@@ -182,6 +194,10 @@ data:add {
    params = { id = "string" },
    generate = generate_from_map_template,
    load = load_map_template,
+   on_enter = on_enter,
+   get_image = function(params)
+      return data["elona_sys.map_template"]:ensure(params.id).image
+   end,
 
    almost_equals = function(self, other)
       return self.id == other.id

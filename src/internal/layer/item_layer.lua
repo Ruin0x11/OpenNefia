@@ -41,7 +41,7 @@ function item_layer:update(dt, screen_updated, scroll_frames)
       local y = math.floor((ind-1) / map:width())
       for _, i in ipairs(stack) do
          found[i.uid] = true
-         local show = i.show and map:is_in_fov(x, y)
+         local show = i.show
          local hide = not show
             and self.batch_inds[i.uid] ~= nil
             and self.batch_inds[i.uid] ~= 0

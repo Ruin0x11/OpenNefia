@@ -75,6 +75,16 @@ function input.textinput(text)
    end
 end
 
+function input.halt_input()
+   if mouse_handler then
+      mouse_handler:halt_input()
+   end
+
+   if key_handler then
+      key_handler:halt_input()
+   end
+end
+
 input.set_key_repeat = love.keyboard.setKeyRepeat
 input.set_text_input = love.keyboard.setTextInput
 

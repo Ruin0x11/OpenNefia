@@ -57,6 +57,10 @@ local function get_feat_tiles()
    return data["base.chip"]:iter():filter(mkpred("feat"))
 end
 
+local function get_portrait_tiles()
+   return data["base.portrait"]:iter()
+end
+
 local tile_size = 48
 local atlas_size = 96
 
@@ -89,8 +93,13 @@ function startup.load_batches()
 
    sw:p("load_batches.feat")
 
+   local portrait_atlas = atlas:new(100, 100, 48, 72)
+   portrait_atlas:load(get_portrait_tiles())
+
+   sw:p("load_batches.portrait")
+
    local atlases = require("internal.global.atlases")
-   atlases.set(tile_atlas, chara_atlas, item_atlas, feat_atlas)
+   atlases.set(tile_atlas, chara_atlas, item_atlas, feat_atlas, portrait_atlas)
 end
 
 return startup

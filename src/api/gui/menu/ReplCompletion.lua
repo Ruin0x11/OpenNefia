@@ -62,10 +62,25 @@ function ReplCompletion:complete(line, repl_env)
 
    for i=1,#parts-1 do
       local part = parts[i]
-      cur = cur[part]
-      if cur == nil then
+      local next_part = cur[part]
+
+      -- Try to call zero-argument functions along the chain
+      if next_part == nil and string.match(part, "%(%)$") then
+         local fn_name = string.gsub(part, "(.*)%(%)$", "%1")
+         local fn = cur[fn_name]
+         if type(fn) == "function" then
+            local success, res = pcall(fn)
+            if success then
+               next_part = res
+            end
+         end
+      end
+
+      if next_part == nil then
          return nil
       end
+
+      cur = next_part
    end
 
    if cur == nil then

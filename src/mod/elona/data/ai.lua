@@ -34,55 +34,6 @@ local function drift_towards_pos(x, y, initial_x, initial_y)
    return x + add_x, y + add_y
 end
 
--- @tparam int x
--- @tparam int y
--- @tparam[opt] int max_dist
-local function go_to_position(chara, params)
-   local dist = params.max_dist or 2
-   local nx, ny
-
-   if Pos.dist(chara.x, chara.y, params.x, params.y) > dist then
-      nx, ny = drift_towards_pos(chara.x, chara.y, params.x, params.y)
-   else
-      nx, ny = Pos.random_direction(chara.x, chara.y)
-   end
-
-   if Map.can_access(nx, ny) then
-      Action.move(chara, nx, ny)
-      return true
-   end
-
-   return false
-end
-
-local function wander(chara, params)
-   local nx, ny = Pos.random_direction(chara.x, chara.y)
-
-   if Map.can_access(nx, ny) then
-      Action.move(chara, nx, ny)
-      return true
-   end
-
-   return false
-end
-
-local function go_to_preset_anchor(chara, params)
-   if chara.ai_state.is_anchored then
-      return Ai.run("elona.go_to_position", { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
-   end
-
-   return false
-end
-
-local function follow_player(chara, params)
-   if chara.ai_config.follow_player_when_calm then
-      local target = Chara.player()
-      if Chara.is_alive(target) then
-         return Ai.run("elona.go_to_position", chara, { x = target.x, y = target.y })
-      end
-   end
-end
-
 local function dir_check(chara, dir, reverse)
    local nx = 0
    local ny = 0
@@ -296,24 +247,77 @@ local function move_towards_target(chara, params)
    return false
 end
 
-local idle_action = {
-   "elona.follow_player",
-   function()
-      if Rand.one_in(5) then return true end
-   end,
-   "elona.on_ai_calm_actions",
-   "elona.go_to_preset_anchor",
-   "elona.wander",
-}
+-- @tparam int x
+-- @tparam int y
+-- @tparam[opt] int max_dist
+local function go_to_position(chara, params)
+   local dist = params.max_dist or 2
+   local nx, ny
+
+   if Pos.dist(chara.x, chara.y, params.x, params.y) > dist then
+      nx, ny = drift_towards_pos(chara.x, chara.y, params.x, params.y)
+   else
+      nx, ny = Pos.random_direction(chara.x, chara.y)
+   end
+
+   if Map.can_access(nx, ny) then
+      Action.move(chara, nx, ny)
+      return true
+   end
+
+   return false
+end
+
+local function go_to_preset_anchor(chara, params)
+   if chara.ai_state.is_anchored then
+      return Ai.run("elona.go_to_position", chara, { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
+   end
+
+   return false
+end
+
+local function wander(chara, params)
+   local nx, ny = Pos.random_direction(chara.x, chara.y)
+
+   if chara:calc("ai_calm") == 2 and Map.current():calc("has_anchored_npcs") then
+      return Ai.run("elona.go_to_position", chara, { x = chara.initial_x, y = chara.initial_y })
+   end
+
+   if Map.can_access(nx, ny) then
+      Action.move(chara, nx, ny)
+      return true
+   end
+
+   return false
+end
+
+local function follow_player(chara, params)
+   --if chara.ai_config.follow_player_when_calm then
+   if chara:calc("ai_calm") == 4 then
+      local target = Chara.player()
+      if Chara.is_alive(target) then
+         return Ai.run("elona.go_to_position", chara, { x = target.x, y = target.y })
+      end
+   end
+end
 
 local function on_ai_calm_actions(chara, params)
-   local i =  chara:emit("elona.on_ai_calm_action", params, false)
-   return i
+   return chara:emit("elona.on_ai_calm_action", params, false)
 end
 
 local function on_ai_ally_actions(chara, params)
    return chara:emit("elona.on_ai_ally_action", params, false)
 end
+
+local idle_action = {
+   "elona.follow_player",
+   function()
+      if not Rand.one_in(5) then return true end
+   end,
+   "elona.on_ai_calm_actions",
+   "elona.go_to_preset_anchor",
+   "elona.wander",
+}
 
 local function do_sleep(chara, _, result)
    if chara:is_ally() then

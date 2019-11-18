@@ -314,6 +314,13 @@ end
 function field_logic.run_one_event(event, target_chara)
    local cb = nil
 
+   if Chara.player() == nil then
+      -- Something went wrong; at least boot the game back to the
+      -- title so it doesn't have to be restarted.
+      Log.error("Player is nil, returning to title.")
+      return false
+   end
+
    if field.map_changed == true then
       event = "turn_begin"
       field.map_changed = false

@@ -39,7 +39,7 @@ function feat_layer:update(dt, screen_updated, scroll_frames)
       local y = math.floor((i-1) / map:width())
       for _, f in ipairs(stack) do
          found[f.uid] = true
-         local show = not f.show and map:is_in_fov(x, y)
+         local show = f.show
          local hide = not show
             and self.batch_inds[f.uid] ~= nil
             and self.batch_inds[f.uid] ~= 0

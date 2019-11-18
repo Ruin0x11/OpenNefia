@@ -1,3 +1,4 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Item = require("api.Item")
 local Map = require("api.Map")
@@ -68,6 +69,7 @@ function ElonaCommand.dig(player)
       return "player_turn_query"
    end
 
+   local player = Chara.player()
    local x, y = Pos.add_direction(dir, player.x, player.y)
 
    if x == player.x and y == player.y then

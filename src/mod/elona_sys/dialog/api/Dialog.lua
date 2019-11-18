@@ -92,14 +92,12 @@ local function query(talk, text, choices, default_choice)
       end
    end
 
-   _p("Choices:", choices, the_choices)
-
    local menu
    if show_impress then
       menu = DialogMenu:new(text,
                             the_choices,
                             speaker_name(talk.speaker),
-                            talk.speaker:calc("portrait"),
+                            talk.speaker:copy_portrait(),
                             talk.speaker:copy_image(),
                             default_choice,
                             talk.speaker.impression,
@@ -108,7 +106,7 @@ local function query(talk, text, choices, default_choice)
       menu = DialogMenu:new(text,
                             the_choices,
                             speaker_name(talk.speaker),
-                            talk.speaker:calc("portrait"),
+                            talk.speaker:copy_portrait(),
                             talk.speaker:copy_image(),
                             default_choice)
    end

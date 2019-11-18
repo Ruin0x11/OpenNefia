@@ -121,25 +121,47 @@ function field_layer:get_object(_type, uid)
    return self.map and self.map:get_object_of_type(_type, uid)
 end
 
+function field_layer:set_camera_pos(x, y)
+   self.camera_x = x
+   self.camera_y = y
+   self.renderer:update_draw_pos(x, y, 0)
+   self.renderer:update(0)
+   self:update_hud()
+end
+
 function field_layer:update_screen(scroll)
    if not self.is_active or not self.renderer then return end
 
-   if scroll == nil then
+   if scroll == nil or self.no_scroll then
       scroll = false
    end
-
-   scroll = scroll and (not self.no_scroll) and false
 
    assert(self.map ~= nil)
 
    local player = self.map:get_object(self.player)
-   local scroll_frames
-   if player then
-      if scroll then
-         scroll_frames = player:calc("scroll") or 3
-      end
+   local scroll_frames = 0
+   if scroll then
+      scroll_frames = 3
+   end
 
-      self.renderer:update_draw_pos(player.x, player.y, scroll_frames)
+   local center_x = self.camera_x or nil
+   local center_y = self.camera_y or nil
+   self.camera_x = nil
+   self.camera_y = nil
+
+   if center_x == nil and player then
+      center_x = player.x
+      center_y = player.y
+      if scroll then
+         scroll_frames = player:calc("scroll") or scroll_frames
+      end
+   end
+
+   if center_x then
+      self.renderer:update_draw_pos(center_x, center_y, scroll_frames)
+   end
+
+   if player then
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
 

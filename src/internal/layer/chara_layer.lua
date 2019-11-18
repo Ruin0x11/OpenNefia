@@ -88,7 +88,15 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
 
    -- Calculate scroll now before the position of all character
    -- sprites are updated.
-   local scroll = self:calc_scroll(map)
+   --
+   -- BUG: assumes memory is unique by UID, which is false since more
+   -- than one memory can exist for a single UID at a time.
+   local scroll = {} -- self:calc_scroll(map)
+
+   for uid, batch_ind in pairs(self.batch_inds) do
+      self.chara_batch:remove_tile(batch_ind.ind)
+      self.batch_inds[uid] = nil
+   end
 
    -- TODO: This has to be deferred to the final scroll frame, because
    -- the shadow map has already been updated by this point. This can
@@ -100,42 +108,26 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    --   - In Elona_next, the FOV map is calculated by the time the
    --   - screen is scrolled, but the FOV map from the previous turn
    --   - will still be displayed.
+   local i = 1
    for ind, stack in map:iter_memory("base.chara") do
       local x = (ind-1) % map:width()
       local y = math.floor((ind-1) / map:width())
 
       for _, c in ipairs(stack) do
          local show = c.show and map:is_in_fov(x, y)
-         local hide = not show
-            and self.batch_inds[c.uid] ~= nil
-            and self.batch_inds[c.uid].ind ~= 0
 
          if show then
             local image = c.image
-            local batch_ind = self.batch_inds[c.uid]
+            local batch_ind = self.batch_inds[i]
             if batch_ind == nil or batch_ind.ind == 0 then
                local ind = self.chara_batch:add_tile {
                   tile = image,
                   x = x,
                   y = y
                }
-               self.batch_inds[c.uid] = { ind = ind, x = x, y = y }
-            else
-               local tile, px, py = self.chara_batch:get_tile(batch_ind)
-
-               if px ~= x or py ~= y or tile ~= image then
-                  self.chara_batch:remove_tile(batch_ind.ind)
-                  local ind = self.chara_batch:add_tile {
-                     tile = image,
-                     x = x,
-                     y = y
-                  }
-                  self.batch_inds[c.uid] = { ind = ind, x = x, y = y }
-               end
+               self.batch_inds[i] = { ind = ind, x = x, y = y }
+               i = i + 1
             end
-         elseif hide then
-            self.chara_batch:remove_tile(self.batch_inds[c.uid].ind)
-            self.batch_inds[c.uid] = nil
          end
       end
    end

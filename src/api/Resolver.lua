@@ -16,7 +16,7 @@ function Resolver.make(id, params, target_field)
    return params
 end
 
-function Resolver.resolve_one(tbl, params, final)
+function Resolver.resolve_one(tbl, params)
    local id = tbl.__resolver
 
    local resolver
@@ -29,8 +29,8 @@ function Resolver.resolve_one(tbl, params, final)
    end
    -- if not Schema.check(resolver.params, params) then error() end
 
-   local result = resolver.resolve(tbl, params, final)
-   if resolver.method then
+   local result = resolver.resolve(tbl, params)
+   if resolver.method and not params.override_method then
       result = {
          __method = resolver.method,
          __value = result
@@ -39,17 +39,20 @@ function Resolver.resolve_one(tbl, params, final)
    return result
 end
 
-local function resolve_recurse(result, proto, params, key, final)
+local function resolve_recurse(result, proto, params, key, seen)
    if type(proto) == "table" then
       if proto.__resolver then
-         result[key] = Resolver.resolve_one(proto, params, final)
+         result[key] = Resolver.resolve_one(proto, params)
       else
          for k, v in pairs(proto) do
             result[key] = result[key] or {}
-            resolve_recurse(result[key], v, params, k, final)
+            if not seen[result[key]] then
+               seen[result[key]] = true
+               resolve_recurse(result[key], v, params, k, seen)
+            end
          end
       end
-   else
+   elseif not params.diff_only then
       result[key] = proto
    end
 end
@@ -57,6 +60,7 @@ end
 function Resolver.resolve(proto, params)
    params = params or {}
    local result = {}
+   local seen = {}
 
    if type(proto) == "table" then
       if proto.__resolver then
@@ -67,7 +71,7 @@ function Resolver.resolve(proto, params)
          -- a value that is depended on for a later resolver.
          for k, v in pairs(proto) do
             if type(k) ~= "number" then
-               resolve_recurse(result, v, params, k)
+               resolve_recurse(result, v, params, k, seen)
             end
          end
          for _, v in ipairs(proto) do
@@ -75,7 +79,7 @@ function Resolver.resolve(proto, params)
             result = Resolver.resolve_one(v, params, result)
          end
       end
-   else
+   elseif not params.diff_only then
       result = proto
    end
 

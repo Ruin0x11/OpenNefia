@@ -15,12 +15,22 @@ local Map = {}
 
 Event.register("base.on_map_enter", "reveal fog",
                function(map, params)
-                  if table.has_value(map.types or {}, "town") then
+                  if map:has_type({"town", "world_map", "player_owned", "guild"}) then
                      map:mod("reveals_fog", true)
                   end
                   if map:calc("reveals_fog") then
                      for _, x, y in map:iter_tiles() do
                         map:reveal_tile(x, y)
+                     end
+                  end
+end)
+
+Event.register("base.on_map_leave", "call generator.on_enter",
+               function(prev_map, params)
+                  if params.next_map.generated_with then
+                     local generator = data["base.map_generator"][params.next_map.generated_with.generator]
+                     if generator and generator.on_enter then
+                        generator.on_enter(params.next_map, params.next_map.generated_with.params, prev_map)
                      end
                   end
 end)
@@ -195,7 +205,19 @@ function Map.generate(generator_id, params, opts)
    Event.trigger("base.on_map_generated", {map=map})
    Event.trigger("base.on_map_loaded", {map=map})
 
+   Map.refresh(map)
+
    return success, map
+end
+
+function Map.refresh(map)
+   local Chara = require("api.Chara")
+   if map:calc("has_anchored_npcs") then
+      for _, chara in Chara.iter_others() do
+         chara.initial_x = chara.x
+         chara.initial_y = chara.y
+      end
+   end
 end
 
 function Map.force_clear_pos(x, y, map)
@@ -347,6 +369,9 @@ function Map.try_place_chara(chara, x, y, map)
    if real_x ~= nil then
       assert(can_place_chara_at(real_x, real_y, map))
 
+      chara.initial_x = real_x
+      chara.initial_y = real_y
+
       return map:take_object(chara, real_x, real_y)
    end
 
@@ -387,7 +412,7 @@ function Map.travel_to(map_or_uid, params)
          x = map.player_start_pos.x or x
          y = map.player_start_pos.y or y
       elseif type(map.player_start_pos) == "function" then
-         x, y = map.player_start_pos(Chara.player(), map)
+         x, y = map.player_start_pos(Chara.player(), map, current)
       end
    end
 
@@ -423,7 +448,7 @@ function Map.travel_to(map_or_uid, params)
       assert(new_ally ~= nil)
    end
 
-   current:emit("base.on_map_leave")
+   current:emit("base.on_map_leave", {next_map=map})
 
    if not current.is_temporary then
       Map.save(current)

@@ -71,6 +71,7 @@ local fallbacks = {
    last_move_direction = "South",
 
    image = "",
+   portrait = "",
 
    gold = 0,
    platinum = 0,
@@ -232,6 +233,16 @@ end
 function IChara:copy_image()
    local chara_atlas = require("internal.global.atlases").get().chara
    return chara_atlas:copy_tile_image(self:calc("image") .. "#1")
+end
+
+function IChara:copy_portrait()
+   local portrait = self:calc("portrait")
+   if portrait == nil then
+      return nil
+   end
+
+   local portrait_atlas = require("internal.global.atlases").get().portrait
+   return portrait_atlas:copy_tile_image(portrait .. "#1")
 end
 
 -- Iterates both the character's inventory and equipment.

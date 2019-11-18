@@ -144,6 +144,11 @@ function Chara.iter_allies()
    return fun.wrap(iter, {map = field.map, uids = save.base.allies}, 1)
 end
 
+function Chara.iter_others(map)
+   map = map or Map.current()
+   return map:iter_charas():filter(function(c) return not c:is_in_party() end)
+end
+
 function Chara.find(id, kind)
    if kind == "ally" then
       return Chara.iter_allies():filter(function(i) return i._id == id end):nth(1)

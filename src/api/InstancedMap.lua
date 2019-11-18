@@ -105,7 +105,7 @@ end
 
 local fallbacks = {
    turn_cost = 1000,
-   is_outdoors = true,
+   is_outdoor = true,
    is_temporary = false,
    dungeon_level = 1,
    deepest_dungeon_level = 10,
@@ -117,12 +117,33 @@ local fallbacks = {
    tile_type = 2,
    default_ai_calm = 1,
    max_crowd_density = 40,
-   is_user_map = false
+   is_user_map = false,
+   has_anchored_npcs = false,
+   reveals_fog = false
 }
 
 function InstancedMap:init_map_data()
    self:mod_base_with(fallbacks, "merge")
    self:emit("base.on_build_map")
+end
+
+function InstancedMap:has_type(ty)
+   if type(ty) == "table" then
+      for _, t in ipairs(ty) do
+         assert(type(t) == "string")
+         if self:has_type(t) then
+            return true
+         end
+      end
+   else
+      for _, v in ipairs(self.types) do
+         if v == ty then
+            return true
+         end
+      end
+   end
+
+   return false
 end
 
 function InstancedMap:width()

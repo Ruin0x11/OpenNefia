@@ -79,7 +79,7 @@ function Tools.items()
 end
 
 function Tools.item()
-   return Tools.items():nth(1)
+   return Rand.choice(Tools.items())
 end
 
 function Tools.allies()
@@ -87,21 +87,29 @@ function Tools.allies()
 end
 
 function Tools.ally()
-   return Tools.allies():nth(1)
+   return Rand.choice(Tools.allies())
 end
 
-function Tools.enemies()
-   local pred = function(c)
-      return Chara.is_alive(c) and not c:is_in_party()
+local function gen_faction_pred(faction)
+   return function ()
+      local pred = function(c)
+         return Chara.is_alive(c) and c.faction == faction
+      end
+      return Map.iter_charas():filter(pred)
    end
-   return Map.iter_charas():filter(pred)
 end
+
+Tools.enemies = gen_faction_pred("base.enemy")
 
 function Tools.enemy()
-   return Tools.enemies():nth(1)
+   return Rand.choice(Tools.enemies())
 end
 
-Tools.foes = Tools.enemies
+Tools.citizens = gen_faction_pred("base.citizen")
+
+function Tools.citizen()
+   return Rand.choice(Tools.citizens())
+end
 
 function Tools.dump_charas()
    local t = Map.iter_charas()
@@ -151,12 +159,16 @@ function Tools.drop_all()
    Chara.player():iter_inventory():each(drop)
 end
 
-function Tools.goto_map(name)
-   local success, map = Map.generate("elona_sys.elona122", { name = name })
+function Tools.goto_map(id)
+   local success, map = Map.generate("elona_sys.map_template", { id = id })
    if not success then
       error(map)
    end
    return Map.travel_to(map)
+end
+
+function Tools.go_home(name)
+   return Map.travel_to(save.base.home_map_uid)
 end
 
 function Tools.top_layer()
@@ -182,6 +194,11 @@ function Tools.items_under()
 end
 
 function Tools.warp_to(x, y)
+   if type(x) == "table" and x.x then
+      y = x.y
+      x = x.x
+   end
+
    local player = Chara.player()
    local x, y = Map.find_position_for_chara(x, y, "ally")
    if x then

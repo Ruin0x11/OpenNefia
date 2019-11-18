@@ -112,6 +112,10 @@ function draw.get_layer(i)
    return layers[i]
 end
 
+function draw.get_current_layer(i)
+   return layers[#layers - (i or 1) + i]
+end
+
 function draw.layer_count()
    return #layers
 end

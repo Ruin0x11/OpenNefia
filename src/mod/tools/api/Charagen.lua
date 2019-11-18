@@ -21,9 +21,9 @@ local function chara_gen_weight(chara, objlv)
    return math.floor((chara.rarity or 100000) / (500 + math.abs(chara.level - objlv) * chara.coefficient))
 end
 
-function Charagen.random_chara_id_raw(objlv, filter, category, race_filter, tag_filters)
+function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, tag_filters)
    objlv = objlv or 0
-   filter = filter or 0
+   fltselect = fltselect or 0
    category = category or 0
    race_filter = race_filter or nil
    tag_filters = tag_filters or {}
@@ -33,7 +33,7 @@ function Charagen.random_chara_id_raw(objlv, filter, category, race_filter, tag_
          return false
       end
 
-      if filter ~= (chara.fltselect or 0) then
+      if fltselect ~= (chara.fltselect or 0) then
          return false
       end
 
@@ -73,21 +73,21 @@ end
 local function do_get_chara_id(params)
    if params.category == 0 and #params.tag_filters == 0 and params.race_filter == nil then
       if params.quality == 3 and Rand.one_in(20) then
-         params.filter = 2
+         params.fltselect = 2
       end
       if params.quality == 4 and Rand.one_in(10) then
-         params.filter = 2
+         params.fltselect = 2
       end
    end
 
-   local id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
+   local id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category)
 
    if id == nil then
-      if params.filter == 2 or params.quality == 6 then
+      if params.fltselect == 2 or params.quality == 6 then
          params.quality = 4
       end
       params.level = params.level + 10
-      id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
+      id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category)
    end
 
    return id
@@ -98,7 +98,7 @@ function Charagen.create(x, y, params, where)
 
    params.quality = params.quality or 0
    params.level = params.level or 0
-   params.filter = params.filter or nil -- fltselect in vanilla
+   params.fltselect = params.fltselect or nil
    params.category = params.category or nil
    params.create_params = params.create_params or {}
    params.tag_filters = params.tag_filters or {}

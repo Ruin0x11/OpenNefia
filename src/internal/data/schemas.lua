@@ -278,6 +278,13 @@ data:add_type {
 }
 
 data:add_type {
+   name = "portrait",
+   schema = schema.Record {
+      image = schema.String
+   }
+}
+
+data:add_type {
    name = "config_option_boolean",
    schema = schema.Record {
       default = schema.Boolean,

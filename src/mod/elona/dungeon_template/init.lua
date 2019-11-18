@@ -315,7 +315,7 @@ local function generate_dungeon(self, params, opts)
    end
 
    -- TODO need some ID for each area that isn't necessarily unique
-   if opts.area.id == "elona.lesimas" then
+   if opts.area.outer_map_id == "elona.lesimas" then
    end
 
    return dungeon

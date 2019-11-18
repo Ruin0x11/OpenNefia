@@ -109,6 +109,9 @@ Gui.bind_keys {
    o = function(me)
       return Command.open(me)
    end,
+   s = function(me)
+      return Command.search(me)
+   end,
    ["return"] = function(me)
       return Command.enter_action(me)
    end,

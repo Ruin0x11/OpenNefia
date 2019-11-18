@@ -60,6 +60,14 @@ function IMapObject:is_in_fov()
 
    return map:is_in_fov(self.x, self.y)
 end
+function IMapObject:has_los(from_x, from_y)
+   local map = self:current_map()
+   if not map then
+      return false
+   end
+
+   return map:has_los(from_x, from_y, self.x, self.y)
+end
 
 --- Produces the data used to display this object in a draw layer.
 --- Each draw layer is intended to interpret this data differently

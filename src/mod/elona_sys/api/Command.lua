@@ -129,7 +129,7 @@ function Command.get(player)
 
    local items = Item.at(player.x, player.y):to_list()
    if #items == 0 then
-      Gui.mes("You grasp at air.")
+      Gui.mes("action.get.air")
       return "turn_end"
    end
 
@@ -143,11 +143,6 @@ function Command.get(player)
 end
 
 function Command.drop(player)
-   if player.inv:len() == 0 then
-      Gui.mes("No items.")
-      return "turn_end"
-   end
-
    return Input.query_inventory(player, "inv_drop")
 end
 
@@ -172,17 +167,20 @@ end
 function Command.close(player)
    for _, f in feats_surrounding(player, "can_close") do
       if Chara.at(f.x, f.y) then
-         Gui.mes("Someone is in the way.")
+         Gui.mes("action.close.blocked")
       else
-         Gui.mes(player.name .. " closes the " .. f.uid .. " ")
+         Gui.mes("action.close.execute", player)
          f:calc("on_close", player)
       end
    end
 end
 
 function Command.search(player)
-   for _, f in feats_surrounding(player, "can_open") do
-      f:calc("on_search", player)
+   local Feat = require("api.Feat")
+   for _, f in Feat.at(player.x, player.y) do
+      if f.on_search then
+         f:calc("on_search", player)
+      end
    end
 end
 

@@ -40,8 +40,8 @@ InventoryProtos.inv_get = {
       local result = Action.get(ctxt.chara, item, amount)
 
       if result then
-         Gui.mes(chara.uid .. " picks up " .. item:build_name(amount))
-         Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), chara.x, chara.y)
+         Gui.mes("action.pick_up.execute", ctxt.chara, item:build_name(amount))
+         Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), ctxt.chara.x, ctxt.chara.y)
       end
 
       -- TODO: handle harvest action

@@ -156,6 +156,9 @@ local function iter_line(state, index)
    if index.x == state.end_x and index.y == state.end_y then
       return nil
    end
+   if state.is_solid(index.x, index.y) then
+      return nil
+   end
 
    local e = index.err + index.err
    if e > -state.bound_y then
@@ -170,7 +173,7 @@ local function iter_line(state, index)
    return index, index.x, index.y
 end
 
-function Pos.iter_line(start_x, start_y, end_x, end_y)
+function Pos.iter_line(start_x, start_y, end_x, end_y, is_solid_cb)
    local delta_x, delta_y, bound_x, bound_y
 
    if start_x < end_x then
@@ -189,8 +192,13 @@ function Pos.iter_line(start_x, start_y, end_x, end_y)
       bound_y = start_y - end_y
    end
 
-   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y }
-   local index = {x=start_x,y=start_y,err=bound_x-bound_y}
+   if is_solid_cb == nil then
+      local Map = require("api.Map")
+      is_solid_cb = function(x, y) return not Map.current():can_access(x, y) end
+   end
+
+   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y, is_solid = is_solid_cb }
+   local index = { x = start_x, y = start_y, err = bound_x - bound_y }
 
    return fun.wrap(iter_line, state, index)
 end
@@ -220,20 +228,20 @@ local function iter_beam(state, pos)
 end
 
 local function gen_line(cb)
-   return function(start_x, start_y, dx, dy, is_solid)
-   dx = math.sign(dx)
-   dy = math.sign(dy)
+   return function(start_x, start_y, dx, dy, is_solid_cb)
+      dx = math.sign(dx)
+      dy = math.sign(dy)
 
-   if not is_solid then
-      local Map = require("api.Map")
-      is_solid = function(x, y) return not Map.current():can_access(x, y) end
-   end
+      if is_solid_cb == nil then
+         local Map = require("api.Map")
+         is_solid_cb = function(x, y) return not Map.current():can_access(x, y) end
+      end
 
-   if dx == 0 and dy == 0 then
-      return fun.iter({})
-   end
+      if dx == 0 and dy == 0 then
+         return fun.iter({})
+      end
 
-   return fun.wrap(cb, {is_solid=is_solid}, {x=start_x+dx,y=start_y+dy,dx=dx,dy=dy})
+      return fun.wrap(cb, {is_solid=is_solid_cb}, {x=start_x+dx,y=start_y+dy,dx=dx,dy=dy})
    end
 end
 

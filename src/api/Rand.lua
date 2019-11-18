@@ -25,6 +25,9 @@ end
 
 function Rand.choice(array)
    assert(type(array) == "table")
+   if tostring(array) == "<generator>" then
+      array = array:to_list()
+   end
    local i = array[Rand.rnd(#array)+1]
    return i
 end

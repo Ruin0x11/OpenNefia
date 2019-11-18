@@ -47,3 +47,21 @@ data:add {
       end,
    }
 }
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "guard",
+
+   root = "",
+   nodes = {
+      __start = function()
+      end,
+
+      where_is = function(t)
+         return "elona.default:talk"
+      end,
+      lost_item = function(t)
+         return "elona.default:talk"
+      end,
+   }
+}

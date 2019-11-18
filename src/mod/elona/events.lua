@@ -259,6 +259,9 @@ local function apply_race_class(chara)
    local class_data = Resolver.run("elona.class", {}, { chara = chara })
    chara:mod_base_with(race_data, "merge")
    chara:mod_base_with(class_data, "merge")
+
+   local rest = Resolver.resolve(chara, {object = chara, diff_only = true, override_method = true})
+   chara:mod_base_with(rest, "set")
 end
 
 Event.register("base.on_normal_build",
@@ -280,6 +283,19 @@ end
 
 Event.register("base.on_build_chara",
                "Init chara_defaults", init_chara_defaults)
+
+local function init_chara_image(chara)
+   if chara.male_image and chara.gender == "male" then
+      chara.image = chara.male_image
+   end
+   if chara.female_image and chara.gender == "female" then
+      chara.image = chara.female_image
+   end
+end
+
+Event.register("base.on_build_chara",
+               "Init chara image", init_chara_image)
+
 
 
 local function calc_damage_fury(chara, params, result)
@@ -445,7 +461,7 @@ local function bump_into_chara(player, params, result)
    local reaction = player:reaction_towards(on_cell)
 
    if reaction > 0 then
-      if on_cell:is_ally() then
+      if on_cell:is_ally() or on_cell.faction == "base.citizen" or Gui.player_is_running() then
          if player:swap_places(on_cell) then
             Gui.mes("You switch places with " .. on_cell.uid .. ".")
             Gui.set_scroll()
@@ -453,12 +469,8 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
-      local function start_dialog(on_cell)
-         Dialog.start(on_cell, "elona.default")
-         return "player_turn_query"
-      end
-
-      return start_dialog(player, on_cell)
+      Dialog.start(on_cell, "elona.default")
+      return "player_turn_query"
    end
 
    -- TODO: relation as -1
@@ -484,7 +496,15 @@ local function calc_dialog_choices(speaker, params, result)
          local role_data = data["elona.role"]:ensure(role.id)
          if role_data.dialog_choices then
             for _, choice in ipairs(role_data.dialog_choices) do
-               table.insert(result, choice)
+               if type(choice) == "function" then
+                  local choices = choice(speaker, params)
+                  assert(type(choices) == "table")
+                  for _, choice in ipairs(choices) do
+                     table.insert(result, choice)
+                  end
+               else
+                  table.insert(result, choice)
+               end
             end
          end
       end
@@ -494,3 +514,11 @@ local function calc_dialog_choices(speaker, params, result)
 end
 
 Event.register("elona.calc_dialog_choices", "Default NPC dialog", calc_dialog_choices)
+
+
+local function refresh_invisibility(chara, params, result)
+   local hidden = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
+   chara:mod("can_target", not hidden)
+end
+
+Event.register("base.on_refresh", "Update invisibility", refresh_invisibility)

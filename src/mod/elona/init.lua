@@ -54,5 +54,6 @@ require("mod.elona.data.activity")
 require("mod.elona.data.dungeon_template")
 require("mod.elona.data.dialog")
 require("mod.elona.data.role")
+require("mod.elona.data.portrait")
 
 require("mod.elona.events")

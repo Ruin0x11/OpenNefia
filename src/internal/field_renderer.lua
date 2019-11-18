@@ -78,7 +78,7 @@ function field_renderer:set_draw_pos(draw_x, draw_y)
 end
 
 function field_renderer:draw_pos()
-   return self.draw_x, self.draw_y
+   return self.draw_x, self.draw_y, self.scroll_x, self.scroll_y
 end
 
 function field_renderer:add_async_draw_callback(cb)

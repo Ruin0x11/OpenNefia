@@ -1,8 +1,9 @@
+local Item = require("api.Item")
 local Chara = require("api.Chara")
+local Feat = require("api.Feat")
 local Fs = require("api.Fs")
 local Log = require("api.Log")
 local InstancedMap = require("api.InstancedMap")
-local Item = require("api.Item")
 local Compat = require("mod.elona_sys.api.Compat")
 
 local struct = require("mod.elona_sys.map_loader.thirdparty.struct")
@@ -67,6 +68,25 @@ local same = {
    800, 801, 802, 803, 804, 805, 806, 807, 808, 809,
    810, 811, 812, 813, 814, 815, 816, 817, 818, 819,
    820, 821, 822, 823, 824
+}
+
+-- the actual feat ID and the IDs/images of map objects from .map
+-- files differ; this maps between them.
+local cell_obj_data = {
+   [0] = { 21, 726 },
+   [1] = { 21, 726 },
+   [2] = { 21, 726 },
+   [3] = { 14, 233 },
+   [4] = { 14, 233 },
+   [5] = { 10, 232 },
+   [6] = { 11, 231 },
+   [7] = { 21, 728 },
+   [8] = { 23, 727 },
+   [9] = { 31, 729 },
+   [10] = { 32, 233 },
+   [11] = { 21, 730 },
+   [12] = { 33, 732 },
+   [13] = { 21, 733 },
 }
 
 local function build_mapping()
@@ -177,19 +197,25 @@ local function convert_122(gen, params)
                Log.warn("Failed to create chara %s (%d) at (%d, %d)", id, data[1], x, y)
             end
          elseif data[5] == 2 then
-            local id = Compat.convert_122_id("base.feat", data[1])
+            local cell_obj = cell_obj_data[data[1]]
+            assert(cell_obj, "unknown 1.22 cell object ID " .. data[1])
+            local id = Compat.convert_122_id("base.feat", cell_obj[1])
+            assert(id, "unknown 1.22 feat ID " .. cell_obj[1])
+            local chip_id = Compat.convert_122_feat_chip(cell_obj[2])
+            assert(chip_id, "unknown 1.22 feat chip ID " .. cell_obj[2])
+
             local x = data[2]
             local y = data[3]
-            local param = data[4]
+            local param_a = data[4] % 1000
+            local param_b = math.floor(data[4] / 1000)
 
-            Log.trace("feat: %s %d %d %d", id, x, y, param)
-            -- cmap.objects[#cmap.objects+1] = {
-            --    id = data[1],
-            --    x = data[2],
-            --    y = data[3],
-            --    feat_param_a = v[4] % 1000,
-            --    feat_param_b = math.floor(v[4] / 1000)
-            -- }
+            Log.trace("feat: %s %s %d %d %d %d", id, chip_id, x, y, param_a, param_b)
+            local feat = Feat.create(id, x, y, {param_a=param_a, param_b=param_b}, result)
+            if not feat then
+               Log.warn("Failed to create feat %s (%d) at (%d, %d)", id, data[1], x, y)
+            else
+               feat.image = chip_id
+            end
          end
       end
    end

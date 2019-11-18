@@ -243,3 +243,75 @@ data:add {
    params = {},
    events = {}
 }
+
+data:add {
+   _type = "base.feat",
+   _id = "quest_board",
+
+   elona_id = 23,
+   image = "elona.feat_quest_board",
+   is_solid = true,
+   is_opaque = false,
+
+   on_bumped_into = function(self, chara)
+      Gui.play_sound("base.chat")
+      Gui.mes("Quest board.")
+   end,
+
+   params = {},
+   events = {}
+}
+
+data:add {
+   _type = "base.feat",
+   _id = "voting_box",
+
+   elona_id = 31,
+   image = "elona.feat_voting_box",
+   is_solid = true,
+   is_opaque = false,
+
+   on_bumped_into = function(self, chara)
+      Gui.play_sound("base.chat")
+      Gui.mes("Voting box.")
+   end,
+
+   params = {},
+   events = {}
+}
+
+data:add {
+   _type = "base.feat",
+   _id = "small_medal",
+
+   elona_id = 32,
+   image = "elona.feat_hidden",
+   is_solid = false,
+   is_opaque = false,
+
+   on_search = function(self, chara)
+      Gui.mes("reveal medal")
+      self:remove_ownership()
+   end,
+
+   params = {},
+   events = {}
+}
+
+data:add {
+   _type = "base.feat",
+   _id = "politics_board",
+
+   elona_id = 33,
+   image = "elona.feat_politics_board",
+   is_solid = true,
+   is_opaque = false,
+
+   on_bumped_into = function(self, chara)
+      Gui.play_sound("base.chat")
+      Gui.mes("Politics board.")
+   end,
+
+   params = {},
+   events = {}
+}

@@ -44,7 +44,7 @@ data:add {
    _id = "gender",
 
    ordering = 300000,
-   method = "set",
+   method = "merge",
    invariants = { male_ratio = "number" },
    params = { chara = "IChara" },
 
@@ -58,7 +58,7 @@ data:add {
    _id = "by_gender",
 
    ordering = 310000,
-   method = "set",
+   method = "merge",
    invariants = { male = "any", female = "any" },
    params = { chara = "IChara" },
 
@@ -72,7 +72,7 @@ data:add {
    _id = "item_count",
 
    ordering = 300000,
-   method = "set",
+   method = "merge",
    invariants = { count = "number" },
 
    resolve = function(self)
@@ -85,10 +85,43 @@ data:add {
    _id = "music_disc_id",
 
    ordering = 300000,
-   method = "set",
+   method = "merge",
 
    resolve = function()
       return 12
+   end
+}
+
+data:add {
+   _type = "base.resolver",
+   _id = "fruit_tree",
+
+   ordering = 300000,
+   method = "merge",
+
+   resolve = function()
+      return 5
+   end
+}
+
+data:add {
+   _type = "base.resolver",
+   _id = "random_portrait",
+
+   ordering = 300000,
+   method = "merge",
+
+   resolve = function(self, params)
+      local ind = 1 + Rand.rnd(32)
+      local chara = params.object
+      local prefix
+      if chara:calc("gender") == "male" then
+         prefix = "man"
+      else
+         prefix = "woman"
+      end
+      local id = ("elona.%s%d"):format(prefix, ind)
+      return data["base.portrait"]:ensure(id)._id
    end
 }
 
