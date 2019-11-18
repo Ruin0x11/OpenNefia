@@ -26,7 +26,6 @@ local function travel_to_map_hook(source, params, result)
 
    save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
 
-   Gui.play_sound("base.exitmap1")
    assert(Map.travel_to(map, map_result))
 
    return {true, "player_turn_query"}

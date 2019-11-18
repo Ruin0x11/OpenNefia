@@ -6,6 +6,12 @@ local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
 
 local MapEntrance = {}
+function MapEntrance.center(chara, map)
+   local x = math.floor(map:width() / 2)
+   local y = math.floor(map:height() / 2)
+
+   return x, y
+end
 function MapEntrance.east(chara, map)
    local x = map:width() - 2
    local y = math.floor(map:height() / 2)
@@ -690,7 +696,7 @@ local your_home = {
 
    copy = {
       types = { "player_owned" },
-      entrance_type = MapEntrance.south,
+      player_start_pos = MapEntrance.south,
       turn_cost = 10000,
       danger_level = 1,
       deepest_dungeon_level = 10,

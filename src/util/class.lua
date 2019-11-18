@@ -194,7 +194,7 @@ function class.assert_is_an(interface, obj)
    if _classes[interface] then
       local klass = interface
       if type(obj) ~= "table" or obj.__class ~= klass then
-         error(string.format("%s is not an instance of %s", obj, klass))
+         error(string.format("%s (%s) is not an instance of %s", obj, type(obj), klass))
       end
       return
    end

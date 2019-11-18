@@ -17,7 +17,7 @@ local Itemgen = {}
 --  8: tree_of_naked, tree_of_fir, christmas_tree
 
 local function item_gen_weight(item, objlv)
-   return math.floor((item.rarity or 0) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
+   return math.floor((item.rarity or 1000000) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
 end
 
 function Itemgen.random_item_id_raw(objlv, categories)
@@ -136,6 +136,7 @@ function Itemgen.create(x, y, params, where)
    params.categories = table.set(params.categories or {})
    params.create_params = params.create_params or {}
 
+   local chara = Chara.player()
    if params.quality < 5 and chara and chara:skill_level("elona.stat_luck") > Rand.rnd(5000) then
       params.quality = params.quality + 1
    end

@@ -454,6 +454,7 @@ function Map.travel_to(map_or_uid, params)
       Map.save(current)
    end
 
+   Gui.play_sound("base.exitmap1")
    Map.set_map(map)
    Gui.update_screen()
 

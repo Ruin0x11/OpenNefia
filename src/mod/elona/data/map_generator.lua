@@ -14,7 +14,7 @@ local function create_junk_items(map)
    local stood_map_tile = true
    if stood_map_tile then
       for _=1,4+Rand.rnd(5) do
-         Itemgen.create(nil, nil, {categories={"elona.junk_in_field"}})
+         Itemgen.create(nil, nil, {categories={"elona.junk_in_field"}}, map)
       end
    end
 end
@@ -171,6 +171,9 @@ data:add {
 
       field:generate(map)
 
+      local x = math.floor(map:width() / 2)
+      local y = math.floor(map:height() / 2)
+      map.player_start_pos = { x = x, y = y }
       map.is_temporary = true
 
       map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
