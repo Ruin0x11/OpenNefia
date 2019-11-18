@@ -403,4 +403,18 @@ function Tools.dungeon(kind, params)
    return Tools.print_map(map)
 end
 
+function Tools.things_at(ty)
+   local PositionPrompt = require("api.gui.PositionPrompt")
+   local result, canceled = PositionPrompt:new():query()
+   if not result or canceled then
+      return fun.iter({})
+   end
+
+   if ty then
+      return Map.current():objects_at_pos(result.x, result.y):filter(function(f) return f._type == ty end)
+   else
+      return Map.current():objects_at_pos(result.x, result.y)
+   end
+end
+
 return Tools

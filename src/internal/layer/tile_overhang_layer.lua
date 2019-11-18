@@ -21,7 +21,7 @@ function tile_overhang_layer:reset()
 end
 
 local function calc_map_shadow(map, hour)
-   if not map.is_outdoors then
+   if not map.is_outdoor then
       return 0
    end
 

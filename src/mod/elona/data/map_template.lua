@@ -8,13 +8,13 @@ local Rand = require("api.Rand")
 local MapEntrance = {}
 function MapEntrance.east(chara, map)
    local x = map:width() - 2
-   local y = math.floor(map:width() / 2)
+   local y = math.floor(map:height() / 2)
 
    return x, y
 end
 function MapEntrance.west(chara, map)
    local x = 1
-   local y = math.floor(map:width() / 2)
+   local y = math.floor(map:height() / 2)
 
    return x, y
 end
@@ -361,7 +361,7 @@ local vernis = {
          { 10, 15, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1006 } }}, shop_rank = 10, _name = "chara.job.general_vendor" } },
          { 7, 26, "elona.wizard", { roles = {{ id = "elona.shopkeeper", params = { 1004 } }}, shop_rank = 11, _name = "chara.job.magic_vendor" } },
          { 14, 25, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1005 } }}, shop_rank = 8, _name = "chara.job.innkeeper" } },
-         { 22, 26, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1003 } }}, shop_rank = 9, _name = "chara.job.baker", image = "elona.baker" } },
+         { 22, 26, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1003 } }}, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara__138" } },
          { 28, 16, "elona.wizard", { role = 5 } },
          { 38, 27, "elona.bartender", { role = 9 } },
          { 6, 25, "elona.healer", { role = 12 } },
@@ -1074,7 +1074,7 @@ local lumiest_graveyard = {
    image = "elona.feat_area_crypt",
    copy = {
       types = { "shelter" },
-      entrance_type = "Custom",
+      player_start_pos = MapEntrance.directional,
       tile_type = 4,
       turn_cost = 10000,
       danger_level = 1,
@@ -1097,7 +1097,7 @@ local truce_ground = {
    image = "elona.feat_area_truce_ground",
    copy = {
       types = { "shelter" },
-      entrance_type = "Custom",
+      player_start_pos = MapEntrance.directional,
       tile_type = 4,
       turn_cost = 10000,
       danger_level = 1,
