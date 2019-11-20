@@ -9,24 +9,40 @@ function ICharaParty:is_party_leader()
 end
 
 function ICharaParty:is_party_leader_of(other)
-   return other:is_in_party()
+   return other:is_allied()
 end
 
 function ICharaParty:get_party_leader()
-   if self:is_in_party() then
+   if self:is_allied() then
       return Chara.player()
    end
 
    return nil
 end
 
+--- True if this character is part of a party.
+--- Currently only valid for the player.
+---
+--- @treturn bool
 function ICharaParty:is_in_party()
+   return self:is_allied()
+end
+
+--- True if this character is sided with the player, or is the player
+--- themselves.
+---
+--- @treturn bool
+function ICharaParty:is_allied()
    return self:is_player() or self:is_ally()
 end
 
+--- Iterates the characters in this character's party.
+--- Currently only valid for the player.
+---
+--- @treturn Iterator(IChara)
 function ICharaParty:iter_party()
    if self:is_in_party() then
-      return Chara.iter_allies()
+      return Chara.iter_party()
    end
 
    return fun.iter({})

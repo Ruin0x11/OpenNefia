@@ -36,7 +36,9 @@ local defaults = {
    ammo_type = "",
    value = 1,
    params = {},
-   types = {}
+   types = {},
+
+   cargo_weight = 0
 }
 table.merge(IItem, defaults)
 

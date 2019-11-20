@@ -2,68 +2,68 @@ local body_part = {
    {
       _id = "head",
 
-      name = "Head",
-      icon = 1
+      icon = 1,
+      elona_id = 1
    },
    {
       _id = "neck",
 
-      name = "Neck",
-      icon = 2
+      icon = 2,
+      elona_id = 2
    },
    {
       _id = "back",
 
-      name = "Back",
-      icon = 3
+      icon = 3,
+      elona_id = 3
    },
    {
       _id = "body",
 
-      name = "Body",
-      icon = 4
+      icon = 4,
+      elona_id = 4
    },
    {
       _id = "hand",
 
-      name = "Hand",
-      icon = 5
+      icon = 5,
+      elona_id = 5
    },
    {
       _id = "ring",
 
-      name = "Ring",
-      icon = 6
+      icon = 6,
+      elona_id = 6
    },
    {
       _id = "arm",
 
-      name = "Arm",
-      icon = 7
+      icon = 7,
+      elona_id = 7
    },
    {
       _id = "waist",
 
-      name = "Waist",
-      icon = 8
+      icon = 8,
+      elona_id = 8
    },
    {
       _id = "leg",
 
-      name = "Leg",
-      icon = 9
+      icon = 9,
+      elona_id = 9
    },
    {
       _id = "ranged",
 
-      name = "Shoot",
-      icon = 10
+      icon = 10,
+      elona_id = 10
    },
    {
       _id = "ammo",
 
-      name = "Ammo",
-      icon = 11
+      icon = 11,
+      elona_id = 11
    }
 }
 

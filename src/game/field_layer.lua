@@ -199,6 +199,11 @@ function field_layer:update_hud()
    self.hud:update()
 end
 
+
+function field_layer:get_message_window()
+   return self.hud:find_widget("api.gui.hud.UiMessageWindow")
+end
+
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
 end

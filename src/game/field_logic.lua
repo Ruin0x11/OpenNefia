@@ -54,8 +54,7 @@ function field_logic.update_chara_time_this_turn(time_this_turn)
          -- turn cost at least as much as the player's starting
          -- turn cost, since the player always goes first at the
          -- beginning of a turn.
-         local speed = math.max(chara:skill_level("elona.stat_speed"), 10)
-         chara.time_this_turn = chara.time_this_turn + speed * time_this_turn
+         chara.time_this_turn = chara.time_this_turn + chara:emit("base.on_calc_speed") * time_this_turn
       end
    end
 end
@@ -83,7 +82,7 @@ function field_logic.turn_begin()
 
    chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
 
-   local speed = math.max(player:skill_level("elona.stat_speed"), 10)
+   local speed = player:emit("base.on_calc_speed")
 
    -- All characters will start with at least this much time during
    -- this turn.
@@ -98,7 +97,7 @@ function field_logic.turn_begin()
 
    World.pass_time_in_seconds(starting_turn_time / 5 + 1)
 
-   Gui.mes_new_turn()
+   field:get_message_window():new_turn()
 
    return "pass_turns"
 end

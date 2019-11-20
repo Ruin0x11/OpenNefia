@@ -1,3 +1,5 @@
+--- @module Save
+
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -10,6 +12,7 @@ local field = require("game.field")
 
 local Save = {}
 
+--- Saves the game.
 function Save.save_game()
    local map = Map.current()
 
@@ -32,6 +35,7 @@ function Save.save_game()
    Gui.mes("Game saved.")
 end
 
+--- Loads the current save.
 function Save.load_game()
    local success, map
 

@@ -1,3 +1,10 @@
+-- General-purpose logic that is meant to be shared by the PC and all
+-- NPCs. These functions obey game rules such as curse state for
+-- unequipping items. Each function will return two values, a boolean
+-- indicating if the action was successful and a string indicating any
+-- errors.
+-- @module Action
+
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -8,13 +15,12 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local save = require("internal.global.save")
 
--- General-purpose logic that is meant to be shared by the PC and all
--- NPCs. These functions obey game rules such as curse state for
--- unequipping items. Each function will return two values, a boolean
--- indicating if the action was successful and a string indicating any
--- errors.
 local Action = {}
 
+--- @tparam IChara chara
+--- @tparam int x
+--- @tparam int y
+--- @treturn bool success
 function Action.move(chara, x, y)
    local params = {
       prev_x = chara.x,
@@ -66,6 +72,10 @@ function Action.move(chara, x, y)
    return true
 end
 
+--- @tparam IChara chara
+--- @tparam IItem item
+--- @tparam[opt] int amount
+--- @treturn bool success
 function Action.get(chara, item, amount)
    if item == nil then
       local items = Item.at(chara.x, chara.y):to_list()
@@ -88,6 +98,10 @@ function Action.get(chara, item, amount)
    return false
 end
 
+--- @tparam IChara chara
+--- @tparam IItem item
+--- @tparam[opt] int amount
+--- @treturn bool success
 function Action.drop(chara, item, amount)
    if item == nil then
       return false
@@ -115,6 +129,10 @@ local can_unequip = hook("can_unequip",
                          end
 )
 
+--- @tparam IChara chara
+--- @tparam IItem item
+--- @treturn bool success
+--- @treturn[opt] string error
 function Action.unequip(chara, item)
    if not chara:has_item_equipped(item) then
       return false, "not_equipped_by_chara"
@@ -132,6 +150,10 @@ function Action.unequip(chara, item)
    return true
 end
 
+--- @tparam IChara chara
+--- @tparam IItem item
+--- @treturn bool success
+--- @treturn[opt] string error
 function Action.equip(chara, item)
    if not chara:has_item(item) then
       return false, "not_owned_by_chara"
@@ -144,6 +166,10 @@ function Action.equip(chara, item)
    return true
 end
 
+--- @tparam IChara chara
+--- @tparam IChara target
+--- @treturn bool success
+--- @treturn[opt] string error
 function Action.melee(chara, target)
    target:damage_hp(Rand.rnd(10), chara, {})
    return true

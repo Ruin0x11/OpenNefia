@@ -6,18 +6,38 @@ local i18n = require("internal.i18n")
 -- @module I18N
 local I18N = {}
 
+--- Returns the current langauge identifier as a string.
+---
+--- @treturn string
 function I18N.language()
-   return "jp"
+   return i18n.language
 end
 
+--- @treturn string
 function I18N.quote_character()
    return "「"
 end
 
+--- True if the current language uses fullwidth characters.
+---
+--- @treturn bool
 function I18N.is_fullwidth()
-   return true
+   return I18N.language() == "jp"
 end
 
+I18N.capitalize = i18n.capitalize
+
+--- Localizes a string with arguments. Pass the ID of a localized
+--- string and any arguments to its formatting function. May return
+--- nil if the ID was not found.
+---
+--- If any of the arguments implement ILocalizable, then the
+--- localization data for them will be produced and sent instead.
+---
+--- @tparam string id ID of the localized string
+--- @param ... Extra arguments to pass to the formatter.
+--- @treturn[opt] string The localized text
+--- @see ILocalizable
 function I18N.get(text, ...)
    local args = {}
    for i = 1, select("#", ...) do
@@ -31,10 +51,10 @@ function I18N.get(text, ...)
    return i18n.get(text, table.unpack(args))
 end
 
-function I18N.get_optional(key, ...)
-   return key
-end
-
+--- Switches the current language.
+---
+--- @tparam string lang Language identifier.
+--- @function switch_language
 I18N.switch_language = i18n.switch_language
 
 return I18N

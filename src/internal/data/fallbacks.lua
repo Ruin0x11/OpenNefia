@@ -170,6 +170,27 @@ data:add_multi(
       },
       {
          _id = "on_chara_place_failure"
+      },
+      {
+         _id = "before_map_refresh"
+      },
+      {
+         _id = "on_chara_refresh_in_map"
+      },
+      {
+         _id = "on_refresh_weight"
+      },
+      {
+         _id = "on_calc_speed"
+      },
+      {
+         _id = "on_regenerate_map"
+      },
+      {
+         _id = "on_item_regenerate"
+      },
+      {
+         _id = "on_chara_regenerate"
       }
    }
 )

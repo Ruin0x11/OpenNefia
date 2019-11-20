@@ -1,5 +1,7 @@
 local Gui = require("api.Gui")
 local Item = require("api.Item")
+local Feat = require("api.Feat")
+local Log = require("api.Log")
 local Map = require("api.Map")
 local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
@@ -147,7 +149,7 @@ local function gen_stair(down)
       params = {
          generator_params = "table",
          area_params = "table",
-         map_uid = "number"
+         map_uid = "number",
       },
 
       on_refresh = function(self)
@@ -165,7 +167,47 @@ local function gen_stair(down)
             return "player_turn_query"
          end
 
-         Map.travel_to(map)
+         local params = nil
+
+         local search
+         if self._id == "elona.stairs_down" then
+            search = "elona.stairs_up"
+         else
+            search = "elona.stairs_down"
+         end
+
+         -- Find where the connecting stair is.
+         local stair
+
+         -- If the loaded map indicates a start position, assume
+         -- stairs are located there.
+         if map.player_start_pos then
+            local x, y
+            if type(map.player_start_pos) == "table" then
+               x = map.player_start_pos.x
+               y = map.player_start_pos.y
+            elseif type(map.player_start_pos) == "function" then
+               x, y = map.player_start_pos(Chara.player(), map, current, params.feat)
+            else
+               error("invalid map start pos: " .. tostring(map.player_start_pos))
+            end
+
+            stair = Feat.at(x, y, map):filter(function(f) return f._id == search end):nth(1)
+         end
+
+         if stair == nil then
+            -- Otherwise, fall back to searching for stairs in the entire map.
+            Log.warn("Start position not provided, falling back to searching entire map for stairs.")
+            stair = map:iter_feats():filter(function(f) return f._id == search end):nth(1)
+         end
+
+         if stair == nil then
+            error("No connecting stair found in other map.")
+         end
+
+         params = { start_x = x, start_y = y }
+
+         Map.travel_to(map, params)
 
          return "player_turn_query"
       end,
@@ -179,6 +221,45 @@ end
 data:add(gen_stair(true))
 data:add(gen_stair(false))
 
+data:add {
+   _type = "base.feat",
+   _id = "map_entrance",
+
+   elona_id = nil,
+   image = "elona.feat_area_city",
+   is_solid = false,
+   is_opaque = false,
+
+   params = {
+      generator_params = "table",
+      area_params = "table",
+      map_uid = "number",
+   },
+
+   on_refresh = function(self)
+      self:mod("can_activate", true)
+   end,
+
+   on_activate = function(self, chara)
+      if not chara:is_player() then
+         return
+      end
+
+      local success, map = MapArea.load_map_of_entrance(self, true)
+      if not success then
+         Gui.report_error(map)
+         return "player_turn_query"
+      end
+
+      Map.travel_to(map)
+
+      return "player_turn_query"
+   end,
+
+   on_descend = function(self, chara)
+      self:on_activate(chara)
+   end
+}
 
 data:add {
    _type = "base.feat",

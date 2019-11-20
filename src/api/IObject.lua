@@ -1,3 +1,5 @@
+--- @module IObject
+
 local Event = require("api.Event")
 local IModdable = require("api.IModdable")
 
@@ -24,6 +26,7 @@ end
 function IObject:build()
 end
 
+--- Refreshes this object.
 function IObject:refresh()
    self:on_refresh()
 end

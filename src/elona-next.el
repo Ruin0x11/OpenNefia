@@ -29,11 +29,14 @@
       (with-current-buffer (process-buffer proc)
         (buffer-string))))
   (let ((win (get-buffer-window lua-process-buffer))
-        (compilation-win (get-buffer-window compilation-last-buffer)))
+        (compilation-win (get-buffer-window compilation-last-buffer))
+        (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
     (when (not (or (and compilation-win (window-live-p win)) (and lua-process-buffer win (window-live-p win))))
-      (let ((buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
-        (if (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
-            (popwin:display-buffer buf))))))
+      (when (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
+        (popwin:display-buffer buf)))
+    (if-let ((win (get-buffer-window buf)))
+        (with-selected-window win
+          (end-of-buffer)))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")

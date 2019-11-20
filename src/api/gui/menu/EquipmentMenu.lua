@@ -1,6 +1,7 @@
 local Action = require("api.Action")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
@@ -39,7 +40,8 @@ local UiListExt = function(equipment_menu)
       local icon = entry.body_part.icon or 1
       equipment_menu.t.body_part_icons:draw_region(icon, x - 66, y - 2) -- wx + 88 - 66 = wx + 22
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-      Draw.text(entry.body_part.name, x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46
+
+      Draw.text(I18N.get("ui.body_part." .. entry.body_part._id), x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       local subtext = entry.subtext

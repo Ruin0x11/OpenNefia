@@ -1,3 +1,5 @@
+--- @module Gui
+
 local Env = require("api.Env")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
@@ -8,25 +10,40 @@ local field = require("game.field")
 local Gui = {}
 
 local scroll = false
+local continue_sentence
 
+--- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen()
    field:update_screen(scroll)
    scroll = false
 end
 
+--- Sets the center position that rendering will start from. Call this
+--- function in the draw() method of a class implementing IUiLayer to
+--- change where the camera will be positioned.
+---
+--- @tparam int x
+--- @tparam int y
 function Gui.set_camera_pos(x, y)
    field:set_camera_pos(x, y)
    scroll = false
 end
 
+--- Updates the HUD. Call this if you change anything that might need
+--- to be reflected in the HUD, such as player equipment.
 function Gui.update_hud()
    field:update_hud()
 end
 
+--- Returns the screen coordinates of the tilemap renderer.
 function Gui.field_draw_pos()
    return field.renderer:draw_pos()
 end
 
+--- Converts from map tile space to screen space.
+---
+--- @tparam int tx
+--- @tparam int ty
 function Gui.tile_to_screen(tx, ty)
    local x, y = draw.get_coords():tile_to_screen(tx + 1, ty + 1)
    local tile_width, tile_height = draw.get_coords():get_size()
@@ -47,23 +64,25 @@ function Gui.key_held_frames()
    return field:key_held_frames()
 end
 
+--- Returns true if the player is running by holding Shift.
 function Gui.player_is_running()
    return field:player_is_running()
 end
 
+--- @tparam string err
+--- @tparam string msg
 function Gui.report_error(err, msg)
    msg = msg or "Error"
    Gui.mes(string.format("%s: %s", msg, string.split(err)[1]), "Red")
    Log.error("%s:\n\t%s", msg, err)
 end
 
-function Gui.wait(wait)
+--- Pauses rendering for the specified number of milliseconds.
+---
+--- @tparam int wait_ms
+function Gui.wait(wait_ms)
    Gui.update_screen()
-   Draw.wait(wait)
-end
-
-local function get_message_window()
-   return field.hud:find_widget("api.gui.hud.UiMessageWindow")
+   Draw.wait(wait_ms)
 end
 
 local Color = {
@@ -88,10 +107,23 @@ local Color = {
    YellowGreen =   { 210, 250, 160 },
 }
 
+--- Prints a localized message in the HUD message window. You can pass
+--- in an I18N ID with arguments and it will be localized, or any
+--- arbitrary string.
+---
+--- @tparam i18n_id|string text
+--- @param ...
 function Gui.mes(text, ...)
    Gui.mes_c(text, nil, ...)
 end
 
+--- Prints a localized message in the HUD message window with color.
+--- You can pass in an I18N ID with arguments and it will be
+--- localized, or any arbitrary string.
+---
+--- @tparam i18n_id|string text
+--- @tparam string|color color
+--- @param ...
 function Gui.mes_c(text, color, ...)
    local t = I18N.get(text, ...)
    if t then text = t end
@@ -103,17 +135,36 @@ function Gui.mes_c(text, color, ...)
       color = Color[color] or {255, 255, 255}
    end
 
+   text = I18N.capitalize(text)
+
    if Env.is_headless() then
       print("<mes> " .. text)
    else
-      get_message_window():message(text, color)
+      field:get_message_window():message(text, color)
    end
 end
 
+--- Prints a message in the HUD message if the provided position is
+--- visible. This is checked using Map.is_in_fov.
+---
+--- @tparam i18n_id|string text
+--- @tparam int x
+--- @tparam int y
+--- @param ...
+--- @see Map.is_in_fov
 function Gui.mes_visible(text, x, y, ...)
    Gui.mes_c_visible(text, x, y, nil, ...)
 end
 
+--- Prints a message in the HUD message if the provided position is
+--- visible. This is checked using Map.is_in_fov.
+---
+--- @tparam i18n_id|string text
+--- @tparam int x
+--- @tparam int y
+--- @tparam string|color color
+--- @param ...
+--- @see Map.is_in_fov
 function Gui.mes_c_visible(text, x, y, color, ...)
    local Map = require("api.Map")
    if Map.is_in_fov(x, y) then
@@ -121,25 +172,36 @@ function Gui.mes_c_visible(text, x, y, color, ...)
    end
 end
 
+--- Clears the HUD message window.
 function Gui.mes_clear()
-   get_message_window():clear()
+   field:get_message_window():clear()
+end
+
+--- Starts a new line in the HUD message window.
+function Gui.mes_clear()
+   field:get_message_window():clear()
 end
 
 -- TODO: just use \n inline
 function Gui.mes_newline()
-   get_message_window():newline()
-end
-
-function Gui.mes_new_turn()
-   get_message_window():new_turn()
+   field:get_message_window():newline()
 end
 
 function Gui.mes_continue_sentence()
+   continue_sentence = true
 end
 
 function Gui.mes_halt()
 end
 
+--- Plays a sound. You can optionally provide a position, so that if
+--- positional audio is enabled in the settings then it will be panned
+--- according to the relative position of the player.
+---
+--- @tparam id:base.sound sound_id
+--- @tparam[opt] int x
+--- @tparam[opt] int y
+--- @tparam[opt] int channel
 function Gui.play_sound(sound_id, x, y, channel)
    local sound_manager = require("internal.global.sound_manager")
    local coords = draw.get_coords()
@@ -152,12 +214,21 @@ function Gui.play_sound(sound_id, x, y, channel)
    end
 end
 
+--- Plays a sound looped in the background.
+---
+--- @tparam id:base.sound sound_id
+--- @see Gui.stop_background_sound
 function Gui.play_background_sound(sound_id)
    local sound_manager = require("internal.global.sound_manager")
 
    sound_manager:play_looping(sound_id)
 end
 
+--- Stops playing a sound that was started with
+--- Gui.play_background_sound.
+---
+--- @tparam id:base.sound sound_id
+--- @see Gui.play_background_sound
 function Gui.stop_background_sound(sound_id)
    local sound_manager = require("internal.global.sound_manager")
 

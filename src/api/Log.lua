@@ -23,6 +23,7 @@ end
 
 local level = levels.info
 
+--- @tparam string l
 function Log.set_level(l)
    if type(l) == "string" then
       l = levels[l] or 3
@@ -30,6 +31,7 @@ function Log.set_level(l)
    level = l
 end
 
+--- @tparam string l
 function Log.has_level(l)
    if type(l) == "string" then
       l = levels[l] or 3
@@ -37,6 +39,8 @@ function Log.has_level(l)
    return level >= l
 end
 
+--- @tparam string s Format string for string.format
+--- @param ...
 function Log.trace(s, ...)
    if level < 5 then
       return
@@ -44,6 +48,8 @@ function Log.trace(s, ...)
    format("[TRACE]", s, ...)
 end
 
+--- @tparam string s Format string for string.format
+--- @param ...
 function Log.debug(s, ...)
    if level < 4 then
       return
@@ -51,6 +57,8 @@ function Log.debug(s, ...)
    format("[DEBUG]", s, ...)
 end
 
+--- @tparam string s Format string for string.format
+--- @param ...
 function Log.info(s, ...)
    if level < 3 then
       return
@@ -58,6 +66,8 @@ function Log.info(s, ...)
    format("[INFO] ", s, ...)
 end
 
+--- @tparam string s Format string for string.format
+--- @param ...
 function Log.warn(s, ...)
    if level < 2 then
       return
@@ -65,6 +75,8 @@ function Log.warn(s, ...)
    format("[WARN] ", s, ...)
 end
 
+--- @tparam string s Format string for string.format
+--- @param ...
 function Log.error(s, ...)
    if level < 1 then
       return

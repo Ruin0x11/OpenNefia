@@ -1,7 +1,5 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
-local InstancedMap = require("api.InstancedMap")
-local Map = require("api.Map")
 local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
 

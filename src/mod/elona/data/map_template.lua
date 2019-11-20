@@ -4,81 +4,7 @@ local I18N = require("api.I18N")
 local Log = require("api.Log")
 local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
-
-local MapEntrance = {}
-function MapEntrance.center(chara, map)
-   local x = math.floor(map:width() / 2)
-   local y = math.floor(map:height() / 2)
-
-   return x, y
-end
-function MapEntrance.east(chara, map)
-   local x = map:width() - 2
-   local y = math.floor(map:height() / 2)
-
-   return x, y
-end
-function MapEntrance.west(chara, map)
-   local x = 1
-   local y = math.floor(map:height() / 2)
-
-   return x, y
-end
-function MapEntrance.south(chara, map)
-   local x = math.floor(map:width() / 2)
-   local y = map:height() - 2
-
-   return x, y
-end
-function MapEntrance.north(chara, map)
-   local x = math.floor(map:width() / 2)
-   local y = 1
-
-   return x, y
-end
-function MapEntrance.directional(chara, map)
-   local pos = save.base.player_pos_on_map_leave
-   if pos then
-      return pos.x, pos.y
-   end
-   local next_dir = Chara.player().last_move_direction
-   local x = 0
-   local y = 0
-
-   if next_dir == "West" then
-      return MapEntrance.east(chara, map)
-   elseif next_dir == "East" then
-      return MapEntrance.west(chara, map)
-   elseif next_dir == "North" then
-      return MapEntrance.south(chara, map)
-   elseif next_dir == "South" then
-      return MapEntrance.north(chara, map)
-   end
-
-   return x, y
-end
-function MapEntrance.world_map(chara, map, prev)
-   local x, y
-   local entrance = MapArea.find_entrance_in_outer_map(prev, map)
-   if entrance == nil then
-      Log.warn("No entrance in world map for " .. map.uid)
-      x = math.floor(map:width() / 2)
-      y = math.floor(map:height() / 2)
-   else
-      x = entrance.x
-      y = entrance.y
-   end
-
-   local index = 0
-   for i, c in Chara.iter_allies() do
-      if c.uid == chara.uid then
-         index = i
-         break
-      end
-   end
-
-   return x + Rand.rnd(math.floor(index / 5) + 1), y + Rand.rnd(math.floor(index / 5) + 1)
-end
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 local north_tyris = {
    _type = "elona_sys.map_template",
@@ -176,6 +102,14 @@ local function create_charas(map, charas)
             for k, v in pairs(opts) do
                if k == "_name" then
                   chara.name = I18N.get(v, chara.name)
+               elseif k == "_role" then
+                  if type(v) == "table" then
+                     chara.roles = { { id = v[1], params = v[2] } }
+                  elseif type(v) == "string" then
+                     chara.roles = { { id = v, params = {} } }
+                  else
+                     error()
+                  end
                elseif k ~= "_count" then
                   chara[k] = v
                end
@@ -361,21 +295,21 @@ local vernis = {
          { 40, 25, "elona.dungeon_cleaner", { role = 3 } },
          { 30, 5, "elona.rilian", { role = 3 } },
          { 42, 24, "elona.bard", { role = 3 } },
-         { 47, 9, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1014 } }}, shop_rank = 5, _name = "chara.job.fisher" } },
-         { 14, 12, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1001 } }}, shop_rank = 12, _name = "chara.job.blacksmith" } },
-         { 39, 27, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1009 } }}, shop_rank = 12, _name = "chara.job.trader" } },
-         { 10, 15, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1006 } }}, shop_rank = 10, _name = "chara.job.general_vendor" } },
-         { 7, 26, "elona.wizard", { roles = {{ id = "elona.shopkeeper", params = { 1004 } }}, shop_rank = 11, _name = "chara.job.magic_vendor" } },
-         { 14, 25, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1005 } }}, shop_rank = 8, _name = "chara.job.innkeeper" } },
-         { 22, 26, "elona.shopkeeper", { roles = {{ id = "elona.shopkeeper", params = { 1003 } }}, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara__138" } },
+         { 47, 9, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1014 } }, shop_rank = 5, _name = "chara.job.fisher" } },
+         { 14, 12, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1001 } }, shop_rank = 12, _name = "chara.job.blacksmith" } },
+         { 39, 27, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1009 } }, shop_rank = 12, _name = "chara.job.trader" } },
+         { 10, 15, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1006 } }, shop_rank = 10, _name = "chara.job.general_vendor" } },
+         { 7, 26, "elona.wizard", { _role = { "elona.shopkeeper", { 1004 } }, shop_rank = 11, _name = "chara.job.magic_vendor" } },
+         { 14, 25, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1005 } }, shop_rank = 8, _name = "chara.job.innkeeper" } },
+         { 22, 26, "elona.shopkeeper", { _role = { "elona.shopkeeper", { 1003 } }, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara__138" } },
          { 28, 16, "elona.wizard", { role = 5 } },
          { 38, 27, "elona.bartender", { role = 9 } },
          { 6, 25, "elona.healer", { role = 12 } },
          { 10, 7, "elona.elder", { role = 6, _name = "chara.job.of_vernis" } },
          { 27, 16, "elona.trainer", { role = 7, _name = "chara.job.trainer" } },
          { 25, 16, "elona.informer", { role = 8 } },
-         { nil, nil, "elona.citizen", { _count = 4, role = 4 } },
-         { nil, nil, "elona.citizen2", { _count = 4, role = 4 } },
+         { nil, nil, "elona.citizen", { _count = 4, _role = "elona.non_quest_target" } },
+         { nil, nil, "elona.citizen2", { _count = 4, _role = "elona.non_quest_target" } },
          { nil, nil, "elona.guard", { _count = 4, role = 14 } },
       }
 
@@ -404,14 +338,14 @@ local the_mine = {
    copy = {
       bgm = 61,
       types = { "dungeon" },
-      player_start_pos = MapEntrance.directional,
+      player_start_pos = nil,
       tile_set = 0,
       turn_cost = 10000,
       danger_level = 1,
       deepest_dungeon_level = 999,
       is_outdoor = false,
       is_temporary = false,
-      should_regenerate = false,
+      -- should_regenerate = false, TODO
       has_anchored_npcs = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
@@ -419,14 +353,6 @@ local the_mine = {
 
    on_generate = function(map)
       set_quest_targets(map)
-   end,
-   on_enter = function(map, prev_map)
-      local stair = Feat.at(4, 9, map):nth(1)
-      assert(stair)
-      print("onenter")
-      if stair.map_uid == nil then
-         stair.map_uid = prev_map.uid
-      end
    end
 }
 data:add(the_mine)

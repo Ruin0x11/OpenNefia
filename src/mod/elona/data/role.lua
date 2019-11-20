@@ -29,7 +29,10 @@ local role = {
             return {{"elona.guard:lost_item", "lost suitcase"}}
          end,
       }
-   }
+   },
+   {
+      _id = "non_quest_target"
+   },
 }
 
 data:add_multi("elona.role", role)

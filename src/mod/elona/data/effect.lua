@@ -1,5 +1,6 @@
 local Chara = require("api.Chara")
 local Effect = require("mod.elona_sys.api.Effect")
+local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 
@@ -67,13 +68,16 @@ local effect = {
          local result
 
          if Rand.one_in(80) then
-            -- decrement attribute adjust
+            local stat = Skill.random_stat()
+            local delta = chara:base_skill_level(stat) / 25 + 1
+            chara:add_stat_adjustment(stat, delta)
+            chara:refresh()
          end
          if Rand.one_in(5) then
             result = { regeneration = false }
          end
-         if not chara:is_in_party() then
-            if chara.quality == "miracle" or chara.quality == "special" then
+         if not chara:is_allied() then
+            if chara.quality >= 4 then -- miracle
                if Rand.one_in(200) then
                   chara:heal_effect("elona.sick")
                end
@@ -208,6 +212,13 @@ local effect = {
    {
       _id = "gravity",
       ordering = 160000,
+   },
+
+   --- buffs
+
+   {
+      _id = "incognito",
+      ordering = 2000000,
    },
 }
 

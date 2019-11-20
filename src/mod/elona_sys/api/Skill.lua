@@ -1,8 +1,18 @@
 local Rand = require("api.Rand")
 local Map = require("api.Map")
+local Event = require("api.Event")
+local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 
 local Skill = {}
+
+function Skill.iter_stats()
+   return data["base.skill"]:iter():filter(function(s) return s.skill_type == "stat" end)
+end
+
+function Skill.random_stat()
+   return Rand.choice(Skill.iter_stats())._id
+end
 
 function Skill.calc_initial_potential(skill, level, knows_skill)
    local p
@@ -188,5 +198,233 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
 
    chara:set_base_skill(skill, level, potential, new_exp)
 end
+
+local function get_random_body_part()
+   if Rand.one_in(7) then
+      return "base.neck"
+   end
+   if Rand.one_in(9) then
+      return "base.back"
+   end
+   if Rand.one_in(8) then
+      return "base.hand"
+   end
+   if Rand.one_in(4) then
+      return "base.ring"
+   end
+   if Rand.one_in(6) then
+      return "base.arm"
+   end
+   if Rand.one_in(5) then
+      return "base.waist"
+   end
+   if Rand.one_in(5) then
+      return "base.leg"
+   end
+
+   return "base.head"
+end
+
+local function refresh_speed_correction(chara)
+   local count = chara:iter_body_parts(true):length()
+
+   if count > 13 then
+      chara.speed_correction = (count - 13) + 5
+   else
+      chara.speed_correction = 0
+   end
+end
+
+function Skill.gain_random_body_part(chara, show_message)
+   -- NOTE: is different in vanilla, checks for openness of slot?
+
+   local body_part = get_random_body_part();
+   chara:add_body_part(body_part)
+
+   if show_message then
+      Gui.mes_c("chara_status.gain_new_body_part",
+                "Green",
+                chara,
+                I18N.get("ui.body_part." .. body_part))
+   end
+
+   refresh_speed_correction(chara)
+end
+
+function Skill.refresh_speed(chara)
+   chara.current_speed = math.floor(chara:skill_level("elona.stat_speed") + math.clamp(100 - chara:calc("speed_correction"), 0, 100) / 100)
+
+   chara.current_speed = math.max(chara.current_speed, 10)
+
+   chara.speed_percentage_in_next_turn = 0
+   local spd_perc = 0
+
+   if not chara:is_player() then
+      return
+   end
+
+   local has_mount = false
+   if not has_mount then
+      local nutrition = math.floor(chara:calc("nutrition") / 1000 * 1000)
+      if nutrition < 1000 then
+         spd_perc = spd_perc - 30
+      end
+      if nutrition < 2000 then
+         spd_perc = spd_perc - 10
+      end
+      if chara.stamina < 0 then
+         spd_perc = spd_perc - 30
+      end
+      if chara.stamina < 25 then
+         spd_perc = spd_perc - 20
+      end
+      if chara.stamina < 50 then
+         spd_perc = spd_perc - 10
+      end
+   end
+   if chara.inventory_weight_type >= 3 then
+      spd_perc = spd_perc - 50
+   end
+   if chara.inventory_weight_type == 2 then
+      spd_perc = spd_perc - 30
+   end
+   if chara.inventory_weight_type == 1 then
+      spd_perc = spd_perc - 10
+   end
+
+   local map = chara:current_map()
+   if map and map:has_type({"world_map", "field"}) then
+      local cargo_weight = chara:calc("cargo_weight")
+      local max_cargo_weight = chara:calc("max_cargo_weight")
+      if cargo_weight > max_cargo_weight then
+         spd_perc = spd_perc - 25 + 25 * cargo_weight / (max_cargo_weight + 1)
+      end
+   end
+
+   chara.speed_percentage_in_next_turn = spd_perc
+end
+
+function Skill.apply_speed_percentage(chara, next_turn)
+   if next_turn then
+      chara.speed_percentage = chara.speed_percentage_in_next_turn
+   end
+
+   local spd = math.floor(chara.current_speed * (100 + chara.speed_percentage) / 100)
+   spd = math.max(spd, 10)
+
+   return spd
+end
+
+function Skill.gain_level(chara, show_message)
+   chara.experience = math.max(chara.experience - chara.required_experience, 0)
+   chara.level = chara.level + 1
+
+   if show_text then
+      if chara:is_player() then
+         Gui.mes_c("chara.gain_level.self", "Green", chara, chara.level)
+      else
+         Gui.mes_c("chara.gain_level.other", "Green", chara)
+      end
+   end
+
+   local skill_bonus = 5 + (100 + chara:base_skill_level("elona.stat_learning") + 10) / (300 + chara.level * 15) + 1
+
+   if chara:is_player() then
+      if chara.level % 5 == 0 then
+         if chara.max_level < chara.level and chara.level <= 50 then
+            chara.aquirable_feat_count = chara.aquirable_feat_count + 1
+         end
+      end
+
+      skill_bonus = skill_bonus + chara:trait_level("elona.skill_bonus")
+   end
+
+   chara.skill_bonus = chara.skill_bonus + skill_bonus
+   chara.total_skill_bonus = chara.total_skill_bonus + skill_bonus
+
+   if chara.race == "elona.mutant" or chara:has_trait("extra_body_party") then
+      if chara.level < 37 and chara.level % 3 == 0 and chara.max_level < chara.level then
+         Skill.gain_random_body_part(chara, true)
+      end
+   end
+
+   if chara.max_level < chara.level then
+      chara.max_level = chara.level
+   end
+
+   if not chara:is_allied() then
+      Skill.grow_primary_skills(chara, show_message)
+   end
+
+   chara.required_experience = Skill.calc_required_experience(chara)
+   chara:refresh()
+end
+
+function Skill.grow_primary_skills(chara)
+   local function grow(skill)
+      chara:mod_base_skill_level(skill, Rand.rnd(3), "add")
+      if chara:base_skill_level(skill) > 2000 then
+         chara:mod_base_skill_level(skill, 2000)
+      end
+   end
+
+   for _, stat in Skill.iter_stats() do
+      grow(stat._id)
+   end
+
+   -- Grow some skills available on all characters (by default: evasion, martial arts, bow)
+   local main_skills = data["base.skill"]:iter():filter(function(s) return s.is_main_skill end)
+
+   for _, skill in main_skills:unwrap() do
+      grow(skill._id)
+   end
+end
+
+function Skill.calc_required_experience(chara)
+   local lv = math.clamp(chara.level, 1, 200)
+   return math.clamp(lv * (lv + 1) * (lv + 2) * (lv + 3) + 3000, 0, 100000000)
+end
+
+local function refresh_max_inventory_weight(chara)
+   local weight = chara:calc("inventory_weight")
+   local mod = math.floor(weight * (100 - chara:trait_level("elona.weight_lifting") * 10 +
+                                       chara:trait_level("elona.weight_lifting_2") * 20) / 100)
+   chara:mod("inventory_weight", mod)
+
+   chara:mod("max_inventory_weight",
+             chara:skill_level("elona.stat_strength") * 500 +
+                chara:skill_level("elona.stat_constitution") * 250 +
+                chara:skill_level("elona.weight_lifting") * 2000 +
+                45000)
+end
+
+Event.register("base.on_refresh_weight", "refresh max inventory weight", refresh_max_inventory_weight)
+
+local function refresh_weight(chara)
+   local weight = chara:calc("inventory_weight")
+   local max_weight = chara:calc("max_inventory_weight")
+
+   if weight > max_weight * 2 then
+      chara.inventory_weight_type = 4 -- very overweight
+   elseif weight > max_weight then
+      chara.inventory_weight_type = 3 -- overweight
+   elseif weight > max_weight / 4 * 3  then
+      chara.inventory_weight_type = 2 -- very burdened
+   elseif weight > max_weight / 2 then
+      chara.inventory_weight_type = 1 -- burdened
+   else
+      chara.inventory_weight_type = 0 -- normal
+   end
+
+   Skill.refresh_speed(chara)
+end
+
+Event.register("base.on_refresh_weight", "apply weight type", refresh_weight)
+
+local function calc_speed(chara)
+   return Skill.apply_speed_percentage(chara, true)
+end
+
+Event.register("base.on_calc_speed", "calc speed", calc_speed)
 
 return Skill

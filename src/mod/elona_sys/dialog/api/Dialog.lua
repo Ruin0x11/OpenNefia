@@ -76,7 +76,9 @@ end
 -- @treturn string Response ID of the choice selected.
 local function query(talk, text, choices, default_choice)
    local show_impress = true
-   if talk.speaker.quality == "Special" and not talk.speaker:is_ally() then
+   if talk.speaker.quality == 6 -- special
+      and not talk.speaker:is_ally()
+   then
       show_impress = false
    end
 
@@ -286,9 +288,9 @@ local function step_dialog(node_data, talk, state)
 
             -- Change speaking character.
             if text.speaker ~= nil then
-               local found = Chara.find(text.speaker, "Others")
+               local found = Chara.find(text.speaker, "other")
                if found == nil then
-                  found = Chara.find(text.speaker, "Allies")
+                  found = Chara.find(text.speaker, "ally")
                end
                if found ~= nil then
                   talk.speaker = found

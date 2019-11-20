@@ -9,6 +9,12 @@ local save = require("internal.global.save")
 -- Functions for manipulating characters.
 local Chara = {}
 
+--- Returns the character at the given position, if any.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap
+--- @treturn[opt] IChara
 function Chara.at(x, y, map)
    -- TODO: ILocation instead of map
    map = map or field.map
@@ -24,15 +30,27 @@ function Chara.at(x, y, map)
    return objs:nth(1)
 end
 
+--- Returns true if this character is the current player.
+---
+--- @tparam IChara c
+--- @treturn bool
 function Chara.is_player(c)
    return type(c) == "table" and field.player == c.uid
 end
 
+--- Obtains a reference to the current player. This can be nil if a
+--- save hasn't been loaded yet.
+---
+--- @treturn[opt] IChara
 function Chara.player()
    local map = Map.current()
    return map and map:get_object(field.player)
 end
 
+--- Sets the current player to a different character. The character
+--- must be contained in the current map.
+---
+--- @tparam uid:IChara|IChara uid_or_chara
 function Chara.set_player(uid_or_chara)
    local uid = uid_or_chara
    if type(uid_or_chara) == "table" then
@@ -56,6 +74,11 @@ function Chara.set_player(uid_or_chara)
    c:refresh()
 end
 
+--- Returns true if this character is in the alive state and is
+--- contained in the current map. Will also handle nil values.
+---
+--- @tparam[opt] IChara c
+--- @tparam[opt] InstancedMap map Map to check for existence in; defaults to current
 function Chara.is_alive(c, map)
    map = map or Map.current()
 
@@ -75,6 +98,22 @@ local hook_generate_chara =
    Event.define_hook("generate_chara",
                      "Overrides the behavior for character generation.")
 
+--- Creates a new character. Returns the character on success, or nil
+--- if creation failed.
+---
+--- @tparam id:base.chara id
+--- @tparam[opt] int x Defaults to a random free position on the map.
+--- @tparam[opt] int y
+--- @tparam[opt] table params Extra parameters.
+---  - ownerless (bool): Do not attach the character to a map. If true, then `where` is ignored.
+---  - no_build (bool): Do not call :build() on the object.
+---  - copy (table): A dict of fields to copy to the newly created item. Overrides level and quality.
+---  - level (int): Level of the character.
+---  - quality (int): Quality of the character (1-6).
+--- @tparam[opt] ILocation map Where to instantiate this item.
+---   Defaults to the current map.
+--- @treturn[opt] IChara
+--- @treturn[opt] string error
 function Chara.create(id, x, y, params, where)
    params = params or {}
    params.level = params.level or 1
@@ -140,21 +179,49 @@ local function iter(a, i)
    return i, d
 end
 
-function Chara.iter_allies()
-   return fun.wrap(iter, {map = field.map, uids = save.base.allies}, 1)
+--- Iterates the characters in the player's party, including the
+--- player themselves.
+---
+--- @treturn Iterator(IChara)
+function Chara.iter_party(map)
+   local party = table.append({ save.base.player }, save.base.allies)
+   return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
 end
 
+--- Iterates the characters in the player's party, not including the
+--- player.
+---
+--- @treturn Iterator(IChara)
+function Chara.iter_allies(map)
+   return fun.wrap(iter, {map = map or field.map, uids = save.base.allies}, 1)
+end
+
+--- Iterates all characters that are not allied (the player or a pet).
+---
+--- @treturn Iterator(IChara)
 function Chara.iter_others(map)
    map = map or Map.current()
-   return map:iter_charas():filter(function(c) return not c:is_in_party() end)
+   return map:iter_charas():filter(function(c) return not c:is_allied() end)
 end
 
-function Chara.find(id, kind)
+--- Looks for a character with the given base.chara ID in the current map.
+---
+--- @tparam id:base.chara id
+--- @tparam string kind "ally" or "other"
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IChara)
+function Chara.find(id, kind, map)
+   local iter
+
    if kind == "ally" then
-      return Chara.iter_allies():filter(function(i) return i._id == id end):nth(1)
+      iter = Chara.iter_allies(map)
+   elseif kind == "other" then
+      iter = Chara.iter_others(map)
+   else
+      error(("invalid kind passed to Chara.find: %s"):format(kind))
    end
 
-   return nil
+   return iter:filter(function(i) return i._id == id end):nth(1)
 end
 
 return Chara

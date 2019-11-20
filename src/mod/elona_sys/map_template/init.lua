@@ -187,6 +187,14 @@ local function on_enter(map, params, previous_map)
    end
 end
 
+local function on_regenerate(map, params)
+   local template = data["elona_sys.map_template"]:ensure(params.id)
+
+   if template.on_regenerate then
+      template.on_regenerate(map)
+   end
+end
+
 data:add {
    _type = "base.map_generator",
    _id = "map_template",
@@ -195,6 +203,7 @@ data:add {
    generate = generate_from_map_template,
    load = load_map_template,
    on_enter = on_enter,
+   on_regenerate = on_regenerate,
    get_image = function(params)
       return data["elona_sys.map_template"]:ensure(params.id).image
    end,

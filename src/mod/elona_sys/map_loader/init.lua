@@ -220,8 +220,18 @@ local function convert_122(gen, params)
       end
    end
 
-   result.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2) }
-   result.default_tile = Compat.convert_122_map_chip(1, 396)
+   local start_x, start_y
+   if stair_up ~= 0 then
+      start_x = stair_up % 1000
+      start_y = math.floor(stair_up / 1000)
+   else
+      start_x = math.floor(width / 2)
+      start_y = math.floor(height / 2)
+   end
+
+   result.player_start_pos = { x = start_x, y = start_y }
+   result.default_tile = Compat.convert_122_map_chip(1, 534)
+   result.should_regenerate = regen
 
    return result
 end

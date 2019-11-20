@@ -1,3 +1,5 @@
+--- @module World
+
 local Event = require("api.Event")
 local save = require("internal.global.save")
 
@@ -13,6 +15,18 @@ local event_types = {
    none = -1,
 }
 
+--- Passes time in seconds.
+---
+--- @tparam int seconds
+--- @tparam[opt] string events Which events to enable. Setting it will
+---   enable events for it and all larger time intervals ("month"
+---   enables events for month and year). Can be one of the following:
+---  - second: `base.on_second_passed`
+---  - minute: `base.on_minute_passed`
+---  - hour: `base.on_hour_passed`
+---  - month: `base.on_month_passed`
+---  - year: `base.on_year_passed`
+---  - none
 function World.pass_time_in_seconds(seconds, events)
    events = event_types[events or "second"] or event_types.second
    local date = save.base.date
@@ -80,10 +94,17 @@ function World.pass_time_in_seconds(seconds, events)
    end
 end
 
+--- Returns the current date.
+---
+--- @treturn DateTime
 function World.date()
    return save.base.date
 end
 
+--- Returns the current date in hours. Used in various places for time
+--- tracking purposes.
+---
+--- @treturn int
 function World.date_hours()
    return save.base.date:hours()
 end

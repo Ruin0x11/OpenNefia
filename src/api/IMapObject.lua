@@ -1,3 +1,5 @@
+--- @interface IMapObject
+
 local IOwned = require("api.IOwned")
 local IObject = require("api.IObject")
 local Log = require("api.Log")
@@ -18,6 +20,7 @@ function IMapObject:init()
    self.y = 0
 end
 
+--- Refreshes this map object.
 function IMapObject:on_refresh()
    local map = self:current_map()
    if map then
@@ -25,6 +28,11 @@ function IMapObject:on_refresh()
    end
 end
 
+--- Sets the position of this map object.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] bool force
 function IMapObject:set_pos(x, y, force)
    local location = self.location
 
@@ -39,10 +47,16 @@ function IMapObject:set_pos(x, y, force)
 
    return true
 end
+
+--- @tparam int dx
+--- @tparam int dy
 function IMapObject:move(dx, dy)
    return self:set_pos(self.x + dx, self.y + dy)
 end
 
+--- Returns the current map this object is contained in, if any.
+---
+--- @treturn[opt] InstancedMap
 function IMapObject:current_map()
    local InstancedMap = require("api.InstancedMap")
    if class.is_an(InstancedMap, self.location) then
@@ -52,6 +66,7 @@ function IMapObject:current_map()
    return nil
 end
 
+--- @treturn bool
 function IMapObject:is_in_fov()
    local map = self:current_map()
    if not map then
@@ -60,6 +75,8 @@ function IMapObject:is_in_fov()
 
    return map:is_in_fov(self.x, self.y)
 end
+
+--- @treturn bool
 function IMapObject:has_los(from_x, from_y)
    local map = self:current_map()
    if not map then
@@ -72,8 +89,13 @@ end
 --- Produces the data used to display this object in a draw layer.
 --- Each draw layer is intended to interpret this data differently
 --- depending on what drawing logic is needed.
+---
+--- @treturn[opt] table
 function IMapObject:produce_memory()
    return nil
 end
+
+--- @function IMapObject.refresh
+--- @inherits IObject.refresh
 
 return IMapObject

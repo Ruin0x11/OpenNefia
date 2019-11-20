@@ -23,11 +23,11 @@ local function calc_initial_gold(item, owner)
       local quality = item:calc("quality")
 
       -- TODO make number instead of enum
-      if quality == "great" then
+      if quality == 3 then -- great
          amount = amount * 2
       end
 
-      if quality == "miracle" or quality == "godly" or quality == "special" then
+      if quality >= 4 then -- miracle
          amount = amount * 4
       end
    end
@@ -10510,6 +10510,17 @@ local item =
                      y = y + 1
                   end
                   Item.create(self.params.fruit_id, x, y, {amount=0})
+               end
+            },
+            {
+               id = "elona.on_regenerate",
+               name = "Fruit tree restock",
+
+               callback = function(self)
+                  if self.params.fruits < 10 then
+                     self.params.fruits = self.params.fruits + 1
+                     self.image = "elona.item_tree_of_fruits"
+                  end
                end
             }
          },

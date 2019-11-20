@@ -1,3 +1,11 @@
+--- Functions for querying and manipulating maps.
+---
+--- As a convention, functions that take an optional `InstancedMap`
+--- instance as a last argument can operate on the currently loaded
+--- map by omitting this argument.
+---
+--- @module Map
+
 local field = require("game.field")
 local data = require("internal.data")
 local Event = require("api.Event")
@@ -8,9 +16,8 @@ local Rand = require("api.Rand")
 local Fs = require("api.Fs")
 local save = require("internal.global.save")
 local SaveFs = require("api.SaveFs")
+local World = require("api.World")
 
--- Concerns anything that has to do with map querying/manipulation.
--- @module Map
 local Map = {}
 
 Event.register("base.on_map_enter", "reveal fog",
@@ -35,12 +42,32 @@ Event.register("base.on_map_leave", "call generator.on_enter",
                   end
 end)
 
+Event.register("base.on_map_leave", "common events",
+               function(prev_map, params)
+                  if prev_map:has_type({"town", "guild"}) or prev_map:calc("is_travel_destination") then
+                     save.base.departure_date = World.date_hours()
+                  end
+end)
+
+--- Replaces the current map without running any cleanup events on the
+--- previous map or moving the player over. This is low-level, and you
+--- should probably use `Map.travel_to` instead.
+---
+--- @tparam InstancedMap map
+--- @see Map.travel_to
 function Map.set_map(map)
    map:emit("base.on_map_enter")
    field:set_map(map)
    return field.map
 end
 
+--- Saves the provided map to the current save. You must call this
+--- function manually to preserve any changes to a loaded map if you
+--- load a map but do not switch the current map to it.
+---
+--- @tparam InstancedMap map
+--- @treturn bool success
+--- @treturn ?string error
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
@@ -49,22 +76,29 @@ function Map.save(map)
 end
 
 Event.register("base.on_map_loaded", "apply template options",
-               function(_, params)
-                  if params.map.generated_with then
-                     local generator = data["base.map_generator"][params.map.generated_with.generator]
+               function(map)
+                  if map.generated_with then
+                     local generator = data["base.map_generator"][map.generated_with.generator]
                      if generator and generator.load then
-                        generator.load(params.map, params.map.generated_with.params)
+                        generator.load(map, map.generated_with.params)
                      end
                   end
 end)
 
 Event.register("base.on_map_loaded", "instantiate all map objects",
-               function(_, params)
-                  for _, v in params.map:iter() do
+               function(map)
+                  for _, v in map:iter() do
                      v:instantiate()
                   end
                end)
 
+--- Loads a map from the current save. If you modify it be sure to
+--- call `Map.save` to persist the changes if you don't set it as the
+--- current map.
+---
+--- @tparam uid:InstancedMap|InstancedMap uid
+--- @treturn bool success
+--- @treturn InstancedMap|string result/error
 function Map.load(uid)
    if type(uid) == "table" and uid.uid then
       return uid
@@ -78,22 +112,29 @@ function Map.load(uid)
       return false, map
    end
 
-   Event.trigger("base.on_map_loaded", {map=map})
+   map:emit("base.on_map_loaded")
 
    return success, map
 end
 
+--- Loads a map from the current save, runs a callback on it, and
+--- saves it.
+---
+--- @tparam uid:InstancedMap|InstancedMap uid
+--- @tparam function cb
+--- @treturn bool success
+--- @treturn InstancedMap|string result/error
 function Map.edit(uid, cb)
    if Map.current().uid == uid then
       return false, "Map.edit should only be called for maps besides the currently loaded one"
    end
 
-   local ok, map = Map.load(uid)
+   local ok, err = Map.load(uid)
    if not ok then
-      return false, map
+      return false, err
    end
 
-   local err
+   local map = err
    ok, err = xpcall(function() return cb(map) end, debug.traceback)
 
    if not ok then
@@ -103,42 +144,99 @@ function Map.edit(uid, cb)
    return Map.save(map)
 end
 
+--- True if this map is an overworld like North Tyris.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.is_world_map(map)
    return (map or field.map):calc("is_world_map")
 end
 
+--- Returns the current map. This can only be nil if a game has not
+--- been loaded yet (e.g. at the title screen).
+---
+--- @treturn[opt] InstancedMap
 function Map.current()
    return field.map
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn int
 function Map.width(map)
    return (map or field.map):width()
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn int
 function Map.height(map)
    return (map or field.map):height()
 end
 
+--- Returns true if the point is in bounds of the map.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.is_in_bounds(x, y, map)
    return (map or field.map):is_in_bounds(x, y)
 end
 
+--- Returns true if there is an unblocked line of sight that is
+--- completely within player-visible tiles between two points. This
+--- includes tiles that are outside the game window.
+---
+--- @tparam int x1
+--- @tparam int y1
+--- @tparam int x2
+--- @tparam int y2
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.has_los(x1, y1, x2, y2, map)
    return (map or field.map):is_in_fov(x1, y1, x2, y2)
 end
 
+--- Returns true if the player can see a position on screen.
+---
+--- NOTE: This function returns false for any positions that are not
+--- contained in the game window. This is the same behavior as
+--- vanilla. For game calculations depending on LoS outside of the
+--- game window, use Map.has_los combined with a maximum distance
+--- check instead.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.is_in_fov(x, y, map)
    return (map or field.map):is_in_fov(x, y)
 end
 
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.is_floor(x, y, map)
    return (map or field.map):can_access(x, y)
 end
 
+--- True if items can be dropped in this map (the maximum item count
+--- of this map has not been exceeded). If false, it does not mean it
+--- is not possible to create more items in the map from a technical
+--- standpoint, only that the player should not be permitted to do so.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.can_drop_items(map)
    return true
 end
 
+--- True if a character can walk on top of the given position.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
 function Map.can_access(x, y, map)
    local Chara = require("api.Chara")
    return Map.is_in_bounds(x, y, map)
@@ -146,30 +244,61 @@ function Map.can_access(x, y, map)
       and Chara.at(x, y, map) == nil
 end
 
+--- Gets the tile at a position for a map.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn[opt] base.map_tile
 function Map.tile(x, y, map)
    return (map or field.map):tile(x, y)
 end
 
+--- Returns the tile at a position for a map.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam id:base.map_tile id
+--- @tparam[opt] InstancedMap map
 function Map.set_tile(x, y, id, map)
-   return (map or field.map):set_tile(x, y, id)
+   (map or field.map):set_tile(x, y, id)
 end
 
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IMapObject)
 function Map.iter_objects_at(x, y, map)
    return (map or field.map):iter_objects_at(x, y)
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IChara)
 function Map.iter_charas(map)
    return (map or field.map):iter_charas()
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IItem)
 function Map.iter_items(map)
    return (map or field.map):iter_items()
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IFeat)
 function Map.iter_feats(map)
    return (map or field.map):iter_feats()
 end
 
+--- Generates a new map using a map generator template.
+---
+--- @tparam id:base.map_generator generator_id ID of the generator to use.
+--- @tparam[opt] table params Parameters to pass to the map generator.
+--- @tparam[opt] table opts Extra options.
+---   - outer_map (InstancedMap): Outer map to associate with the
+---     newly created map.
+--- @treturn bool success
+--- @treturn InstancedMap|string result/error
 function Map.generate(generator_id, params, opts)
    params = params or {}
 
@@ -202,24 +331,142 @@ function Map.generate(generator_id, params, opts)
 
    map.generated_with = { generator = generator_id, params = params }
 
-   Event.trigger("base.on_map_generated", {map=map})
-   Event.trigger("base.on_map_loaded", {map=map})
+   map:emit("base.on_map_generated")
+   map:emit("base.on_map_loaded")
 
-   Map.refresh(map)
+   if not params.no_refresh then
+      Map.refresh(map)
+   end
 
    return success, map
 end
 
-function Map.refresh(map)
-   local Chara = require("api.Chara")
-   if map:calc("has_anchored_npcs") then
-      for _, chara in Chara.iter_others() do
-         chara.initial_x = chara.x
-         chara.initial_y = chara.y
+local function relocate_chara(chara, map)
+   local x, y
+   for i=1, 1000 do
+      if cnt <= 100 then
+         x = chara.x + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
+         y = chara.y + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
+      else
+         x = Rand.rnd(map:width())
+         y = Rand.rnd(map:height())
+      end
+
+      if Map.can_access(x, y, map) then
+         chara:set_pos(x, y)
+         break
       end
    end
 end
 
+local function refresh_chara(chara, map)
+   chara.was_passed_item = nil
+
+   local is_initializing_economy = false
+   if is_initializing_economy then
+      -- TODO return if adventurer/ally
+   end
+
+   if chara.state == "CitizenDead" then
+      if World.date_hours() >= chara.date_to_revive_on then
+         chara:revive()
+      else
+         return
+      end
+   end
+
+   local Chara = require("api.Chara")
+   if not Chara.is_alive(chara, map) then
+      return
+   end
+
+   chara:emit("base.on_chara_refresh_in_map")
+
+   local on_cell = Chara.at(chara.x, chara.y, map)
+   local can_access = Map.is_in_bounds(chara.x, chara.y, map)
+      and Map.is_floor(chara.x, chara.y, map)
+      and (on_cell == nil or on_cell.uid == chara.uid)
+
+   if not can_access then
+      relocate_chara(chara, map)
+   end
+end
+
+local function regenerate_map(map)
+   local Item = require("api.Item")
+   local Chara = require("api.Chara")
+   local first_time = map.next_regenerate_date == 0
+
+   if not first_time then
+      if map.generated_with then
+         local generator = data["base.map_generator"][map.generated_with.generator]
+         if generator and generator.on_regenerate then
+            generator.on_regenerate(map, map.generated_with.params)
+         end
+      end
+
+      for _, item in map:iter_items() do
+         if map:has_type({"town", "guild"}) then
+            -- Remove player-owned items on the ground.
+            if not Item.is_alive(item) or item.own_state == "none" then
+               item:remove_ownership()
+            else
+               item:emit("on_regenerate")
+            end
+         end
+      end
+
+      for _, chara in map:iter_charas() do
+         chara:clear_status_effects()
+
+         if Chara.is_alive(chara) and chara.is_temporary and Rand.one_in(2) then
+            chara:remove_ownership()
+         else
+            chara:emit("on_regenerate")
+         end
+      end
+   end
+end
+
+Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
+
+function Map.refresh(map)
+   local Chara = require("api.Chara")
+
+   if map.is_generated_every_time then
+      -- Regenerate the map with the same parameters.
+      assert(map.generated_with)
+      local success, err = Map.generate(map.generated_with.id, map.generated_with.params)
+      if not success then
+         return err
+      end
+
+      local new_map = err
+      table.replace(map, new_map)
+   end
+
+   if map.should_regenerate and World.date_hours() >= map.next_regenerate_date then
+      map:emit("base.on_regenerate_map")
+   end
+
+   if not map.is_generated_every_time then
+      map:emit("base.before_map_refresh")
+      -- three_years_later
+      -- update_adventureres
+
+      for _, chara in Map.iter_charas(map) do
+         refresh_chara(chara, map)
+      end
+   end
+
+   return map, nil
+end
+
+--- Clears a position on a map so it can be accessable by a character.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
 function Map.force_clear_pos(x, y, map)
    local Chara = require("api.Chara")
 
@@ -240,6 +487,14 @@ local function can_place_chara_at(x, y, map)
    return Map.can_access(x, y, map)
 end
 
+--- Finds a free position to place something on a map.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] table params Extra parameters.
+---  - allow_stacking (bool): If true, ignore items on the ground when
+---    checking for tile openness.
+--- @tparam[opt] InstancedMap map
 function Map.find_free_position(x, y, params, map)
    params = params or {}
    map = map or Map.current()
@@ -289,14 +544,14 @@ end
 --- Tries to find an open tile to place a character.
 -- @tparam int x
 -- @tparam int y
--- @tparam string scope Determines how hard to try.
+-- @tparam[opt] string scope Determines how hard to try.
 --  - "npc" - Find a random position nearby. Give up after 100 tries.
 --            (default)
 --  - "ally" - Same as "npc", but keep looking across the entire map
 --             for an open space. Give up if not found.
--- @treturn[1][1] int
--- @treturn[1][2] int
--- @treturn[2] nil
+-- @tparam[opt] InstancedMap map
+-- @treturn ?int x position
+-- @treturn ?int y position
 function Map.find_position_for_chara(x, y, scope, map)
    map = map or Map.current()
    x = x or Rand.rnd(map:width() - 4) + 2
@@ -316,7 +571,7 @@ function Map.find_position_for_chara(x, y, scope, map)
       tries = tries + 1
    until tries == 100
 
-   if scope ~= "ally" and scope ~= "player" then
+   if scope ~= "ally" then
       return nil
    end
 
@@ -348,13 +603,17 @@ local function failed_to_place(chara)
    chara:emit("base.on_chara_place_failure")
 end
 
+--- Tries to place a character near a position, moving it somewhere
+--- close if it isn't available.
+---
+--- @tparam IChara chara
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
 function Map.try_place_chara(chara, x, y, map)
    local scope = "npc"
-   if chara:is_in_party() then
+   if chara:is_allied() then
       scope = "ally"
-   end
-   if chara:is_player() then
-      scope = "player"
    end
 
    local real_x, real_y = Map.find_position_for_chara(x, y, nil, map)
@@ -379,6 +638,15 @@ function Map.try_place_chara(chara, x, y, map)
    return nil
 end
 
+--- Cleans up the current map and moves the player and allies to a
+--- different map. This is the recommended function to call to
+--- transport the player to another map.
+---
+--- @tparam InstancedMap|uid:InstancedMap map_or_uid
+--- @tparam[opt] table params Extra parameters.
+---   - start_x (int): starting X position in the new map.
+---   - start_y (int): starting Y position in the new map.
+---   - feat (IFeat)): feat used to travel to this map, like stairs.
 function Map.travel_to(map_or_uid, params)
    params = params or {}
 
@@ -412,7 +680,9 @@ function Map.travel_to(map_or_uid, params)
          x = map.player_start_pos.x or x
          y = map.player_start_pos.y or y
       elseif type(map.player_start_pos) == "function" then
-         x, y = map.player_start_pos(Chara.player(), map, current)
+         x, y = map.player_start_pos(Chara.player(), map, current, params.feat)
+      else
+         error("invalid map start pos: " .. tostring(map.player_start_pos))
       end
    end
 
@@ -459,6 +729,29 @@ function Map.travel_to(map_or_uid, params)
    Gui.update_screen()
 
    return true
+end
+
+--- Returns the world map which is directly accessable by this map.
+---
+--- NOTE: This only works in maps on the overworld for now, not nested
+--- dungeons.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn[opt] InstancedMap
+function Map.world_map_containing(map)
+   map = map or Map.current()
+
+   local ok, err = Map.load(map._outer_map_uid)
+   if not ok then
+      error(err)
+   end
+
+   local outer = err
+   if outer and outer:has_type("world_map") then
+      return outer
+   end
+
+   return nil
 end
 
 -- TODO: way of accessing map variables without exposing internals

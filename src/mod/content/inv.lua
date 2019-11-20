@@ -204,7 +204,7 @@ local function shop_filter(ctxt, item)
 
    -- TODO: param3
 
-   if item.quality == "special" then
+   if item.quality == 6 then -- special
       return false
    end
 

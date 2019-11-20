@@ -9,6 +9,6 @@ globals = {
    "class",
    "inspect",
    "fun",
-   "_p",
+   "_ppr",
    "save",
 }

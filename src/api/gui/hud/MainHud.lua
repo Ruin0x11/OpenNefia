@@ -29,6 +29,7 @@ function MainHud:init()
       dv = 0,
       pv = 0
    }
+   self.skill_adjusts = {}
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -81,7 +82,11 @@ function MainHud:refresh(player)
 
       for _, id in ipairs(attrs) do
          self.stats[id] = player:skill_level(id)
+         self.stat_adjusts[id] = player:stat_adjustment(id)
       end
+
+      self.stats.original_speed = player:base_skill_level("elona.stat_speed")
+      self.stats.final_speed = player:emit("base.on_calc_speed", {}, attrs["elona.stat_speed"])
 
       self.hp_bar:set_data(player.hp, player:calc("max_hp"))
       self.mp_bar:set_data(player.mp, player:calc("max_mp"))
@@ -183,11 +188,20 @@ function MainHud:draw_attributes()
       local color = self.t.text_color
 
       if a == "elona.stat_speed" then
-         Draw.text(tostring(self.stats[a]), x + 8, y, color)
+         if self.stats.original_speed > self.stats.final_speed then
+            color = self.t.stat_penalty_color
+         elseif self.stats.original_speed < self.stats.final_speed then
+            color = self.t.stat_bonus_color
+         end
+         Draw.text(tostring(self.stats.final_speed), x + 8, y, color)
       elseif a == "dv_pv" then
          local dv_pv = string.format("%d/%d", self.stats["dv"], self.stats["pv"])
          Draw.text(dv_pv, x + 14, y, color)
       else
+         local adj = self.skill_adjusts[a]
+         if adj < 0 then
+            color = self.t.stat_penalty_color
+         end
          Draw.text(tostring(self.stats[a]), x, y, color)
       end
    end

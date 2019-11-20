@@ -53,7 +53,7 @@ local element = {
 
       on_damage = function(chara)
          local chance = 3
-         if chara.quality == "miracle" or chara.quality == "special" then
+         if chara.quality >= 4 then -- miracle
             chance = chance + 3
          end
          if Rand.one_in(chance) then

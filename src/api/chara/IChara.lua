@@ -1,3 +1,5 @@
+--- @interface IChara
+
 local data = require("internal.data")
 local field = require("game.field")
 local Chara = require("api.Chara")
@@ -56,7 +58,9 @@ local fallbacks = {
    state = "Dead",
    name = "",
    gender = "female",
+   max_level = 1,
    experience = 0,
+   required_experience = 0,
    sleep_experience = 0,
    dv = 0,
    pv = 0,
@@ -75,6 +79,7 @@ local fallbacks = {
 
    gold = 0,
    platinum = 0,
+   karma = 0,
 
    number_of_weapons = 0,
    ether_disease_speed = 0,
@@ -104,7 +109,27 @@ local fallbacks = {
    pierce_chance = 0,
    physical_damage_reduction = 0,
 
-   ai = "elona.elona_default_ai"
+   ai = "elona.elona_default_ai",
+
+   is_quest_target = nil,
+   was_passed_item = nil,
+
+   date_to_revive_on = 0,
+
+   aquirable_feat_count = 0,
+   skill_bonus = 0,
+   total_skill_bonus = 0,
+   speed_correction = 0,
+   current_speed = 0,
+   speed_percentage = 0,
+   speed_percentage_in_next_turn = 0,
+   inventory_weight = 0,
+   max_inventory_weight = 0,
+   inventory_weight_type = 0,
+   cargo_weight = 0,
+   max_cargo_weight = 0,
+
+   is_temporary = nil
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -166,10 +191,14 @@ function IChara:instantiate()
    Event.trigger("base.on_chara_instantiated", {chara=self})
 end
 
+--- Refreshes this character, resetting all moddable data.
+---
+--- @overrides IMapObject.refresh
 function IChara:refresh()
    IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    ICharaEquip.on_refresh(self)
+   ICharaSkills.on_refresh(self)
    ICharaTraits.on_refresh(self)
 
    self:refresh_weight()
@@ -208,9 +237,12 @@ function IChara:refresh()
    self:emit("base.on_refresh")
 end
 
+--- @overrides IMapObject:on_refresh
 function IChara:on_refresh()
 end
 
+--- @treturn[opt] table
+--- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
    return {
       uid = self.uid,
@@ -219,6 +251,8 @@ function IChara:produce_memory()
    }
 end
 
+--- @treturn table
+--- @overrides ILocalizable:produce_locale_data
 function IChara:produce_locale_data()
    return {
       name = self:calc("name"),
@@ -230,11 +264,17 @@ function IChara:produce_locale_data()
    }
 end
 
+--- Copies this character's chip image.
+---
+--- @treturn asset
 function IChara:copy_image()
    local chara_atlas = require("internal.global.atlases").get().chara
    return chara_atlas:copy_tile_image(self:calc("image") .. "#1")
 end
 
+--- Copies this character's portrait.
+---
+--- @treturn asset
 function IChara:copy_portrait()
    local portrait = self:calc("portrait")
    if portrait == nil then
@@ -245,20 +285,33 @@ function IChara:copy_portrait()
    return portrait_atlas:copy_tile_image(portrait .. "#1")
 end
 
--- Iterates both the character's inventory and equipment.
+--- Iterates both the character's inventory and equipment.
+---
+--- @treturn Iterator(IItem)
 function IChara:iter_items()
    return fun.chain(self:iter_inventory(), self:iter_equipment())
 end
 
 function IChara:refresh_weight()
    local weight = 0
+   local cargo_weight = 0
    for _, i in self:iter_items() do
       weight = weight + i:calc("weight")
+      cargo_weight = cargo_weight + i:calc("cargo_weight")
    end
-   self:mod("inventory_weight", weight)
-   self:mod("max_inventory_weight", 1000)
+   self.inventory_weight = weight
+   self.cargo_weight = cargo_weight
+   self.max_inventory_weight = 45000
+   self.inventory_weight_type = 0
+   self:emit("base.on_refresh_weight")
 end
 
+--- Sets this character's position. Use this function instead of updating x and y manually.
+---
+--- @tparam int x
+--- @tparam int y
+--- @treturn bool true on success.
+--- @overrides IMapObject.set_pos
 function IChara:set_pos(x, y)
    if Chara.at(x, y) ~= nil then
       return false
@@ -267,14 +320,23 @@ function IChara:set_pos(x, y)
    return IMapObject.set_pos(self, x, y)
 end
 
+--- Returns true if this character is the current player.
+---
+--- @treturn bool
 function IChara:is_player()
    return field.player == self.uid
 end
 
+--- Returns true if this character is an ally of the player.
+---
+--- @treturn bool
 function IChara:is_ally()
    return fun.iter(save.base.allies):index(self.uid) ~= nil
 end
 
+--- Attempts to recruit this character as an ally.
+---
+--- @treturn bool true on success.
 function IChara:recruit_as_ally()
    if self:is_ally() then
       return false
@@ -289,6 +351,10 @@ function IChara:recruit_as_ally()
    return true
 end
 
+--- Swaps the positions of this character with another.
+---
+--- @tparam IMapObject other
+--- @treturn b ool true on success.
 function IChara:swap_places(other)
    local location = self.location
    if not location or location ~= other.location then
@@ -311,6 +377,17 @@ Calculates the actual damage dealt, separate from base damage which is used to c
 ]] ,
                                               0)
 
+--- Damages this character.
+---
+--- @tparam int amount Base amount of damage to inflict.
+--- @tparam[opt] string|IChara source The source of damage. Can be a
+---   string or another character.
+--- @tparam[opt] table params Extra parameters.
+---  - element (id:base.element): The element of the damage.
+---  - element_power (int): The power of the elemental damage.
+---  - weapon (IItem): The item used to inflict the damage.
+---  - message_tense (string): Either "passive" or "active".
+---  - extra_attacks (int): Number of extra attacks to apply.
 function IChara:damage_hp(amount, source, params)
    params = params or {}
 
@@ -447,28 +524,45 @@ function IChara.apply_element_on_damage(victim, params)
 end
 Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
+--- Damages this character's stamina points.
+---
+--- @tparam int amount
 function IChara:damage_sp(amount)
    self.stamina = math.max(self.stamina - amount, -100)
 end
 
+--- Heals this character's hit points.
+---
+--- @tparam int add
 function IChara:heal_hp(add)
    self.hp = math.min(self.hp + math.max(add, 0), self:calc("max_hp"))
 end
 
+--- Heals this character's mana points.
+---
+--- @tparam int add
 function IChara:heal_mp(add)
    self.mp = math.min(self.mp + math.max(add, 0), self:calc("max_mp"))
 end
 
+--- Heals this character's stamina points.
+---
+--- @tparam int add
 function IChara:heal_sp(add)
    self.stamina = math.max(self.stamina + math.max(add, 0), self:calc("max_stamina"))
 end
 
+--- Fully heals this character's health, mana and stamina.
 function IChara:heal_to_max()
    self.hp = self:calc("max_hp")
    self.mp = self:calc("max_mp")
    self.stamina = self:calc("max_stamina")
 end
 
+--- Kills this character, moving it to the "dead" state. Like
+--- IChara:damage_hp, a damage source can be provided.
+---
+--- @tparam[opt] string|IChara source
 function IChara:kill(source)
    if not Chara.is_alive(self) then
       return
@@ -488,6 +582,8 @@ function IChara:kill(source)
    self.state = "Dead"
 end
 
+--- Revives this character.
+--- @treturn bool
 function IChara:revive()
    if Chara.is_alive(self) then
       return false
@@ -496,11 +592,14 @@ function IChara:revive()
    self.state = "Alive"
    self:heal_to_max()
 
-   Event.trigger("base.on_chara_revived", {chara=self})
+   self:emit("base.on_chara_revived")
 
    return true
 end
 
+--- Revives this character and moves them to the current/given map.
+---
+--- @tparam[opt] InstancedMap map
 function IChara:revive_and_place(map)
    if not self:revive() then
       return false
@@ -519,10 +618,14 @@ function IChara:revive_and_place(map)
    return true
 end
 
+--- Sets or clears the AI target of this character.
+---
+--- @tparam[opt] IChara target
 function IChara:set_target(target)
    self.target = target
 end
 
+--- Resets the AI state of this character.
 function IChara:reset_ai()
    self.target = nil
 
@@ -537,10 +640,25 @@ function IChara:reset_ai()
       anchor_y = nil,
       is_anchored = false,
    }
+
+   self:reset_all_reactions()
 end
 
+--- @treturn[opt] IChara
 function IChara:get_target()
    return self.target
+end
+
+--- Clears all status effects, stat adjustments, activities and AI
+--- targets, and refreshes the character,
+function IChara:clear_status_effects()
+   self.effects = {}
+   self.stat_adjusts = {}
+   self.ai_state.hate = 0
+   self.target = nil
+   self:remove_activity()
+
+   self:refresh()
 end
 
 --

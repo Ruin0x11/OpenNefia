@@ -40,14 +40,14 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
 
    if pos == "0" then
       -- room anywhere
-      w = Rand.rnd(min_size, min_size + max_size)
-      h = Rand.rnd(min_size, min_size + max_size)
+      w = Rand.between(min_size, min_size + max_size)
+      h = Rand.between(min_size, min_size + max_size)
       x = Rand.rnd(map_width) + 2
       y = Rand.rnd(map_height) + 2
    elseif pos == "1" then
       -- room anywhere, away from edges
-      w = math.floor(Rand.rnd(min_size, min_size + max_size) / 3 * 3) + 5
-      h = math.floor(Rand.rnd(min_size, min_size + max_size) / 3 * 3) + 5
+      w = math.floor(Rand.between(min_size, min_size + max_size) / 3 * 3) + 5
+      h = math.floor(Rand.between(min_size, min_size + max_size) / 3 * 3) + 5
       x = math.floor(Rand.rnd(map_width) / 3 * 3) + 2
       y = math.floor(Rand.rnd(map_height) / 3 * 3) + 2
    elseif pos == "2" then
@@ -87,8 +87,8 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
       x = min_size + 1 + Rand.rnd(x_range)
       y = min_size + 1 + Rand.rnd(y_range)
    elseif pos == "4" then
-      w = Rand.rnd(min_size, min_size + max_size)
-      h = Rand.rnd(min_size, min_size + max_size)
+      w = Rand.between(min_size, min_size + max_size)
+      h = Rand.between(min_size, min_size + max_size)
       x = Rand.rnd(map_width - max_size - 8) + 3
       y = Rand.rnd(map_height - max_size - 8) + 3
    end

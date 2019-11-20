@@ -1,10 +1,18 @@
-local field = require("game.field")
-local Chara = require("api.Chara")
+--- @module feat
+
+local Event = require("api.Event")
+local Map = require("api.Map")
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
+local field = require("game.field")
 
 local Feat = {}
 
+--- Iterates the feats at the given position.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] InstancedMap map
 function Feat.at(x, y, map)
    map = map or field.map
 
@@ -15,24 +23,36 @@ function Feat.at(x, y, map)
    return map:iter_type_at_pos("base.feat", x, y)
 end
 
+--- Creates a new feat. Returns the feat on success, or nil if
+--- creation failed.
+---
+--- @tparam id:base.feat id
+--- @tparam[opt] int x Defaults to a random free position on the map.
+--- @tparam[opt] int y
+--- @tparam[opt] table params Extra parameters.
+---  - ownerless (bool): Do not attach the feat to a map. If true, then `where` is ignored.
+---  - no_build (bool): Do not call :build() on the object.
+--- @tparam[opt] ILocation where Where to instantiate this feat.
+---   Defaults to the current map.
+--- @treturn[opt] IFeat
+--- @treturn[opt] string error
 function Feat.create(id, x, y, params, where)
-   if x == nil then
-      local player = Chara.player()
-      if Chara.is_alive(player) then
-         x = player.x
-         y = player.y
-      end
-   end
-
    params = params or {}
 
-   where = where or field.map
+   if params.ownerless then
+      where = nil
+   else
+      where = where or field.map
+   end
 
-   if not class.is_an(ILocation, where) then return nil end
+   if not class.is_an(ILocation, where) and not params.ownerless then
+      return nil, "invalid location"
+   end
 
-   if where:is_positional() then
-      if not where:is_in_bounds(x, y) then
-         return nil
+   if where and where:is_positional() then
+      x, y = Map.find_free_position(x, y, {}, where)
+      if not x then
+         return nil, "out of bounds"
       end
    end
 
@@ -41,11 +61,15 @@ function Feat.create(id, x, y, params, where)
    }
    local feat = MapObject.generate_from("base.feat", id, gen_params)
 
-   feat = where:take_object(feat, x, y)
+   if where then
+      feat = where:take_object(feat, x, y)
 
-   if feat then
-      feat:refresh()
+      if not feat then
+         return nil, "location failed to receive feat"
+      end
    end
+
+   feat:refresh()
 
    return feat
 end
@@ -71,8 +95,6 @@ local function feat_stepped_on_handler(source, p, result)
    return result
 end
 
-local Event = require("api.Event")
-print("LOADF " .. tostring(require("internal.env").is_hotloading()))
 Event.register("base.on_chara_moved", "feat handler", feat_stepped_on_handler)
 Event.register("base.before_chara_moved", "before move feat handler", feat_bumped_into_handler)
 

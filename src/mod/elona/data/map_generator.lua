@@ -176,6 +176,15 @@ data:add {
       map.player_start_pos = { x = x, y = y }
       map.is_temporary = true
 
+      map.types = { "field" }
+      map.tile_type = 4
+      map.turn_cost = 10000
+      map.danger_level = 1
+      map.deepest_dungeon_level = 1
+      map.is_outdoor = true
+      map.has_anchored_npcs = false
+      map.default_ai_calm = 0
+
       map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
 
       return map

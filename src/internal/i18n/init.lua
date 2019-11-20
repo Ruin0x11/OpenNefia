@@ -97,6 +97,16 @@ function i18n.get(key, ...)
    return nil
 end
 
+function i18n.capitalize(text)
+   -- Find the "capitalize" function defined in the I18N environment.
+   local cap = i18n.env.capitalize
+   if type(cap) ~= "function" then
+      return text
+   end
+
+   return cap(text)
+end
+
 function i18n.on_hotload(old, new)
    table.replace_with(old, new)
    i18n.switch_language(old.language or "en")

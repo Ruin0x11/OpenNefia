@@ -7,7 +7,7 @@ data:add {
    invariants = { min = "any", max = "any" },
 
    resolve = function(self)
-      return Rand.rnd(self.min, self.max)
+      return Rand.between(self.min, self.max)
    end
 }
 

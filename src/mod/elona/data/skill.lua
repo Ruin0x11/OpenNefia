@@ -174,6 +174,7 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+      is_main_skill = true,
    },
    {
       _id = "crossbow",
@@ -206,6 +207,7 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+      is_main_skill = true,
 
       calc_damage_params = function(self, chara, weapon, target)
          local related = "elona.strength"
@@ -247,6 +249,7 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+      is_main_skill = true
    },
    {
       _id = "dual_wield",

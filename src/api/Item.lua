@@ -1,5 +1,4 @@
 local ILocation = require("api.ILocation")
-local Chara = require("api.Chara")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
 local InventoryContext = require("api.gui.menu.InventoryContext")
@@ -20,43 +19,44 @@ function Item.at(x, y, map)
    return map:iter_type_at_pos("base.item", x, y):filter(Item.is_alive)
 end
 
-function Item.is_alive(item)
+--- Returns true if this item has any amount remaining and is
+--- contained in the current map. Will also handle nil values.
+---
+--- @tparam[opt] IItem item
+--- @tparam[opt] InstancedMap map Map to check for existence in; defaults to current
+function Item.is_alive(item, map)
+   map = map or Map.current()
    if type(item) ~= "table" or item.amount <= 0 then
       return false
    end
 
-   local map = item:current_map()
-   if not map then
+   local their_map = item:current_map()
+   if not their_map then
       return false
    end
 
-   return map.uid == Map.current().uid
+   return their_map.uid == map.uid
 end
 
-function Item.almost_equals(a, b)
-   local comparators = {
-      "weight",
-      "image"
-   }
-
-   for _, field in ipairs(comparators) do
-      if a[field] ~= b[field] then
-         return false
-      end
-   end
-
-   return true
-end
-
+--- Creates a new item. Returns the item on success, or nil if
+--- creation failed.
+---
+--- @tparam id:base.item id
+--- @tparam[opt] int x Defaults to a random free position on the map.
+--- @tparam[opt] int y
+--- @tparam[opt] table params Extra parameters.
+---  - ownerless (bool): Do not attach the item to a map. If true, then `where` is ignored.
+---  - no_build (bool): Do not call :build() on the object.
+---  - no_stack (bool): Do not attempt to stack this item with others like it on the same tile.
+---  - copy (table): A dict of fields to copy to the newly created item. Overrides fix_level, quality, and amount.
+---  - amount (int): Amount of the item to create.
+---  - fix_level (int): Fix level of the item.
+---  - quality (int): Quality of the item (1-6).
+--- @tparam[opt] ILocation map Where to instantiate this item.
+---   Defaults to the current map.
+--- @treturn[opt] IItem
+--- @treturn[opt] string error
 function Item.create(id, x, y, params, where)
-   if x == nil then
-      local player = Chara.player()
-      if Chara.is_alive(player) then
-         x = player.x
-         y = player.y
-      end
-   end
-
    params = params or {}
 
    if params.ownerless then
@@ -72,7 +72,7 @@ function Item.create(id, x, y, params, where)
    if where and where:is_positional() then
       x, y = Map.find_free_position(x, y, {}, where)
       if not x then
-         return nil
+         return nil, "out of bounds"
       end
    end
 
@@ -109,12 +109,12 @@ end
 --- Causes the same behavior as selecting the given item in a given
 --- inventory context. The item must be contained in the inventory's
 --- sources and be selectable.
--- @tparam IItem item
--- @tparam string operation
--- @tparam[opt] table params
--- @treturn[1][1] IItem
--- @treturn[2][1] nil
--- @treturn[2][2] string error kind
+---
+--- @tparam IItem item
+--- @tparam string operation
+--- @tparam[opt] table params
+--- @treturn[opt] IItem non-nil on success
+--- @treturn[opt] string error
 function Item.activate_shortcut(item, operation, params)
    if type(operation) ~= "string" then
       error(string.format("Invalid inventory operation: %s", operation))

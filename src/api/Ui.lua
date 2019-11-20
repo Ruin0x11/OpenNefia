@@ -1,3 +1,5 @@
+--- @module Ui
+
 local UiTheme = require("api.gui.UiTheme")
 local Rand = require("api.Rand")
 local Draw = require("api.Draw")
@@ -8,6 +10,9 @@ local Ui = {}
 
 local tile_size = 48
 
+--- @tparam int width
+--- @tparam int height
+--- @tparam[opt] bool in_game
 function Ui.params_centered(width, height, in_game)
    local x = (Draw.get_width() - width) / 2
 
@@ -23,6 +28,9 @@ function Ui.params_centered(width, height, in_game)
 end
 
 local t
+-- @tparam string topic
+-- @tparam int x
+-- @tparam int y
 function Ui.draw_topic(topic, x, y)
    t = t or UiTheme.load()
    Draw.set_font(12, "bold")
@@ -34,6 +42,12 @@ function Ui.draw_topic(topic, x, y)
    Draw.set_color(255, 255, 255)
 end
 
+-- @tparam string text
+-- @tparam int x
+-- @tparam int y
+-- @tparam int width
+-- @tparam int height
+-- @tparam int x_offset
 function Ui.draw_note(text, x, y, width, height, x_offset)
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
    Draw.text(text,

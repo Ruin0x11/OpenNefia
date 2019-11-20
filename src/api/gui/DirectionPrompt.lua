@@ -72,8 +72,6 @@ function DirectionPrompt:draw()
 
    -- TODO move draw args into params
 
-   require("mod.tools.api.Tools").draw_debug_pos(self.x, self.y)
-   require("mod.tools.api.Tools").draw_debug_pos(x, y, {0,0,255})
    Draw.set_color({255,255,255,alpha})
 
    if self.cardinal then

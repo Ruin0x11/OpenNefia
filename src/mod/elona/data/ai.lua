@@ -198,7 +198,7 @@ local function move_towards_target(chara, params)
       end
    end
 
-   if not chara:is_in_party() then
+   if not chara:is_allied() then
       if chara.quality > Great and chara:reaction_towards(chara:get_target()) < 0 then -- or -2
          if Map.is_in_bounds(nx, ny) then
             -- crush if wall

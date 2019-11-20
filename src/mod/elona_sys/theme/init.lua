@@ -208,6 +208,15 @@ data:add {
             type = "color",
             color = {0, 0, 0}
          },
+
+         stat_penalty_color = {
+            type = "color",
+            color = {200, 0, 0}
+         },
+         stat_bonus_color = {
+            type = "color",
+            color = {0, 120, 0}
+         },
       }
    }
 }

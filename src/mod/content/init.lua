@@ -374,7 +374,7 @@ local load_map = function(world_map, id)
    local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
    assert(home_entrance)
 
-   local success, map = MapArea.load_map_of_entrance(home_entrance)
+   local success, map = MapArea.load_map_of_entrance(home_entrance, true)
    if not success then
       error(map)
    end

@@ -4,3 +4,5 @@ sound/
 /src/repl_history.txt
 /src/mod/elona/data/map
 /deps
+TAGS
+/doc/out

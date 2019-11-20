@@ -1,7 +1,12 @@
+--- Functions for drawing things on the screen.
+---
+--- These functions must only be used from a drawing context - either
+--- the draw() callback of an IDrawable or within a deferred draw
+--- callback.
+---
+--- @module Draw
 local draw = require("internal.draw")
 
--- Functions for drawing things on the screen.
--- @module Draw
 local Draw = {}
 
 Draw.layer_count = draw.layer_count
@@ -18,6 +23,13 @@ Draw.get_width = love.graphics.getWidth
 Draw.get_height = love.graphics.getHeight
 Draw.create_canvas = love.graphics.newCanvas
 
+--- Sets the current drawing color. You can provide a table of up to  four
+--- values or four separate integers.
+---
+--- @tparam int|color r
+--- @tparam[opt] int g
+--- @tparam[opt] int b
+--- @tparam[opt] int a
 function Draw.set_color(r, g, b, a)
    if type(r) == "table" then
       love.graphics.setColor(
@@ -40,6 +52,13 @@ end
 
 Draw.clear = love.graphics.clear
 
+--- Draws text.
+---
+--- @tparam string str
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] color color
+--- @tparam[opt] int size
 function Draw.text(str, x, y, color, size)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
@@ -50,6 +69,13 @@ function Draw.text(str, x, y, color, size)
    love.graphics.print(str, x, y)
 end
 
+--- Draws a filled rectangle.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam int width
+--- @tparam int height
+--- @tparam[opt] color color
 function Draw.filled_rect(x, y, width, height, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
@@ -57,6 +83,13 @@ function Draw.filled_rect(x, y, width, height, color)
    love.graphics.polygon("fill", x, y, x + width, y, x + width, y + height, x, y + height)
 end
 
+--- Draws a rectangle using lines.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam int width
+--- @tparam int height
+--- @tparam[opt] color color
 function Draw.line_rect(x, y, width, height, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
@@ -64,6 +97,13 @@ function Draw.line_rect(x, y, width, height, color)
    love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
 end
 
+--- Draws a line.
+---
+--- @tparam int x1
+--- @tparam int y1
+--- @tparam int x2
+--- @tparam int y2
+--- @tparam[opt] color color
 function Draw.line(x1, y1, x2, y2, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
@@ -71,6 +111,12 @@ function Draw.line(x1, y1, x2, y2, color)
    love.graphics.line(x1, y1 + 1, x2, y2 + 1)
 end
 
+--- Returns the width of the provided text using the current font or a
+--- font of the given size.
+---
+--- @tparam string text
+--- @tparam[opt] int size
+--- @treturn int Width in pixels.
 function Draw.text_width(text, size)
    if size then
       Draw.set_font(size)
@@ -78,10 +124,19 @@ function Draw.text_width(text, size)
    return love.graphics.getFont():getWidth(text)
 end
 
+--- Returns the height in pixels of the current font.
+---
+--- @tparam[opt] int size
+--- @treturn int Height in pixels.
 function Draw.text_height()
    return love.graphics.getFont():getHeight()
 end
 
+--- Wraps the given text according to a wrap limit in pixels using the
+--- current font.
+---
+--- @tparam string text
+--- @tparam int wraplimit Maximum width in pixels.
 function Draw.wrap_text(text, wraplimit)
    return love.graphics.getFont():getWrap(text, wraplimit)
 end
@@ -154,6 +209,11 @@ function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
    return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy)
 end
 
+--- Waits the specified number of milliseconds. Be careful with this
+--- function since you can easily freeze the game if the provided
+--- duration is too large.
+---
+--- @tparam int msecs Duration in milliseconds.
 function Draw.wait(msecs)
    love.timer.sleep(msecs / 1000)
 end
@@ -174,6 +234,13 @@ end
 -- TODO: sanitize
 Draw.yield = coroutine.yield
 
+--- Draws shadowed text.
+---
+--- @tparam string str
+--- @tparam int x
+--- @tparam int y
+--- @tparam[opt] color color
+--- @tparam[opt] color shadow_color
 function Draw.text_shadowed(str, x, y, color, shadow_color)
    color = color or {255, 255, 255}
    shadow_color = shadow_color or {0, 0, 0}
@@ -192,6 +259,11 @@ function Draw.register_draw_layer(layer)
    field:register_draw_layer(layer)
 end
 
+--- Converts from milliseconds to the number of frames elapsed in that
+--- time. By default, assumes a refresh rate of 60 FPS.
+---
+--- @tparam int msecs
+--- @tparam[opt] int framerate
 function Draw.msecs_to_frames(msecs, framerate)
    framerate = framerate or 60
    local msecs_per_frame = (1 / framerate or 60) * 1000

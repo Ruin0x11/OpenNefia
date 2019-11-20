@@ -8,7 +8,16 @@ end
 
 function ICharaTraits:has_trait(trait_id)
    data["base.trait"]:ensure(trait_id)
-   return self.traits[trait_id]
+   return self.traits[trait_id] and self.traits[trait_id].level ~= 0
+end
+
+function ICharaTraits:trait_level(trait_id)
+   data["base.trait"]:ensure(trait_id)
+   local trait = self.traits[trait_id]
+   if trait == nil then
+      return 0
+   end
+   return trait.level
 end
 
 function ICharaTraits:on_refresh()

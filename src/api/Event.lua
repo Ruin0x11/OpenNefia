@@ -1,3 +1,5 @@
+--- @module Event
+
 local Log = require("api.Log")
 local EventHolder = require("api.EventHolder")
 local env = require("internal.env")
@@ -19,6 +21,16 @@ function Event.global()
    return global_events
 end
 
+--- Registers a new event handler.
+---
+--- This should only be called on mod startup.
+---
+--- @tparam id:base.event event_id Event ID to register for.
+--- @tparam string name A uniquely idenfiying name for the event;
+---   intended for debugging use. Can be as long as needed. Please be
+---   descriptive in the event's behavior to aid discovery.
+--- @tparam function cb Event callback.
+--- @tparam[opt] table opts
 function Event.register(event_id, name, cb, opts)
    if env.is_hotloading() then
       if global_events:has_handler(event_id, name) then
@@ -33,31 +45,61 @@ function Event.register(event_id, name, cb, opts)
    global_events:register(event_id, name, cb, opts)
 end
 
+--- Replaces an event handler with a new callback.
+---
+--- This should only be called on mod startup.
+---
+--- @tparam id:base.event event_id Event ID to register for.
+--- @tparam string name The name of a registered event handler for the event ID.
+--- @tparam function cb Event callback.
+--- @tparam[opt] table opts
 function Event.replace(event_id, name, cb, opts)
    Log.warn("Event replace: %s - \":%s\"", event_id, name)
    check_event(event_id)
    global_events:replace(event_id, name, cb, opts)
 end
 
-function Event.unregister(event_id, cb, opts)
+--- Unregisters an event handler.
+---
+--- This should only be called on mod startup.
+---
+--- @tparam id:base.event event_id Event ID to register for.
+--- @tparam string name The name of a registered event handler for the event ID.
+function Event.unregister(event_id, name)
    if env.is_hotloading() then
       Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id)
       return
    end
 
    check_event(event_id)
-   global_events:unregister(event_id, cb, opts)
+   global_events:unregister(event_id, name)
 end
 
+--- Triggers an event globally.
+---
+--- @tparam id:base.event event_id
+--- @tparam[opt] table args Arguments for the event.
+--- @tparam[opt] any default Default return value for the event.
+--- @treturn[opt] any The event's returned result
 function Event.trigger(event_id, args, default)
    check_event(event_id)
    return global_events:trigger(event_id, "global", args, default)
 end
 
+--- Returns a string with the list of registered events for an event
+--- ID. Intended to be used from the REPL.
+---
+--- @tparam id:base.event event_id
+--- @treturn string
 function Event.list(event_id)
    return global_events:print(event_id)
 end
 
+--- Creates a new entry of type base.event in the current mod.
+---
+--- @tparam string id Event ID.
+--- @tparam table types
+--- @tparam string desc
 function Event.create(id, types, desc)
    local dat = data:add {
       _type = "base.event",
@@ -72,6 +114,13 @@ function Event.create(id, types, desc)
    end
 end
 
+--- Creates a new entry to type base.event with a default callback.
+---
+--- @tparam string id Event ID.
+--- @tparam string desc
+--- @tparam[opt] any default
+--- @tparam[opt] string field
+--- @tparam[opt] function cb
 function Event.define_hook(id, desc, default, field, cb)
    local access_field = type(field) == "string"
 
@@ -126,14 +175,6 @@ function Event.define_hook(id, desc, default, field, cb)
    Event.register(full_id, name, cb, {priority=100000})
 
    return func
-end
-
--- Generates a function that returns the result of triggering
--- `event_id` with two arguments, params and result.
-function Event.generate_function(event_id)
-   return function(params, result)
-      return Event.trigger(event_id, params, result)
-   end
 end
 
 return Event

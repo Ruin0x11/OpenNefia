@@ -18,9 +18,36 @@ else
    check_dependency("socket")
 end
 
-local fs = require("util.fs")
-local preprocess = require("tools/preprocess")
+local usage = [[
+usage: luajit build.lua <command>
+  preprocess: extract assets from vanilla Elona
+  ldoc: run ldoc on source]]
 
-preprocess("deps\\elona", "src\\mod\\elona")
+local commands = {}
 
-assert(fs.copy_directory("deps/elona/sound", "src/mod/elona"))
+function commands.preprocess()
+   local fs = require("util.fs")
+   local preprocess = require("tools/preprocess")
+
+   preprocess("deps\\elona", "src\\mod\\elona")
+
+   assert(fs.copy_directory("deps/elona/sound", "src/mod/elona"))
+
+   return 0
+end
+
+function commands.ldoc()
+   local ret = os.execute("ldoc -i -c doc/config.ld . --fatalwarnings")
+   if ret ~= 0 then return 1 end
+   return 0
+end
+
+local command = arg[1] or ""
+local cb = commands[command]
+
+if cb == nil then
+   print(usage)
+   os.exit(1)
+end
+
+os.exit(cb())

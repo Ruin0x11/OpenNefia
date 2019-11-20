@@ -106,7 +106,6 @@ end
 local fallbacks = {
    turn_cost = 1000,
    is_outdoor = true,
-   is_temporary = false,
    dungeon_level = 1,
    deepest_dungeon_level = 10,
    danger_level = 1,
@@ -119,7 +118,14 @@ local fallbacks = {
    max_crowd_density = 40,
    is_user_map = false,
    has_anchored_npcs = false,
-   reveals_fog = false
+   reveals_fog = false,
+
+   --- If true, always re
+   is_generated_every_time = false,
+   should_regenerate = false,
+   is_temporary = false,
+
+   next_regenerate_date = 0,
 }
 
 function InstancedMap:init_map_data()
@@ -219,6 +225,15 @@ function InstancedMap:memory(x, y, kind)
    return self._memory[kind][y*self._width+x+1]
 end
 
+--- Returns true if there is an unblocked line of sight that is
+--- completely within player-visible tiles between two points. This
+--- includes tiles that are outside the game window.
+---
+--- @tparam int x1
+--- @tparam int y1
+--- @tparam int x2
+--- @tparam int y2
+--- @treturn bool
 function InstancedMap:has_los(x1, y1, x2, y2)
    local cb = function(x, y)
       return self:can_see_through(x, y)
@@ -433,10 +448,17 @@ function InstancedMap:can_see_through(x, y)
       and not self._opaque[y*self._width+x+1]
 end
 
--- NOTE: This function returns false for any positions that are not
--- contained in the game window. This is the same behavior as vanilla.
--- For game calculations depending on LoS outside of the game window,
--- use InstancedMap:has_los combined with a maximum distance check instead.
+--- Returns true if the player can see a position on screen.
+---
+--- NOTE: This function returns false for any positions that are not
+--- contained in the game window. This is the same behavior as
+--- vanilla. For game calculations depending on LoS outside of the
+--- game window, use InstancedMap:has_los combined with a maximum
+--- distance check instead.
+---
+--- @tparam int x
+--- @tparam int y
+--- @treturn bool
 function InstancedMap:is_in_fov(x, y)
    return self._in_sight[y*self._width+x+1] == self._last_sight_id
 end

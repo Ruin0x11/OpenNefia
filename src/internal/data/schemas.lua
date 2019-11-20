@@ -172,6 +172,7 @@ data:add_type {
 data:add_type {
    name = "skill",
    schema = schema.Record {
+      is_main_skill = schema.Boolean
    },
 }
 
@@ -183,6 +184,12 @@ data:add_type {
 
 data:add_type {
    name = "trait",
+   schema = schema.Record {
+   },
+}
+
+data:add_type {
+   name = "quest",
    schema = schema.Record {
    },
 }

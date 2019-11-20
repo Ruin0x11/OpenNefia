@@ -63,16 +63,13 @@ local function should_drop_item(item, chara)
    end
 
    local result = false
-   if item:calc("quality") == "godly"
-   or item:calc("quality") == "special" then
+   if item:calc("quality") >= 5 then -- godly
       result = true
    end
    if Rand.one_in(30) then
       result = true
    end
-   if item:calc("quality") == "miracle"
-   or item:calc("quality") == "godly"
-   or item:calc("quality") == "special" then
+   if item:calc("quality") >= 4 then -- miracle
       if Rand.one_in(2) then
          result = true
       end
@@ -82,7 +79,7 @@ local function should_drop_item(item, chara)
          result = false
       end
    end
-   if item:calc("quality") == "special" then
+   if item:calc("quality") == 6 then -- special
       result = true
    end
    if item:calc("always_drop") then

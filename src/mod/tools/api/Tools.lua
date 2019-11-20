@@ -417,4 +417,26 @@ function Tools.things_at(ty)
    end
 end
 
+function Tools.thing_at(ty)
+   return Tools.things_at(ty):nth(1)
+end
+
+-- Converts an array of sequential probabilities into percent
+-- probabilities.
+function Tools.to_percent_probabilities(probs)
+   local result = {}
+   local total = 1
+
+   for i, prob in ipairs(probs) do
+      local perc = 1 / prob
+
+      result[i] = total * perc
+      total = total * (1 - perc)
+   end
+
+   result[#probs+1] = total
+
+   return result
+end
+
 return Tools

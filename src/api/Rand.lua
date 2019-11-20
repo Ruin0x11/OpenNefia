@@ -1,13 +1,16 @@
+--- @module Rand
 local Rand = {}
 
-function Rand.rnd(a, b)
-   if b == nil then
-      b = a
-      a = 0
-   end
+--- Returns a random integer in `[0, n)`.
+--- @tparam int n
+function Rand.rnd(n)
+   return math.random(0, math.floor(n) - 1)
+end
 
-   -- TODO: replace with same rng method as hsp
-   -- TODO: alias math.random to this function
+--- Returns a random integer in `[a, b)`.
+--- @tparam int a
+--- @tparam int b
+function Rand.between(a, b)
    return math.random(math.floor(a), math.floor(b) - 1)
 end
 
@@ -27,6 +30,7 @@ function Rand.choice(array)
    assert(type(array) == "table")
    if tostring(array) == "<generator>" then
       array = array:to_list()
+
    end
    local i = array[Rand.rnd(#array)+1]
    return i
@@ -43,6 +47,7 @@ function Rand.roll_dice(dice_x, dice_y, add)
    for _ in fun.range(1, dice_x) do
       result = result + Rand.rnd(dice_y) + 1
    end
+
    return result + add
 end
 

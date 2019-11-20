@@ -1,3 +1,5 @@
+--- @module ILocation
+
 local ILocation = class.interface("ILocation",
                  {
                     is_positional = "function",
@@ -19,8 +21,7 @@ local ILocation = class.interface("ILocation",
 -- @function take_object
 -- @tparam ILocation self
 -- @tparam IMapObject obj
--- @treturn[1] IMapObject obj
--- @treturn[2] nil
+-- @treturn[opt] IMapObject obj
 
 function ILocation:serialize()
 end

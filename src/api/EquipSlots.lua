@@ -1,10 +1,13 @@
+--- @module EquipSlots
+
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local data = require("internal.data")
 
---- Equipment slots for characters.
 local EquipSlots = class.class("EquipSlots", ILocation)
 
+--- @tparam {id:base.body_part,...} body_parts
+--- @tparam uid:IChara owner_uid
 function EquipSlots:init(body_parts, owner_uid)
    body_parts = body_parts or {}
 
@@ -62,8 +65,8 @@ end
 --- Puts an item into an equip slot provided it is free. Returns the
 --- object on success, nil on failure.
 -- @tparam IMapObject obj
--- @treturn[1] IMapObject
--- @treturn[2] nil
+-- @tparam int slot
+-- @treturn[opt] IMapObject
 -- @ownership obj nil
 function EquipSlots:equip(obj, slot)
    if slot == nil then
@@ -96,8 +99,7 @@ end
 --- Removes an item from the equip slots. Returns the object on
 --- success, nil on failure.
 -- @tparam IMapObject obj
--- @treturn[1] IMapObject
--- @treturn[2] nil
+-- @treturn[opt] IMapObject
 -- @ownership obj self
 function EquipSlots:unequip(obj)
    if obj == nil then

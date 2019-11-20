@@ -31,7 +31,7 @@ local UiListExt = function()
          UiList.draw_item_text(self, item.text, item, i, x + 40, y + 8, 0, {0, 0, 0})
       else
          Draw.set_font(14)
-         UiList.draw_item_text(self, x + 40, y + 1, item.text, 0, {0, 0, 0})
+         UiList.draw_item_text(self, item.text, item, i, x + 40, y + 1, 0, {0, 0, 0})
       end
    end
 

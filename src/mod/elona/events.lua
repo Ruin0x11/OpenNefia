@@ -2,13 +2,16 @@ local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local NpcMemory = require("mod.elona_sys.api.NpcMemory")
+local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
+local World = require("api.World")
 local Resolver = require("api.Resolver")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local MapObject = require("api.MapObject")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
+local Role = require("mod.elona_sys.api.Role")
 
 --
 --
@@ -232,8 +235,6 @@ local initial_skills = {
    ["elona.throwing"] = 4
 }
 
-local Skill = require("mod.elona_sys.api.Skill")
-
 local function init_skills_from_table(chara, tbl)
    for skill_id, level in pairs(tbl) do
       local init = Skill.calc_initial_skill_level(skill_id, level, chara:base_skill_level(skill_id), chara:calc("level"), chara)
@@ -279,6 +280,7 @@ Event.register("base.on_build_chara",
 local function init_chara_defaults(chara)
    chara.performance_interest = chara.performance_interest or 0
    chara.performance_interest_revive_date = chara.performance_interest_revive_date or 0
+   chara.required_experience = Skill.calc_required_experience(chara)
 end
 
 Event.register("base.on_build_chara",
@@ -422,6 +424,7 @@ Event.register(
       -- using Chara.create would cause recursion
       local chara = MapObject.generate_from("base.chara", params.id, params.gen_params)
 
+      chara.is_shade = true
       chara.title = "shade"
       chara.image = "elona.chara_shade"
 
@@ -522,3 +525,47 @@ local function refresh_invisibility(chara, params, result)
 end
 
 Event.register("base.on_refresh", "Update invisibility", refresh_invisibility)
+
+local function refresh_other_chara(chara, params)
+   if not chara:is_allied() then
+      chara.hp = chara:calc("max_hp")
+      chara.hp = chara:calc("max_mp")
+      chara:remove_effect("elona.insanity")
+
+      local map = chara:current_map()
+      assert(map)
+
+      if map:calc("has_anchored_npcs") then
+         chara.initial_x = chara.x
+         chara.initial_y = chara.y
+      end
+
+      if not chara.is_quest_target then
+         chara:reset_ai()
+      end
+
+      if Role.has(chara, "elona.guard") then
+         if Chara.player():calc("karma") < -30 then
+            if Chara.player():calc("level") > chara:calc("level") then
+               Skill.gain_level(chara)
+            end
+            if not Chara.player():has_effect("elona.incognito") then
+               chara.ai_state.hate = 200
+               chara:mod_reaction_at(Chara.player(), -1000)
+            end
+         end
+      end
+
+      if map:has_type({"town", "guild"}) then
+         chara:remove_effect("elona.sleep")
+         local date = World.date()
+         if date.hour >= 22 or date.hour < 7 then
+            if Rand.one_in(6) then
+               chara:set_effect_turns("elona.sleep", Rand.rnd(400))
+            end
+         end
+      end
+   end
+end
+
+Event.register("base.on_chara_refresh_in_map", "Refresh other character", refresh_other_chara)

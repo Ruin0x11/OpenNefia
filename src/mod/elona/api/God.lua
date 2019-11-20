@@ -16,7 +16,7 @@ function God.say(god_id, talk_event_id)
       local god = data["elona.god"]:ensure(god_id)
       if god.talk_id then
          local mes = Talk.message(god.talk_id, talk_event_id, chara)
-         Gui.mes(mes, "Orange")
+         Gui.mes_c(mes, "Orange")
       end
    end
 end
@@ -41,7 +41,7 @@ function God.modify_piety(chara, amount, params)
    end
 
    if chara:skill_level("elona.faith") * 100 < piety then
-      Gui.mes("God is indifferent to " .. chara.uid)
+      Gui.mes("god.pray.indifferent", chara.god_id)
       return
    end
 
@@ -53,7 +53,7 @@ end
 function God.make_skill_blessing(skill, coefficient, add)
    return function(chara)
       if chara:has_skill(skill) then
-         local amount = math.clamp(chara:calc("piety") / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
+         local amount = math.clamp((chara:calc("piety") or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)
          chara:mod_skill_level(skill, amount, "add")
       end
    end
@@ -65,7 +65,7 @@ function God.switch_religion_with_penalty(chara, new_god, params)
    Gui.update_screen()
 
    if chara.god_id ~= nil then
-      Gui.mes(chara.god_id .. " is enraged.", "Purple")
+      Gui.mes_c("god.enraged", chara.god_id, "Purple")
       God.say(chara.god_id, "elona.god_stop_believing")
       Gui.play_sound("base.punish1")
    end
@@ -83,10 +83,10 @@ function God.switch_religion(chara, new_god, params)
    chara:reset("god_id", new_god)
 
    if not new_god then
-      Gui.mes(chara.uid .. " is now an unbeliever.")
+      Gui.mes_c("god.switch.unbeliever", "Orange")
    else
       Gui.play_sound("base.complete1")
-      Gui.mes(chara.uid .. " switches to god " .. new_god, "Orange")
+      Gui.mes_c("god.switch.follower", "Orange", new_god)
       God.say(chara.god_id, "elona.god_new_believer")
    end
 
@@ -95,12 +95,12 @@ end
 
 function God.pray(chara)
    if not chara:calc("god_id") then
-      Gui.mes(chara.uid .. " does not believe in god.")
+      Gui.mes("god.pray.do_not_believe")
       return "turn_end"
    end
 
    if chara:is_player() then
-      Gui.mes("Really pray to your god? ")
+      Gui.mes("god.pray.prompt")
       if not Input.yes_no() then
          Gui.update_screen()
          return "player_turn_query"

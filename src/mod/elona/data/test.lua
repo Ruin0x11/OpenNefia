@@ -1037,12 +1037,11 @@ local item =
                self.amount = Rand.rnd(1000)
             end
 
-            if self.quality == "great" then
+            if self.quality == 3 then -- great
                self.number = self.number * 2
             end
 
-            -- TODO make number instead of enum
-            if self.quality == "miracle" or self.quality == "godly" or self.quality == "special" then
+            if self.quality >= 4 -- miracle
                self.number = self.number * 4
             end
 
