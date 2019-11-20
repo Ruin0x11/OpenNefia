@@ -8,6 +8,7 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local SkillCheck = require("mod.elona.api.SkillCheck")
+local Chara = require("api.Chara")
 
 data:add {
    _type = "base.feat",
@@ -187,7 +188,7 @@ local function gen_stair(down)
                x = map.player_start_pos.x
                y = map.player_start_pos.y
             elseif type(map.player_start_pos) == "function" then
-               x, y = map.player_start_pos(Chara.player(), map, current, params.feat)
+               x, y = map.player_start_pos(Chara.player(), map, self:current_map(), self)
             else
                error("invalid map start pos: " .. tostring(map.player_start_pos))
             end
@@ -205,7 +206,8 @@ local function gen_stair(down)
             error("No connecting stair found in other map.")
          end
 
-         params = { start_x = x, start_y = y }
+         params = { start_x = stair.x, start_y = stair.y }
+         stair.map_uid = self:current_map().uid
 
          Map.travel_to(map, params)
 

@@ -1,4 +1,5 @@
 local ICharaSkills = class.interface("ICharaSkills")
+local data = require("internal.data")
 
 function ICharaSkills:init()
    self.skills = self.skills or {}
@@ -22,7 +23,7 @@ function ICharaSkills:set_stat_adjustment(skill, adj)
 end
 
 function ICharaSkills:add_stat_adjustment(skill, delta)
-   self:set_stat_adjustment(self:stat_adjustment(skill) + delta)
+   self:set_stat_adjustment(skill, self:stat_adjustment(skill) + delta)
 end
 
 function ICharaSkills:on_refresh()

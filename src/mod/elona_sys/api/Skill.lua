@@ -336,7 +336,7 @@ function Skill.gain_level(chara, show_message)
          end
       end
 
-      skill_bonus = skill_bonus + chara:trait_level("elona.skill_bonus")
+      skill_bonus = skill_bonus + chara:trait_level("elona.extra_bonus_points")
    end
 
    chara.skill_bonus = chara.skill_bonus + skill_bonus

@@ -128,8 +128,18 @@ local fallbacks = {
    inventory_weight_type = 0,
    cargo_weight = 0,
    max_cargo_weight = 0,
+   initial_max_cargo_weight = 0,
 
-   is_temporary = nil
+   is_temporary = nil,
+
+   height = 0,
+   weight = 0,
+   personality = 0,
+   talk_type = 0,
+   interest = 0,
+   impression = 0,
+
+   shop_rank = 0,
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -188,7 +198,7 @@ function IChara:instantiate()
    IObject.instantiate(self)
    ICharaTalk.instantiate(self)
 
-   Event.trigger("base.on_chara_instantiated", {chara=self})
+   self:emit("base.on_chara_instantiated")
 end
 
 --- Refreshes this character, resetting all moddable data.
@@ -266,18 +276,23 @@ end
 
 --- Copies this character's chip image.
 ---
---- @treturn asset
+--- @treturn[opt] asset
 function IChara:copy_image()
+   local image = self:calc("image")
+   if image == nil or data["base.chip"][image] == nil then
+      return nil
+   end
+
    local chara_atlas = require("internal.global.atlases").get().chara
-   return chara_atlas:copy_tile_image(self:calc("image") .. "#1")
+   return chara_atlas:copy_tile_image(image .. "#1")
 end
 
 --- Copies this character's portrait.
 ---
---- @treturn asset
+--- @treturn[opt] asset
 function IChara:copy_portrait()
    local portrait = self:calc("portrait")
-   if portrait == nil then
+   if portrait == nil or data["base.portrait"][portrait] == nil then
       return nil
    end
 

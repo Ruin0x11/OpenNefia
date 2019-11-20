@@ -409,6 +409,9 @@ local function base_init(self, player)
    local axe = Item.create("content.axe", nil, nil, {}, player)
    assert(player:equip_item(axe))
    player:refresh()
+
+   player.gold = 1000000000
+   player.platinum = 1000
 end
 
 local function my_start(self, player)

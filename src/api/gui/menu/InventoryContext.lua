@@ -2,6 +2,8 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
+local Ui = require("api.Ui")
+local ILocation = require("api.ILocation")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -36,6 +38,11 @@ local function source_equipment(ctxt)
    return ctxt.chara:iter_equipment()
 end
 
+local function source_shop(ctxt)
+   assert(class.is_an(ILocation, ctxt.shop))
+   return ctxt.shop:iter()
+end
+
 local sources = {
    {
       name = "chara",
@@ -50,7 +57,7 @@ local sources = {
       getter = source_target,
       order = 11000,
       params = {
-         chara = "IChara"
+         target = "IChara"
       }
    },
    {
@@ -78,6 +85,20 @@ local sources = {
       end,
       params = {
          chara = "IChara"
+      }
+   },
+   {
+      name = "shop",
+      getter = source_shop,
+      order = 7000,
+      on_get_name = function(self, name, item, menu)
+         return name .. " " .. Ui.display_weight(item:calc("weight"))
+      end,
+      on_get_subtext = function(self, subtext, item, menu)
+         return tostring(item:calc("value")) .. " gp"
+      end,
+      params = {
+         shop = "table"
       }
    },
 }
@@ -116,6 +137,7 @@ function InventoryContext:init(proto, params)
    self.target = params.target or nil
    self.container = params.container or nil
    self.map = params.map or nil
+   self.shop = params.shop or nil
 
    self.icon = self.proto.icon or 1
 

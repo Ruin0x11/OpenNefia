@@ -49,13 +49,14 @@ local UiListExt = function(inventory_menu)
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       -- on_display_item_value
-      local subtext = "1.2s"
-
-      local weight = "1.2s"
-      local value = "12345 gp"
+      local subtext = Ui.display_weight(entry.item:calc("weight"))
 
       if entry.source.on_get_name then
          item_name = entry.source:on_get_name(item_name, entry.item, inventory_menu)
+      end
+
+      if entry.source.on_get_subtext then
+         subtext = entry.source:on_get_subtext(subtext, entry.item, inventory_menu)
       end
 
       if inventory_menu.layout then
@@ -104,10 +105,6 @@ end
 function InventoryMenu:on_query()
    self.canceled = false
    self.result = nil
-end
-
-function InventoryMenu:on_hotload()
-   table.merge(self.pages, UiListExt(self))
 end
 
 -- TODO: IList needs refactor to "selected_entry" to avoid naming
@@ -195,7 +192,7 @@ function InventoryMenu:update_filtering()
    -- configured for the inventory action.
    for _, entry in iter:unwrap() do
       local item = entry.item
-      if not Item.is_alive(item) then
+      if item.amount <= 0 then
          item:remove_ownership()
       else
          if self.ctxt:filter(item) then

@@ -76,13 +76,22 @@
   (let ((bounds (elona-next--bounds-of-last-defun pos)))
     (elona-next-send-region (car bounds) (cdr bounds))))
 
-(defun elona-next-hotload-this-file ()
-  (interactive)
+(defun elona-next--require-path-of-file (file)
   (let* ((prefix
           (file-relative-name
-           (file-name-sans-extension (buffer-file-name))
+           (file-name-sans-extension file)
            (string-join (list (projectile-project-root) "src/"))))
          (lua-path (replace-regexp-in-string "/" "." prefix))
+         (lua-name (let ((it (car (last (split-string lua-path "\\.")))))
+                     (if (string-equal it "init")
+                         (car (last (butlast
+                                     (split-string lua-path "\\."))))
+                       it))))
+    (cons lua-path lua-name)))
+
+(defun elona-next-hotload-this-file ()
+  (interactive)
+  (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name))))
          (cmd (format
                "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.env').hotload('%s') end"
                lua-path
@@ -93,16 +102,9 @@
 
 (defun elona-next-require-this-file ()
   (interactive)
-  (let* ((prefix
-          (file-relative-name
-           (file-name-sans-extension (buffer-file-name))
-           (string-join (list (projectile-project-root) "src/"))))
-         (lua-path (replace-regexp-in-string "/" "." prefix))
-         (lua-name (let ((it (car (last (split-string lua-path "\\.")))))
-                     (if (string-equal it "init")
-                         (car (last (butlast
-                                     (split-string lua-path "\\."))))
-                       it)))
+  (let* ((pair (elona-next--require-path-of-file (buffer-file-name)))
+         (lua-path (car pair))
+         (lua-name (cdr pair))
          (cmd (format
                "%s = require('%s'); require('api.Repl').send('%s = require \"%s\"')"
                lua-name
@@ -112,6 +114,19 @@
     (save-buffer)
     (elona-next--send cmd)
     (message "%s" cmd)))
+
+(defun elona-next-copy-require-path ()
+  (interactive)
+  (let* ((pair (elona-next--require-path-of-file (buffer-file-name)))
+         (lua-path (car pair))
+         (lua-name (cdr pair))
+         (src (format
+               "local %s = require(\"%s\")\n"
+               lua-name
+               lua-path)))
+    (message "%s" src)
+    (kill-new src))
+  )
 
 (defun elona-next-run-this-file ()
   (interactive)

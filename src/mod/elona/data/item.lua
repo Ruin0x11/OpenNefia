@@ -340,6 +340,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -359,6 +360,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -378,6 +380,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -398,6 +401,7 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -598,6 +602,7 @@ local item =
          efid = 1130,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -619,6 +624,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -641,6 +647,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -663,6 +670,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -684,6 +692,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -703,6 +712,7 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -1299,6 +1309,7 @@ local item =
          skill = 108,
 
          categories = {
+            "elona.equip_ammo",
             "elona.equip_ammo_arrow"
          }
       },
@@ -1323,6 +1334,7 @@ local item =
          tags = { "sf" },
 
          categories = {
+            "elona.equip_ammo",
             "elona.equip_ammo_bullet",
             "elona.tag_sf"
          }
@@ -1422,6 +1434,7 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
+            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -1477,6 +1490,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1499,6 +1513,7 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1521,6 +1536,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1544,6 +1560,7 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1567,6 +1584,7 @@ local item =
          efp = 400,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1625,6 +1643,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1648,6 +1667,7 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -1671,6 +1691,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -3820,7 +3841,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "corpse effects",
 
                callback = function(self, params, result)
@@ -3873,6 +3894,7 @@ local item =
          efp = 500,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -3993,6 +4015,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -4534,6 +4557,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -4636,6 +4660,7 @@ local item =
          efp = 500,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -4659,6 +4684,7 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -4681,6 +4707,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -4700,6 +4727,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -4897,6 +4925,7 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_alcohol"
          }
       },
@@ -5070,6 +5099,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -5509,6 +5539,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -5530,6 +5561,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.drink_potion"
          }
       },
@@ -5554,6 +5586,7 @@ local item =
          tags = { "spshop" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_spshop"
          }
       },
@@ -5576,6 +5609,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_neg"
          }
       },
@@ -6435,6 +6469,7 @@ local item =
          color = { 175, 255, 175 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -6942,6 +6977,7 @@ local item =
          efp = 2000,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -6963,6 +6999,7 @@ local item =
          efp = 2500,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -6982,6 +7019,7 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -7078,6 +7116,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7125,6 +7164,7 @@ local item =
          efp = 300,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -7171,6 +7211,7 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -7243,6 +7284,7 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -7264,6 +7306,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7333,6 +7376,7 @@ local item =
          efp = 250,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -7405,6 +7449,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -7453,6 +7498,7 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7550,6 +7596,7 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7571,6 +7618,7 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7592,6 +7640,7 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7637,6 +7686,7 @@ local item =
          tags = { "nogive" },
 
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -7689,6 +7739,7 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7762,6 +7813,7 @@ local item =
          efp = 250,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -7990,6 +8042,7 @@ local item =
          efp = 500,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -8233,7 +8286,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "morgia effects",
 
                callback = function(self, params)
@@ -8277,7 +8330,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "marelion effects",
 
                callback = function(self, params)
@@ -8321,7 +8374,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "spenseweed effects",
 
                callback = function(self, params)
@@ -8364,7 +8417,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "curaria effects",
 
                callback = function(self, params)
@@ -8405,7 +8458,7 @@ local item =
          },
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "alraunia effects",
 
                callback = function(self, params)
@@ -8486,6 +8539,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_neg"
          }
       },
@@ -8511,6 +8565,7 @@ local item =
          color = "RandomSeeded",
          medal_value = 5,
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -8536,6 +8591,7 @@ local item =
          color = "RandomSeeded",
          medal_value = 8,
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -8560,6 +8616,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -8582,6 +8639,7 @@ local item =
          efp = 200,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -9135,6 +9193,7 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
+            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -9154,6 +9213,7 @@ local item =
          subcategory = 20001,
          coefficient = 100,
          categories = {
+            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -9457,6 +9517,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -9561,6 +9622,7 @@ local item =
          skill = 109,
 
          categories = {
+            "elona.equip_ammo",
             "elona.equip_ammo_bolt"
          }
       },
@@ -9911,6 +9973,7 @@ local item =
          tags = { "neg" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_neg"
          }
       },
@@ -9933,6 +9996,7 @@ local item =
          efp = 180,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -9957,6 +10021,7 @@ local item =
          color = "RandomSeeded",
          medal_value = 7,
          categories = {
+            "elona.scroll",
             "elona.tag_spshop"
          }
       },
@@ -10032,6 +10097,7 @@ local item =
          efp = 200,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10053,6 +10119,7 @@ local item =
          efp = 400,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10073,6 +10140,7 @@ local item =
          efp = 200,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10094,6 +10162,7 @@ local item =
          efp = 400,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10131,6 +10200,7 @@ local item =
          elona_type = "scroll",
 
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10183,6 +10253,7 @@ local item =
          tags = { "sf" },
 
          categories = {
+            "elona.equip_ammo",
             "elona.equip_ammo_energy_cell",
             "elona.tag_sf"
          }
@@ -10249,6 +10320,7 @@ local item =
          efp = 300,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -10268,6 +10340,7 @@ local item =
          elona_type = "potion",
          medal_value = 3,
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -10340,6 +10413,7 @@ local item =
          tags = { "nogive" },
          color = "RandomAny",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -10386,6 +10460,7 @@ local item =
          color = { 255, 215, 175 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10411,6 +10486,7 @@ local item =
          color = { 255, 155, 155 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10513,7 +10589,7 @@ local item =
                end
             },
             {
-               id = "elona.on_regenerate",
+               id = "base.on_regenerate",
                name = "Fruit tree restock",
 
                callback = function(self)
@@ -10754,6 +10830,7 @@ local item =
          color = { 225, 225, 255 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10777,6 +10854,7 @@ local item =
          color = { 255, 225, 225 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -10916,6 +10994,7 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -10990,6 +11069,7 @@ local item =
             { id = 32, power = 100 }
          },
          categories = {
+            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -11102,6 +11182,7 @@ local item =
             { id = 30, power = 100 }
          },
          categories = {
+            "elona.equip_back",
             "elona.equip_back_cloak"
          }
       },
@@ -11148,6 +11229,7 @@ local item =
          elona_type = "potion",
          medal_value = 10,
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -11292,6 +11374,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -11399,7 +11482,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "egg effects",
 
                callback = function(self, params, result)
@@ -11441,6 +11524,7 @@ local item =
          color = { 235, 215, 155 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -11461,7 +11545,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_item_eat_effects",
+               id = "elona.on_eat_item_effect",
                name = "egg effects",
 
                callback = function(self, params, result)
@@ -11500,6 +11584,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -11553,6 +11638,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -11732,6 +11818,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -11946,6 +12033,7 @@ local item =
          rarity = 800000,
          coefficient = 100,
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -12162,6 +12250,7 @@ local item =
          medal_value = 5,
 
          categories = {
+            "elona.scroll",
             "elona.no_generate"
          }
       },
@@ -12271,6 +12360,7 @@ local item =
          tags = { "nogive" },
 
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -12293,6 +12383,7 @@ local item =
          tags = { "noshop", "spshop" },
 
          categories = {
+            "elona.scroll",
             "elona.tag_noshop",
             "elona.tag_spshop"
          }
@@ -12411,6 +12502,7 @@ local item =
          color = "RandomSeeded",
          medal_value = 30,
          categories = {
+            "elona.drink",
             "elona.tag_spshop"
          }
       },
@@ -12551,6 +12643,7 @@ local item =
          efp = 150,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -12662,6 +12755,7 @@ local item =
          efp = 100,
          elona_type = "scroll",
          categories = {
+            "elona.scroll",
          }
       },
       {
@@ -14000,6 +14094,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -14102,6 +14197,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -14151,6 +14247,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -14225,6 +14322,7 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -14272,6 +14370,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
          }
       },
       {
@@ -14293,6 +14392,7 @@ local item =
          color = { 175, 175, 255 },
 
          categories = {
+            "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
          }
@@ -14938,6 +15038,7 @@ local item =
          tags = { "nogive" },
          color = "RandomSeeded",
          categories = {
+            "elona.drink",
             "elona.tag_nogive"
          }
       },
@@ -14962,6 +15063,7 @@ local item =
          tags = { "noshop" },
          color = "RandomSeeded",
          categories = {
+            "elona.scroll",
             "elona.tag_noshop"
          }
       },
@@ -15113,6 +15215,7 @@ local item =
          medal_value = 72,
 
          categories = {
+            "elona.scroll",
             "elona.unique_item"
          }
       },
@@ -15718,6 +15821,7 @@ local item =
          tags = { "fest" },
 
          categories = {
+            "elona.drink",
             "elona.tag_fest",
             "elona.no_generate"
          }
@@ -15740,6 +15844,7 @@ local item =
          efp = 100,
          elona_type = "potion",
          categories = {
+            "elona.drink",
             "elona.unique_item"
          }
       },

@@ -3,6 +3,7 @@ local Stopwatch = require("api.Stopwatch")
 local Benchmark = {}
 
 function Benchmark.run(cb, runs, ...)
+   runs = runs or 1
    local sw = Stopwatch:new()
    local indiv = {}
    for i=1,runs do

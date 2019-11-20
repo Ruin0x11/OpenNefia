@@ -17,6 +17,10 @@ function WeightedSampler:add(item, weight)
    table.insert(self.candidates, { item, self.sum })
 end
 
+function WeightedSampler:len()
+   return #self.candidates
+end
+
 function WeightedSampler:sample()
    if self.sum == 0 or #self.candidates == 0 then
       return nil

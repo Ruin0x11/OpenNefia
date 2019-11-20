@@ -342,9 +342,6 @@ local function iter(state, prev_index)
 end
 
 function proxy:iter()
-   for _, v in pairs(inner[self._type]) do
-      assert(v._id, inspect(v))
-   end
    local inner_iter, inner_state, inner_index
    if inner[self._type] ~= nil then
       inner_iter, inner_state, inner_index = pairs(inner[self._type])

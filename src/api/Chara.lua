@@ -72,6 +72,8 @@ function Chara.set_player(uid_or_chara)
    c:reset_all_reactions()
    c:heal_to_max()
    c:refresh()
+
+   field.hud:refresh(c)
 end
 
 --- Returns true if this character is in the alive state and is

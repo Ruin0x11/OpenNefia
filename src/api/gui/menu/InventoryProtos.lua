@@ -134,7 +134,7 @@ InventoryProtos.inv_eat = {
 }
 
 InventoryProtos.inv_buy = {
-   sources = { "target" },
+   sources = { "shop" },
    shortcuts = false,
    icon = 6,
    query_amount = true,

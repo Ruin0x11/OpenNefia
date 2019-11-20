@@ -2,6 +2,7 @@
 
 local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
+local data = require("internal.data")
 
 local IEventEmitter = class.interface("IEventEmitter")
 
@@ -85,6 +86,8 @@ end
 --- @tparam[opt] table opts
 --- @tparam[opt] EventHolder global_events
 function IEventEmitter:connect_self(event_id, name, cb, opts, global_events)
+   data["base.event"]:ensure(event_id)
+
    register_global_handler_if_needed(self, event_id, global_events)
 
    self._events:register(event_id, name, cb, opts)
@@ -95,6 +98,8 @@ end
 --- @tparam id:base.event event_id
 --- @tparam string name The name the handler was registered with
 function IEventEmitter:disconnect_self(event_id, name)
+   data["base.event"]:ensure(event_id)
+
    self._events:unregister(event_id, name)
 
    if self._events:count(event_id) == 0 then

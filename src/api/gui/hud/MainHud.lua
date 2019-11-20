@@ -29,7 +29,7 @@ function MainHud:init()
       dv = 0,
       pv = 0
    }
-   self.skill_adjusts = {}
+   self.stat_adjusts = {}
 end
 
 function MainHud:relayout(x, y, width, height)
@@ -198,7 +198,7 @@ function MainHud:draw_attributes()
          local dv_pv = string.format("%d/%d", self.stats["dv"], self.stats["pv"])
          Draw.text(dv_pv, x + 14, y, color)
       else
-         local adj = self.skill_adjusts[a]
+         local adj = self.stat_adjusts[a]
          if adj < 0 then
             color = self.t.stat_penalty_color
          end

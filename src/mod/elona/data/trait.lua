@@ -8,7 +8,7 @@ local trait = {
       elona_id = 164
    },
    {
-      _id = "skill_bonus",
+      _id = "extra_bonus_points",
       elona_id = 154
    },
    {

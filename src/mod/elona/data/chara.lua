@@ -5411,6 +5411,22 @@ local chara = {
       female_image = "elona.chara_maid_female",
       fltselect = 1,
       coefficient = 400,
+
+      events = {
+         {
+            id = "base.on_chara_instantiated",
+            name = "Set image",
+
+            callback = function(self)
+               local id = Rand.rnd(33) * 2 + 1
+               if self.gender == "female" then
+                  id = id + 1
+               end
+               self.image = data["base.chip"]:iter():filter(function(c) return c.elona_id == id end):extract("_id"):nth(1)
+               assert(self.image)
+            end
+         }
+      }
    },
    {
       _id = "ebon2",

@@ -187,6 +187,9 @@ data:add_multi(
          _id = "on_regenerate_map"
       },
       {
+         _id = "on_regenerate"
+      },
+      {
          _id = "on_item_regenerate"
       },
       {

@@ -2,6 +2,7 @@ local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
+local Log = require("api.Log")
 
 -- This shouldn't be in base, since it has a lot of logic specific to
 -- elona.
@@ -64,6 +65,10 @@ function Itemgen.random_item_id_raw(objlv, categories)
    for _, item in candidates:unwrap() do
       local weight = item_gen_weight(item, objlv)
       sampler:add(item._id, weight)
+   end
+
+   if sampler:len() == 0 then
+      Log.warn("No item generation candidates found for parameters: %d %s", objlv, inspect(categories))
    end
 
    return sampler:sample()
@@ -131,6 +136,9 @@ function Itemgen.create(x, y, params, where)
 
    params.quality = params.quality or 0
    params.level = params.level or 0
+   if type(params.categories) == "string" then
+      params.categories = {params.categories}
+   end
    params.categories = table.set(params.categories or {})
    params.create_params = params.create_params or {}
 

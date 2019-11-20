@@ -248,7 +248,7 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [154] = 1,
+               ["elona.extra_bonus_points"] = { level = 1 },
             },
 
             breed_power = 220,

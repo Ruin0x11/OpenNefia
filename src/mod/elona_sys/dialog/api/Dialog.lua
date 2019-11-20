@@ -244,7 +244,7 @@ local function step_dialog(node_data, talk, state)
    if type(node) == "function" then
       -- Run function. It is expected to return either a string or
       -- table containing the next node to jump to.
-      local ok, result = pcall(node, talk, state, node_data.opts)
+      local ok, result = xpcall(node, debug.traceback, talk, state, node_data.opts)
       if ok then
          if type(result) == "string" then
             next_node = {choice = result, opts = {}}

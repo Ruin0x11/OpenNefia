@@ -155,10 +155,8 @@ data:add {
       local field = data["elona.field_type"][field_type]
       if not field then
          field_type = default_field_type
-         field = data["elona.field_type"][field_type]
+         field = data["elona.field_type"]:ensure(field_type)
       end
-
-      assert(field, "could not find elona.field_type entry for " .. tostring(field_type))
 
       local map = InstancedMap:new(width, height)
       map:clear("elona.grass")

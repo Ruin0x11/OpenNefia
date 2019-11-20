@@ -50,8 +50,6 @@ function UiStatusEffects:set_data()
    end
 
    table.sort(raw, function(a, b) return a.ordering < b.ordering end)
-
-   self:calc_max_width()
 end
 
 function UiStatusEffects:calc_max_width()

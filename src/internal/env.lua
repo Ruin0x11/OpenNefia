@@ -493,6 +493,8 @@ function env.generate_sandbox(mod_name, is_strict)
 
    sandbox["save"] = require("internal.global.save")
 
+   sandbox["debug"] = { traceback = debug.traceback }
+
    if is_strict then
       -- copy the strict metatable from the global environment
       -- (thirdparty/strict.lua)

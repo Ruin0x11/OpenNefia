@@ -38,7 +38,9 @@ local defaults = {
    params = {},
    types = {},
 
-   cargo_weight = 0
+   cargo_weight = 0,
+
+   rarity = 1000000
 }
 table.merge(IItem, defaults)
 
@@ -233,7 +235,9 @@ function IItem:can_stack_with(other)
    local ignored_fields = table.set {
       "uid",
       "amount",
-      "temp"
+      "temp",
+      "_events",
+      "global_events",
    }
 
    for field, my_val in pairs(self) do

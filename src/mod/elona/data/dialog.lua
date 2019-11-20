@@ -1,5 +1,8 @@
 local Chara = require("api.Chara")
 local Input = require("api.Input")
+local Item = require("api.Item")
+local Role = require("mod.elona_sys.api.Role")
+local ShopInventory = require("mod.elona.api.ShopInventory")
 
 data:add {
    _type = "elona_sys.dialog",
@@ -34,11 +37,11 @@ data:add {
 
    root = "",
    nodes = {
-      __start = function()
-      end,
-
       buy = function(t)
-         Input.query_inventory(Chara.player(), "inv_buy", {target=t.speaker})
+         local inv_id = Role.get(t.speaker, "elona.shopkeeper").params.inventory_id
+         local shop = ShopInventory.generate(inv_id, t.speaker)
+
+         Input.query_inventory(Chara.player(), "inv_buy", {target=t.speaker, shop=shop})
          return "elona.default:talk"
       end,
       sell = function(t)
@@ -54,9 +57,6 @@ data:add {
 
    root = "",
    nodes = {
-      __start = function()
-      end,
-
       where_is = function(t)
          return "elona.default:talk"
       end,

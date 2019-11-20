@@ -280,7 +280,21 @@ Event.register("base.on_build_chara",
 local function init_chara_defaults(chara)
    chara.performance_interest = chara.performance_interest or 0
    chara.performance_interest_revive_date = chara.performance_interest_revive_date or 0
+
+   if chara:is_player() then
+      chara.nutrition = 9000
+   else
+      chara.nutrition = 5000 + Rand.rnd(4000)
+   end
+
+   chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
+
    chara.required_experience = Skill.calc_required_experience(chara)
+
+   if chara:is_player() then
+      chara.initial_max_cargo_weight = 80000
+      chara.max_cargo_weight = chara.initial_max_cargo_weight
+   end
 end
 
 Event.register("base.on_build_chara",
