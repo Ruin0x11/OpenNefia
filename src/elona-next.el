@@ -20,7 +20,7 @@
                         :coding 'utf-8))
 
 (defun elona-next--send (str)
-  (when (buffer-live-p lua-process-buffer)
+  (when (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
     (lua-send-string str))
   (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
     (when (process-live-p proc)

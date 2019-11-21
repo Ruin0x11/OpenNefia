@@ -22,6 +22,7 @@ end
 function Itemgen.random_item_id_raw(objlv, categories)
    objlv = objlv or 0
    categories = categories or {}
+   assert(type(categories) == "table")
    if categories[1] then
       categories = table.set(categories)
    end

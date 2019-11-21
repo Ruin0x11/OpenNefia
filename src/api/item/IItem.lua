@@ -49,7 +49,10 @@ function IItem:pre_build()
    IModdable.init(self)
    IMapObject.init(self)
    IEventEmitter.init(self)
+   IItemEnchantments.init(self)
+end
 
+function IItem:normal_build()
    self.location = nil
    self.ownership = self.ownership or "none"
 
@@ -59,19 +62,7 @@ function IItem:pre_build()
 
    self.name = self._id
 
-   self.weight = 10
-   self.dv = 4
-   self.pv = 4
-   self.hit_bonus = 3
-   self.damage_bonus = 2
-   self.bonus = 1
-
    self:set_image()
-
-   IItemEnchantments.init(self)
-end
-
-function IItem:normal_build()
 end
 
 function IItem:build()
@@ -236,6 +227,9 @@ function IItem:can_stack_with(other)
       "uid",
       "amount",
       "temp",
+
+      -- TODO: Compare event tables by event name, since those are
+      -- uniquely idenfying.
       "_events",
       "global_events",
    }

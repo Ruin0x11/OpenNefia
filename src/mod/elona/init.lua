@@ -56,5 +56,6 @@ require("mod.elona.data.dialog")
 require("mod.elona.data.shop_inventory")
 require("mod.elona.data.role")
 require("mod.elona.data.portrait")
+require("mod.elona.data.quest")
 
 require("mod.elona.events")

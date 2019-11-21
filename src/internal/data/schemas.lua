@@ -189,12 +189,6 @@ data:add_type {
 }
 
 data:add_type {
-   name = "quest",
-   schema = schema.Record {
-   },
-}
-
-data:add_type {
    name = "sound",
    schema = schema.Record {
       file = schema.String

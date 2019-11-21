@@ -156,7 +156,7 @@ local function generate_from_map_template(self, params, opts)
       template.on_generate(map)
    end
 
-   return map
+   return map, params.id
 end
 
 local function load_map_template(map, params, opts)

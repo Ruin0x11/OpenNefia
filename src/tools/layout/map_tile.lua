@@ -483,7 +483,7 @@ local map_tile = {
    { atlas = 1, id = 544, name = "wall_stone_8_fog" },
    { atlas = 1, id = 545, name = "stable_top" },
    { atlas = 1, id = 546, name = "horse_top" },
-   { atlas = 1, id = 552, name = "palace_fountain", count_x = 2 },
+   { atlas = 1, id = 550, name = "palace_fountain", count_x = 2 },
    { atlas = 1, id = 564, name = "light_grass_carts" },
    { atlas = 1, id = 565, name = "light_grass_carts_gold" },
    { atlas = 1, id = 566, name = "light_grass_carts_jewels" },

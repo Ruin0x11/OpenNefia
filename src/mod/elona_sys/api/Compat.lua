@@ -37,4 +37,9 @@ function Compat.convert_122_map_chip(elona_atlas, elona_id)
    return nil
 end
 
+function Compat.convert_122_item_category(category)
+   assert(category)
+   return data["base.item_type"]:iter():filter(function(i) return i.ordering == category end):extract("_id"):nth(1)
+end
+
 return Compat

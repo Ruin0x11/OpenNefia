@@ -48,7 +48,7 @@ Filters.fsetdeliver = {
    "elona.furniture",
    "elona.ore",
    "elona.spellbook",
-   "elona.junk_in_field",
+   "elona.junk",
 }
 
 Filters.fsetincome = {

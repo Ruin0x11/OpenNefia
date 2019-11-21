@@ -80,7 +80,7 @@ function MapObject.clone(obj, owned)
    assert(proto.location == nil)
 
    -- Generate a new object using the stripped object as a prototype.
-   local new_object = MapObject.generate(proto, {no_pre_build=true})
+   local new_object = MapObject.generate(proto, {no_build=true})
 
    -- TODO: move
    local IMapObject = require("api.IMapObject")

@@ -357,7 +357,7 @@ data:add {
 
       map.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2)}
 
-      return map
+      return map, "test"
    end
 }
 
@@ -391,10 +391,12 @@ local function base_init(self, player)
 
       local home = load_map(world_map, "elona.your_home")
       local vernis = load_map(world_map, "elona.vernis")
+      local palmia = load_map(world_map, "elona.palmia")
 
       Map.save(world_map)
       Map.save(home)
       Map.save(vernis)
+      Map.save(palmia)
 
       Map.set_map(home)
 

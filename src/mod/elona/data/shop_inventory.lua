@@ -6,6 +6,7 @@ local Filters = require("mod.elona.api.Filters")
 -- Generates a list to be used with "choices" which will set the
 -- provided field to one of the choices in "list".
 local function make_choices_list(list, field_name)
+   local list = table.deepcopy(list)
    for i, v in ipairs(list) do
       list[i] = { index = i - 1 }
       list[i][field_name] = v

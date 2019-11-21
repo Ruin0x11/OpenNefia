@@ -185,7 +185,7 @@ data:add {
 
       map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
 
-      return map
+      return map, tile.field_type
    end,
 
    almost_equals = function(self, other)

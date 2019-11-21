@@ -119,6 +119,7 @@ local fallbacks = {
    is_user_map = false,
    has_anchored_npcs = false,
    reveals_fog = false,
+   name = "",
 
    --- If true, always re
    is_generated_every_time = false,

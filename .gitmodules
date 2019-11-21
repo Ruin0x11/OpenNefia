@@ -1,7 +1,9 @@
-[submodule "lib/love"]
-	path = lib/love
-	url = https://bitbucket.org/ruin0x11/love
-	branch = elona-next
 [submodule "lib/luajit-2.0"]
 	path = lib/luajit-2.0
 	url = http://luajit.org/git/luajit-2.0.git
+[submodule "lib/megasource"]
+	path = lib/megasource
+	url = hg::https://bitbucket.org/rude/megasource
+[submodule "lib/love"]
+	path = lib/love
+	url = git@git.sr.ht:~ruin0x11/love

@@ -41,7 +41,7 @@ function DamagePopupLayer:update(dt, screen_updated)
 end
 
 function DamagePopupLayer:draw(draw_x, draw_y)
-   local popups = save.damage_popups.popups
+   local popups = save.damage_popups.popups or {}
    local sx, sy = self.coords:get_start_offset(draw_x, draw_y)
    for _, v in ipairs(popups) do
       local x, y = self.coords:tile_to_screen(v.x+1, v.y+1)

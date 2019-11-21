@@ -7,6 +7,8 @@ ElonaCommand = require("mod.elona.api.ElonaCommand")
 Skill = require("mod.elona_sys.api.Skill")
 Dialog = require("mod.elona_sys.dialog.api.Dialog")
 
+Log.set_level("debug")
+
 local test = function()
 end
 

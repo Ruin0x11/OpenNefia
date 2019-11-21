@@ -62,6 +62,7 @@ local fallbacks = {
    experience = 0,
    required_experience = 0,
    sleep_experience = 0,
+   fame = 0,
    dv = 0,
    pv = 0,
    hit_bonus = 0,
@@ -592,9 +593,13 @@ function IChara:kill(source)
       end
    end
 
-   Event.trigger("base.on_chara_killed", {chara=self,source=source})
+   if self.roles ~= nil then
+      self.state = "CitizenDead"
+   else
+      self.state = "Dead"
+   end
 
-   self.state = "Dead"
+   Event.trigger("base.on_chara_killed", {chara=self,source=source})
 end
 
 --- Revives this character.

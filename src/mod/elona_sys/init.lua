@@ -61,6 +61,20 @@ add_elona_id("base.element")
 add_elona_id("base.sound")
 add_elona_id("base.body_part")
 
+
+data:add_type {
+   name = "quest",
+   schema = schema.Record {
+   },
+}
+
+data:add_type {
+   name = "quest_reward",
+   schema = schema.Record {
+   },
+}
+
+
 require("mod.elona_sys.data.event")
 
 require("mod.elona_sys.theme.init")

@@ -12,6 +12,6 @@ data:add {
       local map = InstancedMap:new(width, height)
       map:clear(params.tile or "elona.grass")
 
-      return map
+      return map, "blank"
    end,
 }

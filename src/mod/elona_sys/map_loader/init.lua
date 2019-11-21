@@ -144,7 +144,7 @@ local function convert_122(gen, params)
          local new_tile = mapping[atlas_no][tile_id]
 
          if new_tile == nil then
-            assert(atlas_no == 2)
+            assert(atlas_no == 2, tile_id)
             assert(same[tile_id])
 
             -- Find the corresponding tile in atlas 1, since this one
@@ -233,7 +233,7 @@ local function convert_122(gen, params)
    result.default_tile = Compat.convert_122_map_chip(1, 534)
    result.should_regenerate = regen
 
-   return result
+   return result, params.name
 end
 
 data:add {

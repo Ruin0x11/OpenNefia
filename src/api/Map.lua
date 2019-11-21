@@ -321,14 +321,21 @@ function Map.generate(generator_id, params, opts)
    end
 
    local generator = data["base.map_generator"]:ensure(generator_id)
-   local success, map = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
+   local success, map, id = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
    if not success then
       return nil, map
    end
    if not class.is_an(InstancedMap, map) then
-      return nil, "result of map_generator:generate must be a map"
+      return nil, "result of map_generator:generate must be a map and string ID"
+   end
+   if type(id) ~= "string" then
+      return nil, ("map ID '%s' must be string (got: %s)"):format(tostring(id), type(id))
+   end
+   if string.find(id, "[^0-9a-zA-Z_.]") then
+      return nil, ("map ID can only contain alphanumeric characters, underscore and period (got: %s)"):format(id)
    end
 
+   map.gen_id = id
    map.generated_with = { generator = generator_id, params = params }
 
    map:emit("base.on_map_generated")
@@ -596,7 +603,7 @@ local function failed_to_place(chara)
       chara.state = "Dead"
       Gui.mes("chara.place_failure.other", chara)
    end
-   if chara.role ~= nil then
+   if chara.roles ~= nil then
       chara.state = "CitizenDead"
    end
 
@@ -741,6 +748,10 @@ end
 function Map.world_map_containing(map)
    map = map or Map.current()
 
+   if map._outer_map_uid == nil then
+      return nil
+   end
+
    local ok, err = Map.load(map._outer_map_uid)
    if not ok then
       error(err)
@@ -749,6 +760,28 @@ function Map.world_map_containing(map)
    local outer = err
    if outer and outer:has_type("world_map") then
       return outer
+   end
+
+   return nil
+end
+
+--- Finds the location of this map in its containing world map.
+--- TODO: needs to support nested dungeons.
+---  - A group of maps is contained in one area.
+---  - The area has a containing world map.
+function Map.position_in_world_map(map)
+   map = map or Map.current()
+
+   local world_map = Map.world_map_containing(map)
+   if not world_map then
+      return nil
+   end
+
+   local MapArea = require("api.MapArea")
+   for _, entrance in MapArea.iter_map_entrances("generated", world_map) do
+      if entrance.map_uid == map.uid then
+         return entrance.x, entrance.y
+      end
    end
 
    return nil
