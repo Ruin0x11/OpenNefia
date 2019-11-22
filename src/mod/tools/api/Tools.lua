@@ -208,9 +208,9 @@ end
 
 function Tools.draw_debug_pos(x, y, color)
    Draw.set_color(color or {255, 0, 0})
-   Draw.set_font(11)
+   Draw.set_font(14)
    Draw.text(string.format("%d/%d", x, y), x, y)
-   Draw.filled_rect(x - 4, y - 4, 8, 8)
+   Draw.filled_rect(x - 8, y - 8, 16, 16)
    Draw.set_color(255, 255, 255)
 end
 

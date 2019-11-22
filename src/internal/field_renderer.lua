@@ -17,7 +17,7 @@ function field_renderer:init(width, height, layers)
 
    self.screen_updated = true
 
-   self.draw_coroutines = {}
+   self.draw_callbacks = {}
    self.layers = {}
 
    self.scroll = nil
@@ -82,12 +82,17 @@ function field_renderer:draw_pos()
 end
 
 function field_renderer:add_async_draw_callback(cb)
-   self.draw_coroutines[#self.draw_coroutines+1] = coroutine.create(cb)
+   self.draw_callbacks[#self.draw_callbacks+1] = coroutine.create(cb)
+end
+
+function field_renderer:has_draw_callbacks()
+   return #self.draw_callbacks > 0
 end
 
 function field_renderer:draw()
    local draw_x = self.draw_x
    local draw_y = self.draw_y
+   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
    for _, l in ipairs(self.layers) do
       local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
@@ -96,16 +101,24 @@ function field_renderer:draw()
       end
    end
 
+   Draw.set_color(255, 255, 255)
+
    local dead = {}
-   for i, co in ipairs(self.draw_coroutines) do
-      local msg, err = coroutine.resume(co, draw_x, draw_y)
-      if err then
+   for i, co in ipairs(self.draw_callbacks) do
+      local msg, err = coroutine.resume(co, sx - draw_x, sy - draw_y)
+      local is_dead = coroutine.status(co) == "dead"
+      if is_dead or err then
          dead[#dead+1] = i
+
+         if err then
+            local Gui = require("api.Gui")
+            Gui.report_error(debug.traceback(co, err), "Error in draw callback")
+         end
       end
    end
 
    for _, i in ipairs(dead) do
-      table.remove(self.draw_coroutines, i)
+      table.remove(self.draw_callbacks, i)
    end
 end
 

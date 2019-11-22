@@ -6,6 +6,7 @@ local Pos = require("api.Pos")
 local IEventEmitter = require("api.IEventEmitter")
 local IModdable = require("api.IModdable")
 local Draw = require("api.Draw")
+local ILocation = require("api.ILocation")
 local ITypedLocation = require("api.ITypedLocation")
 
 local InstancedMap = class.class("InstancedMap", { ITypedLocation, IModdable, IEventEmitter })
@@ -89,7 +90,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._memory = {}
 
    self._tiles = table.of({}, width * height)
-   self._tiles_dirty = true
+   self._tiles_dirty = {}
    self._uids = uids
 
    self.default_tile = "base.floor"
@@ -215,7 +216,7 @@ function InstancedMap:set_tile(x, y, id)
 
    self:refresh_tile(x, y)
 
-   self._tiles_dirty = true
+   self._tiles_dirty[#self._tiles_dirty] = {x, y}
 end
 
 function InstancedMap:tile(x, y)
@@ -394,7 +395,7 @@ function InstancedMap:memorize_tile(x, y)
       table.insert(memory[obj._type][ind], m)
    end
 
-   self._tiles_dirty = true
+   self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
 end
 
 function InstancedMap:reveal_tile(x, y)
@@ -484,6 +485,17 @@ function InstancedMap:refresh_tile(x, y)
    local ind = y * self._width + x + 1
    self._solid[ind] = solid
    self._opaque[ind] = opaque
+end
+
+function InstancedMap:redraw_all_tiles()
+   for _, x, y in Pos.iter_rect(0, 0, self:width()-1, self:height()-1)  do
+      self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+   end
+end
+
+function InstancedMap:deserialize()
+   ILocation.deserialize(self)
+   self:redraw_all_tiles()
 end
 
 

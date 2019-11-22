@@ -564,7 +564,11 @@ local cook = {
          category = "elona.scroll"
       end
 
-      self.reward = { _id = "elona.by_category", category = category }
+      if category then
+         self.reward = { _id = "elona.by_category", category = category }
+      else
+         self.reward = { _id = "elona.supply" }
+      end
 
       local food_quality = Rand.rnd(7) + 3
       self.difficulty = food_quality * 3

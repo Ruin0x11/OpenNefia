@@ -1,7 +1,7 @@
 return {
    ui = {
       body_part = {
-         base = {
+         elona = {
             head = "頭",
             neck = "首",
             back = "背中",

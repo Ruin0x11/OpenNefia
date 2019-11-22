@@ -112,12 +112,24 @@ local function is_weapon(item)
       and item:calc("dice_x") > 0
 end
 
+local function is_ranged_weapon(item)
+   return item:is_equipped_at("elona.ranged")
+      and item:calc("dice_x") > 0
+end
+
+local function is_ammo(item)
+   return item:is_equipped_at("elona.ammo")
+      and item:calc("dice_x") > 0
+end
+
 function IItem:refresh()
    IModdable.on_refresh(self)
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
 
    self:mod("is_weapon", is_weapon(self))
+   self:mod("is_ranged_weapon", is_ranged_weapon(self))
+   self:mod("is_ammo", is_ammo(self))
    self:mod("is_armor", self:calc("dice_x") == 0)
 end
 
@@ -233,6 +245,11 @@ function IItem:can_stack_with(other)
       "_events",
       "global_events",
    }
+
+   local ok, err = IEventEmitter.compare_events(self, other)
+   if not ok then
+      return err
+   end
 
    for field, my_val in pairs(self) do
       if not ignored_fields[field] then

@@ -34,7 +34,7 @@ function EventHolder:register(event_id, name, cb, opts)
       return
    end
 
-   -- TODO: unnecessary if the sort is stable, and incorrect anyways
+   -- BUG: unnecessary if the sort is stable, and incorrect anyways
    local priority = opts.priority or 200000
 
    self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
@@ -151,6 +151,40 @@ function EventHolder:print(event_id)
    end
 
    return s
+end
+
+function EventHolder:__eq(other)
+   local found = {}
+
+   for id, tree in pairs(self.hooks) do
+      found[id] = found[id] or {}
+      for name, _ in pairs(tree.name_to_ind) do
+         found[id][name] = false
+      end
+   end
+
+   for id, tree in pairs(other.hooks) do
+      found[id] = found[id] or {}
+      for name, _ in pairs(tree.name_to_ind) do
+         if found[id][name] == false then
+            found[id][name] = true
+         else
+            -- A handler was found in the second holder that wasn't
+            -- in the first holder.
+            return false
+         end
+      end
+   end
+
+   for _, t in pairs(found) do
+      for _, was_found in pairs(t) do
+         if was_found == false then
+            return false
+         end
+      end
+   end
+
+   return true
 end
 
 return EventHolder

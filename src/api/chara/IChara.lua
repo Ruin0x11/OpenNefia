@@ -141,6 +141,8 @@ local fallbacks = {
    impression = 0,
 
    shop_rank = 0,
+
+   breaks_into_debris = nil,
 }
 
 --- Initializes the bare minimum values on this character. All

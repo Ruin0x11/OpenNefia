@@ -147,4 +147,8 @@ Event.register("base.on_map_loaded", "init all event callbacks",
                   end
                end)
 
+function IEventEmitter:compare_events(other)
+   return self._events == other._events and self.global_events == other.global_events
+end
+
 return IEventEmitter

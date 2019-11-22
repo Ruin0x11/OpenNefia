@@ -8,22 +8,17 @@ local Combat = {}
 -- & 2: two handed
 -- & 4: dual wield
 
-local function get_ammo(chara)
-   return chara:items_equipped_at("elona.ammo"):nth(1)
-end
-
-local function calc_accuracy_default(chara, weapon, attack_skill, params)
+local function calc_accuracy_default(chara, weapon, attack_skill, ammo, params)
    local accuracy
 
    if weapon then
       accuracy = chara:skill_level("elona.stat_dexterity") / 4
-         + chara:skill_level(weapon:calc("skill")) / 3
+         + chara:skill_level(weapon:calc("skill") or "elona.martial_arts") / 3
          + chara:skill_level(attack_skill)
          + 50
          + chara:calc("hit_bonus")
          + weapon:calc("hit_bonus")
 
-      local ammo = get_ammo(chara)
       if ammo then
          accuracy = accuracy + ammo:calc("hit_bonus")
       end
@@ -119,6 +114,7 @@ local hook_calc_accuracy = Event.define_hook("calc_accuracy",
                                                 return calc_accuracy_default(params.chara,
                                                                              params.weapon,
                                                                              params.attack_skill,
+                                                                             params.ammo,
                                                                              params)
 end)
 
@@ -278,8 +274,8 @@ Event.register("elona.hook_calc_attack_hit",
                   return mod_attack_hit_for_criticals(result, params.chara)
 end)
 
-function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_count, is_ranged)
-   local to_hit = Combat.calc_accuracy(chara, weapon, target, attack_skill, attack_count, is_ranged, true)
+function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_count, is_ranged, ammo)
+   local to_hit = Combat.calc_accuracy(chara, weapon, target, attack_skill, attack_count, is_ranged, true, ammo)
    local evasion = Combat.calc_evasion(target, chara, weapon, attack_skill, attack_count, is_ranged)
 
    local result = hook_calc_attack_hit({
@@ -290,6 +286,7 @@ function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_coun
 
          attack_count = attack_count or 1,
          is_ranged = is_ranged or false,
+         ammo = ammo
                                        },
       { result = nil, to_hit = to_hit, evasion = evasion })
 
@@ -308,7 +305,7 @@ function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_coun
    return "miss"
 end
 
-local function calc_damage_params_default(chara, weapon, target, attack_skill)
+local function calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
    local dmgfix = chara:calc("damage_bonus") + weapon:calc("damage_bonus") + weapon:calc("bonus")
    if weapon:is_blessed() then
       dmgfix = dmgfix + 1
@@ -317,19 +314,18 @@ local function calc_damage_params_default(chara, weapon, target, attack_skill)
    local dice_y = weapon:calc("dice_y")
 
    local multiplier
-   local ammo = get_ammo(chara)
    if ammo then
       dmgfix = dmgfix + ammo:calc("damage_bonus") + ammo:calc("dice_x") * ammo:calc("dice_y") / 2
       multiplier = 0.5
          + (chara:skill_level("elona.stat_perception")
-               + chara:skill_level(weapon:calc("skill")) / 5
+               + chara:skill_level(weapon:calc("skill") or "elona.throwing") / 5
                + chara:skill_level(attack_skill) / 5
                + chara:skill_level("elona.marksman") * 3 / 2)
          / 40
    else
       multiplier = 0.6
          + (chara:skill_level("elona.stat_strength")
-               + chara:skill_level(weapon:calc("skill")) / 5
+               + chara:skill_level(weapon:calc("skill") or "elona.throwing") / 5
                + chara:skill_level(attack_skill) / 5
                + chara:skill_level("elona.tactics") * 2)
          / 40
@@ -387,14 +383,14 @@ Event.register(
       return calc_raw_damage_for_traits(result, params.chara)
 end)
 
-function Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged)
+function Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged, ammo)
    local skill = data["base.skill"][attack_skill]
 
    local damage_params
    if skill and skill.calc_damage_params then
-      damage_params = skill:calc_damage_params(chara, weapon, target, is_ranged)
+      damage_params = skill:calc_damage_params(chara, weapon, target, is_ranged, ammo)
    else
-      damage_params = calc_damage_params_default(chara, weapon, target, attack_skill)
+      damage_params = calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
    end
 
    return hook_calc_raw_damage({
@@ -402,7 +398,8 @@ function Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_r
          weapon = weapon,
          target = target,
          attack_skill = attack_skill,
-         is_ranged = is_ranged
+         is_ranged = is_ranged,
+         ammo = ammo
                                },
       damage_params)
 end
@@ -456,8 +453,8 @@ function Combat.calc_protection(target, attacker, weapon, attack_skill, is_range
    })
 end
 
-function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical)
-   local damage_params = Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged)
+function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
+   local damage_params = Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged, ammo)
    local protection_params = Combat.calc_protection(target, chara, weapon, attack_skill, is_ranged)
 
    damage_params.multiplier = math.floor(damage_params.multiplier * 100)
@@ -486,8 +483,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
       damage = damage * 100 / (100 + protection_params.amount)
    end
 
-   if is_ranged then
-      assert(ammo)
+   if is_ranged and ammo then
       local ammo_type = ammo:calc("ammo_type")
       if ammo_type == "vorpal" then
          damage_params.pierce_rate = 60

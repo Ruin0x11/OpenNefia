@@ -8,6 +8,7 @@ function fps:init()
    self.ms = 0
    self.frames = 0
    self.text = ""
+   self.threshold = 200
 end
 
 function fps:update(dt)
@@ -16,8 +17,8 @@ function fps:update(dt)
    self.ms = self.ms + dt * 1000
    self.frames = self.frames + 1
 
-   if self.ms >= 1000 then
-      self.text = string.format("FPS: %02.2f", self.frames / (self.ms / 1000))
+   if self.ms >= self.threshold then
+      self.text = string.format("FPS: %02.2f", self.frames / (self.ms / self.threshold))
       self.frames = 0
       self.ms = 0
    end

@@ -161,7 +161,7 @@ function Event.define_hook(id, desc, default, field, cb)
          _default = table.deepcopy(_default)
       end
 
-      local success, result = pcall(function() return Event.trigger(full_id, params, _default) end)
+      local success, result = xpcall(function() return Event.trigger(full_id, params, _default) end, debug.traceback)
       if not success then
          local Gui = require("api.Gui")
          Gui.report_error(result, "Error running hook")

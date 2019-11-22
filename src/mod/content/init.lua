@@ -127,6 +127,22 @@ data:add {
 
 data:add {
    _type = "base.item",
+   _id = "bow",
+
+   name = "bow",
+   image = "elona.item_long_bow",
+   skill = "elona.bow",
+
+   dice_x = 10,
+   dice_y = 10,
+
+   equip_slots = {
+      "elona.ranged"
+   }
+}
+
+data:add {
+   _type = "base.item",
    _id = "arrow",
 
    name = "arrow",
@@ -410,6 +426,15 @@ local function base_init(self, player)
 
    local axe = Item.create("content.axe", nil, nil, {}, player)
    assert(player:equip_item(axe))
+
+   local bow = Item.create("content.bow", nil, nil, {}, player)
+   assert(player:equip_item(bow))
+
+   _ppr(Chara.player().equip.body_parts)
+   local arrow = Item.create("content.arrow", nil, nil, {}, player)
+   assert(player:equip_item(arrow))
+   _ppr(Chara.player().equip.body_parts)
+
    player:refresh()
 
    player.gold = 1000000000

@@ -179,6 +179,48 @@ data:add {
          shadow = "asset/shadow.png",
          shadow_edges = "asset/shadow_edges.png",
 
+         failure_to_cast_effect = "asset/failure_to_cast_effect.png",
+         swarm_effect = "asset/swarm_effect.png",
+         breaking_effect = "asset/breaking_effect.png",
+         melee_attack_debris = "asset/melee_attack_debris.png",
+         melee_attack_blood = "asset/melee_attack_blood.png",
+         ranged_attack_arrow = "asset/ranged_attack_arrow.png",
+         ranged_attack_laser = "asset/ranged_attack_laser.png",
+         ranged_attack_bullet = "asset/ranged_attack_bullet.png",
+         ranged_attack_magic_arrow = "asset/ranged_attack_magic_arrow.png",
+
+         anim_slash = {
+            image = "asset/anim_slash.png",
+            count_x = 4
+         },
+
+         anim_bash = {
+            image = "asset/anim_bash.png",
+            count_x = 4
+         },
+
+         anim_miracle = {
+            image = "asset/anim_miracle.png",
+            count_x = 10,
+            count_y = 2,
+            regions = {
+               beam_1 = {0, 0, 96, 55},
+               beam_2 = {96, 0, 96, 55},
+               beam_3 = {288, 0, 96, 40}
+            }
+         },
+
+         anim_gene = {
+            image = "asset/anim_gene.png",
+            count_x = 5,
+            count_y = 2
+         },
+
+         anim_critical = {
+            image = "asset/anim_critical.png",
+            count_x = 6
+         },
+
          attribute_font = {
             type = "font",
             size = 13

@@ -71,12 +71,12 @@ function PagedListModel:select_page(page)
    end
 
    self.model:set_data(contents)
+   print("SELECT", self.selected, self.page, self.page_max)
 end
 
 function PagedListModel:set_data(items)
    self.items_ = items or self.items_
-   print(self.selected_, #self.items_)
-   self.selected_ = math.min(self.selected_, #self.items_)
+   self.selected_ = math.clamp(math.min(self.selected_, #self.items_), 1, #self.items_)
    self.page = math.ceil(self.selected_ / self.page_size) - 1
    self.page_max = math.max(0, math.ceil(#self.items_ / self.page_size) - 1)
 

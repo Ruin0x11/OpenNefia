@@ -54,22 +54,20 @@ function tile_overhang_layer:update(dt, screen_updated)
    local map = Map.current()
    assert(map ~= nil)
 
-   if map._tiles_dirty then
-      for i, t in map:iter_tiles() do
-         local x = (i-1) % map:width()
-         local y = math.floor((i-1) / map:width())
-         local id = t._id
+   for i, p in ipairs(map._tiles_dirty) do
+      local x = p[1]
+      local y = p[2]
+      local id = t._id
+      local m = map:memory(x, y)
 
-         if t.wall then
-            local one_tile_down = map:tile(x, y+1)
-            if one_tile_down ~= nil and not one_tile_down.wall then
-               id = t.wall
-            end
+      if m.wall then
+         local one_tile_down = map:tile(x, y+1)
+         if one_tile_down ~= nil and not one_tile_down.wall then
+            id = m.wall
          end
-
-         self.tile_batch:update_tile(x, y, id)
       end
-      map._tiles_dirty = false
+
+      self.tile_batch:update_tile(x, y, id)
    end
 
    self.tile_batch.shadow = calc_map_shadow(map, date.hour)

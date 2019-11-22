@@ -142,7 +142,7 @@ function Quest.generate_from_proto(proto_id, chara)
       if reward.params then
          for key, ty in pairs(reward.params) do
             if type(quest.reward[key]) ~= ty then
-               error(("Quest reward '%s' expects parameter '%s' of type '%s', got '%s'"):format(quest.reward._id, key, ty, type(quest.reward[key])))
+               error(("Quest reward '%s' expects parameter '%s' of type '%s', got '%s' (%s)"):format(quest.reward._id, key, ty, type(quest.reward[key]), proto._id))
             end
          end
       end

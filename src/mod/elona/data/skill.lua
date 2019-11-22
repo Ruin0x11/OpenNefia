@@ -118,6 +118,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 1,
    },
    {
       _id = "short_sword",
@@ -126,6 +128,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 1,
    },
    {
       _id = "axe",
@@ -134,6 +138,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 1,
    },
    {
       _id = "blunt",
@@ -150,6 +156,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 1,
    },
    {
       _id = "stave",
@@ -166,6 +174,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 1,
    },
    {
       _id = "bow",
@@ -174,7 +184,9 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
       is_main_skill = true,
+      attack_animation = 2,
    },
    {
       _id = "crossbow",
@@ -183,6 +195,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 2,
    },
    {
       _id = "firearm",
@@ -191,6 +205,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 2,
    },
    {
       _id = "throwing",
@@ -199,6 +215,8 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
+      attack_animation = 2,
    },
    {
       _id = "martial_arts",
@@ -207,6 +225,7 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
       is_main_skill = true,
 
       calc_damage_params = function(self, chara, weapon, target)
@@ -249,6 +268,7 @@ local skill = {
       ability_type = 0,
       cost = 0,
       range = 0,
+
       is_main_skill = true
    },
    {

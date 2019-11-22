@@ -30,6 +30,7 @@ function field_layer:init()
    self.loaded = false
    self.map_changed = false
    self.no_scroll = true
+   self.waiting_for_draw_callbacks = false
 
    local keys = KeyHandler:new(true)
    self.keys = InputHandler:new(keys)
@@ -99,7 +100,7 @@ function field_layer:set_map(map)
    assert(map.uid, "Map must have UID")
 
    self.map = map
-   self.map._tiles_dirty = true
+   self.map:redraw_all_tiles()
    self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
    self.map_changed = true
    self.no_scroll = true
@@ -131,6 +132,7 @@ end
 
 function field_layer:update_screen(scroll)
    if not self.is_active or not self.renderer then return end
+   local sw = require("api.Stopwatch"):new()
 
    if scroll == nil or self.no_scroll then
       scroll = false
@@ -156,6 +158,7 @@ function field_layer:update_screen(scroll)
          scroll_frames = player:calc("scroll") or scroll_frames
       end
    end
+
 
    if center_x then
       self.renderer:update_draw_pos(center_x, center_y, scroll_frames)
@@ -210,6 +213,20 @@ end
 
 function field_layer:add_async_draw_callback(cb)
    self.renderer:add_async_draw_callback(cb)
+end
+
+function field_layer:wait_for_draw_callbacks()
+   self.waiting_for_draw_callbacks = true
+end
+
+function field_layer:check_for_wait()
+   local has_cbs = self.renderer:has_draw_callbacks()
+   if has_cbs and self.waiting_for_draw_callbacks then
+      return true
+   end
+
+   self.waiting_for_draw_callbacks = false
+   return false
 end
 
 function field_layer:draw()

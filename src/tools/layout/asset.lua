@@ -304,6 +304,54 @@ local crop = {
       width = 48,
       height = 48,
    },
+   {
+      name = "melee_attack_debris",
+      source = "graphic/item.bmp",
+      x = 1104,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "melee_attack_blood",
+      source = "graphic/item.bmp",
+      x = 720,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "ranged_attack_arrow",
+      source = "graphic/item.bmp",
+      x = 48,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "ranged_attack_laser",
+      source = "graphic/item.bmp",
+      x = 624,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "ranged_attack_bullet",
+      source = "graphic/item.bmp",
+      x = 624,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "ranged_attack_magic_arrow",
+      source = "graphic/item.bmp",
+      x = 288,
+      y = 0,
+      width = 48,
+      height = 48,
+   },
 
    {
       name = "emotion_icons",
@@ -1048,6 +1096,18 @@ local function gen_convert(name, no_alpha)
    }
 end
 
+local function gen_anim(name, new_name, count_x, count_y)
+   return {
+      name = name,
+      type = "convert",
+      source = string.format("graphic/%s.bmp", name),
+      output = string.format("graphic/asset/%s.png", new_name),
+      count_x = count_x,
+      count_y = count_y or 1,
+      combine_multiple = true
+   }
+end
+
 local convert = {
    gen_convert("g1"),
    gen_convert("g2"),
@@ -1108,6 +1168,10 @@ local convert = {
    gen_convert("ie_sheet"),
    gen_convert("ie_chat"),
    gen_convert("ie_scroll"),
+
+   gen_anim("anime12", "anim_miracle", 10, 2),
+   gen_anim("anime13", "anim_gene", 5, 2),
+   gen_anim("anime28", "anim_critical", 6),
 }
 
 return {

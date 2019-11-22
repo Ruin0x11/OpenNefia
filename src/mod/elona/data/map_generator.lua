@@ -182,10 +182,11 @@ data:add {
       map.is_outdoor = true
       map.has_anchored_npcs = false
       map.default_ai_calm = 0
+      map.default_tile = "elona.wall_forest_fog"
 
       map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
 
-      return map, tile.field_type
+      return map, field_type
    end,
 
    almost_equals = function(self, other)

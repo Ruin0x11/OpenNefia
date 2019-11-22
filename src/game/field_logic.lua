@@ -320,6 +320,11 @@ function field_logic.run_one_event(event, target_chara)
       return false
    end
 
+   -- Wait for draw callbacks if necessary.
+   while field:check_for_wait() do
+      coroutine.yield()
+   end
+
    if field.map_changed == true then
       event = "turn_begin"
       field.map_changed = false

@@ -8,6 +8,8 @@ local Item = require("api.Item")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
+local Anim = require("mod.elona_sys.api.Anim")
+local UiTheme = require("api.gui.UiTheme")
 
 local ElonaAction = {}
 
@@ -22,8 +24,12 @@ local function shield_bash(chara, target)
    end
 end
 
+local function body_part_where_equipped(chara, flag)
+   return function(entry) return entry.equipped:calc(flag) end
+end
+
 function ElonaAction.get_melee_weapons(chara)
-   local pred = function(entry) return entry.equipped:calc("is_weapon") end
+   local pred = body_part_where_equipped "is_weapon"
    return chara:iter_body_parts():filter(pred):extract("equipped")
 end
 
@@ -41,7 +47,34 @@ function ElonaAction.melee_attack(chara, target)
    end
 
    if attack_number == 0 then
-      ElonaAction.physical_attack(chara, nil, target, "elona.martial_arts", 0, attack_number)
+      ElonaAction.physical_attack(chara, nil, target, "elona.martial_arts", 0, attack_number, false)
+   end
+end
+
+function ElonaAction.get_ranged_weapon_and_ammo(chara)
+   local pred = body_part_where_equipped "is_ranged_weapon"
+   local ranged = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+
+   pred = body_part_where_equipped "is_ammo"
+   local ammo = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+end
+
+function ElonaAction.ranged_attack(chara)
+   local target = require("mod.tools.api.Tools").enemy()
+   -- TODO ammo
+   if target then
+      local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+      if not weapon then
+         Gui.mes("No ranged weapon.")
+         return
+      end
+      if not ammo then
+         Gui.mes("No ammo.")
+         return
+      end
+
+      local skill = weapon:calc("skill")
+      ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo)
    end
 end
 
@@ -85,7 +118,36 @@ local function show_evade_text(chara, target, extra_attacks)
    end
 end
 
-local function do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged)
+local function play_ranged_animation(start_x, start_y, end_x, end_y, attack_skill, weapon)
+   local chip, sound
+   local t = UiTheme.load()
+
+   local color = {255, 255, 255}
+
+   if attack_skill == "elona.bow" then
+      chip = t.ranged_attack_arrow
+      sound = "base.bow1"
+   elseif attack_skill == "elona.crossbow" then
+      chip = t.ranged_attack_bolt
+      sound = "base.bow1"
+   elseif attack_skill == "elona.firearm" then
+      if table.set(weapon.proto.categories)["elona.equip_ranged_laser_gun"] then
+         chip = t.ranged_attack_laser
+         sound = "base.laser1"
+      else
+         chip = t.ranged_attack_bullet
+         sound = "base.gun1"
+      end
+   else
+      chip = weapon:copy_image()
+      sound = "base.throw1"
+   end
+
+   local cb = Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, nil)
+   Gui.start_draw_callback(cb)
+end
+
+local function do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
    if not Chara.is_alive(chara) or not Chara.is_alive(target) then
       return
    end
@@ -98,12 +160,13 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    -- mef
 
    if is_ranged then
-      -- animation
+      -- TODO: inherit color if weapon has enchantments
+      play_ranged_animation(chara.x, chara.y, target.x, target.y, attack_skill, weapon)
    end
 
    attack_skill = attack_skill or "elona.martial_arts"
 
-   local hit = Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_number, is_ranged)
+   local hit = Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_number, is_ranged, ammo)
    local did_hit = hit == "hit" or hit == "critical"
    local is_critical = hit == "critical"
 
@@ -117,12 +180,14 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
          end
       end
 
-      local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical)
+      local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
       local damage = raw_damage.damage
-      local play_animation = chara:is_player()
+      local play_animation = chara:is_player() or true
       if play_animation then
          local damage_percent = damage * 100 / target:calc("max_hp")
-         -- animation
+         local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0
+         local cb = Anim.melee_attack(target.x, target.y, target:calc("breaks_into_debris"), kind, damage_percent, is_critical)
+         Gui.start_draw_callback(cb)
       end
 
       local element, element_power
@@ -164,12 +229,12 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    chara:emit("elona.after_physical_attack", {weapon=weapon,target=target,hit=hit,is_ranged=is_ranged,attack_skill=attack_skill})
 end
 
-function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged)
+function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
    local attacks = extra_attacks
    local going
 
    repeat
-      do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged)
+      do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
       going = false
       if attacks == 0 then
          if is_ranged then

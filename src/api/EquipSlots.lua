@@ -13,9 +13,10 @@ function EquipSlots:init(body_parts, owner_uid)
 
    self.owner_uid = owner_uid
 
-   local init = function(i)
+   local init = function(_type)
+      data["base.body_part"]:ensure(_type)
       return {
-         type = i,
+         type = _type,
          equipped = nil
       }
    end
@@ -125,7 +126,8 @@ end
 --- Adds a new body part.
 -- @tparam base.body_part _type
 function EquipSlots:add_body_part(_type)
-   self.body_parts[self.body_parts+1] = { type = _type }
+   data["base.body_part"]:ensure(_type)
+   self.body_parts[self.body_parts+1] = { type = _type, equipped = nil }
 end
 
 --- Removes a body part at slot. Fails if an item is equipped there;

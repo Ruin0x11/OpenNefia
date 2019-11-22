@@ -81,7 +81,7 @@ local item =
          subcategory = 10002,
          coefficient = 100,
 
-         skill = 100,
+         skill = "elona.long_sword",
          pierce_rate = 5,
          categories = {
             "elona.equip_melee_long_sword"
@@ -104,7 +104,7 @@ local item =
          subcategory = 10003,
          coefficient = 100,
 
-         skill = 101,
+         skill = "elona.short_sword",
          pierce_rate = 10,
          categories = {
             "elona.equip_melee_short_sword"
@@ -126,7 +126,7 @@ local item =
          subcategory = 10009,
          coefficient = 100,
 
-         skill = 102,
+         skill = "elona.axe",
 
          categories = {
             "elona.equip_melee_hand_axe"
@@ -148,7 +148,7 @@ local item =
          subcategory = 10004,
          coefficient = 100,
 
-         skill = 103,
+         skill = "elona.blunt",
 
          categories = {
             "elona.equip_melee_club"
@@ -1155,7 +1155,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -1193,7 +1193,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -1228,7 +1228,7 @@ local item =
          subcategory = 24001,
          coefficient = 100,
 
-         skill = 108,
+         skill = "elona.bow",
 
          gods = { "elona.lulwy" },
 
@@ -1255,7 +1255,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -1277,7 +1277,7 @@ local item =
          subcategory = 24020,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          gods = { "elona.mani" },
 
@@ -1306,7 +1306,7 @@ local item =
          subcategory = 25001,
          coefficient = 100,
 
-         skill = 108,
+         skill = "elona.bow",
 
          categories = {
             "elona.equip_ammo",
@@ -1329,7 +1329,7 @@ local item =
          subcategory = 25020,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          tags = { "sf" },
 
@@ -1357,7 +1357,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 107,
+         skill = "elona.scythe",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -1398,7 +1398,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -1609,7 +1609,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
          { id = 37, power = 100 },
 
          is_precious = true,
@@ -1883,7 +1883,7 @@ local item =
          coefficient = 100,
          light = 10,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 200,
          categories = {
@@ -3919,7 +3919,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 101,
+         skill = "elona.short_sword",
 
          _copy = {
             enchantments = {
@@ -3960,7 +3960,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 108,
+         skill = "elona.bow",
 
          _copy = {
             enchantments = {
@@ -4032,7 +4032,7 @@ local item =
          subcategory = 24030,
          coefficient = 100,
 
-         skill = 111,
+         skill = "elona.throwing",
 
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
          pierce_rate = 5,
@@ -4056,7 +4056,7 @@ local item =
          subcategory = 10011,
          coefficient = 100,
 
-         skill = 107,
+         skill = "elona.scythe",
 
          _copy = {
             enchantments = {
@@ -4085,7 +4085,7 @@ local item =
          subcategory = 10006,
          coefficient = 100,
 
-         skill = 105,
+         skill = "elona.stave",
 
          gods = { "elona.itzpalt" },
 
@@ -4110,7 +4110,7 @@ local item =
          subcategory = 10007,
          coefficient = 100,
 
-         skill = 104,
+         skill = "elona.polearm",
          pierce_rate = 25,
          categories = {
             "elona.equip_melee_lance"
@@ -4280,7 +4280,7 @@ local item =
          subcategory = 10002,
          coefficient = 100,
 
-         skill = 100,
+         skill = "elona.long_sword",
          pierce_rate = 20,
          categories = {
             "elona.equip_melee_long_sword"
@@ -4303,7 +4303,7 @@ local item =
          subcategory = 10003,
          coefficient = 100,
 
-         skill = 101,
+         skill = "elona.short_sword",
          pierce_rate = 10,
          categories = {
             "elona.equip_melee_short_sword"
@@ -4325,7 +4325,7 @@ local item =
          subcategory = 10010,
          coefficient = 100,
 
-         skill = 102,
+         skill = "elona.axe",
 
          categories = {
             "elona.equip_melee_axe"
@@ -4347,7 +4347,7 @@ local item =
          subcategory = 10005,
          coefficient = 100,
 
-         skill = 103,
+         skill = "elona.blunt",
 
          categories = {
             "elona.equip_melee_hammer"
@@ -4370,7 +4370,7 @@ local item =
          subcategory = 10007,
          coefficient = 100,
 
-         skill = 104,
+         skill = "elona.polearm",
          pierce_rate = 25,
          categories = {
             "elona.equip_melee_lance"
@@ -4393,7 +4393,7 @@ local item =
          subcategory = 10006,
          coefficient = 100,
 
-         skill = 105,
+         skill = "elona.stave",
 
          gods = { "elona.itzpalt" },
 
@@ -4417,7 +4417,7 @@ local item =
          subcategory = 24001,
          coefficient = 100,
 
-         skill = 108,
+         skill = "elona.bow",
 
          gods = { "elona.lulwy" },
 
@@ -4445,7 +4445,7 @@ local item =
          subcategory = 24020,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          gods = { "elona.mani" },
 
@@ -4474,7 +4474,7 @@ local item =
          subcategory = 10001,
          coefficient = 100,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          categories = {
             "elona.equip_melee_broadsword"
@@ -4511,7 +4511,7 @@ local item =
          subcategory = 10010,
          coefficient = 100,
 
-         skill = 102,
+         skill = "elona.axe",
 
          categories = {
             "elona.equip_melee_axe"
@@ -4533,7 +4533,7 @@ local item =
          subcategory = 10008,
          coefficient = 100,
 
-         skill = 104,
+         skill = "elona.polearm",
          pierce_rate = 30,
          categories = {
             "elona.equip_melee_halberd"
@@ -4941,7 +4941,7 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 110,
 
@@ -5196,7 +5196,7 @@ local item =
          subcategory = 10003,
          coefficient = 100,
 
-         skill = 101,
+         skill = "elona.short_sword",
          pierce_rate = 5,
          categories = {
             "elona.equip_melee_short_sword"
@@ -6769,7 +6769,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 103,
+         skill = "elona.blunt",
 
          _copy = {
             enchantments = {
@@ -6851,7 +6851,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 105,
+         skill = "elona.stave",
 
          _copy = {
             enchantments = {
@@ -6892,7 +6892,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 104,
+         skill = "elona.polearm",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -8954,7 +8954,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -8975,7 +8975,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -8996,7 +8996,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -9017,7 +9017,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -9038,7 +9038,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -9059,7 +9059,7 @@ local item =
          subcategory = 14003,
          coefficient = 100,
 
-         skill = 168,
+         skill = "elona.shield",
 
          categories = {
             "elona.equip_shield_shield"
@@ -9591,7 +9591,7 @@ local item =
          subcategory = 24003,
          coefficient = 100,
 
-         skill = 109,
+         skill = "elona.crossbow",
 
          gods = { "elona.lulwy" },
 
@@ -9619,7 +9619,7 @@ local item =
          subcategory = 25002,
          coefficient = 100,
 
-         skill = 109,
+         skill = "elona.crossbow",
 
          categories = {
             "elona.equip_ammo",
@@ -9881,7 +9881,7 @@ local item =
          subcategory = 24020,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          gods = { "elona.mani" },
 
@@ -10220,7 +10220,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          gods = { "elona.mani" },
 
@@ -10248,7 +10248,7 @@ local item =
          subcategory = 25030,
          coefficient = 100,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          tags = { "sf" },
 
@@ -10278,7 +10278,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -12662,7 +12662,7 @@ local item =
          rarity = 10000,
          coefficient = 100,
 
-         skill = 111,
+         skill = "elona.throwing",
          effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 5,
          enchantments = {
             { id = 70054, power = 800 }
@@ -13399,7 +13399,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 108,
+         skill = "elona.bow",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13439,7 +13439,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13479,7 +13479,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 107,
+         skill = "elona.scythe",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13522,7 +13522,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 105,
+         skill = "elona.stave",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13565,7 +13565,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 104,
+         skill = "elona.polearm",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13604,7 +13604,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 101,
+         skill = "elona.short_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13643,7 +13643,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 103,
+         skill = "elona.blunt",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13903,7 +13903,7 @@ local item =
          rarity = 350000,
          coefficient = 100,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 150,
 
@@ -13926,7 +13926,7 @@ local item =
          rarity = 400000,
          coefficient = 100,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 130,
 
@@ -13948,7 +13948,7 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 70,
 
@@ -13971,7 +13971,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         skill = 183,
+         skill = "elona.performer",
          elona_function = 17,
          param1 = 175,
          categories = {
@@ -14009,7 +14009,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 102,
+         skill = "elona.axe",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14263,7 +14263,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 183,
+         skill = "elona.performer",
 
          elona_function = 17,
          is_precious = true,
@@ -14414,7 +14414,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         skill = 111,
+         skill = "elona.throwing",
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 15,
          enchantments = {
             { id = 70061, power = 100 }
@@ -14439,7 +14439,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         skill = 111,
+         skill = "elona.throwing",
          effective_range = { 80, 100, 90, 80, 60, 20, 20, 20, 20, 20 },
          pierce_rate = 0,
          enchantments = {
@@ -14485,7 +14485,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 111,
+         skill = "elona.throwing",
          is_precious = true,
          identify_difficulty = 500,
          fixlv = "special",
@@ -14533,7 +14533,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 111,
+         skill = "elona.throwing",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14574,7 +14574,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14743,7 +14743,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 111,
+         skill = "elona.throwing",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14780,7 +14780,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 168,
+         skill = "elona.shield",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14816,7 +14816,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 168,
+         skill = "elona.shield",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15013,7 +15013,7 @@ local item =
          subcategory = 10011,
          coefficient = 100,
 
-         skill = 107,pierce_rate = 5,enchantments = {
+         skill = "elona.scythe",pierce_rate = 5,enchantments = {
             { id = 80025, power = 100 }
          },categories = {
             "elona.equip_melee_scythe"
@@ -15106,7 +15106,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 107,
+         skill = "elona.scythe",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15175,7 +15175,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15576,7 +15576,7 @@ local item =
          coefficient = 100,
          light = 9,
 
-         skill = 110,
+         skill = "elona.firearm",
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15613,7 +15613,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         skill = 100,
+         skill = "elona.long_sword",
          pierce_rate = 100,
          categories = {
             "elona.equip_melee_long_sword"
@@ -15655,7 +15655,7 @@ local item =
          coefficient = 100,
          light = 10,
 
-         skill = 183,
+         skill = "elona.performer",
 
          elona_function = 17,
          is_precious = true,
@@ -16014,7 +16014,7 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
-         skill = 101,
+         skill = "elona.short_sword",
          pierce_rate = 40,
          categories = {
             "elona.equip_melee_short_sword"
@@ -16133,7 +16133,7 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
-         skill = 108,
+         skill = "elona.bow",
 
          gods = { "elona.lulwy" },
 
@@ -16205,7 +16205,7 @@ local item =
          subcategory = 10001,
          coefficient = 100,
 
-         skill = 100,
+         skill = "elona.long_sword",
 
          is_precious = true,
          identify_difficulty = 500,

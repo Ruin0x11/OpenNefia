@@ -24,10 +24,10 @@ local function make_tostring(kind, tbl)
    return function(self)
       if self.__class then
          return string.format("instance of '%s'",
-                              rawget(self.__class,'name') or '?')
+                              rawget(self.__class,'__name') or '?')
       end
       return tbl[self]
-         and string.format("%s '%s'", kind, rawget(self, "name") or "?")
+         and string.format("%s '%s'", kind, rawget(self, "__name") or "?")
          or self
    end
 end
@@ -62,13 +62,13 @@ function class.interface(name, reqs, parents)
    _interfaces[i] = tostring(i)
 
    i.__index = i
-   i.name = name
+   i.__name = name
    i.reqs = reqs or {}
    i.methods = {}
    i.all_methods = {}
 
    i.delegate = function(i, field, params)
-      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
+      if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.__name .. "." .. field .. ": " .. tostring(params)) end
       if _interfaces[params] or type(params) == "string" then params = {params} end
       for _, k in ipairs(params) do
          i.methods[k] = function(self, ...)
@@ -88,11 +88,11 @@ function class.interface(name, reqs, parents)
       end
       i.reqs = table.merge(table.deepcopy(p.reqs), i.reqs)
       i.all_methods = table.merge(table.deepcopy(p.all_methods), i.all_methods)
-      i.parents[#i.parents+1] = p
+      i.__parents[#i.__parents+1] = p
       _iface_children[p][i] = true
    end
 
-   i.parents = {}
+   i.__parents = {}
    if parents then
       if _interfaces[parents] then parents = {parents} end
       if parents[1] == nil then
@@ -108,7 +108,7 @@ function class.interface(name, reqs, parents)
    _iface_children[i] = _iface_children[i] or setmetatable({}, { __mode = "k" })
 
    if not binser.hasResource(name) and not binser.hasRegistry(name) then
-      binser.registerClass(i)
+      binser.registerClass(i, name)
    end
 
    return setmetatable(i, iface_mt)
@@ -162,7 +162,7 @@ end
 local function delegate(c, field, params)
    local set = {}
 
-   if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.name .. "." .. field .. ": " .. tostring(params)) end
+   if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.__name .. "." .. field .. ": " .. tostring(params)) end
    if _interfaces[params] or type(params) == "string" then params = {params} end
    for _, v in ipairs(params) do
       if _interfaces[v] then
@@ -178,11 +178,20 @@ end
 
 function class.is_an(interface, obj)
    if type(obj) ~= "table" then
-      return false
+      return false, "not a table"
    end
 
    if _classes[interface] then
-      return type(obj) == "table" and obj.__class == interface
+      local result = obj.__class == interface
+      if not result then
+         local name = obj.__class
+         if type(name) == "table" then
+            name = obj.__class.__name
+         end
+         return false, ("Needed class '%s', got '%s'"):format(interface.__name, name)
+      end
+
+      return true
    end
 
    local err = verify(obj, interface)
@@ -191,24 +200,16 @@ function class.is_an(interface, obj)
 end
 
 function class.assert_is_an(interface, obj)
-   if _classes[interface] then
-      local klass = interface
-      if type(obj) ~= "table" or obj.__class ~= klass then
-         error(string.format("%s (%s) is not an instance of %s", obj, type(obj), klass))
-      end
-      return
-   end
-
-   local err = verify(obj, interface)
-   if err then
-      error(string.format("%s should implement %s: %s", obj, interface, err))
+   local ok, err = class.is_an(interface, obj)
+   if not ok then
+      error(string.format("%s (%s) is not an instance of %s: %s", obj, type(obj), interface, err))
    end
 end
 
 local function copy_all_interface_methods_to_class(klass)
    klass.__interface_methods = {}
 
-   for _, iface in ipairs(klass.interfaces) do
+   for _, iface in ipairs(klass.__interfaces) do
       for k, v in pairs(iface.all_methods) do
          if not klass.__interface_methods[k] then
             klass.__interface_methods[k] = v
@@ -330,10 +331,10 @@ function class.class(name, ifaces)
 
    c.__verify = true
 
-   c.name = name
+   c.__name = name
 
    if _interfaces[ifaces] then ifaces = {ifaces} end
-   c.interfaces = ifaces or {}
+   c.__interfaces = ifaces or {}
    c.__interface_methods = {}
 
    copy_all_interface_methods_to_class(c)
@@ -358,7 +359,7 @@ function class.class(name, ifaces)
    end
 
    c.new = function(self, ...)
-      if type(self) ~= "table" or self.name ~= name then
+      if type(self) ~= "table" or self.__name ~= name then
          error("Call new() with colon (:) syntax.")
       end
 
@@ -372,8 +373,8 @@ function class.class(name, ifaces)
          c.init(instance, ...)
       end
 
-      if c.__verify and c.interfaces then
-         for _, i in ipairs(c.interfaces) do
+      if c.__verify and c.__interfaces then
+         for _, i in ipairs(c.__interfaces) do
             class.assert_is_an(i, instance)
          end
       end
@@ -382,7 +383,7 @@ function class.class(name, ifaces)
    end
 
    if not binser.hasResource(name) and not binser.hasRegistry(name) then
-      binser.registerClass(c)
+      binser.registerClass(c, name)
    end
 
    return setmetatable(c, root_mt)
@@ -395,21 +396,21 @@ end
 function class.uses_interface(klass_or_iface, iface)
    local ifaces
    if _interfaces[klass_or_iface] then
-      ifaces = klass_or_iface.parents
+      ifaces = klass_or_iface.__parents
    else
-      ifaces = klass_or_iface.interfaces
+      ifaces = klass_or_iface.__interfaces
    end
 
    for _, i in ipairs(ifaces) do
       if iface == i then
-         print("find " .. " " .. klass_or_iface.name .. " " .. iface.name .. " " .. i.name)
+         print("find " .. " " .. klass_or_iface.__name .. " " .. iface.__name .. " " .. i.__name)
          return true
       end
 
       local children = _iface_children[iface] or {}
       for _, child in ipairs(children) do
          if class.uses_interface(klass_or_iface, child) then
-            print("find " .. " " .. klass_or_iface.name .. " " .. iface.name .. " " .. i.name)
+            print("find " .. " " .. klass_or_iface.__name .. " " .. iface.__name .. " " .. i.__name)
             return true
          end
       end
@@ -424,7 +425,7 @@ local function copy_all_interface_methods_to_children(iface)
       child.reqs = table.merge(table.deepcopy(iface.reqs), child.reqs)
 
       child.all_methods = {}
-      for _, parent in ipairs(child.parents) do
+      for _, parent in ipairs(child.__parents) do
          for k, v in pairs(parent.all_methods) do
             child.all_methods[k] = v
          end
@@ -498,7 +499,7 @@ function class.hotload(old, new)
       -- interfaces will also have the methods from each interface
       -- they use regenerated from scratch also.
 
-      for _, iface in ipairs(old.parents) do
+      for _, iface in ipairs(old.__parents) do
          _iface_children[iface][old] = nil
       end
 
@@ -509,7 +510,7 @@ function class.hotload(old, new)
          rawset(old, k, v)
       end
 
-      for _, iface in ipairs(old.parents) do
+      for _, iface in ipairs(old.__parents) do
          _iface_children[iface][old] = true
       end
 

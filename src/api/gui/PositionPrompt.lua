@@ -128,7 +128,7 @@ end
 
 function PositionPrompt:draw()
    Gui.set_camera_pos(self.target_x, self.target_y)
-   local x, y = Draw.get_coords():tile_to_screen(self.target_x+1, self.target_y+1)
+   local x, y = Gui.tile_to_screen(self.target_x, self.target_y)
    local draw_x, draw_y, scx, scy = Gui.field_draw_pos()
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
    love.graphics.setBlendMode("add")
@@ -136,7 +136,7 @@ function PositionPrompt:draw()
 
    if should_draw_line(self.origin_x, self.origin_y, self.target_x, self.target_y) then
       for _, tx, ty in  Pos.iter_line(self.origin_x, self.origin_y, self.target_x, self.target_y) do
-         local x, y = Draw.get_coords():tile_to_screen(tx+1, ty+1)
+         local x, y = Gui.tile_to_screen(tx, ty)
          Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {255, 255, 255, 25})
       end
    end

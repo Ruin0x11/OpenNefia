@@ -67,6 +67,9 @@ function Feat.create(id, x, y, params, where)
       if not feat then
          return nil, "location failed to receive feat"
       end
+      print(where.__class.__name)
+      assert(feat.location == where)
+      assert(feat:current_map())
    end
 
    feat:refresh()

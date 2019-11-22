@@ -243,6 +243,7 @@ data:add {
    end,
 
    on_activate = function(self, chara)
+      assert(self:current_map())
       if not chara:is_player() then
          return
       end

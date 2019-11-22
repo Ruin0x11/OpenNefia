@@ -1,11 +1,7 @@
 Tools = require("mod.tools.api.Tools")
 Itemgen = require("mod.tools.api.Itemgen")
+Charagen = require("mod.tools.api.Charagen")
 Compat = require("mod.elona_sys.api.Compat")
-Combat = require("mod.elona.api.Combat")
-ElonaAction = require("mod.elona.api.ElonaAction")
-ElonaCommand = require("mod.elona.api.ElonaCommand")
-Skill = require("mod.elona_sys.api.Skill")
-Dialog = require("mod.elona_sys.dialog.api.Dialog")
 
 Log.set_level("debug")
 

@@ -48,7 +48,7 @@ function I18N.get(text, ...)
          args[i] = arg
       end
    end
-   return i18n.get(text, table.unpack(args))
+   return i18n.get(text, table.unpack(args)) or ("<error: %s>"):format(text)
 end
 
 --- Switches the current language.

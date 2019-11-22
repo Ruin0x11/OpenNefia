@@ -40,16 +40,31 @@ function Gui.field_draw_pos()
    return field.renderer:draw_pos()
 end
 
+--- Starts a draw callback to be run asynchronously.
+function Gui.start_draw_callback(cb)
+   field:add_async_draw_callback(cb)
+
+   -- TODO: make configurable
+   Gui.wait_for_draw_callbacks()
+end
+
+--- Waits for all draw callbacks to finish before continuing.
+function Gui.wait_for_draw_callbacks()
+   field:wait_for_draw_callbacks()
+end
+
 --- Converts from map tile space to screen space.
 ---
---- @tparam int tx
---- @tparam int ty
+--- @tparam int tx Tile X coordinate
+--- @tparam int ty Tile Y coordinate
 function Gui.tile_to_screen(tx, ty)
-   local x, y = draw.get_coords():tile_to_screen(tx + 1, ty + 1)
-   local tile_width, tile_height = draw.get_coords():get_size()
-   x = x + tile_width / 2
-   y = y + tile_height / 2
-   return x, y
+   return draw.get_coords():tile_to_screen(tx+1, ty+1)
+end
+
+--- Returns the screen Y coordinate of the message window. Use for
+--- checking occlusion of a point with the message window.
+function Gui.message_window_y()
+return Draw.get_width() - 72
 end
 
 function Gui.scroll_screen()

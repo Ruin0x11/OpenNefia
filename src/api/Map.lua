@@ -325,8 +325,9 @@ function Map.generate(generator_id, params, opts)
    if not success then
       return nil, map
    end
-   if not class.is_an(InstancedMap, map) then
-      return nil, "result of map_generator:generate must be a map and string ID"
+   local ok, err = class.is_an(InstancedMap, map)
+   if not ok then
+      return nil, ("result of map_generator:generate must be a map and string ID (%s)"):format(err)
    end
    if type(id) ~= "string" then
       return nil, ("map ID '%s' must be string (got: %s)"):format(tostring(id), type(id))

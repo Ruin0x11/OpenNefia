@@ -182,7 +182,7 @@ function Draw.image_region(image, quad, x, y, width, height, color, centered, ro
    return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
 end
 
-function Draw.image_stretched(image, x, y, tx, ty, color, rotation)
+function Draw.image_stretched(image, x, y, tx, ty, color, centered, rotation)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
@@ -195,7 +195,7 @@ function Draw.image_stretched(image, x, y, tx, ty, color, rotation)
    return love.graphics.draw(image, x, y, math.rad(rotation or 0), sx, sy)
 end
 
-function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, rotation)
+function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, centered, rotation)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end

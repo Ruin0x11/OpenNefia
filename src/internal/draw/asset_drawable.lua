@@ -26,16 +26,25 @@ function asset_drawable:init(data_inst)
    if count_x ~= 1 or count_y ~= 1 then
       local w = iw / count_x
       local h = ih / count_y
+
+      local q = 1
       for j=1,count_y do
          for i=1,count_x do
-            self.quads[i] = love.graphics.newQuad(w * (i - 1),
+            self.quads[q] = love.graphics.newQuad(w * (i - 1),
                                                   h * (j - 1),
                                                   w, h, iw, ih)
+            q = q + 1
          end
       end
    end
 
    self.regions = data_inst.regions
+
+   if type(self.regions) == "table" then
+      for k, v in pairs(self.regions) do
+         self.quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
+      end
+   end
 end
 
 function asset_drawable:make_batch(parts, width, height)
@@ -79,6 +88,9 @@ end
 
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
    if (table.count(self.quads) == 0 or width or height) then
+      -- BUG: These regions are global to all assets. What happens is
+      -- an asset that is loaded on one layer igets modified when
+      -- another layer draws and it glitches out.
       local regions = self.regions
       if type(self.regions) == "function" then
          local width = width or self.image:getWidth()

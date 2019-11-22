@@ -280,7 +280,6 @@ function profile.report(s, n)
         end
      end
   end
-  _ppr(total)
   out = {}
   for _, v in pairs(total) do
      out[#out+1] = v
