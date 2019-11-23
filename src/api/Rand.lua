@@ -11,7 +11,7 @@ end
 --- @tparam int a
 --- @tparam int b
 function Rand.between(a, b)
-   return math.random(math.floor(a), math.floor(b) - 1)
+   return math.random(math.floor(a), math.floor(a+b) - 1)
 end
 
 function Rand.one_in(n)

@@ -10,6 +10,13 @@ data:add_type {
    },
 }
 
+data:extend_type(
+   "base.map_tile",
+   {
+      field_type = schema.Optional(schema.String),
+   }
+)
+
 local function create_junk_items(map)
    local stood_map_tile = true
    if stood_map_tile then
@@ -36,6 +43,9 @@ data:add_multi(
       {
          _id = "plains",
 
+         default_tile = "elona.grass",
+         fog = "elona.wall_stone_1_fog",
+
          tiles = {
             { id = "elona.grass_violets", density = 10 },
             { id = "elona.grass_rocks", density = 2 },
@@ -54,6 +64,9 @@ data:add_multi(
       {
          _id = "forest",
 
+         default_tile = "elona.grass_bush_1",
+         fog = "elona.wall_stone_1_fog",
+
          tiles = {
             { id = "elona.grass_bush_2", density = 25 },
             { id = "elona.grass", density = 10 },
@@ -70,12 +83,18 @@ data:add_multi(
       {
          _id = "sea",
 
+         default_tile = "elona.cracked_dirt_1",
+         fog = "elona.wall_stone_1_fog",
+
          generate = function(self, map)
             map.name = "sea"
          end
       },
       {
          _id = "grassland",
+
+         default_tile = "elona.grass_tall_1",
+         fog = "elona.wall_stone_1_fog",
 
          tiles = {
             { id = "elona.grass_bush_3", density = 10 },
@@ -97,6 +116,9 @@ data:add_multi(
       {
          _id = "desert",
 
+         default_tile = "elona.desert",
+         fog = "elona.wall_stone_4_fog",
+
          tiles = {
             { id = "elona.desert_rocks_3", density = 25 },
             { id = "elona.desert_rocks_2", density = 10 },
@@ -113,6 +135,9 @@ data:add_multi(
       },
       {
          _id = "snow_field",
+
+         default_tile = "elona.snow",
+         fog = "elona.wall_stone_5_fog",
 
          tiles = {
             { id = "elona.snow_clumps_2", density = 4 },
@@ -159,7 +184,7 @@ data:add {
       end
 
       local map = InstancedMap:new(width, height)
-      map:clear("elona.grass")
+      map:clear(field.default_tile)
 
       if field.tiles then
          for _, v in ipairs(field.tiles) do
@@ -176,13 +201,14 @@ data:add {
 
       map.types = { "field" }
       map.tile_type = 4
+      map.max_crowd_density = 4
       map.turn_cost = 10000
       map.danger_level = 1
       map.deepest_dungeon_level = 1
       map.is_outdoor = true
       map.has_anchored_npcs = false
       map.default_ai_calm = 0
-      map.default_tile = "elona.wall_forest_fog"
+      map.default_tile = field.fog
 
       map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
 

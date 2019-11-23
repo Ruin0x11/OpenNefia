@@ -393,10 +393,13 @@ function Tools.print_memory(map)
    return res
 end
 
-local Dungeon = require("mod.elona.api.Dungeon")
-
 function Tools.dungeon(kind, params)
-   local success, map = Map.generate("elona.dungeon_template")
+   params = params or {}
+   params.id = kind
+   params.dungeon_level = params.dungeon_level or 1
+   params.deepest_dungeon_level = params.deepest_dungeon_level or 5
+   params.tileset = params.tileset or "elona.dungeon"
+   local success, map = Map.generate("elona.dungeon_template", params)
 
    assert(success, map)
 

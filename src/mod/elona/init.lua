@@ -1,11 +1,4 @@
 data:extend_type(
-   "base.map_tile",
-   {
-      field_type = schema.Optional(schema.String),
-   }
-)
-
-data:extend_type(
    "base.element",
    {
       preserves_sleep = schema.Boolean,
@@ -45,6 +38,7 @@ require("mod.elona.data.scenario")
 require("mod.elona.data.chip")
 require("mod.elona.data.map_tile")
 require("mod.elona.data.map_template")
+require("mod.elona.data.map_tileset")
 require("mod.elona.data.map_generator")
 require("mod.elona.data.element")
 require("mod.elona.data.effect")

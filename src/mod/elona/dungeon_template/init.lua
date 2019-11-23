@@ -8,6 +8,8 @@ local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Filters = require("mod.elona.api.Filters")
 local Calc = require("mod.elona.api.Calc")
+local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 data:add_type {
    name = "dungeon_template",
@@ -22,7 +24,7 @@ data:add_multi(
       {
          _id = "mapgen_floor",
          image = "mod/elona/graphic/map_tile/0_0.png",
-         is_solid = false
+         is_solid = true
       },
       {
          _id = "mapgen_tunnel",
@@ -59,27 +61,12 @@ local function connect_stairs(map, outer_map, area_uid, dungeon_level)
 
    pred = function(feat) return feat._id == "elona.stairs_up" end
    local up = map:iter_feats():filter(pred):nth(1)
-   assert(up)
-   up._outer_map_id = outer_map.uid
-
-   return up.x, up.y
-end
-
-local function convert_tiles(map)
-   local lookup = {
-      ["elona.mapgen_floor"] = "elona.hardwood_floor_1",
-      ["elona.mapgen_tunnel"] = "elona.red_floor",
-      ["elona.mapgen_wall"] = "elona.wall_decor_top",
-      ["elona.mapgen_room"] = "elona.cyber_1",
-      ["elona.mapgen_floor_2"] = "elona.hardwood_floor_1",
-   }
-
-   for _, x, y in Pos.iter_rect(0, 0, map:width() - 1, map:height() - 1) do
-      local old = Map.tile(x, y, map)._id
-      local new = lookup[old]
-      assert(new, old)
-      Map.set_tile(x, y, new, map)
+   if up then
+      up._outer_map_id = outer_map.uid
+      return { x = up.x, y = up.y }
    end
+
+   return nil
 end
 
 local function generate_dungeon_raw(id, width, height, gen_params)
@@ -218,24 +205,29 @@ local function generate_dungeon(self, params, opts)
    end
 
    assert(params.dungeon_level)
+   -- TODO
+   -- assert(params.outer_map_id)
    local dungeon_level = params.dungeon_level
-
-   local gen_params = {
-      min_size = 3,
-      max_size = 4,
-      room_count = 3,
-      room_entrance_count = 1,
-      hidden_path_chance = 5,
-      creature_packs = 1,
-      dungeon_level = dungeon_level,
-      deepest_dungeon_level = deepest_dungeon_level
-   }
+   local gen_params
 
    while true do
       local id = params.id
       assert(id)
       local width = params.width or 34 + Rand.rnd(15)
       local height = params.height or 22 + Rand.rnd(15)
+
+      gen_params = {
+         min_size = 3,
+         max_size = 4,
+         room_count = 3,
+         extra_room_count = 10,
+         room_entrance_count = 1,
+         tunnel_length = width * height,
+         hidden_path_chance = 5,
+         creature_packs = 1,
+         dungeon_level = dungeon_level,
+         deepest_dungeon_level = deepest_dungeon_level
+      }
 
       local err
       dungeon, err = generate_dungeon_raw(id, width, height, gen_params)
@@ -245,19 +237,22 @@ local function generate_dungeon(self, params, opts)
       end
    end
 
-   convert_tiles(dungeon)
+   if params.tileset then
+      MapTileset.apply(params.tileset, dungeon)
+   end
 
    opts.area.deepest_dungeon_level = params.deepest_dungeon_level
 
    dungeon.dungeon_level = params.dungeon_level
    assert(dungeon.dungeon_level)
 
-   local start_x, start_y = connect_stairs(dungeon, opts.outer_map, opts.area.uid, params.dungeon_level)
+   local start_pos = connect_stairs(dungeon, opts.outer_map, opts.area.uid, params.dungeon_level)
 
-   dungeon.player_start_pos = {
-      x = start_x,
-      y = start_y
-   }
+   if start_pos then
+      dungeon.player_start_pos = start_pos
+   else
+      dungeon.player_start_pos = { math.floor(dungeon:width() / 2), math.floor(dungeon:height() / 2) }
+   end
 
    local template = data["elona.dungeon_template"]:ensure(params.id)
 
@@ -318,14 +313,24 @@ local function generate_dungeon(self, params, opts)
    if opts.area.outer_map_id == "elona.lesimas" then
    end
 
-   return dungeon
+   local gen_id = string.format("%s_%d_%d", params.id, params.dungeon_level, params.deepest_dungeon_level)
+
+   return dungeon, gen_id
 end
 
 data:add {
    _type = "base.map_generator",
    _id = "dungeon_template",
 
-   params = {id = "string", width = "number", height = "number", dungeon_level = "number", deepest_dungeon_level = "number", area_id = "string"},
+   params = {
+      id = "string",
+      width = "number",
+      height = "number",
+      dungeon_level = "number",
+      deepest_dungeon_level = "number",
+      area_id = "string"
+   },
+
    generate = generate_dungeon,
 
    almost_equals = table.deepcompare

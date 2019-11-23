@@ -398,12 +398,12 @@ function InstancedMap:memorize_tile(x, y)
    self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
 end
 
-function InstancedMap:reveal_tile(x, y)
+function InstancedMap:reveal_tile(x, y, tile)
    local memory = self._memory
    local ind = y * self._width + x + 1;
 
    memory["base.map_tile"] = memory["base.map_tile"] or {}
-   memory["base.map_tile"][ind] = { self:tile(x, y) }
+   memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
 end
 
 function InstancedMap:iter_memory(_type)

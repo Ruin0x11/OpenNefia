@@ -1502,6 +1502,24 @@ data:add_multi(
          image = "mod/elona/graphic/map_tile/1_11.png"
       },
       {
+         _id = "cracked_dirt_1",
+         elona_id = 12,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_12.png"
+      },
+      {
+         _id = "cracked_dirt_2",
+         elona_id = 13,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_13.png"
+      },
+      {
+         _id = "room_default",
+         elona_id = 14,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_14.png"
+      },
+      {
          _id = "desert_rocks_1",
          elona_id = 16,
          elona_atlas = 1,
@@ -1575,6 +1593,12 @@ data:add_multi(
          elona_id = 35,
          elona_atlas = 1,
          image = "mod/elona/graphic/map_tile/1_35.png"
+      },
+      {
+         _id = "dark_dirt_4",
+         elona_id = 36,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_36.png"
       },
       {
          _id = "destroyed",
@@ -1753,6 +1777,18 @@ data:add_multi(
          elona_id = 66,
          elona_atlas = 1,
          image = "mod/elona/graphic/map_tile/1_66.png"
+      },
+      {
+         _id = "tower_of_fire_tile_2",
+         elona_id = 67,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_67.png"
+      },
+      {
+         _id = "tower_of_fire_tile_3",
+         elona_id = 68,
+         elona_atlas = 1,
+         image = "mod/elona/graphic/map_tile/1_68.png"
       },
       {
          _id = "hardwood_floor_1",

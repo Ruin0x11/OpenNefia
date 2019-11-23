@@ -8,12 +8,14 @@ data:add_type {
    name = "map_template",
    schema = schema.Record {
       map = schema.String,
-      copy_to_map = schema.Optional(schema.Table),
+      elona_id = schema.Optional(schema.Number),
+      copy = schema.Optional(schema.Table),
       areas = schema.Optional(schema.Table),
       objects = schema.Optional(schema.Table),
       on_generate = schema.Optional(schema.Function),
    }
 }
+data:add_index("elona_sys.map_template", "elona_id")
 
 --- Obtains the map generation parameters for an entry in the "areas"
 --- field of a map_template.
@@ -164,6 +166,10 @@ local function load_map_template(map, params, opts)
 
    -- Copy functions in the "copy" subtable back to the map, since
    -- they will not be serialized (they become nil).
+   --
+   -- NOTE: but this ignores the fact that maps can be generated in
+   -- many ways that may not have a "copy" table available. In that
+   -- case a data type for map entrances would have to be created.
    if template.copy then
       for k, v in pairs(template.copy) do
          if type(k) == "string" and k:sub(1, 1) ~= "_" then
