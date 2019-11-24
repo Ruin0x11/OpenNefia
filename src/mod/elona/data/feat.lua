@@ -9,6 +9,9 @@ local Skill = require("mod.elona_sys.api.Skill")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Chara = require("api.Chara")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Calc = require("mod.elona.api.Calc")
+local Anim = require("mod.elona_sys.api.Anim")
 
 data:add {
    _type = "base.feat",
@@ -162,7 +165,7 @@ local function gen_stair(down)
             return
          end
 
-         local success, map = MapArea.load_map_of_entrance(self)
+         local success, map, was_generated = MapArea.load_map_of_entrance(self, true)
          if not success then
             Gui.report_error(map)
             return "player_turn_query"
@@ -177,37 +180,53 @@ local function gen_stair(down)
             search = "elona.stairs_down"
          end
 
-         -- Find where the connecting stair is.
-         local stair
+         -- find where to place the player. If the area of the next
+         -- map differs, assume we're leaving into the world map.
+         local start_x, start_y
+         local inner_area = save.base.area_mapping:area_for_map(self:current_map())
+         local outer_area = save.base.area_mapping:area_for_map(map)
+         if inner_area ~= outer_area then
+            assert(map.uid == inner_area.outer_map_uid)
+            start_x = outer_area.x
+            start_y = outer_area.y
+         else
+            -- Find where the connecting stair is.
+            local stair
 
-         -- If the loaded map indicates a start position, assume
-         -- stairs are located there.
-         if map.player_start_pos then
-            local x, y
-            if type(map.player_start_pos) == "table" then
-               x = map.player_start_pos.x
-               y = map.player_start_pos.y
-            elseif type(map.player_start_pos) == "function" then
-               x, y = map.player_start_pos(Chara.player(), map, self:current_map(), self)
-            else
-               error("invalid map start pos: " .. tostring(map.player_start_pos))
+            -- If the loaded map indicates a start position, assume
+            -- stairs are located there.
+            if map.player_start_pos then
+               local x, y
+               if type(map.player_start_pos) == "table" then
+                  x = map.player_start_pos.x
+                  y = map.player_start_pos.y
+               elseif type(map.player_start_pos) == "function" then
+                  x, y = map.player_start_pos(Chara.player(), map, self:current_map(), self)
+               else
+                  error("invalid map start pos: " .. tostring(map.player_start_pos))
+               end
+
+               stair = Feat.at(x, y, map):filter(function(f) return f._id == search end):nth(1)
             end
 
-            stair = Feat.at(x, y, map):filter(function(f) return f._id == search end):nth(1)
+            if stair == nil then
+               -- Otherwise, fall back to searching for stairs in the entire map.
+               Log.warn("Start position not provided, falling back to searching entire map for stairs.")
+               stair = map:iter_feats():filter(function(f) return f._id == search end):nth(1)
+            end
+
+            if stair == nil then
+               Log.warn("No connecting stair found in other map.")
+               start_x = math.floor(map:width() / 2)
+               start_y = math.floor(map:height() / 2)
+            else
+               start_x = stair.x
+               start_y = stair.y
+               stair.map_uid = self:current_map().uid
+            end
          end
 
-         if stair == nil then
-            -- Otherwise, fall back to searching for stairs in the entire map.
-            Log.warn("Start position not provided, falling back to searching entire map for stairs.")
-            stair = map:iter_feats():filter(function(f) return f._id == search end):nth(1)
-         end
-
-         if stair == nil then
-            error("No connecting stair found in other map.")
-         end
-
-         params = { start_x = stair.x, start_y = stair.y }
-         stair.map_uid = self:current_map().uid
+         params = { start_x = start_x, start_y = start_y }
 
          Map.travel_to(map, params)
 
@@ -234,7 +253,6 @@ data:add {
 
    params = {
       generator_params = "table",
-      area_params = "table",
       map_uid = "number",
    },
 
@@ -248,7 +266,7 @@ data:add {
          return
       end
 
-      local success, map = MapArea.load_map_of_entrance(self, true)
+      local success, map = MapArea.load_map_of_entrance(self, false)
       if not success then
          Gui.report_error(map)
          return "player_turn_query"
@@ -281,13 +299,25 @@ data:add {
          name = "Bash to shatter pot",
 
          callback = function(self, params)
+            local map = self:current_map()
             local basher = params.chara
+
+            self.image = nil
             -- TODO: spill fragment
-            Item.create("elona.pillar", self.x, self.y)
+            local level = map:calc("dungeon_level")
+            if map.gen_id == "elona.shelter" then level = 0 end
+
+            Itemgen.create(self.x, self.y, Calc.filter(level, 1), map)
+
+            map:memorize_tile(self.x, self.y)
+            Gui.update_screen()
+
             if Map.is_in_fov(basher.x, basher.y) then
                Gui.play_sound("base.bash1")
-               Gui.mes(basher.uid ..  " shatters the pot.")
+               Gui.mes("action.bash.shatters_pot", basher)
                Gui.play_sound("base.crush1")
+               local anim = Anim.breaking(self.x, self.y)
+               Gui.start_draw_callback(anim)
             end
             self:remove_ownership()
             return true

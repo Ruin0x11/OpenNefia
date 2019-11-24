@@ -253,7 +253,7 @@ local chara = {
    { id = 252, name = "metal" },
    { id = 253, name = "cat" },
    { id = 254, name = "dog" },
-   { id = 255, name = "catsister" },
+   { id = 255, name = "rat" },
    { id = 256, name = "shell" },
    { id = 257, name = "slime" },
    { id = 258, name = "public_performer" },

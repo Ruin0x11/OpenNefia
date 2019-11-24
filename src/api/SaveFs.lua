@@ -70,7 +70,7 @@ function SaveFs.read(path, save)
    local full_path = load_path(path, save)
 
    if not fs.exists(full_path) then
-      return false, "file does not exist"
+      return false, ("file does not exist: %s"):format(full_path)
    end
    Log.trace("savefs read: %s", full_path)
    local content, err = fs.read(full_path)

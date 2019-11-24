@@ -9,19 +9,42 @@ local levels = {
    error = 1
 }
 
+local level = levels.info
+local filter = nil
+
+-- copied from internal.env
+local function convert_to_require_path(path)
+   local path = path
+   path = string.strip_suffix(path, ".lua")
+   path = string.gsub(path, "/", ".")
+   path = string.gsub(path, "\\", ".")
+   path = string.strip_suffix(path, ".init")
+   path = string.gsub(path, "^%.+", "")
+   return path
+end
+
 local function format(kind, s, ...)
    local out = string.format(s, ...)
    local trace = debug.getinfo(3, "S")
-   local source = ""
+   local req_paths = true
+   local source = "<...>"
    if trace then
       local file = trace.source:sub(2)
       local line = trace.linedefined
-      -- source = string.format("%s:%d: ", file, line)
+      local req_path = convert_to_require_path(file)
+      if req_paths then
+         source = req_path
+      else
+         source = string.format("%s:%d", file, line)
+      end
    end
-   print(string.format("%s %s%s", kind, source, out))
-end
 
-local level = levels.info
+   if filter and not string.match(source, filter) then
+      return
+   end
+
+   print(string.format("%s[%s] %s", kind, source, out))
+end
 
 --- @tparam string l
 function Log.set_level(l)
@@ -37,6 +60,14 @@ function Log.has_level(l)
       l = levels[l] or 3
    end
    return level >= l
+end
+
+function Log.set_filter(tag)
+   if tag ~= nil and type(tag) ~= "string" then
+      return
+   end
+
+   filter = tag
 end
 
 --- @tparam string s Format string for string.format

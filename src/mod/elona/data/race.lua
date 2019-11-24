@@ -358,7 +358,7 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [153] = 1,
+               ["elona.magic_resistance"] = { level = 1 },
             },
 
             breed_power = 180,
@@ -414,8 +414,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [160] = 1,
-               [161] = 1,
+               ["elona.fairy_resistances"] = { level = 1 },
+               ["elona.fairy_equip_restriction"] = { level = 1 },
             },
 
             breed_power = 180,
@@ -604,8 +604,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [152] = 2,
-               [155] = 1,
+               ["elona.resist_poison"] = { level = 2 },
+               ["elona.resist_darkness"] = { level = 1 },
             },
 
             breed_power = 150,
@@ -657,8 +657,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [158] = 1,
-               [159] = 1,
+               ["elona.slow_digestion"] = { level = 1 },
+               ["elona.more_materials"] = { level = 1 },
             },
 
             breed_power = 210,
@@ -766,8 +766,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [168] = 1,
-               [156] = 1,
+               ["elona.slow_ether_disease"] = { level = 1 },
+               ["elona.reduce_overcast_damage"] = { level = 1 },
             },
 
             breed_power = 120,
@@ -1220,9 +1220,9 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [151] = 1,
-               [155] = 2,
-               [152] = 1
+               ["elona.resist_cold"] = { level = 1 },
+               ["elona.resist_darkness"] = { level = 2 },
+               ["elona.resist_poison"] = { level = 1 }
             },
 
             breed_power = 25,
@@ -1754,8 +1754,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [155] = 1,
-               [159] = 1
+               ["elona.resist_darkness"] = { level = 1 },
+               ["elona.more_materials"] = { level = 1 }
             },
 
             breed_power = 290,
@@ -2258,8 +2258,8 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [157] = 1,
-               [152] = 2,
+               ["elona.immune_to_dimming"] = { level = 1 },
+               ["elona.resist_poison"] = { level = 2 },
             },
 
             breed_power = 40,
@@ -3093,7 +3093,7 @@ local race =
 
          copy_to_chara = {
             traits = {
-               [0] = 1,
+               ["elona.extra_body_parts"] = { level = 1 },
             },
 
             breed_power = 50,

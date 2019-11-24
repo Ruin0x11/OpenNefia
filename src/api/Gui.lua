@@ -10,7 +10,7 @@ local field = require("game.field")
 local Gui = {}
 
 local scroll = false
-local continue_sentence
+local capitalize = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen()
@@ -140,7 +140,7 @@ end
 --- @tparam string|color color
 --- @param ...
 function Gui.mes_c(text, color, ...)
-   local t = I18N.get(text, ...)
+   local t = I18N.get_optional(text, ...) or text
    if t then text = t end
 
    if color == nil and string.find(text, I18N.quote_character()) then
@@ -150,7 +150,10 @@ function Gui.mes_c(text, color, ...)
       color = Color[color] or {255, 255, 255}
    end
 
-   text = I18N.capitalize(text)
+   if capitalize then
+      text = I18N.capitalize(text)
+   end
+   capitalize = true
 
    if Env.is_headless() then
       print("<mes> " .. text)
@@ -203,7 +206,7 @@ function Gui.mes_newline()
 end
 
 function Gui.mes_continue_sentence()
-   continue_sentence = true
+   capitalize = false
 end
 
 function Gui.mes_halt()

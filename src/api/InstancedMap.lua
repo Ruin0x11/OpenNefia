@@ -126,6 +126,7 @@ local fallbacks = {
    is_generated_every_time = false,
    should_regenerate = false,
    is_temporary = false,
+   can_exit_from_edge = true,
 
    next_regenerate_date = 0,
 }
@@ -270,9 +271,9 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local sth = math.min(Draw.get_tiled_height(), self._height)
 
    self._shadow_map = {}
-   for i=0,stw + 4 - 1 do
+   for i=0,stw + 4 do
       self._shadow_map[i] = {}
-      for j=0,sth + 4 - 1 do
+      for j=0,sth + 4 do
          self._shadow_map[i][j] = 0
       end
    end
@@ -283,11 +284,11 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
 
    -- The shadowmap has extra space at the edges, to make shadows at
    -- the edge of the map display correctly, so offset the start and
-   -- end positions by 1..
+   -- end positions by 1.
    local start_x = math.clamp(player_x - math.floor(stw / 2), 0, self._width - stw) - 1
    local start_y = math.clamp(player_y - math.floor(sth / 2) - 1, 0, self._height - sth) - 1
-   local end_x = (start_x + stw) + 1
-   local end_y = (start_y + sth) + 1
+   local end_x = (start_x + stw) + 1 + 1
+   local end_y = (start_y + sth) + 1 + 1
 
    local fov_y_start = player_y - math.floor(fov_size / 2)
    local fov_y_end = player_y + math.floor(fov_size / 2)
@@ -398,9 +399,14 @@ function InstancedMap:memorize_tile(x, y)
    self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
 end
 
-function InstancedMap:reveal_tile(x, y, tile)
+function InstancedMap:reveal_tile(x, y, tile_id)
    local memory = self._memory
    local ind = y * self._width + x + 1;
+
+   local tile
+   if tile_id then
+      tile = data["base.map_tile"]:ensure(tile_id)
+   end
 
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
@@ -433,9 +439,16 @@ function InstancedMap:set_outer_map(map_or_uid, x, y)
       uid = map_or_uid.uid
    end
 
-   self._outer_map_uid = uid
-   self._outer_map_x = x or nil
-   self._outer_map_y = y or nil
+   local area = save.base.area_mapping:area_for_outer_map(uid)
+   if area == nil then
+      area = save.base.area_mapping:create_area(uid, x, y)
+   end
+
+   area.x = x
+   area.y = y
+   area.outer_map_uid = uid
+
+   save.base.area_mapping:add_map_to_area(area.uid, self.uid)
 end
 
 -- TODO: Need to handle depending on what is querying. People may want

@@ -20,14 +20,11 @@ local function debug_server(port)
          local result = "waiting"
 
          if client then
-            print("client")
             local text = client:receive("*a")
-            print("[Server] GET " .. text)
             local s, err = loadstring(text)
             if s then
                local success, res = xpcall(s, function(err) return err .. "\n" .. debug.traceback(2) end)
                if success then
-                  print("[Server] Result: " .. tostring(res))
                   result = "success"
                else
                   print("[Server] Exec error:\n\t" .. tostring(res))

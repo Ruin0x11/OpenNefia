@@ -726,7 +726,14 @@ local lesimas = {
    _id = "lesimas",
    _type = "elona_sys.map_template",
    elona_id = 3,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.lesimas",
+         dungeon_level = 1,
+         deepest_dungeon_level = 45
+      }
+   },
    image = "elona.feat_area_lesimas",
    copy = {
       types = { "dungeon" },

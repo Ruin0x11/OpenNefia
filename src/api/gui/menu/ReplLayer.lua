@@ -97,6 +97,13 @@ function ReplLayer:init(env, history)
       ["end"] = function()
          self:set_cursor_pos(#self.text)
       end,
+      insert = function()
+         self:insert_text(Env.clipboard_text())
+      end,
+      delete = function()
+         Env.set_clipboard_text(self.text)
+         self:set_text("")
+      end,
       tab = function()
          local function complete(cand)
             local text = self.completion.base .. cand.text
@@ -237,7 +244,7 @@ function ReplLayer:relayout(x, y, width, height)
    self.height = Draw.get_height() / 3
    self.font_size = 15
    Draw.set_font(self.font_size)
-   self.max_lines = math.floor((self.height - 5) / Draw.text_height()) - 1
+   self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 
    if self.pulldown then
       self.pulldown = false

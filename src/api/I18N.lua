@@ -38,7 +38,7 @@ I18N.capitalize = i18n.capitalize
 --- @param ... Extra arguments to pass to the formatter.
 --- @treturn[opt] string The localized text
 --- @see ILocalizable
-function I18N.get(text, ...)
+function I18N.get_optional(text, ...)
    local args = {}
    for i = 1, select("#", ...) do
       local arg = select(i, ...)
@@ -48,7 +48,22 @@ function I18N.get(text, ...)
          args[i] = arg
       end
    end
-   return i18n.get(text, table.unpack(args)) or ("<error: %s>"):format(text)
+   return i18n.get(text, table.unpack(args))
+end
+
+--- Localizes a string with arguments. Pass the ID of a localized
+--- string and any arguments to its formatting function. May return
+--- nil if the ID was not found.
+---
+--- If any of the arguments implement ILocalizable, then the
+--- localization data for them will be produced and sent instead.
+---
+--- @tparam string id ID of the localized string
+--- @param ... Extra arguments to pass to the formatter.
+--- @treturn[opt] string The localized text
+--- @see ILocalizable
+function I18N.get(text, ...)
+   return I18N.get_optional(text, ...) or ("<error: %s>"):format(text)
 end
 
 --- Switches the current language.

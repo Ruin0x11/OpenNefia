@@ -9,13 +9,13 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 
-local anim_wait = 10
+local anim_wait = 5
 
 local function pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()
    local scx, scy = Gui.tile_to_screen(tx, ty)
-   scx = scx - math.floor(tw / 2)
-   scy = scy - math.floor(th / 2)
+   scx = scx + math.floor(tw / 2)
+   scy = scy + math.floor(th / 2)
    return scx, scy
 end
 

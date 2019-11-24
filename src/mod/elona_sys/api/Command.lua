@@ -84,7 +84,9 @@ function Command.move(player, x, y)
       return result
    end
 
-   if not Map.is_in_bounds(next_pos.x, next_pos.y) then
+   if not Map.is_in_bounds(next_pos.x, next_pos.y)
+      and Map.current():calc("can_exit_from_edge")
+   then
       -- Player is trying to move out of the map.
 
       Event.trigger("elona_sys.before_player_map_leave", {player=player})

@@ -2,6 +2,7 @@
 
 local Event = require("api.Event")
 local EventHolder = require("api.EventHolder")
+local Log = require("api.Log")
 local data = require("internal.data")
 
 local IEventEmitter = class.interface("IEventEmitter")
@@ -16,6 +17,22 @@ function IEventEmitter:init()
       end
    end
 end
+
+function IEventEmitter:on_reload_prototype()
+   Log.info("Reloading prototype of %s:%s for object %d", self._type, self._id, self.uid)
+   print(self.on_activate, self.proto)
+   if self.proto and self.proto.events then
+      for _, event in ipairs(self.proto.events) do
+         self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
+      end
+   end
+end
+
+Event.register("base.on_hotload_object", "reload events for object", function(obj)
+                  if class.is_an(IEventEmitter, obj) then
+                     IEventEmitter.on_reload_prototype(obj)
+                  end
+end)
 
 local cache = {}
 

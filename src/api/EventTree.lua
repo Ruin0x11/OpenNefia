@@ -161,7 +161,9 @@ function EventTree:print()
          disabled = "Yes"
       end
 
-      arr[#arr+1] = { v.name, v.priority, disabled }
+      local first_line = string.split(v.name)[1]
+
+      arr[#arr+1] = { first_line, v.priority, disabled }
    end
 
    return table.print(arr,

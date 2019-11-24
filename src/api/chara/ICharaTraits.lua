@@ -37,7 +37,7 @@ function ICharaTraits:on_refresh()
    for trait_id, entry in pairs(self.traits) do
       local trait = data["base.trait"]:ensure(trait_id)
       if entry.level ~= 0 and trait.on_refresh then
-         trait.on_refresh(self, entry.level)
+         trait.on_refresh(entry, self)
       end
    end
 end

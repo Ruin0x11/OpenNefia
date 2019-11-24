@@ -194,6 +194,9 @@ data:add_multi(
       },
       {
          _id = "on_chara_regenerate"
+      },
+      {
+         _id = "on_hotload_object"
       }
    }
 )

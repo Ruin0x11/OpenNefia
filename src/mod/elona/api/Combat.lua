@@ -461,7 +461,6 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
    local damage = Rand.roll_dice(damage_params.dice_x, damage_params.dice_y, damage_params.dmgfix)
 
    local skill = data["base.skill"][attack_skill]
-   local ammo = get_ammo(chara)
 
    if is_critical then
       damage = Rand.dice_max(damage_params.dice_x, damage_params.dice_y, damage_params.dmgfix)

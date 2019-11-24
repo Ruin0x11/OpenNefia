@@ -41,6 +41,7 @@ function field_layer:init()
       "internal.layer.feat_layer",
       "internal.layer.item_layer",
       "internal.layer.chara_layer",
+      "internal.layer.tile_overhang_layer",
       "internal.layer.shadow_layer",
    }
 end

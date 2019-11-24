@@ -18,7 +18,7 @@ function fps:update(dt)
    self.frames = self.frames + 1
 
    if self.ms >= self.threshold then
-      self.text = string.format("FPS: %02.2f", self.frames / (self.ms / self.threshold))
+      self.text = string.format("FPS: %02.2f\nRAM: %04.2fMB", self.frames / (self.ms / 1000), collectgarbage("count") / 1024)
       self.frames = 0
       self.ms = 0
    end

@@ -115,18 +115,34 @@
     (elona-next--send cmd)
     (message "%s" cmd)))
 
+(defun elona-next-require-path (file)
+  (interactive)
+  (let* ((pair (elona-next--require-path-of-file file))
+         (lua-path (car pair))
+         (lua-name (cdr pair)))
+    (format
+     "local %s = require(\"%s\")\n"
+     lua-name
+     lua-path)))
+
 (defun elona-next-copy-require-path ()
   (interactive)
-  (let* ((pair (elona-next--require-path-of-file (buffer-file-name)))
-         (lua-path (car pair))
-         (lua-name (cdr pair))
-         (src (format
-               "local %s = require(\"%s\")\n"
-               lua-name
-               lua-path)))
+  (let ((src (elona-next-require-path (buffer-file-name))))
     (message "%s" src)
-    (kill-new src))
-  )
+    (kill-new src)))
+
+(defun elona-next-insert-require ()
+  (interactive)
+  (let* ((project-root (projectile-ensure-project (projectile-project-root)))
+         (cands (seq-filter (lambda (f)
+                              (and (not (string-prefix-p "lib/" f))
+                               (string-equal "lua" (file-name-extension f))))
+                            (projectile-project-files project-root)))
+         (file (string-join (list project-root (projectile-completing-read "File: " cands)))))
+    (when file
+      (next-line)
+      (insert (elona-next-require-path file))
+      (previous-line))))
 
 (defun elona-next-run-this-file ()
   (interactive)

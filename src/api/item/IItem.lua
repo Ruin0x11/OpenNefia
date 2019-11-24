@@ -149,13 +149,20 @@ function IItem:get_owning_chara()
 end
 
 function IItem:produce_memory()
+   local shadow = 20
+   local image = data["base.chip"][self.image]
+   if image then
+      shadow = image.shadow or shadow
+   end
+
    return {
       uid = self.uid,
       show = require("api.Item").is_alive(self),
-      image = self.image .. "#1",
+      image = (self.image or "") .. "#1",
       color = {0, 0, 0},
       x_offset = self:calc("x_offset") or 0,
-      y_offset = self:calc("y_offset") or 0
+      y_offset = self:calc("y_offset") or 0,
+      shadow = shadow
    }
 end
 

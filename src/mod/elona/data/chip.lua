@@ -253,7 +253,7 @@ local chara_chips = {
    { elona_id = 252, name = "metal" },
    { elona_id = 253, name = "cat" },
    { elona_id = 254, name = "dog" },
-   { elona_id = 255, name = "catsister" },
+   { elona_id = 255, name = "rat" },
    { elona_id = 256, name = "shell", y_offset = -16 },
    { elona_id = 257, name = "slime" },
    { elona_id = 258, name = "public_performer" },

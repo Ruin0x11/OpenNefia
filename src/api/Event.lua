@@ -9,14 +9,6 @@ local Event = {}
 
 local global_events = require("internal.global.global_events")
 
-local function check_event(event_id)
-   if env.is_loaded("internal.data.base") then
-      if data["base.event"][event_id] == nil then
-         error("Unknown event type \"" .. event_id .. "\"")
-      end
-   end
-end
-
 function Event.global()
    return global_events
 end
@@ -32,16 +24,6 @@ end
 --- @tparam function cb Event callback.
 --- @tparam[opt] table opts
 function Event.register(event_id, name, cb, opts)
-   if env.is_hotloading() then
-      if global_events:has_handler(event_id, name) then
-         Log.warn("Replacing event callback for for %s - \":%s\"", event_id, name)
-         return Event.replace(event_id, name, cb, opts)
-      else
-         Log.warn("New event callback hotloaded for %s - \":%s\"", event_id, name)
-      end
-   end
-
-   check_event(event_id)
    global_events:register(event_id, name, cb, opts)
 end
 
@@ -54,8 +36,6 @@ end
 --- @tparam function cb Event callback.
 --- @tparam[opt] table opts
 function Event.replace(event_id, name, cb, opts)
-   Log.warn("Event replace: %s - \":%s\"", event_id, name)
-   check_event(event_id)
    global_events:replace(event_id, name, cb, opts)
 end
 
@@ -66,12 +46,6 @@ end
 --- @tparam id:base.event event_id Event ID to register for.
 --- @tparam string name The name of a registered event handler for the event ID.
 function Event.unregister(event_id, name)
-   if env.is_hotloading() then
-      Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id)
-      return
-   end
-
-   check_event(event_id)
    global_events:unregister(event_id, name)
 end
 
@@ -82,7 +56,6 @@ end
 --- @tparam[opt] any default Default return value for the event.
 --- @treturn[opt] any The event's returned result
 function Event.trigger(event_id, args, default)
-   check_event(event_id)
    return global_events:trigger(event_id, "global", args, default)
 end
 

@@ -1,6 +1,8 @@
 local Dungeon = require("mod.elona.api.Dungeon")
 local Rand = require("api.Rand")
 local Map = require("api.Map")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Filters = require("mod.elona.api.Filters")
 
 data:add(
    {
@@ -26,7 +28,15 @@ data:add(
       _id = "type_3",
       _type = "elona.dungeon_template",
 
-      generate = Dungeon.gen_type_3
+      generate = Dungeon.gen_type_3,
+
+      calc_density = function(map)
+         local crowd_density = map:calc("max_crowd_density")
+         return {
+            mob = crowd_density / 2,
+            item = crowd_density / 3
+         }
+      end
    }
 )
 
@@ -62,7 +72,15 @@ data:add(
       _id = "type_8",
       _type = "elona.dungeon_template",
 
-      generate = Dungeon.gen_type_8
+      generate = Dungeon.gen_type_8,
+
+      calc_density = function(map)
+         local crowd_density = map:calc("max_crowd_density")
+         return {
+            mob = crowd_density / 4,
+            item = crowd_density / 10
+         }
+      end
    }
 )
 
@@ -71,7 +89,19 @@ data:add(
       _id = "type_9",
       _type = "elona.dungeon_template",
 
-      generate = Dungeon.gen_type_9
+      generate = Dungeon.gen_type_9,
+
+      after_generate = function(map)
+         Itemgen.create(nil, nil, {categories=Filters.fsetwear, quality=6})
+      end,
+
+      calc_density = function(map)
+         local crowd_density = map:calc("max_crowd_density")
+         return {
+            mob = crowd_density / 3,
+            item = crowd_density / 10
+         }
+      end
    }
 )
 
@@ -80,7 +110,15 @@ data:add(
       _id = "type_10",
       _type = "elona.dungeon_template",
 
-      generate = Dungeon.gen_type_10
+      generate = Dungeon.gen_type_10,
+
+      calc_density = function(map)
+         local crowd_density = map:calc("max_crowd_density")
+         return {
+            mob = crowd_density / 3,
+            item = crowd_density / 6
+         }
+      end
    }
 )
 
@@ -91,7 +129,7 @@ data:add(
 
       image = "elona.feat_area_cave",
 
-      generate = function(self, params, opts)
+      generate = function(rooms, params, opts)
          params.tileset = "elona.dungeon"
 
          local kind = "elona.type_2"
@@ -111,8 +149,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         params.id = kind
-         return Map.generate("elona.dungeon_template", params, opts)
+         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
       end
    }
 )
@@ -124,7 +161,7 @@ data:add(
 
       image = "elona.feat_area_tower",
 
-      generate = function(self, params, opts)
+      generate = function(rooms, params, opts)
          params.tileset = "elona.dungeon_tower"
 
          local kind = "elona.type_1"
@@ -141,8 +178,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         params.id = kind
-         return Map.generate("elona.dungeon_template", params, opts)
+         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
       end
    }
 )
@@ -154,7 +190,7 @@ data:add(
 
       image = "elona.feat_area_tree",
 
-      generate = function(self, params, opts)
+      generate = function(rooms, params, opts)
          params.tileset = "elona.dungeon_forest"
 
          local kind = "elona.type_2"
@@ -171,8 +207,7 @@ data:add(
             kind = "elona.type_4"
          end
 
-         params.id = kind
-         return Map.generate("elona.dungeon_template", params, opts)
+         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
       end
    }
 )
@@ -184,7 +219,7 @@ data:add(
 
       image = "elona.feat_area_temple",
 
-      generate = function(self, params, opts)
+      generate = function(rooms, params, opts)
          params.tileset = "elona.dungeon_castle"
 
          local kind = "elona.type_1"
@@ -201,8 +236,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         params.id = kind
-         return Map.generate("elona.dungeon_template", params, opts)
+         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
       end
    }
 )
@@ -214,7 +248,9 @@ data:add(
 
       image = "elona.feat_area_cave",
 
-      generate = function(self, params, opts)
+      deepest_dungeon_level = 45,
+
+      generate = function(rooms, params, opts)
          local tileset = "elona.lesimas"
 
          if Rand.one_in(20) then
@@ -268,15 +304,15 @@ data:add(
             end
          end
 
-         params.id = kind
+         params.attempts = 1
 
-         local ok, map = Map.generate("elona.dungeon_template", params, opts)
+         local map, err = data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
 
-         if ok then
+         if map then
             map.max_crowd_density = map.max_crowd_density + math.floor(params.dungeon_level / 2)
          end
 
-         return ok, map
+         return map
       end
    }
 )

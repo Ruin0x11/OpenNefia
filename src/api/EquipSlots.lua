@@ -154,6 +154,7 @@ function EquipSlots:items_equipped_at(body_part_type)
    local pred = function(v)
       return v.equipped and v.body_part._id == body_part_type
    end
+   _ppr("iter",body_part_type,self:iter_body_parts():extract("body_part"):extract("_id"):to_list())
    return self:iter_body_parts(false):filter(pred):extract("equipped")
 end
 
@@ -173,10 +174,6 @@ local function iter_body_parts(state, index)
       index = index + 1
    until (entry.equipped ~= nil or state.also_empty)
       or index > #state.body_parts
-
-   if index > #state.body_parts then
-      return nil
-   end
 
    return index, entry
 end

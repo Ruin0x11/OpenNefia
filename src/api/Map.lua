@@ -12,6 +12,7 @@ local Event = require("api.Event")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
 local InstancedMap = require("api.InstancedMap")
+local IEventEmitter = require("api.IEventEmitter")
 local Rand = require("api.Rand")
 local Fs = require("api.Fs")
 local save = require("internal.global.save")
@@ -71,7 +72,7 @@ end
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
-   Log.info("Saving map %d to %s", map.uid, path)
+   Log.debug("Saving map %d to %s", map.uid, path)
    return SaveFs.write(path, map)
 end
 
@@ -91,6 +92,20 @@ Event.register("base.on_map_loaded", "instantiate all map objects",
                      v:instantiate()
                   end
                end)
+
+Event.register("base.on_hotload_prototype", "Notify objects in map of prototype hotload", function(_, params)
+                  local map = Map.current()
+                  if map then
+                     for _, obj in map:iter() do
+                        if class.is_an(IEventEmitter, obj)
+                           and obj._type == params.new._type
+                           and obj._id == params.new._id
+                        then
+                           obj:emit("base.on_hotload_object", params)
+                        end
+                     end
+                  end
+end)
 
 --- Loads a map from the current save. If you modify it be sure to
 --- call `Map.save` to persist the changes if you don't set it as the
@@ -297,28 +312,17 @@ end
 --- @tparam[opt] table opts Extra options.
 ---   - outer_map (InstancedMap): Outer map to associate with the
 ---     newly created map.
+---   - area_uid (InstancedMap): Area to associate with the newly
+---     created map.
 --- @treturn bool success
 --- @treturn InstancedMap|string result/error
 function Map.generate(generator_id, params, opts)
    params = params or {}
 
+   _ppr(generator_id, table.keys(opts or {}))
    opts = opts or {}
    opts.outer_map = opts.outer_map or Map.current()
-
-   if not opts.no_generate_area and not opts.area then
-      local area_uid
-      if type(params.area_params) == "number" then
-         area_uid = params.area_params
-         opts.area = save.base.area_mapping:get_data_of_area(area_uid).data
-         Log.warn("Reusing area for map: %s", inspect(opts.area))
-      else
-         area_uid = save.base.area_mapping:generate_area()
-
-         opts.area = save.base.area_mapping:get_data_of_area(area_uid).data
-         table.merge_missing(opts.area, params.area_params)
-         Log.warn("Generating new area for map: %s", inspect(opts.area))
-      end
-   end
+   opts.area_uid = opts.area_uid or nil
 
    local generator = data["base.map_generator"]:ensure(generator_id)
    local success, map, id = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
@@ -338,6 +342,7 @@ function Map.generate(generator_id, params, opts)
 
    map.gen_id = id
    map.generated_with = { generator = generator_id, params = params }
+   Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
 
    map:emit("base.on_map_generated")
    map:emit("base.on_map_loaded")
@@ -675,6 +680,8 @@ function Map.travel_to(map_or_uid, params)
    local current = field.map
    local x, y = 0, 0
 
+   Log.info("Traveling: %d -> %d", current.uid, map.uid)
+
    if map.uid == current.uid then
       -- Nothing to do.
       return
@@ -736,6 +743,9 @@ function Map.travel_to(map_or_uid, params)
    Map.set_map(map)
    Gui.update_screen()
 
+   current = nil
+   collectgarbage()
+
    return true
 end
 
@@ -749,21 +759,12 @@ end
 function Map.world_map_containing(map)
    map = map or Map.current()
 
-   if map._outer_map_uid == nil then
-      return nil
+   local area = save.base.area_mapping:area_for_map(map)
+   if area == nil then
+      return nil, "Map doesn't have an outer map"
    end
 
-   local ok, err = Map.load(map._outer_map_uid)
-   if not ok then
-      error(err)
-   end
-
-   local outer = err
-   if outer and outer:has_type("world_map") then
-      return outer
-   end
-
-   return nil
+   return Map.load(area.outer_map_uid)
 end
 
 --- Finds the location of this map in its containing world map.
@@ -773,21 +774,12 @@ end
 function Map.position_in_world_map(map)
    map = map or Map.current()
 
-   local world_map = Map.world_map_containing(map)
-   if not world_map then
-      return nil
+   local area = save.base.area_mapping:area_for_map(map)
+   if area == nil then
+      return nil, nil
    end
 
-   local MapArea = require("api.MapArea")
-   for _, entrance in MapArea.iter_map_entrances("generated", world_map) do
-      if entrance.map_uid == map.uid then
-         return entrance.x, entrance.y
-      end
-   end
-
-   return nil
+   return area.x, area.y
 end
-
--- TODO: way of accessing map variables without exposing internals
 
 return Map

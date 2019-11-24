@@ -188,6 +188,10 @@ function Tools.feats_under()
    return Feat.at(player.x, player.y)
 end
 
+function Tools.feat_under()
+   return Tools.feats_under():nth(1)
+end
+
 function Tools.items_under()
    local player = Chara.player()
    return Item.at(player.x, player.y)
@@ -391,6 +395,28 @@ function Tools.print_memory(map)
    end
 
    return res
+end
+
+function Tools.print_shadow(map)
+   map = map or Map.current()
+   Gui.update_screen()
+   local s = ""
+
+   local shadow = map:shadow_map()
+
+   for i=0, #shadow[1] do
+      for j=0,#shadow do
+         local o = shadow[j][i] or 0
+         local i = "."
+         if bit.band(o, 0x100) > 0 then
+            i = "#"
+         end
+         s = s .. i
+      end
+      s = s .. "\n"
+   end
+
+   return s
 end
 
 function Tools.dungeon(kind, params)

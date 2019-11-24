@@ -32,6 +32,7 @@ function field_logic.quickstart()
    local success, map = Map.generate("content.test", {})
    assert(success, map)
    field:set_map(map)
+   Map.save(map)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
    field_logic.setup_new_game(me)
@@ -385,6 +386,7 @@ function field_logic.query()
 
    draw.pop_layer()
 
+   field.map = nil
    field.is_active = false
 
    return "title"

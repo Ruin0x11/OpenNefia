@@ -1,4 +1,7 @@
+local data = require("internal.data")
+local env = require("internal.env")
 local EventTree = require("api.EventTree")
+local Log = require("api.Log")
 
 local EventHolder = class.class("EventHolder")
 
@@ -18,7 +21,26 @@ function EventHolder:deserialize()
    self:init()
 end
 
+local function check_event(event_id)
+   if env.is_loaded("internal.data.base") then
+      if data["base.event"][event_id] == nil then
+         error("Unknown event type \"" .. event_id .. "\"")
+      end
+   end
+end
+
 function EventHolder:register(event_id, name, cb, opts)
+   check_event(event_id)
+
+   if env.is_hotloading() then
+      if self:has_handler(event_id, name) then
+         Log.warn("Replacing event callback for for %s - \":%s\"", event_id, name)
+         return self:replace(event_id, name, cb, opts)
+      else
+         Log.warn("New event callback hotloaded for %s - \":%s\"", event_id, name)
+      end
+   end
+
    if opts == nil then
       opts = {}
    end
@@ -46,6 +68,8 @@ function EventHolder:register(event_id, name, cb, opts)
 end
 
 function EventHolder:replace(event_id, name, cb, opts)
+   check_event(event_id)
+
    if opts == nil then
       opts = {}
    end
@@ -62,6 +86,13 @@ function EventHolder:replace(event_id, name, cb, opts)
 end
 
 function EventHolder:unregister(event_id, name)
+   check_event(event_id)
+
+   if env.is_hotloading() then
+      Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id)
+      return
+   end
+
    local events = self.hooks[event_id]
    if events then
       events:unregister(name)
@@ -77,6 +108,8 @@ function EventHolder:count(event_id)
 end
 
 function EventHolder:trigger(event_id, source, args, default)
+   check_event(event_id)
+
    args = args or {}
    local result = default
 

@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local uid_tracker = require("internal.uid_tracker")
 
 -- manages groups of related maps ("areas"). it makes no assumptions
@@ -7,56 +8,117 @@ local area_mapping = class.class("area_mapping")
 function area_mapping:init(uids)
    self.uids = uids or uid_tracker:new()
 
-   self.map_to_area = {}
-   self.area_to_maps = {}
+   self.areas = {}
+   self.maps = {}
 end
 
-function area_mapping:generate_area()
-   local area_uid = self.uids:get_next_and_increment()
-   assert(not self.area_to_maps[area_uid])
-   self.area_to_maps[area_uid] = { uid = area_uid, maps = {}, data = {} }
-   return area_uid
+local function get_uid(obj)
+   local uid = obj
+   if type(obj) == "table" then
+      uid = obj.uid
+   end
+   return uid
 end
 
-function area_mapping:set_area_of_map(map_uid, area_uid)
-   local old = self.map_to_area[map_uid]
-   if old then
-      self.area_to_maps[old].maps[map_uid] = nil
+function area_mapping:create_area(outer_map_or_uid, x, y)
+   local outer_map_uid = get_uid(outer_map_or_uid)
+   if outer_map_or_uid ~= nil then
+      assert(type(x) == "number")
+      assert(type(y) == "number")
    end
 
-   self.map_to_area[map_uid] = area_uid
-   self.area_to_maps[area_uid].maps[map_uid] = true
+   local uid = self.uids:get_next_and_increment()
+   self.areas[uid] = {
+      uid = uid,
+      outer_map_uid = outer_map_uid,
+      x = x,
+      y = y,
+      maps = {},
+      data = {}
+   }
+
+   Log.debug("Created area %d in map %s at (%s,%s)", uid, outer_map_uid, x, y)
+   return self.areas[uid]
 end
 
-function area_mapping:maybe_generate_area_for_map(map_uid)
-   if not self.map_to_area[map_uid] then
-      local area = self:generate_area()
-      self:set_area_of_map(map_uid, area)
-      return true, area
+function area_mapping:remove_area(area_uid)
+   local area = self.areas[area_uid]
+   if area == nil then
+      error(("Area %s does not exist"):format(area_uid))
    end
 
-   return false, self.map_to_area[map_uid]
-end
-
-function area_mapping:iter_maps_in_area(area)
-   if not self.area_to_maps[area] then
-      error("Unknown area UID " .. tostring(area))
+   for _, map_uid in ipairs(area.maps) do
+      self.maps[map_uid] = nil
    end
-   return fun.iter(self.area_to_maps[area].maps)
+
+   Log.debug("Removed area %d", area_uid)
+   self.areas[area_uid] = nil
 end
 
-function area_mapping:get_area_of_map(map)
-   return self.map_to_area[map]
+function area_mapping:add_map_to_area(area_uid, map_or_uid)
+   local map_uid = get_uid(map_or_uid)
+   assert(type(map_uid) == "number")
+
+   local area = self.areas[area_uid]
+   if area == nil then
+      error(("Area %s does not exist"):format(area_uid))
+   end
+   if self.maps[map_uid] ~= nil then
+      error(("Map UID %d is already part of an area: %d"):format(map_uid, self.maps[map_uid]))
+   end
+
+   Log.debug("Associating map %d with area %d", map_uid, area_uid)
+
+   area.maps[map_uid] = {}
+   self.maps[map_uid] = area_uid
 end
 
-function area_mapping:get_data_of_area(area)
-   return self.area_to_maps[area]
+function area_mapping:remove_map(map_or_uid)
+   local map_uid = get_uid(map_or_uid)
+   assert(type(map_uid) == "number")
+
+   local area = self:area_for_map(map_uid)
+   if area == nil then
+      return
+   end
+
+   Log.debug("Removing map %d from area %d", map_uid, area.uid)
+
+   area.maps[map_uid] = nil
+   self.maps[map_uid] = nil
 end
 
-function area_mapping:iter_maps_in_same_area(map)
-   local area_uid = self:get_area_of_map(map)
-   assert(area_uid)
-   return self:iter_maps_in_area(area_uid)
+function area_mapping:area(area_uid)
+   return self.areas[area_uid]
+end
+
+function area_mapping:area_for_map(map_or_uid)
+   local map_uid = get_uid(map_or_uid)
+   if map_uid == nil then
+      return nil
+   end
+
+   local area_uid = self.maps[map_uid]
+   if area_uid == nil then
+      return nil
+   end
+
+   return self.areas[area_uid]
+end
+
+function area_mapping:area_for_outer_map(map_or_uid)
+   local map_uid = get_uid(map_or_uid)
+   if map_uid == nil then
+      return nil
+   end
+
+   for _, v in ipairs(self.areas) do
+      if v.outer_map_uid == map_uid then
+         return v
+      end
+   end
+
+   return nil
 end
 
 return area_mapping

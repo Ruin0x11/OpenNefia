@@ -1,15 +1,11 @@
 local Rand = require("api.Rand")
 
-local function pick(base, chance, others)
+local function pick(choices, chance)
    return function()
-      local choices = { base }
       if Rand.one_in(chance) then
-         for _, o in ipairs(others) do
-            choices[#choices+1] = o
-         end
+         return Rand.choice(choices)
       end
-
-      return Rand.choice(choices)
+      return choices[1]
    end
 end
 
@@ -88,7 +84,7 @@ data:add_multi(
 
          tiles = {
             ["elona.mapgen_room"] = "elona.anime_water_shallow",
-            ["elona.mapgen_tunnel"] = pick("elona.dark_dirt_1", 4, {"elona.dark_dirt_2"}),
+            ["elona.mapgen_tunnel"] = pick({"elona.dark_dirt_1","elona.dark_dirt_2","elona.dark_dirt_3","elona.dark_dirt_4"}, 2),
             ["elona.mapgen_wall"] = "elona.wall_dirt_dark_top",
             ["elona.mapgen_floor"] = "elona.wall_dirt_dark_top",
          }
@@ -112,9 +108,9 @@ data:add_multi(
 
          tiles = {
             ["elona.mapgen_floor"] = "elona.wall_dirt_dark_top",
-            ["elona.mapgen_tunnel"] = pick("elona.dark_dirt_1", 4, {"elona.dark_dirt_2"}),
+            ["elona.mapgen_tunnel"] = pick({"elona.dark_dirt_1","elona.dark_dirt_2","elona.dark_dirt_3","elona.dark_dirt_4"}, 2),
             ["elona.mapgen_wall"] = "elona.wall_dirt_dark_top",
-            ["elona.mapgen_room"] = pick("elona.dark_dirt_1", 4, {"elona.dark_dirt_2"}),
+            ["elona.mapgen_room"] = pick({"elona.dark_dirt_1","elona.dark_dirt_2","elona.dark_dirt_3","elona.dark_dirt_4"}, 2),
          },
 
          fog = "elona.wall_stone_2_fog"
@@ -125,9 +121,9 @@ data:add_multi(
 
          tiles = {
             ["elona.mapgen_floor"] = "elona.wall_dirt_dark_top",
-            ["elona.mapgen_tunnel"] = pick("elona.snow", 3, {"elona.snow_mound"}),
+            ["elona.mapgen_tunnel"] = pick({"elona.snow", "elona.snow_mound", "elona.snow_plants"}, 2),
             ["elona.mapgen_wall"] = "elona.wall_dirt_dark_top",
-            ["elona.mapgen_room"] = pick("elona.dark_dirt_1", 6, {"elona.dark_dirt_2", "elona.dark_dirt_3"}),
+            ["elona.mapgen_room"] = pick({"elona.dark_dirt_1", "elona.dark_dirt_2", "elona.dark_dirt_3", "elona.dark_dirt_4", "elona.destroyed", "elona.dirt_patch"}, 3),
          },
 
          fog = "elona.wall_stone_2_fog"
@@ -140,7 +136,7 @@ data:add_multi(
             ["elona.mapgen_floor"] = "elona.wall_tower_of_fire_top",
             ["elona.mapgen_tunnel"] = "elona.tower_of_fire_tile_2",
             ["elona.mapgen_wall"] = "elona.wall_tower_of_fire_top",
-            ["elona.mapgen_room"] = pick("elona.tower_of_fire_tile_1", 2, {"elona.tower_of_fire_tile_2"})
+            ["elona.mapgen_room"] = pick({"elona.tower_of_fire_tile_1", "elona.tower_of_fire_tile_2"}, 2)
          },
 
          fog = "elona.wall_stone_3_fog"
@@ -153,7 +149,7 @@ data:add_multi(
             ["elona.mapgen_floor"] = "elona.wall_forest_top",
             ["elona.mapgen_tunnel"] = "elona.grass",
             ["elona.mapgen_wall"] = "elona.wall_forest_top",
-            ["elona.mapgen_room"] = pick("elona.grass", 6, {"elona.grass_violets", "elona.grass_rocks", "elona.grass_tall_1", "elona.grass_tall_2", "elona.grass_patch_1"})
+            ["elona.mapgen_room"] = pick({"elona.grass", "elona.grass_violets", "elona.grass_rocks", "elona.grass_tall_1", "elona.grass_tall_2", "elona.grass_patch_1"}, 6)
          },
 
          fog = "elona.wall_stone_1_fog"
@@ -166,7 +162,7 @@ data:add_multi(
             ["elona.mapgen_floor"] = "elona.wall_concrete_top",
             ["elona.mapgen_tunnel"] = "elona.cobble_4",
             ["elona.mapgen_wall"] = "elona.wall_concrete_light_top",
-            ["elona.mapgen_room"] = pick("elona.tile_1", 3, {"elona.tile_2"})
+            ["elona.mapgen_room"] = pick({"elona.tile_1", "elona.tile_2", "elona.tile_3"}, 2)
          },
 
          fog = "elona.wall_stone_3_fog"
@@ -190,9 +186,9 @@ data:add_multi(
 
          tiles = {
             ["elona.mapgen_floor"] = "elona.wall_dirt_top",
-            ["elona.mapgen_tunnel"] = pick("elona.dark_dirt_1", 4, {"elona.dark_dirt_2"}),
+            ["elona.mapgen_tunnel"] = pick({ "elona.dark_dirt_1", "elona.dark_dirt_2", "elona.dark_dirt_3", "elona.dark_dirt_4", "elona.destroyed", "elona.dirt_patch" }, 2),
             ["elona.mapgen_wall"] = "elona.wall_stone_1_top",
-            ["elona.mapgen_room"] = pick("elona.cobble_dark_1", 4, {"elona.cobble_dark_2"})
+            ["elona.mapgen_room"] = pick({"elona.cobble_dark_1", "elona.cobble_dark_2", "elona.cobble_dark_3", "elona.cobble_dark_4"}, 2)
          },
 
          fog = "elona.wall_stone_4_fog"

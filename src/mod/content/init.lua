@@ -390,7 +390,7 @@ local load_map = function(world_map, id)
    local home_entrance = MapArea.iter_map_entrances("not_generated", world_map):filter(find_home):nth(1)
    assert(home_entrance)
 
-   local success, map = MapArea.load_map_of_entrance(home_entrance, true)
+   local success, map = MapArea.load_map_of_entrance(home_entrance, false)
    if not success then
       error(map)
    end
@@ -405,16 +405,22 @@ local function base_init(self, player)
          error(world_map)
       end
 
+      -- TODO set this up automatically, as "root map" or similar
+      local area = save.base.area_mapping:create_area()
+      save.base.area_mapping:add_map_to_area(area.uid, world_map.uid)
+
       local home = load_map(world_map, "elona.your_home")
       local vernis = load_map(world_map, "elona.vernis")
       local palmia = load_map(world_map, "elona.palmia")
+      local lesimas = load_map(world_map, "elona.lesimas")
 
       Map.save(world_map)
       Map.save(home)
       Map.save(vernis)
       Map.save(palmia)
+      Map.save(lesimas)
 
-      Map.set_map(home)
+      Map.set_map(vernis)
 
       assert(Map.current():take_object(player, 15, 12))
       Chara.set_player(player)
@@ -430,15 +436,15 @@ local function base_init(self, player)
    local bow = Item.create("content.bow", nil, nil, {}, player)
    assert(player:equip_item(bow))
 
-   _ppr(Chara.player().equip.body_parts)
    local arrow = Item.create("content.arrow", nil, nil, {}, player)
    assert(player:equip_item(arrow))
-   _ppr(Chara.player().equip.body_parts)
 
    player:refresh()
 
    player.gold = 1000000000
    player.platinum = 1000
+   player.max_hp = 100000000
+   player:heal_to_max()
 end
 
 local function my_start(self, player)

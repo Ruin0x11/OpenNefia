@@ -27,7 +27,7 @@ local function make_tostring(kind, tbl)
                               rawget(self.__class,'__name') or '?')
       end
       return tbl[self]
-         and string.format("%s '%s'", kind, rawget(self, "__name") or "?")
+         and string.format("%s '%s' (%s)", kind, rawget(self, "__name") or "?", string.tostring_raw(self))
          or self
    end
 end
@@ -470,8 +470,6 @@ function class.hotload(old, new)
       rawset(old, "new", method_new)
       rawset(old, "__index", method___index)
       rawset(old, "__newindex", method___newindex)
-
-      print("Hotload onto " .. string.tostring_raw(old))
    elseif _interfaces[old] then
       -- The interface system works in a sort of abstract class/mixin
       -- manner. Interfaces can specify parent interfaces, and on

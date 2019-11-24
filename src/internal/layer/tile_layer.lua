@@ -9,8 +9,11 @@ local tile_layer = class.class("tile_layer", IDrawLayer)
 function tile_layer:init(width, height, coords)
    local coords = Draw.get_coords()
    local tile_atlas = require("internal.global.atlases").get().tile
+   local tw, th = coords:get_size()
 
    self.tile_batch = tile_batch:new(width, height, tile_atlas, coords)
+   self.tile_width = tw
+   self.tile_height = th
 end
 
 function tile_layer:relayout()
@@ -49,8 +52,6 @@ end
 function tile_layer:update(dt, screen_updated)
    if not screen_updated then return end
 
-   self.tile_batch.updated = true
-
    local map = Map.current()
    assert(map ~= nil)
 
@@ -75,9 +76,8 @@ function tile_layer:update(dt, screen_updated)
       end
    end
 
-   map._tiles_dirty = {}
-
    self.tile_batch.shadow = calc_map_shadow(map, save.base.date.hour)
+   self.tile_batch.updated = true
 end
 
 function tile_layer:draw(draw_x, draw_y, offx, offy)

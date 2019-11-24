@@ -2,15 +2,27 @@ local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local sparse_batch = require("internal.draw.sparse_batch")
+local UiTheme = require("api.gui.UiTheme")
+local atlas = require("internal.draw.atlas")
 
 local chara_layer = class.class("chara_layer", IDrawLayer)
 
 function chara_layer:init(width, height)
    local coords = Draw.get_coords()
    local chara_atlas = require("internal.global.atlases").get().chara
+   local shadow_atlas = atlas:new(1, 1, 48, 48)
+   local t = UiTheme.load(self)
+
+   local tiles = {{
+         _id = "shadow",
+         image = "mod/elona/graphic/asset/character_shadow.png"
+   }}
+   shadow_atlas:load(fun.iter(tiles), coords)
 
    self.chara_batch = sparse_batch:new(width, height, chara_atlas, coords)
+   self.shadow_batch = sparse_batch:new(width, height, shadow_atlas, coords)
    self.batch_inds = {}
+   self.shadow_batch_inds = {}
    self.scroll = nil
    self.scroll_frames = 0
    self.scroll_max_frames = 0
@@ -93,10 +105,10 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    -- than one memory can exist for a single UID at a time.
    local scroll = {} -- self:calc_scroll(map)
 
-   for uid, batch_ind in pairs(self.batch_inds) do
-      self.chara_batch:remove_tile(batch_ind.ind)
-      self.batch_inds[uid] = nil
-   end
+   self.chara_batch:clear()
+   self.shadow_batch:clear()
+   self.batch_inds = {}
+   self.shadow_batch_inds = {}
 
    -- TODO: This has to be deferred to the final scroll frame, because
    -- the shadow map has already been updated by this point. This can
@@ -120,6 +132,12 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
             local image = c.image
             local batch_ind = self.batch_inds[i]
             if batch_ind == nil or batch_ind.ind == 0 then
+               local shadow_ind = self.shadow_batch:add_tile {
+                  tile = "shadow#1",
+                  x = x,
+                  y = y
+               }
+               self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }
                local ind = self.chara_batch:add_tile {
                   tile = image,
                   x = x,
@@ -152,7 +170,12 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
 end
 
 function chara_layer:draw(draw_x, draw_y, offx, offy)
-   self.chara_batch:draw(draw_x + offx, draw_y + offy)
+   love.graphics.setBlendMode("subtract")
+   Draw.set_color(255, 255, 255, 110)
+   self.shadow_batch:draw(draw_x + offx, draw_y + offy, 8, 20)
+   love.graphics.setBlendMode("alpha")
+   Draw.set_color(255, 255, 255)
+   self.chara_batch:draw(draw_x + offx, draw_y + offy + 16)
 end
 
 return chara_layer

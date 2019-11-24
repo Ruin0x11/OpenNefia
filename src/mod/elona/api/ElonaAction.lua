@@ -25,7 +25,7 @@ local function shield_bash(chara, target)
 end
 
 local function body_part_where_equipped(chara, flag)
-   return function(entry) return entry.equipped:calc(flag) end
+   return function(entry) return entry.equipped and entry.equipped:calc(flag) end
 end
 
 function ElonaAction.get_melee_weapons(chara)
@@ -182,12 +182,12 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
       local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
       local damage = raw_damage.damage
-      local play_animation = chara:is_player() or true
+      local play_animation = chara:is_player()
       if play_animation then
          local damage_percent = damage * 100 / target:calc("max_hp")
          local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0
-         local cb = Anim.melee_attack(target.x, target.y, target:calc("breaks_into_debris"), kind, damage_percent, is_critical)
-         Gui.start_draw_callback(cb)
+         local anim = Anim.melee_attack(target.x, target.y, target:calc("breaks_into_debris"), kind, damage_percent, is_critical)
+         Gui.start_draw_callback(anim)
       end
 
       local element, element_power

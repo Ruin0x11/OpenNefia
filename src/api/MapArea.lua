@@ -1,18 +1,4 @@
 --- Functions dealing with the connections between maps.
----
---- In Elona_next, maps are linked to each other by keeping a private
---- _outer_map_uid field on maps with entrances from a map one level
---- up, and through feats on overworlds that hold map UIDs to child
---- maps. To know which map is a parent of another map and where the
---- player should arrive when traveling up a level, it is necessary to
---- find the corresponding feat with an entrance to the inner map in
---- the outer map. To go the other direction, you only have to find the
---- entrance in the inner map leading to the outer map.
----
---- It is possible for the connection between two maps to go out of
---- sync since there is no global array of connections to maps.
---- However, it should be difficult to cause this in practice as long
---- as this API is used instead of modifying map feats manually.
 --- @module MapArea
 
 local Feat = require("api.Feat")
@@ -20,6 +6,7 @@ local Log = require("api.Log")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local data = require("internal.data")
+local save = require("internal.global.save")
 local MapArea = {}
 
 -- TODO: do not use an implicit Map.current() in any function, since
@@ -31,6 +18,22 @@ local MapArea = {}
 --- @treturn bool
 function MapArea.is_entrance(feat)
    return feat.generator_params ~= nil or feat.map_uid ~= nil
+end
+
+function MapArea.current()
+   return save.base.area_mapping:area_for_map(Map.current())
+end
+
+function MapArea.area_for_map(map_or_uid)
+   return save.base.area_mapping:area_for_map(map_or_uid)
+end
+
+function MapArea.create_area(outer_map_or_uid, x, y)
+   return save.base.area_mapping:create_area(outer_map_or_uid, x, y)
+end
+
+function MapArea.add_map_to_area(area_uid, map_or_uid)
+   return save.base.area_mapping:add_map_to_area(area_uid, map_or_uid)
 end
 
 --- Iterates the entraces on a map.
@@ -90,35 +93,6 @@ function MapArea.find_entrance_in_outer_map(inner_map_or_uid, outer_map)
    return entrance
 end
 
---- Given an inner and outer map, finds the position in the outer map
---- that the inner map will lead to when traveling from the inner to
---- the outer map. This should be the same position as the position of
---- the stairs in the outer map that lead to the inner map. If there
---- is no entrance leading to the inner map on the outer map, nil is
---- returned.
----
---- @tparam InstancedMap inner_map
---- @tparam[opt] InstancedMap outer_map Defaults to the current map.
---- @treturn[opt] int x
---- @treturn[opt] int y
-function MapArea.find_position_in_outer_map(inner_map, outer_map)
-   outer_map = outer_map or Map.current()
-
-   if inner_map._outer_map_uid == outer_map.uid
-   and inner_map._outer_map_x
-   and inner_map._outer_map_y
-   then
-      return inner_map._outer_map_x, inner_map._outer_map_y
-   end
-
-   local entrance = MapArea.find_entrance_in_outer_map(inner_map, outer_map)
-   if entrance then
-      return entrance.x, entrance.y
-   end
-
-   return nil
-end
-
 --- Given an inner map, loads its outer map.
 ---
 --- @treturn bool success
@@ -126,22 +100,14 @@ end
 function MapArea.load_outer_map(inner_map)
    inner_map = inner_map or Map.current()
 
-   local outer = inner_map._outer_map_uid
-   if not outer then
-      return false, "Map doesn't lead anywhere"
-   end
-
-   local success, err = Map.load(outer)
+   local success, err = Map.world_map_containing(inner_map)
    if not success then
       return false, err
    end
 
    local map = err
-   local start_x, start_y = MapArea.find_position_in_outer_map(inner_map, map)
-
-   if not start_x or not start_y then
-      Log.warn("Outer map %d does not have entrance for inner map %d.", map.uid, inner_map.uid)
-   end
+   local start_x, start_y = Map.position_in_world_map(inner_map)
+   assert(start_x and start_y)
 
    return true, { map = map, start_x = start_x, start_y = start_y }
 end
@@ -187,7 +153,11 @@ end
 --- @tparam int y
 --- @treturn bool success
 function MapArea.set_entrance(inner_map, outer_map, x, y)
-   local existing = inner_map._outer_map_uid
+   local area = save.base.area_mapping:area_for_map(inner_map)
+   local existing
+   if area then
+      existing = area.outer_map_uid
+   end
 
    local entrance
    if existing then
@@ -224,8 +194,13 @@ function MapArea.set_entrance(inner_map, outer_map, x, y)
    end
 
    entrance.map_uid = inner_map.uid
-   inner_map._outer_map_uid = outer_map.uid
-   Log.warn("Associating outer map %d with inner map %d", outer_map.uid, inner_map.uid)
+
+   if area then
+      area.outer_map_uid = outer_map.uid
+   else
+      area = save.base.area_mapping:create_area(outer_map.uid, x, y)
+      save.base.area_mapping:add_map_to_area(area.uid, inner_map.uid)
+   end
 
    return true
 end
@@ -234,10 +209,10 @@ end
 --- It will be generated if necessary.
 ---
 --- @tparam IFeat feat
---- @tparam bool associate If true, associates the inner map with the
---- outer map if it's an entrance.
+--- @tparam bool associate If true, associates the inner map with the feat's map
 --- @treturn bool success
 --- @treturn InstancedMap|string result/error
+--- @treturn bool true if map was generated for the first time
 function MapArea.load_map_of_entrance(feat, associate)
    if not MapArea.is_entrance(feat) then
       return false, "Feat is not a map entrance"
@@ -246,13 +221,33 @@ function MapArea.load_map_of_entrance(feat, associate)
    local outer_map = feat:current_map()
    assert(outer_map)
 
+   local area
+   if feat.map_uid ~= nil then
+      area = MapArea.area_for_map(feat.map_uid)
+   end
+
+   if area == nil then
+      if associate then
+         -- Use the previous map's area. For stairs leading within the
+         -- same dungeon.
+         area = MapArea.area_for_map(outer_map.uid)
+         Log.debug("Using area of previous map: %s", outer_map.uid)
+      else
+         -- Create a new area. For map entrances in the world map,
+         -- where the two areas must be separate.
+         area = MapArea.create_area(outer_map.uid, feat.x, feat.y)
+         Log.debug("Creating new area in outer map: %s", outer_map.uid)
+      end
+   end
+   assert(area, ("No area for map %s"):format(feat.map_uid))
+
    local success, map
    if feat.map_uid == nil then
       local gen_id = feat.generator_params.generator
       local gen_params = feat.generator_params.params
-      gen_params.area_params = feat.area_params
+      local gen_opts = {area_uid = area.uid}
 
-      success, map = Map.generate(gen_id, gen_params)
+      success, map = Map.generate(gen_id, gen_params, gen_opts)
 
       if not success then
          return false, "Couldn't generate map: " .. map
@@ -264,21 +259,10 @@ function MapArea.load_map_of_entrance(feat, associate)
       end
    end
 
-   if associate then
-      -- BUG: This can happen if two maps both contain entrances
-      -- pointing to one another. This means when trying to leave
-      -- either map the player will be moved into the other one
-      -- indefinitely.
-      assert(feat.map_uid ~= outer_map.uid, "Cannot create circular reference between inner/outer maps")
+   feat.map_uid = map.uid
 
-      local is_entrance = feat._id == "elona.map_entrance"
-      assert(is_entrance)
-
-      feat.map_uid = map.uid
-      local outer_map_uid = outer_map.uid
-
-      Log.info("Associating map %d with outer map %d", map.uid, outer_map_uid)
-      map._outer_map_uid = outer_map_uid
+   if MapArea.area_for_map(map.uid) == nil then
+      MapArea.add_map_to_area(area.uid, map.uid)
    end
 
    return true, map

@@ -129,7 +129,7 @@ end
 function PositionPrompt:draw()
    Gui.set_camera_pos(self.target_x, self.target_y)
    local x, y = Gui.tile_to_screen(self.target_x, self.target_y)
-   local draw_x, draw_y, scx, scy = Gui.field_draw_pos()
+   local draw_x, draw_y = Gui.field_draw_pos()
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
    love.graphics.setBlendMode("add")
    Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {127, 127, 255, 50})

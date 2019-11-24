@@ -121,7 +121,7 @@ local function convert_122(gen, params)
 
    local idx = Fs.open(base .. ".idx", "rb")
    local width, height, atlas_no, regen, stair_up = struct.unpack("iiiii", idx:read(4 * 5))
-   Log.debug("Map %s: w:%d h:%d atlas:%d regen:%d stair_up:%d", base, width, height, atlas_no, regen, stair_up)
+   Log.trace("Map %s: w:%d h:%d atlas:%d regen:%d stair_up:%d", base, width, height, atlas_no, regen, stair_up)
 
    local result = InstancedMap:new(width, height)
 

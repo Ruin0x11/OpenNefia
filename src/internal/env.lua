@@ -48,6 +48,9 @@ local SANDBOX_GLOBALS = {
    "utf8",
    "math",
 
+   -- LuaJIT stdlib
+   "bit",
+
    -- OOP library
    "class",
 
@@ -311,13 +314,11 @@ local function gen_require(chunk_loader, can_load_path)
          return package.loaded[req_path]
       end
 
-      Log.debug("HOTLOAD %s", req_path)
       LOADING[req_path] = true
       LOADING_STACK[#LOADING_STACK+1] = req_path
       local result, err = chunk_loader(req_path)
       LOADING_STACK[#LOADING_STACK] = nil
       LOADING[req_path] = false
-      Log.debug("HOTLOAD RESULT %s", tostring(result))
 
       if err then
          IS_HOTLOADING = false
@@ -342,7 +343,7 @@ local function gen_require(chunk_loader, can_load_path)
                table.replace_with(package.loaded[req_path], result)
             end
          end
-         Log.info("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
+         Log.trace("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
       elseif result == nil then
          package.loaded[req_path] = true
       else
@@ -429,10 +430,11 @@ function env.hotload_path(path, also_deps)
       HOTLOAD_DEPS = true
    end
 
-   Log.info("Begin hotload: %s", path)
+   Log.trace("Begin hotload: %s", path)
    IS_HOTLOADING = path
    local result = env.require(path, true)
    IS_HOTLOADING = false
+   Log.trace("End hotload: %s %s", path, inspect(result))
 
    if also_deps then
       HOTLOAD_DEPS = false

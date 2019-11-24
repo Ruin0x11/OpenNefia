@@ -6,7 +6,7 @@ local Calc = {}
 function Calc.calc_object_level(base, map)
    local ret = base or 0
    map = (map or Map.current())
-   if base <= 0 then
+   if base < 0 then
       ret = map:calc("dungeon_level")
    end
 
@@ -48,6 +48,13 @@ function Calc.calc_object_quality(quality)
    end
 
    return math.clamp(ret, 1, 5)
+end
+
+function Calc.filter(level, quality)
+   return {
+      level = Calc.calc_object_level(level),
+      quality = Calc.calc_object_level(quality),
+   }
 end
 
 return Calc

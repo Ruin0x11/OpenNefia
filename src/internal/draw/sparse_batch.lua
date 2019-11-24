@@ -2,7 +2,7 @@ local IBatch = require("internal.draw.IBatch")
 local Draw = require("api.Draw")
 local sparse_batch = class.class("sparse_batch", IBatch)
 
-function sparse_batch:init(width, height, atlas, coords)
+function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.width = width
    self.height = height
    self.atlas = atlas
@@ -13,6 +13,7 @@ function sparse_batch:init(width, height, atlas, coords)
    self.ycoords = {}
    self.xoffs = {}
    self.yoffs = {}
+   self.rotations = {}
    self.colors = {}
 
    self.free_indices = {}
@@ -21,6 +22,8 @@ function sparse_batch:init(width, height, atlas, coords)
    self.updated = true
    self.tile_width = self.atlas.tile_width
    self.tile_height = self.atlas.tile_height
+   self.offset_x = offset_x or 0
+   self.offset_y = offset_y or 0
 end
 
 function sparse_batch:get_tile(ind)
@@ -50,6 +53,7 @@ function sparse_batch:add_tile(params)
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
    self.yoffs[ind] = params.y_offset or 0
+   self.rotations[ind] = params.rotation or 0
    self.updated = true
    return ind
 end
@@ -58,6 +62,20 @@ function sparse_batch:remove_tile(ind)
    self.tiles[ind] = 0
    -- TODO: keep this array sorted from smallest to largest.
    table.insert(self.free_indices, ind)
+   self.updated = true
+end
+
+function sparse_batch:clear()
+   self.tiles = {}
+   self.xcoords = {}
+   self.ycoords = {}
+   self.xoffs = {}
+   self.yoffs = {}
+   self.rotations = {}
+   self.colors = {}
+
+   self.free_indices = {}
+
    self.updated = true
 end
 
@@ -72,11 +90,13 @@ function sparse_batch:set_tile_offsets(ind, ox, oy)
    self.updated = true
 end
 
-function sparse_batch:draw(x, y)
+function sparse_batch:draw(x, y, offset_x, offset_y)
    -- slight speedup
    local batch = self.batch
    local tw = self.tile_width
    local th = self.tile_height
+   offset_x = offset_x or 0
+   offset_y = offset_y or 0
 
    local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
 
@@ -89,6 +109,7 @@ function sparse_batch:draw(x, y)
       local yc = self.ycoords
       local xo = self.xoffs
       local yo = self.yoffs
+      local rots = self.rotations
 
       batch:clear()
 
@@ -109,7 +130,8 @@ function sparse_batch:draw(x, y)
                -- end
                local tile = tiles[tile]
                if tile ~= nil then
-                  batch:add(tile, x, y)
+                  local _, _, tw, th = tile.quad:getViewport()
+                  batch:add(tile.quad, x, y + tile.offset_y, rots[ind], 1, 1, tw / 2, th / 2)
                end
             end
          end
@@ -120,7 +142,7 @@ function sparse_batch:draw(x, y)
       self.updated = false
    end
 
-   love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
+   love.graphics.draw(batch, sx + ox - tw + offset_x, sy + oy - th + offset_y)
 end
 
 return sparse_batch

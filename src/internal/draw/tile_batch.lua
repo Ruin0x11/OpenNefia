@@ -2,7 +2,7 @@ local IBatch = require("internal.draw.IBatch")
 local Draw = require("api.Draw")
 local tile_batch = class.class("tile_batch", IBatch)
 
-function tile_batch:init(width, height, atlas, coords)
+function tile_batch:init(width, height, atlas, coords, tile_width, tile_height, offset_x, offset_y)
    self.width = width
    self.height = height
    self.atlas = atlas
@@ -13,8 +13,8 @@ function tile_batch:init(width, height, atlas, coords)
    self.tiles = table.of(0, width * height)
    self.batch = love.graphics.newSpriteBatch(atlas.image)
    self.updated = true
-   self.tile_width = self.atlas.tile_width
-   self.tile_height = self.atlas.tile_height
+   self.tile_width = tile_width or self.atlas.tile_width
+   self.tile_height = tile_height or self.atlas.tile_height
 end
 
 function tile_batch:find_bounds(x, y)
@@ -36,8 +36,10 @@ function tile_batch:update_tile(x, y, tile)
    if x >= 0 and y >= 0 and x < self.width and y < self.height then
       if self.atlas.tiles[tile] ~= nil then
          self.tiles[y*self.width+x+1] = tile
-         self.updated = true
+      else
+         self.tiles[y*self.width+x+1] = 0
       end
+      self.updated = true
    end
 end
 
@@ -63,7 +65,8 @@ function tile_batch:draw(x, y)
                   local tile = self_tiles[y*self.width+x+1]
                   if tile ~= 0 then
                      local i, j = self.coords:tile_to_screen(x - tx, y - ty)
-                     batch:add(tiles[tile], i, j)
+                     local tile_data = tiles[tile]
+                     batch:add(tile_data.quad, i, j + tile_data.offset_y)
                   end
                end
             end

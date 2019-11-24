@@ -304,9 +304,9 @@ function shadow_batch:draw(x, y, offx, offy)
       self.batch:clear()
       self.edge_batch:clear()
 
-      for y=ty-1,tdy do
+      for y=ty-1,tdy+1 do
          if y >= -1 and y <= self.height then
-            for x=tx-1,tdx do
+            for x=tx-1,tdx+1 do
                if x >= -1 and x <= self.width then
                   local tile = self_tiles[x+1][y+1]
                   local i, j = self.coords:tile_to_screen(x - tx, y - ty)

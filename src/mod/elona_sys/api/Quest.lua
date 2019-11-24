@@ -215,7 +215,6 @@ function Quest.generate(chara)
 
       local min_fame = p.min_fame or 0
       if p.min_fame <= 0 or fame >= p.min_fame then
-         print("test", p._id)
          if Rand.one_in(chance) then
             proto = p
             break
@@ -323,8 +322,8 @@ function Quest.register_town(map)
    if map.is_generated_every_time then
       return nil, "Map must be able to be regenerated (is_generated_every_time = false)"
    end
-   local world_map = Map.world_map_containing(map)
-   if not world_map then
+   local ok, world_map = Map.world_map_containing(map)
+   if not ok then
       return nil, "Map must have containing world map"
    end
 

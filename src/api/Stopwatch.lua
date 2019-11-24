@@ -1,5 +1,6 @@
 local socket = require("socket")
 
+local Log = require("api.Log")
 local Stopwatch = class.class("Stopwatch")
 
 function Stopwatch:init()
@@ -35,7 +36,7 @@ function Stopwatch:measure_and_format(text)
 end
 
 function Stopwatch:p(text)
-   print(self:measure_and_format(text))
+   Log.info(self:measure_and_format(text))
 end
 
 function Stopwatch:bench(f, ...)
