@@ -7,6 +7,8 @@ local Calc = require("mod.elona_sys.api.Calc")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
+local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local function calc_dig_success(chara, x, y, dig_count)
    local success = false
@@ -30,12 +32,34 @@ local function calc_dig_success(chara, x, y, dig_count)
 end
 
 local function do_dig_success(chara, x, y)
+   local map = chara:current_map()
+   local tile = MapTileset.get("elona.mapgen_tunnel", map)
+   map:set_tile(x, y, tile)
+   Gui.play_sound("base.crush1")
+
+   local item = nil
+   if Rand.one_in(5) then
+      item = "gold"
+   end
+   if Rand.one_in(8) then
+      item = "item"
+   end
    -- TODO hidden path
 
-   print(x,y,"dood")
-   chara:current_map():set_tile(x, y, "elona.wood_floor_5")
-   Gui.play_sound("base.crush1")
-   Gui.mes("finish mining wall")
+   Gui.mes("activity.dig_mining.finish.wall")
+
+   if item and not map:calc("cannot_mine_items") then
+      if item == "gold" then
+         Item.create("elona.gold_piece", x, y, map)
+      elseif item == "item" then
+         local Calc = require("mod.elona.api.Calc")
+         local params = Calc.filter(chara:current_map().dungeon_level, 2)
+         params.categories = { "elona.ore" }
+
+         Itemgen.create(x, y, params, map)
+      end
+   end
+
    Skill.gain_skill_exp(chara, "elona.mining", 100)
 end
 

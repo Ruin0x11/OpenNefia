@@ -87,4 +87,21 @@ function MapTileset.apply(tileset_id, map)
    end
 end
 
+function MapTileset.get(tile_id, map)
+   local tileset = data["elona_sys.map_tileset"]:ensure("elona.default")
+   local match = tileset.tiles[tile_id]
+
+   local id
+
+   if match then
+      if type(match) == "string" then
+         id = match
+      elseif type(match) == "function" then
+         id = match(x, y, tile)
+      end
+   end
+
+   return id
+end
+
 return MapTileset

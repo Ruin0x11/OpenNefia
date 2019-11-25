@@ -131,7 +131,7 @@ function field_layer:set_camera_pos(x, y)
    self:update_hud()
 end
 
-function field_layer:update_screen(scroll)
+function field_layer:update_screen(scroll, dt)
    if not self.is_active or not self.renderer then return end
    local sw = require("api.Stopwatch"):new()
 
@@ -169,7 +169,7 @@ function field_layer:update_screen(scroll)
       self.map:calc_screen_sight(player.x, player.y, player:calc("fov") or 15)
    end
 
-   local dt = 0
+   local dt = dt or 0
 
    if not Env.is_headless() then
       local going = true

@@ -421,7 +421,7 @@ local function base_init(self, player)
       Map.save(palmia)
       Map.save(lesimas)
 
-      Map.set_map(vernis)
+      Map.set_map(home)
 
       assert(Map.current():take_object(player, 15, 12))
       Chara.set_player(player)
@@ -452,7 +452,7 @@ local function my_start(self, player)
    base_init(self, player)
 
    for i=1,4 do
-      local a = Chara.create("elona.putit", i+8, 3)
+      local a = Chara.create("elona.little_sister", i+8, 3)
       a:recruit_as_ally()
    end
 
@@ -491,7 +491,7 @@ data:add {
 
    name = "My Scenario",
 
-   on_game_start = init2
+   on_game_start = my_start
 }
 
 require("mod.content.dialog")

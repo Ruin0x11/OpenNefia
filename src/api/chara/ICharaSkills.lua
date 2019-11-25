@@ -54,7 +54,7 @@ local function generate_methods(iface, name, field, ty)
       return self[field][skill] and self[field][skill].level > 0
    end
 
-   iface["gain_" .. name] = function(self, skill)
+   iface["gain_" .. name] = function(self, skill, level)
       data[ty]:ensure(skill)
       self[field][skill] = self[field][skill] or
          {
@@ -64,7 +64,7 @@ local function generate_methods(iface, name, field, ty)
          }
 
       if self[field][skill].level == 0 then
-         self[field][skill].level = 1
+         self[field][skill].level = level or 1
       end
    end
 

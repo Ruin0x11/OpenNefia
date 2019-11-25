@@ -89,6 +89,13 @@ local cell_obj_data = {
    [13] = { 21, 733 },
 }
 
+local doors = {
+   [726] = { open = 236, sound = 48 },
+   [728] = { open = 241, sound = 67 },
+   [730] = { open = 264, sound = 71 },
+   [733] = { open = 265, sound = 48 }
+}
+
 local function build_mapping()
    local mapping = { [0] = {}, [1] = {}, [2] = {} }
 
@@ -215,6 +222,17 @@ local function convert_122(gen, params)
                Log.warn("Failed to create feat %s (%d) at (%d, %d)", id, data[1], x, y)
             else
                feat.image = chip_id
+
+               local door = doors[cell_obj[2]]
+               if door then
+                  local open_chip_id = Compat.convert_122_feat_chip(door.open)
+                  local sound = Compat.convert_122_id("base.sound", door.sound)
+                  assert(open_chip_id and sound)
+
+                  feat.closed_tile = chip_id
+                  feat.opened_tile = open_chip_id
+                  feat.open_sound = sound
+               end
             end
          end
       end

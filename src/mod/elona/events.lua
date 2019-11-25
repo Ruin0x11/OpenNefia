@@ -564,3 +564,23 @@ local function refresh_other_chara(chara, params)
 end
 
 Event.register("base.on_chara_refresh_in_map", "Refresh other character", refresh_other_chara)
+
+local footstep = 0
+local footsteps = {"base.foot1a", "base.foot1b"}
+local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
+Event.register("elona_sys.hook_player_move", "Footsteps in world map",
+               function(_, params, result)
+                  local map = params.chara:current_map()
+                  if map:has_type("world_map") then
+                     local tile = map:tile(params.chara.x, params.chara.y)
+                     if tile.kind == 4 then
+                        Gui.play_sound(snow_footsteps[footstep%2+1])
+                        footstep = footstep + Rand.rnd(2)
+                     else
+                        Gui.play_sound(footsteps[footstep%2+1])
+                        footstep = footstep + 1
+                     end
+                  end
+
+                  return result
+               end)

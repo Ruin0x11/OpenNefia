@@ -127,6 +127,7 @@ local fallbacks = {
    should_regenerate = false,
    is_temporary = false,
    can_exit_from_edge = true,
+   cannot_mine_items = nil,
 
    next_regenerate_date = 0,
    visit_times = 0

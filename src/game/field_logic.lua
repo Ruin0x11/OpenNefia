@@ -222,17 +222,18 @@ function field_logic.player_turn()
    return "player_turn_query"
 end
 
+local dt = 0
+
 function field_logic.player_turn_query()
    local result
    local going = true
-   local dt = 0
 
    local player = Chara.player()
    if not Chara.is_alive(player) then
       return "player_died"
    end
 
-   Gui.update_screen()
+   Gui.update_screen(nil, dt)
 
    while going do
       local ran, turn_result = field:run_actions(dt, player)
