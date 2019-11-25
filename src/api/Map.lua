@@ -58,6 +58,7 @@ end)
 --- @see Map.travel_to
 function Map.set_map(map)
    map:emit("base.on_map_enter")
+   map.visit_times = map.visit_times + 1
    field:set_map(map)
    return field.map
 end
@@ -444,19 +445,9 @@ end
 Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
 
 function Map.refresh(map)
+   Log.info("Refreshing map %d (%s)", map.uid, map.gen_id)
+
    local Chara = require("api.Chara")
-
-   if map.is_generated_every_time then
-      -- Regenerate the map with the same parameters.
-      assert(map.generated_with)
-      local success, err = Map.generate(map.generated_with.id, map.generated_with.params)
-      if not success then
-         return err
-      end
-
-      local new_map = err
-      table.replace(map, new_map)
-   end
 
    if map.should_regenerate and World.date_hours() >= map.next_regenerate_date then
       map:emit("base.on_regenerate_map")
@@ -659,7 +650,7 @@ end
 --- @tparam[opt] table params Extra parameters.
 ---   - start_x (int): starting X position in the new map.
 ---   - start_y (int): starting Y position in the new map.
----   - feat (IFeat)): feat used to travel to this map, like stairs.
+---   - feat (IFeat): feat used to travel to this map, like stairs.
 function Map.travel_to(map_or_uid, params)
    params = params or {}
 
@@ -675,6 +666,20 @@ function Map.travel_to(map_or_uid, params)
    else
       class.assert_is_an(InstancedMap, map_or_uid)
       map = map_or_uid
+   end
+
+   if map.visit_times > 0 and map.is_generated_every_time then
+      Log.info("Regenerating map.")
+      -- Regenerate the map with the same parameters.
+      assert(map.generated_with)
+      local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
+      if not success then
+         return err
+      end
+
+      local new_map = err
+      new_map.uid = map.uid
+      map = new_map
    end
 
    local current = field.map
@@ -738,6 +743,8 @@ function Map.travel_to(map_or_uid, params)
    if not current.is_temporary then
       Map.save(current)
    end
+
+   Map.refresh(map)
 
    Gui.play_sound("base.exitmap1")
    Map.set_map(map)

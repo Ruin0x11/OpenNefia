@@ -185,6 +185,7 @@ local function gen_stair(down)
          local start_x, start_y
          local inner_area = save.base.area_mapping:area_for_map(self:current_map())
          local outer_area = save.base.area_mapping:area_for_map(map)
+         assert(inner_area and outer_area, ("%s %s %s"):format(self:current_map().uid, map.uid, inspect(save.base.area_mapping.maps)))
          if inner_area ~= outer_area then
             assert(map.uid == inner_area.outer_map_uid)
             start_x = outer_area.x
@@ -226,7 +227,12 @@ local function gen_stair(down)
             end
          end
 
-         params = { start_x = start_x, start_y = start_y }
+         params = {
+            start_x = start_x,
+            start_y = start_y,
+            maybe_regenerate = true,
+            feat = self
+         }
 
          Map.travel_to(map, params)
 
@@ -272,7 +278,7 @@ data:add {
          return "player_turn_query"
       end
 
-      Map.travel_to(map)
+      Map.travel_to(map, {maybe_regenerate = true})
 
       return "player_turn_query"
    end,

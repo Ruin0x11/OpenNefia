@@ -117,9 +117,7 @@ function field_renderer:draw()
       end
    end
 
-   for _, i in ipairs(dead) do
-      table.remove(self.draw_callbacks, i)
-   end
+   table.remove_indices(self.draw_callbacks, dead)
 end
 
 function field_renderer:update(dt)

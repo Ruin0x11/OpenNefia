@@ -13,13 +13,23 @@ local level = levels.info
 local filter = nil
 
 -- copied from internal.env
+local PATH_CACHE = {}
 local function convert_to_require_path(path)
+   if PATH_CACHE[path] then
+      return PATH_CACHE[path]
+   end
+
+   local old_path = path
    local path = path
+
    path = string.strip_suffix(path, ".lua")
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
    path = string.strip_suffix(path, ".init")
    path = string.gsub(path, "^%.+", "")
+
+   PATH_CACHE[old_path] = path
+
    return path
 end
 

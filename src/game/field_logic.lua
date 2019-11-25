@@ -116,13 +116,28 @@ function field_logic.determine_turn()
    -- HACK: use a better way that also orders allies first
    local found = nil
    local chara
-   repeat
-      chara_iter_index, chara = chara_iter(chara_iter_state, chara_iter_index)
+   local going = true
+   local any_moved = true
 
-      if chara ~= nil and chara.time_this_turn >= field:turn_cost() then
-         found = chara
+   while going do
+      repeat
+         chara_iter_index, chara = chara_iter(chara_iter_state, chara_iter_index)
+
+         if chara ~= nil and chara.time_this_turn >= field:turn_cost() then
+            found = chara
+            any_moved = true
+         end
+      until found ~= nil or chara_iter_index == nil
+
+      if found or any_moved == false then
+         going = false
       end
-   until found ~= nil or chara_iter_index == nil
+
+      if chara_iter_index == nil then
+         any_moved = false
+         chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
+      end
+   end
 
    return found
 end
@@ -148,13 +163,13 @@ function field_logic.pass_turns()
    -- BUILTIN: gain level
 
    -- if Chara.is_player(chara) then
-      -- actually means beginning of all turns.
+   -- actually means beginning of all turns.
 
-      -- refresh speed?
-      -- prevent escape
-      -- RETURN: potentially exit map here
-      -- proc map events
-      -- ether disease
+   -- refresh speed?
+   -- prevent escape
+   -- RETURN: potentially exit map here
+   -- proc map events
+   -- ether disease
    -- end
 
    if chara:is_player() and not Chara.is_alive(chara) then

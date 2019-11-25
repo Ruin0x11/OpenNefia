@@ -129,6 +129,7 @@ local fallbacks = {
    can_exit_from_edge = true,
 
    next_regenerate_date = 0,
+   visit_times = 0
 }
 
 function InstancedMap:init_map_data()

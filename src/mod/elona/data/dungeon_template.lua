@@ -149,7 +149,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
+         return kind
       end
    }
 )
@@ -178,7 +178,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
+         return kind
       end
    }
 )
@@ -207,7 +207,7 @@ data:add(
             kind = "elona.type_4"
          end
 
-         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
+         return kind
       end
    }
 )
@@ -236,7 +236,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
+         return kind
       end
    }
 )
@@ -247,8 +247,6 @@ data:add(
       _type = "elona.dungeon_template",
 
       image = "elona.feat_area_cave",
-
-      deepest_dungeon_level = 45,
 
       generate = function(rooms, params, opts)
          local tileset = "elona.lesimas"
@@ -304,15 +302,48 @@ data:add(
             end
          end
 
-         params.attempts = 1
+         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
 
-         local map, err = data["elona.dungeon_template"]:ensure(kind).generate(rooms, params, opts)
+         return kind
+      end
+   }
+)
 
-         if map then
-            map.max_crowd_density = map.max_crowd_density + math.floor(params.dungeon_level / 2)
-         end
+data:add(
+   {
+      _id = "tower_of_fire",
+      _type = "elona.dungeon_template",
 
-         return map
+      generate = function(rooms, params, opts)
+         params.tileset = "elona.tower_of_fire"
+         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+         return "elona.type_1"
+      end
+   }
+)
+
+data:add(
+   {
+      _id = "crypt_of_the_damned",
+      _type = "elona.dungeon_template",
+
+      generate = function(rooms, params, opts)
+         params.tileset = "elona.dirt"
+         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+         return "elona.type_1"
+      end
+   }
+)
+
+data:add(
+   {
+      _id = "ancient_castle",
+      _type = "elona.dungeon_template",
+
+      generate = function(rooms, params, opts)
+         params.tileset = "elona.dungeon_castle"
+         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+         return "elona.type_1"
       end
    }
 )

@@ -10,26 +10,7 @@ local World = require("api.World")
 local Resolver = require("api.Resolver")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local MapObject = require("api.MapObject")
-local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Role = require("mod.elona_sys.api.Role")
-
---
---
--- Commands
---
---
-
-Gui.bind_keys {
-   b = function(me)
-      return ElonaCommand.bash(me)
-   end,
-   e = function(me)
-      return ElonaCommand.eat(me)
-   end,
-   i = function(me)
-      return ElonaCommand.dig(me)
-   end
-}
 
 --
 --

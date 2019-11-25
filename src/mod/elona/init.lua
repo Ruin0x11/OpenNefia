@@ -53,3 +53,22 @@ require("mod.elona.data.portrait")
 require("mod.elona.data.quest")
 
 require("mod.elona.events")
+
+
+local Gui = require("api.Gui")
+local ElonaCommand = require("mod.elona.api.ElonaCommand")
+
+Gui.bind_keys {
+   b = function(me)
+      return ElonaCommand.bash(me)
+   end,
+   e = function(me)
+      return ElonaCommand.eat(me)
+   end,
+   f = function(me)
+      return ElonaCommand.fire(me)
+   end,
+   i = function(me)
+      return ElonaCommand.dig(me)
+   end
+}

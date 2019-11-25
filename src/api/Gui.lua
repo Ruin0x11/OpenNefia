@@ -68,11 +68,11 @@ return Draw.get_width() - 72
 end
 
 function Gui.scroll_screen()
-   field:update_screen(true)
+   --field:update_screen(true)
 end
 
 function Gui.set_scroll()
-   scroll = true
+   -- scroll = true
 end
 
 function Gui.key_held_frames()

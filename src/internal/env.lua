@@ -255,12 +255,20 @@ local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 local LOADING_STACK = {}
+local PATH_CACHE = {}
 
 -- Converts a filepath to a uniquely identifying Lua require path.
 -- Examples:
 -- api/chara/IChara.lua -> api.chara.IChara
 -- mod/elona/init.lua   -> mod.elona
 function env.convert_to_require_path(path)
+   -- This function is gets hot since many functions call "require" in
+   -- function bodies to get around circular dependencies.
+   if PATH_CACHE[path] then
+      return PATH_CACHE[path]
+   end
+
+   local old_path = path
    local path = path
 
    -- HACK: needs better normalization to prevent duplicate chunks. If
@@ -272,6 +280,8 @@ function env.convert_to_require_path(path)
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
    path = string.strip_suffix(path, ".init")
+
+   PATH_CACHE[old_path] = path
 
    return path
 end
@@ -529,7 +539,7 @@ function env.is_loaded(path)
    return package.loaded[path] ~= nil
 end
 
-function env.require_all_apis(dir, recurse)
+function env.require_all_apis(dir, recurse, full_path)
    local fs = require("util.fs")
 
    dir = dir or "api"
@@ -538,14 +548,24 @@ function env.require_all_apis(dir, recurse)
 
    for _, api in fs.iter_directory_items(dir .. "/") do
       local path = fs.join(dir, api)
-      if fs.is_file(path) then
-         local name = fs.filename_part(path)
+      if fs.is_file(path) and fs.extension_part(path) == "lua" then
+         local name
+         if full_path then
+            name = env.convert_to_require_path(path)
+         else
+            name = fs.filename_part(path)
+         end
          if api_env[name] then
             Log.warn("Duplicate API required in environment: %s", name)
          end
-         api_env[name] = env.require(path)
+         local success, tbl = pcall(env.require, path)
+         if success then
+            api_env[name] = tbl
+         else
+            Log.debug("API require failed: %s", tbl)
+         end
       elseif fs.is_directory(path) and recurse then
-         table.merge(api_env, env.require_all_apis(path))
+         table.merge(api_env, env.require_all_apis(path, recurse, full_path))
       end
    end
 

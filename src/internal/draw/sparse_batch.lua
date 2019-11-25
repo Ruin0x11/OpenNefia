@@ -131,7 +131,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                local tile = tiles[tile]
                if tile ~= nil then
                   local _, _, tw, th = tile.quad:getViewport()
-                  batch:add(tile.quad, x, y + tile.offset_y, rots[ind], 1, 1, tw / 2, th / 2)
+                  batch:add(tile.quad, x + (tw / 2), y + tile.offset_y + (th / 2), rots[ind], 1, 1, tw / 2, th / 2)
                end
             end
          end

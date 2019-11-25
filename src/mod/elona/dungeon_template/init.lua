@@ -86,9 +86,24 @@ end
 local function generate_dungeon_raw(template, gen_params, opts)
    local rooms = {}
 
-   local map, err = template.generate(rooms, gen_params, opts)
-   if not map then
-      return nil, err
+   local map, err
+   local tries = 0
+   while true do
+      map, err = template.generate(rooms, gen_params, opts)
+      if not map then
+         return nil, err
+      end
+
+      if type(map) == "string" then
+         if tries > 10 then
+            return nil, "More than 10 dungeon generators were composed together."
+         end
+         template = data["elona.dungeon_template"]:ensure(map)
+      else
+         break
+      end
+
+      tries = tries + 1
    end
 
    class.assert_is_an(InstancedMap, map)
@@ -224,31 +239,33 @@ local function generate_dungeon(self, params, opts)
       Log.debug("Setting area %d's deepest level: %d", area.uid, deepest_dungeon_level)
    end
 
-   for _ = 1, 2000 do
+   local attempts = params.attempts or 2000
+   for _ = 1, attempts do
       local width = params.width or 34 + Rand.rnd(15)
       local height = params.height or 22 + Rand.rnd(15)
 
       gen_params = {
          width = width,
          height = height,
+         room_count = width * height / 70,
          min_size = 3,
          max_size = 4,
-         room_count = 3,
          extra_room_count = 10,
          room_entrance_count = 1,
          tunnel_length = width * height,
          hidden_path_chance = 5,
          creature_packs = 1,
          dungeon_level = dungeon_level,
-         deepest_dungeon_level = deepest_dungeon_level
+         deepest_dungeon_level = deepest_dungeon_level,
+         max_crowd_density = width * height / 100
       }
 
       local err
       dungeon, err = generate_dungeon_raw(template, gen_params, opts)
 
       if dungeon then
-         gen_params.id = params.id
-         params = gen_params
+         _ppr(gen_params, params)
+         params = table.merge(gen_params, params)
          break
       end
    end
@@ -260,9 +277,8 @@ local function generate_dungeon(self, params, opts)
    Log.info("Dungeon generated: %s", params.id)
    _ppr(params)
 
-   if params.tileset then
-      MapTileset.apply(params.tileset, dungeon)
-   end
+   local tileset = params.tileset or "elona.dirt"
+   MapTileset.apply(tileset, dungeon)
 
    dungeon.dungeon_level = params.dungeon_level
    assert(dungeon.dungeon_level)

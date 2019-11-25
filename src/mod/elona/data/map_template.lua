@@ -789,15 +789,20 @@ local tower_of_fire = {
    _id = "tower_of_fire",
    _type = "elona_sys.map_template",
    elona_id = 16,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.tower_of_fire",
+         dungeon_level = 15,
+         deepest_dungeon_level = 18
+      }
+   },
    image = "elona.feat_area_tower_of_fire",
    copy = {
       types = { "dungeon_tower" },
       entrance_type = "StairUp",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 15,
-      deepest_dungeon_level = 18,
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
@@ -812,15 +817,20 @@ local crypt_of_the_damned = {
    _id = "crypt_of_the_damned",
    _type = "elona_sys.map_template",
    elona_id = 17,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.crypt_of_the_damned",
+         dungeon_level = 25,
+         deepest_dungeon_level = 30
+      }
+   },
    image = "elona.feat_area_crypt",
    copy = {
       types = { "dungeon" },
       entrance_type = "StairUp",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 25,
-      deepest_dungeon_level = 30,
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
@@ -835,15 +845,20 @@ local ancient_castle = {
    _id = "ancient_castle",
    _type = "elona_sys.map_template",
    elona_id = 18,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.ancient_castle",
+         dungeon_level = 17,
+         deepest_dungeon_level = 22
+      }
+   },
    image = "elona.feat_area_castle",
    copy = {
       types = { "dungeon_castle" },
       entrance_type = "StairUp",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 17,
-      deepest_dungeon_level = 22,
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
@@ -887,15 +902,20 @@ local mountain_pass = {
    _id = "mountain_pass",
    _type = "elona_sys.map_template",
    elona_id = 26,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.type_8",
+         dungeon_level = 25,
+         deepest_dungeon_level = 29
+      }
+   },
    image = "elona.feat_area_dungeon",
    copy = {
       types = { "dungeon" },
       entrance_type = "StairDown",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 25,
-      deepest_dungeon_level = 29,
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0
@@ -907,18 +927,24 @@ local puppy_cave = {
    _id = "puppy_cave",
    _type = "elona_sys.map_template",
    elona_id = 27,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.type_10",
+         dungeon_level = 2,
+         deepest_dungeon_level = 5
+      }
+   },
    image = "elona.feat_area_dungeon",
    copy = {
       types = { "dungeon" },
       entrance_type = "StairUp",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 2,
-      deepest_dungeon_level = 5,
       is_outdoor = false,
       has_anchored_npcs = false,
       default_ai_calm = 0,
+      is_generated_every_time = true
    }
 }
 data:add(puppy_cave)
@@ -927,7 +953,14 @@ local minotaurs_nest = {
    _id = "minotaurs_nest",
    _type = "elona_sys.map_template",
    elona_id = 38,
-   map = "dungeon1",
+   map = {
+      generator = "elona.dungeon_template",
+      params = {
+         id = "elona.type_9",
+         dungeon_level = 23,
+         deepest_dungeon_level = 27
+      }
+   },
    image = "elona.feat_area_dungeon",
    copy = {
       types = { "dungeon" },

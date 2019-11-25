@@ -58,10 +58,11 @@ local function generate_from_map_template(self, params, opts)
       error("Could not generate map: " .. map)
    end
 
-   if template.copy_to_map then
-      local copy = Resolver.resolve(template.copy_to_map)
+   if template.copy then
+      local copy = Resolver.resolve(template.copy)
 
       for k, v in pairs(copy) do
+         print("copy", k, v)
          map[k] = v
       end
    end
@@ -107,7 +108,9 @@ local function load_map_template(map, params, opts)
    -- many ways that may not have a "copy" table available. In that
    -- case a data type for map entrances would have to be created.
    if template.copy then
-      for k, v in pairs(template.copy) do
+      local copy = Resolver.resolve(template.copy)
+
+      for k, v in pairs(copy) do
          if type(k) == "string" and k:sub(1, 1) ~= "_" then
             if type(v) == "function" and map[k] == nil then
                map[k] = v

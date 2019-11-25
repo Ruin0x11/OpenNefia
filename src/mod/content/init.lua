@@ -147,6 +147,7 @@ data:add {
 
    name = "arrow",
    image = "elona.item_bolt",
+   skill = "elona.bow",
 
    equip_slots = {
       "elona.ammo"
@@ -340,11 +341,11 @@ Event.register("elona.on_physical_attack_miss",
                "damage popups",
                function(source, p)
                   local Map = require("api.Map")
-                  if Map.is_in_fov(source.x, source.y) then
+                  if Map.is_in_fov(p.target.x, p.target.y) then
                      if p.hit == "evade" then
-                        DamagePopup.add(source.x, source.y, "evade!!")
+                        DamagePopup.add(p.target.x, p.target.y, "evade!!")
                      else
-                        DamagePopup.add(source.x, source.y, "miss")
+                        DamagePopup.add(p.target.x, p.target.y, "miss")
                      end
                   end
                end,
@@ -464,6 +465,25 @@ local function my_start(self, player)
    end
 end
 
+local function init2(self, player)
+   local _, m = Map.generate("content.test")
+   Map.set_map(m)
+
+   assert(Map.current():take_object(player, 15, 12))
+   Chara.set_player(player)
+   local bow = Item.create("content.bow", nil, nil, {}, player)
+   assert(player:equip_item(bow))
+
+   local arrow = Item.create("content.arrow", nil, nil, {}, player)
+   assert(player:equip_item(arrow))
+   player.gold = 1000000000
+   player.platinum = 1000
+   player.max_hp = 100000000
+   player:heal_to_max()
+
+   fun.range(600):each(function() Chara.create("elona.silver_bell") end)
+end
+
 
 data:add {
    _type = "base.scenario",
@@ -471,7 +491,7 @@ data:add {
 
    name = "My Scenario",
 
-   on_game_start = base_init
+   on_game_start = init2
 }
 
 require("mod.content.dialog")

@@ -47,6 +47,15 @@ function Repl.wrap_last_input_as_function()
    return f, err
 end
 
+function Repl.wrap_last_input_as_iterator()
+   local f, err = Repl.wrap_last_input_as_function()
+   if not f then
+      return f, err
+   end
+
+   return fun.tabulate(f)
+end
+
 --- Queues a code block that runs the next time execution enters the
 --- player's control. If the code returns a turn result, it is used as
 --- the player's turn.

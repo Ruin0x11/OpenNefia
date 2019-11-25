@@ -59,6 +59,9 @@ function item_layer:update(dt, screen_updated, scroll_frames)
             and self.batch_inds[i.uid] ~= 0
 
          if show then
+            --
+            -- Item chip.
+            --
             local batch_ind = self.batch_inds[i.uid]
             local image = i.image
             local x_offset = i.x_offset
@@ -86,39 +89,72 @@ function item_layer:update(dt, screen_updated, scroll_frames)
                end
             end
 
+
+            --
+            -- Item drop shadow.
+            --
             batch_ind = self.shadow_batch_inds[i.uid]
             image = i.image
             x_offset = i.x_offset
             y_offset = i.y_offset
             local rotation = i.shadow or 20
-            if batch_ind == nil or batch_ind == 0 then
-               self.shadow_batch_inds[i.uid] = self.shadow_batch:add_tile {
-                  tile = image,
-                  x = x,
-                  y = y,
-                  x_offset = x_offset + math.floor(rotation/15),
-                  y_offset = y_offset,
-                  rotation = math.rad(it)
-               }
-            else
-               local tile, px, py = self.shadow_batch:get_tile(batch_ind)
 
-               if px ~= x or py ~= i or tile ~= image then
-                  self.shadow_batch:remove_tile(batch_ind)
+            local draw = true
+            local image_data = self.item_batch.atlas.tiles[image]
+            local is_tall = false
+            if image_data then
+               local _, _, tw, th = image_data.quad:getViewport()
+               is_tall = tw * 2 == th
+            end
+
+            if is_tall then
+               x_offset = i.x_offset + rotation / 2
+               y_offset = i.y_offset - 4
+               rotation = rotation / 4
+            else
+               if i.y_offset < self.item_batch.tile_height / 2 then
+                  x_offset = i.x_offset + rotation / 80 + 2
+                  y_offset = i.y_offset - 2
+                  rotation = rotation / 4
+               else
+                  draw = false
+               end
+            end
+
+            if draw then
+               if batch_ind == nil or batch_ind == 0 then
                   self.shadow_batch_inds[i.uid] = self.shadow_batch:add_tile {
                      tile = image,
                      x = x,
                      y = y,
-                     x_offset = x_offset + math.floor(rotation/15),
+                     x_offset = x_offset,
                      y_offset = y_offset,
-                     rotation = math.rad(it)
+                     rotation = math.rad(rotation)
                   }
+               else
+                  local tile, px, py = self.shadow_batch:get_tile(batch_ind)
+
+                  if px ~= x or py ~= i or tile ~= image then
+                     self.shadow_batch:remove_tile(batch_ind)
+                     self.shadow_batch_inds[i.uid] = self.shadow_batch:add_tile {
+                        tile = image,
+                        x = x,
+                        y = y,
+                        x_offset = x_offset,
+                        y_offset = y_offset,
+                        rotation = math.rad(rotation)
+                     }
+                  end
                end
+            else
+               self.shadow_batch:remove_tile(self.shadow_batch_inds[i.uid])
+               self.shadow_batch_inds[i.uid] = 0
             end
          elseif hide then
             self.item_batch:remove_tile(self.batch_inds[i.uid])
             self.shadow_batch:remove_tile(self.shadow_batch_inds[i.uid])
             self.batch_inds[i.uid] = 0
+            self.shadow_batch_inds[i.uid] = 0
          end
       end
    end
@@ -137,9 +173,9 @@ end
 
 function item_layer:draw(draw_x, draw_y, offx, offy)
    love.graphics.setShader(self.shader)
-   Draw.set_color(255, 255, 255, 255 - 80)
+   Draw.set_color(255, 255, 255, 80)
    love.graphics.setBlendMode("subtract")
-   self.shadow_batch:draw(draw_x + offx, draw_y + offy, 0, -4)
+   self.shadow_batch:draw(draw_x + offx, draw_y + offy)
    love.graphics.setShader()
    Draw.set_color(255, 255, 255)
    love.graphics.setBlendMode("alpha")

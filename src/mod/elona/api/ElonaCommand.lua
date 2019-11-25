@@ -96,6 +96,32 @@ function ElonaCommand.dig(player)
    return "turn_end"
 end
 
+function ElonaCommand.fire(player)
+   local pred = function(c)
+      return Chara.is_alive(c) and player:reaction_towards(c) < 0
+   end
+
+   local targets = Map.iter_charas():filter(pred):to_list()
+   table.sort(targets, function(a, b)
+                 return Pos.dist(player.x, player.y, a.x, a.y)
+                    < Pos.dist(player.x, player.y, b.x, b.y)
+   end)
+   local target = targets[1]
+
+   if not target then
+      Gui.mes("Nobody in the map.")
+      return "player_turn_query"
+   end
+
+   local result = ElonaAction.ranged_attack(player, target)
+
+   if not result then
+      return "player_turn_query"
+   end
+
+   return "turn_end"
+end
+
 function ElonaCommand.increment_sleep_potential(player)
    local stats = data["base.skill"]:iter():filter(function(s) return s.skill_type == "stat" end):extract("_id")
    local levels = 0

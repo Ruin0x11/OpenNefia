@@ -67,6 +67,8 @@ end
 
 function IItem:build()
    self:emit("base.on_build_item")
+
+   self:refresh()
 end
 
 function IItem:instantiate()
@@ -106,20 +108,21 @@ function IItem:build_name(amount)
    return s
 end
 
-local function is_weapon(item)
-   return not item:is_equipped_at("elona.ranged")
+local function is_melee_weapon(item)
+   return item:is_equipped()
+      and not item:is_equipped_at("elona.ranged")
       and not item:is_equipped_at("elona.ammo")
       and item:calc("dice_x") > 0
 end
 
 local function is_ranged_weapon(item)
-   return item:is_equipped_at("elona.ranged")
-      and item:calc("dice_x") > 0
+   return item:is_equipped()
+      and item:is_equipped_at("elona.ranged")
 end
 
 local function is_ammo(item)
-   return item:is_equipped_at("elona.ammo")
-      and item:calc("dice_x") > 0
+   return item:is_equipped()
+      and item:is_equipped_at("elona.ammo")
 end
 
 function IItem:refresh()
@@ -127,7 +130,7 @@ function IItem:refresh()
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
 
-   self:mod("is_weapon", is_weapon(self))
+   self:mod("is_melee_weapon", is_melee_weapon(self))
    self:mod("is_ranged_weapon", is_ranged_weapon(self))
    self:mod("is_ammo", is_ammo(self))
    self:mod("is_armor", self:calc("dice_x") == 0)
@@ -149,7 +152,8 @@ function IItem:get_owning_chara()
 end
 
 function IItem:produce_memory()
-   local shadow = 20
+   local shadow
+   local is_tall = false
    local image = data["base.chip"][self.image]
    if image then
       shadow = image.shadow or shadow

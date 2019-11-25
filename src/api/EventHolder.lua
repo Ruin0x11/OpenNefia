@@ -108,6 +108,7 @@ function EventHolder:count(event_id)
 end
 
 function EventHolder:trigger(event_id, source, args, default)
+   -- print("emit", event_id)
    check_event(event_id)
 
    args = args or {}

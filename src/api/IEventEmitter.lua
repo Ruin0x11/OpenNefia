@@ -65,7 +65,7 @@ function IEventEmitter:emit(event_id, params, result, global_events)
       return nil
    end
 
-   self:emit("base.before_handle_self_event", {event_id = event_id, params = params, result = result})
+   -- self:emit("base.before_handle_self_event", {event_id = event_id, params = params, result = result})
 
    return self._events:trigger(event_id, self, params, result)
 end

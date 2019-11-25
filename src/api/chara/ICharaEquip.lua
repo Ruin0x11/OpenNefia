@@ -63,6 +63,7 @@ function ICharaEquip:equip_item(item, force)
    end
 
    local result = self.equip:equip(item)
+   item:refresh()
 
    return result
 end
@@ -91,6 +92,7 @@ function ICharaEquip:unequip_item(item)
    end
 
    local result = self:take_item(item)
+   item:refresh()
 
    return result
 end

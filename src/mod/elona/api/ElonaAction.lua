@@ -24,12 +24,12 @@ local function shield_bash(chara, target)
    end
 end
 
-local function body_part_where_equipped(chara, flag)
+local function body_part_where_equipped(flag)
    return function(entry) return entry.equipped and entry.equipped:calc(flag) end
 end
 
 function ElonaAction.get_melee_weapons(chara)
-   local pred = body_part_where_equipped "is_weapon"
+   local pred = body_part_where_equipped "is_melee_weapon"
    return chara:iter_body_parts():filter(pred):extract("equipped")
 end
 
@@ -57,25 +57,35 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
 
    pred = body_part_where_equipped "is_ammo"
    local ammo = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
+
+   if ranged == nil then
+      return nil, "No ranged weapon."
+   end
+
+   local skill = "elona.throwing"
+   if ammo then
+      skill = ammo:calc("skill")
+   end
+
+   if ranged:calc("skill") ~= skill then
+      return nil, ("Incompatible skills (weapon: %s, ammo: %s)"):format(ranged:calc("skill"), skill)
+   end
+
+   return ranged, ammo
 end
 
-function ElonaAction.ranged_attack(chara)
-   local target = require("mod.tools.api.Tools").enemy()
-   -- TODO ammo
-   if target then
-      local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
-      if not weapon then
-         Gui.mes("No ranged weapon.")
-         return
-      end
-      if not ammo then
-         Gui.mes("No ammo.")
-         return
-      end
-
-      local skill = weapon:calc("skill")
-      ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo)
+function ElonaAction.ranged_attack(chara, target)
+   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+   if not weapon then
+      local err = ammo
+      Gui.mes(err)
+      return false, err
    end
+
+   local skill = weapon:calc("skill")
+   ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo)
+
+   return true
 end
 
 local function calc_exp_modifier(target)
@@ -212,7 +222,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    else
       local play_sound = chara:is_player()
       if play_sound then
-         Gui.play_sound("base.miss")
+         Gui.play_sound("base.miss", target.x, target.y)
       end
       chara:emit("elona.on_physical_attack_miss", {weapon=weapon,target=target,hit=hit,is_ranged=is_ranged,attack_skill=attack_skill})
    end
