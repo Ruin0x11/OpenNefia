@@ -120,7 +120,10 @@ end
 function mod.load_mods(mods)
    local load_order = mod.calculate_load_order(mods)
 
-   Log.info("Loading mods: %s", inspect(load_order))
+   local mod_names = fun.iter(load_order)
+      :extract("id")
+   :foldl(function(acc, s) return (acc and (acc .. " ") or "") .. s end)
+   Log.info("Loading mods: %s", mod_names)
 
    for _, mod in ipairs(load_order) do
       local manifest = fs.join(mod.root_path, "mod.lua")

@@ -8,6 +8,7 @@
 
 local field = require("game.field")
 local data = require("internal.data")
+local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
@@ -254,10 +255,29 @@ end
 --- @tparam[opt] InstancedMap map
 --- @treturn bool
 function Map.can_access(x, y, map)
-   local Chara = require("api.Chara")
    return Map.is_in_bounds(x, y, map)
       and Map.is_floor(x, y, map)
-      and Chara.at(x, y, map) == nil
+end
+
+--- Calculates access to a tile with respect to the objects on it.
+--- Allows excluding an object, so you can for example calculate
+--- access to tile ignoring a character on it.
+---
+--- In Elona_next this is necessary since the blocked state of a tile
+--- is dependent on the "is_solid" flag of all the objects on it along
+--- with the "is_solid" flag of the tile.
+---
+--- @tparam int x
+--- @tparam int y
+--- @tparam table params Extra parameters.
+---  - exclude (IMapObject[opt]): An object to exclude from access
+---    calculation.
+--- @tparam[opt] InstancedMap map
+--- @treturn bool
+function Map.recalc_access(x, y, params, map)
+   params = params or {}
+   return Map.is_in_bounds(x, y, map)
+      and map:recalc_access(x, y, params.exclude)
 end
 
 --- Gets the tile at a position for a map.
@@ -286,24 +306,6 @@ end
 --- @treturn Iterator(IMapObject)
 function Map.iter_objects_at(x, y, map)
    return (map or field.map):iter_objects_at(x, y)
-end
-
---- @tparam[opt] InstancedMap map
---- @treturn Iterator(IChara)
-function Map.iter_charas(map)
-   return (map or field.map):iter_charas()
-end
-
---- @tparam[opt] InstancedMap map
---- @treturn Iterator(IItem)
-function Map.iter_items(map)
-   return (map or field.map):iter_items()
-end
-
---- @tparam[opt] InstancedMap map
---- @treturn Iterator(IFeat)
-function Map.iter_feats(map)
-   return (map or field.map):iter_feats()
 end
 
 --- Generates a new map using a map generator template.
@@ -358,7 +360,7 @@ end
 local function relocate_chara(chara, map)
    local x, y
    for i=1, 1000 do
-      if cnt <= 100 then
+      if i <= 100 then
          x = chara.x + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
          y = chara.y + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
       else
@@ -397,9 +399,7 @@ local function refresh_chara(chara, map)
    chara:emit("base.on_chara_refresh_in_map")
 
    local on_cell = Chara.at(chara.x, chara.y, map)
-   local can_access = Map.is_in_bounds(chara.x, chara.y, map)
-      and Map.is_floor(chara.x, chara.y, map)
-      and (on_cell == nil or on_cell.uid == chara.uid)
+   local can_access = Map.recalc_access(chara.x, chara.y, {exclude=chara}, map)
 
    if not can_access then
       relocate_chara(chara, map)
@@ -458,7 +458,7 @@ function Map.refresh(map)
       -- three_years_later
       -- update_adventureres
 
-      for _, chara in Map.iter_charas(map) do
+      for _, chara in Chara.iter(map) do
          refresh_chara(chara, map)
       end
    end
@@ -635,7 +635,11 @@ function Map.try_place_chara(chara, x, y, map)
       chara.initial_x = real_x
       chara.initial_y = real_y
 
-      return map:take_object(chara, real_x, real_y)
+      local result = map:take_object(chara, real_x, real_y)
+      if result then
+         map:refresh_tile(real_x, real_y)
+      end
+      return result
    end
 
    failed_to_place(chara)

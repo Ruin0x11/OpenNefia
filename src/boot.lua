@@ -1,3 +1,6 @@
+_DEBUG = false
+_CONSOLE = _CONSOLE or false
+
 package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua"
 
 local dir_sep = package.config:sub(1,1)
@@ -9,34 +12,18 @@ if love == nil then
       package.path = package.path .. ";..\\lib\\luasocket\\?.lua"
    end
 
-   _DEBUG = true
+   _CONSOLE = true
+
    love = require("util.lovemock")
 end
 
 -- globals that will be used very often.
 
-_DEBUG = true
+if _DEBUG then
+   _CONSOLE = true
+end
 
 require("ext")
-
-mobdebug = require("mobdebug")
-mobdebug.is_running = function()
-   local _, mask = debug.gethook(coroutine.running())
-   return mask == "crl"
-end
-mobdebug.scope = function(f)
-   local set = false
-   if _DEBUG and mobdebug.is_running() then
-      set = true
-      mobdebug.off()
-   end
-
-   f()
-
-   if set then
-      mobdebug.on()
-   end
-end
 
 inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")

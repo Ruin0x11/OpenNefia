@@ -54,7 +54,7 @@ function EmotionIcon.set(chara, id, turns)
 end
 
 function EmotionIcon.clear_all()
-   for _, c in Map.iter_charas() do
+   for _, c in Chara.iter() do
       EmotionIcon.set(chara, nil)
    end
 end

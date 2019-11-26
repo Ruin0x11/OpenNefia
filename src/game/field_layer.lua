@@ -55,13 +55,10 @@ function field_layer:setup_repl()
    local apis = env.require_all_apis("api", true)
    repl_env = table.merge(repl_env, apis)
 
-   -- WARNING: for development only.
-   if _DEBUG then
-      repl_env = table.merge(repl_env, _G)
-      repl_env = table.merge(repl_env, env.require_all_apis("internal"))
-      repl_env = table.merge(repl_env, env.require_all_apis("game"))
-      repl_env["save"] = save
-   end
+   repl_env = table.merge(repl_env, _G)
+   repl_env = table.merge(repl_env, env.require_all_apis("internal"))
+   repl_env = table.merge(repl_env, env.require_all_apis("game"))
+   repl_env["save"] = save
 
    -- HACK: remove
    local history = {}
@@ -76,7 +73,6 @@ function field_layer:setup_repl()
       local chunk = loadfile("repl_startup.lua")
       setfenv(chunk, repl_env)
       chunk()
-      print("OK")
    end
 
    self.repl = ReplLayer:new(repl_env, history)

@@ -1,3 +1,4 @@
+local socket = require("socket")
 local profile = require("thirdparty.profile")
 local env = require("internal.env")
 local Event = require("api.Event")
@@ -5,6 +6,9 @@ local Event = require("api.Event")
 local Profile = {}
 
 function Profile.hook_all()
+   if true then
+      return
+   end
    profile.hookall()
 
    local apis = env.require_all_apis("api", true, true)
@@ -58,6 +62,7 @@ function Profile.hook_all()
 end
 
 function Profile.reset()
+   profile.setclock(socket.gettime)
    profile.reset()
 end
 
@@ -71,6 +76,18 @@ end
 
 function Profile.report(kind)
    return profile.report(kind)
+end
+
+function Profile.run(cb, times, ...)
+   Profile.start()
+
+   for _ = 1, times or 1 do
+      cb(...)
+   end
+
+   Profile.stop()
+
+   return Profile.report(100)
 end
 
 return Profile

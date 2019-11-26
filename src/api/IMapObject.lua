@@ -33,6 +33,7 @@ end
 --- @tparam int x
 --- @tparam int y
 --- @tparam[opt] bool force
+--- @treturn bool true if succeeded
 function IMapObject:set_pos(x, y, force)
    local location = self.location
 
@@ -43,7 +44,14 @@ function IMapObject:set_pos(x, y, force)
       return false
    end
 
+   local old_x, old_y = self.x, self.y
+
    location:move_object(self, x, y)
+
+   if location.refresh_tile then
+      location:refresh_tile(old_x, old_y)
+      location:refresh_tile(x, y)
+   end
 
    return true
 end

@@ -95,7 +95,7 @@ local function gen_faction_pred(faction)
       local pred = function(c)
          return Chara.is_alive(c) and c.faction == faction
       end
-      return Map.iter_charas():filter(pred)
+      return Chara.iter():filter(pred)
    end
 end
 
@@ -112,7 +112,7 @@ function Tools.citizen()
 end
 
 function Tools.dump_charas()
-   local t = Map.iter_charas()
+   local t = Chara.iter()
    :map(function(c) return { tostring(c.uid), c.x, c.y } end)
       :to_list()
 
@@ -120,7 +120,7 @@ function Tools.dump_charas()
 end
 
 function Tools.dump_items()
-   local t = Map.iter_items()
+   local t = Item.iter()
    :map(function(i) return { tostring(i.uid), i.x, i.y } end)
       :to_list()
 
@@ -143,7 +143,7 @@ function Tools.clone_me(times)
 end
 
 function Tools.take_all()
-   Map.iter_items():each(function(item) Action.get(Chara.player(), item) end)
+   Item.iter():each(function(item) Action.get(Chara.player(), item) end)
 end
 
 function Tools.drop_all()
@@ -466,6 +466,10 @@ function Tools.to_percent_probabilities(probs)
    result[#probs+1] = total
 
    return result
+end
+
+function Tools.cpos()
+   return Chara.player().x, Chara.player().y
 end
 
 return Tools

@@ -23,6 +23,14 @@ function Feat.at(x, y, map)
    return map:iter_type_at_pos("base.feat", x, y)
 end
 
+--- Iterates all feats in the map.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IFeat)
+function Feat.iter(map)
+   return (map or field.map):iter_feats()
+end
+
 --- Creates a new feat. Returns the feat on success, or nil if
 --- creation failed.
 ---

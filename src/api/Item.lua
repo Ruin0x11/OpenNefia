@@ -19,6 +19,12 @@ function Item.at(x, y, map)
    return map:iter_type_at_pos("base.item", x, y):filter(Item.is_alive)
 end
 
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IItem)
+function Item.iter(map)
+   return (map or field.map):iter_items()
+end
+
 --- Returns true if this item has any amount remaining and is
 --- contained in the current map. Will also handle nil values.
 ---

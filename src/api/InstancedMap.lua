@@ -480,6 +480,23 @@ function InstancedMap:is_in_fov(x, y)
    return self._in_sight[y*self._width+x+1] == self._last_sight_id
 end
 
+function InstancedMap:recalc_access(x, y, exclude)
+   local solid = self:tile(x, y).is_solid
+   if solid then
+      return false
+   end
+
+   for _, obj in self._multi_pool:objects_at_pos(x, y) do
+      if not exclude or obj.uid ~= exclude.uid then
+         if obj:calc("is_solid") then
+            return false
+         end
+      end
+   end
+
+   return true
+end
+
 function InstancedMap:refresh_tile(x, y)
    local tile = self:tile(x, y)
 
@@ -489,12 +506,12 @@ function InstancedMap:refresh_tile(x, y)
    local opaque = tile.is_opaque
 
    for _, obj in self._multi_pool:objects_at_pos(x, y) do
-      solid = solid or obj:calc("is_solid")
-      opaque = opaque or obj:calc("is_opaque")
-
       if solid and opaque then
          break
       end
+
+      solid = solid or obj:calc("is_solid")
+      opaque = opaque or obj:calc("is_opaque")
    end
 
    local ind = y * self._width + x + 1

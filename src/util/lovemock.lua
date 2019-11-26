@@ -32,7 +32,7 @@ love.graphics.newSpriteBatch = function()
 end
 love.graphics.newQuad = function()
    return {
-      getViewport = function() return 0, 0, 100, 100 end
+      getViewport = function() return 0, 0, 48, 48 end
    }
 end
 love.graphics.newCanvas = function()
@@ -48,12 +48,15 @@ end
 love.graphics.newImage = function(path)
    check_path(path)
    return {
-      getWidth = function() return 100 end,
-      getHeight = function() return 100 end,
+      getWidth = function() return 48 end,
+      getHeight = function() return 48 end,
       setFilter = function() end,
       release = function() end,
       typeOf = function(self, ty) return ty == "Image" end
    }
+end
+love.graphics.newShader = function()
+   return {}
 end
 love.graphics.draw = function() end
 love.image.newImageData = function(path)
@@ -61,8 +64,8 @@ love.image.newImageData = function(path)
    return {
       mapPixel = function() end,
       getPixel = function() return 1, 0, 0 end,
-      getWidth = function() return 100 end,
-      getHeight = function() return 100 end,
+      getWidth = function() return 48 end,
+      getHeight = function() return 48 end,
       release = function() end,
    }
 end

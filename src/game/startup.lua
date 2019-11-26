@@ -11,6 +11,10 @@ local Log = require("api.Log")
 local startup = {}
 
 function startup.run(mods)
+   if jit and jit.status() == false then
+      Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
+   end
+
    math.randomseed(internal.get_timestamp())
 
    require("internal.data.base")

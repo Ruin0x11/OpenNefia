@@ -319,7 +319,7 @@ function Skill.gain_level(chara, show_message)
    chara.experience = math.max(chara.experience - chara.required_experience, 0)
    chara.level = chara.level + 1
 
-   if show_text then
+   if show_message then
       if chara:is_player() then
          Gui.mes_c("chara.gain_level.self", "Green", chara, chara.level)
       else
@@ -342,7 +342,7 @@ function Skill.gain_level(chara, show_message)
    chara.skill_bonus = chara.skill_bonus + skill_bonus
    chara.total_skill_bonus = chara.total_skill_bonus + skill_bonus
 
-   if chara.race == "elona.mutant" or chara:has_trait("extra_body_party") then
+   if chara:has_trait("elona.extra_body_parts") then
       if chara.level < 37 and chara.level % 3 == 0 and chara.max_level < chara.level then
          Skill.gain_random_body_part(chara, true)
       end

@@ -3,16 +3,17 @@ local socket = require("socket")
 local Log = require("api.Log")
 local Stopwatch = class.class("Stopwatch")
 
-function Stopwatch:init()
+function Stopwatch:init(precision)
    self.time = socket.gettime()
    self.framerate = 60
+   self.precision = precision or 5
 end
 
-function Stopwatch:measure(precision)
+function Stopwatch:measure()
    local new = socket.gettime()
    local result = new - self.time
    self.time = new
-   return math.round(result * 1000, precision or 5)
+   return math.round(result * 1000, self.precision)
 end
 
 local function msecs_to_frames(msecs, framerate)
@@ -29,7 +30,7 @@ function Stopwatch:measure_and_format(text)
    end
 
    local msecs = self:measure()
-   return string.format("%s\t%02.02fms\t(%02.02f frames)",
+   return string.format("%s\t%02." .. string.format("%02d", self.precision) .. "fms\t(%02.02f frames)",
                         text,
                         msecs,
                         msecs_to_frames(msecs, self.framerate))

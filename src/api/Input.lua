@@ -10,6 +10,7 @@ local Prompt = require("api.gui.Prompt")
 local TextPrompt = require("api.gui.TextPrompt")
 local NumberPrompt = require("api.gui.NumberPrompt")
 local DirectionPrompt = require("api.gui.DirectionPrompt")
+local PositionPrompt = require("api.gui.PositionPrompt")
 
 local Input = {}
 
@@ -110,6 +111,22 @@ function Input.query_direction(chara)
    end
 
    return result
+end
+
+--- Queries the player for a position.
+---
+--- @tparam[opt] IChara chara Defaults to the player.
+--- @treturn[opt] int x
+--- @treturn[opt] int y
+--- @treturn[opt] string error
+function Input.query_position(chara)
+   chara = chara or Chara.player()
+   local result, canceled = PositionPrompt:new(chara.x, chara.y):query()
+   if canceled then
+      return result, canceled
+   end
+
+   return result.x, result.y
 end
 
 return Input

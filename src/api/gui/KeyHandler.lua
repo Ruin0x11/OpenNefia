@@ -107,10 +107,12 @@ function KeyHandler:run_key_action(key, ...)
 
    local func = self.bindings[key]
    if func then
-      return func(...)
+      return func(...), true
    elseif self.forwards then
       return self.forwards:run_key_action(key, ...)
    end
+
+   return nil, false
 end
 
 function KeyHandler:handle_repeat(key, dt)
@@ -167,19 +169,21 @@ function KeyHandler:run_actions(dt, ...)
       -- two movement keys can form a diagonal, they should be fired
       -- instead of each one individually.
       if v.pressed then
-         result = self:run_key_action(key, ...)
-         ran = true
-         -- only run the first action
-         break
+         result, ran = self:run_key_action(key, ...)
+         if ran then
+            -- only run the first action
+            break
+         end
       end
    end
    if not ran then
       for key, _ in pairs(self.this_frame) do
-         result = self:run_key_action(key, ...)
-         ran = true
+         result, ran = self:run_key_action(key, ...)
 
-         -- only run the first action
-         break
+         if ran then
+            -- only run the first action
+            break
+         end
       end
    end
 

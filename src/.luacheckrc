@@ -4,6 +4,7 @@ globals = {
    "require",
    "data",
    "mobdebug",
+   "_CONSOLE",
    "_DEBUG",
    "love",
    "class",

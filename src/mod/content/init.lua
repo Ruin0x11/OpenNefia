@@ -309,6 +309,7 @@ data:add {
 
 
 local Event = require("api.Event")
+local Rand = require("api.Rand")
 
 
 -- local EmotionIcon = require("mod.emotion_icons.api.EmotionIcon")
@@ -362,17 +363,20 @@ data:add {
 
       local width = p.width or 100
       local height = p.height or 100
-      local map = InstancedMap:new(width, height, nil, "content.floor")
+      local map = InstancedMap:new(width, height, nil, "elona.cyber_4")
 
       for y=0,width-1 do
          for x=0,height-1 do
             if x == 0 or y == 0 or x == width-1 or y == height-1 then
-               map:set_tile(x, y, "content.wall")
+               map:set_tile(x, y, "elona.wall_stone_7_top")
+            elseif y % 3 == 0 or x % 4 == 1 then
+               map:set_tile(x, y, Rand.choice({"elona.cyber_1", "elona.cyber_2", "elona.cyber_3"}))
             end
          end
       end
 
       map.player_start_pos = { x = math.floor(width / 2), y = math.floor(height / 2)}
+      map.default_tile = "elona.tiled_1"
 
       return map, "test"
    end
@@ -451,13 +455,21 @@ end
 local function my_start(self, player)
    base_init(self, player)
 
+   local Skill = require("mod.elona_sys.api.Skill")
+
    for i=1,4 do
-      local a = Chara.create("elona.little_sister", i+8, 3)
+      local a = Chara.create("elona.younger_sister", i+8, 3)
       a:recruit_as_ally()
+      for _ = 1, 50 do
+         Skill.gain_level(a)
+      end
    end
 
+   local Gui = require("api.Gui")
+   Gui.mes_c("I have no idea why, but I'm not any stronger...", "Green")
+
    for i=1,10 do
-      Chara.create("elona.snail", i+8, 11)
+      Chara.create("elona.putit", i+8, 11)
    end
 
    for _=1,50 do
@@ -465,7 +477,7 @@ local function my_start(self, player)
    end
 end
 
-local function init2(self, player)
+local function init_bells(self, player)
    local _, m = Map.generate("content.test")
    Map.set_map(m)
 
@@ -481,7 +493,7 @@ local function init2(self, player)
    player.max_hp = 100000000
    player:heal_to_max()
 
-   fun.range(600):each(function() Chara.create("elona.silver_bell") end)
+   fun.range(10):each(function() Chara.create("elona.silver_bell") end)
 end
 
 

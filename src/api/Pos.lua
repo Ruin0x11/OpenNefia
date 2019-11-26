@@ -229,9 +229,6 @@ local function iter_line(state, index)
    if index.x == state.end_x and index.y == state.end_y then
       return nil
    end
-   if state.is_solid(index.x, index.y) then
-      return nil
-   end
 
    local e = index.err + index.err
    if e > -state.bound_y then
@@ -253,9 +250,8 @@ end
 --- @tparam int start_y
 --- @tparam int end_x
 --- @tparam int end_y
---- @tparam[opt] function is_solid_cb Defaults to InstancedMap.can_access
 --- @treturn Iterator(int,int)
-function Pos.iter_line(start_x, start_y, end_x, end_y, is_solid_cb)
+function Pos.iter_line(start_x, start_y, end_x, end_y)
    local delta_x, delta_y, bound_x, bound_y
 
    if start_x < end_x then
@@ -274,12 +270,7 @@ function Pos.iter_line(start_x, start_y, end_x, end_y, is_solid_cb)
       bound_y = start_y - end_y
    end
 
-   if is_solid_cb == nil then
-      local Map = require("api.Map")
-      is_solid_cb = function(x, y) return not Map.current():can_access(x, y) end
-   end
-
-   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y, is_solid = is_solid_cb }
+   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y }
    local index = { x = start_x, y = start_y, err = bound_x - bound_y }
 
    return fun.wrap(iter_line, state, index)

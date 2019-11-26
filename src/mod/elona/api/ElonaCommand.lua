@@ -101,7 +101,7 @@ function ElonaCommand.fire(player)
       return Chara.is_alive(c) and player:reaction_towards(c) < 0
    end
 
-   local targets = Map.iter_charas():filter(pred):to_list()
+   local targets = Chara.iter():filter(pred):to_list()
    table.sort(targets, function(a, b)
                  return Pos.dist(player.x, player.y, a.x, a.y)
                     < Pos.dist(player.x, player.y, b.x, b.y)
@@ -245,7 +245,7 @@ function ElonaCommand.wake_up_everyone(map)
    map = map or Map.current()
    local hour = save.base.date.hour
    if hour >= 7 or hour <= 22 then
-      for _, chara in Map.iter_charas() do
+      for _, chara in Chara.iter() do
          if not chara:is_ally() and chara:has_effect("elona.sleep") then
             if Rand.one_in(10) then
                chara:remove_effect("elona.sleep")

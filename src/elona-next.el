@@ -140,9 +140,11 @@
                             (projectile-project-files project-root)))
          (file (string-join (list project-root (projectile-completing-read "File: " cands)))))
     (when file
-      (next-line)
+      (when (not (eobp))
+        (next-line))
       (insert (elona-next-require-path file))
-      (previous-line))))
+      (when (not (bobp))
+        (previous-line)))))
 
 (defun elona-next-run-this-file ()
   (interactive)

@@ -114,7 +114,7 @@ function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
 
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
    love.graphics.setBlendMode("subtract")
-   Draw.set_color(255, 0, 255, 25)
+   Draw.set_color(255, 255, 255, 20)
    for ind, _ in pairs(self.top_shadows) do
       local x = ind % self.overhang_batch.width
       local y = math.floor(ind / self.overhang_batch.width)

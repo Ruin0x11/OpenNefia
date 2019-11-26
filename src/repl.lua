@@ -1,6 +1,4 @@
-local Log = require("api.Log")
-Log.set_level("info")
-
+_CONSOLE = true
 require("boot")
 
 require("internal.data.base")
@@ -15,6 +13,9 @@ local fs = require("util.fs")
 local save = require("internal.global.save")
 local ReplLayer = require("api.gui.menu.ReplLayer")
 local Gui = require("api.Gui")
+local Log = require("api.Log")
+
+Log.set_level("info")
 
 local mods = mod.scan_mod_dir()
 startup.run(mods)
@@ -42,20 +43,30 @@ local function pass_one_turn(turns)
    local ev = "turn_begin"
    local target_chara, going
 
-   for i=1,turns do
-      Gui.mes(string.format("==== turn %d ====", i))
-      repeat
-         going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
-      until ev == "player_turn_query"
+   local cb = function()
+      for i=1,turns do
+         Gui.mes(string.format("==== turn %d ====", i))
+         repeat
+            going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
+         until ev == "player_turn_query"
 
-      ev = "turn_end"
+         ev = "turn_end"
 
-      repeat
-         going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
-      until ev == "turn_begin"
+         repeat
+            going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
+         until ev == "turn_begin"
+      end
+
+      return going, ev, target_chara
    end
 
-   return going, ev, target_chara
+   local co = coroutine.create(cb)
+   local ok, err = coroutine.resume(co, 0)
+   if not ok or err ~= nil then
+      if type(err) == "string" then
+         error("\n\t" .. (err or "Unknown error."))
+      end
+   end
 end
 
 rawset(_G, "tu", pass_one_turn)
@@ -82,7 +93,6 @@ if fs.exists("repl_startup.lua") then
 end
 
 
-print("===================")
 local console_repl = require 'thirdparty.repl.console'
 local elona_repl   = console_repl:clone()
 
@@ -98,8 +108,8 @@ function elona_repl:compilechunk(text)
 end
 
 local function gather_results(success, ...)
-  local n = select('#', ...)
-  return success, { n = n, ... }
+   local n = select('#', ...)
+   return success, { n = n, ... }
 end
 
 -- @see repl:displayresults(results)

@@ -24,9 +24,6 @@ function love.load(arg)
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
-      mobdebug.start()
-      mobdebug.off()
-      mobdebug.coro()
    end
 
    loop = coroutine.create(game.loop)

@@ -39,8 +39,6 @@ function field_logic.quickstart()
 end
 
 function field_logic.setup()
-   Gui.mes_clear()
-
    -- This function gets called again if field_logic.query() throws an
    -- error, so don't rerun base.on_game_initialize.
    if not field.is_active then
@@ -49,7 +47,7 @@ function field_logic.setup()
 end
 
 function field_logic.update_chara_time_this_turn(time_this_turn)
-   for _, chara in Map.iter_charas() do
+   for _, chara in Chara.iter() do
       if Chara.is_alive(chara) then
          -- Ensure all characters (including the player) have a
          -- turn cost at least as much as the player's starting
@@ -81,7 +79,7 @@ function field_logic.turn_begin()
    -- index 1-15, adventurers 15-56, and so on.
    player_finished_turn = false
 
-   chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
+   chara_iter, chara_iter_state, chara_iter_index = Chara.iter()
 
    local speed = player:emit("base.on_calc_speed")
 
@@ -135,7 +133,7 @@ function field_logic.determine_turn()
 
       if chara_iter_index == nil then
          any_moved = false
-         chara_iter, chara_iter_state, chara_iter_index = Map.iter_charas()
+         chara_iter, chara_iter_state, chara_iter_index = Chara.iter()
       end
    end
 

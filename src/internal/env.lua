@@ -57,11 +57,8 @@ local SANDBOX_GLOBALS = {
    -- misc. globals
    "inspect",
    "fun",
+   "_ppr"
 }
-
-if _DEBUG then
-   SANDBOX_GLOBALS[#SANDBOX_GLOBALS+1] = "_ppr"
-end
 
 local UNSAFE_HOTLOAD_PATHS = {
    "internal.env",
@@ -141,13 +138,22 @@ local global_require = require
 local function env_loadfile(path, mod_env)
    local resolved = package.searchpath(path, package.path)
 
-   if resolved == nil and not mod_env and _DEBUG then
+   if resolved == nil and not mod_env and _CONSOLE then
       -- Also try cpath, but only when not using the love runtime
       -- (tests). Mods shouldn't be able to load arbitrary native
       -- libraries.
       resolved = package.searchpath(path, package.cpath)
       if resolved then
          return global_require(path)
+      end
+   end
+
+   if resolved == nil and string.match(path, "^socket") then
+      -- Some modules like luasocket aren't in package.cpath but can
+      -- be loaded with 'require' anyway for some mysterious reason.
+      local tbl = global_require(path)
+      if tbl then
+         return tbl
       end
    end
 

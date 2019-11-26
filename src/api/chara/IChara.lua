@@ -143,6 +143,7 @@ local fallbacks = {
    shop_rank = 0,
 
    breaks_into_debris = nil,
+   is_solid = true
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -328,14 +329,20 @@ end
 ---
 --- @tparam int x
 --- @tparam int y
+--- @tparam bool force
 --- @treturn bool true on success.
 --- @overrides IMapObject.set_pos
-function IChara:set_pos(x, y)
-   if Chara.at(x, y) ~= nil then
+function IChara:set_pos(x, y, force)
+   local map = self:current_map()
+   if not map then
       return false
    end
 
-   return IMapObject.set_pos(self, x, y)
+   if not Map.can_access(x, y, map) and not force then
+      return false
+   end
+
+   return IMapObject.set_pos(self, x, y, force)
 end
 
 --- Returns true if this character is the current player.
@@ -364,7 +371,7 @@ function IChara:recruit_as_ally()
    self.faction = "base.friendly"
    self:refresh()
 
-   Gui.mes(self.uid .. " joins as an ally! ", "Orange")
+   Gui.mes_c("action.ally_joins.success", "Orange", self)
    Gui.play_sound("base.pray1");
    return true
 end
@@ -601,6 +608,12 @@ function IChara:kill(source)
       self.state = "Dead"
    end
 
+   self.is_solid = nil
+   local map = self:current_map()
+   if map then
+      map:refresh_tile(self.x, self.y)
+   end
+
    Event.trigger("base.on_chara_killed", {chara=self,source=source})
 end
 
@@ -612,6 +625,7 @@ function IChara:revive()
    end
 
    self.state = "Alive"
+   self.is_solid = true
    self:heal_to_max()
 
    self:emit("base.on_chara_revived")

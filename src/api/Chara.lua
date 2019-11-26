@@ -1,6 +1,5 @@
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
-local Map = require("api.Map")
 local Event = require("api.Event")
 
 local field = require("game.field")
@@ -23,11 +22,80 @@ function Chara.at(x, y, map)
       return nil
    end
 
-   local objs = map:iter_type_at_pos("base.chara", x, y):filter(function(c) return Chara.is_alive(c, map) end)
+   for _, chara in map:iter_type_at_pos("base.chara", x, y) do
+      if chara.state == "Alive" then
+         return chara
+      end
+   end
 
-   assert(objs:length() <= 1, string.format("More than one live character on tile %d,%d", x, y))
+   return nil
+end
 
-   return objs:nth(1)
+local function iter(a, i)
+   if i > #a.uids then
+      return nil
+   end
+   if a.map == nil then
+      return nil
+   end
+
+   local d = a.map:get_object_of_type("base.chara", a.uids[i])
+   i = i + 1
+
+   return i, d
+end
+
+--- Iterates all characters in the map.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IChara)
+function Chara.iter(map)
+   return (map or field.map):iter_charas()
+end
+
+--- Iterates the characters in the player's party, including the
+--- player themselves.
+---
+--- @treturn Iterator(IChara)
+function Chara.iter_party(map)
+   local party = table.append({ save.base.player }, save.base.allies)
+   return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
+end
+
+--- Iterates the characters in the player's party, not including the
+--- player.
+---
+--- @treturn Iterator(IChara)
+function Chara.iter_allies(map)
+   return fun.wrap(iter, {map = map or field.map, uids = save.base.allies}, 1)
+end
+
+--- Iterates all characters that are not allied (the player or a pet).
+---
+--- @treturn Iterator(IChara)
+function Chara.iter_others(map)
+   map = map or field.map
+   return map:iter_charas():filter(function(c) return not c:is_allied() end)
+end
+
+--- Looks for a character with the given base.chara ID in the current map.
+---
+--- @tparam id:base.chara id
+--- @tparam string kind "ally" or "other"
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IChara)
+function Chara.find(id, kind, map)
+   local iter
+
+   if kind == "ally" then
+      iter = Chara.iter_allies(map)
+   elseif kind == "other" then
+      iter = Chara.iter_others(map)
+   else
+      error(("invalid kind passed to Chara.find: %s"):format(kind))
+   end
+
+   return iter:filter(function(i) return i._id == id end):nth(1)
 end
 
 --- Returns true if this character is the current player.
@@ -43,8 +111,7 @@ end
 ---
 --- @treturn[opt] IChara
 function Chara.player()
-   local map = Map.current()
-   return map and map:get_object(field.player)
+   return field.map and field.map:get_object(field.player)
 end
 
 --- Sets the current player to a different character. The character
@@ -58,7 +125,7 @@ function Chara.set_player(uid_or_chara)
    end
 
    assert(type(uid) == "number")
-   assert(Map.current():has_object(uid))
+   assert(field.map:has_object(uid))
    field.player = uid
 
    local c = Chara.player()
@@ -82,7 +149,7 @@ end
 --- @tparam[opt] IChara c
 --- @tparam[opt] InstancedMap map Map to check for existence in; defaults to current
 function Chara.is_alive(c, map)
-   map = map or Map.current()
+   map = map or field.map
 
    if type(c) ~= "table" or c.state ~= "Alive" then
       return false
@@ -155,6 +222,7 @@ function Chara.create(id, x, y, params, where)
 
    if where then
       -- TODO: may want to return status
+      local Map = require("api.Map")
       Map.try_place_chara(chara, x, y, where)
    end
 
@@ -165,65 +233,6 @@ function Chara.create(id, x, y, params, where)
    chara:emit("base.on_chara_generated")
 
    return chara
-end
-
-local function iter(a, i)
-   if i > #a.uids then
-      return nil
-   end
-   if a.map == nil then
-      return nil
-   end
-
-   local d = a.map:get_object_of_type("base.chara", a.uids[i])
-   i = i + 1
-
-   return i, d
-end
-
---- Iterates the characters in the player's party, including the
---- player themselves.
----
---- @treturn Iterator(IChara)
-function Chara.iter_party(map)
-   local party = table.append({ save.base.player }, save.base.allies)
-   return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
-end
-
---- Iterates the characters in the player's party, not including the
---- player.
----
---- @treturn Iterator(IChara)
-function Chara.iter_allies(map)
-   return fun.wrap(iter, {map = map or field.map, uids = save.base.allies}, 1)
-end
-
---- Iterates all characters that are not allied (the player or a pet).
----
---- @treturn Iterator(IChara)
-function Chara.iter_others(map)
-   map = map or Map.current()
-   return map:iter_charas():filter(function(c) return not c:is_allied() end)
-end
-
---- Looks for a character with the given base.chara ID in the current map.
----
---- @tparam id:base.chara id
---- @tparam string kind "ally" or "other"
---- @tparam[opt] InstancedMap map
---- @treturn Iterator(IChara)
-function Chara.find(id, kind, map)
-   local iter
-
-   if kind == "ally" then
-      iter = Chara.iter_allies(map)
-   elseif kind == "other" then
-      iter = Chara.iter_others(map)
-   else
-      error(("invalid kind passed to Chara.find: %s"):format(kind))
-   end
-
-   return iter:filter(function(i) return i._id == id end):nth(1)
 end
 
 return Chara

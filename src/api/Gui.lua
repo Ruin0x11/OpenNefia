@@ -156,7 +156,7 @@ function Gui.mes_c(text, color, ...)
    capitalize = true
 
    if Env.is_headless() then
-      print("<mes> " .. text)
+      Log.info("<mes> " .. text)
    else
       field:get_message_window():message(text, color)
    end
