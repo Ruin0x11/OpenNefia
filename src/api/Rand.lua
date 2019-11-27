@@ -14,6 +14,10 @@ function Rand.between(a, b)
    return math.random(math.floor(a), math.floor(a+b) - 1)
 end
 
+--- Returns true one out of every `n` times.
+---
+--- @tparam int n
+--- @treturn bool
 function Rand.one_in(n)
    return Rand.rnd(n) == 0
 end
@@ -22,17 +26,25 @@ function Rand.one_in_percent(n)
    return 100 / n
 end
 
+--- TODO: must be constant and unmodifiable, for determinism
 function Rand.set_seed(seed)
    math.randomseed(seed)
 end
 
-function Rand.choice(array)
-   assert(type(array) == "table")
-   if tostring(array) == "<generator>" then
-      array = array:to_list()
+-- Selects a random element out of an arraylike table or iterator. If
+-- an iterator is passed it must be finite, or an infinite loop will
+-- occur.
+--
+-- @tparam table|Iterator(any) arr_or_iter
+-- @return any
+function Rand.choice(arr_or_iter)
+   local arr = arr_or_iter
+   assert(type(arr_or_iter) == "table")
+   if tostring(arr_or_iter) == "<generator>" then
+      arr = arr_or_iter:to_list()
 
    end
-   local i = array[Rand.rnd(#array)+1]
+   local i = arr[Rand.rnd(#arr)+1]
    return i
 end
 
@@ -40,6 +52,11 @@ function Rand.percent_chance(percent)
    return math.random() < (percent / 100)
 end
 
+-- Rolls a die of (x)d(y) + add.
+--
+-- @tparam int dice_x
+-- @tparam int dice_y
+-- @tparam int add
 function Rand.roll_dice(dice_x, dice_y, add)
    dice_x = math.max(dice_x, 1)
    dice_y = math.max(dice_y, 1)

@@ -22,10 +22,7 @@ function BookMenu:init(text, elona_compat)
    self.input = InputHandler:new()
    self.model = PagedListModel:new({}, 40, false)
    self:set_data(text)
-   self.elona_compat = elona_compat
-   if self.elona_compat == nil then
-      self.elona_compat = false
-   end
+   self.elona_compat = elona_compat or false
 
    self.input = InputHandler:new()
    self.input:bind_keys {

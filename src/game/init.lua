@@ -2,6 +2,7 @@
 -- missing data, since internal code can add its own data inline.
 require("internal.data.base")
 
+local Draw = require("api.Draw")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 local internal = require("internal")
@@ -56,7 +57,7 @@ local function main_title()
 end
 
 -- TODO: make into scenario/config option
-local quickstart = false
+local quickstart = true
 
 local function run_field()
    return field_logic.query()
@@ -65,6 +66,9 @@ end
 -- This loop should never throw an error, to support resuming using
 -- the debug server.
 function game.loop()
+   -- Run one frame of drawing first, to clear the screen.
+   coroutine.yield()
+
    local mods = mod.scan_mod_dir()
    startup.run(mods)
 
@@ -95,6 +99,8 @@ function game.loop()
 end
 
 function game.draw()
+   Draw.clear(0, 0, 0)
+
    local going = true
 
    while going do

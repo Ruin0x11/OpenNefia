@@ -361,8 +361,9 @@ end
 
 --- Attempts to recruit this character as an ally.
 ---
+--- @tparam bool no_message
 --- @treturn bool true on success.
-function IChara:recruit_as_ally()
+function IChara:recruit_as_ally(no_message)
    if self:is_ally() then
       return false
    end
@@ -371,8 +372,10 @@ function IChara:recruit_as_ally()
    self.faction = "base.friendly"
    self:refresh()
 
-   Gui.mes_c("action.ally_joins.success", "Orange", self)
-   Gui.play_sound("base.pray1");
+   if not no_message then
+      Gui.mes_c("action.ally_joins.success", "Orange", self)
+      Gui.play_sound("base.pray1");
+   end
    return true
 end
 

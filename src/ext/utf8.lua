@@ -1,8 +1,9 @@
-utf8 = package.try_require("utf8")
-if love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil) then
-   -- require the luarocks version (starwing/utf8)
-   utf8 = require("lua-utf8")
-   assert(utf8, "lua-utf8 not installed")
+if utf8 == nil then
+   utf8 = package.try_require("utf8")
+   if love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil) then
+      -- require the luarocks version (starwing/utf8)
+      utf8 = require("lua-utf8")
+   end
 end
 
 --- Returns a new string with the last UTF-8 codepoint removed.
@@ -18,21 +19,23 @@ function utf8.pop(t)
    return t
 end
 
---- Analogous to string.sub, but operates on UTF-8 codepoints.
--- @see string.sub
--- @tparam string t
--- @tparam int i
--- @tparam int j
--- @treturn string
-function utf8.sub(t, i, j)
-   local len = utf8.len(t)
-   i = i or 0
-   j = j or len
+if utf8.sub == nil then
+   --- Analogous to string.sub, but operates on UTF-8 codepoints.
+   -- @see string.sub
+   -- @tparam string t
+   -- @tparam int i
+   -- @tparam int j
+   -- @treturn string
+   function utf8.sub(t, i, j)
+      local len = utf8.len(t)
+      i = i or 0
+      j = j or len
 
-   local start = utf8.offset(t, i) or 0
-   local finish = (utf8.offset(t, j + 1) or (#t + 1)) - 1
+      local start = utf8.offset(t, i) or 0
+      local finish = (utf8.offset(t, j + 1) or (#t + 1)) - 1
 
-   return string.sub(t, start, finish)
+      return string.sub(t, start, finish)
+   end
 end
 
 -- Returns true if cp is a fullwidth UTF-8 codepoint.

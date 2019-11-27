@@ -138,11 +138,11 @@ function UiList:get_item_color()
 end
 
 function UiList:draw_item(item, i, x, y, key_name)
-   self:draw_select_key(item, i, key_name, x, y)
+   self:draw_select_key(item, i, key_name, x, y) -- TODO draw this with a batch
 
    Draw.set_font(14) -- 14 - en * 2
 
-   local text = self:get_item_text(item, i)
+   local text = self:get_item_text(item, i) -- TODO cache this
    local color = self:get_item_color(item)
    self:draw_item_text(text, item, i, x + 26, y + 1, 0, color)
 end

@@ -17,12 +17,16 @@ local Input = {}
 Input.set_key_handler = input.set_key_handler
 Input.set_mouse_handler = input.set_mouse_handler
 
+function Input.prompt(choices)
+   return Prompt:new(choices):query()
+end
+
 --- Opens a dialog prompt asking for a yes or no response. Returns
 --- true if "yes" was selected.
 ---
 --- @treturn bool
 function Input.yes_no()
-   local res = Prompt:new({{ text = "ui.yes", key = "y" }, { text = "ui.no", key = "n" }}):query()
+   local res = Input.prompt({{ text = "ui.yes", key = "y" }, { text = "ui.no", key = "n" }})
    return res.index == 1
 end
 

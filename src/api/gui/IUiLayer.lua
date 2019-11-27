@@ -15,7 +15,11 @@ local function query(self)
 
    internal.draw.push_layer(self)
 
-   self:on_query()
+   local ok, err = pcall(function() self:on_query() end)
+   if not ok then
+      internal.draw.pop_layer()
+      error(err)
+   end
 
    local success, res, canceled
 

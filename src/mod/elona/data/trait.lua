@@ -13,6 +13,10 @@ local trait = {
       elona_id = 164
    },
    {
+      _id = "long_distance_runner",
+      elona_id = 24
+   },
+   {
       _id = "extra_bonus_points",
       elona_id = 154
    },

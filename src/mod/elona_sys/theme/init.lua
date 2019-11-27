@@ -175,6 +175,8 @@ data:add {
          g4 = "asset/g4.png",
          select_key = "asset/select_key.png",
          list_bullet = "asset/list_bullet.png",
+         hp_bar_ally = "asset/hp_bar_ally.png",
+         hp_bar_other = "asset/hp_bar_other.png",
 
          shadow = "asset/shadow.png",
          shadow_edges = "asset/shadow_edges.png",

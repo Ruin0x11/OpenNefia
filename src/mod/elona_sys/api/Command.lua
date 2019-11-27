@@ -227,6 +227,16 @@ function Command.enter_action(player)
    return "player_turn_query"
 end
 
+function Command.help()
+   local HelpMenuView = require("api.gui.menu.HelpMenuView")
+   local SideBarMenu = require("api.gui.menu.SideBarMenu")
+
+   local view = HelpMenuView:new():new()
+   SideBarMenu:new({{text = "test", data = 1}}, view):query()
+
+   return "player_turn_query"
+end
+
 function Command.save_game()
    Save.save_game()
    return "player_turn_query"

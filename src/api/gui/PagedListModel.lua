@@ -71,7 +71,6 @@ function PagedListModel:select_page(page)
    end
 
    self.model:set_data(contents)
-   print("SELECT", self.selected, self.page, self.page_max)
 end
 
 function PagedListModel:set_data(items)

@@ -22,6 +22,7 @@ function ReplLayer:init(env, history)
    self.result = ""
    self.size = 10000
    self.color = {17, 17, 65, 192}
+   self.font_size = 15
 
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
@@ -30,6 +31,9 @@ function ReplLayer:init(env, history)
    self.history_index = 0
 
    self.output = {}
+
+   self.canvas = nil
+   self.redraw = false
 
    -- quake pulldown
    self.pulldown = true
@@ -122,7 +126,9 @@ function ReplLayer:init(env, history)
                   complete(self.completion.candidates[1])
                   self.completion = nil
                else
-                  self:print(inspect(fun.iter(self.completion.candidates):extract("text"):to_list()))
+                  local concat = function(acc, s) return (acc and (acc .. "  ") or "") .. s end
+                  self.completion.text = fun.iter(self.completion.candidates):extract("text"):foldl(concat)
+                  self.redraw = true
                end
             end
          else
@@ -160,6 +166,7 @@ end
 
 function ReplLayer:set_text(text)
    self.text = text or ""
+   self.redraw = true
 
    self:set_cursor_pos(#self.text)
 end
@@ -168,12 +175,14 @@ function ReplLayer:scrollback_up()
    self.scrollback_index = math.clamp(self.scrollback_index + math.floor(self.max_lines / 2),
                                       0,
                                       math.max(self.scrollback:len() - self.max_lines, 0))
+   self.redraw = true
 end
 
 function ReplLayer:scrollback_down()
    self.scrollback_index = math.clamp(self.scrollback_index - math.floor(self.max_lines / 2),
                                       0,
                                       math.max(self.scrollback:len() - self.max_lines, 0))
+   self.redraw = true
 end
 
 function ReplLayer:clear()
@@ -208,6 +217,7 @@ function ReplLayer:insert_text(t)
    end
 
    self:move_cursor(utf8.len(t))
+   self.redraw = true
 end
 
 function ReplLayer:delete_char()
@@ -226,6 +236,7 @@ function ReplLayer:delete_char()
    end
 
    self:move_cursor(-1)
+   self.redraw = true
 end
 
 function ReplLayer:set_cursor_pos(byte)
@@ -246,6 +257,11 @@ function ReplLayer:relayout(x, y, width, height)
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 
+   if self.canvas == nil or width ~= self.width or height ~= self.height then
+      self.canvas = Draw.create_canvas(self.width, self.height)
+      self.redraw = true
+   end
+
    if self.pulldown then
       self.pulldown = false
       self.pulldown_y = self.max_lines
@@ -263,6 +279,7 @@ function ReplLayer:print(text)
          self.scrollback:push(line)
       end
    end
+   self.redraw = true
 end
 
 function ReplLayer:execute(code)
@@ -280,19 +297,27 @@ function ReplLayer.format_repl_result(result)
       if result._type and result._id then
          result_text = inspect(Object.make_prototype(result))
       elseif tostring(result) == "<generator>" then
-         local max = 10
-         local list = result:take(max + 1)
-         local first = list:nth(1)
-         if type(first) == "table" and first._type then
-            list = list:map(Object.make_prototype)
-         end
-         if list:length() == max + 1 then
-            result_text = "(iterator): " .. inspect(list:take(10):to_list())
-            result_text = string.strip_suffix(result_text, " }")
-            result_text = result_text .. ", <...> }"
-         else
-            result_text = "(iterator): " .. inspect(list:to_list())
-         end
+         -- Wrap in a protected function in case running the generator
+         -- returns an error
+         local _, rest = xpcall(function()
+               local text
+               local max = 10
+               local list = result:take(max + 1)
+               local first = list:nth(1)
+               if type(first) == "table" and first._type then
+                  list = list:map(Object.make_prototype)
+               end
+               if list:length() == max + 1 then
+                  text = "(iterator): " .. inspect(list:take(10):to_list())
+                  text = string.strip_suffix(text, " }")
+                  text = text .. ", <...> }"
+               else
+                  text = "(iterator): " .. inspect(list:to_list())
+               end
+
+               return text
+         end, debug.traceback)
+         result_text = rest
          stop = true
       else
          result_text = inspect(result)
@@ -420,24 +445,18 @@ function ReplLayer:execute_all_deferred()
    return success, results
 end
 
-function ReplLayer:draw()
+function ReplLayer:redraw_window()
+   Draw.clear()
    Draw.set_font(self.font_size)
 
    -- background
-   local top = self.height - self.pulldown_y * Draw.text_height()
+   local top = self.height -- - self.pulldown_y * Draw.text_height()
    Draw.filled_rect(self.x, self.y, self.width, top, self.color)
 
    -- caret
    Draw.set_color(255, 255, 255)
    Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
-
-   -- blinking cursor
-   if math.floor(self.frames * 2) % 2 == 0 then
-      local x = self.x + 5 + Draw.text_width(self.mode.caret) + self.cursor_x + 1
-      local y = self.y + top - Draw.text_height() - 5
-      Draw.line(x, y, x, y + Draw.text_height() - 1)
-   end
 
    -- scrollback counter
    if self.scrollback_index > 0 then
@@ -448,7 +467,9 @@ function ReplLayer:draw()
    -- scrollback display
    local offset = 0
    if self.completion and #self.completion.candidates > 1 then
+      Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, {255, 240, 130})
       offset = 1
+      Draw.set_color(255, 255, 255)
    end
 
    for i=1,self.max_lines do
@@ -457,6 +478,26 @@ function ReplLayer:draw()
          break
       end
       Draw.text(t, self.x + 5, self.y + top - Draw.text_height() * (i+1+offset) - 5)
+   end
+end
+
+function ReplLayer:draw()
+   Draw.set_color(255, 255, 255)
+   if self.redraw then
+      Draw.with_canvas(self.canvas, function() self:redraw_window() end)
+      self.redraw = false
+   end
+
+   local top = -self.pulldown_y * Draw.text_height()
+
+   Draw.image(self.canvas, self.x, self.y + top)
+
+   -- blinking cursor
+   if math.floor(self.frames * 2) % 2 == 0 then
+      local top = self.height - self.pulldown_y * Draw.text_height()
+      local x = self.x + 9 + Draw.text_width(self.mode.caret) + self.cursor_x
+      local y = self.y + top - Draw.text_height() - 5
+      Draw.line(x, y, x, y + Draw.text_height() - 1)
    end
 end
 

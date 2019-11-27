@@ -255,6 +255,7 @@ function draw.set_font(size, style, filename)
       style = size.style
       size = size.size
    end
+   assert(type(size) == "number")
    style = style or "normal"
    filename = filename or "data/font/" .. default_font
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end

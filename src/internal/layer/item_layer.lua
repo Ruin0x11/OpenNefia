@@ -89,7 +89,6 @@ function item_layer:update(dt, screen_updated, scroll_frames)
                end
             end
 
-
             --
             -- Item drop shadow.
             --

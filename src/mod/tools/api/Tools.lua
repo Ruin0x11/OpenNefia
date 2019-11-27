@@ -8,6 +8,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
+local Input = require("api.Input")
 
 local Tools = {}
 
@@ -167,7 +168,7 @@ function Tools.goto_map(id)
    return Map.travel_to(map)
 end
 
-function Tools.go_home(name)
+function Tools.go_home()
    return Map.travel_to(save.base.home_map_uid)
 end
 
@@ -212,9 +213,10 @@ end
 
 function Tools.draw_debug_pos(x, y, color)
    Draw.set_color(color or {255, 0, 0})
-   Draw.set_font(14)
-   Draw.text(string.format("%d/%d", x, y), x, y)
-   Draw.filled_rect(x - 8, y - 8, 16, 16)
+   Draw.set_font(11)
+   Draw.text(string.format("%d,%d", x, y), x+4, y-12)
+   Draw.filled_rect(x, y - 4, 1, 8)
+   Draw.filled_rect(x - 4, y, 8, 1)
    Draw.set_color(255, 255, 255)
 end
 
@@ -470,6 +472,57 @@ end
 
 function Tools.cpos()
    return Chara.player().x, Chara.player().y
+end
+
+function Tools.open_dictionary()
+   local ids = data["base.chara"]:iter():extract("_id"):map(function(id) return { text = id, data = id } end):to_list()
+
+   local DictionaryView = require("mod.tools.api.DictionaryView")
+   local SideBarMenu = require("api.gui.menu.SideBarMenu")
+
+   local view = DictionaryView:new()
+   SideBarMenu:new(ids, view):query()
+
+   return "player_turn_query"
+end
+
+function Tools.inspect_at()
+   local things = Tools.things_at()
+   if things == nil then
+      return
+   end
+
+   local thing
+
+   if things:length() == 0 then
+      Gui.mes("Nothing at position.")
+      return
+   elseif things:length() == 1 then
+      thing = things:nth(1)
+   else
+      Gui.mes("Which to inspect?")
+      local choices = things:map(function(t) return ("%s (uid: %d)"):format(t._id, t.uid) end):to_list()
+      local choice, canceled = Input.prompt(choices)
+      if canceled then
+         return
+      end
+      thing = things:nth(choice.index)
+   end
+
+   local data = fun.iter(table.keys(thing))
+     :filter(function(k) return not string.match(k, "^_") end)
+     :map(function(k) return { text = tostring(k), data = k } end)
+     :to_list()
+
+   table.sort(data, function(a, b) return a.text < b.text end)
+
+   local InspectView = require("mod.tools.api.InspectView")
+   local SideBarMenu = require("api.gui.menu.SideBarMenu")
+
+   local view = InspectView:new(thing)
+   SideBarMenu:new(data, view):query()
+
+   return "player_turn_query"
 end
 
 return Tools

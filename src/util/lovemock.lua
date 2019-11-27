@@ -12,7 +12,7 @@ love.graphics.getHeight = function() return 600 end
 love.graphics.getFont = function()
    return
       {
-         getWidth = function(s) return #s * 8 end,
+         getWidth = function(self, s) return #s * 8 end,
          getHeight = function() return 14 end,
       }
 end

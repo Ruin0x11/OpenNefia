@@ -481,8 +481,7 @@ function InstancedMap:is_in_fov(x, y)
 end
 
 function InstancedMap:recalc_access(x, y, exclude)
-   local solid = self:tile(x, y).is_solid
-   if solid then
+   if self:tile(x, y).is_solid then
       return false
    end
 

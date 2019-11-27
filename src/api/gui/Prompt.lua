@@ -38,12 +38,18 @@ function Prompt:init(choices, width)
    self.can_cancel = true
    self.width = width or 160
 
+   Draw.set_font(14) -- 14 - en * 2
    for i, choice in ipairs(choices) do
       if type(choice) == "string" then
          choice = { text = choice, key = KEYS:sub(i, i) }
          choices[i] = choice
       end
-      choice.text = I18N.get(choice.text) or choice.text
+      choice.text = I18N.get_optional(choice.text) or choice.text
+
+      local width = Draw.text_width(choice.text)
+      if width + 26 + 33 + 44 > self.width then
+         self.width = width + 26 + 33 + 44
+      end
    end
 
    self.list = UiList:new(choices, 20)

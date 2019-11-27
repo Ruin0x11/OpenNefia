@@ -122,7 +122,7 @@ function mod.load_mods(mods)
 
    local mod_names = fun.iter(load_order)
       :extract("id")
-   :foldl(function(acc, s) return (acc and (acc .. " ") or "") .. s end)
+      :foldl(function(acc, s) return (acc and (acc .. " ") or "") .. s end)
    Log.info("Loading mods: %s", mod_names)
 
    for _, mod in ipairs(load_order) do

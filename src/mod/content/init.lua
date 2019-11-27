@@ -466,7 +466,7 @@ local function my_start(self, player)
    end
 
    local Gui = require("api.Gui")
-   Gui.mes_c("I have no idea why, but I'm not any stronger...", "Green")
+   Gui.mes_c("Please don't die.", "Green")
 
    for i=1,10 do
       Chara.create("elona.putit", i+8, 11)

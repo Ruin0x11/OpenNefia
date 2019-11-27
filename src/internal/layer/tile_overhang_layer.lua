@@ -108,13 +108,13 @@ function tile_overhang_layer:update(dt, screen_updated)
    self.overhang_batch.updated = true
 end
 
-function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
-   Draw.set_color(255, 255, 255)
-   self.overhang_batch:draw(draw_x + offx, draw_y + offy + 12)
-
+function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+
    love.graphics.setBlendMode("subtract")
    Draw.set_color(255, 255, 255, 20)
+
+   -- Top shadows above wall tiles
    for ind, _ in pairs(self.top_shadows) do
       local x = ind % self.overhang_batch.width
       local y = math.floor(ind / self.overhang_batch.width)
@@ -124,6 +124,7 @@ function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
                        math.floor(self.tile_height / 6))
    end
 
+   -- Bottom shadows below wall tiles
    for ind, _ in pairs(self.bottom_shadows) do
       local x = ind % self.overhang_batch.width
       local y = math.floor(ind / self.overhang_batch.width)
@@ -140,9 +141,16 @@ function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
                        self.tile_width,
                        math.floor(self.tile_height / 4))
    end
-   love.graphics.setBlendMode("alpha")
 
+   love.graphics.setBlendMode("alpha")
    Draw.set_color(255, 255, 255)
+end
+
+function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
+   Draw.set_color(255, 255, 255)
+   self.overhang_batch:draw(draw_x + offx, draw_y + offy + 12)
+
+   self:draw_shadows(draw_x, draw_y, offx, offy)
 end
 
 return tile_overhang_layer

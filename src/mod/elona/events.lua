@@ -514,6 +514,29 @@ end
 Event.register("elona.calc_dialog_choices", "Default NPC dialog", calc_dialog_choices)
 
 
+local function refresh_hp_mp_stamina(chara, params, result)
+   local mp_factor = chara:skill_level("elona.stat_magic") * 2
+      + chara:skill_level("elona.stat_will")
+      + (chara:skill_level("elona.stat_learning") / 3)
+      * (chara:calc("level") / 25)
+      + chara:skill_level("elona.stat_magic")
+
+   chara.max_mp = math.floor(math.clamp(mp_factor, 1, 1000000) * (chara:skill_level("elona.stat_mana") / 100))
+
+   local hp_factor = chara:skill_level("elona.stat_constitution") * 2
+      + chara:skill_level("elona.stat_strength")
+      + (chara:skill_level("elona.stat_will") / 3)
+      * (chara:calc("level") / 25)
+      + chara:skill_level("elona.stat_strength")
+
+   chara.max_hp = math.floor(math.clamp(hp_factor, 1, 1000000) * (chara:skill_level("elona.stat_life") / 100)) + 5
+
+   chara.max_stamina = 100 + (chara:skill_level("elona.stat_constitution") + chara:skill_level("elona.stat_strength")) / 5
+      + chara:trait_level("elona.long_distance_runner") * 8
+end
+
+Event.register("base.on_refresh", "Update max HP/MP/stamina", refresh_hp_mp_stamina)
+
 local function refresh_invisibility(chara, params, result)
    local hidden = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
    chara:mod("can_target", not hidden)

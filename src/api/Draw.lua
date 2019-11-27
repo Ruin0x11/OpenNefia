@@ -50,7 +50,25 @@ function Draw.set_background_color(r, g, b, a)
    love.graphics.setBackgroundColor(r, g, b, a)
 end
 
-Draw.clear = love.graphics.clear
+--- @tparam int|color r
+--- @tparam[opt] int g
+--- @tparam[opt] int b
+--- @tparam[opt] int a
+function Draw.clear(r, g, b, a)
+   if type(r) == "table" then
+      love.graphics.clear(
+         r[1] / 255,
+         r[2] / 255,
+         r[3] / 255,
+         (r[4] or 255) / 255)
+   else
+      love.graphics.clear(
+         (r or 0) / 255,
+         (b or 0) / 255,
+         (g or 0) / 255,
+         (a or 0) / 255)
+   end
+end
 
 --- Draws text.
 ---

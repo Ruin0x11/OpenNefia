@@ -11,4 +11,11 @@ function Fs.open(file, mode)
    return io.open(file, mode)
 end
 
+function Fs.read_all(file)
+   local f = assert(Fs.open(file, "rb"))
+   local content = f:read("*all")
+   f:close()
+   return content
+end
+
 return Fs

@@ -131,15 +131,18 @@ Gui.bind_keys {
    ["return"] = function(me)
       return Command.enter_action(me)
    end,
-   ["."] = function(me)
+   ["."] = function()
       return "turn_end"
    end,
-   ["`"] = function(me)
+   ["`"] = function()
       Repl.query()
       return "player_turn_query"
    end,
-   escape = function(me)
+   escape = function()
       return Command.quit_game()
+   end,
+   ["?"] = function()
+      return Command.help()
    end,
    n = function()
       Gui.mes(require("api.gui.TextPrompt"):new(16):query())

@@ -12,4 +12,5 @@ globals = {
    "fun",
    "_ppr",
    "save",
+   "utf8",
 }

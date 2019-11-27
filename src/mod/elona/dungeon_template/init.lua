@@ -112,9 +112,10 @@ local function generate_dungeon_raw(template, gen_params, opts)
    return map
 end
 
-local function set_filter()
+local function set_filter(dungeon)
+   -- TODO support custom filters
    return {
-      level = Calc.calc_object_level(10),
+      level = Calc.calc_object_level(dungeon:calc("dungeon_level")),
       quality = Calc.calc_object_quality(1),
    }
 end
@@ -141,7 +142,7 @@ local function populate_rooms(dungeon, template, gen_params)
                            dungeon)
          end
 
-         local filter = set_filter()
+         local filter = set_filter(dungeon)
 
          local chara = Charagen.create(Rand.rnd(w) + x, Rand.rnd(h) + y, filter, dungeon)
          if chara then
@@ -168,7 +169,7 @@ local function populate_rooms(dungeon, template, gen_params)
 
                for ry = y, y + h - 1 do
                   for rx = x, x + w - 1 do
-                     local filter = set_filter()
+                     local filter = set_filter(dungeon)
                      Charagen.create(rx, ry, filter, dungeon)
                   end
                end
@@ -319,7 +320,7 @@ local function generate_dungeon(self, params, opts)
 
    Log.info("Creating mobs.")
    for _=1, mob_density do
-      Charagen.create(nil, nil, set_filter(), dungeon)
+      Charagen.create(nil, nil, set_filter(dungeon), dungeon)
    end
 
    Log.info("Creating items.")

@@ -15,7 +15,7 @@ function chara_layer:init(width, height)
 
    local tiles = {{
          _id = "shadow",
-         image = "mod/elona/graphic/asset/character_shadow.png"
+         image = t.character_shadow
    }}
    shadow_atlas:load(fun.iter(tiles), coords)
 
@@ -28,9 +28,11 @@ function chara_layer:init(width, height)
    self.scroll_max_frames = 0
    self.scroll_consecutive = 0
    self.coords = coords
+   self.t = t
 end
 
 function chara_layer:relayout()
+   self.t = UiTheme.load(self)
 end
 
 function chara_layer:reset()
@@ -169,6 +171,19 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
    return false
 end
 
+function chara_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
+   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+
+   for _, ind in pairs(self.batch_inds) do
+      if true then
+         local ratio = 0.9
+         self.t.hp_bar_ally:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
+                                     sy - draw_y + offy + ind.y * 48 + 32,
+                                     ratio * 30, 3, ratio * 30)
+      end
+   end
+end
+
 function chara_layer:draw(draw_x, draw_y, offx, offy)
    love.graphics.setBlendMode("subtract")
    Draw.set_color(255, 255, 255, 110)
@@ -176,6 +191,8 @@ function chara_layer:draw(draw_x, draw_y, offx, offy)
    love.graphics.setBlendMode("alpha")
    Draw.set_color(255, 255, 255)
    self.chara_batch:draw(draw_x + offx, draw_y + offy + 16)
+
+   self:draw_hp_bars(draw_x, draw_y, offx, offy)
 end
 
 return chara_layer
