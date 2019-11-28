@@ -3,7 +3,6 @@ local Map = require("api.Map")
 local MapObject = require("api.MapObject")
 local InventoryContext = require("api.gui.menu.InventoryContext")
 
-local data = require("internal.data")
 local field = require("game.field")
 
 -- Functions for manipulating items.
@@ -23,6 +22,16 @@ end
 --- @treturn Iterator(IItem)
 function Item.iter(map)
    return (map or field.map):iter_items()
+end
+
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IItem)
+function Item.iter_ground(map)
+   map = map or field.map
+   local is_on_ground = function(i)
+      return i:current_map() ~= nil
+   end
+   return Item.iter(map):filter(is_on_ground)
 end
 
 --- Returns true if this item has any amount remaining and is

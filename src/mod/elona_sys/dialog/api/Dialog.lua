@@ -37,8 +37,8 @@ end
 ---  * key.fragment            - dialog.root.key.fragment
 ---  * dialog.key              - dialog.key
 ---  * {"key.fragment", args = {"arg1", "arg2"}}  - (localized with arguments)
-local function resolve_response(obj, talk)
-   local args = {}
+local function resolve_response(obj, talk, args)
+   local args = args or {}
    local get
    local key
 
@@ -61,7 +61,7 @@ local function resolve_response(obj, talk)
       key = "ui.more"
    end
 
-   return resolve_translated_text(talk.dialog.root, key, args)
+   return resolve_translated_text(root, key, args)
 end
 
 local function speaker_name(chara)
@@ -90,6 +90,7 @@ local function query(talk, text, choices, default_choice)
    for i, choice in ipairs(choices) do
       the_choices[i] =  resolve_response(choice[2], talk)
       if default_choice == nil and choice[1] == "__END__" then
+         _ppr("Get")
          default_choice = i
       end
    end
@@ -114,6 +115,7 @@ local function query(talk, text, choices, default_choice)
    end
 
    local result = menu:query()
+   print(result, default_choice)
 
    return choices[result][1]
 end
@@ -288,9 +290,9 @@ local function step_dialog(node_data, talk, state)
 
             -- Change speaking character.
             if text.speaker ~= nil then
-               local found = Chara.find(text.speaker, "other")
+               local found = Chara.find(text.speaker, "others")
                if found == nil then
-                  found = Chara.find(text.speaker, "ally")
+                  found = Chara.find(text.speaker, "allies")
                end
                if found ~= nil then
                   talk.speaker = found
@@ -316,7 +318,7 @@ local function step_dialog(node_data, talk, state)
             if node.default_choice ~= nil then
                for j, choice in ipairs(choices) do
                   if choice[1] == node.default_choice then
-                     default_choice = j - 1
+                     default_choice = j
                   end
                end
                if default_choice == nil then
@@ -325,7 +327,7 @@ local function step_dialog(node_data, talk, state)
             end
 
             -- Resolve localized text.
-            local tex = resolve_translated_text(talk.dialog.root, text[1])
+            local tex = resolve_translated_text(talk.dialog.root, text[1], args)
 
             -- Prompt for choice if on the last text entry or
             -- `next_node` is non-nil, otherwise show single choice.

@@ -1,7 +1,6 @@
 local Action = require("api.Action")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
-local Event = require("api.Event")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Map = require("api.Map")
@@ -75,20 +74,12 @@ function Tools.spawn_items(count)
    end
 end
 
-function Tools.items()
-   return Map.iter_items()
-end
-
 function Tools.item()
-   return Rand.choice(Tools.items())
-end
-
-function Tools.allies()
-   return Chara.iter_allies()
+   return Rand.choice(Item.iter())
 end
 
 function Tools.ally()
-   return Rand.choice(Tools.allies())
+   return Rand.choice(Chara.iter_allies())
 end
 
 local function gen_faction_pred(faction)

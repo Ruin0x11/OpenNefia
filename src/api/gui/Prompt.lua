@@ -57,7 +57,6 @@ function Prompt:init(choices, width)
 
    for i, v in ipairs(choices) do
       if type(v) == "table" and v.key then
-         print("bind",v.key)
          self.list:unbind_keys({v.key})
          self.list:bind_keys {
             [v.key] = function()

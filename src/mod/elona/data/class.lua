@@ -1,3 +1,5 @@
+local Item = require("api.Item")
+
 local class = {
    {
       _id = "warrior",
@@ -92,7 +94,12 @@ local class = {
          ["elona.light_armor"] = 4,
          ["elona.alchemy"] = 4,
          ["elona.casting"] = 5,
-      }
+      },
+
+      on_init_player = function(player)
+         Item.create("elona.spellbook_of_minor_teleportation", nil, nil, {}, player)
+         Item.create("elona.spellbook_of_magic_arrow", nil, nil, {amount=3}, player)
+      end
    },
    {
       _id = "farmer",
@@ -122,7 +129,11 @@ local class = {
          ["elona.healing"] = 5,
          ["elona.gardening"] = 5,
          ["elona.tailoring"] = 5,
-      }
+      },
+
+      on_init_player = function(player)
+         Item.create("elona.portable_cooking_tool", nil, nil, {}, player)
+      end
    },
    {
       _id = "predator",
@@ -206,7 +217,12 @@ local class = {
          ["elona.medium_armor"] = 4,
          ["elona.heavy_armor"] = 4,
          ["elona.casting"] = 4,
-      }
+      },
+
+      on_init_player = function(player)
+         Item.create("elona.spellbook_of_minor_teleportation", nil, nil, {}, player)
+         Item.create("elona.spellbook_of_magic_arrow", nil, nil, {amount=3}, player)
+      end
    },
    {
       _id = "tourist",
@@ -258,7 +274,11 @@ local class = {
          ["elona.jeweler"] = 5,
          ["elona.light_armor"] = 4,
          ["elona.riding"] = 3,
-      }
+      },
+
+      on_init_player = function(player)
+         Item.create("elona.grand_piano", nil, nil, {}, player)
+      end
    },
    {
       _id = "gunner",
@@ -315,7 +335,12 @@ local class = {
          ["elona.heavy_armor"] = 4,
          ["elona.faith"] = 5,
          ["elona.casting"] = 5,
-      }
+      },
+
+      on_init_player = function(player)
+         Item.create("elona.spellbook_of_cure_minor_wound", nil, nil, {amount=3}, player)
+         Item.create("elona.spellbook_of_hero", nil, nil, {}, player)
+      end
    },
    {
       _id = "claymore",

@@ -3,6 +3,7 @@ return {
       desc = {
          elona = {
             cook = function(quest, client)
+            end
          }
       }
    }

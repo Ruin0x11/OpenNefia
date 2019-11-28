@@ -17,6 +17,7 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.height = 380
 
    self.text = text
+   self.wrapped = {}
    self.choices = choices
    self.speaker_name = speaker_name or ""
    self.portrait = portrait
@@ -48,6 +49,9 @@ function DialogMenu:relayout()
    self.t = UiTheme.load(self)
 
    self.pages:relayout(self.x + 136, self.y + self.height - 56 - self.pages:len() * 19 + 4, self.width, self.height)
+
+   local _, wrapped = Draw.wrap_text(self.text, self.width - 200)
+   self.wrapped = wrapped
 end
 
 function DialogMenu:draw()
@@ -79,9 +83,8 @@ function DialogMenu:draw()
    Draw.text("-", self.x + 60, self.y + 198, {0, 0, 0})
    Draw.text("-", self.x + 60, self.y + 245, {0, 0, 0})
 
-   local _, wrapped = Draw.wrap_text(self.text, self.width)
-
-   for i, line in ipairs(wrapped) do
+   Draw.set_font(14) -- 14 - en * 2
+   for i, line in ipairs(self.wrapped) do
       Draw.text(line, self.x + 150, self.y + 43 + (i - 1) * 19, {20, 10, 5})
    end
 

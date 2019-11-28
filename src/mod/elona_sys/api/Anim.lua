@@ -9,7 +9,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 
-local anim_wait = 5
+local anim_wait = 30
 
 local function pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()
@@ -34,11 +34,12 @@ function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)
       scx = scx + draw_x
       scy = scy + draw_y
 
-      for frame = 0, duration-1 do
+      local frame = 0
+      while frame <= duration - 1 do
          draw_cb(asset, scx, scy, frame)
 
-         Draw.yield()
-         Draw.wait(anim_wait)
+         local _, _, frames_passed = Draw.yield(anim_wait)
+         frame = frame + frames_passed
       end
    end
 end
@@ -59,13 +60,14 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
          particles[i] = { x, y }
       end
 
-      for frame = 0, duration-1 do
+      local frame = 0
+      while frame <= duration - 1 do
          for i, p in ipairs(particles) do
             draw_cb(asset, scx, scy, frame, p[1], p[2], i-1)
          end
 
-         Draw.yield()
-         Draw.wait(anim_wait)
+         local _, _, frames_passed = Draw.yield(anim_wait)
+         frame = frame + frames_passed
       end
    end
 end
@@ -118,15 +120,16 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
 
       local count = math.floor(Pos.dist(start_x, start_y, end_x, end_y) / 2) + 1
 
-      for _ = 1, count do
+      local frame = 1
+      while frame <= count do
          sx = sx - math.floor((start_x - end_x) * tw / count)
          sy = sy - math.floor((start_y - end_y) * th / count)
 
          if is_in_screen(sx, sy) then
             chip:draw(sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
 
-            Draw.yield()
-            Draw.wait(anim_wait)
+            local _, _, frames_passed = Draw.yield(anim_wait)
+            frame = frame + frames_passed
          end
       end
 
@@ -178,7 +181,8 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
          frames = 5
       end
 
-      for frame = 1, frames do
+      local frame = 1
+      while frame <= frames do
          if is_critical then
             t.anim_critical:draw_region(frame, sx - 24, sy - 32)
          end
@@ -224,8 +228,8 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
             end
          end
 
-         Draw.yield()
-         Draw.wait(anim_wait)
+         local _, _, frames_passed = Draw.yield(anim_wait)
+         frame = frame + frames_passed
       end
    end
 end
@@ -242,8 +246,9 @@ function Anim.gene_engineering(tx, ty)
       local scx, scy = Gui.tile_to_screen(tx, ty)
       draw_x = draw_x + scx - 24
       draw_y = draw_y + scy - 60
-      for i = 0, 10 - 1 do
 
+      local i = 0
+      while i <= 9 do
          for j = 0, math.floor(draw_x / 96) + 1 do
             local frame = math.floor(i / 2) + 1
             if j == 0 then
@@ -253,8 +258,8 @@ function Anim.gene_engineering(tx, ty)
             end
          end
 
-         Draw.wait(anim_wait * 2.25)
-         Draw.yield()
+         local _, _, frames_passed = Draw.yield(anim_wait * 2.25)
+         i = i + frames_passed
       end
    end
 end
@@ -298,6 +303,7 @@ function Anim.miracle(positions, sound)
       end
 
       local loops = 0
+      local delta = 1
       while true do
          local did_something = false
 
@@ -331,9 +337,9 @@ function Anim.miracle(positions, sound)
                end
 
                if w.duration >= 20 then
-                  w.duration = w.duration - Rand.rnd(2)
+                  w.duration = w.duration - (delta * Rand.rnd(2))
                else
-                  w.duration = w.duration - 1
+                  w.duration = w.duration - delta
                end
             end
          end
@@ -346,10 +352,9 @@ function Anim.miracle(positions, sound)
             break
          end
 
-         Draw.wait(anim_wait * 2.25)
-         Draw.yield()
-
-         loops = loops + 1
+         local _
+         _, _, delta = Draw.yield(anim_wait * 2.25)
+         loops = loops + delta
       end
    end
 end

@@ -70,7 +70,7 @@ local UiListExt = function(feats_menu)
          name_x_offset = 45 - 64 - 20
       end
 
-      feats_menu.trait_icons:draw_region(trait_icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
+      feats_menu.t.trait_icons:draw_region(trait_icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
 
       UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
 

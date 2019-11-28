@@ -133,7 +133,7 @@ function CharaMakeWrapper:make_chara()
    local default_id = "content.player" -- TODO
    local chara = Chara.create(default_id, nil, nil, {no_build = true, ownerless = true})
 
-   local make_pairs = function(menu) print(menu.name); return env.get_require_path(menu), menu:charamake_result() end
+   local make_pairs = function(menu) return env.get_require_path(menu), menu:charamake_result() end
    local results = fun.iter(self.trail):map(make_pairs):to_map()
 
    for _, menu in ipairs(self.trail) do
@@ -199,7 +199,7 @@ function CharaMakeWrapper:update()
       local act = table.maybe(result, "chara_make_action")
       self:handle_action(act)
    elseif result then
-      self.results[self.submenu.name] = result
+      self.results[self.submenu.__class.__name] = result
 
       local has_next = self.menus[#self.trail+2] ~= nil
       if has_next then

@@ -465,10 +465,9 @@ local function search_for_target(chara, params)
 
             if x >= 0 and y < Map.width() then
                local on_cell = Chara.at(x, y)
-               if on_cell ~= nil and not on_cell:is_player() then
+               if on_cell ~= nil and not on_cell:is_player() and not on_cell:calc("is_not_targeted_by_ai") then
                   if chara:reaction_towards(on_cell) < 0 then
-                     local can_be_attacked = true
-                     if can_be_attacked then
+                     if not chara:calc("is_not_targeted_by_ai") then
                         chara.ai_state.hate = 30
                         chara:set_target(on_cell)
                         return true

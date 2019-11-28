@@ -78,15 +78,14 @@ function Map.save(map)
    return SaveFs.write(path, map)
 end
 
-Event.register("base.on_map_loaded", "apply template options",
-               function(map)
-                  if map.generated_with then
-                     local generator = data["base.map_generator"][map.generated_with.generator]
-                     if generator and generator.load then
-                        generator.load(map, map.generated_with.params)
-                     end
-                  end
-end)
+local function run_generator_load_callback(map)
+   if map.generated_with then
+      local generator = data["base.map_generator"][map.generated_with.generator]
+      if generator and generator.load then
+         generator.load(map, map.generated_with.params)
+      end
+   end
+end
 
 Event.register("base.on_map_loaded", "instantiate all map objects",
                function(map)
@@ -127,6 +126,15 @@ function Map.load(uid)
    local success, map = SaveFs.read(path)
    if not success then
       return false, map
+   end
+
+   -- Map events should be initialized here because they will not be
+   -- serialized.
+   run_generator_load_callback(map)
+
+   if type(map.events) == "table" then
+      Log.info("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
+      map:connect_self_multiple(map.events)
    end
 
    map:emit("base.on_map_loaded")
@@ -308,6 +316,26 @@ function Map.iter_objects_at(x, y, map)
    return (map or field.map):iter_objects_at(x, y)
 end
 
+-- @tparam IChara chara
+-- @tparam[opt] InstancedMap previous_map
+-- @tparam[opt] IFeat feat
+-- @tparam[opt] InstancedMap map
+function Map.calc_start_position(chara, previous_map, feat, map)
+   map = map or field.map
+
+   local x, y
+   if type(map.player_start_pos) == "table" then
+      x = map.player_start_pos.x
+      y = map.player_start_pos.y
+   elseif type(map.player_start_pos) == "function" then
+      x, y = map:player_start_pos(chara, previous_map, feat)
+   else
+      error("invalid map start pos: " .. tostring(map.player_start_pos))
+   end
+
+   return x,y
+end
+
 --- Generates a new map using a map generator template.
 ---
 --- @tparam id:base.map_generator generator_id ID of the generator to use.
@@ -347,7 +375,14 @@ function Map.generate(generator_id, params, opts)
    map.generated_with = { generator = generator_id, params = params }
    Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
 
+   if type(map.events) == "table" then
+      Log.info("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
+      map:connect_self_multiple(map.events)
+   end
+
    map:emit("base.on_map_generated")
+
+   run_generator_load_callback(map)
    map:emit("base.on_map_loaded")
 
    if not params.no_refresh then
@@ -398,7 +433,6 @@ local function refresh_chara(chara, map)
 
    chara:emit("base.on_chara_refresh_in_map")
 
-   local on_cell = Chara.at(chara.x, chara.y, map)
    local can_access = Map.recalc_access(chara.x, chara.y, {exclude=chara}, map)
 
    if not can_access then
@@ -408,10 +442,11 @@ end
 
 local function regenerate_map(map)
    local Item = require("api.Item")
-   local Chara = require("api.Chara")
    local first_time = map.next_regenerate_date == 0
 
    if not first_time then
+      Log.info("Regenerating map %d (%s)", map.uid, map.gen_id)
+
       if map.generated_with then
          local generator = data["base.map_generator"][map.generated_with.generator]
          if generator and generator.on_regenerate then
@@ -425,7 +460,7 @@ local function regenerate_map(map)
             if not Item.is_alive(item) or item.own_state == "none" then
                item:remove_ownership()
             else
-               item:emit("on_regenerate")
+               item:emit("base.on_regenerate")
             end
          end
       end
@@ -436,10 +471,12 @@ local function regenerate_map(map)
          if Chara.is_alive(chara) and chara.is_temporary and Rand.one_in(2) then
             chara:remove_ownership()
          else
-            chara:emit("on_regenerate")
+            chara:emit("base.on_regenerate")
          end
       end
    end
+
+   map.next_regenerate_date = World.date_hours() + 120
 end
 
 Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
@@ -447,9 +484,7 @@ Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
 function Map.refresh(map)
    Log.info("Refreshing map %d (%s)", map.uid, map.gen_id)
 
-   local Chara = require("api.Chara")
-
-   if map.should_regenerate and World.date_hours() >= map.next_regenerate_date then
+   if map.is_regenerated and World.date_hours() >= map.next_regenerate_date then
       map:emit("base.on_regenerate_map")
    end
 
@@ -700,15 +735,9 @@ function Map.travel_to(map_or_uid, params)
       x = params.start_x
       y = params.start_y
    else
-      if type(map.player_start_pos) == "table" then
-         x = map.player_start_pos.x or x
-         y = map.player_start_pos.y or y
-      elseif type(map.player_start_pos) == "function" then
-         x, y = map.player_start_pos(Chara.player(), map, current, params.feat)
-      else
-         error("invalid map start pos: " .. tostring(map.player_start_pos))
-      end
+      x, y = Map.calc_start_position(Chara.player(), current, params.feat, map)
    end
+   _ppr(x, y, map.uid, map._id)
 
    -- take the player, allies and any items they carry.
    --
@@ -771,7 +800,7 @@ function Map.world_map_containing(map)
    map = map or Map.current()
 
    local area = save.base.area_mapping:area_for_map(map)
-   if area == nil then
+   if area == nil or area.outer_map_uid == nil then
       return nil, "Map doesn't have an outer map"
    end
 

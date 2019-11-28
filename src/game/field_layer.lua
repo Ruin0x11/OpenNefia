@@ -216,8 +216,8 @@ function field_layer:wait_for_draw_callbacks()
    self.waiting_for_draw_callbacks = true
 end
 
-function field_layer:check_for_wait()
-   local has_cbs = self.renderer:has_draw_callbacks()
+function field_layer:update_draw_callbacks(dt)
+   local has_cbs = self.renderer:update_draw_callbacks(dt)
    if has_cbs and self.waiting_for_draw_callbacks then
       return true
    end

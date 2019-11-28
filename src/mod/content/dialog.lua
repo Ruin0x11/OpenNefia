@@ -51,7 +51,7 @@ data:add {
                {"replenish", "choices.replenish"}
             }
 
-            if Chara.find("elona.little_sister", "ally") ~= nil then
+            if Chara.find("elona.little_sister", "allies") ~= nil then
                table.insert(choices, {"turn_over", "choices.turn_over"})
             end
             table.insert(choices, {"__END__", "__BYE__"})

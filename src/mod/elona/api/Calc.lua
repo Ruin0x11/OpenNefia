@@ -30,7 +30,21 @@ function Calc.calc_object_level(base, map)
    return ret
 end
 
+local QUALITY = {
+   bad = 1,
+   good = 2,
+   great = 3,
+   miracle = 4,
+   godly = 5,
+   special = 6
+}
+
 function Calc.calc_object_quality(quality)
+   if type(quality) == "string" then
+      assert(QUALITY[quality], ("Unknown quality %s"):format(quality))
+      quality = QUALITY[quality]
+   end
+
    local ret = quality or 2
    if ret == 0 then
       ret = 2
@@ -50,11 +64,11 @@ function Calc.calc_object_quality(quality)
    return math.clamp(ret, 1, 5)
 end
 
-function Calc.filter(level, quality)
-   return {
+function Calc.filter(level, quality, rest)
+   return table.merge({
       level = Calc.calc_object_level(level),
-      quality = Calc.calc_object_level(quality),
-   }
+      quality = Calc.calc_object_quality(quality),
+   }, rest or {})
 end
 
 return Calc

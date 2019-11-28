@@ -7,24 +7,22 @@ local data = require("internal.data")
 
 local IEventEmitter = class.interface("IEventEmitter")
 
-function IEventEmitter:init()
+function IEventEmitter:init(events)
    self._events = EventHolder:new()
    self.global_events = EventHolder:new()
 
-   if self.proto and self.proto.events then
-      for _, event in ipairs(self.proto.events) do
-         self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
-      end
+   local events = events or (self.proto and self.proto.events)
+   if events then
+      self:connect_self_multiple(events)
    end
 end
 
 function IEventEmitter:on_reload_prototype()
    Log.info("Reloading prototype of %s:%s for object %d", self._type, self._id, self.uid)
-   print(self.on_activate, self.proto)
-   if self.proto and self.proto.events then
-      for _, event in ipairs(self.proto.events) do
-         self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
-      end
+
+   local events = self.proto and self.proto.events
+   if events then
+      self:connect_self_multiple(events)
    end
 end
 
@@ -121,6 +119,12 @@ function IEventEmitter:disconnect_self(event_id, name)
 
    if self._events:count(event_id) == 0 then
       self._events:unregister(event_id, string.format("Global callback runner (%s)", event_id))
+   end
+end
+
+function IEventEmitter:connect_self_multiple(events)
+   for _, event in ipairs(events) do
+      self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
    end
 end
 

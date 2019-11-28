@@ -11,6 +11,7 @@ local Resolver = require("api.Resolver")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local MapObject = require("api.MapObject")
 local Role = require("mod.elona_sys.api.Role")
+local Text = require("mod.elona.api.Text")
 
 --
 --
@@ -426,6 +427,20 @@ Event.register(
       return chara
 end)
 
+Event.register("base.generate_chara_name", "Elona character name generation", function(_, _, result)
+                  if result and result ~= "" then
+                     return result
+                  end
+                  return Text.random_name()
+end)
+
+Event.register("base.generate_title", "Elona title generation", function(_, params, result)
+                  if result and result ~= "" then
+                     return result
+                  end
+                  return Text.random_title(params.kind)
+end)
+
 Event.register("base.on_chara_generated", "npc memory", function(chara) NpcMemory.on_generated(chara._id) end)
 Event.register("base.on_object_cloned", "npc memory",
                function(_, params)
@@ -467,7 +482,7 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
-      Dialog.start(on_cell, "elona.default")
+      Dialog.start(on_cell)
       return "player_turn_query"
    end
 
@@ -591,19 +606,28 @@ Event.register("base.on_chara_refresh_in_map", "Refresh other character", refres
 local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
-Event.register("elona_sys.hook_player_move", "Footsteps in world map",
-               function(_, params, result)
-                  local map = params.chara:current_map()
-                  if map:has_type("world_map") then
+Event.register("elona_sys.hook_player_move", "Leave footsteps",
+               function(player, params, result)
+                  if player.x ~= result.pos.x or player.y ~= result.pos.y then
+                     local map = params.chara:current_map()
                      local tile = map:tile(params.chara.x, params.chara.y)
                      if tile.kind == 4 then
                         Gui.play_sound(snow_footsteps[footstep%2+1])
                         footstep = footstep + Rand.rnd(2)
                      else
-                        Gui.play_sound(footsteps[footstep%2+1])
-                        footstep = footstep + 1
+                        if map:has_type("world_map") then
+                           Gui.play_sound(footsteps[footstep%2+1])
+                           footstep = footstep + 1
+                        end
                      end
                   end
 
                   return result
                end)
+
+local function respawn_mobs()
+   if save.base.play_turns % 20 == 0 then
+   end
+end
+
+Event.register("base.on_minute_passed", "Respawn mobs", respawn_mobs)

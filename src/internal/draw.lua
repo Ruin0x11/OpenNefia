@@ -1,4 +1,5 @@
 local env = require("internal.env")
+local fs = require("util.fs")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -121,6 +122,14 @@ function draw.layer_count()
 end
 
 local coroutines = {}
+
+function draw.update_layers_below(dt)
+   for i, layer in ipairs(layers) do
+      if i < #layers then
+         layer:update(dt)
+      end
+   end
+end
 
 function draw.draw_layers()
    if env.hotloaded_this_frame() then
@@ -246,7 +255,7 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
-local default_font = "kochi-gothic-subst.ttf"
+local default_font = "MS-Gothic.ttf"
 
 local font_cache = setmetatable({}, { __mode = "v" })
 function draw.set_font(size, style, filename)
@@ -257,7 +266,7 @@ function draw.set_font(size, style, filename)
    end
    assert(type(size) == "number")
    style = style or "normal"
-   filename = filename or "data/font/" .. default_font
+   filename = filename or fs.join("data/font", default_font)
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
    font_cache[size][filename] = font_cache[size][filename]
       or love.graphics.newFont(filename, size, "mono")

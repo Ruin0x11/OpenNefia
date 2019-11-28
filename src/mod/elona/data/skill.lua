@@ -96,7 +96,7 @@ local skill = {
       range = 0,
 
       calc_initial_level = function(level, chara)
-         return math.floor(level * (100 * chara.level * 2) / 100)
+         return math.floor(level * (100 + chara.level * 2) / 100)
       end
    },
    {

@@ -1,4 +1,4 @@
---- @module feat
+--- @module Feat
 
 local Event = require("api.Event")
 local Map = require("api.Map")

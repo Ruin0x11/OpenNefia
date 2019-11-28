@@ -28,11 +28,7 @@ end
 function field_logic.quickstart()
    field:init_global_data()
 
-   save.base.scenario = "content.my_scenario"
-   local success, map = Map.generate("content.test", {})
-   assert(success, map)
-   field:set_map(map)
-   Map.save(map)
+   save.base.scenario = "elona.elona"
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
    field_logic.setup_new_game(me)
@@ -64,6 +60,11 @@ local chara_iter_state = nil
 local chara_iter_index = 0
 
 function field_logic.turn_begin()
+   local turn_result = Event.trigger("base.on_turn_begin", {}, nil)
+   if turn_result then
+      -- return turn_result
+   end
+
    local player = Chara.player()
 
    if not Chara.is_alive(player) then
@@ -336,8 +337,8 @@ function field_logic.run_one_event(event, target_chara)
    end
 
    -- Wait for draw callbacks if necessary.
-   while field:check_for_wait() do
-      coroutine.yield()
+   while field:update_draw_callbacks(dt) do
+      dt = coroutine.yield()
    end
 
    if field.map_changed == true then
@@ -393,6 +394,8 @@ function field_logic.query()
    field.is_active = true
 
    draw.push_layer(field)
+
+   Gui.update_screen()
 
    while going do
       going, event, target_chara = field_logic.run_one_event(event, target_chara)

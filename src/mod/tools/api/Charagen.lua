@@ -80,14 +80,14 @@ local function do_get_chara_id(params)
       end
    end
 
-   local id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category)
+   local id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
 
    if id == nil then
       if params.fltselect == 2 or params.quality == 6 then
          params.quality = 4
       end
       params.level = params.level + 10
-      id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category)
+      id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
    end
 
    return id
@@ -95,6 +95,7 @@ end
 
 function Charagen.create(x, y, params, where)
    params = params or {}
+   _ppr(params)
 
    params.quality = params.quality or 0
    params.level = params.level or 0

@@ -1,10 +1,26 @@
 local Chara = require("api.Chara")
+local Calc = require("mod.elona.api.Calc")
+local Item = require("api.Item")
+local Map = require("api.Map")
 local Feat = require("api.Feat")
 local I18N = require("api.I18N")
-local Log = require("api.Log")
-local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
+local IChara = require("api.chara.IChara")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Gui = require("api.Gui")
+local World = require("api.World")
+local Text = require("mod.elona.api.Text")
+
+local function reload_122_map_geometry(current, elona122_map_id)
+   local _, temp = assert(Map.generate("elona_sys.elona122", { name = elona122_map_id }))
+   assert(current:width() == temp:width())
+   assert(current:height() == temp:height())
+
+   for _, x, y, tile in temp:iter_tiles() do
+      current:set_tile(x, y, tile)
+   end
+end
 
 local north_tyris = {
    _type = "elona_sys.map_template",
@@ -67,7 +83,7 @@ data:add(north_tyris)
 
 local function chara_filter_town(callbacks)
    return function(self)
-      local opts = { level = 10, quality = 1, fltselect = 5 }
+      local opts = Calc.filter(10, "bad", {fltselect = 5})
 
       if callbacks == nil then
          return opts
@@ -125,7 +141,7 @@ end
 local function generate_chara(map)
    local params
    if map.chara_filter then
-      params = map.chara_filter()
+      params = map:chara_filter()
       assert(type(params) == "table")
    else
       local player = Chara.player()
@@ -344,8 +360,7 @@ local the_mine = {
       danger_level = 1,
       deepest_dungeon_level = 999,
       is_outdoor = false,
-      is_temporary = false,
-      -- should_regenerate = false, TODO
+      is_regenerated = false,
       has_anchored_npcs = true,
       default_ai_calm = 1,
       max_crowd_density = 0,
@@ -353,7 +368,32 @@ local the_mine = {
 
    on_generate = function(map)
       set_quest_targets(map)
-   end
+   end,
+
+   events = {
+      {
+         id = "elona_sys.on_quest_check",
+         name = "Sidequest: putit_attacks",
+
+         callback = function(map)
+            if Sidequest.progress("elona.putit_attacks") < 2 then
+               if Sidequest.no_targets_remaining(map) then
+                  Sidequest.set_progress("elona.putit_attacks", 2)
+                  Gui.play_sound("base.write1");
+                  Gui.mes_c("quest.journal_updated", "Green");
+               end
+            end
+         end
+      },
+      {
+         id = "base.on_map_generated",
+         name = "Sidequest: putit_attacks",
+
+         callback = function(map)
+            Sidequest.set_quest_targets(map)
+         end
+      }
+   }
 }
 data:add(the_mine)
 
@@ -399,7 +439,7 @@ local palmia = {
       player_start_pos = function(chara, map)
          local x, y = MapEntrance.directional(chara, map)
          if save.base.player_pos_on_map_leave then
-            return x,y
+            return x, y
          end
          local last_dir = Chara.player().last_move_direction
          if last_dir == "East" then
@@ -507,7 +547,7 @@ local noyel = {
       player_start_pos = function(chara, map)
          local x, y = MapEntrance.directional(chara, map)
          if save.base.player_pos_on_map_leave then
-            return x,y
+            return x, y
          end
          local last_dir = Chara.player().last_move_direction
          if last_dir == "East" then
@@ -536,7 +576,199 @@ local noyel = {
             end
          end
       }
-   }
+   },
+
+   on_regenerate = function(map)
+      local function reload_noyel(map)
+         for _, item in Item.iter_ground() do
+            if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
+               item:remove()
+            end
+         end
+
+         if map.is_noyel_christmas_festival then
+            local item = Item.create("elona.pedestal", 29, 16)
+            item.own_state = "not_owned"
+
+            item = Item.create("elona.statue_of_jure", 29, 16)
+            item.own_state = "not_owned"
+
+            item = Item.create("elona.altar", 29, 17)
+            item.own_state = "not_owned"
+            item.params = { god_id = "elona.jure" }
+
+            item = Item.create("elona.mochi", 29, 17)
+            item.own_state = "unobtainable"
+
+            local chara = Chara.create("elona.kaneda_bike", 48, 19)
+            if chara then
+               chara.roles = {{id="elona.unique_chara"}}
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.part_time_worker", 30, 17)
+            if chara then
+               chara.roles = {{id="elona.unique_chara"}}
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.punk", 38, 19)
+            if chara then
+               chara.is_only_in_christmas = true
+               chara.is_hung_on_sand_bag = true
+               chara.name = I18N.get("chara.job.fanatic")
+            end
+
+            chara = Chara.create("elona.fanatic", 35, 19)
+            if chara then
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.fanatic", 37, 18)
+            if chara then
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.fanatic", 37, 21)
+            if chara then
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.fanatic", 39, 20)
+            if chara then
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.fanatic", 38, 21)
+            if chara then
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.bartender", 17, 8)
+            if chara then
+               chara.ai_calm = 3
+               chara.is_only_in_christmas = true
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.food_vendor", rank=10}}}
+               chara.name = I18N.get("chara.job.food_vendor", chara.name)
+            end
+
+            chara = Chara.create("elona.hot_spring_maniac", 25, 8)
+            if chara then
+               chara.ai_calm = 3
+               chara.faction = "elona.citizen"
+               chara.is_only_in_christmas = true
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.souvenir_vendor", rank=30}}}
+               chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
+            end
+
+            chara = Chara.create("elona.rogue", 24, 22)
+            if chara then
+               chara.ai_calm = 3
+               chara.faction = "elona.citizen"
+               chara.is_only_in_christmas = true
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.souvenir_vendor", rank=30}}}
+               chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
+            end
+
+            chara = Chara.create("elona.shopkeeper", 38, 12)
+            if chara then
+               chara.ai_calm = 3
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.blackmarket", rank=10}}}
+               chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
+               chara.is_only_in_christmas = true
+            end
+
+            chara = Chara.create("elona.rogue", 28, 9)
+            if chara then
+               chara.ai_calm = 3
+               chara.faction = "elona.citizen"
+               chara.is_only_in_christmas = true
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.street_vendor", rank=30}}}
+               chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
+            end
+
+            chara = Chara.create("elona.rogue", 29, 24)
+            if chara then
+               chara.ai_calm = 3
+               chara.faction = "elona.citizen"
+               chara.is_only_in_christmas = true
+               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.street_vendor", rank=30}}}
+               chara.name = I18N.get("chara.job.street_vendor2", Text.random_name())
+            end
+
+            for _ = 1, 20 do
+               chara = Chara.create("elona.holy_beast")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+
+               chara = Chara.create("elona.festival_tourist")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+            end
+
+            for _ = 1, 15 do
+               chara = Chara.create("elona.bard")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+            end
+
+            for _ = 1, 7 do
+               chara = Chara.create("elona.prostitute")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+
+               chara = Chara.create("elona.tourist")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+
+               chara = Chara.create("elona.noble")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+
+               chara = Chara.create("elona.punk")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+            end
+
+            for _ = 1, 3 do
+               chara = Chara.create("elona.stray_cat")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+
+               chara = Chara.create("elona.tourist")
+               if chara then
+                  chara.is_only_in_christmas = true
+               end
+            end
+         else
+            Chara.iter_others()
+               :filter(function(c) return c.is_only_in_christmas end)
+               :each(IChara.vanquish)
+         end
+      end
+
+      if World.date().month == 12 then
+         if not map.is_noyel_christmas_festival then
+            map.is_noyel_christmas_festival = true
+            reload_noyel(map)
+         end
+         reload_122_map_geometry(map, "noyel_fest")
+      else
+         if map.is_noyel_christmas_festival then
+            map.is_noyel_christmas_festival = false
+            reload_noyel(map)
+         end
+         reload_122_map_geometry(map, "noyel")
+      end
+   end
 }
 data:add(noyel)
 
@@ -551,7 +783,7 @@ local lumiest = {
       player_start_pos = function(chara, map)
          local x, y = MapEntrance.directional(chara, map)
          if save.base.player_pos_on_map_leave then
-            return x,y
+            return x, y
          end
          local last_dir = Chara.player().last_move_direction
          if last_dir == "West" then
@@ -617,14 +849,19 @@ local your_home = {
    _type = "elona_sys.map_template",
 
    elona_id = 7,
-   map = "home0",
+   map = {
+      generator = "elona.home",
+      params = {
+         id = "elona.cave",
+      }
+   },
    image = "elona.feat_area_your_dungeon",
 
    copy = {
       types = { "player_owned" },
       player_start_pos = MapEntrance.south,
       turn_cost = 10000,
-      danger_level = 1,
+      dungeon_level = 1,
       deepest_dungeon_level = 10,
       is_outdoor = false,
       has_anchored_npcs = true,
@@ -747,11 +984,11 @@ local lesimas = {
       default_ai_calm = 0,
       can_return_to = true,
       shows_floor_count_in_name = true,
-      chara_filter = function()
-         local opts = { objlv = Calc.calc_objlv(Map.current().dungeon_level), quality = 1 }
+      chara_filter = function(map)
+         local opts = Calc.filter(map.dungeon_level, "bad")
 
-         if Map.current().dungeon_level < 4 and opts.objlv > 5 then
-            opts.objlv = 5
+         if map.dungeon_level < 4 and opts.level > 5 then
+            opts.level = 5
          end
 
          return opts
@@ -778,8 +1015,8 @@ local the_void = {
       default_ai_calm = 0,
       can_return_to = true,
       prevents_domination = true,
-      chara_filter = function()
-         return { level = math.modf(Map.current().dungeon_level, 50) + 5, quality = 1 }
+      chara_filter = function(map)
+         return Calc.filter((map.dungeon_level % 50) + 5, "bad")
       end
    }
 }
@@ -806,8 +1043,8 @@ local tower_of_fire = {
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
-      chara_filter = function()
-         return { level = Map.current().dungeon_level, quality = 1, fltn = "fire" }
+      chara_filter = function(map)
+         return Calc.filter(map.dungeon_level, "bad", { tag_filters = {"fire"}})
       end
    }
 }
@@ -834,8 +1071,8 @@ local crypt_of_the_damned = {
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
-      chara_filter = function()
-         return { level = Map.current().dungeon_level, quality = 1, fltn = "undead" }
+      chara_filter = function(map)
+         return Calc.filter(map.dungeon_level, "bad", { tag_filters = {"undead"} })
       end
    }
 }
@@ -862,11 +1099,11 @@ local ancient_castle = {
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
-      chara_filter = function()
-         local opts = { level = Map.current().dungeon_level, quality = 1 }
+      chara_filter = function(map)
+         local opts = Calc.filter(map.dungeon_level, "bad")
 
          if Rand.one_in(2) then
-            opts.fltn = "man"
+            opts.tag_filters = {"man"}
          end
 
          return opts
@@ -891,8 +1128,8 @@ local dragons_nest = {
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
-      chara_filter = function()
-         return { level = Map.current().dungeon_level, quality = 1 }
+      chara_filter = function(map)
+         return Calc.filter(map.dungeon_level, "bad")
       end
    }
 }
@@ -973,10 +1210,10 @@ local minotaurs_nest = {
       has_anchored_npcs = true,
       default_ai_calm = 0,
       chara_filter = function()
-         local opts = { level = Map.current().dungeon_level, quality = 1 }
+         local opts = Calc.filter(map.dungeon_level, "bad")
 
          if Rand.one_in(2) then
-            opts.fltn = "mino"
+            opts.tag_filters = {"mino"}
          end
 
          return opts
@@ -1001,11 +1238,11 @@ local yeeks_nest = {
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,
-      chara_filter = function()
-         local opts = { level = Map.current().dungeon_level, quality = 1 }
+      chara_filter = function(map)
+         local opts = Calc.filter(map.dungeon_level, "bad")
 
          if Rand.one_in(2) then
-            opts.fltn = "yeek"
+            opts.tag_filters = {"yeek"}
          end
 
          return opts
@@ -1031,8 +1268,8 @@ local pyramid = {
       has_anchored_npcs = true,
       default_ai_calm = 0,
       prevents_teleport = true,
-      chara_filter = function()
-         return { level = Map.current().dungeon_level, quality = 1, flttypemajor = 13 }
+      chara_filter = function(map)
+         return Calc.filter(map.dungeon_level, "bad", {category = 13})
       end
    }
 }
@@ -1055,7 +1292,7 @@ local lumiest_graveyard = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       chara_filter = function()
-         return { level = 20, quality = 1, fltselect = 4 }
+         return Calc.filter(20, "bad", {fltselect = 4})
       end
    }
 }
@@ -1078,7 +1315,7 @@ local truce_ground = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       chara_filter = function()
-         return { level = 20, quality = 1, fltselect = 4 }
+         return Calc.filter(20, "bad", {fltselect = 4})
       end
    }
 }
@@ -1124,7 +1361,7 @@ local cyber_dome = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       chara_filter = function()
-         return { level = 10, quality = 1, fltn = "sf" }
+         return Calc.filter(10, "bad", {tag_filters = {"sf"}})
       end
    }
 }

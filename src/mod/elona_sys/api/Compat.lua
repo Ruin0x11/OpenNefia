@@ -9,6 +9,10 @@ function Compat.convert_122_id(_type, elona_id)
    return nil
 end
 
+function Compat.convert_122_ids(_type, ids)
+   return fun.iter(ids):map(function(i) return {i, Compat.convert_122_id(_type, i)} end):to_list()
+end
+
 local function gen_chip_convert(group)
    return function(elona_id)
       local pred = function(c) return c.group == group and c.elona_id == elona_id end

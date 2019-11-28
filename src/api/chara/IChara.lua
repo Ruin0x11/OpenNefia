@@ -8,6 +8,7 @@ local Rand = require("api.Rand")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
+local I18N = require("api.I18N")
 local ICharaEffects = require("api.chara.ICharaEffects")
 local ICharaEquip = require("api.chara.ICharaEquip")
 local ICharaInventory = require("api.chara.ICharaInventory")
@@ -57,6 +58,7 @@ local defaults = {
 local fallbacks = {
    state = "Dead",
    name = "",
+   title = "",
    gender = "female",
    max_level = 1,
    experience = 0,
@@ -152,7 +154,7 @@ function IChara:pre_build()
    IMapObject.init(self)
 
    self.state = "Dead"
-   self.name = self._id
+   self.name = I18N.get_optional("chara." .. self._id .. ".name") or self.name
 
    -- NOTE: to add new interfaces/behaviors, connect_self to
    -- on_instantiate and run them there.
@@ -261,7 +263,8 @@ function IChara:produce_memory()
    return {
       uid = self.uid,
       show = Chara.is_alive(self),
-      image = (self:calc("image") or "") .. "#1"
+      image = (self:calc("image") or "") .. "#1",
+      color = self:calc("color")
    }
 end
 
@@ -315,6 +318,7 @@ function IChara:refresh_weight()
    local weight = 0
    local cargo_weight = 0
    for _, i in self:iter_items() do
+      assert(i:calc("cargo_weight"), inspect(i))
       weight = weight + i:calc("weight")
       cargo_weight = cargo_weight + i:calc("cargo_weight")
    end
@@ -610,14 +614,35 @@ function IChara:kill(source)
    else
       self.state = "Dead"
    end
-
    self.is_solid = nil
+
    local map = self:current_map()
    if map then
       map:refresh_tile(self.x, self.y)
    end
 
-   Event.trigger("base.on_chara_killed", {chara=self,source=source})
+   self:emit("base.on_chara_killed", {source=source})
+end
+
+--- Removes this character completely.
+function IChara:vanquish()
+   if self:is_player() then
+      return
+   end
+
+   self.state = "Dead"
+   self.is_solid = nil
+
+   local map = self:current_map()
+   if map then
+      map:refresh_tile(self.x, self.y)
+   end
+
+   if self:is_ally() then
+      table.iremove_value(save.base.allies, self.uid)
+   end
+
+   self:emit("base.on_chara_vanquished")
 end
 
 --- Revives this character.

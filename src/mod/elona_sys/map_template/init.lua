@@ -60,11 +60,7 @@ local function generate_from_map_template(self, params, opts)
 
    if template.copy then
       local copy = Resolver.resolve(template.copy)
-
-      for k, v in pairs(copy) do
-         print("copy", k, v)
-         map[k] = v
-      end
+      table.merge(map, copy)
    end
 
    if template.areas then
@@ -90,6 +86,8 @@ local function generate_from_map_template(self, params, opts)
          end
       end
    end
+
+   map.events = template.events or {}
 
    if template.on_generate then
       template.on_generate(map)
@@ -118,6 +116,8 @@ local function load_map_template(map, params, opts)
          end
       end
    end
+
+   map.events = template.events or {}
 
    if template.on_load then
       template.on_load(map)

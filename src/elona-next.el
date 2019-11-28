@@ -138,12 +138,13 @@
                               (and (not (string-prefix-p "lib/" f))
                                (string-equal "lua" (file-name-extension f))))
                             (projectile-project-files project-root)))
-         (file (string-join (list project-root (projectile-completing-read "File: " cands)))))
+         (file (projectile-completing-read "File: " cands)))
     (when file
       (beginning-of-line)
       (when (not (eobp))
         (next-line))
-      (insert (elona-next-require-path file))
+      (insert (elona-next-require-path
+               (string-join (list project-root file))))
       (when (not (bobp))
         (previous-line))
       (indent-region (point-at-bol) (point-at-eol)))))

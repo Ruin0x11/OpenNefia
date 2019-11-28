@@ -42,12 +42,11 @@ function World.pass_time_in_seconds(seconds, events)
       local minutes_passed = math.floor(date.second / 60)
 
       date.minute = date.minute + minutes_passed
+      date.second = date.second % 60
 
       if events >= 4 then
          Event.trigger("base.on_minute_passed", {minutes=minutes_passed})
       end
-
-      date.second = date.second % 60
 
       if date.minute >= 60 then
          local hours_passed = math.floor(date.minute / 60)
@@ -72,18 +71,21 @@ function World.pass_time_in_seconds(seconds, events)
             end
 
             if date.day >= 31 then
-               date.month = date.month + 1
+               local months_passed = math.floor(date.day / 31)
+               date.month = date.month + months_passed
+               date.day = date.day % 31
 
                if events >= 1 then
-                  Event.trigger("base.on_month_passed")
+                  Event.trigger("base.on_month_passed", {months=months_passed})
                end
 
                if date.month >= 13 then
-                  date.year = date.year + 1
-                  date.month = 1
+                  local years_passed = math.floor(date.month / 13)
+                  date.year = date.year + years_passed
+                  date.month = date.month % 13
 
                   if events >= 0 then
-                     Event.trigger("base.on_year_passed")
+                     Event.trigger("base.on_year_passed", {years=years_passed})
                   end
                end
             end

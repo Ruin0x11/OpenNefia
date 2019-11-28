@@ -1,6 +1,7 @@
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local Skill = require("mod.elona_sys.api.Skill")
+local Event = require("api.Event")
 
 data:add {
    _type = "base.resolver",
@@ -167,5 +168,22 @@ data:add {
       copy_to_chara.skills = Resolver.make("elona.skills", {skills = class.skills})
 
       return Resolver.resolve(copy_to_chara, params)
+   end
+}
+
+data:add {
+   _type = "base.resolver",
+   _id = "random_name",
+
+   ordering = 200000,
+   method = "merge",
+   invariants = { },
+   params = { },
+
+   resolve = function()
+      return {
+         name = Event.trigger("base.generate_chara_name", {}, ""),
+         has_own_name = true
+      }
    end
 }

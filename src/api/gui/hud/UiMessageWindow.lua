@@ -204,6 +204,7 @@ end
 
 function UiMessageWindow:redraw_window()
    Draw.clear()
+   Draw.set_color(255, 255, 255)
 
    self.t.message_window:draw_bar(0, 0, self.width)
 
@@ -221,13 +222,12 @@ function UiMessageWindow:redraw_window()
 end
 
 function UiMessageWindow:draw()
-   Draw.set_color(255, 255, 255)
-
    if self.redraw then
       Draw.with_canvas(self.canvas, function() self:redraw_window() end)
       self.redraw = false
    end
 
+   Draw.set_color(255, 255, 255)
    Draw.image(self.canvas, self.x, self.y)
 end
 

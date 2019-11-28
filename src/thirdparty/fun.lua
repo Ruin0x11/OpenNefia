@@ -1107,4 +1107,24 @@ end
 methods.group_by = method2(group_by)
 exports.group_by = export2(group_by)
 
+local function dup_helper(n, var_1, ...)
+   if var_1 ~= nil then
+      return var_1, select(n, var_1, ...), ...
+   end
+end
+
+-- Duplicates iterators that return only a single value per iteration
+-- (like string.gmatch) so they can be used with fun.wrap().
+--
+-- From https://github.com/luafun/luafun/issues/20#issuecomment-207777263
+local dup = function(n, f, s, var)
+   if type( n ) ~= "number" then
+      n, f, s, var = 1, n, f, s
+   end
+   return function(s2, v)
+      return dup_helper(n, f(s2, v))
+   end, s, var
+end
+exports.dup = dup
+
 return exports

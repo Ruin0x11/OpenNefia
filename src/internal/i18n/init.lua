@@ -1,3 +1,4 @@
+local Rand = require("api.Rand")
 local mod = require("internal.mod")
 local fs = require("util.fs")
 
@@ -9,14 +10,20 @@ reify_one = function(_db, item, key)
    if type(item) == "string" or type(item) == "function" then
       _db[key] = item
    elseif type(item) == "table" then
-      for k, v in pairs(item) do
-         local next_key
-         if key == "" then
-            next_key = k
-         else
-            next_key = key .. "." .. k
+      if item[1] then
+         -- List of options; one is chosen at random.
+         _db[key] = item
+      else
+         -- Nested list of keys.
+         for k, v in pairs(item) do
+            local next_key
+            if key == "" then
+               next_key = k
+            else
+               next_key = key .. "." .. k
+            end
+            reify_one(_db, v, next_key)
          end
-         reify_one(_db, v, next_key)
       end
    else
       error("unknown type: " .. key)
@@ -31,7 +38,7 @@ load_translations = function(path, merged)
          local chunk, err = loadfile(path)
 
          if chunk == nil then
-            error("Error loading translations: " .. err)
+            error("Error loading translations:\n\t" .. err)
          end
 
          setfenv(chunk, i18n.env)
@@ -84,12 +91,16 @@ function i18n.get(key, ...)
       return nil
    end
 
+   if type(entry) == "table" and entry[1] then
+      entry = Rand.choice(entry)
+   end
+
    if type(entry) == "string" then
       return entry
    elseif type(entry) == "function" then
       local success, result = pcall(entry, ...)
       if not success then
-         return ("<error: %s [%s]>"):format(result, key)
+         return ("<error [%s]: %s>"):format(key, result)
       end
       return result
    end

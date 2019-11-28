@@ -53,6 +53,43 @@ function Gui.wait_for_draw_callbacks()
    field:wait_for_draw_callbacks()
 end
 
+--- Waits for the specified number of milliseconds.
+function Gui.wait(ms)
+   local anim = function() Draw.yield(ms) end
+   Gui.start_draw_callback(anim)
+   Gui.wait_for_draw_callbacks()
+end
+
+--- Fades out the screen.
+function Gui.fade_out()
+   local anim = function()
+      local frame = 1
+      while frame < 50 do
+         local _, _, frames_passed = Draw.yield(20)
+         frame = frame + frames_passed
+         for _=1, frame do
+            Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {0, 0, 0, 5})
+         end
+      end
+
+      frame = 1
+      while frame < 30 do
+         local _, _, frames_passed = Draw.yield(20)
+         frame = frame + frames_passed
+         for _=1, 50 do
+            Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {0, 0, 0, 5})
+         end
+
+         love.graphics.setBlendMode("subtract")
+         Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
+         love.graphics.setBlendMode("alpha")
+      end
+   end
+
+   Gui.start_draw_callback(anim)
+   Gui.wait_for_draw_callbacks()
+end
+
 --- Converts from map tile space to screen space.
 ---
 --- @tparam int tx Tile X coordinate

@@ -116,15 +116,15 @@ local fallbacks = {
    tile_set = "Normal",
    tile_type = 2,
    default_ai_calm = 1,
+   crowd_density = 0,
    max_crowd_density = 40,
    is_user_map = false,
    has_anchored_npcs = false,
    reveals_fog = false,
    name = "",
 
-   --- If true, always re
    is_generated_every_time = false,
-   should_regenerate = false,
+   is_regenerated = true,
    is_temporary = false,
    can_exit_from_edge = true,
    cannot_mine_items = nil,

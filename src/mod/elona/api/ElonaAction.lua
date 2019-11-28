@@ -184,9 +184,9 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       if chara:is_player() then
          if is_critical then
             Gui.mes("Critical!", "Red")
-            Gui.play_sound("base.atk2")
+            Gui.play_sound("base.atk2", target.x, target.y)
          else
-            Gui.play_sound("base.atk1")
+            Gui.play_sound("base.atk1", target.x, target.y)
          end
       end
 

@@ -1,5 +1,7 @@
 local Chara = require("api.Chara")
+local Event = require("api.Event")
 local Pos = require("api.Pos")
+local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
@@ -10,11 +12,15 @@ local Rand = require("api.Rand")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Itemgen = require("mod.tools.api.Itemgen")
 
-local function calc_dig_success(chara, x, y, dig_count)
+local function calc_dig_success(map, params, result)
+   local chara = params.chara
+   local x = params.dig_x
+   local y = params.dig_y
+   local dig_count = params.dig_count
    local success = false
    local flag = false -- kind == 6
 
-   local tile = chara:current_map():tile(x, y)
+   local tile = map:tile(x, y)
 
    -- TODO config difficulty
    local difficulty = tile.mining_difficulty or 1500
@@ -31,11 +37,20 @@ local function calc_dig_success(chara, x, y, dig_count)
    return success
 end
 
-local function do_dig_success(chara, x, y)
-   local map = chara:current_map()
-   local tile = MapTileset.get("elona.mapgen_tunnel", map)
-   map:set_tile(x, y, tile)
-   Gui.play_sound("base.crush1")
+Event.define_hook("calc_dig_success",
+                  "Calculates if digging succeeded.",
+                  false,
+                  nil,
+                  calc_dig_success)
+
+Event.register("elona.on_dig_success", "Create item", function(map, params)
+   if map:calc("cannot_mine_items") then
+      return
+   end
+
+   local x = params.dig_x
+   local y = params.dig_y
+   local chara = params.chara
 
    local item = nil
    if Rand.one_in(5) then
@@ -44,21 +59,30 @@ local function do_dig_success(chara, x, y)
    if Rand.one_in(8) then
       item = "item"
    end
+   if item == "gold" then
+      Item.create("elona.gold_piece", x, y, map)
+   elseif item == "item" then
+      local Calc = require("mod.elona.api.Calc")
+      local params = Calc.filter(chara:current_map().dungeon_level, 2)
+      params.categories = { "elona.ore" }
+
+      Itemgen.create(x, y, params, map)
+   end
+end)
+
+local function do_dig_success(chara, x, y)
+   local map = chara:current_map()
+   local tile = MapTileset.get("elona.mapgen_tunnel", map)
+   map:set_tile(x, y, tile)
+   Gui.play_sound("base.crush1")
+   local anim = Anim.breaking(x, y)
+   Gui.start_draw_callback(anim)
+
    -- TODO hidden path
 
    Gui.mes("activity.dig_mining.finish.wall")
 
-   if item and not map:calc("cannot_mine_items") then
-      if item == "gold" then
-         Item.create("elona.gold_piece", x, y, map)
-      elseif item == "item" then
-         local Calc = require("mod.elona.api.Calc")
-         local params = Calc.filter(chara:current_map().dungeon_level, 2)
-         params.categories = { "elona.ore" }
-
-         Itemgen.create(x, y, params, map)
-      end
-   end
+   map:emit("elona.on_dig_success", {chara=chara, dig_x=x, dig_y=y})
 
    Skill.gain_skill_exp(chara, "elona.mining", 100)
 end
@@ -315,7 +339,15 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            Gui.mes("start digging")
+            local map = params.chara:current_map()
+            assert(map, "Character not in map")
+
+            Gui.mes("activity.dig_mining.start.wall")
+            local tile = map:tile(self.x, self.y)
+            if tile.kind == 6 then
+               Gui.mes("activity.dig_mining.start.hard")
+            end
+
             self.dig_count = 0
          end
       },
@@ -330,14 +362,16 @@ data:add {
             end
             self.dig_count = self.dig_count + 1
 
-            local success = calc_dig_success(chara, self.x, self.y, self.dig_count)
+            local map = chara:current_map()
+
+            local success = map:emit("elona.hook_calc_dig_success", {chara=chara, dig_x=self.x, dig_y=self.y, dig_count=self.dig_count})
 
             if success then
                do_dig_success(chara, self.x, self.y)
                chara:remove_activity()
                return "turn_end"
             elseif chara.turns_alive % 5 == 0 then
-               Gui.mes("*clang*")
+               Gui.mes_c("activity.dig_spot.sound", "Blue")
             end
 
             return "turn_end"
@@ -348,7 +382,7 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
-            Gui.mes("digging failed")
+            Gui.mes("activity.dig_mining.fail")
          end
       }
    }

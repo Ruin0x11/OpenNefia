@@ -42,6 +42,7 @@ function I18N.get_optional(text, ...)
    local args = {}
    for i = 1, select("#", ...) do
       local arg = select(i, ...)
+      local i18n = require("internal.i18n.init")
       if class.is_an(ILocalizable, arg) then
          args[i] = arg:produce_locale_data()
       else
@@ -65,6 +66,9 @@ end
 function I18N.get(text, ...)
    return I18N.get_optional(text, ...) or ("<error: %s>"):format(text)
 end
+
+
+-- TODO for itemname, prove a set of "cut points" so the user can split the string and insert ehatever.
 
 --- Switches the current language.
 ---

@@ -186,11 +186,11 @@ local function populate_rooms(dungeon, template, gen_params)
 end
 
 local function place_trap(x, y, level, map)
-   print "trap"
+   -- print "trap"
 end
 
 local function place_web(x, y, level, map)
-   print "web"
+   -- print "web"
 end
 
 local function place_pot(x, y, map)

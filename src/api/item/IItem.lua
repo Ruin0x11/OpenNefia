@@ -3,6 +3,7 @@ local Event = require("api.Event")
 local IItemEnchantments = require("api.item.IItemEnchantments")
 local IMapObject = require("api.IMapObject")
 local IObject = require("api.IObject")
+local IOwned = require("api.IOwned")
 local IModdable = require("api.IModdable")
 local IEventEmitter = require("api.IEventEmitter")
 local IStackableObject = require("api.IStackableObject")
@@ -10,13 +11,12 @@ local ILocalizable = require("api.ILocalizable")
 local Log = require("api.Log")
 local data = require("internal.data")
 
--- TODO: move out of api
 local IItem = class.interface("IItem",
                          {},
                          {IStackableObject, IModdable, IItemEnchantments, IEventEmitter, ILocalizable})
 
 -- TODO: schema
-local defaults = {
+local fallbacks = {
    amount = 1,
    dice_x = 0,
    dice_y = 0,
@@ -42,10 +42,8 @@ local defaults = {
 
    rarity = 1000000
 }
-table.merge(IItem, defaults)
 
 function IItem:pre_build()
-   -- TODO remove and place in schema as defaults
    IModdable.init(self)
    IMapObject.init(self)
    IEventEmitter.init(self)
@@ -54,11 +52,8 @@ end
 
 function IItem:normal_build()
    self.location = nil
-   self.ownership = self.ownership or "none"
 
    local Rand = require("api.Rand")
-   self.curse_state = self.curse_state or Rand.choice({"cursed", "blessed", "none", "doomed"})
-   self.identify_state = self.identify_state or "completely"
 
    self.name = self._id
 
@@ -66,6 +61,8 @@ function IItem:normal_build()
 end
 
 function IItem:build()
+   self:mod_base_with(fallbacks, "merge")
+
    self:emit("base.on_build_item")
 
    self:refresh()
@@ -337,6 +334,16 @@ function IItem:calc_ui_color()
    end
 
     return {0, 0, 0}
+end
+
+--- @overrides IOwned.remove_ownership
+function IItem:remove()
+   self.amount = 0
+
+   local map = self:current_map()
+   if map then
+      map:refresh_tile(self.x, self.y)
+   end
 end
 
 return IItem

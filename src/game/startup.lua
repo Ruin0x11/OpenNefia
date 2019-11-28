@@ -26,7 +26,7 @@ function startup.run(mods)
 
    startup.load_batches()
 
-   i18n.switch_language("en")
+   i18n.switch_language("jp")
 
    local default_theme = "elona_sys.default"
    UiTheme.add_theme(default_theme)

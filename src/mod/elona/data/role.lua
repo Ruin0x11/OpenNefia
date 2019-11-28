@@ -37,7 +37,7 @@ local role = {
       elona_id = 4,
    },
    {
-      _id = "non_quest_giver",
+      _id = "unique_chara",
       elona_id = 3,
    },
 }

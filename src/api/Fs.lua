@@ -12,7 +12,10 @@ function Fs.open(file, mode)
 end
 
 function Fs.read_all(file)
-   local f = assert(Fs.open(file, "rb"))
+   local f, err = Fs.open(file, "rb")
+   if f == nil then
+      return nil, err
+   end
    local content = f:read("*all")
    f:close()
    return content

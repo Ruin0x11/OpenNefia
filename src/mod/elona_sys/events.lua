@@ -2,6 +2,9 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
+local Quest = require("mod.elona_sys.api.Quest")
+local Chara = require("api.Chara")
+local Role = require("mod.elona_sys.api.Role")
 
 --
 --
@@ -64,6 +67,7 @@ local function init_save()
       towns = {},
       quests = {}
    }
+   s.sidequest = {}
 end
 
 Event.register("base.on_init_save", "Init save", init_save)
@@ -184,3 +188,70 @@ Event.register("base.on_kill_chara", "Damage text", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, true, params.message_tense, params.element, params.extra_attacks)
 end)
+
+local function register_quest_town(map, _, _)
+   -- This overwrites and updates the quest info for the map if it
+   -- goes out of date (like the entrance was moved for some reason)
+   if map:has_type("town") and Map.world_map_containing(map) then
+      Quest.register_town(map)
+   end
+
+   if Quest.town_info(map) then
+      -- Register all characters that can be quest targets.
+      for _, chara in Chara.iter_others(map) do
+         if chara.quality < 6 and not Role.has(chara, "elona.unique_chara") then
+            Quest.register_client(chara)
+         end
+      end
+
+      -- Remove clients that do not exist in this map any longer.
+      local remove = {}
+      for i, client in pairs(save.elona_sys.quest.clients) do
+         if map:get_object(client.uid == nil) then
+            Log.warn("Remove missing quest client %d", client.uid)
+            remove[#remove+1] = i
+         end
+      end
+
+      table.remove_indices(save.elona_sys.quest.clients, remove)
+
+      -- Generate quests for characters that are not already quest givers.
+      local here = Quest.iter()
+        :filter(function(q) return q.originating_map_uid == map.uid end)
+        :extract("client_chara_uid")
+        :to_list()
+
+      local charas_with_quest = table.set(here)
+
+      for _, client in Quest.iter_clients() do
+         if client.originating_map_uid == map.uid and not charas_with_quest[client.uid] then
+            if not Rand.one_in(3) then
+               Quest.generate(client.uid)
+            end
+         end
+      end
+   end
+end
+
+Event.register("base.on_map_loaded", "register town as quest endpoint", register_quest_town)
+
+Event.register("base.on_chara_killed", "Refresh sidequests (when chara killed)",
+               function(chara)
+                  local map = chara:current_map()
+                  if map then
+                     map:emit("elona_sys.on_quest_check")
+                  end
+               end)
+
+Event.register("base.on_chara_vanquished", "Refresh sidequests (when chara vanquished)",
+               function(chara)
+                  local map = chara:current_map()
+                  if map then
+                     map:emit("elona_sys.on_quest_check")
+                  end
+               end)
+
+Event.register("base.on_map_enter", "Refresh sidequests (when map entered)",
+               function(map)
+                  map:emit("elona_sys.on_quest_check")
+               end)

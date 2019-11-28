@@ -143,7 +143,8 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
                local ind = self.chara_batch:add_tile {
                   tile = image,
                   x = x,
-                  y = y
+                  y = y,
+                  color = c.color
                }
                self.batch_inds[i] = { ind = ind, x = x, y = y }
                i = i + 1

@@ -249,7 +249,7 @@ local function convert_122(gen, params)
 
    result.player_start_pos = { x = start_x, y = start_y }
    result.default_tile = Compat.convert_122_map_chip(1, 534)
-   result.should_regenerate = regen
+   result.next_regenerate_date = regen
 
    return result, params.name
 end

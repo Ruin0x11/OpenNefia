@@ -82,11 +82,32 @@ function field_renderer:draw_pos()
 end
 
 function field_renderer:add_async_draw_callback(cb)
-   self.draw_callbacks[#self.draw_callbacks+1] = coroutine.create(cb)
+   self.draw_callbacks[#self.draw_callbacks+1] = {
+      thread = coroutine.create(cb),
+      dt = 0
+   }
 end
 
-function field_renderer:has_draw_callbacks()
+function field_renderer:update_draw_callbacks(dt)
+   for i, co in ipairs(self.draw_callbacks) do
+      co.dt = co.dt - dt
+   end
+
    return #self.draw_callbacks > 0
+end
+
+local function resume_coroutine(co, draw_x, draw_y, frame_delta)
+   local ok, dt = coroutine.resume(co.thread, draw_x, draw_y, frame_delta)
+   local is_dead = coroutine.status(co.thread) == "dead"
+   if is_dead or not ok then
+      local err = dt
+      if err then
+         local Gui = require("api.Gui")
+         Gui.report_error(debug.traceback(co.thread, err), "Error in draw callback")
+      end
+      return false, 0
+   end
+   return true, dt
 end
 
 function field_renderer:draw()
@@ -103,16 +124,30 @@ function field_renderer:draw()
 
    Draw.set_color(255, 255, 255)
 
+   draw_x = sx - draw_x
+   draw_y = sy - draw_y
    local dead = {}
    for i, co in ipairs(self.draw_callbacks) do
-      local msg, err = coroutine.resume(co, sx - draw_x, sy - draw_y)
-      local is_dead = coroutine.status(co) == "dead"
-      if is_dead or err then
-         dead[#dead+1] = i
-
-         if err then
-            local Gui = require("api.Gui")
-            Gui.report_error(debug.traceback(co, err), "Error in draw callback")
+      if co.dt > 0 then
+         -- This frame has not been advanced yet; redraw the animation
+         -- on the current frame (delta 0)
+         local ok = resume_coroutine(co, draw_x, draw_y, 0)
+         if not ok then
+            -- Coroutine error; stop drawing now
+            dead[#dead+1] = i
+         end
+      else
+         while co.dt <= 0 do
+            -- Advance one frame (delta 1)
+            local ok, dt = resume_coroutine(co, draw_x, draw_y, 1)
+            if not ok then
+               -- Coroutine error; stop drawing now
+               dead[#dead+1] = i
+               break
+            else
+               dt = math.max(dt or 16.66, 16.66) / 1000
+               co.dt = co.dt + dt
+            end
          end
       end
    end
@@ -121,6 +156,8 @@ function field_renderer:draw()
 end
 
 function field_renderer:update(dt)
+   self:update_draw_callbacks(dt)
+
    -- BUG: this really doesn't look like the original Elona's
    -- scrolling. The issue is here it is based on dt. In vanilla
    -- scrolling would always scroll by a fixed amount of pixels

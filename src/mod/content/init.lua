@@ -402,6 +402,8 @@ local load_map = function(world_map, id)
    return map
 end
 
+local Skill = require("mod.elona_sys.api.Skill")
+
 local function base_init(self, player)
    do
       local success, world_map
@@ -448,20 +450,23 @@ local function base_init(self, player)
 
    player.gold = 1000000000
    player.platinum = 1000
-   player.max_hp = 100000000
+
+   for _= 1, 100 do
+      Skill.gain_level(player)
+      Skill.grow_primary_skills(player)
+   end
    player:heal_to_max()
 end
 
 local function my_start(self, player)
    base_init(self, player)
 
-   local Skill = require("mod.elona_sys.api.Skill")
-
    for i=1,4 do
       local a = Chara.create("elona.younger_sister", i+8, 3)
       a:recruit_as_ally()
       for _ = 1, 50 do
          Skill.gain_level(a)
+         Skill.grow_primary_skills(a)
       end
    end
 
@@ -490,7 +495,11 @@ local function init_bells(self, player)
    assert(player:equip_item(arrow))
    player.gold = 1000000000
    player.platinum = 1000
-   player.max_hp = 100000000
+
+   for _= 1, 100 do
+      Skill.gain_level(player)
+      Skill.grow_primary_skills(player)
+   end
    player:heal_to_max()
 
    fun.range(10):each(function() Chara.create("elona.silver_bell") end)

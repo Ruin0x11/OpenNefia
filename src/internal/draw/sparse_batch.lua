@@ -14,7 +14,9 @@ function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.xoffs = {}
    self.yoffs = {}
    self.rotations = {}
-   self.colors = {}
+   self.colors_r = {}
+   self.colors_g = {}
+   self.colors_b = {}
 
    self.free_indices = {}
 
@@ -48,12 +50,16 @@ end
 function sparse_batch:add_tile(params)
    -- TODO: needs z-ordering...
    local ind = table.remove(self.free_indices) or #self.tiles + 1
+   params.color = params.color or {}
    self.tiles[ind] = params.tile or ""
    self.xcoords[ind] = params.x or 0
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
    self.yoffs[ind] = params.y_offset or 0
    self.rotations[ind] = params.rotation or 0
+   self.colors_r[ind] = (params.color[1] or 255) / 255
+   self.colors_g[ind] = (params.color[2] or 255) / 255
+   self.colors_b[ind] = (params.color[3] or 255) / 255
    self.updated = true
    return ind
 end
@@ -72,7 +78,9 @@ function sparse_batch:clear()
    self.xoffs = {}
    self.yoffs = {}
    self.rotations = {}
-   self.colors = {}
+   self.colors_r = {}
+   self.colors_g = {}
+   self.colors_b = {}
 
    self.free_indices = {}
 
@@ -110,6 +118,9 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       local xo = self.xoffs
       local yo = self.yoffs
       local rots = self.rotations
+      local cr = self.colors_r
+      local cg = self.colors_g
+      local cb = self.colors_b
 
       batch:clear()
 
@@ -121,13 +132,11 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                local i, j = self.coords:tile_to_screen(cx - tx, cy - ty)
                local x = i + xo[ind]
                local y = j + yo[ind]
-               -- if color then
-               -- batch.setColor(self.colors[ind])
-               -- color_set = true
-               -- elseif not color_set then
-               -- batch.setColor(1, 1, 1)
-               -- color_set = false
-               -- end
+               if cr[ind] then
+                  batch:setColor(cr[ind], cg[ind], cb[ind])
+               else
+                  batch:setColor(1, 1, 1)
+               end
                local tile = tiles[tile]
                if tile ~= nil then
                   local _, _, tw, th = tile.quad:getViewport()
@@ -137,6 +146,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
          end
       end
 
+      batch:setColor(1, 1, 1)
       batch:flush()
 
       self.updated = false

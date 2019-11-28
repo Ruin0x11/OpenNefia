@@ -45,6 +45,8 @@ local portrait = {
    { name = "man42" },
    { name = "man43" },
    { name = "man44" },
+   "skip",
+   "skip",
    { name = "barius" },
    { name = "loyter" },
    { name = "bethel" },
@@ -60,6 +62,7 @@ local portrait = {
    { name = "man46" },
    { name = "man47" },
    { name = "man48" },
+   "skip",
    { name = "woman1" },
    { name = "woman2" },
    { name = "woman3" },
@@ -106,6 +109,8 @@ local portrait = {
    { name = "woman44" },
    { name = "woman45" },
    { name = "woman46" },
+   "skip",
+   "skip",
    { name = "larnneire" },
    { name = "shena" },
    { name = "miches" },
@@ -121,18 +126,20 @@ local portrait = {
 local function gen_portraits(portraits)
    local l = {}
    for i, v in ipairs(portraits) do
-      local id = i - 1
-      l[#l + 1] = {
-         type = "crop",
-         id = id,
-         source = "graphic/face1.bmp",
-         output = string.format("graphic/face/%s.png", v.name),
-         x = (id % 15) * 48,
-         y = math.floor(id / 15) * 72,
-         width = 48,
-         height = 72,
-         no_alpha = true
-      }
+      if v ~= "skip" then
+         local id = i - 1
+         l[#l + 1] = {
+            type = "crop",
+            id = id,
+            source = "graphic/face1.bmp",
+            output = string.format("graphic/face/%s.png", v.name),
+            x = (id % 16) * 48,
+            y = math.floor(id / 16) * 72,
+            width = 48,
+            height = 72,
+            no_alpha = true
+         }
+      end
    end
    return l
 end

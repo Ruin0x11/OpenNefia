@@ -61,11 +61,11 @@ function ElonaCommand.do_dig(player, x, y)
 end
 
 function ElonaCommand.dig(player)
-   Gui.mes("Which direction?")
+   Gui.mes("action.dig.prompt")
    local dir = Input.query_direction()
 
    if not dir then
-      Gui.mes("Okay, then.")
+      Gui.mes("common.it_is_impossible")
       return "player_turn_query"
    end
 
@@ -82,7 +82,7 @@ function ElonaCommand.dig(player)
    local can_dig = tile.is_solid and tile.is_opaque
 
    if not can_dig then
-      Gui.mes("it is impossible.")
+      Gui.mes("common.it_is_impossible")
       return "player_turn_query"
    end
 

@@ -6,37 +6,37 @@ local Log = require("api.Log")
 
 local MapEntrance = {}
 
-function MapEntrance.center(chara, map)
+function MapEntrance.center(map, chara)
    local x = math.floor(map:width() / 2)
    local y = math.floor(map:height() / 2)
 
    return x, y
 end
-function MapEntrance.east(chara, map)
+function MapEntrance.east(map, chara)
    local x = map:width() - 2
    local y = math.floor(map:height() / 2)
 
    return x, y
 end
-function MapEntrance.west(chara, map)
+function MapEntrance.west(map, chara)
    local x = 1
    local y = math.floor(map:height() / 2)
 
    return x, y
 end
-function MapEntrance.south(chara, map)
+function MapEntrance.south(map, chara)
    local x = math.floor(map:width() / 2)
    local y = map:height() - 2
 
    return x, y
 end
-function MapEntrance.north(chara, map)
+function MapEntrance.north(map, chara)
    local x = math.floor(map:width() / 2)
    local y = 1
 
    return x, y
 end
-function MapEntrance.directional(chara, map)
+function MapEntrance.directional(map, chara)
    local pos = save.base.player_pos_on_map_leave
    if pos then
       return pos.x, pos.y
@@ -46,18 +46,18 @@ function MapEntrance.directional(chara, map)
    local y = 0
 
    if next_dir == "West" then
-      return MapEntrance.east(chara, map)
+      return MapEntrance.east(map, chara)
    elseif next_dir == "East" then
-      return MapEntrance.west(chara, map)
+      return MapEntrance.west(map, chara)
    elseif next_dir == "North" then
-      return MapEntrance.south(chara, map)
+      return MapEntrance.south(map, chara)
    elseif next_dir == "South" then
-      return MapEntrance.north(chara, map)
+      return MapEntrance.north(map, chara)
    end
 
    return x, y
 end
-function MapEntrance.world_map(chara, map, prev)
+function MapEntrance.world_map(map, chara, prev)
    local x, y
    local entrance = MapArea.find_entrance_in_outer_map(prev, map)
    if entrance == nil then
@@ -79,7 +79,7 @@ function MapEntrance.world_map(chara, map, prev)
 
    return x + Rand.rnd(math.floor(index / 5) + 1), y + Rand.rnd(math.floor(index / 5) + 1)
 end
-function MapEntrance.stair(chara, map, prev, stair)
+function MapEntrance.stair(map, chara, prev, stair)
    -- TODO: bad, stairs should indicate ignoring player_start_pos
    -- entirely since a map can have a player_start_pos and multiple
    -- stairs at the same time.
@@ -97,7 +97,7 @@ function MapEntrance.stair(chara, map, prev, stair)
    local feat = map:iter_feats():filter(search):nth(1)
    if not feat then
       Log.warn("No stairs to enter on were found in map.")
-      return MapEntrance.center(chara, map, prev)
+      return MapEntrance.center(map, chara, prev)
    end
 
    return feat.x, feat.y
