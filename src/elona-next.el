@@ -16,7 +16,6 @@
                         :buffer "*elona next*"
                         :host host
                         :service port
-                        :nowait t
                         :coding 'utf-8))
 
 (defun elona-next--send (str)
@@ -26,8 +25,7 @@
     (when (process-live-p proc)
       (comint-send-string proc str)
       (process-send-eof proc)
-      (with-current-buffer (process-buffer proc)
-        (buffer-string))))
+      (delete-process proc)))
   (let ((win (get-buffer-window lua-process-buffer))
         (compilation-win (get-buffer-window compilation-last-buffer))
         (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))

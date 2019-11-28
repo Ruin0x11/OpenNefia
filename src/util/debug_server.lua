@@ -1,13 +1,15 @@
+local Log = require("api.Log")
 local socket = require("socket")
 
 local function debug_server(port)
-   local server = socket.bind("127.0.0.1", port)
+   local server, err = socket.bind("127.0.0.1", port)
    if not server then
+      Log.error("!!! Failed to start debug server: %s !!!", err)
       return nil
    end
 
    server:settimeout(0)
-   print(string.format("Debug server listening on %d.", port))
+   Log.info("Debug server listening on %d.", port)
 
    local function poll()
       while true do
@@ -20,18 +22,23 @@ local function debug_server(port)
          local result = "waiting"
 
          if client then
+            Log.trace("client recv")
+
             local text = client:receive("*a")
+            Log.trace("Source: %s", text)
+
             local s, err = loadstring(text)
             if s then
                local success, res = xpcall(s, function(err) return err .. "\n" .. debug.traceback(2) end)
                if success then
+                  Log.error("Success: %s", res)
                   result = "success"
                else
-                  print("[Server] Exec error:\n\t" .. tostring(res))
+                  Log.error("Exec error:\n\t%s", res)
                   result = "exec_error"
                end
             else
-               print("[Server] Compile error:\n\t" .. err)
+               Log.error("Compile error:\n\t%s", err)
                result = "compile_error"
             end
          end
