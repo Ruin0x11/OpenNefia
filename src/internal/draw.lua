@@ -56,7 +56,7 @@ function draw.init()
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
    love.graphics.setBlendMode("alpha")
 
-   gamma_correct = love.graphics.newShader("graphic/shader/gamma.frag.glsl")
+   gamma_correct = love.graphics.newShader("mod/base/graphic/shader/gamma.frag.glsl")
 end
 
 function draw.draw_start(c)
