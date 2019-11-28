@@ -140,6 +140,8 @@ elseif arg[1] == "batch" then
    assert(chunk, err)
    chunk()
    os.exit(0)
+elseif arg[1] == "load" then
+   lo()
 end
 
 local Env = require("api.Env")

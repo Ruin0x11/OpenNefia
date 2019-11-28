@@ -1,5 +1,5 @@
 #!/bin/bash
 
 pushd src
-luajit repl.lua
+luajit repl.lua $*
 popd

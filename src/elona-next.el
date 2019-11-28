@@ -178,11 +178,12 @@
                            (list (elona-next--repl-file) "test"))))
         (equal 0 result))))
 
-(defun elona-next-start-repl ()
-  (interactive)
+(defun elona-next-start-repl (&optional arg)
+  (interactive "P")
   (let* ((buffer-name (string-join (list "*" elona-next--repl-name "*")))
          (buffer (get-buffer buffer-name))
-         (default-directory (file-name-directory (directory-file-name (elona-next--repl-file)))))
+         (default-directory (file-name-directory (directory-file-name (elona-next--repl-file))))
+         (switch (or (and arg "load") "")))
     (if (and (buffer-live-p buffer) (process-live-p (get-buffer-process buffer)))
         (progn
           (setq next-error-last-buffer (get-buffer buffer-name))
@@ -190,7 +191,7 @@
           (comint-goto-process-mark))
       (if (elona-next--test-repl)
           (progn
-            (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file))
+            (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file) switch)
             (setq next-error-last-buffer (get-buffer buffer-name))
             (pop-to-buffer buffer-name))
         (progn
