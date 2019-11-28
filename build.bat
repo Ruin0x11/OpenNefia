@@ -22,4 +22,4 @@ rem LuaJIT ffi bindings depend on path; ensure versioned libs are
 rem ordered first to avoid missing entry point errors
 set PATH=%cd%\lib\libvips;%PATH%
 
-%LUAJIT_BIN% build.lua preprocess
+%LUAJIT_BIN% build.lua %*

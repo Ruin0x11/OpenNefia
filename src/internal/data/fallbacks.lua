@@ -84,7 +84,7 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   image = "graphic/default/floor.png"
+   image = "mod/base/graphic/floor.png"
 }
 
 data:add {

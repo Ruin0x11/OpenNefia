@@ -137,7 +137,7 @@ local chara_chips = {
    { elona_id = 135, name = "citizen2_female" },
    { elona_id = 136, name = "citizen_male" },
    { elona_id = 137, name = "citizen_female" },
-   { elona_id = 138, name = "_138" },
+   { elona_id = 138, name = "baker" },
    { elona_id = 139, name = "mercenary_male" },
    { elona_id = 140, name = "shopkeeper_male" },
    { elona_id = 141, name = "shopkeeper_female" },

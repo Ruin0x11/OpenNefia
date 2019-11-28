@@ -13,4 +13,4 @@ if [ ! -d "deps/elona" ]; then
     popd
 fi
 
-luajit build.lua preprocess
+luajit build.lua $*

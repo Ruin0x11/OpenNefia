@@ -120,7 +120,7 @@ local function convert_122(gen, params)
    end
 
    -- HACK
-   local base = Fs.join("mod/elona/data/map", params.name)
+   local base = Fs.join("mod/elona/map", params.name)
 
    if not Fs.exists(base .. ".map") then
       error(string.format("Map doesn't exist: %s", base .. ".map"))

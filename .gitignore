@@ -1,8 +1,8 @@
 bin/
-graphic/
 sound/
 /src/repl_history.txt
-/src/mod/elona/data/map
+/src/mod/elona/graphic
+/src/mod/beautify/graphic
 /deps
 TAGS
 /doc/out
