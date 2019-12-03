@@ -4,8 +4,9 @@ local Rand = require("api.Rand")
 local Calc = {}
 
 function Calc.calc_object_level(base, map)
+   map = map or Map.current()
+
    local ret = base or 0
-   map = (map or Map.current())
    if base < 0 then
       ret = map:calc("dungeon_level")
    end
@@ -64,9 +65,11 @@ function Calc.calc_object_quality(quality)
    return math.clamp(ret, 1, 5)
 end
 
-function Calc.filter(level, quality, rest)
+function Calc.filter(level, quality, rest, map)
+   map = map or Map.current()
+
    return table.merge({
-      level = Calc.calc_object_level(level),
+      level = Calc.calc_object_level(level, map),
       quality = Calc.calc_object_quality(quality),
    }, rest or {})
 end

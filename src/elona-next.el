@@ -36,6 +36,9 @@
         (with-selected-window win
           (end-of-buffer)))))
 
+(defun elona-next--send-to-repl (str)
+  (elona-next--send (format "require('api.Repl').send('%s')" str)))
+
 (defun elona-next-send-region (start end)
   (interactive "r")
   (setq start (lua-maybe-skip-shebang-line start))
@@ -104,13 +107,11 @@
          (lua-path (car pair))
          (lua-name (cdr pair))
          (cmd (format
-               "%s = require('%s'); require('api.Repl').send('%s = require \"%s\"')"
-               lua-name
-               lua-path
+               "%s = require(\"%s\")"
                lua-name
                lua-path)))
     (save-buffer)
-    (elona-next--send cmd)
+    (elona-next--send-to-repl cmd)
     (message "%s" cmd)))
 
 (defun elona-next-require-path (file)

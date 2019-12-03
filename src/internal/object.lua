@@ -40,7 +40,11 @@ function object.make_prototype(obj)
 end
 
 function object.__index(t, k)
-   if k == "_mt" then
+   if k == "__iface" then
+      local mt = getmetatable(t)
+      return mt.__iface
+   end
+   if k == "__mt" then
       local mt = getmetatable(t)
       return env.get_require_path(mt.__iface)
    end

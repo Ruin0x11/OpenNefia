@@ -88,6 +88,12 @@ function ReplCompletion:complete(line, repl_env)
    end
 
    local keys = table.keys(cur)
+   if cur.__iface and cur.__iface.all_methods then
+      for k, v in pairs(cur.__iface.all_methods) do
+         keys[#keys+1] = k
+         -- keys[#keys+1] = { k, v.iface_path }
+      end
+   end
    local incomplete = parts[#parts]
    local pos
    if has_colon then

@@ -23,6 +23,23 @@ local function push_history(env, result)
    env["_1"] = result
 end
 
+-- Trims the trackback to remove unnecessary source locations at and
+-- above the REPL logic itself.
+local function trim_traceback(err)
+   local trace = debug.traceback(err, 2)
+   local new = ""
+
+   for v in string.lines(trace) do
+      if string.match(v, "^\t%[C%]: in function 'xpcall'$") then
+         break
+      end
+
+      new = new .. v .. "\n"
+   end
+
+   return new
+end
+
 function LuaReplMode:submit(text)
    -- WARNING: massive backdoor waiting to happen.
    local chunk, err = loadstring("return " .. text)
@@ -38,12 +55,14 @@ function LuaReplMode:submit(text)
    setfenv(chunk, self.env)
 
    -- capture (status, varags...) as a table
-   local results = { xpcall(chunk, function(err) return debug.traceback(err, 2) end) }
+   local results = { xpcall(chunk, trim_traceback) }
 
    local ok = results[1]
 
    if ok then
       push_history(self.env, results[2])
+   else
+      results[2] = "[Error]: " .. results[2]
    end
 
    table.remove(results, 1)

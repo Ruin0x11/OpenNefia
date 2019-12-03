@@ -13,6 +13,7 @@ local event = {
    { _id = "calc_dialog_choices" },
    { _id = "calc_bad_performance_damage" },
    { _id = "before_respawn_mobs" },
+   { _id = "before_cast_return" },
 
 }
 

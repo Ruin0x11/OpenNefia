@@ -529,6 +529,10 @@ function InstancedMap:deserialize()
    self:redraw_all_tiles()
 end
 
+function InstancedMap:__eq(other)
+   return self.uid == other.uid
+end
+
 
 --
 -- ILocation impl

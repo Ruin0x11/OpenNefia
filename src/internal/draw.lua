@@ -7,8 +7,8 @@ end
 
 local draw = {}
 
-local width = 800
-local height = 600
+local WIDTH = 800
+local HEIGHT = 600
 
 local canvas = nil
 local error_canvas = nil
@@ -36,21 +36,24 @@ local function create_canvas(w, h)
    return canvas
 end
 
-function draw.init()
-   love.window.setTitle("Elona_next")
-   local window_mode = {
-      resizable = true,
-      minwidth = 800,
-      minheight = 600,
-      vsync = true
-   }
+local function set_window_mode(width, height, window_mode)
+   window_mode = window_mode or {}
+   window_mode.minwidth = 800
+   window_mode.minheight = 600
+   window_mode.vsync = true
+   window_mode.resizable = true
+
    local success = love.window.setMode(width, height, window_mode)
    if not success then
       error("Could not initialize display.")
    end
 
-   canvas = create_canvas(width, height)
-   error_canvas = create_canvas(width, height)
+   draw.resize(width, height)
+end
+
+function draw.init()
+   love.window.setTitle("Elona_next")
+   set_window_mode(WIDTH, HEIGHT)
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
@@ -290,6 +293,28 @@ function draw.draw_error(err)
    love.graphics.print(err, pos, pos)
 
    draw.draw_end(error_canvas)
+end
+
+function draw.set_fullscreen(kind, width, height)
+   if not width or not height then
+      width = WIDTH
+      height = HEIGHT
+   end
+
+   local mode = {}
+   if kind == "windowed" then
+      mode.fullscreen = false
+   elseif kind == "fullscreen" then
+      mode.fullscreen = true
+      mode.fullscreentype = "exclusive"
+   elseif kind == "desktop_fullscreen" then
+      mode.fullscreen = true
+      mode.fullscreentype = "desktop"
+   else
+      error(("Invalid fullscreen type '%s'"):format(kind))
+   end
+
+   set_window_mode(width, height, mode)
 end
 
 --

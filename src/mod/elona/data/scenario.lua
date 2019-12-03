@@ -6,7 +6,7 @@ local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
-local load_map = function(world_map, id)
+local function load_map(world_map, id)
    local find_home = function(i)
       return i.generator_params.generator == "elona_sys.map_template"
          and i.generator_params.params.id == id
@@ -32,7 +32,7 @@ local function load_towns(world_map)
       local template = data["elona_sys.map_template"]:ensure(gen_params.params.id)
       local types = table.set(template.copy.types or {})
 
-      return types["elona.town"]
+      return types["town"]
    end
 
    local entrances = MapArea.iter_map_entrances("not_generated", world_map)

@@ -286,7 +286,7 @@ function field_logic.turn_end(chara)
    -- party time emoicon
 
    if regen then
-      -- Chara.regen_hp_mp(chara)
+      chara:emit("base.on_regenerate")
    end
 
    -- proc timestop

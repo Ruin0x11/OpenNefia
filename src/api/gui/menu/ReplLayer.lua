@@ -11,6 +11,7 @@ local InputHandler = require("api.gui.InputHandler")
 local LuaReplMode = require("api.gui.menu.LuaReplMode")
 local TextHandler = require("api.gui.TextHandler")
 local ReplCompletion = require("api.gui.menu.ReplCompletion")
+local UiTheme = require("api.gui.UiTheme")
 
 local ReplLayer = class.class("ReplLayer", IUiLayer)
 
@@ -257,6 +258,9 @@ function ReplLayer:relayout(x, y, width, height)
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 
+   self.t = UiTheme.load(self)
+   self.color = self.t.repl_bg_color or self.color
+
    if self.canvas == nil or width ~= self.width or height ~= self.height then
       self.canvas = Draw.create_canvas(self.width, self.height)
       self.redraw = true
@@ -268,15 +272,17 @@ function ReplLayer:relayout(x, y, width, height)
    end
 end
 
-function ReplLayer:print(text)
+function ReplLayer:print(text, color)
+   color = color or {255, 255, 255}
+
    Draw.set_font(self.font_size)
    local success, err, wrapped = xpcall(function() return Draw.wrap_text(text, self.width) end, debug.traceback)
    if not success then
-      self.scrollback:push("[REPL] error printing result: " .. string.split(err)[1])
+      self.scrollback:push({text="[REPL] error printing result: " .. string.split(err)[1], color=self.t.repl_error_color})
       print(err)
    else
       for _, line in ipairs(wrapped) do
-         self.scrollback:push(line)
+         self.scrollback:push({text=line, color=color})
       end
    end
    self.redraw = true
@@ -384,13 +390,17 @@ function ReplLayer:submit()
 
    local result_text = ReplLayer.format_results(results, true)
 
+   local color
    if not success then
       print(result_text)
+      color = self.t.repl_error_color
+   else
+      color = self.t.repl_result_color
    end
 
    self.output[#self.output+1] = result_text
 
-   self:print(result_text)
+   self:print(result_text, color)
 
    self:save_history()
 end
@@ -467,7 +477,7 @@ function ReplLayer:redraw_window()
    -- scrollback display
    local offset = 0
    if self.completion and #self.completion.candidates > 1 then
-      Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, {255, 240, 130})
+      Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, self.t.repl_completion_color)
       offset = 1
       Draw.set_color(255, 255, 255)
    end
@@ -477,12 +487,11 @@ function ReplLayer:redraw_window()
       if t == nil then
          break
       end
-      Draw.text(t, self.x + 5, self.y + top - Draw.text_height() * (i+1+offset) - 5)
+      Draw.text(t.text, self.x + 5, self.y + top - Draw.text_height() * (i+1+offset) - 5, t.color)
    end
 end
 
 function ReplLayer:draw()
-   Draw.set_color(255, 255, 255)
    if self.redraw then
       Draw.with_canvas(self.canvas, function() self:redraw_window() end)
       self.redraw = false
@@ -490,6 +499,7 @@ function ReplLayer:draw()
 
    local top = -self.pulldown_y * Draw.text_height()
 
+   Draw.set_color(255, 255, 255)
    Draw.image(self.canvas, self.x, self.y + top)
 
    -- blinking cursor
@@ -524,6 +534,8 @@ function ReplLayer:update(dt)
 end
 
 function ReplLayer.on_hotload(old, new)
+   -- Sometimes we'll want to reconstruct the REPL so :init() gets
+   -- called again. Set it to nil and the field layer will do so.
    require("game.field").repl = nil
    class.hotload(old, new)
 end

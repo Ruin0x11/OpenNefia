@@ -12,6 +12,7 @@ local ElonaAction = require("mod.elona.api.ElonaAction")
 local MapObject = require("api.MapObject")
 local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
 --
 --
@@ -631,3 +632,154 @@ local function respawn_mobs()
 end
 
 Event.register("base.on_minute_passed", "Respawn mobs", respawn_mobs)
+
+local function on_regenerate(chara)
+   if Rand.one_in(6) then
+      local amount = Rand.rnd(chara:skill_level("elona.healing") / 3 + 1) + 1
+      chara:heal_hp(amount)
+   end
+   if Rand.one_in(5) then
+      local amount = Rand.rnd(chara:skill_level("elona.meditation") / 2 + 1) + 1
+      chara:heal_mp(amount)
+   end
+end
+
+Event.register("base.on_regenerate", "Regenerate HP/MP", on_regenerate)
+
+local function gain_healing_meditation_exp(chara)
+   local exp = 0
+   if chara:calc("hp") ~= chara:calc("max_hp") then
+      local healing = chara:skill_level("elona.healing")
+      if healing < chara:skill_level("elona.stat_constitution") then
+         exp = 5 + healing / 5
+      end
+   end
+   Skill.gain_skill_exp(chara, "elona.healing", exp, 1000)
+
+   exp = 0
+   if chara:calc("mp") ~= chara:calc("max_mp") then
+      local meditation = chara:skill_level("elona.meditation")
+      if meditation < chara:skill_level("elona.stat_magic") then
+         exp = 5 + meditation / 5
+      end
+   end
+   Skill.gain_skill_exp(chara, "elona.meditation", exp, 1000)
+end
+
+local function gain_stealth_experience(chara)
+   local exp = 2
+
+   local map = chara:current_map()
+   if map and map:has_type("world_map") and Rand.one_in(20) then
+      exp = 0
+   end
+
+   Skill.gain_skill_exp(chara, "elona.stealth", exp, 0, 1000)
+end
+
+local function gain_weight_lifting_experience(chara)
+   local exp = 0
+
+   if chara:calc("inventory_weight_type") > 0 then
+      exp = 4
+
+      local map = chara:current_map()
+      if map and map:has_type("world_map") and Rand.one_in(20) then
+         exp = 0
+      end
+   end
+
+   Skill.gain_skill_exp(chara, "elona.weight_lifting", exp, 0, 1000)
+end
+
+local function gain_experience_at_turn_start(chara)
+   if not chara:is_player() then
+      return
+   end
+
+   local turn = chara.turns_alive % 10
+   if turn == 1 then
+      Chara.iter_party()
+         :filter(Chara.is_alive)
+         :each(gain_healing_meditation_exp)
+   elseif turn == 2 then
+      gain_stealth_experience(chara)
+   elseif turn == 3 then
+      gain_weight_lifting_experience(chara)
+   elseif turn == 4 then
+      if not chara:has_activity() then
+         chara:heal_stamina(2)
+      end
+   end
+end
+
+Event.register("base.before_chara_turn_start", "Gain experience", gain_experience_at_turn_start)
+
+local function proc_return(chara)
+   if not chara:is_player() then
+      return
+   end
+
+   local s = save.elona
+   if s.turns_until_cast_return > 0 then
+      s.turns_until_cast_return = s.turns_until_cast_return - 1
+
+      local map = chara:current_map()
+      if not map then
+         s.turns_until_cast_return = 0
+      end
+      if map:calc("prevents_return") then
+         Gui.mes("magic.return.prevented.normal")
+         s.turns_until_cast_return = 0
+         return
+      end
+
+      if s.turns_until_cast_return <= 0 and not DeferredEvent.is_pending() then
+         local has_escort = Chara.iter_allies()
+            :filter(Chara.is_alive)
+            :extract("is_quest_escort")
+            :any()
+
+         if has_escort then
+            Gui.mes("magic.return.prevented.normal")
+            return
+         end
+
+         if chara:calc("inventory_weight_type") >= 4 then
+            Gui.mes("magic.return.prevented.overweight")
+            return
+         end
+
+         local dest = s.return_destination_map_uid
+         if dest == nil or dest == map.uid then
+            Gui.mes("common.nothing_happens")
+            return
+         end
+
+         local blocked = Event.trigger("elona.before_cast_return", {}, false)
+         if blocked then
+            return
+         end
+
+         Gui.play_sound("base.teleport1")
+         Gui.mes("magic.return.door_opens")
+         -- TODO
+         Gui.mes_halt()
+         Gui.update_screen()
+         local map_uid = s.return_destination_map_uid
+         s.return_destination_map_uid = nil
+
+         Map.travel_to(map_uid)
+      end
+   end
+end
+
+Event.register("base.before_chara_turn_start", "Proc return event", proc_return)
+
+local function init_save()
+   local s = save.elona
+   s.turns_until_cast_return = 0
+   s.return_destination_map_uid = nil
+end
+
+Event.register("base.on_init_save", "Init save (Elona)", init_save)

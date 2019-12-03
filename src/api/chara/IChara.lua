@@ -580,7 +580,7 @@ end
 --- Heals this character's stamina points.
 ---
 --- @tparam int add
-function IChara:heal_sp(add)
+function IChara:heal_stamina(add)
    self.stamina = math.max(self.stamina + math.max(add, 0), self:calc("max_stamina"))
 end
 

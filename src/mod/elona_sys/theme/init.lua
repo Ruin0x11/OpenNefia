@@ -262,6 +262,23 @@ data:add {
             type = "color",
             color = {0, 120, 0}
          },
+
+         repl_bg_color = {
+            type = "color",
+            color = {17, 17, 65, 192}
+         },
+         repl_error_color = {
+            type = "color",
+            color = {255, 0, 0}
+         },
+         repl_result_color = {
+            type = "color",
+            color = {150, 200, 200}
+         },
+         repl_completion_color = {
+            type = "color",
+            color = {255, 240, 130}
+         }
       }
    }
 }

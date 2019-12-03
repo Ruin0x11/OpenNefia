@@ -90,7 +90,6 @@ local function query(talk, text, choices, default_choice)
    for i, choice in ipairs(choices) do
       the_choices[i] =  resolve_response(choice[2], talk)
       if default_choice == nil and choice[1] == "__END__" then
-         _ppr("Get")
          default_choice = i
       end
    end
@@ -115,7 +114,6 @@ local function query(talk, text, choices, default_choice)
    end
 
    local result = menu:query()
-   print(result, default_choice)
 
    return choices[result][1]
 end

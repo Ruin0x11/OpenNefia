@@ -238,8 +238,14 @@ function field_layer:query_repl()
    if self.repl == nil then
       self:setup_repl()
    end
-   self.repl:query()
-   self.repl:save_history()
+
+   -- The repl could get hotloaded, so keep it in an upvalue.
+   local repl = self.repl
+   repl:query()
+
+   if repl then
+      repl:save_history()
+   end
 end
 
 -- HACK: Needs to be replaced with resource system.

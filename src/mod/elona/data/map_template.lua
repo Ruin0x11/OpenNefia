@@ -83,7 +83,7 @@ data:add(north_tyris)
 
 local function chara_filter_town(callbacks)
    return function(self)
-      local opts = Calc.filter(10, "bad", {fltselect = 5})
+      local opts = Calc.filter(10, "bad", {fltselect = 5}, self)
 
       if callbacks == nil then
          return opts

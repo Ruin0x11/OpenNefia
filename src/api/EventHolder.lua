@@ -88,11 +88,6 @@ end
 function EventHolder:unregister(event_id, name)
    check_event(event_id)
 
-   if env.is_hotloading() then
-      Log.warn("Skipping Event.unregister for %s - \":%s\"", event_id)
-      return
-   end
-
    local events = self.hooks[event_id]
    if events then
       events:unregister(name)

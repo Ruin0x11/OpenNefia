@@ -327,7 +327,7 @@ data:add {
    _type = "base.activity",
    _id = "dig_wall",
 
-   params = { x = "number", y = "number" },
+   params = { x = "number", y = "number", chara = "IChara" },
    default_turns = 40,
 
    animation_wait = 2,
@@ -414,7 +414,7 @@ data:add {
             local chara = params.chara
 
             if self.turns % 2 == 0 then
-               chara:heal_sp(1)
+               chara:heal_stamina(1)
             end
             if self.turns % 3 == 0 then
                chara:heal_hp(1)

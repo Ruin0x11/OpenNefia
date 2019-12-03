@@ -73,7 +73,8 @@ data:add_multi(
       { _id = "on_chara_vanquished" },
       { _id = "on_turn_begin" },
       { _id = "generate_chara_name" },
-      { _id = "generate_title" }
+      { _id = "generate_title" },
+      { _id = "on_regenerate" },
    }
 )
 
