@@ -8,6 +8,7 @@ local EventHolder = class.class("EventHolder")
 function EventHolder:init()
    self.hooks = {}
    self.observers = {}
+   self.registered = {}
 end
 
 function EventHolder:clear()
@@ -25,6 +26,53 @@ local function check_event(event_id)
    if env.is_loaded("internal.data.base") then
       if data["base.event"][event_id] == nil then
          error("Unknown event type \"" .. event_id .. "\"")
+      end
+   end
+end
+
+local function find_calling_chunk()
+   local trace = debug.getinfo(4, "S")
+   if trace == nil then
+      return nil
+   end
+
+   local file = trace.source:sub(2)
+   return env.convert_to_require_path(file)
+end
+
+--- Called by base.on_hotload_begin.
+function EventHolder:_begin_register(chunk)
+   self._registered_last_load = self.registered
+   self._registering_chunk = chunk
+   self.registered = {}
+end
+
+--- After hotloading, automatically unregisters any events from a
+--- chunk that were registered previously but are now missing from the
+--- newly hotloaded chunk. Called by base.on_hotload_end.
+function EventHolder:_end_register()
+   local prev = self._registered_last_load[self._registering_chunk] or {}
+   local cur = self.registered[self._registering_chunk] or {}
+
+   local remove = {}
+   for ev, t in pairs(prev) do
+      for name, _ in pairs(t) do
+         if not (cur[ev] and cur[ev][name]) then
+            remove[#remove+1] = { event_id = ev, name = name }
+         end
+      end
+   end
+
+   self.registered = table.merge_ex(self._registered_last_load, self.registered)
+   self._registering_chunk = nil
+   self._registered_last_load = nil
+
+   if #remove > 0 then
+      Log.info("Found %d events missing from chunk, unregistering.", #remove)
+
+      for _, pair in ipairs(remove) do
+         Log.info("Unregister %s %s", pair.event_id, pair.name)
+         self:unregister(pair.event_id, pair.name)
       end
    end
 end
@@ -65,6 +113,11 @@ function EventHolder:register(event_id, name, cb, opts)
    if not events:insert(priority, cb, name) then
       error(string.format("Name is already taken: %s %s", event_id, name))
    end
+
+   local chunk = find_calling_chunk()
+   self.registered[chunk] = self.registered[chunk] or {}
+   self.registered[chunk][event_id] = self.registered[chunk][event_id] or {}
+   self.registered[chunk][event_id][name] = true
 end
 
 function EventHolder:replace(event_id, name, cb, opts)
@@ -82,7 +135,16 @@ function EventHolder:replace(event_id, name, cb, opts)
       return false
    end
 
-   return self.hooks[event_id]:replace(name, cb, opts.priority)
+   local success = self.hooks[event_id]:replace(name, cb, opts.priority)
+
+   if success then
+      local chunk = find_calling_chunk()
+      self.registered[chunk] = self.registered[chunk] or {}
+      self.registered[chunk][event_id] = self.registered[chunk][event_id] or {}
+      self.registered[chunk][event_id][name] = true
+   end
+
+   return success
 end
 
 function EventHolder:unregister(event_id, name)
@@ -91,6 +153,12 @@ function EventHolder:unregister(event_id, name)
    local events = self.hooks[event_id]
    if events then
       events:unregister(name)
+   end
+
+   for chunk, t in pairs(self.registered) do
+      if t[event_id] then
+         t[event_id][name] = nil
+      end
    end
 end
 

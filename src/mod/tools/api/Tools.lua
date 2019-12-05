@@ -82,6 +82,10 @@ function Tools.ally()
    return Rand.choice(Chara.iter_allies())
 end
 
+function Tools.other()
+   return Rand.choice(Chara.iter_others())
+end
+
 local function gen_faction_pred(faction)
    return function ()
       local pred = function(c)

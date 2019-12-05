@@ -41,11 +41,11 @@ data:add {
          local inv_id = Role.get(t.speaker, "elona.shopkeeper").params.inventory_id
          local shop = ShopInventory.generate(inv_id, t.speaker)
 
-         Input.query_inventory(Chara.player(), "inv_buy", {target=t.speaker, shop=shop})
+         Input.query_inventory(Chara.player(), "elona.inv_buy", {target=t.speaker, shop=shop})
          return "elona.default:talk"
       end,
       sell = function(t)
-         Input.query_inventory(Chara.player(), "inv_sell", {target=t.speaker})
+         Input.query_inventory(Chara.player(), "elona.inv_sell", {target=t.speaker})
          return "elona.default:talk"
       end,
    }

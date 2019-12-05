@@ -136,19 +136,19 @@ function Command.get(player)
 
    if #items == 1 then
       local item = items[1]
-      Item.activate_shortcut(item, "inv_get", { chara = player })
+      Item.activate_shortcut(item, "elona.inv_get", { chara = player })
       return "turn_end"
    end
 
-   return Input.query_inventory(player, "inv_get")
+   return Input.query_inventory(player, "elona.inv_get")
 end
 
 function Command.drop(player)
-   return Input.query_inventory(player, "inv_drop")
+   return Input.query_inventory(player, "elona.inv_drop")
 end
 
 function Command.inventory(player)
-   return Input.query_inventory(player, "inv_general")
+   return Input.query_inventory(player, "elona.inv_general")
 end
 
 function Command.wear(player)

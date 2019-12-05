@@ -47,7 +47,7 @@ function ElonaCommand.do_eat(player, item)
 end
 
 function ElonaCommand.eat(player)
-   return Input.query_inventory(player, "inv_eat")
+   return Input.query_inventory(player, "elona.inv_eat")
 end
 
 function ElonaCommand.do_dig(player, x, y)

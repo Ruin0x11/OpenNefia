@@ -213,14 +213,101 @@ data:add {
             }
          },
 
+         anim_spot_mine = {
+            image = "asset/anim_spot_mine.png",
+            count_x = 5
+         },
+         anim_spot_fish = {
+            image = "asset/anim_spot_fish.png",
+            count_x = 3
+         },
+         anim_spot_harvest = {
+            image = "asset/anim_spot_harvest.png",
+            count_x = 3
+         },
+         anim_spot_dig = {
+            image = "asset/anim_spot_dig.png",
+            count_x = 4
+         },
+         anim_shock = {
+            image = "asset/anim_shock.png",
+            count_x = 10
+         },
+         anim_breath = {
+            image = "asset/anim_breath.png",
+            count_x = 10
+         },
+         anim_smoke = {
+            image = "asset/anim_smoke.png",
+            count_x = 5
+         },
+         anim_sparkle = {
+            image = "asset/anim_sparkle.png",
+            count_x = 10
+         },
+         anim_buff = {
+            image = "asset/anim_buff.png",
+            count_x = 5
+         },
          anim_gene = {
             image = "asset/anim_gene.png",
             count_x = 5,
             count_y = 2
          },
-
          anim_critical = {
             image = "asset/anim_critical.png",
+            count_x = 6
+         },
+         anim_curse = {
+            image = "asset/anim_curse.png",
+            count_x = 5
+         },
+         anim_elec = {
+            image = "asset/anim_elec.png",
+            count_x = 6
+         },
+         anim_flame = {
+            image = "asset/anim_flame.png",
+            count_x = 10
+         },
+         anim_elem_lightning = {
+            image = "asset/anim_elem_lightning.png",
+            count_x = 5
+         },
+         anim_elem_cold = {
+            image = "asset/anim_elem_cold.png",
+            count_x = 6
+         },
+         anim_elem_fire = {
+            image = "asset/anim_elem_fire.png",
+            count_x = 6
+         },
+         anim_elem_nether = {
+            image = "asset/anim_elem_nether.png",
+            count_x = 6
+         },
+         anim_elem_darkness = {
+            image = "asset/anim_elem_darkness.png",
+            count_x = 6
+         },
+         anim_elem_mind = {
+            image = "asset/anim_elem_mind.png",
+            count_x = 6
+         },
+         anim_elem_sound = {
+            image = "asset/anim_elem_sound.png",
+            count_x = 6
+         },
+         anim_elem_chaos = {
+            image = "asset/anim_elem_chaos.png",
+            count_x = 6
+         },
+         anim_elem_nerve = {
+            image = "asset/anim_elem_nerve.png",
+            count_x = 6
+         },
+         anim_elem_poison = {
+            image = "asset/anim_elem_poison.png",
             count_x = 6
          },
 

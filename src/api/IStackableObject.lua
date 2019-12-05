@@ -13,8 +13,8 @@ local IStackableObject = class.interface("IStackableObject",
 --- also attempts to move the object into the original object's
 --- location. If this fails, return nil. If unsuccessful, no state is
 --- changed. Returns the separated item.
--- @tparam int amount
--- @tparam bool owned
+-- @tparam int amount Default 1
+-- @tparam bool owned Default false
 -- @treturn IItem
 -- @retval_ownership[owned=false] nil
 -- @retval_ownership[owned=true] self.location

@@ -36,7 +36,7 @@ local fallbacks = {
    ammo_type = "",
    value = 1,
    params = {},
-   types = {},
+   categories = {},
 
    cargo_weight = 0,
 
@@ -344,6 +344,25 @@ function IItem:remove()
    if map then
       map:refresh_tile(self.x, self.y)
    end
+end
+
+function IItem:has_category(cat)
+   if type(cat) == "table" then
+      for _, t in ipairs(cat) do
+         assert(type(t) == "string")
+         if self:has_type(t) then
+            return true
+         end
+      end
+   else
+      for _, v in ipairs(self.categories) do
+         if v == cat then
+            return true
+         end
+      end
+   end
+
+   return false
 end
 
 return IItem

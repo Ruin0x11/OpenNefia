@@ -3,6 +3,7 @@ local Map = require("api.Map")
 local MapObject = require("api.MapObject")
 local InventoryContext = require("api.gui.menu.InventoryContext")
 
+local data = require("internal.data")
 local field = require("game.field")
 
 -- Functions for manipulating items.
@@ -139,11 +140,7 @@ function Item.activate_shortcut(item, operation, params)
       return nil, "item_dead"
    end
 
-   local protos = require("api.gui.menu.InventoryProtos")
-   local proto = protos[operation]
-   if not proto then
-      error("unknown context type " .. operation)
-   end
+   local proto = data["elona_sys.inventory_proto"]:ensure(operation)
 
    params = params or {}
    params.chara = params.chara or item:get_owning_chara() or nil

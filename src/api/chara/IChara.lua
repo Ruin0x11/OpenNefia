@@ -74,6 +74,7 @@ local fallbacks = {
    fov = 15,
    time_this_turn = 0,
    turns_alive = 0,
+   insanity = 0,
    armor_class = "",
    last_move_direction = "South",
 
@@ -145,7 +146,9 @@ local fallbacks = {
    shop_rank = 0,
 
    breaks_into_debris = nil,
-   is_solid = true
+   is_solid = true,
+
+   anorexia_count = 0
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -318,7 +321,6 @@ function IChara:refresh_weight()
    local weight = 0
    local cargo_weight = 0
    for _, i in self:iter_items() do
-      assert(i:calc("cargo_weight"), inspect(i))
       weight = weight + i:calc("weight")
       cargo_weight = cargo_weight + i:calc("cargo_weight")
    end

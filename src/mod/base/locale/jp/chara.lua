@@ -27,7 +27,7 @@ end
   :format(name(_1))
 end,
       lose = function(_1)
-  return ("%sの身長は少し伸びた。")
+  return ("%sの身長は少し縮んだ。")
   :format(name(_1))
 end
     },

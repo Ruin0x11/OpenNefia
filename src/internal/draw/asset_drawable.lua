@@ -37,6 +37,8 @@ function asset_drawable:init(data_inst)
          end
       end
    end
+   self.count_x = count_x
+   self.count_y = count_y
 
    self.regions = data_inst.regions
 

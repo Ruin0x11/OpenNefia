@@ -201,7 +201,7 @@ function EquipmentMenu:update()
             Gui.mes("Can't unequip: " .. err)
          end
       else
-         local selected_item, canceled = Input.query_item(self.chara, "inv_equip", { body_part_id = entry.body_part._id })
+         local selected_item, canceled = Input.query_item(self.chara, "elona.inv_equip", { body_part_id = entry.body_part._id })
          if not canceled then
             assert(Action.equip(self.chara, selected_item))
             self.changed_equipment = true

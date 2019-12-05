@@ -13,6 +13,7 @@ local MapObject = require("api.MapObject")
 local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Effect = require("mod.elona.api.Effect")
 
 --
 --
@@ -477,8 +478,9 @@ local function bump_into_chara(player, params, result)
    if reaction > 0 then
       if on_cell:is_ally() or on_cell.faction == "base.citizen" or Gui.player_is_running() then
          if player:swap_places(on_cell) then
-            Gui.mes("You switch places with " .. on_cell.uid .. ".")
+            Gui.mes("action.move.displace.text", on_cell)
             Gui.set_scroll()
+            on_cell:emit("elona.on_displaced")
          end
          return "turn_end"
       end
@@ -609,8 +611,10 @@ local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
 Event.register("elona_sys.hook_player_move", "Leave footsteps",
                function(player, params, result)
-                  if player.x ~= result.pos.x or player.y ~= result.pos.y then
-                     local map = params.chara:current_map()
+                  local map = params.chara:current_map()
+                  if (player.x ~= result.pos.x or player.y ~= result.pos.y)
+                     and Map.can_access(result.pos.x, result.pos.y, map)
+                  then
                      local tile = map:tile(params.chara.x, params.chara.y)
                      if tile.kind == 4 then
                         Gui.play_sound(snow_footsteps[footstep%2+1])
@@ -783,3 +787,29 @@ local function init_save()
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)
+
+local function decrease_nutrition(chara, params, result)
+   if not chara:is_player() then
+      return result -- TODO nil counts as no modifying result
+   end
+
+   local nutrition = chara:calc("nutrition")
+   if nutrition < 2000 then
+      if nutrition < 1000 then
+         chara:damage_hp(Rand.rnd(2) + chara:calc("max_hp") / 50, "elona.hunger")
+         if save.elona_sys.awake_hours % 10 == 0 then
+            -- interrupt action
+            if Rand.one_in(50) then
+               Effect.modify_weight(chara, -1)
+            end
+         end
+      end
+      result.regeneration = false
+   end
+
+   return result
+end
+
+Event.register("base.on_chara_turn_end",
+               "Decrease nutrition",
+               decrease_nutrition)

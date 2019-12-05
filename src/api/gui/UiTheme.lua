@@ -110,10 +110,10 @@ function UiTheme.load_asset(id)
    return UiTheme.load(nil)[id]
 end
 
-function UiTheme.hotload(old, new)
+function UiTheme.on_hotload(old, new)
    local id = old.theme_id()
    assert(id)
-   new.load_theme(id)
+   new.add_theme(id)
 end
 
 return UiTheme

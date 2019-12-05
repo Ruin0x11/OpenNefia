@@ -80,6 +80,25 @@ data:add_type {
    },
 }
 
+data:add_type {
+   name = "magic",
+   schema = schema.Record {
+      cast = schema.Function
+   }
+}
+
+data:add_type {
+   name = "basic_anim",
+   schema = schema.Record {
+   }
+}
+
+data:add_type {
+   name = "inventory_proto",
+   schema = schema.Record {
+   }
+}
+
 
 require("mod.elona_sys.data.event")
 

@@ -11906,6 +11906,8 @@ local item =
          rarity = 300000,
          coefficient = 100,
 
+         params = { chara_id = "" },
+
          param1 = 8000,
          param3 = 240,
 
@@ -11946,6 +11948,8 @@ local item =
          rarity = 300000,
          coefficient = 100,
          originalnameref2 = "bottle",
+
+         params = { chara_id = "" },
 
          efid = 1101,
          efp = 100,

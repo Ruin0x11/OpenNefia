@@ -9,7 +9,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 
-local anim_wait = 30
+local anim_wait = 30 * 0.5
 
 local function pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()
@@ -23,6 +23,41 @@ local function is_in_screen(sx, sy)
    local msg_y = Gui.message_window_y()
    return sy >= 0 and sy <= msg_y
       and sx >= 0 and sx <= Draw.get_width()
+end
+
+function Anim.load(anim_id, tx, ty)
+   local t = UiTheme.load()
+   local anim = data["elona_sys.basic_anim"]:ensure(anim_id)
+   local sx, sy = Gui.tile_to_screen(tx, ty)
+   local asset = t[anim.asset]
+   assert(asset, ("Asset not found: %s"):format(anim.asset))
+   assert(asset.count_x)
+
+   if not Map.is_in_fov(tx, ty) or anim_wait == 0 then
+      return function() end
+   end
+
+   local frames = anim.frames or asset.count_x
+   local sound = anim.sound or nil
+   local wait = anim.wait or 3.5
+   local rotation = anim.rotation or 0
+
+   return function(draw_x, draw_y)
+      sx = draw_x + sx
+      sy = draw_y + sy
+
+      if sound then
+         Gui.play_sound(sound)
+      end
+
+      local frame = 1
+      while frame <= frames do
+         asset:draw_region(frame, sx + 24, sy + 8, nil, nil, {255, 255, 255}, rotation * frame)
+
+         local _, _, frames_passed = Draw.yield(anim_wait * wait)
+         frame = frame + frames_passed
+      end
+   end
 end
 
 function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)

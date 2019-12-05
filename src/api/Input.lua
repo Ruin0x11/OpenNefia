@@ -54,7 +54,7 @@ end
 local function query_inventory(chara, operation, params, returns_item)
    local InventoryWrapper = require("api.gui.menu.InventoryWrapper")
 
-   operation = operation or "inv_general"
+   operation = operation or "elona.inv_general"
 
    params = params or {}
    params.chara = chara

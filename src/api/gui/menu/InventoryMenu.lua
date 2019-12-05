@@ -273,13 +273,13 @@ function InventoryMenu:update()
       if not can_select then
          Gui.mes("Can't select: " .. reason)
       else
+         if self.returns_item then
+            return self:selected_item_object()
+         end
+
          local result, canceled = self:on_select()
 
          if not canceled then
-            if self.returns_item then
-               return self:selected_item_object()
-            end
-
             if result == "inventory_continue" then
                self:update_filtering()
             elseif result == "turn_end" then

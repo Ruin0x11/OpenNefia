@@ -169,7 +169,7 @@ function Combat.calc_evasion(target, attacker, weapon, attack_skill, attack_coun
 end
 
 local function mod_attack_hit_for_status_ailments(result, chara, target, is_ranged)
-   if chara:has_status_ailment("elona.dimmed") then
+   if chara:has_status_ailment("elona.dimming") then
       if Rand.one_in(4) then
          result.result = "critical"
          return result, "blocked"

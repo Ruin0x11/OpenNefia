@@ -3,6 +3,7 @@ Itemgen = require("mod.tools.api.Itemgen")
 Charagen = require("mod.tools.api.Charagen")
 Compat = require("mod.elona_sys.api.Compat")
 Benchmark = require("mod.tools.api.Benchmark")
+Magic = require("mod.elona_sys.api.Magic")
 
 Log.set_level("info")
 

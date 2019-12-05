@@ -197,7 +197,7 @@ local function gen_stair(down)
             -- If the loaded map indicates a start position, assume
             -- stairs are located there.
             if map.player_start_pos then
-               local x, y = Map.calc_start_position(Chara.player(), map, self:current_map(), self)
+               local x, y = Map.calc_start_position(Chara.player(), map, self, self:current_map())
 
                stair = Feat.at(x, y, map):filter(function(f) return f._id == search end):nth(1)
             end

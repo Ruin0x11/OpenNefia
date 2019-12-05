@@ -129,7 +129,7 @@ local function sex_apply_effect(chara, is_partner)
       Skill.gain_skill_exp(chara, "elona.stat_will", exp)
    end
    if Rand.one_in(15) then
-      chara:apply_effect("elona.sickness", 200)
+      chara:apply_effect("elona.sick", 200)
    end
    Skill.gain_skill_exp(chara, "elona.stat_charisma", exp)
 end

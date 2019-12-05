@@ -16,7 +16,7 @@ TextPrompt:delegate("input", IInput)
 
 function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    self.length = length or 16
-   self.width = length * 16 + 60
+   self.width = self.length * 16 + 60
    self.height = 36
    self.can_cancel = can_cancel
    if can_cancel == nil then self.can_cancel = true end

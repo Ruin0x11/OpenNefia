@@ -46,7 +46,7 @@ function I18N.get_optional(text, ...)
       if class.is_an(ILocalizable, arg) then
          args[i] = arg:produce_locale_data()
       else
-         args[i] = arg
+         args[i] = I18N.get_optional(arg) or arg
       end
    end
    return i18n.get(text, table.unpack(args))

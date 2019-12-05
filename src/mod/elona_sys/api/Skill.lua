@@ -1,5 +1,6 @@
 local Rand = require("api.Rand")
 local Map = require("api.Map")
+local Chara = require("api.Chara")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
@@ -115,6 +116,79 @@ function Skill.modify_potential(potential, level_delta)
    return potential
 end
 
+local function skill_change_text(chara, skill_id, is_increase)
+   local part
+   if is_increase then
+      part = "increase"
+   else
+      part = "decrease"
+   end
+   local text = I18N.get_optional("skill." .. part .. "." .. skill_id, chara)
+   if text then
+      return text
+   end
+
+   if is_increase then
+      return I18N.get("skill.default.increase", chara, "ability." .. skill_id .. ".name")
+   else
+      return I18N.get("skill.default.decrease", chara, "ability." .. skill_id .. ".name")
+   end
+end
+
+local function proc_leveling(chara, skill, new_exp, level, potential)
+   if new_exp >= 1000 then
+      local level_delta = math.floor(new_exp / 1000)
+      new_exp = new_exp % 1000
+      level = level + level_delta
+      potential = Skill.modify_potential(potential, level_delta)
+      chara:set_base_skill(skill, level, potential, new_exp)
+      if Map.is_in_fov(chara.x, chara.y) then
+         local color = "White"
+         if chara:is_allied() then
+            Gui.play_sound("base.ding3")
+            Gui.mes_alert()
+            color = "Green"
+         end
+         Gui.mes_c(skill_change_text(chara, skill, true), color)
+      end
+      chara:refresh()
+   elseif new_exp < 0 then
+      local level_delta = math.floor(-new_exp / 1000 + 1)
+      new_exp = 1000 + new_exp % 1000
+      if level - level_delta < 1 then
+         level_delta = level - 1
+         if level == 1 and level_delta == 0 then
+            new_exp = 0
+         end
+      end
+
+      level = level - level_delta
+      potential = Skill.modify_potential(potential, -level_delta)
+      chara:set_base_skill(skill, level, potential, new_exp)
+      if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
+         Gui.mes_alert()
+         Gui.mes_c(skill_change_text(chara, skill, false), "Red")
+      end
+      chara:refresh()
+   end
+
+   chara:set_base_skill(skill, level, potential, new_exp)
+end
+
+function Skill.gain_fixed_skill_exp(chara, skill, exp)
+   data["base.skill"]:ensure(skill)
+
+   local level = chara:skill_level(skill)
+   local potential = chara:skill_potential(skill)
+   local new_exp = chara:skill_experience(skill) + exp
+
+   if potential == 0 then
+      return
+   end
+
+   proc_leveling(chara, skill, new_exp, level, potential)
+end
+
 function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divisor_level)
    exp_divisor_stat = exp_divisor_stat or 0
    exp_divisor_level = exp_divisor_level or 0
@@ -148,9 +222,10 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
       exp = base_exp
    end
 
-   local is_show_house = false -- TODO
-   if is_show_house then
-      exp = exp / 5
+   local map = chara:current_map()
+   local exp_divisor = map:calc("exp_divisor")
+   if exp_divisor then
+      exp = exp / exp_divisor
    end
 
    if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level ~= 1000 then
@@ -162,41 +237,7 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    end
 
    local new_exp = exp + chara:skill_experience(skill)
-   if new_exp >= 1000 then
-      local level_delta = math.floor(new_exp / 1000)
-      new_exp = new_exp % 1000
-      level = level + level_delta
-      potential = Skill.modify_potential(potential, level_delta)
-      chara:set_base_skill(skill, level, potential, new_exp)
-      if Map.is_in_fov(chara.x, chara.y) then
-         local color
-         if chara:is_ally() then
-            Gui.play_sound("base.ding3")
-            color = "Green"
-         end
-         Gui.mes(chara.uid .. " levels up " .. skill, color)
-      end
-      chara:refresh()
-   elseif new_exp < 0 then
-      local level_delta = math.floor(-new_exp / 1000 + 1)
-      new_exp = 1000 + new_exp % 1000
-      if level - level_delta < 1 then
-         level_delta = level - 1
-         if level == 1 and level_delta == 0 then
-            new_exp = 0
-         end
-      end
-
-      level = level - level_delta
-      potential = Skill.modify_potential(potential, -level_delta)
-      chara:set_base_skill(skill, level, potential, new_exp)
-      if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
-         Gui.mes(chara.uid .. " loses a level of " .. skill, "Red")
-      end
-      chara:refresh()
-   end
-
-   chara:set_base_skill(skill, level, potential, new_exp)
+   proc_leveling(chara, skill, new_exp, level, potential)
 end
 
 local function get_random_body_part()
@@ -384,6 +425,44 @@ function Skill.calc_required_experience(chara)
    local lv = math.clamp(chara.level, 1, 200)
    return math.clamp(lv * (lv + 1) * (lv + 2) * (lv + 3) + 3000, 0, 100000000)
 end
+
+function Skill.impression_level(impression)
+   if     impression < 10  then return 0
+   elseif impression < 25  then return 1
+   elseif impression < 40  then return 2
+   elseif impression < 75  then return 3
+   elseif impression < 100 then return 4
+   elseif impression < 150 then return 5
+   elseif impression < 200 then return 6
+   elseif impression < 300 then return 7
+   else                         return 8
+   end
+end
+
+function Skill.modify_impression(chara, delta)
+   delta = math.floor(delta)
+   local level = Skill.impression_level(chara.impression)
+   if delta >= 0 then
+      delta = delta * 100 / (50 + level * level * level)
+      if delta == 0 and level < Rand.rnd(10) then
+         delta = 1
+      end
+   end
+
+   chara.impression = chara.impression + delta
+   local new_level = Skill.impression_level(chara.impression)
+   if level > new_level then
+      Gui.mes_c("chara.impression.lose", "Purple", chara, "ui.impression._" .. new_level)
+   elseif new_level > level and chara:reaction_towards(Chara.player()) > 0 then
+      Gui.mes_c("chara.impression.gain", "Green", chara, "ui.impression._" .. new_level)
+   end
+end
+
+--
+--
+-- Events
+--
+--
 
 local function refresh_max_inventory_weight(chara)
    local weight = chara:calc("inventory_weight")

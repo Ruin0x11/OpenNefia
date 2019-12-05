@@ -8,11 +8,11 @@ local IUiLayer = require("api.gui.IUiLayer")
 local IconBar = require("api.gui.menu.IconBar")
 local InputHandler = require("api.gui.InputHandler")
 local InventoryContext = require("api.gui.menu.InventoryContext")
-local InventoryContext = require("api.gui.menu.InventoryContext")
 local InventoryMenu = require("api.gui.menu.InventoryMenu")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
+local data = require("internal.data")
 
 --- Wraps an InventoryMenu such that multiple inventory actions can be
 --- switched between by pressing Tab. A single InventoryMenu will
@@ -22,8 +22,6 @@ local UiWindow = require("api.gui.UiWindow")
 local InventoryWrapper = class.class("InventoryWrapper", IUiLayer)
 
 InventoryWrapper:delegate("input", IInput)
-
-local protos = require("api.gui.menu.InventoryProtos")
 
 function InventoryWrapper:init(kind, params, returns_item)
    self.x = 0
@@ -46,10 +44,7 @@ end
 function InventoryWrapper:switch_context(kind)
    Gui.play_sound("base.inv");
 
-   local proto = protos[kind]
-   if not proto then
-      error("unknown context type " .. kind)
-   end
+   local proto = data["elona_sys.inventory_proto"]:ensure(kind)
 
    local ctxt = InventoryContext:new(proto, self.params)
    self.submenu = InventoryMenu:new(ctxt, self.returns_item)

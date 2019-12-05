@@ -249,6 +249,9 @@ end
 function Gui.mes_halt()
 end
 
+function Gui.mes_alert()
+end
+
 --- Plays a sound. You can optionally provide a position, so that if
 --- positional audio is enabled in the settings then it will be panned
 --- according to the relative position of the player.

@@ -1,8 +1,5 @@
 --- @module Event
 
-local Log = require("api.Log")
-local EventHolder = require("api.EventHolder")
-local env = require("internal.env")
 local data = require("internal.data")
 
 local Event = {}
@@ -108,6 +105,7 @@ function Event.define_hook(id, desc, default, field, cb)
 
    local full_id = (dat and dat._id) or nil
 
+   local env = require("internal.env")
    if not env.is_hotloading() then
       assert(dat)
       full_id = dat._id

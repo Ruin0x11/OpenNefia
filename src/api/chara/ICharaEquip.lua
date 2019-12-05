@@ -72,6 +72,10 @@ function ICharaEquip:has_item_equipped(item)
    return self.equip:has_object(item)
 end
 
+function ICharaEquip:has_enchantment(id)
+   return false
+end
+
 function ICharaEquip:items_equipped_at(body_part_type)
    return self.equip:items_equipped_at(body_part_type)
 end
