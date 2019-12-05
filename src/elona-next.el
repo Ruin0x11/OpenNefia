@@ -94,7 +94,7 @@
   (interactive)
   (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name))))
          (cmd (format
-               "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.env').hotload('%s') end"
+               "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.hotload').hotload('%s') end"
                lua-path
                lua-path)))
     (save-buffer)
