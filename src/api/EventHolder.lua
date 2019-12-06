@@ -82,10 +82,10 @@ function EventHolder:register(event_id, name, cb, opts)
 
    if env.is_hotloading() then
       if self:has_handler(event_id, name) then
-         Log.warn("Replacing event callback for for %s - \":%s\"", event_id, name)
+         Log.debug("Replacing event callback for for %s - \":%s\"", event_id, name)
          return self:replace(event_id, name, cb, opts)
       else
-         Log.warn("New event callback hotloaded for %s - \":%s\"", event_id, name)
+         Log.debug("New event callback hotloaded for %s - \":%s\"", event_id, name)
       end
    end
 
@@ -227,6 +227,11 @@ end
 function EventHolder:has_handler(event_id, name)
    local events = self.hooks[event_id]
    if events then
+      if name == nil and next(events) then
+         -- Just check if any event handler for event_id is registered
+         return true
+      end
+
       return events:has_handler(name)
    end
 
@@ -244,7 +249,7 @@ function EventHolder:print(event_id)
    local s = ""
 
    for k, v in pairs(self.hooks) do
-      s = s .. k .. "\n" .. v:print() .. "\n"
+      s = s .. ("= %s =\n%s\n"):format(k, v:print())
    end
 
    return s

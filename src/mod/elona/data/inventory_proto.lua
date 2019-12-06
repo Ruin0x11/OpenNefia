@@ -2,7 +2,8 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Action = require("api.Action")
 local Input = require("api.Input")
-local ElonaCommand = require("mod.elona.api.ElonaCommand") -- TODO
+local ElonaCommand = require("mod.elona.api.ElonaCommand")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
 
@@ -124,12 +125,41 @@ local inv_equip = {
       return item:can_equip_at(ctxt.body_part_id)
    end,
    can_select = function(ctxt, item)
-      -- TODO: fairy trait
-      -- return ctxt.chara:can_equip(item)
+      if ctxt.chara:has_trait("elona.fairy_equip_restriction") and item:calc("weight") >= 1000 then
+         Gui.mes("ui.inv.equip.too_heavy")
+         return false, "too heavy"
+      end
+
       return true
    end
 }
 data:add(inv_equip)
+
+local inv_read = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_read",
+
+   sources = { "chara", "ground" },
+   shortcuts = true,
+   icon = 4,
+   filter = function(ctxt, item)
+      if not item:has_event_handler("elona_sys.on_item_read") then
+         return false
+      end
+
+      if ctxt.chara:current_map():has_type("world_map") then
+         if not (item:has_category("elona.scroll_deed") or item:calc("can_read_in_world_map")) then
+            return false
+         end
+      end
+
+      return true
+   end,
+   on_select = function(ctxt, item)
+      return ElonaAction.read(ctxt.chara, item)
+   end
+}
+data:add(inv_read)
 
 local inv_eat = {
    _type = "elona_sys.inventory_proto",
@@ -142,6 +172,7 @@ local inv_eat = {
       return item:has_category("elona.food")
          or item:has_category("elona.cargo_food")
          or item:calc("material") == "elona.raw"
+         or item:has_event_handler("elona_sys.on_item_eat")
    end,
    can_select = function(ctxt, item)
       if item:calc("flags").is_no_drop then
@@ -151,10 +182,42 @@ local inv_eat = {
       return true
    end,
    on_select = function(ctxt, item)
-      return ElonaCommand.do_eat(ctxt.chara, item)
+      return ElonaAction.eat(ctxt.chara, item)
    end
 }
 data:add(inv_eat)
+
+local inv_drink = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_drink",
+
+   sources = { "chara", "ground" },
+   shortcuts = true,
+   icon = 6,
+   filter = function(ctxt, item)
+      return item:has_event_handler("elona_sys.on_item_drink")
+   end,
+   on_select = function(ctxt, item)
+      return ElonaAction.drink(ctxt.chara, item)
+   end
+}
+data:add(inv_drink)
+
+local inv_zap = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_zap",
+
+   sources = { "chara", "ground" },
+   shortcuts = true,
+   icon = 6,
+   filter = function(ctxt, item)
+      return item:has_event_handler("elona_sys.on_item_zap")
+   end,
+   on_select = function(ctxt, item)
+      return ElonaAction.zap(ctxt.chara, item)
+   end
+}
+data:add(inv_zap)
 
 local inv_buy = {
    _type = "elona_sys.inventory_proto",

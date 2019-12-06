@@ -452,8 +452,7 @@ data:add {
 
 local function cook(chara, item, cooking_tool)
    Gui.play_sound("base.cook1")
-   local sep = item:separate(1, true)
-   assert(sep)
+   local sep = item:separate()
    local cooking = chara:skill_level("elona.cooking")
 
    local food_quality = Rand.rnd(cooking + 7) + Rand.rnd

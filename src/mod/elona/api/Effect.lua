@@ -4,6 +4,9 @@ local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
 local Skill = require("mod.elona_sys.api.Skill")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local Calc = require("mod.elona_sys.api.Calc")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 local Effect = {}
 
@@ -73,6 +76,47 @@ function Effect.modify_height(chara, delta)
    end
 end
 
+function Effect.modify_karma(chara, delta)
+   if chara:has_trait("elona.no_guilt") and delta < 0 then
+      delta = delta * 75 / 100
+      if delta <= 0 then
+         return
+      end
+   end
+   if chara:has_trait("elona.good_person") then
+      delta = delta * 150 / 100
+   end
+
+   local color
+   if delta >= 0 then
+      color = "Orange"
+   else
+      color = "Purple"
+   end
+
+   Gui.mes_c("chara_status.karma.changed", delta)
+   if delta > 0 then
+      if chara.karma < -30 and chara.karma + delta >= -30 then
+         Gui.mes_c("chara_status.karma.you_are_no_longer_criminal", "Green")
+      end
+   elseif delta < 0 then
+      if chara.karma >= -30 and chara.karma + delta < -30 then
+         Gui.mes_c("chara_status.karma.you_are_criminal_now", "Purple")
+         Calc.make_guards_hostile()
+      end
+   end
+
+   local max = 20
+   if chara:has_trait("elona.no_guilt") then
+      max = max - 20
+   end
+   if chara:has_trait("elona.good_person") then
+      max = max + 20
+   end
+
+   chara.karma = math.clamp(chara.karma + delta, -100, max)
+end
+
 function Effect.show_eating_message(chara)
    local nutrition = chara.nutrition
    if nutrition >= 12000 then
@@ -88,6 +132,10 @@ function Effect.show_eating_message(chara)
    else
       Gui.mes_c("food.eating_message.starving", "Green")
    end
+end
+
+function Effect.apply_general_eating_effect(chara, food)
+   -- TODO
 end
 
 function Effect.apply_food_curse_state(chara, curse_state)
@@ -106,9 +154,10 @@ function Effect.apply_food_curse_state(chara, curse_state)
          Gui.mes("food.eat_status.good", chara)
       end
       if Rand.one_in(5) then
+         -- TODO buff
       end
 
-      chara:add_effect_turns("elona.insanity", -2)
+      Effect.modify_insanity(chara, 2)
    end
 end
 
@@ -203,6 +252,186 @@ function Effect.get_hungry(chara)
       end
       Skill.refresh_speed(chara)
    end
+end
+
+-- TODO all categories with elona_id >= 50000
+local autoidentify = table.set {
+   "elona.drink",
+   "elona.cargo_food",
+   "elona.cargo",
+   "elona.misc_item",
+   "elona.gold",
+   "elona.remains",
+   "elona.scroll",
+   "elona.tree",
+   "elona.book",
+   "elona.junk_in_field",
+   "elona.platinum",
+   "elona.food",
+   "elona.ore",
+   "elona.furniture",
+   "elona.furniture_well",
+   "elona.furniture_altar",
+   "elona.spellbook",
+   "elona.rod",
+   "elona.junk",
+   "elona.container"
+}
+
+local identify_states = {
+   unidentified = 0,
+   partly = 1,
+   almost = 2,
+   completely = 3
+}
+
+function Effect.try_to_identify_item(item, power)
+   local level
+   if power >= item:calc("difficulty_of_identification") then
+      level = "completely"
+   else
+      level = "unidentified"
+   end
+   return Effect.identify_item(item, level)
+end
+
+function Effect.do_identify_item(item, level)
+   if item.identify_state == "almost" then
+      for _, cat in ipairs(item.categories) do
+         if autoidentify[cat] then
+            level = "completely"
+            break
+         end
+      end
+   end
+
+   local old = identify_states[item.identify_state]
+   local new = identify_states[level]
+   assert(old, item.identify_state)
+   assert(new, level)
+
+   if old >= new then
+      return false, "unidentified"
+   end
+
+   if old > identify_states.partly then
+      ItemMemory.set_known(item, 1)
+   end
+
+   return true, level
+end
+
+function Effect.identify_item(item, level)
+   local do_change_level, new_level = Effect.do_identify_item(item, level)
+   if do_change_level then
+      item.identify_state = level
+   end
+   return new_level
+end
+
+function Effect.modify_insanity(chara, delta)
+   if chara:calc("quality") >= 4 then
+      return
+   end
+
+   local resistance = chara:resist_level("elona.mind")
+   if resistance > 10 then
+      return
+   end
+
+   delta = math.floor(delta / resistance)
+   if chara:is_allied() and chara:has_trait("elona.cures_sanity") then
+      delta = delta - Rand.rnd(4)
+   end
+
+   delta = math.max(delta, 0)
+   chara:add_effect_turns("elona.insanity", delta)
+   if Rand.one_in(10) or Rand.rnd(delta + 1) > 5 or Rand.rnd(chara:effect_turns("elona.insanity") + 1) > 50 then
+      chara:apply_effect("elona.insanity", 100)
+   end
+end
+
+function Effect.eat_rotten_food(chara)
+   -- TODO
+end
+
+local function add_ether_disease_trait(chara)
+   for _ = 1, 100000 do
+      -- TODO
+      Gui.mes_c("add corruption trait", "Red")
+      break
+   end
+end
+
+local function remove_ether_disease_trait(chara)
+   for _ = 1, 100000 do
+      -- TODO
+      Gui.mes_c("remove corruption trait", "Green")
+      break
+   end
+end
+
+function Effect.modify_corruption(chara, delta)
+   local original_stage = math.floor(chara.ether_disease_corruption / 1000)
+   local add_amount = delta
+   if delta > 0 then
+      add_amount = add_amount + chara:calc("ether_disease_speed")
+   end
+
+   if chara:has_trait("elona.slow_ether_disease") and delta > 0 then
+      add_amount = add_amount * 100 / 150
+   end
+
+   chara.ether_disease_corruption = math.clamp(math.floor(chara.ether_disease_corruption + add_amount), 0, 20000)
+   local stage_delta = math.floor(chara.ether_disease_corruption / 1000) - original_stage
+
+   if not chara:is_player() then
+      return
+   end
+
+   if stage_delta > 0 then
+      if original_stage == 0 then
+         Gui.mes_c("chara.corruption.symptom", "Purple")
+         ExHelp.maybe_show(15)
+      end
+
+      local traits_to_add
+      if original_stage + stage_delta >= 20 then
+         traits_to_add = 20 - original_stage
+      else
+         traits_to_add = stage_delta
+      end
+
+      for i = 1, traits_to_add do
+         if original_stage + i > 20 then
+            break
+         end
+         add_ether_disease_trait(chara)
+      end
+
+      local anim = Anim.load("elona.anim_smoke", chara.x, chara.y)
+      Gui.start_draw_callback(anim)
+   elseif stage_delta < 0 then
+      local traits_to_remove
+      if original_stage + stage_delta < 0 then
+         traits_to_remove = original_stage
+      else
+         traits_to_remove = math.abs(stage_delta)
+      end
+
+      if traits_to_remove < 0 then
+         traits_to_remove = 0
+      end
+
+      for _ = 1, traits_to_remove do
+         remove_ether_disease_trait(chara)
+      end
+
+      local anim = Anim.load("elona.anim_sparkle", chara.x, chara.y)
+      Gui.start_draw_callback(anim)
+   end
+
+   chara:refresh()
 end
 
 return Effect

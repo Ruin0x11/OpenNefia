@@ -784,6 +784,7 @@ local function init_save()
    local s = save.elona
    s.turns_until_cast_return = 0
    s.return_destination_map_uid = nil
+   s.holy_well_count = 0
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

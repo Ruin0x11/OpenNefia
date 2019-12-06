@@ -86,6 +86,8 @@ end
 
 --- Creates a new entry to type base.event with a default callback.
 ---
+--- TODO remove this or make it play better with IEventEmitter objects
+---
 --- @tparam string id Event ID.
 --- @tparam string desc
 --- @tparam[opt] any default

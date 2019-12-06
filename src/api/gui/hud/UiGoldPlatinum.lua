@@ -16,6 +16,9 @@ end
 function UiGoldPlatinum:draw()
    local Chara = require("api.Chara")
    local chara = Chara.player()
+   if not chara then
+      return
+   end
    local gold = chara.gold
    local plat = chara.platinum
 

@@ -44,6 +44,29 @@ local function generator_for_template(template)
    return map
 end
 
+-- looks for stairs with the tags "stairs_up" and "stairs_down" and
+-- connects them to the map.
+local function connect_stairs(map, outer_map, generator)
+   local dungeon_level = map.dungeon_level
+   local stairs_up = map:iter_feats():filter(function(f) return f.tag == "stairs_up" end):nth(1)
+   local stairs_down = map:iter_feats():filter(function(f) return f.tag == "stairs_down" end):nth(1)
+
+   assert(stairs_up, "Map is missing feat with 'stairs_up' tag")
+   -- stairs_down may be missing if the map is the bottommost floor of
+   -- the dungeon
+
+   -- connect the stairs up to the outer map
+   stairs_up.map_uid = outer_map.uid
+   assert(stairs_up.map_uid)
+   print("stairsup", stairs_up.uid, stairs_up.map_uid)
+
+   if stairs_down then
+      local new_generator = table.deepcopy(generator)
+      new_generator.params.dungeon_level = dungeon_level + 1
+      stairs_down.generator_params = new_generator
+   end
+end
+
 local function generate_from_map_template(self, params, opts)
    if not params.id then
       error("Map template ID must be provided")
@@ -56,6 +79,11 @@ local function generate_from_map_template(self, params, opts)
    local success, map = Map.generate(generator.generator, generator.params, opts)
    if not success then
       error("Could not generate map: " .. map)
+   end
+
+   local generator_data = data["base.map_generator"]:ensure(generator.generator)
+   if generator_data.connect_stairs then
+      connect_stairs(map, opts.outer_map, generator)
    end
 
    if template.copy then

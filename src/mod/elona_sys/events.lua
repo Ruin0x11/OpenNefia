@@ -1,10 +1,12 @@
 local Event = require("api.Event")
+local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Quest = require("mod.elona_sys.api.Quest")
 local Chara = require("api.Chara")
 local Role = require("mod.elona_sys.api.Role")
+local Log = require("api.Log")
 
 --
 --
@@ -81,7 +83,38 @@ end
 
 Event.register("base.on_build_map", "Init map", init_map)
 
-local function show_element_text_damage()
+local function show_element_text_damage(target, source, tense, element)
+end
+
+local function show_element_text_death(target, source, tense, element)
+end
+
+local function show_text_death(target, source, tense)
+   local death_type = Rand.rnd(4)
+
+   if tense == "ally" then
+      Gui.mes_continue_sentence()
+
+      if death_type == 0 then
+         Gui.mes_c("death_by.chara.transformed_into_meat.active", "Red", target, source)
+      elseif death_type == 1 then
+         Gui.mes_c("death_by.chara.destroyed.active", "Red", target, source)
+      elseif death_type == 2 then
+         Gui.mes_c("death_by.chara.minced.active", "Red", target, source)
+      elseif death_type == 3 then
+         Gui.mes_c("death_by.chara.killed.active", "Red", target, source)
+      end
+   elseif tense == "enemy" then
+      if death_type == 0 then
+         Gui.mes_c("death_by.chara.transformed_into_meat.passive", "Red", target, source)
+      elseif death_type == 1 then
+         Gui.mes_c("death_by.chara.destroyed.passive", "Red", target, source)
+      elseif death_type == 2 then
+         Gui.mes_c("death_by.chara.minced.passive", "Red", target, source)
+      elseif death_type == 3 then
+         Gui.mes_c("death_by.chara.killed.passive", "Red", target, source)
+      end
+   end
 end
 
 local function show_damage_text(chara, weapon, target, damage_level, was_killed, tense, element, extra_attacks)
@@ -90,76 +123,86 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
    end
 
    if extra_attacks > 0 then
-      Gui.mes("Furthermore, ")
+      Gui.mes("damage.furthermore")
       Gui.mes_continue_sentence()
+   end
+
+   local skill = "elona.martial_arts" -- TODO
+
+   if weapon then
+      skill = weapon:calc("skill")
    end
 
    local source = chara
 
    if tense == "ally" and chara then
       if weapon then
-         Gui.mes(chara.uid .. " attacks " .. target.uid .. " with " .. weapon:build_name() .. " and ")
+         -- TODO
+         if skill == "elona.throwing" then
+            Gui.mes("damage.weapon.attacks_throwing", chara, "damage.weapon.verb_and." .. skill, target, weapon:build_name())
+         else
+            Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon.verb_and." .. skill, target)
+         end
       else
-         Gui.mes(chara.uid .. " attacks " .. target.uid .. " unarmed and ")
+         local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".enemy")
+         Gui.mes("damage.weapon.attacks_unarmed_and", chara, melee, target)
       end
 
       Gui.mes_continue_sentence()
 
       if was_killed then
-         Gui.mes("kills it. ")
+         if element then
+            show_element_text_death(target, source, tense, element)
+         else
+            show_text_death(target, source, tense)
+         end
       else
          if element then
-            show_element_text_damage(target, source, target, element)
+            show_element_text_damage(target, source, tense, element)
          else
             if damage_level == -1 then
-               Gui.mes("scratches it. ")
+               Gui.mes("damage.levels.scratch", target, chara)
             elseif damage_level == 0 then
-               Gui.mes("slightly wounds it. ")
+               Gui.mes_c("damage.levels.slightly", "Orange", target, chara)
             elseif damage_level == 1 then
-               Gui.mes("moderately wounds it. ")
+               Gui.mes_c("damage.levels.moderately", "Gold", target, chara)
             elseif damage_level == 2 then
-               Gui.mes("severely wounds it. ")
+               Gui.mes_c("damage.levels.severely", "Gold", target, chara)
             elseif damage_level >= 3 then
-               Gui.mes("critically wounds it. ")
+               Gui.mes_c("damage.levels.critically", "Red", target, chara)
             end
          end
       end
    else
       if tense == "enemy" and chara then
          if weapon then
-            Gui.mes(chara.uid .. " attacks with " .. weapon:build_name() .. ". ")
+            local weapon_name = I18N.get_optional("damage.weapon." .. skill .. ".name")
+            if weapon_name then
+               Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon.verb." .. skill, target, weapon_name)
+            end
          else
-            Gui.mes(chara.uid .. " attacks unarmed. ")
+            local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".ally")
+            Gui.mes("damage.weapon.attacks_unarmed", chara, melee, target)
          end
       end
 
       if was_killed then
-         Gui.mes(target.uid .. " was killed. ")
-      else
          if element then
-            show_element_text_damage(target, source, target, element)
+            show_element_text_death(target, source, tense, element)
          else
-            if damage_level == -1 then
-               Gui.mes(target.uid .. " is scratched. ")
-            elseif damage_level == 0 then
-               Gui.mes(target.uid .. " is slightly wounded. ", "Orange")
-            elseif damage_level == 1 then
-               Gui.mes(target.uid .. " is moderately wounded. ", "Gold")
-            elseif damage_level == 2 then
-               Gui.mes(target.uid .. " is severely wounded. ", "LightRed")
-            elseif damage_level >= 3 then
-               Gui.mes(target.uid .. " is critically wounded. ", "Red")
-            end
+            show_text_death(target, source, tense)
          end
-
-         if damage_level == 1 then
-            Gui.mes(target.uid .. " screams. ")
-         elseif damage_level == 2 then
-            Gui.mes(target.uid .. " writhes in pain. ")
-         elseif damage_level >= 3 then
-            Gui.mes(target.uid .. " is severely hurt! ")
-         elseif damage_level == -2 then
-            Gui.mes(target.uid .. " is healed. ")
+      else
+         if target:is_in_fov() then
+            if damage_level == 1 then
+               Gui.mes_c("damage.reactions.screams", "Gold", target)
+            elseif damage_level == 2 then
+               Gui.mes_c("damage.reactions.writes_in_pain", "LightRed", target)
+            elseif damage_level >= 3 then
+               Gui.mes_c("damage.reactions.is_severely_hurt", "Red", target)
+            elseif damage_level == -2 then
+               Gui.mes_c("damage.is_healed", "Blue", target)
+            end
          end
       end
    end
@@ -254,4 +297,93 @@ Event.register("base.on_chara_vanquished", "Refresh sidequests (when chara vanqu
 Event.register("base.on_map_enter", "Refresh sidequests (when map entered)",
                function(map)
                   map:emit("elona_sys.on_quest_check")
+end)
+
+
+-- The following events are necessary to run on every object each time
+-- a map is loaded because event callbacks are not serialized.
+
+Event.register("base.on_item_instantiated", "Connect item events",
+               function(item)
+                  Log.info("Connecting handlers for item %d", item.uid)
+                  if item.proto.on_use then
+                     item:connect_self("elona_sys.on_item_use",
+                                       "Item prototype on_use handler",
+                                       item.proto.on_use)
+                  end
+                  if item.proto.on_eat then
+                     item:connect_self("elona_sys.on_item_eat",
+                                       "Item prototype on_eat handler",
+                                       item.proto.on_eat)
+                  end
+                  if item.proto.on_drink then
+                     item:connect_self("elona_sys.on_item_drink",
+                                       "Item prototype on_drink handler",
+                                       item.proto.on_drink)
+                  end
+                  if item.proto.on_read then
+                     item:connect_self("elona_sys.on_item_read",
+                                       "Item prototype on_read handler",
+                                       item.proto.on_read)
+                  end
+                  if item.proto.on_zap then
+                     item:connect_self("elona_sys.on_item_zap",
+                                       "Item prototype on_zap handler",
+                                       item.proto.on_zap)
+                  end
+end)
+
+
+local IItem = require("api.item.IItem")
+Event.register("base.on_hotload_object", "reload events for item", function(obj)
+                  if class.is_an(IItem, obj) then
+                     obj:instantiate()
+                  end
+end)
+
+Event.register("base.on_feat_instantiated", "Connect feat events",
+               function(feat)
+                  Log.info("Connecting handlers for feat %d", feat.uid)
+                  if feat.proto.on_bash then
+                     feat:connect_self("elona_sys.on_bash",
+                                       "Feat prototype on_bash handler",
+                                       feat.proto.on_bash)
+                  end
+                  if feat.proto.on_activate then
+                     feat:connect_self("elona_sys.on_feat_activate",
+                                       "Feat prototype on_activate handler",
+                                       feat.proto.on_activate)
+                  end
+                  if feat.proto.on_search then
+                     feat:connect_self("elona_sys.on_feat_search",
+                                       "Feat prototype on_search handler",
+                                       feat.proto.on_search)
+                  end
+                  if feat.proto.on_open then
+                     feat:connect_self("elona_sys.on_feat_open",
+                                       "Feat prototype on_open handler",
+                                       feat.proto.on_open)
+                  end
+                  if feat.proto.on_close then
+                     feat:connect_self("elona_sys.on_feat_close",
+                                       "Feat prototype on_close handler",
+                                       feat.proto.on_close)
+                  end
+                  if feat.proto.on_descend then
+                     feat:connect_self("elona_sys.on_feat_descend",
+                                       "Feat prototype on_descend handler",
+                                       feat.proto.on_descend)
+                  end
+                  if feat.proto.on_ascend then
+                     feat:connect_self("elona_sys.on_feat_descend",
+                                       "Feat prototype on_ascend handler",
+                                       feat.proto.on_ascend)
+                  end
                end)
+
+local IFeat = require("api.feat.IFeat")
+Event.register("base.on_hotload_object", "reload events for feat", function(obj)
+                  if class.is_an(IFeat, obj) then
+                     obj:instantiate()
+                  end
+end)

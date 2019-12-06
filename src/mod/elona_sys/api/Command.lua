@@ -171,30 +171,41 @@ function Command.close(player)
          Gui.mes("action.close.blocked")
       else
          Gui.mes("action.close.execute", player)
-         f:calc("on_close", player)
+         f:emit("elona_sys.on_feat_close", {chara=player})
       end
    end
 end
 
 function Command.search(player)
    local Feat = require("api.Feat")
-   for _, f in Feat.at(player.x, player.y) do
-      if f.on_search then
-         f:calc("on_search", player)
+
+   for j = 0, 10 do
+      local y = player.y + j - 5
+      if not (y < 0 or y >= player:current_map():height()) then
+         for i = 0, 10 do
+            local x = player.x + i - 5
+            if not (x < 0 or x >= player:current_map():width()) then
+               for _, f in Feat.at(x, y) do
+                  f:emit("elona_sys.on_feat_search", {chara=player})
+               end
+            end
+         end
       end
    end
+
+   player:emit("elona_sys.on_search")
 end
 
 function Command.open(player)
    for _, f in feats_surrounding(player, "can_open") do
       Gui.mes(player.name .. " opens the " .. f.uid .. " ")
-      f:calc("on_open", player)
+      f:emit("elona_sys.on_feat_open", {chara=player})
    end
 end
 
 local function activate(player, feat)
    Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
-   feat:calc("on_activate", player)
+   feat:emit("elona_sys.on_feat_activate", {chara=player})
 end
 
 function Command.enter_action(player)

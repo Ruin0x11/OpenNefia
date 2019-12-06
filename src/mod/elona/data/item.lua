@@ -3,6 +3,8 @@ local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
+local Magic = require("mod.elona.api.Magic")
+local Effect = require("mod.elona.api.Effect")
 
 local function calc_initial_gold(item, owner)
    local amount
@@ -544,7 +546,11 @@ local item =
          image = "elona.item_book",
          value = 100,
          weight = 80,
-         on_read = function() end,
+         on_read = function(self)
+            Effect.identify_item(self, "partly")
+            local BookMenu = require("api.gui.menu.BookMenu")
+            BookMenu:new("text", true):query()
+         end,
          fltselect = 1,
          category = 55000,
          coefficient = 100,
@@ -562,7 +568,11 @@ local item =
          image = "elona.item_book",
          value = 500,
          weight = 80,
-         on_read = function() end,
+         on_read = function(self)
+            Effect.identify_item(self, "partly")
+            local BookMenu = require("api.gui.menu.BookMenu")
+            BookMenu:new("text", true):query()
+         end,
          category = 55000,
          rarity = 2000000,
          coefficient = 100,
@@ -607,13 +617,11 @@ local item =
          image = "elona.item_potion",
          value = 100,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "bottle",
 
-         efid = 1130,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1130),
          categories = {
             "elona.drink",
          }
@@ -624,15 +632,12 @@ local item =
          image = "elona.item_potion",
          value = 20,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 1111,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1111, 200),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -647,15 +652,12 @@ local item =
          image = "elona.item_potion",
          value = 30,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 1109,
-         efp = 150,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1109, 150),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -670,15 +672,12 @@ local item =
          image = "elona.item_potion",
          value = 40,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 1110,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1110, 200),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -693,14 +692,11 @@ local item =
          image = "elona.item_potion",
          value = 120,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          has_random_name = true,
 
-         efid = 1112,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1112, 200),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -715,15 +711,12 @@ local item =
          image = "elona.item_potion",
          value = 280,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52002,
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         efid = 1102,
-         efp = 300,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1102, 300),
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -1523,7 +1516,6 @@ local item =
          image = "elona.item_potion",
          value = 150,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52001,
          coefficient = 100,
@@ -1531,9 +1523,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 400,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(400, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1545,7 +1535,6 @@ local item =
          image = "elona.item_potion",
          value = 300,
          weight = 120,
-         on_drink = function() end,
          level = 4,
          category = 52000,
          subcategory = 52001,
@@ -1554,9 +1543,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 400,
-         efp = 300,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(400, 300),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1568,7 +1555,6 @@ local item =
          image = "elona.item_potion",
          value = 1280,
          weight = 120,
-         on_drink = function() end,
          level = 8,
          category = 52000,
          subcategory = 52001,
@@ -1577,9 +1563,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 401,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(401, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1591,7 +1575,6 @@ local item =
          image = "elona.item_potion",
          value = 3000,
          weight = 120,
-         on_drink = function() end,
          level = 15,
          category = 52000,
          subcategory = 52001,
@@ -1601,9 +1584,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 401,
-         efp = 300,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(401, 300),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1615,7 +1596,6 @@ local item =
          image = "elona.item_potion",
          value = 5000,
          weight = 120,
-         on_drink = function() end,
          level = 25,
          category = 52000,
          subcategory = 52001,
@@ -1625,9 +1605,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 401,
-         efp = 400,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(401, 400),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1675,7 +1653,6 @@ local item =
          image = "elona.item_potion",
          value = 7500,
          weight = 120,
-         on_drink = function() end,
          level = 35,
          category = 52000,
          subcategory = 52001,
@@ -1685,9 +1662,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 402,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(402, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1699,7 +1674,6 @@ local item =
          image = "elona.item_potion",
          value = 10000,
          weight = 120,
-         on_drink = function() end,
          level = 45,
          category = 52000,
          subcategory = 52001,
@@ -1709,9 +1683,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 402,
-         efp = 300,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(402, 300),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1723,7 +1695,6 @@ local item =
          image = "elona.item_potion",
          value = 15000,
          weight = 120,
-         on_drink = function() end,
          level = 45,
          category = 52000,
          subcategory = 52001,
@@ -1733,9 +1704,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 403,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(403, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -2270,14 +2239,18 @@ local item =
          image = "elona.item_well",
          value = 1800,
          weight = 350000,
-         on_drink = function() end,
          category = 60001,
          subcategory = 60001,
          coefficient = 100,
          light = 9,
 
          param2 = 100,
+         params = {
+            count_1 = 0,
+            count_2 = 0,
+         },
 
+         on_drink = Magic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -3352,14 +3325,18 @@ local item =
          image = "elona.item_fountain",
          value = 2400,
          weight = 600000,
-         on_drink = function() end,
          fltselect = 1,
          category = 60001,
          subcategory = 60001,
          coefficient = 100,
 
          param2 = 100,
+         params = {
+            count_1 = 0,
+            count_2 = 0,
+         },
 
+         on_drink = Magic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -3990,43 +3967,59 @@ local item =
 
          param1 = 1000,
          param3 = 4,
+         params = {
+            chara_id = nil
+         },
 
          gods = { "any" },
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "corpse effects",
 
                callback = function(self, params, result)
-                  local chara = self.params.chara_id
-                  if not chara then
+                  local corpse_chara_id = self.params.chara_id
+                  if not corpse_chara_id then
                      return
                   end
 
-                  local dat = data["base.chara"]:ensure(chara)
+                  local dat = data["base.chara"]:ensure(corpse_chara_id)
+                  local chara = params.chara
 
-                  if fun.iter(dat.tags or {}):index("man") then
+                  if table.set(dat.tags or {})["man"] then
                      if chara:has_trait("elona.can_eat_human_flesh") then
-                        Gui.mes("can eat human flesh")
+                        Gui.mes("food.effect.human.like")
                      else
-                        Gui.mes("cannot eat human flesh")
-                        -- TODO damage insanity
+                        Gui.mes("food.effect.human.dislike")
+                        Effect.modify_insanity(chara, 15)
                         chara:apply_effect("elona.insanity", 150)
-                        -- TODO add trait
+                        if not chara:has_trait("elona.can_eat_human_flesh") and Rand.one_in(5) then
+                           chara:gain_trait("elona.can_eat_human_flesh")
+                        end
                      end
                   elseif chara:has_trait("elona.can_eat_human_flesh") then
-                     Gui.mes("would have rather eaten human flesh")
+                     Gui.mes("food.effect.human.would_have_rather_eaten")
                      result.nutrition = result.nutrition * 2 / 3
                   end
 
                   if dat.on_eat_corpse then
-                     dat:on_eat_corpse(self, params, result)
+                     dat.on_eat_corpse(self, params, result)
                   end
 
                   return result
                end
             },
+            {
+               id = "elona.on_eat_item_begin",
+               name = "itadaki-mammoth",
+
+               callback = function(self)
+                  if self.params.chara_id == "elona.mammoth" then
+                     Gui.mes("activity.eat.start.mammoth")
+                  end
+               end
+            }
          },
 
          categories = {
@@ -4039,15 +4032,12 @@ local item =
          image = "elona.item_bottle_of_whisky",
          value = 180,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52002,
          coefficient = 100,
          originalnameref2 = "bottle",
 
-         efid = 1102,
-         efp = 500,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1102, 500),
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -5103,15 +5093,12 @@ local item =
          image = "elona.item_molotov",
          value = 280,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52002,
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         efid = 1102,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1102, 200),
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -5282,14 +5269,11 @@ local item =
          image = "elona.item_potion",
          value = 120,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          has_random_name = true,
 
-         efid = 1108,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1108, 200),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -5684,6 +5668,7 @@ local item =
          weight = 180,
          category = 60000,
          coefficient = 100,
+         can_read_multiple_times = true,
          categories = {
             "elona.furniture"
          }
@@ -5733,7 +5718,6 @@ local item =
          image = "elona.item_potion",
          value = 280,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52001,
          coefficient = 0,
@@ -5741,9 +5725,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 439,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(439, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -5755,7 +5737,6 @@ local item =
          image = "elona.item_potion",
          value = 280,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          subcategory = 52001,
          coefficient = 0,
@@ -5763,9 +5744,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 440,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(440, 100),
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -5777,7 +5756,6 @@ local item =
          image = "elona.item_potion",
          value = 50000,
          weight = 120,
-         on_drink = function() end,
          level = 10,
          category = 52000,
          rarity = 80000,
@@ -5785,9 +5763,7 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 1113,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1113, 100),
 
          tags = { "spshop" },
          color = "RandomSeeded",
@@ -5860,6 +5836,8 @@ local item =
 
          count = Resolver.make("elona.item_count", { count = 1 }),
          has_charge = true,
+
+         zap_always_succeeds = true,
 
          efid = 441,
          efp = 100,
@@ -7277,16 +7255,13 @@ local item =
          image = "elona.item_potion",
          value = 150,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 442,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(442, 200),
          categories = {
             "elona.drink",
          }
@@ -7372,15 +7347,12 @@ local item =
          image = "elona.item_potion",
          value = 40,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 443,
-         efp = 400,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(443, 400),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -7421,7 +7393,6 @@ local item =
          image = "elona.item_potion",
          value = 800,
          weight = 120,
-         on_drink = function() end,
          level = 9,
          category = 52000,
          coefficient = 100,
@@ -7429,9 +7400,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 444,
-         efp = 300,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(444, 300),
          categories = {
             "elona.drink",
          }
@@ -7468,7 +7437,6 @@ local item =
          image = "elona.item_potion",
          value = 700,
          weight = 120,
-         on_drink = function() end,
          level = 8,
          category = 52000,
          coefficient = 100,
@@ -7476,9 +7444,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 445,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(445, 250),
          categories = {
             "elona.drink",
          }
@@ -7541,7 +7507,6 @@ local item =
          image = "elona.item_potion",
          value = 850,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 700000,
          coefficient = 100,
@@ -7549,9 +7514,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 446,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(446, 250),
          categories = {
             "elona.drink",
          }
@@ -7562,15 +7525,12 @@ local item =
          image = "elona.item_potion",
          value = 30,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 447,
-         efp = 400,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(447, 400),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -7634,16 +7594,13 @@ local item =
          image = "elona.item_potion",
          value = 450,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 448,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(448, 250),
          categories = {
             "elona.drink",
          }
@@ -7705,15 +7662,12 @@ local item =
          image = "elona.item_potion",
          value = 30,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 449,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(449, 250),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -7943,14 +7897,11 @@ local item =
          image = "elona.item_molotov",
          value = 800,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         efid = 1116,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1116, 100),
 
          tags = { "nogive" },
 
@@ -8563,7 +8514,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "morgia effects",
 
                callback = function(self, params)
@@ -8608,7 +8559,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "marelion effects",
 
                callback = function(self, params)
@@ -8653,7 +8604,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "spenseweed effects",
 
                callback = function(self, params)
@@ -8697,7 +8648,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "curaria effects",
 
                callback = function(self, params)
@@ -8739,7 +8690,7 @@ local item =
          },
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "alraunia effects",
 
                callback = function(self, params)
@@ -8809,15 +8760,12 @@ local item =
          image = "elona.item_potion",
          value = 150,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 1118,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1118, 100),
 
          tags = { "neg" },
          color = "RandomSeeded",
@@ -8884,7 +8832,6 @@ local item =
          image = "elona.item_potion",
          value = 5000,
          weight = 120,
-         on_drink = function() end,
          level = 8,
          category = 52000,
          rarity = 200000,
@@ -8892,9 +8839,7 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         efid = 454,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(454, 100),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -8909,7 +8854,6 @@ local item =
          image = "elona.item_potion",
          value = 4000,
          weight = 120,
-         on_drink = function() end,
          level = 10,
          category = 52000,
          rarity = 400000,
@@ -8918,9 +8862,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 1121,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1121, 200),
          categories = {
             "elona.drink",
          }
@@ -10671,15 +10613,12 @@ local item =
          image = "elona.item_potion",
          value = 280,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          rarity = 400000,
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         efid = 1103,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1103, 100),
          medal_value = 3,
          categories = {
             "elona.drink",
@@ -10741,16 +10680,13 @@ local item =
          image = "elona.item_potion",
          value = 500,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 2000000,
          coefficient = 100,
          originalnameref2 = "bottle",
          has_random_name = true,
 
-         efid = 1108,
-         efp = 150,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1108, 150),
 
          tags = { "nogive" },
          color = "RandomAny",
@@ -10905,7 +10841,7 @@ local item =
                end
             },
             {
-               id = "elona.on_bash",
+               id = "elona_sys.on_bash",
                name = "Fruit tree bash behavior",
 
                callback = function(self)
@@ -10915,7 +10851,7 @@ local item =
                   local fruits = self:calc("params").fruits or 0
                   if self:calc("own_state") == "unobtainable" or fruits <= 0 then
                      Gui.mes("action.bash.tree.no_fruits")
-                     return true
+                     return "turn_end"
                   end
                   self.params.fruits = self.params.fruits - 1
                   if self.params.fruits <= 0 then
@@ -10930,7 +10866,7 @@ local item =
                   end
                   Item.create(self.params.fruit_id, x, y, {amount=0})
 
-                  return true
+                  return "turn_end"
                end
             },
             {
@@ -11578,7 +11514,6 @@ local item =
          image = "elona.item_potion",
          value = 100000,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 30000,
          coefficient = 0,
@@ -11586,9 +11521,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 1131,
-         efp = 200,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1131, 200),
          medal_value = 10,
          categories = {
             "elona.drink",
@@ -11724,15 +11657,12 @@ local item =
          image = "elona.item_potion",
          value = 1900,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 300000,
          coefficient = 100,
          has_random_name = true,
 
-         efid = 1116,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1116, 250),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -11847,7 +11777,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "egg effects",
 
                callback = function(self, params, result)
@@ -11913,7 +11843,7 @@ local item =
 
          events = {
             {
-               id = "elona.on_eat_item_effect",
+               id = "elona_sys.on_item_eat",
                name = "egg effects",
 
                callback = function(self, params, result)
@@ -11943,7 +11873,6 @@ local item =
          image = "elona.item_bottle_of_milk",
          value = 1000,
          weight = 300,
-         on_drink = function() end,
          category = 52000,
          rarity = 300000,
          coefficient = 100,
@@ -11951,9 +11880,7 @@ local item =
 
          params = { chara_id = "" },
 
-         efid = 1101,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1101, 100),
          categories = {
             "elona.drink",
          }
@@ -11998,15 +11925,12 @@ local item =
          image = "elona.item_molotov",
          value = 400,
          weight = 50,
-         on_drink = function() end,
          level = 10,
          category = 52000,
          coefficient = 0,
          has_random_name = true,
 
-         efid = 1133,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1133, 100),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -12184,7 +12108,6 @@ local item =
          image = "elona.item_handful_of_snow",
          value = 10,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          rarity = 100000,
          coefficient = 100,
@@ -12193,9 +12116,7 @@ local item =
 
          elona_function = 14,
 
-         efid = 1103,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1103, 100),
          categories = {
             "elona.drink",
          }
@@ -12428,7 +12349,6 @@ local item =
          image = "elona.item_holy_well",
          value = 185000,
          weight = 350000,
-         on_drink = function() end,
          fltselect = 1,
          category = 60001,
          subcategory = 60001,
@@ -12437,7 +12357,12 @@ local item =
          light = 9,
 
          param2 = 100,
+         params = {
+            count_1 = 0,
+            count_2 = 0,
+         },
 
+         on_drink = Magic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -12748,15 +12673,12 @@ local item =
          image = "elona.item_potion",
          value = 4500,
          weight = 50,
-         on_drink = function() end,
          level = 5,
          category = 52000,
          rarity = 150000,
          coefficient = 0,
 
-         efid = 1135,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1135, 100),
 
          tags = { "nogive" },
 
@@ -12780,6 +12702,8 @@ local item =
          efid = 1136,
          efp = 100,
          elona_type = "scroll",
+
+         can_read_in_world_map = true,
 
          tags = { "noshop", "spshop" },
 
@@ -12887,7 +12811,6 @@ local item =
          image = "elona.item_potion",
          value = 50000,
          weight = 120,
-         on_drink = function() end,
          level = 15,
          category = 52000,
          rarity = 10000,
@@ -12897,9 +12820,7 @@ local item =
 
          is_precious = true,
 
-         efid = 1139,
-         efp = 500,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1139, 500),
 
          tags = { "spshop" },
          color = "RandomSeeded",
@@ -13362,7 +13283,6 @@ local item =
          image = "elona.item_toilet",
          value = 1000,
          weight = 12000,
-         on_drink = function() end,
          level = 4,
          category = 60001,
          subcategory = 60001,
@@ -13372,6 +13292,12 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
+         params = {
+            count_1 = 0,
+            count_2 = 0,
+         },
+
+         on_drink = Magic.drink_well,
          elona_type = "well",
 
          categories = {
@@ -14546,15 +14472,12 @@ local item =
          image = "elona.item_handful_of_snow",
          value = 10,
          weight = 50,
-         on_drink = function() end,
          category = 52000,
          rarity = 100000,
          coefficient = 100,
          originalnameref2 = "potion",
 
-         efid = 1142,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1142, 100),
          categories = {
             "elona.drink",
          }
@@ -14654,14 +14577,11 @@ local item =
          image = "elona.item_vomit",
          value = 400,
          weight = 100,
-         on_drink = function() end,
          category = 52000,
          rarity = 10000,
          coefficient = 0,
 
-         efid = 1130,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1130, 100),
          categories = {
             "elona.drink",
          }
@@ -14702,7 +14622,6 @@ local item =
          image = "elona.item_potion",
          value = 4500,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 4000,
          coefficient = 100,
@@ -14710,9 +14629,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 1143,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1143, 100),
          categories = {
             "elona.drink",
          }
@@ -14826,7 +14743,6 @@ local item =
          image = "elona.item_potion",
          value = 12000,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 5000,
          coefficient = 0,
@@ -14834,9 +14750,7 @@ local item =
          has_random_name = true,
          color = "RandomSeeded",
 
-         efid = 1144,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1144, 100),
          categories = {
             "elona.drink",
          }
@@ -15513,15 +15427,12 @@ local item =
          image = "elona.item_potion",
          value = 1500,
          weight = 120,
-         on_drink = function() end,
          category = 52000,
          rarity = 300000,
          coefficient = 100,
          has_random_name = true,
 
-         efid = 1116,
-         efp = 250,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1116, 250),
 
          tags = { "nogive" },
          color = "RandomSeeded",
@@ -15978,8 +15889,10 @@ local item =
                   local chance = 3
                   if Rand.one_in(chance) then
                      local chara = params.chara
-                     Gui.mes_visible(chara.uid .. " chokes ", chara.x, chara.y, "Purple")
-                     Gui.mes_visible("'oeh'", chara.x, chara.y, "Purple")
+                     if chara:is_in_fov() then
+                        Gui.mes_c("food.mochi.chokes", "Purple", chara)
+                        Gui.mes_c("food.mochi.dialog")
+                     end
                      chara:add_effect_turns("elona.choked", 1)
                   end
                end
@@ -16013,8 +15926,10 @@ local item =
                local chance = 10
                if Rand.one_in(chance) then
                   local chara = params.chara
-                  Gui.mes_visible(chara.uid .. " chokes ", chara.x, chara.y, "Purple")
-                  Gui.mes_visible("'oeh'", chara.x, chara.y, "Purple")
+                  if chara:is_in_fov() then
+                     Gui.mes_c("food.mochi.chokes", "Purple", chara)
+                     Gui.mes_c("food.mochi.dialog")
+                  end
                   chara:add_effect_turns("elona.choked", 1)
                end
             end
@@ -16324,16 +16239,13 @@ local item =
          image = "elona.item_bottle_of_soda",
          value = 500,
          weight = 50,
-         on_drink = function() end,
          fltselect = 1,
          category = 52000,
          rarity = 400000,
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         efid = 1146,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1146, 100),
 
          tags = { "fest" },
 
@@ -16349,7 +16261,6 @@ local item =
          image = "elona.item_blue_capsule_drug",
          value = 7500,
          weight = 100,
-         on_drink = function() end,
          fltselect = 3,
          category = 52000,
          rarity = 5000,
@@ -16357,9 +16268,7 @@ local item =
 
          fixlv = "special",
 
-         efid = 1147,
-         efp = 100,
-         elona_type = "potion",
+         on_drink = Magic.drink_potion(1147, 100),
          categories = {
             "elona.drink",
             "elona.unique_item"

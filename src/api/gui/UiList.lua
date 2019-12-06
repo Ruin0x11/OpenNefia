@@ -75,12 +75,18 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
 
    if class.is_an(IPaged, self.model) then
       thing.left = function()
+         local page = self.page
          self:previous_page()
-         Gui.play_sound("base.pop1")
+         if self.page ~= page then
+            Gui.play_sound("base.pop1")
+         end
       end
       thing.right = function()
+         local page = self.page
          self:next_page()
-         Gui.play_sound("base.pop1")
+         if self.page ~= page then
+            Gui.play_sound("base.pop1")
+         end
       end
    end
 

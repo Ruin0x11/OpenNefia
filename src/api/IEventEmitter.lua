@@ -18,10 +18,9 @@ function IEventEmitter:init(events)
 end
 
 function IEventEmitter:on_reload_prototype()
-   Log.info("Reloading prototype of %s:%s for object %d", self._type, self._id, self.uid)
-
    local events = self.proto and self.proto.events
    if events then
+      Log.info("Hotloading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
       self:connect_self_multiple(events)
    end
 end

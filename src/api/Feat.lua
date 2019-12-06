@@ -40,6 +40,7 @@ end
 --- @tparam[opt] table params Extra parameters.
 ---  - ownerless (bool): Do not attach the feat to a map. If true, then `where` is ignored.
 ---  - no_build (bool): Do not call :build() on the object.
+---  - approximate_pos (bool): If position is not accessable, put the feat somewhere close.
 --- @tparam[opt] ILocation where Where to instantiate this feat.
 ---   Defaults to the current map.
 --- @treturn[opt] IFeat
@@ -58,9 +59,14 @@ function Feat.create(id, x, y, params, where)
    end
 
    if where and where:is_positional() then
-      x, y = Map.find_free_position(x, y, {}, where)
+      if x == nil or params.approximate_pos then
+         x, y = Map.find_free_position(x, y, {}, where)
+      end
       if not x then
          return nil, "out of bounds"
+      end
+      if not Map.can_access(x, y, where) then
+         return nil, "cannot access tile"
       end
    end
 

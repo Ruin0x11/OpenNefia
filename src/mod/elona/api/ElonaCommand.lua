@@ -30,6 +30,10 @@ function ElonaCommand.bash(player)
    return "turn_end"
 end
 
+function ElonaCommand.read(player, item)
+   return Input.query_inventory(player, "elona.inv_read")
+end
+
 function ElonaCommand.do_eat(player, item)
    if player:calc("nutrition") > 10000 then
       Gui.mes("too bloated.")
@@ -48,6 +52,14 @@ end
 
 function ElonaCommand.eat(player)
    return Input.query_inventory(player, "elona.inv_eat")
+end
+
+function ElonaCommand.drink(player)
+   return Input.query_inventory(player, "elona.inv_drink")
+end
+
+function ElonaCommand.zap(player)
+   return Input.query_inventory(player, "elona.inv_zap")
 end
 
 function ElonaCommand.do_dig(player, x, y)

@@ -1,6 +1,8 @@
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 
+local eating_effect = require("mod.elona.data.chara.eating_effect")
+
 local chara = {
    {
       _id = "bug",
@@ -134,9 +136,7 @@ local chara = {
       image = "elona.chara_healer",
       fltselect = 7,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- holy_one
-      end,
+      on_eat_corpse = eating_effect.holy_one,
    },
    {
       _id = "nun",
@@ -155,9 +155,7 @@ local chara = {
       image = "elona.chara_nun",
       fltselect = 7,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- holy_one
-      end,
+      on_eat_corpse = eating_effect.holy_one,
    },
    {
       _id = "elder",
@@ -229,9 +227,7 @@ local chara = {
       image = "elona.chara_guard_port_kapul",
       fltselect = 9,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- guard
-      end,
+      on_eat_corpse = eating_effect.guard,
    },
    {
       _id = "guard",
@@ -249,9 +245,7 @@ local chara = {
       image = "elona.chara_guard",
       fltselect = 9,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- guard
-      end,
+      on_eat_corpse = eating_effect.guard,
    },
    {
       _id = "palmian_elite_soldier",
@@ -312,9 +306,7 @@ local chara = {
       image = "elona.chara_at",
       fltselect = 1,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- at
-      end,
+      on_eat_corpse = eating_effect.at,
    },
    {
       _id = "orphe",
@@ -433,9 +425,7 @@ local chara = {
       fltselect = 3,
       rarity = 1000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- vesda
-      end,
+      on_eat_corpse = eating_effect.vesda,
    },
    {
       _id = "miches",
@@ -654,9 +644,7 @@ local chara = {
       eqweapon1 = 358,
       fltselect = 3,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- insanity
-      end,
+      on_eat_corpse = eating_effect.insanity,
    },
    {
       _id = "wynan",
@@ -876,9 +864,7 @@ local chara = {
       rarity = 80000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- putit
-      end,
+      on_eat_corpse = eating_effect.putit,
    },
    {
       _id = "red_putit",
@@ -899,9 +885,7 @@ local chara = {
       rarity = 70000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- putit
-      end,
+      on_eat_corpse = eating_effect.putit,
    },
    {
       _id = "slime",
@@ -1502,9 +1486,7 @@ local chara = {
       class = "elona.warrior",
       category = 5,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- poisonous
-      end,
+      on_eat_corpse = eating_effect.poisonous,
    },
    {
       _id = "yeek",
@@ -1684,9 +1666,7 @@ local chara = {
       faction = "base.enemy",
       race = "elona.centipede",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- poisonous
-      end,
+      on_eat_corpse = eating_effect.poisonous,
    },
    {
       _id = "mushroom",
@@ -1716,9 +1696,7 @@ local chara = {
       image = "elona.chara_spore_mushroom",
       rarity = 50000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- poisonous
-      end,
+      on_eat_corpse = eating_effect.poisonous,
    },
    {
       _id = "chaos_mushroom",
@@ -2006,9 +1984,7 @@ local chara = {
       },
       category = 2,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- troll
-      end,
+      on_eat_corpse = eating_effect.troll,
    },
    {
       _id = "warrior_of_elea",
@@ -2133,9 +2109,7 @@ local chara = {
       faction = "base.enemy",
       race = "elona.mandrake",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- mandrake
-      end,
+      on_eat_corpse = eating_effect.mandrake,
    },
    {
       _id = "beetle",
@@ -2146,9 +2120,7 @@ local chara = {
       race = "elona.beetle",
       class = "elona.predator",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- beetle
-      end,
+      on_eat_corpse = eating_effect.beetle,
    },
    {
       _id = "orc_warrior",
@@ -2191,9 +2163,7 @@ local chara = {
       class = "elona.predator",
       category = 9,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
       drops = { "elona.zombie" },
    },
    {
@@ -2260,9 +2230,7 @@ local chara = {
       },
       color = { 255, 225, 225 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- fire_ent
-      end,
+      on_eat_corpse = eating_effect.fire_ent,
    },
    {
       _id = "ice_ent",
@@ -2278,9 +2246,7 @@ local chara = {
       },
       color = { 225, 225, 255 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- ice_ent
-      end,
+      on_eat_corpse = eating_effect.ice_ent,
    },
    {
       _id = "lich",
@@ -2297,9 +2263,7 @@ local chara = {
       class = "elona.wizard",
       rarity = 60000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "master_lich",
@@ -2317,9 +2281,7 @@ local chara = {
       color = { 255, 225, 225 },
       rarity = 50000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "demi_lich",
@@ -2337,9 +2299,7 @@ local chara = {
       color = { 225, 225, 255 },
       rarity = 40000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "executioner",
@@ -2647,9 +2607,7 @@ local chara = {
       image = "elona.chara_giant_squirrel",
       color = { 255, 255, 175 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- calm
-      end,
+      on_eat_corpse = eating_effect.calm,
    },
    {
       _id = "killer_squirrel",
@@ -2663,9 +2621,7 @@ local chara = {
       image = "elona.chara_giant_squirrel",
       color = { 255, 155, 155 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- calm
-      end,
+      on_eat_corpse = eating_effect.calm,
    },
    {
       _id = "grudge",
@@ -2680,9 +2636,7 @@ local chara = {
       race = "elona.ghost",
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- grudge
-      end,
+      on_eat_corpse = eating_effect.grudge,
    },
    {
       _id = "hungry_demon",
@@ -2697,9 +2651,7 @@ local chara = {
       rarity = 70000,
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- grudge
-      end,
+      on_eat_corpse = eating_effect.grudge,
    },
    {
       _id = "hungry_sea_lion",
@@ -2747,9 +2699,7 @@ local chara = {
       color = { 255, 215, 175 },
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- electric_cloud
-      end,
+      on_eat_corpse = eating_effect.electric_cloud,
    },
    {
       _id = "chaos_cloud",
@@ -2766,9 +2716,7 @@ local chara = {
       color = { 225, 195, 255 },
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- chaos_cloud
-      end,
+      on_eat_corpse = eating_effect.chaos_cloud,
    },
    {
       _id = "floating_eye",
@@ -2787,9 +2735,7 @@ local chara = {
       rarity = 80000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- floating_eye
-      end,
+      on_eat_corpse = eating_effect.floating_eye,
    },
    {
       _id = "chaos_eye",
@@ -2812,9 +2758,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- chaos_eye
-      end,
+      on_eat_corpse = eating_effect.chaos_eye,
    },
    {
       _id = "mad_gaze",
@@ -2837,9 +2781,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- mad_gaze
-      end,
+      on_eat_corpse = eating_effect.mad_gaze,
    },
    {
       _id = "death_gaze",
@@ -2863,9 +2805,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- floating_eye
-      end,
+      on_eat_corpse = eating_effect.floating_eye,
    },
    {
       _id = "wyvern",
@@ -2943,9 +2883,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsQuickTempered" },
-      on_eat_corpse = function()
-         -- cyclops
-      end,
+      on_eat_corpse = eating_effect.cyclops,
    },
    {
       _id = "titan",
@@ -2961,9 +2899,7 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       flags = { "IsQuickTempered" },
-      on_eat_corpse = function()
-         -- titan
-      end,
+      on_eat_corpse = eating_effect.titan,
    },
    {
       _id = "imp",
@@ -2981,9 +2917,7 @@ local chara = {
       color = { 255, 225, 225 },
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- imp
-      end,
+      on_eat_corpse = eating_effect.imp,
       drops = { "elona.imp" },
    },
    {
@@ -3002,9 +2936,7 @@ local chara = {
       color = { 175, 175, 255 },
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- imp
-      end,
+      on_eat_corpse = eating_effect.imp,
       drops = { "elona.imp" },
    },
    {
@@ -3022,9 +2954,7 @@ local chara = {
       color = { 225, 195, 255 },
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- imp
-      end,
+      on_eat_corpse = eating_effect.imp,
       drops = { "elona.imp" },
    },
    {
@@ -3042,9 +2972,7 @@ local chara = {
       faction = "base.enemy",
       race = "elona.hand",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- hand
-      end,
+      on_eat_corpse = eating_effect.hand,
    },
    {
       _id = "hand_of_the_chaos",
@@ -3062,9 +2990,7 @@ local chara = {
       race = "elona.hand",
       color = { 225, 195, 255 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- hand
-      end,
+      on_eat_corpse = eating_effect.hand,
    },
    {
       _id = "hand_of_the_murderer",
@@ -3085,9 +3011,7 @@ local chara = {
       cspecialeq = 1,
       eqtwohand = 1,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- hand
-      end,
+      on_eat_corpse = eating_effect.hand,
    },
    {
       _id = "ghost",
@@ -3101,9 +3025,7 @@ local chara = {
       image = "elona.chara_nymph",
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- ghost
-      end,
+      on_eat_corpse = eating_effect.ghost,
    },
    {
       _id = "nymph",
@@ -3122,9 +3044,7 @@ local chara = {
       color = { 255, 215, 175 },
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- nymph
-      end,
+      on_eat_corpse = eating_effect.nymph,
    },
    {
       _id = "man_eater_flower",
@@ -3165,9 +3085,7 @@ local chara = {
       race = "elona.snake",
       color = { 225, 225, 255 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "king_cobra",
@@ -3181,9 +3099,7 @@ local chara = {
       race = "elona.snake",
       color = { 255, 225, 225 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "fire_drake",
@@ -3230,9 +3146,7 @@ local chara = {
       image = "elona.chara_tuwen",
       category = 13,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
       drops = { "elona.mummy" },
    },
    {
@@ -3251,9 +3165,7 @@ local chara = {
       color = { 255, 195, 185 },
       category = 13,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "greater_mummy",
@@ -3271,9 +3183,7 @@ local chara = {
       color = { 255, 215, 175 },
       category = 13,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "tuwen",
@@ -3294,9 +3204,7 @@ local chara = {
       category = 13,
       coefficient = 400,
       flags = { "IsDeathMaster" },
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
       drops = { "elona.tuwen" }
    },
    {
@@ -3316,9 +3224,7 @@ local chara = {
       category = 13,
       rarity = 50000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- rotten_one
-      end,
+      on_eat_corpse = eating_effect.rotten_one,
    },
    {
       _id = "goblin",
@@ -3463,9 +3369,7 @@ local chara = {
       category = 11,
       rarity = 50000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- mammoth
-      end,
+      on_eat_corpse = eating_effect.mammoth,
    },
    {
       _id = "living_armor",
@@ -3479,9 +3383,7 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "steel_mass",
@@ -3496,9 +3398,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "golden_armor",
@@ -3513,9 +3413,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "death_armor",
@@ -3531,9 +3429,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "medusa",
@@ -3585,9 +3481,7 @@ local chara = {
       class = "elona.archer",
       coefficient = 400,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- cupid_of_love
-      end,
+      on_eat_corpse = eating_effect.cupid_of_love,
       drops = { "elona.cupid_of_love" },
    },
    {
@@ -3766,9 +3660,7 @@ local chara = {
       },
       image = "elona.chara_scorpion",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "king_scorpion",
@@ -3784,9 +3676,7 @@ local chara = {
       image = "elona.chara_scorpion",
       color = { 255, 155, 155 },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "spider",
@@ -3826,9 +3716,7 @@ local chara = {
       color = { 215, 255, 215 },
       category = 6,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "paralyzer",
@@ -3849,9 +3737,7 @@ local chara = {
       color = { 225, 225, 255 },
       category = 6,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "tarantula",
@@ -3872,9 +3758,7 @@ local chara = {
       color = { 255, 215, 175 },
       category = 6,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- cobra
-      end,
+      on_eat_corpse = eating_effect.cobra,
    },
    {
       _id = "blood_spider",
@@ -3908,9 +3792,7 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "stone_golem",
@@ -3924,9 +3806,7 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "steel_golem",
@@ -3942,9 +3822,7 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "golden_golem",
@@ -3959,9 +3837,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "mithril_golem",
@@ -3976,9 +3852,7 @@ local chara = {
       rarity = 20000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "sky_golem",
@@ -3993,9 +3867,7 @@ local chara = {
       rarity = 15000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "adamantium_golem",
@@ -4010,9 +3882,7 @@ local chara = {
       rarity = 15000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "fire_crab",
@@ -4026,9 +3896,7 @@ local chara = {
          ["elona.fire"] = 500,
       },
       coefficient = 400,
-      on_eat_corpse = function()
-         -- fire_crab
-      end,
+      on_eat_corpse = eating_effect.fire_crab,
    },
    {
       _id = "fire_centipede",
@@ -4043,9 +3911,7 @@ local chara = {
       },
       image = "elona.chara_fire_centipede",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- fire_centipede
-      end,
+      on_eat_corpse = eating_effect.fire_centipede,
    },
    {
       _id = "cultist_of_fire",
@@ -4124,9 +3990,7 @@ local chara = {
       race = "elona.piece",
       class = "elona.warrior",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "rook",
@@ -4139,9 +4003,7 @@ local chara = {
       class = "elona.predator",
       image = "elona.chara_rook",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "bishop",
@@ -4159,9 +4021,7 @@ local chara = {
       class = "elona.wizard",
       image = "elona.chara_bishop",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "knight",
@@ -4178,9 +4038,7 @@ local chara = {
       cspecialeq = 1,
       eqtwohand = 1,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "queen",
@@ -4196,9 +4054,7 @@ local chara = {
       class = "elona.wizard",
       image = "elona.chara_queen",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "king",
@@ -4214,9 +4070,7 @@ local chara = {
       class = "elona.warrior",
       image = "elona.chara_king",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "mercenary_warrior",
@@ -4480,9 +4334,7 @@ local chara = {
       race = "elona.cat",
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- cat
-      end,
+      on_eat_corpse = eating_effect.cat,
    },
    {
       _id = "silver_cat",
@@ -4497,9 +4349,7 @@ local chara = {
       image = "elona.chara_stray_cat",
       rarity = 1000,
       coefficient = 0,
-      on_eat_corpse = function()
-         -- cat
-      end,
+      on_eat_corpse = eating_effect.cat,
    },
    {
       _id = "stray_cat",
@@ -4515,9 +4365,7 @@ local chara = {
       color = { 255, 255, 175 },
       rarity = 10000,
       coefficient = 0,
-      on_eat_corpse = function()
-         -- cat
-      end,
+      on_eat_corpse = eating_effect.cat,
    },
    {
       _id = "lion",
@@ -4673,9 +4521,7 @@ local chara = {
       race = "elona.shell",
       class = "elona.predator",
       coefficient = 400,
-      on_eat_corpse = function()
-         -- calm
-      end,
+      on_eat_corpse = eating_effect.calm,
       drops = { "elona.hermit_crab" },
    },
    {
@@ -4826,9 +4672,7 @@ local chara = {
       fixlv = 6,
       fltselect = 3,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- insanity
-      end,
+      on_eat_corpse = eating_effect.insanity,
       drops = { "elona.god_boss" },
    },
    {
@@ -5011,9 +4855,7 @@ local chara = {
       race = "elona.machine",
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "blade_alpha",
@@ -5026,9 +4868,7 @@ local chara = {
       color = { 225, 225, 255 },
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "blade_omega",
@@ -5041,9 +4881,7 @@ local chara = {
       color = { 255, 155, 155 },
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "kaneda_bike",
@@ -5061,9 +4899,7 @@ local chara = {
       fltselect = 3,
       coefficient = 400,
       flags = { "IsImmuneToFear", "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
       dialog = "elona.kaneda_bike",
    },
    {
@@ -5081,9 +4917,7 @@ local chara = {
       rarity = 5000,
       coefficient = 400,
       flags = { "IsImmuneToFear", "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "mine_dog",
@@ -5101,9 +4935,7 @@ local chara = {
       rarity = 25000,
       coefficient = 400,
       flags = { "IsImmuneToFear", "IsImmuneToMine", "CuresMpFrequently" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
       drops = { "elona.mine_dog" },
    },
    {
@@ -5118,9 +4950,7 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
    },
    {
       _id = "deformed_eye",
@@ -5138,9 +4968,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- deformed_eye
-      end,
+      on_eat_corpse = eating_effect.deformed_eye,
       drops = { "elona.deformed_eye" },
    },
    {
@@ -5160,9 +4988,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- deformed_eye
-      end,
+      on_eat_corpse = eating_effect.deformed_eye,
       drops = { "elona.deformed_eye" },
    },
    {
@@ -5184,9 +5010,7 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       flags = { "IsFloating", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- ether
-      end,
+      on_eat_corpse = eating_effect.ether,
    },
    {
       _id = "hedgehog",
@@ -5213,9 +5037,7 @@ local chara = {
       damage_reaction_info = 500062,
       rarity = 70000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- ether
-      end,
+      on_eat_corpse = eating_effect.ether,
    },
    {
       _id = "chicken",
@@ -5246,9 +5068,7 @@ local chara = {
       image = "elona.chara_pumpkin",
       rarity = 60000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- pumpkin
-      end,
+      on_eat_corpse = eating_effect.pumpkin,
    },
    {
       _id = "puppy",
@@ -5269,9 +5089,7 @@ local chara = {
       rarity = 20000,
       coefficient = 400,
       flags = { "IsInvisible" },
-      on_eat_corpse = function()
-         -- pumpkin
-      end,
+      on_eat_corpse = eating_effect.pumpkin,
    },
    {
       _id = "greater_pumpkin",
@@ -5292,9 +5110,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsInvisible" },
-      on_eat_corpse = function()
-         -- greater_pumpkin
-      end,
+      on_eat_corpse = eating_effect.greater_pumpkin,
    },
    {
       _id = "halloween_nightmare",
@@ -5315,9 +5131,7 @@ local chara = {
       rarity = 60000,
       coefficient = 400,
       flags = { "IsInvisible" },
-      on_eat_corpse = function()
-         -- halloween_nightmare
-      end,
+      on_eat_corpse = eating_effect.halloween_nightmare,
    },
    {
       _id = "stalker",
@@ -5334,9 +5148,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsInvisible", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- stalker
-      end,
+      on_eat_corpse = eating_effect.stalker,
    },
    {
       _id = "shadow_stalker",
@@ -5354,9 +5166,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsInvisible", "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- stalker
-      end,
+      on_eat_corpse = eating_effect.stalker,
    },
    {
       _id = "ebon",
@@ -5752,9 +5562,7 @@ local chara = {
       rarity = 20000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- yith
-      end,
+      on_eat_corpse = eating_effect.yith,
    },
    {
       _id = "shub_niggurath",
@@ -5777,9 +5585,7 @@ local chara = {
       rarity = 40000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- yith
-      end,
+      on_eat_corpse = eating_effect.yith,
    },
    {
       _id = "gagu",
@@ -5795,9 +5601,7 @@ local chara = {
       image = "elona.chara_gagu",
       rarity = 80000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- yith
-      end,
+      on_eat_corpse = eating_effect.yith,
    },
    {
       _id = "spiral_king",
@@ -5820,9 +5624,7 @@ local chara = {
       rarity = 30000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- yith
-      end,
+      on_eat_corpse = eating_effect.yith,
    },
    {
       _id = "fairy",
@@ -6005,9 +5807,7 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- horse
-      end,
+      on_eat_corpse = eating_effect.horse,
    },
    {
       _id = "wild_horse",
@@ -6024,9 +5824,7 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- horse
-      end,
+      on_eat_corpse = eating_effect.horse,
    },
    {
       _id = "noyel_horse",
@@ -6043,9 +5841,7 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- horse
-      end,
+      on_eat_corpse = eating_effect.horse,
    },
    {
       _id = "yowyn_horse",
@@ -6062,9 +5858,7 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- horse
-      end,
+      on_eat_corpse = eating_effect.horse,
    },
    {
       _id = "wild_horse2",
@@ -6081,9 +5875,7 @@ local chara = {
       rarity = 10000,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
-      on_eat_corpse = function()
-         -- horse
-      end,
+      on_eat_corpse = eating_effect.horse,
    },
    {
       _id = "mutant",
@@ -6298,9 +6090,7 @@ local chara = {
       rarity = 50000,
       coefficient = 400,
       flags = { "IsImmuneToFear" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
       eqammo = { 25020, 3 },
       eqrange = { 496, 4 }
    },
@@ -6371,9 +6161,7 @@ local chara = {
       rarity = 10000,
       coefficient = 0,
       flags = { "IsFloating" },
-      on_eat_corpse = function()
-         -- ghost
-      end,
+      on_eat_corpse = eating_effect.ghost,
    },
    {
       _id = "quickling",
@@ -6388,9 +6176,7 @@ local chara = {
       rarity = 15000,
       coefficient = 400,
       flags = { "IsUnsuitableForMount", "IsImmuneToElementalDamage" },
-      on_eat_corpse = function()
-         -- quickling
-      end,
+      on_eat_corpse = eating_effect.quickling,
    },
    {
       _id = "quickling_archer",
@@ -6409,9 +6195,7 @@ local chara = {
       rarity = 15000,
       coefficient = 400,
       flags = { "IsUnsuitableForMount", "IsImmuneToElementalDamage" },
-      on_eat_corpse = function()
-         -- quickling
-      end,
+      on_eat_corpse = eating_effect.quickling,
    },
    {
       _id = "silver_bell",
@@ -6428,9 +6212,7 @@ local chara = {
       rarity = 2000,
       coefficient = 0,
       flags = { "IsUnsuitableForMount", "IsMetal", "IsImmuneToElementalDamage", "IsFloating" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
       drops = { "elona.silver_bell" },
    },
    {
@@ -6449,9 +6231,7 @@ local chara = {
       rarity = 5000,
       coefficient = 0,
       flags = { "IsUnsuitableForMount", "IsMetal", "IsImmuneToElementalDamage", "IsFloating" },
-      on_eat_corpse = function()
-         -- iron
-      end,
+      on_eat_corpse = eating_effect.iron,
       drops = { "elona.gold_bell" },
    },
    {
@@ -6469,9 +6249,7 @@ local chara = {
       color = { 225, 225, 255 },
       rarity = 40000,
       coefficient = 400,
-      on_eat_corpse = function()
-         -- alien
-      end,
+      on_eat_corpse = eating_effect.alien,
    },
    -- For debug
    -- chara spiral_putit {

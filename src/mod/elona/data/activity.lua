@@ -11,6 +11,7 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Itemgen = require("mod.tools.api.Itemgen")
+local Effect = require("mod.elona.api.Effect")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -155,9 +156,9 @@ data:add {
             if chara:is_in_fov() then
                Gui.play_sound("base.eat1")
                if self.food.own_state == "not_owned" and chara:is_ally() then
-                  Gui.mes(chara.uid .. ": start eat in secret ")
+                  Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
-                  Gui.mes(chara.uid .. ": start eat normal ")
+                  Gui.mes("activity.eat.start.normal", chara, self.food)
                end
             end
 
@@ -200,14 +201,16 @@ data:add {
          callback = function(self, params)
             local chara = params.chara
             if not self.no_message then
-               Gui.mes_visible(chara.uid .. ": Eat act finish.", chara.x, chara.y)
+               if chara:is_in_fov() then
+                  Gui.mes("activity.eat.finish", chara, self.food)
+               end
             end
 
-            -- apply general eating effect
-            self.food:emit("elona.on_eat_item_effect", {chara=chara})
+            Effect.apply_general_eating_effect(chara, self.food)
+            self.food:emit("elona_sys.on_item_eat", {chara=chara})
 
             if chara:is_player() then
-               -- partly identify
+               Effect.identify_item(self.food, "partly")
             end
 
             if chara:unequip_item(self.food) then
@@ -217,7 +220,7 @@ data:add {
             self.food.amount = self.food.amount - 1
 
             if chara:is_player() then
-               Gui.mes("Show eating message")
+               Effect.show_eating_message(chara)
             else
                if chara.item_to_be_used
                   and chara.item_to_be_used.uid == self.food
@@ -225,12 +228,11 @@ data:add {
                   chara.item_to_be_used = nil
                end
 
-               -- quest
+               -- TODO quest
             end
 
-            -- anorexia
+            Effect.proc_anorexia(chara)
 
-            -- mochi
             self.food:emit("elona.on_eat_item_finish", {chara=chara})
          end
       }

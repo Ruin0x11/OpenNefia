@@ -1,4 +1,6 @@
+local Log = require("api.Log")
 local Rand = require("api.Rand")
+local Stopwatch = require("api.Stopwatch")
 local mod = require("internal.mod")
 local fs = require("util.fs")
 
@@ -69,6 +71,8 @@ function i18n.switch_language(lang, force)
       i18n.db[lang] = {}
    end
 
+   local sw = Stopwatch:new()
+
    for _, mod in mod.iter_loaded() do
       local path = fs.join(mod.root_path, "locale")
 
@@ -79,6 +83,8 @@ function i18n.switch_language(lang, force)
          end
       end
    end
+
+   Log.info("Translations for language '%s' loaded in %02.02f seconds", lang, sw:measure() * 1000)
 end
 
 function i18n.get_language()

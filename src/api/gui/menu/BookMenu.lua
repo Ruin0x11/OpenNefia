@@ -117,6 +117,7 @@ function BookMenu:relayout()
 end
 
 function BookMenu:draw()
+   Draw.set_color(255, 255, 255)
    self.t.book:draw(self.x, self.y)
 
    Draw.set_color(self.t.text_color)

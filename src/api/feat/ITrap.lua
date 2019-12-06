@@ -17,7 +17,7 @@ end
 
 function ITrap:on_stepped_on(obj)
    if not obj:calc("is_floating") and self:reaction_towards(obj) < 0 then
-      self:calc("on_activate", obj)
+      self:emit("elona_sys.on_feat_activate", obj)
    end
 end
 

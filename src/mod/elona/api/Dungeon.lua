@@ -777,6 +777,7 @@ end
 --- dungeon algorithms
 ---
 
+--- Rooms connected by tunnels.
 function Dungeon.gen_type_1(rooms, params)
    local map = Dungeon.create_map(params)
 
@@ -1116,7 +1117,7 @@ function Dungeon.gen_type_9(rooms, params)
    return map
 end
 
--- Large cavern with walls interspersed throughout.
+-- Large cavern with walls interspersed throughout (Puppy's Cave).
 function Dungeon.gen_type_10(rooms, params)
    local class = 5 + Rand.rnd(4)
    local bold = 2

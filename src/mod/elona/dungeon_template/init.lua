@@ -57,26 +57,20 @@ data:add {
    is_opaque = true
 }
 
-local function connect_stairs(map, outer_map, area_uid, template_id, dungeon_level)
+local function mark_stairs(map)
    local pred
 
    pred = function(feat) return feat._id == "elona.stairs_down" end
    local down = map:iter_feats():filter(pred):nth(1)
 
    if down then
-      down.generator_params = {
-         generator = "elona.dungeon_template",
-         params = {
-            id = template_id,
-            dungeon_level = dungeon_level + 1
-         }
-      }
+      down.tag = "stairs_down"
    end
 
    pred = function(feat) return feat._id == "elona.stairs_up" end
    local up = map:iter_feats():filter(pred):nth(1)
    if up then
-      up.map_uid = outer_map.uid
+      up.tag = "stairs_up"
       return { x = up.x, y = up.y }
    end
 
@@ -284,7 +278,7 @@ local function generate_dungeon(self, params, opts)
    dungeon.dungeon_level = params.dungeon_level
    assert(dungeon.dungeon_level)
 
-   local start_pos = connect_stairs(dungeon, opts.outer_map, opts.area_uid, params.id, params.dungeon_level)
+   local start_pos = mark_stairs(dungeon)
 
    if start_pos then
       dungeon.player_start_pos = start_pos
@@ -390,7 +384,10 @@ data:add {
       area_id = "string"
    },
 
+   connect_stairs = true,
+
    generate = generate_dungeon,
 
    almost_equals = table.deepcompare
+
 }

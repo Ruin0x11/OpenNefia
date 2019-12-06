@@ -23,7 +23,7 @@ end
 
 function IFeat:instantiate()
    IObject.instantiate(self)
-   Event.trigger("base.on_feat_instantiated", {item=self})
+   self:emit("base.on_feat_instantiated")
 end
 
 function IFeat:refresh()
@@ -40,21 +40,6 @@ function IFeat:produce_memory()
       show = not self:calc("is_invisible"),
       image = (self:calc("image") or "") .. "#1"
    }
-end
-
-function IFeat:on_stepped_on(obj)
-end
-
-function IFeat:on_bumped_into(obj)
-end
-
-function IFeat:on_open(opener)
-end
-
-function IFeat:on_close(closer)
-end
-
-function IFeat:on_activate(closer)
 end
 
 return IFeat

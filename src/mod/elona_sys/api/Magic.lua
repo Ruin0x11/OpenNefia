@@ -1,23 +1,20 @@
 local IItem = require("api.item.IItem")
-local Skill = require("mod.elona_sys.api.Skill")
+local IMapObject = require("api.IMapObject")
+local Effect = require("mod.elona.api.Effect")
 
 local Magic = {}
-
-local function is_cursed(curse_state)
-   return curse_state == "cursed" or curse_state == "doomed"
-end
 
 local function calc_adjusted_power(magic, power, curse_state)
    if magic.alignment == "negative" then
       if curse_state == "blessed" then
          return 50
-      elseif is_cursed(curse_state) then
+      elseif Effect.is_cursed(curse_state) then
          return power * 150 / 100
       end
    else
       if curse_state == "blessed" then
          return power * 150 / 100
-      elseif is_cursed(curse_state) then
+      elseif Effect.is_cursed(curse_state) then
          return 50
       end
    end
@@ -33,9 +30,19 @@ function Magic.cast(id, params)
       target = nil,
       item = nil,
       curse_state = nil,
-      x = 0,
-      y = 0
+      x = nil,
+      y = nil
    }
+   params.power = params.power or 0
+
+   if class.is_an(IMapObject, params.source) then
+      params.x = params.x or params.source.x
+      params.y = params.y or params.source.y
+   end
+   if class.is_an(IMapObject, params.target) then
+      params.x = params.x or params.target.x
+      params.y = params.y or params.target.y
+   end
 
    local curse_state = "none"
 

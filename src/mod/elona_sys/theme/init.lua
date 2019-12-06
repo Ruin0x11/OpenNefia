@@ -365,6 +365,14 @@ data:add {
          repl_completion_color = {
             type = "color",
             color = {255, 240, 130}
+         },
+         repl_search_color = {
+            type = "color",
+            color = {130, 240, 130}
+         },
+         repl_match_color = {
+            type = "color",
+            color = {17, 17, 200}
          }
       }
    }

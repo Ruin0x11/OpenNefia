@@ -95,7 +95,6 @@ end
 
 function Charagen.create(x, y, params, where)
    params = params or {}
-   _ppr(params)
 
    params.quality = params.quality or 0
    params.level = params.level or 0

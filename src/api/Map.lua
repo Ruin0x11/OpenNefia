@@ -61,6 +61,7 @@ function Map.set_map(map)
    map:emit("base.on_map_enter")
    map.visit_times = map.visit_times + 1
    field:set_map(map)
+   Gui.mes_clear()
    return field.map
 end
 

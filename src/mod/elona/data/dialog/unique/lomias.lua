@@ -281,7 +281,7 @@ data:add {
          },
          on_finish = function()
             local corpse = Item.create("elona.corpse", Chara.player().x, Chara.player().y)
-            corpse.params = { chara = "elona.beggar" }
+            corpse.params = { chara_id = "elona.beggar" }
             corpse.identify_state = "completely"
             Gui.mes("common.something_is_put_on_the_ground")
             Sidequest.set_progress("elona.tutorial", 1)

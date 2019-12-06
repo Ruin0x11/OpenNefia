@@ -10,6 +10,7 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Anim = require("mod.elona_sys.api.Anim")
 local UiTheme = require("api.gui.UiTheme")
+local Effect = require("mod.elona.api.Effect")
 
 local ElonaAction = {}
 
@@ -105,12 +106,13 @@ local function show_miss_text(chara, target, extra_attacks)
       return
    end
    if extra_attacks > 0 then
-      Gui.mes("Furthermore, ")
+      Gui.mes("damage.furthermore")
+      Gui.mes_continue_sentence()
    end
    if target:is_ally() then
-      Gui.mes(target.uid .. " skillfully evades " .. chara.uid .. ". ")
+      Gui.mes("damage.miss.ally", chara, target)
    else
-      Gui.mes(chara.uid .. " misses " .. target.uid .. ". ")
+      Gui.mes("damage.miss.other", chara, target)
    end
 end
 
@@ -119,12 +121,13 @@ local function show_evade_text(chara, target, extra_attacks)
       return
    end
    if extra_attacks > 0 then
-      Gui.mes("Furthermore, ")
+      Gui.mes("damage.furthermore")
+      Gui.mes_continue_sentence()
    end
    if target:is_ally() then
-      Gui.mes(target.uid .. " skillfully evades " .. chara.uid .. ". ")
+      Gui.mes("damage.evade.ally", chara, target)
    else
-      Gui.mes(target.uid .. " skillfully evades " .. chara.uid .. ". ")
+      Gui.mes("damage.evade.other", chara, target)
    end
 end
 
@@ -352,8 +355,8 @@ end
 
 function ElonaAction.bash(chara, x, y)
    for _, item in Item.at(x, y) do
-      local result = item:emit("elona.on_bash", {chara=chara}, nil)
-      if result then return true end
+      local result = item:emit("elona_sys.on_bash", {chara=chara}, nil)
+      if result then return result end
    end
 
    local target = Chara.at(x, y)
@@ -361,57 +364,95 @@ function ElonaAction.bash(chara, x, y)
       if not target:has_effect("elona.sleep") then
          if chara:is_player() and chara:reaction_towards(target) >= 0 then
             if not ElonaAction.prompt_really_attack(target) then
-               return false
+               return "player_turn_query"
             end
          end
-         if target:has_effect("elona.choked") then
+         if target:has_effect("elona.choking") then
             Gui.play_sound("base.bash1")
-            Gui.mes(chara.uid .. " rams " .. target.uid .. " from choking.")
+            Gui.mes("action.bash.choked.execute", chara, target)
             local killed = target:damage_hp(chara:skill_level("elona.stat_strength") * 5, chara)
             if not killed then
-               Gui.mes(target.uid .. " spits mochi.")
-               target:remove_effect("elona.choked")
-               -- TODO modify impress
+               Gui.mes("action.bash.choked.spits", target)
+               target:remove_effect("elona.choking")
+               Skill.modify_impression(target, 10)
             end
          else
             Gui.play_sound("base.bash1")
-            Gui.mes(chara.uid .. " bashes up " .. target.uid .. ".")
+            Gui.mes("action.bash.execute", chara, target)
             chara:act_hostile_towards(target)
          end
       else
          Gui.play_sound("base.bash1")
-         Gui.mes(chara.uid .. " bashes up " .. target.uid .. " for sleep.")
-         -- TODO modify karma
+         Gui.mes("action.bash.execute", chara, target)
+         Gui.mes("action.bash.disturbs_sleep", chara, target)
+         Effect.modify_karma(chara, -1)
          -- TODO emotion icon
       end
       target:remove_effect("elona.sleep")
-      return true
+      return "turn_end"
    end
 
    for _, feat in Feat.at(x, y) do
-      local result = feat:emit("elona.on_bash", {chara=chara})
+      local result = feat:emit("elona_sys.on_bash", {chara=chara})
       if result then return true end
    end
 
-   Gui.mes(chara.uid .. " bashes air.")
+   Gui.mes("action.bash.air", chara)
+   Gui.play_sound("base.miss", x, y)
+
    return true
+end
+
+function ElonaAction.read(chara, item)
+   if chara:has_effect("elona.blindness") then
+      if chara:is_in_fov() then
+         Gui.mes("action.read.cannot_see", chara)
+      end
+      return "turn_end"
+   end
+
+   local result = item:emit("elona_sys.on_item_read", {chara=chara}, "turn_end")
+   return result
 end
 
 function ElonaAction.eat(chara, item)
    if chara:is_player() then
       if item.chara_using and item.chara_using.uid ~= chara.uid then
-         Gui.mes("someone else is using")
-         return false
+         Gui.mes("action.someone_else_is_using")
+         return "player_turn_query"
       end
    elseif item.chara_using then
-      item.chara_using:finish_activity()
-      assert(item.chara_using == nil)
-      Gui.mes_visible(chara.uid .. "snatches food.")
+      local using = item.chara_using
+      if using.uid ~= chara.uid then
+         using:finish_activity()
+         assert(item.chara_using == nil)
+         if chara:is_in_fov() then
+            Gui.mes("action.eat.snatches", chara, using)
+         end
+      end
    end
 
    chara:start_activity("elona.eating", {food=item})
 
-   return true
+   return "turn_end"
+end
+
+function ElonaAction.drink(chara, item)
+   local result = item:emit("elona_sys.on_item_drink", {chara=chara}, "turn_end")
+   return result
+end
+
+function ElonaAction.zap(chara, item)
+   if item.count <= 0 then
+      if chara:is_in_fov(chara) then
+         Gui.mes("action.zap.execute", item)
+         Gui.mes("common.nothing_happens")
+      end
+      return "player_turn_query"
+   end
+
+   local result = item:emit("elona_sys.on_item_zap", {chara=chara}, "turn_end")
+   return result
 end
 
 return ElonaAction

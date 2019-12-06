@@ -126,7 +126,6 @@ function EquipmentMenu:update_from_chara()
       data[#data + 1] = entry
    end
 
-   print("ITEMS", #data)
    self.pages:set_data(data)
    self.win:set_pages(self.pages)
    self:refresh_item_icons()

@@ -42,5 +42,14 @@ Gui.bind_keys {
    end,
    i = function(me)
       return ElonaCommand.dig(me)
-   end
+   end,
+   r = function(me)
+      return ElonaCommand.read(me)
+   end,
+   q = function(me)
+      return ElonaCommand.drink(me)
+   end,
+   z = function(me)
+      return ElonaCommand.zap(me)
+   end,
 }

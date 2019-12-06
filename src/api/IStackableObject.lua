@@ -14,13 +14,13 @@ local IStackableObject = class.interface("IStackableObject",
 --- location. If this fails, return nil. If unsuccessful, no state is
 --- changed. Returns the separated item.
 -- @tparam int amount Default 1
--- @tparam bool owned Default false
+-- @tparam bool owned Default true
 -- @treturn IItem
 -- @retval_ownership[owned=false] nil
 -- @retval_ownership[owned=true] self.location
 function IStackableObject:separate(amount, owned)
    amount = math.clamp(amount or 1, 0, self.amount)
-   owned = owned or false
+   owned = owned or true
 
    if amount == 0 then
       return nil
@@ -100,7 +100,7 @@ end
 -- @treturn[2] nil
 -- @retval_ownership self where
 function IStackableObject:move_some(amount, where, x, y, no_stack)
-   local separated = self:separate(amount)
+   local separated = self:separate(amount, false)
 
    if separated == nil then
       return nil

@@ -14,6 +14,7 @@ love.graphics.getFont = function()
       {
          getWidth = function(self, s) return #s * 8 end,
          getHeight = function() return 14 end,
+         getWrap = function(text, width) return text, width end,
       }
 end
 love.graphics.setFont = function() end

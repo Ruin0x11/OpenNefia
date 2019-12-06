@@ -49,6 +49,11 @@ function ReplLayer:init(env, history)
    -- tab completion
    self.completion = nil
 
+   -- history search
+   self.search = nil
+   self.can_search = true
+   self.max_search_size = 1000
+
    self.deferred = queue:new()
 
    self.print_varargs = false
@@ -61,11 +66,9 @@ function ReplLayer:init(env, history)
    self.input:bind_keys {
       text_entered = function(t)
          self:insert_text(t)
-         self.completion = nil
       end,
       backspace = function()
          self:delete_char()
-         self.completion = nil
       end,
       text_submitted = function()
          self:submit()
@@ -108,6 +111,7 @@ function ReplLayer:init(env, history)
       delete = function()
          Env.set_clipboard_text(self.text)
          self:set_text("")
+         self:_reset_completion_and_search()
       end,
       tab = function()
          local function complete(cand)
@@ -143,6 +147,12 @@ function ReplLayer:init(env, history)
    self.input:halt_input()
 end
 
+function ReplLayer:_reset_completion_and_search()
+   self.completion = nil
+   self.search = nil
+   self.can_search = true
+end
+
 function ReplLayer:on_query()
    self.completion = nil
    if self.scrollback:len() == 0 then
@@ -152,17 +162,83 @@ function ReplLayer:on_query()
 end
 
 function ReplLayer:history_prev()
+   if self.can_search and self.search == nil and self.text ~= "" then
+      self.search = {
+            text = string.escape_for_gsub(self.text),
+            status = "failure"
+      }
+   end
+
    self.scrollback_index = 0
-   self.history_index = math.max(self.history_index - 1, 0)
-   self:set_text(self.history[self.history_index])
+   if self.search then
+      local prev = self.history_index
+      self.search.status = "failure"
+      for _=1,self.max_search_size do
+         self.history_index = math.max(self.history_index - 1, 1)
+         local text = self.history[self.history_index]
+         local match_start, match_end = string.find(text, self.search.text)
+         if match_start then
+            self.search.status = "success"
+            self.search.match_start = match_start
+            self.search.match_end = match_end
+            self:set_text(text)
+            break
+         end
+         if self.history_index == 1 then
+            break
+         end
+      end
+      if self.search.status ~= "success" then
+         self.history_index = prev
+      end
+      self.redraw = true
+   else
+      self.history_index = math.max(self.history_index - 1, 1)
+      self:set_text(self.history[self.history_index])
+   end
+
    self.completion = nil
+   self.can_search = false
 end
 
 function ReplLayer:history_next()
+   if self.can_search and self.search == nil and self.text ~= "" then
+      self.search = {
+            text = string.escape_for_gsub(self.text),
+            status = "failure"
+      }
+   end
+
    self.scrollback_index = 0
-   self.history_index = math.min(self.history_index + 1, #self.history)
-   self:set_text(self.history[self.history_index])
+   if self.search then
+      local prev = self.history_index
+      for _=1,self.max_search_size do
+         self.search.status = "failure"
+         self.history_index = math.min(self.history_index + 1, #self.history)
+         local text = self.history[self.history_index]
+         local match_start, match_end = string.find(text, self.search.text)
+         if match_start then
+            self.search.status = "success"
+            self.search.match_start = match_start
+            self.search.match_end = match_end
+            self:set_text(text)
+            break
+         end
+         if self.history_index == #self.history then
+            break
+         end
+      end
+      if self.search.status ~= "success" then
+         self.history_index = prev
+      end
+      self.redraw = true
+   else
+      self.history_index = math.min(self.history_index + 1, #self.history)
+      self:set_text(self.history[self.history_index])
+   end
+
    self.completion = nil
+   self.can_search = false
 end
 
 function ReplLayer:set_text(text)
@@ -196,13 +272,15 @@ end
 function ReplLayer:move_cursor(codepoints)
    local pos = utf8.find_next_pos(self.text, self.cursor_pos, codepoints)
    if codepoints > 0 and pos == 0 then
-      pos = utf8.offset(self.text, 1)
+      pos = utf8.offset(self.text, codepoints)
    end
    if pos < 1 then
       self.cursor_pos = 0
       self.cursor_x = 0
       return
    end
+
+   self:_reset_completion_and_search()
 
    self:set_cursor_pos(pos)
 end
@@ -216,6 +294,8 @@ function ReplLayer:insert_text(t)
       local a, b = string.split_at_pos(self.text, self.cursor_pos)
       self.text = a .. t .. b
    end
+
+   self:_reset_completion_and_search()
 
    self:move_cursor(utf8.len(t))
    self.redraw = true
@@ -379,7 +459,7 @@ function ReplLayer:submit()
    self.history_index = 0
    self.cursor_pos = 0
    self.cursor_x = 0
-   self.completion = nil
+   self:_reset_completion_and_search()
 
    self:print(self.mode.caret .. text)
    if string.nonempty(text) then
@@ -466,7 +546,25 @@ function ReplLayer:redraw_window()
    -- caret
    Draw.set_color(255, 255, 255)
    Draw.text(self.mode.caret, self.x + 5, self.y + top - Draw.text_height() - 5)
-   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5)
+
+   -- text
+   local color
+   if self.search then
+      if self.search.status == "failure" then
+         color = self.t.repl_error_color
+      elseif self.search.status == "success" then
+         color = self.t.repl_search_color
+      end
+      local char_width = Draw.text_width(".")
+      if self.search.match_start then
+         Draw.filled_rect(self.x + 5 + Draw.text_width(self.mode.caret) + char_width * self.search.match_start,
+                          self.y + top - Draw.text_height() - 5,
+                          Draw.text_width(self.search.text),
+                          Draw.text_height(),
+                          self.t.repl_match_color)
+      end
+   end
+   Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5, color)
 
    -- scrollback counter
    if self.scrollback_index > 0 then
@@ -474,7 +572,7 @@ function ReplLayer:redraw_window()
       Draw.text(scrollback_count, self.width - Draw.text_width(scrollback_count) - 5, self.y + top - Draw.text_height() - 5)
    end
 
-   -- scrollback display
+   -- completion candidates
    local offset = 0
    if self.completion and #self.completion.candidates > 1 then
       Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, self.t.repl_completion_color)
@@ -482,6 +580,7 @@ function ReplLayer:redraw_window()
       Draw.set_color(255, 255, 255)
    end
 
+   -- scrollback display
    for i=1,self.max_lines do
       local t = self.scrollback[self.scrollback_index + i]
       if t == nil then

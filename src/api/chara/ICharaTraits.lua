@@ -42,4 +42,20 @@ function ICharaTraits:on_refresh()
    end
 end
 
+function ICharaTraits:gain_trait(trait_id, level, no_message)
+   local trait = data["base.trait"]:ensure(trait_id)
+   if self.traits[trait_id] ~= nil then
+      return
+   end
+
+   level = level or 1
+
+   self.traits[trait_id] = {
+      level = level
+   }
+
+   -- TODO
+   Gui.mes_c("trait._" .. trait.elona_id .. ".positive.gain", "Green")
+end
+
 return ICharaTraits

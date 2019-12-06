@@ -12,6 +12,8 @@ local Chara = require("api.Chara")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Calc = require("mod.elona.api.Calc")
 local Anim = require("mod.elona_sys.api.Anim")
+local Pos = require("api.Pos")
+local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 
 data:add {
    _type = "base.feat",
@@ -43,10 +45,10 @@ data:add {
          self:reset("image", self.closed_tile)
       end
    end,
-   on_bumped_into = function(self, chara)
+   on_bumped_into = function(self, params)
       self:on_open()
    end,
-   on_open = function(self, chara)
+   on_open = function(self, params)
       if self.opened then
          return
       end
@@ -62,7 +64,7 @@ data:add {
 
       self:refresh()
    end,
-   on_close = function(self, chara)
+   on_close = function(self, params)
       if not self.opened then
          return
       end
@@ -78,6 +80,45 @@ data:add {
 
       self:refresh()
    end,
+   on_bash = function(self, params)
+      local basher = params.chara
+      Gui.play_sound("base.bash1")
+      local difficulty = self.difficulty * 3 + 30
+      -- EVENT: on_calc_door_difficulty
+
+      local str = basher:skill_level("elona.stat_strength")
+
+      if Rand.rnd(difficulty) < str and Rand.one_in(2) then
+         Gui.mes("Door is destroyed.")
+         if self.difficulty > str then
+            Skill.gain_skill_action("elona.stat_strength", (difficulty - str) * 15)
+         end
+         self:remove_ownership()
+         return "turn_end"
+      else
+         Gui.mes("Door is bashed.")
+         -- EVENT: on_bash_door
+
+         -- TODO
+         if Rand.one_in(4) then
+            Gui.mes("magic1")
+         end
+         if Rand.one_in(3) then
+            Gui.mes("magic2")
+         end
+         if Rand.one_in(3) then
+            Gui.mes("hurtself", "Purple")
+         end
+         if Rand.one_in(3) then
+            if self.difficulty > 0 then
+               self.difficulty = self.difficulty - 1
+               Gui.mes_visible("The door cracks.", basher.x, basher.y)
+            end
+         end
+      end
+
+      return "turn_end"
+   end,
 
    events = {
       {
@@ -86,50 +127,6 @@ data:add {
 
          callback = function(self)
             self.difficulty = 5
-         end
-      },
-      {
-         id = "elona.on_bash",
-         name = "Bash to open door",
-
-         callback = function(self, params)
-            local basher = params.chara
-            Gui.play_sound("base.bash1")
-            local difficulty = self.difficulty * 3 + 30
-            -- EVENT: on_calc_door_difficulty
-
-            local str = basher:skill_level("elona.stat_strength")
-
-            if Rand.rnd(difficulty) < str and Rand.one_in(2) then
-               Gui.mes("Door is destroyed.")
-               if self.difficulty > str then
-                  Skill.gain_skill_action("elona.stat_strength", (difficulty - str) * 15)
-               end
-               self:remove_ownership()
-               return true
-            else
-               Gui.mes("Door is bashed.")
-               -- EVENT: on_bash_door
-
-               -- TODO
-               if Rand.one_in(4) then
-                  Gui.mes("magic1")
-               end
-               if Rand.one_in(3) then
-                  Gui.mes("magic2")
-               end
-               if Rand.one_in(3) then
-                  Gui.mes("hurtself", "Purple")
-               end
-               if Rand.one_in(3) then
-                  if self.difficulty > 0 then
-                     self.difficulty = self.difficulty - 1
-                     Gui.mes_visible("The door cracks.", basher.x, basher.y)
-                  end
-               end
-            end
-
-            return true
          end
       }
    }
@@ -160,7 +157,8 @@ local function gen_stair(down)
          self:mod("can_activate", true)
       end,
 
-      on_activate = function(self, chara)
+      on_activate = function(self, params)
+         local chara = params.chara
          if not chara:is_player() then
             return
          end
@@ -231,8 +229,8 @@ local function gen_stair(down)
          return "player_turn_query"
       end,
 
-      [field] = function(self, chara)
-         self:on_activate(chara)
+      [field] = function(self, params)
+         self:on_activate(params.chara)
       end
    }
 end
@@ -258,8 +256,9 @@ data:add {
       self:mod("can_activate", true)
    end,
 
-   on_activate = function(self, chara)
+   on_activate = function(self, params)
       assert(self:current_map())
+      local chara = params.chara
       if not chara:is_player() then
          return
       end
@@ -275,8 +274,8 @@ data:add {
       return "player_turn_query"
    end,
 
-   on_descend = function(self, chara)
-      self:on_activate(chara)
+   on_descend = function(self, params)
+      self:on_activate(params.chara)
    end
 }
 
@@ -291,36 +290,32 @@ data:add {
 
    params = { },
 
+   on_bash = function(self, params)
+      local map = self:current_map()
+      local basher = params.chara
+
+      self.image = nil
+      -- TODO: spill fragment
+      local level = map:calc("dungeon_level")
+      if map.gen_id == "elona.shelter" then level = 0 end
+
+      Itemgen.create(self.x, self.y, Calc.filter(level, 1), map)
+
+      map:memorize_tile(self.x, self.y)
+      Gui.update_screen()
+
+      if Map.is_in_fov(basher.x, basher.y) then
+         Gui.play_sound("base.bash1")
+         Gui.mes("action.bash.shatters_pot", basher)
+         Gui.play_sound("base.crush1")
+         local anim = Anim.breaking(self.x, self.y)
+         Gui.start_draw_callback(anim)
+      end
+      self:remove_ownership()
+      return "turn_end"
+   end,
+
    events = {
-      {
-         id = "elona.on_bash",
-         name = "Bash to shatter pot",
-
-         callback = function(self, params)
-            local map = self:current_map()
-            local basher = params.chara
-
-            self.image = nil
-            -- TODO: spill fragment
-            local level = map:calc("dungeon_level")
-            if map.gen_id == "elona.shelter" then level = 0 end
-
-            Itemgen.create(self.x, self.y, Calc.filter(level, 1), map)
-
-            map:memorize_tile(self.x, self.y)
-            Gui.update_screen()
-
-            if Map.is_in_fov(basher.x, basher.y) then
-               Gui.play_sound("base.bash1")
-               Gui.mes("action.bash.shatters_pot", basher)
-               Gui.play_sound("base.crush1")
-               local anim = Anim.breaking(self.x, self.y)
-               Gui.start_draw_callback(anim)
-            end
-            self:remove_ownership()
-            return true
-         end
-      },
       {
          id = "elona_sys.on_bump_into",
          name = "Bump into to shatter pot",
@@ -343,11 +338,19 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   on_search = function(self, chara)
+   on_search = function(self, params)
+      local chara = params.chara
+
+      if math.abs(chara.y - self.y) > 1 or math.abs(chara.x - self.x) > 1 then
+         return
+      end
+
       if SkillCheck.try_to_reveal(chara) then
-         Gui.mes("reveal hidden path")
-         Map.set_tile(self.x, self.y, "elona.hardwood_floor_1", chara:current_map())
+         local map = chara:current_map()
+         local tile = MapTileset.get("elona.mapgen_tunnel", map)
+         Map.set_tile(self.x, self.y, tile, map)
          self:remove_ownership()
+         Gui.mes("action.search.discover.hidden_path")
       end
    end,
 
@@ -364,7 +367,7 @@ data:add {
    is_solid = true,
    is_opaque = false,
 
-   on_bumped_into = function(self, chara)
+   on_bumped_into = function(self, params)
       Gui.play_sound("base.chat")
       Gui.mes("Quest board.")
    end,
@@ -382,7 +385,7 @@ data:add {
    is_solid = true,
    is_opaque = false,
 
-   on_bumped_into = function(self, chara)
+   on_bumped_into = function(self, params)
       Gui.play_sound("base.chat")
       Gui.mes("Voting box.")
    end,
@@ -400,9 +403,20 @@ data:add {
    is_solid = false,
    is_opaque = false,
 
-   on_search = function(self, chara)
-      Gui.mes("reveal medal")
-      self:remove_ownership()
+   on_search = function(self, params)
+      local chara = params.chara
+      if chara.x == self.x and chara.y == self.y then
+         Gui.play_sound("base.ding2")
+         Gui.mes("action.search.small_coin.find")
+         Item.create("elona.small_medal", self.x, self.y)
+         self:remove_ownership()
+      else
+         if Pos.dist(chara.x, chara.y, self.x, self.y) > 2 then
+            Gui.mes("action.search.small_coin.far")
+         else
+            Gui.mes("action.search.small_coin.close")
+         end
+      end
    end,
 
    params = {},
@@ -418,7 +432,7 @@ data:add {
    is_solid = true,
    is_opaque = false,
 
-   on_bumped_into = function(self, chara)
+   on_bumped_into = function(self, params)
       Gui.play_sound("base.chat")
       Gui.mes("Politics board.")
    end,

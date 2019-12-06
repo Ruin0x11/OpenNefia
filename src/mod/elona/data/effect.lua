@@ -129,7 +129,9 @@ local effect = {
 
       on_turn_end = function(chara)
          if chara:effect_turns("elona.choking") % 3 == 0 then
-            Gui.mes_visible(chara.uid .. " is choked", chara.x, chara.y)
+            if chara:is_in_fov() then
+               Gui.mes("misc.status_ailment.choked", chara)
+            end
          end
 
          chara:add_effect_turns("elona.choking", 2)
@@ -185,7 +187,9 @@ local effect = {
 
       on_turn_end = function(chara)
          if Rand.one_in(3) then
-            Gui.mes_visible(chara.uid .. " is insane ", chara.x, chara.y)
+            if chara:is_in_fov() then
+               Gui.mes("misc.status_ailment.insane", chara)
+            end
          end
          if Rand.one_in(5) then
             chara:add_effect_turns("elona.confusion", Rand.rnd(10))

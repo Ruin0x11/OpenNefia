@@ -72,6 +72,7 @@ function chara_layer:scroll_one(dt)
    return self.scroll_frames <= 0
 end
 
+local rot = 0
 function chara_layer:update(dt, screen_updated, scroll_frames)
    if not screen_updated then
       self.scroll_consecutive = 0

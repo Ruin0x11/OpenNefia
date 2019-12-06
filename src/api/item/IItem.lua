@@ -70,7 +70,7 @@ end
 
 function IItem:instantiate()
    IObject.instantiate(self)
-   Event.trigger("base.on_item_instantiated", {item=self})
+   self:emit("base.on_item_instantiated")
 end
 
 function IItem:set_image(image)

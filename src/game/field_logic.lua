@@ -23,6 +23,8 @@ function field_logic.setup_new_game(player)
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
+
+   Event.trigger("base.on_new_game")
 end
 
 function field_logic.quickstart()
@@ -37,6 +39,9 @@ end
 function field_logic.setup()
    -- This function gets called again if field_logic.query() throws an
    -- error, so don't rerun base.on_game_initialize.
+   if not field.repl then
+      field:setup_repl()
+   end
    if not field.is_active then
       Event.trigger("base.on_game_initialize")
    end

@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Log = require("api.Log")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 local circular_buffer = require("thirdparty.circular_buffer")
@@ -187,6 +188,8 @@ function UiMessageWindow:recalc_lines()
       return
    end
 
+   Log.warn("MESSAGE RECALC")
+
    local cutoff, index_of_first_text = self:calc_start_offset()
 
    self.each_line = circular_buffer:new(self.max_lines)
@@ -200,6 +203,7 @@ end
 function UiMessageWindow:clear()
    self.history = circular_buffer:new(self.max_log)
    self.each_line = circular_buffer:new(self.max_lines)
+   self.redraw = true
 end
 
 function UiMessageWindow:redraw_window()

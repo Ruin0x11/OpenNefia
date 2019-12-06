@@ -258,8 +258,8 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
--- local default_font = "MS-Gothic.ttf"
-local default_font = "kochi-gothic-subst.ttf"
+local default_font = "MS-Gothic.ttf"
+-- local default_font = "kochi-gothic-subst.ttf"
 
 local font_cache = setmetatable({}, { __mode = "v" })
 function draw.set_font(size, style, filename)

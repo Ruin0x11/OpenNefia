@@ -233,10 +233,6 @@ function Gui.mes_clear()
 end
 
 --- Starts a new line in the HUD message window.
-function Gui.mes_clear()
-   field:get_message_window():clear()
-end
-
 -- TODO: just use \n inline
 function Gui.mes_newline()
    field:get_message_window():newline()

@@ -148,7 +148,11 @@ local fallbacks = {
    breaks_into_debris = nil,
    is_solid = true,
 
-   anorexia_count = 0
+   anorexia_count = 0,
+
+   melee_attack_type = 0,
+   ether_disease_corruption = 0,
+   ether_disease_speed = 0
 }
 
 --- Initializes the bare minimum values on this character. All

@@ -11,24 +11,24 @@ function string.chars(s)
    return string.gmatch(s, ".")
 end
 
-local function escape_for_gsub(s)
+function string.escape_for_gsub(s)
    return string.gsub(s, "([^%w])", "%%%1")
 end
 
 function string.has_prefix(s, prefix)
-   return string.find(s, "^" .. escape_for_gsub(prefix))
+   return string.find(s, "^" .. string.escape_for_gsub(prefix))
 end
 
 function string.has_suffix(s, suffix)
-   return string.find(s, escape_for_gsub(suffix) .. "$")
+   return string.find(s, string.escape_for_gsub(suffix) .. "$")
 end
 
 function string.strip_prefix(s, prefix)
-   return string.gsub(s, "^" .. escape_for_gsub(prefix), "")
+   return string.gsub(s, "^" .. string.escape_for_gsub(prefix), "")
 end
 
 function string.strip_suffix(s, suffix)
-   return string.gsub(s, escape_for_gsub(suffix) .. "$", "")
+   return string.gsub(s, string.escape_for_gsub(suffix) .. "$", "")
 end
 
 function string.strip_whitespace(s)

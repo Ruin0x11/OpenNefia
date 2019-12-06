@@ -117,5 +117,21 @@ local trait = {
       _id = "immune_to_dimming",
       elona_id = 157
    },
+   {
+      _id = "no_guilt",
+      elona_id = 162
+   },
+   {
+      _id = "good_person",
+      elona_id = 169
+   },
+   {
+      _id = "can_eat_human_flesh",
+      elona_id = 41
+   },
+   {
+      _id = "cures_sanity",
+      elona_id = 166
+   }
 }
 data:add_multi("base.trait", trait)

@@ -68,7 +68,8 @@ function I18N.get(text, ...)
 end
 
 
--- TODO for itemname, prove a set of "cut points" so the user can split the string and insert ehatever.
+-- TODO for itemname, provide a set of "cut points" so the user can
+-- split the string and insert whatever.
 
 --- Switches the current language.
 ---

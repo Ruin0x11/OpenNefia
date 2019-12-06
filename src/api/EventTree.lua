@@ -130,9 +130,21 @@ function EventTree:traverse(source, args, default)
    local cache = self.cache
 
    local result = default
+   local new_result
    local status
    for i, cb in ipairs(cache) do
-      result, status = cb(source, args, result)
+      new_result, status = cb(source, args, result)
+
+      -- If the result returned is nil, do not set the final result to
+      -- nil. This is to avoid having to return 'result' for event
+      -- callbacks that return a significant return value, since
+      -- leaving out a return will cause 'nil' to be returned instead.
+      -- Requiring something to be returned in every callback meant it
+      -- was easy for one event in the chain to forget to do this,
+      -- causing errors, and it was difficult to remember which events
+      -- required 'result' to be returned or not.
+      result = new_result or result
+
       if status == "blocked" then
          break
       end
