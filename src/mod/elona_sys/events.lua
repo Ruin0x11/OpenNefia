@@ -305,7 +305,6 @@ end)
 
 Event.register("base.on_item_instantiated", "Connect item events",
                function(item)
-                  Log.info("Connecting handlers for item %d", item.uid)
                   if item.proto.on_use then
                      item:connect_self("elona_sys.on_item_use",
                                        "Item prototype on_use handler",
@@ -343,7 +342,6 @@ end)
 
 Event.register("base.on_feat_instantiated", "Connect feat events",
                function(feat)
-                  Log.info("Connecting handlers for feat %d", feat.uid)
                   if feat.proto.on_bash then
                      feat:connect_self("elona_sys.on_bash",
                                        "Feat prototype on_bash handler",

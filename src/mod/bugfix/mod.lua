@@ -1,5 +1,5 @@
 return {
-   id = "base",
+   id = "bugfix",
    dependencies = {
       elona = ">= 0"
    }

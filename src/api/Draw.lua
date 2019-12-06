@@ -289,4 +289,8 @@ function Draw.msecs_to_frames(msecs, framerate)
    return frames
 end
 
+function Draw.load_image_data(path)
+   return love.image.newImageData(path)
+end
+
 return Draw

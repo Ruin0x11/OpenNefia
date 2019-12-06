@@ -163,6 +163,14 @@ function Tools.goto_map(id)
    return Map.travel_to(map)
 end
 
+function Tools.gen_map(id, params)
+   local success, map = Map.generate(id, params)
+   if not success then
+      error(map)
+   end
+   return Map.travel_to(map)
+end
+
 function Tools.go_home()
    return Map.travel_to(save.base.home_map_uid)
 end

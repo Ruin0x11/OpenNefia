@@ -1,13 +1,18 @@
 local setmetatable = setmetatable
 local pairs = pairs
 local type = type
-local function visit(node, graph, visited, ordered)
-    if visited[node] == 0 then return 1 end
+local function visit(node, graph, visited, ordered, cycle)
+    if visited[node] == 0 then
+       cycle[#cycle+1] = node
+       return 1
+    end
     if visited[node] == 1 then return end
     visited[node] = 0
+    cycle[#cycle+1] = node
     local deps = graph[node]
+    _ppr(node, deps)
     for i=1, #deps do
-        if visit(deps[i], graph, visited, ordered) then return 1 end
+        if visit(deps[i], graph, visited, ordered, cycle) then return 1 end
     end
     visited[node] = 1
     ordered[#ordered+1] = node
@@ -46,10 +51,11 @@ function tsort:sort()
     local graph = self.graph
     local ordered = {}
     local visited = {}
+    local cycle = {}
     for node in pairs(graph) do
         if visited[node] == nil then
-            if visit(node, graph, visited, ordered) then
-                return nil, "There is a circular dependency in the graph. It is not possible to derive a topological sort."
+            if visit(node, graph, visited, ordered, cycle) then
+                return nil, cycle
             end
         end
     end

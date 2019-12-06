@@ -31,7 +31,7 @@ local function debug_server(port)
             if s then
                local success, res = xpcall(s, function(err) return err .. "\n" .. debug.traceback(2) end)
                if success then
-                  Log.error("Success: %s", res)
+                  Log.info("Success: %s", res)
                   result = "success"
                else
                   Log.error("Exec error:\n\t%s", res)

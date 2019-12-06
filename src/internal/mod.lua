@@ -62,6 +62,7 @@ function mod.calculate_load_order(mods)
    -- the file location of each manifest, so reassociate them after
    -- sorting.
    local paths = {}
+   local seen = {}
 
    for _, manifest_file in ipairs(mods) do
       local success, manifest = load_manifest(manifest_file)
@@ -75,6 +76,11 @@ function mod.calculate_load_order(mods)
          error(string.format("Manifest must contain 'id' field. (%s)", manifest_file))
       end
 
+      if seen[mod_id] then
+         error(("Mod %s was registered twice."):format(mod_id))
+      end
+      seen[mod_id] = true
+
       if type(manifest.dependencies) == "table" then
          graph:add(0, mod_id) -- root
          for dep_id, version in pairs(manifest.dependencies) do
@@ -87,9 +93,9 @@ function mod.calculate_load_order(mods)
       paths[mod_id] = { root_path = fs.parent(manifest_file), id = mod_id }
    end
 
-   local order = graph:sort()
+   local order, cycle = graph:sort()
    if order == nil then
-      error("Circular dependency")
+      error(("Circular dependency: %s"):format(inspect(cycle)))
    end
 
    table.remove(order, 1)
