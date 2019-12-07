@@ -1,5 +1,5 @@
 local data = require("internal.data")
-local env = require("internal.env")
+local paths = require("internal.paths")
 local Event = require("api.Event")
 
 data:add_multi(
@@ -87,7 +87,7 @@ data:add_multi(
 
 local function on_hotload_begin(_, params)
    -- strip trailing "init" to make the path unique
-   local path = env.convert_to_require_path(params.path_or_class)
+   local path = paths.convert_to_require_path(params.path_or_class)
    Event.global():_begin_register(path)
 end
 

@@ -1,4 +1,5 @@
 local Log = require("api.Log")
+local paths = require("internal.paths")
 local fs = require("util.fs")
 local env = require("internal.env")
 local tsort = require("thirdparty.resty.tsort")
@@ -12,7 +13,7 @@ local mod = {}
 local loaded = {}
 
 local function load_mod(mod_name, init_lua_path)
-   local req_path = env.convert_to_require_path(init_lua_path)
+   local req_path = paths.convert_to_require_path(init_lua_path)
 
    local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
 

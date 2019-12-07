@@ -149,7 +149,7 @@ function M.module_basepath()
 end
 
 -- split a qualified name into the module part and the name part,
--- e.g 'pl.utils.split' becomes 'pl.utils' and 'split'. Also
+-- e.g 'thirdparty.pl.utils.split' becomes 'thirdparty.pl.utils' and 'split'. Also
 -- must understand colon notation!
 function M.split_dotted_name (s)
    local s1,s2 = s:match '^(.+)[%.:](.+)$'

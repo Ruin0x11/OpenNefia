@@ -1,3 +1,5 @@
+local ansicolors = require("thirdparty.ansicolors")
+
 -- @module Log
 local Log = {}
 
@@ -33,7 +35,7 @@ local function convert_to_require_path(path)
    return path
 end
 
-local function format(kind, s, ...)
+local function format(kind, color, s, ...)
    local out = string.format(s, ...)
    local trace = debug.getinfo(3, "S")
    local req_paths = true
@@ -53,7 +55,9 @@ local function format(kind, s, ...)
       return
    end
 
-   print(string.format("%s[%s] %s", kind, source, out))
+   local str = string.format("%s[%s] %s", kind, source, out)
+   local formatted = ansicolors(("%%{%s}%s%%{reset}"):format(color, str))
+   print(formatted)
 end
 
 --- @tparam string l
@@ -86,7 +90,7 @@ function Log.trace(s, ...)
    if level < 5 then
       return
    end
-   format("[TRACE]", s, ...)
+   format("[TRACE]", "magenta", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -95,7 +99,7 @@ function Log.debug(s, ...)
    if level < 4 then
       return
    end
-   format("[DEBUG]", s, ...)
+   format("[DEBUG]", "bright black", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -104,7 +108,7 @@ function Log.info(s, ...)
    if level < 3 then
       return
    end
-   format("[INFO] ", s, ...)
+   format("[INFO] ", "white", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -113,7 +117,7 @@ function Log.warn(s, ...)
    if level < 2 then
       return
    end
-   format("[WARN] ", s, ...)
+   format("[WARN] ", "yellow", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -122,7 +126,7 @@ function Log.error(s, ...)
    if level < 1 then
       return
    end
-   format("[ERROR]", s, ...)
+   format("[ERROR]", "red", s, ...)
 end
 
 return Log

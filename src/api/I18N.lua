@@ -1,9 +1,10 @@
+-- Interface to the text localization system.
+-- @module I18N
+
 local ILocalizable = require("api.ILocalizable")
 
 local i18n = require("internal.i18n")
 
--- Interface to the text localization system.
--- @module I18N
 local I18N = {}
 
 --- Returns the current langauge identifier as a string.

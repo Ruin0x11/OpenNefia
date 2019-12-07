@@ -197,14 +197,13 @@ local function parse_file(fname, lang, package, args)
    function F:warning (msg,kind,line)
       kind = kind or 'warning'
       line = line or lineno()
-      Item.had_warning = true
-      io.stderr:write(fname..':'..line..': '..msg,'\n')
+      local warning = ("%s:%s: %s"):format(fname,line,msg)
+      Item.warnings[#Item.warnings+1] = warning
    end
 
    function F:error (msg)
       self:warning(msg,'error')
-      io.stderr:write('LDoc error\n')
-      os.exit(1)
+      error(msg)
    end
 
    local function add_module(tags,module_found,old_style)

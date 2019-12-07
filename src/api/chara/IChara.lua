@@ -86,7 +86,6 @@ local fallbacks = {
    karma = 0,
 
    number_of_weapons = 0,
-   ether_disease_speed = 0,
    initial_x = 0,
    initial_y = 0,
    ai_config = {
@@ -150,7 +149,9 @@ local fallbacks = {
 
    anorexia_count = 0,
 
+   --- @field melee_attack_type
    melee_attack_type = 0,
+
    ether_disease_corruption = 0,
    ether_disease_speed = 0
 }

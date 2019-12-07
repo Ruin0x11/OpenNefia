@@ -163,6 +163,8 @@ doc.File = File
 doc.Item = Item
 doc.Module = Module
 
+Item.warnings = {}
+
 function File:_init(filename)
    self.filename = filename
    self.items = List()
@@ -409,7 +411,7 @@ function File:finish()
             -- must be a free-standing function (sometimes a problem...)
          end
       end
-      item.names_hierarchy = require('pl.utils').split(
+      item.names_hierarchy = require('thirdparty.pl.utils').split(
         item.name,
         '[.:]'
       )
@@ -1036,14 +1038,14 @@ function Item:warning(msg)
    local file = self.file and self.file.filename
    if type(file) == 'table' then require 'thirdparty.pl.pretty'.dump(file); file = '?' end
    file = file or '?'
-   io.stderr:write(file,':',self.lineno or '1',': ',self.name or '?',': ',msg,'\n')
-   Item.had_warning = true
+   local warning = ("%s:%s: %s: %s"):format(file,self.lineno or '1',self.name or '?',msg)
+   Item.warnings[#Item.warnings+1] = warning
    return nil
 end
 
 function Item:error(msg)
    self:warning(msg)
-   os.exit(1)
+   error(msg)
 end
 
 Module.warning, Module.error = Item.warning, Item.error
@@ -1140,7 +1142,7 @@ function Module:process_see_reference (s,modules,istype)
    fun_ref = self.items.by_name[s]
    if fun_ref then return reference(s,self,fun_ref) end
    -- otherwise, start splitting!
-   local packmod,name = split_dotted_name(s) -- e.g. 'pl.utils','split'
+   local packmod,name = split_dotted_name(s) -- e.g. 'thirdparty.pl.utils','split'
    if packmod then -- qualified name
       mod_ref = modules.by_name[packmod] -- fully qualified mod name?
       if not mod_ref then

@@ -19,5 +19,7 @@ alias("inherits", "see")
 
 new_type("event", "Events", false, "Event Parameters")
 custom_tags = {
-   {"ownership", "Ownership"}
+   {"ownership", "Ownership"},
+   {"interface", "Interface"},
+   {"overrides", "Overrides"},
 }

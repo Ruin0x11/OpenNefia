@@ -30,6 +30,10 @@ fun = require("thirdparty.fun")
 
 class = require("util.class")
 
+local function remove_all_metatables(item, path)
+  if path[#path] ~= inspect.METATABLE then return item end
+end
+
 function _ppr(...)
    local t = {...}
    local max = 0
@@ -46,7 +50,7 @@ function _ppr(...)
       if v == nil then
          io.write("nil")
       else
-         io.write(inspect(v))
+         io.write(inspect(v, {process = remove_all_metatables}))
       end
       io.write("\t")
    end
@@ -64,6 +68,8 @@ if is_windows then
    io.stdout:setvbuf("no")
    io.stderr:setvbuf("no")
 end
+
+help = require("api.Doc").lookup
 
 -- prevent new globals from here on out.
 require("thirdparty.strict")

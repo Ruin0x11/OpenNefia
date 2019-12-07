@@ -373,6 +373,10 @@ function ReplLayer:execute(code)
    self:submit()
 end
 
+local function remove_all_metatables(item, path)
+  if path[#path] ~= inspect.METATABLE then return item end
+end
+
 function ReplLayer.format_repl_result(result)
    local result_text
    local stop = false
@@ -381,7 +385,7 @@ function ReplLayer.format_repl_result(result)
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
       if result._type and result._id then
-         result_text = inspect(Object.make_prototype(result))
+         result_text = inspect(Object.make_prototype(result), {process=remove_all_metatables})
       elseif tostring(result) == "<generator>" then
          -- Wrap in a protected function in case running the generator
          -- returns an error
@@ -394,11 +398,11 @@ function ReplLayer.format_repl_result(result)
                   list = list:map(Object.make_prototype)
                end
                if list:length() == max + 1 then
-                  text = "(iterator): " .. inspect(list:take(10):to_list())
+                  text = "(iterator): " .. inspect(list:take(10):to_list(), {process=remove_all_metatables})
                   text = string.strip_suffix(text, " }")
                   text = text .. ", <...> }"
                else
-                  text = "(iterator): " .. inspect(list:to_list())
+                  text = "(iterator): " .. inspect(list:to_list(), {process=remove_all_metatables})
                end
 
                return text
@@ -406,7 +410,7 @@ function ReplLayer.format_repl_result(result)
          result_text = rest
          stop = true
       else
-         result_text = inspect(result)
+         result_text = inspect(result, {process=remove_all_metatables})
       end
    else
       result_text = tostring(result)

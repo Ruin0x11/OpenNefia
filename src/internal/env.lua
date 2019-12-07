@@ -1,4 +1,9 @@
 local Log = require("api.Log")
+local fs = require("util.fs")
+local doc = require("internal.doc")
+local paths = require("internal.paths")
+
+local doc_store = require("internal.global.doc_store")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -158,11 +163,11 @@ local function env_loadfile(path, mod_env)
    end
 
    if resolved == nil then
-      local paths = ""
+      local tried_paths = ""
       for _, s in ipairs(string.split(package.path, ";")) do
-         paths = paths .. "\n" .. s
+         tried_paths = tried_paths .. "\n" .. s
       end
-      return nil, "Cannot find path " .. path .. paths
+      return nil, "Cannot find path " .. path .. tried_paths
    end
 
    local chunk, err = loadfile(resolved)
@@ -261,41 +266,31 @@ local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 local LOADING_STACK = {}
-local PATH_CACHE = {}
+local DOCS_LOADED = {}
 
--- Converts a filepath to a uniquely identifying Lua require path.
--- Examples:
--- api/chara/IChara.lua -> api.chara.IChara
--- mod/elona/init.lua   -> mod.elona
-function env.convert_to_require_path(path)
-   -- This function is gets hot since many functions call "require" in
-   -- function bodies to get around circular dependencies.
-   if PATH_CACHE[path] then
-      return PATH_CACHE[path]
+local function update_documentation(path, req_path, api_table)
+   if DOCS_LOADED[req_path] and not IS_HOTLOADING then
+      return
    end
 
-   local old_path = path
-   local path = path
+   if not get_load_type(req_path) then
+      return
+   end
 
-   -- HACK: needs better normalization to prevent duplicate chunks. If
-   -- this is not completely unique then two require paths could end
-   -- up referring to the same file, breaking hotloading. The
-   -- intention is any require path uniquely identifies a return value
-   -- from `require`.
-   path = string.strip_suffix(path, ".lua")
-   path = string.gsub(path, "/", ".")
-   path = string.gsub(path, "\\", ".")
-   path = string.strip_suffix(path, ".init")
-   path = string.gsub(path, "^%.+", "")
-
-   PATH_CACHE[old_path] = path
-
-   return path
+   local resolved = package.searchpath(path, package.path)
+   if resolved then
+      local entry = doc_store.entries[resolved]
+      local modify_time = fs.get_info(resolved).modtime
+      if not entry or doc_store.files[entry.file_path].last_updated < modify_time or IS_HOTLOADING then
+         DOCS_LOADED[req_path] = true
+         doc.reparse(req_path, api_table)
+      end
+   end
 end
 
 local function gen_require(chunk_loader, can_load_path)
    return function(path, hotload)
-      local req_path = env.convert_to_require_path(path)
+      local req_path = paths.convert_to_require_path(path)
 
       if can_load_path and not can_load_path(req_path) then
          return nil
@@ -328,6 +323,7 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if not hotload and package.loaded[req_path] then
+         update_documentation(path, req_path, package.loaded[req_path])
          return package.loaded[req_path]
       end
 
@@ -361,6 +357,8 @@ local function gen_require(chunk_loader, can_load_path)
             end
          end
          Log.trace("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
+
+         update_documentation(path, req_path, package.loaded[req_path])
       elseif result == nil then
          package.loaded[req_path] = true
       else
@@ -405,7 +403,7 @@ function env.hotload_path(path, also_deps)
    -- "init.lua" at the end. We still need to strip "init.lua" from
    -- the end if that's the case, in order to make the paths
    -- "api/Api.lua" and "api/Api/init.lua" resolve to the same thing.
-   path = env.convert_to_require_path(path)
+   path = paths.convert_to_require_path(path)
 
    HOTLOADED = {}
 
@@ -536,7 +534,7 @@ function env.require_all_apis(dir, recurse, full_path)
       if fs.is_file(path) and fs.extension_part(path) == "lua" then
          local name
          if full_path then
-            name = env.convert_to_require_path(path)
+            name = paths.convert_to_require_path(path)
          else
             name = fs.filename_part(path)
          end

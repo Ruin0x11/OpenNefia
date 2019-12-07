@@ -1,5 +1,6 @@
 local data = require("internal.data")
 local env = require("internal.env")
+local paths = require("internal.paths")
 local EventTree = require("api.EventTree")
 local Log = require("api.Log")
 
@@ -37,7 +38,7 @@ local function find_calling_chunk()
    end
 
    local file = trace.source:sub(2)
-   return env.convert_to_require_path(file)
+   return paths.convert_to_require_path(file)
 end
 
 --- Called by base.on_hotload_begin.

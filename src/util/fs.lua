@@ -45,7 +45,9 @@ if not love or love.getVersion() == "lovemock" then
       end
 
       return {
-         type = attrs.mode
+         type = attrs.mode,
+         size = attrs.size,
+         modtime = attrs.modification
       }
    end
    fs.get_save_directory = function()
@@ -74,6 +76,7 @@ if not love or love.getVersion() == "lovemock" then
       if love then
          name = fs.join(fs.get_save_directory(), name)
       end
+      assert(fs.exists(name), ("file does not exist: %s"):format(name))
       local f = io.open(name, "rb")
       local data = f:read(size or "*all")
       f:close()
@@ -95,6 +98,7 @@ if not love or love.getVersion() == "lovemock" then
 
       return os.remove(name)
    end
+   fs.get_working_directory = lfs.currentdir
 else
    fs.get_directory_items = love.filesystem.getDirectoryItems
    fs.get_info = love.filesystem.getInfo
@@ -103,6 +107,7 @@ else
    fs.write = love.filesystem.write
    fs.read = love.filesystem.read
    fs.remove = love.filesystem.remove
+   fs.get_working_directory = love.filesystem.getWorkingDirectory
 end
 
 function fs.iter_directory_items(dir)

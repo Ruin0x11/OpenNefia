@@ -10,7 +10,6 @@ local function visit(node, graph, visited, ordered, cycle)
     visited[node] = 0
     cycle[#cycle+1] = node
     local deps = graph[node]
-    _ppr(node, deps)
     for i=1, #deps do
         if visit(deps[i], graph, visited, ordered, cycle) then return 1 end
     end

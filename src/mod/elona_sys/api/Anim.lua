@@ -1,4 +1,4 @@
---- @example Gui.add_async_callback(Anim.swarm(20, 20))
+--- @usage Gui.add_async_callback(Anim.swarm(20, 20))
 --- @module Anim
 local Anim = {}
 
