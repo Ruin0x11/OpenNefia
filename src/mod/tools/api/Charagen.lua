@@ -1,3 +1,5 @@
+--- Character generation algorithm for Elona.
+--- @module Charagen
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Map = require("api.Map")
@@ -93,6 +95,15 @@ local function do_get_chara_id(params)
    return id
 end
 
+--- Creates a random character.
+---
+--- @tparam[opt] int x
+--- @tparam[opt] int y
+--- @tparam[opt] table params Extra parameters.
+--- test
+--- test2
+--- @tparam[opt] ILocation where
+--- @treturn[opt] IChara
 function Charagen.create(x, y, params, where)
    params = params or {}
 

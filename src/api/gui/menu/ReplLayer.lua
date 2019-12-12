@@ -193,8 +193,12 @@ function ReplLayer:history_prev()
       end
       self.redraw = true
    else
-      self.history_index = math.max(self.history_index - 1, 1)
-      self:set_text(self.history[self.history_index])
+      if self.history_index - 1 < 1 then
+         self:set_text("")
+      else
+         self.history_index = self.history_index - 1
+         self:set_text(self.history[self.history_index])
+      end
    end
 
    self.completion = nil
@@ -233,8 +237,12 @@ function ReplLayer:history_next()
       end
       self.redraw = true
    else
-      self.history_index = math.min(self.history_index + 1, #self.history)
-      self:set_text(self.history[self.history_index])
+      if self.history_index + 1 > #self.history then
+         self:set_text("")
+      else
+         self.history_index = self.history_index + 1
+         self:set_text(self.history[self.history_index])
+      end
    end
 
    self.completion = nil

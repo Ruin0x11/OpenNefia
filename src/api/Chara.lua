@@ -1,3 +1,5 @@
+--- Functions for manipulating characters.
+--- @module Chara
 local MapObject = require("api.MapObject")
 local ILocation = require("api.ILocation")
 local Event = require("api.Event")
@@ -5,14 +7,13 @@ local Event = require("api.Event")
 local field = require("game.field")
 local save = require("internal.global.save")
 
--- Functions for manipulating characters.
 local Chara = {}
 
 --- Returns the character at the given position, if any.
 ---
 --- @tparam int x
 --- @tparam int y
---- @tparam[opt] InstancedMap
+--- @tparam[opt] InstancedMap map
 --- @treturn[opt] IChara
 function Chara.at(x, y, map)
    -- TODO: ILocation instead of map
@@ -175,13 +176,12 @@ local hook_generate_chara =
 --- @tparam[opt] int x Defaults to a random free position on the map.
 --- @tparam[opt] int y
 --- @tparam[opt] table params Extra parameters.
----  - ownerless (bool): Do not attach the character to a map. If true, then `where` is ignored.
----  - no_build (bool): Do not call :build() on the object.
----  - copy (table): A dict of fields to copy to the newly created item. Overrides level and quality.
----  - level (int): Level of the character.
----  - quality (int): Quality of the character (1-6).
---- @tparam[opt] ILocation map Where to instantiate this item.
----   Defaults to the current map.
+---   - ownerless (bool): Do not attach the character to a map. If true, then `where` is ignored.
+---   - no_build (bool): Do not call :build() on the object.
+---   - copy (table): A dict of fields to copy to the newly created item. Overrides level and quality.
+---   - level (int): Level of the character.
+---   - quality (int): Quality of the character (1-6).
+--- @tparam[opt] ILocation map Where to instantiate this item. Defaults to the current map.
 --- @treturn[opt] IChara
 --- @treturn[opt] string error
 function Chara.create(id, x, y, params, where)

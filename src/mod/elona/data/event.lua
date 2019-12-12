@@ -14,6 +14,7 @@ local event = {
    { _id = "before_cast_return" },
    { _id = "on_displaced" },
    { _id = "calc_wand_success" },
+   { _id = "on_shop_restocked" },
 
 }
 

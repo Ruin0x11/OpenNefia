@@ -1,7 +1,7 @@
 --luacheck: ignore
-project='elona-next'
-title='elona-next Lua API'
-description='Public API for modding elona-next'
+project='Elona_next'
+title='Elona_next Lua API'
+description='Public API for modding Elona_next'
 format='discount'
 backtick_references=false
 merge=false
@@ -13,13 +13,12 @@ dir='out'
 readme='main.md'
 style='!pale'
 kind_names={topic='Manual',module="APIs"}
-alias("interface", "module")
 alias("overrides", "see")
 alias("inherits", "see")
 
 new_type("event", "Events", false, "Event Parameters")
+new_type("interface", "Interfaces", true, "Parameters")
 custom_tags = {
    {"ownership", "Ownership"},
-   {"interface", "Interface"},
    {"overrides", "Overrides"},
 }

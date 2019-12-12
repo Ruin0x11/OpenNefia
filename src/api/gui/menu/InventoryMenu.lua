@@ -4,6 +4,7 @@ local Ui = require("api.Ui")
 local Item = require("api.Item")
 local Inventory = require("api.Inventory")
 local Input = require("api.Input")
+local I18N = require("api.I18N")
 
 local IInput = require("api.gui.IInput")
 local UiWindow = require("api.gui.UiWindow")
@@ -78,12 +79,13 @@ function InventoryMenu:init(ctxt, returns_item)
    self.ctxt = ctxt
    self.returns_item = returns_item
 
-   self.win = UiWindow:new("ui.inv.window", true, "key help")
+   self.win = UiWindow:new("ui.inv.window.name", true, "key help")
    self.pages = UiList:new_paged(table.of("hoge", 100), 16)
    table.merge(self.pages, UiListExt(self))
 
    self.total_weight = 0
    self.max_weight = 0
+   self.cargo_weight = 0
    self.layout = nil -- ResistanceLayout:new()
    self.subtext_column = "subtext"
 
@@ -213,8 +215,13 @@ function InventoryMenu:update_filtering()
    -- TODO: Determine when to display weight. Inventory contexts can
    -- be created out of any number of sources that might exclude a
    -- character, like a spot on the map.
-   self.total_weight = self.ctxt.chara:calc("inventory_weight")
-   self.max_weight = self.ctxt.chara:calc("max_inventory_weight")
+   self.total_weight = Ui.display_weight(self.ctxt.chara:calc("inventory_weight"))
+   self.max_weight = Ui.display_weight(self.ctxt.chara:calc("max_inventory_weight"))
+   self.cargo_weight = Ui.display_weight(self.ctxt.chara:calc("cargo_weight"))
+
+   if self.ctxt.show_money and self.ctxt.target then
+      self.money = self.ctxt.target:calc("gold")
+   end
 
    -- Run after filter actions that can return a turn result, like
    -- exiting the menu preemptively if a condition is false (for
@@ -243,7 +250,8 @@ function InventoryMenu:draw()
 
    Ui.draw_topic(self.subtext_column, self.x + 526, self.y + 30)
 
-   local weight_note = string.format("%d items  (%s/%ss)", self.pages:len(), self.total_weight, self.max_weight)
+   local weight_note = string.format("%d items  (%s)", self.pages:len(),
+                                I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight))
    Ui.draw_note(weight_note, self.x, self.y, self.width, self.height, 0)
 
    -- on_draw
@@ -254,11 +262,10 @@ function InventoryMenu:draw()
    Draw.set_font(14) -- 14 - en * 2
    self.pages:draw()
 
-   local show_money = true
-   if show_money then
+   if self.ctxt.show_money then
       Draw.set_font(self.t.gold_count_font) -- 13 - en * 2
       self.t.gold_coin:draw(self.x + 340, self.y + 32, nil, nil, {255, 255, 255})
-      Draw.text("12345 gp", self.x + 368, self.y + 37, self.t.text_color)
+      Draw.text(("%d gp"):format(self.money), self.x + 368, self.y + 37, self.t.text_color)
    end
 end
 

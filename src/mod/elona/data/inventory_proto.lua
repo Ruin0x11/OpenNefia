@@ -227,6 +227,7 @@ local inv_buy = {
    shortcuts = false,
    icon = 6,
    query_amount = true,
+   show_money = true,
    can_select = function(ctxt, item)
       if item:calc("flags").is_no_drop then
          return false, "marked as no drop"
@@ -270,6 +271,7 @@ local inv_sell = {
    shortcuts = false,
    icon = 7,
    query_amount = true,
+   show_money = true,
    can_select = function(ctxt, item)
       if item:calc("flags").is_no_drop then
          return false, "marked as no drop"

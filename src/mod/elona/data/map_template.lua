@@ -120,9 +120,9 @@ local function create_charas(map, charas)
                   chara.name = I18N.get(v, chara.name)
                elseif k == "_role" then
                   if type(v) == "table" then
-                     chara.roles = { { id = v[1], params = v[2] } }
+                     chara.roles = { [v[1]] = v[2] }
                   elseif type(v) == "string" then
-                     chara.roles = { { id = v, params = {} } }
+                     chara.roles = { [v] = {} }
                   else
                      error()
                   end
@@ -602,13 +602,13 @@ local noyel = {
 
             local chara = Chara.create("elona.kaneda_bike", 48, 19)
             if chara then
-               chara.roles = {{id="elona.unique_chara"}}
+               chara.roles = {["elona.unique_chara"] = {}}
                chara.is_only_in_christmas = true
             end
 
             chara = Chara.create("elona.part_time_worker", 30, 17)
             if chara then
-               chara.roles = {{id="elona.unique_chara"}}
+               chara.roles = {["elona.unique_chara"] = {}}
                chara.is_only_in_christmas = true
             end
 
@@ -648,7 +648,7 @@ local noyel = {
             if chara then
                chara.ai_calm = 3
                chara.is_only_in_christmas = true
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.food_vendor", rank=10}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.food_vendor", rank=10}}
                chara.name = I18N.get("chara.job.food_vendor", chara.name)
             end
 
@@ -657,7 +657,7 @@ local noyel = {
                chara.ai_calm = 3
                chara.faction = "elona.citizen"
                chara.is_only_in_christmas = true
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.souvenir_vendor", rank=30}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor", rank=30}}
                chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
             end
 
@@ -666,14 +666,14 @@ local noyel = {
                chara.ai_calm = 3
                chara.faction = "elona.citizen"
                chara.is_only_in_christmas = true
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.souvenir_vendor", rank=30}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor", rank=30}}
                chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
             end
 
             chara = Chara.create("elona.shopkeeper", 38, 12)
             if chara then
                chara.ai_calm = 3
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.blackmarket", rank=10}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.blackmarket", rank=10}}
                chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
                chara.is_only_in_christmas = true
             end
@@ -683,7 +683,7 @@ local noyel = {
                chara.ai_calm = 3
                chara.faction = "elona.citizen"
                chara.is_only_in_christmas = true
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.street_vendor", rank=30}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.street_vendor", rank=30}}
                chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
             end
 
@@ -692,7 +692,7 @@ local noyel = {
                chara.ai_calm = 3
                chara.faction = "elona.citizen"
                chara.is_only_in_christmas = true
-               chara.roles = {{id="elona.shopkeeper", {inventory_id="elona.street_vendor", rank=30}}}
+               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.street_vendor", rank=30}}
                chara.name = I18N.get("chara.job.street_vendor2", Text.random_name())
             end
 
@@ -1182,7 +1182,17 @@ local puppy_cave = {
       has_anchored_npcs = false,
       default_ai_calm = 0,
       is_generated_every_time = true
-   }
+   },
+
+   on_generate = function(map)
+      if map.dungeon_level == map.deepest_dungeon_level
+         and Sidequest.progress("elona.puppys_cave") < 2
+         and not Chara.find("elona.poppy", "ally")
+      then
+         local poppy = Chara.create("elona.poppy", nil, nil, {}, map)
+         poppy.is_not_targeted_by_ai = true
+      end
+   end,
 }
 data:add(puppy_cave)
 

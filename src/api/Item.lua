@@ -1,3 +1,5 @@
+--- Functions for manipulating items.
+--- @module Item
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
@@ -6,7 +8,6 @@ local InventoryContext = require("api.gui.menu.InventoryContext")
 local data = require("internal.data")
 local field = require("game.field")
 
--- Functions for manipulating items.
 local Item = {}
 
 function Item.at(x, y, map)

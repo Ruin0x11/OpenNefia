@@ -365,7 +365,7 @@ function Dialog.start(chara, dialog_id)
       return
    end
 
-   dialog_id = dialog_id or chara:calc("dialog") or "elona_sys.ignores_you"
+   dialog_id = dialog_id or "elona_sys.ignores_you"
 
    local dialog = data["elona_sys.dialog"]:ensure(dialog_id)
 

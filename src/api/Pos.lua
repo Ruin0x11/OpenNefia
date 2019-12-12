@@ -1,6 +1,5 @@
--- Functions dealing with 2D tiled map positions.
--- @module Pos
-
+--- Functions dealing with 2D tiled map positions.
+--- @module Pos
 local Rand = require("api.Rand")
 
 local Pos = {}
@@ -25,7 +24,7 @@ end
 
 --- Converts a direction to a pair of (dx, dy), or (0, 0) on failure.
 ---
---- @tparam direction
+--- @tparam direction dir
 --- @treturn int x
 --- @treturn int y
 function Pos.unpack_direction(dir)
@@ -125,6 +124,8 @@ function Pos.direction_in(start_x, start_y, finish_x, finish_y)
    return nx, ny
 end
 
+--- True if a point is in a centered square.
+---
 --- @tparam int x
 --- @tparam int y
 --- @tparam int center_x

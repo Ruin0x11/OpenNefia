@@ -1,7 +1,8 @@
-local mod = require("internal.mod")
 local internal = require("internal")
+local mod = require("internal.mod")
 local i18n = require("internal.i18n")
 local data = require("internal.data")
+local doc = require("internal.doc")
 local field = require("game.field")
 local Stopwatch = require("api.Stopwatch")
 local UiTheme = require("api.gui.UiTheme")
@@ -16,6 +17,8 @@ function startup.run(mods)
    end
 
    math.randomseed(internal.get_timestamp())
+
+   doc.load()
 
    require("internal.data.base")
 
@@ -34,6 +37,10 @@ function startup.run(mods)
    field:setup_repl()
 
    Event.trigger("base.on_game_startup")
+end
+
+function startup.shutdown()
+   doc.save()
 end
 
 local tile_batch = require("internal.draw.tile_batch")

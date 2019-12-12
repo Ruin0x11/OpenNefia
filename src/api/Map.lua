@@ -812,6 +812,7 @@ end
 --- TODO: needs to support nested dungeons.
 ---  - A group of maps is contained in one area.
 ---  - The area has a containing world map.
+--- @tparam InstancedMap map
 function Map.position_in_world_map(map)
    map = map or Map.current()
 

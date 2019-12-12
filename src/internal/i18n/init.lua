@@ -84,7 +84,7 @@ function i18n.switch_language(lang, force)
       end
    end
 
-   Log.info("Translations for language '%s' loaded in %02.02f seconds", lang, sw:measure() * 1000)
+   Log.info("Translations for language '%s' loaded in %02.02fms", lang, sw:measure())
 end
 
 function i18n.get_language()

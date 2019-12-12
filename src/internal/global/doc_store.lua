@@ -1,4 +1,5 @@
 return {
    files = {},
-   entries = setmetatable({}, { __mode = "k" })
+   entries = {},
+   can_load = false
 }

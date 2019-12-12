@@ -69,7 +69,7 @@ if is_windows then
    io.stderr:setvbuf("no")
 end
 
-help = require("api.Doc").lookup
+help = require("api.Doc").help
 
 -- prevent new globals from here on out.
 require("thirdparty.strict")

@@ -1,3 +1,5 @@
+--- Item generation algorithm for Elona.
+--- @module Itemgen
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
@@ -132,6 +134,15 @@ local function do_generate_item_id(params)
    return id
 end
 
+--- Creates a random item.
+---
+--- @tparam[opt] int x
+--- @tparam[opt] int y
+--- @tparam[opt] table params Extra parameters.
+--- test
+--- test2
+--- @tparam[opt] ILocation where
+--- @treturn[opt] IItem
 function Itemgen.create(x, y, params, where)
    params = params or {}
 

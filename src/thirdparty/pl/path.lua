@@ -24,30 +24,37 @@ if res then
     attributes = lfs.attributes
     currentdir = lfs.currentdir
     link_attrib = lfs.symlinkattributes
+
+    --- Lua iterator over the entries of a given directory.
+    -- Behaves like `lfs.dir`
+    path.dir = lfs.dir
+
+    --- Creates a directory.
+    path.mkdir = lfs.mkdir
+
+    --- Removes a directory.
+    path.rmdir = lfs.rmdir
+
+    ---- Get the working directory.
+    path.currentdir = currentdir
+
+    --- Changes the working directory.
+    path.chdir = lfs.chdir
 else
-    error("pl.path requires LuaFileSystem")
+    local res,fs = _G.pcall(_G.require,'util.fs')
+    if res then
+      -- NOTE: only what is necessary for ldoc is implemented
+       attributes = fs.attributes
+       currentdir = fs.get_working_directory
+       link_attrib = fs.attributes
+    else
+       error("pl.path requires LuaFileSystem")
+    end
 end
 
 attrib = attributes
 path.attrib = attrib
 path.link_attrib = link_attrib
-
---- Lua iterator over the entries of a given directory.
--- Behaves like `lfs.dir`
-path.dir = lfs.dir
-
---- Creates a directory.
-path.mkdir = lfs.mkdir
-
---- Removes a directory.
-path.rmdir = lfs.rmdir
-
----- Get the working directory.
-path.currentdir = currentdir
-
---- Changes the working directory.
-path.chdir = lfs.chdir
-
 
 --- is this a directory?
 -- @string P A file path

@@ -67,3 +67,31 @@ function string.tostring_raw(tbl)
    setmetatable(tbl, mt)
    return s
 end
+
+-- from http://lua-users.org/wiki/StringRecipes
+function string.wrap(str, limit, indent, indent1)
+   indent = indent or ""
+   indent1 = indent1 or indent
+   limit = limit or 72
+   local here = 1-#indent1
+   local function check(sp, st, word, fi)
+      if string.find(sp, "\n") then
+         here = st - #indent
+      end
+      if fi - here > limit then
+         here = st - #indent
+         return "\n"..indent..word
+      end
+   end
+   return indent1..str:gsub("(%s+)()(%S+)()", check)
+end
+
+function string.reflow(str, limit, indent, indent1)
+   return (str:gsub("%s*\n%s+", "\n")
+              :gsub("%s%s+", " ")
+              :gsub("[^\n]+",
+                    function(line)
+                       return string.wrap(line, limit, indent, indent1)
+   end))
+end
+

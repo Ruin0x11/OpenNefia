@@ -219,7 +219,7 @@ local function generate_dungeon(self, params, opts)
    if opts.area_uid then
       local areas = save.base.area_mapping
       area = areas:area(opts.area_uid)
-      deepest_dungeon_level = area.data.deepest_dungeon_level
+      deepest_dungeon_level = area.data.deepest_dungeon_level or deepest_dungeon_level
    end
 
    if deepest_dungeon_level == nil then

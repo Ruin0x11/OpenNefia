@@ -99,6 +99,8 @@ if not love or love.getVersion() == "lovemock" then
       return os.remove(name)
    end
    fs.get_working_directory = lfs.currentdir
+
+   fs.attributes = lfs.attributes
 else
    fs.get_directory_items = love.filesystem.getDirectoryItems
    fs.get_info = love.filesystem.getInfo
@@ -108,6 +110,29 @@ else
    fs.read = love.filesystem.read
    fs.remove = love.filesystem.remove
    fs.get_working_directory = love.filesystem.getWorkingDirectory
+
+   fs.attributes = function(filepath, aname, atable)
+      filepath = string.gsub(filepath, "^%.[/\\]", "")
+      filepath = string.gsub(filepath, "\\", "/")
+      filepath = string.strip_prefix(filepath, fs.get_working_directory() .. "/")
+      local info = love.filesystem.getInfo(filepath)
+      if info == nil then
+         return nil, "file does not exist"
+      end
+
+      if info.type == "symlink" then
+         info.type = "link"
+      end
+
+      info.mode = info.type
+      info.type = nil
+
+      if aname then
+         info = info[aname]
+      end
+
+      return info
+   end
 end
 
 function fs.iter_directory_items(dir)
@@ -256,8 +281,8 @@ function fs.normalize(path)
    -- if is_windows then
    --    path = path:lower()
    -- end
+   path = path:gsub("[/\\]", dir_sep)
    local base, rest = fs.split_base(path)
-   rest = rest:gsub("[/\\]", dir_sep)
 
    local parts = {}
 

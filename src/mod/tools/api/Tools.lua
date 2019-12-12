@@ -528,4 +528,18 @@ function Tools.inspect_at()
    return "player_turn_query"
 end
 
+function Tools.goto_down_stairs()
+   local stairs = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_down" end):nth(1)
+   if stairs then
+      Chara.player():set_pos(stairs.x, stairs.y)
+   end
+end
+
+function Tools.goto_up_stairs()
+   local stairs = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_up" end):nth(1)
+   if stairs then
+      Chara.player():set_pos(stairs.x, stairs.y)
+   end
+end
+
 return Tools

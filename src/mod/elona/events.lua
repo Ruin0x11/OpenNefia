@@ -485,7 +485,8 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
-      Dialog.start(on_cell)
+      local dialog_id = on_cell:calc("dialog") or "elona.default"
+      Dialog.start(on_cell, dialog_id)
       return "player_turn_query"
    end
 
@@ -508,8 +509,8 @@ local function calc_dialog_choices(speaker, params, result)
    table.insert(result, {"talk", "talk.npc.common.choices.talk"})
 
    if speaker.roles then
-      for _, role in ipairs(speaker.roles) do
-         local role_data = data["elona.role"]:ensure(role.id)
+      for id, _ in pairs(speaker.roles) do
+         local role_data = data["elona.role"]:ensure(id)
          if role_data.dialog_choices then
             for _, choice in ipairs(role_data.dialog_choices) do
                if type(choice) == "function" then

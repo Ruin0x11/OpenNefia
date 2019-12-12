@@ -82,7 +82,9 @@
           (file-relative-name
            (file-name-sans-extension file)
            (string-join (list (projectile-project-root) "src/"))))
-         (lua-path (replace-regexp-in-string "/" "." prefix))
+         (lua-path (string-trim-left
+                    (replace-regexp-in-string "/" "." prefix)
+                    "\\.+"))
          (lua-name (let ((it (car (last (split-string lua-path "\\.")))))
                      (if (string-equal it "init")
                          (car (last (butlast
@@ -166,7 +168,7 @@
 (defvar elona-next--repl-name "elona-next-repl")
 
 (defun elona-next--repl-file ()
-(string-join (list (projectile-project-root) "src/repl.lua")))
+  (string-join (list (projectile-project-root) "src/repl.lua")))
 
 (defun elona-next--test-repl ()
   (with-current-buffer (get-buffer-create elona-next--repl-errors-buffer)
@@ -183,6 +185,10 @@
          (buffer (get-buffer buffer-name))
          (default-directory (file-name-directory (directory-file-name (elona-next--repl-file))))
          (switch (or (and arg "load") "")))
+    (when-let ((buf (get-buffer elona-next--repl-errors-buffer))
+               (dir default-directory))
+      (with-current-buffer buf
+        (setq-local default-directory dir)))
     (if (and (buffer-live-p buffer) (process-live-p (get-buffer-process buffer)))
         (progn
           (setq next-error-last-buffer (get-buffer buffer-name))

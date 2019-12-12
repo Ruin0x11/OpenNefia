@@ -11,8 +11,8 @@ local role = {
       elona_id = 1000,
 
       dialog_choices = {
-         {"elona.shopkeeper:buy", "buy"},
-         {"elona.shopkeeper:sell", "sell"}
+         {"elona.shopkeeper:buy", "talk.npc.shop.choices.buy"},
+         {"elona.shopkeeper:sell", "talk.npc.shop.choices.sell"}
       }
    },
    {

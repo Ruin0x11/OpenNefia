@@ -13,5 +13,5 @@ globals = {
    "_ppr",
    "save",
    "utf8",
-   "help"
+   "hel mip"
 }

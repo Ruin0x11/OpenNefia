@@ -3,6 +3,7 @@ local Rand = {}
 
 --- Returns a random integer in `[0, n)`.
 --- @tparam int n
+--- @treturn int
 function Rand.rnd(n)
    return math.random(0, math.floor(n) - 1)
 end

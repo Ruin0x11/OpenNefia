@@ -85,7 +85,7 @@ function Ui.cutoff_text(text, width)
    local t = ""
    local w = 0
 
-   for c in string.chars(text) do
+   for _, c in utf8.chars(text) do
       if c == nil or w >= width then
          break
       end
@@ -159,12 +159,16 @@ function Ui.parse_elona_markup(text, width, color)
          push_result(x, y)
          append = false
 
-         local close_index = string.find(text, ">", i)
+         -- `i` is a UTF-8 codepoint position, and we translate to byte position.
+         local byte = utf8.offset(text,i)
+
+         -- This is a byte position.
+         local close_index = string.find(text, ">", byte)
          if close_index == nil then
             return nil, ("missing '>' to close '<' at position %d"):format(i)
          end
 
-         local tag_name = utf8.sub(text, i+1, close_index-1)
+         local tag_name = string.sub(text, byte+1, close_index-1)
          local tag = TAGS[tag_name]
          if tag ~= nil then
             if tag.color then
@@ -195,7 +199,8 @@ function Ui.parse_elona_markup(text, width, color)
             Draw.set_font(font_size)
          end
 
-         i = close_index
+         -- Convert from byte position to UTF-8 codepoint position
+         i = utf8.codepoint_pos(text, close_index)
       elseif c == "^" then
          -- Treat the next character literally.
          i = i + 1
@@ -232,10 +237,10 @@ end
 function Ui.draw_elona_markup(markup, x, y, shadow)
    for _, item in ipairs(markup) do
       Draw.set_font(item.font_size, item.font_style)
-      Draw.set_color(item.color)
       if shadow then
          Draw.text(item.text, x + item.x - 1, y + item.y - 1, {160, 160, 140})
       end
+      Draw.set_color(item.color)
       Draw.text(item.text, x + item.x, y + item.y)
    end
 end

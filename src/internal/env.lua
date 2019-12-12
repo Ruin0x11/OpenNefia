@@ -269,9 +269,11 @@ local LOADING_STACK = {}
 local DOCS_LOADED = {}
 
 local function update_documentation(path, req_path, api_table)
-   if DOCS_LOADED[req_path] and not IS_HOTLOADING then
+   if not doc.can_load() or (DOCS_LOADED[req_path] and not IS_HOTLOADING) then
       return
    end
+
+   DOCS_LOADED[req_path] = true
 
    if not get_load_type(req_path) then
       return
@@ -279,11 +281,18 @@ local function update_documentation(path, req_path, api_table)
 
    local resolved = package.searchpath(path, package.path)
    if resolved then
-      local entry = doc_store.entries[resolved]
-      local modify_time = fs.get_info(resolved).modtime
-      if not entry or doc_store.files[entry.file_path].last_updated < modify_time or IS_HOTLOADING then
-         DOCS_LOADED[req_path] = true
-         doc.reparse(req_path, api_table)
+      resolved = fs.normalize(resolved)
+
+      local file = doc_store.files[resolved]
+      local info = fs.get_info(resolved)
+      assert(info, resolved)
+
+      local modify_time = info.modtime
+      if not file or file.last_updated < modify_time or IS_HOTLOADING then
+         local ok, err = pcall(doc.reparse, req_path, api_table)
+         if not ok then
+            Log.error("Doc parse error: %s", err)
+         end
       end
    end
 end

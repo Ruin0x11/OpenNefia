@@ -186,3 +186,14 @@ function utf8.find_next_pos(str, pos, delta)
 
    return pos
 end
+
+function utf8.codepoint_pos(str, byte)
+   local cp = 1
+   for p, _ in utf8.codes(str) do
+      if p >= byte then
+         return cp
+      end
+      cp = cp + 1
+   end
+   return nil
+end

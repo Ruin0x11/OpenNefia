@@ -61,9 +61,9 @@ local function connect_stairs(map, outer_map, generator)
    print("stairsup", stairs_up.uid, stairs_up.map_uid)
 
    if stairs_down then
-      local new_generator = table.deepcopy(generator)
-      new_generator.params.dungeon_level = dungeon_level + 1
-      stairs_down.generator_params = new_generator
+      generator.params.dungeon_level = dungeon_level + 1
+      stairs_down.generator_params = generator
+      Log.warn("Generator down: %s", inspect(generator))
    end
 end
 
@@ -83,7 +83,15 @@ local function generate_from_map_template(self, params, opts)
 
    local generator_data = data["base.map_generator"]:ensure(generator.generator)
    if generator_data.connect_stairs then
-      connect_stairs(map, opts.outer_map, generator)
+      local next_generator = {
+         generator = self._id,
+         params = params
+      }
+      if generator.params.dungeon_level then
+         next_generator.params.dungeon_level = generator.params.dungeon_level
+         next_generator.params.deepest_dungeon_level = generator.params.deepest_dungeon_level
+      end
+      connect_stairs(map, opts.outer_map, next_generator)
    end
 
    if template.copy then

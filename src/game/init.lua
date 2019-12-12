@@ -96,6 +96,8 @@ function game.loop()
          end
       end
    end
+
+   startup.shutdown()
 end
 
 function game.draw()

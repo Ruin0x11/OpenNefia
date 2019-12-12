@@ -1,4 +1,4 @@
---- @interface IChara
+--- @classmod IChara
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -143,6 +143,7 @@ local fallbacks = {
    impression = 0,
 
    shop_rank = 0,
+   shop_restock_date = 0,
 
    breaks_into_debris = nil,
    is_solid = true,

@@ -9,13 +9,7 @@ function Role.get(chara, role_id)
       return nil
    end
 
-   for _, role in ipairs(chara.roles) do
-      if role.id == role_id then
-         return role
-      end
-   end
-
-   return nil
+   return chara.roles[role_id]
 end
 
 return Role

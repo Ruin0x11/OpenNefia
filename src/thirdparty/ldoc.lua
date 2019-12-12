@@ -76,7 +76,7 @@ ldoc, a documentation generator for Lua, vs ]]..version..[[
   and processes <file> if 'file' was not defined in the ld file.
 ]]
 -- local args = lapp(usage)
-local lfs = require 'lfs'
+local fs = require 'util.fs'
 local doc = require 'thirdparty.ldoc.doc'
 local lang = require 'thirdparty.ldoc.lang'
 local tools = require 'thirdparty.ldoc.tools'
@@ -329,13 +329,14 @@ function ldoc.ldoc(target_dir, args, config)
       if err then quit("no "..quote(args.config).." found") end
       local config_path = path.dirname(args.config)
       if config_path ~= '' then
-         print('changing to directory',config_path)
-         lfs.chdir(config_path)
+         --print('changing to directory',config_path)
+         --lfs.chdir(config_path)
+         error(config_path)
       end
       config_is_read = true
       args.file = ldoc.file or '.'
       if args.file == '.' then
-         args.file = lfs.currentdir()
+         args.file = fs.get_working_directory()
       elseif type(args.file) == 'table' then
          for i,f in ipairs(args.file) do
             args.file[i] = abspath(f)
@@ -515,7 +516,7 @@ function ldoc.ldoc(target_dir, args, config)
          end
       end
       process_file(args.file, file_list, args)
-      if #file_list == 0 then quit "unsupported file extension" end
+      if interactive and #file_list == 0 then quit "unsupported file extension" end
    else
       quit ("file or directory does not exist: "..quote(args.file))
    end
@@ -793,7 +794,7 @@ function ldoc.ldoc(target_dir, args, config)
       local user = path.expanduser('~'):gsub('[/\\: ]','_')
       local tmpdir = path.join(path.is_windows and os.getenv('TMP') or '/tmp','ldoc'..user)
       if not path.isdir(tmpdir) then
-         lfs.mkdir(tmpdir)
+         fs.create_directory(tmpdir)
       end
       local function tmpwrite (name)
          local ok,text = pcall(require,'ldoc.html.'..name:gsub('%.','_'))
@@ -864,7 +865,7 @@ function ldoc.dump_file(file, config)
    end
 
    lapp.show_usage_error = "throw"
-   local args = lapp(usage, {"--only_process", "--file", file})
+   local args = lapp(usage, {"--ignore", "--only_process", "--file", file})
 
    return ldoc.ldoc(".", args, new_config)
 end

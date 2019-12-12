@@ -49,6 +49,7 @@ data:add {
 
    progress = {
       [1] = "quest.journal.sub.puppys_cave.progress._0",
+      [2] = "quest.journal.sub.puppys_cave.progress._1",
       [1000] = "",
    },
 }

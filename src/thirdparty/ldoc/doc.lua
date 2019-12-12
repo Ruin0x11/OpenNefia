@@ -1045,7 +1045,10 @@ end
 
 function Item:error(msg)
    self:warning(msg)
-   error(msg)
+
+   local name = self.file and self.file.filename or "[?]"
+   local full_msg = ("%s:(%s):%s"):format(name, self.name or "?", msg)
+   error(full_msg)
 end
 
 Module.warning, Module.error = Item.warning, Item.error

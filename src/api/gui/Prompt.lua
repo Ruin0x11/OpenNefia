@@ -102,7 +102,7 @@ function Prompt:relayout(x, y)
    self.t = UiTheme.load(self)
 
    self.win:relayout(self.x + 8, self.y + 8, self.width - 16, self.height - 16)
-   self.list:relayout(self.x + 30, self.y + 24)
+   self.list:relayout(self.x + 30, self.y + 24, self.width, self.height)
 end
 
 function Prompt:update()
