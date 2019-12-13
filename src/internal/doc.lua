@@ -290,7 +290,7 @@ local function alias_api_fields(api_table, req_path)
    end
 
    local entry, file_path = doc_entry_for_req_path(req_path)
-   assert(entry)
+   assert(entry, req_path .. " " .. file_path)
 
    if tbl then
       for k, obj in pairs(tbl) do

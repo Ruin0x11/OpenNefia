@@ -17,8 +17,13 @@
   (condition-case nil
       (progn
         (goto-char (point-min))
-        (json-parse-buffer))
-      (error nil)))
+        (if (fboundp 'json-parse-buffer)
+            (json-parse-buffer
+             :object-type 'plist
+             :null-object nil
+             :false-object :json-false)
+          (json-read)))
+    (error nil)))
 
 (defun elona-next--tcp-filter (proc chunk)
   (with-current-buffer (process-buffer proc)
@@ -39,7 +44,7 @@
      response)))
 
 (defun elona-next--process-response (cmd content response)
-  (if-let ((candidates (gethash "candidates" response)))
+  (if-let ((candidates (plist-get :candidates response)))
       (let ((cand (completing-read "Candidate: " (append candidates nil))))
         (elona-next--send cmd cand))
     (pcase cmd
@@ -51,15 +56,15 @@
       (else (error "No action for %s" cmd)))))
 
 (defun elona-next--command-help (content response)
-  (-let (((&hash "success" "doc" "message") response)
+  (-let (((&plist :success :doc :message) response)
          (buffer (get-buffer-create "*elona-next-help*")))
-    (if (eq success t)
+     (if (eq success t)
         (with-help-window buffer
           (princ doc)))
     (message "%s" message)))
 
 (defun elona-next--command-jump-to (content response)
-  (-let* (((&hash "success" "file" "line" "column") response))
+  (-let* (((&plist :success :file :line :column) response))
     (if (eq success t)
         (let ((loc (xref-make-file-location file line column)))
           (xref--push-markers)
@@ -83,7 +88,7 @@
   (run-with-idle-timer 0 nil (lambda () (eldoc-message elona-next--eldoc-saved-message))))
 
 (defun elona-next--command-signature (response)
-  (-let* (((&hash "sig" "params" "summary") response))
+  (-let* (((&plist :sig :params :summary) response))
     (when sig
       (setq elona-next--eldoc-saved-message
             (format "%s :: %s\n%s" (elona-next--fontify-str sig) params summary)
@@ -97,7 +102,7 @@
   eldoc-last-message)
 
 (defun elona-next--command-apropos (response)
-  (-let* (((&hash "items") response)
+  (-let* (((&plist :items) response)
           (cand (completing-read "Apropos: " (append items nil))))
     (elona-next--send "help" cand)))
 
