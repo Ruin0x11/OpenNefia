@@ -115,22 +115,26 @@ function env.find_calling_mod()
 
    local stack = 1
    local info = debug.getinfo(stack, "S")
+   local loc
 
    while info do
+      if info.what == "main" and loc == nil then
+         loc = info
+      end
       local mod_env = getfenv(stack)
       local success, mod_name = pcall(function()
             return mod_env._MOD_NAME
       end)
 
       if success then
-         return mod_name
+         return mod_name, info
       end
 
       stack = stack + 1
       info = debug.getinfo(stack, "S")
    end
 
-   return "base"
+   return "base", loc
 end
 
 local global_require = require
@@ -274,14 +278,19 @@ local HOTLOADED = {}
 local LOADING = {}
 local LOADING_STACK = {}
 local DOCS_LOADED = {}
+local DOCS_HOTLOADED = {}
 local LOADING_MODS = {}
 
 local function update_documentation(path, req_path, api_table)
    if not doc.can_load() or (DOCS_LOADED[req_path] and not IS_HOTLOADING) then
       return
    end
+   if IS_HOTLOADING and DOCS_HOTLOADED[req_path] then
+      return true
+   end
 
    DOCS_LOADED[req_path] = true
+   DOCS_HOTLOADED[req_path] = true
 
    if not get_load_type(req_path) then
       return
@@ -425,6 +434,7 @@ function env.hotload_path(path, also_deps)
    path = paths.convert_to_require_path(path)
 
    HOTLOADED = {}
+   DOCS_HOTLOADED = {}
 
    if not can_hotload(path) then
       error("Can't hotload the path " .. path)

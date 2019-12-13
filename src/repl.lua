@@ -112,8 +112,8 @@ end
 
 server = nil
 
--- @see repl:showprompt(prompt)
-function elona_repl:showprompt(prompt)
+-- @see repl:prompt(prompt)
+function elona_repl:prompt(level)
    if server == nil or env.server_needs_restart then
       if server then
          server:stop()
@@ -123,7 +123,19 @@ function elona_repl:showprompt(prompt)
       env.server_needs_restart = false
    end
 
-  console_repl:showprompt(prompt)
+   if not self.server_stepped then
+      console_repl:prompt(level)
+   end
+
+   self.server_stepped = false
+end
+
+local super = elona_repl.handleline
+function elona_repl:handleline(line)
+   if line == "server:step()" then
+      self.server_stepped = true
+   end
+   return super(self, line)
 end
 
 local function gather_results(success, ...)
@@ -133,6 +145,10 @@ end
 
 -- @see repl:displayresults(results)
 function elona_repl:displayresults(results)
+   if self.server_stepped then
+      return
+   end
+
    -- omit parens (elona console style)
    if results.n == 1 and type(results[1]) == "function" then
       local success

@@ -47,12 +47,11 @@ function Doc.make_params_string(the_doc)
    local params = "("
    for i, v in ipairs(the_doc.params.params) do
       local modifier = the_doc.modifiers.param[i]
-      _ppr(v, modifier)
 
       if i > 1 then
          params = params .. " -> "
       end
-      if modifier then
+      if modifier and modifier.type then
          params = params .. modifier.type
          if modifier.opt then
             params = params .. "?"
@@ -110,9 +109,14 @@ function Doc.help(thing)
       end
    elseif the_doc.type == "function" then
       name = doc.get_item_full_name(the_doc)
+   else
+      name = the_doc.full_path
    end
 
    local _type = ("a %s%s"):format(the_doc.is_builtin and "builtin " or "", the_doc.type)
+   if the_doc.type == "data instance" then
+      _type = _type .. (" of '%s'"):format(the_doc.data_type)
+   end
 
    local defined = ""
    if not the_doc.is_builtin then
@@ -162,7 +166,7 @@ function Doc.help(thing)
          end
       end
    end
-   if type(the_doc) == "function" then
+   if the_doc.type == "function" then
       local ret = the_doc.modifiers["return"]
       if ret and #ret > 0 then
          params = params .. "\n\n= Returns\n"

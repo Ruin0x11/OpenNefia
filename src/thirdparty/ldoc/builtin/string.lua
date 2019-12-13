@@ -11,6 +11,7 @@ local string = {}
 -- @tparam string s
 -- @tparam[opt] int i
 -- @tparam[opt] int j
+-- @treturn int
 function string.byte(s, i, j) end
 
 ---
@@ -18,7 +19,8 @@ function string.byte(s, i, j) end
 -- the number of arguments, in which each character has the internal numerical
 -- code equal to its corresponding argument.
 -- Note that numerical codes are not necessarily portable across platforms.
--- @param ...
+-- @tparam int... ...
+-- @treturn string
 function string.char(...) end
 
 ---
@@ -26,6 +28,7 @@ function string.char(...) end
 -- function, so that a later `loadstring` on this string returns a copy of
 -- the function. `function` must be a Lua function without upvalues.
 -- @tparam function fn
+-- @treturn string
 function string.dump(fn) end
 
 ---
@@ -68,7 +71,7 @@ function string.find(s, pattern, init, plain) end
 -- This function does not accept string values containing embedded zeros,
 -- except as arguments to the `q` option.
 -- @tparam string formatstring
--- @param ...
+-- @tparam ... ...
 function string.format(formatstring, ...) end
 
 ---
@@ -150,6 +153,7 @@ function string.gsub(s, pattern, repl , n) end
 -- Receives a string and returns its length. The empty string `""` has
 -- length 0. Embedded zeros are counted, so `"a\000bc\000"` has length 5.
 -- @tparam string s
+-- @treturn int
 function string.len(s) end
 
 ---
@@ -157,6 +161,7 @@ function string.len(s) end
 -- letters changed to lowercase. All other characters are left unchanged. The
 -- definition of what an uppercase letter is depends on the current locale.
 -- @tparam string s
+-- @treturn string
 function string.lower(s) end
 
 ---
@@ -175,11 +180,13 @@ function string.match(s, pattern, init) end
 -- `s`.
 -- @tparam string s
 -- @tparam int n
+-- @treturn string
 function string.rep(s, n) end
 
 ---
 -- Returns a string that is the string `s` reversed.
 -- @tparam string s
+-- @treturn string
 function string.reverse(s) end
 
 ---
@@ -191,6 +198,7 @@ function string.reverse(s) end
 -- @tparam string s
 -- @tparam[opt] int i
 -- @tparam[opt] int j
+-- @treturn string
 function string.sub(s, i , j) end
 
 ---
@@ -198,6 +206,7 @@ function string.sub(s, i , j) end
 -- letters changed to uppercase. All other characters are left unchanged. The
 -- definition of what a lowercase letter is depends on the current locale.
 -- @tparam string s
+-- @treturn string
 function string.upper(s) end
 
 return string

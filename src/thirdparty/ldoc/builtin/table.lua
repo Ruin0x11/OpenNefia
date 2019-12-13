@@ -40,7 +40,7 @@ function table.remove(table, pos) end
 ---
 -- Returns a new table with all parameters stored into keys 1, 2, etc. and with a field "n" with
 -- the total number of parameters. Note that the resulting table may not be a sequence.
--- @param ...
+-- @tparam ... ...
 -- @treturn table
 function table.pack(...) end
 ---
@@ -63,7 +63,7 @@ function table.sort(table, comp) end
 -- @tparam table list
 -- @tparam[opt] int i
 -- @tparam[opt] int j
--- @return ...
+-- @treturn ...
 function unpack(list, i, j) end
 
 return table

@@ -61,7 +61,7 @@
 (defun elona-next--command-jump-to (content response)
   (-let* (((&hash "success" "file" "line" "column") response))
     (if (eq success t)
-        (let (((xref-make-file-location file line column)))
+        (let ((loc (xref-make-file-location file line column)))
           (xref--push-markers)
           (xref--show-location loc nil))
       (xref-find-definitions content))))
@@ -77,20 +77,23 @@
     (buffer-string)))
 
 (defvar elona-next--eldoc-saved-message nil)
+(defvar elona-next--eldoc-saved-point nil)
 
 (defun elona-next--eldoc-message (&optional msg)
   (run-with-idle-timer 0 nil (lambda () (eldoc-message elona-next--eldoc-saved-message))))
 
 (defun elona-next--command-signature (response)
-  (-let* (((&hash "sig" "params") response))
+  (-let* (((&hash "sig" "params" "summary") response))
     (when sig
       (setq elona-next--eldoc-saved-message
-            (format "%s :: %s" (elona-next--fontify-str sig) params))
+            (format "%s :: %s\n%s" (elona-next--fontify-str sig) params summary)
+            elona-next--eldoc-saved-point (point))
       (elona-next--eldoc-message elona-next--eldoc-saved-message))))
 
 (defun elona-next-eldoc-function ()
-  (elona-next--send "signature"
-                    (symbol-name (elona-next--dotted-symbol-at-point)))
+  (ignore-errors
+      (elona-next--send "signature"
+                        (symbol-name (elona-next--dotted-symbol-at-point))))
   eldoc-last-message)
 
 (defun elona-next--command-apropos (response)
@@ -263,6 +266,7 @@
   (interactive)
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "_")
+    (modify-syntax-entry ?: "_")
     (symbol-at-point)))
 
 (defun elona-next-describe-thing-at-point (arg)

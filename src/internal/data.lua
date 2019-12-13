@@ -1,6 +1,9 @@
 local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
+local doc = require("internal.doc")
 local env = require ("internal.env")
+local paths = require("internal.paths")
+local fs = require("util.fs")
 local schema = require ("thirdparty.schema")
 
 if env.is_hotloading() then
@@ -120,7 +123,7 @@ end
 function data:add_type(schema, params)
    params = params or {}
 
-   local mod_name = env.find_calling_mod()
+   local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
 
    if env.is_hotloading() and schemas[_type] then
@@ -133,6 +136,15 @@ function data:add_type(schema, params)
    metatable._type = _type
 
    local generate = params.generates or nil
+
+   assert(loc, _type)
+   if loc then
+      schema._defined_in = {
+         relative = fs.normalize(loc.short_src),
+         line = loc.lastlinedefined
+      }
+      doc.add_for_data_type(_type, schema._defined_in, schema.doc)
+   end
 
    inner[_type] = {}
    index[_type] = {}
@@ -165,13 +177,30 @@ function data:run_edits_for(_type, _id)
    self[_type][_id] = global_edits[_type](self[_type][_id])
 end
 
+local function update_docs(dat, _schema, loc)
+   if (dat._doc or _schema.on_document) then
+      if loc then
+         dat._defined_in = {
+            relative = fs.normalize(loc.short_src),
+            line = loc.lastlinedefined
+         }
+      end
+      local the_doc = dat._doc
+      if _schema.on_document then
+         the_doc =_schema.on_document(dat)
+      end
+      doc.add_for_data(dat._type, dat._id, the_doc, dat._defined_in, dat)
+   end
+end
+
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
 
-   local mod_name = env.find_calling_mod()
+   local mod_name, loc = env.find_calling_mod()
 
    local _id = dat._id
    local _type = dat._type
+   dat._doc = dat._doc or ""
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
       data:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
@@ -227,6 +256,8 @@ function data:add(dat)
             add_index_field(dat, _type, field)
          end
 
+         update_docs(dat, _schema, loc)
+
          return dat
       else
          Log.error("ID is already taken on type '%s': '%s'", _type, full_id)
@@ -242,7 +273,14 @@ function data:add(dat)
    end
 
    dat._id = full_id
+
+   update_docs(dat, _schema, loc)
+
    return dat
+end
+
+function data:iter()
+   return fun.iter(table.keys(schemas)):map(function(ty) return ty, data[ty] end)
 end
 
 function data:add_multi(_type, list)
@@ -296,6 +334,18 @@ end
 function proxy:__index(k)
    local exist = rawget(proxy, k)
    if exist then return exist end
+
+   if k == "_defined_in" then
+      return schemas[self._type]._defined_in
+   end
+
+   if k == "on_document" then
+      return schemas[self._type].on_document
+   end
+
+   if k == "doc" then
+      return schemas[self._type].doc
+   end
 
    local _type = rawget(self, "_type")
    local for_type = rawget(inner, _type)

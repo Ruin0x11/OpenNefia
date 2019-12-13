@@ -96,7 +96,8 @@ function commands.signature(text)
 
    return {
       sig = sig,
-      params = Doc.make_params_string(entry)
+      params = Doc.make_params_string(entry),
+      summary = entry.summary
    }
 end
 

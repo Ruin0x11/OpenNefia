@@ -6,6 +6,12 @@ data:add_type {
    schema = schema.Record {
       observer = schema.Optional(schema.String)
    },
+   on_document = function(dat)
+      return { summary = "dood" }
+   end,
+   doc = [[
+Events that can be fired.
+]]
 }
 
 local IChara = require("api.chara.IChara")

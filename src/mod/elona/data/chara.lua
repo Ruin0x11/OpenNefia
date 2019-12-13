@@ -6,6 +6,7 @@ local eating_effect = require("mod.elona.data.chara.eating_effect")
 local chara = {
    {
       _id = "bug",
+      _doc = "bug",
       elona_id = 0,
       item_type = 3,
       level = 1,

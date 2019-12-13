@@ -35,7 +35,4 @@ function Ai.run(id, chara, params)
    return ai.act(chara, params or {})
 end
 
-function Ai.act_hostile_towards(chara, target)
-end
-
 return Ai

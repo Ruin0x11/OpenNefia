@@ -418,7 +418,9 @@ function doc.get(path)
          path = path:gsub("^ext%.", "")
       end
       local file_path = get_paths(path)
-      entry = doc_store.entries[file_path]
+      if not string.match(file_path, "^__private__:") then
+         entry = doc_store.entries[file_path]
+      end
    elseif type(path) == "table" then
       if path.__iface then
          path = path.__iface
@@ -436,6 +438,7 @@ function doc.get(path)
             local file = doc_store.entries[alias.file_path]
             assert(file)
 
+            assert(file.full_path, inspect(file))
             if alias.full_path == file.full_path:lower() then
                -- this is a module
                entry = file
@@ -461,6 +464,90 @@ function doc.get(path)
       return nil, ("No documentation for %s (%s)"):format(aliases[1].file_path, path)
    else
       return nil, ("No documentation for %s"):format(path)
+   end
+end
+
+local function create_doc_from_location(file_path, loc)
+   local file = { base = "", filename = "", relative = "" }
+
+   if loc then
+      local relative = loc.relative
+      local filename = fs.join(fs.get_working_directory(), relative)
+      local base = filename:gsub("/([^/]+)$", "")
+      file = {
+         base = base,
+         filename = filename,
+         relative = relative
+      }
+   end
+
+   return {
+      items = {},
+      full_path = file_path,
+      lineno = loc.line,
+      file = file
+   }
+end
+
+function doc.add_for_data_type(_type, defined_in, summary)
+   local file_path = "__private__:data_type"
+   local full_path = _type
+   assert(full_path)
+
+   if doc_store.entries[file_path] == nil then
+      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in) -- BUG
+   end
+
+   local the_doc = {
+      type = "data type",
+      full_path = full_path,
+      name = _type,
+      file = doc_store.entries[file_path].file,
+      lineno = defined_in.line,
+      summary = summary or nil
+   }
+
+   doc_store.entries[file_path].items[full_path] = the_doc
+
+   local alias = { file_path = file_path, full_path = full_path }
+
+   -- "base.chara"
+   add_alias(_type, alias)
+end
+
+function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
+   local file_path = "__private__:data"
+   local full_path = ("%s:%s"):format(_type, _id)
+
+   if doc_store.entries[file_path] == nil then
+      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in) -- BUG
+   end
+
+   if type(the_doc) == "string" then
+      the_doc = { summary = the_doc }
+   end
+
+   assert(type(the_doc) == "table")
+   the_doc.type = "data instance"
+   the_doc.data_type = _type
+   the_doc.name = _id
+   the_doc.full_path = full_path
+   the_doc.file = doc_store.entries[file_path].file
+   the_doc.lineno = defined_in and defined_in.line or 0
+
+   doc_store.entries[file_path].items[full_path] = the_doc
+
+   local alias = { file_path = file_path, full_path = full_path }
+
+   -- "base.chara:elona.putit"
+   add_alias(full_path, alias)
+
+   -- "elona.putit"
+   add_alias(_id, alias)
+
+   if dat then
+      -- <table 0x12345678>
+      add_alias(dat, alias)
    end
 end
 
@@ -495,8 +582,26 @@ function doc.build_all()
          local req_path = paths.convert_to_require_path(path)
          local api_name = fs.filename_part(path)
 
-         -- require the original API
-         local success, tbl = pcall(require, api_name)
+         local success, tbl
+         if api_name == "global" then
+            -- "global" is just a name used by ldoc to contain all the
+            -- global functions like `assert` and `collectgarbage`,
+            -- not an actual module.
+            --
+            -- Since we use strict.lua we have to generate a new table
+            -- without the strict metatable containing the global
+            -- functions to prevent errors.
+            success = true
+            tbl = {}
+            for k, v in pairs(_G) do
+               if type(v) == "function" then
+                  tbl[k] = v
+               end
+            end
+         else
+            -- require the original API
+            success, tbl = pcall(require, api_name)
+         end
 
          if success then
             doc.reparse(req_path, tbl, api_name)
@@ -522,6 +627,17 @@ function doc.build_all()
             doc.reparse(req_path, tbl, api_name)
          else
             Log.debug("API require failed: %s", tbl)
+         end
+      end
+   end
+
+   local data = require("internal.data")
+   for _, _ty, tbl in data:iter() do
+      doc.add_for_data_type(_ty, tbl._defined_in, tbl.doc)
+
+      if tbl.on_document then
+         for _, dat in tbl:iter() do
+            doc.add_for_data(_ty, dat._id, tbl.on_document(dat), dat._defined_in, dat)
          end
       end
    end
@@ -579,17 +695,25 @@ function doc.load()
    table.replace_with(doc_store, SaveFs.deserialize(str))
 
    for p, entry in pairs(doc_store.entries) do
-      local file_path, req_path = get_paths(p)
-      local api_table
-      if entry.is_builtin then
-         print("BUILTIN", entry.mod_name)
-         api_table = require(entry.mod_name)
-         req_path = entry.mod_name
-      else
-         print("non", entry.mod_name)
-         api_table = require(file_path)
+      if not string.match(p, "^__private__:") then
+         local file_path, req_path = get_paths(p)
+         local api_table
+         if entry.mod_name == "global" then
+            api_table = {}
+            for k, v in pairs(_G) do
+               if type(v) == "function" then
+                  api_table[k] = v
+               end
+            end
+            req_path = "global"
+         elseif entry.is_builtin then
+            api_table = require(entry.mod_name)
+            req_path = entry.mod_name
+         else
+            api_table = require(file_path)
+         end
+         alias_api_fields(api_table, req_path)
       end
-      alias_api_fields(api_table, req_path)
    end
 
    doc_store.can_load = true
