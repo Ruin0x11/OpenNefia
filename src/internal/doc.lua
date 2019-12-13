@@ -216,7 +216,7 @@ local function convert_ldoc_item(item, mod_name, is_builtin)
    t.summary = reformat_docstring(t.summary)
    t.description = reformat_docstring(t.description)
 
-   return t.full_path:lower(), t
+   return t.full_path, t
 end
 
 -- Strips unnecessary info from ldoc's raw output.
@@ -261,7 +261,6 @@ local function add_alias(key, alias)
    assert(doc_store.entries[alias.file_path], alias.file_path .. inspect(table.keys(doc_store.entries)))
 
    alias.full_path = alias.full_path:lower()
-
    if type(key) == "string" then
       key = key:lower()
    end
@@ -273,6 +272,7 @@ local function add_alias(key, alias)
       end
    end
 
+   print(alias.display_name,alias.full_path,key,"displ")
    table.insert(doc_store.aliases[key], alias)
 end
 
@@ -295,23 +295,23 @@ local function alias_api_fields(api_table, req_path)
    if tbl then
       for k, obj in pairs(tbl) do
          if type(obj) == "function" then
-            local full_path = ("%s.%s"):format(req_path, k):lower()
-            local item = entry.items[full_path]
+            local full_path = ("%s.%s"):format(req_path, k)
+            local item = entry.items[full_path:lower()]
             if item then
                -- This item has documentation available, so add an alias for it.
-               add_alias(obj, {file_path=file_path, full_path=full_path})
+               add_alias(obj, {file_path=file_path, full_path=full_path, display_name=full_path})
             end
          end
       end
    end
 
-   add_alias(entry.full_path, {file_path=file_path, full_path=entry.full_path})
-   add_alias(api_table, {file_path=file_path, full_path=entry.full_path})
+   add_alias(entry.full_path, {file_path=file_path, full_path=entry.full_path, display_name=entry.full_path})
+   add_alias(api_table, {file_path=file_path, full_path=entry.full_path, display_name=entry.full_path})
 end
 
 local function add_common_aliases(item, file_path)
    local full_path = item.full_path
-   local alias = { file_path=file_path, full_path=full_path }
+   local alias = { file_path=file_path, full_path=full_path, display_name=full_path }
 
    add_alias(full_path, alias)
 
@@ -454,7 +454,7 @@ function doc.get(path)
          else
             return {
                type = "candidates",
-               candidates = fun.iter(aliases):extract("full_path"):to_list()
+               candidates = fun.iter(aliases):map(function(a) return { a.display_name, a.full_path } end):to_list()
             }
          end
       end
@@ -509,7 +509,7 @@ function doc.add_for_data_type(_type, defined_in, summary)
 
    doc_store.entries[file_path].items[full_path] = the_doc
 
-   local alias = { file_path = file_path, full_path = full_path }
+   local alias = { file_path = file_path, full_path = full_path, display_name = full_path }
 
    -- "base.chara"
    add_alias(_type, alias)
@@ -537,7 +537,7 @@ function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
 
    doc_store.entries[file_path].items[full_path] = the_doc
 
-   local alias = { file_path = file_path, full_path = full_path }
+   local alias = { file_path = file_path, full_path = full_path, display_name = full_path }
 
    -- "base.chara:elona.putit"
    add_alias(full_path, alias)

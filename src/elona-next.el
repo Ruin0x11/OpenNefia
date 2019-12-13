@@ -43,9 +43,14 @@
      (process-get proc :content)
      response)))
 
+(defun elona-next--completing-read (prompt list)
+  (let ((cands (mapcar (lambda (c) (append c nil)) list)))
+    (completing-read prompt cands)))
+
 (defun elona-next--process-response (cmd content response)
   (if-let ((candidates (plist-get :candidates response)))
-      (let ((cand (completing-read "Candidate: " (append candidates nil))))
+      ; in pairs of ("api.Api.name", "api.api.name")
+      (let ((cand (elona-next--completing-read "Candidate: " candidates)))
         (elona-next--send cmd cand))
     (pcase cmd
       ("help" (elona-next--command-help content response))
@@ -59,9 +64,9 @@
   (-let (((&plist :success :doc :message) response)
          (buffer (get-buffer-create "*elona-next-help*")))
      (if (eq success t)
-        (with-help-window buffer
-          (princ doc)))
-    (message "%s" message)))
+         (with-help-window buffer
+           (princ doc))
+       (message "%s" message))))
 
 (defun elona-next--command-jump-to (content response)
   (-let* (((&plist :success :file :line :column) response))
@@ -103,8 +108,8 @@
 
 (defun elona-next--command-apropos (response)
   (-let* (((&plist :items) response)
-          (cand (completing-read "Apropos: " (append items nil))))
-    (elona-next--send "help" cand)))
+          (item (elona-next--completing-read "Apropos: " items)))
+    (elona-next--send "help" item)))
 
 (defun elona-next--tcp-sentinel (proc message)
   "Runs when a client closes the connection."

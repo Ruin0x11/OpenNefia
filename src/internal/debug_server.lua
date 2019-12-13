@@ -105,10 +105,10 @@ function commands.apropos(text)
    local items = {}
 
    for _, entry in pairs(doc_store.entries) do
-      for k, _ in pairs(entry.items) do
-         items[#items+1] = k
+      for k, item in pairs(entry.items) do
+         items[#items+1] = { item.full_path, k }
       end
-      items[#items+1] = entry.full_path
+      items[#items+1] = { entry.full_path, entry.full_path:lower() }
    end
 
    return {
