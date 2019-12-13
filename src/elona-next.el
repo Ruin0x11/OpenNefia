@@ -1,5 +1,7 @@
 (require 'lua-mode)
 (require 'eval-sexp-fu nil t)
+(require 'json)
+(require 'dash)
 
 (defvar elona-next-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -11,40 +13,143 @@
   "Elona next debug server."
   :lighter " Elona" :keymap elona-next-minor-mode-map)
 
+(defun elona-next--parse-response ()
+  (condition-case nil
+      (progn
+        (goto-char (point-min))
+        (json-parse-buffer))
+      (error nil)))
+
+(defun elona-next--tcp-filter (proc chunk)
+  (with-current-buffer (process-buffer proc)
+    (goto-char (point-max))
+    (insert chunk)
+    (let ((response (process-get proc :response)))
+      (unless response
+        (when (setf response (elona-next--parse-response))
+          (delete-region (point-min) (point))
+          (process-put proc :response response)))))
+  (when-let ((response (process-get proc :response)))
+    (with-current-buffer (process-buffer proc)
+      (erase-buffer))
+    (process-put proc :response nil)
+    (elona-next--process-response
+     (process-get proc :command)
+     (process-get proc :content)
+     response)))
+
+(defun elona-next--process-response (cmd content response)
+  (if-let ((candidates (gethash "candidates" response)))
+      (let ((cand (completing-read "Candidate: " (append candidates nil))))
+        (elona-next--send cmd cand))
+    (pcase cmd
+      ("help" (elona-next--command-help content response))
+      ("jump_to" (elona-next--command-jump-to content response))
+      ("signature" (elona-next--command-signature response))
+      ("apropos" (elona-next--command-apropos response))
+      ("run" t)
+      (else (error "No action for %s" cmd)))))
+
+(defun elona-next--command-help (content response)
+  (-let (((&hash "success" "doc" "message") response)
+         (buffer (get-buffer-create "*elona-next-help*")))
+    (if (eq success t)
+        (with-help-window buffer
+          (princ doc)))
+    (message "%s" message)))
+
+(defun elona-next--command-jump-to (content response)
+  (-let* (((&hash "success" "file" "line" "column") response))
+    (if (eq success t)
+        (let (((xref-make-file-location file line column)))
+          (xref--push-markers)
+          (xref--show-location loc nil))
+      (xref-find-definitions content))))
+
+(defun elona-next--fontify-str (str)
+  (with-temp-buffer
+    (insert str)
+    (delay-mode-hooks (lua-mode))
+    (font-lock-default-function 'lua-mode)
+    (font-lock-default-fontify-region (point-min)
+                                      (point-max)
+                                      nil)
+    (buffer-string)))
+
+(defvar elona-next--eldoc-saved-message nil)
+
+(defun elona-next--eldoc-message (&optional msg)
+  (run-with-idle-timer 0 nil (lambda () (eldoc-message elona-next--eldoc-saved-message))))
+
+(defun elona-next--command-signature (response)
+  (-let* (((&hash "sig" "params") response))
+    (when sig
+      (setq elona-next--eldoc-saved-message
+            (format "%s :: %s" (elona-next--fontify-str sig) params))
+      (elona-next--eldoc-message elona-next--eldoc-saved-message))))
+
+(defun elona-next-eldoc-function ()
+  (elona-next--send "signature"
+                    (symbol-name (elona-next--dotted-symbol-at-point)))
+  eldoc-last-message)
+
+(defun elona-next--command-apropos (response)
+  (-let* (((&hash "items") response)
+          (cand (completing-read "Apropos: " (append items nil))))
+    (elona-next--send "help" cand)))
+
+(defun elona-next--tcp-sentinel (proc message)
+  "Runs when a client closes the connection."
+  (when (string-match-p "^open " message)
+    (let ((buffer (process-buffer proc)))
+      (when buffer
+        (kill-buffer buffer)))))
+
 (defun elona-next--make-tcp-connection (host port)
   (make-network-process :name "elona next"
                         :buffer "*elona next*"
                         :host host
                         :service port
+                        :filter 'elona-next--tcp-filter
+                        :sentinel 'elona-next--tcp-sentinel
                         :coding 'utf-8))
 
-(defun elona-next--send (str)
-  (when (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
-    (lua-send-string str))
-  (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567)))
+(defun elona-next--send (cmd str)
+  (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567))
+        (json (json-encode (list :command cmd :content str))))
     (when (process-live-p proc)
-      (comint-send-string proc str)
+      (process-put proc :command cmd)
+      (process-put proc :content str)
+      (comint-send-string proc (format "%s\n" json))
       (process-send-eof proc)
-      (delete-process proc)))
-  (let ((win (get-buffer-window lua-process-buffer))
-        (compilation-win (get-buffer-window compilation-last-buffer))
-        (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
-    (when (not (or (and compilation-win (window-live-p win)) (and lua-process-buffer win (window-live-p win))))
-      (when (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
-        (popwin:display-buffer buf)))
-    (if-let ((win (get-buffer-window buf)))
-        (with-selected-window win
-          (end-of-buffer)))))
+      ;; In REPL mode, run the server for one step to ensure the
+      ;; response is received (it's supposed to run every frame as
+      ;; a coroutine in LOVE)
+      (when (and (buffer-live-p lua-process-buffer)
+                 (get-buffer-process lua-process-buffer))
+        (lua-send-string "server:step()"))))
+
+  ;; Show the REPL if we're executing code.
+  (when (string-equal cmd "run")
+    (let ((win (get-buffer-window lua-process-buffer))
+          (compilation-win (get-buffer-window compilation-last-buffer))
+          (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
+      (when (not (or (and compilation-win (window-live-p win)) (and lua-process-buffer win (window-live-p win))))
+        (when (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
+          (popwin:display-buffer buf)))
+      (if-let ((win (get-buffer-window buf)))
+          (with-selected-window win
+            (end-of-buffer))))))
 
 (defun elona-next--send-to-repl (str)
-  (elona-next--send (format "require('api.Repl').send('%s')" str)))
+  (elona-next--send "run" (format "require('api.Repl').send('%s')" str)))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
   (setq start (lua-maybe-skip-shebang-line start))
   (let* ((lineno (line-number-at-pos start))
          (region-str (buffer-substring-no-properties start end)))
-    (elona-next--send region-str)))
+    (elona-next--send "run" region-str)))
 
 (defun elona-next-send-buffer ()
   (interactive)
@@ -100,7 +205,7 @@
                lua-path
                lua-path)))
     (save-buffer)
-    (elona-next--send cmd)
+    (elona-next--send "run" cmd)
     (message "Hotloaded %s." lua-path)))
 
 (defun elona-next-require-this-file ()
@@ -154,6 +259,30 @@
   (interactive)
   (lua-send-string (format "dofile \"%s\"" (buffer-file-name))))
 
+(defun elona-next--dotted-symbol-at-point ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (symbol-at-point)))
+
+(defun elona-next-describe-thing-at-point (arg)
+  (interactive "P")
+  (let ((sym (if arg
+                 (symbol-at-point)
+               (elona-next--dotted-symbol-at-point))))
+    (elona-next--send "help" (symbol-name sym))))
+
+(defun elona-next-jump-to-definition (arg)
+  (interactive "P")
+  (let ((sym (if arg
+                 (symbol-at-point)
+               (elona-next--dotted-symbol-at-point))))
+    (elona-next--send "jump_to" (symbol-name sym))))
+
+(defun elona-next-describe-apropos ()
+  (interactive)
+  (elona-next--send "apropos" ""))
+
 (defun elona-next-eval-sexp-fu-setup ()
   (define-eval-sexp-fu-flash-command elona-next-send-defun
     (eval-sexp-fu-flash (elona-next--bounds-of-last-defun (point))))
@@ -172,12 +301,12 @@
 
 (defun elona-next--test-repl ()
   (with-current-buffer (get-buffer-create elona-next--repl-errors-buffer)
-    (delete-region (point-min) (point-max))
-      (let ((result (apply 'call-process "luajit" nil
-                           (current-buffer)
-                           nil
-                           (list (elona-next--repl-file) "test"))))
-        (equal 0 result))))
+    (erase-buffer)
+    (let ((result (apply 'call-process "luajit" nil
+                         (current-buffer)
+                         nil
+                         (list (elona-next--repl-file) "test"))))
+      (equal 0 result))))
 
 (defun elona-next-start-repl (&optional arg)
   (interactive "P")

@@ -135,12 +135,7 @@ end
 
 local global_require = require
 
---- Loads a chunk from a package search path ignoring
---- `package.loaded`. If no environment is passed, the returned chunk
---- will have access to the global environment.
--- @tparam string path
--- @tparam[opt] table mod_env
-local function env_loadfile(path, mod_env)
+local function get_require_path(path, mod_env)
    local resolved = package.searchpath(path, package.path)
 
    if resolved == nil and not mod_env and _CONSOLE then
@@ -149,17 +144,30 @@ local function env_loadfile(path, mod_env)
       -- libraries.
       resolved = package.searchpath(path, package.cpath)
       if resolved then
-         return global_require(path)
+         return path, true -- return the original path
       end
    end
 
    if resolved == nil and string.match(path, "^socket") then
       -- Some modules like luasocket aren't in package.cpath but can
       -- be loaded with 'require' anyway for some mysterious reason.
-      local tbl = global_require(path)
-      if tbl then
-         return tbl
+      if global_require(path) then
+         return path, true
       end
+   end
+
+   return resolved, false
+end
+
+--- Loads a chunk from a package search path ignoring
+--- `package.loaded`. If no environment is passed, the returned chunk
+--- will have access to the global environment.
+-- @tparam string path
+-- @tparam[opt] table mod_env
+local function env_loadfile(path, mod_env)
+   local resolved, require_now = get_require_path(path, mod_env)
+   if require_now then
+      return global_require(resolved)
    end
 
    if resolved == nil then
@@ -207,6 +215,10 @@ local function get_load_type(path)
 end
 
 local function can_hotload(path)
+   if get_require_path(path) == nil then
+      return false
+   end
+
    for _, patt in ipairs(UNSAFE_HOTLOAD_PATHS) do
       if string.match(path, patt) then
          return false
@@ -217,12 +229,7 @@ local function can_hotload(path)
 end
 
 local function extract_mod_name(path)
-   local r, count = string.gsub(path, "^mod%.([^.]+)%..+$", "%1")
-   if count == 0 then
-      return nil
-   end
-
-   return r
+   return string.match(path, "^mod%.([^.]+)[%.]?")
 end
 
 --- Loads a chunk without updating the global package.loaded table.
@@ -267,6 +274,7 @@ local HOTLOADED = {}
 local LOADING = {}
 local LOADING_STACK = {}
 local DOCS_LOADED = {}
+local LOADING_MODS = {}
 
 local function update_documentation(path, req_path, api_table)
    if not doc.can_load() or (DOCS_LOADED[req_path] and not IS_HOTLOADING) then
@@ -283,13 +291,14 @@ local function update_documentation(path, req_path, api_table)
    if resolved then
       resolved = fs.normalize(resolved)
 
-      local file = doc_store.files[resolved]
+      local file = doc_store.entries[resolved]
       local info = fs.get_info(resolved)
       assert(info, resolved)
 
       local modify_time = info.modtime
       if not file or file.last_updated < modify_time or IS_HOTLOADING then
-         local ok, err = pcall(doc.reparse, req_path, api_table)
+         local is_builtin = false -- TODO
+         local ok, err = pcall(doc.reparse, req_path, api_table, is_builtin)
          if not ok then
             Log.error("Doc parse error: %s", err)
          end
@@ -348,15 +357,16 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if IS_HOTLOADING and result == "no_hotload" then
-         Log.warn("!!! Not hotloading: %s", req_path)
-         return package.loaded[req_path]
+         IS_HOTLOADING = false
+         Log.error("Chunk %s does not support hotloading", req_path)
+         return
       end
 
       if type(package.loaded[req_path]) == "table"
          and type(result) == "table"
       then
          Log.info("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
-         if result.on_hotload then
+         if type(result.on_hotload) == "function" then
             result.on_hotload(package.loaded[req_path], result)
          else
             if class.is_class_or_interface(result) then
@@ -420,6 +430,29 @@ function env.hotload_path(path, also_deps)
       error("Can't hotload the path " .. path)
    end
 
+   if get_load_type(path) == "mod" then
+      local mod_name = extract_mod_name(path)
+      assert(mod_name, "No mod name for " .. path)
+      if not LOADING_MODS[mod_name] then
+         local mod = require("internal.mod")
+         if not mod.is_loaded(mod_name) then
+            Log.warn("Mod '%s' is not yet loaded, attempting to load...", mod_name)
+            LOADING_MODS[mod_name] = true
+            local ok, err = mod.hotload_mod(mod_name)
+            LOADING_MODS[mod_name] = nil
+            if not ok then
+               error(err)
+            end
+         end
+      end
+
+      -- if we tried hotloading the mod manifest, just return nothing.
+      if string.match(path, "^mod%." .. mod_name .. "%.mod$") then
+         Log.info("Hotloaded mod manifest for '%s'.", mod_name)
+         return nil
+      end
+   end
+
    local loaded = package.loaded[path]
    if not loaded then
       Log.warn("Tried to hotload '%s', but path was not yet loaded. Requiring normally.", path)
@@ -445,6 +478,14 @@ function env.hotload_path(path, also_deps)
    hotloaded_this_frame = true
 
    return result
+end
+
+function env.hotload_all()
+   for path, _ in pairs(package.loaded) do
+      if can_hotload(path) then
+         env.hotload_path(path)
+      end
+   end
 end
 
 -- Redefines a single function on an API table by loading its chunk
@@ -562,6 +603,11 @@ function env.require_all_apis(dir, recurse, full_path)
    end
 
    return api_env
+end
+
+function env.restart_debug_server()
+   Log.warn("Restarting debug server...")
+   env.server_needs_restart = true
 end
 
 return env

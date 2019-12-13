@@ -7,7 +7,7 @@ local function rotate_indice(i, n)
     return ((i - 1) % n) + 1
 end
 
-local circular_buffer = {}
+local circular_buffer = class.class("circular_buffer")
 
 function circular_buffer:filled()
     return #(self.history) == self.max_length
@@ -37,7 +37,7 @@ circular_buffer.metatable = {}
 
 -- positive values index from newest to oldest (starting with 1)
 -- negative values index from oldest to newest (starting with -1)
-function circular_buffer.metatable:__index(i)
+function circular_buffer.metatable:get(i)
     local history_length = #(self.history)
     if i == 0 or math.abs(i) > history_length then
         return nil
@@ -50,26 +50,22 @@ function circular_buffer.metatable:__index(i)
     end
 end
 
-function circular_buffer.metatable:__len()
+function circular_buffer:__len()
     return #(self.history)
 end
 
-function circular_buffer:new(max_length)
+function circular_buffer:init(max_length)
     if type(max_length) ~= 'number' or max_length <= 1 then
         error("Buffer length must be a positive integer")
     end
 
-    local instance = {
-        history = {},
-        oldest = 1,
-        max_length = max_length,
-        push = circular_buffer.push,
-        filled = circular_buffer.filled,
-        len = circular_buffer.len,
-        clear = circular_buffer.clear,
-    }
-    setmetatable(instance, circular_buffer.metatable)
-    return instance
+    self.history = {}
+    self.oldest = 1
+    self.max_length = max_length
+    self.push = circular_buffer.push
+    self.filled = circular_buffer.filled
+    self.len = circular_buffer.len
+    self.clear = circular_buffer.clear
 end
 
 return circular_buffer

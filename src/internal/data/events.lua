@@ -1,6 +1,7 @@
 local data = require("internal.data")
 local paths = require("internal.paths")
 local Event = require("api.Event")
+local IEventEmitter = require("api.IEventEmitter")
 
 data:add_multi(
    "base.event",
@@ -97,3 +98,15 @@ end
 
 Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin)
 Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end)
+
+Event.register("base.on_map_loaded", "init all event callbacks",
+               function(map)
+                  for _, v in map:iter() do
+                     -- Event callbacks will not be serialized since
+                     -- they are functions, so they have to be copied
+                     -- from the prototype each time.
+                     if class.is_an(IEventEmitter, v) then
+                        IEventEmitter.init(v)
+                     end
+                  end
+               end)

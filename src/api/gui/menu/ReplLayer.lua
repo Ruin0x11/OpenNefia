@@ -427,29 +427,13 @@ function ReplLayer.format_repl_result(result)
    return result_text, stop
 end
 
-local function join_results(acc, x, stop)
-   if acc.stop then
-      return acc
-   end
-
-   if stop then
-      acc.stop = true
-   end
-   if not acc.text then
-      acc.text = x
-   else
-      acc.text = acc.text .. "\t" .. x
-   end
-
-   return acc
-end
-
 function ReplLayer.format_results(results, print_varargs)
    local result_text
 
    if type(results) == "table" then
       if print_varargs then
-         result_text = fun.iter(results):map(ReplLayer.format_repl_result):foldl(join_results, {}).text
+         local tbl = fun.iter(results):map(ReplLayer.format_repl_result):to_list()
+         result_text = table.concat(tbl, "\t")
       else
          result_text = ReplLayer.format_repl_result(results[1])
       end
@@ -594,7 +578,7 @@ function ReplLayer:redraw_window()
 
    -- scrollback display
    for i=1,self.max_lines do
-      local t = self.scrollback[self.scrollback_index + i]
+      local t = self.scrollback:get(self.scrollback_index + i)
       if t == nil then
          break
       end

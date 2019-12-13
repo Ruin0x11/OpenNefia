@@ -80,7 +80,7 @@ function UiMessageWindow:push_text(text, color)
       self:newline()
    end
 
-   local first = self.each_line[1]
+   local first = self.each_line:get(1)
    local work = ""
 
    -- HACK: love2d's text wrapping doesn't work with CJK, because it
@@ -92,7 +92,7 @@ function UiMessageWindow:push_text(text, color)
       if first.width + width > self.width then
          first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
          self:newline()
-         first = self.each_line[1]
+         first = self.each_line:get(1)
          work = ""
       end
 
@@ -146,7 +146,7 @@ function UiMessageWindow:calc_start_offset()
    -- area is the text to print at the beginning of the message
    -- window.
    for i=1,self.history:len() do
-      local t = self.history[i]
+      local t = self.history:get(i)
       local text = t.text
       cutoff = text
       local tw = Draw.text_width(text)
@@ -195,7 +195,7 @@ function UiMessageWindow:recalc_lines()
    self.each_line = circular_buffer:new(self.max_lines)
 
    for i=index_of_first_text,1,-1 do
-      local t = self.history[i]
+      local t = self.history:get(i)
       self:push_text(t.text, t.color)
    end
 end
@@ -218,7 +218,7 @@ function UiMessageWindow:redraw_window()
    local x = 6
    local y = 5 + (self.each_line:len() - 1) * Draw.text_height()
    for i=1,self.each_line:len() do
-      local line = self.each_line[i]
+      local line = self.each_line:get(i)
       self:draw_one_line(x, y, line)
       y = y - Draw.text_height()
    end

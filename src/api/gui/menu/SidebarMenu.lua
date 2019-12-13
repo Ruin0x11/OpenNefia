@@ -5,17 +5,16 @@ local Ui = require("api.Ui")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
 local UiWindow = require("api.gui.UiWindow")
-local TopicWindow = require("api.gui.TopicWindow")
 local InputHandler = require("api.gui.InputHandler")
 local UiList = require("api.gui.UiList")
 local ISettable = require("api.gui.ISettable")
 local IUiLayer = require("api.gui.IUiLayer")
-local IUiElement = require("api.gui.IUiElement")
+local ISidebarView = require("api.gui.menu.ISidebarView")
 
-local SideBarMenu = class.class("SideBarMenu", {IUiLayer, ISettable})
+local SidebarMenu = class.class("SidebarMenu", {IUiLayer, ISettable})
 
-SideBarMenu:delegate("list", "focus")
-SideBarMenu:delegate("input", IInput)
+SidebarMenu:delegate("list", "focus")
+SidebarMenu:delegate("input", IInput)
 
 local UiListExt = function(side_bar_menu)
    local E = {}
@@ -27,7 +26,7 @@ local UiListExt = function(side_bar_menu)
    return E
 end
 
-function SideBarMenu:init(data, view, in_game, select_on_chosen)
+function SidebarMenu:init(view, in_game, select_on_chosen)
    self.in_game = in_game or false
    self.select_on_chosen = select_on_chosen or false
 
@@ -43,25 +42,22 @@ function SideBarMenu:init(data, view, in_game, select_on_chosen)
       escape = function() self.canceled = true end
    }
 
-   class.assert_is_an(IUiElement, view)
-   class.assert_is_an(ISettable, view)
+   class.assert_is_an(ISidebarView, view)
    self.view = view
 
-   self:set_data(data)
-end
-
-function SideBarMenu:set_data(data)
+   local data = self.view:get_sidebar_entries()
    self.pages:set_data(data)
+   self:set_data(data)
    self:on_select_item()
 end
 
-function SideBarMenu:on_select_item()
+function SidebarMenu:on_select_item()
    local item = self.pages:selected_item()
    self.view:set_data(item.data or item.text)
    self.win:set_pages(self.pages)
 end
 
-function SideBarMenu:relayout(x, y, width, height)
+function SidebarMenu:relayout(x, y, width, height)
    self.width = 780
    self.height = 496
    self.x, self.y = Ui.params_centered(self.width, self.height, self.in_game)
@@ -75,7 +71,7 @@ function SideBarMenu:relayout(x, y, width, height)
    self:on_select_item()
 end
 
-function SideBarMenu:draw()
+function SidebarMenu:draw()
    self.win:draw()
    Ui.draw_topic("ui.manual.topic", self.x + 34, self.y + 36)
 
@@ -92,14 +88,14 @@ function SideBarMenu:draw()
    self.view:draw()
 end
 
-function SideBarMenu:on_query()
+function SidebarMenu:on_query()
    self.canceled = false
    self.pages:update()
    self.view:update()
    Gui.play_sound(self.view.sound or "base.pop2")
 end
 
-function SideBarMenu:update()
+function SidebarMenu:update()
    if self.select_on_chosen then
       if self.pages.chosen then
          self:on_select_item()
@@ -123,4 +119,4 @@ function SideBarMenu:update()
    self.view:update()
 end
 
-return SideBarMenu
+return SidebarMenu

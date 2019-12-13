@@ -5,7 +5,7 @@ local Draw = require("api.Draw")
 local env = require("internal.env")
 local internal = require("internal")
 local game = require("game")
-local debug_server = require("util.debug_server")
+local debug_server = require("internal.debug_server")
 local profile = require("thirdparty.profile")
 
 local loop = nil
@@ -20,7 +20,8 @@ function love.load(arg)
    internal.draw.init()
    Draw.set_font(12)
 
-   server = debug_server(4567)
+   server = debug_server:new()
+   server:start()
 
    if arg[#arg] == "-debug" then
       _DEBUG = true
@@ -62,15 +63,31 @@ function love.update(dt)
       return
    end
 
+   if env.server_needs_restart then
+      if server then
+         server:stop()
+      end
+      server = debug_server:new()
+      server:start()
+      env.server_needs_restart = false
+   end
+
    if server then
-      local ok, err = coroutine.resume(server, dt)
+      local ok, err = server:step(dt)
       if not ok then
          print("Error in server:\n\t" .. debug.traceback(server, err))
          print()
-         error(err)
+         if not ok then
+            -- Coroutine is dead. Restart server.
+            server = debug_server.start(DEBUG_SERVER_PORT)
+         else
+            -- We can continue executing since game.loop is still alive.
+            start_halt()
+            halt_error = err.message
+         end
       else
          local result = err
-         if halt and result == "success" then
+         if halt and result and result.success then
             stop_halt()
          end
       end

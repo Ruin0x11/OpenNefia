@@ -2,11 +2,10 @@ local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 local IModdable = require("api.IModdable")
-local IUiElement = require("api.gui.IUiElement")
 local TopicWindow = require("api.gui.TopicWindow")
-local ISettable = require("api.gui.ISettable")
+local ISidebarView = require("api.gui.menu.ISidebarView")
 
-local InspectView = class.class("InspectView", {IUiElement, ISettable})
+local InspectView = class.class("InspectView", ISidebarView)
 
 function InspectView:init(obj)
    self.obj = obj
@@ -20,6 +19,17 @@ function InspectView:init(obj)
 
    self.title = "Inspect"
    self.sound = "base.pop2"
+end
+
+function InspectView:get_sidebar_entries()
+   local headings = fun.iter(table.keys(self.obj))
+   :filter(function(k) return not string.match(k, "^_") end)
+   :map(function(k) return { text = tostring(k), data = k } end)
+      :to_list()
+
+   table.sort(headings, function(a, b) return a.text < b.text end)
+
+   return headings
 end
 
 function InspectView:set_data(key)

@@ -1,4 +1,4 @@
---- manipulating Lua tables.
+--- Functions for manipulating Lua tables.
 -- @module table
 
 local table = {}
@@ -9,13 +9,21 @@ local table = {}
 -- `sep` is the empty string, the default for `i` is 1, and the default for
 -- `j` is the length of the table. If `i` is greater than `j`, returns the
 -- empty string.
-function table.concat(table , sep , i , j) end
+-- @tparam table table
+-- @tparam[opt] string sep
+-- @tparam[opt] int i
+-- @tparam[opt] int i
+-- @treturn string
+function table.concat(table, sep, i, j) end
 
 ---
 -- Inserts element `value` at position `pos` in `table`, shifting up
 -- other elements to open space, if necessary. The default value for `pos` is
 -- `n+1`, where `n` is the length of the table (see §2.5.5), so that a call
 -- `table.insert(t,x)` inserts `x` at the end of table `t`.
+-- @tparam table table
+-- @tparam int|any pos
+-- @tparam[opt] any value
 function table.insert(table, pos, value) end
 
 ---
@@ -24,12 +32,17 @@ function table.insert(table, pos, value) end
 -- element. The default value for `pos` is `n`, where `n` is the length of the
 -- table, so that a call `table.remove(t)` removes the last element of table
 -- `t`.
-function table.remove(table , pos) end
+-- @tparam table table
+-- @tparam[opt] int pos
+-- @treturn any
+function table.remove(table, pos) end
 
 ---
 -- Returns a new table with all parameters stored into keys 1, 2, etc. and with a field "n" with
 -- the total number of parameters. Note that the resulting table may not be a sequence.
-function table.pack (···) end
+-- @param ...
+-- @treturn table
+function table.pack(...) end
 ---
 -- Sorts table elements in a given order,
 -- *in-place*, from `table[1]` to `table[n]`, where `n` is the length of the
@@ -37,7 +50,9 @@ function table.pack (···) end
 -- table elements, and returns true when the first is less than the second
 -- (so that `not comp(a[i+1],a[i])` will be true after the sort). If `comp`
 -- is not given, then the '<' operator will be used.
-function table.sort(table , comp) end
+-- @tparam table table
+-- @tparam[opt] fn(any,any=>bool) comp
+function table.sort(table, comp) end
 
 ---
 -- Returns the elements from the given table. This function is equivalent to
@@ -45,6 +60,10 @@ function table.sort(table , comp) end
 -- except that the above code can be written only for a fixed number of
 -- elements. By default, `i` is 1 and `j` is the length of the list, as
 -- defined by the length operator (see §2.5.5).
-function unpack(list , i , j) end
+-- @tparam table list
+-- @tparam[opt] int i
+-- @tparam[opt] int j
+-- @return ...
+function unpack(list, i, j) end
 
 return table

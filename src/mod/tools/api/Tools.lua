@@ -478,13 +478,11 @@ function Tools.cpos()
 end
 
 function Tools.open_dictionary()
-   local ids = data["base.chara"]:iter():extract("_id"):map(function(id) return { text = id, data = id } end):to_list()
-
    local DictionaryView = require("mod.tools.api.DictionaryView")
-   local SideBarMenu = require("api.gui.menu.SideBarMenu")
+   local SidebarMenu = require("api.gui.menu.SideBarMenu")
 
    local view = DictionaryView:new()
-   SideBarMenu:new(ids, view):query()
+   SidebarMenu:new(view):query()
 
    return "player_turn_query"
 end
@@ -512,18 +510,11 @@ function Tools.inspect_at()
       thing = things:nth(choice.index)
    end
 
-   local data = fun.iter(table.keys(thing))
-     :filter(function(k) return not string.match(k, "^_") end)
-     :map(function(k) return { text = tostring(k), data = k } end)
-     :to_list()
-
-   table.sort(data, function(a, b) return a.text < b.text end)
-
    local InspectView = require("mod.tools.api.InspectView")
-   local SideBarMenu = require("api.gui.menu.SideBarMenu")
+   local SidebarMenu = require("api.gui.menu.SidebarMenu")
 
    local view = InspectView:new(thing)
-   SideBarMenu:new(data, view):query()
+   SidebarMenu:new(view):query()
 
    return "player_turn_query"
 end

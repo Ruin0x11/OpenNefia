@@ -12,27 +12,45 @@ local mod = {}
 
 local loaded = {}
 
-local function load_mod(mod_name, init_lua_path)
-   local req_path = paths.convert_to_require_path(init_lua_path)
+local MOD_DIR = "mod"
 
-   local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
+local function load_mod(mod_name, root_path)
+   local init_lua_path = fs.join(root_path, "init.lua")
 
-   if err then
-      error(err, 0)
+   if fs.is_file(init_lua_path) then
+      local req_path = paths.convert_to_require_path(init_lua_path)
+
+      local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
+
+      if err then
+         return false, err
+      end
+
+      -- Mods are not expected to return anything in init.lua.
+      package.loaded[req_path] = true
+
+      Log.info("Loaded mod %s to %s.", mod_name, req_path)
+   else
+      Log.info("Loaded mod %s without init.lua.", mod_name)
    end
 
-   Log.info("Loaded mod %s to %s.", mod_name, req_path)
+   loaded[mod_name] = true
 
-   -- Mods are not expected to return anything in init.lua.
-   package.loaded[req_path] = true
+   return true
+end
 
-   return chunk
+function mod.is_loaded(mod_name)
+   return not not loaded[mod_name]
 end
 
 local function load_manifest(manifest_path)
+   if not fs.is_file(manifest_path) then
+      return false, "Cannot find mod manifest at " .. manifest_path
+   end
+
    local chunk, err = loadfile(manifest_path)
    if chunk == nil then
-      error(err)
+      return false, err
    end
    setfenv(chunk, {})
    local success, manifest = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
@@ -41,7 +59,24 @@ local function load_manifest(manifest_path)
       return success, err
    end
    if type(manifest) ~= "table" then
-      error("Manifest must be table (" .. manifest_path .. ")")
+      return false, (("Manifest must be table (got %s): %s"):format(type(manifest), manifest_path))
+   end
+
+   local valid_keys = {
+      id = { required = true },
+      dependencies = { required = true }
+   }
+   for k, _ in pairs(manifest) do
+      if not valid_keys[k] then
+         return false, ("Invalid manifest key '%s': %s"):format(k, manifest_path)
+      else
+         valid_keys[k].seen = true
+      end
+   end
+   for k, v in pairs(valid_keys) do
+      if v.required and not v.seen then
+         return false, ("Missing required manifest key '%s': %s"):format(k, manifest_path)
+      end
    end
 
    return true, manifest
@@ -114,8 +149,8 @@ end
 function mod.scan_mod_dir()
    local mods = {}
 
-   for _, mod_id in fs.iter_directory_items("mod/") do
-      local manifest_file = fs.join("mod", mod_id, "mod.lua")
+   for _, mod_id in fs.iter_directory_items(MOD_DIR .. "/") do
+      local manifest_file = fs.join(MOD_DIR, mod_id, "mod.lua")
       if fs.is_file(manifest_file) then
          mods[#mods+1] = manifest_file
       end
@@ -124,31 +159,40 @@ function mod.scan_mod_dir()
    return mods
 end
 
+-- Called when hotloading code from a mod that has not been loaded
+-- yet. Checks the manifest to ensure all the mod's dependencies are
+-- loaded first.
+function mod.hotload_mod(mod_id, root_path)
+   root_path = root_path or fs.join(MOD_DIR, mod_id)
+   local manifest_file = fs.join(root_path, "mod.lua")
+   local ok, manifest = load_manifest(manifest_file)
+   if not ok then
+      return ok, manifest
+   end
+
+   assert(manifest.id == mod_id, "Mod ID must match manifest ID")
+
+   for dep_id, version in pairs(manifest.dependencies) do
+      -- TODO check version
+      if not mod.is_loaded(dep_id) then
+         return false, ("Mod dependency '%s' of mod '%s' is not loaded."):format(dep_id, mod_id)
+      end
+   end
+
+   Log.info("Hotloading mod %s at %s", mod_id, root_path)
+   return load_mod(mod_id, root_path)
+end
+
 function mod.load_mods(mods)
    local load_order = mod.calculate_load_order(mods)
 
-   local mod_names = fun.iter(load_order)
-      :extract("id")
-      :foldl(function(acc, s) return (acc and (acc .. " ") or "") .. s end)
+   local mod_names = table.concat(fun.iter(load_order):extract("id"):to_list(), " ")
    Log.info("Loading mods: %s", mod_names)
 
-   for _, mod in ipairs(load_order) do
-      local manifest = fs.join(mod.root_path, "mod.lua")
-      if not fs.is_file(manifest) then
-         error("Cannot find mod dependency " .. mod.id)
-      end
-
-      local init = fs.join(mod.root_path, "init.lua")
-      if fs.is_file(init) then
-         if loaded[mod.id] then
-            error("Mod '" .. mod.id .. "' is already loaded.")
-         end
-
-         load_mod(mod.id, init)
-
-         loaded[mod.id] = true
-      else
-         Log.info("No init.lua for mod %s.", mod.id)
+   for _, m in ipairs(load_order) do
+      local ok, err = mod.hotload_mod(m.id, m.root_path)
+      if not ok then
+         error(err)
       end
    end
 end

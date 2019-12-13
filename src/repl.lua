@@ -72,7 +72,9 @@ end
 rawset(_G, "tu", pass_one_turn)
 
 local function load_game()
+   field.is_active = false
    field_logic.quickstart()
+   field_logic.setup()
    field.is_active = true
    Gui.update_screen()
 end
@@ -93,8 +95,9 @@ if fs.exists("repl_startup.lua") then
 end
 
 
-local console_repl = require 'thirdparty.repl.console'
+local console_repl = require("thirdparty.repl.console")
 local elona_repl   = console_repl:clone()
+local debug_server = require("internal.debug_server")
 
 -- @see repl:showprompt(prompt)
 function elona_repl:compilechunk(text)
@@ -105,6 +108,22 @@ function elona_repl:compilechunk(text)
    end
 
    return chunk, err
+end
+
+server = nil
+
+-- @see repl:showprompt(prompt)
+function elona_repl:showprompt(prompt)
+   if server == nil or env.server_needs_restart then
+      if server then
+         server:stop()
+      end
+      server = debug_server:new()
+      server:start()
+      env.server_needs_restart = false
+   end
+
+  console_repl:showprompt(prompt)
 end
 
 local function gather_results(success, ...)

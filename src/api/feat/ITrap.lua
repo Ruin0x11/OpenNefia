@@ -21,4 +21,4 @@ function ITrap:on_stepped_on(obj)
    end
 end
 
-return IFeat
+return ITrap

@@ -6,6 +6,7 @@ local Log = require("api.Log")
 local draw = require("internal.draw")
 local Draw = require("api.Draw")
 local field = require("game.field")
+local ansicolors = require("thirdparty.ansicolors")
 
 local Gui = {}
 
@@ -138,25 +139,25 @@ function Gui.wait(wait_ms)
 end
 
 local Color = {
-   White =         { 255, 255, 255 },
-   Green =         { 175, 255, 175 },
-   Red =           { 255, 155, 155 },
-   Blue =          { 175, 175, 255 },
-   Orange =        { 255, 215, 175 },
-   Yellow =        { 255, 255, 175 },
-   Grey =          { 155, 154, 153 },
-   Purple =        { 185, 155, 215 },
-   Cyan =          { 155, 205, 205 },
-   LightRed =      { 255, 195, 185 },
-   Gold =          { 235, 215, 155 },
-   LightBrown =    { 225, 215, 185 },
-   DarkGreen =     { 105, 235, 105 },
-   LightGrey =     { 205, 205, 205 },
-   PaleRed =       { 255, 225, 225 },
-   LightBlue =     { 225, 225, 255 },
-   LightPurple =   { 225, 195, 255 },
-   LightGreen =    { 215, 255, 215 },
-   YellowGreen =   { 210, 250, 160 },
+   White =         { { 255, 255, 255 }, "white"          },
+   Green =         { { 175, 255, 175 }, "green"          },
+   Red =           { { 255, 155, 155 }, "red"            },
+   Blue =          { { 175, 175, 255 }, "blue"           },
+   Orange =        { { 255, 215, 175 }, "yellow"         },
+   Yellow =        { { 255, 255, 175 }, "yellow"         },
+   Grey =          { { 155, 154, 153 }, "white dim"      },
+   Purple =        { { 185, 155, 215 }, "magenta"        },
+   Cyan =          { { 155, 205, 205 }, "cyan"           },
+   LightRed =      { { 255, 195, 185 }, "red bright"     },
+   Gold =          { { 235, 215, 155 }, "yellow bright"  },
+   LightBrown =    { { 225, 215, 185 }, "yellow dim"     },
+   DarkGreen =     { { 105, 235, 105 }, "green dim"      },
+   LightGrey =     { { 205, 205, 205 }, "white dim"      },
+   PaleRed =       { { 255, 225, 225 }, "red dim"        },
+   LightBlue =     { { 225, 225, 255 }, "blue bright"    },
+   LightPurple =   { { 225, 195, 255 }, "magenta bright" },
+   LightGreen =    { { 215, 255, 215 }, "green bright"   },
+   YellowGreen =   { { 210, 250, 160 }, "yellow bright"  },
 }
 
 --- Prints a localized message in the HUD message window. You can pass
@@ -183,8 +184,15 @@ function Gui.mes_c(text, color, ...)
    if color == nil and string.find(text, I18N.quote_character()) then
       color = {210, 250, 160}
    end
+
+   local dat
    if type(color) == "string" then
-      color = Color[color] or {255, 255, 255}
+      dat = Color[color]
+      if dat then
+         color = dat[1]
+      else
+         color = {255, 255, 255}
+      end
    end
 
    if capitalize then
@@ -193,7 +201,11 @@ function Gui.mes_c(text, color, ...)
    capitalize = true
 
    if Env.is_headless() then
-      Log.info("<mes> " .. text)
+      if Log.has_level("info") then
+         color = dat and dat[2] or "white"
+         local mes = ("<mes> %%{%s}%s%%{reset}"):format(color, text)
+         print(ansicolors(mes))
+      end
    else
       field:get_message_window():message(text, color)
    end

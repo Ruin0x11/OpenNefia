@@ -20,6 +20,10 @@ function DictionaryView:init()
    self.sound = "base.spell"
 end
 
+function DictionaryView:get_sidebar_entries()
+  return data["base.chara"]:iter():extract("_id"):map(function(id) return { text = id, data = id } end):to_list()
+end
+
 function DictionaryView:set_data(id)
    self.data = data[self.type][id]
 

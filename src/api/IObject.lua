@@ -41,7 +41,6 @@ end
 
 function IObject:finalize()
    self:build()
-   self:instantiate()
 end
 
 function IObject:instantiate()

@@ -46,7 +46,27 @@ local function register_global_handler_if_needed(self, event_id, global_events)
    end
 end
 
---- Emits an event.
+--- Causes this object to emit an event.
+---
+--- This will run the event handlers for `event_id` registered for
+--- this object and return the result that is passed down from the
+--- final handler. Some events may require the use of parameters and
+--- return values, while others may not; this depends on the type of
+--- event being handled.
+---
+--- `params` is a key-value table of parameters to pass to the event.
+--- The specific parameteres you can pass depends on which event you
+--- are handling; check the event's documentation for details.
+---
+--- `result` is the default return value of the event handling to
+--- return if no result is return by any event (e.g. all event
+--- callbacks return `nil`).
+---
+--- Events are handled based on the priority of each handler. You can
+--- use `IEventEmitter:connect_self()` to connect more event handlers
+--- to just this object individually. To run code whenever *any*
+--- object emits an event, or the event is triggered globally, use
+--- `Event.register().`
 ---
 --- @tparam id:base.event event_id
 --- @tparam[opt] table params Parameters to be passed to the event;
@@ -154,18 +174,6 @@ end
 function IEventEmitter:disconnect_global_matching(name)
    -- TODO
 end
-
-Event.register("base.on_map_loaded", "init all event callbacks",
-               function(map)
-                  for _, v in map:iter() do
-                     -- Event callbacks will not be serialized since
-                     -- they are functions, so they have to be copied
-                     -- from the prototype each time.
-                     if class.is_an(IEventEmitter, v) then
-                        IEventEmitter.init(v)
-                     end
-                  end
-               end)
 
 function IEventEmitter:compare_events(other)
    return self._events == other._events and self.global_events == other.global_events
