@@ -33,11 +33,9 @@ function circular_buffer:push(value)
     end
 end
 
-circular_buffer.metatable = {}
-
 -- positive values index from newest to oldest (starting with 1)
 -- negative values index from oldest to newest (starting with -1)
-function circular_buffer.metatable:get(i)
+function circular_buffer:get(i)
     local history_length = #(self.history)
     if i == 0 or math.abs(i) > history_length then
         return nil

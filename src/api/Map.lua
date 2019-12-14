@@ -88,27 +88,6 @@ local function run_generator_load_callback(map)
    end
 end
 
-Event.register("base.on_map_loaded", "instantiate all map objects",
-               function(map)
-                  for _, v in map:iter() do
-                     v:instantiate()
-                  end
-               end)
-
-Event.register("base.on_hotload_prototype", "Notify objects in map of prototype hotload", function(_, params)
-                  local map = Map.current()
-                  if map then
-                     for _, obj in map:iter() do
-                        if class.is_an(IEventEmitter, obj)
-                           and obj._type == params.new._type
-                           and obj._id == params.new._id
-                        then
-                           obj:emit("base.on_hotload_object", params)
-                        end
-                     end
-                  end
-end)
-
 --- Loads a map from the current save. If you modify it be sure to
 --- call `Map.save` to persist the changes if you don't set it as the
 --- current map.

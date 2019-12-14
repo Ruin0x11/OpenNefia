@@ -205,7 +205,6 @@ data:add
    map_uid = "number",
  }, on_refresh = function(self) self:mod("can_activate", true)
 end, on_activate = function(self, params)
-   assert(self:current_map())
    local chara = params.chara
    if not chara:is_player() then return end
 

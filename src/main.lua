@@ -75,19 +75,12 @@ function love.update(dt)
    if server then
       local ok, err = server:step(dt)
       if not ok then
-         print("Error in server:\n\t" .. debug.traceback(server, err))
-         print()
-         if not ok then
-            -- Coroutine is dead. Restart server.
-            server = debug_server.start(DEBUG_SERVER_PORT)
-         else
-            -- We can continue executing since game.loop is still alive.
-            start_halt()
-            halt_error = err.message
-         end
+         -- Coroutine is dead. Restart server.
+         server = debug_server:new()
+         server:start()
       else
          local result = err
-         if halt and result and result.success then
+         if halt and result then
             stop_halt()
          end
       end

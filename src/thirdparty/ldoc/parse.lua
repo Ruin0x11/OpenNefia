@@ -18,6 +18,12 @@ local parse = {}
 
 local tnext, append = lexer.skipws, table.insert
 
+
+local function trim_whitespace(s)
+   local from = s:match"^%s*()"
+   return from > #s and "" or s:match(".*%S", from)
+end
+
 -- a pattern particular to LuaDoc tag lines: the line must begin with @TAG,
 -- followed by the value, which may extend over several lines.
 local luadoc_tag = '^%s*@(%w+)'
@@ -214,6 +220,44 @@ local function parse_file(fname, lang, package, args)
       module_item = item
    end
 
+   local function add_item(tags, item_follows, parse_error, is_local, case, t)
+      local line = lineno()
+      if t ~= nil then
+         if item_follows then -- parse the item definition
+            local err = item_follows(tags,tok)
+            if err then F:error(err) end
+         elseif parse_error then
+            F:warning('definition cannot be parsed - '..parse_error)
+         else
+            lang:parse_extra(tags,tok,case)
+         end
+      end
+      if is_local or tags['local'] then
+         tags:add('local',true)
+      end
+      -- support for standalone fields/properties of classes/modules
+      if (tags.field or tags.param) and not tags.class then
+         -- the hack is to take a subfield and pull out its name,
+         -- (see Tag:add above) but let the subfield itself go through
+         -- with any modifiers.
+         local fp = tags.field or tags.param
+         if type(fp) == 'table' then fp = fp[1] end
+         fp = tools.extract_identifier(fp)
+         tags:add('name',fp)
+         tags:add('class','field')
+      end
+      if tags.name then
+         current_item = F:new_item(tags,line)
+         current_item.inferred = item_follows ~= nil
+         if doc.project_level(tags.class) then
+            if module_item then
+               F:error("Module already declared!")
+            end
+            module_item = current_item
+         end
+      end
+   end
+
    local mod
    local t,v = tnext(tok)
    -- with some coding styles first comment is standard boilerplate; option to ignore this.
@@ -229,20 +273,52 @@ local function parse_file(fname, lang, package, args)
          return nil
       end
    end
+   local in_return = false
+   local guessed_mod_name = nil
    if lang.parse_module_call and t ~= 'comment' then
       local prev_token
       while t do
          if prev_token ~= '.' and prev_token ~= ':' and t == 'iden' and v == 'module' then
             break
          end
+         if in_return then
+            if t == "iden" then
+               guessed_mod_name = v
+            end
+         else
+            in_return = t == "keyword" and v == "return"
+         end
          prev_token = t
          t, v = tnext(tok)
+         if t then
+            guessed_mod_name = nil
+         end
       end
       if not t then
-         if not args.ignore then
-            F:warning("no module() call found; no initial doc comment")
+         -- HACK: try to determine module name from file name and
+         -- top level return value.
+
+         -- Guess the module name from the file name. However, we will
+         -- only return this module if there is a top-level return
+         -- statement at the end of the file.
+         local mod_name = fname:match("/([^./]+)%.lua$")
+
+         if mod_name and mod_name == guessed_mod_name then
+            F:warning("assuming module named " .. mod_name .. " exists for documentation")
+            add_module(Tags.new{summary="",description=""},mod_name,true)
+            first_comment = false
+            module_found = true
+
+            -- We have to reparse the file since the lexer reached the
+            -- end of it once.
+            tok,f = lang.lexer(fname)
+            t,v = tnext(tok)
+         else
+            if not args.ignore then
+               F:warning("no module() call found; no initial doc comment")
+            end
+            return nil
          end
-         --return nil
       else
          mod,t,v = lang:parse_module_call(tok,t,v)
          if mod and mod ~= '...' then
@@ -253,6 +329,7 @@ local function parse_file(fname, lang, package, args)
       end
    end
    local ok, err = xpcall(function()
+   local last_was_newline
    while t do
       if t == 'comment' then
          local comment = {}
@@ -382,44 +459,24 @@ local function parse_file(fname, lang, package, args)
 
          -- end of a block of document comments
          if ldoc_comment and tags then
-            local line = lineno()
-            if t ~= nil then
-               if item_follows then -- parse the item definition
-                  local err = item_follows(tags,tok)
-                  if err then F:error(err) end
-               elseif parse_error then
-                  F:warning('definition cannot be parsed - '..parse_error)
-               else
-                  lang:parse_extra(tags,tok,case)
-               end
-            end
-            if is_local or tags['local'] then
-               tags:add('local',true)
-            end
-            -- support for standalone fields/properties of classes/modules
-            if (tags.field or tags.param) and not tags.class then
-               -- the hack is to take a subfield and pull out its name,
-               -- (see Tag:add above) but let the subfield itself go through
-               -- with any modifiers.
-               local fp = tags.field or tags.param
-               if type(fp) == 'table' then fp = fp[1] end
-               fp = tools.extract_identifier(fp)
-               tags:add('name',fp)
-               tags:add('class','field')
-            end
-            if tags.name then
-               current_item = F:new_item(tags,line)
-               current_item.inferred = item_follows ~= nil
-               if doc.project_level(tags.class) then
-                  if module_item then
-                     F:error("Module already declared!")
-                  end
-                  module_item = current_item
-               end
-            end
+            add_item(tags, item_follows, parse_error, is_local, case, t)
             if not t then break end
          end
+      elseif t == "keyword" and v == "function" then
+         -- Pick up undocumented functions, so we at least know of
+         -- their existence.
+         if last_was_newline then
+            local parse_error
+            local item_follows, is_local, case = lang:item_follows(t,v,tok)
+            if not item_follows then
+               parse_error = is_local
+               is_local = false
+            end
+            local tags = Tags.new{summary="",description=""}
+            add_item(tags, item_follows, parse_error, is_local, case, t)
+         end
       end
+      last_was_newline = t == "space" and v == "\n"
       if t ~= 'comment' then t,v = tok() end
    end
    end,debug.traceback)

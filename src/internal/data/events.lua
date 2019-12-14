@@ -2,6 +2,7 @@ local data = require("internal.data")
 local paths = require("internal.paths")
 local Event = require("api.Event")
 local IEventEmitter = require("api.IEventEmitter")
+local Map = require("api.Map")
 
 data:add_multi(
    "base.event",
@@ -108,5 +109,20 @@ Event.register("base.on_map_loaded", "init all event callbacks",
                      if class.is_an(IEventEmitter, v) then
                         IEventEmitter.init(v)
                      end
+                     v:instantiate()
                   end
                end)
+
+Event.register("base.on_hotload_prototype", "Notify objects in map of prototype hotload", function(_, params)
+                  local map = Map.current()
+                  if map then
+                     for _, obj in map:iter() do
+                        if class.is_an(IEventEmitter, obj)
+                           and obj._type == params.new._type
+                           and obj._id == params.new._id
+                        then
+                           obj:emit("base.on_hotload_object", params)
+                        end
+                     end
+                  end
+end)

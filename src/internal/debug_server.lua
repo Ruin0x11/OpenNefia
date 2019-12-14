@@ -213,6 +213,7 @@ function debug_server:step(dt)
       Log.error("%s", debug.traceback(self.coro, err))
       self:stop()
    end
+   return ok, err
 end
 
 function debug_server:stop()

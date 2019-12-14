@@ -269,11 +269,17 @@ end
 --- @treturn[opt] table
 --- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
+   local hp_bar = "hp_bar_other"
+   if self:is_allied() then
+      hp_bar = "hp_bar_ally"
+   end
    return {
       uid = self.uid,
       show = Chara.is_alive(self),
       image = (self:calc("image") or "") .. "#1",
-      color = self:calc("color")
+      color = self:calc("color"),
+      hp_bar = hp_bar,
+      hp_ratio = self:calc("hp") / self:calc("max_hp")
    }
 end
 

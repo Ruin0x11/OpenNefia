@@ -216,7 +216,7 @@ local function convert_ldoc_item(item, mod_name, is_builtin)
    t.summary = reformat_docstring(t.summary)
    t.description = reformat_docstring(t.description)
 
-   return t.full_path, t
+   return t.full_path:lower(), t
 end
 
 -- Strips unnecessary info from ldoc's raw output.
@@ -272,7 +272,6 @@ local function add_alias(key, alias)
       end
    end
 
-   print(alias.display_name,alias.full_path,key,"displ")
    table.insert(doc_store.aliases[key], alias)
 end
 
@@ -447,6 +446,7 @@ function doc.get(path)
                entry = file.items[alias.full_path]
             end
 
+            assert(entry, alias.full_path)
             return {
                type = "entry",
                entry = entry
@@ -521,6 +521,10 @@ function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
 
    if doc_store.entries[file_path] == nil then
       doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in) -- BUG
+   else
+      if doc_store.entries[file_path].items[full_path]  then
+         return
+      end
    end
 
    if type(the_doc) == "string" then

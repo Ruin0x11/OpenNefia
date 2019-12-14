@@ -147,7 +147,13 @@ function chara_layer:update(dt, screen_updated, scroll_frames)
                   y = y,
                   color = c.color
                }
-               self.batch_inds[i] = { ind = ind, x = x, y = y }
+               self.batch_inds[i] = {
+                  ind = ind,
+                  x = x,
+                  y = y,
+                  hp_ratio = c.hp_ratio,
+                  hp_bar = c.hp_bar
+               }
                i = i + 1
             end
          end
@@ -177,9 +183,9 @@ function chara_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
    for _, ind in pairs(self.batch_inds) do
-      if true then
-         local ratio = 0.9
-         self.t.hp_bar_ally:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
+      if ind.hp_bar then
+         local ratio = ind.hp_ratio or 0.9
+         self.t[ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
                                      sy - draw_y + offy + ind.y * 48 + 32,
                                      ratio * 30, 3, ratio * 30)
       end
