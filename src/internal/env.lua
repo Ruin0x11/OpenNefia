@@ -365,6 +365,7 @@ local function gen_require(chunk_loader, can_load_path)
       if err then
          IS_HOTLOADING = false
          error("\n\t" .. err, 0)
+   print(alias.display_name,alias.full_path,key,"displ")
       end
 
       if IS_HOTLOADING and result == "no_hotload" then

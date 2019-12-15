@@ -36,7 +36,7 @@ function MapArea.add_map_to_area(area_uid, map_or_uid)
    return save.base.area_mapping:add_map_to_area(area_uid, map_or_uid)
 end
 
---- Iterates the entraces on a map.
+--- Iterates the entrances on a map.
 ---
 --- @tparam[opt] string kind Which entrances to iterate.
 ---   - any: iterate all entrances. (default)

@@ -913,7 +913,9 @@ local your_home = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       tile_type = 3,
-      is_fixed = true
+
+      is_fixed = true,
+      can_return_to = false
    }
 }
 data:add(your_home)

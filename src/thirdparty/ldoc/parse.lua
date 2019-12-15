@@ -305,7 +305,7 @@ local function parse_file(fname, lang, package, args)
 
          -- ldoc appears to lowercase the filename, so a
          -- case-sensitive comparison will not always match.
-         if mod_name and string.lower(mod_name) == string.lower(guessed_mod_name) then
+         if mod_name and guessed_mod_name and string.lower(mod_name) == string.lower(guessed_mod_name) then
             F:warning("assuming module named " .. mod_name .. " exists for documentation")
             add_module(Tags.new{summary="",description=""},mod_name,true)
             first_comment = false

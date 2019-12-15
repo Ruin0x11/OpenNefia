@@ -101,7 +101,7 @@ function load (ld , source , mode , env) end
 ---
 -- Similar to `load`, but gets the chunk from file `filename`. Or from the
 -- standard input, if no file name is given.
--- @tparam[opt] filename
+-- @tparam[opt] string filename
 -- @tparam[opt] string mode
 -- @tparam[opt] table env
 function loadfile (filename , mode , env) end
@@ -187,7 +187,7 @@ function rawset(table, index, value) end
 -- Returns all arguments after argument number
 -- `index`. Otherwise, `index` must be the string `"#"`, and `select` returns
 -- the total number of extra arguments it received.
--- @tparam int|string
+-- @tparam string index
 -- @tparam ... ...
 function select(index, ...) end
 
@@ -212,7 +212,8 @@ function setmetatable(table, metatable) end
 -- the number can have a decimal part, as well as an optional exponent part
 -- (see 2.1). In other bases, only unsigned integers are accepted.
 -- @tparam any e
--- @tparam[opt] int
+-- @tparam[opt] int base
+-- @treturn number
 function tonumber(e , base) end
 
 ---
@@ -222,6 +223,7 @@ function tonumber(e , base) end
 -- the corresponding value with `e` as argument, and uses the result of the
 -- call as its result.
 -- @tparam any e
+-- @treturn string
 function tostring(e) end
 
 ---

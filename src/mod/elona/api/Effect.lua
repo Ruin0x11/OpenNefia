@@ -7,6 +7,8 @@ local Skill = require("mod.elona_sys.api.Skill")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Calc = require("mod.elona_sys.api.Calc")
 local ExHelp = require("mod.elona.api.ExHelp")
+local Event = require("api.Event")
+local Map = require("api.Map")
 
 local Effect = {}
 
@@ -432,6 +434,60 @@ function Effect.modify_corruption(chara, delta)
    end
 
    chara:refresh()
+end
+
+function Effect.can_return_to(entrance)
+   local area = MapArea.area_for_map(entrance.map_uid)
+
+   if not area then
+      return false
+   end
+
+   if not area.can_return_to then
+      return false
+   end
+
+   if (area.deepest_level_visited or 0) == 0 then
+      return false
+   end
+
+   return true
+end
+
+function Effect.query_return_location(chara)
+   local forbidden = Event.trigger("elona.calc_return_forbidden", {chara=chara}, false)
+   if forbidden then
+      Gui.mes("misc.return.forbidden")
+      if not Input.yes_no() then
+         Gui.update_screen()
+         return nil
+      end
+   end
+
+   local outer_map = Map.world_map_containing(chara:current_map())
+   assert(outer_map)
+
+   local to_prompt = function(map_entrance)
+      return {
+         text = "name"
+      }
+   end
+
+   local maps = MapArea.iter_map_entrances("generated", outer_map)
+      :filter(Effect.can_return_to)
+      :map(to_prompt)
+      :to_list()
+
+   local result, canceled = Input.prompt(maps)
+
+   if canceled then
+      Gui.mes("misc.return.no_location")
+      return nil
+   end
+
+   Gui.update_screen()
+
+   return maps[result.index].map_uid, 15 + Rand.rnd(15)
 end
 
 return Effect

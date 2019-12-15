@@ -1,6 +1,5 @@
 local env = require("internal.env")
 local fs = require("util.fs")
-local priority_queue = require("thirdparty.priority_queue")
 
 if env.is_hotloading() then
    return "no_hotload"

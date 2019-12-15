@@ -26,13 +26,14 @@ local function progress(_status)
 end
 
 function startup.run_all(mods)
-   local coro = function() startup.run(mods) end
-   while coroutine.resume(coro) ~= "progress_finished" do
+   local coro = coroutine.create(function() startup.run(mods) end)
+   while startup.get_progress() ~= "progress_finished" do
+      coroutine.resume(coro)
    end
 end
 
 function startup.run(mods)
-   progress("Loading documentation...")
+   progress("Loading mods...")
 
    -- Wrap these functions to allow hotloading via table access.
    rawset(_G, "help", function(...) return Doc.help(...) end)
@@ -44,14 +45,14 @@ function startup.run(mods)
 
    math.randomseed(internal.get_timestamp())
 
-   doc.load()
-
-   progress("Loading mods...")
-
    require("internal.data.base")
 
    mod.load_mods(mods)
    data:run_all_edits()
+
+   progress("Loading documentation...")
+
+   doc.load()
 
    -- data is finalized at this point.
 
