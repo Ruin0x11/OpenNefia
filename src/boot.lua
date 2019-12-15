@@ -1,7 +1,7 @@
 _DEBUG = false
 _CONSOLE = _CONSOLE or false
 
-package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua"
+package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/init.fnl"
 
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"

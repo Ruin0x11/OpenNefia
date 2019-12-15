@@ -22,6 +22,7 @@ function paths.convert_to_require_path(path)
    -- intention is any require path uniquely identifies a return value
    -- from `require`.
    path = string.strip_suffix(path, ".lua")
+   path = string.strip_suffix(path, ".fnl")
    path = string.gsub(path, "/", ".")
    path = string.gsub(path, "\\", ".")
    path = string.strip_suffix(path, ".init")

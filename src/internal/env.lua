@@ -184,7 +184,15 @@ local function env_loadfile(path, mod_env)
       return nil, "Cannot find path " .. path .. tried_paths
    end
 
-   local chunk, err = loadfile(resolved)
+   local chunk, err
+   if fs.extension_part(resolved) == "fnl" then
+      local src = assert(io.open(resolved, "r"):read("*all"))
+      local str = require("thirdparty.fennel").compileString(src)
+      chunk, err = loadstring(str)
+   else
+      chunk, err = loadfile(resolved)
+   end
+
    if chunk == nil then
       return nil, err
    end
@@ -336,6 +344,8 @@ local function gen_require(chunk_loader, can_load_path)
                loop[#loop+1] = p
             end
          end
+         LOADING = {}
+         LOADING_STACK = {}
          error("Loop while loading " .. req_path .. ":\n" .. inspect(loop))
       end
 

@@ -301,7 +301,7 @@ local function parse_file(fname, lang, package, args)
          -- Guess the module name from the file name. However, we will
          -- only return this module if there is a top-level return
          -- statement at the end of the file.
-         local mod_name = fname:match("/([^./]+)%.lua$")
+         local mod_name = fname:match("/([^./]+)%.[a-z]+$")
 
          -- ldoc appears to lowercase the filename, so a
          -- case-sensitive comparison will not always match.
