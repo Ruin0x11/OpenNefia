@@ -65,7 +65,17 @@ function LuaReplMode:submit(text)
       results[2] = "[Error]: " .. results[2]
    end
 
-   table.remove(results, 1)
+   -- Deal with nil values, since `table.remove`` will not shift down
+   -- anything past a 'nil' in the middle of the result array.
+   local max = 0
+   for k, _ in pairs(results) do
+      max = math.max(max, k)
+   end
+   for i=2,max do
+      results[i-1] = results[i]
+   end
+   results.count = max - 1
+
    return ok, results
 end
 

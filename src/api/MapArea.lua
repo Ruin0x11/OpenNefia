@@ -265,6 +265,8 @@ function MapArea.load_map_of_entrance(feat, associate)
       MapArea.add_map_to_area(area.uid, map.uid)
    end
 
+   map:emit("base.on_map_loaded_from_entrance", {entrance=feat})
+
    return true, map
 end
 

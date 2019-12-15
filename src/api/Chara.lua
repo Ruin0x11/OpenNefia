@@ -109,7 +109,7 @@ end
 --- @tparam IChara c
 --- @treturn bool
 function Chara.is_player(c)
-   return type(c) == "table" and field.player == c.uid
+   return type(c) == "table" and field.player.uid == c.uid
 end
 
 --- Obtains a reference to the current player. This can be nil if a
@@ -117,22 +117,20 @@ end
 ---
 --- @treturn[opt] IChara
 function Chara.player()
-   return field.map and field.map:get_object(field.player)
+   return field.player
 end
 
 --- Sets the current player to a different character. The character
 --- must be contained in the current map.
 ---
 --- @tparam uid:IChara|IChara uid_or_chara
-function Chara.set_player(uid_or_chara)
-   local uid = uid_or_chara
-   if type(uid_or_chara) == "table" then
-      uid = uid_or_chara.uid
-   end
+function Chara.set_player(chara)
+   assert(type(chara) == "table")
 
-   assert(type(uid) == "number")
-   assert(field.map:has_object(uid))
-   field.player = uid
+   if field.map then
+      assert(field.map:has_object(chara.uid))
+   end
+   field.player = chara
 
    local c = Chara.player()
 

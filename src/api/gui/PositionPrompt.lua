@@ -140,6 +140,7 @@ function PositionPrompt:draw()
          Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {255, 255, 255, 25})
       end
    end
+   love.graphics.setBlendMode("alpha")
 end
 
 function PositionPrompt:update(dt)

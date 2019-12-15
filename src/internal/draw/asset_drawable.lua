@@ -50,8 +50,8 @@ function asset_drawable:init(data_inst)
 end
 
 function asset_drawable:make_batch(parts, width, height)
-   self.batch = self.batch or love.graphics.newSpriteBatch(self.image, self.image:getWidth() * self.image:getHeight())
-   self.batch:clear()
+   local batch = love.graphics.newSpriteBatch(self.image, self.image:getWidth() * self.image:getHeight())
+   batch:clear()
 
    local regions = {}
    local region_quads = {}
@@ -68,12 +68,12 @@ function asset_drawable:make_batch(parts, width, height)
    end
 
    for _, part in ipairs(parts) do
-      self.batch:add(self.quads[part[1]] or region_quads[part[1]], part[2], part[3])
+      batch:add(self.quads[part[1]] or region_quads[part[1]], part[2], part[3])
    end
 
-   self.batch:flush()
+   batch:flush()
 
-   return self.batch
+   return batch
 end
 
 function asset_drawable:get_width()
@@ -166,8 +166,8 @@ function asset_drawable:draw_tiled()
    local iw = self:get_width()
    local ih = self:get_height()
 
-   for j = 1, Draw.height() / iw do
-      for i = 1, Draw.width() / ih do
+   for j = 0, Draw.get_height() / iw do
+      for i = 0, Draw.get_width() / ih do
          self:draw(i * iw, j * ih)
       end
    end

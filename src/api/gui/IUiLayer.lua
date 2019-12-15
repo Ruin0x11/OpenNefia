@@ -7,18 +7,21 @@ local internal = require("internal")
 
 local IUiLayer
 
-local function query(self)
+local function query(self, z_order)
    class.assert_is_an(IUiLayer, self)
 
    local dt = 0
    local abort = false
 
-   internal.draw.push_layer(self)
+   internal.draw.push_layer(self, z_order)
 
-   local ok, err = pcall(function() self:on_query() end)
-   if not ok then
+   local ok, result = pcall(function() return self:on_query() end)
+   if not ok or (ok and result == false) then
       internal.draw.pop_layer()
-      error(err)
+      if not ok then
+         error(result)
+      end
+      return
    end
 
    local success, res, canceled

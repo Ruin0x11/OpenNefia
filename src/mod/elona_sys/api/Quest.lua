@@ -1,7 +1,3 @@
---- How quests are managed:
----
---- 1. On entering a map that can be used as a quest destination, is is added to a list of
----
 --- @module Quest
 
 local Role = require("mod.elona_sys.api.Role")
@@ -43,7 +39,7 @@ function Quest.for_client(chara)
       uid = chara.uid
    end
 
-   return save.elona_sys.quest.quests[uid]
+   return fun.iter(save.elona_sys.quest.quests):filter(function(q) return q.client_uid == uid end):nth(1)
 end
 
 local function calc_quest_reward(quest)
@@ -147,7 +143,8 @@ function Quest.generate_from_proto(proto_id, chara)
       end
    end
 
-   quest.client_chara_uid = client.uid
+   quest.client_uid = client.uid
+   quest.client_name = client.name
    quest.originating_map_uid = town.uid
 
    quest.reward_gold = calc_quest_reward(quest)

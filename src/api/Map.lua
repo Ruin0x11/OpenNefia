@@ -113,7 +113,7 @@ function Map.load(uid)
    run_generator_load_callback(map)
 
    if type(map.events) == "table" then
-      Log.info("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
+      Log.debug("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
       map:connect_self_multiple(map.events)
    end
 
@@ -330,7 +330,6 @@ end
 function Map.generate(generator_id, params, opts)
    params = params or {}
 
-   _ppr(generator_id, table.keys(opts or {}))
    opts = opts or {}
    opts.outer_map = opts.outer_map or Map.current()
    opts.area_uid = opts.area_uid or nil
@@ -356,7 +355,7 @@ function Map.generate(generator_id, params, opts)
    Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
 
    if type(map.events) == "table" then
-      Log.info("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
+      Log.debug("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
       map:connect_self_multiple(map.events)
    end
 
@@ -424,16 +423,9 @@ local function regenerate_map(map)
    local Item = require("api.Item")
    local first_time = map.next_regenerate_date == 0
 
+   Log.info("Regenerating map %d (%s)", map.uid, map.gen_id)
+
    if not first_time then
-      Log.info("Regenerating map %d (%s)", map.uid, map.gen_id)
-
-      if map.generated_with then
-         local generator = data["base.map_generator"][map.generated_with.generator]
-         if generator and generator.on_regenerate then
-            generator.on_regenerate(map, map.generated_with.params)
-         end
-      end
-
       for _, item in map:iter_items() do
          if map:has_type({"town", "guild"}) then
             -- Remove player-owned items on the ground.
@@ -453,6 +445,13 @@ local function regenerate_map(map)
          else
             chara:emit("base.on_regenerate")
          end
+      end
+   end
+
+   if map.generated_with then
+      local generator = data["base.map_generator"][map.generated_with.generator]
+      if generator and generator.on_regenerate then
+         generator.on_regenerate(map, map.generated_with.params)
       end
    end
 
@@ -687,24 +686,32 @@ function Map.travel_to(map_or_uid, params)
       map = map_or_uid
    end
 
+   local current = field.map
+   Log.info("Traveling: %d -> %d", current.uid, map.uid)
+
    if map.visit_times > 0 and map.is_generated_every_time then
-      Log.info("Regenerating map.")
+      Log.info("Rebuilding map.")
       -- Regenerate the map with the same parameters.
       assert(map.generated_with)
       local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
       if not success then
-         return err
+         error(err)
       end
 
       local new_map = err
+
+      if map.generated_with then
+         local generator = data["base.map_generator"][map.generated_with.generator]
+         if generator and generator.on_rebuild then
+            generator.on_rebuild(map, map.generated_with.params, new_map, params)
+         end
+      end
+
       new_map.uid = map.uid
       map = new_map
    end
 
-   local current = field.map
    local x, y = 0, 0
-
-   Log.info("Traveling: %d -> %d", current.uid, map.uid)
 
    if map.uid == current.uid then
       -- Nothing to do.
@@ -717,7 +724,6 @@ function Map.travel_to(map_or_uid, params)
    else
       x, y = Map.calc_start_position(Chara.player(), current, params.feat, map)
    end
-   _ppr(x, y, map.uid, map._id)
 
    -- take the player, allies and any items they carry.
    --
@@ -759,7 +765,6 @@ function Map.travel_to(map_or_uid, params)
 
    Map.refresh(map)
 
-   Gui.play_sound("base.exitmap1")
    Map.set_map(map)
    Gui.update_screen()
 

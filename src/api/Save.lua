@@ -19,7 +19,7 @@ function Save.save_game()
    do
       local global = save_store.for_mod("base")
       global.map = map.uid
-      global.player = field.player
+      global.player = field.player.uid
 
       Log.info("Saving game.")
       Log.trace("save map: %d  player %d", global.map, global.player)
@@ -56,7 +56,9 @@ function Save.load_game()
    end
 
    Map.set_map(map)
-   Chara.set_player(player_uid)
+   Chara.set_player(map:get_object(player_uid))
+
+   collectgarbage()
 
    -- BUG: events registered with Event.register since the game has
    -- started will be left over when a save is reloaded.
@@ -80,7 +82,6 @@ function Save.load_game()
    Gui.mes("Game loaded.")
 
    Event.trigger("base.on_game_initialize")
-
 end
 
 return Save

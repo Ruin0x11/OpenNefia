@@ -1,5 +1,6 @@
 local env = require("internal.env")
 local fs = require("util.fs")
+local priority_queue = require("thirdparty.priority_queue")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -13,6 +14,7 @@ local HEIGHT = 600
 local canvas = nil
 local error_canvas = nil
 local layers = {}
+local sorted_layers = {}
 local handler = nil
 local gamma_correct = nil
 
@@ -80,9 +82,20 @@ function draw.draw_end(c)
    love.graphics.setBlendMode("alpha")
 end
 
-function draw.set_root(ui_layer)
+local function sort_layers()
+   sorted_layers = {}
+   for i, entry in ipairs(layers) do
+      sorted_layers[i] = entry
+   end
+   table.sort(sorted_layers, function(a, b) return a.priority < b.priority end)
+   sorted_layers = fun.iter(sorted_layers):extract("layer"):to_list()
+end
+
+function draw.set_root(ui_layer, priority)
+   priority = priority or 0
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
-   layers = {ui_layer}
+   layers = {{layer=ui_layer, priority=priority}}
+   sort_layers()
    ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
 end
@@ -94,18 +107,21 @@ function draw.set_root_input_handler(input)
    handler:halt_input()
 end
 
-function draw.push_layer(ui_layer)
+function draw.push_layer(ui_layer, priority)
+   priority = priority or #layers
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
-   table.insert(layers, ui_layer)
+   table.insert(layers, {layer=ui_layer, priority=priority})
+   sort_layers()
    ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
 end
 
 function draw.pop_layer()
    layers[#layers] = nil
+   sort_layers()
    if layers[#layers] then
-      layers[#layers]:focus()
-      layers[#layers]:halt_input()
+      layers[#layers].layer:focus()
+      layers[#layers].layer:halt_input()
    elseif handler then
       handler:focus()
       handler:halt_input()
@@ -127,24 +143,24 @@ end
 local coroutines = {}
 
 function draw.update_layers_below(dt)
-   for i, layer in ipairs(layers) do
+   for i, entry in ipairs(layers) do
       if i < #layers then
-         layer:update(dt)
+         entry.layer:update(dt)
       end
    end
 end
 
 function draw.draw_layers()
    if env.hotloaded_this_frame() then
-      for _, layer in ipairs(layers) do
-         if layer.on_hotload_layer then
-            layer:on_hotload_layer()
+      for _, entry in ipairs(layers) do
+         if entry.layer.on_hotload_layer then
+            entry.layer:on_hotload_layer()
          end
-         layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+         entry.layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
       end
    end
 
-   for i, layer in ipairs(layers) do
+   for _, layer in ipairs(sorted_layers) do
       layer:draw()
    end
 
@@ -225,13 +241,17 @@ function draw.get_tiled_height()
    return coords:get_tiled_height(love.graphics.getHeight() - (72 + 16))
 end
 
-function draw.with_canvas(other_canvas, f)
+function draw.with_canvas(other_canvas, f, ...)
    love.graphics.setCanvas(other_canvas)
    love.graphics.setBlendMode("alpha")
 
-   f()
+   local ok, err = pcall(f, ...)
 
    love.graphics.setCanvas(canvas)
+
+   if not ok then
+      error(err)
+   end
 end
 
 local image_cache = setmetatable({}, { __mode = "v" })
@@ -327,8 +347,8 @@ function draw.resize(w, h)
    canvas = create_canvas(w, h)
    error_canvas = create_canvas(w, h)
 
-   for _, layer in ipairs(layers) do
-      layer:relayout(0, 0, w, h)
+   for _, entry in ipairs(layers) do
+      entry.layer:relayout(0, 0, w, h)
    end
 
    require("api.Gui").update_screen()

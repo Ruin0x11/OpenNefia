@@ -2,6 +2,7 @@
 
 local Event = require("api.Event")
 local IModdable = require("api.IModdable")
+local Resolver = require("api.Resolver")
 
 -- An object instance backed by a data prototype.
 local IObject = class.interface("IObject",

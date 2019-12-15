@@ -1,9 +1,9 @@
 local Anim = require("mod.elona_sys.api.Anim")
 local Effect = require("mod.elona.api.Effect")
+local Map = require("api.Map")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Item = require("api.Item")
-local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 
@@ -491,5 +491,75 @@ data:add {
       cook(source, item, params.item)
 
       return true
+   end
+}
+
+local function teleport_to(chara, x, y, check_cb, pos_cb, success_cb)
+   local prevents_teleport = false -- TODO
+   if prevents_teleport then
+      if chara:is_in_fov() then
+         Gui.mes("magic.teleport.prevented")
+      end
+      return true
+   end
+
+   if check_cb and not check_cb() then
+      return true
+   end
+
+   if chara:is_in_fov() then
+      Gui.play_sound("base.teleport1", chara.x, chara.y)
+   end
+
+   local map = chara:current_map()
+   for attempt = 1, 200 do
+      local next_x, next_y = pos_cb(x, y, attempt)
+
+      if Map.can_access(next_x, next_y, map) then
+         success_cb(chara)
+
+         chara:remove_activity()
+         chara:set_pos(next_x, next_y)
+         if chara:is_player() then
+            Gui.update_screen()
+         end
+
+         break
+      end
+   end
+
+   return true
+end
+
+data:add {
+   _id = "shadow_step",
+   _type = "elona_sys.magic",
+   elona_id = 619,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   skill = "elona.stat_will",
+   cost = 10,
+   range = 6005,
+   difficulty = 0,
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      local pos = function(x, y, attempt)
+         return x + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2),
+                y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
+      end
+      local success = function(chara)
+         if chara:is_in_fov() then
+            Gui.mes("magic.teleport.shadow_step", chara, target)
+         end
+      end
+
+      return teleport_to(source, target.x, target.y, nil, pos, success)
    end
 }

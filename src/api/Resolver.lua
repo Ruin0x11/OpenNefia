@@ -64,7 +64,7 @@ function Resolver.resolve(proto, params)
 
    if type(proto) == "table" then
       if proto.__resolver then
-         result = Resolver.resolve_one(proto, params, result)
+         result = Resolver.resolve_one(proto, params)
       else
          -- resolve key-value first, then array values, to allow
          -- specifying the order of resolving if one resolver modifies
@@ -76,7 +76,11 @@ function Resolver.resolve(proto, params)
          end
          for _, v in ipairs(proto) do
             assert(type(v) == "table" and v.__resolver)
-            result = Resolver.resolve_one(v, params, result)
+            local resolved = Resolver.resolve_one(v, params, result)
+
+            for k, v in pairs(resolved) do
+               result[k] = v
+            end
          end
       end
    elseif not params.diff_only then

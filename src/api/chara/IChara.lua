@@ -367,7 +367,7 @@ end
 ---
 --- @treturn bool
 function IChara:is_player()
-   return field.player == self.uid
+   return field.player and field.player.uid == self.uid
 end
 
 --- Returns true if this character is an ally of the player.

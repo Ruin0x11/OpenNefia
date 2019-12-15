@@ -53,3 +53,13 @@ data:add {
       [1000] = "",
    },
 }
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "mias_dream",
+
+   progress = {
+      [1] = "quest.journal.sub.mias_dream.progress._0",
+      [1000] = "",
+   },
+}

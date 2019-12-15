@@ -13,5 +13,6 @@ globals = {
    "_ppr",
    "save",
    "utf8",
-   "hel mip"
+   "help",
+   "pause"
 }

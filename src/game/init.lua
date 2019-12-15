@@ -5,6 +5,7 @@ require("internal.data.base")
 local Draw = require("api.Draw")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
+local I18N = require("api.I18N")
 local internal = require("internal")
 
 local chara_make = require("game.chara_make")
@@ -70,6 +71,8 @@ function game.loop()
    coroutine.yield()
 
    local mods = mod.scan_mod_dir()
+
+   -- This function will yield to support the progress bar.
    startup.run(mods)
 
    local cb
@@ -100,8 +103,45 @@ function game.loop()
    startup.shutdown()
 end
 
-function game.draw()
+local function draw_progress_bar(status_text, ratio)
    Draw.clear(0, 0, 0)
+   local text = "Now Loading..."
+   local x = Draw.get_width() / 2
+   local y = Draw.get_height() / 2
+   local progress_width = 400
+   local progress_height = 20
+
+   Draw.set_font(18)
+   Draw.text(text,
+             x - Draw.text_width(text) / 2,
+             y - Draw.text_height() / 2 - 20 - 4 - progress_height,
+             {255, 255, 255})
+
+   if status_text then
+      Draw.set_font(14)
+      Draw.text(status_text,
+                x - Draw.text_width(status_text) / 2,
+                y - Draw.text_height() / 2 - 4 - progress_height,
+                {255, 255, 255})
+      Draw.line_rect(x - progress_width / 2, y, progress_width, progress_height)
+      Draw.filled_rect(x - progress_width / 2, y, progress_width * math.min(ratio, 1), progress_height)
+   end
+end
+
+function game.draw()
+   -- This gets called when game.loop() yields on the first frame.
+   draw_progress_bar()
+
+
+   -- Progress bar.
+   local status = ""
+   local progress = 0
+   local steps = 0
+   repeat
+      draw_progress_bar(status, progress / steps)
+      status, progress, steps = startup.get_progress()
+      coroutine.yield()
+   until status == "progress_finished"
 
    local going = true
 

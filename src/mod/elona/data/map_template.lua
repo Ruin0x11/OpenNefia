@@ -135,9 +135,6 @@ local function create_charas(map, charas)
    end
 end
 
-local function update_quests_in_map(map)
-end
-
 local function generate_chara(map)
    local params
    if map.chara_filter then
@@ -317,7 +314,7 @@ local vernis = {
          { 10, 15, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.general_vendor" } }, shop_rank = 10, _name = "chara.job.general_vendor" } },
          { 7, 26, "elona.wizard", { _role = { "elona.shopkeeper", { inventory_id = "elona.magic_vendor" } }, shop_rank = 11, _name = "chara.job.magic_vendor" } },
          { 14, 25, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.innkeeper" } }, shop_rank = 8, _name = "chara.job.innkeeper" } },
-         { 22, 26, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.bakery" } }, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara__138" } },
+         { 22, 26, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.bakery" } }, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara_baker" } },
          { 28, 16, "elona.wizard", { role = 5 } },
          { 38, 27, "elona.bartender", { role = 9 } },
          { 6, 25, "elona.healer", { role = 12 } },
@@ -330,8 +327,6 @@ local vernis = {
       }
 
       create_charas(map, charas)
-
-      update_quests_in_map(map)
 
       for i=0,25 do
          generate_chara(map)
@@ -418,7 +413,7 @@ local yowyn = {
       chara_filter = chara_filter_town {
          [1] = function()
             if Rand.one_in(2) then
-               return { id = "core.farmer" }
+               return { id = "elona.farmer" }
             end
 
             return nil
@@ -456,18 +451,69 @@ local palmia = {
       is_outdoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
+      max_crowd_density = 45,
       quest_town_id = 3,
       quest_custom_map = "palmia",
       chara_filter = chara_filter_town {
          [1] = function()
             if Rand.one_in(3) then
-               return { id = "core.noble" }
+               return { id = "elona.noble" }
             end
 
             return nil
          end
+      },
+   },
+
+   on_generate = function(map)
+      local charas = {
+         { 42, 27, "elona.bartender", { role = 9 } },
+         { 34, 3, "elona.healer", { role = 12 } },
+         { 22, 31, "elona.arena_master", { role = 10 } },
+         { 5, 15, "elona.erystia", { role = 3 } },
+         { 41, 11, "elona.mia", { role = 3 } },
+         { 5, 6, "elona.conery", { role = 3 } },
+         { 24, 6, "elona.cleaner", { role = 3 } },
+         { 15, 22, "elona.cleaner", { role = 3 } },
+         { 15, 22, "elona.bard", { role = 3 } },
+         { 48, 18, "elona.shopkeeper", { role = 1006, shop_rank = 10, _name = "chara.job.general_vendor" } },
+         { 30, 17, "elona.shopkeeper", { role = 1005, shop_rank = 8, _name = "chara.job.innkeeper" } },
+         { 48, 3, "elona.shopkeeper", { role = 1008, shop_rank = 8, _name = "chara.job.goods_vendor" } },
+         { 42, 17, "elona.shopkeeper", { role = 1001, shop_rank = 12 } },
+         { 11, 14, "elona.shopkeeper", { role = 1003, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara_baker" } },
+         { 41, 3, "elona.wizard", { role = 1004, shop_rank = 11, _name = "chara.job.magic_vendor" } },
+         { 41, 28, "elona.shopkeeper", { role = 1009, shop_rank = 12, _name = "chara.job.trader" } },
+         { 7, 2, "elona.stersha", { role = 15, ai_calm = 3 } },
+         { 6, 2, "elona.xabi", { role = 15, ai_calm = 3 } },
+         { 49, 11, "elona.elder", { role = 6, _name = "chara.job.of_palmia" } },
+         { 30, 27, "elona.trainer", { role = 7, _name = "chara.job.trainer" } },
+         { 32, 27, "elona.wizard", { role = 5 } },
+         { 29, 28, "elona.informer", { role = 8 } },
+         { 16, 5, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 16, 9, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 5, 3, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 8, 3, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 35, 14, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 38, 14, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 29, 2, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 19, 18, "elona.guard", { role = 14, ai_calm = 3 } },
+         { 22, 18, "elona.guard", { role = 14, ai_calm = 3 } },
+         { -3, 0, "elona.citizen", { _count = 5, role = 4 } },
+         { -3, 0, "elona.citizen2", { _count = 5, role = 4 } },
+         { -3, 0, "elona.guard", { _count = 4, role = 14 } },
       }
-   }
+
+      create_charas(map, charas)
+
+      for i=0,25 do
+         generate_chara(map)
+      end
+
+      if Sidequest.progress("elona.mias_dream") == 1000 then
+         local silver_cat = Chara.create("elona.silver_cat", 42, 11, {}, map)
+         silver_cat.roles = {["elona.unique_chara"] = {}}
+      end
+   end
 }
 data:add(palmia)
 
@@ -492,15 +538,15 @@ local derphy = {
       chara_filter = chara_filter_town {
          [1] = function()
             if Rand.one_in(3) then
-               return { id = "core.rogue" }
+               return { id = "elona.rogue" }
             elseif Rand.one_in(2) then
-               return { id = "core.prostitute" }
+               return { id = "elona.prostitute" }
             end
          end,
 
          -- Thieves guild
          [3] = function()
-            return { id = "core.thief_guild_member" }
+            return { id = "elona.thief_guild_member" }
          end
       }
    }
@@ -529,7 +575,7 @@ local port_kapul = {
       chara_filter = chara_filter_town {
          -- Fighters guild
          [3] = function()
-            return { id = "core.fighter_guild_member" }
+            return { id = "elona.fighter_guild_member" }
          end
       }
    }
@@ -572,7 +618,7 @@ local noyel = {
       chara_filter = chara_filter_town {
          [1] = function()
             if Rand.one_in(3) then
-               return { id = "core.sister" }
+               return { id = "elona.sister" }
             end
          end
       }
@@ -750,7 +796,7 @@ local noyel = {
             end
          else
             Chara.iter_others()
-               :filter(function(c) return c.is_only_in_christmas end)
+            :filter(function(c) return c.is_only_in_christmas end)
                :each(IChara.vanquish)
          end
       end
@@ -813,13 +859,13 @@ local lumiest = {
       chara_filter = chara_filter_town {
          [1] = function()
             if Rand.one_in(3) then
-               return { id = "core.artist" }
+               return { id = "elona.artist" }
             end
          end,
 
          -- Mages guild
          [3] = function()
-            return { id = "core.mage_guild_member" }
+            return { id = "elona.mage_guild_member" }
          end
       }
    }
@@ -967,7 +1013,7 @@ local lesimas = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.lesimas",
-         dungeon_level = 1,
+         start_dungeon_level = 1,
          deepest_dungeon_level = 45
       }
    },
@@ -1030,7 +1076,7 @@ local tower_of_fire = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.tower_of_fire",
-         dungeon_level = 15,
+         start_dungeon_level = 15,
          deepest_dungeon_level = 18
       }
    },
@@ -1058,7 +1104,7 @@ local crypt_of_the_damned = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.crypt_of_the_damned",
-         dungeon_level = 25,
+         start_dungeon_level = 25,
          deepest_dungeon_level = 30
       }
    },
@@ -1086,7 +1132,7 @@ local ancient_castle = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.ancient_castle",
-         dungeon_level = 17,
+         start_dungeon_level = 17,
          deepest_dungeon_level = 22
       }
    },
@@ -1143,7 +1189,7 @@ local mountain_pass = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.type_8",
-         dungeon_level = 25,
+         start_dungeon_level = 25,
          deepest_dungeon_level = 29
       }
    },
@@ -1168,7 +1214,7 @@ local puppy_cave = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.type_10",
-         dungeon_level = 2,
+         start_dungeon_level = 2,
          deepest_dungeon_level = 5
       }
    },
@@ -1187,7 +1233,7 @@ local puppy_cave = {
    on_generate = function(map)
       if map.dungeon_level == map.deepest_dungeon_level
          and Sidequest.progress("elona.puppys_cave") < 2
-         and not Chara.find("elona.poppy", "ally")
+         and not Chara.find("elona.poppy", "allies")
       then
          local poppy = Chara.create("elona.poppy", nil, nil, {}, map)
          poppy.is_not_targeted_by_ai = true
@@ -1204,7 +1250,7 @@ local minotaurs_nest = {
       generator = "elona.dungeon_template",
       params = {
          id = "elona.type_9",
-         dungeon_level = 23,
+         start_dungeon_level = 23,
          deepest_dungeon_level = 27
       }
    },

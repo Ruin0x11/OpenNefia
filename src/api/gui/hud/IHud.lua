@@ -1,4 +1,4 @@
-local IUiElement = require("api.gui.IUiElement")
+local IUiLayer = require("api.gui.IUiLayer")
 
 return class.interface("IHud",
                  {
@@ -7,4 +7,4 @@ return class.interface("IHud",
                     register_widget = "function",
                     find_widget = "function",
                  },
-                 IUiElement)
+                 IUiLayer)

@@ -303,7 +303,9 @@ local function parse_file(fname, lang, package, args)
          -- statement at the end of the file.
          local mod_name = fname:match("/([^./]+)%.lua$")
 
-         if mod_name and mod_name == guessed_mod_name then
+         -- ldoc appears to lowercase the filename, so a
+         -- case-sensitive comparison will not always match.
+         if mod_name and string.lower(mod_name) == string.lower(guessed_mod_name) then
             F:warning("assuming module named " .. mod_name .. " exists for documentation")
             add_module(Tags.new{summary="",description=""},mod_name,true)
             first_comment = false
@@ -472,7 +474,7 @@ local function parse_file(fname, lang, package, args)
                parse_error = is_local
                is_local = false
             end
-            local tags = Tags.new{summary="",description=""}
+            local tags = Tags.new{summary="",description="",params={},modifiers={}}
             add_item(tags, item_follows, parse_error, is_local, case, t)
          end
       end

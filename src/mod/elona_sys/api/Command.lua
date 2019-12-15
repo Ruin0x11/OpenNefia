@@ -93,6 +93,9 @@ function Command.move(player, x, y)
       -- quest abandonment warning
 
       if Input.yes_no() then
+         Gui.play_sound("base.exitmap1")
+         Gui.update_screen()
+
          local success, result = table.unpack(hook_travel_to_map())
 
          if not success then
@@ -230,6 +233,7 @@ function Command.enter_action(player)
          return "player_turn_query"
       end
 
+      Gui.play_sound("base.exitmap1")
       assert(Map.travel_to(map))
 
       return "turn_begin"

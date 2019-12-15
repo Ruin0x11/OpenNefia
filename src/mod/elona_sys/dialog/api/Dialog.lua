@@ -277,7 +277,8 @@ local function step_dialog(node_data, talk, state)
 
          if type(text) == "table" then
             -- Obtain arguments to I18N.get().
-            local args = {}
+            -- Assume the speaker is the first argument unless otherwise noted.
+            local args = {talk.speaker}
             if text.args then
                local ok
                ok, args = pcall(text.args, talk, state, node_data.opts)
@@ -367,17 +368,29 @@ function Dialog.start(chara, dialog_id)
 
    dialog_id = dialog_id or "elona_sys.ignores_you"
 
+   local start_node = "__start"
+   local colon_pos = string.find(dialog_id, ":")
+   if colon_pos then
+      start_node = dialog_id:sub(colon_pos+1)
+      dialog_id = dialog_id:sub(1, colon_pos-1)
+   end
+
    local dialog = data["elona_sys.dialog"]:ensure(dialog_id)
 
    local talk = make_talk(chara, dialog, dialog_id)
    local state = {}
-   local next_node = {choice = "__start", opts = {}}
+   local next_node = {choice = start_node, opts = {}}
 
    Gui.play_sound("base.chat")
 
    while next_node ~= nil do
       next_node = step_dialog(next_node, talk, state)
    end
+end
+
+function Dialog.talk_to_chara(chara)
+   local dialog_id = chara:calc("dialog") or "elona.default"
+   Dialog.start(chara, dialog_id)
 end
 
 return Dialog

@@ -19,7 +19,7 @@
         (goto-char (point-min))
         (if (fboundp 'json-parse-buffer)
             (json-parse-buffer
-             :object-type 'plist
+             :object-type 'alist
              :null-object nil
              :false-object :json-false)
           (json-read)))
@@ -44,37 +44,8 @@
      response)))
 
 (defun elona-next--completing-read (prompt list)
-  (let ((cands (mapcar (lambda (c) (append c nil)) list)))
+  (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil))))
     (completing-read prompt cands)))
-
-(defun elona-next--process-response (cmd content response)
-  (if-let ((candidates (plist-get :candidates response)))
-      ; in pairs of ("api.Api.name", "api.api.name")
-      (let ((cand (elona-next--completing-read "Candidate: " candidates)))
-        (elona-next--send cmd cand))
-    (pcase cmd
-      ("help" (elona-next--command-help content response))
-      ("jump_to" (elona-next--command-jump-to content response))
-      ("signature" (elona-next--command-signature response))
-      ("apropos" (elona-next--command-apropos response))
-      ("run" t)
-      (else (error "No action for %s" cmd)))))
-
-(defun elona-next--command-help (content response)
-  (-let (((&plist :success :doc :message) response)
-         (buffer (get-buffer-create "*elona-next-help*")))
-     (if (eq success t)
-         (with-help-window buffer
-           (princ doc))
-       (message "%s" message))))
-
-(defun elona-next--command-jump-to (content response)
-  (-let* (((&plist :success :file :line :column) response))
-    (if (eq success t)
-        (let ((loc (xref-make-file-location file line column)))
-          (xref--push-markers)
-          (xref--show-location loc nil))
-      (xref-find-definitions content))))
 
 (defun elona-next--fontify-str (str)
   (with-temp-buffer
@@ -92,24 +63,66 @@
 (defun elona-next--eldoc-message (&optional msg)
   (run-with-idle-timer 0 nil (lambda () (eldoc-message elona-next--eldoc-saved-message))))
 
-(defun elona-next--command-signature (response)
-  (-let* (((&plist :sig :params :summary) response))
-    (when sig
-      (setq elona-next--eldoc-saved-message
-            (format "%s :: %s\n%s" (elona-next--fontify-str sig) params summary)
-            elona-next--eldoc-saved-point (point))
-      (elona-next--eldoc-message elona-next--eldoc-saved-message))))
+(defun elona-next--game-running-p ()
+  (or
+   (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
+   (and compilation-in-progress)))
 
 (defun elona-next-eldoc-function ()
   (ignore-errors
+    (when (elona-next--game-running-p)
       (elona-next--send "signature"
-                        (symbol-name (elona-next--dotted-symbol-at-point))))
+                        (symbol-name (elona-next--dotted-symbol-at-point)))))
   eldoc-last-message)
 
+(defun elona-next--process-response (cmd content response)
+  (if-let ((candidates (assoc 'candidates response)))
+      ; in pairs of ("api.Api.name", "api.api.name")
+      (let ((cand (elona-next--completing-read "Candidate: " (cdr candidates))))
+        (elona-next--send cmd cand))
+    (pcase cmd
+      ("help" (elona-next--command-help content response))
+      ("jump_to" (elona-next--command-jump-to content response))
+      ("signature" (elona-next--command-signature response))
+      ("apropos" (elona-next--command-apropos response))
+      ("run" t)
+      (else (error "No action for %s" cmd)))))
+
+;;
+;; Commands
+;;
+
+(defun elona-next--command-help (content response)
+  (-let (((&alist 'success 'doc 'message) response)
+         (buffer (get-buffer-create "*elona-next-help*")))
+     (if (eq success t)
+         (with-help-window buffer
+           (princ doc))
+       (message "%s" message))))
+
+(defun elona-next--command-jump-to (content response)
+  (-let* (((&alist 'success 'file 'line 'column) response))
+    (if (eq success t)
+        (let ((loc (xref-make-file-location file line column)))
+          (xref--push-markers)
+          (xref--show-location loc nil))
+      (xref-find-definitions content))))
+
+(defun elona-next--command-signature (response)
+  (-let* (((&alist 'sig 'params 'summary) response))
+    (when sig
+      (setq elona-next--eldoc-saved-message
+            (format "%s :: %s%s" (elona-next--fontify-str sig) params (or (and (not (string-blank-p summary))
+                                                                               (format "\n%s" summary))
+                                                                          ""))
+            elona-next--eldoc-saved-point (point))
+      (elona-next--eldoc-message elona-next--eldoc-saved-message))))
+
 (defun elona-next--command-apropos (response)
-  (-let* (((&plist :items) response)
+  (-let* (((&alist :items) response)
           (item (elona-next--completing-read "Apropos: " items)))
     (elona-next--send "help" item)))
+
 
 (defun elona-next--tcp-sentinel (proc message)
   "Runs when a client closes the connection."

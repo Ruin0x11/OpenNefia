@@ -48,32 +48,11 @@ end
 
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
-   -- this auto-requires the full public API.
+   -- `Repl.generate_env()` auto-requires the full public API.
+   local Repl = require("api.Repl")
    local ReplLayer = require("api.gui.menu.ReplLayer")
 
-   local repl_env = env.generate_sandbox("repl")
-   local apis = env.require_all_apis("api", true)
-   repl_env = table.merge(repl_env, apis)
-
-   repl_env = table.merge(repl_env, _G)
-   repl_env = table.merge(repl_env, env.require_all_apis("internal"))
-   repl_env = table.merge(repl_env, env.require_all_apis("game"))
-   repl_env["save"] = save
-
-   -- HACK: remove
-   local history = {}
-   local file = io.open("repl_history.txt", "r")
-   if file ~= nil then
-      for line in file:lines() do
-         history[#history + 1] = line
-      end
-   end
-
-   if fs.exists("repl_startup.lua") then
-      local chunk = loadfile("repl_startup.lua")
-      setfenv(chunk, repl_env)
-      chunk()
-   end
+   local repl_env, history = Repl.generate_env()
 
    self.repl = ReplLayer:new(repl_env, history)
 end
@@ -88,6 +67,8 @@ function field_layer:init_global_data()
    s.allies = {}
    s.uids = uid_tracker:new()
    s.map_uids = uid_tracker:new()
+
+   self.player = nil
 
    Event.trigger("base.on_init_save")
 end
@@ -137,7 +118,7 @@ function field_layer:update_screen(scroll, dt)
 
    assert(self.map ~= nil)
 
-   local player = self.map:get_object(self.player)
+   local player = self.player
    local scroll_frames = 0
    if scroll then
       scroll_frames = 3
@@ -194,7 +175,7 @@ function field_layer:update_hud()
    -- HACK due to global data
    self.hud.clock:set_data(save.base.date)
 
-   local player = self.map:get_object(self.player)
+   local player = self.player
    self.hud:refresh(player)
    self.hud:update()
 end
@@ -230,8 +211,6 @@ function field_layer:draw()
    if self.renderer then
       self.renderer:draw()
    end
-
-   self.hud:draw()
 end
 
 function field_layer:query_repl()

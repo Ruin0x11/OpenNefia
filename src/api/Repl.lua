@@ -1,6 +1,12 @@
+--- @module Repl
+
 local Codegen = require("api.Codegen")
 local Env = require("api.Env")
+local SaveFs = require("api.SaveFs")
+local env = require("internal.env")
 local field = require("game.field")
+local repl = require("internal.repl")
+local fs = require("util.fs")
 
 local Repl = {}
 
@@ -61,6 +67,64 @@ end
 --- the player's turn.
 function Repl.defer_execute(code)
    field.repl:defer_execute(code)
+end
+
+function Repl.generate_env(locals)
+   locals = locals or {}
+
+   local repl_env = env.generate_sandbox("repl")
+   local apis = env.require_all_apis("api", true)
+   repl_env = table.merge(repl_env, apis)
+
+   repl_env = table.merge(repl_env, _G)
+   repl_env = table.merge(repl_env, env.require_all_apis("internal"))
+   repl_env = table.merge(repl_env, env.require_all_apis("game"))
+   repl_env["save"] = require("internal.global.save")
+
+   local history = {}
+   if SaveFs.exists("data/repl_history") then
+      local ok
+      ok, history = SaveFs.read("data/repl_history")
+      if not ok then
+         error(history)
+      end
+   end
+
+   if fs.exists("repl_startup.lua") then
+      local chunk = loadfile("repl_startup.lua")
+      setfenv(chunk, repl_env)
+      chunk()
+   end
+
+   return { normal = repl_env, locals = locals }, history
+end
+
+--- Stops execution at the point this function is called and starts
+--- the REPL with all local variables in scope captured in its
+--- environment. If any modifications are made to local variables,
+--- they will be reflected when execution resumes.
+function Repl.pause()
+   local locals = repl.capture_locals(1)
+   local repl_env, history = Repl.generate_env(locals)
+
+   local mod, loc = env.find_calling_mod()
+   local loc_string = ""
+   if loc then
+      loc_string = loc_string .. (" in %s on line %d"):format(fs.normalize(loc.short_src), loc.linedefined)
+   end
+   if mod then
+      loc_string = loc_string .. (" (mod: `%s`)"):format(mod)
+   end
+
+   local mes = ("Breakpoint%s.\nLocals: %s"):format(loc_string, table.concat(table.keys(locals), ", "))
+   local params = {
+      history = history,
+      color = {65, 17, 17, 192},
+      message = mes
+   }
+   require("api.gui.menu.ReplLayer"):new(repl_env, params):query()
+
+   repl.restore_locals(1, locals)
 end
 
 return Repl

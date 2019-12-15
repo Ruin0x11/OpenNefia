@@ -83,6 +83,11 @@ function SaveFs.read(path, save)
    return true, result
 end
 
+function SaveFs.exists(path, save)
+   local full_path = load_path(path, save)
+   return fs.exists(full_path)
+end
+
 -- Saves are handled the same as in vanilla. When a map is exited, it
 -- is saved in the temporary working save location. When the player
 -- wants to save the game, the profile folder to save to is replaced

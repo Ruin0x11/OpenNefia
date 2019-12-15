@@ -19,6 +19,7 @@ local field_logic = {}
 function field_logic.setup_new_game(player)
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
 
+   Chara.set_player(player)
    scenario:on_game_start(player)
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
@@ -398,6 +399,7 @@ function field_logic.query()
 
    field.is_active = true
 
+   draw.push_layer(field.hud, 1000000)
    draw.push_layer(field)
 
    Gui.update_screen()
@@ -406,6 +408,7 @@ function field_logic.query()
       going, event, target_chara = field_logic.run_one_event(event, target_chara)
    end
 
+   draw.pop_layer()
    draw.pop_layer()
 
    field.map = nil

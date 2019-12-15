@@ -114,7 +114,7 @@ function table.deepcopy(t)
     return cycle_aware_copy(t,{})
 end
 
-function table.copy(tbl)
+function table.shallow_copy(tbl)
    local new = {}
    for k, v in pairs(tbl) do
       new[k] = v

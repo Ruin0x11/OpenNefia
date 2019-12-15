@@ -29,6 +29,36 @@ data:add {
          },
          choices = "__start"
       },
+      you_kidding = {
+         text = {
+            {"talk.npc.common.you_kidding"}
+         },
+         choices = "__start"
+      },
+   },
+}
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_giver",
+
+   root = "talk.npc.quest_giver",
+   nodes = {
+      quest_about = {
+         text = {
+            {"about"}
+         },
+         choices = {
+            {"quest_giver_take", "about.choices.take"},
+            {"elona.default:you_kidding", "about.choices.leave"}
+         }
+      },
+      quest_giver_take = {
+         text = {
+            {"take"}
+         },
+         choices = {{"__END__", "__BYE__"}}
+      },
    },
 }
 
@@ -85,3 +115,4 @@ require("mod.elona.data.dialog.unique.miches")
 require("mod.elona.data.dialog.unique.larnneire")
 require("mod.elona.data.dialog.unique.lomias")
 require("mod.elona.data.dialog.unique.rilian")
+require("mod.elona.data.dialog.unique.poppy")

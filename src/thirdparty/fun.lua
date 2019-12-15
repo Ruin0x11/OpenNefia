@@ -5,6 +5,7 @@
 ---
 --- Distributed under the MIT/X11 License. See COPYING.md for more details.
 ---
+-- @module fun
 
 local exports = {}
 local methods = {}
@@ -56,6 +57,13 @@ local iterator_mt = {
     __index = methods;
 }
 
+--- Returns a luafun-compatible iterator from an iterator triplet of
+--- gen, param and state.
+---
+--- @function fun.wrap
+--- @tparam any gen
+--- @tparam any param
+--- @tparam any state
 local wrap = function(gen, param, state)
     return setmetatable({
         gen = gen,
@@ -128,6 +136,16 @@ local rawiter = function(obj, param, state)
           obj, type(obj)))
 end
 
+--- Make gen, param, state iterator from the iterable object. The
+--- function is a generalized version of pairs() and ipairs().
+---
+--- The function distinguish between arrays and maps using #arg == 0
+--- check to detect maps. For arrays ipairs is used. For maps a
+--- modified version of pairs is used that also returns keys. Userdata
+--- objects are handled in the same way as tables.
+---
+--- @function fun.iter(obj)
+--- @tparam list|map|string obj
 local iter = function(obj, param, state)
     return wrap(rawiter(obj, param, state))
 end
@@ -169,6 +187,31 @@ local export2 = function(fun)
     end
 end
 
+--- Execute the fun for each iteration value. The function is equivalent to the code below:
+--
+---   for _it, ... in iter(gen, param, state) do
+---       fun(...)
+---   end
+---
+--- Examples:
+---
+---   > each(print, { a = 1, b = 2, c = 3})
+---   b 2
+---   a 1
+---   c 3
+---
+---   > each(print, {1, 2, 3})
+---   1
+---   2
+---   3
+---
+--- The function is used for its side effects. Implementation directly
+--- applies fun to all iteration values without returning a new
+--- iterator, in contrast to functions like map().
+---
+--- @function fun.each(fun, iter)
+--- @tparam function fun
+--- @tparam iterator iter
 local each = function(fun, gen, param, state)
     repeat
         state = call_if_not_empty(fun, gen(param, state))
@@ -983,6 +1026,7 @@ exports.chain = chain
 -- Operators
 --------------------------------------------------------------------------------
 
+-- @table operator
 local operator = {
     ----------------------------------------------------------------------------
     -- Comparison operators

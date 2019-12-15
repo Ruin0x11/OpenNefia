@@ -64,13 +64,13 @@ local function mark_stairs(map)
    local down = map:iter_feats():filter(pred):nth(1)
 
    if down then
-      down.tag = "stairs_down"
+      down.label = "stairs_down"
    end
 
    pred = function(feat) return feat._id == "elona.stairs_up" end
    local up = map:iter_feats():filter(pred):nth(1)
    if up then
-      up.tag = "stairs_up"
+      up.label = "stairs_up"
       return { x = up.x, y = up.y }
    end
 
@@ -211,7 +211,7 @@ local function generate_dungeon(self, params, opts)
    local template = data["elona.dungeon_template"]:ensure(params.id)
    Log.debug("generate dungeon: %s", inspect(params))
 
-   local dungeon_level = params.dungeon_level or 1
+   local dungeon_level = params.dungeon_level or params.start_dungeon_level or 1
    local deepest_dungeon_level = params.deepest_dungeon_level
    local gen_params
 
@@ -259,7 +259,6 @@ local function generate_dungeon(self, params, opts)
       dungeon, err = generate_dungeon_raw(template, gen_params, opts)
 
       if dungeon then
-         _ppr(gen_params, params)
          params = table.merge(gen_params, params)
          break
       end
@@ -270,7 +269,6 @@ local function generate_dungeon(self, params, opts)
    end
 
    Log.info("Dungeon generated: %s", params.id)
-   _ppr(params)
 
    local tileset = params.tileset or "elona.dirt"
    MapTileset.apply(tileset, dungeon)
@@ -304,7 +302,7 @@ local function generate_dungeon(self, params, opts)
    -- This was done in Elona by just placing the player on the stairs
    -- in the map during the generation routine.
    local block = Feat.create("elona.mapgen_block", dungeon.player_start_pos.x, dungeon.player_start_pos.y, {}, dungeon)
-   assert(block)
+   assert(not Map.can_access(dungeon.player_start_pos.x, dungeon.player_start_pos.y, dungeon))
 
    if template.after_generate then
       template.after_generate(dungeon)
@@ -359,8 +357,10 @@ local function generate_dungeon(self, params, opts)
       end
    end
 
-   block:remove_ownership()
-   assert(Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y) == nil)
+   if block then
+      block:remove_ownership()
+   end
+   assert(Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y) == nil, "chara at")
 
    dungeon.can_exit_from_edge = false
 
@@ -379,7 +379,8 @@ data:add {
       id = "string",
       width = "number",
       height = "number",
-      dungeon_level = "number",
+      start_dungeon_level = "number",
+      dungeon_level = "number[opt]",
       deepest_dungeon_level = "number",
       area_id = "string"
    },

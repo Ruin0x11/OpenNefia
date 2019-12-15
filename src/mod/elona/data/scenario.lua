@@ -94,7 +94,6 @@ local function start(self, player)
 
    local x, y = MapEntrance.center(home, player)
    assert(Map.current():take_object(player, x, y))
-   Chara.set_player(player)
    initialize_player(player)
 
    save.base.should_reset_world_map = true

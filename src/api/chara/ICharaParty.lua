@@ -56,4 +56,8 @@ function ICharaParty:act_hostile_towards(other)
    end
 end
 
+function ICharaParty:can_recruit_allies()
+   return true
+end
+
 return ICharaParty

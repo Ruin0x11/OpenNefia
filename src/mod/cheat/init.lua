@@ -18,6 +18,8 @@ local function level_up()
    local arrow = Item.create("content.arrow", nil, nil, {}, player)
    assert(player:equip_item(arrow))
 
+   player:gain_skill("elona.mining", 10000)
+
    player.gold = 10000000
    player.platinum = 10000
 

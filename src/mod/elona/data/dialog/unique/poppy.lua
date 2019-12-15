@@ -1,13 +1,15 @@
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
-local I18N = require("api.I18N")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 
 data:add {
-   id = "poppy",
-   root = "core.talk.unique.poppy",
+   _type = "elona_sys.dialog",
+   _id = "poppy",
+
+   root = "talk.unique.poppy",
    nodes = {
       __start = function()
-         local flag = Internal.get_quest_flag("puppys_cave")
+         local flag = Sidequest.progress("elona.puppys_cave")
          if flag == 1000 then
             return "quest_completed"
          end
@@ -20,7 +22,7 @@ data:add {
          },
          choices = function()
             local choices = {}
-            if Chara.can_recruit_allies() then
+            if Chara.player():can_recruit_allies() then
                table.insert(choices, {"take", "find.choices.take"})
             end
             table.insert(choices, {"__END__", "__BYE__"})
@@ -29,9 +31,9 @@ data:add {
          end
       },
       take = function(t)
-         Gui.txt(I18N.get("core.talk.unique.poppy.find.you_must_return", t.speaker))
+         Gui.mes("talk.unique.poppy.find.you_must_return", t.speaker)
          t.speaker:recruit_as_ally()
-         t.speaker:set_flag("IsEscortedInSubQuest", true)
+         t.speaker.is_being_escorted = true
          t.speaker:refresh()
 
          return "__END__"

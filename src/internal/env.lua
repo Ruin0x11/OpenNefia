@@ -62,6 +62,8 @@ local SANDBOX_GLOBALS = {
    -- misc. globals
    "inspect",
    "fun",
+   "help",
+   "pause",
    "_ppr"
 }
 

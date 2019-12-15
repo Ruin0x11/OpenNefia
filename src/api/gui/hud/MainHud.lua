@@ -1,5 +1,4 @@
 local Draw = require("api.Draw")
-local Ui = require("api.Ui")
 
 local IHud = require("api.gui.hud.IHud")
 local IInput = require("api.gui.IInput")
@@ -13,6 +12,7 @@ local UiStatusEffects = require("api.gui.hud.UiStatusEffects")
 local UiTheme = require("api.gui.UiTheme")
 
 local MainHud = class.class("MainHud", IHud)
+MainHud:delegate("input", IInput)
 
 function MainHud:init()
    self.input = InputHandler:new()

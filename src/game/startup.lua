@@ -8,10 +8,36 @@ local Stopwatch = require("api.Stopwatch")
 local UiTheme = require("api.gui.UiTheme")
 local Event = require("api.Event")
 local Log = require("api.Log")
+local Doc = require("api.Doc")
+local Repl = require("api.Repl")
 
 local startup = {}
 
+local progress_step = 0
+local status = ""
+function startup.get_progress()
+   return status, progress_step, 11
+end
+
+local function progress(_status)
+   status = _status
+   progress_step = progress_step + 1
+   coroutine.yield()
+end
+
+function startup.run_all(mods)
+   local coro = function() startup.run(mods) end
+   while coroutine.resume(coro) ~= "progress_finished" do
+   end
+end
+
 function startup.run(mods)
+   progress("Loading documentation...")
+
+   -- Wrap these functions to allow hotloading via table access.
+   rawset(_G, "help", function(...) return Doc.help(...) end)
+   rawset(_G, "pause", function(...) return Repl.pause(...) end)
+
    if jit and jit.status() == false then
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
    end
@@ -20,6 +46,8 @@ function startup.run(mods)
 
    doc.load()
 
+   progress("Loading mods...")
+
    require("internal.data.base")
 
    mod.load_mods(mods)
@@ -27,9 +55,15 @@ function startup.run(mods)
 
    -- data is finalized at this point.
 
+   progress("Loading tilemaps...")
+
    startup.load_batches()
 
+   progress("Loading translations...")
+
    i18n.switch_language("jp")
+
+   progress("Loading theme...")
 
    local default_theme = "elona_sys.default"
    UiTheme.add_theme(default_theme)
@@ -37,6 +71,9 @@ function startup.run(mods)
    field:setup_repl()
 
    Event.trigger("base.on_game_startup")
+
+   progress("Finished.")
+   progress("progress_finished")
 end
 
 function startup.shutdown()
@@ -88,27 +125,32 @@ function startup.load_batches()
    local sw = Stopwatch:new()
    sw:measure()
 
+   progress("Loading tilemaps (tile)...")
    local tile_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    tile_atlas:load(get_map_tiles(), coords)
 
    sw:p("load_batches.tile")
 
+   progress("Loading tilemaps (overhang)...")
    local tile_overhang_atlas = atlas:new(atlas_size, atlas_size, tile_size, math.floor(tile_size / 4), 0, 16)
    tile_overhang_atlas:load(get_map_overhang_tiles(), coords)
 
    sw:p("load_batches.tile_overhang")
 
+   progress("Loading tilemaps (character)...")
    local chara_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    chara_atlas:load(get_chara_tiles())
 
    sw:p("load_batches.chara")
 
+   progress("Loading tilemaps (item)...")
    local item_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    item_atlas:load(get_item_tiles())
 
    sw:p("load_batches.item")
 
    -- HACK
+   progress("Loading tilemaps (item shadow)...")
    local load_tile = function(atlas, proto)
       local draw = function(tile, x, y)
          love.graphics.setColor(0, 0, 0)
@@ -122,11 +164,13 @@ function startup.load_batches()
 
    sw:p("load_batches.item_shadow")
 
+   progress("Loading tilemaps (feat)...")
    local feat_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
    feat_atlas:load(get_feat_tiles())
 
    sw:p("load_batches.feat")
 
+   progress("Loading tilemaps (portrait)...")
    local portrait_atlas = atlas:new(100, 100, 48, 72)
    portrait_atlas:load(get_portrait_tiles())
 

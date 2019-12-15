@@ -2,6 +2,8 @@ local Draw = require("api.Draw")
 local Env = require("api.Env")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
+local Doc = require("api.Doc")
+local SaveFs = require("api.SaveFs")
 local circular_buffer = require("thirdparty.circular_buffer")
 local queue = require("util.queue")
 
@@ -17,18 +19,42 @@ local ReplLayer = class.class("ReplLayer", IUiLayer)
 
 ReplLayer:delegate("input", IInput)
 
-function ReplLayer:init(env, history)
+function ReplLayer:init(vars, params)
+   params = params or {}
+
+   self.history = params.history or {}
+   self.color = params.color or {17, 17, 65, 192}
+   self.message = params.message or nil
+
    self.text = ""
-   self.env = env or {}
+
+   self.vars = vars or {}
+   self.vars.locals = self.vars.locals or {}
+   self.vars.normal = self.vars.normal or {}
+
+   self.env = setmetatable({}, {
+         __index = function(self, ind)
+            if rawget(vars.locals, ind) then
+               return rawget(vars.locals, ind)
+            end
+            return rawget(vars.normal, ind)
+         end,
+         __newindex = function(self, ind, val)
+            if rawget(vars.locals, ind) then
+               rawset(vars.locals, ind, val)
+            else
+               rawset(vars.normal, ind, val)
+            end
+         end
+   })
+
    self.result = ""
    self.size = 10000
-   self.color = {17, 17, 65, 192}
    self.font_size = 15
 
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
 
-   self.history = history or {}
    self.history_index = 0
 
    self.output = {}
@@ -60,7 +86,7 @@ function ReplLayer:init(env, history)
 
    -- mode of operation. could implement Elona-style console if
    -- desired.
-   self.mode = LuaReplMode:new(env)
+   self.mode = LuaReplMode:new(self.env)
 
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys {
@@ -117,7 +143,15 @@ function ReplLayer:init(env, history)
          local function complete(cand)
             local text = self.completion.base .. cand.text
             if cand.type == "function" then
-               text = text .. "("
+               local rest = "("
+               local mod_name = string.match(self.completion.base, "^([a-zA-Z_]+)")
+               if mod_name then
+                  local doc = Doc.get(text)
+                  if doc and doc.entry and #doc.entry.params == 0 then
+                     rest = "()"
+                  end
+               end
+               text = text .. rest
             end
             self:set_text(text)
          end
@@ -156,8 +190,12 @@ end
 function ReplLayer:on_query()
    self.completion = nil
    if self.scrollback:len() == 0 then
-      self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
-                               Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
+      if self.message then
+         self:print(self.message)
+      else
+         self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
+                                  Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
+      end
    end
 end
 
@@ -220,16 +258,18 @@ function ReplLayer:history_next()
          self.search.status = "failure"
          self.history_index = math.min(self.history_index + 1, #self.history)
          local text = self.history[self.history_index]
-         local match_start, match_end = string.find(text, self.search.text)
-         if match_start then
-            self.search.status = "success"
-            self.search.match_start = match_start
-            self.search.match_end = match_end
-            self:set_text(text)
-            break
-         end
-         if self.history_index == #self.history then
-            break
+         if text then
+            local match_start, match_end = string.find(text, self.search.text)
+            if match_start then
+               self.search.status = "success"
+               self.search.match_start = match_start
+               self.search.match_end = match_end
+               self:set_text(text)
+               break
+            end
+            if self.history_index == #self.history then
+               break
+            end
          end
       end
       if self.search.status ~= "success" then
@@ -347,7 +387,7 @@ function ReplLayer:relayout(x, y, width, height)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 
    self.t = UiTheme.load(self)
-   self.color = self.t.repl_bg_color or self.color
+   self.color = self.color or self.t.repl_bg_color
 
    if self.canvas == nil or width ~= self.width or height ~= self.height then
       self.canvas = Draw.create_canvas(self.width, self.height)
@@ -432,8 +472,22 @@ function ReplLayer.format_results(results, print_varargs)
 
    if type(results) == "table" then
       if print_varargs then
-         local tbl = fun.iter(results):map(ReplLayer.format_repl_result):to_list()
-         result_text = table.concat(tbl, "\t")
+         -- `results` could have nil values in the middle, so iterate
+         -- by index.
+         local tbl = {}
+         local count = results.count
+         if tostring(results[1]) == "<generator>" then
+            -- Don't print out the state and index of iterators.
+            count = 1
+         end
+         for i=1, count do
+            tbl[i] = ReplLayer.format_repl_result(results[i])
+         end
+         if #tbl == 0 then
+            result_text = "nil"
+         else
+            result_text = table.concat(tbl, "\t")
+         end
       else
          result_text = ReplLayer.format_repl_result(results[1])
       end
@@ -482,13 +536,7 @@ function ReplLayer:submit()
 end
 
 function ReplLayer:save_history()
-   -- HACK: this must go through the config API eventually.
-   local file = io.open("repl_history.txt", "w")
-   for i, v in ipairs(self.history) do
-      file:write(v)
-      file:write("\n")
-   end
-   file:close()
+   SaveFs.write("data/repl_history", self.history)
 end
 
 function ReplLayer:last_input()
@@ -596,6 +644,8 @@ function ReplLayer:draw()
 
    Draw.set_color(255, 255, 255)
    Draw.image(self.canvas, self.x, self.y + top)
+
+   Draw.set_font(self.font_size)
 
    -- blinking cursor
    if math.floor(self.frames * 2) % 2 == 0 then

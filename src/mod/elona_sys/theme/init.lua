@@ -77,6 +77,8 @@ data:add {
          deco_feat_b = "asset/deco_feat_b.png",
          deco_feat_c = "asset/deco_feat_c.png",
          deco_feat_d = "asset/deco_feat_d.png",
+         deco_board_a = "asset/deco_board_a.png",
+         deco_board_b = "asset/deco_board_b.png",
          inventory_icons = {
             image = "asset/inventory_icons.png",
             count_x = 22

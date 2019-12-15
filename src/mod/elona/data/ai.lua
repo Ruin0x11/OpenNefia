@@ -277,15 +277,16 @@ local function go_to_preset_anchor(chara, params)
 end
 
 local function wander(chara, params)
-   local nx, ny = Pos.random_direction(chara.x, chara.y)
-
    if chara:calc("ai_calm") == 2 and Map.current():calc("has_anchored_npcs") then
       return Ai.run("elona.go_to_position", chara, { x = chara.initial_x, y = chara.initial_y })
    end
 
-   if Map.can_access(nx, ny) then
-      Action.move(chara, nx, ny)
-      return true
+   if (chara:calc("ai_calm") or 1) == 1 then
+      local nx, ny = Pos.random_direction(chara.x, chara.y)
+      if Map.can_access(nx, ny) then
+         Action.move(chara, nx, ny)
+         return true
+      end
    end
 
    return false

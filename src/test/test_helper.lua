@@ -9,7 +9,7 @@ function test_helper.mock_map()
    local startup = require("game.startup")
    startup.load_batches(require("internal.draw").get_coords())
    local mods = { "mod/base/mod.lua", "test/mod/mod.lua" }
-   startup.run(mods)
+   startup.run_all(mods)
 
    local Rand = require("api.Rand")
    Rand.set_seed(0)

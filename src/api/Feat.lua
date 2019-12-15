@@ -90,28 +90,4 @@ function Feat.create(id, x, y, params, where)
    return feat
 end
 
-local function feat_bumped_into_handler(source, p, result)
-   for _, feat in Feat.at(p.x, p.y) do
-      if feat:calc("is_solid") then
-         feat:on_bumped_into(source)
-         result.blocked = true
-      end
-   end
-
-   return result
-end
-
-local function feat_stepped_on_handler(source, p, result)
-   for _, feat in Feat.at(p.x, p.y, source:current_map()) do
-      if feat.on_stepped_on then
-         feat:on_stepped_on(source)
-      end
-   end
-
-   return result
-end
-
-Event.register("base.on_chara_moved", "feat handler", feat_stepped_on_handler)
-Event.register("base.before_chara_moved", "before move feat handler", feat_bumped_into_handler)
-
 return Feat

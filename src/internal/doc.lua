@@ -87,6 +87,10 @@ end
 
 function doc.get_item_full_name(item)
    local name = doc.get_item_name(item)
+   if item.mod_name == "global" then
+      -- "ipairs" instead of "global.ipairs"
+      return name
+   end
    if item.kind == "methods" then
       name = string.format("%s:%s", item.mod_name, name)
    else
@@ -175,36 +179,6 @@ local function convert_ldoc_item(item, mod_name, is_builtin)
          "type",
       }
    )
-
-   -- modify fields that are not encodable by json.lua
-   if t.params then
-      t.params.params = {}
-      for i = 1, #t.params do
-         t.params.params[i] = t.params[i]
-         t.params[i] = nil
-      end
-   end
-   if t.formal_args then
-      t.formal_args.args = {}
-      for i = 1, #t.formal_args do
-         t.formal_args.args[i] = t.formal_args[i]
-         t.formal_args[i] = nil
-      end
-   end
-   if t.modifiers then
-      if t.modifiers.param then
-         local remove = {}
-         for k, _ in pairs(t.modifiers.param) do
-            if type(k) ~= "number" then
-               remove[#remove+1] = k
-            end
-         end
-         for _, k in ipairs(remove) do
-            t.modifiers.param[k] = nil
-         end
-      end
-   end
-   t.kinds = nil
 
    if item.file == nil then
       error(inspect(item))
@@ -429,34 +403,39 @@ function doc.get(path)
       entry = nil
    end
 
-   if entry == nil then
-      aliases = doc_store.aliases[path]
-      if aliases and #aliases > 0 then
-         if #aliases == 1 then
-            local alias = aliases[1]
-            local file = doc_store.entries[alias.file_path]
-            assert(file)
+   if entry then
+      return {
+         type = "entry",
+         entry = entry
+      }
+   end
 
-            assert(file.full_path, inspect(file))
-            if alias.full_path == file.full_path:lower() then
-               -- this is a module
-               entry = file
-            else
-               -- this is an item inside the module
-               entry = file.items[alias.full_path]
-            end
+   aliases = doc_store.aliases[path]
+   if aliases and #aliases > 0 then
+      if #aliases == 1 then
+         local alias = aliases[1]
+         local file = doc_store.entries[alias.file_path]
+         assert(file)
 
-            assert(entry, alias.full_path)
-            return {
-               type = "entry",
-               entry = entry
-            }
+         assert(file.full_path, inspect(file))
+         if alias.full_path == file.full_path:lower() then
+            -- this is a module
+            entry = file
          else
-            return {
-               type = "candidates",
-               candidates = fun.iter(aliases):map(function(a) return { a.display_name, a.full_path } end):to_list()
-            }
+            -- this is an item inside the module
+            entry = file.items[alias.full_path]
          end
+
+         assert(entry, alias.full_path)
+         return {
+            type = "entry",
+            entry = entry
+         }
+      else
+         return {
+            type = "candidates",
+            candidates = fun.iter(aliases):map(function(a) return { a.display_name, a.full_path } end):to_list()
+         }
       end
    end
 
@@ -653,10 +632,6 @@ function doc.clear()
    doc_store.can_load = true
 end
 
-local function doc_store_path()
-   return fs.join("data", "doc")
-end
-
 function doc.save()
    local remove = {}
    for k, _ in pairs(doc_store.aliases) do
@@ -669,13 +644,8 @@ function doc.save()
       doc_store.aliases[key] = nil
    end
 
-   local str = SaveFs.serialize(doc_store)
-   local path = doc_store_path()
-   local dirs = fs.parent(path)
-   fs.create_directory(dirs)
-
-   Log.info("Saving documentation to %s.", path)
-   fs.write(path, str)
+   Log.info("Saving documentation.")
+   SaveFs.write("data/doc", doc_store)
 
    for _, key in ipairs(remove) do
       doc_store.aliases[key] = remove[key]
@@ -683,20 +653,17 @@ function doc.save()
 end
 
 function doc.load()
-   local path = doc_store_path()
-
-   if not fs.exists(path) then
+   if not SaveFs.exists("data/doc") then
       return
    end
 
-   Log.info("Loading documentation from %s.", path)
-
-   local str, err = fs.read(path)
-   if not str then
-      error(err)
+   Log.info("Loading documentation.")
+   local ok, new_doc_store = SaveFs.read("data/doc")
+   if not ok then
+      error(new_doc_store)
    end
 
-   table.replace_with(doc_store, SaveFs.deserialize(str))
+   table.replace_with(doc_store, new_doc_store)
 
    for p, entry in pairs(doc_store.entries) do
       if not string.match(p, "^__private__:") then

@@ -1,6 +1,6 @@
-local Chara = require("game.Chara")
+local Chara = require("api.Chara")
+local Item = require("api.Item")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
-local Item = require("game.Item")
 
 local common = require("mod.elona.data.dialog.common")
 
@@ -68,9 +68,9 @@ data:add {
             {"quest.end"},
          },
          on_finish = function()
-            Item.create("core.cooler_box", Chara.player().x, Chara.player().y)
-            Item.create("core.gold_piece", Chara.player().x, Chara.player().y, {amount=2500})
-            Item.create("core.platinum_coin", Chara.player().x, Chara.player().y, {amount=2})
+            Item.create("elona.cooler_box", Chara.player().x, Chara.player().y)
+            Item.create("elona.gold_piece", Chara.player().x, Chara.player().y, {amount=2500})
+            Item.create("elona.platinum_coin", Chara.player().x, Chara.player().y, {amount=2})
 
             common.quest_completed()
 
@@ -78,7 +78,7 @@ data:add {
 
             Chara.find("elona.poppy", "allies"):vanquish()
             local poppy = Chara.create("elona.poppy", 31, 4)
-            poppy.role = {{id = "elona.unique_chara"}}
+            poppy.roles = {{id = "elona.unique_chara"}}
          end
       }
    }

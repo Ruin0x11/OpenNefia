@@ -18,7 +18,7 @@ local Log = require("api.Log")
 Log.set_level("info")
 
 local mods = mod.scan_mod_dir()
-startup.run(mods)
+startup.run_all(mods)
 
 local apis = env.require_all_apis()
 apis = table.merge(apis, env.require_all_apis("internal"))

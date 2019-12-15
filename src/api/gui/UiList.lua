@@ -56,32 +56,37 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
 
    self:set_data()
 
-   local thing = {}
+   self.input = InputHandler:new()
+   self.input:bind_keys(self:make_keymap())
+end
+
+function UiList:make_keymap()
+   local keys = {}
    for i=1,#KEYS do
       local key = KEYS:sub(i, i)
-      thing[key] = function()
+      keys[key] = function()
          self:choose(i)
       end
    end
-   thing.up = function()
+   keys.up = function()
       self:select_previous()
       Gui.play_sound("base.cursor1")
    end
-   thing.down = function()
+   keys.down = function()
       self:select_next()
       Gui.play_sound("base.cursor1")
    end
-   thing["return"] = function() self:choose() end
+   keys["return"] = function() self:choose() end
 
    if class.is_an(IPaged, self.model) then
-      thing.left = function()
+      keys.left = function()
          local page = self.page
          self:previous_page()
          if self.page ~= page then
             Gui.play_sound("base.pop1")
          end
       end
-      thing.right = function()
+      keys.right = function()
          local page = self.page
          self:next_page()
          if self.page ~= page then
@@ -89,9 +94,7 @@ function UiList:init(items, item_height, item_offset_x, item_offset_y)
          end
       end
    end
-
-   self.input = InputHandler:new()
-   self.input:bind_keys(thing)
+   return keys
 end
 
 function UiList:new_paged(items, page_max, item_height, item_offset_x, item_offset_y)

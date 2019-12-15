@@ -14,6 +14,7 @@ local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
+local Quest = require("mod.elona_sys.api.Quest")
 
 --
 --
@@ -485,8 +486,7 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
-      local dialog_id = on_cell:calc("dialog") or "elona.default"
-      Dialog.start(on_cell, dialog_id)
+      Dialog.talk_to_chara(on_cell)
       return "player_turn_query"
    end
 
@@ -525,6 +525,10 @@ local function calc_dialog_choices(speaker, params, result)
             end
          end
       end
+   end
+
+   if Quest.for_client(speaker) then
+      table.insert(result, {"elona.quest_giver:quest_about", "talk.npc.quest_giver.choices.about_the_work"})
    end
 
    return result

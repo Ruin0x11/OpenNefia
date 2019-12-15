@@ -4,8 +4,10 @@ module 'global'
 
 ---
 -- Issues an error when  its argument `v` is false.
--- That is, nil or false. otherwise, returns all its arguments. 
+-- That is, nil or false. otherwise, returns all its arguments.
 -- `message` is an error when absent, it defaults to "assertion failed!"
+-- @tparam any v
+-- @tparam[opt] string message
 function assert(v , message) end
 
 ---
@@ -25,6 +27,8 @@ function assert(v , message) end
 --   * "setstepmul": sets `arg` as the new value for the *step multiplier*
 --   of the collector (see 2.10). Returns the previous value for *step*.
 --
+-- @tparam[opt] string opt
+-- @tparam[opt] any arg
 function collectgarbage(opt , arg) end
 
 ---
@@ -33,6 +37,7 @@ function collectgarbage(opt , arg) end
 -- `dofile` executes the contents of the standard input (`stdin`). Returns
 -- all values returned by the chunk. In case of errors, `dofile` propagates
 -- the error to its caller (that is, `dofile` does not run in protected mode).
+-- @tparam string filename
 function dofile(filename) end
 
 ---
@@ -45,6 +50,8 @@ function dofile(filename) end
 -- `error` function was called. Level 2 points the error to where the function
 -- that called `error` was called; and so on. Passing a level 0 avoids the
 -- addition of error position information to the message.
+-- @tparam[opt] string message
+-- @tparam[opt] int level
 function error(message , level) end
 
 ---
@@ -58,6 +65,7 @@ function error(message , level) end
 -- If `object` does not have a metatable, returns nil. Otherwise, if the
 -- object's metatable has a `"__metatable"` field, returns the associated
 -- value. Otherwise, returns the metatable of the given object.
+-- @tparam any object
 function getmetatable(object) end
 
 ---
@@ -66,12 +74,13 @@ function getmetatable(object) end
 --   for i,v in ipairs(t) do *body* end
 -- will iterate over the pairs (`1,t[1]`), (`2,t[2]`), ..., up to the
 -- first integer key absent from the table.
+-- @tparam table t
 function ipairs(t) end
 
 ---
 -- Loads a chunk.
 -- If `ld` is a string, the chunk is this string.
--- If `ld` is a function, load calls it repeatedly to get the chunk pieces. Each call to `ld` must return a 
+-- If `ld` is a function, load calls it repeatedly to get the chunk pieces. Each call to `ld` must return a
 -- string that concatenates with previous results. A return of an empty string, nil, or no value
 -- signals the end of the chunk.
 -- If there are no syntactic errors, returns the compiled chunk as a function;
@@ -83,12 +92,19 @@ function ipairs(t) end
 -- The string `mode` controls whether the chunk can be text or binary (that is, a precompiled chunk).
 -- It may be the string "b" (only binary chunks), "t" (only text chunks), or "bt" (both binary and text).
 -- The default is "bt"
-function load (ld [, source [, mode [, env]]]) end
+-- @tparam string|function ld
+-- @tparam[opt] string source
+-- @tparam[opt] string mode
+-- @tparam[opt] table env
+function load (ld , source , mode , env) end
 
 ---
 -- Similar to `load`, but gets the chunk from file `filename`. Or from the
 -- standard input, if no file name is given.
-function loadfile (filename [, mode [, env]]]) end
+-- @tparam[opt] filename
+-- @tparam[opt] string mode
+-- @tparam[opt] table env
+function loadfile (filename , mode , env) end
 
 ---
 -- Allows a program to traverse all fields of a table. Its first argument is
@@ -109,6 +125,8 @@ function loadfile (filename [, mode [, env]]]) end
 -- The behavior of `next` is *undefined* if, during the traversal, you assign
 -- any value to a non-existent field in the table. You may however modify
 -- existing fields. In particular, you may clear existing fields.
+-- @tparam table table
+-- @tparam any index
 function next(table , index) end
 
 ---
@@ -119,6 +137,7 @@ function next(table , index) end
 -- will iterate over all key-value pairs of table `t`.
 -- See function `next` for the caveats of modifying the table during its
 -- traversal.
+-- @tparam table t
 function pairs(t) end
 
 ---
@@ -128,6 +147,8 @@ function pairs(t) end
 -- boolean), which is true if the call succeeds without errors. In such case,
 -- `pcall` also returns all results from the call, after this first result. In
 -- case of any error, `pcall` returns false plus the error message.
+-- @tparam function f
+-- @tparam ... ...
 function pcall(f, arg1, ...) end
 
 ---
@@ -135,16 +156,21 @@ function pcall(f, arg1, ...) end
 -- Uses the `tostring` function to convert them to strings. `print` is not
 -- intended for formatted output, but only as a quick way to show a value,
 -- typically for debugging. For formatted output, use `string.format`.
+-- @tparam ... ...
 function print(...) end
 
 ---
 -- Checks whether `v1` is equal to `v2`. Does not invoke any
 -- metamethod. Returns a boolean.
+-- @tparam any v1
+-- @tparam any v2
 function rawequal(v1, v2) end
 
 ---
 -- Gets the real value of `table[index]`. Does not invoke any
 -- metamethod. `table` must be a table; `index` may be any value.
+-- @tparam table table
+-- @tparam any index
 function rawget(table, index) end
 
 ---
@@ -152,12 +178,17 @@ function rawget(table, index) end
 -- metamethod. `table` must be a table, `index` any value different from nil,
 -- and `value` any Lua value.
 -- This function returns `table`.
+-- @tparam table table
+-- @tparam any index
+-- @tparam any value
 function rawset(table, index, value) end
 
 ---
 -- Returns all arguments after argument number
 -- `index`. Otherwise, `index` must be the string `"#"`, and `select` returns
 -- the total number of extra arguments it received.
+-- @tparam int|string
+-- @tparam ... ...
 function select(index, ...) end
 
 ---
@@ -166,6 +197,8 @@ function select(index, ...) end
 -- metatable of the given table. If the original metatable has a `"__metatable"`
 -- field, raises an error.
 -- This function returns `table`.
+-- @tparam table table
+-- @tparam[opt] table metatable
 function setmetatable(table, metatable) end
 
 ---
@@ -178,7 +211,9 @@ function setmetatable(table, metatable) end
 -- 11, and so forth, with '`Z`' representing 35. In base 10 (the default),
 -- the number can have a decimal part, as well as an optional exponent part
 -- (see 2.1). In other bases, only unsigned integers are accepted.
-function tonumber(e [, base]) end
+-- @tparam any e
+-- @tparam[opt] int
+function tonumber(e , base) end
 
 ---
 -- Converts any value to a string in a reasonable format.
@@ -186,6 +221,7 @@ function tonumber(e [, base]) end
 -- If the metatable of `e` has a `"__tostring"` field, then `tostring` calls
 -- the corresponding value with `e` as argument, and uses the result of the
 -- call as its result.
+-- @tparam any e
 function tostring(e) end
 
 ---
@@ -193,6 +229,7 @@ function tostring(e) end
 -- results of this function are "
 -- `nil`" (a string, not the value nil), "`number`", "`string`", "`boolean`",
 -- "`table`", "`function`", "`thread`", and "`userdata`".
+-- @tparam any v
 function type(v) end
 
 ---
@@ -211,6 +248,8 @@ function type(v) end
 -- which is true if the call succeeds without errors. In this case, `xpcall`
 -- also returns all results from the call, after this first result. In case
 -- of any error, `xpcall` returns false plus the result from `err`.
+-- @tparam function f
+-- @tparam[opt] function err
 function xpcall(f, err) end
 
 ---
@@ -237,5 +276,6 @@ function xpcall(f, err) end
 -- of `package.loaded[modname]`.
 -- If there is any error loading or running the module, or if it cannot find
 -- any loader for the module, then `require` signals an error.
+-- @tparam string modname
 function require(modname) end
 

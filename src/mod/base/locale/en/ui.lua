@@ -848,6 +848,8 @@ end,
       _8 = "legendary-size",
       _9 = "heavier than an elephant"
     },
-    yes = "Yes"
+    yes = "Yes",
+
+    now_loading = "Now Loading..."
   }
 }

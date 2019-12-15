@@ -45,7 +45,7 @@ function Doc.make_params_string(the_doc)
    end
 
    local params = "("
-   for i, v in ipairs(the_doc.params.params) do
+   for i, v in ipairs(the_doc.params) do
       local modifier = the_doc.modifiers.param[i]
 
       if i > 1 then
@@ -57,7 +57,7 @@ function Doc.make_params_string(the_doc)
             params = params .. "?"
          end
       else
-         params = params .. "(any)"
+         params = params .. "<?>"
       end
    end
 
@@ -126,7 +126,7 @@ function Doc.help(thing)
    local sig = ""
    if the_doc.type == "function" then
       local params_str = Doc.make_params_string(the_doc)
-      sig = ("\n\n%s :: %s"):format(doc.get_item_full_name(the_doc), params_str)
+      sig = ("\n\n%s%s :: %s"):format(doc.get_item_full_name(the_doc), the_doc.args, params_str)
    end
 
    local summary
@@ -144,25 +144,29 @@ function Doc.help(thing)
    local params = ""
    if the_doc.params then
       params = "\n\n= Parameters\n"
-      for i, param_name in ipairs(the_doc.params.params) do
-         local modifier = the_doc.modifiers.param[i]
+      if #the_doc.params == 0 then
+         params = params .. "   (none)"
+      else
+         for i, param_name in ipairs(the_doc.params) do
+            local modifier = the_doc.modifiers.param[i]
 
-         if i > 1 then
-            params = params .. "\n"
-         end
-         params = params .. " * " .. param_name .. ""
+            if i > 1 then
+               params = params .. "\n"
+            end
+            params = params .. " * " .. param_name .. ""
 
-         local ty = "any"
-         local opt = false
-         if modifier and modifier.type then
-            ty = modifier.type
-            opt = modifier.opt
-         end
-         params = params .. (" :: %s%s"):format(ty, opt and "?" or "")
+            local ty = "<?>"
+            local opt = false
+            if modifier and modifier.type then
+               ty = modifier.type
+               opt = modifier.opt
+            end
+            params = params .. (" :: %s%s"):format(ty, opt and "?" or "")
 
-         local desc = string.strip_whitespace(the_doc.params.map[param_name])
-         if desc ~= "" then
-            params = params .. ": " .. desc
+            local desc = string.strip_whitespace(the_doc.params.map[param_name])
+            if desc ~= "" then
+               params = params .. ": " .. desc
+            end
          end
       end
    end

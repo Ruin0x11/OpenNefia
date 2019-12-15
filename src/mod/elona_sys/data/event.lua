@@ -18,6 +18,9 @@ local event = {
       { _id = "on_feat_open" },
       { _id = "on_feat_close" },
       { _id = "on_feat_descend" },
+      { _id = "on_feat_ascend" },
+      { _id = "on_feat_bumped_into" },
+      { _id = "on_feat_stepped_on" },
 }
 
 data:add_multi("base.event", event)

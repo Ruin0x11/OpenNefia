@@ -7,6 +7,7 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Chara = require("api.Chara")
 local Role = require("mod.elona_sys.api.Role")
 local Log = require("api.Log")
+local Feat = require("api.Feat")
 
 --
 --
@@ -261,7 +262,7 @@ local function register_quest_town(map, _, _)
       -- Generate quests for characters that are not already quest givers.
       local here = Quest.iter()
         :filter(function(q) return q.originating_map_uid == map.uid end)
-        :extract("client_chara_uid")
+        :extract("client_uid")
         :to_list()
 
       local charas_with_quest = table.set(here)
@@ -276,7 +277,7 @@ local function register_quest_town(map, _, _)
    end
 end
 
-Event.register("base.on_map_loaded", "register town as quest endpoint", register_quest_town)
+Event.register("base.on_map_loaded_from_entrance", "register town as quest endpoint", register_quest_town)
 
 Event.register("base.on_chara_killed", "Refresh sidequests (when chara killed)",
                function(chara)
@@ -373,9 +374,19 @@ Event.register("base.on_feat_instantiated", "Connect feat events",
                                        feat.proto.on_descend)
                   end
                   if feat.proto.on_ascend then
-                     feat:connect_self("elona_sys.on_feat_descend",
+                     feat:connect_self("elona_sys.on_feat_ascend",
                                        "Feat prototype on_ascend handler",
                                        feat.proto.on_ascend)
+                  end
+                  if feat.proto.on_bumped_into then
+                     feat:connect_self("elona_sys.on_feat_bumped_into",
+                                       "Feat prototype on_bumped_into handler",
+                                       feat.proto.on_bumped_into)
+                  end
+                  if feat.proto.on_stepped_on then
+                     feat:connect_self("elona_sys.on_feat_stepped_on",
+                                       "Feat prototype on_stepped_on handler",
+                                       feat.proto.on_stepped_on)
                   end
                end)
 
@@ -385,3 +396,26 @@ Event.register("base.on_hotload_object", "reload events for feat", function(obj)
                      obj:instantiate()
                   end
 end)
+
+local function feat_bumped_into_handler(chara, p, result)
+   for _, feat in Feat.at(p.x, p.y, chara:current_map()) do
+      if feat:calc("is_solid") then
+         feat:emit("elona_sys.on_feat_bumped_into", {chara=chara})
+         result.blocked = true
+      end
+   end
+
+   return result
+end
+Event.register("base.before_chara_moved", "Feat bumped into behavior", feat_bumped_into_handler)
+
+local function feat_stepped_on_handler(chara, p, result)
+   for _, feat in Feat.at(p.x, p.y, chara:current_map()) do
+      if feat.on_stepped_on then
+         feat:emit("elona_sys.on_feat_stepped_on", {chara=chara})
+      end
+   end
+
+   return result
+end
+Event.register("base.on_chara_moved", "Feat stepped on behavior", feat_stepped_on_handler)
