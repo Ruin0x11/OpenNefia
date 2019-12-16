@@ -53,6 +53,7 @@ function LuaReplMode:submit(text)
    end
 
    setfenv(chunk, self.env)
+   print("get", getfenv(chunk).Tools)
 
    -- capture (status, varags...) as a table
    local results = { xpcall(chunk, trim_traceback) }

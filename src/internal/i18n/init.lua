@@ -37,6 +37,7 @@ load_translations = function(path, merged)
    for _, file in fs.iter_directory_items(path) do
       local path = fs.join(path, file)
       if fs.is_file(path) and fs.extension_part(path) == "lua" then
+         Log.debug("Loading translations at %s", path)
          local chunk, err = loadfile(path)
 
          if chunk == nil then
@@ -66,6 +67,9 @@ function i18n.switch_language(lang, force)
    if not i18n.env then
       error(string.format("Language %s does not exist.", lang))
    end
+
+   i18n.env["get"] = i18n.get
+   i18n.env["rnd"] = Rand.rnd
 
    if i18n.db[lang] == nil or force then
       i18n.db[lang] = {}

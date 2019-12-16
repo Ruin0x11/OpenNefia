@@ -54,7 +54,7 @@ function field_layer:setup_repl()
 
    local repl_env, history = Repl.generate_env()
 
-   self.repl = ReplLayer:new(repl_env, history)
+   self.repl = ReplLayer:new(repl_env, { history = history })
 end
 
 function field_layer:init_global_data()

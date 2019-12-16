@@ -1,6 +1,6 @@
 local socket = require("socket")
 local profile = require("thirdparty.profile")
-local env = require("internal.env")
+local repl = require("internal.repl")
 local Event = require("api.Event")
 
 local Profile = {}
@@ -11,11 +11,11 @@ function Profile.hook_all()
    end
    profile.hookall()
 
-   local apis = env.require_all_apis("api", true, true)
-   apis = table.merge(apis, env.require_all_apis("internal", true, true))
-   apis = table.merge(apis, env.require_all_apis("game"), true, true)
-   apis = table.merge(apis, env.require_all_apis("mod/elona", true, true))
-   apis = table.merge(apis, env.require_all_apis("mod/elona_sys", true, true))
+   local apis = repl.require_all_apis("api", true, true)
+   apis = table.merge(apis, repl.require_all_apis("internal", true, true))
+   apis = table.merge(apis, repl.require_all_apis("game"), true, true)
+   apis = table.merge(apis, repl.require_all_apis("mod/elona", true, true))
+   apis = table.merge(apis, repl.require_all_apis("mod/elona_sys", true, true))
 
    local no_hook = {
       "add_interface",

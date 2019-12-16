@@ -45,6 +45,9 @@ local function load_towns(world_map)
       end
       Map.save(map)
    end
+
+   -- Save the world map since the entrances on it were modified.
+   Map.save(world_map)
 end
 
 local function initialize_player(player)
@@ -74,14 +77,20 @@ local function initialize_player(player)
    player:refresh()
 end
 
-local function start(self, player)
+local function create_first_map()
    -- Generate the world map.
    local _, world_map = assert(Map.generate("elona_sys.map_template", { id = "elona.north_tyris" }))
 
    -- TODO set this up automatically, as "root map" or similar
    local area = save.base.area_mapping:create_area()
    save.base.area_mapping:add_map_to_area(area.uid, world_map.uid)
-   Map.save(world_map)
+   area.outer_map_uid = world_map.uid
+
+   return world_map
+end
+
+local function start(self, player)
+   local world_map = create_first_map()
 
    -- Load all towns.
    load_towns(world_map)

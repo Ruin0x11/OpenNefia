@@ -13,6 +13,7 @@ local mod = require("internal.mod")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
 local save_store = require("internal.save_store")
+local draw = require("internal.draw")
 
 -- TODO: this module isn't hotloadable since game.loop gets run in a
 -- coroutine. Would be better to just put game.loop() into a
@@ -132,7 +133,6 @@ function game.draw()
    -- This gets called when game.loop() yields on the first frame.
    draw_progress_bar()
 
-
    -- Progress bar.
    local status = ""
    local progress = 0
@@ -146,7 +146,7 @@ function game.draw()
    local going = true
 
    while going do
-      local ok, ret = xpcall(internal.draw.draw_layers, debug.traceback)
+      local ok, ret = xpcall(draw.draw_layers, debug.traceback)
 
       if not ok then
          going = coroutine.yield(ret)

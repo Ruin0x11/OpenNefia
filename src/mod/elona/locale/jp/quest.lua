@@ -1,6 +1,6 @@
 local quest = {
    cook = {
-      food_kind = {
+      food_type = {
          _1 = {
             _1 = {
                title = "肉！",
@@ -152,14 +152,14 @@ local quest = {
          title = "物凄く欲しい物",
          desc = function(player, speaker, params)
             return ("%sが、最近やたらと%sを見せびらかして自慢してくる%s。%sもたまらなく%sが欲しい%s！どうにかしてブツを手に入れてくれれば、%sを払%s。手段はもちろん問わない%s。")
-               :format(params.client_name, params.__REF__, noda(speaker), ore(speaker), params.__REF__, yo(speaker), params.reward, u(speaker), yo(speaker))
+               :format(params.target_name, params.item_name, noda(speaker), ore(speaker), params.item_name, yo(speaker), params.reward, u(speaker), yo(speaker))
          end,
       },
       _2 = {
          title = "狙った獲物",
          desc = function(player, speaker, params)
             return ("%sが%sを所持しているのは知っている%s？わけあって、どうしてもこの品物が必要なの%s。うまく取り合って入手してくれれば、%sを払%s。")
-               :format(params.client_name, params.__REF__, kana(speaker), da(speaker), params.reward, u(speaker))
+               :format(params.target_name, params.item_name, kana(speaker), da(speaker), params.reward, u(speaker))
          end
       },
    },
@@ -168,21 +168,21 @@ local quest = {
          title = "討伐の依頼",
          desc = function(player, speaker, params)
             return ("熟練の冒険者にだけ頼める依頼%s。%sの変種が街に向かっているのが確認された%s。討伐すれば報酬に%sを与え%s。これは平凡な依頼ではない%s。この怪物の強さは、少なくともレベル%sは下らない%s。")
-               :format(da(speaker), params.objective, noda(speaker), params.reward, ru(speaker), yo(speaker), params.__REF__, daro(speaker))
+               :format(da(speaker), params.objective, noda(speaker), params.reward, ru(speaker), yo(speaker), params.enemy_level, daro(speaker))
          end,
       },
       _2 = {
          title = "助けて！",
          desc = function(player, speaker, params)
             return ("ふざけて友人に変異のポーションを飲ませたら、%sになってしまった%s！レベル%sはあるモンスター%s！街の平和のためにも一刻もはやく始末して%s！お礼%s？もちろん、%sを用意し%s。%s！")
-               :format(params.objective, yo(speaker), params.__REF__, da(speaker), kure(speaker), ka(speaker), params.reward, ta(speaker), tanomu(speaker))
+               :format(params.objective, yo(speaker), params.enemy_level, da(speaker), kure(speaker), ka(speaker), params.reward, ta(speaker), tanomu(speaker))
          end,
       },
       _3 = {
          title = "特務指令",
          desc = function(player, speaker, params)
             return ("脅威の芽はなるべく早く摘み取らなければならない%s。この街の中で、軍の実験体が檻から出て暴れている%s。%sを払うので討伐して%s。研究データによると、この%sはレベル%sのモンスターに匹敵する強さらしい%s。気をつけてかかって%s。")
-               :format(na(speaker), noda(speaker), params.reward, kure(speaker), params.objective, params.__REF__, yo(speaker), kure(speaker))
+               :format(na(speaker), noda(speaker), params.reward, kure(speaker), params.objective, params.enemy_level, yo(speaker), kure(speaker))
          end
       }
    },
@@ -264,21 +264,21 @@ local quest = {
          title = "農作業の手伝い",
          desc = function(player, speaker, params)
             return ("そろそろ畑に植えた作物も育っている頃%s。%s付近にある畑まで行って、%sほどの作物を掘ってきて%s。報酬は%sを払%s。")
-               :format(da(speaker), params.map, params.__REF__, kure(speaker), params.reward, u(speaker))
+               :format(da(speaker), params.map, params.required_weight, kure(speaker), params.reward, u(speaker))
          end,
       },
       _2 = {
          title = "代わりに収穫して",
          desc = function(player, speaker, params)
             return ("この時期になると、なんだか気が重くなる%s。畑に育った作物を、どっさりと掘らなきゃならない%s。%sを払うから、代わりに%sぐらいの量を収穫して来てくれない%s！")
-               :format(yo(speaker), noda(speaker), params.reward, params.__REF__, kana(speaker))
+               :format(yo(speaker), noda(speaker), params.reward, params.required_weight, kana(speaker))
          end,
       },
       _3 = {
          title = "収穫期",
          desc = function(player, speaker, params)
             return ("いよいよ待ちに待った収穫期の到来%s！とてもじゃないが一人では無理なので、%sで手伝ってもらえない%s？そう%s、%sの担当は重さにして%sほど%s。")
-               :format(da(speaker), params.reward, kana(speaker), dana(speaker), kimi(speaker), params.__REF__, da(speaker))
+               :format(da(speaker), params.reward, kana(speaker), dana(speaker), kimi(speaker), params.required_weight, da(speaker))
          end
       },
    },
@@ -311,13 +311,13 @@ local quest = {
          title = "街の危機",
          desc = function(player, speaker, params)
             return ("もう噂を耳にしたかもしれない%s、%sの亜種レベル%s相当が街の各地に出没してい%s。このままでは%sたちの平和も長くは続かない%s。%s、奴らを退治して%s。街を代表して報酬に%sを用意し%s。")
-               :format(ga(speaker), params.objective, params.__REF__, ru(speaker), ore(speaker), daro(speaker), tanomu(speaker), kure(speaker), params.reward, ta(speaker))
+               :format(ga(speaker), params.objective, params.enemy_level, ru(speaker), ore(speaker), daro(speaker), tanomu(speaker), kure(speaker), params.reward, ta(speaker))
          end,
       },
       _2 = {
          desc = function(player, speaker, params)
             return ("井戸の呪い:どこかの馬鹿が井戸におかしな液体を混ぜやがった%s！おかげで街の中を変異したレベル%s相当の%sが徘徊してい%s。役所に頼んで、なんとか報酬の%sは集めた%s。早くなんとかして%s！")
-               :format(yo(speaker), params.__REF__, params.objective, ru(speaker), params.reward, yo(speaker), kure(speaker))
+               :format(yo(speaker), params.enemy_level, params.objective, ru(speaker), params.reward, yo(speaker), kure(speaker))
          end,
 
       },
@@ -325,7 +325,7 @@ local quest = {
          title = "エーテル変異体",
          desc = function(player, speaker, params)
             return ("大変%s！大変%s！%sの隣の家の一家全員が、エーテル病で%sに変異してしまった%s！見たところ、強さはレベル%sぐらいじゃない%s？ともかく、すぐに退治して%s。報酬は%s払%s。")
-               :format(da(speaker), da(speaker), ore(speaker), params.objective, noda(speaker), params.__REF__, kana(speaker), kure(speaker), params.reward, u(speaker))
+               :format(da(speaker), da(speaker), ore(speaker), params.objective, noda(speaker), params.enemy_level, kana(speaker), kure(speaker), params.reward, u(speaker))
          end,
       }
    },
@@ -334,21 +334,21 @@ local quest = {
          title = "ベイベー！",
          desc = function(player, speaker, params)
             return ("ベイベーのってる%s！イェーイ、%sは凄くハイテンション%s！%sも%sのパーティーに来て%s。報酬？そんな野暮なものはない%s！%s！芸で%s記録すればプラチナコインをプレゼントする%s！イェーイ！")
-               :format(kana(speaker), ore(speaker), da(speaker), kimi(speaker), ore(speaker), kure(speaker), yo(speaker), ga(speaker), params.__REF__, yo(speaker))
+               :format(kana(speaker), ore(speaker), da(speaker), kimi(speaker), ore(speaker), kure(speaker), yo(speaker), ga(speaker), params.required_points, yo(speaker))
          end,
       },
       _2 = {
          title = "セレブパーティー",
          desc = function(player, speaker, params)
             return ("%sの名前を知らない？世間知らずの人間もいるもの%s。%sは泣く子も黙るトップセレブなの%s。近く開くパーティーの席で客を楽しませてくれる芸人を募集中%s。%sのパフォーマンスを出せたら、プラチナコインを払%s。")
-               :format(ore(speaker), da(speaker), ore(speaker), da(speaker), da(speaker), params.__REF__, u(speaker))
+               :format(ore(speaker), da(speaker), ore(speaker), da(speaker), da(speaker), params.required_points, u(speaker))
          end,
       },
       _3 = {
          title = "代替芸人募集",
          desc = function(player, speaker, params)
             return ("ああ、だれか%s、%sの代わりにパーティーで芸を披露して%s。聴衆の反応が怖くてとても舞台にあがれない%s！どうにか%s得点を稼いでくれれば、お礼にプラチナコインをあげ%s。")
-               :format(tanomu(speaker), ore(speaker), kure(speaker), noda(speaker), params.__REF__, ru(speaker))
+               :format(tanomu(speaker), ore(speaker), kure(speaker), noda(speaker), params.required_points, ru(speaker))
          end
       }
    },
@@ -403,25 +403,24 @@ local quest = {
                title = "見習い魔術師の要望",
                desc = function(player, speaker, params)
                   return ("%sの%sという者が、魔法を勉強しているそう%s。%sを無事届けてくれれば、報酬として%sを払%s。")
-                     :format(params.map, params.client_name, da(speaker), params.__REF__, params.reward, u(speaker))
+                     :format(params.map, params.target_name, da(speaker), params.item_name, params.reward, u(speaker))
                end,
             },
             _2 = {
                title = "本の返却",
                desc = function(player, speaker, params)
                   return ("%sという%sに住む知り合いに、借りていた%sを届けてくれない%s。報酬は%s%s。")
-                     :format(params.client_name, params.map, params.__REF__, kana(speaker), params.reward, da(speaker))
+                     :format(params.target_name, params.map, params.item_name, kana(speaker), params.reward, da(speaker))
                end,
             },
             _3 = {
                title = "珍しい本の配送",
                desc = function(player, speaker, params)
                   return ("%sという本が最近手に入ったので、前から欲しがっていた%sにプレゼントしたい。%sを手間賃として払うので、%sまで行って届けてくれない%s？")
-                     :format(params.__REF__, params.client_name, params.reward, params.map, kana(speaker))
+                     :format(params.item_name, params.target_name, params.reward, params.map, kana(speaker))
                end
             }
          },
-
          furniture = {
             _1 = {
                title = "家具の配達",
@@ -434,7 +433,7 @@ local quest = {
                title = "お祝いの品",
                desc =function(player, speaker, params)
                   return ("友達の%sが%sに家を建てたので、お祝いに%sをプレゼントしようと思%s。%sで届けてくれない%s？")
-                     :format(params.client_name, params.map, params.__REF__, u(speaker), params.reward, kana(speaker))
+                     :format(params.target_name, params.map, params.item_name, u(speaker), params.reward, kana(speaker))
                end
             }
          },
@@ -443,14 +442,14 @@ local quest = {
                title = "珍品の配達",
                desc = function(player, speaker, params)
                   return ("配達の依頼%s。なんに使うのか知らない%s、%sが%sを買い取りたいそう%s。%sまで配達すれば%sを払%s。")
-                     :format(da(speaker), ga(speaker), params.client_name, params.__REF__, da(speaker), params.map, params.reward, u(speaker))
+                     :format(da(speaker), ga(speaker), params.target_name, params.item_name, da(speaker), params.map, params.reward, u(speaker))
                end,
             },
             _2 = {
                title = "廃品回収",
                desc = function(player, speaker, params)
                   return ("知っていた%s。%sに住む%sが廃品を回収しているらしい%s。%sを送ろうと思うが、面倒なので%sの手間賃で代わりに持っていって%s。")
-                     :format(kana(speaker), params.map, params.client_name, yo(speaker), params.__REF__, params.reward, kure(speaker))
+                     :format(kana(speaker), params.map, params.target_name, yo(speaker), params.item_name, params.reward, kure(speaker))
                end
             }
          },
@@ -459,21 +458,21 @@ local quest = {
                title = "鉱石収集家に届け物",
                desc = function(player, speaker, params)
                   return ("%sに%sという鉱石収集家がいる%s。この%sを届けてもらえない%s。報酬は%s%s。")
-                     :format(params.map, params.client_name, noda(speaker), params.__REF__, kana(speaker), params.reward, da(speaker))
+                     :format(params.map, params.target_name, noda(speaker), params.item_name, kana(speaker), params.reward, da(speaker))
                end,
             },
             _2 = {
                title = "石材の配送",
                desc = function(player, speaker, params)
                   return ("%sで、%sを素材に、彫刻コンテストが開かれるそう%s。責任者の%sまで、材料を届けてくれる人を探している%s。お礼には%sを用意してい%s。")
-                     :format(params.map, params.__REF__, da(speaker), params.client_name, noda(speaker), params.reward, ru(speaker))
+                     :format(params.map, params.item_name, da(speaker), params.target_name, noda(speaker), params.reward, ru(speaker))
                end
             },
             _3 = {
                title = "鉱石のプレゼント",
                desc = function(player, speaker, params)
                   return ("長年の友好の証として、%sに%sを送ろうと思ってい%s。%sで%sまで運んでもらえない%s？")
-                     :format(params.client_name, params.__REF__, ru(speaker), params.reward, params.map, kana(speaker))
+                     :format(params.target_name, params.item_name, ru(speaker), params.reward, params.map, kana(speaker))
                end
             }
          },
@@ -483,6 +482,17 @@ local quest = {
 
 return {
    quest = {
-      elona = quest
-   }
+      types = {
+         elona = quest
+      },
+      reward = {
+         elona = {
+            wear = "装備品",
+            magic = "魔道具",
+            armor = "防具",
+            weapon = "武器",
+            supply = "補給品"
+         }
+      }
+   },
 }

@@ -3,7 +3,7 @@ local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
 
-local internal = require("internal")
+local draw = require("internal.draw")
 
 local IUiLayer
 
@@ -13,11 +13,11 @@ local function query(self, z_order)
    local dt = 0
    local abort = false
 
-   internal.draw.push_layer(self, z_order)
+   draw.push_layer(self, z_order)
 
    local ok, result = pcall(function() return self:on_query() end)
    if not ok or (ok and result == false) then
-      internal.draw.pop_layer()
+      draw.pop_layer()
       if not ok then
          error(result)
       end
@@ -55,7 +55,7 @@ local function query(self, z_order)
 
    self:halt_input()
 
-   internal.draw.pop_layer()
+   draw.pop_layer()
 
    return res, canceled
 end

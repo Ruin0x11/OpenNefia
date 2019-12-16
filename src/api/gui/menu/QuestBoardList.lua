@@ -1,15 +1,15 @@
-local Draw = require("api.Draw")
 local Chara = require("api.Chara")
+local Draw = require("api.Draw")
 local I18N = require("api.I18N")
-local IUiList = require("api.gui.IUiList")
-local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
+local IPaged = require("api.gui.IPaged")
+local IUiList = require("api.gui.IUiList")
 local InputHandler = require("api.gui.InputHandler")
 local PagedListModel = require("api.gui.PagedListModel")
-local IPaged = require("api.gui.IPaged")
+local Quest = require("mod.elona_sys.api.Quest")
+local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
 local Window = require("api.gui.Window")
-local Gui = require("api.Gui")
 
 local QuestBoardList = class.class("QuestBoardList", IUiList, IPaged)
 
@@ -42,7 +42,20 @@ QuestBoardList:delegate("input", IInput)
 local KEYS = "abcdefghijklmnopqr"
 
 function QuestBoardList:init(quests)
-   self.model = PagedListModel:new(quests, 4)
+   local data = fun.iter(quests)
+      :map(function(q)
+            local speaker = assert(Chara.find(q.client_uid))
+            local title, desc = Quest.get_name_and_desc(q, speaker, false)
+            return {
+               quest = q,
+               title = title,
+               wrapped_desc = "",
+               desc = desc
+            }
+          end)
+      :to_list()
+
+   self.model = PagedListModel:new(data, 4)
 
    self.windows = {}
    for _ = 1, 4 do
@@ -72,6 +85,12 @@ function QuestBoardList:relayout(x, y, width, height)
       self.windows[i*2-1]:relayout(self.x + 4, y + 4, self.width, window_height)
       self.windows[i*2]:relayout(self.x, y, self.width, window_height)
    end
+
+   Draw.set_font(13)
+   for _, entry in self.model:iter_all_pages() do
+      local _, wrapped = Draw.wrap_text(entry.desc, self.width - 40)
+      entry.wrapped_desc = wrapped
+   end
 end
 
 function QuestBoardList.quest_difficulty_color(level, difficulty)
@@ -90,12 +109,12 @@ function QuestBoardList:draw_item(item, i, x, y, key_name)
    UiList.draw_select_key(self, item, i, key_name, x, y)
    UiList.draw_item_text(self, item.title or "Quest", item, i, x + 76, y - 1, 19)
 
-   Draw.text(I18N.get("quest.info.days", item.deadline_days), x + 324, y + 2)
+   Draw.text(I18N.get("quest.info.days", item.quest.deadline_days), x + 324, y + 2)
 
-   Draw.text(tostring(item.client_name), x + 372, y + 2)
+   Draw.text(tostring(item.quest.client_name), x + 372, y + 2)
 
    local level = Chara.player():calc("level")
-   local difficulty = item.difficulty
+   local difficulty = item.quest.difficulty
    local color = QuestBoardList.quest_difficulty_color(level, difficulty)
    Draw.set_color(color)
 
@@ -115,7 +134,11 @@ function QuestBoardList:draw_item(item, i, x, y, key_name)
 
    Draw.set_color(255, 255, 255)
 
-   Draw.text(item.description or "quest description", x, y + 20, {0, 0, 0}, 13)
+   y = y + 20
+   for ind=1,#item.wrapped_desc do
+      Draw.text(item.wrapped_desc[ind], x, y, {0, 0, 0}, 13)
+      y = y + Draw.text_height()
+   end
 end
 
 function QuestBoardList:draw()

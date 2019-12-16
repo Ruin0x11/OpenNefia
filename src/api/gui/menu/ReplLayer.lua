@@ -4,6 +4,7 @@ local Gui = require("api.Gui")
 local Object = require("api.Object")
 local Doc = require("api.Doc")
 local SaveFs = require("api.SaveFs")
+local Log = require("api.Log")
 local circular_buffer = require("thirdparty.circular_buffer")
 local queue = require("util.queue")
 
@@ -19,7 +20,7 @@ local ReplLayer = class.class("ReplLayer", IUiLayer)
 
 ReplLayer:delegate("input", IInput)
 
-function ReplLayer:init(vars, params)
+function ReplLayer:init(env, params)
    params = params or {}
 
    self.history = params.history or {}
@@ -28,25 +29,7 @@ function ReplLayer:init(vars, params)
 
    self.text = ""
 
-   self.vars = vars or {}
-   self.vars.locals = self.vars.locals or {}
-   self.vars.normal = self.vars.normal or {}
-
-   self.env = setmetatable({}, {
-         __index = function(self, ind)
-            if rawget(vars.locals, ind) then
-               return rawget(vars.locals, ind)
-            end
-            return rawget(vars.normal, ind)
-         end,
-         __newindex = function(self, ind, val)
-            if rawget(vars.locals, ind) then
-               rawset(vars.locals, ind, val)
-            else
-               rawset(vars.normal, ind, val)
-            end
-         end
-   })
+   self.env = env or {}
 
    self.result = ""
    self.size = 10000
@@ -100,7 +83,7 @@ function ReplLayer:init(vars, params)
          self:submit()
          local res, err = pcall(Gui.update_screen)
          if not res then
-            self:print("[DRAW ERROR] " .. err)
+            Log.error("[DRAW ERROR] %s", err)
          end
          self.input:halt_input()
       end,
@@ -214,16 +197,20 @@ function ReplLayer:history_prev()
       for _=1,self.max_search_size do
          self.history_index = math.max(self.history_index - 1, 1)
          local text = self.history[self.history_index]
-         local match_start, match_end = string.find(text, self.search.text)
-         if match_start then
-            self.search.status = "success"
-            self.search.match_start = match_start
-            self.search.match_end = match_end
-            self:set_text(text)
-            break
-         end
-         if self.history_index == 1 then
-            break
+         if text then
+            local match_start, match_end = string.find(text, self.search.text)
+            if match_start then
+               self.search.status = "success"
+               self.search.match_start = match_start
+               self.search.match_end = match_end
+               self:set_text(text)
+               break
+            end
+            if self.history_index == 1 then
+               break
+            end
+         else
+            self.history_index = 0
          end
       end
       if self.search.status ~= "success" then
@@ -233,6 +220,7 @@ function ReplLayer:history_prev()
    else
       if self.history_index - 1 < 1 then
          self:set_text("")
+         self.history_index = 0
       else
          self.history_index = self.history_index - 1
          self:set_text(self.history[self.history_index])
@@ -270,6 +258,8 @@ function ReplLayer:history_next()
             if self.history_index == #self.history then
                break
             end
+         else
+            self.history_index = #self.history+1
          end
       end
       if self.search.status ~= "success" then
@@ -279,6 +269,7 @@ function ReplLayer:history_next()
    else
       if self.history_index + 1 > #self.history then
          self:set_text("")
+         self.history_index = #self.history+1
       else
          self.history_index = self.history_index + 1
          self:set_text(self.history[self.history_index])
@@ -373,7 +364,16 @@ function ReplLayer:set_cursor_pos(byte)
 
    Draw.set_font(self.font_size)
    local rest = string.sub(self.text, 0, self.cursor_pos)
-   self.cursor_x = Draw.text_width(rest)
+
+   -- handle failures on decoding invalid UTF-8.
+   local ok, x = pcall(Draw.text_width, rest)
+   if not ok then
+      Log.error("Display error: %s", x)
+      self:set_text("")
+   else
+      self.cursor_x = x
+   end
+
    self.frames = 0
 end
 
@@ -407,7 +407,7 @@ function ReplLayer:print(text, color)
    local success, err, wrapped = xpcall(function() return Draw.wrap_text(text, self.width) end, debug.traceback)
    if not success then
       self.scrollback:push({text="[REPL] error printing result: " .. string.split(err)[1], color=self.t.repl_error_color})
-      print(err)
+      Log.error("%s", err)
    else
       for _, line in ipairs(wrapped) do
          self.scrollback:push({text=line, color=color})
@@ -516,7 +516,7 @@ function ReplLayer:submit()
       table.insert(self.history, 1, text)
    end
 
-   local success, results = self.mode:submit(text)
+   local success, results = self.mode:submit(text, self.env)
 
    local result_text = ReplLayer.format_results(results, true)
 

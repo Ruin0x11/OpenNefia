@@ -79,9 +79,10 @@ function Chara.iter_others(map)
    return map:iter_charas():filter(function(c) return not c:is_allied() end)
 end
 
---- Looks for a character with the given base.chara ID in the current map.
+--- Looks for a character with the given UID or base.chara ID in the
+--- current map.
 ---
---- @tparam id:base.chara id
+--- @tparam id:base.chara|uid:base.chara id
 --- @tparam string kind "all", "allies" or "others"
 --- @tparam[opt] InstancedMap map
 --- @treturn Iterator(IChara)
@@ -89,8 +90,8 @@ function Chara.find(id, kind, map)
    map = map or field.map
 
    kind = kind or "all"
-   local iter
 
+   local iter
    if kind == "all" then
       iter = Chara.iter(map)
    elseif kind == "allies" then
@@ -101,7 +102,18 @@ function Chara.find(id, kind, map)
       error(("invalid kind passed to Chara.find: %s"):format(kind))
    end
 
-   return iter:filter(function(i) return Chara.is_alive(i, map) and i._id == id end):nth(1)
+   local compare_field
+   if type(id) == "number" then
+      compare_field = "uid"
+   else
+      compare_field = "_id"
+   end
+
+   local pred = function(chara)
+      return Chara.is_alive(chara, map) and chara[compare_field] == id
+   end
+
+   return iter:filter(pred):nth(1)
 end
 
 --- Returns true if this character is the current player.

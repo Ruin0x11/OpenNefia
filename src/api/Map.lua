@@ -786,7 +786,7 @@ function Map.world_map_containing(map)
 
    local area = save.base.area_mapping:area_for_map(map)
    if area == nil or area.outer_map_uid == nil then
-      return nil, "Map doesn't have an outer map"
+      return nil, ("Map %d (%s) doesn't have an outer map in area: %s"):format(map.uid, map.gen_id, inspect(area))
    end
 
    return Map.load(area.outer_map_uid)

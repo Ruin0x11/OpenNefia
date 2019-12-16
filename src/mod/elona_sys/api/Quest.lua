@@ -19,11 +19,11 @@ function Quest.iter()
    return fun.wrap(pairs(save.elona_sys.quest.quests))
 end
 
---- Iterates all quests that the player is taking (completed or not).
+--- Iterates all quests that the player has accepted (completed or not).
 ---
 --- @treturn Iterator(IQuest)
-function Quest.iter_taken()
-   return Quest.iter():filter(function(q) return q.state ~= "pending" end)
+function Quest.iter_accepted()
+   return Quest.iter():filter(function(q) return q.state ~= "not_accepted" end)
 end
 
 --- Returns the total number of all generated quests.
@@ -77,7 +77,7 @@ function Quest.generate_from_proto(proto_id, chara)
       _id = "",
       client_chara_type = 0,
       difficulty = 0,
-      state = "pending",
+      state = "not_accepted",
       expiration_date = 0,
       deadline_days = 0,
       reward = nil,
@@ -160,22 +160,69 @@ function Quest.generate_from_proto(proto_id, chara)
    return quest, nil
 end
 
-function Quest.get_locale_data(quest, is_active)
+function Quest.get_locale_params(quest, is_active)
    local proto = data["elona_sys.quest"]:ensure(quest._id)
-   local locale_data = proto.locale_data(quest, is_active)
-   locale_data.map = quest.map_name
+   local params = {}
+
+   params.map = quest.map_name
 
    local reward = I18N.get("quest.info.gold_pieces", quest.reward_gold)
    if quest.reward ~= nil then
-      local reward = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
-      reward = reward .. I18N.get("quest.info.and") .. reward.locale_data(quest.reward, quest)
+      local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
+      local text
+      if reward_proto.localize then
+         text = reward_proto.localize(quest.reward, quest)
+      else
+         text = I18N.get("quest.reward." .. quest.reward._id)
+      end
+      reward = reward .. I18N.get("quest.info.and") .. text
+      params.reward = reward
    end
 
    if quest.deadline_days == nil then
-      locale_data.deadline = I18N.get("quest.info.no_deadline")
+      params.deadline = I18N.get("quest.info.no_deadline")
    else
-      locale_data.deadline = I18N.get("quest.info.days", quest.deadline_days)
+      params.deadline = I18N.get("quest.info.days", quest.deadline_days)
    end
+
+   local locale_key = "quest.types." .. quest._id
+   if proto.locale_data then
+      -- contains data specific to each quest type, like enemy level,
+      -- harvest item weight, etc.
+      local extra_params, locale_key_suffix = proto.locale_data(quest)
+
+      assert(extra_params)
+      params = table.merge(params, extra_params)
+      if locale_key_suffix then
+         locale_key = locale_key .. "." .. locale_key_suffix
+      end
+   end
+
+   return params, locale_key
+end
+
+function Quest.get_name_and_desc(quest, speaker, is_active)
+   local params, locale_key = Quest.get_locale_params(quest, speaker, is_active)
+
+   -- Count how many entries under the key that exist containing a
+   -- "title" field.
+   local choices = I18N.get_choice_count(locale_key, "title")
+   if choices == 0 then
+      print(locale_key)
+      return "<unknown>", "<unknown>"
+   end
+
+   Rand.set_seed(quest.client_uid + 1)
+
+   local index = Rand.rnd(choices) + 1
+
+   Rand.set_seed()
+
+   local player = Chara.player()
+   local title = I18N.get(locale_key .. "._" .. index .. ".title", player, speaker, params)
+   local desc = I18N.get(locale_key .. "._" .. index .. ".desc", player, speaker, params)
+
+   return title, desc
 end
 
 function Quest.generate(chara)

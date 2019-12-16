@@ -1,3 +1,7 @@
+local Log = require("api.Log")
+local paths = require("internal.paths")
+local fs = require("util.fs")
+
 local repl = {}
 
 -- from mobdebug
@@ -94,6 +98,42 @@ function repl.restore_locals(level, vars)
       end
       i = i + 1
    end
+end
+
+function repl.require_all_apis(dir, recurse, full_path)
+   dir = dir or "api"
+
+   local api_env = {}
+
+   for _, api in fs.iter_directory_items(dir .. "/") do
+      local path = fs.join(dir, api)
+      if fs.is_file(path) and fs.extension_part(path) == "lua" then
+         local name
+         if full_path then
+            name = paths.convert_to_require_path(path)
+         else
+            name = fs.filename_part(path)
+            if name == "init" then
+               -- api/init.lua instead of api.lua
+               name = fs.basename(fs.parent(path))
+            end
+         end
+         Log.debug("API require: %s %s", name, path)
+         if api_env[name] then
+            Log.warn("Duplicate API required in environment: %s", name)
+         end
+         local success, tbl = pcall(require, path)
+         if success then
+            api_env[name] = tbl
+         else
+            Log.debug("API require failed: %s", tbl)
+         end
+      elseif fs.is_directory(path) and recurse then
+         table.merge(api_env, repl.require_all_apis(path, recurse, full_path))
+      end
+   end
+
+   return api_env
 end
 
 return repl

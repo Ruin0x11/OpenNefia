@@ -100,15 +100,17 @@ end,
       }
     },
     filter_name = {
-      _25000 = "ammos",
-      _52000 = "potions",
-      _53000 = "scrolls",
-      _56000 = "rods",
-      _57000 = "food",
-      _60000 = "furniture",
-      _60001 = "well",
-      _64000 = "junks",
-      _77000 = "ores",
+       elona = {
+          equip_ammo = "ammos",
+          drink = "potions",
+          scroll = "scrolls",
+          rod = "rods",
+          food = "food",
+          furniture = "furniture",
+          furniture_well = "well",
+          junk = "junks",
+          ore = "ores",
+       }
       default = "Unknown"
     },
     fireproof_blanket_protects_item = function(_1, _2)

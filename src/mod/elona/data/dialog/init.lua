@@ -1,9 +1,9 @@
 local Chara = require("api.Chara")
 local Input = require("api.Input")
-local Item = require("api.Item")
-local Role = require("mod.elona_sys.api.Role")
 local ShopInventory = require("mod.elona.api.ShopInventory")
 local World = require("api.World")
+local Quest = require("mod.elona_sys.api.Quest")
+local Event = require("api.Event")
 
 data:add {
    _type = "elona_sys.dialog",
@@ -45,22 +45,62 @@ data:add {
    root = "talk.npc.quest_giver",
    nodes = {
       quest_about = {
-         text = {
-            {"about"}
-         },
+         text = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest, "Character doesn't have a quest.")
+            local _, desc = Quest.get_name_and_desc(quest, t.speaker, false)
+            return {{desc}}
+         end,
          choices = {
-            {"quest_giver_take", "about.choices.take"},
+            {"before_accept", "about.choices.take"},
             {"elona.default:you_kidding", "about.choices.leave"}
          }
       },
-      quest_giver_take = {
+      before_accept = function(t)
+         local quest = Quest.for_client(t.speaker)
+         assert(quest, "Character doesn't have a quest.")
+
+         if Quest.iter_accepted():length() >= 5 then
+            return "too_many_unfinished"
+         end
+
+         local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
+
+         local ok, node = quest_proto.on_accept(quest, t.speaker)
+         if not ok then
+            assert(node, "`on_accept()` must return a boolean and dialog node")
+            return node
+         end
+
+         quest.state = "accepted"
+
+         return node or "accept"
+      end,
+      too_many_unfinished = {
          text = {
-            {"take"}
+            {"about.too_many_unfinished"}
          },
-         choices = {{"__END__", "__BYE__"}}
+         choices = "elona.default:__start"
+      },
+      accept = {
+         text = {
+            {"about.thanks"}
+         },
+         choices = "elona.default:__start"
       },
    },
 }
+
+local function add_quest_dialog(speaker, params, result)
+   local quest = Quest.for_client(speaker)
+   if quest and quest.state == "not_accepted" then
+      table.insert(result, {"elona.quest_giver:quest_about", "talk.npc.quest_giver.choices.about_the_work"})
+   end
+
+   return result
+end
+
+Event.register("elona.calc_dialog_choices", "Add quest dialog choices", add_quest_dialog)
 
 local function refresh_shop(shopkeeper)
    local inv_id = shopkeeper.roles["elona.shopkeeper"].inventory_id

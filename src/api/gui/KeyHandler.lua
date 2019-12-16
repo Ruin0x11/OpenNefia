@@ -1,6 +1,6 @@
 local IKeyInput = require("api.gui.IKeyInput")
 
-local internal = require("internal")
+local input = require("internal.input")
 
 -- TODO: needs to handle direction keypress combinations
 local repeats = table.set {
@@ -58,9 +58,9 @@ end
 function KeyHandler:focus()
    -- BUG: will not take into account forwards. If there is a child
    -- element with a TextHandler, then text input could get messed up.
-   internal.input.set_key_repeat(true)
-   internal.input.set_text_input(false)
-   internal.input.set_key_handler(self)
+   input.set_key_repeat(true)
+   input.set_text_input(false)
+   input.set_key_handler(self)
 end
 
 function KeyHandler:bind_keys(bindings)

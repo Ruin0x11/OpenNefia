@@ -527,10 +527,6 @@ local function calc_dialog_choices(speaker, params, result)
       end
    end
 
-   if Quest.for_client(speaker) then
-      table.insert(result, {"elona.quest_giver:quest_about", "talk.npc.quest_giver.choices.about_the_work"})
-   end
-
    return result
 end
 

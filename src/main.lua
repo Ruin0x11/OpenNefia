@@ -3,13 +3,13 @@ require("boot")
 local Draw = require("api.Draw")
 
 local env = require("internal.env")
-local internal = require("internal")
 local game = require("game")
 local debug_server = require("internal.debug_server")
-local profile = require("thirdparty.profile")
+local input = require("internal.input")
+local draw = require("internal.draw")
 
-local loop = nil
-local draw = nil
+local loop_coro = nil
+local draw_coro = nil
 local server = nil
 
 local fps = require("internal.fps"):new()
@@ -17,7 +17,7 @@ fps.show_fps = true
 
 function love.load(arg)
    love.filesystem.setIdentity("Elona_next")
-   internal.draw.init()
+   draw.init()
    Draw.set_font(12)
 
    server = debug_server:new()
@@ -27,8 +27,8 @@ function love.load(arg)
       _DEBUG = true
    end
 
-   loop = coroutine.create(game.loop)
-   draw = coroutine.create(game.draw)
+   loop_coro = coroutine.create(game.loop)
+   draw_coro = coroutine.create(game.draw)
 end
 
 local halt = false
@@ -36,13 +36,13 @@ local pop_draw_layer = false
 local halt_error = ""
 
 local function stop_halt()
-   love.keypressed = internal.input.keypressed
+   love.keypressed = input.keypressed
 
    halt = false
 end
 
 local function start_halt()
-   internal.input.halt_input()
+   input.halt_input()
    love.keypressed = function(key, scancode, isrepeat)
       local keys = table.set {"return", "escape", "space"}
       if keys[key] then
@@ -59,7 +59,7 @@ end
 function love.update(dt)
    fps:update(dt)
 
-   if internal.draw.needs_wait() then
+   if draw.needs_wait() then
       return
    end
 
@@ -90,10 +90,10 @@ function love.update(dt)
       return
    end
 
-   local ok, err = coroutine.resume(loop, dt, pop_draw_layer)
+   local ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
    if not ok or err ~= nil then
-      print("Error in loop:\n\t" .. debug.traceback(loop, err))
+      print("Error in loop:\n\t" .. debug.traceback(loop_coro, err))
       print()
       if not ok then
          -- Coroutine is dead. No choice but to throw.
@@ -105,7 +105,7 @@ function love.update(dt)
       end
    end
 
-   if coroutine.status(loop) == "dead" then
+   if coroutine.status(loop_coro) == "dead" then
       print("Finished.")
       love.event.quit()
    end
@@ -113,16 +113,16 @@ end
 
 function love.draw()
    if halt then
-      internal.draw.draw_error(halt_error)
+      draw.draw_error(halt_error)
       return
    end
 
-   internal.draw.draw_start()
+   draw.draw_start()
 
    local going = true
-   local ok, err = coroutine.resume(draw, going)
+   local ok, err = coroutine.resume(draw_coro, going)
    if not ok or err then
-      print("Error in draw:\n\t" .. debug.traceback(draw, err))
+      print("Error in draw:\n\t" .. debug.traceback(draw_coro, err))
       print()
       if not ok then
          -- Coroutine is dead. No choice but to throw.
@@ -136,7 +136,7 @@ function love.draw()
 
    fps:draw()
 
-   internal.draw.draw_end()
+   draw.draw_end()
 
    env.set_hotloaded_this_frame(false)
 end
@@ -147,13 +147,13 @@ end
 --
 --
 
-love.resize = internal.draw.resize
+love.resize = draw.resize
 
-love.mousemoved = internal.input.mousemoved
-love.mousepressed = internal.input.mousepressed
-love.mousereleased = internal.input.mousereleased
+love.mousemoved = input.mousemoved
+love.mousepressed = input.mousepressed
+love.mousereleased = input.mousereleased
 
-love.keypressed = internal.input.keypressed
-love.keyreleased = internal.input.keyreleased
+love.keypressed = input.keypressed
+love.keyreleased = input.keyreleased
 
-love.textinput = internal.input.textinput
+love.textinput = input.textinput

@@ -1,16 +1,17 @@
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
+local Item = require("api.Item")
+local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Pos = require("api.Pos")
-local Log = require("api.Log")
 local Ui = require("api.Ui")
-local MapArea = require("api.MapArea")
 local Charagen = require("mod.tools.api.Charagen")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Role = require("mod.elona_sys.api.Role")
 local Filters = require("mod.elona.api.Filters")
 local Quest = require("mod.elona_sys.api.Quest")
-local Map = require("api.Map")
+local I18N = require("api.I18N")
+local Event = require("api.Event")
 
 local fallbacks = {
    id = 0,
@@ -85,8 +86,8 @@ data:add {
       return mkgenerate({self.category})(self, quest)
    end,
 
-   locale_data = function(self)
-      return I18N.get("item.filter_name." .. self.params.category)
+   localize = function(self)
+      return I18N.get("item.filter_name." .. self.category)
    end
 }
 
@@ -103,7 +104,11 @@ local collect = {
    min_fame = 30000,
    chance = 13,
 
-   params = { target_chara_uid = "number", target_item_id = "string" },
+   params = {
+      target_chara_uid = "number",
+      target_name = "string",
+      target_item_id = "string"
+   },
 
    difficulty = function()
       return Chara.player():calc("level") / 3
@@ -138,10 +143,14 @@ local collect = {
 
       self.params = {
          target_chara_uid = target_chara.uid,
+         target_name = target_chara.name,
          target_item_id = target_item._id
       }
 
       return true
+   end,
+   locale_data = function(self)
+      return { item_name = self.params.target_item_id, target_name = self.params.target_name }
    end
 }
 data:add(collect)
@@ -170,8 +179,8 @@ local function hunt_enemy_id(difficulty, min_level)
    return id
 end
 
-local hunt = {
-   _id = "hunt",
+local huntex = {
+   _id = "huntex",
    _type = "elona_sys.quest",
 
    elona_id = 1010,
@@ -199,15 +208,21 @@ local hunt = {
       local min_level = math.clamp(math.floor(self.difficulty / 7), 5, 30)
       local enemy_id = hunt_enemy_id(self.difficulty, min_level)
 
-      self.params = { enemy_id = enemy_id }
+      self.params = {
+         enemy_id = enemy_id,
+         enemy_level = math.floor(self.difficulty * 3 / 2)
+      }
 
       return true
+   end,
+   locale_data = function(self)
+      return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
    end
 }
-data:add(hunt)
+data:add(huntex)
 
-local hunt_ex = {
-   _id = "hunt_ex",
+local conquer = {
+   _id = "conquer",
    _type = "elona_sys.quest",
 
    elona_id = 1008,
@@ -235,12 +250,18 @@ local hunt_ex = {
       local min_level = math.clamp(math.floor(self.difficulty / 4), 5, 30)
       local enemy_id = hunt_enemy_id(self.difficulty, min_level)
 
-      self.params = { enemy_id = enemy_id }
+      self.params = {
+         enemy_id = enemy_id,
+         enemy_level = math.floor(self.difficulty * 10 / 8)
+      }
 
       return true
+   end,
+   locale_data = function(self)
+      return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
    end
 }
-data:add(hunt_ex)
+data:add(conquer)
 
 local escort = {
    _id = "escort",
@@ -297,6 +318,9 @@ local escort = {
       }
 
       return true
+   end,
+   locale_data = function(self)
+      return {}, "difficulty._" .. self.params.escort_difficulty
    end
 }
 data:add(escort)
@@ -337,6 +361,9 @@ local party = {
       }
 
       return true
+   end,
+   locale_data = function(self)
+      return { required_points = self.params.required_points }
    end
 }
 data:add(party)
@@ -382,22 +409,21 @@ local harvest = {
    end,
 
    locale_data = function(self, is_active)
-      local ref = Ui.display_weight(self.params.required_weight)
-      local objective = I18N.get("quest.info.harvest.text", ref)
+      local required_weight = Ui.display_weight(self.params.required_weight)
+      local objective = I18N.get("quest.info.harvest.text", required_weight)
       if is_active then
          objective = objective .. I18N.get("quest.info.now", Ui.display_weight(self.params.current_weight))
       end
 
       return {
-         ref = ref,
          objective = objective
       }
    end
 }
 data:add(harvest)
 
-local hunt2 = {
-   _id = "hunt2",
+local hunt = {
+   _id = "hunt",
    _type = "elona_sys.quest",
 
    elona_id = 1001,
@@ -419,16 +445,13 @@ local hunt2 = {
    end,
 
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
+   deadline_days = -1,
 
    generate = function(self, client)
-      self.params = {
-         required_weight = 15000 + self.difficulty * 2500
-      }
-
       return true
    end
 }
-data:add(hunt2)
+data:add(hunt)
 
 local deliver = {
    _id = "deliver",
@@ -500,7 +523,7 @@ local deliver = {
          self.reward = "elona.armor"
       elseif category == "elona.junk" then
          self.reward = { _id = "elona.by_category", category = "elona.ore" }
-      elseif category == "category:elona.furniture" then
+      elseif category == "elona.furniture" then
          self.reward = { _id = "elona.by_category", category = "elona.furniture" }
       end
 
@@ -516,9 +539,63 @@ local deliver = {
       }
 
       return true
+   end,
+   on_accept = function(self)
+      local player = Chara.player()
+      local item = Item.create(self.params.item_id, player.x, player.y, {ownerless=true})
+      if not player:can_take_object(item) then
+         return false, "elona.quest_deliver:backpack_full"
+      end
+
+      player:take_object(item)
+      Gui.mes("common.you_put_in_your_backpack", item)
+      Gui.play_sound("base.inv")
+
+      return true, "elona.quest_deliver:accept"
+   end,
+   locale_data = function(self)
+      local params = {
+         item_category = self.params.item_category,
+         item_name = self.params.item_id,
+         target_name = self.params.target_name
+      }
+      local key = self.params.item_category
+      return params, key
    end
 }
 data:add(deliver)
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_deliver",
+
+   root = "talk.npc.quest_giver",
+   nodes = {
+      backpack_full = {
+         text = {
+            {"about.backpack_full"}
+         },
+         choices = "elona.default:__start"
+      },
+      accept = {
+         text = {
+            {"about.here_is_package"}
+         },
+         choices = "elona.default:__start"
+      },
+   }
+}
+
+Event.register("base.on_map_enter", "Mark quest delivery targets",
+               function(map)
+                  local charas_with_delivery = Quest.iter_accepted()
+                      :filter(function(q) return q.originating_map_uid == map.uid and q._id == "elona.deliver" end)
+                      :map(function(q) return q.params.target_chara_uid end):to_map()
+
+                  for _, chara in map:iter_charas() do
+                     chara.has_quest_delivery = charas_with_delivery[chara.uid]
+                  end
+               end)
 
 local cook = {
    _id = "cook",
@@ -580,6 +657,14 @@ local cook = {
       }
 
       return true
+   end,
+
+   locale_data = function(self)
+      local ingredient = "food.names._" .. self.params.food_type .. ".default_origin"
+      local objective = I18N.get("food.names._" .. self.params.food_type .. "._" .. self.params.food_quality, ingredient)
+      local params = { objective = objective }
+      local key = "food_type._" .. self.params.food_type
+      return params, key
    end
 }
 data:add(cook)
@@ -611,15 +696,16 @@ local supply = {
       local item_id = Itemgen.random_item_id_raw(nil, {category})
       assert(item_id)
 
-      self.difficulty = food_quality * 3
-      self.reward_fix = 60 + self.difficulty
+      self.reward_fix = self.reward_fix + self.difficulty
 
       self.params = {
-         food_type = food_type,
-         food_quality = food_quality
+         target_item_id = item_id,
       }
 
       return true
+   end,
+   locale_data = function(self)
+      return { objective = self.params.target_item_id }
    end
 }
-data:add(cook)
+data:add(supply)

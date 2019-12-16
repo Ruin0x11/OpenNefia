@@ -27,7 +27,7 @@ local function resolve_translated_text(root, key, args)
       full_key = root .. "." .. key
    end
 
-   return I18N.get(full_key, table.unpack(args or {})) or full_key
+   return I18N.get_optional(full_key, table.unpack(args or {})) or key
 end
 
 --- Convert a response localization key to the full localization key.
@@ -267,6 +267,17 @@ local function step_dialog(node_data, talk, state)
       -- on_finish: Function run when this node is exited.
       -- default_choice: If provided, dialog option is cancellable with this response as the default.
       local texts = node.text
+      if type(texts) == "function" then
+         local ok
+         ok, texts = pcall(texts, talk, state, node_data.opts)
+         if not ok then
+            dialog_error(talk, "Error getting dialog text", texts)
+         end
+
+         if type(texts) ~= "table" then
+            dialog_error(talk, "`text` function must return a table of strings")
+         end
+      end
 
       for i, text in ipairs(texts) do
          if texts[i+1] == nil then

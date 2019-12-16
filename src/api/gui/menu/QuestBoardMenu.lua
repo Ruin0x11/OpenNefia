@@ -60,7 +60,7 @@ function QuestBoardMenu:update()
    if self.pages.chosen then
       Gui.mes("ui.board.do_you_meet")
       if Input.yes_no() then
-         return self.pages:selected_item()
+         return self.pages:selected_item().quest
       end
    end
 

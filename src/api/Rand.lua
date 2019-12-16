@@ -29,7 +29,7 @@ end
 
 --- TODO: must be constant and unmodifiable, for determinism
 function Rand.set_seed(seed)
-   math.randomseed(seed)
+   math.randomseed(seed or 0)
 end
 
 -- Selects a random element out of an arraylike table or iterator. If

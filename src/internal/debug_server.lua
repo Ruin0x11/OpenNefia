@@ -1,9 +1,12 @@
 local Log = require("api.Log")
 local Doc = require("api.Doc")
+local ReplCompletion = require("api.gui.menu.ReplCompletion")
 local doc = require("internal.doc")
 local doc_store = require("internal.global.doc_store")
+local fs = require("util.fs")
 local socket = require("socket")
 local json = require("thirdparty.json")
+local field = require("game.field")
 
 local commands = {}
 
@@ -101,19 +104,52 @@ function commands.signature(text)
    }
 end
 
-function commands.apropos(text)
-   local items = {}
+-- The size of the apropos candidates list is huge, so transferring it
+-- over the network is infeasable. Instead write it to a file and let
+-- the user's editor read it from disk.
+local apropos_update_time = 0
 
-   for _, entry in pairs(doc_store.entries) do
-      for k, item in pairs(entry.items) do
-         items[#items+1] = { item.full_path, k }
+function commands.apropos(text)
+   local path = "data/apropos.json"
+   local updated = false
+
+   if true or doc.last_updated_time() > apropos_update_time then
+      local items = {}
+
+      for _, entry in pairs(doc_store.entries) do
+         for k, item in pairs(entry.items) do
+            items[#items+1] = { item.full_path, k }
+         end
+         items[#items+1] = { entry.full_path, entry.full_path:lower() }
       end
-      items[#items+1] = { entry.full_path, entry.full_path:lower() }
+
+      fs.write(path, json.encode(items))
+
+      apropos_update_time = doc.last_updated_time()
+      updated = true
    end
 
    return {
-      items = items
+      path = path,
+      updated = updated
    }
+end
+
+function commands.completion(text)
+   if not field.repl then
+      return {}
+   end
+
+   local completion = ReplCompletion:new():complete(text, field.repl.env)
+   if completion == nil then
+      return {}
+   end
+
+   -- "candidates" is a special field
+   completion.results = completion.candidates
+   completion.candidates = nil
+
+   return completion
 end
 
 local debug_server = class.class("debug_server")
@@ -135,7 +171,7 @@ function debug_server:poll()
       Log.trace("client recv")
 
       local text = client:receive("*l")
-      Log.trace("Request: %s", text)
+      Log.debug("Request: %s", text)
 
       local ok, req = pcall(json.decode, text)
       if not ok then
@@ -169,7 +205,7 @@ function debug_server:poll()
          resp = json.encode(result)
       end
 
-      Log.trace("Response: %s", resp)
+      Log.debug("Response: %s", resp)
 
       local byte, err = client:send(resp .. "")
       Log.trace("send %s %s", byte, err)

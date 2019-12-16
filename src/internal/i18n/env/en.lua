@@ -54,34 +54,6 @@ function en.ordinal(n)
    end
 end
 
-function en.he(obj)
-   if type(obj) == "table" then
-      if obj.gender == "Male" then
-         return "he"
-      elseif obj.gender == "Female" then
-         return "she"
-      else
-         return "it"
-      end
-   end
-
-   return "its"
-end
-
-function en.his(obj)
-   if type(obj) == "table" then
-      if obj.gender == "Male" then
-         return "his"
-      elseif obj.gender == "Female" then
-         return "her"
-      else
-         return "its"
-      end
-   end
-
-   return "its"
-end
-
 function en.s(obj, need_e)
    if type(obj) == "number" then
       if obj > 1 then

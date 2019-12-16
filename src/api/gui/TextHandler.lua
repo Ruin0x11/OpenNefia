@@ -1,6 +1,6 @@
 local IKeyInput = require("api.gui.IKeyInput")
 
-local internal = require("internal")
+local input = require("internal.input")
 
 local TextHandler = class.class("TextHandler", IKeyInput)
 
@@ -79,9 +79,9 @@ function TextHandler:forward_to(handler)
 end
 
 function TextHandler:focus()
-   internal.input.set_key_repeat(true)
-   internal.input.set_text_input(true)
-   internal.input.set_key_handler(self)
+   input.set_key_repeat(true)
+   input.set_text_input(true)
+   input.set_key_handler(self)
 end
 
 function TextHandler:halt_input()

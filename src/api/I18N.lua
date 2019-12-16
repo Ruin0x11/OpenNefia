@@ -78,4 +78,20 @@ end
 --- @function switch_language
 I18N.switch_language = i18n.switch_language
 
+function I18N.get_choice_count(prefix, suffix)
+   local i = 1
+
+   if suffix then
+      suffix = "." .. suffix
+   else
+      suffix = ""
+   end
+
+   while I18N.get_optional(prefix .. "._" .. i .. suffix) do
+      i = i + 1
+   end
+
+   return i - 1
+end
+
 return I18N

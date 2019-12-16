@@ -100,16 +100,18 @@ end,
       }
     },
     filter_name = {
-      _25000 = "矢弾",
-      _52000 = "ポーション",
-      _53000 = "巻物",
-      _56000 = "杖",
-      _57000 = "食べ物",
-      _60000 = "家具",
-      _60001 = "井戸",
-      _64000 = "ジャンク",
-      _77000 = "鉱石",
-      default = "不明"
+       elona = {
+          equip_ammo = "矢弾",
+          drink = "ポーション",
+          scroll = "巻物",
+          rod = "杖",
+          food = "食べ物",
+          furniture = "家具",
+          furniture_well = "井戸",
+          junk = "ジャンク",
+          ore = "鉱石",
+       },
+       default = "不明"
     },
     fireproof_blanket_protects_item = function(_1, _2)
   return ("%sが%sの持ち物を炎から守った。")

@@ -2,6 +2,8 @@
 (require 'eval-sexp-fu nil t)
 (require 'json)
 (require 'dash)
+(require 'company)
+(require 'cl)
 
 (defvar elona-next-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -85,6 +87,7 @@
       ("jump_to" (elona-next--command-jump-to content response))
       ("signature" (elona-next--command-signature response))
       ("apropos" (elona-next--command-apropos response))
+      ("completion" (elona-next--command-completion response))
       ("run" t)
       (else (error "No action for %s" cmd)))))
 
@@ -99,6 +102,36 @@
          (with-help-window buffer
            (princ doc))
        (message "%s" message))))
+
+(defvar elona-next--is-completing nil)
+
+(defun elona-next--command-completion (response)
+  (when elona-next--is-completing
+    (-let* (((&alist 'results 'prefix) response)
+            (candidates (mapcar (lambda (item)
+                                  (elona-next--make-completion-candidate item prefix))
+                                results)))))
+  (funcall elona-next--is-completing candidates)
+  (setq elona-next--is-completing nil))
+
+(defun elona-next--company-candidates (prefix callback)
+  (message (prin1-to-string prefix))
+  (when (elona-next--game-running-p)
+    (progn
+      (setq elona-next--is-completing callback)
+      (elona-next--send "completion" prefix))))
+
+;;;###autoload
+(defun company-elona-next (command &optional arg &rest _)
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend #'company-elona-next))
+    (prefix (substring-no-properties (company-grab-symbol)))
+    (candidates (cons :async (lambda (callback) (elona-next--company-candidates arg callback))))
+    ;(annotation (elona-next--company-annotation arg))
+    ;(quickhelp-string (elona-next--company-quickhelp-string arg))
+    ;; (doc-buffer (company-doc-buffer "*elona-next-help*"))
+    ))
 
 (defun elona-next--command-jump-to (content response)
   (-let* (((&alist 'success 'file 'line 'column) response))
@@ -118,11 +151,25 @@
             elona-next--eldoc-saved-point (point))
       (elona-next--eldoc-message elona-next--eldoc-saved-message))))
 
-(defun elona-next--command-apropos (response)
-  (-let* (((&alist :items) response)
-          (item (elona-next--completing-read "Apropos: " items)))
-    (elona-next--send "help" item)))
+(defvar elona-next--apropos-candidates nil)
 
+(defun elona-next--apropos-file (path)
+  (let ((base (getenv "HOME"))
+        (sep (if (eq system-type 'windows-nt) "\\" "/"))
+        (dir
+         (if (eq system-type 'windows-nt)
+             "AppData\\Roaming\\LOVE"
+           ".local/share/love")))
+    (string-join (list base dir "Elona_next" path) sep)))
+
+(defun elona-next--command-apropos (response)
+  (-let* (((&alist 'path 'updated) response)
+          (items (or
+                  (and (not updated) elona-next--apropos-candidates)
+                  (json-read-file (elona-next--apropos-file path)))))
+    (setq elona-next--apropos-candidates items)
+    (let ((item (elona-next--completing-read "Apropos: " items)))
+      (elona-next--send "help" item))))
 
 (defun elona-next--tcp-sentinel (proc message)
   "Runs when a client closes the connection."

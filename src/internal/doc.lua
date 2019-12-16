@@ -1,6 +1,7 @@
 local fs = require("util.fs")
 local paths = require("internal.paths")
 local ldoc = require("thirdparty.ldoc")
+local internal = require("internal.init")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 
@@ -69,6 +70,11 @@ local function convert_ldoc_file(file)
    }
 end
 
+local last_updated_time = 0
+function doc.last_updated_time()
+   return last_updated_time
+end
+
 function doc.get_item_name(item)
    local name = item.name
 
@@ -101,10 +107,21 @@ end
 
 local function file_to_full_path(file, item, is_builtin)
    local prefix = paths.convert_to_require_path(file.relative)
+
+   -- capitalize mod name, since on Windows path is always lowercase
+   prefix = prefix:gsub("%.([a-z]+)$",
+                        function(s)
+                           if s == item.mod_name:lower() then
+                              return "." .. item.mod_name
+                           else
+                              return "." .. s
+                           end
+                        end)
+
    if is_builtin then
       prefix = prefix:match("%.([^.]+)$")
    end
-   if item == nil then
+   if item.is_module then
       return prefix
    end
 
@@ -180,12 +197,9 @@ local function convert_ldoc_item(item, mod_name, is_builtin)
       }
    )
 
-   if item.file == nil then
-      error(inspect(item))
-   end
    t.mod_name = mod_name
    t.file = convert_ldoc_file(item.file)
-   t.full_path = file_to_full_path(t.file, item, is_builtin)
+   t.full_path = file_to_full_path(t.file, t, is_builtin)
 
    t.summary = reformat_docstring(t.summary)
    t.description = reformat_docstring(t.description)
@@ -214,12 +228,13 @@ local function convert_ldoc(dump, is_builtin)
       }
    )
 
+   t.is_module = true
    t.is_builtin = is_builtin
    t.items = fun.wrap(ipairs(dump.items)):map(function(i) return convert_ldoc_item(i, t.mod_name, is_builtin) end):to_map()
    t.file = convert_ldoc_file(dump.file)
-   t.full_path = file_to_full_path(t.file, nil, is_builtin)
-   t.last_updated = os.time()
-   t.is_module = true
+   t.full_path = file_to_full_path(t.file, t, is_builtin)
+   t.last_updated = internal.get_timestamp()
+   t.mod_name = t.name
 
    t.summary = reformat_docstring(t.summary)
    t.description = reformat_docstring(t.description)
@@ -316,6 +331,8 @@ local CONFIG_FILE = "data/ldoc.ld"
 
 function doc.reparse(path, api_table, is_builtin)
    local file_path, req_path = get_paths(path)
+
+   last_updated_time = internal.get_timestamp()
 
    ldoc_config = ldoc_config or read_ldoc_config(CONFIG_FILE)
    local dump = ldoc.dump_file(file_path, ldoc_config)[1]
@@ -688,6 +705,7 @@ function doc.load()
    end
 
    doc_store.can_load = true
+   last_updated_time = internal.get_timestamp()
 end
 
 function doc.can_load()

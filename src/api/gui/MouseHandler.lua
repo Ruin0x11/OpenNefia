@@ -1,6 +1,6 @@
 local IMouseInput = require("api.gui.IMouseInput")
 
-local internal = require("internal")
+local input = require("internal.input")
 
 local MouseHandler = class.class("MouseHandler", IMouseInput)
 
@@ -29,7 +29,7 @@ function MouseHandler:forward_to(handler)
 end
 
 function MouseHandler:focus()
-   internal.input.set_mouse_handler(self)
+   input.set_mouse_handler(self)
 end
 
 function MouseHandler:halt_input()
@@ -41,7 +41,7 @@ end
 function MouseHandler:run_mouse_action(button, x, y, pressed)
    local func = self.bindings[button]
    if func then
-      func(v.x, v.y, v.pressed)
+      func(x, y, pressed)
    elseif self.forwards then
       self.forwards:run_mouse_action(button, x, y, pressed)
    end

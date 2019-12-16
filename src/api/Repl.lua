@@ -73,12 +73,13 @@ function Repl.generate_env(locals)
    locals = locals or {}
 
    local repl_env = env.generate_sandbox("repl")
-   local apis = env.require_all_apis("api", true)
+   local apis = repl.require_all_apis("api", true)
    repl_env = table.merge(repl_env, apis)
 
    repl_env = table.merge(repl_env, _G)
-   repl_env = table.merge(repl_env, env.require_all_apis("internal"))
-   repl_env = table.merge(repl_env, env.require_all_apis("game"))
+   repl_env = table.merge(repl_env, repl.require_all_apis("internal", true))
+   repl_env = table.merge(repl_env, repl.require_all_apis("game"))
+   repl_env = table.merge(repl_env, repl.require_all_apis("util"))
    repl_env["save"] = require("internal.global.save")
 
    local history = {}
@@ -90,13 +91,31 @@ function Repl.generate_env(locals)
       end
    end
 
+   local vars = { normal = repl_env, locals = locals }
+
+   local env = setmetatable({}, {
+         __index = function(self, ind)
+            if rawget(vars.locals, ind) then
+               return rawget(vars.locals, ind)
+            end
+            return rawget(vars.normal, ind)
+         end,
+         __newindex = function(self, ind, val)
+            if rawget(vars.locals, ind) then
+               rawset(vars.locals, ind, val)
+            else
+               rawset(vars.normal, ind, val)
+            end
+         end
+   })
+
    if fs.exists("repl_startup.lua") then
       local chunk = loadfile("repl_startup.lua")
-      setfenv(chunk, repl_env)
+      setfenv(chunk, env)
       chunk()
    end
 
-   return { normal = repl_env, locals = locals }, history
+   return env, history
 end
 
 --- Stops execution at the point this function is called and starts

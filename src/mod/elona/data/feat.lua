@@ -299,7 +299,7 @@ data:add {
    params = {}, events = {}}
 
 local function visit_quest_giver(feat, player, quest)
-   local client = feat:current_map():get_object(quest.client_uid)
+   local client = Chara.find(quest.client_uid, "all", feat:current_map())
    assert(client)
    Magic.cast("elona.shadow_step", {source=player, target=client})
    if Chara.is_alive(client) then

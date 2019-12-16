@@ -221,10 +221,7 @@ function MapArea.load_map_of_entrance(feat, associate)
    local outer_map = feat:current_map()
    assert(outer_map)
 
-   local area
-   if feat.map_uid ~= nil then
-      area = MapArea.area_for_map(feat.map_uid)
-   end
+   local area = nil
 
    if area == nil then
       if associate then
@@ -250,15 +247,20 @@ function MapArea.load_map_of_entrance(feat, associate)
       success, map = Map.generate(gen_id, gen_params, gen_opts)
 
       if not success then
-         return false, "Couldn't generate map: " .. map
+         local mes = "Couldn't generate map: " .. map
+         Log.error(mes)
+         return false, mes
       end
    else
       success, map = Map.load(feat.map_uid)
       if not success then
-         return false, "Couldn't load map: " .. map
+         local mes = "Couldn't load map: " .. map
+         Log.error(mes)
+         return false, mes
       end
    end
 
+   Log.info("Associating feat %d -> map %d", feat.uid, map.uid)
    feat.map_uid = map.uid
 
    if MapArea.area_for_map(map.uid) == nil then

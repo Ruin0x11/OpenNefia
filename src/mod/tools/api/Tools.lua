@@ -533,4 +533,12 @@ function Tools.goto_up_stairs()
    end
 end
 
+function Tools.uid_to_map(uid)
+   local ok, map = Map.load(uid)
+   if not ok then
+      return nil, map
+   end
+   return map
+end
+
 return Tools
