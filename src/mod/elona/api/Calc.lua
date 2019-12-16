@@ -74,4 +74,12 @@ function Calc.filter(level, quality, rest, map)
    }, rest or {})
 end
 
+function Calc.calc_fame_gained(chara, base)
+   local ret = math.floor(base * 100 / (100 + chara.fame / 100 * (chara.fame / 100) / 2500))
+   if ret < 5 then
+      ret = Rand.rnd(5) + 1
+   end
+   return ret
+end
+
 return Calc

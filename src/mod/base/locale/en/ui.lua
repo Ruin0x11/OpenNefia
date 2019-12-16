@@ -760,15 +760,6 @@ end
       _5 = "Strong",
       _6 = "Superb"
     },
-    reward = {
-      _0 = "",
-      _1 = "equipment",
-      _2 = "magical goods",
-      _3 = "armor",
-      _4 = "weapons",
-      _5 = "ores",
-      _6 = "furnitures"
-    },
     save = "*saving*",
     save_on_suspend = "App focus was lost. Quicksaving game.",
     scene = {

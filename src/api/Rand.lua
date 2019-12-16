@@ -74,7 +74,7 @@ function Rand.dice_max(dice_x, dice_y, add)
 end
 
 function Rand.shuffle(tbl)
-   local res = table.deepcopy(tbl)
+   local res = table.shallow_copy(tbl)
 
    for i=1, #res do
       local j = Rand.rnd(#res-i+1) + i

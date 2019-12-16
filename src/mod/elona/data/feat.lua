@@ -18,6 +18,34 @@ local QuestBoardMenu = require("api.gui.menu.QuestBoardMenu")
 local Quest = require("mod.elona_sys.api.Quest")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Magic = require("mod.elona_sys.api.Magic")
+local I18N = require("api.I18N")
+
+local function get_map_display_name(area, description)
+   if area.is_hidden then
+      return ""
+   end
+
+   local desc = I18N.get("map.unique." .. area.gen_id .. ".desc")
+   local name = I18N.get("map.unique." .. area.gen_id .. ".name")
+   if name == nil and desc then
+      name = desc
+   end
+
+   if not description then
+      return name
+   end
+
+   local text
+   if area.types["elona.nefia"] then
+      text = I18N.get("map.you_see_an_entrance", name, area.starting_dungeon_level)
+   elseif desc then
+      text = desc
+   else
+      text = I18N.get("map.you_see", name)
+   end
+
+   return text
+end
 
 data:add {
    _type = "base.feat",
@@ -211,7 +239,7 @@ data:add(gen_stair(false))
 
 data:add
 {
-   _type = "base.feat", _id = "map_entrance", elona_id = nil,
+   _type = "base.feat", _id = "map_entrance", elona_id = 15,
    image = "elona.feat_area_city", is_solid = false, is_opaque = false, params = {
       generator_params = "table",
       map_uid = "number",
@@ -236,6 +264,20 @@ data:add
 
       return "player_turn_query"
    end,
+
+   on_stepped_on = function(self, params)
+      local area = { gen_id = "elona.vernis", types = {} }
+      if area.types["elona.nefia"] then
+         -- TODO
+         ExHelp.maybe_show("elona.random_dungeon")
+      end
+   end,
+
+   description = function(self)
+      local area = { gen_id = "elona.vernis", types = {} }
+      return get_map_display_name(area, true)
+   end,
+
    on_descend = function(self, params) self:on_activate(params.chara) end
 }
 

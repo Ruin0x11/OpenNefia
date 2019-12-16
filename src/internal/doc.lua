@@ -375,15 +375,20 @@ function doc.reparse(path, api_table, is_builtin)
       seen[full_path] = true
 
       local aliases = doc_store.aliases[full_path]
+      local found
       if aliases then
          for _, alias in ipairs(aliases) do
             local file = doc_store.entries[alias.file_path]
             assert(file, alias.file_path)
             assert(file.file.filename == item.file.filename, ("%s %s"):format(inspect(file.file), inspect(item.file)))
+            found = true
+            break
          end
       end
 
-      add_common_aliases(item, file_path)
+      if not found then
+         add_common_aliases(item, file_path)
+      end
 
       if is_builtin then
          item.is_builtin = true
@@ -712,6 +717,20 @@ function doc.can_load()
    -- only start loading documentation on require after there has been an
    -- attempt to load the doc store on startup.
    return doc_store.can_load
+end
+
+function doc.aliases_for(full_path)
+   full_path = full_path:lower()
+   local aliases = {}
+   for k, alias_list in pairs(doc_store.aliases) do
+      for _, alias in ipairs(alias_list) do
+         if alias.full_path == full_path then
+            aliases[#aliases+1] = tostring(k)
+         end
+      end
+   end
+
+   return aliases
 end
 
 return doc

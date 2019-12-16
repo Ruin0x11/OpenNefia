@@ -12,6 +12,7 @@ local Filters = require("mod.elona.api.Filters")
 local Quest = require("mod.elona_sys.api.Quest")
 local I18N = require("api.I18N")
 local Event = require("api.Event")
+local Effect = require("mod.elona.api.Effect")
 
 local fallbacks = {
    id = 0,
@@ -22,6 +23,43 @@ local fallbacks = {
    expiration_hours = 0,
    reward_item = "",
 }
+
+local function make_quest_rewards(quest, gold, platinum, item_count)
+   gold = gold or quest.reward_gold
+   platinum = platinum or 1
+
+   local player = Chara.player()
+   local map = player:current_map()
+
+   if gold > 0 then
+      Item.create("elona.gold_piece", player.x, player.y, {amount=gold}, map)
+   end
+   if platinum > 0 then
+      Item.create("elona.platinum_coin", player.x, player.y, {amount=platinum}, map)
+   end
+
+   if quest.reward then
+      item_count = item_count or Rand.rnd(Rand.rnd(4) + 1) + 1
+
+      for _=1, item_count do
+         local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
+         local filter = reward_proto.generate(quest.reward, quest)
+         pause()
+         Itemgen.create(player.x, player.y, filter, map)
+      end
+   end
+
+   Gui.play_sound("base.complete1")
+
+   Effect.modify_karma(player, 1)
+
+   local fame_gained = Calc.calc_fame_gained(player, quest.difficulty * 3 + 10)
+   Gui.mes_c("quest.completed_taken_from", "Green", quest.client_name)
+   Gui.mes_c("quest.gain_fame", "Green", fame_gained)
+   player.fame = player.fame + fame_gained
+
+   Gui.mes("common.something_is_put_on_the_ground")
+end
 
 local function mkgenerate(categories)
    return function(self, quest)
@@ -36,7 +74,7 @@ local function mkgenerate(categories)
       local category = Rand.choice(categories)
 
       return {
-         level = math.floor(quest.difficulty - Chara.player():calc("level") / 2 + 1),
+         level = math.floor(quest.difficulty + Chara.player():calc("level") / 2 + 1),
          quality = Calc.calc_object_quality(quality),
          categories = {category}
       }
@@ -101,8 +139,8 @@ local collect = {
    reward = "elona.supply",
    reward_fix = 60,
 
-   min_fame = 30000,
-   chance = 13,
+   min_fame = 0,
+   chance = 14,
 
    params = {
       target_chara_uid = "number",
@@ -116,19 +154,21 @@ local collect = {
 
    deadline_days = function() return Rand.rnd(3) + 2 end,
 
-   generate = function(self, client, map)
+   generate = function(self, client, start, map)
       local target_chara, target_item
 
-      for _, chara in map:iter_charas()  do
+      local charas = Rand.shuffle(map:iter_charas():to_list())
+
+      for _, chara in ipairs(charas)  do
          if chara.uid ~= client.uid then
-            if Chara.is_alive(chara)
+            if Chara.is_alive(chara, map)
                and chara:reaction_towards(Chara.player(), "original") > 0
                and not Role.has(chara, "elona.guard")
                and not Role.has(chara, "elona.non_quest_target")
             then
                local item = Itemgen.create(nil, nil, { level = 40, quality = 2, categories = Filters.fsetcollect }, chara)
                if item then
-                  -- item.count = 0
+                  item.count = 0 -- TODO
                   target_chara = chara
                   target_item = item
                   break
@@ -150,7 +190,10 @@ local collect = {
       return true
    end,
    locale_data = function(self)
-      return { item_name = self.params.target_item_id, target_name = self.params.target_name }
+      return {
+         item_name = I18N.get("item." .. self.params.target_item_id .. ".name"),
+         target_name = self.params.target_name
+      }
    end
 }
 data:add(collect)
@@ -314,13 +357,14 @@ local escort = {
 
       self.params = {
          escort_difficulty = escort_difficulty,
-         destination_map_uid = dest.uid
+         destination_map_uid = dest.uid,
+         destination_map_name = dest.name
       }
 
       return true
    end,
    locale_data = function(self)
-      return {}, "difficulty._" .. self.params.escort_difficulty
+      return { map = self.params.destination_map_name, }, "difficulty._" .. self.params.escort_difficulty
    end
 }
 data:add(escort)
@@ -445,7 +489,7 @@ local hunt = {
    end,
 
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
-   deadline_days = -1,
+   deadline_days = nil,
 
    generate = function(self, client)
       return true
@@ -481,23 +525,21 @@ local deliver = {
    generate = function(self, client, start)
       local cur_uid = client.originating_map_uid
 
-      -- Only consider clients outside this map (doesn't make sense to
-      -- deliver within the same one)
-      local free_clients = Quest.iter_clients():filter(function(c) return c.originating_map_uid ~= cur_uid end)
-
-      -- Find a random incomplete quest with a client who is not also
-      -- the target of another delivery quest.
-      local found_client
-      for _, client in free_clients:unwrap() do
-         if client.originating_map_uid ~= cur_uid then
-            local exists = function(q) return q._id == "elona.deliver" and q.params.target_chara_uid == client.uid end
-            local existing = Quest.iter():filter(exists):nth(1)
-            if existing == nil then
-               found_client = client
-               break
-            end
+      local pred = function(client)
+         -- Only consider clients outside this map (doesn't make sense to
+         -- deliver within the same one)
+         if client.originating_map_uid == cur_uid then
+            return false
          end
+
+         -- Find a random incomplete quest with a client who is not also
+         -- the target of another delivery quest.
+         local has_quest = function(q) return q._id == "elona.deliver" and q.params.target_chara_uid == client.uid end
+         local existing_quest = Quest.iter():filter(has_quest):nth(1)
+         return existing_quest == nil
       end
+
+      local found_client = Rand.choice(Quest.iter_clients():filter(pred))
 
       if found_client == nil then
          return false, "No client to deliver to found."
@@ -532,6 +574,7 @@ local deliver = {
 
       self.params = {
          target_map_uid = found_client.originating_map_uid,
+         target_map_name = found_client.originating_map_name,
          target_name = found_client.name,
          target_chara_uid = found_client.uid,
          item_category = category,
@@ -539,6 +582,16 @@ local deliver = {
       }
 
       return true
+   end,
+   locale_data = function(self)
+      local params = {
+         item_category = self.params.item_category,
+         item_name = I18N.get("item." .. self.params.item_id .. ".name"),
+         target_name = self.params.target_name,
+         map = self.params.target_map_name
+      }
+      local key = self.params.item_category
+      return params, key
    end,
    on_accept = function(self)
       local player = Chara.player()
@@ -553,17 +606,28 @@ local deliver = {
 
       return true, "elona.quest_deliver:accept"
    end,
-   locale_data = function(self)
-      local params = {
-         item_category = self.params.item_category,
-         item_name = self.params.item_id,
-         target_name = self.params.target_name
-      }
-      local key = self.params.item_category
-      return params, key
+   on_complete = function(self, client, text)
+      local platinum = Rand.rnd(2) + 1
+      make_quest_rewards(self, nil, platinum)
+      client.is_quest_delivery_target = nil
    end
 }
 data:add(deliver)
+
+local function delivery_quest_for(chara)
+   return Quest.iter_accepted()
+      :filter(function(q)
+            return q._id == "elona.deliver"
+               and q.params.target_chara_uid == chara.uid
+             end)
+      :nth(1) -- There should only ever be a single one per character.
+end
+
+local function find_delivery_item(client)
+   local item_id = client.is_quest_delivery_target
+   local item = Chara.player():iter_inventory():filter(function(i) return i._id == item_id end):nth(1)
+   return item
+end
 
 data:add {
    _type = "elona_sys.dialog",
@@ -583,18 +647,44 @@ data:add {
          },
          choices = "elona.default:__start"
       },
+      finish = function(t)
+         local quest = delivery_quest_for(t.speaker)
+         assert(quest)
+
+         local item = find_delivery_item(t.speaker)
+
+         Gui.mes("talk.npc.common.hand_over", item)
+         local sep = assert(item:move_some(1, t.speaker))
+         t.speaker.item_to_use = sep
+
+         Chara.player():refresh_weight()
+
+         return Quest.complete(quest, t.speaker)
+      end
    }
 }
 
 Event.register("base.on_map_enter", "Mark quest delivery targets",
                function(map)
                   local charas_with_delivery = Quest.iter_accepted()
-                      :filter(function(q) return q.originating_map_uid == map.uid and q._id == "elona.deliver" end)
-                      :map(function(q) return q.params.target_chara_uid end):to_map()
+                      :filter(function(q) return q.params.target_map_uid == map.uid and q._id == "elona.deliver" end)
+                      :map(function(q) return q.params.target_chara_uid, q.params.item_id end):to_map()
 
                   for _, chara in map:iter_charas() do
-                     chara.has_quest_delivery = charas_with_delivery[chara.uid]
+                     chara.is_quest_delivery_target = charas_with_delivery[chara.uid]
                   end
+               end)
+
+Event.register("elona.calc_dialog_choices", "Add quest delivery choice",
+               function(speaker, params, result)
+                  if speaker.is_quest_delivery_target then
+                     local item = find_delivery_item(speaker)
+                     if item then
+                        table.insert(result, {"elona.quest_deliver:finish", "talk.npc.quest_giver.choices.here_is_delivery"})
+                     end
+                  end
+
+                  return result
                end)
 
 local cook = {
@@ -705,7 +795,9 @@ local supply = {
       return true
    end,
    locale_data = function(self)
-      return { objective = self.params.target_item_id }
+      return {
+         objective = I18N.get("item." .. self.params.target_item_id .. ".name"),
+      }
    end
 }
 data:add(supply)

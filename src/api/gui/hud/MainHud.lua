@@ -92,6 +92,9 @@ function MainHud:refresh(player)
       self.mp_bar:set_data(player.mp, player:calc("max_mp"))
       self.level:set_data(player.level, player.experience)
       self.status_effects:set_data()
+
+      local map = player:current_map()
+      self.map_name = map and map.name or ""
    end
 end
 
@@ -121,7 +124,7 @@ end
 function MainHud:draw_map_name()
    Draw.set_font(self.t.map_name_font) -- 12 + sizefix - en * 2
 
-   local map_name = "some_map_name"
+   local map_name = self.map_name
    local map_level = "B.12"
    local max_width = 16
    if string.nonempty(map_level) then

@@ -9,6 +9,8 @@ local World = require("api.World")
 local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
 local I18N = require("api.I18N")
+local Event = require("api.Event")
+local Gui = require("api.Gui")
 
 local Quest = {}
 
@@ -59,7 +61,7 @@ local function calc_quest_reward(quest)
    return math.floor(reward_gold)
 end
 
-function Quest.generate_from_proto(proto_id, chara)
+function Quest.generate_from_proto(proto_id, chara, map)
    local uid = chara
    if type(chara) == "table" then
       uid = chara.uid
@@ -79,7 +81,7 @@ function Quest.generate_from_proto(proto_id, chara)
       difficulty = 0,
       state = "not_accepted",
       expiration_date = 0,
-      deadline_days = 0,
+      deadline_days = nil,
       reward = nil,
       reward_fix = 0,
       params = {}
@@ -114,7 +116,7 @@ function Quest.generate_from_proto(proto_id, chara)
    end
 
    if proto.generate then
-      local success = proto.generate(quest, client, town)
+      local success = proto.generate(quest, client, town, map)
       if not success then
          Log.debug("Quest generation did not succeed.")
          return nil, "Quest generation did not succeed."
@@ -149,7 +151,9 @@ function Quest.generate_from_proto(proto_id, chara)
 
    quest.reward_gold = calc_quest_reward(quest)
 
-   quest.expiration_date = expiration_hours + World.date_hours()
+   if expiration_hours ~= nil then
+      quest.expiration_date = expiration_hours + World.date_hours()
+   end
    quest._id = proto._id
    quest.map_name = town.name
 
@@ -160,12 +164,7 @@ function Quest.generate_from_proto(proto_id, chara)
    return quest, nil
 end
 
-function Quest.get_locale_params(quest, is_active)
-   local proto = data["elona_sys.quest"]:ensure(quest._id)
-   local params = {}
-
-   params.map = quest.map_name
-
+local function get_reward_text(quest)
    local reward = I18N.get("quest.info.gold_pieces", quest.reward_gold)
    if quest.reward ~= nil then
       local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
@@ -176,14 +175,19 @@ function Quest.get_locale_params(quest, is_active)
          text = I18N.get("quest.reward." .. quest.reward._id)
       end
       reward = reward .. I18N.get("quest.info.and") .. text
-      params.reward = reward
    end
 
-   if quest.deadline_days == nil then
-      params.deadline = I18N.get("quest.info.no_deadline")
-   else
-      params.deadline = I18N.get("quest.info.days", quest.deadline_days)
-   end
+   return reward
+end
+
+function Quest.get_locale_params(quest, is_active)
+   local proto = data["elona_sys.quest"]:ensure(quest._id)
+   local params = {}
+
+   params.map = quest.map_name
+
+   local reward = get_reward_text(quest)
+   params.reward = reward
 
    local locale_key = "quest.types." .. quest._id
    if proto.locale_data then
@@ -225,7 +229,7 @@ function Quest.get_name_and_desc(quest, speaker, is_active)
    return title, desc
 end
 
-function Quest.generate(chara)
+function Quest.generate(chara, map)
    local uid = chara
    if type(chara) == "table" then
       uid = chara.uid
@@ -270,7 +274,7 @@ function Quest.generate(chara)
       return nil, "Generation was skipped."
    end
 
-   return Quest.generate_from_proto(proto._id, client)
+   return Quest.generate_from_proto(proto._id, client, map)
 end
 
 function Quest.create_reward(quest)
@@ -353,7 +357,8 @@ function Quest.register_client(chara)
    local client = {
       uid = chara.uid,
       name = chara.name,
-      originating_map_uid = map.uid
+      originating_map_uid = map.uid,
+      originating_map_name = map.name
    }
 
    save.elona_sys.quest.clients[chara.uid] = client
@@ -409,16 +414,16 @@ end
 
 function Quest.unregister_town(map)
    local remove = {}
-   for _, client in pairs(save.elona_sys.quest.clients) do
+   for k, client in pairs(save.elona_sys.quest.clients) do
       if client.originating_map_uid == map.uid then
-         remove[#remove+1] = i
+         remove[#remove+1] = k
       end
    end
 
    table.remove_keys(save.elona_sys.quest.clients, remove)
 
    remove = {}
-   for _, quest in pairs(save.elona_sys.quest.quests) do
+   for i, quest in ipairs(save.elona_sys.quest.quests) do
       if quest.originating_map_uid == map.uid then
          remove[#remove+1] = i
       end
@@ -427,6 +432,70 @@ function Quest.unregister_town(map)
    table.remove_keys(save.elona_sys.quest.quests, remove)
 
    save.elona_sys.quest.towns[map.uid] = nil
+end
+
+function Quest.update_in_map(map)
+   -- This overwrites and updates the quest info for the map if it
+   -- goes out of date (like the entrance was moved for some reason)
+   if map:has_type("town") and Map.world_map_containing(map) then
+      Quest.register_town(map)
+   end
+
+   if Quest.town_info(map) then
+      -- Register all characters that can be quest targets.
+      for _, chara in Chara.iter_others(map) do
+         if chara.quality < 6 and not Role.has(chara, "elona.unique_chara") then
+            Quest.register_client(chara)
+         end
+      end
+
+      -- Remove clients that do not exist in this map any longer.
+      local remove = {}
+      for i, client in pairs(save.elona_sys.quest.clients) do
+         if map:get_object(client.uid == nil) then
+            Log.warn("Remove missing quest client %d", client.uid)
+            remove[#remove+1] = i
+         end
+      end
+
+      table.remove_indices(save.elona_sys.quest.clients, remove)
+
+      -- Generate quests for characters that are not already quest givers.
+      for _, client in Quest.iter_clients() do
+         local quest = Quest.for_client(client)
+         local do_generate = quest == nil
+            or (World.date():hours() > quest.expiration_date
+                   and quest.state == "not_accepted")
+         if do_generate then
+            if not Rand.one_in(3) then
+               if quest then
+                  assert(table.iremove_value(save.elona_sys.quest.quests, quest))
+               end
+               Quest.generate(client.uid, map)
+            end
+         end
+      end
+   end
+end
+
+function Quest.complete(quest, client)
+   local reward_text = get_reward_text(quest)
+   local text = I18N.get("quest.giver.complete.done_well", client)
+   if reward_text then
+      Gui.mes("quest.giver.complete.take_reward", reward_text, client)
+   end
+
+   local proto = data["elona_sys.quest"]:ensure(quest._id)
+
+   text = proto.on_complete(quest, client, text) or text
+
+   Event.trigger("elona_sys.on_quest_completed", {quest=quest, client=client})
+
+   table.iremove_value(save.elona_sys.quest.quests, quest)
+
+   Gui.update_screen()
+
+   return "elona.default:__start", {text}
 end
 
 return Quest

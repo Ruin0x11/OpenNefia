@@ -8,6 +8,7 @@ local IModdable = require("api.IModdable")
 local IEventEmitter = require("api.IEventEmitter")
 local IStackableObject = require("api.IStackableObject")
 local ILocalizable = require("api.ILocalizable")
+local I18N = require("api.I18N")
 local Log = require("api.Log")
 local data = require("internal.data")
 
@@ -53,8 +54,6 @@ end
 function IItem:normal_build()
    self.location = nil
 
-   local Rand = require("api.Rand")
-
    self.name = self._id
 
    self:set_image()
@@ -62,6 +61,8 @@ end
 
 function IItem:build()
    self:mod_base_with(fallbacks, "merge")
+
+   self.name = I18N.get("item." .. self._id .. ".name")
 
    self:emit("base.on_build_item")
 
@@ -189,7 +190,7 @@ function IItem:current_map()
    -- BUG: Needs to be generalized to allow nesting.
    local Chara = require("api.Chara")
    local chara = self:get_owning_chara()
-   if Chara.is_alive(chara) then
+   if chara and chara.state == "alive" then
       return chara:current_map()
    end
 

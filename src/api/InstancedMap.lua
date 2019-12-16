@@ -453,6 +453,10 @@ function InstancedMap:set_outer_map(map_or_uid, x, y)
    save.base.area_mapping:add_map_to_area(area.uid, self.uid)
 end
 
+function InstancedMap:is_floor(x, y)
+   return self:is_in_bounds(x, y) and not self:tile(x, y).is_solid
+end
+
 -- TODO: Need to handle depending on what is querying. People may want
 -- things that can pass through walls, etc.
 function InstancedMap:can_access(x, y)

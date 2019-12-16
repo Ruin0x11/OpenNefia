@@ -234,47 +234,7 @@ Event.register("base.on_kill_chara", "Damage text", function(chara, params)
 end)
 
 local function register_quest_town(map, _, _)
-   -- This overwrites and updates the quest info for the map if it
-   -- goes out of date (like the entrance was moved for some reason)
-   if map:has_type("town") and Map.world_map_containing(map) then
-      Quest.register_town(map)
-   end
-
-   if Quest.town_info(map) then
-      -- Register all characters that can be quest targets.
-      for _, chara in Chara.iter_others(map) do
-         if chara.quality < 6 and not Role.has(chara, "elona.unique_chara") then
-            Quest.register_client(chara)
-         end
-      end
-
-      -- Remove clients that do not exist in this map any longer.
-      local remove = {}
-      for i, client in pairs(save.elona_sys.quest.clients) do
-         if map:get_object(client.uid == nil) then
-            Log.warn("Remove missing quest client %d", client.uid)
-            remove[#remove+1] = i
-         end
-      end
-
-      table.remove_indices(save.elona_sys.quest.clients, remove)
-
-      -- Generate quests for characters that are not already quest givers.
-      local here = Quest.iter()
-        :filter(function(q) return q.originating_map_uid == map.uid end)
-        :extract("client_uid")
-        :to_list()
-
-      local charas_with_quest = table.set(here)
-
-      for _, client in Quest.iter_clients() do
-         if client.originating_map_uid == map.uid and not charas_with_quest[client.uid] then
-            if not Rand.one_in(3) then
-               Quest.generate(client.uid)
-            end
-         end
-      end
-   end
+   Quest.update_in_map(map)
 end
 
 Event.register("base.on_map_loaded_from_entrance", "register town as quest endpoint", register_quest_town)
@@ -341,6 +301,14 @@ Event.register("base.on_hotload_object", "reload events for item", function(obj)
                   end
 end)
 
+local function print_feat_description(feat)
+   local desc = feat.proto.description
+   if type(desc) == "function" then
+      desc = desc(feat)
+   end
+   Gui.mes(desc)
+end
+
 Event.register("base.on_feat_instantiated", "Connect feat events",
                function(feat)
                   if feat.proto.on_bash then
@@ -387,6 +355,12 @@ Event.register("base.on_feat_instantiated", "Connect feat events",
                      feat:connect_self("elona_sys.on_feat_stepped_on",
                                        "Feat prototype on_stepped_on handler",
                                        feat.proto.on_stepped_on)
+                  end
+
+                  if feat.proto.description then
+                     feat:connect_self("elona_sys.on_feat_stepped_on",
+                                       "Print feat message",
+                                       print_feat_description)
                   end
                end)
 

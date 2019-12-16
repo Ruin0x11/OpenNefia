@@ -1,3345 +1,3344 @@
-return {
-  item = {
-    academic_table = {
-      description = {
-        main = {
-          text = "A desk used for students in Asseria schools,"
-        }
-      },
-      name = "academic table"
-    },
-    acidproof_liquid = {
-      description = {
-        main = {
-          text = "Use on an item to protect it from acid,"
-        }
-      },
-      name = "acidproof liquid"
-    },
-    alchemy_kit = {
-      description = {
-        main = {
-          text = "An alchemy kit with tools for basic alchemy,"
-        }
-      },
-      name = "alchemy kit"
-    },
-    aloe = {
-      description = {
-        main = {
-          text = "A type of vegetation,"
-        }
-      },
-      name = "aloe"
-    },
-    alraunia = {
-      description = {
-        main = {
-          text = "A type of herb,"
-        }
-      },
-      name = "alraunia"
-    },
-    altar = {
-      description = {
-        main = {
-          text = "An altar to the gods"
-        }
-      },
-      name = "altar"
-    },
-    alud = {
-      name = "<Al'ud>",
-      unidentified_name = "tough lute"
-    },
-    ancient_book = {
-      description = {
-        main = {
-          text = "A book written in a dead language,"
-        }
-      },
-      name = "ancient book"
-    },
-    ancient_tomb = {
-      description = {
-        main = {
-          text = "An ancient Euldernan style tomb,"
-        }
-      },
-      name = "ancient tomb"
-    },
-    anemos = {
-      description = {
-        main = {
-          text = "A type of herb,"
-        }
-      },
-      name = "anemos"
-    },
-    animal_bone = {
-      description = {
-        main = {
-          text = "Probably leftovers from a meal,"
-        }
-      },
-      name = "animal bone"
-    },
-    anvil = {
-      description = {
-        main = {
-          text = "An anvil used for blacksmithing,"
-        }
-      },
-      name = "anvil"
-    },
-    api_nut = {
-      description = {
-        main = {
-          text = "A nut used to make candy"
-        }
-      },
-      name = "api nut"
-    },
-    apple = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "apple"
-    },
-    arbalest = {
-      name = "<Arbalest>",
-      unidentified_name = "purple necklace"
-    },
-    armor = {
-      description = {
-        main = {
-          text = "Armor on display,"
-        }
-      },
-      name = "armor"
-    },
-    armored_boots = {
-      description = {
-        main = {
-          text = "A pair of boots with armored plating,"
-        }
-      },
-      name = "armored boots"
-    },
-    armored_cloak = {
-      description = {
-        main = {
-          text = "A reinforced cloak designed for protection,"
-        }
-      },
-      name = "armored cloak"
-    },
-    armored_ring = {
-      description = {
-        main = {
-          text = "Protects a portion of your finger,"
-        }
-      },
-      name = "armored ring"
-    },
-    arrow = {
-      description = {
-        main = {
-          text = "Hand forged arrows,"
-        }
-      },
-      name = "arrow"
-    },
-    artifact_seed = {
-      description = {
-        main = {
-          text = "A type of seed,"
-        }
-      },
-      name = "artifact seed"
-    },
-    aurora_ring = {
-      description = {
-        main = {
-          text = "Protects you from bad weather,"
-        }
-      },
-      name = "aurora ring"
-    },
-    axe_of_destruction = {
-      name = "<Axe of Destruction>",
-      unidentified_name = "giant axe"
-    },
-    bait = {
-      description = {
-        main = {
-          text = "Bait for a fishing pole,"
-        }
-      },
-      name = "bait"
-    },
-    banded_mail = {
-      description = {
-        main = {
-          text = "A form of mail reinforced with leather,"
-        }
-      },
-      name = "banded mail"
-    },
-    bar_table_alpha = {
-      description = {
-        main = {
-          text = "A table holding alcohol,"
-        }
-      },
-      name = "bar table alpha"
-    },
-    bar_table_beta = {
-      description = {
-        main = {
-          text = "A table with coasters and peanut boxes,"
-        }
-      },
-      name = "bar table beta"
-    },
-    barbecue_set = {
-      description = {
-        main = {
-          text = "An amazing set of cooking tools,"
-        }
-      },
-      name = "barbecue set"
-    },
-    bardiche = {
-      description = {
-        main = {
-          text = "A single-bladed axe resembling a polearm,"
-        }
-      },
-      name = "bardiche"
-    },
-    barn = {
-      name = "barn"
-    },
-    barrel = {
-      description = {
-        main = {
-          text = "A barrel for storing items,"
-        }
-      },
-      name = "barrel"
-    },
-    basket = {
-      description = {
-        main = {
-          text = "It's empty,"
-        }
-      },
-      name = "basket"
-    },
-    bathtub = {
-      description = {
-        main = {
-          text = "A porcelain bathtub,"
-        }
-      },
-      name = "bathtub"
-    },
-    battle_axe = {
-      description = {
-        main = {
-          text = "A large double-bladed axe"
-        }
-      },
-      name = "battle axe"
-    },
-    beaker = {
-      description = {
-        main = {
-          text = "Fragile scientific equipment,"
-        }
-      },
-      name = "beaker"
-    },
-    beggars_pendant = {
-      name = "<Beggar's Pendant>",
-      unidentified_name = "dirty pendant"
-    },
-    bejeweled_amulet = {
-      description = {
-        main = {
-          text = "An amulet that shows one's wealth"
-        }
-      },
-      name = "bejeweled amulet"
-    },
-    bejeweled_chest = {
-      description = {
-        main = {
-          text = "An ancient jeweled chest,"
-        }
-      },
-      name = "bejeweled chest"
-    },
-    big_cupboard = {
-      description = {
-        main = {
-          text = "Holds a lot of dishes,"
-        }
-      },
-      name = "big cupboard"
-    },
-    big_foliage_plant = {
-      description = {
-        main = {
-          text = "The leaves look fake,"
-        }
-      },
-      name = "big foliage plant"
-    },
-    big_table = {
-      name = "big table"
-    },
-    bill = {
-      name = "bill",
-      unidentified_name = "lousy paper"
-    },
-    black_board = {
-      description = {
-        main = {
-          text = "Technophiles use this to teach,"
-        }
-      },
-      name = "black board"
-    },
-    black_crystal = {
-      description = {
-        main = {
-          text = "A black crystal,"
-        }
-      },
-      name = "black crystal"
-    },
-    blank_disc = {
-      description = {
-        main = {
-          text = "Asserian computer technology,"
-        }
-      },
-      name = "blank disc"
-    },
-    blood_moon = {
-      name = "<Blood Moon>",
-      unidentified_name = "bloody mace"
-    },
-    blue_capsule_drug = {
-      name = "blue capsule drug",
-      unidentified_name = "blue capsule"
-    },
-    blue_stall = {
-      name = "blue stall"
-    },
-    blue_treasure_machine = {
-      description = {
-        main = {
-          text = "A treasure machine accepting very rare coins,"
-        }
-      },
-      name = "blue treasure machine"
-    },
-    board = {
-      description = {
-        main = {
-          text = 'A note on this board reads ""Wante'
-        }
-      },
-      name = "board"
-    },
-    bolt = {
-      description = {
-        main = {
-          text = "Standard equipment for hunting rabbits,"
-        }
-      },
-      name = "bolt"
-    },
-    bomb_fish = {
-      description = {
-        main = {
-          text = "A type of fish,"
-        }
-      },
-      name = "bomb fish"
-    },
-    bone_fragment = {
-      description = {
-        main = {
-          text = "Some bones are valuable"
-        }
-      },
-      name = "bone fragment"
-    },
-    bonfire = {
-      description = {
-        main = {
-          text = "You smell something strange burning,"
-        }
-      },
-      name = "bonfire"
-    },
-    book_a = {
-      description = {
-        main = {
-          text = "A leather bound book,"
-        }
-      },
-      name = "book",
-      unidentified_name = "book"
-    },
-    book_b = {
-      description = {
-        main = {
-          text = "A book with watermarks,"
-        }
-      },
-      name = "book",
-      unidentified_name = "book"
-    },
-    book_of_bokonon = {
-      name = "Bokonon"
-    },
-    book_of_rachel = {
-      description = {
-        main = {
-          text = "A book decorated with pictures,"
-        }
-      },
-      name = "book"
-    },
-    book_of_resurrection = {
-      description = {
-        main = {
-          text = "A book said to hold the secrets of life itself,"
-        }
-      },
-      name = "resurrection"
-    },
-    bookshelf = {
-      description = {
-        main = {
-          text = "Because there is no public library in Nort Tyris,"
-        }
-      },
-      name = "bookshelf"
-    },
-    boots = {
-      description = {
-        main = {
-          text = "A standard pair of boots,"
-        }
-      },
-      name = "boots"
-    },
-    boring_bed = {
-      description = {
-        main = {
-          text = "A refurbished be"
-        }
-      },
-      name = "boring bed"
-    },
-    bottle_of_beer = {
-      description = {
-        main = {
-          text = "A bottle of beer,"
-        }
-      },
-      name = "beer",
-      unidentified_name = "clear liquid"
-    },
-    bottle_of_dirty_water = {
-      description = {
-        main = {
-          text = "A bottle of murky water,"
-        }
-      },
-      name = "dirty water",
-      unidentified_name = "clear liquid"
-    },
-    bottle_of_dye = {
-      description = {
-        main = {
-          text = "Expertly made dye that works on most materials,"
-        }
-      },
-      name = "dye"
-    },
-    bottle_of_hermes_blood = {
-      description = {
-        main = {
-          text = "A rare item that increases your speed,"
-        }
-      },
-      name = "hermes blood"
-    },
-    bottle_of_milk = {
-      description = {
-        main = {
-          text = "Milk"
-        }
-      },
-      name = "milk"
-    },
-    bottle_of_salt = {
-      name = "salt"
-    },
-    bottle_of_soda = {
-      name = "soda",
-      unidentified_name = "clear liquid"
-    },
-    bottle_of_sulfuric = {
-      description = {
-        main = {
-          text = "A clear odorless liquid,"
-        }
-      },
-      name = "sulfuric",
-      unidentified_name = "clear liquid"
-    },
-    bottle_of_water = {
-      description = {
-        main = {
-          text = "A bottle of pure water,"
-        }
-      },
-      name = "water",
-      unidentified_name = "clear liquid"
-    },
-    bottle_of_whisky = {
-      description = {
-        main = {
-          text = "A bottle of dwarven whisky,"
-        }
-      },
-      name = "whisky",
-      unidentified_name = "clear liquid"
-    },
-    bow_of_vindale = {
-      name = "<Bow of Vindale>",
-      unidentified_name = "shaking bow"
-    },
-    bowl = {
-      description = {
-        main = {
-          text = "I'm not sure I want to eat this,"
-        }
-      },
-      name = "bowl"
-    },
-    brand_new_grave = {
-      description = {
-        main = {
-          text = "A recent grave... The name is still readable,"
-        }
-      },
-      name = "brand new grave"
-    },
-    breast_plate = {
-      description = {
-        main = {
-          text = "An armor designed to protect the chest,"
-        }
-      },
-      name = "breast plate"
-    },
-    breastplate = {
-      description = {
-        main = {
-          text = "An armor that offers decent protection,"
-        }
-      },
-      name = "breastplate"
-    },
-    broken_pillar = {
-      description = {
-        main = {
-          text = "A pillar designed after one's common in Eluderni"
-        }
-      },
-      name = "broken pillar"
-    },
-    broken_sword = {
-      description = {
-        main = {
-          text = "The materials can probably be salvaged,"
-        }
-      },
-      name = "broken sword"
-    },
-    broken_vase = {
-      description = {
-        main = {
-          text = "Why would you take the time to collect the broken pieces?!?"
-        }
-      },
-      name = "broken vase"
-    },
-    broom = {
-      description = {
-        main = {
-          text = "Useful for cleaning,"
-        }
-      },
-      name = "broom"
-    },
-    bug = {
-      description = {
-        main = {
-          text = "not used in the game"
-        }
-      },
-      name = "gold bar"
-    },
-    bugged_book = {
-      description = {
-        main = {
-          text = "generated when failed to create an item"
-        }
-      },
-      name = "bugged book",
-      unidentified_name = "book"
-    },
-    bullet = {
-      description = {
-        main = {
-          text = "Made by Cyber Dome In"
-        }
-      },
-      name = "bullet"
-    },
-    bulletproof_jacket = {
-      description = {
-        main = {
-          text = "Protects from more than just bullets,"
-        }
-      },
-      name = "bulletproof jacket"
-    },
-    bundle_of_bows = {
-      description = {
-        main = {
-          text = "A display of bows,"
-        }
-      },
-      name = "bows"
-    },
-    bundle_of_weapons = {
-      description = {
-        main = {
-          text = "A display of weapons,"
-        }
-      },
-      name = "weapons"
-    },
-    bunk_bed = {
-      description = {
-        main = {
-          text = "A makeshift bunk be"
-        }
-      },
-      name = "bunk bed"
-    },
-    cabinet = {
-      description = {
-        main = {
-          text = "The drawer is locked,"
-        }
-      },
-      name = "cabinet"
-    },
-    camera = {
-      description = {
-        main = {
-          text = "Asserian photography technology,"
-        }
-      },
-      name = "camera"
-    },
-    campfire = {
-      description = {
-        main = {
-          text = "Due to magic these logs never burn up,"
-        }
-      },
-      name = "campfire"
-    },
-    candle = {
-      description = {
-        main = {
-          text = "A creepy set of candles,"
-        }
-      },
-      name = "candle"
-    },
-    canvas = {
-      description = {
-        main = {
-          text = "A canvas used for painting on,"
-        }
-      },
-      name = "canvas"
-    },
-    card = {
-      description = {
-        main = {
-          text = "A card of a creature,"
-        }
-      },
-      name = "card"
-    },
-    cargo_art = {
-      description = {
-        main = {
-          text = "A cargo of art supplies,"
-        }
-      },
-      name = "art"
-    },
-    cargo_barrel = {
-      description = {
-        main = {
-          text = "A cargo of barrels,"
-        }
-      },
-      name = "barrel"
-    },
-    cargo_canvas = {
-      description = {
-        main = {
-          text = "A cargo of canvas,"
-        }
-      },
-      name = "canvas"
-    },
-    cargo_christmas_tree = {
-      description = {
-        main = {
-          text = "A cargo of pine trees,"
-        }
-      },
-      name = "christmas tree"
-    },
-    cargo_coffin = {
-      description = {
-        main = {
-          text = "A cargo of coffins,"
-        }
-      },
-      name = "coffin"
-    },
-    cargo_grave = {
-      description = {
-        main = {
-          text = "A cargo of grave materials,"
-        }
-      },
-      name = "grave"
-    },
-    cargo_inner_tube = {
-      description = {
-        main = {
-          text = "A cargo of ship materials,"
-        }
-      },
-      name = "inner tube"
-    },
-    cargo_manboo = {
-      description = {
-        main = {
-          text = "A cargo of fish,"
-        }
-      },
-      name = "manboo"
-    },
-    cargo_noble_toy = {
-      description = {
-        main = {
-          text = "A cargo of children's toys,"
-        }
-      },
-      name = "noble toy"
-    },
-    cargo_piano = {
-      description = {
-        main = {
-          text = "A cargo of pianos,"
-        }
-      },
-      name = "piano"
-    },
-    cargo_rag_doll = {
-      description = {
-        main = {
-          text = "A cargo of children's toys,"
-        }
-      },
-      name = "rag doll"
-    },
-    cargo_rope = {
-      description = {
-        main = {
-          text = "A cargo of rope,"
-        }
-      },
-      name = "rope"
-    },
-    cargo_snow_man = {
-      description = {
-        main = {
-          text = "A cargo of snow men,"
-        }
-      },
-      name = "snow man"
-    },
-    cargo_travelers_food = {
-      description = {
-        main = {
-          text = "Travel rations often used by merchants,"
-        }
-      },
-      name = "traveler's food"
-    },
-    cargo_tuna_fish = {
-      description = {
-        main = {
-          text = "A cargo of fish,"
-        }
-      },
-      name = "tuna fish"
-    },
-    cargo_whisky = {
-      description = {
-        main = {
-          text = "A cargo of alcohol,"
-        }
-      },
-      name = "whisky"
-    },
-    carnation = {
-      description = {
-        main = {
-          text = "A symbol of love towards one's parents,"
-        }
-      },
-      name = "carnation"
-    },
-    carpenters_tool = {
-      description = {
-        main = {
-          text = "Used to craft some wooden items,"
-        }
-      },
-      name = "carpenter's tool"
-    },
-    carrot = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "carrot"
-    },
-    casino_table = {
-      description = {
-        main = {
-          text = "It's no fun without other people,,,"
-        }
-      },
-      name = "casino table"
-    },
-    cat_sisters_diary = {
-      description = {
-        main = {
-          text = "Nyo reading!"
-        }
-      },
-      name = "cat sister's diary"
-    },
-    cbocchi = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "cbocchi"
-    },
-    ceremony_altar = {
-      description = {
-        main = {
-          text = "An altar for rituals to give tribute to the gods,"
-        }
-      },
-      name = "ceremony altar"
-    },
-    chain_mail = {
-      description = {
-        main = {
-          text = "An armor made of small linked rings,"
-        }
-      },
-      name = "chain mail"
-    },
-    charm = {
-      description = {
-        main = {
-          text = "A good luck charm,"
-        }
-      },
-      name = "charm"
-    },
-    cheap_bed = {
-      description = {
-        main = {
-          text = "A bed made out of recycled parts...,,"
-        }
-      },
-      name = "cheap bed"
-    },
-    cheap_chair = {
-      description = {
-        main = {
-          text = "More like a foot stool,"
-        }
-      },
-      name = "cheap chair"
-    },
-    cheap_rack = {
-      description = {
-        main = {
-          text = "An ordinary inexpensive rack,"
-        }
-      },
-      name = "cheap rack"
-    },
-    cheap_table = {
-      description = {
-        main = {
-          text = "A table made out of recycled wood,"
-        }
-      },
-      name = "cheap table"
-    },
-    cherry = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "cherry"
-    },
-    chest = {
-      description = {
-        main = {
-          text = "A heavy chest,"
-        }
-      },
-      name = "chest"
-    },
-    chest_of_clothes = {
-      description = {
-        main = {
-          text = "A clean set of clothing,"
-        }
-      },
-      name = "clothes"
-    },
-    chip = {
-      description = {
-        main = {
-          text = "Asserian computer technology,"
-        }
-      },
-      name = "chip"
-    },
-    chochin = {
-      name = "chochin"
-    },
-    christmas_tree = {
-      description = {
-        main = {
-          text = "A tree used for an ancient holiday,"
-        }
-      },
-      name = "christmas tree"
-    },
-    claymore = {
-      description = {
-        main = {
-          text = "A large sword normally held in two hands,"
-        }
-      },
-      name = "claymore"
-    },
-    claymore_unique = {
-      name = "<Claymore>",
-      unidentified_name = "brutish sword"
-    },
-    clean_bed = {
-      description = {
-        main = {
-          text = "At least it's clean,"
-        }
-      },
-      name = "clean bed"
-    },
-    cloak = {
-      description = {
-        main = {
-          text = "A heavy cloak designed for travel,"
-        }
-      },
-      name = "cloak"
-    },
-    closed_pot = {
-      description = {
-        main = {
-          text = "A covered pot,"
-        }
-      },
-      name = "closed pot"
-    },
-    closet = {
-      description = {
-        main = {
-          text = "A closet for storing items,"
-        }
-      },
-      name = "closet"
-    },
-    club = {
-      description = {
-        main = {
-          text = "A blunt weapon with a round end that is sometimes spiked,"
-        }
-      },
-      name = "club"
-    },
-    coat = {
-      description = {
-        main = {
-          text = "A coat often worn when cold,"
-        }
-      },
-      name = "coat"
-    },
-    coffin = {
-      description = {
-        main = {
-          text = "It would be disrespectful of the deceased to sleep in this"
-        }
-      },
-      name = "coffin"
-    },
-    coldproof_blanket = {
-      description = {
-        main = {
-          text = "Produced to protect from cold areas while sleeping but has found more use protecting one's equipment!"
-        }
-      },
-      name = "coldproof blanket"
-    },
-    collapsed_grave = {
-      description = {
-        main = {
-          text = "A common style grave that has started to crumble,"
-        }
-      },
-      name = "collapsed grave"
-    },
-    comfortable_bed = {
-      description = {
-        main = {
-          text = "An average bed,"
-        }
-      },
-      name = "comfortable bed"
-    },
-    comfortable_table = {
-      description = {
-        main = {
-          text = "A table often used in one's house,"
-        }
-      },
-      name = "comfortable table"
-    },
-    composite_boots = {
-      description = {
-        main = {
-          text = "A pair of boots with an armored mesh,"
-        }
-      },
-      name = "composite boots"
-    },
-    composite_gauntlets = {
-      description = {
-        main = {
-          text = "A pair of gauntlets made out of a composite mesh,"
-        }
-      },
-      name = "composite gauntlets"
-    },
-    composite_girdle = {
-      description = {
-        main = {
-          text = "A girdle with straps designed to keep loose clothing out of the way,"
-        }
-      },
-      name = "composite girdle"
-    },
-    composite_helm = {
-      description = {
-        main = {
-          text = "A very sturdy helm,"
-        }
-      },
-      name = "composite helm"
-    },
-    composite_mail = {
-      description = {
-        main = {
-          text = "A sturdy armor,"
-        }
-      },
-      name = "composite mail"
-    },
-    composite_ring = {
-      description = {
-        main = {
-          text = "A ring made out of composite,"
-        }
-      },
-      name = "composite ring"
-    },
-    computer = {
-      description = {
-        main = {
-          text = "Asserian computer technology,"
-        }
-      },
-      name = "computer"
-    },
-    cooler_box = {
-      description = {
-        main = {
-          text = "A cooler box"
-        }
-      },
-      name = "cooler box",
-      unidentified_name = "chilly box"
-    },
-    corpse = {
-      description = {
-        main = {
-          text = "A corpse of an unknown creature,"
-        }
-      },
-      name = "corpse"
-    },
-    counter = {
-      name = "counter"
-    },
-    craft_book_shelf = {
-      description = {
-        main = {
-          text = "A nicely crafted bookshelf,"
-        }
-      },
-      name = "craft book shelf"
-    },
-    craft_cupboard = {
-      description = {
-        main = {
-          text = "A place to store your fine china,"
-        }
-      },
-      name = "craft cupboard"
-    },
-    craft_rack = {
-      description = {
-        main = {
-          text = "A nicely crafted piece of furniture,"
-        }
-      },
-      name = "craft rack"
-    },
-    crim_ale = {
-      description = {
-        main = {
-          text = "crim is some kind of addictive berry"
-        }
-      },
-      name = "crim ale",
-      unidentified_name = "clear liquid"
-    },
-    crimson_plate = {
-      name = "<Crimson Plate>",
-      unidentified_name = "red girdle"
-    },
-    crossbow = {
-      description = {
-        main = {
-          text = "A ranged weapon designed to shoot straight and pierce armor,"
-        }
-      },
-      name = "crossbow"
-    },
-    crossroad_sign = {
-      description = {
-        main = {
-          text = "Oop'"
-        }
-      },
-      name = "crossroad sign"
-    },
-    crumbled_grave = {
-      description = {
-        main = {
-          text = "A common style grave that has been destroyed,"
-        }
-      },
-      name = "crumbled grave"
-    },
-    cupboard = {
-      description = {
-        main = {
-          text = "A cupboard to store dishes,"
-        }
-      },
-      name = "cupboard"
-    },
-    curaria = {
-      description = {
-        main = {
-          text = "A type of herb,"
-        }
-      },
-      name = "curaria"
-    },
-    cutlassfish = {
-      description = {
-        main = {
-          text = "A fish that looks something like an Eel,"
-        }
-      },
-      name = "cutlassfish"
-    },
-    cyber_snack = {
-      description = {
-        main = {
-          text = "potato chips,"
-        }
-      },
-      name = "cyber snack"
-    },
-    dagger = {
-      description = {
-        main = {
-          text = "A small double-edged weapon used for close combat,"
-        }
-      },
-      name = "dagger"
-    },
-    dal_i_thalion = {
-      name = "<Dal-i-thalion>",
-      unidentified_name = "light shoes"
-    },
-    darts_board = {
-      description = {
-        main = {
-          text = 'A note reads "Please do not play drunk!'
-        }
-      },
-      name = "darts board"
-    },
-    daruma = {
-      name = "daruma"
-    },
-    dead_fish = {
-      description = {
-        main = {
-          text = "Hiding one of these is a popular prank in North Tyris..."
-        }
-      },
-      name = "dead fish"
-    },
-    dead_tree = {
-      description = {
-        main = {
-          text = "A tree that has died from bad weather,"
-        }
-      },
-      name = "dead tree"
-    },
-    deck = {
-      description = {
-        main = {
-          text = "A deck of card'"
-        }
-      },
-      name = "deck"
-    },
-    decorated_armor = {
-      description = {
-        main = {
-          text = "A decorative cloth often used as a display for armor stores,"
-        }
-      },
-      name = "decorated armor"
-    },
-    decorated_cloth = {
-      description = {
-        main = {
-          text = "A decorative cloth often used as a clothing store display,"
-        }
-      },
-      name = "decorated cloth"
-    },
-    decorated_gloves = {
-      description = {
-        main = {
-          text = "Gloves often worn by nobility,"
-        }
-      },
-      name = "decorated gloves"
-    },
-    decorated_window = {
-      name = "decorated window"
-    },
-    decorative_amulet = {
-      description = {
-        main = {
-          text = "A cute amulet,"
-        }
-      },
-      name = "decorative amulet"
-    },
-    decorative_armor = {
-      description = {
-        main = {
-          text = "A set of decorative armor,"
-        }
-      },
-      name = "decorative armor"
-    },
-    decorative_ring = {
-      description = {
-        main = {
-          text = "A pretty ring,"
-        }
-      },
-      name = "decorative ring"
-    },
-    deed = {
-      name = "deed"
-    },
-    deed_of_dungeon = {
-      name = "dungeon"
-    },
-    deed_of_farm = {
-      description = {
-        main = {
-          text = "A deed for a farm,"
-        }
-      },
-      name = "farm"
-    },
-    deed_of_heirship = {
-      description = {
-        main = {
-          text = "A deed of heirship,"
-        }
-      },
-      name = "heirship"
-    },
-    deed_of_museum = {
-      description = {
-        main = {
-          text = "A deed for a museum,"
-        }
-      },
-      name = "museum"
-    },
-    deed_of_ranch = {
-      description = {
-        main = {
-          text = "A deed for a ranch,"
-        }
-      },
-      name = "ranch"
-    },
-    deed_of_shop = {
-      description = {
-        main = {
-          text = "A deed for a shop,"
-        }
-      },
-      name = "shop"
-    },
-    deed_of_storage_house = {
-      description = {
-        main = {
-          text = "A deed for a storage house,"
-        }
-      },
-      name = "storage house"
-    },
-    deer_head = {
-      name = "deer head"
-    },
-    diablo = {
-      description = {
-        main = {
-          text = "This sword seems to be sentient,"
-        }
-      },
-      name = "<Diablo>",
-      unidentified_name = "pure black sword"
-    },
-    dining_table = {
-      description = {
-        main = {
-          text = "A hand crafted dining table,"
-        }
-      },
-      name = "dining table"
-    },
-    disc = {
-      description = {
-        main = {
-          text = 'A message is written on it saying "Please do not throw,'
-        }
-      },
-      name = "disc"
-    },
-    disguise_set = {
-      description = {
-        main = {
-          text = "Disguise kit - with instructions,"
-        }
-      },
-      name = "disguise set"
-    },
-    dish = {
-      name = "dish"
-    },
-    disorderly_book = {
-      description = {
-        main = {
-          text = "This is just a mess!"
-        }
-      },
-      name = "disorderly book"
-    },
-    double_bed = {
-      name = "double bed"
-    },
-    downstairs = {
-      name = "downstairs"
-    },
-    dragon_slayer = {
-      description = {
-        main = {
-          text = "dev item"
-        }
-      },
-      name = "<Dragon Slayer>",
-      unidentified_name = "two-edged great sword"
-    },
-    dress = {
-      description = {
-        main = {
-          text = "A lovely dress,"
-        }
-      },
-      name = "dress"
-    },
-    dresser = {
-      description = {
-        main = {
-          text = "A common dresser,"
-        }
-      },
-      name = "dresser"
-    },
-    earth_crystal = {
-      name = "earth crystal"
-    },
-    eastern_bed = {
-      description = {
-        main = {
-          text = "A useful bed of eastern design,"
-        }
-      },
-      name = "eastern bed"
-    },
-    eastern_lamp = {
-      name = "eastern lamp"
-    },
-    eastern_partition = {
-      name = "eastern partition"
-    },
-    eastern_window = {
-      name = "eastern window"
-    },
-    edible_wild_plant = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "edible wild plant"
-    },
-    egg = {
-      description = {
-        main = {
-          text = "This egg would taste better cooked,"
-        }
-      },
-      name = "egg"
-    },
-    elegant_table = {
-      description = {
-        main = {
-          text = "Keep your elbows off the table!"
-        }
-      },
-      name = "elegant table"
-    },
-    elemental_staff = {
-      name = "<Elemental Staff>",
-      unidentified_name = "elemental staff"
-    },
-    empty_basket = {
-      description = {
-        main = {
-          text = "This basket is made out of wicker,"
-        }
-      },
-      name = "empty basket"
-    },
-    empty_bottle = {
-      description = {
-        main = {
-          text = "An empty bottle,"
-        }
-      },
-      name = "empty bottle",
-      unidentified_name = "empty bottle"
-    },
-    empty_bowl = {
-      description = {
-        main = {
-          text = "It's empty,"
-        }
-      },
-      name = "empty bowl"
-    },
-    energy_cell = {
-      description = {
-        main = {
-          text = "Do not tamper with lens,"
-        }
-      },
-      name = "energy cell"
-    },
-    engagement_amulet = {
-      description = {
-        main = {
-          text = "An amulet that shows one's love,"
-        }
-      },
-      name = "engagement amulet"
-    },
-    engagement_ring = {
-      description = {
-        main = {
-          text = "A ring given to show one's intent to marry,"
-        }
-      },
-      name = "engagement ring"
-    },
-    ether_dagger = {
-      description = {
-        main = {
-          text = "This dagger seems to be made out of wind,"
-        }
-      },
-      name = "<Ether Dagger>",
-      unidentified_name = "dagger surrounded by wind"
-    },
-    fairy_hat = {
-      description = {
-        main = {
-          text = "An exotic hat crafted by faeries,"
-        }
-      },
-      name = "fairy hat"
-    },
-    fancy_lamp = {
-      description = {
-        main = {
-          text = "A lamp from Asseria,"
-        }
-      },
-      name = "fancy lamp"
-    },
-    feather = {
-      description = {
-        main = {
-          text = "A product of magic,"
-        }
-      },
-      name = "feather"
-    },
-    feather_hat = {
-      description = {
-        main = {
-          text = "A hat with a feather often worn by nobles,"
-        }
-      },
-      name = "feather hat"
-    },
-    festival_wreath = {
-      name = "festival wreath"
-    },
-    figurine = {
-      description = {
-        main = {
-          text = "A statue of a creature,"
-        }
-      },
-      name = "figurine"
-    },
-    figurine_of_sword = {
-      name = "sword"
-    },
-    figurine_of_warrior = {
-      name = "warrior"
-    },
-    fire_wood = {
-      description = {
-        main = {
-          text = "Dried wood ready for burning,"
-        }
-      },
-      name = "fire wood"
-    },
-    fireplace = {
-      description = {
-        main = {
-          text = "Used to heat a house,"
-        }
-      },
-      name = "fireplace"
-    },
-    fireproof_blanket = {
-      description = {
-        main = {
-          text = "Produced to protect the user from hot areas while sleeping but has found more use protecting one's equipment!"
-        }
-      },
-      name = "fireproof blanket"
-    },
-    fireproof_liquid = {
-      description = {
-        main = {
-          text = "Use on an item to protect it from fire,"
-        }
-      },
-      name = "fireproof liquid"
-    },
-    fish_a = {
-      name = ""
-    },
-    fish_b = {
-      name = ""
-    },
-    fishing_pole = {
-      description = {
-        main = {
-          text = "A pole used for bait fishing,"
-        }
-      },
-      name = "fishing pole"
-    },
-    five_horned_helm = {
-      name = "<Five Horned Helm>",
-      unidentified_name = "horned helmet"
-    },
-    flag = {
-      description = {
-        main = {
-          text = "Comes with its own support so it does not touch the ground,"
-        }
-      },
-      name = "flag"
-    },
-    flatfish = {
-      description = {
-        main = {
-          text = "An odd fish that lays on its side,"
-        }
-      },
-      name = "flatfish"
-    },
-    flower_arch = {
-      name = "flower arch"
-    },
-    flowerbed = {
-      description = {
-        main = {
-          text = "A beautiful bed of flowers,"
-        }
-      },
-      name = "flowerbed"
-    },
-    flying_scroll = {
-      description = {
-        main = {
-          text = "A magical scroll with arcane writing,"
-        }
-      },
-      name = "flying scroll"
-    },
-    food_maker = {
-      description = {
-        main = {
-          text = "A tool used to cook food in Asseria,"
-        }
-      },
-      name = "food maker"
-    },
-    food_processor = {
-      description = {
-        main = {
-          text = "A miracle of technology!"
-        }
-      },
-      name = "food processor"
-    },
-    fortune_cookie = {
-      description = {
-        main = {
-          text = "Will tell you your fortune,"
-        }
-      },
-      name = "fortune cookie"
-    },
-    fountain = {
-      description = {
-        main = {
-          text = "Throw a coin in,"
-        }
-      },
-      name = "fountain"
-    },
-    foxtail_grass = {
-      description = {
-        main = {
-          text = "Has seeds that can be dangerous to your pets,"
-        }
-      },
-      name = "foxtail grass"
-    },
-    freezer = {
-      description = {
-        main = {
-          text = "A freezer to keep your food from spoiling,"
-        }
-      },
-      name = "freezer"
-    },
-    fried_potato = {
-      description = {
-        main = {
-          text = "Greasy fries!"
-        }
-      },
-      name = "fried potato"
-    },
-    frisias_tail = {
-      name = "<Frisia's Tail>",
-      unidentified_name = "cat's tail"
-    },
-    fruit_seed = {
-      description = {
-        main = {
-          text = "A type of seed,"
-        }
-      },
-      name = "fruit seed"
-    },
-    frying_pan_for_testing = {
-      description = {
-        main = {
-          text = "dev item"
-        }
-      },
-      name = "for testing"
-    },
-    fur_carpet = {
-      name = "fur carpet"
-    },
-    furnace = {
-      description = {
-        main = {
-          text = "A furnace used for smithing,"
-        }
-      },
-      name = "furnace"
-    },
-    furnance = {
-      description = {
-        main = {
-          text = "Some furnances are used to heat an area and others are used for metalwork,"
-        }
-      },
-      name = "furnance"
-    },
-    gaia_hammer = {
-      name = "<Gaia Hammer>",
-      unidentified_name = "giant hammer"
-    },
-    garbage = {
-      description = {
-        main = {
-          text = "Stinky,,,"
-        }
-      },
-      name = "garbage"
-    },
-    garoks_hammer = {
-      name = "Garok's hammer",
-      unidentified_name = "master hammer"
-    },
-    gazania = {
-      description = {
-        main = {
-          text = "Decorative flowers,"
-        }
-      },
-      name = "gazania"
-    },
-    gem_cutter = {
-      description = {
-        main = {
-          text = "Some magical materials are just that hard to cut!"
-        }
-      },
-      name = "gem cutter"
-    },
-    gem_seed = {
-      description = {
-        main = {
-          text = "A type of seed,"
-        }
-      },
-      name = "gem seed"
-    },
-    gem_stone_of_mani = {
-      name = "Mani",
-      unidentified_name = "strange jewel"
-    },
-    gene_machine = {
-      name = "gene machine",
-      unidentified_name = "freaky machine"
-    },
-    giant_bed = {
-      description = {
-        main = {
-          text = "A large and elegant bed,"
-        }
-      },
-      name = "giant bed"
-    },
-    giant_cactus = {
-      description = {
-        main = {
-          text = "A decorative cactus,"
-        }
-      },
-      name = "giant cactus"
-    },
-    giant_foliage_plant = {
-      description = {
-        main = {
-          text = "A plant used for decoration,"
-        }
-      },
-      name = "giant foliage plant"
-    },
-    giants_shackle = {
-      description = {
-        main = {
-          text = "I would not want to be attached to those!"
-        }
-      },
-      name = "giant's shackle",
-      unidentified_name = "shakle"
-    },
-    gift = {
-      description = {
-        main = {
-          text = "It's hard to open,"
-        }
-      },
-      name = "gift"
-    },
-    girdle = {
-      description = {
-        main = {
-          text = "A type of belt,"
-        }
-      },
-      name = "girdle"
-    },
-    girls_diary = {
-      description = {
-        main = {
-          text = "A girl's diary"
-        }
-      },
-      name = "girl's diary"
-    },
-    globefish = {
-      description = {
-        main = {
-          text = "A fish that can inflate itself into a round ball,"
-        }
-      },
-      name = "globefish"
-    },
-    gloves = {
-      description = {
-        main = {
-          text = "A thick pair of gloves,"
-        }
-      },
-      name = "gloves"
-    },
-    gloves_of_vesda = {
-      name = "<Gloves of Vesda>",
-      unidentified_name = "burning gloves"
-    },
-    gold_bar = {
-      name = "gold bar"
-    },
-    gold_piece = {
-      description = {
-        main = {
-          text = "Standard currency of North Tyris,"
-        }
-      },
-      name = "gold piece"
-    },
-    golden_pedestal = {
-      description = {
-        main = {
-          text = "A pedestal decorated with gold leaf,"
-        }
-      },
-      name = "golden pedestal"
-    },
-    gorgeous_candlestick = {
-      description = {
-        main = {
-          text = "An ornamental candlestick,"
-        }
-      },
-      name = "gorgeous candlestick"
-    },
-    goulds_piano = {
-      name = "<Gould's Piano>",
-      unidentified_name = "nondescriptive piano"
-    },
-    grand_piano = {
-      description = {
-        main = {
-          text = "A beautifully crafted piano,"
-        }
-      },
-      name = "grand piano"
-    },
-    grape = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "grape"
-    },
-    grave_ornamented_with_flowers = {
-      description = {
-        main = {
-          text = "A recent grave with flowers for the departed... The name is still readable,"
-        }
-      },
-      name = "ornamented with flowers"
-    },
-    green_pea = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "green pea"
-    },
-    green_plant = {
-      description = {
-        main = {
-          text = "A plant used for decoration,"
-        }
-      },
-      name = "green plant"
-    },
-    grenade = {
-      description = {
-        main = {
-          text = "Made by Cyber Dome In"
-        }
-      },
-      name = "grenade"
-    },
-    guava = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "guava"
-    },
-    guillotine = {
-      description = {
-        main = {
-          text = "You are sure to get ahead in life with one of these!"
-        }
-      },
-      name = "guillotine"
-    },
-    halberd = {
-      description = {
-        main = {
-          text = "A weapon resembling a spear with the head of an axe,"
-        }
-      },
-      name = "halberd"
-    },
-    hammer = {
-      description = {
-        main = {
-          text = "A tool that is sometimes adopted as a weapon"
-        }
-      },
-      name = "hammer"
-    },
-    hand_axe = {
-      description = {
-        main = {
-          text = "A small single-bladed axe,"
-        }
-      },
-      name = "hand axe"
-    },
-    handful_of_snow = {
-      description = {
-        main = {
-          text = "Some snow,"
-        }
-      },
-      name = "snow"
-    },
-    happy_apple = {
-      description = {
-        main = {
-          text = "A magical fruit said to come from Ehekatl's garden,"
-        }
-      },
-      name = "happy apple",
-      unidentified_name = "mysterious apple"
-    },
-    happy_bed = {
-      description = {
-        main = {
-          text = "It is said that you will sleep better in one of these"
-        }
-      },
-      name = "happy bed"
-    },
-    harmonica = {
-      description = {
-        main = {
-          text = "A harmonica commonly found in Culdia,"
-        }
-      },
-      name = "harmonica"
-    },
-    harp = {
-      description = {
-        main = {
-          text = "An expertly crafted harp favored by the Erea of Vindale,"
-        }
-      },
-      name = "harp"
-    },
-    healthy_leaf = {
-      description = {
-        main = {
-          text = "A type of vegetation,"
-        }
-      },
-      name = "healthy leaf"
-    },
-    heart = {
-      name = "heart"
-    },
-    heavy_boots = {
-      description = {
-        main = {
-          text = "Boots made for travel,"
-        }
-      },
-      name = "heavy boots"
-    },
-    heavy_helm = {
-      description = {
-        main = {
-          text = "A helm designed for good protection,"
-        }
-      },
-      name = "heavy helm"
-    },
-    heir_trunk = {
-      description = {
-        main = {
-          text = 'A magical trunk that can connect to "fourth dimensional inheritance storage" for a small fee,'
-        }
-      },
-      name = "heir trunk"
-    },
-    helm = {
-      description = {
-        main = {
-          text = "A standard helm,"
-        }
-      },
-      name = "helm"
-    },
-    herb_seed = {
-      description = {
-        main = {
-          text = "A type of seed,"
-        }
-      },
-      name = "herb seed"
-    },
-    hero_cheese = {
-      description = {
-        main = {
-          text = "A type of cheese eaten by heros"
-        }
-      },
-      name = "hero cheese",
-      unidentified_name = "mysterious cheese"
-    },
-    high_grade_dresser = {
-      description = {
-        main = {
-          text = "A beautifully crafted dresser,"
-        }
-      },
-      name = "high grade dresser"
-    },
-    hiryu_to = {
-      name = "<Hiryu-To>",
-      unidentified_name = "rutilant katana"
-    },
-    holy_lance = {
-      name = "<Holy Lance>",
-      unidentified_name = "holy lance"
-    },
-    holy_well = {
-      description = {
-        main = {
-          text = "A note reads \"Please do not taint the town's water supply"
-        }
-      },
-      name = "holy well"
-    },
-    horn = {
-      description = {
-        main = {
-          text = "A horn imported from Marr Nis Farra,"
-        }
-      },
-      name = "horn"
-    },
-    house_board = {
-      name = "house board"
-    },
-    imo = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "imo"
-    },
-    inner_tube = {
-      description = {
-        main = {
-          text = "Such an odd design,,,"
-        }
-      },
-      name = "inner tube"
-    },
-    iron_maiden = {
-      description = {
-        main = {
-          text = "A device of pure pain!"
-        }
-      },
-      name = "iron maiden"
-    },
-    jerky = {
-      description = {
-        main = {
-          text = "Dried out travel rations,"
-        }
-      },
-      name = "jerky"
-    },
-    junk = {
-      description = {
-        main = {
-          text = "One man's junk is another man's treasure!"
-        }
-      },
-      name = "junk"
-    },
-    junk_stone = {
-      description = {
-        main = {
-          text = "A useless stone that seems to break apart into sand when touched,"
-        }
-      },
-      name = "junk stone"
-    },
-    jures_body_pillow = {
-      name = "Jure's body pillow"
-    },
-    jures_gem_stone_of_holy_rain = {
-      name = "holy rain",
-      unidentified_name = "heavenly jewel"
-    },
-    kagami_mochi = {
-      name = "kagami mochi"
-    },
-    katana = {
-      description = {
-        main = {
-          text = "A unique curved sword made through a folding process,"
-        }
-      },
-      name = "katana"
-    },
-    kill_kill_piano = {
-      name = "<Kill Kill Piano>",
-      unidentified_name = "heavy piano"
-    },
-    king_drawer = {
-      description = {
-        main = {
-          text = "It even has a book shelf!"
-        }
-      },
-      name = "king drawer"
-    },
-    kings_bed = {
-      name = "king's bed"
-    },
-    kitchen = {
-      description = {
-        main = {
-          text = "Part of a kitchen set,"
-        }
-      },
-      name = "kitchen"
-    },
-    kitchen_knife = {
-      name = "kitchen knife"
-    },
-    kitchen_oven = {
-      description = {
-        main = {
-          text = "The other half of a kitchen set,"
-        }
-      },
-      name = "kitchen oven"
-    },
-    kite_shield = {
-      description = {
-        main = {
-          text = "A shield shaped like a kite,"
-        }
-      },
-      name = "kite shield"
-    },
-    kitty_bank = {
-      description = {
-        main = {
-          text = "Please don't break me,..., Nyu?"
-        }
-      },
-      name = "kitty bank"
-    },
-    kiwi = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "kiwi"
-    },
-    knight_helm = {
-      description = {
-        main = {
-          text = "A helm made for knights,"
-        }
-      },
-      name = "knight helm"
-    },
-    knight_shield = {
-      description = {
-        main = {
-          text = "A shield given to knights,"
-        }
-      },
-      name = "knight shield"
-    },
-    kotatsu = {
-      name = "kotatsu"
-    },
-    kumiromi_scythe = {
-      name = "<Kumiromi Scythe>",
-      unidentified_name = "harvest scythe"
-    },
-    kumiromis_gem_stone_of_rejuvenation = {
-      name = "rejuvenation",
-      unidentified_name = "heavenly jewel"
-    },
-    lantern = {
-      description = {
-        main = {
-          text = "A light source,"
-        }
-      },
-      name = "lantern"
-    },
-    large_bookshelf = {
-      name = "large bookshelf"
-    },
-    large_bouquet = {
-      description = {
-        main = {
-          text = "A beautiful bouquet of flowers,"
-        }
-      },
-      name = "large bouquet"
-    },
-    large_foliage_plant = {
-      description = {
-        main = {
-          text = "A decorative plant,"
-        }
-      },
-      name = "large foliage plant"
-    },
-    large_shield = {
-      description = {
-        main = {
-          text = "A large circular shield,"
-        }
-      },
-      name = "large shield"
-    },
-    laser_gun = {
-      description = {
-        main = {
-          text = "A remnant of ancient times,"
-        }
-      },
-      name = "laser gun"
-    },
-    leash = {
-      description = {
-        main = {
-          text = "A leather leash for your pets!"
-        }
-      },
-      name = "leash"
-    },
-    leccho = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "leccho"
-    },
-    lemon = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "lemon"
-    },
-    lettuce = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "lettuce"
-    },
-    license_of_the_void_explorer = {
-      description = {
-        main = {
-          text = "This will allow you to explore the void that has been found recently in the south-west,"
-        }
-      },
-      name = "the void explorer",
-      unidentified_name = "strange paper"
-    },
-    light_cloak = {
-      description = {
-        main = {
-          text = "Designed for children and smaller races,"
-        }
-      },
-      name = "light cloak"
-    },
-    light_gloves = {
-      description = {
-        main = {
-          text = "A pair of gloves with a soft inner lining,"
-        }
-      },
-      name = "light gloves"
-    },
-    light_mail = {
-      description = {
-        main = {
-          text = "A mail made of leather with thin plating,"
-        }
-      },
-      name = "light mail"
-    },
-    lightsabre = {
-      name = "lightsabre"
-    },
-    little_ball = {
-      description = {
-        main = {
-          text = "This ball gives you unique powers..."
-        }
-      },
-      name = "little ball",
-      unidentified_name = "mechanical ball"
-    },
-    little_sisters_diary = {
-      description = {
-        main = {
-          text = "A diary written in with crayon,"
-        }
-      },
-      name = "little sister's diary"
-    },
-    lockpick = {
-      description = {
-        main = {
-          text = "A questionable item not intended for public use,"
-        }
-      },
-      name = "lockpick"
-    },
-    long_bow = {
-      description = {
-        main = {
-          text = "A bow specifically designed to shoot further than a short bow,"
-        }
-      },
-      name = "long bow"
-    },
-    long_pillar = {
-      description = {
-        main = {
-          text = "A pillar designed after one's common in Eludernia,"
-        }
-      },
-      name = "long pillar"
-    },
-    long_staff = {
-      description = {
-        main = {
-          text = "A staff used primarily as a weapon and sometimes for magic,"
-        }
-      },
-      name = "long staff"
-    },
-    long_sword = {
-      description = {
-        main = {
-          text = "A double-edged sword"
-        }
-      },
-      name = "long sword"
-    },
-    lot_of_accessories = {
-      description = {
-        main = {
-          text = "A display case for various gift items,"
-        }
-      },
-      name = "accessories"
-    },
-    lot_of_alcohols = {
-      description = {
-        main = {
-          text = "Often found in bars,"
-        }
-      },
-      name = "alcohols"
-    },
-    lot_of_books = {
-      description = {
-        main = {
-          text = "A disorderly stacks of books,"
-        }
-      },
-      name = "books"
-    },
-    lot_of_empty_bottles = {
-      description = {
-        main = {
-          text = "They still smell of alcohol,"
-        }
-      },
-      name = "empty bottles"
-    },
-    lot_of_goods = {
-      description = {
-        main = {
-          text = "A display case for various gift items,"
-        }
-      },
-      name = "goods"
-    },
-    love_potion = {
-      description = {
-        main = {
-          text = 'A label reads "To be used only on livestock'
-        }
-      },
-      name = "love potion",
-      unidentified_name = "clear liquid"
-    },
-    lucky_dagger = {
-      name = "<Lucky Dagger>",
-      unidentified_name = "thin dagger"
-    },
-    lulwys_gem_stone_of_god_speed = {
-      name = "god speed",
-      unidentified_name = "heavenly jewel"
-    },
-    lute = {
-      description = {
-        main = {
-          text = "A lute is a common musical instrument among bards,"
-        }
-      },
-      name = "lute"
-    },
-    luxury_bed = {
-      description = {
-        main = {
-          text = "A bed made in Asseria,"
-        }
-      },
-      name = "luxury bed"
-    },
-    luxury_cabinet = {
-      name = "luxury cabinet"
-    },
-    luxury_drawer = {
-      description = {
-        main = {
-          text = "A place to keep your spare clothes,"
-        }
-      },
-      name = "luxury drawer"
-    },
-    luxury_sofa = {
-      name = "luxury sofa"
-    },
-    machine = {
-      description = {
-        main = {
-          text = "Asserian technology,"
-        }
-      },
-      name = "machine"
-    },
-    machine_gun = {
-      description = {
-        main = {
-          text = "Made by Cyber Dome In"
-        }
-      },
-      name = "machine gun"
-    },
-    magic_fruit = {
-      description = {
-        main = {
-          text = "A type of fruit,"
-        }
-      },
-      name = "magic fruit",
-      unidentified_name = "rare fruit"
-    },
-    magic_hat = {
-      description = {
-        main = {
-          text = "A hat mages often wear,"
-        }
-      },
-      name = "magic hat"
-    },
-    magical_seed = {
-      description = {
-        main = {
-          text = "A type of seed,"
-        }
-      },
-      name = "magical seed"
-    },
-    mana_crystal = {
-      name = "mana crystal"
-    },
-    manboo = {
-      name = "manboo"
-    },
-    map = {
-      description = {
-        main = {
-          text = "A map of Elona,"
-        }
-      },
-      name = "map"
-    },
-    mareilon = {
-      description = {
-        main = {
-          text = "A type of herb,"
-        }
-      },
-      name = "mareilon"
-    },
-    masters_delivery_chest = {
-      name = "master's delivery chest",
-      unidentified_name = "delivery chest"
-    },
-    material_box = {
-      description = {
-        main = {
-          text = "A box filled with materials,"
-        }
-      },
-      name = "material box"
-    },
-    material_kit = {
-      description = {
-        main = {
-          text = "This hard to produce item can change the material of many items!"
-        }
-      },
-      name = "material kit"
-    },
-    mauser_c96_custom = {
-      name = "<Mauser C96 Custom>",
-      unidentified_name = "rusted pistol"
-    },
-    melon = {
-      description = {
-        main = {
-          text = "A type of vegetable,"
-        }
-      },
-      name = "melon"
-    },
-    menu_board = {
-      description = {
-        main = {
-          text = "A menu for a restaurant,"
-        }
-      },
-      name = "menu board"
-    },
-    messy_cloth = {
-      description = {
-        main = {
-          text = "A pile of laundry,"
-        }
-      },
-      name = "messy cloth"
-    },
-    microwave_oven = {
-      description = {
-        main = {
-          text = "Asserian cooking technolog"
-        }
-      },
-      name = "microwave oven"
-    },
-    mine = {
-      description = {
-        main = {
-          text = 'The warning label reads "Do not step on mine when armed'
-        }
-      },
-      name = "mine"
-    },
-    mini_snow_man = {
-      description = {
-        main = {
-          text = "A small snowman,"
-        }
-      },
-      name = "mini snow man"
-    },
-    miniature_tree = {
-      name = "miniature tree"
-    },
-    mochi = {
-      name = "mochi"
-    },
-    modern_chair = {
-      description = {
-        main = {
-          text = "A chair made in Asseria,"
-        }
-      },
-      name = "modern chair"
-    },
-    modern_lamp_a = {
-      description = {
-        main = {
-          text = "An Asserian lamp,"
-        }
-      },
-      name = "modern lamp"
-    },
-    modern_lamp_b = {
-      description = {
-        main = {
-          text = "An Asserian lamp,"
-        }
-      },
-      name = "modern lamp"
-    },
-    modern_rack = {
-      name = "modern rack"
-    },
-    modern_table = {
-      description = {
-        main = {
-          text = "A table made with Cyber Dome technology,"
-        }
-      },
-      name = "modern table"
-    },
-    molotov = {
-      description = {
-        main = {
-          text = 'A label on the bottle states "Light before throwing",'
-        }
-      },
-      name = "molotov"
-    },
-    money_tree = {
-      description = {
-        main = {
-          text = "Money grows on this tree,"
-        }
-      },
-      name = "money tree"
-    },
-    monster_ball = {
-      description = {
-        main = {
-          text = "A strange item invented by a mad scientist...,"
-        }
-      },
-      name = "monster ball"
-    },
-    monster_heart = {
-      description = {
-        main = {
-          text = "Helps to tame monsters,"
-        }
-      },
-      name = "monster heart",
-      unidentified_name = "beating heart"
-    },
-    moon_gate = {
-      name = "moon gate"
-    },
-    moonfish = {
-      description = {
-        main = {
-          text = "A beautiful fish as pale as the moon,"
-        }
-      },
-      name = "moonfish"
-    },
-    morgia = {
-      description = {
-        main = {
-          text = "A type of herb,"
-        }
-      },
-      name = "morgia"
-    },
-    mournblade = {
-      description = {
-        main = {
-          text = "An evil black sword surrounded with an aura of dread,"
-        }
-      },
-      name = "<Mournblade>",
-      unidentified_name = "chaotic sword"
-    },
-    music_ticket = {
-      description = {
-        main = {
-          text = "Tickets given out to promising musicians,"
-        }
-      },
-      name = "music ticket",
-      unidentified_name = "some kind of ticket"
-    },
-    mysterious_map = {
-      description = {
-        main = {
-          text = "A map with no recognizable landmarks,"
-        }
-      },
-      name = "mysterious map"
-    },
-    narrow_dining_table = {
-      description = {
-        main = {
-          text = "A dining room table,"
-        }
-      },
-      name = "narrow dining table"
-    },
-    neat_bar_table = {
-      description = {
-        main = {
-          text = "A bar table with racks of alcohol and wine,"
-        }
-      },
-      name = "neat bar table"
-    },
-    neat_rack = {
-      description = {
-        main = {
-          text = "A rack with a framed set of glass doors,"
-        }
-      },
-      name = "neat rack"
-    },
-    neat_shelf = {
-      description = {
-        main = {
-          text = "A shelf containing books on crafting,"
-        }
-      },
-      name = "neat shelf"
-    },
-    neck_guard = {
-      description = {
-        main = {
-          text = "Sometimes the only thing between an enemy sword and your neck,"
-        }
-      },
-      name = "neck guard"
-    },
-    nerine = {
-      description = {
-        main = {
-          text = "Decorative flowers,"
-        }
-      },
-      name = "nerine"
-    },
-    new_years_decoration = {
-      name = "new year's decoration"
-    },
-    new_years_gift = {
-      name = "new year's gift"
-    },
-    nice_window = {
-      name = "nice window"
-    },
-    nuclear_bomb = {
-      description = {
-        main = {
-          text = "A horrifying weapon of destruction from ancient times,"
-        }
-      },
-      name = "nuclear bomb",
-      unidentified_name = "very dangerous bomb"
-    },
-    old_bookshelf = {
-      description = {
-        main = {
-          text = "You see large cracks in the wood,"
-        }
-      },
-      name = "old bookshelf"
-    },
-    old_grave = {
-      description = {
-        main = {
-          text = "An old norland tomb,"
-        }
-      },
-      name = "old grave"
-    },
-    old_shelf = {
-      description = {
-        main = {
-          text = "It looks like it's going to fall apart!"
-        }
-      },
-      name = "old shelf"
-    },
-    open_pot = {
-      description = {
-        main = {
-          text = "An uncovered pot,"
-        }
-      },
-      name = "open pot"
-    },
-    ore_piece = {
-      description = {
-        main = {
-          text = "Pretty worthless,"
-        }
-      },
-      name = "ore piece"
-    },
-    oven = {
-      description = {
-        main = {
-          text = "A dwarven oven,"
-        }
-      },
-      name = "oven"
-    },
-    pachisuro_machine = {
-      description = {
-        main = {
-          text = "Similar to a slot machine,"
-        }
-      },
-      name = "pachisuro machine"
-    },
-    painting_of_landscape = {
-      description = {
-        main = {
-          text = "A painting of a landscape,"
-        }
-      },
-      name = "landscape"
-    },
-    painting_of_madam = {
-      description = {
-        main = {
-          text = "A copy of a painting by a famous Yerles artist,"
-        }
-      },
-      name = "madam"
-    },
-    painting_of_sunflower = {
-      description = {
-        main = {
-          text = "A painting of a sunflower,"
-        }
-      },
-      name = "sunflower"
-    },
-    palmia_pride = {
-      name = "<Palmia Pride>",
-      unidentified_name = "blue ring"
-    },
-    pan_flute = {
-      description = {
-        main = {
-          text = "A type of instrument designed after (but larger than) fairy made flutes,"
-        }
-      },
-      name = "pan flute"
-    },
-    panty = {
-      description = {
-        main = {
-          text = "A fitting weapon for those who fight dirty,"
-        }
-      },
-      name = "panty"
-    },
-    partition = {
-      name = "partition"
-    },
-    pedestal = {
-      name = "pedestal"
-    },
-    pentagram = {
-      description = {
-        main = {
-          text = "An ancient religious symbol now containing six points!"
-        }
-      },
-      name = "pentagram"
-    },
-    peridot = {
-      description = {
-        main = {
-          text = "A gem attached to a neck chain,"
-        }
-      },
-      name = "peridot"
-    },
-    pick = {
-      description = {
-        main = {
-          text = "A pick sometimes used for mining,"
-        }
-      },
-      name = "pick"
-    },
-    pillar = {
-      name = "pillar"
-    },
-    pillar_ornamented_with_flowers = {
-      description = {
-        main = {
-          text = "A pillar designed after one's common in Eludernia,"
-        }
-      },
-      name = "ornamented with flowers"
-    },
-    pillar_ornamented_with_plants = {
-      description = {
-        main = {
-          text = "A pillar designed after one's common in Eludernia,"
-        }
-      },
-      name = "ornamented with plants"
-    },
-    pistol = {
-      description = {
-        main = {
-          text = "Made by Cyber Dome In"
-        }
-      },
-      name = "pistol"
-    },
-    plain_bed = {
-      description = {
-        main = {
-          text = "A bed made in Cyber Dome,"
-        }
-      },
-      name = "plain bed"
-    },
-    plank_of_carneades = {
-      name = "Carneades"
-    },
-    plate_gauntlets = {
-      description = {
-        main = {
-          text = "A pair of plated gauntlets,"
-        }
-      },
-      name = "plate gauntlets"
-    },
-    plate_girdle = {
-      description = {
-        main = {
-          text = "A reinforced girdle,"
-        }
-      },
-      name = "plate girdle"
-    },
-    plate_mail = {
-      description = {
-        main = {
-          text = "An armor forged by dwarves,"
-        }
-      },
-      name = "plate mail"
-    },
-    platinum_coin = {
-      description = {
-        main = {
-          text = "Rare coins used by the guilds for currency,"
-        }
-      },
-      name = "platinum coin"
-    },
-    playback_disc = {
-      description = {
-        main = {
-          text = "A mysterious disc that seems to play your memories,"
-        }
-      },
-      name = "playback disc"
-    },
-    poison = {
-      description = {
-        main = {
-          text = "Warning"
-        }
-      },
-      name = "poison"
-    },
-    pop_corn = {
-      description = {
-        main = {
-          text = "Buttery popcorn,"
-        }
-      },
-      name = "pop corn"
-    },
-    pope_robe = {
-      description = {
-        main = {
-          text = "A robe from ancient times that has an aura of peace,"
-        }
-      },
-      name = "pope robe"
-    },
-    portable_cooking_tool = {
-      description = {
-        main = {
-          text = "A cooking set popular among adventurers,"
-        }
-      },
-      name = "portable cooking tool"
-    },
-    pot = {
-      description = {
-        main = {
-          text = "Useful for cooking!"
-        }
-      },
-      name = "pot"
-    },
-    pot_for_testing = {
-      description = {
-        main = {
-          text = "dev item"
-        }
-      },
-      name = "for testing"
-    },
-    potion_of_blindness = {
-      description = {
-        main = {
-          text = "Sometimes carried by prostitutes,"
-        }
-      },
-      name = "blindness"
-    },
-    potion_of_confusion = {
-      description = {
-        main = {
-          text = 'A label says "Please do not drink to identify contents,'
-        }
-      },
-      name = "confusion"
-    },
-    potion_of_cure_corruption = {
-      description = {
-        main = {
-          text = 'A label reads "For use in curing harmful diseases only'
-        }
-      },
-      name = "cure corruption"
-    },
-    potion_of_cure_critical_wound = {
-      description = {
-        main = {
-          text = "A potion that cures some wounds,"
-        }
-      },
-      name = "cure critical wound"
-    },
-    potion_of_cure_major_wound = {
-      description = {
-        main = {
-          text = "A potion that cures some wounds,"
-        }
-      },
-      name = "cure major wound"
-    },
-    potion_of_cure_minor_wound = {
-      description = {
-        main = {
-          text = "A potion that cures some wounds,"
-        }
-      },
-      name = "cure minor wound"
-    },
-    potion_of_cure_mutation = {
-      description = {
-        main = {
-          text = "Cures mutated genes,"
-        }
-      },
-      name = "cure mutation"
-    },
-    potion_of_defender = {
-      description = {
-        main = {
-          text = "A magical potion that can protect you from harm,"
-        }
-      },
-      name = "defender"
-    },
-    potion_of_descent = {
-      description = {
-        main = {
-          text = "A strange potion,"
-        }
-      },
-      name = "descent"
-    },
-    potion_of_evolution = {
-      description = {
-        main = {
-          text = "You say it's evolution?"
-        }
-      },
-      name = "evolution"
-    },
-    potion_of_healer = {
-      description = {
-        main = {
-          text = "A potion that cures some wounds,"
-        }
-      },
-      name = "healer"
-    },
-    potion_of_healer_eris = {
-      description = {
-        main = {
-          text = "A potion made by a talented alchemist cures some wounds,"
-        }
-      },
-      name = "healer <Eris>"
-    },
-    potion_of_healer_jure = {
-      description = {
-        main = {
-          text = "A potion whose formula was created by Jure herself,"
-        }
-      },
-      name = "healer <Jure>"
-    },
-    potion_of_healer_odina = {
-      description = {
-        main = {
-          text = "A potion made by a talented alchemist cures some wounds,"
-        }
-      },
-      name = "healer <Odina>"
-    },
-    potion_of_healing = {
-      description = {
-        main = {
-          text = "A potion that cures some wounds,"
-        }
-      },
-      name = "healing"
-    },
-    potion_of_hero = {
-      description = {
-        main = {
-          text = 'A label warns "Can give a false sense of confidence,'
-        }
-      },
-      name = "hero"
-    },
-    potion_of_mutation = {
-      description = {
-        main = {
-          text = "Mutates your genetic makeup,"
-        }
-      },
-      name = "mutation"
-    },
-    potion_of_paralysis = {
-      description = {
-        main = {
-          text = 'A label dictates "For medical use only,'
-        }
-      },
-      name = "paralysis"
-    },
-    potion_of_potential = {
-      description = {
-        main = {
-          text = "A valuable potion,"
-        }
-      },
-      name = "potential"
-    },
-    potion_of_resistance = {
-      description = {
-        main = {
-          text = "A magical potion that can protect you from harm,"
-        }
-      },
-      name = "resistance"
-    },
-    potion_of_restore_body = {
-      description = {
-        main = {
-          text = "A potion that restores physical stats,"
-        }
-      },
-      name = "restore body"
-    },
-    potion_of_restore_spirit = {
-      description = {
+local item = {
+  academic_table = {
+    desc = {
+      main = {
+        text = "A desk used for students in Asseria schools,"
+      }
+    },
+    name = "academic table"
+  },
+  acidproof_liquid = {
+    desc = {
+      main = {
+        text = "Use on an item to protect it from acid,"
+      }
+    },
+    name = "acidproof liquid"
+  },
+  alchemy_kit = {
+    desc = {
+      main = {
+        text = "An alchemy kit with tools for basic alchemy,"
+      }
+    },
+    name = "alchemy kit"
+  },
+  aloe = {
+    desc = {
+      main = {
+        text = "A type of vegetation,"
+      }
+    },
+    name = "aloe"
+  },
+  alraunia = {
+    desc = {
+      main = {
+        text = "A type of herb,"
+      }
+    },
+    name = "alraunia"
+  },
+  altar = {
+    desc = {
+      main = {
+        text = "An altar to the gods"
+      }
+    },
+    name = "altar"
+  },
+  alud = {
+    name = "<Al'ud>",
+    unidentified_name = "tough lute"
+  },
+  ancient_book = {
+    desc = {
+      main = {
+        text = "A book written in a dead language,"
+      }
+    },
+    name = "ancient book"
+  },
+  ancient_tomb = {
+    desc = {
+      main = {
+        text = "An ancient Euldernan style tomb,"
+      }
+    },
+    name = "ancient tomb"
+  },
+  anemos = {
+    desc = {
+      main = {
+        text = "A type of herb,"
+      }
+    },
+    name = "anemos"
+  },
+  animal_bone = {
+    desc = {
+      main = {
+        text = "Probably leftovers from a meal,"
+      }
+    },
+    name = "animal bone"
+  },
+  anvil = {
+    desc = {
+      main = {
+        text = "An anvil used for blacksmithing,"
+      }
+    },
+    name = "anvil"
+  },
+  api_nut = {
+    desc = {
+      main = {
+        text = "A nut used to make candy"
+      }
+    },
+    name = "api nut"
+  },
+  apple = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "apple"
+  },
+  arbalest = {
+    name = "<Arbalest>",
+    unidentified_name = "purple necklace"
+  },
+  armor = {
+    desc = {
+      main = {
+        text = "Armor on display,"
+      }
+    },
+    name = "armor"
+  },
+  armored_boots = {
+    desc = {
+      main = {
+        text = "A pair of boots with armored plating,"
+      }
+    },
+    name = "armored boots"
+  },
+  armored_cloak = {
+    desc = {
+      main = {
+        text = "A reinforced cloak designed for protection,"
+      }
+    },
+    name = "armored cloak"
+  },
+  armored_ring = {
+    desc = {
+      main = {
+        text = "Protects a portion of your finger,"
+      }
+    },
+    name = "armored ring"
+  },
+  arrow = {
+    desc = {
+      main = {
+        text = "Hand forged arrows,"
+      }
+    },
+    name = "arrow"
+  },
+  artifact_seed = {
+    desc = {
+      main = {
+        text = "A type of seed,"
+      }
+    },
+    name = "artifact seed"
+  },
+  aurora_ring = {
+    desc = {
+      main = {
+        text = "Protects you from bad weather,"
+      }
+    },
+    name = "aurora ring"
+  },
+  axe_of_destruction = {
+    name = "<Axe of Destruction>",
+    unidentified_name = "giant axe"
+  },
+  bait = {
+    desc = {
+      main = {
+        text = "Bait for a fishing pole,"
+      }
+    },
+    name = "bait"
+  },
+  banded_mail = {
+    desc = {
+      main = {
+        text = "A form of mail reinforced with leather,"
+      }
+    },
+    name = "banded mail"
+  },
+  bar_table_alpha = {
+    desc = {
+      main = {
+        text = "A table holding alcohol,"
+      }
+    },
+    name = "bar table alpha"
+  },
+  bar_table_beta = {
+    desc = {
+      main = {
+        text = "A table with coasters and peanut boxes,"
+      }
+    },
+    name = "bar table beta"
+  },
+  barbecue_set = {
+    desc = {
+      main = {
+        text = "An amazing set of cooking tools,"
+      }
+    },
+    name = "barbecue set"
+  },
+  bardiche = {
+    desc = {
+      main = {
+        text = "A single-bladed axe resembling a polearm,"
+      }
+    },
+    name = "bardiche"
+  },
+  barn = {
+    name = "barn"
+  },
+  barrel = {
+    desc = {
+      main = {
+        text = "A barrel for storing items,"
+      }
+    },
+    name = "barrel"
+  },
+  basket = {
+    desc = {
+      main = {
+        text = "It's empty,"
+      }
+    },
+    name = "basket"
+  },
+  bathtub = {
+    desc = {
+      main = {
+        text = "A porcelain bathtub,"
+      }
+    },
+    name = "bathtub"
+  },
+  battle_axe = {
+    desc = {
+      main = {
+        text = "A large double-bladed axe"
+      }
+    },
+    name = "battle axe"
+  },
+  beaker = {
+    desc = {
+      main = {
+        text = "Fragile scientific equipment,"
+      }
+    },
+    name = "beaker"
+  },
+  beggars_pendant = {
+    name = "<Beggar's Pendant>",
+    unidentified_name = "dirty pendant"
+  },
+  bejeweled_amulet = {
+    desc = {
+      main = {
+        text = "An amulet that shows one's wealth"
+      }
+    },
+    name = "bejeweled amulet"
+  },
+  bejeweled_chest = {
+    desc = {
+      main = {
+        text = "An ancient jeweled chest,"
+      }
+    },
+    name = "bejeweled chest"
+  },
+  big_cupboard = {
+    desc = {
+      main = {
+        text = "Holds a lot of dishes,"
+      }
+    },
+    name = "big cupboard"
+  },
+  big_foliage_plant = {
+    desc = {
+      main = {
+        text = "The leaves look fake,"
+      }
+    },
+    name = "big foliage plant"
+  },
+  big_table = {
+    name = "big table"
+  },
+  bill = {
+    name = "bill",
+    unidentified_name = "lousy paper"
+  },
+  black_board = {
+    desc = {
+      main = {
+        text = "Technophiles use this to teach,"
+      }
+    },
+    name = "black board"
+  },
+  black_crystal = {
+    desc = {
+      main = {
+        text = "A black crystal,"
+      }
+    },
+    name = "black crystal"
+  },
+  blank_disc = {
+    desc = {
+      main = {
+        text = "Asserian computer technology,"
+      }
+    },
+    name = "blank disc"
+  },
+  blood_moon = {
+    name = "<Blood Moon>",
+    unidentified_name = "bloody mace"
+  },
+  blue_capsule_drug = {
+    name = "blue capsule drug",
+    unidentified_name = "blue capsule"
+  },
+  blue_stall = {
+    name = "blue stall"
+  },
+  blue_treasure_machine = {
+    desc = {
+      main = {
+        text = "A treasure machine accepting very rare coins,"
+      }
+    },
+    name = "blue treasure machine"
+  },
+  board = {
+    desc = {
+      main = {
+        text = 'A note on this board reads ""Wante'
+      }
+    },
+    name = "board"
+  },
+  bolt = {
+    desc = {
+      main = {
+        text = "Standard equipment for hunting rabbits,"
+      }
+    },
+    name = "bolt"
+  },
+  bomb_fish = {
+    desc = {
+      main = {
+        text = "A type of fish,"
+      }
+    },
+    name = "bomb fish"
+  },
+  bone_fragment = {
+    desc = {
+      main = {
+        text = "Some bones are valuable"
+      }
+    },
+    name = "bone fragment"
+  },
+  bonfire = {
+    desc = {
+      main = {
+        text = "You smell something strange burning,"
+      }
+    },
+    name = "bonfire"
+  },
+  book_a = {
+    desc = {
+      main = {
+        text = "A leather bound book,"
+      }
+    },
+    name = "book",
+    unidentified_name = "book"
+  },
+  book_b = {
+    desc = {
+      main = {
+        text = "A book with watermarks,"
+      }
+    },
+    name = "book",
+    unidentified_name = "book"
+  },
+  book_of_bokonon = {
+    name = "Bokonon"
+  },
+  book_of_rachel = {
+    desc = {
+      main = {
+        text = "A book decorated with pictures,"
+      }
+    },
+    name = "book"
+  },
+  book_of_resurrection = {
+    desc = {
+      main = {
+        text = "A book said to hold the secrets of life itself,"
+      }
+    },
+    name = "resurrection"
+  },
+  bookshelf = {
+    desc = {
+      main = {
+        text = "Because there is no public library in Nort Tyris,"
+      }
+    },
+    name = "bookshelf"
+  },
+  boots = {
+    desc = {
+      main = {
+        text = "A standard pair of boots,"
+      }
+    },
+    name = "boots"
+  },
+  boring_bed = {
+    desc = {
+      main = {
+        text = "A refurbished be"
+      }
+    },
+    name = "boring bed"
+  },
+  bottle_of_beer = {
+    desc = {
+      main = {
+        text = "A bottle of beer,"
+      }
+    },
+    name = "beer",
+    unidentified_name = "clear liquid"
+  },
+  bottle_of_dirty_water = {
+    desc = {
+      main = {
+        text = "A bottle of murky water,"
+      }
+    },
+    name = "dirty water",
+    unidentified_name = "clear liquid"
+  },
+  bottle_of_dye = {
+    desc = {
+      main = {
+        text = "Expertly made dye that works on most materials,"
+      }
+    },
+    name = "dye"
+  },
+  bottle_of_hermes_blood = {
+    desc = {
+      main = {
+        text = "A rare item that increases your speed,"
+      }
+    },
+    name = "hermes blood"
+  },
+  bottle_of_milk = {
+    desc = {
+      main = {
+        text = "Milk"
+      }
+    },
+    name = "milk"
+  },
+  bottle_of_salt = {
+    name = "salt"
+  },
+  bottle_of_soda = {
+    name = "soda",
+    unidentified_name = "clear liquid"
+  },
+  bottle_of_sulfuric = {
+    desc = {
+      main = {
+        text = "A clear odorless liquid,"
+      }
+    },
+    name = "sulfuric",
+    unidentified_name = "clear liquid"
+  },
+  bottle_of_water = {
+    desc = {
+      main = {
+        text = "A bottle of pure water,"
+      }
+    },
+    name = "water",
+    unidentified_name = "clear liquid"
+  },
+  bottle_of_whisky = {
+    desc = {
+      main = {
+        text = "A bottle of dwarven whisky,"
+      }
+    },
+    name = "whisky",
+    unidentified_name = "clear liquid"
+  },
+  bow_of_vindale = {
+    name = "<Bow of Vindale>",
+    unidentified_name = "shaking bow"
+  },
+  bowl = {
+    desc = {
+      main = {
+        text = "I'm not sure I want to eat this,"
+      }
+    },
+    name = "bowl"
+  },
+  brand_new_grave = {
+    desc = {
+      main = {
+        text = "A recent grave... The name is still readable,"
+      }
+    },
+    name = "brand new grave"
+  },
+  breast_plate = {
+    desc = {
+      main = {
+        text = "An armor designed to protect the chest,"
+      }
+    },
+    name = "breast plate"
+  },
+  breastplate = {
+    desc = {
+      main = {
+        text = "An armor that offers decent protection,"
+      }
+    },
+    name = "breastplate"
+  },
+  broken_pillar = {
+    desc = {
+      main = {
+        text = "A pillar designed after one's common in Eluderni"
+      }
+    },
+    name = "broken pillar"
+  },
+  broken_sword = {
+    desc = {
+      main = {
+        text = "The materials can probably be salvaged,"
+      }
+    },
+    name = "broken sword"
+  },
+  broken_vase = {
+    desc = {
+      main = {
+        text = "Why would you take the time to collect the broken pieces?!?"
+      }
+    },
+    name = "broken vase"
+  },
+  broom = {
+    desc = {
+      main = {
+        text = "Useful for cleaning,"
+      }
+    },
+    name = "broom"
+  },
+  bug = {
+    desc = {
+      main = {
+        text = "not used in the game"
+      }
+    },
+    name = "gold bar"
+  },
+  bugged_book = {
+    desc = {
+      main = {
+        text = "generated when failed to create an item"
+      }
+    },
+    name = "bugged book",
+    unidentified_name = "book"
+  },
+  bullet = {
+    desc = {
+      main = {
+        text = "Made by Cyber Dome In"
+      }
+    },
+    name = "bullet"
+  },
+  bulletproof_jacket = {
+    desc = {
+      main = {
+        text = "Protects from more than just bullets,"
+      }
+    },
+    name = "bulletproof jacket"
+  },
+  bundle_of_bows = {
+    desc = {
+      main = {
+        text = "A display of bows,"
+      }
+    },
+    name = "bows"
+  },
+  bundle_of_weapons = {
+    desc = {
+      main = {
+        text = "A display of weapons,"
+      }
+    },
+    name = "weapons"
+  },
+  bunk_bed = {
+    desc = {
+      main = {
+        text = "A makeshift bunk be"
+      }
+    },
+    name = "bunk bed"
+  },
+  cabinet = {
+    desc = {
+      main = {
+        text = "The drawer is locked,"
+      }
+    },
+    name = "cabinet"
+  },
+  camera = {
+    desc = {
+      main = {
+        text = "Asserian photography technology,"
+      }
+    },
+    name = "camera"
+  },
+  campfire = {
+    desc = {
+      main = {
+        text = "Due to magic these logs never burn up,"
+      }
+    },
+    name = "campfire"
+  },
+  candle = {
+    desc = {
+      main = {
+        text = "A creepy set of candles,"
+      }
+    },
+    name = "candle"
+  },
+  canvas = {
+    desc = {
+      main = {
+        text = "A canvas used for painting on,"
+      }
+    },
+    name = "canvas"
+  },
+  card = {
+    desc = {
+      main = {
+        text = "A card of a creature,"
+      }
+    },
+    name = "card"
+  },
+  cargo_art = {
+    desc = {
+      main = {
+        text = "A cargo of art supplies,"
+      }
+    },
+    name = "art"
+  },
+  cargo_barrel = {
+    desc = {
+      main = {
+        text = "A cargo of barrels,"
+      }
+    },
+    name = "barrel"
+  },
+  cargo_canvas = {
+    desc = {
+      main = {
+        text = "A cargo of canvas,"
+      }
+    },
+    name = "canvas"
+  },
+  cargo_christmas_tree = {
+    desc = {
+      main = {
+        text = "A cargo of pine trees,"
+      }
+    },
+    name = "christmas tree"
+  },
+  cargo_coffin = {
+    desc = {
+      main = {
+        text = "A cargo of coffins,"
+      }
+    },
+    name = "coffin"
+  },
+  cargo_grave = {
+    desc = {
+      main = {
+        text = "A cargo of grave materials,"
+      }
+    },
+    name = "grave"
+  },
+  cargo_inner_tube = {
+    desc = {
+      main = {
+        text = "A cargo of ship materials,"
+      }
+    },
+    name = "inner tube"
+  },
+  cargo_manboo = {
+    desc = {
+      main = {
+        text = "A cargo of fish,"
+      }
+    },
+    name = "manboo"
+  },
+  cargo_noble_toy = {
+    desc = {
+      main = {
+        text = "A cargo of children's toys,"
+      }
+    },
+    name = "noble toy"
+  },
+  cargo_piano = {
+    desc = {
+      main = {
+        text = "A cargo of pianos,"
+      }
+    },
+    name = "piano"
+  },
+  cargo_rag_doll = {
+    desc = {
+      main = {
+        text = "A cargo of children's toys,"
+      }
+    },
+    name = "rag doll"
+  },
+  cargo_rope = {
+    desc = {
+      main = {
+        text = "A cargo of rope,"
+      }
+    },
+    name = "rope"
+  },
+  cargo_snow_man = {
+    desc = {
+      main = {
+        text = "A cargo of snow men,"
+      }
+    },
+    name = "snow man"
+  },
+  cargo_travelers_food = {
+    desc = {
+      main = {
+        text = "Travel rations often used by merchants,"
+      }
+    },
+    name = "traveler's food"
+  },
+  cargo_tuna_fish = {
+    desc = {
+      main = {
+        text = "A cargo of fish,"
+      }
+    },
+    name = "tuna fish"
+  },
+  cargo_whisky = {
+    desc = {
+      main = {
+        text = "A cargo of alcohol,"
+      }
+    },
+    name = "whisky"
+  },
+  carnation = {
+    desc = {
+      main = {
+        text = "A symbol of love towards one's parents,"
+      }
+    },
+    name = "carnation"
+  },
+  carpenters_tool = {
+    desc = {
+      main = {
+        text = "Used to craft some wooden items,"
+      }
+    },
+    name = "carpenter's tool"
+  },
+  carrot = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "carrot"
+  },
+  casino_table = {
+    desc = {
+      main = {
+        text = "It's no fun without other people,,,"
+      }
+    },
+    name = "casino table"
+  },
+  cat_sisters_diary = {
+    desc = {
+      main = {
+        text = "Nyo reading!"
+      }
+    },
+    name = "cat sister's diary"
+  },
+  cbocchi = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "cbocchi"
+  },
+  ceremony_altar = {
+    desc = {
+      main = {
+        text = "An altar for rituals to give tribute to the gods,"
+      }
+    },
+    name = "ceremony altar"
+  },
+  chain_mail = {
+    desc = {
+      main = {
+        text = "An armor made of small linked rings,"
+      }
+    },
+    name = "chain mail"
+  },
+  charm = {
+    desc = {
+      main = {
+        text = "A good luck charm,"
+      }
+    },
+    name = "charm"
+  },
+  cheap_bed = {
+    desc = {
+      main = {
+        text = "A bed made out of recycled parts...,,"
+      }
+    },
+    name = "cheap bed"
+  },
+  cheap_chair = {
+    desc = {
+      main = {
+        text = "More like a foot stool,"
+      }
+    },
+    name = "cheap chair"
+  },
+  cheap_rack = {
+    desc = {
+      main = {
+        text = "An ordinary inexpensive rack,"
+      }
+    },
+    name = "cheap rack"
+  },
+  cheap_table = {
+    desc = {
+      main = {
+        text = "A table made out of recycled wood,"
+      }
+    },
+    name = "cheap table"
+  },
+  cherry = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "cherry"
+  },
+  chest = {
+    desc = {
+      main = {
+        text = "A heavy chest,"
+      }
+    },
+    name = "chest"
+  },
+  chest_of_clothes = {
+    desc = {
+      main = {
+        text = "A clean set of clothing,"
+      }
+    },
+    name = "clothes"
+  },
+  chip = {
+    desc = {
+      main = {
+        text = "Asserian computer technology,"
+      }
+    },
+    name = "chip"
+  },
+  chochin = {
+    name = "chochin"
+  },
+  christmas_tree = {
+    desc = {
+      main = {
+        text = "A tree used for an ancient holiday,"
+      }
+    },
+    name = "christmas tree"
+  },
+  claymore = {
+    desc = {
+      main = {
+        text = "A large sword normally held in two hands,"
+      }
+    },
+    name = "claymore"
+  },
+  claymore_unique = {
+    name = "<Claymore>",
+    unidentified_name = "brutish sword"
+  },
+  clean_bed = {
+    desc = {
+      main = {
+        text = "At least it's clean,"
+      }
+    },
+    name = "clean bed"
+  },
+  cloak = {
+    desc = {
+      main = {
+        text = "A heavy cloak designed for travel,"
+      }
+    },
+    name = "cloak"
+  },
+  closed_pot = {
+    desc = {
+      main = {
+        text = "A covered pot,"
+      }
+    },
+    name = "closed pot"
+  },
+  closet = {
+    desc = {
+      main = {
+        text = "A closet for storing items,"
+      }
+    },
+    name = "closet"
+  },
+  club = {
+    desc = {
+      main = {
+        text = "A blunt weapon with a round end that is sometimes spiked,"
+      }
+    },
+    name = "club"
+  },
+  coat = {
+    desc = {
+      main = {
+        text = "A coat often worn when cold,"
+      }
+    },
+    name = "coat"
+  },
+  coffin = {
+    desc = {
+      main = {
+        text = "It would be disrespectful of the deceased to sleep in this"
+      }
+    },
+    name = "coffin"
+  },
+  coldproof_blanket = {
+    desc = {
+      main = {
+        text = "Produced to protect from cold areas while sleeping but has found more use protecting one's equipment!"
+      }
+    },
+    name = "coldproof blanket"
+  },
+  collapsed_grave = {
+    desc = {
+      main = {
+        text = "A common style grave that has started to crumble,"
+      }
+    },
+    name = "collapsed grave"
+  },
+  comfortable_bed = {
+    desc = {
+      main = {
+        text = "An average bed,"
+      }
+    },
+    name = "comfortable bed"
+  },
+  comfortable_table = {
+    desc = {
+      main = {
+        text = "A table often used in one's house,"
+      }
+    },
+    name = "comfortable table"
+  },
+  composite_boots = {
+    desc = {
+      main = {
+        text = "A pair of boots with an armored mesh,"
+      }
+    },
+    name = "composite boots"
+  },
+  composite_gauntlets = {
+    desc = {
+      main = {
+        text = "A pair of gauntlets made out of a composite mesh,"
+      }
+    },
+    name = "composite gauntlets"
+  },
+  composite_girdle = {
+    desc = {
+      main = {
+        text = "A girdle with straps designed to keep loose clothing out of the way,"
+      }
+    },
+    name = "composite girdle"
+  },
+  composite_helm = {
+    desc = {
+      main = {
+        text = "A very sturdy helm,"
+      }
+    },
+    name = "composite helm"
+  },
+  composite_mail = {
+    desc = {
+      main = {
+        text = "A sturdy armor,"
+      }
+    },
+    name = "composite mail"
+  },
+  composite_ring = {
+    desc = {
+      main = {
+        text = "A ring made out of composite,"
+      }
+    },
+    name = "composite ring"
+  },
+  computer = {
+    desc = {
+      main = {
+        text = "Asserian computer technology,"
+      }
+    },
+    name = "computer"
+  },
+  cooler_box = {
+    desc = {
+      main = {
+        text = "A cooler box"
+      }
+    },
+    name = "cooler box",
+    unidentified_name = "chilly box"
+  },
+  corpse = {
+    desc = {
+      main = {
+        text = "A corpse of an unknown creature,"
+      }
+    },
+    name = "corpse"
+  },
+  counter = {
+    name = "counter"
+  },
+  craft_book_shelf = {
+    desc = {
+      main = {
+        text = "A nicely crafted bookshelf,"
+      }
+    },
+    name = "craft book shelf"
+  },
+  craft_cupboard = {
+    desc = {
+      main = {
+        text = "A place to store your fine china,"
+      }
+    },
+    name = "craft cupboard"
+  },
+  craft_rack = {
+    desc = {
+      main = {
+        text = "A nicely crafted piece of furniture,"
+      }
+    },
+    name = "craft rack"
+  },
+  bottle_of_crim_ale = {
+    desc = {
+      main = {
+        text = "crim is some kind of addictive berry"
+      }
+    },
+    name = "crim ale",
+    unidentified_name = "clear liquid"
+  },
+  crimson_plate = {
+    name = "<Crimson Plate>",
+    unidentified_name = "red girdle"
+  },
+  crossbow = {
+    desc = {
+      main = {
+        text = "A ranged weapon designed to shoot straight and pierce armor,"
+      }
+    },
+    name = "crossbow"
+  },
+  crossroad_sign = {
+    desc = {
+      main = {
+        text = "Oop'"
+      }
+    },
+    name = "crossroad sign"
+  },
+  crumbled_grave = {
+    desc = {
+      main = {
+        text = "A common style grave that has been destroyed,"
+      }
+    },
+    name = "crumbled grave"
+  },
+  cupboard = {
+    desc = {
+      main = {
+        text = "A cupboard to store dishes,"
+      }
+    },
+    name = "cupboard"
+  },
+  curaria = {
+    desc = {
+      main = {
+        text = "A type of herb,"
+      }
+    },
+    name = "curaria"
+  },
+  cutlassfish = {
+    desc = {
+      main = {
+        text = "A fish that looks something like an Eel,"
+      }
+    },
+    name = "cutlassfish"
+  },
+  cyber_snack = {
+    desc = {
+      main = {
+        text = "potato chips,"
+      }
+    },
+    name = "cyber snack"
+  },
+  dagger = {
+    desc = {
+      main = {
+        text = "A small double-edged weapon used for close combat,"
+      }
+    },
+    name = "dagger"
+  },
+  dal_i_thalion = {
+    name = "<Dal-i-thalion>",
+    unidentified_name = "light shoes"
+  },
+  darts_board = {
+    desc = {
+      main = {
+        text = 'A note reads "Please do not play drunk!'
+      }
+    },
+    name = "darts board"
+  },
+  daruma = {
+    name = "daruma"
+  },
+  dead_fish = {
+    desc = {
+      main = {
+        text = "Hiding one of these is a popular prank in North Tyris..."
+      }
+    },
+    name = "dead fish"
+  },
+  dead_tree = {
+    desc = {
+      main = {
+        text = "A tree that has died from bad weather,"
+      }
+    },
+    name = "dead tree"
+  },
+  deck = {
+    desc = {
+      main = {
+        text = "A deck of card'"
+      }
+    },
+    name = "deck"
+  },
+  decorated_armor = {
+    desc = {
+      main = {
+        text = "A decorative cloth often used as a display for armor stores,"
+      }
+    },
+    name = "decorated armor"
+  },
+  decorated_cloth = {
+    desc = {
+      main = {
+        text = "A decorative cloth often used as a clothing store display,"
+      }
+    },
+    name = "decorated cloth"
+  },
+  decorated_gloves = {
+    desc = {
+      main = {
+        text = "Gloves often worn by nobility,"
+      }
+    },
+    name = "decorated gloves"
+  },
+  decorated_window = {
+    name = "decorated window"
+  },
+  decorative_amulet = {
+    desc = {
+      main = {
+        text = "A cute amulet,"
+      }
+    },
+    name = "decorative amulet"
+  },
+  decorative_armor = {
+    desc = {
+      main = {
+        text = "A set of decorative armor,"
+      }
+    },
+    name = "decorative armor"
+  },
+  decorative_ring = {
+    desc = {
+      main = {
+        text = "A pretty ring,"
+      }
+    },
+    name = "decorative ring"
+  },
+  deed = {
+    name = "deed"
+  },
+  deed_of_dungeon = {
+    name = "dungeon"
+  },
+  deed_of_farm = {
+    desc = {
+      main = {
+        text = "A deed for a farm,"
+      }
+    },
+    name = "farm"
+  },
+  deed_of_heirship = {
+    desc = {
+      main = {
+        text = "A deed of heirship,"
+      }
+    },
+    name = "heirship"
+  },
+  deed_of_museum = {
+    desc = {
+      main = {
+        text = "A deed for a museum,"
+      }
+    },
+    name = "museum"
+  },
+  deed_of_ranch = {
+    desc = {
+      main = {
+        text = "A deed for a ranch,"
+      }
+    },
+    name = "ranch"
+  },
+  deed_of_shop = {
+    desc = {
+      main = {
+        text = "A deed for a shop,"
+      }
+    },
+    name = "shop"
+  },
+  deed_of_storage_house = {
+    desc = {
+      main = {
+        text = "A deed for a storage house,"
+      }
+    },
+    name = "storage house"
+  },
+  deer_head = {
+    name = "deer head"
+  },
+  diablo = {
+    desc = {
+      main = {
+        text = "This sword seems to be sentient,"
+      }
+    },
+    name = "<Diablo>",
+    unidentified_name = "pure black sword"
+  },
+  dining_table = {
+    desc = {
+      main = {
+        text = "A hand crafted dining table,"
+      }
+    },
+    name = "dining table"
+  },
+  disc = {
+    desc = {
+      main = {
+        text = 'A message is written on it saying "Please do not throw,'
+      }
+    },
+    name = "disc"
+  },
+  disguise_set = {
+    desc = {
+      main = {
+        text = "Disguise kit - with instructions,"
+      }
+    },
+    name = "disguise set"
+  },
+  dish = {
+    name = "dish"
+  },
+  disorderly_book = {
+    desc = {
+      main = {
+        text = "This is just a mess!"
+      }
+    },
+    name = "disorderly book"
+  },
+  double_bed = {
+    name = "double bed"
+  },
+  downstairs = {
+    name = "downstairs"
+  },
+  dragon_slayer = {
+    desc = {
+      main = {
+        text = "dev item"
+      }
+    },
+    name = "<Dragon Slayer>",
+    unidentified_name = "two-edged great sword"
+  },
+  dress = {
+    desc = {
+      main = {
+        text = "A lovely dress,"
+      }
+    },
+    name = "dress"
+  },
+  dresser = {
+    desc = {
+      main = {
+        text = "A common dresser,"
+      }
+    },
+    name = "dresser"
+  },
+  earth_crystal = {
+    name = "earth crystal"
+  },
+  eastern_bed = {
+    desc = {
+      main = {
+        text = "A useful bed of eastern design,"
+      }
+    },
+    name = "eastern bed"
+  },
+  eastern_lamp = {
+    name = "eastern lamp"
+  },
+  eastern_partition = {
+    name = "eastern partition"
+  },
+  eastern_window = {
+    name = "eastern window"
+  },
+  edible_wild_plant = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "edible wild plant"
+  },
+  egg = {
+    desc = {
+      main = {
+        text = "This egg would taste better cooked,"
+      }
+    },
+    name = "egg"
+  },
+  elegant_table = {
+    desc = {
+      main = {
+        text = "Keep your elbows off the table!"
+      }
+    },
+    name = "elegant table"
+  },
+  elemental_staff = {
+    name = "<Elemental Staff>",
+    unidentified_name = "elemental staff"
+  },
+  empty_basket = {
+    desc = {
+      main = {
+        text = "This basket is made out of wicker,"
+      }
+    },
+    name = "empty basket"
+  },
+  empty_bottle = {
+    desc = {
+      main = {
+        text = "An empty bottle,"
+      }
+    },
+    name = "empty bottle",
+    unidentified_name = "empty bottle"
+  },
+  empty_bowl = {
+    desc = {
+      main = {
+        text = "It's empty,"
+      }
+    },
+    name = "empty bowl"
+  },
+  energy_cell = {
+    desc = {
+      main = {
+        text = "Do not tamper with lens,"
+      }
+    },
+    name = "energy cell"
+  },
+  engagement_amulet = {
+    desc = {
+      main = {
+        text = "An amulet that shows one's love,"
+      }
+    },
+    name = "engagement amulet"
+  },
+  engagement_ring = {
+    desc = {
+      main = {
+        text = "A ring given to show one's intent to marry,"
+      }
+    },
+    name = "engagement ring"
+  },
+  ether_dagger = {
+    desc = {
+      main = {
+        text = "This dagger seems to be made out of wind,"
+      }
+    },
+    name = "<Ether Dagger>",
+    unidentified_name = "dagger surrounded by wind"
+  },
+  fairy_hat = {
+    desc = {
+      main = {
+        text = "An exotic hat crafted by faeries,"
+      }
+    },
+    name = "fairy hat"
+  },
+  fancy_lamp = {
+    desc = {
+      main = {
+        text = "A lamp from Asseria,"
+      }
+    },
+    name = "fancy lamp"
+  },
+  feather = {
+    desc = {
+      main = {
+        text = "A product of magic,"
+      }
+    },
+    name = "feather"
+  },
+  feather_hat = {
+    desc = {
+      main = {
+        text = "A hat with a feather often worn by nobles,"
+      }
+    },
+    name = "feather hat"
+  },
+  festival_wreath = {
+    name = "festival wreath"
+  },
+  figurine = {
+    desc = {
+      main = {
+        text = "A statue of a creature,"
+      }
+    },
+    name = "figurine"
+  },
+  figurine_of_sword = {
+    name = "sword"
+  },
+  figurine_of_warrior = {
+    name = "warrior"
+  },
+  fire_wood = {
+    desc = {
+      main = {
+        text = "Dried wood ready for burning,"
+      }
+    },
+    name = "fire wood"
+  },
+  fireplace = {
+    desc = {
+      main = {
+        text = "Used to heat a house,"
+      }
+    },
+    name = "fireplace"
+  },
+  fireproof_blanket = {
+    desc = {
+      main = {
+        text = "Produced to protect the user from hot areas while sleeping but has found more use protecting one's equipment!"
+      }
+    },
+    name = "fireproof blanket"
+  },
+  fireproof_liquid = {
+    desc = {
+      main = {
+        text = "Use on an item to protect it from fire,"
+      }
+    },
+    name = "fireproof liquid"
+  },
+  fish_a = {
+    name = ""
+  },
+  fish_b = {
+    name = ""
+  },
+  fishing_pole = {
+    desc = {
+      main = {
+        text = "A pole used for bait fishing,"
+      }
+    },
+    name = "fishing pole"
+  },
+  five_horned_helm = {
+    name = "<Five Horned Helm>",
+    unidentified_name = "horned helmet"
+  },
+  flag = {
+    desc = {
+      main = {
+        text = "Comes with its own support so it does not touch the ground,"
+      }
+    },
+    name = "flag"
+  },
+  flatfish = {
+    desc = {
+      main = {
+        text = "An odd fish that lays on its side,"
+      }
+    },
+    name = "flatfish"
+  },
+  flower_arch = {
+    name = "flower arch"
+  },
+  flowerbed = {
+    desc = {
+      main = {
+        text = "A beautiful bed of flowers,"
+      }
+    },
+    name = "flowerbed"
+  },
+  flying_scroll = {
+    desc = {
+      main = {
+        text = "A magical scroll with arcane writing,"
+      }
+    },
+    name = "flying scroll"
+  },
+  food_maker = {
+    desc = {
+      main = {
+        text = "A tool used to cook food in Asseria,"
+      }
+    },
+    name = "food maker"
+  },
+  food_processor = {
+    desc = {
+      main = {
+        text = "A miracle of technology!"
+      }
+    },
+    name = "food processor"
+  },
+  fortune_cookie = {
+    desc = {
+      main = {
+        text = "Will tell you your fortune,"
+      }
+    },
+    name = "fortune cookie"
+  },
+  fountain = {
+    desc = {
+      main = {
+        text = "Throw a coin in,"
+      }
+    },
+    name = "fountain"
+  },
+  foxtail_grass = {
+    desc = {
+      main = {
+        text = "Has seeds that can be dangerous to your pets,"
+      }
+    },
+    name = "foxtail grass"
+  },
+  freezer = {
+    desc = {
+      main = {
+        text = "A freezer to keep your food from spoiling,"
+      }
+    },
+    name = "freezer"
+  },
+  fried_potato = {
+    desc = {
+      main = {
+        text = "Greasy fries!"
+      }
+    },
+    name = "fried potato"
+  },
+  frisias_tail = {
+    name = "<Frisia's Tail>",
+    unidentified_name = "cat's tail"
+  },
+  fruit_seed = {
+    desc = {
+      main = {
+        text = "A type of seed,"
+      }
+    },
+    name = "fruit seed"
+  },
+  frying_pan_for_testing = {
+    desc = {
+      main = {
+        text = "dev item"
+      }
+    },
+    name = "for testing"
+  },
+  fur_carpet = {
+    name = "fur carpet"
+  },
+  furnace = {
+    desc = {
+      main = {
+        text = "A furnace used for smithing,"
+      }
+    },
+    name = "furnace"
+  },
+  furnance = {
+    desc = {
+      main = {
+        text = "Some furnances are used to heat an area and others are used for metalwork,"
+      }
+    },
+    name = "furnance"
+  },
+  gaia_hammer = {
+    name = "<Gaia Hammer>",
+    unidentified_name = "giant hammer"
+  },
+  garbage = {
+    desc = {
+      main = {
+        text = "Stinky,,,"
+      }
+    },
+    name = "garbage"
+  },
+  garoks_hammer = {
+    name = "Garok's hammer",
+    unidentified_name = "master hammer"
+  },
+  gazania = {
+    desc = {
+      main = {
+        text = "Decorative flowers,"
+      }
+    },
+    name = "gazania"
+  },
+  gem_cutter = {
+    desc = {
+      main = {
+        text = "Some magical materials are just that hard to cut!"
+      }
+    },
+    name = "gem cutter"
+  },
+  gem_seed = {
+    desc = {
+      main = {
+        text = "A type of seed,"
+      }
+    },
+    name = "gem seed"
+  },
+  gem_stone_of_mani = {
+    name = "Mani",
+    unidentified_name = "strange jewel"
+  },
+  gene_machine = {
+    name = "gene machine",
+    unidentified_name = "freaky machine"
+  },
+  giant_bed = {
+    desc = {
+      main = {
+        text = "A large and elegant bed,"
+      }
+    },
+    name = "giant bed"
+  },
+  giant_cactus = {
+    desc = {
+      main = {
+        text = "A decorative cactus,"
+      }
+    },
+    name = "giant cactus"
+  },
+  giant_foliage_plant = {
+    desc = {
+      main = {
+        text = "A plant used for decoration,"
+      }
+    },
+    name = "giant foliage plant"
+  },
+  giants_shackle = {
+    desc = {
+      main = {
+        text = "I would not want to be attached to those!"
+      }
+    },
+    name = "giant's shackle",
+    unidentified_name = "shakle"
+  },
+  gift = {
+    desc = {
+      main = {
+        text = "It's hard to open,"
+      }
+    },
+    name = "gift"
+  },
+  girdle = {
+    desc = {
+      main = {
+        text = "A type of belt,"
+      }
+    },
+    name = "girdle"
+  },
+  girls_diary = {
+    desc = {
+      main = {
+        text = "A girl's diary"
+      }
+    },
+    name = "girl's diary"
+  },
+  globefish = {
+    desc = {
+      main = {
+        text = "A fish that can inflate itself into a round ball,"
+      }
+    },
+    name = "globefish"
+  },
+  gloves = {
+    desc = {
+      main = {
+        text = "A thick pair of gloves,"
+      }
+    },
+    name = "gloves"
+  },
+  gloves_of_vesda = {
+    name = "<Gloves of Vesda>",
+    unidentified_name = "burning gloves"
+  },
+  gold_bar = {
+    name = "gold bar"
+  },
+  gold_piece = {
+    desc = {
+      main = {
+        text = "Standard currency of North Tyris,"
+      }
+    },
+    name = "gold piece"
+  },
+  golden_pedestal = {
+    desc = {
+      main = {
+        text = "A pedestal decorated with gold leaf,"
+      }
+    },
+    name = "golden pedestal"
+  },
+  gorgeous_candlestick = {
+    desc = {
+      main = {
+        text = "An ornamental candlestick,"
+      }
+    },
+    name = "gorgeous candlestick"
+  },
+  goulds_piano = {
+    name = "<Gould's Piano>",
+    unidentified_name = "nondescriptive piano"
+  },
+  grand_piano = {
+    desc = {
+      main = {
+        text = "A beautifully crafted piano,"
+      }
+    },
+    name = "grand piano"
+  },
+  grape = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "grape"
+  },
+  grave_ornamented_with_flowers = {
+    desc = {
+      main = {
+        text = "A recent grave with flowers for the departed... The name is still readable,"
+      }
+    },
+    name = "ornamented with flowers"
+  },
+  green_pea = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "green pea"
+  },
+  green_plant = {
+    desc = {
+      main = {
+        text = "A plant used for decoration,"
+      }
+    },
+    name = "green plant"
+  },
+  grenade = {
+    desc = {
+      main = {
+        text = "Made by Cyber Dome In"
+      }
+    },
+    name = "grenade"
+  },
+  guava = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "guava"
+  },
+  guillotine = {
+    desc = {
+      main = {
+        text = "You are sure to get ahead in life with one of these!"
+      }
+    },
+    name = "guillotine"
+  },
+  halberd = {
+    desc = {
+      main = {
+        text = "A weapon resembling a spear with the head of an axe,"
+      }
+    },
+    name = "halberd"
+  },
+  hammer = {
+    desc = {
+      main = {
+        text = "A tool that is sometimes adopted as a weapon"
+      }
+    },
+    name = "hammer"
+  },
+  hand_axe = {
+    desc = {
+      main = {
+        text = "A small single-bladed axe,"
+      }
+    },
+    name = "hand axe"
+  },
+  handful_of_snow = {
+    desc = {
+      main = {
+        text = "Some snow,"
+      }
+    },
+    name = "snow"
+  },
+  happy_apple = {
+    desc = {
+      main = {
+        text = "A magical fruit said to come from Ehekatl's garden,"
+      }
+    },
+    name = "happy apple",
+    unidentified_name = "mysterious apple"
+  },
+  happy_bed = {
+    desc = {
+      main = {
+        text = "It is said that you will sleep better in one of these"
+      }
+    },
+    name = "happy bed"
+  },
+  harmonica = {
+    desc = {
+      main = {
+        text = "A harmonica commonly found in Culdia,"
+      }
+    },
+    name = "harmonica"
+  },
+  harp = {
+    desc = {
+      main = {
+        text = "An expertly crafted harp favored by the Erea of Vindale,"
+      }
+    },
+    name = "harp"
+  },
+  healthy_leaf = {
+    desc = {
+      main = {
+        text = "A type of vegetation,"
+      }
+    },
+    name = "healthy leaf"
+  },
+  heart = {
+    name = "heart"
+  },
+  heavy_boots = {
+    desc = {
+      main = {
+        text = "Boots made for travel,"
+      }
+    },
+    name = "heavy boots"
+  },
+  heavy_helm = {
+    desc = {
+      main = {
+        text = "A helm designed for good protection,"
+      }
+    },
+    name = "heavy helm"
+  },
+  heir_trunk = {
+    desc = {
+      main = {
+        text = 'A magical trunk that can connect to "fourth dimensional inheritance storage" for a small fee,'
+      }
+    },
+    name = "heir trunk"
+  },
+  helm = {
+    desc = {
+      main = {
+        text = "A standard helm,"
+      }
+    },
+    name = "helm"
+  },
+  herb_seed = {
+    desc = {
+      main = {
+        text = "A type of seed,"
+      }
+    },
+    name = "herb seed"
+  },
+  hero_cheese = {
+    desc = {
+      main = {
+        text = "A type of cheese eaten by heros"
+      }
+    },
+    name = "hero cheese",
+    unidentified_name = "mysterious cheese"
+  },
+  high_grade_dresser = {
+    desc = {
+      main = {
+        text = "A beautifully crafted dresser,"
+      }
+    },
+    name = "high grade dresser"
+  },
+  hiryu_to = {
+    name = "<Hiryu-To>",
+    unidentified_name = "rutilant katana"
+  },
+  holy_lance = {
+    name = "<Holy Lance>",
+    unidentified_name = "holy lance"
+  },
+  holy_well = {
+    desc = {
+      main = {
+        text = "A note reads \"Please do not taint the town's water supply"
+      }
+    },
+    name = "holy well"
+  },
+  horn = {
+    desc = {
+      main = {
+        text = "A horn imported from Marr Nis Farra,"
+      }
+    },
+    name = "horn"
+  },
+  house_board = {
+    name = "house board"
+  },
+  imo = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "imo"
+  },
+  inner_tube = {
+    desc = {
+      main = {
+        text = "Such an odd design,,,"
+      }
+    },
+    name = "inner tube"
+  },
+  iron_maiden = {
+    desc = {
+      main = {
+        text = "A device of pure pain!"
+      }
+    },
+    name = "iron maiden"
+  },
+  jerky = {
+    desc = {
+      main = {
+        text = "Dried out travel rations,"
+      }
+    },
+    name = "jerky"
+  },
+  junk = {
+    desc = {
+      main = {
+        text = "One man's junk is another man's treasure!"
+      }
+    },
+    name = "junk"
+  },
+  junk_stone = {
+    desc = {
+      main = {
+        text = "A useless stone that seems to break apart into sand when touched,"
+      }
+    },
+    name = "junk stone"
+  },
+  jures_body_pillow = {
+    name = "Jure's body pillow"
+  },
+  jures_gem_stone_of_holy_rain = {
+    name = "holy rain",
+    unidentified_name = "heavenly jewel"
+  },
+  kagami_mochi = {
+    name = "kagami mochi"
+  },
+  katana = {
+    desc = {
+      main = {
+        text = "A unique curved sword made through a folding process,"
+      }
+    },
+    name = "katana"
+  },
+  kill_kill_piano = {
+    name = "<Kill Kill Piano>",
+    unidentified_name = "heavy piano"
+  },
+  king_drawer = {
+    desc = {
+      main = {
+        text = "It even has a book shelf!"
+      }
+    },
+    name = "king drawer"
+  },
+  kings_bed = {
+    name = "king's bed"
+  },
+  kitchen = {
+    desc = {
+      main = {
+        text = "Part of a kitchen set,"
+      }
+    },
+    name = "kitchen"
+  },
+  kitchen_knife = {
+    name = "kitchen knife"
+  },
+  kitchen_oven = {
+    desc = {
+      main = {
+        text = "The other half of a kitchen set,"
+      }
+    },
+    name = "kitchen oven"
+  },
+  kite_shield = {
+    desc = {
+      main = {
+        text = "A shield shaped like a kite,"
+      }
+    },
+    name = "kite shield"
+  },
+  kitty_bank = {
+    desc = {
+      main = {
+        text = "Please don't break me,..., Nyu?"
+      }
+    },
+    name = "kitty bank"
+  },
+  kiwi = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "kiwi"
+  },
+  knight_helm = {
+    desc = {
+      main = {
+        text = "A helm made for knights,"
+      }
+    },
+    name = "knight helm"
+  },
+  knight_shield = {
+    desc = {
+      main = {
+        text = "A shield given to knights,"
+      }
+    },
+    name = "knight shield"
+  },
+  kotatsu = {
+    name = "kotatsu"
+  },
+  kumiromi_scythe = {
+    name = "<Kumiromi Scythe>",
+    unidentified_name = "harvest scythe"
+  },
+  kumiromis_gem_stone_of_rejuvenation = {
+    name = "rejuvenation",
+    unidentified_name = "heavenly jewel"
+  },
+  lantern = {
+    desc = {
+      main = {
+        text = "A light source,"
+      }
+    },
+    name = "lantern"
+  },
+  large_bookshelf = {
+    name = "large bookshelf"
+  },
+  large_bouquet = {
+    desc = {
+      main = {
+        text = "A beautiful bouquet of flowers,"
+      }
+    },
+    name = "large bouquet"
+  },
+  large_foliage_plant = {
+    desc = {
+      main = {
+        text = "A decorative plant,"
+      }
+    },
+    name = "large foliage plant"
+  },
+  large_shield = {
+    desc = {
+      main = {
+        text = "A large circular shield,"
+      }
+    },
+    name = "large shield"
+  },
+  laser_gun = {
+    desc = {
+      main = {
+        text = "A remnant of ancient times,"
+      }
+    },
+    name = "laser gun"
+  },
+  leash = {
+    desc = {
+      main = {
+        text = "A leather leash for your pets!"
+      }
+    },
+    name = "leash"
+  },
+  leccho = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "leccho"
+  },
+  lemon = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "lemon"
+  },
+  lettuce = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "lettuce"
+  },
+  license_of_the_void_explorer = {
+    desc = {
+      main = {
+        text = "This will allow you to explore the void that has been found recently in the south-west,"
+      }
+    },
+    name = "the void explorer",
+    unidentified_name = "strange paper"
+  },
+  light_cloak = {
+    desc = {
+      main = {
+        text = "Designed for children and smaller races,"
+      }
+    },
+    name = "light cloak"
+  },
+  light_gloves = {
+    desc = {
+      main = {
+        text = "A pair of gloves with a soft inner lining,"
+      }
+    },
+    name = "light gloves"
+  },
+  light_mail = {
+    desc = {
+      main = {
+        text = "A mail made of leather with thin plating,"
+      }
+    },
+    name = "light mail"
+  },
+  lightsabre = {
+    name = "lightsabre"
+  },
+  little_ball = {
+    desc = {
+      main = {
+        text = "This ball gives you unique powers..."
+      }
+    },
+    name = "little ball",
+    unidentified_name = "mechanical ball"
+  },
+  little_sisters_diary = {
+    desc = {
+      main = {
+        text = "A diary written in with crayon,"
+      }
+    },
+    name = "little sister's diary"
+  },
+  lockpick = {
+    desc = {
+      main = {
+        text = "A questionable item not intended for public use,"
+      }
+    },
+    name = "lockpick"
+  },
+  long_bow = {
+    desc = {
+      main = {
+        text = "A bow specifically designed to shoot further than a short bow,"
+      }
+    },
+    name = "long bow"
+  },
+  long_pillar = {
+    desc = {
+      main = {
+        text = "A pillar designed after one's common in Eludernia,"
+      }
+    },
+    name = "long pillar"
+  },
+  long_staff = {
+    desc = {
+      main = {
+        text = "A staff used primarily as a weapon and sometimes for magic,"
+      }
+    },
+    name = "long staff"
+  },
+  long_sword = {
+    desc = {
+      main = {
+        text = "A double-edged sword"
+      }
+    },
+    name = "long sword"
+  },
+  lot_of_accessories = {
+    desc = {
+      main = {
+        text = "A display case for various gift items,"
+      }
+    },
+    name = "accessories"
+  },
+  lot_of_alcohols = {
+    desc = {
+      main = {
+        text = "Often found in bars,"
+      }
+    },
+    name = "alcohols"
+  },
+  lot_of_books = {
+    desc = {
+      main = {
+        text = "A disorderly stacks of books,"
+      }
+    },
+    name = "books"
+  },
+  lot_of_empty_bottles = {
+    desc = {
+      main = {
+        text = "They still smell of alcohol,"
+      }
+    },
+    name = "empty bottles"
+  },
+  lot_of_goods = {
+    desc = {
+      main = {
+        text = "A display case for various gift items,"
+      }
+    },
+    name = "goods"
+  },
+  love_potion = {
+    desc = {
+      main = {
+        text = 'A label reads "To be used only on livestock'
+      }
+    },
+    name = "love potion",
+    unidentified_name = "clear liquid"
+  },
+  lucky_dagger = {
+    name = "<Lucky Dagger>",
+    unidentified_name = "thin dagger"
+  },
+  lulwys_gem_stone_of_god_speed = {
+    name = "god speed",
+    unidentified_name = "heavenly jewel"
+  },
+  lute = {
+    desc = {
+      main = {
+        text = "A lute is a common musical instrument among bards,"
+      }
+    },
+    name = "lute"
+  },
+  luxury_bed = {
+    desc = {
+      main = {
+        text = "A bed made in Asseria,"
+      }
+    },
+    name = "luxury bed"
+  },
+  luxury_cabinet = {
+    name = "luxury cabinet"
+  },
+  luxury_drawer = {
+    desc = {
+      main = {
+        text = "A place to keep your spare clothes,"
+      }
+    },
+    name = "luxury drawer"
+  },
+  luxury_sofa = {
+    name = "luxury sofa"
+  },
+  machine = {
+    desc = {
+      main = {
+        text = "Asserian technology,"
+      }
+    },
+    name = "machine"
+  },
+  machine_gun = {
+    desc = {
+      main = {
+        text = "Made by Cyber Dome In"
+      }
+    },
+    name = "machine gun"
+  },
+  magic_fruit = {
+    desc = {
+      main = {
+        text = "A type of fruit,"
+      }
+    },
+    name = "magic fruit",
+    unidentified_name = "rare fruit"
+  },
+  magic_hat = {
+    desc = {
+      main = {
+        text = "A hat mages often wear,"
+      }
+    },
+    name = "magic hat"
+  },
+  magical_seed = {
+    desc = {
+      main = {
+        text = "A type of seed,"
+      }
+    },
+    name = "magical seed"
+  },
+  mana_crystal = {
+    name = "mana crystal"
+  },
+  manboo = {
+    name = "manboo"
+  },
+  map = {
+    desc = {
+      main = {
+        text = "A map of Elona,"
+      }
+    },
+    name = "map"
+  },
+  mareilon = {
+    desc = {
+      main = {
+        text = "A type of herb,"
+      }
+    },
+    name = "mareilon"
+  },
+  masters_delivery_chest = {
+    name = "master's delivery chest",
+    unidentified_name = "delivery chest"
+  },
+  material_box = {
+    desc = {
+      main = {
+        text = "A box filled with materials,"
+      }
+    },
+    name = "material box"
+  },
+  material_kit = {
+    desc = {
+      main = {
+        text = "This hard to produce item can change the material of many items!"
+      }
+    },
+    name = "material kit"
+  },
+  mauser_c96_custom = {
+    name = "<Mauser C96 Custom>",
+    unidentified_name = "rusted pistol"
+  },
+  melon = {
+    desc = {
+      main = {
+        text = "A type of vegetable,"
+      }
+    },
+    name = "melon"
+  },
+  menu_board = {
+    desc = {
+      main = {
+        text = "A menu for a restaurant,"
+      }
+    },
+    name = "menu board"
+  },
+  messy_cloth = {
+    desc = {
+      main = {
+        text = "A pile of laundry,"
+      }
+    },
+    name = "messy cloth"
+  },
+  microwave_oven = {
+    desc = {
+      main = {
+        text = "Asserian cooking technolog"
+      }
+    },
+    name = "microwave oven"
+  },
+  mine = {
+    desc = {
+      main = {
+        text = 'The warning label reads "Do not step on mine when armed'
+      }
+    },
+    name = "mine"
+  },
+  mini_snow_man = {
+    desc = {
+      main = {
+        text = "A small snowman,"
+      }
+    },
+    name = "mini snow man"
+  },
+  miniature_tree = {
+    name = "miniature tree"
+  },
+  mochi = {
+    name = "mochi"
+  },
+  modern_chair = {
+    desc = {
+      main = {
+        text = "A chair made in Asseria,"
+      }
+    },
+    name = "modern chair"
+  },
+  modern_lamp_a = {
+    desc = {
+      main = {
+        text = "An Asserian lamp,"
+      }
+    },
+    name = "modern lamp"
+  },
+  modern_lamp_b = {
+    desc = {
+      main = {
+        text = "An Asserian lamp,"
+      }
+    },
+    name = "modern lamp"
+  },
+  modern_rack = {
+    name = "modern rack"
+  },
+  modern_table = {
+    desc = {
+      main = {
+        text = "A table made with Cyber Dome technology,"
+      }
+    },
+    name = "modern table"
+  },
+  molotov = {
+    desc = {
+      main = {
+        text = 'A label on the bottle states "Light before throwing",'
+      }
+    },
+    name = "molotov"
+  },
+  money_tree = {
+    desc = {
+      main = {
+        text = "Money grows on this tree,"
+      }
+    },
+    name = "money tree"
+  },
+  monster_ball = {
+    desc = {
+      main = {
+        text = "A strange item invented by a mad scientist...,"
+      }
+    },
+    name = "monster ball"
+  },
+  monster_heart = {
+    desc = {
+      main = {
+        text = "Helps to tame monsters,"
+      }
+    },
+    name = "monster heart",
+    unidentified_name = "beating heart"
+  },
+  moon_gate = {
+    name = "moon gate"
+  },
+  moonfish = {
+    desc = {
+      main = {
+        text = "A beautiful fish as pale as the moon,"
+      }
+    },
+    name = "moonfish"
+  },
+  morgia = {
+    desc = {
+      main = {
+        text = "A type of herb,"
+      }
+    },
+    name = "morgia"
+  },
+  mournblade = {
+    desc = {
+      main = {
+        text = "An evil black sword surrounded with an aura of dread,"
+      }
+    },
+    name = "<Mournblade>",
+    unidentified_name = "chaotic sword"
+  },
+  music_ticket = {
+    desc = {
+      main = {
+        text = "Tickets given out to promising musicians,"
+      }
+    },
+    name = "music ticket",
+    unidentified_name = "some kind of ticket"
+  },
+  mysterious_map = {
+    desc = {
+      main = {
+        text = "A map with no recognizable landmarks,"
+      }
+    },
+    name = "mysterious map"
+  },
+  narrow_dining_table = {
+    desc = {
+      main = {
+        text = "A dining room table,"
+      }
+    },
+    name = "narrow dining table"
+  },
+  neat_bar_table = {
+    desc = {
+      main = {
+        text = "A bar table with racks of alcohol and wine,"
+      }
+    },
+    name = "neat bar table"
+  },
+  neat_rack = {
+    desc = {
+      main = {
+        text = "A rack with a framed set of glass doors,"
+      }
+    },
+    name = "neat rack"
+  },
+  neat_shelf = {
+    desc = {
+      main = {
+        text = "A shelf containing books on crafting,"
+      }
+    },
+    name = "neat shelf"
+  },
+  neck_guard = {
+    desc = {
+      main = {
+        text = "Sometimes the only thing between an enemy sword and your neck,"
+      }
+    },
+    name = "neck guard"
+  },
+  nerine = {
+    desc = {
+      main = {
+        text = "Decorative flowers,"
+      }
+    },
+    name = "nerine"
+  },
+  new_years_decoration = {
+    name = "new year's decoration"
+  },
+  new_years_gift = {
+    name = "new year's gift"
+  },
+  nice_window = {
+    name = "nice window"
+  },
+  nuclear_bomb = {
+    desc = {
+      main = {
+        text = "A horrifying weapon of destruction from ancient times,"
+      }
+    },
+    name = "nuclear bomb",
+    unidentified_name = "very dangerous bomb"
+  },
+  old_bookshelf = {
+    desc = {
+      main = {
+        text = "You see large cracks in the wood,"
+      }
+    },
+    name = "old bookshelf"
+  },
+  old_grave = {
+    desc = {
+      main = {
+        text = "An old norland tomb,"
+      }
+    },
+    name = "old grave"
+  },
+  old_shelf = {
+    desc = {
+      main = {
+        text = "It looks like it's going to fall apart!"
+      }
+    },
+    name = "old shelf"
+  },
+  open_pot = {
+    desc = {
+      main = {
+        text = "An uncovered pot,"
+      }
+    },
+    name = "open pot"
+  },
+  ore_piece = {
+    desc = {
+      main = {
+        text = "Pretty worthless,"
+      }
+    },
+    name = "ore piece"
+  },
+  oven = {
+    desc = {
+      main = {
+        text = "A dwarven oven,"
+      }
+    },
+    name = "oven"
+  },
+  pachisuro_machine = {
+    desc = {
+      main = {
+        text = "Similar to a slot machine,"
+      }
+    },
+    name = "pachisuro machine"
+  },
+  painting_of_landscape = {
+    desc = {
+      main = {
+        text = "A painting of a landscape,"
+      }
+    },
+    name = "landscape"
+  },
+  painting_of_madam = {
+    desc = {
+      main = {
+        text = "A copy of a painting by a famous Yerles artist,"
+      }
+    },
+    name = "madam"
+  },
+  painting_of_sunflower = {
+    desc = {
+      main = {
+        text = "A painting of a sunflower,"
+      }
+    },
+    name = "sunflower"
+  },
+  palmia_pride = {
+    name = "<Palmia Pride>",
+    unidentified_name = "blue ring"
+  },
+  pan_flute = {
+    desc = {
+      main = {
+        text = "A type of instrument designed after (but larger than) fairy made flutes,"
+      }
+    },
+    name = "pan flute"
+  },
+  panty = {
+    desc = {
+      main = {
+        text = "A fitting weapon for those who fight dirty,"
+      }
+    },
+    name = "panty"
+  },
+  partition = {
+    name = "partition"
+  },
+  pedestal = {
+    name = "pedestal"
+  },
+  pentagram = {
+    desc = {
+      main = {
+        text = "An ancient religious symbol now containing six points!"
+      }
+    },
+    name = "pentagram"
+  },
+  peridot = {
+    desc = {
+      main = {
+        text = "A gem attached to a neck chain,"
+      }
+    },
+    name = "peridot"
+  },
+  pick = {
+    desc = {
+      main = {
+        text = "A pick sometimes used for mining,"
+      }
+    },
+    name = "pick"
+  },
+  pillar = {
+    name = "pillar"
+  },
+  pillar_ornamented_with_flowers = {
+    desc = {
+      main = {
+        text = "A pillar designed after one's common in Eludernia,"
+      }
+    },
+    name = "ornamented with flowers"
+  },
+  pillar_ornamented_with_plants = {
+    desc = {
+      main = {
+        text = "A pillar designed after one's common in Eludernia,"
+      }
+    },
+    name = "ornamented with plants"
+  },
+  pistol = {
+    desc = {
+      main = {
+        text = "Made by Cyber Dome In"
+      }
+    },
+    name = "pistol"
+  },
+  plain_bed = {
+    desc = {
+      main = {
+        text = "A bed made in Cyber Dome,"
+      }
+    },
+    name = "plain bed"
+  },
+  plank_of_carneades = {
+    name = "Carneades"
+  },
+  plate_gauntlets = {
+    desc = {
+      main = {
+        text = "A pair of plated gauntlets,"
+      }
+    },
+    name = "plate gauntlets"
+  },
+  plate_girdle = {
+    desc = {
+      main = {
+        text = "A reinforced girdle,"
+      }
+    },
+    name = "plate girdle"
+  },
+  plate_mail = {
+    desc = {
+      main = {
+        text = "An armor forged by dwarves,"
+      }
+    },
+    name = "plate mail"
+  },
+  platinum_coin = {
+    desc = {
+      main = {
+        text = "Rare coins used by the guilds for currency,"
+      }
+    },
+    name = "platinum coin"
+  },
+  playback_disc = {
+    desc = {
+      main = {
+        text = "A mysterious disc that seems to play your memories,"
+      }
+    },
+    name = "playback disc"
+  },
+  poison = {
+    desc = {
+      main = {
+        text = "Warning"
+      }
+    },
+    name = "poison"
+  },
+  pop_corn = {
+    desc = {
+      main = {
+        text = "Buttery popcorn,"
+      }
+    },
+    name = "pop corn"
+  },
+  pope_robe = {
+    desc = {
+      main = {
+        text = "A robe from ancient times that has an aura of peace,"
+      }
+    },
+    name = "pope robe"
+  },
+  portable_cooking_tool = {
+    desc = {
+      main = {
+        text = "A cooking set popular among adventurers,"
+      }
+    },
+    name = "portable cooking tool"
+  },
+  pot = {
+    desc = {
+      main = {
+        text = "Useful for cooking!"
+      }
+    },
+    name = "pot"
+  },
+  pot_for_testing = {
+    desc = {
+      main = {
+        text = "dev item"
+      }
+    },
+    name = "for testing"
+  },
+  potion_of_blindness = {
+    desc = {
+      main = {
+        text = "Sometimes carried by prostitutes,"
+      }
+    },
+    name = "blindness"
+  },
+  potion_of_confusion = {
+    desc = {
+      main = {
+        text = 'A label says "Please do not drink to identify contents,'
+      }
+    },
+    name = "confusion"
+  },
+  potion_of_cure_corruption = {
+    desc = {
+      main = {
+        text = 'A label reads "For use in curing harmful diseases only'
+      }
+    },
+    name = "cure corruption"
+  },
+  potion_of_cure_critical_wound = {
+    desc = {
+      main = {
+        text = "A potion that cures some wounds,"
+      }
+    },
+    name = "cure critical wound"
+  },
+  potion_of_cure_major_wound = {
+    desc = {
+      main = {
+        text = "A potion that cures some wounds,"
+      }
+    },
+    name = "cure major wound"
+  },
+  potion_of_cure_minor_wound = {
+    desc = {
+      main = {
+        text = "A potion that cures some wounds,"
+      }
+    },
+    name = "cure minor wound"
+  },
+  potion_of_cure_mutation = {
+    desc = {
+      main = {
+        text = "Cures mutated genes,"
+      }
+    },
+    name = "cure mutation"
+  },
+  potion_of_defender = {
+    desc = {
+      main = {
+        text = "A magical potion that can protect you from harm,"
+      }
+    },
+    name = "defender"
+  },
+  potion_of_descent = {
+    desc = {
+      main = {
+        text = "A strange potion,"
+      }
+    },
+    name = "descent"
+  },
+  potion_of_evolution = {
+    desc = {
+      main = {
+        text = "You say it's evolution?"
+      }
+    },
+    name = "evolution"
+  },
+  potion_of_healer = {
+    desc = {
+      main = {
+        text = "A potion that cures some wounds,"
+      }
+    },
+    name = "healer"
+  },
+  potion_of_healer_eris = {
+    desc = {
+      main = {
+        text = "A potion made by a talented alchemist cures some wounds,"
+      }
+    },
+    name = "healer <Eris>"
+  },
+  potion_of_healer_jure = {
+    desc = {
+      main = {
+        text = "A potion whose formula was created by Jure herself,"
+      }
+    },
+    name = "healer <Jure>"
+  },
+  potion_of_healer_odina = {
+    desc = {
+      main = {
+        text = "A potion made by a talented alchemist cures some wounds,"
+      }
+    },
+    name = "healer <Odina>"
+  },
+  potion_of_healing = {
+    desc = {
+      main = {
+        text = "A potion that cures some wounds,"
+      }
+    },
+    name = "healing"
+  },
+  potion_of_hero = {
+    desc = {
+      main = {
+        text = 'A label warns "Can give a false sense of confidence,'
+      }
+    },
+    name = "hero"
+  },
+  potion_of_mutation = {
+    desc = {
+      main = {
+        text = "Mutates your genetic makeup,"
+      }
+    },
+    name = "mutation"
+  },
+  potion_of_paralysis = {
+    desc = {
+      main = {
+        text = 'A label dictates "For medical use only,'
+      }
+    },
+    name = "paralysis"
+  },
+  potion_of_potential = {
+    desc = {
+      main = {
+        text = "A valuable potion,"
+      }
+    },
+    name = "potential"
+  },
+  potion_of_resistance = {
+    desc = {
+      main = {
+        text = "A magical potion that can protect you from harm,"
+      }
+    },
+    name = "resistance"
+  },
+  potion_of_restore_body = {
+    desc = {
+      main = {
+        text = "A potion that restores physical stats,"
+      }
+    },
+    name = "restore body"
+  },
+  potion_of_restore_spirit = {
+    desc = {
         main = {
           text = "A potion that restores spiritual stats,"
         }
@@ -3347,7 +3346,7 @@ return {
       name = "restore spirit"
     },
     potion_of_salt_solution = {
-      description = {
+      desc = {
         main = {
           text = "Some salt,"
         }
@@ -3355,7 +3354,7 @@ return {
       name = "salt solution"
     },
     potion_of_silence = {
-      description = {
+      desc = {
         main = {
           text = "...,,"
         }
@@ -3363,7 +3362,7 @@ return {
       name = "silence"
     },
     potion_of_slow = {
-      description = {
+      desc = {
         main = {
           text = "An item often carried by thieves,"
         }
@@ -3371,7 +3370,7 @@ return {
       name = "slow"
     },
     potion_of_speed = {
-      description = {
+      desc = {
         main = {
           text = "A magical potion that increases your speed temporarily,"
         }
@@ -3379,7 +3378,7 @@ return {
       name = "speed"
     },
     potion_of_troll_blood = {
-      description = {
+      desc = {
         main = {
           text = "Tastes worse than it smells,"
         }
@@ -3387,7 +3386,7 @@ return {
       name = "troll blood"
     },
     potion_of_weaken_resistance = {
-      description = {
+      desc = {
         main = {
           text = 'A label informs you "can cause harmful side effects,'
         }
@@ -3395,7 +3394,7 @@ return {
       name = "weaken resistance"
     },
     potion_of_weakness = {
-      description = {
+      desc = {
         main = {
           text = "A strangely colored potion,"
         }
@@ -3403,7 +3402,7 @@ return {
       name = "weakness"
     },
     presidents_chair = {
-      description = {
+      desc = {
         main = {
           text = "A rare chair made for Asseria's elite,"
         }
@@ -3415,7 +3414,7 @@ return {
       name = "puff puff bread"
     },
     putitoro = {
-      description = {
+      desc = {
         main = {
           text = "dev item"
         }
@@ -3423,7 +3422,7 @@ return {
       name = "putitoro"
     },
     qucche = {
-      description = {
+      desc = {
         main = {
           text = "A type of fruit,"
         }
@@ -3431,7 +3430,7 @@ return {
       name = "qucche"
     },
     quwapana = {
-      description = {
+      desc = {
         main = {
           text = "A type of vegetation,"
         }
@@ -3439,7 +3438,7 @@ return {
       name = "quwapana"
     },
     rabbits_tail = {
-      description = {
+      desc = {
         main = {
           text = "A tail said to bring luck,"
         }
@@ -3448,7 +3447,7 @@ return {
       unidentified_name = "fluffy tail"
     },
     rack_of_accessories = {
-      description = {
+      desc = {
         main = {
           text = "Products for display or sale,"
         }
@@ -3456,7 +3455,7 @@ return {
       name = "accessories"
     },
     rack_of_goods = {
-      description = {
+      desc = {
         main = {
           text = "Products for display or sale,"
         }
@@ -3464,7 +3463,7 @@ return {
       name = "goods"
     },
     rack_of_potions = {
-      description = {
+      desc = {
         main = {
           text = "A potions rack,"
         }
@@ -3472,7 +3471,7 @@ return {
       name = "potions"
     },
     radish = {
-      description = {
+      desc = {
         main = {
           text = "A type of vegetable,"
         }
@@ -3480,7 +3479,7 @@ return {
       name = "radish"
     },
     rag_doll = {
-      description = {
+      desc = {
         main = {
           text = "A cute stuffed teddy bear,"
         }
@@ -3488,7 +3487,7 @@ return {
       name = "rag doll"
     },
     ragged_table = {
-      description = {
+      desc = {
         main = {
           text = "A rustic table,"
         }
@@ -3496,7 +3495,7 @@ return {
       name = "ragged table"
     },
     ragnarok = {
-      description = {
+      desc = {
         main = {
           text = "It's said that only a god can use its true power,"
         }
@@ -3509,7 +3508,7 @@ return {
       unidentified_name = "gun of genocide"
     },
     rainbow_fruit = {
-      description = {
+      desc = {
         main = {
           text = "A type of fruit,"
         }
@@ -3521,7 +3520,7 @@ return {
       unidentified_name = "cursed halberd"
     },
     rare_treasure_ball = {
-      description = {
+      desc = {
         main = {
           text = "This contains a rare treasure,"
         }
@@ -3529,7 +3528,7 @@ return {
       name = "rare treasure ball"
     },
     ration = {
-      description = {
+      desc = {
         main = {
           text = "A ratio"
         }
@@ -3537,7 +3536,7 @@ return {
       name = "ration"
     },
     raw_noodle = {
-      description = {
+      desc = {
         main = {
           text = "This would taste better cooked,"
         }
@@ -3566,7 +3565,7 @@ return {
       name = "red stall"
     },
     red_treasure_machine = {
-      description = {
+      desc = {
         main = {
           text = "A treasure machine accepting rare coins,"
         }
@@ -3574,7 +3573,7 @@ return {
       name = "red treasure machine"
     },
     register = {
-      description = {
+      desc = {
         main = {
           text = "Needed to run a shop,"
         }
@@ -3582,7 +3581,7 @@ return {
       name = "register"
     },
     remains_blood = {
-      description = {
+      desc = {
         main = {
           text = "The blood of a creature,"
         }
@@ -3590,7 +3589,7 @@ return {
       name = "blood"
     },
     remains_bone = {
-      description = {
+      desc = {
         main = {
           text = "The bones of a creature,"
         }
@@ -3598,7 +3597,7 @@ return {
       name = "bone"
     },
     remains_eye = {
-      description = {
+      desc = {
         main = {
           text = "The eye of a creature,"
         }
@@ -3606,7 +3605,7 @@ return {
       name = "eye"
     },
     remains_heart = {
-      description = {
+      desc = {
         main = {
           text = "The heart of a creature,"
         }
@@ -3614,7 +3613,7 @@ return {
       name = "heart"
     },
     remains_skin = {
-      description = {
+      desc = {
         main = {
           text = "The skin of a creature,"
         }
@@ -3622,7 +3621,7 @@ return {
       name = "skin"
     },
     rice_barrel = {
-      description = {
+      desc = {
         main = {
           text = "A barrel for holding rice,"
         }
@@ -3630,7 +3629,7 @@ return {
       name = "rice barrel"
     },
     ring = {
-      description = {
+      desc = {
         main = {
           text = "A plain ring,"
         }
@@ -3638,7 +3637,7 @@ return {
       name = "ring"
     },
     ring_mail = {
-      description = {
+      desc = {
         main = {
           text = "Leather armor with metal rings sewn on,"
         }
@@ -3650,7 +3649,7 @@ return {
       unidentified_name = "steel ring"
     },
     robe = {
-      description = {
+      desc = {
         main = {
           text = "A common robe,"
         }
@@ -3658,7 +3657,7 @@ return {
       name = "robe"
     },
     rod_of_acid_ground = {
-      description = {
+      desc = {
         main = {
           text = "A mithril rod,"
         }
@@ -3666,7 +3665,7 @@ return {
       name = "acid ground"
     },
     rod_of_alchemy = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of emerald,"
         }
@@ -3674,7 +3673,7 @@ return {
       name = "alchemy"
     },
     rod_of_change_creature = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of ether,"
         }
@@ -3682,7 +3681,7 @@ return {
       name = "change creature"
     },
     rod_of_cure = {
-      description = {
+      desc = {
         main = {
           text = "A wooden rod with a cloth grip,"
         }
@@ -3690,7 +3689,7 @@ return {
       name = "cure"
     },
     rod_of_cure_minor_wound = {
-      description = {
+      desc = {
         main = {
           text = "A wooden rod with a cloth grip,"
         }
@@ -3698,7 +3697,7 @@ return {
       name = "cure minor wound"
     },
     rod_of_domination = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of rubynus,"
         }
@@ -3706,7 +3705,7 @@ return {
       name = "domination"
     },
     rod_of_fire_bolt = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of metal,"
         }
@@ -3714,7 +3713,7 @@ return {
       name = "fire bolt"
     },
     rod_of_fire_wall = {
-      description = {
+      desc = {
         main = {
           text = "A platinum rod,"
         }
@@ -3722,7 +3721,7 @@ return {
       name = "fire wall"
     },
     rod_of_heal = {
-      description = {
+      desc = {
         main = {
           text = "A decorated wooden rod with a cloth grip,"
         }
@@ -3730,7 +3729,7 @@ return {
       name = "heal"
     },
     rod_of_healing_hands = {
-      description = {
+      desc = {
         main = {
           text = "A silver plated rod,"
         }
@@ -3738,7 +3737,7 @@ return {
       name = "healing hands"
     },
     rod_of_holy_light = {
-      description = {
+      desc = {
         main = {
           text = "A gold plated rod,"
         }
@@ -3746,7 +3745,7 @@ return {
       name = "holy light"
     },
     rod_of_ice_bolt = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of wood,"
         }
@@ -3754,7 +3753,7 @@ return {
       name = "ice bolt"
     },
     rod_of_identify = {
-      description = {
+      desc = {
         main = {
           text = "A wooden rod,"
         }
@@ -3762,7 +3761,7 @@ return {
       name = "identify"
     },
     rod_of_lightning_bolt = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of bronze,"
         }
@@ -3770,7 +3769,7 @@ return {
       name = "lightning bolt"
     },
     rod_of_magic_mapping = {
-      description = {
+      desc = {
         main = {
           text = "A rod plated with adamantium,"
         }
@@ -3778,7 +3777,7 @@ return {
       name = "magic mapping"
     },
     rod_of_magic_missile = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of iron,"
         }
@@ -3786,7 +3785,7 @@ return {
       name = "magic missile"
     },
     rod_of_make_door = {
-      description = {
+      desc = {
         main = {
           text = "A pearl tipped rod,"
         }
@@ -3794,7 +3793,7 @@ return {
       name = "make door"
     },
     rod_of_mana = {
-      description = {
+      desc = {
         main = {
           text = "A rod wrapped in dawn cloth,"
         }
@@ -3802,7 +3801,7 @@ return {
       name = "mana"
     },
     rod_of_silence = {
-      description = {
+      desc = {
         main = {
           text = "A mica tipped rod,"
         }
@@ -3810,7 +3809,7 @@ return {
       name = "silence"
     },
     rod_of_slow = {
-      description = {
+      desc = {
         main = {
           text = "A rod with a silver tip,"
         }
@@ -3818,7 +3817,7 @@ return {
       name = "slow"
     },
     rod_of_speed = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of glass,"
         }
@@ -3826,7 +3825,7 @@ return {
       name = "speed"
     },
     rod_of_summon_monsters = {
-      description = {
+      desc = {
         main = {
           text = "A heavy rod,"
         }
@@ -3834,7 +3833,7 @@ return {
       name = "summon monsters"
     },
     rod_of_teleportation = {
-      description = {
+      desc = {
         main = {
           text = "A rod made out of steel,"
         }
@@ -3842,7 +3841,7 @@ return {
       name = "teleportation"
     },
     rod_of_uncurse = {
-      description = {
+      desc = {
         main = {
           text = "A rod wrapped in spirit cloth,"
         }
@@ -3850,7 +3849,7 @@ return {
       name = "uncurse"
     },
     rod_of_wall_creation = {
-      description = {
+      desc = {
         main = {
           text = "A wall made out of obsidian,"
         }
@@ -3858,7 +3857,7 @@ return {
       name = "wall creation"
     },
     rod_of_web = {
-      description = {
+      desc = {
         main = {
           text = "A rod wrapped in silk,"
         }
@@ -3866,7 +3865,7 @@ return {
       name = "web"
     },
     rod_of_wishing = {
-      description = {
+      desc = {
         main = {
           text = "A dragon scale rod with a diamond tip,"
         }
@@ -3874,7 +3873,7 @@ return {
       name = "wishing"
     },
     rose = {
-      description = {
+      desc = {
         main = {
           text = "A symbol of love,"
         }
@@ -3882,7 +3881,7 @@ return {
       name = "rose"
     },
     round_chair = {
-      description = {
+      desc = {
         main = {
           text = "A chair for a small child or a fairy,"
         }
@@ -3890,7 +3889,7 @@ return {
       name = "round chair"
     },
     round_shield = {
-      description = {
+      desc = {
         main = {
           text = "Used to block hostile weapons,"
         }
@@ -3898,7 +3897,7 @@ return {
       name = "round shield"
     },
     rune = {
-      description = {
+      desc = {
         main = {
           text = "A magical rune that warps reality,"
         }
@@ -3906,7 +3905,7 @@ return {
       name = "rune"
     },
     sack_of_flour = {
-      description = {
+      desc = {
         main = {
           text = "Flour used for baking,"
         }
@@ -3917,7 +3916,7 @@ return {
       name = "sugar"
     },
     sacred_altar = {
-      description = {
+      desc = {
         main = {
           text = "An altar with a holy aura,"
         }
@@ -3925,7 +3924,7 @@ return {
       name = "sacred altar"
     },
     safe = {
-      description = {
+      desc = {
         main = {
           text = "It might not be safe to carry..."
         }
@@ -3933,7 +3932,7 @@ return {
       name = "safe"
     },
     sage = {
-      description = {
+      desc = {
         main = {
           text = "An herb used to season food,"
         }
@@ -3945,7 +3944,7 @@ return {
       unidentified_name = "shining helm"
     },
     salary_chest = {
-      description = {
+      desc = {
         main = {
           text = "A salary chest for freelance employment,"
         }
@@ -3953,7 +3952,7 @@ return {
       name = "salary chest"
     },
     salmon = {
-      description = {
+      desc = {
         main = {
           text = "A fish with unique spawning habits,"
         }
@@ -3961,7 +3960,7 @@ return {
       name = "salmon"
     },
     sand_bag = {
-      description = {
+      desc = {
         main = {
           text = "Attach your own punching bag!"
         }
@@ -3972,7 +3971,7 @@ return {
       name = "sandborer"
     },
     sardine = {
-      description = {
+      desc = {
         main = {
           text = "A small oily fish,"
         }
@@ -3980,7 +3979,7 @@ return {
       name = "sardine"
     },
     scarecrow = {
-      description = {
+      desc = {
         main = {
           text = "Used by farmers to keep birds away from their crops,"
         }
@@ -3991,7 +3990,7 @@ return {
       name = "Schrodinger's cat"
     },
     scimitar = {
-      description = {
+      desc = {
         main = {
           text = "A curved sword,"
         }
@@ -3999,7 +3998,7 @@ return {
       name = "scimitar"
     },
     scroll_of_ally = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4007,7 +4006,7 @@ return {
       name = "ally"
     },
     scroll_of_change_material = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4015,7 +4014,7 @@ return {
       name = "change material"
     },
     scroll_of_contingency = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4023,7 +4022,7 @@ return {
       name = "contingency"
     },
     scroll_of_curse = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4031,7 +4030,7 @@ return {
       name = "curse"
     },
     scroll_of_detect_objects = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4039,7 +4038,7 @@ return {
       name = "detect objects"
     },
     scroll_of_enchant_armor = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4047,7 +4046,7 @@ return {
       name = "enchant armor"
     },
     scroll_of_enchant_weapon = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4055,7 +4054,7 @@ return {
       name = "enchant weapon"
     },
     scroll_of_escape = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4063,7 +4062,7 @@ return {
       name = "escape"
     },
     scroll_of_faith = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4071,7 +4070,7 @@ return {
       name = "faith"
     },
     scroll_of_gain_attribute = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4079,7 +4078,7 @@ return {
       name = "gain attribute"
     },
     scroll_of_gain_material = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4087,7 +4086,7 @@ return {
       name = "gain material"
     },
     scroll_of_greater_enchant_armor = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4095,7 +4094,7 @@ return {
       name = "greater enchant armor"
     },
     scroll_of_greater_enchant_weapon = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4103,7 +4102,7 @@ return {
       name = "greater enchant weapon"
     },
     scroll_of_greater_identify = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4111,7 +4110,7 @@ return {
       name = "greater identify"
     },
     scroll_of_growth = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4119,7 +4118,7 @@ return {
       name = "growth"
     },
     scroll_of_healing_rain = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4127,7 +4126,7 @@ return {
       name = "healing rain"
     },
     scroll_of_holy_light = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4135,7 +4134,7 @@ return {
       name = "holy light"
     },
     scroll_of_holy_rain = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4143,7 +4142,7 @@ return {
       name = "holy rain"
     },
     scroll_of_holy_veil = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4151,7 +4150,7 @@ return {
       name = "holy veil"
     },
     scroll_of_identify = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4159,7 +4158,7 @@ return {
       name = "identify"
     },
     scroll_of_incognito = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4167,7 +4166,7 @@ return {
       name = "incognito"
     },
     scroll_of_inferior_material = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4175,7 +4174,7 @@ return {
       name = "inferior material"
     },
     scroll_of_knowledge = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4183,7 +4182,7 @@ return {
       name = "knowledge"
     },
     scroll_of_magical_map = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4191,7 +4190,7 @@ return {
       name = "magical map"
     },
     scroll_of_mana = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4199,7 +4198,7 @@ return {
       name = "mana"
     },
     scroll_of_minor_teleportation = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4207,7 +4206,7 @@ return {
       name = "minor teleportation"
     },
     scroll_of_name = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4215,7 +4214,7 @@ return {
       name = "name"
     },
     scroll_of_oracle = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4223,7 +4222,7 @@ return {
       name = "oracle"
     },
     scroll_of_recharge = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4231,7 +4230,7 @@ return {
       name = "recharge"
     },
     scroll_of_return = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4239,7 +4238,7 @@ return {
       name = "return"
     },
     scroll_of_superior_material = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4247,7 +4246,7 @@ return {
       name = "superior material"
     },
     scroll_of_teleportation = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4255,7 +4254,7 @@ return {
       name = "teleportation"
     },
     scroll_of_uncurse = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4263,7 +4262,7 @@ return {
       name = "uncurse"
     },
     scroll_of_vanish_curse = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4271,7 +4270,7 @@ return {
       name = "vanish curse"
     },
     scroll_of_wonder = {
-      description = {
+      desc = {
         main = {
           text = "A magical scroll with arcane writing,"
         }
@@ -4279,7 +4278,7 @@ return {
       name = "wonder"
     },
     scythe = {
-      description = {
+      desc = {
         main = {
           text = "A farmer's tool that has largely replaced sickles,"
         }
@@ -4287,7 +4286,7 @@ return {
       name = "scythe"
     },
     scythe_of_void = {
-      description = {
+      desc = {
         main = {
           text = "This weapon's very existence defies all logic,"
         }
@@ -4307,7 +4306,7 @@ return {
       unidentified_name = "strange jewel"
     },
     secret_treasure = {
-      description = {
+      desc = {
         main = {
           text = "This strange object seems to slightly shift its shape,"
         }
@@ -4316,7 +4315,7 @@ return {
       unidentified_name = "mysterious jewel"
     },
     server = {
-      description = {
+      desc = {
         main = {
           text = "Asserian computer technology,"
         }
@@ -4324,7 +4323,7 @@ return {
       name = "server"
     },
     seven_league_boots = {
-      description = {
+      desc = {
         main = {
           text = "Rare boots magically enhanced to allow faster travel,"
         }
@@ -4332,7 +4331,7 @@ return {
       name = "seven league boots"
     },
     sewing_kit = {
-      description = {
+      desc = {
         main = {
           text = "An sewing kit intended for clothing repair,"
         }
@@ -4340,7 +4339,7 @@ return {
       name = "sewing kit"
     },
     shelter = {
-      description = {
+      desc = {
         main = {
           text = "This kit can be used to build a shelter that protects you from the weather!"
         }
@@ -4352,7 +4351,7 @@ return {
       unidentified_name = "scentful panty"
     },
     shield = {
-      description = {
+      desc = {
         main = {
           text = "A shield with a crest,"
         }
@@ -4364,7 +4363,7 @@ return {
       unidentified_name = "tingling shield"
     },
     shit = {
-      description = {
+      desc = {
         main = {
           text = "Stinky...,,"
         }
@@ -4372,7 +4371,7 @@ return {
       name = "shit"
     },
     shoes = {
-      description = {
+      desc = {
         main = {
           text = "A pair of shoes,"
         }
@@ -4380,7 +4379,7 @@ return {
       name = "shoes"
     },
     shop_strongbox = {
-      description = {
+      desc = {
         main = {
           text = "A chest containing your shop's profit"
         }
@@ -4391,7 +4390,7 @@ return {
       name = "shopkeeper's trunk"
     },
     short_bow = {
-      description = {
+      desc = {
         main = {
           text = "A standard easy to use bow,"
         }
@@ -4399,7 +4398,7 @@ return {
       name = "short bow"
     },
     shot_gun = {
-      description = {
+      desc = {
         main = {
           text = "Made by Cyber Dome In"
         }
@@ -4407,7 +4406,7 @@ return {
       name = "shot gun"
     },
     show_case_of_breads = {
-      description = {
+      desc = {
         main = {
           text = "A shelf of bread for display,"
         }
@@ -4419,7 +4418,7 @@ return {
       unidentified_name = "foreign gate"
     },
     shuriken = {
-      description = {
+      desc = {
         main = {
           text = "A Hira-Shuriken,"
         }
@@ -4427,7 +4426,7 @@ return {
       name = "shuriken"
     },
     sickle = {
-      description = {
+      desc = {
         main = {
           text = "A farmer's tool for harvesting crops,"
         }
@@ -4435,7 +4434,7 @@ return {
       name = "sickle"
     },
     sign = {
-      description = {
+      desc = {
         main = {
           text = "Sig"
         }
@@ -4443,7 +4442,7 @@ return {
       name = "sign"
     },
     silk_cloth = {
-      description = {
+      desc = {
         main = {
           text = "Silk cloth woven by faeries,"
         }
@@ -4451,7 +4450,7 @@ return {
       name = "silk cloth"
     },
     simple_dresser = {
-      description = {
+      desc = {
         main = {
           text = "A dresser often made for children,"
         }
@@ -4462,7 +4461,7 @@ return {
       name = "simple rack"
     },
     simple_shelf = {
-      description = {
+      desc = {
         main = {
           text = "A shelf for your dining room,"
         }
@@ -4470,7 +4469,7 @@ return {
       name = "simple shelf"
     },
     sink = {
-      description = {
+      desc = {
         main = {
           text = "Has its own water filtration system,"
         }
@@ -4478,7 +4477,7 @@ return {
       name = "sink"
     },
     sisters_love_fueled_lunch = {
-      description = {
+      desc = {
         main = {
           text = "It even has cookies!"
         }
@@ -4486,7 +4485,7 @@ return {
       name = "sister's love fueled lunch"
     },
     skeleton = {
-      description = {
+      desc = {
         main = {
           text = "Bones of an unknown creature,"
         }
@@ -4494,7 +4493,7 @@ return {
       name = "skeleton"
     },
     skeleton_key = {
-      description = {
+      desc = {
         main = {
           text = "An item stolen from a legendary locksmith,"
         }
@@ -4506,7 +4505,7 @@ return {
       name = "skull bow"
     },
     sleeping_bag = {
-      description = {
+      desc = {
         main = {
           text = "Useful for camping and sleeping in moldy dungeons!"
         }
@@ -4514,7 +4513,7 @@ return {
       name = "sleeping bag"
     },
     sleeping_drug = {
-      description = {
+      desc = {
         main = {
           text = 'A label says "Do not inhale,'
         }
@@ -4522,7 +4521,7 @@ return {
       name = "sleeping drug"
     },
     slot_machine = {
-      description = {
+      desc = {
         main = {
           text = "Do you want to try it?"
         }
@@ -4530,7 +4529,7 @@ return {
       name = "slot machine"
     },
     small_foliage_plant = {
-      description = {
+      desc = {
         main = {
           text = "Plants in a pot,"
         }
@@ -4538,7 +4537,7 @@ return {
       name = "small foliage plant"
     },
     small_gamble_chest = {
-      description = {
+      desc = {
         main = {
           text = "Popular among gamblers,"
         }
@@ -4546,7 +4545,7 @@ return {
       name = "small gamble chest"
     },
     small_medal = {
-      description = {
+      desc = {
         main = {
           text = "Dwarven currency rarely found outside of their homeland,"
         }
@@ -4555,7 +4554,7 @@ return {
       unidentified_name = "silver coin"
     },
     small_shield = {
-      description = {
+      desc = {
         main = {
           text = "A small reinforced shield,"
         }
@@ -4563,7 +4562,7 @@ return {
       name = "small shield"
     },
     snow_barrel = {
-      description = {
+      desc = {
         main = {
           text = "A barrel with snow on it,"
         }
@@ -4571,7 +4570,7 @@ return {
       name = "snow barrel"
     },
     snow_man = {
-      description = {
+      desc = {
         main = {
           text = "A snow man,"
         }
@@ -4579,7 +4578,7 @@ return {
       name = "snow man"
     },
     snow_scarecrow = {
-      description = {
+      desc = {
         main = {
           text = "Is there a need for one in the snow?"
         }
@@ -4587,7 +4586,7 @@ return {
       name = "snow scarecrow"
     },
     sofa = {
-      description = {
+      desc = {
         main = {
           text = "A finely crafted sofa,"
         }
@@ -4595,7 +4594,7 @@ return {
       name = "sofa"
     },
     soft_bed = {
-      description = {
+      desc = {
         main = {
           text = "A soft bed meant for a child,"
         }
@@ -4603,7 +4602,7 @@ return {
       name = "soft bed"
     },
     solemn_tomb = {
-      description = {
+      desc = {
         main = {
           text = "A tome of a rich or heroic figure,"
         }
@@ -4611,7 +4610,7 @@ return {
       name = "solemn tomb"
     },
     spear = {
-      description = {
+      desc = {
         main = {
           text = "A polearm with a sharp point,"
         }
@@ -4622,7 +4621,7 @@ return {
       name = "special steamed meat bun"
     },
     speed_ring = {
-      description = {
+      desc = {
         main = {
           text = "A rare magical ring that increases your speed,"
         }
@@ -4630,7 +4629,7 @@ return {
       name = "speed ring"
     },
     spellbook_of_4_dimensional_pocket = {
-      description = {
+      desc = {
         main = {
           text = "A tome on alternate dimension"
         }
@@ -4638,7 +4637,7 @@ return {
       name = "4 dimensional pocket"
     },
     spellbook_of_acid_ground = {
-      description = {
+      desc = {
         main = {
           text = "The pages of this tome are tinted green,"
         }
@@ -4646,7 +4645,7 @@ return {
       name = "acid ground"
     },
     spellbook_of_chaos_ball = {
-      description = {
+      desc = {
         main = {
           text = "You find this tome confusing,"
         }
@@ -4654,7 +4653,7 @@ return {
       name = "chaos ball"
     },
     spellbook_of_chaos_eye = {
-      description = {
+      desc = {
         main = {
           text = "This tome makes no sense,"
         }
@@ -4662,7 +4661,7 @@ return {
       name = "chaos eye"
     },
     spellbook_of_contingency = {
-      description = {
+      desc = {
         main = {
           text = "An ancient tome,"
         }
@@ -4670,7 +4669,7 @@ return {
       name = "contingency"
     },
     spellbook_of_cure_critical_wound = {
-      description = {
+      desc = {
         main = {
           text = "This tome has been carefully preserved,"
         }
@@ -4678,7 +4677,7 @@ return {
       name = "cure critical wound"
     },
     spellbook_of_cure_eris = {
-      description = {
+      desc = {
         main = {
           text = "A tome of arcane healing,"
         }
@@ -4686,7 +4685,7 @@ return {
       name = "cure <Eris>"
     },
     spellbook_of_cure_jure = {
-      description = {
+      desc = {
         main = {
           text = "A tome of words written by Jure herself,"
         }
@@ -4694,7 +4693,7 @@ return {
       name = "cure <Jure>"
     },
     spellbook_of_cure_minor_wound = {
-      description = {
+      desc = {
         main = {
           text = "This tome has carefully been taken care of,"
         }
@@ -4702,7 +4701,7 @@ return {
       name = "cure minor wound"
     },
     spellbook_of_darkness_arrow = {
-      description = {
+      desc = {
         main = {
           text = "This tome seems to carefully bend light,"
         }
@@ -4710,7 +4709,7 @@ return {
       name = "darkness arrow"
     },
     spellbook_of_darkness_beam = {
-      description = {
+      desc = {
         main = {
           text = "This tome seems to bend light,"
         }
@@ -4718,7 +4717,7 @@ return {
       name = "darkness beam"
     },
     spellbook_of_detect_objects = {
-      description = {
+      desc = {
         main = {
           text = "Makes you feel like a treasure hunter,"
         }
@@ -4726,7 +4725,7 @@ return {
       name = "detect objects"
     },
     spellbook_of_domination = {
-      description = {
+      desc = {
         main = {
           text = "A tome that seems to break your will,"
         }
@@ -4734,7 +4733,7 @@ return {
       name = "domination"
     },
     spellbook_of_elemental_scar = {
-      description = {
+      desc = {
         main = {
           text = "A weathered and warped tome,"
         }
@@ -4742,7 +4741,7 @@ return {
       name = "elemental scar"
     },
     spellbook_of_fire_ball = {
-      description = {
+      desc = {
         main = {
           text = "This tome is hot,"
         }
@@ -4750,7 +4749,7 @@ return {
       name = "fire ball"
     },
     spellbook_of_fire_bolt = {
-      description = {
+      desc = {
         main = {
           text = "The tome is strangely warm,"
         }
@@ -4758,7 +4757,7 @@ return {
       name = "fire bolt"
     },
     spellbook_of_fire_wall = {
-      description = {
+      desc = {
         main = {
           text = "This tome is warm,"
         }
@@ -4766,7 +4765,7 @@ return {
       name = "fire wall"
     },
     spellbook_of_harvest = {
-      description = {
+      desc = {
         main = {
           text = "A tome on secret form's of magical alchemy,"
         }
@@ -4774,7 +4773,7 @@ return {
       name = "harvest"
     },
     spellbook_of_healing_hands = {
-      description = {
+      desc = {
         main = {
           text = "A handy tome,"
         }
@@ -4782,7 +4781,7 @@ return {
       name = "healing hands"
     },
     spellbook_of_healing_rain = {
-      description = {
+      desc = {
         main = {
           text = "A slightly damp tome,"
         }
@@ -4790,7 +4789,7 @@ return {
       name = "healing rain"
     },
     spellbook_of_hero = {
-      description = {
+      desc = {
         main = {
           text = "Strangely reading this book gives you a slight adrenalin rush,"
         }
@@ -4798,7 +4797,7 @@ return {
       name = "hero"
     },
     spellbook_of_holy_light = {
-      description = {
+      desc = {
         main = {
           text = "A tome with a calming glow,"
         }
@@ -4806,7 +4805,7 @@ return {
       name = "holy light"
     },
     spellbook_of_holy_rain = {
-      description = {
+      desc = {
         main = {
           text = "A slightly damp tome,"
         }
@@ -4814,7 +4813,7 @@ return {
       name = "holy rain"
     },
     spellbook_of_holy_shield = {
-      description = {
+      desc = {
         main = {
           text = "A yellowed tome with a holy aura,"
         }
@@ -4822,7 +4821,7 @@ return {
       name = "holy shield"
     },
     spellbook_of_holy_veil = {
-      description = {
+      desc = {
         main = {
           text = "A tome on religious spells,"
         }
@@ -4830,7 +4829,7 @@ return {
       name = "holy veil"
     },
     spellbook_of_ice_ball = {
-      description = {
+      desc = {
         main = {
           text = "This tome is cold,"
         }
@@ -4838,7 +4837,7 @@ return {
       name = "ice ball"
     },
     spellbook_of_ice_bolt = {
-      description = {
+      desc = {
         main = {
           text = "The tome is cool to the touch,"
         }
@@ -4846,7 +4845,7 @@ return {
       name = "ice bolt"
     },
     spellbook_of_identify = {
-      description = {
+      desc = {
         main = {
           text = "A yellowed tome that contains the secret of any item,"
         }
@@ -4854,7 +4853,7 @@ return {
       name = "identify"
     },
     spellbook_of_illusion_beam = {
-      description = {
+      desc = {
         main = {
           text = "A tome that hurts your eyes when read,"
         }
@@ -4862,7 +4861,7 @@ return {
       name = "illusion beam"
     },
     spellbook_of_incognito = {
-      description = {
+      desc = {
         main = {
           text = "A tome whose words often mean another thing,"
         }
@@ -4870,7 +4869,7 @@ return {
       name = "incognito"
     },
     spellbook_of_knowledge = {
-      description = {
+      desc = {
         main = {
           text = "An insightful tome,"
         }
@@ -4878,7 +4877,7 @@ return {
       name = "knowledge"
     },
     spellbook_of_lightning_bolt = {
-      description = {
+      desc = {
         main = {
           text = "This tome lets off a static discharge,"
         }
@@ -4886,7 +4885,7 @@ return {
       name = "lightning bolt"
     },
     spellbook_of_magic_arrow = {
-      description = {
+      desc = {
         main = {
           text = "A tome that teaches how to use magical energy,"
         }
@@ -4894,7 +4893,7 @@ return {
       name = "magic arrow"
     },
     spellbook_of_magic_ball = {
-      description = {
+      desc = {
         main = {
           text = "A tome that teaches how to manipulate magic energy by sheer force of will, "
         }
@@ -4902,7 +4901,7 @@ return {
       name = "magic ball"
     },
     spellbook_of_magic_laser = {
-      description = {
+      desc = {
         main = {
           text = "A tome that teaches how to focus magic energy"
         }
@@ -4910,7 +4909,7 @@ return {
       name = "magic laser"
     },
     spellbook_of_magic_mapping = {
-      description = {
+      desc = {
         main = {
           text = "A tome that makes you aware of your surroundings,"
         }
@@ -4918,7 +4917,7 @@ return {
       name = "magic mapping"
     },
     spellbook_of_make_door = {
-      description = {
+      desc = {
         main = {
           text = "This tome is yellowed and warped,"
         }
@@ -4926,7 +4925,7 @@ return {
       name = "make door"
     },
     spellbook_of_minor_teleportation = {
-      description = {
+      desc = {
         main = {
           text = "The words in this tome do not seem to stay in one place,"
         }
@@ -4934,7 +4933,7 @@ return {
       name = "minor teleportation"
     },
     spellbook_of_mutation = {
-      description = {
+      desc = {
         main = {
           text = "This tome appears to have legs,"
         }
@@ -4942,7 +4941,7 @@ return {
       name = "mutation"
     },
     spellbook_of_nerve_eye = {
-      description = {
+      desc = {
         main = {
           text = "Reading this tome makes your eye twitch,"
         }
@@ -4950,7 +4949,7 @@ return {
       name = "nerve eye"
     },
     spellbook_of_nether_eye = {
-      description = {
+      desc = {
         main = {
           text = "You feel like the world of the dead has its eye on you,"
         }
@@ -4958,7 +4957,7 @@ return {
       name = "nether eye"
     },
     spellbook_of_nightmare = {
-      description = {
+      desc = {
         main = {
           text = "A tome that has an aura of dread,"
         }
@@ -4966,7 +4965,7 @@ return {
       name = "nightmare"
     },
     spellbook_of_oracle = {
-      description = {
+      desc = {
         main = {
           text = "A tome of prophecys,"
         }
@@ -4974,7 +4973,7 @@ return {
       name = "oracle"
     },
     spellbook_of_regeneration = {
-      description = {
+      desc = {
         main = {
           text = "A tome that looks like new,"
         }
@@ -4982,7 +4981,7 @@ return {
       name = "regeneration"
     },
     spellbook_of_resistance = {
-      description = {
+      desc = {
         main = {
           text = "A tome that seems undamaged by the weather,"
         }
@@ -4990,7 +4989,7 @@ return {
       name = "resistance"
     },
     spellbook_of_return = {
-      description = {
+      desc = {
         main = {
           text = "A tome that allows a person to return to specific places containing a rift,"
         }
@@ -4998,7 +4997,7 @@ return {
       name = "return"
     },
     spellbook_of_silence = {
-      description = {
+      desc = {
         main = {
           text = "A tome whose words are impossible to pronounce for most creatures,"
         }
@@ -5006,7 +5005,7 @@ return {
       name = "silence"
     },
     spellbook_of_slow = {
-      description = {
+      desc = {
         main = {
           text = "A yellowed tome that's pages seem to move slowly,"
         }
@@ -5014,7 +5013,7 @@ return {
       name = "slow"
     },
     spellbook_of_sound_ball = {
-      description = {
+      desc = {
         main = {
           text = "You can swear you hear a buzzing sound from this tome,"
         }
@@ -5022,7 +5021,7 @@ return {
       name = "sound ball"
     },
     spellbook_of_speed = {
-      description = {
+      desc = {
         main = {
           text = "A hastily written tome,"
         }
@@ -5030,7 +5029,7 @@ return {
       name = "speed"
     },
     spellbook_of_summon_monsters = {
-      description = {
+      desc = {
         main = {
           text = "You can swear you hear growling,"
         }
@@ -5038,7 +5037,7 @@ return {
       name = "summon monsters"
     },
     spellbook_of_teleportation = {
-      description = {
+      desc = {
         main = {
           text = "A yellowed tome whose words seem to move on their own/"
         }
@@ -5046,7 +5045,7 @@ return {
       name = "teleportation"
     },
     spellbook_of_uncurse = {
-      description = {
+      desc = {
         main = {
           text = "A tome often carried by priests,"
         }
@@ -5054,7 +5053,7 @@ return {
       name = "uncurse"
     },
     spellbook_of_wall_creation = {
-      description = {
+      desc = {
         main = {
           text = "This tome seems to be heavier than it is,"
         }
@@ -5062,7 +5061,7 @@ return {
       name = "wall creation"
     },
     spellbook_of_weakness = {
-      description = {
+      desc = {
         main = {
           text = "A battered tome,"
         }
@@ -5070,7 +5069,7 @@ return {
       name = "weakness"
     },
     spellbook_of_web = {
-      description = {
+      desc = {
         main = {
           text = "You can swear you see spiders crawling over this tome out of the corner of your eye,"
         }
@@ -5078,7 +5077,7 @@ return {
       name = "web"
     },
     spellbook_of_wishing = {
-      description = {
+      desc = {
         main = {
           text = "This tome is ancient and has a crushing aura of power,"
         }
@@ -5086,7 +5085,7 @@ return {
       name = "wishing"
     },
     spenseweed = {
-      description = {
+      desc = {
         main = {
           text = "A type of herb,"
         }
@@ -5094,7 +5093,7 @@ return {
       name = "spenseweed"
     },
     square_chair = {
-      description = {
+      desc = {
         main = {
           text = "An everyday chair,"
         }
@@ -5105,7 +5104,7 @@ return {
       name = "square window"
     },
     stack_of_dishes = {
-      description = {
+      desc = {
         main = {
           text = "A set of decorative dishes,"
         }
@@ -5113,7 +5112,7 @@ return {
       name = "dish"
     },
     staff = {
-      description = {
+      desc = {
         main = {
           text = "A staff used in a variety of ways,"
         }
@@ -5125,7 +5124,7 @@ return {
       unidentified_name = "shivering staff"
     },
     stained_glass_window = {
-      description = {
+      desc = {
         main = {
           text = "A expensive stained glass window often used to decorate chapels,"
         }
@@ -5133,7 +5132,7 @@ return {
       name = "stained glass window"
     },
     statue_of_armor = {
-      description = {
+      desc = {
         main = {
           text = "A shelf or armor,"
         }
@@ -5141,7 +5140,7 @@ return {
       name = "armor"
     },
     statue_of_cat = {
-      description = {
+      desc = {
         main = {
           text = "A painting of a cat,"
         }
@@ -5153,7 +5152,7 @@ return {
       unidentified_name = "fishy statue"
     },
     statue_of_cross = {
-      description = {
+      desc = {
         main = {
           text = "An ancient symbol,"
         }
@@ -5165,7 +5164,7 @@ return {
       unidentified_name = "goddess"
     },
     statue_of_holy_cross = {
-      description = {
+      desc = {
         main = {
           text = "A holy symbol from ancient times,"
         }
@@ -5181,7 +5180,7 @@ return {
       unidentified_name = "god"
     },
     statue_of_lulwy = {
-      description = {
+      desc = {
         main = {
           text = "A beautiful statue of a winged goddess,"
         }
@@ -5194,7 +5193,7 @@ return {
       unidentified_name = "god"
     },
     statue_of_money = {
-      description = {
+      desc = {
         main = {
           text = "A statue common in Asseria style casinos,"
         }
@@ -5202,7 +5201,7 @@ return {
       name = "money"
     },
     statue_of_opatos = {
-      description = {
+      desc = {
         main = {
           text = "You feel the ground shake slightly at this statue,"
         }
@@ -5211,7 +5210,7 @@ return {
       unidentified_name = "god"
     },
     stethoscope = {
-      description = {
+      desc = {
         main = {
           text = "A real one can be used to check your health,"
         }
@@ -5219,7 +5218,7 @@ return {
       name = "stethoscope"
     },
     stick_bread = {
-      description = {
+      desc = {
         main = {
           text = "A loaf of baked bread,"
         }
@@ -5227,7 +5226,7 @@ return {
       name = "stick bread"
     },
     stomafillia = {
-      description = {
+      desc = {
         main = {
           text = "A type of herb,"
         }
@@ -5235,7 +5234,7 @@ return {
       name = "stomafillia"
     },
     stone = {
-      description = {
+      desc = {
         main = {
           text = "It's just a stone"
         }
@@ -5243,7 +5242,7 @@ return {
       name = "stone"
     },
     storage = {
-      description = {
+      desc = {
         main = {
           text = "You do not know how to open it,"
         }
@@ -5251,7 +5250,7 @@ return {
       name = "storage"
     },
     stove = {
-      description = {
+      desc = {
         main = {
           text = "A stove useful for cooking food,"
         }
@@ -5259,7 +5258,7 @@ return {
       name = "stove"
     },
     stradivarius = {
-      description = {
+      desc = {
         main = {
           text = "A legendary instrument,"
         }
@@ -5268,7 +5267,7 @@ return {
       unidentified_name = "elegant string"
     },
     straw = {
-      description = {
+      desc = {
         main = {
           text = "This can be useful to the right person,"
         }
@@ -5276,7 +5275,7 @@ return {
       name = "straw"
     },
     strawberry = {
-      description = {
+      desc = {
         main = {
           text = "A type of fruit,"
         }
@@ -5284,7 +5283,7 @@ return {
       name = "strawberry"
     },
     street_lamp = {
-      description = {
+      desc = {
         main = {
           text = "A lamp that decorates the streets of Asseria,"
         }
@@ -5292,7 +5291,7 @@ return {
       name = "street lamp"
     },
     stump = {
-      description = {
+      desc = {
         main = {
           text = "The remains of a tree that has been cut out of the ground and is used as a seat,"
         }
@@ -5300,7 +5299,7 @@ return {
       name = "stump"
     },
     suitcase = {
-      description = {
+      desc = {
         main = {
           text = "A suitcase lost by a traveler, "
         }
@@ -5315,7 +5314,7 @@ return {
       name = "sun crystal"
     },
     sweet_potato = {
-      description = {
+      desc = {
         main = {
           text = "A type of vegetable,"
         }
@@ -5323,7 +5322,7 @@ return {
       name = "sweet potato"
     },
     table = {
-      description = {
+      desc = {
         main = {
           text = "A common table,"
         }
@@ -5331,7 +5330,7 @@ return {
       name = "table"
     },
     talisman = {
-      description = {
+      desc = {
         main = {
           text = "A talisman said to ward off evil,"
         }
@@ -5342,7 +5341,7 @@ return {
       name = "tamer's whip"
     },
     tangerine = {
-      description = {
+      desc = {
         main = {
           text = "A type of fruit,"
         }
@@ -5350,7 +5349,7 @@ return {
       name = "tangerine"
     },
     tax_masters_tax_box = {
-      description = {
+      desc = {
         main = {
           text = "Pay your taxes here,"
         }
@@ -5359,7 +5358,7 @@ return {
       unidentified_name = "tax box"
     },
     textbook = {
-      description = {
+      desc = {
         main = {
           text = "A textbook used to study a trade,"
         }
@@ -5368,7 +5367,7 @@ return {
       unidentified_name = "book"
     },
     thick_gauntlets = {
-      description = {
+      desc = {
         main = {
           text = "A pair of gauntlets made mostly of thick leather,"
         }
@@ -5376,7 +5375,7 @@ return {
       name = "thick gauntlets"
     },
     throne = {
-      description = {
+      desc = {
         main = {
           text = "Built for royalty,"
         }
@@ -5384,7 +5383,7 @@ return {
       name = "throne"
     },
     tight_boots = {
-      description = {
+      desc = {
         main = {
           text = "A tight fitting pair of boots,"
         }
@@ -5392,7 +5391,7 @@ return {
       name = "tight boots"
     },
     tight_rope = {
-      description = {
+      desc = {
         main = {
           text = "You start to practice your knots on this piece of rope,"
         }
@@ -5400,7 +5399,7 @@ return {
       name = "tight rope"
     },
     toilet = {
-      description = {
+      desc = {
         main = {
           text = "You can drink from it but I don't recommend it,,,"
         }
@@ -5408,7 +5407,7 @@ return {
       name = "toilet"
     },
     token_of_friendship = {
-      description = {
+      desc = {
         main = {
           text = "A token given only to friends,"
         }
@@ -5420,7 +5419,7 @@ return {
       name = "tomato"
     },
     tombstone = {
-      description = {
+      desc = {
         main = {
           text = "Please do not kick the tombstones,"
         }
@@ -5428,7 +5427,7 @@ return {
       name = "tombstone"
     },
     torch = {
-      description = {
+      desc = {
         main = {
           text = "This enchanted torch will never burn out,"
         }
@@ -5436,7 +5435,7 @@ return {
       name = "torch"
     },
     towel = {
-      description = {
+      desc = {
         main = {
           text = "Soft fluffy towels!"
         }
@@ -5444,7 +5443,7 @@ return {
       name = "towel"
     },
     tower_shield = {
-      description = {
+      desc = {
         main = {
           text = "It's like your very on portable wall!"
         }
@@ -5455,7 +5454,7 @@ return {
       name = "town book"
     },
     toy = {
-      description = {
+      desc = {
         main = {
           text = "A child's toy,"
         }
@@ -5463,7 +5462,7 @@ return {
       name = "toy"
     },
     training_machine = {
-      description = {
+      desc = {
         main = {
           text = "Asserian health equipment,"
         }
@@ -5471,7 +5470,7 @@ return {
       name = "training machine"
     },
     trash_can = {
-      description = {
+      desc = {
         main = {
           text = "North Tyris laws make it illegal to search,"
         }
@@ -5479,7 +5478,7 @@ return {
       name = "trash can"
     },
     treasure_ball = {
-      description = {
+      desc = {
         main = {
           text = "I'm sure there's something good inside,"
         }
@@ -5487,7 +5486,7 @@ return {
       name = "treasure ball"
     },
     treasure_map = {
-      description = {
+      desc = {
         main = {
           text = "A map from sources unknown that leads to treasure,"
         }
@@ -5496,7 +5495,7 @@ return {
       unidentified_name = "crumbling paper"
     },
     tree_of_ash = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree,"
         }
@@ -5504,7 +5503,7 @@ return {
       name = "ash"
     },
     tree_of_beech = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree,"
         }
@@ -5512,7 +5511,7 @@ return {
       name = "beech"
     },
     tree_of_cedar = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree with a scented wood,"
         }
@@ -5520,7 +5519,7 @@ return {
       name = "cedar"
     },
     tree_of_fir = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree,"
         }
@@ -5528,7 +5527,7 @@ return {
       name = "fir"
     },
     tree_of_fruitless = {
-      description = {
+      desc = {
         main = {
           text = "A tree with no fruits,"
         }
@@ -5536,7 +5535,7 @@ return {
       name = "fruitless"
     },
     tree_of_fruits = {
-      description = {
+      desc = {
         main = {
           text = "A fruit tree,"
         }
@@ -5544,7 +5543,7 @@ return {
       name = "fruits"
     },
     tree_of_naked = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree,"
         }
@@ -5552,7 +5551,7 @@ return {
       name = "naked"
     },
     tree_of_palm = {
-      description = {
+      desc = {
         main = {
           text = "A tree found in warm climates,"
         }
@@ -5560,7 +5559,7 @@ return {
       name = "palm"
     },
     tree_of_zelkova = {
-      description = {
+      desc = {
         main = {
           text = "A type of tree,"
         }
@@ -5571,7 +5570,7 @@ return {
       name = "triangle plant"
     },
     trident = {
-      description = {
+      desc = {
         main = {
           text = "A three pronged polearm,"
         }
@@ -5579,7 +5578,7 @@ return {
       name = "trident"
     },
     tuna = {
-      description = {
+      desc = {
         main = {
           text = "A carnivorous fish,"
         }
@@ -5591,7 +5590,7 @@ return {
       unidentified_name = "yellow necklace"
     },
     unicorn_horn = {
-      description = {
+      desc = {
         main = {
           text = "Known for it's amazing healing properties unicorn horns are also a reminder of how Elonians have driven the species into near extinction,,"
         }
@@ -5599,7 +5598,7 @@ return {
       name = "unicorn horn"
     },
     unknown_seed = {
-      description = {
+      desc = {
         main = {
           text = "A type of seed,"
         }
@@ -5611,7 +5610,7 @@ return {
       unidentified_name = "beautiful shell"
     },
     upright_piano = {
-      description = {
+      desc = {
         main = {
           text = "A piano commonly found in bars"
         }
@@ -5635,7 +5634,7 @@ return {
       name = "tools"
     },
     vase = {
-      description = {
+      desc = {
         main = {
           text = "A vase on a night stand,"
         }
@@ -5643,7 +5642,7 @@ return {
       name = "vase"
     },
     vegetable_seed = {
-      description = {
+      desc = {
         main = {
           text = "A type of seed,"
         }
@@ -5651,7 +5650,7 @@ return {
       name = "vegetable seed"
     },
     vindale_cloak = {
-      description = {
+      desc = {
         main = {
           text = "made in vindale"
         }
@@ -5659,7 +5658,7 @@ return {
       name = "vindale cloak"
     },
     vomit = {
-      description = {
+      desc = {
         main = {
           text = "Why did you pick this up?,,,"
         }
@@ -5667,7 +5666,7 @@ return {
       name = "vomit"
     },
     wakizashi = {
-      description = {
+      desc = {
         main = {
           text = "A short sword usually worn together with a katana,"
         }
@@ -5675,7 +5674,7 @@ return {
       name = "wakizashi"
     },
     wallet = {
-      description = {
+      desc = {
         main = {
           text = "A wallet lost by a traveler,"
         }
@@ -5683,7 +5682,7 @@ return {
       name = "wallet"
     },
     washing = {
-      description = {
+      desc = {
         main = {
           text = "North Tyris laws have harsh penalties for polluting water,"
         }
@@ -5691,7 +5690,7 @@ return {
       name = "washing"
     },
     washstand = {
-      description = {
+      desc = {
         main = {
           text = "The water is dirty..."
         }
@@ -5699,7 +5698,7 @@ return {
       name = "sink"
     },
     water_tub = {
-      description = {
+      desc = {
         main = {
           text = 'A warning label reads "Not suitable for golems'
         }
@@ -5707,7 +5706,7 @@ return {
       name = "water tub"
     },
     well = {
-      description = {
+      desc = {
         main = {
           text = "Toss a coin in,"
         }
@@ -5715,7 +5714,7 @@ return {
       name = "well"
     },
     well_kept_armor = {
-      description = {
+      desc = {
         main = {
           text = "Oiled and polished decorative armor"
         }
@@ -5723,7 +5722,7 @@ return {
       name = "well kept armor"
     },
     whistle = {
-      description = {
+      desc = {
         main = {
           text = "Useful for waking people up or just playing pranks,"
         }
@@ -5745,7 +5744,7 @@ return {
       name = "window"
     },
     wing = {
-      description = {
+      desc = {
         main = {
           text = "A marvel of genetic engineering,"
         }
@@ -5753,7 +5752,7 @@ return {
       name = "wing"
     },
     wood_piece = {
-      description = {
+      desc = {
         main = {
           text = "Not dry enough to burn easily,"
         }
@@ -5761,7 +5760,7 @@ return {
       name = "wood piece"
     },
     worthless_fake_gold_bar = {
-      description = {
+      desc = {
         main = {
           text = "What a waste of time......,"
         }
@@ -5770,7 +5769,7 @@ return {
       unidentified_name = "valuable gold bar"
     },
     zantetsu = {
-      description = {
+      desc = {
         main = {
           text = "Sword rumored to cut through anything,"
         }
@@ -5779,4 +5778,9 @@ return {
       unidentified_name = "shining silver katana"
     }
   }
+
+return {
+   item = {
+      elona = item
+   }
 }

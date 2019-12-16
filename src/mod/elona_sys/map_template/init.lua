@@ -1,7 +1,8 @@
+local I18N = require("api.I18N")
 local Log = require("api.Log")
-local Resolver = require("api.Resolver")
 local Map = require("api.Map")
 local MapArea = require("api.MapArea")
+local Resolver = require("api.Resolver")
 
 --- An Elona 1.22-style map template which uses a static map file.
 data:add_type {
@@ -134,6 +135,8 @@ local function generate_from_map_template(self, params, opts)
       template.on_generate(map)
    end
 
+   map.name = I18N.get("map.unique." .. params.id .. ".name")
+
    return map, params.id
 end
 
@@ -198,7 +201,7 @@ local function transfer_stairs(old_map, new_map, params)
             else
                Log.warn("Transfering ungenerated stair %d -> %d", old_stair.uid, new_stair.uid)
                new_stair.map_uid = old_stair.map_uid
-               new_stair.generator_params = nil
+               new_stair.generator_params = old_stair.generator_params
             end
          else
             Log.error("Missing stairs in rebuilt dungeon with label %s", label)

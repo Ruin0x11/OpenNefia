@@ -37,7 +37,7 @@ end
 ---  * key.fragment            - dialog.root.key.fragment
 ---  * dialog.key              - dialog.key
 ---  * {"key.fragment", args = {"arg1", "arg2"}}  - (localized with arguments)
-local function resolve_response(obj, talk, args)
+local function resolve_response(obj, args, choices_root)
    local args = args or {}
    local get
    local key
@@ -51,17 +51,15 @@ local function resolve_response(obj, talk, args)
       key = obj
    end
 
-   local root = talk.dialog.root
-
    if key == "__BYE__" then
-      root = ""
+      choices_root = ""
       key = "ui.bye"
    elseif key == "__MORE__" then
-      root = ""
+      choices_root = ""
       key = "ui.more"
    end
 
-   return resolve_translated_text(root, key, args)
+   return resolve_translated_text(choices_root, key, args)
 end
 
 local function speaker_name(chara)
@@ -74,7 +72,7 @@ end
 -- @tparam table choices List of choices in format {"response_id", "core.locale.key"}
 -- @tparam[opt] int default_choice index of default choice if window is canceled
 -- @treturn string Response ID of the choice selected.
-local function query(talk, text, choices, default_choice)
+local function query(talk, text, choices, default_choice, choices_root)
    local show_impress = true
    if talk.speaker.quality == 6 -- special
       and not talk.speaker:is_ally()
@@ -88,7 +86,7 @@ local function query(talk, text, choices, default_choice)
 
    local the_choices = {}
    for i, choice in ipairs(choices) do
-      the_choices[i] =  resolve_response(choice[2], talk)
+      the_choices[i] =  resolve_response(choice[2], choices_root)
       if default_choice == nil and choice[1] == "__END__" then
          default_choice = i
       end
@@ -187,7 +185,8 @@ local function find_dialog(cur, id)
 end
 
 local get_choices
-get_choices = function(node, talk, state, node_data, choice_key, found)
+get_choices = function(node, talk, state, node_data, choice_key, found, root)
+   root = root or nil
    found = found or {}
    local choices = node.choices
    if choices == nil then
@@ -205,14 +204,16 @@ get_choices = function(node, talk, state, node_data, choice_key, found)
             dialog_error(talk, "Infinite recursion when retrieving external node for dialog choices", choices)
          end
          found[choices] = true
-         local new_node = data["elona_sys.dialog"]:ensure(dialog_id).nodes[node_id]
-         choices = get_choices(new_node, talk, state, node_data, choice_key, found) -- recurse
+         local new_dialog = data["elona_sys.dialog"]:ensure(dialog_id)
+         local new_node = new_dialog.nodes[node_id]
+         root = new_dialog.root
+         choices = get_choices(new_node, talk, state, node_data, choice_key, found, root) -- recurse
       else
          dialog_error(talk, "Cannot find external node for dialog choices", choices)
       end
    end
 
-   return choices
+   return choices, root
 end
 
 local function step_dialog(node_data, talk, state)
@@ -320,7 +321,11 @@ local function step_dialog(node_data, talk, state)
             end
 
             -- Build choices. Default to ending the dialog.
-            local choices = get_choices(node, talk, state, node_data, choice_key)
+            local choices_root = talk.dialog.root
+            local choices, new_root = get_choices(node, talk, state, node_data, choice_key)
+            if new_root then
+               choices_root = new_root
+            end
 
             -- Set the default choice to select if window is
             -- cancelled. If nil, prevent cancellation.

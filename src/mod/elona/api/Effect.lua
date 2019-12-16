@@ -96,7 +96,7 @@ function Effect.modify_karma(chara, delta)
       color = "Purple"
    end
 
-   Gui.mes_c("chara_status.karma.changed", delta)
+   Gui.mes_c("chara_status.karma.changed", color, delta)
    if delta > 0 then
       if chara.karma < -30 and chara.karma + delta >= -30 then
          Gui.mes_c("chara_status.karma.you_are_no_longer_criminal", "Green")

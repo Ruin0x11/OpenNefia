@@ -14,7 +14,7 @@ local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
-local Quest = require("mod.elona_sys.api.Quest")
+local Feat = require("api.Feat")
 
 --
 --

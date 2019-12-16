@@ -222,7 +222,7 @@ end
 --- @tparam[opt] InstancedMap map
 --- @treturn bool
 function Map.is_floor(x, y, map)
-   return (map or field.map):can_access(x, y)
+   return (map or field.map):is_floor(x, y)
 end
 
 --- True if items can be dropped in this map (the maximum item count
@@ -243,8 +243,10 @@ end
 --- @tparam[opt] InstancedMap map
 --- @treturn bool
 function Map.can_access(x, y, map)
+   map = map or field.map
    return Map.is_in_bounds(x, y, map)
       and Map.is_floor(x, y, map)
+      and map:can_access(x, y)
 end
 
 --- Calculates access to a tile with respect to the objects on it.
@@ -512,12 +514,19 @@ end
 --- @tparam[opt] table params Extra parameters.
 ---  - allow_stacking (bool): If true, ignore items on the ground when
 ---    checking for tile openness.
+---  - only_map (bool): ignore characters on tiles; only check for
+---    walls/floors.
 --- @tparam[opt] InstancedMap map
 function Map.find_free_position(x, y, params, map)
    params = params or {}
    map = map or Map.current()
 
-   if x and Map.is_in_bounds(x, y, map) then
+   local check_tile = Map.can_access
+   if params.only_map then
+      check_tile = Map.is_floor
+   end
+
+   if x and check_tile(x, y, map) then
       return x, y
    end
 
@@ -545,7 +554,7 @@ function Map.find_free_position(x, y, params, map)
          end
       end
 
-      if not Map.can_access(sx, sy, map) then
+      if not check_tile(sx, sy, map) then
          ok = false
       end
 

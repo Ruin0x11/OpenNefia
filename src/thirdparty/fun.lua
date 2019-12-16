@@ -1108,6 +1108,12 @@ end
 methods.extract = method1(extract)
 exports.extract = export1(extract)
 
+local filter_by = function(field, gen, param, state)
+   return fun.filter(function(i) return i[field] end, gen, param, state)
+end
+methods.filter_by = method1(filter_by)
+exports.filter_by = export1(filter_by)
+
 local tuples = function(gen, param, state)
    return fun.map(function(...) return {...} end, gen, param, state)
 end

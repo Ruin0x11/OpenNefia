@@ -246,7 +246,7 @@ function data:add(dat)
          dat._id = full_id
 
          local Event = require("api.Event")
-         Event.trigger("base.on_hotload_prototype", {old=inner[_type][full_id], new=dat})
+         Event.trigger("base.before_hotload_prototype", {old=inner[_type][full_id], new=dat})
 
          table.replace_with(inner[_type][full_id], dat)
          self:run_edits_for(_type, full_id)
@@ -255,6 +255,8 @@ function data:add(dat)
             remove_index_field(dat, _type, field)
             add_index_field(dat, _type, field)
          end
+
+         Event.trigger("base.on_hotload_prototype", {new=dat})
 
          update_docs(dat, _schema, loc)
 

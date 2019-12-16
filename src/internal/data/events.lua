@@ -57,6 +57,7 @@ data:add_multi(
       { _id = "on_activity_interrupt" },
       { _id = "on_activity_cleanup" },
       { _id = "on_generate" },
+      { _id = "before_hotload_prototype" },
       { _id = "on_hotload_prototype" },
       { _id = "on_chara_generated" },
       { _id = "on_object_cloned" },

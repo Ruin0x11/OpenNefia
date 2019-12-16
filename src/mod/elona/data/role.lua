@@ -40,6 +40,38 @@ local role = {
       _id = "unique_chara",
       elona_id = 3,
    },
+   {
+      _id = "bartender",
+      elona_id = 9,
+   },
+   {
+      _id = "wizard",
+      elona_id = 5,
+   },
+   {
+      _id = "elder",
+      elona_id = 6,
+   },
+   {
+      _id = "trainer",
+      elona_id = 7,
+   },
+   {
+      _id = "informer",
+      elona_id = 8,
+   },
+   {
+      _id = "arena_master",
+      elona_id = 10,
+   },
+   {
+      _id = "healer",
+      elona_id = 12,
+   },
+   {
+      _id = "royal_family",
+      elona_id = 15,
+   },
 }
 
 data:add_multi("elona.role", role)

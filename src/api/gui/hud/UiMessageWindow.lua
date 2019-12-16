@@ -107,7 +107,7 @@ function UiMessageWindow:draw_one_line(x, y, line)
    for _, item in ipairs(line.text) do
       -- love.graphics.print() accepts arguments like
       --   {color, text, color, text...}
-      Draw.set_color(item.color)
+      Draw.set_color(item.color or {255, 255, 255})
       Draw.text(item.text, x, y)
       x = x + item.width
    end
@@ -207,7 +207,7 @@ function UiMessageWindow:clear()
 end
 
 function UiMessageWindow:redraw_window()
-   Draw.clear()
+   Draw.clear(0, 0, 0)
    Draw.set_color(255, 255, 255)
 
    self.t.message_window:draw_bar(0, 0, self.width)

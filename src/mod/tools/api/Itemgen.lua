@@ -152,7 +152,9 @@ function Itemgen.create(x, y, params, where)
       params.categories = {params.categories}
    end
    params.categories = table.set(params.categories or {})
-   params.create_params = params.create_params or {}
+
+   local create_params = params.create_params or {}
+   create_params.ownerless = params.ownerless
 
    local chara = Chara.player()
    if params.quality < 5 and chara and chara:skill_level("elona.stat_luck") > Rand.rnd(5000) then

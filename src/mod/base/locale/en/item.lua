@@ -110,8 +110,8 @@ end,
           furniture_well = "well",
           junk = "junks",
           ore = "ores",
-       }
-      default = "Unknown"
+       },
+       default = "Unknown"
     },
     fireproof_blanket_protects_item = function(_1, _2)
   return ("%s protects %s%s stuff from fire.")

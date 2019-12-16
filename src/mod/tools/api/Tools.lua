@@ -155,6 +155,16 @@ function Tools.drop_all()
    Chara.player():iter_inventory():each(drop)
 end
 
+function Tools.goto_thing(thing)
+   local IMapObject = require("api.IMapObject")
+   if class.is_an(IMapObject, thing) then
+      local x, y = Map.find_free_position(thing.x, thing.y, {}, thing:current_map())
+      if x then
+         assert(Chara.player():set_pos(x, y, true))
+      end
+   end
+end
+
 function Tools.goto_map(id)
    local success, map = Map.generate("elona_sys.map_template", { id = id })
    if not success then

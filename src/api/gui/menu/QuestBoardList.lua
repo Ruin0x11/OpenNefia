@@ -46,14 +46,25 @@ function QuestBoardList:init(quests)
       :map(function(q)
             local speaker = assert(Chara.find(q.client_uid))
             local title, desc = Quest.get_name_and_desc(q, speaker, false)
+
+            local deadline
+            if q.deadline_days == nil then
+               deadline = I18N.get("quest.info.no_deadline")
+            else
+               deadline = I18N.get("quest.info.days", q.deadline_days)
+            end
+
             return {
                quest = q,
                title = title,
                wrapped_desc = "",
-               desc = desc
+               desc = desc,
+               deadline = deadline
             }
           end)
       :to_list()
+
+   table.sort(data, function(a, b) return a.quest.difficulty < b.quest.difficulty end)
 
    self.model = PagedListModel:new(data, 4)
 
@@ -109,7 +120,7 @@ function QuestBoardList:draw_item(item, i, x, y, key_name)
    UiList.draw_select_key(self, item, i, key_name, x, y)
    UiList.draw_item_text(self, item.title or "Quest", item, i, x + 76, y - 1, 19)
 
-   Draw.text(I18N.get("quest.info.days", item.quest.deadline_days), x + 324, y + 2)
+   Draw.text(item.deadline, x + 324, y + 2)
 
    Draw.text(tostring(item.quest.client_name), x + 372, y + 2)
 

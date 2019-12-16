@@ -60,7 +60,7 @@ function Feat.create(id, x, y, params, where)
 
    if where and where:is_positional() then
       if x == nil or params.approximate_pos then
-         x, y = Map.find_free_position(x, y, {}, where)
+         x, y = Map.find_free_position(x, y, {only_map=true, allow_stacking=true}, where)
       end
       if not x then
          return nil, "out of bounds"
