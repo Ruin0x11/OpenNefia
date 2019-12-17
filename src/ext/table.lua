@@ -1,3 +1,5 @@
+--- @module table
+
 --- Merges two tables &mdash; values from first get overwritten by the second.
 --- @usage
 -- function some_func(x, y, args)

@@ -110,6 +110,8 @@ local function file_to_full_path(file, item, is_builtin)
                            end
                         end)
 
+   prefix = prefix:gsub("^ext%.", "")
+
    if is_builtin then
       prefix = prefix:match("%.([^.]+)$")
    end
@@ -249,6 +251,7 @@ end
 -- @tparam any key
 -- @tparam {file_path=string,full_path=string} alias
 local function add_alias(key, alias)
+   Log.trace("add alias %s -> %s", key, alias)
    assert(doc_store.entries[alias.file_path], alias.file_path .. inspect(table.keys(doc_store.entries)))
 
    alias.full_path = alias.full_path:lower()
@@ -290,6 +293,8 @@ local function alias_api_fields(api_table, req_path)
       for k, obj in pairs(tbl) do
          if type(obj) == "function" then
             local full_path = ("%s.%s"):format(req_path, k)
+            full_path = full_path:gsub("^ext.", "")
+
             local item = entry.items[full_path:lower()]
             if item then
                -- This item has documentation available, so add an alias for it.
@@ -394,9 +399,7 @@ function doc.reparse(path, api_table, is_builtin)
          end
       end
 
-      if not found then
          add_common_aliases(item, file_path)
-      end
 
       if is_builtin then
          item.is_builtin = true

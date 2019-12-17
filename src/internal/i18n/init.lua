@@ -63,10 +63,11 @@ end
 
 function i18n.switch_language(lang, force)
    i18n.language = lang
-   i18n.env = package.try_require("internal.i18n.env." .. lang)
-   if not i18n.env then
-      error(string.format("Language %s does not exist.", lang))
+   local ok, env = pcall(require, "internal.i18n.env." .. lang)
+   if not ok then
+      error(("Could not require I18N environment '%s': %s"):format(lang, env))
    end
+   i18n.env = env
 
    i18n.env["get"] = i18n.get
    i18n.env["rnd"] = Rand.rnd

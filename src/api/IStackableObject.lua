@@ -56,7 +56,7 @@ function IStackableObject:stack_with(other)
    other:remove_ownership()
 end
 
---- True if this object can be stacked with `other`.
+--- Returns true if this object can be stacked with `other`.
 ---
 --- @tparam IStackableObject other
 --- @treturn bool

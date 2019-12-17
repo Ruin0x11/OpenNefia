@@ -1,3 +1,5 @@
+--- @module string
+
 function string.nonempty(s)
    return type(s) == "string" and s ~= ""
 end
@@ -36,6 +38,11 @@ function string.strip_whitespace(s)
    return from > #s and "" or s:match(".*%S", from)
 end
 
+--- Splits a string `str` on separator `sep`.
+---
+--- @tparam string str
+--- @tparam[opt] string sep defaults to "\n"
+--- @treturn {string}
 function string.split(str,sep)
    sep = sep or "\n"
    local ret={}
@@ -56,6 +63,9 @@ function string.split_at_pos(str, pos)
 end
 
 --- Version of tostring that bypasses metatables.
+---
+--- @tparam any tbl
+--- @treturn string
 function string.tostring_raw(tbl)
    if type(tbl) ~= "table" then
       return tostring(tbl)
@@ -68,7 +78,15 @@ function string.tostring_raw(tbl)
    return s
 end
 
--- from http://lua-users.org/wiki/StringRecipes
+--- Wraps a string on a character limit.
+---
+--- From http://lua-users.org/wiki/StringRecipes
+---
+--- @tparam string str
+--- @tparam uint limit Wrap limit in byte positions.
+--- @tparam[opt] string indent Indent of wrapped lines.
+--- @tparam[opt] string indent1 Indent of the first line.
+--- @treturn string
 function string.wrap(str, limit, indent, indent1)
    indent = indent or ""
    indent1 = indent1 or indent
@@ -86,6 +104,14 @@ function string.wrap(str, limit, indent, indent1)
    return indent1..str:gsub("(%s+)()(%S+)()", check)
 end
 
+--- Wraps a string with multiple potential blank lines on a character
+--- limit into separate paragraphs.
+---
+--- @tparam string str
+--- @tparam uint limit Wrap limit in byte positions.
+--- @tparam[opt] string indent Indent of wrapped lines in paragraphs.
+--- @tparam[opt] string indent1 Indent of new paragraphs.
+--- @treturn string
 function string.reflow(str, limit, indent, indent1)
    return (str:gsub("%s*\n%s+", "\n")
               :gsub("%s%s+", " ")

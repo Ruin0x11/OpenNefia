@@ -1,8 +1,12 @@
+--- @module utf8
+
 if utf8 == nil then
-   utf8 = package.try_require("utf8")
-   if love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil) then
+   local ok
+   ok, utf8 = pcall(require, "utf8")
+   if not ok or (love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil)) then
       -- require the luarocks version (starwing/utf8)
       utf8 = require("lua-utf8")
+      package.loaded["utf8"] = utf8
    end
 end
 
@@ -23,8 +27,8 @@ if utf8.sub == nil then
    --- Analogous to string.sub, but operates on UTF-8 codepoints.
    -- @see string.sub
    -- @tparam string t
-   -- @tparam int i
-   -- @tparam int j
+   -- @tparam uint i
+   -- @tparam uint j
    -- @treturn string
    function utf8.sub(t, i, j)
       local len = utf8.len(t)
@@ -44,7 +48,7 @@ end
 -- UCD East Asian Width table instead.
 -- (https://www.unicode.org/Public/UCD/latest/ucd/EastAsianWidth.txt)
 --
--- @tparam int cp utf8 codepoint
+-- @tparam uint cp utf8 codepoint
 -- @treturn bool
 function utf8.is_fullwidth(cp)
    if cp < 0x2e80 then      -- Standard
@@ -82,8 +86,9 @@ end
 
 --- Returns the length of the string in terms of widthness. Halfwidth
 --- counts as 1, fullwidth 2.
+---
 -- @tparam string t
--- @treturn int
+-- @treturn uint
 function utf8.wide_len(t)
    local len = 0
    for p, c in utf8.codes(t) do
@@ -98,11 +103,12 @@ end
 
 --- Analogous to string.sub, but operates on the widthness of
 --- characters. Halfwidth counts as length 1, fullwidth 2.
--- @see string.sub
+---
 -- @tparam string t
--- @tparam int i
--- @tparam int j
+-- @tparam uint i
+-- @tparam uint j
 -- @treturn string
+-- @see string.sub
 function utf8.wide_sub(t, i, j)
    local start, finish, len
 
@@ -145,7 +151,9 @@ local function iter(state, prev_index)
 end
 
 --- Iterates the characters of a string as UTF-8 substrings.
--- @tparam string str
+---
+--- @tparam string str
+--- @treturn iterator(string)
 function utf8.chars(str)
    local inner_iter, inner_state, inner_first = utf8.codes(str)
    return iter, {str=str, iter=inner_iter,inner_state=inner_state,inner_index=inner_first+1}, inner_first+1
@@ -158,9 +166,11 @@ end
 
 --- Gets the byte pos in str at delta codepoints over. Assumes str is
 --- valid Unicode.
+---
 -- @tparam string str
--- @tparam int pos byte position
+-- @tparam uint pos byte position
 -- @tparam int delta can be negative
+-- @treturn[opt] uint
 function utf8.find_next_pos(str, pos, delta)
    if delta == 0 then
       return pos
@@ -187,6 +197,12 @@ function utf8.find_next_pos(str, pos, delta)
    return pos
 end
 
+--- Gets the position of the UTF-8 codepoint in `str` at byte position
+--- `byte`.
+---
+--- @tparam string str
+--- @tparam uint byte
+--- @treturn[opt] uint
 function utf8.codepoint_pos(str, byte)
    local cp = 1
    for p, _ in utf8.codes(str) do
