@@ -16,6 +16,10 @@ local ReplLayer = require("api.gui.menu.ReplLayer")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
 
+if not fs.exists(fs.get_save_directory()) then
+   fs.create_directory(fs.get_save_directory())
+end
+
 Log.set_level("info")
 
 local mods = mod.scan_mod_dir()

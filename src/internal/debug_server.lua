@@ -54,7 +54,7 @@ local function with_candidates(cb)
          end
       end
 
-      return error_result(err)
+      return { message = err }
    end
 end
 
@@ -127,6 +127,7 @@ function commands.apropos(text)
          items[#items+1] = { entry.full_path, entry.full_path:lower() }
       end
 
+      fs.create_directory(fs.parent(path))
       fs.write(path, json.encode(items))
 
       apropos_update_time = doc.last_updated_time()
@@ -171,7 +172,7 @@ function debug_server:poll()
 
    local result = nil
 
-   if client then
+   while client ~= nil do
       Log.trace("client recv")
 
       local text = client:receive("*l")
@@ -216,6 +217,11 @@ function debug_server:poll()
       client:close()
 
       result = result.success
+
+      client, _, err = self.server:accept()
+      if err and err ~= "timeout" then
+         error(err)
+      end
    end
 
    return result

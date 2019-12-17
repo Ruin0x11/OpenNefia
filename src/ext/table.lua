@@ -10,7 +10,7 @@
 -- some_func(1,2,{option1=true}) -- returns 1
 -- @tparam table tblA first table
 -- @tparam table tblB second table
--- @treturn array|table an array or an associated array where tblA and tblB have been merged
+-- @treturn list|table a list or an associated list where tblA and tblB have been merged
 function table.merge(tblA, tblB)
    if not tblB then
       return tblA
@@ -110,12 +110,15 @@ end
 -- This supports cycles in tables; cycles will be reproduced in the copy.
 -- This will also set the copied table's metatable to that of the original.
 -- @within Copying
--- @tab t A table
--- @return new table
+-- @tparam table t A table
+-- @treturn table new table
 function table.deepcopy(t)
     return cycle_aware_copy(t,{})
 end
 
+--- Makes a shallow copy of a table.
+--- @tparam table tbl
+--- @treturn table
 function table.shallow_copy(tbl)
    local new = {}
    for k, v in pairs(tbl) do
@@ -159,8 +162,8 @@ end
 -- @within Comparing
 -- @param t1 A value
 -- @param t2 A value
--- @bool[opt] ignore_mt if true, ignore __eq metamethod (default false)
--- @number[opt] eps if defined, then used for any number comparisons
+-- @tparam[opt] bool ignore_mt if true, ignore __eq metamethod (default false)
+-- @tparam[opt] number eps if defined, then used for any number comparisons
 -- @return true or false
 function table.deepcompare(t1,t2,ignore_mt,eps)
     return cycle_aware_compare(t1,t2,ignore_mt,eps,{})
@@ -220,6 +223,11 @@ function table.of_2d(item, width, height, zero_indexed)
    return tbl
 end
 
+--- Removes a value from a list-like table.
+---
+--- @tparam table tbl
+--- @tparam any value
+--- @treturn[opt] any the removed value
 function table.iremove_value(tbl, value)
    local result
 
@@ -237,9 +245,9 @@ function table.iremove_value(tbl, value)
    return result
 end
 
---- Flattens an array-like table one layer down.
--- @tparam array arr
--- @treturn array
+--- Flattens an list-like table one layer down.
+-- @tparam list arr
+-- @treturn list
 function table.flatten(arr)
    local result = {}
 
@@ -277,10 +285,10 @@ function table.maybe(obj, ...)
    return t
 end
 
---- Concatenates two array-like tables.
--- @tparam array a
--- @tparam array b
--- @treturn array
+--- Concatenates two list-like tables.
+-- @tparam list a
+-- @tparam list b
+-- @treturn list
 function table.append(a, b)
    for _, v in ipairs(b) do
       table.insert(a, v)
@@ -288,10 +296,9 @@ function table.append(a, b)
    return a
 end
 
---- Converts an array to a set, with all keys set to "true".
--- @tparam array arr
--- @tparam bool keep_map_part if true, also keep any existing entries
--- in the map part of the table.
+--- Converts an list to a set, with all keys set to "true".
+-- @tparam list arr
+-- @tparam bool keep_map_part if true, also keep any existing entries in the map part of the table.
 -- @treturn table
 function table.set(arr, keep_map_part)
    local tbl = {}
@@ -313,7 +320,7 @@ end
 
 -- Returns the keys of a dictionary-like table.
 -- @tparam table tbl
--- @treturn array
+-- @treturn list
 function table.keys(tbl)
    local arr = {}
    for k, _ in pairs(tbl) do
@@ -324,7 +331,7 @@ end
 
 -- Returns the values of a dictionary-like table.
 -- @tparam table tbl
--- @treturn array
+-- @treturn list
 function table.values(tbl)
    local arr = {}
    for _, v in pairs(tbl) do
@@ -338,9 +345,9 @@ function table.unique(tbl)
    return table.keys(table.set(tbl))
 end
 
---- Removes the specified indices from an array-like table. The
---- indices must be an array of integers with no duplicates sorted in
---- ascending order.
+--- Removes the specified indices from an list-like table. The indices
+--- must be an list of integers with no duplicates sorted in ascending
+--- order.
 function table.remove_indices(arr, inds)
    local offset = 0
    for _, ind in ipairs(inds) do
@@ -381,11 +388,11 @@ local function ireduce(arr, f, start)
    return result
 end
 
---- Formats a 2-dimensional array-like table in a printable manner.
--- @tparam array t
--- @tparam[opt] array params.header
--- @tparam[opt] array params.spacing
--- @tparam[opt] array params.sort
+--- Formats a 2-dimensional list-like table in a printable manner.
+-- @tparam list t
+-- @tparam[opt] list params.header
+-- @tparam[opt] list params.spacing
+-- @tparam[opt] list params.sort
 -- @treturn string
 function table.print(t, params)
    if not (t[1] ~= nil and t[1][1] ~= nil) then
@@ -435,7 +442,7 @@ end
 
 --- Sorts a table in O(n^2) time in a stable manner. Ported from Elona
 --- 1.22 to preserve correctness.
--- @tparam array arr
+-- @tparam list arr
 -- @tparam[opt] func f
 function table.insertion_sort(arr, f)
    local found_unsorted = true
@@ -539,7 +546,7 @@ end
 --- fields.
 -- @tparam table tbl Table to merge values onto.
 -- @tparam any add Value to merge. If the field __multi is non-nil,
--- treat this table as an array, each containing another table to run
+-- treat this table as an list, each containing another table to run
 -- merge_ex on in the order listed.
 -- @tparam[opt] table defaults Default table to take values from if any
 -- are missing in `tbl` but present in `add`.

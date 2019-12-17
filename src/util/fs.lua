@@ -51,7 +51,7 @@ if not love or love.getVersion() == "lovemock" then
       }
    end
    fs.get_save_directory = function()
-      return fs.join(fs.get_temporary_directory(), "save")
+      return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "Elona_next")
    end
    fs.create_directory = function(name)
       if love then
@@ -87,6 +87,7 @@ if not love or love.getVersion() == "lovemock" then
          name = fs.join(fs.get_save_directory(), name)
       end
       local f = io.open(name, "wb")
+      assert(f, ("could not open %s"):format(name))
       f:write(data)
       f:close()
       return true, nil

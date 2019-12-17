@@ -78,36 +78,38 @@
   eldoc-last-message)
 
 (defun elona-next--process-response (cmd content response)
-  (if-let ((candidates (assoc 'candidates response)))
-      ; in pairs of ("api.Api.name", "api.api.name")
-      (let ((cand (elona-next--completing-read "Candidate: " (cdr candidates))))
-        (elona-next--send cmd cand))
-    (pcase cmd
-      ("help" (elona-next--command-help content response))
-      ("jump_to" (elona-next--command-jump-to content response))
-      ("signature" (elona-next--command-signature response))
-      ("apropos" (elona-next--command-apropos response))
-      ("completion" (elona-next--command-completion response))
-      ("run" t)
-      (else (error "No action for %s" cmd)))))
+  (-let (((&alist 'success 'candidates 'message) response))
+    (if (eq success t)
+        (if candidates
+            ; in pairs of ("api.Api.name", "api.api.name")
+            (let ((cand (elona-next--completing-read "Candidate: " (cdr candidates))))
+              (elona-next--send cmd cand))
+          (pcase cmd
+            ("help" (elona-next--command-help content response))
+            ("jump_to" (elona-next--command-jump-to content response))
+            ("signature" (elona-next--command-signature response))
+            ("apropos" (elona-next--command-apropos response))
+            ("completion" (elona-next--command-completion response))
+            ("run" t)
+            (else (error "No action for %s" cmd))))
+      (error message))))
 
 ;;
 ;; Commands
 ;;
 
 (defun elona-next--command-help (content response)
-  (-let (((&alist 'success 'doc 'message) response)
+  (-let (((&alist 'doc 'message) response)
          (buffer (get-buffer-create "*elona-next-help*")))
-     (if (eq success t)
-         (with-help-window buffer
-           (princ doc)
-           (with-current-buffer buffer
-             (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
-                   (fill-column 80))
-               (beginning-of-buffer)
-               (next-line 3)
-               (fill-region (point) (point-max)))))
-       (message "%s" message))))
+    (with-help-window buffer
+      (princ doc)
+      (with-current-buffer buffer
+        (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
+              (fill-column 80))
+          (beginning-of-buffer)
+          (next-line 3)
+          (fill-region (point) (point-max)))))
+    (message "%s" message)))
 
 (defvar elona-next--is-completing nil)
 
@@ -163,7 +165,9 @@
 (defvar elona-next--apropos-candidates nil)
 
 (defun elona-next--apropos-file (path)
-  (let ((base (getenv "HOME"))
+  (let ((base (if (elona-next--headless-mode-p)
+                  (string-trim-right (temporary-file-directory) "/")
+                (getenv "HOME")))
         (sep (if (eq system-type 'windows-nt) "\\" "/"))
         (dir
          (if (eq system-type 'windows-nt)

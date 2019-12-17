@@ -1,6 +1,5 @@
 --- @module IFactioned
 
-local Chara = require("api.Chara")
 local Faction = require("api.Faction")
 local IObject = require("api.IObject")
 
@@ -42,6 +41,7 @@ end
 ---
 --- @tparam IFactioned other
 --- @tparam[opt] string kind If "original", ignore temporary personal reactions.
+--- @treturn number Friendly if positive, enemy if negative
 function IFactioned:reaction_towards(other, kind)
    local reaction = Faction.reaction_towards(self:calc("faction"), other:calc("faction"))
 
