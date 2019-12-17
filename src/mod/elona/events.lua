@@ -815,3 +815,45 @@ end
 Event.register("base.on_chara_turn_end",
                "Decrease nutrition",
                decrease_nutrition)
+
+local function play_default_map_music(map, _, music_id)
+   if map:has_type("field") then
+      return "none"
+   end
+   if map:has_type("town") then
+      music_id = "elona.town1"
+   end
+   if map:has_type("player_owned") then
+      music_id = "elona.home"
+   end
+   if map:calc("music") then
+      music_id = map:calc("music")
+   end
+   if map:has_type("dungeon") then
+      local choices = {
+         "elona.dungeon1",
+         "elona.dungeon2",
+         "elona.dungeon3",
+         "elona.dungeon4",
+         "elona.dungeon5",
+         "elona.dungeon6"
+      }
+      local hour = World.date().hour
+      music_id = choices[hour % 6 + 1]
+   end
+
+   if music_id == nil or map:has_type("world_map") then
+      local choices = {
+         "elona.field1",
+         "elona.field2",
+         "elona.field3",
+      }
+      local day = World.date().day
+      music_id = choices[day % 3 + 1]
+   end
+
+   return music_id
+end
+
+Event.register("elona_sys.calc_map_music", "Play default map music",
+               play_default_map_music)

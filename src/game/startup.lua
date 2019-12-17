@@ -17,7 +17,7 @@ local startup = {}
 local progress_step = 0
 local status = ""
 function startup.get_progress()
-   return status, progress_step, 11
+   return status, progress_step, 12
 end
 
 local function progress(_status)

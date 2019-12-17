@@ -45,9 +45,6 @@ local function load_towns(world_map)
       end
       Map.save(map)
    end
-
-   -- Save the world map since the entrances on it were modified.
-   Map.save(world_map)
 end
 
 local function initialize_player(player)
@@ -92,14 +89,17 @@ end
 local function start(self, player)
    local world_map = create_first_map()
 
-   -- Load all towns.
-   load_towns(world_map)
-
    -- Load the player's home.
    local home = load_map(world_map, "elona.your_home")
    Map.save(home)
    Map.set_map(home)
    save.base.home_map_uid = home.uid
+
+   -- Load all towns.
+   load_towns(world_map)
+
+   -- Save the world map since the entrances on it were modified.
+   Map.save(world_map)
 
    local x, y = MapEntrance.center(home, player)
    assert(Map.current():take_object(player, x, y))

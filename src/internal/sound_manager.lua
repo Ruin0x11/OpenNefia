@@ -7,6 +7,7 @@ function sound_manager:init(data)
    self.data = data
    self.sources = {}
    self.looping_sources = {}
+   self.music_id = nil
 
    love.audio.setDistanceModel("inverse")
 end
@@ -17,21 +18,21 @@ end
 
 function sound_manager:update()
    local remove = {}
-   for _,s in pairs(sources) do
-      if s:isStopped() then
+   for _, s in pairs(self.sources) do
+      if not s:isPlaying() then
          remove[#remove + 1] = s
       end
    end
 
-   for i, s in ipairs(remove) do
-      sources[s] = nil
+   for _, s in ipairs(remove) do
+      self.sources[s] = nil
    end
 end
 
-function sound_manager:play_looping(id)
-   local sound = self.data[id]
+function sound_manager:play_looping(id, ty)
+   local sound = self.data[ty][id]
    if sound == nil then
-      Log.warn("Unknown sound %s", tostring(id))
+      Log.warn("Unknown sound %s:%s", ty, id)
       return
    end
 
@@ -42,30 +43,32 @@ function sound_manager:play_looping(id)
       src:setAttenuationDistances(0, 0)
    end
 
-   love.audio.play(src)
+   src:play()
 
-   self.looping_sources[id] = src
+   self.looping_sources[ty .. ":" .. id] = src
 end
 
-function sound_manager:stop_looping(id, unique)
+function sound_manager:stop_looping(id, ty)
    if id == nil then
       for k, _ in pairs(self.looping_sources) do
-         self:stop_looping(k, unique)
+         if k ~= "music:" .. self.music_id then
+            self:stop_looping(k, ty)
+         end
       end
 
       return
    end
 
-   local src = self.looping_sources[id]
+   local src = self.looping_sources[ty .. ":" .. id]
    if src == nil then return end
 
    love.audio.stop(src)
 
-   self.looping_sources[id] = nil
+   self.looping_sources[ty .. ":" .. id] = nil
 end
 
 function sound_manager:play(id, x, y, channel)
-   local sound = self.data[id]
+   local sound = self.data.sound[id]
    if sound == nil then
       Log.warn("Unknown sound %s", tostring(id))
       return
@@ -103,6 +106,27 @@ function sound_manager:stop(channel)
 
    love.audio.stop(src)
    self.sources[channel] = nil
+end
+
+function sound_manager:play_music(sound_id)
+   assert(type(sound_id) == "string")
+
+   if self.music_id == sound_id then
+      return
+   end
+
+   if self.music_id ~= nil then
+      self:stop_music()
+   end
+
+   self:play_looping(sound_id, "music")
+   self.music_id = sound_id
+end
+
+function sound_manager:stop_music()
+   if self.music_id then
+      self:stop_looping(self.music_id, "music")
+   end
 end
 
 return sound_manager

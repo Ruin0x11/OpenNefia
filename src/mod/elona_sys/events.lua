@@ -393,3 +393,12 @@ local function feat_stepped_on_handler(chara, p, result)
    return result
 end
 Event.register("base.on_chara_moved", "Feat stepped on behavior", feat_stepped_on_handler)
+
+local function play_map_music(map)
+   local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)
+   if data["base.music"][music_id] then
+      Gui.play_music(music_id)
+   end
+end
+
+Event.register("base.on_map_enter", "Play map music", play_map_music)

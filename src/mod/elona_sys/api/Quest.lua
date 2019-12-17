@@ -432,6 +432,14 @@ function Quest.unregister_town(map)
    save.elona_sys.quest.towns[map.uid] = nil
 end
 
+
+--- Updates the status of all quests in this map.
+---
+--- NOTE: This function modifies the map, so the caller has to be sure
+--- to call `Map.save()` on it afterward. For example, the "collect"
+--- quest generates an item on the target character.
+---
+--- @tparam InstancedMap map
 function Quest.update_in_map(map)
    -- This overwrites and updates the quest info for the map if it
    -- goes out of date (like the entrance was moved for some reason)
@@ -473,12 +481,6 @@ function Quest.update_in_map(map)
             end
          end
       end
-
-      -- Certain quests can modify the state of the map. For example,
-      -- the "collect" quest generates an item on the target
-      -- character. Thus we have to save the map after updating quest
-      -- information.
-      Map.save(map)
    end
 end
 

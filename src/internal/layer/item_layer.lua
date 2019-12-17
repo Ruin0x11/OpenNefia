@@ -106,15 +106,16 @@ function item_layer:update(dt, screen_updated, scroll_frames)
                is_tall = tw * 2 == th
             end
 
+            -- TODO no idea what the rotation amounts should bw
             if is_tall then
                x_offset = i.x_offset + rotation / 2
                y_offset = i.y_offset - 4
-               rotation = rotation / 4
+               rotation = rotation / 2
             else
                if i.y_offset < self.item_batch.tile_height / 2 then
                   x_offset = i.x_offset + rotation / 80 + 2
                   y_offset = i.y_offset - 2
-                  rotation = rotation / 4
+                  rotation = rotation / 16
                else
                   draw = false
                end

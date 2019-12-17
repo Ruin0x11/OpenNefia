@@ -31,6 +31,7 @@ function field_layer:init()
    self.map_changed = false
    self.no_scroll = true
    self.waiting_for_draw_callbacks = false
+   self.sound_manager = require("internal.global.sound_manager")
 
    local keys = KeyHandler:new(true)
    self.keys = InputHandler:new(keys)
@@ -187,6 +188,7 @@ end
 
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
+   self.sound_manager:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb)

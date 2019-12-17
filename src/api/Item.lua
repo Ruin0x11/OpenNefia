@@ -86,8 +86,8 @@ function Item.create(id, x, y, params, where)
       return nil, "invalid location"
    end
 
-   if where and where:is_positional() and params.approximate_pos then
-      x, y = Map.find_free_position(x, y, {only_map=true, allow_stacking=true}, where)
+   if where and where:is_positional() and (not x or params.approximate_pos) then
+      x, y = Map.find_free_position(x, y, {only_map=true}, where)
       if not x then
          return nil, "out of bounds"
       end

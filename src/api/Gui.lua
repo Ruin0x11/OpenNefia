@@ -301,7 +301,21 @@ function Gui.stop_background_sound(sound_id)
    sound_manager:stop_looping(sound_id)
 end
 
+--- Plays music.
+---
+--- @tparam id:base.music music_id
 function Gui.play_music(music_id)
+   local sound_manager = require("internal.global.sound_manager")
+
+   print("playsome", music_id)
+   sound_manager:play_music(music_id)
+end
+
+--- Stops the currently playing music.
+function Gui.stop_music()
+   local sound_manager = require("internal.global.sound_manager")
+
+   sound_manager:stop_music()
 end
 
 function Gui.bind_keys(keys)

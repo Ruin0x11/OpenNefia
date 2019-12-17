@@ -89,8 +89,9 @@ data:add {
          choices = {
             {"elona.lomias:__start", "__MORE__"}
          },
-         on_finish = function()
-            -- Map.current().bgm = 67
+         on_finish = function(t)
+            t.speaker:current_map().music = "elona.home"
+            Gui.play_music("elona.home")
          end
       }
    }

@@ -75,7 +75,7 @@ end
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
-   Log.debug("Saving map %d to %s", map.uid, path)
+   Log.info("Saving map %d to %s", map.uid, path)
    return SaveFs.write(path, map)
 end
 

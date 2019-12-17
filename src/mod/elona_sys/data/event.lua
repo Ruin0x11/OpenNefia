@@ -22,6 +22,7 @@ local event = {
       { _id = "on_feat_bumped_into" },
       { _id = "on_feat_stepped_on" },
       { _id = "on_quest_completed" },
+      { _id = "calc_map_music" },
 }
 
 data:add_multi("base.event", event)

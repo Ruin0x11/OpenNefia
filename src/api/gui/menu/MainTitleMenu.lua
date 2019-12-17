@@ -70,6 +70,10 @@ function MainTitleMenu:init()
    self.input.keys:forward_to(self.list)
 end
 
+function MainTitleMenu:on_query()
+   Gui.play_music("elona.opening");
+end
+
 function MainTitleMenu:relayout(x, y, width, height)
    self.x = x
    self.y = y

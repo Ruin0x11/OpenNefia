@@ -202,6 +202,13 @@ data:add_type {
 }
 
 data:add_type {
+   name = "music",
+   schema = schema.Record {
+      file = schema.String
+   },
+}
+
+data:add_type {
    name = "ui_indicator",
    schema = schema.Record {
       indicator = schema.Function
