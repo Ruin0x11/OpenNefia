@@ -12,10 +12,12 @@ local Map = require("api.Map")
 
 local Effect = {}
 
+--- @tparam curse_state curse_state
 function Effect.is_cursed(curse_state)
    return curse_state == "cursed" or curse_state == "doomed"
 end
 
+--- @tparam IChara chara
 function Effect.impregnate(chara)
    if chara:has_enchantment("elona.prevents_pregnancy") then
       Gui.mes("misc.pregnant.pukes_out", chara)
@@ -34,6 +36,9 @@ function Effect.impregnate(chara)
    return true
 end
 
+--- @tparam IChara chara
+--- @tparam int delta
+--- @tparam[opt] bool force
 function Effect.modify_weight(chara, delta, force)
    local height = chara.height
    local min = height * height * 18 / 25000
@@ -62,6 +67,8 @@ function Effect.modify_weight(chara, delta, force)
    end
 end
 
+--- @tparam IChara chara
+--- @tparam int delta
 function Effect.modify_height(chara, delta)
    chara.height = math.floor(chara.height * (100 + delta) / 100 + ((delta > 0 and 1) or 0) - ((delta < 0 and 1) or 0))
 
@@ -78,6 +85,8 @@ function Effect.modify_height(chara, delta)
    end
 end
 
+--- @tparam IChara chara
+--- @tparam int delta
 function Effect.modify_karma(chara, delta)
    if chara:has_trait("elona.no_guilt") and delta < 0 then
       delta = delta * 75 / 100

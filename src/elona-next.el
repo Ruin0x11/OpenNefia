@@ -74,7 +74,7 @@
   (ignore-errors
     (when (elona-next--game-running-p)
       (elona-next--send "signature"
-                        (symbol-name (elona-next--dotted-symbol-at-point)))))
+                        (elona-next--dotted-symbol-at-point))))
   eldoc-last-message)
 
 (defun elona-next--process-response (cmd content response)
@@ -100,7 +100,13 @@
          (buffer (get-buffer-create "*elona-next-help*")))
      (if (eq success t)
          (with-help-window buffer
-           (princ doc))
+           (princ doc)
+           (with-current-buffer buffer
+             (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
+                   (fill-column 80))
+               (beginning-of-buffer)
+               (next-line 3)
+               (fill-region (point) (point-max)))))
        (message "%s" message))))
 
 (defvar elona-next--is-completing nil)
@@ -136,9 +142,12 @@
 (defun elona-next--command-jump-to (content response)
   (-let* (((&alist 'success 'file 'line 'column) response))
     (if (eq success t)
-        (let ((loc (xref-make-file-location file line column)))
+        (let* ((loc (xref-make-file-location file line column))
+               (marker (xref-location-marker loc))
+               (buf (marker-buffer marker)))
           (xref--push-markers)
-          (xref--show-location loc nil))
+          (switch-to-buffer buf)
+          (xref--goto-char marker))
       (xref-find-definitions content))))
 
 (defun elona-next--command-signature (response)
@@ -187,6 +196,10 @@
                         :sentinel 'elona-next--tcp-sentinel
                         :coding 'utf-8))
 
+(defun elona-next--headless-mode-p ()
+  (and (buffer-live-p lua-process-buffer)
+       (get-buffer-process lua-process-buffer)))
+
 (defun elona-next--send (cmd str)
   (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567))
         (json (json-encode (list :command cmd :content str))))
@@ -198,8 +211,7 @@
       ;; In REPL mode, run the server for one step to ensure the
       ;; response is received (it's supposed to run every frame as
       ;; a coroutine in LOVE)
-      (when (and (buffer-live-p lua-process-buffer)
-                 (get-buffer-process lua-process-buffer))
+      (when (elona-next--headless-mode-p)
         (lua-send-string "server:step()"))))
 
   ;; Show the REPL if we're executing code.
@@ -209,13 +221,27 @@
           (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
       (when (not (or (and compilation-win (window-live-p win)) (and lua-process-buffer win (window-live-p win))))
         (when (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
-          (popwin:display-buffer buf)))
+          (popwin:popup-buffer buf :stick t :noselect t :height 0.3)))
       (if-let ((win (get-buffer-window buf)))
-          (with-selected-window win
-            (end-of-buffer))))))
+          (save-excursion
+            (with-selected-window win
+              (end-of-buffer)))))))
+
+(defun elona-next--get-lua-result ()
+  "Gets the last line of the current Lua buffer."
+  (with-current-buffer lua-process-buffer
+    (sleep-for 0 200)
+    (goto-char (point-max))
+    (forward-line -1)
+    (let ((line (thing-at-point 'line t)))
+      (substring line 2 (max 3 (- (length line) 1))))))
 
 (defun elona-next--send-to-repl (str)
-  (elona-next--send "run" (format "require('api.Repl').send('%s')" str)))
+  (if (elona-next--headless-mode-p)
+      (progn
+        (lua-send-string str)
+        (message (elona-next--get-lua-result)))
+    (elona-next--send "run" (format "require('api.Repl').send('%s')" str))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
@@ -310,48 +336,103 @@
     (message "%s" src)
     (kill-new src)))
 
+(defun elona-next-insert-require-for-file (file)
+  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+    (beginning-of-line)
+    (insert (elona-next-require-path
+             (string-join (list project-root file))))
+    (indent-region (point-at-bol) (point-at-eol))))
+
+(defun elona-next--api-file-cands ()
+  (let ((project-root (projectile-ensure-project (projectile-project-root))))
+    (-filter (lambda (f)
+               (and (not (string-prefix-p "lib/" f))
+                    (string-equal "lua" (file-name-extension f))))
+             (projectile-project-files project-root))))
+
 (defun elona-next-insert-require ()
   (interactive)
-  (let* ((project-root (projectile-ensure-project (projectile-project-root)))
-         (cands (seq-filter (lambda (f)
-                              (and (not (string-prefix-p "lib/" f))
-                               (string-equal "lua" (file-name-extension f))))
-                            (projectile-project-files project-root)))
-         (file (projectile-completing-read "File: " cands)))
+  (let* ((files (elona-next--api-file-cands))
+         (file (projectile-completing-read "File: " files)))
     (when file
-      (beginning-of-line)
-      (when (not (eobp))
-        (next-line))
-      (insert (elona-next-require-path
-               (string-join (list project-root file))))
-      (when (not (bobp))
-        (previous-line))
-      (indent-region (point-at-bol) (point-at-eol)))))
+      (elona-next-insert-require-for-file file))))
 
-(defun elona-next-run-this-file ()
+(defun elona-next--extract-missing-api (flycheck-error)
+  (let ((message (flycheck-error-message flycheck-error)))
+    (when (string-match "accessing undefined variable '\\(.+\\)'" message)
+      (match-string 1 message))))
+
+(defun elona-next--api-name-to-path (api-name cands)
+  (let* ((regexp (format "/%s.lua$" api-name))
+         (case-fold-search nil)
+         (filtered (-filter (lambda (f) (string-match-p regexp f)) cands)))
+    (cl-case (length filtered)
+      (0 nil)
+      (1 (car filtered))
+      (t (completing-read (format "Path for '%s': " api-name) filtered)))))
+
+(defun elona-next-insert-missing-requires ()
   (interactive)
-  (lua-send-string (format "dofile \"%s\"" (buffer-file-name))))
+  (let* ((errors flycheck-current-errors)
+         (apis (-uniq (-non-nil (-map 'elona-next--extract-missing-api errors))))
+         (cands (elona-next--api-file-cands))
+         (paths (-non-nil (-map (lambda (n) (elona-next--api-name-to-path n cands)) apis))))
+    (save-excursion
+      (beginning-of-buffer)
+      (-each paths 'elona-next-insert-require-for-file))))
+
+(defun elona-next--extract-unused-api (flycheck-error)
+  (let ((message (flycheck-error-message flycheck-error))
+        (line (flycheck-error-line flycheck-error)))
+    (when (string-match "unused variable '\\([A-Z][a-zA-Z]+\\)'" message)
+      line)))
+
+(defun elona-next-remove-unused-requires ()
+  (interactive)
+  (let* ((errors flycheck-current-errors)
+         (lines (sort (-non-nil (-map 'elona-next--extract-unused-api errors)) '>))
+         (kill-whole-line t))
+    (save-excursion
+      (-each lines
+        (lambda (line)
+          (goto-line line)
+          (beginning-of-line)
+          (kill-line))))))
+
+(defvar elona-next--eval-expression-history '())
+
+(defun elona-next-eval-expression (exp)
+  (interactive
+   (list
+    (read-from-minibuffer "Eval: " nil nil nil 'elona-next--eval-expression-history)))
+  (elona-next--send-to-repl exp))
+
+(defun elona-next-eval-current-line ()
+  (interactive)
+  (elona-next--send-to-repl (buffer-substring (line-beginning-position) (line-end-position))))
 
 (defun elona-next--dotted-symbol-at-point ()
   (interactive)
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "_")
-    (modify-syntax-entry ?: "_")
-    (symbol-at-point)))
+    (string-trim
+     (symbol-name
+      (symbol-at-point))
+     "[.:]" "[.:]")))
 
 (defun elona-next-describe-thing-at-point (arg)
   (interactive "P")
   (let ((sym (if arg
-                 (symbol-at-point)
+                 (symbol-name (symbol-at-point))
                (elona-next--dotted-symbol-at-point))))
-    (elona-next--send "help" (symbol-name sym))))
+    (elona-next--send "help" sym)))
 
 (defun elona-next-jump-to-definition (arg)
   (interactive "P")
   (let ((sym (if arg
-                 (symbol-at-point)
+                 (symbol-name (symbol-at-point))
                (elona-next--dotted-symbol-at-point))))
-    (elona-next--send "jump_to" (symbol-name sym))))
+    (elona-next--send "jump_to" sym)))
 
 (defun elona-next-describe-apropos ()
   (interactive)

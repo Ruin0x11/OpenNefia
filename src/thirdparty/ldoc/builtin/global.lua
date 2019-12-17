@@ -8,7 +8,7 @@ module 'global'
 -- `message` is an error when absent, it defaults to "assertion failed!"
 -- @tparam any v
 -- @tparam[opt] string message
-function assert(v , message) end
+function assert(v, message) end
 
 ---
 -- This function is a generic interface to the garbage collector. It
@@ -29,7 +29,7 @@ function assert(v , message) end
 --
 -- @tparam[opt] string opt
 -- @tparam[opt] any arg
-function collectgarbage(opt , arg) end
+function collectgarbage(opt, arg) end
 
 ---
 -- Opens the named file and executes its contents as a Lua chunk. When
@@ -38,6 +38,7 @@ function collectgarbage(opt , arg) end
 -- all values returned by the chunk. In case of errors, `dofile` propagates
 -- the error to its caller (that is, `dofile` does not run in protected mode).
 -- @tparam string filename
+-- @treturn ... ...
 function dofile(filename) end
 
 ---
@@ -52,7 +53,7 @@ function dofile(filename) end
 -- addition of error position information to the message.
 -- @tparam[opt] string message
 -- @tparam[opt] int level
-function error(message , level) end
+function error(message, level) end
 
 ---
 -- A global variable (not a function) that holds the global environment
@@ -75,6 +76,7 @@ function getmetatable(object) end
 -- will iterate over the pairs (`1,t[1]`), (`2,t[2]`), ..., up to the
 -- first integer key absent from the table.
 -- @tparam table t
+-- @treturn iterator(uint,any)
 function ipairs(t) end
 
 ---
@@ -96,7 +98,7 @@ function ipairs(t) end
 -- @tparam[opt] string source
 -- @tparam[opt] string mode
 -- @tparam[opt] table env
-function load (ld , source , mode , env) end
+function load (ld, source , mode , env) end
 
 ---
 -- Similar to `load`, but gets the chunk from file `filename`. Or from the
@@ -104,7 +106,7 @@ function load (ld , source , mode , env) end
 -- @tparam[opt] string filename
 -- @tparam[opt] string mode
 -- @tparam[opt] table env
-function loadfile (filename , mode , env) end
+function loadfile (filename, mode , env) end
 
 ---
 -- Allows a program to traverse all fields of a table. Its first argument is
@@ -127,7 +129,7 @@ function loadfile (filename , mode , env) end
 -- existing fields. In particular, you may clear existing fields.
 -- @tparam table table
 -- @tparam any index
-function next(table , index) end
+function next(table, index) end
 
 ---
 -- For iterating over all key-value pairs of a table.
@@ -149,6 +151,7 @@ function pairs(t) end
 -- case of any error, `pcall` returns false plus the error message.
 -- @tparam function f
 -- @tparam ... ...
+-- @treturn ...
 function pcall(f, arg1, ...) end
 
 ---
@@ -214,7 +217,7 @@ function setmetatable(table, metatable) end
 -- @tparam any e
 -- @tparam[opt] int base
 -- @treturn number
-function tonumber(e , base) end
+function tonumber(e, base) end
 
 ---
 -- Converts any value to a string in a reasonable format.
@@ -232,6 +235,7 @@ function tostring(e) end
 -- `nil`" (a string, not the value nil), "`number`", "`string`", "`boolean`",
 -- "`table`", "`function`", "`thread`", and "`userdata`".
 -- @tparam any v
+-- @treturn string
 function type(v) end
 
 ---
@@ -252,6 +256,8 @@ function type(v) end
 -- of any error, `xpcall` returns false plus the result from `err`.
 -- @tparam function f
 -- @tparam[opt] function err
+-- @treturn[1] bool
+-- @treturn[2] ...
 function xpcall(f, err) end
 
 ---
@@ -279,5 +285,6 @@ function xpcall(f, err) end
 -- If there is any error loading or running the module, or if it cannot find
 -- any loader for the module, then `require` signals an error.
 -- @tparam string modname
+-- @treturn[opt] any
 function require(modname) end
 

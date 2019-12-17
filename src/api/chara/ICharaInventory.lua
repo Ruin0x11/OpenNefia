@@ -81,6 +81,10 @@ function ICharaInventory:take_item(item, amount)
    end
 end
 
+--- Iterates the items in the character's inventory (excluding
+--- equipment).
+---
+--- @treturn iterator(IItem)
 function ICharaInventory:iter_inventory()
    return self.inv:iter()
 end

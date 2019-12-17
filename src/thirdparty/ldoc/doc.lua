@@ -446,6 +446,8 @@ function Item:_init(tags,file,line)
    self.tags = {}
    self.formal_args = tags.formal_args
    tags.formal_args = nil
+   self.is_undocumented = tags.is_undocumented
+   tags.is_undocumented = nil
    local iter = tags.iter or Map.iter
    for tag in iter(tags) do
       self:set_tag(tag,tags[tag])

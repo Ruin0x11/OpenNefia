@@ -31,6 +31,7 @@ local env = {}
 
 --- Globals for use inside mods. All of these should be loaded by the
 --- time this file is loaded.
+--- @field SANDBOX_GLOBALS
 local SANDBOX_GLOBALS = {
    -- Lua basic functions
    "assert",
@@ -172,6 +173,9 @@ end
 -- @tparam[opt] table mod_env
 local function env_loadfile(path, mod_env)
    local resolved, require_now = get_require_path(path, mod_env)
+
+   Log.trace("resolved path: %s -> %s", path, resolved)
+
    if require_now then
       return global_require(resolved)
    end
@@ -219,7 +223,7 @@ function env.load_sandboxed_chunk(path, mod_name)
 end
 
 local function get_load_type(path)
-   if string.match(path, "^api%.") then
+   if string.match(path, "^api%.") or string.match(path, "^thirdparty%.") then
       return "api"
    elseif path_is_in_mod(path) then
       return "mod"
@@ -291,7 +295,7 @@ local DOCS_LOADED = {}
 local DOCS_HOTLOADED = {}
 local LOADING_MODS = {}
 
-local function update_documentation(path, req_path, api_table)
+local function update_documentation(path, req_path)
    if not doc.can_load() or (DOCS_LOADED[req_path] and not IS_HOTLOADING) then
       return
    end
@@ -316,8 +320,7 @@ local function update_documentation(path, req_path, api_table)
 
       local modify_time = info.modtime
       if not file or file.last_updated < modify_time or IS_HOTLOADING then
-         local is_builtin = false -- TODO
-         local ok, err = pcall(doc.reparse, req_path, api_table, is_builtin)
+         local ok, err = pcall(doc.build_for_file, path)
          if not ok then
             Log.error("Doc parse error: %s", err)
          end
@@ -362,7 +365,7 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if not hotload and package.loaded[req_path] then
-         update_documentation(path, req_path, package.loaded[req_path])
+         update_documentation(path, req_path)
          return package.loaded[req_path]
       end
 
@@ -398,13 +401,13 @@ local function gen_require(chunk_loader, can_load_path)
             end
          end
          Log.trace("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
-
-         update_documentation(path, req_path, package.loaded[req_path])
       elseif result == nil then
          package.loaded[req_path] = true
       else
          package.loaded[req_path] = result
       end
+
+      update_documentation(path, req_path, package.loaded[req_path])
 
       if hotload then
          HOTLOADED[req_path] = true

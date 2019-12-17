@@ -26,6 +26,9 @@ function I18N.is_fullwidth()
    return I18N.language() == "jp"
 end
 
+--- @function I18N.capitalize(str)
+--- @tparam string str
+--- @treturn string
 I18N.capitalize = i18n.capitalize
 
 --- Localizes a string with arguments. Pass the ID of a localized
@@ -36,7 +39,7 @@ I18N.capitalize = i18n.capitalize
 --- localization data for them will be produced and sent instead.
 ---
 --- @tparam string id ID of the localized string
---- @param ... Extra arguments to pass to the formatter.
+--- @tparam ... ... Extra arguments to pass to the formatter.
 --- @treturn[opt] string The localized text
 --- @see ILocalizable
 function I18N.get_optional(text, ...)
@@ -62,7 +65,7 @@ end
 ---
 --- @tparam string id ID of the localized string
 --- @param ... Extra arguments to pass to the formatter.
---- @treturn[opt] string The localized text
+--- @treturn string The localized text
 --- @see ILocalizable
 function I18N.get(text, ...)
    return I18N.get_optional(text, ...) or ("<error: %s>"):format(text)

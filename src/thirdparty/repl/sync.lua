@@ -17,16 +17,16 @@
 -- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 local repl      = require 'thirdparty.repl'
-local sync_repl = repl:clone()
 local error     = error
 
--- @class repl.sync
 --- This module implements a synchronous REPL.  It provides
 --- a run() method for actually running the REPL, and requires
 --- that implementors implement the lines() method.
+--- @classmod repl.sync
+local sync_repl = repl:clone()
 
 --- Run a REPL loop in a synchronous fashion.
--- @name repl.sync:run
+-- @function repl.sync:run
 function sync_repl:run()
   self:prompt(1)
   for line in self:lines() do
@@ -37,7 +37,7 @@ function sync_repl:run()
 end
 
 --- Returns an iterator that yields lines to be evaluated.
--- @name repl.sync:lines
+-- @function repl.sync:lines
 -- @return An iterator.
 function sync_repl:lines()
   error 'You must implement the lines method'

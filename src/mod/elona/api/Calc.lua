@@ -1,5 +1,6 @@
 local Map = require("api.Map")
 local Rand = require("api.Rand")
+local Charagen = require("mod.tools.api.Charagen")
 
 local Calc = {}
 
@@ -80,6 +81,30 @@ function Calc.calc_fame_gained(chara, base)
       ret = Rand.rnd(5) + 1
    end
    return ret
+end
+
+function Calc.hunt_enemy_id(difficulty, min_level)
+   local id
+
+   for _ = 1, 50 do
+      local chara = Charagen.create(nil, nil, { level = difficulty, quality = 2, ownerless = true })
+      id = chara._id
+      if not chara.is_shade and chara.level >= min_level then
+         break
+      end
+   end
+
+   return id
+end
+
+function Calc.round_margin(a, b)
+   if a > b then
+      return a - Rand.rnd(a - b)
+   elseif a < b then
+      return a + Rand.rnd(b - a)
+   else
+      return a
+   end
 end
 
 return Calc

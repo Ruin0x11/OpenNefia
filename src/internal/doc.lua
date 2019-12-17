@@ -50,14 +50,6 @@ local function get_paths(path)
    return file_path, req_path
 end
 
-local function copy_table(tbl, keys)
-   local result = {}
-   for _, k in ipairs(keys) do
-      result[k] = tbl[k]
-   end
-   return result
-end
-
 local function convert_ldoc_file(file)
    local base = fs.normalize(file.base)
    local filename = fs.normalize(file.filename)
@@ -174,6 +166,14 @@ local function reformat_docstring(docstring)
    return res
 end
 
+local function copy_table(tbl, keys)
+   local result = {}
+   for _, k in ipairs(keys) do
+      result[k] = tbl[k]
+   end
+   return result
+end
+
 local function convert_ldoc_item(item, mod_name, is_builtin)
    local t = copy_table(
       item,
@@ -182,6 +182,7 @@ local function convert_ldoc_item(item, mod_name, is_builtin)
          "description",
          "formal_args",
          "inferred",
+         "is_undocumented",
          "kind",
          "lineno",
          "modifiers",
@@ -214,6 +215,7 @@ local function convert_ldoc(dump, is_builtin)
       {
          "description",
          "inferred",
+         "is_undocumented",
          "kind",
          "kinds",
          "lineno",
@@ -270,6 +272,10 @@ local function doc_entry_for_req_path(req_path)
 end
 
 local function alias_api_fields(api_table, req_path)
+   if type(api_table) ~= "table" then
+      return
+   end
+
    -- Associate functions with their corresponding documentation, so
    -- you can do things like Doc.help(Rand.rnd).
    local tbl = api_table
@@ -300,6 +306,8 @@ end
 local function add_common_aliases(item, file_path)
    local full_path = item.full_path
    local alias = { file_path=file_path, full_path=full_path, display_name=full_path }
+
+   Log.trace("document %s %s", full_path, file_path)
 
    add_alias(full_path, alias)
 
@@ -397,9 +405,7 @@ function doc.reparse(path, api_table, is_builtin)
 
    add_common_aliases(result, file_path)
 
-   if type(api_table) == "table" then
-      alias_api_fields(api_table, req_path)
-   end
+   alias_api_fields(api_table, req_path)
 
    return true
 end
@@ -556,86 +562,104 @@ function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
    end
 end
 
-function doc.build_for(dir)
-   for _, api in fs.iter_directory_items(dir .. "/") do
-      local path = fs.join(dir, api)
-      if fs.is_file(path) and fs.extension_part(path) == "lua" then
-         local req_path = paths.convert_to_require_path(path)
-         local success, tbl = pcall(require, path)
-         if success then
-            doc.reparse(req_path, tbl)
-         else
-            Log.debug("API require failed: %s", tbl)
+-- Obtains the chunk with members for documentation associated with
+-- `path`. This may be different from the file's chunk, since files in
+-- ext/ and ldoc's builtin documentation path are actually documenting
+-- stdlib tables, and the result of requiring those files is not a
+-- table.
+local function get_api_table_for_file(file)
+   -- the docs in ext/*.lua and thirdparty/ldoc/builtin/*.lua actually
+   -- map to global stdlib tables, not the given files. In this case
+   -- we want to require the actual stdlib table instead of the ones
+   -- with the documentation.
+   local require_original = file:match("thirdparty/ldoc/builtin/[^/.]+%.lua$") or file:match("^ext/[^/.]+%.lua$")
+
+   local success, tbl
+
+   if require_original then
+      -- The documentation in this file should be associated with a
+      -- chunk other than the file's returned chunk.
+      local api_name = fs.filename_part(file)
+      if file:match("^thirdparty/ldoc/builtin/") and api_name == "global" then
+         -- "global" is just a name used by ldoc to contain all the
+         -- global functions like `assert` and `collectgarbage`,
+         -- not an actual module.
+         --
+         -- Since we use strict.lua we have to generate a new table
+         -- without the strict metatable containing the global
+         -- functions to prevent errors.
+         success = true
+         tbl = {}
+         for k, v in pairs(_G) do
+            if type(v) == "function" then
+               tbl[k] = v
+            end
          end
-      elseif fs.is_directory(path) then
-         doc.build_for(path)
+         Log.trace("Require global: %s", file)
+      else
+         -- require the original API
+         Log.trace("Require original: %s", api_name)
+         success, tbl = pcall(require, api_name)
+      end
+   else
+      Log.trace("Require normal: %s", file)
+      success, tbl = pcall(require, file)
+   end
+
+   return success, tbl
+end
+
+function doc.build_for_file(path, tbl)
+   local req_path = paths.convert_to_require_path(path)
+
+   local success
+
+   -- Obtain the table from require so we can alias documentation to
+   -- its members. This way you can call help(table.concat) or
+   -- similar, passing the actual function object instead of a string.
+   if tbl ~= nil then
+      success = true
+   else
+      success, tbl = get_api_table_for_file(path)
+   end
+
+   if success then
+      doc.reparse(req_path, tbl)
+   else
+      Log.debug("API require failed: %s", tbl)
+   end
+end
+
+function doc.build_for(dir)
+   if fs.is_file(dir) then
+      doc.build_for_file(dir)
+   else
+      for _, api in fs.iter_directory_items(dir .. "/") do
+         local path = fs.join(dir, api)
+         if fs.is_file(path) and fs.extension_part(path) == "lua" then
+            doc.build_for_file(path)
+         elseif fs.is_directory(path) then
+            doc.build_for(path)
+         end
       end
    end
 end
 
-function doc.build_all()
+function doc.rebuild()
    doc.clear()
 
    doc.build_for("api")
    doc.build_for("mod")
+   doc.build_for("internal")
+   doc.build_for("thirdparty/fun.lua")
 
    -- Lua stdlib
-   local builtin_dir = "thirdparty/ldoc/builtin"
-   for _, api in fs.iter_directory_items(builtin_dir) do
-      local path = fs.join(builtin_dir, api)
-      if fs.is_file(path) and fs.extension_part(path) == "lua" then
-         local req_path = paths.convert_to_require_path(path)
-         local api_name = fs.filename_part(path)
+   doc.build_for("thirdparty/ldoc/builtin")
 
-         local success, tbl
-         if api_name == "global" then
-            -- "global" is just a name used by ldoc to contain all the
-            -- global functions like `assert` and `collectgarbage`,
-            -- not an actual module.
-            --
-            -- Since we use strict.lua we have to generate a new table
-            -- without the strict metatable containing the global
-            -- functions to prevent errors.
-            success = true
-            tbl = {}
-            for k, v in pairs(_G) do
-               if type(v) == "function" then
-                  tbl[k] = v
-               end
-            end
-         else
-            -- require the original API
-            success, tbl = pcall(require, api_name)
-         end
+   -- Extension methods for Lua stdlib
+   doc.build_for("ext")
 
-         if success then
-            doc.reparse(req_path, tbl, api_name)
-         else
-            Log.debug("API require failed: %s", tbl)
-         end
-      end
-   end
-
-   -- ext
-   local ext_dir = "ext"
-   for _, api in fs.iter_directory_items(ext_dir) do
-      local path = fs.join(ext_dir, api)
-      if fs.is_file(path) and fs.extension_part(path) == "lua" then
-         local req_path = paths.convert_to_require_path(path)
-         local api_name = fs.filename_part(path)
-
-         -- require the original API
-         local success, tbl = pcall(require, api_name)
-
-         if success then
-            assert(type(tbl) == "table", api_name)
-            doc.reparse(req_path, tbl, api_name)
-         else
-            Log.debug("API require failed: %s", tbl)
-         end
-      end
-   end
-
+   -- Data entries
    local data = require("internal.data")
    for _, _ty, tbl in data:iter() do
       doc.add_for_data_type(_ty, tbl._defined_in, tbl.doc)
@@ -646,6 +670,8 @@ function doc.build_all()
          end
       end
    end
+
+   doc.save()
 end
 
 function doc.clear()
@@ -687,25 +713,14 @@ function doc.load()
 
    table.replace_with(doc_store, new_doc_store)
 
-   for p, entry in pairs(doc_store.entries) do
-      if not string.match(p, "^__private__:") then
-         local file_path, req_path = get_paths(p)
-         local api_table
-         if entry.mod_name == "global" then
-            api_table = {}
-            for k, v in pairs(_G) do
-               if type(v) == "function" then
-                  api_table[k] = v
-               end
-            end
-            req_path = "global"
-         elseif entry.is_builtin then
-            api_table = require(entry.mod_name)
-            req_path = entry.mod_name
-         else
-            api_table = require(file_path)
+   for path, _ in pairs(doc_store.entries) do
+      Log.debug("load doc: %s", path)
+      if not string.match(path, "^__private__:") then
+         local _, req_path = get_paths(path)
+         local success, api_table = get_api_table_for_file(path)
+         if success then
+            alias_api_fields(api_table, req_path)
          end
-         alias_api_fields(api_table, req_path)
       end
    end
 
@@ -720,7 +735,13 @@ function doc.can_load()
 end
 
 function doc.aliases_for(full_path)
+   local the_doc = doc.get(full_path)
+   if the_doc and the_doc.entry then
+      full_path = the_doc.entry.full_path
+   end
+
    full_path = full_path:lower()
+
    local aliases = {}
    for k, alias_list in pairs(doc_store.aliases) do
       for _, alias in ipairs(alias_list) do
@@ -730,7 +751,7 @@ function doc.aliases_for(full_path)
       end
    end
 
-   return aliases
+   return aliases, full_path
 end
 
 return doc

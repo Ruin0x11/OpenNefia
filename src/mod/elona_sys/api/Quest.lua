@@ -11,30 +11,28 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local I18N = require("api.I18N")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
+local Effect = require("mod.elona.api.Effect")
+local Calc = require("mod.elona.api.Calc")
 
 local Quest = {}
 
 --- Iterates all quests that can appear in quest boards.
 ---
---- @treturn Iterator(IQuest)
+--- @treturn iterator(IQuest)
 function Quest.iter()
    return fun.wrap(pairs(save.elona_sys.quest.quests))
 end
 
 --- Iterates all quests that the player has accepted (completed or not).
 ---
---- @treturn Iterator(IQuest)
+--- @treturn iterator(IQuest)
 function Quest.iter_accepted()
    return Quest.iter():filter(function(q) return q.state ~= "not_accepted" end)
 end
 
---- Returns the total number of all generated quests.
----
---- @treturn int
-function Quest.count()
-end
-
 --- Returns the quest this character is giving as a client, if any.
+--- @tparam IChara chara
+--- @treturn[opt] table
 function Quest.for_client(chara)
    local uid = chara
    if type(chara) == "table" then
@@ -335,7 +333,7 @@ function Quest.register_client(chara)
    if not chara.can_talk then
       return nil, "Cannot talk to character."
    end
-   if chara.roles == nil then
+   if next(chara.roles) == nil then
       return nil, "Character has no role."
    end
    if Role.has(chara, "elona.non_quest_client") then
@@ -475,6 +473,12 @@ function Quest.update_in_map(map)
             end
          end
       end
+
+      -- Certain quests can modify the state of the map. For example,
+      -- the "collect" quest generates an item on the target
+      -- character. Thus we have to save the map after updating quest
+      -- information.
+      Map.save(map)
    end
 end
 
@@ -496,6 +500,46 @@ function Quest.complete(quest, client)
    Gui.update_screen()
 
    return "elona.default:__start", {text}
+end
+
+--- @tparam table quest
+--- @tparam[opt] uint gold
+--- @tparam[opt] uint platinum
+--- @tparam[opt] uint item_count
+function Quest.create_rewards(quest, gold, platinum, item_count)
+   gold = gold or quest.reward_gold
+   platinum = platinum or 1
+
+   local player = Chara.player()
+   local map = player:current_map()
+
+   if gold > 0 then
+      Item.create("elona.gold_piece", player.x, player.y, {amount=gold}, map)
+   end
+   if platinum > 0 then
+      Item.create("elona.platinum_coin", player.x, player.y, {amount=platinum}, map)
+   end
+
+   if quest.reward then
+      item_count = item_count or Rand.rnd(Rand.rnd(4) + 1) + 1
+
+      for _=1, item_count do
+         local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
+         local filter = reward_proto.generate(quest.reward, quest)
+         Itemgen.create(player.x, player.y, filter, map)
+      end
+   end
+
+   Gui.play_sound("base.complete1")
+
+   Effect.modify_karma(player, 1)
+
+   local fame_gained = Calc.calc_fame_gained(player, quest.difficulty * 3 + 10)
+   Gui.mes_c("quest.completed_taken_from", "Green", quest.client_name)
+   Gui.mes_c("quest.gain_fame", "Green", fame_gained)
+   player.fame = player.fame + fame_gained
+
+   Gui.mes("common.something_is_put_on_the_ground")
 end
 
 return Quest

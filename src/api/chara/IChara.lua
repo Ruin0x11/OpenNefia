@@ -154,7 +154,9 @@ local fallbacks = {
    melee_attack_type = 0,
 
    ether_disease_corruption = 0,
-   ether_disease_speed = 0
+   ether_disease_speed = 0,
+
+   roles = {}
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -623,7 +625,7 @@ function IChara:kill(source)
       end
    end
 
-   if self.roles ~= nil then
+   if next(self.roles) then
       self.state = "CitizenDead"
    else
       self.state = "Dead"

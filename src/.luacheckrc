@@ -14,7 +14,13 @@ globals = {
    "save",
    "utf8",
    "help",
-   "pause"
+   "pause",
+
+   math = {
+      fields = {
+         "clamp"
+      }
+   },
 }
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}

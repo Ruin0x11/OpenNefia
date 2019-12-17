@@ -29,7 +29,10 @@ end
 function startup.run_all(mods)
    local coro = coroutine.create(function() startup.run(mods) end)
    while startup.get_progress() ~= "progress_finished" do
-      coroutine.resume(coro)
+      local ok, err = coroutine.resume(coro)
+      if not ok then
+         error(debug.traceback(coro, err))
+      end
    end
 end
 

@@ -64,7 +64,7 @@ function lpeg.P(value) end
 -- characters with code between the codes of x and y (both inclusive).
 -- As an example, the pattern `lpeg.R("09")` matches any digit, and `lpeg.R("az",
 -- "AZ")` matches any ASCII letter.
-function lpeg.R({range}) end
+function lpeg.R(range) end
 
 ---
 -- Returns a pattern that matches any single character that appears in the given
@@ -209,6 +209,6 @@ function lpeg.Ct(patt) end
 -- match fails.
 -- Any extra values returned by the function become the values produced by the
 -- capture.
-function lpeg.Cmt(patt, function) end
+function lpeg.Cmt(patt, fun) end
 
 return lpeg

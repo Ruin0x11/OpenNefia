@@ -165,7 +165,7 @@ local Color = {
 --- arbitrary string.
 ---
 --- @tparam i18n_id|string text
---- @param ...
+--- @tparam ... ...
 function Gui.mes(text, ...)
    Gui.mes_c(text, nil, ...)
 end

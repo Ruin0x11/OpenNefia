@@ -81,7 +81,11 @@ function commands.signature(text)
 
    local entry
    if result.candidates then
-      result, err = Doc.get(result.candidates[1])
+      for _, pair in ipairs(result.candidates) do
+         local full_path = pair[2]
+         result, err = Doc.get(full_path)
+         if result and result.entry then break end
+      end
       if not result or not result.entry then
          return {}
       end
@@ -89,7 +93,7 @@ function commands.signature(text)
 
    entry = result.entry
 
-   if entry.type ~= "function" then
+   if not entry.params then
       return {}
    end
 

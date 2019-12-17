@@ -307,7 +307,7 @@ local function parse_file(fname, lang, package, args)
          -- case-sensitive comparison will not always match.
          if mod_name and guessed_mod_name and string.lower(mod_name) == string.lower(guessed_mod_name) then
             F:warning("assuming module named " .. mod_name .. " exists for documentation")
-            add_module(Tags.new{summary="",description=""},mod_name,true)
+            add_module(Tags.new{summary="",description="",is_undocumented=true},mod_name,true)
             first_comment = false
             module_found = true
 
@@ -474,7 +474,7 @@ local function parse_file(fname, lang, package, args)
                parse_error = is_local
                is_local = false
             end
-            local tags = Tags.new{summary="",description="",params={},modifiers={}}
+            local tags = Tags.new{summary="",description="",params={},modifiers={},is_undocumented=true}
             add_item(tags, item_follows, parse_error, is_local, case, t)
          end
       end

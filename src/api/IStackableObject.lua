@@ -1,3 +1,5 @@
+--- @classmod IStackableObject
+
 local IOwned = require("api.IOwned")
 local IMapObject = require("api.IMapObject")
 
@@ -43,6 +45,9 @@ function IStackableObject:separate(amount, owned)
    return separated
 end
 
+--- Stacks this object with `other`. Afterwards, deletes `other`.
+---
+--- @tparam IStackableObject other
 function IStackableObject:stack_with(other)
    assert(self._type == other._type)
 
@@ -51,6 +56,10 @@ function IStackableObject:stack_with(other)
    other:remove_ownership()
 end
 
+--- True if this object can be stacked with `other`.
+---
+--- @tparam IStackableObject other
+--- @treturn bool
 function IStackableObject:can_stack_with(other)
    return self._type == other._type and self.uid ~= other.uid
 end

@@ -45,7 +45,7 @@ function Doc.make_params_string(the_doc)
    end
 
    local params = "("
-   for i, v in ipairs(the_doc.params) do
+   for i, name in ipairs(the_doc.params) do
       local modifier = the_doc.modifiers.param[i]
 
       if i > 1 then
@@ -56,6 +56,8 @@ function Doc.make_params_string(the_doc)
          if modifier.opt then
             params = params .. "?"
          end
+      elseif name == "..." then
+         params = params .. name
       else
          params = params .. "<?>"
       end
@@ -67,6 +69,8 @@ function Doc.make_params_string(the_doc)
       if ret[1].opt then
          params = params .. "?"
       end
+   elseif the_doc.is_undocumented then
+      params = params .. ") => <?>"
    else
       params = params .. ") => ()"
    end
@@ -145,7 +149,7 @@ function Doc.help(thing)
    if the_doc.params then
       params = "\n\n= Parameters\n"
       if #the_doc.params == 0 then
-         params = params .. "   (none)"
+         params = params .. " * (none)"
       else
          for i, param_name in ipairs(the_doc.params) do
             local modifier = the_doc.modifiers.param[i]
@@ -160,6 +164,8 @@ function Doc.help(thing)
             if modifier and modifier.type then
                ty = modifier.type
                opt = modifier.opt
+            elseif param_name == "..." then
+               ty = "..."
             end
             params = params .. (" :: %s%s"):format(ty, opt and "?" or "")
 
