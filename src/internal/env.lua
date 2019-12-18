@@ -55,7 +55,7 @@ local SANDBOX_GLOBALS = {
    "math",
 
    -- LuaJIT stdlib
-   "bit",
+   -- "bit",
 
    -- OOP library
    "class",
@@ -323,6 +323,9 @@ local function update_documentation(path, req_path)
 
       local file = doc_store.entries[resolved]
       local info = fs.get_info(resolved)
+      if info == nil then
+         info = { modtime = 0 }
+      end
       assert(info, resolved)
 
       local modify_time = info.modtime

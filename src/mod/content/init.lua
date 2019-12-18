@@ -417,15 +417,15 @@ local function base_init(self, player)
       save.base.area_mapping:add_map_to_area(area.uid, world_map.uid)
 
       local home = load_map(world_map, "elona.your_home")
-      local vernis = load_map(world_map, "elona.vernis")
-      local palmia = load_map(world_map, "elona.palmia")
-      local lesimas = load_map(world_map, "elona.lesimas")
+      --local vernis = load_map(world_map, "elona.vernis")
+      --local palmia = load_map(world_map, "elona.palmia")
+      --local lesimas = load_map(world_map, "elona.lesimas")
 
       Map.save(world_map)
       Map.save(home)
-      Map.save(vernis)
-      Map.save(palmia)
-      Map.save(lesimas)
+      --Map.save(vernis)
+      --Map.save(palmia)
+      --Map.save(lesimas)
 
       Map.set_map(home)
 

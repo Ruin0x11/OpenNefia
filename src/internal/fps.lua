@@ -25,14 +25,16 @@ function fps:update(dt)
       self.ms = 0
 
       if self.show_draw_stats then
-	      love.graphics.getStats(self.draw_stats)
-	      self.text = self.text .. string.format("\nDRW: %d\nCNV: %d\nTXTR: %04.2fMB\nIMG: %d\nCNVS: %d\nFNTS: %d",
-	      self.draw_stats.drawcalls,
-	      self.draw_stats.canvasswitches,
-	      self.draw_stats.texturememory / 1024 / 1024,
-	      self.draw_stats.images,
-	      self.draw_stats.canvases,
-	      self.draw_stats.fonts)
+         love.graphics.getStats(self.draw_stats)
+         if self.draw_stats.drawcalls then
+            self.text = self.text .. string.format("\nDRW: %d\nCNV: %d\nTXTR: %04.2fMB\nIMG: %d\nCNVS: %d\nFNTS: %d",
+                                                   self.draw_stats.drawcalls,
+                                                   self.draw_stats.canvasswitches,
+                                                   self.draw_stats.texturememory / 1024 / 1024,
+                                                   self.draw_stats.images,
+                                                   self.draw_stats.canvases,
+                                                   self.draw_stats.fonts)
+         end
       end
    end
 end

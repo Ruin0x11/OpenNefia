@@ -229,13 +229,13 @@ function ShopInventory.generate(inv_id, shopkeeper)
       items_to_create = inv.item_number({shopkeeper = shopkeeper, item_number = items_to_create})
    end
 
-   for index = 0, items_to_create - 1 do
+   local go = function(index)
       -- Go through each generation rule the shop defines and get back
       -- a table of options for Item.create().
       local args = ShopInventory.apply_rules(index, shopkeeper, inv)
 
       if not args then
-         goto continue
+         return
       end
 
       args.no_stack = true
@@ -250,7 +250,7 @@ function ShopInventory.generate(inv_id, shopkeeper)
       end
       if not item then
          -- Shop inventory is full, don't generate anything else.
-         break
+         return true
       end
 
       -- If the shop defines special handling of item state on
@@ -258,13 +258,13 @@ function ShopInventory.generate(inv_id, shopkeeper)
       -- item that happen afterward.
       if inv.on_generate_item then
          inv.on_generate_item({item = item, index = index, shopkeeper = shopkeeper})
-         goto continue
+         return
       end
 
       -- Exclude items like cursed items, seeds or water.
       if ShopInventory.should_remove(item, inv) then
          item:remove_ownership()
-         goto continue
+         return
       end
 
       -- Calculate the number of items sold (always above 0).
@@ -276,7 +276,7 @@ function ShopInventory.generate(inv_id, shopkeeper)
          local number = ShopInventory.calc_cargo_amount(item)
          if number == nil then
             item:remove_ownership()
-            goto continue
+            return
          else
             item.number = number
          end
@@ -293,8 +293,12 @@ function ShopInventory.generate(inv_id, shopkeeper)
       end
 
       item:stack() -- Item.stack(-1, item, false) -- invalidates "item".
+   end
 
-      ::continue::
+   for index = 0, items_to_create - 1 do
+      if go(index) then
+         break
+      end
    end
 
    return result

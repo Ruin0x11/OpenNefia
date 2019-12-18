@@ -236,7 +236,7 @@ function MapArea.load_map_of_entrance(feat, associate)
          Log.debug("Creating new area in outer map: %s", outer_map.uid)
       end
    end
-   assert(area, ("No area for map %s"):format(feat.map_uid))
+   assert(area, ("No area for map %s"):format(feat.map_uid or "?"))
 
    local success, map
    if feat.map_uid == nil then

@@ -188,7 +188,7 @@ function class.is_an(interface, obj)
          if type(name) == "table" then
             name = obj.__class.__name
          end
-         return false, ("Needed class '%s', got '%s'"):format(interface.__name, name)
+         return false, ("Needed class '%s', got '%s'"):format(tostring(interface), tostring(name))
       end
 
       return true

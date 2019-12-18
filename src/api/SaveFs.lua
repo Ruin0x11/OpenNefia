@@ -9,10 +9,16 @@ function SaveFs.current()
 end
 
 local function compress(str)
+   if love.data == nil then
+      return str
+   end
    return love.data.compress("string", "gzip", str, -1)
 end
 
 local function decompress(dat)
+   if love.data == nil then
+      return dat
+   end
    return love.data.decompress("string", "gzip", dat)
 end
 

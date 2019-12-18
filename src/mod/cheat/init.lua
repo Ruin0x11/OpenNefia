@@ -13,10 +13,10 @@ local function level_up()
    end
 
    local bow = Item.create("content.bow", nil, nil, {}, player)
-   assert(player:equip_item(bow))
+   --assert(player:equip_item(bow))
 
    local arrow = Item.create("content.arrow", nil, nil, {}, player)
-   assert(player:equip_item(arrow))
+   --assert(player:equip_item(arrow))
 
    player:gain_skill("elona.mining", 10000)
 

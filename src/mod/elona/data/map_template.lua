@@ -112,7 +112,10 @@ local function create_charas(map, charas)
 
       for i=1,count do
          local chara = Chara.create(id, x, y, {}, map)
-         assert(chara, ("%s:%s:%s"):format(x, y, id))
+         if not chara then
+            return
+         end
+         --assert(chara, ("%s:%s:%s"):format(tostring(x), tostring(y), id))
 
          if opts then
             for k, v in pairs(opts) do

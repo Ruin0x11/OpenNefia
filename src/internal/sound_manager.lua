@@ -30,6 +30,9 @@ function sound_manager:update()
 end
 
 function sound_manager:play_looping(id, ty)
+   if true then
+      return
+   end
    local sound = self.data[ty][id]
    if sound == nil then
       Log.warn("Unknown sound %s:%s", ty, id)
@@ -49,6 +52,9 @@ function sound_manager:play_looping(id, ty)
 end
 
 function sound_manager:stop_looping(id, ty)
+   if true then
+      return
+   end
    if id == nil then
       for k, _ in pairs(self.looping_sources) do
          if k ~= "music:" .. self.music_id then
@@ -68,6 +74,9 @@ function sound_manager:stop_looping(id, ty)
 end
 
 function sound_manager:play(id, x, y, channel)
+   if true then
+      return
+   end
    local sound = self.data.sound[id]
    if sound == nil then
       Log.warn("Unknown sound %s", tostring(id))
@@ -101,6 +110,9 @@ function sound_manager:play(id, x, y, channel)
 end
 
 function sound_manager:stop(channel)
+   if true then
+      return
+   end
    local src = self.sources[channel]
    if src == nil then return end
 

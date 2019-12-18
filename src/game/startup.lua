@@ -53,7 +53,7 @@ function startup.run(mods)
    rawset(_G, "help", function(...) return Doc.help(...) end)
    rawset(_G, "pause", function(...) return Repl.pause(...) end)
 
-   if jit and jit.status() == false then
+   if rawget(_G, "jit") and jit.status() == false then
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
    end
 
@@ -68,9 +68,9 @@ function startup.run(mods)
 
    -- data is finalized at this point.
 
-   if alias_api_tables then
-      doc.alias_api_tables()
-   end
+   -- if alias_api_tables then
+   --    doc.alias_api_tables()
+   -- end
 
    progress("Loading tilemaps...")
 

@@ -31,7 +31,7 @@ end
 function field_logic.quickstart()
    field:init_global_data()
 
-   save.base.scenario = "elona.elona"
+   save.base.scenario = "content.my_scenario"
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
    field_logic.setup_new_game(me)

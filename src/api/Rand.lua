@@ -45,6 +45,9 @@ function Rand.choice(arr_or_iter)
       arr = arr_or_iter:to_list()
 
    end
+   if #arr == 0 then
+      return nil
+   end
    local i = arr[Rand.rnd(#arr)+1]
    return i
 end
