@@ -1,5 +1,6 @@
 local schema = require("thirdparty.schema")
 local data = require("internal.data")
+local Doc = require("api.Doc")
 
 data:add_type {
    name = "event",
@@ -7,7 +8,7 @@ data:add_type {
       observer = schema.Optional(schema.String)
    },
    on_document = function(dat)
-      return { summary = "dood" }
+      return Doc.make_ldoc_doc(dat, dat.params, dat.returns)
    end,
    doc = [[
 Events that can be fired.

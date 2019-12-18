@@ -17,6 +17,18 @@ local function error_result(err)
    }
 end
 
+-- Request:
+--
+-- {
+--   "command":"run",
+--   "content":"tostring(42)"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+-- }
 function commands.run(text)
    local status, success, result
 
@@ -58,11 +70,43 @@ local function with_candidates(cb)
    end
 end
 
+-- Request:
+--
+-- {
+--   "command":"help",
+--   "content":"Rand.rnd"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "doc":"Rand.rnd() is a function defined in <...>"
+-- }
+--
+-- @function commands.help
 commands.help = with_candidates(
    function(_, text)
       return { doc = Doc.help(text) }
-   end)
+end)
 
+-- Request:
+--
+-- {
+--   "command":"jump_to",
+--   "content":"Rand.rnd"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "file":"api/Rand.lua",
+--   "line":7,
+--   "column":0
+-- }
+--
+-- @function commands.jump_to
 commands.jump_to = with_candidates(
    function(entry)
       return {
@@ -72,6 +116,21 @@ commands.jump_to = with_candidates(
       }
    end)
 
+-- Request:
+--
+-- {
+--   "command":"signature",
+--   "content":"Rand.rnd"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "sig":"Rand.rnd(n)",
+--   "params":"(uint) => uint"
+--   "summary":"Returns a random integer in `[0, n)`."
+-- }
 function commands.signature(text)
    local result, err = Doc.get(text)
 
@@ -113,6 +172,20 @@ end
 -- the user's editor read it from disk.
 local apropos_update_time = 0
 
+-- Request:
+--
+-- {
+--   "command":"apropos",
+--   "content":""
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "path":"data/apropos.json",
+--   "updated":true
+-- }
 function commands.apropos(text)
    local path = "data/apropos.json"
    local updated = false
@@ -120,11 +193,13 @@ function commands.apropos(text)
    if true or doc.last_updated_time() > apropos_update_time then
       local items = {}
 
-      for _, entry in pairs(doc_store.entries) do
-         for k, item in pairs(entry.items) do
-            items[#items+1] = { item.full_path, k }
+      for full_path, entry in pairs(doc_store.entries) do
+         if not full_path:match("^private:") then
+            for k, item in pairs(entry.items) do
+               items[#items+1] = { item.full_path, k }
+            end
+            items[#items+1] = { entry.full_path, entry.full_path:lower() }
          end
-         items[#items+1] = { entry.full_path, entry.full_path:lower() }
       end
 
       fs.create_directory(fs.parent(path))
@@ -140,6 +215,19 @@ function commands.apropos(text)
    }
 end
 
+-- Request:
+--
+-- {
+--   "command":"completion",
+--   "content":"Chara.cr"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "results":["Chara.create"]
+-- }
 function commands.completion(text)
    if not field.repl then
       return {}
@@ -177,6 +265,13 @@ function debug_server:poll()
 
       local text = client:receive("*l")
       Log.debug("Request: %s", text)
+
+      -- JSON should have this format:
+      --
+      -- {
+      --   "command":"help",
+      --   "content":"Chara.create"
+      -- }
 
       local ok, req = pcall(json.decode, text)
       if not ok then

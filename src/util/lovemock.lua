@@ -75,6 +75,8 @@ love.audio.setPosition= function() end
 love.audio.newSource = function(path)
    check_path(path)
    return {
+      play = function() end,
+      stop = function() end,
       setLooping = function() end,
       setPosition = function() end,
       setRelative = function() end,

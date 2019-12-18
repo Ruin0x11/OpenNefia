@@ -47,6 +47,8 @@ function EventTree:replace(name, cb, priority)
       self.cache[ind] = cb
    end
 
+   self.dirty = true
+
    return true
 end
 

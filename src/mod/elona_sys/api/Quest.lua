@@ -1,4 +1,4 @@
---- @module Quest
+--- @modQuest
 
 local Role = require("mod.elona_sys.api.Role")
 local Rand = require("api.Rand")
@@ -73,6 +73,8 @@ function Quest.generate_from_proto(proto_id, chara, map)
    local town = save.elona_sys.quest.towns[client.originating_map_uid]
    assert(town)
 
+   Log.debug("generate quest ID: '%s'", proto_id)
+
    local quest = {
       _id = "",
       client_chara_type = 0,
@@ -85,7 +87,6 @@ function Quest.generate_from_proto(proto_id, chara, map)
       params = {}
    }
 
-   local expiration_hours = (Rand.rnd(3) + 1) * 24
    local proto = data["elona_sys.quest"]:ensure(proto_id)
 
    local add_field = function(proto, quest, field)
@@ -107,17 +108,19 @@ function Quest.generate_from_proto(proto_id, chara, map)
    add_field(proto, quest, "difficulty")
    add_field(proto, quest, "deadline_days")
 
+   local expiration_hours
    if type(proto.expiration_hours) == "function" then
       expiration_hours = proto.expiration_hours(quest, client, town)
    else
-      expiration_hours = proto.expiration_hours
+      expiration_hours = proto.expiration_hours or (Rand.rnd(3) + 1) * 24
    end
 
    if proto.generate then
       local success = proto.generate(quest, client, town, map)
       if not success then
-         Log.debug("Quest generation did not succeed.")
-         return nil, "Quest generation did not succeed."
+         local mes = ("Tried to generate quest '%s' but did not succeed"):format(quest._id)
+         Log.warn(mes)
+         return nil, mes
       end
    end
 
@@ -467,7 +470,8 @@ function Quest.update_in_map(map)
       table.remove_indices(save.elona_sys.quest.clients, remove)
 
       -- Generate quests for characters that are not already quest givers.
-      for _, client in Quest.iter_clients() do
+      local clients = Quest.iter_clients():filter(function(c) return c.originating_map_uid == map.uid end)
+      for _, client in clients:unwrap() do
          local quest = Quest.for_client(client)
          local do_generate = quest == nil
             or (World.date():hours() > quest.expiration_date

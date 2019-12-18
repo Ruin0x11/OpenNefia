@@ -139,3 +139,5 @@ data["base.effect"]:edit("register status effect indicator",
         end
       return dat
                              end)
+
+require("mod.base.data")

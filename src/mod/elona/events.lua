@@ -506,6 +506,7 @@ Event.register("elona_sys.on_player_bumped_into_chara",
 
 
 local function calc_dialog_choices(speaker, params, result)
+   print("calc1")
    table.insert(result, {"talk", "talk.npc.common.choices.talk"})
 
    if speaker.roles then
@@ -530,7 +531,7 @@ local function calc_dialog_choices(speaker, params, result)
    return result
 end
 
-Event.register("elona.calc_dialog_choices", "Default NPC dialog", calc_dialog_choices)
+Event.register("elona.calc_dialog_choices", "Default NPC dialog choices", calc_dialog_choices)
 
 
 local function refresh_hp_mp_stamina(chara, params, result)

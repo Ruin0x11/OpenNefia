@@ -4,6 +4,8 @@
 (require 'dash)
 (require 'company)
 (require 'cl)
+(require 'flycheck)
+(require 'markdown-mode)
 
 (defvar elona-next-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -46,17 +48,22 @@
      response)))
 
 (defun elona-next--completing-read (prompt list)
-  (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil))))
-    (completing-read prompt cands)))
+  (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil)))
+        (reader (if (bound-and-true-p ivy-read) 'ivy-read 'completing-read)))
+    (funcall reader prompt cands)))
 
-(defun elona-next--fontify-str (str)
+(defun elona-next--fontify-region (mode beg end)
+  (let ((prev-mode major-mode))
+    (delay-mode-hooks (funcall mode))
+    (font-lock-default-function mode)
+    (font-lock-default-fontify-region beg end nil)
+    ;(delay-mode-hooks (funcall prev-mode))
+    ))
+
+(defun elona-next--fontify-str (str mode)
   (with-temp-buffer
     (insert str)
-    (delay-mode-hooks (lua-mode))
-    (font-lock-default-function 'lua-mode)
-    (font-lock-default-fontify-region (point-min)
-                                      (point-max)
-                                      nil)
+    (elona-next--fontify-region mode (point-min) (point-max))
     (buffer-string)))
 
 (defvar elona-next--eldoc-saved-message nil)
@@ -72,9 +79,10 @@
 
 (defun elona-next-eldoc-function ()
   (ignore-errors
-    (when (elona-next--game-running-p)
-      (elona-next--send "signature"
-                        (elona-next--dotted-symbol-at-point))))
+    (let ((sym (elona-next--dotted-symbol-at-point)))
+      (when (and (elona-next--game-running-p)
+                 (not (string-equal sym "nil")))
+        (elona-next--send "signature" sym))))
   eldoc-last-message)
 
 (defun elona-next--process-response (cmd content response)
@@ -82,7 +90,7 @@
     (if (eq success t)
         (if candidates
             ; in pairs of ("api.Api.name", "api.api.name")
-            (let ((cand (elona-next--completing-read "Candidate: " (cdr candidates))))
+            (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
               (elona-next--send cmd cand))
           (pcase cmd
             ("help" (elona-next--command-help content response))
@@ -98,17 +106,111 @@
 ;; Commands
 ;;
 
+(defun elona-next--start-of-help-buffer ()
+  (let* ((str (buffer-string))
+         (pos (string-match "^\n  " str)))
+    (or (and pos (+ 1 pos))
+        (save-excursion
+          (beginning-of-buffer)
+          (next-line 3)
+          (point)))))
+
+(defun elona-next--end-of-help-buffer ()
+  (let ((str (buffer-string)))
+    (or (string-match "\n= Parameters$" str)
+        (string-match "\n= Returns$" str)
+        (point-max))))
+
+(defvar elona-next--help-buffer-font-lock-keywords
+  `(;; Definitions
+    (,(rx line-start "'" (group-n 1 (+ not-newline)) "'"
+          " is " (? (or "a " "an ")) (group-n 2 (+ not-newline))
+          " defined in '" (group-n 3 (+ not-newline))
+          "' on line " (group-n 4 (+ digit)) ".")
+     (1 font-lock-function-name-face t noerror)
+     (2 font-lock-type-face t noerror)
+     (3 '(face link) t noerror)
+     (4 font-lock-constant-face t noerror))
+
+    ;; Type signature
+    (,(lua-rx line-start
+              (group-n 1 lua-funcname)
+              "("
+              (group-n 2 (? "[") (* (or lua-name "...") (* (any " ,[])"))))
+              ") :: ("
+              (group-n 3 (* (+ (not (any "-)"))) (? " -> ")))
+              ") => "
+              (group-n 4 (+ (not (any "\n" space)))))
+     (1 font-lock-function-name-face t noerror)
+     (2 font-lock-variable-name-face t noerror)
+     (3 font-lock-type-face t noerror)
+     (4 font-lock-type-face t noerror))
+
+    ;; Section headers
+    (,(rx line-start "= " (group-n 1 (or "Parameters" "Returns")) line-end)
+     (0 font-lock-comment-face t noerror))
+
+    ;; Parameters
+    (,(lua-rx line-start " * " (group-n 1 lua-name)
+              " :: " (group-n 2 (+ (not (any "\n" space)))) (? ":"))
+     (1 font-lock-variable-name-face t noerror)
+     (2 font-lock-type-face t noerror))
+
+    ;; Returns
+    (,(lua-rx line-start " * " (group-n 1 (+ (not (any "\n" space)))))
+     (1 font-lock-type-face nil noerror))
+    ))
+
+(defun elona-next--format-help-buffer ()
+  (save-excursion
+    (beginning-of-buffer)
+    (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
+          (fill-column 80)
+          (start (elona-next--start-of-help-buffer))
+          (end (elona-next--end-of-help-buffer))
+          (inhibit-read-only t))
+      (elona-next--fontify-region 'markdown-mode start end)
+      (markdown-toggle-markup-hiding t)
+      (font-lock-add-keywords nil elona-next--help-buffer-font-lock-keywords)
+      (font-lock-fontify-region (point-min) (point-max))
+      (beginning-of-buffer)
+      (next-line 3)
+      (fill-region (point) (point-max)))))
+
+(defvar elona-next--signature-font-lock-keywords
+  `((,(lua-rx line-start
+              (group-n 1 (symbol "function"))
+              " "
+              (group-n 2 lua-funcname)
+              "("
+              (group-n 3 (? "[") (* (or lua-name "...") (* (any " ,[])"))))
+              ") "
+              (group-n 4 (symbol "end"))
+              " :: ("
+              (group-n 5 (* (+ (not (any "-)"))) (? " -> ")))
+              ") => "
+              (group-n 6 (+ (not (any "\n" space)))))
+     (1 font-lock-keyword-face t noerror)
+     (2 font-lock-function-name-face t noerror)
+     (3 font-lock-variable-name-face t noerror)
+     (4 font-lock-keyword-face t noerror)
+     (5 font-lock-type-face t noerror)
+     (6 font-lock-type-face t noerror))))
+
+(defun elona-next--fontify-signature (str)
+  (with-temp-buffer
+    (insert str)
+    ;(font-lock-add-keywords nil elona-next--signature-font-lock-keywords)
+    ;(font-lock-fontify-region (point-min) (point-max))
+    (buffer-string)))
+
 (defun elona-next--command-help (content response)
   (-let (((&alist 'doc 'message) response)
          (buffer (get-buffer-create "*elona-next-help*")))
     (with-help-window buffer
       (princ doc)
       (with-current-buffer buffer
-        (let ((paragraph-start "[ \t]*\n[ \t]*$\\|[ \t]*[-+*=] ")
-              (fill-column 80))
-          (beginning-of-buffer)
-          (next-line 3)
-          (fill-region (point) (point-max)))))
+        (elona-next--format-help-buffer)))
     (message "%s" message)))
 
 (defvar elona-next--is-completing nil)
@@ -156,9 +258,10 @@
   (-let* (((&alist 'sig 'params 'summary) response))
     (when sig
       (setq elona-next--eldoc-saved-message
-            (format "%s :: %s%s" (elona-next--fontify-str sig) params (or (and (not (string-blank-p summary))
-                                                                               (format "\n%s" summary))
-                                                                          ""))
+            (elona-next--fontify-signature
+             (format "%s :: %s%s" sig params (or (and (not (string-blank-p summary))
+                                                      (format "\n%s" summary))
+                                                 "")))
             elona-next--eldoc-saved-point (point))
       (elona-next--eldoc-message elona-next--eldoc-saved-message))))
 
@@ -433,10 +536,15 @@
 
 (defun elona-next-jump-to-definition (arg)
   (interactive "P")
-  (let ((sym (if arg
-                 (symbol-name (symbol-at-point))
-               (elona-next--dotted-symbol-at-point))))
-    (elona-next--send "jump_to" sym)))
+  (let* ((sym (if arg
+                  (symbol-name (symbol-at-point))
+                (elona-next--dotted-symbol-at-point)))
+         (result (if (string-equal sym "nil")
+                     (elona-next--completing-read
+                      "Jump to: "
+                      (json-read-file (elona-next--apropos-file "data/apropos.json")))
+                   sym)))
+    (elona-next--send "jump_to" result)))
 
 (defun elona-next-describe-apropos ()
   (interactive)

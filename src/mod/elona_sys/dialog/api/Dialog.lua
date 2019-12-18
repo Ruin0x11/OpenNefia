@@ -1,3 +1,5 @@
+--- @module Dialog
+
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
@@ -407,6 +409,25 @@ end
 function Dialog.talk_to_chara(chara)
    local dialog_id = chara:calc("dialog") or "elona.default"
    Dialog.start(chara, dialog_id)
+end
+
+--- Adds a dialog choice to a list of possible choices if it doesn't
+--- already exist in the list.
+---
+--- @tparam string choice_id
+--- @tparam string choice_text
+--- @tparam {{string,string}...} choices
+--- @tparam[opt] bool also_text If true, also match by the localized choice text
+function Dialog.add_choice(choice_id, choice_text, choices, also_text)
+   for _, exist in ipairs(choices) do
+      if exist[1] == choice_id -- choice ID
+         and (also_text and exist[2] == choice_id) -- localized text
+      then
+         return
+      end
+   end
+
+   table.insert(choices, {choice_id, choice_text})
 end
 
 return Dialog

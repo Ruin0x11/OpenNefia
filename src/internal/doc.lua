@@ -89,6 +89,7 @@ function doc.get_item_full_name(item)
       -- "ipairs" instead of "global.ipairs"
       return name
    end
+
    if item.kind == "methods" then
       name = string.format("%s:%s", item.mod_name, name)
    else
@@ -251,7 +252,7 @@ end
 -- @tparam any key
 -- @tparam {file_path=string,full_path=string} alias
 local function add_alias(key, alias)
-   Log.trace("add alias %s -> %s", key, alias)
+   --Log.trace("add alias %s -> %s", key, alias)
    assert(doc_store.entries[alias.file_path], alias.file_path .. inspect(table.keys(doc_store.entries)))
 
    alias.full_path = alias.full_path:lower()
@@ -274,7 +275,7 @@ local function doc_entry_for_req_path(req_path)
    return doc_store.entries[file_path], file_path
 end
 
-local function alias_api_fields(api_table, req_path)
+local function alias_api_table_fields(api_table, req_path)
    if type(api_table) ~= "table" then
       return
    end
@@ -408,7 +409,7 @@ function doc.reparse(path, api_table, is_builtin)
 
    add_common_aliases(result, file_path)
 
-   alias_api_fields(api_table, req_path)
+   alias_api_table_fields(api_table, req_path)
 
    return true
 end
@@ -505,7 +506,8 @@ function doc.add_for_data_type(_type, defined_in, summary)
    assert(full_path)
 
    if doc_store.entries[file_path] == nil then
-      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in) -- BUG
+      -- BUG data types do not have a provided location
+      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in)
    end
 
    local the_doc = {
@@ -525,14 +527,14 @@ function doc.add_for_data_type(_type, defined_in, summary)
    add_alias(_type, alias)
 end
 
-function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
+function doc.add_for_data(_type, _id, the_doc, defined_in, dat, force)
    local file_path = "__private__:data"
    local full_path = ("%s:%s"):format(_type, _id)
 
    if doc_store.entries[file_path] == nil then
-      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in) -- BUG
+      doc_store.entries[file_path] = create_doc_from_location(file_path, defined_in)
    else
-      if doc_store.entries[file_path].items[full_path]  then
+      if doc_store.entries[file_path].items[full_path] and not force then
          return
       end
    end
@@ -558,6 +560,9 @@ function doc.add_for_data(_type, _id, the_doc, defined_in, dat)
 
    -- "elona.putit"
    add_alias(_id, alias)
+
+   -- "putit"
+   add_alias(_id:gsub("^([^.]+)%.", ""), alias)
 
    if dat then
       -- <table 0x12345678>
@@ -716,19 +721,21 @@ function doc.load()
 
    table.replace_with(doc_store, new_doc_store)
 
+   doc_store.can_load = true
+   last_updated_time = internal.get_timestamp()
+end
+
+function doc.alias_api_tables()
    for path, _ in pairs(doc_store.entries) do
       Log.debug("load doc: %s", path)
       if not string.match(path, "^__private__:") then
          local _, req_path = get_paths(path)
          local success, api_table = get_api_table_for_file(path)
          if success then
-            alias_api_fields(api_table, req_path)
+            alias_api_table_fields(api_table, req_path)
          end
       end
    end
-
-   doc_store.can_load = true
-   last_updated_time = internal.get_timestamp()
 end
 
 function doc.can_load()

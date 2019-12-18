@@ -26,7 +26,15 @@ local function progress(_status)
    coroutine.yield()
 end
 
+-- skip documenting api tables to save startup time from dozens of
+-- requires.
+-- TODO should be config option
+local alias_api_tables = true
+
 function startup.run_all(mods)
+   -- we're running headless, turn off expensive documentation loading
+   alias_api_tables = false
+
    local coro = coroutine.create(function() startup.run(mods) end)
    while startup.get_progress() ~= "progress_finished" do
       local ok, err = coroutine.resume(coro)
@@ -37,7 +45,9 @@ function startup.run_all(mods)
 end
 
 function startup.run(mods)
-   progress("Loading mods...")
+   progress("Loading documentation...")
+
+   doc.load(alias_api_tables)
 
    -- Wrap these functions to allow hotloading via table access.
    rawset(_G, "help", function(...) return Doc.help(...) end)
@@ -51,14 +61,16 @@ function startup.run(mods)
 
    require("internal.data.base")
 
+   progress("Loading mods...")
+
    mod.load_mods(mods)
    data:run_all_edits()
 
-   progress("Loading documentation...")
-
-   doc.load()
-
    -- data is finalized at this point.
+
+   if alias_api_tables then
+      doc.alias_api_tables()
+   end
 
    progress("Loading tilemaps...")
 

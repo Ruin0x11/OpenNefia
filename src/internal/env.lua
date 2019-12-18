@@ -222,11 +222,18 @@ function env.load_sandboxed_chunk(path, mod_name)
    return env_loadfile(path, mod_env)
 end
 
+-- list of require paths that are allowed in mods.
+local THIRDPARTY_REQUIRES = table.set {
+   "socket"
+}
+
 local function get_load_type(path)
    if string.match(path, "^api%.") or string.match(path, "^thirdparty%.") then
       return "api"
    elseif path_is_in_mod(path) then
       return "mod"
+   elseif THIRDPARTY_REQUIRES[path] then
+      return "thirdparty"
    end
 
    return nil
@@ -258,7 +265,7 @@ end
 local function safe_load_chunk(path)
    local load_type = get_load_type(path)
 
-   if load_type == "api" then
+   if load_type == "api" or load_type == "thirdparty" then
       Log.debug("Loading chunk %s with global env.", path)
       return env_loadfile(path)
    elseif load_type == "mod" then
@@ -286,7 +293,7 @@ local function env_loadfile_or_safe_load(path)
    return env_loadfile(path)
 end
 
-local IS_HOTLOADING = false
+local HOTLOADING_PATH = false
 local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
@@ -296,10 +303,10 @@ local DOCS_HOTLOADED = {}
 local LOADING_MODS = {}
 
 local function update_documentation(path, req_path)
-   if not doc.can_load() or (DOCS_LOADED[req_path] and not IS_HOTLOADING) then
+   if not doc.can_load() or (DOCS_LOADED[req_path] and HOTLOADING_PATH ~= path) then
       return
    end
-   if IS_HOTLOADING and DOCS_HOTLOADED[req_path] then
+   if HOTLOADING_PATH and DOCS_HOTLOADED[req_path] then
       return true
    end
 
@@ -319,7 +326,7 @@ local function update_documentation(path, req_path)
       assert(info, resolved)
 
       local modify_time = info.modtime
-      if not file or file.last_updated < modify_time or IS_HOTLOADING then
+      if not file or file.last_updated < modify_time or HOTLOADING_PATH then
          local ok, err = pcall(doc.build_for_file, path)
          if not ok then
             Log.error("Doc parse error: %s", err)
@@ -376,13 +383,12 @@ local function gen_require(chunk_loader, can_load_path)
       LOADING[req_path] = false
 
       if err then
-         IS_HOTLOADING = false
+         HOTLOADING_PATH = false
          error("\n\t" .. err, 0)
-   print(alias.display_name,alias.full_path,key,"displ")
       end
 
-      if IS_HOTLOADING and result == "no_hotload" then
-         IS_HOTLOADING = false
+      if HOTLOADING_PATH and result == "no_hotload" then
+         HOTLOADING_PATH = false
          Log.error("Chunk %s does not support hotloading", req_path)
          return
       end
@@ -492,9 +498,9 @@ function env.hotload_path(path, also_deps)
    end
 
    Log.trace("Begin hotload: %s", path)
-   IS_HOTLOADING = path
+   HOTLOADING_PATH = path
    local result = env.require(path, true)
-   IS_HOTLOADING = false
+   HOTLOADING_PATH = false
    Log.trace("End hotload: %s %s", path, inspect(result))
 
    if also_deps then
@@ -529,7 +535,7 @@ end
 --- variables besides the entries in package.loaded.
 -- @treturn bool
 function env.is_hotloading()
-   return IS_HOTLOADING
+   return HOTLOADING_PATH
 end
 
 --- Overwrites Lua's builtin `require` with a version compatible with

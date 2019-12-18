@@ -128,7 +128,9 @@ function Doc.help(thing)
    end
 
    local sig = ""
-   if the_doc.type == "function" then
+   if the_doc.signature then
+      sig = "\n\n" .. the_doc.signature
+   elseif the_doc.type == "function" then
       local params_str = Doc.make_params_string(the_doc)
       sig = ("\n\n%s%s :: %s"):format(doc.get_item_full_name(the_doc), the_doc.args, params_str)
    end
@@ -176,7 +178,8 @@ function Doc.help(thing)
          end
       end
    end
-   if the_doc.type == "function" then
+
+   if the_doc.modifiers then
       local ret = the_doc.modifiers["return"]
       if ret and #ret > 0 then
          params = params .. "\n\n= Returns\n"
@@ -263,6 +266,44 @@ function Doc.summarize(mod)
    end
 
    return res
+end
+
+function Doc.make_ldoc_doc(dat, params, returns)
+   local the_doc = {
+      summary = "<summary>",
+      description = dat._doc,
+      params = { map = {} },
+      full_path = dat._type .. ":" .. dat._id,
+      modifiers = {
+         param = {},
+         ["return"] = {}
+      },
+      signature = ""
+   }
+
+   params = params or {}
+
+   for i, v in ipairs(params) do
+      the_doc.params[i] = v.name
+      the_doc.params.map[v.name] = v.desc
+      local opt = string.find(v.type, "%?$")
+      if opt then
+         v.type = v.type:sub(1, opt-1)
+      end
+      table.insert(the_doc.modifiers.param, { type = v.type, opt = not not opt })
+   end
+
+   returns = returns or {}
+
+   for _, v in ipairs(returns) do
+      local opt = string.find(v.type, "%?$")
+      if opt then
+         v.type = v.type:sub(1, opt-1)
+      end
+      table.insert(the_doc.modifiers["return"], { type = v.type, opt = not not opt })
+   end
+
+   return the_doc
 end
 
 function Doc.on_hotload(old, new)

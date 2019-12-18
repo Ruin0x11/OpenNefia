@@ -1,3 +1,5 @@
+--- @classmod ICharaSkills
+
 local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
 
@@ -122,5 +124,25 @@ end
 generate_methods(ICharaSkills, "skill", "skills", "base.skill")
 generate_methods(ICharaSkills, "magic", "magic", "base.skill")
 generate_methods(ICharaSkills, "resist", "resists", "base.element")
+
+--- @function ICharaSkills:skill_level(skill_id)
+--- @tparam id:base.skill skill_id
+--- @treturn[opt] number
+
+--- @function ICharaSkills:base_skill_level(skill_id)
+--- @tparam id:base.skill skill_id
+--- @treturn[opt] number
+
+--- @function ICharaSkills:mod_skill_level(skill_id, amount, op)
+--- @tparam id:base.skill skill_id
+--- @tparam number amount
+--- @tparam[opt] string op
+--- @treturn[opt] number
+
+--- @function ICharaSkills:mod_base_skill_level(skill_id, amount, op)
+--- @tparam id:base.skill skill_id
+--- @tparam number amount
+--- @tparam[opt] string op
+--- @treturn[opt] number
 
 return ICharaSkills

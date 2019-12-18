@@ -1,3 +1,7 @@
+local Gui = require("api.Gui")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local Quest = require("mod.elona_sys.api.Quest")
+local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
@@ -38,10 +42,10 @@ local collect = {
          if chara.uid ~= client.uid then
             if Chara.is_alive(chara, map)
                and chara:reaction_towards(Chara.player(), "original") > 0
-               and not chara.roles["elona.guard"]
-               and not chara.roles["elona.non_quest_target"]
+               and (chara.roles["elona.guard"] or chara.roles["elona.non_quest_target"])
             then
-               local item = Itemgen.create(nil, nil, { level = 40, quality = 2, categories = Filters.fsetcollect }, chara)
+               local category = Rand.choice(Filters.fsetcollect)
+               local item = Itemgen.create(nil, nil, { level = 40, quality = 2, categories = {category} }, chara)
                if item then
                   item.count = 0 -- TODO
                   target_chara = chara
@@ -72,3 +76,68 @@ local collect = {
    end
 }
 data:add(collect)
+
+local function collect_quest_for(chara)
+   local function is_quest_client(q)
+      return q._id == "elona.collect" and q.client_uid == chara.uid
+   end
+   return Quest.iter():filter(is_quest_client):nth(1)
+end
+
+local function find_item(chara, item_id)
+   return chara:iter_inventory():filter(function(i) return i._id == item_id end)
+end
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_collect",
+
+   root = "talk.npc.quest_giver",
+   nodes = {
+      trade = function(t)
+         print("trade")
+      end,
+      give = function(t)
+         -- TODO generalize with dialog argument
+         local quest = collect_quest_for(t.speaker)
+         assert(quest)
+
+         local item = find_item(Chara.player(), quest.params.target_item_id)
+
+         Gui.mes("talk.npc.common.hand_over", item)
+         local sep = assert(item:move_some(1, t.speaker))
+         t.speaker.item_to_use = sep
+
+         Chara.player():refresh_weight()
+
+         return Quest.complete(quest, t.speaker)
+      end
+   }
+}
+
+local function add_collect_dialog_choice(speaker, _, choices)
+   local function has_collect_quest(q)
+      return q._id == "elona.collect" and q.params.target_chara_uid == speaker.uid
+   end
+   if Quest.iter():any(has_collect_quest) then
+      Dialog.add_choice("elona.collect:trade", "talk.npc.common.choices.trade", choices)
+   end
+   return choices
+end
+
+Event.register("elona.calc_dialog_choices", "Add trade option for character with collect quest",
+               add_collect_dialog_choice, {priority = 210000})
+
+local function add_give_dialog_choice(speaker, _, choices)
+   local quest = collect_quest_for(speaker)
+   if quest then
+      local item = find_item(Chara.player(), quest.params.target_item_id)
+      if item then
+         Dialog.add_choice("elona.collect:give", "talk.npc.common.choices.", choices)
+      end
+   end
+   return choices
+end
+
+Event.register("elona.calc_dialog_choices", "Add give option for collect quest client",
+               add_give_dialog_choice)

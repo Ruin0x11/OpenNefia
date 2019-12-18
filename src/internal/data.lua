@@ -127,6 +127,17 @@ function data:add_type(schema, params)
    local _type = mod_name .. "." .. schema.name
 
    if env.is_hotloading() and schemas[_type] then
+      Log.debug("In-place update of type %s", _type)
+
+      schema.indexes = schemas[_type].indexes
+      if loc then
+         schema._defined_in = {
+            relative = fs.normalize(loc.short_src),
+            line = loc.lastlinedefined
+         }
+         doc.add_for_data_type(_type, schema._defined_in, schema.doc, true)
+      end
+      table.replace_with(schemas[_type], schema)
       return
    end
 
@@ -177,7 +188,7 @@ function data:run_edits_for(_type, _id)
    self[_type][_id] = global_edits[_type](self[_type][_id])
 end
 
-local function update_docs(dat, _schema, loc)
+local function update_docs(dat, _schema, loc, is_hotloading)
    if (dat._doc or _schema.on_document) then
       if loc then
          dat._defined_in = {
@@ -189,7 +200,7 @@ local function update_docs(dat, _schema, loc)
       if _schema.on_document then
          the_doc =_schema.on_document(dat)
       end
-      doc.add_for_data(dat._type, dat._id, the_doc, dat._defined_in, dat)
+      doc.add_for_data(dat._type, dat._id, the_doc, dat._defined_in, dat, is_hotloading)
    end
 end
 
@@ -258,7 +269,7 @@ function data:add(dat)
 
          Event.trigger("base.on_hotload_prototype", {new=dat})
 
-         update_docs(dat, _schema, loc)
+         update_docs(dat, _schema, loc, true)
 
          return dat
       else

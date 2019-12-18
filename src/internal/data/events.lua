@@ -10,7 +10,16 @@ data:add_multi(
       { _id = "before_handle_self_event" },
       { _id = "before_ai_decide_action" },
       { _id = "after_chara_damaged", },
-      { _id = "on_calc_damage" },
+      {
+         _id = "on_calc_damage",
+
+         params = {
+            { name = "test", type = "int", desc = "zxc" }
+         },
+         returns = {
+            { type = "int?" }
+         }
+      },
       { _id = "after_damage_hp", },
       { _id = "on_damage_chara", },
       { _id = "on_kill_chara", },

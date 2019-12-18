@@ -3,6 +3,9 @@ require("boot")
 
 require("internal.data.base")
 
+local Stopwatch = require("api.Stopwatch")
+local sw = Stopwatch:new()
+
 local field_logic = require("game.field_logic")
 local field = require("game.field")
 local mod = require("internal.mod")
@@ -172,6 +175,8 @@ function elona_repl:displayresults(results)
       print(line)
    end
 end
+
+sw:p("REPL startup time")
 
 if arg[1] == "test" then
    os.exit(0)

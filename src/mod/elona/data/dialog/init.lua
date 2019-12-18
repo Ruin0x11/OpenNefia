@@ -66,10 +66,14 @@ data:add {
 
          local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
 
-         local ok, node = quest_proto.on_accept(quest, t.speaker)
-         if not ok then
-            assert(node, "`on_accept()` must return a boolean and dialog node")
-            return node
+         local node = "accept"
+         if quest_proto.on_accept then
+            local ok
+            ok, node = quest_proto.on_accept(quest, t.speaker)
+            if not ok then
+               assert(node, "`on_accept()` must return a boolean and dialog node")
+               return node
+            end
          end
 
          quest.state = "accepted"

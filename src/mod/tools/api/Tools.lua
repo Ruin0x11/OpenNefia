@@ -551,4 +551,13 @@ function Tools.uid_to_map(uid)
    return map
 end
 
+function Tools.new_quests()
+   local Quest = require("mod.elona_sys.api.Quest")
+   local World = require("api.World")
+   local map = Map.current()
+   World.pass_time_in_seconds(60*60*24*5)
+   Quest.update_in_map(map)
+   Map.save(map)
+end
+
 return Tools
