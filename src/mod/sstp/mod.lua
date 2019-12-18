@@ -1,0 +1,4 @@
+return {
+   id = "sstp",
+   dependencies = {}
+}
