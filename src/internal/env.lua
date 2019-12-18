@@ -124,8 +124,8 @@ function env.find_calling_mod()
       if info.what == "main" and loc == nil then
          loc = info
       end
-      local mod_env = getfenv(stack)
       local success, mod_name = pcall(function()
+            local mod_env = getfenv(stack)
             return mod_env._MOD_NAME
       end)
 

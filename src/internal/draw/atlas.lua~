@@ -3,15 +3,17 @@ local binpack = require("thirdparty.binpack")
 
 local atlas = class.class("atlas")
 
-function atlas:init(tile_width, tile_height)
+function atlas:init(tile_count_x, tile_count_y, tile_width, tile_height)
    self.tile_width = tile_width
    self.tile_height = tile_height
+   self.tile_count_x = tile_count_x
+   self.tile_count_y = tile_count_y
    self.tiles = {}
    self.image = nil
    self.batch = nil
-   self.binpack = nil
-   self.image_width = nil
-   self.image_height = nil
+   self.image_width = self.tile_width * self.tile_count_x
+   self.image_height = self.tile_height * self.tile_count_y
+   self.binpack = binpack:new(self.image_width, self.image_height)
 
    -- blank fallback in case of missing filepath.
    local fallback_data = love.image.newImageData(self.tile_width, self.tile_height)
@@ -85,30 +87,22 @@ function atlas:load_one(proto, draw_tile)
    end
 end
 
-function atlas:load(protos, coords, cb)
-   assert(self.tile_count_x == nil)
+function atlas:load(proto_iter, coords, cb)
    -- self.coords = coords -- TODO
 
    self.tiles = {}
 
-   local count = #protos
-   self.tile_count_x = 48
-   self.tile_count_y = math.ceil(count / 48 + 1) * 2 -- account for tall tiles
+   local image_width = self.tile_width * self.tile_count_x
+   local image_height = self.tile_height * self.tile_count_y
 
-   self.image_width = self.tile_width * self.tile_count_x
-   self.image_height = self.tile_height * self.tile_count_y
-   self.binpack = binpack:new(self.image_width, self.image_height)
-
-   local canvas = love.graphics.newCanvas(self.image_width, self.image_height)
+   local canvas = love.graphics.newCanvas(image_width, image_height)
    love.graphics.setCanvas(canvas)
 
    local cb = cb or function(self, proto) self:load_one(proto) end
 
-   for _, proto in ipairs(protos) do
-      cb(self, proto)
+   for _, proto in proto_iter:unwrap() do
+      -- cb(self, proto)
    end
-
-   print(("%d/%d tiles filled."):format(count, self.tile_count_x * self.tile_count_y))
 
    love.graphics.setCanvas()
 

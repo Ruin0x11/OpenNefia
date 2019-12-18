@@ -10,14 +10,14 @@ local chara_layer = class.class("chara_layer", IDrawLayer)
 function chara_layer:init(width, height)
    local coords = Draw.get_coords()
    local chara_atlas = require("internal.global.atlases").get().chara
-   local shadow_atlas = atlas:new(1, 1, 48, 48)
+   local shadow_atlas = atlas:new(48, 48)
    local t = UiTheme.load(self)
 
    local tiles = {{
          _id = "shadow",
          image = t.character_shadow
    }}
-   shadow_atlas:load(fun.iter(tiles), coords)
+   shadow_atlas:load(tiles, coords)
 
    self.chara_batch = sparse_batch:new(width, height, chara_atlas, coords)
    self.shadow_batch = sparse_batch:new(width, height, shadow_atlas, coords)

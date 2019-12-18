@@ -208,7 +208,6 @@ local function transfer_stairs(old_map, new_map, params)
          end
       end
    end
-   pause()
 
    new_map.dungeon_level = old_map.dungeon_level
 end

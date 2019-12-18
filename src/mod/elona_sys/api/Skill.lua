@@ -166,8 +166,8 @@ local function proc_leveling(chara, skill, new_exp, level, potential)
       potential = Skill.modify_potential(potential, -level_delta)
       chara:set_base_skill(skill, level, potential, new_exp)
       if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
-         Gui.mes_alert()
          Gui.mes_c(skill_change_text(chara, skill, false), "Red")
+         Gui.mes_alert()
       end
       chara:refresh()
    end

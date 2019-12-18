@@ -349,6 +349,11 @@ function debug_server:start()
 end
 
 function debug_server:step(dt)
+   if self.coro == nil then
+      self:stop()
+      return
+   end
+
    local ok, err = coroutine.resume(self.coro, dt)
    if not ok then
       Log.error("%s", debug.traceback(self.coro, err))

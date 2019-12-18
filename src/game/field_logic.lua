@@ -315,7 +315,6 @@ function field_logic.player_died()
    Gui.mes("misc.death.you_leave_dying_message")
    Gui.update_screen()
 
-   Gui.mes("Last words? ")
    local last_words = Input.query_text(16, true)
    if last_words == nil then
       last_words = I18N.get("system.last_words")
@@ -378,7 +377,8 @@ function field_logic.run_one_event(event, target_chara)
    success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
 
    if not success then
-      -- pass the error up to the main loop so the handler can run
+      -- pass the error up to the main loop so the error screen can be
+      -- displayed
       coroutine.yield(event)
 
       event = "player_turn_query"

@@ -107,31 +107,30 @@ local mkpred = function(group)
 end
 
 local function get_map_tiles()
-   return data["base.map_tile"]:iter()
+   return data["base.map_tile"]:iter():to_list()
 end
 
 local function get_map_overhang_tiles()
-   return data["base.map_tile"]:iter():filter(function(t) return t.wall_kind ~= nil end)
+   return data["base.map_tile"]:iter():filter(function(t) return t.wall_kind ~= nil end):to_list()
 end
 
 local function get_chara_tiles()
-   return data["base.chip"]:iter():filter(mkpred("chara"))
+   return data["base.chip"]:iter():filter(mkpred("chara")):to_list()
 end
 
 local function get_item_tiles()
-   return data["base.chip"]:iter():filter(mkpred("item"))
+   return data["base.chip"]:iter():filter(mkpred("item")):to_list()
 end
 
 local function get_feat_tiles()
-   return data["base.chip"]:iter():filter(mkpred("feat"))
+   return data["base.chip"]:iter():filter(mkpred("feat")):to_list()
 end
 
 local function get_portrait_tiles()
-   return data["base.portrait"]:iter()
+   return data["base.portrait"]:iter():to_list()
 end
 
 local tile_size = 48
-local atlas_size = 96
 
 function startup.load_batches()
    Log.info("Loading tile batches.")
@@ -143,25 +142,25 @@ function startup.load_batches()
    sw:measure()
 
    progress("Loading tilemaps (tile)...")
-   local tile_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   local tile_atlas = atlas:new(tile_size, tile_size)
    tile_atlas:load(get_map_tiles(), coords)
 
    sw:p("load_batches.tile")
 
    progress("Loading tilemaps (overhang)...")
-   local tile_overhang_atlas = atlas:new(atlas_size, atlas_size, tile_size, math.floor(tile_size / 4), 0, 16)
+   local tile_overhang_atlas = atlas:new(tile_size, tile_size)
    tile_overhang_atlas:load(get_map_overhang_tiles(), coords)
 
    sw:p("load_batches.tile_overhang")
 
    progress("Loading tilemaps (character)...")
-   local chara_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   local chara_atlas = atlas:new(tile_size, tile_size)
    chara_atlas:load(get_chara_tiles())
 
    sw:p("load_batches.chara")
 
    progress("Loading tilemaps (item)...")
-   local item_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   local item_atlas = atlas:new(tile_size, tile_size)
    item_atlas:load(get_item_tiles())
 
    sw:p("load_batches.item")
@@ -176,19 +175,19 @@ function startup.load_batches()
       end
       atlas:load_one(proto, draw)
    end
-   local item_shadow_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   local item_shadow_atlas = atlas:new(tile_size, tile_size)
    item_shadow_atlas:load(get_item_tiles(), nil, load_tile)
 
    sw:p("load_batches.item_shadow")
 
    progress("Loading tilemaps (feat)...")
-   local feat_atlas = atlas:new(atlas_size, atlas_size, tile_size, tile_size)
+   local feat_atlas = atlas:new(tile_size, tile_size)
    feat_atlas:load(get_feat_tiles())
 
    sw:p("load_batches.feat")
 
    progress("Loading tilemaps (portrait)...")
-   local portrait_atlas = atlas:new(100, 100, 48, 72)
+   local portrait_atlas = atlas:new(48, 72)
    portrait_atlas:load(get_portrait_tiles())
 
    sw:p("load_batches.portrait")

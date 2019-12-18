@@ -1,4 +1,4 @@
-#!/usr/bin/env lua
+-- #!/usr/bin/env lua
 ---------------
 -- ## ldoc, a Lua documentation generator.
 --

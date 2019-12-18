@@ -76,8 +76,8 @@ function love.update(dt)
       local ok, err = server:step(dt)
       if not ok then
          -- Coroutine is dead. Restart server.
-         server = debug_server:new()
-         server:start()
+         -- server = debug_server:new()
+         -- server:start()
       else
          local result = err
          if halt and result then
