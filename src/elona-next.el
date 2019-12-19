@@ -245,14 +245,14 @@
 
 (defun elona-next--command-jump-to (content response)
   (-let* (((&alist 'success 'file 'line 'column) response))
-    (if (eq success t)
+    (if file
         (let* ((loc (xref-make-file-location file line column))
                (marker (xref-location-marker loc))
                (buf (marker-buffer marker)))
           (xref--push-markers)
           (switch-to-buffer buf)
           (xref--goto-char marker))
-      (xref-find-definitions content))))
+      (xref-find-definitions (strip-text-properties content)))))
 
 (defun elona-next--command-signature (response)
   (-let* (((&alist 'sig 'params 'summary) response))
@@ -558,7 +558,10 @@
   (define-eval-sexp-fu-flash-command elona-next-require-this-file
     (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
   (define-eval-sexp-fu-flash-command elona-next-send-current-line
-    (eval-sexp-fu-flash (elona-next--bounds-of-line))))
+    (eval-sexp-fu-flash (elona-next--bounds-of-line)))
+
+  (define-eval-sexp-fu-flash-command lua-send-buffer
+    (eval-sexp-fu-flash (elona-next--bounds-of-buffer))))
 
 (defvar elona-next--repl-errors-buffer "*elona-next-repl-errors*")
 (defvar elona-next--repl-name "elona-next-repl")
@@ -598,5 +601,9 @@
         (progn
           (pop-to-buffer elona-next--repl-errors-buffer)
           (error "REPL startup failed."))))))
+
+(defun elona-next-run-batch-script ()
+  (interactive)
+  (compile (format "%s repl.lua batch %s" lua-default-application (buffer-file-name))))
 
 (provide 'elona-next)

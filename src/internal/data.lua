@@ -108,6 +108,10 @@ local function remove_index_field(dat, _type, field)
 end
 
 function data:add_index(_type, field)
+   if not schemas[_type] then
+      return
+   end
+
    if schemas[_type].indexes[field] then
       return
    end
@@ -125,6 +129,7 @@ function data:add_type(schema, params)
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
+   print("ADD TYPE", _type)
 
    if env.is_hotloading() and schemas[_type] then
       Log.debug("In-place update of type %s", _type)
@@ -136,6 +141,11 @@ function data:add_type(schema, params)
             line = loc.lastlinedefined
          }
          doc.add_for_data_type(_type, schema._defined_in, schema.doc, true)
+      else
+         schema._defined_in = {
+            relative = ".",
+            line = 0
+         }
       end
       table.replace_with(schemas[_type], schema)
       return
@@ -148,13 +158,17 @@ function data:add_type(schema, params)
 
    local generate = params.generates or nil
 
-   assert(loc, _type)
    if loc then
       schema._defined_in = {
          relative = fs.normalize(loc.short_src),
          line = loc.lastlinedefined
       }
       doc.add_for_data_type(_type, schema._defined_in, schema.doc)
+   else
+      schema._defined_in = {
+         relative = ".",
+         line = 0
+      }
    end
 
    inner[_type] = {}
@@ -194,6 +208,11 @@ local function update_docs(dat, _schema, loc, is_hotloading)
          dat._defined_in = {
             relative = fs.normalize(loc.short_src),
             line = loc.lastlinedefined
+         }
+      else
+         dat._defined_in = {
+            relative = ".",
+            line = 0
          }
       end
       local the_doc = dat._doc

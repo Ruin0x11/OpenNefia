@@ -27,7 +27,7 @@ local function isWindows()
   return type(package) == 'table' and type(package.config) == 'string' and package.config:sub(1,1) == '\\'
 end
 
-local supported = not isWindows()
+local supported = not isWindows() and not _IS_LOVEJS
 if isWindows() then supported = os.getenv("ANSICON") end
 
 local keys = {

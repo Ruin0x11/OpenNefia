@@ -82,10 +82,10 @@ end
 --- Looks for a character with the given UID or base.chara ID in the
 --- current map.
 ---
---- @tparam id:base.chara|uid:base.chara id
+--- @tparam id:base.chara|uid id
 --- @tparam string kind "all", "allies" or "others"
 --- @tparam[opt] InstancedMap map
---- @treturn Iterator(IChara)
+--- @treturn iterator(IChara)
 function Chara.find(id, kind, map)
    map = map or field.map
 

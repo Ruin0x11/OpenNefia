@@ -1,6 +1,8 @@
 _DEBUG = false
 _CONSOLE = _CONSOLE or false
 
+_IS_LOVEJS = jit == nil
+
 package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/init.fnl"
 
 local dir_sep = package.config:sub(1,1)
@@ -68,6 +70,8 @@ if is_windows then
    io.stdout:setvbuf("no")
    io.stderr:setvbuf("no")
 end
+
+require("api.Log").set_level("debug")
 
 -- prevent new globals from here on out.
 require("thirdparty.strict")

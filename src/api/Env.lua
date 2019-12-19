@@ -40,6 +40,13 @@ function Env.pop_ui_result()
    return ui_results:pop()
 end
 
+function Env.clear_ui_results()
+   if not Env.is_headless() then
+      error("This function can only be used in headless mode.")
+   end
+   ui_results = queue:new()
+end
+
 --- @treturn string
 function Env.lua_version()
    if jit then

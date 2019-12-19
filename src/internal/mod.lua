@@ -20,7 +20,7 @@ local function load_mod(mod_name, root_path)
    if fs.is_file(init_lua_path) then
       local req_path = paths.convert_to_require_path(init_lua_path)
 
-      local chunk, err = env.load_sandboxed_chunk(req_path, mod_name)
+      local chunk, err = env.safe_require(req_path)
 
       if err then
          return false, err

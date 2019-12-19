@@ -55,7 +55,7 @@ local SANDBOX_GLOBALS = {
    "math",
 
    -- LuaJIT stdlib
-   -- "bit",
+   "bit",
 
    -- OOP library
    "class",
@@ -72,6 +72,15 @@ local UNSAFE_HOTLOAD_PATHS = {
    "internal.env",
    "util.class",
 }
+
+local HOTLOADING_PATH = false
+local HOTLOAD_DEPS = false
+local HOTLOADED = {}
+local LOADING = {}
+local LOADING_STACK = {}
+local DOCS_LOADED = {}
+local DOCS_HOTLOADED = {}
+local LOADING_MODS = {}
 
 -- To determine the require path of a chunk, it is necessary to keep a
 -- cache. If a chunk is hotloaded, the table it returns will be merged
@@ -114,6 +123,20 @@ function env.find_calling_mod()
    local hotload_path = env.is_hotloading()
    if hotload_path then
       return path_is_in_mod(hotload_path) or "base"
+   end
+
+   if _IS_LOVEJS then
+      print("==========")
+      for i = #LOADING_STACK, 1, -1 do
+         local path = LOADING_STACK[i]
+         local mod_name = path_is_in_mod(path)
+         print(i, path, mod_name)
+         if mod_name then
+            return mod_name
+         end
+      end
+
+      return "base"
    end
 
    local stack = 1
@@ -293,15 +316,6 @@ local function env_loadfile_or_safe_load(path)
    return env_loadfile(path)
 end
 
-local HOTLOADING_PATH = false
-local HOTLOAD_DEPS = false
-local HOTLOADED = {}
-local LOADING = {}
-local LOADING_STACK = {}
-local DOCS_LOADED = {}
-local DOCS_HOTLOADED = {}
-local LOADING_MODS = {}
-
 local function update_documentation(path, req_path)
    if not doc.can_load() or (DOCS_LOADED[req_path] and HOTLOADING_PATH ~= path) then
       return
@@ -342,7 +356,10 @@ local function gen_require(chunk_loader, can_load_path)
    return function(path, hotload)
       local req_path = paths.convert_to_require_path(path)
 
+      LOADING_STACK[#LOADING_STACK+1] = req_path
+
       if can_load_path and not can_load_path(req_path) then
+         LOADING_STACK[#LOADING_STACK] = nil
          return nil
       end
 
@@ -375,12 +392,12 @@ local function gen_require(chunk_loader, can_load_path)
       end
 
       if not hotload and package.loaded[req_path] then
+         LOADING_STACK[#LOADING_STACK] = nil
          update_documentation(path, req_path)
          return package.loaded[req_path]
       end
 
       LOADING[req_path] = true
-      LOADING_STACK[#LOADING_STACK+1] = req_path
       local result, err = chunk_loader(req_path)
       LOADING_STACK[#LOADING_STACK] = nil
       LOADING[req_path] = false

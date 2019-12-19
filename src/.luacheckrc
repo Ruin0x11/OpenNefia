@@ -6,6 +6,7 @@ globals = {
    "mobdebug",
    "_CONSOLE",
    "_DEBUG",
+   "_IS_LOVEJS",
    "love",
    "class",
    "inspect",
@@ -19,6 +20,16 @@ globals = {
    math = {
       fields = {
          "clamp"
+      }
+   },
+   string = {
+      fields = {
+         "split"
+      }
+   },
+   table = {
+      fields = {
+         "unpack"
       }
    },
 }

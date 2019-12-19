@@ -141,7 +141,7 @@ function fs.iter_directory_items(dir)
 end
 
 function fs.exists(path)
-   if not fs.get_info and love.filesystem.exists then
+   if _IS_LOVEJS then
       return love.filesystem.exists(path)
    end
 
@@ -149,7 +149,7 @@ function fs.exists(path)
 end
 
 function fs.is_directory(path)
-   if not fs.get_info and love.filesystem.isDirectory then
+   if _IS_LOVEJS then
       return love.filesystem.isDirectory(path)
    end
 
@@ -158,7 +158,7 @@ function fs.is_directory(path)
 end
 
 function fs.is_file(path)
-   if not fs.get_info and love.filesystem.isFile then
+   if _IS_LOVEJS then
       return love.filesystem.isFile(path)
    end
 
