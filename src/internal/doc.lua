@@ -474,7 +474,7 @@ function doc.get(path)
    if path and aliases and aliases[1].file_path ~= path then
       return nil, ("No documentation for %s (%s)"):format(aliases[1].file_path, path)
    else
-      return nil, ("No documentation for %s"):format(path)
+      return nil, ("No documentation for %s"):format((tostring(path)))
    end
 end
 

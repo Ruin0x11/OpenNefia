@@ -120,60 +120,6 @@ return {
          ranged = "*vopal*"
       },
       weapon = {
-         _100 = {
-            name = "sword",
-            verb = "slash",
-            verb_and = "slash"
-         },
-         _101 = {
-            name = "dagger",
-            verb = "stab",
-            verb_and = "stab"
-         },
-         _102 = {
-            name = "axe",
-            verb = "slash",
-            verb_and = "slash"
-         },
-         _103 = {
-            name = "mace",
-            verb = "smash",
-            verb_and = "smash"
-         },
-         _104 = {
-            name = "spear",
-            verb = "stab",
-            verb_and = "stab"
-         },
-         _105 = {
-            name = "staff",
-            verb = "smash",
-            verb_and = "smash"
-         },
-         _107 = {
-            name = "scythe",
-            verb = "slash",
-            verb_and = "slash"
-         },
-         _108 = {
-            name = "bow",
-            verb = "shoot",
-            verb_and = "shoot"
-         },
-         _109 = {
-            name = "crossbow",
-            verb = "shoot",
-            verb_and = "shoot"
-         },
-         _110 = {
-            name = "gun",
-            verb = "shoot",
-            verb_and = "shoot"
-         },
-         _111 = {
-            verb = "shoot",
-            verb_and = "shoot"
-         },
          attacks_and = function(_1, _2, _3)
             return ("%s %s%s %s and")
                :format(name(_1), _2, s(_1), name(_3))

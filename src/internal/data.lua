@@ -129,7 +129,6 @@ function data:add_type(schema, params)
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
-   print("ADD TYPE", _type)
 
    if env.is_hotloading() and schemas[_type] then
       Log.debug("In-place update of type %s", _type)

@@ -31,6 +31,8 @@ end
 
 function sound_manager:play_looping(id, ty)
    if _IS_LOVEJS then
+      -- sound is completely broken in love.js (introduces lag and
+      -- doesn't even play properly...)
       return
    end
 
@@ -125,6 +127,10 @@ function sound_manager:stop(channel)
 end
 
 function sound_manager:play_music(sound_id)
+   if _IS_LOVEJS then
+      return
+   end
+
    assert(type(sound_id) == "string")
 
    if self.music_id == sound_id then

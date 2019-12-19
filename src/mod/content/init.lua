@@ -1,3 +1,6 @@
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+
 --
 --
 -- Charas
@@ -447,15 +450,6 @@ local function base_init(self, player)
    assert(player:equip_item(arrow))
 
    player:refresh()
-
-   player.gold = 1000000000
-   player.platinum = 1000
-
-   for _= 1, 100 do
-      Skill.gain_level(player)
-      Skill.grow_primary_skills(player)
-   end
-   player:heal_to_max()
 end
 
 local function my_start(self, player)
@@ -464,22 +458,33 @@ local function my_start(self, player)
    for i=1,4 do
       local a = Chara.create("elona.younger_sister", i+8, 3)
       a:recruit_as_ally()
-      for _ = 1, 50 do
+      for _ = 1, 5 do
          Skill.gain_level(a)
          Skill.grow_primary_skills(a)
       end
+      a:heal_to_max()
    end
 
-   local Gui = require("api.Gui")
-   Gui.mes_c("Please don't die.", "Green")
+   DeferredEvent.add(function()
+         local lomias = Chara.find("elona.lomias", "others")
+         Dialog.start(lomias, "elona.lomias_game_begin")
+
+         return "player_turn_query"
+   end)
 
    for i=1,10 do
-      Chara.create("elona.putit", i+8, 11)
+      Chara.create("elona.putit")
    end
 
    for _=1,50 do
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
+
+   local Gui = require("api.Gui")
+   Gui.mes_c("!!! WARNING !!! this is a really early build. expect everything to break fantastically. ", "Red")
+   Gui.mes_newline()
+   Gui.mes_c("Try pressing '`' for console. Type in `Chara.create(\"elona.putit\")`, `Item`, `Map`, `Input`... ", "Gold")
+   Gui.mes_newline()
 end
 
 local function init_bells(self, player)

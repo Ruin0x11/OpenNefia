@@ -48,7 +48,7 @@ local function init_stocks()
       make_stock("LOM", 1)
    }
    s.last_update = World.date():hours()
-   require("api.Gui").mes_c("Stocks initted", "Green")
+   require("api.Gui").mes_c("Elostock mod initted. ", "Green")
 end
 
 Event.register("base.on_game_initialize", "Init stocks", init_stocks)

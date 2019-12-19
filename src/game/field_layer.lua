@@ -222,7 +222,7 @@ function field_layer:query_repl()
 
    -- The repl could get hotloaded, so keep it in an upvalue.
    local repl = self.repl
-   repl:query()
+   repl:query(100000000) -- draw on top of everything
 
    if repl then
       repl:save_history()

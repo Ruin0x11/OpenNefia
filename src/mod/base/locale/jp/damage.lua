@@ -105,60 +105,6 @@ return {
          ranged = " *ズバシュッ* "
       },
       weapon = {
-         _100 = {
-            name = "長剣",
-            verb = "切られた",
-            verb_and = "切り払い"
-         },
-         _101 = {
-            name = "短剣",
-            verb = "刺された",
-            verb_and = "突き刺して"
-         },
-         _102 = {
-            name = "斧",
-            verb = "切られた",
-            verb_and = "切り払い"
-         },
-         _103 = {
-            name = "鈍器",
-            verb = "打たれた",
-            verb_and = "打って"
-         },
-         _104 = {
-            name = "槍",
-            verb = "刺された",
-            verb_and = "突き刺して"
-         },
-         _105 = {
-            name = "杖",
-            verb = "打たれた",
-            verb_and = "打って"
-         },
-         _107 = {
-            name = "鎌",
-            verb = "切られた",
-            verb_and = "切り払い"
-         },
-         _108 = {
-            name = "弓",
-            verb = "撃たれた",
-            verb_and = "射撃し"
-         },
-         _109 = {
-            name = "クロスボウ",
-            verb = "撃たれた",
-            verb_and = "射撃し"
-         },
-         _110 = {
-            name = "銃",
-            verb = "撃たれた",
-            verb_and = "射撃し"
-         },
-         _111 = {
-            verb = "攻撃された",
-            verb_and = "投げ"
-         },
          attacks_and = function(_1, _2, _3)
             return ("%s%sを%s")
                :format(kare_wa(_1), name(_3), _2)

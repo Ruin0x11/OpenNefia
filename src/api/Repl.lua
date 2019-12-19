@@ -141,7 +141,7 @@ function Repl.pause()
       color = {65, 17, 17, 192},
       message = mes
    }
-   require("api.gui.menu.ReplLayer"):new(repl_env, params):query()
+   require("api.gui.menu.ReplLayer"):new(repl_env, params):query(100000000) -- draw on top of everything
 
    repl.restore_locals(1, locals)
 end

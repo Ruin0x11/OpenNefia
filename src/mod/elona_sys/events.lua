@@ -140,9 +140,9 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
       if weapon then
          -- TODO
          if skill == "elona.throwing" then
-            Gui.mes("damage.weapon.attacks_throwing", chara, "damage.weapon.verb_and." .. skill, target, weapon:build_name())
+            Gui.mes("damage.weapon.attacks_throwing", chara, "damage.weapon." .. skill .. ".verb_and", target, weapon:build_name())
          else
-            Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon.verb_and." .. skill, target)
+            Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon." .. skill .. ".verb_and", target)
          end
       else
          local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".enemy")
@@ -179,7 +179,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
          if weapon then
             local weapon_name = I18N.get_optional("damage.weapon." .. skill .. ".name")
             if weapon_name then
-               Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon.verb." .. skill, target, weapon_name)
+               Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon." .. skill .. ".verb", target, weapon_name)
             end
          else
             local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".ally")

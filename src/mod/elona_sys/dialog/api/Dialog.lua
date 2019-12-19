@@ -87,7 +87,11 @@ local function query(talk, text, choices, default_choice, choices_root)
 
    local the_choices = {}
    for i, choice in ipairs(choices) do
-      the_choices[i] =  resolve_response(choice[2], choices_root)
+      local rest = {}
+      for i = 3, #choice do
+         rest[i-2] = choice[i]
+      end
+      the_choices[i] =  resolve_response(choice[2], rest, choices_root)
       if default_choice == nil and choice[1] == "__END__" then
          default_choice = i
       end
@@ -370,7 +374,7 @@ local function step_dialog(node_data, talk, state)
             -- Prompt for choice if on the last text entry or
             -- `next_node` is non-nil, otherwise show single choice.
             if texts[i+1] == nil then
-               local choice = query(talk, tex, choices, default_choice)
+               local choice = query(talk, tex, choices, default_choice, talk.dialog.root)
                next_node = {choice = choice, opts = {}}
             else
                query(talk, tex, {{"dummy", choice_key}})

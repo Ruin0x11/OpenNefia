@@ -71,10 +71,15 @@ if is_windows then
    io.stderr:setvbuf("no")
 end
 
-require("api.Log").set_level("debug")
-
 -- prevent new globals from here on out.
 require("thirdparty.strict")
+
+if _IS_LOVEJS then
+   -- hack to satisfy strict.lua
+   jit = nil
+
+   require("api.Log").set_level("debug")
+end
 
 -- Hook the global `require` to support hotloading.
 require("internal.env").hook_global_require()

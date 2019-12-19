@@ -126,11 +126,9 @@ function env.find_calling_mod()
    end
 
    if _IS_LOVEJS then
-      print("==========")
       for i = #LOADING_STACK, 1, -1 do
          local path = LOADING_STACK[i]
          local mod_name = path_is_in_mod(path)
-         print(i, path, mod_name)
          if mod_name then
             return mod_name
          end
@@ -336,9 +334,11 @@ local function update_documentation(path, req_path)
       resolved = fs.normalize(resolved)
 
       local file = doc_store.entries[resolved]
-      local info = fs.get_info(resolved)
-      if info == nil then
+      local info
+      if _IS_LOVEJS then
          info = { modtime = 0 }
+      else
+         info = fs.get_info(resolved)
       end
       assert(info, resolved)
 
