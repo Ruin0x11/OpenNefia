@@ -475,7 +475,7 @@ function ReplLayer.format_results(results, print_varargs)
          -- `results` could have nil values in the middle, so iterate
          -- by index.
          local tbl = {}
-         local count = results.count
+         local count = results.n
          if tostring(results[1]) == "<generator>" then
             -- Don't print out the state and index of iterators.
             count = 1

@@ -348,7 +348,7 @@
       (progn
         (lua-send-string str)
         (message (elona-next--get-lua-result)))
-    (elona-next--send "run" (format "require('api.Repl').send('%s')" str))))
+    (elona-next--send "run" (format "require('api.Repl').send([[\n%s\n]])" str))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
@@ -470,7 +470,7 @@
       (match-string 1 message))))
 
 (defun elona-next--api-name-to-path (api-name cands)
-  (let* ((regexp (format "/%s.lua$" api-name))
+  (let* ((regexp (format "/%s\\(\\|/init\\).lua$" api-name))
          (case-fold-search nil)
          (filtered (-filter (lambda (f) (string-match-p regexp f)) cands)))
     (cl-case (length filtered)
@@ -486,7 +486,9 @@
          (paths (-non-nil (-map (lambda (n) (elona-next--api-name-to-path n cands)) apis))))
     (save-excursion
       (beginning-of-buffer)
-      (-each paths 'elona-next-insert-require-for-file))))
+      (-each paths 'elona-next-insert-require-for-file)
+      (save-buffer)
+      (flycheck-buffer))))
 
 (defun elona-next--extract-unused-api (flycheck-error)
   (let ((message (flycheck-error-message flycheck-error))
@@ -504,7 +506,9 @@
         (lambda (line)
           (goto-line line)
           (beginning-of-line)
-          (kill-line))))))
+          (kill-line)))
+      (save-buffer)
+      (flycheck-buffer))))
 
 (defvar elona-next--eval-expression-history '())
 
@@ -597,7 +601,8 @@
           (progn
             (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file) switch)
             (setq next-error-last-buffer (get-buffer buffer-name))
-            (pop-to-buffer buffer-name))
+            (pop-to-buffer buffer-name)
+            (setq-local company-backends '(company-etags)))
         (progn
           (pop-to-buffer elona-next--repl-errors-buffer)
           (error "REPL startup failed."))))))

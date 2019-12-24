@@ -1,18 +1,28 @@
 --- @module Rand
+local RandomGenerator = require("api.RandomGenerator")
+
 local Rand = {}
+
+local rng = RandomGenerator:new(0)
 
 --- Returns a random integer in `[0, n)`.
 --- @tparam int n
 --- @treturn int
 function Rand.rnd(n)
-   return math.random(0, math.floor(n) - 1)
+   return rng:rnd(math.floor(n))
 end
 
---- Returns a random integer in `[a, b)`.
---- @tparam int a
---- @tparam int b
-function Rand.between(a, b)
-   return math.random(math.floor(a), math.floor(a+b) - 1)
+--- Returns a random integer in `[n, m)`.
+--- @tparam int n
+--- @tparam int m
+function Rand.between(n, m)
+   return rng:rnd_between(math.floor(n), math.floor(m))
+end
+
+--- Returns a random float in `[0, 1)`.
+--- @treturn number
+function Rand.rnd_float()
+   return rng:rnd_float()
 end
 
 --- Returns true one out of every `n` times.
@@ -27,9 +37,8 @@ function Rand.one_in_percent(n)
    return 100 / n
 end
 
---- TODO: must be constant and unmodifiable, for determinism
 function Rand.set_seed(seed)
-   math.randomseed(seed or 0)
+   rng:set_seed(seed)
 end
 
 -- Selects a random element out of an arraylike table or iterator. If
@@ -53,7 +62,7 @@ function Rand.choice(arr_or_iter)
 end
 
 function Rand.percent_chance(percent)
-   return math.random() < (percent / 100)
+   return rng:rnd_float() < (percent / 100)
 end
 
 -- Rolls a die of (x)d(y) + add.

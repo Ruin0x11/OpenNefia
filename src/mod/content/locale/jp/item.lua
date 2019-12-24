@@ -8,6 +8,9 @@ local item = {
   arrow = {
     name = "テストの矢"
   },
+  armor = {
+    name = "テストの鎧"
+  },
   test = {
     name = "テストのアイテム"
   },
@@ -15,6 +18,8 @@ local item = {
 
 return {
    item = {
-      content = item
+      info = {
+         content = item
+      }
    }
 }

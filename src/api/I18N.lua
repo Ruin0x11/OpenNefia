@@ -19,6 +19,15 @@ function I18N.quote_character()
    return "「"
 end
 
+--- @treturn string
+function I18N.space()
+   if I18N.is_fullwidth() then
+      return ""
+   end
+
+   return " "
+end
+
 --- True if the current language uses fullwidth characters.
 ---
 --- @treturn bool

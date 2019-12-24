@@ -6,8 +6,8 @@ local UiTheme = require("api.gui.UiTheme")
 local UiLevel = class.class("UiLevel", {IUiElement, ISettable})
 
 function UiLevel:init()
-   self.level = math.random(1, 20)
-   self.exp = math.random(100000)
+   self.level = 1
+   self.exp = 0
 end
 
 function UiLevel:set_data(level, exp)

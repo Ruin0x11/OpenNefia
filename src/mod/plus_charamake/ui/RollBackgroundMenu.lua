@@ -2,13 +2,13 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local IUiLayer = require("api.gui.IUiLayer")
+local Rand = require("api.Rand")
 
 local RollBackgroundMenu = class.class("RollBackgroundMenu", IUiLayer)
 
@@ -66,7 +66,7 @@ function RollBackgroundMenu:init()
 end
 
 function RollBackgroundMenu:reroll(play_sound, which_part)
-   local generator = function(i) return "the history " .. math.random(100) end
+   local generator = function(i) return "the history " .. Rand.rnd(100) end
    local first, second = self.texts:iter():split(2)
    local gen = fun.tabulate(generator)
 

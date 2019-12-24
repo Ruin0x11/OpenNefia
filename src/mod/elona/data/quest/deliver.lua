@@ -106,7 +106,7 @@ end
 function deliver.locale_data(self)
    local params = {
       item_category = self.params.item_category,
-      item_name = I18N.get("item." .. self.params.item_id .. ".name"),
+      item_name = I18N.get("item.info." .. self.params.item_id .. ".name"),
       target_name = self.params.target_name,
       map = self.params.target_map_name
    }

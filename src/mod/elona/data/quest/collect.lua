@@ -70,7 +70,7 @@ local collect = {
    end,
    locale_data = function(self)
       return {
-         item_name = I18N.get("item." .. self.params.target_item_id .. ".name"),
+         item_name = I18N.get("item.info." .. self.params.target_item_id .. ".name"),
          target_name = self.params.target_name
       }
    end

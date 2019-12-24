@@ -167,7 +167,7 @@ function elona_repl:displayresults(results)
       end
    end
 
-   local result_text = ReplLayer.format_results(results)
+   local result_text = ReplLayer.format_results(results, true)
    for line in string.lines(result_text) do
       if #line > 2500 then
          line = string.sub(line, 1, 2500) .. "..."

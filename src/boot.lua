@@ -25,12 +25,12 @@ if _DEBUG then
    _CONSOLE = true
 end
 
+class = require("util.class")
+
 require("ext")
 
 inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")
-
-class = require("util.class")
 
 local function remove_all_metatables(item, path)
   if path[#path] ~= inspect.METATABLE then return item end

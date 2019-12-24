@@ -75,7 +75,7 @@ function LuaReplMode:submit(text)
    for i=2,max do
       results[i-1] = results[i]
    end
-   results.count = max - 1
+   results.n = max - 1
 
    return ok, results
 end

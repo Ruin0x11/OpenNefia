@@ -1,3 +1,4 @@
+local Rand = require("api.Rand")
 local Log = require("api.Log")
 local paths = require("internal.paths")
 local fs = require("util.fs")
@@ -9,7 +10,6 @@ if env.is_hotloading() then
 end
 
 local mod = {}
-
 local loaded = {}
 
 local MOD_DIR = "mod"
@@ -19,6 +19,10 @@ local function load_mod(mod_name, root_path)
 
    if fs.is_file(init_lua_path) then
       local req_path = paths.convert_to_require_path(init_lua_path)
+
+      -- Reset the random seed before loading each mod loading can
+      -- always be deterministic.
+      Rand.set_seed(0)
 
       local chunk, err = env.safe_require(req_path)
 
@@ -195,6 +199,8 @@ function mod.load_mods(mods)
          error(err)
       end
    end
+
+   Rand.set_seed()
 end
 
 function mod.iter_loaded()

@@ -10,6 +10,7 @@ local UiTheme = require("api.gui.UiTheme")
 local Event = require("api.Event")
 local Log = require("api.Log")
 local Doc = require("api.Doc")
+local Rand = require("api.Rand")
 local Repl = require("api.Repl")
 
 local startup = {}
@@ -57,7 +58,8 @@ function startup.run(mods)
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
    end
 
-   math.randomseed(internal.get_timestamp())
+   -- For determinism during mod loading.
+   Rand.set_seed(0)
 
    require("internal.data.base")
 

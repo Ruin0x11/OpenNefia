@@ -1,3 +1,5 @@
+local IItem = require("api.item.IItem")
+local Sha1 = require("mod.extlibs.api.Sha1")
 local Csv = require("mod.elona_sys.api.Csv")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
@@ -196,7 +198,9 @@ local TITLE_FILES = {
 
 --- @tparam[opt] string kind One of "character" (default), "weapon",
 --- "party" or "living_weapon"
-function Text.random_title(kind)
+--- @tparam[opt] uint seed
+--- @treturn string
+function Text.random_title(kind, seed)
    kind = kind or "character"
    local lang = I18N.language()
    if titles[lang] == nil then
@@ -208,7 +212,60 @@ function Text.random_title(kind)
       titles[lang] = Csv.parse_file("mod/elona/data/csv/" .. file):to_list()
    end
 
-   return fun.tabulate(function() return random_title_internal(kind) end):filter(function(i) return i end):nth(1)
+   if seed then
+      Rand.set_seed(seed)
+   end
+
+   -- keep trying until we get a valid title
+   local result = fun.tabulate(function() return random_title_internal(kind) end)
+                        :filter(function(i) return i end)
+                        :nth(1)
+
+   if seed then
+      Rand.set_seed()
+   end
+
+   return result
+end
+
+local function string_to_int(str)
+   local hash_chunks = {Sha1.sha1(str)} -- list of ints
+   return fun.iter(hash_chunks):foldl(fun.op.add, 0)
+end
+
+-- TODO hardcoded
+local RANDOM_COLORS = {
+   { 255, 255, 255 },
+   { 175, 255, 175 },
+   { 255, 155, 155 },
+   { 175, 175, 255 },
+   { 255, 215, 175 },
+   { 255, 255, 175 },
+}
+
+--- Gets the name and color of an unidentified item.
+--- @tparam base.item|IItem item
+--- @tparam[opt] uint seed Seed used for randomized color/name
+--- @treturn string,color
+function Text.unidentified_item_params(item, seed)
+   local unknown_name = I18N.get_optional("item.info." .. item._id .. ".unidentified_name")
+   if unknown_name then
+      return unknown_name, item.color
+   end
+
+   local has_random_name = item.has_random_name
+
+   if has_random_name then
+      seed = seed or save.base.random_seed
+      local index = (string_to_int(item._id) % seed) % 6
+      unknown_name = I18N.get("ui.random_item." .. item.originalnameref2 .. "._" .. index)
+         .. I18N.space()
+         .. I18N.get("ui.random_item." .. item.originalnameref2 .. ".name")
+      local color = RANDOM_COLORS[index+1]
+      return unknown_name, color
+   end
+
+   return item.name, item.color
 end
 
 return Text

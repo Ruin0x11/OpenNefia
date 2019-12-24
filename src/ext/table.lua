@@ -296,14 +296,14 @@ function table.append(a, b)
    return a
 end
 
---- Converts an list to a set, with all keys set to "true".
--- @tparam list arr
+--- Converts n list to a set, with all keys set to "true".
+-- @tparam list list
 -- @tparam bool keep_map_part if true, also keep any existing entries in the map part of the table.
 -- @treturn table
-function table.set(arr, keep_map_part)
+function table.set(list, keep_map_part)
    local tbl = {}
    if keep_map_part then
-      for k, v in pairs(arr) do
+      for k, v in pairs(list) do
          if type(k) == "number" then
             tbl[v] = true
          else
@@ -311,7 +311,7 @@ function table.set(arr, keep_map_part)
          end
       end
    else
-      for _, k in ipairs(arr) do
+      for _, k in ipairs(list) do
          tbl[k] = true
       end
    end

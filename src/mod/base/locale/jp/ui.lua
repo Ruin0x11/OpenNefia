@@ -838,6 +838,10 @@ return {
       },
       yes = "ああ",
 
-      now_loading = "ロード中…"
+      now_loading = "ロード中…",
+
+      sense_perception = function(_1, _2)
+         return (" (%s)[%s製]"):format(_1, _2)
+      end
    }
 }

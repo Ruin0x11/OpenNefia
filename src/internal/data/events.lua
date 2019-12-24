@@ -137,3 +137,24 @@ Event.register("base.on_hotload_prototype", "Notify objects in map of prototype 
                      end
                   end
 end)
+
+local DateTime = require("api.DateTime")
+local area_mapping = require("internal.area_mapping")
+local uid_tracker = require("internal.uid_tracker")
+local Rand = require("api.Rand")
+local save = require("internal.global.save")
+
+local function init_save()
+   local s = save.base
+   s.date = DateTime:new(517, 8, 12, 16, 10, 0)
+   s.play_turns = 0
+   s.play_days = 0
+   s.area_mapping = area_mapping:new()
+   s.player = nil
+   s.allies = {}
+   s.uids = uid_tracker:new()
+   s.map_uids = uid_tracker:new()
+   s.random_seed = Rand.rnd(800) + 2
+end
+
+Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

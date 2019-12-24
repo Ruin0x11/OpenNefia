@@ -9,18 +9,41 @@ local draw = require("internal.draw")
 
 local Draw = {}
 
+--- @function Draw.layer_count
 Draw.layer_count = draw.layer_count
+
+--- @function Draw.get_layer
 Draw.get_layer = draw.get_layer
+
+--- @function Draw.set_root
 Draw.set_root = draw.set_root
+
+--- @function Draw.get_coords
 Draw.get_coords = draw.get_coords
+
+--- @function Draw.get_tiled_width
 Draw.get_tiled_width = draw.get_tiled_width
+
+--- @function Draw.get_tiled_height
 Draw.get_tiled_height = draw.get_tiled_height
+
+--- @function Draw.with_canvas
 Draw.with_canvas = draw.with_canvas
+
+--- @function Draw.set_font
 Draw.set_font = draw.set_font
+
+--- @function Draw.run
 Draw.run = draw.run
 
+
+--- @function Draw.get_width
 Draw.get_width = love.graphics.getWidth
+
+--- @function Draw.get_height
 Draw.get_height = love.graphics.getHeight
+
+--- @function Draw.create_canvas
 Draw.create_canvas = love.graphics.newCanvas
 
 --- Sets the current drawing color. You can provide a table of up to  four

@@ -60,6 +60,7 @@ load_translations = function(path, merged)
    end
 end
 
+i18n.load_translations = load_translations
 
 function i18n.switch_language(lang, force)
    i18n.language = lang
@@ -84,7 +85,7 @@ function i18n.switch_language(lang, force)
       if fs.is_directory(path) then
          local path = fs.join(path, lang)
          if fs.is_directory(path) then
-            load_translations(path, i18n.db[lang])
+            i18n.load_translations(path, i18n.db[lang])
          end
       end
    end

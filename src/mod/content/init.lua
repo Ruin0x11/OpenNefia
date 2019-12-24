@@ -479,12 +479,6 @@ local function my_start(self, player)
    for _=1,50 do
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
-
-   local Gui = require("api.Gui")
-   Gui.mes_c("!!! WARNING !!! this is a really early build. expect everything to break fantastically. ", "Red")
-   Gui.mes_newline()
-   Gui.mes_c("Try pressing '`' for console. Type in `Chara.create(\"elona.putit\")`, `Item`, `Map`, `Input`... ", "Gold")
-   Gui.mes_newline()
 end
 
 local function init_bells(self, player)

@@ -349,7 +349,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 411,
          efp = 100,
@@ -369,7 +369,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 413,
          efp = 100,
@@ -389,7 +389,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 408,
          efp = 100,
@@ -410,7 +410,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 458,
          efp = 300,
@@ -432,7 +432,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -455,7 +455,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 12 }),
          has_charge = true,
@@ -478,7 +478,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -503,7 +503,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -528,7 +528,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -640,7 +640,7 @@ local item =
          on_drink = Magic.drink_potion(1111, 200),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -660,7 +660,7 @@ local item =
          on_drink = Magic.drink_potion(1109, 150),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -680,7 +680,7 @@ local item =
          on_drink = Magic.drink_potion(1110, 200),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -699,7 +699,7 @@ local item =
          on_drink = Magic.drink_potion(1112, 200),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -734,7 +734,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -758,7 +758,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -782,7 +782,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -1521,7 +1521,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(400, 100),
          categories = {
@@ -1541,7 +1541,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(400, 300),
          categories = {
@@ -1561,7 +1561,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(401, 100),
          categories = {
@@ -1582,7 +1582,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(401, 300),
          categories = {
@@ -1603,7 +1603,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(401, 400),
          categories = {
@@ -1660,7 +1660,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(402, 100),
          categories = {
@@ -1681,7 +1681,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(402, 300),
          categories = {
@@ -1702,7 +1702,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(403, 100),
          categories = {
@@ -2359,7 +2359,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -2401,7 +2401,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -2426,7 +2426,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -2450,7 +2450,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
@@ -2473,7 +2473,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -2497,7 +2497,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -2521,7 +2521,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
@@ -2560,7 +2560,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -3377,7 +3377,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 10 }),
          has_charge = true,
@@ -3401,7 +3401,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -3918,7 +3918,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 9 }),
          has_charge = true,
@@ -3943,7 +3943,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -4157,7 +4157,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 412,
          efp = 100,
@@ -4727,7 +4727,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 428,
          efp = 100,
@@ -4832,7 +4832,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 429,
          efp = 500,
@@ -4860,7 +4860,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -4879,7 +4879,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1104,
          efp = 100,
@@ -4899,7 +4899,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 408,
          efp = 100,
@@ -4922,7 +4922,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -4948,7 +4948,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -4974,7 +4974,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -4998,7 +4998,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -5023,7 +5023,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5049,7 +5049,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -5075,7 +5075,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -5171,7 +5171,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -5276,7 +5276,7 @@ local item =
          on_drink = Magic.drink_potion(1108, 200),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -5295,7 +5295,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -5321,7 +5321,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -5346,7 +5346,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -5395,7 +5395,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5420,7 +5420,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5445,7 +5445,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5470,7 +5470,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5496,7 +5496,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5522,7 +5522,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -5723,7 +5723,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(439, 100),
          categories = {
@@ -5742,7 +5742,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(440, 100),
          categories = {
@@ -5766,7 +5766,7 @@ local item =
          on_drink = Magic.drink_potion(1113, 100),
 
          tags = { "spshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_spshop"
@@ -5789,7 +5789,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -5808,7 +5808,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 1 }),
          has_charge = true,
@@ -5843,7 +5843,7 @@ local item =
          efp = 100,
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.rod",
             "elona.tag_noshop"
@@ -7218,7 +7218,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 411,
          efp = 2000,
@@ -7240,7 +7240,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 412,
          efp = 2500,
@@ -7259,7 +7259,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(442, 200),
          categories = {
@@ -7279,7 +7279,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -7304,7 +7304,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 7 }),
          has_charge = true,
@@ -7329,7 +7329,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7355,7 +7355,7 @@ local item =
          on_drink = Magic.drink_potion(443, 400),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7375,7 +7375,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -7398,7 +7398,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(444, 300),
          categories = {
@@ -7419,7 +7419,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7442,7 +7442,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(445, 250),
          categories = {
@@ -7463,7 +7463,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7489,7 +7489,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -7512,7 +7512,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(446, 250),
          categories = {
@@ -7533,7 +7533,7 @@ local item =
          on_drink = Magic.drink_potion(447, 400),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7552,7 +7552,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -7576,7 +7576,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -7598,7 +7598,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(448, 250),
          categories = {
@@ -7618,7 +7618,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7644,7 +7644,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7670,7 +7670,7 @@ local item =
          on_drink = Magic.drink_potion(449, 250),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7690,7 +7690,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -7715,7 +7715,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 451,
          efp = 250,
@@ -7738,7 +7738,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 6 }),
          has_charge = true,
@@ -7763,7 +7763,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7789,7 +7789,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -7813,7 +7813,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 406,
          efp = 300,
@@ -7835,7 +7835,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 407,
          efp = 300,
@@ -7857,7 +7857,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 621,
          efp = 250,
@@ -7880,7 +7880,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -7954,7 +7954,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1117,
          efp = 250,
@@ -7977,7 +7977,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -8003,7 +8003,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -8028,7 +8028,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 453,
          efp = 250,
@@ -8234,7 +8234,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -8257,7 +8257,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 430,
          efp = 500,
@@ -8280,7 +8280,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          _copy = {
             count = Resolver.make("elona.item_count", { count = 3 }),
@@ -8768,7 +8768,7 @@ local item =
          on_drink = Magic.drink_potion(1118, 100),
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -8793,7 +8793,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          medal_value = 5,
          categories = {
             "elona.scroll",
@@ -8819,7 +8819,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          medal_value = 8,
          categories = {
             "elona.scroll",
@@ -8842,7 +8842,7 @@ local item =
          on_drink = Magic.drink_potion(454, 100),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -8860,7 +8860,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(1121, 200),
          categories = {
@@ -8881,7 +8881,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -9778,7 +9778,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1122,
          efp = 100,
@@ -9809,7 +9809,7 @@ local item =
          efp = 100,
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          medal_value = 20,
          categories = {
             "elona.rod",
@@ -9830,7 +9830,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -9907,7 +9907,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -9933,7 +9933,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 8 }),
          has_charge = true,
@@ -10253,7 +10253,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -10272,7 +10272,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1127,
          efp = 180,
@@ -10300,7 +10300,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "spshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          medal_value = 7,
          categories = {
             "elona.scroll",
@@ -10349,7 +10349,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          is_precious = true,
 
@@ -10373,7 +10373,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1124,
          efp = 200,
@@ -10395,7 +10395,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1124,
          efp = 400,
@@ -10416,7 +10416,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1125,
          efp = 200,
@@ -10438,7 +10438,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1125,
          efp = 400,
@@ -10598,7 +10598,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1129,
          efp = 300,
@@ -10638,7 +10638,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -10663,7 +10663,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -11189,7 +11189,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 7 }),
          has_charge = true,
@@ -11214,7 +11214,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11254,7 +11254,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -11285,7 +11285,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -11305,7 +11305,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11331,7 +11331,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -11519,7 +11519,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(1131, 200),
          medal_value = 10,
@@ -11614,7 +11614,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11640,7 +11640,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11665,7 +11665,7 @@ local item =
          on_drink = Magic.drink_potion(1116, 250),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -11725,7 +11725,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11751,7 +11751,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -11933,7 +11933,7 @@ local item =
          on_drink = Magic.drink_potion(1133, 100),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -12000,7 +12000,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 6 }),
          has_charge = true,
@@ -12024,7 +12024,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -12749,7 +12749,7 @@ local item =
          rarity = 1000,
          coefficient = 0,
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          is_precious = true,
 
@@ -12773,7 +12773,7 @@ local item =
          rarity = 5000,
          coefficient = 0,
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          is_precious = true,
 
@@ -12823,7 +12823,7 @@ local item =
          on_drink = Magic.drink_potion(1139, 500),
 
          tags = { "spshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          medal_value = 30,
          categories = {
             "elona.drink",
@@ -12884,7 +12884,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 4 }),
          has_charge = true,
@@ -12965,7 +12965,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1140,
          efp = 150,
@@ -13082,7 +13082,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          efid = 1141,
          efp = 100,
@@ -13464,7 +13464,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 5 }),
          has_charge = true,
@@ -14428,7 +14428,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -14454,7 +14454,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 2 }),
          has_charge = true,
@@ -14627,7 +14627,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(1143, 100),
          categories = {
@@ -14680,7 +14680,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.book",
             "elona.tag_noshop"
@@ -14705,7 +14705,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -14725,7 +14725,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -14748,7 +14748,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          on_drink = Magic.drink_potion(1144, 100),
          categories = {
@@ -15323,7 +15323,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -15349,7 +15349,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
 
          count = Resolver.make("elona.item_count", { count = 3 }),
          has_charge = true,
@@ -15435,7 +15435,7 @@ local item =
          on_drink = Magic.drink_potion(1116, 250),
 
          tags = { "nogive" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -15460,7 +15460,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = "RandomSeeded",
+         color = Resolver.make("elona.random_item_color"),
          categories = {
             "elona.scroll",
             "elona.tag_noshop"

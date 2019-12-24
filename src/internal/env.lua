@@ -113,8 +113,8 @@ local function path_is_in_mod(path)
 end
 
 -- Tries to find the mod that is calling the current function by
--- looking up the stack for an environment with the _MOD_NAME global
--- variable. If not found, returns "base".
+-- looking up the list of paths for one contained in a mod. If not
+-- found, returns "base".
 --
 -- When hotloading, this uses the currently hotloading require path to
 -- see if a mod is being hotloaded at the top level instead, since the
@@ -125,40 +125,20 @@ function env.find_calling_mod()
       return path_is_in_mod(hotload_path) or "base"
    end
 
-   if _IS_LOVEJS then
-      for i = #LOADING_STACK, 1, -1 do
-         local path = LOADING_STACK[i]
-         local mod_name = path_is_in_mod(path)
-         if mod_name then
-            return mod_name
+   for i = #LOADING_STACK, 1, -1 do
+      local path = LOADING_STACK[i]
+      local mod_name = path_is_in_mod(path)
+      if mod_name then
+         local info = debug.getinfo(i, "S")
+         local loc
+         if info.what == "main" then
+            loc = info
          end
+         return mod_name, loc
       end
-
-      return "base"
    end
 
-   local stack = 1
-   local info = debug.getinfo(stack, "S")
-   local loc
-
-   while info do
-      if info.what == "main" and loc == nil then
-         loc = info
-      end
-      local success, mod_name = pcall(function()
-            local mod_env = getfenv(stack)
-            return mod_env._MOD_NAME
-      end)
-
-      if success then
-         return mod_name, info
-      end
-
-      stack = stack + 1
-      info = debug.getinfo(stack, "S")
-   end
-
-   return "base", loc
+   return "base", debug.getinfo(2, "S")
 end
 
 local global_require = require
@@ -340,14 +320,17 @@ local function update_documentation(path, req_path)
       else
          info = fs.get_info(resolved)
       end
-      assert(info, resolved)
 
-      local modify_time = info.modtime
-      if not file or file.last_updated < modify_time or HOTLOADING_PATH then
-         local ok, err = pcall(doc.build_for_file, path)
-         if not ok then
-            Log.error("Doc parse error: %s", err)
+      if info then
+         local modify_time = info.modtime
+         if not file or file.last_updated < modify_time or HOTLOADING_PATH then
+            local ok, err = pcall(doc.build_for_file, path)
+            if not ok then
+               Log.error("Doc parse error: %s", err)
+            end
          end
+      else
+         Log.warn("Can't load docs at %s (%s)", path, resolved)
       end
    end
 end
@@ -501,6 +484,16 @@ function env.hotload_path(path, also_deps)
       -- if we tried hotloading the mod manifest, just return nothing.
       if string.match(path, "^mod%." .. mod_name .. "%.mod$") then
          Log.info("Hotloaded mod manifest for '%s'.", mod_name)
+         return nil
+      end
+
+      -- Hotload files holding translations (they have a "locale"
+      -- directory in the mod root)
+      local lang = string.match(path, "^mod%." .. mod_name .. "%.locale%.([a-z_]+)%.")
+      if lang then
+         Log.info("Hotloading translations at %s for language '%s'.", path, lang)
+         local i18n = require("internal.i18n")
+         i18n.load_translations(path, i18n.db[lang])
          return nil
       end
    end

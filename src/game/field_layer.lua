@@ -1,17 +1,13 @@
 local InputHandler = require("api.gui.InputHandler")
 local IUiLayer = require("api.gui.IUiLayer")
 local Event = require("api.Event")
-local DateTime = require("api.DateTime")
 local IInput = require("api.gui.IInput")
 local KeyHandler = require("api.gui.KeyHandler")
 local Log = require("api.Log")
 local Env = require("api.Env")
 
-local area_mapping = require("internal.area_mapping")
 local env = require("internal.env")
 local field_renderer = require("internal.field_renderer")
-local uid_tracker = require("internal.uid_tracker")
-local fs = require("util.fs")
 local save = require("internal.global.save")
 
 local field_layer = class.class("field_layer", IUiLayer)
@@ -59,16 +55,6 @@ function field_layer:setup_repl()
 end
 
 function field_layer:init_global_data()
-   local s = save.base
-   s.date = DateTime:new(517, 8, 12, 16, 10, 0)
-   s.play_turns = 0
-   s.play_days = 0
-   s.area_mapping = area_mapping:new()
-   s.player = nil
-   s.allies = {}
-   s.uids = uid_tracker:new()
-   s.map_uids = uid_tracker:new()
-
    self.player = nil
 
    Event.trigger("base.on_init_save")

@@ -85,7 +85,7 @@ end
 --- @tparam id:base.chara|uid id
 --- @tparam string kind "all", "allies" or "others"
 --- @tparam[opt] InstancedMap map
---- @treturn iterator(IChara)
+--- @treturn[opt] IChara
 function Chara.find(id, kind, map)
    map = map or field.map
 

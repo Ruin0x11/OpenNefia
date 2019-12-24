@@ -165,4 +165,32 @@ function Item.activate_shortcut(item, operation, params)
    return ctxt:on_select(item)
 end
 
+--- Looks for an item with the given UID or base.item ID in the
+--- current map.
+---
+--- @tparam id:base.item|uid id
+--- @tparam string kind "all", "ground", "inventory" or "equipment"
+--- @tparam[opt] InstancedMap map
+--- @treturn[opt] IItem
+function Item.find(id, kind, map)
+   map = map or field.map
+
+   kind = kind or "ground"
+
+   local iter = Item.iter(map)
+
+   local compare_field
+   if type(id) == "number" then
+      compare_field = "uid"
+   else
+      compare_field = "_id"
+   end
+
+   local pred = function(item)
+      return Item.is_alive(item, map) and item[compare_field] == id
+   end
+
+   return iter:filter(pred):nth(1)
+end
+
 return Item

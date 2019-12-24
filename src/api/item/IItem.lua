@@ -62,7 +62,7 @@ end
 function IItem:build()
    self:mod_base_with(fallbacks, "merge")
 
-   self.name = I18N.get("item." .. self._id .. ".name")
+   self.name = I18N.get("item.info." .. self._id .. ".name")
 
    self:emit("base.on_build_item")
 
