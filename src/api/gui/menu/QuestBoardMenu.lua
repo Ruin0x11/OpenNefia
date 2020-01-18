@@ -20,7 +20,11 @@ function QuestBoardMenu:init(quests)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function QuestBoardMenu:make_keymap()
+   return {
       escape = function() self.canceled = true end,
       shift = function() self.canceled = true end
    }

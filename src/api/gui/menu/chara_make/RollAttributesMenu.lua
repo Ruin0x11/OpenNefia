@@ -75,10 +75,7 @@ function RollAttributesMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.alist)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end,
-      ["kp*"] = function() self:reroll(true, true) end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.win = UiWindow:new("roll_attributes.title")
 
@@ -86,6 +83,13 @@ function RollAttributesMenu:init()
    self.intro_sound = "base.skill"
 
    self:reroll()
+end
+
+function RollAttributesMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end,
+      ["kp*"] = function() self:reroll(true, true) end
+   }
 end
 
 function RollAttributesMenu:on_make_chara(chara)

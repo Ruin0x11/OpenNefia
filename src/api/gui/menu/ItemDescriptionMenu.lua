@@ -34,7 +34,13 @@ function ItemDescriptionMenu:init(item, list)
    self.model = PagedListModel:new({}, 15)
    self.win = UiWindow:new("item desc")
    self.input = InputHandler:new()
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+
+   self:update_desc()
+end
+
+function ItemDescriptionMenu:make_keymap()
+   return {
       shift = function() self.finished = true end,
       escape = function() self.finished = true end,
       up = function()
@@ -53,8 +59,6 @@ function ItemDescriptionMenu:init(item, list)
       end,
       ["return"] = function() self.finished = true end,
    }
-
-   self:update_desc()
 end
 
 function ItemDescriptionMenu:on_query()

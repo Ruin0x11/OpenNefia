@@ -30,12 +30,16 @@ function SelectScenarioMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Choose a scenario. It will change the start location and win conditions."
    self.intro_sound = "base.ok1"
+end
+
+function SelectScenarioMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectScenarioMenu:on_make_chara()

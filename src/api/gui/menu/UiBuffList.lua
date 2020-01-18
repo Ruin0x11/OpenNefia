@@ -36,7 +36,11 @@ function UiBuffList:init()
    self.item_height = 32
 
    self.input = InputHandler:new()
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function UiBuffList:make_keymap()
+   return {
       up = function() self:select_previous() end,
       down = function() self:select_next() end,
    }

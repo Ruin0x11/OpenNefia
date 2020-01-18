@@ -27,6 +27,29 @@ local function progress(_status)
    coroutine.yield()
 end
 
+local function load_keybinds()
+   local input = require("internal.input")
+
+   local keybinds = {}
+   for _, kb in data["base.keybind"]:iter() do
+      local id = kb._id
+
+      -- allow omitting "base." if the keybind is provided by the base
+      -- mod.
+      if string.match(id, "^base%.") then
+         id = string.split(id, ".")[2]
+      end
+
+      keybinds[#keybinds+1] = {
+         action = id,
+         primary = kb.default,
+         alternate = kb.default_alternate,
+      }
+   end
+
+   input.set_keybinds(keybinds)
+end
+
 -- skip documenting api tables to save startup time from dozens of
 -- requires.
 -- TODO should be config option
@@ -90,6 +113,8 @@ function startup.run(mods)
    field:setup_repl()
 
    Event.trigger("base.on_game_startup")
+
+   load_keybinds()
 
    progress("Finished.")
    progress("progress_finished")

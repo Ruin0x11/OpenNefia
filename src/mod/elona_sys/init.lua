@@ -122,40 +122,40 @@ local Command = require("mod.elona_sys.api.Command")
 local Gui = require("api.Gui")
 local Repl = require("api.Repl")
 Gui.bind_keys {
-   up = function(me)
+   north = function(me)
       return Command.move(me, "North")
    end,
-   down = function(me)
+   south = function(me)
       return Command.move(me, "South")
    end,
-   left = function(me)
+   west = function(me)
       return Command.move(me, "West")
    end,
-   right = function(me)
+   east = function(me)
       return Command.move(me, "East")
    end,
-   g = function(me)
+   get = function(me)
       return Command.get(me)
    end,
-   w = function(me)
+   wear = function(me)
       return Command.wear(me)
    end,
-   d = function(me)
+   drop = function(me)
       return Command.drop(me)
    end,
-   x = function(me)
+   quick_inv = function(me)
       return Command.inventory(me)
    end,
-   c = function(me)
+   close = function(me)
       return Command.close(me)
    end,
-   o = function(me)
+   open = function(me)
       return Command.open(me)
    end,
-   s = function(me)
+   search = function(me)
       return Command.search(me)
    end,
-   ["return"] = function(me)
+   enter = function(me)
       return Command.enter_action(me)
    end,
    ["."] = function()

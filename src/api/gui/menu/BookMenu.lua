@@ -25,21 +25,7 @@ function BookMenu:init(text, elona_compat)
    self.elona_compat = elona_compat or false
 
    self.input = InputHandler:new()
-   self.input:bind_keys {
-      escape = function() self.canceled = true end,
-      shift = function() self.canceled = true end,
-      left = function()
-         if self:previous_page() then
-            Gui.play_sound("base.card1")
-         end
-      end,
-      right = function()
-         if self:next_page() then
-            Gui.play_sound("base.card1")
-         end
-      end,
-      ["return"] = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 end
 
 local function parse_color(hex)
@@ -78,6 +64,24 @@ local function parse_params(line)
    end
 
    return line, params
+end
+
+function BookMenu:make_keymap()
+   return {
+      escape = function() self.canceled = true end,
+      shift = function() self.canceled = true end,
+      left = function()
+         if self:previous_page() then
+            Gui.play_sound("base.card1")
+         end
+      end,
+      right = function()
+         if self:next_page() then
+            Gui.play_sound("base.card1")
+         end
+      end,
+      ["return"] = function() self.canceled = true end
+   }
 end
 
 function BookMenu:on_query()

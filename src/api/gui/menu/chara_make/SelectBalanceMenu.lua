@@ -27,11 +27,15 @@ function SelectBalanceMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Choose a balance."
+end
+
+function SelectBalanceMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectBalanceMenu:on_make_chara()

@@ -34,7 +34,11 @@ function NumberPrompt:init(max, initial, autocenter)
 
    self.win = TopicWindow:new(0, 2)
    self.input = InputHandler:new()
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function NumberPrompt:make_keymap()
+   return {
       up = function()
          self:set_number(self.max)
          Gui.play_sound("base.cursor1")

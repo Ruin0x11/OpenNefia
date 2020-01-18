@@ -29,13 +29,17 @@ function CharacterSheetMenu:init(behavior)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.buff_list)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+
+   self.caption = "Summary."
+end
+
+function CharacterSheetMenu:make_keymap()
+   return {
       p = function()
          ChangeAppearanceMenu:new():query()
       end
    }
-
-   self.caption = "Summary."
 end
 
 function CharacterSheetMenu:text_level()

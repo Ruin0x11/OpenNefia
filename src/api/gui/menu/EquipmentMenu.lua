@@ -73,16 +73,20 @@ function EquipmentMenu:init(chara)
    table.merge(self.pages, UiListExt(self))
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
-      x = function() self:show_item_description() end,
-      shift = function() self.canceled = true end,
-      escape = function() self.canceled = true end,
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.stats = {}
    self.changed_equipment = false
 
    self:update_from_chara()
+end
+
+function EquipmentMenu:make_keymap()
+   return {
+      x = function() self:show_item_description() end,
+      shift = function() self.canceled = true end,
+      escape = function() self.canceled = true end,
+   }
 end
 
 function EquipmentMenu:on_hotload_layer()

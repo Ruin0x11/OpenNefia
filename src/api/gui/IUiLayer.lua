@@ -63,6 +63,7 @@ end
 IUiLayer = class.interface("IUiLayer",
                            {
                               relayout = "function",
+                              make_keymap = "function",
                               query = { default = query },
                               on_query = { default = function() end },
                               on_hotload_layer = { default = function() end },

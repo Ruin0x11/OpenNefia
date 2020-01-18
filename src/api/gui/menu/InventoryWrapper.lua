@@ -41,6 +41,10 @@ function InventoryWrapper:init(kind, params, returns_item)
    self:switch_context(kind)
 end
 
+function InventoryWrapper:make_keymap()
+   return {}
+end
+
 function InventoryWrapper:switch_context(kind)
    Gui.play_sound("base.inv");
 

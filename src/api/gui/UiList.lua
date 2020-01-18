@@ -63,30 +63,30 @@ end
 function UiList:make_keymap()
    local keys = {}
    for i=1,#KEYS do
-      local key = KEYS:sub(i, i)
+      local key = "raw_" .. KEYS:sub(i, i)
       keys[key] = function()
          self:choose(i)
       end
    end
-   keys.up = function()
+   keys.north = function()
       self:select_previous()
       Gui.play_sound("base.cursor1")
    end
-   keys.down = function()
+   keys.south = function()
       self:select_next()
       Gui.play_sound("base.cursor1")
    end
-   keys["return"] = function() self:choose() end
+   keys["enter"] = function() self:choose() end
 
    if class.is_an(IPaged, self.model) then
-      keys.left = function()
+      keys.west = function()
          local page = self.page
          self:previous_page()
          if self.page ~= page then
             Gui.play_sound("base.pop1")
          end
       end
-      keys.right = function()
+      keys.east = function()
          local page = self.page
          self:next_page()
          if self.page ~= page then

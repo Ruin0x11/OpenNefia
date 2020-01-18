@@ -32,6 +32,10 @@ function MainHud:init()
    self.stat_adjusts = {}
 end
 
+function MainHud:make_keymap()
+   return {}
+end
+
 function MainHud:relayout(x, y, width, height)
    self.width = width
    self.height = height

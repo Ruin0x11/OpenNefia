@@ -20,7 +20,11 @@ function DirectionPrompt:init(x, y)
    self.canceled = false
 
    self.input = InputHandler:new()
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function DirectionPrompt:make_keymap()
+   return {
       ["return"] = function()
          self.result = "Center"
       end,
@@ -47,7 +51,7 @@ function DirectionPrompt:init(x, y)
       escape = function()
          self.canceled = true
       end,
-      shift = function()
+      cancel = function()
          self.canceled = true
       end
    }

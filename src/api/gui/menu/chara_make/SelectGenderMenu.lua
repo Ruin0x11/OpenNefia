@@ -20,12 +20,16 @@ function SelectGenderMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "There is no difference in the genders."
    self.intro_sound = "base.spell"
+end
+
+function SelectGenderMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectGenderMenu:on_make_chara(chara)

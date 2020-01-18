@@ -105,7 +105,12 @@ function KeyHandler:run_key_action(key, ...)
       it.pressed = false
    end
 
-   local func = self.bindings[key]
+   local keybind = input.keypress_to_keybind(key)
+
+   local func = self.bindings[keybind]
+   if func == nil then
+      func = self.bindings["raw_" .. key]
+   end
    if func then
       return func(...), true
    elseif self.forwards then

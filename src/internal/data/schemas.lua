@@ -360,3 +360,10 @@ data:add_type {
       options = schema.Table
    }
 }
+
+data:add_type {
+   name = "keybind",
+   schema = schema.Record {
+      default = schema.String
+   }
+}

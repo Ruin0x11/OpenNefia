@@ -22,10 +22,7 @@ function CharacterSummaryMenu:init(chara)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
-   self.input:bind_keys {
-      ["return"] = function() self:reroll(true) end,
-      shift = function() self.canceled = true end,
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Here is the final summary."
    self.intro_sound = "base.skill"
@@ -35,6 +32,13 @@ function CharacterSummaryMenu:init(chara)
    self.caption_box = CharaMakeCaption:new()
 
    self:reroll()
+end
+
+function CharacterSummaryMenu:make_keymap()
+   return {
+      ["return"] = function() self:reroll(true) end,
+      shift = function() self.canceled = true end,
+   }
 end
 
 function CharacterSummaryMenu:on_query()

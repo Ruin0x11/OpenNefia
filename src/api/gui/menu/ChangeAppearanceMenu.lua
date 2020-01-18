@@ -39,12 +39,16 @@ function ChangeAppearanceMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Change appearance."
    self.intro_sound = "base.port"
+end
+
+function ChangeAppearanceMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function ChangeAppearanceMenu:on_make_chara()

@@ -32,12 +32,16 @@ function SelectClassMenu:init(race)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Choose a class."
    self.intro_sound = "base.ok1"
+end
+
+function SelectClassMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectClassMenu:on_make_chara(chara)

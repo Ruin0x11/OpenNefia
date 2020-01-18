@@ -37,10 +37,7 @@ function SidebarMenu:init(view, in_game, select_on_chosen)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end,
-      escape = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    class.assert_is_an(ISidebarView, view)
    self.view = view
@@ -49,6 +46,13 @@ function SidebarMenu:init(view, in_game, select_on_chosen)
    self.pages:set_data(data)
    self:set_data(data)
    self:on_select_item()
+end
+
+function SidebarMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end,
+      escape = function() self.canceled = true end
+   }
 end
 
 function SidebarMenu:on_select_item()

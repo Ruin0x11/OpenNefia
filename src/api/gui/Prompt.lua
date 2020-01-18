@@ -57,9 +57,10 @@ function Prompt:init(choices, width)
 
    for i, v in ipairs(choices) do
       if type(v) == "table" and v.key then
-         self.list:unbind_keys({v.key})
+         local key = "raw_" .. v.key
+         self.list:unbind_keys({key})
          self.list:bind_keys {
-            [v.key] = function()
+            [key] = function()
                self.list:choose(i)
             end
          }
@@ -70,11 +71,15 @@ function Prompt:init(choices, width)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+   self.input:halt_input()
+end
+
+function Prompt:make_keymap()
+   return {
       shift = function() if self.can_cancel then self.canceled = true end end,
       escape = function() if self.can_cancel then self.canceled = true end end,
    }
-   self.input:halt_input()
 end
 
 function Prompt:on_query()

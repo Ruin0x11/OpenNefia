@@ -30,12 +30,16 @@ function SelectRaceMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Yaa. I've been waiting for you."
    self.intro_sound = "base.ok1"
+end
+
+function SelectRaceMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectRaceMenu:relayout()

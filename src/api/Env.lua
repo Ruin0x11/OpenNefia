@@ -1,6 +1,7 @@
 --- Contains information about the OS and program.
 --- @module Env
 
+local env = require("internal.env")
 local queue = require("util.queue")
 
 local Env = {}
@@ -23,6 +24,9 @@ end
 function Env.is_headless()
    return (not love) or Env.love_version() == "lovemock"
 end
+
+-- @function Env.is_hotloading
+Env.is_hotloading = env.is_hotloading
 
 local ui_results = queue:new()
 

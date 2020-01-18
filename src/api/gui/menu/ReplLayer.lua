@@ -72,7 +72,12 @@ function ReplLayer:init(env, params)
    self.mode = LuaReplMode:new(self.env)
 
    self.input = InputHandler:new(TextHandler:new())
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+   self.input:halt_input()
+end
+
+function ReplLayer:make_keymap()
+   return {
       text_entered = function(t)
          self:insert_text(t)
       end,
@@ -161,7 +166,6 @@ function ReplLayer:init(env, params)
          end
       end
    }
-   self.input:halt_input()
 end
 
 function ReplLayer:_reset_completion_and_search()

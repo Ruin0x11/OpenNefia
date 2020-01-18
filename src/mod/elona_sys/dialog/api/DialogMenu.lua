@@ -32,7 +32,11 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.pages = UiList:new_paged(self.choices, 8)
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function DialogMenu:make_keymap()
+   return {
       shift = function() self:cancel() end,
       escape = function() self:cancel() end,
    }

@@ -43,6 +43,10 @@ function field_layer:init()
    }
 end
 
+function field_layer:make_keymap()
+   return {}
+end
+
 function field_layer:setup_repl()
    -- avoid circular requires that depend on internal.field, since
    -- `Repl.generate_env()` auto-requires the full public API.

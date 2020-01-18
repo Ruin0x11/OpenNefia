@@ -25,7 +25,13 @@ function PositionPrompt:init(target_x, target_y, origin_x, origin_y, targets)
    self.canceled = false
 
    self.input = InputHandler:new()
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+
+   Gui.set_camera_pos(self.target_x, self.target_y)
+end
+
+function PositionPrompt:make_keymap()
+   return {
       ["return"] = function()
          self.result = { x = self.target_x, y = self.target_y }
       end,
@@ -54,8 +60,6 @@ function PositionPrompt:init(target_x, target_y, origin_x, origin_y, targets)
          self:previous_target()
       end
    }
-
-   Gui.set_camera_pos(self.target_x, self.target_y)
 end
 
 function PositionPrompt:current_target_index()

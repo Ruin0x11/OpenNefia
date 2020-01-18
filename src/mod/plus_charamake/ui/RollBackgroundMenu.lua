@@ -57,12 +57,16 @@ function RollBackgroundMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Can you tell me the history of you?"
    self.intro_sound = "base.ok1"
+end
+
+function RollBackgroundMenu:make_keymap()
+   return {
+      shift = function() self.canceled = true end
+   }
 end
 
 function RollBackgroundMenu:reroll(play_sound, which_part)

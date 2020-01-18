@@ -101,7 +101,11 @@ function FeatsMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function FeatsMenu:make_keymap()
+   return {
       shift = function() self.canceled = true end
    }
 end

@@ -35,7 +35,12 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    self.win = TopicWindow:new(0, 2)
 
    self.input = InputHandler:new(TextHandler:new())
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+   self.input:halt_input()
+end
+
+function TextPrompt:make_keymap()
+   return {
       text_entered = function(t)
          self.text = self.text .. t
          self:update_display_text()
@@ -48,7 +53,6 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
       ["\t"] = function() self:cancel() end,
       text_canceled = function() self:cancel() end,
    }
-   self.input:halt_input()
 end
 
 function TextPrompt:focus()
@@ -122,11 +126,11 @@ function TextPrompt:draw()
              16) -- 16 - en * 2
 
    self.t.input_caret:draw(
-              self.x + Draw.text_width(self.display_text) + 34,
-              self.y + 5,
-              nil,
-              nil,
-              {255, 255, 255, self.caret_alpha / 2 + 50})
+      self.x + Draw.text_width(self.display_text) + 34,
+      self.y + 5,
+      nil,
+      nil,
+      {255, 255, 255, self.caret_alpha / 2 + 50})
 end
 
 function TextPrompt:update(dt)

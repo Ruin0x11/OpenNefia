@@ -20,7 +20,11 @@ function DeathMenu:init(data)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.prompt)
-   self.input:bind_keys {
+   self.input:bind_keys(self:make_keymap())
+end
+
+function DeathMenu:make_keymap()
+   return {
       shift = function() self.canceled = true end
    }
 end

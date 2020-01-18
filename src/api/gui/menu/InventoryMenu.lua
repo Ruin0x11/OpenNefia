@@ -95,13 +95,17 @@ function InventoryMenu:init(ctxt, returns_item)
    self.input:forward_to(self.pages)
    -- TODO
    -- self.pages:register("on_chosen", self.on_chosen)
-   self.input:bind_keys {
-      x = function() self:show_item_description() end,
-      shift = function() self.canceled = true end,
-      escape = function() self.canceled = true end,
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self:update_filtering()
+end
+
+function InventoryMenu:make_keymap()
+   return {
+      identify = function() self:show_item_description() end,
+      cancel = function() self.canceled = true end,
+      escape = function() self.canceled = true end,
+   }
 end
 
 function InventoryMenu:on_query()

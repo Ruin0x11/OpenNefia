@@ -58,17 +58,21 @@ function SelectAliasMenu:init()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
-   self.input:bind_keys {
-      ["kp*"] = function()
-         self:lock(self.list.selected)
-      end,
-      shift = function() self.canceled = true end
-   }
+   self.input:bind_keys(self:make_keymap())
 
    self.caption = "Choose an alias."
    self.intro_sound = "base.ok1"
 
    self:reroll(false)
+end
+
+function SelectAliasMenu:make_keymap()
+   return {
+      ["kp*"] = function()
+         self:lock(self.list.selected)
+      end,
+      shift = function() self.canceled = true end
+   }
 end
 
 function SelectAliasMenu:on_make_chara(chara)
