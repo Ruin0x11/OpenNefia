@@ -10,7 +10,7 @@ else
    local function check_dependency(name)
       local s, err = pcall(function() return require(name) end)
       if not s then
-         error(string.format("Lua dependency '%s' not installed; use luarocks or similar to install it\nSee README.md for required libraries.\n%s", name, err))
+         error(string.format("Lua dependency '%s' not installed; use luarocks or similar to install it.\nSee README.md for required libraries.\n%s", name, err))
       end
    end
    check_dependency("lfs")
