@@ -4,6 +4,8 @@
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
+local Log = require("api.Log")
+local draw = require("internal.draw")
 local input = require("internal.input")
 
 local Prompt = require("api.gui.Prompt")
@@ -131,6 +133,11 @@ function Input.query_position(chara)
    end
 
    return result.x, result.y
+end
+
+function Input.reload_keybinds()
+   Log.info("Reloading keybinds.")
+   draw.get_current_layer().layer:focus()
 end
 
 return Input

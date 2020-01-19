@@ -41,7 +41,7 @@ function KeyHandler:init(no_repeat_delay)
    self.no_repeat_delay = no_repeat_delay
 
    self:bind_keys {
-      ["`"] = function()
+      repl = function()
          require("game.field"):query_repl()
       end
    }
@@ -82,6 +82,7 @@ function KeyHandler:focus()
    input.set_key_repeat(true)
    input.set_text_input(false)
    input.set_key_handler(self)
+   self.keybinds:set_dirty()
 end
 
 function KeyHandler:bind_keys(bindings)

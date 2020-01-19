@@ -170,27 +170,27 @@ Gui.bind_keys {
    enter = function(me)
       return Command.enter_action(me)
    end,
-   ["."] = function()
+   wait = function()
       return "turn_end"
    end,
-   ["`"] = function()
+   repl = function()
       Repl.query()
       return "player_turn_query"
    end,
    escape = function()
       return Command.quit_game()
    end,
-   ["?"] = function()
+   help = function()
       return Command.help()
    end,
    n = function()
       Gui.mes(require("api.gui.TextPrompt"):new(16):query())
       return "player_turn_query"
    end,
-   f2 = function()
+   quicksave = function()
       return Command.save_game()
    end,
-   f3 = function()
+   quickload = function()
       return Command.load_game()
    end
 }

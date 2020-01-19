@@ -82,16 +82,20 @@ local function mod_key(key, actrl, ashift, aalt, agui)
    return new
 end
 
+function KeybindTranslator:set_dirty()
+   self.dirty = true
+end
+
 -- @tparam {string} actions
 function KeybindTranslator:enable(actions)
    self.accepts = table.merge(self.accepts, table.set(actions))
-   self.dirty = true
+   self:set_dirty()
 end
 
 -- @tparam {string} actions
 function KeybindTranslator:disable(actions)
    self.accepts = table.difference(self.accepts, table.set(actions))
-   self.dirty = true
+   self:set_dirty()
 end
 
 function KeybindTranslator:reload()

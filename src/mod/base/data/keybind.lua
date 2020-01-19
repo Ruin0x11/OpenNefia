@@ -1,3 +1,6 @@
+local Input = require("api.Input")
+local Env = require("api.Env")
+
 local function add_keybinds(raw)
    local kbs = {}
    for id, default in pairs(raw) do
@@ -67,5 +70,28 @@ add_keybinds {
    mode2 = "kp*",
    ammo = "A",
    quick_inv = "x",
-   repl = "`"
+   repl = "`",
+   quicksave = "f2",
+   quickload = "f3"
 }
+
+if Env.is_hotloading() then
+   local keybinds = {}
+   for _, kb in data["base.keybind"]:iter() do
+      local id = kb._id
+
+      -- allow omitting "base." if the keybind is provided by the base
+      -- mod.
+      if string.match(id, "^base%.") then
+         id = string.split(id, ".")[2]
+      end
+
+      keybinds[#keybinds+1] = {
+         action = id,
+         primary = kb.default,
+         alternate = kb.default_alternate,
+      }
+   end
+   config["base.keybinds"] = keybinds
+   Input.reload_keybinds()
+end
