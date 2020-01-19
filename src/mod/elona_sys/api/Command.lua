@@ -143,15 +143,15 @@ function Command.get(player)
       return "turn_end"
    end
 
-   return Input.query_inventory(player, "elona.inv_get")
+   return Input.query_inventory(player, "elona.inv_get", nil, "elona.main")
 end
 
 function Command.drop(player)
-   return Input.query_inventory(player, "elona.inv_drop")
+   return Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
 end
 
 function Command.inventory(player)
-   return Input.query_inventory(player, "elona.inv_general")
+   return Input.query_inventory(player, "elona.inv_examine", nil, "elona.main")
 end
 
 function Command.wear(player)

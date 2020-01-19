@@ -139,7 +139,7 @@ function InventoryContext:init(proto, params)
    self.map = params.map or nil
    self.shop = params.shop or nil
 
-   self.icon = self.proto.icon or 1
+   self.icon = (self.proto.icon or 0) + 1
 
    if self.proto.keybinds then
       self.input:bind_keys(self.proto.keybinds)
@@ -190,6 +190,14 @@ function InventoryContext:gen_sort(a, b)
    end
 
    return gen_default_sort(f)
+end
+
+function InventoryContext:on_shortcut(item)
+   if self.proto.on_shortcut then
+      return self.proto.on_shortcut(self, item)
+   end
+
+   return true
 end
 
 function InventoryContext:filter(item)

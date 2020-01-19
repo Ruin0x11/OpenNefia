@@ -45,7 +45,7 @@ function TextPrompt:make_keymap()
          self.text = self.text .. t
          self:update_display_text()
       end,
-      backspace = function()
+      raw_backspace = function()
          self.text = utf8.pop(self.text)
          self:update_display_text()
       end,

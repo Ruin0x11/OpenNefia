@@ -1,17 +1,27 @@
 local IKeyInput = require("api.gui.IKeyInput")
+local KeybindTranslator = require("api.gui.KeybindTranslator")
 
 local input = require("internal.input")
 
 local TextHandler = class.class("TextHandler", IKeyInput)
+
+local MODIFIERS = table.set {
+   "ctrl",
+   "alt",
+   "shift",
+   "gui"
+}
 
 function TextHandler:init()
    self.bindings = {}
    self.forwards = nil
    self.chars = {}
    self.this_frame = {}
+   self.modifiers = {}
    self.finished = false
    self.canceled = false
    self.halted = false
+   self.keybinds = KeybindTranslator:new()
 end
 
 local function translate(char, text)
@@ -24,6 +34,10 @@ end
 
 function TextHandler:receive_key(char, pressed, text, is_repeat)
    if pressed and not is_repeat then self.halted = false end
+
+   if MODIFIERS[char] then
+      self.modifiers[char] = pressed
+   end
 
    if not pressed then return end
 
@@ -65,12 +79,16 @@ function TextHandler:bind_keys(bindings)
    for k, v in pairs(bindings) do
       self.bindings[k] = v
    end
+
+   self.keybinds:enable(bindings)
 end
 
 function TextHandler:unbind_keys(bindings)
    for _, k in ipairs(bindings) do
       self.bindings[k] = nil
    end
+
+   self.keybinds:disable(bindings)
 end
 
 function TextHandler:forward_to(handler)
@@ -82,9 +100,11 @@ function TextHandler:focus()
    input.set_key_repeat(true)
    input.set_text_input(true)
    input.set_key_handler(self)
+   self.keybinds:set_dirty()
 end
 
 function TextHandler:halt_input()
+   self.modifiers = {}
    self.halted = true
 end
 
@@ -95,9 +115,36 @@ function TextHandler:key_held_frames()
    return 0
 end
 
+function TextHandler:prepend_key_modifiers(key)
+   local new = ""
+
+   if self.modifiers.ctrl then
+      new = new .. "ctrl_"
+   end
+   if self.modifiers.shift then
+      new = new .. "shift_"
+   end
+   if self.modifiers.alt then
+      new = new .. "alt_"
+   end
+   if self.modifiers.gui then
+      new = new .. "gui_"
+   end
+
+   return new .. key
+end
+
+
 function TextHandler:run_key_action(key)
-   if self.bindings[key] then
-      self.bindings[key]()
+   local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
+
+   local func = self.bindings[keybind]
+   if func == nil then
+      func = self.bindings["raw_" .. key]
+   end
+
+   if func then
+      func()
    elseif self.bindings["text_entered"] then
       self.bindings["text_entered"](key)
    end
@@ -112,8 +159,16 @@ function TextHandler:run_actions()
 
    for c, _ in pairs(self.this_frame) do
       if not ran[c] then
-         if self.bindings[c] then
-            self.bindings[c]()
+         local keybind = self.keybinds:key_to_keybind(c, self.modifiers)
+
+         local func = self.bindings[keybind]
+         if func == nil then
+            local with_modifiers = self:prepend_key_modifiers(c)
+            func = self.bindings["raw_" .. with_modifiers]
+         end
+
+         if func then
+            func()
          end
       end
    end

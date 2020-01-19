@@ -54,6 +54,7 @@ local function query(self, z_order)
    end
 
    self:halt_input()
+   self:release()
 
    draw.pop_layer()
 
@@ -65,6 +66,7 @@ IUiLayer = class.interface("IUiLayer",
                               relayout = "function",
                               make_keymap = "function",
                               query = { default = query },
+                              release = { default = function() end },
                               on_query = { default = function() end },
                               on_hotload_layer = { default = function() end },
                            },

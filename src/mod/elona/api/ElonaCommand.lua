@@ -12,6 +12,10 @@ local World = require("api.World")
 
 local ElonaCommand = {}
 
+function ElonaCommand.examine(player)
+   return Input.query_inventory(player, "elona.inv_examine", nil, "elona.main")
+end
+
 function ElonaCommand.bash(player)
    Gui.mes("Which direction?")
    local dir = Input.query_direction()
@@ -31,7 +35,7 @@ function ElonaCommand.bash(player)
 end
 
 function ElonaCommand.read(player, item)
-   return Input.query_inventory(player, "elona.inv_read")
+   return Input.query_inventory(player, "elona.inv_read", nil, "elona.main")
 end
 
 function ElonaCommand.do_eat(player, item)
@@ -51,15 +55,27 @@ function ElonaCommand.do_eat(player, item)
 end
 
 function ElonaCommand.eat(player)
-   return Input.query_inventory(player, "elona.inv_eat")
+   return Input.query_inventory(player, "elona.inv_eat", nil, "elona.main")
 end
 
 function ElonaCommand.drink(player)
-   return Input.query_inventory(player, "elona.inv_drink")
+   return Input.query_inventory(player, "elona.inv_drink", nil, "elona.main")
 end
 
 function ElonaCommand.zap(player)
-   return Input.query_inventory(player, "elona.inv_zap")
+   return Input.query_inventory(player, "elona.inv_zap", nil, "elona.main")
+end
+
+function ElonaCommand.use(player)
+   return Input.query_inventory(player, "elona.inv_use", nil, "elona.main")
+end
+
+function ElonaCommand.dip(player)
+   return Input.query_inventory(player, "elona.inv_dip_source", nil, "elona.main")
+end
+
+function ElonaCommand.throw(player)
+   return Input.query_inventory(player, "elona.inv_throw", nil, "elona.main")
 end
 
 function ElonaCommand.do_dig(player, x, y)

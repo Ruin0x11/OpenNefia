@@ -88,13 +88,17 @@ end
 
 -- @tparam {string} actions
 function KeybindTranslator:enable(actions)
-   self.accepts = table.merge(self.accepts, table.set(actions))
+   for k, _ in pairs(actions) do
+      self.accepts[k] = true
+   end
    self:set_dirty()
 end
 
 -- @tparam {string} actions
 function KeybindTranslator:disable(actions)
-   self.accepts = table.difference(self.accepts, table.set(actions))
+   for k, _ in pairs(actions) do
+      self.accepts[k] = false
+   end
    self:set_dirty()
 end
 
@@ -102,8 +106,10 @@ function KeybindTranslator:reload()
    local keybinds = config["base.keybinds"]
    self.translations = {}
    for _, kb in pairs(keybinds) do
-      self:load_key(kb.primary, kb.action)
-      self:load_key(kb.alternate, kb.action)
+      if self.accepts[kb.action] then
+         self:load_key(kb.primary, kb.action)
+         self:load_key(kb.alternate, kb.action)
+      end
    end
 end
 

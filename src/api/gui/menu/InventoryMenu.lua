@@ -320,4 +320,12 @@ function InventoryMenu:update()
    self.pages:update()
 end
 
+function InventoryMenu:release()
+   for _, entry in self.pages:iter() do
+      if entry.icon then
+         entry.icon:release()
+      end
+   end
+end
+
 return InventoryMenu

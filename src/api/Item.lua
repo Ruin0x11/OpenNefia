@@ -149,6 +149,10 @@ function Item.activate_shortcut(item, operation, params)
 
    local ctxt = InventoryContext:new(proto, params)
 
+   if not ctxt:on_shortcut(item) then
+      return nil, "on_shortcut_failed"
+   end
+
    -- TODO: include specific reason, like "is_in_world_map"
    if not ctxt:filter(item) then
       return nil, "filtered_out"

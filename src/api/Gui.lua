@@ -307,7 +307,6 @@ end
 function Gui.play_music(music_id)
    local sound_manager = require("internal.global.sound_manager")
 
-   print("playsome", music_id)
    sound_manager:play_music(music_id)
 end
 

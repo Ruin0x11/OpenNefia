@@ -455,4 +455,24 @@ function ElonaAction.zap(chara, item)
    return result
 end
 
+function ElonaAction.use(chara, item)
+   Gui.mes("common.nothing_happens")
+   return "player_turn_query"
+end
+
+function ElonaAction.open(chara, item)
+   Gui.mes("common.nothing_happens")
+   return "player_turn_query"
+end
+
+function ElonaAction.dip(chara, item)
+   Gui.mes("common.nothing_happens")
+   return "player_turn_query"
+end
+
+function ElonaAction.throw(chara, item)
+   Gui.mes("common.nothing_happens")
+   return "player_turn_query"
+end
+
 return ElonaAction

@@ -18,7 +18,7 @@ local source_container = function(ctxt)
    return ctxt.container:iter()
 end
 
-local inv_general = {
+local inv_examine = {
    keybinds = {
       x = function(ctxt, item)
          item.flags.no_drop = not item.flags.no_drop
@@ -300,7 +300,7 @@ local inv_cook = {
    end,
 }
 
-local inv_dip = {
+local inv_dip_source = {
    source = { "chara" },
    filter = function(ctxt, item)
       -- TODO: bait
@@ -315,7 +315,7 @@ local inv_dip_target = {
    source = { "chara", "equipment", "ground" },
    filter = function(ctxt, item)
       -- TODO: bait
-      return ctxt.item ~= item and item.can_dip
+      return ctxt.item ~= item and item.can_dip_source
    end,
    on_menu_enter = function(ctxt)
       Gui.mes("What to dip into " .. ctxt.stack[1].item.uid .. "?")

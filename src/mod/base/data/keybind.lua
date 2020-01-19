@@ -69,10 +69,21 @@ add_keybinds {
    mode = "z",
    mode2 = "kp*",
    ammo = "A",
+   previous_page = "kp7",
+   next_page = "kp9",
    quick_inv = "x",
-   repl = "`",
    quicksave = "f2",
-   quickload = "f3"
+   quickload = "f3",
+
+   repl = "`",
+   repl_page_up = "pageup",
+   repl_page_down = "pagedown",
+   repl_first_char = "home",
+   repl_last_char = "home",
+   repl_paste = "ctrl_v",
+   repl_cut = "ctrl_x",
+   repl_copy = "ctrl_c",
+   repl_complete = "tab",
 }
 
 if Env.is_hotloading() then

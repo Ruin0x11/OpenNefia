@@ -574,6 +574,7 @@ The available actions in the inventory menu are dynamic depending on the context
 24 (put into chest)
 ** 4 - Multidrop
 2 (drop)
+2
 * Special item handling
 _when item is chosen after filter_
 - music disc: sort by BGM number in addition to type/ID

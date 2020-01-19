@@ -53,7 +53,7 @@ end
 -- skip documenting api tables to save startup time from dozens of
 -- requires.
 -- TODO should be config option
-local alias_api_tables = true
+local alias_api_tables = false
 
 function startup.run_all(mods)
    -- we're running headless, turn off expensive documentation loading

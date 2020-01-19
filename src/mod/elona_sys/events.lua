@@ -266,33 +266,52 @@ end)
 
 Event.register("base.on_item_instantiated", "Connect item events",
                function(item)
-                  if item.proto.on_use then
-                     item:connect_self("elona_sys.on_item_use",
-                                       "Item prototype on_use handler",
-                                       item.proto.on_use)
-                  end
-                  if item.proto.on_eat then
-                     item:connect_self("elona_sys.on_item_eat",
-                                       "Item prototype on_eat handler",
-                                       item.proto.on_eat)
-                  end
-                  if item.proto.on_drink then
-                     item:connect_self("elona_sys.on_item_drink",
-                                       "Item prototype on_drink handler",
-                                       item.proto.on_drink)
-                  end
-                  if item.proto.on_read then
-                     item:connect_self("elona_sys.on_item_read",
-                                       "Item prototype on_read handler",
-                                       item.proto.on_read)
-                  end
-                  if item.proto.on_zap then
-                     item:connect_self("elona_sys.on_item_zap",
-                                       "Item prototype on_zap handler",
-                                       item.proto.on_zap)
+                  -- The reason there are boolean flags indicating if
+                  -- an action can be taken ("can_eat", "can_open") is
+                  -- because it makes it easier to temporarily disable
+                  -- the action. Without this the check relies on
+                  -- whether or not the event handler is present, and
+                  -- it is difficult to preserve the state of event
+                  -- handlers across serialization.
+                  local actions = {
+                     "use",
+                     "eat",
+                     "drink",
+                     "read",
+                     "zap",
+                     "open",
+                     "dip_source",
+                     "throw"
+                  }
+
+                  for _, action in ipairs(actions) do
+                     if item.proto["on_" .. action] then
+                        item:connect_self("elona_sys.on_item_" .. action,
+                                          "Item prototype on_" .. action .. " handler",
+                                          item.proto["on_" .. action])
+                     end
+                     if item:has_event_handler("elona_sys.on_item_" .. action) then
+                        item["can_" .. action] = true
+                     end
                   end
 end)
 
+Event.register("base.on_item_instantiated", "Permit item actions",
+               function(item)
+                  if item:has_category("elona.container") then
+                     item.can_open = true
+                  end
+
+                  if item:has_category("elona.food")
+                     or item:has_category("elona.cargo_food")
+                  then
+                     item.can_eat = true
+                  end
+
+                  if item:has_category("elona.drink") then
+                     item.can_throw = true
+                  end
+end)
 
 local IItem = require("api.item.IItem")
 Event.register("base.on_hotload_object", "reload events for item", function(obj)

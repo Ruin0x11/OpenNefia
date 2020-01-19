@@ -39,26 +39,26 @@ end
 
 function NumberPrompt:make_keymap()
    return {
-      up = function()
+      north = function()
          self:set_number(self.max)
          Gui.play_sound("base.cursor1")
       end,
-      down = function()
+      south = function()
          self:set_number(1)
          Gui.play_sound("base.cursor1")
       end,
-      left = function()
+      west = function()
          self:modify_number(-1)
          Gui.play_sound("base.cursor1")
       end,
-      right = function()
+      east = function()
          self:modify_number(1)
          Gui.play_sound("base.cursor1")
       end,
       -- TODO: intercardinal actions
-      shift = function() self.canceled = true end,
-      esc = function() self.canceled = true end,
-      ["return"] = function() self.finished = true end,
+      cancel = function() self.canceled = true end,
+      escape = function() self.canceled = true end,
+      enter = function() self.finished = true end,
    }
 end
 

@@ -4,7 +4,7 @@ local KeybindTranslator = require("api.gui.KeybindTranslator")
 local input = require("internal.input")
 
 -- TODO: needs to handle direction keypress combinations
-local repeats = table.set {
+local REPEATS = table.set {
    "north",
    "south",
    "west",
@@ -15,7 +15,7 @@ local repeats = table.set {
    "southeast"
 }
 
-local modifiers = table.set {
+local MODIFIERS = table.set {
    "ctrl",
    "alt",
    "shift",
@@ -55,19 +55,15 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
    if is_text then return end
    if self.halted and is_repeat then return end
 
+   if MODIFIERS[key] then
+      self.modifiers[key] = pressed
+   end
+
    if pressed then
       self.pressed[key] = true
-
-      if modifiers[key] then
-         self.modifiers[key] = true
-      end
    else
       self.pressed[key] = nil
       self.repeat_delays[key] = nil
-
-      if modifiers[key] then
-         self.modifiers[key] = nil
-      end
    end
 end
 
@@ -105,6 +101,7 @@ function KeyHandler:halt_input()
    self.repeat_delays = {}
    self.pressed = {}
    self.this_frame = {}
+   self.modifiers = {}
    self.halted = true
    self.stop_halt = false
    self.frames_held = 0
@@ -112,7 +109,26 @@ end
 
 -- Special key repeat for keys bound to a movement action.
 function KeyHandler:is_repeating_key(key)
-   return repeats[self.keybinds:key_to_keybind(key, {}) or ""]
+   return REPEATS[self.keybinds:key_to_keybind(key, {}) or ""]
+end
+
+function KeyHandler:prepend_key_modifiers(key)
+   local new = ""
+
+   if self.modifiers.ctrl then
+      new = new .. "ctrl_"
+   end
+   if self.modifiers.shift then
+      new = new .. "shift_"
+   end
+   if self.modifiers.alt then
+      new = new .. "alt_"
+   end
+   if self.modifiers.gui then
+      new = new .. "gui_"
+   end
+
+   return new .. key
 end
 
 function KeyHandler:run_key_action(key, ...)
@@ -140,7 +156,8 @@ function KeyHandler:run_key_action(key, ...)
 
    local func = self.bindings[keybind]
    if func == nil then
-      func = self.bindings["raw_" .. key]
+      local with_modifiers = self:prepend_key_modifiers(key)
+      func = self.bindings["raw_" .. with_modifiers]
    end
    if func then
       return func(...), true

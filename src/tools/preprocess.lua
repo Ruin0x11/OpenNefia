@@ -14,7 +14,7 @@ local function remove_key_color(image, key_color)
    if image:bands() == 4 then
       key_color[4] = 0
    end
-   local alpha = image:equal(key_color):ifthenelse(0, 255):extract_band(1)
+   local alpha = image:equal(key_color):ifthenelse(0, 255):bandor()
    return image:bandjoin(alpha)
 end
 

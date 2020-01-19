@@ -126,13 +126,14 @@ function atlas:copy_tile_image(tile_id)
       love.graphics.setColor(1, 1, 1) -- TODO allow change?
 
       local _, _, tw, th = tile.quad:getViewport()
-      image = love.graphics.newCanvas(tw, th)
-      love.graphics.setCanvas(image)
+      local canvas = love.graphics.newCanvas(tw, th)
+      love.graphics.setCanvas(canvas)
 
       love.graphics.draw(self.image, tile.quad, 0, tile.y_offset)
 
       love.graphics.setCanvas()
-      image = love.graphics.newImage(image:newImageData())
+      image = love.graphics.newImage(canvas:newImageData())
+      canvas:release()
    else
       image = self.fallback
    end

@@ -46,24 +46,24 @@ end
 --- Queries the player for number input.
 ---
 --- @tparam[opt] int max The maximum number enterable. Defaults to 100.
---- @tparam[opt] int initial The initial nmber. Defaults to `max`.
+--- @tparam[opt] int initial The initial number. Defaults to `max`.
 --- @treturn[opt] int the number that was input
 --- @treturn[opt] string "canceled" if prompt was canceled
 function Input.query_number(max, initial)
    return NumberPrompt:new(max, initial):query()
 end
 
-local function query_inventory(chara, operation, params, returns_item)
+local function query_inventory(chara, operation, params, returns_item, group)
    local InventoryWrapper = require("api.gui.menu.InventoryWrapper")
 
-   operation = operation or "elona.inv_general"
+   operation = operation or "elona.inv_examine"
 
    params = params or {}
    params.chara = chara
    params.map = chara and chara:current_map()
    params.target = params.target or nil
 
-   local result, canceled = InventoryWrapper:new(operation, params, returns_item):query()
+   local result, canceled = InventoryWrapper:new(operation, params, returns_item, group):query()
 
    return result, canceled
 end
@@ -73,16 +73,19 @@ end
 --- item is selected, and may return accordingly.
 ---
 --- @tparam IChara chara
---- @tparam string operation
+--- @tparam id:elona_sys.inventory_proto operation
 --- @tparam[opt] table params
+--- @tparam[opt] id:elona_sys.inventory_group group Inventory group
+---              the operation belongs to for menu cycling. The
+---              operation must be contained in the group.
 --- @treturn[opt] turn_result
 --- @treturn[opt] string "canceled" if the prompt was canceled
-function Input.query_inventory(chara, operation, params)
+function Input.query_inventory(chara, operation, params, group)
    -- TODO: this can get confusing because not all contexts
    -- necessarily receive a character, and besides the "chara" field
    -- is treated specially in some parts. The interface should be
    -- uniform between this and Input.activate_shortcut.
-   return query_inventory(chara, operation, params, false)
+   return query_inventory(chara, operation, params, false, group)
 end
 
 --- Queries for an item in a character's inventory according to the
@@ -91,7 +94,7 @@ end
 --- item is returned.
 ---
 --- @tparam IChara chara
---- @tparam string operation
+--- @tparam id:elona_sys.inventory_proto operation
 --- @tparam[opt] table params
 --- @treturn[opt] IItem
 --- @treturn[opt] string "canceled" if the prompt was canceled

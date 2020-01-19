@@ -100,6 +100,13 @@ data:add_type {
    }
 }
 
+data:add_type {
+   name = "inventory_group",
+   schema = schema.Record {
+      protos = schema.Table
+   }
+}
+
 
 require("mod.elona_sys.data.event")
 

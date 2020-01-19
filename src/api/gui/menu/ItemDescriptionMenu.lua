@@ -41,23 +41,23 @@ end
 
 function ItemDescriptionMenu:make_keymap()
    return {
-      shift = function() self.finished = true end,
+      cancel = function() self.finished = true end,
       escape = function() self.finished = true end,
-      up = function()
+      north = function()
          self:previous_item()
       end,
-      down = function()
+      south = function()
          self:next_item()
       end,
-      left = function()
+      west = function()
          self:previous_page()
          Gui.play_sound("base.pop1")
       end,
-      right = function()
+      east = function()
          self:next_page()
          Gui.play_sound("base.pop1")
       end,
-      ["return"] = function() self.finished = true end,
+      enter = function() self.finished = true end,
    }
 end
 

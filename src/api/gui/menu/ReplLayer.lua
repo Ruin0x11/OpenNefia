@@ -81,7 +81,7 @@ function ReplLayer:make_keymap()
       text_entered = function(t)
          self:insert_text(t)
       end,
-      backspace = function()
+      raw_backspace = function()
          self:delete_char()
       end,
       text_submitted = function()
@@ -95,39 +95,42 @@ function ReplLayer:make_keymap()
       text_canceled = function()
          self.finished = true
       end,
-      up = function()
+      north = function()
          self:history_next()
       end,
-      down = function()
+      south = function()
          self:history_prev()
       end,
-      left = function()
+      west = function()
          self:move_cursor(-1)
       end,
-      right = function()
+      east = function()
          self:move_cursor(1)
       end,
-      pageup = function()
+      repl_page_up = function()
          self:scrollback_up()
       end,
-      pagedown = function()
+      repl_page_down = function()
          self:scrollback_down()
       end,
-      home = function()
+      repl_first_char = function()
          self:set_cursor_pos(0)
       end,
-      ["end"] = function()
+      repl_last_char = function()
          self:set_cursor_pos(#self.text)
       end,
-      insert = function()
+      repl_paste = function()
          self:insert_text(Env.clipboard_text())
       end,
-      delete = function()
+      repl_cut = function()
          Env.set_clipboard_text(self.text)
          self:set_text("")
          self:_reset_completion_and_search()
       end,
-      tab = function()
+      repl_copy = function()
+         Env.set_clipboard_text(self.text)
+      end,
+      repl_complete = function()
          local function complete(cand)
             local text = self.completion.base .. cand.text
             if cand.type == "function" then
