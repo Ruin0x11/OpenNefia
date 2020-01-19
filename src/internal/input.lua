@@ -1,11 +1,10 @@
 local IMouseInput = require("api.gui.IMouseInput")
 local IKeyInput = require("api.gui.IKeyInput")
-local keybind_translator = require("internal.keybind_translator")
+local config = require("internal.config")
 
 local input = {}
 
 local mouse_handler = nil
-local keybinds = keybind_translator:new()
 
 function input.set_mouse_handler(tbl)
    if tbl ~= nil then
@@ -60,16 +59,12 @@ local function translate_scancode(scancode)
 end
 
 function input.keypressed(key, scancode, isrepeat)
-   keybinds:keypressed(key, scancode, isrepeat)
-
    if key_handler then
       key_handler:receive_key(translate_scancode(scancode), true, false, isrepeat)
    end
 end
 
 function input.keyreleased(key, scancode)
-   keybinds:keyreleased(key, scancode)
-
    if key_handler then
       key_handler:receive_key(translate_scancode(scancode), false, false)
    end
@@ -95,11 +90,7 @@ input.set_key_repeat = love.keyboard.setKeyRepeat
 input.set_text_input = love.keyboard.setTextInput
 
 function input.set_keybinds(kbs)
-   keybinds:load(kbs)
-end
-
-function input.keypress_to_keybind(key)
-   return keybinds.event
+   config["base.keybinds"] = kbs
 end
 
 return input

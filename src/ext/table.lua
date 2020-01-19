@@ -69,6 +69,26 @@ function table.merge_existing(a, b)
    return a
 end
 
+function table.intersection(a, b)
+   local res = {}
+   for k, _ in pairs(a) do
+      if b[k] then
+         res[k] = true
+      end
+   end
+   return res
+end
+
+function table.difference(a, b)
+   local res = {}
+   for k, _ in pairs(a) do
+      if not b[k] then
+         res[k] = true
+      end
+   end
+   return res
+end
+
 --- Replaces one table with another such that existing
 --- globals/upvalues pointing to the table will also be updated
 --- in-place.

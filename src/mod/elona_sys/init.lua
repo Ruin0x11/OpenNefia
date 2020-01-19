@@ -134,6 +134,18 @@ Gui.bind_keys {
    east = function(me)
       return Command.move(me, "East")
    end,
+   northwest = function(me)
+      return Command.move(me, "Northwest")
+   end,
+   northeast = function(me)
+      return Command.move(me, "Northeast")
+   end,
+   southwest = function(me)
+      return Command.move(me, "Southwest")
+   end,
+   southeast = function(me)
+      return Command.move(me, "Southeast")
+   end,
    get = function(me)
       return Command.get(me)
    end,

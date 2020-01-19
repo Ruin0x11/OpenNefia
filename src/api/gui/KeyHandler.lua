@@ -1,13 +1,25 @@
 local IKeyInput = require("api.gui.IKeyInput")
+local KeybindTranslator = require("api.gui.KeybindTranslator")
 
 local input = require("internal.input")
 
 -- TODO: needs to handle direction keypress combinations
 local repeats = table.set {
-   "up",
-   "down",
-   "left",
-   "right"
+   "north",
+   "south",
+   "west",
+   "east",
+   "northwest",
+   "northeast",
+   "southwest",
+   "southeast"
+}
+
+local modifiers = table.set {
+   "ctrl",
+   "alt",
+   "shift",
+   "gui"
 }
 
 -- A key handler that will fire actions only on the same frame a
@@ -19,10 +31,12 @@ function KeyHandler:init(no_repeat_delay)
    self.this_frame = {}
    self.pressed = {}
    self.repeat_delays = {}
+   self.modifiers = {}
    self.forwards = nil
    self.halted = false
    self.stop_halt = true
    self.frames_held = 0
+   self.keybinds = KeybindTranslator:new()
 
    self.no_repeat_delay = no_repeat_delay
 
@@ -34,19 +48,26 @@ function KeyHandler:init(no_repeat_delay)
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
+   if self.forwards then
+      self.forwards:receive_key(key, pressed, is_text, is_repeat)
+   end
+
    if is_text then return end
    if self.halted and is_repeat then return end
 
-   -- if pressed and not repeats[key] and not self.pressed[key] then
-   --    self.this_frame[key] = true
-   --    self.stop_halt = true
-   -- end
-
    if pressed then
       self.pressed[key] = true
+
+      if modifiers[key] then
+         self.modifiers[key] = true
+      end
    else
       self.pressed[key] = nil
       self.repeat_delays[key] = nil
+
+      if modifiers[key] then
+         self.modifiers[key] = nil
+      end
    end
 end
 
@@ -67,12 +88,16 @@ function KeyHandler:bind_keys(bindings)
    for k, v in pairs(bindings) do
       self.bindings[k] = v
    end
+
+   self.keybinds:enable(bindings)
 end
 
 function KeyHandler:unbind_keys(bindings)
    for _, k in ipairs(bindings) do
       self.bindings[k] = nil
    end
+
+   self.keybinds:disable(bindings)
 end
 
 function KeyHandler:halt_input()
@@ -84,17 +109,22 @@ function KeyHandler:halt_input()
    self.frames_held = 0
 end
 
+-- Special key repeat for keys bound to a movement action.
+function KeyHandler:is_repeating_key(key)
+   return repeats[self.keybinds:key_to_keybind(key, {}) or ""]
+end
+
 function KeyHandler:run_key_action(key, ...)
    local it = self.repeat_delays[key]
    if it then
       it.wait_remain = it.wait_remain - 1
       if it.wait_remain <= 0 then
-         if repeats[key] then
+         if self:is_repeating_key(key) then
             it.delay = 40 * 2
          end
          it.fast = true
       elseif it.fast then
-         if repeats[key] then
+         if self:is_repeating_key(key) then
             it.delay = 40 * 2
          else
             it.delay = 10
@@ -105,7 +135,7 @@ function KeyHandler:run_key_action(key, ...)
       it.pressed = false
    end
 
-   local keybind = input.keypress_to_keybind(key)
+   local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
 
    local func = self.bindings[keybind]
    if func == nil then
@@ -124,7 +154,7 @@ function KeyHandler:handle_repeat(key, dt)
    local it = self.repeat_delays[key] or {}
 
    if it.wait_remain == nil then
-      if repeats[key] then
+      if self:is_repeating_key(key) then
          if self.no_repeat_delay then
             it.wait_remain = 0
             it.delay = 40

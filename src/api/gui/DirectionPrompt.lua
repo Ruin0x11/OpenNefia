@@ -25,25 +25,25 @@ end
 
 function DirectionPrompt:make_keymap()
    return {
-      ["return"] = function()
+      enter = function()
          self.result = "Center"
       end,
-      up = function()
+      north = function()
          if self.cardinal then
             self.result = "North"
          end
       end,
-      down = function()
+      south = function()
          if self.cardinal then
             self.result = "South"
          end
       end,
-      left = function()
+      west = function()
          if self.cardinal then
             self.result = "West"
          end
       end,
-      right = function()
+      east = function()
          if self.cardinal then
             self.result = "East"
          end

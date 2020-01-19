@@ -26,30 +26,29 @@ require("mod.elona.data")
 
 require("mod.elona.events")
 
-
 local Gui = require("api.Gui")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 
 Gui.bind_keys {
-   b = function(me)
+   bash = function(me)
       return ElonaCommand.bash(me)
    end,
-   e = function(me)
+   eat = function(me)
       return ElonaCommand.eat(me)
    end,
-   f = function(me)
+   fire = function(me)
       return ElonaCommand.fire(me)
    end,
-   i = function(me)
+   dig = function(me)
       return ElonaCommand.dig(me)
    end,
-   r = function(me)
+   read = function(me)
       return ElonaCommand.read(me)
    end,
-   q = function(me)
+   drink = function(me)
       return ElonaCommand.drink(me)
    end,
-   z = function(me)
+   zap = function(me)
       return ElonaCommand.zap(me)
    end,
 }

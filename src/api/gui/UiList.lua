@@ -76,7 +76,7 @@ function UiList:make_keymap()
       self:select_next()
       Gui.play_sound("base.cursor1")
    end
-   keys["enter"] = function() self:choose() end
+   keys.enter = function() self:choose() end
 
    if class.is_an(IPaged, self.model) then
       keys.west = function()

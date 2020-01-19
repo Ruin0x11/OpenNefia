@@ -11,6 +11,7 @@ local function add_keybinds(raw)
 end
 
 add_keybinds {
+   --cancel = "shift",
    cancel = "lshift",
    escape = "escape",
    north = {"up", "kp8"},

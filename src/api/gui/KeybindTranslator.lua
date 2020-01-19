@@ -1,14 +1,11 @@
-local keybind_translator = class.class("keybind_translator")
+local KeybindTranslator = class.class("KeybindTranslator")
+local config = require("internal.config")
 
 local MODIFIERS = {
-   rshift = 1,
-   lshift = 2,
-   rctrl = 4,
-   lctrl = 8,
-   ralt = 16,
-   lalt = 32,
-   rgui = 64,
-   lgui = 128
+   shift = 1,
+   ctrl = 2,
+   alt = 4,
+   gui = 8
 }
 
 -- NOTE: assumes en_US
@@ -26,6 +23,11 @@ local SHIFTS = {
    ["~"] = "`",
 }
 
+local CHARS = "abcdefghijklmnopqrstuvwxyz"
+for ch in string.chars(CHARS) do
+   SHIFTS[string.upper(ch)] = ch
+end
+
 local IGNORE_SHIFT = table.set {
    "north",
    "south",
@@ -42,11 +44,11 @@ local CTRL = bit.bor(4, 8)
 local ALT = bit.bor(16, 32)
 local GUI = bit.bor(64, 128)
 
-function keybind_translator:init()
+function KeybindTranslator:init()
    self.modifiers = 0
    self.translations = {}
-   self.event = nil
-   self.accepts = table.set { "mode", "identify" } -- TODO
+   self.accepts = {}
+   self.dirty = false
 end
 
 local function mod_key(key, actrl, ashift, aalt, agui)
@@ -80,7 +82,20 @@ local function mod_key(key, actrl, ashift, aalt, agui)
    return new
 end
 
-function keybind_translator:load(keybinds)
+-- @tparam {string} actions
+function KeybindTranslator:enable(actions)
+   self.accepts = table.merge(self.accepts, table.set(actions))
+   self.dirty = true
+end
+
+-- @tparam {string} actions
+function KeybindTranslator:disable(actions)
+   self.accepts = table.difference(self.accepts, table.set(actions))
+   self.dirty = true
+end
+
+function KeybindTranslator:reload()
+   local keybinds = config["base.keybinds"]
    self.translations = {}
    for _, kb in pairs(keybinds) do
       self:load_key(kb.primary, kb.action)
@@ -88,61 +103,53 @@ function keybind_translator:load(keybinds)
    end
 end
 
-function keybind_translator:load_key(key, action)
+function KeybindTranslator:load_key(key, action)
    if key == nil then
       return
    end
 
    if SHIFTS[key] then
-      key = mod_key(key, nil, true, nil, nil)
+      key = mod_key(SHIFTS[key], nil, true, nil, nil)
    end
    self.translations[key] = action
 end
 
-function keybind_translator:keypressed(key, scancode, isrepeat, ignore_shift)
+function KeybindTranslator:key_to_keybind(key, modifiers, ignore_shift)
+   if self.dirty then
+      self:reload()
+      self.dirty = false
+   end
+
    local ident = ""
 
-   if bit.band(self.modifiers, CTRL) ~= 0 then
+   if modifiers.ctrl then
       ident = ident .. "ctrl_"
    end
-   if bit.band(self.modifiers, ALT)  ~= 0 then
+   if modifiers.alt then
       ident = ident .. "alt_"
    end
-   if bit.band(self.modifiers, SHIFT) ~= 0 and not ignore_shift then
+   if modifiers.shift
+      and key ~= "shift"
+      and not ignore_shift
+   then
       ident = ident .. "shift_"
    end
-   if bit.band(self.modifiers, GUI) ~= 0 then
+   if modifiers.gui then
       ident = ident .. "gui_"
    end
    ident = ident .. key
 
-   local b = MODIFIERS[key]
-   if b then
-      self.modifiers = bit.bor(self.modifiers, b)
-   end
-
-   self.event = self.translations[ident]
+   local event = self.translations[ident]
 
    if ignore_shift then
-      if self.event and not IGNORE_SHIFT[self.event] then
-         self.event = nil
+      if event and not IGNORE_SHIFT[event] then
+         event = nil
       end
-   elseif self.event == nil then
-      self:keypressed(key, scancode, isrepeat, true)
+   elseif event == nil then
+      event = self:key_to_keybind(key, modifiers, true)
    end
 
-   _ppr("PRESS", key, ident, self.event, self.modifiers)
+  return event
 end
 
-function keybind_translator:keyreleased(key, scancode, isrepeat)
-   local b = MODIFIERS[key]
-   if b then
-      self.modifiers = bit.band(self.modifiers, bit.bnot(b))
-   else
-      self.event = nil
-   end
-
-   _ppr("RELEASE", key, self.event, self.modifiers)
-end
-
-return keybind_translator
+return KeybindTranslator

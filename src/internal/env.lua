@@ -578,6 +578,7 @@ function env.generate_sandbox(mod_name, is_strict)
 
    sandbox["require"] = mod_require
    sandbox["data"] = require("internal.data")
+   sandbox["config"] = require("internal.config")
    sandbox["schema"] = require("thirdparty.schema")
    sandbox["_G"] = sandbox
 
