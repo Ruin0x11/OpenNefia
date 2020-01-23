@@ -150,11 +150,11 @@ function IItem:get_owning_chara()
 end
 
 function IItem:produce_memory()
-   local shadow
+   local shadow_angle
    local is_tall = false
    local image = data["base.chip"][self.image]
    if image then
-      shadow = image.shadow or shadow
+      shadow_angle = image.shadow or shadow_angle
    end
 
    return {
@@ -164,7 +164,8 @@ function IItem:produce_memory()
       color = self:calc("color") or {255, 255, 255},
       x_offset = self:calc("x_offset") or 0,
       y_offset = self:calc("y_offset") or 0,
-      shadow = shadow
+      shadow_type = "drop_shadow",
+      shadow = shadow_angle
    }
 end
 

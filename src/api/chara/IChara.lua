@@ -281,7 +281,8 @@ function IChara:produce_memory()
       image = (self:calc("image") or "") .. "#1",
       color = self:calc("color"),
       hp_bar = hp_bar,
-      hp_ratio = self:calc("hp") / self:calc("max_hp")
+      hp_ratio = self:calc("hp") / self:calc("max_hp"),
+      shadow_type = "normal"
    }
 end
 

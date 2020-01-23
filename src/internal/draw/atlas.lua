@@ -25,10 +25,17 @@ function atlas:insert_tile(id, frame, filepath_or_data, load_tile)
    end
 
    local tile
+   local need_release
    if class.is_an(asset_drawable, filepath_or_data) then
+      -- This image is an asset from a UI theme that's being used; do
+      -- not release it.
       tile = filepath_or_data.image
+      need_release = false
    else
+      -- We're creating a temporary image that will only be used for
+      -- blitting into the atlas; discard it after.
       tile = love.graphics.newImage(filepath_or_data)
+      need_release = true
    end
    assert(tile, filepath_or_data)
 
@@ -68,13 +75,17 @@ function atlas:insert_tile(id, frame, filepath_or_data, load_tile)
 
    self.tiles[full_id] = { quad = quad, offset_y = offset_y }
 
-   tile:release()
+   if need_release then
+      tile:release()
+   end
 end
 
 function atlas:load_one(proto, draw_tile)
    local id = proto._id
    local images = proto.image
-   if type(images) == "string" then
+   if type(images) == "string"
+      or class.is_an(asset_drawable, images)
+   then
       images = {images}
    end
 
@@ -100,7 +111,10 @@ function atlas:load(protos, coords, cb)
    self.binpack = binpack:new(self.image_width, self.image_height)
 
    local canvas = love.graphics.newCanvas(self.image_width, self.image_height)
+
    love.graphics.setCanvas(canvas)
+   love.graphics.setBlendMode("alpha")
+   love.graphics.setColor(1, 1, 1, 1)
 
    local cb = cb or function(self, proto) self:load_one(proto) end
 

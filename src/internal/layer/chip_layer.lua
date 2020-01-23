@@ -51,7 +51,7 @@ function chip_layer:draw_drop_shadow(i, x, y)
    local image = i.image
    local x_offset = i.x_offset
    local y_offset = i.y_offset
-   local rotation = i.shadow or 20
+   local rotation = i.shadow_angle or 20
 
    local draw = true
    local image_data = self.chip_batch.atlas.tiles[image]
@@ -134,6 +134,11 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
       ["base.item"] = 1,
       ["base.feat"] = 0
    }
+   local layer_offset_y = {
+      ["base.chara"] = -16,
+      ["base.item"] = 0,
+      ["base.feat"] = 0
+   }
 
    local all = fun.iter(types)
       :map(function(ty)
@@ -159,7 +164,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
       for _, i in ipairs(stack) do
          found[i.uid] = true
          local show = i.show and map:is_in_fov(x, y)
-         local shadow = i.shadow
+         local shadow_type = i.shadow_type
 
          if show then
             --
@@ -167,8 +172,8 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
             --
             local batch_ind = self.chip_batch_inds[i.uid]
             local image = i.image
-            local x_offset = i.x_offset
-            local y_offset = i.y_offset
+            local x_offset = i.x_offset or 0
+            local y_offset = i.y_offset or 0 + layer_offset_y[chip_type]
             if batch_ind == nil or batch_ind == 0 then
                -- tiles at the top of the screen should be drawn
                -- first, so they have the lowest z-order. conveniently
@@ -193,6 +198,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                   ind = ind,
                   x = x,
                   y = y,
+                  y_offset = y_offset,
                   hp_ratio = i.hp_ratio,
                   hp_bar = i.hp_bar
                }
@@ -211,16 +217,17 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                -- end
             end
 
-            if shadow == "drop_shadow" then
+            if shadow_type == "drop_shadow" then
                --
                -- Item drop shadow.
                --
                self:draw_drop_shadow(i, x, y)
-            elseif shadow == "normal" then
+            elseif shadow_type == "normal" then
                self.shadow_batch:add_tile {
                   tile = "shadow#1",
                   x = x,
                   y = y,
+                  y_offset = y_offset,
                   z_order = 0
                }
                self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }
@@ -248,7 +255,7 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
       if ind.hp_bar then
          local ratio = ind.hp_ratio or 0.9
          self.t[ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
-                                                sy - draw_y + offy + ind.y * 48 + 48,
+                                                sy - draw_y + offy + ind.y * 48 + ind.y_offset + 48,
                                                 ratio * 30, 3, ratio * 30)
       end
    end
@@ -259,11 +266,12 @@ function chip_layer:draw(draw_x, draw_y, offx, offy)
    Draw.set_color(255, 255, 255, 80)
    love.graphics.setBlendMode("subtract")
    self.drop_shadow_batch:draw(draw_x + offx, draw_y + offy)
-
-   Draw.set_color(255, 255, 255, 110)
-   self.shadow_batch:draw(draw_x + offx, draw_y + offy, 8, 20)
-
    love.graphics.setShader()
+
+   love.graphics.setBlendMode("subtract")
+   Draw.set_color(255, 255, 255, 110)
+   self.shadow_batch:draw(draw_x + offx, draw_y + offy, 8, 36)
+
    Draw.set_color(255, 255, 255)
    love.graphics.setBlendMode("alpha")
    self.chip_batch:draw(draw_x + offx, draw_y + offy)

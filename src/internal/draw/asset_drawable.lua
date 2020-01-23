@@ -177,7 +177,9 @@ function asset_drawable:release()
    for _, q in ipairs(self.quads) do
       q:release()
    end
+   self.quads = {}
    self.image:release()
+   self.image = nil
 end
 
 return asset_drawable
