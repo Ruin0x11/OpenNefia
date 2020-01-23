@@ -90,7 +90,7 @@ function UiMessageWindow:push_text(text, color)
       -- TODO: handle halfwidth text wrapping (English)
       local width = Draw.text_width(s)
       if first.width + width > self.width then
-         first.text[#first.text+1] = {color = color, text = work, width = Draw.text_width(work)}
+         first.text[#first.text+1] = {color = color, text = work, width = first.width}
          self:newline()
          first = self.each_line:get(1)
          work = ""
@@ -188,8 +188,6 @@ function UiMessageWindow:recalc_lines()
       return
    end
 
-   Log.warn("MESSAGE RECALC")
-
    local cutoff, index_of_first_text = self:calc_start_offset()
 
    self.each_line = circular_buffer:new(self.max_lines)
@@ -241,7 +239,7 @@ function UiMessageWindow:newline(text)
    Draw.set_font(14)
    self.add_width = 2
    local width = Draw.text_width(text)
-   self.each_line:push({text = {color = {255, 255, 255}, text = text, width = width}, width = width})
+   self.each_line:push({text = {{color = {255, 255, 255}, text = text, width = width}}, width = width})
 end
 
 function UiMessageWindow:new_turn()
