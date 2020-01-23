@@ -47,7 +47,10 @@ function Sstp.send_raw(op, protocol, params, ip, port)
    ip = ip or DEFAULT_IP
    port = port or DEFAULT_PORT
 
-   local client = assert(socket.connect(ip, port))
+   local client, err = socket.connect(ip, port)
+   if client == nil then
+      return nil, err
+   end
    client:settimeout(1)
 
    local req = ("%s %s\r\nSender: elona-next\r\n"):format(op, protocol)

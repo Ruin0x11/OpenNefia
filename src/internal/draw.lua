@@ -7,8 +7,8 @@ end
 
 local draw = {}
 
-local WIDTH = 1024
-local HEIGHT = 768
+local WIDTH = 800
+local HEIGHT = 600
 
 local canvas = nil
 local error_canvas = nil

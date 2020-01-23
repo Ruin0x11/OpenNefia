@@ -2,7 +2,7 @@ local _atlases = {}
 
 local atlases = {}
 
-function atlases.set(tile, tile_overhang, chara, item, item_shadow, feat, portrait)
+function atlases.set(tile, tile_overhang, chara, item, item_shadow, feat, chip, portrait)
    _atlases = {
       tile = tile,
       tile_overhang = tile_overhang,
@@ -10,6 +10,7 @@ function atlases.set(tile, tile_overhang, chara, item, item_shadow, feat, portra
       item = item,
       item_shadow = item_shadow,
       feat = feat,
+      chip = chip,
       portrait = portrait,
    }
 end

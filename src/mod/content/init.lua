@@ -472,8 +472,9 @@ local function my_start(self, player)
          return "player_turn_query"
    end)
 
-   for i=1,10 do
-      Chara.create("elona.putit")
+   for _=1,10 do
+      local c = Chara.create("elona.putit")
+      c.is_not_targeted_by_ai = true
    end
 
    for _=1,50 do

@@ -161,7 +161,7 @@ function IItem:produce_memory()
       uid = self.uid,
       show = require("api.Item").is_alive(self),
       image = (self.image or "") .. "#1",
-      color = {0, 0, 0},
+      color = self:calc("color") or {255, 255, 255},
       x_offset = self:calc("x_offset") or 0,
       y_offset = self:calc("y_offset") or 0,
       shadow = shadow

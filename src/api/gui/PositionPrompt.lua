@@ -32,31 +32,31 @@ end
 
 function PositionPrompt:make_keymap()
    return {
-      ["return"] = function()
+      enter = function()
          self.result = { x = self.target_x, y = self.target_y }
       end,
-      up = function()
+      north = function()
          self.target_y = math.max(self.target_y - 1, 0)
       end,
-      down = function()
+      south = function()
          self.target_y = math.min(self.target_y + 1, Map.current():height()-1)
       end,
-      left = function()
+      west = function()
          self.target_x = math.max(self.target_x - 1, 0)
       end,
-      right = function()
+      east = function()
          self.target_x = math.min(self.target_x + 1, Map.current():width()-1)
       end,
       escape = function()
          self.canceled = true
       end,
-      shift = function()
+      cancel = function()
          self.canceled = true
       end,
-      ["kp+"] = function()
+      next_page = function()
          self:next_target()
       end,
-      ["kp-"] = function()
+      previous_page = function()
          self:previous_target()
       end
    }

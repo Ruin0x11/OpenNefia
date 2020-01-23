@@ -153,6 +153,10 @@ local function get_feat_tiles()
    return data["base.chip"]:iter():filter(mkpred("feat")):to_list()
 end
 
+local function get_chip_tiles()
+   return data["base.chip"]:iter():to_list()
+end
+
 local function get_portrait_tiles()
    return data["base.portrait"]:iter():to_list()
 end
@@ -213,6 +217,12 @@ function startup.load_batches()
 
    sw:p("load_batches.feat")
 
+   progress("Loading tilemaps (chip)...")
+   local chip_atlas = atlas:new(tile_size, tile_size)
+   chip_atlas:load(get_chip_tiles())
+
+   sw:p("load_batches.feat")
+
    progress("Loading tilemaps (portrait)...")
    local portrait_atlas = atlas:new(48, 72)
    portrait_atlas:load(get_portrait_tiles())
@@ -220,7 +230,7 @@ function startup.load_batches()
    sw:p("load_batches.portrait")
 
    local atlases = require("internal.global.atlases")
-   atlases.set(tile_atlas, tile_overhang_atlas, chara_atlas, item_atlas, item_shadow_atlas, feat_atlas, portrait_atlas)
+   atlases.set(tile_atlas, tile_overhang_atlas, chara_atlas, item_atlas, item_shadow_atlas, feat_atlas, chip_atlas, portrait_atlas)
 end
 
 return startup

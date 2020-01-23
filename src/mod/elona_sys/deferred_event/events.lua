@@ -1,6 +1,6 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
-local skip_list = require("mod.elona_sys.thirdparty.skip_list")
+local SkipList = require("api.SkipList")
 
 local function run_events(_, _, result)
    local to_remove = 0
@@ -26,7 +26,7 @@ end
 Event.register("base.on_turn_begin", "Run deferred events", run_events)
 
 local function clear_events()
-   save.elona_sys.deferred_events = skip_list:new()
+   save.elona_sys.deferred_events = SkipList:new()
 end
 
 Event.register("base.on_init_save", "Init save (deferred events)", clear_events)

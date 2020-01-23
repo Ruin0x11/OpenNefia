@@ -126,6 +126,7 @@ function InventoryWrapper:switch_context()
 
    self.submenu:relayout(self.x, self.y, self.width, self.height)
 
+   -- HACK
    collectgarbage()
 end
 

@@ -34,9 +34,9 @@ end
 -- Probability that a node appears in a higher level
 local p = 0.5
 
-local skip_list = class.class("skip_list")
+local SkipList = class.class("SkipList")
 
-function skip_list:clear()
+function SkipList:clear()
    self.head   = {}
    self._levels= 1
    self._count = 0
@@ -45,7 +45,7 @@ end
 
 -- comp: < or > (Duplicate keys are inserted at the beginning)
 -- comp: <= or >= (Duplicate keys are inserted at the end)
-function skip_list:init(initial_size,comp)
+function SkipList:init(initial_size,comp)
    initial_size= initial_size or 100
 
    local levels= floor( logb(initial_size,1/p) )
@@ -57,22 +57,22 @@ function skip_list:init(initial_size,comp)
    self.comp = comp or function(key1,key2) return key1 <= key2 end
 end
 
-function skip_list:length()
+function SkipList:length()
    return self._count
 end
 
 -- Return the key, value, and node
 -- If value is omitted, return any matching key and value
-function skip_list:find(key,value)
+function SkipList:find(key,value)
    local node = self.head
    local comp = self.comp
    -- Start search at the highest level
    for level = self._levels,1,-1 do
       while node[level] do
-         local old= node
-         node     = node[level]
-         local c1 = comp(node.key,key)
-         local c2 = not comp(key,node.key)
+         local old = node
+         node      = node[level]
+         local c1  = comp(node.key,key)
+         local c2  = not comp(key,node.key)
          --[[
             If both comparisons are true, then move to the next node
             If one of them is true, a matching key was found!
@@ -107,7 +107,7 @@ function skip_list:find(key,value)
    end
 end
 
-function skip_list:insert(key,value)
+function SkipList:insert(key,value)
    -- http://stackoverflow.com/questions/12067045/random-level-function-in-skip-list
    -- Using a uniform distribution, we find the number of levels
    -- by using the cdf of a geometric distribution
@@ -146,7 +146,7 @@ function skip_list:insert(key,value)
    end
 end
 
-function skip_list:_delete(node)
+function SkipList:_delete(node)
    local level = 1
    while node[-level] do
       local next = node[level]
@@ -160,7 +160,7 @@ end
 
 -- Return the key,value if successful
 -- If value is omitted, delete any matching key
-function skip_list:delete(key,value)
+function SkipList:delete(key,value)
    local k,v,node = self:find(key,value)
    if not node then return end
    self:_delete(node)
@@ -168,7 +168,7 @@ function skip_list:delete(key,value)
 end
 
 -- Return the first key,value
-function skip_list:pop()
+function SkipList:pop()
    local node  = self.head[1]
    if not node then return end
    self:_delete(node)
@@ -176,7 +176,7 @@ function skip_list:pop()
 end
 
 -- Check but do not remove the first key,value
-function skip_list:peek()
+function SkipList:peek()
    local node = self.head[1]
    if not node then return end
    return node.key,node.value
@@ -184,7 +184,7 @@ end
 
 -- Iterate in order or reverse
 -- Return the key,value
-function skip_list:iterate(mode)
+function SkipList:iterate(mode)
    mode = mode or 'normal'
    if not (mode == 'normal' or mode == 'reverse') then
       error('Invalid mode')
@@ -223,7 +223,7 @@ end
 
 -- Check the integrity of the skip list
 -- Return true if it passes else error!
-function skip_list:check()
+function SkipList:check()
    local level = 0
    local comp  = self.comp
    while self.head[level+1] do
@@ -269,4 +269,4 @@ function skip_list:check()
    return true
 end
 
-return skip_list
+return SkipList

@@ -6,7 +6,7 @@ local Item = require("api.Item")
 local function level_up()
    local player = Chara.player()
 
-   local levels = 1
+   local levels = 100
    for _= 1, levels do
       Skill.gain_level(player)
       Skill.grow_primary_skills(player)
