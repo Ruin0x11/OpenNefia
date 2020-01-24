@@ -4,6 +4,3 @@
 [submodule "lib/megasource"]
 	path = lib/megasource
 	url = hg::https://bitbucket.org/rude/megasource
-[submodule "lib/love"]
-	path = lib/love
-	url = git@git.sr.ht:~ruin0x11/love
