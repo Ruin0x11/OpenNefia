@@ -15,19 +15,25 @@ function Pcc:init(parts)
       self.parts:insert(part.z_order, {image = entry.image, color = part.color})
    end
 
+   self.dirty = true
    self.image = nil
    self.frame = 1
    self.dir = 1
    self.quads = {}
    self.full_size = false
+end
+
+function Pcc:deserialize()
+   self.dirty = true
+end
+
+function Pcc:refresh()
    for i = 1, 16 do
       local x = math.floor((i-1) / 4)
       local y = (i-1) % 4
       self.quads[i] = love.graphics.newQuad(x * 32, y * 48, 32, 48, 128, 192)
    end
-end
 
-function Pcc:refresh()
    local canvas = love.graphics.newCanvas(128, 192)
 
    Draw.with_canvas(canvas, function()
@@ -51,6 +57,8 @@ function Pcc:refresh()
    self.image = love.graphics.newImage(canvas:newImageData())
 
    canvas:release()
+
+   self.dirty = false
 end
 
 function Pcc:release()
@@ -62,12 +70,14 @@ function Pcc:on_scroll()
 end
 
 function Pcc:draw(x, y)
-   local width, height
-   local offset_x = 0
-   local offset_y = 0
+   if self.dirty then
+      self:refresh()
+   end
+
+   local width, height, offset_x, offset_y
    if self.full_size then
-      offset_x = 6
-      offset_y = 2
+      offset_x = 8
+      offset_y = -4
    else
       width = 24
       height = 40
@@ -75,7 +85,12 @@ function Pcc:draw(x, y)
       offset_y = 4
    end
 
-   Draw.image_region(self.image, self.quads[self.dir + (self.frame-1) * 4], x + offset_x, y + offset_y, width, height)
+   local quad = self.quads[self.dir + (self.frame-1) * 4]
+   if quad == nil then
+      return
+   end
+
+   Draw.image_region(self.image, quad, x + offset_x, y + offset_y, width, height)
 end
 
 return Pcc

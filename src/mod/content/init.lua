@@ -481,29 +481,33 @@ local function my_start(self, player)
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
 
-   player.pcc = require("api.gui.Pcc"):new {
-      {
-         id = "elona.body_1",
-         z_order = 0,
-      },
-      {
-         id = "elona.eye_7",
-         z_order = 10,
-      },
-      {
-         id = "elona.hair_2",
-         z_order = 20,
-      },
-      {
-         id = "elona.cloth_1",
-         z_order = 30,
-      },
-      {
-         id = "elona.pants_1",
-         z_order = 20,
-      }
-                                           }
-   player.pcc.dir = 4
+   local function set_pcc(chara)
+      chara.pcc = require("api.gui.Pcc"):new {
+         {
+            id = "elona.body_1",
+            z_order = 0,
+         },
+         {
+            id = "elona.eye_7",
+            z_order = 10,
+         },
+         {
+            id = "elona.hair_2",
+            z_order = 20,
+         },
+         {
+            id = "elona.cloth_1",
+            z_order = 30,
+         },
+         {
+            id = "elona.pants_1",
+            z_order = 20,
+         }
+                                              }
+      chara.pcc.dir = 4
+   end
+
+   Chara.iter():each(set_pcc)
 end
 
 local function init_bells(self, player)

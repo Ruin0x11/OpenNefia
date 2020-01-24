@@ -22,12 +22,13 @@ local _iface_children = setmetatable({}, { __mode = "k" })
 
 local function make_tostring(kind, tbl)
    return function(self)
+      local addr = string.gsub(string.tostring_raw(self), "^table: (.*)", "%1")
       if self.__class then
-         return string.format("instance of '%s'",
-                              rawget(self.__class,'__name') or '?')
+         return string.format("instance of '%s' (%s)",
+                              rawget(self.__class,'__name') or '?', addr)
       end
       return tbl[self]
-         and string.format("%s '%s' (%s)", kind, rawget(self, "__name") or "?", string.tostring_raw(self))
+         and string.format("%s '%s' (%s)", kind, rawget(self, "__name") or "?", addr)
          or self
    end
 end

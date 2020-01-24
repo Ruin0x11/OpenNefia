@@ -84,7 +84,9 @@ function IconBar:update()
 end
 
 function IconBar:release()
-   self.canvas:release()
+   if self.canvas then
+      self.canvas:release()
+   end
 end
 
 return IconBar

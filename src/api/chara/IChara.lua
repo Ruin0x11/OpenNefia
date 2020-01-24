@@ -272,7 +272,11 @@ local PCC_DIRS = {
    South = 1,
    West = 2,
    East = 3,
-   North = 4
+   North = 4,
+   Northwest = 4,
+   Northeast = 4,
+   Southwest = 1,
+   Southeast = 1,
 }
 
 --- @treturn[opt] table

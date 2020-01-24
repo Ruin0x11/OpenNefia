@@ -53,8 +53,14 @@ local function query(self, z_order)
       end
    end
 
-   self:halt_input()
-   self:release()
+   ok, result = pcall(function()
+         self:halt_input()
+         self:release()
+   end)
+
+   if not ok then
+      Log.error("Error releasing UI layer: %s", result)
+   end
 
    draw.pop_layer()
 

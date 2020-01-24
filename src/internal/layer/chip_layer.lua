@@ -181,7 +181,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                -- index 0 represents (0, 0), 1 represents (1, 0), and
                -- so on.
                local z_order = ind + LAYER_Z_ORDER[chip_type]
-               print("zorder", tostring(image):sub(1,20), chip_type, ind, LAYER_Z_ORDER[chip_type], z_order)
 
                local new_ind = self.chip_batch:add_tile {
                   tile = image,

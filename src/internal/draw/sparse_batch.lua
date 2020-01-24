@@ -55,10 +55,6 @@ end
 function sparse_batch:add_tile(params)
    local ind = table.remove(self.free_indices) or #self.tiles + 1
 
-   if class.is_an(IChipRenderable, params.tile) then
-      params.tile:refresh()
-   end
-
    local z_order = params.z_order or 0
    self.ordering:insert(z_order, ind)
 
