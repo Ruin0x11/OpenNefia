@@ -3,6 +3,7 @@ std = "lua51c+luajit"
 globals = {
    "require",
    "data",
+   "config",
    "mobdebug",
    "_CONSOLE",
    "_DEBUG",

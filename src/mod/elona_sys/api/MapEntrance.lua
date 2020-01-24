@@ -41,7 +41,7 @@ function MapEntrance.directional(map, chara)
    if pos then
       return pos.x, pos.y
    end
-   local next_dir = Chara.player().last_move_direction
+   local next_dir = Chara.player().direction
    local x = 0
    local y = 0
 

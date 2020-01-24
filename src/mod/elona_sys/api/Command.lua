@@ -64,6 +64,8 @@ function Command.move(player, x, y)
       x, y = Pos.add_direction(x, player.x, player.y)
    end
 
+   player.direction = Pos.pack_direction(Pos.direction_in(player.x, player.y, x, y))
+
    -- Try to modify the final position.
    local next_pos = hook_player_move({chara=player}, {pos={x=x,y=y}})
 

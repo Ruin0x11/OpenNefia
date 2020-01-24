@@ -83,6 +83,7 @@ add_keybinds {
    repl_paste = "ctrl_v",
    repl_cut = "ctrl_x",
    repl_copy = "ctrl_c",
+   repl_clear = "ctrl_l",
    repl_complete = "tab",
 }
 

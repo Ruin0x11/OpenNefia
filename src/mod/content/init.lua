@@ -465,12 +465,12 @@ local function my_start(self, player)
       a:heal_to_max()
    end
 
-   DeferredEvent.add(function()
-         local lomias = Chara.find("elona.lomias", "others")
-         Dialog.start(lomias, "elona.lomias_game_begin")
+   -- DeferredEvent.add(function()
+   --       local lomias = Chara.find("elona.lomias", "others")
+   --       Dialog.start(lomias, "elona.lomias_game_begin")
 
-         return "player_turn_query"
-   end)
+   --       return "player_turn_query"
+   -- end)
 
    for _=1,10 do
       local c = Chara.create("elona.putit")
@@ -480,6 +480,30 @@ local function my_start(self, player)
    for _=1,50 do
       Item.create("content.test", 0, 0, {amount = 2}, Chara.player())
    end
+
+   player.pcc = require("api.gui.Pcc"):new {
+      {
+         id = "elona.body_1",
+         z_order = 0,
+      },
+      {
+         id = "elona.eye_7",
+         z_order = 10,
+      },
+      {
+         id = "elona.hair_2",
+         z_order = 20,
+      },
+      {
+         id = "elona.cloth_1",
+         z_order = 30,
+      },
+      {
+         id = "elona.pants_1",
+         z_order = 20,
+      }
+                                           }
+   player.pcc.dir = 4
 end
 
 local function init_bells(self, player)

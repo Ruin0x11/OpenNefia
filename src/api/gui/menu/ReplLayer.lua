@@ -130,6 +130,9 @@ function ReplLayer:make_keymap()
       repl_copy = function()
          Env.set_clipboard_text(self.text)
       end,
+      repl_clear = function()
+         self:clear()
+      end,
       repl_complete = function()
          local function complete(cand)
             local text = self.completion.base .. cand.text
@@ -311,8 +314,7 @@ end
 function ReplLayer:clear()
    self.scrollback = circular_buffer:new(self.size)
    self.scrollback_index = 0
-
-   self:set_text("")
+   self.redraw = true
 end
 
 function ReplLayer:move_cursor(codepoints)

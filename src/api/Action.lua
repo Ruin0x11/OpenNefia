@@ -39,7 +39,7 @@ function Action.move(chara, x, y)
       return false
    end
 
-   chara.last_move_direction = Pos.pack_direction(Pos.direction_in(chara.x, chara.y, x, y))
+   chara.direction = Pos.pack_direction(Pos.direction_in(chara.x, chara.y, x, y))
 
    if not Map.can_access(x, y, chara:current_map()) then
       return false

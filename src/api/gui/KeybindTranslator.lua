@@ -39,11 +39,6 @@ local IGNORE_SHIFT = table.set {
    "southeast"
 }
 
-local SHIFT = bit.bor(1, 2)
-local CTRL = bit.bor(4, 8)
-local ALT = bit.bor(16, 32)
-local GUI = bit.bor(64, 128)
-
 function KeybindTranslator:init()
    self.modifiers = 0
    self.translations = {}
@@ -60,8 +55,6 @@ local function mod_key(key, actrl, ashift, aalt, agui)
    key = string.gsub(key, "alt_", "")
    local gui = string.match(key, "gui_") or agui
    key = string.gsub(key, "gui_", "")
-
-   shift = true
 
    local new = ""
    if ctrl then

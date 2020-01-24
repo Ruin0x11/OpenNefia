@@ -1,7 +1,8 @@
-local IBatch = require("internal.draw.IBatch")
 local Draw = require("api.Draw")
-local sparse_batch = class.class("sparse_batch", IBatch)
+local IBatch = require("internal.draw.IBatch")
+local IChipRenderable = require("api.gui.IChipRenderable")
 local SkipList = require("api.SkipList")
+local sparse_batch = class.class("sparse_batch", IBatch)
 
 function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.width = width
@@ -22,7 +23,8 @@ function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
 
    self.free_indices = {}
 
-   self.batch = love.graphics.newSpriteBatch(atlas.image)
+   self.batches = {}
+   self.drawables = {}
    self.updated = true
    self.tile_width = self.atlas.tile_width
    self.tile_height = self.atlas.tile_height
@@ -52,6 +54,10 @@ end
 
 function sparse_batch:add_tile(params)
    local ind = table.remove(self.free_indices) or #self.tiles + 1
+
+   if class.is_an(IChipRenderable, params.tile) then
+      params.tile:refresh()
+   end
 
    local z_order = params.z_order or 0
    self.ordering:insert(z_order, ind)
@@ -89,6 +95,8 @@ function sparse_batch:clear()
    self.colors_g = {}
    self.colors_b = {}
    self.z_orders = {}
+   self.batches = {}
+   self.drawables = {}
    self.ordering = SkipList:new()
 
    self.free_indices = {}
@@ -109,33 +117,67 @@ end
 
 function sparse_batch:draw(x, y, offset_x, offset_y)
    -- slight speedup
-   local batch = self.batch
    local tw = self.tile_width
    local th = self.tile_height
    offset_x = offset_x or 0
    offset_y = offset_y or 0
 
+   local xc = self.xcoords
+   local yc = self.ycoords
+   local xo = self.xoffs
+   local yo = self.yoffs
+
    local sx, sy, ox, oy = self.coords:get_start_offset(x, y, Draw.get_width(), Draw.get_height())
+   local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
 
    if self.updated then
-      local tx, ty, tdx, tdy = self.coords:find_bounds(x, y, self.width, self.height)
+      for _, batch in ipairs(self.batches) do
+         batch:clear()
+      end
 
+      self.drawables = {}
+
+      local batch = nil
+      local batch_ind = 1
       local self_tiles = self.tiles
       local tiles = self.atlas.tiles
-      local xc = self.xcoords
-      local yc = self.ycoords
-      local xo = self.xoffs
-      local yo = self.yoffs
       local rots = self.rotations
       local cr = self.colors_r
       local cg = self.colors_g
       local cb = self.colors_b
 
-      batch:clear()
-
       for _, _, ind in self.ordering:iterate() do
-         local tile = assert(self_tiles[ind])
-         if tile ~= 0 then
+         local tile = self_tiles[ind]
+
+         if class.is_an(IChipRenderable, tile) then -- TODO is this slow?
+            -- This is a renderable object with custom logic (like
+            -- PCCs). We have to stop drawing to the current sprite
+            -- batch to draw it, in order to keep the Z ordering
+            -- correct.
+            if batch ~= nil then
+               batch:setColor(1, 1, 1)
+               batch:flush()
+               batch = nil
+            end
+            self.drawables[#self.drawables+1] = { ind, tile }
+         elseif tile ~= 0 then
+            -- This is a reference to a tile in the sprite atlas.
+            if batch == nil then
+               -- Reuse a sprite batch from a previous update instead
+               -- of allocating a new one every time
+               batch = self.batches[batch_ind]
+
+               if batch == nil then
+                  -- No free sprite batch available in pool, make a new one
+                  batch = love.graphics.newSpriteBatch(self.atlas.image)
+                  self.batches[batch_ind] = batch
+               end
+
+               batch_ind = batch_ind + 1
+
+               self.drawables[#self.drawables+1] = { ind, batch }
+            end
+
             local cx = xc[ind]
             local cy = yc[ind]
             if cx >= tx - 1 and cx < tdx and cy >= ty - 1 and cy < tdy then
@@ -163,13 +205,27 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
          end
       end
 
-      batch:setColor(1, 1, 1)
-      batch:flush()
+      if batch ~= nil then
+         batch:setColor(1, 1, 1)
+         batch:flush()
+      end
 
       self.updated = false
    end
 
-   love.graphics.draw(batch, sx + ox - tw + offset_x, sy + oy - th + offset_y)
+   for _, pair in ipairs(self.drawables) do
+      local ind = pair[1]
+      local drawable = pair[2]
+      if drawable.draw then
+         local i, j = self.coords:tile_to_screen(xc[ind] - tx, yc[ind] - ty)
+         drawable:draw(sx + ox - tw + offset_x + i + xo[ind],
+                       sy + oy - th + offset_y + j + yo[ind])
+      else
+         love.graphics.draw(drawable,
+                            sx + ox - tw + offset_x,
+                            sy + oy - th + offset_y)
+      end
+   end
 end
 
 return sparse_batch

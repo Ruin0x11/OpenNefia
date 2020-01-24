@@ -367,3 +367,11 @@ data:add_type {
       default = schema.String
    }
 }
+
+data:add_type {
+   name = "pcc_part",
+   schema = schema.Record {
+      kind = schema.String,
+      image = schema.String
+   }
+}

@@ -35,17 +35,17 @@ function ChangeAppearanceList:init(items)
 
    self.input = InputHandler:new()
    self.input:bind_keys {
-      up = function()
+      north = function()
          self:select_previous()
          Gui.play_sound("base.cursor1")
       end,
-      down = function()
+      south = function()
          self:select_next()
          Gui.play_sound("base.cursor1")
       end,
-      ["return"] = function() self:choose(self.model:selected_item()) end,
-      left = function() self:decrement(self.model:selected_item()) end,
-      right = function() self:increment(self.model:selected_item()) end,
+      enter = function() self:choose(self.model:selected_item()) end,
+      west = function() self:decrement(self.model:selected_item()) end,
+      east = function() self:increment(self.model:selected_item()) end,
    }
 
    self:set_page(0)

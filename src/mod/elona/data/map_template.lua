@@ -442,7 +442,7 @@ local palmia = {
          if save.base.player_pos_on_map_leave then
             return x, y
          end
-         local last_dir = Chara.player().last_move_direction
+         local last_dir = Chara.player().direction
          if last_dir == "East" then
             y = 22
          elseif last_dir == "North" then
@@ -604,7 +604,7 @@ local noyel = {
          if save.base.player_pos_on_map_leave then
             return x, y
          end
-         local last_dir = Chara.player().last_move_direction
+         local last_dir = Chara.player().direction
          if last_dir == "East" then
             y = 3
          elseif last_dir == "North" then
@@ -841,7 +841,7 @@ local lumiest = {
          if save.base.player_pos_on_map_leave then
             return x, y
          end
-         local last_dir = Chara.player().last_move_direction
+         local last_dir = Chara.player().direction
          if last_dir == "West" then
             x = 58
             y = 21

@@ -1,11 +1,6 @@
 local vips = require("vips")
 assert(vips)
 
-local layout = require("tools.layout.chip")
-local map_tile = require("tools.layout.map_tile")
-local portrait = require("tools.layout.portrait")
-local asset = require("tools.layout.asset")
-
 local fs = require("util.fs")
 
 local atlas_cache = {}
@@ -23,7 +18,7 @@ local function crop(i, elona_root, mod_root)
    if not atlas_cache[source] then
       local atlas = vips.Image.new_from_file(source)
       if not i.no_alpha then
-         atlas = remove_key_color(atlas, {0, 0, 0})
+         atlas = remove_key_color(atlas, i.key_color or {0, 0, 0})
       end
       atlas_cache[source] = atlas
    end
@@ -49,7 +44,7 @@ local function convert(i, elona_root, mod_root)
    local source = fs.join(elona_root, i.source)
    local image = vips.Image.new_from_file(source)
    if not i.no_alpha then
-      image = remove_key_color(image, {0, 0, 0})
+      image = remove_key_color(image, i.key_color or {0, 0, 0})
    end
    local output = fs.join(mod_root, i.output)
    fs.create_directory(fs.parent(output))
@@ -77,6 +72,17 @@ local function preprocess(list, elona_root, mod_root)
    io.write("\n")
 end
 
+
+--
+-- Image conversion targets
+--
+
+local layout = require("tools.layout.chip")
+local map_tile = require("tools.layout.map_tile")
+local portrait = require("tools.layout.portrait")
+local asset = require("tools.layout.asset")
+local pcc_part = require("tools.layout.pcc_part")
+
 local targets = {
    layout.chara,
    layout.item,
@@ -90,7 +96,10 @@ local targets = {
 
    asset.crop,
    asset.convert,
+
+   pcc_part.pcc_part,
 }
+
 
 local function preprocess_all(elona_root, mod_root)
    print(string.format("Cropping image files from %s -> %s", elona_root, mod_root))

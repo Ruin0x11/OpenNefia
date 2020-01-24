@@ -76,7 +76,7 @@ local fallbacks = {
    turns_alive = 0,
    insanity = 0,
    armor_class = "",
-   last_move_direction = "South",
+   direction = "South",
 
    image = "",
    portrait = "",
@@ -268,6 +268,13 @@ end
 function IChara:on_refresh()
 end
 
+local PCC_DIRS = {
+   South = 1,
+   West = 2,
+   East = 3,
+   North = 4
+}
+
 --- @treturn[opt] table
 --- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
@@ -275,10 +282,20 @@ function IChara:produce_memory()
    if self:is_allied() then
       hp_bar = "hp_bar_ally"
    end
+
+   local image
+   if self.pcc then
+      self.pcc.dir = PCC_DIRS[self.direction] or 4
+      self.pcc.frame = self.turns_alive % 4 + 1
+      image = self.pcc
+   else
+      image = (self:calc("image") or "") .. "#1"
+   end
+
    return {
       uid = self.uid,
       show = Chara.is_alive(self),
-      image = (self:calc("image") or "") .. "#1",
+      image = image,
       color = self:calc("color"),
       hp_bar = hp_bar,
       hp_ratio = self:calc("hp") / self:calc("max_hp"),

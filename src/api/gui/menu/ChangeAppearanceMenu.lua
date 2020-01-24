@@ -25,15 +25,16 @@ local ChangeAppearanceListExt = function(change_appearance_menu)
    return E
 end
 
-function ChangeAppearanceMenu:init()
+function ChangeAppearanceMenu:init(chara)
    self.width = 380
    self.height = 340
+   self.chara = chara or nil
 
    self.win = UiWindow:new("appearance", true, "key_help")
 
    self.list = ChangeAppearanceList:new()
 
-   self.preview = ChangeAppearancePreview:new()
+   self.preview = ChangeAppearancePreview:new(chara)
 
    table.merge(self.list, ChangeAppearanceListExt(self))
 

@@ -4,9 +4,10 @@ local TopicWindow = require("api.gui.TopicWindow")
 
 local ChangeAppearancePreview = class.class("ChangeAppearancePreview", IUiElement)
 
-function ChangeAppearancePreview:init()
+function ChangeAppearancePreview:init(chara)
    self.width = 88
    self.height = 120
+   self.chara = chara or nil
 
    self.topic_window = TopicWindow:new(1, 1)
    self.show_portrait = false
@@ -23,17 +24,6 @@ function ChangeAppearancePreview:relayout(x, y)
    self.topic_window:relayout(self.x, self.y, self.width, self.height)
 end
 
-function ChangeAppearancePreview:update()
-   self.frame = self.frame + 1
-   if self.frame % 100 < 45 then
-      self.direction = self.frame % 16
-   else
-      self.direction = self.direction + 1
-   end
-
-   self.topic_window:update()
-end
-
 function ChangeAppearancePreview:draw()
    self.topic_window:draw()
    if self.show_portrait then
@@ -45,6 +35,17 @@ function ChangeAppearancePreview:draw()
          -- Draw.image(self.chip, self.x + 46, self.y + 59, nil, nil, nil, true)
       end
    end
+end
+
+function ChangeAppearancePreview:update()
+   self.frame = self.frame + 1
+   if self.frame % 100 < 45 then
+      self.direction = self.frame % 16
+   else
+      self.direction = self.direction + 1
+   end
+
+   self.topic_window:update()
 end
 
 return ChangeAppearancePreview

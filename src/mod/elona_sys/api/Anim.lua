@@ -9,7 +9,7 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Draw = require("api.Draw")
 
-local anim_wait = 30 * 0.5
+local anim_wait = 80 * 0.5
 
 local function pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()

@@ -53,7 +53,7 @@ local function translate_scancode(scancode)
    elseif scancode == "lalt" or scancode == "ralt" then
       return "alt"
    elseif scancode == "lgui" or scancode == "rgui" then
-      return "ctrl"
+      return "gui"
    end
    return scancode
 end

@@ -108,6 +108,22 @@ function chip_layer:draw_drop_shadow(i, x, y)
    end
 end
 
+local TYPES = {
+   "base.chara",
+   "base.item",
+   "base.feat"
+}
+local LAYER_Z_ORDER = {
+   ["base.chara"] = 2,
+   ["base.item"] = 1,
+   ["base.feat"] = 0
+}
+local LAYER_OFFSET_Y = {
+   ["base.chara"] = -16,
+   ["base.item"] = 0,
+   ["base.feat"] = 0
+}
+
 function chip_layer:update(dt, screen_updated, scroll_frames)
    if not screen_updated then return end
 
@@ -124,23 +140,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   local types = {
-      "base.chara",
-      "base.item",
-      "base.feat"
-   }
-   local layer_z_order = {
-      ["base.chara"] = 2,
-      ["base.item"] = 1,
-      ["base.feat"] = 0
-   }
-   local layer_offset_y = {
-      ["base.chara"] = -16,
-      ["base.item"] = 0,
-      ["base.feat"] = 0
-   }
-
-   local all = fun.iter(types)
+   local all = fun.iter(TYPES)
       :map(function(ty)
              return map:iter_memory(ty)
            end)
@@ -156,7 +156,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 
    for ind, stack in fun.chain(table.unpack(all)) do
       -- { 1, 600 } -> 600
-      local chip_type = types[ind[1]]
+      local chip_type = TYPES[ind[1]]
       ind = ind[2]
 
       local x = (ind-1) % map:width()
@@ -171,18 +171,19 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
             -- Normal chip.
             --
             local batch_ind = self.chip_batch_inds[i.uid]
-            local image = i.image
+            local image = i.drawable or i.image
             local x_offset = i.x_offset or 0
-            local y_offset = i.y_offset or 0 + layer_offset_y[chip_type]
+            local y_offset = i.y_offset or 0 + LAYER_OFFSET_Y[chip_type]
             if batch_ind == nil or batch_ind == 0 then
                -- tiles at the top of the screen should be drawn
                -- first, so they have the lowest z-order. conveniently
                -- this is already representable by tile indices since
                -- index 0 represents (0, 0), 1 represents (1, 0), and
                -- so on.
-               local z_order = ind + layer_z_order[chip_type]
+               local z_order = ind + LAYER_Z_ORDER[chip_type]
+               print("zorder", tostring(image):sub(1,20), chip_type, ind, LAYER_Z_ORDER[chip_type], z_order)
 
-               local ind = self.chip_batch:add_tile {
+               local new_ind = self.chip_batch:add_tile {
                   tile = image,
                   x = x,
                   y = y,
@@ -195,7 +196,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                -- Extra data needed for rendering non-chip things like
                -- the HP bar.
                self.chip_batch_inds[i.uid] = {
-                  ind = ind,
+                  ind = new_ind,
                   x = x,
                   y = y,
                   y_offset = y_offset,

@@ -118,11 +118,18 @@ function Repl.generate_env(locals)
    return env, history
 end
 
+local paused = false
+
 --- Stops execution at the point this function is called and starts
 --- the REPL with all local variables in scope captured in its
 --- environment. If any modifications are made to local variables,
 --- they will be reflected when execution resumes.
 function Repl.pause()
+   if paused then
+      return
+   end
+   paused = true
+
    local locals = repl.capture_locals(1)
    local repl_env, history = Repl.generate_env(locals)
 
@@ -141,9 +148,20 @@ function Repl.pause()
       color = {65, 17, 17, 192},
       message = mes
    }
-   require("api.gui.menu.ReplLayer"):new(repl_env, params):query(100000000) -- draw on top of everything
+
+   local ok, err = pcall(function()
+         require("api.gui.menu.ReplLayer")
+            :new(repl_env, params)
+            :query(100000000) -- draw on top of everything
+   end)
 
    repl.restore_locals(1, locals)
+
+   paused = false
+
+   if not ok then
+      error(err)
+   end
 end
 
 return Repl
