@@ -54,6 +54,7 @@ function DialogMenu:relayout()
 
    self.pages:relayout(self.x + 136, self.y + self.height - 56 - self.pages:len() * 19 + 4, self.width, self.height)
 
+   Draw.set_font(14)
    local _, wrapped = Draw.wrap_text(self.text, self.width - 200)
    self.wrapped = wrapped
 end

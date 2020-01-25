@@ -160,7 +160,7 @@ function IItem:produce_memory()
    return {
       uid = self.uid,
       show = require("api.Item").is_alive(self),
-      image = (self.image or "") .. "#1",
+      image = (self.image or ""),
       color = self:calc("color") or {255, 255, 255},
       x_offset = self:calc("x_offset") or 0,
       y_offset = self:calc("y_offset") or 0,
@@ -234,7 +234,7 @@ end
 
 function IItem:copy_image()
    local item_atlas = require("internal.global.atlases").get().item
-   return item_atlas:copy_tile_image(self:calc("image") .. "#1")
+   return item_atlas:copy_tile_image(self:calc("image") .. "#default")
 end
 
 function IItem:can_stack_with(other)

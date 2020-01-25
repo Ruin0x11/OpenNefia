@@ -124,7 +124,11 @@ local LAYER_OFFSET_Y = {
    ["base.feat"] = 0
 }
 
+local FRAME_LENGTH = 10
+
 function chip_layer:update(dt, screen_updated, scroll_frames)
+   self.chip_batch:update(dt)
+
    if not screen_updated then return end
 
    self.chip_batch.updated = true
@@ -224,7 +228,7 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                self:draw_drop_shadow(i, x, y)
             elseif shadow_type == "normal" then
                self.shadow_batch:add_tile {
-                  tile = "shadow#1",
+                  tile = "shadow",
                   x = x,
                   y = y,
                   y_offset = y_offset,

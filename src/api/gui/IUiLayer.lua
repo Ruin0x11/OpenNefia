@@ -1,4 +1,5 @@
 local Env = require("api.Env")
+local Event = require("api.Event")
 local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")

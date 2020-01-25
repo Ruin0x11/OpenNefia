@@ -38,7 +38,7 @@ function IFeat:produce_memory()
    return {
       uid = self.uid,
       show = not self:calc("is_invisible"),
-      image = (self:calc("image") or "") .. "#1"
+      image = (self:calc("image") or "")
    }
 end
 

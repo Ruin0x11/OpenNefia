@@ -1,6 +1,5 @@
 local Chara = require("api.Chara")
 local Event = require("api.Event")
-local Save = require("api.Save")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 local Input = require("api.Input")

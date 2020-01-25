@@ -84,7 +84,7 @@ function tile_overhang_layer:update(dt, screen_updated)
          if t.wall_kind ~= nil then
             local one_tile_up = map:tile(x, y-1)
             if one_tile_up ~= nil and one_tile_up.wall_kind == nil then
-               self.overhang_batch:update_tile(x, y, id .. "#1")
+               self.overhang_batch:update_tile(x, y, id)
                self.top_shadows[x+y*self.overhang_batch.width] = true
             else
                self.overhang_batch:update_tile(x, y, nil)

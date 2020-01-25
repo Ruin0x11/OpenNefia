@@ -50,6 +50,8 @@ local function calc_map_shadow(map, hour)
 end
 
 function tile_layer:update(dt, screen_updated)
+   self.tile_batch:update(dt)
+
    if not screen_updated then return end
 
    local map = Map.current()
@@ -70,9 +72,9 @@ function tile_layer:update(dt, screen_updated)
             end
          end
 
-         self.tile_batch:update_tile(x, y, id .. "#1")
+         self.tile_batch:update_tile(x, y, id)
       else
-         self.tile_batch:update_tile(x, y, map.default_tile .. "#1")
+         self.tile_batch:update_tile(x, y, map.default_tile)
       end
    end
 

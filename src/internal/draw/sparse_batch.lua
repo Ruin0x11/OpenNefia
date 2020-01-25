@@ -1,3 +1,4 @@
+local anim = require("internal.draw.anim")
 local Draw = require("api.Draw")
 local IBatch = require("internal.draw.IBatch")
 local IChipRenderable = require("api.gui.IChipRenderable")
@@ -58,8 +59,13 @@ function sparse_batch:add_tile(params)
    local z_order = params.z_order or 0
    self.ordering:insert(z_order, ind)
 
+   local tile = params.tile or ""
+   if type(params.tile) == "string" then
+      tile = self.atlas:make_anim(params.tile)
+   end
+
    params.color = params.color or {}
-   self.tiles[ind] = params.tile or ""
+   self.tiles[ind] = tile
    self.xcoords[ind] = params.x or 0
    self.ycoords[ind] = params.y or 0
    self.xoffs[ind] = params.x_offset or 0
@@ -109,6 +115,15 @@ function sparse_batch:set_tile_offsets(ind, ox, oy)
    self.xoffs[ind] = ox
    self.yoffs[ind] = oy
    self.updated = true
+end
+
+function sparse_batch:update(dt)
+   for _, t in pairs(self.tiles) do
+      if class.is_an(anim, t) then
+         local changed_frame = t:update(dt)
+         self.updated = changed_frame or self.updated
+      end
+   end
 end
 
 function sparse_batch:draw(x, y, offset_x, offset_y)
@@ -185,7 +200,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                else
                   batch:setColor(1, 1, 1)
                end
-               local tile_tbl = tiles[tile]
+               local tile_tbl = tiles[tile.image]
                if tile_tbl ~= nil then
                   local _, _, ttw, tth = tile_tbl.quad:getViewport()
                   batch:add(tile_tbl.quad,

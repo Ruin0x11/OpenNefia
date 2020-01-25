@@ -10,7 +10,7 @@ function tile_batch:init(width, height, atlas, coords, tile_width, tile_height, 
 
    self.shadow = 0
 
-   self.tiles = table.of(0, width * height)
+   self.tiles = {}
    self.batch = love.graphics.newSpriteBatch(atlas.image)
    self.updated = true
    self.tile_width = tile_width or self.atlas.tile_width
@@ -34,13 +34,28 @@ end
 
 function tile_batch:update_tile(x, y, tile)
    if x >= 0 and y >= 0 and x < self.width and y < self.height then
-      if self.atlas.tiles[tile] ~= nil then
-         self.tiles[y*self.width+x+1] = tile
+      if tile == nil then
+         self.tiles[y*self.width+x+1] = nil
       else
-         self.tiles[y*self.width+x+1] = 0
+         local t = self.tiles[y*self.width+x+1]
+         if t == nil or t.tile_id ~= tile then
+            self.tiles[y*self.width+x+1] = self.atlas:make_anim(tile)
+         end
       end
       self.updated = true
    end
+end
+
+function tile_batch:update(dt)
+   local D = require("api.Debug")
+   for i=1,self.width * self.height do
+      local t = self.tiles[i]
+      if t then
+         local changed_frame = t:update(dt)
+         self.updated = changed_frame or self.updated
+      end
+   end
+   D.print_end()
 end
 
 function tile_batch:draw(x, y)
@@ -63,9 +78,10 @@ function tile_batch:draw(x, y)
             for x=tx,tdx do
                if x >= 0 and x < self.width then
                   local tile = self_tiles[y*self.width+x+1]
-                  if tile ~= 0 then
+                  if tile ~= nil then
                      local i, j = self.coords:tile_to_screen(x - tx, y - ty)
-                     local tile_data = tiles[tile]
+                     local tile_data = tiles[tile.image]
+                     assert(tile_data, tostring(tile.image))
                      batch:add(tile_data.quad, i, j + tile_data.offset_y)
                   end
                end

@@ -293,7 +293,7 @@ function IChara:produce_memory()
       self.pcc.frame = self.turns_alive % 4 + 1
       image = self.pcc
    else
-      image = (self:calc("image") or "") .. "#1"
+      image = (self:calc("image") or "")
    end
 
    return {
@@ -330,7 +330,7 @@ function IChara:copy_image()
    end
 
    local chara_atlas = require("internal.global.atlases").get().chara
-   return chara_atlas:copy_tile_image(image .. "#1")
+   return chara_atlas:copy_tile_image(image .. "#default")
 end
 
 --- Copies this character's portrait.
@@ -343,7 +343,7 @@ function IChara:copy_portrait()
    end
 
    local portrait_atlas = require("internal.global.atlases").get().portrait
-   return portrait_atlas:copy_tile_image(portrait .. "#1")
+   return portrait_atlas:copy_tile_image(portrait .. "#default")
 end
 
 --- Iterates both the character's inventory and equipment.

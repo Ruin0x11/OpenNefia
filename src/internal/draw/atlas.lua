@@ -1,5 +1,7 @@
+local anim = require("internal.draw.anim")
 local asset_drawable = require("internal.draw.asset_drawable")
 local binpack = require("thirdparty.binpack")
+local Log = require("api.Log")
 
 local atlas = class.class("atlas")
 
@@ -12,14 +14,15 @@ function atlas:init(tile_width, tile_height)
    self.binpack = nil
    self.image_width = nil
    self.image_height = nil
+   self.anims = {}
 
    -- blank fallback in case of missing filepath.
    local fallback_data = love.image.newImageData(self.tile_width, self.tile_height)
    self.fallback = love.graphics.newImage(fallback_data)
 end
 
-function atlas:insert_tile(id, frame, filepath_or_data, load_tile)
-   local full_id = id .. "#" .. tostring(frame)
+function atlas:insert_tile(id, frame_id, filepath_or_data, load_tile)
+   local full_id = ("%s#%s"):format(id, frame_id)
    if self.tiles[full_id] then
       error("already loaded")
    end
@@ -80,20 +83,38 @@ function atlas:insert_tile(id, frame, filepath_or_data, load_tile)
    end
 end
 
+local DEFAULT_ANIMS = {
+   default = {
+      frames = {{id = "default", time = 1}}
+   }
+}
+
 function atlas:load_one(proto, draw_tile)
    local id = proto._id
    local images = proto.image
    if type(images) == "string"
       or class.is_an(asset_drawable, images)
    then
-      images = {images}
+      images = {default = images}
    end
 
    assert(type(images) == "table", inspect(proto))
 
-   for i, v in ipairs(images) do
-      self:insert_tile(id, i, v, draw_tile)
+   for frame_id, v in pairs(images) do
+      self:insert_tile(id, frame_id, v, draw_tile)
    end
+
+   local anims = proto.anim or table.deepcopy(DEFAULT_ANIMS)
+   if anims[1] then
+      local frames = anims
+      anims = {default = {frames = frames}}
+   end
+   for _, anim_data in pairs(anims) do
+      for _, frame in ipairs(anim_data.frames) do
+         frame.image = ("%s#%s"):format(id, frame.id)
+      end
+   end
+   self.anims[id] = anims
 end
 
 function atlas:load(protos, coords, cb)
@@ -122,7 +143,7 @@ function atlas:load(protos, coords, cb)
       cb(self, proto)
    end
 
-   print(("%d/%d tiles filled."):format(count, self.tile_count_x * self.tile_count_y))
+   Log.info("%d/%d tiles filled.", count, self.tile_count_x * self.tile_count_y)
 
    love.graphics.setCanvas()
 
@@ -130,6 +151,17 @@ function atlas:load(protos, coords, cb)
    canvas:release()
 
    self.batch = love.graphics.newSpriteBatch(self.image)
+end
+
+function atlas:make_anim(tile_id)
+   if tile_id == nil then
+      return nil
+   end
+
+   local anims = self.anims[tile_id]
+   assert(anims, tostring(tile_id))
+
+   return anim:new(anims, tile_id)
 end
 
 function atlas:copy_tile_image(tile_id)

@@ -1108,19 +1108,33 @@ local function gen_crop(list, source, folder)
       local x = (id % 33) * 48
       local y = math.floor(id / 33) * 48
 
-      local output = string.format("graphic/%s/%s.png", folder, v.name)
+      if v.count_x then
+         for i=1,v.count_x do
+            local output = string.format("graphic/%s/%s_%d.png", folder, v.name, i)
 
-      l[#l+1] = {
-         type = "crop",
-         source = source,
-         x = x,
-         y = y,
-         width = width,
-         height = height,
-         output = output,
-         count_x = v.count_x,
-         combine_multiple = true,
-      }
+            l[#l+1] = {
+               type = "crop",
+               source = source,
+               x = x,
+               y = y,
+               width = width,
+               height = height,
+               output = output
+            }
+         end
+      else
+         local output = string.format("graphic/%s/%s.png", folder, v.name)
+
+         l[#l+1] = {
+            type = "crop",
+            source = source,
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            output = output
+         }
+      end
    end
 
    return l

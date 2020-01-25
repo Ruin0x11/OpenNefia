@@ -65,7 +65,7 @@ local SANDBOX_GLOBALS = {
    "fun",
    "help",
    "pause",
-   "_ppr"
+   "_ppr",
 }
 
 local UNSAFE_HOTLOAD_PATHS = {

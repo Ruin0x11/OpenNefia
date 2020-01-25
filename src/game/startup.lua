@@ -18,7 +18,7 @@ local startup = {}
 local progress_step = 0
 local status = ""
 function startup.get_progress()
-   return status, progress_step, 12
+   return status, progress_step, 13
 end
 
 local function progress(_status)
@@ -69,13 +69,15 @@ function startup.run_all(mods)
 end
 
 function startup.run(mods)
-   progress("Loading documentation...")
-
-   doc.load(alias_api_tables)
+   progress("Loading early modules...")
 
    -- Wrap these functions to allow hotloading via table access.
    rawset(_G, "help", function(...) return Doc.help(...) end)
    rawset(_G, "pause", function(...) return Repl.pause(...) end)
+
+   progress("Loading documentation...")
+
+   doc.load(alias_api_tables)
 
    if rawget(_G, "jit") and jit.status() == false then
       Log.warn("JIT compiler is _off_ due to sethook/debug settings.")
