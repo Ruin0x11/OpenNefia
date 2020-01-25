@@ -1115,7 +1115,7 @@ local function gen_crop(list, source, folder)
             l[#l+1] = {
                type = "crop",
                source = source,
-               x = x,
+               x = x + ((i-1) * width),
                y = y,
                width = width,
                height = height,

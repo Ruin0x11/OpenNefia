@@ -91,8 +91,9 @@ end
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
    if (table.count(self.quads) == 0 or width or height) then
       -- BUG: These regions are global to all assets. What happens is
-      -- an asset that is loaded on one layer igets modified when
+      -- an asset that is loaded on one layer gets modified when
       -- another layer draws and it glitches out.
+      -- TODO: rewrite this. it leaks memory also.
       local regions = self.regions
       if type(self.regions) == "function" then
          local width = width or self.image:getWidth()

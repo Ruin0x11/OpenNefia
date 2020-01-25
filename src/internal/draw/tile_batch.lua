@@ -34,20 +34,15 @@ end
 
 function tile_batch:update_tile(x, y, tile)
    if x >= 0 and y >= 0 and x < self.width and y < self.height then
-      if tile == nil then
-         self.tiles[y*self.width+x+1] = nil
-      else
-         local t = self.tiles[y*self.width+x+1]
-         if t == nil or t.tile_id ~= tile then
-            self.tiles[y*self.width+x+1] = self.atlas:make_anim(tile)
-         end
+      local t = self.tiles[y*self.width+x+1]
+      if t == nil or t.tile_id ~= tile then
+         self.tiles[y*self.width+x+1] = self.atlas:make_anim(tile)
       end
       self.updated = true
    end
 end
 
 function tile_batch:update(dt)
-   local D = require("api.Debug")
    for i=1,self.width * self.height do
       local t = self.tiles[i]
       if t then
@@ -55,7 +50,6 @@ function tile_batch:update(dt)
          self.updated = changed_frame or self.updated
       end
    end
-   D.print_end()
 end
 
 function tile_batch:draw(x, y)

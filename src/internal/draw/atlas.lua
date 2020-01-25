@@ -24,7 +24,7 @@ end
 function atlas:insert_tile(id, frame_id, filepath_or_data, load_tile)
    local full_id = ("%s#%s"):format(id, frame_id)
    if self.tiles[full_id] then
-      error("already loaded")
+      error(string.format("tile %s already loaded", full_id))
    end
 
    local tile
@@ -83,28 +83,26 @@ function atlas:insert_tile(id, frame_id, filepath_or_data, load_tile)
    end
 end
 
-local DEFAULT_ANIMS = {
-   default = {
-      frames = {{id = "default", time = 1}}
-   }
-}
-
-function atlas:load_one(proto, draw_tile)
+function atlas:insert_anim(proto, images)
    local id = proto._id
-   local images = proto.image
-   if type(images) == "string"
-      or class.is_an(asset_drawable, images)
-   then
-      images = {default = images}
+   local anims = proto.anim
+   if anims == nil then
+      local frames = {}
+      for i=1,table.count(images) do
+         local frame_id = "default"
+         if i > 1 then
+            frame_id = "default_" .. i
+         end
+         if images[frame_id] then
+            frames[#frames+1] = { id = frame_id, time = 0.25 }
+         else
+            break
+         end
+      end
+      assert(#frames > 0)
+      anims = {default = {frames = frames}}
    end
 
-   assert(type(images) == "table", inspect(proto))
-
-   for frame_id, v in pairs(images) do
-      self:insert_tile(id, frame_id, v, draw_tile)
-   end
-
-   local anims = proto.anim or table.deepcopy(DEFAULT_ANIMS)
    if anims[1] then
       local frames = anims
       anims = {default = {frames = frames}}
@@ -115,6 +113,49 @@ function atlas:load_one(proto, draw_tile)
       end
    end
    self.anims[id] = anims
+end
+
+function atlas:load_one(proto, draw_tile)
+   local id = proto._id
+   local images = proto.image
+
+   if type(images) == "table"
+      and (type(images[1]) == "string"
+              or class.is_an(asset_drawable, images[1]))
+   then
+      local new_images = {}
+      for i, image_file in ipairs(images) do
+         local frame_id = "default"
+         if i > 1 then
+            frame_id = "default_" .. i
+         end
+         print(frame_id, image_file)
+         new_images[frame_id] = image_file
+      end
+      images = new_images
+   elseif type(images) == "string"
+      or class.is_an(asset_drawable, images)
+   then
+      images = {default = images}
+   end
+
+   assert(type(images) == "table")
+   assert(images.default, id .. " must have 'default' image")
+
+   for frame_id, v in pairs(images) do
+      self:insert_tile(id, frame_id, v, draw_tile)
+   end
+
+   self:insert_anim(proto, images)
+end
+
+function atlas:hotload(proto)
+   -- TODO
+   -- make atlas image into canvas
+   -- if new prototype, attempt to fit sprite into atlas
+   -- if existing, find location of sprite and overwrite it
+   -- insert/update anim
+   -- same logic as :load() except without wiping everything
 end
 
 function atlas:load(protos, coords, cb)
@@ -159,9 +200,16 @@ function atlas:make_anim(tile_id)
    end
 
    local anims = self.anims[tile_id]
-   assert(anims, tostring(tile_id))
+   assert(anims)
 
    return anim:new(anims, tile_id)
+end
+
+function atlas:update_anim(the_anim, tile_id)
+   local anims = self.anims[tile_id]
+   assert(anims)
+
+   the_anim:init(anims, tile_id)
 end
 
 function atlas:copy_tile_image(tile_id)

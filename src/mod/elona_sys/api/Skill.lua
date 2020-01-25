@@ -404,9 +404,6 @@ end
 function Skill.grow_primary_skills(chara)
    local function grow(skill)
       chara:mod_base_skill_level(skill, Rand.rnd(3), "add")
-      if chara:base_skill_level(skill) > 2000 then
-         chara:mod_base_skill_level(skill, 2000)
-      end
    end
 
    for _, stat in Skill.iter_stats() do

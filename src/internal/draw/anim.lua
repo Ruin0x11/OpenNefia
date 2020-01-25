@@ -22,7 +22,6 @@ function anim:set_anim(id)
    self.frame = 1
    self.time_left = self.anims[self.anim_id].frames[self.frame].time
    self.image = self.anims[self.anim_id].frames[self.frame].image
-   assert(self.image, self.frame .. self.anim_id .. inspect(self.anims))
 end
 
 function anim:step_anim()
@@ -36,7 +35,17 @@ function anim:step_anim()
    end
    self.time_left = self.time_left + anim_data.frames[self.frame].time
    self.image = anim_data.frames[self.frame].image
-   assert(self.image, self.frame .. self.anim_id .. inspect(self.anims))
+
+   local D = require("api.Debug")
+
+   if self.tile_id == "elona.item_campfire" then
+      if self.image ~= image then
+         D.print("NEXT", self.image, image, self.tile_id)
+      else
+         D.print("no", self.image, image, self.tile_id)
+      end
+      D.print_end()
+   end
 
    return self.image ~= image
 end

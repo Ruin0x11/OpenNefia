@@ -128,6 +128,7 @@ local FRAME_LENGTH = 10
 
 function chip_layer:update(dt, screen_updated, scroll_frames)
    self.chip_batch:update(dt)
+   self.drop_shadow_batch:update(dt)
 
    if not screen_updated then return end
 

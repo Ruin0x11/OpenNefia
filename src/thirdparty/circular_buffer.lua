@@ -48,6 +48,36 @@ function circular_buffer:get(i)
     end
 end
 
+local function iter(state, i)
+   if i >= #state.history then
+      return nil
+   end
+
+   i = i + 1
+   local value = circular_buffer.get(state, i)
+
+   return i, value
+end
+
+local function iter_reverse(state, i)
+   if i >= #state.history then
+      return nil
+   end
+
+   i = i + 1
+   local value = circular_buffer.get(state, -i)
+
+   return i, value
+end
+
+function circular_buffer:iter()
+   return iter, self, 1
+end
+
+function circular_buffer:iter_reverse()
+   return iter_reverse, self, 1
+end
+
 function circular_buffer:__len()
     return #(self.history)
 end

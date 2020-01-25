@@ -507,7 +507,7 @@ local function my_start(self, player)
       chara.pcc.dir = 4
    end
 
-   Chara.iter():each(set_pcc)
+   set_pcc(Chara.player())
 end
 
 local function init_bells(self, player)

@@ -1387,12 +1387,8 @@ local function make_chip_group(chips, group)
       chip.group = group
       if chip.count_x then
          chip.image = {}
-         chip.anim = {}
-         local time = 0.25
          for frame=1, chip.count_x do
-            local id = "frame_" .. frame
-            chip.image[id] = string.format("mod/elona/graphic/%s/%s_%d.png", group, chip.name, frame)
-            chip.anim[#chip.anim+1] = {id = id, time = time}
+            chip.image[#chip.image+1] = string.format("mod/elona/graphic/%s/%s_%d.png", group, chip.name, frame)
          end
       else
          chip.image = string.format("mod/elona/graphic/%s/%s.png", group, chip.name)

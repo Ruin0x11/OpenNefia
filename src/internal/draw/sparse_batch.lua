@@ -23,6 +23,7 @@ function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.z_orders = {}
 
    self.free_indices = {}
+   self.free_anims = {}
 
    self.batches = {}
    self.drawables = {}
@@ -61,7 +62,13 @@ function sparse_batch:add_tile(params)
 
    local tile = params.tile or ""
    if type(params.tile) == "string" then
-      tile = self.atlas:make_anim(params.tile)
+      local the_anim = table.remove(self.free_anims)
+      if the_anim == nil then
+         the_anim = self.atlas:make_anim(params.tile)
+      else
+         self.atlas:update_anim(the_anim, params.tile)
+      end
+      tile = the_anim
    end
 
    params.color = params.color or {}
@@ -80,13 +87,23 @@ function sparse_batch:add_tile(params)
 end
 
 function sparse_batch:remove_tile(ind)
+   local tile = self.tiles[ind]
    self.tiles[ind] = 0
    table.insert(self.free_indices, ind)
+   if class.is_an(anim, tile) then
+      table.insert(self.free_anims, tile)
+   end
    assert(self.ordering:delete(self.z_orders[ind], ind))
    self.updated = true
 end
 
 function sparse_batch:clear()
+   for _, tile in pairs(self.tiles) do
+      if class.is_an(anim, tile) then
+         table.insert(self.free_anims, tile)
+      end
+   end
+
    self.tiles = {}
    self.xcoords = {}
    self.ycoords = {}

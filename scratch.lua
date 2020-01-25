@@ -1,17 +1,12 @@
-local Chara = require("api.Chara")
-local Pcc = require("api.gui.Pcc")
+local Skill = require("mod.elona_sys.api.Skill")
 
-Chara.player().pcc = Pcc:new {
-   {
-      id = "elona.etc_10",
-      z_order = 100
-   },
-   {
-      id = "elona.body_1",
-      z_order = 0
-   },
-   {
-      id = "elona.eye_1",
-      z_order = 10
-   }
-}
+function mkdood(chara, levels)
+   local chara = Chara.create(chara or "prinny.prinny")
+
+   levels = levels or 10
+   for _= 1, levels do
+      Skill.gain_level(chara)
+      Skill.grow_primary_skills(chara)
+   end
+   return chara
+end

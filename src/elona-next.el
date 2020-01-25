@@ -522,6 +522,10 @@
   (interactive)
   (elona-next--send-to-repl (buffer-substring (line-beginning-position) (line-end-position))))
 
+(defun elona-next-eval-buffer ()
+  (interactive)
+  (elona-next--send-to-repl (buffer-string)))
+
 (defun elona-next--dotted-symbol-at-point ()
   (interactive)
   (with-syntax-table (copy-syntax-table)
