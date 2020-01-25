@@ -3,6 +3,8 @@
 local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
 
+local MAX_LEVEL = 2000
+
 function ICharaSkills:init()
    self.skills = self.skills or {}
    self.magic = self.magic or {}
@@ -66,7 +68,9 @@ local function generate_methods(iface, name, field, ty)
          }
 
       if self[field][skill].level == 0 then
-         self[field][skill].level = level or 1
+         level = level or 1
+         level = math.clamp(level, 1, MAX_LEVEL)
+         self[field][skill].level = level
       end
    end
 
@@ -77,7 +81,7 @@ local function generate_methods(iface, name, field, ty)
       end
 
       local s = self[field][skill]
-      s.level = math.floor(level or s.level)
+      s.level = math.clamp(math.floor(level or s.level), 0, MAX_LEVEL)
       s.potential = math.floor(potential or s.potential)
       s.experience = math.floor(experience or s.experience)
    end
@@ -106,7 +110,11 @@ local function generate_methods(iface, name, field, ty)
          if not self["has_" .. name](self, skill) then
             return
          end
-         return self:mod(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local result = self:mod(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local level = self.temp[field][skill][subfield]
+         level = math.clamp(level, 0, MAX_LEVEL)
+         self.temp[field][skill][subfield] = level
+         return result
       end
       -- self:mod_base_skill_level(skill, level, "add")
       iface["mod_base_" .. name .. "_" .. subfield] = function(self, skill, amount, op)
@@ -114,7 +122,11 @@ local function generate_methods(iface, name, field, ty)
          if not self["has_" .. name](self, skill) then
             self["gain_" .. name](self, skill)
          end
-         return self:mod_base(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local result = self:mod_base(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local level = self[field][skill][subfield]
+         level = math.clamp(level, 0, MAX_LEVEL)
+         self[field][skill][subfield] = level
+         return result
       end
    end
 end
