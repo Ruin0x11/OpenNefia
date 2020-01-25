@@ -1205,7 +1205,7 @@ function Dungeon.gen_type_10(rooms, params)
       if map:tile(x, y)._id ~= "elona.mapgen_tunnel" then
          return
       end
-      if Feat.at(x, y):length() > 0 then
+      if Feat.at(x, y, map):length() > 0 then
          return
       end
 

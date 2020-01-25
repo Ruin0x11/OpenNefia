@@ -301,7 +301,9 @@ local function generate_dungeon(self, params, opts)
    -- HACK: Block the starting position so nothing gets generated there.
    -- This was done in Elona by just placing the player on the stairs
    -- in the map during the generation routine.
-   local block = Feat.create("elona.mapgen_block", dungeon.player_start_pos.x, dungeon.player_start_pos.y, {}, dungeon)
+   local feats = Feat.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y, dungeon)
+   assert(feats:length() == 1, table.concat(feats:extract("_id"):to_list()))
+   local block = assert(Feat.create("elona.mapgen_block", dungeon.player_start_pos.x, dungeon.player_start_pos.y, {}, dungeon))
    assert(not Map.can_access(dungeon.player_start_pos.x, dungeon.player_start_pos.y, dungeon))
 
    if template.after_generate then

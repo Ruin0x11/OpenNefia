@@ -298,18 +298,31 @@ end
 
 -- Function called when an error is caught by the main loop.
 function draw.draw_error(err)
+   if handler then
+      handler:halt_input()
+   end
    draw.draw_start(error_canvas)
    love.graphics.draw(canvas)
    love.graphics.setColor(0, 0, 0, 128/256)
    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
-   err = err .. "\n\nStrike [Enter] or send code to continue, [Backspace] to exit current layer."
+   local x = 70
+   local y = 70
 
-   local pos = 70
+   local _, lines = love.graphics.getFont():getWrap(err, love.graphics.getWidth() - x)
+
+   lines[#lines+1] = ""
+   lines[#lines+1] = ""
+   lines[#lines+1] = "Strike [Enter] or send code to continue, [Backspace] to exit current layer."
+
    draw.set_font(14)
    love.graphics.origin()
    love.graphics.setColor(1, 1, 1, 1)
-   love.graphics.print(err, pos, pos)
+
+   for _, line in ipairs(lines) do
+      love.graphics.print(line, x, y)
+      y = y + love.graphics.getFont():getHeight()
+   end
 
    draw.draw_end(error_canvas)
 end

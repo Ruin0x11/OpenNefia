@@ -7,6 +7,9 @@ function mkdood(chara, levels)
    for _= 1, levels do
       Skill.gain_level(chara)
       Skill.grow_primary_skills(chara)
+      if _ > 100 then
+         require("api.Debug").print_end()
+      end
    end
    return chara
 end

@@ -704,7 +704,7 @@ function Map.travel_to(map_or_uid, params)
       assert(map.generated_with)
       local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
       if not success then
-         error(err)
+         error("\n\t" .. err)
       end
 
       local new_map = err

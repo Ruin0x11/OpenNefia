@@ -41,12 +41,16 @@ end
 ---  - ownerless (bool): Do not attach the feat to a map. If true, then `where` is ignored.
 ---  - no_build (bool): Do not call :build() on the object.
 ---  - approximate_pos (bool): If position is not accessable, put the feat somewhere close.
+---  - allow_stacking (bool): If true, ignore items on the ground when
+---    checking for tile openness.
 --- @tparam[opt] ILocation where Where to instantiate this feat.
 ---   Defaults to the current map.
 --- @treturn[opt] IFeat
 --- @treturn[opt] string error
 function Feat.create(id, x, y, params, where)
    params = params or {}
+   params.allow_stacking = params.allow_stacking or true
+   params.approximate_pos = params.approximate_pos or false
 
    if params.ownerless then
       where = nil
@@ -60,7 +64,7 @@ function Feat.create(id, x, y, params, where)
 
    if where and where:is_positional() then
       if x == nil or params.approximate_pos then
-         x, y = Map.find_free_position(x, y, {only_map=true, allow_stacking=true}, where)
+         x, y = Map.find_free_position(x, y, {only_map=true, allow_stacking=params.allow_stacking}, where)
       end
       if not x then
          return nil, "out of bounds"
