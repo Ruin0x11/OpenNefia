@@ -126,7 +126,8 @@ end
 --- @tparam string msg
 function Gui.report_error(err, msg)
    msg = msg or "Error"
-   Gui.mes(string.format("%s: %s", msg, string.split(err)[1]), "Red")
+   Gui.mes_newline()
+   Gui.mes_c(string.format("%s: %s", msg, string.split(err)[1]), "Red")
    Log.error("%s:\n\t%s", msg, err)
 end
 

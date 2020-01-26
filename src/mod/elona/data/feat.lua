@@ -213,6 +213,7 @@ local function gen_stair(down)
                     start_x = math.floor(map:width() / 2)
                     start_y = math.floor(map:height() / 2)
                  else
+                    Log.debug("Found stair at (%s,%s)", stair.x, stair.y)
                     start_x = stair.x
                     start_y = stair.y
                     stair.map_uid = self:current_map().uid
@@ -225,6 +226,9 @@ local function gen_stair(down)
                  maybe_regenerate = true,
                  feat = self
               }
+
+              Log.debug("Map starting params: %s %s", start_x, start_y)
+              Log.debug("My location: %s %s", self.x, self.y)
 
               Map.travel_to(map, params)
 

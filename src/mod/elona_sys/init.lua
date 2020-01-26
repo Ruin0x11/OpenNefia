@@ -184,7 +184,7 @@ Gui.bind_keys {
       Repl.query()
       return "player_turn_query"
    end,
-   escape = function()
+   quit = function()
       return Command.quit_game()
    end,
    help = function()

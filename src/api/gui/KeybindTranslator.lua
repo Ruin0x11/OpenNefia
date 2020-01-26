@@ -101,7 +101,12 @@ function KeybindTranslator:reload()
    for _, kb in pairs(keybinds) do
       if self.accepts[kb.action] then
          self:load_key(kb.primary, kb.action)
-         self:load_key(kb.alternate, kb.action)
+
+         if kb.alternate then
+            for _, key in ipairs(kb.alternate) do
+               self:load_key(key, kb.action)
+            end
+         end
       end
    end
 end

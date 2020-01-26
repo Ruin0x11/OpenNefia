@@ -5,7 +5,9 @@ local function add_keybinds(raw)
    local kbs = {}
    for id, default in pairs(raw) do
       if type(default) == "table" then
-         kbs[#kbs+1] = { _id = id, default = default[1], default_alternate = default[2] }
+         local rest = table.deepcopy(default)
+         table.remove(rest, 1)
+         kbs[#kbs+1] = { _id = id, default = default[1], default_alternate = rest }
       else
          kbs[#kbs+1] = { _id = id, default = default }
       end
@@ -13,10 +15,11 @@ local function add_keybinds(raw)
    data:add_multi("base.keybind", kbs)
 end
 
-add_keybinds {
+local keybinds = {
    --cancel = "shift",
    cancel = "lshift",
    escape = "escape",
+   quit = "escape",
    north = {"up", "kp8"},
    south = {"down", "kp2"},
    west = {"left", "kp4"},
@@ -61,7 +64,7 @@ add_keybinds {
    offer = "O",
    journal = "j",
    material = "m",
-   quick = "z",
+   quick_menu = "z",
    trait = "F",
    look = "l",
    give = "G",
@@ -74,12 +77,13 @@ add_keybinds {
    quick_inv = "x",
    quicksave = "f2",
    quickload = "f3",
+   alt_movement = "alt",
 
    repl = "`",
    repl_page_up = "pageup",
    repl_page_down = "pagedown",
    repl_first_char = "home",
-   repl_last_char = "home",
+   repl_last_char = "end",
    repl_paste = "ctrl_v",
    repl_cut = "ctrl_x",
    repl_copy = "ctrl_c",
@@ -87,8 +91,42 @@ add_keybinds {
    repl_complete = "tab",
 }
 
+local dualshock = {
+   north = {"joystick_14", "joystick_axis_2_-"},
+   south = {"joystick_15", "joystick_axis_2_+"},
+   west = {"joystick_16", "joystick_axis_1_-"},
+   east = {"joystick_17", "joystick_axis_1_+"},
+   enter = "joystick_2",
+   quick_inv = "joystick_3",
+   fire = "joystick_6",
+   quick_menu = "joystick_4",
+   escape = "joystick_1",
+   quit = "joystick_10",
+   get = "joystick_1",
+   target = "joystick_5",
+   previous_page = "joystick_5",
+   next_page = "joystick_6",
+   identify = "joystick_4",
+}
+
+for action, keys in pairs(dualshock) do
+   if type(keys) == "string" then
+      keys = {keys}
+   end
+
+   if type(keybinds[action]) == "string" then
+      keybinds[action] = {keybinds[action]}
+   end
+
+   for _, key in ipairs(keys) do
+      table.insert(keybinds[action], key)
+   end
+end
+
+add_keybinds(keybinds)
+
 if Env.is_hotloading() then
-   local keybinds = {}
+   local kbs = {}
    for _, kb in data["base.keybind"]:iter() do
       local id = kb._id
 
@@ -98,12 +136,12 @@ if Env.is_hotloading() then
          id = string.split(id, ".")[2]
       end
 
-      keybinds[#keybinds+1] = {
+      kbs[#kbs+1] = {
          action = id,
          primary = kb.default,
          alternate = kb.default_alternate,
       }
    end
-   config["base.keybinds"] = keybinds
+   config["base.keybinds"] = kbs
    Input.reload_keybinds()
 end

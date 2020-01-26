@@ -309,6 +309,10 @@ function Map.calc_start_position(chara, previous_map, feat, map)
    if type(map.player_start_pos) == "table" then
       x = map.player_start_pos.x
       y = map.player_start_pos.y
+   elseif type(map.player_start_pos) == "string" then
+      x, y = data["base.map_entrance"]
+         :ensure(map.player_start_pos)
+         .pos(chara, previous_map, feat)
    elseif type(map.player_start_pos) == "function" then
       x, y = map:player_start_pos(chara, previous_map, feat)
    else
@@ -704,7 +708,7 @@ function Map.travel_to(map_or_uid, params)
       assert(map.generated_with)
       local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
       if not success then
-         error("\n\t" .. err)
+         error("\n\t" .. err, 0)
       end
 
       local new_map = err
@@ -718,6 +722,11 @@ function Map.travel_to(map_or_uid, params)
 
       new_map.uid = map.uid
       map = new_map
+
+      -- Ignore start_x and start_y, since this is a completely new
+      -- map.
+      params.start_x = nil
+      params.start_y = nil
    end
 
    local x, y = 0, 0

@@ -247,16 +247,14 @@ function MapArea.load_map_of_entrance(feat, associate)
       success, map = Map.generate(gen_id, gen_params, gen_opts)
 
       if not success then
-         local mes = "Couldn't generate map: " .. map
-         Log.error(mes)
-         return false, mes
+         local err = map
+         return false, err
       end
    else
       success, map = Map.load(feat.map_uid)
       if not success then
-         local mes = "Couldn't load map: " .. map
-         Log.error(mes)
-         return false, mes
+         local err = map
+         return false, err
       end
    end
 

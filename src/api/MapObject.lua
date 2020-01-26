@@ -92,7 +92,7 @@ function MapObject.clone(obj, owned)
       local x = new_object.x or 0
       local y = new_object.y or 0
 
-      if not obj.location.can_take_object(new_object, x, y) then
+      if not obj.location:can_take_object(new_object, x, y) then
          Log.warn("Tried to clone object %d (%s), but the location %s couldn't take the object.",
                   obj.uid, obj._type, tostring(obj.location))
          new_object:remove_ownership()

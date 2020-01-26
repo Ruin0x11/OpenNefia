@@ -2,7 +2,6 @@ local Feat = require("api.Feat")
 local Chara = require("api.Chara")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Charagen = require("mod.tools.api.Charagen")
-local Pos = require("api.Pos")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
@@ -10,7 +9,6 @@ local Filters = require("mod.elona.api.Filters")
 local Calc = require("mod.elona.api.Calc")
 local Log = require("api.Log")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
-local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 data:add_type {
    name = "dungeon_template",
@@ -71,10 +69,7 @@ local function mark_stairs(map)
    local up = map:iter_feats():filter(pred):nth(1)
    if up then
       up.label = "stairs_up"
-      return { x = up.x, y = up.y }
    end
-
-   return nil
 end
 
 local function generate_dungeon_raw(template, gen_params, opts)
@@ -276,15 +271,12 @@ local function generate_dungeon(self, params, opts)
    dungeon.dungeon_level = params.dungeon_level
    assert(dungeon.dungeon_level)
 
-   local start_pos = mark_stairs(dungeon)
+   local start_x
+   local start_y
 
-   if start_pos then
-      dungeon.player_start_pos = start_pos
-   else
-      dungeon.player_start_pos = { math.floor(dungeon:width() / 2), math.floor(dungeon:height() / 2) }
-   end
+   assert(start_x and start_y)
 
-   local template = data["elona.dungeon_template"]:ensure(params.id)
+   data["elona.dungeon_template"]:ensure(params.id)
 
    Log.info("Populating dungeon rooms.")
    populate_rooms(dungeon, template, gen_params)
@@ -301,10 +293,10 @@ local function generate_dungeon(self, params, opts)
    -- HACK: Block the starting position so nothing gets generated there.
    -- This was done in Elona by just placing the player on the stairs
    -- in the map during the generation routine.
-   local feats = Feat.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y, dungeon)
+   local feats = Feat.at(start_x, start_y, dungeon)
    assert(feats:length() == 1, table.concat(feats:extract("_id"):to_list()))
-   local block = assert(Feat.create("elona.mapgen_block", dungeon.player_start_pos.x, dungeon.player_start_pos.y, {}, dungeon))
-   assert(not Map.can_access(dungeon.player_start_pos.x, dungeon.player_start_pos.y, dungeon))
+   local block = assert(Feat.create("elona.mapgen_block", start_x, start_y, {}, dungeon))
+   assert(not Map.can_access(start_x, start_y, dungeon))
 
    if template.after_generate then
       template.after_generate(dungeon)
@@ -362,7 +354,10 @@ local function generate_dungeon(self, params, opts)
    if block then
       block:remove_ownership()
    end
-   assert(Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y) == nil, "chara at")
+   local chara = Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y)
+   if chara then
+      error("chara exists on start pos: " .. chara._id)
+   end
 
    dungeon.can_exit_from_edge = false
 

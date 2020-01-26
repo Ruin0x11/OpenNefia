@@ -200,14 +200,20 @@ function atlas:make_anim(tile_id)
    end
 
    local anims = self.anims[tile_id]
-   assert(anims)
+   if not anims then
+      Log.warn("Missing animation for '%s'", tile_id)
+      return
+   end
 
    return anim:new(anims, tile_id)
 end
 
 function atlas:update_anim(the_anim, tile_id)
    local anims = self.anims[tile_id]
-   assert(anims)
+   if not anims then
+      Log.warn("Missing animation for '%s' (update)", tile_id)
+      return
+   end
 
    the_anim:init(anims, tile_id)
 end

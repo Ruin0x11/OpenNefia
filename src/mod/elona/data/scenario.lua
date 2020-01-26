@@ -2,7 +2,6 @@ local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Item = require("api.Item")
 local MapArea = require("api.MapArea")
-local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
@@ -101,7 +100,7 @@ local function start(self, player)
    -- Save the world map since the entrances on it were modified.
    Map.save(world_map)
 
-   local x, y = MapEntrance.center(home, player)
+   local x, y = data["base.map_entrance"]["base.center"].pos(player, home)
    assert(Map.current():take_object(player, x, y))
    initialize_player(player)
 

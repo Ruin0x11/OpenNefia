@@ -375,3 +375,10 @@ data:add_type {
       image = schema.String
    }
 }
+
+data:add_type {
+   name = "map_entrance",
+   schema = schema.Record {
+      pos = schema.Function
+   }
+}

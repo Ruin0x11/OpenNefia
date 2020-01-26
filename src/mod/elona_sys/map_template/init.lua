@@ -84,7 +84,7 @@ local function generate_from_map_template(self, params, opts)
 
    local success, map = Map.generate(generator.generator, new_params, opts)
    if not success then
-      error("Could not generate map:\n\t" .. map)
+      error(map, 0)
    end
 
    local generator_data = data["base.map_generator"]:ensure(generator.generator)

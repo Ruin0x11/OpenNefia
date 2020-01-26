@@ -13,3 +13,14 @@ function mkdood(chara, levels)
    end
    return chara
 end
+
+function posses()
+   local p = Chara.player()
+   local down = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_up" end):nth(1)
+   local up = Map.current():iter_feats():filter(function(f) return f._id == "elona.stairs_down" end):nth(1)
+   return {
+      player = {p.x, p.y},
+      up = {up.x, up.y},
+      down = {down.x, down.y},
+   }
+end

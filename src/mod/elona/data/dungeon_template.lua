@@ -12,6 +12,7 @@ data:add(
       generate = Dungeon.gen_type_1
    }
 )
+
 data:add(
    {
       _id = "type_2",

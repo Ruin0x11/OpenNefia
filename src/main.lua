@@ -57,6 +57,8 @@ local function start_halt()
 end
 
 function love.update(dt)
+   input.poll_joystick_axes()
+
    fps:update(dt)
 
    if draw.needs_wait() then
@@ -155,5 +157,8 @@ love.mousereleased = input.mousereleased
 
 love.keypressed = input.keypressed
 love.keyreleased = input.keyreleased
+
+love.joystickpressed = input.joystickpressed
+love.joystickreleased = input.joystickreleased
 
 love.textinput = input.textinput

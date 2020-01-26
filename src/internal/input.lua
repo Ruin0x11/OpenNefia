@@ -70,6 +70,55 @@ function input.keyreleased(key, scancode)
    end
 end
 
+local joystick_deadzone = 0.75
+local joystick_axes = {}
+
+-- Joystick axes will never trigger LÖVE events, hence this function.
+function input.poll_joystick_axes()
+   local joystick = love.joystick.getJoysticks()[1]
+   if joystick == nil then
+      joystick_axes = {}
+      return
+   end
+
+   for axis = 1, joystick:getAxisCount() do
+      local value = joystick:getAxis(axis)
+      local current = joystick_axes[axis]
+      if current ~= "+" and value > joystick_deadzone then
+         if current == "-" then
+            input.joystickreleased(joystick, "axis_" .. axis .. "_-")
+         end
+         input.joystickpressed(joystick, "axis_" .. axis .. "_+")
+         joystick_axes[axis] = "+"
+      elseif current ~= "-" and value < -joystick_deadzone then
+         if current == "+" then
+            input.joystickreleased(joystick, "axis_" .. axis .. "_+")
+         end
+         input.joystickpressed(joystick, "axis_" .. axis .. "_-")
+         joystick_axes[axis] = "-"
+      elseif value >= -joystick_deadzone and value <= joystick_deadzone then
+         if current == "+" then
+            input.joystickreleased(joystick, "axis_" .. axis .. "_+")
+         elseif current == "-" then
+            input.joystickreleased(joystick, "axis_" .. axis .. "_-")
+         end
+         joystick_axes[axis] = nil
+      end
+   end
+end
+
+function input.joystickpressed(joystick, button)
+   if key_handler then
+      key_handler:receive_key("joystick_" .. button, true, false, false)
+   end
+end
+
+function input.joystickreleased(joystick, button)
+   if key_handler then
+      key_handler:receive_key("joystick_" ..  button, false, false)
+   end
+end
+
 function input.textinput(text)
    if key_handler then
       key_handler:receive_key(text, true, true)
