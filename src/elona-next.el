@@ -6,6 +6,7 @@
 (require 'cl)
 (require 'flycheck)
 (require 'markdown-mode)
+(require 'help-mode)
 
 (defvar elona-next-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -161,6 +162,19 @@
      (1 font-lock-type-face nil noerror))
     ))
 
+(define-button-type 'elona-next-file
+  :supertype 'help-xref
+  'help-function (lambda (file line)
+                   (let ((path (string-join (list (projectile-project-root)
+                                                  "src/"
+                                                  file))))
+                     (pop-to-buffer (find-file-noselect path))
+                     (goto-line line)
+                     (recenter)))
+  'help-echo (purecopy "mouse-2, RET: find object's definition"))
+
+(defvar elona-next--file-regexp "defined in '\\(.*?\\)' on line \\([0-9]+\\)")
+
 (defun elona-next--format-help-buffer ()
   (save-excursion
     (beginning-of-buffer)
@@ -175,7 +189,11 @@
       (font-lock-fontify-region (point-min) (point-max))
       (beginning-of-buffer)
       (next-line 3)
-      (fill-region (point) (point-max)))))
+      (fill-region (point) (point-max))
+      (beginning-of-buffer)
+      (when (and (re-search-forward elona-next--file-regexp nil t)
+                 (match-string 1))
+        (help-xref-button 1 'elona-next-file (match-string 1) (string-to-number (match-string 2)))))))
 
 (defvar elona-next--signature-font-lock-keywords
   `((,(lua-rx line-start
