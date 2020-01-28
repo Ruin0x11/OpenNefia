@@ -64,14 +64,15 @@ function DialogMenu:draw()
    self.t.ie_chat:draw(self.x, self.y - 20, nil, nil, {255, 255, 255})
 
    if self.portrait then
-      self.portrait:draw(self.x + 42, self.y + 42, 80, 112)
+      Draw.chip(self.portrait, self.x + 42, self.y + 42, 80, 112, "portrait")
    elseif self.chara_image then
-      self.chara_image:draw(self.x + 82,
-                            self.y + 125, -- TODO offset_y
-                            self.chara_image:get_width() * 2,
-                            self.chara_image:get_height() * 2,
-                            nil,
-                            true)
+      Draw.chip(self.chara_image,
+                self.x + 82,
+                self.y + 125, -- TODO offset_y
+                self.chara_image:get_width() * 2,
+                self.chara_image:get_height() * 2,
+                nil,
+                true)
    end
 
    -- NOTE: ignored by Ui.draw_topic

@@ -320,32 +320,6 @@ function IChara:produce_locale_data()
    }
 end
 
---- Copies this character's chip image.
----
---- @treturn[opt] asset
-function IChara:copy_image()
-   local image = self:calc("image")
-   if image == nil or data["base.chip"][image] == nil then
-      return nil
-   end
-
-   local chara_atlas = require("internal.global.atlases").get().chara
-   return chara_atlas:copy_tile_image(image .. "#default")
-end
-
---- Copies this character's portrait.
----
---- @treturn[opt] asset
-function IChara:copy_portrait()
-   local portrait = self:calc("portrait")
-   if portrait == nil or data["base.portrait"][portrait] == nil then
-      return nil
-   end
-
-   local portrait_atlas = require("internal.global.atlases").get().portrait
-   return portrait_atlas:copy_tile_image(portrait .. "#default")
-end
-
 --- Iterates both the character's inventory and equipment.
 ---
 --- @treturn Iterator(IItem)

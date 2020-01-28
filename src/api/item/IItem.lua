@@ -232,11 +232,6 @@ function IItem:remove_activity()
    self.chara_using = nil
 end
 
-function IItem:copy_image()
-   local item_atlas = require("internal.global.atlases").get().item
-   return item_atlas:copy_tile_image(self:calc("image") .. "#default")
-end
-
 function IItem:can_stack_with(other)
    -- TODO: this gets super complicated when adding new fields. There
    -- should be a way to specify a field will not have any effect on

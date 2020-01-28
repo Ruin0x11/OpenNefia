@@ -250,6 +250,19 @@ function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, centered,
    return love.graphics.draw(image, quad, x, y, math.rad(rotation or 0), sx, sy)
 end
 
+local atlases = require("internal.global.atlases")
+
+function Draw.make_chip_batch(atlas)
+   local the_atlas = atlases.get()[atlas]
+   if not the_atlas then
+      error(("Atlas '%s' doesn't exist."):format(atlas))
+   end
+   return the_atlas:make_batch()
+end
+
+function Draw.chip(chip, x, y, width, height, color, centered, rotation)
+end
+
 --- Waits the specified number of milliseconds. Be careful with this
 --- function since you can easily freeze the game if the provided
 --- duration is too large.

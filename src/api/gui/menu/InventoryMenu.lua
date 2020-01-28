@@ -42,7 +42,7 @@ local UiListExt = function(inventory_menu)
 
       UiList.draw_select_key(self, entry, i, key_name, x, y)
 
-      entry.icon:draw(x - 21, y + 11, nil, nil, nil, true)
+      inventory_menu.chip_batch:add(entry.icon, x - 21, y + 11, nil, nil, nil, true)
 
       if entry.source.on_draw then
          entry.source:on_draw(x, y, entry.item, inventory_menu)
@@ -68,6 +68,11 @@ local UiListExt = function(inventory_menu)
 
       Draw.text(subtext, x + 516 - Draw.text_width(subtext), y + 2, color)
    end
+   function E:draw()
+      UiList.draw(self)
+      inventory_menu.chip_batch:draw()
+      inventory_menu.chip_batch:clear()
+   end
 
    return E
 end
@@ -90,6 +95,8 @@ function InventoryMenu:init(ctxt, returns_item)
    self.subtext_column = "subtext"
 
    self.result = nil
+
+   self.chip_batch = nil
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -145,6 +152,11 @@ function InventoryMenu:relayout(x, y)
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
 
+   if self.chip_batch then
+      self.chip_batch:release()
+   end
+   self.chip_batch = Draw.make_chip_batch("chip")
+
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 58, self.y + 60)
    self.win:set_pages(self.pages)
@@ -164,7 +176,7 @@ end
 function InventoryMenu:update_icons_this_page()
    for _, entry in self.pages:iter() do
       if not entry.icon then
-         entry.icon = entry.item:copy_image()
+         entry.icon = entry.item:calc("image")
       end
    end
 end
@@ -321,11 +333,7 @@ function InventoryMenu:update()
 end
 
 function InventoryMenu:release()
-   for _, entry in self.pages:iter() do
-      if entry.icon then
-         entry.icon:release()
-      end
-   end
+   self.chip_batch:release()
 end
 
 return InventoryMenu

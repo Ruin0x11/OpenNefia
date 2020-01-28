@@ -47,7 +47,7 @@ local UiListExt = function(equipment_menu)
       local subtext = entry.subtext
 
       if entry.equipped then
-         entry.icon:draw(x + 12, y + 10, nil, nil, {255, 255, 255}, true)
+         equipment_menu.chip_batch:add(entry.icon, x + 12, y + 10, nil, nil, {255, 255, 255}, true)
 
          if equipment_menu.layout then
             item_name, subtext = equipment_menu.layout:draw_row(entry.equipped, item_name, subtext, x, y)
@@ -57,7 +57,11 @@ local UiListExt = function(equipment_menu)
       UiList.draw_item_text(self, item_name, entry, i, x, y, 30, color)
 
       Draw.text(subtext, x + 530 - Draw.text_width(subtext), y + 2, color)
-
+   end
+   function E:draw()
+      UiList.draw(self)
+      equipment_menu.chip_batch:draw()
+      equipment_menu.chip_batch:clear()
    end
 
    return E
@@ -77,6 +81,8 @@ function EquipmentMenu:init(chara)
 
    self.stats = {}
    self.changed_equipment = false
+
+   self.chip_batch = nil
 
    self:update_from_chara()
 end
@@ -102,7 +108,7 @@ end
 function EquipmentMenu:refresh_item_icons()
    for _, entry in self.pages:iter() do
       if entry.equipped and not entry.icon then
-         entry.icon = entry.equipped:copy_image()
+         entry.icon = entry.equipped:calc("image")
       end
    end
 end
@@ -121,7 +127,7 @@ function EquipmentMenu:update_from_chara()
 
       if i.equipped then
          entry.equipped = i.equipped
-         entry.icon = i.equipped:copy_image()
+         entry.icon = i.equipped:calc("image")
          entry.color = i.equipped:calc_ui_color()
          entry.text = i.equipped:build_name()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
@@ -153,6 +159,11 @@ end
 function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
+
+   if self.chip_batch then
+      self.chip_batch:release()
+   end
+   self.chip_batch = Draw.make_chip_batch("chip")
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 88, self.y + 60, self.width, self.height)
@@ -220,6 +231,10 @@ function EquipmentMenu:update()
 
    self.win:update()
    self.pages:update()
+end
+
+function EquipmentMenu:release()
+   self.chip_batch:release()
 end
 
 return EquipmentMenu

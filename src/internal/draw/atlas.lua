@@ -1,5 +1,6 @@
 local anim = require("internal.draw.anim")
 local asset_drawable = require("internal.draw.asset_drawable")
+local atlas_batch = require("internal.draw.atlas_batch")
 local binpack = require("thirdparty.binpack")
 local Log = require("api.Log")
 
@@ -216,6 +217,10 @@ function atlas:update_anim(the_anim, tile_id)
    end
 
    the_anim:init(anims, tile_id)
+end
+
+function atlas:make_batch()
+   return atlas_batch:new(self)
 end
 
 function atlas:copy_tile_image(tile_id)

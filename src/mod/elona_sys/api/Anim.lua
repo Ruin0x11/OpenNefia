@@ -161,7 +161,11 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
          sy = sy - math.floor((start_y - end_y) * th / count)
 
          if is_in_screen(sx, sy) then
-            chip:draw(sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
+            if type(chip) == "string" then
+               Draw.chip(chip, sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
+            else
+               chip:draw(sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
+            end
 
          end
 

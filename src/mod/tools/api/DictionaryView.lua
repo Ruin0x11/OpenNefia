@@ -33,7 +33,7 @@ function DictionaryView:set_data(id)
    end
 
    if self.data then
-      self.image = Chara.create(id, nil, nil, {ownerless=true}):copy_image()
+      self.image = Chara.create(id, nil, nil, {ownerless=true}):calc("image")
    end
 end
 
@@ -57,10 +57,11 @@ function DictionaryView:draw()
    self.chip_bg:draw()
    if self.image then
       local offset_y = 0
-      if self.image:get_height() == 96 then
+      local is_tall = data["base.chip"][self.image].is_tall
+      if is_tall then
          offset_y = -24
       end
-      self.image:draw(self.x + self.width - 128 + 48, self.y + 48 + 72 + offset_y, nil, nil, {255, 255, 255}, true)
+      Draw.chip(self.image, self.x + self.width - 128 + 48, self.y + 48 + 72 + offset_y, nil, nil, {255, 255, 255}, true)
    end
 
    Draw.text(("ID: %s"):format(self.data._id), self.x + 38, self.y + 58, {0, 0, 0})

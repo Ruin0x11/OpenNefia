@@ -321,7 +321,13 @@ function field_logic.player_died()
       last_words = I18N.get("misc.death.dying_message", last_words)
    end
 
-   local result, canceled = DeathMenu:new({{ last_words = last_words, death_cause = "death cause", image = Chara.player():copy_image() }}):query()
+   local result, canceled = DeathMenu:new({
+         {
+            last_words = last_words,
+            death_cause = "death cause",
+            image = Chara.player():calc("image")
+         }
+   }):query()
    if canceled or result.index == 1 then
       revive_player()
       return "turn_begin"

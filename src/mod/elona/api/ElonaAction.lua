@@ -152,7 +152,7 @@ local function play_ranged_animation(start_x, start_y, end_x, end_y, attack_skil
          sound = "base.gun1"
       end
    else
-      chip = weapon:copy_image()
+      chip = weapon:calc("image")
       sound = "base.throw1"
    end
 

@@ -4,7 +4,11 @@ local Event = require("api.Event")
 Event.register("base.on_chara_killed", "Notify when dead",
                function(chara, params)
                   if chara:is_player() then
-                     Sstp.send("You died at the hands of \"" .. params.source.name .. "\"...")
+                     local name = "???"
+                     if params.source then
+                        name = params.source.name
+                     end
+                     Sstp.send("You died at the hands of \"" .. name .. "\"...")
                   end
 end)
 

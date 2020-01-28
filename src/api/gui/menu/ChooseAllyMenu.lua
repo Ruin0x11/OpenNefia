@@ -24,7 +24,7 @@ local UiListExt = function(choose_ally_menu)
    end
    function E:draw_item_text(text, entry, i, x, y, x_offset)
       if entry.kind == "ally" then
-         entry.icon:draw(x - 44, y + 8, nil, nil, entry.color, true)
+         Draw.chip(entry.icon, x - 44, y + 8, nil, nil, entry.color, true)
       end
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
@@ -77,7 +77,7 @@ function ChooseAllyMenu:populate_list()
          self.data[#self.data+1] = {
             kind = "ally",
             text = string.format("%s %s Lv.%s", ally.title, ally.name, ally:calc("level")),
-            icon = ally:copy_image(),
+            icon = ally:calc("image"),
             color = {255, 255, 255},
             info = "info",
             ally = ally

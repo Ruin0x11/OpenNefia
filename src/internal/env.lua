@@ -205,7 +205,7 @@ local function env_loadfile(path, mod_env)
    mod_env = mod_env or _G
    setfenv(chunk, mod_env)
 
-   local success, err = xpcall(chunk, debug.traceback)
+   local success, err = pcall(chunk)
    if not success then
       return nil, err
    end

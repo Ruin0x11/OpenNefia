@@ -114,8 +114,8 @@ local function query(talk, text, choices, default_choice, choices_root)
       menu = DialogMenu:new(text,
                             the_choices,
                             speaker_name(talk.speaker),
-                            talk.speaker:copy_portrait(),
-                            talk.speaker:copy_image(),
+                            talk.speaker:calc("portrait"),
+                            talk.speaker:calc("image"),
                             default_choice,
                             talk.speaker.impression,
                             talk.speaker.interest)
@@ -123,8 +123,8 @@ local function query(talk, text, choices, default_choice, choices_root)
       menu = DialogMenu:new(text,
                             the_choices,
                             speaker_name(talk.speaker),
-                            talk.speaker:copy_portrait(),
-                            talk.speaker:copy_image(),
+                            talk.speaker:calc("portrait"),
+                            talk.speaker:calc("image"),
                             default_choice)
    end
 

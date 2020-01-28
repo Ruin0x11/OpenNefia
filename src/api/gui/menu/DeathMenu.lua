@@ -77,7 +77,7 @@ function DeathMenu:draw()
 
          Draw.text(I18N.get("misc.score.score", 9999), x + 480, y + 20)
 
-         self.data[i].image:draw(x - 22, y + 12, nil, nil, {255, 255, 255}, true)
+         Draw.chip(self.data[i].image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
       end
    end
 
