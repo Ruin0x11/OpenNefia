@@ -194,7 +194,8 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                   x_offset = x_offset,
                   y_offset = y_offset,
                   color = i.color,
-                  z_order = z_order
+                  z_order = z_order,
+                  drawables = i.drawables
                }
 
                -- Extra data needed for rendering non-chip things like
@@ -207,19 +208,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
                   hp_ratio = i.hp_ratio,
                   hp_bar = i.hp_bar
                }
-            else
-               -- local tile, px, py = self.chip_batch:get_tile(batch_ind)
-               --
-               -- if px ~= x or py ~= i or tile ~= image then
-               -- self.chip_batch:remove_tile(batch_ind)
-               -- self.chip_batch_inds[i.uid] = self.chip_batch:add_tile {
-               -- tile = image,
-               -- x = x,
-               -- y = y,
-               -- x_offset = x_offset,
-               -- y_offset = y_offset,
-               -- }
-               -- end
             end
 
             if shadow_type == "drop_shadow" then

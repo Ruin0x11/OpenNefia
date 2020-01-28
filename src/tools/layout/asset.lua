@@ -137,6 +137,14 @@ local crop = {
       height = 16,
    },
    {
+      name = "player_light",
+      source = "graphic/interface.bmp",
+      x = 800,
+      y = 112,
+      width = 144,
+      height = 144,
+   },
+   {
       name = "camera",
       source = "graphic/interface.bmp",
       x = 240,

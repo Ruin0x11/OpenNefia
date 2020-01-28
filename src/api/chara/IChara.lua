@@ -156,7 +156,9 @@ local fallbacks = {
    ether_disease_corruption = 0,
    ether_disease_speed = 0,
 
-   roles = {}
+   roles = {},
+
+   drawables = {}
 }
 
 --- Initializes the bare minimum values on this character. All
@@ -196,7 +198,7 @@ end
 --- Finishes initializing this character. All characters must run this
 --- function sometime after running pre_build() before being used.
 function IChara:build()
-   self:mod_base_with(fallbacks, "merge")
+   self:mod_base_with(table.deepcopy(fallbacks), "merge")
 
    self.state = "Alive"
 
@@ -303,7 +305,8 @@ function IChara:produce_memory()
       color = self:calc("color"),
       hp_bar = hp_bar,
       hp_ratio = self:calc("hp") / self:calc("max_hp"),
-      shadow_type = "normal"
+      shadow_type = "normal",
+      drawables = self.drawables
    }
 end
 

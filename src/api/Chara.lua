@@ -135,13 +135,16 @@ end
 --- Sets the current player to a different character. The character
 --- must be contained in the current map.
 ---
---- @tparam uid:IChara|IChara uid_or_chara
+--- @tparam IChara chara
 function Chara.set_player(chara)
    assert(type(chara) == "table")
 
    if field.map then
       assert(field.map:has_object(chara.uid))
    end
+
+   chara:emit("base.on_set_player", {previous_player=field.player})
+
    field.player = chara
 
    local c = Chara.player()

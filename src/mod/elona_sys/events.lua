@@ -421,3 +421,26 @@ local function play_map_music(map)
 end
 
 Event.register("base.on_map_enter", "Play map music", play_map_music)
+
+local PlayerLightDrawable = require("api.gui.PlayerLightDrawable")
+local function add_player_light(player, params)
+   if params.previous_player then
+      local remove = {}
+      for i, d in ipairs(params.previous_player.drawables) do
+         if class.is_an(PlayerLightDrawable, d.drawable) then
+            remove[#remove+1] = i
+         end
+      end
+      table.remove_indices(params.previous_player.drawables, remove)
+   end
+
+   for _, d in ipairs(player.drawables) do
+      if class.is_an(PlayerLightDrawable, d.drawable) then
+         return
+      end
+   end
+
+   table.insert(player.drawables, { drawable = PlayerLightDrawable:new() })
+end
+
+Event.register("base.on_set_player", "Add player light", add_player_light)

@@ -141,4 +141,3 @@ data["base.effect"]:edit("register status effect indicator",
                              end)
 
 require("mod.base.data")
-require("mod.base.events")

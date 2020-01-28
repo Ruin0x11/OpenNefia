@@ -183,6 +183,7 @@ data:add {
          shadow = "asset/shadow.png",
          shadow_edges = "asset/shadow_edges.png",
          character_shadow = "asset/character_shadow.png",
+         player_light = "asset/player_light.png",
 
          failure_to_cast_effect = "asset/failure_to_cast_effect.png",
          swarm_effect = "asset/swarm_effect.png",

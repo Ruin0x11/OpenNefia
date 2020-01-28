@@ -90,6 +90,7 @@ data:add_multi(
       { _id = "on_regenerate" },
       { _id = "on_hotload_begin" },
       { _id = "on_hotload_end" },
+      { _id = "on_set_player" },
    }
 )
 
