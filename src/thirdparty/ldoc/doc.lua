@@ -2,11 +2,11 @@
 -- Defining the ldoc document model.
 
 
-local class = require 'thirdparty.pl.class'
-local utils = require 'thirdparty.pl.utils'
-local List = require 'thirdparty.pl.List'
-local Map = require 'thirdparty.pl.Map'
-local text = require 'thirdparty.pl.text'
+local class = require 'pl.class'
+local utils = require 'pl.utils'
+local List = require 'pl.List'
+local Map = require 'pl.Map'
+local text = require 'pl.text'
 
 local doc = {}
 local global = require 'ldoc.builtin.globals'
@@ -411,7 +411,7 @@ function File:finish()
             -- must be a free-standing function (sometimes a problem...)
          end
       end
-      item.names_hierarchy = require('thirdparty.pl.utils').split(
+      item.names_hierarchy = require('pl.utils').split(
         item.name,
         '[.:]'
       )
@@ -948,7 +948,7 @@ function Item:build_return_groups()
          groups:append(group)
          lastg = g
       end
-      --require 'thirdparty.pl.pretty'.dump(ret)
+      --require 'pl.pretty'.dump(ret)
       if not mods then
          self:error(quote(self.name)..' had no return?')
       end
@@ -957,7 +957,7 @@ function Item:build_return_groups()
    -- order by groups to force error groups to the end
    table.sort(groups,function(g1,g2) return g1.g < g2.g end)
    self.retgroups = groups
-   --require 'thirdparty.pl.pretty'.dump(groups)
+   --require 'pl.pretty'.dump(groups)
    -- cool, now see if there are any treturns that have tfields to associate with
    local fields = self.tags.field
    if fields then
@@ -975,7 +975,7 @@ function Item:build_return_groups()
                ctypes:append {name=f,type=fmods[i].type,comment=fcomments[i]}
             end end
             r.ctypes = ctypes
-            --require 'thirdparty.pl.pretty'.dump(ctypes)
+            --require 'pl.pretty'.dump(ctypes)
          end
       end end
    end
@@ -1038,7 +1038,7 @@ end
 
 function Item:warning(msg)
    local file = self.file and self.file.filename
-   if type(file) == 'table' then require 'thirdparty.pl.pretty'.dump(file); file = '?' end
+   if type(file) == 'table' then require 'pl.pretty'.dump(file); file = '?' end
    file = file or '?'
    local warning = ("%s:%s: %s: %s"):format(file,self.lineno or '1',self.name or '?',msg)
    Item.warnings[#Item.warnings+1] = warning
@@ -1147,7 +1147,7 @@ function Module:process_see_reference (s,modules,istype)
    fun_ref = self.items.by_name[s]
    if fun_ref then return reference(s,self,fun_ref) end
    -- otherwise, start splitting!
-   local packmod,name = split_dotted_name(s) -- e.g. 'thirdparty.pl.utils','split'
+   local packmod,name = split_dotted_name(s) -- e.g. 'pl.utils','split'
    if packmod then -- qualified name
       mod_ref = modules.by_name[packmod] -- fully qualified mod name?
       if not mod_ref then

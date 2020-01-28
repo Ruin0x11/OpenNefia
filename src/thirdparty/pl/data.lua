@@ -17,7 +17,7 @@
 -- Dependencies: `pl.utils`, `pl.array2d` (fallback methods)
 -- @module pl.data
 
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local _DEBUG = rawget(_G,'_DEBUG')
 
 local patterns,function_arg,usplit,array_tostring = utils.patterns,utils.function_arg,utils.split,utils.array_tostring

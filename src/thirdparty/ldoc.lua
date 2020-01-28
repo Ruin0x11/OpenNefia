@@ -18,18 +18,18 @@
 
 local interactive = false
 
-local class = require 'thirdparty.pl.class'
-local path = require 'thirdparty.pl.path'
-local dir = require 'thirdparty.pl.dir'
-local utils = require 'thirdparty.pl.utils'
-local List = require 'thirdparty.pl.List'
-local stringx = require 'thirdparty.pl.stringx'
-local tablex = require 'thirdparty.pl.tablex'
+local class = require 'pl.class'
+local path = require 'pl.path'
+local dir = require 'pl.dir'
+local utils = require 'pl.utils'
+local List = require 'pl.List'
+local stringx = require 'pl.stringx'
+local tablex = require 'pl.tablex'
 
 -- Penlight compatibility
 utils.unpack = utils.unpack or unpack or table.unpack
 local append = table.insert
-local lapp = require 'thirdparty.pl.lapp'
+local lapp = require 'pl.lapp'
 
 local version = '1.4.6'
 

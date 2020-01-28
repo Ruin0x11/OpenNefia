@@ -3,8 +3,8 @@
 -- for known modules and functions.
 -- A module reference to an example `test-fun.lua` would look like
 -- `@{example:test-fun}`.
-local List = require 'thirdparty.pl.List'
-local tablex = require 'thirdparty.pl.tablex'
+local List = require 'pl.List'
+local tablex = require 'pl.tablex'
 local globals = require 'thirdparty.ldoc.builtin.globals'
 local prettify = {}
 

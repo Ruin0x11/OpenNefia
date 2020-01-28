@@ -10,7 +10,7 @@
 -- @classmod pl.Map
 
 local tablex = require 'pl.tablex'
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local stdmt = utils.stdmt
 local deepcompare = tablex.deepcompare
 

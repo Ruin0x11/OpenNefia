@@ -5,7 +5,7 @@
 -- Soft Dependencies: `alien`, `ffi` (either are used on Windows for copying/moving files)
 -- @module pl.dir
 
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local path = require 'pl.path'
 local is_windows = path.is_windows
 local ldir = path.dir

@@ -6,7 +6,7 @@
 -- @classmod pl.OrderedMap
 
 local tablex = require 'pl.tablex'
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local List = require 'pl.List'
 local index_by,tsort,concat = tablex.index_by,table.sort,table.concat
 

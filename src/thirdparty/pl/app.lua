@@ -5,7 +5,7 @@
 -- @module pl.app
 
 local io,package,require = _G.io, _G.package, _G.require
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local path = require 'pl.path'
 
 local app = {}

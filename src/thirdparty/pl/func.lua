@@ -20,7 +20,7 @@
 local type,setmetatable,getmetatable,rawset = type,setmetatable,getmetatable,rawset
 local concat,append = table.concat,table.insert
 local tostring = tostring
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local pairs,rawget,unpack,pack = pairs,rawget,utils.unpack,utils.pack
 local tablex = require 'pl.tablex'
 local map = tablex.map

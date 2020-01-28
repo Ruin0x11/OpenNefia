@@ -3,9 +3,9 @@
 -- This encapsulates the different strategies needed for parsing C and Lua
 -- source code.
 
-local class = require 'thirdparty.pl.class'
-local utils = require 'thirdparty.pl.utils'
-local List =  require 'thirdparty.pl.List'
+local class = require 'pl.class'
+local utils = require 'pl.utils'
+local List =  require 'pl.List'
 local tools = require 'thirdparty.ldoc.tools'
 local lexer = require 'thirdparty.ldoc.lexer'
 local quit = utils.quit

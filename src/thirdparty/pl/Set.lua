@@ -23,7 +23,7 @@
 -- @classmod pl.Set
 
 local tablex = require 'pl.tablex'
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local array_tostring, concat = utils.array_tostring, table.concat
 local merge,difference = tablex.merge,tablex.difference
 local Map = require 'pl.Map'

@@ -32,7 +32,7 @@ return function(env)
         List = true, Map = true, Set = true,
         OrderedMap = true, MultiMap = true, Date = true,
     }
-    rawset(env,'utils',require 'thirdparty.pl.utils')
+    rawset(env,'utils',require 'pl.utils')
 
     for name,klass in pairs(env.utils.stdmt) do
         klass.__index = function(t,key)

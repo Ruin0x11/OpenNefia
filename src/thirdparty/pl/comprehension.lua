@@ -30,7 +30,7 @@
 -- See @{07-functional.md.List_Comprehensions|the Guide}
 -- @module pl.comprehension
 
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 
 local status,lb = pcall(require, "pl.luabalanced")
 if not status then

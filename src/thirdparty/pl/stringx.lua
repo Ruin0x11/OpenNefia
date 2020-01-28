@@ -8,7 +8,7 @@
 --
 -- Dependencies: `pl.utils`
 -- @module pl.stringx
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local string = string
 local find = string.find
 local type,setmetatable,ipairs = type,setmetatable,ipairs

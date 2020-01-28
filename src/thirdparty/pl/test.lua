@@ -9,7 +9,7 @@
 -- @module pl.test
 
 local tablex = require 'pl.tablex'
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local pretty = require 'pl.pretty'
 local path = require 'pl.path'
 local type,unpack,pack = type,utils.unpack,utils.pack

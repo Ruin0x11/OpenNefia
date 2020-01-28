@@ -3,7 +3,7 @@
 -- Dependencies: `pl.utils`, `pl.class`, `pl.List`, `pl.Map`
 -- @classmod pl.MultiMap
 
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local class = require 'pl.class'
 local List = require 'pl.List'
 local Map = require 'pl.Map'

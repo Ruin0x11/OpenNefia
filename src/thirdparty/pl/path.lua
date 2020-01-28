@@ -13,7 +13,7 @@ local tmpnam = os.tmpname
 local attributes, currentdir, link_attrib
 local package = package
 local append, concat, remove = table.insert, table.concat, table.remove
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local assert_string,raise = utils.assert_string,utils.raise
 
 local attrib

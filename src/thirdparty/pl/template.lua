@@ -28,7 +28,7 @@
 -- Dependencies: `pl.utils`
 -- @module pl.template
 
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 
 local append,format,strsub,strfind,strgsub = table.insert,string.format,string.sub,string.find,string.gsub
 

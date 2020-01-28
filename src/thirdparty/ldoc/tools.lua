@@ -2,13 +2,13 @@
 -- General utility functions for ldoc
 -- @module tools
 
-local class = require 'thirdparty.pl.class'
-local List = require 'thirdparty.pl.List'
-local path = require 'thirdparty.pl.path'
-local utils = require 'thirdparty.pl.utils'
-local tablex = require 'thirdparty.pl.tablex'
-local stringx = require 'thirdparty.pl.stringx'
-local dir = require 'thirdparty.pl.dir'
+local class = require 'pl.class'
+local List = require 'pl.List'
+local path = require 'pl.path'
+local utils = require 'pl.utils'
+local tablex = require 'pl.tablex'
+local stringx = require 'pl.stringx'
+local dir = require 'pl.dir'
 local tools = {}
 local M = tools
 local append = table.insert
@@ -149,7 +149,7 @@ function M.module_basepath()
 end
 
 -- split a qualified name into the module part and the name part,
--- e.g 'thirdparty.pl.utils.split' becomes 'thirdparty.pl.utils' and 'split'. Also
+-- e.g 'pl.utils.split' becomes 'pl.utils' and 'split'. Also
 -- must understand colon notation!
 function M.split_dotted_name (s)
    local s1,s2 = s:match '^(.+)[%.:](.+)$'

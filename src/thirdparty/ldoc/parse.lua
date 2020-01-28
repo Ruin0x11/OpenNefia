@@ -1,9 +1,9 @@
 -- parsing code for doc comments
 
-local utils = require 'thirdparty.pl.utils'
-local List = require 'thirdparty.pl.List'
-local Map = require 'thirdparty.pl.Map'
-local stringio = require 'thirdparty.pl.stringio'
+local utils = require 'pl.utils'
+local List = require 'pl.List'
+local Map = require 'pl.Map'
+local stringio = require 'pl.stringio'
 local lexer = require 'thirdparty.ldoc.lexer'
 local tools = require 'thirdparty.ldoc.tools'
 local doc = require 'thirdparty.ldoc.doc'

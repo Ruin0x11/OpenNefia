@@ -4,7 +4,7 @@
 --
 -- Dependencies: `pl.utils`, `pl.types`
 -- @module pl.tablex
-local utils = require ('thirdparty.pl.utils')
+local utils = require ('pl.utils')
 local types = require ('pl.types')
 local getmetatable,setmetatable,require = getmetatable,setmetatable,require
 local tsort,append,remove = table.sort,table.insert,table.remove

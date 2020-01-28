@@ -13,13 +13,13 @@
 -- generalizes the idea of these project-level categories and in fact custom categories
 -- can be created (refered to as 'kinds' in the code)
 
-local List = require 'thirdparty.pl.List'
-local utils = require 'thirdparty.pl.utils'
-local path = require 'thirdparty.pl.path'
-local stringx = require 'thirdparty.pl.stringx'
-local template = require 'thirdparty.pl.template'
-local tablex = require 'thirdparty.pl.tablex'
-local OrderedMap = require 'thirdparty.pl.OrderedMap'
+local List = require 'pl.List'
+local utils = require 'pl.utils'
+local path = require 'pl.path'
+local stringx = require 'pl.stringx'
+local template = require 'pl.template'
+local tablex = require 'pl.tablex'
+local OrderedMap = require 'pl.OrderedMap'
 local tools = require 'thirdparty.ldoc.tools'
 local markup = require 'thirdparty.ldoc.markup'
 local prettify = require 'thirdparty.ldoc.prettify'

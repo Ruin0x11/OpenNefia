@@ -4,8 +4,8 @@
 -- be the general module for managing other formats as well.
 
 local doc = require 'ldoc.doc'
-local utils = require 'thirdparty.pl.utils'
-local stringx = require 'thirdparty.pl.stringx'
+local utils = require 'pl.utils'
+local stringx = require 'pl.stringx'
 local prettify = require 'thirdparty.ldoc.prettify'
 local quit, concat, lstrip = utils.quit, table.concat, stringx.lstrip
 local markup = {}

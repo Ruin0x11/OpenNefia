@@ -392,9 +392,9 @@ end
 -- local options = utils.quote_arg {
 --     "-lluacov",
 --     "-e",
---     "utils = print(require('thirdparty.pl.utils')._VERSION",
+--     "utils = print(require('pl.utils')._VERSION",
 -- }
--- -- returns: -lluacov -e 'utils = print(require('\''thirdparty.pl.utils'\'')._VERSION'
+-- -- returns: -lluacov -e 'utils = print(require('\''pl.utils'\'')._VERSION'
 function utils.quote_arg(argument)
     if type(argument) == "table" then
         -- encode an entire table

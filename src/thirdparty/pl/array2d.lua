@@ -9,7 +9,7 @@ local tonumber,assert,tostring,io,ipairs,string,table =
 local setmetatable,getmetatable = setmetatable,getmetatable
 
 local tablex = require 'pl.tablex'
-local utils = require 'thirdparty.pl.utils'
+local utils = require 'pl.utils'
 local types = require 'pl.types'
 local imap,tmap,reduce,keys,tmap2,tset,index_by = tablex.imap,tablex.map,tablex.reduce,tablex.keys,tablex.map2,tablex.set,tablex.index_by
 local remove = table.remove
