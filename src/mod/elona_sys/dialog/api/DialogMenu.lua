@@ -25,6 +25,9 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.default_choice = default_choice
    self.can_cancel = default_choice ~= nil
 
+   self.chip_batch = nil
+   self.portrait_batch = nil
+
    if self.choices == nil or #self.choices == 0 then
       self.choices = { "__MORE__" }
    end
@@ -53,6 +56,9 @@ function DialogMenu:relayout()
    self.t = UiTheme.load(self)
 
    self.pages:relayout(self.x + 136, self.y + self.height - 56 - self.pages:len() * 19 + 4, self.width, self.height)
+
+   self.chip_batch = Draw.make_chip_batch("chip")
+   self.portrait_batch = Draw.make_chip_batch("portrait")
 
    Draw.set_font(14)
    local _, wrapped = Draw.wrap_text(self.text, self.width - 200)
@@ -109,6 +115,15 @@ function DialogMenu:update()
    end
 
    self.pages:update()
+end
+
+function DialogMenu:release()
+   if self.chip_batch then
+      self.chip_batch:release()
+   end
+   if self.portrait_batch then
+      self.portrait_batch:release()
+   end
 end
 
 return DialogMenu

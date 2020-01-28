@@ -406,12 +406,12 @@ local chara_chips = {
 
 local item_chips = {
    { elona_id = 0, name = "empty" },
-   -- { elona_id = 1, name = "projectile_arrow" },
-   -- { elona_id = 2, name = "projectile_bullet" },
-   -- { elona_id = 3, name = "projectile_bolt" },
+   { elona_id = 1, name = "projectile_arrow" },
+   { elona_id = 2, name = "projectile_bullet" },
+   { elona_id = 3, name = "projectile_bolt" },
    -- { elona_id = 4, name = "_4" },
    -- { elona_id = 5, name = "_5" },
-   -- { elona_id = 6, name = "projectile_magic_arrow" },
+   { elona_id = 6, name = "projectile_magic_arrow" },
    -- { elona_id = 7, name = "particle_spark" },
    -- { elona_id = 8, name = "particle_skull" },
    -- { elona_id = 9, name = "particle_candle" },

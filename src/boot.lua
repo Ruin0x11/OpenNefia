@@ -10,8 +10,10 @@ package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/ini
 -- relative paths in package.path ourselves and use functions like
 -- love.filesystem.load instead of loadfile to go through LÖVE's
 -- filesystem abstraction layer so the files can be found.
-local absolute_dir = love.filesystem.getSource()
-package.path = package.path:gsub('%./', absolute_dir)
+if love.system.getOS() == "Android" then
+   local absolute_dir = love.filesystem.getSource()
+   package.path = package.path:gsub('%./', absolute_dir)
+end
 
 -- We have to update LÖVE's require path which is completely separate
 -- from package.path in order to make love.filesystem.load work

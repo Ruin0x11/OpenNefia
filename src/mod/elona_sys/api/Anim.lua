@@ -2,12 +2,13 @@
 --- @module Anim
 local Anim = {}
 
-local UiTheme = require("api.gui.UiTheme")
-local Rand = require("api.Rand")
+local Draw = require("api.Draw")
+local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
-local Draw = require("api.Draw")
+local Rand = require("api.Rand")
+local UiTheme = require("api.gui.UiTheme")
 
 local anim_wait = 80 * 0.5
 
@@ -133,15 +134,23 @@ function Anim.bolt(start_x, start_y, end_x, end_y)
    end
 end
 
+local chip_batch = nil
+
+Event.register("base.on_hotload_end", "hotload chip batch (Anim)",
+               function()
+                  chip_batch = nil
+               end)
+
 function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, impact_sound)
    return function(draw_x, draw_y)
+      chip_batch = chip_batch or Draw.make_chip_batch("chip")
+
       if not Map.is_in_fov(start_x, start_y) and not Map.is_in_fov(end_x, end_y) then
          return
       end
 
       if chip == nil then
-         local t = UiTheme.load()
-         chip = t.ranged_attack_magic_arrow
+         chip = "elona.item_projectile_arrow"
       end
 
       if sound then
@@ -161,12 +170,16 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
          sy = sy - math.floor((start_y - end_y) * th / count)
 
          if is_in_screen(sx, sy) then
-            if type(chip) == "string" then
-               Draw.chip(chip, sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
-            else
-               chip:draw(sx + math.floor(tw / 2), sy + math.floor(th / 2), tw, th, color, true, math.deg(math.atan2(end_x - start_x, start_y - end_y)))
-            end
-
+            chip_batch:clear()
+            chip_batch:add(chip,
+                           sx + math.floor(tw / 2),
+                           sy + math.floor(th / 2),
+                           tw,
+                           th,
+                           color,
+                           true,
+                           math.deg(math.atan2(end_x - start_x, start_y - end_y)))
+            chip_batch:draw()
          end
 
          local _, _, frames_passed = Draw.yield(anim_wait)

@@ -133,7 +133,7 @@ function Repl.pause()
    local locals = repl.capture_locals(1)
    local repl_env, history = Repl.generate_env(locals)
 
-   local mod, loc = env.find_calling_mod()
+   local mod, loc = env.find_calling_mod(1)
    local loc_string = ""
    if loc then
       loc_string = loc_string .. (" in %s on line %d"):format(fs.normalize(loc.short_src), loc.linedefined)

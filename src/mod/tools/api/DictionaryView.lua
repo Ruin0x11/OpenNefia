@@ -15,6 +15,7 @@ function DictionaryView:init()
 
    self.data = nil
    self.image = nil
+   self.chip_batch = nil
 
    self.title = "Dictionary"
    self.sound = "base.spell"
@@ -43,6 +44,8 @@ function DictionaryView:relayout(x, y, width, height)
    self.width = width
    self.height = height
 
+   self.chip_batch = Draw.make_chip_batch("chip")
+
    self.chip_bg:relayout(self.x + self.width - 128, self.y + 48, 96, 128)
 end
 
@@ -61,7 +64,9 @@ function DictionaryView:draw()
       if is_tall then
          offset_y = -24
       end
-      Draw.chip(self.image, self.x + self.width - 128 + 48, self.y + 48 + 72 + offset_y, nil, nil, {255, 255, 255}, true)
+      self.chip_batch:add(self.image, self.x + self.width - 128 + 48, self.y + 48 + 72 + offset_y, nil, nil, {255, 255, 255}, true)
+      self.chip_batch:draw()
+      self.chip_batch:clear()
    end
 
    Draw.text(("ID: %s"):format(self.data._id), self.x + 38, self.y + 58, {0, 0, 0})

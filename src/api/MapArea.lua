@@ -102,14 +102,14 @@ function MapArea.load_outer_map(inner_map)
 
    local success, err = Map.world_map_containing(inner_map)
    if not success then
-      return false, err
+      return nil, err
    end
 
    local map = err
    local start_x, start_y = Map.position_in_world_map(inner_map)
    assert(start_x and start_y)
 
-   return true, { map = map, start_x = start_x, start_y = start_y }
+   return { map = map, start_pos = { x = start_x, y = start_y } }, nil
 end
 
 --- Creates a new entrance leading to an ungenerated map on an outer

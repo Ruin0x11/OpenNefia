@@ -189,10 +189,6 @@ data:add {
          breaking_effect = "asset/breaking_effect.png",
          melee_attack_debris = "asset/melee_attack_debris.png",
          melee_attack_blood = "asset/melee_attack_blood.png",
-         ranged_attack_arrow = "asset/ranged_attack_arrow.png",
-         ranged_attack_laser = "asset/ranged_attack_laser.png",
-         ranged_attack_bullet = "asset/ranged_attack_bullet.png",
-         ranged_attack_magic_arrow = "asset/ranged_attack_magic_arrow.png",
 
          anim_slash = {
             image = "asset/anim_slash.png",

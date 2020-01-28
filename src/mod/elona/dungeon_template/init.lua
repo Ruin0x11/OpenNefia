@@ -55,7 +55,7 @@ data:add {
    is_opaque = true
 }
 
-local function mark_stairs(map)
+local function tag_stairs(map)
    local pred
 
    pred = function(feat) return feat._id == "elona.stairs_down" end
@@ -271,10 +271,7 @@ local function generate_dungeon(self, params, opts)
    dungeon.dungeon_level = params.dungeon_level
    assert(dungeon.dungeon_level)
 
-   local start_x
-   local start_y
-
-   assert(start_x and start_y)
+   tag_stairs(dungeon)
 
    data["elona.dungeon_template"]:ensure(params.id)
 
@@ -290,13 +287,17 @@ local function generate_dungeon(self, params, opts)
       item_density = result.item
    end
 
-   -- HACK: Block the starting position so nothing gets generated there.
-   -- This was done in Elona by just placing the player on the stairs
-   -- in the map during the generation routine.
-   local feats = Feat.at(start_x, start_y, dungeon)
-   assert(feats:length() == 1, table.concat(feats:extract("_id"):to_list()))
-   local block = assert(Feat.create("elona.mapgen_block", start_x, start_y, {}, dungeon))
-   assert(not Map.can_access(start_x, start_y, dungeon))
+   -- HACK: Block the starting positions so nothing gets generated
+   -- there. This was done in Elona by just placing the player on the
+   -- stairs in the map during the generation routine.
+
+   local blocks = {}
+   for _, feat in Feat.iter(dungeon) do
+      if feat._id == "elona.stair_up" or feat._id == "elona.stair_down" then
+         blocks[#blocks+1] = assert(Feat.create("elona.mapgen_block", feat.x, feat.y, {}, dungeon))
+         assert(not Map.can_access(feat.x, feat.y, dungeon))
+      end
+   end
 
    if template.after_generate then
       template.after_generate(dungeon)
@@ -351,7 +352,7 @@ local function generate_dungeon(self, params, opts)
       end
    end
 
-   if block then
+   for _, block in ipairs(blocks) do
       block:remove_ownership()
    end
    local chara = Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y)

@@ -7,7 +7,7 @@ Magic = require("mod.elona_sys.api.Magic")
 Effect = require("mod.elona.api.Effect")
 Quest = require("mod.elona_sys.api.Quest")
 
-Log.set_level("info")
+Log.set_level("debug")
 
 local test = function()
 end

@@ -119,13 +119,14 @@ end
 -- When hotloading, this uses the currently hotloading require path to
 -- see if a mod is being hotloaded at the top level instead, since the
 -- caller of this function will be the debug server or REPL.
-function env.find_calling_mod()
+function env.find_calling_mod(offset)
+   offset = offset or 0
    local hotload_path = env.is_hotloading()
    if hotload_path then
       return path_is_in_mod(hotload_path) or "base"
    end
 
-   for i = #LOADING_STACK, 1, -1 do
+   for i = #LOADING_STACK-offset, 1, -1 do
       local path = LOADING_STACK[i]
       local mod_name = path_is_in_mod(path)
       if mod_name then

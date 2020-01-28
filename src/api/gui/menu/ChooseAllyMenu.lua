@@ -24,12 +24,17 @@ local UiListExt = function(choose_ally_menu)
    end
    function E:draw_item_text(text, entry, i, x, y, x_offset)
       if entry.kind == "ally" then
-         Draw.chip(entry.icon, x - 44, y + 8, nil, nil, entry.color, true)
+         choose_ally_menu.chip_batch:add(entry.icon, x - 44, y + 8, nil, nil, entry.color, true)
       end
       UiList.draw_item_text(self, text, entry, i, x, y, x_offset)
 
       -- TODO x offset can differ based on operation
       Draw.text(entry.info, x + 100, y + 2)
+   end
+   function E:draw()
+      UiList.draw(self)
+      choose_ally_menu.chip_batch:draw()
+      choose_ally_menu.chip_batch:clear()
    end
 
    return E
@@ -53,6 +58,8 @@ function ChooseAllyMenu:init(filter)
 
    self.window = UiWindow:new("title", true, "hint")
    table.merge(self.pages, UiListExt(self))
+
+   self.chip_batch = nil
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
@@ -109,6 +116,8 @@ function ChooseAllyMenu:relayout()
    local x, y = Ui.params_centered(width, height)
 
    self.t = UiTheme.load(self)
+
+   self.chip_batch = Draw.make_chip_batch("chip")
 
    self.window:relayout(x, y, width, height)
    self.pages:relayout(x + 58, y + 66, width, height)
@@ -185,6 +194,12 @@ function ChooseAllyMenu:update()
    end
 
    self.pages:update()
+end
+
+function ChooseAllyMenu:release()
+   if self.chip_batch then
+      self.chip_batch:release()
+   end
 end
 
 return ChooseAllyMenu

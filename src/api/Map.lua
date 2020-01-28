@@ -298,28 +298,30 @@ function Map.iter_objects_at(x, y, map)
    return (map or field.map):iter_objects_at(x, y)
 end
 
--- @tparam IChara chara
+-- @tparam InstancedMap map
 -- @tparam[opt] InstancedMap previous_map
 -- @tparam[opt] IFeat feat
--- @tparam[opt] InstancedMap map
-function Map.calc_start_position(chara, previous_map, feat, map)
-   map = map or field.map
-
-   local x, y
-   if type(map.player_start_pos) == "table" then
-      x = map.player_start_pos.x
-      y = map.player_start_pos.y
-   elseif type(map.player_start_pos) == "string" then
-      x, y = data["base.map_entrance"]
-         :ensure(map.player_start_pos)
-         .pos(chara, previous_map, feat)
-   elseif type(map.player_start_pos) == "function" then
-      x, y = map:player_start_pos(chara, previous_map, feat)
-   else
-      error("invalid map start pos: " .. tostring(map.player_start_pos))
+-- @tparam[opt] {x=uint,y=uint}|base.map_entrance|function start_pos
+function Map.calc_start_position(map, previous_map, feat, start_pos)
+   if start_pos == nil then
+      start_pos = map.player_start_pos
    end
 
-   return x,y
+   local x, y
+   if type(start_pos) == "table" then
+      x = start_pos.x
+      y = start_pos.y
+   elseif type(start_pos) == "string" then
+      x, y = data["base.map_entrance"]
+         :ensure(start_pos)
+         .pos(map, previous_map, feat)
+   elseif type(start_pos) == "function" then
+      x, y = start_pos(map, previous_map, feat)
+   else
+      error("invalid map start pos: " .. tostring(start_pos))
+   end
+
+   return x, y
 end
 
 --- Generates a new map using a map generator template.
@@ -679,13 +681,13 @@ end
 ---
 --- @tparam InstancedMap|uid:InstancedMap map_or_uid
 --- @tparam[opt] table params Extra parameters.
----   - start_x (int): starting X position in the new map.
----   - start_y (int): starting Y position in the new map.
 ---   - feat (IFeat): feat used to travel to this map, like stairs.
+---   - start_pos ({x=uint,y=uint}|base.map_entrance|function):
+---     logic to run to determine the start position on the map. Can
+---     be a table of coordinates, an ID of a base.map_entrance entry,
+---     or a function that returns a table of {x,y}.
 function Map.travel_to(map_or_uid, params)
    params = params or {}
-
-   local Chara = require("api.Chara")
 
    local success, map
    if type(map_or_uid) == "number" then
@@ -722,26 +724,21 @@ function Map.travel_to(map_or_uid, params)
 
       new_map.uid = map.uid
       map = new_map
-
-      -- Ignore start_x and start_y, since this is a completely new
-      -- map.
-      params.start_x = nil
-      params.start_y = nil
    end
-
-   local x, y = 0, 0
 
    if map.uid == current.uid then
       -- Nothing to do.
       return
    end
 
-   if params.start_x and params.start_y then
-      x = params.start_x
-      y = params.start_y
-   else
-      x, y = Map.calc_start_position(Chara.player(), current, params.feat, map)
-   end
+   local start_pos = params.start_pos or nil
+   local x, y = Map.calc_start_position(map,
+                                        current,
+                                        params.feat,
+                                        start_pos)
+
+   Log.warn("Start position: %s %s (%s)", x, y, inspect(start_pos))
+   assert(x and y)
 
    -- take the player, allies and any items they carry.
    --

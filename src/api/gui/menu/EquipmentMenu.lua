@@ -160,9 +160,6 @@ function EquipmentMenu:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.t = UiTheme.load(self)
 
-   if self.chip_batch then
-      self.chip_batch:release()
-   end
    self.chip_batch = Draw.make_chip_batch("chip")
 
    self.win:relayout(self.x, self.y, self.width, self.height)

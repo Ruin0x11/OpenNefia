@@ -18,6 +18,8 @@ function DeathMenu:init(data)
    self.caption = CharaMakeCaption:new("misc.death.you_are_about_to_be_buried")
    self.prompt = Prompt:new({"misc.death.crawl_up", "misc.death.lie_on_your_back"}, 240)
 
+   self.chip_batch = nil
+
    self.input = InputHandler:new()
    self.input:forward_to(self.prompt)
    self.input:bind_keys(self:make_keymap())
@@ -35,6 +37,8 @@ function DeathMenu:relayout(x, y, width, height)
    self.width = width or Draw.get_width()
    self.height = height or Draw.get_height()
    self.t = UiTheme.load(self)
+
+   self.chip_batch = Draw.make_chip_batch("chip")
 
    self.caption:relayout(self.x + 20, self.y + 30)
    self.prompt:relayout(nil, 100)
@@ -77,9 +81,12 @@ function DeathMenu:draw()
 
          Draw.text(I18N.get("misc.score.score", 9999), x + 480, y + 20)
 
-         Draw.chip(self.data[i].image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
+         self.chip_batch:add(self.data[i].image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
       end
    end
+
+   self.chip_batch:draw()
+   self.chip_batch:clear()
 
    self.caption:draw()
    self.prompt:draw()
@@ -91,6 +98,12 @@ function DeathMenu:update()
    local result, canceled = self.prompt:update()
    if result then
       return result, canceled
+   end
+end
+
+function DeathMenu:release()
+   if self.chip_batch then
+      self.chip_batch:release()
    end
 end
 

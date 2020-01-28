@@ -170,16 +170,7 @@ local function gen_stair(down)
                  return "player_turn_query"
               end
 
-              local params = nil
-
-              local search
-              if self._id == "elona.stairs_down" then
-                 search = "elona.stairs_up"
-              else
-                 search = "elona.stairs_down"
-              end
-
-              local start_x, start_y
+              local start_pos
               local inner_area = save.base.area_mapping:area_for_map(self:current_map())
               local outer_area = save.base.area_mapping:area_for_map(map)
               assert(inner_area and outer_area,
@@ -187,48 +178,23 @@ local function gen_stair(down)
                                          inspect(save.base.area_mapping.maps)))
               if inner_area ~= outer_area then
                  assert(map.uid == inner_area.outer_map_uid)
-                 start_x = outer_area.x
-                 start_y = outer_area.y
+                 start_pos = { x = inner_area.x, y = inner_area.y }
               else
-                 local stair
-
-                 if map.player_start_pos then
-                    local x, y = Map.calc_start_position(Chara.player(), map, self,
-                                                         self:current_map())
-
-                    stair = Feat.at(x, y, map):filter(function(f) return f._id == search
-                                                     end):nth(1)
-                 end
-
-                 if stair == nil then
-                    Log.warn(
-                       "Start position not provided, falling back to searching entire map for stairs."
-                    )
-                    stair = map:iter_feats():filter(function(f) return f._id == search
-                                                   end):nth(1)
-                 end
-
-                 if stair == nil then
-                    Log.warn("No connecting stair found in other map.")
-                    start_x = math.floor(map:width() / 2)
-                    start_y = math.floor(map:height() / 2)
+                 if id == "stair_up" then
+                    start_pos = "elona.stair_down"
                  else
-                    Log.debug("Found stair at (%s,%s)", stair.x, stair.y)
-                    start_x = stair.x
-                    start_y = stair.y
-                    stair.map_uid = self:current_map().uid
+                    start_pos = "elona.stair_up"
                  end
               end
 
               params = {
-                 start_x = start_x,
-                 start_y = start_y,
+                 start_pos = start_pos,
                  maybe_regenerate = true,
                  feat = self
               }
 
-              Log.debug("Map starting params: %s %s", start_x, start_y)
-              Log.debug("My location: %s %s", self.x, self.y)
+              Log.debug("Map starting pos: %s", inspect(params.start_pos))
+              Log.debug("My location: %d %d", self.x, self.y)
 
               Map.travel_to(map, params)
 
@@ -264,7 +230,7 @@ data:add
       local outer_area = save.base.area_mapping:area_for_map(map)
       assert(inner_area ~= outer_area)
 
-      Map.travel_to(map, {maybe_regenerate = true})
+      Map.travel_to(map, {maybe_regenerate = true, start_pos = "elona.stair_up"})
 
       return "player_turn_query"
    end,

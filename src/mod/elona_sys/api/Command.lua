@@ -15,10 +15,10 @@ local Command = {}
 
 local function travel_to_map_hook(source, params, result)
    local cur = Map.current()
-   local success, map_result = MapArea.load_outer_map(cur)
+   local map_result, err = MapArea.load_outer_map(cur)
 
-   if not success then
-      return {false, "Could not load outer map: " .. map_result}
+   if not map_result then
+      return {false, "Could not load outer map: " .. err}
    end
 
    local map = map_result.map
@@ -26,7 +26,8 @@ local function travel_to_map_hook(source, params, result)
 
    save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
 
-   assert(Map.travel_to(map, map_result))
+   local start_pos = map_result.start_pos
+   assert(Map.travel_to(map, {start_pos = start_pos}))
 
    return {true, "player_turn_query"}
 end

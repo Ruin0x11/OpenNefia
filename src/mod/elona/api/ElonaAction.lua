@@ -133,22 +133,21 @@ end
 
 local function play_ranged_animation(start_x, start_y, end_x, end_y, attack_skill, weapon)
    local chip, sound
-   local t = UiTheme.load()
 
    local color = {255, 255, 255}
 
    if attack_skill == "elona.bow" then
-      chip = t.ranged_attack_arrow
+      chip = "elona.item_projectile_arrow"
       sound = "base.bow1"
    elseif attack_skill == "elona.crossbow" then
-      chip = t.ranged_attack_bolt
+      chip = "elona.item_projectile_bolt"
       sound = "base.bow1"
    elseif attack_skill == "elona.firearm" then
       if table.set(weapon.proto.categories)["elona.equip_ranged_laser_gun"] then
-         chip = t.ranged_attack_laser
+         chip = "elona.item_projectile_laser"
          sound = "base.laser1"
       else
-         chip = t.ranged_attack_bullet
+         chip = "elona.item_projectile_bullet"
          sound = "base.gun1"
       end
    else
