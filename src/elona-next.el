@@ -73,18 +73,43 @@
 (defun elona-next--eldoc-message (&optional msg)
   (run-with-idle-timer 0 nil (lambda () (eldoc-message elona-next--eldoc-saved-message))))
 
+(defun elona-next--eldoc-get ()
+  (ignore-errors
+    (let ((sym (elona-next--dotted-symbol-at-point)))
+      (if (and (elona-next--game-running-p)
+               (not (string-equal sym "nil")))
+          (elona-next--send "signature" sym)
+        )))
+  eldoc-last-message)
+
+(defun elona-next-eldoc-function ()
+  (if (and elona-next--eldoc-saved-message
+           (equal elona-next--eldoc-saved-point (point)))
+      elona-next--eldoc-saved-message
+
+    (setq elona-next--eldoc-saved-message nil
+          elona-next--eldoc-saved-point nil)
+    (elona-next--eldoc-get)
+    (let* ((sym-dotted (elona-next--dotted-symbol-at-point))
+           (sym (symbol-at-point))
+           (defs (or (and sym-dotted (etags--xref-find-definitions sym-dotted))
+                     (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
+      (when defs
+        (let* ((def (car defs))
+               (raw (substring-no-properties (xref-item-summary def))))
+          (with-temp-buffer
+            (insert raw)
+            (delay-mode-hooks (lua-mode))
+            (font-lock-default-function 'lua-mode)
+            (font-lock-default-fontify-region (point-min)
+                                              (point-max)
+                                              nil)
+            (buffer-string)))))))
+
 (defun elona-next--game-running-p ()
   (or
    (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
    (and compilation-in-progress)))
-
-(defun elona-next-eldoc-function ()
-  (ignore-errors
-    (let ((sym (elona-next--dotted-symbol-at-point)))
-      (when (and (elona-next--game-running-p)
-                 (not (string-equal sym "nil")))
-        (elona-next--send "signature" sym))))
-  eldoc-last-message)
 
 (defun elona-next--process-response (cmd content response)
   (-let (((&alist 'success 'candidates 'message) response))
@@ -267,7 +292,7 @@
         (let* ((loc (xref-make-file-location file line column))
                (marker (xref-location-marker loc))
                (buf (marker-buffer marker)))
-          (xref--push-markers)
+          (xref-push-marker-stack)
           (switch-to-buffer buf)
           (xref--goto-char marker))
       (xref-find-definitions (strip-text-properties content)))))
@@ -562,15 +587,17 @@
 
 (defun elona-next-jump-to-definition (arg)
   (interactive "P")
-  (let* ((sym (if arg
-                  (symbol-name (symbol-at-point))
-                (elona-next--dotted-symbol-at-point)))
-         (result (if (string-equal sym "nil")
-                     (elona-next--completing-read
-                      "Jump to: "
-                      (json-read-file (elona-next--apropos-file "data/apropos.json")))
-                   sym)))
-    (elona-next--send "jump_to" result)))
+  (if (elona-next--game-running-p)
+      (let* ((sym (if arg
+                      (symbol-name (symbol-at-point))
+                    (elona-next--dotted-symbol-at-point)))
+             (result (if (string-equal sym "nil")
+                         (elona-next--completing-read
+                          "Jump to: "
+                          (json-read-file (elona-next--apropos-file "data/apropos.json")))
+                       sym)))
+        (elona-next--send "jump_to" result))
+    (xref-find-definitions (elona-next--dotted-symbol-at-point))))
 
 (defun elona-next-describe-apropos ()
   (interactive)
