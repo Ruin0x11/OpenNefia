@@ -1142,7 +1142,7 @@ end
 
 chara = gen_crop(chara, "graphic/character.bmp", "chara")
 item = gen_crop(item, "graphic/item.bmp", "item")
-misc = gen_crop(misc, "graphic/item.bmp", "misc")
+misc = gen_crop(misc, "graphic/item.bmp", "item")
 feat = gen_crop(feat, "graphic/map1.bmp", "feat")
 area = gen_crop(area, "graphic/map0.bmp", "feat")
 

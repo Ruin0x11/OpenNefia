@@ -67,7 +67,8 @@ function tile_layer:update(dt, screen_updated)
          local id = t._id
          if t.wall then
             local one_tile_down = map:tile(x, y+1)
-            if one_tile_down ~= nil and not one_tile_down.wall then
+            local is_memorized = map:is_memorized(x, y+1)
+            if one_tile_down ~= nil and not one_tile_down.wall and is_memorized then
                id = t.wall
             end
          end

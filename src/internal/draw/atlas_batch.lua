@@ -8,7 +8,11 @@ function atlas_batch:init(the_atlas)
    self.batch = love.graphics.newSpriteBatch(the_atlas.image)
 end
 
+local f = 0
+
 function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
+   rotation = rotation or 0
+
    local tile = self.atlas.tiles[chip]
    if tile == nil then
       tile = self.atlas.tiles[chip .. "#default"]
@@ -28,7 +32,7 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
       sx = width / ttw
    end
    if height then
-      sy = height / height
+      sy = height / tth
    end
 
    local ox, oy
@@ -38,9 +42,9 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
    end
 
    self.batch:add(tile.quad,
-                  x,
-                  y + tile.offset_y,
-                  rotation,
+                  math.floor(x),
+                  math.floor(y + tile.offset_y),
+                  math.rad(rotation),
                   sx,
                   sy,
                   ox,

@@ -401,6 +401,11 @@ function InstancedMap:memorize_tile(x, y)
    self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
 end
 
+function InstancedMap:is_memorized(x, y)
+   local ind = y * self._width + x + 1;
+   return self._in_sight[ind] > 0
+end
+
 function InstancedMap:reveal_tile(x, y, tile_id)
    local memory = self._memory
    local ind = y * self._width + x + 1;

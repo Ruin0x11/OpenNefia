@@ -181,8 +181,16 @@ function startup.load_batches()
    sw:p("load_batches.tile")
 
    progress("Loading tilemaps (overhang)...")
+   local tw, th = coords:get_size()
+   local quad = love.graphics.newQuad(0, 0, tw, math.floor(th / 4), tw, th)
+   local load_tile = function(atlas, proto)
+      local draw = function(tile, x, y)
+         love.graphics.draw(tile, quad, x, y)
+      end
+      atlas:load_one(proto, draw)
+   end
    local tile_overhang_atlas = atlas:new(tile_size, tile_size)
-   tile_overhang_atlas:load(get_map_overhang_tiles(), coords)
+   tile_overhang_atlas:load(get_map_overhang_tiles(), nil, load_tile)
 
    sw:p("load_batches.tile_overhang")
 
