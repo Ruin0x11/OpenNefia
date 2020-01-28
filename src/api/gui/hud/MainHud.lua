@@ -99,6 +99,15 @@ function MainHud:refresh(player)
 
       local map = player:current_map()
       self.map_name = map and map.name or ""
+
+      local map_level = "B.12"
+      local max_width = 16
+      if string.nonempty(map_level) then
+         max_width = 12
+      end
+      if utf8.wide_len(self.map_name) > max_width then
+         self.map_name = utf8.wide_sub(self.map_name, 0, max_width)
+      end
    end
 end
 
@@ -128,24 +137,12 @@ end
 function MainHud:draw_map_name()
    Draw.set_font(self.t.map_name_font) -- 12 + sizefix - en * 2
 
-   local map_name = self.map_name
-   local map_level = "B.12"
-   local max_width = 16
-   if string.nonempty(map_level) then
-      max_width = 12
-   end
    Draw.set_color(self.t.text_color)
-   if utf8.wide_len(map_name) > max_width then
-      Draw.text(utf8.wide_sub(map_name, 0, max_width),
-                self.x + 136 + 24,
-                self.height - 16 + 3) -- inf_bary + 3 + vfix - en
-   else
-      Draw.text(map_name,
-                self.x + 136 + 24,
-                self.height - 16 + 3) -- inf_bary + 3 + vfix - en
-   end
-   if string.nonempty(map_level) then
-      Draw.text(map_level,
+   Draw.text(self.map_name,
+             self.x + 136 + 24,
+             self.height - 16 + 3) -- inf_bary + 3 + vfix - en
+   if string.nonempty(self.map_level) then
+      Draw.text(self.map_level,
                 self.x + 136 + 114,
                 self.height - 16 + 3) -- inf_bary + 3 + vfix - en
    end

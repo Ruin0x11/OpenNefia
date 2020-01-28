@@ -16,6 +16,12 @@ function theme_proxy:init(namespace)
    self.namespace = namespace
 end
 
+function theme_proxy:serialize()
+end
+
+function theme_proxy:deserialize()
+end
+
 local function find_asset(namespace, asset)
    for i = #active_themes, 1, -1 do
       local theme = active_themes[i]
@@ -32,6 +38,13 @@ local function find_asset(namespace, asset)
 end
 
 function theme_proxy:__index(asset)
+   if asset == "serialize" then
+      return theme_proxy.serialize
+   end
+   if asset == "deserialize" then
+      return theme_proxy.deserialize
+   end
+
    local id = self.namespace .. "." .. asset
    if cache[id] then
       return cache[id]

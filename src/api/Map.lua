@@ -823,4 +823,46 @@ function Map.position_in_world_map(map)
    return area.x, area.y
 end
 
+-- @tparam uint hour
+-- @tparam InstancedMap[opt] map
+function Map.calc_shadow(hour, map)
+   map = map or field.map
+
+   local shadow = {5, 5, 5}
+
+   if not map.is_outdoor then
+      return shadow
+   end
+
+   if hour >= 24 or (hour >= 0 and hour < 4) then
+      shadow = {110, 90, 60}
+   elseif hour >= 4 and hour < 10 then
+      shadow = {
+         70 - (hour - 3) * 10,
+         80 - (hour - 3) * 12,
+         60 - (hour - 3) * 10
+      }
+   elseif hour >= 10 and hour < 12 then
+      shadow = {10, 10, 10}
+   elseif hour >= 12 and hour < 17 then
+      shadow = {0, 0, 0}
+   elseif hour >= 17 and hour < 21 then
+      shadow = {
+         0 + (hour - 17) * 20,
+         15 + (hour - 16) * 15,
+         10 + (hour - 16) * 10
+      }
+   elseif hour >= 21 and hour < 24 then
+      shadow = {
+         80 + (hour - 21) * 10,
+         70 + (hour - 21) * 10,
+         40 + (hour - 21) * 5,
+      }
+   end
+
+   -- TODO weather, noyel
+
+   return shadow
+end
+
 return Map

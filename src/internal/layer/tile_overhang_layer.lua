@@ -25,32 +25,6 @@ function tile_overhang_layer:reset()
    self.batch_inds = {}
 end
 
-local function calc_map_shadow(map, hour)
-   if not map.is_outdoor then
-      return 0
-   end
-
-   local shadow = 0
-
-   if hour >= 24 or (hour >= 0 and hour < 4) then
-      shadow = 110
-   elseif hour >= 4 and hour < 10 then
-      shadow = math.max(10, 70 - (hour - 3) * 10)
-   elseif hour >= 10 and hour < 12 then
-      shadow = 10
-   elseif hour >= 12 and hour < 17 then
-      shadow = 1
-   elseif hour >= 17 and hour < 21 then
-      shadow = (hour - 17) * 20
-   elseif hour >= 21 and hour < 24 then
-      shadow = 80 + (hour - 21) * 10
-   end
-
-   -- TODO weather, noyel
-
-   return shadow
-end
-
 function tile_overhang_layer:update(dt, screen_updated)
    if not screen_updated then return end
 
@@ -104,7 +78,7 @@ function tile_overhang_layer:update(dt, screen_updated)
    -- be used here too...
    map._tiles_dirty = {}
 
-   self.overhang_batch.shadow = calc_map_shadow(map, save.base.date.hour)
+   self.overhang_batch.shadow = Map.calc_shadow(save.base.date.hour, map)
    self.overhang_batch.updated = true
 end
 

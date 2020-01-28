@@ -230,7 +230,8 @@ data:add
       local outer_area = save.base.area_mapping:area_for_map(map)
       assert(inner_area ~= outer_area)
 
-      Map.travel_to(map, {maybe_regenerate = true, start_pos = "elona.stair_up"})
+      local start_pos = map.player_start_pos or "elona.stair_up"
+      Map.travel_to(map, {maybe_regenerate = true, start_pos = start_pos})
 
       return "player_turn_query"
    end,

@@ -1,6 +1,3 @@
-local shadow_batch = require("internal.draw.shadow_batch")
-local sparse_batch = require("internal.draw.sparse_batch")
-local tile_batch = require("internal.draw.tile_batch")
 local sound_manager = require("internal.global.sound_manager")
 local Draw = require("api.Draw")
 

@@ -27,7 +27,8 @@ function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.free_anims = {}
 
    self.batches = {}
-   self.to_draw = {}
+   self.to_draw_inds = {}
+   self.to_draw_drawables = {}
    self.updated = true
    self.tile_width = self.atlas.tile_width
    self.tile_height = self.atlas.tile_height
@@ -83,7 +84,7 @@ function sparse_batch:add_tile(params)
    self.colors_g[ind] = (params.color[2] or 255) / 255
    self.colors_b[ind] = (params.color[3] or 255) / 255
    self.z_orders[ind] = z_order
-   self.drawables[ind] = params.drawables or {}
+   self.drawables[ind] = params.drawables or nil
    self.updated = true
    return ind
 end
@@ -117,7 +118,8 @@ function sparse_batch:clear()
    self.colors_b = {}
    self.z_orders = {}
    self.batches = {}
-   self.to_draw = {}
+   self.to_draw_inds = {}
+   self.to_draw_drawables = {}
    self.ordering = SkipList:new()
 
    self.free_indices = {}
@@ -143,9 +145,9 @@ function sparse_batch:update(dt)
          self.updated = changed_frame or self.updated
       end
    end
-   for _, pair in ipairs(self.to_draw) do
-      if pair[2].update then
-         pair[2]:update(dt)
+   for _, drawable in ipairs(self.to_draw_drawables) do
+      if drawable.update then
+         drawable:update(dt)
       end
    end
 end
@@ -170,7 +172,8 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
          batch:clear()
       end
 
-      self.to_draw = {}
+      self.to_draw_inds = {}
+      self.to_draw_drawables = {}
 
       local batch = nil
       local batch_ind = 1
@@ -192,7 +195,8 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                batch = nil
             end
             for _, entry in ipairs(dr[ind]) do
-               self.to_draw[#self.to_draw+1] = { ind, entry.drawable }
+               self.to_draw_inds[#self.to_draw_inds+1] = ind
+               self.to_draw_drawables[#self.to_draw_drawables+1] = entry.drawable
             end
          end
 
@@ -206,7 +210,8 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                batch:flush()
                batch = nil
             end
-            self.to_draw[#self.to_draw+1] = { ind, tile }
+            self.to_draw_inds[#self.to_draw_inds+1] = ind
+            self.to_draw_drawables[#self.to_draw_drawables+1] = tile
          elseif tile ~= 0 then
             -- This is a reference to a tile in the sprite atlas.
             if batch == nil then
@@ -222,7 +227,8 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
 
                batch_ind = batch_ind + 1
 
-               self.to_draw[#self.to_draw+1] = { ind, batch }
+               self.to_draw_inds[#self.to_draw_inds+1] = ind
+               self.to_draw_drawables[#self.to_draw_drawables+1] = batch
             end
 
             local cx = xc[ind]
@@ -260,9 +266,9 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
       self.updated = false
    end
 
-   for _, pair in ipairs(self.to_draw) do
-      local ind = pair[1]
-      local drawable = pair[2]
+   for idx = 1, #self.to_draw_inds do
+      local ind = self.to_draw_inds[idx]
+      local drawable = self.to_draw_drawables[idx]
       if drawable.draw then
          local i, j = self.coords:tile_to_screen(xc[ind] - tx, yc[ind] - ty)
          drawable:draw(sx + ox - tw + offset_x + i + xo[ind],

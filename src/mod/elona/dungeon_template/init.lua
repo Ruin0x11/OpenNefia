@@ -355,10 +355,6 @@ local function generate_dungeon(self, params, opts)
    for _, block in ipairs(blocks) do
       block:remove_ownership()
    end
-   local chara = Chara.at(dungeon.player_start_pos.x, dungeon.player_start_pos.y)
-   if chara then
-      error("chara exists on start pos: " .. chara._id)
-   end
 
    dungeon.can_exit_from_edge = false
 

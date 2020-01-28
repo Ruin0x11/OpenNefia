@@ -34,7 +34,7 @@ function fps:update(dt)
       local fps = self.frames / (self.ms / 1000)
       local ram = collectgarbage("count") / 1024
       local diff = ram - self.prev_ram
-      self.text = string.format("FPS: %02.2f\nRAM: %04.2fMB \nRAMD: %04.2fMB", fps, ram, diff)
+      self.text = string.format("FPS: %02.2f\nRAM: %04.2fMB \nRMD: %04.4fMB", fps, ram, diff)
       self.frames = 0
       self.ms = 0
 

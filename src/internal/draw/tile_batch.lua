@@ -8,7 +8,7 @@ function tile_batch:init(width, height, atlas, coords, tile_width, tile_height, 
    self.atlas = atlas
    self.coords = coords
 
-   self.shadow = 0
+   self.shadow = {5, 5, 5}
 
    self.tiles = {}
    self.batch = love.graphics.newSpriteBatch(atlas.image)
@@ -88,11 +88,15 @@ function tile_batch:draw(x, y)
       self.updated = false
    end
 
-   Draw.set_color(255 - self.shadow, 255 - self.shadow, 255 - self.shadow)
-
+   Draw.set_color(255, 255, 255)
    love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
 
-   Draw.set_color(255, 255, 255)
+   -- TODO gfdec2 decrements colors but prevents them from reaching a
+   -- 0 value, so the colors here are inaccurate.
+   love.graphics.setBlendMode("subtract")
+   Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
+   Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height())
+   love.graphics.setBlendMode("alpha")
 end
 
 return tile_batch

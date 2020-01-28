@@ -130,7 +130,6 @@ function atlas:load_one(proto, draw_tile)
          if i > 1 then
             frame_id = "default_" .. i
          end
-         print(frame_id, image_file)
          new_images[frame_id] = image_file
       end
       images = new_images

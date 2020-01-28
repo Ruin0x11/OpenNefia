@@ -156,6 +156,15 @@ local function init_save()
    s.uids = uid_tracker:new()
    s.map_uids = uid_tracker:new()
    s.random_seed = Rand.rnd(800) + 2
+   s.shadow = 70
+   s.has_light_source = false
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})
+
+Event.register("base.on_hotload_end", "Hotload field renderer",
+               function()
+                  local field = require("game.field")
+                  field.renderer.screen_updated = true
+                  field.renderer:update(0)
+               end)

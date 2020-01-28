@@ -110,7 +110,7 @@ local fallbacks = {
    dungeon_level = 1,
    deepest_dungeon_level = 10,
    danger_level = 1,
-   player_start_pos = { x = 0, y = 0 },
+   player_start_pos = nil,
    types = {},
    appearance = "",
    tile_set = "Normal",

@@ -92,7 +92,7 @@ function shadow_batch:init(width, height, coords)
    self.tile_width = 48
    self.tile_height = 48
 
-   self.light = 50
+   self.shadow_strength = 70
 end
 
 function shadow_batch:find_bounds(x, y)
@@ -322,7 +322,7 @@ function shadow_batch:draw(x, y, offx, offy)
       self.updated = false
    end
 
-   Draw.set_color(255, 255, 255, self.light)
+   Draw.set_color(255, 255, 255, self.shadow_strength)
    love.graphics.setBlendMode("subtract")
    love.graphics.draw(self.batch, sx + ox - tw, sy + oy - th)
    love.graphics.draw(self.edge_batch, sx + ox - tw, sy + oy - th)
