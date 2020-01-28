@@ -52,7 +52,7 @@ local function load_manifest(manifest_path)
       return false, "Cannot find mod manifest at " .. manifest_path
    end
 
-   local chunk, err = loadfile(manifest_path)
+   local chunk, err = love.filesystem.load(manifest_path)
    if chunk == nil then
       return false, err
    end
@@ -108,7 +108,7 @@ function mod.calculate_load_order(mods)
       local success, manifest = load_manifest(manifest_file)
       if not success then
          local err = manifest
-         error(string.format("Error initializing %s:\n\t%s", mod_id, err))
+         error(string.format("Error initializing %s:\n\t%s", manifest.id, err))
       end
 
       local mod_id = manifest.id

@@ -38,7 +38,7 @@ load_translations = function(path, merged)
       local path = fs.join(path, file)
       if fs.is_file(path) and fs.extension_part(path) == "lua" then
          Log.debug("Loading translations at %s", path)
-         local chunk, err = loadfile(path)
+         local chunk, err = love.filesystem.load(path)
 
          if chunk == nil then
             error("Error loading translations:\n\t" .. err)

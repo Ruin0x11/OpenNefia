@@ -5,6 +5,19 @@ _IS_LOVEJS = jit == nil
 
 package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/init.fnl"
 
+-- BUG: LÖVE for Android will not load relative paths for some reason,
+-- probably due to a PhysFS bug. Due to this we have to expand the
+-- relative paths in package.path ourselves and use functions like
+-- love.filesystem.load instead of loadfile to go through LÖVE's
+-- filesystem abstraction layer so the files can be found.
+local absolute_dir = love.filesystem.getSource()
+package.path = package.path:gsub('%./', absolute_dir)
+
+-- We have to update LÖVE's require path which is completely separate
+-- from package.path in order to make love.filesystem.load work
+-- properly
+love.filesystem.setRequirePath(package.path)
+
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 

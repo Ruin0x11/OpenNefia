@@ -5,18 +5,23 @@ local Fs = {}
 Fs.exists = fs.exists
 Fs.join = fs.join
 
-function Fs.open(file, mode)
-   -- TODO: needs to use physfs
+function Fs.open(filepath, mode)
    assert(mode, "mode is required")
-   return io.open(file, mode)
+
+   -- love.File:open() does not support "rb"
+   mode = mode:gsub("b$", "")
+
+   local file = love.filesystem.newFile(filepath)
+   file:open(mode)
+   return file
 end
 
-function Fs.read_all(file)
-   local f, err = Fs.open(file, "rb")
+function Fs.read_all(filepath)
+   local f, err = Fs.open(filepath, "r")
    if f == nil then
       return nil, err
    end
-   local content = f:read("*all")
+   local content = f:read()
    f:close()
    return content
 end

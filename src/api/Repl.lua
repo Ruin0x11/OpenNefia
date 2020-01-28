@@ -110,7 +110,7 @@ function Repl.generate_env(locals)
    })
 
    if fs.exists("repl_startup.lua") then
-      local chunk = loadfile("repl_startup.lua")
+      local chunk = love.filesystem.load("repl_startup.lua")
       setfenv(chunk, env)
       chunk()
    end
