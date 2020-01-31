@@ -87,9 +87,9 @@ function Gui.fade_out()
             Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {0, 0, 0, 5})
          end
 
-         love.graphics.setBlendMode("subtract")
+         Draw.set_blend_mode("subtract")
          Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
-         love.graphics.setBlendMode("alpha")
+         Draw.set_blend_mode("alpha")
       end
    end
 

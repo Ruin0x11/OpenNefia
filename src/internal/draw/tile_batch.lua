@@ -91,12 +91,13 @@ function tile_batch:draw(x, y)
    Draw.set_color(255, 255, 255)
    love.graphics.draw(batch, sx + ox - tw, sy + oy - th)
 
-   -- TODO gfdec2 decrements colors but prevents them from reaching a
-   -- 0 value, so the colors here are inaccurate.
-   love.graphics.setBlendMode("subtract")
+   -- TODO: The original HSP code uses the gfdec2 function. gfdec2
+   -- decrements colors but prevents them from reaching a 0 value, so
+   -- the colors here are inaccurate.
+   Draw.set_blend_mode("subtract")
    Draw.set_color(self.shadow[1], self.shadow[2], self.shadow[3], 108)
    Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height())
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("alpha")
 end
 
 return tile_batch

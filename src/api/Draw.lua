@@ -6,6 +6,7 @@
 ---
 --- @module Draw
 local draw = require("internal.draw")
+local Env = require("api.Env")
 
 local Draw = {}
 
@@ -328,6 +329,19 @@ end
 
 function Draw.load_image_data(path)
    return love.image.newImageData(path)
+end
+
+local supports_subtract = Env.os() ~= "Android"
+
+function Draw.set_blend_mode(mode, alphamode)
+   -- BUG: Graphics hardware on mobile devices doesn't always seem to
+   -- support the "subtract" blending mode. In this case, we should
+   -- color the shadow black and blend as "alpha" instead.
+   if mode == "subtract" and not supports_subtract then
+      mode = "alpha"
+   end
+
+   love.graphics.setBlendMode(mode, alphamode)
 end
 
 return Draw

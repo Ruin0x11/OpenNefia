@@ -304,12 +304,12 @@ function shadow_batch:draw(x, y, offx, offy)
       self.batch:clear()
       self.edge_batch:clear()
 
-      for y=ty-1,tdy+1 do
-         if y >= -1 and y <= self.height then
-            for x=tx-1,tdx+1 do
-               if x >= -1 and x <= self.width then
-                  local tile = self_tiles[x+1][y+1]
-                  local i, j = self.coords:tile_to_screen(x - tx, y - ty)
+      for iy=ty-1,tdy+1 do
+         if iy >= -1 and iy <= self.height then
+            for ix=tx-1,tdx+1 do
+               if ix >= -1 and ix <= self.width then
+                  local tile = self_tiles[ix+1][iy+1]
+                  local i, j = self.coords:tile_to_screen(ix - tx, iy - ty)
                   self:add_one(tile, i, j)
                end
             end
@@ -323,10 +323,10 @@ function shadow_batch:draw(x, y, offx, offy)
    end
 
    Draw.set_color(255, 255, 255, self.shadow_strength)
-   love.graphics.setBlendMode("subtract")
-   love.graphics.draw(self.batch, sx + ox - tw, sy + oy - th)
-   love.graphics.draw(self.edge_batch, sx + ox - tw, sy + oy - th)
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("subtract")
+   Draw.image(self.batch, sx + ox - tw, sy + oy - th)
+   Draw.image(self.edge_batch, sx + ox - tw, sy + oy - th)
+   Draw.set_blend_mode("alpha")
 end
 
 return shadow_batch

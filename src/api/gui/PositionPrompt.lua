@@ -3,7 +3,6 @@ local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
-local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
@@ -135,7 +134,7 @@ function PositionPrompt:draw()
    local x, y = Gui.tile_to_screen(self.target_x, self.target_y)
    local draw_x, draw_y = Gui.field_draw_pos()
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
-   love.graphics.setBlendMode("add")
+   Draw.set_blend_mode("add")
    Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {127, 127, 255, 50})
 
    if should_draw_line(self.origin_x, self.origin_y, self.target_x, self.target_y) then
@@ -144,7 +143,7 @@ function PositionPrompt:draw()
          Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {255, 255, 255, 25})
       end
    end
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("alpha")
 end
 
 function PositionPrompt:update(dt)

@@ -257,16 +257,16 @@ end
 function chip_layer:draw(draw_x, draw_y, offx, offy)
    love.graphics.setShader(self.shadow_shader)
    Draw.set_color(255, 255, 255, 80)
-   love.graphics.setBlendMode("subtract")
+   Draw.set_blend_mode("subtract")
    self.drop_shadow_batch:draw(draw_x + offx, draw_y + offy)
    love.graphics.setShader()
 
-   love.graphics.setBlendMode("subtract")
+   Draw.set_blend_mode("subtract")
    Draw.set_color(255, 255, 255, 110)
    self.shadow_batch:draw(draw_x + offx, draw_y + offy, 8, 36)
 
    Draw.set_color(255, 255, 255)
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("alpha")
    self.chip_batch:draw(draw_x + offx, draw_y + offy)
 
    self:draw_hp_bars(draw_x, draw_y, offx, offy)

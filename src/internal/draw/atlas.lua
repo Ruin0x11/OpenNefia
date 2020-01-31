@@ -178,7 +178,7 @@ function atlas:load(protos, coords, cb)
    love.graphics.setBlendMode("alpha")
    love.graphics.setColor(1, 1, 1, 1)
 
-   local cb = cb or function(self, proto) self:load_one(proto) end
+   cb = cb or function(self, proto) self:load_one(proto) end
 
    for _, proto in ipairs(protos) do
       cb(self, proto)

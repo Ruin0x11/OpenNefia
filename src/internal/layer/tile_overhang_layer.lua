@@ -85,7 +85,7 @@ end
 function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
-   love.graphics.setBlendMode("subtract")
+   Draw.set_blend_mode("subtract")
    Draw.set_color(255, 255, 255, 20)
 
    -- Top shadows above wall tiles
@@ -116,7 +116,7 @@ function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
                        math.floor(self.tile_height / 4))
    end
 
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("alpha")
    Draw.set_color(255, 255, 255)
 end
 

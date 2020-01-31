@@ -53,9 +53,9 @@ function IconBar:do_redraw()
       if self.index == i then
          color = {255, 255, 255}
 
-         love.graphics.setBlendMode("add")
+         Draw.set_blend_mode("add")
          self.t[self.icon_set]:draw_region(i, x + 20, y - 24, nil, nil, {255, 255, 255, 70})
-         love.graphics.setBlendMode("alpha")
+         Draw.set_blend_mode("alpha")
       end
 
 

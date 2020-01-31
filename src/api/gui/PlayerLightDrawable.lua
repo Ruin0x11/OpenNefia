@@ -33,9 +33,9 @@ function PlayerLightDrawable:update(dt)
 end
 
 function PlayerLightDrawable:draw(x, y)
-   love.graphics.setBlendMode("add")
+   Draw.set_blend_mode("add")
    self.t.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, self.color, true)
-   love.graphics.setBlendMode("alpha")
+   Draw.set_blend_mode("alpha")
    Draw.set_color(255, 255, 255)
 end
 
