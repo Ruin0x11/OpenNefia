@@ -10,8 +10,6 @@ local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
 
-local anim_wait = 80 * 0.5
-
 local function pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()
    local scx, scy = Gui.tile_to_screen(tx, ty)
@@ -34,7 +32,7 @@ function Anim.load(anim_id, tx, ty)
    assert(asset, ("Asset not found: %s"):format(anim.asset))
    assert(asset.count_x)
 
-   if not Map.is_in_fov(tx, ty) or anim_wait == 0 then
+   if not Map.is_in_fov(tx, ty) or config["base.anim_wait"] == 0 then
       return function() end
    end
 
@@ -55,7 +53,7 @@ function Anim.load(anim_id, tx, ty)
       while frame <= frames do
          asset:draw_region(frame, sx + 24, sy + 8, nil, nil, {255, 255, 255}, rotation * frame)
 
-         local _, _, frames_passed = Draw.yield(anim_wait * wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] * wait)
          frame = frame + frames_passed
       end
    end
@@ -74,7 +72,7 @@ function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)
       while frame <= duration - 1 do
          draw_cb(asset, scx, scy, frame)
 
-         local _, _, frames_passed = Draw.yield(anim_wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
          frame = frame + frames_passed
       end
    end
@@ -102,7 +100,7 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
             draw_cb(asset, scx, scy, frame, p[1], p[2], i-1)
          end
 
-         local _, _, frames_passed = Draw.yield(anim_wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
          frame = frame + frames_passed
       end
    end
@@ -182,7 +180,7 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
             chip_batch:draw()
          end
 
-         local _, _, frames_passed = Draw.yield(anim_wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
          frame = frame + frames_passed
       end
 
@@ -281,7 +279,7 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
             end
          end
 
-         local _, _, frames_passed = Draw.yield(anim_wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
          frame = frame + frames_passed
       end
    end
@@ -311,7 +309,7 @@ function Anim.gene_engineering(tx, ty)
             end
          end
 
-         local _, _, frames_passed = Draw.yield(anim_wait * 2.25)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] * 2.25)
          i = i + frames_passed
       end
    end
@@ -406,7 +404,7 @@ function Anim.miracle(positions, sound)
          end
 
          local _
-         _, _, delta = Draw.yield(anim_wait * 2.25)
+         _, _, delta = Draw.yield(config["base.anim_wait"] * 2.25)
          loops = loops + delta
       end
    end

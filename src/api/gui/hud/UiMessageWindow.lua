@@ -223,16 +223,6 @@ function UiMessageWindow:redraw_window()
 
 end
 
-function UiMessageWindow:draw()
-   if self.redraw then
-      Draw.with_canvas(self.canvas, function() self:redraw_window() end)
-      self.redraw = false
-   end
-
-   Draw.set_color(255, 255, 255)
-   Draw.image(self.canvas, self.x, self.y)
-end
-
 function UiMessageWindow:newline(text)
    text = text or ""
 
@@ -266,7 +256,18 @@ function UiMessageWindow:message(text, color)
    self.redraw = true
 end
 
-function UiMessageWindow:update()
+function UiMessageWindow:draw()
+   if self.redraw then
+      Draw.with_canvas(self.canvas, function() self:redraw_window() end)
+      self.redraw = false
+   end
+
+   Draw.set_color(255, 255, 255)
+   Draw.image(self.canvas, self.x, self.y)
+end
+
+function UiMessageWindow:update(dt)
+   require("mod.elona.api.Weather").update_rain(dt)
 end
 
 return UiMessageWindow

@@ -1,5 +1,6 @@
 local sound_manager = require("internal.global.sound_manager")
 local Draw = require("api.Draw")
+local Log = require("api.Log")
 
 local field_renderer = class.class("field_renderer")
 
@@ -42,6 +43,14 @@ function field_renderer:init(width, height, layers)
    end
 end
 
+function field_renderer:set_map(map, layers)
+   local draw_callbacks = self.draw_callbacks
+
+   self:init(map:width(), map:height(), layers)
+
+   self.draw_callbacks = draw_callbacks
+end
+
 function field_renderer:set_scroll(dx, dy, scroll_frames)
    self.scroll = { dx = dx, dy = dy }
    self.scroll_max_frames = scroll_frames
@@ -78,15 +87,33 @@ function field_renderer:draw_pos()
    return self.draw_x, self.draw_y, self.scroll_x, self.scroll_y
 end
 
-function field_renderer:add_async_draw_callback(cb)
-   self.draw_callbacks[#self.draw_callbacks+1] = {
+function field_renderer:add_async_draw_callback(cb, tag)
+   local key = #self.draw_callbacks+1
+   if tag ~= nil then
+      if type(tag) ~= "string" then
+         error(("Draw callback tag must be a string, got: '%s'"):format(tag))
+      end
+      key = tag
+   end
+
+   self.draw_callbacks[key] = {
       thread = coroutine.create(cb),
       dt = 0
    }
 end
 
+function field_renderer:remove_async_draw_callback(tag)
+   if self.draw_callbacks[tag] == nil then
+      Log.debug("Tried to stop draw callback '%s' but it didn't exist.", tag)
+      return
+   end
+
+   self.draw_callbacks[tag] = nil
+end
+
 function field_renderer:update_draw_callbacks(dt)
-   for i, co in ipairs(self.draw_callbacks) do
+   -- TODO: order by priority
+   for _, co in pairs(self.draw_callbacks) do
       co.dt = co.dt - dt
    end
 
@@ -124,24 +151,27 @@ function field_renderer:draw()
    draw_x = sx - draw_x
    draw_y = sy - draw_y
    local dead = {}
-   for i, co in ipairs(self.draw_callbacks) do
+
+   -- TODO: order by priority
+   for key, co in pairs(self.draw_callbacks) do
       if co.dt > 0 then
          -- This frame has not been advanced yet; redraw the animation
          -- on the current frame (delta 0)
-         local ok = resume_coroutine(co, draw_x, draw_y, 0)
-         if not ok then
+         local going = resume_coroutine(co, draw_x, draw_y, 0)
+         if not going then
             -- Coroutine error; stop drawing now
-            dead[#dead+1] = i
+            dead[#dead+1] = key
          end
       else
          while co.dt <= 0 do
             -- Advance one frame (delta 1)
-            local ok, dt = resume_coroutine(co, draw_x, draw_y, 1)
-            if not ok then
+            local going, dt = resume_coroutine(co, draw_x, draw_y, 1)
+            if not going then
                -- Coroutine error; stop drawing now
-               dead[#dead+1] = i
+               dead[#dead+1] = key
                break
             else
+               -- TODO: assumes 60 FPS
                dt = math.max(dt or 16.66, 16.66) / 1000
                co.dt = co.dt + dt
             end
@@ -149,7 +179,7 @@ function field_renderer:draw()
       end
    end
 
-   table.remove_indices(self.draw_callbacks, dead)
+   table.remove_keys(self.draw_callbacks, dead)
 end
 
 function field_renderer:update(dt)

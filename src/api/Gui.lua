@@ -42,11 +42,17 @@ function Gui.field_draw_pos()
 end
 
 --- Starts a draw callback to be run asynchronously.
-function Gui.start_draw_callback(cb)
-   field:add_async_draw_callback(cb)
+function Gui.start_draw_callback(cb, async, tag)
+   field:add_async_draw_callback(cb, tag)
 
-   -- TODO: make configurable
-   Gui.wait_for_draw_callbacks()
+   if not async then
+      Gui.wait_for_draw_callbacks()
+   end
+end
+
+--- Stops a tagged draw callback.
+function Gui.stop_draw_callback(tag)
+   field:remove_async_draw_callback(tag)
 end
 
 --- Waits for all draw callbacks to finish before continuing.
@@ -88,7 +94,6 @@ function Gui.fade_out()
    end
 
    Gui.start_draw_callback(anim)
-   Gui.wait_for_draw_callbacks()
 end
 
 --- Converts from map tile space to screen space.

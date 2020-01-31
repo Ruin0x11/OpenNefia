@@ -240,6 +240,8 @@ function field_logic.player_turn_query()
    Gui.update_screen(nil, dt)
 
    while going do
+      dt = coroutine.yield()
+
       local ran, turn_result = field:run_actions(dt, player)
       field:update(dt)
 
@@ -257,8 +259,6 @@ function field_logic.player_turn_query()
          going = false
          break
       end
-
-      dt = coroutine.yield()
    end
 
    -- TODO: convert public to internal event
@@ -350,6 +350,9 @@ function field_logic.run_one_event(event, target_chara)
    while field:update_draw_callbacks(dt) do
       dt = coroutine.yield()
    end
+
+   -- Subsequent events should not draw anything.
+   dt = 0
 
    if field.map_changed == true then
       event = "turn_begin"

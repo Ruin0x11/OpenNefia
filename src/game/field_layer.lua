@@ -68,7 +68,11 @@ function field_layer:set_map(map)
 
    self.map = map
    self.map:redraw_all_tiles()
-   self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
+   if self.renderer == nil then
+      self.renderer = field_renderer:new(map:width(), map:height(), self.layers)
+   else
+      self.renderer:set_map(map, self.layers)
+   end
    self.map_changed = true
    self.no_scroll = true
 end
@@ -179,8 +183,12 @@ function field_layer:update(dt, ran_action, result)
    self.sound_manager:update(dt)
 end
 
-function field_layer:add_async_draw_callback(cb)
-   self.renderer:add_async_draw_callback(cb)
+function field_layer:add_async_draw_callback(cb, tag)
+   self.renderer:add_async_draw_callback(cb, tag)
+end
+
+function field_layer:remove_async_draw_callback(tag)
+   self.renderer:remove_async_draw_callback(tag)
 end
 
 function field_layer:wait_for_draw_callbacks()

@@ -453,7 +453,6 @@ local function base_init(self, player)
 end
 
 local function my_start(self, player)
-   config["base.play_music"] = false
    base_init(self, player)
 
    for i=1,4 do

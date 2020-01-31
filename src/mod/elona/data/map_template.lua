@@ -12,7 +12,7 @@ local World = require("api.World")
 local Text = require("mod.elona.api.Text")
 
 local function entrance_edge(chara, map)
-   return data["base.map_entrance"]["base.edge"].player_start_pos(chara, map)
+   return data["base.map_entrance"]["base.edge"].pos(chara, map)
 end
 
 local function reload_122_map_geometry(current, elona122_map_id)

@@ -159,7 +159,7 @@ data:add {
          Effect.show_eating_message(target)
       end
 
-      Effect.apply_food_curse_state(chara, params.curse_state)
+      Effect.apply_food_curse_state(target, params.curse_state)
       local anim = Anim.load("elona.anim_elec", target.x, target.y)
       Gui.start_draw_callback(anim)
 

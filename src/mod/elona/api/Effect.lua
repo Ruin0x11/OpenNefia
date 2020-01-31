@@ -1,5 +1,6 @@
 local Gui = require("api.Gui")
 local Item = require("api.Item")
+local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
