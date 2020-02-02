@@ -200,7 +200,21 @@ function Draw.image(image, x, y, width, height, color, centered, rotation)
       ox = (image:getWidth()) / 2
       oy = (image:getHeight()) / 2
    end
-   return love.graphics.draw(image, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
+
+   -- Sprite batches will ignore the width and height of
+   -- love.graphics.draw; we have to manually set the scissor.
+   local do_scissor = image.typeOf and image:typeOf("SpriteBatch") and width and height
+   if do_scissor then
+      love.graphics.setScissor(x, y, width, height)
+   end
+
+   local result = love.graphics.draw(image, x, y, math.rad(rotation or 0), sx, sy, ox, oy)
+
+   if do_scissor then
+      love.graphics.setScissor()
+   end
+
+   return result
 end
 
 function Draw.image_region(image, quad, x, y, width, height, color, centered, rotation)

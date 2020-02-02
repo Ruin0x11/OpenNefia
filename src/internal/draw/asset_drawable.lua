@@ -1,6 +1,7 @@
 local Env = require("api.Env")
 local Draw = require("api.Draw")
 local draw = require("internal.draw")
+local asset_instance = require("internal.draw.asset_instance")
 
 local asset_drawable = class.class("asset_drawable")
 
@@ -49,6 +50,17 @@ function asset_drawable:init(data_inst)
    end
 end
 
+-- Given `parts`, a list of region IDs and coordinates, creates a
+-- sprite batch which draws them as a single batch.
+--
+-- The contents of `parts` look like this:
+--
+--  { "right_mid", x + width - 16, i * 16 + y + 16 }
+--
+-- The first entry is the region ID, second is X, third is Y. The
+-- regions are generated from the theme data - they can be a map of
+-- region to image location or a function that generates them
+-- dynamically from a width and height.
 function asset_drawable:make_batch(parts, width, height)
    local batch = love.graphics.newSpriteBatch(self.image, self.image:getWidth() * self.image:getHeight())
    batch:clear()
@@ -74,6 +86,10 @@ function asset_drawable:make_batch(parts, width, height)
    batch:flush()
 
    return batch
+end
+
+function asset_drawable:make_instance(width, height)
+   return asset_instance:new(self, width, height)
 end
 
 function asset_drawable:get_width()
