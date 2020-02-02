@@ -4,13 +4,14 @@ local Draw = require("api.Draw")
 local sparse_batch = require("internal.draw.sparse_batch")
 local UiTheme = require("api.gui.UiTheme")
 local atlas = require("internal.draw.atlas")
+local atlases = require("internal.global.atlases")
 
 local chip_layer = class.class("chip_layer", IDrawLayer)
 
 function chip_layer:init(width, height)
    local coords = Draw.get_coords()
-   local chip_atlas = require("internal.global.atlases").get().chip
-   local item_shadow_atlas = require("internal.global.atlases").get().item_shadow
+   local chip_atlas = atlases.get().chip
+   local item_shadow_atlas = atlases.get().item_shadow
 
    local shadow_atlas = atlas:new(48, 48)
    self.t = UiTheme.load(self)

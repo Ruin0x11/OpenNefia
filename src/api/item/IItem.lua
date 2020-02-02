@@ -41,7 +41,21 @@ local fallbacks = {
 
    cargo_weight = 0,
 
-   rarity = 1000000
+   rarity = 1000000,
+
+   -- Ambient light information. Each one is a table or nil. Same
+   -- format as vanilla:
+   -- - chip (id:base.chip): chip with animation to play over tile.
+   -- - brightness (uint): alpha value of chip animation.
+   -- - offset_y (int): offset of chip animation.
+   -- - power (int): magnitude of shadow decrease. affected by player
+   --                distance to light.
+   -- - flicker (uint): random flicker to add to light. Added as
+   --                   Rand.rnd(flicker + 1).
+   -- - always_on (bool): if true, ignore time of day when displaying
+   --                     the light. normally lights are only
+   --                     displayed if 17 < date.hour || date.hour < 6.
+   light = nil
 }
 
 function IItem:pre_build()

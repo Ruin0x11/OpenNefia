@@ -33,7 +33,7 @@ function field_renderer:init(width, height, layers)
       end
       local IDrawLayer = require("api.gui.IDrawLayer")
 
-      local instance = layer:new(width, height)
+      local instance = layer:new(width, height, coords)
       class.assert_is_an(IDrawLayer, instance)
 
       -- TODO

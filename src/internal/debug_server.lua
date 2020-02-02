@@ -1,6 +1,7 @@
 local Log = require("api.Log")
 local Doc = require("api.Doc")
 local ReplCompletion = require("api.gui.menu.ReplCompletion")
+local ReplLayer = require("api.gui.menu.ReplLayer")
 local doc = require("internal.doc")
 local doc_store = require("internal.global.doc_store")
 local fs = require("util.fs")
@@ -28,6 +29,7 @@ end
 --
 -- {
 --   "success":true,
+--   "result":"42"
 -- }
 function commands.run(text)
    local status, success, result
@@ -51,7 +53,7 @@ function commands.run(text)
       return error_result(status)
    end
 
-   return {}
+   return { result = ReplLayer.format_repl_result(result) }
 end
 
 local function with_candidates(cb)

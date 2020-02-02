@@ -46,6 +46,180 @@ local hook_calc_initial_gold =
                         return calc_initial_gold(params.item, params.owner)
    end)
 
+local light = {
+   lantern = {
+      pic = 3,
+      ani = 0,
+      bright = 80,
+      offset_y = 0,
+      power = 6,
+      flicker = 40,
+      always_on = false
+   },
+   lamp = {
+      pic = 3,
+      ani = 0,
+      bright = 100,
+      offset_y = 30,
+      power = 8,
+      flicker = 20,
+      always_on = false
+   },
+   torch = {
+      pic = 1,
+      ani = 1,
+      bright = 50,
+      offset_y = 8,
+      power = 8,
+      flicker = 50,
+      always_on = true
+   },
+   torch_lamp = {
+      pic = 1,
+      ani = 1,
+      bright = 70,
+      offset_y = 28,
+      power = 8,
+      flicker = 70,
+      always_on = true
+   },
+   town_light = {
+      pic = 11,
+      ani = 0,
+      bright = 140,
+      offset_y = 48,
+      power = 10,
+      flicker = 20,
+      always_on = false
+   },
+   port_light = {
+      pic = 0,
+      ani = 0,
+      bright = 140,
+      offset_y = 62,
+      power = 10,
+      flicker = 20,
+      always_on = false
+   },
+   port_light_snow = {
+      pic = 11,
+      ani = 0,
+      bright = 100,
+      offset_y = 72,
+      power = 10,
+      flicker = 20,
+      always_on = false
+   },
+   stove = {
+      pic = 5,
+      ani = 1,
+      bright = 170,
+      offset_y = 4,
+      power = 2,
+      flicker = 80,
+      always_on = true
+   },
+   crystal = {
+      pic = 9,
+      ani = 1,
+      bright = 30,
+      offset_y = 8,
+      power = 2,
+      flicker = 80,
+      always_on = true
+   },
+   crystal_middle = {
+      pic = 9,
+      ani = 1,
+      bright = 30,
+      offset_y = 24,
+      power = 2,
+      flicker = 80,
+      always_on = true
+   },
+   crystal_high = {
+      pic = 9,
+      ani = 1,
+      bright = 30,
+      offset_y = 50,
+      power = 5,
+      flicker = 80,
+      always_on = true
+   },
+   town = {
+      pic = 8,
+      ani = 0,
+      bright = 120,
+      offset_y = 0,
+      power = 15,
+      flicker = 15,
+      always_on = false
+   },
+   item = {
+      pic = 7,
+      ani = 0,
+      bright = 35,
+      offset_y = 4,
+      power = 1,
+      flicker = 40,
+      always_on = true
+   },
+   item_middle = {
+      pic = 7,
+      ani = 0,
+      bright = 35,
+      offset_y = 24,
+      power = 1,
+      flicker = 40,
+      always_on = true
+   },
+   gate = {
+      pic = 12,
+      ani = 0,
+      bright = 20,
+      offset_y = 32,
+      power = 2,
+      flicker = 30,
+      always_on = true
+   },
+   candle = {
+      pic = 4,
+      ani = 0,
+      bright = 50,
+      offset_y = 48,
+      power = 5,
+      flicker = 70,
+      always_on = true
+   },
+   candle_low = {
+      pic = 4,
+      ani = 0,
+      bright = 50,
+      offset_y = 16,
+      power = 5,
+      flicker = 70,
+      always_on = true
+   },
+   window = {
+      pic = 12,
+      ani = 0,
+      bright = 100,
+      offset_y = 24,
+      power = 3,
+      flicker = 10,
+      always_on = false
+   },
+   window_red = {
+      pic = 13,
+      ani = 0,
+      bright = 70,
+      offset_y = 35,
+      power = 3,
+      flicker = 10,
+      always_on = false
+   },
+}
+
 -- TODO: Some fields should not be stored on the prototype as
 -- defaults, but instead copied on generation.
 

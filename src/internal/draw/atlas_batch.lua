@@ -3,7 +3,7 @@ local Draw = require("api.Draw")
 local atlas_batch = class.class("atlas_batch")
 
 function atlas_batch:init(the_atlas)
-   assert(class.is_an(require("internal.draw.atlas"), the_atlas))
+   class.assert_is_an(require("internal.draw.atlas"), the_atlas)
    self.atlas = the_atlas
    self.batch = love.graphics.newSpriteBatch(the_atlas.image)
 end

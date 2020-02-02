@@ -41,7 +41,8 @@ local function trim_traceback(err)
 end
 
 function LuaReplMode:submit(text)
-   -- WARNING: massive backdoor waiting to happen.
+   -- WARNING: massive backdoor waiting to happen. All someone has to
+   -- do is load this API and arbitrary code execution is possible.
    local chunk, err = loadstring("return " .. text)
 
    if chunk == nil then

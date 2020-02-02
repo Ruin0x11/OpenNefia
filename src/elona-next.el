@@ -13,6 +13,12 @@
     (define-key map "\C-c\C-l" 'elona-next-send-buffer)
     map))
 
+(defcustom elona-next-repl-address "127.0.0.1"
+  "Address to use for connecting to the REPL.")
+
+(defcustom elona-next-repl-port 4567
+  "Port to use for connecting to the REPL.")
+
 ;;;###autoload
 (define-minor-mode elona-next-minor-mode
   "Elona next debug server."
@@ -351,7 +357,7 @@
        (get-buffer-process lua-process-buffer)))
 
 (defun elona-next--send (cmd str)
-  (let ((proc (elona-next--make-tcp-connection "127.0.0.1" 4567))
+  (let ((proc (elona-next--make-tcp-connection elona-next-repl-address elona-next-repl-port))
         (json (json-encode (list :command cmd :content str))))
     (when (process-live-p proc)
       (process-put proc :command cmd)
@@ -558,7 +564,7 @@
 (defun elona-next-eval-expression (exp)
   (interactive
    (list
-    (read-from-minibuffer "Eval: " nil nil nil 'elona-next--eval-expression-history)))
+    (read-from-minibuffer "Eval (lua): " nil nil nil 'elona-next--eval-expression-history)))
   (elona-next--send-to-repl exp))
 
 (defun elona-next-eval-current-line ()

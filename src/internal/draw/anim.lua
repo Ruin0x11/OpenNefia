@@ -1,5 +1,6 @@
 local IChipAnimatable = require("api.gui.IChipAnimatable")
 
+-- Finite state machine for animations. Contains no drawing logic.
 local anim = class.class("anim", IChipAnimatable)
 
 function anim:init(anims, tile_id)
@@ -36,17 +37,6 @@ function anim:step_anim()
    self.time_left = self.time_left + anim_data.frames[self.frame].time
    self.image = anim_data.frames[self.frame].image
 
-   local D = require("api.Debug")
-
-   if self.tile_id == "elona.item_campfire" then
-      if self.image ~= image then
-         D.print("NEXT", self.image, image, self.tile_id)
-      else
-         D.print("no", self.image, image, self.tile_id)
-      end
-      D.print_end()
-   end
-
    return self.image ~= image
 end
 
@@ -54,7 +44,7 @@ function anim:update(dt)
    local changed_frame = false
    self.time_left = self.time_left - dt
    while self.time_left < 0 do
-      changed_frame = self:step_anim()
+      changed_frame = self:step_anim() or changed_frame
    end
    return changed_frame
 end

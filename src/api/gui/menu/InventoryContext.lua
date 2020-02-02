@@ -39,7 +39,7 @@ local function source_equipment(ctxt)
 end
 
 local function source_shop(ctxt)
-   assert(class.is_an(ILocation, ctxt.shop))
+   class.assert_is_an(ILocation, ctxt.shop)
    return ctxt.shop:iter()
 end
 

@@ -13,7 +13,7 @@ local theme_proxy = class.class("theme_proxy")
 
 function theme_proxy:init(namespace)
    assert(type(namespace) == "string")
-   self.namespace = namespace
+   self._namespace = namespace
 end
 
 function theme_proxy:serialize()
@@ -38,19 +38,17 @@ local function find_asset(namespace, asset)
 end
 
 function theme_proxy:__index(asset)
-   if asset == "serialize" then
-      return theme_proxy.serialize
-   end
-   if asset == "deserialize" then
-      return theme_proxy.deserialize
+   local v = rawget(theme_proxy, asset)
+   if v then
+      return v
    end
 
-   local id = self.namespace .. "." .. asset
+   local id = self._namespace .. "." .. asset
    if cache[id] then
       return cache[id]
    end
 
-   local proto, theme = find_asset(self.namespace, asset)
+   local proto, theme = find_asset(self._namespace, asset)
    if not proto then
       error("Cannot find asset " .. id)
    end

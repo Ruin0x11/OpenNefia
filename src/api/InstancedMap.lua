@@ -89,6 +89,9 @@ function InstancedMap:init(width, height, uids, tile)
    -- interpreted by each rendering layer.
    self._memory = {}
 
+   -- Ambient light information. See IItem.light.
+   self._light = {}
+
    self._tiles = table.of({}, width * height)
    self._tiles_dirty = {}
    self._uids = uids
@@ -228,6 +231,10 @@ end
 
 function InstancedMap:memory(x, y, kind)
    return self._memory[kind][y*self._width+x+1]
+end
+
+function InstancedMap:light(x, y)
+   return self._light[y*self._width+x+1]
 end
 
 --- Returns true if there is an unblocked line of sight that is
@@ -513,6 +520,9 @@ function InstancedMap:refresh_tile(x, y)
    local solid = tile.is_solid
    local opaque = tile.is_opaque
 
+   local ind = y * self._width + x + 1
+   self._light[ind] = nil
+
    for _, obj in self._multi_pool:objects_at_pos(x, y) do
       if solid and opaque then
          break
@@ -520,9 +530,17 @@ function InstancedMap:refresh_tile(x, y)
 
       solid = solid or obj:calc("is_solid")
       opaque = opaque or obj:calc("is_opaque")
-   end
 
-   local ind = y * self._width + x + 1
+      local tile_light = obj:calc("tile_light")
+      if tile_light then
+         tile_light.offset_y = tile_light.offset_y or 0
+         tile_light.brightness = tile_light.brightness or 0
+         tile_light.power = tile_light.power or 0
+         tile_light.flicker = tile_light.flicker or 0
+
+         self._light[ind] = tile_light
+      end
+   end
    self._solid[ind] = solid
    self._opaque[ind] = opaque
 end
