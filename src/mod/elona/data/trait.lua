@@ -132,6 +132,10 @@ local trait = {
    {
       _id = "cures_sanity",
       elona_id = 166
+   },
+   {
+      _id = "no_inflict_fear",
+      elona_id = 44
    }
 }
 data:add_multi("base.trait", trait)

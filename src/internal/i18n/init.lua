@@ -32,30 +32,34 @@ reify_one = function(_db, item, key)
    end
 end
 
+function i18n.load_single_translation(path, merged)
+   Log.debug("Loading translations at %s", path)
+   local chunk, err = love.filesystem.load(path)
+
+   if chunk == nil then
+      error("Error loading translations:\n\t" .. err)
+   end
+
+   setfenv(chunk, i18n.env)
+
+   local ok, result = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
+
+   if not ok then
+      error("Error loading translations: " .. result)
+   end
+   if type(result) ~= "table" then
+      error("Error loading translations: returned type not a table (" .. path .. ")")
+   end
+
+   reify_one(merged, result, "")
+end
+
 local load_translations
 load_translations = function(path, merged)
    for _, file in fs.iter_directory_items(path) do
-      local path = fs.join(path, file)
-      if fs.is_file(path) and fs.extension_part(path) == "lua" then
-         Log.debug("Loading translations at %s", path)
-         local chunk, err = love.filesystem.load(path)
-
-         if chunk == nil then
-            error("Error loading translations:\n\t" .. err)
-         end
-
-         setfenv(chunk, i18n.env)
-
-         local ok, result = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
-
-         if not ok then
-            error("Error loading translations: " .. result)
-         end
-         if type(result) ~= "table" then
-            error("Error loading translations: returned type not a table (" .. path .. ")")
-         end
-
-         reify_one(merged, result, "")
+      local full_path = fs.join(path, file)
+      if fs.is_file(full_path) and fs.extension_part(full_path) == "lua" then
+         i18n.load_single_translation(full_path, merged)
       end
    end
 end

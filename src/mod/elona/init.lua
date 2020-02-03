@@ -63,4 +63,7 @@ Gui.bind_keys {
    throw = function(me)
       return ElonaCommand.throw(me)
    end,
+   rest = function(me)
+      return ElonaCommand.rest(me)
+   end,
 }

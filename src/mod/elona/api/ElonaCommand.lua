@@ -150,6 +150,12 @@ function ElonaCommand.fire(player)
    return "turn_end"
 end
 
+function ElonaCommand.rest(player)
+   player:start_activity("elona.resting")
+
+   return "turn_end"
+end
+
 function ElonaCommand.increment_sleep_potential(player)
    local stats = data["base.skill"]:iter():filter(function(s) return s.skill_type == "stat" end):extract("_id")
    local levels = 0

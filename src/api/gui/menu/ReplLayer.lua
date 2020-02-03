@@ -612,7 +612,7 @@ function ReplLayer:redraw_window()
       end
       local char_width = Draw.text_width(".")
       if self.search.match_start then
-         Draw.filled_rect(self.x + 5 + Draw.text_width(self.mode.caret) + char_width * self.search.match_start,
+         Draw.filled_rect(self.x + 5 + Draw.text_width(self.mode.caret) + char_width * (self.search.match_start - 1),
                           self.y + top - Draw.text_height() - 5,
                           Draw.text_width(self.search.text),
                           Draw.text_height(),

@@ -46,7 +46,7 @@ function ReplCompletion:find_boundary(line)
    return string.split_at_pos(line, ind)
 end
 
-function ReplCompletion:complete(line, repl_env)
+function ReplCompletion:complete(line, root_env)
    local prefix, partial = self:find_boundary(line)
    local parts = string.split(partial, ".")
 
@@ -58,7 +58,7 @@ function ReplCompletion:complete(line, repl_env)
       parts[#parts+1] = s[2]
    end
 
-   local cur = repl_env
+   local cur = root_env
 
    for i=1,#parts-1 do
       local part = parts[i]
@@ -87,7 +87,17 @@ function ReplCompletion:complete(line, repl_env)
       return nil
    end
 
-   local keys = table.keys(cur)
+   -- Sometimes the REPL environment will be a proxy with no actual
+   -- keys. In this case we can't call table.keys on it, so there will
+   -- be no completions if the table is in the root environment.
+   -- Instead we generate a __keys field in Repl.generate_env and keep
+   -- it on the environment's metatable for completion purposes.
+   local mt = getmetatable(cur)
+   local keys = mt and mt.__keys
+   if keys == nil then
+      keys = table.keys(cur)
+   end
+
    if cur.__iface and cur.__iface.all_methods then
       for k, v in pairs(cur.__iface.all_methods) do
          keys[#keys+1] = k
@@ -107,7 +117,7 @@ function ReplCompletion:complete(line, repl_env)
       base = base .. string.split_at_pos(partial, pos)
    end
 
-   local pred = function(s) return string.has_prefix(s, incomplete) end
+   local pred = function(s) print(s, incomplete); return string.has_prefix(s, incomplete) end
    local trans = function(i)
       return {
          text = i,

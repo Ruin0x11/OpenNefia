@@ -492,9 +492,11 @@ function env.hotload_path(path, also_deps)
       -- directory in the mod root)
       local lang = string.match(path, "^mod%." .. mod_name .. "%.locale%.([a-z_]+)%.")
       if lang then
-         Log.info("Hotloading translations at %s for language '%s'.", path, lang)
          local i18n = require("internal.i18n")
-         i18n.load_translations(path, i18n.db[lang])
+         local filepath = get_require_path(path)
+         filepath = filepath:gsub("^%./", "")
+         Log.info("Hotloading translations at %s for language '%s'.", path, lang)
+         i18n.load_single_translation(filepath, i18n.db[lang])
          return nil
       end
    end

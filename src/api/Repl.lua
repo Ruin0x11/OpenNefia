@@ -93,7 +93,14 @@ function Repl.generate_env(locals)
 
    local vars = { normal = repl_env, locals = locals }
 
-   local env = setmetatable({}, {
+   -- For REPL completion, we need a list of the keys in this
+   -- environment. Because the environment is a proxy with no actual
+   -- keys, we can't calculate the list from the outside. To solve
+   -- this, generate the list of keys up front and update it in the
+   -- __newindex metamethod.
+   local keys = table.merge(table.keys(vars.locals), table.keys(vars.normal))
+
+   local env_proxy = setmetatable({}, {
          __index = function(self, ind)
             if rawget(vars.locals, ind) then
                return rawget(vars.locals, ind)
@@ -106,16 +113,22 @@ function Repl.generate_env(locals)
             else
                rawset(vars.normal, ind, val)
             end
-         end
+            if val == nil then
+               table.iremove_value(keys, ind)
+            else
+               keys[#keys+1] = ind
+            end
+         end,
+         __keys = keys
    })
 
    if fs.exists("repl_startup.lua") then
       local chunk = love.filesystem.load("repl_startup.lua")
-      setfenv(chunk, env)
+      setfenv(chunk, env_proxy)
       chunk()
    end
 
-   return env, history
+   return env_proxy, history
 end
 
 local paused = false

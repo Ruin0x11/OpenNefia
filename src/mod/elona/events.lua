@@ -34,13 +34,13 @@ local function retreat_in_fear(chara, params)
 
       local retreats = params.damage * 100 / chara:calc("max_hp") + 10 > Rand.rnd(200)
 
-      if params.attacker and params.attacker:is_player() and false then
+      if params.attacker and params.attacker:has_trait("elona.no_inflict_fear") then
          retreats = false
       end
 
       if retreats then
          assert(chara:set_effect_turns("elona.fear", Rand.rnd(20) + 5))
-         Gui.mes_visible(chara.uid .. " runs away in fear. ", chara.x, chara.y, "Blue")
+         Gui.mes_c_visible("damage.runs_away_in_terror", chara.x, chara.y, "Blue", chara)
       end
    end
 end

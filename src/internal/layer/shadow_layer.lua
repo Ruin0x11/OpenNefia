@@ -42,7 +42,7 @@ function shadow_layer:rebuild_light(map)
    local hour = save.base.date.hour
 
    if player then
-      for _, x, y, tile in map:iter_tiles() do
+      for _, x, y, _ in map:iter_tiles() do
          local light = map:light(x, y)
          if light then
             local show_light = true or light.always_on or (hour > 17 or hour < 6)

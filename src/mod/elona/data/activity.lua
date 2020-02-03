@@ -405,7 +405,7 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            Gui.mes("start resting")
+            Gui.mes("activity.rest.start")
          end
       },
       {
@@ -431,7 +431,7 @@ data:add {
                   do_sleep = true
                end
                if do_sleep then
-                  Gui.mes("drift off to sleep")
+                  Gui.mes("activity.rest.drop_off_to_sleep")
                   ElonaCommand.do_sleep(chara, self.bed)
                   chara:remove_activity()
                   return "turn_end"
@@ -446,7 +446,7 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
-            Gui.mes("rest finish")
+            Gui.mes("activity.rest.finish")
          end
       }
    }
