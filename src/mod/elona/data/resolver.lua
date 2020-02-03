@@ -141,10 +141,8 @@ data:add {
          return {}
       end
       local copy_to_chara = table.deepcopy(race.copy_to_chara)
-      if race.base then
-         if race.base.skills then
-            copy_to_chara.skills = Resolver.make("elona.skills", {skills = race.base.skills})
-         end
+      if race.skills then
+         copy_to_chara.skills = Resolver.make("elona.skills", {skills = race.skills})
       end
       return Resolver.resolve(copy_to_chara, params)
 end}

@@ -54,6 +54,10 @@ data:add {
          map_name_icon = "asset/map_name_icon.png",
          bar = "asset/hud_bar.png",
          skill_icons = {
+            image = "asset/skill_icons.png",
+            count_x = 8
+         },
+         hud_skill_icons = {
             image = "asset/hud_skill_icons.png",
             count_x = 10
          },

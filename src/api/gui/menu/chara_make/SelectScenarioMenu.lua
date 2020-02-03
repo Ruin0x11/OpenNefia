@@ -38,6 +38,7 @@ end
 
 function SelectScenarioMenu:make_keymap()
    return {
+      escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
 end

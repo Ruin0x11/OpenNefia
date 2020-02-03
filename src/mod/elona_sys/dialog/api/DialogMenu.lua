@@ -74,15 +74,15 @@ function DialogMenu:draw()
       self.portrait_batch:add(self.portrait, self.x + 42, self.y + 42, 80, 112)
       self.portrait_batch:draw()
    elseif self.chara_image then
-      self.chara_batch:clear()
-      self.chara_batch:add(self.chara_image,
+      self.chip_batch:clear()
+      self.chip_batch:add(self.chara_image,
                            self.x + 82,
                            self.y + 125, -- TODO offset_y
                            self.chara_image:get_width() * 2,
                            self.chara_image:get_height() * 2,
                            nil,
                            true)
-      self.chara_batch:draw()
+      self.chip_batch:draw()
    end
 
    -- NOTE: ignored by Ui.draw_topic

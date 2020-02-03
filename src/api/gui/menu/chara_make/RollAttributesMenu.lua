@@ -2,8 +2,9 @@ local Chara = require("api.Chara")
 local CharaMake = require("api.CharaMake")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Resolver = require("api.Resolver")
+local I18N = require("api.I18N")
 local Rand = require("api.Rand")
+local Resolver = require("api.Resolver")
 local Ui = require("api.Ui")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -39,6 +40,17 @@ local UiListExt = function(roll_attributes_menu)
    return E
 end
 
+local ATTRIBUTES = {
+   "elona.stat_strength",
+   "elona.stat_constitution",
+   "elona.stat_dexterity",
+   "elona.stat_perception",
+   "elona.stat_learning",
+   "elona.stat_will",
+   "elona.stat_magic",
+   "elona.stat_charisma",
+}
+
 function RollAttributesMenu:init()
    self.width = 360
    self.height = 352
@@ -47,19 +59,22 @@ function RollAttributesMenu:init()
    self.locks = {}
    self.finished = false
 
-   local texts = {
-      { id = "elona.stat_strength", text = "Strength" },
-      { id = "elona.stat_constitution", text = "Constitution" },
-      { id = "elona.stat_dexterity", text = "Dexterity" },
-      { id = "elona.stat_perception", text = "Perception" },
-      { id = "elona.stat_learning", text = "Learning" },
-      { id = "elona.stat_will", text = "Will" },
-      { id = "elona.stat_magic", text = "Magic" },
-      { id = "elona.stat_charisma", text = "Charisma" },
-   }
+   local texts = fun.iter(ATTRIBUTES)
+      :map(function(id)
+            return {
+               id = id,
+               text = I18N.get("ability." .. id .. ".name")
+            }
+          end)
+      :to_list()
    self.data = {
-      { text = "Reroll", on_choose = function() self:reroll(true) end },
-      { text = "Proceed" },
+      {
+         text = I18N.get("chara_make.common.reroll"),
+         on_choose = function() self:reroll(true) end
+      },
+      {
+         text = I18N.get("chara_make.roll_attributes.proceed")
+      },
    }
    local function lock(attr)
       return function()
@@ -77,9 +92,9 @@ function RollAttributesMenu:init()
    self.input:forward_to(self.alist)
    self.input:bind_keys(self:make_keymap())
 
-   self.win = UiWindow:new("roll_attributes.title")
+   self.win = UiWindow:new("chara_make.roll_attributes.title")
 
-   self.caption = "Roll your attributes."
+   self.caption = "chara_make.roll_attributes.caption"
    self.intro_sound = "base.skill"
 
    self:reroll()
@@ -87,6 +102,7 @@ end
 
 function RollAttributesMenu:make_keymap()
    return {
+      escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end,
       mode2 = function() self:reroll(true, true) end
    }
@@ -160,13 +176,13 @@ end
 
 local quads = {
       ["elona.stat_strength"] = 1,
-      ["elona.stat_constitution"] = 3,
-      ["elona.stat_dexterity"] = 4,
-      ["elona.stat_perception"] = 5,
-      ["elona.stat_learning"] = 6,
-      ["elona.stat_will"] = 7,
-      ["elona.stat_magic"] = 8,
-      ["elona.stat_charisma"] = 9,
+      ["elona.stat_constitution"] = 2,
+      ["elona.stat_dexterity"] = 3,
+      ["elona.stat_perception"] = 4,
+      ["elona.stat_learning"] = 5,
+      ["elona.stat_will"] = 6,
+      ["elona.stat_magic"] = 7,
+      ["elona.stat_charisma"] = 8,
 }
 
 function RollAttributesMenu:draw_attribute(item, i, x, y)
@@ -199,13 +215,13 @@ function RollAttributesMenu:draw()
    self.t.g1:draw(self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
 
    Draw.set_color(255, 255, 255)
-   Ui.draw_topic("chara_making.roll_attributes.title", self.x + 28, self.y + 30)
+   Ui.draw_topic("chara_make.roll_attributes.attributes", self.x + 28, self.y + 30)
 
    Draw.set_color(0, 0, 0)
    Draw.set_font(12) -- 12 + sizefix - en * 2
-   Draw.text("locked items", self.x + 175, self.y + 52)
+   Draw.text(I18N.get("chara_make.roll_attributes.locked_items_desc"), self.x + 175, self.y + 52)
    Draw.set_font(13, "bold") -- 13 - en * 2
-   Draw.text("remain" .. ": " .. self.locks_left, self.x + 180, self.y + 84)
+   Draw.text(I18N.get("chara_make.roll_attributes.locks_left") .. ": " .. self.locks_left, self.x + 180, self.y + 84)
 
    self.alist:draw()
 end

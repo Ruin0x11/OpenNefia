@@ -1,3 +1,4 @@
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
@@ -11,29 +12,52 @@ local SelectGenderMenu = class.class("SelectGenderMenu", ICharaMakeSection)
 
 SelectGenderMenu:delegate("input", IInput)
 
+local UiListExt = function()
+   local E = {}
+
+   function E:get_item_text(entry)
+      return entry.name
+   end
+
+   return E
+end
+
 function SelectGenderMenu:init()
    self.width = 370
    self.height = 168
 
+   local genders = {
+      "male",
+      "female"
+   }
+
+   self.genders = fun.iter(genders)
+      :map(function(g)
+            return { name = I18N.get("ui.sex3." .. g), gender = g }
+          end)
+      :to_list()
+
    self.win = UiWindow:new("chara_make.select_gender.title")
-   self.list = UiList:new({"ui.gender3.male", "ui.gender3.female"})
+   self.list = UiList:new(self.genders)
+   table.merge(self.list, UiListExt())
 
    self.input = InputHandler:new()
    self.input:forward_to(self.list)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "There is no difference in the genders."
+   self.caption = "chara_make.select_gender.caption"
    self.intro_sound = "base.spell"
 end
 
 function SelectGenderMenu:make_keymap()
    return {
+      escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
 end
 
 function SelectGenderMenu:on_make_chara(chara)
-   chara.gender = self.list:selected_item()
+   chara.gender = self.list:selected_item().gender
 end
 
 function SelectGenderMenu:relayout()

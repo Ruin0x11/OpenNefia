@@ -20,7 +20,7 @@ function SelectFeatsMenu:init(chara)
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
 
-   self.caption = "Your caption here."
+   self.caption = "chara_make.select_feats.caption"
    self.intro_sound = "base.feat"
 end
 

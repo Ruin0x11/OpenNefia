@@ -1,5 +1,5 @@
 return {
-  chara_making = {
+  chara_make = {
     common = {
       reroll = "Reroll"
     },
@@ -19,13 +19,13 @@ return {
       what_is_your_name = "Last question. What's your name?"
     },
     roll_attributes = {
-      attribute_reroll = "Attb Reroll",
+      title = "Attb Reroll",
       caption = "You should prepare well, if you want to survive long enough in Irva.",
       locked_items_desc = "Locked items will\nnot change.",
       locks_left = "Locks left",
       min_roll = "Min Roll",
       proceed = "Proceed",
-      title = "Attributes"
+      attributes = "Attributes"
     },
     select_alias = {
       alias_list = "Alias List",

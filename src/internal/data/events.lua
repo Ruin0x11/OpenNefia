@@ -3,6 +3,7 @@ local paths = require("internal.paths")
 local Event = require("api.Event")
 local IEventEmitter = require("api.IEventEmitter")
 local Map = require("api.Map")
+local UiTheme = require("api.gui.UiTheme")
 
 data:add_multi(
    "base.event",
@@ -109,8 +110,8 @@ local function on_hotload_end()
    Event.global():_end_register()
 end
 
-Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin)
-Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end)
+Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin, {priority = 1})
+Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end, {priority = 9999999999})
 
 Event.register("base.on_map_loaded", "init all event callbacks",
                function(map)
@@ -168,5 +169,14 @@ Event.register("base.on_hotload_end", "Hotload field renderer",
                   if field.is_active then
                      field.renderer.screen_updated = true
                      field.renderer:update(0)
+                  end
+               end)
+
+Event.register("base.on_hotload_prototype", "Hotload UI theme",
+               function(_, args)
+                  if args.new._type == "base.theme" then
+                     UiTheme.clear()
+                     local default_theme = "elona_sys.default"
+                     UiTheme.add_theme(default_theme)
                   end
                end)

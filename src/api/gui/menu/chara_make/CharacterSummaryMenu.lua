@@ -24,7 +24,7 @@ function CharacterSummaryMenu:init(chara)
    self.input:forward_to(self.inner)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "Here is the final summary."
+   self.caption = "chara_make.final_screen.caption"
    self.intro_sound = "base.skill"
 
    -- cheat a bit. this gets drawn over the one in the charamake

@@ -82,6 +82,14 @@ function asset_instance:make_batch(parts)
    return batch
 end
 
+function asset_instance:get_width()
+   return self.width or self.asset:get_width()
+end
+
+function asset_instance:get_height()
+   return self.height or self.asset:get_height()
+end
+
 function asset_instance:draw(x, y, width, height, color, centered, rotation)
    Draw.image(self.asset.image, x, y, width, height, color, centered, rotation)
 end

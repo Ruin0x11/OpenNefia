@@ -31,7 +31,7 @@ function CharacterSheetMenu:init(behavior)
    self.input:forward_to(self.buff_list)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "Summary."
+   self.caption = "chara_make.final_screen.caption"
 end
 
 function CharacterSheetMenu:make_keymap()

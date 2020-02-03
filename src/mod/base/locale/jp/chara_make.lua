@@ -1,5 +1,5 @@
 return {
-  chara_making = {
+  chara_make = {
     common = {
       reroll = "リロール"
     },
@@ -19,13 +19,13 @@ return {
       what_is_your_name = "最後の質問だ。君の名前は？"
     },
     roll_attributes = {
-      attribute_reroll = "能力のロール",
+      title = "能力のロール",
       caption = "死にたくないなら、ある程度の能力は必要だね。",
       locked_items_desc = "ロックされた能力は\n変化しません",
       locks_left = "残りロック",
       min_roll = "最低値ロール",
       proceed = "決定",
-      title = "能力"
+      attributes = "能力"
     },
     select_alias = {
       alias_list = "異名の候補",

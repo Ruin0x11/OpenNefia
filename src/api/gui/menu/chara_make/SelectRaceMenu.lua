@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local data = require("internal.data")
 
@@ -9,18 +10,48 @@ local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 
+local config = require("internal.config")
+
 local SelectRaceMenu = class.class("SelectRaceMenu", ICharaMakeSection)
 
 SelectRaceMenu:delegate("input", IInput)
+
+local UiListExt = function()
+   local E = {}
+
+   function E:get_item_text(entry)
+      return entry.name
+   end
+
+   return E
+end
 
 function SelectRaceMenu:init()
    self.width = 680
    self.height = 500
 
-   local races = data["base.race"]:iter():extract("_id"):to_list()
+   local races = data["base.race"]:iter()
+      :map(function(entry)
+              return {
+                 proto = data["base.race"]:ensure(entry._id),
+                 name = I18N.get("race." .. entry._id .. ".name"),
+                 desc = I18N.get_optional("race." .. entry._id .. ".description") or ""
+              }
+          end)
+
+   if not config["base.show_charamake_extras"] then
+      races = races:filter(function(entry)
+            return not entry.proto.is_extra
+      end)
+   end
+
+   races = races:to_list()
+
+   table.sort(races, function(a, b) return a.proto.ordering < b.proto.ordering end)
 
    self.win = UiWindow:new("chara_make.select_race.title")
    self.pages = UiList:new_paged(races, 16)
+   table.merge(self.pages, UiListExt())
    self.bg = Ui.random_cm_bg()
 
    -- self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
@@ -32,12 +63,13 @@ function SelectRaceMenu:init()
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "Yaa. I've been waiting for you."
+   self.caption = "chara_make.select_race.caption"
    self.intro_sound = "base.ok1"
 end
 
 function SelectRaceMenu:make_keymap()
    return {
+      escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
 end
@@ -83,7 +115,7 @@ function SelectRaceMenu:on_make_chara(chara)
 end
 
 function SelectRaceMenu:charamake_result()
-   return self.pages:selected_item()
+   return self.pages:selected_item().proto._id
 end
 
 function SelectRaceMenu:update()

@@ -42,13 +42,14 @@ function ChangeAppearanceMenu:init(chara)
    self.input:forward_to(self.list)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "Change appearance."
+   self.caption = "chara_make.customize_appearance.caption"
    self.intro_sound = "base.port"
 end
 
 function ChangeAppearanceMenu:make_keymap()
    return {
-      shift = function() self.canceled = true end
+      escape = function() self.canceled = true end,
+      cancel = function() self.canceled = true end
    }
 end
 

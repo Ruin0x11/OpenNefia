@@ -40,7 +40,7 @@ function Ui.draw_topic(topic, x, y)
    Draw.set_color(0, 0, 0)
    local text = I18N.get_optional(topic) or topic
    Draw.text(text, x + 26, y + 8) -- y + vfix + 8
-   Draw.line(x + 22, y + 21, x + Draw.text_width(topic) + 36, y + 21)
+   Draw.line(x + 22, y + 21, x + Draw.text_width(text) + 36, y + 21)
    Draw.set_color(255, 255, 255)
 end
 

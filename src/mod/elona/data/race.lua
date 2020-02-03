@@ -37,25 +37,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 3,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.pickpocket"] = 3,
-               ["elona.stealth"] = 2,
-               ["elona.magic_device"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 3,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 2,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.pickpocket"] = 3,
+            ["elona.stealth"] = 2,
+            ["elona.magic_device"] = 3,
          }
+
 
       },
       {
@@ -84,25 +83,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 130,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 3,
-               ["elona.heavy_armor"] = 3,
-               ["elona.shield"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 130,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 3,
+            ["elona.stat_perception"] = 2,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 3,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 1,
+            ["elona.healing"] = 3,
+            ["elona.heavy_armor"] = 3,
+            ["elona.shield"] = 3,
          }
+
 
       },
       {
@@ -130,23 +128,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 1,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 3,
-               ["elona.healing"] = 40,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 10,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 1,
+            ["elona.stat_perception"] = 2,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 2,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 3,
+            ["elona.healing"] = 40,
          }
+
 
       },
       {
@@ -176,25 +173,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.polearm"] = 3,
-               ["elona.shield"] = 3,
-               ["elona.evasion"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 70,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 80,
+            ["elona.martial_arts"] = 2,
+            ["elona.polearm"] = 3,
+            ["elona.shield"] = 3,
+            ["elona.evasion"] = 2,
          }
+
 
       },
       {
@@ -221,24 +217,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 60,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 65,
-               ["elona.martial_arts"] = 3,
-               ["elona.tactics"] = 4,
-               ["elona.eye_of_mind"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 160,
+            ["elona.stat_mana"] = 60,
+            ["elona.stat_strength"] = 12,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 3,
+            ["elona.stat_perception"] = 4,
+            ["elona.stat_learning"] = 3,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 65,
+            ["elona.martial_arts"] = 3,
+            ["elona.tactics"] = 4,
+            ["elona.eye_of_mind"] = 3,
          }
+
 
       },
       {
@@ -275,26 +270,25 @@ local race =
             },
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 110,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 12,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.firearm"] = 5,
-               ["elona.literacy"] = 3,
-               ["elona.negotiation"] = 2,
-               ["elona.throwing"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 110,
+            ["elona.stat_mana"] = 90,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 12,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.firearm"] = 5,
+            ["elona.literacy"] = 3,
+            ["elona.negotiation"] = 2,
+            ["elona.throwing"] = 3,
          }
+
 
       },
       {
@@ -329,26 +323,25 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.casting"] = 3,
-               ["elona.tactics"] = 3,
-               ["elona.two_hand"] = 3,
-               ["elona.control_magic"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 90,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.casting"] = 3,
+            ["elona.tactics"] = 3,
+            ["elona.two_hand"] = 3,
+            ["elona.control_magic"] = 3,
          }
+
 
       },
       {
@@ -386,25 +379,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.casting"] = 5,
-               ["elona.literacy"] = 3,
-               ["elona.magic_device"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 10,
+            ["elona.stat_magic"] = 12,
+            ["elona.stat_charisma"] = 8,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.casting"] = 5,
+            ["elona.literacy"] = 3,
+            ["elona.magic_device"] = 3,
          }
+
 
       },
       {
@@ -449,25 +441,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 40,
-               ["elona.stat_mana"] = 130,
-               ["elona.stat_strength"] = 3,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 12,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 1,
-               ["elona.casting"] = 5,
-               ["elona.pickpocket"] = 3,
-               ["elona.light_armor"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 40,
+            ["elona.stat_mana"] = 130,
+            ["elona.stat_strength"] = 3,
+            ["elona.stat_constitution"] = 4,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 13,
+            ["elona.stat_charisma"] = 12,
+            ["elona.stat_speed"] = 120,
+            ["elona.martial_arts"] = 1,
+            ["elona.casting"] = 5,
+            ["elona.pickpocket"] = 3,
+            ["elona.light_armor"] = 3,
          }
+
 
       },
       {
@@ -493,25 +484,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 14,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.dual_wield"] = 30,
-               ["elona.greater_evasion"] = 6,
-               ["elona.anatomy"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 70,
+            ["elona.stat_strength"] = 11,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 14,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 5,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.dual_wield"] = 30,
+            ["elona.greater_evasion"] = 6,
+            ["elona.anatomy"] = 4,
          }
+
 
       },
       {
@@ -533,24 +523,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 13,
-               ["elona.stat_speed"] = 55,
-               ["elona.martial_arts"] = 2,
-               ["elona.evasion"] = 2,
-               ["elona.performer"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 13,
+            ["elona.stat_speed"] = 55,
+            ["elona.martial_arts"] = 2,
+            ["elona.evasion"] = 2,
+            ["elona.performer"] = 3,
          }
+
 
       },
       {
@@ -577,24 +566,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.evasion"] = 2,
-               ["elona.greater_evasion"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 80,
+            ["elona.martial_arts"] = 2,
+            ["elona.evasion"] = 2,
+            ["elona.greater_evasion"] = 2,
          }
+
 
       },
       {
@@ -629,25 +617,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 11,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.cooking"] = 4,
-               ["elona.jeweler"] = 3,
-               ["elona.mining"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 10,
+            ["elona.stat_constitution"] = 11,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.cooking"] = 4,
+            ["elona.jeweler"] = 3,
+            ["elona.mining"] = 4,
          }
+
 
       },
       {
@@ -686,26 +673,25 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 12,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.performer"] = 4,
-               ["elona.lock_picking"] = 2,
-               ["elona.negotiation"] = 2,
-               ["elona.throwing"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 12,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 10,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 11,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.performer"] = 4,
+            ["elona.lock_picking"] = 2,
+            ["elona.negotiation"] = 2,
+            ["elona.throwing"] = 3,
          }
+
 
       },
       {
@@ -739,24 +725,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 2,
-               ["elona.stat_perception"] = 2,
-               ["elona.stat_learning"] = 1,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 45,
-               ["elona.martial_arts"] = 3,
-               ["elona.cooking"] = 3,
-               ["elona.fishing"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 10,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 2,
+            ["elona.stat_perception"] = 2,
+            ["elona.stat_learning"] = 1,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 45,
+            ["elona.martial_arts"] = 3,
+            ["elona.cooking"] = 3,
+            ["elona.fishing"] = 3,
          }
+
 
       },
       {
@@ -795,25 +780,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 110,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 12,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 5,
-               ["elona.casting"] = 2,
-               ["elona.memorization"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 110,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 12,
+            ["elona.stat_magic"] = 13,
+            ["elona.stat_charisma"] = 10,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.magic_capacity"] = 5,
+            ["elona.casting"] = 2,
+            ["elona.memorization"] = 3,
          }
+
 
       },
       {
@@ -838,23 +822,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 1,
-               ["elona.riding"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 4,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 10,
+            ["elona.stat_speed"] = 100,
+            ["elona.martial_arts"] = 1,
+            ["elona.riding"] = 3,
          }
+
 
       },
       {
@@ -880,24 +863,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 130,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 3,
-               ["elona.anatomy"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 130,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 8,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 1,
+            ["elona.healing"] = 3,
+            ["elona.anatomy"] = 3,
          }
+
 
       },
       {
@@ -916,24 +898,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.performer"] = 3,
-               ["elona.investing"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 1,
+            ["elona.performer"] = 3,
+            ["elona.investing"] = 2,
          }
+
 
       },
       {
@@ -956,23 +937,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 2,
-               ["elona.stat_magic"] = 2,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 1,
-               ["elona.eye_of_mind"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 3,
+            ["elona.stat_will"] = 2,
+            ["elona.stat_magic"] = 2,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 1,
+            ["elona.eye_of_mind"] = 3,
          }
+
 
       },
       {
@@ -993,23 +973,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 2,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 25,
-               ["elona.martial_arts"] = 1,
-               ["elona.throwing"] = 5,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 3,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 3,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 2,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 25,
+            ["elona.martial_arts"] = 1,
+            ["elona.throwing"] = 5,
          }
+
 
       },
       {
@@ -1031,25 +1010,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 70,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 2,
-               ["elona.memorization"] = 3,
-               ["elona.literacy"] = 2,
-               ["elona.magic_capacity"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 70,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 10,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 2,
+            ["elona.memorization"] = 3,
+            ["elona.literacy"] = 2,
+            ["elona.magic_capacity"] = 3,
          }
+
 
       },
       {
@@ -1071,24 +1049,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 75,
-               ["elona.martial_arts"] = 2,
-               ["elona.detection"] = 3,
-               ["elona.stealth"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 75,
+            ["elona.martial_arts"] = 2,
+            ["elona.detection"] = 3,
+            ["elona.stealth"] = 3,
          }
+
 
       },
       {
@@ -1112,24 +1089,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.tailoring"] = 3,
-               ["elona.alchemy"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 50,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 10,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 1,
+            ["elona.tailoring"] = 3,
+            ["elona.alchemy"] = 2,
          }
+
 
       },
       {
@@ -1152,23 +1128,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 10,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 3,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 140,
-               ["elona.martial_arts"] = 2,
-               ["elona.greater_evasion"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 10,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 3,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 9,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 3,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 140,
+            ["elona.martial_arts"] = 2,
+            ["elona.greater_evasion"] = 3,
          }
+
 
       },
       {
@@ -1193,24 +1168,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 170,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 12,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 50,
-               ["elona.martial_arts"] = 3,
-               ["elona.healing"] = 2,
-               ["elona.carpentry"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 170,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 12,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 3,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 50,
+            ["elona.martial_arts"] = 3,
+            ["elona.healing"] = 2,
+            ["elona.carpentry"] = 4,
          }
+
 
       },
       {
@@ -1254,25 +1228,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 140,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 13,
-               ["elona.stat_magic"] = 15,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.meditation"] = 5,
-               ["elona.magic_device"] = 3,
-               ["elona.casting"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 140,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 10,
+            ["elona.stat_will"] = 13,
+            ["elona.stat_magic"] = 15,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 3,
+            ["elona.meditation"] = 5,
+            ["elona.magic_device"] = 3,
+            ["elona.casting"] = 3,
          }
+
 
       },
       {
@@ -1299,24 +1272,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 90,
-               ["elona.martial_arts"] = 2,
-               ["elona.detection"] = 4,
-               ["elona.performer"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 11,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 90,
+            ["elona.martial_arts"] = 2,
+            ["elona.detection"] = 4,
+            ["elona.performer"] = 2,
          }
+
 
       },
       {
@@ -1352,24 +1324,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 14,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 4,
-               ["elona.magic_device"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 60,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 14,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 11,
+            ["elona.stat_charisma"] = 11,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 2,
+            ["elona.magic_capacity"] = 4,
+            ["elona.magic_device"] = 2,
          }
+
 
       },
       {
@@ -1397,24 +1368,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 2,
-               ["elona.casting"] = 3,
-               ["elona.control_magic"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 10,
+            ["elona.stat_magic"] = 13,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 2,
+            ["elona.casting"] = 3,
+            ["elona.control_magic"] = 2,
          }
+
 
       },
       {
@@ -1436,24 +1406,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 3,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 25,
-               ["elona.martial_arts"] = 2,
-               ["elona.detection"] = 3,
-               ["elona.anatomy"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 3,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 10,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 25,
+            ["elona.martial_arts"] = 2,
+            ["elona.detection"] = 3,
+            ["elona.anatomy"] = 3,
          }
+
 
       },
       {
@@ -1478,24 +1447,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 190,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.literacy"] = 3,
-               ["elona.traveling"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 190,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 11,
+            ["elona.stat_constitution"] = 13,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 9,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 3,
+            ["elona.literacy"] = 3,
+            ["elona.traveling"] = 3,
          }
+
 
       },
       {
@@ -1518,23 +1486,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 13,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 2,
-               ["elona.greater_evasion"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 50,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 13,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 100,
+            ["elona.martial_arts"] = 2,
+            ["elona.greater_evasion"] = 2,
          }
+
 
       },
       {
@@ -1560,25 +1527,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 200,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 4,
-               ["elona.anatomy"] = 3,
-               ["elona.magic_device"] = 2,
-               ["elona.carpentry"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 200,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 12,
+            ["elona.stat_constitution"] = 14,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 4,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 4,
+            ["elona.anatomy"] = 3,
+            ["elona.magic_device"] = 2,
+            ["elona.carpentry"] = 3,
          }
+
 
       },
       {
@@ -1607,24 +1573,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 70,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.memorization"] = 3,
-               ["elona.control_magic"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 70,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.memorization"] = 3,
+            ["elona.control_magic"] = 3,
          }
+
 
       },
       {
@@ -1649,23 +1614,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 2,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.eye_of_mind"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 4,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 2,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.eye_of_mind"] = 4,
          }
+
 
       },
       {
@@ -1685,23 +1649,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.stealth"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.stealth"] = 4,
          }
+
 
       },
       {
@@ -1727,24 +1690,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 12,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 3,
-               ["elona.traveling"] = 3,
-               ["elona.fishing"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 160,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 11,
+            ["elona.stat_constitution"] = 12,
+            ["elona.stat_dexterity"] = 11,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 85,
+            ["elona.martial_arts"] = 3,
+            ["elona.traveling"] = 3,
+            ["elona.fishing"] = 2,
          }
+
 
       },
       {
@@ -1779,26 +1741,25 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 110,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.healing"] = 5,
-               ["elona.fishing"] = 2,
-               ["elona.mining"] = 2,
-               ["elona.eye_of_mind"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 110,
+            ["elona.stat_mana"] = 90,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.healing"] = 5,
+            ["elona.fishing"] = 2,
+            ["elona.mining"] = 2,
+            ["elona.eye_of_mind"] = 3,
          }
+
 
       },
       {
@@ -1826,25 +1787,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.healing"] = 3,
-               ["elona.performer"] = 2,
-               ["elona.eye_of_mind"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 160,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 10,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 5,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.healing"] = 3,
+            ["elona.performer"] = 2,
+            ["elona.eye_of_mind"] = 3,
          }
+
 
       },
       {
@@ -1874,24 +1834,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 40,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 50,
-               ["elona.martial_arts"] = 2,
-               ["elona.lock_picking"] = 3,
-               ["elona.magic_device"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 40,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 4,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 50,
+            ["elona.martial_arts"] = 2,
+            ["elona.lock_picking"] = 3,
+            ["elona.magic_device"] = 2,
          }
+
 
       },
       {
@@ -1919,24 +1878,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 110,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.magic_capacity"] = 3,
-               ["elona.control_magic"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 110,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 11,
+            ["elona.stat_charisma"] = 5,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 3,
+            ["elona.magic_capacity"] = 3,
+            ["elona.control_magic"] = 3,
          }
+
 
       },
       {
@@ -1964,24 +1922,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 130,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 8,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.literacy"] = 4,
-               ["elona.control_magic"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 130,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 12,
+            ["elona.stat_charisma"] = 8,
+            ["elona.stat_speed"] = 80,
+            ["elona.martial_arts"] = 2,
+            ["elona.literacy"] = 4,
+            ["elona.control_magic"] = 3,
          }
+
 
       },
       {
@@ -2014,24 +1971,23 @@ local race =
             },
 
          },
-         base = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 2,
-               ["elona.stealth"] = 3,
-               ["elona.disarm_trap"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 60,
+            ["elona.stat_mana"] = 90,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 9,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 85,
+            ["elona.martial_arts"] = 2,
+            ["elona.stealth"] = 3,
+            ["elona.disarm_trap"] = 3,
          }
+
 
       },
       {
@@ -2058,24 +2014,23 @@ local race =
             },
 
          },
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 80,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 3,
-               ["elona.magic_device"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 9,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 9,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 80,
+            ["elona.martial_arts"] = 2,
+            ["elona.magic_capacity"] = 3,
+            ["elona.magic_device"] = 2,
          }
+
 
       },
       {
@@ -2101,24 +2056,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 220,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 13,
-               ["elona.stat_constitution"] = 15,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 9,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.traveling"] = 3,
-               ["elona.jeweler"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 220,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 13,
+            ["elona.stat_constitution"] = 15,
+            ["elona.stat_dexterity"] = 10,
+            ["elona.stat_perception"] = 9,
+            ["elona.stat_learning"] = 10,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 13,
+            ["elona.stat_charisma"] = 9,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 3,
+            ["elona.traveling"] = 3,
+            ["elona.jeweler"] = 3,
          }
+
 
       },
       {
@@ -2144,24 +2098,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 140,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 5,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 4,
-               ["elona.traveling"] = 3,
-               ["elona.greater_evasion"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 140,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 10,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 5,
+            ["elona.stat_speed"] = 120,
+            ["elona.martial_arts"] = 4,
+            ["elona.traveling"] = 3,
+            ["elona.greater_evasion"] = 2,
          }
+
 
       },
       {
@@ -2189,24 +2142,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 160,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 9,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 3,
-               ["elona.detection"] = 3,
-               ["elona.tailoring"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 160,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 11,
+            ["elona.stat_constitution"] = 9,
+            ["elona.stat_dexterity"] = 10,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 85,
+            ["elona.martial_arts"] = 3,
+            ["elona.detection"] = 3,
+            ["elona.tailoring"] = 3,
          }
+
 
       },
       {
@@ -2231,24 +2183,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 50,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 12,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 120,
-               ["elona.martial_arts"] = 2,
-               ["elona.stealth"] = 3,
-               ["elona.anatomy"] = 5,
-            }
+         skills = {
+            ["elona.stat_life"] = 50,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 12,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 120,
+            ["elona.martial_arts"] = 2,
+            ["elona.stealth"] = 3,
+            ["elona.anatomy"] = 5,
          }
+
 
       },
       {
@@ -2285,24 +2236,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 70,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 45,
-               ["elona.martial_arts"] = 4,
-               ["elona.weight_lifting"] = 5,
-               ["elona.mining"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 150,
+            ["elona.stat_mana"] = 70,
+            ["elona.stat_strength"] = 10,
+            ["elona.stat_constitution"] = 14,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 45,
+            ["elona.martial_arts"] = 4,
+            ["elona.weight_lifting"] = 5,
+            ["elona.mining"] = 3,
          }
+
 
       },
       {
@@ -2325,24 +2275,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 40,
-               ["elona.stat_mana"] = 50,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 22,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 8,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 1,
-               ["elona.weight_lifting"] = 3,
-               ["elona.mining"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 40,
+            ["elona.stat_mana"] = 50,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 22,
+            ["elona.stat_dexterity"] = 3,
+            ["elona.stat_perception"] = 8,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 3,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 10,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 1,
+            ["elona.weight_lifting"] = 3,
+            ["elona.mining"] = 3,
          }
+
 
       },
       {
@@ -2370,24 +2319,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 60,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.disarm_trap"] = 2,
-               ["elona.shield"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 60,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 3,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.disarm_trap"] = 2,
+            ["elona.shield"] = 3,
          }
+
 
       },
       {
@@ -2425,25 +2373,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 8,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.long_sword"] = 3,
-               ["elona.shield"] = 2,
-               ["elona.lock_picking"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 8,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 9,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.long_sword"] = 3,
+            ["elona.shield"] = 2,
+            ["elona.lock_picking"] = 3,
          }
+
 
       },
       {
@@ -2475,24 +2422,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 10,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 2,
-               ["elona.literacy"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 4,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 10,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.magic_capacity"] = 2,
+            ["elona.literacy"] = 3,
          }
+
 
       },
       {
@@ -2521,25 +2467,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 120,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 12,
-               ["elona.stat_speed"] = 110,
-               ["elona.martial_arts"] = 2,
-               ["elona.performer"] = 2,
-               ["elona.greater_evasion"] = 3,
-               ["elona.evasion"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 120,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 12,
+            ["elona.stat_speed"] = 110,
+            ["elona.martial_arts"] = 2,
+            ["elona.performer"] = 2,
+            ["elona.greater_evasion"] = 3,
+            ["elona.evasion"] = 2,
          }
+
 
       },
       {
@@ -2567,25 +2512,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 7,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 85,
-               ["elona.martial_arts"] = 2,
-               ["elona.weight_lifting"] = 3,
-               ["elona.performer"] = 2,
-               ["elona.detection"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 7,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 85,
+            ["elona.martial_arts"] = 2,
+            ["elona.weight_lifting"] = 3,
+            ["elona.performer"] = 2,
+            ["elona.detection"] = 3,
          }
+
 
       },
       {
@@ -2617,25 +2561,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 95,
-               ["elona.martial_arts"] = 2,
-               ["elona.meditation"] = 3,
-               ["elona.literacy"] = 4,
-               ["elona.investing"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 10,
+            ["elona.stat_speed"] = 95,
+            ["elona.martial_arts"] = 2,
+            ["elona.meditation"] = 3,
+            ["elona.literacy"] = 4,
+            ["elona.investing"] = 2,
          }
+
 
       },
       {
@@ -2660,24 +2603,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 8,
-               ["elona.stat_perception"] = 10,
-               ["elona.stat_learning"] = 3,
-               ["elona.stat_will"] = 3,
-               ["elona.stat_magic"] = 2,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 75,
-               ["elona.martial_arts"] = 1,
-               ["elona.stealth"] = 3,
-               ["elona.anatomy"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 4,
+            ["elona.stat_dexterity"] = 8,
+            ["elona.stat_perception"] = 10,
+            ["elona.stat_learning"] = 3,
+            ["elona.stat_will"] = 3,
+            ["elona.stat_magic"] = 2,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 75,
+            ["elona.martial_arts"] = 1,
+            ["elona.stealth"] = 3,
+            ["elona.anatomy"] = 2,
          }
+
 
       },
       {
@@ -2700,24 +2642,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 4,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 20,
-               ["elona.martial_arts"] = 1,
-               ["elona.meditation"] = 3,
-               ["elona.sense_quality"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 4,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 20,
+            ["elona.martial_arts"] = 1,
+            ["elona.meditation"] = 3,
+            ["elona.sense_quality"] = 3,
          }
+
 
       },
       {
@@ -2746,25 +2687,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 12,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 21,
-               ["elona.stat_perception"] = 28,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 13,
-               ["elona.stat_magic"] = 12,
-               ["elona.stat_charisma"] = 25,
-               ["elona.stat_speed"] = 500,
-               ["elona.martial_arts"] = 3,
-               ["elona.evasion"] = 3,
-               ["elona.greater_evasion"] = 3,
-               ["elona.eye_of_mind"] = 2,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 12,
+            ["elona.stat_constitution"] = 13,
+            ["elona.stat_dexterity"] = 21,
+            ["elona.stat_perception"] = 28,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 13,
+            ["elona.stat_magic"] = 12,
+            ["elona.stat_charisma"] = 25,
+            ["elona.stat_speed"] = 500,
+            ["elona.martial_arts"] = 3,
+            ["elona.evasion"] = 3,
+            ["elona.greater_evasion"] = 3,
+            ["elona.eye_of_mind"] = 2,
          }
+
 
       },
       {
@@ -2794,23 +2734,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 200,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 15,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 11,
-               ["elona.stat_perception"] = 24,
-               ["elona.stat_learning"] = 12,
-               ["elona.stat_will"] = 15,
-               ["elona.stat_magic"] = 8,
-               ["elona.stat_charisma"] = 10,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 5,
-               ["elona.firearm"] = 30,
-            }
+         skills = {
+            ["elona.stat_life"] = 200,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 15,
+            ["elona.stat_constitution"] = 14,
+            ["elona.stat_dexterity"] = 11,
+            ["elona.stat_perception"] = 24,
+            ["elona.stat_learning"] = 12,
+            ["elona.stat_will"] = 15,
+            ["elona.stat_magic"] = 8,
+            ["elona.stat_charisma"] = 10,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 5,
+            ["elona.firearm"] = 30,
          }
+
 
       },
       {
@@ -2837,24 +2776,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 500,
-               ["elona.stat_strength"] = 10,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 14,
-               ["elona.stat_perception"] = 18,
-               ["elona.stat_learning"] = 16,
-               ["elona.stat_will"] = 18,
-               ["elona.stat_magic"] = 28,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 110,
-               ["elona.martial_arts"] = 4,
-               ["elona.control_magic"] = 3,
-               ["elona.magic_capacity"] = 5,
-            }
+         skills = {
+            ["elona.stat_life"] = 150,
+            ["elona.stat_mana"] = 500,
+            ["elona.stat_strength"] = 10,
+            ["elona.stat_constitution"] = 13,
+            ["elona.stat_dexterity"] = 14,
+            ["elona.stat_perception"] = 18,
+            ["elona.stat_learning"] = 16,
+            ["elona.stat_will"] = 18,
+            ["elona.stat_magic"] = 28,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 110,
+            ["elona.martial_arts"] = 4,
+            ["elona.control_magic"] = 3,
+            ["elona.magic_capacity"] = 5,
          }
+
 
       },
       {
@@ -2887,25 +2825,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 7,
-               ["elona.stat_perception"] = 9,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 12,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 65,
-               ["elona.martial_arts"] = 2,
-               ["elona.meditation"] = 3,
-               ["elona.lock_picking"] = 3,
-               ["elona.disarm_trap"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 10,
+            ["elona.stat_dexterity"] = 7,
+            ["elona.stat_perception"] = 9,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 12,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 65,
+            ["elona.martial_arts"] = 2,
+            ["elona.meditation"] = 3,
+            ["elona.lock_picking"] = 3,
+            ["elona.disarm_trap"] = 3,
          }
+
 
       },
       {
@@ -2927,24 +2864,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 150,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 10,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 20,
-               ["elona.stat_learning"] = 10,
-               ["elona.stat_will"] = 15,
-               ["elona.stat_magic"] = 15,
-               ["elona.stat_charisma"] = 4,
-               ["elona.stat_speed"] = 35,
-               ["elona.martial_arts"] = 1,
-               ["elona.control_magic"] = 3,
-               ["elona.magic_capacity"] = 5,
-            }
+         skills = {
+            ["elona.stat_life"] = 150,
+            ["elona.stat_mana"] = 150,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 10,
+            ["elona.stat_dexterity"] = 10,
+            ["elona.stat_perception"] = 20,
+            ["elona.stat_learning"] = 10,
+            ["elona.stat_will"] = 15,
+            ["elona.stat_magic"] = 15,
+            ["elona.stat_charisma"] = 4,
+            ["elona.stat_speed"] = 35,
+            ["elona.martial_arts"] = 1,
+            ["elona.control_magic"] = 3,
+            ["elona.magic_capacity"] = 5,
          }
+
 
       },
       {
@@ -2966,24 +2902,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 80,
-               ["elona.stat_strength"] = 5,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 10,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 5,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 60,
-               ["elona.martial_arts"] = 1,
-               ["elona.anatomy"] = 3,
-               ["elona.meditation"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 80,
+            ["elona.stat_strength"] = 5,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 10,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 5,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 60,
+            ["elona.martial_arts"] = 1,
+            ["elona.anatomy"] = 3,
+            ["elona.meditation"] = 3,
          }
+
 
       },
       {
@@ -3017,24 +2952,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 120,
-               ["elona.stat_mana"] = 140,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 11,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 3,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 2,
-               ["elona.eye_of_mind"] = 3,
-               ["elona.stealth"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 120,
+            ["elona.stat_mana"] = 140,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 11,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 9,
+            ["elona.stat_charisma"] = 3,
+            ["elona.stat_speed"] = 100,
+            ["elona.martial_arts"] = 2,
+            ["elona.eye_of_mind"] = 3,
+            ["elona.stealth"] = 4,
          }
+
 
       },
       {
@@ -3066,24 +3000,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 30,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 7,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 13,
-               ["elona.stat_perception"] = 15,
-               ["elona.stat_learning"] = 8,
-               ["elona.stat_will"] = 10,
-               ["elona.stat_magic"] = 13,
-               ["elona.stat_charisma"] = 22,
-               ["elona.stat_speed"] = 200,
-               ["elona.martial_arts"] = 4,
-               ["elona.two_hand"] = 6,
-               ["elona.tactics"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 30,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 7,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 13,
+            ["elona.stat_perception"] = 15,
+            ["elona.stat_learning"] = 8,
+            ["elona.stat_will"] = 10,
+            ["elona.stat_magic"] = 13,
+            ["elona.stat_charisma"] = 22,
+            ["elona.stat_speed"] = 200,
+            ["elona.martial_arts"] = 4,
+            ["elona.two_hand"] = 6,
+            ["elona.tactics"] = 4,
          }
+
 
       },
       {
@@ -3108,24 +3041,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 100,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 5,
-               ["elona.stat_dexterity"] = 5,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 7,
-               ["elona.stat_will"] = 9,
-               ["elona.stat_magic"] = 7,
-               ["elona.stat_charisma"] = 1,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 2,
-               ["elona.magic_capacity"] = 3,
-               ["elona.healing"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 100,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 5,
+            ["elona.stat_dexterity"] = 5,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 7,
+            ["elona.stat_will"] = 9,
+            ["elona.stat_magic"] = 7,
+            ["elona.stat_charisma"] = 1,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 2,
+            ["elona.magic_capacity"] = 3,
+            ["elona.healing"] = 4,
          }
+
 
       },
       {
@@ -3156,24 +3088,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 80,
-               ["elona.stat_mana"] = 90,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 7,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 7,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 90,
-               ["elona.martial_arts"] = 1,
-               ["elona.meditation"] = 3,
-               ["elona.negotiation"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 80,
+            ["elona.stat_mana"] = 90,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 7,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 7,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 90,
+            ["elona.martial_arts"] = 1,
+            ["elona.meditation"] = 3,
+            ["elona.negotiation"] = 4,
          }
+
 
       },
       {
@@ -3203,25 +3134,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 200,
-               ["elona.stat_strength"] = 13,
-               ["elona.stat_constitution"] = 14,
-               ["elona.stat_dexterity"] = 9,
-               ["elona.stat_perception"] = 15,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 11,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 70,
-               ["elona.martial_arts"] = 3,
-               ["elona.control_magic"] = 4,
-               ["elona.meditation"] = 3,
-               ["elona.faith"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 150,
+            ["elona.stat_mana"] = 200,
+            ["elona.stat_strength"] = 13,
+            ["elona.stat_constitution"] = 14,
+            ["elona.stat_dexterity"] = 9,
+            ["elona.stat_perception"] = 15,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 11,
+            ["elona.stat_charisma"] = 11,
+            ["elona.stat_speed"] = 70,
+            ["elona.martial_arts"] = 3,
+            ["elona.control_magic"] = 4,
+            ["elona.meditation"] = 3,
+            ["elona.faith"] = 4,
          }
+
 
       },
       {
@@ -3252,29 +3182,28 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 90,
-               ["elona.stat_mana"] = 150,
-               ["elona.stat_strength"] = 6,
-               ["elona.stat_constitution"] = 6,
-               ["elona.stat_dexterity"] = 6,
-               ["elona.stat_perception"] = 6,
-               ["elona.stat_learning"] = 6,
-               ["elona.stat_will"] = 6,
-               ["elona.stat_magic"] = 6,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 100,
-               ["elona.martial_arts"] = 3,
-               ["elona.tactics"] = 3,
-               ["elona.casting"] = 4,
-               ["elona.negotiation"] = 3,
-               ["elona.throwing"] = 3,
-               ["elona.dual_wield"] = 4,
-               ["elona.firearm"] = 4,
-               ["elona.two_hand"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 90,
+            ["elona.stat_mana"] = 150,
+            ["elona.stat_strength"] = 6,
+            ["elona.stat_constitution"] = 6,
+            ["elona.stat_dexterity"] = 6,
+            ["elona.stat_perception"] = 6,
+            ["elona.stat_learning"] = 6,
+            ["elona.stat_will"] = 6,
+            ["elona.stat_magic"] = 6,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 100,
+            ["elona.martial_arts"] = 3,
+            ["elona.tactics"] = 3,
+            ["elona.casting"] = 4,
+            ["elona.negotiation"] = 3,
+            ["elona.throwing"] = 3,
+            ["elona.dual_wield"] = 4,
+            ["elona.firearm"] = 4,
+            ["elona.two_hand"] = 3,
          }
+
 
       },
       {
@@ -3298,23 +3227,22 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 150,
-               ["elona.stat_mana"] = 50,
-               ["elona.stat_strength"] = 9,
-               ["elona.stat_constitution"] = 8,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 5,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 6,
-               ["elona.stat_speed"] = 125,
-               ["elona.martial_arts"] = 1,
-               ["elona.healing"] = 4,
-            }
+         skills = {
+            ["elona.stat_life"] = 150,
+            ["elona.stat_mana"] = 50,
+            ["elona.stat_strength"] = 9,
+            ["elona.stat_constitution"] = 8,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 5,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 6,
+            ["elona.stat_speed"] = 125,
+            ["elona.martial_arts"] = 1,
+            ["elona.healing"] = 4,
          }
+
 
       },
       {
@@ -3338,30 +3266,29 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 200,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 17,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 19,
-               ["elona.stat_perception"] = 17,
-               ["elona.stat_learning"] = 16,
-               ["elona.stat_will"] = 25,
-               ["elona.stat_magic"] = 24,
-               ["elona.stat_charisma"] = 21,
-               ["elona.stat_speed"] = 150,
-               ["elona.martial_arts"] = 6,
-               ["elona.evasion"] = 3,
-               ["elona.greater_evasion"] = 3,
-               ["elona.eye_of_mind"] = 2,
-               ["elona.firearm"] = 8,
-               ["elona.bow"] = 7,
-               ["elona.dual_wield"] = 7,
-               ["elona.two_hand"] = 5,
-               ["elona.tactics"] = 7,
-            }
+         skills = {
+            ["elona.stat_life"] = 200,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 17,
+            ["elona.stat_constitution"] = 13,
+            ["elona.stat_dexterity"] = 19,
+            ["elona.stat_perception"] = 17,
+            ["elona.stat_learning"] = 16,
+            ["elona.stat_will"] = 25,
+            ["elona.stat_magic"] = 24,
+            ["elona.stat_charisma"] = 21,
+            ["elona.stat_speed"] = 150,
+            ["elona.martial_arts"] = 6,
+            ["elona.evasion"] = 3,
+            ["elona.greater_evasion"] = 3,
+            ["elona.eye_of_mind"] = 2,
+            ["elona.firearm"] = 8,
+            ["elona.bow"] = 7,
+            ["elona.dual_wield"] = 7,
+            ["elona.two_hand"] = 5,
+            ["elona.tactics"] = 7,
          }
+
 
       },
       {
@@ -3394,25 +3321,24 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 3,
-               ["elona.stat_mana"] = 40,
-               ["elona.stat_strength"] = 2,
-               ["elona.stat_constitution"] = 4,
-               ["elona.stat_dexterity"] = 18,
-               ["elona.stat_perception"] = 16,
-               ["elona.stat_learning"] = 5,
-               ["elona.stat_will"] = 8,
-               ["elona.stat_magic"] = 9,
-               ["elona.stat_charisma"] = 7,
-               ["elona.stat_speed"] = 750,
-               ["elona.martial_arts"] = 1,
-               ["elona.stealth"] = 3,
-               ["elona.evasion"] = 7,
-               ["elona.greater_evasion"] = 6,
-            }
+         skills = {
+            ["elona.stat_life"] = 3,
+            ["elona.stat_mana"] = 40,
+            ["elona.stat_strength"] = 2,
+            ["elona.stat_constitution"] = 4,
+            ["elona.stat_dexterity"] = 18,
+            ["elona.stat_perception"] = 16,
+            ["elona.stat_learning"] = 5,
+            ["elona.stat_will"] = 8,
+            ["elona.stat_magic"] = 9,
+            ["elona.stat_charisma"] = 7,
+            ["elona.stat_speed"] = 750,
+            ["elona.martial_arts"] = 1,
+            ["elona.stealth"] = 3,
+            ["elona.evasion"] = 7,
+            ["elona.greater_evasion"] = 6,
          }
+
 
       },
       {
@@ -3441,24 +3367,23 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 1,
-               ["elona.stat_mana"] = 100,
-               ["elona.stat_strength"] = 4,
-               ["elona.stat_constitution"] = 1,
-               ["elona.stat_dexterity"] = 3,
-               ["elona.stat_perception"] = 32,
-               ["elona.stat_learning"] = 2,
-               ["elona.stat_will"] = 4,
-               ["elona.stat_magic"] = 4,
-               ["elona.stat_charisma"] = 16,
-               ["elona.stat_speed"] = 640,
-               ["elona.martial_arts"] = 1,
-               ["elona.magic_capacity"] = 4,
-               ["elona.greater_evasion"] = 6,
-            }
+         skills = {
+            ["elona.stat_life"] = 1,
+            ["elona.stat_mana"] = 100,
+            ["elona.stat_strength"] = 4,
+            ["elona.stat_constitution"] = 1,
+            ["elona.stat_dexterity"] = 3,
+            ["elona.stat_perception"] = 32,
+            ["elona.stat_learning"] = 2,
+            ["elona.stat_will"] = 4,
+            ["elona.stat_magic"] = 4,
+            ["elona.stat_charisma"] = 16,
+            ["elona.stat_speed"] = 640,
+            ["elona.martial_arts"] = 1,
+            ["elona.magic_capacity"] = 4,
+            ["elona.greater_evasion"] = 6,
          }
+
 
       },
       {
@@ -3489,31 +3414,31 @@ local race =
 
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 170,
-               ["elona.stat_mana"] = 60,
-               ["elona.stat_strength"] = 11,
-               ["elona.stat_constitution"] = 13,
-               ["elona.stat_dexterity"] = 4,
-               ["elona.stat_perception"] = 3,
-               ["elona.stat_learning"] = 4,
-               ["elona.stat_will"] = 5,
-               ["elona.stat_magic"] = 3,
-               ["elona.stat_charisma"] = 11,
-               ["elona.stat_speed"] = 155,
-               ["elona.martial_arts"] = 2,
-               ["elona.evasion"] = 11,
-               ["elona.lock_picking"] = 3,
-               ["elona.disarm_trap"] = 3,
-            }
+         skills = {
+            ["elona.stat_life"] = 170,
+            ["elona.stat_mana"] = 60,
+            ["elona.stat_strength"] = 11,
+            ["elona.stat_constitution"] = 13,
+            ["elona.stat_dexterity"] = 4,
+            ["elona.stat_perception"] = 3,
+            ["elona.stat_learning"] = 4,
+            ["elona.stat_will"] = 5,
+            ["elona.stat_magic"] = 3,
+            ["elona.stat_charisma"] = 11,
+            ["elona.stat_speed"] = 155,
+            ["elona.martial_arts"] = 2,
+            ["elona.evasion"] = 11,
+            ["elona.lock_picking"] = 3,
+            ["elona.disarm_trap"] = 3,
          }
+
 
       },
       -- For debug
       {
          _id = "slug",
          ordering = 0,
+         is_extra = true,
 
          copy_to_chara = {
 
@@ -3534,22 +3459,21 @@ local race =
             },
          },
 
-         base = {
-            skills = {
-               ["elona.stat_life"] = 1000,
-               ["elona.stat_mana"] = 1000,
-               ["elona.stat_strength"] = 100,
-               ["elona.stat_constitution"] = 100,
-               ["elona.stat_dexterity"] = 100,
-               ["elona.stat_perception"] = 100,
-               ["elona.stat_learning"] = 100,
-               ["elona.stat_will"] = 100,
-               ["elona.stat_magic"] = 100,
-               ["elona.stat_charisma"] = 100,
-               ["elona.stat_speed"] = 500,
-               ["elona.mining"] = 100,
-            }
+         skills = {
+            ["elona.stat_life"] = 1000,
+            ["elona.stat_mana"] = 1000,
+            ["elona.stat_strength"] = 100,
+            ["elona.stat_constitution"] = 100,
+            ["elona.stat_dexterity"] = 100,
+            ["elona.stat_perception"] = 100,
+            ["elona.stat_learning"] = 100,
+            ["elona.stat_will"] = 100,
+            ["elona.stat_magic"] = 100,
+            ["elona.stat_charisma"] = 100,
+            ["elona.stat_speed"] = 500,
+            ["elona.mining"] = 100,
          }
+
       },
    }
 

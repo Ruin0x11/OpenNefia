@@ -44,10 +44,10 @@ function SelectAliasMenu:init()
    self.width = 400
    self.height = 458
 
-   self.win = UiWindow:new("chara_making.select_alias.title", true)
+   self.win = UiWindow:new("chara_make.select_alias.title", true)
 
    local items = {
-      { text = I18N.get("chara_making.common.reroll"), type = "reroll", on_choose = function() self:reroll(true) end }
+      { text = I18N.get("chara_make.common.reroll"), type = "reroll", on_choose = function() self:reroll(true) end }
    }
    table.append(items, table.of(function(i) return { text = "alias" .. i, type = "alias" } end, 16))
 
@@ -60,7 +60,7 @@ function SelectAliasMenu:init()
    self.input:forward_to(self.list)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "Choose an alias."
+   self.caption = "chara_make.select_alias.caption"
    self.intro_sound = "base.ok1"
 
    self:reroll(false)
@@ -71,6 +71,7 @@ function SelectAliasMenu:make_keymap()
       mode2 = function()
          self:lock(self.list.selected)
       end,
+      escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
 end
@@ -116,7 +117,7 @@ end
 function SelectAliasMenu:draw()
    self.win:draw()
    self.list:draw()
-   Ui.draw_topic("chara_making.select_alias.alias_list", self.x + 28, self.y + 30)
+   Ui.draw_topic("chara_make.select_alias.alias_list", self.x + 28, self.y + 30)
 
    local bg = self.t["g" .. (math.floor(self.bg_index / 4) % 4 + 1)]
    bg:draw(

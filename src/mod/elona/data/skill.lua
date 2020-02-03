@@ -114,7 +114,7 @@ local skill = {
    {
       _id = "long_sword",
       elona_id = 100,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -124,7 +124,7 @@ local skill = {
    {
       _id = "short_sword",
       elona_id = 101,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -134,7 +134,7 @@ local skill = {
    {
       _id = "axe",
       elona_id = 102,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -144,7 +144,7 @@ local skill = {
    {
       _id = "blunt",
       elona_id = 103,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -152,7 +152,7 @@ local skill = {
    {
       _id = "polearm",
       elona_id = 104,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -162,66 +162,15 @@ local skill = {
    {
       _id = "stave",
       elona_id = 105,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
-   },
-   {
-      _id = "scythe",
-      elona_id = 107,
-      related_basic_attribute = 10,
-      ability_type = 0,
-      cost = 0,
-      range = 0,
-
-      attack_animation = 1,
-   },
-   {
-      _id = "bow",
-      elona_id = 108,
-      related_basic_attribute = 12,
-      ability_type = 0,
-      cost = 0,
-      range = 0,
-
-      is_main_skill = true,
-      attack_animation = 2,
-   },
-   {
-      _id = "crossbow",
-      elona_id = 109,
-      related_basic_attribute = 12,
-      ability_type = 0,
-      cost = 0,
-      range = 0,
-
-      attack_animation = 2,
-   },
-   {
-      _id = "firearm",
-      elona_id = 110,
-      related_basic_attribute = 13,
-      ability_type = 0,
-      cost = 0,
-      range = 0,
-
-      attack_animation = 2,
-   },
-   {
-      _id = "throwing",
-      elona_id = 111,
-      related_basic_attribute = 12,
-      ability_type = 0,
-      cost = 0,
-      range = 0,
-
-      attack_animation = 2,
    },
    {
       _id = "martial_arts",
       elona_id = 106,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -254,9 +203,60 @@ local skill = {
       end
    },
    {
+      _id = "scythe",
+      elona_id = 107,
+      related_basic_attribute = "elona.stat_strength",
+      ability_type = 0,
+      cost = 0,
+      range = 0,
+
+      attack_animation = 1,
+   },
+   {
+      _id = "bow",
+      elona_id = 108,
+      related_basic_attribute = "elona.stat_dexterity",
+      ability_type = 0,
+      cost = 0,
+      range = 0,
+
+      is_main_skill = true,
+      attack_animation = 2,
+   },
+   {
+      _id = "crossbow",
+      elona_id = 109,
+      related_basic_attribute = "elona.stat_dexterity",
+      ability_type = 0,
+      cost = 0,
+      range = 0,
+
+      attack_animation = 2,
+   },
+   {
+      _id = "firearm",
+      elona_id = 110,
+      related_basic_attribute = "elona.stat_perception",
+      ability_type = 0,
+      cost = 0,
+      range = 0,
+
+      attack_animation = 2,
+   },
+   {
+      _id = "throwing",
+      elona_id = 111,
+      related_basic_attribute = "elona.stat_dexterity",
+      ability_type = 0,
+      cost = 0,
+      range = 0,
+
+      attack_animation = 2,
+   },
+   {
       _id = "shield",
       elona_id = 168,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -264,7 +264,7 @@ local skill = {
    {
       _id = "evasion",
       elona_id = 173,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -274,7 +274,7 @@ local skill = {
    {
       _id = "dual_wield",
       elona_id = 166,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -282,7 +282,7 @@ local skill = {
    {
       _id = "two_hand",
       elona_id = 167,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -374,7 +374,7 @@ local skill = {
    {
       _id = "weight_lifting",
       elona_id = 153,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -382,7 +382,7 @@ local skill = {
    {
       _id = "tactics",
       elona_id = 152,
-      related_basic_attribute = 10,
+      related_basic_attribute = "elona.stat_strength",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -390,7 +390,7 @@ local skill = {
    {
       _id = "marksman",
       elona_id = 189,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -398,7 +398,7 @@ local skill = {
    {
       _id = "healing",
       elona_id = 154,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -406,7 +406,7 @@ local skill = {
    {
       _id = "mining",
       elona_id = 163,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -414,7 +414,7 @@ local skill = {
    {
       _id = "carpentry",
       elona_id = 176,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -422,7 +422,7 @@ local skill = {
    {
       _id = "heavy_armor",
       elona_id = 169,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -434,7 +434,7 @@ local skill = {
    {
       _id = "medium_armor",
       elona_id = 170,
-      related_basic_attribute = 11,
+      related_basic_attribute = "elona.stat_constitution",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -446,7 +446,7 @@ local skill = {
    {
       _id = "light_armor",
       elona_id = 171,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -454,7 +454,7 @@ local skill = {
    {
       _id = "lock_picking",
       elona_id = 158,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -462,7 +462,7 @@ local skill = {
    {
       _id = "disarm_trap",
       elona_id = 175,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -470,7 +470,7 @@ local skill = {
    {
       _id = "tailoring",
       elona_id = 177,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -478,7 +478,7 @@ local skill = {
    {
       _id = "jeweler",
       elona_id = 179,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -486,7 +486,7 @@ local skill = {
    {
       _id = "pickpocket",
       elona_id = 300,
-      related_basic_attribute = 12,
+      related_basic_attribute = "elona.stat_dexterity",
       ability_type = 0,
       cost = 20,
       range = 8000,
@@ -494,7 +494,7 @@ local skill = {
    {
       _id = "stealth",
       elona_id = 157,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -502,7 +502,7 @@ local skill = {
    {
       _id = "detection",
       elona_id = 159,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -510,7 +510,7 @@ local skill = {
    {
       _id = "sense_quality",
       elona_id = 162,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -518,7 +518,7 @@ local skill = {
    {
       _id = "eye_of_mind",
       elona_id = 186,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -526,7 +526,7 @@ local skill = {
    {
       _id = "fishing",
       elona_id = 185,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 5,
       range = 10000,
@@ -534,7 +534,7 @@ local skill = {
    {
       _id = "greater_evasion",
       elona_id = 187,
-      related_basic_attribute = 13,
+      related_basic_attribute = "elona.stat_perception",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -542,7 +542,7 @@ local skill = {
    {
       _id = "anatomy",
       elona_id = 161,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -550,7 +550,7 @@ local skill = {
    {
       _id = "literacy",
       elona_id = 150,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -558,7 +558,7 @@ local skill = {
    {
       _id = "memorization",
       elona_id = 165,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -566,7 +566,7 @@ local skill = {
    {
       _id = "alchemy",
       elona_id = 178,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -574,7 +574,7 @@ local skill = {
    {
       _id = "gardening",
       elona_id = 180,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -582,7 +582,7 @@ local skill = {
    {
       _id = "gene_engineer",
       elona_id = 151,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -590,7 +590,7 @@ local skill = {
    {
       _id = "cooking",
       elona_id = 184,
-      related_basic_attribute = 14,
+      related_basic_attribute = "elona.stat_learning",
       ability_type = 0,
       cost = 15,
       range = 10000,
@@ -598,7 +598,7 @@ local skill = {
    {
       _id = "meditation",
       elona_id = 155,
-      related_basic_attribute = 16,
+      related_basic_attribute = "elona.stat_magic",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -606,7 +606,7 @@ local skill = {
    {
       _id = "magic_device",
       elona_id = 174,
-      related_basic_attribute = 16,
+      related_basic_attribute = "elona.stat_magic",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -614,7 +614,7 @@ local skill = {
    {
       _id = "casting",
       elona_id = 172,
-      related_basic_attribute = 16,
+      related_basic_attribute = "elona.stat_magic",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -622,7 +622,7 @@ local skill = {
    {
       _id = "control_magic",
       elona_id = 188,
-      related_basic_attribute = 16,
+      related_basic_attribute = "elona.stat_magic",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -630,7 +630,7 @@ local skill = {
    {
       _id = "magic_capacity",
       elona_id = 164,
-      related_basic_attribute = 15,
+      related_basic_attribute = "elona.stat_will",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -638,7 +638,7 @@ local skill = {
    {
       _id = "faith",
       elona_id = 181,
-      related_basic_attribute = 15,
+      related_basic_attribute = "elona.stat_will",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -646,7 +646,7 @@ local skill = {
    {
       _id = "traveling",
       elona_id = 182,
-      related_basic_attribute = 15,
+      related_basic_attribute = "elona.stat_will",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -654,7 +654,7 @@ local skill = {
    {
       _id = "riding",
       elona_id = 301,
-      related_basic_attribute = 15,
+      related_basic_attribute = "elona.stat_will",
       ability_type = 0,
       cost = 20,
       range = 8000,
@@ -662,7 +662,7 @@ local skill = {
    {
       _id = "negotiation",
       elona_id = 156,
-      related_basic_attribute = 17,
+      related_basic_attribute = "elona.stat_charisma",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -670,7 +670,7 @@ local skill = {
    {
       _id = "investing",
       elona_id = 160,
-      related_basic_attribute = 17,
+      related_basic_attribute = "elona.stat_charisma",
       ability_type = 0,
       cost = 0,
       range = 0,
@@ -678,7 +678,7 @@ local skill = {
    {
       _id = "performer",
       elona_id = 183,
-      related_basic_attribute = 17,
+      related_basic_attribute = "elona.stat_charisma",
       ability_type = 0,
       cost = 25,
       range = 10000,

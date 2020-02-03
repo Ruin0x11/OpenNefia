@@ -560,4 +560,11 @@ function Tools.new_quests()
    Map.save(map)
 end
 
+function Tools.reload_theme()
+   local UiTheme = require("api.gui.UiTheme")
+   UiTheme.clear()
+   local default_theme = "elona_sys.default"
+   UiTheme.add_theme(default_theme)
+end
+
 return Tools

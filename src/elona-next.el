@@ -375,7 +375,11 @@
   (when (string-equal cmd "run")
     (let ((win (get-buffer-window lua-process-buffer))
           (compilation-win (get-buffer-window compilation-last-buffer))
-          (buf (if compilation-in-progress compilation-last-buffer lua-process-buffer)))
+          (buf (if compilation-in-progress
+                   (if (buffer-live-p compilation-last-buffer)
+                       compilation-last-buffer
+                     (get-buffer "*compilation*"))
+                 lua-process-buffer)))
       (when (not (or (and compilation-win (window-live-p win)) (and lua-process-buffer win (window-live-p win))))
         (when (and (buffer-live-p buf) (not (window-live-p (get-buffer-window buf))))
           (popwin:popup-buffer buf :stick t :noselect t :height 0.3)))

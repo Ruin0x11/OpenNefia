@@ -160,6 +160,7 @@ end
 --- @tparam[opt] int size
 --- @treturn int Width in pixels.
 function Draw.text_width(text, size)
+   text = text or " "
    if size then
       Draw.set_font(size)
    end

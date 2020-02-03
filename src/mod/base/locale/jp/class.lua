@@ -1,5 +1,7 @@
 return {
   class = {
-    unemployed = "なし"
+     base = {
+        unemployed = "なし"
+     }
   }
 }

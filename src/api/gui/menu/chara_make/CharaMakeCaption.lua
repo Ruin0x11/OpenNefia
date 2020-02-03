@@ -15,6 +15,7 @@ end
 
 function CharaMakeCaption:set_data(caption)
    self.caption = caption or self.caption
+   self.caption = I18N.get(caption) or caption
    self:relayout()
 end
 
@@ -36,10 +37,11 @@ end
 function CharaMakeCaption:draw()
    Draw.set_font(16) -- 16 - en * 2
 
-   local step = self.width / 128
-   for i=0,step do
+   local count = math.ceil(self.width / 128)
+   local step
+   for i=0,count do
       local q
-      if i == self.width / 128 - 1 then
+      if i == count then
          step = self.width % 128
          q = 3
       else

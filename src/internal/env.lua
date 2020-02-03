@@ -496,7 +496,13 @@ function env.hotload_path(path, also_deps)
          local filepath = get_require_path(path)
          filepath = filepath:gsub("^%./", "")
          Log.info("Hotloading translations at %s for language '%s'.", path, lang)
+
+         -- The locale DB might not be loaded yet, so we should create
+         -- it if so.
+         i18n.db[lang] = i18n.db[lang] or {}
+
          i18n.load_single_translation(filepath, i18n.db[lang])
+
          return nil
       end
    end
