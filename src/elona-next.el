@@ -82,10 +82,10 @@
 (defun elona-next--eldoc-get ()
   (ignore-errors
     (let ((sym (elona-next--dotted-symbol-at-point)))
-      (if (and (elona-next--game-running-p)
+      (if (and (not (string-empty-p sym))
+               (elona-next--game-running-p)
                (not (string-equal sym "nil")))
-          (elona-next--send "signature" sym)
-        )))
+          (elona-next--send "signature" sym))))
   eldoc-last-message)
 
 (defun elona-next-eldoc-function ()
@@ -97,20 +97,21 @@
           elona-next--eldoc-saved-point nil)
     (elona-next--eldoc-get)
     (let* ((sym-dotted (elona-next--dotted-symbol-at-point))
-           (sym (symbol-at-point))
-           (defs (or (and sym-dotted (etags--xref-find-definitions sym-dotted))
-                     (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
-      (when defs
-        (let* ((def (car defs))
-               (raw (substring-no-properties (xref-item-summary def))))
-          (with-temp-buffer
-            (insert raw)
-            (delay-mode-hooks (lua-mode))
-            (font-lock-default-function 'lua-mode)
-            (font-lock-default-fontify-region (point-min)
-                                              (point-max)
-                                              nil)
-            (buffer-string)))))))
+           (sym (symbol-at-point)))
+      (when (not (or (string-empty-p sym-dotted) (string-empty-p sym)))
+        (let ((defs (or (and sym-dotted (etags--xref-find-definitions sym-dotted))
+                        (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
+          (when defs
+            (let* ((def (car defs))
+                   (raw (substring-no-properties (xref-item-summary def))))
+              (with-temp-buffer
+                (insert raw)
+                (delay-mode-hooks (lua-mode))
+                (font-lock-default-function 'lua-mode)
+                (font-lock-default-fontify-region (point-min)
+                                                  (point-max)
+                                                  nil)
+                (buffer-string)))))))))
 
 (defun elona-next--game-running-p ()
   (or

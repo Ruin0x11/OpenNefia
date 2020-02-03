@@ -101,7 +101,6 @@ data:add {
          caption = {
             image = "asset/caption.png",
             regions = function(width, height)
-               print"cap"
                local quad = {}
                quad[1] =  { 0, 0, 128, 3 }
                quad[2] =  { 0, 3, 128, 22 }
@@ -308,6 +307,43 @@ data:add {
          anim_elem_poison = {
             image = "asset/anim_elem_poison.png",
             count_x = 6
+         },
+
+         light_port_light = {
+            image = "asset/light_port_light.png"
+         },
+         light_torch = {
+            image = "asset/light_torch.png",
+            count_x = 2
+         },
+         light_lantern = {
+            image = "asset/light_lantern.png"
+         },
+         light_candle = {
+            image = "asset/light_candle.png"
+         },
+         light_stove = {
+            image = "asset/light_stove.png",
+            count_x = 2
+         },
+         light_item = {
+            image = "asset/light_item.png"
+         },
+         light_town = {
+            image = "asset/light_town.png"
+         },
+         light_crystal = {
+            image = "asset/light_crystal.png",
+            count_x = 2
+         },
+         light_town_light = {
+            image = "asset/light_town_light.png"
+         },
+         light_window = {
+            image = "asset/light_window.png"
+         },
+         light_window_red = {
+            image = "asset/light_window_red.png"
          },
 
          attribute_font = {

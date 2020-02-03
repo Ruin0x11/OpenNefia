@@ -245,12 +245,17 @@ end
 function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
    local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
 
+   -- TODO: rewrite this as a batched draw layer
    for _, ind in pairs(self.chip_batch_inds) do
       if ind.hp_bar then
+         if self["i_" .. ind.hp_bar] == nil then
+            self["i_" .. ind.hp_bar] = self.t[ind.hp_bar]:make_instance()
+         end
+
          local ratio = ind.hp_ratio or 0.9
-         self.t[ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
-                                                sy - draw_y + offy + ind.y * 48 + ind.y_offset + 48,
-                                                ratio * 30, 3, ratio * 30)
+         self["i_" .. ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
+                                                      sy - draw_y + offy + ind.y * 48 + ind.y_offset + 48,
+                                                      ratio * 30, 3, ratio * 30)
       end
    end
 end

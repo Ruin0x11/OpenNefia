@@ -16,8 +16,7 @@ local function add_keybinds(raw)
 end
 
 local keybinds = {
-   --cancel = "shift",
-   cancel = "lshift",
+   cancel = "shift",
    escape = "escape",
    quit = "escape",
    north = {"up", "kp8"},
@@ -78,6 +77,7 @@ local keybinds = {
    quicksave = "f2",
    quickload = "f3",
    alt_movement = "alt",
+   portrait = "p",
 
    repl = "`",
    repl_page_up = "pageup",

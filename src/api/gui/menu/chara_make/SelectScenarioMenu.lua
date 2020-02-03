@@ -9,7 +9,7 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiWindow = require("api.gui.UiWindow")
 local InputHandler = require("api.gui.InputHandler")
 
-local data = require("internal.data")
+local save = require("internal.global.save")
 
 local SelectScenarioMenu = class.class("SelectScenarioMenu", ICharaMakeSection)
 
@@ -38,7 +38,7 @@ end
 
 function SelectScenarioMenu:make_keymap()
    return {
-      shift = function() self.canceled = true end
+      cancel = function() self.canceled = true end
    }
 end
 
@@ -47,8 +47,7 @@ function SelectScenarioMenu:on_make_chara()
 end
 
 function SelectScenarioMenu:on_charamake_finish()
-   -- HACK
-   require("game.field").data.scenario = "elona.elona"
+   save.base.scenario = "elona.elona"
 end
 
 function SelectScenarioMenu:relayout()

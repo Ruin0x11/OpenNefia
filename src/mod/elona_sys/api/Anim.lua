@@ -163,15 +163,15 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
       local count = math.floor(Pos.dist(start_x, start_y, end_x, end_y) / 2) + 1
 
       local frame = 1
-      while frame <= count do
-         sx = sx - math.floor((start_x - end_x) * tw / count)
-         sy = sy - math.floor((start_y - end_y) * th / count)
+      while frame < count do
+         local cx = sx - frame * math.floor((start_x - end_x) * tw / count)
+         local cy = sy - frame * math.floor((start_y - end_y) * th / count)
 
-         if is_in_screen(sx, sy) then
+         if is_in_screen(cx, cy) then
             chip_batch:clear()
             chip_batch:add(chip,
-                           sx + math.floor(tw / 2),
-                           sy + math.floor(th / 2),
+                           cx + math.floor(tw / 2),
+                           cy + math.floor(th / 2),
                            tw,
                            th,
                            color,
@@ -180,7 +180,7 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
             chip_batch:draw()
          end
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] / 2)
          frame = frame + frames_passed
       end
 

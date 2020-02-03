@@ -260,6 +260,7 @@ function debug_server:poll()
       error(err)
    end
 
+   local cmd_name = nil
    local result = nil
 
    while client ~= nil do
@@ -279,12 +280,12 @@ function debug_server:poll()
       if not ok then
          result = error_result(req)
       else
-         local key = req.command
+         cmd_name = req.command
          local content = req.content
-         if type(key) ~= "string" or type(content) ~= "string" then
+         if type(cmd_name) ~= "string" or type(content) ~= "string" then
             result = error_result("Request must have 'command' and 'content' keys")
          else
-            local cmd = commands[key]
+            local cmd = commands[cmd_name]
             if cmd == nil then
                result = error_result("No command named " .. key)
             else
@@ -321,7 +322,7 @@ function debug_server:poll()
       end
    end
 
-   return result
+   return cmd_name, result
 end
 
 function debug_server:start()
@@ -341,9 +342,9 @@ function debug_server:start()
 
    local function poll()
       while true do
-         local result = self:poll()
+         local cmd_name, result = self:poll()
 
-         coroutine.yield(result)
+         coroutine.yield(cmd_name, result)
       end
    end
 

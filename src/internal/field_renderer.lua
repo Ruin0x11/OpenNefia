@@ -117,7 +117,7 @@ function field_renderer:update_draw_callbacks(dt)
       co.dt = co.dt - dt
    end
 
-   return #self.draw_callbacks > 0
+   return next(self.draw_callbacks) ~= nil
 end
 
 local function resume_coroutine(co, draw_x, draw_y, frame_delta)

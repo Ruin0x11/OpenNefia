@@ -41,8 +41,10 @@ end
 
 function UiBuffList:make_keymap()
    return {
-      up = function() self:select_previous() end,
-      down = function() self:select_next() end,
+      north = function() self:select_previous() end,
+      south = function() self:select_next() end,
+      escape = function() self.canceled = true end,
+      cancel = function() self.canceled = true end,
    }
 end
 

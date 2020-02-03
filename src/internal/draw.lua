@@ -149,13 +149,19 @@ function draw.update_layers_below(dt)
    end
 end
 
+local function hotload_layer(layer)
+   if layer.on_hotload_layer then
+      layer:on_hotload_layer()
+   end
+   layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+   layer:bind_keys(layer:make_keymap())
+end
+
 function draw.draw_layers()
    if env.hotloaded_this_frame() then
       for _, entry in ipairs(layers) do
-         if entry.layer.on_hotload_layer then
-            entry.layer:on_hotload_layer()
-         end
-         entry.layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+         hotload_layer(entry.layer)
       end
    end
 

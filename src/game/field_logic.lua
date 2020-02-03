@@ -16,7 +16,11 @@ local DeathMenu = require("api.gui.menu.DeathMenu")
 local field_logic = {}
 
 function field_logic.setup_new_game(player)
+   field.map = nil
+
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
+
+   assert(player)
 
    Chara.set_player(player)
    scenario:on_game_start(player)

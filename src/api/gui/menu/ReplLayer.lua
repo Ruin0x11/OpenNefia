@@ -469,6 +469,8 @@ function ReplLayer.format_repl_result(result)
       else
          result_text = inspect(result, {process=remove_all_metatables})
       end
+   elseif type(result) == "string" then
+      result_text = ("\"%s\""):format(result)
    else
       result_text = tostring(result)
    end

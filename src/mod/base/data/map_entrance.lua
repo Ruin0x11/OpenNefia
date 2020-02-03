@@ -4,6 +4,7 @@ local Rand = require("api.Rand")
 local Log = require("api.Log")
 
 local function center(map, chara)
+   assert(class.is_an("api.InstancedMap", map))
    local x = math.floor(map:width() / 2)
    local y = math.floor(map:height() / 2)
 

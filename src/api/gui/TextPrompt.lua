@@ -9,6 +9,7 @@ local TopicWindow = require("api.gui.TopicWindow")
 local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local TextHandler = require("api.gui.TextHandler")
+local config = require("internal.config")
 
 local TextPrompt = class.class("TextPrompt", IUiLayer)
 
@@ -134,7 +135,7 @@ function TextPrompt:draw()
 end
 
 function TextPrompt:update(dt)
-   self.frames = self.frames + dt * 6
+   self.frames = self.frames + dt * config["base.screen_sync"]
    self.caret_alpha = math.sin(self.frames) * 255 * 2 -- TODO
 
    if self.finished then

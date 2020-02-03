@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
+local config = require("internal.config")
 local save = require("internal.global.save")
 
 local PlayerLightDrawable = class.class("PlayerLightDrawable")
@@ -16,7 +17,7 @@ function PlayerLightDrawable:init()
 end
 
 function PlayerLightDrawable:update(dt)
-   self.frames = self.frames + dt * 6
+   self.frames = self.frames + dt * config["base.screen_sync"]
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
       local hour = save.base.date.hour

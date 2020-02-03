@@ -68,10 +68,10 @@ end
 
 function SelectAliasMenu:make_keymap()
    return {
-      ["kp*"] = function()
+      mode2 = function()
          self:lock(self.list.selected)
       end,
-      shift = function() self.canceled = true end
+      cancel = function() self.canceled = true end
    }
 end
 

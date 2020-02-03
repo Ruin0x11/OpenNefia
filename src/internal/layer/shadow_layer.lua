@@ -1,34 +1,36 @@
+local config = require("internal.config")
 local save = require("internal.global.save")
-local atlases = require("internal.global.atlases")
 local shadow_batch = require("internal.draw.shadow_batch")
-local sparse_batch = require("internal.draw.sparse_batch")
 local Chara = require("api.Chara")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
+local UiTheme = require("api.gui.UiTheme")
 
 local shadow_layer = class.class("shadow_layer", IDrawLayer)
 
 function shadow_layer:init(width, height, coords)
-   local chip_atlas = atlases.get().chip
-
    self.coords = coords
    self.shadow_batch = shadow_batch:new(width, height, coords)
-   self.light_batch = sparse_batch:new(width, height, chip_atlas, coords)
+   self.lights = {}
    self.frames = 0
    self.reupdate = true
    self.reupdate_light = false
 end
 
 function shadow_layer:relayout()
+   self.t = UiTheme.load(self)
 end
 
 function shadow_layer:reset()
    self.batch_inds = {}
+   self.lights = {}
 end
 
-function shadow_layer:recalc_light(map)
+function shadow_layer:rebuild_light(map)
+   self.lights = {}
+
    local shadow = save.base.shadow
    local has_light_source = save.base.has_light_source
    local is_dungeon = map:has_type("dungeon")
@@ -38,9 +40,6 @@ function shadow_layer:recalc_light(map)
 
    local player = Chara.player()
    local hour = save.base.date.hour
-
-   self.light_batch.updated = true
-   self.light_batch:clear()
 
    if player then
       for _, x, y, tile in map:iter_tiles() do
@@ -53,15 +52,15 @@ function shadow_layer:recalc_light(map)
                shadow = shadow - power
 
                local sx, sy = self.coords:tile_to_screen(x + 1, y + 1)
-               local flicker = light.brightness + Rand.rnd(light.flicker + 1)
-               local color = {255, 255, 255, flicker}
-               self.light_batch:add_tile {
-                  tile = light.chip,
+
+               table.insert(self.lights, {
+                  instance = self.t[light.chip]:make_instance(),
                   x = sx,
                   y = sy,
                   y_offset = light.y_offset,
-                  color = color
-               }
+                  color = {255, 255, 255, 255},
+                  frame = 1
+               })
             end
          end
       end
@@ -72,19 +71,36 @@ function shadow_layer:recalc_light(map)
    self.shadow_batch.shadow_strength = shadow
 end
 
+function shadow_layer:update_light_flicker()
+   for _, light in ipairs(self.lights) do
+      local flicker = light.brightness + Rand.rnd(light.flicker + 1)
+      light.color[4] = flicker
+
+      local frame_count = #light.chip:regions()
+      if frame_count > 1 then
+         light.frame = Rand.rnd(frame_count) + 1
+      else
+         light.frame = 1
+      end
+   end
+end
+
 function shadow_layer:update(dt, screen_updated, scroll_frames)
-   self.frames = self.frames + dt * 6
-   self.light_batch:update(dt)
+   self.frames = self.frames + dt * config["base.screen_sync"]
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
       self.reupdate_light = true
    end
 
-   if self.reupdate or self.reupdate_light then
+   if self.reupdate then
       local map = Map.current()
       assert(map ~= nil)
 
-      self:recalc_light(map)
+      self:rebuild_light(map)
+   end
+
+   if self.reupdate or self.reupdate_light then
+      self:update_light_flicker()
       self.reupdate_light = false
    end
 
@@ -112,7 +128,10 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
 end
 
 function shadow_layer:draw(draw_x, draw_y, offx, offy)
-   self.light_batch:draw(draw_x, draw_y, 0, 0)
+   for _, light in ipairs(self.lights) do
+      light.instance:draw_region(light.frame, light.x, light.y)
+   end
+
    self.shadow_batch:draw(draw_x, draw_y, 0, 0)
 end
 

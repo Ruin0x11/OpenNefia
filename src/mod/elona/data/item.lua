@@ -48,8 +48,7 @@ local hook_calc_initial_gold =
 
 local light = {
    lantern = {
-      pic = 3,
-      ani = 0,
+      chip = "light_lantern",
       bright = 80,
       offset_y = 0,
       power = 6,
@@ -57,8 +56,7 @@ local light = {
       always_on = false
    },
    lamp = {
-      pic = 3,
-      ani = 0,
+      chip = "light_lantern",
       bright = 100,
       offset_y = 30,
       power = 8,
@@ -66,8 +64,7 @@ local light = {
       always_on = false
    },
    torch = {
-      pic = 1,
-      ani = 1,
+      chip = "light_torch",
       bright = 50,
       offset_y = 8,
       power = 8,
@@ -75,8 +72,7 @@ local light = {
       always_on = true
    },
    torch_lamp = {
-      pic = 1,
-      ani = 1,
+      chip = "light_torch",
       bright = 70,
       offset_y = 28,
       power = 8,
@@ -84,8 +80,7 @@ local light = {
       always_on = true
    },
    town_light = {
-      pic = 11,
-      ani = 0,
+      chip = "light_town_light",
       bright = 140,
       offset_y = 48,
       power = 10,
@@ -93,8 +88,7 @@ local light = {
       always_on = false
    },
    port_light = {
-      pic = 0,
-      ani = 0,
+      chip = "light_port_light",
       bright = 140,
       offset_y = 62,
       power = 10,
@@ -102,8 +96,7 @@ local light = {
       always_on = false
    },
    port_light_snow = {
-      pic = 11,
-      ani = 0,
+      chip = "light_town_light",
       bright = 100,
       offset_y = 72,
       power = 10,
@@ -111,8 +104,7 @@ local light = {
       always_on = false
    },
    stove = {
-      pic = 5,
-      ani = 1,
+      chip = "light_stove",
       bright = 170,
       offset_y = 4,
       power = 2,
@@ -120,8 +112,7 @@ local light = {
       always_on = true
    },
    crystal = {
-      pic = 9,
-      ani = 1,
+      chip = "light_crystal",
       bright = 30,
       offset_y = 8,
       power = 2,
@@ -129,8 +120,7 @@ local light = {
       always_on = true
    },
    crystal_middle = {
-      pic = 9,
-      ani = 1,
+      chip = "light_crystal",
       bright = 30,
       offset_y = 24,
       power = 2,
@@ -138,8 +128,7 @@ local light = {
       always_on = true
    },
    crystal_high = {
-      pic = 9,
-      ani = 1,
+      chip = "light_crystal",
       bright = 30,
       offset_y = 50,
       power = 5,
@@ -147,8 +136,7 @@ local light = {
       always_on = true
    },
    town = {
-      pic = 8,
-      ani = 0,
+      chip = "light_town",
       bright = 120,
       offset_y = 0,
       power = 15,
@@ -156,8 +144,7 @@ local light = {
       always_on = false
    },
    item = {
-      pic = 7,
-      ani = 0,
+      chip = "light_item",
       bright = 35,
       offset_y = 4,
       power = 1,
@@ -165,8 +152,7 @@ local light = {
       always_on = true
    },
    item_middle = {
-      pic = 7,
-      ani = 0,
+      chip = "light_item",
       bright = 35,
       offset_y = 24,
       power = 1,
@@ -174,8 +160,7 @@ local light = {
       always_on = true
    },
    gate = {
-      pic = 12,
-      ani = 0,
+      chip = "light_window",
       bright = 20,
       offset_y = 32,
       power = 2,
@@ -183,8 +168,7 @@ local light = {
       always_on = true
    },
    candle = {
-      pic = 4,
-      ani = 0,
+      chip = "light_candle",
       bright = 50,
       offset_y = 48,
       power = 5,
@@ -192,8 +176,7 @@ local light = {
       always_on = true
    },
    candle_low = {
-      pic = 4,
-      ani = 0,
+      chip = "light_candle",
       bright = 50,
       offset_y = 16,
       power = 5,
@@ -201,8 +184,7 @@ local light = {
       always_on = true
    },
    window = {
-      pic = 12,
-      ani = 0,
+      chip = "light_window",
       bright = 100,
       offset_y = 24,
       power = 3,
@@ -210,8 +192,7 @@ local light = {
       always_on = false
    },
    window_red = {
-      pic = 13,
-      ani = 0,
+      chip = "light_window_red",
       bright = 70,
       offset_y = 35,
       power = 3,
@@ -235,11 +216,11 @@ local item =
          category = 99999999,
          subcategory = 99999999,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.bug",
             "elona.no_generate"
-         }
+         },
+         light = light.item
       },
       {
          _id = "long_sword",
@@ -1010,7 +991,6 @@ local item =
          weight = 1200,
          category = 77000,
          coefficient = 100,
-         light = 7,
 
          gods = { "elona.jure", "elona.opatos" },
 
@@ -1018,7 +998,8 @@ local item =
          color = { 255, 215, 175 },
          categories = {
             "elona.ore"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "gold_bar",
@@ -1029,7 +1010,6 @@ local item =
          category = 77000,
          rarity = 500000,
          coefficient = 100,
-         light = 7,
 
          gods = { "elona.jure", "elona.opatos" },
 
@@ -1037,7 +1017,9 @@ local item =
 
          categories = {
             "elona.ore"
-         }
+         },
+
+         light = light.crystal
       },
       {
          _id = "raw_ore_of_rubynus",
@@ -1049,7 +1031,6 @@ local item =
          subcategory = 77001,
          rarity = 500000,
          coefficient = 100,
-         light = 7,
          originalnameref2 = "raw ore",
 
          gods = { "elona.jure", "elona.opatos" },
@@ -1059,7 +1040,8 @@ local item =
          categories = {
             "elona.ore_valuable",
             "elona.ore"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "raw_ore_of_mica",
@@ -1091,7 +1073,6 @@ local item =
          subcategory = 77001,
          rarity = 400000,
          coefficient = 100,
-         light = 7,
          originalnameref2 = "raw ore",
 
          gods = { "elona.jure", "elona.opatos" },
@@ -1101,7 +1082,8 @@ local item =
          categories = {
             "elona.ore_valuable",
             "elona.ore"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "raw_ore_of_diamond",
@@ -1113,7 +1095,6 @@ local item =
          subcategory = 77001,
          rarity = 250000,
          coefficient = 100,
-         light = 7,
          originalnameref2 = "raw ore",
 
          gods = { "elona.jure", "elona.opatos" },
@@ -1123,7 +1104,8 @@ local item =
          categories = {
             "elona.ore_valuable",
             "elona.ore"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "wood_piece",
@@ -1212,10 +1194,10 @@ local item =
          weight = 3200,
          category = 64000,
          coefficient = 100,
-         light = 2,
          categories = {
             "elona.junk"
-         }
+         },
+         light = light.torch_lamp
       },
       {
          _id = "flag",
@@ -1356,7 +1338,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10002,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
 
@@ -1377,7 +1358,8 @@ local item =
             "elona.equip_melee_long_sword",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "zantetsu",
@@ -1395,7 +1377,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10002,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
 
@@ -1415,7 +1396,8 @@ local item =
             "elona.equip_melee_long_sword",
             "elona.unique_weapon",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "long_bow",
@@ -1563,7 +1545,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10011,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.scythe",
 
@@ -1584,7 +1565,8 @@ local item =
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "mournblade",
@@ -1605,7 +1587,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10002,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
 
@@ -1627,7 +1608,8 @@ local item =
             "elona.equip_melee_long_sword",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "light_cloak",
@@ -1804,7 +1786,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10002,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
          { id = 37, power = 100 },
@@ -1819,7 +1800,8 @@ local item =
             "elona.equip_melee_long_sword",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "potion_of_healer_odina",
@@ -1994,13 +1976,13 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "dining_table",
@@ -2081,7 +2063,6 @@ local item =
          subcategory = 60005,
          rarity = 100000,
          coefficient = 100,
-         light = 10,
 
          skill = "elona.performer",
          elona_function = 17,
@@ -2089,7 +2070,8 @@ local item =
          categories = {
             "elona.furniture_instrument",
             "elona.furniture"
-         }
+         },
+         light = light.item_middle
       },
       {
          _id = "bar_table_alpha",
@@ -2182,13 +2164,13 @@ local item =
          weight = 400,
          category = 60000,
          coefficient = 100,
-         light = 4,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.lantern
       },
       {
          _id = "decorative_armor",
@@ -2416,7 +2398,6 @@ local item =
          category = 60001,
          subcategory = 60001,
          coefficient = 100,
-         light = 9,
 
          param2 = 100,
          params = {
@@ -2429,7 +2410,9 @@ local item =
 
          categories = {
             "elona.furniture_well"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "variety_of_clothes",
@@ -2459,10 +2442,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 2,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.torch_lamp
       },
       {
          _id = "oven",
@@ -2788,13 +2771,13 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "small_foliage_plant",
@@ -3264,10 +3247,10 @@ local item =
          weight = 860,
          category = 60000,
          coefficient = 100,
-         light = 3,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.lamp
       },
       {
          _id = "simple_shelf",
@@ -3468,14 +3451,15 @@ local item =
          category = 60002,
          subcategory = 60002,
          coefficient = 100,
-         light = 13,
 
          params = { god_id = "" },
 
          categories = {
             "elona.furniture_altar",
             "elona.no_generate"
-         }
+         },
+
+         light = light.candle_low
       },
       {
          _id = "ceremony_altar",
@@ -3487,11 +3471,11 @@ local item =
          category = 60002,
          subcategory = 60002,
          coefficient = 100,
-         light = 13,
          categories = {
             "elona.furniture_altar",
             "elona.no_generate"
-         }
+         },
+         light = light.candle_low
       },
       {
          _id = "fountain",
@@ -4236,7 +4220,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10003,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.short_sword",
 
@@ -4259,7 +4242,8 @@ local item =
             "elona.equip_melee_short_sword",
             "elona.unique_weapon",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "bow_of_vinderre",
@@ -4278,7 +4262,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24001,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.bow",
 
@@ -4305,7 +4288,8 @@ local item =
             "elona.equip_ranged_bow",
             "elona.unique_weapon",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "worthless_fake_gold_bar",
@@ -4953,13 +4937,13 @@ local item =
          category = 72000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.container"
-         }
+         },
+         light = light.item
       },
       {
          _id = "chest",
@@ -4970,13 +4954,13 @@ local item =
          category = 72000,
          rarity = 500000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.container"
-         }
+         },
+         light = light.item
       },
       {
          _id = "safe",
@@ -4987,13 +4971,13 @@ local item =
          category = 72000,
          rarity = 500000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.container"
-         }
+         },
+         light = light.item
       },
       {
          _id = "scroll_of_magical_map",
@@ -5310,13 +5294,13 @@ local item =
          weight = 12000,
          category = 59000,
          coefficient = 100,
-         light = 1,
 
          elona_function = 15,
          param1 = 40,
          categories = {
             "elona.misc_item"
-         }
+         },
+         light = light.torch
       },
       {
          _id = "portable_cooking_tool",
@@ -5788,12 +5772,12 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 5,
          tags = { "sf" },
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+         light = light.town_light
       },
       {
          _id = "water_tub",
@@ -6134,10 +6118,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 10,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item_middle
       },
       {
          _id = "high_grade_dresser",
@@ -6149,13 +6133,14 @@ local item =
          category = 60000,
          rarity = 150000,
          coefficient = 100,
-         light = 8,
 
          elona_function = 19,
 
          categories = {
             "elona.furniture"
-         }
+         },
+
+         light = light.crystal_middle
       },
       {
          _id = "neat_bar_table",
@@ -6318,13 +6303,14 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         light = 10,
 
          elona_function = 19,
 
          categories = {
             "elona.furniture"
-         }
+         },
+
+         light = light.item_middle
       },
       {
          _id = "clean_bed",
@@ -6355,10 +6341,10 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "pachisuro_machine",
@@ -6371,11 +6357,11 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "casino_table",
@@ -6404,11 +6390,11 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "darts_board",
@@ -6521,13 +6507,14 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 10,
 
          elona_function = 19,
 
          categories = {
             "elona.furniture"
-         }
+         },
+
+         light = light.item_middle
       },
       {
          _id = "big_cupboard",
@@ -6552,10 +6539,10 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 7,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "comfortable_bed",
@@ -6616,13 +6603,13 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 10,
 
          elona_function = 17,
          param1 = 150,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item_middle
       },
       {
          _id = "statue_of_cross",
@@ -6632,11 +6619,11 @@ local item =
          weight = 15600,
          category = 60000,
          coefficient = 100,
-         light = 10,
          originalnameref2 = "statue",
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item_middle
       },
       {
          _id = "stump",
@@ -6707,13 +6694,14 @@ local item =
          category = 60000,
          rarity = 150000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 44,
 
          categories = {
             "elona.furniture"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "golden_pedestal",
@@ -6725,10 +6713,10 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         light = 3,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.lamp
       },
       {
          _id = "golden_statue",
@@ -6831,13 +6819,14 @@ local item =
          on_use = function() end,
          category = 60000,
          coefficient = 100,
-         light = 7,
 
          elona_function = 22,
 
          categories = {
             "elona.furniture"
-         }
+         },
+
+         light = light.crystal
       },
       {
          _id = "deed",
@@ -7142,7 +7131,6 @@ local item =
          equip_slots = { "elona.arm" },
          subcategory = 22003,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -7164,7 +7152,9 @@ local item =
             "elona.equip_wrist_glove",
             "elona.unique_item",
             "elona.equip_wrist"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "blood_moon",
@@ -7183,7 +7173,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10004,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.blunt",
 
@@ -7208,7 +7197,9 @@ local item =
             "elona.equip_melee_club",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "ring_of_steel_dragon",
@@ -7224,7 +7215,6 @@ local item =
          equip_slots = { "elona.ring" },
          subcategory = 32001,
          coefficient = 100,
-         light = 9,
 
          _copy = {
             enchantments = {
@@ -7246,7 +7236,8 @@ local item =
             "elona.equip_ring_ring",
             "elona.unique_item",
             "elona.equip_ring"
-         }
+         },
+         light = light.item
       },
       {
          _id = "staff_of_insanity",
@@ -7267,7 +7258,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10006,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.stave",
 
@@ -7289,7 +7279,8 @@ local item =
             "elona.equip_melee_staff",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "rankis",
@@ -7309,7 +7300,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10007,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.polearm",
 
@@ -7329,7 +7319,8 @@ local item =
             "elona.equip_melee_lance",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "palmia_pride",
@@ -7346,7 +7337,6 @@ local item =
          equip_slots = { "elona.ring" },
          subcategory = 32001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -7363,7 +7353,8 @@ local item =
             "elona.equip_ring_ring",
             "elona.unique_item",
             "elona.equip_ring"
-         }
+         },
+         light = light.item
       },
       {
          _id = "shopkeepers_trunk",
@@ -10128,7 +10119,6 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
 
          gods = { "elona.mani" },
 
@@ -10137,7 +10127,9 @@ local item =
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "computer",
@@ -10149,7 +10141,6 @@ local item =
          category = 60000,
          rarity = 300000,
          coefficient = 100,
-         light = 9,
 
          gods = { "elona.mani" },
 
@@ -10158,7 +10149,9 @@ local item =
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "training_machine",
@@ -10305,7 +10298,6 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 9,
 
          gods = { "elona.mani" },
 
@@ -10314,7 +10306,9 @@ local item =
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "shot_gun",
@@ -10733,7 +10727,6 @@ local item =
          subcategory = 24021,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.firearm",
 
@@ -10757,7 +10750,8 @@ local item =
             "elona.tag_sf",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "scroll_of_recharge",
@@ -11125,10 +11119,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 6,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.stove
       },
       {
          _id = "fireplace",
@@ -11140,10 +11134,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 6,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.stove
       },
       {
          _id = "stove",
@@ -11155,10 +11149,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 6,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.stove
       },
       {
          _id = "giant_foliage_plant",
@@ -11258,10 +11252,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 7,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.crystal
       },
       {
          _id = "snow_man",
@@ -11272,10 +11266,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "deed_of_farm",
@@ -11335,7 +11329,6 @@ local item =
          category = 59000,
          rarity = 1500000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 6,
          param1 = Resolver.make("elona.music_disc_id"),
@@ -11347,7 +11340,8 @@ local item =
          categories = {
             "elona.tag_sf",
             "elona.misc_item"
-         }
+         },
+         light = light.item
       },
       {
          _id = "rod_of_wall_creation",
@@ -11599,7 +11593,6 @@ local item =
          category = 59000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 7,
 
@@ -11607,7 +11600,9 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "seven_league_boots",
@@ -12082,7 +12077,6 @@ local item =
          category = 59000,
          rarity = 200000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 10,
 
@@ -12091,7 +12085,8 @@ local item =
          categories = {
             "elona.tag_sf",
             "elona.misc_item"
-         }
+         },
+         light = light.item
       },
       {
          _id = "molotov",
@@ -12123,13 +12118,14 @@ local item =
          category = 59000,
          rarity = 300000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 11,
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "freezer",
@@ -12219,13 +12215,13 @@ local item =
          on_use = function() end,
          category = 59000,
          coefficient = 100,
-         light = 1,
 
          elona_function = 13,
          param1 = 100,
          categories = {
             "elona.misc_item"
-         }
+         },
+         light = light.torch
       },
       {
          _id = "candle",
@@ -12236,13 +12232,13 @@ local item =
          category = 60000,
          rarity = 250000,
          coefficient = 100,
-         light = 12,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.candle
       },
       {
          _id = "fancy_lamp",
@@ -12254,10 +12250,10 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 3,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.lamp
       },
       {
          _id = "modern_lamp_a",
@@ -12269,12 +12265,12 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 14,
          tags = { "sf" },
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+         light = light.port_light
       },
       {
          _id = "handful_of_snow",
@@ -12285,7 +12281,6 @@ local item =
          category = 52000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
          originalnameref2 = "handful",
 
          elona_function = 14,
@@ -12293,7 +12288,8 @@ local item =
          on_drink = Magic.drink_potion(1103, 100),
          categories = {
             "elona.drink",
-         }
+         },
+         light = light.item
       },
       {
          _id = "tree_of_naked",
@@ -12351,10 +12347,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "snow_barrel",
@@ -12379,12 +12375,12 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 15,
          tags = { "sf" },
          categories = {
             "elona.tag_sf",
             "elona.furniture"
-         }
+         },
+         light = light.port_light_snow
       },
       {
          _id = "statue_of_holy_cross",
@@ -12396,11 +12392,11 @@ local item =
          category = 60000,
          rarity = 50000,
          coefficient = 100,
-         light = 15,
          originalnameref2 = "statue",
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.port_light_snow
       },
       {
          _id = "pillar",
@@ -12426,10 +12422,10 @@ local item =
          category = 60000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "cargo_christmas_tree",
@@ -12441,13 +12437,14 @@ local item =
          category = 92000,
          rarity = 600000,
          coefficient = 100,
-         light = 16,
 
          param1 = 6,
 
          categories = {
             "elona.cargo"
-         }
+         },
+
+         light = light.crystal_high
       },
       {
          _id = "cargo_snow_man",
@@ -12459,13 +12456,14 @@ local item =
          category = 92000,
          rarity = 800000,
          coefficient = 100,
-         light = 9,
 
          param1 = 6,
 
          categories = {
             "elona.cargo"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "christmas_tree",
@@ -12478,11 +12476,11 @@ local item =
          category = 80000,
          rarity = 100000,
          coefficient = 100,
-         light = 16,
          categories = {
             "elona.tree",
             "elona.snow_tree"
-         }
+         },
+         light = light.crystal_high
       },
       {
          _id = "giants_shackle",
@@ -12495,14 +12493,15 @@ local item =
          category = 72000,
          rarity = 100000,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
 
          categories = {
             "elona.container",
             "elona.no_generate"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "empty_bottle",
@@ -12528,7 +12527,6 @@ local item =
          subcategory = 60001,
          rarity = 50000,
          coefficient = 100,
-         light = 9,
 
          param2 = 100,
          params = {
@@ -12542,7 +12540,9 @@ local item =
          categories = {
             "elona.furniture_well",
             "elona.no_generate"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "presidents_chair",
@@ -12554,14 +12554,14 @@ local item =
          category = 60000,
          rarity = 10000,
          coefficient = 100,
-         light = 9,
 
          elona_function = 44,
          is_precious = true,
          medal_value = 20,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "green_plant",
@@ -12629,10 +12629,10 @@ local item =
          category = 60000,
          rarity = 600000,
          coefficient = 100,
-         light = 17,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window
       },
       {
          _id = "window",
@@ -12643,10 +12643,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 17,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window
       },
       {
          _id = "triangle_plant",
@@ -12687,10 +12687,10 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         light = 17,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window
       },
       {
          _id = "kings_bed",
@@ -13019,7 +13019,6 @@ local item =
          equip_slots = { "elona.head" },
          subcategory = 12001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13042,7 +13041,9 @@ local item =
             "elona.equip_head_helm",
             "elona.unique_item",
             "elona.equip_head"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "spellbook_of_incognito",
@@ -13122,11 +13123,11 @@ local item =
          category = 60000,
          rarity = 400000,
          coefficient = 100,
-         light = 18,
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+         light = light.gate
       },
       {
          _id = "flying_scroll",
@@ -13367,10 +13368,10 @@ local item =
          category = 60000,
          rarity = 200000,
          coefficient = 100,
-         light = 17,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window
       },
       {
          _id = "king_drawer",
@@ -13573,10 +13574,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 13,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.candle_low
       },
       {
          _id = "eastern_window",
@@ -13588,10 +13589,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 17,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window
       },
       {
          _id = "chochin",
@@ -13603,10 +13604,10 @@ local item =
          category = 60000,
          rarity = 500000,
          coefficient = 100,
-         light = 19,
          categories = {
             "elona.furniture"
-         }
+         },
+         light = light.window_red
       },
       {
          _id = "partition",
@@ -13666,7 +13667,6 @@ local item =
          equip_slots = { "elona.leg" },
          subcategory = 18002,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -13685,7 +13685,9 @@ local item =
             "elona.equip_leg_shoes",
             "elona.unique_item",
             "elona.equip_leg"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "magic_fruit",
@@ -13720,14 +13722,14 @@ local item =
          category = 64000,
          rarity = 800000,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          fixlv = "special",
          categories = {
             "elona.unique_item",
             "elona.junk"
-         }
+         },
+         light = light.item
       },
       {
          _id = "speed_ring",
@@ -13937,7 +13939,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24001,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.bow",
 
@@ -13959,7 +13960,8 @@ local item =
             "elona.equip_ranged_bow",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "winchester_premium",
@@ -13978,7 +13980,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24020,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.firearm",
 
@@ -14000,7 +14001,8 @@ local item =
             "elona.equip_ranged_gun",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "kumiromi_scythe",
@@ -14019,7 +14021,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10011,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.scythe",
 
@@ -14042,7 +14043,8 @@ local item =
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "elemental_staff",
@@ -14063,7 +14065,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10006,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.stave",
 
@@ -14087,7 +14088,9 @@ local item =
             "elona.equip_melee_staff",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "holy_lance",
@@ -14107,7 +14110,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10007,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.polearm",
 
@@ -14126,7 +14128,8 @@ local item =
             "elona.equip_melee_lance",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "lucky_dagger",
@@ -14147,7 +14150,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10003,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.short_sword",
 
@@ -14168,7 +14170,8 @@ local item =
             "elona.equip_melee_short_sword",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "gaia_hammer",
@@ -14187,7 +14190,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10005,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.blunt",
 
@@ -14209,7 +14211,9 @@ local item =
             "elona.equip_melee_hammer",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "lulwys_gem_stone_of_god_speed",
@@ -14568,7 +14572,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10010,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.axe",
 
@@ -14586,7 +14589,9 @@ local item =
             "elona.equip_melee_axe",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "spellbook_of_magic_ball",
@@ -14665,7 +14670,6 @@ local item =
          category = 59000,
          rarity = 400000,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
 
@@ -14673,7 +14677,9 @@ local item =
 
          categories = {
             "elona.misc_item"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "town_book",
@@ -14774,7 +14780,6 @@ local item =
          equip_slots = { "elona.neck" },
          subcategory = 34001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -14788,7 +14793,8 @@ local item =
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
-         }
+         },
+         light = light.item
       },
       {
          _id = "potion_of_descent",
@@ -14819,7 +14825,6 @@ local item =
          subcategory = 60005,
          rarity = 400000,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.performer",
 
@@ -14834,7 +14839,8 @@ local item =
             "elona.furniture_instrument",
             "elona.unique_item",
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "book_of_resurrection",
@@ -15042,7 +15048,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24030,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.throwing",
          is_precious = true,
@@ -15052,7 +15057,7 @@ local item =
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },light = light.item
       },
       {
          _id = "secret_experience_of_lomias",
@@ -15092,7 +15097,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24030,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.throwing",
 
@@ -15115,7 +15119,8 @@ local item =
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "claymore_unique",
@@ -15134,7 +15139,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10001,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
 
@@ -15150,7 +15154,8 @@ local item =
             "elona.equip_melee_broadsword",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "happy_bed",
@@ -15164,7 +15169,6 @@ local item =
          subcategory = 60004,
          rarity = 2000,
          coefficient = 100,
-         light = 9,
 
          param1 = 200,
 
@@ -15176,7 +15180,8 @@ local item =
             "elona.furniture_bed",
             "elona.tag_noshop",
             "elona.furniture"
-         }
+         },
+         light = light.item
       },
       {
          _id = "statue_of_ehekatl",
@@ -15215,7 +15220,6 @@ local item =
          equip_slots = { "elona.neck" },
          subcategory = 34001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15232,7 +15236,9 @@ local item =
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "twin_edge",
@@ -15248,7 +15254,6 @@ local item =
          equip_slots = { "elona.neck" },
          subcategory = 34001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15265,7 +15270,9 @@ local item =
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "music_ticket",
@@ -15309,7 +15316,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24030,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.throwing",
 
@@ -15330,7 +15336,8 @@ local item =
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "alud",
@@ -15347,7 +15354,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 14003,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.shield",
 
@@ -15367,7 +15373,9 @@ local item =
             "elona.equip_shield_shield",
             "elona.unique_item",
             "elona.equip_shield"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "shield_of_thorn",
@@ -15384,7 +15392,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 14003,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.shield",
 
@@ -15403,7 +15410,9 @@ local item =
             "elona.equip_shield_shield",
             "elona.unique_weapon",
             "elona.equip_shield"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "crimson_plate",
@@ -15421,7 +15430,6 @@ local item =
          equip_slots = { "elona.waist" },
          subcategory = 19001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15439,7 +15447,9 @@ local item =
             "elona.equip_back_girdle",
             "elona.unique_item",
             "elona.equip_cloak"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "gift",
@@ -15678,7 +15688,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10011,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.scythe",
 
@@ -15695,7 +15704,7 @@ local item =
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
-         }
+         },light = light.item
       },
       {
          _id = "unknown_shell",
@@ -15712,7 +15721,6 @@ local item =
          equip_slots = { "elona.neck" },
          subcategory = 34001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -15730,7 +15738,9 @@ local item =
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "hiryu_to",
@@ -15749,7 +15759,6 @@ local item =
          equip_slots = { "elona.hand" },
          subcategory = 10002,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.long_sword",
 
@@ -15769,7 +15778,8 @@ local item =
             "elona.equip_melee_long_sword",
             "elona.unique_weapon",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "license_of_the_void_explorer",
@@ -15937,14 +15947,14 @@ local item =
          category = 59000,
          rarity = 20000,
          coefficient = 0,
-         light = 10,
 
          elona_function = 47,
          is_precious = true,
          is_showroom_only = true,
          categories = {
             "elona.misc_item"
-         }
+         },
+         light = light.item_middle
       },
       {
          _id = "statue_of_creator",
@@ -16130,7 +16140,6 @@ local item =
          equip_slots = { "elona.head" },
          subcategory = 12001,
          coefficient = 100,
-         light = 9,
 
          is_precious = true,
          identify_difficulty = 500,
@@ -16150,7 +16159,9 @@ local item =
             "elona.equip_head_helm",
             "elona.unique_item",
             "elona.equip_head"
-         }
+         },
+
+         light = light.item
       },
       {
          _id = "mauser_c96_custom",
@@ -16168,7 +16179,6 @@ local item =
          equip_slots = { "elona.ranged" },
          subcategory = 24020,
          coefficient = 100,
-         light = 9,
 
          skill = "elona.firearm",
 
@@ -16187,7 +16197,8 @@ local item =
             "elona.tag_sf",
             "elona.unique_item",
             "elona.equip_ranged"
-         }
+         },
+         light = light.item
       },
       {
          _id = "lightsabre",
@@ -16203,7 +16214,6 @@ local item =
          subcategory = 10002,
          rarity = 2000,
          coefficient = 100,
-         light = 9,
          _copy = {
             color = Resolver.make("elona.furniture_color"),
          },
@@ -16213,7 +16223,8 @@ local item =
          categories = {
             "elona.equip_melee_long_sword",
             "elona.equip_melee"
-         }
+         },
+         light = light.item
       },
       {
          _id = "garoks_hammer",
@@ -16226,7 +16237,6 @@ local item =
          category = 59000,
          rarity = 5000,
          coefficient = 0,
-         light = 9,
 
          elona_function = 49,
          is_precious = true,
@@ -16236,7 +16246,8 @@ local item =
          categories = {
             "elona.unique_item",
             "elona.misc_item"
-         }
+         },
+         light = light.item
       },
       {
          _id = "goulds_piano",
@@ -16250,7 +16261,6 @@ local item =
          subcategory = 60005,
          rarity = 100000,
          coefficient = 100,
-         light = 10,
 
          skill = "elona.performer",
 
@@ -16269,7 +16279,9 @@ local item =
             "elona.furniture_instrument",
             "elona.unique_item",
             "elona.furniture"
-         }
+         },
+
+         light = light.item_middle
       },
       {
          _id = "festival_wreath",
@@ -16282,13 +16294,13 @@ local item =
          category = 60000,
          rarity = 5000,
          coefficient = 100,
-         light = 16,
          tags = { "fest" },
          categories = {
             "elona.tag_fest",
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+         light = light.crystal_high
       },
       {
          _id = "pedestal",

@@ -35,6 +35,10 @@ function CharaMakeWrapper:init(menus)
    self:proceed()
 end
 
+function CharaMakeWrapper:make_keymap()
+   return {}
+end
+
 function CharaMakeWrapper:proceed()
    local menu_id
    if self.submenu then
@@ -195,6 +199,9 @@ function CharaMakeWrapper:update()
    end
 
    local result, canceled = self.submenu:update()
+   if result or canceled then
+      print(result, canceled)
+   end
    if canceled then
       local act = table.maybe(result, "chara_make_action")
       self:handle_action(act)

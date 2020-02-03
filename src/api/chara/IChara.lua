@@ -481,7 +481,7 @@ function IChara:damage_hp(amount, source, params)
    damage = victim:emit("base.hook_calc_applied_damage", event_params, damage)
    event_params.damage = damage
 
-   victim.hp = math.min(victim.hp - math.floor(damage), victim.max_hp)
+   victim.hp = math.min(victim.hp - math.floor(damage), victim:calc("max_hp"))
 
    victim:emit("base.after_chara_damaged", event_params)
 

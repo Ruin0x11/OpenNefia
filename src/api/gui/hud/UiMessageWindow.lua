@@ -44,6 +44,8 @@ function UiMessageWindow:relayout(x, y, width, height)
    self.max_lines = math.floor(self.height / Draw.text_height()) - 1
    self.y_offset = -(self.height % Draw.text_height())
 
+   self.i_message_window = self.t.message_window:make_instance()
+
    self:recalc_lines()
 end
 
@@ -208,7 +210,7 @@ function UiMessageWindow:redraw_window()
    Draw.clear(0, 0, 0)
    Draw.set_color(255, 255, 255)
 
-   self.t.message_window:draw_bar(0, 0, self.width)
+   self.i_message_window:draw_bar(0, 0, self.width)
 
    self.the_width = 0
 
@@ -267,7 +269,6 @@ function UiMessageWindow:draw()
 end
 
 function UiMessageWindow:update(dt)
-   require("mod.elona.api.Weather").update_rain(dt)
 end
 
 return UiMessageWindow

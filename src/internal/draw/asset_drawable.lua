@@ -50,42 +50,8 @@ function asset_drawable:init(data_inst)
    end
 end
 
--- Given `parts`, a list of region IDs and coordinates, creates a
--- sprite batch which draws them as a single batch.
---
--- The contents of `parts` look like this:
---
---  { "right_mid", x + width - 16, i * 16 + y + 16 }
---
--- The first entry is the region ID, second is X, third is Y. The
--- regions are generated from the theme data - they can be a map of
--- region to image location or a function that generates them
--- dynamically from a width and height.
 function asset_drawable:make_batch(parts, width, height)
-   local batch = love.graphics.newSpriteBatch(self.image, self.image:getWidth() * self.image:getHeight())
-   batch:clear()
-
-   local regions = {}
-   local region_quads = {}
-   if self.regions then
-      regions = self.regions
-      if type(regions) == "function" then
-         assert(width and height, "width and height must be provided with region generator function")
-         regions = regions(width, height)
-      end
-
-      for k, v in pairs(regions) do
-         region_quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
-      end
-   end
-
-   for _, part in ipairs(parts) do
-      batch:add(self.quads[part[1]] or region_quads[part[1]], part[2], part[3])
-   end
-
-   batch:flush()
-
-   return batch
+   error("make batch")
 end
 
 function asset_drawable:make_instance(width, height)
@@ -106,21 +72,9 @@ end
 
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
    if (table.count(self.quads) == 0 or width or height) then
-      -- BUG: These regions are global to all assets. What happens is
-      -- an asset that is loaded on one layer gets modified when
-      -- another layer draws and it glitches out.
-      -- TODO: rewrite this. it leaks memory also.
-      local regions = self.regions
-      if type(self.regions) == "function" then
-         local width = width or self.image:getWidth()
-         local height = height or self.image:getHeight()
-         regions = self.regions(width, height)
-      end
-
-      for k, v in pairs(regions) do
-         self.quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
-      end
+      error("Can't draw this asset dynamically; use make_instance() first")
    end
+
    if not self.quads[quad] then
       error(string.format("Quad ID '%s' not found", tostring(quad)))
       return
@@ -133,50 +87,11 @@ function asset_drawable:draw_stretched(x, y, tx, ty, color, centered, rotation)
 end
 
 function asset_drawable:draw_region_stretched(quad, x, y, tx, ty, color, centered, rotation)
-   if quad < 1 or quad > #self.quads then
-      error(string.format("Quad ID %d is not in range 1,%d", quad, #self.quads))
+   if not self.quads[quad] then
+      error(string.format("Quad ID '%s' not found", tostring(quad)))
       return
    end
    Draw.image_region_stretched(self.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
-end
-
-function asset_drawable:draw_bar(x, y, width)
-   local iw = self:get_width()
-   local ih = self:get_height()
-
-   local last_width = width % iw
-   local last_quad = self.bar_quads[last_width]
-   if last_quad == nil then
-      self.bar_quads = {} -- TODO
-      self.bar_quads[last_width] = love.graphics.newQuad(0, 0, last_width, ih, iw, ih)
-      last_quad = self.bar_quads[last_width]
-   end
-
-   local step = math.floor(width / iw)
-   for i=0,step do
-      if i == step - 1 then
-         step = width % iw
-         Draw.image_region(self.image, last_quad, i * iw + x, y)
-      else
-         step = iw
-         Draw.image(self.image, i * iw + x, y)
-      end
-   end
-end
-
-function asset_drawable:draw_percentage_bar(x, y, width)
-   local iw = self:get_width()
-   local ih = self:get_height()
-
-   local last_width = width % iw;
-   local last_quad = self.bar_quads[last_width]
-   if last_quad == nil then
-      self.bar_quads = {} -- TODO
-      self.bar_quads[last_width] = love.graphics.newQuad(iw - width, 0, last_width, ih, iw, ih)
-      last_quad = self.bar_quads[last_width]
-   end
-
-   Draw.image_region(self.image, last_quad, x, y)
 end
 
 function asset_drawable:draw_tiled()
@@ -191,8 +106,8 @@ function asset_drawable:draw_tiled()
 end
 
 function asset_drawable:release()
-   for _, q in ipairs(self.quads) do
-      q:release()
+   for _, quad in pairs(self.quads) do
+      quad:release()
    end
    self.quads = {}
    self.image:release()

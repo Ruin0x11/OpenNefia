@@ -193,6 +193,14 @@ end
 
 function field_layer:wait_for_draw_callbacks()
    self.waiting_for_draw_callbacks = true
+
+   local dt
+   local has_cbs
+
+   repeat
+      dt = coroutine.yield()
+      has_cbs = self:update_draw_callbacks(dt)
+   until not has_cbs
 end
 
 function field_layer:update_draw_callbacks(dt)
@@ -206,9 +214,9 @@ function field_layer:update_draw_callbacks(dt)
 end
 
 function field_layer:draw()
-   if self.renderer then
-      self.renderer:draw()
-   end
+   if not self.is_active or not self.renderer then return end
+
+   self.renderer:draw()
 end
 
 function field_layer:query_repl()

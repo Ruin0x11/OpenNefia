@@ -26,6 +26,8 @@ function CharaMakeCaption:relayout(x, y)
    local width = math.min(Draw.text_width(self.caption) + 45, 760)
 
    self.width = width
+
+   self.i_caption = self.t.caption:make_instance(self.width)
 end
 
 function CharaMakeCaption:update()
@@ -45,9 +47,9 @@ function CharaMakeCaption:draw()
          q = 0
       end
 
-      self.t.caption:draw_region(1 + q, i * 128 + self.x, self.y, nil, nil, {255, 255, 255})
-      self.t.caption:draw_region(2 + q, i * 128 + self.x, self.y + 2, nil, nil, {255, 255, 255})
-      self.t.caption:draw_region(3 + q, i * 128 + self.x, self.y + 22, nil, nil, {255, 255, 255})
+      self.i_caption:draw_region(1 + q, i * 128 + self.x, self.y, nil, nil, {255, 255, 255})
+      self.i_caption:draw_region(2 + q, i * 128 + self.x, self.y + 2, nil, nil, {255, 255, 255})
+      self.i_caption:draw_region(3 + q, i * 128 + self.x, self.y + 22, nil, nil, {255, 255, 255})
    end
 
    Draw.text(self.caption, self.x + 18, self.y + 4, {245, 245, 245}) -- y + vfix + 4

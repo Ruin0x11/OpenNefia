@@ -36,8 +36,9 @@ end
 
 function CharacterSummaryMenu:make_keymap()
    return {
-      ["return"] = function() self:reroll(true) end,
-      shift = function() self.canceled = true end,
+      enter = function() self:reroll(true) end,
+      cancel = function() print("can"); self.canceled = true end,
+      escape = function() print("can"); self.canceled = true end,
    }
 end
 
@@ -103,7 +104,10 @@ function CharacterSummaryMenu:update()
       end
    end
 
-   self.inner:update()
+   local ok, err = xpcall(function() self.inner:update() end, debug.traceback)
+   if err then
+      print(err)
+   end
 
    self.caption_box:set_data("")
 

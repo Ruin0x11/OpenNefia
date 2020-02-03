@@ -24,6 +24,10 @@ function SelectFeatsMenu:init(chara)
    self.intro_sound = "base.feat"
 end
 
+function SelectFeatsMenu:make_keymap()
+   return {}
+end
+
 function SelectFeatsMenu:relayout()
    self.inner:relayout()
 end

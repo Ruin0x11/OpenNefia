@@ -35,7 +35,8 @@ function UiBar:relayout(x, y, width, height)
    self.width = width
    self.height = height
    self.t = UiTheme.load(self)
-   self.bar = self.t[self.bar_kind]
+
+   self.i_bar = self.t[self.bar_kind]:make_instance()
 end
 
 function UiBar:draw()
@@ -45,7 +46,7 @@ function UiBar:draw()
    if self.inner_width > 0 then
       Draw.set_color(255, 255, 255)
 
-      self.bar:draw(self.x + 16, self.y + 5, self.inner_width, 6)
+      self.i_bar:draw_percentage_bar(self.x + 16, self.y + 5, self.inner_width, 6)
    end
 
    if self.show_digit then

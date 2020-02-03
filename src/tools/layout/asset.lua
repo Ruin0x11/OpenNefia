@@ -1047,6 +1047,98 @@ local crop = {
       width = 128,
       height = 128,
    },
+
+   {
+      name = "light_port_light",
+      source = "graphic/interface.bmp",
+      x = 192,
+      y = 704,
+      width = 48,
+      height = 48
+   },
+   {
+      name = "light_torch",
+      source = "graphic/interface.bmp",
+      x = 240,
+      y = 704,
+      width = 48,
+      height = 48,
+      count_x = 2
+   },
+   {
+      name = "light_lantern",
+      source = "graphic/interface.bmp",
+      x = 336,
+      y = 704,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "light_candle",
+      source = "graphic/interface.bmp",
+      x = 384,
+      y = 704,
+      width = 48,
+      height = 48,
+   },
+   {
+      name = "light_stove",
+      source = "graphic/interface.bmp",
+      x = 432,
+      y = 704,
+      width = 48,
+      height = 48,
+      count_x = 2,
+   },
+   {
+      name = "light_item",
+      source = "graphic/interface.bmp",
+      x = 528,
+      y = 704,
+      width = 48,
+      height = 48
+   },
+   {
+      name = "light_town",
+      source = "graphic/interface.bmp",
+      x = 576,
+      y = 704,
+      width = 48,
+      height = 48
+   },
+   {
+      name = "light_crystal",
+      source = "graphic/interface.bmp",
+      x = 624,
+      y = 704,
+      width = 48,
+      height = 48,
+      count_x = 2
+   },
+   {
+      name = "light_town_light",
+      source = "graphic/interface.bmp",
+      x = 720,
+      y = 704,
+      width = 48,
+      height = 48
+   },
+   {
+      name = "light_window",
+      source = "graphic/interface.bmp",
+      x = 768,
+      y = 704,
+      width = 48,
+      height = 48
+   },
+   {
+      name = "light_window_red",
+      source = "graphic/interface.bmp",
+      x = 816,
+      y = 704,
+      width = 48,
+      height = 48
+   }
 }
 
 local function gen_crop_list(list)

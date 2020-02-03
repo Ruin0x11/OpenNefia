@@ -165,6 +165,8 @@ Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0
 Event.register("base.on_hotload_end", "Hotload field renderer",
                function()
                   local field = require("game.field")
-                  field.renderer.screen_updated = true
-                  field.renderer:update(0)
+                  if field.is_active then
+                     field.renderer.screen_updated = true
+                     field.renderer:update(0)
+                  end
                end)

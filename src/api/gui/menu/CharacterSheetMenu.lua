@@ -36,7 +36,7 @@ end
 
 function CharacterSheetMenu:make_keymap()
    return {
-      p = function()
+      portrait = function()
          ChangeAppearanceMenu:new():query()
       end
    }
@@ -166,7 +166,7 @@ function CharacterSheetMenu:draw_text()
    Draw.set_color(255, 255, 255)
    for i, t in ipairs(attr.texts) do
       self.t.skill_icons:draw_region(
-                        t,
+                        i,
                         attr.x - 17,
                         attr.y + 6 + (i-1) * attr.item_height,
                         nil, nil,
@@ -203,7 +203,7 @@ function CharacterSheetMenu:draw_attribute_name(attr, x, y)
 end
 
 function CharacterSheetMenu:draw_attribute_potential(attr, x, y)
-   local pot = potential_string(100)
+   local pot = self:potential_string(100)
    Draw.text(pot, x, y)
 end
 

@@ -17,6 +17,9 @@ local function load_map(world_map, id)
    if not success then
       error(map)
    end
+
+   assert(class.is_an("api.InstancedMap", map))
+
    return map
 end
 
@@ -100,7 +103,7 @@ local function start(self, player)
    -- Save the world map since the entrances on it were modified.
    Map.save(world_map)
 
-   local x, y = data["base.map_entrance"]["base.center"].pos(player, home)
+   local x, y = data["base.map_entrance"]["base.center"].pos(home, player)
    assert(Map.current():take_object(player, x, y))
    initialize_player(player)
 

@@ -87,8 +87,8 @@ end
 
 function RollAttributesMenu:make_keymap()
    return {
-      shift = function() self.canceled = true end,
-      ["kp*"] = function() self:reroll(true, true) end
+      cancel = function() self.canceled = true end,
+      mode2 = function() self:reroll(true, true) end
    }
 end
 

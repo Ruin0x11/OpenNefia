@@ -194,13 +194,6 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
       local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
       local damage = raw_damage.damage
-      local play_animation = chara:is_player()
-      if play_animation then
-         local damage_percent = damage * 100 / target:calc("max_hp")
-         local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0
-         local anim = Anim.melee_attack(target.x, target.y, target:calc("breaks_into_debris"), kind, damage_percent, is_critical)
-         Gui.start_draw_callback(anim)
-      end
 
       local element, element_power
       if weapon then
@@ -219,6 +212,16 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       end
 
       local killed, base_damage, actual_damage = target:damage_hp(damage, chara, {element=element,element_power=element_power,extra_attacks=extra_attacks,weapon=weapon,message_tense=tense})
+
+      if did_hit and killed then
+         local play_animation = chara:is_player()
+         if play_animation then
+            local damage_percent = damage * 100 / target:calc("max_hp")
+            local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0
+            local anim = Anim.melee_attack(target.x, target.y, target:calc("breaks_into_debris"), kind, damage_percent, is_critical)
+            Gui.start_draw_callback(anim)
+         end
+      end
 
       chara:emit("elona.on_physical_attack_hit", {weapon=weapon,target=target,hit=hit,damage=damage,base_damage=base_damage,actual_damage=actual_damage,is_ranged=is_ranged,attack_skill=attack_skill,killed=killed})
    else
