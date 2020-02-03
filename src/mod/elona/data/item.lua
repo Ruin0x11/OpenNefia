@@ -6021,9 +6021,9 @@ local item =
          }
       },
       {
-         _id = "rack_of_good",
+         _id = "rack_of_goods",
          elona_id = 292,
-         image = "elona.item_rack_of_good",
+         image = "elona.item_rack_of_goods",
          value = 1800,
          weight = 6800,
          category = 60000,

@@ -631,7 +631,7 @@ local item = {
    { id = 253, name = "heir_trunk" },
    { id = 254, name = "wallet" },
    { id = 255, name = "well_kept_armor" },
-   { id = 256, name = "rack_of_good" },
+   { id = 256, name = "rack_of_goods" },
    { id = 257, name = "rack_of_accessories" },
    { id = 258, name = "towel" },
    { id = 259, name = "ragged_table" },

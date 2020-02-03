@@ -7,6 +7,7 @@ local draw = require("internal.draw")
 local Draw = require("api.Draw")
 local field = require("game.field")
 local ansicolors = require("thirdparty.ansicolors")
+local config = require("internal.config")
 
 local Gui = {}
 
@@ -278,7 +279,7 @@ function Gui.play_sound(sound_id, x, y, channel)
    local sound_manager = require("internal.global.sound_manager")
    local coords = draw.get_coords()
 
-   if x ~= nil and y ~= nil then
+   if config["base.positional_audio"] and x ~= nil and y ~= nil then
       local sx, sy = coords:tile_to_screen(x, y)
       sound_manager:play(sound_id, sx, sy, channel)
    else
@@ -312,6 +313,11 @@ end
 --- @tparam id:base.music music_id
 function Gui.play_music(music_id)
    local sound_manager = require("internal.global.sound_manager")
+
+   if not config["base.play_music"] then
+      sound_manager:stop_music()
+      return
+   end
 
    sound_manager:play_music(music_id)
 end

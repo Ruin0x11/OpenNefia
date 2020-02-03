@@ -250,7 +250,7 @@ function UiMessageWindow:message(text, color)
       else
          text = string.format("  %s", minute, text)
       end
-      self:newline(text)
+      self:newline()
    end
 
    self.history:push({text = text, color = color})

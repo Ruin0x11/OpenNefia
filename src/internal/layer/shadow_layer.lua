@@ -2,6 +2,7 @@ local config = require("internal.config")
 local save = require("internal.global.save")
 local shadow_batch = require("internal.draw.shadow_batch")
 local Chara = require("api.Chara")
+local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
@@ -15,7 +16,6 @@ function shadow_layer:init(width, height, coords)
    self.shadow_batch = shadow_batch:new(width, height, coords)
    self.lights = {}
    self.frames = 0
-   self.reupdate = true
    self.reupdate_light = false
 end
 
@@ -45,22 +45,25 @@ function shadow_layer:rebuild_light(map)
       for _, x, y, tile in map:iter_tiles() do
          local light = map:light(x, y)
          if light then
-            local show_light = light.always_on or (hour > 17 or hour < 6)
+            local show_light = true or light.always_on or (hour > 17 or hour < 6)
             if show_light then
-               local power = Pos.dist(player.x, player.y, x, y)
-               power = math.clamp(power, 0, 6) * tile.light.power
+               local power = 6 - Pos.dist(player.x, player.y, x, y)
+               power = math.clamp(power, 0, 6) * light.power
                shadow = shadow - power
 
-               local sx, sy = self.coords:tile_to_screen(x + 1, y + 1)
-
-               table.insert(self.lights, {
-                  instance = self.t[light.chip]:make_instance(),
-                  x = sx,
-                  y = sy,
-                  y_offset = light.y_offset,
-                  color = {255, 255, 255, 255},
-                  frame = 1
-               })
+               if map:is_in_fov(x, y) then
+                  local sx, sy = self.coords:tile_to_screen(x + 1, y + 1)
+                  table.insert(self.lights, {
+                                  chip = light.chip,
+                                  flicker = light.flicker,
+                                  brightness = light.brightness,
+                                  x = sx,
+                                  y = sy,
+                                  offset_y = light.offset_y,
+                                  color = {255, 255, 255, 255},
+                                  frame = 1
+                  })
+               end
             end
          end
       end
@@ -76,7 +79,7 @@ function shadow_layer:update_light_flicker()
       local flicker = light.brightness + Rand.rnd(light.flicker + 1)
       light.color[4] = flicker
 
-      local frame_count = #light.chip:regions()
+      local frame_count = #self.t[light.chip].quads
       if frame_count > 1 then
          light.frame = Rand.rnd(frame_count) + 1
       else
@@ -92,23 +95,23 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
       self.reupdate_light = true
    end
 
-   if self.reupdate then
+   if screen_updated then
       local map = Map.current()
       assert(map ~= nil)
 
       self:rebuild_light(map)
    end
 
-   if self.reupdate or self.reupdate_light then
+   if screen_updated or self.reupdate_light then
       self:update_light_flicker()
       self.reupdate_light = false
    end
 
-   if not (screen_updated or self.reupdate) then return false end
+   if not screen_updated then return false end
 
    -- In vanilla, the shadow map is only updated after the screen
    -- finishes scrolling. The following code simulates this.
-   if not self.reupdate and scroll_frames > 0 then
+   if scroll_frames > 0 then
       return true
    end
 
@@ -122,14 +125,26 @@ function shadow_layer:update(dt, screen_updated, scroll_frames)
       self.shadow_batch:set_tiles(shadow_map)
    end
 
-   self.reupdate = false
-
    return false
 end
 
 function shadow_layer:draw(draw_x, draw_y, offx, offy)
+   local sx, sy, ox, oy = self.coords:get_start_offset(draw_x - offx,
+                                                       draw_y - offy,
+                                                       Draw.get_width(),
+                                                       Draw.get_height())
+
+   Draw.set_blend_mode("add")
+
    for _, light in ipairs(self.lights) do
-      light.instance:draw_region(light.frame, light.x, light.y)
+      local asset = self.t[light.chip]
+      local x = sx + light.x - draw_x
+      local y = sy + light.y - light.offset_y - draw_y
+      if #asset.quads == 0 then
+         asset:draw(x, y, nil, nil, light.color)
+      else
+         asset:draw_region(light.frame, x, y, nil, nil, light.color)
+      end
    end
 
    self.shadow_batch:draw(draw_x, draw_y, 0, 0)

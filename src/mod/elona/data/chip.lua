@@ -628,7 +628,7 @@ local item_chips = {
    { elona_id = 253, name = "heir_trunk" },
    { elona_id = 254, name = "wallet" },
    { elona_id = 255, name = "well_kept_armor" },
-   { elona_id = 256, name = "rack_of_good" },
+   { elona_id = 256, name = "rack_of_goods" },
    { elona_id = 257, name = "rack_of_accessories" },
    { elona_id = 258, name = "towel" },
    { elona_id = 259, name = "ragged_table", y_offset = -8, stack_height = 12 },

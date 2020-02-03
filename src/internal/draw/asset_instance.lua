@@ -82,10 +82,6 @@ function asset_instance:make_batch(parts)
    return batch
 end
 
-function asset_instance:regions()
-   return table.keys(self.quads)
-end
-
 function asset_instance:draw(x, y, width, height, color, centered, rotation)
    Draw.image(self.asset.image, x, y, width, height, color, centered, rotation)
 end

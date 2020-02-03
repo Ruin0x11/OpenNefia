@@ -2,8 +2,6 @@ local Log = require("api.Log")
 
 -- Borrowed from https://love2d.org/wiki/Minimalist_Sound_Manager
 local sound_manager = class.class("sound_manager")
-local config = require("internal.config")
-
 
 function sound_manager:init(data)
    self.data = data
@@ -129,11 +127,6 @@ function sound_manager:stop(channel)
 end
 
 function sound_manager:play_music(sound_id)
-   if config["base.play_music"] == false then
-      self:stop_music()
-      return
-   end
-
    if _IS_LOVEJS then
       return
    end
