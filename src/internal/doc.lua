@@ -366,7 +366,7 @@ function doc.reparse(path, api_table, is_builtin)
       return false
    end
 
-   Log.info("Updating documentation for %s (%s)", req_path, path)
+   Log.debug("Updating documentation for %s (%s)", req_path, path)
 
    local result = convert_ldoc(dump, is_builtin)
 
@@ -644,6 +644,7 @@ function doc.build_for(dir)
    else
       for _, api in fs.iter_directory_items(dir .. "/") do
          local path = fs.join(dir, api)
+         -- TODO support fennel
          if fs.is_file(path) and fs.extension_part(path) == "lua" then
             doc.build_for_file(path)
          elseif fs.is_directory(path) then

@@ -58,7 +58,7 @@ local load_translations
 load_translations = function(path, merged)
    for _, file in fs.iter_directory_items(path) do
       local full_path = fs.join(path, file)
-      if fs.is_file(full_path) and fs.extension_part(full_path) == "lua" then
+      if fs.is_file(full_path) and fs.can_load(full_path) then
          i18n.load_single_translation(full_path, merged)
       end
    end

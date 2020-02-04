@@ -15,9 +15,9 @@ local loaded = {}
 local MOD_DIR = "mod"
 
 local function load_mod(mod_name, root_path)
-   local init_lua_path = fs.join(root_path, "init.lua")
+   local init_lua_path = fs.find_loadable(root_path, "init")
 
-   if fs.is_file(init_lua_path) then
+   if init_lua_path then
       local req_path = paths.convert_to_require_path(init_lua_path)
 
       -- Reset the random seed before loading each mod loading can
@@ -154,8 +154,8 @@ function mod.scan_mod_dir()
    local mods = {}
 
    for _, mod_id in fs.iter_directory_items(MOD_DIR .. "/") do
-      local manifest_file = fs.join(MOD_DIR, mod_id, "mod.lua")
-      if fs.is_file(manifest_file) then
+      local manifest_file = fs.find_loadable(MOD_DIR, mod_id, "mod")
+      if manifest_file then
          mods[#mods+1] = manifest_file
       end
    end
@@ -168,7 +168,10 @@ end
 -- loaded first.
 function mod.hotload_mod(mod_id, root_path)
    root_path = root_path or fs.join(MOD_DIR, mod_id)
-   local manifest_file = fs.join(root_path, "mod.lua")
+   local manifest_file = fs.find_loadable(root_path, "mod")
+   if not manifest_file then
+      return false, "No mod manifest found."
+   end
    local ok, manifest = load_manifest(manifest_file)
    if not ok then
       return ok, manifest

@@ -45,7 +45,7 @@ function shadow_layer:rebuild_light(map)
       for _, x, y, _ in map:iter_tiles() do
          local light = map:light(x, y)
          if light then
-            local show_light = true or light.always_on or (hour > 17 or hour < 6)
+            local show_light = light.always_on or (hour > 17 or hour < 6)
             if show_light then
                local power = 6 - Pos.dist(player.x, player.y, x, y)
                power = math.clamp(power, 0, 6) * light.power

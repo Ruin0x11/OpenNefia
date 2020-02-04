@@ -193,7 +193,13 @@ local function env_loadfile(path, mod_env)
    local chunk, err
    if fs.extension_part(resolved) == "fnl" then
       local src = assert(io.open(resolved, "r"):read("*all"))
-      local str = require("thirdparty.fennel").compileString(src)
+
+      -- include some standard macros
+      src = "(require-macros :internal.fennel.macros)\n" .. src
+
+      rawset(_G, "_ENV", mod_env)
+      local str = require("thirdparty.fennel").compileString(src, {env = {}})
+      rawset(_G, "_ENV", nil)
       chunk, err = loadstring(str)
    else
       chunk, err = loadfile(resolved)

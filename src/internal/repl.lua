@@ -107,7 +107,7 @@ function repl.require_all_apis(dir, recurse, full_path)
 
    for _, api in fs.iter_directory_items(dir .. "/") do
       local path = fs.join(dir, api)
-      if fs.is_file(path) and fs.extension_part(path) == "lua" then
+      if fs.is_file(path) and fs.can_load(path) then
          local name
          if full_path then
             name = paths.convert_to_require_path(path)

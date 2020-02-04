@@ -20,6 +20,9 @@ end
 -- properly
 love.filesystem.setRequirePath(package.path)
 
+local fennel = require("thirdparty.fennel")
+table.insert(package.loaders or package.searchers, fennel.searcher)
+
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 

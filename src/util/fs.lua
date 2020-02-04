@@ -328,4 +328,31 @@ function fs.join(base, ...)
    return res
 end
 
+local EXTS = { "lua", "fnl" }
+function fs.can_load(path)
+   local my_ext = fs.extension_part(path)
+   for _, ext in ipairs(EXTS) do
+      if my_ext == ext then
+         return true
+      end
+   end
+   return false
+end
+
+-- Searches for a file loadable with `require` at the nested path -
+-- either .lua or .fnl.
+-- @param ... Set of directory components, without file extension
+-- @treturn[opt] string
+function fs.find_loadable(...)
+   local path = fs.join(...)
+   for _, ext in ipairs(EXTS) do
+      local full_path = path .. "." .. ext
+      if fs.is_file(full_path) then
+         return full_path
+      end
+   end
+
+   return nil
+end
+
 return fs

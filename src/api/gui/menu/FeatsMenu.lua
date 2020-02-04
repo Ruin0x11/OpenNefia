@@ -1,5 +1,7 @@
 local Draw = require("api.Draw")
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
+local data = require("internal.data")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiList = require("api.gui.UiList")
@@ -13,11 +15,16 @@ local FeatsMenu = class.class("FeatsMenu", IUiLayer)
 FeatsMenu:delegate("pages", "chosen")
 FeatsMenu:delegate("input", IInput)
 
-local function trait_color(trait)
-   if true then
-      return {0, 0, 200}
-   elseif false then
-      return {200, 0, 0}
+local function trait_color(entry)
+   if entry.type == "description" then
+      local level = 1
+      if level > 0 then
+         return {0, 0, 200}
+      elseif level < 0 then
+         return {200, 0, 0}
+      else
+         return {10, 10, 10}
+      end
    end
 
    return {10, 10, 10}
@@ -31,7 +38,17 @@ local UiListExt = function(feats_menu)
    local E = {}
 
    function E:get_item_text(item)
-      return item.text
+      local text = item.text
+
+      if item.trait and item.type == "description" then
+         local category = item.trait.category or "dood"
+
+         text = ("[%s]%s")
+            :format(I18N.get("trait.window.category." .. category),
+                    text)
+      end
+
+      return text
    end
    function E:can_choose(item)
       return item.type == "can_acquire"
@@ -56,7 +73,7 @@ local UiListExt = function(feats_menu)
          return
       end
 
-      local color = trait_color(item.trait)
+      local color = trait_color(item)
       local trait_icon = trait_icon(item.trait)
 
       local draw_name = item.type == "can_acquire"
@@ -72,13 +89,13 @@ local UiListExt = function(feats_menu)
 
       feats_menu.t.trait_icons:draw_region(trait_icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
 
-      UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
-
       if draw_name then
-         Draw.text("(Trait name.)", x + 186, y + 2, color)
+         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
+         Draw.text(item.desc, x + 186, y + 2, color)
+      else
+         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
       end
    end
-   --------------------
 
    return E
 end
@@ -86,14 +103,33 @@ end
 function FeatsMenu:init()
    self.chara_make = false
 
-   self.win = UiWindow:new("ui.feat.title", true, "key help", 55, 40)
+   self.win = UiWindow:new("trait.window.title", true, "key help", 55, 40)
+
+   local available = data["base.trait"]:iter()
+     :filter(function(t) return t.category == "feat" end)
+     :map(function(t)
+           local level = 0
+           return {
+              text = I18N.get("trait._" .. t.elona_id .. ".levels._" .. level .. ".name"),
+              desc = I18N.get("trait._" .. t.elona_id .. ".desc"),
+              trait = t,
+              type = "can_acquire"
+           }
+         end)
+     :to_list()
+
+   local have = table.of(
+      {
+         text = "Your trait is this.",
+         trait = data["base.trait"]:ensure("elona.desire_for_violence"),
+         type = "description"
+      }, 20)
 
    self.data = table.flatten({
-      {{ text = "Available feats", type = "header" }},
-      table.of({ text = "Trait name", trait = "base.sometrait", type = "can_acquire" }, 20),
-      {{ text = "Feats and traits", type = "header"}},
-      {{ text = "Your body is complicated.", trait = "base.complicated", type = "description" }},
-      table.of({ text = "Your trait is this.", trait = "base.othertrait", type = "description" }, 20),
+         {{ text = I18N.get("trait.window.available_feats"), type = "header" }},
+         available,
+         {{ text = I18N.get("trait.window.feats_and_traits"), type = "header"}},
+         have
    })
 
    self.pages = UiList:new_paged(self.data, 15)
@@ -147,9 +183,9 @@ function FeatsMenu:draw()
    local is_player = true
    local text
    if is_player then
-      text = "ui.feat.you_can_acquire" .. " " .. tostring(5)
+      text = I18N.get("trait.window.you_can_acquire", 5)
    else
-      text = "ui.feat.your_trait" .. " " .. "name"
+      text = I18N.get("trait.window.your_trait", "someone")
    end
 
    Ui.draw_note(text, self.x, self.y, self.width, self.height, 50)

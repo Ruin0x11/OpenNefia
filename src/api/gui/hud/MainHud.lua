@@ -179,7 +179,7 @@ function MainHud:draw_attributes()
       elseif a == "dv_pv" then
          x_offset = 14
       end
-      self.t.skill_icons:draw_region(
+      self.t.hud_skill_icons:draw_region(
          i,
          self.x + 136 + (i - 1) * item_width + 148 + x_offset,
          self.height - 16 + 1)
