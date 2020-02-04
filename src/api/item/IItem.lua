@@ -16,48 +16,6 @@ local IItem = class.interface("IItem",
                          {},
                          {IStackableObject, IModdable, IItemEnchantments, IEventEmitter, ILocalizable})
 
--- TODO: schema
-local fallbacks = {
-   amount = 1,
-   dice_x = 0,
-   dice_y = 0,
-   ownership = "none",
-   curse_state = "none",
-   identify_state = "completely",
-   weight = 0,
-   dv = 0,
-   pv = 0,
-   hit_bonus = 0,
-   damage_bonus = 0,
-   bonus = 0,
-   flags = {},
-   name = "item",
-   pierce_rate = 0,
-   effective_range = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
-   ammo_type = "",
-   value = 1,
-   params = {},
-   categories = {},
-
-   cargo_weight = 0,
-
-   rarity = 1000000,
-
-   -- Ambient light information. Each one is a table or nil. Same
-   -- format as vanilla:
-   -- - chip (id:base.chip): chip with animation to play over tile.
-   -- - brightness (uint): alpha value of chip animation.
-   -- - offset_y (int): offset of chip animation.
-   -- - power (int): magnitude of shadow decrease. affected by player
-   --                distance to light.
-   -- - flicker (uint): random flicker to add to light. Added as
-   --                   Rand.rnd(flicker + 1).
-   -- - always_on (bool): if true, ignore time of day when displaying
-   --                     the light. normally lights are only
-   --                     displayed if 17 < date.hour || date.hour < 6.
-   light = nil
-}
-
 function IItem:pre_build()
    IModdable.init(self)
    IMapObject.init(self)
@@ -74,7 +32,8 @@ function IItem:normal_build()
 end
 
 function IItem:build()
-   self:mod_base_with(fallbacks, "merge")
+   local fallbacks = data.fallbacks["base.item"]
+   self:mod_base_with(table.deepcopy(fallbacks), "merge")
 
    self.name = I18N.get("item.info." .. self._id .. ".name")
 

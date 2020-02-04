@@ -458,8 +458,8 @@ function ElonaAction.zap(chara, item)
 end
 
 function ElonaAction.use(chara, item)
-   Gui.mes("common.nothing_happens")
-   return "player_turn_query"
+   local result = item:emit("elona_sys.on_item_use", {chara=chara}, "turn_end")
+   return result
 end
 
 function ElonaAction.open(chara, item)

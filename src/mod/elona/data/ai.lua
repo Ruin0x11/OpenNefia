@@ -167,7 +167,7 @@ local function move_towards_target(chara, params)
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
-      if params.retreat or chara.ai_config.min_distance > dist then
+      if params.retreat or chara.ai_dist > dist then
          -- Move away from target.
          chara.ai_state.last_target_x = chara.x + (chara.x - target.x)
          chara.ai_state.last_target_y = chara.y + (chara.y - target.y)
@@ -409,7 +409,7 @@ local function default_action(chara, params)
       end
    end
 
-   if chara.ai_config.min_distance <= dist then
+   if chara.ai_dist <= dist then
       if Rand.one_in(3) then
          return true
       end
@@ -419,7 +419,7 @@ local function default_action(chara, params)
       chara.ai_state.hate = chara.ai_state.hate - 1
    end
 
-   if Rand.percent_chance(chara.ai_config.move_chance_percent) then
+   if Rand.percent_chance(chara.ai_move) then
       return Ai.run("elona.idle_action", chara)
    end
 
@@ -437,7 +437,7 @@ local function basic_action(chara, params)
 
    chara:act_hostile_towards(target)
 
-   local choosing_sub_act = Rand.percent_chance(chara.ai_config.sub_act_chance_percent)
+   local choosing_sub_act = Rand.percent_chance(chara.ai_act_sub_freq)
    local choice
 
    if choosing_sub_act then
@@ -606,8 +606,8 @@ local function decide_targeted_action(chara, params)
 
    local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
-   if dist ~= chara.ai_config.min_distance then
-      if Rand.percent_chance(chara.ai_config.move_chance_percent) then
+   if chara.ai_dist <= dist then
+      if Rand.percent_chance(chara.ai_move) then
          return Ai.run("elona.move_towards_target", chara)
       end
    end

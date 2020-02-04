@@ -126,6 +126,8 @@ Event.register("base.on_map_loaded", "init all event callbacks",
                   end
                end)
 
+-- BUG O(n*m), instead make a list of items hotloaded and pass to
+-- on_hotload_end
 Event.register("base.on_hotload_prototype", "Notify objects in map of prototype hotload", function(_, params)
                   local map = Map.current()
                   if map then

@@ -1,6 +1,5 @@
 local Map = require("api.Map")
 local env = require("internal.env")
-local data = require("internal.data")
 
 local Codegen = {}
 
@@ -22,7 +21,6 @@ function Codegen.loadstring(str)
 end
 
 function Codegen.generate_object_getter(klass, name, _type)
-   assert(data[_type], string.format("data type '%s' doesn't exist", _type))
 
    local private = "_" .. name
    klass["get_" .. name] = function(self, map)

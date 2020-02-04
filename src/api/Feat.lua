@@ -89,6 +89,8 @@ function Feat.create(id, x, y, params, where)
       assert(feat:current_map())
    end
 
+   feat:instantiate()
+
    feat:refresh()
 
    return feat

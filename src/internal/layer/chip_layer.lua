@@ -169,6 +169,11 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
       local y = math.floor((ind-1) / map:width())
       for _, i in ipairs(stack) do
          found[i.uid] = true
+
+         --
+         -- TODO handle memory
+         --
+
          local show = i.show and map:is_in_fov(x, y)
          local shadow_type = i.shadow_type
 

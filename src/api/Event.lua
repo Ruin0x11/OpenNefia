@@ -1,5 +1,6 @@
 --- @module Event
 
+local Log = require("api.Log")
 local data = require("internal.data")
 
 local Event = {}

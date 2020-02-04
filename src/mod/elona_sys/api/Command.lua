@@ -176,7 +176,6 @@ function Command.close(player)
       if Chara.at(f.x, f.y) then
          Gui.mes("action.close.blocked")
       else
-         Gui.mes("action.close.execute", player)
          f:emit("elona_sys.on_feat_close", {chara=player})
       end
    end

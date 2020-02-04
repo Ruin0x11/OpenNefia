@@ -101,8 +101,8 @@ return {
       close = {
          blocked = "There's something on the floor.",
          execute = function(_1)
-            return ("%s close the door.")
-               :format(name(_1))
+            return ("%s close%s the door.")
+               :format(name(_1), s(_1))
          end,
          nothing_to_close = "There's nothing to close."
       },

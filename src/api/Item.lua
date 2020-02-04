@@ -112,6 +112,7 @@ function Item.create(id, x, y, params, where)
       end
    end
 
+   item:instantiate()
    item:emit("base.on_generate")
 
    if not params.no_stack then

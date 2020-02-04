@@ -244,6 +244,7 @@ function Chara.create(id, x, y, params, where)
       chara:refresh()
    end
 
+   chara:instantiate()
    chara:emit("base.on_chara_generated")
 
    return chara

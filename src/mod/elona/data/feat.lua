@@ -67,7 +67,6 @@ data:add {
    closed_tile = "elona.feat_door_wooden_closed",
    opened_tile = "elona.feat_door_wooden_open",
    on_refresh = function(self)
-
       self.opened = not not self.opened
 
       self:reset("can_open", not self.opened, "set")
@@ -80,7 +79,7 @@ data:add {
          self:reset("image", self.closed_tile)
       end
    end,
-   on_bumped_into = function(self, params) self:on_open() end,
+   on_bumped_into = function(self, params) self:on_open(params) end,
 
    on_open = function(self, params)
       if self.opened then return end
@@ -89,8 +88,10 @@ data:add {
       self.is_solid = false
       self.is_opaque = false
 
-      Gui.mes("Open the door.")
-      if self.open_sound then Gui.play_sound(self.open_sound, self.x, self.y) end
+      Gui.mes("action.open.door.succeed", params.chara)
+      if self.open_sound then
+         Gui.play_sound(self.open_sound, self.x, self.y)
+      end
 
       self:refresh()
    end,
@@ -101,8 +102,9 @@ data:add {
       self.is_solid = true
       self.is_opaque = true
 
-      Gui.mes("Close the door.")
-      if self.close_sound then Gui.play_sound(self.close_sound, self.x, self.y)
+      Gui.mes("action.close.execute", params.chara)
+      if self.close_sound then
+         Gui.play_sound(self.close_sound, self.x, self.y)
       end
 
       self:refresh()

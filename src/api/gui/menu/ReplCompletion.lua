@@ -117,7 +117,7 @@ function ReplCompletion:complete(line, root_env)
       base = base .. string.split_at_pos(partial, pos)
    end
 
-   local pred = function(s) print(s, incomplete); return string.has_prefix(s, incomplete) end
+   local pred = function(s) return string.has_prefix(s, incomplete) end
    local trans = function(i)
       return {
          text = i,

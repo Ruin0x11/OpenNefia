@@ -661,7 +661,7 @@ function ReplLayer:draw()
    -- blinking cursor
    if math.floor(self.frames * 2) % 2 == 0 then
       local top = self.height - self.pulldown_y * Draw.text_height()
-      local x = self.x + 9 + Draw.text_width(self.mode.caret) + self.cursor_x
+      local x = self.x + 5 + Draw.text_width(self.mode.caret) + self.cursor_x
       local y = self.y + top - Draw.text_height() - 5
       Draw.line(x, y, x, y + Draw.text_height() - 1)
    end

@@ -302,10 +302,8 @@ function InventoryMenu:update()
          if not canceled then
             if result == "inventory_continue" then
                self:update_filtering()
-            elseif result == "turn_end" then
-               return result
             else
-               error("unknown inventory result " .. result)
+               return result
             end
          end
       end

@@ -31,15 +31,25 @@ end
 function shadow_layer:rebuild_light(map)
    self.lights = {}
 
+   local player = Chara.player()
+   local hour = save.base.date.hour
+
    local shadow = save.base.shadow
    local has_light_source = save.base.has_light_source
+
+   if player then
+      for _, item in player:iter_items() do
+         if item:calc("is_light_source") then
+            has_light_source = true
+            break
+         end
+      end
+   end
+
    local is_dungeon = map:has_type("dungeon")
    if has_light_source and is_dungeon then
       shadow = shadow - 50
    end
-
-   local player = Chara.player()
-   local hour = save.base.date.hour
 
    if player then
       for _, x, y, _ in map:iter_tiles() do

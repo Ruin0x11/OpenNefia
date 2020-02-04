@@ -11,7 +11,8 @@ if env.is_hotloading() then
 end
 
 local data = {
-   errors = {}
+   errors = {},
+   fallbacks = {}
 }
 
 function script_path()
@@ -65,6 +66,9 @@ function data:clear()
    index = {}
    schemas = {}
    metatables = {}
+
+   self.errors = {}
+   self.fallbacks = {}
 end
 
 function data:types()
@@ -125,6 +129,9 @@ function data:add_index(_type, field)
 end
 
 function data:add_type(schema, params)
+   schema.fields = schema.fields or {}
+   schema.fallbacks = schema.fallbacks or {}
+
    params = params or {}
 
    local mod_name, loc = env.find_calling_mod()
@@ -177,6 +184,12 @@ function data:add_type(schema, params)
    generates[_type] = generate
 
    global_edits[_type] = EventTree:new()
+
+   local fallbacks = table.deepcopy(schema.fallbacks)
+   for k, field in pairs(schema.fields) do
+      fallbacks[k] = field.default
+   end
+   self.fallbacks[_type] = fallbacks
 end
 
 -- TODO: metatable indexing could create a system for indexing
@@ -310,6 +323,21 @@ function data:add(dat)
    return dat
 end
 
+function data:make_template(_type)
+   local result = {
+      _id = "",
+      _type = _type
+   }
+
+   for k, field in pairs(schemas[_type].fields) do
+      if field.template then
+         result[k] = field.default
+      end
+   end
+
+   return result
+end
+
 function data:iter()
    return fun.iter(table.keys(schemas)):map(function(ty) return ty, data[ty] end)
 end
@@ -381,7 +409,7 @@ function proxy:__index(k)
    local _type = rawget(self, "_type")
    local for_type = rawget(inner, _type)
    if not for_type then
-      error("Unknown type " .. _type)
+      return nil
    end
 
    -- Permit substituting an instance of a data type if it is passed
