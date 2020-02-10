@@ -158,6 +158,9 @@ function KeyHandler:run_key_action(key, ...)
    end
 
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
+   if Log.has_level("trace") then
+      Log.trace("Keybind: %s %s %s", key, keybind)
+   end
 
    local func = self.bindings[keybind]
    if func == nil then

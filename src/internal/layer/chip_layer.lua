@@ -114,18 +114,135 @@ local TYPES = {
    "base.item",
    "base.feat"
 }
-local LAYER_Z_ORDER = {
-   ["base.chara"] = 2,
-   ["base.item"] = 1,
-   ["base.feat"] = 0
-}
-local LAYER_OFFSET_Y = {
-   ["base.chara"] = -16,
-   ["base.item"] = 0,
-   ["base.feat"] = 0
+local CONFIG = {
+   ["base.chara"] = {
+      z_order = 2,
+      y_offset = -16,
+   },
+   ["base.item"] = {
+      z_order = 1,
+      y_offset = 0,
+      show_memory = true,
+      is_stacking = true
+   },
+   ["base.feat"] = {
+      z_order = 0,
+      y_offset = 0,
+      show_memory = true
+   }
 }
 
-local FRAME_LENGTH = 10
+function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
+   local shadow_type = i.shadow_type
+   local batch_ind = self.chip_batch_inds[i.uid]
+   local image = i.drawable or i.image
+   local x_offset = i.x_offset or 0
+   local y_offset = (i.y_offset or 0) + CONFIG[chip_type].y_offset - (stack_height or 0)
+   if batch_ind == nil or batch_ind == 0 then
+      -- tiles at the top of the screen should be drawn
+      -- first, so they have the lowest z-order. conveniently
+      -- this is already representable by tile indices since
+      -- index 0 represents (0, 0), 1 represents (1, 0), and
+      -- so on.
+      local z_order = ind + CONFIG[chip_type].z_order
+
+      local new_ind = self.chip_batch:add_tile {
+         tile = image,
+         x = x,
+         y = y,
+         x_offset = x_offset,
+         y_offset = y_offset,
+         color = i.color,
+         z_order = z_order,
+         drawables = i.drawables
+      }
+
+      -- Extra data needed for rendering non-chip things like
+      -- the HP bar.
+      self.chip_batch_inds[i.uid] = {
+         ind = new_ind,
+         x = x,
+         y = y,
+         y_offset = y_offset,
+         hp_ratio = i.hp_ratio,
+         hp_bar = i.hp_bar
+      }
+   end
+
+   if shadow_type == "drop_shadow" then
+      --
+      -- Item drop shadow.
+      --
+      self:draw_drop_shadow(i, x, y)
+   elseif shadow_type == "normal" then
+      self.shadow_batch:add_tile {
+         tile = "shadow",
+         x = x,
+         y = y,
+         y_offset = y_offset,
+         z_order = 0
+      }
+      self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }
+   end
+end
+
+function chip_layer:draw_normal(ind, map, stack, chip_type, found)
+   local x = (ind-1) % map:width()
+   local y = math.floor((ind-1) / map:width())
+
+   for _, i in ipairs(stack) do
+      found[i.uid] = true
+
+      local show = i.show
+      if not map:is_in_fov(x, y) then
+         show = show and CONFIG[chip_type].show_memory
+      end
+
+      if show then
+         self:draw_one(ind, x, y, i, chip_type)
+      end
+   end
+end
+
+function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
+   local x = (ind-1) % map:width()
+   local y = math.floor((ind-1) / map:width())
+
+   local show_count = 0
+   local to_show = {}
+   for _, i in ipairs(stack) do
+      local show = i.show
+      if not map:is_in_fov(x, y) then
+         show = show and CONFIG[chip_type].show_memory
+      end
+      to_show[i] = show
+      show_count = show_count + 1
+   end
+
+   if show_count > 3 then
+      -- HACK
+      local i = {
+         uid = stack[1].uid,
+         show = true,
+         image = "elona.item_stack",
+         color = {255, 255, 255},
+         x_offset = 0,
+         y_offset = 0,
+         shadow_type = "drop_shadow"
+      }
+      self:draw_one(ind, x, y, i, chip_type, 0)
+   else
+      local stack_height = 0
+      for _, i in ipairs(stack) do
+         found[i.uid] = true
+
+         if to_show[i] then
+            self:draw_one(ind, x, y, i, chip_type, stack_height)
+            stack_height = stack_height + i.stack_height
+         end
+      end
+   end
+end
 
 function chip_layer:update(dt, screen_updated, scroll_frames)
    self.chip_batch:update(dt)
@@ -146,12 +263,6 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 
    local found = {}
 
-   local all = fun.iter(TYPES)
-      :map(function(ty)
-             return map:iter_memory(ty)
-           end)
-      :to_list()
-
    self.chip_batch:clear()
    self.shadow_batch:clear()
    self.drop_shadow_batch:clear()
@@ -160,77 +271,12 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
 
-   for ind, stack in fun.chain(table.unpack(all)) do
-      -- { 1, 600 } -> 600
-      local chip_type = TYPES[ind[1]]
-      ind = ind[2]
-
-      local x = (ind-1) % map:width()
-      local y = math.floor((ind-1) / map:width())
-      for _, i in ipairs(stack) do
-         found[i.uid] = true
-
-         --
-         -- TODO handle memory
-         --
-
-         local show = i.show and map:is_in_fov(x, y)
-         local shadow_type = i.shadow_type
-
-         if show then
-            --
-            -- Normal chip.
-            --
-            local batch_ind = self.chip_batch_inds[i.uid]
-            local image = i.drawable or i.image
-            local x_offset = i.x_offset or 0
-            local y_offset = i.y_offset or 0 + LAYER_OFFSET_Y[chip_type]
-            if batch_ind == nil or batch_ind == 0 then
-               -- tiles at the top of the screen should be drawn
-               -- first, so they have the lowest z-order. conveniently
-               -- this is already representable by tile indices since
-               -- index 0 represents (0, 0), 1 represents (1, 0), and
-               -- so on.
-               local z_order = ind + LAYER_Z_ORDER[chip_type]
-
-               local new_ind = self.chip_batch:add_tile {
-                  tile = image,
-                  x = x,
-                  y = y,
-                  x_offset = x_offset,
-                  y_offset = y_offset,
-                  color = i.color,
-                  z_order = z_order,
-                  drawables = i.drawables
-               }
-
-               -- Extra data needed for rendering non-chip things like
-               -- the HP bar.
-               self.chip_batch_inds[i.uid] = {
-                  ind = new_ind,
-                  x = x,
-                  y = y,
-                  y_offset = y_offset,
-                  hp_ratio = i.hp_ratio,
-                  hp_bar = i.hp_bar
-               }
-            end
-
-            if shadow_type == "drop_shadow" then
-               --
-               -- Item drop shadow.
-               --
-               self:draw_drop_shadow(i, x, y)
-            elseif shadow_type == "normal" then
-               self.shadow_batch:add_tile {
-                  tile = "shadow",
-                  x = x,
-                  y = y,
-                  y_offset = y_offset,
-                  z_order = 0
-               }
-               self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }
-            end
+   for _, chip_type in ipairs(TYPES) do
+      for ind, stack in map:iter_memory(chip_type) do
+         if CONFIG[chip_type].is_stacking then
+            self:draw_stacking(ind, map, stack, chip_type, found)
+         else
+            self:draw_normal(ind, map, stack, chip_type, found)
          end
       end
    end
@@ -239,8 +285,14 @@ function chip_layer:update(dt, screen_updated, scroll_frames)
 
    for uid, _ in pairs(self.chip_batch_inds) do
       if not found[uid] then
-         self.chip_batch:remove_tile(self.chip_batch_inds[uid])
-         self.shadow_batch:remove_tile(self.shadow_batch_inds[uid])
+         local chip_uid = self.chip_batch_inds[uid]
+         if chip_uid then
+            self.chip_batch:remove_tile(chip_uid)
+         end
+         local shadow_uid = self.shadow_batch_inds[uid]
+         if shadow_uid then
+            self.shadow_batch:remove_tile(shadow_uid)
+         end
          self.chip_batch_inds[uid] = nil
          self.shadow_batch_inds[uid] = nil
       end

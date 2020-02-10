@@ -58,6 +58,7 @@ end)
 --- @tparam InstancedMap map
 --- @see Map.travel_to
 function Map.set_map(map)
+   assert(class.is_an(InstancedMap, map))
    map:emit("base.on_map_enter")
    map.visit_times = map.visit_times + 1
    field:set_map(map)
@@ -77,6 +78,14 @@ function Map.save(map)
    local path = Fs.join("map", tostring(map.uid))
    Log.info("Saving map %d to %s", map.uid, path)
    return SaveFs.write(path, map)
+end
+
+--- @tparam InstancedMap map
+function Map.reveal_all(map)
+   map = map or field.map
+   for _, x, y in map:iter_tiles() do
+      map:memorize_tile(x, y)
+   end
 end
 
 local function run_generator_load_callback(map)

@@ -408,6 +408,8 @@ end
 local Skill = require("mod.elona_sys.api.Skill")
 
 local function base_init(self, player)
+   local home
+
    do
       local success, world_map
       success, world_map = Map.generate("elona_sys.map_template", { id = "elona.north_tyris" })
@@ -419,7 +421,7 @@ local function base_init(self, player)
       local area = save.base.area_mapping:create_area()
       save.base.area_mapping:add_map_to_area(area.uid, world_map.uid)
 
-      local home = load_map(world_map, "elona.your_home")
+      home = load_map(world_map, "elona.your_home")
       --local vernis = load_map(world_map, "elona.vernis")
       --local palmia = load_map(world_map, "elona.palmia")
       --local lesimas = load_map(world_map, "elona.lesimas")
@@ -429,11 +431,6 @@ local function base_init(self, player)
       --Map.save(vernis)
       --Map.save(palmia)
       --Map.save(lesimas)
-
-      Map.set_map(home)
-
-      assert(Map.current():take_object(player, 15, 12))
-      Chara.set_player(player)
    end
 
    local armor = Item.create("content.armor", nil, nil, {}, player)
@@ -450,10 +447,16 @@ local function base_init(self, player)
    assert(player:equip_item(arrow))
 
    player:refresh()
+
+   return {
+      map = home,
+      start_x = 15,
+      start_y = 12
+   }
 end
 
 local function my_start(self, player)
-   base_init(self, player)
+   local ret = base_init(self, player)
 
    for i=1,4 do
       local a = Chara.create("elona.younger_sister", i+8, 3)
@@ -508,6 +511,8 @@ local function my_start(self, player)
    end
 
    set_pcc(Chara.player())
+
+   return ret
 end
 
 local function init_bells(self, player)

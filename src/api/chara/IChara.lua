@@ -194,7 +194,7 @@ function IChara:produce_memory()
 
    return {
       uid = self.uid,
-      show = Chara.is_alive(self),
+      show = Chara.is_alive(self, self:current_map()),
       image = image,
       color = self:calc("color"),
       hp_bar = hp_bar,

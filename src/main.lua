@@ -135,6 +135,7 @@ function love.draw()
       end
    end
 
+   fps:update_draw_stats()
    fps:draw()
 
    draw.draw_end()

@@ -3,10 +3,8 @@
 require("internal.data.base")
 
 local Draw = require("api.Draw")
-local Log = require("api.Log")
+local Event = require("api.Event")
 local SaveFs = require("api.SaveFs")
-local I18N = require("api.I18N")
-local internal = require("internal")
 
 local chara_make = require("game.chara_make")
 local mod = require("internal.mod")
@@ -75,6 +73,8 @@ function game.loop()
 
    -- This function will yield to support the progress bar.
    startup.run(mods)
+
+   Event.trigger("base.on_startup")
 
    local cb
    if quickstart then

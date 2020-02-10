@@ -103,10 +103,16 @@ end
 
 local function set_filter(dungeon)
    -- TODO support custom filters
-   return {
+   local filter =  {
       level = Calc.calc_object_level(dungeon:calc("dungeon_level")),
       quality = Calc.calc_object_quality(1),
    }
+
+   if filter.level > 5 then
+      pause()
+   end
+
+   return filter
 end
 
 local function populate_rooms(dungeon, template, gen_params)

@@ -4,6 +4,7 @@ local config = require("internal.config")
 
 local input = {}
 
+local key_handler = nil
 local mouse_handler = nil
 
 function input.set_mouse_handler(tbl)
@@ -11,10 +12,6 @@ function input.set_mouse_handler(tbl)
       class.assert_is_an(IMouseInput, tbl)
    end
    mouse_handler = tbl
-end
-
-function input.reset_mouse_handler()
-   mouse_handler = default_mouse_handler
 end
 
 function input.mousemoved(x, y, dx, dy, istouch)
@@ -35,8 +32,6 @@ function input.mousereleased(x, y, button, istouch)
    end
 end
 
-
-local key_handler = nil
 
 function input.set_key_handler(tbl)
    if tbl ~= nil then

@@ -324,6 +324,10 @@ function data:add(dat)
 end
 
 function data:make_template(_type)
+   if not schemas[_type] then
+      error(("No such type %s"):format(_type))
+   end
+
    local result = {
       _id = "",
       _type = _type

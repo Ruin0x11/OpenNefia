@@ -736,7 +736,7 @@ local item = {
    { id = 358, name = "_358" },
    { id = 359, name = "_359" },
    { id = 360, name = "dish" },
-   { id = 363, name = "_363" },
+   { id = 363, name = "stack" },
    { id = 364, name = "fancy_lamp" },
    { id = 365, name = "handful_of_snow" },
    { id = 366, name = "mini_snow_man" },

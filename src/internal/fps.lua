@@ -42,17 +42,14 @@ function fps:update(dt)
       self.ram_graph:add_point(ram)
       self.ram_diff_graph:add_point(diff)
 
-      if self.show_draw_stats then
-         love.graphics.getStats(self.draw_stats)
-         if self.draw_stats.drawcalls then
-            self.text = self.text .. string.format("\nDRW: %d\nCNV: %d\nTXTR: %04.2fMB\nIMG: %d\nCNVS: %d\nFNTS: %d",
-                                                   self.draw_stats.drawcalls,
-                                                   self.draw_stats.canvasswitches,
-                                                   self.draw_stats.texturememory / 1024 / 1024,
-                                                   self.draw_stats.images,
-                                                   self.draw_stats.canvases,
-                                                   self.draw_stats.fonts)
-         end
+      if self.show_draw_stats and self.draw_stats.drawcalls then
+         self.text = self.text .. string.format("\nDRW: %d\nCNV: %d\nTXTR: %04.2fMB\nIMG: %d\nCNVS: %d\nFNTS: %d",
+                                                self.draw_stats.drawcalls,
+                                                self.draw_stats.canvasswitches,
+                                                self.draw_stats.texturememory / 1024 / 1024,
+                                                self.draw_stats.images,
+                                                self.draw_stats.canvases,
+                                                self.draw_stats.fonts)
       end
 
       Draw.set_font(14)
@@ -66,6 +63,10 @@ function fps:update(dt)
       self.prev_ram = ram
       self.prev_diff = diff
    end
+end
+
+function fps:update_draw_stats()
+   love.graphics.getStats(self.draw_stats)
 end
 
 function fps:draw()

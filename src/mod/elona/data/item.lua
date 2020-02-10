@@ -12212,15 +12212,6 @@ local item =
          image = "elona.item_torch",
          value = 200,
          weight = 150,
-         on_use = function(self)
-            if self.is_light_source then
-               Gui.mes("action.use.torch.put_out")
-               self.is_light_source = false
-            else
-               Gui.mes("action.use.torch.light")
-               self.is_light_source = true
-            end
-         end,
          category = 59000,
          coefficient = 100,
 
@@ -12229,7 +12220,17 @@ local item =
          categories = {
             "elona.misc_item"
          },
-         light = light.torch
+         light = light.torch,
+
+         on_use = function(self)
+            if self.is_light_source then
+               Gui.mes("action.use.torch.put_out")
+               self.is_light_source = false
+            else
+               Gui.mes("action.use.torch.light")
+               self.is_light_source = true
+            end
+         end
       },
       {
          _id = "candle",

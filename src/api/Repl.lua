@@ -80,6 +80,9 @@ function Repl.generate_env(locals)
    repl_env = table.merge(repl_env, repl.require_all_apis("internal", true))
    repl_env = table.merge(repl_env, repl.require_all_apis("game"))
    repl_env = table.merge(repl_env, repl.require_all_apis("util"))
+
+   repl_env._traceback = debug.traceback("", nil, 2)
+
    repl_env["save"] = require("internal.global.save")
 
    local history = {}

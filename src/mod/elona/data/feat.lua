@@ -1,6 +1,5 @@
 local Gui = require("api.Gui")
 local Item = require("api.Item")
-local Feat = require("api.Feat")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local MapArea = require("api.MapArea")
@@ -257,7 +256,8 @@ data:add
 data:add {
    _type = "base.feat", _id = "pot", elona_id = 30,
    image = "elona.feat_pot", is_solid = false, is_opaque = false,
-   params = {}, on_bash = function(self, params)
+   params = {},
+   on_bash = function(self, params)
       local map = self:current_map()
       local basher = params.chara
 
@@ -278,15 +278,16 @@ data:add {
          local anim = Anim.breaking(self.x, self.y)
          Gui.start_draw_callback(anim)
       end
+
       self:remove_ownership()
       return "turn_end"
    end,
 
    events = {
       {
-         id = "elona_sys.on_bump_into", name = "Bump into to shatter pot",
+         id = "elona_sys.on_bump_into",
+         name = "Bump into to shatter pot",
          callback = function(self, params)
-            print("on_bump")
             return ElonaAction.bash(params.chara, self.x, self.y)
          end
       }

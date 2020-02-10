@@ -22,6 +22,18 @@ local function calc_adjusted_power(magic, power, curse_state)
    return power
 end
 
+-- Casts a spell.
+--
+-- @tparam id:base.magic id
+-- @tparam[opt] table params Magic parameters.
+--  - power (int): Relative power of spell.
+--  - source (IChara): Thing casting the spell.
+--  - target (IChara): Target of the spell.
+--  - item (IItem): Item used in the spell.
+--  - curse_state (string): Curse state affecting the spell.
+--  - x (uint): Target map X position.
+--  - y (uint): Target map Y position.
+--  - element (id:base.element): Element the spell uses.
 function Magic.cast(id, params)
    local magic = data["elona_sys.magic"]:ensure(id)
    params = params or {

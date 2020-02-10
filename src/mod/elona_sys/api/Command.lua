@@ -221,8 +221,7 @@ function Command.enter_action(player)
       return "player_turn_query" -- TODO could differ per feat
    end
 
-   -- HACK
-   local is_world_map = Map.current().generated_with.params.id == "elona.north_tyris"
+   local is_world_map = Map.current():has_type("world_map")
 
    if is_world_map then
       local params = {

@@ -96,7 +96,9 @@ function sparse_batch:remove_tile(ind)
    if class.is_an(anim, tile) then
       table.insert(self.free_anims, tile)
    end
-   assert(self.ordering:delete(self.z_orders[ind], ind))
+   if self.z_orders[ind] ~= nil then
+      self.ordering:delete(self.z_orders[ind], ind)
+   end
    self.updated = true
 end
 

@@ -465,7 +465,10 @@ List of events to bind to this item when it is spawned.
 ]]
          },
          is_light_source = {
-            default = false
+            default = false,
+            doc = [[
+If true, lights up dungeons if in the player's inventory.
+]]
          },
          light = {
             default = nil,
@@ -671,11 +674,16 @@ data:add_type(
 
 data:add_type {
    name = "scenario",
-   schema = schema.Record {
-      name = schema.String,
-      starting_map = schema.Table,
-      on_game_begin = schema.Function,
-   },
+   fields = {
+      on_game_begin = {
+         default = nil,
+         template = true,
+         type = "function(self,IChara)",
+         doc = [[
+Function called on game begin. Is passed the created player.
+]]
+      },
+   }
 }
 
 data:add_type {

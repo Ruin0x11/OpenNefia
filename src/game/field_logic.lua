@@ -8,6 +8,7 @@ local World = require("api.World")
 local Log = require("api.Log")
 local draw = require("internal.draw")
 local field = require("game.field")
+local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
 
@@ -23,7 +24,12 @@ function field_logic.setup_new_game(player)
    assert(player)
 
    Chara.set_player(player)
-   scenario:on_game_start(player)
+   local params = scenario:on_game_start(player)
+   assert(type(params) == "table", "Scenario must return table of {map,start_x,start_y}")
+
+   local map = params.map
+   Map.set_map(map)
+   assert(params.map:take_object(player, params.start_x, params.start_y))
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
@@ -34,7 +40,7 @@ end
 function field_logic.quickstart()
    field:init_global_data()
 
-   save.base.scenario = "content.my_scenario"
+   save.base.scenario = config["base.quickstart_scenario"]
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
    field_logic.setup_new_game(me)

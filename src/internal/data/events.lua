@@ -88,10 +88,10 @@ data:add_multi(
       { _id = "on_new_game" },
       { _id = "generate_chara_name" },
       { _id = "generate_title" },
-      { _id = "on_regenerate" },
       { _id = "on_hotload_begin" },
       { _id = "on_hotload_end" },
       { _id = "on_set_player" },
+      { _id = "on_startup" },
    }
 )
 

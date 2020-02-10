@@ -6,13 +6,16 @@
   (each [_ obj (ipairs [...])]
     (let [name (if (= (type obj) "table")
                    (. obj :name)
-                   (string.gsub obj "%.?([_a-zA-Z0-9]+)$" "%1") obj)
+                   (string.match obj "%.?([^%.]+)$"))
           path (if (= (type obj) "table")
                    (. obj :path)
-                   obj)]
+                   (tostring obj))]
       (table.insert names (sym name))
       (table.insert requires (list (sym :require) path))))
-  (list (sym :local) names requires))
+  (let [it (list (sym :local) names requires)]
+    (print it)
+    it)
+  )
 
 (fn mac.comment [...] nil)
 
@@ -38,15 +41,17 @@
         (table.insert result form)))
   result)
 
-(fn mac.definst [id ty props]
-  (local tbl (reify-table props))
-  (tset tbl :_id (tostring id))
-  (tset tbl :_type (tostring ty))
+(fn mac.definst [id ty ...]
+  (local tbl (reify-table [...]))
+  (tset tbl :_id (to-lua-case id))
+  (tset tbl :_type (to-lua-case ty))
   (list (sym "data:add") tbl))
 
 (fn mac.deflocale [props] (reify-table props))
 
-(fn mac.defhandler [event desc args body]
-  (list (sym :Event.register) (tostring event) desc (list (sym :fn) args body)))
+(fn mac.defhandler [event desc args ...]
+  (list (sym :Event.register) (tostring event) desc (table.append
+                                                     (list (sym :fn) args)
+                                                     (list ...))))
 
 mac

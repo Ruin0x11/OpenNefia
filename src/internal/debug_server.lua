@@ -169,6 +169,62 @@ function commands.signature(text)
    }
 end
 
+-- Request:
+--
+-- {
+--   "command":"apropos",
+--   "content":"base.chara"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "template":"{ _type = "base.chara", _id = "" }"
+-- }
+function commands.template(id)
+   local data = require("internal.data")
+
+   if id == "" then
+      local types = data:types()
+      return {
+         candidates = fun.iter(types):map(function(t) return {t, t} end):to_list()
+      }
+   end
+
+   return {
+      template = inspect(data:make_template(id))
+   }
+end
+
+-- Request:
+--
+-- {
+--   "command":"apropos",
+--   "content":"base.chara"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "ids":{"elona.putit", ... }
+-- }
+function commands.ids(id)
+   local data = require("internal.data")
+
+   if id == "" then
+      local types = data:types()
+      return {
+         candidates = fun.iter(types):map(function(t) return {t, t} end):to_list()
+      }
+   end
+
+   return {
+      ids = data[id]:iter():extract("_id"):to_list()
+   }
+end
+
 -- The size of the apropos candidates list is huge, so transferring it
 -- over the network is infeasable. Instead write it to a file and let
 -- the user's editor read it from disk.

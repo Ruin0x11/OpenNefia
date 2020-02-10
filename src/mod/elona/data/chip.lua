@@ -733,7 +733,7 @@ local item_chips = {
    { elona_id = 358, name = "_358" },
    { elona_id = 359, name = "_359" },
    { elona_id = 360, name = "dish", y_offset = -0, shadow = 1, stack_height = 2 },
-   { elona_id = 363, name = "_363" },
+   { elona_id = 363, name = "stack" },
    { elona_id = 364, name = "fancy_lamp", y_offset = -22, shadow = 250, stack_height = 8},
    { elona_id = 365, name = "handful_of_snow" },
    { elona_id = 366, name = "mini_snow_man" },

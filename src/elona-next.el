@@ -57,7 +57,7 @@
 (defun elona-next--completing-read (prompt list)
   (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil)))
         (reader (if (bound-and-true-p ivy-read) 'ivy-read 'completing-read)))
-    (funcall reader prompt cands)))
+    (funcall reader prompt cands nil t)))
 
 (defun elona-next--fontify-region (mode beg end)
   (let ((prev-mode major-mode))
@@ -131,8 +131,10 @@
             ("signature" (elona-next--command-signature response))
             ("apropos" (elona-next--command-apropos response))
             ("completion" (elona-next--command-completion response))
+            ("template" (elona-next--command-template response))
+            ("ids" (elona-next--command-ids content response))
             ("run" t)
-            (else (error "No action for %s" cmd))))
+            (else (error "No action for %s %s" cmd (prin1-to-string response)))))
       (error message))))
 
 ;;
@@ -336,6 +338,20 @@
     (setq elona-next--apropos-candidates items)
     (let ((item (elona-next--completing-read "Apropos: " items)))
       (elona-next--send "help" item))))
+
+(defun elona-next--command-template (response)
+  (insert (alist-get 'template response)))
+
+(defun elona-next--command-ids (type response)
+  (let ((ids (alist-get 'ids response)))
+    (insert
+     (format "\"%s\""
+             (completing-read (format "ID (%s): " type)
+                              (append ids nil))))))
+
+;;
+;; Network
+;;
 
 (defun elona-next--tcp-sentinel (proc message)
   "Runs when a client closes the connection."
@@ -670,5 +686,13 @@
 (defun elona-next-run-batch-script ()
   (interactive)
   (compile (format "%s repl.lua batch %s" lua-default-application (buffer-file-name))))
+
+(defun elona-next-insert-template ()
+  (interactive)
+  (elona-next--send "template" ""))
+
+(defun elona-next-insert-id ()
+  (interactive)
+  (elona-next--send "ids" ""))
 
 (provide 'elona-next)

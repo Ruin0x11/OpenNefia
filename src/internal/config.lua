@@ -6,6 +6,7 @@ config["base.anim_wait"] = 80 * 0.5
 config["base.screen_sync"] = 6
 config["base.positional_audio"] = false
 config["base.show_charamake_extras"] = false
+config["base.quickstart_secnario"] = "content.my_scenario"
 
 -- private options
 config["base._basic_attributes"] = {

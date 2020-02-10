@@ -173,7 +173,7 @@ local function iter_rect(state, pos)
    return pos, old.x, old.y
 end
 
---- Iterates points in a rectangle.
+--- Iterates points in a filled rectangle.
 ---
 --- @tparam int start_x
 --- @tparam int start_y
@@ -182,6 +182,64 @@ end
 --- @treturn Iterator(int,int)
 function Pos.iter_rect(start_x, start_y, end_x, end_y)
    return fun.wrap(iter_rect, {start_x=start_x,end_x=end_x+1,end_y=end_y+1}, {x=start_x-1,y=start_y})
+end
+
+local function iter_border(state, pos)
+   if pos.y > state.end_y then
+      return nil, nil
+   end
+
+   local old_x = pos.x
+   local old_y = pos.y
+
+   if pos.y == state.start_y or pos.y == state.end_y then
+      if pos.x == state.end_x then
+         pos.x = state.start_x
+         pos.y = pos.y + 1
+      else
+         pos.x = pos.x + 1
+      end
+   else
+      if pos.x == state.start_x then
+         pos.x = state.end_x
+      else
+         pos.x = state.start_x
+         pos.y = pos.y + 1
+      end
+   end
+
+   return pos, old_x, old_y
+end
+
+--- Iterates points in a line rectangle.
+---
+--- @tparam int start_x
+--- @tparam int start_y
+--- @tparam int end_x
+--- @tparam int end_y
+--- @treturn Iterator(int,int)
+function Pos.iter_border(start_x, start_y, end_x, end_y)
+   return fun.wrap(iter_border, {start_x=start_x,end_x=end_x,start_y=start_y,end_y=end_y}, {x=start_x,y=start_y})
+end
+
+local function iter_circle(state, pos)
+   local old_x, old_y = pos.x + state.ox, pos.y + state.oy
+   local found = false
+   while not found do
+      old_x, old_y = pos.x + state.ox, pos.y + state.oy
+      pos.x = pos.x + 1
+      if pos.x == state.diameter then
+         pos.x = 0
+         pos.y = pos.y + 1
+         if pos.y == state.diameter then
+            return nil
+         end
+      end
+
+      found = state.cache[pos.x][pos.y]
+   end
+
+   return pos, old_x, old_y
 end
 
 local function iter_circle(state, pos)
@@ -345,33 +403,18 @@ Pos.iter_bolt = gen_line(iter_bolt)
 --- @treturn Iterator(int,int)
 Pos.iter_beam = gen_line(iter_beam)
 
-local function iter_surrounding(state, pos)
-   if pos.y > 1 then
-      return nil
-   end
-
-   local x, y = pos.x + state.x, pos.y + state.y
-
-   pos.x = pos.x + 1
-   if pos.x > 1 then
-      pos.x = -1
-      pos.y = pos.y + 1
-   end
-
-   if pos.x == 0 and pos.y == 0 then
-      pos.x = pos.x + 1
-   end
-
-   return pos, x, y
-end
-
 --- Iterates points surrounding a position.
 ---
 --- @tparam int x
 --- @tparam int y
 --- @treturn Iterator(int,int)
 function Pos.iter_surrounding(x, y)
-   return fun.wrap(iter_surrounding, {x=x,y=y},{x=-1,y=-1})
+   local start_x = x - 1
+   local start_y = y - 1
+   local end_x = x + 1
+   local end_y = y + 1
+
+   return fun.wrap(iter_border, {start_x=start_x,end_x=end_x,start_y=start_y,end_y=end_y}, {x=start_x,y=start_y})
 end
 
 return Pos
