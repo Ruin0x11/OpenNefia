@@ -7,8 +7,6 @@ local MAX_LEVEL = 2000
 
 function ICharaSkills:init()
    self.skills = self.skills or {}
-   self.magic = self.magic or {}
-   self.resists = self.resists or {}
 
    self.stat_adjusts = self.stat_adjusts or {}
 end
@@ -49,28 +47,34 @@ function ICharaSkills:on_refresh()
    end
 end
 
-local function generate_methods(iface, name, field, ty)
+local function generate_methods(iface, name, ty)
    local subfields = { "level", "potential", "experience" }
+
+   local get_id = function(id)
+      return ("%s:%s"):format(ty, id)
+   end
 
    iface["has_" .. name] = function(self, skill)
       data[ty]:ensure(skill)
+      skill = get_id(skill)
       -- This checks base, not temporary
-      return self[field][skill] and self[field][skill].level > 0
+      return self.skills[skill] and self.skills[skill].level > 0
    end
 
    iface["gain_" .. name] = function(self, skill, level)
       data[ty]:ensure(skill)
-      self[field][skill] = self[field][skill] or
+      skill = get_id(skill)
+      self.skills[skill] = self.skills[skill] or
          {
             level = 0,
             potential = 0,
             experience = 0,
          }
 
-      if self[field][skill].level == 0 then
+      if self.skills[skill].level == 0 then
          level = level or 1
          level = math.clamp(level, 1, MAX_LEVEL)
-         self[field][skill].level = level
+         self.skills[skill].level = level
       end
    end
 
@@ -80,7 +84,8 @@ local function generate_methods(iface, name, field, ty)
          self["gain_" .. name](self, skill)
       end
 
-      local s = self[field][skill]
+      skill = get_id(skill)
+      local s = self.skills[skill]
       s.level = math.clamp(math.floor(level or s.level), 0, MAX_LEVEL)
       s.potential = math.floor(potential or s.potential)
       s.experience = math.floor(experience or s.experience)
@@ -90,9 +95,10 @@ local function generate_methods(iface, name, field, ty)
       -- self:skill_level(skill)
       iface[name .. "_" .. subfield] = function(self, skill)
          data[ty]:ensure(skill)
-         local it = self:calc(field)[skill]
+         skill = get_id(skill)
+         local it = self:calc("skills")[skill]
          if not it or not it[subfield] then
-            it = self[field][skill]
+            it = self.skills[skill]
          end
          if not it then return 0 end
          return it[subfield] or 0
@@ -100,7 +106,8 @@ local function generate_methods(iface, name, field, ty)
       -- self:base_skill_level(skill)
       iface["base_" .. name .. "_" .. subfield] = function(self, skill)
          data[ty]:ensure(skill)
-         local it = self[field][skill]
+         skill = get_id(skill)
+         local it = self.skills[skill]
          if not it then return 0 end
          return it[subfield] or 0
       end
@@ -110,10 +117,11 @@ local function generate_methods(iface, name, field, ty)
          if not self["has_" .. name](self, skill) then
             return
          end
-         local result = self:mod(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
-         local level = self.temp[field][skill][subfield]
+         skill = get_id(skill)
+         local result = self:mod("skills", { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local level = self.temp.skills[skill][subfield]
          level = math.clamp(level, 0, MAX_LEVEL)
-         self.temp[field][skill][subfield] = level
+         self.temp.skills[skill][subfield] = level
          return result
       end
       -- self:mod_base_skill_level(skill, level, "add")
@@ -122,10 +130,11 @@ local function generate_methods(iface, name, field, ty)
          if not self["has_" .. name](self, skill) then
             self["gain_" .. name](self, skill)
          end
-         local result = self:mod_base(field, { [skill] = { [subfield] = math.floor(amount) } }, op)
-         local level = self[field][skill][subfield]
+         skill = get_id(skill)
+         local result = self:mod_base("skills", { [skill] = { [subfield] = math.floor(amount) } }, op)
+         local level = self.skills[skill][subfield]
          level = math.clamp(level, 0, MAX_LEVEL)
-         self[field][skill][subfield] = level
+         self.skills[skill][subfield] = level
          return result
       end
    end
@@ -133,9 +142,9 @@ end
 
 -- TODO: keep eveything in one "skills" field, to prevent needing to
 -- distinguish by type, and instead prefix each ID with the type name
-generate_methods(ICharaSkills, "skill", "skills", "base.skill")
-generate_methods(ICharaSkills, "magic", "magic", "base.skill")
-generate_methods(ICharaSkills, "resist", "resists", "base.element")
+generate_methods(ICharaSkills, "skill", "base.skill")
+generate_methods(ICharaSkills, "magic", "elona_sys.magic")
+generate_methods(ICharaSkills, "resist", "base.element")
 
 --- @function ICharaSkills:skill_level(skill_id)
 --- @tparam id:base.skill skill_id

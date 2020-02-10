@@ -23,7 +23,11 @@ function Repl.get()
 end
 
 function Repl.clear()
-   return Repl.get():clear()
+   field.repl:clear()
+end
+
+function Repl.print(text, color)
+   field.repl:print(text, color)
 end
 
 function Repl.copy_last_input()

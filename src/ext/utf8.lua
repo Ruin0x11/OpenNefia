@@ -5,8 +5,12 @@ if utf8 == nil then
    ok, utf8 = pcall(require, "utf8")
    if not ok or (love.getVersion() == "lovemock" and (utf8 == nil or utf8.codes == nil)) then
       -- require the luarocks version (starwing/utf8)
-      utf8 = require("lua-utf8")
-      package.loaded["utf8"] = utf8
+      local ok, result = pcall(require, "lua-utf8")
+      if not ok then
+         error("Please install luautf8 from luarocks.")
+      end
+      utf8 = result
+      package.loaded["utf8"] = result
    end
 end
 

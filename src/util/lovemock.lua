@@ -90,6 +90,23 @@ love.keyboard.setTextInput = function() end
 love.data.compress = function(_, _, obj) return obj end
 love.data.decompress = function(_, _, str) return str end
 love.timer.sleep = function() end
+love.system.getOS = function() return "lovemock" end
+love.filesystem.setRequirePath = function() end
+love.filesystem.load = loadfile
+love.filesystem.newFile = function(filepath)
+   return {
+      open = function(self, mode)
+         self._inner = io.open(filepath, mode .. "b")
+      end,
+      read = function(self, count)
+         count = count or "*a"
+         return self._inner:read(count)
+      end,
+      close = function(self)
+         self._inner:close()
+      end
+   }
+end
 
 love.getVersion = function() return "lovemock" end
 

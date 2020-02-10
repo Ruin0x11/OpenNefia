@@ -5,9 +5,30 @@
           "api.Event"
           "api.Chara"
           "api.Item"
-          "api.Map")
+          "api.Map"
+          "api.Gui"
+          "api.Env"
+          "mod.elona_sys.api.Magic"
+          "mod.tools.api.Tools")
+
+(local magic "elona.lightning_breath")
+
+(fn cast [me]
+  (let [enemy (Tools.enemy)]
+    (if enemy
+        (Magic.cast magic {:source me :target enemy})
+        (Magic.cast magic {:source me :x 10 :y 10}))
+    "turn_end"))
+
+(fn spawn [me]
+  (Chara.create "test_room.breather")
+  "player_turn_query")
+
+(Gui.bind_keys {:raw_m cast :raw_shift_s spawn})
 
 (fn scratch [player map]
+  (each [_ entry (: (. data "elona_sys.magic") :iter)]
+    (player:gain_magic entry._id 100))
   (Chara.create "test_room.breather" 10 5 {} map)
   (each [_ x y (map:iter_tiles)]
     (when (and (= (% x 2) 0) (= (% y 2) 0) (map:can_access x y))
@@ -33,6 +54,13 @@
 (definst test-room base.scenario
   (on-game-start test-room))
 
+;; 0. On instantiate, reify skills/magic/element from 'abilities' table
+;; 1. Take all skills.
+;; 2. Take all AI actions.
+;; 3. Take all magic (in elona_sys).
+;; 4. Exclude special actions.
+;; 5. Run random action.
+
 (definst breather base.chara
   (class "elona.predator")
   (race "elona.slime")
@@ -40,8 +68,14 @@
   (color [100 255 100])
   (level 40)
   (ai-act-sub-freq 100)
-  ;; (special-actions [{ 1 "base.magic" 2 "elona.breath" element "elona.fire"}])
-  )
+  (abilities
+   (base.skill
+    (elona.stat-life 100))
+   (base.magic
+    (elona.fire-breath 20))
+   (base.element
+    (elona.fire 200)))
+  (special-abilities ["elona.fire-breath"]))
 
 (defhandler "base.on_startup" "Set quickstart scenario"
   []

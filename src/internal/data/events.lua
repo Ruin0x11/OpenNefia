@@ -92,6 +92,7 @@ data:add_multi(
       { _id = "on_hotload_end" },
       { _id = "on_set_player" },
       { _id = "on_startup" },
+      { _id = "on_get_item" },
    }
 )
 

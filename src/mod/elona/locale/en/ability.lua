@@ -199,56 +199,8 @@ return {
             description = "Used when wielding two weapoms at the same time.",
             name = "Dual Wield"
          },
-         element_chaos = {
-            description = "Resistance to chaos.",
-            name = "chaos"
-         },
-         element_cold = {
-            description = "Resistance to cold.",
-            name = "cold"
-         },
-         element_cut = {
-            description = "Resistance to cut.",
-            name = "cut"
-         },
-         element_darkness = {
-            description = "Resistance to darkness.",
-            name = "darkness"
-         },
-         element_fire = {
-            description = "Resistance to fire.",
-            name = "fire"
-         },
-         element_lightning = {
-            description = "Resistance to lightning.",
-            name = "lightning"
-         },
-         element_magic = {
-            description = "Resistance to magic.",
-            name = "magic"
-         },
-         element_mind = {
-            description = "Resistance to mind.",
-            name = "mind"
-         },
-         element_nerve = {
-            description = "Resistance to nerve.",
-            name = "nerve"
-         },
-         element_nether = {
-            description = "Resistance to nether.",
-            name = "nether"
-         },
-         element_poison = {
-            description = "Resistance to poison.",
-            name = "poison"
-         },
          element_scar = {
             name = "Element Scar"
-         },
-         element_sound = {
-            description = "Resistance to sound.",
-            name = "sound"
          },
          elemental_shield = {
             name = "Elemental Shield"

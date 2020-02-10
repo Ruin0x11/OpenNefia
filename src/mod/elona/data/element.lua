@@ -6,7 +6,8 @@ local element = {
    {
       _id = "fire",
       elona_id = 50,
-      color = { 150, 0, 0 },
+      color = { 255, 155, 155 },
+      ui_color = { 150, 0, 0 },
       can_resist = true,
       sound = "base.atk_fire",
 
@@ -16,6 +17,9 @@ local element = {
          end
 
          return damage
+      end,
+
+      on_damage_tile = function(self, x, y)
       end,
 
       on_damage = function(chara, damage)
@@ -33,18 +37,23 @@ local element = {
    {
       _id = "cold",
       elona_id = 51,
-      color = { 0, 0, 150 },
+      color = { 255, 255, 255 },
+      ui_color = { 0, 0, 150 },
       sound = "base.atk_ice",
+
+      on_damage_tile = function(self, x, y)
+      end,
    },
    {
       _id = "lightning",
       elona_id = 52,
-      color = { 150, 150, 0 },
+      color = { 255, 255, 175 },
+      ui_color = { 150, 150, 0 },
       can_resist = true,
       sound = "base.atk_elec",
 
       on_modify_damage = function(chara, damage)
-         if chara:has_effect("elona.wet") > 0 then
+         if chara:has_effect("elona.wet") then
             damage = damage * 3 / 2
          end
 
@@ -57,14 +66,15 @@ local element = {
             chance = chance + 3
          end
          if Rand.one_in(chance) then
-            chara:apply_effect("elona.paralyzed", 1)
+            chara:apply_effect("elona.paralysis", 1)
          end
       end
    },
    {
       _id = "darkness",
       elona_id = 53,
-      color = { 100, 80, 80 },
+      color = { 175, 175, 255 },
+      ui_color = { 100, 80, 80 },
       can_resist = true,
       sound = "base.atk_dark",
 
@@ -76,7 +86,8 @@ local element = {
    {
       _id = "mind",
       elona_id = 54,
-      color = { 150, 100, 50 },
+      color = { 255, 195, 185 },
+      ui_color = { 150, 100, 50 },
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_mind",
@@ -89,7 +100,8 @@ local element = {
    {
       _id = "nether",
       elona_id = 56,
-      color = { 150, 50, 0 },
+      color = { 155, 154, 153 },
+      ui_color = { 150, 50, 0 },
       can_resist = true,
       sound = "base.atk_hell",
 
@@ -116,7 +128,8 @@ local element = {
    {
       _id = "poison",
       elona_id = 55,
-      color = { 0, 150, 0 },
+      color = { 175, 255, 175 },
+      ui_color = { 0, 150, 0 },
       can_resist = true,
       sound = "base.atk_poison",
 
@@ -128,7 +141,8 @@ local element = {
    {
       _id = "sound",
       elona_id = 57,
-      color = { 50, 100, 150 },
+      color = { 235, 215, 155 },
+      ui_color = { 50, 100, 150 },
       can_resist = true,
       sound = "base.atk_sound",
 
@@ -140,7 +154,8 @@ local element = {
    {
       _id = "chaos",
       elona_id = 59,
-      color = { 150, 0, 150 },
+      color = { 185, 155, 215 },
+      ui_color = { 150, 0, 150 },
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_chaos",
@@ -171,7 +186,8 @@ local element = {
    {
       _id = "nerve",
       elona_id = 58,
-      color = { 100, 150, 50 },
+      color = { 155, 205, 205 },
+      ui_color = { 100, 150, 50 },
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_nerve",
@@ -184,7 +200,7 @@ local element = {
    {
       _id = "magic",
       elona_id = 60,
-      color = { 150, 100, 100 },
+      ui_color = { 150, 100, 100 },
       can_resist = true,
 
       calc_initial_resist_level = function(chara, level)
@@ -213,6 +229,7 @@ local element = {
    },
    {
       _id = "acid",
+      color = { 175, 255, 175 },
       elona_id = 63,
       sound = "base.atk_poison",
    },

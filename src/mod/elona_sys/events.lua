@@ -118,7 +118,8 @@ local function show_text_death(target, source, tense)
    end
 end
 
-local function show_damage_text(chara, weapon, target, damage_level, was_killed, tense, element, extra_attacks)
+local function show_damage_text(chara, weapon, target, damage_level, was_killed,
+                                tense, no_attack_text, element, extra_attacks)
    if not Map.is_in_fov(target.x, target.y) then
       return
    end
@@ -137,16 +138,18 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
    local source = chara
 
    if tense == "ally" and chara then
-      if weapon then
-         -- TODO
-         if skill == "elona.throwing" then
-            Gui.mes("damage.weapon.attacks_throwing", chara, "damage.weapon." .. skill .. ".verb_and", target, weapon:build_name())
+      if not no_attack_text then
+         if weapon then
+            -- TODO
+            if skill == "elona.throwing" then
+               Gui.mes("damage.weapon.attacks_throwing", chara, "damage.weapon." .. skill .. ".verb_and", target, weapon:build_name())
+            else
+               Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon." .. skill .. ".verb_and", target)
+            end
          else
-            Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon." .. skill .. ".verb_and", target)
+            local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".enemy")
+            Gui.mes("damage.weapon.attacks_unarmed_and", chara, melee, target)
          end
-      else
-         local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".enemy")
-         Gui.mes("damage.weapon.attacks_unarmed_and", chara, melee, target)
       end
 
       Gui.mes_continue_sentence()
@@ -175,15 +178,17 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
          end
       end
    else
-      if tense == "enemy" and chara then
-         if weapon then
-            local weapon_name = I18N.get_optional("damage.weapon." .. skill .. ".name")
-            if weapon_name then
-               Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon." .. skill .. ".verb", target, weapon_name)
+      if not no_attack_text then
+         if tense == "enemy" and chara then
+            if weapon then
+               local weapon_name = I18N.get_optional("damage.weapon." .. skill .. ".name")
+               if weapon_name then
+                  Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon." .. skill .. ".verb", target, weapon_name)
+               end
+            else
+               local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".ally")
+               Gui.mes("damage.weapon.attacks_unarmed", chara, melee, target)
             end
-         else
-            local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".ally")
-            Gui.mes("damage.weapon.attacks_unarmed", chara, melee, target)
          end
       end
 
@@ -221,7 +226,8 @@ local function get_damage_level(base_damage, damage, chara)
 end
 Event.register("base.on_damage_chara", "Damage text", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
-                  show_damage_text(params.attacker, params.weapon, chara, damage_level, false, params.message_tense, params.element, params.extra_attacks)
+                  show_damage_text(params.attacker, params.weapon, chara, damage_level, false,
+                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks)
 
                   -- If an event causes character death, switch to
                   -- passive tense or messages like "kills it. kills
@@ -230,7 +236,8 @@ Event.register("base.on_damage_chara", "Damage text", function(chara, params)
 end)
 Event.register("base.on_kill_chara", "Damage text", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
-                  show_damage_text(params.attacker, params.weapon, chara, damage_level, true, params.message_tense, params.element, params.extra_attacks)
+                  show_damage_text(params.attacker, params.weapon, chara, damage_level, true,
+                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks)
 end)
 
 local function register_quest_town(map, _, _)

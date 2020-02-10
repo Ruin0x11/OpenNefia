@@ -5,6 +5,20 @@ _IS_LOVEJS = jit == nil
 
 package.path = package.path .. ";./thirdparty/?.lua;./?/init.lua;./?.fnl;./?/init.fnl"
 
+local dir_sep = package.config:sub(1,1)
+local is_windows = dir_sep == "\\"
+
+if love == nil then
+   if is_windows then
+      package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
+      package.path = package.path .. ";..\\lib\\luasocket\\?.lua"
+   end
+
+   _CONSOLE = true
+
+   love = require("util.lovemock")
+end
+
 -- BUG: LÖVE for Android will not load relative paths for some reason,
 -- probably due to a PhysFS bug. Due to this we have to expand the
 -- relative paths in package.path ourselves and use functions like
@@ -22,20 +36,6 @@ love.filesystem.setRequirePath(package.path)
 
 local fennel = require("thirdparty.fennel")
 table.insert(package.loaders or package.searchers, fennel.searcher)
-
-local dir_sep = package.config:sub(1,1)
-local is_windows = dir_sep == "\\"
-
-if love == nil then
-   if is_windows then
-      package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
-      package.path = package.path .. ";..\\lib\\luasocket\\?.lua"
-   end
-
-   _CONSOLE = true
-
-   love = require("util.lovemock")
-end
 
 -- globals that will be used very often.
 

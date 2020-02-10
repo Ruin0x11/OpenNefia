@@ -47,11 +47,10 @@ function chip_layer:reset()
 end
 local it = 0
 
-function chip_layer:draw_drop_shadow(i, x, y)
+function chip_layer:draw_drop_shadow(i, x, y, y_offset)
    local batch_ind = self.shadow_batch_inds[i.uid]
    local image = i.image
    local x_offset = i.x_offset
-   local y_offset = i.y_offset
    local rotation = i.shadow_angle or 20
 
    local draw = true
@@ -65,12 +64,12 @@ function chip_layer:draw_drop_shadow(i, x, y)
    -- TODO no idea what the rotation amounts should be
    if is_tall then
       x_offset = i.x_offset + rotation / 2
-      y_offset = i.y_offset - 4
+      y_offset = y_offset - 4
       rotation = rotation / 2
    else
       if i.y_offset < self.chip_batch.tile_height / 2 then
          x_offset = i.x_offset + rotation / 80 + 2
-         y_offset = i.y_offset - 2
+         y_offset = y_offset - 2
          rotation = rotation / 16
       else
          draw = false
@@ -173,7 +172,7 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
       --
       -- Item drop shadow.
       --
-      self:draw_drop_shadow(i, x, y)
+      self:draw_drop_shadow(i, x, y, y_offset)
    elseif shadow_type == "normal" then
       self.shadow_batch:add_tile {
          tile = "shadow",

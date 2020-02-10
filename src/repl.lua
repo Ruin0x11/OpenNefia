@@ -15,6 +15,7 @@ local data = require("internal.data")
 local startup = require("game.startup")
 local fs = require("util.fs")
 local save = require("internal.global.save")
+local Event = require("api.Event")
 local ReplLayer = require("api.gui.menu.ReplLayer")
 local Gui = require("api.Gui")
 local Log = require("api.Log")
@@ -177,6 +178,8 @@ function elona_repl:displayresults(results)
 end
 
 sw:p("REPL startup time")
+
+Event.trigger("base.on_startup")
 
 if arg[1] == "test" then
    os.exit(0)

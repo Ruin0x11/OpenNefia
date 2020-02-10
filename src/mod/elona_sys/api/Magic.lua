@@ -47,13 +47,15 @@ function Magic.cast(id, params)
    }
    params.power = params.power or 0
 
-   if class.is_an(IMapObject, params.source) then
-      params.x = params.x or params.source.x
-      params.y = params.y or params.source.y
-   end
+   -- If no position is specified, first try to use the target's if
+   -- one is provided, then the source.
    if class.is_an(IMapObject, params.target) then
       params.x = params.x or params.target.x
       params.y = params.y or params.target.y
+   end
+   if class.is_an(IMapObject, params.source) then
+      params.x = params.x or params.source.x
+      params.y = params.y or params.source.y
    end
 
    local curse_state = "none"

@@ -355,6 +355,7 @@ function IChara:damage_hp(amount, source, params)
 
       -- only required for message printing
       message_tense = params.message_tense or "passive",
+      no_attack_text = params.no_attack_text,
       extra_attacks = params.extra_attacks or 0,
       weapon = params.weapon or nil,
    }
@@ -368,6 +369,7 @@ function IChara:damage_hp(amount, source, params)
    event_params.damage = damage
 
    damage = victim:emit("base.hook_calc_damage", event_params, damage)
+   damage = math.floor(damage)
    event_params.damage = damage
 
    local base_damage = damage

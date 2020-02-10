@@ -449,4 +449,44 @@ function Anim.breaking(tx, ty)
    return Anim.make_particle_animation(scx, scy, "breaking_effect", 5, 4, create, draw)
 end
 
+function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, map)
+   local color = {255, 255, 255}
+   local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
+   if element then
+      color = data["base.element"]:ensure(element).color
+   end
+
+   local t = UiTheme.load()
+
+   return function(draw_x, draw_y)
+      Gui.play_sound("base.breath1", chara_x, chara_y)
+
+      local frame = 1
+      local tw, th = Draw.get_coords():get_size()
+      tw = math.floor(tw / 2)
+      th = math.floor(th / 2)
+      while frame < 6 do
+         for _, pos in ipairs(positions) do
+            local tx = pos[1]
+            local ty = pos[2]
+            if map:has_los(chara_x, chara_y, tx, ty) then
+               local sx, sy = Gui.tile_to_screen(tx, ty)
+
+               t.anim_breath:draw_region(frame, draw_x + sx + tw, draw_y + sy + th, nil, nil, color, true, rotation)
+            end
+         end
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         frame = frame + delta
+      end
+
+      if element then
+         local sound = data["base.element"]:ensure(element).sound
+         if sound then
+            Gui.play_sound(sound, chara_x, chara_y)
+         end
+      end
+   end
+end
+
 return Anim

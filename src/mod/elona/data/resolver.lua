@@ -24,7 +24,7 @@ local init_skill_list = function(self, params)
    local skills = {}
 
    for skill_id, level in pairs(self.skills) do
-      skills[skill_id] = Resolver.run("elona.skill", { skill = skill_id, level = level }, { chara = params.chara })
+      skills["base.skill:" .. skill_id] = Resolver.run("elona.skill", { skill = skill_id, level = level }, { chara = params.chara })
    end
 
    return skills

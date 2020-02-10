@@ -69,8 +69,8 @@ function InstancedMap:init(width, height, uids, tile)
    self._height = height
 
    self._multi_pool = multi_pool:new(width, height, uids)
-   self._last_sight_id = 0
-   self._in_sight = table.of(self._last_sight_id, width * height)
+   self._last_sight_id = 1
+   self._in_sight = table.of(0, width * height)
 
    -- Map of shadows to be drawn. This is coordinate-local to the
    -- visible screen area only, with (1, 1) being the tile at the

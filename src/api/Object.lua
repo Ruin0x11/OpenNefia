@@ -89,6 +89,12 @@ function Object.generate(proto, params)
    local obj = object.deserialize(proto)
    assert(obj.proto)
 
+   if params.copy then
+      for k, v in pairs(params.copy) do
+         obj[k] = v
+      end
+   end
+
    if not params.no_pre_build then
       obj:pre_build()
 

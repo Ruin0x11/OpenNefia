@@ -1274,19 +1274,27 @@ local item =
 
          prevent_sell_in_own_shop = true,
 
-         on_get = function(self, getter)
-            getter.gold = getter.gold + self.amount
-            self:remove_ownership()
-         end,
+         events = {
+            {
+               id = "base.on_get_item",
+               name = "Add gold to inventory",
+               priority = 50000,
 
-         _copy = {
-            amount = 0 -- TODO
+               callback = function(self, params)
+                  Gui.play_sound("base.getgold1", params.chara.x, params.chara.y)
+                  Gui.mes("action.pick_up.execute", params.chara, self:build_name(params.amount))
+                  params.chara.gold = params.chara.gold + self.amount
+                  self:remove_ownership()
+                  return true
+               end
+            }
          },
 
          on_generate = function(self, is_shop, owner)
             local Rand = require("api.Rand")
 
             self.amount = hook_calc_initial_gold({item=self,owner=owner})
+            print("Amount,", self.amount)
 
             if owner then
                owner.gold = owner.gold + self.amount

@@ -1,9 +1,12 @@
 local Anim = require("mod.elona_sys.api.Anim")
+local Chara = require("api.Chara")
 local Effect = require("mod.elona.api.Effect")
-local Map = require("api.Map")
+local ElonaPos = require("mod.elona.api.ElonaPos")
 local Gui = require("api.Gui")
+local I18N = require("api.I18N")
 local Input = require("api.Input")
 local Item = require("api.Item")
+local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 
@@ -606,44 +609,114 @@ data:add {
    end
 }
 
-data:add {
-   _id = "breath",
-   _type = "elona_sys.magic",
-   elona_id = 428,
-
-   params = {
-      "source"
-   },
-
-   skill = "elona.stat_perception",
-   cost = 20,
-   range = 10000,
-   difficulty = 550,
-
-   cast = function(self, params)
-      local source = params.source
-      if not source:is_player() then
-         Gui.mes("common.nothing_happens")
-         return true, { obvious = false }
-      end
-
-      local s = save.elona
-      if s.turns_until_cast_return ~= 0 then
-         Gui.mes("magic.return.cancel")
-         s.turns_until_cast_return = 0
-      else
-         local map_uid = Effect.query_return_location(source)
-
-         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
-            Gui.mes("jail") -- TODO
-         end
-
-         if map_uid then
-            s.return_destination_map_uid = map_uid
-            s.turns_until_cast_return = 15 + Rand.rnd(15)
-         end
-      end
-
-      return true
+local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
+   local id
+   if element then
+      id = element .. "_breath"
+      element = "elona." .. element
+   else
+      id = "breath"
    end
-}
+   local full_id = "elona." .. id
+   data:add {
+      _id = id,
+      _type = "elona_sys.magic",
+      elona_id = elona_id,
+
+      params = {
+         "source"
+      },
+
+      skill = "elona.stat_perception",
+      cost = 20,
+      range = 10000,
+      difficulty = 550,
+
+      dice = function(self, params)
+         local level = params.source:magic_level(full_id)
+         return {
+            x = 1 + level / dice_x,
+            y = dice_y,
+            bonus = level / bonus
+         }
+      end,
+
+      cast = function(self, params)
+         local map = params.source:current_map()
+         local sx = params.source.x
+         local sy = params.source.y
+         if not map:has_los(sx, sy, params.x, params.y) then
+            return false
+         end
+         if map:is_in_fov(sx, sy) then
+            local breath_name
+            if element then
+               breath_name = I18N.get("magic.breath.named", "element." .. element .. ".name")
+            else
+               breath_name = I18N.get("magic.breath.named", "magic.breath.no_element")
+            end
+            Gui.mes_visible("magic.breath.bellows", sx, sy, params.source, breath_name)
+
+            local positions = ElonaPos.make_breath(sx, sy, params.x, params.y, range, map)
+
+            local cb = Anim.breath(positions, element, sx, sy, params.x, params.y, map)
+            Gui.start_draw_callback(cb)
+
+            local element_data
+            if element then
+               element_data = data["base.element"]:ensure(element)
+            end
+
+            for _, pos in ipairs(positions) do
+               local tx = pos[1]
+               local ty = pos[2]
+
+               if map:has_los(sx, sy, tx, ty) then
+                  if not (sx == tx and sx == ty) then
+                     -- TODO riding
+                     if element_data and element_data.on_damage_tile then
+                        element_data:on_damage_tile(tx, ty)
+                     end
+                     local chara = Chara.at(tx, ty, map)
+                     if chara then
+                        local dice = self:dice(params)
+                        local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+
+                        local tense = "enemy"
+                        if not chara:is_ally() then
+                           tense = "ally"
+                        end
+                        if tense == "ally" then
+                           Gui.mes_visible("magic.breath.ally", tx, ty, chara)
+                        else
+                           Gui.mes_visible("magic.breath.other", tx, ty, chara)
+                        end
+                        chara:damage_hp(damage,
+                                        params.source,
+                                        {
+                                           element = element,
+                                           element_power = params.element_power,
+                                           message_tense = tense,
+                                           no_attack_text = true
+                                        })
+                     end
+                  end
+               end
+            end
+         end
+         return true
+      end
+   }
+end
+
+make_breath("fire",      602, 15, 7, 8,  12)
+make_breath("cold",      603, 15, 7, 8,  10)
+make_breath("lightning", 604, 15, 7, 8,  10)
+make_breath("chaos",     605, 15, 7, 8,  10)
+make_breath("poison",    606, 15, 7, 8,  10)
+make_breath("nether",    607, 15, 7, 8,  10)
+make_breath("sound",     608, 15, 7, 8,  10)
+make_breath("darkness",  609, 15, 7, 8,  10)
+make_breath("mind",      610, 15, 7, 8,  10)
+make_breath("nerve",     611, 15, 7, 8,  10)
+make_breath(nil,         612, 20, 6, 15, 10)

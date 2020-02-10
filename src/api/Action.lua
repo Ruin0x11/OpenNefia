@@ -72,6 +72,27 @@ function Action.move(chara, x, y)
    return true
 end
 
+Event.register("base.on_get_item", "Pick up item",
+               function(item, params, result)
+                  if not Item.is_alive(item) then
+                     return result
+                  end
+
+                  params.amount = params.amount or item.amount
+                  local picked_up = params.chara:take_item(item, params.amount)
+                  if picked_up then
+                     Gui.mes("action.pick_up.execute", params.chara, item:build_name(params.amount))
+                     Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), params.chara.x, params.chara.y)
+                     return picked_up
+                  end
+
+                  if params.chara:is_player() then
+                     Gui.mes("action.get.cannot_carry")
+                  end
+
+                  return false
+               end)
+
 --- @tparam IChara chara
 --- @tparam IItem item
 --- @tparam[opt] int amount
@@ -86,16 +107,7 @@ function Action.get(chara, item, amount)
       item = items[#items]
    end
 
-   local picked_up = chara:take_item(item, amount)
-   if picked_up then
-      return picked_up
-   end
-
-   if chara:is_player() then
-      Gui.mes("action.get.cannot_carry")
-   end
-
-   return false
+   return item:emit("base.on_get_item", {chara=chara,amount=amount}, false)
 end
 
 --- @tparam IChara chara

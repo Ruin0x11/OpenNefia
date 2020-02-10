@@ -448,6 +448,8 @@ local function base_init(self, player)
 
    player:refresh()
 
+   Map.set_map(home)
+
    return {
       map = home,
       start_x = 15,

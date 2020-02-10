@@ -207,56 +207,8 @@ return {
             description = "複数の武器を扱う技術",
             name = "二刀流"
          },
-         element_chaos = {
-            description = "混沌の効果への耐性",
-            name = "混沌"
-         },
-         element_cold = {
-            description = "冷気や水への耐性",
-            name = "冷気"
-         },
-         element_cut = {
-            description = "切り傷への耐性",
-            name = "出血"
-         },
-         element_darkness = {
-            description = "暗黒や盲目への耐性",
-            name = "暗黒"
-         },
-         element_fire = {
-            description = "熱や炎への耐性",
-            name = "火炎"
-         },
-         element_lightning = {
-            description = "雷や電気への耐性",
-            name = "電撃"
-         },
-         element_magic = {
-            description = "魔法攻撃への耐性",
-            name = "魔法"
-         },
-         element_mind = {
-            description = "精神攻撃への抵抗力",
-            name = "幻惑"
-         },
-         element_nerve = {
-            description = "睡眠や麻痺への耐性",
-            name = "神経"
-         },
-         element_nether = {
-            description = "生命吸収への抵抗力",
-            name = "地獄"
-         },
-         element_poison = {
-            description = "毒への耐性",
-            name = "毒"
-         },
          element_scar = {
             name = "元素の傷跡"
-         },
-         element_sound = {
-            description = "音波や轟音への耐性",
-            name = "音"
          },
          elemental_shield = {
             name = "元素保護"

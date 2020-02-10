@@ -316,7 +316,7 @@ Event.register("base.hook_calc_damage",
 local function calc_damage_resistance(chara, params, result)
    local element = params.element
    if element and element.can_resist then
-      local resistance = chara:resist_level(element._id)
+      local resistance = math.floor(chara:resist_level(element._id) / 50)
       if resistance < 3 then
          result = result * 150 / math.clamp(resistance * 50 + 50, 40, 150)
       elseif resistance < 10 then

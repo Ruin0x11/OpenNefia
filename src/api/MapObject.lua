@@ -12,50 +12,27 @@ function MapObject.generate_from(_type, id, params, uid_tracker)
 
    local uid = uid_tracker:get_next_and_increment()
 
-   local obj = Object.generate_from(_type, id, {no_pre_build=true})
+   -- params.no_pre_build = true
+   local obj = Object.generate_from(_type, id, params)
 
    rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, data)
 
-   if not params.no_pre_build then
-      obj:pre_build()
-
-      if not params.no_build then
-         obj:normal_build()
-         obj:finalize()
-      end
-   end
-
    return obj
 end
 
 function MapObject.generate(proto, params, uid_tracker)
-   params = params or {}
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
-   local obj = Object.generate(proto, {no_pre_build=true})
+   -- params.no_pre_build = true
+   local obj = Object.generate(proto, params)
 
    rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
-
-   if params.copy then
-      for k, v in pairs(params.copy) do
-         obj[k] = v
-      end
-   end
-
-   if not params.no_pre_build then
-      obj:pre_build()
-
-      if not params.no_build then
-         obj:normal_build()
-         obj:finalize()
-      end
-   end
 
    return obj
 end
