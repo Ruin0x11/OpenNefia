@@ -218,7 +218,6 @@
           (end (elona-next--end-of-help-buffer))
           (inhibit-read-only t))
       (elona-next--fontify-region 'markdown-mode start end)
-      (markdown-toggle-markup-hiding t)
       (font-lock-add-keywords nil elona-next--help-buffer-font-lock-keywords)
       (font-lock-fontify-region (point-min) (point-max))
       (beginning-of-buffer)
@@ -252,8 +251,8 @@
 (defun elona-next--fontify-signature (str)
   (with-temp-buffer
     (insert str)
-    ;(font-lock-add-keywords nil elona-next--signature-font-lock-keywords)
-    ;(font-lock-fontify-region (point-min) (point-max))
+    (font-lock-add-keywords nil elona-next--signature-font-lock-keywords)
+    (font-lock-fontify-region (point-min) (point-max))
     (buffer-string)))
 
 (defun elona-next--command-help (content response)
