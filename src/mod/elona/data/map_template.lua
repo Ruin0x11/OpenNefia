@@ -39,8 +39,6 @@ local north_tyris = {
       player_start_pos = "base.world",
       tile_type = 1,
       turn_cost = 50000,
-      danger_level = 1,
-      deepest_dungeon_level = 1,
       is_outdoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 0,
@@ -84,60 +82,21 @@ local north_tyris = {
 }
 data:add(north_tyris)
 
-local function chara_filter_town(callbacks)
+local function chara_filter_town(callback)
    return function(self)
       local opts = Calc.filter(10, "bad", {fltselect = 5}, self)
-
-      if callbacks == nil then
+      if callback == nil then
          return opts
       end
 
-      local result = {}
-      local level = 1 -- map.dungeon_level
-      local callback = callbacks[level]
+      local result = true
 
-      if callback then
-         local result_ = callback(self)
-         if result_ ~= nil and type(result_) == "table" then
-            result = result_
-         end
+      local result_ = callback(self)
+      if result_ ~= nil and type(result_) == "table" then
+         result = result_
       end
 
       return table.merge(opts, result)
-   end
-end
-
-local function create_charas(map, charas)
-   for _, data in ipairs(charas) do
-      local x, y, id, opts = table.unpack(data)
-
-      local count = (opts and opts["_count"]) or 1
-
-      for i=1,count do
-         local chara = Chara.create(id, x, y, {}, map)
-         if not chara then
-            return
-         end
-         --assert(chara, ("%s:%s:%s"):format(tostring(x), tostring(y), id))
-
-         if opts then
-            for k, v in pairs(opts) do
-               if k == "_name" then
-                  chara.name = I18N.get(v, chara.name)
-               elseif k == "_role" then
-                  if type(v) == "table" then
-                     chara.roles = { [v[1]] = v[2] }
-                  elseif type(v) == "string" then
-                     chara.roles = { [v] = {} }
-                  else
-                     error()
-                  end
-               elseif k ~= "_count" then
-                  chara[k] = v
-               end
-            end
-         end
-      end
    end
 end
 
@@ -295,56 +254,118 @@ local vernis = {
       default_ai_calm = 1,
       max_crowd_density = 40,
 
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(2) then
                return { id = "elona.miner" }
             end
 
             return nil
          end
-      }
+      )
    },
-
-   on_generate = function(map)
-      local charas = {
-         { 39, 3, "elona.whom_dwell_in_the_vanity" },
-         { 42, 23, "elona.loyter", { _role = "elona.unique_chara" } },
-         { 24, 5, "elona.miches", { _role = "elona.unique_chara" } },
-         { 40, 24, "elona.shena", { _role = "elona.unique_chara" } },
-         { 40, 25, "elona.dungeon_cleaner", { _role = "elona.unique_chara" } },
-         { 30, 5, "elona.rilian", { _role = "elona.unique_chara" } },
-         { 42, 24, "elona.bard", { _role = "elona.unique_chara" } },
-         { 47, 9, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.fisher" } }, shop_rank = 5, _name = "chara.job.fisher" } },
-         { 14, 12, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.blacksmith" } }, shop_rank = 12, _name = "chara.job.blacksmith" } },
-         { 39, 27, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.trader" } }, shop_rank = 12, _name = "chara.job.trader" } },
-         { 10, 15, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.general_vendor" } }, shop_rank = 10, _name = "chara.job.general_vendor" } },
-         { 7, 26, "elona.wizard", { _role = { "elona.shopkeeper", { inventory_id = "elona.magic_vendor" } }, shop_rank = 11, _name = "chara.job.magic_vendor" } },
-         { 14, 25, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.innkeeper" } }, shop_rank = 8, _name = "chara.job.innkeeper" } },
-         { 22, 26, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.bakery" } }, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara_baker" } },
-         { 28, 16, "elona.wizard", { _role = "elona.wizard" } },
-         { 38, 27, "elona.bartender", { _role = "elona.bartender" } },
-         { 6, 25, "elona.healer", { _role = "elona.healer" } },
-         { 10, 7, "elona.elder", { _role = "elona.elder", _name = "chara.job.of_vernis" } },
-         { 27, 16, "elona.trainer", { _role = "elona.trainer", _name = "chara.job.trainer" } },
-         { 25, 16, "elona.informer", { _role = "elona.informer" } },
-         { nil, nil, "elona.citizen", { _count = 4, _role = "elona.non_quest_target" } },
-         { nil, nil, "elona.citizen2", { _count = 4, _role = "elona.non_quest_target" } },
-         { nil, nil, "elona.guard", { _count = 4, _role = "elona.guard" }},
-      }
-
-      create_charas(map, charas)
-
-      for i=0,25 do
-         generate_chara(map)
-      end
-
-      local stair = Feat.at(28, 9, map):nth(1)
-      assert(stair)
-      stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_mine" }}
-      stair.area_params = { outer_map_id = map._id }
-   end
 }
+function vernis.on_generate(map)
+   local chara = Chara.create("elona.whom_dwell_in_the_vanity", 39, 3)
+
+   chara = Chara.create("elona.loyter", 42, 23)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.miches", 24, 5)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.shena", 40, 24)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.dungeon_cleaner", 40, 25)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.rilian", 30, 5)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.bard", 42, 24)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.shopkeeper", 47, 9)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.fisher" }
+   chara.shop_rank = 5
+   chara.name = I18N.get("chara.job.fisher", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 14, 12)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.blacksmith" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 39, 27)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 10, 15)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.general_vendor" }
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.wizard", 7, 26)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+   chara.shop_rank = 11
+   chara.name = I18N.get("chara.job.magic_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 14, 25)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.innkeeper", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 22, 26)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+   chara.shop_rank = 9
+   chara.image = "elona.chara_baker"
+   chara.name = I18N.get("chara.job.baker", chara.name)
+
+   chara = Chara.create("elona.wizard", 28, 16)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.bartender", 38, 27)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.healer", 6, 25)
+   chara.roles["elona.healer"] = true
+
+   chara = Chara.create("elona.elder", 10, 7)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_vernis", chara.name)
+
+   chara = Chara.create("elona.trainer", 27, 16)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.informer", 25, 16)
+   chara.roles["elona.informer"] = true
+
+   for _=1,4 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,4 do
+      chara = Chara.create("elona.guard")
+      chara.roles["elona.guard"] = true
+   end
+
+   for _=1,25 do
+      generate_chara(map)
+   end
+
+   -- TODO only if sidequest
+   local stair = Feat.at(28, 9, map):nth(1)
+   assert(stair)
+   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_mine" }}
+   stair.area_params = { outer_map_id = map._id }
+end
 data:add(vernis)
 
 local the_mine = {
@@ -418,17 +439,106 @@ local yowyn = {
       default_ai_calm = 1,
       quest_town_id = 2,
       quest_custom_map = "yowyn",
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(2) then
                return { id = "elona.farmer" }
             end
 
             return nil
          end
-      }
+      )
    }
 }
+function yowyn.on_regenerate(map)
+   -- TODO only if sidequest
+   local stair = Feat.at(23, 22, map):nth(1)
+   assert(stair)
+   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.cat_mansion" }}
+   stair.area_params = { outer_map_id = map._id }
+
+   local chara = Chara.create("elona.ainc", 3, 17)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.tam", 26, 11)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.gilbert_the_colonel", 14, 20)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.shopkeeper", 11, 5)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 25, 8)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 7, 8)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.goods_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 14, 14)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 35, 18)
+   chara.roles["elona.horse_master"] = true
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.horse_master", chara.name)
+
+   chara = Chara.create("elona.lame_horse", 33, 16)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.lame_horse", 37, 19)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.yowyn_horse", 34, 19)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.yowyn_horse", 38, 16)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.elder", 3, 4)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_yowyn", chara.name)
+
+   chara = Chara.create("elona.trainer", 20, 14)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.wizard", 24, 16)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.informer", 26, 16)
+   chara.roles["elona.informer"] = true
+
+   chara = Chara.create("elona.gwen", 14, 12)
+   chara.roles["elona.special"] = true
+
+
+   for _=1,2 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,3 do
+      chara = Chara.create("elona.guard")
+      chara.roles["elona.guard"] = true
+   end
+
+   for _=1,15 do
+      generate_chara(map)
+   end
+end
 data:add(yowyn)
 
 local palmia = {
@@ -463,67 +573,162 @@ local palmia = {
       max_crowd_density = 45,
       quest_town_id = 3,
       quest_custom_map = "palmia",
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(3) then
                return { id = "elona.noble" }
             end
 
             return nil
          end
-      },
+      ),
    },
-
-   on_generate = function(map)
-      local charas = {
-         { 42, 27, "elona.bartender", { _role = "elona.bartender" } },
-         { 34, 3, "elona.healer", { _role = "elona.healer" } },
-         { 22, 31, "elona.arena_master", { _role = "elona.arena_master" } },
-         { 5, 15, "elona.erystia", { _role = "elona.unique_chara" } },
-         { 41, 11, "elona.mia", { _role = "elona.unique_chara" } },
-         { 5, 6, "elona.conery", { _role = "elona.unique_chara" } },
-         { 24, 6, "elona.cleaner", { _role = "elona.unique_chara" } },
-         { 15, 22, "elona.cleaner", { _role = "elona.unique_chara" } },
-         { 15, 22, "elona.bard", { _role = "elona.unique_chara" } },
-         { 48, 18, "elona.shopkeeper", { role = 1006, shop_rank = 10, _name = "chara.job.general_vendor" } },
-         { 30, 17, "elona.shopkeeper", { role = 1005, shop_rank = 8, _name = "chara.job.innkeeper" } },
-         { 48, 3, "elona.shopkeeper", { role = 1008, shop_rank = 8, _name = "chara.job.goods_vendor" } },
-         { 42, 17, "elona.shopkeeper", { role = 1001, shop_rank = 12 } },
-         { 11, 14, "elona.shopkeeper", { role = 1003, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara_baker" } },
-         { 41, 3, "elona.wizard", { role = 1004, shop_rank = 11, _name = "chara.job.magic_vendor" } },
-         { 41, 28, "elona.shopkeeper", { role = 1009, shop_rank = 12, _name = "chara.job.trader" } },
-         { 7, 2, "elona.stersha", { _role = "elona.royal_family", ai_calm = 3 } },
-         { 6, 2, "elona.xabi", { _role = "elona.royal_family", ai_calm = 3 } },
-         { 49, 11, "elona.elder", { _role = "elona.elder", _name = "chara.job.of_palmia" } },
-         { 30, 27, "elona.trainer", { _role = "elona.trainer", _name = "chara.job.trainer" } },
-         { 32, 27, "elona.wizard", { _role = "elona.wizard" } },
-         { 29, 28, "elona.informer", { _role = "elona.informer" } },
-         { 16, 5, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 16, 9, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 5, 3, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 8, 3, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 35, 14, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 38, 14, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 29, 2, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 19, 18, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { 22, 18, "elona.guard", { _role = "elona.guard", ai_calm = 3 } },
-         { -3, 0, "elona.citizen", { _count = 5, _role = "elona.non_quest_target"} },
-         { -3, 0, "elona.citizen2", { _count = 5, _role = "elona.non_quest_target"} },
-         { -3, 0, "elona.guard", { _count = 4, _role = "elona.guard" }},
-      }
-
-      create_charas(map, charas)
-
-      for _=1,25 do
-         generate_chara(map)
-      end
-
-      if Sidequest.progress("elona.mias_dream") == 1000 then
-         local silver_cat = Chara.create("elona.silver_cat", 42, 11, {}, map)
-         silver_cat.roles = {["elona.unique_chara"] = {}}
-      end
-   end
 }
+function palmia.on_generate(map)
+   local chara = Chara.create("elona.bartender", 42, 27)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.healer", 34, 3)
+   chara.roles["elona.healer"] = true
+
+   chara = Chara.create("elona.arena_master", 22, 31)
+   chara.roles["elona.arena_master"] = true
+
+   chara = Chara.create("elona.erystia", 5, 15)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.mia", 41, 11)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.conery", 5, 6)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.cleaner", 24, 6)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.cleaner", 15, 22)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.bard", 15, 22)
+   chara.roles["elona.special"] = true
+
+   if Sidequest.progress("elona.mias_dream") == 1000 then
+      local silver_cat = Chara.create("elona.silver_cat", 42, 11, {}, map)
+      silver_cat.roles["elona.special"] = true
+   end
+
+   chara = Chara.create("elona.shopkeeper", 48, 18)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 30, 17)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 48, 3)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.goods_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 42, 17)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 11, 14)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+   chara.shop_rank = 9
+   chara.image = "elona.chara_baker"
+   chara.name = I18N.get("chara.job.baker", chara.name)
+
+   chara = Chara.create("elona.wizard", 41, 3)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+   chara.shop_rank = 11
+   chara.name = I18N.get("chara.job.magic_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 41, 28)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.stersha", 7, 2)
+   chara.roles["elona.royal_family"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.xabi", 6, 2)
+   chara.roles["elona.royal_family"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.elder", 49, 11)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_palmia", chara.name)
+
+   chara = Chara.create("elona.trainer", 30, 27)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.wizard", 32, 27)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.informer", 29, 28)
+   chara.roles["elona.informer"] = true
+
+   chara = Chara.create("elona.guard", 16, 5)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 16, 9)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 5, 3)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 8, 3)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 35, 14)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 38, 14)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 29, 2)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 19, 18)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 22, 18)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   for _=1,5 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,4 do
+    chara = Chara.create("elona.guard")
+    chara.roles["elona.guard"] = true
+   end
+
+   for _=1,25 do
+      generate_chara(map)
+   end
+end
 data:add(palmia)
 
 local derphy = {
@@ -545,24 +750,100 @@ local derphy = {
       default_ai_calm = 1,
       quest_town_id = 4,
       quest_custom_map = "rogueden",
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(3) then
                return { id = "elona.rogue" }
             elseif Rand.one_in(2) then
                return { id = "elona.prostitute" }
             end
-         end,
-
-         -- Thieves guild
-         [3] = function()
-            return { id = "elona.thief_guild_member" }
          end
-      }
+      )
    }
-
 }
+function derphy.on_generate(map)
+   local chara = Chara.create(253, 23, 14)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(259, 13, 18)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(294, 16, 17)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.shopkeeper", 10, 17)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.bartender", 15, 15)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.shopkeeper", 13, 3)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 29, 23)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 26, 7)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.goods_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 30, 4)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.blackmarket", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 29, 4)
+   chara.roles["elona.slaver"] = true
+   chara.name = I18N.get("chara.job.slave_master", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 10, 6)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+   chara = Chara.create("elona.arena_master", 7, 15)
+   chara.roles["elona.arena_master"] = true
+
+   chara = Chara.create("elona.elder", 9, 18)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_derphy", chara.name)
+
+   chara = Chara.create("elona.trainer", 13, 18)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.wizard", 5, 26)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.informer", 3, 28)
+   chara.roles["elona.informer"] = true
+
+   for _=1,4 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,20 do
+      generate_chara(map)
+   end
+end
 data:add(derphy)
+
+-- -- Thieves guild
+-- [3] = function()
+--    return { id = "elona.thief_guild_member" }
+-- end
 
 local port_kapul = {
    _id = "port_kapul",
@@ -583,15 +864,132 @@ local port_kapul = {
       default_ai_calm = 1,
       quest_town_id = 5,
       quest_custom_map = "kapul",
-      chara_filter = chara_filter_town {
-         -- Fighters guild
-         [3] = function()
-            return { id = "elona.fighter_guild_member" }
-         end
-      }
+      chara_filter = chara_filter_town()
    }
 }
+function port_kapul.on_regenerate(map)
+   local chara = Chara.create("elona.raphael", 15, 18)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.arnord", 36, 27)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.icolle", 5, 26)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.doria", 29, 3)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.cleaner", 24, 21)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.cleaner", 12, 26)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.cleaner", 8, 11)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.bard", 8, 14)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.shopkeeper", 16, 17)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 23, 7)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 32, 14)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 22, 14)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.goods_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 16, 25)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.blackmarket", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 17, 28)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.food_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.food_vendor", chara.name)
+
+   chara = Chara.create("elona.wizard", 22, 22)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+   chara.shop_rank = 11
+   chara.name = I18N.get("chara.job.magic_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 35, 3)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.innkeeper", chara.name)
+
+   chara = Chara.create("elona.bartender", 15, 15)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.arena_master", 26, 3)
+   chara.roles["elona.arena_master"] = true
+
+   chara = Chara.create("elona.pet_arena_master", 25, 4)
+   chara.roles["elona.arena_master"] = true
+
+   chara = Chara.create("elona.elder", 8, 12)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_port_kapul", chara.name)
+
+   chara = Chara.create("elona.trainer", 16, 4)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.wizard", 14, 4)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.informer", 17, 5)
+   chara.roles["elona.informer"] = true
+
+   chara = Chara.create("elona.healer", 27, 11)
+   chara.roles["elona.healer"] = true
+
+   for _=1,2 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,4 do
+      chara = Chara.create("elona.sailor")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,5 do
+      chara = Chara.create("elona.guard_port_kapul")
+      chara.roles["elona.guard"] = true
+   end
+
+   chara = Chara.create("elona.captain", 7, 6)
+   chara.roles["elona.citizen"] = true
+
+   for _=1,20 do
+      generate_chara(map)
+   end
+end
 data:add(port_kapul)
+
+---- Fighters guild
+--[3] = function()
+--   return { id = "elona.fighter_guild_member" }
+--end
 
 local noyel = {
    _id = "noyel",
@@ -627,207 +1025,164 @@ local noyel = {
       quest_town_id = 6,
       quest_custom_map = "noyel",
       villagers_make_snowmen = true,
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(3) then
                return { id = "elona.sister" }
             end
          end
-      }
+      )
    },
+}
+local function reload_noyel_christmas(map)
+   local item = Item.create("elona.pedestal", 29, 16)
+   item.own_state = "not_owned"
 
-   on_regenerate = function(map)
-      local function reload_noyel(map)
-         for _, item in Item.iter_ground() do
-            if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
-               item:remove()
-            end
-         end
+   item = Item.create("elona.statue_of_jure", 29, 16)
+   item.own_state = "not_owned"
 
-         if map.is_noyel_christmas_festival then
-            local item = Item.create("elona.pedestal", 29, 16)
-            item.own_state = "not_owned"
+   item = Item.create("elona.altar", 29, 17)
+   item.own_state = "not_owned"
+   item.params = { god_id = "elona.jure" }
 
-            item = Item.create("elona.statue_of_jure", 29, 16)
-            item.own_state = "not_owned"
+   item = Item.create("elona.mochi", 29, 17)
+   item.own_state = "unobtainable"
 
-            item = Item.create("elona.altar", 29, 17)
-            item.own_state = "not_owned"
-            item.params = { god_id = "elona.jure" }
+   local chara = Chara.create("elona.kaneda_bike", 48, 19)
+   chara.roles["elona.special"] = true
+   chara.is_only_in_christmas = true
 
-            item = Item.create("elona.mochi", 29, 17)
-            item.own_state = "unobtainable"
+   chara = Chara.create("elona.part_time_worker", 30, 17)
+   chara.roles["elona.special"] = true
+   chara.is_only_in_christmas = true
 
-            local chara = Chara.create("elona.kaneda_bike", 48, 19)
-            if chara then
-               chara.roles = {["elona.unique_chara"] = {}}
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.punk", 38, 19)
+   chara.is_only_in_christmas = true
+   chara.is_hung_on_sand_bag = true
+   chara.name = I18N.get("chara.job.fanatic")
 
-            chara = Chara.create("elona.part_time_worker", 30, 17)
-            if chara then
-               chara.roles = {["elona.unique_chara"] = {}}
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.fanatic", 35, 19)
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.punk", 38, 19)
-            if chara then
-               chara.is_only_in_christmas = true
-               chara.is_hung_on_sand_bag = true
-               chara.name = I18N.get("chara.job.fanatic")
-            end
+   chara = Chara.create("elona.fanatic", 37, 18)
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.fanatic", 35, 19)
-            if chara then
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.fanatic", 37, 21)
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.fanatic", 37, 18)
-            if chara then
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.fanatic", 39, 20)
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.fanatic", 37, 21)
-            if chara then
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.fanatic", 38, 21)
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.fanatic", 39, 20)
-            if chara then
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.bartender", 17, 8)
+   chara.ai_calm = 3
+   chara.is_only_in_christmas = true
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.food_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.food_vendor", chara.name)
 
-            chara = Chara.create("elona.fanatic", 38, 21)
-            if chara then
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.hot_spring_maniac", 25, 8)
+   chara.ai_calm = 3
+   chara.faction = "elona.citizen"
+   chara.is_only_in_christmas = true
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
+   chara.shop_rank = 30
+   chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
-            chara = Chara.create("elona.bartender", 17, 8)
-            if chara then
-               chara.ai_calm = 3
-               chara.is_only_in_christmas = true
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.food_vendor", rank=10}}
-               chara.name = I18N.get("chara.job.food_vendor", chara.name)
-            end
+   chara = Chara.create("elona.rogue", 24, 22)
+   chara.ai_calm = 3
+   chara.faction = "elona.citizen"
+   chara.is_only_in_christmas = true
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
+   chara.shop_rank = 30
+   chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
-            chara = Chara.create("elona.hot_spring_maniac", 25, 8)
-            if chara then
-               chara.ai_calm = 3
-               chara.faction = "elona.citizen"
-               chara.is_only_in_christmas = true
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor", rank=30}}
-               chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
-            end
+   chara = Chara.create("elona.shopkeeper", 38, 12)
+   chara.ai_calm = 3
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.blackmarket"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
+   chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.rogue", 24, 22)
-            if chara then
-               chara.ai_calm = 3
-               chara.faction = "elona.citizen"
-               chara.is_only_in_christmas = true
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor", rank=30}}
-               chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
-            end
+   chara = Chara.create("elona.rogue", 28, 9)
+   chara.ai_calm = 3
+   chara.faction = "elona.citizen"
+   chara.is_only_in_christmas = true
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
+   chara.shop_rank = 30
+   chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
 
-            chara = Chara.create("elona.shopkeeper", 38, 12)
-            if chara then
-               chara.ai_calm = 3
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.blackmarket", rank=10}}
-               chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
-               chara.is_only_in_christmas = true
-            end
+   chara = Chara.create("elona.rogue", 29, 24)
+   chara.ai_calm = 3
+   chara.faction = "elona.citizen"
+   chara.is_only_in_christmas = true
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
+   chara.shop_rank = 30
+   chara.name = I18N.get("chara.job.street_vendor2", Text.random_name())
 
-            chara = Chara.create("elona.rogue", 28, 9)
-            if chara then
-               chara.ai_calm = 3
-               chara.faction = "elona.citizen"
-               chara.is_only_in_christmas = true
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.street_vendor", rank=30}}
-               chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
-            end
+   for _ = 1, 20 do
+      chara = Chara.create("elona.holy_beast")
+      chara.is_only_in_christmas = true
 
-            chara = Chara.create("elona.rogue", 29, 24)
-            if chara then
-               chara.ai_calm = 3
-               chara.faction = "elona.citizen"
-               chara.is_only_in_christmas = true
-               chara.roles = {["elona.shopkeeper"] = {inventory_id="elona.street_vendor", rank=30}}
-               chara.name = I18N.get("chara.job.street_vendor2", Text.random_name())
-            end
+      chara = Chara.create("elona.festival_tourist")
+      chara.is_only_in_christmas = true
+   end
 
-            for _ = 1, 20 do
-               chara = Chara.create("elona.holy_beast")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
+   for _ = 1, 15 do
+      chara = Chara.create("elona.bard")
+      chara.is_only_in_christmas = true
+   end
 
-               chara = Chara.create("elona.festival_tourist")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
-            end
+   for _ = 1, 7 do
+      chara = Chara.create("elona.prostitute")
+      chara.is_only_in_christmas = true
 
-            for _ = 1, 15 do
-               chara = Chara.create("elona.bard")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
-            end
+      chara = Chara.create("elona.tourist")
+      chara.is_only_in_christmas = true
 
-            for _ = 1, 7 do
-               chara = Chara.create("elona.prostitute")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
+      chara = Chara.create("elona.noble")
+      chara.is_only_in_christmas = true
 
-               chara = Chara.create("elona.tourist")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
+      chara = Chara.create("elona.punk")
+      chara.is_only_in_christmas = true
+   end
 
-               chara = Chara.create("elona.noble")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
+   for _ = 1, 3 do
+      chara = Chara.create("elona.stray_cat")
+      chara.is_only_in_christmas = true
 
-               chara = Chara.create("elona.punk")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
-            end
-
-            for _ = 1, 3 do
-               chara = Chara.create("elona.stray_cat")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
-
-               chara = Chara.create("elona.tourist")
-               if chara then
-                  chara.is_only_in_christmas = true
-               end
-            end
-         else
-            Chara.iter_others()
-            :filter(function(c) return c.is_only_in_christmas end)
-               :each(IChara.vanquish)
-         end
-      end
-
-      if World.date().month == 12 then
-         if not map.is_noyel_christmas_festival then
-            map.is_noyel_christmas_festival = true
-            reload_noyel(map)
-         end
-         reload_122_map_geometry(map, "noyel_fest")
-      else
-         if map.is_noyel_christmas_festival then
-            map.is_noyel_christmas_festival = false
-            reload_noyel(map)
-         end
-         reload_122_map_geometry(map, "noyel")
+      chara = Chara.create("elona.tourist")
+      chara.is_only_in_christmas = true
+   end
+end
+local function reload_noyel(map)
+   Chara.iter_others(map)
+   :filter(function(c) return c.is_only_in_christmas end)
+      :each(IChara.vanquish)
+end
+function noyel.on_regenerate(map)
+   for _, item in Item.iter_ground() do
+      if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
+         item:remove()
       end
    end
-}
+
+   if World.date().month == 12 then
+      if not map.is_noyel_christmas_festival then
+         map.is_noyel_christmas_festival = true
+         reload_noyel_christmas(map)
+      end
+      reload_122_map_geometry(map, "noyel_fest")
+   else
+      if map.is_noyel_christmas_festival then
+         map.is_noyel_christmas_festival = false
+         reload_noyel(map)
+      end
+      reload_122_map_geometry(map, "noyel")
+   end
+end
 data:add(noyel)
 
 local lumiest = {
@@ -869,21 +1224,129 @@ local lumiest = {
       default_ai_calm = 1,
       quest_town_id = 7,
       quest_custom_map = "lumiest",
-      chara_filter = chara_filter_town {
-         [1] = function()
+      chara_filter = chara_filter_town(
+         function()
             if Rand.one_in(3) then
                return { id = "elona.artist" }
             end
-         end,
-
-         -- Mages guild
-         [3] = function()
-            return { id = "elona.mage_guild_member" }
          end
-      }
+      )
    }
 }
+function lumiest.on_generate(map)
+   -- TODO only if sidequest
+   local stair = Feat.at(18, 45, map):nth(1)
+   assert(stair)
+   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_sewers" }}
+   stair.area_params = { outer_map_id = map._id }
+
+   local chara = Chara.create(252, 12, 24)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(280, 21, 3)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(290, 5, 20)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(320, 28, 29)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(326, 41, 19)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(326, 32, 43)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(326, 29, 28)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(326, 16, 45)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create(326, 13, 24)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.bartender", 41, 42)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.healer", 10, 16)
+   chara.roles["elona.healer"] = true
+
+   chara = Chara.create("elona.shopkeeper", 47, 30)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 24, 47)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 37, 30)
+   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.blacksmith", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 37, 12)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+   chara.shop_rank = 9
+   chara.image = "elona.chara_baker"
+   chara.name = I18N.get("chara.job.baker", chara.name)
+
+   chara = Chara.create("elona.wizard", 6, 15)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+   chara.shop_rank = 11
+   chara.name = I18N.get("chara.job.magic_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 33, 43)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 47, 12)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.fisher" }
+   chara.shop_rank = 5
+   chara.name = I18N.get("chara.job.fisher", chara.name)
+
+   chara = Chara.create("elona.elder", 3, 38)
+   chara.roles["elona.elder"] = true
+   chara.name = I18N.get("chara.job.of_lumiest", chara.name)
+
+   chara = Chara.create("elona.trainer", 21, 28)
+   chara.roles["elona.trainer"] = true
+   chara.name = I18N.get("chara.job.trainer", chara.name)
+
+   chara = Chara.create("elona.wizard", 21, 30)
+   chara.roles["elona.wizard"] = true
+
+   chara = Chara.create("elona.informer", 23, 38)
+   chara.roles["elona.informer"] = true
+
+   for _=1,6 do
+      chara = Chara.create("elona.citizen")
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2")
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,7 do
+      chara = Chara.create("elona.guard")
+      chara.roles["elona.guard"] = true
+   end
+
+   for _=1,25 do
+      generate_chara(map)
+   end
+end
 data:add(lumiest)
+
+-- -- Mages guild
+-- [3] = function()
+--    return { id = "elona.mage_guild_member" }
+-- end
 
 local fields = {
    _id = "fields",
@@ -1246,17 +1709,16 @@ local puppy_cave = {
       default_ai_calm = 0,
       is_generated_every_time = true
    },
-
-   on_generate = function(map)
-      if map.dungeon_level == map.deepest_dungeon_level
-         and Sidequest.progress("elona.puppys_cave") < 2
-         and not Chara.find("elona.poppy", "allies")
-      then
-         local poppy = Chara.create("elona.poppy", nil, nil, {}, map)
-         poppy.is_not_targeted_by_ai = true
-      end
-   end,
 }
+function puppy_cave.on_generate(map)
+   if map.dungeon_level == map.deepest_dungeon_level
+      and Sidequest.progress("elona.puppys_cave") < 2
+      and not Chara.find("elona.poppy", "allies")
+   then
+      local poppy = Chara.create("elona.poppy", nil, nil, {}, map)
+      poppy.is_not_targeted_by_ai = true
+   end
+end
 data:add(puppy_cave)
 
 local minotaurs_nest = {
@@ -1277,8 +1739,6 @@ local minotaurs_nest = {
       entrance_type = "StairUp",
       tile_type = 0,
       turn_cost = 10000,
-      danger_level = 23,
-      deepest_dungeon_level = 27,
       is_outdoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 0,

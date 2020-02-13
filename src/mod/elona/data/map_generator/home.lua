@@ -28,10 +28,10 @@ data:add {
    on_generate = function(map)
       if Sidequest.progress("elona.main_quest") == 0 then
          local chara = Chara.create("elona.larnneire", 18, 10, {}, map)
-         chara.roles = {["elona.unique_chara"] = {}}
+         chara.roles = {["elona.special"] = {}}
 
          chara = Chara.create("elona.lomias", 16, 11, {}, map)
-         chara.roles = {["elona.unique_chara"] = {}}
+         chara.roles = {["elona.special"] = {}}
 
          local item = Item.create("elona.heir_trunk", 6, 10, {}, map)
          item.count = 3

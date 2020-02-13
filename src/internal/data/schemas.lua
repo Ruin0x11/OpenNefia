@@ -35,54 +35,65 @@ data:add_type(
    {
       name = "chara",
       fields = {
-         level = {
+         {
+            name = "level",
             default = 1,
             template = true,
             doc = [[
 Relative strength of this character.
 ]]
          },
-         ai_move = {
+         {
+            name = "ai_move",
             default = 100,
             doc = [[
 Chance this unit will take an idle action if they have no target.
 ]]
          },
-         ai_dist = {
+         {
+            name = "ai_dist",
             default = 1,
             doc = [[
 Minimum distance before this unit starts moving toward their target.
 ]]
          },
-         ai_calm = {
+         {
+            name = "ai_calm",
             default = 1,
          },
-         ai_act_sub_freq = {
+         {
+            name = "ai_act_sub_freq",
             default = 0,
          },
-         portrait = {
+         {
+            name = "portrait",
             default = nil,
             type = "base.portrait"
          },
-         resistances = {
+         {
+            name = "resistances",
             default = {},
          },
-         item_type = {
+         {
+            name = "item_type",
             default = 0,
             doc = [[
 The kind of item this character drops on death.
 ]]
          },
-         tags = {
+         {
+            name = "tags",
             default = {},
             doc = [[
 A list of strings used for filtering during character generation.
 ]]
          },
-         can_talk = {
+         {
+            name = "can_talk",
             default = false
          },
-         faction = {
+         {
+            name = "faction",
             default = "base.enemy",
             template = true,
             doc = [[
@@ -91,21 +102,24 @@ What alignment this character has.
 This determines if it will act hostile toward the player on first sight.
 ]]
          },
-         race = {
+         {
+            name = "race",
             default = "base.default",
             template = true,
             doc = [[
 The race of this character.
 ]]
          },
-         class = {
+         {
+            name = "class",
             default = "base.default",
             template = true,
             doc = [[
 The class of this character.
 ]]
          },
-         image = {
+         {
+            name = "image",
             default = "",
             template = true,
             type = "base.chip",
@@ -113,41 +127,49 @@ The class of this character.
 The character's image.
 ]]
          },
-         male_image = {
+         {
+            name = "male_image",
             default = nil,
             type = "base.chip",
          },
-         female_image = {
+         {
+            name = "female_image",
             default = nil,
             type = "base.chip",
          },
-         gender = {
+         {
+            name = "gender",
             default = "female",
             doc = [[
 The character's gender, either male or female.
 ]]
          },
-         fixlv = {
+         {
+            name = "fixlv",
             default = nil
          },
-         fltselect = {
+         {
+            name = "fltselect",
             default = 0
          },
-         rarity = {
+         {
+            name = "rarity",
             default = 0,
             template = true,
             doc = [[
 Variable affecting the chance this character is generated.
 ]]
          },
-         coefficient = {
+         {
+            name = "coefficient",
             default = 0,
             template = true,
             doc = [[
 Variable affecting the chance this character is generated.
 ]]
          },
-         dialog = {
+         {
+            name = "dialog",
             default = nil,
             type = "elona_sys.dialog",
             doc = [[
@@ -156,45 +178,55 @@ Dialog tree to run upon bumping into this character.
 The character must have `can_talk` set to `true` for this to trigger.
 ]]
          },
-         cspecialeq = {
+         {
+            name = "cspecialeq",
             default = nil
          },
          eqweapon1 = {
             default = nil
          },
-         creaturepack = {
+         {
+            name = "creaturepack",
             default = nil
          },
-         flags = {
+         {
+            name = "flags",
             default = {}
          },
-         on_eat_corpse = {
+         {
+            name = "on_eat_corpse",
             default = nil,
             type = "function"
          },
-         events = {
+         {
+            name = "events",
             default = nil,
             type = "table",
             doc = [[
 List of events to bind to this character when they are spawned.
 ]]
          },
-         category = {
+         {
+            name = "category",
             default = nil,
             type = "number"
          },
-         color = {
+         {
+            name = "color",
             default = nil,
             type = "table"
          },
-         is_unique = {
+         {
+            name = "is_unique",
             default = false
          },
-         drops = {
+         {
+            name = "drops",
             default = nil,
             type = "table",
          },
-         ai = {
+         {
+            name = "ai",
             default = "elona.elona_default_ai",
             type = "base.ai_action"
          }
@@ -213,6 +245,7 @@ List of events to bind to this character when they are spawned.
          hit_bonus = 0,
          damage_bonus = 0,
          curse_power = 0,
+         equipment_weight = 0,
          critical_rate = 0,
          fov = 15,
          time_this_turn = 0,
@@ -293,7 +326,10 @@ List of events to bind to this character when they are spawned.
 
          roles = {},
 
-         drawables = {}
+         drawables = {},
+
+         x_offset = 0,
+         y_offset = 0,
       }
    },
    { interface = IChara }
@@ -303,44 +339,67 @@ data:add_type(
    {
       name = "item",
       fields = {
-         level = {
+         {
+            name = "level",
             default = 1,
+            type = "number",
             template = true,
             doc = [[
 Relative strength of this item.
 ]]
          },
-         weight = {
+         {
+            name = "weight",
             default = 0,
+            type = "number",
             template = true
          },
-         value = {
+         {
+            name = "value",
             default = 0,
+            type = "number",
             template = true
          },
-         dv = {
+         {
+            name = "dv",
+            default = 0,
+            type = "number",
+            doc = [[
+DV of this item. Applies if it is equipment.
+]]
+         },
+         {
+            name = "pv",
+            type = "number",
             default = 0
          },
-         pv = {
+         {
+            name = "dice_x",
+            type = "number",
             default = 0
          },
-         dice_x = {
+         {
+            name = "dice_y",
+            type = "number",
             default = 0
          },
-         dice_y = {
+         {
+            name = "hit_bonus",
+            type = "number",
             default = 0
          },
-         hit_bonus = {
+         {
+            name = "damage_bonus",
+            type = "number",
             default = 0
          },
-         damage_bonus = {
-            default = 0
-         },
-         color = {
+         {
+            name = "color",
             default = nil,
-            type = "table"
+            type = "table?"
          },
-         image = {
+         {
+            name = "image",
             default = "",
             template = true,
             type = "base.chip",
@@ -348,55 +407,73 @@ Relative strength of this item.
 The item's image.
 ]]
          },
-         rarity = {
+         {
+            name = "rarity",
             default = 1000000,
+            type = "uint",
             template = true,
             doc = [[
 Variable affecting the chance this item is generated.
 ]]
          },
-         coefficient = {
+         {
+            name = "coefficient",
             default = 100,
+            type = "uint",
             template = true,
             doc = [[
 Variable affecting the chance this item is generated.
 ]]
          },
-         flags = {
+         {
+            name = "flags",
+            type = "table",
             default = {}
          },
-         params = {
+         {
+            name = "params",
+            type = "table",
             default = {}
          },
-         categories = {
+         {
+            name = "categories",
             default = {},
+            type = "table",
             template = true
          },
-         equip_slots = {
+         {
+            name = "equip_slots",
             default = {},
+            type = "table",
             template = true
          },
-         on_read = {
+         {
+            name = "on_read",
             default = nil,
-            type = "function"
+            type = "function(IItem,IChara)?"
          },
-         on_zap = {
+         {
+            name = "on_zap",
             default = nil,
-            type = "function"
+            type = "function(IItem,IChara)?"
          },
-         on_eat = {
+         {
+            name = "on_eat",
             default = nil,
-            type = "function"
+            type = "function(IItem,IChara)?"
          },
-         on_drink = {
+         {
+            name = "on_drink",
             default = nil,
-            type = "function"
+            type = "function(IItem,IChara)?"
          },
-         fltselect = {
+         {
+            name = "fltselect",
             default = nil,
-            type = "number"
+            type = "number?"
          },
-         tags = {
+         {
+            name = "tags",
             default = {},
             template = true,
             doc = [[
@@ -405,77 +482,91 @@ A list of strings used for filtering during item generation.
          },
          originalnameref2 = {
             default = nil,
-            type = "string"
+            type = "string?"
          },
-         count = {
+         {
+            name = "count",
             default = nil,
-            type = "number"
+            type = "number?"
          },
-         has_charge = {
+         {
+            name = "has_charge",
             default = nil,
             type = "boolean"
          },
-         chargelevel = {
+         {
+            name = "chargelevel",
             default = nil,
-            type = "number"
+            type = "number?"
          },
-         gods = {
+         {
+            name = "gods",
             default = {},
             doc = [[
 What gods this item can be offered to.
 ]]
          },
-         enchantments = {
+         {
+            name = "enchantments",
             default = nil,
-            type = "table",
+            type = "table?",
          },
-         fixlv = {
+         {
+            name = "fixlv",
             default = nil,
-            type = "string"
+            type = "string?"
          },
-         identify_difficulty = {
+         {
+            name = "identify_difficulty",
             default = nil,
-            type = "string"
+            type = "string?"
          },
-         is_precious = {
+         {
+            name = "is_precious",
             default = nil,
             type = "boolean"
          },
-         skill = {
+         {
+            name = "skill",
             default = nil,
-            type = "base.skill"
+            type = "base.skill?"
          },
-         material = {
+         {
+            name = "material",
             default = nil,
-            type = "number"
+            type = "number?"
          },
-         effective_range = {
+         {
+            name = "effective_range",
             default = {100, 20, 20, 20, 20, 20, 20, 20, 20, 20},
             type = "table"
          },
-         pierce_rate = {
+         {
+            name = "pierce_rate",
             default = 0,
             type = "number"
          },
-         events = {
+         {
+            name = "events",
             default = nil,
-            type = "table",
+            type = "table?",
             doc = [[
 List of events to bind to this item when it is spawned.
 ]]
          },
-         is_light_source = {
+         {
+            name = "is_light_source",
             default = false,
             doc = [[
 If true, lights up dungeons if in the player's inventory.
 ]]
          },
-         light = {
+         {
+            name = "light",
             default = nil,
-            type = "table",
+            type = "table?",
             doc = [[
-Ambient light information. Each one is a table or nil. Same
-format as vanilla:
+Ambient light information.
 - chip (id:base.chip): chip with animation to play over tile.
 - brightness (uint): alpha value of chip animation.
 - offset_y (int): offset of chip animation.
@@ -500,6 +591,11 @@ format as vanilla:
          value = 1,
 
          cargo_weight = 0,
+
+         is_melee_weapon = nil,
+         is_ranged_weapon = nil,
+         x_offset = 0,
+         y_offset = 0,
       }
    },
    { interface = IItem }
@@ -675,7 +771,8 @@ data:add_type(
 data:add_type {
    name = "scenario",
    fields = {
-      on_game_begin = {
+      {
+         name = "on_game_begin",
          default = nil,
          template = true,
          type = "function(self,IChara)",

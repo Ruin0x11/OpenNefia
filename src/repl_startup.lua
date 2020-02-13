@@ -14,3 +14,5 @@ end
 
 Event.unregister("base.on_game_initialize", "debug")
 Event.register("base.on_game_initialize", "debug", function() Repl.defer_execute(test) end)
+
+conv = Compat.convert_122_id

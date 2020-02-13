@@ -275,7 +275,7 @@ return {
                   :format(ta(_1))
             end
          },
-         horse_keeper = {
+         horse_master = {
             choices = {
                buy = "馬を買う"
             }

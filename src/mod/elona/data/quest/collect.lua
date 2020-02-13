@@ -42,7 +42,7 @@ local collect = {
          if chara.uid ~= client.uid then
             if Chara.is_alive(chara, map)
                and chara:reaction_towards(Chara.player(), "original") > 0
-               and (chara.roles["elona.guard"] or chara.roles["elona.non_quest_target"])
+               and (chara.roles["elona.guard"] or chara.roles["elona.citizen"])
             then
                local category = Rand.choice(Filters.fsetcollect)
                local item = Itemgen.create(nil, nil, { level = 40, quality = 2, categories = {category} }, chara)

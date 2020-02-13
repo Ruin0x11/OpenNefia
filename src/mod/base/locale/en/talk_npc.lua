@@ -230,7 +230,7 @@ end
         },
         restore_attributes = "Done treatment. Take care!"
       },
-      horse_keeper = {
+      horse_master = {
         choices = {
           buy = "I want to buy a horse."
         }

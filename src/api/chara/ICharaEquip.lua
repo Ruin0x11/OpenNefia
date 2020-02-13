@@ -30,8 +30,8 @@ function ICharaEquip:apply_item_stats(item)
    self:mod("hit_bonus", item:calc("hit_bonus"))
    self:mod("damage_bonus", item:calc("damage_bonus"))
 
-   if item:calc("is_weapon") then
-      self:mod("number_of_weapons", 1)
+   if item:calc("is_melee_weapon") then
+      self:mod("number_of_weapons", 1, "add")
    elseif item:calc("is_armor") then
       local bonus = 0
       if item:is_blessed() then

@@ -677,7 +677,7 @@ return {
          master_lich = {
             name = "master lich"
          },
-         master_of_pet_arena = {
+         pet_arena_master = {
             name = "master of pet arena"
          },
          master_thief = {

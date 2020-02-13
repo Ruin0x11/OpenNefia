@@ -274,8 +274,10 @@ local function generate_dungeon(self, params, opts)
    local tileset = params.tileset or "elona.dirt"
    MapTileset.apply(tileset, dungeon)
 
-   dungeon.dungeon_level = params.dungeon_level
+   dungeon.dungeon_level = dungeon_level
+   dungeon.deepest_dungeon_level = deepest_dungeon_level
    assert(dungeon.dungeon_level)
+   assert(dungeon.deepest_dungeon_level)
 
    tag_stairs(dungeon)
 
@@ -390,5 +392,4 @@ data:add {
    generate = generate_dungeon,
 
    almost_equals = table.deepcompare
-
 }

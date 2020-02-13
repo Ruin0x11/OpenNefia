@@ -33,11 +33,11 @@ local role = {
       }
    },
    {
-      _id = "non_quest_target",
+      _id = "citizen",
       elona_id = 4,
    },
    {
-      _id = "unique_chara",
+      _id = "special",
       elona_id = 3,
    },
    {
@@ -71,6 +71,14 @@ local role = {
    {
       _id = "royal_family",
       elona_id = 15,
+   },
+   {
+      _id = "slaver",
+      elona_id = 17
+   },
+   {
+      _id = "innkeeper",
+      elona_id = 1005,
    },
 }
 

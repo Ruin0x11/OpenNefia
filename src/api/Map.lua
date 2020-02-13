@@ -34,16 +34,6 @@ Event.register("base.on_map_enter", "reveal fog",
                   end
 end)
 
-Event.register("base.on_map_leave", "call generator.on_enter",
-               function(prev_map, params)
-                  if params.next_map.generated_with then
-                     local generator = data["base.map_generator"][params.next_map.generated_with.generator]
-                     if generator and generator.on_enter then
-                        generator.on_enter(params.next_map, params.next_map.generated_with.params, prev_map)
-                     end
-                  end
-end)
-
 Event.register("base.on_map_leave", "common events",
                function(prev_map, params)
                   if prev_map:has_type({"town", "guild"}) or prev_map:calc("is_travel_destination") then
@@ -120,11 +110,6 @@ function Map.load(uid)
    -- Map events should be initialized here because they will not be
    -- serialized.
    run_generator_load_callback(map)
-
-   if type(map.events) == "table" then
-      Log.debug("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
-      map:connect_self_multiple(map.events)
-   end
 
    map:emit("base.on_map_loaded")
 
@@ -371,11 +356,6 @@ function Map.generate(generator_id, params, opts)
    map.generated_with = { generator = generator_id, params = params }
    Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
 
-   if type(map.events) == "table" then
-      Log.debug("Connecting %d events for map %d (%s)", #map.events, map.uid, map.gen_id)
-      map:connect_self_multiple(map.events)
-   end
-
    map:emit("base.on_map_generated")
 
    run_generator_load_callback(map)
@@ -462,13 +442,6 @@ local function regenerate_map(map)
          else
             chara:emit("base.on_regenerate")
          end
-      end
-   end
-
-   if map.generated_with then
-      local generator = data["base.map_generator"][map.generated_with.generator]
-      if generator and generator.on_regenerate then
-         generator.on_regenerate(map, map.generated_with.params)
       end
    end
 
@@ -724,12 +697,7 @@ function Map.travel_to(map_or_uid, params)
 
       local new_map = err
 
-      if map.generated_with then
-         local generator = data["base.map_generator"][map.generated_with.generator]
-         if generator and generator.on_rebuild then
-            generator.on_rebuild(map, map.generated_with.params, new_map, params)
-         end
-      end
+      map:emit("base.on_map_rebuild", {new_map=new_map,travel_to_params=params})
 
       new_map.uid = map.uid
       map = new_map
