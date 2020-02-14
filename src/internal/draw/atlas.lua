@@ -222,27 +222,4 @@ function atlas:make_batch()
    return atlas_batch:new(self)
 end
 
-function atlas:copy_tile_image(tile_id)
-   local tile = self.tiles[tile_id]
-   local image
-
-   if tile then
-      love.graphics.setColor(1, 1, 1) -- TODO allow change?
-
-      local _, _, tw, th = tile.quad:getViewport()
-      local canvas = love.graphics.newCanvas(tw, th)
-      love.graphics.setCanvas(canvas)
-
-      love.graphics.draw(self.image, tile.quad, 0, tile.y_offset)
-
-      love.graphics.setCanvas()
-      image = love.graphics.newImage(canvas:newImageData())
-      canvas:release()
-   else
-      image = self.fallback
-   end
-
-   return asset_drawable:new(image)
-end
-
 return atlas

@@ -161,7 +161,16 @@ function object.deserialize(self, _type, _id)
                    __id = "object",
                    __index = object.__index,
                    __proto = proto,
-                   __iface = iface
+                   __iface = iface,
+                   __inspect = function(t)
+                      local n = {}
+                      for k, v in pairs(t) do
+                         if not (type(k) == "string" and string.match(k, "^__")) then
+                            n[k] = v
+                         end
+                      end
+                      return inspect(n)
+                   end
    })
    return self
 end

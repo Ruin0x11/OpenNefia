@@ -16,7 +16,7 @@ local function mkrain(mod_y, length_y, speed_x, speed_y)
 
       while true do
          local map = Map.current()
-         if map.is_outdoor then
+         if not map.is_indoor then
             local width = Draw.get_width()
             local height = Draw.get_height()
             local max_rain = width * height / 3500

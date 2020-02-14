@@ -5,7 +5,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
-local Calc = require("mod.elona_sys.api.Calc")
+local Calc = require("mod.elona.api.Calc")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
@@ -64,7 +64,7 @@ Event.register("elona.on_dig_success", "Create item", function(map, params)
       Item.create("elona.gold_piece", x, y, map)
    elseif item == "item" then
       local Calc = require("mod.elona.api.Calc")
-      local params = Calc.filter(chara:current_map().dungeon_level, 2)
+      local params = Calc.filter(map:calc("dungeon_level"), 2, nil, map)
       params.categories = { "elona.ore" }
 
       Itemgen.create(x, y, params, map)

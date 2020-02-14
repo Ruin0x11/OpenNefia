@@ -151,6 +151,12 @@ local function generate_from_map_template(self, params, opts)
       new_params.dungeon_level = params.dungeon_level
    end
 
+   local copy = {}
+   if template.copy then
+      copy = Resolver.resolve(template.copy)
+   end
+   opts.copy = copy
+
    local success, map = Map.generate(generator.generator, new_params, opts)
    if not success then
       error(map, 0)
@@ -158,21 +164,22 @@ local function generate_from_map_template(self, params, opts)
 
    local generator_data = data["base.map_generator"]:ensure(generator.generator)
    if generator_data.connect_stairs then
-      local next_generator = {
-         generator = self._id,
-         params = params
-      }
-      if generator.params.dungeon_level then
-         next_generator.params.dungeon_level = generator.params.dungeon_level or next_generator.params.dungeon_level
-         next_generator.params.deepest_dungeon_level = generator.params.deepest_dungeon_level
+      if opts.outer_map then
+         local next_generator = {
+            generator = self._id,
+            params = params
+         }
+         if generator.params.dungeon_level then
+            next_generator.params.dungeon_level = generator.params.dungeon_level or next_generator.params.dungeon_level
+            next_generator.params.deepest_dungeon_level = generator.params.deepest_dungeon_level
+         end
+         connect_stairs(map, opts.outer_map, next_generator)
+      else
+         Log.warn("Generating dungeon without outer map.")
       end
-      connect_stairs(map, opts.outer_map, next_generator)
    end
 
-   if template.copy then
-      local copy = Resolver.resolve(template.copy)
-      table.merge(map, copy)
-   end
+   table.merge(map, copy)
 
    if template.areas then
       for _, area in ipairs(template.areas) do
@@ -189,17 +196,6 @@ local function generate_from_map_template(self, params, opts)
          MapArea.create_entrance(area_generator_params, area_params, area.x, area.y, map)
       end
    end
-
-   if template.copy then
-      for k, v in pairs(template.copy) do
-         if type(k) == "string" and k:sub(1, 1) ~= "_" then
-            map[k] = v
-         end
-      end
-   end
-
-   local events = bind_events(template)
-   map:connect_self_multiple(events)
 
    map.name = I18N.get("map.unique." .. params.id .. ".name")
 

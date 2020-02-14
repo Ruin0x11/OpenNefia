@@ -180,6 +180,7 @@ end
 sw:p("REPL startup time")
 
 Event.trigger("base.on_startup")
+field:init_global_data()
 
 if arg[1] == "test" then
    os.exit(0)

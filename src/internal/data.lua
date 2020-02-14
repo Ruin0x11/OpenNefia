@@ -127,11 +127,20 @@ function data:add_index(_type, field)
    end
 end
 
+local function is_valid_ident(name)
+   return string.match(name, "^[_a-z][_a-z0-9]*$")
+end
+
 function data:add_type(schema, params)
    schema.fields = schema.fields or {}
    schema.fallbacks = schema.fallbacks or {}
 
    params = params or {}
+
+   if not is_valid_ident(schema.name) then
+      data:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", schema.name)
+      return nil
+   end
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
@@ -245,6 +254,12 @@ function data:add(dat)
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
       data:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
+      return nil
+   end
+
+   if not is_valid_ident(_id) then
+      _ppr(dat)
+      data:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", _id)
       return nil
    end
 

@@ -63,3 +63,14 @@ data:add {
       [1000] = "",
    },
 }
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "sewer_sweeping",
+
+   progress = {
+      [1] = "quest.journal.sub.sewer_sweeping.progress._0",
+      [2] = "quest.journal.sub.sewer_sweeping.progress._1",
+      [1000] = "",
+   },
+}

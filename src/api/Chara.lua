@@ -158,16 +158,18 @@ function Chara.set_player(chara)
    field.hud:refresh(c)
 end
 
---- Returns true if this character is in the alive state and is
---- contained in the current map. Will also handle nil values.
+--- Returns true if this character is in the alive state. Will also
+--- handle nil values.
 ---
 --- @tparam[opt] IChara c
---- @tparam[opt] InstancedMap map Map to check for existence in; defaults to current
+--- @tparam[opt] InstancedMap map Map to check for existence in
 function Chara.is_alive(c, map)
-   map = map or field.map
-
    if type(c) ~= "table" or c.state ~= "Alive" then
       return false
+   end
+
+   if map == nil then
+      return true
    end
 
    local their_map = c:current_map()

@@ -439,7 +439,7 @@ function Tools.dungeon(kind, params)
    params.id = kind
    params.dungeon_level = params.dungeon_level or 1
    params.deepest_dungeon_level = params.deepest_dungeon_level or 5
-   params.tileset = params.tileset or "elona.dungeon"
+   params.tileset = params.tileset or "elona.home"
    local success, map = Map.generate("elona.dungeon_template", params)
 
    assert(success, map)
@@ -565,6 +565,49 @@ function Tools.reload_theme()
    UiTheme.clear()
    local default_theme = "elona_sys.default"
    UiTheme.add_theme(default_theme)
+end
+
+function Tools.print_map_detailed(map)
+   local str = ""
+   local function print(...)
+      for i, s in ipairs({...}) do
+         if i > 1 then
+            str = str .. "\t"
+         end
+         str = str .. s
+      end
+      str = str .. "\n"
+   end
+
+   map = map or Map.current()
+   print("-----", "Map: " .. map.name)
+   print(Tools.print_map(map))
+
+   print("=====", "Chara")
+   for _, chara in Chara.iter(map) do
+      print(chara.name, chara.x, chara.y)
+   end
+
+   print("=====", "Item")
+   for _, item in Item.iter(map) do
+      print(item.name, item.x, item.y)
+   end
+
+   print("=====", "Feat")
+   for _, feat in Feat.iter(map) do
+      print(feat._id, feat.x, feat.y, inspect(feat.generator_params))
+   end
+
+   print("=====")
+
+   return str
+end
+
+function Tools.gen_all_maps()
+   for _, entry in ipairs(data["elona_sys.map_template"]["elona.north_tyris"].areas) do
+      local _, map = assert(Map.generate("elona_sys.map_template", { id = entry.map }))
+      print(Tools.print_map_detailed(map))
+   end
 end
 
 return Tools

@@ -88,7 +88,7 @@ function MapTileset.apply(tileset_id, map)
 end
 
 function MapTileset.get(tile_id, map)
-   local tileset = data["elona_sys.map_tileset"]:ensure("elona.default")
+   local tileset = data["elona_sys.map_tileset"]:ensure(map.tileset)
    local match = tileset.tiles[tile_id]
 
    local id

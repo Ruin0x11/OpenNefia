@@ -80,6 +80,10 @@ local role = {
       _id = "innkeeper",
       elona_id = 1005,
    },
+   {
+      _id = "spell_writer",
+      elona_id = 1020,
+   },
 }
 
 data:add_multi("elona.role", role)

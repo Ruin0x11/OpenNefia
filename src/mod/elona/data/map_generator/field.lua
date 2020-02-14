@@ -205,7 +205,7 @@ data:add {
       map.turn_cost = 10000
       map.dungeon_level = 1
       map.deepest_dungeon_level = 1
-      map.is_outdoor = true
+      map.is_indoor = true
       map.has_anchored_npcs = false
       map.default_ai_calm = 0
       map.default_tile = field.fog

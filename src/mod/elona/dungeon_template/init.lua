@@ -84,10 +84,12 @@ local function generate_dungeon_raw(template, gen_params, opts)
       end
 
       if type(map) == "string" then
+         assert(type(err) == "table", "Generation parameters should be the second return value.")
          if tries > 10 then
             return nil, "More than 10 dungeon generators were composed together."
          end
          template = data["elona.dungeon_template"]:ensure(map)
+         gen_params = err
       else
          break
       end
@@ -103,8 +105,8 @@ end
 
 local function set_filter(dungeon)
    -- TODO support custom filters
-   local filter =  {
-      level = Calc.calc_object_level(dungeon:calc("dungeon_level")),
+   local filter = {
+      level = Calc.calc_object_level(dungeon:calc("dungeon_level"), dungeon),
       quality = Calc.calc_object_quality(1),
    }
 
@@ -286,6 +288,9 @@ local function generate_dungeon(self, params, opts)
    Log.info("Populating dungeon rooms.")
    populate_rooms(dungeon, template, gen_params)
 
+   -- TODO: this is annoying. the density parameter is in "copy" on
+   -- map templates but it has to be passed to the dungeon template
+   -- instead.
    local crowd_density = dungeon:calc("max_crowd_density")
    local mob_density, item_density = crowd_density / 4, crowd_density / 4
 
@@ -311,14 +316,16 @@ local function generate_dungeon(self, params, opts)
       template.after_generate(dungeon)
    end
 
-   -- TODO is special per room type
+   -- TODO generation can be special per room type
 
-   Log.info("Creating mobs.")
+   Log.info("Map density: %s", crowd_density)
+
+   Log.info("Creating %d mobs.", mob_density)
    for _=1, mob_density do
       Charagen.create(nil, nil, set_filter(dungeon), dungeon)
    end
 
-   Log.info("Creating items.")
+   Log.info("Creating %d items.", item_density)
    for _=1, item_density do
       Itemgen.create(nil, nil,
                      {

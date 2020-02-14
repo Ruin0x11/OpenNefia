@@ -453,7 +453,7 @@ Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
 function Map.refresh(map)
    Log.info("Refreshing map %d (%s)", map.uid, map.gen_id)
 
-   if map.is_regenerated and World.date_hours() >= map.next_regenerate_date then
+   if not map.is_not_regenerated and World.date_hours() >= map.next_regenerate_date then
       map:emit("base.on_regenerate_map")
    end
 
@@ -528,7 +528,7 @@ function Map.find_free_position(x, y, params, map)
          sy = Rand.rnd(map:height() - 2) + 2
          if not params.allow_stacking then
             local Item = require("api.Item")
-            if Item.at(sx, sy):length() > 0 then
+            if Item.at(sx, sy, map):length() > 0 then
                ok = false
             end
          end
@@ -807,7 +807,7 @@ function Map.calc_shadow(hour, map)
 
    local shadow = {5, 5, 5}
 
-   if not map.is_outdoor then
+   if map.is_indoor then
       return shadow
    end
 

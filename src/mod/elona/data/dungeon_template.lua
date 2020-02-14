@@ -150,7 +150,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return kind
+         return kind, params
       end
    }
 )
@@ -163,7 +163,7 @@ data:add(
       image = "elona.feat_area_tower",
 
       generate = function(rooms, params, opts)
-         params.tileset = "elona.dungeon_tower"
+         params.tileset = "elona.tower_1"
 
          local kind = "elona.type_1"
          if Rand.one_in(5) then
@@ -179,7 +179,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return kind
+         return kind, params
       end
    }
 )
@@ -208,7 +208,7 @@ data:add(
             kind = "elona.type_4"
          end
 
-         return kind
+         return kind, params
       end
    }
 )
@@ -237,7 +237,7 @@ data:add(
             params.tileset = "elona.water"
          end
 
-         return kind
+         return kind, params
       end
    }
 )
@@ -259,10 +259,10 @@ data:add(
             tileset = "elona.dirt"
          end
          if params.dungeon_level < 20 then
-            tileset = "elona.dungeon_tower"
+            tileset = "elona.tower_1"
          end
          if params.dungeon_level < 10 then
-            tileset = "elona.dungeon_castle"
+            tileset = "elona.tower_2"
          end
          if params.dungeon_level < 5 then
             tileset = "elona.dirt"
@@ -305,7 +305,7 @@ data:add(
 
          params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
 
-         return kind
+         return kind, params
       end
    }
 )
@@ -316,9 +316,16 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         params.tileset = "elona.tower_of_fire"
-         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-         return "elona.type_1"
+         if params.dungeon_level == params.deepest_dungeon_level then
+            local _, map = assert(Map.generate("elona_sys.elona122", { name = "firet1" }))
+            map.max_crowd_density = 0
+            map.music = "elona.last_boss"
+            return map
+         else
+            params.tileset = "elona.tower_of_fire"
+            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+            return "elona.type_1", params
+         end
       end
    }
 )
@@ -329,9 +336,16 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         params.tileset = "elona.dirt"
-         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-         return "elona.type_1"
+         if params.dungeon_level == params.deepest_dungeon_level then
+            local _, map = assert(Map.generate("elona_sys.elona122", { name = "undeadt1" }))
+            map.max_crowd_density = 0
+            map.music = "elona.last_boss"
+            return map
+         else
+            params.tileset = "elona.dirt"
+            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+            return "elona.type_1", params
+         end
       end
    }
 )
@@ -342,9 +356,16 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         params.tileset = "elona.dungeon_castle"
-         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-         return "elona.type_1"
+         if params.dungeon_level == params.deepest_level then
+            local _, map = assert(Map.generate("elona_sys.elona122", { name = "undeadt1" }))
+            map.max_crowd_density = 0
+            map.music = "elona.last_boss"
+            return map
+         else
+            params.tileset = "elona.dungeon_castle"
+            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
+            return "elona.type_1", params
+         end
       end
    }
 )

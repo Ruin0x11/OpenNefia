@@ -251,7 +251,9 @@ local function convert_122(gen, params)
    result.default_tile = Compat.convert_122_map_chip(1, 534)
    result.next_regenerate_date = regen
 
-   return result, params.name
+   local id = params.name:gsub("-", "_")
+
+   return result, id
 end
 
 data:add {
