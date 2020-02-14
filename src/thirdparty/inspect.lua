@@ -296,7 +296,12 @@ function Inspector:putValue(v)
          tv == 'cdata' or tv == 'ctype' then
     self:puts(tostring(v))
   elseif tv == 'table' then
-    self:putTable(v)
+    local mt = getmetatable(v)
+    if not self.override_mt and mt and mt.__inspect then
+      self:puts('<' .. mt.__inspect(v) .. '>')
+    else
+      self:putTable(v)
+    end
   else
     self:puts('<', tv, ' ', self:getId(v), '>')
   end
@@ -311,6 +316,7 @@ function inspect.inspect(root, options)
   local newline       = options.newline or '\n'
   local indent        = options.indent  or '  '
   local process       = options.process
+  local override_mt   = options.override_mt
   local always_tabify = options.always_tabify
 
   if process then
@@ -326,6 +332,7 @@ function inspect.inspect(root, options)
     newline          = newline,
     indent           = indent,
     always_tabify    = always_tabify,
+    override_mt      = override_mt,
     tableAppearances = countTableAppearances(root)
   }, Inspector_mt)
 
