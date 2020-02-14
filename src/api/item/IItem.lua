@@ -1,9 +1,7 @@
 local EquipSlots = require("api.EquipSlots")
-local Event = require("api.Event")
 local IItemEnchantments = require("api.item.IItemEnchantments")
 local IMapObject = require("api.IMapObject")
 local IObject = require("api.IObject")
-local IOwned = require("api.IOwned")
 local IModdable = require("api.IModdable")
 local IEventEmitter = require("api.IEventEmitter")
 local IStackableObject = require("api.IStackableObject")
@@ -110,6 +108,7 @@ end
 function IItem:on_refresh()
 end
 
+--- @treturn[opt] IChara
 function IItem:get_owning_chara()
    local IChara = require("api.chara.IChara")
 
@@ -154,15 +153,19 @@ function IItem:produce_locale_data()
    }
 end
 
+--- @treturn bool
 function IItem:is_blessed()
    return self:calc("curse_state") == "blessed"
 end
 
+--- @treturn bool
 function IItem:is_cursed()
    local curse_state = self:calc("curse_state")
    return curse_state == "cursed" or curse_state == "doomed"
 end
 
+--- @treturn[opt] InstancedMap
+--- @overrides IMapObject.current_map
 function IItem:current_map()
    -- BUG: Needs to be generalized to allow nesting.
    local Chara = require("api.Chara")
@@ -174,6 +177,8 @@ function IItem:current_map()
    return IMapObject.current_map(self)
 end
 
+--- @tparam id:base.body_part body_part_type
+--- @treturn bool
 function IItem:can_equip_at(body_part_type)
    local equip_slots = self:calc("equip_slots") or {}
    if #equip_slots == 0 then
@@ -185,10 +190,13 @@ function IItem:can_equip_at(body_part_type)
    return can_equip[body_part_type] == true
 end
 
+--- @treturn bool
 function IItem:is_equipped()
    return class.is_an(EquipSlots, self.location)
 end
 
+--- @tparam id:base.body_part body_part_type
+--- @treturn bool
 function IItem:is_equipped_at(body_part_type)
    if not self:is_equipped() then
       return false

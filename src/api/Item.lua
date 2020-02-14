@@ -10,6 +10,12 @@ local field = require("game.field")
 
 local Item = {}
 
+--- Returns the items at a given map position.
+---
+--- @tparam uint x
+--- @tparam uint y
+--- @tparam InstancedMap map
+--- @treturn Iterator(IItem)
 function Item.at(x, y, map)
    map = map or field.map
 

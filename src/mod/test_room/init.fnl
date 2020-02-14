@@ -47,7 +47,8 @@
 
     (scratch player map)
 
-    (Map.reveal_all map)
+    (each [_ x y (map:iter_tiles)]
+      (map:memorize_tile x y))
 
     {:map map :start_x (/ width 2) :start_y (/ height 2)}))
 

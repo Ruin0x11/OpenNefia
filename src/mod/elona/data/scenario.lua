@@ -58,7 +58,7 @@ local function initialize_player(player)
       Item.create("elona.potion_of_cure_minor_wound", nil, nil, {amount=3}, player)
    end
 
-   local klass = data["base.class"][player.class]
+   local klass = data["base.class"]:ensure(player.class)
    if klass.on_init_player then
       klass.on_init_player(player)
    end

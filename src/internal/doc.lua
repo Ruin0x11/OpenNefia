@@ -457,8 +457,8 @@ function doc.get(path)
             -- this is an item inside the module
             entry = file.items[alias.full_path]
          end
+         assert(entry, ("BUG: must use docstring comment ('---') %s"):format(alias.full_path))
 
-         assert(entry, alias.full_path)
          return {
             type = "entry",
             entry = entry

@@ -88,7 +88,7 @@ function SelectClassMenu:make_keymap()
 end
 
 function SelectClassMenu:on_make_chara(chara)
-   chara.class = self:charamake_result()
+   chara.class = self:charamake_result().proto._id
 end
 
 function SelectClassMenu:charamake_result()

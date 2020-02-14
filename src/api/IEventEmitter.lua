@@ -55,11 +55,11 @@ end
 --- event being handled.
 ---
 --- `params` is a key-value table of parameters to pass to the event.
---- The specific parameteres you can pass depends on which event you
---- are handling; check the event's documentation for details.
+--- The specific parameters you can pass depend on which event you are
+--- handling; check the event's documentation for details.
 ---
 --- `result` is the default return value of the event handling to
---- return if no result is return by any event (e.g. all event
+--- return if no result is returned by any event (e.g. all event
 --- callbacks return `nil`).
 ---
 --- Events are handled based on the priority of each handler. You can
