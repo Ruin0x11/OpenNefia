@@ -30,7 +30,7 @@ data:add_multi(
          fog = "wall_stone_4_fog"
       },
       {
-         _id = "doors_jail",
+         _id = "jail",
          elona_id = 12,
 
          door = {
@@ -39,7 +39,7 @@ data:add_multi(
          }
       },
       {
-         _id = "doors_sf",
+         _id = "sf",
          elona_id = 8,
 
          door = {
@@ -48,16 +48,16 @@ data:add_multi(
          }
       },
       {
-         _id = "doors_eastern",
+         _id = "eastern",
          elona_id = 9,
 
          door = {
-            open_tile = "elona.feat_door_sf_open",
-            closed_tile = "elona.feat_door_sf_closed",
+            open_tile = "elona.feat_door_eastern_open",
+            closed_tile = "elona.feat_door_eastern_closed",
          }
       },
       {
-         _id = "dungeon",
+         _id = "home",
          elona_id = 3,
 
          tiles = {
@@ -69,7 +69,17 @@ data:add_multi(
          fog = "elona.wall_dirt_dark_fog"
       },
       {
-         _id = "stone_dirt",
+         _id = "wilderness",
+         elona_id = 4,
+
+         tiles = {
+            ["elona.mapgen_floor"] = "elona.grass",
+         },
+
+         fog = "elona.wall_stone_1_fog"
+      },
+      {
+         _id = "town",
          elona_id = 2,
 
          tiles = {
@@ -155,7 +165,7 @@ data:add_multi(
          fog = "elona.wall_stone_1_fog"
       },
       {
-         _id = "dungeon_tower",
+         _id = "tower_1",
          elona_id = 100,
 
          tiles = {
@@ -168,7 +178,7 @@ data:add_multi(
          fog = "elona.wall_stone_3_fog"
       },
       {
-         _id = "lesimas",
+         _id = "tower_2",
          elona_id = 101,
 
          tiles = {
@@ -194,7 +204,7 @@ data:add_multi(
          fog = "elona.wall_stone_4_fog"
       },
       {
-         _id = "test",
+         _id = "world_map",
          elona_id = 1,
 
          tiles = {

@@ -106,7 +106,7 @@ end
 
 -------------------------------------------------------------------
 
-function CodeGenerator:puts(...)
+function CodeGenerator:write(...)
    local args   = {...}
    local buffer = self.buffer
    local len    = #buffer
@@ -117,33 +117,33 @@ function CodeGenerator:puts(...)
    self.bol = false
 end
 
-function CodeGenerator:put_table_start(opts)
+function CodeGenerator:write_table_start(opts)
    if self.in_table[#self.in_table] then
       self:tabify()
    end
    self.in_table[#self.in_table+1] = false
 
-   self:puts("{")
+   self:write("{")
    if opts and opts.no_indent then
-      self:puts(" ")
+      self:write(" ")
    else
       self.level = self.level + 1
    end
 end
 
-function CodeGenerator:put_table_end(opts)
+function CodeGenerator:write_table_end(opts)
    local it = self.in_table[#self.in_table]
    self.in_table[#self.in_table] = nil
 
    if opts and opts.no_indent then
-      self:puts(" }")
+      self:write(" }")
       self:tabify()
    else
       self.level = self.level - 1
       if it then
          self:tabify()
       end
-      self:puts("}")
+      self:write("}")
    end
 end
 
@@ -155,10 +155,11 @@ end
 
 function CodeGenerator:tabify(opts)
    if self.in_table[#self.in_table] then
-      self:puts(",")
+      self:write(",")
+      self.in_table[#self.in_table] = false
    end
    local level = (opts and opts.indent) or self.level
-   self:puts(self.newline, string.rep(self.indent, level))
+   self:write(self.newline, string.rep(self.indent, level))
    self.bol = true
 end
 
@@ -177,41 +178,41 @@ function CodeGenerator:get_id(v)
    return tostring(id)
 end
 
-function CodeGenerator:put_key(k)
-   if is_identifier(k) then return self:puts(k) end
-   self:puts("[")
-   self:put_value(k)
-   self:puts("]")
+function CodeGenerator:write_key(k)
+   if is_identifier(k) then return self:write(k) end
+   self:write("[")
+   self:write_value(k)
+   self:write("]")
 end
 
-function CodeGenerator:put_table(t)
+function CodeGenerator:write_table(t)
    if t == KEY or t == METATABLE then
-      self:puts(tostring(t))
+      self:write(tostring(t))
    elseif self:already_visited(t) then
-      self:puts('<table ', self:get_id(t), '>')
+      self:write('<table ', self:get_id(t), '>')
    elseif self.level >= self.depth then
-      self:puts('{...}')
+      self:write('{...}')
    else
       local non_sequential_keys, non_sequential_keys_length, sequence_length = get_non_sequential_keys(t)
       local mt                = getmetatable(t)
 
-      self:puts('{')
+      self:write('{')
       self:down(function()
             local count = 0
             for i=1, sequence_length do
-               if count > 0 then self:puts(',') end
-               self:puts(' ')
-               self:put_value(t[i])
+               if count > 0 then self:write(',') end
+               self:write(' ')
+               self:write_value(t[i])
                count = count + 1
             end
 
             for i=1, non_sequential_keys_length do
                local k = non_sequential_keys[i]
-               if count > 0 then self:puts(',') end
+               if count > 0 then self:write(',') end
                self:tabify()
-               self:put_key(k)
-               self:puts(' = ')
-               self:put_value(t[k])
+               self:write_key(k)
+               self:write(' = ')
+               self:write_value(t[k])
                count = count + 1
             end
       end)
@@ -219,32 +220,32 @@ function CodeGenerator:put_table(t)
       if non_sequential_keys_length > 0 or type(mt) == 'table' then -- result is multi-lined. Justify closing }
          self:tabify()
       elseif sequence_length > 0 then -- array tables have one extra space before closing }
-         self:puts(' ')
+         self:write(' ')
       end
 
-      self:puts('}')
+      self:write('}')
    end
 end
 
-function CodeGenerator:put_value(v)
+function CodeGenerator:write_value(v)
    local tv = type(v)
 
    if tv == 'string' then
-      self:puts(smart_quote(escape(v)))
+      self:write(smart_quote(escape(v)))
    elseif tv == 'number' or tv == 'boolean' or tv == 'nil' or
    tv == 'cdata' or tv == 'ctype' then
-      self:puts(tostring(v))
+      self:write(tostring(v))
    elseif tv == 'table' then
       local mt = getmetatable(v)
       local codegen_type = mt and mt.__codegen_type
       if codegen_type == "literal" then
-         self:puts(v[1])
+         self:write(v[1])
       elseif codegen_type == "block_string" then
-         self:puts("[[")
-         self:puts(v[1])
-         self:puts("]]")
+         self:write("[[")
+         self:write(v[1])
+         self:write("]]")
       else
-         self:put_table(v)
+         self:write_table(v)
       end
    else
       error(("cannot output value of type '%s' as lua code"):format(tv))
@@ -259,42 +260,44 @@ function CodeGenerator:gen_literal(str)
    return setmetatable({str}, {__codegen_type="literal"})
 end
 
-function CodeGenerator:put_return()
-   assert(not self.in_table[#self.in_table], "cannot put return inside table")
-   self:puts("return ")
+function CodeGenerator:write_return()
+   assert(not self.in_table[#self.in_table], "cannot write return inside table")
+   self:write("return ")
 end
 
-function CodeGenerator:put_local()
-   assert(not self.in_table[#self.in_table], "cannot put local inside table")
-   self:puts("local ")
+function CodeGenerator:write_local()
+   assert(not self.in_table[#self.in_table], "cannot write local inside table")
+   self:write("local ")
 end
 
-function CodeGenerator:put_assignment(name)
-   assert(not self.in_table[#self.in_table], "cannot put assignment inside table")
-   self:puts(name, " = ")
+function CodeGenerator:write_assignment(name)
+   assert(not self.in_table[#self.in_table], "cannot write assignment inside table")
+   self:write(name, " = ")
 end
 
-function CodeGenerator:put_ident(name)
-   self:puts(name)
+function CodeGenerator:write_ident(name)
+   self:write(name)
 end
 
-function CodeGenerator:put_comment(body, opts)
+function CodeGenerator:write_comment(body, opts)
    if self.in_table[#self.in_table] then
       self.in_table[#self.in_table] = false
    end
    if not self.bol then
-      self:puts(" ")
+      self:write(" ")
    end
-   if opts and opts.type == "docstring" then
-      self:puts("--- ")
-   else
-      self:puts("-- ")
+   for line in string.lines(body) do
+      if opts and opts.type == "docstring" then
+         self:write("--- ")
+      else
+         self:write("-- ")
+      end
+      self:write(line)
+      self:tabify()
    end
-   self:puts(body)
-   self:tabify()
 end
 
-function CodeGenerator:put_block_comment(body, opts)
+function CodeGenerator:write_block_comment(body, opts)
    if not self.bol then
       self:tabify({indent = 0})
    end
@@ -302,26 +305,26 @@ function CodeGenerator:put_block_comment(body, opts)
       self.in_table[#self.in_table] = false
    end
    if opts and opts.type == "docstring" then
-      self:puts("---[[")
+      self:write("---[[")
    else
-      self:puts("--[[")
+      self:write("--[[")
    end
-   self:puts(body)
+   self:write(body)
    if opts and opts.type == "docstring" then
-      self:puts("---]]")
+      self:write("---]]")
    else
-      self:puts("--]]")
+      self:write("--]]")
    end
    self:tabify()
 end
 
-function CodeGenerator:put_key_value(k, v)
+function CodeGenerator:write_key_value(k, v)
    if not self.bol then
       self:tabify()
    end
-   self:put_key(k)
-   self:puts(" = ")
-   self:put_value(v)
+   self:write_key(k)
+   self:write(" = ")
+   self:write_value(v)
    self.in_table[#self.in_table] = true
 end
 

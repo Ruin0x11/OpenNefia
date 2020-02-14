@@ -108,15 +108,14 @@ function InstancedMap:on_refresh()
 end
 
 local fallbacks = {
-   turn_cost = 1000,
-   is_outdoor = true,
+   turn_cost = 10000,
+   is_indoor = false,
    dungeon_level = 1,
-   deepest_dungeon_level = 10,
-   danger_level = 1,
+   deepest_dungeon_level = 1,
    player_start_pos = nil,
    types = {},
    appearance = "",
-   tile_set = "Normal",
+   tileset = "elona.dirt",
    tile_type = 2,
    default_ai_calm = 1,
    crowd_density = 0,
@@ -127,7 +126,7 @@ local fallbacks = {
    name = "",
 
    is_generated_every_time = false,
-   is_regenerated = true,
+   is_not_regenerated = false,
    is_temporary = false,
    can_exit_from_edge = true,
    cannot_mine_items = nil,
@@ -583,6 +582,9 @@ function InstancedMap:is_positional()
 end
 
 function InstancedMap:take_object(obj, x, y)
+   if x < 0 or y < 0 or x >= self:width() or y >= self:height() then
+      return nil
+   end
    self._multi_pool:take_object(obj, x, y)
    obj.location = self
    self:refresh_tile(x, y)

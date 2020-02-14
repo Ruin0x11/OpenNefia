@@ -1,20 +1,28 @@
-local Env = require("api.Env")
 local Draw = require("api.Draw")
-local draw = require("internal.draw")
 local asset_instance = require("internal.draw.asset_instance")
+local image_converter = require("internal.draw.image_converter")
 
 local asset_drawable = class.class("asset_drawable")
 
-function asset_drawable:init(data_inst)
-   if type(data_inst) == "string" then
-      data_inst = { image = data_inst }
-   end
+local converter = image_converter:new()
 
-   if (type(data_inst) == "userdata" or Env.is_headless()) and data_inst.typeOf and data_inst:typeOf("Image") then
-      self.image = data_inst
+local function load_image(image_spec)
+   local ty = type(image_spec)
+   if ty == "string" then
+      return converter:convert_single(image_spec, {0, 0, 0})
+   elseif ty == "table" then
+      if image_spec.x then
+         return converter:crop_single(image_spec, image_spec.key_color or {0, 0, 0})
+      else
+         return converter:convert_single(image_spec, image_spec.key_color or {0, 0, 0})
+      end
    else
-      self.image = draw.load_image(data_inst.image)
+      error(("invalid image type '%s'"):format(ty))
    end
+end
+
+function asset_drawable:init(proto)
+   self.image = load_image(proto.image)
 
    self.quads = {}
    self.bar_quads = {}
@@ -22,8 +30,8 @@ function asset_drawable:init(data_inst)
    local iw = self.image:getWidth()
    local ih = self.image:getHeight()
 
-   local count_x = data_inst.count_x or 1
-   local count_y = data_inst.count_y or 1
+   local count_x = proto.count_x or 1
+   local count_y = proto.count_y or 1
    if count_x ~= 1 or count_y ~= 1 then
       local w = iw / count_x
       local h = ih / count_y
@@ -41,17 +49,13 @@ function asset_drawable:init(data_inst)
    self.count_x = count_x
    self.count_y = count_y
 
-   self.regions = data_inst.regions
+   self.regions = proto.regions
 
    if type(self.regions) == "table" then
       for k, v in pairs(self.regions) do
          self.quads[k] = love.graphics.newQuad(v[1], v[2], v[3], v[4], self.image:getWidth(), self.image:getHeight())
       end
    end
-end
-
-function asset_drawable:make_batch(parts, width, height)
-   error("make batch")
 end
 
 function asset_drawable:make_instance(width, height)

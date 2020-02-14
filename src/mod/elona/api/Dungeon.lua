@@ -38,15 +38,16 @@ local room_kinds = {
    },
 }
 
-function Dungeon.create_map(params, width, height, density)
+function Dungeon.create_map(params, width, height, max_crowd_density)
    width = width or params.width
    height = height or params.height
+   require("api.Log").error("%s %s %s", width, height, max_crowd_density)
 
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")
    map.dungeon_level = params.dungeon_level
    map.deepest_dungeon_level = params.deepest_dungeon_level
-   map.max_crowd_density = density or params.max_crowd_density
+   map.max_crowd_density = max_crowd_density or params.max_crowd_density
    return map
 end
 
@@ -904,7 +905,9 @@ end
 
 --- One large room spanning the entire map.
 function Dungeon.gen_type_3(rooms, params)
-   local map = Dungeon.create_map(params, (48 + Rand.rnd(20)), 22, map.width * map_height / 20)
+   local width = (48 + Rand.rnd(20))
+   local height = 22
+   local map = Dungeon.create_map(params, width, height, width * height / 20)
 
    for _, x, y in map:iter_tiles() do
       local is_border = x == 0 or y == 0 or x + 1 == map:width() or y + 1 == map:height()
@@ -993,9 +996,9 @@ function Dungeon.gen_type_5(rooms, params)
    return map
 end
 
-local function set_filter()
+local function set_filter(map)
    return {
-      level = Calc.calc_object_level(10),
+      level = Calc.calc_object_level(10, map),
       quality = Calc.calc_object_quality(1),
    }
 end
@@ -1021,7 +1024,7 @@ function Dungeon.gen_type_6(rooms, params)
 
    map.max_crowd_density = 0
    for _=1, 10 + Rand.rnd(6) do
-      local chara = Charagen.create(nil, nil, set_filter(), map)
+      local chara = Charagen.create(nil, nil, set_filter(map), map)
       if chara then
          chara.faction = "base.enemy"
       end
@@ -1043,42 +1046,44 @@ end
 
 -- Long vertical tunnel.
 function Dungeon.gen_type_8(rooms, params)
-   local map = Dungeon.create_map(params, 30, (60 + Rand.rnd(60)), params.width * params.height / 100)
+   local width = 30
+   local height = (60 + Rand.rnd(60))
+   local map = Dungeon.create_map(params, width, height, width * height / 20)
 
-   local width = 6
-   local dx = math.floor(map:width() / 2) - math.floor(width / 2)
+   local tunnel_width = 6
+   local dx = math.floor(map:width() / 2) - math.floor(tunnel_width / 2)
    local variance = 0
 
    for i = 1, map:height() - 4 do
       local y = i + 1
-      for j = 1, width do
+      for j = 1, tunnel_width do
          local x = j - 1 + dx
          map:set_tile(x, y, "elona.mapgen_tunnel")
       end
       if variance <= 0 and Rand.one_in(2) then
          variance = Rand.rnd(12)
       end
-      if Rand.one_in(2) and width > 4 then
-         width = width - Rand.rnd(2)
+      if Rand.one_in(2) and tunnel_width > 4 then
+         tunnel_width = tunnel_width - Rand.rnd(2)
       end
       if variance > 0 then
          if variance < 5 and width > 3 then
-            width = width - Rand.rnd(2)
+            tunnel_width = tunnel_width - Rand.rnd(2)
             variance = variance - 1
          end
          if variance > 4 and width < 10 then
-            width = width + 1
+            tunnel_width = tunnel_width + 1
             variance = variance - 1
          end
       end
       if dx > 1 then
          dx = dx - Rand.rnd(2)
       end
-      if dx + width < map:width() - 1 then
+      if dx + tunnel_width < map:width() - 1 then
          dx = dx + Rand.rnd(2)
       end
-      if dx + width > map:width() then
-         width = map:width() - dx
+      if dx + tunnel_width > map:width() then
+         tunnel_width = map:width() - dx
       end
    end
 
@@ -1108,7 +1113,9 @@ function Dungeon.gen_type_9(rooms, params)
    local class = 12
    local bold = 2
 
-   local map = Dungeon.create_map(params, (class * (bold * 2) - bold + 8), params.width, params.width * params.height / 12)
+   local width = (class * (bold * 2) - bold + 8)
+   local height = params.width
+   local map = Dungeon.create_map(params, width, height, width * height / 12)
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)
@@ -1122,7 +1129,9 @@ function Dungeon.gen_type_10(rooms, params)
    local class = 5 + Rand.rnd(4)
    local bold = 2
 
-   local map = Dungeon.create_map(params, (class * (bold * 2) - bold + 8), params.width, params.width * params.height / 12)
+   local width = (class * (bold * 2) - bold + 8)
+   local height = params.width
+   local map = Dungeon.create_map(params, width, height, width * height / 12)
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)

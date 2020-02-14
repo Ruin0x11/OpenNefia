@@ -4677,7 +4677,7 @@ local chara = {
       drops = { "elona.god_boss" },
    },
    {
-      _id = "master_of_pet_arena",
+      _id = "pet_arena_master",
       elona_id = 179,
       item_type = 3,
       tags = { "man" },

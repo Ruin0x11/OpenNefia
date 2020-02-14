@@ -14,7 +14,6 @@ local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
-local Feat = require("api.Feat")
 
 --
 --
@@ -137,7 +136,7 @@ local function play_heartbeat(chara)
    if chara:is_player() then
       local threshold = 25 * 0.01
       if chara.hp < chara:calc("max_hp") * threshold then
-         Gui.play_sound("base.Heart1")
+         Gui.play_sound("base.heart1")
       end
    end
 end
@@ -551,8 +550,8 @@ local function refresh_hp_mp_stamina(chara, params, result)
 
    chara.max_hp = math.floor(math.clamp(hp_factor, 1, 1000000) * (chara:skill_level("elona.stat_life") / 100)) + 5
 
-   chara.max_stamina = 100 + (chara:skill_level("elona.stat_constitution") + chara:skill_level("elona.stat_strength")) / 5
-      + chara:trait_level("elona.long_distance_runner") * 8
+   chara.max_stamina = math.floor(100 + (chara:skill_level("elona.stat_constitution") + chara:skill_level("elona.stat_strength")) / 5
+                                     + chara:trait_level("elona.long_distance_runner") * 8)
 end
 
 Event.register("base.on_refresh", "Update max HP/MP/stamina", refresh_hp_mp_stamina)
@@ -634,6 +633,10 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
 
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then
+      local calc =
+      local Calc = require("mod.elona.api.Calc")
+
+      Calc.respawn_mobs()
    end
 end
 

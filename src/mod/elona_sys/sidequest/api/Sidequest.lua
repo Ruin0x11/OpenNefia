@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Gui = require("api.Gui")
 local Map = require("api.Map")
 
 local Sidequest = {}
@@ -33,6 +34,7 @@ function Sidequest.set_quest_targets(map)
    for _, v in Chara.iter_others(map) do
       if Chara.is_alive(v, map) then
          v.is_quest_target = true
+         v.faction = "base.enemy"
          v:mod_reaction_at(Chara.player(), -1000)
       end
    end
@@ -48,6 +50,11 @@ function Sidequest.no_targets_remaining(map)
    end
 
    return true
+end
+
+function Sidequest.update_journal()
+   Gui.play_sound("base.write1");
+   Gui.mes_c("quest.journal_updated", "Green");
 end
 
 return Sidequest

@@ -155,13 +155,19 @@ local function get_require_path(path, mod_env)
       if resolved then
          return path, true -- return the original path
       end
+
+      if path == "ffi" then
+         return path, true
+      end
    end
 
-   if resolved == nil and string.match(path, "^socket") then
+   if resolved == nil then
       -- Some modules like luasocket aren't in package.cpath but can
       -- be loaded with 'require' anyway for some mysterious reason.
-      if global_require(path) then
-         return path, true
+      for _, mod in ipairs(THIRDPARTY_REQUIRES) do
+         if string.match(path, "^" .. mod) and global_require(path) then
+            return path, true
+         end
       end
    end
 

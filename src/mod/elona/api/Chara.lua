@@ -1,4 +1,6 @@
+local Calc = require("mod.elona.api.Calc")
 local Map = require("api.Map")
+local Rand = require("api.Rand")
 
 local Chara = {}
 
@@ -24,7 +26,7 @@ function Chara.respawn_mobs(map)
          return map:chara_filter()
       end
 
-      return Calc.filter(Chara.player().level, "bad")
+      return Calc.filter(Chara.player().level, "bad", nil, map)
    end
 
    if map.crowd_density < density / 4 and Rand.one_in(2) then

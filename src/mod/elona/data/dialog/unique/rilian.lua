@@ -78,7 +78,7 @@ data:add {
 
             Chara.find("elona.poppy", "allies"):vanquish()
             local poppy = Chara.create("elona.poppy", 31, 4)
-            poppy.roles = {{id = "elona.unique_chara"}}
+            poppy.roles = {{id = "elona.special"}}
          end
       }
    }

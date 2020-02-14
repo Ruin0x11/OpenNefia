@@ -2,9 +2,8 @@ local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
 local doc = require("internal.doc")
 local env = require ("internal.env")
-local paths = require("internal.paths")
 local fs = require("util.fs")
-local schema = require ("thirdparty.schema")
+local schema = require("thirdparty.schema")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -128,11 +127,20 @@ function data:add_index(_type, field)
    end
 end
 
+local function is_valid_ident(name)
+   return string.match(name, "^[_a-z][_a-z0-9]*$")
+end
+
 function data:add_type(schema, params)
    schema.fields = schema.fields or {}
    schema.fallbacks = schema.fallbacks or {}
 
    params = params or {}
+
+   if not is_valid_ident(schema.name) then
+      data:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", schema.name)
+      return nil
+   end
 
    local mod_name, loc = env.find_calling_mod()
    local _type = mod_name .. "." .. schema.name
@@ -186,8 +194,8 @@ function data:add_type(schema, params)
    global_edits[_type] = EventTree:new()
 
    local fallbacks = table.deepcopy(schema.fallbacks)
-   for k, field in pairs(schema.fields) do
-      fallbacks[k] = field.default
+   for _, field in ipairs(schema.fields) do
+      fallbacks[field.name] = field.default
    end
    self.fallbacks[_type] = fallbacks
 end
@@ -246,6 +254,12 @@ function data:add(dat)
 
    if not (string.nonempty(_id) and string.nonempty(_type)) then
       data:error("Missing _id (%s) or _type (%s)", tostring(_id), tostring(_type))
+      return nil
+   end
+
+   if not is_valid_ident(_id) then
+      _ppr(dat)
+      data:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", _id)
       return nil
    end
 
@@ -323,23 +337,49 @@ function data:add(dat)
    return dat
 end
 
-function data:make_template(_type)
+function data:make_template(_type, opts)
    if not schemas[_type] then
       error(("No such type %s"):format(_type))
    end
 
-   local result = {
-      _id = "",
-      _type = _type
-   }
+   opts = opts or {}
+   opts.scope = opts.scope or "template"
+   if opts.comments == nil then
+      opts.comments = false
+   end
 
-   for k, field in pairs(schemas[_type].fields) do
-      if field.template then
-         result[k] = field.default
+   local gen = require("api.CodeGenerator"):new()
+
+   gen:write_table_start()
+   gen:write_key_value("_id", "")
+   gen:write_key_value("_type", _type)
+
+   local prev_comment
+   for _, field in ipairs(schemas[_type].fields) do
+      local do_write = (opts.scope == "template" and field.template) or opts.scope ~= "template"
+      if do_write then
+         local do_comment = opts.comments and field.doc
+         if do_comment then
+            if not prev_comment then
+               gen:tabify()
+               gen:tabify()
+            end
+            gen:write_comment(field.doc)
+         end
+         gen:write_key_value(field.name, field.default)
+         if do_comment then
+            gen:tabify()
+            gen:tabify()
+         end
+         prev_comment = do_comment
+      else
+         prev_comment = false
       end
    end
 
-   return result
+   gen:write_table_end()
+
+   return tostring(gen)
 end
 
 function data:iter()

@@ -65,7 +65,7 @@ function theme_proxy:__index(asset)
 
       if _type == nil or _type == "asset" then
          local copy = {
-            image = fs.join(root, proto.image),
+            image = proto.image,
             count_x = proto.count_x,
             count_y = proto.count_y,
             regions = proto.regions

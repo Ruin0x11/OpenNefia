@@ -5,7 +5,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local Calc = {}
 
 function Calc.calc_object_level(base, map)
-   map = map or Map.current()
+   assert(map)
 
    local ret = base or 0
    if base < 0 then
@@ -105,6 +105,17 @@ function Calc.round_margin(a, b)
    else
       return a
    end
+end
+
+function Calc.do_stamina_action(chara, delta)
+   chara:damage_sp(delta)
+   return chara.stamina >= 50 or chara.stamina >= Rand.rnd(75)
+end
+
+function Calc.make_sound(chara, map)
+end
+
+function Calc.make_guards_hostile(map)
 end
 
 return Calc

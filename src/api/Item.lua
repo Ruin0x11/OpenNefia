@@ -42,15 +42,19 @@ function Item.iter_ground(map)
    return Item.iter(map):filter(is_on_ground)
 end
 
---- Returns true if this item has any amount remaining and is
---- contained in the current map. Will also handle nil values.
+--- Returns true if this item has any amount remaining. Will also
+--- handle nil values.
 ---
 --- @tparam[opt] IItem item
---- @tparam[opt] InstancedMap map Map to check for existence in; defaults to current
+--- @tparam[opt] InstancedMap map Map to check for existence in
 function Item.is_alive(item, map)
    map = map or Map.current()
    if type(item) ~= "table" or item.amount <= 0 then
       return false
+   end
+
+   if map == nil then
+      return true
    end
 
    local their_map = item:current_map()

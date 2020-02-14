@@ -788,7 +788,7 @@ return {
          master_lich = {
             name = "マスターリッチ"
          },
-         master_of_pet_arena = {
+         pet_arena_master = {
             name = "ペットアリーナの主催者『ニノ』"
          },
          master_thief = {

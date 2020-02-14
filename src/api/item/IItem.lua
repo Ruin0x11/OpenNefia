@@ -85,13 +85,11 @@ local function is_melee_weapon(item)
 end
 
 local function is_ranged_weapon(item)
-   return item:is_equipped()
-      and item:is_equipped_at("elona.ranged")
+   return item:is_equipped_at("elona.ranged")
 end
 
 local function is_ammo(item)
-   return item:is_equipped()
-      and item:is_equipped_at("elona.ammo")
+   return item:is_equipped_at("elona.ammo")
 end
 
 function IItem:refresh()
@@ -168,7 +166,6 @@ end
 --- @overrides IMapObject.current_map
 function IItem:current_map()
    -- BUG: Needs to be generalized to allow nesting.
-   local Chara = require("api.Chara")
    local chara = self:get_owning_chara()
    if chara and chara.state == "alive" then
       return chara:current_map()

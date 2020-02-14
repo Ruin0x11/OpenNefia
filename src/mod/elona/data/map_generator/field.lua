@@ -203,9 +203,9 @@ data:add {
       map.tile_type = 4
       map.max_crowd_density = 4
       map.turn_cost = 10000
-      map.danger_level = 1
+      map.dungeon_level = 1
       map.deepest_dungeon_level = 1
-      map.is_outdoor = true
+      map.is_indoor = true
       map.has_anchored_npcs = false
       map.default_ai_calm = 0
       map.default_tile = field.fog

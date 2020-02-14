@@ -68,6 +68,75 @@ local function connect_stairs(map, outer_map, generator)
    end
 end
 
+local function transfer_stairs(old_map, new_map, params)
+   -- Find all stairs in each map tagged with a label, indicating they
+   -- are used for connection between maps.
+   local assoc = function(f) return f.label or false, f end
+   local old_stairs = old_map:iter_feats():map(assoc):to_map()
+   local new_stairs = new_map:iter_feats():map(assoc):to_map()
+
+   for label, old_stair in pairs(old_stairs) do
+      if type(label) == "string" then
+         local new_stair = new_stairs[label]
+         if new_stair and old_stair._id == new_stair._id then
+            if old_stair.map_uid == nil then
+               Log.warn("Transfering generated stair %d -> %d", old_stair.uid, new_stair.uid)
+               assert(old_stair.generator_params)
+               new_stair.map_uid = nil
+               new_stair.generator_params = old_stair.generator_params
+            else
+               Log.warn("Transfering ungenerated stair %d -> %d", old_stair.uid, new_stair.uid)
+               new_stair.map_uid = old_stair.map_uid
+               new_stair.generator_params = old_stair.generator_params
+            end
+         else
+            Log.error("Missing stairs in rebuilt dungeon with label %s", label)
+         end
+      end
+   end
+
+   new_map.dungeon_level = old_map.dungeon_level
+end
+
+local function bind_events(template)
+   local events = table.deepcopy(template.events or {})
+
+   if template.on_generate then
+      events[#events+1] = {
+         id = "base.on_map_generated",
+         name = "map_template: on_generate",
+         callback = template.on_generate,
+         priority = 50000
+      }
+   end
+
+   if template.on_load then
+      events[#events+1] = {
+         id = "base.on_map_loaded",
+         name = "map_template: on_load",
+         callback = template.on_load,
+         priority = 50000
+      }
+   end
+
+   events[#events+1] = {
+      id = "base.on_map_rebuilt",
+      name = "Transfer stairs to new map; map_template: on_rebuild",
+      callback = function(map, params)
+         local new_map = params.new_map
+         local travel_to_params = params.travel_to_params
+         transfer_stairs(map, new_map, travel_to_params)
+
+         if template.on_rebuild then
+            template.on_rebuild(map, map.generated_with.params, new_map)
+         end
+      end,
+      priority = 50000
+   }
+
+   return events
+end
+
 local function generate_from_map_template(self, params, opts)
    if not params.id then
       error("Map template ID must be provided")
@@ -82,6 +151,12 @@ local function generate_from_map_template(self, params, opts)
       new_params.dungeon_level = params.dungeon_level
    end
 
+   local copy = {}
+   if template.copy then
+      copy = Resolver.resolve(template.copy)
+   end
+   opts.copy = copy
+
    local success, map = Map.generate(generator.generator, new_params, opts)
    if not success then
       error(map, 0)
@@ -89,21 +164,22 @@ local function generate_from_map_template(self, params, opts)
 
    local generator_data = data["base.map_generator"]:ensure(generator.generator)
    if generator_data.connect_stairs then
-      local next_generator = {
-         generator = self._id,
-         params = params
-      }
-      if generator.params.dungeon_level then
-         next_generator.params.dungeon_level = generator.params.dungeon_level or next_generator.params.dungeon_level
-         next_generator.params.deepest_dungeon_level = generator.params.deepest_dungeon_level
+      if opts.outer_map then
+         local next_generator = {
+            generator = self._id,
+            params = params
+         }
+         if generator.params.dungeon_level then
+            next_generator.params.dungeon_level = generator.params.dungeon_level or next_generator.params.dungeon_level
+            next_generator.params.deepest_dungeon_level = generator.params.deepest_dungeon_level
+         end
+         connect_stairs(map, opts.outer_map, next_generator)
+      else
+         Log.warn("Generating dungeon without outer map.")
       end
-      connect_stairs(map, opts.outer_map, next_generator)
    end
 
-   if template.copy then
-      local copy = Resolver.resolve(template.copy)
-      table.merge(map, copy)
-   end
+   table.merge(map, copy)
 
    if template.areas then
       for _, area in ipairs(template.areas) do
@@ -119,20 +195,6 @@ local function generate_from_map_template(self, params, opts)
          end
          MapArea.create_entrance(area_generator_params, area_params, area.x, area.y, map)
       end
-   end
-
-   if template.copy then
-      for k, v in pairs(template.copy) do
-         if type(k) == "string" and k:sub(1, 1) ~= "_" then
-            map[k] = v
-         end
-      end
-   end
-
-   map.events = template.events or {}
-
-   if template.on_generate then
-      template.on_generate(map)
    end
 
    map.name = I18N.get("map.unique." .. params.id .. ".name")
@@ -161,65 +223,8 @@ local function load_map_template(map, params, opts)
       end
    end
 
-   map.events = template.events or {}
-
-   if template.on_load then
-      template.on_load(map)
-   end
-end
-
-local function on_enter(map, params, previous_map)
-   local template = data["elona_sys.map_template"]:ensure(params.id)
-
-   if template.on_enter then
-      template.on_enter(map, previous_map)
-   end
-end
-
-local function on_regenerate(map, params)
-   local template = data["elona_sys.map_template"]:ensure(params.id)
-
-   if template.on_regenerate then
-      template.on_regenerate(map, params)
-   end
-end
-
-local function transfer_stairs(old_map, new_map, params)
-   local assoc = function(f) return f.label or false, f end
-   local old_stairs = old_map:iter_feats():map(assoc):to_map()
-   local new_stairs = new_map:iter_feats():map(assoc):to_map()
-
-   for label, old_stair in pairs(old_stairs) do
-      if type(label) == "string" then
-         local new_stair = new_stairs[label]
-         if new_stair and old_stair._id == new_stair._id then
-            if old_stair.map_uid == nil then
-               Log.warn("Transfering generated stair %d -> %d", old_stair.uid, new_stair.uid)
-               assert(old_stair.generator_params)
-               new_stair.map_uid = nil
-               new_stair.generator_params = old_stair.generator_params
-            else
-               Log.warn("Transfering ungenerated stair %d -> %d", old_stair.uid, new_stair.uid)
-               new_stair.map_uid = old_stair.map_uid
-               new_stair.generator_params = old_stair.generator_params
-            end
-         else
-            Log.error("Missing stairs in rebuilt dungeon with label %s", label)
-         end
-      end
-   end
-
-   new_map.dungeon_level = old_map.dungeon_level
-end
-
-local function on_rebuild(map, params, new_map, travel_to_params)
-   local template = data["elona_sys.map_template"]:ensure(params.id)
-
-   transfer_stairs(map, new_map, travel_to_params)
-
-   if template.on_rebuild then
-      template.on_rebuild(map, params, new_map)
-   end
+   local events = bind_events(template)
+   map:connect_self_multiple(events)
 end
 
 data:add {
@@ -229,9 +234,6 @@ data:add {
    params = { id = "string" },
    generate = generate_from_map_template,
    load = load_map_template,
-   on_enter = on_enter,
-   on_regenerate = on_regenerate,
-   on_rebuild = on_rebuild,
    get_image = function(params)
       return data["elona_sys.map_template"]:ensure(params.id).image
    end,

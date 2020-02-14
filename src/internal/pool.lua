@@ -1,11 +1,9 @@
 local uid_tracker = require("internal.uid_tracker")
 local ILocation = require("api.ILocation")
-local MapObject = require("api.MapObject")
-local binser = require("thirdparty.binser")
 
 -- Low-level storage for map objects of the same types. Pretty much
 -- anything that needs to store map objects uses this internally.
-local pool = class.class("pool", ILocation)
+local pool = class.class("pool", ILocation, { no_inspect = false })
 
 -- serialization ID for binser
 pool.__id = "pool"
@@ -18,7 +16,7 @@ function pool:init(type_id, tracker, width, height)
    class.assert_is_an(uid_tracker, tracker)
 
    self.type_id = type_id
-   self.content = {}
+   self.content = setmetatable({}, { __inspect = tostring })
    self.uids = {}
    self.uid_tracker = tracker
    self.width = width
@@ -102,21 +100,21 @@ function pool:remove_object(obj)
    -- HACK terribly inefficient for over 100 elements.
    local ind = entry.array_index
    table.remove(self.uids, ind)
-   for k, v in pairs(self.content) do
+   for _, v in pairs(self.content) do
       if v.array_index >= ind then
          v.array_index = v.array_index - 1
       end
    end
 
-   local obj = self.content[uid].data
+   local obj_ = self.content[uid].data
 
-   self.content[obj.uid] = nil
+   self.content[obj_.uid] = nil
 
-   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
+   table.iremove_value(self.positional[obj_.y*self.width+obj_.x+1], obj_)
 
-   obj.location = nil
+   obj_.location = nil
 
-   return obj
+   return obj_
 end
 
 -- HACK: This should really be extracted into its own class.

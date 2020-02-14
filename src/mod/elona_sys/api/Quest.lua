@@ -453,7 +453,7 @@ function Quest.update_in_map(map)
    if Quest.town_info(map) then
       -- Register all characters that can be quest targets.
       for _, chara in Chara.iter_others(map) do
-         if chara.quality < 6 and not Role.has(chara, "elona.unique_chara") then
+         if chara.quality < 6 and not Role.has(chara, "elona.special") then
             Quest.register_client(chara)
          end
       end

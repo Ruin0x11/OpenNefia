@@ -56,7 +56,11 @@ local iface_mt = {
 }
 
 _interfaces[iface_mt] = tostring(iface_mt)
-setmetatable(iface_mt, { __tostring = iface_mt.__tostring })
+setmetatable(iface_mt,
+             {
+                __tostring = iface_mt.__tostring,
+                __inspect = tostring
+             })
 
 function class.interface(name, reqs, parents)
    local i = {}
@@ -115,12 +119,13 @@ function class.interface(name, reqs, parents)
    return setmetatable(i, iface_mt)
 end
 
-local root_mt = {
-   __tostring = make_tostring("Class", _classes)
+local class_mt = {
+   __tostring = make_tostring("Class", _classes),
+   __inspect = tostring
 }
 
-_classes[root_mt] = tostring(root_mt)
-setmetatable(root_mt, { __tostring = root_mt.__tostring })
+_classes[class_mt] = tostring(class_mt)
+setmetatable(class_mt, { __tostring = class_mt.__tostring })
 
 local function verify(instance, interface)
    if not _interfaces[interface] then
@@ -223,11 +228,18 @@ local function copy_all_interface_methods_to_class(klass)
    end
 end
 
-function class.class(name, ifaces)
+function class.class(name, ifaces, opts)
+   opts = opts or {}
+
    local c = {}
+
    _classes[c] = tostring(c)
 
-   c.__tostring = root_mt.__tostring
+   if opts.no_inspect then
+      c.__inspect = tostring
+   end
+
+   c.__tostring = class_mt.__tostring
 
    c.__delegates = {}
    c.__memoized = setmetatable({}, { __mode = "v" })
@@ -391,7 +403,7 @@ function class.class(name, ifaces)
       binser.registerClass(c, name)
    end
 
-   return setmetatable(c, root_mt)
+   return setmetatable(c, class_mt)
 end
 
 function class.is_class_or_interface(tbl)
@@ -521,8 +533,8 @@ function class.hotload(old, new)
 
       local iface_classes = {}
       -- NOTE: the ordering of pairs is unspecified
-      for klass, name in pairs(_classes) do
-         if klass ~= root_mt then
+      for klass, _ in pairs(_classes) do
+         if klass ~= class_mt then
             if class.uses_interface(klass, old) then
                iface_classes[#iface_classes] = klass
             end

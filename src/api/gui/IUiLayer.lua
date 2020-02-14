@@ -8,6 +8,16 @@ local draw = require("internal.draw")
 
 local IUiLayer
 
+-- TODO: z_order should be a class variable, or at least configurable,
+-- instead of having to specify it at the call site every time.
+
+--- Starts drawing this UI layer and switches input focus to it.
+---
+--- @treturn[opt] any The value returned by the layer's `update`
+--- function. Always nil if the layer was canceled, but not
+--- necessarily non-nil if it was not canceled.
+--- @treturn[opt] string Equals "canceled" if the layer was canceled
+--- out of.
 local function query(self, z_order)
    class.assert_is_an(IUiLayer, self)
 
