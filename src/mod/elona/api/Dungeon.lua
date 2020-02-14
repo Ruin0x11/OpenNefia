@@ -41,7 +41,6 @@ local room_kinds = {
 function Dungeon.create_map(params, width, height, max_crowd_density)
    width = width or params.width
    height = height or params.height
-   require("api.Log").error("%s %s %s", width, height, max_crowd_density)
 
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")

@@ -12,6 +12,7 @@ local own_states = {
    [-2] = "inherited",
    [0]  = "none",
    [1]  = "not_owned",
+   [2]  = "shop",
    [3]  = "shelter",
    [4]  = "harvested",
    [5]  = "unobtainable",

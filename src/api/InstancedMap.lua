@@ -124,6 +124,7 @@ local fallbacks = {
    has_anchored_npcs = false,
    reveals_fog = false,
    name = "",
+   item_limit = nil,
 
    is_generated_every_time = false,
    is_not_regenerated = false,
@@ -550,6 +551,14 @@ function InstancedMap:redraw_all_tiles()
    end
 end
 
+function InstancedMap:replace_with(other)
+   assert(class.is_an(InstancedMap, other))
+
+   local uid = self.uid
+   table.replace_with(self, other)
+   self.uid = uid
+end
+
 function InstancedMap:deserialize()
    ILocation.deserialize(self)
    self:redraw_all_tiles()
@@ -616,6 +625,5 @@ end
 function InstancedMap:can_take_object(obj)
    return true
 end
-
 
 return InstancedMap

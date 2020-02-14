@@ -349,7 +349,7 @@ data:add_multi(
          }
       },
       {
-         _id = "sales_person_a",
+         _id = "cyber_dome",
          elona_id = 1011,
          rules = {
             { one_in = 4, categories = "elona.equip_ranged" },
@@ -359,7 +359,25 @@ data:add_multi(
          }
       },
       {
-         _id = "sales_person_c",
+         _id = "embassy",
+         elona_id = 1012,
+         rules = {
+            { categories = "elona.furniture" },
+            { index = 0, id = "elona.microwave_oven" },
+            { index = 1, id = "elona.shop_strongbox" },
+            { index = 2, id = "elona.register" },
+            { index = 3, id = "elona.salary_chest" },
+            { index = 4, id = "elona.freezer" },
+            { index = 5, id = "elona.playback_disc" },
+            { index = 6, id = "elona.house_board" },
+            { predicate = function(args) return args.index > 10 and not Rand.one_in(3) end, id = "Skip" },
+            { index = 19, id = "elona.red_treasure_machine" },
+            { index = 20, id = "elona.blue_treasure_machine" },
+            { index = 21, id = "elona.tax_masters_tax_box" },
+         },
+      },
+      {
+         _id = "deed",
          elona_id = 1013,
          rules = {
             { all_but_one_in = 3, id = "Skip" },
@@ -403,24 +421,6 @@ data:add_multi(
          rules = {
             { id = "elona.bottle_of_dye" },
          }
-      },
-      {
-         _id = "sales_person_b",
-         elona_id = 1012,
-         rules = {
-            { categories = "elona.furniture" },
-            { index = 0, id = "elona.microwave_oven" },
-            { index = 1, id = "elona.shop_strongbox" },
-            { index = 2, id = "elona.register" },
-            { index = 3, id = "elona.salary_chest" },
-            { index = 4, id = "elona.freezer" },
-            { index = 5, id = "elona.playback_disc" },
-            { index = 6, id = "elona.house_board" },
-            { predicate = function(args) return args.index > 10 and not Rand.one_in(3) end, id = "Skip" },
-            { index = 19, id = "elona.red_treasure_machine" },
-            { index = 20, id = "elona.blue_treasure_machine" },
-            { index = 21, id = "elona.tax_masters_tax_box" },
-         },
       },
       {
          _id = "fisher",

@@ -34,6 +34,7 @@ data:add_multi(
       { _id = "on_chara_pass_turn" },
       { _id = "on_game_initialize" },
       { _id = "on_map_generated" },
+      { _id = "on_map_regenerated" },
       { _id = "on_map_loaded" },
       { _id = "on_map_loaded_from_entrance" },
       { _id = "on_map_rebuilt" },

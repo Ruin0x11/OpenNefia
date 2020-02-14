@@ -610,4 +610,9 @@ function Tools.gen_all_maps()
    end
 end
 
+function Tools.gen_one_map(id)
+   local _, map = assert(Map.generate("elona_sys.map_template", { id = id }))
+   print(Tools.print_map_detailed(map))
+end
+
 return Tools

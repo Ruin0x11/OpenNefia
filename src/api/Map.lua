@@ -100,8 +100,7 @@ function Map.load(uid)
       return false, map
    end
 
-   -- Map events should be initialized here because they will not be
-   -- serialized.
+   -- This binds the events on the map.
    run_generator_load_callback(map)
 
    map:emit("base.on_map_loaded")
@@ -349,9 +348,10 @@ function Map.generate(generator_id, params, opts)
    map.generated_with = { generator = generator_id, params = params }
    Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
 
-   map:emit("base.on_map_generated")
-
+   -- This binds the events on the map.
    run_generator_load_callback(map)
+
+   map:emit("base.on_map_generated", {is_first_generation=true})
    map:emit("base.on_map_loaded")
 
    if not params.no_refresh then
@@ -441,7 +441,7 @@ local function regenerate_map(map)
    map.next_regenerate_date = World.date_hours() + 120
 end
 
-Event.register("base.on_regenerate_map", "regenerate map", regenerate_map)
+Event.register("base.on_regenerate_map", "regenerate map", regenerate_map, {priority=50000})
 
 function Map.refresh(map)
    Log.info("Refreshing map %d (%s)", map.uid, map.gen_id)
@@ -681,6 +681,7 @@ function Map.travel_to(map_or_uid, params)
 
    if map.visit_times > 0 and map.is_generated_every_time then
       Log.info("Rebuilding map.")
+
       -- Regenerate the map with the same parameters.
       assert(map.generated_with)
       local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
@@ -692,8 +693,7 @@ function Map.travel_to(map_or_uid, params)
 
       map:emit("base.on_map_rebuild", {new_map=new_map,travel_to_params=params})
 
-      new_map.uid = map.uid
-      map = new_map
+      map:replace_with(new_map)
    end
 
    if map.uid == current.uid then

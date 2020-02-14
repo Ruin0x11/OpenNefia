@@ -77,6 +77,14 @@ local role = {
       elona_id = 17
    },
    {
+      _id = "returner",
+      elona_id = 21,
+   },
+   {
+      _id = "caravan_master",
+      elona_id = 23
+   },
+   {
       _id = "innkeeper",
       elona_id = 1005,
    },

@@ -74,3 +74,14 @@ data:add {
       [1000] = "",
    },
 }
+
+data:add {
+   _type = "elona_sys.sidequest",
+   _id = "nightmare",
+
+   progress = {
+      [1] = "quest.journal.sub.nightmare.progress._0",
+      [2] = "quest.journal.sub.nightmare.progress._1",
+      [1000] = "",
+   },
+}

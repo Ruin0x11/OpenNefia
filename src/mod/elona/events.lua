@@ -633,9 +633,7 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
 
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then
-      local calc =
       local Calc = require("mod.elona.api.Calc")
-
       Calc.respawn_mobs()
    end
 end

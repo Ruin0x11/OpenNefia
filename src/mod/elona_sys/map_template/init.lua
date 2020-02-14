@@ -119,6 +119,15 @@ local function bind_events(template)
       }
    end
 
+   if template.on_regenerate then
+      events[#events+1] = {
+         id = "base.on_map_regenerated",
+         name = "map_template: on_regenerate",
+         callback = template.on_regenerate,
+         priority = 70000
+      }
+   end
+
    events[#events+1] = {
       id = "base.on_map_rebuilt",
       name = "Transfer stairs to new map; map_template: on_rebuild",

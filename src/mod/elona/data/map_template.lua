@@ -1,5 +1,7 @@
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Map = require("api.Map")
 local Feat = require("api.Feat")
@@ -111,114 +113,6 @@ local function generate_chara(map)
    local Charagen = require("mod.tools.api.Charagen")
    return Charagen.create(nil, nil, params, map)
 end
-
-local test_world = {
-   _id = "test_world",
-   _type = "elona_sys.map_template",
-   elona_id = 47,
-   map = "test",
-   copy = {
-      types = { "world_map" },
-      player_start_pos = "base.world",
-      tileset = "elona.world_map",
-      turn_cost = 50000,
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 0
-   },
-   areas = {
-      { map = "elona.test_world_north_border", x = 28, y = 1 },
-   }
-}
-data:add(test_world)
-
-local test_world_north_border = {
-   _id = "test_world_north_border",
-   _type = "elona_sys.map_template",
-   elona_id = 48,
-   map = "test2",
-   image = "elona.feat_area_border_tent",
-   copy = {
-      types = { "guild" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      turn_cost = 10000,
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      chara_filter = chara_filter_town()
-   }
-}
-data:add(test_world_north_border)
-
-local south_tyris = {
-   _id = "south_tyris",
-   _type = "elona_sys.map_template",
-   elona_id = 44,
-   map = "styris",
-   copy = {
-      types = { "world_map" },
-      player_start_pos = "base.world",
-      tileset = "elona.world_map",
-      turn_cost = 50000,
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 0
-   },
-   areas = {
-      { map = "elona.south_tyris_north_border", x = 42, y = 1 },
-      { map = "elona.the_smoke_and_pipe", x = 39, y = 13 },
-   }
-}
-data:add(south_tyris)
-
-local south_tyris_north_border = {
-   _id = "south_tyris_north_border",
-   _type = "elona_sys.map_template",
-   elona_id = 45,
-   map = "test2",
-   image = "elona.feat_area_border_tent",
-   copy = {
-      types = { "guild" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      turn_cost = 10000,
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      chara_filter = chara_filter_town()
-   }
-}
-data:add(south_tyris_north_border)
-
-local the_smoke_and_pipe = {
-   _id = "the_smoke_and_pipe",
-   _type = "elona_sys.map_template",
-   elona_id = 46,
-   map = "inn1",
-   image = "elona.feat_area_the_smoke_and_pipe",
-   copy = {
-      types = { "guild" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      turn_cost = 10000,
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = true,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      chara_filter = chara_filter_town()
-   }
-}
-data:add(the_smoke_and_pipe)
 
 local vernis = {
    _type = "elona_sys.map_template",
@@ -1516,7 +1410,6 @@ local fields = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = false,
-      has_anchored_npcs = false,
       default_ai_calm = 0
    }
 }
@@ -1564,7 +1457,6 @@ local show_house = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 1,
       tileset = "elona.home",
       reveals_fog = true,
@@ -1586,13 +1478,17 @@ local arena = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 0,
+      max_crowd_density = 0,
       reveals_fog = true,
       prevents_domination = true,
       prevents_monster_ball = true
    }
 }
+function arena.on_generate(map)
+   -- TODO
+   Chara.create("elona.putit", nil, nil, nil, map)
+end
 data:add(arena)
 
 local pet_arena = {
@@ -1607,14 +1503,18 @@ local pet_arena = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 0,
+      max_crowd_density = 0,
       reveals_fog = true,
       prevents_teleport = true,
       prevents_domination = true,
       prevents_monster_ball = true
    }
 }
+function arena.on_generate(map)
+   -- TODO
+   Chara.create("elona.putit", nil, nil, nil, map)
+end
 data:add(pet_arena)
 
 local quest = {
@@ -1628,7 +1528,7 @@ local quest = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = false,
-      has_anchored_npcs = false,
+      max_crowd_density = 0,
       default_ai_calm = 0,
       shows_floor_count_in_name = true,
       prevents_building_shelter = true
@@ -1684,7 +1584,6 @@ local the_void = {
       dungeon_level = 50,
       deepest_dungeon_level = 99999999,
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 0,
       can_return_to = true,
       prevents_domination = true,
@@ -1840,7 +1739,6 @@ local puppy_cave = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 0,
       is_generated_every_time = true
    },
@@ -1922,6 +1820,7 @@ local pyramid = {
    map = "sqPyramid",
    image = "elona.feat_area_pyramid",
    copy = {
+      music = "elona.puti",
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
       dungeon_level = 20,
@@ -1929,13 +1828,43 @@ local pyramid = {
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 0,
+      max_crowd_density = 40,
       prevents_teleport = true,
       chara_filter = function(map)
          return Calc.filter(map.dungeon_level, "bad", {category = 13}, map)
       end
    }
 }
+function pyramid.on_generate(map)
+   for _=1,map:calc("max_crowd_density")+1 do
+      generate_chara(map)
+   end
+end
 data:add(pyramid)
+
+local pyramid_2 = {
+   _id = "pyramid",
+   _type = "elona_sys.map_template",
+   elona_id = 37,
+   map = "sqPyramid2",
+   image = "elona.feat_area_pyramid",
+   copy = {
+      music = "elona.puti",
+      types = { "dungeon" },
+      player_start_pos = "elona.stair_up",
+      dungeon_level = 21,
+      deepest_dungeon_level = 21,
+      is_indoor = true,
+      has_anchored_npcs = true,
+      default_ai_calm = 0,
+      max_crowd_density = 0,
+      prevents_teleport = true,
+      chara_filter = function(map)
+         return Calc.filter(map.dungeon_level, "bad", {category = 13}, map)
+      end
+   }
+}
+data:add(pyramid_2)
 
 local lumiest_graveyard = {
    _id = "lumiest_graveyard",
@@ -1944,6 +1873,7 @@ local lumiest_graveyard = {
    map = "grave_1",
    image = "elona.feat_area_crypt",
    copy = {
+      music = "elona.ruin",
       types = { "shelter" },
       player_start_pos = "base.edge",
       tileset = "elona.wilderness",
@@ -1952,11 +1882,17 @@ local lumiest_graveyard = {
       is_indoor = false,
       has_anchored_npcs = true,
       default_ai_calm = 1,
+      max_crowd_density = 7,
       chara_filter = function(map)
-         return Calc.filter(20, "bad", {fltselect = 4}, map)
+         return Calc.filter(20, "good", {fltselect = 4}, map)
       end
    }
 }
+function lumiest_graveyard.on_generate(map)
+   for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+      generate_chara(map)
+   end
+end
 data:add(lumiest_graveyard)
 
 local truce_ground = {
@@ -1973,13 +1909,33 @@ local truce_ground = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = false,
+      max_crowd_density = 10,
       has_anchored_npcs = true,
       default_ai_calm = 1,
       chara_filter = function(map)
-         return Calc.filter(20, "bad", {fltselect = 4}, map)
+         return Calc.filter(20, "good", {fltselect = 4}, map)
       end
    }
 }
+function truce_ground.on_generate(map)
+   local function mkaltar(god, x, y)
+      local item = Item.create("elona.altar", x, y, {}, map)
+      item.params.god_id = god
+      item.own_state = "not_owned"
+   end
+
+   mkaltar("elona.mani", 10, 8)
+   mkaltar("elona.lulwy", 13, 8)
+   mkaltar("elona.opatos", 10, 13)
+   mkaltar("elona.ehekatl", 13, 13)
+   mkaltar("elona.itzpalt", 20, 8)
+   mkaltar("elona.kumiromi", 23, 8)
+   mkaltar("elona.jure", 20, 13)
+
+   for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+      generate_chara(map)
+   end
+end
 data:add(truce_ground)
 
 local jail = {
@@ -1996,14 +1952,337 @@ local jail = {
       dungeon_level = 1,
       deepest_dungeon_level = 1,
       is_indoor = true,
-      has_anchored_npcs = false,
       default_ai_calm = 0,
+      max_crowd_density = 0,
       prevents_teleport = true,
       prevents_return = true,
       prevents_random_events = true
    }
 }
 data:add(jail)
+
+local test_world = {
+   _id = "test_world",
+   _type = "elona_sys.map_template",
+   elona_id = 47,
+   map = "test",
+   copy = {
+      types = { "world_map" },
+      player_start_pos = "base.world",
+      tileset = "elona.world_map",
+      turn_cost = 50000,
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 0
+   },
+   areas = {
+      { map = "elona.test_world_north_border", x = 28, y = 1 },
+   }
+}
+data:add(test_world)
+
+local function on_generate_border(map)
+   local chara = Chara.create("elona.shopkeeper", 7, 23, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.general_vendor" }
+   chara.shop_rank = 10
+   chara.name = I18N.get("chara.job.general_vendor", chara.name)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.shopkeeper", 5, 17, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara.shop_rank = 12
+   chara.name = I18N.get("chara.job.trader", chara.name)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.shopkeeper", 16, 19, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+
+   chara = Chara.create("elona.bartender", 17, 13, nil, map)
+   chara.roles["elona.bartender"] = true
+
+   chara = Chara.create("elona.caravan_master", 7, 3, nil, map)
+   chara.roles["elona.caravan_master"] = {dest=""}
+
+   for _=1,2 do
+      chara = Chara.create("elona.beggar", nil, nil, nil, map)
+
+      chara = Chara.create("elona.mercenary_warrior", nil, nil, nil, map)
+      chara.faction = "elona.citizen"
+
+      chara = Chara.create("elona.mercenary_archer", nil, nil, nil, map)
+      chara.faction = "elona.citizen"
+
+      chara = Chara.create("elona.mercenary_wizard", nil, nil, nil, map)
+      chara.faction = "elona.citizen"
+   end
+
+   chara = Chara.create("elona.guard", 5, 7, nil, map)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.guard", 8, 7, nil, map)
+   chara.roles["elona.guard"] = true
+   chara.ai_calm = 3
+end
+
+local test_world_north_border = {
+   _id = "test_world_north_border",
+   _type = "elona_sys.map_template",
+   elona_id = 48,
+   map = "test2",
+   image = "elona.feat_area_border_tent",
+   copy = {
+      types = { "guild" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      turn_cost = 10000,
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      max_crowd_density = 0,
+      chara_filter = chara_filter_town()
+   }
+}
+function test_world_north_border.on_generate(map)
+   on_generate_border(map)
+
+   DeferredEvent.add(function()
+         for _, ally in Chara.iter_allies() do
+            if not ally.roles["elona.adventurer"]
+               and not ally.roles["elona.special"]
+            then
+               -- TODO emotion icon
+               Gui.mes("event.my_eyes", ally)
+            end
+         end
+   end)
+end
+data:add(test_world_north_border)
+
+local south_tyris = {
+   _id = "south_tyris",
+   _type = "elona_sys.map_template",
+   elona_id = 44,
+   map = "styris",
+   copy = {
+      types = { "world_map" },
+      player_start_pos = "base.world",
+      tileset = "elona.world_map",
+      turn_cost = 50000,
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      max_crowd_density = 0,
+      default_ai_calm = 0
+   },
+   areas = {
+      { map = "elona.south_tyris_north_border", x = 42, y = 1 },
+      { map = "elona.the_smoke_and_pipe", x = 39, y = 13 },
+   }
+}
+data:add(south_tyris)
+
+local north_tyris_south_border = {
+   _id = "north_tyris_south_border",
+   _type = "elona_sys.map_template",
+   elona_id = 43,
+   map = "station-nt1",
+   image = "elona.feat_area_border_tent",
+   copy = {
+      types = { "guild" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      max_crowd_density = 0,
+      chara_filter = chara_filter_town()
+   },
+   on_generate = on_generate_border
+}
+data:add(north_tyris_south_border)
+
+local south_tyris_north_border = {
+   _id = "south_tyris_north_border",
+   _type = "elona_sys.map_template",
+   elona_id = 45,
+   map = "station-nt1",
+   image = "elona.feat_area_border_tent",
+   copy = {
+      types = { "guild" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      turn_cost = 10000,
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      chara_filter = chara_filter_town()
+   },
+   on_generate = on_generate_border
+}
+data:add(south_tyris_north_border)
+
+local the_smoke_and_pipe = {
+   _id = "the_smoke_and_pipe",
+   _type = "elona_sys.map_template",
+   elona_id = 46,
+   map = "inn1",
+   image = "elona.feat_area_the_smoke_and_pipe",
+   copy = {
+      music = "elona.ruin",
+      types = { "guild" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      turn_cost = 10000,
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = true,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      max_crowd_density = 0,
+      chara_filter = chara_filter_town()
+   }
+}
+function the_smoke_and_pipe.on_generate(map)
+   local chara = Chara.create("elona.shopkeeper", 19, 10, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
+   chara.roles["elona.innkeeper"] = true
+   chara.shop_rank = 8
+   chara.name = I18N.get("chara.job.innkeeper", chara.name)
+
+   chara = Chara.create("elona.the_leopard_warrior", 26, 16, nil, map)
+   chara.roles["elona.special"] = true
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.town_child", 25, 15, nil, map)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.town_child", 25, 17, nil, map)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.town_child", 27, 18, nil, map)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.town_child", 27, 16, nil, map)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.town_child", 26, 17, nil, map)
+   chara.ai_calm = 3
+
+   chara = Chara.create("elona.silvia", 4, 3, nil, map)
+   chara.roles["elona.special"] = true
+
+   Chara.create("elona.rogue", 4, 2, nil, map)
+   Chara.create("elona.farmer", 3, 3, nil, map)
+   Chara.create("elona.artist", 4, 4, nil, map)
+   Chara.create("elona.noble", 5, 4, nil, map)
+   Chara.create("elona.hot_spring_maniac", 24, 3, nil, map)
+   Chara.create("elona.hot_spring_maniac", 26, 4, nil, map)
+   Chara.create("elona.hot_spring_maniac", 25, 5, nil, map)
+   Chara.create("elona.hot_spring_maniac", 25, 9, nil, map)
+   Chara.create("elona.bard", 12, 9, nil, map)
+
+   for _=1,2 do
+      Chara.create("elona.beggar", nil, nil, nil, map)
+
+      chara = Chara.create("elona.mercenary_warrior", nil, nil, nil, map)
+      chara.faction = "base.citizen"
+
+      chara = Chara.create("elona.old_person", nil, nil, nil, map)
+      chara.faction = "base.citizen"
+
+      Chara.create("elona.mercenary", nil, nil, nil, map)
+      Chara.create("elona.tourist", nil, nil, nil, map)
+   end
+end
+data:add(the_smoke_and_pipe)
+
+local miral_and_garoks_workshop = {
+   _id = "miral_and_garoks_workshop",
+   _type = "elona_sys.map_template",
+   elona_id = 34,
+   map = "smith0",
+   image = "elona.feat_area_miral_and_garoks_workshop",
+   copy = {
+      music = "elona.ruin",
+      types = { "guild" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      reveals_fog = true,
+      chara_filter = chara_filter_town()
+   }
+}
+function miral_and_garoks_workshop.on_generate(map)
+   local chara = Chara.create("elona.garokk", 17, 11, nil, map)
+   chara.roles["elona.special"] = true
+
+   chara = Chara.create("elona.miral", 8, 16, nil, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.miral"}
+
+   for _=1,5 do
+      chara = Chara.create("elona.cat", nil, nil, nil, map)
+      chara.roles["elona.special"] = true
+   end
+end
+data:add(miral_and_garoks_workshop)
+
+local mansion_of_younger_sister = {
+   _id = "mansion_of_younger_sister",
+   _type = "elona_sys.map_template",
+   elona_id = 29,
+   map = "sister",
+   copy = {
+      types = { "shelter" },
+      player_start_pos = "base.south",
+      tileset = "elona.town",
+      dungeon_level = 1,
+      deepest_dungeon_level = 1,
+      is_indoor = false,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      can_return_to = true,
+      villagers_make_snowmen = true,
+      max_crowd_density = 0,
+      is_hidden_in_world_map = true
+   }
+}
+function mansion_of_younger_sister.on_generate(map, params)
+   if params.is_first_generation then
+      local item = Item.create("elona.book_of_rachel", 12, 8, nil, map)
+      item.params.book_no = 4
+   end
+
+   local chara = Chara.create("elona.younger_sister_of_mansion", 12, 6, nil, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.younger_sister_of_mansion"}
+
+   for _=1,6 do
+      chara = Chara.create("elona.young_lady", nil, nil, nil, map)
+      chara.roles["elona.special"] = true
+   end
+
+   for _=1,8 do
+      chara = Chara.create("elona.silver_cat", nil, nil, nil, map)
+      chara.roles["elona.special"] = true
+   end
+end
+data:add(mansion_of_younger_sister)
 
 local cyber_dome = {
    _id = "cyber_dome",
@@ -2021,11 +2300,41 @@ local cyber_dome = {
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
+      max_crowd_density = 10,
       chara_filter = function(map)
          return Calc.filter(10, "bad", {tag_filters = {"sf"}}, map)
       end
    }
 }
+function cyber_dome.on_generate(map)
+   local item = Item.create("elona.altar", 19, 5, {}, map)
+   item.params.god_id = "elona.mani"
+   item.own_state = "not_owned"
+
+   local chara = Chara.create("elona.sales_person", 9, 16, nil, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.cyber_dome"}
+   chara.shop_rank = 10
+
+   chara = Chara.create("elona.sales_person", 9, 8, nil, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.cyber_dome"}
+   chara.shop_rank = 10
+
+   chara = Chara.create("elona.strange_scientist", 28, 7, nil, map)
+   chara.roles["elona.special"] = true
+   chara.shop_rank = 10
+
+   for _=1,4 do
+      chara = Chara.create("elona.citizen_of_cyber_dome", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen_of_cyber_dome2", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+   end
+
+   for _=1,math.floor(map:calc("max_crowd_density")/2) do
+      generate_chara(map)
+   end
+end
 data:add(cyber_dome)
 
 local larna = {
@@ -2045,52 +2354,53 @@ local larna = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       can_return_to = true,
+      max_crowd_density = 20,
       chara_filter = chara_filter_town()
    }
 }
+function larna.on_generate(map)
+   local chara = Chara.create("elona.wizard", 21, 23, nil, map)
+   chara.roles["elona.returner"] = true
+
+   chara = Chara.create("elona.shopkeeper", 9, 44, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.dye_vendor" }
+   chara.shop_rank = 5
+   chara.name = I18N.get("chara.job.dye_vendor", chara.name)
+
+   chara = Chara.create("elona.shopkeeper", 13, 37, nil, map)
+   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.souvenir_vendor" }
+   chara.shop_rank = 30
+   chara.name = I18N.get("chara.job.souvenir_vendor", chara.name)
+
+   chara = Chara.create("elona.bartender", 24, 48, nil, map)
+   chara.roles["elona.bartender"] = true
+
+   Chara.create("elona.hot_spring_maniac", 7, 36, nil, map)
+   Chara.create("elona.hot_spring_maniac", 9, 38, nil, map)
+   Chara.create("elona.hot_spring_maniac", 6, 33, nil, map)
+   Chara.create("elona.hot_spring_maniac", 3, 33, nil, map)
+   Chara.create("elona.hot_spring_maniac", 8, 31, nil, map)
+   Chara.create("elona.hot_spring_maniac", 4, 36, nil, map)
+
+   for _=1,7 do
+      chara = Chara.create("elona.citizen", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+
+      Chara.create("elona.hot_spring_maniac", nil, nil, nil, map)
+   end
+
+   for _=1,15 do
+      Chara.create("elona.hot_spring_maniac", nil, nil, nil, map)
+   end
+
+   for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+      generate_chara(map)
+   end
+end
 data:add(larna)
-
-local miral_and_garoks_workshop = {
-   _id = "miral_and_garoks_workshop",
-   _type = "elona_sys.map_template",
-   elona_id = 34,
-   map = "smith0",
-   image = "elona.feat_area_miral_and_garoks_workshop",
-   copy = {
-      types = { "guild" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      reveals_fog = true,
-      chara_filter = chara_filter_town()
-   }
-}
-data:add(miral_and_garoks_workshop)
-
-local mansion_of_younger_sister = {
-   _id = "mansion_of_younger_sister",
-   _type = "elona_sys.map_template",
-   elona_id = 29,
-   map = "sister",
-   copy = {
-      types = { "shelter" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      can_return_to = true,
-      villagers_make_snowmen = true,
-      is_hidden_in_world_map = true
-   }
-}
-data:add(mansion_of_younger_sister)
 
 local embassy = {
    _id = "embassy",
@@ -2109,30 +2419,41 @@ local embassy = {
       has_anchored_npcs = true,
       default_ai_calm = 1,
       reveals_fog = true,
+      max_crowd_density = 0,
       chara_filter = chara_filter_town()
    }
 }
-data:add(embassy)
+function embassy.on_generate(map)
+   local chara = Chara.create("elona.sales_person", 9, 2, {}, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.embassy"}
+   chara.shop_rank = 10
 
-local north_tyris_south_border = {
-   _id = "north_tyris_south_border",
-   _type = "elona_sys.map_template",
-   elona_id = 43,
-   map = "station-nt1",
-   image = "elona.feat_area_border_tent",
-   copy = {
-      types = { "guild" },
-      player_start_pos = "base.south",
-      tileset = "elona.town",
-      dungeon_level = 1,
-      deepest_dungeon_level = 1,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 1,
-      chara_filter = chara_filter_town()
-   }
-}
-data:add(north_tyris_south_border)
+   chara = Chara.create("elona.sales_person", 15, 2, {}, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.embassy"}
+   chara.shop_rank = 10
+
+   chara = Chara.create("elona.sales_person", 21, 2, {}, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.deed"}
+   chara.shop_rank = 10
+
+   chara = Chara.create("elona.sales_person", 3, 2, {}, map)
+   chara.roles["elona.shopkeeper"] = {inventory_id="elona.deed"}
+   chara.shop_rank = 10
+
+   for _=1,3 do
+      chara = Chara.create("elona.citizen", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+
+      chara = Chara.create("elona.citizen2", nil, nil, nil, map)
+      chara.roles["elona.citizen"] = true
+   end
+
+   for i=1,4 do
+      chara = Chara.create("elona.guard", 3+(i-1)*6, 9, nil, map)
+      chara.roles["elona.guard"] = true
+   end
+end
+data:add(embassy)
 
 local fort_of_chaos_beast = {
    _id = "fort_of_chaos_beast",
@@ -2141,6 +2462,7 @@ local fort_of_chaos_beast = {
    map = "god",
    image = "elona.feat_area_god",
    copy = {
+      music = "elona.boss2",
       types = { "shelter" },
       player_start_pos = "base.south",
       tileset = "elona.tower_1",
@@ -2149,9 +2471,13 @@ local fort_of_chaos_beast = {
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
+      max_crowd_density = 0,
       chara_filter = chara_filter_town()
    }
 }
+function fort_of_chaos_beast.on_generate(map)
+   Chara.create("elona.frisia", 12, 14, nil, map)
+end
 data:add(fort_of_chaos_beast)
 
 local fort_of_chaos_machine = {
@@ -2161,16 +2487,21 @@ local fort_of_chaos_machine = {
    map = "god",
    image = "elona.feat_area_god",
    copy = {
+      music = "elona.boss2",
       types = { "shelter" },
       player_start_pos = "base.south",
       tileset = "elona.tower_1",
       dungeon_level = 33,
       deepest_dungeon_level = 33,
+      max_crowd_density = 0,
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1
    }
 }
+function fort_of_chaos_beast.on_generate(map)
+   Chara.create("elona.utima", 12, 14, nil, map)
+end
 data:add(fort_of_chaos_machine)
 
 local fort_of_chaos_collapsed = {
@@ -2180,23 +2511,28 @@ local fort_of_chaos_collapsed = {
    map = "god",
    image = "elona.feat_area_god",
    copy = {
+      music = "elona.boss2",
       types = { "shelter" },
       player_start_pos = "base.south",
       tileset = "elona.tower_1",
       dungeon_level = 33,
       deepest_dungeon_level = 33,
+      max_crowd_density = 0,
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1
    }
 }
+function fort_of_chaos_beast.on_generate(map)
+   Chara.create("elona.azzrssil", 12, 14, nil, map)
+end
 data:add(fort_of_chaos_collapsed)
 
 local shelter = {
    _id = "shelter",
    _type = "elona_sys.map_template",
    elona_id = 30,
-   map = "shelter_2", -- TODO
+   map = "shelter_1",
    copy = {
       music = "elona.lonely",
       types = { "player_owned" },
@@ -2208,6 +2544,9 @@ local shelter = {
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
+      max_crowd_density = 0,
+      item_limit = 5,
+
       reveals_fog = true,
       prevents_return = true,
       prevents_building_shelter = true,
@@ -2216,8 +2555,76 @@ local shelter = {
 }
 data:add(shelter)
 
+local shelter_inn = {
+   _id = "shelter_inn",
+   _type = "elona_sys.map_template",
+   map = "shelter_2",
+   copy = {
+      music = "elona.lonely",
+      types = { "field" },
+      player_start_pos = "elona.stair_up",
+      tileset = "elona.tower_1",
+      turn_cost = 1000000,
+      dungeon_level = -999999,
+      deepest_dungeon_level = 999999,
+      is_indoor = true,
+      has_anchored_npcs = true,
+      default_ai_calm = 1,
+      max_crowd_density = 0,
+      item_limit = 5,
+      is_generated_every_time = true,
+
+      reveals_fog = true,
+      prevents_return = true,
+      prevents_building_shelter = true,
+      prevents_random_events = true
+   }
+}
+data:add(shelter_inn)
+
 local test_site = {
    _id = "test_site",
+   _type = "elona_sys.map_template",
+   map = "sqNightmare",
+   copy = {
+      music = "elona.puti",
+      types = { "dungeon" },
+      player_start_pos = { x = 6, y = 27 },
+      dungeon_level = 5,
+      deepest_dungeon_level = 999,
+      is_indoor = true,
+      is_not_regenerated = true,
+      max_crowd_density = 0,
+      default_ai_calm = 0
+   },
+   events = {
+      {
+         id = "elona_sys.on_quest_check",
+         name = "Sidequest: nightmare",
+
+         callback = function(map)
+            if Sidequest.progress("elona.nightmare") < 2 then
+               if Sidequest.no_targets_remaining(map) then
+                  Sidequest.set_progress("elona.nightmare", 2)
+                  Sidequest.update_journal()
+               end
+            end
+         end
+      },
+      {
+         id = "base.on_map_generated",
+         name = "Sidequest: nightmare",
+
+         callback = function(map)
+            Sidequest.set_quest_targets(map)
+         end
+      }
+   }
+}
+data:add(test_site)
+
+local rq = {
+   _id = "rq",
    _type = "elona_sys.map_template",
    elona_id = 9,
    map = "dungeon1",
@@ -2228,8 +2635,108 @@ local test_site = {
       dungeon_level = 1,
       deepest_dungeon_level = 45,
       is_indoor = false,
-      has_anchored_npcs = false,
+      max_crowd_density = 0,
       default_ai_calm = 0
    }
 }
-data:add(test_site)
+data:add(rq)
+
+local shop = {
+   _id = "shop",
+   _type = "elona_sys.map_template",
+   elona_id = 102,
+   map = "shop_1",
+   copy = {
+      music = "elona.town3",
+      types = { "player_owned" },
+      player_start_pos = "base.south",
+      is_indoor = true,
+      max_items = 10,
+   }
+}
+function shop.on_generate(map)
+   local item = Item.create("elona.book", 17, 14, nil, map)
+   item.params.book_id = 8
+
+   Item.create("elona.shop_strongbox", 19, 10, nil, map)
+   Item.create("elona.register", 17, 11, nil, map)
+end
+data:add(shop)
+
+local crop = {
+   _id = "crop",
+   _type = "elona_sys.map_template",
+   elona_id = 103,
+   map = "crop_1",
+   copy = {
+      music = "elona.lonely",
+      types = { "player_owned" },
+      player_start_pos = "base.south",
+      is_indoor = false,
+      max_items = 80,
+   }
+}
+function crop.on_generate(map)
+   local item = Item.create("elona.book", 17, 14, nil, map)
+   item.params.book_id = 9
+end
+data:add(crop)
+
+local ranch = {
+   _id = "ranch",
+   _type = "elona_sys.map_template",
+   elona_id = 31,
+   map = "ranch_1",
+   copy = {
+      music = "elona.lonely",
+      types = { "player_owned" },
+      player_start_pos = "base.south",
+      is_indoor = false,
+      max_items = 80,
+   }
+}
+function ranch.on_generate(map)
+   local item = Item.create("elona.book", 23, 8, nil, map)
+   item.params.book_id = 11
+
+   Item.create("elona.register", 22, 6, nil, map)
+end
+data:add(ranch)
+
+local dungeon = {
+   _id = "dungeon",
+   _type = "elona_sys.map_template",
+   elona_id = 39,
+   map = "dungeon1",
+   copy = {
+      music = "elona.lonely",
+      types = { "player_owned" },
+      player_start_pos = "base.south",
+      is_indoor = false,
+      max_items = 350,
+   }
+}
+function dungeon.on_generate(map)
+   local item = Item.create("elona.book", 39, 54, nil, map)
+   item.params.book_id = 15
+end
+data:add(dungeon)
+
+local storage = {
+   _id = "storage",
+   _type = "elona_sys.map_template",
+   elona_id = 104,
+   map = "storage_1",
+   copy = {
+      music = "elona.lonely",
+      types = { "player_owned" },
+      player_start_pos = "base.south",
+      is_indoor = false,
+      max_items = 200,
+   }
+}
+function storage.on_generate(map)
+   local item = Item.create("elona.book", 39, 54, nil, map)
+   item.params.book_id = 15
+end
+data:add(storage)
