@@ -1,13 +1,9 @@
-local iso_coords = class.class("iso_coords")
-
-function iso_coords:load_tile(tile, x, y)
-   love.graphics.draw(tile, x, y)
-end
+local ICoords = require("internal.draw.coords.ICoords")
+local iso_coords = class.class("iso_coords", ICoords)
 
 function iso_coords:get_size()
    return 64, 64
 end
-
 
 function iso_coords:get_tiled_width(w)
    return math.floor(w / 64)

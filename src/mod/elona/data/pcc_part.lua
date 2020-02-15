@@ -160,6 +160,6 @@ local pcc_parts = {
 
 for _, pcc_part in ipairs(pcc_parts) do
    pcc_part._type = "base.pcc_part"
-   pcc_part.image = string.format("mod/elona/graphic/pcc_part/%s.png", pcc_part._id)
+   pcc_part.image = string.format("graphic/pcc_%s.png", pcc_part._id)
    data:add(pcc_part)
 end

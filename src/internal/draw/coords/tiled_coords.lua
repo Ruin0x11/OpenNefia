@@ -1,8 +1,5 @@
-local tiled_coords = class.class("tiled_coords")
-
-function tiled_coords:load_tile(tile, x, y)
-   love.graphics.draw(tile, x, y)
-end
+local ICoords = require("internal.draw.coords.ICoords")
+local tiled_coords = class.class("tiled_coords", ICoords)
 
 function tiled_coords:get_size()
    return 48, 48

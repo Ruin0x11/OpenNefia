@@ -24,7 +24,11 @@ if not fs.exists(fs.get_save_directory()) then
    fs.create_directory(fs.get_save_directory())
 end
 
-Log.set_level("debug")
+local level = "debug"
+if arg[1] == "test" then
+   level = "error"
+end
+Log.set_level(level)
 
 local mods = mod.scan_mod_dir()
 startup.run_all(mods)

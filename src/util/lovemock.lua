@@ -31,9 +31,22 @@ love.graphics.newSpriteBatch = function()
       flush = function() end,
    }
 end
-love.graphics.newQuad = function()
+love.graphics.newQuad = function(x, y, w, h, tw, th)
    return {
-      getViewport = function() return 0, 0, 48, 48 end
+      x = x,
+      y = y,
+      w = w,
+      h = h,
+      tw = tw,
+      th = th,
+      getViewport = function(self) return self.x, self.y, self.w, self.h end,
+      setViewport = function(self, x, y, w, h)
+         self.x = x
+         self.y = y
+         self.w = w
+         self.h = h
+      end,
+      release = function() end
    }
 end
 love.graphics.newCanvas = function()
@@ -55,6 +68,10 @@ love.graphics.newImage = function(path)
       release = function() end,
       typeOf = function(self, ty) return ty == "Image" end
    }
+end
+love.graphics.newImageData = function(path)
+   check_path(path)
+   return {}
 end
 love.graphics.newShader = function()
    return {}

@@ -1,28 +1,49 @@
 local Draw = require("api.Draw")
 local asset_instance = require("internal.draw.asset_instance")
-local image_converter = require("internal.draw.image_converter")
 
 local asset_drawable = class.class("asset_drawable")
 
-local converter = image_converter:new()
+local image_cache = {}
 
-local function load_image(image_spec)
-   local ty = type(image_spec)
-   if ty == "string" then
-      return converter:convert_single(image_spec, {0, 0, 0})
-   elseif ty == "table" then
-      if image_spec.x then
-         return converter:crop_single(image_spec, image_spec.key_color or {0, 0, 0})
-      else
-         return converter:convert_single(image_spec, image_spec.key_color or {0, 0, 0})
-      end
-   else
-      error(("invalid image type '%s'"):format(ty))
+local function crop(proto)
+   love.graphics.setColor(1, 1, 1)
+
+   local base = image_cache[proto.source]
+   if base == nil then
+      base = love.graphics.newImage(proto.source)
+      image_cache[proto.source] = base
    end
+
+   local quad = love.graphics.newQuad(proto.x, proto.y, proto.width, proto.height,
+                                      base:getWidth(), base:getHeight())
+   local canvas = love.graphics.newCanvas(proto.width, proto.height)
+   love.graphics.setCanvas(canvas)
+
+   love.graphics.draw(base, quad, 0, 0)
+
+   love.graphics.setCanvas()
+   local image = love.graphics.newImage(canvas:newImageData())
+
+   quad:release()
+   canvas:release()
+
+   return image
+end
+
+local function load_image(proto)
+   if proto.image then
+      return love.graphics.newImage(proto.image)
+   end
+
+   if proto.source then
+      return crop(proto)
+   end
+
+   error("invalid image asset: must contain {image} or {source,x,y,width,height}")
 end
 
 function asset_drawable:init(proto)
-   self.image = load_image(proto.image)
+   self.image = load_image(proto)
 
    self.quads = {}
    self.bar_quads = {}
@@ -69,6 +90,9 @@ end
 function asset_drawable:get_height()
    return self.image:getHeight()
 end
+
+asset_drawable.getWidth = asset_drawable.get_width
+asset_drawable.getHeight = asset_drawable.get_height
 
 function asset_drawable:draw(x, y, width, height, color, centered, rotation)
    Draw.image(self.image, x, y, width, height, color, centered, rotation)

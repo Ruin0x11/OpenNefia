@@ -431,6 +431,11 @@ local function base_init(self, player)
       --Map.save(vernis)
       --Map.save(palmia)
       --Map.save(lesimas)
+
+      Map.set_map(home)
+
+      assert(Map.current():take_object(player, 15, 12))
+      Chara.set_player(player)
    end
 
    local armor = Item.create("content.armor", nil, nil, {}, player)
@@ -447,18 +452,10 @@ local function base_init(self, player)
    assert(player:equip_item(arrow))
 
    player:refresh()
-
-   Map.set_map(home)
-
-   return {
-      map = home,
-      start_x = 15,
-      start_y = 12
-   }
 end
 
 local function my_start(self, player)
-   local ret = base_init(self, player)
+   base_init(self, player)
 
    for i=1,4 do
       local a = Chara.create("elona.younger_sister", i+8, 3)
@@ -513,8 +510,6 @@ local function my_start(self, player)
    end
 
    set_pcc(Chara.player())
-
-   return ret
 end
 
 local function init_bells(self, player)

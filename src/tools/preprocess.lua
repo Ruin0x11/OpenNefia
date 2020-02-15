@@ -3,8 +3,6 @@ assert(vips)
 
 local fs = require("util.fs")
 
-local atlas_cache = {}
-
 local function remove_key_color(image, key_color)
    if image:bands() == 4 then
       key_color[4] = 0
@@ -13,98 +11,31 @@ local function remove_key_color(image, key_color)
    return image:bandjoin(alpha)
 end
 
-local function crop(i, elona_root, mod_root)
-   local source = fs.join(elona_root, i.source)
-   if not atlas_cache[source] then
-      local atlas = vips.Image.new_from_file(source)
-      if not i.no_alpha then
-         atlas = remove_key_color(atlas, i.key_color or {0, 0, 0})
-      end
-      atlas_cache[source] = atlas
-   end
-
-   local width = i.width
-   local height = i.height
-   if i.combine_multiple then
-      width = width * (i.count_x or 1)
-      height = height * (i.count_y or 1)
-   end
-
-   local cropped = atlas_cache[source]:extract_area(i.x,
-                                                      i.y,
-                                                      width,
-                                                      height)
-
-   local output = fs.join(mod_root, i.output)
-   fs.create_directory(fs.parent(output))
-   cropped:pngsave(output)
-end
-
-local function convert(i, elona_root, mod_root)
-   local source = fs.join(elona_root, i.source)
-   local image = vips.Image.new_from_file(source)
-   if not i.no_alpha then
-      image = remove_key_color(image, i.key_color or {0, 0, 0})
-   end
-   local output = fs.join(mod_root, i.output)
-   fs.create_directory(fs.parent(output))
-   image:pngsave(output)
-end
-
-local function preprocess_one(i, elona_root, mod_root)
-   if i.type == "crop" then
-      crop(i, elona_root, mod_root)
-   elseif i.type == "convert" then
-      convert(i, elona_root, mod_root)
-   else
-      error("unknown type " .. tostring(i.type))
-   end
-end
-
-local function preprocess(list, elona_root, mod_root)
-   local count = #list
-   io.write(string.format("\r%d/%d", 0, count))
-
-   for i, v in ipairs(list) do
-      preprocess_one(v, elona_root, mod_root)
-      io.write(string.format("\r%d/%d", i, count))
-   end
-   io.write("\n")
-end
-
-
---
--- Image conversion targets
---
-
-local layout = require("tools.layout.chip")
-local map_tile = require("tools.layout.map_tile")
-local portrait = require("tools.layout.portrait")
-local asset = require("tools.layout.asset")
-local pcc_part = require("tools.layout.pcc_part")
-
-local targets = {
-   layout.chara,
-   layout.item,
-   layout.feat,
-   layout.area,
-   layout.misc,
-
-   map_tile.map_tile,
-
-   portrait.portrait,
-
-   asset.crop,
-   asset.convert,
-
-   pcc_part.pcc_part,
+local no_alpha = {
 }
 
+for _, v in ipairs(no_alpha) do
+   no_alpha[v] = true
+end
 
 local function preprocess_all(elona_root, mod_root)
-   print(string.format("Cropping image files from %s -> %s", elona_root, mod_root))
-   for _, target in ipairs(targets) do
-      preprocess(target, elona_root, mod_root)
+   elona_root = fs.normalize(fs.join(elona_root, "graphic"))
+   mod_root = fs.normalize(mod_root)
+
+   print(string.format("Converting image files from %s -> %s", elona_root, mod_root))
+
+   for _, item in fs.iter_directory_items(elona_root) do
+      local path = fs.join(elona_root, item)
+      if fs.is_file(path) then
+         local image = vips.Image.new_from_file(path)
+         if not no_alpha[item] then
+            image = remove_key_color(image, {0, 0, 0})
+         end
+         local filename = fs.filename_part(item) .. ".png"
+         local output = fs.join(mod_root, filename)
+         fs.create_directory(fs.parent(output))
+         image:pngsave(output)
+      end
    end
 
    print("Finished.")

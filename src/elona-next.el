@@ -651,11 +651,10 @@
 (defun elona-next--test-repl ()
   (with-current-buffer (get-buffer-create elona-next--repl-errors-buffer)
     (erase-buffer)
-    (let ((result (apply 'call-process "luajit" nil
-                         (current-buffer)
-                         nil
-                         (list (elona-next--repl-file) "test"))))
-      (equal 0 result))))
+    (apply 'call-process "luajit" nil
+           (current-buffer)
+           nil
+           (list (elona-next--repl-file) "test"))))
 
 (defun elona-next-start-repl (&optional arg)
   (interactive "P")
@@ -672,15 +671,18 @@
           (setq next-error-last-buffer (get-buffer buffer-name))
           (pop-to-buffer buffer)
           (comint-goto-process-mark))
-      (if (elona-next--test-repl)
+      (let ((result (elona-next--test-repl)))
+        (if (eq result 0)
+            (progn
+              (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file) switch)
+              (setq next-error-last-buffer (get-buffer buffer-name))
+              (pop-to-buffer buffer-name)
+              (setq-local company-backends '(company-etags)))
           (progn
-            (run-lua elona-next--repl-name "luajit" nil (elona-next--repl-file) switch)
-            (setq next-error-last-buffer (get-buffer buffer-name))
-            (pop-to-buffer buffer-name)
-            (setq-local company-backends '(company-etags)))
-        (progn
-          (pop-to-buffer elona-next--repl-errors-buffer)
-          (error "REPL startup failed."))))))
+            (with-current-buffer elona-next--repl-errors-buffer
+              (ansi-color-apply-on-region (point-min) (point-max)))
+            (pop-to-buffer elona-next--repl-errors-buffer)
+            (error "REPL startup failed with code %s." result)))))))
 
 (defun elona-next-run-batch-script ()
   (interactive)

@@ -1,10 +1,82 @@
+local Log = require("api.Log")
 local anim = require("internal.draw.anim")
 local asset_drawable = require("internal.draw.asset_drawable")
 local atlas_batch = require("internal.draw.atlas_batch")
 local binpack = require("thirdparty.binpack")
-local Log = require("api.Log")
 
 local atlas = class.class("atlas")
+
+local image_cache = {}
+
+local function crop(proto)
+   love.graphics.setColor(1, 1, 1)
+
+   local base = image_cache[proto.source]
+   if base == nil then
+      base = love.graphics.newImage(proto.source)
+      image_cache[proto.source] = base
+   end
+
+   local quad = love.graphics.newQuad(proto.x, proto.y, proto.width, proto.height,
+                                      base:getWidth(), base:getHeight())
+   local canvas = love.graphics.newCanvas(proto.width, proto.height)
+   love.graphics.setCanvas(canvas)
+
+   love.graphics.draw(base, quad, 0, 0)
+
+   love.graphics.setCanvas()
+   local image = love.graphics.newImage(canvas:newImageData())
+
+   canvas:release()
+
+   return image, quad
+end
+
+local function load_tile(spec, frame_id)
+   local tile, quad, need_release
+
+   -- spec has the format:
+   --
+   --     {
+   --       image = "graphic/chip.png",
+   --       count_x = 1
+   --     }
+   --
+   -- or:
+   --
+   --     {
+   --       source = "graphic/map0.bmp",
+   --       x = 0,
+   --       y = 0,
+   --       width = 48,
+   --       height = 48,
+   --       count_x = 1,
+   --       key_color = {0, 0, 0}
+   --     }
+   --
+   -- or is an instance of asset_drawable
+
+   if class.is_an(asset_drawable, spec) then
+      tile = spec
+      quad = nil
+      need_release = false
+   elseif type(spec) == "table" then
+      if spec.source then
+         tile, quad = crop(spec)
+         need_release = false
+      elseif spec.image then
+         tile = love.graphics.newImage(spec.image)
+         quad = love.graphics.newQuad(0, 0, tile:getWidth(), tile.getHeight(), tile:getWidth(), tile:getHeight())
+         need_release = true
+      else
+         error(("Unsupported tile type: %s"):format(spec))
+      end
+   else
+      error(("Unsupported tile type: %s"):format(spec))
+   end
+
+   return tile, quad, need_release
+end
 
 function atlas:init(tile_width, tile_height)
    self.tile_width = tile_width
@@ -22,49 +94,40 @@ function atlas:init(tile_width, tile_height)
    self.fallback = love.graphics.newImage(fallback_data)
 end
 
-function atlas:insert_tile(id, frame_id, filepath_or_data, load_tile)
-   local full_id = ("%s#%s"):format(id, frame_id)
+function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
+   local full_id = ("%s#%s:%d"):format(id, anim_id, frame_id)
    if self.tiles[full_id] then
       error(string.format("tile %s already loaded", full_id))
    end
 
-   local tile
-   local need_release
-   if class.is_an(asset_drawable, filepath_or_data) then
-      -- This image is an asset from a UI theme that's being used; do
-      -- not release it.
-      tile = filepath_or_data.image
-      need_release = false
-   else
-      -- We're creating a temporary image that will only be used for
-      -- blitting into the atlas; discard it after.
-      tile = love.graphics.newImage(filepath_or_data)
-      need_release = true
-   end
-   assert(tile, filepath_or_data)
+   local tile, quad, need_release = load_tile(spec, frame_id)
 
    local rect = self.binpack:insert(tile:getWidth(), tile:getHeight())
-   assert(rect, filepath_or_data)
+   assert(rect, inspect(spec))
 
-   if load_tile then
-      load_tile(tile, rect.x, rect.y)
-   elseif self.coords then
-      self.coords:load_tile(tile, rect.x, rect.y)
+   if class.is_an(asset_drawable, tile) then
+      tile:draw(rect.x, rect.y)
    else
-      love.graphics.draw(tile, rect.x, rect.y)
+      if load_tile_cb then
+         load_tile_cb(tile, quad, rect.x, rect.y)
+      else
+         love.graphics.draw(tile, quad, rect.x, rect.y)
+      end
    end
 
+   -- Create a new quad inside the atlas we're assembling pointing to
+   -- the tile that was pasted in.
    local is_tall = tile:getHeight() == self.tile_height * 2
-   local quad
+   local inner_quad
    if is_tall then
-      quad = love.graphics.newQuad(rect.x,
+      inner_quad = love.graphics.newQuad(rect.x,
                                    rect.y,
                                    self.tile_width,
                                    self.tile_height * 2,
                                    self.image_width,
                                    self.image_height)
    else
-      quad = love.graphics.newQuad(rect.x,
+      inner_quad = love.graphics.newQuad(rect.x,
                                    rect.y,
                                    self.tile_width,
                                    self.tile_height,
@@ -77,73 +140,107 @@ function atlas:insert_tile(id, frame_id, filepath_or_data, load_tile)
       offset_y = -self.tile_height
    end
 
-   self.tiles[full_id] = { quad = quad, offset_y = offset_y }
+   self.tiles[full_id] = { quad = inner_quad, offset_y = offset_y }
 
    if need_release then
       tile:release()
+   end
+   if quad then
+      quad:release()
    end
 end
 
 function atlas:insert_anim(proto, images)
    local id = proto._id
-   local anims = proto.anim
-   if anims == nil then
+   local anims = {} -- proto.anim
+
+   -- anims = { default = { frames = {{id = "1", time = 0.25}} } }
+
+   for anim_id, spec in pairs(images) do
       local frames = {}
-      for i=1,table.count(images) do
-         local frame_id = "default"
-         if i > 1 then
-            frame_id = "default_" .. i
-         end
-         if images[frame_id] then
-            frames[#frames+1] = { id = frame_id, time = 0.25 }
-         else
-            break
-         end
+      for i=1,spec.count_x do
+         frames[i] = { id = tostring(i), time = 0.25 }
       end
-      assert(#frames > 0)
-      anims = {default = {frames = frames}}
+      anims[anim_id] = { frames = frames }
    end
 
-   if anims[1] then
-      local frames = anims
-      anims = {default = {frames = frames}}
-   end
-   for _, anim_data in pairs(anims) do
-      for _, frame in ipairs(anim_data.frames) do
-         frame.image = ("%s#%s"):format(id, frame.id)
-      end
-   end
    self.anims[id] = anims
 end
 
 function atlas:load_one(proto, draw_tile)
    local id = proto._id
-   local images = proto.image
+   local image = proto.image
+   local images
 
-   if type(images) == "table"
-      and (type(images[1]) == "string"
-              or class.is_an(asset_drawable, images[1]))
-   then
-      local new_images = {}
-      for i, image_file in ipairs(images) do
-         local frame_id = "default"
-         if i > 1 then
-            frame_id = "default_" .. i
-         end
-         new_images[frame_id] = image_file
+   -- proto.image can have the following formats:
+   --
+   -- - a string, pointing to a bare image file
+   --   + creates animation "default" with one frame
+   --
+   --     "graphic/chip.png"
+   --
+   if type(image) == "string" then
+      images = {
+         default = {
+            image = image,
+            count_x = 1
+         }
+      }
+
+   -- - a table, with an image file, frame count and key color
+   --   + if count_x/count_y > 1, more than one frame is generated
+   --   + creates animation "default" with frames numbered 1, 2, 3, etc.
+   --
+   --     {
+   --       image = "graphic/chip.bmp",
+   --       count_x = 1
+   --     }
+   --
+   elseif type(image) == "table" then
+      if image.image then
+         images = {
+            default = image
+         }
+
+   -- - a table, pointing to a region on a texture atlas
+   --   + if count_x/count_y > 1, more than one frame is generated
+   --   + creates animation "default" with frames numbered 1, 2, 3, etc.
+   --
+   --     {
+   --       height = 48,
+   --       source = "graphic/map0.bmp",
+   --       width = 48,
+   --       count_x = 1,
+   --       x = 0,
+   --       y = 0
+   --     }
+   --
+      elseif image.source then
+         images = {
+            default = image
+         }
+
+   -- - a map of animation names to any of the above.
+   --
+   --     {
+   --       default = "graphic/chip.bmp",
+   --       anim1 = { image = "graphic/chip1.bmp", count_x = 2 }
+   --     }
+   --
+      elseif image.default then
+         -- pass
+      else
+         error("unsupported image type")
       end
-      images = new_images
-   elseif type(images) == "string"
-      or class.is_an(asset_drawable, images)
-   then
-      images = {default = images}
+   else
+      error("unsupported image type")
    end
 
-   assert(type(images) == "table")
-   assert(images.default, id .. " must have 'default' image")
-
-   for frame_id, v in pairs(images) do
-      self:insert_tile(id, frame_id, v, draw_tile)
+   for anim_id, spec in pairs(images) do
+      spec.count_x = spec.count_x or 1
+      for i = 1, (spec.count_x or 1) do
+         self:insert_tile(id, anim_id, i, spec, draw_tile)
+      end
    end
 
    self:insert_anim(proto, images)

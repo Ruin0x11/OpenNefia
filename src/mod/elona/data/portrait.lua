@@ -119,8 +119,18 @@ local portraits = {
 }
 
 for i, portrait in ipairs(portraits) do
+   local id = i - 1
+
    portrait._type = "base.portrait"
    portrait.elona_id = i - 1
-   portrait.image = string.format("mod/elona/graphic/face/%s.png", portrait._id)
+
+   portrait.image = {
+      source = "graphic/face1.png",
+      x = (id % 16) * 48,
+      y = math.floor(id / 16) * 72,
+      width = 48,
+      height = 72
+   }
+
    data:add(portrait)
 end

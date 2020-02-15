@@ -50,6 +50,10 @@
     (each [_ x y (map:iter_tiles)]
       (map:memorize_tile x y))
 
+    (Map.set_map map)
+    (assert (: (Map.current) :take_object player (/ width 2) (/ height 2)))
+    (Chara.set_player player)
+
     {:map map :start_x (/ width 2) :start_y (/ height 2)}))
 
 (definst test-room base.scenario

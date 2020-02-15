@@ -43,388 +43,279 @@ local function topic_window_regions(width, height)
    return quad
 end
 
-data:add_multi(
-"base.asset",
-{
-    {
-        _id = "hud_minimap",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 120,
-            y = 504,
-            width = 136,
-            height = 88
-        }
-    },
-    {
-        _id = "map_name_icon",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 208,
-            y = 376,
-            width = 16,
-            height = 16
-        }
-    },
-    {
-        _id = "hud_bar",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
-        }
-    },
-    {
-        _id = "skill_icons",
-        image = {
-            source = "mod/elona/graphic/item.bmp",
-            x = 0,
-            y = 672,
-            width = 48 * 8,
-            height = 48
-        },
-        count_x = 8
-    },
-    {
-        _id = "hud_skill_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 376,
-            width = 16 * 10,
-            height = 16
-        },
-        count_x = 10
-    },
-    {
-        _id = "message_window",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 496,
-            y = 528,
-            width = 192,
-            height = 72
-        }
-    },
-    {
-        _id = "gold_coin",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 392,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "platinum_coin",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 24,
-            y = 392,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "character_level_icon",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 48,
-            y = 392,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "hp_bar_frame",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 312,
-            y = 504,
-            width = 104,
-            height = 15
-        }
-    },
-    {
-        _id = "hud_hp_bar",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 312,
-            y = 520,
-            width = 100,
-            height = 6
-        }
-    },
-    {
-        _id = "hud_mp_bar",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 432,
-            y = 520,
-            width = 100,
-            height = 6
-        }
-    },
-    {
-        _id = "clock",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 448,
-            y = 408,
-            width = 120,
-            height = 96
-        }
-    },
-    {
-        _id = "clock_hand",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 288,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "date_label_frame",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 448,
-            y = 376,
-            width = 128,
-            height = 24
-        }
-    },
-    {
-        _id = "book",
-        image = "mod/elona/graphic/book.bmp",
-    },
-    {
-        _id = "deco_inv_a",
-        image = {
-            source = "mod/elona/graphic/deco_inv.bmp",
-            x = 0,
-            y = 0,
-            width = 144,
-            height = 48
-        }
-    },
-    {
-        _id = "deco_inv_b",
-        image = {
-            source = "mod/elona/graphic/deco_inv.bmp",
-            x = 0,
-            y = 48,
-            width = 48,
-            height = 72
-        }
-    },
-    {
-        _id = "deco_inv_c",
-        image = {
-            source = "mod/elona/graphic/deco_inv.bmp",
-            x = 48,
-            y = 48,
-            width = 48,
-            height = 72
-        }
-    },
-    {
-        _id = "deco_inv_d",
-        image = {
-            source = "mod/elona/graphic/deco_inv.bmp",
-            x = 0,
-            y = 120,
-            width = 48,
-            height = 72
-        }
-    },
-    {
-        _id = "deco_mirror_a",
-        image = {
-            source = "mod/elona/graphic/deco_mirror.bmp",
-            x = 0,
-            y = 0,
-            width = 48,
-            height = 120
-        }
-    },
-    {
-        _id = "deco_feat_a",
-        image = {
-            source = "mod/elona/graphic/deco_feat.bmp",
-            x = 0,
-            y = 0,
-            width = 48,
-            height = 192
-        }
-    },
-    {
-        _id = "deco_feat_b",
-        image = {
-            source = "mod/elona/graphic/deco_feat.bmp",
-            x = 48,
-            y = 0,
-            width = 48,
-            height = 144
-        }
-    },
-    {
-        _id = "deco_feat_c",
-        image = {
-            source = "mod/elona/graphic/deco_feat.bmp",
-            x = 0,
-            y = 192,
-            width = 96,
-            height = 72
-        }
-    },
-    {
-        _id = "deco_feat_d",
-        image = {
-            source = "mod/elona/graphic/deco_feat.bmp",
-            x = 48,
-            y = 144,
-            width = 96,
-            height = 48
-        }
-    },
-    {
-        _id = "deco_board_a",
-        image = {
-            source = "mod/elona/graphic/deco_board.bmp",
-            x = 0,
-            y = 0,
-            width = 128,
-            height = 128
-        }
-    },
-    {
-        _id = "deco_board_b",
-        image = {
-            source = "mod/elona/graphic/deco_board.bmp",
-            x = 0,
-            y = 144,
-            width = 48,
-            height = 84
-        }
-    },
-    {
-        _id = "inventory_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 288,
-            y = 48,
-            width = 48 * 22,
-            height = 48
-        },
-        count_x = 22
-    },
-    {
-        _id = "trait_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 384,
-            y = 336,
-            width = 24 * 6,
-            height = 24
-        },
-        count_x = 6
-    },
-    {
-        _id = "equipped_icon",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 12,
-            y = 348,
-            width = 12,
-            height = 12
-        }
-    },
-    {
-        _id = "label_input",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 128,
-            y = 288,
-            width = 128,
-            height = 32
-        }
-    },
-    {
-        _id = "input_caret",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 336,
-            width = 12,
-            height = 24
-        }
-    },
-    {
-        _id = "buff_icon",
-        image = {
-            source = "mod/elona/graphic/character.bmp",
-            x = 0,
-            y = 1120,
-            width = 32 * 19,
-            height = 32
-        },
-        count_x = 19
-    },
-    {
-        _id = "buff_icon_none",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 320,
-            y = 160,
-            width = 32,
-            height = 32
-        }
-    },
-    {
-        _id = "arrow_left",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 312,
-            y = 336,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "arrow_right",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 336,
-            y = 336,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "direction_arrow",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 212,
-            y = 432,
-            width = 28,
-            height = 28
-        }
-    },
-    {
-        _id = "caption",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 672,
-            y = 477,
-            width = 128,
-            height = 25
-        },
-        regions = function(width, height)
+data:add {
+   _type = "base.theme",
+   _id = "default",
+
+   root = "graphic",
+   assets = {
+      hud_minimap = {
+         source = "interface.bmp",
+         x = 120,
+         y = 504,
+         width = 136,
+         height = 88
+      },
+      map_name_icon = {
+         source = "interface.bmp",
+         x = 208,
+         y = 376,
+         width = 16,
+         height = 16
+      },
+      hud_bar = {
+         source = "interface.bmp",
+         x = 0,
+         y = 0,
+         width = 0,
+         height = 0
+      },
+      skill_icons = {
+         source = "item.bmp",
+         x = 0,
+         y = 672,
+         width = 48 * 8,
+         height = 48,
+         count_x = 8
+      },
+      hud_skill_icons = {
+         source = "interface.bmp",
+         x = 0,
+         y = 376,
+         width = 16 * 10,
+         height = 16,
+         count_x = 10
+      },
+      message_window = {
+         source = "interface.bmp",
+         x = 496,
+         y = 528,
+         width = 192,
+         height = 72
+      },
+      gold_coin = {
+         source = "interface.bmp",
+         x = 0,
+         y = 392,
+         width = 24,
+         height = 24
+      },
+      platinum_coin = {
+         source = "interface.bmp",
+         x = 24,
+         y = 392,
+         width = 24,
+         height = 24
+      },
+      character_level_icon = {
+         source = "interface.bmp",
+         x = 48,
+         y = 392,
+         width = 24,
+         height = 24
+      },
+      hp_bar_frame = {
+         source = "interface.bmp",
+         x = 312,
+         y = 504,
+         width = 104,
+         height = 15
+      },
+      hud_hp_bar = {
+         source = "interface.bmp",
+         x = 312,
+         y = 520,
+         width = 100,
+         height = 6
+      },
+      hud_mp_bar = {
+         source = "interface.bmp",
+         x = 432,
+         y = 520,
+         width = 100,
+         height = 6
+      },
+      clock = {
+         source = "interface.bmp",
+         x = 448,
+         y = 408,
+         width = 120,
+         height = 96
+      },
+      clock_hand = {
+         source = "interface.bmp",
+         x = 0,
+         y = 288,
+         width = 48,
+         height = 48
+      },
+      date_label_frame = {
+         source = "interface.bmp",
+         x = 448,
+         y = 376,
+         width = 128,
+         height = 24
+      },
+      book = {
+         image = "book.bmp",
+      },
+      deco_inv_a = {
+         source = "deco_inv.bmp",
+         x = 0,
+         y = 0,
+         width = 144,
+         height = 48
+      },
+      deco_inv_b = {
+         source = "deco_inv.bmp",
+         x = 0,
+         y = 48,
+         width = 48,
+         height = 72
+      },
+      deco_inv_c = {
+         source = "deco_inv.bmp",
+         x = 48,
+         y = 48,
+         width = 48,
+         height = 72
+      },
+      deco_inv_d = {
+         source = "deco_inv.bmp",
+         x = 0,
+         y = 120,
+         width = 48,
+         height = 72
+      },
+      deco_mirror_a = {
+         source = "deco_mirror.bmp",
+         x = 0,
+         y = 0,
+         width = 48,
+         height = 120
+      },
+      deco_feat_a = {
+         source = "deco_feat.bmp",
+         x = 0,
+         y = 0,
+         width = 48,
+         height = 192
+      },
+      deco_feat_b = {
+         source = "deco_feat.bmp",
+         x = 48,
+         y = 0,
+         width = 48,
+         height = 144
+      },
+      deco_feat_c = {
+         source = "deco_feat.bmp",
+         x = 0,
+         y = 192,
+         width = 96,
+         height = 72
+      },
+      deco_feat_d = {
+         source = "deco_feat.bmp",
+         x = 48,
+         y = 144,
+         width = 96,
+         height = 48
+      },
+      deco_board_a = {
+         source = "deco_board.bmp",
+         x = 0,
+         y = 0,
+         width = 128,
+         height = 128
+      },
+      deco_board_b = {
+         source = "deco_board.bmp",
+         x = 0,
+         y = 144,
+         width = 48,
+         height = 84
+      },
+      inventory_icons = {
+         source = "interface.bmp",
+         x = 288,
+         y = 48,
+         width = 48 * 22,
+         height = 48,
+         count_x = 22
+      },
+      trait_icons = {
+         source = "interface.bmp",
+         x = 384,
+         y = 336,
+         width = 24 * 6,
+         height = 24,
+         count_x = 6
+      },
+      equipped_icon = {
+         source = "interface.bmp",
+         x = 12,
+         y = 348,
+         width = 12,
+         height = 12
+      },
+      label_input = {
+         source = "interface.bmp",
+         x = 128,
+         y = 288,
+         width = 128,
+         height = 32
+      },
+      input_caret = {
+         source = "interface.bmp",
+         x = 0,
+         y = 336,
+         width = 12,
+         height = 24
+      },
+      buff_icon = {
+         source = "character.bmp",
+         x = 0,
+         y = 1120,
+         width = 32 * 19,
+         height = 32,
+         count_x = 19
+      },
+      buff_icon_none = {
+         source = "interface.bmp",
+         x = 320,
+         y = 160,
+         width = 32,
+         height = 32
+      },
+      arrow_left = {
+         source = "interface.bmp",
+         x = 312,
+         y = 336,
+         width = 24,
+         height = 24
+      },
+      arrow_right = {
+         source = "interface.bmp",
+         x = 336,
+         y = 336,
+         width = 24,
+         height = 24
+      },
+      direction_arrow = {
+         source = "interface.bmp",
+         x = 212,
+         y = 432,
+         width = 28,
+         height = 28
+      },
+      caption = {
+         source = "interface.bmp",
+         x = 672,
+         y = 477,
+         width = 128,
+         height = 25,
+         regions = function(width, height)
             local quad = {}
             quad[1] =  { 0, 0, 128, 3 }
             quad[2] =  { 0, 3, 128, 22 }
@@ -433,423 +324,305 @@ data:add_multi(
             quad[5] =  { 0, 3, width % 128, 22 }
             quad[6] =  { 0, 0, width % 128, 2 }
             return quad
-        end
-    },
-    {
-        _id = "enchantment_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 72,
-            y = 336,
-            width = 24 * 9,
-            height = 24
-        },
-        count_x = 9
-    },
-    {
-        _id = "inheritance_icon",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 384,
-            y = 360,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "body_part_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 600,
-            y = 336,
-            width = 24 * 11,
-            height = 24
-        },
-        count_x = 11
-    },
-    {
-        _id = "tip_icons",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 96,
-            y = 360,
-            width = 24 * 8,
-            height = 16
-        },
-        count_x = 8
-    },
-    {
-        _id = "deco_wear_a",
-        image = {
-            source = "mod/elona/graphic/deco_wear.bmp",
-            x = 0,
-            y = 0,
-            width = 96,
-            height = 120
-        }
-    },
-    {
-        _id = "deco_wear_b",
-        image = {
-            source = "mod/elona/graphic/deco_wear.bmp",
-            x = 0,
-            y = 120,
-            width = 72,
-            height = 144
-        }
-    },
-    {
-        _id = "radar_deco",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 64,
-            y = 288,
-            width = 50,
-            height = 32
-        }
-    },
-    {
-        _id = "status_effect_bar",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 416,
-            width = 80,
-            height = 15
-        }
-    },
-    {
-        _id = "ie_chat",
-        image = "mod/elona/graphic/ie_chat.bmp"
-    },
-    {
-        _id = "ie_sheet",
-        image = "mod/elona/graphic/ie_sheet.bmp",
-    },
-    {
-        _id = "ime_status_english",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 24,
-            y = 336,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "ime_status_japanese",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 48,
-            y = 336,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "ime_status_none",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 72,
-            y = 336,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "window",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 48,
-            width = 264,
-            height = 192
-        },
-        regions = gen_window_regions() -- ()
-    },
-    {
-        _id = "window_0",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "window_1",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 48,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "window_2",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 96,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "window_3",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 144,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "window_4",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 192,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "window_5",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 240,
-            y = 240,
-            width = 48,
-            height = 48
-        },
-        regions = topic_window_regions
-    },
-    {
-        _id = "topic_window",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
-        },
-        regions = {
+         end
+      },
+      enchantment_icons = {
+         source = "interface.bmp",
+         x = 72,
+         y = 336,
+         width = 24 * 9,
+         height = 24,
+         count_x = 9
+      },
+      inheritance_icon = {
+         source = "interface.bmp",
+         x = 384,
+         y = 360,
+         width = 24,
+         height = 24
+      },
+      body_part_icons = {
+         source = "interface.bmp",
+         x = 600,
+         y = 336,
+         width = 24 * 11,
+         height = 24,
+         count_x = 11
+      },
+      tip_icons = {
+         source = "interface.bmp",
+         x = 96,
+         y = 360,
+         width = 24 * 8,
+         height = 16,
+         count_x = 8
+      },
+      deco_wear_a = {
+         source = "deco_wear.bmp",
+         x = 0,
+         y = 0,
+         width = 96,
+         height = 120
+      },
+      deco_wear_b = {
+         source = "deco_wear.bmp",
+         x = 0,
+         y = 120,
+         width = 72,
+         height = 144
+      },
+      radar_deco = {
+         source = "interface.bmp",
+         x = 64,
+         y = 288,
+         width = 50,
+         height = 32
+      },
+      status_effect_bar = {
+         source = "interface.bmp",
+         x = 0,
+         y = 416,
+         width = 80,
+         height = 15
+      },
+      ie_chat = {
+         image = "ie_chat.bmp"
+      },
+      ie_sheet = {
+         image = "ie_sheet.bmp",
+      },
+      ime_status_english = {
+         source = "interface.bmp",
+         x = 24,
+         y = 336,
+         width = 24,
+         height = 24
+      },
+      ime_status_japanese = {
+         source = "interface.bmp",
+         x = 48,
+         y = 336,
+         width = 24,
+         height = 24
+      },
+      ime_status_none = {
+         source = "interface.bmp",
+         x = 72,
+         y = 336,
+         width = 24,
+         height = 24
+      },
+      window = {
+         source = "interface.bmp",
+         x = 0,
+         y = 48,
+         width = 264,
+         height = 192,
+         regions = gen_window_regions() -- ()
+      },
+      window_0 = {
+         source = "interface.bmp",
+         x = 0,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      window_1 = {
+         source = "interface.bmp",
+         x = 48,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      window_2 = {
+         source = "interface.bmp",
+         x = 96,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      window_3 = {
+         source = "interface.bmp",
+         x = 144,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      window_4 = {
+         source = "interface.bmp",
+         x = 192,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      window_5 = {
+         source = "interface.bmp",
+         x = 240,
+         y = 240,
+         width = 48,
+         height = 48,
+         regions = topic_window_regions
+      },
+      topic_window = {
+         source = "interface.bmp",
+         x = 0,
+         y = 0,
+         width = 0,
+         height = 0,
+         regions = {
             fill = { 24, 24, 228, 144 }
-        }
-    },
-    {
-        _id = "title",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
-        }
-    },
-    {
-        _id = "void",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
-        }
-    },
-    {
-        _id = "bg_night",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
-        }
-    },
-    {
-        _id = "g1",
-        image = "mod/elona/graphic/mod/elona/graphic/asset/g1.png",
-    },
-    {
-        _id = "g2",
-        image = "mod/elona/graphic/mod/elona/graphic/asset/g2.png",
-    },
-    {
-        _id = "g3",
-        image = "mod/elona/graphic/mod/elona/graphic/asset/g3.png",
-    },
-    {
-        _id = "g4",
-        image = "mod/elona/graphic/mod/elona/graphic/asset/g4.png",
-    },
-    {
-        _id = "select_key",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 1000,
-            y = 1000,
-            width = 24,
-            height = 18
-        }
-    },
-    {
-        _id = "list_bullet",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 48,
-            y = 360,
-            width = 16,
-            height = 16
-        }
-    },
-    {
-        _id = "hp_bar_ally",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 432,
-            y = 517,
-            width = 48,
-            height = 3
-        }
-    },
-    {
-        _id = "hp_bar_other",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 432,
-            y = 513,
-            width = 48,
-            height = 3
-        }
-    },
-    {
-        _id = "shadow",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 0,
-            y = 656,
-            width = 24,
-            height = 24
-        }
-    },
-    {
-        _id = "shadow_edges",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 192,
-            y = 752,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "character_shadow",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 240,
-            y = 384,
-            width = 32,
-            height = 16
-        }
-    },
-    {
-        _id = "player_light",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 800,
-            y = 112,
-            width = 144,
-            height = 144
-        }
-    },
-    {
-        _id = "failure_to_cast_effect",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 480,
-            y = 0,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "swarm_effect",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 816,
-            y = 0,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "breaking_effect",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 864,
-            y = 0,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "melee_attack_debris",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 1104,
-            y = 0,
-            width = 48,
-            height = 48
-        }
-    },
-    {
-        _id = "melee_attack_blood",
-        image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 720,
-            y = 0,
-            width = 48,
-            height = 48
-        }
-    },
+         }
+      },
+      title = {
+         source = "interface.bmp",
+         x = 0,
+         y = 0,
+         width = 0,
+         height = 0
+      },
+      void = {
+         source = "interface.bmp",
+         x = 0,
+         y = 0,
+         width = 0,
+         height = 0
+      },
+      bg_night = {
+         source = "interface.bmp",
+         x = 0,
+         y = 0,
+         width = 0,
+         height = 0
+      },
+      g1 = {
+         image = "g1.bmp",
+      },
+      g2 = {
+         image = "g2.bmp",
+      },
+      g3 = {
+         image = "g3.bmp",
+      },
+      g4 = {
+         image = "g4.bmp",
+      },
+      select_key = {
+         source = "interface.bmp",
+         x = 1000,
+         y = 1000,
+         width = 24,
+         height = 18
+      },
+      list_bullet = {
+         source = "interface.bmp",
+         x = 48,
+         y = 360,
+         width = 16,
+         height = 16
+      },
+      hp_bar_ally = {
+         source = "interface.bmp",
+         x = 432,
+         y = 517,
+         width = 48,
+         height = 3
+      },
+      hp_bar_other = {
+         source = "interface.bmp",
+         x = 432,
+         y = 513,
+         width = 48,
+         height = 3
+      },
+      shadow = {
+         source = "interface.bmp",
+         x = 0,
+         y = 656,
+         width = 24,
+         height = 24
+      },
+      shadow_edges = {
+         source = "interface.bmp",
+         x = 192,
+         y = 752,
+         width = 48,
+         height = 48
+      },
+      character_shadow = {
+         source = "interface.bmp",
+         x = 240,
+         y = 384,
+         width = 32,
+         height = 16
+      },
+      player_light = {
+         source = "interface.bmp",
+         x = 800,
+         y = 112,
+         width = 144,
+         height = 144
+      },
+      failure_to_cast_effect = {
+         source = "interface.bmp",
+         x = 480,
+         y = 0,
+         width = 48,
+         height = 48
+      },
+      swarm_effect = {
+         source = "interface.bmp",
+         x = 816,
+         y = 0,
+         width = 48,
+         height = 48
+      },
+      breaking_effect = {
+         source = "interface.bmp",
+         x = 864,
+         y = 0,
+         width = 48,
+         height = 48
+      },
+      melee_attack_debris = {
+         source = "interface.bmp",
+         x = 1104,
+         y = 0,
+         width = 48,
+         height = 48
+      },
+      melee_attack_blood = {
+         source = "interface.bmp",
+         x = 720,
+         y = 0,
+         width = 48,
+         height = 48
+      },
 
-      {
-         _id = "anim_slash",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 1008,
-            y = 432,
-            width = 48 * 4,
-            height = 48
-         },
+      anim_slash = {
+         source = "interface.bmp",
+         x = 1008,
+         y = 432,
+         width = 48 * 4,
+         height = 48,
          count_x = 4
       },
 
-      {
-         _id = "anim_bash",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 816,
-            y = 432,
-            width = 48 * 4,
-            height = 48
-         },
+      anim_bash = {
+         source = "interface.bmp",
+         x = 816,
+         y = 432,
+         width = 48 * 4,
+         height = 48,
          count_x = 4
       },
 
-      {
-         _id = "anim_miracle",
-         image = "mod/elona/graphic/anime12.bmp",
+      anim_miracle = {
+         image = "anime12.bmp",
          count_x = 10,
          count_y = 2,
          regions = {
@@ -859,335 +632,246 @@ data:add_multi(
          }
       },
 
-      {
-         _id = "anim_spot_mine",
-         image = "mod/elona/graphic/anime1.bmp",
+      anim_spot_mine = {
+         image = "anime1.bmp",
          count_x = 5
       },
-      {
-         _id = "anim_spot_fish",
-         image = "mod/elona/graphic/anime2.bmp",
+      anim_spot_fish = {
+         image = "anime2.bmp",
          count_x = 3
       },
-      {
-         _id = "anim_spot_harvest",
-         image = "mod/elona/graphic/anime3.bmp",
+      anim_spot_harvest = {
+         image = "anime3.bmp",
          count_x = 3
       },
-      {
-         _id = "anim_spot_dig",
-         image = "mod/elona/graphic/anime4.bmp",
+      anim_spot_dig = {
+         image = "anime4.bmp",
          count_x = 4
       },
-      {
-         _id = "anim_shock",
-         image = "mod/elona/graphic/anime6.bmp",
+      anim_shock = {
+         image = "anime6.bmp",
          count_x = 10
       },
-      {
-         _id = "anim_breath",
-         image = "mod/elona/graphic/anime7.bmp",
+      anim_breath = {
+         image = "anime7.bmp",
          count_x = 10
       },
-      {
-         _id = "anim_smoke",
-         image = "mod/elona/graphic/anime8.bmp",
+      anim_smoke = {
+         image = "anime8.bmp",
          count_x = 5
       },
-      {
-         _id = "anim_sparkle",
-         image = "mod/elona/graphic/anime10.bmp",
+      anim_sparkle = {
+         image = "anime10.bmp",
          count_x = 10
       },
-      {
-         _id = "anim_buff",
-         image = "mod/elona/graphic/anime11.bmp",
+      anim_buff = {
+         image = "anime11.bmp",
          count_x = 5
       },
-      {
-         _id = "anim_gene",
-         image = "mod/elona/graphic/anime13.bmp",
+      anim_gene = {
+         image = "anime13.bmp",
          count_x = 5,
          count_y = 2
       },
-      {
-         _id = "anim_critical",
-         image = "mod/elona/graphic/anime28.bmp",
+      anim_critical = {
+         image = "anime28.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_curse",
-         image = "mod/elona/graphic/anime14.bmp",
+      anim_curse = {
+         image = "anime14.bmp",
          count_x = 5
       },
-      {
-         _id = "anim_elec",
-         image = "mod/elona/graphic/anime15.bmp",
+      anim_elec = {
+         image = "anime15.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_flame",
-         image = "mod/elona/graphic/anime16.bmp",
+      anim_flame = {
+         image = "anime16.bmp",
          count_x = 10
       },
-      {
-         _id = "anim_elem_lightning",
-         image = "mod/elona/graphic/anime18.bmp",
+      anim_elem_lightning = {
+         image = "anime18.bmp",
          count_x = 5
       },
-      {
-         _id = "anim_elem_cold",
-         image = "mod/elona/graphic/anime19.bmp",
+      anim_elem_cold = {
+         image = "anime19.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_fire",
-         image = "mod/elona/graphic/anime20.bmp",
+      anim_elem_fire = {
+         image = "anime20.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_nether",
-         image = "mod/elona/graphic/anime21.bmp",
+      anim_elem_nether = {
+         image = "anime21.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_darkness",
-         image = "mod/elona/graphic/anime22.bmp",
+      anim_elem_darkness = {
+         image = "anime22.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_mind",
-         image = "mod/elona/graphic/anime23.bmp",
+      anim_elem_mind = {
+         image = "anime23.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_sound",
-         image = "mod/elona/graphic/anime24.bmp",
+      anim_elem_sound = {
+         image = "anime24.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_chaos",
-         image = "mod/elona/graphic/anime25.bmp",
+      anim_elem_chaos = {
+         image = "anime25.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_nerve",
-         image = "mod/elona/graphic/anime26.bmp",
+      anim_elem_nerve = {
+         image = "anime26.bmp",
          count_x = 6
       },
-      {
-         _id = "anim_elem_poison",
-         image = "mod/elona/graphic/anime27.bmp",
+      anim_elem_poison = {
+         image = "anime27.bmp",
          count_x = 6
       },
 
-      {
-         _id = "light_port_light",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 192,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_port_light = {
+         source = "interface.bmp",
+         x = 192,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_torch",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 240,
-            y = 704,
-            width = 48 * 2,
-            height = 48
-         },
+      light_torch = {
+         source = "interface.bmp",
+         x = 240,
+         y = 704,
+         width = 48 * 2,
+         height = 48,
          count_x = 2
       },
-      {
-         _id = "light_lantern",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 336,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_lantern = {
+         source = "interface.bmp",
+         x = 336,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_candle",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 384,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_candle = {
+         source = "interface.bmp",
+         x = 384,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_stove",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 432,
-            y = 704,
-            width = 48 * 2,
-            height = 48
-         },
+      light_stove = {
+         source = "interface.bmp",
+         x = 432,
+         y = 704,
+         width = 48 * 2,
+         height = 48,
          count_x = 2
       },
-      {
-         _id = "light_item",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 528,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_item = {
+         source = "interface.bmp",
+         x = 528,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_town",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 576,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_town = {
+         source = "interface.bmp",
+         x = 576,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_crystal",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 624,
-            y = 704,
-            width = 48 * 2,
-            height = 48
-         },
+      light_crystal = {
+         source = "interface.bmp",
+         x = 624,
+         y = 704,
+         width = 48 * 2,
+         height = 48,
          count_x = 2
       },
-      {
-         _id = "light_town_light",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 720,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_town_light = {
+         source = "interface.bmp",
+         x = 720,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_window",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 768,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_window = {
+         source = "interface.bmp",
+         x = 768,
+         y = 704,
+         width = 48,
+         height = 48
       },
-      {
-         _id = "light_window_red",
-         image = {
-            source = "mod/elona/graphic/interface.bmp",
-            x = 816,
-            y = 704,
-            width = 48,
-            height = 48
-         }
+      light_window_red = {
+         source = "interface.bmp",
+         x = 816,
+         y = 704,
+         width = 48,
+         height = 48
       },
-   }
-)
-
-data:add_multi(
-   "base.asset",
-   {
-      {
-         _id = "attribute_font",
+      attribute_font = {
          type = "font",
          size = 13
       },
-      {
-         _id = "map_name_font",
+      map_name_font = {
          type = "font",
          size = 12
       },
-      {
-         _id = "gold_count_font",
+      gold_count_font = {
          type = "font",
          size = 13
       },
-      {
-         _id = "status_indicator_font",
+      status_indicator_font = {
          type = "font",
          size = 13 -- 13 - en * 2
       },
 
-      {
-         _id = "text_color",
+      text_color = {
          type = "color",
          color = {0, 0, 0}
       },
-      {
-         _id = "text_color_light",
+      text_color_light = {
          type = "color",
          color = {255, 255, 255}
       },
-      {
-         _id = "text_color_light_shadow",
+      text_color_light_shadow = {
          type = "color",
          color = {0, 0, 0}
       },
 
-      {
-         _id = "stat_penalty_color",
+      stat_penalty_color = {
          type = "color",
          color = {200, 0, 0}
       },
-      {
-         _id = "stat_bonus_color",
+      stat_bonus_color = {
          type = "color",
          color = {0, 120, 0}
       },
 
-      {
-         _id = "repl_bg_color",
+      repl_bg_color = {
          type = "color",
          color = {17, 17, 65, 192}
       },
-      {
-         _id = "repl_error_color",
+      repl_error_color = {
          type = "color",
          color = {255, 0, 0}
       },
-      {
-         _id = "repl_result_color",
+      repl_result_color = {
          type = "color",
          color = {150, 200, 200}
       },
-      {
-         _id = "repl_completion_color",
+      repl_completion_color = {
          type = "color",
          color = {255, 240, 130}
       },
-      {
-         _id = "repl_search_color",
+      repl_search_color = {
          type = "color",
          color = {130, 240, 130}
       },
-      {
-         _id = "repl_match_color",
+      repl_match_color = {
          type = "color",
          color = {17, 17, 200}
-      }
-   }
-)
-
-data:add {
-   _type = "base.theme",
-   _id = "default",
-
-   root = "mod/elona/graphic",
-   assets = {
-      elona = {
       }
    }
 }

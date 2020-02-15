@@ -23,14 +23,13 @@ function theme_proxy:deserialize()
 end
 
 local function find_asset(namespace, asset)
+   assert(namespace == "base")
+
    for i = #active_themes, 1, -1 do
       local theme = active_themes[i]
-      local ns = theme.assets[namespace]
-      if ns then
-         local proto = ns[asset]
-         if proto then
-            return proto, theme
-         end
+      local proto = theme.assets[asset]
+      if proto then
+         return proto, theme
       end
    end
 
@@ -43,7 +42,12 @@ function theme_proxy:__index(asset)
       return v
    end
 
-   local id = self._namespace .. "." .. asset
+   local id
+   if self._namespace == "base" then
+      id = asset
+   else
+      id = self._namespace .. "." .. asset
+   end
    if cache[id] then
       return cache[id]
    end
@@ -53,7 +57,6 @@ function theme_proxy:__index(asset)
       error("Cannot find asset " .. id)
    end
 
-   local root = theme.root
    local obj
 
    if type(proto) == "string" then
@@ -64,12 +67,13 @@ function theme_proxy:__index(asset)
       local _type = proto.type
 
       if _type == nil or _type == "asset" then
-         local copy = {
-            image = proto.image,
-            count_x = proto.count_x,
-            count_y = proto.count_y,
-            regions = proto.regions
-         }
+         local copy = table.deepcopy(proto)
+         if copy.source then
+            copy.source = fs.join(theme.root, copy.source)
+         end
+         if copy.image then
+            copy.image = fs.join(theme.root, copy.image)
+         end
          obj = asset_drawable:new(copy)
       elseif _type == "font" then
          obj = { size = proto.size }
@@ -103,8 +107,8 @@ function UiTheme.add_theme(id)
    active_themes[#active_themes+1] = theme
    cache = {}
    -- TEMP: validate file existence
-   local p = theme_proxy:new("elona")
-   for k, _ in pairs(theme.assets.elona) do
+   local p = theme_proxy:new("base")
+   for k, _ in pairs(theme.assets) do
       assert(p[k])
    end
 end
@@ -114,7 +118,7 @@ function UiTheme.theme_id()
 end
 
 function UiTheme.load(instance)
-   return theme_proxy:new("elona")
+   return theme_proxy:new("base")
 end
 
 function UiTheme.load_asset(id)

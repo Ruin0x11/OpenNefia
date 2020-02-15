@@ -182,9 +182,10 @@ function startup.load_batches()
 
    progress("Loading tilemaps (overhang)...")
    local tw, th = coords:get_size()
-   local quad = love.graphics.newQuad(0, 0, tw, math.floor(th / 4), tw, th)
    local load_tile = function(atlas, proto)
-      local draw = function(tile, x, y)
+      local draw = function(tile, quad, x, y)
+         local qx, qy, _, _ = quad:getViewport()
+         quad:setViewport(qx, qy, tw, math.floor(th / 4))
          love.graphics.draw(tile, quad, x, y)
       end
       atlas:load_one(proto, draw)
@@ -209,9 +210,9 @@ function startup.load_batches()
    -- HACK
    progress("Loading tilemaps (item shadow)...")
    local load_tile = function(atlas, proto)
-      local draw = function(tile, x, y)
+      local draw = function(tile, quad, x, y)
          love.graphics.setColor(0, 0, 0)
-         love.graphics.draw(tile, x, y)
+         love.graphics.draw(tile, quad, x, y)
          love.graphics.setColor(1, 1, 1)
       end
       atlas:load_one(proto, draw)
@@ -240,7 +241,14 @@ function startup.load_batches()
    sw:p("load_batches.portrait")
 
    local atlases = require("internal.global.atlases")
-   atlases.set(tile_atlas, tile_overhang_atlas, chara_atlas, item_atlas, item_shadow_atlas, feat_atlas, chip_atlas, portrait_atlas)
+   atlases.set(tile_atlas,
+               tile_overhang_atlas,
+               chara_atlas,
+               item_atlas,
+               item_shadow_atlas,
+               feat_atlas,
+               chip_atlas,
+               portrait_atlas)
 end
 
 return startup
