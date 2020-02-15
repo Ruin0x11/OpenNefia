@@ -1,5 +1,6 @@
-local vips = require("vips")
 local ffi = require("ffi")
+local fs = require("util.fs")
+local vips = require("vips")
 
 local image_converter = class.class("image_converter")
 
@@ -20,6 +21,14 @@ end
 --- @tparam string image_path
 --- @treturn love.graphics.Image
 function image_converter:convert_single(image_path, key_color)
+   assert(type(image_path) == "string", inspect(image_path))
+
+   -- We are only concerned with legacy BMP files from other Elona
+   -- variants that need transparency added to them on the fly.
+   if fs.extension_part(image_path) == "png" then
+      return love.graphics.newImage(image_path)
+   end
+
    local vips_image = vips.Image.new_from_file(image_path)
 
    if key_color then
@@ -36,13 +45,13 @@ function image_converter:convert_single(image_path, key_color)
    return love.graphics.newImage(image_data)
 end
 
-function image_converter:crop_single(image_spec, key_color)
+function image_converter:crop_single(source, x, y, width, height, key_color)
    love.graphics.setColor(1, 1, 1)
 
-   local image = self:get_image(image_spec.source)
-   local quad = love.graphics.newQuad(image_spec.x, image_spec.y, image_spec.width, image_spec.height,
+   local image = self:get_image(source, key_color)
+   local quad = love.graphics.newQuad(x, y, width, height,
                                       image:getWidth(), image:getHeight())
-   local canvas = love.graphics.newCanvas(image_spec.width, image_spec.height)
+   local canvas = love.graphics.newCanvas(width, height)
    love.graphics.setCanvas(canvas)
 
    love.graphics.draw(image, quad, 0, 0)
@@ -56,7 +65,7 @@ end
 
 function image_converter:get_image(image_path, key_color)
    if self.image_cache[image_path] == nil then
-      self.image_cache[image_path] = image_converter.convert_single(image_path, key_color)
+      self.image_cache[image_path] = self:convert_single(image_path, key_color)
    end
 
    return self.image_cache[image_path]
