@@ -160,6 +160,7 @@ local pcc_parts = {
 
 for _, pcc_part in ipairs(pcc_parts) do
    pcc_part._type = "base.pcc_part"
-   pcc_part.image = string.format("graphic/pcc_%s.png", pcc_part._id)
+   pcc_part.image = string.format("graphic/pcc_%s.bmp", pcc_part._id)
+   pcc_part.key_color = { 43, 133, 133 }
    data:add(pcc_part)
 end

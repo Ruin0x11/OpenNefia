@@ -28,8 +28,6 @@ function field_logic.setup_new_game(player)
    assert(type(params) == "table", "Scenario must return table of {map,start_x,start_y}")
    assert(Map.current(), "Scenario must set the current map")
 
-   assert(Map.current():take_object(player, params.start_x, params.start_y))
-
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
 

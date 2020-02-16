@@ -51,7 +51,7 @@ function MainHud:relayout(x, y, width, height)
    self.mp_bar:relayout(math.floor((self.width - 84) / 2) + 40, self.height - (72 + 16) - 12)
    self.status_effects:relayout(self.x + 8, self.height - (72 + 16) - 50)
 
-   self.i_bar = self.t.bar:make_instance()
+   self.i_hud_bar = self.t.hud_bar:make_instance()
 end
 
 function MainHud:set_date(date)
@@ -127,13 +127,13 @@ end
 function MainHud:draw_bar()
    Draw.set_color(255, 255, 255)
 
-   self.i_bar:draw_bar(self.x, self.height - 16, self.width)
+   self.i_hud_bar:draw_bar(self.x, self.height - 16, self.width)
 
    self.t.map_name_icon:draw(self.x + 136 + 6, self.height - 16)
 end
 
 function MainHud:draw_minimap()
-   self.t.minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
+   self.t.hud_minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
 end
 
 function MainHud:draw_map_name()

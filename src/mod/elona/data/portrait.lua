@@ -125,11 +125,12 @@ for i, portrait in ipairs(portraits) do
    portrait.elona_id = i - 1
 
    portrait.image = {
-      source = "graphic/face1.png",
+      source = "graphic/face1.bmp",
       x = (id % 16) * 48,
       y = math.floor(id / 16) * 72,
       width = 48,
-      height = 72
+      height = 72,
+      key_color = "none"
    }
 
    data:add(portrait)

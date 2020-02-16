@@ -8,6 +8,7 @@
           "api.Map"
           "api.Gui"
           "api.Env"
+          "mod.elona_sys.api.Anim"
           "mod.elona_sys.api.Magic"
           "mod.tools.api.Tools")
 
@@ -24,7 +25,28 @@
   (Chara.create "test_room.breather")
   "player_turn_query")
 
-(Gui.bind_keys {:raw_m cast :raw_shift_s spawn})
+(fn anim [me]
+  (let [anim (Anim.melee_attack 10 10 false 0 50 false)]
+    (Gui.start_draw_callback anim)))
+
+(Gui.bind_keys {:raw_m cast :raw_shift_s spawn :raw_shift_a anim})
+
+(fn set-pcc [chara]
+  (let [Pcc (require "api.gui.Pcc")]
+    (tset chara :pcc
+          (Pcc:new [
+                    {:id "elona.body_1" :z_order 0}
+                    {:id "elona.eye_7" :z_order 10}
+                    {:id "elona.hair_2" :z_order 20}
+                    {:id "elona.cloth_1" :z_order 30}
+                    {:id "elona.pants_1" :z_order 20}
+                    ]
+                   ))
+    (tset chara :dir 4)))
+
+;;
+;; scratch
+;;
 
 (fn scratch [player map]
   (each [_ entry (: (. data "elona_sys.magic") :iter)]
@@ -35,7 +57,8 @@
       (each [_ id (ipairs ["elona.guava" "elona.scroll_of_return" "elona.safe"])]
         (Item.create id x y {} map))
       (when (Rand.one_in 3)
-        (Item.create "elona.putitoro" x y {} map)))))
+        (Item.create "elona.putitoro" x y {} map))))
+  (set-pcc player))
 
 (fn test-room [self player]
   (let [width 20

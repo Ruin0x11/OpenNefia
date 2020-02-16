@@ -1413,7 +1413,7 @@ local function make_chip_group(chips, group, source)
    end
 end
 
-make_chip_group(chara_chips, "chara", "graphic/character.png")
-make_chip_group(item_chips, "item", "graphic/item.png")
-make_chip_group(feat_chips, "feat", "graphic/map1.png")
-make_chip_group(area_chips, "feat", "graphic/map0.png")
+make_chip_group(chara_chips, "chara", "graphic/character.bmp")
+make_chip_group(item_chips, "item", "graphic/item.bmp")
+make_chip_group(feat_chips, "feat", "graphic/map1.bmp")
+make_chip_group(area_chips, "feat", "graphic/map0.bmp")

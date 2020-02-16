@@ -9,7 +9,7 @@ function Window:init(shadow)
 end
 
 function Window:draw()
-   Draw.image(self.batch)
+   Draw.image(self.batch, 0, 0)
 end
 
 function Window:relayout(x, y, width, height)

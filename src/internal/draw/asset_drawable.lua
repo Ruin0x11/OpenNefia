@@ -1,21 +1,15 @@
 local Draw = require("api.Draw")
 local asset_instance = require("internal.draw.asset_instance")
+local bmp_convert = require("internal.bmp_convert")
 
 local asset_drawable = class.class("asset_drawable")
 
-local image_cache = {}
-
 local function crop(proto)
-   love.graphics.setColor(1, 1, 1)
-
-   local base = image_cache[proto.source]
-   if base == nil then
-      base = love.graphics.newImage(proto.source)
-      image_cache[proto.source] = base
-   end
+   local base = bmp_convert.load_image(proto.source, proto.key_color)
 
    local quad = love.graphics.newQuad(proto.x, proto.y, proto.width, proto.height,
                                       base:getWidth(), base:getHeight())
+   assert(proto.width > 0, inspect(proto))
    local canvas = love.graphics.newCanvas(proto.width, proto.height)
    love.graphics.setCanvas(canvas)
 
@@ -30,9 +24,11 @@ local function crop(proto)
    return image
 end
 
-local function load_image(proto)
+local function load_image_region(proto)
+   love.graphics.setColor(1, 1, 1)
+
    if proto.image then
-      return love.graphics.newImage(proto.image)
+      return bmp_convert.load_image(proto.image, proto.key_color)
    end
 
    if proto.source then
@@ -43,7 +39,7 @@ local function load_image(proto)
 end
 
 function asset_drawable:init(proto)
-   self.image = load_image(proto)
+   self.image = load_image_region(proto)
 
    self.quads = {}
    self.bar_quads = {}
@@ -90,9 +86,6 @@ end
 function asset_drawable:get_height()
    return self.image:getHeight()
 end
-
-asset_drawable.getWidth = asset_drawable.get_width
-asset_drawable.getHeight = asset_drawable.get_height
 
 function asset_drawable:draw(x, y, width, height, color, centered, rotation)
    Draw.image(self.image, x, y, width, height, color, centered, rotation)

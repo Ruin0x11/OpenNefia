@@ -1,6 +1,7 @@
 local Draw = require("api.Draw")
 local SkipList = require("api.SkipList")
 local IChipRenderable = require("api.gui.IChipRenderable")
+local bmp_convert = require("internal.bmp_convert")
 local data = require("internal.data")
 
 local Pcc = class.class("Pcc", IChipRenderable)
@@ -12,7 +13,12 @@ function Pcc:init(parts)
    for _, part in ipairs(parts) do
       local entry = data["base.pcc_part"]:ensure(part.id)
       assert(entry.image)
-      self.parts:insert(part.z_order, {image = entry.image, color = part.color})
+      self.parts:insert(part.z_order,
+                        {
+                           image = entry.image,
+                           key_color = entry.key_color,
+                           color = part.color
+                        })
    end
 
    self.dirty = true
@@ -38,7 +44,7 @@ function Pcc:refresh()
 
    Draw.with_canvas(canvas, function()
                        for _, _, part in self.parts:iterate() do
-                          local image = assert(love.graphics.newImage(part.image))
+                          local image = assert(bmp_convert.load_image(part.image, part.key_color))
                           if part.color then
                              Draw.set_color(part.color)
                           else

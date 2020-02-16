@@ -3,34 +3,9 @@ local anim = require("internal.draw.anim")
 local asset_drawable = require("internal.draw.asset_drawable")
 local atlas_batch = require("internal.draw.atlas_batch")
 local binpack = require("thirdparty.binpack")
+local bmp_convert = require("internal.bmp_convert")
 
 local atlas = class.class("atlas")
-
-local image_cache = {}
-
-local function crop(proto)
-   love.graphics.setColor(1, 1, 1)
-
-   local base = image_cache[proto.source]
-   if base == nil then
-      base = love.graphics.newImage(proto.source)
-      image_cache[proto.source] = base
-   end
-
-   local quad = love.graphics.newQuad(proto.x, proto.y, proto.width, proto.height,
-                                      base:getWidth(), base:getHeight())
-   local canvas = love.graphics.newCanvas(proto.width, proto.height)
-   love.graphics.setCanvas(canvas)
-
-   love.graphics.draw(base, quad, 0, 0)
-
-   love.graphics.setCanvas()
-   local image = love.graphics.newImage(canvas:newImageData())
-
-   canvas:release()
-
-   return image, quad
-end
 
 local function load_tile(spec, frame_id)
    local tile, quad, need_release
@@ -59,15 +34,14 @@ local function load_tile(spec, frame_id)
    if class.is_an(asset_drawable, spec) then
       tile = spec
       quad = nil
-      need_release = false
    elseif type(spec) == "table" then
       if spec.source then
-         tile, quad = crop(spec)
-         need_release = false
+         tile = bmp_convert.load_image(spec.source, spec.key_color)
+         quad = love.graphics.newQuad(spec.x or 0, spec.y or 0, spec.width, spec.height,
+                                      tile:getWidth(), tile:getHeight())
       elseif spec.image then
-         tile = love.graphics.newImage(spec.image)
-         quad = love.graphics.newQuad(0, 0, tile:getWidth(), tile.getHeight(), tile:getWidth(), tile:getHeight())
-         need_release = true
+         tile = bmp_convert.load_image(spec.image, spec.key_color)
+         quad = love.graphics.newQuad(0, 0, tile:getWidth(), tile:getHeight(), tile:getWidth(), tile:getHeight())
       else
          error(("Unsupported tile type: %s"):format(spec))
       end
@@ -100,24 +74,30 @@ function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
       error(string.format("tile %s already loaded", full_id))
    end
 
-   local tile, quad, need_release = load_tile(spec, frame_id)
+   local tile, quad = load_tile(spec, frame_id)
 
-   local rect = self.binpack:insert(tile:getWidth(), tile:getHeight())
+   local _, tw, th
+   if class.is_an(asset_drawable, tile) then
+      tw = tile:get_width()
+      th = tile:get_height()
+   else
+      _, _, tw, th = quad:getViewport()
+   end
+
+   local rect = self.binpack:insert(tw, th)
    assert(rect, inspect(spec))
 
    if class.is_an(asset_drawable, tile) then
       tile:draw(rect.x, rect.y)
+   elseif load_tile_cb then
+      load_tile_cb(tile, quad, rect.x, rect.y)
    else
-      if load_tile_cb then
-         load_tile_cb(tile, quad, rect.x, rect.y)
-      else
-         love.graphics.draw(tile, quad, rect.x, rect.y)
-      end
+      love.graphics.draw(tile, quad, rect.x, rect.y)
    end
 
    -- Create a new quad inside the atlas we're assembling pointing to
    -- the tile that was pasted in.
-   local is_tall = tile:getHeight() == self.tile_height * 2
+   local is_tall = th == self.tile_height * 2
    local inner_quad
    if is_tall then
       inner_quad = love.graphics.newQuad(rect.x,
@@ -142,9 +122,6 @@ function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
 
    self.tiles[full_id] = { quad = inner_quad, offset_y = offset_y }
 
-   if need_release then
-      tile:release()
-   end
    if quad then
       quad:release()
    end
@@ -154,12 +131,13 @@ function atlas:insert_anim(proto, images)
    local id = proto._id
    local anims = {} -- proto.anim
 
-   -- anims = { default = { frames = {{id = "1", time = 0.25}} } }
+   -- anims = { default = { frames = {{image = "default#1", time = 0.25}} } }
 
    for anim_id, spec in pairs(images) do
       local frames = {}
-      for i=1,spec.count_x do
-         frames[i] = { id = tostring(i), time = 0.25 }
+      for frame_id=1,spec.count_x do
+         local full_id = ("%s#%s:%d"):format(id, anim_id, frame_id)
+         frames[frame_id] = { image = full_id, time = 0.25 }
       end
       anims[anim_id] = { frames = frames }
    end
@@ -193,7 +171,8 @@ function atlas:load_one(proto, draw_tile)
    --
    --     {
    --       image = "graphic/chip.bmp",
-   --       count_x = 1
+   --       count_x = 1,
+   --       key_color = {0, 0, 0}
    --     }
    --
    elseif type(image) == "table" then
@@ -212,7 +191,8 @@ function atlas:load_one(proto, draw_tile)
    --       width = 48,
    --       count_x = 1,
    --       x = 0,
-   --       y = 0
+   --       y = 0,
+   --       key_color = {0, 0, 0}
    --     }
    --
       elseif image.source then
@@ -230,10 +210,10 @@ function atlas:load_one(proto, draw_tile)
       elseif image.default then
          -- pass
       else
-         error("unsupported image type")
+         error("unsupported image type " .. inspect(image))
       end
    else
-      error("unsupported image type")
+      error("unsupported image type " .. inspect(image))
    end
 
    for anim_id, spec in pairs(images) do

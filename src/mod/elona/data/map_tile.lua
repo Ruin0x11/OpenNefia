@@ -4202,14 +4202,14 @@ local tiles = {
 for _, tile in ipairs(tiles) do
    tile.count_x = tile.count_x or 1
 
-   local id = tile.elona_id - 1
+   local id = tile.elona_id
    local x = (id % 33) * 48
    local y = math.floor(id / 33) * 48
 
    tile._type = "base.map_tile"
 
    tile.image = {
-      source = string.format("graphic/map%d.png", tile.elona_atlas),
+      source = string.format("graphic/map%d.bmp", tile.elona_atlas),
       x = x,
       y = y,
       width = 48,

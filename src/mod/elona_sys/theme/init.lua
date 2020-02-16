@@ -66,9 +66,9 @@ data:add {
       hud_bar = {
          source = "interface.bmp",
          x = 0,
-         y = 0,
-         width = 0,
-         height = 0
+         y = 440,
+         width = 192,
+         height = 24,
       },
       skill_icons = {
          source = "item.bmp",
@@ -468,36 +468,16 @@ data:add {
          height = 48,
          regions = topic_window_regions
       },
-      topic_window = {
-         source = "interface.bmp",
-         x = 0,
-         y = 0,
-         width = 0,
-         height = 0,
-         regions = {
-            fill = { 24, 24, 228, 144 }
-         }
-      },
       title = {
-         source = "interface.bmp",
-         x = 0,
-         y = 0,
-         width = 0,
-         height = 0
+         image = "title.bmp",
+         key_color = "none"
       },
       void = {
-         source = "interface.bmp",
-         x = 0,
-         y = 0,
-         width = 0,
-         height = 0
+         image = "void.bmp",
+         key_color = "none"
       },
       bg_night = {
-         source = "interface.bmp",
-         x = 0,
-         y = 0,
-         width = 0,
-         height = 0
+         image = "bg_night.bmp"
       },
       g1 = {
          image = "g1.bmp",
@@ -513,10 +493,10 @@ data:add {
       },
       select_key = {
          source = "interface.bmp",
-         x = 1000,
-         y = 1000,
+         x = 0,
+         y = 30,
          width = 24,
-         height = 18
+         height = 18,
       },
       list_bullet = {
          source = "interface.bmp",
@@ -543,15 +523,20 @@ data:add {
          source = "interface.bmp",
          x = 0,
          y = 656,
-         width = 24,
-         height = 24
+         width = 24 * 8,
+         height = 24 * 6,
+         count_x = 8,
+         count_y = 6,
+         key_color = "none",
       },
       shadow_edges = {
          source = "interface.bmp",
          x = 192,
          y = 752,
-         width = 48,
-         height = 48
+         width = 48 * 17,
+         height = 48,
+         count_x = 17,
+         key_color = "none",
       },
       character_shadow = {
          source = "interface.bmp",

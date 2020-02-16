@@ -54,9 +54,6 @@ function SelectRaceMenu:init()
    table.merge(self.pages, UiListExt())
    self.bg = Ui.random_cm_bg()
 
-   -- self.chip_male = Draw.load_image("graphic/temp/chara_male.bmp")
-   -- self.chip_female = Draw.load_image("graphic/temp/chara_female.bmp")
-
    self.race_info = UiRaceInfo:new(races[1])
 
    self.input = InputHandler:new()

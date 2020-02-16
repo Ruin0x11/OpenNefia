@@ -15,7 +15,7 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
 
    local tile = self.atlas.tiles[chip]
    if tile == nil then
-      tile = self.atlas.tiles[chip .. "#default"]
+      tile = self.atlas.tiles[chip .. "#default:1"]
    end
 
    local _, _, ttw, tth = tile.quad:getViewport()
@@ -54,7 +54,7 @@ end
 function atlas_batch:tile_size(chip)
    local tile = self.atlas.tiles[chip]
    if tile == nil then
-      tile = self.atlas.tiles[chip .. "#default"]
+      tile = self.atlas.tiles[chip .. "#default:1"]
    end
 
    local _, _, ttw, tth = tile.quad:getViewport()

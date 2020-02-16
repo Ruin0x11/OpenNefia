@@ -188,6 +188,8 @@ function Draw.image(image, x, y, width, height, color, centered, rotation)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
+   x = math.floor(x)
+   y = math.floor(y)
    local sx = 1
    local sy = 1
    if width and image.getWidth then
@@ -222,6 +224,8 @@ function Draw.image_region(image, quad, x, y, width, height, color, centered, ro
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
+   x = math.floor(x)
+   y = math.floor(y)
    local sx = 1
    local sy = 1
    local _, _, qw, qh = quad:getViewport()
@@ -243,6 +247,8 @@ function Draw.image_stretched(image, x, y, tx, ty, color, centered, rotation)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
+   x = math.floor(x)
+   y = math.floor(y)
    local sx = 1
    local sy = 1
    if tx and ty then
@@ -256,6 +262,8 @@ function Draw.image_region_stretched(image, quad, x, y, tx, ty, color, centered,
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
+   x = math.floor(x)
+   y = math.floor(y)
    local sx = 1
    local sy = 1
    local _, _, qw, qh = quad:getViewport()

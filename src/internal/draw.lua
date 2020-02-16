@@ -250,7 +250,7 @@ function draw.with_canvas(other_canvas, f, ...)
    love.graphics.setCanvas(other_canvas)
    love.graphics.setBlendMode("alpha")
 
-   local ok, err = pcall(f, ...)
+   local ok, err = xpcall(f, debug.traceback, ...)
 
    love.graphics.setCanvas(canvas)
 

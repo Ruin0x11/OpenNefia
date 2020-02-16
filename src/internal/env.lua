@@ -204,7 +204,10 @@ local function env_loadfile(path, mod_env)
       src = "(require-macros :internal.fennel.macros)\n" .. src
 
       rawset(_G, "_ENV", mod_env)
-      local str = require("thirdparty.fennel").compileString(src, {env = {}})
+      local ok, str = xpcall(require("thirdparty.fennel").compileString, debug.traceback, src, {env = {}})
+      if not ok then
+         return nil, str
+      end
       rawset(_G, "_ENV", nil)
       chunk, err = loadstring(str)
    else

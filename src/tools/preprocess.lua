@@ -11,12 +11,10 @@ local function remove_key_color(image, key_color)
    return image:bandjoin(alpha)
 end
 
-local no_alpha = {
+local key_colors = {
+   ["title.bmp"] = "none",
+   ["void.bmp"] = "none",
 }
-
-for _, v in ipairs(no_alpha) do
-   no_alpha[v] = true
-end
 
 local function preprocess_all(elona_root, mod_root)
    elona_root = fs.normalize(fs.join(elona_root, "graphic"))
@@ -28,11 +26,14 @@ local function preprocess_all(elona_root, mod_root)
       local path = fs.join(elona_root, item)
       if fs.is_file(path) then
          local image = vips.Image.new_from_file(path)
-         if not no_alpha[item] then
-            image = remove_key_color(image, {0, 0, 0})
+
+         local key_color = key_colors[item] or {0, 0, 0}
+         if key_color ~= "none" then
+            image = remove_key_color(image, key_color)
          end
          local filename = fs.filename_part(item) .. ".png"
          local output = fs.join(mod_root, filename)
+         print(("%s -> %s"):format(path, output))
          fs.create_directory(fs.parent(output))
          image:pngsave(output)
       end

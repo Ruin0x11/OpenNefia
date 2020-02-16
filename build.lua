@@ -27,10 +27,8 @@ local commands = {}
 
 function commands.preprocess()
    local fs = require("util.fs")
-   local preprocess = require("tools/preprocess")
 
-   preprocess("deps\\elona", "src\\graphic")
-
+   assert(fs.copy_directory("deps/elona/graphic", "src"))
    assert(fs.copy_directory("deps/elona/sound", "src/mod/elona"))
 
    return 0
