@@ -22,6 +22,12 @@ InputHandler:delegate("mouse", {
 function InputHandler:init(keys)
    self.keys = keys or KeyHandler:new()
    self.mouse = MouseHandler:new()
+
+   self:bind_keys {
+      repl = function()
+         require("game.field"):query_repl()
+      end
+   }
 end
 
 function InputHandler:focus()

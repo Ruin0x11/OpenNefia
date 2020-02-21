@@ -5,6 +5,7 @@ local ReplLayer = require("api.gui.menu.ReplLayer")
 local doc = require("internal.doc")
 local doc_store = require("internal.global.doc_store")
 local fs = require("util.fs")
+local hotload = require("internal.hotload")
 local socket = require("socket")
 local json = require("thirdparty.json")
 local field = require("game.field")
@@ -54,6 +55,28 @@ function commands.run(text)
    end
 
    return { result = ReplLayer.format_repl_result(result) }
+end
+
+-- Request:
+--
+-- {
+--   "command":"hotload",
+--   "content":"api.Rand"
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true
+-- }
+function commands.hotload(require_path)
+   local success, status = xpcall(hotload.hotload, debug.traceback, require_path)
+
+   if not success then
+      return error_result(status)
+   end
+
+   return {}
 end
 
 local function with_candidates(cb)
@@ -343,7 +366,7 @@ function debug_server:poll()
          else
             local cmd = commands[cmd_name]
             if cmd == nil then
-               result = error_result("No command named " .. key)
+               result = error_result("No command named " .. cmd_name)
             else
                local ok, err = xpcall(cmd, debug.traceback, content)
                if not ok then

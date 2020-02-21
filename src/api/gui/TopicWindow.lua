@@ -5,8 +5,8 @@ local UiTheme = require("api.gui.UiTheme")
 local TopicWindow = class.class("TopicWindow", IUiElement)
 
 function TopicWindow:init(frame_style, fill_style)
-   self.frame_style = frame_style
-   self.fill_style = fill_style
+   self.frame_style = frame_style or 0
+   self.fill_style = fill_style or 0
 end
 
 function TopicWindow:relayout(x, y, width, height)

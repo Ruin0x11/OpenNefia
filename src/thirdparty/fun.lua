@@ -2031,7 +2031,7 @@ exports.index_by = export1(index_by)
 --- @tparam iterator iterator
 --- @treturn iterator
 local extract = function(field, gen, param, state)
-   return fun.map(function(i) return i[field] end, gen, param, state)
+   return map(function(i) return i[field] end, gen, param, state)
 end
 methods.extract = method1(extract)
 exports.extract = export1(extract)
@@ -2046,7 +2046,7 @@ exports.extract = export1(extract)
 --- @tparam iterator iter
 --- @treturn iterator
 local filter_by = function(field, gen, param, state)
-   return fun.filter(function(i) return i[field] end, gen, param, state)
+   return filter(function(i) return i[field] end, gen, param, state)
 end
 methods.filter_by = method1(filter_by)
 exports.filter_by = export1(filter_by)
@@ -2057,7 +2057,7 @@ exports.filter_by = export1(filter_by)
 --- @tparam iterator iter
 --- @treturn iterator(list)
 local tuples = function(gen, param, state)
-   return fun.map(function(...) return {...} end, gen, param, state)
+   return map(function(...) return {...} end, gen, param, state)
 end
 methods.tuples = method0(tuples)
 exports.tuples = export0(tuples)
@@ -2084,7 +2084,7 @@ methods.each_with_self = method2(each_with_self)
 exports.each_with_self = export2(each_with_self)
 
 local select_retval = function(n, gen, param, state)
-   return fun.map(function(...) return select(n, ...) end, gen, param, state)
+   return map(function(...) return select(n, ...) end, gen, param, state)
 end
 methods.select_retval = method1(select_retval)
 exports.select_retval = export1(select_retval)
@@ -2102,7 +2102,7 @@ local group_by = function(f, default, gen, param, state)
       table.insert(acc[field], x)
       return acc
    end
-   return fun.foldl(group_by_x, {}, gen, param, state)
+   return foldl(group_by_x, {}, gen, param, state)
 end
 methods.group_by = method2(group_by)
 exports.group_by = export2(group_by)

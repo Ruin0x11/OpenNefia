@@ -49,10 +49,11 @@
     (with-current-buffer (process-buffer proc)
       (erase-buffer))
     (process-put proc :response nil)
-    (elona-next--process-response
-     (process-get proc :command)
-     (process-get proc :content)
-     response)))
+    (with-demoted-errors "Error: %s"
+        (elona-next--process-response
+         (process-get proc :command)
+         (process-get proc :content)
+         response))))
 
 (defun elona-next--completing-read (prompt list)
   (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil)))
@@ -134,6 +135,7 @@
             ("template" (elona-next--command-template response))
             ("ids" (elona-next--command-ids content response))
             ("run" t)
+            ("hotload" t)
             (else (error "No action for %s %s" cmd (prin1-to-string response)))))
       (error message))))
 
@@ -461,10 +463,10 @@
   (let* ((prefix
           (file-relative-name
            (file-name-sans-extension file)
-           (string-join (list (projectile-project-root) "src/"))))
+           (string-join (list (projectile-project-root)))))
          (lua-path (string-trim-left
                     (replace-regexp-in-string "/" "." prefix)
-                    "\\.+"))
+                    "\\(src\\)?\\.+"))
          (lua-name (let ((it (car (last (split-string lua-path "\\.")))))
                      (if (string-equal it "init")
                          (car (last (butlast
@@ -474,13 +476,9 @@
 
 (defun elona-next-hotload-this-file ()
   (interactive)
-  (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name))))
-         (cmd (format
-               "local ok, hotload = pcall(function() return require('hotload') end); if ok then hotload('%s') else require('internal.hotload').hotload('%s') end"
-               lua-path
-               lua-path)))
+  (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name)))))
     (save-buffer)
-    (elona-next--send "run" cmd)
+    (elona-next--send "hotload" lua-path)
     (message "Hotloaded %s." lua-path)))
 
 (defun elona-next-require-this-file ()

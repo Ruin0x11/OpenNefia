@@ -40,12 +40,6 @@ function KeyHandler:init(no_repeat_delay)
    self.keybinds = KeybindTranslator:new()
 
    self.no_repeat_delay = no_repeat_delay
-
-   self:bind_keys {
-      repl = function()
-         require("game.field"):query_repl()
-      end
-   }
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)

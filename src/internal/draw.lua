@@ -127,6 +127,10 @@ function draw.pop_layer()
    end
 end
 
+function draw.get_layers()
+   return layers
+end
+
 function draw.get_layer(i)
    return layers[i]
 end
@@ -140,14 +144,6 @@ function draw.layer_count()
 end
 
 local coroutines = {}
-
-function draw.update_layers_below(dt)
-   for i, entry in ipairs(layers) do
-      if i < #layers then
-         entry.layer:update(dt)
-      end
-   end
-end
 
 local function hotload_layer(layer)
    if layer.on_hotload_layer then

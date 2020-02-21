@@ -42,6 +42,13 @@ local function query(self, z_order)
       Log.info("Returning UI result: %s %s", inspect(res), tostring(canceled))
    else
       while true do
+         local current = draw.get_current_layer().layer
+         if current ~= self then
+            current:focus()
+            current:halt_input()
+            return nil, "canceled"
+         end
+
          if abort then
             -- BUG: This should remove the layer with the error instead
             -- of the topmost layer always.

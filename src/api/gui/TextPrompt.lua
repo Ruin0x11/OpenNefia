@@ -15,7 +15,7 @@ local TextPrompt = class.class("TextPrompt", IUiLayer)
 
 TextPrompt:delegate("input", IInput)
 
-function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
+function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset, initial_text, shadow)
    self.length = length or 16
    self.width = self.length * 16 + 60
    self.height = 36
@@ -25,9 +25,11 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    if limit_length == nil then self.limit_length = true end
    self.autocenter = autocenter
    if autocenter == nil then self.autocenter = true end
+   self.shadow = shadow
+   if shadow == nil then self.shadow = true end
    self.y_offset = y_offset or 0
 
-   self.text = ""
+   self.text = initial_text or ""
    self.display_text = ""
    self.cut_off = false
    self.frames = 0
@@ -38,6 +40,8 @@ function TextPrompt:init(length, can_cancel, limit_length, autocenter, y_offset)
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys(self:make_keymap())
    self.input:halt_input()
+
+   self:update_display_text()
 end
 
 function TextPrompt:make_keymap()
@@ -54,6 +58,10 @@ function TextPrompt:make_keymap()
       ["\t"] = function() self:cancel() end,
       text_canceled = function() self:cancel() end,
    }
+end
+
+function TextPrompt:get_text()
+   return self.text
 end
 
 function TextPrompt:focus()
@@ -113,7 +121,9 @@ function TextPrompt:ime_status_quad()
 end
 
 function TextPrompt:draw()
-   Draw.filled_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
+   if self.shadow then
+      Draw.filled_rect(self.x + 4, self.y + 4, self.width - 1, self.height - 1, {0, 0, 0, 127})
+   end
 
    self.win:draw()
    self.t.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)

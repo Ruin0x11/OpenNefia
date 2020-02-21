@@ -33,6 +33,10 @@ local function translate(char, text)
 end
 
 function TextHandler:receive_key(char, pressed, text, is_repeat)
+   if self.forwards then
+      self.forwards:receive_key(char, pressed, text, is_repeat)
+   end
+
    if pressed and not is_repeat then self.halted = false end
 
    if MODIFIERS[char] then
@@ -67,12 +71,7 @@ function TextHandler:receive_key(char, pressed, text, is_repeat)
 
    char = translate(char, text)
    if not char then return end
-
-   if self.forwards then
-      self.forwards:receive_key(char, pressed, text, is_repeat)
-   else
-      table.insert(self.chars, char)
-   end
+   table.insert(self.chars, char)
 end
 
 function TextHandler:bind_keys(bindings)
@@ -135,19 +134,31 @@ function TextHandler:prepend_key_modifiers(key)
 end
 
 
-function TextHandler:run_key_action(key)
-   local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
+function TextHandler:run_key_action(key, ...)
+   local keybind
+
+   local special = false
+   if key == "text_submitted" or key == "text_canceled" then
+      keybind = key
+      special = true
+   else
+      keybind = self.keybinds:key_to_keybind(key, self.modifiers)
+   end
 
    local func = self.bindings[keybind]
-   if func == nil then
+   if func == nil and not special then
       func = self.bindings["raw_" .. key]
    end
 
    if func then
-      func()
-   elseif self.bindings["text_entered"] then
-      self.bindings["text_entered"](key)
+      return func(...)
+   elseif not special and self.bindings["text_entered"] then
+      return self.bindings["text_entered"](key, ...)
+   elseif self.forwards then
+      return self.forwards:run_key_action(key, ...)
    end
+
+   return nil, false
 end
 
 function TextHandler:run_actions()
@@ -173,12 +184,12 @@ function TextHandler:run_actions()
       end
    end
 
-   if self.finished and self.bindings["text_submitted"] then
-      self.bindings["text_submitted"]()
+   if self.finished then
+      self:run_key_action("text_submitted")
    end
 
-   if self.canceled and self.bindings["text_canceled"] then
-      self.bindings["text_canceled"]()
+   if self.canceled then
+      self:run_key_action("text_canceled")
    end
 
    self.chars = {}

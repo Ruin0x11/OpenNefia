@@ -143,4 +143,15 @@ function Input.reload_keybinds()
    draw.get_current_layer().layer:focus()
 end
 
+function Input.back_to_field()
+   local layers = table.set {
+      "MainHud",
+      "field_layer",
+      "MainTitleMenu"
+   }
+   while not layers[draw.get_current_layer().layer.__class.__name] do
+      draw.pop_layer()
+   end
+end
+
 return Input

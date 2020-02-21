@@ -34,14 +34,11 @@
 (fn set-pcc [chara]
   (let [Pcc (require "api.gui.Pcc")]
     (tset chara :pcc
-          (Pcc:new [
-                    {:id "elona.body_1" :z_order 0}
+          (Pcc:new [{:id "elona.body_1" :z_order 0}
                     {:id "elona.eye_7" :z_order 10}
                     {:id "elona.hair_2" :z_order 20}
                     {:id "elona.cloth_1" :z_order 30}
-                    {:id "elona.pants_1" :z_order 20}
-                    ]
-                   ))
+                    {:id "elona.pants_1" :z_order 20}]))
     (tset chara :dir 4)))
 
 ;;
