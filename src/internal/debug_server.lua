@@ -35,9 +35,17 @@ end
 function commands.run(text)
    local status, success, result
 
-   local s, err = loadstring(text)
-   if s then
-      success, result = xpcall(s, function(e) return e .. "\n" .. debug.traceback(2) end)
+   local fn, err = loadstring(text)
+
+   if fn then
+      -- NOTE: It is very important that the code being run does not
+      -- call coroutine.yield, or it will mess up the flow and
+      -- potentially leave the debug server in an invalid state. To
+      -- protect against this, run the code itself in a new coroutine
+      -- so if the code yields it will not affect any state.
+      local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
+      local _
+      _, success, result = coroutine.resume(coro)
       if success then
          Log.info("Success: %s", result)
          status = "success"
@@ -333,6 +341,7 @@ function debug_server:init(port)
 end
 
 function debug_server:poll()
+
    local client, _, err = self.server:accept()
 
    if err and err ~= "timeout" then
@@ -422,7 +431,6 @@ function debug_server:start()
    local function poll()
       while true do
          local cmd_name, result = self:poll()
-
          coroutine.yield(cmd_name, result)
       end
    end
@@ -438,7 +446,7 @@ function debug_server:step(dt)
 
    local ok, err = coroutine.resume(self.coro, dt)
    if not ok then
-      Log.error("%s", debug.traceback(self.coro, err))
+      Log.error("Error, will stop debug server: %s", debug.traceback(self.coro, err))
       self:stop()
    end
    return ok, err

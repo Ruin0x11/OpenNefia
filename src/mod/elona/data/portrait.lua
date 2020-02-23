@@ -45,6 +45,8 @@ local portraits = {
    { _id = "man42" },
    { _id = "man43" },
    { _id = "man44" },
+   "skip",
+   "skip",
    { _id = "barius" },
    { _id = "loyter" },
    { _id = "bethel" },
@@ -60,6 +62,7 @@ local portraits = {
    { _id = "man46" },
    { _id = "man47" },
    { _id = "man48" },
+   "skip",
    { _id = "woman1" },
    { _id = "woman2" },
    { _id = "woman3" },
@@ -106,6 +109,8 @@ local portraits = {
    { _id = "woman44" },
    { _id = "woman45" },
    { _id = "woman46" },
+   "skip",
+   "skip",
    { _id = "larnneire" },
    { _id = "shena" },
    { _id = "miches" },
@@ -119,19 +124,21 @@ local portraits = {
 }
 
 for i, portrait in ipairs(portraits) do
-   local id = i - 1
+   if portrait ~= "skip" then
+      local id = i - 1
 
-   portrait._type = "base.portrait"
-   portrait.elona_id = i - 1
+      portrait._type = "base.portrait"
+      portrait.elona_id = i - 1
 
-   portrait.image = {
-      source = "graphic/face1.bmp",
-      x = (id % 16) * 48,
-      y = math.floor(id / 16) * 72,
-      width = 48,
-      height = 72,
-      key_color = "none"
-   }
+      portrait.image = {
+         source = "graphic/face1.bmp",
+         x = (id % 16) * 48,
+         y = math.floor(id / 16) * 72,
+         width = 48,
+         height = 72,
+         key_color = "none"
+      }
 
-   data:add(portrait)
+      data:add(portrait)
+   end
 end

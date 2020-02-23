@@ -1,4 +1,5 @@
 local IKeyInput = require("api.gui.IKeyInput")
+local Log = require("api.Log")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
 
 local input = require("internal.input")
@@ -14,7 +15,7 @@ local MODIFIERS = table.set {
 
 function TextHandler:init()
    self.bindings = {}
-   self.forwards = nil
+   self.forwards = {}
    self.chars = {}
    self.this_frame = {}
    self.modifiers = {}
@@ -33,8 +34,8 @@ local function translate(char, text)
 end
 
 function TextHandler:receive_key(char, pressed, text, is_repeat)
-   if self.forwards then
-      self.forwards:receive_key(char, pressed, text, is_repeat)
+   for _, forward in ipairs(self.forwards) do
+      forward:receive_key(char, pressed, text, is_repeat)
    end
 
    if pressed and not is_repeat then self.halted = false end
@@ -90,9 +91,14 @@ function TextHandler:unbind_keys(bindings)
    self.keybinds:disable(bindings)
 end
 
-function TextHandler:forward_to(handler)
-   class.assert_is_an(IKeyInput, handler)
-   self.forwards = handler
+function TextHandler:forward_to(handlers)
+   if not handlers[1] then
+      handlers = { handlers }
+   end
+   for _, handler in ipairs(handlers) do
+      class.assert_is_an(IKeyInput, handler)
+   end
+   self.forwards = handlers
 end
 
 function TextHandler:focus()
@@ -145,20 +151,43 @@ function TextHandler:run_key_action(key, ...)
       keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    end
 
+   if self.bindings[keybind] == nil and not special then
+      keybind = "raw_" .. key
+   end
+
+   if self.bindings[keybind] == nil
+      and not special
+      and string.len(key) == 1
+      and self.bindings["text_entered"]
+   then
+      return true, self.bindings["text_entered"](key, ...)
+   end
+
+   if Log.has_level("trace") then
+      Log.trace("Keybind: %s %s %s", key, keybind, self)
+   end
+
+   local ran, result = self:run_keybind_action(keybind, ...)
+
+   if not ran then
+      for _, forward in ipairs(self.forwards) do
+         local did_something, first_result = forward:run_key_action(key, ...)
+         if did_something then
+            return did_something, first_result
+         end
+      end
+   end
+
+   return ran
+end
+
+function TextHandler:run_keybind_action(keybind, ...)
    local func = self.bindings[keybind]
-   if func == nil and not special then
-      func = self.bindings["raw_" .. key]
-   end
-
    if func then
-      return func(...)
-   elseif not special and self.bindings["text_entered"] then
-      return self.bindings["text_entered"](key, ...)
-   elseif self.forwards then
-      return self.forwards:run_key_action(key, ...)
+      return true, func(...)
    end
 
-   return nil, false
+   return false, nil
 end
 
 function TextHandler:run_actions()
@@ -171,16 +200,14 @@ function TextHandler:run_actions()
    for c, _ in pairs(self.this_frame) do
       if not ran[c] then
          local keybind = self.keybinds:key_to_keybind(c, self.modifiers)
-
-         local func = self.bindings[keybind]
-         if func == nil then
-            local with_modifiers = self:prepend_key_modifiers(c)
-            func = self.bindings["raw_" .. with_modifiers]
+         if Log.has_level("trace") then
+            Log.trace("Keybind: %s %s %s", c, keybind, self)
          end
 
-         if func then
-            func()
+         if self.bindings[keybind] == nil then
+            keybind = "raw_" .. c
          end
+         self:run_keybind_action(keybind)
       end
    end
 

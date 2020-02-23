@@ -61,10 +61,6 @@ function love.update(dt)
 
    fps:update(dt)
 
-   if draw.needs_wait() then
-      return
-   end
-
    if env.server_needs_restart then
       if server then
          server:stop()
@@ -81,10 +77,14 @@ function love.update(dt)
          -- server = debug_server:new()
          -- server:start()
       else
-         if halt and cmd_name == "run" then
+         if halt and (cmd_name == "run" or cmd_name == "hotload") then
             stop_halt()
          end
       end
+   end
+
+   if draw.needs_wait() then
+      return
    end
 
    if halt then

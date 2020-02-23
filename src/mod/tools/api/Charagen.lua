@@ -125,7 +125,6 @@ function Charagen.create(x, y, params, where)
 
    if id == "elona.mandrake" then
       print(debug.traceback"a")
-      pause()
    end
 
    local create_params = params.create_params

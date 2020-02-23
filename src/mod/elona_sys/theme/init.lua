@@ -553,35 +553,35 @@ data:add {
          height = 144
       },
       failure_to_cast_effect = {
-         source = "interface.bmp",
+         source = "item.bmp",
          x = 480,
          y = 0,
          width = 48,
          height = 48
       },
       swarm_effect = {
-         source = "interface.bmp",
+         source = "item.bmp",
          x = 816,
          y = 0,
          width = 48,
          height = 48
       },
       breaking_effect = {
-         source = "interface.bmp",
+         source = "item.bmp",
          x = 864,
          y = 0,
          width = 48,
          height = 48
       },
       melee_attack_debris = {
-         source = "interface.bmp",
+         source = "item.bmp",
          x = 1104,
          y = 0,
          width = 48,
          height = 48
       },
       melee_attack_blood = {
-         source = "interface.bmp",
+         source = "item.bmp",
          x = 720,
          y = 0,
          width = 48,

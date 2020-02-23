@@ -126,22 +126,5 @@ end
 add_keybinds(keybinds)
 
 if Env.is_hotloading() then
-   local kbs = {}
-   for _, kb in data["base.keybind"]:iter() do
-      local id = kb._id
-
-      -- allow omitting "base." if the keybind is provided by the base
-      -- mod.
-      if string.match(id, "^base%.") then
-         id = string.split(id, ".")[2]
-      end
-
-      kbs[#kbs+1] = {
-         action = id,
-         primary = kb.default,
-         alternate = kb.default_alternate,
-      }
-   end
-   config["base.keybinds"] = kbs
    Input.reload_keybinds()
 end

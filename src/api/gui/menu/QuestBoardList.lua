@@ -9,34 +9,13 @@ local PagedListModel = require("api.gui.PagedListModel")
 local Quest = require("mod.elona_sys.api.Quest")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
+local IList = require("api.gui.IList")
 local Window = require("api.gui.Window")
 
-local QuestBoardList = class.class("QuestBoardList", IUiList, IPaged)
+local QuestBoardList = class.class("QuestBoardList", {IUiList, IPaged})
 
-QuestBoardList:delegate("model", {
-                       "items",
-                       "changed",
-                       "selected",
-                       "selected_item",
-                       "select",
-                       "select_next",
-                       "select_previous",
-                       "choose",
-                       "can_select",
-                       "set_data",
-                       "get_item_text",
-                       "chosen",
-                       "on_choose",
-                       "can_choose",
-                       "on_select",
-                       "select_page",
-                       "next_page",
-                       "previous_page",
-                       "iter",
-                       "len",
-                       "page"
-})
-
+QuestBoardList:delegate("model", IList)
+QuestBoardList:delegate("model", IPaged)
 QuestBoardList:delegate("input", IInput)
 
 local KEYS = "abcdefghijklmnopqr"
@@ -76,10 +55,6 @@ function QuestBoardList:init(quests)
 
    self.input = InputHandler:new()
    self.input:bind_keys(UiList.make_keymap(self))
-end
-
-function QuestBoardList:get_item_color(item)
-   return {0, 0, 0}
 end
 
 function QuestBoardList:relayout(x, y, width, height)

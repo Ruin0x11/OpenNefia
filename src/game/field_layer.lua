@@ -54,6 +54,7 @@ function field_layer:setup_repl()
    local repl_env, history = Repl.generate_env()
 
    self.repl = ReplLayer:new(repl_env, { history = history })
+   self.repl:relayout()
 end
 
 function field_layer:init_global_data()
@@ -226,7 +227,7 @@ function field_layer:query_repl()
 
    -- The repl could get hotloaded, so keep it in an upvalue.
    local repl = self.repl
-   repl:query(100000000) -- draw on top of everything
+   repl:query()
 
    if repl then
       repl:save_history()

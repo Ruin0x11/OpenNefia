@@ -76,6 +76,10 @@ function ReplLayer:init(env, params)
    self.input:halt_input()
 end
 
+function ReplLayer:default_z_order()
+   return 100000000
+end
+
 function ReplLayer:make_keymap()
    return {
       text_entered = function(t)
@@ -415,7 +419,7 @@ function ReplLayer:print(text, color)
    Draw.set_font(self.font_size)
    local success, err, wrapped = xpcall(function() return Draw.wrap_text(text, self.width) end, debug.traceback)
    if not success then
-      self.scrollback:push({text="[REPL] error printing result: " .. string.split(err)[1], color=self.t.repl_error_color})
+      self.scrollback:push({text="[REPL] error printing result: " .. string.split(err)[1], color=nil})
       Log.error("%s", err)
    else
       for _, line in ipairs(wrapped) do

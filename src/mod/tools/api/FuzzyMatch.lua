@@ -194,7 +194,7 @@ function FuzzyMatch.match(query, candidates, opts)
    opts.smart_case = opts.smart_case or false
    opts.ignore_spaces = opts.ignore_spaces or false
 
-   local results = SkipList:new(#candidates)
+   local results = SkipList:new(#candidates+1)
 
    for _, cand in ipairs(candidates) do
       local score = FuzzyMatch.match_one(cand, query, opts)

@@ -15,3 +15,39 @@ data:add {
       return map, "blank"
    end,
 }
+
+data:add_type {
+   name = "interactive_fn",
+   fields = {
+      {
+         name = "func",
+         type = "function",
+         template = true
+      },
+      {
+         name = "spec",
+         type = "table",
+         template = true
+      }
+   }
+}
+
+data:add {
+   _type = "base.keybind",
+   _id = "m_x",
+   default = "alt_x"
+}
+
+data:add {
+   _type = "base.keybind",
+   _id = "prompt_previous",
+   default = "ctrl_p"
+}
+
+data:add {
+   _type = "base.keybind",
+   _id = "prompt_next",
+   default = "ctrl_n"
+}
+
+require("mod.tools.exec.interactive")

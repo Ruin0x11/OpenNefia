@@ -57,6 +57,16 @@ function TextPrompt:make_keymap()
       text_submitted = function() self.finished = true end,
       ["\t"] = function() self:cancel() end,
       text_canceled = function() self:cancel() end,
+      west = function()
+         -- prompt text forward
+      end,
+      east = function()
+         -- prompt text backward
+      end,
+      repl_first_char = function()
+      end,
+      repl_last_char = function()
+      end,
    }
 end
 

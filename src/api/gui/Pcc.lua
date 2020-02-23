@@ -51,7 +51,6 @@ function Pcc:refresh()
                              Draw.set_color(255, 255, 255)
                           end
                           love.graphics.draw(image, 0, 0)
-                          image:release()
                        end
    end)
 

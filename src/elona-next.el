@@ -13,6 +13,9 @@
     (define-key map "\C-c\C-l" 'elona-next-send-buffer)
     map))
 
+(defcustom elona-next-always-send-to-repl nil
+  "If non-nil, treat hotloading as evaluating the buffer in the REPL instead.")
+
 (defcustom elona-next-repl-address "127.0.0.1"
   "Address to use for connecting to the REPL.")
 
@@ -476,10 +479,12 @@
 
 (defun elona-next-hotload-this-file ()
   (interactive)
-  (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name)))))
-    (save-buffer)
-    (elona-next--send "hotload" lua-path)
-    (message "Hotloaded %s." lua-path)))
+  (if elona-next-always-send-to-repl
+      (elona-next-eval-buffer)
+    (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name)))))
+      (save-buffer)
+      (elona-next--send "hotload" lua-path)
+      (message "Hotloaded %s." lua-path))))
 
 (defun elona-next-require-this-file ()
   (interactive)
@@ -494,26 +499,27 @@
     (elona-next--send-to-repl cmd)
     (message "%s" cmd)))
 
-(defun elona-next-require-path (file)
-  (interactive)
+(defun elona-next--require-path (file)
   (let* ((pair (elona-next--require-path-of-file file))
          (lua-path (car pair))
-         (lua-name (cdr pair)))
+         (lua-name (cdr pair))
+         (local (if elona-next-always-send-to-repl "" "local ")))
     (format
-     "local %s = require(\"%s\")\n"
+     "%s%s = require(\"%s\")\n"
+     local
      lua-name
      lua-path)))
 
 (defun elona-next-copy-require-path ()
   (interactive)
-  (let ((src (elona-next-require-path (buffer-file-name))))
+  (let ((src (elona-next--require-path (buffer-file-name))))
     (message "%s" src)
     (kill-new src)))
 
 (defun elona-next-insert-require-for-file (file)
   (let ((project-root (projectile-ensure-project (projectile-project-root))))
     (beginning-of-line)
-    (insert (elona-next-require-path
+    (insert (elona-next--require-path
              (string-join (list project-root file))))
     (indent-region (point-at-bol) (point-at-eol))))
 
@@ -585,13 +591,38 @@
     (read-from-minibuffer "Eval (lua): " nil nil nil 'elona-next--eval-expression-history)))
   (elona-next--send-to-repl exp))
 
-(defun elona-next-eval-current-line ()
-  (interactive)
-  (elona-next--send-to-repl (buffer-substring (line-beginning-position) (line-end-position))))
+(defun elona-next-eval-region (start end)
+  (interactive "r")
+  (elona-next--send-to-repl (buffer-substring start end)))
 
 (defun elona-next-eval-buffer ()
   (interactive)
   (elona-next--send-to-repl (buffer-string)))
+
+(defun elona-next-eval-current-line ()
+  (interactive)
+  (elona-next-eval-region (line-beginning-position) (line-end-position)))
+
+(defun elona-next--bounds-of-block ()
+  (save-excursion
+    (let ((start
+           (save-excursion
+             (while (and (not (bobp)) (> (lua-calculate-indentation) 0))
+               (previous-line))
+             (beginning-of-line)
+             (point)))
+          (end
+           (save-excursion
+             (while (and (not (eobp)) (> (lua-calculate-indentation) 0))
+               (next-line))
+             (end-of-line)
+             (point))))
+      (cons start end))))
+
+(defun elona-next-eval-block ()
+  (interactive)
+  (let ((pos (elona-next---bounds-of-block)))
+    (elona-next-eval-region (car pos) (cdr pos))))
 
 (defun elona-next--dotted-symbol-at-point ()
   (interactive)
@@ -635,6 +666,11 @@
   (define-eval-sexp-fu-flash-command elona-next-require-this-file
     (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
   (define-eval-sexp-fu-flash-command elona-next-send-current-line
+    (eval-sexp-fu-flash (elona-next--bounds-of-line)))
+
+  (define-eval-sexp-fu-flash-command elona-next-eval-block
+    (eval-sexp-fu-flash (elona-next--bounds-of-block)))
+  (define-eval-sexp-fu-flash-command elona-next-eval-current-line
     (eval-sexp-fu-flash (elona-next--bounds-of-line)))
 
   (define-eval-sexp-fu-flash-command lua-send-buffer
@@ -693,5 +729,14 @@
 (defun elona-next-insert-id ()
   (interactive)
   (elona-next--send "ids" ""))
+
+(defun elona-next-make-scratch-buffer ()
+  (interactive)
+  (let* ((filename (format-time-string "%Y-%m-%d_%H-%M-%S.lua"))
+         (dest-path (string-join (list (projectile-project-root) "src/scratch/" filename))))
+    (find-file dest-path)
+    (newline)
+    (add-file-local-variable 'elona-next-always-send-to-repl t)
+    (beginning-of-buffer)))
 
 (provide 'elona-next)

@@ -1,0 +1,27 @@
+local charas = {
+   vernis = {
+      { 39, 3, "elona.whom_dwell_in_the_vanity" },
+      { 42, 23, "elona.loyter", { _role = "elona.special" } },
+      { 24, 5, "elona.miches", { _role = "elona.special" } },
+      { 40, 24, "elona.shena", { _role = "elona.special" } },
+      { 40, 25, "elona.dungeon_cleaner", { _role = "elona.special" } },
+      { 30, 5, "elona.rilian", { _role = "elona.special" } },
+      { 42, 24, "elona.bard", { _role = "elona.special" } },
+      { 47, 9, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.fisher" } }, shop_rank = 5, _name = "chara.job.fisher" } },
+      { 14, 12, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.blacksmith" } }, shop_rank = 12, _name = "chara.job.blacksmith" } },
+      { 39, 27, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.trader" } }, shop_rank = 12, _name = "chara.job.trader" } },
+      { 10, 15, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.general_vendor" } }, shop_rank = 10, _name = "chara.job.general_vendor" } },
+      { 7, 26, "elona.wizard", { _role = { "elona.shopkeeper", { inventory_id = "elona.magic_vendor" } }, shop_rank = 11, _name = "chara.job.magic_vendor" } },
+      { 14, 25, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.innkeeper" } }, shop_rank = 8, _name = "chara.job.innkeeper" } },
+      { 22, 26, "elona.shopkeeper", { _role = { "elona.shopkeeper", { inventory_id = "elona.bakery" } }, shop_rank = 9, _name = "chara.job.baker", image = "elona.chara_baker" } },
+      { 28, 16, "elona.wizard", { _role = "elona.wizard" } },
+      { 38, 27, "elona.bartender", { _role = "elona.bartender" } },
+      { 6, 25, "elona.healer", { _role = "elona.healer" } },
+      { 10, 7, "elona.elder", { _role = "elona.elder", _name = "chara.job.of_vernis" } },
+      { 27, 16, "elona.trainer", { _role = "elona.trainer", _name = "chara.job.trainer" } },
+      { 25, 16, "elona.informer", { _role = "elona.informer" } },
+      { nil, nil, "elona.citizen", { _count = 4, _role = "elona.citizen" } },
+      { nil, nil, "elona.citizen2", { _count = 4, _role = "elona.citizen" } },
+      { nil, nil, "elona.guard", { _count = 4, _role = "elona.guard" }},
+   }
+}

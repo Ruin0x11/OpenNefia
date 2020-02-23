@@ -33,7 +33,7 @@ function KeyHandler:init(no_repeat_delay)
    self.pressed = {}
    self.repeat_delays = {}
    self.modifiers = {}
-   self.forwards = nil
+   self.forwards = {}
    self.halted = false
    self.stop_halt = true
    self.frames_held = 0
@@ -43,8 +43,8 @@ function KeyHandler:init(no_repeat_delay)
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
-   if self.forwards then
-      self.forwards:receive_key(key, pressed, is_text, is_repeat)
+   for _, forward in ipairs(self.forwards) do
+      forward:receive_key(key, pressed, is_text, is_repeat)
    end
 
    if is_text then return end
@@ -62,9 +62,14 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
    end
 end
 
-function KeyHandler:forward_to(handler)
-   class.assert_is_an(IKeyInput, handler)
-   self.forwards = handler
+function KeyHandler:forward_to(handlers)
+   if not handlers[1] then
+      handlers = { handlers }
+   end
+   for _, handler in ipairs(handlers) do
+      class.assert_is_an(IKeyInput, handler)
+   end
+   self.forwards = handlers
 end
 
 function KeyHandler:focus()
@@ -153,21 +158,35 @@ function KeyHandler:run_key_action(key, ...)
 
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    if Log.has_level("trace") then
-      Log.trace("Keybind: %s %s %s", key, keybind)
+      Log.trace("Keybind: %s %s %s", key, keybind, self)
    end
 
-   local func = self.bindings[keybind]
-   if func == nil then
+   if self.bindings[keybind] == nil then
       local with_modifiers = self:prepend_key_modifiers(key)
-      func = self.bindings["raw_" .. with_modifiers]
-   end
-   if func then
-      return func(...), true
-   elseif self.forwards then
-      return self.forwards:run_key_action(key, ...)
+      keybind = "raw_" .. with_modifiers
    end
 
-   return nil, false
+   local ran, result = self:run_keybind_action(keybind, ...)
+
+   if not ran then
+      for _, forward in ipairs(self.forwards) do
+         local did_something, first_result = forward:run_key_action(key, ...)
+         if did_something then
+            return did_something, first_result
+         end
+      end
+   end
+
+   return ran, result
+end
+
+function KeyHandler:run_keybind_action(keybind, ...)
+   local func = self.bindings[keybind]
+   if func then
+      return true, func(...)
+   end
+
+   return false, nil
 end
 
 function KeyHandler:handle_repeat(key, dt)
@@ -224,7 +243,7 @@ function KeyHandler:run_actions(dt, ...)
       -- two movement keys can form a diagonal, they should be fired
       -- instead of each one individually.
       if v.pressed then
-         result, ran = self:run_key_action(key, ...)
+         ran, result = self:run_key_action(key, ...)
          if ran then
             -- only run the first action
             break
@@ -233,7 +252,7 @@ function KeyHandler:run_actions(dt, ...)
    end
    if not ran then
       for key, _ in pairs(self.this_frame) do
-         result, ran = self:run_key_action(key, ...)
+         ran, result = self:run_key_action(key, ...)
 
          if ran then
             -- only run the first action

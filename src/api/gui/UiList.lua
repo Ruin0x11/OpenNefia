@@ -11,35 +11,8 @@ local IPaged = require("api.gui.IPaged")
 local PagedListModel = require("api.gui.PagedListModel")
 
 local UiList = class.class("UiList", IUiList)
-UiList:delegate("model", {
-                   "changed",
-                   "selected",
-                   "chosen",
-                   "items",
-                   "selected_item",
-                   "select",
-                   "select_next",
-                   "select_previous",
-                   "can_select",
-                   "can_choose",
-                   "get_item_text",
-                   "set_data",
-                   "choose",
-                   "on_choose",
-                   "on_select",
-
-                   "select_page",
-                   "next_page",
-                   "previous_page",
-                   "page",
-                   "page_max",
-                   "page_size",
-                   "changed_page",
-
-                   "len",
-                   "iter",
-                   "iter_all_pages",
-})
+UiList:delegate("model", IList)
+UiList:delegate("model", IPaged)
 UiList:delegate("input", IInput)
 
 local KEYS = "abcdefghijklmnopqr"

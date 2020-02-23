@@ -15,8 +15,8 @@ local scroll = false
 local capitalize = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
-function Gui.update_screen()
-   field:update_screen(scroll)
+function Gui.update_screen(dt)
+   field:update_screen(scroll, dt)
    scroll = false
 end
 
@@ -331,6 +331,10 @@ end
 
 function Gui.bind_keys(keys)
    field:bind_keys(keys)
+end
+
+function Gui.field_is_active()
+   return field.is_active
 end
 
 return Gui

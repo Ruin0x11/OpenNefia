@@ -1,15 +1,20 @@
 local Env = require("api.Env")
-local Event = require("api.Event")
 local Log = require("api.Log")
 local IDrawable = require("api.gui.IDrawable")
 local IInput = require("api.gui.IInput")
 
 local draw = require("internal.draw")
 
-local IUiLayer
+local IUiLayer = class.interface("IUiLayer",
+                                 {
+                                    relayout = "function",
+                                    make_keymap = "function",
+                                 },
+                                 { IDrawable, IInput })
 
--- TODO: z_order should be a class variable, or at least configurable,
--- instead of having to specify it at the call site every time.
+function IUiLayer:default_z_order()
+   return 100000
+end
 
 --- Starts drawing this UI layer and switches input focus to it.
 ---
@@ -18,8 +23,12 @@ local IUiLayer
 --- necessarily non-nil if it was not canceled.
 --- @treturn[opt] string Equals "canceled" if the layer was canceled
 --- out of.
-local function query(self, z_order)
+function IUiLayer:query(z_order)
    class.assert_is_an(IUiLayer, self)
+
+   if z_order == nil then
+      z_order = self:default_z_order() or 100000
+   end
 
    local dt = 0
    local abort = false
@@ -42,18 +51,23 @@ local function query(self, z_order)
       Log.info("Returning UI result: %s %s", inspect(res), tostring(canceled))
    else
       while true do
+         if abort then
+            Log.error("Draw error encountered, removing layer.")
+            local Input = require("api.Input")
+            Input.back_to_field()
+         end
+
+         -- Check if the layer has modified the internal state of the
+         -- layer stack, and if so bail out immediately so the focus
+         -- can be restored to the current layer. Otherwise the game
+         -- will be stuck in this loop forever waiting for user input,
+         -- which might not be able to be provided if the focused
+         -- layer was switched already.
          local current = draw.get_current_layer().layer
          if current ~= self then
             current:focus()
             current:halt_input()
             return nil, "canceled"
-         end
-
-         if abort then
-            -- BUG: This should remove the layer with the error instead
-            -- of the topmost layer always.
-            Log.error("Draw error encountered, removing layer.")
-            break
          end
 
          success, res, canceled = xpcall(
@@ -64,6 +78,8 @@ local function query(self, z_order)
             debug.traceback)
          if not success then
             Log.error("Error on query: %s", res)
+            res = nil
+            canceled = "error"
             break
          end
          if res or canceled then break end
@@ -85,15 +101,13 @@ local function query(self, z_order)
    return res, canceled
 end
 
-IUiLayer = class.interface("IUiLayer",
-                           {
-                              relayout = "function",
-                              make_keymap = "function",
-                              query = { default = query },
-                              release = { default = function() end },
-                              on_query = { default = function() end },
-                              on_hotload_layer = { default = function() end },
-                           },
-                           { IDrawable, IInput })
+function IUiLayer:release()
+end
+
+function IUiLayer:on_query()
+end
+
+function IUiLayer:on_hotload_layer()
+end
 
 return IUiLayer

@@ -243,6 +243,21 @@ local function update_docs(dat, _schema, loc, is_hotloading)
    end
 end
 
+function data:replace(dat)
+   local mod_name = env.find_calling_mod()
+   local _id = dat._id
+   local _type = dat._type
+   local full_id = mod_name .. "." .. _id
+
+   if not inner[_type][full_id]  then
+      self:error("ID does not exist for type '%s': '%s'", _type, full_id)
+   end
+
+   Log.debug("Replacing %s:%s", _type, full_id)
+   inner[_type][full_id] = nil
+   self:add(dat)
+end
+
 function data:add(dat)
    -- if stage ~= "loading" then error("stop") end
 
@@ -393,6 +408,10 @@ function data:add_multi(_type, list)
    end
 end
 
+function data:has_type(_type)
+   return inner[_type] ~= nil
+end
+
 local proxy = class.class("proxy")
 
 function proxy:init(_type)
@@ -452,7 +471,7 @@ function proxy:__index(k)
 
    local _type = rawget(self, "_type")
    local for_type = rawget(inner, _type)
-   if not for_type then
+   if for_type == nil then
       return nil
    end
 
@@ -495,10 +514,7 @@ local function iter(state, prev_index)
 end
 
 function proxy:iter()
-   local inner_iter, inner_state, inner_index
-   if inner[self._type] ~= nil then
-      inner_iter, inner_state, inner_index = pairs(inner[self._type])
-   end
+   local inner_iter, inner_state, inner_index = pairs(inner[self._type])
    return fun.wrap(iter, {iter=inner_iter,state=inner_state}, inner_index)
 end
 
@@ -512,6 +528,13 @@ end
 
 setmetatable(data, {
                 __index = function(t, k)
+                   -- This always returns a table instead of nil so
+                   -- that references to data type tables can be
+                   -- populated later, after mods have finished
+                   -- loading. As an example, if this returned nil if
+                   -- a type was nonexistent, it would be necessary to
+                   -- initialize things like the sound manager only
+                   -- after mods have been loaded.
                    return proxy:new(k)
                 end,
                 __newindex = function(t, k, v)

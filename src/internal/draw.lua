@@ -132,7 +132,11 @@ function draw.get_layers()
 end
 
 function draw.get_layer(i)
-   return layers[i]
+   if i <= 0 then
+      return layers[#layers+i]
+   else
+      return layers[i]
+   end
 end
 
 function draw.get_current_layer()

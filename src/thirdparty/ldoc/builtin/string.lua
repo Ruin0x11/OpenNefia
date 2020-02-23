@@ -11,7 +11,7 @@ local string = {}
 -- @tparam string s
 -- @tparam[opt] int i
 -- @tparam[opt] int j
--- @treturn int
+-- @treturn int...
 function string.byte(s, i, j) end
 
 ---

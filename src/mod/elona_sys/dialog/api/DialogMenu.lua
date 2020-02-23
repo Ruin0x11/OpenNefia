@@ -75,11 +75,14 @@ function DialogMenu:draw()
       self.portrait_batch:draw()
    elseif self.chara_image then
       self.chip_batch:clear()
+      --TODO
+      local width = 48
+      local height = 48
       self.chip_batch:add(self.chara_image,
                            self.x + 82,
                            self.y + 125, -- TODO offset_y
-                           self.chara_image:get_width() * 2,
-                           self.chara_image:get_height() * 2,
+                           width * 2,
+                           height * 2,
                            nil,
                            true)
       self.chip_batch:draw()

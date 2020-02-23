@@ -33,6 +33,10 @@ function PagedListModel:init(items, page_size, wrapping)
    self:set_data()
 end
 
+function PagedListModel:get(i)
+   return self.model:get(i)
+end
+
 function PagedListModel:iter()
    return self.model:iter()
 end
@@ -114,14 +118,14 @@ function PagedListModel:previous_page()
    return turned
 end
 
-function PagedListModel:select_next()
-   self.model:select_next()
+function PagedListModel:select_next(delta)
+   self.model:select_next(delta)
    self:update_selected_index()
    self.changed = self.model.changed
 end
 
-function PagedListModel:select_previous()
-   self.model:select_previous()
+function PagedListModel:select_previous(delta)
+   self.model:select_previous(delta)
    self:update_selected_index()
    self.changed = self.model.changed
 end

@@ -23,9 +23,14 @@ function MouseHandler:bind_mouse(bindings)
    self.bindings = bindings
 end
 
-function MouseHandler:forward_to(handler)
-   class.assert_is_an(IMouseInput, handler)
-   self.forwards = handler
+function MouseHandler:forward_to(handlers)
+   if not handlers[1] then
+      handlers = { handlers }
+   end
+   for _, handler in ipairs(handlers) do
+      assert(class.is_an(IMouseInput, handler))
+   end
+   self.forwards = handlers
 end
 
 function MouseHandler:focus()
@@ -43,7 +48,7 @@ function MouseHandler:run_mouse_action(button, x, y, pressed)
    if func then
       func(x, y, pressed)
    elseif self.forwards then
-      self.forwards:run_mouse_action(button, x, y, pressed)
+      --self.forwards:run_mouse_action(button, x, y, pressed)
    end
 end
 
@@ -52,7 +57,7 @@ function MouseHandler:run_mouse_movement_action(x, y, dx, dy)
    if func then
       func(x, y, dx, dy)
    elseif self.forwards then
-      self.forwards:run_mouse_movement_action(x, y, dx, dy)
+      --self.forwards:run_mouse_movement_action(x, y, dx, dy)
    end
 end
 

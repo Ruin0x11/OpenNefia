@@ -98,13 +98,13 @@ end
 function KeybindTranslator:reload()
    local keybinds = config["base.keybinds"]
    self.translations = {}
-   for _, kb in pairs(keybinds) do
-      if self.accepts[kb.action] then
-         self:load_key(kb.primary, kb.action)
+   for action, kb in pairs(keybinds) do
+      if self.accepts[action] then
+         self:load_key(kb.primary, action)
 
          if kb.alternate then
             for _, key in ipairs(kb.alternate) do
-               self:load_key(key, kb.action)
+               self:load_key(key, action)
             end
          end
       end

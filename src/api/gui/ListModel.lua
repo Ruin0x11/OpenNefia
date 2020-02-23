@@ -20,6 +20,10 @@ function ListModel:set_data(items)
    self.selected = math.max(self.selected, 1)
 end
 
+function ListModel:get(i)
+   return self.items[i]
+end
+
 function ListModel:iter()
    return fun.iter(self.items)
 end
@@ -46,12 +50,12 @@ function ListModel:select(i)
    self:on_select(self:selected_item(), i)
 end
 
-function ListModel:select_next()
-   self:select(self.selected + 1)
+function ListModel:select_next(delta)
+   self:select(self.selected + (delta or 1))
 end
 
-function ListModel:select_previous()
-   self:select(self.selected - 1)
+function ListModel:select_previous(delta)
+   self:select_next(-(delta or 1))
 end
 
 function ListModel:selected_item()

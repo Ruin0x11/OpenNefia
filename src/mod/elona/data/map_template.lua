@@ -324,7 +324,7 @@ local yowyn = {
       )
    }
 }
-function yowyn.on_regenerate(map)
+function yowyn.on_generate(map)
    -- TODO only if sidequest
    local stair = Feat.at(23, 22, map):nth(1)
    assert(stair)
@@ -787,7 +787,7 @@ local port_kapul = {
       chara_filter = chara_filter_town()
    }
 }
-function port_kapul.on_regenerate(map)
+function port_kapul.on_generate(map)
    local chara = Chara.create("elona.raphael", 15, 18, nil, map)
    chara.roles["elona.special"] = true
 
@@ -1046,7 +1046,7 @@ local function reload_noyel_christmas(map)
 
    chara = Chara.create("elona.hot_spring_maniac", 25, 8, nil, map)
    chara.ai_calm = 3
-   chara.faction = "elona.citizen"
+   chara.faction = "base.citizen"
    chara.is_only_in_christmas = true
    chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
    chara.shop_rank = 30
@@ -1054,7 +1054,7 @@ local function reload_noyel_christmas(map)
 
    chara = Chara.create("elona.rogue", 24, 22, nil, map)
    chara.ai_calm = 3
-   chara.faction = "elona.citizen"
+   chara.faction = "base.citizen"
    chara.is_only_in_christmas = true
    chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
    chara.shop_rank = 30
@@ -1069,7 +1069,7 @@ local function reload_noyel_christmas(map)
 
    chara = Chara.create("elona.rogue", 28, 9, nil, map)
    chara.ai_calm = 3
-   chara.faction = "elona.citizen"
+   chara.faction = "base.citizen"
    chara.is_only_in_christmas = true
    chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
    chara.shop_rank = 30
@@ -1077,7 +1077,7 @@ local function reload_noyel_christmas(map)
 
    chara = Chara.create("elona.rogue", 29, 24, nil, map)
    chara.ai_calm = 3
-   chara.faction = "elona.citizen"
+   chara.faction = "base.citizen"
    chara.is_only_in_christmas = true
    chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
    chara.shop_rank = 30
@@ -1123,7 +1123,7 @@ local function reload_noyel(map)
    :filter(function(c) return c.is_only_in_christmas end)
       :each(IChara.vanquish)
 end
-function noyel.on_regenerate(map)
+function noyel.on_generate(map)
    for _, item in Item.iter_ground() do
       if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
          item:remove()
@@ -1932,7 +1932,7 @@ function truce_ground.on_generate(map)
    mkaltar("elona.kumiromi", 23, 8)
    mkaltar("elona.jure", 20, 13)
 
-   for _=1,math.floor(map:calc("max_crowd_density"/2)) do
+   for _=1,math.floor(map:calc("max_crowd_density")/2) do
       generate_chara(map)
    end
 end
@@ -2012,13 +2012,13 @@ local function on_generate_border(map)
       chara = Chara.create("elona.beggar", nil, nil, nil, map)
 
       chara = Chara.create("elona.mercenary_warrior", nil, nil, nil, map)
-      chara.faction = "elona.citizen"
+      chara.faction = "base.citizen"
 
       chara = Chara.create("elona.mercenary_archer", nil, nil, nil, map)
-      chara.faction = "elona.citizen"
+      chara.faction = "base.citizen"
 
       chara = Chara.create("elona.mercenary_wizard", nil, nil, nil, map)
-      chara.faction = "elona.citizen"
+      chara.faction = "base.citizen"
    end
 
    chara = Chara.create("elona.guard", 5, 7, nil, map)
@@ -2499,7 +2499,7 @@ local fort_of_chaos_machine = {
       default_ai_calm = 1
    }
 }
-function fort_of_chaos_beast.on_generate(map)
+function fort_of_chaos_machine.on_generate(map)
    Chara.create("elona.utima", 12, 14, nil, map)
 end
 data:add(fort_of_chaos_machine)
@@ -2523,7 +2523,7 @@ local fort_of_chaos_collapsed = {
       default_ai_calm = 1
    }
 }
-function fort_of_chaos_beast.on_generate(map)
+function fort_of_chaos_collapsed.on_generate(map)
    Chara.create("elona.azzrssil", 12, 14, nil, map)
 end
 data:add(fort_of_chaos_collapsed)
@@ -2655,7 +2655,7 @@ local shop = {
    }
 }
 function shop.on_generate(map)
-   local item = Item.create("elona.book", 17, 14, nil, map)
+   local item = Item.create("elona.book_b", 17, 14, nil, map)
    item.params.book_id = 8
 
    Item.create("elona.shop_strongbox", 19, 10, nil, map)
@@ -2677,7 +2677,7 @@ local crop = {
    }
 }
 function crop.on_generate(map)
-   local item = Item.create("elona.book", 17, 14, nil, map)
+   local item = Item.create("elona.book_b", 17, 14, nil, map)
    item.params.book_id = 9
 end
 data:add(crop)
@@ -2696,7 +2696,7 @@ local ranch = {
    }
 }
 function ranch.on_generate(map)
-   local item = Item.create("elona.book", 23, 8, nil, map)
+   local item = Item.create("elona.book_b", 23, 8, nil, map)
    item.params.book_id = 11
 
    Item.create("elona.register", 22, 6, nil, map)
@@ -2717,7 +2717,7 @@ local dungeon = {
    }
 }
 function dungeon.on_generate(map)
-   local item = Item.create("elona.book", 39, 54, nil, map)
+   local item = Item.create("elona.book_b", 39, 54, nil, map)
    item.params.book_id = 15
 end
 data:add(dungeon)
@@ -2735,8 +2735,4 @@ local storage = {
       max_items = 200,
    }
 }
-function storage.on_generate(map)
-   local item = Item.create("elona.book", 39, 54, nil, map)
-   item.params.book_id = 15
-end
 data:add(storage)

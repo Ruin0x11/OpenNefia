@@ -111,7 +111,7 @@ local function set_filter(dungeon)
    }
 
    if filter.level > 5 then
-      pause()
+      ---pause()
    end
 
    return filter

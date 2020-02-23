@@ -4,6 +4,7 @@ local UiTheme = require("api.gui.UiTheme")
 local Rand = require("api.Rand")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
+local Gui = require("api.Gui")
 
 -- Commonly used functions for UI rendering.
 -- @module Ui
@@ -13,14 +14,13 @@ local tile_size = 48
 
 --- @tparam int width
 --- @tparam int height
---- @tparam[opt] bool in_game
-function Ui.params_centered(width, height, in_game)
+function Ui.params_centered(width, height)
    local x = (Draw.get_width() - width) / 2
 
    local y
-   if in_game then
+   if Gui.field_is_active() then
       local tiled_height = Draw.get_height() / tile_size
-      y = ((tiled_height + 1) * tile_size - height) / 2 + 8
+      y = ((tiled_height - 2) * tile_size - height) / 2 + 8
    else
       y = (Draw.get_height() - height) / 2
    end

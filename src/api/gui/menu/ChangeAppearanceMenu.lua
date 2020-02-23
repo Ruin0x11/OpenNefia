@@ -57,7 +57,7 @@ function ChangeAppearanceMenu:on_make_chara()
 end
 
 function ChangeAppearanceMenu:relayout()
-   self.x, self.y = Ui.params_centered(self.width, self.height, false)
+   self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 12
 
    self.t = UiTheme.load(self)

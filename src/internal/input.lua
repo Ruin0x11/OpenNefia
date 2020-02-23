@@ -40,7 +40,7 @@ function input.set_key_handler(tbl)
    key_handler = tbl
 end
 
-local function translate_scancode(scancode)
+local function normalize_key(scancode)
    if scancode == "lshift" or scancode == "rshift" then
       return "shift"
    elseif scancode == "lctrl" or scancode == "rctrl" then
@@ -55,13 +55,13 @@ end
 
 function input.keypressed(key, scancode, isrepeat)
    if key_handler then
-      key_handler:receive_key(translate_scancode(scancode), true, false, isrepeat)
+      key_handler:receive_key(normalize_key(key), true, false, isrepeat)
    end
 end
 
 function input.keyreleased(key, scancode)
    if key_handler then
-      key_handler:receive_key(translate_scancode(scancode), false, false)
+      key_handler:receive_key(normalize_key(key), false, false)
    end
 end
 

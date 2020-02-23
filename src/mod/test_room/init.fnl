@@ -55,7 +55,12 @@
         (Item.create id x y {} map))
       (when (Rand.one_in 3)
         (Item.create "elona.putitoro" x y {} map))))
-  (set-pcc player))
+  (set-pcc player)
+
+  (let [item (Item.create "content.bow" nil nil {} player)]
+    (player:equip_item item))
+  (let [item (Item.create "content.arrow" nil nil {} player)]
+    (player:equip_item item)))
 
 (fn test-room [self player]
   (let [width 20

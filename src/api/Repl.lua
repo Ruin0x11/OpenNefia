@@ -10,24 +10,27 @@ local fs = require("util.fs")
 
 local Repl = {}
 
-function Repl.send(code)
-   field.repl:execute(code)
-end
-
 function Repl.query()
    return field:query_repl()
 end
 
 function Repl.get()
+   if field.repl == nil then
+      field:setup_repl()
+   end
    return field.repl
 end
 
+function Repl.send(code)
+   Repl.get():execute(code)
+end
+
 function Repl.clear()
-   field.repl:clear()
+   Repl.get():clear()
 end
 
 function Repl.print(text, color)
-   field.repl:print(text, color)
+   Repl.get():print(text, color)
 end
 
 function Repl.copy_last_input()
@@ -70,7 +73,7 @@ end
 --- player's control. If the code returns a turn result, it is used as
 --- the player's turn.
 function Repl.defer_execute(code)
-   field.repl:defer_execute(code)
+   Repl.get():defer_execute(code)
 end
 
 function Repl.generate_env(locals)
@@ -170,9 +173,7 @@ function Repl.pause()
    }
 
    local ok, err = pcall(function()
-         require("api.gui.menu.ReplLayer")
-            :new(repl_env, params)
-            :query(100000000) -- draw on top of everything
+         require("api.gui.menu.ReplLayer"):new(repl_env, params):query()
    end)
 
    repl.restore_locals(1, locals)
