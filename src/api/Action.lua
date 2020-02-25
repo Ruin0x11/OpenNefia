@@ -45,6 +45,8 @@ function Action.move(chara, x, y)
       return false
    end
 
+   chara:set_pos(x, y)
+
    chara:emit("base.on_chara_moved", params)
    -- EVENT: on_character_movement
    -- mount update
@@ -53,8 +55,6 @@ function Action.move(chara, x, y)
    --   The original code jumps back before Chara.set_pos and
    --   re-procs everything including traps on the newly
    --   teleported-to position.
-
-   chara:set_pos(x, y)
 
 
    -- EVENT: after_character_movement

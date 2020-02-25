@@ -124,24 +124,24 @@
 
 (defun elona-next--process-response (cmd content response)
   (with-demoted-errors "Error: %s"
-      (-let (((&alist 'success 'candidates 'message) response))
-        (if (eq success t)
-            (if candidates
+    (-let (((&alist 'success 'candidates 'message) response))
+      (if (eq success t)
+          (if candidates
                                         ; in pairs of ("api.Api.name", "api.api.name")
-                (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
-                  (elona-next--send cmd cand))
-              (pcase cmd
-                ("help" (elona-next--command-help content response))
-                ("jump_to" (elona-next--command-jump-to content response))
-                ("signature" (elona-next--command-signature response))
-                ("apropos" (elona-next--command-apropos response))
-                ("completion" (elona-next--command-completion response))
-                ("template" (elona-next--command-template response))
-                ("ids" (elona-next--command-ids content response))
-                ("run" t)
-                ("hotload" t)
-                (else (error "No action for %s %s" cmd (prin1-to-string response)))))
-          (error message)))))
+              (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
+                (elona-next--send cmd cand))
+            (pcase cmd
+              ("help" (elona-next--command-help content response))
+              ("jump_to" (elona-next--command-jump-to content response))
+              ("signature" (elona-next--command-signature response))
+              ("apropos" (elona-next--command-apropos response))
+              ("completion" (elona-next--command-completion response))
+              ("template" (elona-next--command-template response))
+              ("ids" (elona-next--command-ids content response))
+              ("run" t)
+              ("hotload" t)
+              (else (error "No action for %s %s" cmd (prin1-to-string response)))))
+        (error message)))))
 
 ;;
 ;; Commands

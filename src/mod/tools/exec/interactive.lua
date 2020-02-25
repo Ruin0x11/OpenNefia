@@ -55,6 +55,44 @@ Mx.make_interactive("item_create", Item, "create",
                        end
                     })
 
+local Watcher = require("mod.tools.api.Watcher")
+local Map = require("api.Map")
+Mx.make_interactive("start_watching", Watcher, "start_watching_object",
+                    {
+                       function()
+                          local cands = {"base.chara", "base.item", "base.feat"}
+                          local ty, canceled = Mx.read_type("choice", {candidates=cands})
+                          if canceled then
+                             return nil, canceled
+                          end
+
+                          local conv = function(obj)
+                             local name = ""
+                             if type(obj.name) == "string" then
+                                name = (" (%s)"):format(obj.name)
+                             end
+                             return { ("%d%s"):format(obj.uid, name), data = obj }
+                          end
+                          cands = Map.current():iter_type(ty):map(conv)
+
+                          return Mx.read_type("choice", {candidates=cands})
+                       end,
+                       { type="string" },
+                       function() return config["tools.default_watches"] end
+                    })
+
+Mx.make_interactive("stop_watching", Watcher, "stop_watching_object",
+                    {
+                       function()
+                          local conv = function(object, watch)
+                             return { watch.name, data = object }
+                          end
+                          local cands = fun.iter(Watcher.get_widget().watches):map(conv)
+
+                          return Mx.read_type("choice", {candidates=cands})
+                       end
+                    })
+
 --
 -- Keybinds
 --

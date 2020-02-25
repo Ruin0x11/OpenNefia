@@ -9,28 +9,6 @@ local opts = {
    ignore_spaces = true
 }
 
-function Mx.test()
-   local cands = {
-      '',
-      'a',
-      'ab',
-      'abC',
-      'abcd',
-      'alphabetacappa',
-      'AlphaBetaCappa',
-      'thisisatestdir',
-      '/////ThisIsATestDir',
-      '/this/is/a/test/dir',
-      '/test/tiatd',
-      '/zzz/path2/path3/path4',
-      '/path1/zzz/path3/path4',
-      '/path1/path2/zzz/path4',
-      '/path1/path2/path3/zzz',
-   }
-
-   return FuzzyFinderPrompt:new(cands, "", opts):query()
-end
-
 function Mx.completing_read(cands)
    return FuzzyFinderPrompt:new(cands, "", opts):query()
 end

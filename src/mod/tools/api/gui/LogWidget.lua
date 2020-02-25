@@ -47,6 +47,7 @@ local COLORS = {
 local shadow_color = {0, 0, 0, 255}
 
 function LogWidget:print(level, message)
+   Draw.set_font(12)
    local formatted = ("[%s] %s"):format(level, message)
    formatted = cut_string(formatted, self.width)
    local text = Draw.make_text(formatted)
@@ -54,7 +55,6 @@ function LogWidget:print(level, message)
 end
 
 function LogWidget:draw()
-   Draw.set_font(12)
    -- Draw.filled_rect(self.x, self.y, self.width, self.height, {17, 17, 65, 64})
    local line = 1
    for i=1, self.max_lines do

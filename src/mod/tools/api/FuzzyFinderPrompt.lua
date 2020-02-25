@@ -18,6 +18,10 @@ function FuzzyFinderPrompt:init(cands, initial_prompt, match_opts, history)
    self.width = 360
    self.height = 200
 
+   if tostring(cands) == "<generator>" then
+      cands = cands:to_list()
+   end
+
    for i=1,#cands do
       if type(cands[i]) ~= "table" then
          cands[i] = { cands[i] }
@@ -114,8 +118,12 @@ function FuzzyFinderPrompt:update_match()
       -- exclude candidates that did't match last time.
       cands = self.matched_cands
    end
+
+   -- BUG add data to matched cands, here it's thrown away
    cands = fun.iter(cands):extract(1):to_list()
+
    self.matched_cands = FuzzyMatch.match(query, cands, self.match_opts)
+
 
    for _, cand in ipairs(self.matched_cands) do
       cand.matched_regions = get_matched_regions(query, cand[1])

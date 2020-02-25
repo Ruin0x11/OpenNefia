@@ -56,4 +56,6 @@ data:add {
    default = "ctrl_n"
 }
 
+require("mod.tools.exec.config")
 require("mod.tools.exec.interactive")
+require("mod.tools.exec.widgets")
