@@ -34,17 +34,18 @@ local touched_paths = {}
 local current_save
 
 local function save_path(child_path, save_name)
+   local dir = fs.get_save_directory()
    if save_name == nil then
-      return fs.join("temp", child_path)
+      return fs.join(dir, "temp", child_path)
    end
 
-   return fs.join("save", save_name, child_path)
+   return fs.join(dir, "save", save_name, child_path)
 end
 
 local function load_path(child_path, save_name)
    if save_name == nil then
       if current_save and not touched_paths[child_path] then
-         local path = fs.join("save", current_save, child_path)
+         local path = save_path(child_path, current_save)
          if fs.exists(path) then
             Log.debug("Save cache hit: %s/%s", current_save, child_path)
             return path

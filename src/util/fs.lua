@@ -33,9 +33,6 @@ if not love or love.getVersion() == "lovemock" then
    end
    fs.get_info = function(path)
       local other_path = path
-      if love then
-         other_path = fs.join(fs.get_save_directory(), path)
-      end
       local attrs = lfs.attributes(other_path)
       if attrs == nil then
          attrs = lfs.attributes(path)
@@ -54,9 +51,6 @@ if not love or love.getVersion() == "lovemock" then
       return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "Elona_next")
    end
    fs.create_directory = function(name)
-      if love then
-         name = fs.join(fs.get_save_directory(), name)
-      end
       local path = string_split(name, dir_sep)[1] .. dir_sep
       if not fs.is_root(path) then
          path = ""
@@ -73,9 +67,6 @@ if not love or love.getVersion() == "lovemock" then
       return path
    end
    fs.read = function(name, size)
-      if love then
-         name = fs.join(fs.get_save_directory(), name)
-      end
       assert(fs.exists(name), ("file does not exist: %s"):format(name))
       local f = io.open(name, "rb")
       local data = f:read(size or "*all")
@@ -83,9 +74,6 @@ if not love or love.getVersion() == "lovemock" then
       return data, nil
    end
    fs.write = function(name, data, size)
-      if love then
-         name = fs.join(fs.get_save_directory(), name)
-      end
       local f = io.open(name, "wb")
       assert(f, ("could not open %s"):format(name))
       f:write(data)
@@ -93,10 +81,6 @@ if not love or love.getVersion() == "lovemock" then
       return true, nil
    end
    fs.remove = function(name)
-      if love then
-         name = fs.join(fs.get_save_directory(), name)
-      end
-
       return os.remove(name)
    end
    fs.get_working_directory = lfs.currentdir

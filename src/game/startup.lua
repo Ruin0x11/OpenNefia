@@ -31,17 +31,18 @@ local function copy_files(src, dest)
    local fs = require("util.fs")
 
    if not fs.exists(src) then
-      error(("Directory %s does not exist; is 'elona/' in the 'deps/' folder?"):format(src))
+      error(("Directory %s does not exist; does 'src/deps/elona' exist?"):format(src))
    end
 
    for _, name in fs.iter_directory_items(src) do
       local src_file = fs.join(src, name)
       local dest_file = fs.join(fs.get_working_directory(), dest, name)
 
-      -- TODO do not assume the save directory is the root when
-      -- reading/writing/checking existence with util.fs. this is
-      -- "Program Files/LOVE" on Windows, not the repo directory.
-      if not love.filesystem.getInfo(dest_file) then
+      -- HACK: Because of LÖVE's restriction that you can only write
+      -- files to the save directory with love.filesystem, we have to
+      -- drop down into using `io` to copy the dependencies from
+      -- 1.22's folder without needing an external build step.
+      if not fs.is_file(dest_file) then
          local f = assert(io.open(src_file, "rb"))
          local data = f:read("*all")
          f:close()
