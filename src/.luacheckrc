@@ -1,6 +1,11 @@
 std = "lua51c+luajit"
 ignore = {
-   "212" -- unused argument 'self'
+   "212"  -- unused argument 'self'
+}
+
+files["scratch/**/*.lua"].ignore = {
+   "111", -- setting non-standard global variable 'X'
+   "113"  -- accessing undefined variable 'X'
 }
 
 globals = {

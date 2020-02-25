@@ -5,7 +5,7 @@ local Object = require("api.Object")
 local Doc = require("api.Doc")
 local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
-local circular_buffer = require("thirdparty.circular_buffer")
+local CircularBuffer = require("api.CircularBuffer")
 local queue = require("util.queue")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -35,7 +35,7 @@ function ReplLayer:init(env, params)
    self.size = 10000
    self.font_size = 15
 
-   self.scrollback = circular_buffer:new(self.size)
+   self.scrollback = CircularBuffer:new(self.size)
    self.scrollback_index = 0
 
    self.history_index = 0
@@ -316,7 +316,7 @@ function ReplLayer:scrollback_down()
 end
 
 function ReplLayer:clear()
-   self.scrollback = circular_buffer:new(self.size)
+   self.scrollback = CircularBuffer:new(self.size)
    self.scrollback_index = 0
    self.redraw = true
 end

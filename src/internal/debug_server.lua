@@ -33,7 +33,7 @@ end
 --   "result":"42"
 -- }
 function commands.run(text)
-   local status, success, result
+   local continue, status, success, result
 
    local fn, err = loadstring(text)
 
@@ -44,9 +44,8 @@ function commands.run(text)
       -- protect against this, run the code itself in a new coroutine
       -- so if the code yields it will not affect any state.
       local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
-      local _
-      _, success, result = coroutine.resume(coro)
-      if success then
+      continue, success, result = coroutine.resume(coro)
+      if continue then
          Log.info("Success: %s", result)
          status = "success"
       else

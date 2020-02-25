@@ -13,7 +13,7 @@
     (define-key map "\C-c\C-l" 'elona-next-send-buffer)
     map))
 
-(defcustom elona-next-always-send-to-repl nil
+(defvar-local elona-next-always-send-to-repl nil
   "If non-nil, treat hotloading as evaluating the buffer in the REPL instead.")
 
 (defcustom elona-next-repl-address "127.0.0.1"
@@ -123,24 +123,25 @@
    (and compilation-in-progress)))
 
 (defun elona-next--process-response (cmd content response)
-  (-let (((&alist 'success 'candidates 'message) response))
-    (if (eq success t)
-        (if candidates
-            ; in pairs of ("api.Api.name", "api.api.name")
-            (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
-              (elona-next--send cmd cand))
-          (pcase cmd
-            ("help" (elona-next--command-help content response))
-            ("jump_to" (elona-next--command-jump-to content response))
-            ("signature" (elona-next--command-signature response))
-            ("apropos" (elona-next--command-apropos response))
-            ("completion" (elona-next--command-completion response))
-            ("template" (elona-next--command-template response))
-            ("ids" (elona-next--command-ids content response))
-            ("run" t)
-            ("hotload" t)
-            (else (error "No action for %s %s" cmd (prin1-to-string response)))))
-      (error message))))
+  (with-demoted-errors "Error: %s"
+      (-let (((&alist 'success 'candidates 'message) response))
+        (if (eq success t)
+            (if candidates
+                                        ; in pairs of ("api.Api.name", "api.api.name")
+                (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
+                  (elona-next--send cmd cand))
+              (pcase cmd
+                ("help" (elona-next--command-help content response))
+                ("jump_to" (elona-next--command-jump-to content response))
+                ("signature" (elona-next--command-signature response))
+                ("apropos" (elona-next--command-apropos response))
+                ("completion" (elona-next--command-completion response))
+                ("template" (elona-next--command-template response))
+                ("ids" (elona-next--command-ids content response))
+                ("run" t)
+                ("hotload" t)
+                (else (error "No action for %s %s" cmd (prin1-to-string response)))))
+          (error message)))))
 
 ;;
 ;; Commands
@@ -604,7 +605,7 @@
 
 (defun elona-next--bounds-of-block ()
   (save-excursion
-    (let ((start
+    (let* ((start
            (save-excursion
              (while (and (not (bobp)) (> (lua-calculate-indentation) 0))
                (previous-line))
@@ -612,6 +613,8 @@
              (point)))
           (end
            (save-excursion
+             (goto-char start)
+             (next-line)
              (while (and (not (eobp)) (> (lua-calculate-indentation) 0))
                (next-line))
              (end-of-line)
@@ -620,7 +623,7 @@
 
 (defun elona-next-eval-block ()
   (interactive)
-  (let ((pos (elona-next---bounds-of-block)))
+  (let ((pos (elona-next--bounds-of-block)))
     (elona-next-eval-region (car pos) (cdr pos))))
 
 (defun elona-next--dotted-symbol-at-point ()
@@ -735,6 +738,7 @@
          (dest-path (string-join (list (projectile-project-root) "src/scratch/" filename))))
     (find-file dest-path)
     (newline)
+    (setq elona-next-always-send-to-repl t)
     (add-file-local-variable 'elona-next-always-send-to-repl t)
     (beginning-of-buffer)))
 

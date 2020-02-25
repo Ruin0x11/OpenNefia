@@ -1,6 +1,6 @@
 local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
-local circular_buffer = require("thirdparty.circular_buffer")
+local CircularBuffer = require("api.CircularBuffer")
 
 local UiFpsGraph = class.class("UiFpsGraph", IUiElement)
 
@@ -9,7 +9,7 @@ function UiFpsGraph:init(color)
    self.min = 0
    self.use_min = true
    self.step = 1
-   self.points = circular_buffer:new(2)
+   self.points = CircularBuffer:new(2)
    self.color = color or {0, 0, 255}
 end
 
@@ -18,7 +18,7 @@ function UiFpsGraph:relayout(x, y, width, height)
    self.y = y
    local size = math.max(math.floor(self.width / self.step), 2)
    if size ~= self.points.max_length then
-      self.points = circular_buffer:new(size)
+      self.points = CircularBuffer:new(size)
    end
    self.width = width
    self.height = height
@@ -29,7 +29,7 @@ end
 
 function UiFpsGraph:clear()
    self.max = 0
-   self.points = circular_buffer:new(2)
+   self.points = CircularBuffer:new(2)
 end
 
 function UiFpsGraph:add_point(n)

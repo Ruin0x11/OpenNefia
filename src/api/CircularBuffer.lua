@@ -7,23 +7,23 @@ local function rotate_indice(i, n)
     return ((i - 1) % n) + 1
 end
 
-local circular_buffer = class.class("circular_buffer")
+local CircularBuffer = class.class("CircularBuffer")
 
-function circular_buffer:filled()
+function CircularBuffer:filled()
     return #(self.history) == self.max_length
 end
 
-function circular_buffer:len()
+function CircularBuffer:len()
     return #(self.history)
 end
 
-function circular_buffer:clear()
+function CircularBuffer:clear()
    for i, _ in ipairs(self.history) do
       self.history[i] = nil
    end
 end
 
-function circular_buffer:push(value)
+function CircularBuffer:push(value)
     if self:filled() then
         local value_to_be_removed = self.history[self.oldest]
         self.history[self.oldest] = value
@@ -35,7 +35,7 @@ end
 
 -- positive values index from newest to oldest (starting with 1)
 -- negative values index from oldest to newest (starting with -1)
-function circular_buffer:get(i)
+function CircularBuffer:get(i)
     local history_length = #(self.history)
     if i == 0 or math.abs(i) > history_length then
         return nil
@@ -54,7 +54,7 @@ local function iter(state, i)
    end
 
    i = i + 1
-   local value = circular_buffer.get(state, i)
+   local value = CircularBuffer.get(state, i)
 
    return i, value
 end
@@ -65,24 +65,24 @@ local function iter_reverse(state, i)
    end
 
    i = i + 1
-   local value = circular_buffer.get(state, -i)
+   local value = CircularBuffer.get(state, -i)
 
    return i, value
 end
 
-function circular_buffer:iter()
+function CircularBuffer:iter()
    return iter, self, 1
 end
 
-function circular_buffer:iter_reverse()
+function CircularBuffer:iter_reverse()
    return iter_reverse, self, 1
 end
 
-function circular_buffer:__len()
+function CircularBuffer:__len()
     return #(self.history)
 end
 
-function circular_buffer:init(max_length)
+function CircularBuffer:init(max_length)
     if type(max_length) ~= 'number' or max_length <= 1 then
         error("Buffer length must be a positive integer")
     end
@@ -90,10 +90,10 @@ function circular_buffer:init(max_length)
     self.history = {}
     self.oldest = 1
     self.max_length = max_length
-    self.push = circular_buffer.push
-    self.filled = circular_buffer.filled
-    self.len = circular_buffer.len
-    self.clear = circular_buffer.clear
+    self.push = CircularBuffer.push
+    self.filled = CircularBuffer.filled
+    self.len = CircularBuffer.len
+    self.clear = CircularBuffer.clear
 end
 
-return circular_buffer
+return CircularBuffer

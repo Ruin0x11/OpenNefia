@@ -345,7 +345,7 @@ function Gui.remove_hud_widget(tag)
    field.hud.widgets:remove(tag)
 end
 
-function Gui.get_hud_widget(tag)
+function Gui.hud_widget(tag)
    return field.hud.widgets:get(tag)
 end
 

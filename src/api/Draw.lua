@@ -108,7 +108,11 @@ function Draw.text(str, x, y, color, size)
    if size then
       Draw.set_font(size)
    end
-   love.graphics.print(str, x, y)
+   if str.typeOf and str:typeOf("Text") then
+      love.graphics.draw(str, x, y)
+   else
+      love.graphics.print(str, x, y)
+   end
 end
 
 --- Draws a filled rectangle.
@@ -365,6 +369,10 @@ function Draw.set_blend_mode(mode, alphamode)
    end
 
    love.graphics.setBlendMode(mode, alphamode)
+end
+
+function Draw.make_text(text)
+   return love.graphics.newText(love.graphics.getFont(), text)
 end
 
 return Draw

@@ -1,4 +1,4 @@
-local Env = require("api.Env")
+Env = require("api.Env")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Chara = require("api.Chara")
 

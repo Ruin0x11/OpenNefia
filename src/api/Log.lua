@@ -1,3 +1,5 @@
+local Event
+
 local ansicolors = require("thirdparty.ansicolors")
 
 -- @module Log
@@ -56,9 +58,12 @@ local function format(kind, color, s, ...)
       return
    end
 
-   local str = string.format("%s[%s] %s", kind, source, out)
+   local str = string.format("[%s][%s] %s", string.upper(kind), source, out)
    local formatted = ansicolors(("%%{%s}%s%%{reset}"):format(color, str))
    print(formatted)
+
+   Event = Event or require("api.Event")
+   Event.trigger("base.on_log_message", {message=out,level=kind,source=source})
 end
 
 --- @tparam string l
@@ -91,7 +96,7 @@ function Log.trace(s, ...)
    if level < 5 then
       return
    end
-   format("[TRACE]", "magenta", s, ...)
+   format("trace", "magenta", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -100,7 +105,7 @@ function Log.debug(s, ...)
    if level < 4 then
       return
    end
-   format("[DEBUG]", "bright black", s, ...)
+   format("debug", "bright black", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -109,7 +114,7 @@ function Log.info(s, ...)
    if level < 3 then
       return
    end
-   format("[INFO] ", "white", s, ...)
+   format("info", "white", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -118,7 +123,7 @@ function Log.warn(s, ...)
    if level < 2 then
       return
    end
-   format("[WARN] ", "yellow", s, ...)
+   format("warn", "yellow", s, ...)
 end
 
 --- @tparam string s Format string for string.format
@@ -127,7 +132,7 @@ function Log.error(s, ...)
    if level < 1 then
       return
    end
-   format("[ERROR]", "red", s, ...)
+   format("error", "red", s, ...)
 end
 
 return Log

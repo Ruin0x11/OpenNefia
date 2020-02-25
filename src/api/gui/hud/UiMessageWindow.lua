@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local UiTheme = require("api.gui.UiTheme")
 local IUiWidget = require("api.gui.IUiWidget")
-local circular_buffer = require("thirdparty.circular_buffer")
+local CircularBuffer = require("api.CircularBuffer")
 local save = require("internal.global.save")
 
 local UiMessageWindow = class.class("UiMessageWindow", IUiWidget)
@@ -11,9 +11,9 @@ function UiMessageWindow:init()
    self.height = 72
 
    self.max_log = 200
-   self.history = circular_buffer:new(self.max_log)
+   self.history = CircularBuffer:new(self.max_log)
    self.max_lines = 4
-   self.each_line = circular_buffer:new(self.max_lines)
+   self.each_line = CircularBuffer:new(self.max_lines)
 
    self.y_offset = 0
    self.current_width = 0
@@ -199,7 +199,7 @@ function UiMessageWindow:recalc_lines()
 
    local cutoff, index_of_first_text = self:calc_start_offset()
 
-   self.each_line = circular_buffer:new(self.max_lines)
+   self.each_line = CircularBuffer:new(self.max_lines)
 
    for i=index_of_first_text,1,-1 do
       local t = self.history:get(i)
@@ -208,8 +208,8 @@ function UiMessageWindow:recalc_lines()
 end
 
 function UiMessageWindow:clear()
-   self.history = circular_buffer:new(self.max_log)
-   self.each_line = circular_buffer:new(self.max_lines)
+   self.history = CircularBuffer:new(self.max_log)
+   self.each_line = CircularBuffer:new(self.max_lines)
    self.redraw = true
 end
 
