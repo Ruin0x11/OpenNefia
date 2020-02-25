@@ -52,9 +52,9 @@ function Mx.read_type(ty, entry)
    end
 end
 
-local function get_single_arg(entry)
+local function get_single_arg(entry, arg)
    if type(entry) == "function" then
-      return entry()
+      return entry(arg)
    elseif type(entry) ~= "table" then
       return entry
    end
@@ -63,18 +63,18 @@ local function get_single_arg(entry)
    return Mx.read_type(ty, entry)
 end
 
-function Mx.get_args(spec)
+function Mx.get_args(spec, arg)
    local args = {}
 
    if type(spec) == "function" then
-      args = spec()
+      args = spec(arg)
       assert(type(args) == "table" and args[1])
    else
       for i, entry in ipairs(spec) do
          if type(entry) == "table" and entry.prompt then
             Gui.mes(entry.prompt)
          end
-         local arg, canceled = get_single_arg(entry)
+         local arg, canceled = get_single_arg(entry, arg)
          if canceled then
             return nil, canceled
          end
@@ -85,7 +85,7 @@ function Mx.get_args(spec)
    return args, nil
 end
 
-function Mx.start()
+function Mx.start(arg)
    local conv = function(entry)
       return {
          [1] = entry._id,
@@ -105,7 +105,7 @@ function Mx.start()
    end
 
    local entry = data["tools.interactive_fn"]:ensure(id)
-   local args, canceled = Mx.get_args(entry.spec)
+   local args, canceled = Mx.get_args(entry.spec, arg)
    if canceled then
       return nil, canceled
    end

@@ -9,14 +9,14 @@ local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 
 if love == nil then
-   if is_windows then
-      package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
-      package.path = package.path .. ";..\\lib\\luasocket\\?.lua"
-   end
-
    _CONSOLE = true
 
    love = require("util.lovemock")
+end
+
+if is_windows then
+   package.path = package.path .. ";..\\lib\\luasocket\\?.lua;..\\lib\\lua-vips\\?.lua"
+   package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
 end
 
 -- BUG: LÖVE for Android will not load relative paths for some reason,

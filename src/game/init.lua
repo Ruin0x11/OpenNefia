@@ -135,13 +135,16 @@ function game.draw()
 
    -- Progress bar.
    local status = ""
+   local last_status = ""
    local progress = 0
    local steps = 0
-   repeat
-      draw_progress_bar(status, progress / steps)
+   while true do
       status, progress, steps = startup.get_progress()
+      draw_progress_bar(status or last_status, progress / steps)
+      if status == nil then break end
+      last_status = status
       coroutine.yield()
-   until status == "progress_finished"
+   end
 
    local going = true
 

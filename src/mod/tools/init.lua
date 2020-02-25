@@ -40,6 +40,12 @@ data:add {
 
 data:add {
    _type = "base.keybind",
+   _id = "prefix_m_x",
+   default = "ctrl_alt_x"
+}
+
+data:add {
+   _type = "base.keybind",
    _id = "prompt_previous",
    default = "ctrl_p"
 }

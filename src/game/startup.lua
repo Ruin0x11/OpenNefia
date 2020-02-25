@@ -18,13 +18,44 @@ local startup = {}
 local progress_step = 0
 local status = ""
 function startup.get_progress()
-   return status, progress_step, 13
+   return status, progress_step, 15
 end
 
 local function progress(_status)
    status = _status
-   progress_step = progress_step + 1
    coroutine.yield()
+   progress_step = progress_step + 1
+end
+
+local function copy_files(src, dest)
+   local fs = require("util.fs")
+
+   if not fs.exists(src) then
+      error(("Directory %s does not exist; is 'elona/' in the 'deps/' folder?"):format(src))
+   end
+
+   for _, name in fs.iter_directory_items(src) do
+      local src_file = fs.join(src, name)
+      local dest_file = fs.join(fs.get_working_directory(), dest, name)
+
+      -- TODO do not assume the save directory is the root when
+      -- reading/writing/checking existence with util.fs. this is
+      -- "Program Files/LOVE" on Windows, not the repo directory.
+      if not love.filesystem.getInfo(dest_file) then
+         local f = assert(io.open(src_file, "rb"))
+         local data = f:read("*all")
+         f:close()
+
+         f = assert(io.open(dest_file, "wb"))
+         f:write(data)
+         f:close()
+      end
+   end
+end
+
+local function check_dependencies()
+   copy_files("deps/elona/graphic", "graphic")
+   copy_files("deps/elona/sound", "mod/elona/sound")
 end
 
 local function load_keybinds()
@@ -51,6 +82,10 @@ function startup.run_all(mods)
 end
 
 function startup.run(mods)
+   progress("Checking dependencies...")
+
+   check_dependencies()
+
    progress("Loading early modules...")
 
    -- Wrap these functions to allow hotloading via table access.
@@ -101,7 +136,7 @@ function startup.run(mods)
    load_keybinds()
 
    progress("Finished.")
-   progress("progress_finished")
+   progress()
 end
 
 function startup.shutdown()

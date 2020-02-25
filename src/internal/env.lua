@@ -142,6 +142,10 @@ function env.find_calling_mod(offset)
    return "base", debug.getinfo(2, "S")
 end
 
+local LOVE2D_REQUIRES = table.set {
+   "socket"
+}
+
 local global_require = require
 
 local function get_require_path(path, mod_env)
@@ -163,11 +167,10 @@ local function get_require_path(path, mod_env)
 
    if resolved == nil then
       -- Some modules like luasocket aren't in package.cpath but can
-      -- be loaded with 'require' anyway for some mysterious reason.
-      for _, mod in ipairs(THIRDPARTY_REQUIRES) do
-         if string.match(path, "^" .. mod) and global_require(path) then
-            return path, true
-         end
+      -- be loaded with 'require' anyway because they're a part of
+      -- LÖVE.
+      if LOVE2D_REQUIRES[path] and global_require(path) then
+         return path, true
       end
    end
 
@@ -193,7 +196,7 @@ local function env_loadfile(path, mod_env)
       for _, s in ipairs(string.split(package.path, ";")) do
          tried_paths = tried_paths .. "\n" .. s
       end
-      return nil, "Cannot find path " .. path .. tried_paths
+      return nil, ("Cannot find path '%s'. Tried searching the following: %s"):format(path, tried_paths)
    end
 
    local chunk, err
@@ -403,7 +406,7 @@ local function gen_require(chunk_loader, can_load_path)
 
       if err then
          HOTLOADING_PATH = false
-         error("\n\t" .. err, 0)
+         error(string.strip_whitespace(err), 0)
       end
 
       if HOTLOADING_PATH and result == "no_hotload" then

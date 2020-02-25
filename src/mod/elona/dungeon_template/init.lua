@@ -22,27 +22,27 @@ data:add_multi(
    {
       {
          _id = "mapgen_floor",
-         image = "mod/elona/graphic/map_tile/0_0.png",
+         image = "graphic/default/floor.png",
          is_solid = true
       },
       {
          _id = "mapgen_tunnel",
-         image = "mod/elona/graphic/map_tile/0_1.png",
+         image = "graphic/default/floor.png",
          is_solid = false
       },
       {
          _id = "mapgen_wall",
-         image = "mod/elona/graphic/map_tile/0_2.png",
+         image = "graphic/default/floor.png",
          is_solid = true
       },
       {
          _id = "mapgen_room",
-         image = "mod/elona/graphic/map_tile/0_3.png",
+         image = "graphic/default/floor.png",
          is_solid = false
       },
       {
          _id = "mapgen_floor_2",
-         image = "mod/elona/graphic/map_tile/0_3.png",
+         image = "graphic/default/floor.png",
          is_solid = false
       },
 })

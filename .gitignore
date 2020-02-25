@@ -1,12 +1,9 @@
-bin/
-sound/
-/src/repl_history.txt
-/src/mod/elona/graphic
-/src/mod/beautify/graphic
-/deps
 TAGS
+/src/repl_history.txt
+/src/graphic/*
+/src/mod/elona/sound/*
+/src/mod/beautify/graphic
+/src/deps
 /doc/out
 /lib
-/lib
 /src/data/font/MS-Gothic.ttf
-/src/graphic/*

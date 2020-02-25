@@ -89,7 +89,7 @@ local function load_game()
    field_logic.quickstart()
    field_logic.setup()
    field.is_active = true
-   Gui.update_screen()
+   Gui.update_screen() -- refresh shadows/FOV
 end
 
 rawset(_G, "lo", load_game)
@@ -185,22 +185,6 @@ sw:p("REPL startup time")
 
 Event.trigger("base.on_startup")
 field:init_global_data()
-
---[[
-do
-   local Chara = require("api.Chara")
-   local Map = require("api.Map")
-   local InstancedMap = require("api.InstancedMap")
-
-   local map = InstancedMap:new(20, 20)
-   map:clear("elona.cobble")
-   Map.set_map(map)
-
-   local player = Chara.create()
-   assert(map:take_object(player, 20, 20))
-   Chara.set_player(player)
-end
---]]
 
 if arg[1] == "test" then
    os.exit(0)

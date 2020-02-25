@@ -67,6 +67,7 @@
         height 20
         map (InstancedMap:new width height)]
     (map:clear "elona.cobble")
+    (tset map :is_indoor true)
     (each [_ x y (Pos.iter_border 0 0 (- (map:width) 1) (- (map:height) 1))]
       (map:set_tile x y "elona.wall_dirt_dark_top"))
 
