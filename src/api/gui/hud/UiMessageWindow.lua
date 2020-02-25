@@ -1,11 +1,10 @@
 local Draw = require("api.Draw")
-local Log = require("api.Log")
-local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
+local IUiWidget = require("api.gui.IUiWidget")
 local circular_buffer = require("thirdparty.circular_buffer")
 local save = require("internal.global.save")
 
-local UiMessageWindow = class.class("UiMessageWindow", IUiElement)
+local UiMessageWindow = class.class("UiMessageWindow", IUiWidget)
 
 function UiMessageWindow:init()
    self.width = 800
@@ -23,6 +22,14 @@ function UiMessageWindow:init()
    self.is_new_turn = true
 
    self:recalc_lines()
+end
+
+function UiMessageWindow:default_widget_position(x, y, width, height)
+   return x + 124, height - (72 + 16), width - 124, 72
+end
+
+function UiMessageWindow:default_widget_z_order()
+   return 50000
 end
 
 function UiMessageWindow:relayout(x, y, width, height)

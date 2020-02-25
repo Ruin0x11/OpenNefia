@@ -1,10 +1,10 @@
 local Draw = require("api.Draw")
 local ISettable = require("api.gui.ISettable")
-local IHudElement = require("api.gui.hud.IHudElement")
+local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 local DateTime = require("api.DateTime")
 
-local UiClock = class.class("UiClock", {IHudElement, ISettable})
+local UiClock = class.class("UiClock", {IUiWidget, ISettable})
 
 local times = {
    "Midnight",
@@ -25,7 +25,8 @@ function UiClock:set_data(date)
    self.date = date
 end
 
-function UiClock.set_transparency(alpha)
+function UiClock:default_widget_position(x, y, width, height)
+   return x, y
 end
 
 function UiClock:relayout(x, y)

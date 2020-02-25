@@ -1,11 +1,11 @@
 local data = require("internal.data")
 local Draw = require("api.Draw")
 local Event = require("api.Event")
-local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
+local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiStatusEffects = class.class("UiStatusEffects", {ISettable, IUiElement})
+local UiStatusEffects = class.class("UiStatusEffects", {ISettable, IUiWidget})
 
 function UiStatusEffects:init()
    self.indicators = {}
@@ -61,6 +61,10 @@ function UiStatusEffects:calc_max_width()
 
    self.height = math.min(#self.indicators * 20, self.base_height or 10000)
    self.y = self.base_y - self.height
+end
+
+function UiStatusEffects:default_widget_position(x, y, width, height)
+   return x + 8, height - (72 + 16) - 50
 end
 
 function UiStatusEffects:relayout(x, y, width, height)

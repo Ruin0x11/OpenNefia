@@ -314,10 +314,9 @@
   (-let* (((&alist 'sig 'params 'summary) response))
     (when sig
       (setq elona-next--eldoc-saved-message
-            (elona-next--fontify-signature
-             (format "%s :: %s%s" sig params (or (and (not (string-blank-p summary))
-                                                      (format "\n%s" summary))
-                                                 "")))
+            (format "%s :: %s%s" sig params (or (and (not (string-blank-p summary))
+                                                     (format "\n%s" summary))
+                                                ""))
             elona-next--eldoc-saved-point (point))
       (elona-next--eldoc-message elona-next--eldoc-saved-message))))
 

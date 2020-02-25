@@ -1,9 +1,9 @@
 local Draw = require("api.Draw")
-local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
+local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiLevel = class.class("UiLevel", {IUiElement, ISettable})
+local UiLevel = class.class("UiLevel", {IUiWidget, ISettable})
 
 function UiLevel:init()
    self.level = 1
@@ -13,6 +13,14 @@ end
 function UiLevel:set_data(level, exp)
    self.level = level or -1
    self.exp = exp or -1
+end
+
+function UiLevel:default_widget_position(x, y, width, height)
+   return x + 4, height - (72 + 16) - 16
+end
+
+function UiLevel:default_widget_z_order()
+   return 75000
 end
 
 function UiLevel:relayout(x, y)

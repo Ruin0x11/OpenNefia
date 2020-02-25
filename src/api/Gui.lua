@@ -337,4 +337,16 @@ function Gui.field_is_active()
    return field.is_active
 end
 
+function Gui.add_hud_widget(widget, tag, opts)
+   field.hud.widgets:add(widget, tag, opts)
+end
+
+function Gui.remove_hud_widget(tag)
+   field.hud.widgets:remove(tag)
+end
+
+function Gui.get_hud_widget(tag)
+   return field.hud.widgets:get(tag)
+end
+
 return Gui

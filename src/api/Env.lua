@@ -28,6 +28,9 @@ end
 -- @function Env.is_hotloading
 Env.is_hotloading = env.is_hotloading
 
+-- @function Env.get_require_path
+Env.get_require_path = env.get_require_path
+
 local ui_results = queue:new()
 
 function Env.push_ui_result(result)

@@ -1,10 +1,18 @@
 local Draw = require("api.Draw")
-local IUiElement = require("api.gui.IUiElement")
+local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 
-local UiGoldPlatinum = class.class("UiGoldPlatinum", IUiElement)
+local UiGoldPlatinum = class.class("UiGoldPlatinum", IUiWidget)
 
 function UiGoldPlatinum:init()
+end
+
+function UiGoldPlatinum:default_widget_position(x, y, width, height)
+   return width - 240, height - (72 + 16) - 16
+end
+
+function UiGoldPlatinum:default_widget_z_order()
+   return 75000
 end
 
 function UiGoldPlatinum:relayout(x, y)
@@ -21,6 +29,8 @@ function UiGoldPlatinum:draw()
    end
    local gold = chara.gold
    local plat = chara.platinum
+
+   Draw.set_font(12)
 
    self.t.gold_coin:draw(self.x, self.y, nil, nil, {255, 255, 255})
    Draw.text_shadowed(string.format("%d gp", gold),

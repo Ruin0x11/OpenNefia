@@ -1,4 +1,7 @@
 std = "lua51c+luajit"
+ignore = {
+   "212" -- unused argument 'self'
+}
 
 globals = {
    "require",

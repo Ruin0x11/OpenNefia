@@ -2,9 +2,9 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local circular_buffer = require("thirdparty.circular_buffer")
 
-local fps_graph = class.class("fps_graph", IUiElement)
+local UiFpsGraph = class.class("UiFpsGraph", IUiElement)
 
-function fps_graph:init(color)
+function UiFpsGraph:init(color)
    self.max = 0
    self.min = 0
    self.use_min = true
@@ -13,7 +13,7 @@ function fps_graph:init(color)
    self.color = color or {0, 0, 255}
 end
 
-function fps_graph:relayout(x, y, width, height)
+function UiFpsGraph:relayout(x, y, width, height)
    self.x = x
    self.y = y
    local size = math.max(math.floor(self.width / self.step), 2)
@@ -24,15 +24,15 @@ function fps_graph:relayout(x, y, width, height)
    self.height = height
 end
 
-function fps_graph:update()
+function UiFpsGraph:update()
 end
 
-function fps_graph:clear()
+function UiFpsGraph:clear()
    self.max = 0
    self.points = circular_buffer:new(2)
 end
 
-function fps_graph:add_point(n)
+function UiFpsGraph:add_point(n)
    self.points:push(n)
    -- self.max = math.max(self.max, n)
    -- self.min = math.min(self.min, n)
@@ -45,7 +45,7 @@ function fps_graph:add_point(n)
    end
 end
 
-function fps_graph:draw()
+function UiFpsGraph:draw()
    Draw.set_color(255, 255, 255)
    Draw.line_rect(self.x, self.y, self.width, self.height)
 
@@ -65,4 +65,4 @@ function fps_graph:draw()
    end
 end
 
-return fps_graph
+return UiFpsGraph

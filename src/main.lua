@@ -7,13 +7,11 @@ local game = require("game")
 local debug_server = require("internal.debug_server")
 local input = require("internal.input")
 local draw = require("internal.draw")
+local draw_stats = require("internal.global.draw_stats")
 
 local loop_coro = nil
 local draw_coro = nil
 local server = nil
-
-local fps = require("internal.fps"):new()
-fps.show_fps = true
 
 function love.load(arg)
    love.filesystem.setIdentity("Elona_next")
@@ -59,7 +57,7 @@ end
 function love.update(dt)
    input.poll_joystick_axes()
 
-   fps:update(dt)
+   draw_stats.frame_start = true
 
    if env.server_needs_restart then
       if server then
@@ -135,8 +133,7 @@ function love.draw()
       end
    end
 
-   fps:update_draw_stats()
-   fps:draw()
+   love.graphics.getStats(draw_stats)
 
    draw.draw_end()
 

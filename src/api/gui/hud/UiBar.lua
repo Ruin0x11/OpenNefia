@@ -1,9 +1,9 @@
 local Draw = require("api.Draw")
-local IUiElement = require("api.gui.IUiElement")
-local UiTheme = require("api.gui.UiTheme")
 local ISettable = require("api.gui.ISettable")
+local IUiWidget = require("api.gui.IUiWidget")
+local UiTheme = require("api.gui.UiTheme")
 
-local UiBar = class.class("UiBar", {IUiElement, ISettable})
+local UiBar = class.class("UiBar", {IUiWidget, ISettable})
 
 function UiBar:init(bar_kind, max, value, show_digit)
    value = value or max
@@ -18,6 +18,10 @@ end
 
 function UiBar:recalc_inner_width()
    self.inner_width = math.min(math.floor(self.value * 84 / self.max), 100)
+end
+
+function UiBar:default_widget_z_order()
+   return 80000
 end
 
 function UiBar:set_data(value, max)

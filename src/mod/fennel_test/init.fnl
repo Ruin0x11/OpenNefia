@@ -1,7 +1,5 @@
 (local Log (require "api.Log"))
 
-(Log.warn "I'm in a fennel!" 1)
-
 (definst serval base.chip
   (group "chara")
   (image "mod/fennel_test/graphic/serval.png"))

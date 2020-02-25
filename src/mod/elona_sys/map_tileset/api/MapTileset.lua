@@ -97,7 +97,7 @@ function MapTileset.get(tile_id, map)
       if type(match) == "string" then
          id = match
       elseif type(match) == "function" then
-         id = match(x, y, tile)
+         id = match()
       end
    end
 

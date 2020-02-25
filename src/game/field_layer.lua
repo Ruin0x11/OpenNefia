@@ -79,11 +79,11 @@ function field_layer:set_map(map)
 end
 
 function field_layer:relayout(x, y, width, height)
-   self.x = x
-   self.y = y
-   self.width = width
-   self.height = height
-   self.hud:relayout(x, y, width, height)
+   self.x = x or self.x
+   self.y = y or self.y
+   self.width = width or self.width
+   self.height = height or self.height
+   self.hud:relayout(self.x, self.y, self.width, self.height)
 end
 
 function field_layer:turn_cost()
@@ -166,22 +166,19 @@ function field_layer:player_is_running()
 end
 
 function field_layer:update_hud()
-   -- HACK due to global data
-   self.hud.clock:set_data(save.base.date)
-
    local player = self.player
-   self.hud:refresh(player)
-   self.hud:update()
+   self.hud:update_from_player(player)
 end
 
 
 function field_layer:get_message_window()
-   return self.hud:find_widget("api.gui.hud.UiMessageWindow")
+   return self.hud.widgets:get("hud_message_window"):widget()
 end
 
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
    self.sound_manager:update(dt)
+   self.hud:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb, tag)
@@ -218,6 +215,7 @@ function field_layer:draw()
    if not self.is_active or not self.renderer then return end
 
    self.renderer:draw()
+   self.hud:draw()
 end
 
 function field_layer:query_repl()
