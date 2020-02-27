@@ -42,7 +42,7 @@ local function register_global_handler_if_needed(self, event_id, global_events)
          end
       end
 
-      self._events:register(event_id, string.format("Global callback runner (%s)", event_id), cache[event_id], { priority = 0 })
+      self._events:register(event_id, string.format("Global callback runner (%s)", event_id), cache[event_id], { priority = 100000 })
    end
 end
 
@@ -177,6 +177,10 @@ end
 
 function IEventEmitter:compare_events(other)
    return self._events == other._events and self.global_events == other.global_events
+end
+
+function IEventEmitter:list_events()
+   return self._events:print()
 end
 
 return IEventEmitter

@@ -106,7 +106,7 @@ function EventHolder:register(event_id, name, cb, opts)
    end
 
    -- BUG: unnecessary if the sort is stable, and incorrect anyways
-   local priority = opts.priority or 200000
+   local priority = opts.priority or 100000
 
    self.hooks[event_id] = self.hooks[event_id] or EventTree:new()
 

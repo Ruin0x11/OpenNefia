@@ -846,6 +846,10 @@ data:add {
          type = "color",
          color = {150, 200, 200}
       },
+      repl_preview_color = {
+         type = "color",
+         color = {100, 150, 150}
+      },
       repl_completion_color = {
          type = "color",
          color = {255, 240, 130}

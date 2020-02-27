@@ -11,7 +11,7 @@ function UiFpsCounter:init()
    self.ms = 0
    self.frames = 0
    self.text = Draw.make_text()
-   self.threshold = 200
+   self.threshold = 0
    self.prev_fps = 0
    self.prev_ram = 0
    self.now = socket.gettime()

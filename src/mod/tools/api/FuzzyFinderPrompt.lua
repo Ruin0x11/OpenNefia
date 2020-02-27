@@ -14,17 +14,22 @@ local FuzzyFinderPrompt = class.class("FuzzyFinderPrompt", IUiLayer)
 
 FuzzyFinderPrompt:delegate("input", IInput)
 
-function FuzzyFinderPrompt:init(cands, initial_prompt, match_opts, history)
-   self.width = 360
+function FuzzyFinderPrompt:init(cands, match_opts, opts)
+   opts = opts or {}
+
    self.height = 200
 
    if tostring(cands) == "<generator>" then
       cands = cands:to_list()
    end
 
+   opts.get_name = opts.get_name or tostring
+
    for i=1,#cands do
-      if type(cands[i]) ~= "table" then
-         cands[i] = { cands[i] }
+      if type(cands[i]) == "string" then
+         cands[i] = { cands[i], data = cands[i] }
+      else
+         cands[i] = { opts.get_name(cands[i]), data = cands[i] }
       end
    end
 
@@ -33,7 +38,7 @@ function FuzzyFinderPrompt:init(cands, initial_prompt, match_opts, history)
    self.match_opts = match_opts or {}
    self.last_search = nil
    self.list = FuzzyFinderList:new(cands)
-   self.text_prompt = TextPrompt:new(20, true, false, false, nil, initial_prompt, false)
+   self.text_prompt = TextPrompt:new(opts.prompt_length or 20, true, false, false, nil, opts.initial_prompt, false)
    self.input = InputHandler:new(TextHandler:new())
    self.input:bind_keys(self:make_keymap())
    self.input:forward_to({self.list, self.text_prompt})
@@ -119,13 +124,9 @@ function FuzzyFinderPrompt:update_match()
       cands = self.matched_cands
    end
 
-   -- BUG add data to matched cands, here it's thrown away
-   cands = fun.iter(cands):extract(1):to_list()
-
    self.matched_cands = FuzzyMatch.match(query, cands, self.match_opts)
 
-
-   for _, cand in ipairs(self.matched_cands) do
+   for i, cand in ipairs(self.matched_cands) do
       cand.matched_regions = get_matched_regions(query, cand[1])
    end
 
@@ -138,6 +139,8 @@ function FuzzyFinderPrompt:on_query()
 end
 
 function FuzzyFinderPrompt:relayout()
+   self.width = self.text_prompt.length * 16 + 60
+
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.y = self.y
 
@@ -158,12 +161,12 @@ function FuzzyFinderPrompt:update(dt)
    if canceled then
       return nil, "canceled"
    elseif text then
-      -- { "base.test", 0.75, matched_regions = {{200, 20}} }
+      -- { "base.test", 0.75, data = "data", matched_regions = {{200, 20}} }
       local item = self.list:selected_item()
       if item == nil then
          return nil
       end
-      return item.data or item[1]
+      return item.data
    end
 end
 

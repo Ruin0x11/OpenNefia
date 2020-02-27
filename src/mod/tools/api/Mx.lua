@@ -4,27 +4,34 @@ local FuzzyFinderPrompt = require("mod.tools.api.FuzzyFinderPrompt")
 
 local Mx = {}
 
-local opts = {
+local match_opts = {
    max_gap = 5,
    ignore_spaces = true
 }
 
-function Mx.completing_read(cands)
-   return FuzzyFinderPrompt:new(cands, "", opts):query()
+function Mx.completing_read(cands, opts)
+   opts = opts or {}
+   opts.match_opts = opts.match_opts or match_opts
+   opts.prompt_length = 30
+
+   return FuzzyFinderPrompt:new(cands, opts):query()
 end
 
 function Mx.read_type(ty, entry)
-   entry = entry or nil
+   if type(entry) == "table" and entry.prompt then
+      Gui.mes(entry.prompt)
+   end
+
    if data:has_type(ty) then
       local cands = data[ty]:iter():extract("_id"):to_list()
       return Mx.completing_read(cands)
    elseif ty == "number" then
       return Input.query_number(entry.max or nil, entry.initial_amount or nil)
    elseif ty == "string" then
-      return Input.query_text(entry.length or nil, true, false)
+      return Input.query_text(entry.length or 30, true, false)
    elseif ty == "choice" then
       assert(entry.candidates, "argument must have 'candidates' field")
-      return Mx.completing_read(entry.candidates)
+      return Mx.completing_read(entry.candidates, entry.get_name)
    else
       error(("unknown argument type '%s'"):format(ty))
    end
@@ -43,15 +50,16 @@ end
 
 function Mx.get_args(spec, arg)
    local args = {}
+   local canceled
 
    if type(spec) == "function" then
-      args = spec(arg)
+      args, canceled = spec(arg)
+      if canceled then
+         return nil, canceled
+      end
       assert(type(args) == "table" and args[1])
    else
       for i, entry in ipairs(spec) do
-         if type(entry) == "table" and entry.prompt then
-            Gui.mes(entry.prompt)
-         end
          local arg, canceled = get_single_arg(entry, arg)
          if canceled then
             return nil, canceled
@@ -64,13 +72,7 @@ function Mx.get_args(spec, arg)
 end
 
 function Mx.start(arg)
-   local conv = function(entry)
-      return {
-         [1] = entry._id,
-         data = entry._id
-      }
-   end
-   local cands = data["tools.interactive_fn"]:iter():map(conv):to_list()
+   local cands = data["tools.interactive_fn"]:iter():extract("_id"):to_list()
 
    local id, canceled = Mx.completing_read(cands)
 
@@ -99,7 +101,10 @@ function Mx.make_interactive(name, tbl, func, spec)
       func = "func"
       tbl = { func = tbl }
    end
+
+   assert(tbl[func], ("Function '%s' not found in table"):format(func))
    local func = function(...) return tbl[func](...) end
+
    if data["tools.interactive_fn"][name] then
       data:replace {
          _type = "tools.interactive_fn",

@@ -58,40 +58,72 @@ Mx.make_interactive("item_create", Item, "create",
 local Watcher = require("mod.tools.api.Watcher")
 local Map = require("api.Map")
 Mx.make_interactive("start_watching", Watcher, "start_watching_object",
-                    {
                        function()
-                          local cands = {"base.chara", "base.item", "base.feat"}
-                          local ty, canceled = Mx.read_type("choice", {candidates=cands})
+                          local get_name = function(obj)
+                             return ("%d (%s) [%s]"):format(obj.uid, obj.name or obj._id, obj._type)
+                          end
+                          local objects = Map.current():iter()
+                          local object, canceled = Mx.read_type("choice", {candidates=objects, get_name=get_name})
                           if canceled then
                              return nil, canceled
                           end
 
-                          local conv = function(obj)
-                             local name = ""
-                             if type(obj.name) == "string" then
-                                name = (" (%s)"):format(obj.name)
-                             end
-                             return { ("%d%s"):format(obj.uid, name), data = obj }
-                          end
-                          cands = Map.current():iter_type(ty):map(conv)
-
-                          return Mx.read_type("choice", {candidates=cands})
-                       end,
-                       { type="string" },
-                       function() return config["tools.default_watches"] end
-                    })
+                          return {
+                             ("%d (%s)"):format(object.uid, object.name or object._id),
+                             object,
+                             config["tools.default_watches"]
+                          }
+                       end)
 
 Mx.make_interactive("stop_watching", Watcher, "stop_watching_object",
                     {
                        function()
-                          local conv = function(object, watch)
-                             return { watch.name, data = object }
+                          local conv = function(name, watch)
+                             return name
                           end
                           local cands = fun.iter(Watcher.get_widget().watches):map(conv)
 
                           return Mx.read_type("choice", {candidates=cands})
                        end
                     })
+
+Mx.make_interactive("start_watching_index", Watcher, "start_watching_index",
+                    {
+                       function()
+                          local widget = Watcher.get_widget()
+                          local conv = function(name, watch)
+                             return name
+                          end
+                          local cands = fun.iter(widget.watches):map(conv)
+
+                          return Mx.read_type("choice", {candidates=cands})
+                       end,
+                       { type = "string" }
+                    })
+
+Mx.make_interactive("stop_watching_index", Watcher, "stop_watching_index",
+                    function()
+                       local widget = Watcher.get_widget()
+                       local conv = function(name, watch)
+                          return name
+                       end
+                       local cands = fun.iter(widget.watches):map(conv)
+
+                       local name, canceled = Mx.read_type("choice", {candidates=cands})
+                       if canceled then
+                          return nil, canceled
+                       end
+
+                       cands = widget.watches[name].indices
+                       local index, canceled = Mx.read_type("choice", {candidates=cands})
+                       if canceled then
+                          return nil, canceled
+                       end
+
+                       return {name, index}
+                    end)
+
+Mx.make_interactive("watcher_clear", Watcher, "clear")
 
 --
 -- Keybinds

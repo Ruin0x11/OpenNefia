@@ -197,16 +197,29 @@ function FuzzyMatch.match(query, candidates, opts)
    local results = SkipList:new(#candidates+1)
 
    for _, cand in ipairs(candidates) do
-      local score = FuzzyMatch.match_one(cand, query, opts)
+      local str
+      if type(cand) == "table" then
+         str = cand[1]
+      else
+         str = cand
+      end
+      local score = FuzzyMatch.match_one(str, query, opts)
       if score > 0 then
+         local res
+         if type(cand) == "table" then
+            cand[2] = score
+            res = cand
+         else
+            res = { cand, score }
+         end
          results:insert(score, cand)
       end
    end
 
    local ret = {}
    for i = results:length(), 1, -1 do
-      local score, cand = results:pop()
-      ret[i] = { cand, score }
+      local _, res = results:pop()
+      ret[i] = res
    end
    return ret
 end

@@ -613,6 +613,16 @@ function env.generate_sandbox(mod_name, is_strict)
 
    sandbox["debug"] = { traceback = debug.traceback }
 
+   sandbox["loadstring"] = function(str)
+      local chunk, err = loadstring(str)
+      if chunk == nil then
+         return nil, err
+      end
+
+      setfenv(chunk, sandbox)
+      return chunk, nil
+   end
+
    if is_strict then
       -- copy the strict metatable from the global environment
       -- (thirdparty/strict.lua)

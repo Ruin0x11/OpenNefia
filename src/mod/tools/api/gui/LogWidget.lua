@@ -31,11 +31,6 @@ function LogWidget:relayout(x, y, width, height)
    self.y = math.floor(Draw.get_height() / 2) - math.floor(self.height / 2)
 end
 
-local function cut_string(str, width)
-   local remain, wrapped = Draw.wrap_text(str, width)
-   return wrapped[1]
-end
-
 local COLORS = {
    trace = { 185, 155, 215 },
    debug = { 155, 154, 153 },
@@ -49,9 +44,16 @@ local shadow_color = {0, 0, 0, 255}
 function LogWidget:print(level, message)
    Draw.set_font(12)
    local formatted = ("[%s] %s"):format(level, message)
-   formatted = cut_string(formatted, self.width)
-   local text = Draw.make_text(formatted)
-   self.buffer:push({color=COLORS[level],text=text,time=self.message_duration})
+   local success, err, wrapped = xpcall(function() return Draw.wrap_text(formatted, self.width) end, debug.traceback)
+   if success then
+      for _, line in ipairs(wrapped) do
+         local text = Draw.make_text(line)
+         self.buffer:push({color=COLORS[level],text=text,time=self.message_duration})
+      end
+   else
+      local text = Draw.make_text(formatted)
+      self.buffer:push({color=COLORS[level],text=text,time=self.message_duration})
+   end
 end
 
 function LogWidget:draw()
