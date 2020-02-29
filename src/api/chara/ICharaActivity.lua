@@ -49,7 +49,7 @@ function ICharaActivity:pass_activity_turn()
    Gui.wait(5 * self.activity.animation_wait)
    Gui.update_screen()
 
-   if self.activity and self.activity.turns <= 0 then
+   if self.activity and (self.activity.turns or 0) <= 0 then
       self:finish_activity()
       return "turn_end"
    end

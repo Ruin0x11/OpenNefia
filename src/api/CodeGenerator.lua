@@ -252,11 +252,11 @@ function CodeGenerator:write_value(v)
    end
 end
 
-function CodeGenerator:gen_block_string(str)
+function CodeGenerator.gen_block_string(str)
    return setmetatable({str}, {__codegen_type="block_string"})
 end
 
-function CodeGenerator:gen_literal(str)
+function CodeGenerator.gen_literal(str)
    return setmetatable({str}, {__codegen_type="literal"})
 end
 

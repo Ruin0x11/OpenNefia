@@ -2,6 +2,10 @@
 
 DIR=`dirname "$(readlink -f "$0")"`
 
+if [ ! -d "src/deps/elona" ]; then
+    ./runtime/setup
+fi
+
 pushd $DIR/src
 love .
 popd

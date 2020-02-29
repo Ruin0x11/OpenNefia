@@ -14,7 +14,7 @@ local FuzzyFinderPrompt = class.class("FuzzyFinderPrompt", IUiLayer)
 
 FuzzyFinderPrompt:delegate("input", IInput)
 
-function FuzzyFinderPrompt:init(cands, match_opts, opts)
+function FuzzyFinderPrompt:init(cands, opts)
    opts = opts or {}
 
    self.height = 200
@@ -35,7 +35,7 @@ function FuzzyFinderPrompt:init(cands, match_opts, opts)
 
    self.cands = cands
    self.matched_cands = {}
-   self.match_opts = match_opts or {}
+   self.match_opts = opts.match_opts or {}
    self.last_search = nil
    self.list = FuzzyFinderList:new(cands)
    self.text_prompt = TextPrompt:new(opts.prompt_length or 20, true, false, false, nil, opts.initial_prompt, false)

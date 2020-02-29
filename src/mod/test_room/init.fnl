@@ -5,6 +5,7 @@
           "api.Event"
           "api.Chara"
           "api.Item"
+          "api.Feat"
           "api.Map"
           "api.Gui"
           "api.Env"
@@ -22,7 +23,7 @@
     "turn_end"))
 
 (fn spawn [me]
-  (Chara.create "test_room.breather")
+  (me:start_activity "elona.digging_material" {:type "rubble"})
   "player_turn_query")
 
 (fn anim [me]
@@ -49,13 +50,8 @@
   (each [_ entry (: (. data "elona_sys.magic") :iter)]
     (player:gain_magic entry._id 100))
   (Chara.create "test_room.breather" 10 5 {} map)
-  (each [_ x y (map:iter_tiles)]
-    (when (and (= (% x 2) 0) (= (% y 2) 0) (map:can_access x y))
-      (each [_ id (ipairs ["elona.guava" "elona.scroll_of_return" "elona.safe"])]
-        (Item.create id x y {} map))
-      (when (Rand.one_in 3)
-        (Item.create "elona.putitoro" x y {} map))))
   (set-pcc player)
+  (Feat.create "elona.pot" 10 7 {} map)
 
   (let [item (Item.create "content.bow" nil nil {} player)]
     (player:equip_item item))

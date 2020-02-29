@@ -366,8 +366,8 @@ function data:make_template(_type, opts)
    local gen = require("api.CodeGenerator"):new()
 
    gen:write_table_start()
-   gen:write_key_value("_id", "")
    gen:write_key_value("_type", _type)
+   gen:write_key_value("_id", "")
 
    local prev_comment
    for _, field in ipairs(schemas[_type].fields) do

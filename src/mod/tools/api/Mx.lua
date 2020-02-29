@@ -28,10 +28,10 @@ function Mx.read_type(ty, entry)
    elseif ty == "number" then
       return Input.query_number(entry.max or nil, entry.initial_amount or nil)
    elseif ty == "string" then
-      return Input.query_text(entry.length or 30, true, false)
+      return Input.query_text(entry.length or 20, true, false)
    elseif ty == "choice" then
       assert(entry.candidates, "argument must have 'candidates' field")
-      return Mx.completing_read(entry.candidates, entry.get_name)
+      return Mx.completing_read(entry.candidates, { get_name = entry.get_name } )
    else
       error(("unknown argument type '%s'"):format(ty))
    end

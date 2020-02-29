@@ -1,6 +1,7 @@
 local Action = require("api.Action")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
+local Event = require("api.Event")
 local Feat = require("api.Feat")
 local Item = require("api.Item")
 local Map = require("api.Map")
@@ -105,6 +106,10 @@ Tools.citizens = gen_faction_pred("base.citizen")
 
 function Tools.citizen()
    return Rand.choice(Tools.citizens())
+end
+
+function Tools.feat()
+   return Rand.choice(Feat.iter())
 end
 
 function Tools.dump_charas()
@@ -613,6 +618,18 @@ end
 function Tools.gen_one_map(id)
    local _, map = assert(Map.generate("elona_sys.map_template", { id = id }))
    print(Tools.print_map_detailed(map))
+end
+
+function Tools.restart_scenario()
+   local scenario = data["base.scenario"]:ensure(save.base.scenario)
+   local player = Chara.create("content.player", nil, nil, {ownerless=true})
+
+   local params = scenario:on_game_start(player)
+   Chara.set_player(player)
+
+   save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
+
+   Event.trigger("base.on_new_game")
 end
 
 return Tools

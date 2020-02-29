@@ -125,6 +125,8 @@ Mx.make_interactive("stop_watching_index", Watcher, "stop_watching_index",
 
 Mx.make_interactive("watcher_clear", Watcher, "clear")
 
+Mx.make_interactive("restart_scenario", Tools, "restart_scenario")
+
 --
 -- Keybinds
 --

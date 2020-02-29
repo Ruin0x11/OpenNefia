@@ -41,9 +41,9 @@ local COLORS = {
 
 local shadow_color = {0, 0, 0, 255}
 
-function LogWidget:print(level, message)
+function LogWidget:print(level, message, source)
    Draw.set_font(12)
-   local formatted = ("[%s] %s"):format(level, message)
+   local formatted = ("[%s][%s] %s"):format(level, source or "?", message)
    local success, err, wrapped = xpcall(function() return Draw.wrap_text(formatted, self.width) end, debug.traceback)
    if success then
       for _, line in ipairs(wrapped) do

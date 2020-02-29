@@ -31,6 +31,28 @@ function Feat.iter(map)
    return (map or field.map):iter_feats()
 end
 
+--- Returns true if this feat is valid.
+---
+--- @tparam[opt] IFeat feat
+--- @tparam[opt] InstancedMap map Map to check for existence in
+function Feat.is_alive(feat, map)
+   map = map or Map.current()
+   if type(feat) ~= "table" then
+      return false
+   end
+
+   if map == nil then
+      return feat:current_map() ~= nil
+   end
+
+   local their_map = feat:current_map()
+   if not their_map then
+      return false
+   end
+
+   return their_map.uid == map.uid
+end
+
 --- Creates a new feat. Returns the feat on success, or nil if
 --- creation failed.
 ---

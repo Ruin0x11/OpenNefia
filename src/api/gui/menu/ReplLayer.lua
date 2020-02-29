@@ -174,7 +174,10 @@ function ReplLayer:make_keymap()
             local cand = self.completion.candidates[self.completion.selected+1]
             complete(cand)
          end
-      end
+      end,
+
+      -- BUG: We can't input '~' as text.
+      repl = function() end
    }
 end
 

@@ -5,6 +5,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local World = require("api.World")
 local Item = require("api.Item")
 local Skill = require("mod.elona_sys.api.Skill")
+local Feat = require("api.Feat")
 local Calc = require("mod.elona.api.Calc")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local Gui = require("api.Gui")
@@ -1019,6 +1020,126 @@ data:add {
             end
 
             Gui.mes("steal")
+         end
+      }
+   }
+}
+
+local function dig_random_site(activity, params)
+   local feat = activity.feat
+   local chara = params.chara
+
+   local map = chara:current_map()
+   local level = map:calc("dungeon_level")
+   local site = map:calc("material_type") or "elona.field"
+
+   if map:has_type("world_map") then
+      level = math.floor(chara:calc("level") / 2) + Rand.rnd(10)
+      if level > 30 then
+         level = 30 + Rand.rnd(Rand.rnd(level-30)+1)
+      end
+      local tile = map:tile(chara.x, chara.y)
+      if tile.field_type then
+         local field_type = data["elona.field_type"]:ensure(tile.field_type)
+         if field_type.material_type then
+            site = field_type.material_type
+         end
+      end
+   end
+
+   if feat then
+      local ty = feat:calc("material_type")
+      if ty then
+         site = ty
+      end
+      local res = feat:emit("elona.calc_feat_materials", {}, {level=level,material_type=site})
+      if res then
+         level = res.level or level
+         site = res.material_type or site
+      end
+   end
+
+   local site_data = data["elona.material_spot"]:ensure(site)
+
+   if Rand.one_in(7) then
+      local choices = nil -- TODO
+      local id, txt_type
+      local amount = 1
+      if site_data.on_search then
+         id, txt_type = site_data:on_search({chara=chara,feat=feat,material_level=level,material_choices=choices})
+      else
+         id, txt_type = Material.random_material_id(level, 0, choices), nil
+      end
+
+      if id then
+         Material.obtain(chara, id, amount, txt_type)
+      end
+   end
+
+   if Rand.one_in(50 + chara:trait_level("elona.perm_material")*20) then
+      local id = "activity.searching.no_more"
+      if site_data.on_finish then
+         id = site_data.on_finish
+      end
+      Gui.mes(id)
+      return true
+   end
+
+   return false
+end
+
+data:add {
+   _type = "base.activity",
+   _id = "searching",
+
+   params = { feat = "table", type = "string" },
+   default_turns = 20,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            if not Feat.is_alive(self.feat) then
+               return "stop"
+            end
+            if self.type then
+               Gui.mes("activity.dig_spot.start.other")
+            end
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            local finished = dig_random_site(self, params)
+            if finished then
+               return self:finish()
+            end
+            if self.turns % 5 == 0 then
+               Gui.mes_c("activity.dig_spot.sound", "Blue")
+            end
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            if self.feat then
+               self.feat:remove_ownership()
+            end
+            if self.type then
+               Gui.mes("activity.dig_spot.finish")
+            end
+            map:emit("elona.on_search_finish", {chara=params.chara,type=self.type})
+            -- TODO spillFrag
          end
       }
    }

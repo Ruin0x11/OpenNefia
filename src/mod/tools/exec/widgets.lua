@@ -9,7 +9,7 @@ Event.register("base.on_log_message", "Send log message to widget",
                function(_, params)
                   local log = Gui.hud_widget("tools.log_widget")
                   if log then
-                     log:widget():print(params.level, params.message)
+                     log:widget():print(params.level, params.message, params.source)
                   end
                end)
 

@@ -54,7 +54,7 @@ function Item.is_alive(item, map)
    end
 
    if map == nil then
-      return true
+      return item:current_map() ~= nil
    end
 
    local their_map = item:current_map()

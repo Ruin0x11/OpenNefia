@@ -330,6 +330,8 @@ List of events to bind to this character when they are spawned.
 
          x_offset = 0,
          y_offset = 0,
+
+         materials = {}
       }
    },
    { interface = IChara }
