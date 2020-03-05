@@ -7,3 +7,6 @@ TAGS
 /doc/out
 /lib
 /src/data/font/MS-Gothic.ttf
+/editor/vscode/out
+/editor/vscode/node_modules
+/editor/vscode/.vscode-test/

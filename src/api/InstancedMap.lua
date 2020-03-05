@@ -255,21 +255,6 @@ function InstancedMap:has_los(x1, y1, x2, y2)
    return Pos.iter_line(x1, y1, x2, y2):all(cb)
 end
 
-local function pp(ar)
-   print("==============")
-   for i=0, #ar do
-      for j=0,#ar do
-         local o = ar[j][i] or 0
-         local i = "."
-         if bit.band(o, 0x100) > 0 then
-            i = "#"
-         end
-         io.write(i)
-      end
-      io.write("\n")
-   end
-end
-
 --- Calculates the positions that can be seen by the player and are
 --- contained in the game window.
 -- @tparam int player_x
@@ -562,10 +547,6 @@ end
 function InstancedMap:deserialize()
    ILocation.deserialize(self)
    self:redraw_all_tiles()
-end
-
-function InstancedMap:__eq(other)
-   return self.uid == other.uid
 end
 
 

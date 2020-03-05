@@ -1,4 +1,5 @@
 local Gui = require("api.Gui")
+local Rand = require("api.Rand")
 
 local Material = {}
 

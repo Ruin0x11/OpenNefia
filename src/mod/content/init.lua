@@ -326,36 +326,6 @@ local Rand = require("api.Rand")
 --
 -- EmotionIcon.install("base.default")
 
-
-local DamagePopup = require("mod.damage_popups.api.DamagePopup")
-
-DamagePopup.install()
-
-Event.register("base.after_damage_hp",
-               "damage popups",
-               function(source, p)
-                  local Map = require("api.Map")
-                  if Map.is_in_fov(p.chara.x, p.chara.y) then
-                     DamagePopup.add(p.chara.x, p.chara.y, tostring(p.damage))
-                  end
-               end,
-               {priority=500000})
-
-Event.register("elona.on_physical_attack_miss",
-               "damage popups",
-               function(source, p)
-                  local Map = require("api.Map")
-                  if Map.is_in_fov(p.target.x, p.target.y) then
-                     if p.hit == "evade" then
-                        DamagePopup.add(p.target.x, p.target.y, "evade!!")
-                     else
-                        DamagePopup.add(p.target.x, p.target.y, "miss")
-                     end
-                  end
-               end,
-               {priority=500000})
-
-
 data:add {
    _type = "base.map_generator",
    _id = "test",

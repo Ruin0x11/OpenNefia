@@ -28,7 +28,7 @@ end
 
 function UiFpsCounter:relayout(x, y, width, height)
    self.x = Draw.get_width() - Draw.text_width(self.buff) - 5
-   self.y = y
+   self.y = y or self.y
 end
 
 function UiFpsCounter:draw()
@@ -79,10 +79,14 @@ function UiFpsCounter:update()
       end
 
       Draw.set_font(14)
+      local relayout = self.buff == ""
       self.buff = buff
       self.text = Draw.make_text(self.buff)
       local x = self.x - 105
 
+      if relayout then
+         self:relayout()
+      end
       self.fps_graph:relayout(x, 5, 100, 40)
       self.ram_graph:relayout(x, 5 + 45, 100, 40)
       self.ram_diff_graph:relayout(x, 5 + 45 + 45, 100, 40)

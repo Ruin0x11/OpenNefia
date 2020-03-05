@@ -57,12 +57,16 @@ function sparse_batch:find_tile_at(x, y)
 end
 
 function sparse_batch:add_tile(params)
+   if params.tile == nil or params.tile == "" then
+      return
+   end
+
    local ind = table.remove(self.free_indices) or #self.tiles + 1
 
    local z_order = params.z_order or 0
    self.ordering:insert(z_order, ind)
 
-   local tile = params.tile or ""
+   local tile = params.tile
    if type(params.tile) == "string" then
       local the_anim = table.remove(self.free_anims)
       if the_anim == nil then

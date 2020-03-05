@@ -6,9 +6,9 @@ local KeyHandler = require("api.gui.KeyHandler")
 local Log = require("api.Log")
 local Env = require("api.Env")
 
+local draw = require("internal.draw")
 local env = require("internal.env")
 local field_renderer = require("internal.field_renderer")
-local save = require("internal.global.save")
 
 local field_layer = class.class("field_layer", IUiLayer)
 
@@ -221,6 +221,10 @@ end
 function field_layer:query_repl()
    if self.repl == nil then
       self:setup_repl()
+   end
+
+   if draw.is_layer_active(self.repl) then
+      return
    end
 
    -- The repl could get hotloaded, so keep it in an upvalue.

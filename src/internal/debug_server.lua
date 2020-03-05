@@ -46,6 +46,7 @@ function commands.run(text)
       local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
       continue, success, result = coroutine.resume(coro)
       if continue then
+         success = true
          Log.info("Success: %s", result)
          status = "success"
       else
@@ -61,7 +62,7 @@ function commands.run(text)
       return error_result(status)
    end
 
-   return { result = ReplLayer.format_repl_result(result) }
+   return { success = true, result = ReplLayer.format_repl_result(result) }
 end
 
 -- Request:
@@ -381,6 +382,7 @@ function debug_server:poll()
                   result = error_result(err)
                else
                   result = err
+                  result.command = cmd_name
                   if result.success == nil then
                      result.success = true
                   end

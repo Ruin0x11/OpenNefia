@@ -3,7 +3,7 @@ local fs = {}
 local dir_sep = package.config:sub(1,1)
 local is_windows = dir_sep == "\\"
 
--- LOVE always expects the directory separator to be forward slash ('/').
+-- LOVE always expects the directory separator to be a forward slash ('/').
 dir_sep = "/"
 
 local function string_split(str,sep)
@@ -19,10 +19,15 @@ local function string_split(str,sep)
    return ret
 end
 
+local function wrap(cb)
+   return function(path, ...) return cb(fs.to_relative(path), ...) end
+end
+
 if not love or love.getVersion() == "lovemock" then
-   local lfs = require("lfs")
-   assert(lfs, "luafilesystem not installed")
+   local ok, lfs = pcall(require, "lfs")
+   assert(ok, "luafilesystem not installed")
    fs.get_directory_items = function(dir)
+      dir = fs.to_relative(dir)
       local items = {}
       for path in lfs.dir(dir) do
          if path ~= "." and path ~= ".." then
@@ -32,7 +37,7 @@ if not love or love.getVersion() == "lovemock" then
       return items
    end
    fs.get_info = function(path)
-      local other_path = path
+      local other_path = fs.to_relative(path)
       local attrs = lfs.attributes(other_path)
       if attrs == nil then
          attrs = lfs.attributes(path)
@@ -51,6 +56,7 @@ if not love or love.getVersion() == "lovemock" then
       return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "Elona_next")
    end
    fs.create_directory = function(name)
+      name = fs.to_relative(name)
       local path = string_split(name, dir_sep)[1] .. dir_sep
       if not fs.is_root(path) then
          path = ""
@@ -67,6 +73,7 @@ if not love or love.getVersion() == "lovemock" then
       return path
    end
    fs.read = function(name, size)
+      name = fs.to_relative(name)
       assert(fs.exists(name), ("file does not exist: %s"):format(name))
       local f = io.open(name, "rb")
       local data = f:read(size or "*all")
@@ -74,6 +81,7 @@ if not love or love.getVersion() == "lovemock" then
       return data, nil
    end
    fs.write = function(name, data, size)
+      name = fs.to_relative(name)
       local f = io.open(name, "wb")
       assert(f, ("could not open %s"):format(name))
       f:write(data)
@@ -81,25 +89,24 @@ if not love or love.getVersion() == "lovemock" then
       return true, nil
    end
    fs.remove = function(name)
+      name = fs.to_relative(name)
       return os.remove(name)
    end
    fs.get_working_directory = lfs.currentdir
 
    fs.attributes = lfs.attributes
 else
-   fs.get_directory_items = love.filesystem.getDirectoryItems
-   fs.get_info = love.filesystem.getInfo
+   fs.get_directory_items = wrap(love.filesystem.getDirectoryItems)
+   fs.get_info = wrap(love.filesystem.getInfo)
    fs.get_save_directory = love.filesystem.getSaveDirectory
-   fs.create_directory = love.filesystem.createDirectory
-   fs.write = love.filesystem.write
-   fs.read = love.filesystem.read
-   fs.remove = love.filesystem.remove
+   fs.create_directory = wrap(love.filesystem.createDirectory)
+   fs.write = wrap(love.filesystem.write)
+   fs.read = wrap(love.filesystem.read)
+   fs.remove = wrap( love.filesystem.remove)
    fs.get_working_directory = love.filesystem.getWorkingDirectory
 
    fs.attributes = function(filepath, aname, atable)
-      filepath = string.gsub(filepath, "^%.[/\\]", "")
-      filepath = string.gsub(filepath, "\\", "/")
-      filepath = string.strip_prefix(filepath, fs.get_working_directory() .. "/")
+      filepath = fs.to_relative(filepath)
       local info = love.filesystem.getInfo(filepath)
       if info == nil then
          return nil, "file does not exist"
@@ -118,6 +125,12 @@ else
 
       return info
    end
+end
+
+function fs.to_relative(filepath)
+   filepath = fs.normalize(filepath)
+   filepath = string.strip_prefix(filepath, fs.get_working_directory() .. "/")
+   return filepath
 end
 
 function fs.iter_directory_items(dir)

@@ -34,7 +34,10 @@ local touched_paths = {}
 local current_save
 
 local function save_path(child_path, save_name)
-   local dir = fs.get_save_directory()
+   -- when using love.filesystem.write, all paths are already relative to the save directory.
+   -- passing absolute paths will result in errors.
+   local dir = ""
+   
    if save_name == nil then
       return fs.join(dir, "temp", child_path)
    end

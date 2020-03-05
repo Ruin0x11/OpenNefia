@@ -21,6 +21,10 @@ function Repl.get()
    return field.repl
 end
 
+function Repl.show()
+   field:query_repl()
+end
+
 function Repl.send(code)
    Repl.get():execute(code)
 end

@@ -26,6 +26,11 @@ end
 function IUiLayer:query(z_order)
    class.assert_is_an(IUiLayer, self)
 
+   if draw.is_layer_active(self) then
+      Log.warn("Draw layer '%s' is already being queried.")
+      return nil, "canceled"
+   end
+
    if z_order == nil then
       z_order = self:default_z_order() or 100000
    end

@@ -148,6 +148,15 @@ function draw.layer_count()
    return #layers
 end
 
+function draw.is_layer_active(layer)
+   for _, pair in ipairs(layers) do
+      if pair.layer == layer then
+         return true
+      end
+   end
+   return false
+end
+
 local coroutines = {}
 
 local function hotload_layer(layer)

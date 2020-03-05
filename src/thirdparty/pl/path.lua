@@ -277,7 +277,9 @@ end
 function path.normcase(P)
     assert_string(1,P)
     if path.is_windows then
-        return (P:lower():gsub('/','\\'))
+        -- love.filesystem.get_info is case-sensitive, even on Windows.
+        -- return (P:lower():gsub('/','\\'))
+        return (P:gsub('/','\\'))
     else
         return P
     end

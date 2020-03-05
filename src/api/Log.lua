@@ -2,7 +2,7 @@ local Event
 
 local ansicolors = require("thirdparty.ansicolors")
 
--- @module Log
+--- @module Log
 local Log = {}
 
 local levels = {

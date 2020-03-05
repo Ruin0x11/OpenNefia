@@ -1,0 +1,140 @@
+{
+	"name": "elona-next",
+	"displayName": "elona-next",
+	"description": "Editor support for Elona_next",
+	"publisher": "Ruin0x11",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.42.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:elona-next.hotloadThisFile",
+		"onCommand:elona-next.insertTemplate",
+		"workspaceContains:deps/elona"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "elona-next.hotloadThisFile",
+				"title": "Elona_next: Hotload this file"
+			},
+			{
+				"command": "elona-next.insertTemplate",
+				"title": "Elona_next: Insert template"
+			},
+            {
+				"command": "elona-next.launchGame",
+				"title": "Elona_next: Launch game"
+            },
+            {
+                "command": "elona-next.describeAtPoint",
+				"title": "Elona_next: Describe thing at point"
+            },
+            {
+                "command": "elona-next.insertRequireStatement",
+				"title": "Elona_next: Insert require statement"
+            },
+            {
+                "command": "elona-next.requireThisFileInRepl",
+				"title": "Elona_next: Require this file in REPL"
+            },
+            {
+                "command": "elona-next.resetDrawLayers",
+				"title": "Elona_next: Reset draw layers"
+            },
+            {
+                "command": "elona-next.sendSelectionToRepl",
+				"title": "Elona_next: Send selection to REPL"
+            },
+            {
+                "command": "elona-next.sendFileToRepl",
+				"title": "Elona_next: Send file to REPL"
+            },
+            {
+                "command": "elona-next.insertId",
+				"title": "Elona_next: Insert ID"
+            }
+		],
+		"keybindings": [
+			{
+				"command": "elona-next.hotloadThisFile",
+				"when": "editorTextFocus",
+				"key": "Ctrl+Shift+R",
+                "mac": "Shift+Cmd+R"
+			},
+			{
+				"command": "elona-next.insertTemplate",
+				"when": "editorTextFocus",
+                "key": "Ctrl+Shift+T",
+                "mac": "Shift+Cmd+T"
+			},
+            {
+				"command": "elona-next.launchGame",
+				"key": "Alt+L"
+            },
+            {
+                "command": "elona-next.describeAtPoint",
+				"when": "editorTextFocus",
+                "key": "Ctrl+D",
+				"mac": "Cmd+D"
+            },
+            {
+                "command": "elona-next.insertRequireStatement",
+				"when": "editorTextFocus",
+				"key": "Ctrl+I",
+				"mac": "Cmd+I"
+            },
+            {
+                "command": "elona-next.requireThisFileInRepl",
+				"when": "editorTextFocus",
+                "key": "Ctrl+Shift+E",
+                "mac": "Shift+Cmd+E"
+            },
+            {
+                "command": "elona-next.sendSelectionToRepl",
+				"when": "editorTextFocus && editorHasSelection",
+                "key": "Ctrl+Shift+S",
+                "mac": "Shift+Cmd+S"
+            },
+            {
+                "command": "elona-next.sendFileToRepl",
+				"when": "editorTextFocus && !editorHasSelection",
+                "key": "Ctrl+Shift+S",
+                "mac": "Shift+Cmd+S"
+            },
+            {
+                "command": "elona-next.insertId",
+				"when": "editorTextFocus && !editorHasSelection",
+                "key": "Ctrl+Shift+D",
+                "mac": "Shift+Cmd+D"
+            }
+        ]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.1",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.42.0",
+		"eslint": "^6.8.0",
+		"@typescript-eslint/parser": "^2.18.0",
+		"@typescript-eslint/eslint-plugin": "^2.18.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.0.1",
+		"typescript": "^3.7.5",
+		"vscode-test": "^1.3.0",
+		"class-transformer": "^0.2.3",
+		"reflect-metadata": "^0.1.13"
+	}
+}

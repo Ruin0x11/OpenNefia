@@ -1,4 +1,4 @@
---- @module DateTime
+--- @classmod DateTime
 
 local DateTime = class.class("DateTime")
 
@@ -29,6 +29,9 @@ function DateTime:hours()
       + self.year * 24 * 30 * 12
 end
 
+
+--- @tparam int hours
+--- @treturn DateTime
 function DateTime.from_hours(hours)
    local hour = hours % 24
    local day = math.floor(hours / 24) % 31

@@ -1,10 +1,15 @@
 local binary_reader = require("internal.binary_reader")
 local Stopwatch = require("api.Stopwatch")
 
-local ffi, fs, vips
+local ffi, fs, vips, ok
 if jit then
    ffi = require("ffi")
-   vips = require("vips")
+   ok, vips = pcall(require, "vips")
+   if not ok then
+     local Log = require("api.Log")
+     Log.warn("Could not load libvips. Falling back to built-in BMP converter.")
+     vips = nil
+   end
 end
 
 local bmp_convert = {}
@@ -26,7 +31,7 @@ local function get_bmp_version(header_size, compression)
    elseif header_size == 100 then
       return "4"
    elseif header_size == 124 then
-      return "five"
+      return "5"
    end
    error("invalid BMP type: " .. tostring(header_size))
 end
@@ -211,7 +216,7 @@ end
 
 local image_cache = {}
 
---- Drop-in replacement for love.graphics.newImage that supports
+--- Replacement for love.graphics.newImage that supports
 --- loading BMP files with an optional key color to replace with
 --- transparency.
 ---
