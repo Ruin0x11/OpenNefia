@@ -1,11 +1,7 @@
 local data = require("internal.data")
-local Event = require("api.Event")
-local Gui = require("api.Gui")
 local Log = require("api.Log")
 
 local Ai = {}
-
-local default_module
 
 function Ai.run(id, chara, params)
    if chara == nil then
