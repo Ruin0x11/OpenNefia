@@ -47,19 +47,6 @@ export class IdsServerResponse extends ServerResponse {
     ids: string[] = new Array<string>();
 }
 
-function unescape(str: string) {
-    return str
-      .replace(/\\\\/g, '\\')
-      .replace(/\\\"/g, '\"')
-      .replace(/\\\//g, '\/')
-      .replace(/\\b/g, '\b')
-      .replace(/\\f/g, '\f')
-      .replace(/\\n/g, '\n')
-      .replace(/\\r/g, '\r')
-      .replace(/\\t/g, '\t')
-      .replace(/'([^']+(?='))'/g, '$1');
-  };
-
 async function chooseCandidate(candidates: Array<any>) {
 	return await vscode.window.showQuickPick(candidates.map((c: any) => new CandidateItem(c)), {});
 }

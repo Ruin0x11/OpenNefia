@@ -1,3 +1,4 @@
+local CodeGenerator = require("api.CodeGenerator")
 local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
 local doc = require("internal.doc")
@@ -362,13 +363,23 @@ function data:make_template(_type, opts)
    if opts.comments == nil then
       opts.comments = false
    end
+   if opts.snippets == nil then
+      opts.snippets = true
+   end
 
-   local gen = require("api.CodeGenerator"):new()
+   local gen = CodeGenerator:new()
+   local snippet_index = 1
 
    gen:write("data:add ")
    gen:write_table_start()
    gen:write_key_value("_type", _type)
-   gen:write_key_value("_id", "")
+
+   local _id = ""
+   if opts.snippets then
+      _id = ("${%d}"):format(snippet_index)
+      snippet_index = snippet_index + 1
+   end
+   gen:write_key_value("_id", _id)
 
    local prev_comment
    for _, field in ipairs(schemas[_type].fields) do
@@ -382,7 +393,17 @@ function data:make_template(_type, opts)
             end
             gen:write_comment(field.doc)
          end
-         gen:write_key_value(field.name, field.default)
+         local value = field.default
+         if opts.snippets then
+            local snippet = ("${%d:%s}"):format(snippet_index, value)
+            if type(value) == "string" then
+               value = snippet
+            else
+               value = CodeGenerator.gen_literal(("${%d:%s}"):format(snippet_index, value))
+            end
+            snippet_index = snippet_index + 1
+         end
+         gen:write_key_value(field.name, value)
          if do_comment then
             gen:tabify()
             gen:tabify()
@@ -394,6 +415,9 @@ function data:make_template(_type, opts)
    end
 
    gen:write_table_end()
+   if opts.snippets then
+      gen:write("${0}")
+   end
 
    return tostring(gen)
 end

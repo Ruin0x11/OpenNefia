@@ -49,9 +49,9 @@
 (fn scratch [player map]
   (each [_ entry (: (. data "elona_sys.magic") :iter)]
     (player:gain_magic entry._id 100))
-  (Chara.create "test_room.breather" 10 5 {} map)
+  ;(Chara.create "test_room.breather" 10 5 {} map)
   (set-pcc player)
-  (Feat.create "elona.pot" 10 7 {} map)
+  ;(Feat.create "elona.pot" 10 7 {} map)
 
   (let [item (Item.create "content.bow" nil nil {} player)]
     (player:equip_item item))

@@ -492,11 +492,12 @@ function env.hotload_path(path, also_deps)
          if not mod.is_loaded(mod_name) then
             Log.warn("Mod '%s' is not yet loaded, attempting to load...", mod_name)
             LOADING_MODS[mod_name] = true
-            local ok, err = mod.hotload_mod(mod_name)
+            local chunk, err = mod.hotload_mod(mod_name)
             LOADING_MODS[mod_name] = nil
-            if not ok then
+            if err then
                error(err)
             end
+            return chunk, err
          end
       end
 

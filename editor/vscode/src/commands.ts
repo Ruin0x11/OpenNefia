@@ -84,11 +84,24 @@ export async function describeAtPoint() {
         });
 }
 
+function unescapeString(str: string) {
+    return str
+      .replace(/\\\\/g, '\\')
+      .replace(/\\\"/g, '\"')
+      .replace(/\\\//g, '\/')
+      .replace(/\\b/g, '\b')
+      .replace(/\\f/g, '\f')
+      .replace(/\\n/g, '\n')
+      .replace(/\\r/g, '\r')
+      .replace(/\\t/g, '\t')
+      .replace(/'([^']+(?='))'/g, '$1');
+  };
+
 export async function insertTemplate() {
     await sendToServer(ServerCommand.Template, "")
     .then((json) => {
         let templateResponse = plainToClass(TemplateServerResponse, json);
-        vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(unescape(templateResponse.template)));
+        vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(unescapeString(templateResponse.template)));
     });
 }
 

@@ -59,7 +59,7 @@ end
 function LogWidget:draw()
    -- Draw.filled_rect(self.x, self.y, self.width, self.height, {17, 17, 65, 64})
    local line = 1
-   for i=1, self.max_lines do
+   for i=-self.buffer:len(), 0 do
       local entry = self.buffer:get(i)
       if entry == nil then
          break

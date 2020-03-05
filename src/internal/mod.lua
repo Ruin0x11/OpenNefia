@@ -16,6 +16,7 @@ local MOD_DIR = "mod"
 
 local function load_mod(mod_name, root_path)
    local init_lua_path = fs.find_loadable(root_path, "init")
+   local chunk, err
 
    if init_lua_path then
       local req_path = paths.convert_to_require_path(init_lua_path)
@@ -24,10 +25,10 @@ local function load_mod(mod_name, root_path)
       -- always be deterministic.
       Rand.set_seed(0)
 
-      local chunk, err = env.safe_require(req_path)
+      chunk, err = env.safe_require(req_path)
 
       if err then
-         return false, err
+         return nil, err
       end
 
       -- Mods are not expected to return anything in init.lua.
@@ -40,7 +41,7 @@ local function load_mod(mod_name, root_path)
 
    loaded[mod_name] = true
 
-   return true
+   return chunk
 end
 
 function mod.is_loaded(mod_name)
@@ -68,7 +69,8 @@ local function load_manifest(manifest_path)
 
    local valid_keys = {
       id = { required = true },
-      dependencies = { required = true }
+      dependencies = { required = true },
+      version = { required = true }
    }
    for k, _ in pairs(manifest) do
       if not valid_keys[k] then
@@ -197,8 +199,8 @@ function mod.load_mods(mods)
    Log.info("Loading mods: %s", mod_names)
 
    for _, m in ipairs(load_order) do
-      local ok, err = mod.hotload_mod(m.id, m.root_path)
-      if not ok then
+      local chunk, err = mod.hotload_mod(m.id, m.root_path)
+      if err then
          error(err)
       end
    end

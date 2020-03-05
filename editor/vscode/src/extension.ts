@@ -17,9 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('elona-next.insertId', insertId));
 	
 	context.subscriptions.push(vscode.languages.registerColorProvider({ scheme: "file", language: "lua" }, new ElonaNextColorProvider()));
-
 	context.subscriptions.push(vscode.languages.registerDefinitionProvider({ scheme: "file", language: "lua" }, new ElonaNextDefinitionProvider()));
-
 	context.subscriptions.push(vscode.languages.registerHoverProvider({ scheme: "file", language: "lua" }, new ElonaNextHoverProvider()));
 
 	vscode.window.showInformationMessage("Elona_next extension loaded.");
