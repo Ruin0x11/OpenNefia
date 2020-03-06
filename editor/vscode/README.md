@@ -6,6 +6,7 @@ Allows for interacting with Elona\_next's debug server with VS Code.
 
 - Documentation on hover for certain functions.
 - Jump to definition for certain functions.
+- Jump to the file referenced by a `require` statement via <kbd>Ctrl</kbd>+<kbd>Left Mouse</kbd>.
 
 ## Commands
 

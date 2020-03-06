@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
 
 function removePrefix(s: string, prefix: string): string {
     const hasPrefix = s.search(new RegExp(prefix, "i")) === 0;
@@ -22,4 +23,19 @@ export function uriToLuaPath(uri: vscode.Uri): string {
     luaPath = removeSuffix(luaPath, ".lua");
     luaPath = removeSuffix(luaPath, ".fnl");
     return luaPath;
+}
+
+export function luaPathToUri(luaPath: string): vscode.Uri | null {
+    let root = vscode.workspace.rootPath;
+    let path = luaPath.replace(/\./g, "/");
+    let final = root + "/" + path + ".lua";
+    if (!fs.existsSync(final)) {
+        final = root + "/" + path + "/init.lua";
+    }
+
+    if (!fs.existsSync(final)) {
+        return null;
+    }
+
+    return vscode.Uri.file(final);
 }

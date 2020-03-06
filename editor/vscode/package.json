@@ -26,93 +26,115 @@
 				"command": "elona-next.insertTemplate",
 				"title": "Elona_next: Insert template"
 			},
-            {
+			{
 				"command": "elona-next.launchGame",
 				"title": "Elona_next: Launch game"
-            },
-            {
-                "command": "elona-next.describeAtPoint",
+			},
+			{
+				"command": "elona-next.describeAtPoint",
 				"title": "Elona_next: Describe thing at point"
-            },
-            {
-                "command": "elona-next.insertRequireStatement",
+			},
+			{
+				"command": "elona-next.insertRequireStatement",
 				"title": "Elona_next: Insert require statement"
-            },
-            {
-                "command": "elona-next.requireThisFileInRepl",
+			},
+			{
+				"command": "elona-next.requireThisFileInRepl",
 				"title": "Elona_next: Require this file in REPL"
-            },
-            {
-                "command": "elona-next.resetDrawLayers",
+			},
+			{
+				"command": "elona-next.resetDrawLayers",
 				"title": "Elona_next: Reset draw layers"
-            },
-            {
-                "command": "elona-next.sendSelectionToRepl",
+			},
+			{
+				"command": "elona-next.sendSelectionToRepl",
 				"title": "Elona_next: Send selection to REPL"
-            },
-            {
-                "command": "elona-next.sendFileToRepl",
+			},
+			{
+				"command": "elona-next.sendFileToRepl",
 				"title": "Elona_next: Send file to REPL"
-            },
-            {
-                "command": "elona-next.insertId",
+			},
+			{
+				"command": "elona-next.insertId",
 				"title": "Elona_next: Insert ID"
-            }
+			},
+			{
+				"command": "elona-next.searchDocumentation",
+				"title": "Elona_next: Search documentation"
+			},
+			{
+				"command": "elona-next.makeScratchBuffer",
+				"title": "Elona_next: Make scratch buffer"
+			},
+			{
+				"command": "elona-next.createNewMod",
+				"title": "Elona_next: Create new mod"
+			},
+			{
+				"command": "elona-next.insertEventHandler",
+				"title": "Elona_next: Insert event handler"
+			}
 		],
 		"keybindings": [
 			{
 				"command": "elona-next.hotloadThisFile",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+R",
-                "mac": "Shift+Cmd+R"
+				"mac": "Shift+Cmd+R"
 			},
 			{
 				"command": "elona-next.insertTemplate",
 				"when": "editorTextFocus",
-                "key": "Ctrl+Shift+T",
-                "mac": "Shift+Cmd+T"
+				"key": "Ctrl+Shift+T",
+				"mac": "Shift+Cmd+T"
 			},
-            {
+			{
 				"command": "elona-next.launchGame",
 				"key": "Alt+L"
-            },
-            {
-                "command": "elona-next.describeAtPoint",
+			},
+			{
+				"command": "elona-next.describeAtPoint",
 				"when": "editorTextFocus",
-                "key": "Ctrl+D",
+				"key": "Ctrl+D",
 				"mac": "Cmd+D"
-            },
-            {
-                "command": "elona-next.insertRequireStatement",
+			},
+			{
+				"command": "elona-next.insertRequireStatement",
 				"when": "editorTextFocus",
 				"key": "Ctrl+I",
 				"mac": "Cmd+I"
-            },
-            {
-                "command": "elona-next.requireThisFileInRepl",
+			},
+			{
+				"command": "elona-next.requireThisFileInRepl",
 				"when": "editorTextFocus",
-                "key": "Ctrl+Shift+E",
-                "mac": "Shift+Cmd+E"
-            },
-            {
-                "command": "elona-next.sendSelectionToRepl",
+				"key": "Ctrl+Shift+E",
+				"mac": "Shift+Cmd+E"
+			},
+			{
+				"command": "elona-next.sendSelectionToRepl",
 				"when": "editorTextFocus && editorHasSelection",
-                "key": "Ctrl+Shift+S",
-                "mac": "Shift+Cmd+S"
-            },
-            {
-                "command": "elona-next.sendFileToRepl",
+				"key": "Ctrl+Shift+S",
+				"mac": "Shift+Cmd+S"
+			},
+			{
+				"command": "elona-next.sendFileToRepl",
 				"when": "editorTextFocus && !editorHasSelection",
-                "key": "Ctrl+Shift+S",
-                "mac": "Shift+Cmd+S"
-            },
-            {
-                "command": "elona-next.insertId",
+				"key": "Ctrl+Shift+S",
+				"mac": "Shift+Cmd+S"
+			},
+			{
+				"command": "elona-next.insertId",
 				"when": "editorTextFocus && !editorHasSelection",
-                "key": "Ctrl+Shift+D",
-                "mac": "Shift+Cmd+D"
-            }
-        ]
+				"key": "Ctrl+Shift+D",
+				"mac": "Shift+Cmd+D"
+			},
+			{
+				"command": "elona-next.insertEventHandler",
+				"when": "editorTextFocus && !editorHasSelection",
+				"key": "Ctrl+Shift+V",
+				"mac": "Shift+Cmd+V"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

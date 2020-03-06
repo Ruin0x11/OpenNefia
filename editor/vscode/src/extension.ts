@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { hotloadThisFile, insertTemplate, describeAtPoint, insertRequireStatement, requireThisFileInRepl, launchGame, resetDrawLayers, sendSelectionToRepl, sendFileToRepl, insertId } from './commands';
+import { hotloadThisFile, insertTemplate, describeAtPoint, insertRequireStatement, requireThisFileInRepl, launchGame, resetDrawLayers, sendSelectionToRepl, sendFileToRepl, insertId, searchDocumentation, makeScratchBuffer, createNewMod, insertEventHandler } from './commands';
 import { ElonaNextDefinitionProvider } from './ElonaNextDefinitionProvider';
 import { ElonaNextHoverProvider } from './ElonaNextHoverProvider';
 import { ElonaNextColorProvider } from './ElonaNextColorProvider';
@@ -15,6 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('elona-next.sendSelectionToRepl', sendSelectionToRepl));
 	context.subscriptions.push(vscode.commands.registerCommand('elona-next.sendFileToRepl', sendFileToRepl));
 	context.subscriptions.push(vscode.commands.registerCommand('elona-next.insertId', insertId));
+	context.subscriptions.push(vscode.commands.registerCommand('elona-next.searchDocumentation', searchDocumentation));
+	context.subscriptions.push(vscode.commands.registerCommand('elona-next.makeScratchBuffer', makeScratchBuffer));
+	context.subscriptions.push(vscode.commands.registerCommand('elona-next.createNewMod', createNewMod));
+	context.subscriptions.push(vscode.commands.registerCommand('elona-next.insertEventHandler', insertEventHandler));
 	
 	context.subscriptions.push(vscode.languages.registerColorProvider({ scheme: "file", language: "lua" }, new ElonaNextColorProvider()));
 	context.subscriptions.push(vscode.languages.registerDefinitionProvider({ scheme: "file", language: "lua" }, new ElonaNextDefinitionProvider()));
