@@ -7,13 +7,17 @@ local Map = require("api.Map")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
 
-local save_store = require("internal.save_store")
+local config = require("internal.config")
 local field = require("game.field")
+local save_store = require("internal.save_store")
 
 local Save = {}
 
 --- Saves the game.
 function Save.save_game()
+   local save_id = config["base._save_id"]
+   assert(save_id)
+
    local map = Map.current()
 
    do
@@ -29,17 +33,27 @@ function Save.save_game()
 
    assert(save_store.save())
 
-   SaveFs.save_game("test")
+   local player = Chara.player()
+   local player_header = ("%s Lv:%d %s"):format(player.name, player.level, map.name)
+   SaveFs.write("header", { header = player_header })
+
+   -- This will commit all the changes to the save.
+   -- Everything that writes files using SaveFs should finish above.
+   SaveFs.save_game(save_id)
 
    Gui.play_sound("base.write1")
    Gui.mes("Game saved.")
 end
 
 --- Loads the current save.
-function Save.load_game()
+function Save.load_game(save_id)
+   save_id = save_id or config["base._save_id"]
+   assert(save_id)
+   config["base._save_id"] = save_id
+
    local success, map
 
-   SaveFs.load_game("test")
+   SaveFs.load_game(save_id)
 
    assert(save_store.load())
 

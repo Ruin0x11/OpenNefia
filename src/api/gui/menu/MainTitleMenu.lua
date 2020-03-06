@@ -53,13 +53,13 @@ function MainTitleMenu:init()
    self.win = UiWindow:new(title_str, true, key_help)
 
    local data = {
-      { text = "Restore an Adventurer" },
-      { text = "Generate an Adventurer" },
-      { text = "Incarnate an Adventurer" },
-      { text = "About" },
-      { text = "Options" },
-      { text = "Mods" },
-      { text = "Exit" }
+      { action = "restore",   text = "Restore an Adventurer" },
+      { action = "generate",  text = "Generate an Adventurer" },
+      { action = "incarnate", text = "Incarnate an Adventurer" },
+      { action = "about",     text = "About" },
+      { action = "options",   text = "Options" },
+      { action = "mods",      text = "Mods" },
+      { action = "exit",      text = "Exit" }
    }
    fun.iter(data):each(function(o) o.subtext = o.text end)
 
@@ -68,14 +68,19 @@ function MainTitleMenu:init()
 
    self.input = InputHandler:new()
    self.input.keys:forward_to(self.list)
+   self.input:bind_keys(self:make_keymap())
+
+   self.action = nil
 end
 
 function MainTitleMenu:make_keymap()
-   return {}
+   return {
+      raw_f3 = function() self.action = "quickstart" end
+  }
 end
 
 function MainTitleMenu:on_query()
-   Gui.play_music("elona.opening");
+   Gui.play_music("elona.opening")
 end
 
 function MainTitleMenu:relayout(x, y, width, height)
@@ -120,16 +125,21 @@ end
 function MainTitleMenu:update(dt)
    self.time = self.time + dt
 
+   local action
    if self.list.chosen then
-      if self.list.selected ~= 2 then
+      action = self.list:selected_item().action
+   elseif self.action then
+      action = self.action
+   end
+   if action then
+      if action ~= "generate" then
          Gui.play_sound("base.ok1")
       end
-      return self.list.selected
+      return action
    end
 
    self.win:update()
    self.list:update()
-
 end
 
 return MainTitleMenu

@@ -38,9 +38,12 @@ function IUiLayer:query(z_order)
    local dt = 0
    local abort = false
 
-   draw.push_layer(self, z_order)
+   local ok, result = xpcall(draw.push_layer, debug.traceback, self, z_order)
+   if not ok then
+      error(result)
+   end
 
-   local ok, result = pcall(function() return self:on_query() end)
+   ok, result = pcall(function() return self:on_query() end)
    if not ok or (ok and result == false) then
       draw.pop_layer()
       if not ok then

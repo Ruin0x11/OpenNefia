@@ -124,6 +124,11 @@ love.filesystem.newFile = function(filepath)
       end
    }
 end
+love.graphics.newText = function()
+   return {
+      set = function() end
+   }
+end
 
 love.getVersion = function() return "lovemock" end
 

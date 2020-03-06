@@ -12,12 +12,6 @@ local function level_up()
       Skill.grow_primary_skills(player)
    end
 
-   local bow = Item.create("content.bow", nil, nil, {}, player)
-   --assert(player:equip_item(bow))
-
-   local arrow = Item.create("content.arrow", nil, nil, {}, player)
-   --assert(player:equip_item(arrow))
-
    player:gain_skill("elona.mining", 10000)
 
    player.gold = 10000000

@@ -81,6 +81,8 @@ function love.update(dt)
       end
    end
 
+   draw.update_global_widgets(dt)
+
    if draw.needs_wait() then
       return
    end
@@ -134,6 +136,8 @@ function love.draw()
    end
 
    love.graphics.getStats(draw_stats)
+
+   draw.draw_global_widgets()
 
    draw.draw_end()
 

@@ -104,8 +104,8 @@ function Item.create(id, x, y, params, where)
    end
 
    local copy = params.copy or {}
-   copy.fix_level = params.fix_level or nil
-   copy.quality = params.quality or nil
+   copy.fix_level = params.fix_level or 1
+   copy.quality = params.quality or 1
    copy.amount = math.max(1, params.amount or 1)
 
    local gen_params = {
@@ -113,7 +113,7 @@ function Item.create(id, x, y, params, where)
       copy = copy
    }
    local item = MapObject.generate_from("base.item", id, gen_params)
-
+ 
    if where then
       item = where:take_object(item, x, y)
 

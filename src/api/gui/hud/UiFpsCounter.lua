@@ -17,9 +17,9 @@ function UiFpsCounter:init()
    self.now = socket.gettime()
    self.buff = ""
 
-   self.fps_graph = UiFpsGraph:new({0, 0, 255})
-   self.ram_graph = UiFpsGraph:new({255, 0, 0})
-   self.ram_diff_graph = UiFpsGraph:new({0, 255, 0})
+   self.fps_graph = UiFpsGraph:new({0, 0, 255, 128})
+   self.ram_graph = UiFpsGraph:new({255, 0, 0, 128})
+   self.ram_diff_graph = UiFpsGraph:new({0, 255, 0, 128})
 end
 
 function UiFpsCounter:default_widget_position(x, y, width, height)

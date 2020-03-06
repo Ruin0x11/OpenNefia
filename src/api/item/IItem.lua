@@ -123,19 +123,22 @@ function IItem:produce_memory()
    local shadow_angle
    local stack_height = 8
    local is_tall = false
+   local x_offset = self:calc("x_offset")
+   local y_offset = self:calc("y_offset")
    local image = data["base.chip"][self.image]
    if image then
       shadow_angle = image.shadow
       stack_height = image.stack_height or 8
+      y_offset = y_offset or image.y_offset
    end
 
    return {
       uid = self.uid,
       show = require("api.Item").is_alive(self, self:current_map()),
       image = (self.image or ""),
-      color = self:calc("color") or {255, 255, 255},
-      x_offset = self:calc("x_offset") or 0,
-      y_offset = self:calc("y_offset") or 0,
+      color = self:calc("color"),
+      x_offset = x_offset,
+      y_offset = y_offset,
       shadow_type = "drop_shadow",
       shadow = shadow_angle,
       stack_height = stack_height

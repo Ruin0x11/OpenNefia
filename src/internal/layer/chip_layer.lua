@@ -67,8 +67,8 @@ function chip_layer:draw_drop_shadow(i, x, y, y_offset)
       y_offset = y_offset - 4
       rotation = rotation / 2
    else
-      if i.y_offset < self.chip_batch.tile_height / 2 then
-         x_offset = i.x_offset + rotation / 80 + 2
+      if (i.y_offset or 0) < self.chip_batch.tile_height / 2 then
+         x_offset = (i.x_offset or 0) + rotation / 80 + 2
          y_offset = y_offset - 2
          rotation = rotation / 16
       else
@@ -136,7 +136,8 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
    local batch_ind = self.chip_batch_inds[i.uid]
    local image = i.drawable or i.image
    local x_offset = i.x_offset or 0
-   local y_offset = (i.y_offset or 0) + CONFIG[chip_type].y_offset - (stack_height or 0)
+   local y_offset_base = CONFIG[chip_type].y_offset - (stack_height or 0)
+   local y_offset = (i.y_offset or 0) + y_offset_base
    if batch_ind == nil or batch_ind == 0 then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
@@ -178,7 +179,7 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
          tile = "shadow",
          x = x,
          y = y,
-         y_offset = y_offset,
+         y_offset = y_offset_base,
          z_order = 0
       }
       self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }

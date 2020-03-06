@@ -155,9 +155,9 @@ local Color = {
    Grey =          { { 155, 154, 153 }, "white dim"      },
    Purple =        { { 185, 155, 215 }, "magenta"        },
    Cyan =          { { 155, 205, 205 }, "cyan"           },
-   LightRed =      { { 255, 195, 185 }, "red bright"     },
+   Pink =          { { 255, 195, 185 }, "red bright"     },
    Gold =          { { 235, 215, 155 }, "yellow bright"  },
-   LightBrown =    { { 225, 215, 185 }, "yellow dim"     },
+   Fresh =         { { 225, 215, 185 }, "yellow dim"     },
    DarkGreen =     { { 105, 235, 105 }, "green dim"      },
    LightGrey =     { { 205, 205, 205 }, "white dim"      },
    PaleRed =       { { 255, 225, 225 }, "red dim"        },
@@ -347,6 +347,18 @@ end
 
 function Gui.hud_widget(tag)
    return field.hud.widgets:get(tag)
+end
+
+function Gui.add_global_widget(widget, tag, opts)
+   draw.add_global_widget(widget, tag, opts)
+end
+
+function Gui.remove_global_widget(tag)
+   draw.remove_global_widget(tag)
+end
+
+function Gui.global_widget(tag)
+   return draw.global_widget(tag)
 end
 
 return Gui

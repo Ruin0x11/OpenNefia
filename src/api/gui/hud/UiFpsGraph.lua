@@ -10,7 +10,7 @@ function UiFpsGraph:init(color)
    self.use_min = true
    self.step = 1
    self.points = CircularBuffer:new(2)
-   self.color = color or {0, 0, 255}
+   self.color = color or {0, 0, 255, 128}
 end
 
 function UiFpsGraph:relayout(x, y, width, height)

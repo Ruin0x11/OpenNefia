@@ -1,4 +1,3 @@
-local internal = require("internal")
 local mod = require("internal.mod")
 local i18n = require("internal.i18n")
 local data = require("internal.data")
@@ -12,13 +11,15 @@ local Log = require("api.Log")
 local Doc = require("api.Doc")
 local Rand = require("api.Rand")
 local Repl = require("api.Repl")
+local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
+
 
 local startup = {}
 
 local progress_step = 0
 local status = ""
 function startup.get_progress()
-   return status, progress_step, 15
+   return status, progress_step, 12
 end
 
 local function progress(_status)
@@ -74,7 +75,7 @@ function startup.run_all(mods)
    alias_api_tables = false
 
    local coro = coroutine.create(function() startup.run(mods) end)
-   while startup.get_progress() ~= "progress_finished" do
+   while startup.get_progress() ~= nil do
       local ok, err = coroutine.resume(coro)
       if not ok then
          error(debug.traceback(coro, err))
@@ -92,6 +93,8 @@ function startup.run(mods)
    -- Wrap these functions to allow hotloading via table access.
    rawset(_G, "help", function(...) return Doc.help(...) end)
    rawset(_G, "pause", function(...) return Repl.pause(...) end)
+
+   draw.add_global_widget(UiFpsCounter:new(), "fps_counter")
 
    progress("Loading documentation...")
 
@@ -144,10 +147,7 @@ function startup.shutdown()
    doc.save()
 end
 
-local tile_batch = require("internal.draw.tile_batch")
-local sparse_batch = require("internal.draw.sparse_batch")
 local atlas = require("internal.draw.atlas")
-local batches = {}
 
 local mkpred = function(group)
    return function(i) return i.group == group end
@@ -159,18 +159,6 @@ end
 
 local function get_map_overhang_tiles()
    return data["base.map_tile"]:iter():filter(function(t) return t.wall_kind ~= nil end):to_list()
-end
-
-local function get_chara_tiles()
-   return data["base.chip"]:iter():filter(mkpred("chara")):to_list()
-end
-
-local function get_item_tiles()
-   return data["base.chip"]:iter():filter(mkpred("item")):to_list()
-end
-
-local function get_feat_tiles()
-   return data["base.chip"]:iter():filter(mkpred("feat")):to_list()
 end
 
 local function get_chip_tiles()
@@ -213,18 +201,6 @@ function startup.load_batches()
 
    sw:p("load_batches.tile_overhang")
 
-   progress("Loading tilemaps (character)...")
-   local chara_atlas = atlas:new(tile_size, tile_size)
-   chara_atlas:load(get_chara_tiles())
-
-   sw:p("load_batches.chara")
-
-   progress("Loading tilemaps (item)...")
-   local item_atlas = atlas:new(tile_size, tile_size)
-   item_atlas:load(get_item_tiles())
-
-   sw:p("load_batches.item")
-
    -- HACK
    progress("Loading tilemaps (item shadow)...")
    local load_tile = function(atlas, proto)
@@ -236,15 +212,9 @@ function startup.load_batches()
       atlas:load_one(proto, draw)
    end
    local item_shadow_atlas = atlas:new(tile_size, tile_size)
-   item_shadow_atlas:load(get_item_tiles(), nil, load_tile)
+   item_shadow_atlas:load(get_chip_tiles(), nil, load_tile)
 
    sw:p("load_batches.item_shadow")
-
-   progress("Loading tilemaps (feat)...")
-   local feat_atlas = atlas:new(tile_size, tile_size)
-   feat_atlas:load(get_feat_tiles())
-
-   sw:p("load_batches.feat")
 
    progress("Loading tilemaps (chip)...")
    local chip_atlas = atlas:new(tile_size, tile_size)
@@ -261,10 +231,7 @@ function startup.load_batches()
    local atlases = require("internal.global.atlases")
    atlases.set(tile_atlas,
                tile_overhang_atlas,
-               chara_atlas,
-               item_atlas,
                item_shadow_atlas,
-               feat_atlas,
                chip_atlas,
                portrait_atlas)
 end

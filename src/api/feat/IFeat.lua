@@ -1,4 +1,3 @@
-local Event = require("api.Event")
 local IEventEmitter = require("api.IEventEmitter")
 local IMapObject = require("api.IMapObject")
 local IObject = require("api.IObject")

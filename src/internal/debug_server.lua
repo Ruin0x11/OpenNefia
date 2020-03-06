@@ -22,20 +22,20 @@ end
 -- Request:
 --
 -- {
---   "command":"run",
---   "content":"tostring(42)"
+--   "command": "run",
+--   "args": { "code": "tostring(42)" }
 -- }
 --
 -- Response:
 --
 -- {
 --   "success":true,
---   "result":"42"
+--   "result": "42"
 -- }
-function commands.run(text)
+function commands.run(args)
    local continue, status, success, result
 
-   local fn, err = loadstring(text)
+   local fn, err = loadstring(args.code)
 
    if fn then
       -- NOTE: It is very important that the code being run does not
@@ -68,8 +68,8 @@ end
 -- Request:
 --
 -- {
---   "command":"hotload",
---   "content":"api.Rand"
+--   "command": "hotload",
+--   "args": { "require_path": "api.Rand" }
 -- }
 --
 -- Response:
@@ -77,8 +77,8 @@ end
 -- {
 --   "success":true
 -- }
-function commands.hotload(require_path)
-   local success, status = xpcall(hotload.hotload, debug.traceback, require_path)
+function commands.hotload(args)
+   local success, status = xpcall(hotload.hotload, debug.traceback, args.require_path)
 
    if not success then
       return error_result(status)
@@ -88,12 +88,12 @@ function commands.hotload(require_path)
 end
 
 local function with_candidates(cb)
-   return function(text)
-      local result, err = Doc.get(text)
+   return function(args)
+      local result, err = Doc.get(args.query)
 
       if result then
          if result.entry then
-            return cb(result.entry, text)
+            return cb(result.entry, args)
          else
             return { candidates = result.candidates }
          end
@@ -106,35 +106,35 @@ end
 -- Request:
 --
 -- {
---   "command":"help",
---   "content":"Rand.rnd"
+--   "command": "help",
+--   "args": { "query": "Rand.rnd" }
 -- }
 --
 -- Response:
 --
 -- {
 --   "success":true,
---   "doc":"Rand.rnd() is a function defined in <...>"
+--   "doc": "Rand.rnd() is a function defined in <...>"
 -- }
 --
 -- @function commands.help
 commands.help = with_candidates(
-   function(_, text)
-      return { doc = Doc.help(text) }
+   function(_, args)
+      return { doc = Doc.help(args.query) }
 end)
 
 -- Request:
 --
 -- {
---   "command":"jump_to",
---   "content":"Rand.rnd"
+--   "command": "jump_to",
+--   "args": { "query": "Rand.rnd" }
 -- }
 --
 -- Response:
 --
 -- {
 --   "success":true,
---   "file":"api/Rand.lua",
+--   "file": "api/Rand.lua",
 --   "line":7,
 --   "column":0
 -- }
@@ -152,20 +152,20 @@ commands.jump_to = with_candidates(
 -- Request:
 --
 -- {
---   "command":"signature",
---   "content":"Rand.rnd"
+--   "command": "signature",
+--   "args": { "query": "Rand.rnd" }
 -- }
 --
 -- Response:
 --
 -- {
 --   "success":true,
---   "sig":"Rand.rnd(n)",
---   "params":"(uint) => uint"
---   "summary":"Returns a random integer in `[0, n)`."
+--   "sig": "Rand.rnd(n)",
+--   "params": "(uint) => uint"
+--   "summary": "Returns a random integer in `[0, n)`."
 -- }
-function commands.signature(text)
-   local result, err = Doc.get(text)
+function commands.signature(args)
+   local result, err = Doc.get(args.query)
 
    if not result then
       return {}
@@ -203,36 +203,47 @@ end
 -- Request:
 --
 -- {
---   "command":"apropos",
---   "content":"base.chara"
+--   "command": "template",
+--   "args": {
+--     "type": "base.chara",
+--     "snippet": true,
+--     "comments": true,
+--     "scope": "template"
+--   }
 -- }
 --
 -- Response:
 --
 -- {
 --   "success":true,
---   "template":"{ _type = "base.chara", _id = "" }"
+--   "template": "{ _type = "base.chara", _id = \"\" }"
 -- }
-function commands.template(id)
+function commands.template(args)
    local data = require("internal.data")
 
-   if id == "" then
-      local types = data:types()
+   if args.type == "" then
+      local types = data:types("template")
       return {
          candidates = fun.iter(types):map(function(t) return {t, t} end):to_list()
       }
    end
 
+   local opts = {
+       snippets = args.snippets,
+       comments = args.comments,
+       scope = args.scope or "template"
+   }
+
    return {
-      template = inspect(data:make_template(id))
+      template = inspect(data:make_template(args.type, opts))
    }
 end
 
 -- Request:
 --
 -- {
---   "command":"apropos",
---   "content":"base.chara"
+--   "command": "ids",
+--   "args": { "type": "base.chara" }
 -- }
 --
 -- Response:
@@ -241,10 +252,10 @@ end
 --   "success":true,
 --   "ids":{"elona.putit", ... }
 -- }
-function commands.ids(id)
+function commands.ids(args)
    local data = require("internal.data")
 
-   if id == "" then
+   if args.type == "" then
       local types = data:types()
       return {
          candidates = fun.iter(types):map(function(t) return {t, t} end):to_list()
@@ -252,7 +263,7 @@ function commands.ids(id)
    end
 
    return {
-      ids = data[id]:iter():extract("_id"):to_list()
+      ids = data[args.type]:iter():extract("_id"):to_list()
    }
 end
 
@@ -264,18 +275,18 @@ local apropos_update_time = 0
 -- Request:
 --
 -- {
---   "command":"apropos",
---   "content":""
+--   "command": "apropos",
+--   "args": {}
 -- }
 --
 -- Response:
 --
 -- {
---   "success":true,
---   "path":"data/apropos.json",
---   "updated":true
+--   "success": "undefined"true,
+--   "path": "data/apropos.json",
+--   "updated": true
 -- }
-function commands.apropos(text)
+function commands.apropos(args)
    local path = "data/apropos.json"
    local updated = false
 
@@ -283,7 +294,8 @@ function commands.apropos(text)
       local items = {}
 
       for full_path, entry in pairs(doc_store.entries) do
-         if not full_path:match("^private:") then
+         local show = not full_path:match("^private:") and not entry.is_undocumented
+         if show then
             for k, item in pairs(entry.items) do
                items[#items+1] = { item.full_path, k }
             end
@@ -299,7 +311,7 @@ function commands.apropos(text)
    end
 
    return {
-      path = path,
+      path = fs.join(fs.get_save_directory(), path),
       updated = updated
    }
 end
@@ -307,8 +319,8 @@ end
 -- Request:
 --
 -- {
---   "command":"completion",
---   "content":"Chara.cr"
+--   "command": "completion",
+--   "args": { "query": "Chara.cr" }
 -- }
 --
 -- Response:
@@ -317,12 +329,12 @@ end
 --   "success":true,
 --   "results":["Chara.create"]
 -- }
-function commands.completion(text)
+function commands.completion(args)
    if not field.repl then
       return {}
    end
 
-   local completion = ReplCompletion:new():complete(text, field.repl.env)
+   local completion = ReplCompletion:new():complete(args.query, field.repl.env)
    if completion == nil then
       return {}
    end
@@ -360,8 +372,8 @@ function debug_server:poll()
       -- JSON should have this format:
       --
       -- {
-      --   "command":"help",
-      --   "content":"Chara.create"
+      --   "command": "help",
+      --   "args": { "content": "Chara.create" }
       -- }
 
       local ok, req = pcall(json.decode, text)
@@ -369,15 +381,15 @@ function debug_server:poll()
          result = error_result(req)
       else
          cmd_name = req.command
-         local content = req.content
-         if type(cmd_name) ~= "string" or type(content) ~= "string" then
-            result = error_result("Request must have 'command' and 'content' keys")
+         local args = req.args
+         if type(cmd_name) ~= "string" or type(args) ~= "table" then
+            result = error_result("Request must have 'command' string and 'args' table, got: " .. text)
          else
             local cmd = commands[cmd_name]
             if cmd == nil then
                result = error_result("No command named " .. cmd_name)
             else
-               local ok, err = xpcall(cmd, debug.traceback, content)
+               local ok, err = xpcall(cmd, debug.traceback, args)
                if not ok then
                   result = error_result(err)
                else

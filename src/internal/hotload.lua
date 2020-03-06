@@ -1,7 +1,22 @@
 local env = require("internal.env")
 local Event = require("api.Event")
+local atlases = require("internal.global.atlases")
 
 local hotload = {}
+
+local hotloaded_data = {}
+
+local function clear_hotloaded_data()
+   hotloaded_data = {}
+end
+local function add_hotloaded_data(_, args)
+   hotloaded_data[#hotloaded_data+1] = args.entry
+end
+
+-- Pass a list of everything hotloaded when hotloading finishes.
+Event.register("base.on_hotload_begin", "Clear hotloaded data list", clear_hotloaded_data)
+Event.register("base.on_hotload_prototype", "Add to hotloaded data list", add_hotloaded_data)
+
 
 --- Reloads a path or a class required from a path that has been
 --- required already by updating its table in-place. If either the
@@ -22,11 +37,11 @@ function hotload.hotload(path_or_class, also_deps)
       path_or_class = path
    end
 
-   Event.trigger("base.on_hotload_begin", {path_or_class=path_or_class,also_deps=also_deps})
+   pcall(Event.trigger, "base.on_hotload_begin", {path_or_class=path_or_class,also_deps=also_deps})
 
    local ok, result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
 
-   Event.trigger("base.on_hotload_end", {path_or_class=path_or_class,also_deps=also_deps,ok=ok,result=result})
+   pcall(Event.trigger, "base.on_hotload_end", {hotloaded_data=hotloaded_data,path_or_class=path_or_class,also_deps=also_deps,ok=ok,result=result})
 
    if not ok then
       error(result)
@@ -34,5 +49,34 @@ function hotload.hotload(path_or_class, also_deps)
 
    return result
 end
+
+Event.register("base.on_hotload_end", "Hotload field renderer",
+               function()
+                  local field = require("game.field")
+                  if field.is_active then
+                     field.renderer.screen_updated = true
+                     field.renderer:update(0)
+                  end
+               end)
+
+Event.register("base.on_hotload_prototype", "Hotload UI theme",
+               function(_, args)
+                  if args.entry._type == "base.theme" then
+                     local UiTheme = require("api.gui.UiTheme")
+                     UiTheme.clear()
+                     local default_theme = "elona_sys.default"
+                     UiTheme.add_theme(default_theme)
+                  end
+               end)
+
+Event.register("base.on_hotload_end", "Hotload chips",
+               function(_, params)
+                  local chips = fun.iter(params.hotloaded_data)
+                      :filter(function(d) return d._type == "base.chip" end)
+                      :to_list()
+                  if #chips > 0 then
+                     atlases.get().chip:hotload(chips)
+                  end
+               end)
 
 return hotload

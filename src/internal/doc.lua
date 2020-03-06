@@ -444,6 +444,13 @@ function doc.get(path)
 
    aliases = doc_store.aliases[path]
    if aliases and #aliases > 0 then
+      for _, alias in ipairs(aliases) do
+         -- Always match aliases with the full path that matches exactly.
+         if alias.full_path == path then
+            aliases = {alias}
+            break
+         end
+      end
       if #aliases == 1 then
          local alias = aliases[1]
          local file = doc_store.entries[alias.file_path]

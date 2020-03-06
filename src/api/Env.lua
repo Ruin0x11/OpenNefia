@@ -18,7 +18,7 @@ function Env.love_version()
    return love.getVersion()
 end
 
---- Returns true if the game was started in headless/REPl mode.
+--- Returns true if the game was started in headless/REPL mode.
 ---
 --- @treturn bool
 function Env.is_headless()

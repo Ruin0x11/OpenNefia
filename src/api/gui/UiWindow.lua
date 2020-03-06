@@ -15,6 +15,7 @@ function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    self.title = title or ""
    self.title = I18N.get_optional(self.title) or self.title
    self.key_help = key_help or ""
+   self.key_help = I18N.get_optional(self.key_help) or self.key_help
    self.page = 0
    self.page_max = 0
    self.show_page = false
@@ -67,8 +68,10 @@ end
 
 function UiWindow:draw()
    if self.shadow then
-      Draw.set_color(31, 31, 31, 127)
+      Draw.set_color(255, 255, 255, 80)
+      Draw.set_blend_mode("subtract")
       self.shadow:draw()
+      Draw.set_blend_mode("alpha")
    end
    Draw.set_color(255, 255, 255)
    self.image:draw()

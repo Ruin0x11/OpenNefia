@@ -1,6 +1,7 @@
 local config = require("internal.config")
 local env = require("internal.env")
 local fs = require("util.fs")
+local WidgetContainer = require("api.gui.WidgetContainer")
 
 if env.is_hotloading() then
    return "no_hotload"
@@ -110,10 +111,10 @@ end
 function draw.push_layer(ui_layer, priority)
    priority = priority or #layers
    class.assert_is_an(require("api.gui.IUiLayer"), ui_layer)
-   table.insert(layers, {layer=ui_layer, priority=priority})
-   sort_layers()
    ui_layer:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
    ui_layer:focus()
+   table.insert(layers, {layer=ui_layer, priority=priority})
+   sort_layers()
 end
 
 function draw.pop_layer()
@@ -197,6 +198,29 @@ function draw.draw_layers()
    end
 
    table.remove_indices(coroutines, dead)
+end
+
+local global_widgets = WidgetContainer:new()
+
+function draw.add_global_widget(widget, tag, opts)
+   global_widgets:add(widget, tag, opts)
+   global_widgets:relayout(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+end
+
+function draw.remove_global_widget(tag)
+   global_widgets:remove(tag)
+end
+
+function draw.global_widget(tag)
+   return global_widgets:get(tag)
+end
+
+function draw.draw_global_widgets()
+   global_widgets:draw()
+end
+
+function draw.update_global_widgets(dt)
+   global_widgets:update(dt)
 end
 
 function draw.needs_wait()
@@ -375,6 +399,8 @@ function draw.resize(w, h)
    for _, entry in ipairs(layers) do
       entry.layer:relayout(0, 0, w, h)
    end
+
+   global_widgets:relayout(0, 0, w, h)
 
    require("api.Gui").update_screen()
 

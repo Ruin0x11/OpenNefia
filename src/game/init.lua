@@ -5,8 +5,11 @@ require("internal.data.base")
 local Draw = require("api.Draw")
 local Event = require("api.Event")
 local SaveFs = require("api.SaveFs")
+local RestoreSaveMenu = require("api.gui.menu.RestoreSaveMenu")
+local Save = require("api.Save")
 
 local chara_make = require("game.chara_make")
+local config = require("internal.config")
 local mod = require("internal.mod")
 local startup = require("game.startup")
 local field_logic = require("game.field_logic")
@@ -33,11 +36,18 @@ local function main_title()
 
       local choice = title:query()
 
-      if choice == 1 then
+      if choice == "quickstart" then
          field_logic.quickstart()
          going = false
          action = "start"
-      elseif choice == 2 then
+      elseif choice == "restore" then
+         local save = RestoreSaveMenu:new():query()
+         if save then
+            Save.load_game(save)
+            going = false
+            action = "start"
+         end
+      elseif choice == "generate" then
          local chara, canceled = chara_make.query()
          if not canceled then
             going = false
@@ -47,7 +57,7 @@ local function main_title()
                action = "start"
             end
          end
-      elseif choice == 7 then
+      elseif choice == "exit" then
          going = false
          action = "quit"
       end
@@ -55,9 +65,6 @@ local function main_title()
 
    return action
 end
-
--- TODO: make into scenario/config option
-local quickstart = true
 
 local function run_field()
    return field_logic.query()
@@ -77,7 +84,7 @@ function game.loop()
    Event.trigger("base.on_startup")
 
    local cb
-   if quickstart then
+   if config["base.quickstart_on_startup"] then
       field_logic.quickstart()
       cb = run_field
    else

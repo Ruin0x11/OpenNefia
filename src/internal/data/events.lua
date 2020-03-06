@@ -3,7 +3,6 @@ local paths = require("internal.paths")
 local Event = require("api.Event")
 local IEventEmitter = require("api.IEventEmitter")
 local Map = require("api.Map")
-local UiTheme = require("api.gui.UiTheme")
 
 data:add_multi(
    "base.event",
@@ -130,15 +129,19 @@ Event.register("base.on_map_loaded", "init all event callbacks",
                   end
                end)
 
--- BUG O(n*m), instead make a list of items hotloaded and pass to
--- on_hotload_end
-Event.register("base.on_hotload_prototype", "Notify objects in map of prototype hotload", function(_, params)
+Event.register("base.on_hotload_end", "Notify objects in map of prototype hotload",
+               function(_, params)
                   local map = Map.current()
                   if map then
+                     local hotloaded = {}
+                     for _, v in ipairs(params.hotloaded_data) do
+                        hotloaded[v._type] = hotloaded[v._type] or {}
+                        hotloaded[v._type][v._id] = true
+                     end
                      for _, obj in map:iter() do
                         if class.is_an(IEventEmitter, obj)
-                           and obj._type == params.new._type
-                           and obj._id == params.new._id
+                           and hotloaded[obj._type]
+                           and hotloaded[obj._type][obj._id]
                         then
                            obj:emit("base.on_hotload_object", params)
                         end
@@ -168,21 +171,3 @@ local function init_save()
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})
-
-Event.register("base.on_hotload_end", "Hotload field renderer",
-               function()
-                  local field = require("game.field")
-                  if field.is_active then
-                     field.renderer.screen_updated = true
-                     field.renderer:update(0)
-                  end
-               end)
-
-Event.register("base.on_hotload_prototype", "Hotload UI theme",
-               function(_, args)
-                  if args.new._type == "base.theme" then
-                     UiTheme.clear()
-                     local default_theme = "elona_sys.default"
-                     UiTheme.add_theme(default_theme)
-                  end
-               end)

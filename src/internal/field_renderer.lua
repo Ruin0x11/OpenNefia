@@ -142,7 +142,7 @@ function field_renderer:draw()
    for _, l in ipairs(self.layers) do
       local ok, result = xpcall(function() l:draw(draw_x, draw_y, self.scroll_x, self.scroll_y) end, debug.traceback)
       if not ok then
-         print(result)
+         Log.error("%s", result)
       end
    end
 

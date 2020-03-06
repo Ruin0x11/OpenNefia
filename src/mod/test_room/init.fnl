@@ -53,9 +53,9 @@
   (set-pcc player)
   ;(Feat.create "elona.pot" 10 7 {} map)
 
-  (let [item (Item.create "content.bow" nil nil {} player)]
+  (let [item (Item.create "elona.long_bow" nil nil {} player)]
     (player:equip_item item))
-  (let [item (Item.create "content.arrow" nil nil {} player)]
+  (let [item (Item.create "elona.arrow" nil nil {} player)]
     (player:equip_item item)))
 
 (fn test-room [self player]

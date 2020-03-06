@@ -3,11 +3,11 @@ local Gui = require("api.Gui")
 
 local LogWidget = require("mod.tools.api.gui.LogWidget")
 
-Gui.add_hud_widget(LogWidget:new(), "tools.log_widget")
+Gui.add_global_widget(LogWidget:new(), "tools.log_widget")
 
 Event.register("base.on_log_message", "Send log message to widget",
                function(_, params)
-                  local log = Gui.hud_widget("tools.log_widget")
+                  local log = Gui.global_widget("tools.log_widget")
                   if log then
                      log:widget():print(params.level, params.message, params.source)
                   end

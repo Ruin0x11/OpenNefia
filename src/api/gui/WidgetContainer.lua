@@ -33,7 +33,14 @@ function WidgetContainer:add(widget, tag, opts)
    opts = opts or {}
    assert(class.is_an(IUiWidget, widget))
    assert(type(tag) == "string")
-   assert(not self.tag_to_idx[tag], ("tag '%s' is already in use"):format(tag))
+
+   if self.tag_to_idx[tag] then
+      if Env.is_hotloading() then
+         return
+      else
+         error(("tag '%s' is already in use"):format(tag))
+      end
+   end
 
    local idx = #self.holders+1
    self.holders[idx] = WidgetHolder:new(widget,

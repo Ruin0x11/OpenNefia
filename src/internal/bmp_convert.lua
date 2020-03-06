@@ -6,6 +6,11 @@ if jit then
    ffi = require("ffi")
    ok, vips = pcall(require, "vips")
    if not ok then
+     -- FIXME: The stock LOVE binary uses a 32-bit luajit, but libvips is compiled for x64, so it can't be loaded when
+     -- running under LOVE. It can be loaded via headless mode, though.
+     --
+     -- We'd have to fix this by distributing a custom LOVE binary ourselves, which we'll have to do eventually to
+     -- support other things (like MIDI).
      local Log = require("api.Log")
      Log.warn("Could not load libvips. Falling back to built-in BMP converter.")
      vips = nil

@@ -10,7 +10,7 @@ end
 
 local function push_history(env, result)
    local max = 10
-   for i = max-1, 1 do
+   for i = max-1, 1, -1 do
       -- push the most recent result and shift the rest down
       -- _1 -> _2
       local id = "_" .. tostring(i)

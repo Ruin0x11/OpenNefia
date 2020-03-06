@@ -102,12 +102,27 @@ else
    fs.create_directory = wrap(love.filesystem.createDirectory)
    fs.write = wrap(love.filesystem.write)
    fs.read = wrap(love.filesystem.read)
-   fs.remove = wrap( love.filesystem.remove)
+   fs.remove = function(path)
+      local function recursively_delete(item)
+         if fs.get_info(item, "directory") then
+             for _, child in pairs(fs.get_directory_items(item)) do
+                 local child_path = fs.join(item, child)
+                 recursively_delete(child_path)
+                 love.filesystem.remove(child_path)
+             end
+         elseif fs.get_info(item) then
+            love.filesystem.remove(item)
+         end
+         love.filesystem.remove(item)
+     end
+     recursively_delete(fs.to_relative(path))
+     return true
+   end
    fs.get_working_directory = love.filesystem.getWorkingDirectory
 
    fs.attributes = function(filepath, aname, atable)
       filepath = fs.to_relative(filepath)
-      local info = love.filesystem.getInfo(filepath)
+      local info = fs.get_info(filepath)
       if info == nil then
          return nil, "file does not exist"
       end

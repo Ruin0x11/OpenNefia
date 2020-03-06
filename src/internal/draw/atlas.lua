@@ -62,6 +62,8 @@ function atlas:init(tile_width, tile_height)
    self.image_width = nil
    self.image_height = nil
    self.anims = {}
+   self.existing = {}
+   self.rects = {}
 
    -- blank fallback in case of missing filepath.
    local fallback_data = love.image.newImageData(self.tile_width, self.tile_height)
@@ -70,9 +72,6 @@ end
 
 function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
    local full_id = ("%s#%s:%d"):format(id, anim_id, frame_id)
-   if self.tiles[full_id] then
-      error(string.format("tile %s already loaded", full_id))
-   end
 
    local tile, quad = load_tile(spec, frame_id)
 
@@ -84,8 +83,13 @@ function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
       _, _, tw, th = quad:getViewport()
    end
 
-   local rect = self.binpack:insert(tw, th)
+   -- NOTE: This would cause issues if the size of the tile changes during a hotload.
+   local rect = self.rects[full_id]
+   if rect == nil then
+      rect = self.binpack:insert(tw, th)
+   end
    assert(rect, inspect(spec))
+   self.rects[full_id] = rect
 
    if class.is_an(asset_drawable, tile) then
       tile:draw(rect.x, rect.y)
@@ -145,11 +149,8 @@ function atlas:insert_anim(proto, images)
    self.anims[id] = anims
 end
 
-function atlas:load_one(proto, draw_tile)
-   local id = proto._id
-   local image = proto.image
+local function get_images(image)
    local images
-
    -- proto.image can have the following formats:
    --
    -- - a string, pointing to a bare image file
@@ -216,6 +217,15 @@ function atlas:load_one(proto, draw_tile)
       error("unsupported image type " .. inspect(image))
    end
 
+   return images
+end
+
+--- @tparam proto base.chip
+--- @tparam[opt] function draw_tile
+function atlas:load_one(proto, draw_tile)
+   local id = proto._id
+   local images = get_images(proto.image)
+
    for anim_id, spec in pairs(images) do
       spec.count_x = spec.count_x or 1
       for i = 1, (spec.count_x or 1) do
@@ -224,15 +234,34 @@ function atlas:load_one(proto, draw_tile)
    end
 
    self:insert_anim(proto, images)
+
+   self.existing[proto._id] = true
 end
 
-function atlas:hotload(proto)
-   -- TODO
+function atlas:hotload(protos)
    -- make atlas image into canvas
-   -- if new prototype, attempt to fit sprite into atlas
-   -- if existing, find location of sprite and overwrite it
-   -- insert/update anim
-   -- same logic as :load() except without wiping everything
+   local canvas = love.graphics.newCanvas(self.image_width, self.image_height)
+
+   love.graphics.setCanvas(canvas)
+   love.graphics.setBlendMode("alpha")
+   love.graphics.setColor(1, 1, 1, 1)
+
+   love.graphics.draw(self.image)
+
+   local cb = function(self, proto) self:load_one(proto) end
+
+   for _, proto in ipairs(protos) do
+      cb(self, proto)
+   end
+
+   love.graphics.setCanvas()
+
+   self.image = love.graphics.newImage(canvas:newImageData())
+   canvas:release()
+
+   self.batch = love.graphics.newSpriteBatch(self.image)
+
+   Log.info("Hotloaded %d tiles.", #protos)
 end
 
 function atlas:load(protos, coords, cb)

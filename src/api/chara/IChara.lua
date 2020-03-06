@@ -183,6 +183,8 @@ function IChara:produce_memory()
       hp_bar = "hp_bar_ally"
    end
 
+   local x_offset = self:calc("x_offset")
+   local y_offset = self:calc("y_offset")
    local image
    if self.pcc then
       self.pcc.dir = PCC_DIRS[self.direction] or 4
@@ -190,6 +192,10 @@ function IChara:produce_memory()
       image = self.pcc
    else
       image = (self:calc("image") or "")
+      local image_data = data["base.chip"][image]
+      if image_data then
+         y_offset = y_offset or image_data.y_offset
+      end
    end
 
    return {
@@ -197,6 +203,8 @@ function IChara:produce_memory()
       show = Chara.is_alive(self, self:current_map()),
       image = image,
       color = self:calc("color"),
+      x_offset = x_offset or 0,
+      y_offset = y_offset or 0,
       hp_bar = hp_bar,
       hp_ratio = self:calc("hp") / self:calc("max_hp"),
       shadow_type = "normal",

@@ -108,8 +108,12 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset, color)
 
    x_offset = x_offset or 0
    if selected then
-      local width = math.clamp(Draw.text_width(text) + 32 + x_offset, 10, 400)
-      Draw.filled_rect(x, y - 2, width, 19, {127, 191, 255, 63})
+      local width = math.clamp(Draw.text_width(text) + 32 + x_offset, 10, 480)
+      Draw.set_blend_mode("subtract")
+      Draw.filled_rect(x, y - 2, width, 19, {30, 10, 0})
+      Draw.set_blend_mode("add")
+      Draw.filled_rect(x+1, y - 1, width-2, 17, {50, 50, 50})
+      Draw.set_blend_mode("alpha")
       self.t.list_bullet:draw(x + width - 20, y + 2, nil, nil, {255, 255, 255})
    end
    Draw.text(text, x + 4 + x_offset, y + 1, color or {0, 0, 0})

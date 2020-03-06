@@ -97,7 +97,13 @@ function ReplLayer:make_keymap()
          self.input:halt_input()
       end,
       text_canceled = function()
-         self.finished = true
+         if self.search then
+            self:_reset_completion_and_search()
+            self:set_text("")
+            self.history_index = 0
+         else
+            self.finished = true
+         end
       end,
       north = function()
          self:history_next()
@@ -185,6 +191,7 @@ function ReplLayer:_reset_completion_and_search()
    self.completion = nil
    self.search = nil
    self.can_search = true
+   self.redraw = true
 end
 
 function ReplLayer:on_query()

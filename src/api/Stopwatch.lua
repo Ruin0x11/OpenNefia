@@ -3,10 +3,11 @@ local socket = require("socket")
 local Log = require("api.Log")
 local Stopwatch = class.class("Stopwatch")
 
-function Stopwatch:init(precision)
+function Stopwatch:init(precision, log_level)
    self.time = socket.gettime()
    self.framerate = 60
    self.precision = precision or 5
+   self.log_level = log_level or "debug"
 end
 
 function Stopwatch:measure()
@@ -37,7 +38,7 @@ function Stopwatch:measure_and_format(text)
 end
 
 function Stopwatch:p(text)
-   Log.info(self:measure_and_format(text))
+   Log[self.log_level](self:measure_and_format(text))
 end
 
 function Stopwatch:bench(f, ...)

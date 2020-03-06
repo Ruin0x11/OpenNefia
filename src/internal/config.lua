@@ -8,8 +8,10 @@ config["base.positional_audio"] = false
 config["base.show_charamake_extras"] = false
 config["base.quickstart_scenario"] = "content.my_scenario"
 config["base.default_font"] = "kochi-gothic-subst.ttf"
+config["base.quickstart_on_startup"] = false
 
 -- private variables
+config["base._save_id"] = nil
 config["base._basic_attributes"] = {
    "elona.stat_strength",
    "elona.stat_constitution",

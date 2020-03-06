@@ -15,7 +15,7 @@ end
 
 function CharaMakeCaption:set_data(caption)
    self.caption = caption or self.caption
-   self.caption = I18N.get(caption) or caption
+   self.caption = I18N.get_optional(caption) or caption
    self:relayout()
 end
 

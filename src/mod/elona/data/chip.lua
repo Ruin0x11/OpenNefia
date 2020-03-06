@@ -1397,7 +1397,6 @@ local function make_chip_group(chips, group, source)
 
       chip._id = group .. "_" .. chip._id
       chip._type = "base.chip"
-      chip.group = group
 
       chip.image = {
          source = source,

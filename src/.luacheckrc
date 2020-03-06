@@ -16,6 +16,7 @@ globals = {
    "_CONSOLE",
    "_DEBUG",
    "_IS_LOVEJS",
+   "_MOD_NAME",
    "love",
    "class",
    "inspect",

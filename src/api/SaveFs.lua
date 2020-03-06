@@ -2,11 +2,8 @@ local binser = require("thirdparty.binser")
 local fs = require("util.fs")
 local Log = require("api.Log")
 
+--- @module SaveFs
 local SaveFs = {}
-
-function SaveFs.current()
-   return SaveFile:new()
-end
 
 local function compress(str)
    if love.data == nil then
@@ -33,11 +30,11 @@ end
 local touched_paths = {}
 local current_save
 
-local function save_path(child_path, save_name)
+function SaveFs.save_path(child_path, save_name)
    -- when using love.filesystem.write, all paths are already relative to the save directory.
    -- passing absolute paths will result in errors.
    local dir = ""
-   
+
    if save_name == nil then
       return fs.join(dir, "temp", child_path)
    end
@@ -48,7 +45,7 @@ end
 local function load_path(child_path, save_name)
    if save_name == nil then
       if current_save and not touched_paths[child_path] then
-         local path = save_path(child_path, current_save)
+         local path = SaveFs.save_path(child_path, current_save)
          if fs.exists(path) then
             Log.debug("Save cache hit: %s/%s", current_save, child_path)
             return path
@@ -56,11 +53,11 @@ local function load_path(child_path, save_name)
       end
    end
 
-   return save_path(child_path, save_name)
+   return SaveFs.save_path(child_path, save_name)
 end
 
 function SaveFs.write(path, obj, save)
-   local full_path = save_path(path, save)
+   local full_path = SaveFs.save_path(path, save)
 
    local str = SaveFs.serialize(obj)
    local dirs = fs.parent(full_path)
@@ -124,8 +121,8 @@ function SaveFs.save_game(save)
    Log.info("Copying save to %s", save)
 
    for path, _ in pairs(touched_paths) do
-      local temp_path = save_path(path, nil)
-      local full_path = save_path(path, save)
+      local temp_path = SaveFs.save_path(path, nil)
+      local full_path = SaveFs.save_path(path, save)
       assert(fs.copy(temp_path, full_path))
    end
 end

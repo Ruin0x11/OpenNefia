@@ -15,7 +15,7 @@ function LogWidget:init()
 end
 
 function LogWidget:default_widget_position(x, y, width, height)
-   return 0, y, math.floor(width / 2), math.floor(height / 2)
+   return 0, y, math.floor(width / 2), math.floor(height / 3)
 end
 
 function LogWidget:relayout(x, y, width, height)

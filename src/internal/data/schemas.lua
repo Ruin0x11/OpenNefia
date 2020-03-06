@@ -60,6 +60,9 @@ Minimum distance before this unit starts moving toward their target.
          {
             name = "ai_calm",
             default = 1,
+            doc = [[
+Controls the default AI's idle behavior.
+]]
          },
          {
             name = "ai_act_sub_freq",
@@ -68,7 +71,12 @@ Minimum distance before this unit starts moving toward their target.
          {
             name = "portrait",
             default = nil,
-            type = "base.portrait"
+            type = "base.portrait",
+            doc = [[
+Portrait displayed when conversing with this character.
+
+Remove this to use the character's sprite instead.
+]]
          },
          {
             name = "resistances",
@@ -90,58 +98,75 @@ A list of strings used for filtering during character generation.
          },
          {
             name = "can_talk",
-            default = false
+            default = false,
+            doc = [[
+If true, you can talk to this character by bumping into them.
+]]
          },
          {
             name = "faction",
             default = "base.enemy",
             template = true,
+            type = "id:base.faction",
             doc = [[
 What alignment this character has.
 
 This determines if it will act hostile toward the player on first sight.
+- base.enemy: hostile towards the player
+- base.citizen: shopkeepers, etc.
+- base.neutral: ignores the player, can swap places with them
+- base.friendly: acts like an ally
 ]]
          },
          {
             name = "race",
-            default = "base.default",
+            default = "elona.slime",
             template = true,
+            type = "id:base.race",
             doc = [[
 The race of this character.
 ]]
          },
          {
             name = "class",
-            default = "base.default",
+            default = "elona.predator",
             template = true,
+            type = "id:base.class",
             doc = [[
 The class of this character.
 ]]
          },
          {
             name = "image",
-            default = "",
+            default = "elona.chara_race_slime",
             template = true,
-            type = "base.chip",
+            type = "id:base.chip",
             doc = [[
-The character's image.
+The character's image. Can be nil to use the race's default image.
 ]]
          },
          {
             name = "male_image",
             default = nil,
             type = "base.chip",
+            doc = [[
+The character's male image. Can be nil to use the race's default image.
+]]
          },
          {
             name = "female_image",
             default = nil,
             type = "base.chip",
+            doc = [[
+The character's female image. Can be nil to use the race's default image.
+]]
          },
          {
             name = "gender",
             default = "female",
+            type = "string",
             doc = [[
-The character's gender, either male or female.
+The character's gender, either "male" or "female".
 ]]
          },
          {
@@ -196,7 +221,10 @@ The character must have `can_talk` set to `true` for this to trigger.
          {
             name = "on_eat_corpse",
             default = nil,
-            type = "function"
+            type = "function(IItem, {chara=IChara})",
+               doc = [[
+A callback to be run when this character's corpse is eaten.
+   ]]
          },
          {
             name = "events",
@@ -214,7 +242,10 @@ List of events to bind to this character when they are spawned.
          {
             name = "color",
             default = nil,
-            type = "table"
+            type = "{int,int,int}",
+            doc = [[
+Color to display on the character's sprite.
+]]
          },
          {
             name = "is_unique",
@@ -228,7 +259,10 @@ List of events to bind to this character when they are spawned.
          {
             name = "ai",
             default = "elona.elona_default_ai",
-            type = "base.ai_action"
+            type = "base.ai_action",
+            doc = [[
+AI callback to run on this character's turn.
+]]
          }
       },
       fallbacks = {
@@ -328,8 +362,8 @@ List of events to bind to this character when they are spawned.
 
          drawables = {},
 
-         x_offset = 0,
-         y_offset = 0,
+         x_offset = nil,
+         y_offset = nil,
 
          materials = {}
       }
@@ -596,8 +630,8 @@ Ambient light information.
 
          is_melee_weapon = nil,
          is_ranged_weapon = nil,
-         x_offset = 0,
-         y_offset = 0,
+         x_offset = nil,
+         y_offset = nil,
       }
    },
    { interface = IItem }
@@ -795,8 +829,35 @@ data:add_type {
 
 data:add_type {
    name = "chip",
-   schema = schema.Record {
-   },
+   fields = {
+      {
+         name = "image",
+         default = "mod/<mod_id>/graphic/image.png",
+         template = true,
+         type = "string|{source=string,x=int,y=int,width=int,height=int,count_x=int?,count_y=int?,key_color={int,int,int}?}",
+         doc = [[
+The image to use for this chip.
+
+It can either be a string referencing an image file, or a table with these contents:
+- source: file containing a larger chip atlas to use.
+- x: x position of the chip on the atlas.
+- y: y position of the chip on the atlas.
+- width: width of one animation frame.
+- height: height of one animation frame.
+- count_x: animation frames in the x direction. This is multiplied by width for the total width.
+- count_y: animation frames in the y direction. This is multiplied by height for the total height.
+- key_color: if `source` is a BMP, controls the color to convert to transparency. Defaults to {0, 0, 0}.
+]]
+      },
+      {
+         name = "y_offset",
+         default = 0,
+         template = true,
+         doc = [[
+Y offset of the sprite in pixels.
+         ]]
+      }
+   }
 }
 
 data:add_type {

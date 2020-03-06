@@ -203,7 +203,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
             if damage_level == 1 then
                Gui.mes_c("damage.reactions.screams", "Gold", target)
             elseif damage_level == 2 then
-               Gui.mes_c("damage.reactions.writes_in_pain", "LightRed", target)
+               Gui.mes_c("damage.reactions.writes_in_pain", "Pink", target)
             elseif damage_level >= 3 then
                Gui.mes_c("damage.reactions.is_severely_hurt", "Red", target)
             elseif damage_level == -2 then
