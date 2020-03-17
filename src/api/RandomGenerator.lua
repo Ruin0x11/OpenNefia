@@ -5,7 +5,7 @@
 local IRandomGenerator = require("api.IRandomGenerator")
 
 local RandomGenerator = class.class("RandomGenerator", IRandomGenerator)
-local Env = require("api.Env")
+local socket = require("socket")
 
 function RandomGenerator:init(seed)
    self:set_seed(seed)
@@ -17,7 +17,7 @@ function RandomGenerator:set_seed(seed)
       -- time(0).
       --
       -- https://github.com/onitama/OpenHSP/blob/1d3d134a5d12017a413cafe527768883fb85c8a1/src/hsp3/hsp3int.cpp#L1033
-      seed = Env.get_time()
+      seed = socket.gettime()
    end
 
    self.seed = seed

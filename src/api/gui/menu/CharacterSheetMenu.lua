@@ -11,8 +11,6 @@ local UiTextGroup = require("api.gui.UiTextGroup")
 local UiTheme = require("api.gui.UiTheme")
 local I18N = require("api.I18N")
 local Env = require("api.Env")
-local Combat = require("mod.elona.api.Combat")
-local ElonaAction = require("mod.elona.api.ElonaAction")
 local save = require("internal.global.save")
 
 local CharacterSheetMenu = class.class("CharacterSheetMenu", IUiLayer)
@@ -346,6 +344,8 @@ local function format_damage_info(name, damage, hit)
 end
 
 local function calc_skill_damage(chara, weapon, attack_number)
+   local Combat = require("mod.elona.api.Combat")
+
    local skill = weapon:calc("skill")
    local hit = Combat.calc_accuracy(chara, weapon, nil, skill, attack_number, false, false)
    local damage = Combat.calc_attack_raw_damage(chara, weapon, nil, skill, false, nil)
@@ -355,6 +355,10 @@ local function calc_skill_damage(chara, weapon, attack_number)
 end
 
 local function calc_damage_info(chara)
+   -- HACK: these are really bad dependencies.
+   local Combat = require("mod.elona.api.Combat")
+   local ElonaAction = require("mod.elona.api.ElonaAction")
+
    local info = {}
 
    local found = nil

@@ -1,0 +1,3 @@
+local TownCreator = {}
+
+return TownCreator

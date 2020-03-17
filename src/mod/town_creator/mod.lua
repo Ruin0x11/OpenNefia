@@ -1,5 +1,5 @@
 return {
-   id = "damage_popups",
+   id = "town_creator",
    version = "0.1.0",
    dependencies = {
       elona = ">= 0"

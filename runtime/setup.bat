@@ -9,6 +9,6 @@ if not exist src\\deps\\elona (
     pushd src\\deps
     powershell -NoProfile -Command "if (Test-Path .\\elona122.zip) { Remove-Item elona122.zip -Force }"
     powershell -NoProfile -Command "Invoke-WebRequest http://ylvania.style.coocan.jp/file/elona122.zip -OutFile elona122.zip"
-    powershell -NoProfile -Command "Expand-Archive -Path elona122.zip -DestinationPath (Resolve-Path .); Remove-Item elona122.zip -Force"
+    ..\\..\\runtime\\7z.exe x elona122.zip
     popd
 )

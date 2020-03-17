@@ -55,7 +55,7 @@
     (with-demoted-errors "Error: %s"
         (elona-next--process-response
          (process-get proc :command)
-         (process-get proc :content)
+         (process-get proc :args)
          response))))
 
 (defun elona-next--completing-read (prompt list)
@@ -122,22 +122,28 @@
    (and (buffer-live-p lua-process-buffer) (get-buffer-process lua-process-buffer))
    (and compilation-in-progress)))
 
-(defun elona-next--process-response (cmd content response)
+(defun elona-next--process-response (cmd args response)
   (with-demoted-errors "Error: %s"
     (-let (((&alist 'success 'candidates 'message) response))
       (if (eq success t)
           (if candidates
-                                        ; in pairs of ("api.Api.name", "api.api.name")
-              (let ((cand (elona-next--completing-read "Candidate: " (append candidates nil))))
+              ; in pairs of ("api.Api.name", "api.api.name")
+              (let* ((cand (elona-next--completing-read "Candidate: " (append candidates nil)))
+                     (args (pcase cmd
+                             ("help" (list :query cand))
+                             ("ids" (list :type cand))
+                             ("template" (list :type cand))
+                             ("hotload" (list :require_path cand))
+                             (else (error "Candidates not supported for %s" cmd)))))
                 (elona-next--send cmd cand))
             (pcase cmd
-              ("help" (elona-next--command-help content response))
-              ("jump_to" (elona-next--command-jump-to content response))
+              ("help" (elona-next--command-help args response))
+              ("jump_to" (elona-next--command-jump-to args response))
               ("signature" (elona-next--command-signature response))
               ("apropos" (elona-next--command-apropos response))
               ("completion" (elona-next--command-completion response))
               ("template" (elona-next--command-template response))
-              ("ids" (elona-next--command-ids content response))
+              ("ids" (elona-next--command-ids args response))
               ("run" t)
               ("hotload" t)
               (else (error "No action for %s %s" cmd (prin1-to-string response)))))
@@ -261,7 +267,7 @@
     (font-lock-fontify-region (point-min) (point-max))
     (buffer-string)))
 
-(defun elona-next--command-help (content response)
+(defun elona-next--command-help (args response)
   (-let (((&alist 'doc 'message) response)
          (buffer (get-buffer-create "*elona-next-help*")))
     (with-help-window buffer
@@ -300,7 +306,7 @@
     ;; (doc-buffer (company-doc-buffer "*elona-next-help*"))
     ))
 
-(defun elona-next--command-jump-to (content response)
+(defun elona-next--command-jump-to (args response)
   (-let* (((&alist 'success 'file 'line 'column) response))
     (if file
         (let* ((loc (xref-make-file-location file line column))
@@ -309,7 +315,7 @@
           (xref-push-marker-stack)
           (switch-to-buffer buf)
           (xref--goto-char marker))
-      (xref-find-definitions (strip-text-properties content)))))
+      (xref-find-definitions (strip-text-properties (plist-get :query args))))))
 
 (defun elona-next--command-signature (response)
   (-let* (((&alist 'sig 'params 'summary) response))
@@ -377,12 +383,12 @@
   (and (buffer-live-p lua-process-buffer)
        (get-buffer-process lua-process-buffer)))
 
-(defun elona-next--send (cmd str)
+(defun elona-next--send (cmd args)
   (let ((proc (elona-next--make-tcp-connection elona-next-repl-address elona-next-repl-port))
-        (json (json-encode (list :command cmd :content str))))
+        (json (json-encode (list :command cmd :args args))))
     (when (process-live-p proc)
       (process-put proc :command cmd)
-      (process-put proc :content str)
+      (process-put proc :args args)
       (comint-send-string proc (format "%s\n" json))
       (process-send-eof proc)
       ;; In REPL mode, run the server for one step to ensure the
@@ -422,14 +428,14 @@
       (progn
         (lua-send-string str)
         (message (elona-next--get-lua-result)))
-    (elona-next--send "run" (format "require('api.Repl').send([[\n%s\n]])" str))))
+    (elona-next--send "run" (list :code (format "require('api.Repl').send([[\n%s\n]])" str)))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
   (setq start (lua-maybe-skip-shebang-line start))
   (let* ((lineno (line-number-at-pos start))
          (region-str (buffer-substring-no-properties start end)))
-    (elona-next--send "run" region-str)))
+    (elona-next--send "run" (list :code region-str))))
 
 (defun elona-next-send-buffer ()
   (interactive)
@@ -483,7 +489,7 @@
       (elona-next-eval-buffer)
     (let* ((lua-path (car (elona-next--require-path-of-file (buffer-file-name)))))
       (save-buffer)
-      (elona-next--send "hotload" lua-path)
+      (elona-next--send "hotload" (list :require_path lua-path))
       (message "Hotloaded %s." lua-path))))
 
 (defun elona-next-require-this-file ()
@@ -640,7 +646,7 @@
   (let ((sym (if arg
                  (symbol-name (symbol-at-point))
                (elona-next--dotted-symbol-at-point))))
-    (elona-next--send "help" sym)))
+    (elona-next--send "help" (list :query sym))))
 
 (defun elona-next-jump-to-definition (arg)
   (interactive "P")
@@ -653,12 +659,12 @@
                           "Jump to: "
                           (json-read-file (elona-next--apropos-file "data/apropos.json")))
                        sym)))
-        (elona-next--send "jump_to" result))
+        (elona-next--send "jump_to" (list :query result)))
     (xref-find-definitions (elona-next--dotted-symbol-at-point))))
 
 (defun elona-next-describe-apropos ()
   (interactive)
-  (elona-next--send "apropos" ""))
+  (elona-next--send "apropos" '()))
 
 (defun elona-next-eval-sexp-fu-setup ()
   (define-eval-sexp-fu-flash-command elona-next-send-defun
@@ -726,11 +732,11 @@
 
 (defun elona-next-insert-template ()
   (interactive)
-  (elona-next--send "template" ""))
+  (elona-next--send "template" '()))
 
 (defun elona-next-insert-id ()
   (interactive)
-  (elona-next--send "ids" ""))
+  (elona-next--send "ids" '()))
 
 (defun elona-next-make-scratch-buffer ()
   (interactive)
