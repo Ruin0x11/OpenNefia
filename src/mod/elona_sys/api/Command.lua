@@ -272,4 +272,11 @@ function Command.quit_game()
    return "player_turn_query"
 end
 
+local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")
+
+function Command.chara_info()
+   CharacterInfoWrapper:new():query()
+   return "player_turn_query"
+end
+
 return Command

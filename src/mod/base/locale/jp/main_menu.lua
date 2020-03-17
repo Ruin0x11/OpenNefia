@@ -77,11 +77,11 @@ end,
     },
     title_menu = {
       about = "このゲームについて",
-      continue = "冒険を再開する",
+      restore = "冒険を再開する",
       exit = "終了",
       incarnate = "冒険者の引継ぎ",
       mods = "MOD",
-      new = "新しい冒険者を作成する",
+      generate = "新しい冒険者を作成する",
       options = "設定の変更"
     }
   }

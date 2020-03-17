@@ -158,6 +158,7 @@ local save = require("internal.global.save")
 local function init_save()
    local s = save.base
    s.date = DateTime:new(517, 8, 12, 16, 10, 0)
+   s.play_time = 0
    s.play_turns = 0
    s.play_days = 0
    s.area_mapping = area_mapping:new()
@@ -168,6 +169,7 @@ local function init_save()
    s.random_seed = Rand.rnd(800) + 2
    s.shadow = 70
    s.has_light_source = false
+   s.deepest_level = 0
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

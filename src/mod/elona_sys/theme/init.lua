@@ -91,7 +91,10 @@ data:add {
          x = 496,
          y = 528,
          width = 192,
-         height = 72
+         height = 72,
+         regions = {
+             window_title = { 0, 53, 192, 18 }
+         }
       },
       gold_coin = {
          source = "interface.bmp",

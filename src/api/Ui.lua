@@ -79,6 +79,15 @@ function Ui.display_weight(weight)
                         "s")
 end
 
+function Ui.display_armor_class(weight)
+   if weight >= 35000 then
+      return I18N.get("item.armor_class.heavy")
+   elseif weight >= 15000 then
+      return I18N.get("item.armor_class.medium")
+   end
+   return I18N.get("item.armor_class.light")
+end
+
 --- Cuts off text past a pixel width according to the current global
 --- font.
 function Ui.cutoff_text(text, width)

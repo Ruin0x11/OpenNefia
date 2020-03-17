@@ -6,6 +6,7 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Log = require("api.Log")
 local SaveFs = require("api.SaveFs")
+local Env = require("api.Env")
 
 local config = require("internal.config")
 local field = require("game.field")
@@ -24,6 +25,7 @@ function Save.save_game()
       local global = save_store.for_mod("base")
       global.map = map.uid
       global.player = field.player.uid
+      global.play_time = Env.update_play_time(global.play_time)
 
       Log.info("Saving game.")
       Log.trace("save map: %d  player %d", global.map, global.player)
@@ -60,6 +62,7 @@ function Save.load_game(save_id)
    local base = save_store.for_mod("base")
    local map_uid = base.map
    local player_uid = base.player
+   Env.update_play_time()
 
    Log.info("Loading game.")
    Log.trace("load map: %d  player %d", map_uid, player_uid)

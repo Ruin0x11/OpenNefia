@@ -1,4 +1,4 @@
-local socket = require("socket")
+local Env = require("api.Env")
 local profile = require("thirdparty.profile")
 local repl = require("internal.repl")
 local Event = require("api.Event")
@@ -62,7 +62,7 @@ function Profile.hook_all()
 end
 
 function Profile.reset()
-   profile.setclock(socket.gettime)
+   profile.setclock(Env.get_time)
    profile.reset()
 end
 

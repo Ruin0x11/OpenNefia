@@ -344,9 +344,11 @@ end
 
 local function calc_raw_damage_for_skills(result, chara, weapon, target, is_ranged)
    if is_ranged then
-      local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
-      local effective_range = weapon:calc_effective_range(dist)
-      result.multiplier = result.multiplier * effective_range / 100
+      if target then
+         local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
+         local effective_range = weapon:calc_effective_range(dist)
+         result.multiplier = result.multiplier * effective_range / 100
+      end
    elseif chara:calc("is_wielding_two_handed") then
       if weapon:calc("weight") >= 4000 then
          result.multiplier = result.multiplier * 1.5

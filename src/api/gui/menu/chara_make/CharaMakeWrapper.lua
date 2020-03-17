@@ -39,6 +39,11 @@ function CharaMakeWrapper:make_keymap()
    return {}
 end
 
+function CharaMakeWrapper:set_caption(text)
+   text = text or self.submenu.caption
+   self.caption:set_data(text)
+end
+
 function CharaMakeWrapper:proceed()
    local menu_id
    if self.submenu then
@@ -83,7 +88,7 @@ function CharaMakeWrapper:proceed()
    end
    self.submenu = submenu
 
-   self.caption:set_data(self.submenu.caption)
+   self:set_caption(self.submenu.caption)
    self:relayout()
 
    Gui.play_sound(self.submenu.intro_sound)

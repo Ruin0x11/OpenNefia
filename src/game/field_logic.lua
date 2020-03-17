@@ -6,6 +6,7 @@ local Input = require("api.Input")
 local Map = require("api.Map")
 local World = require("api.World")
 local Log = require("api.Log")
+local Env = require("api.Env")
 local draw = require("internal.draw")
 local field = require("game.field")
 local config = require("internal.config")
@@ -31,6 +32,7 @@ function field_logic.setup_new_game(player)
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
    assert(config["base._save_id"])
+   Env.update_play_time()
 
    Event.trigger("base.on_new_game")
 end

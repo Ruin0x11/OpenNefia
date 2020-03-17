@@ -53,15 +53,22 @@ function MainTitleMenu:init()
    self.win = UiWindow:new(title_str, true, key_help)
 
    local data = {
-      { action = "restore",   text = "Restore an Adventurer" },
-      { action = "generate",  text = "Generate an Adventurer" },
-      { action = "incarnate", text = "Incarnate an Adventurer" },
-      { action = "about",     text = "About" },
-      { action = "options",   text = "Options" },
-      { action = "mods",      text = "Mods" },
-      { action = "exit",      text = "Exit" }
+      { action = "restore",   text = "main_menu.title_menu.restore", subtext = "Restore an Adventurer" },
+      { action = "generate",  text = "main_menu.title_menu.generate", subtext = "Generate an Adventurer" },
+      { action = "incarnate", text = "main_menu.title_menu.incarnate", subtext = "Incarnate an Adventurer" },
+      { action = "about",     text = "main_menu.title_menu.about", subtext = "About" },
+      { action = "options",   text = "main_menu.title_menu.options", subtext = "Options" },
+      { action = "mods",      text = "main_menu.title_menu.mods", subtext = "Mods" },
+      { action = "exit",      text = "main_menu.title_menu.exit", subtext = "Exit" }
    }
-   fun.iter(data):each(function(o) o.subtext = o.text end)
+   for _, entry in ipairs(data) do
+       if I18N.language() == "en" then
+         entry.text = entry.subtext
+         entry.subtext = ""
+       else
+         entry.text = I18N.get(entry.text)
+       end
+   end
 
    self.list = UiList:new(data, 35)
    table.merge(self.list, UiListExt())
@@ -108,6 +115,8 @@ function MainTitleMenu:draw()
    end
 
    Draw.text("Elona_next version " .. self.version .. "  Developed by Ruin0x11", 20, 56)
+
+   Draw.text("F3: Quickstart", 20, Draw.get_height() - 20 - Draw.text_height())
 
    self.win:draw()
    self.list:draw()

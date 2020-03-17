@@ -3,13 +3,13 @@ import * as vscode from "vscode";
 import { plainToClass, classToPlain } from "class-transformer";
 
 class CandidateItem implements vscode.QuickPickItem {
-	label: string;
-	description: string;
-	
-	constructor(json: any) {
-		this.label = json[0];
-		this.description = json[1];
-	}
+    label: string;
+    description: string;
+
+    constructor(json: any) {
+        this.label = json[0];
+        this.description = json[1];
+    }
 }
 
 export enum ServerCommand {
@@ -24,7 +24,7 @@ export enum ServerCommand {
 }
 
 export class ClientRequest {
-    fromCandidate(candidate: string) {}
+    fromCandidate(candidate: string) { }
 }
 
 export enum TemplateScope {
@@ -56,7 +56,7 @@ export class TemplateClientRequest extends ClientRequest {
     snippets: boolean;
     comments: boolean;
     scope: TemplateScope;
-    
+
     fromCandidate(type: string) {
         this.type = type;
     }
@@ -105,7 +105,7 @@ export class IdsClientRequest extends ClientRequest {
     }
 }
 
-export class AproposClientRequest extends ClientRequest {}
+export class AproposClientRequest extends ClientRequest { }
 
 export class ServerResponse {
     success: boolean = true;
@@ -144,7 +144,7 @@ export class AproposServerResponse extends ServerResponse {
 }
 
 async function chooseCandidate(candidates: Array<any>) {
-	return await vscode.window.showQuickPick(candidates.map((c: any) => new CandidateItem(c)), {});
+    return await vscode.window.showQuickPick(candidates.map((c: any) => new CandidateItem(c)), {});
 }
 
 export async function handleServerResponse(json: any, args: ClientRequest, noCandidates: boolean): Promise<any | string | null> {
@@ -154,10 +154,10 @@ export async function handleServerResponse(json: any, args: ClientRequest, noCan
     if (response.success) {
         if (response.candidates && !noCandidates) {
             return await chooseCandidate(response.candidates)
-               .then(async (cand) => { 
-                    if (cand) { 
+                .then(async (cand) => {
+                    if (cand) {
                         args.fromCandidate(cand.label);
-                        return await sendToServer(response.command, args, noCandidates); 
+                        return await sendToServer(response.command, args, noCandidates);
                     }
                     return null;
                 });
@@ -194,25 +194,25 @@ export async function sendToServer(command: ServerCommand, args: ClientRequest, 
     var buf = Buffer.alloc(0);
 
     return new Promise((resolve, reject) => {
-      const client = net.createConnection({ host: host, port: port }, () => {
-        client.write(JSON.stringify({command: command, args: classToPlain(args)}) + "\r\n");
-      });
-      client.on('data', (data) => buf = Buffer.concat([buf, data]));
-      client.on('end', async () => {
-          let str = buf.toString();
-          let json = JSON.parse(str);
-          let result = await handleServerResponse(json, args, noCandidates);
-          if (typeof result === "string" || result === null) {
-              reject(result);
-          } else {
-              resolve(result);
-          }
-      });
-      client.on('error', () => reject());
-      client.on('timeout', () => {
-          reject();
-          client.destroy();
-      });
+        const client = net.createConnection({ host: host, port: port }, () => {
+            client.write(JSON.stringify({ command: command, args: classToPlain(args) }) + "\r\n");
+        });
+        client.on('data', (data) => buf = Buffer.concat([buf, data]));
+        client.on('end', async () => {
+            let str = buf.toString();
+            let json = JSON.parse(str);
+            let result = await handleServerResponse(json, args, noCandidates);
+            if (typeof result === "string" || result === null) {
+                reject(result);
+            } else {
+                resolve(result);
+            }
+        });
+        client.on('error', () => reject());
+        client.on('timeout', () => {
+            reject();
+            client.destroy();
+        });
     });
 }
 
@@ -221,11 +221,13 @@ export async function sendToRepl(code: string, show: boolean = false) {
     if (show) {
         // fullCode = fullCode + `;Repl.defer_execute("require('api.repl').show();return 'player_turn_query'")`;
     }
-    await sendToServer(ServerCommand.Run, new RunClientRequest(fullCode));
 
-    let truncated = code;
-    if (code.length > 20) {
-        code = code.substr(0, 17) + "...";
-    }
-    vscode.window.showInformationMessage("Sent to REPL: " + truncated);
+    await sendToServer(ServerCommand.Run, new RunClientRequest(fullCode))
+        .then(() => {
+            let truncated = code;
+            if (code.length > 20) {
+                code = code.substr(0, 17) + "...";
+            }
+            vscode.window.showInformationMessage("Sent to REPL: " + truncated);
+        });
 }

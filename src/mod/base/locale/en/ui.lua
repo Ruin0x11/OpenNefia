@@ -215,7 +215,7 @@ end,
   return ("(%s) ")
   :format(_1)
 end,
-        hint = "Hint",
+        hint = "Hint:",
         is_not_currently = "This character isn't currently blessed or hexed."
       },
       category = {
@@ -253,7 +253,7 @@ end,
       history = "Trace",
       personal = {
         age = "Age",
-        age_counter = "",
+        age_counter = function(_1) return "" end,
         aka = "Aka",
         class = "Class",
         height = "Height",
@@ -299,7 +299,7 @@ end,
         equip_weight = "Equip Wt",
         level_counter = function(_1)
   return ("%s Level")
-  :format(_1)
+  :format(ordinal(_1))
 end
       },
       you_can_spend_bonus = function(_1)

@@ -33,6 +33,7 @@ reify_one = function(_db, item, key)
 end
 
 function i18n.load_single_translation(path, merged)
+   path = fs.normalize(path)
    Log.debug("Loading translations at %s", path)
    local chunk, err = love.filesystem.load(path)
 

@@ -14373,7 +14373,7 @@ local item =
          elona_function = 33,
 
          on_generate = function(self)
-            self.param2 = Rand.rnd(self:calc("objlv") + 1) + 1
+            self.param2 = Rand.rnd(self:calc("level") + 1) + 1
             self.value = 2000 + self.param2 * self.param2 + self.param2 * 100
          end,
 
@@ -14424,7 +14424,7 @@ local item =
 
          on_generate = function(self)
             local Rand = require("api.Rand")
-            self.param1 = Rand.rnd(Rand.rnd(math.clamp(math.floor(self:calc("objlv") / 2), 1, 15)) + 1)
+            self.param1 = Rand.rnd(Rand.rnd(math.clamp(math.floor(self:calc("level") / 2), 1, 15)) + 1)
          end,
 
          elona_type = "book",

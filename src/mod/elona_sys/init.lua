@@ -190,14 +190,13 @@ Gui.bind_keys {
    help = function()
       return Command.help()
    end,
-   n = function()
-      Gui.mes(require("api.gui.TextPrompt"):new(16):query())
-      return "player_turn_query"
-   end,
    quicksave = function()
       return Command.save_game()
    end,
    quickload = function()
       return Command.load_game()
+   end,
+   chara_info = function()
+      return Command.chara_info()
    end
 }

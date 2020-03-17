@@ -9,23 +9,7 @@ local InputHandler = require("api.gui.InputHandler")
 
 local ChangeAppearanceList = class.class("ChangeAppearanceList", IUiList)
 
-ChangeAppearanceList:delegate("model", {
-                         "items",
-                         "get_item_text",
-                         "changed",
-                         "can_select",
-                         "selected",
-                         "selected_item",
-                         "select",
-                         "on_select",
-                         "select_next",
-                         "select_previous",
-                         "set_data",
-                         "can_choose",
-                         "on_choose",
-                         "iter",
-})
-
+ChangeAppearanceList:delegate("model", IUiList)
 ChangeAppearanceList:delegate("input", IInput)
 
 function ChangeAppearanceList:init(items)

@@ -2,7 +2,7 @@ local Draw = require("api.Draw")
 local IUiWidget = require("api.gui.IUiWidget")
 local UiFpsGraph = require("api.gui.hud.UiFpsGraph")
 local draw_stats = require("internal.global.draw_stats")
-local socket = require("socket")
+local Env = require("api.Env")
 
 local UiFpsCounter = class.class("UiFpsCounter", IUiWidget)
 
@@ -14,7 +14,7 @@ function UiFpsCounter:init()
    self.threshold = 0
    self.prev_fps = 0
    self.prev_ram = 0
-   self.now = socket.gettime()
+   self.now = Env.get_time()
    self.buff = ""
 
    self.fps_graph = UiFpsGraph:new({0, 0, 255, 128})
@@ -47,7 +47,7 @@ function UiFpsCounter:update()
       return
    end
 
-   local now = socket.gettime()
+   local now = Env.get_time()
    local dt = now - self.now
    self.now = now
    self.ms = self.ms + dt * 1000

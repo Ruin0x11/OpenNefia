@@ -77,11 +77,11 @@ end,
     },
     title_menu = {
       about = "About",
-      continue = "Restore an Adventurer",
+      restore = "Restore an Adventurer",
       exit = "Exit",
       incarnate = "Incarnate an Adventurer",
       mods = "Mods",
-      new = "Generate an Adventurer",
+      generate = "Generate an Adventurer",
       options = "Options"
     }
   }

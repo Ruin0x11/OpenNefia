@@ -8,5 +8,6 @@ local CharaMake = {}
 
 CharaMake.get_section_result = chara_make.get_section_result
 CharaMake.make_chara = chara_make.make_chara
+CharaMake.set_caption = chara_make.set_caption
 
 return CharaMake

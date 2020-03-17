@@ -1,17 +1,17 @@
-local socket = require("socket")
 
+local Env = require("api.Env")
 local Log = require("api.Log")
 local Stopwatch = class.class("Stopwatch")
 
 function Stopwatch:init(precision, log_level)
-   self.time = socket.gettime()
+   self.time = Env.get_time()
    self.framerate = 60
    self.precision = precision or 5
    self.log_level = log_level or "debug"
 end
 
 function Stopwatch:measure()
-   local new = socket.gettime()
+   local new = Env.get_time()
    local result = new - self.time
    self.time = new
    return math.round(result * 1000, self.precision)

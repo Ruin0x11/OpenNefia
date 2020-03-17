@@ -11,7 +11,8 @@
           "api.Env"
           "mod.elona_sys.api.Anim"
           "mod.elona_sys.api.Magic"
-          "mod.tools.api.Tools")
+          "mod.tools.api.Tools"
+          "mod.elona.api.Text")
 
 (local magic "elona.lightning_breath")
 
@@ -40,7 +41,9 @@
                     {:id "elona.hair_2" :z_order 20}
                     {:id "elona.cloth_1" :z_order 30}
                     {:id "elona.pants_1" :z_order 20}]))
-    (tset chara :dir 4)))
+    (tset chara :dir 4))
+    (tset chara :portrait "elona.zeome")
+    (tset chara :title (Text.random_title)))
 
 ;;
 ;; scratch

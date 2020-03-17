@@ -4,28 +4,11 @@ local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local ListModel = require("api.gui.ListModel")
 local UiTheme = require("api.gui.UiTheme")
+local I18N = require("api.I18N")
 
 local UiBuffList = class.class("UiBuffList", IUiList)
 
-UiBuffList:delegate("model", {
-                       "items",
-                       "changed",
-                       "selected",
-                       "selected_item",
-                       "select",
-                       "select_next",
-                       "select_previous",
-                       "choose",
-                       "can_select",
-                       "set_data",
-                       "get_item_text",
-                       "chosen",
-                       "on_choose",
-                       "can_choose",
-                       "on_select",
-                       "iter"
-})
-
+UiBuffList:delegate("model", IUiList)
 UiBuffList:delegate("input", IInput)
 
 function UiBuffList:init()
@@ -59,7 +42,7 @@ function UiBuffList:relayout(x, y)
 end
 
 function UiBuffList:draw_item(item, i, x, y)
-   local has_buff = i % 2 == 0
+   local has_buff = false
    if has_buff then
       self.t.buff_icon:draw_region(3, x, y, nil, nil, {255, 255, 255, 255})
       if self.selected == i then
@@ -82,7 +65,7 @@ function UiBuffList:update()
 end
 
 function UiBuffList:get_hint()
-   return "hint:"
+   return I18N.get("ui.chara_sheet.buff.is_not_currently")
 end
 
 return UiBuffList

@@ -1,17 +1,14 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
-local Ui = require("api.Ui")
 local Input = require("api.Input")
 
 local Prompt = require("api.gui.Prompt")
-local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
-local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
+local WindowTitle = require("api.gui.menu.WindowTitle")
+local CharaMake = require("api.CharaMake")
 
 local CharacterSummaryMenu = class.class("CharacterSummaryMenu", ICharaMakeSection)
 
@@ -27,9 +24,7 @@ function CharacterSummaryMenu:init(chara)
    self.caption = "chara_make.final_screen.caption"
    self.intro_sound = "base.skill"
 
-   -- cheat a bit. this gets drawn over the one in the charamake
-   -- wrapper.
-   self.caption_box = CharaMakeCaption:new()
+   self.title = WindowTitle:new("window title")
 
    self:reroll()
 end
@@ -37,18 +32,17 @@ end
 function CharacterSummaryMenu:make_keymap()
    return {
       enter = function() self:reroll(true) end,
-      cancel = function() print("can"); self.canceled = true end,
-      escape = function() print("can"); self.canceled = true end,
    }
 end
 
 function CharacterSummaryMenu:on_query()
+   Gui.play_sound("base.chara")
    self.canceled = false
    self.name = "????"
 end
 
 function CharacterSummaryMenu:on_make_chara(chara)
-   if string.nonempty(self.name) then
+   if self.name then
       chara.name = self.name
    else
       chara.name = "name"
@@ -68,16 +62,14 @@ function CharacterSummaryMenu:relayout(x, y, width, height)
    self.y = y
    self.width = width
    self.height = height
-   self.inner:relayout(x, y, width, height)
-   self.caption_box:relayout(self.x + 20, self.y + 30)
+   self.inner:relayout(x, y - 10, width, height)
+   self.title:relayout(240, Draw.get_height() - 16, Draw.get_width() - 240, 16)
 end
 
 function CharacterSummaryMenu:draw()
    self.inner:draw()
 
-   if self.caption_box.caption ~= "" then
-      self.caption_box:draw()
-   end
+   self.title:draw()
 end
 
 local function prompt_final()
@@ -85,11 +77,12 @@ local function prompt_final()
 end
 
 function CharacterSummaryMenu:update()
-   if self.canceled then
-      self.caption_box:set_data("Are you satisfied?")
+   if self.inner.canceled then
+      self.inner.canceled = false
+      CharaMake.set_caption("chara_make.final_screen.are_you_satisfied.prompt")
       local res = prompt_final()
       if res.index == 1 then
-         self.caption_box:set_data("Last question. What's your name?")
+         CharaMake.set_caption("chara_make.final_screen.what_is_your_name")
 
          local name, canceled = Input.query_text(10)
          if not canceled then
@@ -97,6 +90,7 @@ function CharacterSummaryMenu:update()
             return self.chara
          end
       elseif res.index == 2 then
+         -- pass
       elseif res.index == 3 then
          return { chara_make_action = "go_to_start" }, "canceled"
       elseif res.index == 4 then
@@ -109,7 +103,7 @@ function CharacterSummaryMenu:update()
       print(err)
    end
 
-   self.caption_box:set_data("")
+   CharaMake.set_caption(self.caption)
 
    self.canceled = false
 end

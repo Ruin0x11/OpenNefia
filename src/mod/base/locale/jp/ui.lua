@@ -212,7 +212,7 @@ return {
                return ("(%s)ﾀｰﾝの間、")
                   :format(_1)
             end,
-            hint = "説明",
+            hint = "説明:",
             is_not_currently = "今は持続効果を受けていない"
          },
          category = {
@@ -250,7 +250,10 @@ return {
          history = "冒険の軌跡",
          personal = {
             age = "年齢",
-            age_counter = "歳",
+            age_counter = function(_1)
+               return ("%s 歳")
+                  :format(_1)
+            end,
             aka = "異名",
             class = "職業",
             height = "身長",

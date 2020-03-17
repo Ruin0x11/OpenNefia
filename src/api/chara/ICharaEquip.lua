@@ -24,11 +24,11 @@ function ICharaEquip:on_refresh()
 end
 
 function ICharaEquip:apply_item_stats(item)
-   self:mod("equipment_weight", item:calc("weight"))
-   self:mod("dv", item:calc("dv"))
-   self:mod("pv", item:calc("pv"))
-   self:mod("hit_bonus", item:calc("hit_bonus"))
-   self:mod("damage_bonus", item:calc("damage_bonus"))
+   self:mod("equipment_weight", item:calc("weight"), "add")
+   self:mod("dv", item:calc("dv"), "add")
+   self:mod("pv", item:calc("pv"), "add")
+   self:mod("hit_bonus", item:calc("hit_bonus"), "add")
+   self:mod("damage_bonus", item:calc("damage_bonus"), "add")
 
    if item:calc("is_melee_weapon") then
       self:mod("number_of_weapons", 1, "add")
@@ -37,19 +37,19 @@ function ICharaEquip:apply_item_stats(item)
       if item:is_blessed() then
          bonus = 2
       end
-      self:mod("pv", item:calc("bonus") * 2 + bonus)
+      self:mod("pv", item:calc("bonus") * 2 + bonus, "add")
    end
 
    local curse_state = item:calc("curse_state")
    if curse_state == "cursed" then
-      self:mod("curse_power", 20)
+      self:mod("curse_power", 20, "add")
    elseif curse_state == "cursed" then
-      self:mod("curse_power", 100)
+      self:mod("curse_power", 100, "add")
    end
 
    local is_ether = false
    if is_ether then
-      self:mod("ether_disease_speed", 5)
+      self:mod("ether_disease_speed", 5, "add")
    end
 
    item:apply_enchantments_to_wielder(self)
