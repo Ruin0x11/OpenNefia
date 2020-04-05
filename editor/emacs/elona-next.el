@@ -428,7 +428,7 @@
       (progn
         (lua-send-string str)
         (message (elona-next--get-lua-result)))
-    (elona-next--send "run" (list :code (format "require('api.Repl').send([[\n%s\n]])" str)))))
+    (elona-next--send "run" (list :code (format "local success, err = require('api.Repl').send([[\n%s\n]]); if not success then error(err) end" str)))))
 
 (defun elona-next-send-region (start end)
   (interactive "r")
