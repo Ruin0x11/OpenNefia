@@ -12,7 +12,7 @@ local Doc = require("api.Doc")
 local Rand = require("api.Rand")
 local Repl = require("api.Repl")
 local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
-
+local config = require("internal.config")
 
 local startup = {}
 
@@ -126,7 +126,7 @@ function startup.run(mods)
 
    progress("Loading translations...")
 
-   i18n.switch_language("jp")
+   i18n.switch_language(config["base.language"])
 
    progress("Loading theme...")
 

@@ -15,7 +15,7 @@ function LogWidget:init()
 end
 
 function LogWidget:default_widget_position(x, y, width, height)
-   return 0, y, math.floor(width / 2), math.floor(height / 3)
+   return 0, math.floor(height / 2), math.floor(width / 2), math.floor(height / 2)
 end
 
 function LogWidget:relayout(x, y, width, height)
@@ -43,7 +43,7 @@ local shadow_color = {0, 0, 0, 255}
 
 function LogWidget:print(level, message, source)
    Draw.set_font(12)
-   local formatted = ("[%s][%s] %s"):format(level, source or "?", message)
+   local formatted = ("[%s][%s] %s"):format(level:sub(1, 1):upper(), source or "?", message)
    local success, err, wrapped = xpcall(function() return Draw.wrap_text(formatted, self.width) end, debug.traceback)
    if success then
       for _, line in ipairs(wrapped) do

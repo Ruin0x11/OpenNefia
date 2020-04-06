@@ -33,7 +33,7 @@ function SelectGenderMenu:init()
 
    self.genders = fun.iter(genders)
       :map(function(g)
-            return { name = I18N.get("ui.sex3." .. g), gender = g }
+            return { name = I18N.capitalize(I18N.get("ui.sex3." .. g)), gender = g }
           end)
       :to_list()
 

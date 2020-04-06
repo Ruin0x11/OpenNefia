@@ -134,7 +134,7 @@ function IItem:produce_memory()
 
    return {
       uid = self.uid,
-      show = require("api.Item").is_alive(self, self:current_map()),
+      show = require("api.Item").is_alive(self),
       image = (self.image or ""),
       color = self:calc("color"),
       x_offset = x_offset,
@@ -317,7 +317,6 @@ function IItem:calc_ui_color()
     return {0, 0, 0}
 end
 
---- @overrides IOwned.remove_ownership
 function IItem:remove()
    self.amount = 0
 

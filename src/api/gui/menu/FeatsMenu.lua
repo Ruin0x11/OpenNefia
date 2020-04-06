@@ -163,7 +163,7 @@ function FeatsMenu:relayout(x, y)
    self.win:set_pages(self.pages)
 end
 
-function FeatsMenu:get_result()
+function FeatsMenu:charamake_result()
    return {}
 end
 

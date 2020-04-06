@@ -517,7 +517,7 @@ function InstancedMap:refresh_tile(x, y)
       opaque = opaque or obj:calc("is_opaque")
 
       local tile_light = obj:calc("light")
-      if tile_light then
+      if tile_light and obj:produce_memory().show then
          tile_light.offset_y = tile_light.offset_y or 0
          tile_light.brightness = tile_light.brightness or 0
          tile_light.power = tile_light.power or 0

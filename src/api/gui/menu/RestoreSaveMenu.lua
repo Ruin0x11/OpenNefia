@@ -26,13 +26,13 @@ local UiListExt = function()
 
    function E:get_item_text(item)
       return item.header
-   end   
+   end
    function E:draw_select_key(entry, i, key_name, x, y)
       y = self.y + (i-1) * 40
       UiList.draw_select_key(self, entry, i, key_name, x, y)
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
-      local subtext = "sav_dood"
+      local subtext = entry.id
       y = self.y + (i-1) * 40
 
       Draw.set_font(13)

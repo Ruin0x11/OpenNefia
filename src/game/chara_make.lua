@@ -14,7 +14,7 @@ chara_make.sections = {
    "api.gui.menu.chara_make.SelectFeatsMenu",
    "api.gui.menu.chara_make.SelectAliasMenu",
    "api.gui.menu.ChangeAppearanceMenu",
-   "api.gui.menu.chara_make.CharacterSummaryMenu"
+   "api.gui.menu.chara_make.CharacterFinalizeMenu"
 }
 
 chara_make.wrapper = nil

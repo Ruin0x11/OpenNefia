@@ -58,7 +58,7 @@ local function format(kind, color, s, ...)
       return
    end
 
-   local str = string.format("[%s][%s] %s", string.upper(kind), source, out)
+   local str = string.format("[%s][%s] %s", kind, source, out)
    local formatted = ansicolors(("%%{%s}%s%%{reset}"):format(color, str))
    print(formatted)
 

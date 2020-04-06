@@ -27,7 +27,7 @@ function IUiLayer:query(z_order)
    class.assert_is_an(IUiLayer, self)
 
    if draw.is_layer_active(self) then
-      Log.warn("Draw layer '%s' is already being queried.")
+      Log.warn("Draw layer '%s' is already being queried.", self.__class.__name)
       return nil, "canceled"
    end
 

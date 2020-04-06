@@ -24,10 +24,6 @@ function CharacterSheetMenu:init(behavior, chara)
    self.height = 400
    self.chara = chara
 
-   if self.chara == nil and CharaMake.is_active() then
-      self.chara = Chara.create("content.player", nil, nil, {ownerless = true})
-   end
-
    self.portrait = self.chara:calc("portrait")
    self.chara_image = self.chara:calc("image")
    self.pcc = self.chara:calc("pcc")

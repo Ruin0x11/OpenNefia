@@ -12,7 +12,7 @@ function ICharaMakeSection.charamake_result(chara)
    return nil
 end
 
-function ICharaMakeSection.on_charamake_finish(chara)
+function ICharaMakeSection.on_make_chara(chara)
 end
 
 return ICharaMakeSection

@@ -73,14 +73,11 @@ function CharaMakeWrapper:proceed()
          local sm = layer_class:new()
          class.assert_is_an(ICharaMakeSection, sm)
          return sm
-   end,
-      function(err)
-         return debug.traceback(err)
-   end)
+   end, debug.traceback)
+
    if not success then
       local err = submenu
       Log.error("Error instantiating charamake menu:\n\t%s", err)
-      self:go_back()
       return
    end
 
@@ -218,8 +215,9 @@ function CharaMakeWrapper:update()
          local success, err = xpcall(
             function()
                for _, menu in ipairs(self.trail) do
-                  menu:on_charamake_finish(result)
+                  menu:on_make_chara(result)
                end
+               self.submenu:on_make_chara(result)
             end,
             debug.traceback)
 

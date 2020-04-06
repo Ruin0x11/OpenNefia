@@ -39,9 +39,6 @@ end
 function SelectFeatsMenu:on_make_chara(chara)
 end
 
-function SelectFeatsMenu:on_charamake_finish(chara)
-end
-
 function SelectFeatsMenu:update()
    if self.inner.chosen then
       -- if self.chara.feats_learnable == 0

@@ -1,4 +1,6 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
+local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 
@@ -11,12 +13,16 @@ local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local WindowTitle = require("api.gui.menu.WindowTitle")
 local CharaMake = require("api.CharaMake")
 
-local CharacterSummaryMenu = class.class("CharacterSummaryMenu", ICharaMakeSection)
+local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeSection)
 
-CharacterSummaryMenu:delegate("input", IInput)
+CharacterFinalizeMenu:delegate("input", IInput)
 
-function CharacterSummaryMenu:init(chara)
-   self.inner = CharacterSheetMenu:new(chara)
+function CharacterFinalizeMenu:init()
+   local chara = Chara.create("content.player", nil, nil, {ownerless = true}) -- TODO skills
+   chara.name = "????"
+   chara.title = CharaMake.get_section_result("api.gui.menu.chara_make.SelectAliasMenu")
+
+   self.inner = CharacterSheetMenu:new(nil, chara)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
@@ -34,27 +40,26 @@ function CharacterSummaryMenu:init(chara)
    self:reroll()
 end
 
-function CharacterSummaryMenu:make_keymap()
+function CharacterFinalizeMenu:make_keymap()
    return {
       enter = function() self:reroll(true) end,
    }
 end
 
-function CharacterSummaryMenu:on_query()
+function CharacterFinalizeMenu:on_query()
    Gui.play_sound("base.chara")
    self.canceled = false
-   self.name = "????"
 end
 
-function CharacterSummaryMenu:on_make_chara(chara)
+function CharacterFinalizeMenu:on_make_chara(chara)
    if self.name then
       chara.name = self.name
    else
-      chara.name = "name"
+      chara.name = Event.trigger("base.generate_chara_name", {}, "player")
    end
 end
 
-function CharacterSummaryMenu:reroll(play_sound)
+function CharacterFinalizeMenu:reroll(play_sound)
    self.chara = require("api.CharaMake").make_chara()
 
    if play_sound then
@@ -62,7 +67,7 @@ function CharacterSummaryMenu:reroll(play_sound)
    end
 end
 
-function CharacterSummaryMenu:relayout(x, y, width, height)
+function CharacterFinalizeMenu:relayout(x, y, width, height)
    self.x = x
    self.y = y
    self.width = width
@@ -71,7 +76,7 @@ function CharacterSummaryMenu:relayout(x, y, width, height)
    self.title:relayout(240, Draw.get_height() - 16, Draw.get_width() - 240, 16)
 end
 
-function CharacterSummaryMenu:draw()
+function CharacterFinalizeMenu:draw()
    self.inner:draw()
 
    self.title:draw()
@@ -81,7 +86,7 @@ local function prompt_final()
    return Prompt:new({"ああ", "いや...", "最初から", "前に戻る"}):query()
 end
 
-function CharacterSummaryMenu:update()
+function CharacterFinalizeMenu:update()
    if self.inner.canceled then
       self.inner.canceled = false
       CharaMake.set_caption("chara_make.final_screen.are_you_satisfied.prompt")
@@ -113,4 +118,4 @@ function CharacterSummaryMenu:update()
    self.canceled = false
 end
 
-return CharacterSummaryMenu
+return CharacterFinalizeMenu

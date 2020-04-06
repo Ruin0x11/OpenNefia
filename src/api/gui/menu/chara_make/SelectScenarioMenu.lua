@@ -62,10 +62,6 @@ function SelectScenarioMenu:make_keymap()
 end
 
 function SelectScenarioMenu:on_make_chara()
-   self.list:selected_item()
-end
-
-function SelectScenarioMenu:on_charamake_finish()
    save.base.scenario = self.scenario._id
 end
 
@@ -73,7 +69,6 @@ function SelectScenarioMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y + 20
 
-   require("api.Log").info(self.list:selected_item().description)
    self.text:set_data({self.list:selected_item().description})
 
    self.win:relayout(self.x, self.y, self.width, self.height)

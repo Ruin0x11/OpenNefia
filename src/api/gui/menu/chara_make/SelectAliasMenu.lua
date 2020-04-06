@@ -77,12 +77,18 @@ function SelectAliasMenu:make_keymap()
 end
 
 function SelectAliasMenu:on_make_chara(chara)
-   chara.alias = self.list:selected_item()
+   chara.alias = self.list:selected_item().text
+end
+
+function SelectAliasMenu:charamake_result()
+   return self.list:selected_item().text
 end
 
 function SelectAliasMenu:lock(i)
    if not self.items[i] then return end
+   if self.items[i].type ~= "alias" then return end
 
+   Gui.play_sound("base.ok1")
    if self.items[i].locked then
       self.items[i].locked = nil
    else

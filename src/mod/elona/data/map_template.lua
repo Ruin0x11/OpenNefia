@@ -1123,7 +1123,7 @@ local function reload_noyel(map)
       :each(IChara.vanquish)
 end
 function noyel.on_generate(map)
-   for _, item in Item.iter_ground() do
+   for _, item in Item.iter_ground(map) do
       if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
          item:remove()
       end
