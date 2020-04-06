@@ -1,8 +1,9 @@
 {
-	"name": "opennefia",
-	"displayName": "opennefia",
+	"name": "opennefia-support",
+	"displayName": "OpenNefia Support",
 	"description": "Editor support for OpenNefia",
 	"publisher": "Ruin0x11",
+	"repository": "https://github.com/Ruin0x11/OpenNefia",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.42.0"
