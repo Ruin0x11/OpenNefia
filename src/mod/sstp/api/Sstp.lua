@@ -53,7 +53,7 @@ function Sstp.send_raw(op, protocol, params, ip, port)
    end
    client:settimeout(1)
 
-   local req = ("%s %s\r\nSender: elona-next\r\n"):format(op, protocol)
+   local req = ("%s %s\r\nSender: OpenNefia\r\n"):format(op, protocol)
    for _, pair in ipairs(params) do
       req = req .. ("%s: %s\r\n"):format(pair[1], pair[2])
    end

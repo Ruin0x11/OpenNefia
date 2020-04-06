@@ -1,7 +1,7 @@
 {
-	"name": "elona-next",
-	"displayName": "elona-next",
-	"description": "Editor support for Elona_next",
+	"name": "opennefia",
+	"displayName": "opennefia",
+	"description": "Editor support for OpenNefia",
 	"publisher": "Ruin0x11",
 	"version": "0.0.1",
 	"engines": {
@@ -11,125 +11,125 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:elona-next.hotloadThisFile",
-		"onCommand:elona-next.insertTemplate",
+		"onCommand:opennefia.hotloadThisFile",
+		"onCommand:opennefia.insertTemplate",
 		"workspaceContains:deps/elona"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "elona-next.hotloadThisFile",
-				"title": "Elona_next: Hotload this file"
+				"command": "opennefia.hotloadThisFile",
+				"title": "OpenNefia: Hotload this file"
 			},
 			{
-				"command": "elona-next.insertTemplate",
-				"title": "Elona_next: Insert template"
+				"command": "opennefia.insertTemplate",
+				"title": "OpenNefia: Insert template"
 			},
 			{
-				"command": "elona-next.launchGame",
-				"title": "Elona_next: Launch game"
+				"command": "opennefia.launchGame",
+				"title": "OpenNefia: Launch game"
 			},
 			{
-				"command": "elona-next.describeAtPoint",
-				"title": "Elona_next: Describe thing at point"
+				"command": "opennefia.describeAtPoint",
+				"title": "OpenNefia: Describe thing at point"
 			},
 			{
-				"command": "elona-next.insertRequireStatement",
-				"title": "Elona_next: Insert require statement"
+				"command": "opennefia.insertRequireStatement",
+				"title": "OpenNefia: Insert require statement"
 			},
 			{
-				"command": "elona-next.requireThisFileInRepl",
-				"title": "Elona_next: Require this file in REPL"
+				"command": "opennefia.requireThisFileInRepl",
+				"title": "OpenNefia: Require this file in REPL"
 			},
 			{
-				"command": "elona-next.resetDrawLayers",
-				"title": "Elona_next: Reset draw layers"
+				"command": "opennefia.resetDrawLayers",
+				"title": "OpenNefia: Reset draw layers"
 			},
 			{
-				"command": "elona-next.sendSelectionToRepl",
-				"title": "Elona_next: Send selection to REPL"
+				"command": "opennefia.sendSelectionToRepl",
+				"title": "OpenNefia: Send selection to REPL"
 			},
 			{
-				"command": "elona-next.sendFileToRepl",
-				"title": "Elona_next: Send file to REPL"
+				"command": "opennefia.sendFileToRepl",
+				"title": "OpenNefia: Send file to REPL"
 			},
 			{
-				"command": "elona-next.insertId",
-				"title": "Elona_next: Insert ID"
+				"command": "opennefia.insertId",
+				"title": "OpenNefia: Insert ID"
 			},
 			{
-				"command": "elona-next.searchDocumentation",
-				"title": "Elona_next: Search documentation"
+				"command": "opennefia.searchDocumentation",
+				"title": "OpenNefia: Search documentation"
 			},
 			{
-				"command": "elona-next.makeScratchBuffer",
-				"title": "Elona_next: Make scratch buffer"
+				"command": "opennefia.makeScratchBuffer",
+				"title": "OpenNefia: Make scratch buffer"
 			},
 			{
-				"command": "elona-next.createNewMod",
-				"title": "Elona_next: Create new mod"
+				"command": "opennefia.createNewMod",
+				"title": "OpenNefia: Create new mod"
 			},
 			{
-				"command": "elona-next.insertEventHandler",
-				"title": "Elona_next: Insert event handler"
+				"command": "opennefia.insertEventHandler",
+				"title": "OpenNefia: Insert event handler"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "elona-next.hotloadThisFile",
+				"command": "opennefia.hotloadThisFile",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+R",
 				"mac": "Shift+Cmd+R"
 			},
 			{
-				"command": "elona-next.insertTemplate",
+				"command": "opennefia.insertTemplate",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+T",
 				"mac": "Shift+Cmd+T"
 			},
 			{
-				"command": "elona-next.launchGame",
+				"command": "opennefia.launchGame",
 				"key": "Alt+L"
 			},
 			{
-				"command": "elona-next.describeAtPoint",
+				"command": "opennefia.describeAtPoint",
 				"when": "editorTextFocus",
 				"key": "Ctrl+D",
 				"mac": "Cmd+D"
 			},
 			{
-				"command": "elona-next.insertRequireStatement",
+				"command": "opennefia.insertRequireStatement",
 				"when": "editorTextFocus",
 				"key": "Ctrl+I",
 				"mac": "Cmd+I"
 			},
 			{
-				"command": "elona-next.requireThisFileInRepl",
+				"command": "opennefia.requireThisFileInRepl",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+E",
 				"mac": "Shift+Cmd+E"
 			},
 			{
-				"command": "elona-next.sendSelectionToRepl",
+				"command": "opennefia.sendSelectionToRepl",
 				"when": "editorTextFocus && editorHasSelection",
 				"key": "Ctrl+Shift+S",
 				"mac": "Shift+Cmd+S"
 			},
 			{
-				"command": "elona-next.sendFileToRepl",
+				"command": "opennefia.sendFileToRepl",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+S",
 				"mac": "Shift+Cmd+S"
 			},
 			{
-				"command": "elona-next.insertId",
+				"command": "opennefia.insertId",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+D",
 				"mac": "Shift+Cmd+D"
 			},
 			{
-				"command": "elona-next.insertEventHandler",
+				"command": "opennefia.insertEventHandler",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+V",
 				"mac": "Shift+Cmd+V"
@@ -138,6 +138,8 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
+		"vscode:package": "vsce package",
+		"vscode:publish": "vsce publish",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",

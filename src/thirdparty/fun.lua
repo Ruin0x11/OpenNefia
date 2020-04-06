@@ -1951,7 +1951,7 @@ exports.op = operator
 methods.op = operator
 
 --------------------------------------------------------------------------------
--- Elona_next modifications
+-- OpenNefia modifications
 --------------------------------------------------------------------------------
 
 -- aliases for consistent naming (underscored)

@@ -7,7 +7,7 @@ local queue = require("util.queue")
 
 local Env = {}
 
---- Returns the version of elona-next as a string.
+--- Returns the version of OpenNefia as a string.
 ---
 --- @treturn string
 function Env.version()

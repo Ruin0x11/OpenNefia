@@ -53,7 +53,7 @@ if not love or love.getVersion() == "lovemock" then
       }
    end
    fs.get_save_directory = function()
-      return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "Elona_next")
+      return fs.join(fs.get_temporary_directory(), ".local", "share", "love", "OpenNefia")
    end
    fs.create_directory = function(name)
       name = fs.to_relative(name)

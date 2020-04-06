@@ -24,5 +24,5 @@ Event.register("base.on_chara_moved", "Watch var",
                end)
 
 -- Local Variables:
--- elona-next-always-send-to-repl: t
+-- opennefia-always-send-to-repl: t
 -- End:

@@ -5,5 +5,5 @@ a = data["town_creator.town_building"]["town_creator.test"]
 MapSpec.place(a.map, a.atlas, 2, 2, true)
 
 -- Local Variables:
--- elona-next-always-send-to-repl: t
+-- opennefia-always-send-to-repl: t
 -- End:

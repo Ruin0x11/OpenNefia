@@ -1,2 +1,2 @@
-((nil (projectile-project-compilation-cmd . "elona-next")
-      (projectile-project-run-cmd . "elona-next")))
+((nil (projectile-project-compilation-cmd . "OpenNefia")
+      (projectile-project-run-cmd . "OpenNefia")))

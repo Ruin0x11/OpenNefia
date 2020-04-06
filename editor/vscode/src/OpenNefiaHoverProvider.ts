@@ -2,7 +2,7 @@ import { HoverProvider, TextDocument, Position, CancellationToken, ProviderResul
 import { sendToServer, ServerCommand, HelpServerResponse, HelpClientRequest } from "./net";
 import { plainToClass } from "class-transformer";
 
-export class ElonaNextHoverProvider implements HoverProvider {
+export class OpenNefiaHoverProvider implements HoverProvider {
     provideHover(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Hover> {
         return new Promise((resolve, reject) => {
         let wordRange = document.getWordRangeAtPosition(position, /[_\w][_\w\.:]*/g)!!;
@@ -17,5 +17,5 @@ export class ElonaNextHoverProvider implements HoverProvider {
             .catch((reason) => reject(reason));
         });
     }
-    
+
 }

@@ -4,11 +4,11 @@ import { plainToClass } from "class-transformer";
 import * as vscode from "vscode";
 import { luaPathToUri } from "./util";
 
-export class ElonaNextDefinitionProvider implements DefinitionProvider {
+export class OpenNefiaDefinitionProvider implements DefinitionProvider {
     public async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<Definition | undefined> {
         return new Promise((resolve, reject) => {
             // Jump to require path file
-            let requireRegex =  /require\(["']([\w\.]+)["']\)*/;
+            let requireRegex = /require\(["']([\w\.]+)["']\)*/;
             let wordRange = document.getWordRangeAtPosition(position, requireRegex);
             if (wordRange) {
                 let luaPath = document.getText(wordRange).match(requireRegex)!![1];
@@ -33,7 +33,7 @@ export class ElonaNextDefinitionProvider implements DefinitionProvider {
                         return;
                     }
                     let uri = Uri.file(response.file);
-                    let position = new vscode.Position(response.line-1, response.column);
+                    let position = new vscode.Position(response.line - 1, response.column);
                     let location = new Location(uri, position);
                     resolve(location);
                 })

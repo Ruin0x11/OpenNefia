@@ -114,7 +114,7 @@ function MainTitleMenu:draw()
       Draw.text("Contributor f1r3fly, Sunstrike, Schmidt, Elvenspirit / View the credits for more", 20, 38)
    end
 
-   Draw.text("Elona_next version " .. self.version .. "  Developed by Ruin0x11", 20, 56)
+   Draw.text("OpenNefia version " .. self.version .. "  Developed by Ruin0x11", 20, 56)
 
    Draw.text("F3: Quickstart", 20, Draw.get_height() - 20 - Draw.text_height())
 

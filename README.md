@@ -1,5 +1,7 @@
-# Gwen
-*Gwen* is an engine rewrite of the Japanese roguelike RPG [Elona](https://ylvania.style.coocan.jp) using Lua and the LÖVE game engine.
+# OpenNefia
+*OpenNefia* is an engine rewrite of the Japanese roguelike RPG [Elona](https://ylvania.style.coocan.jp) using Lua and the LÖVE game engine.
+
+It is not a variant of Elona, but instead a ground-up rewrite intended to vastly expand the support for modding in the game, allowing for things that would have been impractical or impossible with the vanilla codebase.
 
 It is also an experiment to see if a game can be written in an extensible manner, using a mod system and an extensive API.
 
@@ -35,22 +37,7 @@ If using a Unix-like platform, ensure the `love` binary is on your `PATH`.
 Run `setup.bat` for Windows or `setup` for Unix-like platforms to download and unpack Elona 1.22.
 
 ## Running
-Run `elona-next.bat` or `elona-next`.
+Run `OpenNefia.bat` or `OpenNefia`.
 
 ## Credits
-Some of the code in this repository has been taken or adapted from the following sources.
-
-- [Elona_foobar](https://github.com/ElonaFoobar/ElonaFoobar) (MIT) [excerpts]
-- [30log](https://github.com/Yonaba/30log) (MIT) [excerpts]
-- [automagic.lua](http://lua-users.org/wiki/AutomagicTables) (unlicensed) [excerpts]
-- [circular_buffer](https://gist.github.com/johndgiese/3e1c6d6e0535d4536692) (unlicensed) [modified]
-- [gambiarra](https://bitbucket.org/zserge/gambiarra) (MIT) [modified]
-- [inspect](https://github.com/kikito/inspect.lua) (MIT)
-- [lua-resty-tsort](https://github.com/bungle/lua-resty-tsort) (MIT) [modified]
-- [lua-schema](https://github.com/sschoener/lua-schema) (MIT)
-- [luacheck](https://github.com/mpeterv/luacheck) (MIT) [excerpts]
-- [luafun](https://github.com/luafun/luafun) (MIT/X11) [modified]
-- [mobdebug](https://github.com/pkulchenko/MobDebug) (MIT) [modified]
-- [Penlight](https://github.com/stevedonovan/Penlight) (MIT) [excerpts]
-- [profile.lua](https://bitbucket.org/itraykov/profile.lua) (unlicensed) [modified]
-- [strict.lua](http://lua-users.org/lists/lua-l/2005-08/msg00737.html) (unlicensed)
+See [CREDITS.md](CREDITS.md) for third-party code information.

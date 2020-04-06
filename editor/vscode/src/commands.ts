@@ -15,7 +15,7 @@ export async function requireThisFileInRepl() {
 
     let uri = editor.document.uri;
     let luaPath = uriToLuaPath(uri);
-    let name = luaPath.substr(luaPath.lastIndexOf(".")+1);
+    let name = luaPath.substr(luaPath.lastIndexOf(".") + 1);
     var code = `${name} = require("${luaPath}")`;
     await sendToRepl(code, true);
 }
@@ -45,7 +45,7 @@ export async function insertRequireStatement() {
                 return;
             }
             let luaPath = uriToLuaPath(file.uri);
-            let name = luaPath.substr(luaPath.lastIndexOf(".")+1);
+            let name = luaPath.substr(luaPath.lastIndexOf(".") + 1);
             var code = `local ${name} = require("${luaPath}")\n`;
             vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(code));
         });
@@ -55,7 +55,7 @@ var OutputTerminal: vscode.Terminal;
 
 export async function launchGame() {
     if (OutputTerminal === undefined) {
-        OutputTerminal = vscode.window.createTerminal("Elona_next Output");
+        OutputTerminal = vscode.window.createTerminal("OpenNefia Output");
         if (process.platform === "win32") {
             OutputTerminal.sendText("$cd = Split-Path (Get-Location); $env:PATH = \"$cd\\lib\\libvips;$env:PATH\"", true);
         }
@@ -71,7 +71,7 @@ function showHelpWindow(helpResponse: HelpServerResponse) {
         vscode.window.showInformationMessage(helpResponse.message!!);
     } else {
         if (DocumentationWindow === undefined) {
-            DocumentationWindow = vscode.window.createOutputChannel("Elona_next Help");
+            DocumentationWindow = vscode.window.createOutputChannel("OpenNefia Help");
         }
         DocumentationWindow.clear();
         DocumentationWindow.append(helpResponse.doc);
@@ -97,26 +97,26 @@ export async function describeAtPoint() {
 
 function unescapeString(str: string) {
     return str
-      .replace(/\\\\/g, '\\')
-      .replace(/\\\"/g, '\"')
-      .replace(/\\\//g, '\/')
-      .replace(/\\b/g, '\b')
-      .replace(/\\f/g, '\f')
-      .replace(/\\n/g, '\n')
-      .replace(/\\r/g, '\r')
-      .replace(/\\t/g, '\t')
-      .replace(/\\{/g, '{')
-      .replace(/\\}/g, '}')
-      .replace(/^['"]/, '')
-      .replace(/['"]$/, '');
-  };
+        .replace(/\\\\/g, '\\')
+        .replace(/\\\"/g, '\"')
+        .replace(/\\\//g, '\/')
+        .replace(/\\b/g, '\b')
+        .replace(/\\f/g, '\f')
+        .replace(/\\n/g, '\n')
+        .replace(/\\r/g, '\r')
+        .replace(/\\t/g, '\t')
+        .replace(/\\{/g, '{')
+        .replace(/\\}/g, '}')
+        .replace(/^['"]/, '')
+        .replace(/['"]$/, '');
+};
 
 export async function insertTemplate() {
     await sendToServer(ServerCommand.Template, new TemplateClientRequest("", true, true, TemplateScope.OptionalCommented))
-    .then((json) => {
-        let templateResponse = plainToClass(TemplateServerResponse, json);
-        vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(unescapeString(templateResponse.template)));
-    });
+        .then((json) => {
+            let templateResponse = plainToClass(TemplateServerResponse, json);
+            vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(unescapeString(templateResponse.template)));
+        });
 }
 
 export async function insertId() {
@@ -125,7 +125,7 @@ export async function insertId() {
             let idsResponse = plainToClass(IdsServerResponse, json);
             return vscode.window.showQuickPick(idsResponse.ids);
         })
-        .then((id) => { if (id) { vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`"${id}"`)); } } );
+        .then((id) => { if (id) { vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`"${id}"`)); } });
 }
 
 export async function hotloadThisFile() {
@@ -234,14 +234,14 @@ function createFile(workspaceEdit: vscode.WorkspaceEdit, path: vscode.Uri, conte
 export async function createNewMod() {
     let root = vscode.workspace.rootPath;
 
-    await vscode.window.showInputBox({validateInput: validateModId, prompt: "Mod ID (must be a Lua identifier)"})
+    await vscode.window.showInputBox({ validateInput: validateModId, prompt: "Mod ID (must be a Lua identifier)" })
         .then(async (modId) => {
             if (modId) {
                 let workspaceEdit = new vscode.WorkspaceEdit();
 
                 let modFile = vscode.Uri.file(root + `/mod/${modId}/mod.lua`);
-                let modFileContent = 
-`return {
+                let modFileContent =
+                    `return {
     id = "${modId}",
     version = "0.1.0",
     dependencies = {
@@ -249,10 +249,10 @@ export async function createNewMod() {
     }
 }`;
                 createFile(workspaceEdit, modFile, modFileContent);
-                
+
                 let initFile = vscode.Uri.file(root + `/mod/${modId}/init.lua`);
-                let initFileContent = 
-`-- Load this mod in-game with Ctrl+Shift+R.
+                let initFileContent =
+                    `-- Load this mod in-game with Ctrl+Shift+R.
 local Log = require ("api.Log")
 
 Log.info("Hello from %s!", _MOD_NAME)`;
@@ -277,24 +277,24 @@ function validateEventHandlerDescription(desc: string): string | null {
 }
 
 export async function insertEventHandler() {
-     await sendToServer(ServerCommand.Ids, new IdsClientRequest("base.event"))
+    await sendToServer(ServerCommand.Ids, new IdsClientRequest("base.event"))
         .then((json) => {
             let idsResponse = plainToClass(IdsServerResponse, json);
             return vscode.window.showQuickPick(idsResponse.ids);
         })
         .then(async (eventId) => {
-            if (eventId) { 
-                let description = await vscode.window.showInputBox({prompt: "Event handler description", validateInput: validateEventHandlerDescription});
+            if (eventId) {
+                let description = await vscode.window.showInputBox({ prompt: "Event handler description", validateInput: validateEventHandlerDescription });
                 if (description) {
-                    // TODO: There's some room for IDE smartness here, like 
+                    // TODO: There's some room for IDE smartness here, like
                     // inserting placeholders for the valid arguments in "params".
-                    let code = 
-`Event.register("${eventId}", "${description}",
+                    let code =
+                        `Event.register("${eventId}", "${description}",
                 function(emitter, params, result)
                     \${0}
                 end)`;
                     vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(code));
                 }
-            } 
+            }
         });
 }

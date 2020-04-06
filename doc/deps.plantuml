@@ -1,0 +1,317 @@
+@startuml
+component elona_next #FF9999 [
+   elona_next
+   --
+   playable state
+   mods creatable
+   beat zeome
+]
+component itemname [
+   itemname
+   --
+   can display all item properties
+]
+component itemname_mod #9999FF [
+   itemname_mod
+   --
+   can add new properties to item names
+]
+component themes #9999FF [
+themes
+--
+can reskin UI components
+]
+component chara_generation [
+   chara_generation
+   --
+   supply initial equipment
+]
+component item_material [
+   item_material
+   --
+   set item materials
+]
+component enchantments [
+    enchantments
+]
+component all_magic [
+    all_magic
+]
+component all_traits [
+all_traits
+]
+component trait_menu [
+trait_menu
+]
+component chara_making [
+chara_making
+]
+component skill_menu [
+skill_menu
+]
+
+component main_gameplay #99FF99 [
+main_gameplay
+]
+component all_quests [
+all_quests
+]
+component trainer [
+trainer
+]
+component main_scenario [
+main_scenario
+]
+component gods [
+gods
+]
+component mef [
+mef
+]
+component connect_refreshed_maps [
+connect_refreshed_maps
+--
+after refresh, reconnect maps which were part of previously refreshed map, using tags
+e.g. stairs to quest map
+]
+component all_dialogs [
+all_dialogs
+]
+component food_effects [
+food_effects
+]
+component item_effects [
+item_effects
+]
+component blending [
+blending
+]
+component material [
+material
+]
+component dip [
+dip
+]
+component casino [
+casino
+]
+component deeds [
+deeds
+]
+component shop [
+shop
+]
+component museum [
+museum
+]
+component ranch [
+ranch
+]
+component wish [
+wish
+]
+component blood_and_fragments [
+blood_and_fragments
+]
+component polish #99FF99 [
+polish
+]
+component emoticons [
+emoticons
+]
+component pcc_creator [
+pcc_creator
+]
+component buffs [
+buffs
+]
+component normal_magic [
+normal_magic
+]
+component magic_menu [
+magic_menu
+]
+component riding [
+riding
+]
+component adventurers [
+adventurers
+]
+component scrolling [
+scrolling
+]
+component guilds [
+guilds
+]
+component scenes [
+scenes
+]
+component journal [
+journal
+]
+component throwing [
+throwing
+]
+component your_home [
+your_home
+]
+component tax [
+tax
+]
+component upgrade_home [
+upgrade_home
+]
+component servant_staying [
+servant_staying
+]
+component guests [
+guests
+]
+component edit_home_map [
+edit_home_map
+]
+component crafting [
+crafting
+]
+component anorexia [
+anorexia
+]
+component cooking [
+cooking
+]
+component cargo [
+cargo
+]
+component fishing [
+fishing
+]
+component conquering_nefia [
+conquering_nefia
+]
+component nefia_generation [
+nefia_generation
+]
+component world_refresh [
+world_refresh
+]
+component weather [
+weather
+]
+component character_drops [
+character_drops
+]
+component arena [
+arena
+]
+component pet_arena [
+pet_arena
+]
+component card_and_statue [
+card_and_statue
+]
+component ai [
+ai
+]
+component extra_gameplay #99FF99 [
+   extra_gameplay
+]
+component quest_party [
+   quest_party
+]
+component quest_harvest [
+   quest_harvest
+]
+component quest_hunt [
+   quest_hunt
+]
+component quest_supply [
+   quest_supply
+]
+component all_sidequests [
+   all_sidequests
+]
+all_quests <-- quest_party
+all_quests <-- quest_harvest
+all_quests <-- quest_hunt
+all_quests <-- quest_supply
+all_dialogs <-- all_sidequests
+all_sidequests <-- journal
+extra_gameplay <-- all_sidequests
+
+ai <-- all_magic
+main_gameplay <-- ai
+item_effects <-- card_and_statue
+extra_gameplay <-- arena
+extra_gameplay <-- pet_arena
+world_refresh <-- weather
+world_refresh <-- conquering_nefia
+world_refresh <-- nefia_generation
+conquering_nefia <-- nefia_generation
+extra_gameplay <-- fishing
+extra_gameplay <-- cargo
+extra_gameplay <-- cooking
+main_gameplay <-- anorexia
+main_gameplay <-- world_refresh
+crafting <-- all_skills
+extra_gameplay <-- crafting
+your_home <-- tax
+your_home <-- upgrade_home
+your_home <-- servant_staying
+your_home <-- guests
+extra_gameplay <-- edit_home_map
+main_gameplay <-- your_home
+throwing <-- all_magic
+main_gameplay <-- throwing
+all_quests <-- journal
+main_scenario <-- scenes
+guilds <-- connect_refreshed_maps
+extra_gameplay <-- guilds
+polish <-- scrolling
+extra_gameplay <-- adventurers
+extra_gameplay <-- riding
+all_magic <-- buffs
+all_magic <-- normal_magic
+skill_menu <-- magic_menu
+chara_making <-- pcc_creator
+polish <-- blood_and_fragments
+polish <-- emoticons
+elona_next <-- polish
+deeds <-- museum
+deeds <-- ranch
+deeds <-- shop
+item_effects <-- deeds
+extra_gameplay <-- casino
+extra_gameplay <-- dip
+all_magic <-- wish
+blending <-- material
+all_magic <-- item_material
+extra_gameplay <-- blending
+elona_next <-- extra_gameplay
+
+item_effects <-- food_effects
+item_effects <-- all_magic
+main_gameplay <-- item_effects
+main_gameplay <-- connect_refreshed_maps
+all_dialogs <-- connect_refreshed_maps
+mef <-- all_magic
+elona_next <-- itemname
+itemname <-- gods
+main_gameplay <-- main_scenario
+main_gameplay <-- all_quests
+main_gameplay <-- character_drops
+chara_making <-- trait_menu
+chara_making <-- skill_menu
+trainer <-- skill_menu
+all_quests <-- all_traits
+main_gameplay <-- skill_menu
+main_gameplay <-- trainer
+elona_next <-- main_gameplay
+elona_next <-- chara_making
+chara_generation <-- item_material
+all_traits <-- trait_menu
+all_magic <-- all_traits
+itemname <-- item_material
+itemname <-- enchantments
+itemname_mod <-- itemname
+elona_next <-- themes
+@enduml

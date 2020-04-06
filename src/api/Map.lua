@@ -239,7 +239,7 @@ end
 --- Allows excluding an object, so you can for example calculate
 --- access to tile ignoring a character on it.
 ---
---- In Elona_next this is necessary since the blocked state of a tile
+--- In OpenNefia this is necessary since the blocked state of a tile
 --- is dependent on the "is_solid" flag of all the objects on it along
 --- with the "is_solid" flag of the tile.
 ---

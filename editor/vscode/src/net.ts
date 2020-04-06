@@ -182,7 +182,7 @@ export async function handleServerResponse(json: any, args: ClientRequest, noCan
         return result;
     }
 
-    let mes = "Error in Elona_next server connection: " + response.message;
+    let mes = "Error in OpenNefia server connection: " + response.message;
     vscode.window.showErrorMessage(mes);
     console.error(mes);
     return response.message;

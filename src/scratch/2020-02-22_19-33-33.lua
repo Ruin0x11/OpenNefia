@@ -10,5 +10,5 @@ Mx.add_function("test", function(...) test.test(...) end)
 Mx.start()
 
 -- Local Variables:
--- elona-next-always-send-to-repl: t
+-- opennefia-always-send-to-repl: t
 -- End:

@@ -32,7 +32,7 @@ function iso_coords:find_bounds(x, y, width, height)
 end
 
 function iso_coords:get_start_offset(x, y, width, height)
-   return width / 2, 64, 0, 0
+   return 64 / 2, 64, 0, 0
 end
 
 function iso_coords:get_draw_pos(tx, ty, mw, mh, width, height)

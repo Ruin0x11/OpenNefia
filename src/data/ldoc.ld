@@ -1,7 +1,7 @@
 --luacheck: ignore
-project='Elona_next'
-title='Elona_next Lua API'
-description='Public API for modding Elona_next'
+project='OpenNefia'
+title='OpenNefia Lua API'
+description='Public API for modding OpenNefia'
 format='discount'
 backtick_references=false
 merge=false

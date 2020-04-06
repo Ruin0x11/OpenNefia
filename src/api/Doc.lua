@@ -1,6 +1,6 @@
 --- Module for looking up documentation interactively.
 ---
---- Elona_next features an interactive documentation system. If you
+--- OpenNefia features an interactive documentation system. If you
 --- want to understand what something does, you can use `Doc.help`
 --- in the REPL to get documentation for modules, functions, and
 --- various other pieces of data.

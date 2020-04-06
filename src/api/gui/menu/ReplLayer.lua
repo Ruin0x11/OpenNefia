@@ -200,7 +200,7 @@ function ReplLayer:on_query()
       if self.message then
          self:print(self.message)
       else
-         self:print(string.format("Elona_next(仮 REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
+         self:print(string.format("OpenNefia REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
                                   Env.version(), Env.love_version(), Env.lua_version(), Env.os()))
       end
    end

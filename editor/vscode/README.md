@@ -1,6 +1,6 @@
-# VS Code Extension for Elona\_next
+# VS Code Extension for OpenNefia
 
-Allows for interacting with Elona\_next's debug server with VS Code.
+Allows for interacting with OpenNefia's debug server with VS Code.
 
 ## Features
 
@@ -14,13 +14,13 @@ Allows for interacting with Elona\_next's debug server with VS Code.
 
 | Palette Command                        | Default Keybind                               |
 -----------------------------------------|-----------------------------------------------|
-| Elona_next: Hotload this file          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
-| Elona_next: Insert template            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> |                     
-| Elona_next: Launch game                | <kbd>Alt</kbd>+<kbd>L</kbd>                   |                   
-| Elona_next: Describe thing at point    | <kbd>Ctrl</kbd>+<kbd>D</kbd>                  |                   
-| Elona_next: Insert require statement   | <kbd>Ctrl</kbd>+<kbd>I</kbd>                  |                  
-| Elona_next: Require this file in REPL  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> |                 
-| Elona_next: Reset draw layers          |                                               |
-| Elona_next: Send selection to REPL     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> |               
-| Elona_next: Send file to REPL          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> |              
-| Elona_next: Insert ID                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd> |
+| OpenNefia: Hotload this file          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
+| OpenNefia: Insert template            | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> |
+| OpenNefia: Launch game                | <kbd>Alt</kbd>+<kbd>L</kbd>                   |
+| OpenNefia: Describe thing at point    | <kbd>Ctrl</kbd>+<kbd>D</kbd>                  |
+| OpenNefia: Insert require statement   | <kbd>Ctrl</kbd>+<kbd>I</kbd>                  |
+| OpenNefia: Require this file in REPL  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> |
+| OpenNefia: Reset draw layers          |                                               |
+| OpenNefia: Send selection to REPL     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> |
+| OpenNefia: Send file to REPL          | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> |
+| OpenNefia: Insert ID                  | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd> |
