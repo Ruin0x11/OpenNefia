@@ -1,11 +1,18 @@
-# OpenNefia
-*OpenNefia* is an engine rewrite of the Japanese roguelike RPG [Elona](https://ylvania.style.coocan.jp) using Lua and the LÖVE game engine.
+<p align="center">
+<img height="256" src="https://github.com/Ruin0x11/OpenNefia/raw/master/src/data/icon1296.png" />
+</p>
+
+<h1 align="center">OpenNefia</h1>
+
+*OpenNefia* is an engine reimplementation of the Japanese roguelike RPG [Elona](http://ylvania.org/en/elona) using Lua and the LÖVE game engine.
 
 It is not a variant of Elona, but instead a ground-up rewrite intended to vastly expand the support for modding in the game, allowing for things that would have been impractical or impossible with the vanilla codebase.
 
 It is also an experiment to see if a game can be written in an extensible manner, using a mod system and an extensive API.
 
-Note that it is currently **alpha-quality** and massive breakage *will* occur when attempting to play through the game normally. *Nearly everything is still a work-in-progress.* If you would like a stable experience, then please play vanilla Elona or a variant like oomSEST instead.
+Note that it is currently **alpha-quality** and massive breakage **will** occur when attempting to play through the game normally. *Nearly everything is still a work-in-progress.* If you would like a stable experience, then please play vanilla Elona or a variant like oomSEST instead.
+
+See the [wiki](https://github.com/Ruin0x11/OpenNefia/wiki) for more information and a work-in-progress modding tutorial.
 
 ## Features
 - Intended goal of being feature-compatible with Elona 1.22 (though still a work in progress).
@@ -15,7 +22,9 @@ Note that it is currently **alpha-quality** and massive breakage *will* occur wh
 - Supports Windows, macOS, and Linux.
 
 ## Requirements
-*Note*: These requirements are only for headless mode. If you're just running the main game, [all you need is LÖVE](https://love2d.org).
+*Note*: These requirements are only for headless mode. If you're just running the main game, all you need is LÖVE. 
+
+If you're using Windows, all the dependencies listed below are already included with the repository.
 
 - [LuaJIT](http://luajit.org) 2.0.5
 - [luasocket](http://w3.impa.br/~diego/software/luasocket/)
@@ -27,14 +36,10 @@ Note that it is currently **alpha-quality** and massive breakage *will* occur wh
 
 If you're using a Unix-like platform and are installing dependencies with `luarocks`, then `luarocks` must be configured to use `luajit` or `lua5.1` as its interpreter.
 
-If you're using Windows, all dependencies needed for running headless mode are already included.
-
 ## Setup
-If using Windows, install LÖVE from https://love2d.org to your Program Files.
+If you're using Windows, install LÖVE from the [official website](https://love2d.org).
 
-If using a Unix-like platform, ensure the `love` binary is on your `PATH`.
-
-Run `setup.bat` for Windows or `setup` for Unix-like platforms to download and unpack Elona 1.22.
+If you're using a Unix-like platform, ensure the `love` binary is on your `PATH`.
 
 ## Running
 Run `OpenNefia.bat` or `OpenNefia`.
