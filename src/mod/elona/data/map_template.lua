@@ -243,10 +243,10 @@ function vernis.on_generate(map)
    end
 
    -- TODO only if sidequest
-   local stair = Feat.at(28, 9, map):nth(1)
-   assert(stair)
-   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_mine" }}
-   stair.area_params = { outer_map_id = map._id }
+   --local stair = Feat.at(28, 9, map):nth(1)
+   --assert(stair)
+   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_mine" }}
+   --stair.area_params = { outer_map_id = map._id }
 end
 data:add(vernis)
 
@@ -326,10 +326,9 @@ local yowyn = {
 }
 function yowyn.on_generate(map)
    -- TODO only if sidequest
-   local stair = Feat.at(23, 22, map):nth(1)
-   assert(stair)
-   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.cat_mansion" }}
-   stair.area_params = { outer_map_id = map._id }
+   --local stair = Feat.at(23, 22, map):nth(1)
+   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.cat_mansion" }}
+   --stair.area_params = { outer_map_id = map._id }
 
    local chara = Chara.create("elona.ainc", 3, 17, nil, map)
    chara.roles["elona.special"] = true
@@ -1195,10 +1194,10 @@ local lumiest = {
 }
 function lumiest.on_generate(map)
    -- TODO only if sidequest
-   local stair = Feat.at(18, 45, map):nth(1)
-   assert(stair)
-   stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_sewer" }}
-   stair.area_params = { outer_map_id = map._id }
+   --local stair = Feat.at(18, 45, map):nth(1)
+   --assert(stair)
+   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_sewer" }}
+   --stair.area_params = { outer_map_id = map._id }
 
    local chara = Chara.create("elona.renton", 12, 24, nil, map)
    chara.roles["elona.special"] = true

@@ -42,7 +42,7 @@
                     {:id "elona.cloth_1" :z_order 30}
                     {:id "elona.pants_1" :z_order 20}]))
     (tset chara :dir 4))
-    (tset chara :portrait "elona.zeome")
+    (tset chara :portrait "elona.man1")
     (tset chara :title (Text.random_title)))
 
 ;;
@@ -76,20 +76,10 @@
       (map:memorize_tile x y))
 
     (Map.set_map map)
-    (assert (: (Map.current) :take_object player (/ width 2) (/ height 2)))
-    (Chara.set_player player)
-
-    {:map map :start_x (/ width 2) :start_y (/ height 2)}))
+    (assert (: (Map.current) :take_object player (/ width 2) (/ height 2)))))
 
 (definst test-room base.scenario
   (on-game-start test-room))
-
-;; 0. On instantiate, reify skills/magic/element from 'abilities' table
-;; 1. Take all skills.
-;; 2. Take all AI actions.
-;; 3. Take all magic (in elona_sys).
-;; 4. Exclude special actions.
-;; 5. Run random action.
 
 (definst breather base.chara
   (class "elona.predator")

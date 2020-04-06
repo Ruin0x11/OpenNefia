@@ -25,13 +25,13 @@ function field_logic.setup_new_game(player)
    assert(player)
 
    Chara.set_player(player)
-   local params = scenario:on_game_start(player)
-   assert(type(params) == "table", "Scenario must return table of {map,start_x,start_y}")
+   scenario:on_game_start(player)
    assert(Map.current(), "Scenario must set the current map")
+   assert(player:current_map() == Map.current(), "Player must exist in current map")
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
-   assert(config["base._save_id"])
+   config["base._save_id"] = ("%s_%d"):format(Chara.player().name, os.time())
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")

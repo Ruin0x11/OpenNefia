@@ -5,6 +5,7 @@ local Gui = require("api.Gui")
 local IChara = require("api.chara.IChara")
 local Log = require("api.Log")
 
+local config = require("internal.config")
 local env = require("internal.env")
 
 local CharaMakeCaption = require("api.gui.menu.chara_make.CharaMakeCaption")
@@ -226,6 +227,7 @@ function CharaMakeWrapper:update()
             Log.error("Error running final character making step:\n\t%s", err)
             self.submenu:on_query() -- reset canceled
          else
+            config["base._save_id"] = result.name
             return result
          end
       else

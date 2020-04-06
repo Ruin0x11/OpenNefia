@@ -2,6 +2,8 @@ local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
+local Chara = require("api.Chara")
+local CharaMake = require("api.CharaMake")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -21,6 +23,10 @@ function CharacterSheetMenu:init(behavior, chara)
    self.width = 700
    self.height = 400
    self.chara = chara
+
+   if self.chara == nil and CharaMake.is_active() then
+      self.chara = Chara.create("content.player", nil, nil, {ownerless = true})
+   end
 
    self.portrait = self.chara:calc("portrait")
    self.chara_image = self.chara:calc("image")
@@ -93,8 +99,8 @@ function CharacterSheetMenu:text_name()
    local gender = self.chara:calc("gender")
    local class = self.chara:calc("class")
    local age = self.chara:calc("age")
-   local height = self.chara:calc("height") .. " cm"
-   local weight = self.chara:calc("weight") .. " kg"
+   local height = ("%d cm"):format(self.chara:calc("height"))
+   local weight = ("%d kg"):format(self.chara:calc("weight"))
 
    self.texts["name"] =
       UiTextGroup:new({

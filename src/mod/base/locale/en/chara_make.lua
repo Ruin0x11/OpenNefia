@@ -70,6 +70,11 @@ return {
         }
       },
       title = "Race Selection"
+    },
+    select_scenario ={
+      caption = "Choose a scenario. It will change the start location and win conditions.",
+      name = "Name",
+      detail = "Detail"
     }
   }
 }

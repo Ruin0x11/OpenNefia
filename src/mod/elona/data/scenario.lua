@@ -104,6 +104,7 @@ local function start(self, player)
    Map.save(world_map)
 
    local x, y = data["base.map_entrance"]["base.center"].pos(home, player)
+   assert(home:take_object(player, x, y))
    initialize_player(player)
 
    save.base.should_reset_world_map = true
@@ -114,12 +115,6 @@ local function start(self, player)
 
          return "player_turn_query"
    end)
-
-   return {
-      map = home,
-      start_x = x,
-      start_y = y
-   }
 end
 
 data:add {

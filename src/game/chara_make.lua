@@ -31,6 +31,10 @@ function chara_make.set_caption(text)
    return chara_make.wrapper and chara_make.wrapper:set_caption(text)
 end
 
+function chara_make.is_active()
+   return chara_make.wrapper ~= nil
+end
+
 function chara_make.query()
    -- create a new save data so mods can access it
    field:init_global_data()

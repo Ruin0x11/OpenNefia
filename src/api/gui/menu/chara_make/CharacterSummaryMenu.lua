@@ -3,6 +3,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 
 local Prompt = require("api.gui.Prompt")
+local I18N = require("api.I18N")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
@@ -24,7 +25,11 @@ function CharacterSummaryMenu:init(chara)
    self.caption = "chara_make.final_screen.caption"
    self.intro_sound = "base.skill"
 
-   self.title = WindowTitle:new("window title")
+   local title_string = I18N.get("ui.chara_sheet.hint.reroll")
+      .. I18N.get("ui.hint.portrait")
+      .. I18N.get("ui.chara_sheet.hint.confirm")
+
+   self.title = WindowTitle:new(title_string)
 
    self:reroll()
 end

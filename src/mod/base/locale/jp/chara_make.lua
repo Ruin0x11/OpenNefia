@@ -70,6 +70,11 @@ return {
         }
       },
       title = "種族の選択"
+    },
+    select_scenario ={
+      caption = "シナリオを選んでください。",
+      name = "名前",
+      detail = "説明"
     }
   }
 }

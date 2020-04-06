@@ -1408,6 +1408,8 @@ local function make_chip_group(chips, group, source)
          count_y = 1
       }
 
+      chip.group = group
+
       data:add(chip)
    end
 end

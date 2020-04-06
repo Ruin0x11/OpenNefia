@@ -32,6 +32,7 @@ function UiTextGroup:update()
 end
 
 function UiTextGroup:set_data(texts)
+   Draw.set_font(self.font_width, self.font_style)
    self.texts = texts or self.texts
    self.draw_texts = fun.iter(self.texts)
        :map(function(i) return Draw.make_text(I18N.get_optional(i) or i) end)
@@ -39,6 +40,7 @@ function UiTextGroup:set_data(texts)
 end
 
 function UiTextGroup:set_text(index, text)
+   Draw.set_font(self.font_width, self.font_style)
    self.texts[index] = text
    self.draw_texts[index]:set(text)
 end

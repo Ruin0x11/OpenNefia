@@ -32,7 +32,8 @@ function CharacterInfoWrapper:init()
       { icon = 1, text = "asd" },
    }
    self.menu_count = 3
-   self.title = WindowTitle:new("Window title")
+
+   self.title = WindowTitle:new()
 
    self.selected_index = 1
    self:switch_context()
@@ -71,6 +72,12 @@ function CharacterInfoWrapper:switch_context()
    self.input:forward_to(self.submenu)
 
    self.icon_bar:select(self.selected_index)
+
+   local title_string = I18N.get("ui.chara_sheet.hint.reroll")
+      .. I18N.get("ui.hint.portrait")
+      .. I18N.get("ui.chara_sheet.hint.confirm")
+
+   self.title:set_data(title_string)
 
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
 

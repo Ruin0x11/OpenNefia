@@ -2,16 +2,17 @@ local Draw = require("api.Draw")
 local IUiElement = require("api.gui.IUiElement")
 local UiTheme = require("api.gui.UiTheme")
 local I18N = require("api.I18N")
+local ISettable = require("api.gui.ISettable")
 local Gui = require("api.Gui")
 
-local IconBar = class.class("IconBar", IUiElement)
+local WindowTitle = class.class("WindowTitle", {IUiElement, ISettable})
 
-function IconBar:init(title, text)
+function WindowTitle:init(title, text)
    self.title = title
    self.text = text or title
 end
 
-function IconBar:relayout(x, y, width, height)
+function WindowTitle:relayout(x, y, width, height)
    self.x = x
    self.y = y
    self.width = width
@@ -19,7 +20,12 @@ function IconBar:relayout(x, y, width, height)
    self.t = UiTheme.load(self)
 end
 
-function IconBar:draw()
+function WindowTitle:set_data(title, text)
+   self.title = title
+   self.text = text or title
+end
+
+function WindowTitle:draw()
    Draw.set_font(12) -- 12 + sizefix
 
    local count = math.ceil(self.width / 192)
@@ -40,7 +46,7 @@ function IconBar:draw()
    Draw.text_shadowed(self.text, self.x + 32, self.y + 1 + offset_y, {250, 250, 250})
 end
 
-function IconBar:update()
+function WindowTitle:update()
 end
 
-return IconBar
+return WindowTitle
