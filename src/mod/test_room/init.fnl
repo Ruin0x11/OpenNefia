@@ -109,5 +109,4 @@
 
 (defhandler "base.on_startup" "Set quickstart scenario"
   []
-  (Log.info "Set test room scenario")
   (tset config "base.quickstart_scenario" "test_room.test_room"))
