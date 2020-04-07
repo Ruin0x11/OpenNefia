@@ -30,4 +30,5 @@ jobs:
         sudo luarocks install luafilesystem
     - name: Run REPL test
       run: |
+        set -e
         ./OpenNefia_REPL test
