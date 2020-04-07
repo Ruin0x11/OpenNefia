@@ -60,7 +60,7 @@ export async function launchGame() {
             OutputTerminal.sendText("$cd = Split-Path (Get-Location); $env:PATH = \"$cd\\lib\\libvips;$env:PATH\"", true);
         }
     }
-    OutputTerminal.sendText("love --console .", true);
+    OutputTerminal.sendText("taskkill /F /FI \"WINDOWTITLE eq OpenNefia\" /T | Out-Null; love --console .", true);
     OutputTerminal.show();
 }
 
@@ -290,7 +290,7 @@ export async function insertEventHandler() {
                     // inserting placeholders for the valid arguments in "params".
                     let code =
                         `Event.register("${eventId}", "${description}",
-                function(emitter, params, result)
+                function(receiver, params, result)
                     \${0}
                 end)`;
                     vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(code));
