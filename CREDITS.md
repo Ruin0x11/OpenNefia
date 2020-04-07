@@ -1,5 +1,7 @@
 # Credits
 
+Much of the code in OpenNefia is ported from the original HSP codebase of Elona 1.22.
+
 The following is a list of third-party projects whose code is used in OpenNefia.
 
 - [Elona_foobar](https://github.com/ElonaFoobar/ElonaFoobar) (MIT) [excerpts]
