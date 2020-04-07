@@ -41,7 +41,7 @@ If you're using Windows, install LÖVE from the [official website](https://love2
 
 If you're using a Unix-like platform, ensure the `love` binary is on your `PATH`.
 
-Then, run `OpenNefia.bat` or `OpenNefia`.
+Then, run `OpenNefia.bat` (Windows) or `OpenNefia` (Unix).
 
 ## Contributing
 Any feedback or contributions to the project are appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
