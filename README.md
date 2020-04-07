@@ -21,21 +21,6 @@ See the [wiki](https://github.com/Ruin0x11/OpenNefia/wiki) for more information 
 - Quality-of-life features for developers like code hotloading and an in-game Lua REPL. Build things like new game UIs or features in an interactive manner.
 - Supports Windows, macOS, and Linux.
 
-## Requirements
-*Note*: These requirements are only for headless mode. If you're just running the main game, all you need is LÖVE.
-
-If you're using Windows, all the dependencies listed below are already included with the repository.
-
-- [LuaJIT](http://luajit.org) 2.0.5
-- [luasocket](http://w3.impa.br/~diego/software/luasocket/)
-    + Provided by LÖVE.
-- [luautf8](https://github.com/starwing/luautf8)
-    + Replacement for LÖVE's `utf8` module.
-- [luafilesystem](https://keplerproject.github.io/luafilesystem)
-    + Replacement for LÖVE's `love.filesystem` module.
-
-If you're using a Unix-like platform and are installing dependencies with `luarocks`, then `luarocks` must be configured to use `luajit` or `lua5.1` as its interpreter.
-
 ## Running
 If you're using Windows, install LÖVE from the [official website](https://love2d.org).
 
