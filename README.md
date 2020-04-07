@@ -4,7 +4,7 @@
 
 <h1 align="center">OpenNefia</h1>
 
-*OpenNefia* is an engine reimplementation of the Japanese roguelike RPG [Elona](http://ylvania.org/en/elona) using Lua and the LÖVE game engine.
+*OpenNefia* is an open-source engine reimplementation of the Japanese roguelike RPG [Elona](http://ylvania.org/en/elona) using Lua and the LÖVE game engine.
 
 It is not a variant of Elona, but a ground-up rewrite intended to vastly expand the support for modding in the game, allowing for game features that would have been impractical or impossible with the vanilla codebase.
 
