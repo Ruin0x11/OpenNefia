@@ -6,7 +6,7 @@
 
 *OpenNefia* is an engine reimplementation of the Japanese roguelike RPG [Elona](http://ylvania.org/en/elona) using Lua and the LÖVE game engine.
 
-It is not a variant of Elona, but instead a ground-up rewrite intended to vastly expand the support for modding in the game, allowing for things that would have been impractical or impossible with the vanilla codebase.
+It is not a variant of Elona, but a ground-up rewrite intended to vastly expand the support for modding in the game, allowing for game features that would have been impractical or impossible with the vanilla codebase.
 
 It is also an experiment to see if a game can be written in an extensible manner, using a mod system and an extensive API.
 
@@ -22,7 +22,7 @@ See the [wiki](https://github.com/Ruin0x11/OpenNefia/wiki) for more information 
 - Supports Windows, macOS, and Linux.
 
 ## Requirements
-*Note*: These requirements are only for headless mode. If you're just running the main game, all you need is LÖVE. 
+*Note*: These requirements are only for headless mode. If you're just running the main game, all you need is LÖVE.
 
 If you're using Windows, all the dependencies listed below are already included with the repository.
 
@@ -36,13 +36,15 @@ If you're using Windows, all the dependencies listed below are already included 
 
 If you're using a Unix-like platform and are installing dependencies with `luarocks`, then `luarocks` must be configured to use `luajit` or `lua5.1` as its interpreter.
 
-## Setup
+## Running
 If you're using Windows, install LÖVE from the [official website](https://love2d.org).
 
 If you're using a Unix-like platform, ensure the `love` binary is on your `PATH`.
 
-## Running
-Run `OpenNefia.bat` or `OpenNefia`.
+Then, run `OpenNefia.bat` or `OpenNefia`.
+
+## Contributing
+Any feedback or contributions to the project are appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Credits
 See [CREDITS.md](CREDITS.md) for third-party code information.
