@@ -43,7 +43,6 @@ function KeyHandler:init(no_repeat_delay)
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
-   print(key, pressed, is_text, is_repeat)
    for _, forward in ipairs(self.forwards) do
       forward:receive_key(key, pressed, is_text, is_repeat)
    end

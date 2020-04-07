@@ -14,7 +14,6 @@ local draw_coro = nil
 local server = nil
 
 function love.load(arg)
-   love.filesystem.setIdentity("OpenNefia")
    draw.init()
    Draw.set_font(12)
 

@@ -10,6 +10,7 @@ local function test_room(self, player)
    local map = InstancedMap:new(width, height)
    map:clear("elona.cobble")
    map.is_indoor = true
+   map.name = "Test Room"
    for _, x, y in Pos.iter_border(0, 0, width - 1, height - 1) do
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end

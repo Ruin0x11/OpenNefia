@@ -57,7 +57,6 @@ end
 function draw.init()
    love.window.setTitle("OpenNefia")
    set_window_mode(WIDTH, HEIGHT)
-   love.window.setIcon(love.image.newImageData("data/icon.png"))
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
