@@ -24,7 +24,7 @@ See the [wiki](https://github.com/Ruin0x11/OpenNefia/wiki) for more information 
 ## Running
 If you're using Windows, install LÖVE from the [official website](https://love2d.org).
 
-If you're using a Unix-like platform, ensure the `love` binary is on your `PATH`.
+If you're using a Unix-like platform, ensure the `love` binary, `wget` and `unzip` are on your `PATH`.
 
 Then, run `OpenNefia.bat` (Windows) or `OpenNefia` (Unix).
 
