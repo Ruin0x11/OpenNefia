@@ -4,8 +4,12 @@ about: Request a new feature.
 title: ''
 ---
 
-## System Information
-  - OS:
-  - OpenNefia commit:
+## Related Issues
+
+<!--
+Include related issues, if any, or omit. Example:
+
+#2, #8.
+-->
 
 ## Description
