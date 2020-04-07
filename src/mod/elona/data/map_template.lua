@@ -1436,7 +1436,7 @@ local your_home = {
       is_indoor = true,
       has_anchored_npcs = true,
       default_ai_calm = 1,
-      tileset = "elona.tileset",
+      tileset = "elona.home",
 
       is_fixed = true,
       can_return_to = false
