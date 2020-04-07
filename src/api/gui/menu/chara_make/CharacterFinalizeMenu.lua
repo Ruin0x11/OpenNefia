@@ -83,7 +83,14 @@ function CharacterFinalizeMenu:draw()
 end
 
 local function prompt_final()
-   return Prompt:new({"ああ", "いや...", "最初から", "前に戻る"}):query()
+   return Prompt:new(
+      {
+         "chara_make.final_screen.are_you_satisfied.yes",
+         "chara_make.final_screen.are_you_satisfied.no",
+         "chara_make.final_screen.are_you_satisfied.restart",
+         "chara_make.final_screen.are_you_satisfied.go_back",
+      }
+      ):query()
 end
 
 function CharacterFinalizeMenu:update()

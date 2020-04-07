@@ -45,7 +45,7 @@ function IObject:finalize()
 end
 
 function IObject:instantiate()
-   Event.trigger("base.on_object_instantiated", {object=self})
+   self:emit("base.on_object_instantiated")
 end
 
 function IObject:clone(owned)

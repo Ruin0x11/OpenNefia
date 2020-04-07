@@ -53,7 +53,7 @@ end
 --- @tparam[opt] any default Default return value for the event.
 --- @treturn[opt] any The event's returned result
 function Event.trigger(event_id, args, default)
-   return global_events:trigger(event_id, "global", args, default)
+   return global_events:trigger(event_id, nil, args, default)
 end
 
 --- Returns a string with the list of registered events for an event

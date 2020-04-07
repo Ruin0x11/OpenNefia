@@ -611,8 +611,9 @@ local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}
 Event.register("elona_sys.hook_player_move", "Leave footsteps",
-               function(player, params, result)
-                  local map = params.chara:current_map()
+               function(_, params, result)
+                  local player = params.chara
+                  local map = player:current_map()
                   if (player.x ~= result.pos.x or player.y ~= result.pos.y)
                      and Map.can_access(result.pos.x, result.pos.y, map)
                   then

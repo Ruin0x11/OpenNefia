@@ -179,8 +179,8 @@ function IEventEmitter:compare_events(other)
    return self._events == other._events and self.global_events == other.global_events
 end
 
-function IEventEmitter:list_events()
-   return self._events:print()
+function IEventEmitter:list_events(event_id)
+   return self._events:print(event_id)
 end
 
 return IEventEmitter
