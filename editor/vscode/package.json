@@ -1,5 +1,5 @@
 {
-	"name": "opennefia-support",
+	"name": "open-nefia-support",
 	"displayName": "OpenNefia Support",
 	"description": "Editor support for OpenNefia",
 	"publisher": "Ruin0x11",
@@ -12,125 +12,125 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:opennefia.hotloadThisFile",
-		"onCommand:opennefia.insertTemplate",
+		"onCommand:open-nefia.hotloadThisFile",
+		"onCommand:open-nefia.insertTemplate",
 		"workspaceContains:deps/elona"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "opennefia.hotloadThisFile",
+				"command": "open-nefia.hotloadThisFile",
 				"title": "OpenNefia: Hotload this file"
 			},
 			{
-				"command": "opennefia.insertTemplate",
+				"command": "open-nefia.insertTemplate",
 				"title": "OpenNefia: Insert template"
 			},
 			{
-				"command": "opennefia.launchGame",
+				"command": "open-nefia.launchGame",
 				"title": "OpenNefia: Launch game"
 			},
 			{
-				"command": "opennefia.describeAtPoint",
+				"command": "open-nefia.describeAtPoint",
 				"title": "OpenNefia: Describe thing at point"
 			},
 			{
-				"command": "opennefia.insertRequireStatement",
+				"command": "open-nefia.insertRequireStatement",
 				"title": "OpenNefia: Insert require statement"
 			},
 			{
-				"command": "opennefia.requireThisFileInRepl",
+				"command": "open-nefia.requireThisFileInRepl",
 				"title": "OpenNefia: Require this file in REPL"
 			},
 			{
-				"command": "opennefia.resetDrawLayers",
+				"command": "open-nefia.resetDrawLayers",
 				"title": "OpenNefia: Reset draw layers"
 			},
 			{
-				"command": "opennefia.sendSelectionToRepl",
+				"command": "open-nefia.sendSelectionToRepl",
 				"title": "OpenNefia: Send selection to REPL"
 			},
 			{
-				"command": "opennefia.sendFileToRepl",
+				"command": "open-nefia.sendFileToRepl",
 				"title": "OpenNefia: Send file to REPL"
 			},
 			{
-				"command": "opennefia.insertId",
+				"command": "open-nefia.insertId",
 				"title": "OpenNefia: Insert ID"
 			},
 			{
-				"command": "opennefia.searchDocumentation",
+				"command": "open-nefia.searchDocumentation",
 				"title": "OpenNefia: Search documentation"
 			},
 			{
-				"command": "opennefia.makeScratchBuffer",
+				"command": "open-nefia.makeScratchBuffer",
 				"title": "OpenNefia: Make scratch buffer"
 			},
 			{
-				"command": "opennefia.createNewMod",
+				"command": "open-nefia.createNewMod",
 				"title": "OpenNefia: Create new mod"
 			},
 			{
-				"command": "opennefia.insertEventHandler",
+				"command": "open-nefia.insertEventHandler",
 				"title": "OpenNefia: Insert event handler"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "opennefia.hotloadThisFile",
+				"command": "open-nefia.hotloadThisFile",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+R",
 				"mac": "Shift+Cmd+R"
 			},
 			{
-				"command": "opennefia.insertTemplate",
+				"command": "open-nefia.insertTemplate",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+T",
 				"mac": "Shift+Cmd+T"
 			},
 			{
-				"command": "opennefia.launchGame",
+				"command": "open-nefia.launchGame",
 				"key": "Alt+L"
 			},
 			{
-				"command": "opennefia.describeAtPoint",
+				"command": "open-nefia.describeAtPoint",
 				"when": "editorTextFocus",
 				"key": "Ctrl+D",
 				"mac": "Cmd+D"
 			},
 			{
-				"command": "opennefia.insertRequireStatement",
+				"command": "open-nefia.insertRequireStatement",
 				"when": "editorTextFocus",
 				"key": "Ctrl+I",
 				"mac": "Cmd+I"
 			},
 			{
-				"command": "opennefia.requireThisFileInRepl",
+				"command": "open-nefia.requireThisFileInRepl",
 				"when": "editorTextFocus",
 				"key": "Ctrl+Shift+E",
 				"mac": "Shift+Cmd+E"
 			},
 			{
-				"command": "opennefia.sendSelectionToRepl",
+				"command": "open-nefia.sendSelectionToRepl",
 				"when": "editorTextFocus && editorHasSelection",
 				"key": "Ctrl+Shift+S",
 				"mac": "Shift+Cmd+S"
 			},
 			{
-				"command": "opennefia.sendFileToRepl",
+				"command": "open-nefia.sendFileToRepl",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+S",
 				"mac": "Shift+Cmd+S"
 			},
 			{
-				"command": "opennefia.insertId",
+				"command": "open-nefia.insertId",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+D",
 				"mac": "Shift+Cmd+D"
 			},
 			{
-				"command": "opennefia.insertEventHandler",
+				"command": "open-nefia.insertEventHandler",
 				"when": "editorTextFocus && !editorHasSelection",
 				"key": "Ctrl+Shift+V",
 				"mac": "Shift+Cmd+V"
