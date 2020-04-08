@@ -245,7 +245,7 @@ function en.himself(obj)
 end
 
 function en.trim_job(name_with_job)
-   return string.gsub(name_with_job, " .*", " ")
+   return string.gsub(name_with_job, " .*", " ") .. " "
 end
 
 function en.name_nojob(obj)

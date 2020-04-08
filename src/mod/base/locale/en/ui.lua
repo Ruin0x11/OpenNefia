@@ -164,9 +164,9 @@ end,
 end
     },
     board = {
-      difficulty = "",
+      difficulty = "$",
       difficulty_counter = function(_1)
-  return (" x %s")
+  return ("$ x %s")
   :format(_1)
 end,
       do_you_meet = "Do you want to meet the client?",
