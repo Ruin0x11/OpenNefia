@@ -116,6 +116,7 @@ require("mod.elona_sys.map_template.init")
 require("mod.elona_sys.map_tileset.init")
 require("mod.elona_sys.dialog.init")
 require("mod.elona_sys.deferred_event.init")
+require("mod.elona_sys.bindable_event.init")
 
 require("mod.elona_sys.events")
 

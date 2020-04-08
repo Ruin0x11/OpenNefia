@@ -1,3 +1,0 @@
-local Effect = {}
-
-return Effect

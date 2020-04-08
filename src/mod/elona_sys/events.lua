@@ -451,3 +451,32 @@ local function add_player_light(player, params)
 end
 
 Event.register("base.on_set_player", "Add player light", add_player_light)
+
+local function warn_quest_abandonment(_, params)
+   local quest = save.elona_sys.instanced_quest
+   if quest and quest.state ~= "completed" then
+      Gui.mes("action.leave.abandoning_quest")
+   end
+end
+Event.register("elona_sys.before_player_map_leave", "Warn about abandoning instanced quest", warn_quest_abandonment)
+
+require("mod.elona_sys.api.Command") -- HACK
+local function proc_quest_abandonment(_, params)
+   local quest = save.elona_sys.instanced_quest
+   if quest then
+      if quest.state ~= "completed" then
+         Quest.fail(quest)
+      end
+   end
+   save.elona_sys.instanced_quest = nil
+end
+Event.register("elona_sys.hook_travel_to_map", "Warn about abandoning instanced quest", proc_quest_abandonment)
+
+local function complete_quest(_, params, result)
+   local quest = Quest.for_client(params.talk.speaker)
+   if quest and quest.state == "completed" then
+      result.choice = "elona_sys.quest:finish"
+   end
+   return result
+end
+Event.register("elona_sys.on_step_dialog", "If speaker has finished quest, complete it", complete_quest)

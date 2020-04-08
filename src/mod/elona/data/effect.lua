@@ -1,5 +1,3 @@
-local Chara = require("api.Chara")
-local Effect = require("mod.elona_sys.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")

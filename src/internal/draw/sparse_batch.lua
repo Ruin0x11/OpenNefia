@@ -218,7 +218,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
             end
             self.to_draw_inds[#self.to_draw_inds+1] = ind
             self.to_draw_drawables[#self.to_draw_drawables+1] = tile
-         elseif tile ~= 0 then
+         elseif tile and tile ~= 0 then
             -- This is a reference to a tile in the sprite atlas.
             if batch == nil then
                -- Reuse a sprite batch from a previous update instead

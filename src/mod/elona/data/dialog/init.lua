@@ -92,6 +92,11 @@ data:add {
          },
          choices = "elona.default:__start"
       },
+      finish = function(t)
+         local quest = Quest.for_client(t.speaker)
+         assert(quest, "Character doesn't have a quest.")
+         return Quest.complete(quest, t.speaker)
+      end
    },
 }
 

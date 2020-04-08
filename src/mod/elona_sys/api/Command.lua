@@ -81,19 +81,21 @@ function Command.move(player, x, y)
 
    local on_cell = Chara.at(next_pos.x, next_pos.y)
    if on_cell then
-
       local result = player:emit("elona_sys.on_player_bumped_into_chara", {chara=on_cell}, "turn_end")
 
       return result
    end
 
+   local area = save.base.area_mapping:area_for_map(Map.current())
+   local has_outer_area = area and area.outer_map_uid
+
    if not Map.is_in_bounds(next_pos.x, next_pos.y)
       and Map.current():calc("can_exit_from_edge")
+      and has_outer_area
    then
       -- Player is trying to move out of the map.
 
       Event.trigger("elona_sys.before_player_map_leave", {player=player})
-      -- quest abandonment warning
 
       if Input.yes_no() then
          Gui.play_sound("base.exitmap1")
@@ -112,6 +114,7 @@ function Command.move(player, x, y)
       return "player_turn_query"
    else
       for _, obj in Map.current():objects_at_pos(next_pos.x, next_pos.y) do
+         Input.halt_input()
          local result = obj:emit("elona_sys.on_bump_into", {chara=player}, nil)
          if result then return "turn_end" end
       end

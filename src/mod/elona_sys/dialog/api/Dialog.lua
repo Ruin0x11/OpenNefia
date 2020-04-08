@@ -1,6 +1,7 @@
 --- @module Dialog
 
 local Chara = require("api.Chara")
+local Event = require("api.Event")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
@@ -226,6 +227,9 @@ get_choices = function(node, talk, state, node_data, choice_key, found)
 end
 
 local function step_dialog(node_data, talk, state)
+   local event_data = Event.trigger("elona_sys.on_step_dialog", {talk=talk}, {choice=node_data.choice})
+   node_data.choice = event_data.choice or node_data.choice
+
    if node_data.choice == "__END__" then
       return nil
    end

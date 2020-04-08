@@ -1,4 +1,4 @@
---- @modQuest
+--- @module Quest
 
 local Role = require("mod.elona_sys.api.Role")
 local Rand = require("api.Rand")
@@ -506,6 +506,16 @@ function Quest.complete(quest, client)
    Gui.update_screen()
 
    return "elona.default:__start", {text}
+end
+
+function Quest.fail(quest)
+   Event.trigger("elona_sys.on_quest_failed", {quest=quest})
+
+   Gui.mes("quest.failed_taken_from", quest.client_name)
+   local fame_delta = Effect.decrement_fame(Chara.player(), 40)
+   Gui.mes_c("quest.lose_fame", "Red", fame_delta)
+
+   table.iremove_value(save.elona_sys.quest.quests, quest)
 end
 
 --- @tparam table quest

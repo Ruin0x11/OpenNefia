@@ -14,11 +14,15 @@ local tile_size = 48
 
 --- @tparam int width
 --- @tparam int height
-function Ui.params_centered(width, height)
-   local x = (Draw.get_width() - width) / 2
+--- @tparam[opt] boolean tiled
+function Ui.params_centered(width, height, tiled)
+   if tiled == nil then
+      tiled = Gui.field_is_active()
+   end
 
+   local x = (Draw.get_width() - width) / 2
    local y
-   if Gui.field_is_active() then
+   if tiled then
       local tiled_height = Draw.get_height() / tile_size
       y = ((tiled_height - 2) * tile_size - height) / 2 + 8
    else

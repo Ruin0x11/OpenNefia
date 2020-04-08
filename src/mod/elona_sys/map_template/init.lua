@@ -155,7 +155,7 @@ local function generate_from_map_template(self, params, opts)
 
    local generator = generator_for_template(template)
 
-   local new_params = table.shallow_copy(generator.params)
+   local new_params = table.shallow_copy(generator.params or {})
    if params.dungeon_level then
       new_params.dungeon_level = params.dungeon_level
    end

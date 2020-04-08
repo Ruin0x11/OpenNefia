@@ -178,4 +178,8 @@ function Input.back_to_field()
    end
 end
 
+function Input.halt_input()
+   draw.get_current_layer().layer:halt_input()
+end
+
 return Input
