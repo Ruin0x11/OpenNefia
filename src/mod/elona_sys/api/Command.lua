@@ -114,9 +114,13 @@ function Command.move(player, x, y)
       return "player_turn_query"
    else
       for _, obj in Map.current():objects_at_pos(next_pos.x, next_pos.y) do
-         Input.halt_input()
-         local result = obj:emit("elona_sys.on_bump_into", {chara=player}, nil)
-         if result then return "turn_end" end
+         if obj:calc("is_solid") then
+            Input.halt_input()
+            local result = obj:emit("elona_sys.on_bump_into", {chara=player}, nil)
+            if result then
+               return "turn_end"
+            end
+         end
       end
 
       -- Run the general-purpose movement command. This will also
@@ -175,7 +179,8 @@ local function feats_under(player, field)
 end
 
 function Command.close(player)
-   for _, f in feats_surrounding(player, "can_close") do
+   local f = feats_surrounding(player, "can_close"):nth(1)
+   if f then
       if Chara.at(f.x, f.y) then
          Gui.mes("action.close.blocked")
       else

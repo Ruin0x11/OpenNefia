@@ -35,6 +35,14 @@ data:add {
          Gui.play_sound("base.chat")
          Gui.mes_c(self.description)
       end
+      return "turn_end"
+   end,
+   on_bash = function(self)
+      if not self.is_kitten then
+         Gui.play_sound("base.bash1")
+         self:remove_ownership()
+         return "turn_end"
+      end
    end,
 
    events = {}

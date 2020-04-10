@@ -39,7 +39,7 @@ function data_table:error(mes, ...)
                    message = mes,
                 }
    )
-   error("data: " .. mes .. inspect(self))
+   error("data error: " .. mes)
 end
 
 function data_table:init()
