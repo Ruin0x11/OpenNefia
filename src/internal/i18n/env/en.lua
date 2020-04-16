@@ -207,7 +207,7 @@ function en.him(obj, ignore_sight)
    end
 
    if obj.is_player then
-      return "yourself"
+      return "you"
    elseif obj.gender == "Male" then
       return "him"
    elseif obj.gender == "Female" then

@@ -20,4 +20,13 @@ function queue:pop()
    return obj
 end
 
+function queue:clear()
+   self._ordered = {}
+   self._buffer = {}
+end
+
+function queue:len()
+   return #self._ordered + #self._buffer
+end
+
 return queue

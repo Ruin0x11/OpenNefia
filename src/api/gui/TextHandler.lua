@@ -1,6 +1,7 @@
 local IKeyInput = require("api.gui.IKeyInput")
 local Log = require("api.Log")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
+local queue = require("util.queue")
 
 local input = require("internal.input")
 
@@ -23,6 +24,7 @@ function TextHandler:init()
    self.canceled = false
    self.halted = false
    self.keybinds = KeybindTranslator:new()
+   self.macro_queue = queue:new()
 end
 
 local function translate(char, text)
@@ -111,6 +113,7 @@ end
 function TextHandler:halt_input()
    self.modifiers = {}
    self.halted = true
+   self:clear_macro_queue()
 end
 
 function TextHandler:update_repeats()
@@ -118,6 +121,18 @@ end
 
 function TextHandler:key_held_frames()
    return 0
+end
+
+function TextHandler:enqueue_macro(keybind)
+   if self.bindings[keybind] == nil then
+      return false
+   end
+   self.macro_queue:push(keybind)
+   return true
+end
+
+function TextHandler:clear_macro_queue()
+   self.macro_queue:clear()
 end
 
 function TextHandler:prepend_key_modifiers(key)
@@ -192,6 +207,13 @@ end
 
 function TextHandler:run_actions()
    local ran = {}
+
+   if self.macro_queue:len() > 0 then
+      local keybind = self.macro_queue:pop()
+      self:run_keybind_action(keybind)
+      return
+   end
+
    for _, c in ipairs(self.chars) do
       self:run_key_action(c)
       ran[c] = true

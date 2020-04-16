@@ -1,6 +1,7 @@
 local Log = require("api.Log")
 local IKeyInput = require("api.gui.IKeyInput")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
+local queue = require("util.queue")
 
 local input = require("internal.input")
 
@@ -38,6 +39,7 @@ function KeyHandler:init(no_repeat_delay)
    self.stop_halt = true
    self.frames_held = 0
    self.keybinds = KeybindTranslator:new()
+   self.macro_queue = queue:new()
 
    self.no_repeat_delay = no_repeat_delay
 end
@@ -109,6 +111,7 @@ function KeyHandler:halt_input()
    self.halted = true
    self.stop_halt = false
    self.frames_held = 0
+   self:clear_macro_queue()
 end
 
 -- Special key repeat for keys bound to a movement action.
@@ -232,9 +235,26 @@ function KeyHandler:key_held_frames()
    return self.frames_held
 end
 
+function KeyHandler:enqueue_macro(keybind)
+   if self.bindings[keybind] == nil then
+      return false
+   end
+   self.macro_queue:push(keybind)
+   return true
+end
+
+function KeyHandler:clear_macro_queue()
+   self.macro_queue:clear()
+end
+
 function KeyHandler:run_actions(dt, ...)
    local ran = false
    local result
+
+   if self.macro_queue:len() > 0 then
+      local keybind = self.macro_queue:pop()
+      return self:run_keybind_action(keybind, ...)
+   end
 
    self:update_repeats(dt)
 

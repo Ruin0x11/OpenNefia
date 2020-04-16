@@ -75,6 +75,7 @@ end
 ---  - ownerless (bool): Do not attach the item to a map. If true, then `where` is ignored.
 ---  - no_build (bool): Do not call :build() on the object.
 ---  - no_stack (bool): Do not attempt to stack this item with others like it on the same tile.
+---  - approximate_pos (bool): If position is not accessable, put the item somewhere close.
 ---  - copy (table): A dict of fields to copy to the newly created item. Overrides fix_level, quality, and amount.
 ---  - amount (int): Amount of the item to create.
 ---  - fix_level (int): Fix level of the item.
@@ -113,7 +114,7 @@ function Item.create(id, x, y, params, where)
       copy = copy
    }
    local item = MapObject.generate_from("base.item", id, gen_params)
- 
+
    if where then
       item = where:take_object(item, x, y)
 

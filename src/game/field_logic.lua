@@ -254,6 +254,11 @@ function field_logic.player_turn_query()
 
    Gui.update_screen(nil, dt)
 
+   result = Event.trigger("base.on_player_turn")
+   if result then
+      return result, player
+   end
+
    while going do
       dt = coroutine.yield()
 
@@ -282,6 +287,7 @@ function field_logic.player_turn_query()
 end
 
 function field_logic.npc_turn(npc)
+   assert(not npc:is_player())
    local Ai = require("api.Ai")
    Ai.run(npc.ai, npc)
 

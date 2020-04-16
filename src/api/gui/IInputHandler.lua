@@ -6,5 +6,7 @@ return class.interface("IInputHandler",
                     run_actions = "function",
                     halt_input = "function",
                     update_repeats = "function",
-                 },
+                    enqueue_macro = "function",
+                    clear_macro_queue = "function"
+},
                  IFocusable)

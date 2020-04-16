@@ -36,8 +36,6 @@ function InputHandler:focus()
    self.mouse:focus()
 end
 
--- TODO: instead expose a "bind_keys" function in IUiElement so
--- elements can register keybinds directly on the parent
 function InputHandler:forward_to(handler, keys)
    self.keys:forward_to(handler, keys)
    self.mouse:forward_to(handler)
@@ -58,6 +56,14 @@ function InputHandler:run_actions(dt, ...)
    self.mouse:run_actions()
 
    return ran, result
+end
+
+function InputHandler:enqueue_macro(action)
+   return self.keys:enqueue_macro(action)
+end
+
+function InputHandler:clear_macro_queue()
+   self.keys:clear_macro_queue()
 end
 
 return InputHandler

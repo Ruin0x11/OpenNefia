@@ -127,6 +127,8 @@ Mx.make_interactive("watcher_clear", Watcher, "clear")
 
 Mx.make_interactive("restart_scenario", Tools, "restart_scenario")
 
+Mx.make_interactive("chara_sheet", Tools, "chara_sheet")
+
 --
 -- Keybinds
 --

@@ -79,8 +79,8 @@ function DialogMenu:draw()
       local width = 48
       local height = 48
       self.chip_batch:add(self.chara_image,
-                           self.x + 82,
-                           self.y + 125, -- TODO offset_y
+                           self.x + 82 + width,
+                           self.y + 125 + height, -- TODO offset_y
                            width * 2,
                            height * 2,
                            nil,

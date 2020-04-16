@@ -64,9 +64,9 @@ if not love or love.getVersion() == "lovemock" then
       for dir in string.gmatch(name, "[^\"" .. dir_sep .. "\"]+") do
          -- avoid appending the root directory ("C:") on windows; it results in "C:\C:\the\path"
          local do_create = not is_windows or (is_windows and not string.match(dir, "^[a-zA-Z]:$"))
+         path = path .. dir .. dir_sep
 
          if do_create then
-            path = path .. dir .. dir_sep
             lfs.mkdir(path)
          end
       end

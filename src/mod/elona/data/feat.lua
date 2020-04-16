@@ -18,6 +18,7 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Magic = require("mod.elona_sys.api.Magic")
 local I18N = require("api.I18N")
+local ExHelp = require("mod.elona.api.ExHelp")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then

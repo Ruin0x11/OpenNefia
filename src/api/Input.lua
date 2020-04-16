@@ -182,4 +182,12 @@ function Input.halt_input()
    draw.get_current_layer().layer:halt_input()
 end
 
+function Input.enqueue_macro(keybind)
+   return draw.get_current_layer().layer:enqueue_macro(keybind)
+end
+
+function Input.clear_macro_queue()
+   draw.get_current_layer().layer:clear_macro_queue()
+end
+
 return Input

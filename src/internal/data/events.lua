@@ -95,6 +95,7 @@ data:add_multi(
       { _id = "on_startup" },
       { _id = "on_get_item" },
       { _id = "on_log_message" },
+      { _id = "on_player_turn" },
    }
 )
 

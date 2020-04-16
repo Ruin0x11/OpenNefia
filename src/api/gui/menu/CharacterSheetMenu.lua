@@ -1,4 +1,5 @@
 local Draw = require("api.Draw")
+local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
@@ -57,6 +58,10 @@ function CharacterSheetMenu:make_keymap()
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
+end
+
+function CharacterSheetMenu:on_query()
+   Gui.play_sound("base.chara")
 end
 
 function CharacterSheetMenu:text_level()

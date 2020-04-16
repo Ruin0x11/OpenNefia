@@ -43,6 +43,12 @@ end
 function MouseHandler:update_repeats()
 end
 
+function MouseHandler:enqueue_macro()
+end
+
+function MouseHandler:clear_macro_queue()
+end
+
 function MouseHandler:run_mouse_action(button, x, y, pressed)
    local func = self.bindings[button]
    if func then

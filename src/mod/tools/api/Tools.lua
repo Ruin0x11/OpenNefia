@@ -632,4 +632,14 @@ function Tools.restart_scenario()
    Event.trigger("base.on_new_game")
 end
 
+function Tools.chara_sheet()
+   local chara = Tools.thing_at()
+   if chara == nil or chara._type ~= "base.chara" then
+      return
+   end
+
+   local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
+   CharacterSheetMenu:new(nil, chara):query()
+end
+
 return Tools

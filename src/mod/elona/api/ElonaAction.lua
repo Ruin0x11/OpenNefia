@@ -91,7 +91,9 @@ end
 
 local function calc_exp_modifier(target)
    local map = target:current_map()
-
+   if map == nil then
+   pause()
+end
    return 1 + ((target:calc("is_hung_on_sand_bag") and 15) or 0)
       + ((target:calc("splits") and 1) or 0)
       + ((target:calc("splits2") and 1) or 0)
