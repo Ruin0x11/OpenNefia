@@ -3,6 +3,7 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Quest = require("mod.elona_sys.api.Quest")
 local Gui = require("api.Gui")
+local Map = require("api.Map")
 
 
 data:add {
@@ -52,10 +53,12 @@ data:add {
 
    root = "quest.noafindskitten.noafindskitten.dialog",
    nodes = {
-      accept = {
-         text = {
-            {"accept"}
-         },
-      }
+      accept = function(t)
+         local _, map = assert(Map.generate("elona_sys.map_template", { id = "noafindskitten.quest_noafindskitten" }))
+         local quest = Quest.for_client(t.speaker)
+         assert(quest)
+         map._quest = quest
+         Map.travel_to(map)
+      end
    }
 }

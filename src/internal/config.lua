@@ -1,14 +1,20 @@
+local fs = require("util.fs")
+
 local config = {}
 
 config["base.language"] = "en"
 config["base.keybinds"] = {}
 config["base.play_music"] = false
-config["base.anim_wait"] = 80 * 0.5
+config["base.anim_wait"] = 40 * 0.5
 config["base.screen_sync"] = 6
 config["base.positional_audio"] = false
 config["base.show_charamake_extras"] = false
 config["base.quickstart_scenario"] = "test_room.test_room"
 config["base.default_font"] = "kochi-gothic-subst.ttf"
+if fs.is_file("data/font/MS-Gothic.ttf") then
+   config["base.default_font"] = "MS-Gothic.ttf"
+end
+
 config["base.quickstart_on_startup"] = false
 
 -- private variables

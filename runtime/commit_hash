@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+echo "return \"$(git rev-parse --short HEAD)\"" > ../src/internal/global/__COMMIT__.lua

@@ -5,17 +5,53 @@
 -- errors.
 -- @module Action
 
-local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
-local Input = require("api.Input")
 local Item = require("api.Item")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
+local I18N = require("api.I18N")
 local save = require("internal.global.save")
 
 local Action = {}
+
+local function item_on_cell_text(x, y)
+   local items = Item.at(x, y):to_list()
+   if #items == 0 then
+      return nil
+   end
+
+   if #items > 4 then
+      return I18N.get("action.move.item_on_cell.more_than_three", #items)
+   end
+
+   local mes = ""
+   for i, v in ipairs(items) do
+      if i > 1 then
+         mes = mes .. I18N.get("misc.and")
+      end
+      mes = mes .. v:build_name()
+   end
+
+   local own_state = items[1].own_state
+   if own_state == "none" then
+      return I18N.get("action.move.item_on_cell.item", mes)
+   elseif own_state == "shelter" then
+      return I18N.get("action.move.item_on_cell.building", mes)
+   else
+      return I18N.get("action.move.item_on_cell.not_owned", mes)
+   end
+end
+
+Event.register("base.on_chara_moved", "Item on cell text", function(chara)
+   if chara:is_player() then
+      local text = item_on_cell_text(chara.x, chara.y)
+      if text then
+         Gui.mes(text)
+      end
+   end
+end)
 
 --- @tparam IChara chara
 --- @tparam int x

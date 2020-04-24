@@ -7,7 +7,7 @@ function Util.chara_blocks(pos)
    local chara = Chara.at(pos.x, pos.y)
    return chara
       and not Chara.is_player(chara)
-      and Chara.player():has_los(chara.x, chara.y)
+      and chara:is_in_fov()
       and chara:reaction_towards(Chara.player()) < 0
 end
 

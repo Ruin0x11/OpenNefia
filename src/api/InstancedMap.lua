@@ -58,6 +58,8 @@ function InstancedMap:init(width, height, uids, tile)
 
    self.uid = save.base.map_uids:get_next_and_increment()
 
+   width = math.floor(width)
+   height = math.floor(height)
    uids = uids or save.base.uids
    tile = tile or "base.floor"
 

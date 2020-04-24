@@ -4,6 +4,7 @@ TAGS
 /src/mod/elona/sound/*
 /src/mod/beautify/graphic
 /src/deps
+/src/internal/global/__COMMIT__.lua
 /doc/out
 /lib
 /src/data/font/MS-Gothic.ttf

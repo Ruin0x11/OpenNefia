@@ -331,7 +331,7 @@ data:add {
    _type = "base.feat", _id = "quest_board", elona_id = 23,
    image = "elona.feat_quest_board", is_solid = true, is_opaque = false,
    on_bumped_into = function(self, params)
-      local pred = function(quest) return quest.originating_map_uid == self:current_map().uid end
+      local pred = function(quest) return quest.originating_map_uid == self:current_map().uid and quest.state == "not_accepted" end
       local quests_here = Quest.iter():filter(pred):to_list()
       local quest, canceled = QuestBoardMenu:new(quests_here):query()
       if quest == nil or canceled then

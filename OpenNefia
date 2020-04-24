@@ -5,6 +5,7 @@ DIR=`dirname "$(readlink -f "$0")"`
 if [ ! -d "src/deps/elona" ]; then
     ./runtime/setup
 fi
+./runtime/commit_hash
 
 pushd $DIR/src
 love .

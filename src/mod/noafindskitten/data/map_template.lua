@@ -4,6 +4,9 @@ local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Feat = require("api.Feat")
 local Rand = require("api.Rand")
+local Input = require("api.Input")
+local Map = require("api.Map")
+local Anim = require("mod.elona_sys.api.Anim")
 local Color = require("mod.elona_sys.api.Color")
 
 data:add {
@@ -28,9 +31,15 @@ data:add {
 
    on_bumped_into = function(self, params)
       if self.is_kitten then
+         local anim = Anim.load("elona.anim_smoke", self.x, self.y)
+         Gui.start_draw_callback(anim)
          self.image = "elona.chara_stray_cat"
          self.color = {255, 255, 255}
+         Gui.update_screen()
          Gui.mes("noafindskitten.kitten_found", "Green")
+         Input.query_more()
+         self:current_map()._quest.state = "completed"
+         Map.travel_to(self:current_map()._outer_map)
       else
          Gui.play_sound("base.chat")
          Gui.mes_c(self.description)
@@ -71,7 +80,10 @@ data:add {
       end
       Rand.choice(Feat.iter(map)).is_kitten = true
 
-      return map, "noafindskitten"
+      -- TODO remove
+      map._outer_map = opts.outer_map.uid
+
+      return map, "noafindskitten.noafindskitten"
     end,
     load = function(map, params, opts)
     end

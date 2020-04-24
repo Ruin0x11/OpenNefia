@@ -17,6 +17,8 @@ if jit then
    end
 end
 
+--- An API to load BMP files into the graphics format LOVE expects, with optional transparency.
+--- This is because LOVE does not support reading BMP natively.
 local bmp_convert = {}
 
 local BI_RGB = 0

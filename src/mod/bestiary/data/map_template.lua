@@ -58,6 +58,7 @@ data:add {
    map = {
       generator = "bestiary.bestiary_item"
    },
+   image = "elona.feat_area_border_tent",
 
    copy = {
       music = "elona.ruin",
@@ -105,6 +106,7 @@ data:add {
    map = {
       generator = "bestiary.bestiary_chara"
    },
+   image = "elona.feat_area_border_tent",
 
    copy = {
       music = "elona.ruin",

@@ -3,6 +3,7 @@
 if [ ! -d "src/deps/elona" ]; then
     ./runtime/setup
 fi
+./runtime/commit_hash
 
 pushd src
 luajit repl.lua $*

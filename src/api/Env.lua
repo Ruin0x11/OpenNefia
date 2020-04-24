@@ -7,11 +7,17 @@ local queue = require("util.queue")
 
 local Env = {}
 
+local VERSION = "0.0.1"
+
 --- Returns the version of OpenNefia as a string.
 ---
 --- @treturn string
 function Env.version()
-   return "0.0.1"
+   local ok, commit = pcall(require, "internal.global.__COMMIT__")
+   if ok then
+      return ("%s (%s)"):format(VERSION, commit)
+   end
+   return VERSION
 end
 
 --- @treturn string
