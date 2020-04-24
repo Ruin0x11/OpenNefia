@@ -31,5 +31,5 @@ local hunt = {
       return true
    end
 }
-data:add(hunt)
+-- data:add(hunt)
 

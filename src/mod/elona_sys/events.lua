@@ -472,10 +472,12 @@ local function proc_quest_abandonment(_, params)
 end
 Event.register("elona_sys.hook_travel_to_map", "Warn about abandoning instanced quest", proc_quest_abandonment)
 
+
+
 local function complete_quest(_, params, result)
    local quest = Quest.for_client(params.talk.speaker)
    if quest and quest.state == "completed" then
-      result.choice = "elona_sys.quest:finish"
+      result.choice = "elona.quest_giver:finish"
    end
    return result
 end

@@ -47,4 +47,4 @@ function supply.generate(self, client, start)
    return true
 end
 
-data:add(supply)
+-- data:add(supply)

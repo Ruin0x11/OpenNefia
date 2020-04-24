@@ -85,7 +85,7 @@ local function collect_quest_for(chara)
 end
 
 local function find_item(chara, item_id)
-   return chara:iter_inventory():filter(function(i) return i._id == item_id end)
+   return chara:iter_inventory():filter(function(i) return i._id == item_id end):nth(1)
 end
 
 data:add {
@@ -95,7 +95,7 @@ data:add {
    root = "talk.npc.quest_giver",
    nodes = {
       trade = function(t)
-         print("trade")
+         Gui.mes_c("TODO", "Orange")
       end,
       give = function(t)
          -- TODO generalize with dialog argument
@@ -120,7 +120,7 @@ local function add_collect_dialog_choice(speaker, _, choices)
       return q._id == "elona.collect" and q.params.target_chara_uid == speaker.uid
    end
    if Quest.iter():any(has_collect_quest) then
-      Dialog.add_choice("elona.collect:trade", "talk.npc.common.choices.trade", choices)
+      Dialog.add_choice("elona.quest_collect:trade", "talk.npc.common.choices.trade", choices)
    end
    return choices
 end
@@ -133,7 +133,7 @@ local function add_give_dialog_choice(speaker, _, choices)
    if quest then
       local item = find_item(Chara.player(), quest.params.target_item_id)
       if item then
-         Dialog.add_choice("elona.collect:give", "talk.npc.common.choices.", choices)
+         Dialog.add_choice("elona.quest_collect:give", I18N.get("talk.npc.quest_giver.choices.here_is_item", item), choices)
       end
    end
    return choices

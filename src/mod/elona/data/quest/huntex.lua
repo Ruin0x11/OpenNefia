@@ -42,4 +42,4 @@ local huntex = {
       return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
    end
 }
-data:add(huntex)
+-- data:add(huntex)

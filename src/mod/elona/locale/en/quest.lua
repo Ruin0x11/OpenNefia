@@ -23,7 +23,7 @@ local quest = {
             _1 = {
                title = "Cocktail party!",
                desc = function(player, speaker, params)
-                  return ("Run a small errand for us and earn {reward}. We need a wicked relish for our cocktail party. Say, {objective} sounds decent.")
+                  return ("Run a small errand for us and earn %s. We need a wicked relish for our cocktail party. Say, %s sounds decent.")
                      :format(params.reward, params.objective)
                end,
             },
@@ -32,7 +32,7 @@ local quest = {
             _1 = {
                title = "Sweet sweet.",
                desc = function(player, speaker, params)
-                  return ("I prefer cakes and candies to alcoholic drinks. You want {reward}? Gimme {objective}!")
+                  return ("I prefer cakes and candies to alcoholic drinks. You want %s? Gimme %s!")
                      :format(params.reward, params.objective)
                end,
             },
@@ -41,7 +41,7 @@ local quest = {
             _1 = {
                title = "I love noodles!",
                desc = function(player, speaker, params)
-                  return ("I love noodles! Is there anyone that hates noodles? I want to eat {objective} now! Rewards? Of course. {reward} sound good? ")
+                  return ("I love noodles! Is there anyone that hates noodles? I want to eat %s now! Rewards? Of course. %s sound good? ")
                      :format(params.objective, params.reward)
                end,
             }
@@ -50,7 +50,7 @@ local quest = {
             _1 = {
                title = "Fussy taste.",
                desc = function(player, speaker, params)
-                  return ("My children won't eat fish. It's killing me. I'm gonna give {reward} to anyone that makes {objective} delicious enough to sweep their fuss!")
+                  return ("My children won't eat fish. It's killing me. I'm gonna give %s to anyone that makes %s delicious enough to sweep their fuss!")
                      :format(params.reward, params.objective)
                end,
             },
@@ -59,7 +59,7 @@ local quest = {
             _1 = {
                title = "Going on a picnic.",
                desc = function(player, speaker, params)
-                  return ("First off, the rewards are no more than {reward}, ok? My kid needs {objective} for a picnic tomorrow. Please hurry.")
+                  return ("First off, the rewards are no more than %s, ok? My kid needs %s for a picnic tomorrow. Please hurry.")
                      :format(params.reward, params.objective)
                end,
             },
@@ -78,7 +78,7 @@ local quest = {
          _1 = {
             title = "My stomach!",
             desc = function(player, speaker, params)
-               return ("My stomach growls like I'm starving to death habitually. Will you bring a piece to this beast? Maybe {objective} will do the job. I can give you {reward} as a reward.")
+               return ("My stomach growls like I'm starving to death habitually. Will you bring a piece to this beast? Maybe %s will do the job. I can give you %s as a reward.")
                   :format(params.objective, params.reward)
             end,
          },
@@ -88,7 +88,7 @@ local quest = {
       _1 = {
          title = "I want it!",
          desc = function(player, speaker, params)
-            return ("Have you seen {client}'s {ref}? I want it! I want it! Get it for me by fair means or foul! I'll give you {reward}.")
+            return ("Have you seen %s's %s? I want it! I want it! Get it for me by fair means or foul! I'll give you %s.")
                :format(params.target_name, params.item_name, params.reward)
          end,
       },
@@ -97,7 +97,7 @@ local quest = {
       _1 = {
          title = "Challenge",
          desc = function(player, speaker, params)
-            return ("Only experienced adventurers should take this task. An unique mutant of {objective} has been sighted near the town. Slay this monster and we'll give you {reward}. This is no ordinary mission. The monster's leve is expected to be around {ref}.")
+            return ("Only experienced adventurers should take this task. An unique mutant of %s has been sighted near the town. Slay this monster and we'll give you %s. This is no ordinary mission. The monster's leve is expected to be around %s.")
                :format(params.objective, params.reward, params.enemy_level)
          end,
       },
@@ -108,7 +108,7 @@ local quest = {
             _1 = {
                title = "Beauty and the beast",
                desc = function(player, speaker, params)
-                  return ("Such great beauty is a sin...My girl friend is followed by her ex-lover and needs an escort. If you safely bring her to {map}, I'll give you {reward}. Please, protect her from the beast.")
+                  return ("Such great beauty is a sin...My girl friend is followed by her ex-lover and needs an escort. If you safely bring her to %s, I'll give you %s. Please, protect her from the beast.")
                      :format(params.map, params.reward)
                end,
             },
@@ -117,7 +117,7 @@ local quest = {
             _1 = {
                title = "Before it's too late.",
                desc = function(player, speaker, params)
-                  return ("Terrible thing happened! My dad is affected by a deadly poison. Hurry! Please take him to his doctor in {map}. I'll let you have {reward} if you sucssed!")
+                  return ("Terrible thing happened! My dad is affected by a deadly poison. Hurry! Please take him to his doctor in %s. I'll let you have %s if you sucssed!")
                      :format(params.map, params.reward)
                end,
             },
@@ -126,7 +126,7 @@ local quest = {
             _1 = {
                title = "Escort needed.",
                desc = function(player, speaker, params)
-                  return ("We have this client secretly heading to {map} for certain reasons. We offer you {reward} if you succeed in escorting this person.")
+                  return ("We have this client secretly heading to %s for certain reasons. We offer you %s if you succeed in escorting this person.")
                      :format(params.map, params.reward)
                end,
             },
@@ -137,7 +137,7 @@ local quest = {
       _1 = {
          title = "The harvest time.",
          desc = function(player, speaker, params)
-            return ("At last, the harvest time has come. It is by no means a job that I alone can handle. You get {reward} if you can gather grown crops weighting {ref}.")
+            return ("At last, the harvest time has come. It is by no means a job that I alone can handle. You get %s if you can gather grown crops weighting %s.")
                :format(params.reward, params.required_weight)
          end,
       },
@@ -146,7 +146,7 @@ local quest = {
       _1 = {
          title = "Hunting.",
          desc = function(player, speaker, params)
-            return ("Filthy creatures are spawning in a forest nearby this city. I'll give you {reward} if you get rid of them.")
+            return ("Filthy creatures are spawning in a forest nearby this city. I'll give you %s if you get rid of them.")
                :format(params.reward)
          end,
       },
@@ -155,7 +155,7 @@ local quest = {
       _1 = {
          title = "Panic.",
          desc = function(player, speaker, params)
-            return ("Help! Our town is being seized by several subspecies of {objective} which are expected to be around {ref} level. Eliminate them all and I'll reward you with {reward} on behalf of all the citizen.")
+            return ("Help! Our town is being seized by several subspecies of %s which are expected to be around %s level. Eliminate them all and I'll reward you with %s on behalf of all the citizen.")
                :format(params.objective, params.enemy_level, params.reward)
          end,
       },
@@ -164,7 +164,7 @@ local quest = {
       _1 = {
          title = "Party time!",
          desc = function(player, speaker, params)
-            return ("I'm throwing a big party today. Many celebrities are going to attend the party so I need someone to keep them entertained. If you successfully gather {ref}, I'll give you a platinum coin. You'll surely be earning tons of tips while you work, too.")
+            return ("I'm throwing a big party today. Many celebrities are going to attend the party so I need someone to keep them entertained. If you successfully gather %s, I'll give you a platinum coin. You'll surely be earning tons of tips while you work, too.")
                :format(params.required_points)
          end,
       },
@@ -173,7 +173,7 @@ local quest = {
       _1 = {
          title = "Birthday.",
          desc = function(player, speaker, params)
-            return ("I want to give my kid {objective} as a birthday present. If you can send me this item, I'll pay you {reward} in exchange.")
+            return ("I want to give my kid %s as a birthday present. If you can send me this item, I'll pay you %s in exchange.")
                :format(params.objective, params.reward)
          end,
       },
@@ -184,7 +184,7 @@ local quest = {
             _1 = {
                title = "Book delivery.",
                desc = function(player, speaker, params)
-                  return ("Can you take {ref} to a person named {client} who lives in {map}? I'll pay you {reward}.")
+                  return ("Can you take %s to a person named %s who lives in %s? I'll pay you %s.")
                      :format(params.item_name, params.target_name, params.map, params.reward)
                end,
             },
@@ -193,7 +193,7 @@ local quest = {
             _1 = {
                title = "A present.",
                desc = function(player, speaker, params)
-                  return ("My uncle {client} has built a house in {map} and I'm planning to send {ref} as a gift. I have {reward} in reward.")
+                  return ("My uncle %s has built a house in %s and I'm planning to send %s as a gift. I have %s in reward.")
                      :format(params.target_name, params.map, params.item_name, params.reward)
                end,
             },
@@ -202,7 +202,7 @@ local quest = {
             _1 = {
                title = "Ecologist.",
                desc = function(player, speaker, params)
-                  return ("My friend in {map} is collecting waste materials. The name is {client}. If you plan to visit {map}, could you hand him {ref}? I'll pay you {reward}.")
+                  return ("My friend in %s is collecting waste materials. The name is %s. If you plan to visit %s, could you hand him %s? I'll pay you %s.")
                      :format(params.map, params.target_name, params.map, params.item_name, params.reward)
                end,
             },
@@ -211,7 +211,7 @@ local quest = {
             _1 = {
                title = "A small token.",
                desc = function(player, speaker, params)
-                  return ("As a token of our long lasting friendship, I decided to give {ref} to {client} who lives in {map}. I'll arrange {reward} for your reward.")
+                  return ("As a token of our long lasting friendship, I decided to give %s to %s who lives in %s. I'll arrange %s for your reward.")
                      :format(params.item_name, params.target_name, params.map, params.reward)
                end,
             },

@@ -44,4 +44,4 @@ function party.generate(self, client)
    return true
 end
 
-data:add(party)
+-- data:add(party)

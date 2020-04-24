@@ -42,4 +42,4 @@ local conquer = {
       return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
    end
 }
-data:add(conquer)
+-- data:add(conquer)

@@ -66,4 +66,4 @@ function escort.generate(self, client, start)
    return true
 end
 
-data:add(escort)
+-- data:add(escort)

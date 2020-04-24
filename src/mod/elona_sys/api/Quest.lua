@@ -497,12 +497,16 @@ function Quest.complete(quest, client)
 
    local proto = data["elona_sys.quest"]:ensure(quest._id)
 
-   text = proto.on_complete(quest, client, text) or text
+   if proto.on_complete then
+      text = proto.on_complete(quest, client, text) or text
+   end
 
    Event.trigger("elona_sys.on_quest_completed", {quest=quest, client=client})
 
    table.iremove_value(save.elona_sys.quest.quests, quest)
 
+   Gui.mes_c("quest.completed_taken_from", "Green", client.name)
+   Gui.play_sound("base.complete1")
    Gui.update_screen()
 
    return "elona.default:__start", {text}

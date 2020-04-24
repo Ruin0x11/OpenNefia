@@ -72,4 +72,4 @@ function cook.generate(self, client, start)
    return true
 end
 
-data:add(cook)
+-- data:add(cook)
