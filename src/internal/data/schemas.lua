@@ -1,6 +1,7 @@
 local schema = require("thirdparty.schema")
 local data = require("internal.data")
 local Doc = require("api.Doc")
+local CodeGenerator = require("api.CodeGenerator")
 
 data:add_type {
    name = "event",
@@ -883,8 +884,21 @@ data:add_type {
 
 data:add_type {
    name = "ai_action",
-   schema = schema.Record {
-      act = schema.Function
+   fields = {
+      {
+         name = "act",
+         default = CodeGenerator.gen_literal [[
+function(chara, params)
+      return true
+   end]],
+         template = true,
+         type = "function(IChara,table)",
+doc = [[
+   Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
+
+   Returns true if the character acted, false if not.
+]]
+      }
    }
 }
 

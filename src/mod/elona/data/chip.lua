@@ -316,7 +316,7 @@ local chara_chips = {
    { elona_id = 351, _id = "ebon2", y_offset = -8, tall = true },
    { elona_id = 352, _id = "garokk" },
    { elona_id = 353, _id = "miral" },
-   { elona_id = 354, _id = "_354" },
+   { elona_id = 354, _id = "catsister" },
    { elona_id = 355, _id = "young_lady" },
    { elona_id = 356, _id = "gwen" },
    { elona_id = 357, _id = "town_child_female" },

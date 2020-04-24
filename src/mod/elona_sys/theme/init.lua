@@ -415,6 +415,13 @@ data:add {
          width = 24,
          height = 24
       },
+      more_prompt = {
+         source = "interface.bmp",
+         x = 552,
+         y = 504,
+         width = 120,
+         height = 22
+      },
       window = {
          source = "interface.bmp",
          x = 0,

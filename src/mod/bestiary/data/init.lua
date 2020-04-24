@@ -1,0 +1,1 @@
+require("mod.bestiary.data.map_template")

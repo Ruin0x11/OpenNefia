@@ -15,6 +15,7 @@ local TextPrompt = require("api.gui.TextPrompt")
 local NumberPrompt = require("api.gui.NumberPrompt")
 local DirectionPrompt = require("api.gui.DirectionPrompt")
 local PositionPrompt = require("api.gui.PositionPrompt")
+local MorePrompt = require("api.gui.MorePrompt")
 
 local Input = {}
 
@@ -68,6 +69,11 @@ local function query_inventory(chara, operation, params, returns_item, group)
    local result, canceled = InventoryWrapper:new(operation, params, returns_item, group):query()
 
    return result, canceled
+end
+
+--- Halts input and displays the "More..." popup.
+function Input.query_more()
+   MorePrompt:new():query()
 end
 
 --- Queries a character to run an inventory operation. This will run

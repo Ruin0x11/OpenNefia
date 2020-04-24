@@ -3253,7 +3253,7 @@ local race =
          copy_to_chara = {
 
             breed_power = 1,
-            image = "elona.chara_god",
+            image = "elona.chara_lulwy",
             age = Resolver.make("base.between", { min = 999999, max = 999999 }),
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 0 }),

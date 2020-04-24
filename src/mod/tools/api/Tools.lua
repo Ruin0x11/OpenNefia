@@ -642,4 +642,8 @@ function Tools.chara_sheet()
    CharacterSheetMenu:new(nil, chara):query()
 end
 
+function Tools.memorize_map()
+   Map.current():iter_tiles():each(function(x, y) Map.current():memorize_tile(x, y) end)
+end
+
 return Tools
