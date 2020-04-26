@@ -1006,3 +1006,33 @@ data:add_type {
       pos = schema.Function
    }
 }
+
+data:add_type {
+   name = "map_template",
+   schema = schema.Record {
+      map = schema.String,
+      copy = schema.Optional(schema.Table),
+      areas = schema.Optional(schema.Table),
+      on_generate = schema.Optional(schema.Function),
+   },
+   fields = {
+      {
+         name = "copy",
+         default = {},
+         template = true,
+         type = "table",
+         doc = [[
+List of fields to copy to the map when it is instantiated.
+]]
+      },
+      {
+         name = "areas",
+         default = nil,
+         template = false,
+         type = "table",
+         doc = [[
+List of map entrances to other maps contained in this map.
+]]
+      },
+   }
+}

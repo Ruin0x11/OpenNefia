@@ -726,10 +726,6 @@
             (pop-to-buffer open-nefia--repl-errors-buffer)
             (error "REPL startup failed with code %s." result)))))))
 
-(defun open-nefia-run-batch-script ()
-  (interactive)
-  (compile (format "%s repl.lua batch %s" lua-default-application (buffer-file-name))))
-
 (defun open-nefia-insert-template ()
   (interactive)
   (open-nefia--send "template" '()))
@@ -747,5 +743,15 @@
     (setq open-nefia-always-send-to-repl t)
     (add-file-local-variable 'open-nefia-always-send-to-repl t)
     (beginning-of-buffer)))
+
+(defun open-nefia-run-headlessly ()
+  (interactive)
+  (let* ((path (file-relative-name
+                (buffer-file-name)
+                (string-join (list (projectile-project-root) "src"))))
+         (script (if (eq system-type 'windows-nt) "OpenNefia_REPL.bat" "./OpenNefia_REPL"))
+         (cmd (format "%s batch %s" script path))
+         (default-directory (projectile-project-root)))
+    (compile cmd)))
 
 (provide 'open-nefia)

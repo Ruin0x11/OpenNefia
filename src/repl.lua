@@ -1,6 +1,13 @@
 _CONSOLE = true
 require("boot")
 
+local Log = require("api.Log")
+local level = "warn"
+if arg[1] == "test" then
+   level = "error"
+end
+Log.set_level(level)
+
 require("internal.data.base")
 
 local Stopwatch = require("api.Stopwatch")
@@ -18,17 +25,10 @@ local save = require("internal.global.save")
 local Event = require("api.Event")
 local ReplLayer = require("api.gui.menu.ReplLayer")
 local Gui = require("api.Gui")
-local Log = require("api.Log")
 
 if not fs.exists(fs.get_save_directory()) then
    fs.create_directory(fs.get_save_directory())
 end
-
-local level = "debug"
-if arg[1] == "test" then
-   level = "error"
-end
-Log.set_level(level)
 
 local mods = mod.scan_mod_dir()
 startup.run_all(mods)

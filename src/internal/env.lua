@@ -206,7 +206,7 @@ local function env_loadfile(path, mod_env)
       -- include some standard macros
       src = "(require-macros :internal.fennel.macros)\n" .. src
 
-      rawset(_G, "_ENV", mod_env)
+      rawset(_G, "_ENV", mod_env or _G)
       local ok, str = xpcall(require("thirdparty.fennel").compileString, debug.traceback, src, {env = {}})
       if not ok then
          return nil, str

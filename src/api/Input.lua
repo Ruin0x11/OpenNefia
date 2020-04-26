@@ -147,7 +147,7 @@ function Input.query_position(chara)
 end
 
 function Input.reload_keybinds()
-   Log.info("Reloading keybinds.")
+   Log.debug("Reloading keybinds.")
 
    local kbs = config["base.keybinds"]
    for _, kb in data["base.keybind"]:iter() do

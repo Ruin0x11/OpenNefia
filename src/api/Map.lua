@@ -13,12 +13,11 @@ local Event = require("api.Event")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
 local InstancedMap = require("api.InstancedMap")
-local IEventEmitter = require("api.IEventEmitter")
 local Rand = require("api.Rand")
 local Fs = require("api.Fs")
-local save = require("internal.global.save")
 local SaveFs = require("api.SaveFs")
 local World = require("api.World")
+local save = require("internal.global.save")
 
 local Map = {}
 
@@ -84,13 +83,25 @@ end
 --- call `Map.save` to persist the changes if you don't set it as the
 --- current map.
 ---
---- @tparam uid:InstancedMap|InstancedMap uid
+--- @tparam uid:InstancedMap|InstancedMap|string id
 --- @treturn bool success
 --- @treturn InstancedMap|string result/error
-function Map.load(uid)
-   if type(uid) == "table" and uid.uid then
-      return uid
+function Map.load(id)
+   local uid
+
+   if type(id) == "string" then
+      local store = save.base.map_registry
+
+      if store[id] == nil then
+         local map_template = data["base.map_template"][id]
+         if id == nil then
+
+         end
+      end
+
+      uid = store[id]
    end
+
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))

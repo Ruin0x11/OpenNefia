@@ -160,10 +160,6 @@ function Command.drop(player)
    return Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
 end
 
-function Command.inventory(player)
-   return Input.query_inventory(player, "elona.inv_examine", nil, "elona.main")
-end
-
 function Command.wear(player)
    return EquipmentMenu:new(player):query()
 end

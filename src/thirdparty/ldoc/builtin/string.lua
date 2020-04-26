@@ -147,6 +147,7 @@ function string.gmatch(s, pattern) end
 -- @tparam string pattern
 -- @tparam[opt] string|function repl
 -- @tparam[opt] int n
+-- @treturn string
 function string.gsub(s, pattern, repl , n) end
 
 ---
@@ -173,6 +174,8 @@ function string.lower(s) end
 -- @tparam string s
 -- @tparam string pattern
 -- @tparam[opt] int init
+-- @treturn[1] string
+-- @treturn[2] string...
 function string.match(s, pattern, init) end
 
 ---

@@ -61,6 +61,7 @@ add_elona_id("base.element")
 add_elona_id("base.sound")
 add_elona_id("base.music")
 add_elona_id("base.body_part")
+add_elona_id("base.map_template")
 
 
 data:add_type {
@@ -162,9 +163,6 @@ Gui.bind_keys {
    end,
    drop = function(me)
       return Command.drop(me)
-   end,
-   quick_inv = function(me)
-      return Command.inventory(me)
    end,
    close = function(me)
       return Command.close(me)

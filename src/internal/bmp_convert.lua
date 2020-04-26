@@ -1,5 +1,6 @@
 local binary_reader = require("internal.binary_reader")
 local Stopwatch = require("api.Stopwatch")
+local Env = require("api.Env")
 
 local ffi, fs, vips, ok
 if jit then
@@ -12,7 +13,7 @@ if jit then
      -- We'd have to fix this by distributing a custom LOVE binary ourselves, which we'll have to do eventually to
      -- support other things (like MIDI).
      local Log = require("api.Log")
-     Log.warn("Could not load libvips. Falling back to built-in BMP converter.")
+     Log.warn("Could not load libvips. Falling back to built-in BMP converter. %s", vips)
      vips = nil
    end
 end
@@ -250,7 +251,7 @@ function bmp_convert.load_image(source, key_color)
    end
 
    local image
-   if string.match(source, "%.bmp$") then
+   if string.match(source, "%.bmp$") and not Env.is_headless() then
       image = bmp_convert.convert(source, key_color)
    else
       image = love.graphics.newImage(source)

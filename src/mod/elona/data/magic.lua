@@ -330,7 +330,7 @@ data:add {
 }
 
 data:add {
-   _id = "potion_water",
+   _id = "potion_dirty_water",
    _type = "elona_sys.magic",
    elona_id = 1130,
 
