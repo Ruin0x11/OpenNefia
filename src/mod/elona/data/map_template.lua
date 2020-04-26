@@ -45,6 +45,7 @@ local north_tyris = {
       default_ai_calm = 0,
    },
 
+   --[[
    areas = {
       { map = "elona.vernis", x = 26, y = 23 },
       { map = "elona.yowyn", x = 43, y = 32 },
@@ -80,6 +81,7 @@ local north_tyris = {
       { map = "elona.fort_of_chaos_collapsed", x = 35, y = 10 },
       { map = "elona.test_site", x = 20, y = 20 },
    }
+   --]]
 }
 data:add(north_tyris)
 

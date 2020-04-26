@@ -600,7 +600,7 @@ function Tools.print_map_detailed(map)
 
    print("=====", "Feat")
    for _, feat in Feat.iter(map) do
-      print(feat._id, feat.x, feat.y, inspect(feat.generator_params))
+      print(feat._id, feat.x, feat.y)
    end
 
    print("=====")
