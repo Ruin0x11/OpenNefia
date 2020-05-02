@@ -13,6 +13,10 @@ local loop_coro = nil
 local draw_coro = nil
 local server = nil
 
+local enable_low_power_mode = true
+local low_power_mode = false
+local low_power_wait = 0
+
 function love.load(arg)
    draw.init()
    Draw.set_font(12)
@@ -36,6 +40,7 @@ local function stop_halt()
    love.keypressed = input.keypressed
 
    halt = false
+   low_power_mode = false
 end
 
 local function start_halt()
@@ -51,6 +56,7 @@ local function start_halt()
    end
 
    halt = true
+   low_power_mode = false
 end
 
 function love.update(dt)
@@ -74,13 +80,16 @@ function love.update(dt)
          -- server = debug_server:new()
          -- server:start()
       else
-         if halt and (cmd_name == "run" or cmd_name == "hotload") then
-            stop_halt()
+         if cmd_name == "run" or cmd_name == "hotload" then
+            if halt then
+               stop_halt()
+            end
+            if low_power_mode then
+               low_power_mode = false
+            end
          end
       end
    end
-
-   draw.update_global_widgets(dt)
 
    if draw.needs_wait() then
       return
@@ -89,6 +98,18 @@ function love.update(dt)
    if halt then
       return
    end
+
+   if low_power_mode then
+      if low_power_wait >= 1 then
+         low_power_wait = low_power_wait - 1
+      end
+      low_power_wait = low_power_wait + dt
+      if low_power_wait < 1 then
+         return
+      end
+   end
+
+   draw.update_global_widgets(dt)
 
    local ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
@@ -117,6 +138,11 @@ function love.draw()
       return
    end
 
+   if low_power_mode then
+      draw.draw_low_power()
+      return
+   end
+
    draw.draw_start()
 
    local going = true
@@ -141,6 +167,17 @@ function love.draw()
    draw.draw_end()
 
    env.set_hotloaded_this_frame(false)
+end
+
+function love.focus(focused)
+   if enable_low_power_mode then
+      if focused then
+         low_power_mode = false
+      else
+         low_power_mode = true
+         low_power_wait = 0
+      end
+   end
 end
 
 --

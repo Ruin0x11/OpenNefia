@@ -93,10 +93,17 @@ function Map.load(id)
       local store = save.base.map_registry
 
       if store[id] == nil then
-         local map_template = data["base.map_template"][id]
-         if id == nil then
-
+         local map_template = data["base.map_template"]:ensure(id)
+         if not map_template.unique then
+            return false, ("Map template %s is not a unique map."):format(id)
          end
+
+         local map = Map.generate2(id)
+
+         Map.save(map)
+         store[id] = map.uid
+
+         return map
       end
 
       uid = store[id]
@@ -319,6 +326,14 @@ function Map.calc_start_position(map, previous_map, feat, start_pos)
    end
 
    return x, y
+end
+
+function Map.generate2(map_template_id, opts)
+   opts = opts or {}
+
+   local map = map_template.generate(map_template_id, opts)
+
+   assert()
 end
 
 --- Generates a new map using a map generator template.

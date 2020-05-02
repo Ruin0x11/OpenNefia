@@ -364,6 +364,14 @@ function draw.draw_error(err)
    draw.draw_end(error_canvas)
 end
 
+function draw.draw_low_power()
+   draw.draw_start(error_canvas)
+   love.graphics.draw(canvas)
+   love.graphics.setColor(0, 0, 0, 128/256)
+   love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+   draw.draw_end(error_canvas)
+end
+
 function draw.set_fullscreen(kind, width, height)
    if not width or not height then
       width = WIDTH
