@@ -1,6 +1,4 @@
-local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
-local Map = require("api.Map")
 local Itemgen = require("mod.tools.api.Itemgen")
 
 data:add_type {
@@ -23,17 +21,6 @@ local function create_junk_items(map)
       for _=1,4+Rand.rnd(5) do
          Itemgen.create(nil, nil, {categories={"elona.junk_in_field"}}, map)
       end
-   end
-end
-
-local function spray_tile(map, tile_id, density)
-   local n = math.floor(map:width() * map:height() * density / 100 + 1)
-   print(n,tile_id)
-
-   for i=1,n do
-      local x = Rand.rnd(map:width())
-      local y = Rand.rnd(map:height())
-      map:set_tile(x, y, tile_id)
    end
 end
 
@@ -164,65 +151,3 @@ data:add_multi(
       },
    }
 )
-
-local default_field_type = "elona.plains"
-
-data:add {
-   _type = "base.map_generator",
-   _id = "field",
-
-   params = { stood_tile = "string" },
-   generate = function(self, params, opts)
-      local width = params.width or 34
-      local height = params.height or 22
-
-      local stood_tile = Map.tile(params.stood_x, params.stood_y)
-
-      local tile = data["base.map_tile"]:ensure(stood_tile)
-
-      -- TODO: refactor to take base.map_generator
-      -- tile spraying could be implemented in Resolver instead
-      local field_type = tile.field_type or default_field_type
-
-      local field = data["elona.field_type"][field_type]
-      if not field then
-         field_type = default_field_type
-         field = data["elona.field_type"]:ensure(field_type)
-      end
-
-      local map = InstancedMap:new(width, height)
-      map:clear(field.default_tile)
-
-      if field.tiles then
-         for _, v in ipairs(field.tiles) do
-            spray_tile(map, v.id, v.density)
-         end
-      end
-
-      field:generate(map)
-
-      local x = math.floor(map:width() / 2)
-      local y = math.floor(map:height() / 2)
-      map.player_start_pos = { x = x, y = y }
-      map.is_temporary = true
-
-      map.types = { "field" }
-      map.tile_type = 4
-      map.max_crowd_density = 4
-      map.turn_cost = 10000
-      map.dungeon_level = 1
-      map.deepest_dungeon_level = 1
-      map.is_indoor = true
-      map.has_anchored_npcs = false
-      map.default_ai_calm = 0
-      map.default_tile = field.fog
-
-      map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
-
-      return map, field_type
-   end,
-
-   almost_equals = function(self, other)
-      return self.stood_tile == other.stood_tile
-   end
-}

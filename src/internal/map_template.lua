@@ -1,14 +1,7 @@
-local I18N = require("api.I18N")
-local Log = require("api.Log")
-local Map = require("api.Map")
 local Resolver = require("api.Resolver")
+local data = require("internal.data")
 
 local map_template = {}
-
--- looks for stairs with the tags "stairs_up" and "stairs_down" and
--- connects them to the map.
-local function connect_stairs(map, outer_map, generator)
-end
 
 local function bind_events(template)
    local events = table.deepcopy(template.events or {})
@@ -57,7 +50,7 @@ local function bind_events(template)
 end
 
 function map_template.generate(id, opts)
-   local template = data["elona_sys.map_template"]:ensure(id)
+   local template = data["base.map_template"]:ensure(id)
    if template.map == nil then
       error(("Map template %s does not contain a `map` function."):format(id))
    end
@@ -71,8 +64,6 @@ function map_template.generate(id, opts)
 
    table.merge(map, copy)
 
-   map.name = map.name or I18N.get("map.unique." .. id .. ".name")
-
    if template.unique then
       map.id = id
    end
@@ -80,8 +71,8 @@ function map_template.generate(id, opts)
    return map
 end
 
-function map_template.load(map, params, opts)
-   local template = data["elona_sys.map_template"]:ensure(params.id)
+function map_template.load(map)
+   local template = data["base.map_template"]:ensure(map.id)
 
    -- Copy functions in the "copy" subtable back to the map, since
    -- they will not be serialized (they become nil).

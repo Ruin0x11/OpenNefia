@@ -3,13 +3,14 @@ local Calc = require("mod.elona.api.Calc")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
-local Map = require("api.Map")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
 local IChara = require("api.chara.IChara")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local World = require("api.World")
 local Text = require("mod.elona.api.Text")
+local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
+local HomeMap = require("mod.elona.api.HomeMap")
 
 local function entrance_edge(chara, map)
    return data["base.map_entrance"]["base.edge"].pos(chara, map)
@@ -17,13 +18,12 @@ end
 
 local function generate_122(elona122_map_id)
    return function()
-      local _, map = assert(Map.generate("elona_sys.elona122", { name = elona122_map_id }))
-      return map
+      return Elona122Map.generate(elona122_map_id)
    end
 end
 
 local function reload_122_map_geometry(current, elona122_map_id)
-   local _, temp = assert(Map.generate("elona_sys.elona122", { name = elona122_map_id }))
+   local temp = Elona122Map.generate(elona122_map_id)
    assert(current:width() == temp:width())
    assert(current:height() == temp:height())
 
@@ -33,12 +33,12 @@ local function reload_122_map_geometry(current, elona122_map_id)
 end
 
 local north_tyris = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "north_tyris",
 
-   map = generate_122("ntyris"),
-
    elona_id = 4,
+   map = generate_122("ntyris"),
+   unique = true,
 
    copy = {
       appearance = 0,
@@ -123,12 +123,13 @@ local function generate_chara(map)
 end
 
 local vernis = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "vernis",
 
    elona_id = 5,
    map = generate_122("vernis"),
    image = "elona.feat_area_city",
+   unique = true,
 
    copy = {
       music = "elona.town1",
@@ -253,16 +254,17 @@ function vernis.on_generate(map)
    -- TODO only if sidequest
    --local stair = Feat.at(28, 9, map):nth(1)
    --assert(stair)
-   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_mine" }}
+   --stair.generator_params = { generator = "base.map_template", params = { id = "elona.the_mine" }}
    --stair.area_params = { outer_map_id = map._id }
 end
 data:add(vernis)
 
 local the_mine = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "the_mine",
 
    map = generate_122("puti"),
+   unique = true,
 
    copy = {
       music = "elona.puti",
@@ -305,10 +307,13 @@ data:add(the_mine)
 
 local yowyn = {
    _id = "yowyn",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 12,
    map = generate_122("yowyn"),
    image = "elona.feat_area_village",
+   unique = true,
+
    copy = {
       music = "elona.village1",
       types = { "town" },
@@ -335,7 +340,7 @@ local yowyn = {
 function yowyn.on_generate(map)
    -- TODO only if sidequest
    --local stair = Feat.at(23, 22, map):nth(1)
-   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.cat_mansion" }}
+   --stair.generator_params = { generator = "base.map_template", params = { id = "elona.cat_mansion" }}
    --stair.area_params = { outer_map_id = map._id }
 
    local chara = Chara.create("elona.ainc", 3, 17, nil, map)
@@ -424,10 +429,13 @@ data:add(yowyn)
 
 local palmia = {
    _id = "palmia",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 15,
    map = generate_122("palmia"),
    image = "elona.feat_area_palace",
+   unique = true,
+
    copy = {
       music = "elona.town4",
       types = { "town" },
@@ -613,10 +621,13 @@ data:add(palmia)
 
 local derphy = {
    _id = "derphy",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 14,
    map = generate_122("rogueden"),
    image = "elona.feat_area_village",
+   unique = true,
+
    copy = {
       music = "elona.town3",
       types = { "town" },
@@ -720,10 +731,11 @@ end
 data:add(derphy)
 
 local thieves_guild = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "thieves_guild",
 
    map = generate_122("thiefguild"),
+   unique = true,
 
    copy = {
       music = "elona.ruin",
@@ -775,10 +787,13 @@ data:add(thieves_guild)
 
 local port_kapul = {
    _id = "port_kapul",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 11,
    map = generate_122("kapul"),
    image = "elona.feat_area_city",
+   unique = true,
+
    copy = {
       music = "elona.town2",
       types = { "town" },
@@ -914,10 +929,11 @@ end
 data:add(port_kapul)
 
 local fighters_guild = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "fighters_guild",
 
    map = generate_122("fighterguild"),
+   unique = true,
 
    copy = {
       music = "elona.ruin",
@@ -962,10 +978,13 @@ data:add(fighters_guild)
 
 local noyel = {
    _id = "noyel",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 33,
    map = generate_122("noyel"),
    image = "elona.feat_area_village_snow",
+   unique = true,
+
    copy = {
       music = "elona.town6",
       types = { "town" },
@@ -1155,10 +1174,13 @@ data:add(noyel)
 
 local lumiest = {
    _id = "lumiest",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 36,
    map = generate_122("lumiest"),
    image = "elona.feat_area_city",
+   unique = true,
+
    copy = {
       music = "elona.town2",
       types = { "town" },
@@ -1204,7 +1226,7 @@ function lumiest.on_generate(map)
    -- TODO only if sidequest
    --local stair = Feat.at(18, 45, map):nth(1)
    --assert(stair)
-   --stair.generator_params = { generator = "elona_sys.map_template", params = { id = "elona.the_sewer" }}
+   --stair.generator_params = { generator = "base.map_template", params = { id = "elona.the_sewer" }}
    --stair.area_params = { outer_map_id = map._id }
 
    local chara = Chara.create("elona.renton", 12, 24, nil, map)
@@ -1311,10 +1333,11 @@ end
 data:add(lumiest)
 
 local mages_guild = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "mages_guild",
 
    map = generate_122("mageguild"),
+   unique = true,
 
    copy = {
       music = "elona.ruin",
@@ -1363,10 +1386,11 @@ end
 data:add(mages_guild)
 
 local the_sewer = {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "the_sewer",
 
    map = generate_122("sqSewer"),
+   unique = true,
 
    copy = {
       music = "elona.puti",
@@ -1408,7 +1432,7 @@ data:add(the_sewer)
 
 local fields = {
    _id = "fields",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 2,
    copy = {
       types = { "field" },
@@ -1424,16 +1448,14 @@ data:add(fields)
 
 local your_home = {
    _id = "your_home",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
 
    elona_id = 7,
-   map = {
-      generator = "elona.home",
-      params = {
-         id = "elona.cave",
-      }
-   },
+   map = function()
+      return HomeMap.generate("elona.cave")
+   end,
    image = "elona.feat_area_your_dungeon",
+   unique = true,
 
    copy = {
       music = "elona.lonely",
@@ -1454,10 +1476,13 @@ data:add(your_home)
 
 local show_house = {
    _id = "show_house",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 35,
    map = generate_122("dungeon1"),
    image = "elona.feat_area_border_tent",
+   unique = true,
+
    copy = {
       types = { "temporary" },
       player_start_pos = "base.south",
@@ -1474,9 +1499,12 @@ data:add(show_house)
 
 local arena = {
    _id = "arena",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 6,
    map = generate_122("arena_1"),
+   unique = true,
+
    copy = {
       music = "elona.arena",
       types = { "temporary" },
@@ -1500,9 +1528,12 @@ data:add(arena)
 
 local pet_arena = {
    _id = "pet_arena",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 40,
    map = generate_122("arena_2"),
+   unique = true,
+
    copy = {
       types = { "temporary" },
       player_start_pos = "elona.stair_up",
@@ -1526,7 +1557,7 @@ data:add(pet_arena)
 
 local quest = {
    _id = "quest",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 13,
    copy = {
       types = { "temporary" },
@@ -1545,7 +1576,8 @@ data:add(quest)
 
 local lesimas = {
    _id = "lesimas",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 3,
    map = {
       generator = "elona.dungeon_template",
@@ -1556,6 +1588,8 @@ local lesimas = {
       }
    },
    image = "elona.feat_area_lesimas",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1581,10 +1615,13 @@ data:add(lesimas)
 
 local the_void = {
    _id = "the_void",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 42,
    map = generate_122("dungeon1"),
    image = "elona.feat_area_lesimas",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1603,8 +1640,9 @@ data:add(the_void)
 
 local tower_of_fire = {
    _id = "tower_of_fire",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 16,
+
    map = {
       generator = "elona.dungeon_template",
       params = {
@@ -1614,6 +1652,8 @@ local tower_of_fire = {
       }
    },
    image = "elona.feat_area_tower_of_fire",
+   unique = true,
+
    copy = {
       types = { "dungeon_tower" },
       player_start_pos = "elona.stair_up",
@@ -1629,8 +1669,9 @@ data:add(tower_of_fire)
 
 local crypt_of_the_damned = {
    _id = "crypt_of_the_damned",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 17,
+
    map = {
       generator = "elona.dungeon_template",
       params = {
@@ -1640,6 +1681,8 @@ local crypt_of_the_damned = {
       }
    },
    image = "elona.feat_area_crypt",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1655,7 +1698,8 @@ data:add(crypt_of_the_damned)
 
 local ancient_castle = {
    _id = "ancient_castle",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 18,
    map = {
       generator = "elona.dungeon_template",
@@ -1666,6 +1710,8 @@ local ancient_castle = {
       }
    },
    image = "elona.feat_area_castle",
+   unique = true,
+
    copy = {
       types = { "dungeon_castle" },
       player_start_pos = "elona.stair_up",
@@ -1687,10 +1733,13 @@ data:add(ancient_castle)
 
 local dragons_nest = {
    _id = "dragons_nest",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 19,
    map = generate_122("dungeon1"),
    image = "elona.feat_area_dungeon",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1708,7 +1757,8 @@ data:add(dragons_nest)
 
 local mountain_pass = {
    _id = "mountain_pass",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 26,
    map = {
       generator = "elona.dungeon_template",
@@ -1719,6 +1769,8 @@ local mountain_pass = {
       }
    },
    image = "elona.feat_area_dungeon",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_down",
@@ -1731,7 +1783,8 @@ data:add(mountain_pass)
 
 local puppy_cave = {
    _id = "puppy_cave",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 27,
    map = {
       generator = "elona.dungeon_template",
@@ -1742,6 +1795,8 @@ local puppy_cave = {
       }
    },
    image = "elona.feat_area_dungeon",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1763,7 +1818,8 @@ data:add(puppy_cave)
 
 local minotaurs_nest = {
    _id = "minotaurs_nest",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 38,
    map = {
       generator = "elona.dungeon_template",
@@ -1774,6 +1830,8 @@ local minotaurs_nest = {
       }
    },
    image = "elona.feat_area_dungeon",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1795,10 +1853,13 @@ data:add(minotaurs_nest)
 
 local yeeks_nest = {
    _id = "yeeks_nest",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 28,
    map = generate_122("dungeon1"),
    image = "elona.feat_area_dungeon",
+   unique = true,
+
    copy = {
       types = { "dungeon" },
       player_start_pos = "elona.stair_up",
@@ -1822,10 +1883,13 @@ data:add(yeeks_nest)
 
 local pyramid = {
    _id = "pyramid",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 37,
    map = generate_122("sqPyramid"),
    image = "elona.feat_area_pyramid",
+   unique = true,
+
    copy = {
       music = "elona.puti",
       types = { "dungeon" },
@@ -1851,10 +1915,13 @@ data:add(pyramid)
 
 local pyramid_2 = {
    _id = "pyramid",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 37,
    map = generate_122("sqPyramid2"),
    image = "elona.feat_area_pyramid",
+   unique = true,
+
    copy = {
       music = "elona.puti",
       types = { "dungeon" },
@@ -1875,10 +1942,13 @@ data:add(pyramid_2)
 
 local lumiest_graveyard = {
    _id = "lumiest_graveyard",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 10,
    map = generate_122("grave_1"),
    image = "elona.feat_area_crypt",
+   unique = true,
+
    copy = {
       music = "elona.ruin",
       types = { "shelter" },
@@ -1904,10 +1974,13 @@ data:add(lumiest_graveyard)
 
 local truce_ground = {
    _id = "truce_ground",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 20,
    map = generate_122("shrine_1"),
    image = "elona.feat_area_truce_ground",
+   unique = true,
+
    copy = {
       music = "elona.ruin",
       types = { "shelter" },
@@ -1947,10 +2020,13 @@ data:add(truce_ground)
 
 local jail = {
    _id = "jail",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 41,
    map = generate_122("jail1"),
    image = "elona.feat_area_jail",
+   unique = true,
+
    copy = {
       types = { "shelter" },
       player_start_pos = "elona.stair_up",
@@ -1970,9 +2046,12 @@ data:add(jail)
 
 local test_world = {
    _id = "test_world",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 47,
    map = generate_122("test"),
+   unique = true,
+
    copy = {
       types = { "world_map" },
       player_start_pos = "base.world",
@@ -2039,10 +2118,13 @@ end
 
 local test_world_north_border = {
    _id = "test_world_north_border",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 48,
    map = generate_122("test2"),
    image = "elona.feat_area_border_tent",
+   unique = true,
+
    copy = {
       types = { "guild" },
       player_start_pos = "base.south",
@@ -2075,9 +2157,12 @@ data:add(test_world_north_border)
 
 local south_tyris = {
    _id = "south_tyris",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 44,
    map = generate_122("styris"),
+   unique = true,
+
    copy = {
       types = { "world_map" },
       player_start_pos = "base.world",
@@ -2099,10 +2184,13 @@ data:add(south_tyris)
 
 local north_tyris_south_border = {
    _id = "north_tyris_south_border",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 43,
    map = generate_122("station-nt1"),
    image = "elona.feat_area_border_tent",
+   unique = true,
+
    copy = {
       types = { "guild" },
       player_start_pos = "base.south",
@@ -2121,10 +2209,13 @@ data:add(north_tyris_south_border)
 
 local south_tyris_north_border = {
    _id = "south_tyris_north_border",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 45,
    map = generate_122("station-nt1"),
    image = "elona.feat_area_border_tent",
+   unique = true,
+
    copy = {
       types = { "guild" },
       player_start_pos = "base.south",
@@ -2143,10 +2234,13 @@ data:add(south_tyris_north_border)
 
 local the_smoke_and_pipe = {
    _id = "the_smoke_and_pipe",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 46,
    map = generate_122("inn1"),
    image = "elona.feat_area_the_smoke_and_pipe",
+   unique = true,
+
    copy = {
       music = "elona.ruin",
       types = { "guild" },
@@ -2218,10 +2312,13 @@ data:add(the_smoke_and_pipe)
 
 local miral_and_garoks_workshop = {
    _id = "miral_and_garoks_workshop",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 34,
    map = generate_122("smith0"),
    image = "elona.feat_area_miral_and_garoks_workshop",
+   unique = true,
+
    copy = {
       music = "elona.ruin",
       types = { "guild" },
@@ -2252,9 +2349,12 @@ data:add(miral_and_garoks_workshop)
 
 local mansion_of_younger_sister = {
    _id = "mansion_of_younger_sister",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 29,
    map = generate_122("sister"),
+   unique = true,
+
    copy = {
       types = { "shelter" },
       player_start_pos = "base.south",
@@ -2293,10 +2393,13 @@ data:add(mansion_of_younger_sister)
 
 local cyber_dome = {
    _id = "cyber_dome",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 21,
    map = generate_122("cyberdome"),
    image = "elona.feat_area_tent",
+   unique = true,
+
    copy = {
       music = "elona.town5",
       types = { "guild" },
@@ -2346,10 +2449,13 @@ data:add(cyber_dome)
 
 local larna = {
    _id = "larna",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 25,
    map = generate_122("highmountain"),
    image = "elona.feat_area_village",
+   unique = true,
+
    copy = {
       music = "elona.village1",
       types = { "guild" },
@@ -2411,10 +2517,13 @@ data:add(larna)
 
 local embassy = {
    _id = "embassy",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 32,
    map = generate_122("office_1"),
    image = "elona.feat_area_embassy",
+   unique = true,
+
    copy = {
       music = "elona.ruin",
       types = { "guild" },
@@ -2464,10 +2573,13 @@ data:add(embassy)
 
 local fort_of_chaos_beast = {
    _id = "fort_of_chaos_beast",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 22,
    map = generate_122("god"),
    image = "elona.feat_area_god",
+   unique = true,
+
    copy = {
       music = "elona.boss2",
       types = { "shelter" },
@@ -2489,10 +2601,13 @@ data:add(fort_of_chaos_beast)
 
 local fort_of_chaos_machine = {
    _id = "fort_of_chaos_machine",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 23,
    map = generate_122("god"),
    image = "elona.feat_area_god",
+   unique = true,
+
    copy = {
       music = "elona.boss2",
       types = { "shelter" },
@@ -2513,10 +2628,13 @@ data:add(fort_of_chaos_machine)
 
 local fort_of_chaos_collapsed = {
    _id = "fort_of_chaos_collapsed",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 24,
    map = generate_122("god"),
    image = "elona.feat_area_god",
+   unique = true,
+
    copy = {
       music = "elona.boss2",
       types = { "shelter" },
@@ -2537,9 +2655,12 @@ data:add(fort_of_chaos_collapsed)
 
 local shelter = {
    _id = "shelter",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    elona_id = 30,
    map = generate_122("shelter_1"),
+   unique = true,
+
    copy = {
       music = "elona.lonely",
       types = { "player_owned" },
@@ -2564,8 +2685,11 @@ data:add(shelter)
 
 local shelter_inn = {
    _id = "shelter_inn",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    map = generate_122("shelter_2"),
+   unique = true,
+
    copy = {
       music = "elona.lonely",
       types = { "field" },
@@ -2591,8 +2715,11 @@ data:add(shelter_inn)
 
 local test_site = {
    _id = "test_site",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
+
    map = generate_122("sqNightmare"),
+   unique = true,
+
    copy = {
       music = "elona.puti",
       types = { "dungeon" },
@@ -2632,7 +2759,7 @@ data:add(test_site)
 
 local rq = {
    _id = "rq",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 9,
    map = generate_122("dungeon1"),
    copy = {
@@ -2650,7 +2777,7 @@ data:add(rq)
 
 local shop = {
    _id = "shop",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 102,
    map = generate_122("shop_1"),
    copy = {
@@ -2672,7 +2799,7 @@ data:add(shop)
 
 local crop = {
    _id = "crop",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 103,
    map = generate_122("crop_1"),
    copy = {
@@ -2691,7 +2818,7 @@ data:add(crop)
 
 local ranch = {
    _id = "ranch",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 31,
    map = generate_122("ranch_1"),
    copy = {
@@ -2712,7 +2839,7 @@ data:add(ranch)
 
 local dungeon = {
    _id = "dungeon",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 39,
    map = generate_122("dungeon1"),
    copy = {
@@ -2731,7 +2858,7 @@ data:add(dungeon)
 
 local storage = {
    _id = "storage",
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    elona_id = 104,
    map = generate_122("storage_1"),
    copy = {

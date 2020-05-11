@@ -9,6 +9,7 @@ local MapArea = require("api.MapArea")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
+local FieldMap = require("mod.elona.api.FieldMap")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -228,15 +229,8 @@ function Command.enter_action(player)
    local is_world_map = Map.current():has_type("world_map")
 
    if is_world_map then
-      local params = {
-         stood_x = player.x,
-         stood_y = player.y,
-      }
-      local ok, map = Map.generate("elona.field", params)
-      if not ok then
-         Gui.report_error(map)
-         return "player_turn_query"
-      end
+      local stood_tile = Map.tile(player.x, player.y)
+      local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
 
       Gui.play_sound("base.exitmap1")
       assert(Map.travel_to(map))

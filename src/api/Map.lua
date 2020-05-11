@@ -17,7 +17,9 @@ local Rand = require("api.Rand")
 local Fs = require("api.Fs")
 local SaveFs = require("api.SaveFs")
 local World = require("api.World")
+local I18N = require("api.I18N")
 local save = require("internal.global.save")
+local map_template = require("internal.map_template")
 
 local Map = {}
 
@@ -71,11 +73,11 @@ function Map.save(map)
 end
 
 local function run_generator_load_callback(map)
-   if map.generated_with then
-      local generator = data["base.map_generator"][map.generated_with.generator]
-      if generator and generator.load then
-         generator.load(map, map.generated_with.params)
-      end
+   -- TODO: need a better way of determining this
+   local is_templated_map = not string.match(map.id, "^_")
+   if is_templated_map then
+      Log.info("Binding events to map: %s", map.id)
+      map_template.load(map)
    end
 end
 
@@ -87,14 +89,15 @@ end
 --- @treturn bool success
 --- @treturn InstancedMap|string result/error
 function Map.load(id)
+   assert(id)
    local uid
 
    if type(id) == "string" then
       local store = save.base.map_registry
 
       if store[id] == nil then
-         local map_template = data["base.map_template"]:ensure(id)
-         if not map_template.unique then
+         local template = data["base.map_template"]:ensure(id)
+         if not template.unique then
             return false, ("Map template %s is not a unique map."):format(id)
          end
 
@@ -102,8 +105,6 @@ function Map.load(id)
 
          Map.save(map)
          store[id] = map.uid
-
-         return map
       end
 
       uid = store[id]
@@ -333,58 +334,10 @@ function Map.generate2(map_template_id, opts)
 
    local map = map_template.generate(map_template_id, opts)
 
-   assert()
-end
+   map.id = map.id or ("_%d"):format(map.uid)
+   map.name = map.name or I18N.get("map.unique." .. map.id .. ".name")
 
---- Generates a new map using a map generator template.
----
---- @tparam id:base.map_generator generator_id ID of the generator to use.
---- @tparam[opt] table params Parameters to pass to the map generator.
---- @tparam[opt] table opts Extra options.
----   - outer_map (InstancedMap): Outer map to associate with the
----     newly created map.
----   - area_uid (InstancedMap): Area to associate with the newly
----     created map.
---- @treturn bool success
---- @treturn InstancedMap|string result/error
-function Map.generate(generator_id, params, opts)
-   params = params or {}
-
-   opts = opts or {}
-   opts.outer_map = opts.outer_map or Map.current()
-   opts.area_uid = opts.area_uid or nil
-
-   local generator = data["base.map_generator"]:ensure(generator_id)
-   local success, map, id = xpcall(function() return generator:generate(params, opts) end, debug.traceback)
-   if not success then
-      return nil, map
-   end
-   local ok, err = class.is_an(InstancedMap, map)
-   if not ok then
-      return nil, ("result of map_generator:generate must be a map and string ID (%s)"):format(err)
-   end
-   if type(id) ~= "string" then
-      return nil, ("map ID '%s' must be string (got: %s)"):format(tostring(id), type(id))
-   end
-   if string.find(id, "[^0-9a-zA-Z_.]") then
-      return nil, ("map ID can only contain alphanumeric characters, underscore and period (got: %s)"):format(id)
-   end
-
-   map.gen_id = id
-   map.generated_with = { generator = generator_id, params = params }
-   Log.info("Generated new map %d (%s) from '%s'", map.uid, map.gen_id, generator_id)
-
-   -- This binds the events on the map.
-   run_generator_load_callback(map)
-
-   map:emit("base.on_map_generated", {is_first_generation=true})
-   map:emit("base.on_map_loaded")
-
-   if not params.no_refresh then
-      Map.refresh(map)
-   end
-
-   return success, map
+   return map
 end
 
 local function relocate_chara(chara, map)
@@ -611,7 +564,7 @@ function Map.find_position_for_chara(x, y, scope, map)
 
    for x=0,map:width()-1 do
       for y=0,map:height()-1 do
-         if can_place_chara_at(chara, x, y, map) then
+         if can_place_chara_at(x, y, map) then
             return x, y
          end
       end
@@ -676,6 +629,17 @@ function Map.try_place_chara(chara, x, y, map)
    return nil
 end
 
+local function rebuild_map(map, params)
+   Log.info("Rebuilding map.")
+
+   -- Regenerate the map with the same parameters.
+   local new_map = Map.generate2(map.id)
+
+   map:emit("base.on_map_rebuild", {new_map=new_map,travel_to_params=params})
+
+   map:replace_with(new_map)
+end
+
 --- Cleans up the current map and moves the player and allies to a
 --- different map. This is the recommended function to call to
 --- transport the player to another map.
@@ -706,20 +670,7 @@ function Map.travel_to(map_or_uid, params)
    Log.info("Traveling: %d -> %d", current.uid, map.uid)
 
    if map.visit_times > 0 and map.is_generated_every_time then
-      Log.info("Rebuilding map.")
-
-      -- Regenerate the map with the same parameters.
-      assert(map.generated_with)
-      local success, err = Map.generate(map.generated_with.generator, map.generated_with.params)
-      if not success then
-         error("\n\t" .. err, 0)
-      end
-
-      local new_map = err
-
-      map:emit("base.on_map_rebuild", {new_map=new_map,travel_to_params=params})
-
-      map:replace_with(new_map)
+      rebuild_map(map, params)
    end
 
    if map.uid == current.uid then
@@ -779,7 +730,6 @@ function Map.travel_to(map_or_uid, params)
    Map.set_map(map)
    Gui.update_screen()
 
-   current = nil
    collectgarbage()
 
    return true

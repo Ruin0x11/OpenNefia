@@ -3,6 +3,52 @@ local Rand = require("api.Rand")
 local Map = require("api.Map")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
+local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
+
+data:add_type {
+   name = "dungeon_template",
+   schema = schema.Record {
+      generator = schema.Function
+   }
+}
+
+data:add_multi(
+   "base.map_tile",
+   {
+      {
+         _id = "mapgen_floor",
+         image = "graphic/default/floor.png",
+         is_solid = true
+      },
+      {
+         _id = "mapgen_tunnel",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+      {
+         _id = "mapgen_wall",
+         image = "graphic/default/floor.png",
+         is_solid = true
+      },
+      {
+         _id = "mapgen_room",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+      {
+         _id = "mapgen_floor_2",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+})
+
+data:add {
+   _type = "base.feat",
+   _id = "mapgen_block",
+
+   is_solid = true,
+   is_opaque = true
+}
 
 data:add(
    {
@@ -316,8 +362,8 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         if params.dungeon_level == params.deepest_dungeon_level then
-            local _, map = assert(Map.generate("elona_sys.elona122", { name = "firet1" }))
+         if params.is_deepest_level then
+            local map =  Elona122Map.generate("firet1")
             map.max_crowd_density = 0
             map.music = "elona.last_boss"
             return map
@@ -336,8 +382,8 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         if params.dungeon_level == params.deepest_dungeon_level then
-            local _, map = assert(Map.generate("elona_sys.elona122", { name = "undeadt1" }))
+         if params.is_deepest_level then
+            local map =  Elona122Map.generate("undeadt1")
             map.max_crowd_density = 0
             map.music = "elona.last_boss"
             return map
@@ -356,8 +402,8 @@ data:add(
       _type = "elona.dungeon_template",
 
       generate = function(rooms, params, opts)
-         if params.dungeon_level == params.deepest_level then
-            local _, map = assert(Map.generate("elona_sys.elona122", { name = "undeadt1" }))
+         if params.is_deepest_level then
+            local map =  Elona122Map.generate("undeadt1")
             map.max_crowd_density = 0
             map.music = "elona.last_boss"
             return map

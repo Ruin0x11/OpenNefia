@@ -171,18 +171,7 @@ function Tools.goto_thing(thing)
 end
 
 function Tools.goto_map(id)
-   local success, map = Map.generate("elona_sys.map_template", { id = id })
-   if not success then
-      error(map)
-   end
-   return Map.travel_to(map)
-end
-
-function Tools.gen_map(id, params)
-   local success, map = Map.generate(id, params)
-   if not success then
-      error(map)
-   end
+   local map = Map.generate2(id)
    return Map.travel_to(map)
 end
 
@@ -439,15 +428,9 @@ function Tools.print_shadow(map)
    return s
 end
 
-function Tools.dungeon(kind, params)
-   params = params or {}
-   params.id = kind
-   params.dungeon_level = params.dungeon_level or 1
-   params.deepest_dungeon_level = params.deepest_dungeon_level or 5
-   params.tileset = params.tileset or "elona.home"
-   local success, map = Map.generate("elona.dungeon_template", params)
-
-   assert(success, map)
+function Tools.dungeon(kind)
+   local DungeonMap = require("mod.elona.api.DungeonMap")
+   local map = DungeonMap.generate(kind, 1, "elona.home")
 
    return Tools.print_map(map)
 end
@@ -606,18 +589,6 @@ function Tools.print_map_detailed(map)
    print("=====")
 
    return str
-end
-
-function Tools.gen_all_maps()
-   for _, entry in ipairs(data["elona_sys.map_template"]["elona.north_tyris"].areas) do
-      local _, map = assert(Map.generate("elona_sys.map_template", { id = entry.map }))
-      print(Tools.print_map_detailed(map))
-   end
-end
-
-function Tools.gen_one_map(id)
-   local _, map = assert(Map.generate("elona_sys.map_template", { id = id }))
-   print(Tools.print_map_detailed(map))
 end
 
 function Tools.restart_scenario()

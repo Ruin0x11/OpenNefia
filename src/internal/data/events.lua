@@ -171,6 +171,7 @@ local function init_save()
    s.shadow = 70
    s.has_light_source = false
    s.deepest_level = 0
+   s.map_registry = {}
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

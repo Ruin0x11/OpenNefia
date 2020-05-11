@@ -4,8 +4,13 @@ local Item = require("api.Item")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
-local function load_map(id)
-   return nil
+local function load_towns()
+   local pred = function(map)
+      return table.set(map.copy.types)["town"] ~= nil
+   end
+   for _, town in data["base.map_template"]:iter():filter(pred) do
+      Map.load(town._id)
+   end
 end
 
 local function initialize_player(player)
@@ -37,7 +42,7 @@ end
 
 local function create_first_map()
    -- Generate the world map.
-   local _, world_map = assert(Map.generate("elona_sys.map_template", { id = "elona.north_tyris" }))
+   local world_map = Map.generate2("elona.north_tyris")
 
    -- TODO set this up automatically, as "root map" or similar
    local area = save.base.area_mapping:create_area()
@@ -51,7 +56,7 @@ local function start(self, player)
    local world_map = create_first_map()
 
    -- Load the player's home.
-   local home = load_map("elona.your_home")
+   local home = Map.generate2("elona.your_home")
    Map.save(home)
    Map.set_map(home)
    save.base.home_map_uid = home.uid

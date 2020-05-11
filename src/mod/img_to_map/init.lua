@@ -68,11 +68,3 @@ local function img_to_map(self, params, opts)
 
    return map, params.chip_id
 end
-
-
-data:add {
-   _type = "base.map_generator",
-   _id = "img_to_map",
-
-   generate = img_to_map
-}

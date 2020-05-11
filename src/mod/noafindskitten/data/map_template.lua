@@ -57,45 +57,32 @@ data:add {
    events = {}
 }
 
-data:add {
-    _type = "base.map_generator",
-    _id = "quest_noafindskitten",
+local function generate_map()
+   local map = InstancedMap:new(40, 40)
+   map:clear("elona.cobble")
+   for _, x, y in Pos.iter_border(0, 0, map:width() - 1, map:height() - 1) do
+      map:set_tile(x, y, "elona.wall_brick_top")
+   end
 
-    params = {},
-    generate = function(self, params, opts)
-      local map = InstancedMap:new(40, 40)
-      map:clear("elona.cobble")
-      for _, x, y in Pos.iter_border(0, 0, map:width() - 1, map:height() - 1) do
-         map:set_tile(x, y, "elona.wall_brick_top")
+   -- NOTE: we'd want to ensure there's a clear path to kitten, so the player doesn't get blocked.
+   local count = math.floor(map:width() * map:height() / 40)
+   for _=1, count do
+      local object = Feat.create("noafindskitten.object", nil, nil, {}, map)
+      if object then
+         object.description = I18N.get("noafindskitten.nki")
+         object.color = Color.hsv_to_rgb(Rand.rnd(256), 255, 255)
       end
+   end
+   Rand.choice(Feat.iter(map)).is_kitten = true
 
-      -- NOTE: we'd want to ensure there's a clear path to kitten, so the player doesn't get blocked.
-      local count = math.floor(map:width() * map:height() / 40)
-      for _=1, count do
-         local object = Feat.create("noafindskitten.object", nil, nil, {}, map)
-         if object then
-            object.description = I18N.get("noafindskitten.nki")
-            object.color = Color.hsv_to_rgb(Rand.rnd(256), 255, 255)
-         end
-      end
-      Rand.choice(Feat.iter(map)).is_kitten = true
-
-      -- TODO remove
-      map._outer_map = opts.outer_map.uid
-
-      return map, "noafindskitten.noafindskitten"
-    end,
-    load = function(map, params, opts)
-    end
-}
+   return map, "noafindskitten.noafindskitten"
+end
 
 data:add {
-   _type = "elona_sys.map_template",
+   _type = "base.map_template",
    _id = "quest_noafindskitten",
 
-   map = {
-      generator = "noafindskitten.quest_noafindskitten"
-   },
+   map = generate_map,
 
    copy = {
       music = "elona.ruin",

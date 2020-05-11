@@ -20,8 +20,6 @@ data:extend_type(
 
 require("mod.elona.init.god")
 
-require("mod.elona.dungeon_template")
-
 require("mod.elona.data")
 
 require("mod.elona.events")

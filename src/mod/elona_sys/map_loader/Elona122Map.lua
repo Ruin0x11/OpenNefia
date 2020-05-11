@@ -6,6 +6,8 @@ local Log = require("api.Log")
 local InstancedMap = require("api.InstancedMap")
 local Compat = require("mod.elona_sys.api.Compat")
 
+local Elona122Map = {}
+
 local struct = require("mod.elona_sys.map_loader.thirdparty.struct")
 
 local own_states = {
@@ -111,17 +113,17 @@ end
 
 local mapping
 
-local function convert_122(gen, params)
+function Elona122Map.generate(name)
    if mapping == nil then
       mapping = build_mapping()
    end
 
-   if not params.name then
+   if not name then
       error("Map name must be provided")
    end
 
    -- HACK
-   local base = Fs.join("mod/elona/map", params.name)
+   local base = Fs.join("mod/elona/map", name)
 
    if not Fs.exists(base .. ".map") then
       error(string.format("Map doesn't exist: %s", base .. ".map"))
@@ -252,19 +254,7 @@ local function convert_122(gen, params)
    result.default_tile = Compat.convert_122_map_chip(1, 534)
    result.next_regenerate_date = regen
 
-   local id = params.name:gsub("-", "_")
-
-   return result, id
+   return result
 end
 
-data:add {
-   _type = "base.map_generator",
-   _id = "elona122",
-
-   generate = convert_122,
-   params = { name = "string" },
-
-   almost_equals = function(a, b)
-      return a.name == b.name
-   end
-}
+return Elona122Map

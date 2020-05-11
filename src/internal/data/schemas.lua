@@ -869,13 +869,6 @@ data:add_type {
 }
 
 data:add_type {
-   name = "map_generator",
-   schema = schema.Record {
-      generate = schema.Function,
-   }
-}
-
-data:add_type {
    name = "faction",
    schema = schema.Record {
       reactions = schema.Table,

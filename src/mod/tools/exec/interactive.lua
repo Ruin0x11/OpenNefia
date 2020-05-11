@@ -17,7 +17,7 @@ Mx.make_interactive("goto_down_stairs", Tools, "goto_down_stairs")
 Mx.make_interactive("goto_up_stairs", Tools, "goto_up_stairs")
 Mx.make_interactive("goto_map", Tools, "goto_map",
                     {
-                       { type="elona_sys.map_template" }
+                       { type="base.map_template" }
                     })
 
 

@@ -15,7 +15,6 @@ local server = nil
 
 local enable_low_power_mode = true
 local low_power_mode = false
-local low_power_wait = 0
 
 function love.load(arg)
    draw.init()
@@ -100,13 +99,7 @@ function love.update(dt)
    end
 
    if low_power_mode then
-      if low_power_wait >= 1 then
-         low_power_wait = low_power_wait - 1
-      end
-      low_power_wait = low_power_wait + dt
-      if low_power_wait < 1 then
-         return
-      end
+      return
    end
 
    draw.update_global_widgets(dt)
@@ -175,7 +168,6 @@ function love.focus(focused)
          low_power_mode = false
       else
          low_power_mode = true
-         low_power_wait = 0
       end
    end
 end

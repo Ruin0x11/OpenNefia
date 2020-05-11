@@ -10,50 +10,7 @@ local Calc = require("mod.elona.api.Calc")
 local Log = require("api.Log")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 
-data:add_type {
-   name = "dungeon_template",
-   schema = schema.Record {
-      generator = schema.Function
-   }
-}
-
-data:add_multi(
-   "base.map_tile",
-   {
-      {
-         _id = "mapgen_floor",
-         image = "graphic/default/floor.png",
-         is_solid = true
-      },
-      {
-         _id = "mapgen_tunnel",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-      {
-         _id = "mapgen_wall",
-         image = "graphic/default/floor.png",
-         is_solid = true
-      },
-      {
-         _id = "mapgen_room",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-      {
-         _id = "mapgen_floor_2",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-})
-
-data:add {
-   _type = "base.feat",
-   _id = "mapgen_block",
-
-   is_solid = true,
-   is_opaque = true
-}
+local DungeonMap = {}
 
 local function tag_stairs(map)
    local pred
@@ -110,14 +67,10 @@ local function set_filter(dungeon)
       quality = Calc.calc_object_quality(1),
    }
 
-   if filter.level > 5 then
-      ---pause()
-   end
-
    return filter
 end
 
-local function populate_rooms(dungeon, template, gen_params)
+local function populate_rooms(dungeon, template, creature_packs)
    local has_monster_house = false
 
    for _, room in ipairs(dungeon.rooms) do
@@ -145,8 +98,8 @@ local function populate_rooms(dungeon, template, gen_params)
          if chara then
             if dungeon.dungeon_level > 3 then
                if (chara.proto.creaturepack or 0) > 0 then
-                  if Rand.one_in(gen_params.creature_packs * 5 + 5) then
-                     gen_params.creature_packs = gen_params.creature_packs + 1
+                  if Rand.one_in(creature_packs * 5 + 5) then
+                     creature_packs = creature_packs + 1
                      for _=1, 10 + Rand.rnd(20) do
                         local filter2 = { level = chara.level, quality = Calc.calc_object_quality(1) }
                         Charagen.create(Rand.rnd(w) + x, Rand.rnd(h) + y, filter2, dungeon)
@@ -209,42 +162,24 @@ local function place_pot(x, y, map)
    return false
 end
 
-local function generate_dungeon(self, params, opts)
+--- Generates a single floor of a dungeon, separate from other floors.
+---
+--- It needs to be added to an area later, as part of a set of dungeon
+--- floors.
+function DungeonMap.generate(id, dungeon_level, tileset, is_deepest_level, width, height, attempts)
    local dungeon
-   local template = data["elona.dungeon_template"]:ensure(params.id)
-   Log.debug("generate dungeon: %s", inspect(params))
+   local template = data["elona.dungeon_template"]:ensure(id)
 
-   local dungeon_level = params.dungeon_level or params.start_dungeon_level or 1
-   local deepest_dungeon_level = params.deepest_dungeon_level
    local gen_params
 
-   local area
-   if opts.area_uid then
-      local areas = save.base.area_mapping
-      area = areas:area(opts.area_uid)
-      deepest_dungeon_level = area.data.deepest_dungeon_level or deepest_dungeon_level
-   end
-
-   if deepest_dungeon_level == nil then
-      deepest_dungeon_level = template.deepest_dungeon_level or 1
-   end
-
-   assert(dungeon_level)
-   assert(deepest_dungeon_level, "Can't find deepest dungeon level")
-
-   if area and not area.data.deepest_dungeon_level then
-      area.data.deepest_dungeon_level = deepest_dungeon_level
-      Log.debug("Setting area %d's deepest level: %d", area.uid, deepest_dungeon_level)
-   end
-
-   local attempts = params.attempts or 2000
+   attempts = attempts or 2000
    for _ = 1, attempts do
-      local width = params.width or 34 + Rand.rnd(15)
-      local height = params.height or 22 + Rand.rnd(15)
+      local w = width or 34 + Rand.rnd(15)
+      local h = height or 22 + Rand.rnd(15)
 
       gen_params = {
-         width = width,
-         height = height,
+         width = w,
+         height = h,
          room_count = width * height / 70,
          min_size = 3,
          max_size = 4,
@@ -254,39 +189,34 @@ local function generate_dungeon(self, params, opts)
          hidden_path_chance = 5,
          creature_packs = 1,
          dungeon_level = dungeon_level,
-         deepest_dungeon_level = deepest_dungeon_level,
+         is_deepest_level = is_deepest_level,
          max_crowd_density = width * height / 100
       }
 
       local err
-      dungeon, err = generate_dungeon_raw(template, gen_params, opts)
+      dungeon, err = generate_dungeon_raw(template, gen_params)
 
       if dungeon then
-         params = table.merge(gen_params, params)
          break
       end
    end
 
    if dungeon == nil then
-      return nil, ("Dungeon generation failed for '%s'."):format(params.id)
+      return nil, ("Dungeon generation failed for '%s'."):format(id)
    end
 
-   Log.info("Dungeon generated: %s", params.id)
+   Log.info("Dungeon generated: %s", id)
 
-   local tileset = params.tileset or "elona.dirt"
+   tileset = tileset or "elona.dirt"
    MapTileset.apply(tileset, dungeon)
 
    dungeon.dungeon_level = dungeon_level
-   dungeon.deepest_dungeon_level = deepest_dungeon_level
    assert(dungeon.dungeon_level)
-   assert(dungeon.deepest_dungeon_level)
 
    tag_stairs(dungeon)
 
-   data["elona.dungeon_template"]:ensure(params.id)
-
    Log.info("Populating dungeon rooms.")
-   populate_rooms(dungeon, template, gen_params)
+   populate_rooms(dungeon, template, gen_params.creature_packs)
 
    -- TODO: this is annoying. the density parameter is in "copy" on
    -- map templates but it has to be passed to the dungeon template
@@ -302,7 +232,8 @@ local function generate_dungeon(self, params, opts)
 
    -- HACK: Block the starting positions so nothing gets generated
    -- there. This was done in Elona by just placing the player on the
-   -- stairs in the map during the generation routine.
+   -- stairs in the map during the generation routine, but here the
+   -- map is generated independent of which map the player is in.
 
    local blocks = {}
    for _, feat in Feat.iter(dungeon) do
@@ -373,30 +304,9 @@ local function generate_dungeon(self, params, opts)
 
    dungeon.can_exit_from_edge = false
 
-   local gen_id = string.format("%s_%d_%d", params.id, dungeon_level, deepest_dungeon_level)
+   Log.info("Generation finished: %d %s", dungeon.uid)
 
-   Log.info("Generation finished: %d %s", dungeon.uid, gen_id)
-
-   return dungeon, gen_id
+   return dungeon
 end
 
-data:add {
-   _type = "base.map_generator",
-   _id = "dungeon_template",
-
-   params = {
-      id = "string",
-      width = "number",
-      height = "number",
-      start_dungeon_level = "number",
-      dungeon_level = "number[opt]",
-      deepest_dungeon_level = "number",
-      area_id = "string"
-   },
-
-   connect_stairs = true,
-
-   generate = generate_dungeon,
-
-   almost_equals = table.deepcompare
-}
+return DungeonMap

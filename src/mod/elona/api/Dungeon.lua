@@ -45,7 +45,6 @@ function Dungeon.create_map(params, width, height, max_crowd_density)
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")
    map.dungeon_level = params.dungeon_level
-   map.deepest_dungeon_level = params.deepest_dungeon_level
    map.max_crowd_density = max_crowd_density or params.max_crowd_density
    return map
 end
@@ -334,7 +333,7 @@ function Dungeon.place_stairs_up_in_room(room, map)
 end
 
 function Dungeon.place_stairs_down_in_room(room, map)
-   if map.dungeon_level >= map.deepest_dungeon_level then
+   if map.is_deepest_level then -- TODO
       return nil
    end
 

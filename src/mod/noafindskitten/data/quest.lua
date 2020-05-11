@@ -54,7 +54,11 @@ data:add {
    root = "quest.noafindskitten.noafindskitten.dialog",
    nodes = {
       accept = function(t)
-         local _, map = assert(Map.generate("elona_sys.map_template", { id = "noafindskitten.quest_noafindskitten" }))
+         local map = Map.generate2("noafindskitten.quest_noafindskitten")
+
+         -- TODO remove
+         map._outer_map = t.speaker:current_map().uid
+
          local quest = Quest.for_client(t.speaker)
          assert(quest)
          map._quest = quest
