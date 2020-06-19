@@ -13,7 +13,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actDrainBlood)
+    end
   },
   {
     _id = "leader",
@@ -21,7 +25,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actLeadership)
+    end
   },
   {
     _id = "short_teleport",
@@ -29,7 +37,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actShortTeleport)
+    end
   },
   {
     _id = "breath_fire",
@@ -37,7 +49,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actBreathFire)
+    end
   },
   {
     _id = "act_sleep",
@@ -45,7 +61,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actTouchSleep)
+    end
   },
   {
     _id = "act_poison",
@@ -53,7 +73,11 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      -- spGain(actTouchPoison)
+    end
   },
   {
     _id = "sexy",
@@ -61,7 +85,11 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_charisma", self.level*4, "add")
+    end
   },
   {
     _id = "str",
@@ -69,7 +97,11 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_strength", self.level*3, "add")
+    end
   },
   {
     _id = "tax",
@@ -101,7 +133,11 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_constitution", self.level*3, "add")
+    end
   },
   {
     _id = "martial",
@@ -109,7 +145,15 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.martial_arts")
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.martial_arts", self.level*3, "add")
+    end
   },
   {
     _id = "casting",
@@ -117,7 +161,13 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      if chara:has_skill("elona.casting") then
+        chara:mod_skill_level("elona.casting", self.level*4, "add")
+      end
+    end
   },
   {
     _id = "power_bash",
@@ -125,7 +175,15 @@ local trait = {
 
     level_min = 0,
     level_max = 1,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.shield")
+    end,
+
+    on_refresh = function(self, chara)
+      -- cBitMod cPowerBash,pc,true
+    end
   },
   {
     _id = "no_fear",
@@ -141,7 +199,15 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.dual_wield")
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.dual_wield", self.level*4, "add")
+    end
   },
   {
     _id = "darkness",
@@ -152,7 +218,7 @@ local trait = {
     type = "feat",
 
     on_refresh = function(self, chara)
-      chara:mod_resist_level("elona.darkness", self.level * 50, "add")
+      chara:mod_resist_level("elona.darkness", self.level * (50 / 2), "add")
     end
   },
   {
@@ -161,7 +227,11 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.poison", self.level * (50 / 2), "add")
+    end
   },
   {
     _id = "trade",
@@ -169,7 +239,15 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.negotiation")
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.negotiation", self.level*4, "add")
+    end
   },
   {
     _id = "faith",
@@ -177,7 +255,11 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.faith", self.level*4, "add")
+    end
   },
   {
     _id = "lucky",
@@ -185,7 +267,11 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_luck", self.level*5, "add")
+    end
   },
   {
     _id = "hp",
@@ -193,7 +279,11 @@ local trait = {
 
     level_min = 0,
     level_max = 5,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_life", self.level*5, "add")
+    end
   },
   {
     _id = "mp",
@@ -201,7 +291,11 @@ local trait = {
 
     level_min = 0,
     level_max = 5,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_mana", self.level*5, "add")
+    end
   },
   {
     _id = "alert",
@@ -209,7 +303,15 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.detection")
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.detection", self.level*3, "add")
+    end
   },
   {
     _id = "runner",
@@ -217,7 +319,18 @@ local trait = {
 
     level_min = 0,
     level_max = 2,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      if self.level == 1 then
+        return chara.level >= 5
+      end
+      return true
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_speed", self.level*5, "add")
+    end
   },
   {
     _id = "hardy",
@@ -225,7 +338,18 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      if self.level == 1 then
+        return chara.level >= 5
+      end
+      return true
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod("pv", self.level*5, "add")
+    end
   },
   {
     _id = "defense",
@@ -233,7 +357,11 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    on_refresh = function(self, chara)
+      chara:mod("dv", self.level*4, "add")
+    end
   },
   {
     _id = "evade",
@@ -241,7 +369,15 @@ local trait = {
 
     level_min = 0,
     level_max = 3,
-    type = "feat"
+    type = "feat",
+
+    can_learn = function(self, chara)
+      return chara:has_skill("elona.evasion")
+    end,
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.evasion", self.level*2, "add")
+    end
   },
   {
     _id = "eat_human",
@@ -257,7 +393,11 @@ local trait = {
 
     level_min = -3,
     level_max = 3,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod("pv", self.level*3, "add")
+    end
   },
   {
     _id = "joint_ache",
@@ -265,7 +405,11 @@ local trait = {
 
     level_min = -3,
     level_max = 3,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.dexterity", self.level*3, "add")
+    end
   },
   {
     _id = "troll_blood",
@@ -273,7 +417,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.healing", self.level*4, "add")
+    end
   },
   {
     _id = "leg",
@@ -281,7 +429,11 @@ local trait = {
 
     level_min = -3,
     level_max = 3,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_speed", self.level*5, "add")
+    end
   },
   {
     _id = "arm",
@@ -289,7 +441,11 @@ local trait = {
 
     level_min = -3,
     level_max = 3,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_strength", self.level*3, "add")
+    end
   },
   {
     _id = "voice",
@@ -297,7 +453,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_charisma", self.level*5, "add")
+    end
   },
   {
     _id = "brain",
@@ -305,7 +465,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.memorization", self.level*4, "add")
+    end
   },
   {
     _id = "res_magic",
@@ -313,7 +477,11 @@ local trait = {
 
     level_min = -1,
     level_max = 1,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.magic", self.level * 50, "add")
+    end
   },
   {
     _id = "res_sound",
@@ -321,7 +489,11 @@ local trait = {
 
     level_min = -1,
     level_max = 1,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.sound", self.level * 50, "add")
+    end
   },
   {
     _id = "res_fire",
@@ -329,7 +501,11 @@ local trait = {
 
     level_min = -1,
     level_max = 1,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.fire", self.level * 50, "add")
+    end
   },
   {
     _id = "res_cold",
@@ -337,7 +513,11 @@ local trait = {
 
     level_min = -1,
     level_max = 1,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.cold", self.level * 50, "add")
+    end
   },
   {
     _id = "res_lightning",
@@ -345,7 +525,11 @@ local trait = {
 
     level_min = -1,
     level_max = 1,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.lightning", self.level * 50, "add")
+    end
   },
   {
     _id = "eye",
@@ -353,7 +537,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "mutation"
+    type = "mutation",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_perception", self.level * 5, "add")
+    end
   },
   {
     _id = "perm_fire",
@@ -361,7 +549,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "race"
+    type = "race",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.fire", self.level * 50, "add")
+    end
   },
   {
     _id = "perm_cold",
@@ -393,7 +585,11 @@ local trait = {
 
     level_min = -2,
     level_max = 2,
-    type = "race"
+    type = "race",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.darkness", self.level * 50, "add")
+    end
   },
   {
     _id = "perm_capacity",
@@ -412,14 +608,14 @@ local trait = {
     type = "race",
 
     on_refresh = function(self, chara)
-      chara:mod_resist_level("elona.magic", 150, "add")
-      chara:mod_resist_level("elona.lightning", 100, "add")
-      chara:mod_resist_level("elona.darkness", 200, "add")
-      chara:mod_resist_level("elona.sound", 50, "add")
-      chara:mod_resist_level("elona.chaos", 100, "add")
-      chara:mod_resist_level("elona.mind", 200, "add")
-      chara:mod_resist_level("elona.nerve", 100, "add")
-      chara:mod_resist_level("elona.cold", 100, "add")
+      chara:mod_resist_level("elona.magic", 3*50, "add")
+      chara:mod_resist_level("elona.lightning", 2*50, "add")
+      chara:mod_resist_level("elona.darkness", 4*50, "add")
+      chara:mod_resist_level("elona.sound", 1*50, "add")
+      chara:mod_resist_level("elona.chaos", 2*50, "add")
+      chara:mod_resist_level("elona.mind", 4*50, "add")
+      chara:mod_resist_level("elona.nerve", 2*50, "add")
+      chara:mod_resist_level("elona.cold", 2*50, "add")
     end
   },
   {
@@ -554,6 +750,78 @@ local trait = {
     level_max = 1,
     type = "race"
   },
+}
+data:add_multi("base.trait", trait)
+
+local function calc_ether_ugly(self, chara)
+  return math.floor(self.level * (4 + chara:calc("level") / 5))
+end
+
+local function calc_ether_foot_spd(self, chara)
+  return math.floor(20 + chara:calc("level") / 2)
+end
+
+local function calc_ether_eye_chr(self, chara)
+  return math.floor(-(5 + chara:calc("level") / 3))
+end
+
+local function calc_ether_eye_per(self, chara)
+  return math.floor(5 + chara:calc("level") / 3)
+end
+
+local function calc_ether_feather_spd(self, chara)
+  return math.floor(12 + chara:calc("level") / 4)
+end
+
+local function calc_ether_neck_pv(self, chara)
+  return math.floor(12 + chara:calc("level"))
+end
+
+local function calc_ether_neck_chr(self, chara)
+  return math.floor(-(5 + chara:calc("level") / 5))
+end
+
+local function calc_ether_rage_dv(self, chara)
+  return math.floor(-(15 + chara:calc("level") * 3 / 2))
+end
+
+local function calc_ether_rage_dmg(self, chara)
+  return math.floor(5 + chara:calc("level") * 2 / 3)
+end
+
+local function calc_ether_mind_end(self, chara)
+  return math.floor(-(5 + chara:calc("level") / 3))
+end
+
+local function calc_ether_mind_dex(self, chara)
+  return math.floor(-(4 + chara:calc("level") / 4))
+end
+
+local function calc_ether_mind_ler(self, chara)
+  return math.floor(6 + chara:calc("level") / 2)
+end
+
+local function calc_ether_mind_wil(self, chara)
+  return math.floor(2 + chara:calc("level") / 6)
+end
+
+local function calc_ether_weak_str(self, chara)
+  return math.floor(-(4 * chara:calc("level") / 2))
+end
+
+local function calc_ether_fool_mag(self, chara)
+  return math.floor(-(4 * chara:calc("level") / 2))
+end
+
+local function calc_ether_heavy_spd(self, chara)
+  return math.floor(-(20 + chara:calc("level") / 2))
+end
+
+local function calc_ether_heavy_pv(self, chara)
+  return math.floor(15 + chara:calc("level") / 2)
+end
+
+local ether_trait = {
   {
     _id = "ether_gravity",
     elona_id = 201,
@@ -568,7 +836,15 @@ local trait = {
 
     level_min = -3,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.stat_charisma", calc_ether_ugly(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_ugly(self, chara)
+    end
   },
   {
     _id = "ether_foot",
@@ -576,7 +852,15 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_speed", calc_ether_foot_spd(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_foot_spd(self, chara)
+    end
   },
   {
     _id = "ether_eye",
@@ -584,7 +868,16 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_charisma", calc_ether_eye_chr(self, chara), "add")
+      chara:mod_skill_level("elona.stat_perception", calc_ether_eye_per(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_eye_chr(self, chara), calc_ether_eye_per(self, chara)
+    end
   },
   {
     _id = "ether_feather",
@@ -596,8 +889,11 @@ local trait = {
 
     on_refresh = function(self, chara)
       chara:mod("is_floating", true)
-      local speed_delta = 12 + math.floor(chara:calc("level") / 4)
-      chara:mod_skill_level("elona.stat_speed", speed_delta, "add")
+      chara:mod_skill_level("elona.stat_speed", calc_ether_feather_spd(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_feather_spd(self, chara)
     end
   },
   {
@@ -606,7 +902,16 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_charisma", calc_ether_neck_chr(self, chara), "add")
+      chara:mod("pv", calc_ether_neck_pv(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_neck_chr(self, chara), calc_ether_neck_pv(self, chara)
+    end
   },
   {
     _id = "ether_rage",
@@ -617,8 +922,11 @@ local trait = {
     type = "disease",
 
     on_refresh = function(self, chara)
-      local dv_delta = -(15 + math.floor(chara:calc("level") * 3 / 2))
-      chara:mod("dv", dv_delta, "add")
+      chara:mod("dv", calc_ether_rage_dv(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_rage_dv(self, chara), calc_ether_rage_dmg(self, chara)
     end
   },
   {
@@ -627,7 +935,21 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_constitution", calc_ether_mind_end(self, chara), "add")
+      chara:mod_skill_level("elona.stat_dexterity", calc_ether_mind_dex(self, chara), "add")
+      chara:mod_skill_level("elona.stat_learning", calc_ether_mind_ler(self, chara), "add")
+      chara:mod_skill_level("elona.stat_will", calc_ether_mind_wil(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_mind_end(self, chara),
+         calc_ether_mind_dex(self, chara),
+         calc_ether_mind_ler(self, chara),
+         calc_ether_mind_wil(self, chara)
+    end
   },
   {
     _id = "ether_rain",
@@ -651,7 +973,16 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_strength", calc_ether_weak_str(self, chara), "add")
+      chara:mod_skill_level("elona.stat_life", -15, "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_weak_str(self, chara)
+    end
   },
   {
     _id = "ether_fool",
@@ -659,7 +990,16 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_magic", calc_ether_fool_mag(self, chara), "add")
+      chara:mod_skill_level("elona.stat_mana", -15, "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_fool_mag(self, chara)
+    end
   },
   {
     _id = "ether_heavy",
@@ -667,7 +1007,16 @@ local trait = {
 
     level_min = -1,
     level_max = 0,
-    type = "disease"
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_skill_level("elona.stat_speed", calc_ether_heavy_spd(self, chara), "add")
+      chara:mod("pv", calc_ether_heavy_pv(self, chara), "add")
+    end,
+
+    locale_params = function(self, chara)
+      return calc_ether_heavy_pv(self, chara), calc_ether_heavy_spd(self, chara)
+    end
   },
   {
     _id = "ether_teleport",
@@ -684,7 +1033,18 @@ local trait = {
     level_min = -1,
     level_max = 0,
     type = "disease"
+  },
+  {
+    _id = "ether_poison",
+    elona_id = 216,
+
+    level_min = -1,
+    level_max = 0,
+    type = "disease",
+
+    on_refresh = function(self, chara)
+      chara:mod_resist_level("elona.stat_poison", 100, "add")
+    end
   }
 }
-
-data:add_multi("base.trait", trait)
+data:add_multi("base.trait", ether_trait)

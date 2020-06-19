@@ -100,6 +100,22 @@ local UiListExt = function(feats_menu)
    return E
 end
 
+function FeatsMenu.localize_trait(id, level, chara)
+  local trait_data = data["base.trait"]:ensure(id)
+
+  local root = "trait." .. id .. "." .. tostring(level)
+  local desc
+  if trait_data.locale_params then
+    desc = I18N.get(root .. ".desc", trait_data.locale_params({ level = level }, chara))
+  else
+    desc = I18N.get_optional(root .. ".desc")
+  end
+  local name = I18N.get_optional(root .. ".name")
+  local menu_desc = I18N.get_optional("trait." .. id .. ".menu_desc")
+
+  return { name = name, desc = desc, menu_desc = menu_desc }
+end
+
 function FeatsMenu:init()
    self.chara_make = false
 

@@ -435,7 +435,7 @@
   (setq start (lua-maybe-skip-shebang-line start))
   (let* ((lineno (line-number-at-pos start))
          (region-str (buffer-substring-no-properties start end)))
-    (open-nefia--send "run" (list :code region-str))))
+    (open-nefia--send-to-repl region-str)))
 
 (defun open-nefia-send-buffer ()
   (interactive)
