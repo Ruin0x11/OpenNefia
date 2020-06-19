@@ -163,7 +163,7 @@ local inv_equip = {
       return item:can_equip_at(ctxt.body_part_id)
    end,
    can_select = function(ctxt, item)
-      if ctxt.chara:has_trait("elona.fairy_equip_restriction") and item:calc("weight") >= 1000 then
+      if ctxt.chara:has_trait("elona.perm_weak") and item:calc("weight") >= 1000 then
          Gui.mes("ui.inv.equip.too_heavy")
          return false, "too heavy"
       end

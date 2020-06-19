@@ -4154,17 +4154,17 @@ local item =
                   local chara = params.chara
 
                   if table.set(dat.tags or {})["man"] then
-                     if chara:has_trait("elona.can_eat_human_flesh") then
+                     if chara:has_trait("elona.eat_human") then
                         Gui.mes("food.effect.human.like")
                      else
                         Gui.mes("food.effect.human.dislike")
                         Effect.modify_insanity(chara, 15)
                         chara:apply_effect("elona.insanity", 150)
-                        if not chara:has_trait("elona.can_eat_human_flesh") and Rand.one_in(5) then
-                           chara:gain_trait("elona.can_eat_human_flesh")
+                        if not chara:has_trait("elona.eat_human") and Rand.one_in(5) then
+                           chara:gain_trait("elona.eat_human")
                         end
                      end
-                  elseif chara:has_trait("elona.can_eat_human_flesh") then
+                  elseif chara:has_trait("elona.eat_human") then
                      Gui.mes("food.effect.human.would_have_rather_eaten")
                      result.nutrition = result.nutrition * 2 / 3
                   end

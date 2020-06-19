@@ -132,7 +132,7 @@ end
 function Hunger.print_quality(chara, item)
    if chara:is_player() then
       local quality = item:calc("food_quality") or item:calc("food_rank") or 0
-      if chara:has_trait("elona.can_eat_human_flesh") then
+      if chara:has_trait("elona.eat_human") then
          local is_human = item._id == "elona.corpse" and false
          if is_human then
             Gui.mes("food: human flesh")

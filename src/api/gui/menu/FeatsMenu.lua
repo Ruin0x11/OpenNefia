@@ -121,7 +121,7 @@ function FeatsMenu:init()
    local have = table.of(
       {
          text = "Your trait is this.",
-         trait = data["base.trait"]:ensure("elona.desire_for_violence"),
+         trait = data["base.trait"]:ensure("elona.ether_rage"),
          type = "description"
       }, 20)
 

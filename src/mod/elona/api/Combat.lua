@@ -362,7 +362,7 @@ local function calc_raw_damage_for_skills(result, chara, weapon, target, is_rang
 end
 
 local function calc_raw_damage_for_traits(result, chara)
-   if chara:has_trait("elona.desire_for_violence") then
+   if chara:has_trait("elona.ether_rage") then
       result.dmgfix = result.dmgfix + 5 + chara:calc("level") * 2 / 3
    end
 
@@ -380,7 +380,7 @@ local hook_calc_raw_damage =
 
 Event.register(
    "elona.hook_calc_raw_damage",
-   "Trait: elona.desire_for_violence",
+   "Trait: elona.ether_rage",
    function(_, params, result)
       return calc_raw_damage_for_traits(result, params.chara)
 end)
@@ -520,7 +520,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
 
    damage = pierce_damage + normal_damage
 
-   if target:has_trait("elona.opatos") then
+   if target:has_trait("elona.god_earth") then
       damage = damage * 95 / 100
    end
 

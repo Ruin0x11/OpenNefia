@@ -27,7 +27,7 @@ local function initialize_player(player)
       klass.on_init_player(player)
    end
 
-   local skill_bonus = 5 + player:trait_level("elona.extra_bonus_points")
+   local skill_bonus = 5 + player:trait_level("elona.perm_skill_point")
    player.skill_bonus = player.skill_bonus + skill_bonus
    player.total_skill_bonus = player.total_skill_bonus + skill_bonus
 

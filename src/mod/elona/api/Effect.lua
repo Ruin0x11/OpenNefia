@@ -89,13 +89,13 @@ end
 --- @tparam IChara chara
 --- @tparam int delta
 function Effect.modify_karma(chara, delta)
-   if chara:has_trait("elona.no_guilt") and delta < 0 then
+   if chara:has_trait("elona.perm_evil") and delta < 0 then
       delta = delta * 75 / 100
       if delta <= 0 then
          return
       end
    end
-   if chara:has_trait("elona.good_person") then
+   if chara:has_trait("elona.perm_good") then
       delta = delta * 150 / 100
    end
 
@@ -119,10 +119,10 @@ function Effect.modify_karma(chara, delta)
    end
 
    local max = 20
-   if chara:has_trait("elona.no_guilt") then
+   if chara:has_trait("elona.perm_evil") then
       max = max - 20
    end
-   if chara:has_trait("elona.good_person") then
+   if chara:has_trait("elona.perm_good") then
       max = max + 20
    end
 
@@ -247,7 +247,7 @@ function Effect.proc_cursed_drink(chara, curse_state)
 end
 
 function Effect.get_hungry(chara)
-   if chara:has_trait("elona.slow_digestion") and Rand.one_in(3) then
+   if chara:has_trait("elona.perm_slow_food") and Rand.one_in(3) then
       return
    end
 
@@ -352,7 +352,7 @@ function Effect.modify_insanity(chara, delta)
    end
 
    delta = math.floor(delta / resistance)
-   if chara:is_allied() and chara:has_trait("elona.cures_sanity") then
+   if chara:is_allied() and chara:has_trait("elona.god_heal") then
       delta = delta - Rand.rnd(4)
    end
 
@@ -390,7 +390,7 @@ function Effect.modify_corruption(chara, delta)
       add_amount = add_amount + chara:calc("ether_disease_speed")
    end
 
-   if chara:has_trait("elona.slow_ether_disease") and delta > 0 then
+   if chara:has_trait("elona.perm_res_ether") and delta > 0 then
       add_amount = add_amount * 100 / 150
    end
 

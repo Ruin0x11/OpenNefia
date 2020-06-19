@@ -377,13 +377,13 @@ function Skill.gain_level(chara, show_message)
          end
       end
 
-      skill_bonus = skill_bonus + chara:trait_level("elona.extra_bonus_points")
+      skill_bonus = skill_bonus + chara:trait_level("elona.perm_skill_point")
    end
 
    chara.skill_bonus = chara.skill_bonus + skill_bonus
    chara.total_skill_bonus = chara.total_skill_bonus + skill_bonus
 
-   if chara:has_trait("elona.extra_body_parts") then
+   if chara:has_trait("elona.perm_chaos_shape") then
       if chara.level < 37 and chara.level % 3 == 0 and chara.max_level < chara.level then
          Skill.gain_random_body_part(chara, true)
       end
@@ -463,8 +463,8 @@ end
 
 local function refresh_max_inventory_weight(chara)
    local weight = chara:calc("inventory_weight")
-   local mod = math.floor(weight * (100 - chara:trait_level("elona.weight_lifting") * 10 +
-                                       chara:trait_level("elona.weight_lifting_2") * 20) / 100)
+   local mod = math.floor(weight * (100 - chara:trait_level("elona.ether_gravity") * 10 +
+                                       chara:trait_level("elona.ether_feather") * 20) / 100)
    chara:mod("inventory_weight", mod)
 
    chara:mod("max_inventory_weight",

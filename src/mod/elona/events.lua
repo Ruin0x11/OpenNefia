@@ -33,7 +33,7 @@ local function retreat_in_fear(chara, params)
 
       local retreats = params.damage * 100 / chara:calc("max_hp") + 10 > Rand.rnd(200)
 
-      if params.attacker and params.attacker:has_trait("elona.no_inflict_fear") then
+      if params.attacker and params.attacker:has_trait("elona.no_fear") then
          retreats = false
       end
 
@@ -551,7 +551,7 @@ local function refresh_hp_mp_stamina(chara, params, result)
    chara.max_hp = math.floor(math.clamp(hp_factor, 1, 1000000) * (chara:skill_level("elona.stat_life") / 100)) + 5
 
    chara.max_stamina = math.floor(100 + (chara:skill_level("elona.stat_constitution") + chara:skill_level("elona.stat_strength")) / 5
-                                     + chara:trait_level("elona.long_distance_runner") * 8)
+                                     + chara:trait_level("elona.stamina") * 8)
 end
 
 Event.register("base.on_refresh", "Update max HP/MP/stamina", refresh_hp_mp_stamina)

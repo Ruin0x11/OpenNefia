@@ -243,7 +243,7 @@ function ElonaCommand.do_sleep(player, bed, params)
    ElonaCommand.wake_up_everyone()
 
    local adj = 1
-   if player:has_trait("elona.slow_digestion") then
+   if player:has_trait("elona.perm_slow_food") then
       adj = 2
    end
    player.nutrition = player.nutrition - math.floor(1500 / adj)
