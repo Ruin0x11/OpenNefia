@@ -77,6 +77,9 @@ function IChara:pre_build()
    self:emit("base.on_pre_build")
 
    self:mod_base_with(defaults, "merge")
+
+   local fallbacks = data.fallbacks["base.chara"]
+   self:mod_base_with(table.deepcopy(fallbacks), "merge")
 end
 
 --- The default initialization logic for characters created through
@@ -91,9 +94,6 @@ end
 --- Finishes initializing this character. All characters must run this
 --- function sometime after running pre_build() before being used.
 function IChara:build()
-   local fallbacks = data.fallbacks["base.chara"]
-   self:mod_base_with(table.deepcopy(fallbacks), "merge")
-
    self.state = "Alive"
 
    self.target = nil

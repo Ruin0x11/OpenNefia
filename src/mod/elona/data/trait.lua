@@ -147,7 +147,7 @@ local trait = {
     level_max = 2,
     type = "feat",
 
-    can_learn = function(self, chara)
+    can_acquire = function(self, chara)
       return chara:has_skill("elona.martial_arts")
     end,
 

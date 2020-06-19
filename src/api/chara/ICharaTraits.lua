@@ -42,20 +42,46 @@ function ICharaTraits:on_refresh()
    end
 end
 
-function ICharaTraits:gain_trait(trait_id, level, no_message)
+function ICharaTraits:increment_trait(trait_id, no_message)
    local trait = data["base.trait"]:ensure(trait_id)
-   if self.traits[trait_id] ~= nil then
+
+   if self.traits[trait_id] == nil then
+      self.traits[trait_id] = { level = 0 }
+   elseif self.traits[trait_id].level >= trait.level_max then
       return
    end
 
-   level = level or 1
+   if self.traits[trait_id].level < trait.level_max then
+      self.traits[trait_id].level = self.traits[trait_id].level + 1
 
-   self.traits[trait_id] = {
-      level = level
-   }
+      if not no_message then
+         Gui.mes_c("trait." .. trait_id .. ".on_gain_level", "Green")
+      end
 
-   -- TODO
-   Gui.mes_c("trait._" .. trait.elona_id .. ".positive.gain", "Green")
+      if self.traits[trait_id].level == 0 then
+         self.traits[trait_id] = nil
+      end
+   end
+end
+
+function ICharaTraits:decrement_trait(trait_id, no_message)
+   local trait = data["base.trait"]:ensure(trait_id)
+
+   if self.traits[trait_id] == nil then
+      self.traits[trait_id] = { level = 0 }
+   elseif self.traits[trait_id].level <= trait.level_min then
+      return
+   end
+
+   self.traits[trait_id].level = self.traits[trait_id].level - 1
+
+   if not no_message then
+      Gui.mes_c("trait." .. trait_id .. ".on_lose_level", "Red")
+   end
+
+   if self.traits[trait_id].level == 0 then
+      self.traits[trait_id] = nil
+   end
 end
 
 return ICharaTraits

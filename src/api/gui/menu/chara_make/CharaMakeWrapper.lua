@@ -99,7 +99,7 @@ function CharaMakeWrapper:go_back()
    if #self.trail == 0 then return end
 
    self.submenu = table.remove(self.trail)
-   -- TODO: self.submenu:on_resume_query(), to reset canceled state
+   self.submenu:on_resume_query()
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()

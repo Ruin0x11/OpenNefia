@@ -1,3 +1,4 @@
+local Gui = require("api.Gui")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
@@ -15,40 +16,31 @@ local FeatsMenu = class.class("FeatsMenu", IUiLayer)
 FeatsMenu:delegate("pages", "chosen")
 FeatsMenu:delegate("input", IInput)
 
-local function trait_color(entry)
-   if entry.type == "description" then
-      local level = 1
-      if level > 0 then
-         return {0, 0, 200}
-      elseif level < 0 then
-         return {200, 0, 0}
-      else
-         return {10, 10, 10}
-      end
-   end
-
-   return {10, 10, 10}
-end
-
-local function trait_icon(trait)
-   return 5
-end
+local TRAIT_ICONS = {
+   feat = 5,
+   mutation = 5,
+   race = 5,
+   disease = 5
+}
 
 local UiListExt = function(feats_menu)
    local E = {}
 
    function E:get_item_text(item)
-      local text = item.text
+      local text = ""
 
-      if item.trait and item.type == "description" then
-         local category = item.trait.category or "dood"
+      if item.type == "header" then
+         text = item.text
+      elseif item.type == "can_acquire" then
+         text = item.name or "a"
+      elseif item.type == "have" then
+         local category = item.trait.type
 
          text = ("[%s]%s")
-            :format(I18N.get("trait.window.category." .. category),
-                    text)
+            :format(I18N.get("trait.window.category." .. category), item.desc)
       end
 
-      return text
+      return text or ""
    end
    function E:can_choose(item)
       return item.type == "can_acquire"
@@ -73,8 +65,8 @@ local UiListExt = function(feats_menu)
          return
       end
 
-      local color = trait_color(item)
-      local trait_icon = trait_icon(item.trait)
+      local color = item.color
+      local icon = TRAIT_ICONS[item.trait.type] or 5
 
       local draw_name = item.type == "can_acquire"
 
@@ -87,13 +79,13 @@ local UiListExt = function(feats_menu)
          name_x_offset = 45 - 64 - 20
       end
 
-      feats_menu.t.trait_icons:draw_region(trait_icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
+      feats_menu.t.trait_icons:draw_region(icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
 
       if draw_name then
-         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
-         Draw.text(item.desc, x + 186, y + 2, color)
+         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset, color)
+         Draw.text(item.menu_desc, x + 186, y + 2, color)
       else
-         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset)
+         UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset, color)
       end
    end
 
@@ -102,6 +94,11 @@ end
 
 function FeatsMenu.localize_trait(id, level, chara)
   local trait_data = data["base.trait"]:ensure(id)
+  local max = false
+  if trait_data.level_max == level - 1 then
+     level = level - 1
+     max = true
+  end
 
   local root = "trait." .. id .. "." .. tostring(level)
   local desc
@@ -111,42 +108,69 @@ function FeatsMenu.localize_trait(id, level, chara)
     desc = I18N.get_optional(root .. ".desc")
   end
   local name = I18N.get_optional(root .. ".name")
+  if name and max then
+     name = name .. "(MAX)"
+  end
   local menu_desc = I18N.get_optional("trait." .. id .. ".menu_desc")
 
   return { name = name, desc = desc, menu_desc = menu_desc }
 end
 
-function FeatsMenu:init()
-   self.chara_make = false
+local function trait_color(level)
+   if level == 0 then
+      return {0, 0, 0}
+   elseif level > 0 then
+      return {0, 0, 200}
+   else
+      return {200, 0, 0}
+   end
+end
+
+local function can_acquire_trait(trait, level, chara)
+   local can_acquire = true
+   if trait.can_acquire then
+      can_acquire = trait.can_acquire({level = level}, chara)
+   end
+   return can_acquire
+end
+
+function FeatsMenu.generate_list(chara)
+   local list = {}
+   local trait_points = 1
+
+   if trait_points > 0 then
+      list[#list+1] = { type = "header", text = I18N.get("trait.window.available_feats") }
+
+      for _, trait in data["base.trait"]:iter():filter(function(t) return t.type == "feat" end) do
+         local level = chara:trait_level(trait._id)
+         if can_acquire_trait(trait, level, chara) then
+            local delta = 1
+            local color = trait_color(level)
+            list[#list+1] = table.merge({ type = "can_acquire", trait = trait, color = color }, FeatsMenu.localize_trait(trait._id, level+delta, chara))
+         end
+      end
+   end
+
+   list[#list+1] = { type = "header", text = I18N.get("trait.window.feats_and_traits") }
+
+   for _, trait in data["base.trait"]:iter() do
+      local level = chara:trait_level(trait._id)
+      if level ~= 0 then
+         local color = trait_color(level)
+         list[#list+1] = table.merge({ type = "have", trait = trait, color = color }, FeatsMenu.localize_trait(trait._id, level, chara))
+      end
+   end
+
+   return list
+end
+
+function FeatsMenu:init(chara, chara_make)
+   self.chara = chara
+   self.chara_make = chara_make
 
    self.win = UiWindow:new("trait.window.title", true, "key help", 55, 40)
 
-   local available = data["base.trait"]:iter()
-     :filter(function(t) return t.category == "feat" end)
-     :map(function(t)
-           local level = 0
-           return {
-              text = I18N.get("trait._" .. t.elona_id .. ".levels._" .. level .. ".name"),
-              desc = I18N.get("trait._" .. t.elona_id .. ".desc"),
-              trait = t,
-              type = "can_acquire"
-           }
-         end)
-     :to_list()
-
-   local have = table.of(
-      {
-         text = "Your trait is this.",
-         trait = data["base.trait"]:ensure("elona.ether_rage"),
-         type = "description"
-      }, 20)
-
-   self.data = table.flatten({
-         {{ text = I18N.get("trait.window.available_feats"), type = "header" }},
-         available,
-         {{ text = I18N.get("trait.window.feats_and_traits"), type = "header"}},
-         have
-   })
+   self.data = FeatsMenu.generate_list(self.chara)
 
    self.pages = UiList:new_paged(self.data, 15)
    table.merge(self.pages, UiListExt(self))
@@ -216,6 +240,31 @@ function FeatsMenu:update()
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then
+      local item = self.pages:selected_item()
+      if (self.chara:is_player() or self.chara_make)
+         and self.chara.feats_acquirable > 0
+         and item.type == "can_acquire"
+      then
+         if self.chara:trait_level(item.trait._id) >= item.trait.level_max then
+            if not self.chara_make then
+               Gui.mes("trait.window.already_maxed")
+            end
+         else
+            self.chara.feats_acquirable = self.chara.feats_acquirable - 1
+            Gui.play_sound("base.ding3")
+            self.chara:increment_trait(item.trait._id, true)
+            self.chara:refresh()
+            self.data = FeatsMenu.generate_list(self.chara)
+            self.pages:set_data(self.data)
+
+            local index = self.pages:iter_all_pages():enumerate():filter(function(_, i) return i.type == "have" and i.trait._id == item.trait._id end):nth(1)
+            self.pages:select(index)
+
+            if not self.chara_make then
+               Gui.update_screen()
+            end
+         end
+      end
    end
 
    self.win:update()

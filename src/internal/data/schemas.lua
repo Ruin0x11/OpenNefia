@@ -366,7 +366,10 @@ AI callback to run on this character's turn.
          x_offset = nil,
          y_offset = nil,
 
-         materials = {}
+         materials = {},
+
+         feats_acquirable = 0,
+         traits = {}
       }
    },
    { interface = IChara }

@@ -1,3 +1,4 @@
+local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Ui = require("api.Ui")
 
@@ -13,9 +14,11 @@ local SelectFeatsMenu = class.class("SelectFeatsMenu", ICharaMakeSection)
 
 SelectFeatsMenu:delegate("input", IInput)
 
-function SelectFeatsMenu:init(chara)
-   self.inner = FeatsMenu:new(chara)
-   self.inner.chara_make = true
+function SelectFeatsMenu:init()
+   self.chara = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
+   self.chara.feats_acquirable = 3
+   assert(self.chara)
+   self.inner = FeatsMenu:new(self.chara, true)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
@@ -37,11 +40,20 @@ function SelectFeatsMenu:draw()
 end
 
 function SelectFeatsMenu:on_make_chara(chara)
+   chara.traits = self.chara.traits
+end
+
+function SelectFeatsMenu:on_resume_query()
+   self.chara = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
+   self.chara.feats_acquirable = 3
+   self.inner = FeatsMenu:new(self.chara, true)
+
+   self.input = InputHandler:new()
+   self.input:forward_to(self.inner)
 end
 
 function SelectFeatsMenu:update()
-   if self.inner.chosen then
-      -- if self.chara.feats_learnable == 0
+   if self.chara.feats_acquirable == 0 then
       return true
    end
 

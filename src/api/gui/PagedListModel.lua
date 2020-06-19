@@ -9,7 +9,6 @@ PagedListModel:delegate("model",
                          "selected_item",
                          "choose",
                          "chosen",
-                         "select",
                          "selected",
                          "on_choose",
                          "can_select",
@@ -51,6 +50,13 @@ end
 
 function PagedListModel:update_selected_index()
    self.selected_ = self.page_size * self.page + self.model.selected
+end
+
+function PagedListModel:select(i)
+   local page = math.floor(i / self.page_size)
+   local index = i % self.page_size
+   self:select_page(page)
+   self.model:select(index)
 end
 
 function PagedListModel:get_item_text(item)

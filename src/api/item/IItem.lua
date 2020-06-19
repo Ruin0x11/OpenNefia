@@ -19,6 +19,9 @@ function IItem:pre_build()
    IMapObject.init(self)
    IEventEmitter.init(self)
    IItemEnchantments.init(self)
+
+   local fallbacks = data.fallbacks["base.item"]
+   self:mod_base_with(table.deepcopy(fallbacks), "merge")
 end
 
 function IItem:normal_build()
@@ -30,9 +33,6 @@ function IItem:normal_build()
 end
 
 function IItem:build()
-   local fallbacks = data.fallbacks["base.item"]
-   self:mod_base_with(table.deepcopy(fallbacks), "merge")
-
    self.name = I18N.get("item.info." .. self._id .. ".name")
 
    self:emit("base.on_build_item")
