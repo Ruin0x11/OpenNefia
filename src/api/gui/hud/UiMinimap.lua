@@ -23,7 +23,7 @@ function UiMinimap:relayout(x, y, width, height)
 end
 
 function UiMinimap:draw()
-   self.t.hud_minimap:draw(self.x, self.y, nil, nil, {255, 255, 255})
+   self.t.base.hud_minimap:draw(self.x, self.y, nil, nil, {255, 255, 255})
 end
 
 function UiMinimap:update(dt)

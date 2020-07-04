@@ -51,7 +51,7 @@ function UiMessageWindow:relayout(x, y, width, height)
    self.max_lines = math.floor(self.height / Draw.text_height()) - 1
    self.y_offset = -(self.height % Draw.text_height())
 
-   self.i_message_window = self.t.message_window:make_instance()
+   self.i_message_window = self.t.base.message_window:make_instance()
 
    self:recalc_lines()
 end

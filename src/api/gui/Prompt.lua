@@ -125,7 +125,7 @@ end
 function Prompt:draw()
    Draw.filled_rect(self.x + 12, self.y + 12, self.width - 17, self.height - 16, {60, 60, 60, 128})
    self.win:draw()
-   self.t.radar_deco:draw(self.x - 16, self.y)
+   self.t.base.radar_deco:draw(self.x - 16, self.y)
    Draw.set_font(14) -- 14 - en * 2
    self.list:draw()
 end

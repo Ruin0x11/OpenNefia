@@ -124,7 +124,7 @@ function UiRaceInfo:draw()
          local text_color, proficiency = skill_info(skill_level)
          local skill_text = ("%s: %s"):format(skill_name, proficiency)
 
-         self.t.skill_icons:draw_region(
+         self.t.base.skill_icons:draw_region(
             1,
             j * 150 + self.x + 200 + 13,
             self.y + ty + 7,
@@ -171,7 +171,7 @@ function UiRaceInfo:draw()
    local rows = 0
 
    if skill_count > 0 then
-      self.t.skill_icons:draw_region(
+      self.t.base.skill_icons:draw_region(
          1,
          self.x + 200 + 13,
          self.y + 260 + 34 + 6,
@@ -199,7 +199,7 @@ function UiRaceInfo:draw()
          local related_skill = proto.related_basic_attribute
          related_skill = I18N.get("ability." .. related_skill .. ".name")
 
-         self.t.skill_icons:draw_region(
+         self.t.base.skill_icons:draw_region(
             1,
             self.x + 200 + 13,
             self.y + 260 + 34 + rows*14 + 6,

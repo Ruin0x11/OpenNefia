@@ -89,7 +89,7 @@ function shadow_layer:update_light_flicker()
       local flicker = light.brightness + Rand.rnd(light.flicker + 1)
       light.color[4] = flicker
 
-      local frame_count = #self.t[light.chip].quads
+      local frame_count = #self.t.base[light.chip].quads
       if frame_count > 1 then
          light.frame = Rand.rnd(frame_count) + 1
       else
@@ -147,7 +147,7 @@ function shadow_layer:draw(draw_x, draw_y, offx, offy)
    Draw.set_blend_mode("add")
 
    for _, light in ipairs(self.lights) do
-      local asset = self.t[light.chip]
+      local asset = self.t.base[light.chip]
       local x = sx + light.x - draw_x
       local y = sy + light.y - light.offset_y - draw_y
       if #asset.quads == 0 then

@@ -136,9 +136,9 @@ function TextPrompt:draw()
    end
 
    self.win:draw()
-   self.t.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)
+   self.t.base.label_input:draw(self.x + self.width / 2 - 60, self.y - 32)
    local ime_status = self:ime_status_quad()
-   self.t[ime_status]:draw(self.x + 8, self.y + 4)
+   self.t.base[ime_status]:draw(self.x + 8, self.y + 4)
 
    Draw.text(self.display_text,
              self.x + 36,
@@ -146,7 +146,7 @@ function TextPrompt:draw()
              {255, 255, 255},
              16) -- 16 - en * 2
 
-   self.t.input_caret:draw(
+   self.t.base.input_caret:draw(
       self.x + Draw.text_width(self.display_text) + 34,
       self.y + 5,
       nil,

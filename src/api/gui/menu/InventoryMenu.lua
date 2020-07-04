@@ -249,14 +249,14 @@ function InventoryMenu:draw()
    self.win:draw()
 
    Draw.set_color(255, 255, 255)
-   self.t.inventory_icons:draw_region(self.ctxt.icon, self.x + 46, self.y - 14)
+   self.t.base.inventory_icons:draw_region(self.ctxt.icon, self.x + 46, self.y - 14)
 
-   self.t.deco_inv_a:draw(self.x + self.width - 136, self.y - 6)
+   self.t.base.deco_inv_a:draw(self.x + self.width - 136, self.y - 6)
    if self.layout == nil then
-      self.t.deco_inv_b:draw(self.x + self.width - 186, self.y - 6)
+      self.t.base.deco_inv_b:draw(self.x + self.width - 186, self.y - 6)
    end
-   self.t.deco_inv_c:draw(self.x + self.width - 246, self.y - 6)
-   self.t.deco_inv_d:draw(self.x - 6, self.y - 6)
+   self.t.base.deco_inv_c:draw(self.x + self.width - 246, self.y - 6)
+   self.t.base.deco_inv_d:draw(self.x - 6, self.y - 6)
 
    local topic = "window items"
    Ui.draw_topic(topic, self.x + 28, self.y + 30)
@@ -276,9 +276,9 @@ function InventoryMenu:draw()
    self.pages:draw()
 
    if self.ctxt.show_money then
-      Draw.set_font(self.t.gold_count_font) -- 13 - en * 2
-      self.t.gold_coin:draw(self.x + 340, self.y + 32, nil, nil, {255, 255, 255})
-      Draw.text(("%d gp"):format(self.money), self.x + 368, self.y + 37, self.t.text_color)
+      Draw.set_font(self.t.base.gold_count_font) -- 13 - en * 2
+      self.t.base.gold_coin:draw(self.x + 340, self.y + 32, nil, nil, {255, 255, 255})
+      Draw.text(("%d gp"):format(self.money), self.x + 368, self.y + 37, self.t.base.text_color)
    end
 end
 

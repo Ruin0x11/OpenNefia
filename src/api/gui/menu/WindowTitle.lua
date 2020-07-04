@@ -30,14 +30,14 @@ function WindowTitle:draw()
 
    local count = math.ceil(self.width / 192)
    for i=0,count do
-      self.t.message_window:draw_region("window_title", self.x + 8 + i * 192, self.y, nil, nil, {255, 255, 255})
+      self.t.base.message_window:draw_region("window_title", self.x + 8 + i * 192, self.y, nil, nil, {255, 255, 255})
    end
 
    local offset_y = 0
    if Gui.field_is_active() then
       offset_y = 1
    end
-   self.t.tip_icons:draw_region(1, self.x, self.y + offset_y)
+   self.t.base.tip_icons:draw_region(1, self.x, self.y + offset_y)
 
    offset_y = 0
    if I18N.is_fullwidth() then

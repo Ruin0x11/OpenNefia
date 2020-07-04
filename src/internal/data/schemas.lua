@@ -832,6 +832,12 @@ data:add_type {
 }
 
 data:add_type {
+   name = "asset",
+   schema = schema.Record {
+   },
+}
+
+data:add_type {
    name = "chip",
    fields = {
       {

@@ -81,16 +81,16 @@ function DirectionPrompt:draw()
    Draw.set_color({255,255,255,alpha})
 
    if self.cardinal then
-      self.t.direction_arrow:draw(x, y - self.tile_height, nil, nil, nil, true, 0)
-      self.t.direction_arrow:draw(x, y + self.tile_height, nil, nil, nil, true, 180)
-      self.t.direction_arrow:draw(x + self.tile_width, y, nil, nil, nil, true, 90)
-      self.t.direction_arrow:draw(x - self.tile_width, y, nil, nil, nil, true, 270)
+      self.t.base.direction_arrow:draw(x, y - self.tile_height, nil, nil, nil, true, 0)
+      self.t.base.direction_arrow:draw(x, y + self.tile_height, nil, nil, nil, true, 180)
+      self.t.base.direction_arrow:draw(x + self.tile_width, y, nil, nil, nil, true, 90)
+      self.t.base.direction_arrow:draw(x - self.tile_width, y, nil, nil, nil, true, 270)
    end
 
-   self.t.direction_arrow:draw(x - self.tile_width, y - self.tile_height, nil, nil, nil, true, 315)
-   self.t.direction_arrow:draw(x + self.tile_width, y + self.tile_height, nil, nil, nil, true, 135)
-   self.t.direction_arrow:draw(x + self.tile_width, y - self.tile_height, nil, nil, nil, true, 45)
-   self.t.direction_arrow:draw(x - self.tile_width, y + self.tile_height, nil, nil, nil, true, 225)
+   self.t.base.direction_arrow:draw(x - self.tile_width, y - self.tile_height, nil, nil, nil, true, 315)
+   self.t.base.direction_arrow:draw(x + self.tile_width, y + self.tile_height, nil, nil, nil, true, 135)
+   self.t.base.direction_arrow:draw(x + self.tile_width, y - self.tile_height, nil, nil, nil, true, 45)
+   self.t.base.direction_arrow:draw(x - self.tile_width, y + self.tile_height, nil, nil, nil, true, 225)
 end
 
 function DirectionPrompt:update(dt)

@@ -49,6 +49,10 @@ function sound_manager:play_looping(id, ty)
       src:setAttenuationDistances(0, 0)
    end
 
+   if sound.volume then
+      src:setVolume(sound.volume)
+   end
+
    src:play()
 
    self.looping_sources[ty .. ":" .. id] = src
@@ -101,6 +105,10 @@ function sound_manager:play(id, x, y, channel)
          src:setRelative(true)
          src:setAttenuationDistances(0, 0)
       end
+   end
+
+   if sound.volume then
+      src:setVolume(sound.volume)
    end
 
    love.audio.play(src)

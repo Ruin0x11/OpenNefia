@@ -32,19 +32,19 @@ function UiGoldPlatinum:draw()
 
    Draw.set_font(12)
 
-   self.t.gold_coin:draw(self.x, self.y, nil, nil, {255, 255, 255})
+   self.t.base.gold_coin:draw(self.x, self.y, nil, nil, {255, 255, 255})
    Draw.text_shadowed(string.format("%d gp", gold),
                       self.x + 28,
                       self.y + 2,
-                      self.t.text_color_light,
-                      self.t.text_color_light_shadow)
+                      self.t.base.text_color_light,
+                      self.t.base.text_color_light_shadow)
 
-   self.t.platinum_coin:draw(self.x + 120, self.y, nil, nil, {255, 255, 255})
+   self.t.base.platinum_coin:draw(self.x + 120, self.y, nil, nil, {255, 255, 255})
    Draw.text_shadowed(string.format("%d pp", plat),
                       self.x + 120 + 28,
                       self.y + 2,
-                      self.t.text_color_light,
-                      self.t.text_color_light_shadow)
+                      self.t.base.text_color_light,
+                      self.t.base.text_color_light_shadow)
 end
 
 function UiGoldPlatinum:update()

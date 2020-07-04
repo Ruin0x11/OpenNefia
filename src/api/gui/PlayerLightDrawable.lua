@@ -35,7 +35,7 @@ end
 
 function PlayerLightDrawable:draw(x, y)
    Draw.set_blend_mode("add")
-   self.t.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, self.color, true)
+   self.t.base.player_light:draw(x + self.offset_x, y + self.offset_y, nil, nil, self.color, true)
    Draw.set_blend_mode("alpha")
    Draw.set_color(255, 255, 255)
 end

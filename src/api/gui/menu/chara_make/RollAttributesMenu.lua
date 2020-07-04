@@ -189,7 +189,7 @@ function RollAttributesMenu:draw_attribute(item, i, x, y)
 
    local quad = quads[item.id]
    if quad then
-      self.t.skill_icons:draw_region(quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
+      self.t.base.skill_icons:draw_region(quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
    end
 
    Draw.text(tostring(item.value.level), x + 172, y, {0, 0, 0})
@@ -211,7 +211,7 @@ end
 
 function RollAttributesMenu:draw()
    self.win:draw()
-   self.t.g1:draw(self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
+   self.t.base.g1:draw(self.x + 85, self.y + self.height / 2, 150, 240, {255, 255, 255, 30}, true)
 
    Draw.set_color(255, 255, 255)
    Ui.draw_topic("chara_make.roll_attributes.attributes", self.x + 28, self.y + 30)

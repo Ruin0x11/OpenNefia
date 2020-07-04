@@ -54,7 +54,7 @@ end
 
 function UiStatusEffects:calc_max_width()
    self.max_width = 50
-   Draw.set_font(self.t.status_indicator_font)
+   Draw.set_font(self.t.base.status_indicator_font)
    for _, indicator in ipairs(self.indicators) do
       self.max_width = math.max(self.max_width, Draw.text_width(indicator.text) + 20)
    end
@@ -78,11 +78,11 @@ function UiStatusEffects:relayout(x, y, width, height)
 end
 
 function UiStatusEffects:draw()
-   Draw.set_font(self.t.status_indicator_font)
+   Draw.set_font(self.t.base.status_indicator_font)
    local y = self.y
    for _, indicator in ipairs(self.indicators) do
       Draw.set_color({255, 255, 255})
-      self.t.status_effect_bar:draw(self.x, y, self.max_width, nil, nil)
+      self.t.base.status_effect_bar:draw(self.x, y, self.max_width, nil, nil)
       Draw.text(indicator.text,
                 self.x + 6,
                 y + 1, -- y + vfix + 1

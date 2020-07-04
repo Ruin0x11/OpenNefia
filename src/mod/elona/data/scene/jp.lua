@@ -1,5 +1,5 @@
 local story0 = {
-    { "pic", "bg3" },
+    { "pic", "base.bg3" },
     { "mc", "elona.intro" },
     {
       "txt",
@@ -29,7 +29,7 @@ local story0 = {
 人間の土地から離れていったが、対立の溝はうまらず
 掃討戦は、今にも始まろうとしていた。]]
     },
-    { "pic", "bg4" },
+    { "pic", "base.bg4" },
     {
       "txt",
       [[
@@ -59,7 +59,7 @@ local story1 = {
     portrait = "elona.saimore"
   },
   { "mc", "elona.town1" },
-  { "pic", "bg1" },
+  { "pic", "base.bg1" },
   {
     "txt",
     [[
@@ -123,7 +123,7 @@ local story2 = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.town1" },
-  { "pic", "bg2" },
+  { "pic", "base.bg2" },
   {
     "txt",
     [[
@@ -242,7 +242,7 @@ local story3 = {
     portrait = "elona.man19"
   },
   { "mc", "elona.unrest2" },
-  { "pic", "bg6" },
+  { "pic", "base.bg6" },
   {
     "txt",
     [[
@@ -307,7 +307,7 @@ local story4 = {
     portrait = "elona.saimore"
   },
   { "mc", "elona.town4" },
-  { "pic", "bg5" },
+  { "pic", "base.bg5" },
   {
     "txt",
     [[
@@ -428,7 +428,7 @@ local story5 = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.psml515" },
-  { "pic", "bg2" },
+  { "pic", "base.bg2" },
   {
     "txt",
     [[
@@ -452,7 +452,7 @@ local story5 = {
     "金次第でどんな依頼も受ける、か…ふふ。確かに腕は立つし、どんな危険なヤマであろうと関係ない。ただし、あの男の場合はね、金次第じゃなくて気分次第なのよ。ええ、あたしがリアナよ。二人とも、着いて来なさい。"
   },
   { "fade" },
-  { "pic", "bg8" },
+  { "pic", "base.bg8" },
   { "fadein" },
   {
     "actor", 3,
@@ -551,7 +551,7 @@ local story7 = {
     portrait = "elona.barius"
   },
   { "mc", "elona.lonely" },
-  { "pic", "bg5" },
+  { "pic", "base.bg5" },
   {
     "txt",
     [[
@@ -608,7 +608,7 @@ local story7 = {
     "セビリス公、後悔するぞ。敵に回るというなら覚悟しておくがいい。私は執念深い性質だ。"
   },
   { "fade" },
-  { "pic", "bg5" },
+  { "pic", "base.bg5" },
   { "fadein" },
   {
     "chat", 1,
@@ -649,7 +649,7 @@ local story15  = {
     portrait = "elona.larnneire"
   },
   { "mc", "elona.unrest2" },
-  { "pic", "bg6" },
+  { "pic", "base.bg6" },
   {
     "txt",
     [[
@@ -736,7 +736,7 @@ local story16  = {
     portrait = "elona.barius"
   },
   { "mc", "elona.lonely" },
-  { "pic", "bg2" },
+  { "pic", "base.bg2" },
   {
     "txt",
     [[
@@ -786,7 +786,7 @@ local story17  = {
     portrait = "elona.larnneire"
   },
   { "mc", "elona.psml035" },
-  { "pic", "bg6" },
+  { "pic", "base.bg6" },
   {
     "txt",
     [[
@@ -874,7 +874,7 @@ local story24  = {
     name = "青い髪の『ヴァリウス』",
     portrait = "elona.barius"
   },
-  { "pic", "bg6" },
+  { "pic", "base.bg6" },
   { "mc", "elona.town4" },
   {
     "txt",
@@ -968,7 +968,7 @@ local story25  = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.lonely" },
-  { "pic", "bg9" },
+  { "pic", "base.bg9" },
   {
     "txt",
     [[
@@ -1031,7 +1031,7 @@ local story26  = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.psml515" },
-  { "pic", "bg4" },
+  { "pic", "base.bg4" },
   {
     "txt",
     [[
@@ -1071,7 +1071,7 @@ local story28  = {
     name = "ラーネイレ",
     portrait = "elona.larnneire"
   },
-  { "pic", "bg7" },
+  { "pic", "base.bg7" },
   { "mc", "elona.memory2" },
   {
     "txt",
@@ -1139,7 +1139,7 @@ local story29  = {
     name = "ラーネイレ",
     portrait = "elona.larnneire"
   },
-  { "pic", "bg7" },
+  { "pic", "base.bg7" },
   { "mc", "elona.memory2" },
   {
     "chat", 1,
@@ -1179,7 +1179,7 @@ local story30  = {
     portrait = "elona.larnneire"
   },
   { "mc", "elona.memory" },
-  { "pic", "bg7" },
+  { "pic", "base.bg7" },
   {
     "chat", 1,
     "あの日は…涼しい秋の夜だった。エリシェと供に、芝居を見に行っていた。くだらない内容だったが、今でも覚えている。あの日のことは、何も忘れることができない。"
@@ -1225,7 +1225,7 @@ local story33  = {
     portrait = "elona.barius"
   },
   { "mc", "elona.unrest2" },
-  { "pic", "bg10" },
+  { "pic", "base.bg10" },
   {
     "chat", 3,
     "ここがサイモアの研究所か。見たところ人影もないし、機具も長い間使われていないようだ。我々の求めている情報が残っているといいが。"
@@ -1305,7 +1305,7 @@ local story35  = {
     portrait = "elona.barius"
   },
   { "mc", "elona.ano_sora" },
-  { "pic", "bg10" },
+  { "pic", "base.bg10" },
   {
     "chat", 5,
     "世界の東に位置し、原生林に覆われた大地のみが、メシェーラの侵食に耐えていました。人々は森を「希望」の意味をもつ「ヴィンデール」と呼んだ…そして長い歳月がたち、最後の人類の知識や文化が失われて行く中、ヴィンデールはその名の通り奇跡を起こすのです。"
@@ -1358,7 +1358,7 @@ local story40  = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.lonely" },
-  { "pic", "bg9" },
+  { "pic", "base.bg9" },
   {
     "chat", 4,
     "セビリス、前々から尋ねようと思っていた。あなたは、なぜ私のことを知っている？"
@@ -1416,7 +1416,7 @@ local story60  = {
     portrait = "elona.lomias"
   },
   { "mc", "elona.lonely" },
-  { "pic", "bg7" },
+  { "pic", "base.bg7" },
   {
     "chat", 5,
     "カルーンの国境はすぐ目の先だ。順調に進めば、ヴィンデールまで三日もかかるまい。"
@@ -1434,7 +1434,7 @@ local story60  = {
     "あなたの気持ちはわかるわ。でも、私は最後の瞬間まで自分の意思で行動したい。森を守るために、できる限りのことをしたい。それが例え失敗に終わっても、後に希望の芽を残せるのなら。"
   },
   { "fade" },
-  { "pic", "bg5" },
+  { "pic", "base.bg5" },
   { "mc", "elona.soraochi" },
   { "fadein" },
   {
@@ -1479,7 +1479,7 @@ local story70  = {
     portrait = "elona.bethel"
   },
   { "mc", "elona.boss2" },
-  { "pic", "bg11" },
+  { "pic", "base.bg11" },
   {
     "chat", 3,
     "…あれは！森から火の手が上がっている。ザナンはもう侵攻を開始したのか。"
@@ -1533,7 +1533,7 @@ local story90  = {
     portrait = "elona.barius"
   },
   { "mc", "elona.boss2" },
-  { "pic", "bg11" },
+  { "pic", "base.bg11" },
   {
     "chat", 5,
     "これはこれは、異形の森の魔女自らこんな場所へ、何の御用ですか？"
@@ -1590,7 +1590,7 @@ local story90  = {
 }
 
 local story100  = {
-  { "pic", "bg12" },
+  { "pic", "base.bg12" },
   { "mc", "elona.epilogue" },
   {
     "txt",

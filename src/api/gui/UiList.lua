@@ -94,11 +94,11 @@ function UiList:relayout(x, y, width, height)
 end
 
 function UiList:draw_select_key(item, i, key_name, x, y)
-   self.t.select_key:draw(x, y, nil, nil, {255, 255, 255})
+   self.t.base.select_key:draw(x, y, nil, nil, {255, 255, 255})
    Draw.set_font(13)
    Draw.text_shadowed(key_name,
-                      x + (self.t.select_key:get_width() - Draw.text_width(key_name)) / 2 - 2,
-                      y + (self.t.select_key:get_height() - Draw.text_height()) / 2,
+                      x + (self.t.base.select_key:get_width() - Draw.text_width(key_name)) / 2 - 2,
+                      y + (self.t.base.select_key:get_height() - Draw.text_height()) / 2,
                       {250, 240, 230},
                       {50, 60, 80})
 end
@@ -114,7 +114,7 @@ function UiList:draw_item_text(text, item, i, x, y, x_offset, color)
       Draw.set_blend_mode("add")
       Draw.filled_rect(x+1, y - 1, width-2, 17, {50, 50, 50})
       Draw.set_blend_mode("alpha")
-      self.t.list_bullet:draw(x + width - 20, y + 2, nil, nil, {255, 255, 255})
+      self.t.base.list_bullet:draw(x + width - 20, y + 2, nil, nil, {255, 255, 255})
    end
    Draw.text(text, x + 4 + x_offset, y + 1, color or {0, 0, 0})
 end

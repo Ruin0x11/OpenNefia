@@ -127,7 +127,7 @@ function ChooseAllyMenu:relayout()
 end
 
 function ChooseAllyMenu:draw()
-   self.t.deco_board_a:draw_tiled()
+   self.t.base.deco_board_a:draw_tiled()
 
    self.pages:draw()
 end

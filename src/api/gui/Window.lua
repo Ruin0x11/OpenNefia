@@ -54,7 +54,7 @@ function Window:relayout(x, y, width, height)
       parts[#parts+1] = { "mid_right_" .. tile_y, x_inner, dy * 8 + y + 48 }
    end
 
-   self.i_window = self.t.window:make_instance()
+   self.i_window = self.t.base.window:make_instance()
    self.batch = self.i_window:make_batch(parts)
 end
 

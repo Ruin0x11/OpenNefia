@@ -21,8 +21,8 @@ function TopicWindow:relayout(x, y, width, height)
 
    Draw.set_color(255, 255, 255)
 
-   self.i_topic_window = self.t["window_" .. self.frame_style]:make_instance(self.width, self.height)
-   self.i_window = self.t.window:make_instance()
+   self.i_topic_window = self.t.base["window_" .. self.frame_style]:make_instance(self.width, self.height)
+   self.i_window = self.t.base.window:make_instance()
 
    self:update_batch()
 end

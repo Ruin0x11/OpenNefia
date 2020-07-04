@@ -130,7 +130,7 @@ function startup.run(mods)
 
    progress("Loading theme...")
 
-   local default_theme = "elona_sys.default"
+   local default_theme = "base.default"
    UiTheme.add_theme(default_theme)
 
    field:setup_repl()

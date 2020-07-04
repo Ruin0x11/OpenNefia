@@ -112,8 +112,8 @@ end
 
 function BookMenu:relayout()
    self.t = UiTheme.load(self)
-   self.width = self.t.book:get_width()
-   self.height = self.t.book:get_height()
+   self.width = self.t.base.book:get_width()
+   self.height = self.t.base.book:get_height()
    self.max_page_width = self.width / 2
 
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width - 16, self.height + 20)
@@ -122,9 +122,9 @@ end
 
 function BookMenu:draw()
    Draw.set_color(255, 255, 255)
-   self.t.book:draw(self.x, self.y)
+   self.t.base.book:draw(self.x, self.y)
 
-   Draw.set_color(self.t.text_color)
+   Draw.set_color(self.t.base.text_color)
    for i, item in self.model:iter() do
       i = i - 1
       local x = self.x + 80 + math.floor(i / 20) * 306

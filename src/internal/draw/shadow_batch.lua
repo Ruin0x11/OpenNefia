@@ -48,8 +48,8 @@ local shadowmap = {
 
 function shadow_batch:relayout()
    self.t = UiTheme.load(self)
-   self.image = self.t.shadow.image
-   self.edge_image = self.t.shadow_edges.image
+   self.image = self.t.base.shadow.image
+   self.edge_image = self.t.base.shadow_edges.image
    self.batch = love.graphics.newSpriteBatch(self.image)
    self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
 end

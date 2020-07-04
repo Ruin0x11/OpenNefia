@@ -40,7 +40,7 @@ function Ui.draw_topic(topic, x, y)
    t = t or UiTheme.load()
    Draw.set_font(12, "bold")
    Draw.set_color(255, 255, 255)
-   t.tip_icons:draw_region(1, x, y + 7)
+   t.base.tip_icons:draw_region(1, x, y + 7)
    Draw.set_color(0, 0, 0)
    local text = I18N.get_optional(topic) or topic
    Draw.text(text, x + 26, y + 8) -- y + vfix + 8
@@ -65,7 +65,7 @@ end
 function Ui.random_cm_bg()
    t = t or UiTheme.load()
    local bg = Rand.rnd(4) + 1
-   return t[string.format("g%d", bg)]
+   return t.base[string.format("g%d", bg)]
 end
 
 function Ui.unpack_font_desc(font)

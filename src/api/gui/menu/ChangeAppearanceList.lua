@@ -119,8 +119,8 @@ function ChangeAppearanceList:draw_item(item, i, x, y)
    UiList.draw_item_text(self, text, item, i, x, y - 1)
 
    if item.type ~= "confirm" then
-      self.t.arrow_left:draw(x - 30, y - 5, nil, nil, {255, 255, 255})
-      self.t.arrow_right:draw(x + 115, y - 5, nil, nil, {255, 255, 255})
+      self.t.base.arrow_left:draw(x - 30, y - 5, nil, nil, {255, 255, 255})
+      self.t.base.arrow_right:draw(x + 115, y - 5, nil, nil, {255, 255, 255})
    end
 end
 

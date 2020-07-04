@@ -57,10 +57,10 @@ function MorePrompt:draw()
    Draw.set_color(255, 255, 255)
    if self.canceled then
       if self.size2 < 6 then
-         self.t.more_prompt:draw(self.x, self.y + self.size2 * 2, self.width, self.height - self.size2 * 4)
+         self.t.base.more_prompt:draw(self.x, self.y + self.size2 * 2, self.width, self.height - self.size2 * 4)
       end
    elseif self.size > 0 then
-      self.t.more_prompt:draw(self.x, self.y + 12 - self.size, self.width, self.size * 2 + 1)
+      self.t.base.more_prompt:draw(self.x, self.y + 12 - self.size, self.width, self.size * 2 + 1)
    end
 end
 

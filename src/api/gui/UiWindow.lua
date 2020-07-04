@@ -87,7 +87,7 @@ function UiWindow:draw()
    local y_offset = self.y_offset
    local title = self.title
 
-   self.t.tip_icons:draw_region(1, x + 30 + x_offset, y + height - 47 - height % 8)
+   self.t.base.tip_icons:draw_region(1, x + 30 + x_offset, y + height - 47 - height % 8)
 
    Draw.line(x + 50 + x_offset,
              y + height - 48 - self.height % 8,

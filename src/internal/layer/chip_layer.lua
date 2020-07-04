@@ -18,7 +18,7 @@ function chip_layer:init(width, height)
 
    local tiles = {{
          _id = "shadow",
-         image = self.t.character_shadow
+         image = self.t.base.character_shadow
    }}
    shadow_atlas:load(tiles, coords)
 
@@ -306,7 +306,7 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
    for _, ind in pairs(self.chip_batch_inds) do
       if ind.hp_bar then
          if self["i_" .. ind.hp_bar] == nil then
-            self["i_" .. ind.hp_bar] = self.t[ind.hp_bar]:make_instance()
+            self["i_" .. ind.hp_bar] = self.t.base[ind.hp_bar]:make_instance()
          end
 
          local ratio = ind.hp_ratio or 0.9

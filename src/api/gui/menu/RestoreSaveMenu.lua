@@ -120,7 +120,7 @@ function RestoreSaveMenu:relayout(x, y, width, height)
 end
 
 function RestoreSaveMenu:draw()
-   self.t.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
+   self.t.base.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
    self.caption:draw()
 
    self.win:draw()

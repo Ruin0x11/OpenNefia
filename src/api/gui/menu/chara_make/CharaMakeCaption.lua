@@ -28,7 +28,7 @@ function CharaMakeCaption:relayout(x, y)
 
    self.width = width
 
-   self.i_caption = self.t.caption:make_instance(self.width)
+   self.i_caption = self.t.base.caption:make_instance(self.width)
 end
 
 function CharaMakeCaption:update()

@@ -446,7 +446,7 @@ function Anim.breaking(tx, ty)
 
    local scx, scy = pos_centered(tx, ty)
 
-   return Anim.make_particle_animation(scx, scy, "breaking_effect", 5, 4, create, draw)
+   return Anim.make_particle_animation(scx, scy, "base.breaking_effect", 5, 4, create, draw)
 end
 
 function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, map)

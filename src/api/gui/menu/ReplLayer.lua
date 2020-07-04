@@ -410,7 +410,7 @@ function ReplLayer:relayout(x, y, width, height)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 
    self.t = UiTheme.load(self)
-   self.color = self.color or self.t.repl_bg_color
+   self.color = self.color or self.t.base.repl_bg_color
 
    if self.canvas == nil or width ~= self.width or height ~= self.height then
       self.canvas = Draw.create_canvas(self.width, self.height)
@@ -548,9 +548,9 @@ function ReplLayer:submit()
    local color
    if not success then
       print(result_text)
-      color = self.t.repl_error_color
+      color = self.t.base.repl_error_color
    else
-      color = self.t.repl_result_color
+      color = self.t.base.repl_result_color
    end
 
    self.output[#self.output+1] = result_text
@@ -620,9 +620,9 @@ function ReplLayer:redraw_window()
    local color
    if self.search then
       if self.search.status == "failure" then
-         color = self.t.repl_error_color
+         color = self.t.base.repl_error_color
       elseif self.search.status == "success" then
-         color = self.t.repl_search_color
+         color = self.t.base.repl_search_color
       end
       local char_width = Draw.text_width(".")
       if self.search.match_start then
@@ -630,7 +630,7 @@ function ReplLayer:redraw_window()
                           self.y + top - Draw.text_height() - 5,
                           Draw.text_width(self.search.text),
                           Draw.text_height(),
-                          self.t.repl_match_color)
+                          self.t.base.repl_match_color)
       end
    end
    Draw.text(self.text, self.x + 5 + Draw.text_width(self.mode.caret), self.y + top - Draw.text_height() - 5, color)
@@ -644,7 +644,7 @@ function ReplLayer:redraw_window()
    -- completion candidates
    local offset = 0
    if self.completion and #self.completion.candidates > 1 then
-      Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, self.t.repl_completion_color)
+      Draw.text(self.completion.text, self.x + 5, self.y + top - Draw.text_height() * 2 - 5, self.t.base.repl_completion_color)
       offset = 1
       Draw.set_color(255, 255, 255)
    end

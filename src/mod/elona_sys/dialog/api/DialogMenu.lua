@@ -67,8 +67,8 @@ function DialogMenu:relayout()
 end
 
 function DialogMenu:draw()
-   self.t.ie_chat:draw(self.x + 4, self.y - 16, nil, nil, {255, 255, 255, 80})
-   self.t.ie_chat:draw(self.x, self.y - 20, nil, nil, {255, 255, 255})
+   self.t.base.ie_chat:draw(self.x + 4, self.y - 16, nil, nil, {255, 255, 255, 80})
+   self.t.base.ie_chat:draw(self.x, self.y - 20, nil, nil, {255, 255, 255})
 
    if self.portrait then
       self.portrait_batch:clear()

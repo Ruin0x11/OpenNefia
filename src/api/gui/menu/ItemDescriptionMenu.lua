@@ -144,11 +144,11 @@ function ItemDescriptionMenu:draw()
 
       if entry_type == "normal" then
          local mark = entry.mark or 1
-         self.t.enchantment_icons:draw_region(mark, x - 28, y - 7)
+         self.t.base.enchantment_icons:draw_region(mark, x - 28, y - 7)
       end
 
       if entry.inherited then
-         self.t.inheritance_icon:draw(x - 53, y - 5)
+         self.t.base.inheritance_icon:draw(x - 53, y - 5)
       end
    end
 end

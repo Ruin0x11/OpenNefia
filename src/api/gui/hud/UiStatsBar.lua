@@ -65,7 +65,7 @@ function UiStatsBar:relayout(x, y, width, height)
    self.height = height
    self.t = UiTheme.load(self)
 
-   self.i_hud_bar = self.t.hud_bar:make_instance()
+   self.i_hud_bar = self.t.base.hud_bar:make_instance()
 end
 
 function UiStatsBar:draw()
@@ -74,10 +74,10 @@ function UiStatsBar:draw()
    self.i_hud_bar:draw_bar(self.x, self.y, self.width)
 
    -- map name
-   self.t.map_name_icon:draw(self.x + 136 + 6, self.y)
-   Draw.set_font(self.t.map_name_font) -- 12 + sizefix - en * 2
+   self.t.base.map_name_icon:draw(self.x + 136 + 6, self.y)
+   Draw.set_font(self.t.base.map_name_font) -- 12 + sizefix - en * 2
 
-   Draw.set_color(self.t.text_color)
+   Draw.set_color(self.t.base.text_color)
    Draw.text(self.map_name,
              self.x + 136 + 24,
              self.y + 3) -- inf_bary + 3 + vfix - en
@@ -111,25 +111,25 @@ function UiStatsBar:draw()
       elseif a == "dv_pv" then
          x_offset = 14
       end
-      self.t.hud_skill_icons:draw_region(
+      self.t.base.hud_skill_icons:draw_region(
          i,
          self.x + 136 + (i - 1) * item_width + 148 + x_offset,
          self.y + 1)
    end
 
    -- values
-   Draw.set_font(self.t.attribute_font) -- 13 - en * 2
+   Draw.set_font(self.t.base.attribute_font) -- 13 - en * 2
    local x
    local y = self.y + 2 -- + vfix
    for i, a in ipairs(attrs) do
       x = self.x + 136 + item_width * (i - 1) + 166
-      local color = self.t.text_color
+      local color = self.t.base.text_color
 
       if a == "elona.stat_speed" then
          if self.stats.original_speed > self.stats.final_speed then
-            color = self.t.stat_penalty_color
+            color = self.t.base.stat_penalty_color
          elseif self.stats.original_speed < self.stats.final_speed then
-            color = self.t.stat_bonus_color
+            color = self.t.base.stat_bonus_color
          end
          Draw.text(tostring(self.stats.final_speed), x + 8, y, color)
       elseif a == "dv_pv" then
@@ -138,7 +138,7 @@ function UiStatsBar:draw()
       else
          local adj = self.stat_adjusts[a]
          if adj < 0 then
-            color = self.t.stat_penalty_color
+            color = self.t.base.stat_penalty_color
          end
          Draw.text(tostring(self.stats[a]), x, y, color)
       end

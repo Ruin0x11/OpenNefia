@@ -45,7 +45,7 @@ function DeathMenu:relayout(x, y, width, height)
 end
 
 function DeathMenu:draw()
-   self.t.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
+   self.t.base.void:draw(self.x, self.y, self.width, self.height, {255, 255, 255})
 
    local x = 135
    local y = 134

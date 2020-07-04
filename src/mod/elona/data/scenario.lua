@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Item = require("api.Item")
+local Scene = require("mod.elona_sys.scene.api.Scene")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 
@@ -53,6 +54,8 @@ local function create_first_map()
 end
 
 local function start(self, player)
+   Scene.play("elona.story0")
+
    local world_map = create_first_map()
 
    -- Load the player's home.

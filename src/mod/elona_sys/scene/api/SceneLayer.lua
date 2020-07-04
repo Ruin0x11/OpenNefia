@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local I18N = require("api.I18N")
 local Log = require("api.Log")
 
 local IUiLayer = require("api.gui.IUiLayer")
@@ -109,7 +110,7 @@ function SceneLayer:proceed()
       elseif id == "chat" then
         finished = true
       elseif id == "actor" then
-        self.actors[t[2]] = { name = t.name, portrait = t.portrait }
+        self.actors[t[2]] = { name = I18N.get_optional(t.name) or t.name, portrait = t.portrait, chip = t.chip }
       elseif id == "se" then
         Gui.play_sound(t[2])
       elseif id == "mc" then
@@ -168,7 +169,7 @@ function SceneLayer:draw()
       width = 0
     end
     Draw.set_blend_mode("subtract")
-    self.t.scene_text_shadow:draw(self.width / 2, y + 4, width, nil, {255, 255, 255, 70}, true)
+    self.t.base.scene_text_shadow:draw(self.width / 2, y + 4, width, nil, {255, 255, 255, 70}, true)
     Draw.set_blend_mode("alpha")
   end
 
@@ -205,8 +206,14 @@ function SceneLayer:update(dt)
     local t = self:current_node()
     while t and t[1] == "chat" do
       if t[1] == "chat" then
-        local actor = self.actors[t[2]]
-        local m = DialogMenu:new(t[3], {}, actor.name, actor.portrait, nil, 1)
+        local actor_id = t[2]
+        local txt = t[3]
+
+        local actor = self.actors[actor_id]
+        if actor == nil then
+          error(("Actor '%d' was not declared in the scene."):format(actor_id))
+        end
+        local m = DialogMenu:new(txt, {}, actor.name, actor.portrait, actor.chip, 1)
         m:relayout(0, 0, self.width, self.height)
         if self.first then
           fade_between()

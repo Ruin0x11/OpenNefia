@@ -118,7 +118,6 @@ data:add_type {
 
 require("mod.elona_sys.data.event")
 
-require("mod.elona_sys.theme.init")
 require("mod.elona_sys.map_tileset.init")
 require("mod.elona_sys.dialog.init")
 require("mod.elona_sys.deferred_event.init")

@@ -64,7 +64,7 @@ Event.register("base.on_hotload_prototype", "Hotload UI theme",
                   if args.entry._type == "base.theme" then
                      local UiTheme = require("api.gui.UiTheme")
                      UiTheme.clear()
-                     local default_theme = "elona_sys.default"
+                     local default_theme = "base.default"
                      UiTheme.add_theme(default_theme)
                   end
                end)

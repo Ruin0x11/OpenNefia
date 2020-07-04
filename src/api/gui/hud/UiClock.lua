@@ -37,24 +37,24 @@ end
 
 function UiClock:draw()
    Draw.set_color(255, 255, 255)
-   self.t.clock:draw(self.x, self.y)
-   self.t.date_label_frame:draw(self.x + 78, self.y + 8)
+   self.t.base.clock:draw(self.x, self.y)
+   self.t.base.date_label_frame:draw(self.x + 78, self.y + 8)
 
    local hour_rot = self.date.hour * 30 + self.date.minute / 2 + self.date.second / 60
    local minute_rot = self.date.minute * 6 + self.date.second / 10
 
-   self.t.clock_hand:draw(self.x + 62, self.y + 48, nil, nil, nil, true, hour_rot)
-   self.t.clock_hand:draw(self.x + 62, self.y + 48, self.t.clock_hand:get_height() / 2, nil, nil, true, minute_rot)
+   self.t.base.clock_hand:draw(self.x + 62, self.y + 48, nil, nil, nil, true, hour_rot)
+   self.t.base.clock_hand:draw(self.x + 62, self.y + 48, self.t.base.clock_hand:get_height() / 2, nil, nil, true, minute_rot)
 
    Draw.text(string.format("%d/%d/%d", self.date.year, self.date.month, self.date.day),
              self.x + 120,
              self.y + 17, -- + vfix
-             self.t.text_color)
+             self.t.base.text_color)
    Draw.text_shadowed(times[self.date.hour / 4 + 1] or "",
                       self.x + 120 + 6,
                       self.y + 35,
-                      self.t.text_color_light,
-                      self.t.text_color_light_shadow)
+                      self.t.base.text_color_light,
+                      self.t.base.text_color_light_shadow)
 end
 
 function UiClock:update()

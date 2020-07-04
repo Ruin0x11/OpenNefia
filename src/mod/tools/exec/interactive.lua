@@ -2,7 +2,7 @@ local Mx = require("mod.tools.api.Mx")
 
 local PicViewer = require("mod.tools.api.PicViewer")
 local function cands()
-   local keys = table.keys(data["base.theme"]["elona_sys.default"].assets)
+   local keys = data["base.asset"]:iter():extract("_id")
    return Mx.completing_read(keys)
 end
 Mx.make_interactive("pic_viewer_start", PicViewer, "start", {cands})

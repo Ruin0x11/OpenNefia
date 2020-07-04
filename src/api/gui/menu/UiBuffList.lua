@@ -44,12 +44,12 @@ end
 function UiBuffList:draw_item(item, i, x, y)
    local has_buff = false
    if has_buff then
-      self.t.buff_icon:draw_region(3, x, y, nil, nil, {255, 255, 255, 255})
+      self.t.base.buff_icon:draw_region(3, x, y, nil, nil, {255, 255, 255, 255})
       if self.selected == i then
          Draw.filled_rect(x, y, 32, 32, {200, 200, 225, 63})
       end
    else
-      self.t.buff_icon_none:draw(x, y, nil, nil, {255, 255, 255, 120})
+      self.t.base.buff_icon_none:draw(x, y, nil, nil, {255, 255, 255, 120})
    end
 end
 

@@ -6,6 +6,8 @@ Benchmark = require("mod.tools.api.Benchmark")
 Magic = require("mod.elona_sys.api.Magic")
 Effect = require("mod.elona.api.Effect")
 Quest = require("mod.elona_sys.api.Quest")
+Scene = require("mod.elona_sys.scene.api.Scene")
+Mx = require("mod.tools.api.Mx")
 
 Log.set_level("info")
 

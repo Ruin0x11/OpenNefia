@@ -38,7 +38,7 @@ function IconBar:do_redraw()
    local x = 50
    local y = 50
    self.bar:draw()
-   self.t.radar_deco:draw(x - 28, y - 8, nil, nil, {255, 255, 255})
+   self.t.base.radar_deco:draw(x - 28, y - 8, nil, nil, {255, 255, 255})
 
    Draw.set_font(12) -- 12 + sizefix - en * 2
 
@@ -47,14 +47,14 @@ function IconBar:do_redraw()
       local text = item.text
 
       local x = x + (i-1) * 44
-      self.t[self.icon_set]:draw_region(icon, x + 20, y - 24)
+      self.t.base[self.icon_set]:draw_region(icon, x + 20, y - 24)
 
       local color = {165, 165, 165}
       if self.index == i then
          color = {255, 255, 255}
 
          Draw.set_blend_mode("add")
-         self.t[self.icon_set]:draw_region(i, x + 20, y - 24, nil, nil, {255, 255, 255, 70})
+         self.t.base[self.icon_set]:draw_region(i, x + 20, y - 24, nil, nil, {255, 255, 255, 70})
          Draw.set_blend_mode("alpha")
       end
 

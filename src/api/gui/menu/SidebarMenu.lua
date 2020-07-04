@@ -79,7 +79,7 @@ function SidebarMenu:draw()
    self.win:draw()
    Ui.draw_topic("ui.manual.topic", self.x + 34, self.y + 36)
 
-   local bg = self.t["g" .. ((self.pages.page) % 4 + 1)]
+   local bg = self.t.base["g" .. ((self.pages.page) % 4 + 1)]
    bg:draw(
       self.x + self.width / 4,
       self.y + self.height / 2,

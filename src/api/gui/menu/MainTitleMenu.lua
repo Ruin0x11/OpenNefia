@@ -101,7 +101,7 @@ function MainTitleMenu:relayout(x, y, width, height)
 end
 
 function MainTitleMenu:draw()
-   self.t.title:draw(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
+   self.t.base.title:draw(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
 
    Draw.set_font(13)
 
@@ -123,7 +123,7 @@ function MainTitleMenu:draw()
 
    local w = self.win.width / 5 * 4
    local h = self.win.height - 80
-   self.t.g4:draw(
+   self.t.base.g4:draw(
               self.win.x + 160 - (w / 2),
               self.win.y + self.win.height / 2 - (h / 2),
               w,

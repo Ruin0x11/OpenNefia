@@ -1,5 +1,5 @@
 local story0 = {
-    { "pic", "bg3" },
+    { "pic", "base.bg3" },
     { "mc", "elona.intro" },
     {
       "txt",
@@ -54,7 +54,7 @@ Now, the conflict grows worse with each passing day
 and a final confrontation becomes more and more inevitable.
 ]]
     },
-    { "pic", "bg4" },
+    { "pic", "base.bg4" },
     {
       "txt",
       [[

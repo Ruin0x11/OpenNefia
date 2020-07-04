@@ -1,19 +1,18 @@
-local en = require("mod.elona.data.scene.en")
-local jp = require("mod.elona.data.scene.jp")
+local jp = dofile("mod.elona.data.scene.jp")
+local en = dofile("mod.elona.data.scene.en")
 
-for id, scene in pairs(jp) do
+local keys = table.merge(table.keys(jp), table.keys(en))
+
+for _, id in ipairs(keys) do
   local t = {
     _type = "elona_sys.scene",
     _id = id,
 
     content = {
-      jp = scene
+       jp = jp[id],
+       en = en[id]
     }
   }
-
-  if en[id] then
-    t.content.en = en[id]
-  end
 
   data:add(t)
 end

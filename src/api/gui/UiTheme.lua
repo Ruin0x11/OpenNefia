@@ -22,9 +22,7 @@ end
 function theme_proxy:deserialize()
 end
 
-local function find_asset(namespace, asset)
-   assert(namespace == "base")
-
+local function find_asset(asset)
    for i = #active_themes, 1, -1 do
       local theme = active_themes[i]
       local proto = theme.assets[asset]
@@ -33,26 +31,15 @@ local function find_asset(namespace, asset)
       end
    end
 
-   return nil
+   return data["base.asset"][asset]
 end
 
-function theme_proxy:__index(asset)
-   local v = rawget(theme_proxy, asset)
-   if v then
-      return v
-   end
-
-   local id
-   if self._namespace == "base" then
-      id = asset
-   else
-      id = self._namespace .. "." .. asset
-   end
+local function load_asset(id)
    if cache[id] then
       return cache[id]
    end
 
-   local proto, theme = find_asset(self._namespace, asset)
+   local proto, theme = find_asset(id)
    if not proto then
       error("Cannot find asset " .. id)
    end
@@ -67,13 +54,7 @@ function theme_proxy:__index(asset)
       local _type = proto.type
 
       if _type == nil or _type == "asset" then
-         local copy = table.deepcopy(proto)
-         if copy.source then
-            copy.source = fs.join(theme.root, copy.source)
-         end
-         if copy.image then
-            copy.image = fs.join(theme.root, copy.image)
-         end
+         local copy = table.shallow_copy(proto)
          obj = asset_drawable:new(copy)
       elseif _type == "font" then
          obj = { size = proto.size }
@@ -93,6 +74,30 @@ function theme_proxy:__index(asset)
    return cache[id]
 end
 
+function theme_proxy:__index(asset)
+   local v = rawget(theme_proxy, asset)
+   if v then
+      return v
+   end
+
+   local id = self._namespace .. "." .. asset
+
+   return load_asset(id)
+end
+
+local theme_holder = class.class("theme_holder")
+
+function theme_holder:init()
+end
+
+function theme_holder:__index(namespace)
+   if data["base.asset"][namespace] then
+      return load_asset(namespace)
+   end
+
+   return theme_proxy:new(namespace)
+end
+
 function UiTheme.clear_cache()
    cache = {}
 end
@@ -107,10 +112,7 @@ function UiTheme.add_theme(id)
    active_themes[#active_themes+1] = theme
    cache = {}
    -- TEMP: validate file existence
-   local p = theme_proxy:new("base")
-   for k, _ in pairs(theme.assets) do
-      assert(p[k])
-   end
+   local p = theme_holder:new()
 end
 
 function UiTheme.theme_id()
@@ -118,7 +120,7 @@ function UiTheme.theme_id()
 end
 
 function UiTheme.load(instance)
-   return theme_proxy:new("base")
+   return theme_holder:new()
 end
 
 function UiTheme.load_asset(id)
@@ -129,6 +131,7 @@ function UiTheme.on_hotload(old, new)
    local id = old.theme_id()
    assert(id)
    new.add_theme(id)
+   table.replace_with(old, new)
 end
 
 return UiTheme

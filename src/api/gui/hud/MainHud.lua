@@ -74,7 +74,7 @@ function MainHud:update_from_player(player)
 end
 
 function MainHud:draw_minimap()
-   self.t.hud_minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
+   self.t.base.hud_minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
 end
 
 function MainHud:draw()

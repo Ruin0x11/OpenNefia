@@ -54,7 +54,7 @@ end
 function QuestBoardMenu:draw()
    Draw.set_color(255, 255, 255)
 
-   self.t.deco_board_a:draw_tiled()
+   self.t.base.deco_board_a:draw_tiled()
 
    self.pages:draw()
 end

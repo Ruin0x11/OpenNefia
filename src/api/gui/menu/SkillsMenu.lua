@@ -126,7 +126,7 @@ function SkillsMenu:relayout()
 end
 
 function SkillsMenu:draw()
-   self.t.ie_sheet:draw(self.x, self.y)
+   self.t.base.ie_sheet:draw(self.x, self.y)
    if self.show_bonus then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local tips = "You can spend " .. 10 .. " bonus points."

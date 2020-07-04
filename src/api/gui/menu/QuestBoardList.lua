@@ -131,7 +131,7 @@ function QuestBoardList:draw()
    for i = 1, 4 do
       --self.windows[i*2-1]:draw()
       self.windows[i*2]:draw()
-      self.t.deco_board_b:draw(self.x + 20, self.y + 8 + (i-1) * 120)
+      self.t.base.deco_board_b:draw(self.x + 20, self.y + 8 + (i-1) * 120)
    end
 
    Draw.set_font(16) -- 16 - en * 2

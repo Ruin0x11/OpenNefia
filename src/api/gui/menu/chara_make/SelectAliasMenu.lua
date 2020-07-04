@@ -125,7 +125,7 @@ function SelectAliasMenu:draw()
    self.list:draw()
    Ui.draw_topic("chara_make.select_alias.alias_list", self.x + 28, self.y + 30)
 
-   local bg = self.t["g" .. (math.floor(self.bg_index / 4) % 4 + 1)]
+   local bg = self.t.base["g" .. (math.floor(self.bg_index / 4) % 4 + 1)]
    bg:draw(
       self.x + self.width / 2,
       self.y + self.height / 2,

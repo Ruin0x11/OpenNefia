@@ -286,7 +286,7 @@ function CharacterSheetMenu:draw_text()
    attr:draw()
    Draw.set_color(255, 255, 255)
    for i, t in ipairs(attr.texts) do
-      self.t.skill_icons:draw_region(
+      self.t.base.skill_icons:draw_region(
                         i,
                         attr.x - 17,
                         attr.y + 6 + (i-1) * attr.item_height,
@@ -477,7 +477,7 @@ function CharacterSheetMenu:draw_values()
 end
 
 function CharacterSheetMenu:draw()
-   self.t.ie_sheet:draw(self.x, self.y, nil, nil, {255, 255, 255})
+   self.t.base.ie_sheet:draw(self.x, self.y, nil, nil, {255, 255, 255})
 
    Ui.draw_topic("ui.chara_sheet.attributes",       self.x + 28,  self.y + 122)
    Ui.draw_topic("ui.chara_sheet.combat_rolls",     self.x + 400, self.y + 253)

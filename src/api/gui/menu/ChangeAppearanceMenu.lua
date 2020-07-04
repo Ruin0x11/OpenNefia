@@ -70,7 +70,7 @@ end
 function ChangeAppearanceMenu:draw()
    self.win:draw()
    Ui.draw_topic("category", self.x + 34, self.y + 36)
-   self.t.deco_mirror_a:draw(self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
+   self.t.base.deco_mirror_a:draw(self.x + self.width - 40, self.y, nil, nil, {255, 255, 255})
 
    self.preview:draw()
    self.list:draw()

@@ -40,12 +40,12 @@ function UiBar:relayout(x, y, width, height)
    self.height = height
    self.t = UiTheme.load(self)
 
-   self.i_bar = self.t[self.bar_kind]:make_instance()
+   self.i_bar = self.t.base[self.bar_kind]:make_instance()
 end
 
 function UiBar:draw()
    Draw.set_font(12, "bold") -- 12 - en * 2
-   self.t.hp_bar_frame:draw(self.x, self.y, 104, 15, {255, 255, 255})
+   self.t.base.hp_bar_frame:draw(self.x, self.y, 104, 15, {255, 255, 255})
 
    if self.inner_width > 0 then
       Draw.set_color(255, 255, 255)
@@ -57,8 +57,8 @@ function UiBar:draw()
       Draw.text_shadowed(string.format("%d(%d)", self.value, self.max),
                          self.x + 20,
                          self.y - 8,
-                         self.t.text_color_light,
-                         self.t.text_color_light_shadow)
+                         self.t.base.text_color_light,
+                         self.t.base.text_color_light_shadow)
    end
 end
 

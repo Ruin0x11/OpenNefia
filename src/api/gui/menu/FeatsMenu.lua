@@ -79,7 +79,7 @@ local UiListExt = function(feats_menu)
          name_x_offset = 45 - 64 - 20
       end
 
-      feats_menu.t.trait_icons:draw_region(icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
+      feats_menu.t.base.trait_icons:draw_region(icon, x + name_x_offset, y - 4, nil, nil, {255, 255, 255})
 
       if draw_name then
          UiList.draw_item_text(self, text, item, i, x + new_x_offset, y, x_offset, color)
@@ -213,11 +213,11 @@ function FeatsMenu:draw()
    Ui.draw_topic("trait.window.name", self.x + 46, self.y + 36)
    -- UNUSED trait.window.level
    Ui.draw_topic("trait.window.detail", self.x + 255, self.y + 36)
-   self.t.inventory_icons:draw_region(11, self.x + 46, self.y - 16)
-   self.t.deco_feat_a:draw(self.x + self.width - 56, self.y + self.height - 198)
-   self.t.deco_feat_b:draw(self.x, self.y)
-   self.t.deco_feat_c:draw(self.x + self.width - 108, self.y)
-   self.t.deco_feat_d:draw(self.x, self.y + self.height - 70)
+   self.t.base.inventory_icons:draw_region(11, self.x + 46, self.y - 16)
+   self.t.base.deco_feat_a:draw(self.x + self.width - 56, self.y + self.height - 198)
+   self.t.base.deco_feat_b:draw(self.x, self.y)
+   self.t.base.deco_feat_c:draw(self.x + self.width - 108, self.y)
+   self.t.base.deco_feat_d:draw(self.x, self.y + self.height - 70)
 
    self.pages:draw()
 
