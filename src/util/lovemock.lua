@@ -113,7 +113,7 @@ love.filesystem.load = loadfile
 love.filesystem.newFile = function(filepath)
    return {
       open = function(self, mode)
-         self._inner = io.open(filepath, mode .. "b")
+         self._inner = assert(io.open(filepath, mode .. "b"))
       end,
       read = function(self, count)
          count = count or "*a"

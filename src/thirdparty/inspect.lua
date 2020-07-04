@@ -277,7 +277,7 @@ function Inspector:putTable(t)
       end
     end)
 
-    if nonSequentialKeysLength > 0 or type(mt) == 'table' then -- result is multi-lined. Justify closing }
+    if nonSequentialKeysLength > 0 or type(mt) == 'table' or self.always_tabify then -- result is multi-lined. Justify closing }
       self:tabify()
     elseif sequenceLength > 0 then -- array tables have one extra space before closing }
       self:puts(' ')

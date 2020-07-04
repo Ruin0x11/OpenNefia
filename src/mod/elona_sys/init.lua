@@ -62,6 +62,7 @@ add_elona_id("base.sound")
 add_elona_id("base.music")
 add_elona_id("base.body_part")
 add_elona_id("base.map_template")
+add_elona_id("base.portrait")
 
 
 data:add_type {
@@ -105,6 +106,12 @@ data:add_type {
    name = "inventory_group",
    schema = schema.Record {
       protos = schema.Table
+   }
+}
+
+data:add_type {
+   name = "scene",
+   schema = schema.Record {
    }
 }
 

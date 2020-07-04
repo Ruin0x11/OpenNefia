@@ -13,7 +13,7 @@ local loop_coro = nil
 local draw_coro = nil
 local server = nil
 
-local enable_low_power_mode = true
+local enable_low_power_mode = false
 local low_power_mode = false
 
 function love.load(arg)
@@ -103,6 +103,7 @@ function love.update(dt)
    end
 
    draw.update_global_widgets(dt)
+   draw.update_global_draw_callbacks(dt)
 
    local ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
@@ -156,6 +157,7 @@ function love.draw()
    love.graphics.getStats(draw_stats)
 
    draw.draw_global_widgets()
+   draw.draw_global_draw_callbacks()
 
    draw.draw_end()
 

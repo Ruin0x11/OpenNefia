@@ -1,5 +1,6 @@
 local Gui = require("api.Gui")
 local ICharaTraits = class.interface("ICharaTraits")
+local I18N = require("api.I18N")
 local data = require("internal.data")
 
 function ICharaTraits:init()
@@ -48,20 +49,24 @@ function ICharaTraits:increment_trait(trait_id, no_message)
    if self.traits[trait_id] == nil then
       self.traits[trait_id] = { level = 0 }
    elseif self.traits[trait_id].level >= trait.level_max then
-      return
+      return false
    end
 
    if self.traits[trait_id].level < trait.level_max then
       self.traits[trait_id].level = self.traits[trait_id].level + 1
 
       if not no_message then
-         Gui.mes_c("trait." .. trait_id .. ".on_gain_level", "Green")
+         if I18N.get_optional("trait." .. trait_id .. ".on_gain_level") then
+            Gui.mes_c("trait." .. trait_id .. ".on_gain_level", "Green")
+         end
       end
 
       if self.traits[trait_id].level == 0 then
          self.traits[trait_id] = nil
       end
    end
+
+   return true
 end
 
 function ICharaTraits:decrement_trait(trait_id, no_message)
@@ -70,18 +75,22 @@ function ICharaTraits:decrement_trait(trait_id, no_message)
    if self.traits[trait_id] == nil then
       self.traits[trait_id] = { level = 0 }
    elseif self.traits[trait_id].level <= trait.level_min then
-      return
+      return false
    end
 
    self.traits[trait_id].level = self.traits[trait_id].level - 1
 
    if not no_message then
-      Gui.mes_c("trait." .. trait_id .. ".on_lose_level", "Red")
+      if I18N.get_optional("trait." .. trait_id .. ".on_lose_level") then
+         Gui.mes_c("trait." .. trait_id .. ".on_lose_level", "Red")
+      end
    end
 
    if self.traits[trait_id].level == 0 then
       self.traits[trait_id] = nil
    end
+
+   return true
 end
 
 return ICharaTraits

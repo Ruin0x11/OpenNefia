@@ -1,5 +1,6 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
+local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 
 local IInput = require("api.gui.IInput")
@@ -29,7 +30,7 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.portrait_batch = nil
 
    if self.choices == nil or #self.choices == 0 then
-      self.choices = { "__MORE__" }
+      self.choices = { I18N.get("ui.more") }
    end
 
    self.pages = UiList:new_paged(self.choices, 8)
@@ -118,7 +119,7 @@ function DialogMenu:update()
 
    if self.default_choice and self.canceled then
       Gui.play_sound("base.more1")
-      return self.default_choice
+      return self.default_choice, "canceled"
    end
 
    self.pages:update()

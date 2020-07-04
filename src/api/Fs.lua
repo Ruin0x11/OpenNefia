@@ -4,6 +4,7 @@ local Fs = {}
 
 Fs.exists = fs.exists
 Fs.join = fs.join
+Fs.basename = fs.basename
 
 function Fs.open(filepath, mode)
    assert(mode, "mode is required")
@@ -21,7 +22,10 @@ function Fs.read_all(filepath)
    if f == nil then
       return nil, err
    end
-   local content = f:read()
+   local content, err = f:read()
+   if content == nil then
+      return nil, err
+   end
    f:close()
    return content
 end

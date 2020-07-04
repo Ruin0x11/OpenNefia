@@ -754,4 +754,17 @@
          (default-directory (projectile-project-root)))
     (compile cmd)))
 
+(defun open-nefia-start-game ()
+  (interactive)
+  (let* ((path (file-relative-name
+                (buffer-file-name)
+                (string-join (list (projectile-project-root) "src"))))
+         (cmd (if (eq system-type 'windows-nt) "OpenNefia.bat" "./OpenNefia"))
+         (default-directory (projectile-project-root)))
+    (compile cmd)))
+
+(defun open-nefia-reset-draw-layers ()
+  (interactive)
+  (open-nefia--send "run" (list :code "require('api.Input').back_to_field()")))
+
 (provide 'open-nefia)

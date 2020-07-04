@@ -1,4 +1,5 @@
 local config = require("internal.config")
+local draw_callbacks = require("internal.draw_callbacks")
 local env = require("internal.env")
 local fs = require("util.fs")
 local WidgetContainer = require("api.gui.WidgetContainer")
@@ -13,6 +14,7 @@ local WIDTH = 800
 local HEIGHT = 600
 
 local canvas = nil
+local canvas_last = nil
 local error_canvas = nil
 local layers = {}
 local sorted_layers = {}
@@ -79,6 +81,10 @@ function draw.draw_end(c)
    love.graphics.setShader(gamma_correct)
    love.graphics.draw(c or canvas)
    love.graphics.setShader()
+
+   love.graphics.setCanvas(canvas_last)
+   love.graphics.draw(c or canvas)
+   love.graphics.setCanvas()
 
    love.graphics.setBlendMode("alpha")
 end
@@ -221,6 +227,28 @@ end
 
 function draw.update_global_widgets(dt)
    global_widgets:update(dt)
+end
+
+local global_draw_callbacks = draw_callbacks:new()
+
+function draw.add_global_draw_callback(cb, tag)
+   global_draw_callbacks:add(cb, tag)
+end
+
+function draw.remove_global_draw_callback(tag)
+   global_draw_callbacks:remove(tag)
+end
+
+function draw.draw_global_draw_callbacks()
+   global_draw_callbacks:draw(0, 0)
+end
+
+function draw.update_global_draw_callbacks(dt)
+   global_draw_callbacks:update(dt)
+end
+
+function draw.wait_global_draw_callbacks()
+   global_draw_callbacks:wait()
 end
 
 function draw.needs_wait()
@@ -394,6 +422,10 @@ function draw.set_fullscreen(kind, width, height)
    set_window_mode(width, height, mode)
 end
 
+function draw.copy_to_canvas()
+   return love.graphics.newImage(canvas_last:newImageData())
+end
+
 --
 --
 -- Event callbacks
@@ -402,6 +434,7 @@ end
 
 function draw.resize(w, h)
    canvas = create_canvas(w, h)
+   canvas_last = create_canvas(w, h)
    error_canvas = create_canvas(w, h)
 
    for _, entry in ipairs(layers) do

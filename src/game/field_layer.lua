@@ -7,6 +7,7 @@ local Log = require("api.Log")
 local Env = require("api.Env")
 
 local draw = require("internal.draw")
+local draw_callbacks = require("internal.draw_callbacks")
 local env = require("internal.env")
 local field_renderer = require("internal.field_renderer")
 
@@ -28,6 +29,7 @@ function field_layer:init()
    self.no_scroll = true
    self.waiting_for_draw_callbacks = false
    self.sound_manager = require("internal.global.sound_manager")
+   self.draw_callbacks = draw_callbacks:new()
 
    local keys = KeyHandler:new(true)
    self.keys = InputHandler:new(keys)
@@ -177,44 +179,34 @@ end
 
 function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
+   self.draw_callbacks:update(dt)
    self.sound_manager:update(dt)
    self.hud:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb, tag)
-   self.renderer:add_async_draw_callback(cb, tag)
+   self.draw_callbacks:add(cb, tag)
 end
 
 function field_layer:remove_async_draw_callback(tag)
-   self.renderer:remove_async_draw_callback(tag)
+   self.draw_callbacks:remove(tag)
 end
 
 function field_layer:wait_for_draw_callbacks()
-   self.waiting_for_draw_callbacks = true
-
-   local dt
-   local has_cbs
-
-   repeat
-      dt = coroutine.yield()
-      has_cbs = self:update_draw_callbacks(dt)
-   until not has_cbs
+   self.draw_callbacks:wait()
 end
 
 function field_layer:update_draw_callbacks(dt)
-   local has_cbs = self.renderer:update_draw_callbacks(dt)
-   if has_cbs and self.waiting_for_draw_callbacks then
-      return true
-   end
-
-   self.waiting_for_draw_callbacks = false
-   return false
+   return self.draw_callbacks:update(dt)
 end
 
 function field_layer:draw()
-   if not self.is_active or not self.renderer then return end
+   if not self.is_active or not self.renderer then
+      return
+   end
 
    self.renderer:draw()
+   self.draw_callbacks:draw(self.renderer.draw_x, self.renderer.draw_y)
    self.hud:draw()
 end
 

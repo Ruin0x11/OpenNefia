@@ -501,6 +501,58 @@ data:add {
       g4 = {
          image = "g4.bmp",
       },
+      bg1 = {
+         image = "bg1.bmp",
+         key_color = "none"
+      },
+      bg2 = {
+         image = "bg2.bmp",
+         key_color = "none"
+      },
+      bg3 = {
+         image = "bg3.bmp",
+         key_color = "none"
+      },
+      bg4 = {
+         image = "bg4.bmp",
+         key_color = "none"
+      },
+      bg5 = {
+         image = "bg5.bmp",
+         key_color = "none"
+      },
+      bg6 = {
+         image = "bg6.bmp",
+         key_color = "none"
+      },
+      bg7 = {
+         image = "bg7.bmp",
+         key_color = "none"
+      },
+      bg8 = {
+         image = "bg8.bmp",
+         key_color = "none"
+      },
+      bg9 = {
+         image = "bg9.bmp",
+         key_color = "none"
+      },
+      bg10 = {
+         image = "bg10.bmp",
+         key_color = "none"
+      },
+      bg11 = {
+         image = "bg11.bmp",
+         key_color = "none"
+      },
+      bg12 = {
+         image = "bg12.bmp",
+         key_color = "none"
+      },
+      bg13 = {
+         image = "bg13.bmp",
+         key_color = "none"
+      },
       select_key = {
          source = "interface.bmp",
          x = 0,
@@ -561,6 +613,13 @@ data:add {
          y = 112,
          width = 144,
          height = 144
+      },
+      scene_text_shadow = {
+         source = "interface.bmp",
+         x = 456,
+         y = 144,
+         width = 344,
+         height = 72
       },
       failure_to_cast_effect = {
          source = "item.bmp",

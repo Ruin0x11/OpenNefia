@@ -419,7 +419,13 @@ local function gen_require(chunk_loader, can_load_path)
          and type(result) == "table"
       then
          Log.info("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
+         if Log.has_level("trace") then
+            Log.trace("\n%s\n========\n%s",
+                      inspect(package.loaded[req_path], {override_mt = true}),
+                      inspect(result, {override_mt = true}))
+         end
          if type(result.on_hotload) == "function" then
+            Log.warn("Table has overridden 'on_hotload' function. Using it instead of default.")
             result.on_hotload(package.loaded[req_path], result)
          else
             if class.is_class_or_interface(result) then
@@ -428,7 +434,9 @@ local function gen_require(chunk_loader, can_load_path)
                table.replace_with(package.loaded[req_path], result)
             end
          end
-         Log.trace("Hotload result: %s", string.tostring_raw(package.loaded[req_path]))
+         if Log.has_level("trace") then
+            Log.trace("Hotload result: %s", inspect(package.loaded[req_path], {override_mt = true}))
+         end
       elseif result == nil then
          package.loaded[req_path] = true
       else

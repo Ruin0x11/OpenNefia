@@ -83,9 +83,11 @@ function IUiLayer:query(z_order)
                local ran = self:run_actions(dt)
                return self:update(dt, ran)
             end,
-            debug.traceback)
+            function(err)
+               return err
+            end)
          if not success then
-            Log.error("Error on query: %s", res)
+            Log.error("Error on query:\n\t%s", res)
             res = nil
             canceled = "error"
             break

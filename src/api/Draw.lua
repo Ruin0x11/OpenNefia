@@ -47,6 +47,14 @@ Draw.get_height = love.graphics.getHeight
 --- @function Draw.create_canvas
 Draw.create_canvas = love.graphics.newCanvas
 
+Draw.copy_to_canvas = draw.copy_to_canvas
+
+Draw.add_global_draw_callback = draw.add_global_draw_callback
+
+Draw.remove_global_draw_callback = draw.remove_global_draw_callback
+
+Draw.wait_global_draw_callbacks = draw.wait_global_draw_callbacks
+
 --- Sets the current drawing color. You can provide a table of up to  four
 --- values or four separate integers.
 ---

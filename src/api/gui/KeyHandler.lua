@@ -86,7 +86,7 @@ end
 function KeyHandler:bind_keys(bindings)
    for k, v in pairs(bindings) do
       if self.bindings[k] ~= nil then
-         Log.warn("in %s: Overwriting existing key binding for '%s'", tostring(self), k)
+         Log.trace("in %s: Overwriting existing key binding for '%s'", tostring(self), k)
       end
 
       self.bindings[k] = v

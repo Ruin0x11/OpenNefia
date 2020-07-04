@@ -45,8 +45,8 @@ function MorePrompt:relayout(x, y)
       self.x = Draw.get_width() - 120
       self.y = Draw.get_height() - 22
    else
-      self.x = self.x or x
-      self.y = self.y or y
+      self.x = x or self.x
+      self.y = y or self.y
    end
    self.width = 120
    self.height = 22
@@ -59,7 +59,7 @@ function MorePrompt:draw()
       if self.size2 < 6 then
          self.t.more_prompt:draw(self.x, self.y + self.size2 * 2, self.width, self.height - self.size2 * 4)
       end
-   else
+   elseif self.size > 0 then
       self.t.more_prompt:draw(self.x, self.y + 12 - self.size, self.width, self.size * 2 + 1)
    end
 end

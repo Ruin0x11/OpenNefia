@@ -68,8 +68,7 @@ function Gui.wait(ms)
    Gui.wait_for_draw_callbacks()
 end
 
---- Fades out the screen.
-function Gui.fade_out()
+function Gui.fade()
    local anim = function()
       local frame = 1
       while frame < 50 do
@@ -84,7 +83,7 @@ function Gui.fade_out()
       while frame < 30 do
          local _, _, frames_passed = Draw.yield(20)
          frame = frame + frames_passed
-         for _=1, 50 do
+         for _=1, 20 do
             Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {0, 0, 0, 5})
          end
 
@@ -94,7 +93,27 @@ function Gui.fade_out()
       end
    end
 
-   Gui.start_draw_callback(anim)
+   draw.add_global_draw_callback(anim)
+   draw.wait_global_draw_callbacks()
+end
+
+function Gui.fade_out(length)
+   length = length or 60
+   local anim = function()
+      local frame = 1
+      while frame < length do
+         local _, _, frames_passed = Draw.yield(20)
+         Draw.set_blend_mode("subtract")
+         for _ = 1, frames_passed do
+            Draw.filled_rect(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255, 10 + frame * 5})
+            frame = frame + 1
+         end
+         Draw.set_blend_mode("alpha")
+      end
+   end
+
+   draw.add_global_draw_callback(anim)
+   draw.wait_global_draw_callbacks()
 end
 
 --- Converts from map tile space to screen space.
@@ -108,7 +127,7 @@ end
 --- Returns the screen Y coordinate of the message window. Use for
 --- checking occlusion of a point with the message window.
 function Gui.message_window_y()
-return Draw.get_width() - 72
+   return Draw.get_width() - 72
 end
 
 function Gui.scroll_screen()
@@ -214,7 +233,9 @@ function Gui.mes_c(text, color, ...)
          print(ansicolors(mes))
       end
    else
-      field:get_message_window():message(text, color)
+      if field.is_active then
+         field:get_message_window():message(text, color)
+      end
    end
 end
 
