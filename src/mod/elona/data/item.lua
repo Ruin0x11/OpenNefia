@@ -12690,6 +12690,10 @@ local item =
          coefficient = 100,
 
          elona_function = 8,
+         on_use = function()
+            local MapEdit = require("api.MapEdit")
+            MapEdit.start()
+         end,
 
          categories = {
             "elona.misc_item"

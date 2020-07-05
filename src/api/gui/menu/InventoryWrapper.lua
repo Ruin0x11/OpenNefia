@@ -145,6 +145,9 @@ function InventoryWrapper:relayout(x, y, width, height)
 end
 
 function InventoryWrapper:draw()
+   if not self.submenu.is_drawing then
+      return
+   end
    Draw.set_color(255, 255, 255)
    if self.group then
       self.icon_bar:draw()

@@ -124,6 +124,31 @@ function Gui.tile_to_screen(tx, ty)
    return draw.get_coords():tile_to_screen(tx+1, ty+1)
 end
 
+--- Converts from map tile space to visible screen space.
+---
+--- @tparam int tx Tile X coordinate
+--- @tparam int ty Tile Y coordinate
+function Gui.tile_to_visible_screen(tx, ty)
+  local x, y = Gui.tile_to_screen(tx, ty)
+  local draw_x, draw_y = Gui.field_draw_pos()
+  local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+  return x - draw_x + sx, y - draw_y + sy
+end
+
+--- Converts from visible screen space to map tile space.
+---
+--- @tparam int tx Tile X coordinate
+--- @tparam int ty Tile Y coordinate
+function Gui.visible_screen_to_tile(sx, sy)
+   if not field.is_active or not field.renderer then
+      return nil, nil
+   end
+
+  local draw_x, draw_y = Gui.field_draw_pos()
+  local start_x, start_y = Draw.get_coords():get_start_offset(draw_x, draw_y)
+   return draw.get_coords():screen_to_tile(sx + draw_x + start_x, sy + draw_y + start_y)
+end
+
 --- Returns the screen Y coordinate of the message window. Use for
 --- checking occlusion of a point with the message window.
 function Gui.message_window_y()

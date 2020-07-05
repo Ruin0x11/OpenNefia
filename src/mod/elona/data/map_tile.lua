@@ -1,3 +1,6 @@
+local Enum = require("api.Enum")
+local TileRole = Enum.TileRole
+
 local tiles = {
    {
       _id = "world_grass",
@@ -101,42 +104,42 @@ local tiles = {
       _id = "world_snow_cross",
       elona_id = 26,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow",
       elona_id = 27,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_trees_1",
       elona_id = 29,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_trees_2",
       elona_id = 30,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_crater",
       elona_id = 31,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_mounds",
       elona_id = 32,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
@@ -264,366 +267,366 @@ local tiles = {
       elona_id = 99,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_trees_1",
       elona_id = 100,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_trees_2",
       elona_id = 101,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_trees_3",
       elona_id = 102,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_trees_4",
       elona_id = 103,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_dead_trees_1",
       elona_id = 104,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_dead_trees_2",
       elona_id = 105,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_dead_trees_3",
       elona_id = 106,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_border_w",
       elona_id = 107,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7,
-      kind2 = 9
+      kind = TileRole.Sand,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_desert_border_s",
       elona_id = 110,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7,
-      kind2 = 9
+      kind = TileRole.Sand,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_desert_border_sw",
       elona_id = 114,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7,
-      kind2 = 9
+      kind = TileRole.Sand,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_desert_border_corner_ne",
       elona_id = 115,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7,
-      kind2 = 9
+      kind = TileRole.Sand,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_desert_bones",
       elona_id = 119,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_rocks_1",
       elona_id = 120,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_rocks_2",
       elona_id = 121,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_rocks_4",
       elona_id = 123,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_plants_1",
       elona_id = 124,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_plants_3",
       elona_id = 126,
       elona_atlas = 0,
       is_feat = true,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_dirt_crater",
       elona_id = 166,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_rocks_1",
       elona_id = 167,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_rocks_2",
       elona_id = 168,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_dead_trees_1",
       elona_id = 170,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_dead_trees_2",
       elona_id = 171,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_dead_trees_3",
       elona_id = 172,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_border_w",
       elona_id = 173,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_e",
       elona_id = 174,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_n",
       elona_id = 175,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_s",
       elona_id = 176,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_corner_nw",
       elona_id = 178,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_corner_se",
       elona_id = 179,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_corner_sw",
       elona_id = 180,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_ne",
       elona_id = 181,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_nw",
       elona_id = 182,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_se",
       elona_id = 183,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_dirt_border_sw",
       elona_id = 184,
       elona_atlas = 0,
-      kind = 8,
-      kind2 = 9
+      kind = TileRole.SandHard,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_snow_dead_tree",
       elona_id = 199,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_trees_3",
       elona_id = 200,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_trees_4",
       elona_id = 201,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_trees_5",
       elona_id = 202,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_w",
       elona_id = 206,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_e",
       elona_id = 207,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_n",
       elona_id = 208,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_s",
       elona_id = 209,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_corner_ne",
       elona_id = 210,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_corner_nw",
       elona_id = 211,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_corner_se",
       elona_id = 212,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_corner_sw",
       elona_id = 213,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_ne",
       elona_id = 214,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_nw",
       elona_id = 215,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_se",
       elona_id = 216,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
       _id = "world_snow_border_sw",
       elona_id = 217,
       elona_atlas = 0,
-      kind = 4,
-      kind2 = 9,
+      kind = TileRole.Snow,
+      kind2 = TileRole.Coast,
       field_type = "elona.snow_field",
    },
    {
@@ -1054,7 +1057,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 568,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
@@ -1063,7 +1066,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 569,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
@@ -1072,7 +1075,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 570,
       elona_atlas = 0,
-      kind = 4,
+      kind = TileRole.Snow,
       field_type = "elona.snow_field",
    },
    {
@@ -1081,7 +1084,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 594,
       elona_atlas = 0,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_mountain_2",
@@ -1089,7 +1092,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 595,
       elona_atlas = 0,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_mountain_3",
@@ -1097,7 +1100,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 596,
       elona_atlas = 0,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_mountain_4",
@@ -1105,7 +1108,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 597,
       elona_atlas = 0,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_desert_mountain_5",
@@ -1113,7 +1116,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 598,
       elona_atlas = 0,
-      kind = 7
+      kind = TileRole.Sand
    },
    {
       _id = "world_dirt_mountain_1",
@@ -1121,7 +1124,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 599,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_dirt_mountain_2",
@@ -1129,7 +1132,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 600,
       elona_atlas = 0,
-      kind = 8
+      kind = TileRole.SandHard
    },
    {
       _id = "world_oasis_c",
@@ -1137,7 +1140,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 604,
       elona_atlas = 0,
-      kind = 10
+      kind = TileRole.SandWater
    },
    {
       _id = "world_oasis_e",
@@ -1145,8 +1148,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 605,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_w",
@@ -1154,8 +1157,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 606,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_s",
@@ -1163,8 +1166,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 607,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_n",
@@ -1172,8 +1175,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 608,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_corner_sw",
@@ -1181,8 +1184,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 609,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_corner_se",
@@ -1190,8 +1193,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 610,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_corner_ne",
@@ -1199,8 +1202,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 611,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_corner_nw",
@@ -1208,8 +1211,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 612,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_ne",
@@ -1217,8 +1220,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 613,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_nw",
@@ -1226,8 +1229,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 614,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_se",
@@ -1235,8 +1238,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 615,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "world_oasis_sw",
@@ -1244,8 +1247,8 @@ local tiles = {
       is_opaque = true,
       elona_id = 616,
       elona_atlas = 0,
-      kind = 10,
-      kind2 = 9
+      kind = TileRole.SandWater,
+      kind2 = TileRole.Coast
    },
    {
       _id = "grass",
@@ -1356,19 +1359,19 @@ local tiles = {
       _id = "grass_rock",
       elona_id = 29,
       elona_atlas = 1,
-      kind = 1
+      kind = TileRole.Dryground
    },
    {
       _id = "field_1",
       elona_id = 30,
       elona_atlas = 1,
-      kind = 2
+      kind = TileRole.Crop
    },
    {
       _id = "field_2",
       elona_id = 31,
       elona_atlas = 1,
-      kind = 2
+      kind = TileRole.Crop
    },
    {
       _id = "dark_dirt_1",
@@ -1419,97 +1422,97 @@ local tiles = {
       _id = "snow",
       elona_id = 45,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_mound",
       elona_id = 46,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_plants",
       elona_id = 47,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_rock",
       elona_id = 48,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_stump",
       elona_id = 49,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_flowers_1",
       elona_id = 50,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_flowers_2",
       elona_id = 51,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_flowers_3",
       elona_id = 52,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_field_1",
       elona_id = 53,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_field_2",
       elona_id = 54,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_ice",
       elona_id = 55,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_clumps_1",
       elona_id = 56,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_clumps_2",
       elona_id = 57,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_stalks",
       elona_id = 58,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_grass",
       elona_id = 59,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_blue_tile",
       elona_id = 60,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_cobble_1",
@@ -1605,19 +1608,19 @@ local tiles = {
       _id = "snow_flowers_4",
       elona_id = 82,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_flowers_5",
       elona_id = 83,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_flowers_6",
       elona_id = 84,
       elona_atlas = 1,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_bushes_1",
@@ -1909,7 +1912,7 @@ local tiles = {
       elona_id = 165,
       elona_atlas = 1,
       count_x = 3,
-      kind = 3
+      kind = TileRole.Water
    },
    {
       _id = "anime_water_sea",
@@ -1917,7 +1920,7 @@ local tiles = {
       elona_id = 168,
       elona_atlas = 1,
       count_x = 3,
-      kind = 3
+      kind = TileRole.Water
    },
    {
       _id = "anime_water_hot_spring",
@@ -1925,7 +1928,7 @@ local tiles = {
       elona_id = 171,
       elona_atlas = 1,
       count_x = 3,
-      kind = 3,
+      kind = TileRole.Water,
       kind2 = 5
    },
    {
@@ -2117,111 +2120,133 @@ local tiles = {
       _id = "light_grass_1",
       elona_id = 330,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_2",
       elona_id = 331,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_3",
       elona_id = 332,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_bush_1",
       elona_id = 333,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_bush_2",
       elona_id = 334,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_plants",
       elona_id = 335,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_patch",
       elona_id = 336,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_shrubs",
       elona_id = 337,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_bushes",
       elona_id = 338,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cliff_sw",
       elona_id = 339,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cliff_s",
       elona_id = 340,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cliff_se",
       elona_id = 341,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_flowers",
       elona_id = 342,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_dirt",
       elona_id = 343,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cobble_1",
       elona_id = 346,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cobble_2",
       elona_id = 347,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cobble_3",
       elona_id = 348,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_cobble_4",
       elona_id = 349,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_wheel",
       elona_id = 359,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_railroad_tracks_ns",
       elona_id = 360,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_railroad_tracks_we",
       elona_id = 361,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_boulder",
       elona_id = 362,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_oriental_top",
@@ -2553,7 +2578,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 464,
       elona_atlas = 1,
-      kind = 6,
+      kind = TileRole.HardWall,
       wall = "elona.wall_stone_3_bottom",
       wall_kind = 2,
 
@@ -3100,6 +3125,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 528,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_2_fog",
@@ -3107,6 +3133,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 529,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_3_fog",
@@ -3114,6 +3141,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 530,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_4_fog",
@@ -3121,6 +3149,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 531,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_5_fog",
@@ -3128,6 +3157,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 532,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_wooden_fog",
@@ -3135,6 +3165,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 533,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_dirt_fog",
@@ -3142,6 +3173,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 534,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_dirt_dark_fog",
@@ -3149,6 +3181,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 535,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_pyramid_fog",
@@ -3156,6 +3189,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 536,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_shingled_fog",
@@ -3163,6 +3197,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 537,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_concrete_fog",
@@ -3170,6 +3205,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 538,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_concrete_light_fog",
@@ -3177,6 +3213,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 539,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_tower_of_fire_fog",
@@ -3184,6 +3221,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 540,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_forest_fog",
@@ -3191,6 +3229,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 541,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_6_fog",
@@ -3198,6 +3237,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 542,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_7_fog",
@@ -3205,6 +3245,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 543,
+      disable_in_map_edit = true
    },
    {
       _id = "wall_stone_8_fog",
@@ -3212,6 +3253,7 @@ local tiles = {
       is_opaque = true,
       elona_atlas = 1,
       elona_id = 544,
+      disable_in_map_edit = true
    },
    {
       _id = "stable_top",
@@ -3219,6 +3261,7 @@ local tiles = {
       is_opaque = true,
       elona_id = 545,
       elona_atlas = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "palace_fountain",
@@ -3228,6 +3271,7 @@ local tiles = {
       elona_atlas = 1,
       count_x = 2,
       wall_kind = 1,
+      disable_in_map_edit = true
    },
    {
       _id = "light_grass_carts",
@@ -3314,7 +3358,7 @@ local tiles = {
       elona_id = 594,
       elona_atlas = 1,
       count_x = 3,
-      kind = 3
+      kind = TileRole.Water
    },
    {
       _id = "light_grass_box",
@@ -3565,637 +3609,637 @@ local tiles = {
       _id = "onii_1",
       elona_id = 22,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_2",
       elona_id = 23,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_3",
       elona_id = 24,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_4",
       elona_id = 26,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_5",
       elona_id = 27,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_6",
       elona_id = 28,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_7",
       elona_id = 29,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_8",
       elona_id = 30,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_9",
       elona_id = 31,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_cracks_atlas2",
       elona_id = 34,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_grass_atlas2",
       elona_id = 36,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_pillar_atlas2",
       elona_id = 44,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "snow_plants_atlas2",
       elona_id = 51,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_10",
       elona_id = 53,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_11",
       elona_id = 54,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_12",
       elona_id = 55,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_13",
       elona_id = 56,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_14",
       elona_id = 57,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_15",
       elona_id = 58,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_16",
       elona_id = 60,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_17",
       elona_id = 61,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_18",
       elona_id = 62,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_19",
       elona_id = 63,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_20",
       elona_id = 64,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_21",
       elona_id = 65,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_22",
       elona_id = 86,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_23",
       elona_id = 87,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_24",
       elona_id = 88,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_25",
       elona_id = 89,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_26",
       elona_id = 90,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_27",
       elona_id = 91,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_28",
       elona_id = 92,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_29",
       elona_id = 93,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_30",
       elona_id = 94,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_31",
       elona_id = 95,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_32",
       elona_id = 96,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_33",
       elona_id = 97,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_34",
       elona_id = 98,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_35",
       elona_id = 119,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_36",
       elona_id = 120,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_37",
       elona_id = 121,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_38",
       elona_id = 122,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_39",
       elona_id = 123,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_40",
       elona_id = 124,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_41",
       elona_id = 125,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_42",
       elona_id = 126,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_43",
       elona_id = 127,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_44",
       elona_id = 128,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_45",
       elona_id = 129,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_46",
       elona_id = 130,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_47",
       elona_id = 131,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_48",
       elona_id = 152,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_49",
       elona_id = 153,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_50",
       elona_id = 154,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_51",
       elona_id = 155,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_52",
       elona_id = 156,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_53",
       elona_id = 157,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_54",
       elona_id = 159,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_55",
       elona_id = 160,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_56",
       elona_id = 161,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_57",
       elona_id = 162,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_58",
       elona_id = 163,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_59",
       elona_id = 164,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_60",
       elona_id = 185,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_61",
       elona_id = 186,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_62",
       elona_id = 187,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_63",
       elona_id = 188,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_64",
       elona_id = 189,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_65",
       elona_id = 190,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_66",
       elona_id = 192,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_67",
       elona_id = 193,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_68",
       elona_id = 194,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_69",
       elona_id = 195,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_70",
       elona_id = 196,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_71",
       elona_id = 218,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_72",
       elona_id = 219,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_73",
       elona_id = 220,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_74",
       elona_id = 221,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_75",
       elona_id = 222,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_76",
       elona_id = 223,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_77",
       elona_id = 252,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_78",
       elona_id = 253,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_79",
       elona_id = 254,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_80",
       elona_id = 255,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_81",
       elona_id = 256,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_82",
       elona_id = 285,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_83",
       elona_id = 286,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_84",
       elona_id = 287,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_85",
       elona_id = 288,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_86",
       elona_id = 289,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_87",
       elona_id = 317,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_88",
       elona_id = 318,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_89",
       elona_id = 319,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_90",
       elona_id = 320,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_91",
       elona_id = 321,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_92",
       elona_id = 322,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_93",
       elona_id = 350,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_94",
       elona_id = 351,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_95",
       elona_id = 352,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_96",
       elona_id = 353,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_97",
       elona_id = 354,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_98",
       elona_id = 355,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_99",
       elona_id = 356,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_100",
       elona_id = 357,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_101",
       elona_id = 358,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    },
    {
       _id = "onii_102",
       elona_id = 359,
       elona_atlas = 2,
-      kind = 4
+      kind = TileRole.Snow
    }
 }
 

@@ -20,9 +20,11 @@ local draw = require("internal.draw")
 -- coroutine. Would be better to just put game.loop() into a
 -- standalone function.
 local game = {}
+game.reached_title = false
 game.in_game = false
 
 local function main_title()
+   game.reached_title = true
    game.in_game = false
 
    local title = require("api.gui.menu.MainTitleMenu"):new()

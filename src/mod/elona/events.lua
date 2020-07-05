@@ -14,6 +14,7 @@ local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 
 --
 --
@@ -618,7 +619,7 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
                      and Map.can_access(result.pos.x, result.pos.y, map)
                   then
                      local tile = map:tile(params.chara.x, params.chara.y)
-                     if tile.kind == 4 then
+                     if tile.kind == Enum.TileRole.Snow then
                         Gui.play_sound(snow_footsteps[footstep%2+1])
                         footstep = footstep + Rand.rnd(2)
                      else

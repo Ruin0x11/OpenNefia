@@ -131,16 +131,14 @@ end
 
 function PositionPrompt:draw()
    Gui.set_camera_pos(self.target_x, self.target_y)
-   local x, y = Gui.tile_to_screen(self.target_x, self.target_y)
-   local draw_x, draw_y = Gui.field_draw_pos()
-   local sx, sy = Draw.get_coords():get_start_offset(draw_x, draw_y)
+   local x, y = Gui.tile_to_visible_screen(self.target_x, self.target_y)
    Draw.set_blend_mode("add")
-   Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {127, 127, 255, 50})
+   Draw.filled_rect(x, y, self.tile_width, self.tile_height, {127, 127, 255, 50})
 
    if should_draw_line(self.origin_x, self.origin_y, self.target_x, self.target_y) then
       for _, tx, ty in  Pos.iter_line(self.origin_x, self.origin_y, self.target_x, self.target_y) do
          local x, y = Gui.tile_to_screen(tx, ty)
-         Draw.filled_rect(x - draw_x + sx, y - draw_y + sy, self.tile_width, self.tile_height, {255, 255, 255, 25})
+         Draw.filled_rect(x, y, self.tile_width, self.tile_height, {255, 255, 255, 25})
       end
    end
    Draw.set_blend_mode("alpha")

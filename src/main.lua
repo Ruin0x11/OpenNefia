@@ -13,7 +13,7 @@ local loop_coro = nil
 local draw_coro = nil
 local server = nil
 
-local enable_low_power_mode = false
+local enable_low_power_mode = true
 local low_power_mode = false
 
 function love.load(arg)
@@ -165,7 +165,7 @@ function love.draw()
 end
 
 function love.focus(focused)
-   if enable_low_power_mode then
+   if game.reached_title and enable_low_power_mode then
       if focused then
          low_power_mode = false
       else

@@ -196,4 +196,8 @@ function Input.clear_macro_queue()
    draw.get_current_layer().layer:clear_macro_queue()
 end
 
+function Input.mouse_pos()
+   return love.mouse.getPosition()
+end
+
 return Input

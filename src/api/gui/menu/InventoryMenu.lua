@@ -93,6 +93,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.cargo_weight = 0
    self.layout = nil -- ResistanceLayout:new()
    self.subtext_column = "subtext"
+   self.is_drawing = true
 
    self.result = nil
 
@@ -139,7 +140,10 @@ end
 
 function InventoryMenu:on_select()
    local item = self:selected_item_object()
-   return self.ctxt:on_select(item, nil, self.pages:iter_all_pages())
+   self.is_drawing = false
+   local result = self.ctxt:on_select(item, nil, self.pages:iter_all_pages())
+   self.is_drawing = true
+   return result
 end
 
 function InventoryMenu:on_menu_exit()
@@ -246,6 +250,10 @@ function InventoryMenu:update_filtering()
 end
 
 function InventoryMenu:draw()
+   if not self.is_drawing then
+      return
+   end
+
    self.win:draw()
 
    Draw.set_color(255, 255, 255)

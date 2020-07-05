@@ -25,6 +25,10 @@ function tiled_coords:tile_to_screen(tx, ty)
    return (tx - 1) * 48, (ty - 1) * 48
 end
 
+function tiled_coords:screen_to_tile(sx, sy)
+   return math.floor(sx / 48), math.floor(sy / 48)
+end
+
 function tiled_coords:find_bounds(x, y, width, height)
    local tile_width = 48
    local tile_height = 48

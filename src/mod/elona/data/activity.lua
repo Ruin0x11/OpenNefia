@@ -13,6 +13,7 @@ local Rand = require("api.Rand")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -347,7 +348,7 @@ data:add {
 
             Gui.mes("activity.dig_mining.start.wall")
             local tile = map:tile(self.x, self.y)
-            if tile.kind == 6 then
+            if tile.kind == Enum.TileRole.HardWall then
                Gui.mes("activity.dig_mining.start.hard")
             end
 
