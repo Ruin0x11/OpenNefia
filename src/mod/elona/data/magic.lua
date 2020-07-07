@@ -1,7 +1,9 @@
 local Anim = require("mod.elona_sys.api.Anim")
 local Chara = require("api.Chara")
+local Draw = require("api.Draw")
 local Effect = require("mod.elona.api.Effect")
 local ElonaPos = require("mod.elona.api.ElonaPos")
+local Pos = require("api.Pos")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Input = require("api.Input")
@@ -9,6 +11,35 @@ local Item = require("api.Item")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
+
+-- Magic, action, and item effects.
+--
+-- In vanilla, there are three main categories of "effects".
+--   Magic: Treated as skills with level/potential.
+--   Actions: Activatable through certain menus, items or AI.
+--   Effects: Activatable through items only.
+--
+-- This division accomplished the following:
+--   - Magic can be leveled up like passive skills and also be triggered in the
+--     code like runEffect(magic_revealMap).
+--   - Actions have different damage calculations than magic, because they don't
+--     have skill levels, so the damage depends on the casting character's stats
+--     instead.
+--   - Effects have a predetermined power that is passed in to the effect runner.
+--   - All three effect types can be triggered programmatically.
+--
+-- In OpenNefia, the effect system is decoupled from skill levels and actions.
+-- Now the intention is that learnable skills or magic with an associated effect
+-- would declare a new "base.skill" entry and label it as an action or magic.
+-- That "base.skill" entry would contain a callback which would then call
+-- Magic.cast() with the ID of the "elona_sys.magic" entry to trigger. The
+-- callback would be run when the magic/action entry is selected in the
+-- magic/action menus, which are populated by filtering the list of "base.skill"
+-- entries.
+
+local RANGE_BOLT = 6
+local RANGE_BALL = 2
+local RANGE_BREATH = 5
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    if curse_state == "doomed" then
@@ -22,14 +53,20 @@ local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    return none
 end
 
-local function sp_check(chara, skill)
+local function is_in_screen(sx, sy)
+   local msg_y = Gui.message_window_y()
+   return sy >= 0 and sy <= msg_y
+      and sx >= 0 and sx <= Draw.get_width()
+end
+
+local function sp_check(source, skill)
    local sp_cost = skill.cost / 2 + 1
    if source.stamina < 50 and source.stamina < Rand.rnd(75) then
       Gui.mes("magic.common.too_exhausted")
       source:damage_sp(sp_cost)
       return false
    end
-   source:damage_stamina(Rand.rnd(sp_cost) + sp_cost)
+   source:damage_sp(Rand.rnd(sp_cost) + sp_cost)
    return true
 end
 
@@ -38,6 +75,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1135,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -104,6 +142,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 626,
 
+   type = "action",
    params = {
       "source",
       "target",
@@ -129,8 +168,8 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1101,
 
+   type = "effect",
    params = {
-      "source",
       "target",
    },
 
@@ -175,6 +214,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1102,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -201,6 +241,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1102,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -234,6 +275,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1103,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -259,6 +301,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1146,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -282,6 +325,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1147,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -305,6 +349,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1142,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -334,6 +379,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 1130,
 
+   type = "effect",
    params = {
       "target",
    },
@@ -359,6 +405,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 300,
 
+   type = "skill",
    params = {
       "source",
       "target",
@@ -391,6 +438,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 301,
 
+   type = "skill",
    params = {
       "source",
       "target",
@@ -411,6 +459,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 183,
 
+   type = "skill",
    params = {
       "source",
       "target",
@@ -466,6 +515,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 184,
 
+   type = "skill",
    params = {
       "source",
       "item",
@@ -496,6 +546,180 @@ data:add {
       return true
    end
 }
+
+data:add {
+   _id = "return",
+   _type = "elona_sys.magic",
+   elona_id = 428,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   skill = "elona.stat_perception",
+   cost = 20,
+   range = 10000,
+   difficulty = 550,
+
+   cast = function(self, params)
+      local source = params.source
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local s = save.elona
+      if s.turns_until_cast_return ~= 0 then
+         Gui.mes("magic.return.cancel")
+         s.turns_until_cast_return = 0
+      else
+         local map_uid = Effect.query_return_location(source)
+
+         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
+            Gui.mes("jail") -- TODO
+         end
+
+         if map_uid then
+            s.return_destination_map_uid = map_uid
+            s.turns_until_cast_return = 15 + Rand.rnd(15)
+         end
+      end
+
+      return true
+   end
+}
+
+---
+--- Skills
+---
+
+
+-- attack (spore)
+
+-- bolt
+
+local function make_bolt(element, elona_id, dice_y, cost, difficulty)
+   local id = element .. "_bolt"
+   local full_id = "elona." .. id
+   element = "elona." .. element
+
+   data:add {
+      _id = "magic_" .. id,
+      _type = "base.skill",
+
+      type = "magic",
+      related_skill = "elona.stat_magic",
+      cost = cost,
+      range = RANGE_BOLT,
+      difficulty = difficulty,
+      target_type = "both"
+   }
+
+   data:add {
+      _id = id,
+      _type = "elona_sys.magic",
+      elona_id = elona_id,
+
+      type = "action",
+      params = {
+         "source"
+      },
+
+      dice = function(self, params)
+         local level = params.source:magic_level(full_id)
+         return {
+            x = params.power / 50 + 1 + level / 20,
+            y = params.power / dice_y + 4,
+            bonus = 0,
+            element_power = 180 + params.power / 4
+         }
+      end,
+
+      cast = function(self, params)
+         local map = params.source:current_map()
+         local sx = params.source.x
+         local sy = params.source.y
+         local positions, success = ElonaPos.make_route(sx, sy, params.x, params.y, map)
+         if not success then
+            return false
+         end
+
+         local Log = require("api.Log")
+
+         local cb = Anim.bolt(positions, element, sx, sy, params.x, params.y, params.range, map)
+         Gui.start_draw_callback(cb)
+
+         local element_data
+         if element then
+            element_data = data["base.element"]:ensure(element)
+         end
+
+         local tx = sx
+         local ty = sy
+
+         for i = 0, 19 do
+            local pos = positions[(i%#positions)+1]
+            local dx = pos[1]
+            local dy = pos[2]
+            tx = tx + dx
+            ty = ty + dy
+
+            if i <= #positions or (map:is_in_bounds(tx, ty) and map:can_see_through(tx, ty) and is_in_screen(tx, ty)) then
+               if Pos.dist(sx, sy, tx, ty) > params.range then
+                  break
+               end
+
+               if sx ~= tx or sy ~= ty then
+                  if element_data and element_data.on_damage_tile then
+                     element_data:on_damage_tile(tx, ty)
+                  end
+                  local chara = Chara.at(tx, ty, map)
+                  if chara and chara ~= params.source then
+                     -- TODO riding
+                     local dice = self:dice(params)
+                     local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+
+                     local tense = "enemy"
+                     if not chara:is_ally() then
+                        tense = "ally"
+                     end
+                     if tense == "ally" then
+                        Gui.mes_visible("magic.bolt.other", tx, ty, chara)
+                     else
+                        Gui.mes_visible("magic.bolt.ally", tx, ty, chara)
+                     end
+                     chara:damage_hp(damage,
+                                     params.source,
+                                     {
+                                        element = element,
+                                        element_power = dice.element_power,
+                                        message_tense = tense,
+                                        no_attack_text = true,
+                                        is_third_person = true
+                                     })
+                  end
+               end
+            end
+         end
+         return true
+      end
+   }
+end
+
+make_bolt("cold",      419, 26, 10, 220)
+make_bolt("fire",      420, 26, 10, 220)
+make_bolt("lightning", 421, 26, 10, 220)
+make_bolt("darkness",  422, 25, 12, 350)
+make_bolt("mind",      423, 25, 12, 350)
+
+-- arrow
+
+-- ball (spSuicide)
+
+-- heal
+
+-- tele
 
 local function teleport_to(chara, x, y, check_cb, pos_cb, success_cb)
    local prevents_teleport = false -- TODO
@@ -539,6 +763,7 @@ data:add {
    _type = "elona_sys.magic",
    elona_id = 619,
 
+   type = "skill",
    params = {
       "source",
       "target",
@@ -555,7 +780,7 @@ data:add {
 
       local pos = function(x, y, attempt)
          return x + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2),
-                y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
+         y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
       end
       local success = function(chara)
          if chara:is_in_fov() then
@@ -567,49 +792,11 @@ data:add {
    end
 }
 
-data:add {
-   _id = "return",
-   _type = "elona_sys.magic",
-   elona_id = 428,
+-- hand
 
-   params = {
-      "source"
-   },
+-- summon
 
-   skill = "elona.stat_perception",
-   cost = 20,
-   range = 10000,
-   difficulty = 550,
-
-   cast = function(self, params)
-      local source = params.source
-      if not source:is_player() then
-         Gui.mes("common.nothing_happens")
-         return true, { obvious = false }
-      end
-
-      local s = save.elona
-      if s.turns_until_cast_return ~= 0 then
-         Gui.mes("magic.return.cancel")
-         s.turns_until_cast_return = 0
-      else
-         local map_uid = Effect.query_return_location(source)
-
-         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
-            Gui.mes("jail") -- TODO
-         end
-
-         if map_uid then
-            s.return_destination_map_uid = map_uid
-            s.turns_until_cast_return = 15 + Rand.rnd(15)
-         end
-      end
-
-      return true
-   end
-}
-
-local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
+local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
    local id
    if element then
       id = element .. "_breath"
@@ -618,19 +805,29 @@ local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
       id = "breath"
    end
    local full_id = "elona." .. id
+
+
+   data:add {
+      _id = "breath_" .. id,
+      _type = "base.skill",
+
+      type = "action",
+      skill = "elona.stat_constitution",
+      cost = cost,
+      range = RANGE_BREATH,
+      difficulty = 0,
+      target_type = "both"
+   }
+
    data:add {
       _id = id,
       _type = "elona_sys.magic",
       elona_id = elona_id,
 
+      type = "action",
       params = {
          "source"
       },
-
-      skill = "elona.stat_perception",
-      cost = 20,
-      range = 10000,
-      difficulty = 550,
 
       dice = function(self, params)
          local level = params.source:magic_level(full_id)
@@ -645,6 +842,8 @@ local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
          local map = params.source:current_map()
          local sx = params.source.x
          local sy = params.source.y
+         local tx = sx
+         local ty = sy
          if not map:has_los(sx, sy, params.x, params.y) then
             return false
          end
@@ -657,7 +856,7 @@ local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
             end
             Gui.mes_visible("magic.breath.bellows", sx, sy, params.source, breath_name)
 
-            local positions = ElonaPos.make_breath(sx, sy, params.x, params.y, range, map)
+            local positions = ElonaPos.make_breath(sx, sy, params.x, params.y, params.range, map)
 
             local cb = Anim.breath(positions, element, sx, sy, params.x, params.y, map)
             Gui.start_draw_callback(cb)
@@ -668,8 +867,10 @@ local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
             end
 
             for _, pos in ipairs(positions) do
-               local tx = pos[1]
-               local ty = pos[2]
+               local dx = pos[1]
+               local dy = pos[2]
+               tx = tx + dx
+               ty = ty + dy
 
                if map:has_los(sx, sy, tx, ty) then
                   if not (sx == tx and sx == ty) then
@@ -697,8 +898,9 @@ local function make_breath(element, elona_id, range, dice_x, dice_y, bonus)
                                            element = element,
                                            element_power = params.element_power,
                                            message_tense = tense,
-                                           no_attack_text = true
-                                        })
+                                           no_attack_text = true,
+                                           is_third_person = true
+                        })
                      end
                   end
                end
@@ -720,3 +922,7 @@ make_breath("darkness",  609, 15, 7, 8,  10)
 make_breath("mind",      610, 15, 7, 8,  10)
 make_breath("nerve",     611, 15, 7, 8,  10)
 make_breath(nil,         612, 20, 6, 15, 10)
+
+-- fov
+
+-- attack

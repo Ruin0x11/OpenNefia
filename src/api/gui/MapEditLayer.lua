@@ -147,6 +147,20 @@ function MapEditLayer:draw()
   self.tile_batch:draw()
 end
 
+local function place_tile(map, tx, ty, tile_id)
+  if map:tile(tx, ty)._id == tile_id then
+    return
+  end
+
+  local tile_data = data["base.map_tile"]:ensure(tile_id)
+  if tile_data.is_solid then
+    Gui.play_sound("base.offer1")
+  end
+  map:set_tile(tx, ty, tile_id)
+  map:memorize_tile(tx, ty)
+  Gui.update_screen()
+end
+
 function MapEditLayer:update(dt)
   if self.finished then
     local player = Chara.player()
@@ -159,15 +173,7 @@ function MapEditLayer:update(dt)
   local map = Map.current()
 
   if self.placing and map:is_in_bounds(self.target_x, self.target_y) then
-    local tile_data = data["base.map_tile"]:ensure(self.selected_tile)
-    if Map.tile(self.target_x, self.target_y)._id ~= self.selected_tile then
-      if tile_data.is_solid then
-        Gui.play_sound("base.offer1")
-      end
-      map:set_tile(self.target_x, self.target_y, self.selected_tile)
-      map:memorize_tile(self.target_x, self.target_y)
-      Gui.update_screen()
-    end
+    place_tile(map, self.target_x, self.target_y, self.selected_tile)
   end
 end
 

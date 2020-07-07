@@ -248,6 +248,8 @@ function Gui.mes_c(text, color, ...)
 
    if capitalize then
       text = I18N.capitalize(text)
+   else
+      text = I18N.space() .. text
    end
    capitalize = true
 

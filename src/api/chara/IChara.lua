@@ -363,6 +363,7 @@ function IChara:damage_hp(amount, source, params)
 
       -- only required for message printing
       message_tense = params.message_tense or "passive",
+      is_third_person = params.is_third_person or false,
       no_attack_text = params.no_attack_text,
       extra_attacks = params.extra_attacks or 0,
       weapon = params.weapon or nil,

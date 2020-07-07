@@ -242,26 +242,6 @@ local function iter_circle(state, pos)
    return pos, old_x, old_y
 end
 
-local function iter_circle(state, pos)
-   local old_x, old_y = pos.x + state.ox, pos.y + state.oy
-   local found = false
-   while not found do
-      old_x, old_y = pos.x + state.ox, pos.y + state.oy
-      pos.x = pos.x + 1
-      if pos.x == state.diameter then
-         pos.x = 0
-         pos.y = pos.y + 1
-         if pos.y == state.diameter then
-            return nil
-         end
-      end
-
-      found = state.cache[pos.x][pos.y]
-   end
-
-   return pos, old_x, old_y
-end
-
 --- Iterates points in a circle.
 ---
 --- @tparam int ox
@@ -302,8 +282,7 @@ local function iter_line(state, index)
    return index, index.x, index.y
 end
 
---- Iterates points in a line. You can pass a callback for stopping
---- the iteration if a solid tile is encountered.
+--- Iterates points in a line.
 ---
 --- @tparam int start_x
 --- @tparam int start_y
@@ -334,74 +313,6 @@ function Pos.iter_line(start_x, start_y, end_x, end_y)
 
    return fun.wrap(iter_line, state, index)
 end
-
-local function iter_bolt(state, pos)
-   local old_x, old_y = pos.x, pos.y
-   if state.is_solid(pos.x + pos.dx, pos.y) then
-      pos.dx = -pos.dx
-   elseif state.is_solid(pos.x, pos.y + pos.dy) then
-      pos.dy = -pos.dy
-   end
-   pos.x = pos.x + pos.dx
-   pos.y = pos.y + pos.dy
-
-   return pos, old_x, old_y
-end
-
-local function iter_beam(state, pos)
-   local old_x, old_y = pos.x, pos.y
-   if state.is_solid(pos.x, pos.y) then
-      return nil
-   end
-   pos.x = pos.x + pos.dx
-   pos.y = pos.y + pos.dy
-
-   return pos, old_x, old_y
-end
-
-local function gen_line(cb)
-   return function(start_x, start_y, dx, dy, is_solid_cb)
-      dx = math.sign(dx)
-      dy = math.sign(dy)
-
-      if is_solid_cb == nil then
-         local Map = require("api.Map")
-         is_solid_cb = function(x, y) return not Map.current():can_access(x, y) end
-      end
-
-      if dx == 0 and dy == 0 then
-         return fun.iter({})
-      end
-
-      return fun.wrap(cb, {is_solid=is_solid_cb}, {x=start_x+dx,y=start_y+dy,dx=dx,dy=dy})
-   end
-end
-
---- Iterates points in a bolt, which bounces off solid tiles. You can
---- pass a callback for stopping the iteration if a solid tile is
---- encountered.
----
---- @function Pos.iter_bolt
---- @tparam int start_x
---- @tparam int start_y
---- @tparam int dx
---- @tparam int dy
---- @tparam[opt] function is_solid_cb Defaults to InstancedMap.can_access
---- @treturn Iterator(int,int)
-Pos.iter_bolt = gen_line(iter_bolt)
-
---- Iterates points in a beam, which travels in a straight line at 45
---- degree angles only. You can pass a callback for stopping the
---- iteration if a solid tile is encountered.
----
---- @function Pos.iter_bolt
---- @tparam int start_x
---- @tparam int start_y
---- @tparam int dx
---- @tparam int dy
---- @tparam[opt] function is_solid_cb Defaults to InstancedMap.can_access
---- @treturn Iterator(int,int)
-Pos.iter_beam = gen_line(iter_beam)
 
 --- Iterates points surrounding a position.
 ---

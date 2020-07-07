@@ -201,6 +201,10 @@ end
 
 Event.register("elona.calc_wand_success", "Default", calc_wand_success)
 
+local function prompt_magic_location()
+   return nil, nil
+end
+
 --- to be used with IItem.on_zap
 function Magic.zap_wand(magic_id, power)
    return function(item, params)

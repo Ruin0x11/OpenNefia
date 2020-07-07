@@ -85,9 +85,16 @@ end
 Event.register("base.on_build_map", "Init map", init_map)
 
 local function show_element_text_damage(target, source, tense, element)
+   Gui.mes("element.damage." .. element._id, target)
 end
 
 local function show_element_text_death(target, source, tense, element)
+   if tense == "ally" then
+      Gui.mes_continue_sentence()
+      Gui.mes_c("element.death." .. element._id .. ".active", "Red", target, source)
+   else
+      Gui.mes_c("element.death." .. element._id .. ".passive", "Red", target, source)
+   end
 end
 
 local function show_text_death(target, source, tense)
@@ -119,7 +126,8 @@ local function show_text_death(target, source, tense)
 end
 
 local function show_damage_text(chara, weapon, target, damage_level, was_killed,
-                                tense, no_attack_text, element, extra_attacks)
+                                tense, no_attack_text, element, extra_attacks,
+                                is_third_person)
    if not Map.is_in_fov(target.x, target.y) then
       return
    end
@@ -136,6 +144,11 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
    end
 
    local source = chara
+
+   local txt_source = source
+   if is_third_person then
+      txt_source = nil
+   end
 
    if tense == "ally" and chara then
       if not no_attack_text then
@@ -156,25 +169,21 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
 
       if was_killed then
          if element then
-            show_element_text_death(target, source, tense, element)
+            show_element_text_death(target, txt_source, tense, element)
          else
-            show_text_death(target, source, tense)
+            show_text_death(target, txt_source, tense)
          end
       else
-         if element then
-            show_element_text_damage(target, source, tense, element)
-         else
-            if damage_level == -1 then
-               Gui.mes("damage.levels.scratch", target, chara)
-            elseif damage_level == 0 then
-               Gui.mes_c("damage.levels.slightly", "Orange", target, chara)
-            elseif damage_level == 1 then
-               Gui.mes_c("damage.levels.moderately", "Gold", target, chara)
-            elseif damage_level == 2 then
-               Gui.mes_c("damage.levels.severely", "Gold", target, chara)
-            elseif damage_level >= 3 then
-               Gui.mes_c("damage.levels.critically", "Red", target, chara)
-            end
+         if damage_level == -1 then
+            Gui.mes("damage.levels.scratch", target, txt_source)
+         elseif damage_level == 0 then
+            Gui.mes_c("damage.levels.slightly", "Orange", target, txt_source)
+         elseif damage_level == 1 then
+            Gui.mes_c("damage.levels.moderately", "Gold", target, txt_source)
+         elseif damage_level == 2 then
+            Gui.mes_c("damage.levels.severely", "Gold", target, txt_source)
+         elseif damage_level >= 3 then
+            Gui.mes_c("damage.levels.critically", "Red", target, txt_source)
          end
       end
    else
@@ -194,9 +203,9 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
 
       if was_killed then
          if element then
-            show_element_text_death(target, source, tense, element)
+            show_element_text_death(target, txt_source, tense, element)
          else
-            show_text_death(target, source, tense)
+            show_text_death(target, txt_source, tense)
          end
       else
          if target:is_in_fov() then
@@ -227,7 +236,8 @@ end
 Event.register("base.on_damage_chara", "Damage text", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, false,
-                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks)
+                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
+                                   params.is_third_person)
 
                   -- If an event causes character death, switch to
                   -- passive tense or messages like "kills it. kills
@@ -237,7 +247,8 @@ end)
 Event.register("base.on_kill_chara", "Damage text", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, true,
-                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks)
+                                   params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
+                                   params.is_third_person)
 end)
 
 local function register_quest_town(map, _, _)

@@ -54,4 +54,32 @@ function ElonaPos.make_breath(start_x, start_y, end_x, end_y, range, map)
    return breath
 end
 
+function ElonaPos.make_route(start_x, start_y, end_x, end_y, map)
+   if start_x == end_x and start_y == end_y then
+      return {{ start_x, end_x }}, true
+   end
+   local sx = start_x
+   local sy = start_y
+
+   local route = {}
+
+   for _, x, y in Pos.iter_line(start_x, start_y, end_x, end_y) do
+      -- Position differences are used instead of actual positions to support
+      -- extending the line beyond the target position, like for bolts that pass
+      -- through the target.
+      local dx = x - sx
+      local dy = y - sy
+
+      if map:can_see_through(x, y) then
+         route[#route+1] = { dx, dy }
+      else
+         return route, false
+      end
+      sx = x
+      sy = y
+   end
+
+   return route, true
+end
+
 return ElonaPos

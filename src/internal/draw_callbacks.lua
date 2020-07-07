@@ -110,13 +110,13 @@ end
 function draw_callbacks:wait()
    self.waiting = true
 
-   local dt
+   local dt, _, skip
    local has_cbs
 
    repeat
-      dt = coroutine.yield()
+      dt, _, skip = coroutine.yield()
       has_cbs = self:update(dt)
-   until not has_cbs
+   until not has_cbs or skip
 end
 
 return draw_callbacks

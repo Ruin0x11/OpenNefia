@@ -34,6 +34,7 @@ end
 -- }
 function commands.run(args)
    local continue, status, success, result
+   local dt = 0
 
    local fn, err = loadstring(args.code)
 
@@ -44,7 +45,12 @@ function commands.run(args)
       -- protect against this, run the code itself in a new coroutine
       -- so if the code yields it will not affect any state.
       local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
-      continue, success, result = coroutine.resume(coro)
+      repeat
+         continue, success, result = coroutine.resume(coro, dt, nil)
+         Log.info("%s %s %s %s", continue, success, result, coroutine.status(coro))
+         dt = coroutine.yield()
+      until not continue or coroutine.status(coro) == "dead"
+
       if continue then
          success = true
          Log.info("Success: %s", result)

@@ -756,11 +756,9 @@
 
 (defun open-nefia-start-game ()
   (interactive)
-  (let* ((path (file-relative-name
-                (buffer-file-name)
-                (string-join (list (projectile-project-root) "src"))))
-         (cmd (if (eq system-type 'windows-nt) "OpenNefia.bat" "./OpenNefia"))
+  (let* ((cmd (if (eq system-type 'windows-nt) "OpenNefia.bat" "./OpenNefia"))
          (default-directory (projectile-project-root)))
+    (setq compilation-search-path (list nil "src"))
     (compile cmd)))
 
 (defun open-nefia-reset-draw-layers ()

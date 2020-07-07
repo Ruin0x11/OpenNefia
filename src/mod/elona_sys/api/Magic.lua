@@ -1,6 +1,7 @@
 local IItem = require("api.item.IItem")
 local IMapObject = require("api.IMapObject")
 local Effect = require("mod.elona.api.Effect")
+local Gui = require("api.Gui")
 
 local Magic = {}
 
@@ -61,13 +62,16 @@ function Magic.cast(id, params)
    local curse_state = "none"
 
    if class.is_an(IItem, params.item) then
-      params.curse_state = params.curse_state or item:calc("curse_state")
+      params.curse_state = params.curse_state or params.item:calc("curse_state")
    end
    params.curse_state = params.curse_state or "none"
 
    params.power = calc_adjusted_power(magic, params.power, curse_state)
 
    local did_something, result = magic:cast(params)
+
+   Gui.update_screen()
+
    return did_something, result
 end
 

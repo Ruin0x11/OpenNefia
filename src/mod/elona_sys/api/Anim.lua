@@ -126,9 +126,84 @@ function Anim.failure_to_cast(tx, ty)
    return Anim.make_animation(scx, scy, "failure_to_cast_effect", 12, draw)
 end
 
-function Anim.bolt(start_x, start_y, end_x, end_y)
+function Anim.bolt(positions, element, chara_x, chara_y, target_x, target_y, range, map)
+   local color = {255, 255, 255}
+   local sound
+   local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
+   if element then
+      local element_data = data["base.element"]:ensure(element)
+      color = element_data.color
+      sound = element_data.sound
+   end
+
+   local t = UiTheme.load()
+
+   local frames = {}
+   local total = -1
+   local x = chara_x
+   local y = chara_y
+   local changed = 1
+
    return function(draw_x, draw_y)
-      -- TODO
+      Gui.play_sound("base.bolt1", chara_x, chara_y)
+
+      local frame = 1
+      local draw
+      local tw, th = Draw.get_coords():get_size()
+
+      while frame < 20 do
+         draw = true
+
+         if changed then
+            if total == -1 then
+               local pos = positions[((frame-1)%#positions)+1]
+               local dx = pos[1]
+               local dy = pos[2]
+               x = x + dx
+               y = y + dy
+
+               if map:is_in_bounds(x, y) and map:can_see_through(x, y) and is_in_screen(x, y) then
+                  if Pos.dist(x, y, chara_x, chara_y) > range then
+                     frames[frame] = "stop"
+                     total = 4
+                  else
+                     local sx, sy = Gui.tile_to_screen(x, y)
+                     frames[frame] = { x = sx + (tw / 2), y = sy + 8, frame = 1 }
+                  end
+               else
+                  frames[frame] = "stop"
+                  total = 4
+               end
+            else
+               total = total - 1
+               if total == 0 then
+                  break
+               end
+            end
+         end
+
+         if draw then
+            for j = 1, #frames do
+               if frames[j] == "stop" then break
+               else
+                  if frames[j].frame < 6 then
+                     t.base.anim_shock:draw_region(frames[j].frame, draw_x + frames[j].x, draw_y + frames[j].y, nil, nil, color, true, rotation)
+                  end
+                  if changed then
+                  frames[j].frame = frames[j].frame + 1
+                  end
+               end
+            end
+         end
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"] + 30)
+         frame = frame + delta
+         changed = delta > 0
+      end
+
+      if sound then
+         Gui.play_sound(sound, chara_x, chara_y)
+      end
    end
 end
 
@@ -137,7 +212,7 @@ local chip_batch = nil
 Event.register("base.on_hotload_end", "hotload chip batch (Anim)",
                function()
                   chip_batch = nil
-               end)
+end)
 
 function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, impact_sound)
    return function(draw_x, draw_y)
@@ -213,9 +288,9 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
 
       local particle
       if debris then
-         particle = t.melee_attack_debris
+         particle = t.base.melee_attack_debris
       else
-         particle = t.melee_attack_blood
+         particle = t.base.melee_attack_blood
       end
 
       local points = {}
@@ -235,7 +310,7 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
       local frame = 1
       while frame <= frames do
          if is_critical then
-            t.anim_critical:draw_region(frame, sx - 24, sy - 32)
+            t.base.anim_critical:draw_region(frame, sx - 24, sy - 32)
          end
          local frame2 = frame + 1
 
@@ -262,20 +337,20 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
          end
 
          if kind == 0 then
-            t.swarm_effect:draw(sx + points[1][1] + 24,
-                                sy + points[1][2] + 10,
-                                (frame - 1) * 10 + count,
-                                (frame - 1) * 10 + count,
-                                nil,
-                                true,
-                                0.5 + (frame - 1) * 0.8)
+            t.base.swarm_effect:draw(sx + points[1][1] + 24,
+                                     sy + points[1][2] + 10,
+                                     (frame - 1) * 10 + count,
+                                     (frame - 1) * 10 + count,
+                                     nil,
+                                     true,
+                                     0.5 + (frame - 1) * 0.8)
          elseif kind == 1 then
             if frame < 5 then
-               t.anim_slash:draw_region(frame, sx, sy)
+               t.base.anim_slash:draw_region(frame, sx, sy)
             end
          elseif kind == 2 then
             if frame < 5 then
-               t.anim_bash:draw_region(frame, sx, sy)
+               t.base.anim_bash:draw_region(frame, sx, sy)
             end
          end
 
@@ -303,9 +378,9 @@ function Anim.gene_engineering(tx, ty)
          for j = 0, math.floor(draw_x / 96) + 1 do
             local frame = math.floor(i / 2) + 1
             if j == 0 then
-               t.anim_gene:draw_region(frame + 5, draw_x, draw_y - j * 96)
+               t.base.anim_gene:draw_region(frame + 5, draw_x, draw_y - j * 96)
             else
-               t.anim_gene:draw_region(frame, draw_x, draw_y - j * 96)
+               t.base.anim_gene:draw_region(frame, draw_x, draw_y - j * 96)
             end
          end
 
@@ -369,10 +444,10 @@ function Anim.miracle(positions, sound)
                if w.duration < 15 then
                   region = region + 1
                end
-               t.anim_miracle:draw_region(region+1, draw_x + w.x, draw_y + anim_y)
+               t.base.anim_miracle:draw_region(region+1, draw_x + w.x, draw_y + anim_y)
                if w.duration <= 14 and w.duration >= 6 then
                   local region2 = 10 + math.floor((14 - w.duration) / 2) + 1
-                  t.anim_miracle:draw_region(region2, draw_x + w.x, draw_y + anim_y + 16)
+                  t.base.anim_miracle:draw_region(region2, draw_x + w.x, draw_y + anim_y + 16)
                end
 
                local anim_x = math.floor(math.clamp(anim_y / 55 + 1, 0, 7 - math.clamp((11 - w.duration) * 2, 0, 7)))
@@ -381,9 +456,9 @@ function Anim.miracle(positions, sound)
                   if w.duration < 15 then
                      region2 = "beam_2"
                   end
-                  t.anim_miracle:draw_region(region2, draw_x + w.x, draw_y + anim_y - j * 55)
+                  t.base.anim_miracle:draw_region(region2, draw_x + w.x, draw_y + anim_y - j * 55)
                   if j == anim_x then
-                     t.anim_miracle:draw_region("beam_3", draw_x + w.x, draw_y + anim_y - j * 55 - 40)
+                     t.base.anim_miracle:draw_region("beam_3", draw_x + w.x, draw_y + anim_y - j * 55 - 40)
                   end
                end
 
@@ -451,9 +526,12 @@ end
 
 function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, map)
    local color = {255, 255, 255}
+   local sound
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
    if element then
-      color = data["base.element"]:ensure(element).color
+      local element_data = data["base.element"]:ensure(element)
+      color = element_data.color
+      sound = element_data.sound
    end
 
    local t = UiTheme.load()
@@ -472,7 +550,7 @@ function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, m
             if map:has_los(chara_x, chara_y, tx, ty) then
                local sx, sy = Gui.tile_to_screen(tx, ty)
 
-               t.anim_breath:draw_region(frame, draw_x + sx + tw, draw_y + sy + th, nil, nil, color, true, rotation)
+               t.base.anim_breath:draw_region(frame, draw_x + sx + tw, draw_y + sy + th, nil, nil, color, true, rotation)
             end
          end
 
@@ -480,11 +558,8 @@ function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, m
          frame = frame + delta
       end
 
-      if element then
-         local sound = data["base.element"]:ensure(element).sound
-         if sound then
-            Gui.play_sound(sound, chara_x, chara_y)
-         end
+      if sound then
+         Gui.play_sound(sound, chara_x, chara_y)
       end
    end
 end
