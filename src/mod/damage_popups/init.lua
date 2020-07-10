@@ -32,3 +32,23 @@ Event.register("elona.on_physical_attack_miss",
                   end
                end,
                {priority=500000})
+
+Event.register("base.on_heal_chara_hp",
+               "damage popups",
+               function(source, p)
+                  if p.quiet then return end
+                  if source:is_in_fov() then
+                     DamagePopup.add(source.x, source.y, tostring(p.amount), { 175, 255, 175 })
+                  end
+               end,
+               {priority=500000})
+
+Event.register("base.on_heal_chara_mp",
+               "damage popups",
+               function(source, p)
+                  if p.quiet then return end
+                  if source:is_in_fov() then
+                     DamagePopup.add(source.x, source.y, tostring(p.amount), { 175, 175, 255 })
+                  end
+               end,
+               {priority=500000})

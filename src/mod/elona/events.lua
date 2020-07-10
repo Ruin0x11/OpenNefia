@@ -645,11 +645,11 @@ Event.register("base.on_minute_passed", "Respawn mobs", respawn_mobs)
 local function on_regenerate(chara)
    if Rand.one_in(6) then
       local amount = Rand.rnd(chara:skill_level("elona.healing") / 3 + 1) + 1
-      chara:heal_hp(amount)
+      chara:heal_hp(amount, true)
    end
    if Rand.one_in(5) then
       local amount = Rand.rnd(chara:skill_level("elona.meditation") / 2 + 1) + 1
-      chara:heal_mp(amount)
+      chara:heal_mp(amount, true)
    end
 end
 

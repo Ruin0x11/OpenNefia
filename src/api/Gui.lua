@@ -13,6 +13,7 @@ local Gui = {}
 
 local scroll = false
 local capitalize = true
+local newline = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen(dt)
@@ -248,10 +249,12 @@ function Gui.mes_c(text, color, ...)
 
    if capitalize then
       text = I18N.capitalize(text)
-   else
+   end
+   if not newline then
       text = I18N.space() .. text
    end
    capitalize = true
+   newline = false
 
    if Env.is_headless() then
       if Log.has_level("info") then
@@ -297,12 +300,15 @@ end
 --- Clears the HUD message window.
 function Gui.mes_clear()
    field:get_message_window():clear()
+   capitalize = true
+   newline = true
 end
 
 --- Starts a new line in the HUD message window.
 -- TODO: just use \n inline
 function Gui.mes_newline()
    field:get_message_window():newline()
+   newline = true
 end
 
 function Gui.mes_continue_sentence()

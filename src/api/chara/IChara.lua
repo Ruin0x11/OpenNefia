@@ -486,15 +486,19 @@ end
 --- Heals this character's hit points.
 ---
 --- @tparam int add
-function IChara:heal_hp(add)
+--- @tparam boolean quiet
+function IChara:heal_hp(add, quiet)
    self.hp = math.min(self.hp + math.max(add, 0), self:calc("max_hp"))
+   self:emit("base.on_heal_chara_hp", { amount = add, quiet = quiet })
 end
 
 --- Heals this character's mana points.
 ---
 --- @tparam int add
-function IChara:heal_mp(add)
+--- @tparam boolean quiet
+function IChara:heal_mp(add, quiet)
    self.mp = math.min(self.mp + math.max(add, 0), self:calc("max_mp"))
+   self:emit("base.on_heal_chara_mp", { amount = add, quiet = quiet })
 end
 
 --- Heals this character's stamina points.

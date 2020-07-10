@@ -55,6 +55,13 @@ local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    return none
 end
 
+local function make_sick(target, chance)
+   if Rand.one_in(chance or 1) then
+      Gui.mes_visible("food.cursed_drink", target.x, target.y, target)
+      target:apply_effect("elona.sick", 200)
+   end
+end
+
 local function is_in_screen(sx, sy)
    local msg_y = Gui.message_window_y()
    return sy >= 0 and sy <= msg_y
@@ -1219,6 +1226,116 @@ data:add {
 }
 
 -- heal
+
+
+local function make_heal(opts)
+   local full_id = "elona.magic_" .. opts._id
+
+   data:add {
+      _id = "magic_" .. opts._id,
+      _type = "base.skill",
+
+      type = "magic",
+      related_skill = "elona.stat_will",
+      cost = opts.cost,
+      range = RANGE_BALL,
+      difficulty = opts.difficulty,
+      target_type = opts.target_type or "self"
+   }
+
+   data:add {
+      _id = opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      params = {
+         "source",
+         "target"
+      },
+
+      dice = function(self, params)
+         local level = params.source:skill_level(full_id)
+         return {
+            x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
+            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
+         }
+      end,
+
+      cast = function(self, params)
+         local target = params.target
+
+         Gui.mes_visible(opts.message, target.x, target.y, target)
+
+         local dice = self:dice(params)
+         Effect.heal(target, dice.x, dice.y, dice.bonus)
+
+         if params.curse_state == "blessed" then
+            target:heal_effect("elona.sick", 5 + Rand.rnd(5))
+         elseif Effect.is_cursed(params.curse_state) then
+            make_sick(target, 3)
+         end
+
+         local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+         Gui.start_draw_callback(cb)
+
+         return true
+      end
+   }
+end
+
+make_heal {
+   _id = "heal_light",
+   message = "magic.healed.slightly",
+   dice_x = function(p, l) return 1 + l / 30 end,
+   dice_y = function(p, l) return p / 40 + 5 end,
+   bonus = function(p, l) return p / 30 end,
+   cost = 6,
+   difficulty = 80
+}
+
+make_heal {
+   _id = "heal_critical",
+   message = "magic.healed.normal",
+   dice_x = function(p, l) return 2 + l / 26 end,
+   dice_y = function(p, l) return p / 25 + 5 end,
+   bonus = function(p, l) return p / 15 end,
+   cost = 15,
+   difficulty = 350
+}
+
+make_heal {
+   _id = "healing_touch",
+   message = "magic.healed.normal",
+   dice_x = function(p, l) return 2 + l / 22 end,
+   dice_y = function(p, l) return p / 18 + 5 end,
+   bonus = function(p, l) return p / 10 end,
+   cost = 20,
+   difficulty = 400,
+   target_type = "direction"
+}
+
+make_heal {
+   _id = "cure_of_eris",
+   message = "magic.healed.greatly",
+   dice_x = function(p, l) return 3 + l / 15 end,
+   dice_y = function(p, l) return p / 12 + 5 end,
+   bonus = function(p, l) return p / 6 end,
+   cost = 35,
+   difficulty = 800
+}
+
+make_heal {
+   _id = "cure_of_jure",
+   message = "magic.healed.completely",
+   dice_x = function(p, l) return 5 + l / 10 end,
+   dice_y = function(p, l) return p / 7 + 5 end,
+   bonus = function(p, l) return p / 2 end,
+   cost = 80,
+   difficulty = 1300
+}
 
 -- teleport
 

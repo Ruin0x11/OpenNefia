@@ -564,7 +564,7 @@ function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
 
       local frame = 1
 
-      local scx, scy = Gui.tile_to_screen(tx, ty)
+      local scx, scy = Gui.tile_to_visible_screen(tx, ty)
       local tw, th = Draw.get_coords():get_size()
 
       for i = 1, 15 do

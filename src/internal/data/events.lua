@@ -96,6 +96,8 @@ data:add_multi(
       { _id = "on_get_item" },
       { _id = "on_log_message" },
       { _id = "on_player_turn" },
+      { _id = "on_heal_chara_hp", },
+      { _id = "on_heal_chara_mp", },
    }
 )
 
