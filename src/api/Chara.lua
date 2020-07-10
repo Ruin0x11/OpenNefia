@@ -50,8 +50,16 @@ end
 ---
 --- @tparam[opt] InstancedMap map
 --- @treturn Iterator(IChara)
-function Chara.iter(map)
+function Chara.iter_all(map)
    return (map or field.map):iter_charas()
+end
+
+--- Iterates all live characters in the map.
+---
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IChara)
+function Chara.iter(map)
+   return Chara.iter_all(map):filter(Chara.is_alive)
 end
 
 --- Iterates the characters in the player's party, including the

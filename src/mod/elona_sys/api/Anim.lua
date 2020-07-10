@@ -216,10 +216,6 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
          return
       end
 
-      if chip == nil then
-         chip = "elona.item_projectile_arrow"
-      end
-
       if sound then
          Gui.play_sound(sound, start_x, start_y)
       end
@@ -568,7 +564,7 @@ function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
 
       local frame = 1
 
-      local scx, scy = Gui.tile_to_visible_screen(tx, ty)
+      local scx, scy = Gui.tile_to_screen(tx, ty)
       local tw, th = Draw.get_coords():get_size()
 
       for i = 1, 15 do

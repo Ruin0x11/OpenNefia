@@ -133,7 +133,7 @@ local function show_evade_text(chara, target, extra_attacks)
    end
 end
 
-local function play_ranged_animation(start_x, start_y, end_x, end_y, attack_skill, weapon)
+local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
    local chip, sound
 
    local color = {255, 255, 255}
@@ -157,8 +157,10 @@ local function play_ranged_animation(start_x, start_y, end_x, end_y, attack_skil
       sound = "base.throw1"
    end
 
-   local cb = Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, nil)
-   Gui.start_draw_callback(cb)
+   if chara:is_in_fov() then
+      local cb = Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, nil)
+      Gui.start_draw_callback(cb)
+   end
 end
 
 local function do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
@@ -175,7 +177,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
    if is_ranged then
       -- TODO: inherit color if weapon has enchantments
-      play_ranged_animation(chara.x, chara.y, target.x, target.y, attack_skill, weapon)
+      play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, attack_skill, weapon)
    end
 
    attack_skill = attack_skill or "elona.martial_arts"

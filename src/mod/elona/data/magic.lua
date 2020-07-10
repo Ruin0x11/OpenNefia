@@ -681,7 +681,6 @@ local function make_bolt(element_id, elona_id, dice_x, dice_y, dice_element_powe
                   if target and target ~= source then
                      -- TODO riding
                      local dice = self:dice(params)
-                     require("api.Log").info("%s %s", inspect(params), inspect(dice))
                      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
                      local success, damage = SkillCheck.handle_control_magic(source, target, damage)
@@ -722,7 +721,161 @@ make_bolt("mind",      423, function(p, l) return p/50+1+l/20 end, function(p, l
 
 -- arrow
 
--- ball (spSuicide)
+local function make_arrow(opts)
+   local id = opts._id
+   local full_id = "elona.magic_" .. opts._id
+
+   data:add {
+      _id = "magic_" .. id,
+      _type = "base.skill",
+
+      type = "magic",
+      skill = "elona.stat_magic",
+      cost = opts.cost,
+      range = RANGE_BOLT,
+      difficulty = opts.difficulty,
+      target_type = "enemy"
+   }
+
+   data:add {
+      _id = id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "skill",
+      params = {
+         "source",
+         "target"
+      },
+
+      dice = function(self, params)
+         local level = params.source:skill_level(full_id)
+         return {
+            x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
+            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
+         }
+      end,
+
+      cast = function(self, params)
+         local source = params.source
+         local target = params.target
+         local sx = params.source.x
+         local sy = params.source.y
+         local tx = params.target.x
+         local ty = params.target.y
+
+         local element = data["base.element"]:ensure(opts.element_id)
+         local color = element.color
+         local sound = element.sound
+
+         if source:is_in_fov() then
+            local cb = Anim.ranged_attack(sx, sy, tx, ty, "elona.item_projectile_magic_arrow", color, "base.arrow1", sound)
+            Gui.start_draw_callback(cb)
+         end
+
+         local dice = self:dice(params)
+         local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+
+         local tense = "enemy"
+         if not target:is_ally() then
+            tense = "ally"
+         end
+         if tense == "ally" then
+            Gui.mes_visible("magic.arrow.other", tx, ty, target)
+         else
+            Gui.mes_visible("magic.ball.ally", tx, ty, target)
+         end
+
+         target:damage_hp(damage,
+                          source,
+                          {
+                             element = element,
+                             element_power = params.element_power,
+                             message_tense = tense,
+                             no_attack_text = true,
+                             is_third_person = true
+         })
+
+         return true
+      end
+   }
+end
+
+make_arrow {
+   _id = "magic_arrow",
+   elona_id = 414,
+   element_id = "elona.magic",
+   dice_x = function(p, l) return p/125+2+l/50 end,
+   dice_y = function(p, l) return p/60+9 end,
+   bonus = nil,
+   element_power = function(p, l) return 100+p/4 end,
+   cost = 5,
+   difficulty = 110,
+}
+
+make_arrow {
+   _id = "nether_arrow",
+   elona_id = 415,
+   element_id = "elona.nether",
+   dice_x = function(p, l) return p/70+1+l/18 end,
+   dice_y = function(p, l) return p/25+8 end,
+   bonus = nil,
+   element_power = function(p, l) return 200+p/3 end,
+   cost = 8,
+   difficulty = 400,
+}
+
+make_arrow {
+   _id = "nerve_arrow",
+   elona_id = 416,
+   element_id = "elona.nerve",
+   dice_x = function(p, l) return p/70+1+l/18 end,
+   dice_y = function(p, l) return p/25+8 end,
+   bonus = nil,
+   element_power = function(p, l) return 200+p/3 end,
+   cost = 10,
+   difficulty = 650,
+}
+
+make_arrow {
+   _id = "chaos_arrow",
+   elona_id = 417,
+   element_id = "elona.chaos",
+   dice_x = function(p, l) return p/70+1+l/18 end,
+   dice_y = function(p, l) return p/25+8 end,
+   bonus = nil,
+   element_power = function(p, l) return 200+p/3 end,
+   cost = 10,
+   difficulty = 400,
+}
+
+make_arrow {
+   _id = "darkness_arrow",
+   elona_id = 418,
+   element_id = "elona.darkness",
+   dice_x = function(p, l) return p/80+1+l/18 end,
+   dice_y = function(p, l) return p/25+8 end,
+   bonus = nil,
+   element_power = function(p, l) return 200+p/3 end,
+   cost = 10,
+   difficulty = 200,
+}
+
+make_arrow {
+   _id = "magic_laser",
+   elona_id = 459,
+   element_id = "elona.magic",
+   dice_x = function(p, l) return p/100+3+l/25 end,
+   dice_y = function(p, l) return p/40+12 end,
+   bonus = nil,
+   element_power = function(p, l) return 100+p/4 end,
+   cost = 24,
+   difficulty = 950,
+}
+
+-- ball
 
 local function make_ball(opts)
    local full_id = "elona.magic_" .. opts._id
@@ -1067,7 +1220,7 @@ data:add {
 
 -- heal
 
--- tele
+-- teleport
 
 local function teleport_to(chara, x, y, check_cb, pos_cb, success_cb)
    local prevents_teleport = false -- TODO

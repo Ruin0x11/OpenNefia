@@ -416,13 +416,13 @@ local race =
             height = 50,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
             resistances = {
-               ["elona.element_magic"] = 200,
-               ["elona.element_darkness"] = 200,
-               ["elona.element_nerve"] = 200,
-               ["elona.element_nether"] = 200,
-               ["elona.element_mind"] = 200,
-               ["elona.element_sound"] = 200,
-               ["elona.element_chaos"] = 200,
+               ["elona.magic"] = 200,
+               ["elona.darkness"] = 200,
+               ["elona.nerve"] = 200,
+               ["elona.nether"] = 200,
+               ["elona.mind"] = 200,
+               ["elona.sound"] = 200,
+               ["elona.chaos"] = 200,
             },
             dv_correction = 250,
             body_parts = {
@@ -707,10 +707,10 @@ local race =
             height = 160,
             gender = Resolver.make("elona.gender", { male_ratio = 50 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             body_parts = {
                "elona.head",
@@ -1205,10 +1205,10 @@ local race =
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             dv_correction = 190,
             pv_correction = 150,
@@ -1305,10 +1305,10 @@ local race =
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             dv_correction = 160,
             body_parts = {
@@ -1954,10 +1954,10 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             pv_correction = 200,
             body_parts = {
@@ -2352,10 +2352,10 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             body_parts = {
                "elona.head",
@@ -2935,10 +2935,10 @@ local race =
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_darkness"] = 500,
-               ["elona.element_nerve"] = 500,
-               ["elona.element_nether"] = 500,
-               ["elona.element_fire"] = 80,
+               ["elona.darkness"] = 500,
+               ["elona.nerve"] = 500,
+               ["elona.nether"] = 500,
+               ["elona.fire"] = 80,
             },
             dv_correction = 130,
             body_parts = {
@@ -3304,7 +3304,7 @@ local race =
             height = 25,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_magic"] = 500,
+               ["elona.magic"] = 500,
             },
             dv_correction = 550,
             body_parts = {
@@ -3355,7 +3355,7 @@ local race =
             height = 12,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             resistances = {
-               ["elona.element_magic"] = 500,
+               ["elona.magic"] = 500,
             },
             dv_correction = 150,
             pv_correction = 1000,

@@ -65,7 +65,7 @@ local function explodes(chara)
       local chance = chara:calc("explode_chance") or Rand.one_in_percent(3)
       if Rand.percent_chance(chance) then
          chara.is_about_to_explode = true
-         Gui.mes("*click*", "LightBlue")
+         Gui.mes_c("damage.explode_click", "LightBlue")
       end
    end
 end
