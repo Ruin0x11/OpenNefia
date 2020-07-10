@@ -1,15 +1,15 @@
-local queue = class.class("queue")
+local Queue = class.class("Queue")
 
-function queue:init()
+function Queue:init()
    self._ordered = {}
    self._buffer = {}
 end
 
-function queue:push(obj)
+function Queue:push(obj)
    self._buffer[#self._buffer+1] = obj
 end
 
-function queue:pop()
+function Queue:pop()
    while #self._buffer > 0 do
       self._ordered[#self._ordered+1] = self._buffer[#self._buffer]
       self._buffer[#self._buffer] = nil
@@ -20,13 +20,13 @@ function queue:pop()
    return obj
 end
 
-function queue:clear()
+function Queue:clear()
    self._ordered = {}
    self._buffer = {}
 end
 
-function queue:len()
+function Queue:len()
    return #self._ordered + #self._buffer
 end
 
-return queue
+return Queue

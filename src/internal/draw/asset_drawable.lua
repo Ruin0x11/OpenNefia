@@ -92,7 +92,7 @@ function asset_drawable:draw(x, y, width, height, color, centered, rotation)
 end
 
 function asset_drawable:draw_region(quad, x, y, width, height, color, centered, rotation)
-   if (table.count(self.quads) == 0 or width or height) then
+   if (table.count(self.quads) == 0 or ((width or height) and type(self.regions) == "function")) then
       error("Can't draw this asset dynamically; use make_instance() first")
    end
 

@@ -1564,8 +1564,7 @@ local chara = {
       category = 12,
       rarity = 150000,
       coefficient = 400,
-      flags = { "Explodes" },
-      explodes = true
+      is_explodable = true
    },
    {
       _id = "kamikaze_samurai",
@@ -1582,8 +1581,7 @@ local chara = {
       category = 12,
       rarity = 25000,
       coefficient = 400,
-      flags = { "Explodes" },
-      explodes = true
+      is_explodable = true
    },
    {
       _id = "bomb_rock",
@@ -1601,8 +1599,7 @@ local chara = {
       image = "elona.chara_rock",
       rarity = 20000,
       coefficient = 400,
-      flags = { "Explodes" },
-      explodes = true
+      is_explodable = true
    },
    {
       _id = "hard_gay",
@@ -1618,8 +1615,7 @@ local chara = {
       image = "elona.chara_hard_gay",
       rarity = 15000,
       coefficient = 200,
-      flags = { "Explodes" },
-      explodes = true
+      is_explodable = true
    },
    {
       _id = "rodlob",

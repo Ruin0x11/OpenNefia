@@ -3,7 +3,7 @@
 
 local socket = require("socket")
 local env = require("internal.env")
-local queue = require("util.queue")
+local Queue = require("api.Queue")
 
 local Env = {}
 
@@ -53,7 +53,7 @@ function Env.update_play_time(old_play_time)
    return new
 end
 
-local ui_results = queue:new()
+local ui_results = Queue:new()
 
 function Env.push_ui_result(result)
    if not Env.is_headless() then
@@ -73,7 +73,7 @@ function Env.clear_ui_results()
    if not Env.is_headless() then
       error("This function can only be used in headless mode.")
    end
-   ui_results = queue:new()
+   ui_results = Queue:new()
 end
 
 --- @treturn string

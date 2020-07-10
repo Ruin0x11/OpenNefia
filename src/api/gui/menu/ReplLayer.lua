@@ -6,7 +6,7 @@ local Doc = require("api.Doc")
 local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
 local CircularBuffer = require("api.CircularBuffer")
-local queue = require("util.queue")
+local Queue = require("api.Queue")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -63,7 +63,7 @@ function ReplLayer:init(env, params)
    self.can_search = true
    self.max_search_size = 1000
 
-   self.deferred = queue:new()
+   self.deferred = Queue:new()
 
    self.print_varargs = false
 

@@ -61,11 +61,11 @@ Event.register("base.on_damage_chara",
                "Disturb sleep", disturb_sleep)
 
 local function explodes(chara)
-   if chara:calc("explodes") then
+   if chara:calc("is_explodable") then
       local chance = chara:calc("explode_chance") or Rand.one_in_percent(3)
       if Rand.percent_chance(chance) then
-         chara.will_explode_soon = true
-         Gui.mes("*click*")
+         chara.is_about_to_explode = true
+         Gui.mes("*click*", "LightBlue")
       end
    end
 end

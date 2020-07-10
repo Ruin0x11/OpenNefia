@@ -8,6 +8,7 @@ local Log = require("api.Log")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
+local Magic = require("mod.elona_sys.api.Magic")
 
 local function default_target(chara)
    return chara:get_party_leader() or Chara.player()
@@ -633,6 +634,12 @@ local function ai_talk(chara, params)
 end
 
 local function elona_default_ai(chara, params)
+   -- sandbag
+   -- leash
+   if chara:calc("is_about_to_explode") then
+      Magic.cast("elona.explosion", {source = chara, x = chara.x, y = chara.y})
+      return true
+   end
    if chara:is_in_party() then
       Ai.run("elona.decide_ally_target", chara)
    end

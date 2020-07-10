@@ -143,7 +143,6 @@ end
 -- TODO: keep eveything in one "skills" field, to prevent needing to
 -- distinguish by type, and instead prefix each ID with the type name
 generate_methods(ICharaSkills, "skill", "base.skill")
-generate_methods(ICharaSkills, "magic", "elona_sys.magic")
 generate_methods(ICharaSkills, "resist", "base.element")
 
 --- @function ICharaSkills:skill_level(skill_id)

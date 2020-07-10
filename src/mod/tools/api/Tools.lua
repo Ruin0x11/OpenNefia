@@ -12,23 +12,23 @@ local Input = require("api.Input")
 
 local Tools = {}
 
-function Tools.spawn_foes(count)
-   count = count or 100
+function Tools.spawn_foes(count, id)
+   count = count or 10
    for i=0,count do
       local x, y = Map.find_position_for_chara()
       if x then
-         Chara.create("content.enemy", x, y)
+         Chara.create(id or "elona.yeek", x, y)
       end
    end
 end
 
 function Tools.spawn_equipped_foes(count)
    local keys = data["base.item"]:iter():extract("_id"):to_list()
-   count = count or 100
+   count = count or 10
    for i=0,count do
       local x, y = Map.find_position_for_chara()
       if x then
-         local c = Chara.create("content.enemy", x, y)
+         local c = Chara.create("elona.yeek", x, y)
 
          local gen = function() return Item.create(Rand.choice(keys), 0, 0, { ownerless = true }) end
          local pred = function(i) return i.equip_slots ~= nil end
@@ -51,11 +51,11 @@ function Tools.show_equipment(chara)
 end
 
 function Tools.spawn_allies(count)
-   count = count or 16
-   for i=0,count do
+   count = count or 4
+   for _=1,count do
       local x, y = Map.find_position_for_chara()
       if x then
-         local c = Chara.create("content.ally", x, y)
+         local c = Chara.create("elona.putit", x, y)
          if not c:recruit_as_ally() then
             return
          end

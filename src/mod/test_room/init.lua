@@ -15,8 +15,6 @@ local function test_room(self, player)
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end
 
-   data["elona_sys.magic"]:iter():each(function(m) player:gain_magic(m._id, 100) end)
-
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)
    item = Item.create("elona.arrow", nil, nil, {}, player)

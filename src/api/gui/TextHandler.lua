@@ -1,7 +1,7 @@
 local IKeyInput = require("api.gui.IKeyInput")
 local Log = require("api.Log")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
-local queue = require("util.queue")
+local Queue = require("api.Queue")
 
 local input = require("internal.input")
 
@@ -24,7 +24,7 @@ function TextHandler:init()
    self.canceled = false
    self.halted = false
    self.keybinds = KeybindTranslator:new()
-   self.macro_queue = queue:new()
+   self.macro_queue = Queue:new()
 end
 
 local function translate(char, text)

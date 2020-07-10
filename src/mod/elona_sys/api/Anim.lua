@@ -126,15 +126,9 @@ function Anim.failure_to_cast(tx, ty)
    return Anim.make_animation(scx, scy, "failure_to_cast_effect", 12, draw)
 end
 
-function Anim.bolt(positions, element, chara_x, chara_y, target_x, target_y, range, map)
-   local color = {255, 255, 255}
-   local sound
+function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y, range, map)
+   color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
-   if element then
-      local element_data = data["base.element"]:ensure(element)
-      color = element_data.color
-      sound = element_data.sound
-   end
 
    local t = UiTheme.load()
 
@@ -151,7 +145,7 @@ function Anim.bolt(positions, element, chara_x, chara_y, target_x, target_y, ran
       local draw
       local tw, th = Draw.get_coords():get_size()
 
-      while frame < 20 do
+      while frame <= 20 do
          draw = true
 
          if changed then
@@ -524,15 +518,9 @@ function Anim.breaking(tx, ty)
    return Anim.make_particle_animation(scx, scy, "base.breaking_effect", 5, 4, create, draw)
 end
 
-function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, map)
-   local color = {255, 255, 255}
-   local sound
+function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target_y, map)
+   color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
-   if element then
-      local element_data = data["base.element"]:ensure(element)
-      color = element_data.color
-      sound = element_data.sound
-   end
 
    local t = UiTheme.load()
 
@@ -560,6 +548,79 @@ function Anim.breath(positions, element, chara_x, chara_y, target_x, target_y, m
 
       if sound then
          Gui.play_sound(sound, chara_x, chara_y)
+      end
+   end
+end
+
+function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
+   rot_delta = rot_delta or -1
+   wait = wait or config["base.anim_wait"]
+
+   local particles = {}
+
+   local t = UiTheme.load()
+   asset = t[asset]
+
+   return function (draw_x, draw_y)
+      if sound then
+         Gui.play_sound(sound, tx, ty)
+      end
+
+      local frame = 1
+
+      local scx, scy = Gui.tile_to_visible_screen(tx, ty)
+      local tw, th = Draw.get_coords():get_size()
+
+      for i = 1, 15 do
+         particles[i] = { x = Rand.rnd(tw), y = Rand.rnd(th) - 8, rot = (Rand.rnd(4) + 1) * rot_delta }
+      end
+
+      while frame <= 10 do
+         local frame2 = frame * 2 - 1
+
+         for j = 1, 15 do
+            local p = particles[j]
+            asset:draw(scx + p.x, scy + p.y + frame2 / p.rot, tw - frame2 * 2, th - frame2 * 2, nil, true, frame2 * p.rot)
+         end
+
+         local _, _, delta = Draw.yield(wait)
+         frame = frame + delta
+      end
+   end
+end
+
+function Anim.ball(positions, color, sound, center_x, center_y, map)
+   color = color or {255, 255, 255}
+
+   local t = UiTheme.load()
+
+   return function(draw_x, draw_y)
+      Gui.play_sound("base.ball1", center_x, center_y)
+
+      local frame = 1
+      local tw, th = Draw.get_coords():get_size()
+      tw = tw / 2
+      th = th / 2
+
+      while frame <= 10 do
+         color[4] = 255
+         for _, pos in ipairs(positions) do
+            local tx = pos[1]
+            local ty = pos[2]
+            local sx, sy = Gui.tile_to_screen(tx, ty)
+            t.base.anim_ball_2:draw_region(frame, draw_x + sx, draw_y + sy, nil, nil, color)
+         end
+
+         color[4] = 250 - frame * frame * 2
+         local sx, sy = Gui.tile_to_screen(center_x, center_y)
+         t.base.anim_ball:draw_region(frame, draw_x + sx - tw, draw_y + sy - th, nil, nil, color)
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         frame = frame + delta
+      end
+
+      if sound then
+         Gui.play_sound(sound, center_x, center_y)
       end
    end
 end

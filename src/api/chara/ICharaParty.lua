@@ -12,6 +12,10 @@ function ICharaParty:is_party_leader_of(other)
    return other:is_allied()
 end
 
+function ICharaParty:is_in_same_faction(other)
+   return self:calc("faction") == other:calc("faction")
+end
+
 function ICharaParty:get_party_leader()
    if self:is_allied() then
       return Chara.player()

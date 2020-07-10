@@ -47,7 +47,6 @@ function commands.run(args)
       local coro = coroutine.create(function() xpcall(fn, function(e) return e .. "\n" .. debug.traceback(2) end) end)
       repeat
          continue, success, result = coroutine.resume(coro, dt, nil)
-         Log.info("%s %s %s %s", continue, success, result, coroutine.status(coro))
          dt = coroutine.yield()
       until not continue or coroutine.status(coro) == "dead"
 

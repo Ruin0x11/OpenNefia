@@ -26,7 +26,7 @@ end
 
 function eating_effect.deformed_eye(corpse, params)
    eat_message(params.chara, "deformed_eye", "Purple")
-   Effect.modify_insanity(params.chara, 25)
+   Effect.damage_insanity(params.chara, 25)
    params.chara:apply_effect("elona.insanity", 500)
 end
 
@@ -37,7 +37,7 @@ end
 
 function eating_effect.holy_one(corpse, params)
    eat_message(params.chara, "holy_one", "Green")
-   Effect.modify_insanity(params.chara, 50)
+   Effect.damage_insanity(params.chara, 50)
    mod_resist_chance(params.chara, "elona.mind", 5)
 end
 
@@ -64,7 +64,7 @@ end
 function eating_effect.insanity(corpse, params)
    eat_message(params.chara, "insanity", "Purple")
    params.chara:mod_base_resist("elona.mind", 50)
-   Effect.modify_insanity(params.chara, 500)
+   Effect.damage_insanity(params.chara, 500)
    params.chara:apply_effect("elona.insanity", 1000)
 end
 
@@ -121,7 +121,7 @@ end
 
 function eating_effect.calm(corpse, params)
    eat_message(params.chara, "calm", "Green")
-   Effect.modify_insanity(params.chara, -20)
+   Effect.damage_insanity(params.chara, -20)
 end
 
 function eating_effect.fire_crab(corpse, params)
@@ -135,7 +135,7 @@ end
 
 function eating_effect.yith(corpse, params)
    eat_message(params.chara, "insanity", "Purple")
-   Effect.modify_insanity(params.chara, 50)
+   Effect.damage_insanity(params.chara, 50)
    mod_resist_chance(params.chara, "elona.mind", 5)
 end
 

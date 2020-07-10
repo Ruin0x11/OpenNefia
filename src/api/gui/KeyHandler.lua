@@ -1,7 +1,7 @@
 local Log = require("api.Log")
 local IKeyInput = require("api.gui.IKeyInput")
 local KeybindTranslator = require("api.gui.KeybindTranslator")
-local queue = require("util.queue")
+local Queue = require("api.Queue")
 
 local input = require("internal.input")
 
@@ -39,7 +39,7 @@ function KeyHandler:init(no_repeat_delay)
    self.stop_halt = true
    self.frames_held = 0
    self.keybinds = KeybindTranslator:new()
-   self.macro_queue = queue:new()
+   self.macro_queue = Queue:new()
 
    self.no_repeat_delay = no_repeat_delay
 end

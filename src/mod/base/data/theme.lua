@@ -721,6 +721,30 @@ local assets = {
       height = 48
    },
    {
+      _id = "heal_effect",
+      source = "graphic/item.bmp",
+      x = 48 * 7,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "curse_effect",
+      source = "graphic/item.bmp",
+      x = 48 * 8,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "offer_effect",
+      source = "graphic/item.bmp",
+      x = 48 * 9,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
       _id = "breaking_effect",
       source = "graphic/item.bmp",
       x = 864,
@@ -796,6 +820,24 @@ local assets = {
       _id = "anim_spot_dig",
       image = "graphic/anime4.bmp",
       count_x = 4
+   },
+   {
+      _id = "anim_ball",
+      source = "graphic/anime5.bmp",
+      count_x = 10,
+      x = 0,
+      y = 0,
+      width = 96 * 10,
+      height = 96,
+   },
+   {
+      _id = "anim_ball_2",
+      source = "graphic/anime5.bmp",
+      count_x = 10,
+      x = 0,
+      y = 96,
+      width = 48 * 10,
+      height = 96,
    },
    {
       _id = "anim_shock",

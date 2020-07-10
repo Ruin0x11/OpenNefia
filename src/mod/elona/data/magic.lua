@@ -11,6 +11,8 @@ local Item = require("api.Item")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
+local SkillCheck = require("mod.elona.api.SkillCheck")
+local Queue = require("api.Queue")
 
 -- Magic, action, and item effects.
 --
@@ -599,10 +601,10 @@ data:add {
 
 -- bolt
 
-local function make_bolt(element, elona_id, dice_y, cost, difficulty)
-   local id = element .. "_bolt"
-   local full_id = "elona." .. id
-   element = "elona." .. element
+local function make_bolt(element_id, elona_id, dice_x, dice_y, dice_element_power, cost, difficulty)
+   local id = element_id .. "_bolt"
+   local full_id = "elona.magic_" .. id
+   element_id = "elona." .. element_id
 
    data:add {
       _id = "magic_" .. id,
@@ -627,16 +629,17 @@ local function make_bolt(element, elona_id, dice_y, cost, difficulty)
       },
 
       dice = function(self, params)
-         local level = params.source:magic_level(full_id)
+         local level = params.source:skill_level(full_id)
          return {
-            x = params.power / 50 + 1 + level / 20,
-            y = params.power / dice_y + 4,
+            x = dice_x(params.power, level),
+            y = dice_y(params.power, level),
             bonus = 0,
-            element_power = 180 + params.power / 4
+            element_power = dice_element_power(params.power, level)
          }
       end,
 
       cast = function(self, params)
+         local source = params.source
          local map = params.source:current_map()
          local sx = params.source.x
          local sy = params.source.y
@@ -645,15 +648,15 @@ local function make_bolt(element, elona_id, dice_y, cost, difficulty)
             return false
          end
 
-         local Log = require("api.Log")
-
-         local cb = Anim.bolt(positions, element, sx, sy, params.x, params.y, params.range, map)
-         Gui.start_draw_callback(cb)
-
-         local element_data
-         if element then
-            element_data = data["base.element"]:ensure(element)
+         local element, color, sound
+         if element_id then
+            element = data["base.element"]:ensure(element_id)
+            color = element.color
+            sound = element.sound
          end
+
+         local cb = Anim.bolt(positions, color, sound, sx, sy, params.x, params.y, params.range, map)
+         Gui.start_draw_callback(cb)
 
          local tx = sx
          local ty = sy
@@ -671,33 +674,37 @@ local function make_bolt(element, elona_id, dice_y, cost, difficulty)
                end
 
                if sx ~= tx or sy ~= ty then
-                  if element_data and element_data.on_damage_tile then
-                     element_data:on_damage_tile(tx, ty)
+                  if element and element.on_damage_tile then
+                     element:on_damage_tile(tx, ty)
                   end
-                  local chara = Chara.at(tx, ty, map)
-                  if chara and chara ~= params.source then
+                  local target = Chara.at(tx, ty, map)
+                  if target and target ~= source then
                      -- TODO riding
                      local dice = self:dice(params)
+                     require("api.Log").info("%s %s", inspect(params), inspect(dice))
                      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
 
-                     local tense = "enemy"
-                     if not chara:is_ally() then
-                        tense = "ally"
+                     local success, damage = SkillCheck.handle_control_magic(source, target, damage)
+                     if not success then
+                        local tense = "enemy"
+                        if not target:is_ally() then
+                           tense = "ally"
+                        end
+                        if tense == "ally" then
+                           Gui.mes_visible("magic.bolt.other", tx, ty, target)
+                        else
+                           Gui.mes_visible("magic.bolt.ally", tx, ty, target)
+                        end
+                        target:damage_hp(damage,
+                                         source,
+                                         {
+                                            element = element,
+                                            element_power = dice.element_power,
+                                            message_tense = tense,
+                                            no_attack_text = true,
+                                            is_third_person = true
+                        })
                      end
-                     if tense == "ally" then
-                        Gui.mes_visible("magic.bolt.other", tx, ty, chara)
-                     else
-                        Gui.mes_visible("magic.bolt.ally", tx, ty, chara)
-                     end
-                     chara:damage_hp(damage,
-                                     params.source,
-                                     {
-                                        element = element,
-                                        element_power = dice.element_power,
-                                        message_tense = tense,
-                                        no_attack_text = true,
-                                        is_third_person = true
-                                     })
                   end
                end
             end
@@ -707,15 +714,356 @@ local function make_bolt(element, elona_id, dice_y, cost, difficulty)
    }
 end
 
-make_bolt("cold",      419, 26, 10, 220)
-make_bolt("fire",      420, 26, 10, 220)
-make_bolt("lightning", 421, 26, 10, 220)
-make_bolt("darkness",  422, 25, 12, 350)
-make_bolt("mind",      423, 25, 12, 350)
+make_bolt("cold",      419, function(p, l) return p/50+1+l/20 end, function(p, l) return p/26+4 end, function(p, l) return 180+p/4 end, 10, 220)
+make_bolt("fire",      420, function(p, l) return p/50+1+l/20 end, function(p, l) return p/26+4 end, function(p, l) return 180+p/4 end, 10, 220)
+make_bolt("lightning", 421, function(p, l) return p/50+1+l/20 end, function(p, l) return p/26+4 end, function(p, l) return 180+p/4 end, 10, 220)
+make_bolt("darkness",  422, function(p, l) return p/50+1+l/20 end, function(p, l) return p/25+4 end, function(p, l) return 180+p/4 end, 12, 350)
+make_bolt("mind",      423, function(p, l) return p/50+1+l/20 end, function(p, l) return p/25+4 end, function(p, l) return 180+p/4 end, 12, 350)
 
 -- arrow
 
 -- ball (spSuicide)
+
+local function make_ball(opts)
+   local full_id = "elona.magic_" .. opts._id
+   local type = opts.type or "magic"
+
+   data:add {
+      _id = type .. "_" .. opts._id,
+      _type = "base.skill",
+
+      type = type,
+      related_skill = opts.related_skill,
+      cost = opts.cost,
+      range = RANGE_BALL,
+      difficulty = opts.difficulty,
+      target_type = "both"
+   }
+
+   data:add {
+      _id = opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      params = {
+         "source"
+      },
+
+      dice = function(self, params)
+         local level = params.source:skill_level(full_id)
+         return {
+            x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
+            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
+            element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
+         }
+      end,
+
+      cast = function(self, params)
+         local source = params.source
+         local map = params.source:current_map()
+         local x = params.source.x
+         local y = params.source.y
+
+         local positions = ElonaPos.make_ball(x, y, params.range, map)
+
+         local element
+         if opts.element_id then
+            element = data["base.element"]:ensure(opts.element_id)
+            local color = element.color
+            local sound = element.sound
+
+            local cb = Anim.ball(positions, color, sound, x, y, map)
+            Gui.start_draw_callback(cb)
+         end
+
+         for _, pos in ipairs(positions) do
+            local tx = pos[1]
+            local ty = pos[2]
+
+            local target = Chara.at(tx, ty)
+
+            if target then
+               opts.ball_cb(self, x, y, tx, ty, source, target, element, params)
+            end
+         end
+
+         return true
+      end
+   }
+end
+
+local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, params)
+   if x == tx and y == ty then
+      return
+   end
+
+   -- TODO riding
+   if element and element.on_damage_tile then
+      element:on_damage_tile(tx, ty)
+   end
+
+   local dice = self:dice(params)
+   local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
+
+   local success, damage = SkillCheck.handle_control_magic(source, target, damage)
+   if not success then
+      local tense = "enemy"
+      if not target:is_ally() then
+         tense = "ally"
+      end
+      if tense == "ally" then
+         Gui.mes_visible("magic.ball.other", tx, ty, target)
+      else
+         Gui.mes_visible("magic.ball.ally", tx, ty, target)
+      end
+
+      target:damage_hp(damage,
+                       source,
+                       {
+                          element = element,
+                          element_power = params.element_power,
+                          message_tense = tense,
+                          no_attack_text = true,
+                          is_third_person = true
+      })
+   end
+end
+
+make_ball {
+   _id = "cold_ball",
+   elona_id = 431,
+   related_skill = "elona.stat_magic",
+   element_id = "elona.cold",
+   dice_x = function(p,l) return p/100+1+l/20 end,
+   dice_y = function(p,l) return p/15+2 end,
+   bonus = nil,
+   element_power = function(p,l) return 150+p/5 end,
+   cost = 16,
+   difficulty = 450,
+   ball_cb = ball_cb_elemental
+}
+
+make_ball {
+   _id = "fire_ball",
+   elona_id = 432,
+   related_skill = "elona.stat_magic",
+   element_id = "elona.fire",
+   dice_x = function(p,l) return p/100+1+l/20 end,
+   dice_y = function(p,l) return p/15+2 end,
+   bonus = nil,
+   element_power = function(p,l) return 150+p/5 end,
+   cost = 16,
+   difficulty = 450,
+   ball_cb = ball_cb_elemental
+}
+
+make_ball {
+   _id = "chaos_ball",
+   elona_id = 433,
+   related_skill = "elona.stat_magic",
+   element_id = "elona.chaos",
+   dice_x = function(p,l) return p/80+1+l/20 end,
+   dice_y = function(p,l) return p/12+2 end,
+   bonus = nil,
+   element_power = function(p,l) return 150+p/5 end,
+   cost = 20,
+   difficulty = 1000,
+   ball_cb = ball_cb_elemental
+}
+
+make_ball {
+   _id = "sound_ball",
+   elona_id = 434,
+   related_skill = "elona.stat_magic",
+   element_id = "elona.sound",
+   dice_x = function(p,l) return p/80+1+l/20 end,
+   dice_y = function(p,l) return p/12+2 end,
+   bonus = nil,
+   element_power = function(p,l) return 150+p/5 end,
+   cost = 18,
+   difficulty = 700,
+   ball_cb = ball_cb_elemental
+}
+
+make_ball {
+   _id = "magic_ball",
+   elona_id = 435,
+   related_skill = "elona.stat_magic",
+   element_id = "elona.magic",
+   dice_x = function(p,l) return p/100+1+l/25 end,
+   dice_y = function(p,l) return p/18+2 end,
+   bonus = nil,
+   element_power = function(p,l) return 100 end,
+   cost = 40,
+   difficulty = 1400,
+   ball_cb = ball_cb_elemental
+}
+
+local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element, params)
+   if source:reaction_towards(target) >= 0 then
+      local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
+      Gui.start_draw_callback(cb)
+      Gui.mes_visible("damage.is_healed", target.x, target.y, target)
+      -- Magic.cast("")
+   end
+end
+
+make_ball {
+   _id = "healing_rain",
+   elona_id = 404,
+   related_skill = "elona.stat_will",
+   element_id = nil,
+   dice_x = function(p, l) return l/20+3 end,
+   dice_y = function(p, l) return p/15+5 end,
+   bonus = function(p, l) return p/10 end,
+   element_power = nil,
+   cost = 38,
+   difficulty = 500,
+   ball_cb = ball_cb_healing_rain
+}
+
+local function ball_cb_rain_of_sanity(self, x, y, tx, ty, source, target, element, params)
+   if source:reaction_towards(target) >= 0 then
+      local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
+      Gui.start_draw_callback(cb)
+      Gui.mes_visible("magic.rain_of_sanity", target.x, target.y, target)
+      Effect.heal_insanity(target, params.power / 10)
+      target:heal_effect("elona.insanity", 9999)
+   end
+end
+
+make_ball {
+   _id = "rain_of_sanity",
+   elona_id = 404,
+   type = "action",
+   related_skill = "elona.stat_will",
+   element_id = nil,
+   dice_x = nil,
+   dice_y = nil,
+   bonus = nil,
+   element_power = nil,
+   cost = 38,
+   difficulty = 500,
+   ball_cb = ball_cb_rain_of_sanity
+}
+
+local function mes_if_can_see(target, mes, ...)
+   if Chara.player():has_effect("elona.blindness") or not target:is_in_fov() then
+      return
+   end
+
+   Gui.mes(mes, ...)
+end
+
+data:add {
+   _id = "action_explosion",
+   _type = "base.skill",
+
+   type = "action",
+   related_skill = "elona.stat_constitution",
+   cost = 20,
+   range = 2,
+   difficulty = 450,
+   target_type = "direction"
+}
+data:add {
+   _id = "explosion",
+   _type = "elona_sys.magic",
+   elona_id = 644,
+
+   type = "action",
+   params = {
+      "source"
+   },
+
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.action_explosion")
+      return {
+         x = 1 + level / 25,
+         y = 15 + level / 5,
+         bonus = 0
+      }
+   end,
+
+   cast = function(self, params)
+      local map = params.source:current_map()
+      local original = params.source
+
+      local chain_bomb = Queue:new()
+      chain_bomb:push(params.source)
+
+      local range = 2
+
+      while chain_bomb:len() > 0 do
+         local source = chain_bomb:pop()
+
+         if Chara.is_alive(source) then
+            if source == original then
+               mes_if_can_see(source, "magic.explosion.begins", source)
+            else
+               mes_if_can_see(source, "magic.explosion.chain", source)
+            end
+
+            params.source = source -- to ensure self:dice(params) is correct
+            local x = source.x
+            local y = source.y
+
+            local positions = ElonaPos.make_ball(x, y, range, map)
+
+            local cb = Anim.ball(positions, nil, nil, x, y, map)
+            Gui.start_draw_callback(cb)
+
+            source:reset("is_about_to_explode", false)
+
+            for _, pos in ipairs(positions) do
+               local tx = pos[1]
+               local ty = pos[2]
+
+               local target = Chara.at(tx, ty)
+
+               if target then
+                  if x ~= tx or y ~= ty then
+                     -- TODO riding
+                     local dice = self:dice(params)
+                     local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
+
+                     local success, damage = SkillCheck.handle_control_magic(source, target, damage)
+                     if not success then
+                        local tense = "enemy"
+                        if not target:is_ally() then
+                           tense = "ally"
+                        end
+                        if tense == "ally" then
+                           Gui.mes_visible("magic.explosion.other", tx, ty, target)
+                        else
+                           Gui.mes_visible("magic.explosion.ally", tx, ty, target)
+                        end
+
+                        if target:calc("is_explodable") then
+                           chain_bomb:push(target)
+                        else
+                           target:damage_hp(damage,
+                                            source,
+                                            {
+                                               message_tense = tense,
+                                               no_attack_text = true,
+                                               is_third_person = true
+                           })
+                        end
+                     end
+                  end
+               end
+            end
+         end
+
+         source:damage_hp(99999, "elona.explosion")
+      end
+
+      return true
+   end
+}
 
 -- heal
 
@@ -796,16 +1144,14 @@ data:add {
 
 -- summon
 
-local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
+local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
    local id
-   if element then
-      id = element .. "_breath"
-      element = "elona." .. element
+   if element_id then
+      id = element_id .. "_breath"
+      element_id = "elona." .. element_id
    else
       id = "breath"
    end
-   local full_id = "elona." .. id
-
 
    data:add {
       _id = "breath_" .. id,
@@ -830,7 +1176,7 @@ local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
       },
 
       dice = function(self, params)
-         local level = params.source:magic_level(full_id)
+         local level = params.source:skill_level("elona.magic_" .. id)
          return {
             x = 1 + level / dice_x,
             y = dice_y,
@@ -847,10 +1193,18 @@ local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
          if not map:has_los(sx, sy, params.x, params.y) then
             return false
          end
+
+         local element, color, sound
+         if element_id then
+            element = data["base.element"]:ensure(element_id)
+            color = element.color
+            sound = element.sound
+         end
+
          if map:is_in_fov(sx, sy) then
             local breath_name
-            if element then
-               breath_name = I18N.get("magic.breath.named", "element." .. element .. ".name")
+            if element_id then
+               breath_name = I18N.get("magic.breath.named", "element." .. element_id .. ".name")
             else
                breath_name = I18N.get("magic.breath.named", "magic.breath.no_element")
             end
@@ -858,13 +1212,8 @@ local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
 
             local positions = ElonaPos.make_breath(sx, sy, params.x, params.y, params.range, map)
 
-            local cb = Anim.breath(positions, element, sx, sy, params.x, params.y, map)
+            local cb = Anim.breath(positions, color, sound, sx, sy, params.x, params.y, map)
             Gui.start_draw_callback(cb)
-
-            local element_data
-            if element then
-               element_data = data["base.element"]:ensure(element)
-            end
 
             for _, pos in ipairs(positions) do
                local dx = pos[1]
@@ -875,8 +1224,8 @@ local function make_breath(element, elona_id, dice_x, dice_y, bonus, cost)
                if map:has_los(sx, sy, tx, ty) then
                   if not (sx == tx and sx == ty) then
                      -- TODO riding
-                     if element_data and element_data.on_damage_tile then
-                        element_data:on_damage_tile(tx, ty)
+                     if element and element.on_damage_tile then
+                        element:on_damage_tile(tx, ty)
                      end
                      local chara = Chara.at(tx, ty, map)
                      if chara then

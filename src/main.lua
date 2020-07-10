@@ -13,7 +13,7 @@ local loop_coro = nil
 local draw_coro = nil
 local server = nil
 
-local enable_low_power_mode = true
+local enable_low_power_mode = false
 local low_power_mode = false
 
 function love.load(arg)

@@ -4158,7 +4158,7 @@ local item =
                         Gui.mes("food.effect.human.like")
                      else
                         Gui.mes("food.effect.human.dislike")
-                        Effect.modify_insanity(chara, 15)
+                        Effect.damage_insanity(chara, 15)
                         chara:apply_effect("elona.insanity", 150)
                         if not chara:has_trait("elona.eat_human") and Rand.one_in(5) then
                            chara:gain_trait("elona.eat_human")

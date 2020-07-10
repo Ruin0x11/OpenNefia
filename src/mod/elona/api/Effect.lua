@@ -169,7 +169,7 @@ function Effect.apply_food_curse_state(chara, curse_state)
          -- TODO buff
       end
 
-      Effect.modify_insanity(chara, 2)
+      Effect.damage_insanity(chara, 2)
    end
 end
 
@@ -341,7 +341,7 @@ function Effect.identify_item(item, level)
    return new_level
 end
 
-function Effect.modify_insanity(chara, delta)
+function Effect.damage_insanity(chara, delta)
    if chara:calc("quality") >= 4 then
       return
    end
@@ -363,8 +363,25 @@ function Effect.modify_insanity(chara, delta)
    end
 end
 
+function Effect.heal_insanity(chara, amount)
+   amount = math.max(amount or 0, 0)
+   chara.insanity = math.max(chara.insanity - amount, 0)
+end
+
 function Effect.eat_rotten_food(chara)
    -- TODO
+end
+
+function Effect.heal(chara, dice_x, dice_y, bonus)
+   -- TODO riding
+   local healing = Rand.roll_dice(dice_x, dice_y, bonus)
+   chara:heal_hp(healing)
+   chara:heal_effect("elona.fear")
+   chara:heal_effect("elona.poison", 50)
+   chara:heal_effect("elona.confusion", 50)
+   chara:heal_effect("elona.dimming", 30)
+   chara:heal_effect("elona.bleeding", 20)
+   Effect.heal_insanity(chara, 1)
 end
 
 local function add_ether_disease_trait(chara)
