@@ -262,6 +262,38 @@ local assets = {
       height = 84
    },
    {
+      _id = "deco_spell_a",
+      source = "graphic/deco_spell.bmp",
+      x = 0,
+      y = 0,
+      width = 72,
+      height = 144
+   },
+   {
+      _id = "deco_spell_b",
+      source = "graphic/deco_spell.bmp",
+      x = 72,
+      y = 0,
+      width = 72,
+      height = 96
+   },
+   {
+      _id = "deco_skill_a",
+      source = "graphic/deco_skill.bmp",
+      x = 0,
+      y = 0,
+      width = 72,
+      height = 144
+   },
+   {
+      _id = "deco_skill_b",
+      source = "graphic/deco_skill.bmp",
+      x = 72,
+      y = 0,
+      width = 102,
+      height = 48
+   },
+   {
       _id = "inventory_icons",
       source = "graphic/interface.bmp",
       x = 288,

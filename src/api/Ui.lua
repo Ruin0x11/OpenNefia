@@ -258,4 +258,19 @@ function Ui.draw_elona_markup(markup, x, y, shadow)
    end
 end
 
+local SKILL_ICONS = {
+   ["elona.stat_strength"] = 1,
+   ["elona.stat_constitution"] = 2,
+   ["elona.stat_dexterity"] = 3,
+   ["elona.stat_perception"] = 4,
+   ["elona.stat_learning"] = 5,
+   ["elona.stat_will"] = 6,
+   ["elona.stat_magic"] = 7,
+   ["elona.stat_charisma"] = 8,
+}
+
+function Ui.skill_icon(skill_id)
+   return SKILL_ICONS[skill_id] or 1
+end
+
 return Ui

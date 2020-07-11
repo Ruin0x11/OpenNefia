@@ -186,13 +186,13 @@ return {
       },
       bye = "さようなら",
       cast_style = {
-         _0 = "魔法を詠唱した。",
-         _1 = "糸を吐いた。",
-         _2 = "体液をまき散らした。",
-         _3 = "触手を伸ばした。",
-         _4 = "鋭く睨んだ。",
-         _5 = "胞子を飛ばした。",
-         _6 = "細かく振動した。"
+         default = "魔法を詠唱した。",
+         spider = "糸を吐いた。",
+         spill = "体液をまき散らした。",
+         tentacle = "触手を伸ばした。",
+         gaze = "鋭く睨んだ。",
+         spore = "胞子を飛ばした。",
+         machine = "細かく振動した。"
       },
       chara_sheet = {
          attribute = {
@@ -785,12 +785,11 @@ return {
          title = "能力の発動"
       },
       spell = {
-         cost = "消費MP",
          effect = "効果",
          lv_chance = "Lv/成功",
          name = "魔法の名称",
          power = "ﾊﾟﾜｰ",
-         stock = "ｽﾄｯｸ",
+         cost_stock = "消費MP(ｽﾄｯｸ)",
          title = "魔法の詠唱",
          turn_counter = "ﾀｰﾝ"
       },

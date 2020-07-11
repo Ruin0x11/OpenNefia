@@ -354,7 +354,8 @@ AI callback to run on this character's turn.
 
          anorexia_count = 0,
 
-         melee_attack_type = 0,
+         melee_style = nil,
+         cast_style = nil,
 
          ether_disease_corruption = 0,
          ether_disease_speed = 0,
@@ -367,6 +368,7 @@ AI callback to run on this character's turn.
          y_offset = nil,
 
          materials = {},
+         spell_stocks = {},
 
          feats_acquirable = 0,
          traits = {}

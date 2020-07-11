@@ -15,6 +15,10 @@ local function test_room(self, player)
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end
 
+   data["base.skill"]:iter()
+      :filter(function(s) return s.type == "spell" end)
+      :each(function(m) player:gain_skill(m._id, 1000) end)
+
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)
    item = Item.create("elona.arrow", nil, nil, {}, player)

@@ -10,6 +10,7 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Anim = require("mod.elona_sys.api.Anim")
 local UiTheme = require("api.gui.UiTheme")
+local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
 
 local ElonaAction = {}
@@ -352,10 +353,9 @@ Event.register("elona.on_physical_attack_hit", "Proc cut counterattack", proc_cu
 --   - print element text 1 if target is not party
 --   - print transformed into meat/destroyed/minced if target is not party
 
-function ElonaAction.prompt_really_attack(target)
-   Gui.mes("Target: " .. target.uid .. ".")
-   Gui.mes("Really attack?")
-
+function ElonaAction.prompt_really_attack(chara, target)
+   Gui.mes(Action.target_level_text(chara, target))
+   Gui.mes("action.really_attack", target)
    return Input.yes_no()
 end
 
@@ -369,7 +369,7 @@ function ElonaAction.bash(chara, x, y)
    if target then
       if not target:has_effect("elona.sleep") then
          if chara:is_player() and chara:reaction_towards(target) >= 0 then
-            if not ElonaAction.prompt_really_attack(target) then
+            if not ElonaAction.prompt_really_attack(chara, target) then
                return "player_turn_query"
             end
          end

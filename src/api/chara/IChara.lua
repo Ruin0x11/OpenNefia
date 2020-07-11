@@ -476,11 +476,43 @@ function IChara.apply_element_on_damage(victim, params)
 end
 Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
+--- Damages this character's mana points.
+---
+--- @tparam int amount
+--- @tparam boolean no_magic_reaction
+--- @tparam boolean quiet
+function IChara:damage_mp(amount, no_magic_reaction, quiet)
+   self.mp = math.floor(math.max(self.mp - amount, -999999))
+   self:emit("base.on_damage_chara_mp", { amount = amount, no_magic_reaction = no_magic_reaction, quiet = quiet })
+end
+
+local function magic_reaction(source, p)
+   if source.mp < 0 and not p.no_magic_reaction then
+      source:emit("base.on_magic_reaction", {})
+      local Skill = require("mod.elona_sys.api.Skill")
+      Skill.gain_skill_exp(source, "elona.magic_capacity", math.abs(source.mp) * 200 / (source:calc("max_mp") + 1))
+      local damage = (source.mp * -1) * 400 / (100 + source:skill_level("elona.magic_capacity") * 10)
+      if source:is_player() then
+         if source:has_trait("elona.perm_capacity") then
+            damage = damage / 2
+         end
+      else
+         damage = damage / 5
+         if damage < 10 then
+            return
+         end
+      end
+      Gui.mes("damage.magic_reaction_hurts", source)
+      source:damage_hp(damage, "elona.magic_overcast")
+   end
+end
+Event.register("base.on_damage_chara_mp", "Magic reaction", magic_reaction)
+
 --- Damages this character's stamina points.
 ---
 --- @tparam int amount
 function IChara:damage_sp(amount)
-   self.stamina = math.max(self.stamina - amount, -100)
+   self.stamina = math.floor(math.max(self.stamina - amount, -100))
 end
 
 --- Heals this character's hit points.
@@ -488,7 +520,7 @@ end
 --- @tparam int add
 --- @tparam boolean quiet
 function IChara:heal_hp(add, quiet)
-   self.hp = math.min(self.hp + math.max(add, 0), self:calc("max_hp"))
+   self.hp = math.floor(math.min(self.hp + math.max(add, 0), self:calc("max_hp")))
    self:emit("base.on_heal_chara_hp", { amount = add, quiet = quiet })
 end
 
@@ -497,7 +529,7 @@ end
 --- @tparam int add
 --- @tparam boolean quiet
 function IChara:heal_mp(add, quiet)
-   self.mp = math.min(self.mp + math.max(add, 0), self:calc("max_mp"))
+   self.mp = math.floor(math.min(self.mp + math.max(add, 0), self:calc("max_mp")))
    self:emit("base.on_heal_chara_mp", { amount = add, quiet = quiet })
 end
 
@@ -505,7 +537,7 @@ end
 ---
 --- @tparam int add
 function IChara:heal_stamina(add)
-   self.stamina = math.max(self.stamina + math.max(add, 0), self:calc("max_stamina"))
+   self.stamina = math.floor(math.max(self.stamina + math.max(add, 0), self:calc("max_stamina")))
 end
 
 --- Fully heals this character's health, mana and stamina.

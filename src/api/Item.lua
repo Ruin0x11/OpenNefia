@@ -3,7 +3,6 @@
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
-local InventoryContext = require("api.gui.menu.InventoryContext")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -159,6 +158,7 @@ function Item.activate_shortcut(item, operation, params)
    params.chara = params.chara or item:get_owning_chara() or nil
    params.map = (params.chara and params.chara:current_map()) or nil
 
+   local InventoryContext = require("api.gui.menu.InventoryContext")
    local ctxt = InventoryContext:new(proto, params)
 
    if not ctxt:on_shortcut(item) then

@@ -64,13 +64,11 @@ end
 
 function field_logic.update_chara_time_this_turn(time_this_turn)
    for _, chara in Chara.iter() do
-      if Chara.is_alive(chara) then
-         -- Ensure all characters (including the player) have a
-         -- turn cost at least as much as the player's starting
-         -- turn cost, since the player always goes first at the
-         -- beginning of a turn.
-         chara.time_this_turn = chara.time_this_turn + chara:emit("base.on_calc_speed") * time_this_turn
-      end
+      -- Ensure all characters (including the player) have a
+      -- turn cost at least as much as the player's starting
+      -- turn cost, since the player always goes first at the
+      -- beginning of a turn.
+      chara.time_this_turn = chara.time_this_turn + chara:emit("base.on_calc_speed") * time_this_turn
    end
 end
 
@@ -100,7 +98,7 @@ function field_logic.turn_begin()
    -- index 1-15, adventurers 15-56, and so on.
    player_finished_turn = false
 
-   chara_iter, chara_iter_state, chara_iter_index = Chara.iter()
+   chara_iter, chara_iter_state, chara_iter_index = Chara.iter_all()
 
    local speed = player:emit("base.on_calc_speed")
 
@@ -154,7 +152,7 @@ function field_logic.determine_turn()
 
       if chara_iter_index == nil then
          any_moved = false
-         chara_iter, chara_iter_state, chara_iter_index = Chara.iter()
+         chara_iter, chara_iter_state, chara_iter_index = Chara.iter_all()
       end
    end
 
@@ -238,6 +236,10 @@ function field_logic.pass_turns()
 end
 
 function field_logic.player_turn()
+   local player = Chara.player()
+
+   player.target_location = nil
+
    return "player_turn_query"
 end
 

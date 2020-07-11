@@ -201,5 +201,17 @@ Gui.bind_keys {
    end,
    chara_info = function()
       return Command.chara_info()
+   end,
+   cast = function(me)
+      return Command.cast(me)
+   end,
+   skill = function(me)
+      return Command.skill(me)
+   end,
+   target = function(me)
+      return Command.target(me)
+   end,
+   look = function(me)
+      return Command.look(me)
    end
 }

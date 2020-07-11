@@ -189,13 +189,13 @@ end,
     },
     bye = "Bye bye.",
     cast_style = {
-      _0 = " casts a spell.",
-      _1 = " splits cobweb.",
-      _2 = " spreads body fluid.",
-      _3 = " puts out a tentacle.",
-      _4 = " gazes.",
-      _5 = " scatters spores.",
-      _6 = " vibrates."
+      default = " casts a spell.",
+      spider = " splits cobweb.",
+      spill = " spreads body fluid.",
+      tentacle = " puts out a tentacle.",
+      gaze = " gazes.",
+      spore = " scatters spores.",
+      machine = " vibrates."
     },
     chara_sheet = {
       attribute = {
@@ -785,12 +785,11 @@ end
       title = "Skill"
     },
     spell = {
-      cost = "Cost",
       effect = "Effect",
       lv_chance = "Lv/Chance",
       name = "Name",
       power = "Power:",
-      stock = "Stock",
+      cost_stock = "Cost(Stock)",
       title = "Spell",
       turn_counter = "t"
     },

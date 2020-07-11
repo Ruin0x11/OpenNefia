@@ -862,3 +862,42 @@ end
 
 Event.register("elona_sys.calc_map_music", "Play default map music",
                play_default_map_music)
+
+local function calc_wand_success(chara, params)
+   local magic = data["elona_sys.magic"]:ensure(params.magic_id)
+   local item = params.item
+
+   if not chara:is_player() or item:calc("is_zap_always_successful") then
+      return true
+   end
+
+   local magic_device = chara:skill_level("elona.magic_device")
+
+   local success
+   if magic.type == "magic" then
+      success = false
+
+      local skill = magic_device * 20 + 100
+      if item:calc("curse_state") == "blessed" then
+         skill = skill * 125 / 100
+      end
+      if Effect.is_cursed(item:calc("curse_state")) then
+         skill = skill * 50 / 100
+      elseif Rand.one_in(2) then
+         success = true
+      end
+      if Rand.rnd(magic.difficulty + 1) / 2 <= skill then
+         success = true
+      end
+   else
+      success = true
+   end
+
+   if Rand.one_in(30) then
+      success = false
+   end
+
+   return success
+end
+
+Event.register("elona.calc_wand_success", "Default", calc_wand_success)

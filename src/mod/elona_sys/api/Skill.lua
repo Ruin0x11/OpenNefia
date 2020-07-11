@@ -4,6 +4,8 @@ local Chara = require("api.Chara")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
+local Input = require("api.Input")
+local Action = require("api.Action")
 
 local Skill = {}
 
@@ -502,5 +504,131 @@ local function calc_speed(chara)
 end
 
 Event.register("base.on_calc_speed", "calc speed", calc_speed)
+
+function Skill.calc_spell_mp_cost(skill_id, chara)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+   local cost
+   if skill_entry.calc_mp_cost then
+      cost = skill_entry:calc_mp_cost(chara)
+   elseif chara:is_player() then
+      cost = skill_entry.cost * (100 + chara:skill_level(skill_id) * 3) / 100 + chara:skill_level(skill_id) / 8
+   else
+      cost = skill_entry.cost * (50 + chara:calc("level") * 3) / 100
+   end
+   return math.floor(cost)
+end
+
+function Skill.calc_spell_stock_cost(skill_id, chara)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+   local cost = skill_entry.cost * 200 / (chara:skill_level(skill_id) * 3 + 100)
+   cost = math.max(cost, skill_entry.cost / 5)
+   cost = Rand.rnd(cost / 2 + 1) + cost / 2
+   return math.floor(cost)
+end
+
+function Skill.calc_spell_success_chance(skill_id, chara)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+
+   -- TODO riding
+   local factor = 4
+   local armor_class = chara:calc("armor_class")
+   if armor_class == "elona.heavy_armor" then
+      factor = 17 - chara:skill_level("elona.heavy_armor") / 5
+   elseif armor_class == "elona.medium_armor" then
+      factor = 12 - chara:skill_level("elona.medium_armor") / 5
+   end
+   factor = math.max(factor, 4)
+   if skill_entry.calc_spell_failure_factor then
+      factor = skill_entry:calc_spell_failure_factor(chara, factor)
+   end
+
+   local chance = 90 + chara:skill_level(skill_id) - (skill_entry.difficulty * factor / (5 + chara:skill_level("elona.casting") * 4))
+
+   if armor_class == "elona.heavy_armor" then
+      chance = math.min(chance, 80)
+   elseif armor_class == "elona.medium_armor" then
+      chance = math.min(chance, 92)
+   else
+      chance = math.min(chance, 100)
+   end
+
+   if chara:calc("is_dual_wielding") then
+      chance = chance - 6
+   end
+
+   if chara:calc("is_wielding_shield") then
+      chance = chance - 12
+   end
+
+   chance = math.clamp(chance, 0, 100)
+
+   return math.floor(chance)
+end
+
+function Skill.calc_spell_power(skill_id, chara)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+   if skill_entry.type ~= "spell" then
+      if chara:has_skill(skill_id) then
+         return chara:skill_level(skill_id) * 6 + 10
+      end
+      return 100
+   end
+
+   if chara:is_player() then
+      return chara:skill_level(skill_id) * 10 + 50
+   end
+
+   if not chara:has_skill("elona.casting") and not chara:is_ally() then
+      return chara:calc("level") * 6 + 10
+   end
+
+   return chara:skill_level("elona.casting") * 6 + 10
+end
+
+function Skill.get_dice(skill_id, chara, power)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+
+   local dice = { x = 0, y = 0, bonus = 0, element_power = 0 }
+   if skill_entry.effect_id then
+      local effect_entry = data["elona_sys.magic"]:ensure(skill_entry.effect_id)
+      if effect_entry.dice then
+         dice = effect_entry:dice({ source = chara, power = power })
+         dice.x = math.floor(dice.x or 0)
+         dice.y = math.floor(dice.y or 0)
+         dice.bonus = math.floor(dice.bonus or 0)
+         dice.element_power = math.floor(dice.element_power or 0)
+      end
+   end
+
+   return dice
+end
+
+function Skill.get_description(skill_id, chara)
+   local desc = ""
+
+   local is_buff = false -- TODO
+   if is_buff then
+      return "turn"
+   end
+
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+
+   local power = Skill.calc_spell_power(skill_id, chara)
+   local dice = Skill.get_dice(skill_id, chara, power)
+
+   if skill_entry.calc_desc then
+      desc = skill_entry.calc_desc(chara, dice)
+   elseif dice.x > 0 then
+      desc = desc .. ("%dd%d"):format(dice.x, dice.y)
+      if dice.bonus > 0 then
+         desc = desc .. ("+%d"):format(dice.bonus)
+      end
+   else
+      desc = desc .. ("%s%s"):format(I18N.get("ui.spell.power"), power)
+   end
+   desc = desc .. " "
+
+   return desc .. I18N.get("ability." .. skill_id .. ".description")
+end
 
 return Skill

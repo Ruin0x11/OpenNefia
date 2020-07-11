@@ -148,43 +148,43 @@ return {
       you_feel_sad = "You feel sad for a moment.",
 
       melee = {
-         _0 = {
+         default = {
             enemy = "punch",
             ally = "punch",
             weapon = "hand",
          },
 
-         _3 = {
-            enemy = "bite",
-            ally = "bite",
-            weapon = "fang",
-         },
-
-         _4 = {
-            enemy = "gaze",
-            ally = "gaze",
-            weapon = "eye",
-         },
-
-         _1 = {
+         claw = {
             enemy = "claw",
             ally = "claw",
             weapon = "claw",
          },
 
-         _5 = {
+         bite = {
+            enemy = "bite",
+            ally = "bite",
+            weapon = "fang",
+         },
+
+         gaze = {
+            enemy = "gaze",
+            ally = "gaze",
+            weapon = "eye",
+         },
+
+         sting = {
             enemy = "sting",
             ally = "sting",
             weapon = "needle",
          },
 
-         _6 = {
+         touch = {
             enemy = "touch",
             ally = "touch",
             weapon = "hand",
          },
 
-         _7 = {
+         spore = {
             enemy = "attack",
             ally = "attack",
             weapon = "spore",

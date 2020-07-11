@@ -1,5 +1,3 @@
-local InstancedMap = require("api.InstancedMap")
-
 data:add_type {
    name = "interactive_fn",
    fields = {
@@ -16,30 +14,23 @@ data:add_type {
    }
 }
 
-data:add {
-   _type = "base.keybind",
-   _id = "m_x",
-   default = "alt_x"
-}
-
-data:add {
-   _type = "base.keybind",
-   _id = "prefix_m_x",
-   default = "ctrl_alt_x"
-}
-
-data:add {
-   _type = "base.keybind",
-   _id = "prompt_previous",
-   default = "ctrl_p"
-}
-
-data:add {
-   _type = "base.keybind",
-   _id = "prompt_next",
-   default = "ctrl_n"
-}
+require("mod.tools.data.init")
 
 require("mod.tools.exec.config")
 require("mod.tools.exec.interactive")
 require("mod.tools.exec.widgets")
+
+local Gui = require("api.Gui")
+local function toggle_widget(id)
+   local widget = Gui.global_widget(id)
+   widget:set_enabled(not widget:enabled())
+end
+
+Gui.bind_keys {
+   ["tools.toggle_fps"] = function()
+      toggle_widget("fps_counter")
+   end,
+   ["tools.toggle_log"] = function()
+      toggle_widget("tools.log_widget")
+   end,
+}

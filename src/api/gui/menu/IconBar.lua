@@ -1,5 +1,7 @@
-local TopicWindow = require("api.gui.TopicWindow")
+local I18N = require("api.I18N")
 local Draw = require("api.Draw")
+
+local TopicWindow = require("api.gui.TopicWindow")
 local IUiElement = require("api.gui.IUiElement")
 local ISettable = require("api.gui.ISettable")
 local UiTheme = require("api.gui.UiTheme")
@@ -14,6 +16,10 @@ function IconBar:init(icon_set)
 end
 
 function IconBar:set_data(icon_order)
+   for _, pair in ipairs(icon_order) do
+      pair.text = I18N.get_optional(pair.text) or pair.text
+   end
+
    self.icon_order = icon_order
 end
 

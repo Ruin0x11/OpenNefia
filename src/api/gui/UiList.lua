@@ -15,7 +15,7 @@ UiList:delegate("model", IList)
 UiList:delegate("model", IPaged)
 UiList:delegate("input", IInput)
 
-local KEYS = "abcdefghijklmnopqr"
+UiList.KEYS = "abcdefghijklmnopqr"
 
 function UiList:init(items, item_height, item_offset_x, item_offset_y)
    if class.is_an(IList, items) then
@@ -35,8 +35,8 @@ end
 
 function UiList:make_keymap()
    local keys = {}
-   for i=1,#KEYS do
-      local key = "raw_" .. KEYS:sub(i, i)
+   for i=1,#UiList.KEYS do
+      local key = "raw_" .. UiList.KEYS:sub(i, i)
       keys[key] = function()
          self:choose(i)
       end
@@ -137,7 +137,7 @@ function UiList:draw()
    for i, item in ipairs(self.items) do
       local x = self.x + self.item_offset_x
       local y = (i - 1) * self.item_height + self.y + self.item_offset_y
-      local key_name = KEYS:sub(i, i)
+      local key_name = UiList.KEYS:sub(i, i)
       self:draw_item(item, i, x, y, key_name)
    end
 end

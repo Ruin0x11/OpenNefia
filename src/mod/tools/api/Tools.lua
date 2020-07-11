@@ -13,7 +13,7 @@ local Input = require("api.Input")
 local Tools = {}
 
 function Tools.spawn_foes(count, id)
-   count = count or 10
+   count = count or 30
    for i=0,count do
       local x, y = Map.find_position_for_chara()
       if x then
@@ -90,7 +90,7 @@ end
 local function gen_faction_pred(faction)
    return function ()
       local pred = function(c)
-         return Chara.is_alive(c) and c.faction == faction
+         return c.faction == faction
       end
       return Chara.iter():filter(pred)
    end
@@ -113,7 +113,7 @@ function Tools.feat()
 end
 
 function Tools.dump_charas()
-   local t = Chara.iter()
+   local t = Chara.iter_all()
    :map(function(c) return { tostring(c.uid), c.x, c.y } end)
       :to_list()
 

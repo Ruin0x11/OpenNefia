@@ -776,7 +776,9 @@ local item =
          coefficient = 100,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1130),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1130, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -792,7 +794,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1111, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1111, 200, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -812,7 +816,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1109, 150),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1109, 150, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -832,7 +838,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1110, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1110, 200, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -851,7 +859,9 @@ local item =
          coefficient = 100,
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1112, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1112, 200, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -871,7 +881,9 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1102, 300),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1102, 300, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -1687,7 +1699,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(400, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(400, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1707,7 +1721,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(400, 300),
+         on_drink = function(item, params)
+            return Magic.drink_potion(400, 300, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1727,7 +1743,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(401, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(401, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1748,7 +1766,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(401, 300),
+         on_drink = function(item, params)
+            return Magic.drink_potion(401, 300, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1769,7 +1789,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(401, 400),
+         on_drink = function(item, params)
+            return Magic.drink_potion(401, 400, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1826,7 +1848,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(402, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(402, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1847,7 +1871,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(402, 300),
+         on_drink = function(item, params)
+            return Magic.drink_potion(402, 300, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -1868,7 +1894,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(403, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(403, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -4203,7 +4231,9 @@ local item =
          coefficient = 100,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1102, 500),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1102, 500, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -5264,7 +5294,9 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1102, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1102, 200, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_alcohol"
@@ -5439,7 +5471,9 @@ local item =
          coefficient = 100,
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1108, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1108, 200, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -5891,7 +5925,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(439, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(439, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -5910,7 +5946,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(440, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(440, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.drink_potion"
@@ -5929,7 +5967,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1113, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1113, 100, item, params)
+         end,
 
          tags = { "spshop" },
          color = Resolver.make("elona.random_item_color"),
@@ -6003,7 +6043,7 @@ local item =
          count = Resolver.make("elona.item_count", { count = 1 }),
          has_charge = true,
 
-         zap_always_succeeds = true,
+         is_zap_always_successful = true,
 
          efid = 441,
          efp = 100,
@@ -7434,7 +7474,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(442, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(442, 200, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -7525,7 +7567,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(443, 400),
+         on_drink = function(item, params)
+            return Magic.drink_potion(443, 400, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -7573,7 +7617,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(444, 300),
+         on_drink = function(item, params)
+            return Magic.drink_potion(444, 300, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -7617,7 +7663,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(445, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(445, 250, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -7687,7 +7735,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(446, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(446, 250, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -7703,7 +7753,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(447, 400),
+         on_drink = function(item, params)
+            return Magic.drink_potion(447, 400, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -7773,7 +7825,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(448, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(448, 250, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -7840,7 +7894,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(449, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(449, 250, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -8074,7 +8130,9 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1116, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1116, 100, item, params)
+         end,
 
          tags = { "nogive" },
 
@@ -8938,7 +8996,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1118, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1118, 100, item, params)
+         end,
 
          tags = { "neg" },
          color = Resolver.make("elona.random_item_color"),
@@ -9012,7 +9072,9 @@ local item =
          originalnameref2 = "potion",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(454, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(454, 100, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -9035,7 +9097,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(1121, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1121, 200, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -10794,7 +10858,9 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1103, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1103, 100, item, params)
+         end,
          medal_value = 3,
          categories = {
             "elona.drink",
@@ -10862,7 +10928,9 @@ local item =
          originalnameref2 = "bottle",
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1108, 150),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1108, 150, item, params)
+         end,
 
          tags = { "nogive" },
          color = "RandomAny",
@@ -11698,7 +11766,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(1131, 200),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1131, 200, item, params)
+         end,
          medal_value = 10,
          categories = {
             "elona.drink",
@@ -11839,7 +11909,9 @@ local item =
          coefficient = 100,
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1116, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1116, 250, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -12057,7 +12129,9 @@ local item =
 
          params = { chara_id = "" },
 
-         on_drink = Magic.drink_potion(1101, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1101, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -12107,7 +12181,9 @@ local item =
          coefficient = 0,
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1133, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1133, 100, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -12302,7 +12378,9 @@ local item =
 
          elona_function = 14,
 
-         on_drink = Magic.drink_potion(1103, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1103, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          },
@@ -12873,7 +12951,9 @@ local item =
          rarity = 150000,
          coefficient = 0,
 
-         on_drink = Magic.drink_potion(1135, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1135, 100, item, params)
+         end,
 
          tags = { "nogive" },
 
@@ -13015,7 +13095,9 @@ local item =
 
          is_precious = true,
 
-         on_drink = Magic.drink_potion(1139, 500),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1139, 500, item, params)
+         end,
 
          tags = { "spshop" },
          color = Resolver.make("elona.random_item_color"),
@@ -14677,7 +14759,9 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
 
-         on_drink = Magic.drink_potion(1142, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1142, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -14782,7 +14866,9 @@ local item =
          rarity = 10000,
          coefficient = 0,
 
-         on_drink = Magic.drink_potion(1130, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1130, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -14830,7 +14916,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(1143, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1143, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -14951,7 +15039,9 @@ local item =
          has_random_name = true,
          color = Resolver.make("elona.random_item_color"),
 
-         on_drink = Magic.drink_potion(1144, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1144, 100, item, params)
+         end,
          categories = {
             "elona.drink",
          }
@@ -15637,7 +15727,9 @@ local item =
          coefficient = 100,
          has_random_name = true,
 
-         on_drink = Magic.drink_potion(1116, 250),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1116, 250, item, params)
+         end,
 
          tags = { "nogive" },
          color = Resolver.make("elona.random_item_color"),
@@ -16452,7 +16544,9 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         on_drink = Magic.drink_potion(1146, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1146, 100, item, params)
+         end,
 
          tags = { "fest" },
 
@@ -16475,7 +16569,9 @@ local item =
 
          fixlv = "special",
 
-         on_drink = Magic.drink_potion(1147, 100),
+         on_drink = function(item, params)
+            return Magic.drink_potion(1147, 100, item, params)
+         end,
          categories = {
             "elona.drink",
             "elona.unique_item"

@@ -160,7 +160,8 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
                Gui.mes("damage.weapon.attacks_and", chara, "damage.weapon." .. skill .. ".verb_and", target)
             end
          else
-            local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".enemy")
+            local melee_style = chara:calc("melee_style") or "default"
+            local melee = I18N.get("damage.melee." .. melee_style .. ".enemy")
             Gui.mes("damage.weapon.attacks_unarmed_and", chara, melee, target)
          end
       end
@@ -195,7 +196,8 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
                   Gui.mes("damage.weapon.attacks_with", chara, "damage.weapon." .. skill .. ".verb", target, weapon_name)
                end
             else
-               local melee = I18N.get("damage.melee._" .. chara:calc("melee_attack_type") .. ".ally")
+               local melee_style = chara:calc("melee_style") or "default"
+               local melee = I18N.get("damage.melee." .. melee_style .. ".ally")
                Gui.mes("damage.weapon.attacks_unarmed", chara, melee, target)
             end
          end

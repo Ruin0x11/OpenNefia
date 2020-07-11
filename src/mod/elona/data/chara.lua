@@ -5745,7 +5745,8 @@ local chara = {
       fltselect = 3,
       rarity = 50000,
       coefficient = 400,
-      flags = { "IsFloating", "CanCastRapidMagic" },
+      flags = { "IsFloating" },
+      can_cast_rapid_magic = true
    },
    {
       _id = "golden_knight",
@@ -5944,7 +5945,8 @@ local chara = {
       fixlv = 6,
       fltselect = 3,
       coefficient = 400,
-      flags = { "IsFloating", "CanCastRapidMagic" },
+      flags = { "IsFloating" },
+      can_cast_rapid_magic = true
    },
    {
       _id = "lexus",
@@ -5966,7 +5968,8 @@ local chara = {
       fixlv = 6,
       fltselect = 3,
       coefficient = 400,
-      flags = { "IsFloating", "CanCastRapidMagic" },
+      flags = { "IsFloating" },
+      can_cast_rapid_magic = true,
       dialog = "elona.lexus",
    },
    {

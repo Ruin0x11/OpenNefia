@@ -153,7 +153,7 @@ end
 --- Returns the screen Y coordinate of the message window. Use for
 --- checking occlusion of a point with the message window.
 function Gui.message_window_y()
-   return Draw.get_width() - 72
+   return Draw.get_height() - 72
 end
 
 function Gui.scroll_screen()
@@ -315,10 +315,16 @@ function Gui.mes_continue_sentence()
    capitalize = false
 end
 
+function Gui.mes_duplicate()
+   -- TODO
+end
+
 function Gui.mes_halt()
+   -- TODO
 end
 
 function Gui.mes_alert()
+   -- TODO
 end
 
 --- Plays a sound. You can optionally provide a position, so that if

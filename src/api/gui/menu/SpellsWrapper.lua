@@ -4,7 +4,6 @@ local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 
-local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local IconBar = require("api.gui.menu.IconBar")
@@ -12,12 +11,14 @@ local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
 local data = require("internal.data")
 local WindowTitle = require("api.gui.menu.WindowTitle")
+local SpellsMenu = require("api.gui.menu.SpellsMenu")
+local SkillsMenu = require("api.gui.menu.SkillsMenu")
 
 local SpellsWrapper = class.class("SpellsWrapper", IUiLayer)
 
 SpellsWrapper:delegate("input", IInput)
 
-function SpellsWrapper:init()
+function SpellsWrapper:init(index)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
@@ -27,16 +28,24 @@ function SpellsWrapper:init()
    self.input:bind_keys(self:make_keymap())
    self.submenu = nil
    self.icon_bar = IconBar:new("inventory_icons")
+
    self.icon_bar:set_data {
-      { icon = 1, text = "asd" },
-      { icon = 2, text = "asd" },
+      { icon = 13, text = "ui.menu.spell.spell" },
+      { icon = 14, text = "ui.menu.spell.skill" },
    }
-   self.menu_count = 3
+   self.menus = {
+      SpellsMenu,
+      SkillsMenu
+   }
 
-   self.title = WindowTitle:new()
+   self.selected_index = math.clamp(index or 1, 1, #self.menus)
+   self.sound = self.menus[self.selected_index].sound
 
-   self.selected_index = 1
    self:switch_context()
+end
+
+function SpellsWrapper:on_query()
+   Gui.play_sound(self.sound)
 end
 
 function SpellsWrapper:make_keymap()
@@ -50,9 +59,11 @@ end
 
 function SpellsWrapper:next_menu()
    self.selected_index = self.selected_index + 1
-   if self.selected_index > self.menu_count then
+   if self.selected_index > #self.menus then
       self.selected_index = 1
    end
+
+   Gui.play_sound("base.pop1")
 
    self:switch_context()
 end
@@ -60,24 +71,19 @@ end
 function SpellsWrapper:previous_menu()
    self.selected_index = self.selected_index - 1
    if self.selected_index < 1 then
-      self.selected_index = self.menu_count
+      self.selected_index = #self.menus
    end
+
+   Gui.play_sound("base.pop1")
 
    self:switch_context()
 end
 
 function SpellsWrapper:switch_context()
-   Gui.play_sound("base.chara")
-   self.submenu = CharacterSheetMenu:new(nil, Chara.player())
+   self.submenu = self.menus[self.selected_index]:new(Chara.player())
    self.input:forward_to(self.submenu)
 
    self.icon_bar:select(self.selected_index)
-
-   local title_string = I18N.get("ui.chara_sheet.hint.reroll")
-      .. I18N.get("ui.hint.portrait")
-      .. I18N.get("ui.chara_sheet.hint.confirm")
-
-   self.title:set_data(title_string)
 
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
 
@@ -91,16 +97,14 @@ function SpellsWrapper:relayout(x, y, width, height)
    self.height = height or Draw.get_height()
    self.t = UiTheme.load(self)
 
-   self.icon_bar:relayout(self.width - (44 * self.menu_count + 60), 34, 44 * self.menu_count + 40, 22)
+   self.icon_bar:relayout(self.width - (44 * #self.menus + 60), 34, 44 * #self.menus + 40, 22)
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
-   self.title:relayout(236 - 10, 0, Draw.get_width() - 236 - 10, 16)
 end
 
 function SpellsWrapper:draw()
    Draw.set_color(255, 255, 255)
    self.icon_bar:draw()
    self.submenu:draw()
-   self.title:draw()
 end
 
 function SpellsWrapper:update()

@@ -133,43 +133,43 @@ return {
       you_feel_sad = "あなたは悲しくなった。",
 
       melee = {
-         _0 = {
+         default = {
             enemy = "殴って",
             ally = "殴られた。",
             weapon = "手",
          },
 
-         _3 = {
-            enemy = "噛み付いて",
-            ally = "噛み付かれた。",
-            weapon = "牙",
-         },
-
-         _4 = {
-            enemy = "睨んで",
-            ally = "睨まれた。",
-            weapon = "眼",
-         },
-
-         _1 = {
+         claw = {
             enemy = "引っ掻き",
             ally = "引っ掻かれた。",
             weapon = "爪",
          },
 
-         _5 = {
+         bite = {
+            enemy = "噛み付いて",
+            ally = "噛み付かれた。",
+            weapon = "牙",
+         },
+
+         gaze = {
+            enemy = "睨んで",
+            ally = "睨まれた。",
+            weapon = "眼",
+         },
+
+         sting = {
             enemy = "刺し",
             ally = "刺された。",
             weapon = "針",
          },
 
-         _6 = {
+         touch = {
             enemy = "触って",
             ally = "触られた。",
             weapon = "手",
          },
 
-         _7 = {
+         spore = {
             enemy = "胞子を撒き散らし",
             ally = "胞子を飛ばされた。",
             weapon = "胞子",

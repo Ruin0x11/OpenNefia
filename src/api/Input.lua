@@ -16,6 +16,7 @@ local NumberPrompt = require("api.gui.NumberPrompt")
 local DirectionPrompt = require("api.gui.DirectionPrompt")
 local PositionPrompt = require("api.gui.PositionPrompt")
 local MorePrompt = require("api.gui.MorePrompt")
+local TargetPrompt = require("api.gui.TargetPrompt")
 
 local Input = {}
 
@@ -135,15 +136,30 @@ end
 --- @tparam[opt] IChara chara Defaults to the player.
 --- @treturn[opt] int x
 --- @treturn[opt] int y
+--- @treturn[opt] boolean can_see
 --- @treturn[opt] string error
 function Input.query_position(chara)
    chara = chara or Chara.player()
-   local result, canceled = PositionPrompt:new(chara.x, chara.y):query()
+   local result, canceled = PositionPrompt:new(chara.x, chara.y, nil, nil, chara):query()
+   if canceled then
+      return nil, canceled
+   end
+
+   return result.x, result.y, result.can_see
+end
+
+--- Queries the player for a target character..
+---
+--- @tparam[opt] IChara chara Defaults to the player.
+--- @treturn[opt] IChara
+function Input.query_target(chara)
+   chara = chara or Chara.player()
+   local result, canceled = TargetPrompt:new(chara):query()
    if canceled then
       return result, canceled
    end
 
-   return result.x, result.y
+   return result
 end
 
 function Input.reload_keybinds()

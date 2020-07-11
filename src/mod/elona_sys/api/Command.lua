@@ -10,6 +10,8 @@ local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
 local FieldMap = require("mod.elona.api.FieldMap")
+local Magic = require("mod.elona_sys.api.Magic")
+local elona_Magic = require("mod.elona.api.Magic")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -276,5 +278,82 @@ function Command.chara_info()
    CharacterInfoWrapper:new():query()
    return "player_turn_query"
 end
+
+local SpellsWrapper = require("api.gui.menu.SpellsWrapper")
+
+local function handle_spells_result(result, chara)
+   local command_type = result.type
+   local skill_id = result._id
+
+   if command_type == "spell" then
+      local did_something = elona_Magic.cast_spell(skill_id, chara, false)
+      if did_something then
+         return "turn_end"
+      end
+      return "player_turn_query"
+   elseif command_type == "skill" then
+      local did_something = Magic.do_action(skill_id, chara)
+      if did_something then
+         return "turn_end"
+      end
+      return "player_turn_query"
+   end
+
+   error("unknown spell result")
+end
+
+function Command.cast(player)
+   local result, canceled = SpellsWrapper:new(1):query()
+   if canceled then
+      return "player_turn_query"
+   end
+   return handle_spells_result(result, player)
+end
+
+function Command.skill(player)
+   local result, canceled = SpellsWrapper:new(2):query()
+   if canceled then
+      return "player_turn_query"
+   end
+   return handle_spells_result(result, player)
+end
+
+function Command.target(player)
+   local x, y, can_see = Input.query_position()
+
+   if x then
+      if not can_see or not Map.is_floor(x, y) then
+         Gui.mes("action.which_direction.cannot_see_location")
+      else
+         Gui.play_sound("base.ok1")
+         local chara = Chara.at(x, y)
+         if chara then
+            player:set_target(chara)
+            Gui.mes("action.look.target", chara)
+         else
+            player.target_location = { x = x, y = y }
+            Gui.mes("action.look.target_ground")
+         end
+      end
+   end
+
+   return "player_turn_query"
+end
+
+function Command.look(player)
+   if Map.is_world_map() then
+      Input.query_position()
+   else
+      local target, canceled = Input.query_target()
+      if target then
+         player:set_target(target)
+         Gui.play_sound("base.ok1")
+         Gui.mes("action.look.target", target)
+      end
+   end
+
+   return "player_turn_query"
+end
+
 
 return Command

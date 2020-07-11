@@ -6,58 +6,50 @@ local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
 local IItem = require("api.item.IItem")
 local Skill = require("mod.elona_sys.api.Skill")
+local Input = require("api.Input")
+local Anim = require("mod.elona_sys.api.Anim")
+local Action = require("api.Action")
+local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 
 local Magic = {}
 
-function Magic.prompt_location(magic_id, caster)
-   local magic = data["elona_sys.magic"]:ensure(magic_id)
-   local params = {
-      source = caster
-   }
+-- BUG: we have to return false or nil instead of player_turn_query to support
+-- characters other than the player using items!
 
-   if magic.target_type == "self" then
-      params.target = caster
-      return params
+function Magic.drink_potion(magic_id, power, item, params)
+   local chara = params.chara
+   local consume_type = params.consume_type
+   local curse_state = "none"
+
+   if consume_type == "thrown" then
+      local throw_power = params.throw_power or 100
+      power = power * throw_power / 100
+      curse_state = item:calc("curse_state")
+   elseif consume_type == "drunk" then
+      curse_state = item:calc("curse_state")
+      if chara:is_in_fov() then
+         Gui.play_sound("base.drink1", chara.x, chara.y)
+         Gui.mes("action.drink.potion", chara, item)
+      end
    end
-end
+   local did_something, result = Magic.cast(magic_id, {power=power,item=item,target=params.chara,curse_state=curse_state})
 
---- to be used with IItem.on_drink
-function Magic.drink_potion(magic_id, power)
-   return function (item, params)
-      local chara = params.chara
-      local consume_type = params.consume_type
-      local curse_state = "none"
-
-      if consume_type == "thrown" then
-         local throw_power = params.throw_power or 100
-         power = power * throw_power / 100
-         curse_state = item:calc("curse_state")
-      elseif consume_type == "drunk" then
-         curse_state = item:calc("curse_state")
-         if chara:is_in_fov() then
-            Gui.play_sound("base.drink1", chara.x, chara.y)
-            Gui.mes("action.drink.potion", chara, item)
-         end
-      end
-      local did_something, result = Magic.cast(magic_id, {power=power,item=item,target=params.chara,curse_state=curse_state})
-
-      if result and chara:is_player() and result.obvious then
-         Effect.identify_item(item, "partly")
-      end
-      -- Event will be triggered globally if potion is consumed
-      -- through spilling, since there will be no item to pass
-      if class.is_an(IItem, item) then
-         item.amount = item.amount - 1
-      end
-
-      chara.nutrition = chara.nutrition + 150
-
-      if chara:is_allied() and chara.nutrition > 12000 and Rand.one_in(5) then
-         Effect.vomit(chara)
-      end
-
-      return "turn_end"
+   if result and chara:is_player() and result.obvious then
+      Effect.identify_item(item, "partly")
    end
+   -- Event will be triggered globally if potion is consumed
+   -- through spilling, since there will be no item to pass
+   if class.is_an(IItem, item) then
+      item.amount = item.amount - 1
+   end
+
+   chara.nutrition = chara.nutrition + 150
+
+   if chara:is_allied() and chara.nutrition > 12000 and Rand.one_in(5) then
+      Effect.vomit(chara)
+   end
+
+   return "turn_end"
 end
 
 local function proc_well_events(well, chara)
@@ -124,154 +116,224 @@ function Magic.drink_well(item, params)
    return proc_well_events(sep, chara)
 end
 
-function Magic.read_scroll(magic_id, power)
-   return function(item, params)
-      local chara = params.chara
+function Magic.read_scroll(magic_id, power, item, params)
+   local chara = params.chara
 
-      if chara:has_effect("elona.blindness") then
+   if chara:has_effect("elona.blindness") then
+      if chara:is_in_fov() then
+         Gui.mes("action.read.cannot_see", chara)
+      end
+      return "turn_end"
+   end
+
+   if chara:has_effect("elona.dimming") or chara:has_effect("elona.confusion") then
+      if not Rand.one_in(4) then
          if chara:is_in_fov() then
-            Gui.mes("action.read.cannot_see", chara)
+            Gui.mes("action.read.scroll.dimmed_or_confused", chara)
          end
          return "turn_end"
       end
+   end
 
-      if chara:has_effect("elona.dimming") or chara:has_effect("elona.confusion") then
-         if not Rand.one_in(4) then
-            if chara:is_in_fov() then
-               Gui.mes("action.read.scroll.dimmed_or_confused", chara)
-            end
-            return "turn_end"
-         end
-      end
+   if chara:is_in_fov() then
+      Gui.mes("action.read.scroll.execute", chara, item)
+   end
+   if not item:calc("can_read_multiple_times") then
+      item.amount = item.amount - 1
+      Skill.gain_skill_exp(chara, "elona.literacy", 25, 2)
+   end
 
+   local did_something, result = Magic.cast(magic_id, {power=power,item=item,source=params.chara})
+
+   if result and chara:is_player() and result.obvious then
+      Effect.identify_item(item, "partly")
+   end
+
+   return "turn_end"
+end
+
+function Magic.zap_wand(magic_id, power, item, params)
+   local magic = data["elona_sys.magic"]:ensure(magic_id)
+   local chara = params.chara
+
+   local curse_state = item:calc("curse_state")
+   if curse_state == "blessed" then
+      curse_state = "none"
+   end
+
+   local x, y = elona_sys_Magic.prompt_magic_location(magic_id, chara)
+   if x == nil then
+      return "player_turn_query"
+   end
+
+   local target = Chara.at(x, y, chara:current_map())
+   if target == nil then
       if chara:is_in_fov() then
-         Gui.mes("action.read.scroll.execute", chara, item)
+         Gui.mes("action.zap.execute", item)
+         Gui.mes("common.nothing_happens")
       end
-      if not item:calc("can_read_multiple_times") then
-         item.amount = item.amount - 1
-         Skill.gain_skill_exp(chara, "elona.literacy", 25, 2)
-      end
+      return "turn_end"
+   end
 
-      local did_something, result = Magic.cast(magic_id, {power=power,item=item,source=params.chara})
+   if chara:is_in_fov() then
+      Gui.mes("action.zap.execute", item)
+   end
+
+   local magic_device = chara:skill_level("elona.magic_device")
+   local stat_magic = chara:skill_level("elona.stat_magic")
+   local stat_perception = chara:skill_level("elona.stat_perception")
+   local adjusted_power = power * (100 + magic_device * 10 + stat_magic / 2 + stat_perception / 2) / 100
+
+   local success = chara:emit("elona.calc_wand_success", {magic_id=magic_id,item=item}, false)
+
+   if success then
+      local did_something, result = Magic.cast(magic_id,
+                                               {
+                                                  power=adjusted_power,
+                                                  item=item,
+                                                  target=params.chara,
+                                                  curse_state=curse_state
+      })
 
       if result and chara:is_player() and result.obvious then
          Effect.identify_item(item, "partly")
       end
-
-      return "turn_end"
+      if chara:is_player() then
+         Skill.gain_skill_exp(chara, "elona.magic_device", 40)
+      end
+   else
+      if chara:is_in_fov() then
+         Gui.mes("action.zap.fail", chara)
+      end
    end
+
+   if Item.is_alive(item) and not item:is_on_ground() then
+      local map = item:current_map()
+      map:refresh_tile(item.x, item.y)
+   end
+
+   local sep = item:separate()
+   sep.count = sep.count - 1
+
+   return "turn_end"
 end
 
-local function calc_wand_success(chara, params)
-   local magic = data["elona_sys.magic"]:ensure(params.magic_id)
-   local item = params.item
+function Magic.do_cast_spell(skill_id, caster, use_mp)
+   local skill_data = data["base.skill"]:ensure(skill_id)
+   local params = {
+      triggered_by = "spell",
+      curse_state = "normal",
+      power = Skill.calc_spell_power(skill_id, caster),
+      range = skill_data.range
+   }
 
-   if not chara:is_player() or item:calc("zap_always_succeeds") then
+   if caster:is_player() then
+      if Skill.calc_spell_mp_cost(skill_id, caster) > caster.mp then
+         Gui.mes("action.cast.overcast_warning")
+         if not Input.yes_no() then
+            return false
+         end
+      end
+      Gui.update_screen()
+   end
+
+   local target = caster:get_target()
+   local success, result = elona_sys_Magic.get_magic_location(skill_data.target_type,
+                                                              skill_data.range,
+                                                              caster,
+                                                              params.triggered_by,
+                                                              target,
+                                                              skill_data.ai_check_ranged_if_self)
+
+   if not success then
+      return false
+   end
+
+   params = table.merge(params, result)
+
+   if caster:is_player() or use_mp then
+      if caster:is_player() then
+      end
+      local mp_used = Skill.calc_spell_mp_cost(skill_id, caster)
+      -- TODO god blessing
+      caster:damage_mp(mp_used, false, true)
+      if not Chara.is_alive(caster) then
+         return true
+      end
+   end
+
+   if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
+      Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
+   else
+      if caster:is_player() then
+         Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, "ability." .. skill_id .. ".name")
+      else
+         Gui.mes_visible("action.cast.other", caster.x, caster.y, caster, "ui.cast_style." .. (caster:calc("cast_style") or "default"))
+      end
+   end
+
+   -- TODO buff: silence
+
+   if not config["base.debug_no_spell_failure"] then
+      if Rand.rnd(100) >= Skill.calc_spell_success_chance(skill_id, caster) then
+         if caster:is_in_fov() then
+            Gui.mes("action.cast.fail", caster)
+            local cb = Anim.failure_to_cast(caster.x, caster.y)
+            Gui.start_draw_callback(cb)
+         end
+         return true
+      end
+   end
+
+   if params.no_effect then
+      Gui.mes("common.nothing_happens")
       return true
    end
 
-   local magic_device = chara:skill_level("elona.magic_device")
+   -- TODO enchantment: enhances your spells
 
-   local success
-   if magic.type == "magic" then
-      success = false
+   local rapid_magic
+   if caster:calc("can_cast_rapid_magic") and skill_data.is_rapid_magic then
+      rapid_magic = 1 + (Rand.one_in(3) and 1 or 0) + (Rand.one_in(2) and 1 or 0)
+   end
 
-      local skill = magic_device * 20 + 100
-      if item:calc("curse_state") == "blessed" then
-         skill = skill * 125 / 100
-      end
-      if Effect.is_cursed(item:calc("curse_state")) then
-         skill = skill * 50 / 100
-      elseif Rand.one_in(2) then
-         success = true
-      end
-      if Rand.rnd(magic.difficulty + 1) / 2 <= skill then
-         success = true
+   if rapid_magic then
+      for i = 1, rapid_magic do
+         elona_sys_Magic.cast(skill_data.effect_id, params)
+         if not Chara.is_alive(params.target) then
+            local target = Action.find_target(caster)
+            if target == nil or caster:reaction_towards(target) > 0 then
+               break
+            else
+               params.target = target
+            end
+         end
       end
    else
-      success = true
+      elona_sys_Magic.cast(skill_data.effect_id, params)
    end
 
-   if Rand.one_in(30) then
-      success = false
-   end
-
-   return success
+   return true
 end
 
-Event.register("elona.calc_wand_success", "Default", calc_wand_success)
+local function gain_spell_and_casting_experience(skill_id, caster)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
 
-local function prompt_magic_location()
-   return nil, nil
+   if caster:is_player() then
+      Skill.gain_skill_exp(caster, skill_id, skill_entry.cost * 4 + 20, 4, 5)
+   end
+
+   Skill.gain_skill_exp(caster, "elona.casting", skill_entry.cost + 10, 5)
 end
 
---- to be used with IItem.on_zap
-function Magic.zap_wand(magic_id, power)
-   return function(item, params)
-      local magic = data["elona_sys.magic"]:ensure(magic_id)
-      local chara = params.chara
-
-      local curse_state = item:calc("curse_state")
-      if curse_state == "blessed" then
-         curse_state = "none"
-      end
-
-      local x, y = prompt_magic_location()
-      if x == nil then
-         return "player_turn_query"
-      end
-
-      local target = Chara.at(x, y, chara:current_map())
-      if target == nil then
-         if chara:is_in_fov() then
-            Gui.mes("action.zap.execute", item)
-            Gui.mes("common.nothing_happens")
-         end
-         return "turn_end"
-      end
-
-      if chara:is_in_fov() then
-         Gui.mes("action.zap.execute", item)
-      end
-
-      local magic_device = chara:skill_level("elona.magic_device")
-      local stat_magic = chara:skill_level("elona.stat_magic")
-      local stat_perception = chara:skill_level("elona.stat_perception")
-      local adjusted_power = power * (100 + magic_device * 10 + stat_magic / 2 + stat_perception / 2) / 100
-
-      local success = chara:emit("elona.calc_wand_success", {magic_id=magic_id,item=item}, false)
-
-      if success then
-         local did_something, result = Magic.cast(magic_id,
-                                                  {
-                                                     power=adjusted_power,
-                                                     item=item,
-                                                     target=params.chara,
-                                                     curse_state=curse_state
-                                                  })
-
-         if result and chara:is_player() and result.obvious then
-            Effect.identify_item(item, "partly")
-         end
-         if chara:is_player() then
-            Skill.gain_skill_exp(chara, "elona.magic_device", 40)
-         end
-      else
-         if chara:is_in_fov() then
-            Gui.mes("action.zap.fail", chara)
-         end
-      end
-
-      if Item.is_alive(item) and not item:is_on_ground() then
-         local map = item:current_map()
-         map:refresh_tile(item.x, item.y)
-      end
-
-      local sep = item:separate()
-      sep.count = sep.count - 1
-
-      return "turn_end"
+function Magic.cast_spell(skill_id, caster, use_mp)
+   local success = Magic.do_cast_spell(skill_id, caster, use_mp)
+   if success then
+      gain_spell_and_casting_experience(skill_id, caster)
+      return true
    end
+
+   return false
 end
 
 return Magic

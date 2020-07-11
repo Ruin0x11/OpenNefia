@@ -80,15 +80,15 @@ return {
             description = "Change target",
             name = "Change"
          },
-         chaos_ball = {
+         spell_chaos_ball = {
             description = "Surround(Chaos)",
             name = "Chaos Ball"
          },
-         chaos_breath = {
+         action_chaos_breath = {
             description = "Breath(Chaos)",
             name = "Chaos Breath"
          },
-         chaos_eye = {
+         spell_chaos_eye = {
             description = "Target(Chaos)",
             name = "Chaos eye"
          },
@@ -96,7 +96,7 @@ return {
             description = "Strengthen allies",
             name = "Cheer"
          },
-         cold_breath = {
+         action_cold_breath = {
             description = "Breath(Cold)",
             name = "Cold Breath"
          },
@@ -115,31 +115,31 @@ return {
             description = "Indicates your skill with cross bows",
             name = "Crossbow"
          },
-         crystal_spear = {
+         spell_crystal_spear = {
             description = "Target(Magic)",
             name = "Crystal Spear"
          },
-         cure_of_eris = {
+         spell_cure_of_eris = {
             description = "Heal self",
             name = "Cure of Eris"
          },
-         cure_of_jure = {
+         spell_cure_of_jure = {
             description = "Heal self",
             name = "Cure of Jure"
          },
-         curse = {
+         spell_curse = {
             description = "Curse target",
             name = "Curse"
          },
-         dark_eye = {
+         spell_dark_eye = {
             description = "Target(Darkness)",
             name = "Dark eye"
          },
-         darkness_bolt = {
+         spell_darkness_bolt = {
             description = "Line(Darkness)",
             name = "Darkness Bolt"
          },
-         darkness_breath = {
+         action_darkness_breath = {
             description = "Breath(Darkness)",
             name = "Darkness Breath"
          },
@@ -154,7 +154,7 @@ return {
             description = "It is used to search hidden locations and traps.",
             name = "Detection"
          },
-         dimensional_move = {
+         action_dimensional_move = {
             description = "Teleport self",
             name = "Dimensional Move"
          },
@@ -175,7 +175,7 @@ return {
             description = "Dominate target",
             name = "Dominate"
          },
-         door_creation = {
+         spell_door_creation = {
             description = "Create doors",
             name = "Door Creation"
          },
@@ -187,7 +187,7 @@ return {
             description = "Draw charges",
             name = "Draw Charge"
          },
-         draw_shadow = {
+         action_draw_shadow = {
             description = "Draw target",
             name = "Draw Shadow"
          },
@@ -213,19 +213,19 @@ return {
             description = "Increases your chance of evading enemy attacks.",
             name = "Evasion"
          },
-         eye_of_dimness = {
+         action_eye_of_dimness = {
             description = "Dim target",
             name = "Eye of dimness"
          },
-         eye_of_ether = {
+         action_eye_of_ether = {
             description = "Corrupt target",
             name = "Eye of Ether"
          },
-         eye_of_insanity = {
+         action_eye_of_insanity = {
             description = "Craze target",
             name = "Eye of Insanity"
          },
-         eye_of_mana = {
+         action_eye_of_mana = {
             description = "Damage MP target",
             name = "Eye of Mana"
          },
@@ -233,7 +233,7 @@ return {
             description = "Increases your chance to deliver critical hits.",
             name = "Eye of Mind"
          },
-         eye_of_mutation = {
+         action_eye_of_mutation = {
             description = "Mutate target",
             name = "Eye of Mutation"
          },
@@ -246,19 +246,19 @@ return {
             description = "Restore charges",
             name = "Fill Charge"
          },
-         fire_ball = {
+         spell_fire_ball = {
             description = "Surround(Fire)",
             name = "Fire Ball"
          },
-         fire_bolt = {
+         spell_fire_bolt = {
             description = "Line(Fire)",
             name = "Fire Bolt"
          },
-         fire_breath = {
+         action_fire_breath = {
             description = "Breath(Fire)",
             name = "Fire Breath"
          },
-         fire_wall = {
+         spell_fire_wall = {
             description = "Create fire grounds",
             name = "Fire Wall"
          },
@@ -271,7 +271,7 @@ return {
             enchantment_description = "makes you better fisher.",
             name = "Fishing"
          },
-         four_dimensional_pocket = {
+         spell_four_dimensional_pocket = {
             description = "Summon 4-Dimensional Pocket",
             name = "4-Dimensional Pocket"
          },
@@ -299,11 +299,11 @@ return {
             description = "Restore MP",
             name = "Harvest Mana"
          },
-         heal_critical = {
+         spell_heal_critical = {
             description = "Heal self",
             name = "Heal Critical"
          },
-         heal_light = {
+         spell_heal_light = {
             description = "Heal self",
             name = "Heal Light"
          },
@@ -311,11 +311,11 @@ return {
             description = "Gradually heals your wounds.",
             name = "Healing"
          },
-         healing_rain = {
+         spell_healing_rain = {
             description = "Heal area",
             name = "Healing Rain"
          },
-         healing_touch = {
+         spell_healing_touch = {
             description = "Heal target",
             name = "Healing Touch"
          },
@@ -323,24 +323,24 @@ return {
             description = "Skill to effectively act while wearing heavy armor.",
             name = "Heavy Armor"
          },
-         hero = {
+         spell_hero = {
             name = "Hero"
          },
-         holy_light = {
+         spell_holy_light = {
             description = "Remove one hex",
             name = "Holy Light"
          },
-         holy_shield = {
+         spell_holy_shield = {
             name = "Holy Shield"
          },
-         holy_veil = {
+         spell_holy_veil = {
             name = "Holy Veil"
          },
-         ice_ball = {
+         spell_ice_ball = {
             description = "Surround(Cold)",
             name = "Ice Ball"
          },
-         ice_bolt = {
+         spell_ice_bolt = {
             description = "Line(Cold)",
             name = "Ice Bolt"
          },
@@ -351,7 +351,7 @@ return {
          incognito = {
             name = "Incognito"
          },
-         insult = {
+         action_insult = {
             description = "Insult target",
             name = "Insult"
          },
@@ -367,11 +367,11 @@ return {
             description = "Skill to effectively act while wearing light armor.",
             name = "Light Armor"
          },
-         lightning_bolt = {
+         spell_lightning_bolt = {
             description = "Line(Lightning)",
             name = "Lightning Bolt"
          },
-         lightning_breath = {
+         action_lightning_breath = {
             description = "Breath(Lightning)",
             name = "Lightning Breath"
          },
@@ -395,19 +395,19 @@ return {
             description = "Reduces kickback damage from over casting.",
             name = "Magic Capacity"
          },
-         magic_dart = {
+         spell_magic_dart = {
             description = "Target(Magic)",
             name = "Magic Dart"
          },
-         magic_device = {
+         spell_magic_device = {
             description = "Improves effectiveness of magic devices.",
             name = "Magic Device"
          },
-         magic_map = {
+         spell_magic_map = {
             description = "Reveal surround map",
             name = "Magic Map"
          },
-         magic_storm = {
+         spell_magic_storm = {
             description = "Surround(Magic)",
             name = "Magic Storm"
          },
@@ -437,19 +437,19 @@ return {
             enchantment_description = "enhances your memory.",
             name = "Memorization"
          },
-         meteor = {
+         spell_meteor = {
             description = "Massive Attack",
             name = "Meteor"
          },
-         mewmewmew = {
+         action_mewmewmew = {
             description = "?",
             name = "Mewmewmew!"
          },
-         mind_bolt = {
+         spell_mind_bolt = {
             description = "Line(Mind)",
             name = "Mind Bolt"
          },
-         mind_breath = {
+         action_mind_breath = {
             description = "Breath(Mind)",
             name = "Mind Breath"
          },
@@ -479,19 +479,19 @@ return {
             description = "Convinces someone to give you better deals.",
             name = "Negotiation"
          },
-         nerve_arrow = {
+         spell_nerve_arrow = {
             description = "Target(Nerve)",
             name = "Nerve Arrow"
          },
-         nerve_breath = {
+         action_nerve_breath = {
             description = "Breath(Nerve)",
             name = "Nerve Breath"
          },
-         nether_arrow = {
+         spell_nether_arrow = {
             description = "Target(Nether)",
             name = "Nether Arrow"
          },
-         nether_breath = {
+         action_nether_breath = {
             description = "Breath(Nether)",
             name = "Nether Breath"
          },
@@ -510,7 +510,7 @@ return {
             description = "Shows how good of a thief you are.",
             name = "Pickpocket"
          },
-         poison_breath = {
+         action_poison_breath = {
             description = "Breath(Poison)",
             name = "Poison Breath"
          },
@@ -518,7 +518,7 @@ return {
             description = "Indicates your skill with polearms.",
             name = "Polearm"
          },
-         power_breath = {
+         action_power_breath = {
             description = "Breath",
             name = "Power Breath"
          },
@@ -533,11 +533,11 @@ return {
          punishment = {
             name = "Punishment"
          },
-         raging_roar = {
+         spell_raging_roar = {
             description = "Surround(Sound)",
             name = "Raging Roar"
          },
-         rain_of_sanity = {
+         action_rain_of_sanity = {
             description = "Cure insane area",
             name = "Rain of sanity"
          },
@@ -552,7 +552,7 @@ return {
             description = "Restore mind",
             name = "Restore Spirit"
          },
-         resurrection = {
+         spell_resurrection = {
             description = "Resurrect dead",
             name = "Resurrection"
          },
@@ -572,7 +572,7 @@ return {
             description = "Indicates your skill with sycthes.",
             name = "Scythe"
          },
-         sense_object = {
+         spell_sense_object = {
             description = "Reveal nearby objects",
             name = "Sense Object"
          },
@@ -580,7 +580,7 @@ return {
             description = "Allows you to sense the quality of stuff.",
             name = "Sense Quality"
          },
-         shadow_step = {
+         action_shadow_step = {
             description = "Teleport to target",
             name = "Shadow Step"
          },
@@ -592,14 +592,14 @@ return {
             description = "Indicates your skill with short swords.",
             name = "Short Sword"
          },
-         short_teleport = {
+         spell_short_teleport = {
             description = "Teleport self",
             name = "Short Teleport"
          },
          slow = {
             name = "Slow"
          },
-         sound_breath = {
+         action_sound_breath = {
             description = "Breath(Sound)",
             name = "Sound Breath"
          },
@@ -614,7 +614,7 @@ return {
             description = "Allows you to move quietly.",
             name = "Stealth"
          },
-         suicide_attack = {
+         action_suicide_attack = {
             description = "Suicide",
             name = "Suicide Attack"
          },
@@ -646,7 +646,7 @@ return {
             description = "Summon Yeeks",
             name = "Summon Yeek"
          },
-         suspicious_hand = {
+         action_suspicious_hand = {
             description = "Steal from target",
             name = "Suspicious Hand"
          },
@@ -663,11 +663,11 @@ return {
             enchantment_description = "makes you a better tailor.",
             name = "Tailoring"
          },
-         teleport = {
+         spell_teleport = {
             description = "Teleport self",
             name = "Teleport"
          },
-         teleport_other = {
+         spell_teleport_other = {
             description = "Teleport target",
             name = "Teleport Other"
          },
@@ -719,7 +719,7 @@ return {
             description = "Remove all hexes",
             name = "Vanquish Hex"
          },
-         wall_creation = {
+         spell_wall_creation = {
             description = "Create walls",
             name = "Wall Creation"
          },
@@ -731,7 +731,7 @@ return {
             description = "Allows you to carry more stuff.",
             name = "Weight Lifting"
          },
-         wish = {
+         spell_wish = {
             description = "Wish",
             name = "Wish"
          },

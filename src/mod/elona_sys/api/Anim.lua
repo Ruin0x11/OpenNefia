@@ -123,7 +123,7 @@ function Anim.failure_to_cast(tx, ty)
       asset:draw(x, y - th / 6, w, h, {255, 255, 255}, true, 75 * frame)
    end
 
-   return Anim.make_animation(scx, scy, "failure_to_cast_effect", 12, draw)
+   return Anim.make_animation(scx, scy, "base.failure_to_cast_effect", 12, draw)
 end
 
 function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y, range, map)
@@ -267,7 +267,7 @@ function Anim.swarm(tx, ty)
       asset:draw(x, y, w, h, {255,255,255}, true, 30 * frame - 45)
    end
 
-   return Anim.make_animation(scx, scy, "swarm_effect", 4, draw)
+   return Anim.make_animation(scx, scy, "base.swarm_effect", 4, draw)
 end
 
 function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)

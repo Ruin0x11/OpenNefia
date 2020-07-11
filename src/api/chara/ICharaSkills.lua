@@ -47,6 +47,12 @@ function ICharaSkills:on_refresh()
    end
 end
 
+function ICharaSkills:spell_stock(skill_id)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+   if skill_entry.type ~= "spell" then return 0 end
+   return self.spell_stocks[skill_id] or 0
+end
+
 local function generate_methods(iface, name, ty)
    local subfields = { "level", "potential", "experience" }
 

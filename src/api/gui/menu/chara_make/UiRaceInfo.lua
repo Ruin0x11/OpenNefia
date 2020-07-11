@@ -119,13 +119,14 @@ function UiRaceInfo:draw()
          end
 
          local skill_id = ATTRIBUTES[i * 3 + j + 1]
+         local skill_entry = data["base.skill"]:ensure(skill_id)
          local skill_name = I18N.get("ability." .. skill_id .. ".name")
          local skill_level = self.race.proto.skills[skill_id] or 0
          local text_color, proficiency = skill_info(skill_level)
          local skill_text = ("%s: %s"):format(skill_name, proficiency)
 
          self.t.base.skill_icons:draw_region(
-            1,
+            Ui.skill_icon(skill_entry.skill),
             j * 150 + self.x + 200 + 13,
             self.y + ty + 7,
             nil,

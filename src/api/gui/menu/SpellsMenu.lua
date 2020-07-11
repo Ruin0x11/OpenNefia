@@ -12,9 +12,9 @@ local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
 
-local SkillsMenu = class.class("SkillsMenu", IUiLayer)
+local SpellsMenu = class.class("SpellsMenu", IUiLayer)
 
-SkillsMenu:delegate("input", IInput)
+SpellsMenu:delegate("input", IInput)
 
 local UiListExt = function(spells_menu)
    local E = {}
@@ -31,22 +31,24 @@ local UiListExt = function(spells_menu)
    function E:draw_item_text(text, item, i, x, y, x_offset)
       UiList.draw_item_text(self, text, item, i, x, y, x_offset)
 
-      Draw.text(item.cost, x + 230 - Draw.text_width(item.cost), y)
-      Draw.text(item.description, x + 267, y)
+      Draw.text(item.cost_stock, x + 230 - Draw.text_width(item.cost_stock), y)
+      Draw.text(item.lv_chance, x + 242, y)
+      Draw.text(item.description, x + 322, y)
    end
 
    return E
 end
 
-function SkillsMenu.generate_list(chara)
+function SpellsMenu.generate_list(chara)
    local list = {}
 
-   for _, entry in data["base.skill"]:iter():filter(function(e) return e.type == "action" end) do
+   for _, entry in data["base.skill"]:iter():filter(function(e) return e.type == "spell" end) do
       list[#list+1] = {
          _id = entry._id,
          name = I18N.get("ability." .. entry._id .. ".name"),
-         cost = ("%d Sp"):format(entry.cost),
-         description = Skill.get_description(entry._id, chara):sub(0, 34),
+         cost_stock = ("%d (%d)"):format(Skill.calc_spell_mp_cost(entry._id, chara), chara:spell_stock(entry._id)),
+         lv_chance = ("%d/%d%%"):format(chara:skill_level(entry._id), Skill.calc_spell_success_chance(entry._id, chara)),
+         description = Skill.get_description(entry._id, chara):sub(0, 40),
          icon = Ui.skill_icon(entry.related_skill)
       }
    end
@@ -54,14 +56,14 @@ function SkillsMenu.generate_list(chara)
    return list
 end
 
-SkillsMenu.sound = "base.skill"
+SpellsMenu.sound = "base.spell"
 
-function SkillsMenu:init(chara)
+function SpellsMenu:init(chara)
    self.chara = chara
 
-   self.win = UiWindow:new("ui.skill.title", true, "key help", 0, 60)
+   self.win = UiWindow:new("ui.spell.title", true, "key help")
 
-   self.data = SkillsMenu.generate_list(self.chara)
+   self.data = SpellsMenu.generate_list(self.chara)
 
    self.pages = UiList:new_paged(self.data, 16)
    table.merge(self.pages, UiListExt(self))
@@ -71,15 +73,15 @@ function SkillsMenu:init(chara)
    self.input:bind_keys(self:make_keymap())
 end
 
-function SkillsMenu:make_keymap()
+function SpellsMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
 end
 
-function SkillsMenu:relayout(x, y)
-   self.width = 600
+function SpellsMenu:relayout(x, y)
+   self.width = 730
    self.height = 438
    self.x, self.y = Ui.params_centered(self.width, self.height)
 
@@ -90,24 +92,24 @@ function SkillsMenu:relayout(x, y)
    self.win:set_pages(self.pages)
 end
 
-function SkillsMenu:charamake_result()
+function SpellsMenu:charamake_result()
    return {}
 end
 
-function SkillsMenu:draw()
+function SpellsMenu:draw()
    self.win:draw()
 
-   Ui.draw_topic("ui.skill.name", self.x + 28, self.y + 36)
-   Ui.draw_topic("ui.skill.cost", self.x + 220, self.y + 36)
-   Ui.draw_topic("ui.skill.effect", self.x + 320, self.y + 36)
-   self.t.base.inventory_icons:draw_region(14, self.x + 46, self.y - 16)
-   self.t.base.deco_skill_a:draw(self.x + self.width - 78, self.y + self.height - 165)
-   self.t.base.deco_skill_b:draw(self.x + self.width - 168, self.y)
+   Ui.draw_topic("ui.spell.name", self.x + 28, self.y + 36)
+   Ui.draw_topic(I18N.get("ui.spell.cost_stock") .. " " .. I18N.get("ui.spell.lv_chance"), self.x + 220, self.y + 36)
+   Ui.draw_topic("ui.spell.effect", self.x + 400, self.y + 36)
+   self.t.base.inventory_icons:draw_region(13, self.x + 46, self.y - 16)
+   self.t.base.deco_spell_a:draw(self.x + self.width - 78, self.y)
+   self.t.base.deco_spell_b:draw(self.x + self.width - 180, self.y)
 
    self.pages:draw()
 end
 
-function SkillsMenu:update()
+function SpellsMenu:update()
    if self.canceled then
       return nil, "canceled"
    end
@@ -115,15 +117,15 @@ function SkillsMenu:update()
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then
-      return { type = "skill", _id = self.pages:selected_item()._id }
+      return { type = "spell", _id = self.pages:selected_item()._id }
    end
 
    self.win:update()
    self.pages:update()
 end
 
-function SkillsMenu:on_hotload_layer()
+function SpellsMenu:on_hotload_layer()
    table.merge(self.pages, UiListExt(self))
 end
 
-return SkillsMenu
+return SpellsMenu

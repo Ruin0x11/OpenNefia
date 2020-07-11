@@ -126,7 +126,7 @@ end
 
 function ElonaCommand.fire(player)
    local pred = function(c)
-      return Chara.is_alive(c) and player:reaction_towards(c) < 0
+      return player:reaction_towards(c) < 0
    end
 
    local targets = Chara.iter():filter(pred):to_list()

@@ -98,6 +98,8 @@ data:add_multi(
       { _id = "on_player_turn" },
       { _id = "on_heal_chara_hp", },
       { _id = "on_heal_chara_mp", },
+      { _id = "on_damage_chara_mp", },
+      { _id = "on_magic_reaction", },
    }
 )
 
