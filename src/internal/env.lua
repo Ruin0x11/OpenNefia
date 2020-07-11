@@ -15,7 +15,7 @@ local doc_store = require("internal.global.doc_store")
 ---    To support hotloading, code should minimize the usage of
 ---    top-level locals or otherwise provide support for hotloading by
 ---    calling env.is_hotloading() in the appropriate places.
---- 4. For now it is assumed that any require path starting with `mod`
+--- 3. For now it is assumed that any require path starting with `mod`
 ---    will be a part of a mod's code, so a mod sandbox should be
 ---    applied to it. Any other path will use the global environment.
 ---
@@ -182,7 +182,7 @@ end
 --- will have access to the global environment.
 -- @tparam string path
 -- @tparam[opt] table mod_env
-local function env_loadfile(path, mod_env)
+local function env_dofile(path, mod_env)
    local resolved, require_now = get_require_path(path, mod_env)
 
    Log.trace("resolved path: %s -> %s", path, resolved)
@@ -239,7 +239,7 @@ function env.load_sandboxed_chunk(path, mod_name)
    -- TODO: cache this somewhere.
    local mod_env = env.generate_sandbox(mod_name, true)
 
-   return env_loadfile(path, mod_env)
+   return env_dofile(path, mod_env)
 end
 
 -- list of require paths that are allowed in mods.
@@ -287,7 +287,7 @@ local function safe_load_chunk(path)
 
    if load_type == "api" or load_type == "thirdparty" then
       Log.debug("Loading chunk %s with global env.", path)
-      return env_loadfile(path)
+      return env_dofile(path)
    elseif load_type == "mod" then
       local mod_name = extract_mod_name(path)
 
@@ -305,12 +305,12 @@ end
 
 --- Requires a path with either the mod environment or the global
 --- environment depending on its prefix.
-local function env_loadfile_or_safe_load(path)
+local function env_dofile_or_safe_load(path)
    if path_is_in_mod(path) then
       return safe_load_chunk(path)
    end
 
-   return env_loadfile(path)
+   return env_dofile(path)
 end
 
 local function update_documentation(path, req_path)
@@ -467,7 +467,7 @@ env.safe_require = gen_require(safe_load_chunk, get_load_type)
 --- hotloading and mod environments, and also allow requiring
 --- non-public files.
 -- @function env.require
-env.require = gen_require(env_loadfile_or_safe_load)
+env.require = gen_require(env_dofile_or_safe_load)
 
 --- Reloads a path that has been required already by updating its
 --- table in-place. If either the result of `require` or the existing

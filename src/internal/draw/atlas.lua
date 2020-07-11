@@ -7,8 +7,8 @@ local bmp_convert = require("internal.bmp_convert")
 
 local atlas = class.class("atlas")
 
-local function load_tile(spec, frame_id)
-   local tile, quad, need_release
+local function load_tile(spec, frame_id, offset_x, offset_y)
+   local tile, quad
 
    -- spec has the format:
    --
@@ -37,7 +37,7 @@ local function load_tile(spec, frame_id)
    elseif type(spec) == "table" then
       if spec.source then
          tile = bmp_convert.load_image(spec.source, spec.key_color)
-         quad = love.graphics.newQuad(spec.x or 0, spec.y or 0, spec.width, spec.height,
+         quad = love.graphics.newQuad((spec.x or 0) + offset_x, (spec.y or 0) + offset_y, spec.width, spec.height,
                                       tile:getWidth(), tile:getHeight())
       elseif spec.image then
          tile = bmp_convert.load_image(spec.image, spec.key_color)
@@ -49,7 +49,7 @@ local function load_tile(spec, frame_id)
       error(("Unsupported tile type: %s"):format(spec))
    end
 
-   return tile, quad, need_release
+   return tile, quad
 end
 
 function atlas:init(tile_width, tile_height)
@@ -70,10 +70,13 @@ function atlas:init(tile_width, tile_height)
    self.fallback = love.graphics.newImage(fallback_data)
 end
 
-function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb)
+function atlas:insert_tile(id, anim_id, frame_id, spec, load_tile_cb, offset_x, offset_y)
+   offset_x = offset_x or 0
+   offset_y = offset_y or 0
+
    local full_id = ("%s#%s:%d"):format(id, anim_id, frame_id)
 
-   local tile, quad = load_tile(spec, frame_id)
+   local tile, quad = load_tile(spec, frame_id, offset_x, offset_y)
 
    local _, tw, th
    if class.is_an(asset_drawable, tile) then
@@ -209,7 +212,7 @@ local function get_images(image)
    --     }
    --
       elseif image.default then
-         -- pass
+         -- TODO
       else
          error("unsupported image type " .. inspect(image))
       end
@@ -228,8 +231,9 @@ function atlas:load_one(proto, draw_tile)
 
    for anim_id, spec in pairs(images) do
       spec.count_x = spec.count_x or 1
-      for i = 1, (spec.count_x or 1) do
-         self:insert_tile(id, anim_id, i, spec, draw_tile)
+      for i = 1, spec.count_x do
+         local offset_x = (i-1)*(spec.width or 0)
+         self:insert_tile(id, anim_id, i, spec, draw_tile, offset_x, 0)
       end
    end
 

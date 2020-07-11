@@ -1,3 +1,5 @@
+local Gui = require("api.Gui")
+
 data:add {
    _type = "base.mef",
    _id = "web",
@@ -6,6 +8,7 @@ data:add {
    image = "elona.mef_web",
 
    on_stepped_on = function(self, params)
+      Gui.mes("Web.")
    end,
 }
 
@@ -20,5 +23,6 @@ data:add {
    -- TODO check if tile is water, if so do not place
 
    on_stepped_on = function(self, params)
+      Gui.mes("Fire.")
    end,
 }

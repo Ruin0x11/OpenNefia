@@ -9,6 +9,7 @@ local Role = require("mod.elona_sys.api.Role")
 local Log = require("api.Log")
 local Feat = require("api.Feat")
 local Anim = require("mod.elona_sys.api.Anim")
+local Mef = require("api.Mef")
 
 --
 --
@@ -462,14 +463,31 @@ Event.register("base.before_chara_moved", "Feat bumped into behavior", feat_bump
 
 local function feat_stepped_on_handler(chara, p, result)
    for _, feat in Feat.at(p.x, p.y, chara:current_map()) do
-      if feat.on_stepped_on then
-         feat:emit("elona_sys.on_feat_stepped_on", {chara=chara})
-      end
+      feat:emit("elona_sys.on_feat_stepped_on", {chara=chara})
    end
 
    return result
 end
 Event.register("base.on_chara_moved", "Feat stepped on behavior", feat_stepped_on_handler)
+
+Event.register("base.on_mef_instantiated", "Connect mef events",
+               function(mef)
+                  if mef.proto.on_stepped_on then
+                     mef:connect_self("elona_sys.on_mef_stepped_on",
+                                      "Mef prototype on_stepped_on handler",
+                                      mef.proto.on_stepped_on)
+                  end
+               end)
+
+local function mef_stepped_on_handler(chara, p, result)
+   local mef = Mef.at(p.x, p.y, chara:current_map())
+   if mef then
+      mef:emit("elona_sys.on_mef_stepped_on", {chara=chara})
+   end
+
+   return result
+end
+Event.register("base.on_chara_moved", "Mef stepped on behavior", mef_stepped_on_handler)
 
 local function play_map_music(map)
    local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)

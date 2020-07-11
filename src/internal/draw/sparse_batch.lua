@@ -250,6 +250,7 @@ function sparse_batch:draw(x, y, offset_x, offset_y)
                end
                local tile_tbl = tiles[tile.image]
                if tile_tbl ~= nil then
+                  --print(tile.image, tile_tbl.quad:getViewport())
                   local _, _, ttw, tth = tile_tbl.quad:getViewport()
                   batch:add(tile_tbl.quad,
                             px + (ttw / 2),

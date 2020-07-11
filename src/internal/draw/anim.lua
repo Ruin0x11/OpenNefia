@@ -26,7 +26,7 @@ function anim:set_anim(id)
 end
 
 function anim:step_anim()
-   local image = self.image
+   local prev_image = self.image
    local anim_data = self.anims[self.anim_id]
    self.frame = self.frame + 1
    if self.frame > #anim_data.frames then
@@ -37,7 +37,7 @@ function anim:step_anim()
    self.time_left = self.time_left + anim_data.frames[self.frame].time
    self.image = anim_data.frames[self.frame].image
 
-   return self.image ~= image
+   return self.image ~= prev_image
 end
 
 function anim:update(dt)

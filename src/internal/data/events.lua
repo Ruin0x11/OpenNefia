@@ -101,6 +101,8 @@ data:add_multi(
       { _id = "on_damage_chara_mp", },
       { _id = "on_magic_reaction", },
       { _id = "on_recruited_as_ally", },
+      { _id = "on_build_mef" },
+      { _id = "on_mef_instantiated" },
    }
 )
 
