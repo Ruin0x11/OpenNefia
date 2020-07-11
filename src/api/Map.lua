@@ -51,6 +51,9 @@ end)
 function Map.set_map(map)
    assert(class.is_an(InstancedMap, map))
    if field.map == map then return end
+   if field.map then
+      Map.clear_debris(field.map)
+   end
    map:emit("base.on_map_enter")
    map.visit_times = map.visit_times + 1
    field:set_map(map)
@@ -809,6 +812,53 @@ function Map.calc_shadow(hour, map)
    -- TODO weather, noyel
 
    return shadow
+end
+
+function Map.spill_blood(x, y, amount, map)
+   map = map or field.map
+
+   local tx, ty
+
+   for i = 1, amount do
+      if i == 1 then
+         tx = x
+         ty = y
+      else
+         tx = x + Rand.rnd(2) - Rand.rnd(2)
+         ty = y + Rand.rnd(2) - Rand.rnd(2)
+      end
+
+      if Map.is_in_bounds(tx, ty, map) and Map.is_floor(tx, ty, map) then
+         local d = map.debris[ty*map._width+tx+1]
+         d.blood = math.min(d.blood + 1, 5)
+      end
+   end
+end
+
+function Map.spill_fragments(x, y, amount, map)
+   map = map or field.map
+
+   local tx, ty
+
+   for i = 1, amount do
+      if i == 1 then
+         tx = x
+         ty = y
+      else
+         tx = x + Rand.rnd(2) - Rand.rnd(2)
+         ty = y + Rand.rnd(2) - Rand.rnd(2)
+      end
+
+      if Map.is_in_bounds(tx, ty, map) and Map.is_floor(tx, ty, map) then
+         local d = map.debris[ty*map._width+tx+1]
+         d.fragments = math.min(d.fragments + 1, 4)
+      end
+   end
+end
+
+function Map.clear_debris(map)
+   map = map or field.map
+   map.debris = table.of(function() return { blood = 0, fragments = 0 } end, map:width() * map:height())
 end
 
 return Map

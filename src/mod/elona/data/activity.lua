@@ -1,4 +1,5 @@
 local Chara = require("api.Chara")
+local Map = require("api.Map")
 local Event = require("api.Event")
 local Pos = require("api.Pos")
 local Anim = require("mod.elona_sys.api.Anim")
@@ -77,6 +78,7 @@ local function do_dig_success(chara, x, y)
    local map = chara:current_map()
    local tile = MapTileset.get("elona.mapgen_tunnel", map)
    map:set_tile(x, y, tile)
+   Map.spill_fragments(x, y, 2, map)
    Gui.play_sound("base.crush1")
    local anim = Anim.breaking(x, y)
    Gui.start_draw_callback(anim)
@@ -1139,8 +1141,9 @@ data:add {
             if self.type then
                Gui.mes("activity.dig_spot.finish")
             end
+            local map = params.chara:current_map()
             map:emit("elona.on_search_finish", {chara=params.chara,type=self.type})
-            -- TODO spillFrag
+            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
          end
       }
    }

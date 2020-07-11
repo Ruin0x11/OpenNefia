@@ -621,4 +621,65 @@ function Anim.ball(positions, color, sound, center_x, center_y, map)
    end
 end
 
+function Anim.death(tx, ty, asset, element_id)
+   if config["base.anim_wait"] <= 0 then
+      return function() end
+   end
+
+   local t = UiTheme.load()
+   asset = t[asset]
+
+   local element_anim
+   local element_anim_dy
+   if element_id then
+      local element_data = data["base.element"]:ensure(element_id)
+      if element_data.death_anim then
+         element_anim = t[element_data.death_anim]
+         element_anim_dy = element_data.death_anim_dy or -16
+      end
+   end
+
+   local tw, th = Draw.get_coords():get_size()
+
+   local point = function()
+      return { x = Rand.rnd(tw) - math.floor(tw / 2), y = math.floor(th / 2) }
+   end
+   local particles = fun.tabulate(point):take(20):to_list()
+
+   local wait = 15
+   if element_anim then
+      wait = wait + 20
+   end
+
+   return function(draw_x, draw_y)
+      local sx, sy = Gui.tile_to_screen(tx, ty)
+
+      local frame = 0
+
+      while frame < 6 do
+         local frame2 = frame * 2
+
+         if element_anim then
+            element_anim:draw_region(frame+1, draw_x + sx - tw / 2, draw_y + sy - (3 * th / 4) + element_anim_dy)
+         end
+
+         for i, pos in ipairs(particles) do
+            local add_x = ((pos.x < 3)  and 1 or 0) * -(1 + ((i % 2 == 0) and 1 or 0)) * frame2
+                        + ((pos.x > -4) and 1 or 0) *  (1 + ((i % 2 == 0) and 1 or 0)) * frame2
+
+            asset:draw(draw_x + sx + tw / 2 + pos.x + add_x,
+                       draw_y + sy + frame2 * frame2 / 2 - 12 + i,
+                       (tw/2) - frame2 * 2,
+                       (th/2) - frame2 * 2,
+                       nil,
+                       true,
+                       0.2 * i)
+         end
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait)
+         frame = frame + delta
+      end
+   end
+end
+
 return Anim

@@ -8,6 +8,7 @@ local Chara = require("api.Chara")
 local Role = require("mod.elona_sys.api.Role")
 local Log = require("api.Log")
 local Feat = require("api.Feat")
+local Anim = require("mod.elona_sys.api.Anim")
 
 --
 --
@@ -235,8 +236,13 @@ local function get_damage_level(base_damage, damage, chara)
    end
    return damage_level
 end
-Event.register("base.on_damage_chara", "Damage text", function(chara, params)
+Event.register("base.on_damage_chara", "Damage text and blood", function(chara, params)
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
+
+                  if damage_level > 1 then
+                     Map.spill_blood(chara.x, chara.y, 1 + Rand.rnd(2))
+                  end
+
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, false,
                                    params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
                                    params.is_third_person)
@@ -246,12 +252,36 @@ Event.register("base.on_damage_chara", "Damage text", function(chara, params)
                   -- it. " will print.
                   params.message_tense = "passive"
 end)
-Event.register("base.on_kill_chara", "Damage text", function(chara, params)
+Event.register("base.on_kill_chara", "Damage text and kill handling", function(chara, params)
+                  if params.element then
+                     Gui.play_sound(params.element.sound, chara.x, chara.y)
+                  end
+
                   local damage_level = get_damage_level(params.base_damage, params.damage, chara)
                   show_damage_text(params.attacker, params.weapon, chara, damage_level, true,
                                    params.message_tense, params.no_attack_text, params.element, params.extra_attacks,
                                    params.is_third_person)
+
+                  if params.element and params.element._id == "elona.nether" and params.attacker and params.damage > 0 then
+                     params.attacker:heal_hp(Rand.rnd(params.damage * (200 + params.element_power) / 1000 + 5))
+                  end
+
+                  if chara:calc("breaks_into_debris") then
+                     if chara:is_in_fov() then
+                        Gui.play_sound("base.crush1", chara.x, chara.y)
+                        local cb = Anim.death(chara.x, chara.y, "base.death_fragments", params.element and params.element._id)
+                        Gui.start_draw_callback(cb)
+                     end
+                     Map.spill_fragments(chara.x, chara.y, 3, chara:current_map())
+                  else
+                     Gui.play_sound(Rand.choice({"base.kill1", "base.kill2"}), chara.x, chara.y)
+                     local cb = Anim.death(chara.x, chara.y, "base.death_blood", params.element and params.element._id)
+                     Gui.start_draw_callback(cb)
+                     Map.spill_blood(chara.x, chara.y, 4)
+                  end
+                  Gui.update_screen()
 end)
+
 
 local function register_quest_town(map, _, _)
    Quest.update_in_map(map)

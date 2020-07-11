@@ -41,7 +41,7 @@ local function load_asset(id)
 
    local proto, theme = find_asset(id)
    if not proto then
-      error("Cannot find asset " .. id)
+      return nil
    end
 
    local obj

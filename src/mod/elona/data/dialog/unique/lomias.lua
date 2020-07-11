@@ -54,7 +54,7 @@ data:add {
                Gui.mes_newline()
                Gui.mes_c("talk.unique.lomias.begin.easter_egg.something_is_killed", "Red")
                Gui.play_sound("base.kill1")
-               -- spill_blood(28, 6, 10)
+               Map.spill_blood(28, 6, 10)
                Item.create("elona.beggars_pendant", 28, 6)
                Gui.update_screen()
                Gui.wait(500)

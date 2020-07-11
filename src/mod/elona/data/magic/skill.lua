@@ -1,3 +1,4 @@
+local Item = require("api.Item")
 local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")

@@ -342,7 +342,8 @@ function IChara:damage_hp(amount, source, params)
    params = params or {}
 
    local element = nil
-   if type(params.element) == "string" then
+   if params.element then
+      assert(type(params.element) == "string")
       element = data["base.element"][params.element]
    end
 
@@ -421,7 +422,6 @@ Event.register("base.after_chara_damaged", "Apply element damage.", IChara.after
 
 function IChara.on_kill_chara(victim, params)
    local attacker = params.attacker
-   Gui.play_sound(Rand.choice({"base.kill1", "base.kill2"}), victim.x, victim.y)
 
    if attacker then
       local gained_exp = victim:emit("base.on_calc_kill_exp", params, 0)

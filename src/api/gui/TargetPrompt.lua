@@ -55,7 +55,9 @@ end
 
 function TargetPrompt:update_target_text()
    local target = self.list:selected_item()
-   self.target_text = Action.target_text(self.chara, target.x, target.y, true)
+   if target then
+      self.target_text = Action.target_text(self.chara, target.x, target.y, true)
+   end
 end
 
 function TargetPrompt:on_query()

@@ -345,6 +345,24 @@ local assets = {
       count_x = 19
    },
    {
+      _id = "debris_blood",
+      source = "graphic/character.bmp",
+      x = 48,
+      y = 1152,
+      width = 48 * 6,
+      height = 48,
+      count_x = 6
+   },
+   {
+      _id = "debris_fragment",
+      source = "graphic/character.bmp",
+      x = 288,
+      y = 1152,
+      width = 48 * 4,
+      height = 48,
+      count_x = 4
+   },
+   {
       _id = "buff_icon_none",
       source = "graphic/interface.bmp",
       x = 320,
@@ -796,6 +814,22 @@ local assets = {
       _id = "melee_attack_blood",
       source = "graphic/item.bmp",
       x = 720,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "death_blood",
+      source = "graphic/item.bmp",
+      x = 16*48,
+      y = 0,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "death_fragments",
+      source = "graphic/item.bmp",
+      x = 18*48,
       y = 0,
       width = 48,
       height = 48

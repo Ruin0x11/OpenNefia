@@ -37,6 +37,7 @@ function field_layer:init()
 
    self.layers = {
       "internal.layer.tile_layer",
+      "internal.layer.debris_layer",
       "internal.layer.chip_layer",
       "internal.layer.tile_overhang_layer",
       "internal.layer.shadow_layer",

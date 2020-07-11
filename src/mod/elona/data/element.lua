@@ -10,6 +10,8 @@ local element = {
       ui_color = { 150, 0, 0 },
       can_resist = true,
       sound = "base.atk_fire",
+      death_anim = "base.anim_elem_fire",
+      death_anim_dy = -20,
 
       on_modify_damage = function(chara, damage)
          if chara:has_effect("elona.wet") then
@@ -40,6 +42,7 @@ local element = {
       color = { 255, 255, 255 },
       ui_color = { 0, 0, 150 },
       sound = "base.atk_ice",
+      death_anim = "base.anim_elem_cold",
 
       on_damage_tile = function(self, x, y)
       end,
@@ -51,6 +54,7 @@ local element = {
       ui_color = { 150, 150, 0 },
       can_resist = true,
       sound = "base.atk_elec",
+      death_anim = "base.anim_elem_lightning",
 
       on_modify_damage = function(chara, damage)
          if chara:has_effect("elona.wet") then
@@ -77,6 +81,7 @@ local element = {
       ui_color = { 100, 80, 80 },
       can_resist = true,
       sound = "base.atk_dark",
+      death_anim = "base.anim_elem_darkness",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.blindness",
@@ -91,6 +96,7 @@ local element = {
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_mind",
+      death_anim = "base.anim_elem_mind",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.confusion",
@@ -104,6 +110,8 @@ local element = {
       ui_color = { 150, 50, 0 },
       can_resist = true,
       sound = "base.atk_hell",
+      death_anim = "base.anim_elem_mind",
+      death_anim_dy = -24,
 
       after_apply_damage = function(chara, params)
          Gui.mes("after")
@@ -132,6 +140,7 @@ local element = {
       ui_color = { 0, 150, 0 },
       can_resist = true,
       sound = "base.atk_poison",
+      death_anim = "base.anim_elem_poison",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.poison",
@@ -145,6 +154,7 @@ local element = {
       ui_color = { 50, 100, 150 },
       can_resist = true,
       sound = "base.atk_sound",
+      death_anim = "base.anim_elem_sound",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.confusion",
@@ -159,6 +169,7 @@ local element = {
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_chaos",
+      death_anim = "base.anim_elem_chaos",
 
       on_damage = function(chara, params)
          local elep = params.element_power
@@ -191,6 +202,7 @@ local element = {
       can_resist = true,
       preserves_sleep = true,
       sound = "base.atk_nerve",
+      death_anim = "base.anim_elem_nerve",
 
       on_damage = function(chara, params)
          chara:apply_effect("elona.paralysis",
@@ -232,6 +244,7 @@ local element = {
       color = { 175, 255, 175 },
       elona_id = 63,
       sound = "base.atk_poison",
+      death_anim = "base.anim_elem_poison",
    },
    {
       _id = "hunger",

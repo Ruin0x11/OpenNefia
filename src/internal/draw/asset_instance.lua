@@ -40,6 +40,26 @@ function asset_instance:resize(width, height)
       end
    end
 
+   local iw = self.asset.image:getWidth()
+   local ih = self.asset.image:getHeight()
+
+   local count_x = self.asset.count_x or 1
+   local count_y = self.asset.count_y or 1
+   if count_x ~= 1 or count_y ~= 1 then
+      local w = iw / count_x
+      local h = ih / count_y
+
+      local q = 1
+      for j=1,count_y do
+         for i=1,count_x do
+            self.quads[q] = love.graphics.newQuad(w * (i - 1),
+                                                  h * (j - 1),
+                                                  w, h, iw, ih)
+            q = q + 1
+         end
+      end
+   end
+
    -- Allocate the actual userdata quads from the region list.
    for k, v in pairs(regions) do
       if self.quads[k] == nil then

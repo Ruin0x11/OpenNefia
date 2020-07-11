@@ -85,7 +85,7 @@ data:add {
       end
 
       for _, chara in Chara.iter():filter(filter) do
-         Gui.mes_visible("magic.gravity", chara)
+         Gui.mes_visible("magic.gravity", chara.x, chara.y)
          chara:apply_effect("elona.gravity", 100 + Rand.rnd(100))
       end
 
@@ -107,7 +107,7 @@ data:add {
    target_type = "enemy"
 }
 data:add {
-   _id = "gravity",
+   _id = "dominate",
    _type = "elona_sys.magic",
    elona_id = 435,
 

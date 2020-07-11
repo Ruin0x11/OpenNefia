@@ -94,9 +94,11 @@ function InstancedMap:init(width, height, uids, tile)
    -- Ambient light information. See IItem.light.
    self._light = {}
 
-   self._tiles = table.of({}, width * height)
+   self._tiles = table.of(function() return {} end, width * height)
    self._tiles_dirty = {}
    self._uids = uids
+
+   self.debris = table.of(function() return { blood = 0, fragments = 0 } end, width * height)
 
    self.default_tile = "base.floor"
 

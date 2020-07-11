@@ -15,6 +15,8 @@ local function test_room(self, player)
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end
 
+   player:mod_base_skill_level("elona.stat_magic", 10000)
+
    data["base.skill"]:iter()
       :filter(function(s) return s.type == "spell" end)
       :each(function(m) player:gain_skill(m._id, 1000) end)
@@ -23,6 +25,8 @@ local function test_room(self, player)
    player:equip_item(item)
    item = Item.create("elona.arrow", nil, nil, {}, player)
    player:equip_item(item)
+
+   player:heal_to_max()
 
    for _, x, y in map:iter_tiles() do
       map:memorize_tile(x, y)

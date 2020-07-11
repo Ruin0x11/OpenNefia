@@ -134,7 +134,7 @@ local function make_bolt(opts)
                         target:damage_hp(damage,
                                          source,
                                          {
-                                            element = element,
+                                            element = element_id,
                                             element_power = dice.element_power,
                                             message_tense = tense,
                                             no_attack_text = true,
@@ -284,7 +284,7 @@ local function make_arrow(opts)
          target:damage_hp(damage,
                           source,
                           {
-                             element = element,
+                             element = opts.element_id,
                              element_power = params.element_power,
                              message_tense = tense,
                              no_attack_text = true,
@@ -469,7 +469,7 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
       target:damage_hp(damage,
                        source,
                        {
-                          element = element,
+                          element = element._id,
                           element_power = params.element_power,
                           message_tense = tense,
                           no_attack_text = true,
@@ -1246,7 +1246,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
                      chara:damage_hp(damage,
                                      params.source,
                                      {
-                                        element = element,
+                                        element = element_id,
                                         element_power = params.element_power,
                                         message_tense = tense,
                                         no_attack_text = true,
