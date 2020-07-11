@@ -280,6 +280,14 @@ Event.register("base.on_map_enter", "Refresh sidequests (when map entered)",
                   map:emit("elona_sys.on_quest_check")
 end)
 
+Event.register("base.on_recruited_as_ally", "Refresh sidequests (when ally recruited)",
+               function(chara)
+                  local map = chara:current_map()
+                  if map then
+                     map:emit("elona_sys.on_quest_check")
+                  end
+end)
+
 
 -- The following events are necessary to run on every object each time
 -- a map is loaded because event callbacks are not serialized.

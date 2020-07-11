@@ -283,7 +283,7 @@ return {
             description = "Allows you to control genes.",
             name = "Gene engineer"
          },
-         gravity = {
+         spell_gravity = {
             description = "Create gravity",
             name = "Gravity"
          },
@@ -723,7 +723,7 @@ return {
             description = "Create walls",
             name = "Wall Creation"
          },
-         web = {
+         spell_web = {
             description = "Create webs",
             name = "Web"
          },

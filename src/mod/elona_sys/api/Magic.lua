@@ -293,8 +293,8 @@ end
 --  - source (IChara): Thing casting the spell.
 --  - target (IChara): Target of the spell.
 --  - item (IItem): Item used in the spell.
---  - triggered_by (string?): Affects targeting. One of "wand", "scroll", "spell", "potion", "potion_thrown",
---      "potion_spilt" or "trap".
+--  - triggered_by (string?): Affects targeting. One of "wand", "scroll",
+--      "spell", "action", potion", "potion_thrown", "potion_spilt" or "trap".
 --  - curse_state (string): Curse state affecting the spell.
 --  - x (uint): Target map X position.
 --  - y (uint): Target map Y position.

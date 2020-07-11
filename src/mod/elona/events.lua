@@ -899,5 +899,83 @@ local function calc_wand_success(chara, params)
 
    return success
 end
-
 Event.register("elona.calc_wand_success", "Default", calc_wand_success)
+
+local function calc_exp_modifier(target)
+   local map = target:current_map()
+   return 1 + ((target:calc("is_hung_on_sand_bag") and 15) or 0)
+      + ((target:calc("splits") and 1) or 0)
+      + ((target:calc("splits2") and 1) or 0)
+      + (map:calc("exp_modifier") or 0)
+end
+
+local function proc_on_physical_attack_miss(chara, params)
+   local exp_modifier = calc_exp_modifier(params.target)
+   local attack_skill = chara:skill_level(params.attack_skill)
+   local target_evasion = params.target:skill_level("elona.evasion")
+   if attack_skill > target_evasion or Rand.one_in(5) then
+      local exp = math.clamp(attack_skill - target_evasion / 2 + 1, 1, 20) / exp_modifier
+      Skill.gain_skill_exp(params.target, "elona.evasion", exp, 0, 4)
+      Skill.gain_skill_exp(params.target, "elona.greater_evasion", exp, 0, 4)
+   end
+end
+Event.register("elona.on_physical_attack_miss", "Gain evasion experience", proc_on_physical_attack_miss, 100000)
+
+local function proc_on_physical_attack(chara, params)
+   local exp_modifier = calc_exp_modifier(params.target)
+   local base_damage = params.base_damage
+   local attack_skill = params.attack_skill
+
+   if params.hit == "critical" then
+      Skill.gain_skill_exp(chara, "elona.eye_of_mind", 60 / exp_modifier, 2)
+   end
+
+   if base_damage > chara:calc("max_hp") / 20
+      or base_damage > chara:skill_level("elona.healing")
+      or Rand.one_in(5)
+   then
+      local attack_skill_exp = math.clamp(chara:skill_level("elona.evasion") * 2 - chara:skill_level(attack_skill) + 1, 5, 50) / exp_modifier
+      Skill.gain_skill_exp(chara, attack_skill, attack_skill_exp, 0, 4)
+
+      if not params.is_ranged then
+         Skill.gain_skill_exp(chara, "elona.tactics", 20 / exp_modifier, 0, 4)
+         if chara:calc("is_wielding_two_handed") then
+            Skill.gain_skill_exp(chara, "elona.two_handed", 20 / exp_modifier, 0, 4)
+         end
+         if chara:calc("is_dual_wielding") then
+            Skill.gain_skill_exp(chara, "elona.dual_wield", 20 / exp_modifier, 0, 4)
+         end
+      elseif attack_skill == "elona.throwing" then
+         Skill.gain_skill_exp(chara, "elona.tactics", 10 / exp_modifier, 0, 4)
+      else
+         Skill.gain_skill_exp(chara, "elona.marksman", 25 / exp_modifier, 0, 4)
+      end
+
+      -- mount
+
+      local target = params.target
+      if Chara.is_alive(target) then
+         local exp = math.clamp(250 * base_damage / target:calc("max_hp") + 1, 3, 100) / exp_modifier
+         Skill.gain_skill_exp(target, target:calc("armor_class"), exp, 0, 5)
+         if target:calc("is_wielding_shield") then
+            Skill.gain_skill_exp(target, "elona.shield", 40 / exp_modifier, 0, 4)
+         end
+      end
+   end
+end
+Event.register("elona.on_physical_attack_hit", "Gain skill experience", proc_on_physical_attack, 100000)
+
+local function proc_weapon_enchantments(chara, params)
+   if params.weapon then
+      ElonaAction.proc_weapon_enchantments(chara, params.weapon, params.target)
+   end
+end
+Event.register("elona.on_physical_attack_hit", "Proc weapon enchantments", proc_weapon_enchantments, 200000)
+
+local function proc_cut_counterattack(chara, params)
+   local cut = params.target:calc("cut_counterattack") or 0
+   if cut > 0 and not params.is_ranged then
+      chara:damage_hp(params.damage * cut / 100 + 1, params.target, {element="elona.cut", element_power=100})
+   end
+end
+Event.register("elona.on_physical_attack_hit", "Proc cut counterattack", proc_cut_counterattack, 300000)

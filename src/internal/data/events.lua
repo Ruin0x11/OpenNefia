@@ -100,6 +100,7 @@ data:add_multi(
       { _id = "on_heal_chara_mp", },
       { _id = "on_damage_chara_mp", },
       { _id = "on_magic_reaction", },
+      { _id = "on_recruited_as_ally", },
    }
 )
 

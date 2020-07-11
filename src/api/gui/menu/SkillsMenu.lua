@@ -31,8 +31,8 @@ local UiListExt = function(spells_menu)
    function E:draw_item_text(text, item, i, x, y, x_offset)
       UiList.draw_item_text(self, text, item, i, x, y, x_offset)
 
-      Draw.text(item.cost, x + 230 - Draw.text_width(item.cost), y)
-      Draw.text(item.description, x + 267, y)
+      Draw.text(item.cost, x + 200 - Draw.text_width(item.cost), y)
+      Draw.text(item.description, x + 237, y)
    end
 
    return E

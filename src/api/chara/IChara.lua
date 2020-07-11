@@ -297,6 +297,7 @@ function IChara:recruit_as_ally(no_message)
       Gui.mes_c("action.ally_joins.success", "Orange", self)
       Gui.play_sound("base.pray1");
    end
+   self:emit("base.on_recruited_as_ally", { no_message = no_message })
    return true
 end
 

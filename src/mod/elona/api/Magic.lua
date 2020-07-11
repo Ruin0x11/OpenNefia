@@ -336,4 +336,59 @@ function Magic.cast_spell(skill_id, caster, use_mp)
    return false
 end
 
+local function damage_sp_action(chara, skill_data)
+   if not chara:is_player() then
+      return
+   end
+
+
+end
+
+function Magic.do_action(skill_id, caster)
+   -- TODO: action: death word
+   --
+   local skill_data = data["base.skill"]:ensure(skill_id)
+
+   local target = caster:get_target()
+   local success, params = elona_sys_Magic.get_magic_location(skill_data.target_type,
+                                                              skill_data.range,
+                                                              caster,
+                                                              "action",
+                                                              target,
+                                                              skill_data.ai_check_ranged_if_self)
+
+   if not success then
+      return false
+   end
+
+   if skill_data.target_type ~= "self_or_nearby" and skill_data.target_type ~= "self" then
+      if caster:has_effect("elona.confusion") or caster:has_effect("elona.blindness") then
+         if Rand.one_in(5) then
+            Gui.mes_visible("misc.shakes_head", caster.x, caster.y, caster)
+            return true
+         end
+      end
+   end
+
+   if skill_data.type == "action" then
+      local success = Effect.do_stamina_check(caster, skill_data.cost, skill_data.related_skill)
+      if not success then
+         return true
+      end
+   end
+
+   params.range = skill_data.range
+   params.power = Skill.calc_spell_power(skill_id, caster)
+
+   if params.no_effect then
+      -- TODO action: pickpocket
+      Gui.mes("common.nothing_happens")
+      return true
+   end
+
+   local did_something = elona_sys_Magic.cast(skill_data.effect_id, params)
+
+   return did_something
+end
+
 return Magic

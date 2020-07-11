@@ -292,7 +292,7 @@ local function handle_spells_result(result, chara)
       end
       return "player_turn_query"
    elseif command_type == "skill" then
-      local did_something = Magic.do_action(skill_id, chara)
+      local did_something = elona_Magic.do_action(skill_id, chara)
       if did_something then
          return "turn_end"
       end

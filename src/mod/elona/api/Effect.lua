@@ -524,4 +524,18 @@ function Effect.decrement_fame(chara, fraction)
    return delta
 end
 
+function Effect.do_stamina_check(source, base_cost, related_skill_id)
+   local sp_cost = base_cost / 2 + 1
+   if source.stamina < 50 and source.stamina < Rand.rnd(75) then
+      Gui.mes("magic.common.too_exhausted")
+      source:damage_sp(sp_cost)
+      return false
+   end
+   source:damage_sp(Rand.rnd(sp_cost) + sp_cost)
+   if related_skill_id then
+      Skill.gain_skill_exp(source, related_skill_id, 25)
+   end
+   return true
+end
+
 return Effect
