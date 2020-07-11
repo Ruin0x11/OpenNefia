@@ -21,6 +21,7 @@ local IItem = require("api.item.IItem")
 local IFeat = require("api.feat.IFeat")
 local ITrap = require("api.feat.ITrap")
 local IActivity = require("api.activity.IActivity")
+local IMef = require("api.mef.IMef")
 
 data:add_type(
    {
@@ -674,6 +675,17 @@ data:add_type(
       },
    },
    { interface = ITrap }
+)
+
+data:add_type(
+   {
+      name = "mef",
+      fields = {
+      },
+      fallbacks = {
+      }
+   },
+   { interface = IMef }
 )
 
 data:add_type(

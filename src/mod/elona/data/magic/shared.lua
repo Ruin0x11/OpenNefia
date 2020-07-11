@@ -187,7 +187,7 @@ make_bolt {
 }
 
 make_bolt {
-    _id = "dark_eye",
+    _id = "darkness_bolt",
     element_id = "elona.darkness",
     elona_id = 422,
     dice_x = function(p, l) return p/50+1+l/20 end,

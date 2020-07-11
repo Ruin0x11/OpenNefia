@@ -111,18 +111,24 @@ end
 local TYPES = {
    "base.chara",
    "base.item",
-   "base.feat"
+   "base.feat",
+   "base.mef"
 }
 local CONFIG = {
    ["base.chara"] = {
-      z_order = 2,
+      z_order = 3,
       y_offset = -16,
    },
    ["base.item"] = {
-      z_order = 1,
+      z_order = 2,
       y_offset = 0,
       show_memory = true,
       is_stacking = true
+   },
+   ["base.mef"] = {
+      z_order = 1,
+      y_offset = 0,
+      show_memory = true
    },
    ["base.feat"] = {
       z_order = 0,

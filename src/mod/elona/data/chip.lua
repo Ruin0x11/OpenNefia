@@ -416,27 +416,6 @@ local item_chips = {
    -- { elona_id = 8, _id = "particle_skull" },
    -- { elona_id = 9, _id = "particle_candle" },
    -- { elona_id = 10, _id = "particle_sweat" },
-   -- { elona_id = 11, _id = "_11" },
-   -- { elona_id = 12, _id = "_12" },
-   -- { elona_id = 13, _id = "_13" },
-   -- { elona_id = 14, _id = "_14" },
-   -- { elona_id = 15, _id = "_15" },
-   -- { elona_id = 16, _id = "_16" },
-   -- { elona_id = 17, _id = "_17" },
-   -- { elona_id = 18, _id = "_18" },
-   -- { elona_id = 19, _id = "mef_slime", count_x = 2},
-   -- { elona_id = 20, _id = "_20" },
-   -- { elona_id = 21, _id = "_21" },
-   -- { elona_id = 22, _id = "mef_water" },
-   -- { elona_id = 23, _id = "_23" },
-   -- { elona_id = 24, _id = "mef_fire", count_x = 3, y_offset = -16 },
-   -- { elona_id = 25, _id = "_25" },
-   -- { elona_id = 26, _id = "_26" },
-   -- { elona_id = 27, _id = "mef_liquid", count_x = 3 },
-   -- { elona_id = 28, _id = "_28" },
-   -- { elona_id = 29, _id = "_29" },
-   -- { elona_id = 30, _id = "mef_barrier", count_x = 2, y_offset = -16 },
-   -- { elona_id = 31, _id = "_31" },
    { elona_id = 33, _id = "worthless_fake_gold_bar" },
    { elona_id = 66, _id = "bed" },
    { elona_id = 67, _id = "rag_doll" },
@@ -1382,6 +1361,30 @@ local area_chips = {
    },
 }
 
+local mef_chips = {
+   { elona_id = 11, _id = "web" },
+   -- { elona_id = 12, _id = "_12" },
+   -- { elona_id = 13, _id = "_13" },
+   -- { elona_id = 14, _id = "_14" },
+   -- { elona_id = 15, _id = "_15" },
+   -- { elona_id = 16, _id = "_16" },
+   -- { elona_id = 17, _id = "_17" },
+   -- { elona_id = 18, _id = "_18" },
+   { elona_id = 19, _id = "acid", count_x = 2},
+   { elona_id = 20, _id = "ether" },
+   -- { elona_id = 21, _id = "_21" },
+   { elona_id = 22, _id = "water" },
+   -- { elona_id = 23, _id = "_23" },
+   { elona_id = 24, _id = "fire", count_x = 3, y_offset = -16 },
+   -- { elona_id = 25, _id = "_25" },
+   -- { elona_id = 26, _id = "_26" },
+   { elona_id = 27, _id = "potion", count_x = 3 },
+   -- { elona_id = 28, _id = "_28" },
+   -- { elona_id = 29, _id = "_29" },
+   { elona_id = 30, _id = "mist", count_x = 2, y_offset = -16 },
+   -- { elona_id = 31, _id = "_31" },
+}
+
 local function make_chip_group(chips, group, source)
    for _, chip in ipairs(chips) do
       local width = 48
@@ -1418,3 +1421,4 @@ make_chip_group(chara_chips, "chara", "graphic/character.bmp")
 make_chip_group(item_chips, "item", "graphic/item.bmp")
 make_chip_group(feat_chips, "feat", "graphic/map1.bmp")
 make_chip_group(area_chips, "feat", "graphic/map0.bmp")
+make_chip_group(mef_chips, "mef", "graphic/item.bmp")
