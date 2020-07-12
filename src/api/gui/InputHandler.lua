@@ -11,6 +11,8 @@ InputHandler:delegate("keys", {
                          "run_key_action",
                          "run_keybind_action",
                          "key_held_frames",
+                         "is_modifier_held",
+                         "ignore_modifiers",
 })
 InputHandler:delegate("mouse", {
                          "bind_mouse",

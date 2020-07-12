@@ -9,6 +9,8 @@ local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
+local Mef = require("api.Mef")
+local IOwned = require("api.IOwned")
 
 local Tools = {}
 
@@ -615,6 +617,14 @@ end
 
 function Tools.memorize_map()
    Map.current():iter_tiles():each(function(x, y) Map.current():memorize_tile(x, y) end)
+end
+
+function Tools.fill_with_mef(id, duration, power)
+   Map.current():iter_tiles():each(function(x, y) Mef.create(id, x, y, { duration = duration, power = power }) end)
+end
+
+function Tools.clear_mefs()
+   Mef.iter():each(IOwned.remove_ownership)
 end
 
 return Tools

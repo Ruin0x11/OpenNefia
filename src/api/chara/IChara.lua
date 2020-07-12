@@ -62,8 +62,8 @@ function IChara:pre_build()
    self.state = "Dead"
    self.name = I18N.get_optional("chara." .. self._id .. ".name") or self.name
 
-   -- NOTE: to add new interfaces/behaviors, connect_self to
-   -- on_instantiate and run them there.
+   -- NOTE: to add new interfaces/behaviors in mods, connect_self to
+   -- base.on_pre_build and run their init() functions there.
    IModdable.init(self)
    IEventEmitter.init(self)
    IFactioned.init(self)
@@ -77,9 +77,6 @@ function IChara:pre_build()
    self:emit("base.on_pre_build")
 
    self:mod_base_with(defaults, "merge")
-
-   local fallbacks = data.fallbacks["base.chara"]
-   self:mod_base_with(table.deepcopy(fallbacks), "merge")
 end
 
 --- The default initialization logic for characters created through
@@ -94,6 +91,9 @@ end
 --- Finishes initializing this character. All characters must run this
 --- function sometime after running pre_build() before being used.
 function IChara:build()
+   local fallbacks = data.fallbacks["base.chara"]
+   self:mod_base_with(table.deepcopy(fallbacks), "merge")
+
    self.state = "Alive"
 
    self.target = nil
@@ -203,8 +203,8 @@ function IChara:produce_memory()
       show = Chara.is_alive(self, self:current_map()),
       image = image,
       color = self:calc("color"),
-      x_offset = x_offset or 0,
-      y_offset = y_offset or 0,
+      x_offset = x_offset or nil,
+      y_offset = y_offset or nil,
       hp_bar = hp_bar,
       hp_ratio = self:calc("hp") / self:calc("max_hp"),
       shadow_type = "normal",

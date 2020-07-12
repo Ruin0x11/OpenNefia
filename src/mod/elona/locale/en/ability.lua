@@ -5,7 +5,7 @@ return {
             description = "Heal MP",
             name = "Absorb Magic"
          },
-         acid_ground = {
+         spell_acid_ground = {
             description = "Create acid grounds",
             name = "Acid Ground"
          },
@@ -171,7 +171,7 @@ return {
          divine_wisdom = {
             name = "Divine Wisdom"
          },
-         dominate = {
+         spell_dominate = {
             description = "Dominate target",
             name = "Dominate"
          },
@@ -205,7 +205,7 @@ return {
          elemental_shield = {
             name = "Elemental Shield"
          },
-         ether_ground = {
+         action_ether_ground = {
             description = "Create ether grounds",
             name = "Ether Ground"
          },
@@ -461,7 +461,7 @@ return {
             description = "Know self",
             name = "Mirror"
          },
-         mist_of_darkness = {
+         spell_mist_of_darkness = {
             description = "Create mist",
             name = "Mist of Darkness"
          },

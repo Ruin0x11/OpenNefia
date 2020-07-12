@@ -163,7 +163,19 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       return
    end
 
-   -- mef
+   local event_params = {
+      weapon = weapon,
+      target = target,
+      is_ranged = is_ranged,
+      ammo = ammo,
+      attack_skill = attack_skill,
+      extra_attacks = extra_attacks,
+   }
+
+   local result = chara:emit("elona.before_physical_attack", event_params, {blocked=false})
+   if result.blocked then
+      return
+   end
 
    if is_ranged then
       -- TODO: inherit color if weapon has enchantments
@@ -333,7 +345,7 @@ function ElonaAction.read(chara, item)
       return "turn_end"
    end
 
-   local result = item:emit("elona_sys.on_item_read", {chara=chara}, "turn_end")
+   local result = item:emit("elona_sys.on_item_read", {chara=chara,triggered_by="read"}, "turn_end")
    return result
 end
 
@@ -360,7 +372,7 @@ function ElonaAction.eat(chara, item)
 end
 
 function ElonaAction.drink(chara, item)
-   local result = item:emit("elona_sys.on_item_drink", {chara=chara}, "turn_end")
+   local result = item:emit("elona_sys.on_item_drink", {chara=chara,triggered_by="potion"}, "turn_end")
    return result
 end
 
@@ -373,12 +385,12 @@ function ElonaAction.zap(chara, item)
       return "player_turn_query"
    end
 
-   local result = item:emit("elona_sys.on_item_zap", {chara=chara}, "turn_end")
+   local result = item:emit("elona_sys.on_item_zap", {chara=chara,triggered_by="wand"}, "turn_end")
    return result
 end
 
 function ElonaAction.use(chara, item)
-   local result = item:emit("elona_sys.on_item_use", {chara=chara}, "turn_end")
+   local result = item:emit("elona_sys.on_item_use", {chara=chara,triggered_by="use"}, "turn_end")
    return result
 end
 

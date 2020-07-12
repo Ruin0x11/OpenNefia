@@ -4,9 +4,6 @@ local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Quest = require("mod.elona_sys.api.Quest")
-local Chara = require("api.Chara")
-local Role = require("mod.elona_sys.api.Role")
-local Log = require("api.Log")
 local Feat = require("api.Feat")
 local Anim = require("mod.elona_sys.api.Anim")
 local Mef = require("api.Mef")
@@ -440,7 +437,8 @@ Event.register("base.on_feat_instantiated", "Connect feat events",
                                        "Print feat message",
                                        print_feat_description)
                   end
-               end)
+               end,
+               {priority = 10000})
 
 local IFeat = require("api.feat.IFeat")
 Event.register("base.on_hotload_object", "reload events for feat", function(obj)
@@ -477,10 +475,26 @@ Event.register("base.on_mef_instantiated", "Connect mef events",
                                       "Mef prototype on_stepped_on handler",
                                       mef.proto.on_stepped_on)
                   end
-               end)
+                  if mef.proto.on_stepped_off then
+                     mef:connect_self("elona_sys.on_mef_stepped_off",
+                                      "Mef prototype on_stepped_off handler",
+                                      mef.proto.on_stepped_off)
+                  end
+                  if mef.proto.on_updated then
+                     mef:connect_self("base.on_mef_updated",
+                                      "Mef prototype on_update handler",
+                                      mef.proto.on_updated)
+                  end
+                  if mef.proto.on_removed then
+                     mef:connect_self("base.on_object_removed",
+                                      "Mef prototype on_removed handler",
+                                      mef.proto.on_removed)
+                  end
+               end,
+               {priority = 10000})
 
 local function mef_stepped_on_handler(chara, p, result)
-   local mef = Mef.at(p.x, p.y, chara:current_map())
+   local mef = Mef.at(chara.x, chara.y, chara:current_map())
    if mef then
       mef:emit("elona_sys.on_mef_stepped_on", {chara=chara})
    end
@@ -488,6 +502,19 @@ local function mef_stepped_on_handler(chara, p, result)
    return result
 end
 Event.register("base.on_chara_moved", "Mef stepped on behavior", mef_stepped_on_handler)
+
+local function mef_stepped_off_handler(chara, p, result)
+   local mef = Mef.at(chara.x, chara.y, chara:current_map())
+   if mef then
+      local inner_result = mef:emit("elona_sys.on_mef_stepped_off", {chara=chara})
+      if inner_result and inner_result.blocked then
+         return inner_result
+      end
+   end
+
+   return result
+end
+Event.register("base.before_chara_moved", "Mef stepped off behavior", mef_stepped_off_handler)
 
 local function play_map_music(map)
    local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)

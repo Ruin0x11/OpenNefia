@@ -34,6 +34,20 @@ function IMef:refresh()
    end
 end
 
+function IMef:step_turn(turns)
+   turns = turns or 1
+   self:emit("base.on_mef_updated", { turns_elapsed = turns })
+
+   if self.turns > -1 then
+      self.turns = math.max(self.turns - turns, -1)
+
+      -- A turn number of -1 signifies the mef should last forever.
+      if self.turns == 0 then
+         self:remove_ownership()
+      end
+   end
+end
+
 function IMef:produce_memory()
    return {
       uid = self.uid,

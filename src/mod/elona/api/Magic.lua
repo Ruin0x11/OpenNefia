@@ -18,21 +18,30 @@ local Magic = {}
 
 function Magic.drink_potion(magic_id, power, item, params)
    local chara = params.chara
-   local consume_type = params.consume_type
-   local curse_state = "none"
+   local triggered_by = params.triggered_by or "potion"
+   local curse_state = params.curse_state or item:calc("curse_state") or "none"
 
-   if consume_type == "thrown" then
+   if triggered_by == "potion_thrown" then
       local throw_power = params.throw_power or 100
       power = power * throw_power / 100
       curse_state = item:calc("curse_state")
-   elseif consume_type == "drunk" then
+   elseif triggered_by == "potion" then
       curse_state = item:calc("curse_state")
       if chara:is_in_fov() then
          Gui.play_sound("base.drink1", chara.x, chara.y)
          Gui.mes("action.drink.potion", chara, item)
       end
    end
-   local did_something, result = Magic.cast(magic_id, {power=power,item=item,target=params.chara,curse_state=curse_state})
+   local magic_params = {
+      source = chara,
+      -- TODO target if thrown
+      power = power,
+      item = item,
+      target = params.chara,
+      curse_state = curse_state,
+      triggered_by = triggered_by
+   }
+   local did_something, result = Magic.cast(magic_id, magic_params)
 
    if result and chara:is_player() and result.obvious then
       Effect.identify_item(item, "partly")
@@ -49,7 +58,11 @@ function Magic.drink_potion(magic_id, power, item, params)
       Effect.vomit(chara)
    end
 
-   return "turn_end"
+   if did_something then
+      return "turn_end"
+   else
+      return "player_turn_query"
+   end
 end
 
 local function proc_well_events(well, chara)

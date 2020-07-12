@@ -676,7 +676,7 @@ function Anim.death(tx, ty, asset, element_id)
                        0.2 * i)
          end
 
-         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait)
+         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait/2)
          frame = frame + delta
       end
    end

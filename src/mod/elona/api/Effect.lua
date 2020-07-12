@@ -538,4 +538,27 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
    return true
 end
 
+function Effect.refresh_visibility(chara)
+   local hidden = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
+   chara:mod("can_target", not hidden)
+end
+
+-- Applies wetness effect and shows the invisibility message.
+function Effect.get_wet(chara, amount)
+   chara:apply_effect("elona.wet", amount)
+   if chara:is_in_fov() then
+      Gui.mes("misc.wet.gets_wet")
+      if chara:calc("is_invisible") then
+         Gui.mes("misc.wet.is_revealed")
+      end
+   end
+   Effect.refresh_visibility(chara)
+end
+
+function Effect.damage_map_fire(x, y, origin)
+end
+
+function Effect.damage_map_ice(x, y, origin)
+end
+
 return Effect

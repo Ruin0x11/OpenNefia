@@ -145,7 +145,8 @@ data:add {
          name = "Set difficulty.",
          callback = function(self) self.difficulty = 5 end
       }
-}}
+   }
+}
 
 local function travel(self, params)
    local chara = params.chara

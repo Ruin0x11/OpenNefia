@@ -409,6 +409,8 @@ local function ireduce(arr, f, start)
 end
 
 --- Formats a 2-dimensional list-like table in a printable manner.
+---
+--- TODO shouldn't be here
 -- @tparam list t
 -- @tparam[opt] list params.header
 -- @tparam[opt] list params.spacing

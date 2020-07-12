@@ -65,6 +65,10 @@ end
 ---  - approximate_pos (bool): If position is not accessable, put the mef somewhere close.
 ---  - allow_stacking (bool): If true, ignore items on the ground when
 ---    checking for tile openness.
+---  - origin (IMapObject): Thing that created this mef, to check if the player
+---    should be accused of hurting something indirectly through it.
+---  - duration (uint): How many turns the mef should last. Defaults to 10. -1 means the mef will never be removed.
+---  - power (uint): Power of the mef. Defaults to 0.
 --- @tparam[opt] ILocation where Where to instantiate this mef.
 ---   Defaults to the current map.
 --- @treturn[opt] IMef
@@ -84,17 +88,21 @@ function Mef.create(id, x, y, params, where)
       return nil, "invalid location"
    end
 
-   if Mef.at(x, y, where) then
-      return nil, "blocked by other mef"
-   end
-
    if where and where:is_positional() then
       if x == nil or y == nil then
-         return nil, "cannot access tile"
+         x, y = Map.find_free_position(x, y, {only_map=true}, where)
       end
       if not Map.is_floor(x, y, where) then
          return nil, "cannot access tile"
       end
+   end
+
+   -- TODO: Would prefer "owner" but this conflicts with "ownerless" in the
+   -- parameters of Mef.create().
+   local origin
+   if params.origin then
+      assert(class.is_an("api.IMapObject", params.origin))
+      origin = params.origin
    end
 
    local gen_params = {
@@ -103,14 +111,26 @@ function Mef.create(id, x, y, params, where)
    local mef = MapObject.generate_from("base.mef", id, gen_params)
 
    if where then
+      local other_mef = Mef.at(x, y, where)
+      if other_mef then
+         where:remove_object(other_mef)
+      end
+
       mef = where:take_object(mef, x, y)
 
       if not mef then
+         if other_mef then
+            assert(where:take_object(other_mef, x, y))
+         end
          return nil, "location failed to receive mef"
       end
       assert(mef.location == where)
       assert(mef:current_map())
    end
+
+   mef.origin = origin
+   mef.turns = params.duration or 10
+   mef.power = params.power or 0
 
    mef:instantiate()
 

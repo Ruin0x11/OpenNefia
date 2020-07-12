@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
+local Effect = require("mod.elona.api.Effect")
 
 local element = {
    {
@@ -21,7 +22,8 @@ local element = {
          return damage
       end,
 
-      on_damage_tile = function(self, x, y)
+      on_damage_tile = function(self, x, y, chara)
+         Effect.damage_map_fire(x, y, chara)
       end,
 
       on_damage = function(chara, damage)
@@ -44,7 +46,8 @@ local element = {
       sound = "base.atk_ice",
       death_anim = "base.anim_elem_cold",
 
-      on_damage_tile = function(self, x, y)
+      on_damage_tile = function(self, x, y, chara)
+         Effect.damage_map_cold(x, y, chara)
       end,
    },
    {

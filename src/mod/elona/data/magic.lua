@@ -26,5 +26,6 @@
 require("mod.elona.data.magic.skill")
 require("mod.elona.data.magic.unique")
 require("mod.elona.data.magic.shared")
+require("mod.elona.data.magic.web")
 require("mod.elona.data.magic.action")
 require("mod.elona.data.magic.effect")

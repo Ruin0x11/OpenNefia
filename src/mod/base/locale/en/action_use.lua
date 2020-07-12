@@ -175,7 +175,8 @@ end
       nuke = {
         cannot_place_here = "You can't place it here.",
         not_quest_goal = "This location is not your quest goal. Really place it here?",
-        set_up = "You set up the nuke...now run!!"
+        set_up = "You set up the nuke...now run!!",
+        countdown = function(_1) return ("*%s*"):format(_1) end
       },
       out_of_charge = "It's out of charge.",
       rope = {

@@ -241,8 +241,10 @@ Event.register("base.on_build_chara",
                "Init skills", init_skills)
 
 local function apply_race_class(chara)
+   -- TODO merge with charamake
    local race_data = Resolver.run("elona.race", {}, { chara = chara })
    local class_data = Resolver.run("elona.class", {}, { chara = chara })
+
    chara:mod_base_with(race_data, "merge")
    chara:mod_base_with(class_data, "merge")
 
@@ -558,8 +560,7 @@ end
 Event.register("base.on_refresh", "Update max HP/MP/stamina", refresh_hp_mp_stamina)
 
 local function refresh_invisibility(chara, params, result)
-   local hidden = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
-   chara:mod("can_target", not hidden)
+   Effect.refresh_visibility(chara)
 end
 
 Event.register("base.on_refresh", "Update invisibility", refresh_invisibility)

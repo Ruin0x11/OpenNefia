@@ -103,6 +103,8 @@ data:add_multi(
       { _id = "on_recruited_as_ally", },
       { _id = "on_build_mef" },
       { _id = "on_mef_instantiated" },
+      { _id = "on_mef_updated" },
+      { _id = "on_object_removed" },
    }
 )
 

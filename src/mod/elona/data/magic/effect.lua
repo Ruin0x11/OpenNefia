@@ -63,7 +63,7 @@ data:add {
       end
 
       -- TODO emotion icon
-      if params.potion_spilt or params.potion_thrown then
+      if params.triggered_by == "potion_spilt" or params.triggered_by == "potion_thrown" then
          Gui.mes("magic.love_potion.spill", params.target)
          Skill.modify_impression(params.target, math.clamp(params.power / 15, 0, 15))
          params.target:apply_effect("elona.dimming", 100)

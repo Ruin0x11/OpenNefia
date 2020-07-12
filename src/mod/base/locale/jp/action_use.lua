@@ -175,7 +175,8 @@ end
       nuke = {
         cannot_place_here = "ここでは使えない。",
         not_quest_goal = "ここはクエストの目標位置ではない。本当にここに設置する？",
-        set_up = "原子爆弾を設置した。逃げろォー！"
+        set_up = "原子爆弾を設置した。逃げろォー！",
+        countdown = function(_1) return (" *%s* "):format(_1) end
       },
       out_of_charge = "それはもう使えない。",
       rope = {

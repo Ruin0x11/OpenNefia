@@ -28,7 +28,8 @@ local event = {
       { _id = "on_quest_failed" },
       { _id = "calc_map_music" },
       { _id = "on_step_dialog" },
-      { _id = "on_mef_stepped_on" }
+      { _id = "on_mef_stepped_on" },
+      { _id = "on_mef_stepped_off" }
 }
 
 data:add_multi("base.event", event)

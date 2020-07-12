@@ -15,12 +15,13 @@ function DirectionPrompt:init(x, y)
    self.center_x = x
    self.center_y = y
    self.frame = 0
-   self.cardinal = true
+   self.diagonal_only = false
    self.result = nil
    self.canceled = false
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
+   self.input:ignore_modifiers { "alt" }
 end
 
 function DirectionPrompt:make_keymap()
@@ -29,24 +30,36 @@ function DirectionPrompt:make_keymap()
          self.result = "Center"
       end,
       north = function()
-         if self.cardinal then
+         if not self.diagonal_only then
             self.result = "North"
          end
       end,
       south = function()
-         if self.cardinal then
+         if not self.diagonal_only then
             self.result = "South"
          end
       end,
       west = function()
-         if self.cardinal then
+         if not self.diagonal_only then
             self.result = "West"
          end
       end,
       east = function()
-         if self.cardinal then
+         if not self.diagonal_only then
             self.result = "East"
          end
+      end,
+      northwest = function()
+         self.result = "Northwest"
+      end,
+      northeast = function()
+         self.result = "Northeast"
+      end,
+      southwest = function()
+         self.result = "Southwest"
+      end,
+      southeast = function()
+         self.result = "Southeast"
       end,
       escape = function()
          self.canceled = true
@@ -78,9 +91,9 @@ function DirectionPrompt:draw()
 
    -- TODO move draw args into params
 
-   Draw.set_color({255,255,255,alpha})
+   Draw.set_color(255,255,255,alpha)
 
-   if self.cardinal then
+   if not self.diagonal_only then
       self.t.base.direction_arrow:draw(x, y - self.tile_height, nil, nil, nil, true, 0)
       self.t.base.direction_arrow:draw(x, y + self.tile_height, nil, nil, nil, true, 180)
       self.t.base.direction_arrow:draw(x + self.tile_width, y, nil, nil, nil, true, 90)
@@ -95,6 +108,8 @@ end
 
 function DirectionPrompt:update(dt)
    self.frame = self.frame + dt
+
+   self.diagonal_only = self.input:is_modifier_held("alt")
 
    if self.canceled then
       return nil, "canceled"

@@ -1,14 +1,7 @@
 local KeybindTranslator = class.class("KeybindTranslator")
 local config = require("internal.config")
 
-local MODIFIERS = {
-   shift = 1,
-   ctrl = 2,
-   alt = 4,
-   gui = 8
-}
-
--- NOTE: assumes en_US
+-- TODO: assumes en_US
 local SHIFTS = {
    ["?"] = "/",
    [">"] = ".",
@@ -40,9 +33,9 @@ local IGNORE_SHIFT = table.set {
 }
 
 function KeybindTranslator:init()
-   self.modifiers = 0
    self.translations = {}
    self.accepts = {}
+   self.ignored_modifiers = {}
    self.dirty = false
 end
 
@@ -122,6 +115,12 @@ function KeybindTranslator:load_key(key, action)
    self.translations[key] = action
 end
 
+function KeybindTranslator:ignore_modifiers(modifiers)
+   modifiers = modifiers or {}
+   assert(type(modifiers) == "table")
+   self.ignored_modifiers = table.set(modifiers)
+end
+
 function KeybindTranslator:key_to_keybind(key, modifiers, ignore_shift)
    if self.dirty then
       self:reload()
@@ -130,19 +129,20 @@ function KeybindTranslator:key_to_keybind(key, modifiers, ignore_shift)
 
    local ident = ""
 
-   if modifiers.ctrl then
+   if modifiers.ctrl and not self.ignored_modifiers.ctrl then
       ident = ident .. "ctrl_"
    end
-   if modifiers.alt then
+   if modifiers.alt and not self.ignored_modifiers.alt then
       ident = ident .. "alt_"
    end
    if modifiers.shift
       and key ~= "shift"
       and not ignore_shift
+      and not self.ignored_modifiers.shift
    then
       ident = ident .. "shift_"
    end
-   if modifiers.gui then
+   if modifiers.gui and not self.ignored_modifiers.gui then
       ident = ident .. "gui_"
    end
    ident = ident .. key

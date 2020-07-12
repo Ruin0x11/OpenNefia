@@ -9,5 +9,7 @@ return class.interface("IKeyInput",
                     bind_keys = "function",
                     unbind_keys = "function",
                     key_held_frames = "function",
+                    is_modifier_held = "function",
+                    ignore_modifiers = "function",
                  },
                  IInputHandler)

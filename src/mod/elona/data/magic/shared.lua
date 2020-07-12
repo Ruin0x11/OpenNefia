@@ -112,7 +112,7 @@ local function make_bolt(opts)
 
                if sx ~= tx or sy ~= ty then
                   if element and element.on_damage_tile then
-                     element:on_damage_tile(tx, ty)
+                     element:on_damage_tile(tx, ty, source)
                   end
                   local target = Chara.at(tx, ty, map)
                   if target and target ~= source then
@@ -448,7 +448,7 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
 
    -- TODO riding
    if element and element.on_damage_tile then
-      element:on_damage_tile(tx, ty)
+      element:on_damage_tile(tx, ty, source)
    end
 
    local dice = self:dice(params)
@@ -1193,6 +1193,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
 
       cast = function(self, params)
          local map = params.source:current_map()
+         local source = params.source
          local sx = params.source.x
          local sy = params.source.y
          if not map:has_los(sx, sy, params.x, params.y) then
@@ -1227,7 +1228,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
                if map:has_los(sx, sy, tx, ty) and (sx ~= tx or sy ~= ty) then
                   -- TODO riding
                   if element and element.on_damage_tile then
-                     element:on_damage_tile(tx, ty)
+                     element:on_damage_tile(tx, ty, source)
                   end
                   local chara = Chara.at(tx, ty, map)
                   if chara then

@@ -140,7 +140,7 @@ local inv_read = {
       return readable and item.on_read ~= nil
    end,
    on_select = function(ctxt, item)
-      return Action.read(ctxt.chara, item)
+      return ElonaAction.read(ctxt.chara, item)
    end
 }
 
@@ -151,7 +151,7 @@ local inv_drink = {
       return item.on_drink ~= nil
    end,
    on_select = function(ctxt, item)
-      return Action.drink(ctxt, item)
+      return ElonaAction.drink(ctxt, item)
    end
 }
 
@@ -159,7 +159,7 @@ local inv_zap = {
    source = { "chara", "ground" },
    shortcuts = true,
    filter = function(ctxt, item)
-      return item.on_drink ~= nil
+      return item.on_zap ~= nil
    end,
    on_select = function(ctxt, item)
       return Command.query_zap(ctxt, item)

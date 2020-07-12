@@ -108,16 +108,10 @@ function chip_layer:draw_drop_shadow(i, x, y, y_offset)
    end
 end
 
-local TYPES = {
-   "base.chara",
-   "base.item",
-   "base.feat",
-   "base.mef"
-}
 local CONFIG = {
    ["base.chara"] = {
       z_order = 3,
-      y_offset = -16,
+      y_offset = -16
    },
    ["base.item"] = {
       z_order = 2,
@@ -137,13 +131,15 @@ local CONFIG = {
    }
 }
 
+local TYPES = table.keys(CONFIG)
+
 function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
    local shadow_type = i.shadow_type
    local batch_ind = self.chip_batch_inds[i.uid]
    local image = i.drawable or i.image
    local x_offset = i.x_offset or 0
-   local y_offset_base = CONFIG[chip_type].y_offset - (stack_height or 0)
-   local y_offset = (i.y_offset or 0) + y_offset_base
+   local y_offset_base = CONFIG[chip_type].y_offset
+   local y_offset = (i.y_offset or y_offset_base or 0) - (stack_height or 0)
    if batch_ind == nil or batch_ind == 0 then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently
@@ -185,7 +181,7 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
          tile = "shadow",
          x = x,
          y = y,
-         y_offset = y_offset_base,
+         y_offset = y_offset,
          z_order = 0
       }
       self.shadow_batch_inds[i] = { ind = ind, x = x, y = y }
@@ -317,7 +313,7 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
 
          local ratio = ind.hp_ratio or 0.9
          self["i_" .. ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
-                                                      sy - draw_y + offy + ind.y * 48 + ind.y_offset + 48,
+                                                      sy - draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
                                                       ratio * 30, 3, ratio * 30)
       end
    end

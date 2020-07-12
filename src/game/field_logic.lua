@@ -1,3 +1,4 @@
+local Mef = require("api.Mef")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
@@ -77,11 +78,19 @@ local chara_iter = nil
 local chara_iter_state = nil
 local chara_iter_index = 0
 
+local function update_mefs(map)
+   for _, mef in Mef.iter(map) do
+      mef:step_turn()
+   end
+end
+
 function field_logic.turn_begin()
    local turn_result = Event.trigger("base.on_turn_begin", {}, nil)
    if turn_result then
       -- return turn_result
    end
+
+   update_mefs(field.map)
 
    local player = Chara.player()
 

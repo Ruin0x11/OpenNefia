@@ -93,7 +93,12 @@ local function add_index_field(self, dat, _type, field)
 
          local exist = self.index[_type][key][index_key]
          if exist ~= nil then
-            self:error(string.format("self.index value on '%s' is not unique: '%s:%s = %s'", _type, v, index_key, exist._id))
+            if env.is_hotloading() then
+               Log.warn("overwriting self.index value on '%s': '%s:%s = %s'", _type, v, index_key, exist._id)
+               self.index[_type][key][index_key] = dat
+            else
+               self:error(string.format("self.index value on '%s' is not unique: '%s:%s = %s'", _type, v, index_key, exist._id))
+            end
          else
             self.index[_type][key][index_key] = dat
          end

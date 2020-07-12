@@ -154,6 +154,14 @@ function TextHandler:prepend_key_modifiers(key)
    return new .. key
 end
 
+function TextHandler:is_modifier_held(modifier)
+   return not not self.modifiers[modifier]
+end
+
+function TextHandler:ignore_modifiers(modifiers)
+   self.keybinds:ignore_modifiers(modifiers)
+end
+
 
 function TextHandler:run_key_action(key, ...)
    local keybind
@@ -179,7 +187,7 @@ function TextHandler:run_key_action(key, ...)
    end
 
    if Log.has_level("trace") then
-      Log.trace("Keybind: %s %s %s", key, keybind, self)
+      Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
    end
 
    local ran, result = self:run_keybind_action(keybind, ...)

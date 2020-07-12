@@ -44,4 +44,8 @@ function SkillCheck.handle_control_magic(source, target, damage)
    end
 end
 
+function SkillCheck.is_floating(chara)
+   return chara:calc("is_floating") and not chara:has_effect("elona.gravity")
+end
+
 return SkillCheck

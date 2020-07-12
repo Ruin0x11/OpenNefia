@@ -2181,6 +2181,7 @@ local race =
                "elona.ring"
             },
 
+            can_pass_through_webs = true
          },
 
          skills = {

@@ -4,6 +4,7 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Effect = require("mod.elona.api.Effect")
 local Rand = require("api.Rand")
+local Mef = require("api.Mef")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -137,37 +138,6 @@ data:add {
       else
          Gui.mes("magic.common.resists")
       end
-
-      return true
-   end
-}
-
-data:add {
-   _id = "spell_web",
-   _type = "base.skill",
-   elona_id = 436,
-
-   type = "spell",
-   effect_id = "elona.web",
-   related_skill = "elona.stat_magic",
-   cost = 10,
-   range = RANGE_BOLT,
-   difficulty = 150,
-   target_type = "location"
-}
-data:add {
-   _id = "web",
-   _type = "elona_sys.magic",
-   elona_id = 436,
-
-   params = {
-      "source",
-   },
-
-   cast = function(self, params)
-      local source = params.source
-
-      error("TODO")
 
       return true
    end

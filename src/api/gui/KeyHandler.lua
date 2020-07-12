@@ -138,6 +138,14 @@ function KeyHandler:prepend_key_modifiers(key)
    return new .. key
 end
 
+function KeyHandler:is_modifier_held(modifier)
+   return not not self.modifiers[modifier]
+end
+
+function KeyHandler:ignore_modifiers(modifiers)
+   self.keybinds:ignore_modifiers(modifiers)
+end
+
 function KeyHandler:run_key_action(key, ...)
    local it = self.repeat_delays[key]
    if it then
@@ -161,7 +169,7 @@ function KeyHandler:run_key_action(key, ...)
 
    local keybind = self.keybinds:key_to_keybind(key, self.modifiers)
    if Log.has_level("trace") then
-      Log.trace("Keybind: %s %s %s", key, keybind, self)
+      Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
    end
 
    if self.bindings[keybind] == nil then

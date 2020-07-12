@@ -18,6 +18,7 @@ local event = {
    { _id = "calc_wand_success" },
    { _id = "on_shop_restocked" },
    { _id = "calc_return_forbidden" },
+   { _id = "before_physical_attack" },
 }
 
 data:add_multi("base.event", event)
