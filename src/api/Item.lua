@@ -47,13 +47,12 @@ end
 --- @tparam[opt] IItem item
 --- @tparam[opt] InstancedMap map Map to check for existence in
 function Item.is_alive(item, map)
-   map = map or Map.current()
    if type(item) ~= "table" or item.amount <= 0 then
       return false
    end
 
    if map == nil then
-      return item:current_map() ~= nil
+      return item.location ~= nil
    end
 
    local their_map = item:current_map()

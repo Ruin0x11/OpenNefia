@@ -157,7 +157,7 @@ end,
     curse = {
       apply = function(_1, _2)
   return ("%sの%sは黒く輝いた。")
-  :format(name(_1), _2)
+  :format(name(_1), itemname(_2))
 end,
       no_effect = "あなたは祈祷を捧げ呪いのつぶやきを無効にした。",
       spell = function(_1, _2)

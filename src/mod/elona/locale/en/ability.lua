@@ -127,7 +127,7 @@ return {
             description = "Heal self",
             name = "Cure of Jure"
          },
-         spell_curse = {
+         action_curse = {
             description = "Curse target",
             name = "Curse"
          },

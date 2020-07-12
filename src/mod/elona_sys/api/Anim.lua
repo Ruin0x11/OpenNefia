@@ -53,7 +53,7 @@ function Anim.load(anim_id, tx, ty)
       while frame <= frames do
          asset:draw_region(frame, sx + 24, sy + 8, nil, nil, {255, 255, 255}, rotation * frame)
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] * wait)
+         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] + wait/2)
          frame = frame + frames_passed
       end
    end

@@ -32,16 +32,10 @@ function Tools.spawn_equipped_foes(count)
       if x then
          local c = Chara.create("elona.yeek", x, y)
 
-         local gen = function() return Item.create(Rand.choice(keys), 0, 0, { ownerless = true }) end
-         local pred = function(i) return i.equip_slots ~= nil end
-         local iter = fun.tabulate(gen):filter(pred)
-
-         for _, i in iter:take(17) do
-            local slot = c:find_equip_slot_for(i)
-            if slot then
-               assert(c:equip_item(i, true))
-            end
-         end
+         local item = Item.create("elona.long_bow", nil, nil, {}, c)
+         c:equip_item(item)
+         item = Item.create("elona.arrow", nil, nil, {}, c)
+         c:equip_item(item)
 
          c:refresh()
       end

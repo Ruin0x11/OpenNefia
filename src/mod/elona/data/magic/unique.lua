@@ -4,7 +4,8 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Effect = require("mod.elona.api.Effect")
 local Rand = require("api.Rand")
-local Mef = require("api.Mef")
+local Item = require("api.Item")
+local Anim = require("mod.elona_sys.api.Anim")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -141,4 +142,114 @@ data:add {
 
       return true
    end
+}
+
+local function do_curse(self, params)
+   local source = params.source
+   local target = params.target
+
+   local chance = params.power / 2
+   if Effect.is_cursed(params.curse_state) then
+      chance = chance * 100
+   end
+   local resistance = 75 + target:skill_level("elona.stat_luck")
+   -- TODO enchantment: resist curse
+   if Rand.rnd(resistance) > chance then
+      return true
+   end
+
+   if target:is_allied() then
+      if target:has_trait("elona.res_curse") and Rand.one_in(3) then
+         Gui.mes("magic.curse.no_effect")
+         return true
+      end
+   end
+
+   local filter = function(item)
+      if not Item.is_alive(item) then
+         return false
+      end
+      if item:calc("curse_state") == "blessed" and Rand.one_in(10) then
+         return false
+      end
+      return true
+   end
+
+   local considering = target:iter_equipment():filter(filter):to_list()
+   require("api.Log").info("%d %d", #considering, target:iter_equipment():length())
+
+   if #considering == 0 then
+      local items = target:iter_inventory():to_list()
+      for _ = 1, 200 do
+         local item = Rand.choice(items)
+         if filter(item) then
+            considering[#considering+1] = item
+            break
+         end
+      end
+   end
+
+   if #considering == 0 then
+      Gui.mes("common.nothing_happens")
+      return true, { obvious = false }
+   end
+
+   local item = Rand.choice(considering)
+
+   Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item)
+   if item.curse_state == "cursed" then
+      item.curse_state = "doomed"
+   else
+      item.curse_state = "cursed"
+   end
+   target:refresh()
+   Gui.play_sound("base.curse3")
+   local cb = Anim.load("elona.anim_curse", target.x, target.y)
+   Gui.start_draw_callback(cb)
+   item:stack()
+
+   return true
+end
+
+data:add {
+   _id = "action_curse",
+   _type = "base.skill",
+   elona_id = 645,
+
+   type = "action",
+   effect_id = "elona.curse",
+   related_skill = "elona.stat_magic",
+   cost = 10,
+   range = 4,
+   difficulty = 100,
+   target_type = "enemy"
+}
+data:add {
+   _id = "curse",
+   _type = "elona_sys.magic",
+   elona_id = 645,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      Gui.mes_visible("magic.curse.spell", params.target.x, params.target.y, params.source, params.target)
+
+      return do_curse(self, params)
+   end
+}
+
+data:add {
+   _id = "effect_curse",
+   _type = "elona_sys.magic",
+   elona_id = 1114,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = do_curse
 }
