@@ -413,6 +413,31 @@ function InstancedMap:reveal_tile(x, y, tile_id)
 
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
+
+   self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+end
+
+function InstancedMap:reveal_objects(x, y)
+   local memory = self._memory
+   local ind = y * self._width + x + 1;
+
+   for _, obj in self._multi_pool:objects_at_pos(x, y) do
+      local m = obj:produce_memory()
+      memory[obj._type] = memory[obj._type] or {}
+      memory[obj._type][ind] = memory[obj._type][ind] or {}
+      table.insert(memory[obj._type][ind], m)
+   end
+end
+
+function InstancedMap:forget_objects(x, y)
+   local memory = self._memory
+   local ind = y * self._width + x + 1;
+
+   for t, m in pairs(memory) do
+      if t ~= "base.map_tile" then
+         table.replace_with(m, {})
+      end
+   end
 end
 
 function InstancedMap:iter_memory(_type)

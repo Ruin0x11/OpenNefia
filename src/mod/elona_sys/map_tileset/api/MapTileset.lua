@@ -104,4 +104,9 @@ function MapTileset.get(tile_id, map)
    return id
 end
 
+function MapTileset.get_default_tile(map)
+   local tileset = data["elona_sys.map_tileset"]:ensure(map.tileset or "elona.default")
+   return tileset.fog
+end
+
 return MapTileset

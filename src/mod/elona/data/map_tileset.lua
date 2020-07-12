@@ -27,7 +27,7 @@ data:add_multi(
             ["elona.mapgen_tunnel"] = "elona.dark_dirt_1",
          },
 
-         fog = "wall_stone_4_fog"
+         fog = "elona.wall_stone_4_fog"
       },
       {
          _id = "jail",

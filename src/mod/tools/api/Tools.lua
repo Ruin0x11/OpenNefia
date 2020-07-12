@@ -613,6 +613,10 @@ function Tools.memorize_map()
    Map.current():iter_tiles():each(function(x, y) Map.current():memorize_tile(x, y) end)
 end
 
+function Tools.forget_map()
+   Map.current():iter_tiles():each(function(x, y) Map.current():reveal_tile(x, y, "elona.grass") end)
+end
+
 function Tools.fill_with_mef(id, duration, power)
    Map.current():iter_tiles():each(function(x, y) Mef.create(id, x, y, { duration = duration, power = power }) end)
 end

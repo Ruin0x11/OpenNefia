@@ -8,6 +8,7 @@ local Item = require("api.Item")
 local Anim = require("mod.elona_sys.api.Anim")
 local Inventory = require("api.Inventory")
 local Input = require("api.Input")
+local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -303,5 +304,114 @@ data:add {
       Input.query_inventory(source, "elona.inv_get_pocket", { container = pocket }, "elona.four_dimensional_pocket")
 
       return false
+   end
+}
+
+local function do_sense(self, params, passes, reveal_cb, forget_cb, message)
+   local curse_state = params.curse_state
+   local is_cursed = Effect.is_cursed(curse_state)
+   local source = params.source
+   local power = params.power
+   local map = params.source:current_map()
+
+   if not source:is_allied() then
+      Gui.mes("common.nothing_happens")
+      return false, { obvious = false }
+   end
+
+   for _=1, passes do
+      for _, x, y in map:iter_tiles() do
+         if is_cursed then
+            forget_cb(x, y, map)
+         else
+            local dist = Pos.dist(source.x, source.y, x, y)
+            if dist < 7 or Rand.rnd(power+1) > Rand.rnd(dist*8+1) or params.curse_state == "blessed" then
+               reveal_cb(x, y, map)
+            end
+         end
+      end
+   end
+
+   if is_cursed then
+      Gui.mes("magic.sense.cursed")
+   else
+      Gui.mes(message, source)
+   end
+
+   local cb = Anim.load("elona.anim_sparkle", source.x, source.y)
+   Gui.start_draw_callback(cb)
+   -- TODO refresh minimap
+end
+
+data:add {
+   _id = "spell_magic_map",
+   _type = "base.skill",
+   elona_id = 429,
+
+   type = "spell",
+   effect_id = "elona.magic_map",
+   related_skill = "elona.stat_perception",
+   cost = 30,
+   range = 0,
+   difficulty = 450,
+   target_type = "self"
+}
+data:add {
+   _id = "magic_map",
+   _type = "elona_sys.magic",
+   elona_id = 463,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local map = params.source:current_map()
+      local default_tile = MapTileset.get_default_tile("elona.mapgen_tunnel", map)
+
+      local reveal = function(x, y, map)
+         map:memorize_tile(x, y, "tile")
+      end
+      local forget = function(x, y, map)
+         map:reveal_tile(x, y, default_tile)
+      end
+
+      return do_sense(self, params, 2, reveal, forget, "magic.sense.magic_mapping")
+   end
+}
+
+data:add {
+   _id = "spell_sense_object",
+   _type = "base.skill",
+   elona_id = 430,
+
+   type = "spell",
+   effect_id = "elona.sense_object",
+   related_skill = "elona.stat_perception",
+   cost = 22,
+   range = 0,
+   difficulty = 250,
+   target_type = "self"
+}
+data:add {
+   _id = "sense_object",
+   _type = "elona_sys.magic",
+   elona_id = 430,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local reveal = function(x, y, map)
+         map:reveal_objects(x, y)
+      end
+      local forget = function(x, y, map)
+         map:forget_objects(x, y)
+      end
+
+      return do_sense(self, params, 1, reveal, forget, "magic.sense.sense_object")
    end
 }
