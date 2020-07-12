@@ -3,6 +3,7 @@ local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
+local Input = require("api.Input")
 
 data:add {
    _id = "pickpocket",
@@ -28,6 +29,7 @@ data:add {
 
       local source = params.source
       if source:is_player() and not Effect.do_stamina_check(source, self) then
+         Gui.mes("magic.common.too_exhausted")
          return true
       end
 
@@ -97,6 +99,7 @@ data:add {
       end
 
       if source:is_player() and not Effect.do_stamina_check(source, self) then
+         Gui.mes("magic.common.too_exhausted")
          return true
       end
 
@@ -141,6 +144,7 @@ data:add {
       end
 
       if source:is_player() and not Effect.do_stamina_check(source, self) then
+         Gui.mes("magic.common.too_exhausted")
          return true
       end
 

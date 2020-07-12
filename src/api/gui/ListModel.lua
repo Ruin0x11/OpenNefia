@@ -58,6 +58,10 @@ function ListModel:select_previous(delta)
    self:select_next(-(delta or 1))
 end
 
+function ListModel:selected_index()
+   return self.selected
+end
+
 function ListModel:selected_item()
    return self.items[self.selected]
 end

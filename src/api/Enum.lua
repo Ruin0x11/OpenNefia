@@ -23,4 +23,14 @@ Enum.TileRole = {
 	SandWater = 10
 }
 
+Enum.OwnState = {
+    Inherited = "inherited",       -- -2
+    None = "none",                 -- 0
+    NotOwned = "not_owned",        -- 1
+    Shop = "shop",                 -- 2
+    Shelter = "shelter",           -- 3
+    Harvested = "harvested",       -- 4
+    Unobtainable = "unobtainable", -- 5
+}
+
 return Enum

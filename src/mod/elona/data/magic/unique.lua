@@ -6,54 +6,12 @@ local Effect = require("mod.elona.api.Effect")
 local Rand = require("api.Rand")
 local Item = require("api.Item")
 local Anim = require("mod.elona_sys.api.Anim")
+local Inventory = require("api.Inventory")
+local Input = require("api.Input")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
 local RANGE_BREATH = 5
-
-data:add {
-   _id = "return",
-   _type = "elona_sys.magic",
-   elona_id = 428,
-
-   type = "skill",
-   params = {
-      "source"
-   },
-
-   related_skill = "elona.stat_perception",
-   cost = 20,
-   range = 10000,
-   difficulty = 550,
-
-   cast = function(self, params)
-      local source = params.source
-      if not source:is_player() then
-         Gui.mes("common.nothing_happens")
-         return true, { obvious = false }
-      end
-
-      local s = save.elona
-      if s.turns_until_cast_return ~= 0 then
-         Gui.mes("magic.return.cancel")
-         s.turns_until_cast_return = 0
-      else
-         local map_uid = Effect.query_return_location(source)
-
-         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
-            Gui.mes("jail") -- TODO
-         end
-
-         if map_uid then
-            s.return_destination_map_uid = map_uid
-            s.turns_until_cast_return = 15 + Rand.rnd(15)
-         end
-      end
-
-      return true
-   end
-}
-
 
 data:add {
    _id = "spell_gravity",
@@ -176,7 +134,6 @@ local function do_curse(self, params)
    end
 
    local considering = target:iter_equipment():filter(filter):to_list()
-   require("api.Log").info("%d %d", #considering, target:iter_equipment():length())
 
    if #considering == 0 then
       local items = target:iter_inventory():to_list()
@@ -252,4 +209,99 @@ data:add {
    },
 
    cast = do_curse
+}
+
+data:add {
+   _id = "spell_return",
+   _type = "base.skill",
+   elona_id = 428,
+
+   type = "spell",
+   effect_id = "elona.return",
+   related_skill = "elona.stat_perception",
+   cost = 28,
+   range = 0,
+   difficulty = 550,
+   target_type = "self"
+}
+data:add {
+   _id = "return",
+   _type = "elona_sys.magic",
+   elona_id = 428,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local s = save.elona
+      if s.turns_until_cast_return ~= 0 then
+         Gui.mes("magic.return.cancel")
+         s.turns_until_cast_return = 0
+      else
+         local map_uid = Effect.query_return_location(source)
+
+         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
+            Gui.mes("jail") -- TODO
+         end
+
+         if map_uid then
+            s.return_destination_map_uid = map_uid
+            s.turns_until_cast_return = 15 + Rand.rnd(15)
+         end
+      end
+
+      return true
+   end
+}
+
+data:add {
+   _id = "spell_four_dimensional_pocket",
+   _type = "base.skill",
+   elona_id = 463,
+
+   type = "spell",
+   effect_id = "elona.four_dimensional_pocket",
+   related_skill = "elona.stat_perception",
+   cost = 60,
+   range = 0,
+   difficulty = 750,
+   target_type = "self"
+}
+data:add {
+   _id = "four_dimensional_pocket",
+   _type = "elona_sys.magic",
+   elona_id = 463,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      Gui.play_sound("base.teleport1")
+      Gui.mes("magic.four_dimensional_pocket")
+
+      local s = save.elona
+      if s.four_dimensional_pocket == nil then
+         s.four_dimensional_pocket = Inventory:new()
+      end
+
+      local pocket = s.four_dimensional_pocket
+      pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
+      pocket.max_weight = params.power * 100
+
+      Input.query_inventory(source, "elona.inv_get_pocket", { container = pocket }, "elona.four_dimensional_pocket")
+
+      return false
+   end
 }

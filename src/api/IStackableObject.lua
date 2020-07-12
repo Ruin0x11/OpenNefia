@@ -109,6 +109,7 @@ end
 -- @treturn[2] nil
 -- @retval_ownership self where
 function IStackableObject:move_some(amount, where, x, y, no_stack)
+   amount = amount or self.amount
    local separated = self:separate(amount, false)
 
    if separated == nil then

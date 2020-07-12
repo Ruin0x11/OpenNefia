@@ -58,6 +58,8 @@ end
 
 SpellsMenu.sound = "base.spell"
 
+local last_index
+
 function SpellsMenu:init(chara)
    self.chara = chara
 
@@ -71,6 +73,10 @@ function SpellsMenu:init(chara)
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
+
+   if last_index then
+      self.pages:select(last_index)
+   end
 end
 
 function SpellsMenu:make_keymap()
@@ -111,12 +117,14 @@ end
 
 function SpellsMenu:update()
    if self.canceled then
+      last_index = self.pages:selected_index()
       return nil, "canceled"
    end
 
    if self.pages.changed then
       self.win:set_pages(self.pages)
    elseif self.pages.chosen then
+      last_index = self.pages:selected_index()
       return { type = "spell", _id = self.pages:selected_item()._id }
    end
 

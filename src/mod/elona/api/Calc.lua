@@ -107,15 +107,14 @@ function Calc.round_margin(a, b)
    end
 end
 
-function Calc.do_stamina_action(chara, delta)
-   chara:damage_sp(delta)
-   return chara.stamina >= 50 or chara.stamina >= Rand.rnd(75)
-end
-
 function Calc.make_sound(chara, map)
 end
 
 function Calc.make_guards_hostile(map)
+end
+
+function Calc.calc_item_value(item, mode)
+   return item:calc("value")
 end
 
 return Calc

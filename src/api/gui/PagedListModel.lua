@@ -48,8 +48,12 @@ function PagedListModel:len()
    return #self.items_
 end
 
+function PagedListModel:selected_index()
+   return self.selected_
+end
+
 function PagedListModel:update_selected_index()
-   self.selected_ = self.page_size * self.page + self.model.selected
+   self.selected_ = self.page_size * self.page + self.model:selected_index()
 end
 
 function PagedListModel:select(i)
@@ -57,6 +61,7 @@ function PagedListModel:select(i)
    local index = i % self.page_size
    self:select_page(page)
    self.model:select(index)
+   self:update_selected_index()
 end
 
 function PagedListModel:get_item_text(item)

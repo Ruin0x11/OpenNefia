@@ -7,6 +7,7 @@ local Inventory = class.class("Inventory", ILocation)
 function Inventory:init(max_size, type_id)
    self.max_size = max_size or 200
    self.type_id = type_id or "base.item"
+   self.max_weight = nil
 
    -- TODO: UID generation and positional access aren't necessary here.
    local uids = require("internal.global.save").base.uids
@@ -15,8 +16,12 @@ function Inventory:init(max_size, type_id)
    self.filters = {}
 end
 
+function Inventory:set_max_size(max_size)
+   self.max_size = max_size
+end
+
 function Inventory:is_full()
-   return self.pool:object_count() >= self.max_size
+   return self:len() >= self.max_size
 end
 
 function Inventory:sorted_by(comparator)

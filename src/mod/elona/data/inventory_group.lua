@@ -57,3 +57,13 @@ data:add {
       "elona.inv_drop",
    }
 }
+
+data:add {
+   _type = "elona_sys.inventory_group",
+   _id = "four_dimensional_pocket",
+
+   protos = {
+      "elona.inv_get_pocket",
+      "elona.inv_put_pocket"
+   }
+}

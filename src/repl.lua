@@ -1,3 +1,8 @@
+---
+--- This file is a separate entrypoint for running the game headlessly (without
+--- LÖVE, under stock LuaJIT).
+---
+
 _CONSOLE = true
 require("boot")
 

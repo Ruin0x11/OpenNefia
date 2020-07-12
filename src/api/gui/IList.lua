@@ -3,11 +3,12 @@ local ISettable = require("api.gui.ISettable")
 return class.interface("IList",
                  {
                     changed = "boolean",
-                    selected = "number",
+                    selected = "number", -- TODO replace with selected_index()
                     chosen = "boolean",
                     items = "table",
                     get = "function",
                     selected_item = "function",
+                    selected_index = "function",
                     select = "function",
                     select_next = "function",
                     select_previous = { type = "function", default = function(self, delta) self:select_next(-(delta or 1)) end },

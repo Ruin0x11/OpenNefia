@@ -2,16 +2,30 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Action = require("api.Action")
 local Input = require("api.Input")
-local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
+local Calc = require("mod.elona.api.Calc")
+local Effect = require("mod.elona.api.Effect")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
       Gui.mes("action.cannot_do_in_global")
       return "player_turn_query"
    end
+end
+
+local function can_take(item)
+   if item.own_state == "not_owned" or item.own_state == "shop" then
+      Gui.play_sound("base.fail1")
+      if item.own_state == "not_owned" then
+         Gui.mes("action.get.not_owned")
+      elseif item.own_state == "shop" then
+         Gui.mes("action.get.cannot_carry")
+      end
+      return false
+   end
+   return true
 end
 
 local inv_examine = {
@@ -101,9 +115,7 @@ local inv_get = {
    icon = 7,
    text = "ui.inventory_command.get",
    on_select = function(ctxt, item, amount)
-      if not ctxt.chara:owns_item(item) then
-         Gui.play_sound("base.fail1");
-         Gui.mes("It's not yours.")
+      if not can_take(item) then
          return "turn_end"
       end
 
@@ -250,23 +262,28 @@ local inv_buy = {
          return false, "marked as no drop"
       end
 
+      if not can_take(item) then
+         return "turn_end"
+      end
+
       return true
    end,
    on_select = function(ctxt, item, amount)
-      if not Input.yes_no("Really buy?") then
+      Gui.mes("ui.inv.buy.prompt", item:build_name(amount), amount)
+      if not Input.yes_no() then
          return "inventory_continue"
       end
 
-      local cost = item:calc("value") * amount
+      local cost = Calc.calc_item_value(item) * amount
 
-      if cost > ctxt.chara.gold then -- TODO
-         Gui.mes("not enough money")
+      if cost > ctxt.chara.gold then
+         Gui.mes("ui.inv.buy.not_enough_money")
          return "inventory_continue"
       end
 
       local separated = Action.get(ctxt.chara, item, amount)
       if not separated then
-         Gui.mes("inventory is full")
+         Gui.mes("ui.inv.buy.common.inventory_is_full")
          return "inventory_continue"
       end
 
@@ -296,10 +313,15 @@ local inv_sell = {
          return false, "marked as no drop"
       end
 
+      if not can_take(item) then
+         return "turn_end"
+      end
+
       return true
    end,
    on_select = function(ctxt, item, amount)
-      if not Input.yes_no("Really sell?") then
+      Gui.mes("ui.inv.sell.prompt", item:build_name(amount), amount)
+      if not Input.yes_no() then
          return "inventory_continue"
       end
 
@@ -453,3 +475,91 @@ local inv_steal = {
    end
 }
 data:add(inv_steal)
+
+local inv_get_pocket = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_get_pocket",
+   elona_id = 22,
+   elona_sub_id = 5,
+
+   sources = { "container" },
+   icon = 17,
+   show_money = false,
+   query_amount = true,
+   text = "ui.inventory_command.put",
+
+   can_select = function(ctxt, item)
+      local success = Effect.do_stamina_check(ctxt.chara, 10)
+      if not success then
+         Gui.mes("magic.common.too_exhausted")
+         return "turn_end"
+      end
+
+      if not can_take(item) then
+         return "turn_end"
+      end
+
+      return true
+   end,
+
+   on_select = function(ctxt, item, amount)
+      local result = Action.get_from_container(ctxt.chara, item, amount)
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_get_pocket)
+
+local inv_put_pocket = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_put_pocket",
+   elona_id = 24,
+   elona_sub_id = 5,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = true,
+   text = "ui.inventory_command.put",
+
+   can_select = function(ctxt, item)
+      local success = Effect.do_stamina_check(ctxt.chara, 10)
+      if not success then
+         Gui.mes("magic.common.too_exhausted")
+         return "turn_end"
+      end
+
+      if not can_take(item) then
+         return "turn_end"
+      end
+
+      return true
+   end,
+
+   on_select = function(ctxt, item, amount)
+      -- HACK: Assuming ctxt.container is an api.Inventory. Probably want to have
+      -- an IInventory interface that both IChara and Inventory satisfy.
+      if ctxt.container:is_full() then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.container.full")
+         return "inventory_continue"
+      end
+
+      if item:calc("weight") >= ctxt.container.max_weight then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.container.too_heavy", ctxt.container.max_weight)
+         return "inventory_continue"
+      end
+
+      if item.is_cargo then
+         Gui.play_sound("base.fail1")
+         Gui.mes("ui.inv.put.container.cannot_hold_cargo")
+         return "inventory_continue"
+      end
+
+      local result = Action.put_in_container(ctxt.container, item, amount)
+
+      return "inventory_continue"
+   end
+}
+data:add(inv_put_pocket)

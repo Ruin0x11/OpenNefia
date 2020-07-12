@@ -1,3 +1,8 @@
+---
+--- This file is run when the REPL starts up and affects its private
+--- environment. Any globals set here will be accessable in the REPL.
+---
+
 Tools = require("mod.tools.api.Tools")
 Itemgen = require("mod.tools.api.Itemgen")
 Charagen = require("mod.tools.api.Charagen")

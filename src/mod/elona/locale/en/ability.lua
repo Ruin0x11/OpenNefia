@@ -556,7 +556,7 @@ return {
             description = "Resurrect dead",
             name = "Resurrection"
          },
-         ["return"] = {
+         spell_return = {
             description = "Return",
             name = "Return"
          },

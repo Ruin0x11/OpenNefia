@@ -26,6 +26,10 @@ local function test_room(self, player)
    item = Item.create("elona.arrow", nil, nil, {}, player)
    player:equip_item(item)
 
+   Item.create("elona.putitoro", nil, nil, {}, player)
+   Item.create("elona.rod_of_identify", nil, nil, {}, player)
+   Item.create("elona.stomafillia", nil, nil, {}, player)
+
    player:heal_to_max()
 
    for _, x, y in map:iter_tiles() do

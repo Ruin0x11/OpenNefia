@@ -43,6 +43,11 @@ local function source_shop(ctxt)
    return ctxt.shop:iter()
 end
 
+local function source_container(ctxt)
+   class.assert_is_an(ILocation, ctxt.container)
+   return ctxt.container:iter()
+end
+
 local sources = {
    {
       name = "chara",
@@ -101,6 +106,18 @@ local sources = {
          shop = "table"
       }
    },
+   {
+      -- TODO: maybe it would be better to have an IInventory interface so
+      -- either IChara or Inventory can be passed transparently. However there
+      -- are some assumptions made about position being available if a character
+      -- is being used, but Inventory doesn't necessarily have position.
+      name = "container",
+      getter = source_container,
+      order = 7000,
+      params = {
+         container = "table"
+      }
+   },
 }
 
 sources = fun.iter(sources):map(function(s) return s.name, s end):to_map()
@@ -133,6 +150,7 @@ function InventoryContext:init(proto, params)
    self.shortcuts = self.proto.shortcuts
    self.stack = {}
 
+   -- Valid parameters to pass in the `params` table.
    self.chara = params.chara or nil
    self.target = params.target or nil
    self.container = params.container or nil

@@ -167,6 +167,37 @@ function Action.drop(chara, item, amount)
    return false
 end
 
+--- @tparam IChara chara
+--- @tparam IItem item
+--- @tparam[opt] int amount
+--- @treturn bool success
+function Action.get_from_container(chara, item, amount)
+   -- TODO food rotting
+   return item:emit("base.on_get_item", {chara=chara,amount=amount}, false)
+end
+
+--- @tparam ILocation container
+--- @tparam IItem item
+--- @tparam[opt] int amount
+--- @treturn bool success
+function Action.put_in_container(container, item, amount)
+   if item == nil then
+      return false
+   end
+
+   -- TODO food rotting
+   -- item:emit("base.on_put_item", {chara=chara,amount=amount}, false) -- rotting
+
+   local success = item:move_some(amount, container)
+   if success then
+      Gui.play_sound(Rand.choice({"base.get1", "base.get2"}))
+      Gui.mes("action.pick_up.put_in_container", item:build_name(amount))
+      return true
+   end
+
+   return false
+end
+
 local hook = function(name, f) return f end
 
 local can_unequip = hook("can_unequip",

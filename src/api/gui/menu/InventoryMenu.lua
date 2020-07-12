@@ -298,7 +298,10 @@ function InventoryMenu:update()
 
    if self.pages.chosen then
       local can_select, reason = self:can_select()
-      if not can_select then
+      if type(can_select) == "string" then
+         -- This is a turn result, like "turn_end".
+         return can_select
+      elseif not can_select then
          Gui.mes("Can't select: " .. reason)
       else
          if self.returns_item then

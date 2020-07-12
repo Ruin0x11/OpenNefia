@@ -386,6 +386,7 @@ function Magic.do_action(skill_id, caster)
    if skill_data.type == "action" then
       local success = Effect.do_stamina_check(caster, skill_data.cost, skill_data.related_skill)
       if not success then
+         Gui.mes("magic.common.too_exhausted")
          return true
       end
    end

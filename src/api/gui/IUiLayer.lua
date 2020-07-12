@@ -16,6 +16,17 @@ function IUiLayer:default_z_order()
    return 100000
 end
 
+local function trimmed_traceback(err, regex)
+   local lines = {}
+   for line in string.lines(debug.traceback(err)) do
+      if line:match(regex) or line:match("%.%.%.")then
+         break
+      end
+      lines[#lines+1] = line
+   end
+   return table.concat(lines, "\n")
+end
+
 --- Starts drawing this UI layer and switches input focus to it.
 ---
 --- @treturn[opt] any The value returned by the layer's `update`
@@ -84,7 +95,7 @@ function IUiLayer:query(z_order)
                return self:update(dt, ran)
             end,
             function(err)
-               return err
+               return trimmed_traceback(err, "IUiLayer.* in function 'query'")
             end)
          if not success then
             Log.error("Error on query:\n\t%s", res)

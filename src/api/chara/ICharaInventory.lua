@@ -58,27 +58,7 @@ function ICharaInventory:has_item_in_inventory(item)
 end
 
 function ICharaInventory:take_item(item, amount)
-   amount = amount or item.amount
-
-   local success
-
-   if amount == item.amount then
-      success = self:take_object(item)
-
-      if success then
-         item:stack()
-      end
-
-      return success
-   else
-      local separated = item:move_some(amount, self)
-
-      if separated then
-         separated:stack()
-      end
-
-      return separated
-   end
+   return item:move_some(amount, self)
 end
 
 --- Iterates the items in the character's inventory (excluding
@@ -87,11 +67,6 @@ end
 --- @treturn iterator(IItem)
 function ICharaInventory:iter_inventory()
    return self.inv:iter()
-end
-
-function ICharaInventory:owns_item(item)
-   -- TODO
-   return item.ownership == "none"
 end
 
 return ICharaInventory
