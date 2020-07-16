@@ -381,7 +381,7 @@
            (result (open-nefia--do-completing-read "Candidate: " cands
                                                    :require-match t
                                                    :caller 'open-nefia--command-locale-search)))
-      (message "%s" result))))
+      (insert (format "\"%s\"" result)))))
 
 (if (fboundp 'ivy-configure)
     (ivy-configure 'open-nefia--command-locale-search

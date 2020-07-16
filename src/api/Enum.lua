@@ -33,4 +33,11 @@ Enum.OwnState = {
     Unobtainable = "unobtainable", -- 5
 }
 
+Enum.IdentifyState = {
+	None = 0,
+	Name = 1,
+	Quality = 2,
+	Full = 3
+}
+
 return Enum

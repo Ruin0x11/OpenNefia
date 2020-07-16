@@ -563,3 +563,24 @@ local inv_put_pocket = {
    end
 }
 data:add(inv_put_pocket)
+
+local inv_identify = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_identify",
+   elona_id = 13,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   text = "ui.inventory_command.identify",
+
+   filter = function(ctxt, item)
+      return item.identify_state ~= "completely"
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end
+}
+data:add(inv_identify)

@@ -9,6 +9,7 @@ local I18N = require("api.I18N")
 local Rand = require("api.Rand")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Queue = require("api.Queue")
+local Magic = require("mod.elona_sys.api.Magic")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -69,7 +70,7 @@ local function make_bolt(opts)
          local level = params.source:skill_level(full_id)
          return {
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
-            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
@@ -245,7 +246,7 @@ local function make_arrow(opts)
          local level = params.source:skill_level(full_id)
          return {
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
-            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
@@ -401,7 +402,7 @@ local function make_ball(opts)
          local level = params.source:skill_level(full_id)
          return {
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
-            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
@@ -630,7 +631,7 @@ data:add {
       local level = params.source:skill_level("elona.action_suicide_attack")
       return {
          x = 1 + level / 25,
-         y = 15 + level / 5,
+         y = 15 + level / 5 + 1,
          bonus = 0
       }
    end,
@@ -747,7 +748,7 @@ local function make_heal(opts)
          local level = params.source:skill_level(full_id)
          return {
             x = (opts.dice_x and opts.dice_x(params.power, level)) or 0,
-            y = (opts.dice_y and opts.dice_y(params.power, level)) or 0,
+            y = ((opts.dice_y and opts.dice_y(params.power, level)) or 0) + 1,
             bonus = (opts.dice_bonus and opts.dice_bonus(params.power, level)) or 0,
             element_power = (opts.dice_element_power and opts.dice_element_power(params.power, level)) or 0
          }
@@ -1186,7 +1187,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
          local level = params.source:skill_level("elona.action_" .. id)
          return {
             x = 1 + level / dice_x,
-            y = dice_y,
+            y = dice_y + 1,
             bonus = level / bonus
          }
       end,
@@ -1273,3 +1274,77 @@ make_breath("darkness",  609, 15, 7, 8,  10)
 make_breath("mind",      610, 15, 7, 8,  10)
 make_breath("nerve",     611, 15, 7, 8,  10)
 make_breath(nil,         612, 20, 6, 15, 10)
+
+
+local function make_remove_hex(opts)
+   local full_id = "elona.spell_" .. opts._id
+
+   data:add {
+      _id = "spell_" .. opts._id,
+      _type = "base.skill",
+      elona_id = opts.elona_id,
+
+      type = "spell",
+      effect_id = "elona." .. opts._id,
+      related_skill = "elona.stat_will",
+      cost = opts.cost,
+      range = 0,
+      difficulty = opts.difficulty,
+      target_type = "self_or_nearby"
+   }
+
+   data:add {
+      _id = opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      params = {
+         "source",
+         "target"
+      },
+
+      dice = function(self, params)
+         local level = params.source:skill_level(full_id)
+         return {
+            x = 0,
+            y = 1,
+            bonus = opts.bonus(params.power, level)
+         }
+      end,
+
+      cast = function(self, params)
+         local target = params.target
+
+         if Effect.is_cursed(params.curse_state) then
+            Gui.mes_visible("magic.common.cursed", target.x, target.y, target)
+            return Magic.cast("elona.curse", params)
+         end
+
+         local dice = self:dice(params)
+
+         Gui.mes("TODO")
+
+         local cb = Anim.load("elona.anim_buff", target.x, target.y)
+         Gui.start_draw_callback(cb)
+
+         return true
+      end
+   }
+end
+
+make_remove_hex {
+   _id = "holy_light",
+   elona_id = 406,
+   cost = 15,
+   difficulty = 400,
+   bonus = function(p, l) return l * 5 + p * 2 end
+}
+
+make_remove_hex {
+   _id = "vanquish_hex",
+   elona_id = 407,
+   cost = 35,
+   difficulty = 850,
+   bonus = function(p, l) return l * 5 + p * 3 / 2 end
+}

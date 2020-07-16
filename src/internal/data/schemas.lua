@@ -561,7 +561,7 @@ What gods this item can be offered to.
          },
          {
             name = "identify_difficulty",
-            default = nil,
+            default = 0,
             type = "string?"
          },
          {

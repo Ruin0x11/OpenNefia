@@ -10,6 +10,7 @@ local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
 local World = require("api.World")
 local Action = require("api.Action")
+local Enum = require("api.Enum")
 
 local ElonaCommand = {}
 
@@ -39,11 +40,11 @@ function ElonaCommand.inventory(player)
 end
 
 function ElonaCommand.bash(player)
-   Gui.mes("Which direction?")
+   Gui.mes("action.bash.prompt")
    local dir = Input.query_direction()
 
    if not dir then
-      Gui.mes("Okay, then.")
+      Gui.mes("common.it_is_impossible")
       return "player_turn_query"
    end
 
@@ -62,7 +63,7 @@ end
 
 function ElonaCommand.do_eat(player, item)
    if player:calc("nutrition") > 10000 then
-      Gui.mes("too bloated.")
+      Gui.mes("ui.inv.eat.too_bloated")
       Gui.update_screen()
       return "player_turn_query"
    end
@@ -102,7 +103,7 @@ end
 
 function ElonaCommand.do_dig(player, x, y)
    if player.stamina < 0 then
-      Gui.mes("too exhausted")
+      Gui.mes("action.dig.too_exhausted")
       return false
    end
 
@@ -123,13 +124,14 @@ function ElonaCommand.dig(player)
    local x, y = Pos.add_direction(dir, player.x, player.y)
 
    if x == player.x and y == player.y then
-      Gui.mes("dig spot")
+      Gui.mes("activity.dig_spot.start.other")
+      Gui.mes("TODO")
       return "player_turn_query"
    end
 
    -- Don't allow digging into water.
    local tile = player:current_map():tile(x, y)
-   local can_dig = tile.is_solid and tile.is_opaque
+   local can_dig = tile.is_solid and tile.role ~= Enum.TileRole.Water
 
    if not can_dig then
       Gui.mes("common.it_is_impossible")
@@ -206,7 +208,8 @@ function ElonaCommand.increment_sleep_potential(player)
       elseif grown_count ~= 0 then
          break
       end
-      player:mod_base_skill_potential(10 + Rand.rnd(8), 1)
+      local skill = Rand.choice(config["base._basic_attributes"])
+      player:mod_base_skill_potential(skill, 1)
       grown_count = grown_count + 1
       if grown_count > 6 then
          if Rand.one_in(5) then
@@ -228,11 +231,11 @@ function ElonaCommand.do_sleep(player, bed, params)
    end
 
    if not params.no_animation then
-      Gui.play_music("elona.mcCoda")
+      Gui.play_music("elona.coda")
       Gui.mes_halt()
    end
 
-   local bg = UiTheme.load_asset("bg_night")
+   local bg = UiTheme.load().base.bg_night
 
    if not params.no_animation then
       Draw.run(function(state)
@@ -280,7 +283,7 @@ function ElonaCommand.do_sleep(player, bed, params)
       adj = 2
    end
    player.nutrition = player.nutrition - math.floor(1500 / adj)
-   Gui.mes("Slept for " .. time_slept .. ".", "Green")
+   Gui.mes_c("activity.sleep.slept_for", "Green", time_slept)
 
    local add_potential = true
 
@@ -295,15 +298,16 @@ function ElonaCommand.do_sleep(player, bed, params)
 
    if add_potential then
       local count = ElonaCommand.increment_sleep_potential(player)
-      Gui.mes("Quality is good: grew " .. count, "Green")
+      Gui.mes_c("activity.sleep.wake_up.good", "Green", count)
    else
-      Gui.mes("Quality is so-so.")
+      Gui.mes("activity.sleep.wake_up.so_so")
    end
 
    if not params.no_animation then
       Gui.mes_halt()
       Gui.play_music()
    end
+
    -- TODO autosave
    -- TODO shop
 end

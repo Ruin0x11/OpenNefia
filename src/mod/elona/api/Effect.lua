@@ -298,16 +298,6 @@ local identify_states = {
    completely = 3
 }
 
-function Effect.try_to_identify_item(item, power)
-   local level
-   if power >= item:calc("difficulty_of_identification") then
-      level = "completely"
-   else
-      level = "unidentified"
-   end
-   return Effect.identify_item(item, level)
-end
-
 function Effect.do_identify_item(item, level)
    if item.identify_state == "almost" then
       for _, cat in ipairs(item.categories) do
@@ -339,7 +329,17 @@ function Effect.identify_item(item, level)
    if do_change_level then
       item.identify_state = level
    end
-   return new_level
+   return do_change_level, new_level
+end
+
+function Effect.try_to_identify_item(item, power)
+   local level
+   if power >= item:calc("difficulty_of_identification") then
+      level = "completely"
+   else
+      level = "unidentified"
+   end
+   return Effect.identify_item(item, level)
 end
 
 function Effect.damage_insanity(chara, delta)

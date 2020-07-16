@@ -262,7 +262,7 @@ end,
       },
       wake_up = {
         good = function(_1)
-  return ("心地よい目覚めだ。潜在能力が伸びた(計%s%)。")
+  return ("心地よい目覚めだ。潜在能力が伸びた(計%s%%)。")
   :format(_1)
 end,
         so_so = "まあまあの目覚めだ。"

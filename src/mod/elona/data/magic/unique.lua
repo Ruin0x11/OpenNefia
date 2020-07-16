@@ -415,3 +415,63 @@ data:add {
       return do_sense(self, params, 1, reveal, forget, "magic.sense.sense_object")
    end
 }
+
+data:add {
+   _id = "spell_identify",
+   _type = "base.skill",
+   elona_id = 411,
+
+   type = "spell",
+   effect_id = "elona.identify",
+   related_skill = "elona.stat_perception",
+   cost = 28,
+   range = 0,
+   difficulty = 800,
+   target_type = "self"
+}
+data:add {
+   _id = "identify",
+   _type = "elona_sys.magic",
+   elona_id = 411,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(source, "elona.inv_identify")
+
+      if canceled then
+         return true
+      end
+
+      local item = result.result
+
+      local level = "unidentified"
+      if params.power >= item:calc("identify_difficulty") then
+         level = "completely"
+      end
+
+      local success = Effect.identify_item(item, level)
+      if success then
+         if item.identify_state ~= "completely" then
+            Gui.mes("ui.inv.identify.partially", item)
+         else
+            Gui.mes("ui.inv.identify.fully", item)
+         end
+      else
+         Gui.mes("ui.inv.identify.need_more_power")
+      end
+
+      item:stack()
+
+      return true
+   end
+}

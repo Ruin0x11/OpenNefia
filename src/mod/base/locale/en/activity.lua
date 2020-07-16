@@ -235,7 +235,7 @@ end,
       },
       wake_up = {
         good = function(_1)
-  return ("You wake up feeling good. Your potential increases. (Total:%s%)")
+  return ("You wake up feeling good. Your potential increases. (Total:%s%%)")
   :format(_1)
 end,
         so_so = "You wake up feeling so so."

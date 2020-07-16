@@ -59,7 +59,7 @@ data:add {
       local level = params.source:skill_level("elona.action_eye_of_insanity")
       return {
          x = 1 + level / 20,
-         y = 10,
+         y = 10 + 1,
          bonus = 0
       }
    end,

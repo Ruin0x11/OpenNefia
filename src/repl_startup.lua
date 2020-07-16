@@ -13,6 +13,7 @@ Effect = require("mod.elona.api.Effect")
 Quest = require("mod.elona_sys.api.Quest")
 Scene = require("mod.elona_sys.scene.api.Scene")
 Mx = require("mod.tools.api.Mx")
+ElonaCommand = require("mod.elona.api.ElonaCommand")
 
 Log.set_level("info")
 

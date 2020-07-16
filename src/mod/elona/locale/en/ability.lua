@@ -344,7 +344,7 @@ return {
             description = "Line(Cold)",
             name = "Ice Bolt"
          },
-         identify = {
+         spell_identify = {
             description = "Identify one item",
             name = "Identify"
          },
@@ -715,7 +715,7 @@ return {
             description = "Escape self.",
             name = "Vanish"
          },
-         vanquish_hex = {
+         spell_vanquish_hex = {
             description = "Remove all hexes",
             name = "Vanquish Hex"
          },
