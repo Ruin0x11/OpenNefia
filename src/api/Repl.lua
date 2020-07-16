@@ -160,6 +160,8 @@ function Repl.pause()
    local locals = repl.capture_locals(1)
    local repl_env, history = Repl.generate_env(locals)
 
+   repl_env["_tb"] = debug.traceback()
+
    local mod, loc = env.find_calling_mod(1)
    local loc_string = ""
    if loc then

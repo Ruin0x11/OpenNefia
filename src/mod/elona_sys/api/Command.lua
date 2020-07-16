@@ -336,7 +336,7 @@ function Command.target(player)
       else
          Gui.play_sound("base.ok1")
          local chara = Chara.at(x, y)
-         if chara then
+         if chara and not chara:is_player() then
             player:set_target(chara)
             Gui.mes("action.look.target", chara)
          else

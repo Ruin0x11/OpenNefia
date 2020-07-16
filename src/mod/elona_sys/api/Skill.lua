@@ -10,7 +10,7 @@ local Action = require("api.Action")
 local Skill = {}
 
 function Skill.iter_stats()
-   return data["base.skill"]:iter():filter(function(s) return s.skill_type == "stat" end)
+   return data["base.skill"]:iter():filter(function(s) return s.type == "stat" end)
 end
 
 function Skill.random_stat()
@@ -20,7 +20,7 @@ end
 function Skill.calc_initial_potential(skill, level, knows_skill)
    local p
 
-   if skill.skill_type == "stat" then
+   if skill.type == "stat" then
       p = math.min(level * 20, 400)
    else
       p = level * 5

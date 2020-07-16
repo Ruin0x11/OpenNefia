@@ -121,8 +121,6 @@ local inv_get = {
 
       local result = Action.get(ctxt.chara, item, amount)
 
-      Gui.update_screen()
-
       -- TODO: handle harvest action
 
       return "inventory_continue"

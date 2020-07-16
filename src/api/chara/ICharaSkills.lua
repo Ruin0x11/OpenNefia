@@ -1,4 +1,5 @@
 --- @classmod ICharaSkills
+local Enum = require("api.Enum")
 
 local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
@@ -19,19 +20,23 @@ function ICharaSkills:set_stat_adjustment(skill, adj)
    if adj == 0 then
       adj = nil
    end
+   if type(adj) == "number" then
+      adj = math.floor(adj)
+   end
    local skill_data = data["base.skill"]:ensure(skill)
-   assert(skill_data.skill_type == "stat")
-   self.stat_adjusts[skill] = math.floor(adj)
+   assert(skill_data.type == "stat", skill)
+   self.stat_adjusts[skill] = adj
 end
 
 function ICharaSkills:add_stat_adjustment(skill, delta)
    self:set_stat_adjustment(skill, self:stat_adjustment(skill) + delta)
 end
 
+-- emulates attbFix
 function ICharaSkills:on_refresh()
    for skill_id, adj in pairs(self.stat_adjusts) do
       if adj ~= 0 then
-         if self.quality >= 4 then -- miracle
+         if self.quality >= Enum.Quality.Great then
             local amt = math.floor(self:base_skill_level(skill_id) / 5)
             if adj < amt then
                adj = amt

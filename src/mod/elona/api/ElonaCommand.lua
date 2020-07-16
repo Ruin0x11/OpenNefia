@@ -192,7 +192,7 @@ function ElonaCommand.rest(player)
 end
 
 function ElonaCommand.increment_sleep_potential(player)
-   local stats = data["base.skill"]:iter():filter(function(s) return s.skill_type == "stat" end):extract("_id")
+   local stats = data["base.skill"]:iter():filter(function(s) return s.type == "stat" end):extract("_id")
    local levels = 0
    for _, id in stats:unwrap() do
       levels = levels + player:base_skill_level(id)

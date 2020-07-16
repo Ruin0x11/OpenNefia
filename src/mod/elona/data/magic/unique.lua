@@ -782,7 +782,8 @@ data:add {
 
       for i = 1, times do
          Gui.play_sound("base.pray1", source.x, source.y)
-         local filter = Calc.filter(params.power / 10, "good")
+         local level = Calc.calc_object_level(params.power / 10, map)
+         local quality = Calc.calc_object_quality("good")
 
          local id = "elona.gold_piece"
          local amount = 400 + Rand.rnd(params.power)
@@ -799,15 +800,148 @@ data:add {
             id = "elona.rod_of_wishing"
             amount = 1
          end
-         filter.amount = amount
-         filter.no_stack = true
-         local item = Item.create(id, source.x, source.y, filter, map)
+         local item = Item.create(id, source.x, source.y, {level=level, quality=quality, amount=amount, no_stack=true}, map)
          if item then
             Gui.mes("magic.wizards_harvest", item)
          end
          Gui.wait(100)
          Gui.update_screen()
       end
+
+      return true
+   end
+}
+
+
+local function do_restore(chara, attrs, curse_state)
+   local quality = chara:calc("quality")
+
+   for _, skill_id in ipairs(attrs) do
+      local adj = chara:stat_adjustment(skill_id)
+      if Effect.is_cursed(curse_state) then
+         if quality <= Enum.Quality.Good then
+            adj = adj - Rand.rnd(chara:base_skill_level(skill_id)) / 5 + Rand.rnd(5)
+         end
+      else
+         adj = math.max(adj, 0)
+         if curse_state == "blessed" then
+            adj = chara:base_skill_level(skill_id) / 10 + 5
+         end
+      end
+
+      chara:set_stat_adjustment(skill_id, adj)
+   end
+
+   chara:refresh()
+end
+
+
+data:add {
+   _id = "spell_restore_body",
+   _type = "base.skill",
+   elona_id = 439,
+
+   type = "spell",
+   effect_id = "elona.restore_body",
+   related_skill = "elona.stat_will",
+   cost = 18,
+   range = 0,
+   difficulty = 250,
+   target_type = "self_or_nearby"
+}
+data:add {
+   _id = "restore_body",
+   _type = "elona_sys.magic",
+   elona_id = 439,
+
+   type = "skill",
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      local map = params.target:current_map()
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.play_sound("base.curse3")
+         Gui.mes_visible("magic.restore.body.cursed", target.x, target.y, target)
+      else
+         Gui.mes_visible("magic.restore.body.apply", target.x, target.y, target)
+         local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+      if params.curse_state == "blessed" then
+         Gui.mes_visible("magic.restore.body.blessed", target.x, target.y, target)
+         local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+
+      local attrs = {
+         "elona.stat_strength",
+         "elona.stat_constitution",
+         "elona.stat_dexterity",
+         "elona.stat_charisma",
+         "elona.stat_speed",
+      }
+      do_restore(target, attrs, params.curse_state)
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "spell_restore_spirit",
+   _type = "base.skill",
+   elona_id = 440,
+
+   type = "spell",
+   effect_id = "elona.restore_spirit",
+   related_skill = "elona.stat_will",
+   cost = 18,
+   range = 0,
+   difficulty = 250,
+   target_type = "self_or_nearby"
+}
+data:add {
+   _id = "restore_spirit",
+   _type = "elona_sys.magic",
+   elona_id = 440,
+
+   type = "skill",
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      local map = params.target:current_map()
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.play_sound("base.curse3")
+         Gui.mes_visible("magic.restore.mind.cursed", target.x, target.y, target)
+      else
+         Gui.mes_visible("magic.restore.mind.apply", target.x, target.y, target)
+         local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+      if params.curse_state == "blessed" then
+         Gui.mes_visible("magic.restore.mind.blessed", target.x, target.y, target)
+         local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+
+      local attrs = {
+         "elona.stat_learning",
+         "elona.stat_perception",
+         "elona.stat_magic",
+         "elona.stat_will",
+         "elona.stat_luck",
+      }
+      do_restore(target, attrs, params.curse_state)
 
       return true
    end

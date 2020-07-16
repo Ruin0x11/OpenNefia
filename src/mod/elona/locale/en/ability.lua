@@ -544,11 +544,11 @@ return {
          regeneration = {
             name = "Regeneration"
          },
-         restore_body = {
+         spell_restore_body = {
             description = "Restore physical",
             name = "Restore Body"
          },
-         restore_spirit = {
+         spell_restore_spirit = {
             description = "Restore mind",
             name = "Restore Spirit"
          },
