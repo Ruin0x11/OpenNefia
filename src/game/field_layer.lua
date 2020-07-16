@@ -34,6 +34,9 @@ function field_layer:init()
    local keys = KeyHandler:new(true)
    self.keys = InputHandler:new(keys)
    self.keys:focus()
+   -- TODO: Maybe we should rethink allowing "alt" as a part of movement
+   -- keybinds
+   self.keys:ignore_modifiers { "alt" }
 
    self.layers = {
       "internal.layer.tile_layer",

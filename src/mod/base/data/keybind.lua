@@ -76,7 +76,6 @@ local keybinds = {
    quick_inv = "x",
    quicksave = "f2",
    quickload = "f3",
-   alt_movement = "alt",
    portrait = "p",
 
    repl = "`",

@@ -190,7 +190,7 @@ function TextHandler:run_key_action(key, ...)
       Log.trace("Keybind: %s %s -> \"%s\" %s", key, inspect(self.modifiers), keybind, self)
    end
 
-   local ran, result = self:run_keybind_action(keybind, ...)
+   local ran, result = self:run_keybind_action(keybind, true, ...)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
@@ -204,13 +204,16 @@ function TextHandler:run_key_action(key, ...)
    return ran
 end
 
-function TextHandler:run_keybind_action(keybind, ...)
+function TextHandler:run_keybind_action(keybind, pressed, ...)
    local func = self.bindings[keybind]
    if func then
-      return true, func(...)
+      return true, func(pressed, ...)
    end
 
    return false, nil
+end
+
+function TextHandler:release_key(key, ...)
 end
 
 function TextHandler:run_actions()
@@ -218,7 +221,7 @@ function TextHandler:run_actions()
 
    if self.macro_queue:len() > 0 then
       local keybind = self.macro_queue:pop()
-      self:run_keybind_action(keybind)
+      self:run_keybind_action(keybind, true)
       return
    end
 
@@ -237,7 +240,7 @@ function TextHandler:run_actions()
          if self.bindings[keybind] == nil then
             keybind = "raw_" .. c
          end
-         self:run_keybind_action(keybind)
+         self:run_keybind_action(keybind, true)
       end
    end
 

@@ -11,5 +11,6 @@ return class.interface("IKeyInput",
                     key_held_frames = "function",
                     is_modifier_held = "function",
                     ignore_modifiers = "function",
+                    release_key = "function"
                  },
                  IInputHandler)

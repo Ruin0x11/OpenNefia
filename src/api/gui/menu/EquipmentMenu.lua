@@ -38,7 +38,7 @@ local UiListExt = function(equipment_menu)
       Draw.set_color(255, 255, 255)
 
       local icon = entry.body_part.icon or 1
-      equipment_menu.t.body_part_icons:draw_region(icon, x - 66, y - 2) -- wx + 88 - 66 = wx + 22
+      equipment_menu.t.base.body_part_icons:draw_region(icon, x - 66, y - 2) -- wx + 88 - 66 = wx + 22
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
 
       Draw.text(I18N.get("ui.body_part." .. entry.body_part._id), x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46

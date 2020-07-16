@@ -57,6 +57,8 @@ function TargetPrompt:update_target_text()
    local target = self.list:selected_item()
    if target then
       self.target_text = Action.target_text(self.chara, target.x, target.y, true)
+   else
+      self.target_text = {}
    end
 end
 
@@ -76,8 +78,6 @@ function TargetPrompt:relayout()
 end
 
 function TargetPrompt:draw()
-   Draw.set_blend_mode("add")
-  
    self.list:draw()
 
    for i, line in ipairs(self.target_text) do

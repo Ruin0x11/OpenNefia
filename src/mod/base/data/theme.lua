@@ -356,7 +356,7 @@ local assets = {
    {
       _id = "debris_fragment",
       source = "graphic/character.bmp",
-      x = 288,
+      x = 336,
       y = 1152,
       width = 48 * 4,
       height = 48,
@@ -446,6 +446,22 @@ local assets = {
       width = 24 * 8,
       height = 16,
       count_x = 8
+   },
+   {
+      _id = "quick_menu_item",
+      source = "graphic/interface.bmp",
+      x = 360,
+      y = 192,
+      width = 48,
+      height = 48
+   },
+   {
+      _id = "quick_menu_item_special",
+      source = "graphic/interface.bmp",
+      x = 360,
+      y = 144,
+      width = 48,
+      height = 48
    },
    {
       _id = "deco_wear_a",

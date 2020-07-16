@@ -10,8 +10,9 @@ local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
 local FieldMap = require("mod.elona.api.FieldMap")
-local Magic = require("mod.elona_sys.api.Magic")
 local elona_Magic = require("mod.elona.api.Magic")
+local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
+local Log = require("api.Log")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -351,6 +352,22 @@ function Command.look(player)
          Gui.mes("action.look.target", target)
       end
    end
+
+   return "player_turn_query"
+end
+
+function Command.quick_menu(player)
+   local action, canceled = QuickMenuPrompt:new():query()
+   if canceled then
+      return "player_turn_query"
+   end
+
+   local did_something, result = Gui.run_keybind_action(action, player)
+   if did_something then
+      return result
+   end
+
+   Log.warn("No keybind action found for '%s'", action)
 
    return "player_turn_query"
 end

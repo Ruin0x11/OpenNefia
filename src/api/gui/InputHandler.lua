@@ -13,6 +13,7 @@ InputHandler:delegate("keys", {
                          "key_held_frames",
                          "is_modifier_held",
                          "ignore_modifiers",
+                         "release_key",
 })
 InputHandler:delegate("mouse", {
                          "bind_mouse",

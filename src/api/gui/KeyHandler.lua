@@ -28,20 +28,22 @@ local MODIFIERS = table.set {
 -- keypressed event is received. For use when key repeat is *on*.
 local KeyHandler = class.class("KeyHandler", IKeyInput)
 
-function KeyHandler:init(no_repeat_delay)
+function KeyHandler:init(no_repeat_delay, capture_released)
    self.bindings = {}
-   self.this_frame = {}
    self.pressed = {}
+   self.unpressed_this_frame = {}
    self.repeat_delays = {}
    self.modifiers = {}
    self.forwards = {}
    self.halted = false
    self.stop_halt = true
    self.frames_held = 0
+   self.keybinds_held = {}
    self.keybinds = KeybindTranslator:new()
    self.macro_queue = Queue:new()
 
    self.no_repeat_delay = no_repeat_delay
+   self.capture_released = capture_released
 end
 
 function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
@@ -61,6 +63,7 @@ function KeyHandler:receive_key(key, pressed, is_text, is_repeat)
    else
       self.pressed[key] = nil
       self.repeat_delays[key] = nil
+      self.unpressed_this_frame[key] = true
    end
 end
 
@@ -106,11 +109,11 @@ end
 function KeyHandler:halt_input()
    self.repeat_delays = {}
    self.pressed = {}
-   self.this_frame = {}
    self.modifiers = {}
    self.halted = true
    self.stop_halt = false
    self.frames_held = 0
+   self.keybinds_held = {}
    self:clear_macro_queue()
 end
 
@@ -177,7 +180,10 @@ function KeyHandler:run_key_action(key, ...)
       keybind = "raw_" .. with_modifiers
    end
 
-   local ran, result = self:run_keybind_action(keybind, ...)
+   self.keybinds_held[key] = self.keybinds_held[key] or {}
+   table.insert(self.keybinds_held[key], keybind)
+
+   local ran, result = self:run_keybind_action(keybind, true, ...)
 
    if not ran then
       for _, forward in ipairs(self.forwards) do
@@ -191,10 +197,10 @@ function KeyHandler:run_key_action(key, ...)
    return ran, result
 end
 
-function KeyHandler:run_keybind_action(keybind, ...)
+function KeyHandler:run_keybind_action(keybind, pressed, ...)
    local func = self.bindings[keybind]
    if func then
-      return true, func(...)
+      return true, func(pressed, ...)
    end
 
    return false, nil
@@ -255,16 +261,36 @@ function KeyHandler:clear_macro_queue()
    self.macro_queue:clear()
 end
 
+function KeyHandler:release_key(key, ...)
+   local keybinds = self.keybinds_held[key]
+   if keybinds then
+      for _, keybind in ipairs(keybinds) do
+         if self.capture_released then
+            self:run_keybind_action(keybind, false, ...)
+         end
+      end
+      self.keybinds_held[key] = nil
+   end
+
+   for _, forward in ipairs(self.forwards) do
+      forward:release_key(key, ...)
+   end
+end
+
 function KeyHandler:run_actions(dt, ...)
    local ran = false
    local result
 
    if self.macro_queue:len() > 0 then
       local keybind = self.macro_queue:pop()
-      return self:run_keybind_action(keybind, ...)
+      return self:run_keybind_action(keybind, true, ...)
    end
 
    self:update_repeats(dt)
+
+   for key, _ in pairs(self.unpressed_this_frame) do
+      self:release_key(key)
+   end
 
    for key, v in pairs(self.repeat_delays) do
       -- TODO: determine what movement actions should be triggered. If
@@ -278,19 +304,11 @@ function KeyHandler:run_actions(dt, ...)
          end
       end
    end
-   if not ran then
-      for key, _ in pairs(self.this_frame) do
-         ran, result = self:run_key_action(key, ...)
 
-         if ran then
-            -- only run the first action
-            break
-         end
-      end
-   end
+   self.keybinds_held = {}
+   self.unpressed_this_frame = {}
 
    self.halted = self.halted and not self.stop_halt
-   self.this_frame = {}
 
    if next(self.pressed) then
       if ran then

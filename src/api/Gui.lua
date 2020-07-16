@@ -421,4 +421,8 @@ function Gui.global_widget(tag)
    return draw.global_widget(tag)
 end
 
+function Gui.run_keybind_action(action, ...)
+   return field:run_keybind_action(action, true, ...)
+end
+
 return Gui

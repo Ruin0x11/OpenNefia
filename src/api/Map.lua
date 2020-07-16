@@ -815,6 +815,7 @@ function Map.calc_shadow(hour, map)
 end
 
 function Map.spill_blood(x, y, amount, map)
+   Log.info("spill %s %s %s", x, y, amount)
    map = map or field.map
 
    local tx, ty
@@ -836,6 +837,7 @@ function Map.spill_blood(x, y, amount, map)
 end
 
 function Map.spill_fragments(x, y, amount, map)
+   Log.info("spillfrag %s %s %s", x, y, amount)
    map = map or field.map
 
    local tx, ty

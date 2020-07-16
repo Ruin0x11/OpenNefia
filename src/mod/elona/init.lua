@@ -28,40 +28,40 @@ local Gui = require("api.Gui")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 
 Gui.bind_keys {
-   quick_inv = function(me)
+   quick_inv = function(_, me)
       return ElonaCommand.examine(me)
    end,
-   bash = function(me)
+   bash = function(_, me)
       return ElonaCommand.bash(me)
    end,
-   eat = function(me)
+   eat = function(_, me)
       return ElonaCommand.eat(me)
    end,
-   fire = function(me)
+   fire = function(_, me)
       return ElonaCommand.fire(me)
    end,
-   dig = function(me)
+   dig = function(_, me)
       return ElonaCommand.dig(me)
    end,
-   read = function(me)
+   read = function(_, me)
       return ElonaCommand.read(me)
    end,
-   drink = function(me)
+   drink = function(_, me)
       return ElonaCommand.drink(me)
    end,
-   zap = function(me)
+   zap = function(_, me)
       return ElonaCommand.zap(me)
    end,
-   use = function(me)
+   use = function(_, me)
       return ElonaCommand.use(me)
    end,
-   dip = function(me)
+   dip = function(_, me)
       return ElonaCommand.dip(me)
    end,
-   throw = function(me)
+   throw = function(_, me)
       return ElonaCommand.throw(me)
    end,
-   rest = function(me)
+   rest = function(_, me)
       return ElonaCommand.rest(me)
    end,
 }

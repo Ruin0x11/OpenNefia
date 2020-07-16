@@ -135,49 +135,49 @@ local Command = require("mod.elona_sys.api.Command")
 local Gui = require("api.Gui")
 local Repl = require("api.Repl")
 Gui.bind_keys {
-   north = function(me)
+   north = function(_, me)
       return Command.move(me, "North")
    end,
-   south = function(me)
+   south = function(_, me)
       return Command.move(me, "South")
    end,
-   west = function(me)
+   west = function(_, me)
       return Command.move(me, "West")
    end,
-   east = function(me)
+   east = function(_, me)
       return Command.move(me, "East")
    end,
-   northwest = function(me)
+   northwest = function(_, me)
       return Command.move(me, "Northwest")
    end,
-   northeast = function(me)
+   northeast = function(_, me)
       return Command.move(me, "Northeast")
    end,
-   southwest = function(me)
+   southwest = function(_, me)
       return Command.move(me, "Southwest")
    end,
-   southeast = function(me)
+   southeast = function(_, me)
       return Command.move(me, "Southeast")
    end,
-   get = function(me)
+   get = function(_, me)
       return Command.get(me)
    end,
-   wear = function(me)
+   wear = function(_, me)
       return Command.wear(me)
    end,
-   drop = function(me)
+   drop = function(_, me)
       return Command.drop(me)
    end,
-   close = function(me)
+   close = function(_, me)
       return Command.close(me)
    end,
-   open = function(me)
+   open = function(_, me)
       return Command.open(me)
    end,
-   search = function(me)
+   search = function(_, me)
       return Command.search(me)
    end,
-   enter = function(me)
+   enter = function(_, me)
       return Command.enter_action(me)
    end,
    wait = function()
@@ -202,16 +202,19 @@ Gui.bind_keys {
    chara_info = function()
       return Command.chara_info()
    end,
-   cast = function(me)
+   cast = function(_, me)
       return Command.cast(me)
    end,
-   skill = function(me)
+   skill = function(_, me)
       return Command.skill(me)
    end,
-   target = function(me)
+   target = function(_, me)
       return Command.target(me)
    end,
-   look = function(me)
+   look = function(_, me)
       return Command.look(me)
+   end,
+   quick_menu = function(_, me)
+      return Command.quick_menu(me)
    end
 }

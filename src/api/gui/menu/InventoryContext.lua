@@ -86,7 +86,7 @@ local sources = {
          return name .. " (main hand)"
       end,
       on_draw = function(self, x, y, item, menu)
-         menu.t.equipped_icon:draw(x - 12, y + 14)
+         menu.t.base.equipped_icon:draw(x - 12, y + 14)
       end,
       params = {
          chara = "IChara"
