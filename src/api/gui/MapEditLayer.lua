@@ -157,7 +157,7 @@ local function place_tile(map, tx, ty, tile_id)
     Gui.play_sound("base.offer1")
   end
   map:set_tile(tx, ty, tile_id)
-  map:memorize_tile(tx, ty)
+  map:reveal_tile(tx, ty)
   Gui.update_screen()
 end
 

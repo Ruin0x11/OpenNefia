@@ -65,6 +65,7 @@ end
 ---  - approximate_pos (bool): If position is not accessable, put the feat somewhere close.
 ---  - allow_stacking (bool): If true, ignore items on the ground when
 ---    checking for tile openness.
+---  - force (bool): If true, ignore accessibility of the position.
 --- @tparam[opt] ILocation where Where to instantiate this feat.
 ---   Defaults to the current map.
 --- @treturn[opt] IFeat
@@ -91,7 +92,7 @@ function Feat.create(id, x, y, params, where)
       if not x then
          return nil, "out of bounds"
       end
-      if not Map.can_access(x, y, where) then
+      if not Map.can_access(x, y, where) and not params.force then
          return nil, "cannot access tile"
       end
    end

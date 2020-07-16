@@ -10,6 +10,8 @@ local Inventory = require("api.Inventory")
 local Input = require("api.Input")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Magic = require("mod.elona_sys.api.Magic")
+local Map = require("api.Map")
+local Feat = require("api.Feat")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -632,6 +634,111 @@ data:add {
       if Effect.is_cursed(params.curse_state) then
          Gui.mes("magic.oracle.cursed")
          return true
+      end
+
+      return true
+   end
+}
+
+data:add {
+   _id = "spell_wall_creation",
+   _type = "base.skill",
+   elona_id = 438,
+
+   type = "spell",
+   effect_id = "elona.wall_creation",
+   related_skill = "elona.stat_magic",
+   cost = 20,
+   range = 0,
+   difficulty = 250,
+   target_type = "location"
+}
+data:add {
+   _id = "wall_creation",
+   _type = "elona_sys.magic",
+   elona_id = 438,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local x = params.x
+      local y = params.y
+      local map = params.source:current_map()
+
+      local tile_id = MapTileset.get("elona.mapgen_wall", map)
+
+      if not Map.is_in_bounds(x, y, map) or not Map.can_access(x, y, map) or not tile_id then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.mes("magic.create.wall")
+
+      if map:tile(x, y)._id ~= tile_id then
+         Gui.play_sound("base.offer1" , x, y)
+      end
+
+      map:set_tile(x, y, tile_id)
+      map:reveal_tile(x, y)
+      Gui.update_screen()
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "spell_door_creation",
+   _type = "base.skill",
+   elona_id = 457,
+
+   type = "spell",
+   effect_id = "elona.door_creation",
+   related_skill = "elona.stat_magic",
+   cost = 15,
+   range = 0,
+   difficulty = 200,
+   target_type = "location"
+}
+data:add {
+   _id = "door_creation",
+   _type = "elona_sys.magic",
+   elona_id = 457,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local x = params.x
+      local y = params.y
+      local map = params.source:current_map()
+
+      if not Map.is_in_bounds(x, y, map) or map:tile(x, y).kind == Enum.TileRole.Water then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.play_sound("base.offer1" , x, y)
+
+      if map:tile(x, y).kind == Enum.TileRole.HardWall then
+         Gui.mes("magic.create.door.resist")
+         return true
+      end
+
+      Gui.mes("magic.create.door.apply")
+
+      local difficulty = Rand.rnd(params.power / 10 + 1)
+      Feat.create("elona.door", x, y, {difficulty=difficulty,force=true}, map)
+      if map:tile(x, y).is_solid then
+         local tile_id = MapTileset.get("elona.mapgen_tunnel", map)
+         if tile_id then
+            map:set_tile(x, y, tile_id)
+         end
       end
 
       return true
