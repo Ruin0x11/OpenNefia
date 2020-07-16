@@ -735,7 +735,7 @@ return {
             description = "Wish",
             name = "Wish"
          },
-         wizards_harvest = {
+         spell_wizards_harvest = {
             description = "Random harvest",
             name = "Wizard's Harvest"
          }

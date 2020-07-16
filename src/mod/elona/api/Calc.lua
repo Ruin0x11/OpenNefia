@@ -32,6 +32,7 @@ function Calc.calc_object_level(base, map)
    return ret
 end
 
+-- TODO enum
 local QUALITY = {
    bad = 1,
    good = 2,

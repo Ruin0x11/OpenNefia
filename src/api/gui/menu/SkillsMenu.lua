@@ -44,12 +44,15 @@ function SkillsMenu.generate_list(chara)
    for _, entry in data["base.skill"]:iter():filter(function(e) return e.type == "action" end) do
       list[#list+1] = {
          _id = entry._id,
+         ordering = (entry.elona_id or 0) * 100,
          name = I18N.get("ability." .. entry._id .. ".name"),
          cost = ("%d Sp"):format(entry.cost),
          description = Skill.get_description(entry._id, chara):sub(0, 34),
          icon = Ui.skill_icon(entry.related_skill)
       }
    end
+
+   table.sort(list, function(a, b) return a.ordering < b.ordering end)
 
    return list
 end

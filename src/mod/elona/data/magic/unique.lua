@@ -1,3 +1,4 @@
+local Calc = require("mod.elona.api.Calc")
 local Pos = require("api.Pos")
 local Enum = require("api.Enum")
 local Chara = require("api.Chara")
@@ -739,6 +740,73 @@ data:add {
          if tile_id then
             map:set_tile(x, y, tile_id)
          end
+      end
+
+      return true
+   end
+}
+
+
+
+data:add {
+   _id = "spell_wizards_harvest",
+   _type = "base.skill",
+   elona_id = 464,
+
+   type = "spell",
+   effect_id = "elona.wizards_harvest",
+   related_skill = "elona.stat_charisma",
+   cost = 45,
+   range = 0,
+   difficulty = 350,
+   target_type = "self"
+}
+data:add {
+   _id = "wizards_harvest",
+   _type = "elona_sys.magic",
+   elona_id = 464,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      local cb = Anim.load("elona.anim_sparkle", source.x, source.y)
+      Gui.start_draw_callback(cb)
+
+      local times = math.clamp(4 + Rand.rnd(params.power / 50 + 1), 1, 15)
+
+      for i = 1, times do
+         Gui.play_sound("base.pray1", source.x, source.y)
+         local filter = Calc.filter(params.power / 10, "good")
+
+         local id = "elona.gold_piece"
+         local amount = 400 + Rand.rnd(params.power)
+
+         if Rand.one_in(30) then
+            id = "elona.platinum_coin"
+            amount = 1
+         end
+         if Rand.one_in(80) then
+            id = "elona.small_medal"
+            amount = 1
+         end
+         if Rand.one_in(2000) then
+            id = "elona.rod_of_wishing"
+            amount = 1
+         end
+         filter.amount = amount
+         filter.no_stack = true
+         local item = Item.create(id, source.x, source.y, filter, map)
+         if item then
+            Gui.mes("magic.wizards_harvest", item)
+         end
+         Gui.wait(100)
+         Gui.update_screen()
       end
 
       return true
