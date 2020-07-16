@@ -973,6 +973,24 @@ local assets = {
       count_x = 10
    },
    {
+      _id = "anim_meteor",
+      source = "graphic/anime17.bmp",
+      x = 0,
+      y = 0,
+      width = 96 * 8,
+      height = 96,
+      count_x = 8
+   },
+   {
+      _id = "anim_meteor_impact",
+      source = "graphic/anime17.bmp",
+      x = 0,
+      y = 96,
+      width = 192 * 5,
+      height = 96,
+      count_x = 5
+   },
+   {
       _id = "anim_elem_lightning",
       image = "graphic/anime18.bmp",
       count_x = 5

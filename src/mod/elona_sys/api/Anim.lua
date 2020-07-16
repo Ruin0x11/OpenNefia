@@ -1,4 +1,25 @@
---- @usage Gui.add_async_callback(Anim.swarm(20, 20))
+--- Animations.
+---
+--- This ports the various parts of the *anime subroutine.
+---
+--- Each function returns a function callback that takes two arguments, an X and
+--- Y position in screen coordinates. This callback is intended to be passed to
+--- Gui.start_draw_callback(), which will handle scheduling of the drawing logic
+--- in the engine using coroutines.
+---
+--- Each callback draws a single frame and then calls Draw.yield(wait_time) to
+--- allow the scheduler to wait until the next frame should be drawn, at a 60
+--- FPS cadence. Draw.yield() returns the actual time passed and the number of
+--- frames passed, from which the animation callback should update the drawing
+--- logic appropriately.
+---
+--- All of this is so we don't have to get hung up by manually redrawing the
+--- screen in the middle of a loop while still technically being inside the
+--- update() function all the way at the top of the main loop, and instead
+--- yielding to the draw() function to handle the drawing parts and still
+--- returning to update() every frame.
+---
+--- @usage Gui.start_draw_callback(Anim.swarm(20, 20))
 --- @module Anim
 local Anim = {}
 
@@ -679,6 +700,71 @@ function Anim.death(tx, ty, asset, element_id)
          local _, _, delta = Draw.yield(config["base.anim_wait"] + wait/2)
          frame = frame + delta
       end
+   end
+end
+
+function Anim.meteor()
+   local t = UiTheme.load()
+
+   local asset_meteor = t.base.anim_meteor
+   local asset_impact = t.base.anim_meteor_impact
+
+   local gen = function()
+      return {
+         x = 240 + Rand.rnd(Draw.get_width()),
+         y = -96,
+         frame = Rand.rnd(8)
+      }
+   end
+   local meteors = fun.tabulate(gen):take(75):to_list()
+
+   return function()
+      local frame = 0
+      local delta = 1
+      local drew_any
+
+      repeat
+         -- TODO screen shake
+
+         drew_any = false
+
+         -- draw
+         for _, m in ipairs(meteors) do
+            if m.frame < 16 then
+               drew_any = true
+
+               local y = m.y * math.clamp(20 - m.frame, 0, 6) / 6 - 96
+               if m.frame >= 10 then
+                  -- impact
+                  asset_impact:draw_region(math.clamp(m.frame - 10 + 1, 1, 5), m.x - 48, m.y)
+               end
+               if m.frame < 16 then
+                  -- meteor disintegration
+                  asset_meteor:draw_region(math.clamp(m.frame - 8, 0, 8)+1, m.x, m.y)
+               end
+            end
+         end
+
+         if delta > 0 and frame % 2 == 0 and frame < 8 and (frame / 3) < #meteors then
+            Gui.play_sound("base.atk_fire")
+         end
+
+        -- step frame
+         for _ = 1, delta do
+            for i, m in ipairs(meteors) do
+               if m.frame < 9 then
+                  -- falling
+                  m.x = m.x - (16 + (i % math.floor(Draw.get_width() / 30)))
+                  m.y = m.y + 24 + (i % math.floor(Draw.get_height() / 10))
+               end
+               m.frame = m.frame + 1
+            end
+         end
+
+         local _
+         _, _, delta = Draw.yield(config["base.anim_wait"] + 40)
+         frame = frame + delta
+      until not drew_any
    end
 end
 

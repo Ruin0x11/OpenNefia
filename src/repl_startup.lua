@@ -14,6 +14,7 @@ Quest = require("mod.elona_sys.api.Quest")
 Scene = require("mod.elona_sys.scene.api.Scene")
 Mx = require("mod.tools.api.Mx")
 ElonaCommand = require("mod.elona.api.ElonaCommand")
+PicViewer = require("mod.tools.api.PicViewer")
 
 Log.set_level("info")
 

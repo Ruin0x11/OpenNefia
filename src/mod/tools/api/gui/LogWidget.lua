@@ -28,7 +28,7 @@ function LogWidget:relayout(x, y, width, height)
    self.width = width + self.padding * 2
    self.height = height
    self.x = x
-   self.y = math.floor(Draw.get_height() / 2) - math.floor(self.height / 2)
+   self.y = math.floor(Draw.get_height() / 2)
 end
 
 local COLORS = {

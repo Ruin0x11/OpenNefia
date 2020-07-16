@@ -13,6 +13,7 @@ local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Magic = require("mod.elona_sys.api.Magic")
 local Map = require("api.Map")
 local Feat = require("api.Feat")
+local Mef = require("api.Mef")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -866,14 +867,14 @@ data:add {
 
       if Effect.is_cursed(params.curse_state) then
          Gui.play_sound("base.curse3")
-         Gui.mes_visible("magic.restore.body.cursed", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.body.cursed", target)
       else
-         Gui.mes_visible("magic.restore.body.apply", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.body.apply", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
       if params.curse_state == "blessed" then
-         Gui.mes_visible("magic.restore.body.blessed", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.body.blessed", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
@@ -922,14 +923,14 @@ data:add {
 
       if Effect.is_cursed(params.curse_state) then
          Gui.play_sound("base.curse3")
-         Gui.mes_visible("magic.restore.mind.cursed", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.mind.cursed", target)
       else
-         Gui.mes_visible("magic.restore.mind.apply", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.mind.apply", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
       if params.curse_state == "blessed" then
-         Gui.mes_visible("magic.restore.mind.blessed", target.x, target.y, target)
+         Gui.mes_visible("magic.restore.mind.blessed", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
@@ -942,6 +943,97 @@ data:add {
          "elona.stat_luck",
       }
       do_restore(target, attrs, params.curse_state)
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "spell_wish",
+   _type = "base.skill",
+   elona_id = 441,
+
+   type = "spell",
+   effect_id = "elona.wish",
+   related_skill = "elona.stat_magic",
+   cost = 580,
+   range = 0,
+   difficulty = 5250,
+   target_type = "self"
+}
+data:add {
+   _id = "wish",
+   _type = "elona_sys.magic",
+   elona_id = 441,
+
+   type = "skill",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      Gui.mes("TODO")
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "spell_meteor",
+   _type = "base.skill",
+   elona_id = 465,
+
+   type = "spell",
+   effect_id = "elona.meteor",
+   related_skill = "elona.stat_magic",
+   cost = 220,
+   range = 0,
+   difficulty = 1450,
+   target_type = "self"
+}
+data:add {
+   _id = "meteor",
+   _type = "elona_sys.magic",
+   elona_id = 465,
+
+   type = "skill",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      Gui.mes_c("magic.meteor", "Blue")
+
+      local cb = Anim.meteor()
+      Gui.start_draw_callback(cb)
+
+      for _, x, y in map:iter_tiles() do
+         if Rand.one_in(3) then
+            local tile = Rand.choice {
+               "elona.cracked_dirt_1",
+               "elona.cracked_dirt_2",
+            }
+            map:set_tile(x, y, tile)
+         end
+         if Rand.one_in(40) then
+            Mef.create("elona.fire", x, y, {duration=Rand.rnd(4)+3, power=50}, map)
+         end
+
+         -- NOTE: also damages caster
+         local chara = Chara.at(x, y, map)
+         if chara then
+            local damage = source:skill_level("elona.stat_magic") * params.power / 10
+            chara:damage_hp(damage, source, { element = "elona.fire", element_power = 1000 })
+         end
+      end
 
       return true
    end
