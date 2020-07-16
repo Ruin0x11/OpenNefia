@@ -5,6 +5,7 @@ local I18N = require("api.I18N")
 local Log = require("api.Log")
 local draw = require("internal.draw")
 local Draw = require("api.Draw")
+local IMapObject = require("api.IMapObject")
 local field = require("game.field")
 local ansicolors = require("thirdparty.ansicolors")
 local config = require("internal.config")
@@ -270,30 +271,60 @@ function Gui.mes_c(text, color, ...)
 end
 
 --- Prints a message in the HUD message if the provided position is
---- visible. This is checked using Map.is_in_fov.
+--- visible.
+---
+--- This function can either be called like
+---
+---    Gui.mes_visible("mod.my_text", x, y, arg1, arg2, ...)
+---
+--- or like
+---
+---    Gui.mes_visible("mod.my_text", chara, arg1, arg2, ...)
+---
+--- where `chara` implements IMapObject. If this is so, then `chara` will be
+--- passed automatically as the first argument to the localization system, and
+--- arg1 will actually become the second argument. This is to save yourself from
+--- having to type out
+---
+---    Gui.mes_visible("mod.my_text", chara.x, chara.y, chara, arg1, arg2, ...)
+---
+--- or
+---
+---    if chara:is_in_fov() then
+---       Gui.mes("mod.my_text", chara, arg1, arg2, ...)
+---    end
+---
+--- since the above is a rather common pattern in vanilla Elona's codebase.
 ---
 --- @tparam i18n_id|string text
---- @tparam int x
---- @tparam int y
+--- @tparam int|IMapObject x
+--- @tparam int|nil y
 --- @param ...
---- @see Map.is_in_fov
 function Gui.mes_visible(text, x, y, ...)
    Gui.mes_c_visible(text, x, y, nil, ...)
 end
 
 --- Prints a message in the HUD message if the provided position is
---- visible. This is checked using Map.is_in_fov.
+--- visible. See `Gui.mes_visible()` for details about the arguments.
 ---
 --- @tparam i18n_id|string text
---- @tparam int x
---- @tparam int y
+--- @tparam int|IMapObject x
+--- @tparam int|string|color y
 --- @tparam string|color color
 --- @param ...
---- @see Map.is_in_fov
+--- @see Gui.mes_visible
 function Gui.mes_c_visible(text, x, y, color, ...)
-   local Map = require("api.Map")
-   if Map.is_in_fov(x, y) then
-      Gui.mes_c(text, color, ...)
+   if class.is_an(IMapObject, x) then
+      local obj = x
+      if obj:is_in_fov() then
+         color = y
+         Gui.mes_c(text, color, obj, ...)
+      end
+   else
+      local Map = require("api.Map")
+      if Map.is_in_fov(x, y) then
+         Gui.mes_c(text, color, ...)
+      end
    end
 end
 
