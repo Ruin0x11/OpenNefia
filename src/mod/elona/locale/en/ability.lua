@@ -498,7 +498,7 @@ return {
          nightmare = {
             name = "Nightmare"
          },
-         oracle = {
+         spell_oracle = {
             description = "Reveal artifacts",
             name = "Oracle"
          },

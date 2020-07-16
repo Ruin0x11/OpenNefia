@@ -186,7 +186,7 @@ function UiRaceInfo:draw()
 
    -- TODO better way of telling if a skill is "normal"
    local is_normal_skill = function(proto)
-      return not NORMAL_SKILLS[proto._id] and proto.related_basic_attribute
+      return proto.type == nil or proto.type == "skill"
    end
 
    local all_skills = data["base.skill"]:iter():filter(is_normal_skill)
@@ -197,7 +197,7 @@ function UiRaceInfo:draw()
          local skill_name = I18N.get("ability." .. proto._id .. ".name")
          skill_name = right_pad(skill_name, pad_size)
 
-         local related_skill = proto.related_basic_attribute
+         local related_skill = proto.related_skill
          related_skill = I18N.get("ability." .. related_skill .. ".name")
 
          self.t.base.skill_icons:draw_region(

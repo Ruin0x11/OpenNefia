@@ -527,7 +527,7 @@ data:add {
          Gui.mes_visible("magic.uncurse.blessed", target.x, target.y, target)
       elseif Effect.is_cursed(params.curse_state) then
          Gui.mes_visible("magic.common.cursed", target.x, target.y, target)
-         return Magic.cast("elona.curse", params)
+         return Magic.cast("elona.effect_curse", params)
       end
 
       local filter = function(item)
@@ -593,5 +593,47 @@ data:add {
       target:refresh()
 
       return true, { obvious = obvious }
+   end
+}
+
+data:add {
+   _id = "spell_oracle",
+   _type = "base.skill",
+   elona_id = 413,
+
+   type = "spell",
+   effect_id = "elona.oracle",
+   related_skill = "elona.stat_magic",
+   cost = 150,
+   range = 0,
+   difficulty = 1500,
+   target_type = "self_or_nearby"
+}
+data:add {
+   _id = "oracle",
+   _type = "elona_sys.magic",
+   elona_id = 413,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_allied() then
+         Gui.mes("common.nothing_happens")
+         return true
+      end
+
+      Gui.mes("TODO")
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.mes("magic.oracle.cursed")
+         return true
+      end
+
+      return true
    end
 }
