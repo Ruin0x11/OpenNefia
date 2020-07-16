@@ -707,7 +707,7 @@ return {
             description = "Used when wielding a weapon with both hands.",
             name = "Two Hand"
          },
-         uncurse = {
+         spell_uncurse = {
             description = "Uncurse items",
             name = "Uncurse"
          },

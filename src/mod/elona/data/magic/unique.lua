@@ -9,6 +9,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Inventory = require("api.Inventory")
 local Input = require("api.Input")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local Magic = require("mod.elona_sys.api.Magic")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -439,6 +440,15 @@ data:add {
       "source"
    },
 
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.spell_identify")
+      return {
+         x = 0,
+         y = 1,
+         bonus = level * params.power * 10 / 100
+      }
+   end,
+
    cast = function(self, params)
       local source = params.source
       if not source:is_player() then
@@ -473,5 +483,115 @@ data:add {
       item:stack()
 
       return true
+   end
+}
+
+data:add {
+   _id = "spell_uncurse",
+   _type = "base.skill",
+   elona_id = 412,
+
+   type = "spell",
+   effect_id = "elona.uncurse",
+   related_skill = "elona.stat_will",
+   cost = 35,
+   range = 0,
+   difficulty = 700,
+   target_type = "self_or_nearby"
+}
+data:add {
+   _id = "uncurse",
+   _type = "elona_sys.magic",
+   elona_id = 412,
+
+   type = "skill",
+   params = {
+      "source"
+   },
+
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.spell_uncurse")
+      return {
+         x = 0,
+         y = 1,
+         bonus = level * params.power * 5 / 100
+      }
+   end,
+
+   cast = function(self, params)
+      local target = params.target
+
+      if params.curse_state == "none" then
+         Gui.mes_visible("magic.uncurse.apply", target.x, target.y, target)
+      elseif params.curse_state == "blessed" then
+         Gui.mes_visible("magic.uncurse.blessed", target.x, target.y, target)
+      elseif Effect.is_cursed(params.curse_state) then
+         Gui.mes_visible("magic.common.cursed", target.x, target.y, target)
+         return Magic.cast("elona.curse", params)
+      end
+
+      local filter = function(item)
+         if not Item.is_alive(item) or item.curse_state == "none" or item.curse_state == "blessed" then
+            return false
+         end
+
+         if params.curse_state ~= "blessed" then
+            if not item:is_equipped() then
+               return false
+            end
+         end
+
+         return true
+      end
+
+      local total_uncursed = 0
+      local total_resisted = 0
+
+      for _, item in target:iter_items():filter(filter) do
+         local chance = 0
+
+         if item.curse_state == "cursed" then
+            chance = Rand.rnd(200) + 1
+         elseif item.curse_state == "doomed" then
+            chance = Rand.rnd(1000) + 1
+         end
+
+         if params.curse_state == "blessed" then
+            chance = chance / 2 + 1
+         end
+
+         if chance > 0 and params.power >= chance then
+            total_uncursed = total_uncursed + 1
+            item.curse_state = "none"
+            item:stack()
+         else
+            total_resisted = total_resisted + 1
+         end
+      end
+
+      if total_uncursed > 0 then
+         if params.curse_state == "blessed" then
+            Gui.mes_visible("magic.uncurse.item", target.x, target.y, target)
+         else
+            Gui.mes_visible("magic.uncurse.equipment", target.x, target.y, target)
+         end
+      end
+      if total_resisted > 0 then
+         Gui.mes_visible("magic.uncurse.resist", target.x, target.y)
+      end
+
+      local obvious = true
+
+      if total_uncursed == 0 and total_resisted == 0 then
+         Gui.mes("common.nothing_happens")
+         obvious = false
+      else
+         local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+
+      target:refresh()
+
+      return true, { obvious = obvious }
    end
 }
