@@ -61,16 +61,16 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
    local ammo = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
 
    if ranged == nil then
-      return nil, "No ranged weapon."
+      return nil, "no_ranged_weapon"
    end
 
-   local skill = "elona.throwing"
-   if ammo then
-      skill = ammo:calc("skill")
+   local skill = ranged:calc("skill")
+   if not ammo and skill ~= "elona.throwing" then
+      return nil, "no_ammo"
    end
 
-   if ranged:calc("skill") ~= skill then
-      return nil, ("Incompatible skills (weapon: %s, ammo: %s)"):format(ranged:calc("skill"), skill)
+   if ammo and ammo:calc("skill") ~= skill then
+      return nil, "wrong_ammo"
    end
 
    return ranged, ammo

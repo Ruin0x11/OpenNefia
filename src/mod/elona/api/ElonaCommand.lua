@@ -9,11 +9,33 @@ local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local UiTheme = require("api.gui.UiTheme")
 local World = require("api.World")
+local Action = require("api.Action")
 
 local ElonaCommand = {}
 
-function ElonaCommand.examine(player)
-   return Input.query_inventory(player, "elona.inv_examine", nil, "elona.main")
+local last_op = "elona.inv_examine"
+
+function ElonaCommand.quick_inv(player)
+   local result, canceled = Input.query_inventory(player, last_op, nil, "elona.main")
+
+   last_op = result.operation
+
+   if canceled then
+      return result, canceled
+   end
+   return result.result, canceled
+end
+
+local function query_inventory(player, op)
+   local result, canceled = Input.query_inventory(player, op, nil, "elona.main")
+   if canceled then
+      return result, canceled
+   end
+   return result.result, canceled
+end
+
+function ElonaCommand.inventory(player)
+   return query_inventory(player, "elona.inv_examine")
 end
 
 function ElonaCommand.bash(player)
@@ -55,27 +77,27 @@ function ElonaCommand.do_eat(player, item)
 end
 
 function ElonaCommand.eat(player)
-   return Input.query_inventory(player, "elona.inv_eat", nil, "elona.main")
+   return query_inventory(player, "elona.inv_eat")
 end
 
 function ElonaCommand.drink(player)
-   return Input.query_inventory(player, "elona.inv_drink", nil, "elona.main")
+   return query_inventory(player, "elona.inv_drink")
 end
 
 function ElonaCommand.zap(player)
-   return Input.query_inventory(player, "elona.inv_zap", nil, "elona.main")
+   return query_inventory(player, "elona.inv_zap")
 end
 
 function ElonaCommand.use(player)
-   return Input.query_inventory(player, "elona.inv_use", nil, "elona.main")
+   return query_inventory(player, "elona.inv_use")
 end
 
 function ElonaCommand.dip(player)
-   return Input.query_inventory(player, "elona.inv_dip_source", nil, "elona.main")
+   return query_inventory(player, "elona.inv_dip_source")
 end
 
 function ElonaCommand.throw(player)
-   return Input.query_inventory(player, "elona.inv_throw", nil, "elona.main")
+   return query_inventory(player, "elona.inv_throw")
 end
 
 function ElonaCommand.do_dig(player, x, y)
@@ -125,19 +147,30 @@ function ElonaCommand.dig(player)
 end
 
 function ElonaCommand.fire(player)
-   local pred = function(c)
-      return player:reaction_towards(c) < 0
-   end
-
-   local targets = Chara.iter():filter(pred):to_list()
-   table.sort(targets, function(a, b)
-                 return Pos.dist(player.x, player.y, a.x, a.y)
-                    < Pos.dist(player.x, player.y, b.x, b.y)
-   end)
-   local target = targets[1]
+   local target = Action.find_target(player)
 
    if not target then
-      Gui.mes("Nobody in the map.")
+      return "player_turn_query"
+   end
+
+   if player:reaction_towards(target) >= 0 then
+      if not ElonaAction.prompt_really_attack(player, target) then
+         return "player_turn_query"
+      end
+   end
+
+   local ranged, err = ElonaAction.get_ranged_weapon_and_ammo(player)
+   if ranged == nil then
+      if err == "no_ranged_weapon" then
+         Gui.mes_duplicate()
+         Gui.mes("action.ranged.equip.need_weapon")
+      elseif err == "no_ammo" then
+         Gui.mes_duplicate()
+         Gui.mes("action.ranged.equip.need_ammo")
+      elseif err == "wrong_ammo" then
+         Gui.mes_duplicate()
+         Gui.mes("action.ranged.equip.wrong_ammo")
+      end
       return "player_turn_query"
    end
 

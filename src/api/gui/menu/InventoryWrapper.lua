@@ -108,13 +108,10 @@ end
 function InventoryWrapper:switch_context()
    Gui.play_sound("base.inv")
 
-   local proto_id
    if self.group then
-      proto_id = self.group.protos[self.selected_index]
-   else
-      proto_id = self.proto_id
+      self.proto_id = self.group.protos[self.selected_index]
    end
-   local proto = data["elona_sys.inventory_proto"]:ensure(proto_id)
+   local proto = data["elona_sys.inventory_proto"]:ensure(self.proto_id)
 
    local ctxt = InventoryContext:new(proto, self.params)
    self.submenu = InventoryMenu:new(ctxt, self.returns_item)
@@ -160,7 +157,7 @@ function InventoryWrapper:update()
    if canceled then
       return nil, "canceled"
    elseif result then
-      return result
+      return { result = result, operation = self.proto_id }
    end
 
    if self.canceled then

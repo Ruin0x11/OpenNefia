@@ -29,7 +29,10 @@ local ElonaCommand = require("mod.elona.api.ElonaCommand")
 
 Gui.bind_keys {
    quick_inv = function(_, me)
-      return ElonaCommand.examine(me)
+      return ElonaCommand.quick_inv(me)
+   end,
+   inventory = function(_, me)
+      return ElonaCommand.inventory(me)
    end,
    bash = function(_, me)
       return ElonaCommand.bash(me)

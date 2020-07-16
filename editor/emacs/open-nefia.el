@@ -58,10 +58,24 @@
          (process-get proc :args)
          response))))
 
+(defcustom open-nefia-completion-package 'ivy "Completion backend to use.")
+
+(defun open-nefia--do-completing-read (prompt cands &key prefix require-match caller)
+  (interactive)
+  (cond
+   ((and (fboundp 'ivy-read) (eq open-nefia-completion-package 'ivy))
+    (ivy-read prompt cands
+              :caller caller
+              :require-match require-match))
+   (t (completing-read prompt cands prefix require-match))))
+
 (defun open-nefia--completing-read (prompt list)
-  (let ((cands (mapcar (lambda (c) (append c nil)) (append list nil)))
-        (reader (if (bound-and-true-p ivy-read) 'ivy-read 'completing-read)))
-    (funcall reader prompt cands nil t)))
+  (let ((cands (mapcar (lambda (c)
+                         (cond
+                          ((stringp c) c)
+                          (t (append c nil))))
+                       (append list nil))))
+    (open-nefia--do-completing-read prompt cands :require-match t)))
 
 (defun open-nefia--fontify-region (mode beg end)
   (let ((prev-mode major-mode))
@@ -144,6 +158,7 @@
               ("completion" (open-nefia--command-completion response))
               ("template" (open-nefia--command-template response))
               ("ids" (open-nefia--command-ids args response))
+              ("locale_search" (open-nefia--command-locale-search response))
               ("run" t)
               ("hotload" t)
               (else (error "No action for %s %s" cmd (prin1-to-string response)))))
@@ -348,6 +363,29 @@
     (setq open-nefia--apropos-candidates items)
     (let ((item (open-nefia--completing-read "Apropos: " items)))
       (open-nefia--send "help" item))))
+
+(defvar open-nefia--locale-search-table nil)
+
+(defun open-nefia--command-locale-search-transformer (id)
+  (let ((text (gethash id open-nefia--locale-search-table)))
+    (concat (propertize (format "\"%s\"" text) 'face 'font-lock-string-face)
+            (format " (%s)" id))))
+
+(defun open-nefia--command-locale-search (response)
+  (let ((items (append (alist-get 'results response) nil)))
+    (setq open-nefia--locale-search-table (make-hash-table))
+    (mapc (lambda (i)
+            (puthash (aref i 0) (aref i 1) open-nefia--locale-search-table))
+          items)
+    (let* ((cands (mapcar (lambda (i) (aref i 0)) items))
+           (result (open-nefia--do-completing-read "Candidate: " cands
+                                                   :require-match t
+                                                   :caller 'open-nefia--command-locale-search)))
+      (message "%s" result))))
+
+(if (fboundp 'ivy-configure)
+    (ivy-configure 'open-nefia--command-locale-search
+      :display-transformer-fn #'open-nefia--command-locale-search-transformer))
 
 (defun open-nefia--command-template (response)
   (insert (alist-get 'template response)))
@@ -764,5 +802,9 @@
 (defun open-nefia-reset-draw-layers ()
   (interactive)
   (open-nefia--send "run" (list :code "require('api.Input').back_to_field()")))
+
+(defun open-nefia-locale-search (query)
+  (interactive "sSearch localized strings: \n")
+  (open-nefia--send "locale_search" (list :query query)))
 
 (provide 'open-nefia)

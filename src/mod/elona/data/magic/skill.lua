@@ -138,10 +138,12 @@ data:add {
          return false
       end
 
-      local item, canceled = Input.query_item(source, "elona.inv_cook")
+      local result, canceled = Input.query_item(source, "elona.inv_cook")
       if canceled then
          return false
       end
+
+      local item = result.result
 
       if source:is_player() and not Effect.do_stamina_check(source, self) then
          Gui.mes("magic.common.too_exhausted")

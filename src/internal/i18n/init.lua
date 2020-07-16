@@ -3,9 +3,11 @@ local Rand = require("api.Rand")
 local Stopwatch = require("api.Stopwatch")
 local mod = require("internal.mod")
 local fs = require("util.fs")
+local dawg = require("internal.dawg")
 
 local i18n = {}
 i18n.db = {}
+i18n.index = nil
 
 local reify_one
 reify_one = function(_db, item, key)
@@ -82,6 +84,8 @@ function i18n.switch_language(lang, force)
       i18n.db[lang] = {}
    end
 
+   i18n.index = nil
+
    local sw = Stopwatch:new()
 
    for _, mod in mod.iter_loaded() do
@@ -133,6 +137,47 @@ function i18n.capitalize(text)
    end
 
    return cap(text)
+end
+
+function i18n.make_prefix_lookup()
+   local d = dawg:new()
+   local corpus = {}
+   local add
+   add = function(id, item)
+      if type(item) == "string" then
+         corpus[#corpus+1] = { item, id }
+      elseif type(item) == "function" then
+         local ok, result = pcall(item, {}, {}, {}, {}, {})
+         if ok then
+            corpus[#corpus+1] = { result, id }
+         end
+      elseif type(item) == "table" then
+         for _, v in ipairs(item) do
+            add(id, v)
+         end
+      end
+   end
+   for id, item in pairs(i18n.db[i18n.language]) do
+      add(id, item)
+   end
+
+   table.sort(corpus, function(a, b) return a[1] < b[1] end)
+
+   for _, pair in ipairs(corpus) do
+      d:insert(pair[1], pair[2])
+   end
+
+   d:finish()
+
+   return d
+end
+
+function i18n.search(prefix)
+   if i18n.index == nil then
+      Log.warn("Building i18n search index.")
+      i18n.index = i18n.make_prefix_lookup()
+   end
+   return i18n.index:search(prefix)
 end
 
 function i18n.on_hotload(old, new)

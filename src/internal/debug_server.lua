@@ -9,6 +9,7 @@ local hotload = require("internal.hotload")
 local socket = require("socket")
 local json = require("thirdparty.json")
 local field = require("game.field")
+local i18n = require("internal.i18n.init")
 
 local commands = {}
 
@@ -349,6 +350,29 @@ function commands.completion(args)
    completion.candidates = nil
 
    return completion
+end
+
+-- Request:
+--
+-- {
+--   "command": "locale_search",
+--   "args": { "query": "You need to equip ammos" }
+-- }
+--
+-- Response:
+--
+-- {
+--   "success":true,
+--   "results":["action.ranged.equip.need_ammo"]
+-- }
+function commands.locale_search(args)
+   local results = fun.iter(i18n.search(args.query))
+      :take(100)
+      :map(function(r) return { r, i18n.get(r) } end)
+      :to_list()
+   return {
+      results = results
+   }
 end
 
 local debug_server = class.class("debug_server")

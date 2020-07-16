@@ -157,11 +157,19 @@ function Command.get(player)
       return "turn_end"
    end
 
-   return Input.query_inventory(player, "elona.inv_get", nil, nil)
+   local result, canceled = Input.query_inventory(player, "elona.inv_get", nil, nil)
+   if canceled then
+      return nil, canceled
+   end
+   return result.result
 end
 
 function Command.drop(player)
-   return Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
+   local result, canceled = Input.query_inventory(player, "elona.inv_drop", nil, "elona.main")
+   if canceled then
+      return nil, canceled
+   end
+   return result.result
 end
 
 function Command.wear(player)
