@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local IUiWidget = require("api.gui.IUiWidget")
 local UiFpsGraph = require("api.gui.hud.UiFpsGraph")
-local draw_stats = require("internal.global.draw_stats")
+local main_state = require("internal.global.main_state")
 local Env = require("api.Env")
 
 local UiFpsCounter = class.class("UiFpsCounter", IUiWidget)
@@ -43,7 +43,7 @@ function UiFpsCounter:draw()
 end
 
 function UiFpsCounter:update()
-   if not draw_stats.frame_start then
+   if not main_state.frame_start then
       return
    end
 
@@ -53,7 +53,7 @@ function UiFpsCounter:update()
    self.ms = self.ms + dt * 1000
 
    self.frames = self.frames + 1
-   draw_stats.frame_start = false
+   main_state.frame_start = false
 
    if self.ms >= self.threshold then
       local fps = self.frames / (self.ms / 1000)
@@ -68,6 +68,7 @@ function UiFpsCounter:update()
       self.ram_graph:add_point(ram)
       self.ram_diff_graph:add_point(diff)
 
+      local draw_stats = main_state.draw_stats
       if self.show_draw_stats and draw_stats.drawcalls then
          buff = buff .. string.format("\nDRW: %d\nCNV: %d\nTXTR: %04.2fMB\nIMG: %d\nCNVS: %d\nFNTS: %d",
                                                 draw_stats.drawcalls,

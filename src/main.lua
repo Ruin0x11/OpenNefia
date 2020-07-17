@@ -7,13 +7,13 @@ local game = require("game")
 local debug_server = require("internal.debug_server")
 local input = require("internal.input")
 local draw = require("internal.draw")
-local draw_stats = require("internal.global.draw_stats")
+local main_state = require("internal.global.main_state")
 
 local loop_coro = nil
 local draw_coro = nil
 local server = nil
 
-local enable_low_power_mode = false
+local enable_low_power_mode = true
 local low_power_mode = false
 
 function love.load(arg)
@@ -61,7 +61,7 @@ end
 function love.update(dt)
    input.poll_joystick_axes()
 
-   draw_stats.frame_start = true
+   main_state.frame_start = true
 
    if env.server_needs_restart then
       if server then
@@ -154,7 +154,7 @@ function love.draw()
       end
    end
 
-   love.graphics.getStats(draw_stats)
+   love.graphics.getStats(main_state.draw_stats)
 
    draw.draw_global_widgets()
    draw.draw_global_draw_callbacks()
@@ -165,7 +165,7 @@ function love.draw()
 end
 
 function love.focus(focused)
-   if game.reached_title and enable_low_power_mode then
+   if main_state.reached_main_title and enable_low_power_mode then
       if focused then
          low_power_mode = false
       else

@@ -15,16 +15,18 @@ local startup = require("game.startup")
 local field_logic = require("game.field_logic")
 local save_store = require("internal.save_store")
 local draw = require("internal.draw")
+local main_state = require("internal.global.main_state")
 
 -- TODO: this module isn't hotloadable since game.loop gets run in a
 -- coroutine. Would be better to just put game.loop() into a
 -- standalone function.
 local game = {}
-game.reached_title = false
 game.in_game = false
 
 local function main_title()
-   game.reached_title = true
+   -- enable on low power mode
+   main_state.reached_main_title = true
+
    game.in_game = false
 
    local title = require("api.gui.menu.MainTitleMenu"):new()
