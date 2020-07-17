@@ -1596,3 +1596,179 @@ make_summon {
    filter = function(p, l) return { id = "elona.younger_sister" } end,
    permit_same_type = true
 }
+
+
+local function do_mutation(source, target, curse_state, times, no_negative_traits)
+   local candidates = data["base.trait"]:iter():filter(function(t) return t.type == "mutation" end):to_list()
+   local did_something = false
+
+   for _ = 1, times do
+      for _ = 1, 100 do
+         local trait = Rand.choice(candidates)
+
+         local delta = 1
+         if Rand.one_in(2) then
+            delta = -1
+         end
+
+         if target:trait_level(trait._id) >= trait.level_max then
+            delta = -1
+         end
+         if target:trait_level(trait._id) <= trait.level_min then
+            delta = 1
+         end
+
+         local proceed = true
+
+         if Effect.is_cursed(curse_state) then
+            if delta > 0 then
+               proceed = false
+            end
+         else
+            if delta < 0 then
+               if curse_state == "blessed" and Rand.one_in(3) or no_negative_traits then
+                  proceed = false
+               end
+            end
+         end
+
+         if proceed then
+            Gui.mes("magic.mutation.apply")
+            target:modify_trait_level(trait._id, delta)
+            local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+            Gui.start_draw_callback(cb)
+            did_something = true
+
+            break
+         end
+      end
+   end
+
+   target:refresh()
+
+   if not did_something then
+      Gui.mes("common.nothing_happens")
+      return true, { obvious = false }
+   end
+
+   return true
+end
+
+
+data:add {
+   _id = "action_eye_of_mutation",
+   _type = "base.skill",
+   elona_id = 632,
+
+   type = "action",
+   effect_id = "elona.eye_of_mutation",
+   related_skill = "elona.stat_will",
+   cost = 10,
+   range = 2,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "eye_of_mutation",
+   _type = "elona_sys.magic",
+   elona_id = 632,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if not target:is_player() then
+         return Magic.cast("elona.change_creature")
+      end
+
+      Gui.mes_visible("magic.mutation.spell", source, target)
+      if Rand.one_in(3) then
+         return true
+      end
+
+      -- TODO enchantment: resist mutation
+
+      local times = 1
+      return do_mutation(source, target, params.curse_state, times)
+   end
+}
+
+
+data:add {
+   _id = "spell_mutation",
+   _type = "base.skill",
+   elona_id = 454,
+
+   type = "spell",
+   effect_id = "elona.mutation",
+   related_skill = "elona.stat_perception",
+   cost = 70,
+   range = 0,
+   difficulty = 2250,
+   target_type = "self_or_nearby",
+}
+data:add {
+   _id = "mutation",
+   _type = "elona_sys.magic",
+   elona_id = 454,
+
+   type = "skill",
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if not target:is_player() then
+         return Magic.cast("elona.change_creature")
+      end
+
+      -- TODO enchantment: resist mutation
+
+      local times = 1
+      return do_mutation(source, target, params.curse_state, times)
+   end
+}
+
+
+data:add {
+   _id = "effect_evolution",
+   _type = "base.skill",
+   elona_id = 1144,
+
+   type = "effect",
+   effect_id = "elona.mutation",
+}
+data:add {
+   _id = "evolution",
+   _type = "elona_sys.magic",
+   elona_id = 1144,
+
+   type = "skill",
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if not target:is_player() then
+         return Magic.cast("elona.change_creature")
+      end
+
+      -- TODO enchantment: resist mutation
+
+      local times = 2 + Rand.rnd(3)
+      return do_mutation(source, target, params.curse_state, times, true)
+   end
+}
