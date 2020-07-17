@@ -70,7 +70,7 @@ local inv_drop = {
    icon = 8,
    text = "ui.inventory_command.drop",
    can_select = function(ctxt, item)
-      if item:calc("flags").is_no_drop then
+      if item:calc("is_no_drop") then
          return false, "marked as no drop"
       end
 
@@ -148,7 +148,7 @@ local inv_eat = {
          or item:calc("material") == "elona.raw" -- TODO
    end,
    can_select = function(ctxt, item)
-      if item:calc("flags").is_no_drop then
+      if item:calc("is_no_drop") then
          return false, "marked as no drop"
       end
 
@@ -256,7 +256,7 @@ local inv_buy = {
    show_money = true,
    text = "ui.inventory_command.buy",
    can_select = function(ctxt, item)
-      if item:calc("flags").is_no_drop then
+      if item:calc("is_no_drop") then
          return false, "marked as no drop"
       end
 
@@ -307,7 +307,7 @@ local inv_sell = {
    show_money = true,
    text = "ui.inventory_command.sell",
    can_select = function(ctxt, item)
-      if item:calc("flags").is_no_drop then
+      if item:calc("is_no_drop") then
          return false, "marked as no drop"
       end
 

@@ -268,6 +268,37 @@ function Effect.get_hungry(chara)
    end
 end
 
+function Effect.eat_food(chara, food)
+   Effect.apply_general_eating_effect(chara, food)
+   food:emit("elona_sys.on_item_eat", {chara=chara})
+
+   if chara:is_player() then
+      Effect.identify_item(food, "partly")
+   end
+
+   if chara:unequip_item(food) then
+      chara:refresh()
+   end
+
+   food.amount = food.amount - 1
+
+   if chara:is_player() then
+      Effect.show_eating_message(chara)
+   else
+      if chara.item_to_be_used
+         and chara.item_to_be_used.uid == food
+      then
+         chara.item_to_be_used = nil
+      end
+
+      -- TODO quest
+   end
+
+   Effect.proc_anorexia(chara)
+
+   food:emit("elona.on_eat_item_finish", {chara=chara})
+end
+
 -- TODO all categories with elona_id >= 50000
 local autoidentify = table.set {
    "elona.drink",

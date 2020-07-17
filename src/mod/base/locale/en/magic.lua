@@ -595,15 +595,15 @@ end
     scavenge = {
       apply = function(_1, _2)
   return ("%s loot%s %s%s backpack.")
-  :format(name(_1), s(_1), name(_2), his_owned(_2))
+  :format(name(_2), s(_2), name(_1), his_owned(_1))
 end,
-      eats = function(_1, _2)
+      eats = function(_1, _2, _3)
   return ("%s eat%s %s!")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_2), s(_2), itemname(_3, 1))
 end,
-      rotten = function(_1, _2)
+      rotten = function(_1, _2, _3)
   return ("%s notice%s unusual odor from %s and step%s back.")
-  :format(name(_1), s(_1), itemname(_2, 1), s(_1))
+  :format(name(_2), s(_2), itemname(_3, 2), s(_2))
 end
     },
     sense = {

@@ -564,7 +564,7 @@ return {
             description = "Allows you to ride creatures.",
             name = "Riding"
          },
-         scavenge = {
+         action_scavenge = {
             description = "Steal food",
             name = "Scavenge"
          },

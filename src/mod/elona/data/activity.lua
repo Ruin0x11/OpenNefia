@@ -210,34 +210,7 @@ data:add {
                end
             end
 
-            Effect.apply_general_eating_effect(chara, self.food)
-            self.food:emit("elona_sys.on_item_eat", {chara=chara})
-
-            if chara:is_player() then
-               Effect.identify_item(self.food, "partly")
-            end
-
-            if chara:unequip_item(self.food) then
-               chara:refresh()
-            end
-
-            self.food.amount = self.food.amount - 1
-
-            if chara:is_player() then
-               Effect.show_eating_message(chara)
-            else
-               if chara.item_to_be_used
-                  and chara.item_to_be_used.uid == self.food
-               then
-                  chara.item_to_be_used = nil
-               end
-
-               -- TODO quest
-            end
-
-            Effect.proc_anorexia(chara)
-
-            self.food:emit("elona.on_eat_item_finish", {chara=chara})
+            Effect.eat_food(chara, self.food)
          end
       }
    }

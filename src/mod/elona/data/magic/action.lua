@@ -7,6 +7,7 @@ local I18N = require("api.I18N")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
 local Enum = require("api.Enum")
+local Item = require("api.Item")
 
 data:add {
    _id = "action_pregnant",
@@ -512,5 +513,71 @@ make_touch {
 
    on_damage = function(self, params, dice)
       params.target:apply_effect("elona.sleep", dice.element_power)
+   end
+}
+
+data:add {
+   _id = "action_scavenge",
+   _type = "base.skill",
+   elona_id = 651,
+
+   type = "action",
+   effect_id = "elona.scavenge",
+   related_skill = "elona.stat_dexterity",
+   cost = 10,
+   range = 0,
+   difficulty = 0,
+   target_type = "direction"
+}
+data:add {
+   _id = "scavenge",
+   _type = "elona_sys.magic",
+   elona_id = 651,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      Gui.mes_visible("magic.scavenge.apply", target, source)
+
+      local filter = function(item)
+         if not Item.is_alive(item) then
+            return false
+         end
+
+         if item._id == "elona.fish_a" then
+            return true
+         end
+      end
+      local food = target:iter_inventory():filter(filter):nth(1)
+      if food == nil then
+         filter = function(item)
+            return Item.is_alive(item) and not item:calc("is_precious") and item:has_category("elona.food")
+         end
+         food = target:iter_inventory():filter(filter):nth(1)
+      end
+
+      if food == nil then
+         return true
+      end
+
+      if food:calc("is_spiked_with_love_potion") then
+         Gui.mes_visible("magic.scavenge.rotten", target, source, food)
+         return true
+      end
+
+      food:remove_activity()
+
+      Gui.mes_visible("magic.scavenge.eats", target, source, food)
+
+      source:heal_hp(source:calc("max_hp") / 3)
+      Effect.eat_food(source, food)
+
+      return true
    end
 }

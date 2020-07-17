@@ -8,6 +8,7 @@ local IStackableObject = require("api.IStackableObject")
 local ILocalizable = require("api.ILocalizable")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
+local Gui = require("api.Gui")
 local data = require("internal.data")
 
 local IItem = class.interface("IItem",
@@ -207,9 +208,13 @@ function IItem:is_equipped_at(body_part_type)
    return slot and slot.type == body_part_type
 end
 
-function IItem:remove_activity()
+function IItem:remove_activity(no_message)
    if not self.chara_using then
       return
+   end
+
+   if not no_message then
+      Gui.mes("activity.cancel.item", self.chara_using)
    end
 
    self.chara_using:remove_activity()
@@ -301,7 +306,7 @@ function IItem:calc_ui_color()
    local color = self:calc("ui_color")
    if color then return color end
 
-   if self:calc("flags").is_no_drop then
+   if self:calc("is_no_drop") then
         return {120, 80, 0}
    end
 

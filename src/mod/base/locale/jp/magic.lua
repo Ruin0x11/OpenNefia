@@ -601,15 +601,15 @@ end
     scavenge = {
       apply = function(_1, _2)
   return ("%sは%sのバックパックを漁った。")
-  :format(name(_1), name(_2))
+  :format(name(_2), name(_1))
 end,
-      eats = function(_1, _2)
+      eats = function(_1, _2, _3)
   return ("%sは%sを食べた！")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_2), itemname(_3, 1))
 end,
-      rotten = function(_1, _2)
+      rotten = function(_1, _2, _3)
   return ("%sは%sの異臭に気付き手をひっこめた。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_2), itemname(_3, 1))
 end
     },
     sense = {
