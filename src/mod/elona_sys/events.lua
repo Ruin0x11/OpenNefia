@@ -261,7 +261,7 @@ Event.register("base.on_damage_chara", "Damage text and blood", function(chara, 
                   params.message_tense = "passive"
 end)
 Event.register("base.on_kill_chara", "Damage text and kill handling", function(chara, params)
-                  if params.element then
+                  if params.element and params.element.sound then
                      Gui.play_sound(params.element.sound, chara.x, chara.y)
                   end
 

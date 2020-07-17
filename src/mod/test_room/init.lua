@@ -18,8 +18,11 @@ local function test_room(self, player)
    player:mod_base_skill_level("elona.stat_magic", 10000)
 
    data["base.skill"]:iter()
-      :filter(function(s) return s.type == "spell" end)
-      :each(function(m) player:gain_skill(m._id, 1000) end)
+      :filter(function(s) return s.type == "spell" or s.type == "action" end)
+         :each(function(m)
+               player:gain_skill(m._id, 1000)
+               player:set_spell_stock(m._id, 100000)
+              end)
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)

@@ -282,6 +282,9 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:is_player() or use_mp then
       if caster:is_player() then
+         local stock = caster:spell_stock(skill_id)
+         stock = math.max(stock - Skill.calc_spell_stock_cost(skill_id, caster), 0)
+         caster:set_spell_stock(skill_id, stock)
       end
       local mp_used = Skill.calc_spell_mp_cost(skill_id, caster)
       -- TODO god blessing

@@ -342,7 +342,7 @@ end,
     },
     gaze = function(_1, _2)
   return ("%s gaze%s at %s.")
-  :format(name(_1), s(_1), name(_2))
+  :format(name(_2), s(_2), name(_1))
 end,
     gravity = function(_1)
   return ("%s feel%s gravity.")

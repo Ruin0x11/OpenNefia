@@ -58,6 +58,12 @@ function ICharaSkills:spell_stock(skill_id)
    return self.spell_stocks[skill_id] or 0
 end
 
+function ICharaSkills:set_spell_stock(skill_id, amount)
+   local skill_entry = data["base.skill"]:ensure(skill_id)
+   if skill_entry.type ~= "spell" then return end
+   self.spell_stocks[skill_id] = amount
+end
+
 local function generate_methods(iface, name, ty)
    local subfields = { "level", "potential", "experience" }
 

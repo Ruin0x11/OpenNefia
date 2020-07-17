@@ -8,6 +8,10 @@ local Map = require("api.Map")
 local Chara = require("api.Chara")
 local Enum = require("api.Enum")
 local Item = require("api.Item")
+local ElonaAction = require("mod.elona.api.ElonaAction")
+local Calc = require("mod.elona.api.Calc")
+
+local RANGE_BOLT = 2
 
 data:add {
    _id = "action_pregnant",
@@ -750,10 +754,10 @@ data:add {
 data:add {
    _id = "action_insult",
    _type = "base.skill",
-   elona_id = 638,
+   elona_id = 648,
 
    type = "action",
-   effect_id = "elona.eye_of_dimness",
+   effect_id = "elona.insult",
    related_skill = "elona.stat_charisma",
    cost = 10,
    range = 4,
@@ -761,9 +765,9 @@ data:add {
    target_type = "enemy",
 }
 data:add {
-   _id = "eye_of_dimness",
+   _id = "insult",
    _type = "elona_sys.magic",
-   elona_id = 638,
+   elona_id = 648,
 
    params = {
       "source",
@@ -785,6 +789,188 @@ data:add {
       end
 
       target:apply_effect("elona.dimming", 200)
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "action_eye_of_mana",
+   _type = "base.skill",
+   elona_id = 652,
+
+   type = "action",
+   effect_id = "elona.eye_of_mana",
+   related_skill = "elona.stat_magic",
+   cost = 10,
+   range = 2,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "eye_of_mana",
+   _type = "elona_sys.magic",
+   elona_id = 652,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      Gui.mes_visible("magic.gaze", target, source)
+
+      target:damage_mp(Rand.rnd(20) + 1)
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "action_vanish",
+   _type = "base.skill",
+   elona_id = 653,
+
+   type = "action",
+   effect_id = "elona.vanish",
+   related_skill = "elona.stat_perception",
+   cost = 10,
+   range = 0,
+   difficulty = 0,
+   target_type = "self",
+}
+data:add {
+   _id = "vanish",
+   _type = "elona_sys.magic",
+   elona_id = 653,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if target:is_allied() or target:calc("quality") >= Enum.Quality.Miracle then
+         return true
+      end
+
+      Gui.mes("magic.vanish", target)
+      target:vanquish()
+
+      return true
+   end
+}
+
+local function make_distant_attack(range, elona_id)
+   data:add {
+      _id = "action_distant_attack_" .. range,
+      _type = "base.skill",
+      elona_id = elona_id,
+
+      type = "action",
+      effect_id = "elona.distant_attack_" .. range,
+      related_skill = "elona.stat_strength",
+      cost = 10,
+      range = range,
+      difficulty = 0,
+      target_type = "enemy",
+   }
+   data:add {
+      _id = "distant_attack_" .. range,
+      _type = "elona_sys.magic",
+      elona_id = 652,
+
+      params = {
+         "source",
+         "target"
+      },
+
+      cast = function(self, params)
+         local source = params.source
+         local target = params.target
+
+         local cb = Anim.ranged_attack(source.x, source.y, target.x, target.y, "elona.item_projectile_spore", nil, "base.arrow1", nil)
+         Gui.start_draw_callback(cb)
+
+         ElonaAction.melee_attack(source, target)
+
+         return true
+      end
+   }
+end
+
+make_distant_attack(4, 649)
+make_distant_attack(7, 650)
+
+
+data:add {
+   _id = "action_change",
+   _type = "base.skill",
+   elona_id = 628,
+
+   type = "action",
+   effect_id = "elona.change",
+   related_skill = "elona.stat_perception",
+   cost = 10,
+   range = RANGE_BOLT,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "change",
+   _type = "elona_sys.magic",
+   elona_id = 628,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+      local map = params.source:current_map()
+
+      if target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local success = true
+      if params.power / 10 + 10 < target:calc("level") then
+         success = false
+      end
+
+      -- TODO adventurer
+      if target:calc("quality") >= Enum.Quality.Miracle or next(target.roles) or target:calc("is_not_changeable") then
+         success = "impossible"
+      end
+      if target:is_allied() then
+         success = false
+      end
+
+      if success == true then
+         local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+         Gui.start_draw_callback(cb)
+         Gui.mes("magic.change.apply", target)
+         local level = Calc.calc_object_level(target:calc("level")+3, map)
+         local quality = Enum.Quality.Good
+         local uid = target.uid
+         Gui.mes("TODO")
+         map:emit("elona_sys.on_quest_check")
+      elseif success == false then
+         Gui.mes("magic.common.resists", target)
+      elseif success == "impossible" then
+         Gui.mes("magic.change.cannot_be_changed", target)
+      end
 
       return true
    end

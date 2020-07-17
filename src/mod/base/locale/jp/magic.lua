@@ -342,7 +342,7 @@ end,
     },
     gaze = function(_1, _2)
   return ("%sは%sを睨み付けた。")
-  :format(name(_1), name(_2))
+  :format(name(_2), name(_1))
 end,
     gravity = function(_1)
   return ("%sは重力を感じた。")

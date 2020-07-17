@@ -76,7 +76,7 @@ return {
             description = "Reduces the chance of casting failure.",
             name = "Casting"
          },
-         change = {
+         action_change = {
             description = "Change target",
             name = "Change"
          },
@@ -162,10 +162,10 @@ return {
             description = "Allows you to disarm harder traps.",
             name = "Disarm Trap"
          },
-         distant_attack = {
+         action_distant_attack_4 = {
             name = "Distant Attack"
          },
-         distant_attack_2 = {
+         action_distant_attack_7 = {
             name = "Distant Attack"
          },
          divine_wisdom = {
@@ -711,7 +711,7 @@ return {
             description = "Uncurse items",
             name = "Uncurse"
          },
-         vanish = {
+         action_vanish = {
             description = "Escape self.",
             name = "Vanish"
          },

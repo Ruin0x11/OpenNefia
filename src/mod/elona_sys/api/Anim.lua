@@ -652,11 +652,13 @@ function Anim.death(tx, ty, asset, element_id)
 
    local element_anim
    local element_anim_dy
+   local element_anim_frames
    if element_id then
       local element_data = data["base.element"]:ensure(element_id)
       if element_data.death_anim then
          element_anim = t[element_data.death_anim]
          element_anim_dy = element_data.death_anim_dy or -16
+         element_anim_frames = #element_anim.quads
       end
    end
 
@@ -680,7 +682,7 @@ function Anim.death(tx, ty, asset, element_id)
       while frame < 6 do
          local frame2 = frame * 2
 
-         if element_anim then
+         if element_anim and frame < element_anim_frames then
             element_anim:draw_region(frame+1, draw_x + sx - tw / 2, draw_y + sy - (3 * th / 4) + element_anim_dy)
          end
 

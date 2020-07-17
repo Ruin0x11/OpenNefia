@@ -1683,7 +1683,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change_creature")
+         return Magic.cast("elona.change")
       end
 
       Gui.mes_visible("magic.mutation.spell", source, target)
@@ -1728,7 +1728,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change_creature")
+         return Magic.cast("elona.change")
       end
 
       -- TODO enchantment: resist mutation
@@ -1763,7 +1763,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change_creature")
+         return Magic.cast("elona.change")
       end
 
       -- TODO enchantment: resist mutation
