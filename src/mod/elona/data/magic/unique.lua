@@ -14,6 +14,10 @@ local Magic = require("mod.elona_sys.api.Magic")
 local Map = require("api.Map")
 local Feat = require("api.Feat")
 local Mef = require("api.Mef")
+local Charagen = require("mod.tools.api.Charagen")
+local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
+local Skill = require("mod.elona_sys.api.Skill")
+local I18N = require("api.I18N")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -977,6 +981,100 @@ data:add {
       local map = params.source:current_map()
 
       Gui.mes("TODO")
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "spell_resurrection",
+   _type = "base.skill",
+   elona_id = 461,
+
+   type = "spell",
+   effect_id = "elona.resurrection",
+   related_skill = "elona.stat_will",
+   cost = 60,
+   range = 0,
+   difficulty = 1650,
+   target_type = "self",
+
+   -- TODO spell description
+   calc_mp_cost = function(skill_entry, chara) return skill_entry.cost end
+}
+data:add {
+   _id = "resurrection",
+   _type = "elona_sys.magic",
+   elona_id = 461,
+
+   type = "skill",
+   params = {
+      "source",
+   },
+
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.spell_resurrection")
+      return {
+         x = 0,
+         y = 1,
+         bonus = math.clamp((level*5*params.power)/20 + 40, 40, 100)
+      }
+   end,
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      if Map.is_world_map(map) then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.mes("magic.resurrection.cursed")
+         for _ = 1, 4 + Rand.rnd(4) do
+            local level = Calc.calc_object_level(source:calc("level"))
+            local quality = Calc.calc_object_quality("good")
+            Charagen.create(nil, nil, { level = level, quality = quality }, map)
+         end
+         return true, { obvious = false }
+      end
+
+      local filter = function(chara)
+         return chara.state == "PetDead" or chara.state == "CitizenDead"
+      end
+
+      local ally, canceled = ChooseNpcMenu:new(filter):query()
+
+      if not ally or canceled then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      ally:revive()
+
+      local success = Map.try_place_chara(ally, source.x, source.y, map)
+      if not success then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.mes_c("magic.resurrection.apply", "Yellow", ally)
+      Gui.mes(I18N.quote_speech("magic.resurrection.dialog"))
+
+      local cb = Anim.miracle({ x = ally.x, y = ally.y })
+      Gui.start_draw_callback(cb)
+      Gui.play_sound("base.pray2")
+
+      -- TODO emotion icon
+
+      if source:is_player() then
+         Skill.modify_impression(ally, 15)
+         if not ally:is_allied() then
+            Effect.modify_karma(source, 2)
+         end
+      end
 
       return true
    end

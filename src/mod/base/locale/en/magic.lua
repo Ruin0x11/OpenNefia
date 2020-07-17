@@ -563,9 +563,9 @@ end,
       dialog = "*quaff*"
     },
     resurrection = {
-      apply = function(_1, _2)
+      apply = function(_1)
   return ("%s %s been resurrected!")
-  :format(_1, have(_2))
+  :format(name(_1), have(_1))
 end,
       cursed = "Hoards of undead raise from the hell!",
       dialog = "Thanks!",

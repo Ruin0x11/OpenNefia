@@ -49,7 +49,7 @@ local UiListExt = function(feats_menu)
       if item.type == "header" then
          return
       end
-      if i % 2 == 0 then
+      if (i - 1) % 2 == 0 then
          Draw.filled_rect(x - 1, y, 640, 18, {12, 14, 16, 16})
       end
       if item.type ~= "can_acquire" then

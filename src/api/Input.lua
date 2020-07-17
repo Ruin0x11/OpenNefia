@@ -189,6 +189,14 @@ function Input.reload_keybinds()
    end
 end
 
+--- Clears all draw layers and returns to the main game screen.
+---
+--- Used for clearing out buggy draw layers that you might have hotloaded and
+--- can't seem to get yourself unstuck from.
+---
+--- This function can also be called remotely from the debug server, so you
+--- don't have to access to the REPL in-game to call it (in case the game is so
+--- borked you can't reach the REPL from there).
 function Input.back_to_field()
    local layers = table.set {
       "MainHud",

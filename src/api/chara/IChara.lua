@@ -566,7 +566,10 @@ function IChara:kill(source)
       end
    end
 
-   if next(self.roles) then
+   if self:is_ally() then
+      self.state = "PetDead"
+      -- TODO modify impression/bodyguard/is escorting
+   elseif next(self.roles) then
       self.state = "CitizenDead"
    else
       self.state = "Dead"

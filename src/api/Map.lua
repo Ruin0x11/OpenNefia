@@ -580,7 +580,7 @@ local function failed_to_place(chara)
    assert(not chara:is_player())
 
    if chara:is_ally() then
-      chara.state = "OtherMap"
+      chara.state = "PetWait"
       Gui.mes("chara.place_failure.ally", chara)
    else
       chara.state = "Dead"

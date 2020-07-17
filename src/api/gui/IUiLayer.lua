@@ -46,6 +46,8 @@ function IUiLayer:query(z_order)
       z_order = self:default_z_order() or 100000
    end
 
+   assert(type(z_order) == "number", ("Z order must be number (got: %s)"):format(z_order))
+
    local dt = 0
    local abort = false
 

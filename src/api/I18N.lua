@@ -106,4 +106,18 @@ function I18N.get_choice_count(prefix, suffix)
    return i - 1
 end
 
+function I18N.quote_speech(id, ...)
+   local text = I18N.get_optional(id, ...)
+   if not text then
+      return id
+   end
+
+   -- TODO
+   if not I18N.is_fullwidth() then
+      text = ("\"%s\""):format(text)
+   end
+
+   return text
+end
+
 return I18N

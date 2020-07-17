@@ -36,7 +36,7 @@ local UiListExt = function(inventory_menu)
       return entry.item:calc_ui_color()
    end
    function E:draw_select_key(entry, i, key_name, x, y)
-      if i % 2 == 0 then
+      if (i - 1) % 2 == 0 then
          Draw.filled_rect(x - 1, y, 540, 18, {12, 14, 16, 16})
       end
 

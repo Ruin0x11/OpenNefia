@@ -571,7 +571,7 @@ end,
     resurrection = {
       apply = function(_1)
   return ("%sは復活した！")
-  :format(_1)
+  :format(name(_1))
 end,
       cursed = "冥界から死霊が呼び出された！",
       dialog = "「ありがとう！」",
