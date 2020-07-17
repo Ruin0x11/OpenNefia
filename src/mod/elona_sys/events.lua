@@ -90,9 +90,19 @@ end
 local function show_element_text_death(target, source, tense, element)
    if tense == "ally" then
       Gui.mes_continue_sentence()
-      Gui.mes_c("element.death." .. element._id .. ".active", "Red", target, source)
+      local text = I18N.get_optional("element.death." .. element._id .. ".active", target, source)
+      if text then
+         Gui.mes_c(text)
+      else
+         Gui.mes_c("element.death.elona.default.active", "Red", target, source)
+      end
    else
-      Gui.mes_c("element.death." .. element._id .. ".passive", "Red", target, source)
+      local text = I18N.get_optional("element.death." .. element._id .. ".passive", target, source)
+      if text then
+         Gui.mes_c(text)
+      else
+         Gui.mes_c("element.death.elona.default.passive", "Red", target, source)
+      end
    end
 end
 

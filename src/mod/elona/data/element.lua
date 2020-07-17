@@ -2,6 +2,7 @@ local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
+local Event = require("api.Event")
 
 local element = {
    {
@@ -271,3 +272,12 @@ local element = {
 }
 
 data:add_multi("base.element", element)
+
+local function vorpal_damage(chara, params, result)
+   if params.element and params.element._id == "elona.vorpal" then
+      result = params.original_damage
+   end
+   return result
+end
+
+Event.register("base.hook_calc_damage", "Proc vorpal damage", vorpal_damage)

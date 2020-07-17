@@ -146,7 +146,7 @@ return {
          death_word = {
             name = "Death Word"
          },
-         decapitation = {
+         action_decapitation = {
             description = "Kill target",
             name = "Decapitation"
          },

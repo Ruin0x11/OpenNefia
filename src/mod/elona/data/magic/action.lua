@@ -581,3 +581,64 @@ data:add {
       return true
    end
 }
+
+data:add {
+   _id = "action_decapitation",
+   _type = "base.skill",
+   elona_id = 658,
+
+   type = "action",
+   effect_id = "elona.decapitation",
+   related_skill = "elona.stat_dexterity",
+   cost = 10,
+   range = 1,
+   difficulty = 0,
+   target_type = "enemy"
+}
+data:add {
+   _id = "decapitation",
+   _type = "elona_sys.magic",
+   elona_id = 658,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if target.hp > target:calc("max_hp") / 8 then
+         return true
+      end
+
+      local tense = "enemy"
+      local is_third_person = true
+
+      if target:is_allied() then
+         tense = "ally"
+         is_third_person = false
+      end
+
+      if target:is_in_fov() then
+         Gui.play_sound("base.atksword")
+         Gui.mes_c("magic.vorpal.sound", "Red")
+         if tense == "enemy" then
+            Gui.mes("magic.vorpal.ally", source, target)
+         else
+            Gui.mes("magic.vorpal.other", source, target)
+         end
+      end
+
+      target:damage_hp(target:calc("max_hp"), source, {
+                          no_attack_text = true,
+                          message_tense = tense,
+                          is_third_pereson = is_third_person,
+                          element = "elona.vorpal",
+                          element_power = 0
+      })
+
+      return true
+   end
+}

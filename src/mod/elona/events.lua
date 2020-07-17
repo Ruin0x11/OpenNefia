@@ -378,16 +378,6 @@ end
 Event.register("base.hook_calc_damage",
                "Proc nullify damage", nullify_damage)
 
-local function vorpal_damage(chara, params, result)
-   if params.element and params.element._id == "elona.vorpal" then
-      result = params.original_damage
-   end
-   return result
-end
-
-Event.register("base.hook_calc_damage",
-               "Proc vorpal damage", vorpal_damage)
-
 local function calc_kill_exp(victim, params)
    local level = victim:calc("level")
    local result = math.clamp(level, 1, 200) * math.clamp(level + 1, 1, 200) * math.clamp(level + 2, 1, 200) / 20 + 8
