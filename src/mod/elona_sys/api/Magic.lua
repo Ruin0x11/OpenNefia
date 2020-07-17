@@ -234,7 +234,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
    end
 
    if target_type == "direction" then
-      if triggered_by == "spell" then
+      if triggered_by == "spell" or triggered_by == "action" then
          Gui.mes("action.which_direction.spell")
       else
          Gui.mes("action.which_direction.wand")

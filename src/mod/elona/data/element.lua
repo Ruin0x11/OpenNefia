@@ -47,7 +47,7 @@ local element = {
       death_anim = "base.anim_elem_cold",
 
       on_damage_tile = function(self, x, y, chara)
-         Effect.damage_map_cold(x, y, chara)
+         Effect.damage_map_ice(x, y, chara)
       end,
    },
    {

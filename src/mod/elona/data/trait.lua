@@ -408,7 +408,7 @@ local trait = {
     type = "mutation",
 
     on_refresh = function(self, chara)
-      chara:mod_skill_level("elona.dexterity", self.level*3, "add")
+      chara:mod_skill_level("elona.stat_dexterity", self.level*3, "add")
     end
   },
   {

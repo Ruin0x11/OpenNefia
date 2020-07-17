@@ -675,27 +675,27 @@ return {
             description = "Indicates your skill with throwing objects.",
             name = "Throwing"
          },
-         touch_of_fear = {
+         action_touch_of_fear = {
             description = "Fear target",
             name = "Touch of Fear"
          },
-         touch_of_hunger = {
+         action_touch_of_hunger = {
             description = "Starve target",
             name = "Touch of Hunger"
          },
-         touch_of_nerve = {
+         action_touch_of_nerve = {
             description = "Paralyze target",
             name = "Touch of Nerve"
          },
-         touch_of_poison = {
+         action_touch_of_poison = {
             description = "Poison target",
             name = "Touch of Poison"
          },
-         touch_of_sleep = {
+         action_touch_of_sleep = {
             description = "Sleep target",
             name = "Touch of Sleep"
          },
-         touch_of_weakness = {
+         action_touch_of_weakness = {
             description = "Weaken target",
             name = "Touch of Weakness"
          },

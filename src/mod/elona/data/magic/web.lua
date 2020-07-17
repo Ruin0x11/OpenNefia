@@ -34,7 +34,7 @@ local function make_web(opts)
          local map = params.source:current_map()
 
          Gui.mes(opts.message)
-         Gui.play_sound("base.web")
+         Gui.play_sound("base.web", params.x, params.y)
 
          local attempts = opts.attempts(params.power)
          local i = 0

@@ -6,6 +6,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local I18N = require("api.I18N")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
+local Enum = require("api.Enum")
 
 data:add {
    _id = "action_pregnant",
@@ -43,6 +44,10 @@ data:add {
 }
 
 local function proc_pregnancy(chara)
+   if not chara:calc("is_pregnant") then
+      return
+   end
+
    if Rand.one_in(15) then
       if chara:is_in_fov() then
          Gui.mes("misc.pregnant.pats_stomach", chara)
@@ -160,9 +165,9 @@ data:add {
       target:heal_mp(params.power / 2 + Rand.rnd(params.power / 2 + 1))
 
       if target:is_in_fov() then
-        Gui.mes("magic.harvest_mana", target)
-        local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
-        Gui.start_draw_callback(cb)
+         Gui.mes("magic.harvest_mana", target)
+         local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+         Gui.start_draw_callback(cb)
       end
    end
 }
@@ -209,9 +214,9 @@ data:add {
       target:heal_mp(Rand.roll_dice(dice.x, dice.y, dice.bonus))
 
       if target:is_in_fov() then
-        Gui.mes("magic.absorb_magic", target)
-        local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
-        Gui.start_draw_callback(cb)
+         Gui.mes("magic.absorb_magic", target)
+         local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+         Gui.start_draw_callback(cb)
       end
    end
 }
@@ -258,18 +263,18 @@ data:add {
 
       local cast_style = source:calc("cast_style")
       if cast_style then
-        if source:is_player() then
-          Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
-        else
-          Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
-        end
+         if source:is_player() then
+            Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
+         else
+            Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
+         end
       else
-        if target:is_allied() then
-          Gui.mes_visible("magic.sucks_blood.ally", source, target)
-        else
-          tense = "ally"
-          Gui.mes_visible("magic.sucks_blood.other", source, target)
-        end
+         if target:is_allied() then
+            Gui.mes_visible("magic.sucks_blood.ally", source, target)
+         else
+            tense = "ally"
+            Gui.mes_visible("magic.sucks_blood.other", source, target)
+         end
       end
 
       local dice = self:dice(params)
@@ -277,12 +282,233 @@ data:add {
       local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
       target:damage_hp(damage, source,
                        {
-                         element = dice.element,
-                         element_power = dice.element_power,
-                         message_tense = tense,
-                         no_attack_text = true
-                       })
+                          element = dice.element,
+                          element_power = dice.element_power,
+                          message_tense = tense,
+                          no_attack_text = true
+      })
 
       return true
+   end
+}
+
+local function make_touch(opts)
+   local full_id = "elona.action_" .. opts._id
+   data:add {
+      _id = "action_" .. opts._id,
+      _type = "base.skill",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      effect_id = "elona." .. opts._id,
+      related_skill = opts.related_skill,
+      cost = 10,
+      range = 0,
+      difficulty = 0,
+      target_type = "direction"
+   }
+   data:add {
+      _id = opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      params = {
+         "source",
+         "target",
+      },
+
+      dice = function(self, params)
+         local level = params.source:skill_level(full_id)
+         return opts.dice(params.power, level)
+      end,
+
+      cast = function(self, params)
+         local source = params.source
+         local target = params.target
+
+         local tense = "enemy"
+
+         local dice = self:dice(params)
+         local element = dice.element
+
+         local cast_style = source:calc("cast_style")
+         if cast_style then
+            if source:is_player() then
+               Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
+            else
+               Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
+            end
+         else
+            local element_adj = I18N.get("element.damage." .. element .. ".name")
+            local melee_style = source:calc("melee_style") or "default"
+            local melee_text
+            if target:is_allied() then
+               melee_text = I18N.get("damage.melee." .. melee_style .. ".ally")
+               Gui.mes_visible("magic.touch.ally", source, target, element_adj, melee_text)
+            else
+               tense = "ally"
+               melee_text = I18N.get("damage.melee." .. melee_style .. ".other")
+               Gui.mes_visible("magic.touch.other", source, target, element_adj, melee_text)
+            end
+         end
+
+         -- Some of the actions have special names for the melee damage type
+         -- ("silky", "rotten") but don't actually exist as elemental damage
+         -- types. If so then don't use an elemental type for them.
+         if not data["base.element"][element] then
+            element = nil
+         end
+
+         local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+         target:damage_hp(damage, source,
+                          {
+                             element = element,
+                             element_power = dice.element_power,
+                             message_tense = tense,
+                             no_attack_text = true
+         })
+
+         opts.on_damage(self, params, dice)
+
+         return true
+      end
+   }
+end
+
+make_touch {
+   _id = "touch_of_weakness",
+   elona_id = 613,
+
+   related_skill = "elona.stat_magic",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 3 + 1,
+         bonus = 0,
+         element = "elona.rotten"
+      }
+   end,
+
+   on_damage = function(self, params, dice)
+      local target = params.target
+      local attribute = Rand.choice(config["base._basic_attributes"])
+      local sustains_enchantment = "" -- TODO enchantment: sustains attribute
+      local proceed = true
+      if (target:calc("quality") >= Enum.Quality.Miracle and Rand.one_in(4))
+         or target:has_enchantment(sustains_enchantment)
+      then
+         proceed = false
+      end
+
+      if proceed then
+         local adj = target:stat_adjustment(attribute)
+         local diff = target:base_skill_level(attribute) - adj
+         if diff > 0 then
+            diff = diff * params.power / 2000 + 1
+            target:set_stat_adjustment(attribute, adj - diff)
+         end
+         Gui.mes_c_visible("magic.weaken", target, "Purple")
+         target:refresh()
+      end
+   end
+}
+
+make_touch {
+   _id = "touch_of_hunger",
+   elona_id = 614,
+
+   related_skill = "elona.stat_magic",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 3 + 1,
+         bonus = 0,
+         element = "elona.starving"
+      }
+   end,
+
+   on_damage = function(self, params, dice)
+      local target = params.target
+      target.nutrition = target.nutrition - 8 * 100
+      Gui.mes_c_visible("magic.hunger", target, "Purple")
+      Effect.get_hungry(target)
+   end
+}
+
+make_touch {
+   _id = "touch_of_poison",
+   elona_id = 615,
+
+   related_skill = "elona.stat_dexterity",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 4 + 1,
+         bonus = 0,
+         element = "elona.poison",
+         element_power = l * 4 + 20
+      }
+   end
+}
+
+make_touch {
+   _id = "touch_of_nerve",
+   elona_id = 616,
+
+   related_skill = "elona.stat_dexterity",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 3 + 1,
+         bonus = 0,
+         element = "elona.nerve",
+         element_power = l * 4 + 20
+      }
+   end
+}
+
+make_touch {
+   _id = "touch_of_fear",
+   elona_id = 617,
+
+   related_skill = "elona.stat_will",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 3 + 1,
+         bonus = 0,
+         element = "elona.fearful",
+         element_power = 100 + l * 2
+      }
+   end,
+
+   on_damage = function(self, params, dice)
+      params.target:apply_effect("elona.fear", dice.element_power)
+   end
+}
+
+make_touch {
+   _id = "touch_of_sleep",
+   elona_id = 618,
+
+   related_skill = "elona.stat_will",
+
+   dice = function(p, l)
+      return {
+         x = 1 + l / 10,
+         y = 3 + 1,
+         bonus = 0,
+         element = "elona.silky",
+         element_power = 100 + l * 3
+      }
+   end,
+
+   on_damage = function(self, params, dice)
+      params.target:apply_effect("elona.sleep", dice.element_power)
    end
 }
