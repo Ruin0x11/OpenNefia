@@ -384,8 +384,8 @@ return {
         name = {
           positive = "カンニバリズム"
         },
-        on_gain_level = "あなたは人肉の味に飽きた。",
-        on_lose_level = "あなたは人肉の味の虜になった。"
+        on_gain_level = "あなたは人肉の味の虜になった。",
+        on_lose_level = "あなたは人肉の味に飽きた。"
       },
 
       iron_skin = {
@@ -410,7 +410,9 @@ return {
         name = {
           negative = "アルビノ",
           positive = "鉄の皮膚"
-        }
+        },
+        on_gain_level = "あなたの皮膚は硬くなった。",
+        on_lose_level = "あなたの皮膚は薄くなった。"
       },
 
       joint_ache = {
@@ -435,7 +437,9 @@ return {
         name = {
           negative = "きしむ関節",
           positive = "しなやかな関節"
-        }
+        },
+        on_gain_level = "あなたの関節はしなやかになった。",
+        on_lose_level = "あなたの関節は痛み出した。"
       },
 
       troll_blood = {
@@ -454,7 +458,9 @@ return {
         name = {
           negative = "貧血",
           positive = "トロールの血"
-        }
+        },
+        on_gain_level = "あなたの血液は緑っぽくなった。",
+        on_lose_level = "あなたの血液は薄れた。"
       },
 
       leg = {
@@ -479,7 +485,9 @@ return {
         name = {
           negative = "ねじれた脚",
           positive = "しなやかな脚"
-        }
+        },
+        on_gain_level = "あなたの脚はしなやかになった。",
+        on_lose_level = "あなたの脚はねじれた。"
       },
 
       arm = {
@@ -504,7 +512,9 @@ return {
         name = {
           negative = "弱い腕",
           positive = "強い腕"
-        }
+        },
+        on_gain_level = "あなたの腕の筋肉が増えた。",
+        on_lose_level = "あなたの腕の贅肉が増えた。"
       },
 
       voice = {
@@ -523,7 +533,9 @@ return {
         name = {
           negative = "かれた声",
           positive = "美声"
-        }
+        },
+        on_gain_level = "あなたの声はよく通る。",
+        on_lose_level = "あなたの声はかれた。"
       },
 
       brain = {
@@ -542,7 +554,9 @@ return {
         name = {
           negative = "痴呆",
           positive = "脳内コンピュータ"
-        }
+        },
+        on_gain_level = "あなたの脳は機械化した。",
+        on_lose_level = "あなたの脳は原始化した。"
       },
 
       res_magic = {
@@ -555,7 +569,9 @@ return {
         name = {
           negative = "魔法の弱点",
           positive = "魔法への耐性"
-        }
+        },
+        on_gain_level = "あなたは魔法の耐性を得た。",
+        on_lose_level = "あなたは魔法の耐性を失った。"
       },
 
       res_sound = {
@@ -568,7 +584,9 @@ return {
         name = {
           negative = "弱い鼓膜",
           positive = "強い鼓膜"
-        }
+        },
+        on_gain_level = "あなたの鼓膜は厚くなった。",
+        on_lose_level = "あなたの鼓膜は薄くなった。"
       },
 
       res_fire = {
@@ -581,7 +599,9 @@ return {
         name = {
           negative = "火炎弱点",
           positive = "火炎耐性"
-        }
+        },
+        on_gain_level = "あなたの血は滾りだした。",
+        on_lose_level = "あなたの腕に鳥肌がたった。"
       },
 
       res_cold = {
@@ -594,7 +614,9 @@ return {
         name = {
           negative = "冷気弱点",
           positive = "冷気耐性"
-        }
+        },
+        on_gain_level = "あなたの皮膚は冷たくなった。",
+        on_lose_level = "あなたは汗をかきはじめた。"
       },
 
       res_lightning = {
@@ -607,7 +629,9 @@ return {
         name = {
           negative = "電撃弱点",
           positive = "電撃耐性"
-        }
+        },
+        on_gain_level = "あなたは非電導体になった。",
+        on_lose_level = "あなたの身体は電気を良く通す。"
       },
 
       eye = {
@@ -626,8 +650,11 @@ return {
         name = {
           negative = "色弱",
           positive = "鷹の目"
-        }
+        },
+        on_gain_level = "あなたの目は細くなった。",
+        on_lose_level = "あなたの視力は低下した。"
       },
+
 
       perm_fire = {
         ["-1"] = {
@@ -810,8 +837,8 @@ return {
         ["-3"] = {
           desc = "あなたはとてつもない重力を生み出している[重量+30%]"
         },
-        on_gain_level = "あなたは重力を発するようになった。",
-        on_lose_level = "あなたの周りの重力は軽減した。"
+        on_gain_level = "あなたの周りの重力は軽減した。",
+        on_lose_level = "あなたは重力を発するようになった。"
       },
 
       ether_ugly = {
@@ -830,8 +857,8 @@ return {
             return "あなたの顔は崩れかけている[魅力" .. _1 .. "]"
           end
         },
-        on_gain_level = "あなたの顔はただれた。",
-        on_lose_level = "あなたの顔のただれは軽くなった。"
+        on_gain_level = "あなたの顔のただれは軽くなった。",
+        on_lose_level = "あなたの顔はただれた。"
       },
 
       ether_foot = {
@@ -840,8 +867,8 @@ return {
             return "あなたの足の裏は蹄になっている[足装備不可 速度+" .. _1 .. "]"
           end
         },
-        on_gain_level = "あなたの足の裏は蹄に変形した。",
-        on_lose_level = "あなたの足は元に戻った。"
+        on_gain_level = "あなたの足は元に戻った。",
+        on_lose_level = "あなたの足の裏は蹄に変形した。"
       },
 
       ether_eye = {
@@ -850,8 +877,8 @@ return {
             return "あなたの目は4つある[感覚+" .. _1 .. " 魅力" .. _2 .. "]"
           end
         },
-        on_gain_level = "あなたの目は増殖した。",
-        on_lose_level = "あなたの目は減った。"
+        on_gain_level = "あなたの目は減った。",
+        on_lose_level = "あなたの目は増殖した。"
       },
 
       ether_feather = {
@@ -860,8 +887,8 @@ return {
             return "あなたの背中には羽がある[背中装備不可 重量-20% 速度+" .. _1 .. "]"
           end
         },
-        on_gain_level = "あなたの背中に羽が生えた。",
-        on_lose_level = "あなたの背中から羽が消えた。"
+        on_gain_level = "あなたの背中から羽が消えた。",
+        on_lose_level = "あなたの背中に羽が生えた。"
       },
 
       ether_neck = {
@@ -870,8 +897,8 @@ return {
             return "あなたの首はもの凄く太い[首装備不可 魅力" .. _1 .. " PV+" .. _2 .. "]"
           end
         },
-        on_gain_level = "あなたの首は太くなった。",
-        on_lose_level = "あなたの首は細くなった。"
+        on_gain_level = "あなたの首は細くなった。",
+        on_lose_level = "あなたの首は太くなった。"
       },
 
       ether_rage = {
@@ -880,8 +907,8 @@ return {
             return "あなたは殺戮に飢えている[DV" .. _1 .. " ダメージ修正+" .. _2 .. "]"
           end
         },
-        on_gain_level = "あなたは憎しみに支配された。",
-        on_lose_level = "あなたの心は落ち着いた。"
+        on_gain_level = "あなたの心は落ち着いた。",
+        on_lose_level = "あなたは憎しみに支配された。"
       },
 
       ether_mind = {
@@ -890,24 +917,24 @@ return {
             return "あなたの頭は巨大化している[耐久" .. _1 .. " 器用" .. _2 .. " 習得+" .. _3 .. " 意思+" .. _4 .. "]"
           end
         },
-        on_gain_level = "あなたの頭は巨大化した。",
-        on_lose_level = "あなたの頭は元に戻った。"
+        on_gain_level = "あなたの頭は元に戻った。",
+        on_lose_level = "あなたの頭は巨大化した。"
       },
 
       ether_rain = {
         ["-1"] = {
           desc = "あなたは雨を呼ぶ[雨天確率上昇]"
         },
-        on_gain_level = "あなたの頭上に雨雲が現れた。",
-        on_lose_level = "あなたの頭上から雨雲が消えた。"
+        on_gain_level = "あなたの頭上から雨雲が消えた。",
+        on_lose_level = "あなたの頭上に雨雲が現れた。"
       },
 
       ether_potion = {
         ["-1"] = {
           desc = "あなたはポーション中毒だ[定期的ポーション消費]"
         },
-        on_gain_level = "あなたはポーション中毒になった。",
-        on_lose_level = "あなたのポーション中毒は消えた。"
+        on_gain_level = "あなたのポーション中毒は消えた。",
+        on_lose_level = "あなたはポーション中毒になった。"
       },
 
       ether_weak = {
@@ -916,8 +943,8 @@ return {
             return "あなたは衰弱している[HP-15% 筋力" .. _1 .. "]"
           end
         },
-        on_gain_level = "あなたは衰弱した。",
-        on_lose_level = "あなたは健康になった。"
+        on_gain_level = "あなたは健康になった。",
+        on_lose_level = "あなたは衰弱した。"
       },
 
       ether_fool = {
@@ -926,8 +953,8 @@ return {
             return "あなたは痴呆になっている[MP-15% 魔力" .. _1 .. "]"
           end
         },
-        on_gain_level = "あなたはぼけた。",
-        on_lose_level = "あなたは明晰になった。"
+        on_gain_level = "あなたは明晰になった。",
+        on_lose_level = "あなたはぼけた。"
       },
 
       ether_heavy = {
@@ -936,24 +963,24 @@ return {
             return "あなたは重い甲殻で覆われている[PV+" .. _1 .. " 速度" .. _2 .. "]"
           end
         },
-        on_gain_level = "あなたの皮膚は甲殻で覆われた。",
-        on_lose_level = "あなたの皮膚から甲殻が消えた。"
+        on_gain_level = "あなたの皮膚から甲殻が消えた。",
+        on_lose_level = "あなたの皮膚は甲殻で覆われた。"
       },
 
       ether_teleport = {
         ["-1"] = {
           desc = "あなたの周囲の空間は捩れている[ランダムテレポート]"
         },
-        on_gain_level = "あなたの周囲の空間は捩れた。",
-        on_lose_level = "あなたの周囲の空間は元通りになった。"
+        on_gain_level = "あなたの周囲の空間は元通りになった。",
+        on_lose_level = "あなたの周囲の空間は捩れた。"
       },
 
       ether_staff = {
         ["-1"] = {
           desc = "あなたは生きたマナバッテリーだ[杖から魔力抽出]"
         },
-        on_gain_level = "あなたのマナは杖から魔力を抽出する。",
-        on_lose_level = "あなたのマナは元通りになった。"
+        on_gain_level = "あなたのマナは元通りになった。",
+        on_lose_level = "あなたのマナは杖から魔力を抽出する。"
       }
     }
   }

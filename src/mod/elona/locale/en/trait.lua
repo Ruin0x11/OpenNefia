@@ -384,8 +384,8 @@ return {
         name = {
           positive = "Cannibalism"
         },
-        on_gain_level = "You can no longer accept human flesh.",
-        on_lose_level = "You are charmed by the flavor of human flesh."
+        on_gain_level = "You are charmed by the flavor of human flesh.",
+        on_lose_level = "You can no longer accept human flesh."
       },
 
       iron_skin = {
@@ -410,7 +410,9 @@ return {
         name = {
           negative = "Albino",
           positive = "Iron Skin"
-        }
+        },
+        on_gain_level = "Your skin becomes harder.",
+        on_lose_level = "Your skin becomes pale."
       },
 
       joint_ache = {
@@ -435,7 +437,9 @@ return {
         name = {
           negative = "Creaking Joint",
           positive = "Flexible Joint"
-        }
+        },
+        on_gain_level = "Your joints become flexible.",
+        on_lose_level = "Your joints creak."
       },
 
       troll_blood = {
@@ -454,7 +458,9 @@ return {
         name = {
           negative = "Anemia",
           positive = "Troll Blood"
-        }
+        },
+        on_gain_level = "Suddenly your blood become greenish!",
+        on_lose_level = "Your metabolism slows down."
       },
 
       leg = {
@@ -479,7 +485,9 @@ return {
         name = {
           negative = "Twisted Leg",
           positive = "Lithe Leg"
-        }
+        },
+        on_gain_level = "Your legs become lithe.",
+        on_lose_level = "Your legs are twisted!"
       },
 
       arm = {
@@ -504,7 +512,9 @@ return {
         name = {
           negative = "Weak Arm",
           positive = "Strong Arm"
-        }
+        },
+        on_gain_level = "Your arms grow stronger.",
+        on_lose_level = "Your arms become thin."
       },
 
       voice = {
@@ -523,7 +533,9 @@ return {
         name = {
           negative = "Husky Voice",
           positive = "Sweet Voice"
-        }
+        },
+        on_gain_level = "Your voice becomes lovely.",
+        on_lose_level = "Your voice becomes scary."
       },
 
       brain = {
@@ -542,7 +554,9 @@ return {
         name = {
           negative = "Stupid",
           positive = "Brain Computer"
-        }
+        },
+        on_gain_level = "Your brain is mechanized!",
+        on_lose_level = "Your brain degenerates."
       },
 
       res_magic = {
@@ -555,7 +569,9 @@ return {
         name = {
           negative = "Magic Res-",
           positive = "Magic Res+"
-        }
+        },
+        on_gain_level = "You gain resistance to magic.",
+        on_lose_level = "You lose resistance to magic."
       },
 
       res_sound = {
@@ -568,7 +584,9 @@ return {
         name = {
           negative = "Sound Res-",
           positive = "Sound Res+"
-        }
+        },
+        on_gain_level = "Your eardrums become thick.",
+        on_lose_level = "Your eardrums become thin."
       },
 
       res_fire = {
@@ -581,7 +599,9 @@ return {
         name = {
           negative = "Fire Res-",
           positive = "Fire Res+"
-        }
+        },
+        on_gain_level = "Your blood starts to boil.",
+        on_lose_level = "Your skin gets gooseflesh."
       },
 
       res_cold = {
@@ -594,7 +614,9 @@ return {
         name = {
           negative = "Cold Res-",
           positive = "Cold Res+"
-        }
+        },
+        on_gain_level = "You feel hot-headed.",
+        on_lose_level = "You shiver."
       },
 
       res_lightning = {
@@ -607,7 +629,9 @@ return {
         name = {
           negative = "Lightning Res-",
           positive = "Lightning Res+"
-        }
+        },
+        on_gain_level = "You gain resistance to lightning.",
+        on_lose_level = "You lose resistance to lightning."
       },
 
       eye = {
@@ -626,7 +650,9 @@ return {
         name = {
           negative = "Color Blind",
           positive = "Hawk Eye"
-        }
+        },
+        on_gain_level = "Your eyes glow.",
+        on_lose_level = "Your sight is weakened."
       },
 
       perm_fire = {
@@ -810,8 +836,8 @@ return {
         ["-3"] = {
           desc = "You generate massive gravity. [Weight+30%]"
         },
-        on_gain_level = "You start to generate gravity.",
-        on_lose_level = "You wieght less."
+        on_gain_level = "You wieght less.",
+        on_lose_level = "You start to generate gravity."
       },
 
       ether_ugly = {
@@ -830,8 +856,8 @@ return {
             return "Your face is crumbling. [CHR" .. _1 .. "]"
           end
         },
-        on_gain_level = "Your face is festered.",
-        on_lose_level = "The swelling in your face decreases."
+        on_gain_level = "The swelling in your face decreases.",
+        on_lose_level = "Your face is festered."
       },
 
       ether_foot = {
@@ -840,8 +866,8 @@ return {
             return "Your feet transformed into hooves. [SPD+" .. _1 .. " Can't wear boots]"
           end
         },
-        on_gain_level = "Your feet change into hooves.",
-        on_lose_level = "Your feet become normal."
+        on_gain_level = "Your feet become normal.",
+        on_lose_level = "Your feet change into hooves."
       },
 
       ether_eye = {
@@ -850,8 +876,8 @@ return {
             return "You have 4 eyes. [PER+" .. _1 .. " CHR" .. _2 .. "]"
           end
         },
-        on_gain_level = "Your eyes are multipling.",
-        on_lose_level = "Your eyes become normal."
+        on_gain_level = "Your eyes become normal.",
+        on_lose_level = "Your eyes are multipling."
       },
 
       ether_feather = {
@@ -860,8 +886,8 @@ return {
             return "You have grown feather. [SPD+" .. _1 .. " Weight-20% Can't wear cloaks]"
           end
         },
-        on_gain_level = "Feathers come out from your back.",
-        on_lose_level = "Your feathers wilt."
+        on_gain_level = "Your feathers wilt.",
+        on_lose_level = "Feathers come out from your back."
       },
 
       ether_neck = {
@@ -870,8 +896,8 @@ return {
             return "Your neck is extremely thick. [CHR" .. _1 .. " PV+" .. _2 .. " Can't wear amulets]"
           end
         },
-        on_gain_level = "Your neck becomes extremely thick.",
-        on_lose_level = "Your neck becomes thin."
+        on_gain_level = "Your neck becomes thin.",
+        on_lose_level = "Your neck becomes extremely thick."
       },
 
       ether_rage = {
@@ -880,8 +906,8 @@ return {
             return "Desire for violence arises withn in you. [DV" .. _1 .. " Dmg bonus+" .. _2 .. "]"
           end
         },
-        on_gain_level = "Hatred dominates your soul.",
-        on_lose_level = " A deep sense of peace fills your heart."
+        on_gain_level = " A deep sense of peace fills your heart.",
+        on_lose_level = "Hatred dominates your soul."
       },
 
       ether_mind = {
@@ -890,24 +916,24 @@ return {
             return "Your head has grown huge. [END" .. _1 .. " DEX" .. _2 .. " LER+" .. _3 .. " WIL+" .. _4 .. "]"
           end
         },
-        on_gain_level = "Suddenly your head become giant size.",
-        on_lose_level = "Your head is normal size now."
+        on_gain_level = "Your head is normal size now.",
+        on_lose_level = "Suddenly your head become giant size."
       },
 
       ether_rain = {
         ["-1"] = {
           desc = "Clouds of rain follow you. [Chance of rain+]"
         },
-        on_gain_level = "Clouds of rain start to follow you.",
-        on_lose_level = "Clouds of rain stop following you."
+        on_gain_level = "Clouds of rain stop following you.",
+        on_lose_level = "Clouds of rain start to follow you."
       },
 
       ether_potion = {
         ["-1"] = {
           desc = "You are addicted to potion. [Consume potions]"
         },
-        on_gain_level = "Potions! More potions!! Suddenly, You become addicted to potion.",
-        on_lose_level = "You are no longer addicted to potion."
+        on_gain_level = "You are no longer addicted to potion.",
+        on_lose_level = "Potions! More potions!! Suddenly, You become addicted to potion."
       },
 
       ether_weak = {
@@ -916,8 +942,8 @@ return {
             return "You suffer debilitation. [HP-15% STR" .. _1 .. "]"
           end
         },
-        on_gain_level = "You become weak, very weak.",
-        on_lose_level = "You become healthy again."
+        on_gain_level = "You become healthy again.",
+        on_lose_level = "You become weak, very weak."
       },
 
       ether_fool = {
@@ -926,8 +952,8 @@ return {
             return "You have dementia. [MP-15% MAG" .. _1 .. "]"
           end
         },
-        on_gain_level = "You become feebleminded.",
-        on_lose_level = "You become confident again."
+        on_gain_level = "You become confident again.",
+        on_lose_level = "You become feebleminded."
       },
 
       ether_heavy = {
@@ -936,24 +962,24 @@ return {
             return "You are covered by heavy carapace. [PV+" .. _1 .. " SPD" .. _2 .. "]"
           end
         },
-        on_gain_level = "Heavy carapace starts to cover up your skin.",
-        on_lose_level = "Your carapace starts to break."
+        on_gain_level = "Your carapace starts to break.",
+        on_lose_level = "Heavy carapace starts to cover up your skin."
       },
 
       ether_teleport = {
         ["-1"] = {
           desc = "You are unstablizing space around you. [Random teleporation]"
         },
-        on_gain_level = "You feel unstable.",
-        on_lose_level = "You feel steady."
+        on_gain_level = "You feel steady.",
+        on_lose_level = "You feel unstable."
       },
 
       ether_staff = {
         ["-1"] = {
           desc = "You are a living mana battery. [Absorb mana from rods]"
         },
-        on_gain_level = "You are a living mana battery.",
-        on_lose_level = "You are no longer a living mana battery."
+        on_gain_level = "You are no longer a living mana battery.",
+        on_lose_level = "You are a living mana battery."
       },
     }
   }

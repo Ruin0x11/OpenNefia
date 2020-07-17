@@ -471,7 +471,7 @@ return {
          mist_of_silence = {
             name = "Mist of Silence"
          },
-         mutation = {
+         spell_mutation = {
             description = "Mutate self",
             name = "Mutation"
          },
