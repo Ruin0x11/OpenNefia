@@ -293,6 +293,40 @@ data:add {
    end
 }
 
+data:add {
+   _id = "action_manis_disassembly",
+   _type = "base.skill",
+   elona_id = 660,
+
+   type = "action",
+   effect_id = "elona.manis_disassembly",
+   related_skill = "elona.stat_will",
+   cost = 10,
+   range = 0,
+   difficulty = 0,
+   target_type = "direction"
+}
+data:add {
+   _id = "manis_disassembly",
+   _type = "elona_sys.magic",
+   elona_id = 660,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      Gui.mes("magic.disassembly")
+      target.hp = target:calc("max_hp") / 12 + 1
+
+      return true
+   end
+}
+
 local function make_touch(opts)
    local full_id = "elona.action_" .. opts._id
    data:add {

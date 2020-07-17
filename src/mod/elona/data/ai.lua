@@ -538,7 +538,7 @@ local function decide_ally_target(chara, params)
 end
 
 local function try_to_heal(chara, params)
-   local threshold = params.threshold or chara.max_hp / 4
+   local threshold = params.threshold or chara:calc("max_hp") / 4
    local chance = params.chance or 5
    if type(chara.on_low_hp) == "function" then
       if chara.hp < threshold then
