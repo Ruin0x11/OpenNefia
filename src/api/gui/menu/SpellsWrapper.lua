@@ -86,8 +86,6 @@ function SpellsWrapper:switch_context()
    self.icon_bar:select(self.selected_index)
 
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
-
-   collectgarbage()
 end
 
 function SpellsWrapper:relayout(x, y, width, height)

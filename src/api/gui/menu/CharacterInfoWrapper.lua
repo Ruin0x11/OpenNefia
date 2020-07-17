@@ -80,8 +80,6 @@ function CharacterInfoWrapper:switch_context()
    self.title:set_data(title_string)
 
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
-
-   collectgarbage()
 end
 
 function CharacterInfoWrapper:relayout(x, y, width, height)
