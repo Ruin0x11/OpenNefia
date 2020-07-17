@@ -179,7 +179,7 @@ return {
             description = "Create doors",
             name = "Door Creation"
          },
-         drain_blood = {
+         action_drain_blood = {
             description = "Drain HP",
             name = "Drain Blood"
          },

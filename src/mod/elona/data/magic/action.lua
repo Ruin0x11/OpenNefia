@@ -165,3 +165,74 @@ data:add {
       end
    end
 }
+
+data:add {
+   _id = "action_drain_blood",
+   _type = "base.skill",
+   elona_id = 601,
+
+   type = "action",
+   effect_id = "elona.drain_blood",
+   related_skill = "elona.stat_dexterity",
+   cost = 7,
+   range = 1,
+   difficulty = 0,
+   target_type = "enemy"
+}
+data:add {
+   _id = "drain_blood",
+   _type = "elona_sys.magic",
+   elona_id = 601,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.action_drain_blood")
+      return {
+         x = 1 + level / 15,
+         y = 6 + 1,
+         bonus = level / 4,
+         element = "elona.nether",
+         element_power = 200
+      }
+   end,
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      local tense = "enemy"
+
+      local cast_style = source:calc("cast_style")
+      if cast_style then
+        if source:is_player() then
+          Gui.mes_visible("action.cast.self", source, "ability." .. self._id .. ".name")
+        else
+          Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
+        end
+      else
+        if target:is_allied() then
+          Gui.mes_visible("magic.sucks_blood.ally", source, target)
+        else
+          tense = "ally"
+          Gui.mes_visible("magic.sucks_blood.other", source, target)
+        end
+      end
+
+      local dice = self:dice(params)
+
+      local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus)
+      target:damage_hp(damage, source,
+                       {
+                         element = dice.element,
+                         element_power = dice.element_power,
+                         message_tense = tense,
+                         no_attack_text = true
+                       })
+
+      return true
+   end
+}

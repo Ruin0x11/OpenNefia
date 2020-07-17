@@ -117,7 +117,6 @@ local element = {
       death_anim_dy = -24,
 
       after_apply_damage = function(chara, params)
-         Gui.mes("after")
          local damage = params.damage
          if params.source and damage > 0 then
             params.source:heal_hp(

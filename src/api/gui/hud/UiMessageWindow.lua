@@ -84,6 +84,7 @@ function UiMessageWindow:push_text(text, color)
    -- calculation to be correct.
    Draw.set_font(14) -- 14 - en * 2
    color = color or {255, 255, 255}
+   assert(color[1] and color[2] and color[3], "invalid color")
 
    if self.each_line:len() == 0 then
       self:newline()

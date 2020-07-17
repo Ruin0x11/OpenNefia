@@ -301,7 +301,11 @@ end
 --- @tparam int|nil y
 --- @param ...
 function Gui.mes_visible(text, x, y, ...)
-   Gui.mes_c_visible(text, x, y, nil, ...)
+   if class.is_an(IMapObject, x) then
+      Gui.mes_c_visible(text, x, nil, nil, y, ...)
+   else
+      Gui.mes_c_visible(text, x, y,   nil, ...)
+   end
 end
 
 --- Prints a message in the HUD message if the provided position is
