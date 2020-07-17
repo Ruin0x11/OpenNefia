@@ -1504,8 +1504,6 @@ local function make_summon(opts)
                table.merge(charagen_params, opts.filter(power, level, source))
             end
 
-            require("api.Log").info("%s", inspect(charagen_params))
-
             local chara = Charagen.create(target.x, target.y, charagen_params, map)
             if chara and chara._id == source._id then
                if not opts.permit_same_type then

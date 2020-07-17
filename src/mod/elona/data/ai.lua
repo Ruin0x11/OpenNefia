@@ -637,7 +637,7 @@ local function elona_default_ai(chara, params)
    -- sandbag
    -- leash
    if chara:calc("is_about_to_explode") then
-      Magic.cast("elona.explosion", {source = chara, x = chara.x, y = chara.y})
+      Magic.cast("elona.suicide_attack", {source = chara, x = chara.x, y = chara.y})
       return true
    end
    if chara:is_in_party() then

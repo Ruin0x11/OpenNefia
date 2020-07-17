@@ -359,7 +359,7 @@ function class.class(name, ifaces, opts)
    c.delegate = delegate
 
    c._serialize = function(self)
-      if self.serialize then
+      if type(self.serialize) == "function" then
          self:serialize()
       end
       return self
@@ -369,7 +369,7 @@ function class.class(name, ifaces, opts)
       self.__memoized = {}
       self.__class = c
       setmetatable(self, c)
-      if self.deserialize then
+      if type(self.deserialize) == "function" then
          self:deserialize()
       end
       return self
@@ -545,6 +545,14 @@ function class.hotload(old, new)
          copy_all_interface_methods_to_class(c)
       end
    end
+end
+
+function class._iter_classes()
+   return fun.iter(_classes)
+end
+
+function class._iter_interfaces()
+   return fun.iter(_interfaces)
 end
 
 return class

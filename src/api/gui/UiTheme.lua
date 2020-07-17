@@ -16,12 +16,6 @@ function theme_proxy:init(namespace)
    self._namespace = namespace
 end
 
-function theme_proxy:serialize()
-end
-
-function theme_proxy:deserialize()
-end
-
 local function find_asset(asset)
    for i = #active_themes, 1, -1 do
       local theme = active_themes[i]
@@ -127,11 +121,16 @@ function UiTheme.load_asset(id)
    return UiTheme.load(nil)[id]
 end
 
+function UiTheme.preload_all()
+   data["base.asset"]:iter():each(function(a) load_asset(a._id) end)
+end
+
 function UiTheme.on_hotload(old, new)
    local id = old.theme_id()
    assert(id)
    new.add_theme(id)
    table.replace_with(old, new)
+   new.preload_all()
 end
 
 return UiTheme

@@ -339,7 +339,7 @@ local function make_touch(opts)
                Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
             end
          else
-            local element_adj = I18N.get("element.damage." .. element .. ".name")
+            local element_adj = I18N.get("element.damage.name." .. element)
             local melee_style = source:calc("melee_style") or "default"
             local melee_text
             if target:is_allied() then
@@ -347,7 +347,7 @@ local function make_touch(opts)
                Gui.mes_visible("magic.touch.ally", source, target, element_adj, melee_text)
             else
                tense = "ally"
-               melee_text = I18N.get("damage.melee." .. melee_style .. ".other")
+               melee_text = I18N.get("damage.melee." .. melee_style .. ".enemy")
                Gui.mes_visible("magic.touch.other", source, target, element_adj, melee_text)
             end
          end
@@ -368,7 +368,9 @@ local function make_touch(opts)
                              no_attack_text = true
          })
 
-         opts.on_damage(self, params, dice)
+         if opts.on_damage then
+            opts.on_damage(self, params, dice)
+         end
 
          return true
       end

@@ -77,7 +77,7 @@ end
 
 local function run_generator_load_callback(map)
    -- TODO: need a better way of determining this
-   local is_templated_map = not string.match(map.id, "^_")
+   local is_templated_map = map.id and not string.match(map.id, "^_")
    if is_templated_map then
       Log.info("Binding events to map: %s", map.id)
       map_template.load(map)
@@ -95,7 +95,9 @@ function Map.load(id)
    assert(id)
    local uid
 
-   if type(id) == "string" then
+   if type(id) == "number" then
+      uid = id
+   elseif type(id) == "string" then
       local store = save.base.map_registry
 
       if store[id] == nil then
