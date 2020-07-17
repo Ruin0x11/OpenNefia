@@ -21,6 +21,7 @@ end
 
 --- @tparam IChara chara
 function Effect.impregnate(chara)
+   -- TODO enchantment
    if chara:has_enchantment("elona.prevents_pregnancy") then
       Gui.mes("misc.pregnant.pukes_out", chara)
       return false

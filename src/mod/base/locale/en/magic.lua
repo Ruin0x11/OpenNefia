@@ -512,7 +512,7 @@ end,
 end,
     pregnant = function(_1, _2)
   return ("%s put%s something into %s%s body!")
-  :format(name(_1), s(_1), name(_2), his_owned(_2))
+  :format(name(_2), s(_2), name(_1), his_owned(_1))
 end,
     rain_of_sanity = function(_1)
   return ("%s %s completely sane again.")

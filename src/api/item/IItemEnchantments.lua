@@ -34,6 +34,7 @@ function IItemEnchantments:on_refresh()
 end
 
 function IItemEnchantments:has_enchantment(id)
+   -- TODO enchantment
    return false
 end
 

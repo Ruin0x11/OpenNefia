@@ -526,7 +526,7 @@ return {
             description = "Heal HP self",
             name = "Prayer of Jure"
          },
-         pregnant = {
+         action_pregnant = {
             description = "Pregnant target",
             name = "Pregnant"
          },

@@ -518,7 +518,7 @@ end,
 end,
     pregnant = function(_1, _2)
   return ("%sは%sの口の中に何かを送り込んだ！")
-  :format(name(_1), name(_2))
+  :format(name(_2), name(_1))
 end,
     rain_of_sanity = function(_1)
   return ("%sの狂気は消え去った。")

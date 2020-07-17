@@ -1,10 +1,27 @@
+local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Anim = require("mod.elona_sys.api.Anim")
+local I18N = require("api.I18N")
+local Map = require("api.Map")
+local Chara = require("api.Chara")
 
 data:add {
-   _id = "pregnancy",
+   _id = "action_pregnant",
+   _type = "base.skill",
+   elona_id = 626,
+
+   type = "action",
+   effect_id = "elona.pregnant",
+   related_skill = "elona.stat_perception",
+   cost = 15,
+   range = 1,
+   difficulty = 0,
+   target_type = "enemy"
+}
+data:add {
+   _id = "pregnant",
    _type = "elona_sys.magic",
    elona_id = 626,
 
@@ -14,13 +31,9 @@ data:add {
       "target",
    },
 
-   related_skill = "elona.stat_perception",
-   cost = 15,
-   range = 2001,
-
    cast = function(self, params)
       if params.target:is_in_fov() then
-         Gui.mes("magic.pregnant", params.source, params.target)
+         Gui.mes_visible("magic.pregnant", params.target, params.source)
       end
 
       Effect.impregnate(params.target)
@@ -28,6 +41,43 @@ data:add {
       return true
    end
 }
+
+local function proc_pregnancy(chara)
+   if Rand.one_in(15) then
+      if chara:is_in_fov() then
+         Gui.mes("misc.pregnant.pats_stomach", chara)
+         Gui.mes(I18N.quote_speech("misc.pregnant.something_is_wrong"))
+      end
+   end
+
+   local map = chara:current_map()
+   if not Map.is_world_map(map) and Rand.one_in(30) then
+      Gui.mes_visible("misc.pregnant.something_breaks_out", chara)
+      chara:apply_effect("elona.bleeding", 15)
+      local level = chara:calc("level") / 2 + 1
+      local alien = Chara.create("elona.alien", chara.x, chara.y, { level = level }, map)
+      if alien then
+         if utf8.wide_len(chara.name) > 10 or string.match(chara.name, I18N.get("chara.job.alien.child")) then
+            alien.name = I18N.get("chara.job.alien.alien_kid")
+         else
+            alien.name = I18N.get("chara.job.alien.child_of", chara.name)
+         end
+      end
+   end
+end
+
+local function event_pregnancy(source, params, result)
+   if result and result.blocked then
+      return result
+   end
+
+   if source.turns_alive % 25 == 0 then
+      proc_pregnancy(source)
+   end
+
+   return result
+end
+Event.register("base.on_chara_pass_turn", "Proc pregnancy", event_pregnancy)
 
 -- fov
 
