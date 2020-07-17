@@ -522,7 +522,7 @@ return {
             description = "Breath",
             name = "Power Breath"
          },
-         prayer_of_jure = {
+         action_prayer_of_jure = {
             description = "Heal HP self",
             name = "Prayer of Jure"
          },

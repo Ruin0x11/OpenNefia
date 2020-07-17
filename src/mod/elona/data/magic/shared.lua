@@ -831,6 +831,60 @@ make_heal {
    difficulty = 1300
 }
 
+data:add {
+   _id = "action_prayer_of_jure",
+   _type = "base.skill",
+   elona_id = 623,
+
+   type = "action",
+   effect_id = "elona.prayer_of_jure",
+   related_skill = "elona.stat_will",
+   cost = 30,
+   range = 0,
+   difficulty = 0,
+   target_type = "self"
+}
+data:add {
+   _id = "prayer_of_jure",
+   _type = "elona_sys.magic",
+   elona_id = 623,
+
+   params = {
+      "source",
+      "target",
+   },
+
+   dice = function(self, params)
+      local level = params.source:skill_level("elona.action_prayer_of_jure")
+      local piety = params.source:calc("piety")
+      return {
+         x = 1 + level / 10,
+         y = piety / 70 + 1 + 1,
+         bonus = 0
+      }
+   end,
+
+   cast = function(self, params)
+      local target = params.target
+
+      -- Gui.mes_visible(opts.message, target.x, target.y, target)
+
+      local dice = self:dice(params)
+      Effect.heal(target, dice.x, dice.y, dice.bonus)
+
+      if params.curse_state == "blessed" then
+         target:heal_effect("elona.sick", 5 + Rand.rnd(5))
+      elseif Effect.is_cursed(params.curse_state) then
+         make_sick(target, 3)
+      end
+
+      local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+      Gui.start_draw_callback(cb)
+
+      return true
+   end
+}
+
 -- teleport
 
 local function teleport_to(chara, x, y, check_cb, pos_cb, success_message, ...)
@@ -1004,7 +1058,7 @@ data:add {
 
       local pos = function(x, y, attempt)
          return source.x + (3 - attempt / 70 + Rand.rnd(5)) * (Rand.one_in(2) and -1 or 1),
-                source.y + (3 - attempt / 70 + Rand.rnd(5)) * (Rand.one_in(2) and -1 or 1)
+         source.y + (3 - attempt / 70 + Rand.rnd(5)) * (Rand.one_in(2) and -1 or 1)
       end
 
       return teleport_to(source, params.x, params.y, nil, pos, nil)
@@ -1385,7 +1439,7 @@ local function summon_choose_target(target_type, range, source)
       return true, {
          source = source,
          target = source
-      }
+                   }
    end
 
    return nil

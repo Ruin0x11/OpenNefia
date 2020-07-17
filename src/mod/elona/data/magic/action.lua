@@ -144,8 +144,8 @@ data:add {
       local level = params.source:skill_level("elona.action_absorb_magic")
       local piety = params.source:calc("piety")
       return {
-         x = 1 + level / 10,
-         y = piety / 70 + 1 + 1,
+         x = 1 + level / 20,
+         y = piety / 140 + 1 + 1,
          bonus = 0
       }
    end,
