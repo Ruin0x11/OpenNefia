@@ -11,7 +11,7 @@ end,
   :format(name(_1))
 end
       },
-      blinded = {
+      blindness = {
         apply = function(_1)
   return ("%sは盲目になった。")
   :format(name(_1))
@@ -21,7 +21,7 @@ end,
   :format(name(_1))
 end
       },
-      confused = {
+      confusion = {
         apply = function(_1)
   return ("%sは混乱した。")
   :format(name(_1))
@@ -31,7 +31,7 @@ end,
   :format(name(_1))
 end
       },
-      dimmed = {
+      dimming = {
         apply = function(_1)
   return ("%sは朦朧とした。")
   :format(name(_1))
@@ -61,7 +61,7 @@ end,
   :format(name(_1))
 end
       },
-      insane = {
+      insanity = {
         apply = function(_1)
   return ("%sは気が狂った。")
   :format(name(_1))
@@ -71,7 +71,7 @@ end,
   :format(name(_1))
 end
       },
-      paralyzed = {
+      paralysis = {
         apply = function(_1)
   return ("%sは麻痺した。")
   :format(name(_1))
@@ -81,7 +81,7 @@ end,
   :format(name(_1))
 end
       },
-      poisoned = {
+      poison = {
         apply = function(_1)
   return ("%sは毒におかされた。")
   :format(name(_1))

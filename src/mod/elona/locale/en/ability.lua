@@ -411,7 +411,7 @@ return {
             description = "Surround(Magic)",
             name = "Magic Storm"
          },
-         manis_disassembly = {
+         action_manis_disassembly = {
             description = "Almost kill target",
             name = "Mani's Disassembly"
          },

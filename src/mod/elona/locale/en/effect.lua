@@ -1,6 +1,6 @@
 return {
-  status_ailment = {
-    message = {
+  effect = {
+    elona = {
       bleeding = {
         apply = function(_1)
   return ("%s begin%s to bleed.")
@@ -11,7 +11,7 @@ end,
   :format(name(_1), his_owned(_1))
 end
       },
-      blinded = {
+      blindness = {
         apply = function(_1)
   return ("%s %s blinded.")
   :format(name(_1), is(_1))
@@ -21,7 +21,7 @@ end,
   :format(name(_1))
 end
       },
-      confused = {
+      confusion = {
         apply = function(_1)
   return ("%s %s confused.")
   :format(name(_1), is(_1))
@@ -31,7 +31,7 @@ end,
   :format(name(_1), s(_1))
 end
       },
-      dimmed = {
+      dimming = {
         apply = function(_1)
   return ("%s %s dimmed.")
   :format(name(_1), is(_1))
@@ -61,7 +61,7 @@ end,
   :format(name(_1), s(_1), his(_1))
 end
       },
-      insane = {
+      insanity = {
         apply = function(_1)
   return ("%s become%s insane.")
   :format(name(_1), s(_1))
@@ -71,7 +71,7 @@ end,
   :format(name(_1), s(_1), himself(_1))
 end
       },
-      paralyzed = {
+      paralysis = {
         apply = function(_1)
   return ("%s %s paralyzed.")
   :format(name(_1), is(_1))
@@ -81,7 +81,7 @@ end,
   :format(name(_1), s(_1))
 end
       },
-      poisoned = {
+      poison = {
         apply = function(_1)
   return ("%s %s poisoned.")
   :format(name(_1), is(_1))

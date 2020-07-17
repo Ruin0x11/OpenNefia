@@ -114,7 +114,7 @@ function ICharaEffects:apply_effect(id, power, params)
    if current == nil or current <= 0 then
       success = self:set_effect_turns(id, turns)
       if success and not params.no_message then
-         Gui.mes_visible(self.uid .. " is applied " .. id .. ". ", self.x, self.y)
+         Gui.mes_c_visible("effect." .. id .. ".apply", self, "Purple")
       end
    else
       local additive = effect.additive_power
@@ -160,6 +160,7 @@ function ICharaEffects:heal_effect(id, power, params)
    end
    if success and not params.no_message and current > 0 and turns <= 0 then
       Gui.mes_visible(self.uid .. " healed effect " .. id .. " completely. ", self.x, self.y)
+      Gui.mes_visible("effect." .. id .. ".heal", self)
    end
 
    self:emit("elona_sys.on_heal_effect", {effect=effect,turns=turns,prev_turns=current,immune=(not success)})
