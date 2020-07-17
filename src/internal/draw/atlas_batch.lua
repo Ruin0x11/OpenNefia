@@ -6,6 +6,8 @@ function atlas_batch:init(the_atlas)
    class.assert_is_an(require("internal.draw.atlas"), the_atlas)
    self.atlas = the_atlas
    self.batch = love.graphics.newSpriteBatch(the_atlas.image)
+   self.width = 0
+   self.height = 0
 end
 
 local f = 0
@@ -41,14 +43,28 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
       oy = (width or tth) / 2
    end
 
+   local x = math.floor(x)
+   local y = math.floor(y + tile.offset_y)
+
    self.batch:add(tile.quad,
-                  math.floor(x),
-                  math.floor(y + tile.offset_y),
+                  x,
+                  y,
                   math.rad(rotation),
                   sx,
                   sy,
                   ox,
                   oy)
+
+   self.width = math.max(self.width, x + (width or ttw))
+   self.height = math.max(self.width, y + (height or tth))
+end
+
+function atlas_batch:get_width()
+   return self.width
+end
+
+function atlas_batch:get_height()
+   return self.height
 end
 
 function atlas_batch:tile_size(chip)
@@ -63,6 +79,8 @@ end
 
 function atlas_batch:clear()
    self.batch:clear()
+   self.width = 0
+   self.height = 0
 end
 
 function atlas_batch:draw(x, y)

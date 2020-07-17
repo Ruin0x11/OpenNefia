@@ -10,6 +10,9 @@ local Rand = require("api.Rand")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Queue = require("api.Queue")
 local Magic = require("mod.elona_sys.api.Magic")
+local Enum = require("api.Enum")
+local Calc = require("mod.elona.api.Calc")
+local Charagen = require("mod.tools.api.Charagen")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -1347,4 +1350,198 @@ make_remove_hex {
    cost = 35,
    difficulty = 850,
    bonus = function(p, l) return l * 5 + p * 3 / 2 end
+}
+
+
+-- NOTE: This check is only so the AI won't try to spam summoning skills.
+--
+-- There's also something else: for summoning spells only, if the player casts
+-- them there is no directional prompt; it always chooses the player as the
+-- target location. The range/enemy target type is only so the AI casts it if
+-- it's in close enough to the player.
+--
+-- Would be better if we could hook into the AI directly in terms of changing
+-- its behavior per spell, instead of having to edge-case everything.
+local function summon_check_can_cast(skill_entry, source)
+   if source:is_player() then
+      return true
+   end
+
+   -- TODO pet arena
+   if source:is_ally() then
+      return false
+   end
+
+   if save.base.play_turns % 10 > 4 then
+      return false
+   end
+
+   return true
+end
+
+local function summon_choose_target(target_type, range, source)
+   if source:is_player() then
+      return true, {
+         source = source,
+         target = source
+      }
+   end
+
+   return nil
+end
+
+local function make_summon(opts)
+   local type = opts.type or "spell"
+   local full_id = "elona." .. type .. "_" .. opts._id
+
+   data:add {
+      _id = type .. "_" .. opts._id,
+      _type = "base.skill",
+      elona_id = opts.elona_id,
+
+      type = type,
+      effect_id = "elona." .. opts._id,
+      related_skill = "elona.stat_magic",
+      cost = 15,
+      range = RANGE_BOLT,
+      difficulty = 200,
+      target_type = "enemy",
+
+      on_check_can_cast = summon_check_can_cast,
+      on_choose_target = summon_choose_target
+   }
+
+   data:add {
+      _id = opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      params = {
+         "source",
+         "target"
+      },
+
+      alignment = "negative",
+
+      cast = function(self, params)
+         local source = params.source
+         local target = params.target
+         local map = params.source:current_map()
+
+         if source:is_player() then
+            -- TODO implement artificial character limit
+            local max_charas = 1000000
+            if map:calc("max_crowd_density") + 100 > max_charas then
+               Gui.mes("common.nothing_happens")
+               return true, { obvious = false }
+            end
+         end
+
+         local level = source:skill_level(full_id)
+         local power = opts.power(params.power, level, source)
+
+         local count = Rand.rnd(opts.count) + 1
+         local i = 1
+         while i <= count do
+            local filter_level = Calc.calc_object_level(power, map)
+            local filter_quality = Enum.Quality.Good
+            local charagen_params = { level = filter_level, quality = filter_quality }
+            if opts.filter then
+               table.merge(charagen_params, opts.filter(power, level, source))
+            end
+
+            require("api.Log").info("%s", inspect(charagen_params))
+
+            local chara = Charagen.create(target.x, target.y, charagen_params, map)
+            if chara and chara._id == source._id then
+               if not opts.permit_same_type then
+                  chara:vanquish()
+                  i = i - 1
+               end
+            end
+
+            i = i + 1
+         end
+
+         Gui.mes_visible("magic.summon", source)
+
+         return true
+      end
+   }
+end
+
+local function summon_power_default(p, l, caster)
+   return math.max((p / 25 + p * p / 10000 + caster:calc("level")) / 2, 1)
+end
+
+make_summon {
+   _id = "summon_monsters",
+   elona_id = 424,
+   type = "spell",
+
+   count = 3,
+   power = summon_power_default,
+   filter = function(p, l) return {}  end
+}
+
+make_summon {
+   _id = "summon_wild",
+   elona_id = 425,
+   type = "spell",
+
+   count = 3,
+   power = summon_power_default,
+   filter = function(p, l) return { tag_filters = { "wild" } }  end
+}
+
+make_summon {
+   _id = "summon_cats",
+   elona_id = 639,
+   type = "action",
+
+   count = 3,
+   power = function(p, l, caster) return 2 + Rand.rnd(18) end,
+   filter = function(p, l) return { tag_filters = { "cat" } }  end
+}
+
+make_summon {
+   _id = "summon_yeek",
+   elona_id = 640,
+   type = "action",
+
+   count = 3,
+   power = function(p, l, caster) return 5 + Rand.rnd(12) end,
+   filter = function(p, l) return { tag_filters = { "yeek" } }  end
+}
+
+make_summon {
+   _id = "summon_pawn",
+   elona_id = 641,
+   type = "action",
+
+   count = 3,
+   power = function(p, l, caster) return 15 + Rand.rnd(8) end,
+   filter = function(p, l) return { tag_filters = { "pawn" } }  end
+}
+
+make_summon {
+   _id = "summon_fire",
+   elona_id = 642,
+   type = "action",
+
+   count = 3,
+   power = function(p, l, caster) return 15 + Rand.rnd(15) end,
+   filter = function(p, l) return { tag_filters = { "fire" } }  end
+}
+
+make_summon {
+   _id = "summon_sister",
+   elona_id = 643,
+   type = "action",
+
+   count = 10,
+   power = summon_power_default,
+   filter = function(p, l) return { id = "elona.younger_sister" } end,
+   permit_same_type = true
 }

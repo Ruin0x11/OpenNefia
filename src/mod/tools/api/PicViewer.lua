@@ -74,14 +74,26 @@ function PicViewer:update(dt)
    end
 end
 
-function PicViewer.start(asset)
+function PicViewer.start(asset, _type)
+   local drawable
+
    if type(asset) == "string" then
-      asset = UiTheme.load()[asset]
-      if asset == nil then
-         error("unknown asset " .. asset)
+      _type = _type or "base.asset"
+      if _type == "base.asset" then
+         drawable = UiTheme.load()[asset]
+         if drawable == nil then
+            error("unknown asset " .. asset)
+         end
+      elseif _type == "base.chip" then
+         local width, height = Draw.get_coords():get_size()
+         drawable = Draw.make_chip_batch("chip")
+         drawable:add(asset, 0, 0, width, height)
+      else
+         error("unknown type " .. _type)
       end
    end
-   PicViewer:new(asset):query()
+
+   PicViewer:new(drawable):query()
 end
 
 return PicViewer

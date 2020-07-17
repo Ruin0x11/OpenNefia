@@ -231,6 +231,18 @@ function Magic.zap_wand(magic_id, power, item, params)
    return "turn_end"
 end
 
+function Magic.check_can_cast_spell(skill_id, caster)
+   local skill_data = data["base.skill"]:ensure(skill_id)
+
+   if skill_data.on_check_can_cast then
+      if not skill_data.on_check_can_cast(skill_data, caster) then
+         return false
+      end
+   end
+
+   return true
+end
+
 function Magic.do_cast_spell(skill_id, caster, use_mp)
    local skill_data = data["base.skill"]:ensure(skill_id)
    local params = {
@@ -247,7 +259,10 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
             return false
          end
       end
-      Gui.update_screen()
+   end
+
+   if not Magic.check_can_cast_spell(skill_id, caster) then
+      return false
    end
 
    local target = caster:get_target()
@@ -256,7 +271,8 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
                                                               caster,
                                                               params.triggered_by,
                                                               target,
-                                                              skill_data.ai_check_ranged_if_self)
+                                                              skill_data.ai_check_ranged_if_self,
+                                                              skill_data.on_choose_target)
 
    if not success then
       return false
@@ -368,7 +384,8 @@ function Magic.do_action(skill_id, caster)
                                                               caster,
                                                               "action",
                                                               target,
-                                                              skill_data.ai_check_ranged_if_self)
+                                                              skill_data.ai_check_ranged_if_self,
+                                                              skill_data.on_choose_target)
 
    if not success then
       return false

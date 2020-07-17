@@ -263,8 +263,15 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
    return false, {}
 end
 
-function Magic.get_magic_location(target_type, range, caster, triggered_by, ai_target, check_ranged_if_self)
+function Magic.get_magic_location(target_type, range, caster, triggered_by, ai_target, check_ranged_if_self, on_choose_cb)
    local success, result
+
+   if on_choose_cb then
+      success, result = on_choose_cb(target_type, range, caster, triggered_by, ai_target, check_ranged_if_self)
+      if success ~= nil then
+         return success, result
+      end
+   end
 
    if caster:is_player() then
       success, result = Magic.prompt_magic_location(target_type,

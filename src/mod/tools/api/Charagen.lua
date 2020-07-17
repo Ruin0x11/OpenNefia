@@ -123,10 +123,6 @@ function Charagen.create(x, y, params, where)
    local bug_id = "elona.bug"
    id = id or bug_id
 
-   if id == "elona.mandrake" then
-      print(debug.traceback"a")
-   end
-
    local create_params = params.create_params
    create_params.quality = params.quality
    create_params.level = params.level

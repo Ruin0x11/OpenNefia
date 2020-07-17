@@ -618,31 +618,31 @@ return {
             description = "Suicide",
             name = "Suicide Attack"
          },
-         summon_cats = {
+         action_summon_cats = {
             description = "Summon cats",
             name = "Summon Cats"
          },
-         summon_fire = {
+         action_summon_fire = {
             description = "Summon fire creatures",
             name = "Summon Fire"
          },
-         summon_monsters = {
+         spell_summon_monsters = {
             description = "Summon hostile creatures",
             name = "Summon Monsters"
          },
-         summon_pawn = {
+         action_summon_pawn = {
             description = "Summon pieces",
             name = "Summon Pawn"
          },
-         summon_sister = {
+         action_summon_sister = {
             description = "Summon sisters",
             name = "Summon sister"
          },
-         summon_wild = {
+         spell_summon_wild = {
             description = "Summon wild creatures",
             name = "Summon Wild"
          },
-         summon_yeek = {
+         action_summon_yeek = {
             description = "Summon Yeeks",
             name = "Summon Yeek"
          },

@@ -1121,6 +1121,7 @@ local function do_mutation(source, target, curse_state, times, no_negative_trait
             local cb = Anim.load("elona.anim_smoke", target.x, target.y)
             Gui.start_draw_callback(cb)
             did_something = true
+
             break
          end
       end

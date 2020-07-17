@@ -18,6 +18,8 @@ function en.name(obj)
          return name
       elseif not obj.has_own_name then
          return "the " .. name
+      else
+         return name
       end
    end
 

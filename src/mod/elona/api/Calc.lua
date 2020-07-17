@@ -1,11 +1,12 @@
 local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Charagen = require("mod.tools.api.Charagen")
+local InstancedMap = require("api.InstancedMap")
 
 local Calc = {}
 
 function Calc.calc_object_level(base, map)
-   assert(map)
+   assert(class.is_an(InstancedMap, map), "Map must be provided")
 
    local ret = base or 0
    if base < 0 then
