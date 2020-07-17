@@ -395,7 +395,21 @@ end },
       apply = function(_1, _2)
   return ("%s insult%s %s.")
   :format(name(_1), s(_1), name(_2))
-end
+      end,
+      list = {
+         neutral = {
+            "You suck!",
+            "You will die alone.",
+            "Bow down before me.",
+            "Go jump off a bridge.",
+            "Bang your head against the wall!",
+            "Why do you sniff under your dog's tail?",
+            "The world is against you because you are a unsavory decomposing virus.",
+            "You are no better than a immoral guzzling bureaucrat.",
+            "You are so lowly.",
+            "Get off me."
+         }
+      }
     },
     love_potion = {
       cursed = function(_1)

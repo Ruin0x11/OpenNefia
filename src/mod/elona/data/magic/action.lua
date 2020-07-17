@@ -676,3 +676,116 @@ data:add {
       return true
    end
 }
+
+data:add {
+   _id = "action_eye_of_ether",
+   _type = "base.skill",
+   elona_id = 633,
+
+   type = "action",
+   effect_id = "elona.eye_of_ether",
+   related_skill = "elona.stat_will",
+   cost = 10,
+   range = 2,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "eye_of_ether",
+   _type = "elona_sys.magic",
+   elona_id = 632,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if not target:is_player() then
+         return true
+      end
+
+      Gui.mes_c("magic.eye_of_ether", target)
+      Effect.modify_corruption(target, 100)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "action_eye_of_dimness",
+   _type = "base.skill",
+   elona_id = 638,
+
+   type = "action",
+   effect_id = "elona.eye_of_dimness",
+   related_skill = "elona.stat_charisma",
+   cost = 10,
+   range = 2,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "eye_of_dimness",
+   _type = "elona_sys.magic",
+   elona_id = 638,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      target:apply_effect("elona.dimming", 200)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "action_insult",
+   _type = "base.skill",
+   elona_id = 638,
+
+   type = "action",
+   effect_id = "elona.eye_of_dimness",
+   related_skill = "elona.stat_charisma",
+   cost = 10,
+   range = 4,
+   difficulty = 0,
+   target_type = "enemy",
+}
+data:add {
+   _id = "eye_of_dimness",
+   _type = "elona_sys.magic",
+   elona_id = 638,
+
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+
+      if target:is_in_fov() then
+         Gui.mes("magic.insult.apply", source, target)
+
+         local insult = I18N.get_optional("magic.insult.list." .. target:calc("gender"))
+         if insult == nil then
+            insult = I18N.get("magic.insult.list.neutral")
+         end
+         Gui.mes(I18N.quote_speech(insult))
+      end
+
+      target:apply_effect("elona.dimming", 200)
+
+      return true
+   end
+}

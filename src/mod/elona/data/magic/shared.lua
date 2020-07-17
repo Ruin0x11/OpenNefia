@@ -1745,7 +1745,7 @@ data:add {
    elona_id = 1144,
 
    type = "effect",
-   effect_id = "elona.mutation",
+   effect_id = "elona.evolution",
 }
 data:add {
    _id = "evolution",
