@@ -29,6 +29,9 @@ function DamagePopupLayer:update(dt, screen_updated)
 
    for i, v in ipairs(popups) do
       v.frame = v.frame + dt * 50
+      local alpha = math.min(easing.outQuint(1 - (v.frame / max_frame), 0, 1, 1) * 255, 255)
+      v.color[4] = alpha
+      v.shadow_color[4] = alpha
       if v.frame > max_frame then
          dead[#dead+1] = i
       end
@@ -50,7 +53,7 @@ function DamagePopupLayer:draw(draw_x, draw_y)
       Draw.set_font(font_size)
       x = x - draw_x - math.floor(Draw.text_width(v.text)) + sx + self.w
       y = y - draw_y - math.floor(Draw.text_height() / 2) - 2 * (v.frame + 30) + sy + self.h
-      Draw.text_shadowed(v.text, x, y, v.color)
+      Draw.text_shadowed(v.text, x, y, v.color, v.shadow_color)
    end
 end
 

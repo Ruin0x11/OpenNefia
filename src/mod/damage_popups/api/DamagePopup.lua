@@ -25,6 +25,7 @@ function DamagePopup.add(tx, ty, text, color, font)
       y = ty,
       text = text,
       color = color,
+      shadow_color = {0, 0, 0, 255},
       font = font,
       frame = 0
    }
