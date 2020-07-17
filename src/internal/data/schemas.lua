@@ -289,6 +289,7 @@ AI callback to run on this character's turn.
          insanity = 0,
          armor_class = "",
          direction = "South",
+         piety = 0,
 
          gold = 0,
          platinum = 0,

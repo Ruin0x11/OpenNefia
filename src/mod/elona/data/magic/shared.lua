@@ -13,6 +13,7 @@ local Magic = require("mod.elona_sys.api.Magic")
 local Enum = require("api.Enum")
 local Calc = require("mod.elona.api.Calc")
 local Charagen = require("mod.tools.api.Charagen")
+local Map = require("api.Map")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -1430,9 +1431,7 @@ local function make_summon(opts)
          local map = params.source:current_map()
 
          if source:is_player() then
-            -- TODO implement artificial character limit
-            local max_charas = 1000000
-            if map:calc("max_crowd_density") + 100 > max_charas then
+            if map:calc("max_crowd_density") + 100 > Map.max_chara_count() then
                Gui.mes("common.nothing_happens")
                return true, { obvious = false }
             end

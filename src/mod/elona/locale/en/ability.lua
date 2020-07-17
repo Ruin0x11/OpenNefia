@@ -1,7 +1,7 @@
 return {
    ability = {
       elona = {
-         absorb_magic = {
+         action_absorb_magic = {
             description = "Heal MP",
             name = "Absorb Magic"
          },
@@ -295,7 +295,7 @@ return {
             description = "Surround(Sound)",
             name = "Grenade"
          },
-         harvest_mana = {
+         action_harvest_mana = {
             description = "Restore MP",
             name = "Harvest Mana"
          },

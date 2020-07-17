@@ -861,4 +861,14 @@ function Map.clear_debris(map)
    map.debris = table.of(function() return { blood = 0, fragments = 0 } end, map:width() * map:height())
 end
 
+function Map.max_chara_count(map)
+   -- TODO implement artificial charcter count
+   local maxFollower = 16
+   local maxNullChara = 1
+   local maxAdv = 40-maxNullChara
+   local maxSaveChara = maxFollower+maxAdv+1+maxNullChara
+   local maxChara = 245
+   return maxChara-maxSaveChara
+end
+
 return Map
