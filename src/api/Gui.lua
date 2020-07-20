@@ -189,7 +189,7 @@ end
 ---
 --- @tparam int wait_ms
 function Gui.wait(wait_ms)
-   Gui.update_screen()
+   Gui.update_screen(wait_ms / 1000.0)
    Draw.wait(wait_ms)
 end
 

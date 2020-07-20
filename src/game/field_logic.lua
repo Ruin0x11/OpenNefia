@@ -256,7 +256,6 @@ function field_logic.player_turn()
 end
 
 local dt = 0
-local Log = require("api.Log")
 
 function field_logic.player_turn_query()
    local result
@@ -267,8 +266,7 @@ function field_logic.player_turn_query()
       return "player_died"
    end
 
-   Log.info("UPDATE SCREEN %s", dt)
-   Gui.update_screen(nil, dt)
+   Gui.update_screen(dt)
 
    result = Event.trigger("base.on_player_turn")
    if result then
@@ -388,6 +386,9 @@ function field_logic.run_one_event(event, target_chara)
       dt = coroutine.yield()
    end
 
+   -- Subsequent events should not draw anything.
+   dt = 0.0
+
    if field.map_changed == true then
       event = "turn_begin"
       field.map_changed = false
@@ -417,9 +418,6 @@ function field_logic.run_one_event(event, target_chara)
 
    local success
    success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
-
-   -- Subsequent events should not draw anything.
-   dt = 0.1
 
    if not success then
       -- pass the error up to the main loop so the error screen can be

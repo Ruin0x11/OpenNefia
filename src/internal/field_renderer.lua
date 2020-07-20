@@ -95,10 +95,8 @@ function field_renderer:draw()
       end
    end
 end
-local Log = require("api.Log")
 
 function field_renderer:update(dt)
-   Log.info("DT: %s", dt)
    -- BUG: this really doesn't look like the original Elona's
    -- scrolling. The issue is here it is based on dt. In vanilla
    -- scrolling would always scroll by a fixed amount of pixels
