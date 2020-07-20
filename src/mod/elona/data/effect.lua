@@ -93,6 +93,7 @@ local effect = {
       stops_activity = true,
 
       on_turn_end = function(chara)
+         chara:set_emotion_icon("elona.skull")
          chara:damage_hp(Rand.rnd(2 + chara:skill_level("elona.stat_constitution") / 10), "elona.poison")
          return { regeneration = false }
       end
@@ -104,7 +105,16 @@ local effect = {
 
       stops_activity = true,
 
+      on_turn_start = function(chara)
+         if chara:is_player() then
+            -- Gui.update_screen()
+            Gui.wait(60)
+         end
+         return { blocked = true }, "blocked"
+      end,
+
       on_turn_end = function(chara)
+         chara:set_emotion_icon("elona.sleep")
          chara:heal_hp(1)
          chara:heal_mp(1)
       end
@@ -119,11 +129,27 @@ local effect = {
       _id = "paralysis",
       ordering = 60000,
 
+      on_turn_start = function(chara)
+         if chara:is_player() then
+            Gui.update_screen()
+            Gui.wait(60)
+         end
+         return { blocked = true }, "blocked"
+      end,
+
       stops_activity = true,
    },
    {
       _id = "choking",
       ordering = 70000,
+
+      on_turn_start = function(chara)
+         if chara:is_player() then
+            Gui.update_screen()
+            Gui.wait(180)
+         end
+         return { blocked = true }, "blocked"
+      end,
 
       on_turn_end = function(chara)
          if chara:effect_turns("elona.choking") % 3 == 0 then
@@ -154,6 +180,16 @@ local effect = {
    {
       _id = "dimming",
       ordering = 100000,
+
+      on_turn_start = function(chara)
+         if chara:is_player() then
+            Gui.update_screen()
+            Gui.wait(60)
+         end
+         if chara:effect_turns("elona.dimming") > 60 then
+            return { blocked = true }, "blocked"
+         end
+      end,
 
       stops_activity = true,
    },

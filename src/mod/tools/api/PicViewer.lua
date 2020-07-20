@@ -12,9 +12,24 @@ local PicViewer = class.class("PicViewer", IUiLayer)
 PicViewer:delegate("input", IInput)
 
 function PicViewer:init(drawable)
+   self.regions = {}
+
    if type(drawable.draw) == "function" then
       self.width = drawable:get_width() + 20
       self.height = drawable:get_height() + 20
+
+      if drawable.quads then
+         local to_region = function(q)
+            local tx, ty, tw, th, iw, ih = q:getViewport()
+            return {
+               x = tx,
+               y = ty,
+               width = tw,
+               height = th
+            }
+         end
+         self.regions = fun.iter(drawable.quads):map(to_region):to_list()
+      end
    else
       self.width = drawable:getWidth() + 20
       self.height = drawable:getHeight() + 20
@@ -60,6 +75,10 @@ function PicViewer:draw()
 
    Draw.filled_rect(x, y, self.width, self.height, {0, 0, 0})
    Draw.line_rect(x+9, y+9, self.width-18, self.height-18, {255, 255, 255})
+
+   for _, r in ipairs(self.regions) do
+      Draw.line_rect(x + r.x + 10, y + r.y + 10, r.width, r.height, {255, 0, 0})
+   end
 
    if self.drawable.draw then
       self.drawable:draw(x + 10, y + 10, nil, nil, {255, 255, 255})

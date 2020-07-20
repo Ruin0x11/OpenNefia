@@ -22,11 +22,13 @@ function DamagePopupLayer:reset()
 end
 
 local max_frame = 40
+local Log = require("api.Log")
 
 function DamagePopupLayer:update(dt, screen_updated)
    local dead = {}
    local popups = save.damage_popups.popups or {}
 
+   Log.info("Dt: %s Upd: %s, %s", dt, screen_updated, debug.traceback())
    for i, v in ipairs(popups) do
       v.frame = v.frame + dt * 50
       local alpha = math.min(easing.outQuint(1 - (v.frame / max_frame), 0, 1, 1) * 255, 255)

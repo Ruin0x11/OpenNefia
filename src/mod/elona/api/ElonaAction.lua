@@ -320,7 +320,7 @@ function ElonaAction.bash(chara, x, y)
          Gui.mes("action.bash.execute", chara, target)
          Gui.mes("action.bash.disturbs_sleep", chara, target)
          Effect.modify_karma(chara, -1)
-         -- TODO emotion icon
+         target:set_emotion_icon("elona.angry", 4)
       end
       target:remove_effect("elona.sleep")
       return "turn_end"

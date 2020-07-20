@@ -771,6 +771,16 @@ local assets = {
       height = 72
    },
    {
+      _id = "emotion_icons",
+      source = "graphic/interface.bmp",
+      x = 32,
+      y = 608,
+      width = 16 * 29,
+      height = 16,
+      count_x = 29
+   },
+
+   {
       _id = "failure_to_cast_effect",
       source = "graphic/item.bmp",
       x = 480,

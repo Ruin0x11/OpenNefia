@@ -612,7 +612,7 @@ function Effect.start_incognito(source)
    local apply = function(chara)
       chara.ai_state.hate = 0
       chara:reset_reaction_at(source)
-      -- TODO emotion icon
+      chara:set_emotion_icon("elona.question", 2)
    end
 
    Chara.iter():filter(filter):each(apply)
@@ -626,7 +626,7 @@ function Effect.end_incognito(source)
    local apply = function(chara)
       chara:mod_reaction_at(source, -100)
       chara.ai_state.hate = 80
-      -- TODO emotion icon
+      chara:set_emotion_icon("elona.angry", 2)
       require("api.Log").info("%s", chara.name)
    end
 
@@ -638,7 +638,10 @@ function Effect.act_hostile_towards(source, target)
       return
    end
 
-   -- TODO emotion icon
+   if target:reaction_towards(source) >= 0 then
+      target:set_emotion_icon("elona.angry", 4)
+   end
+
    if target:reaction_towards(source) >= 1000 then
       Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
    else
@@ -665,7 +668,9 @@ function Effect.act_hostile_towards(source, target)
          chara:set_reaction_at(source, -100)
          chara:set_target(source)
          chara.ai_state.hate = 20
-         -- TODO emotion icon
+         if target:reaction_towards(source) >= 0 then
+            target:set_emotion_icon("elona.angry", 3)
+         end
       end
       Chara.iter():filter(function(c) return target.is_livestock end):each(anger)
    end

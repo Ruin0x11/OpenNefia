@@ -176,14 +176,17 @@ function field_logic.pass_turns()
       return "turn_begin"
    end
 
-   chara:emit("base.before_chara_turn_start")
 
    chara.time_this_turn = chara.time_this_turn - field:turn_cost()
 
    chara.turns_alive = chara.turns_alive + 1
 
+   local result = chara:emit("base.before_chara_turn_start", {}, {blocked=false})
+   if result.blocked then
+      return result.turn_result or "turn_end", chara
+   end
+
    -- EVENT: before_chara_begin_turn
-   -- emotion icon
    -- wet if outdoors and rain
 
    -- BUILTIN: gain level
@@ -253,6 +256,7 @@ function field_logic.player_turn()
 end
 
 local dt = 0
+local Log = require("api.Log")
 
 function field_logic.player_turn_query()
    local result
@@ -263,6 +267,7 @@ function field_logic.player_turn_query()
       return "player_died"
    end
 
+   Log.info("UPDATE SCREEN %s", dt)
    Gui.update_screen(nil, dt)
 
    result = Event.trigger("base.on_player_turn")
@@ -383,9 +388,6 @@ function field_logic.run_one_event(event, target_chara)
       dt = coroutine.yield()
    end
 
-   -- Subsequent events should not draw anything.
-   dt = 0
-
    if field.map_changed == true then
       event = "turn_begin"
       field.map_changed = false
@@ -415,6 +417,9 @@ function field_logic.run_one_event(event, target_chara)
 
    local success
    success, event, target_chara = xpcall(function() return cb(target_chara) end, debug.traceback)
+
+   -- Subsequent events should not draw anything.
+   dt = 0.1
 
    if not success then
       -- pass the error up to the main loop so the error screen can be

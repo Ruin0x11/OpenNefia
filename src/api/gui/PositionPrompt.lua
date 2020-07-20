@@ -164,13 +164,13 @@ end
 function PositionPrompt:update(dt)
    if self.canceled then
       Gui.set_camera_pos(self.origin_x, self.origin_y)
-      Gui.update_screen(nil, dt)
+      Gui.update_screen(dt)
       return nil, "canceled"
    end
 
    if self.result then
       Gui.set_camera_pos(self.origin_x, self.origin_y)
-      Gui.update_screen(nil, dt)
+      Gui.update_screen(dt)
       return self.result, nil
    end
 end

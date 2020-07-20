@@ -711,4 +711,9 @@ function IChara:has_role(role)
    return self.roles[role] ~= nil
 end
 
+function IChara:set_emotion_icon(icon, duration)
+   self.emotion_icon = icon
+   self.emotion_icon_turns = duration or 1
+end
+
 return IChara

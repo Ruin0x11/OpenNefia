@@ -117,6 +117,8 @@ function draw_callbacks:wait()
       dt, _, skip = coroutine.yield()
       has_cbs = self:update(dt)
    until not has_cbs or skip
+
+   self.waiting = false
 end
 
 return draw_callbacks

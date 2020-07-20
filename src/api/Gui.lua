@@ -65,7 +65,9 @@ end
 
 --- Waits for the specified number of milliseconds.
 function Gui.wait(ms)
-   local anim = function() Draw.yield(ms) end
+   local anim = function()
+      Draw.yield(ms)
+   end
    Gui.start_draw_callback(anim)
    Gui.wait_for_draw_callbacks()
 end

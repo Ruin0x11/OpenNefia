@@ -692,6 +692,27 @@ local function gain_weight_lifting_experience(chara)
    Skill.gain_skill_exp(chara, "elona.weight_lifting", exp, 0, 1000)
 end
 
+local function update_emotion_icon(chara)
+   chara.emotion_icon_turns = math.max(chara.emotion_icon_turns - 1, 0)
+   if chara.emotion_icon and chara.emotion_icon_turns == 0 then
+      chara.emotion_icon = nil
+   end
+end
+
+Event.register("base.before_chara_turn_start", "Update emotion icon", update_emotion_icon)
+
+local function proc_enough_exp_for_level(chara)
+   while chara.experience >= chara.required_experience do
+      if chara:is_player() then
+         Gui.play_sound("base.ding1")
+         Gui.mes_alert()
+      end
+      Skill.gain_level(chara, true)
+   end
+end
+
+Event.register("base.before_chara_turn_start", "Check if character leveled up", proc_enough_exp_for_level, {priority = 90000})
+
 local function gain_experience_at_turn_start(chara)
    if not chara:is_player() then
       return

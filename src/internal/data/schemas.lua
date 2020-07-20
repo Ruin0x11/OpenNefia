@@ -376,6 +376,9 @@ AI callback to run on this character's turn.
          traits = {},
 
          absorbed_charges = 0,
+
+         emotion_icon = nil,
+         emotion_icon_turns = 0
       }
    },
    { interface = IChara }

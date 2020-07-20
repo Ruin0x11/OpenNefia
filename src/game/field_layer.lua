@@ -43,6 +43,7 @@ function field_layer:init()
       "internal.layer.debris_layer",
       "internal.layer.chip_layer",
       "internal.layer.tile_overhang_layer",
+      "internal.layer.emotion_icon_layer",
       "internal.layer.shadow_layer",
    }
 end

@@ -172,6 +172,12 @@ function data_table:add_type(schema, params)
          }
       end
       table.replace_with(self.schemas[_type], schema)
+
+      local fallbacks = table.deepcopy(schema.fallbacks)
+      for _, field in ipairs(schema.fields) do
+         fallbacks[field.name] = field.default
+      end
+      self.fallbacks[_type] = fallbacks
       return
    end
 

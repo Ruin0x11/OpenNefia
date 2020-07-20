@@ -62,7 +62,8 @@ data:add {
          Gui.start_draw_callback(anim)
       end
 
-      -- TODO emotion icon
+      params.target:set_emotion_icon("elona.heart", 3)
+
       if params.triggered_by == "potion_spilt" or params.triggered_by == "potion_thrown" then
          Gui.mes("magic.love_potion.spill", params.target)
          Skill.modify_impression(params.target, math.clamp(params.power / 15, 0, 15))

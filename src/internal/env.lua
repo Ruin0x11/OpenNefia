@@ -406,7 +406,7 @@ local function gen_require(chunk_loader, can_load_path)
 
       if err then
          HOTLOADING_PATH = false
-         error(string.strip_whitespace(err), 0)
+         error(("%s: %s"):format(path, string.strip_whitespace(err)), 0)
       end
 
       if HOTLOADING_PATH and result == "no_hotload" then

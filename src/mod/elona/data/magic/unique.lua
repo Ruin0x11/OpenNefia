@@ -1067,7 +1067,7 @@ data:add {
       Gui.start_draw_callback(cb)
       Gui.play_sound("base.pray2")
 
-      -- TODO emotion icon
+      ally:set_emotion_icon("elona.heart", 3)
 
       if source:is_player() then
          Skill.modify_impression(ally, 15)

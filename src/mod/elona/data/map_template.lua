@@ -2147,7 +2147,7 @@ function test_world_north_border.on_generate(map)
             if not ally.roles["elona.adventurer"]
                and not ally.roles["elona.special"]
             then
-               -- TODO emotion icon
+               ally:set_emotion_icon("elona.blind", 20)
                Gui.mes("event.my_eyes", ally)
             end
          end

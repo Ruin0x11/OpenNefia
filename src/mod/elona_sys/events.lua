@@ -14,17 +14,20 @@ local Mef = require("api.Mef")
 --
 --
 
--- local function proc_effects_turn_start(chara, params, result)
---    for effect_id, _ in pairs(chara.effects) do
---       local effect = data["base.effect"]:ensure(effect_id)
---       if effect.on_turn_start then
---          result = effect.on_turn_start(chara, params, result) or result
---       end
---    end
---    return result
--- end
---
--- Event.register("base.on_turn_start", "Proc effect on_turn_start", proc_effects_turn_start)
+local function proc_effects_turn_start(chara, params, result)
+   local status = nil
+   for effect_id, _ in pairs(chara.effects) do
+      local effect = data["base.effect"]:ensure(effect_id)
+      if effect.on_turn_start then
+         local _result, _status = effect.on_turn_start(chara, params, result)
+         result = table.merge(result, _result or {})
+         status = _status or status
+      end
+   end
+   return result, status
+end
+
+Event.register("base.before_chara_turn_start", "Proc effect on_turn_start", proc_effects_turn_start)
 
 local function proc_effects_turn_end(chara, params, result)
    for effect_id, _ in pairs(chara.effects) do
