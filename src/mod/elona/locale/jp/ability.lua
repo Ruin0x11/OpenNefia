@@ -1,11 +1,11 @@
 return {
    ability = {
       elona = {
-         absorb_magic = {
+         action_absorb_magic = {
             description = "マナ回復",
             name = "魔力の吸収"
          },
-         acid_ground = {
+         spell_acid_ground = {
             description = "酸の発生",
             name = "酸の海"
          },
@@ -87,27 +87,27 @@ return {
             description = "魔法詠唱の成功率を上げる",
             name = "詠唱"
          },
-         change = {
+         action_change = {
             description = "対象変容",
             name = "他者変容"
          },
-         chaos_ball = {
+         spell_chaos_ball = {
             description = "混沌の球",
             name = "混沌の渦"
          },
-         chaos_breath = {
+         action_chaos_breath = {
             description = "混沌のブレス",
             name = "混沌のブレス"
          },
-         chaos_eye = {
+         spell_chaos_eye = {
             description = "混沌の矢",
             name = "混沌の瞳"
          },
-         cheer = {
+         action_cheer = {
             description = "視界内仲間強化",
             name = "鼓舞"
          },
-         cold_breath = {
+         action_cold_breath = {
             description = "冷気のブレス",
             name = "冷気のブレス"
          },
@@ -127,38 +127,38 @@ return {
             description = "クロスボウを扱う技術",
             name = "クロスボウ"
          },
-         crystal_spear = {
+         spell_crystal_spear = {
             description = "無属性の矢",
             name = "魔力の集積"
          },
-         cure_of_eris = {
+         spell_cure_of_eris = {
             description = "体力回復",
             name = "エリスの癒し"
          },
-         cure_of_jure = {
+         spell_cure_of_jure = {
             description = "体力回復",
             name = "ジュアの癒し"
          },
-         curse = {
+         action_curse = {
             description = "呪いをかける",
             name = "呪いの言葉"
          },
-         dark_eye = {
+         spell_dark_eye = {
             description = "暗黒の矢",
             name = "暗黒の矢"
          },
-         darkness_bolt = {
+         spell_darkness_bolt = {
             description = "暗黒のボルト",
             name = "暗黒の光線"
          },
-         darkness_breath = {
+         action_darkness_breath = {
             description = "暗黒のブレス",
             name = "暗黒のブレス"
          },
          death_word = {
             name = "死の宣告"
          },
-         decapitation = {
+         action_decapitation = {
             description = "対象即死",
             name = "首狩り"
          },
@@ -167,7 +167,7 @@ return {
             enchantment_description = "探知能力を強化する",
             name = "探知"
          },
-         dimensional_move = {
+         action_dimensional_move = {
             description = "近くへの瞬間移動",
             name = "空間歪曲"
          },
@@ -176,38 +176,38 @@ return {
             enchantment_description = "罠の解体を容易にする",
             name = "罠解体"
          },
-         distant_attack = {
+         action_distant_attack_4 = {
             description = "遠距離打撃",
             name = "遠距離打撃"
          },
-         distant_attack_2 = {
+         action_distant_attack_7 = {
             description = "遠距離打撃",
             name = "遠距離打撃"
          },
          divine_wisdom = {
             name = "知者の加護"
          },
-         dominate = {
+         spell_dominate = {
             description = "対象を支配する",
             name = "支配"
          },
-         door_creation = {
+         spell_door_creation = {
             description = "ドアの生成",
             name = "ドア生成"
          },
-         drain_blood = {
+         action_drain_blood = {
             description = "体力吸収",
             name = "吸血の牙"
          },
-         draw_charge = {
+         action_draw_charge = {
             description = "杖から魔力抽出",
             name = "魔力の抽出"
          },
-         draw_shadow = {
+         action_draw_shadow = {
             description = "対象をテレポート",
             name = "異次元の手"
          },
-         drop_mine = {
+         action_drop_mine = {
             description = "足元に地雷設置",
             name = "地雷投下"
          },
@@ -221,7 +221,7 @@ return {
          elemental_shield = {
             name = "元素保護"
          },
-         ether_ground = {
+         action_ether_ground = {
             description = "エーテルの発生",
             name = "エーテルの海"
          },
@@ -229,19 +229,19 @@ return {
             description = "攻撃を回避する",
             name = "回避"
          },
-         eye_of_dimness = {
+         action_eye_of_dimness = {
             description = "対象朦朧",
             name = "朦朧の眼差し"
          },
-         eye_of_ether = {
+         action_eye_of_ether = {
             description = "対象エーテル侵食",
             name = "エーテルの眼差し"
          },
-         eye_of_insanity = {
+         action_eye_of_insanity = {
             description = "対象狂気",
             name = "狂気の眼差し"
          },
-         eye_of_mana = {
+         action_eye_of_mana = {
             description = "マナダメージ",
             name = "マナの眼差し"
          },
@@ -250,7 +250,7 @@ return {
             enchantment_description = "心眼の技術を上昇させる",
             name = "心眼"
          },
-         eye_of_mutation = {
+         action_eye_of_mutation = {
             description = "対象変容",
             name = "変容の眼差し"
          },
@@ -259,23 +259,23 @@ return {
             enchantment_description = "信仰を深める",
             name = "信仰"
          },
-         fill_charge = {
+         action_fill_charge = {
             description = "充填",
             name = "魔力の充填"
          },
-         fire_ball = {
+         spell_fire_ball = {
             description = "炎の球",
             name = "ファイアボール"
          },
-         fire_bolt = {
+         spell_fire_bolt = {
             description = "火炎のボルト",
             name = "ファイアボルト"
          },
-         fire_breath = {
+         action_fire_breath = {
             description = "炎のブレス",
             name = "炎のブレス"
          },
-         fire_wall = {
+         spell_fire_wall = {
             description = "火柱の発生",
             name = "炎の壁"
          },
@@ -288,7 +288,7 @@ return {
             enchantment_description = "釣りの腕を上げる",
             name = "釣り"
          },
-         four_dimensional_pocket = {
+         spell_four_dimensional_pocket = {
             description = "四次元のポケットを召喚",
             name = "四次元ポケット"
          },
@@ -302,7 +302,7 @@ return {
             enchantment_description = "遺伝子学の知識を深める",
             name = "遺伝子学"
          },
-         gravity = {
+         spell_gravity = {
             description = "重力の発生",
             name = "グラビティ"
          },
@@ -311,19 +311,19 @@ return {
             enchantment_description = "見切りの腕を上げる",
             name = "見切り"
          },
-         grenade = {
+         action_grenade = {
             description = "轟音の球",
             name = "グレネード"
          },
-         harvest_mana = {
+         action_harvest_mana = {
             description = "マナ回復",
             name = "マナ回復"
          },
-         heal_critical = {
+         spell_heal_critical = {
             description = "体力回復",
             name = "致命傷治癒"
          },
-         heal_light = {
+         spell_heal_light = {
             description = "体力回復",
             name = "軽傷治癒"
          },
@@ -332,11 +332,11 @@ return {
             enchantment_description = "体力回復を強化する",
             name = "治癒"
          },
-         healing_rain = {
+         spell_healing_rain = {
             description = "体力回復の球",
             name = "治癒の雨"
          },
-         healing_touch = {
+         spell_healing_touch = {
             description = "体力回復",
             name = "癒しの手"
          },
@@ -345,36 +345,36 @@ return {
             enchantment_description = "重装備の技術を上昇させる",
             name = "重装備"
          },
-         hero = {
+         spell_hero = {
             name = "英雄"
          },
-         holy_light = {
+         spell_holy_light = {
             description = "1つの呪い(hex)除去",
             name = "清浄なる光"
          },
-         holy_shield = {
+         spell_holy_shield = {
             description = "防御力強化",
             name = "聖なる盾"
          },
-         holy_veil = {
+         spell_holy_veil = {
             name = "ホーリーヴェイル"
          },
-         ice_ball = {
+         spell_ice_ball = {
             description = "氷の球",
             name = "アイスボール"
          },
-         ice_bolt = {
+         spell_ice_bolt = {
             description = "氷のボルト",
             name = "アイスボルト"
          },
-         identify = {
+         spell_identify = {
             description = "アイテム鑑定",
             name = "鑑定"
          },
          incognito = {
             name = "インコグニート"
          },
-         insult = {
+         action_insult = {
             description = "対象朦朧",
             name = "罵倒"
          },
@@ -392,11 +392,11 @@ return {
             enchantment_description = "軽装備の技術を上昇させる",
             name = "軽装備"
          },
-         lightning_bolt = {
+         spell_lightning_bolt = {
             description = "雷のボルト",
             name = "ライトニングボルト"
          },
-         lightning_breath = {
+         action_lightning_breath = {
             description = "電撃のブレス",
             name = "電撃のブレス"
          },
@@ -422,24 +422,24 @@ return {
             enchantment_description = "マナの限界を上昇させる",
             name = "魔力の限界"
          },
-         magic_dart = {
+         spell_magic_dart = {
             description = "無属性の矢",
             name = "魔法の矢"
          },
-         magic_device = {
+         spell_magic_device = {
             description = "道具から魔力を効果的に引き出す",
             enchantment_description = "魔道具の効果を上げる",
             name = "魔道具"
          },
-         magic_map = {
+         spell_magic_map = {
             description = "周囲の地形感知",
             name = "魔法の地図"
          },
-         magic_storm = {
+         spell_magic_storm = {
             description = "魔法の球",
             name = "魔力の嵐"
          },
-         manis_disassembly = {
+         action_manis_disassembly = {
             description = "敵瀕死",
             name = "マニの分解術"
          },
@@ -467,19 +467,19 @@ return {
             enchantment_description = "魔法の知識の忘却を防ぐ",
             name = "暗記"
          },
-         meteor = {
+         spell_meteor = {
             description = "全域攻撃",
             name = "メテオ"
          },
-         mewmewmew = {
+         action_mewmewmew = {
             description = "？",
             name = "うみみゃぁ！"
          },
-         mind_bolt = {
+         spell_mind_bolt = {
             description = "幻惑のボルト",
             name = "幻影の光線"
          },
-         mind_breath = {
+         action_mind_breath = {
             description = "幻惑のブレス",
             name = "幻惑のブレス"
          },
@@ -488,11 +488,11 @@ return {
             enchantment_description = "採掘能力を強化する",
             name = "採掘"
          },
-         action_mirror = {
+         mirror = {
             description = "自分の状態の感知",
             name = "自己認識"
          },
-         mist_of_darkness = {
+         spell_mist_of_darkness = {
             description = "霧の発生",
             name = "闇の霧"
          },
@@ -503,7 +503,7 @@ return {
             description = "魔法使用不可",
             name = "沈黙の霧"
          },
-         mutation = {
+         spell_mutation = {
             description = "突然変異",
             name = "自己の変容"
          },
@@ -512,26 +512,26 @@ return {
             enchantment_description = "交渉を有利に進めさせる",
             name = "交渉"
          },
-         nerve_arrow = {
+         spell_nerve_arrow = {
             description = "神経の矢",
             name = "麻痺の矢"
          },
-         nerve_breath = {
+         action_nerve_breath = {
             description = "神経のブレス",
             name = "神経のブレス"
          },
-         nether_arrow = {
+         spell_nether_arrow = {
             description = "地獄の矢",
             name = "地獄の吐息"
          },
-         nether_breath = {
+         action_nether_breath = {
             description = "地獄のブレス",
             name = "地獄のブレス"
          },
          nightmare = {
             name = "ナイトメア"
          },
-         oracle = {
+         spell_oracle = {
             description = "アーティファクト感知",
             name = "神託"
          },
@@ -545,7 +545,7 @@ return {
             enchantment_description = "窃盗の腕を上げる",
             name = "窃盗"
          },
-         poison_breath = {
+         action_poison_breath = {
             description = "毒のブレス",
             name = "毒のブレス"
          },
@@ -553,45 +553,45 @@ return {
             description = "槍を扱う技術",
             name = "槍"
          },
-         power_breath = {
+         action_power_breath = {
             description = "ブレス",
             name = "強力なブレス"
          },
-         prayer_of_jure = {
+         action_prayer_of_jure = {
             description = "体力回復",
             name = "ジュアの祈り"
          },
-         pregnant = {
+         action_pregnant = {
             description = "対象妊娠",
             name = "妊娠"
          },
          punishment = {
             name = "神罰"
          },
-         raging_roar = {
+         spell_raging_roar = {
             description = "轟音の球",
             name = "轟音の波動"
          },
-         rain_of_sanity = {
+         action_rain_of_sanity = {
             description = "狂気回復の球",
             name = "狂気治癒の雨"
          },
          regeneration = {
             name = "リジェネレーション"
          },
-         restore_body = {
+         spell_restore_body = {
             description = "肉体の弱体化の治療",
             name = "肉体復活"
          },
-         restore_spirit = {
+         spell_restore_spirit = {
             description = "精神の弱体化の治療",
             name = "精神復活"
          },
-         resurrection = {
+         spell_resurrection = {
             description = "死者の蘇生",
             name = "復活"
          },
-         ["return"] = {
+         spell_return = {
             description = "特定の場所への帰還",
             name = "帰還"
          },
@@ -600,7 +600,7 @@ return {
             enchantment_description = "乗馬の腕を上げる",
             name = "乗馬"
          },
-         scavenge = {
+         action_scavenge = {
             description = "盗んで食べる",
             name = "食い漁り"
          },
@@ -608,7 +608,7 @@ return {
             description = "鎌を扱う技術",
             name = "鎌"
          },
-         sense_object = {
+         spell_sense_object = {
             description = "周囲の物質感知",
             name = "物質感知"
          },
@@ -616,7 +616,7 @@ return {
             description = "アイテムの質や種類を感じ取る",
             name = "自然鑑定"
          },
-         shadow_step = {
+         action_shadow_step = {
             description = "対象へのテレポート",
             name = "接近"
          },
@@ -628,14 +628,14 @@ return {
             description = "刃渡りの短い剣を扱う技術",
             name = "短剣"
          },
-         short_teleport = {
+         spell_short_teleport = {
             description = "近くへの瞬間移動",
             name = "ショートテレポート"
          },
          slow = {
             name = "鈍足"
          },
-         sound_breath = {
+         action_sound_breath = {
             description = "轟音のブレス",
             name = "轟音のブレス"
          },
@@ -651,43 +651,43 @@ return {
             enchantment_description = "隠密能力を強化する",
             name = "隠密"
          },
-         suicide_attack = {
+         action_suicide_attack = {
             description = "自爆の球",
             name = "自爆"
          },
-         summon_cats = {
+         action_summon_cats = {
             description = "猫を召喚する",
             name = "猫召喚"
          },
-         summon_fire = {
+         action_summon_fire = {
             description = "炎の生き物を召喚する",
             name = "炎召喚"
          },
-         summon_monsters = {
+         spell_summon_monsters = {
             description = "モンスターを召喚する",
             name = "モンスター召喚"
          },
-         summon_pawn = {
+         action_summon_pawn = {
             description = "駒を召喚する",
             name = "駒召喚"
          },
-         summon_sister = {
+         action_summon_sister = {
             description = "妹を召喚する",
             name = "妹召喚"
          },
-         summon_wild = {
+         spell_summon_wild = {
             description = "野生の生き物を召喚する",
             name = "野生召喚"
          },
-         summon_yeek = {
+         action_summon_yeek = {
             description = "イークを召喚する",
             name = "イーク召喚"
          },
-         suspicious_hand = {
+         action_suspicious_hand = {
             description = "盗み",
             name = "スリの指"
          },
-         swarm = {
+         action_swarm = {
             description = "隣接対象攻撃",
             name = "スウォーム"
          },
@@ -701,11 +701,11 @@ return {
             enchantment_description = "裁縫の腕を上げる",
             name = "裁縫"
          },
-         teleport = {
+         spell_teleport = {
             description = "瞬間移動",
             name = "テレポート"
          },
-         teleport_other = {
+         spell_teleport_other = {
             description = "対象を瞬間移動させる",
             name = "テレポートアザー"
          },
@@ -713,27 +713,27 @@ return {
             description = "投擲道具を扱う技術",
             name = "投擲"
          },
-         touch_of_fear = {
+         action_touch_of_fear = {
             description = "無属性攻撃",
             name = "恐怖の手"
          },
-         touch_of_hunger = {
+         action_touch_of_hunger = {
             description = "飢餓攻撃",
             name = "飢餓の手"
          },
-         touch_of_nerve = {
+         action_touch_of_nerve = {
             description = "神経攻撃",
             name = "麻痺の手"
          },
-         touch_of_poison = {
+         action_touch_of_poison = {
             description = "毒攻撃",
             name = "毒の手"
          },
-         touch_of_sleep = {
+         action_touch_of_sleep = {
             description = "精神攻撃",
             name = "眠りの手"
          },
-         touch_of_weakness = {
+         action_touch_of_weakness = {
             description = "弱体化",
             name = "弱体化の手"
          },
@@ -746,23 +746,23 @@ return {
             description = "両手で武器を扱う技術",
             name = "両手持ち"
          },
-         uncurse = {
+         spell_uncurse = {
             description = "アイテム解呪",
             name = "解呪"
          },
-         vanish = {
+         action_vanish = {
             description = "退却する",
             name = "退却"
          },
-         vanquish_hex = {
+         spell_vanquish_hex = {
             description = "全ての呪い(hex)除去",
             name = "全浄化"
          },
-         wall_creation = {
+         spell_wall_creation = {
             description = "壁の生成",
             name = "壁生成"
          },
-         web = {
+         spell_web = {
             description = "蜘蛛の巣発生",
             name = "蜘蛛の巣"
          },
@@ -770,11 +770,11 @@ return {
             description = "重い荷物を持ち運ぶことを可能にする",
             name = "重量挙げ"
          },
-         wish = {
+         spell_wish = {
             description = "願いの効果",
             name = "願い"
          },
-         wizards_harvest = {
+         spell_wizards_harvest = {
             description = "ランダムな収穫",
             name = "魔術師の収穫"
          }
