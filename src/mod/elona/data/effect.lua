@@ -106,11 +106,11 @@ local effect = {
       stops_activity = true,
 
       on_turn_start = function(chara)
+         local result = { blocked = true }
          if chara:is_player() then
-            -- Gui.update_screen()
-            Gui.wait(60)
+            result.wait = 60
          end
-         return { blocked = true }, "blocked"
+         return result, "blocked"
       end,
 
       on_turn_end = function(chara)
@@ -130,11 +130,11 @@ local effect = {
       ordering = 60000,
 
       on_turn_start = function(chara)
+         local result = { blocked = true }
          if chara:is_player() then
-            Gui.update_screen()
-            Gui.wait(60)
+            result.wait = 60
          end
-         return { blocked = true }, "blocked"
+         return result, "blocked"
       end,
 
       stops_activity = true,
@@ -144,11 +144,11 @@ local effect = {
       ordering = 70000,
 
       on_turn_start = function(chara)
+         local result = { blocked = true }
          if chara:is_player() then
-            Gui.update_screen()
-            Gui.wait(180)
+            result.wait = 180
          end
-         return { blocked = true }, "blocked"
+         return result, "blocked"
       end,
 
       on_turn_end = function(chara)
@@ -182,12 +182,12 @@ local effect = {
       ordering = 100000,
 
       on_turn_start = function(chara)
+         local result = { blocked = true }
          if chara:is_player() then
-            Gui.update_screen()
-            Gui.wait(60)
+            result.wait = 60
          end
          if chara:effect_turns("elona.dimming") > 60 then
-            return { blocked = true }, "blocked"
+            return result, "blocked"
          end
       end,
 

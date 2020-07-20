@@ -160,7 +160,7 @@ data:add {
 }
 
 data:add {
-   _id = "potion_restore_stamina",
+   _id = "effect_soda",
    _type = "elona_sys.magic",
    elona_id = 1146,
 
@@ -426,7 +426,6 @@ end
 
 Event.register("elona.on_search_finish", "Proc treasure map", proc_treasure_map)
 
-
 data:add {
    _id = "effect_salt",
    _type = "elona_sys.magic",
@@ -452,6 +451,41 @@ data:add {
       elseif target:is_in_fov() then
          Gui.mes_c("magic.salt.apply", "SkyBlue")
       end
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_elixir",
+   _type = "elona_sys.magic",
+   elona_id = 1120,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      Gui.mes_c("magic.prayer", "Yellow", target)
+
+      target:set_effect_turns("elona.poison", 0)
+      target:set_effect_turns("elona.sleep", 0)
+      target:set_effect_turns("elona.confusion", 0)
+      target:set_effect_turns("elona.blindness", 0)
+      target:set_effect_turns("elona.paralysis", 0)
+      target:set_effect_turns("elona.choking", 0)
+      target:set_effect_turns("elona.dimming", 0)
+      target:set_effect_turns("elona.drunk", 0)
+      target:set_effect_turns("elona.bleeding", 0)
+      target:set_effect_turns("elona.sleep", 0)
+      target.hp = target:calc("max_hp")
+      target.mp = target:calc("max_mp")
+      target.stamina = target:calc("max_stamina")
+
+      local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+      Gui.start_draw_callback(cb)
 
       return true
    end

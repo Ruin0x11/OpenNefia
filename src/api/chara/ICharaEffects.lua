@@ -48,6 +48,10 @@ function ICharaEffects:remove_effect(id)
    self:set_effect_turns(id, 0)
 end
 
+function ICharaEffects:remove_all_effects()
+   self.effects = {}
+end
+
 local function calc_power_after_resistance(chara, effect, element, power)
    local resistance = chara:resist_level(element._id)
    local level = math.floor(resistance / 50)

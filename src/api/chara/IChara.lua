@@ -16,6 +16,7 @@ local ICharaParty = require("api.chara.ICharaParty")
 local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
 local ICharaTraits = require("api.chara.ICharaTraits")
+local ICharaBuffs = require("api.chara.ICharaBuffs")
 local IObject = require("api.IObject")
 local ILocalizable = require("api.ILocalizable")
 local ICharaTalk = require("api.chara.ICharaTalk")
@@ -41,7 +42,8 @@ local IChara = class.interface("IChara",
                             ICharaSkills,
                             ICharaTraits,
                             ICharaEffects,
-                            ICharaActivity
+                            ICharaActivity,
+                            ICharaBuffs
                          })
 
 IChara._type = "base.chara"
@@ -614,11 +616,32 @@ function IChara:revive()
 
    self.state = "Alive"
    self.is_solid = true
-   self:heal_to_max()
+   self.hp = math.floor(self:calc("max_hp") / 3)
+   self.mp = math.floor(self:calc("max_mp") / 3)
+   self.stamina = math.floor(self:calc("max_stamina") / 3)
+   self:reset("is_pregnant", false)
+   self:reset("is_anorexic", false)
+   self.insanity = 0
+   self.nutrition = 8000
+   self.personal_reactions = {}
+
+   self:renew_status()
 
    self:emit("base.on_chara_revived")
 
    return true
+end
+
+function IChara:renew_status()
+   self:remove_activity()
+   self:remove_all_effects()
+   self:remove_all_buffs()
+   self.emotion_icon = nil
+   self.emotion_icon_turns = 0
+   self.stat_adjusts = {}
+   self.ai_state.hate = 0
+
+   self:refresh()
 end
 
 --- Revives this character and moves them to the current/given map.
@@ -713,7 +736,7 @@ end
 
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
-   self.emotion_icon_turns = duration or 1
+   self.emotion_icon_turns = duration or 2
 end
 
 return IChara

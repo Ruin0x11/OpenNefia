@@ -66,6 +66,7 @@ end
 --- Waits for the specified number of milliseconds.
 function Gui.wait(ms)
    local anim = function()
+      Gui.update_screen(ms / 1000.0)
       Draw.yield(ms)
    end
    Gui.start_draw_callback(anim)
@@ -183,14 +184,6 @@ function Gui.report_error(err, msg)
    Gui.mes_newline()
    Gui.mes_c(string.format("%s: %s", msg, string.split(err)[1]), "Red")
    Log.error("%s:\n\t%s", msg, err)
-end
-
---- Pauses rendering for the specified number of milliseconds.
----
---- @tparam int wait_ms
-function Gui.wait(wait_ms)
-   Gui.update_screen(wait_ms / 1000.0)
-   Draw.wait(wait_ms)
 end
 
 local Color = {

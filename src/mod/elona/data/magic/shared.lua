@@ -1784,3 +1784,73 @@ data:add {
       return do_mutation(source, target, params.curse_state, times, true)
    end
 }
+
+data:add {
+   _id = "effect_cure_mutation",
+   _type = "elona_sys.magic",
+   elona_id = 1121,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true
+      end
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.mes_visible("magic.common.it_is_cursed", target)
+         return do_mutation(params.source, target, params.curse_state, 1)
+      end
+
+      local times = 1 + Rand.rnd(2)
+      if params.curse_state == "none" then
+         times = times + 1
+      elseif params.curse_state == "blessed" then
+         times = times + 2
+      end
+
+      local candidates = data["base.trait"]:iter():filter(function(t) return t.type == "mutation" end):to_list()
+
+      local did_something = false
+
+      for _ = 1, times do
+         for _ = 1, 100 do
+            local trait = Rand.choice(candidates)
+            local level = target:trait_level(trait._id)
+            if level ~= 0 then
+               local message, color
+               if level > 0 then
+                  message = "trait." .. trait._id .. ".on_gain_level"
+                  color = "Green"
+               else
+                  message = "trait." .. trait._id .. ".on_lose_level"
+                  color = "Red"
+               end
+
+               target.traits[trait._id] = { level = 0 }
+
+               Gui.mes("magic.cure_mutation")
+               Gui.mes_c(message, color)
+
+               did_something = true
+               break
+            end
+         end
+      end
+
+      if not did_something then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      target:refresh()
+
+      return true
+   end
+}

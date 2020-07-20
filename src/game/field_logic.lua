@@ -183,6 +183,9 @@ function field_logic.pass_turns()
 
    local result = chara:emit("base.before_chara_turn_start", {}, {blocked=false})
    if result.blocked then
+      if result.wait then
+         Gui.wait(result.wait)
+      end
       return result.turn_result or "turn_end", chara
    end
 
