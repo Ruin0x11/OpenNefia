@@ -543,7 +543,7 @@ make_ball {
 
 make_ball {
    _id = "magic_storm",
-   elona_id = 435,
+   elona_id = 460,
    related_skill = "elona.stat_magic",
    element_id = "elona.magic",
    dice_x = function(p,l) return p/100+1+l/25 end,
@@ -608,7 +608,7 @@ end
 
 make_ball {
    _id = "rain_of_sanity",
-   elona_id = 404,
+   elona_id = 637,
    type = "action",
    related_skill = "elona.stat_will",
    element_id = nil,

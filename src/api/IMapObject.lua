@@ -64,10 +64,36 @@ end
 --- Returns the current map this object is contained in, if any.
 ---
 --- @treturn[opt] InstancedMap
+--- @see IMapObject:containing_map()
 function IMapObject:current_map()
    local InstancedMap = require("api.InstancedMap")
    if class.is_an(InstancedMap, self.location) then
       return self.location
+   end
+
+   return nil
+end
+
+--- Returns the map this object is contained in, recursively traversing up the
+--- locations of each object until a map is found.
+---
+--- For example, if an item is being held in something's inventory,
+--- `IMapObject:current_map()` will return `nil`. Instead,
+--- `IMapObject:containing_map()` first gets the current location of the item's
+--- containing inventory, and then the containing location of said inventory,
+--- and so forth, returning if any location up the tree is an instanced map.
+---
+--- @treturn[opt] InstancedMap
+--- @see IMapObject:current_map()
+function IMapObject:containing_map()
+   local InstancedMap = require("api.InstancedMap")
+   local location = self.location
+
+   while location ~= nil do
+      if class.is_an(InstancedMap, location) then
+         return location
+      end
+      location = location.location
    end
 
    return nil

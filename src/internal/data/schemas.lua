@@ -643,6 +643,7 @@ Ambient light information.
          name = "item",
          ammo_type = "",
          value = 1,
+         params = {},
 
          cargo_weight = 0,
 

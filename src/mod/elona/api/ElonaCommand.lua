@@ -124,9 +124,8 @@ function ElonaCommand.dig(player)
    local x, y = Pos.add_direction(dir, player.x, player.y)
 
    if x == player.x and y == player.y then
-      Gui.mes("activity.dig_spot.start.other")
-      Gui.mes("TODO")
-      return "player_turn_query"
+      player:start_activity("elona.digging_spot")
+      return "turn_end"
    end
 
    -- Don't allow digging into water.

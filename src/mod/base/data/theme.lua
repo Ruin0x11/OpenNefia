@@ -694,6 +694,11 @@ local assets = {
       key_color = "none"
    },
    {
+      _id = "paper",
+      image = "graphic/paper.bmp",
+      count_x = 2
+   },
+   {
       _id = "select_key",
       source = "graphic/interface.bmp",
       x = 0,

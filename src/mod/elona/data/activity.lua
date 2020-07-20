@@ -1083,9 +1083,6 @@ data:add {
             if not Feat.is_alive(self.feat) then
                return "stop"
             end
-            if self.type then
-               Gui.mes("activity.dig_spot.start.other")
-            end
          end
       },
       {
@@ -1111,11 +1108,51 @@ data:add {
             if self.feat then
                self.feat:remove_ownership()
             end
-            if self.type then
-               Gui.mes("activity.dig_spot.finish")
-            end
             local map = params.chara:current_map()
-            map:emit("elona.on_search_finish", {chara=params.chara,type=self.type})
+            Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "digging_spot",
+
+   params = {},
+   default_turns = 20,
+
+   animation_wait = 2,
+
+   on_interrupt = "stop",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            Gui.mes("activity.dig_spot.start.other")
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            if self.turns % 5 == 0 then
+               Gui.mes_c("activity.dig_spot.sound", "Blue")
+            end
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            Gui.mes("activity.dig_spot.finish")
+            local map = params.chara:current_map()
+            map:emit("elona.on_search_finish", {chara=params.chara})
             Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
          end
       }

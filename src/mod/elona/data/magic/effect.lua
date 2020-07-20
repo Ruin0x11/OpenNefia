@@ -4,6 +4,15 @@ local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
+local Map = require("api.Map")
+local TreasureMapWindow = require("mod.elona.api.gui.TreasureMapWindow")
+local Event = require("api.Event")
+local Input = require("api.Input")
+local Save = require("api.Save")
+local Enum = require("api.Enum")
+local Calc = require("mod.elona.api.Calc")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    if curse_state == "doomed" then
@@ -125,7 +134,7 @@ data:add {
 }
 
 data:add {
-   _id = "potion_water",
+   _id = "effect_water",
    _type = "elona_sys.magic",
    elona_id = 1103,
 
@@ -292,6 +301,132 @@ data:add {
    end
 }
 
+local function find_treasure_location(map)
+   local cardinal = {
+      {  1,  0 },
+      { -1,  0 },
+      {  0,  1 },
+      {  0, -1 },
+   }
+
+   local point = function()
+      local tx = 4 + Rand.rnd(map:width() - 8)
+      local ty = 3 + Rand.rnd(map:width() - 6)
+      return tx, ty
+   end
+
+   local filter = function(tx, ty)
+      -- TODO
+      if map.id == "elona.north_tyris" then
+         if tx >= 50 and ty >= 39 and tx <= 73 and ty <= 54 then
+            return false
+         end
+      end
+
+      for _, pos in ipairs(cardinal) do
+         local tile = map:tile(tx + pos[1], ty + pos[2])
+         if tile.field_type == "elona.sea" or tile.is_solid then
+            return false
+         end
+      end
+
+      return true
+   end
+
+   return fun.tabulate(point):take(1000):filter(filter):nth(1)
+end
+
+data:add {
+   _id = "effect_treasure_map",
+   _type = "elona_sys.magic",
+   elona_id = 1136,
+
+   type = "effect",
+   params = {
+      "source",
+      "item",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local item = params.item
+      local map = params.source:current_map()
+      if not Map.is_world_map(map) then
+         Gui.mes("magic.map.need_global_map")
+         --return true
+      end
+
+      if Effect.is_cursed(params.curse_state) and Rand.one_in(5) then
+         Gui.mes("magic.map.cursed")
+         item.amount = item.amount - 1
+         local item_map = item:current_map()
+         if item_map then
+            item_map:refresh_tile(item.x, item.y)
+         end
+         return true
+      end
+
+      local item_map = item:containing_map()
+      if item.params.treasure_map == nil then
+         item:separate()
+
+         local tx, ty = find_treasure_location(item_map)
+         if tx then
+            item.params.treasure_map = { x = tx, y = ty }
+         end
+      end
+
+      Gui.mes("magic.map.apply")
+
+      TreasureMapWindow:new(item_map,
+                            item.params.treasure_map.x,
+                            item.params.treasure_map.y)
+         :query()
+
+      return true
+   end
+}
+
+local function proc_treasure_map(map, params)
+   local chara = params.chara
+   local _type = params.type
+
+   local filter = function(item)
+      return item._id == "elona.treasure_map"
+         and type(item.params.treasure_map) == "table"
+         and item.params.treasure_map.x == chara.x
+         and item.params.treasure_map.y == chara.y
+   end
+   local treasure_map = chara:iter_inventory():filter(filter):nth(1)
+
+   if treasure_map then
+      Gui.play_sound("base.chest1")
+      Gui.mes_c("activity.dig_spot.something_is_there", "Yellow")
+      Input.query_more()
+      Gui.play_sound("base.ding2")
+
+      Item.create("elona.small_medal", chara.x, chara.y, { amount = 2 + Rand.rnd(2) }, map)
+      Item.create("elona.platinum_coin", chara.x, chara.y, { amount = 1 + Rand.rnd(3) }, map)
+      Item.create("elona.gold_piece", chara.x, chara.y, { amount = Rand.rnd(10000) + 20001 }, map)
+      for i = 1, 4 do
+         local level = Calc.calc_object_level(chara:calc("level") + 10, map)
+         local quality = Calc.calc_object_quality(Enum.Quality.Great)
+         if i == 1 then
+            quality = Enum.Quality.Godly
+         end
+         local category = Rand.choice(Filters.fsetchest)
+         Itemgen.create(chara.x, chara.y, { level = level, quality = quality, categories = {category} }, map)
+      end
+
+      Gui.mes("common.something_is_put_on_the_ground")
+      treasure_map.amount = treasure_map.amount - 1
+      Save.save_game() -- TODO autosave
+   end
+end
+
+Event.register("elona.on_search_finish", "Proc treasure map", proc_treasure_map)
+
+
 data:add {
    _id = "effect_salt",
    _type = "elona_sys.magic",
@@ -315,7 +450,7 @@ data:add {
             target:damage_hp(Rand.rnd(20000), "elona.acid")
          end
       elseif target:is_in_fov() then
-         Gui.mes_c("magic.salt.snail", "SkyBlue")
+         Gui.mes_c("magic.salt.apply", "SkyBlue")
       end
 
       return true

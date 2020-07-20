@@ -101,4 +101,8 @@ function Save.load_game(save_id)
    Event.trigger("base.on_game_initialize")
 end
 
+-- TODO
+function Save.autosave()
+end
+
 return Save
