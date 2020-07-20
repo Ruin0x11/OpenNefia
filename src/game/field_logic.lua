@@ -387,7 +387,7 @@ function field_logic.run_one_event(event, target_chara)
    end
 
    -- Subsequent events should not draw anything.
-   dt = 0.0
+   dt = 0
 
    if field.map_changed == true then
       event = "turn_begin"

@@ -465,7 +465,7 @@ return {
             description = "Shows how good of a miner you are.",
             name = "Mining"
          },
-         mirror = {
+         action_mirror = {
             description = "Know self",
             name = "Mirror"
          },

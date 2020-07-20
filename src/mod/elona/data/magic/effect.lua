@@ -18,74 +18,6 @@ local function per_curse_state(curse_state, doomed, cursed, none, blessed)
 end
 
 data:add {
-   _id = "love_potion",
-   _type = "elona_sys.magic",
-   elona_id = 1135,
-
-   type = "effect",
-   params = {
-      "target",
-   },
-
-   cast = function(self, params)
-      if Effect.is_cursed(params.curse_state) then
-         if params.target:is_player() then
-         else
-            Gui.mes("magic.love_potion.cursed", params.target)
-            Skill.modify_impression(params.target, -15)
-         end
-         return true, { obvious = false }
-      end
-
-      local function love_miracle(chara)
-         if Rand.one_in(2) or chara:is_player() then
-            return
-         end
-         Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
-         if Rand.one_in(2) then
-            local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
-            if item then
-               item.params = { chara_id = chara._id }
-               local weight = chara:calc("weight")
-               item.weight = weight * 10 + 250
-               item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
-            end
-         else
-            local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
-            if item then
-               item.params = { chara_id = chara._id }
-            end
-         end
-
-         Gui.play_sound("base.atk_elec")
-         local anim = Anim.load("elona.anim_elec", chara.x, chara.y)
-         Gui.start_draw_callback(anim)
-      end
-
-      params.target:set_emotion_icon("elona.heart", 3)
-
-      if params.triggered_by == "potion_spilt" or params.triggered_by == "potion_thrown" then
-         Gui.mes("magic.love_potion.spill", params.target)
-         Skill.modify_impression(params.target, math.clamp(params.power / 15, 0, 15))
-         params.target:apply_effect("elona.dimming", 100)
-         love_miracle(params.target)
-         return true
-      end
-
-      if params.target:is_player() then
-         Gui.mes("magic.love_potion.self", params.target)
-      else
-         Gui.mes("magic.love_potion.other", params.target)
-         love_miracle(params.target)
-         Skill.modify_impression(params.target, math.clamp(params.power / 4, 0, 25))
-      end
-
-      params.target:apply_effect("elona.dimming", 500)
-      return true
-   end
-}
-
-data:add {
    _id = "milk",
    _type = "elona_sys.magic",
    elona_id = 1101,
@@ -132,7 +64,7 @@ data:add {
 }
 
 data:add {
-   _id = "alcohol",
+   _id = "effect_ale",
    _type = "elona_sys.magic",
    elona_id = 1102,
 
@@ -159,7 +91,7 @@ data:add {
 }
 
 data:add {
-   _id = "potion_acid",
+   _id = "effect_sulfuric",
    _type = "elona_sys.magic",
    elona_id = 1102,
 
@@ -243,7 +175,7 @@ data:add {
 }
 
 data:add {
-   _id = "potion_restore_stamina_greater",
+   _id = "effect_cupsule",
    _type = "elona_sys.magic",
    elona_id = 1147,
 
@@ -267,7 +199,101 @@ data:add {
 }
 
 data:add {
-   _id = "potion_salt",
+   _id = "effect_dirty_water",
+   _type = "elona_sys.magic",
+   elona_id = 1130,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      if target:is_in_fov() then
+         if target:is_player() then
+            Gui.mes("magic.dirty_water.self")
+         else
+            Gui.mes("magic.dirty_water.other")
+         end
+      end
+
+      Effect.proc_cursed_drink(target, params.curse_state)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_love_potion",
+   _type = "elona_sys.magic",
+   elona_id = 1135,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      if Effect.is_cursed(params.curse_state) then
+         if params.target:is_player() then
+         else
+            Gui.mes("magic.love_potion.cursed", params.target)
+            Skill.modify_impression(params.target, -15)
+         end
+         return true, { obvious = false }
+      end
+
+      local function love_miracle(chara)
+         if Rand.one_in(2) or chara:is_player() then
+            return
+         end
+         Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
+         if Rand.one_in(2) then
+            local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
+            if item then
+               item.params = { chara_id = chara._id }
+               local weight = chara:calc("weight")
+               item.weight = weight * 10 + 250
+               item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
+            end
+         else
+            local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
+            if item then
+               item.params = { chara_id = chara._id }
+            end
+         end
+
+         Gui.play_sound("base.atk_elec")
+         local anim = Anim.load("elona.anim_elec", chara.x, chara.y)
+         Gui.start_draw_callback(anim)
+      end
+
+      params.target:set_emotion_icon("elona.heart", 3)
+
+      if params.triggered_by == "potion_spilt" or params.triggered_by == "potion_thrown" then
+         Gui.mes("magic.love_potion.spill", params.target)
+         Skill.modify_impression(params.target, math.clamp(params.power / 15, 0, 15))
+         params.target:apply_effect("elona.dimming", 100)
+         love_miracle(params.target)
+         return true
+      end
+
+      if params.target:is_player() then
+         Gui.mes("magic.love_potion.self", params.target)
+      else
+         Gui.mes("magic.love_potion.other", params.target)
+         love_miracle(params.target)
+         Skill.modify_impression(params.target, math.clamp(params.power / 4, 0, 25))
+      end
+
+      params.target:apply_effect("elona.dimming", 500)
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_salt",
    _type = "elona_sys.magic",
    elona_id = 1142,
 
@@ -291,32 +317,6 @@ data:add {
       elseif target:is_in_fov() then
          Gui.mes_c("magic.salt.snail", "SkyBlue")
       end
-
-      return true
-   end
-}
-
-data:add {
-   _id = "potion_dirty_water",
-   _type = "elona_sys.magic",
-   elona_id = 1130,
-
-   type = "effect",
-   params = {
-      "target",
-   },
-
-   cast = function(self, params)
-      local target = params.target
-      if target:is_in_fov() then
-         if target:is_player() then
-            Gui.mes("magic.dirty_water.self")
-         else
-            Gui.mes("magic.dirty_water.other")
-         end
-      end
-
-      Effect.proc_cursed_drink(target, params.curse_state)
 
       return true
    end

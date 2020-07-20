@@ -488,7 +488,7 @@ return {
             enchantment_description = "採掘能力を強化する",
             name = "採掘"
          },
-         mirror = {
+         action_mirror = {
             description = "自分の状態の感知",
             name = "自己認識"
          },

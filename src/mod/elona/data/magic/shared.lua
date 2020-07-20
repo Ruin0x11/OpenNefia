@@ -50,6 +50,7 @@ local function make_bolt(opts)
    data:add {
       _id = "spell_" .. id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = "spell",
       effect_id = "elona." .. id,
@@ -382,6 +383,7 @@ local function make_ball(opts)
    data:add {
       _id = type .. "_" .. opts._id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = type,
       effect_id = "elona." .. opts._id,
@@ -575,7 +577,8 @@ local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element,
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("damage.is_healed", target.x, target.y, target)
-      -- Magic.cast("")
+      local dice = self:dice(params)
+      Effect.heal(target, dice.x, dice.y, dice.bonus)
    end
 end
 
@@ -737,6 +740,22 @@ data:add {
 
 -- heal
 
+local function do_heal(target, curse_state, dice)
+   Effect.heal(target, dice.x, dice.y, dice.bonus)
+
+   if curse_state == "blessed" then
+      target:heal_effect("elona.sick", 5 + Rand.rnd(5))
+   else
+      if Rand.one_in(3) then
+         Effect.proc_cursed_drink(target, curse_state)
+      end
+   end
+
+   local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
+   Gui.start_draw_callback(cb)
+
+   return true
+end
 
 local function make_heal(opts)
    local full_id = "elona.spell_" .. opts._id
@@ -781,18 +800,7 @@ local function make_heal(opts)
          Gui.mes_visible(opts.message, target.x, target.y, target)
 
          local dice = self:dice(params)
-         Effect.heal(target, dice.x, dice.y, dice.bonus)
-
-         if params.curse_state == "blessed" then
-            target:heal_effect("elona.sick", 5 + Rand.rnd(5))
-         elseif Effect.is_cursed(params.curse_state) then
-            make_sick(target, 3)
-         end
-
-         local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
-         Gui.start_draw_callback(cb)
-
-         return true
+         return do_heal(target, params.curse_state, dice)
       end
    }
 end
@@ -884,21 +892,8 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      -- Gui.mes_visible(opts.message, target.x, target.y, target)
-
       local dice = self:dice(params)
-      Effect.heal(target, dice.x, dice.y, dice.bonus)
-
-      if params.curse_state == "blessed" then
-         target:heal_effect("elona.sick", 5 + Rand.rnd(5))
-      elseif Effect.is_cursed(params.curse_state) then
-         make_sick(target, 3)
-      end
-
-      local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
-      Gui.start_draw_callback(cb)
-
-      return true
+      do_heal(target, params.curse_state, dice)
    end
 }
 
