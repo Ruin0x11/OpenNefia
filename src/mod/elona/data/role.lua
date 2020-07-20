@@ -73,6 +73,10 @@ local role = {
       elona_id = 15,
    },
    {
+      _id = "shop_guard",
+      elona_id = 16,
+   },
+   {
       _id = "slaver",
       elona_id = 17
    },

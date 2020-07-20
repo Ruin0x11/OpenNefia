@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Faction = require("api.Faction")
 local IFactioned = require("api.IFactioned")
+local Effect = require("mod.elona.api.Effect")
 
 local ICharaParty = class.interface("ICharaParty", {}, IFactioned)
 
@@ -66,6 +67,7 @@ function ICharaParty:act_hostile_towards(other)
          c.ai_state.leader_attacker = self
       end
    end
+   Effect.act_hostile_towards(self, other)
 end
 
 function ICharaParty:can_recruit_allies()

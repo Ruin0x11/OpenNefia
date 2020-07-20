@@ -19,7 +19,7 @@ local RANGE_BOLT = 2
 data:add {
    _id = "action_pregnant",
    _type = "base.skill",
-   elona_id = 626,
+   elona_id = 654,
 
    type = "action",
    effect_id = "elona.pregnant",
@@ -32,7 +32,7 @@ data:add {
 data:add {
    _id = "pregnant",
    _type = "elona_sys.magic",
-   elona_id = 626,
+   elona_id = 654,
 
    type = "action",
    params = {

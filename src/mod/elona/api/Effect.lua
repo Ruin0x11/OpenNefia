@@ -593,4 +593,82 @@ end
 function Effect.damage_map_ice(x, y, origin)
 end
 
+function Effect.start_incognito(source)
+   local filter = function(chara)
+      if chara:has_role("elona.shopkeeper")
+         and chara.roles["elona.shopkeeper"].inventory_id == "elona.wandering_merchant"
+      then
+         return false
+      end
+
+      if chara:has_role("elona.shop_guard") then
+         return false
+      end
+
+      return chara:base_reaction_towards(source) >= 0
+         and chara:reaction_towards(source) < 0
+   end
+
+   local apply = function(chara)
+      chara.ai_state.hate = 0
+      chara:reset_reaction_at(source)
+      -- TODO emotion icon
+   end
+
+   Chara.iter():filter(filter):each(apply)
+end
+
+function Effect.end_incognito(source)
+   local filter = function(chara)
+      return not chara:is_player() and chara:has_role("elona.guard") and source:calc("karma") < -30
+   end
+
+   local apply = function(chara)
+      chara:mod_reaction_at(source, -100)
+      chara.ai_state.hate = 80
+      -- TODO emotion icon
+      require("api.Log").info("%s", chara.name)
+   end
+
+   Chara.iter():filter(filter):each(apply)
+end
+
+function Effect.act_hostile_towards(source, target)
+   if not source:is_allied() or target:is_player() then
+      return
+   end
+
+   -- TODO emotion icon
+   if target:reaction_towards(source) >= 1000 then
+      Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
+   else
+      if target:reaction_towards(source) >= 100 then
+         Effect.modify_karma(source, -2)
+      end
+      -- TODO fire giant
+      if target:reaction_towards(source) > 0 then
+         Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
+         target:set_reaction_at(source, 0) -- reaction towards "base.friendly" is 100
+      else
+         if target:reaction_towards(source) >= 0 then
+            Gui.mes_c("misc.hostile_action.gets_furious", "Purple", target)
+         end
+         target:set_reaction_at(source, -100)
+         target.ai_state.hate = 80
+         target:set_target(source)
+      end
+   end
+
+   if target.is_livestock and Rand.one_in(50) then
+      Gui.mes_c("misc.hostile_action.get_excited", "Red")
+      local anger = function(chara)
+         chara:set_reaction_at(source, -100)
+         chara:set_target(source)
+         chara.ai_state.hate = 20
+         -- TODO emotion icon
+      end
+      Chara.iter():filter(function(c) return target.is_livestock end):each(anger)
+   end
+end
+
 return Effect

@@ -424,4 +424,30 @@ function Magic.do_action(skill_id, caster)
    return did_something
 end
 
+function Magic.apply_buff(buff_id, params)
+   local buff = data["elona_sys.buff"]:ensure(buff_id)
+   local target = params.target
+
+   if buff.type == "blessing" then
+      local cb = Anim.load("elona.anim_buff", target.x, target.y)
+      Gui.start_draw_callback(cb)
+   elseif buff.type == "hex" then
+      local cb = Anim.heal(target.x, target.y, "base.curse_effect", "base.curse1", -1)
+      Gui.start_draw_callback(cb)
+   end
+
+   if buff.target_rider then
+      -- TODO riding
+   end
+
+   local power = buff:power(params)
+   params.buff = power
+
+   Effect.add_buff(target, buff_id, power.power, power.duration)
+
+   if buff.on_apply then
+      buff:on_apply(params)
+   end
+end
+
 return Magic

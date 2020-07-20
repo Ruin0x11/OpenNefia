@@ -466,7 +466,7 @@ Event.register("base.on_map_leave", "npc memory",
 
 local function bump_into_chara(player, params, result)
    local on_cell = params.chara
-   local reaction = player:reaction_towards(on_cell)
+   local reaction = on_cell:reaction_towards(player)
 
    if reaction > 0 then
       if on_cell:is_ally() or on_cell.faction == "base.citizen" or Gui.player_is_running() then
@@ -483,7 +483,7 @@ local function bump_into_chara(player, params, result)
    end
 
    -- TODO: relation as -1
-   if reaction < 0 then
+   if reaction <= 0 then
       player:set_target(on_cell)
       ElonaAction.melee_attack(player, on_cell)
       Gui.set_scroll()

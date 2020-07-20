@@ -138,6 +138,42 @@ doc = [[
 }
 
 data:add_type {
+   name = "buff",
+   fields = {
+      {
+         name = "type",
+         default = "blessing",
+         template = true,
+         type = "table",
+doc = [[
+The type of this buff. Available options:
+
+- blessing
+- hex
+- food
+]]
+      },
+      {
+         name = "apply",
+         default = CodeGenerator.gen_literal [[
+function(self, params)
+   local source = params.source
+   local target = params.target
+   local map = params.source:current_map()
+
+   return true
+end]],
+         template = true,
+         type = "function(elona_sys.magic, table)?",
+doc = [[
+Run the logic for this buff, if any. This can be omitted if the effect is
+implemented in event handlers, like for Silence.
+]]
+      },
+   },
+}
+
+data:add_type {
    name = "basic_anim",
    schema = schema.Record {
    }

@@ -449,7 +449,7 @@ function IChara.apply_hostile_action(victim, params)
 
    if attacker and not Chara.is_player(victim) then
       local apply_hate
-      if victim:reaction_towards(attacker) < 0 or attacker:reaction_towards(victim, "original") < 0 then
+      if victim:reaction_towards(attacker) < 0 or attacker:base_reaction_towards(victim) < 0 then
          if victim.ai_state.hate == 0 and Rand.one_in(4) then
             apply_hate = true
          end
@@ -459,7 +459,7 @@ function IChara.apply_hostile_action(victim, params)
       end
 
       if apply_hate then
-         if victim:get_hate_at(attacker) == 0 then
+         if victim:get_reaction_at(attacker) == 0 then
             victim.ai_state.hate = 20
             victim:set_target(attacker)
          else
@@ -705,6 +705,10 @@ Codegen.generate_object_getter(IChara, "ammo", "base.item")
 
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1
+end
+
+function IChara:has_role(role)
+   return self.roles[role] ~= nil
 end
 
 return IChara

@@ -15,6 +15,10 @@ function IFactioned:reset_reaction_at(other)
    self.personal_reactions[other.uid] = nil
 end
 
+function IFactioned:set_reaction_at(other, amount)
+   self.personal_reactions[other.uid] = amount
+end
+
 --- Clears all personal reactions on this character.
 function IFactioned:reset_all_reactions()
    self.personal_reactions = {}
@@ -34,20 +38,27 @@ end
 
 --- Returns the reaction of this object towards another based on
 --- faction. Values above 0 indicate friendly relations; values below
---- 0 indicate hostile relations. Characters can have personal
---- reactions towards a specific individual, like from stealing an
---- item. Pass "original" to the `kind` field to bypass this and
---- obtain the unmodified reaction.
+--- 0 indicate hostile relations.
 ---
 --- @tparam IFactioned other
---- @tparam[opt] string kind If "original", ignore temporary personal reactions.
+--- @treturn number Friendly if positive, enemy if negative
+function IFactioned:base_reaction_towards(other, kind)
+   return Faction.reaction_towards(self:calc("faction"), other:calc("faction"))
+end
+
+--- Returns the reaction of this object towards another based on
+--- faction. Values above 0 indicate friendly relations; values below
+--- 0 indicate hostile relations. Characters can have personal
+--- reactions towards a specific individual, like from stealing an
+--- item.
+---
+--- @tparam IFactioned other
 --- @treturn number Friendly if positive, enemy if negative
 function IFactioned:reaction_towards(other, kind)
-   local reaction = Faction.reaction_towards(self:calc("faction"), other:calc("faction"))
-
-   if kind ~= "original" then
-      local personal = self.personal_reactions[other.uid]
-      reaction = reaction + (personal or 0)
+   local reaction = self:base_reaction_towards(other)
+   local personal = self.personal_reactions[other.uid]
+   if personal then
+      reaction = personal
    end
 
    return reaction

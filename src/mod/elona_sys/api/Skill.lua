@@ -95,10 +95,9 @@ function Skill.calc_skill_exp(base_exp, potential, skill_level, buff)
    return exp
 end
 
-local function get_skill_buff(chara, skill)
-   local buffs = chara:calc("growth_buffs") or {}
-   local list = buffs["base.skill"] or {}
-   return list[skill] or 0
+local function get_skill_buff(chara, skill_id)
+   local buffs = chara.temp.growth_buffs or {}
+   return buffs[skill_id] or 0
 end
 
 function Skill.calc_chara_exp_from_skill_exp(required_exp, level, skill_exp, exp_divisor)

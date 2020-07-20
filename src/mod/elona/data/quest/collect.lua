@@ -41,7 +41,7 @@ local collect = {
       for _, chara in ipairs(charas)  do
          if chara.uid ~= client.uid then
             if Chara.is_alive(chara, map)
-               and chara:reaction_towards(Chara.player(), "original") > 0
+               and chara:base_reaction_towards(Chara.player()) > 0
                and (chara.roles["elona.guard"] or chara.roles["elona.citizen"])
             then
                local category = Rand.choice(Filters.fsetcollect)

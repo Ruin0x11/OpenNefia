@@ -13,7 +13,7 @@ function Faction.reaction_towards(mine, theirs)
    local their_faction = data["base.faction"]:ensure(theirs)
 
    if my_faction == their_faction then
-      return 100
+      return 100000
    end
 
    return my_faction.reactions[their_faction._id] or 0

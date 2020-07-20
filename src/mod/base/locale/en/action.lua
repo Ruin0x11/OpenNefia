@@ -57,7 +57,7 @@ return {
             jail = "As might be expected, the door of the Jail is hard."
          },
          execute = function(_1, _2)
-            return ("%s bash%s up %s")
+            return ("%s bash%s up %s.")
                :format(name(_1), s(_1, true), name(_2))
          end,
          prompt = "Which direction do you want to bash? ",
