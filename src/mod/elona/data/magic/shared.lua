@@ -387,7 +387,7 @@ local function make_ball(opts)
       effect_id = "elona." .. opts._id,
       related_skill = opts.related_skill,
       cost = opts.cost,
-      range = RANGE_BALL,
+      range = opts.range or (RANGE_BALL + 1),
       difficulty = opts.difficulty,
       target_type = "self_or_nearby",
       ai_check_ranged_if_self = true
@@ -553,6 +553,23 @@ make_ball {
    ball_cb = ball_cb_elemental
 }
 
+make_ball{
+   _id = "grenade",
+   elona_id = 655,
+
+   type = "action",
+   related_skill = "elona.stat_magic",
+   element_id = "elona.sound",
+   dice_x = function(p, l) return p / 80 + 1 end,
+   dice_y = function(p, l) return p / 8 + 2 end,
+   bonus = nil,
+   element_power = function(p, l) return 150 + p / 2 end,
+   cost = 18,
+   range = 1,
+   difficulty = 700,
+   ball_cb = ball_cb_elemental
+}
+
 local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element, params)
    if source:reaction_towards(target) >= 0 then
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
@@ -647,7 +664,7 @@ data:add {
       local chain_bomb = Queue:new()
       chain_bomb:push(params.source)
 
-      local range = 2
+      local range = params.range
 
       while chain_bomb:len() > 0 do
          local source = chain_bomb:pop()

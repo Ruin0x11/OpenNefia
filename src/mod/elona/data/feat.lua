@@ -393,3 +393,26 @@ data:add {
       Gui.mes("Politics board.")
    end,
 }
+
+
+-- TODO feat: trap handling (procMove)
+
+data:add {
+   _type = "base.feat",
+   _id = "mine",
+   elona_id = 14,
+   elona_sub_id = 7,
+
+   image = "elona.feat_trap",
+   is_solid = false,
+   is_opaque = false,
+
+   on_stepped_on = function(self, params)
+      local chara = params.chara
+      Gui.mes_c("action.move.trap.activate.mine", "LightBlue")
+      local cb = Anim.ball({{ chara.x, chara.y }}, nil, nil, chara.x, chara.y, chara:current_map())
+      Gui.start_draw_callback(cb)
+      self:remove_ownership()
+      params.chara:damage_hp(100+Rand.rnd(200), "elona.trap")
+   end,
+}

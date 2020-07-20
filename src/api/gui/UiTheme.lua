@@ -33,6 +33,13 @@ local function load_asset(id)
       return cache[id]
    end
 
+   -- BUG: The following causes flickering if the asset is being loaded in the
+   -- middle of the draw() loop, because apparently LÖVE stops drawing in the
+   -- middle of the frame if it can't finish within an alotted period of time
+   -- (16ms?). I would rather load everything up front, but because BMP loading
+   -- is expensive and it takes almost a minute to load it all at once I'd
+   -- rather just load it lazily for the time being.
+
    local proto, theme = find_asset(id)
    if not proto then
       return nil

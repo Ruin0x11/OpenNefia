@@ -781,15 +781,94 @@ data:add_type {
 
 data:add_type {
    name = "skill",
-   schema = schema.Record {
-      is_main_skill = schema.Boolean
-   },
-}
+   fields = {
+      {
+         name = "type",
+         default = "effect",
+         template = true,
+         doc = [[
+Determines how this skill is treated in the interface. Available options:
 
-data:add_type {
-   name = "magic",
-   schema = schema.Record {
-   },
+- "skill": Only viewable in the player's skills list in the character sheet. (default)
+- "spell": Castable from the player's Spells menu.
+- "action": Useable from the player's Skills menu.
+]]
+      },
+      {
+         name = "effect_id",
+         default = nil,
+         template = true,
+         doc = [[
+The related magic of this skill to trigger when its entry in the menu is selected.
+
+*Required* if the skill's `type` is "spell" or "action".
+]]
+      },
+      {
+         name = "related_skill",
+         default = "elona.stat_strength",
+         template = true,
+         doc = [[
+A related skill to improve when this skill is used. Affects the skill's icon in the menus.
+]]
+      },
+      {
+         name = "cost",
+         default = 10,
+         template = true,
+         doc = [[
+Cost to apply when triggering this skill.
+
+Used only when the skill's `type` is "spell" or "action".
+]]
+      },
+      {
+         name = "range",
+         default = 0,
+         template = true,
+         doc = [[
+Range of this skill, passed to the magic casting system.
+
+This parameter also affects how the default AI will attempt to use the skill, in
+combination with the `target_type` field.
+
+Used only when the skill's `type` is "spell" or "action".
+]]
+      },
+      {
+         name = "difficulty",
+         default = 100,
+         template = true,
+         doc = [[
+Difficulty of triggering this skill.
+
+Used only when the skill's `type` is "spell" or "action".
+]]
+      },
+      {
+         name = "target_type",
+         default = "self",
+         template = true,
+         doc = [[
+What target this skill applies to. Available options:
+
+- "self": Only affects the caster
+- "self_or_nearby": Can affect the caster or someone nearby, but only if a wand is being used. Fails if no character on tile (heal, holy veil)
+- "nearby": Can affect the caster or someone nearby, fails if no character on tile (touch, steal, dissasemble)
+- "location": Affects a ground position (web, create wall)
+- "target_or_location": Affects the currently targeted character or ground position (breaths, bolts)
+- "enemy": Affects the currently targeted character, prompts if friendly (most attack magic)
+- "other": Affects the currently targeted character, does not prompt (shadow step)
+- "direction": Casts in a cardinal direction (teleport other)
+
+This parameter also affects how the default AI will attempt to use the skill.
+For example, the range of the Suicide Attack action is set to "nearby" in order
+to ensure the AI is right next to its target before exploding.
+
+Used only when the skill's `type` is "spell" or "action".
+]]
+      },
+   }
 }
 
 data:add_type {

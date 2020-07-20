@@ -11,6 +11,8 @@ local Item = require("api.Item")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Calc = require("mod.elona.api.Calc")
 local Input = require("api.Input")
+local Pos = require("api.Pos")
+local Feat = require("api.Feat")
 
 local RANGE_BOLT = 2
 
@@ -1166,5 +1168,239 @@ data:add {
 
       local item = result.result
       return do_recharge(source, item, params.power)
+   end
+}
+
+
+data:add {
+   _id = "action_swarm",
+   _type = "base.skill",
+   elona_id = 631,
+
+   type = "action",
+   effect_id = "elona.swarm",
+   related_skill = "elona.stat_strength",
+   cost = 5,
+   range = 1,
+   difficulty = 220,
+   target_type = "self",
+}
+data:add {
+   _id = "swarm",
+   _type = "elona_sys.magic",
+   elona_id = 631,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local target = params.target
+      local map = params.source:current_map()
+
+      Gui.mes_c("magic.swarm", "Blue")
+
+      local filter = function(chara)
+         if not Chara.is_alive(chara) or chara:is_allied_with(source) then
+            return false
+         end
+
+         if Pos.dist(source.x, source.y, chara.x, chara.y) > params.range then
+            return false
+         end
+
+         if not source:has_los(chara.x, chara.y) then
+            return false
+         end
+
+         return true
+      end
+
+      local melee = function(chara)
+         local cb = Anim.swarm(chara.x, chara.y)
+         Gui.start_draw_callback(cb)
+         ElonaAction.melee_attack(source, chara)
+      end
+
+      Chara.iter():filter(filter):each(melee)
+
+      return true
+   end
+}
+
+
+data:add {
+   _id = "action_cheer",
+   _type = "base.skill",
+   elona_id = 656,
+
+   type = "action",
+   effect_id = "elona.cheer",
+   related_skill = "elona.stat_charisma",
+   cost = 28,
+   range = RANGE_BOLT+1,
+   difficulty = 500,
+   target_type = "self_or_nearby",
+}
+data:add {
+   _id = "cheer",
+   _type = "elona_sys.magic",
+   elona_id = 656,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      Gui.mes_visible("magic.cheer.apply", source)
+
+      local filter = function(chara)
+         if chara:is_player() or not chara:is_allied() or not chara:is_in_same_faction(source) then
+            return false
+         end
+
+         if Pos.dist(source.x, source.y, chara.x, chara.y) > params.range then
+            return false
+         end
+
+         if not source:has_los(chara.x, chara.y) then
+            return false
+         end
+
+         return true
+      end
+
+      local cheer = function(chara)
+         Gui.mes_c_visible("magic.cheer.is_excited", chara, "Blue")
+         -- TODO buff
+      end
+
+      Chara.iter():filter(filter):each(cheer)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "action_mewmewmew",
+   _type = "base.skill",
+   elona_id = 657,
+
+   type = "action",
+   effect_id = "elona.mewmewmew",
+   related_skill = "elona.stat_luck",
+   cost = 1,
+   range = 1,
+   difficulty = 500,
+   target_type = "self_or_nearby",
+}
+data:add {
+   _id = "mewmewmew",
+   _type = "elona_sys.magic",
+   elona_id = 657,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      local filter = function(chara)
+         if not Chara.is_alive(source) or chara == source then
+            return false
+         end
+
+         return true
+      end
+
+      Gui.mes_c("magic.mewmewmew", "Blue")
+
+      local positions = Chara.iter():filter(filter):map(function(c) return { x = c.x, y = c.y } end):to_list()
+
+      local cb = Anim.miracle(positions)
+      Gui.start_draw_callback(cb)
+
+      Chara.iter():filter(filter):each(function(chara) chara:damage_hp(9999999, source) end)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "action_mirror",
+   _type = "base.skill",
+   elona_id = 626,
+
+   type = "action",
+   effect_id = "elona.mirror",
+   related_skill = "elona.stat_perception",
+   cost = 30,
+   range = 1,
+   difficulty = 500,
+   target_type = "self",
+}
+data:add {
+   _id = "mirror",
+   _type = "elona_sys.magic",
+   elona_id = 626,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      Gui.mes("magic.mirror")
+
+      -- This skill was only used for debugging purposes.
+      Gui.mes("TODO")
+
+      return true
+   end
+}
+
+data:add {
+   _id = "action_drop_mine",
+   _type = "base.skill",
+   elona_id = 659,
+
+   type = "action",
+   effect_id = "elona.drop_mine",
+   related_skill = "elona.stat_magic",
+   cost = 15,
+   range = 1,
+   difficulty = 0,
+   target_type = "self_or_nearby",
+}
+data:add {
+   _id = "drop_mine",
+   _type = "elona_sys.magic",
+   elona_id = 659,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      if Map.is_world_map(map) then
+         return true
+      end
+
+      if Feat.at(source.x, source.y, map):length() > 0 then
+         return true
+      end
+
+      Feat.create("elona.mine", source.x, source.y, {force=true}, map)
+      Gui.mes_visible("magic.drop_mine", source)
+
+      return true
    end
 }

@@ -410,7 +410,7 @@ function debug_server:poll()
          result = error_result(req)
       else
          cmd_name = req.command
-         local args = req.args
+         local args = req.args or {}
          if type(cmd_name) ~= "string" or type(args) ~= "table" then
             result = error_result("Request must have 'command' string and 'args' table, got: " .. text)
          else

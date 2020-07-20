@@ -148,7 +148,7 @@ local ATTRS = {
 }
 
 function CharacterSheetMenu:text_attr()
-   local attr = fun.iter(ATTRS):map(function(id) return "ability." .. id .. ".name" end):to_list()
+   local attr = fun.iter(ATTRS):map(function(id) return "ability." .. id .. ".short_name" end):to_list()
    self.texts["attr"] = UiTextGroup:new(attr, 12)
    self.texts["attr"]:relayout(self.x + 54, self.y + 151)
 end

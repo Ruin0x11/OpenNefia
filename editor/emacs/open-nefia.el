@@ -60,7 +60,7 @@
 
 (defcustom open-nefia-completion-package 'ivy "Completion backend to use.")
 
-(defun open-nefia--do-completing-read (prompt cands &key prefix require-match caller)
+(cl-defun open-nefia--do-completing-read (prompt cands &key prefix require-match caller)
   (interactive)
   (cond
    ((and (fboundp 'ivy-read) (eq open-nefia-completion-package 'ivy))
@@ -149,7 +149,7 @@
                              ("template" (list :type cand))
                              ("hotload" (list :require_path cand))
                              (else (error "Candidates not supported for %s" cmd)))))
-                (open-nefia--send cmd cand))
+                (open-nefia--send cmd args))
             (pcase cmd
               ("help" (open-nefia--command-help args response))
               ("jump_to" (open-nefia--command-jump-to args response))
@@ -387,8 +387,27 @@
     (ivy-configure 'open-nefia--command-locale-search
       :display-transformer-fn #'open-nefia--command-locale-search-transformer))
 
+(defun open-nefia--unbracket-string (pre post string)
+  "Remove PRE/POST from the beginning/end of STRING.
+Both PRE and POST must be pre-/suffixes of STRING, or neither is
+removed.  Return the new string.  If STRING is nil, return nil."
+  (declare (indent 2))
+  (and string
+       (if (and (string-prefix-p pre string)
+		(string-suffix-p post string))
+	   (substring string (length pre) (- (length post)))
+	 string)))
+
+(defsubst open-nefia--unescape-string (str)
+  "Unescape escaped commas, semicolons and newlines in STR."
+  (open-nefia--unbracket-string "'" "'"
+    (replace-regexp-in-string
+     "\\\\n" "\n"
+     (replace-regexp-in-string
+      "\\\\\\([,;]\\)" "\\1" str))))
+
 (defun open-nefia--command-template (response)
-  (insert (alist-get 'template response)))
+  (insert (open-nefia--unescape-string (alist-get 'template response))))
 
 (defun open-nefia--command-ids (type response)
   (let ((ids (alist-get 'ids response)))
@@ -766,7 +785,7 @@
 
 (defun open-nefia-insert-template ()
   (interactive)
-  (open-nefia--send "template" '()))
+  (open-nefia--send "template" (list :type "")))
 
 (defun open-nefia-insert-id ()
   (interactive)

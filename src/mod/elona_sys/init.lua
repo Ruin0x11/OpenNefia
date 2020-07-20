@@ -1,3 +1,5 @@
+local CodeGenerator = require("api.CodeGenerator")
+
 local function add_elona_id(_type)
    data:extend_type(
       _type,
@@ -85,9 +87,54 @@ data:add_type {
 
 data:add_type {
    name = "magic",
-   schema = schema.Record {
-      cast = schema.Function
-   }
+   fields = {
+      {
+         name = "params",
+         default = { "source" },
+         template = true,
+         type = "table",
+doc = [[
+   The parameters this magic accepts.
+
+   Currently used purely for documentation purposes. Might be redundant.
+]]
+      },
+      {
+         name = "dice",
+         default = CodeGenerator.gen_literal [[
+function(self, params)
+  local level = params.source:skill_level("my_mod.some_magic")
+  return {
+    x = params.power * 10,
+    y = level * 10,
+    bonus = 50,
+  }
+end
+]],
+         type = "function(elona_sys.magic, table)",
+         doc = [[
+The dice indicating the relative strength of this magic. Has this format:
+]]
+      },
+      {
+         name = "cast",
+         default = CodeGenerator.gen_literal [[
+function(self, params)
+   local source = params.source
+   local target = params.target
+   local map = params.source:current_map()
+
+   return true
+end]],
+         template = true,
+         type = "function(elona_sys.magic, table)",
+doc = [[
+   Runs arbitrary AI actions. Is passed the character and extra parameters, differing depending on the action.
+
+   Returns true if the character acted, false if not.
+]]
+      },
+   },
 }
 
 data:add_type {

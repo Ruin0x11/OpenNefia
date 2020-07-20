@@ -40,6 +40,14 @@ function ICharaParty:is_allied()
    return self:is_player() or self:is_ally()
 end
 
+--- True if this character is sided with the given character.
+---
+--- @treturn bool
+function ICharaParty:is_allied_with(other)
+   -- TODO
+   return self:is_in_same_faction(other)
+end
+
 --- Iterates the characters in this character's party.
 --- Currently only valid for the player.
 ---

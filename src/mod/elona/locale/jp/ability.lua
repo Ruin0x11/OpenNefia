@@ -20,16 +20,20 @@ return {
             name = "解剖学"
          },
          stat_charisma = {
-            name = "魅力"
+            name = "魅力",
+            short_name = "魅力"
          },
          stat_constitution = {
-            name = "耐久"
+            name = "耐久",
+            short_name = "耐久",
          },
          stat_dexterity = {
-            name = "器用"
+            name = "器用",
+            short_name = "器用",
          },
          stat_learning = {
-            name = "習得"
+            name = "習得",
+            short_name = "習得",
          },
          stat_life = {
             name = "生命力"
@@ -38,22 +42,26 @@ return {
             name = "運勢"
          },
          stat_magic = {
-            name = "魔力"
+            name = "魔力",
+            short_name = "魔力",
          },
          stat_mana = {
             name = "マナ"
          },
          stat_perception = {
-            name = "感覚"
+            name = "感覚",
+            short_name = "感覚",
          },
          stat_speed = {
             name = "速度"
          },
          stat_strength = {
-            name = "筋力"
+            name = "筋力",
+            short_name = "筋力",
          },
          stat_will = {
-            name = "意思"
+            name = "意思",
+            short_name = "意思",
          },
          axe = {
             description = "斧を扱う技術",
@@ -480,7 +488,7 @@ return {
             enchantment_description = "採掘能力を強化する",
             name = "採掘"
          },
-         mirror = {
+         action_mirror = {
             description = "自分の状態の感知",
             name = "自己認識"
          },

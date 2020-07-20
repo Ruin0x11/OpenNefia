@@ -1063,7 +1063,7 @@ data:add {
       Gui.mes_c("magic.resurrection.apply", "Yellow", ally)
       Gui.mes(I18N.quote_speech("magic.resurrection.dialog"))
 
-      local cb = Anim.miracle({ x = ally.x, y = ally.y })
+      local cb = Anim.miracle({{ x = ally.x, y = ally.y }})
       Gui.start_draw_callback(cb)
       Gui.play_sound("base.pray2")
 

@@ -121,7 +121,7 @@ local function show_text_death(target, source, tense)
       elseif death_type == 3 then
          Gui.mes_c("death_by.chara.killed.active", "Red", target, source)
       end
-   elseif tense == "enemy" then
+   else
       if death_type == 0 then
          Gui.mes_c("death_by.chara.transformed_into_meat.passive", "Red", target, source)
       elseif death_type == 1 then

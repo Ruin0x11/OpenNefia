@@ -162,6 +162,7 @@ data:add {
    related_skill = "elona.stat_dexterity",
    cost = 20,
    target_type = "nearby",
+   message_nothing_happens = false
 }
 
 data:add {
@@ -180,7 +181,7 @@ data:add {
    range = 8000,
 
    cast = function(self, params)
-      -- TODO
+      -- TODO instanced quest
       if false then
          Gui.mes("magic.steal.in_quest")
          return false

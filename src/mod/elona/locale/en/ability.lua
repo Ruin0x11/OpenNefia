@@ -18,16 +18,20 @@ return {
             name = "Anatomy"
          },
          stat_charisma = {
-            name = "Charisma"
+            name = "Charisma",
+            short_name = " CHR"
          },
          stat_constitution = {
-            name = "Constitution"
+            name = "Constitution",
+            short_name = " CON",
          },
          stat_dexterity = {
-            name = "Dexterity"
+            name = "Dexterity",
+            short_name = " DEX",
          },
          stat_learning = {
-            name = "Learning"
+            name = "Learning",
+            short_name = " LER",
          },
          stat_life = {
             name = "Life"
@@ -36,22 +40,26 @@ return {
             name = "Luck"
          },
          stat_magic = {
-            name = "Magic"
+            name = "Magic",
+            short_name = " MAG",
          },
          stat_mana = {
             name = "Mana"
          },
          stat_perception = {
-            name = "Perception"
+            name = "Perception",
+            short_name = " PER",
          },
          stat_speed = {
             name = "Speed"
          },
          stat_strength = {
-            name = "Strength"
+            name = "Strength",
+            short_name = " STR",
          },
          stat_will = {
-            name = "Will"
+            name = "Will",
+            short_name = " WIL",
          },
          axe = {
             description = "Indicates your skill with axes.",
@@ -92,7 +100,7 @@ return {
             description = "Target(Chaos)",
             name = "Chaos eye"
          },
-         cheer = {
+         action_cheer = {
             description = "Strengthen allies",
             name = "Cheer"
          },
@@ -191,7 +199,7 @@ return {
             description = "Draw target",
             name = "Draw Shadow"
          },
-         drop_mine = {
+         action_drop_mine = {
             description = "Set Mine",
             name = "Drop Mine"
          },
@@ -291,7 +299,7 @@ return {
             description = "Makes you able to evade inaccurate attacks.",
             name = "Greater Evasion"
          },
-         grenade = {
+         action_grenade = {
             description = "Surround(Sound)",
             name = "Grenade"
          },
@@ -650,7 +658,7 @@ return {
             description = "Steal from target",
             name = "Suspicious Hand"
          },
-         swarm = {
+         action_swarm = {
             description = "Attack circle",
             name = "Swarm"
          },

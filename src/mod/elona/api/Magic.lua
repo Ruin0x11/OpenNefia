@@ -414,8 +414,7 @@ function Magic.do_action(skill_id, caster)
    params.range = skill_data.range
    params.power = Skill.calc_spell_power(skill_id, caster)
 
-   if params.no_effect then
-      -- TODO action: pickpocket
+   if params.no_effect and skill_data.message_nothing_happens then
       Gui.mes("common.nothing_happens")
       return true
    end

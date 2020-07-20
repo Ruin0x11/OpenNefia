@@ -130,16 +130,6 @@ end,
   return ("You have assigned the shortcut to {%s} key.")
   :format(_1)
 end,
-    attribute = {
-      _0 = " STR",
-      _1 = " CON",
-      _2 = " DEX",
-      _3 = " PER",
-      _4 = " LER",
-      _5 = " WIL",
-      _6 = " MAG",
-      _7 = " CHR"
-    },
     autodig = {
       disabled = "You disable autodig.",
       enabled = "You enable autodig.",
