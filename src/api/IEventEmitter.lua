@@ -161,20 +161,6 @@ function IEventEmitter:connect_global(event_id, name, cb, opts, global_events)
    self.global_events:register(event_id, name, cb, opts)
 end
 
--- Disconnects all self event handlers across all event types that
--- match `name`.
--- @tparam string name a string or regex
-function IEventEmitter:disconnect_self_matching(name)
-   -- TODO
-end
-
--- Disconnects all global event handlers across all event types that
--- match `name`.
--- @tparam string name a string or regex
-function IEventEmitter:disconnect_global_matching(name)
-   -- TODO
-end
-
 function IEventEmitter:compare_events(other)
    return self._events == other._events and self.global_events == other.global_events
 end

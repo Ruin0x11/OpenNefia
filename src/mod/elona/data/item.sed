@@ -29,7 +29,7 @@ s/legacy_id/elona_id/
 /pv = 0/d
 /dv = 0/d
 /material = 0/d
-/chargelevel = 0/d
+/charge_level = 0/d
 /is_readable = false/d
 /is_zappable = false/d
 /is_drinkable = false/d

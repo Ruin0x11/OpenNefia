@@ -373,7 +373,9 @@ AI callback to run on this character's turn.
          spell_stocks = {},
 
          feats_acquirable = 0,
-         traits = {}
+         traits = {},
+
+         absorbed_charges = 0,
       }
    },
    { interface = IChara }
@@ -534,12 +536,17 @@ A list of strings used for filtering during item generation.
             type = "number?"
          },
          {
+            name = "charges",
+            default = nil,
+            type = "number?"
+         },
+         {
             name = "has_charge",
             default = nil,
             type = "boolean"
          },
          {
-            name = "chargelevel",
+            name = "charge_level",
             default = nil,
             type = "number?"
          },

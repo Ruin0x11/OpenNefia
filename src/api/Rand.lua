@@ -37,6 +37,10 @@ function Rand.one_in_percent(n)
    return 100 / n
 end
 
+--- Sets the seed of the random generator, like HSP's `randomize` function. Pass
+--- in `nil` to set the seed to the current time.
+---
+--- @tparam[opt] int
 function Rand.set_seed(seed)
    rng:set_seed(seed)
 end
@@ -52,7 +56,6 @@ function Rand.choice(arr_or_iter)
    assert(type(arr_or_iter) == "table")
    if tostring(arr_or_iter) == "<generator>" then
       arr = arr_or_iter:to_list()
-
    end
    if #arr == 0 then
       return nil
@@ -65,7 +68,7 @@ function Rand.percent_chance(percent)
    return rng:rnd_float() < (percent / 100)
 end
 
--- Rolls a die of (x)d(y) + add.
+-- Rolls a die of <x>d<y> + <add>
 --
 -- @tparam int dice_x
 -- @tparam int dice_y
@@ -81,10 +84,19 @@ function Rand.roll_dice(dice_x, dice_y, add)
    return result + add
 end
 
+-- Returns the maximum roll possible from a die of <x>d<y> + <add>
+--
+-- @tparam int dice_x
+-- @tparam int dice_y
+-- @tparam int add
 function Rand.dice_max(dice_x, dice_y, add)
    return dice_x * dice_y + add
 end
 
+-- Randomly shuffles the elements of a table. Returns a new table.
+--
+-- @tparam table tbl immutable
+-- @tparam table res
 function Rand.shuffle(tbl)
    local res = table.shallow_copy(tbl)
 

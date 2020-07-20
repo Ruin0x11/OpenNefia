@@ -582,3 +582,25 @@ local inv_identify = {
    end
 }
 data:add(inv_identify)
+
+local inv_draw_charge = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_draw_charge",
+   elona_id = 23,
+   elona_sub_id = 3,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   text = "ui.inventory_command.identify",
+
+   filter = function(ctxt, item)
+      return item.has_charge
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end
+}
+data:add(inv_draw_charge)

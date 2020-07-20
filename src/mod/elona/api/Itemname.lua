@@ -28,8 +28,8 @@ local function localize_identified_parts(item)
    if bonus ~= 0 then
       s = s .. number_string(bonus)
    end
-   if item.has_charges then
-      s = s .. I18N.get("item.charges", item.count)
+   if item.charges and item.charges > 0 then
+      s = s .. I18N.get("item.charges", item.charges)
    end
 
    local dice_x = item:calc("dice_x") or 0

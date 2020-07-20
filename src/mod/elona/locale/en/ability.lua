@@ -183,7 +183,7 @@ return {
             description = "Drain HP",
             name = "Drain Blood"
          },
-         draw_charge = {
+         action_draw_charge = {
             description = "Draw charges",
             name = "Draw Charge"
          },
@@ -242,7 +242,7 @@ return {
             enchantment_description = "makes you pious.",
             name = "Faith"
          },
-         fill_charge = {
+         action_fill_charge = {
             description = "Restore charges",
             name = "Fill Charge"
          },

@@ -10,6 +10,7 @@ local Enum = require("api.Enum")
 local Item = require("api.Item")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Calc = require("mod.elona.api.Calc")
+local Input = require("api.Input")
 
 local RANGE_BOLT = 2
 
@@ -964,7 +965,11 @@ data:add {
          local level = Calc.calc_object_level(target:calc("level")+3, map)
          local quality = Enum.Quality.Good
          local uid = target.uid
+
+         -- This logic is really complicated and domain specific, and is used
+         -- only in three places in the code (relocate_chara).
          Gui.mes("TODO")
+
          map:emit("elona_sys.on_quest_check")
       elseif success == false then
          Gui.mes("magic.common.resists", target)
@@ -973,5 +978,193 @@ data:add {
       end
 
       return true
+   end
+}
+
+
+data:add {
+   _id = "action_draw_charge",
+   _type = "base.skill",
+   elona_id = 629,
+
+   type = "action",
+   effect_id = "elona.draw_charge",
+   related_skill = "elona.stat_magic",
+   cost = 1,
+   range = 0,
+   difficulty = 0,
+   target_type = "self",
+}
+data:add {
+   _id = "draw_charge",
+   _type = "elona_sys.magic",
+   elona_id = 629,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+
+      if canceled then
+         return true
+      end
+
+      local item = result.result
+
+      local charges = 1
+      local charge_level = item:calc("charge_level")
+      if charge_level == 1 then
+         charges = 100
+      elseif charge_level == 2 then
+         charges = 25
+      elseif charge_level <= 4 then
+         charges = 5
+      elseif charge_level <= 6 then
+         charges = 3
+      end
+
+      local cb = Anim.load("elona.anim_smoke", source.x, source.y)
+      Gui.start_draw_callback(cb)
+
+      charges = charges * item.charges
+      source.absorbed_charges = source.absorbed_charges + charges
+      Gui.mes("magic.draw_charge", item, charges, source.absorbed_charges)
+      item:remove()
+      source:refresh_weight()
+
+      return true
+   end
+}
+
+local function do_recharge(source, item, power)
+   local charge_level = item:calc("charge_level")
+
+   -- TODO more special cases
+   if charge_level < 1 or item:calc("is_not_rechargable") then
+      Gui.mes("magic.fill_charge.cannot_recharge")
+      return true
+   end
+
+   pause()
+   if item.charges > charge_level then
+      Gui.mes("magic.fill_charge.cannot_recharge_anymore", item)
+      return true
+   end
+
+   local success = true
+
+   if Rand.one_in(power / 25 + 1) then
+      success = false
+   end
+
+   if item:has_category("elona.spellbook") and Rand.one_in(4) then
+      success = false
+   end
+
+   if Rand.one_in(charge_level * charge_level + 1) then
+      success = false
+   end
+
+   if success then
+      local charges = 1 + Rand.rnd(charge_level / 2 + 1)
+      if item:has_category("elona.spellbook") then
+         charges = 1
+      end
+
+      Gui.mes("magic.fill_charge.apply", item, charges)
+      item.charges = math.min(charges + item.charges, charge_level)
+      local cb = Anim.load("elona.anim_smoke", source.x, source.y)
+      Gui.start_draw_callback(cb)
+   else
+      if Rand.one_in(4) then
+         Gui.mes("magic.fill_charge.explodes", item)
+         item.amount = item.amount - 1
+         source:refresh_weight()
+      end
+      Gui.mes("magic.fill_charge.fail", item)
+   end
+
+   return true
+end
+
+data:add {
+   _id = "action_fill_charge",
+   _type = "base.skill",
+   elona_id = 630,
+
+   type = "action",
+   effect_id = "elona.fill_charge",
+   related_skill = "elona.stat_magic",
+   cost = 10,
+   range = 0,
+   difficulty = 0,
+   target_type = "self",
+}
+data:add {
+   _id = "fill_charge",
+   _type = "elona_sys.magic",
+   elona_id = 630,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      if source.absorbed_charges < 10 then
+         Gui.mes("magic.fill_charge.more_power_needed")
+         return true, { obvious = false }
+      end
+
+      source.absorbed_charges = math.max(source.absorbed_charges - 10, 0)
+      Gui.mes("magic.fill_charge.spend", source.absorbed_charges)
+
+      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+      if canceled then
+         return true, { obvious = false }
+      end
+
+      local item = result.result
+      return do_recharge(source, item, params.power)
+   end
+}
+
+data:add {
+   _id = "effect_recharge",
+   _type = "elona_sys.magic",
+   elona_id = 1129,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+      local map = params.source:current_map()
+
+      local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
+      if canceled then
+         return true, { obvious = false }
+      end
+
+      local item = result.result
+      return do_recharge(source, item, params.power)
    end
 }

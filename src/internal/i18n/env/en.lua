@@ -94,7 +94,7 @@ function en.is(obj)
          if obj.amount > 1 then
             return ""
          else
-            return "s"
+            return "is"
          end
       end
 

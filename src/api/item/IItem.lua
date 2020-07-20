@@ -274,15 +274,6 @@ function IItem:can_stack_with(other)
    return true
 end
 
-function IItem:has_type(_type)
-   for _, v in ipairs(self:calc("types")) do
-      if v == _type then
-         return true
-      end
-   end
-   return false
-end
-
 function IItem:calc_effective_range(dist)
    dist = math.max(math.floor(dist), 0)
    local result
@@ -329,6 +320,8 @@ function IItem:remove()
    if map then
       map:refresh_tile(self.x, self.y)
    end
+
+   self:remove_ownership()
 end
 
 function IItem:has_category(cat)
