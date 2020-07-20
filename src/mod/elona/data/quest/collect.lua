@@ -95,7 +95,7 @@ data:add {
    root = "talk.npc.quest_giver",
    nodes = {
       trade = function(t)
-         Gui.mes_c("TODO", "Orange")
+         Gui.mes_c("TODO", "Yellow")
       end,
       give = function(t)
          -- TODO generalize with dialog argument

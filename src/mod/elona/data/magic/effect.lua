@@ -41,7 +41,7 @@ data:add {
          if Rand.one_in(2) or chara:is_player() then
             return
          end
-         Gui.mes_c("misc.love_miracle.uh", "Cyan")
+         Gui.mes_c("misc.love_miracle.uh", "SkyBlue")
          if Rand.one_in(2) then
             local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
             if item then
@@ -103,12 +103,12 @@ data:add {
             if target:is_player() then
                Gui.mes("magic.milk.cursed.self")
             else
-               Gui.mes_c("magic.milk.cursed.other", "Cyan")
+               Gui.mes_c("magic.milk.cursed.other", "SkyBlue")
             end
          elseif target:is_player() then
             Gui.mes("magic.milk.self")
          else
-            Gui.mes_c("magic.milk.other", "Cyan")
+            Gui.mes_c("magic.milk.other", "SkyBlue")
          end
       end
 
@@ -145,9 +145,9 @@ data:add {
       local target = params.target
       if target:is_in_fov() then
          if Effect.is_cursed(params.curse_state) then
-            Gui.mes_c("magic.alcohol.cursed", "Cyan")
+            Gui.mes_c("magic.alcohol.cursed", "SkyBlue")
          else
-            Gui.mes_c("magic.alcohol.normal", "Cyan")
+            Gui.mes_c("magic.alcohol.normal", "SkyBlue")
          end
       end
 
@@ -289,7 +289,7 @@ data:add {
             target:damage_hp(Rand.rnd(20000), "elona.acid")
          end
       elseif target:is_in_fov() then
-         Gui.mes_c("magic.salt.snail", "Cyan")
+         Gui.mes_c("magic.salt.snail", "SkyBlue")
       end
 
       return true

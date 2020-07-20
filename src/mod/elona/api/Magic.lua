@@ -71,7 +71,7 @@ local function proc_well_events(well, chara)
    if not chara:is_player() and Rand.one_in(15) then
       -- Fall into well.
       Gui.mes("action.drink.well.effect.falls.text", chara)
-      Gui.mes_c("action.drink.well.effect.falls.dialog", "Cyan", chara)
+      Gui.mes_c("action.drink.well.effect.falls.dialog", "SkyBlue", chara)
       if chara:calc("is_floating") and not chara:has_effect("elona.gravity") then
          Gui.mes_c("action.drink.well.effect.falls.floats", chara)
       else

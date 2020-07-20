@@ -514,7 +514,7 @@ data:add {
             end
 
             if not self.is_host and self.turns % 5 == 0 then
-               Gui.mes_visible("*noise*", params.chara.x, params.chara.y, "Cyan")
+               Gui.mes_visible("*noise*", params.chara.x, params.chara.y, "SkyBlue")
             end
 
             return "turn_end"
@@ -573,7 +573,7 @@ end
 local function performance_bad(chara, instrument, audience, activity)
    activity.performace_quality = activity.performance_quality - math.floor(audience:calc("level") / 2)
 
-   Gui.mes_visible("angry ", chara.x, chara.y, "Cyan")
+   Gui.mes_visible("angry ", chara.x, chara.y, "SkyBlue")
    Gui.mes_visible("throws rock ", chara.x, chara.y)
    local damage = audience:emit("elona.calc_bad_performance_damage", {chara=chara,instrument=instrument,activity=activity}, Rand.rnd(audience:calc("level") + 1) + 1)
    chara:damage_hp(damage, "elona.performer")
@@ -616,7 +616,7 @@ local function performance_good(chara, instrument, audience, activity)
 
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 5 + 1) then
       if Rand.one_in(3) then
-         Gui.mes_visible("perform interest ", chara.x, chara.y, "Cyan")
+         Gui.mes_visible("perform interest ", chara.x, chara.y, "SkyBlue")
          activity.performance_quality = activity.performance_quality + level + 5
 
          local receive_goods = chara:calc("perform_receives_goods")
@@ -686,7 +686,7 @@ local function performance_apply(chara, instrument, audience, activity)
    end
 
    if audience:calc("performance_interest") <= 0 then
-      Gui.mes_visible("disinterest", audience.x, audience.y, "Cyan")
+      Gui.mes_visible("disinterest", audience.x, audience.y, "SkyBlue")
       audience:reset("performance_interest", 0)
       return
    end

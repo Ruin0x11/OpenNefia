@@ -16,7 +16,7 @@ function God.say(god_id, talk_event_id)
       local god = data["elona.god"]:ensure(god_id)
       if god.talk_id then
          local mes = Talk.message(god.talk_id, talk_event_id, chara)
-         Gui.mes_c(mes, "Orange")
+         Gui.mes_c(mes, "Yellow")
       end
    end
 end
@@ -83,10 +83,10 @@ function God.switch_religion(chara, new_god, params)
    chara:reset("god_id", new_god)
 
    if not new_god then
-      Gui.mes_c("god.switch.unbeliever", "Orange")
+      Gui.mes_c("god.switch.unbeliever", "Yellow")
    else
       Gui.play_sound("base.complete1")
-      Gui.mes_c("god.switch.follower", "Orange", new_god)
+      Gui.mes_c("god.switch.follower", "Yellow", new_god)
       God.say(chara.god_id, "elona.god_new_believer")
    end
 

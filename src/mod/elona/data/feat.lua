@@ -409,7 +409,7 @@ data:add {
 
    on_stepped_on = function(self, params)
       local chara = params.chara
-      Gui.mes_c("action.move.trap.activate.mine", "LightBlue")
+      Gui.mes_c("action.move.trap.activate.mine", "SkyBlue")
       local cb = Anim.ball({{ chara.x, chara.y }}, nil, nil, chara.x, chara.y, chara:current_map())
       Gui.start_draw_callback(cb)
       self:remove_ownership()

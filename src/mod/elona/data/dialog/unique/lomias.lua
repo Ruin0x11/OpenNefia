@@ -363,7 +363,7 @@ data:add {
             {"__END__", "__MORE__"}
          },
          on_finish = function()
-            Gui.mes_c("talk.unique.lomias.tutorial.equip.done.lomias_releases", "Cyan")
+            Gui.mes_c("talk.unique.lomias.tutorial.equip.done.lomias_releases", "SkyBlue")
             for i=0,2 do
                local putit = Chara.create("elona.putit", Chara.player().x, Chara.player().y)
                putit.is_not_targeted_by_ai = true

@@ -190,11 +190,11 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
          if damage_level == -1 then
             Gui.mes("damage.levels.scratch", target, txt_source)
          elseif damage_level == 0 then
-            Gui.mes_c("damage.levels.slightly", "Orange", target, txt_source)
+            Gui.mes_c("damage.levels.slightly", "Yellow", target, txt_source)
          elseif damage_level == 1 then
-            Gui.mes_c("damage.levels.moderately", "Gold", target, txt_source)
+            Gui.mes_c("damage.levels.moderately", "Orange", target, txt_source)
          elseif damage_level == 2 then
-            Gui.mes_c("damage.levels.severely", "Gold", target, txt_source)
+            Gui.mes_c("damage.levels.severely", "Orange", target, txt_source)
          elseif damage_level >= 3 then
             Gui.mes_c("damage.levels.critically", "Red", target, txt_source)
          end
@@ -224,7 +224,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
       else
          if target:is_in_fov() then
             if damage_level == 1 then
-               Gui.mes_c("damage.reactions.screams", "Gold", target)
+               Gui.mes_c("damage.reactions.screams", "Orange", target)
             elseif damage_level == 2 then
                Gui.mes_c("damage.reactions.writhes_in_pain", "Pink", target)
             elseif damage_level >= 3 then

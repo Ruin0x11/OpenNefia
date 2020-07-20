@@ -31,7 +31,7 @@ function Effect.impregnate(chara)
       return false
    end
 
-   Gui.mes_c("misc.pregnant.gets_pregnant", "Orange", chara)
+   Gui.mes_c("misc.pregnant.gets_pregnant", "Yellow", chara)
    local anim = Anim.load("elona.anim_smoke", chara.x, chara.y)
    Gui.start_draw_callback(anim)
    chara.is_pregnant = true
@@ -103,7 +103,7 @@ function Effect.modify_karma(chara, delta)
 
    local color
    if delta >= 0 then
-      color = "Orange"
+      color = "Yellow"
    else
       color = "Purple"
    end
