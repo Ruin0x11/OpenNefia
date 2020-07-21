@@ -103,6 +103,7 @@ end
 
 -- TODO
 function Save.autosave()
+   Save.save_game()
 end
 
 return Save

@@ -1,7 +1,7 @@
 local skill = {
    {
       _id = "stat_life",
-      type = "stat",
+      type = "stat_special",
       elona_id = 2,
       ability_type = 0,
       cost = 0,
@@ -13,7 +13,7 @@ local skill = {
    },
    {
       _id = "stat_mana",
-      type = "stat",
+      type = "stat_special",
       elona_id = 3,
       ability_type = 0,
       cost = 0,

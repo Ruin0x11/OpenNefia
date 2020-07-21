@@ -13,6 +13,10 @@ function Skill.iter_stats()
    return data["base.skill"]:iter():filter(function(s) return s.type == "stat" end)
 end
 
+function Skill.iter_base_stats()
+   return Skill.iter_stats():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
+end
+
 function Skill.random_stat()
    return Rand.choice(Skill.iter_stats())._id
 end
@@ -120,7 +124,7 @@ function Skill.modify_potential_from_level(chara, skill, level_delta)
 end
 
 function Skill.modify_potential(chara, skill, delta)
-   local potential = math.clamp(chara:skill_potential(skill) + delta, 2, 400)
+   local potential = math.clamp(math.floor(chara:skill_potential(skill) + delta), 2, 400)
    chara.skills["base.skill:" .. skill].potential = potential
 end
 

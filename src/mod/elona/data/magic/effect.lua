@@ -17,6 +17,7 @@ local I18N = require("api.I18N")
 local God = require("mod.elona.api.God")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
+   assert(type(curse_state) == "string")
    if curse_state == "doomed" then
       return doomed
    elseif curse_state == "cursed" then
@@ -735,6 +736,140 @@ data:add {
       Skill.gain_skill_exp(target, "elona.faith", exp, 6, 1000)
 
       target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_gain_skill_potential",
+   _type = "elona_sys.magic",
+   elona_id = 1119,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      local times = 1
+      if params.curse_state == "blessed" then
+         times = times + 1
+      end
+
+      local candidates = data["base.skill"]:iter()
+         :filter(function(skill) return skill.type == nil or skill.type == "skill" end)
+         :to_list()
+
+      for i = 1, times do
+         while true do
+            local skill = Rand.choice(candidates)
+            if skill.related_skill ~= nil then
+               if target:base_skill_level(skill._id) > 0 then
+                  local amount = params.power * per_curse_state(params.curse_state, -4,-2,5,5) / 100
+                  Skill.modify_potential(target, skill._id, amount)
+                  local mes
+                  if i == 1 then
+                     mes = "magic.gain_skill_potential.the"
+                  else
+                     mes = "magic.gain_skill_potential.furthermore_the"
+                  end
+
+                  local skill_name = "ability." .. skill._id .. ".name"
+
+                  if not Effect.is_cursed(params.curse_state) then
+                     if target:is_in_fov() then
+                        Gui.play_sound("base.ding2", target.x, target.y)
+                        Gui.mes_c(I18N.get(mes) .. I18N.get("magic.gain_skill_potential.increases", target, skill_name), "Green")
+                     end
+                  else
+                     if target:is_in_fov() then
+                        Gui.play_sound("base.curse3", target.x, target.y)
+                        Gui.mes_c("magic.gain_skill_potential.decreases", "Red", target, skill_name)
+                     end
+                  end
+
+                  break
+               end
+            end
+         end
+      end
+
+      target:refresh()
+      Save.autosave()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_punish_decrement_stats",
+   _type = "elona_sys.magic",
+   elona_id = 1106,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      for _, stat in Skill.iter_stats() do
+         local amount = per_curse_state(params.curse_state, -2000, -2000, -1000, -250)
+         Skill.gain_skill_exp(target, stat._id, amount)
+      end
+
+      local cb = Anim.load("elona.anim_curse", target.x, target.y)
+      Gui.start_draw_callback(cb)
+
+      target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_gain_potential",
+   _type = "elona_sys.magic",
+   elona_id = 1113,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if params.curse_state == "blessed" then
+         for _, stat in Skill.iter_base_stats() do
+            local amount = Rand.rnd(target:skill_potential(stat._id) / 20 + 3) + 1
+            Skill.modify_potential(target, stat._id, amount)
+         end
+         Gui.mes("magic.gain_potential.blessed", target)
+         local cb = Anim.miracle({{ x = target.x, y = target.y }})
+         Gui.start_draw_callback(cb)
+         Gui.play_sound("base.ding3", target.x, target.y)
+      else
+         local stat = Rand.choice(Skill.iter_base_stats())
+         local stat_name = "ability." .. stat._id .. ".name"
+         if params.curse_state == "none" then
+            Gui.mes("magic.gain_potential.increases", target, stat_name)
+            local amount = Rand.rnd(target:skill_potential(stat._id) / 10 + 10) + 1
+            Skill.modify_potential(target, stat._id, -amount)
+            Gui.play_sound("base.ding2", target.x, target.y)
+         else
+            Gui.mes("magic.gain_potential.decreases", target, stat_name)
+            local amount = Rand.rnd(target:skill_potential(stat._id) / 10 + 10) + 1
+            Skill.modify_potential(target, stat._id, -amount)
+            Gui.play_sound("base.curse3", target.x, target.y)
+         end
+      end
+
+      Save.autosave()
 
       return true
    end
