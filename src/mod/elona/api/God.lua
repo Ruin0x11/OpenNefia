@@ -9,7 +9,7 @@ function God.say(god_id, talk_event_id)
    local chara
    if class.is_an(IChara, god_id) then
       chara = god_id
-      god_id = chara:calc("god_id")
+      god_id = chara:calc("god")
    end
 
    if god_id then
@@ -64,7 +64,7 @@ function God.switch_religion_with_penalty(chara, new_god, params)
 
    Gui.update_screen()
 
-   if chara.god_id ~= nil then
+   if chara.god ~= nil then
       Gui.mes_c("god.enraged", chara.god_id, "Purple")
       God.say(chara.god_id, "elona.god_stop_believing")
       Gui.play_sound("base.punish1")
@@ -94,7 +94,7 @@ function God.switch_religion(chara, new_god, params)
 end
 
 function God.pray(chara)
-   if not chara:calc("god_id") then
+   if not chara:calc("god") then
       Gui.mes("god.pray.do_not_believe")
       return "turn_end"
    end

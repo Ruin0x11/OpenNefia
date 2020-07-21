@@ -16,9 +16,9 @@ local function set_god(chara)
    if not chara:is_player() and has_dialog then
       local gods = data["elona.god"]:iter():extract("_id"):to_list()
       gods[#gods+1] = "eyth"
-      chara.god_id = Rand.choice(gods)
-      if chara.god_id == "eyth" then
-         chara.god_id = nil
+      chara.god = Rand.choice(gods)
+      if chara.god == "eyth" then
+         chara.god = nil
       end
    end
 end
@@ -27,7 +27,7 @@ Event.register("base.on_normal_build",
                "Set NPC god", set_god)
 
 local function apply_god_blessing(chara)
-   local id = chara:calc("god_id") or ""
+   local id = chara:calc("god") or ""
    local god = data["elona.god"][id]
    if not god then
       return

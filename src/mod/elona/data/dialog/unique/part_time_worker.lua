@@ -10,7 +10,7 @@ return {
          if not (Map.id() == "core.noyel" and Map.area().christmas_festival) then
             return "__END__"
          end
-         if Chara.player().god_id == "core.jure" then
+         if Chara.player().god == "elona.jure" then
             return "already_believe_in_jure"
          end
 
