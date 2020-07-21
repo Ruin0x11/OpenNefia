@@ -201,8 +201,8 @@ function Itemname.en(item, number, needs_article)
                      s = s .. "EGOMINORN "
                   end
                end
-               if item.quality ~= Quality.Special then
-                  if item.quality == Quality.Miracle or item.quality == Quality.Godly then
+               if item.quality ~= Quality.Unique then
+                  if item.quality == Quality.Great or item.quality == Quality.God then
                      s = s .. I18N.get("item_material." .. material .. ".alias") .. I18N.space()
                   else
                      s = s .. I18N.get("item_material." .. material .. ".name") .. I18N.space()
@@ -218,12 +218,12 @@ function Itemname.en(item, number, needs_article)
    if identify_state == "unidentified" then
       s = s .. unknown_name
    elseif identify_state ~= "completely" then
-      if (item.quality ~= Quality.Miracle and item.quality ~= Quality.Godly) or category >= 50000 then
+      if (item.quality ~= Quality.Great and item.quality ~= Quality.God) or category >= 50000 then
          s = s .. name
       else
          s = s .. unknown_name
       end
-   elseif item.quality == "Special" or item:calc("is_precious") then
+   elseif item.quality == Enum.Quality.Unique or item:calc("is_precious") then
       s = s .. name
    else
       s = s .. name
@@ -233,7 +233,7 @@ function Itemname.en(item, number, needs_article)
       end
       if subname >= 40000 then
          local title = Text.random_title("weapon", subname - 40000)
-         if item.quality == Quality.Miracle then
+         if item.quality == Quality.Great then
             s = I18N.space() .. I18N.get("item.miracle_paren", title)
          else
             s = I18N.space() .. I18N.get("item.godly_paren", title)
@@ -243,7 +243,7 @@ function Itemname.en(item, number, needs_article)
 
    if needs_article then
       if identify_state == "completely"
-         and (item.quality == Quality.Miracle or item.quality == Quality.Godly)
+         and (item.quality == Quality.Great or item.quality == Quality.God)
          and category < 50000
       then
          s = "the " .. s

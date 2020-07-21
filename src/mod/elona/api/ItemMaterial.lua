@@ -136,9 +136,9 @@ function ItemMaterial.change_item_material(item, material, do_reset)
    local coeff = 120
    if item.quality == Enum.Quality.Bad then
       coeff = 150
-   elseif item.quality == Enum.Quality.Good then
+   elseif item.quality == Enum.Quality.Normal then
       coeff = 100
-   elseif item.quality >= Enum.Quality.Great then
+   elseif item.quality >= Enum.Quality.Good then
       coeff = 80
    end
 

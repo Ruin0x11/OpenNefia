@@ -100,7 +100,7 @@ data:add {
 
       local success = Rand.rnd(params.power / 15 + 5) < target:calc("level")
 
-      if target:calc("quality") >= Enum.Quality.Great then
+      if target:calc("quality") >= Enum.Quality.Good then
          Gui.mes("magic.domination.cannot_be_charmed")
       elseif success then
          target:recruit_as_ally()
@@ -827,7 +827,7 @@ local function do_restore(chara, attrs, curse_state)
    for _, skill_id in ipairs(attrs) do
       local adj = chara:stat_adjustment(skill_id)
       if Effect.is_cursed(curse_state) then
-         if quality <= Enum.Quality.Good then
+         if quality <= Enum.Quality.Normal then
             adj = adj - Rand.rnd(chara:base_skill_level(skill_id)) / 5 + Rand.rnd(5)
          end
       else

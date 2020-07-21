@@ -420,9 +420,9 @@ local function proc_treasure_map(map, params)
       Item.create("elona.gold_piece", chara.x, chara.y, { amount = Rand.rnd(10000) + 20001 }, map)
       for i = 1, 4 do
          local level = Calc.calc_object_level(chara:calc("level") + 10, map)
-         local quality = Calc.calc_object_quality(Enum.Quality.Great)
+         local quality = Calc.calc_object_quality(Enum.Quality.Good)
          if i == 1 then
-            quality = Enum.Quality.Godly
+            quality = Enum.Quality.God
          end
          local category = Rand.choice(Filters.fsetchest)
          Itemgen.create(chara.x, chara.y, { level = level, quality = quality, categories = {category} }, map)
@@ -1154,7 +1154,7 @@ data:add {
       local item = result.result
       item:separate()
 
-      if item.quality < Enum.Quality.Miracle or item.quality == Enum.Quality.Special then
+      if item.quality < Enum.Quality.Great or item.quality == Enum.Quality.Unique then
          Gui.mes("common.it_is_impossible")
          return true, { obvious = false }
       end
@@ -1204,7 +1204,7 @@ data:add {
       local item = result.result
       item:separate()
 
-      if item.quality < Enum.Quality.Miracle or item.quality == Enum.Quality.Special then
+      if item.quality < Enum.Quality.Great or item.quality == Enum.Quality.Unique then
          Gui.mes("common.it_is_impossible")
          return true, { obvious = false }
       end

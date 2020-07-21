@@ -11,7 +11,7 @@ end
 
 local function name(id)
    local i = Item.find(id) or Item.create(id)
-   i.quality = Enum.Quality.Godly
+   i.quality = Enum.Quality.God
 
    i.identify_state = "unidentified"
    print("== unident ", Itemname.en(i, nil, true))

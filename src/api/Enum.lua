@@ -2,10 +2,10 @@ local Enum = {}
 
 Enum.Quality = {
    Bad = 1,
-   Good = 2,
-   Great = 3,
-   Miracle = 4,
-   Godly = 5,
+   Normal = 2,
+   Good = 3,
+   Great = 4,
+   God = 5,
    Special = 6,
 }
 

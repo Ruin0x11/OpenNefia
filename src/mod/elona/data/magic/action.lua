@@ -439,7 +439,7 @@ make_touch {
       local attribute = Rand.choice(config["base._basic_attributes"])
       local sustains_enchantment = "" -- TODO enchantment: sustains attribute
       local proceed = true
-      if (target:calc("quality") >= Enum.Quality.Miracle and Rand.one_in(4))
+      if (target:calc("quality") >= Enum.Quality.Great and Rand.one_in(4))
          or target:has_enchantment(sustains_enchantment)
       then
          proceed = false
@@ -861,7 +861,7 @@ data:add {
       local source = params.source
       local target = params.target
 
-      if target:is_allied() or target:calc("quality") >= Enum.Quality.Miracle then
+      if target:is_allied() or target:calc("quality") >= Enum.Quality.Great then
          return true
       end
 
@@ -953,7 +953,7 @@ data:add {
       end
 
       -- TODO adventurer
-      if target:calc("quality") >= Enum.Quality.Miracle or next(target.roles) or target:calc("is_not_changeable") then
+      if target:calc("quality") >= Enum.Quality.Great or next(target.roles) or target:calc("is_not_changeable") then
          success = "impossible"
       end
       if target:is_allied() then
@@ -965,7 +965,7 @@ data:add {
          Gui.start_draw_callback(cb)
          Gui.mes("magic.change.apply", target)
          local level = Calc.calc_object_level(target:calc("level")+3, map)
-         local quality = Enum.Quality.Good
+         local quality = Enum.Quality.Normal
          local uid = target.uid
 
          -- This logic is really complicated and domain specific, and is used

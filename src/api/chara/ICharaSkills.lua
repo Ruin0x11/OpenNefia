@@ -36,7 +36,7 @@ end
 function ICharaSkills:on_refresh()
    for skill_id, adj in pairs(self.stat_adjusts) do
       if adj ~= 0 then
-         if self.quality >= Enum.Quality.Great then
+         if self.quality >= Enum.Quality.Good then
             local amt = math.floor(self:base_skill_level(skill_id) / 5)
             if adj < amt then
                adj = amt

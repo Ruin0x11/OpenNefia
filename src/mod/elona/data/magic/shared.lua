@@ -1510,7 +1510,7 @@ local function make_summon(opts)
          local i = 1
          while i <= count do
             local filter_level = Calc.calc_object_level(power, map)
-            local filter_quality = Enum.Quality.Good
+            local filter_quality = Enum.Quality.Normal
             local charagen_params = { level = filter_level, quality = filter_quality }
             if opts.filter then
                table.merge(charagen_params, opts.filter(power, level, source))
@@ -1876,7 +1876,7 @@ local function make_gain_ally(opts)
          end
 
          local level = source:calc("level") / 2 + 5
-         local quality = Enum.Quality.Great
+         local quality = Enum.Quality.Good
          local chara_id = opts.chara_id or nil
          local tag_filters = nil
 
