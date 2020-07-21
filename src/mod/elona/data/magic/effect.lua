@@ -570,3 +570,57 @@ data:add {
       return true
    end
 }
+
+data:add {
+   _id = "effect_descent",
+   _type = "elona_sys.magic",
+   elona_id = 1143,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if Effect.is_cursed(params.curse_state) or params.curse_state == "none" then
+         if target.level <= 1 then
+            Gui.mes("common.nothing_happens")
+            return true, { obvious = false }
+         end
+         target.level = target.level - 1
+         target.experience = 0
+         target.required_experience = Skill.calc_required_experience(target)
+         Gui.mes_c("magic.descent", "Purple", target)
+      else
+         target.experience = target.required_experience
+         Skill.gain_level(target, true)
+         if target:is_in_fov() then
+            Gui.play_sound("base.ding1", target.x, target.y)
+         end
+      end
+      if Effect.is_cursed(params.curse_state) then
+         Gui.mes("magic.common.it_is_cursed")
+         for _, stat in Skill.iter_stats() do
+            if Rand.one_in(3) then
+               if stat._id ~= "elona.stat_speed"
+                  and stat._id ~= "elona.stat_luck"
+                  and stat._id ~= "elona.stat_mana"
+                  and stat._id ~= "elona.stat_life"
+               then
+                  if target:base_skill_level(stat._id) > 0 then
+                     Skill.gain_skill_exp(target, stat._id, -1000)
+                  end
+               end
+            end
+         end
+         local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+         Gui.start_draw_callback(cb)
+      end
+
+      target:refresh()
+
+      return true
+   end
+}

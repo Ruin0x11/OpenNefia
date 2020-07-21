@@ -667,7 +667,6 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
       Skill.modify_potential(chara, skill_id, 50)
    end
    chara.skills["base.skill:" .. skill_id].level = new_level
-   pause()
    chara:refresh()
 end
 
