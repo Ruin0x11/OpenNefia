@@ -572,6 +572,65 @@ data:add {
 }
 
 data:add {
+   _id = "effect_gain_skill",
+   _type = "elona_sys.magic",
+   elona_id = 1105,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      -- HACK
+      local candidates = data["base.skill"]:iter():filter(function(skill) return skill.type == nil or skill.type == "skill" end):to_list()
+
+      -- Greater chance to learn a new skill instead of improving an existing
+      -- one based on the curse level.
+      local existing_threshold = per_curse_state(params.curse_state, 0, 0, 100, 2000)
+
+      local cnt = 0
+
+      while true do
+         local skill = Rand.choice(candidates)
+
+         local skill_name = "ability." .. skill._id .. ".name"
+
+         if not Effect.is_cursed(params.curse_state) then
+            if skill.related_skill ~= nil then
+               local consider = true
+               if cnt < existing_threshold and target:base_skill_level(skill._id) > 0 then
+                  consider = false
+               end
+               if consider then
+                  Skill.gain_skill(target, skill._id, 1)
+                  Gui.mes_c("magic.gain_skill", "Green", target, skill_name)
+                  Gui.play_sound("base.ding2")
+                  break
+               end
+            end
+         else
+            if target:base_skill_level(skill._id) > 0 then
+               if target:is_in_fov() then
+                  Gui.play_sound("base.curse1", target.x, target.y)
+                  Gui.mes("magic.common.it_is_cursed")
+               end
+               Skill.gain_skill_exp(target, skill._id, -1000)
+               break
+            end
+         end
+         cnt = cnt + 1
+      end
+
+      Save.autosave()
+
+      return true
+   end
+}
+
+data:add {
    _id = "effect_descent",
    _type = "elona_sys.magic",
    elona_id = 1143,
