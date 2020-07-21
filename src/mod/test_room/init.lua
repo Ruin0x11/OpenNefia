@@ -20,7 +20,7 @@ local function test_room(self, player)
 
    data["base.skill"]:iter()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 42, 1234)
+            Skill.gain_skill(player, m._id, 2000, 1234)
            end)
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)

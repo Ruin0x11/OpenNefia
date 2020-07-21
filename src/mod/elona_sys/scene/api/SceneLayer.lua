@@ -52,6 +52,10 @@ function SceneLayer:make_keymap()
   }
 end
 
+function SceneLayer:default_z_order()
+  return 1000000000
+end
+
 function SceneLayer:current_node()
   return self.scene[self.index]
 end
@@ -213,13 +217,13 @@ function SceneLayer:update(dt)
         if actor == nil then
           error(("Actor '%d' was not declared in the scene."):format(actor_id))
         end
-        local m = DialogMenu:new(txt, {}, actor.name, actor.portrait, actor.chip, 1)
+        local m = DialogMenu:new(txt, {}, actor.name, actor.portrait, actor.chip, 1, false)
         m:relayout(0, 0, self.width, self.height)
         if self.first then
           fade_between()
           self.first = false
         end
-        local _, canceled = m:query()
+        local _, canceled = m:query(self:default_z_order() + 1)
         if canceled == "canceled" then
           self.finished = true
           break
@@ -238,7 +242,7 @@ function SceneLayer:update(dt)
   self.first = false
 
   if self.finished then
-    Gui.fade_out()
+    Gui.fade_out(120)
     return true
   end
 end

@@ -13,7 +13,7 @@ local DialogMenu = class.class("DialogMenu", IUiLayer)
 
 DialogMenu:delegate("input", IInput)
 
-function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, default_choice)
+function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, default_choice, is_in_game)
    self.width = 600
    self.height = 380
 
@@ -25,6 +25,7 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.chara_image = chara_image
    self.default_choice = default_choice
    self.can_cancel = default_choice ~= nil
+   self.is_in_game = is_in_game
 
    self.chip_batch = nil
    self.portrait_batch = nil
@@ -53,7 +54,7 @@ function DialogMenu:cancel()
 end
 
 function DialogMenu:relayout()
-   self.x, self.y = Ui.params_centered(self.width, self.height)
+   self.x, self.y = Ui.params_centered(self.width, self.height, self.is_in_game)
    self.t = UiTheme.load(self)
 
    self.pages:relayout(self.x + 136, self.y + self.height - 56 - self.pages:len() * 19 + 4, self.width, self.height)

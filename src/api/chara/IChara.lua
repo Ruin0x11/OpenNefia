@@ -394,10 +394,12 @@ function IChara:damage_hp(amount, source, params)
 
    victim:emit("base.after_chara_damaged", event_params)
 
+   -- shade2/chara_func.hsp:1501 	if cHP(tc)>=0{ ...
    if victim.hp >= 0 then
       victim:emit("base.on_damage_chara", event_params)
    end
 
+   -- shade2/chara_func.hsp:1596 	if cHp(tc)<0{ ...
    local killed = false
    if victim.hp < 0 then
       victim:kill(source)
@@ -445,33 +447,46 @@ Event.register("base.on_kill_chara", "Default kill handler.", IChara.on_kill_cha
 function IChara.apply_hostile_action(victim, params)
    local attacker = params.attacker
 
-   if attacker then
-      attacker:act_hostile_towards(victim)
+   -- shade2/chara_func.hsp:1583 		if dmgSource>=0{ ...
+   if attacker == nil then
+      return
    end
 
-   if attacker and not Chara.is_player(victim) then
-      local apply_hate
-      if victim:reaction_towards(attacker) < 0 or attacker:base_reaction_towards(victim) < 0 then
-         if victim.ai_state.hate == 0 and Rand.one_in(4) then
+   local apply_hate = false
+   if victim:reaction_towards(attacker) < 0 then
+      if victim:base_reaction_towards(attacker) >= 0 then
+         if (victim.ai_state.hate == 0 or Rand.one_in(4)) then
             apply_hate = true
          end
       end
-      if not attacker:is_player() and attacker:get_target() == victim and Rand.one_in(3) then
-         apply_hate = true
+   else
+      if victim:base_reaction_towards(attacker) < 0 then
+         if (victim.ai_state.hate == 0 or Rand.one_in(4)) then
+            apply_hate = true
+         end
+      end
+   end
+
+   if not attacker:is_player() and attacker:get_target() == victim and Rand.one_in(3) then
+      apply_hate = true
+   end
+
+   if apply_hate then
+      if not victim:is_player() then
+         victim:set_target(attacker)
       end
 
-      if apply_hate then
-         if victim:get_reaction_at(attacker) == 0 then
-            victim.ai_state.hate = 20
-            victim:set_target(attacker)
-         else
-            victim.ai_state.hate = victim.ai_state.hate + 2
-         end
+      if victim.ai_state.hate == 0 then
+         victim:set_emotion_icon("elona.angry", 2)
+         victim.ai_state.hate = 20
+      else
+         victim.ai_state.hate = victim.ai_state.hate + 2
       end
    end
 end
 Event.register("base.on_damage_chara", "Hostile action towards AI", IChara.apply_hostile_action)
 
+-- shade2/chara_func.hsp:1541 		if ele{ ...
 function IChara.apply_element_on_damage(victim, params)
    if params.element and params.element.on_damage then
       params.element.on_damage(victim, params)
@@ -490,6 +505,7 @@ function IChara:damage_mp(amount, no_magic_reaction, quiet)
 end
 
 local function magic_reaction(source, p)
+   -- shade2/chara_func.hsp:1778 	if cMP(tc)<0{	 ...
    if source.mp < 0 and not p.no_magic_reaction then
       source:emit("base.on_magic_reaction", {})
       local Skill = require("mod.elona_sys.api.Skill")

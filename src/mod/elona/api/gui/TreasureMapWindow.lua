@@ -76,7 +76,6 @@ function TreasureMapWindow:on_query()
 end
 
 function TreasureMapWindow:draw()
-   Draw.set_color(255, 255, 255)
    self.t.base.paper:draw_region(1, self.x, self.y, nil, nil, {255, 255, 255})
    self.batch:draw(self.x + 26, self.y + 46)
 

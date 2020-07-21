@@ -16,6 +16,7 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local I18N = require("api.I18N")
 local God = require("mod.elona.api.God")
 local AliasPrompt = require("api.gui.AliasPrompt")
+local Log = require("api.Log")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -357,7 +358,7 @@ data:add {
       local map = params.source:current_map()
       if not Map.is_world_map(map) then
          Gui.mes("magic.map.need_global_map")
-         --return true
+         return true
       end
 
       if Effect.is_cursed(params.curse_state) and Rand.one_in(5) then
@@ -375,9 +376,14 @@ data:add {
          item:separate()
 
          local tx, ty = find_treasure_location(item_map)
-         if tx then
+         if tx and ty then
             item.params.treasure_map = { x = tx, y = ty }
          end
+      end
+
+      if not item.params.treasure_map then
+         Log.warn("No treasure map location found.")
+         return true
       end
 
       Gui.mes("magic.map.apply")
@@ -1140,6 +1146,56 @@ data:add {
       end
 
       local result, canceled = Input.query_item(target, "elona.inv_equipment")
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local item = result.result
+      item:separate()
+
+      if item.quality < Enum.Quality.Miracle or item.quality == Enum.Quality.Special then
+         Gui.mes("common.it_is_impossible")
+         return true, { obvious = false }
+      end
+
+      Gui.mes("magic.name.prompt")
+
+      result, canceled = AliasPrompt:new("weapon"):query()
+      Rand.set_seed()
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local seed = result.seed
+      item.subname = seed
+
+      Gui.mes("magic.name.apply", result.alias)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_garoks_hammer",
+   _type = "elona_sys.magic",
+   elona_id = 49,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(target, "elona.inv_garoks_hammer")
 
       if not result or canceled then
          return true, { obvious = false }

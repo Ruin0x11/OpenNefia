@@ -69,6 +69,17 @@ function table.merge_existing(a, b)
    return a
 end
 
+function table.union(a, b)
+   local res = {}
+   for k, _ in pairs(a) do
+      res[k] = true
+   end
+   for k, _ in pairs(b) do
+      res[k] = true
+   end
+   return res
+end
+
 function table.intersection(a, b)
    local res = {}
    for k, _ in pairs(a) do

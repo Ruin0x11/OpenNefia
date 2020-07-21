@@ -120,6 +120,8 @@ function IItem:get_owning_chara()
    return nil
 end
 
+local Item = nil
+
 function IItem:produce_memory()
    local shadow_angle
    local stack_height = 8
@@ -133,9 +135,11 @@ function IItem:produce_memory()
       y_offset = y_offset or image.y_offset
    end
 
+   Item = Item or require("api.Item")
+
    return {
       uid = self.uid,
-      show = require("api.Item").is_alive(self),
+      show = Item.is_alive(self),
       image = (self.image or ""),
       color = self:calc("color"),
       x_offset = x_offset,
