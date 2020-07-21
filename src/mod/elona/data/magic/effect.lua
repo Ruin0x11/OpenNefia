@@ -14,6 +14,7 @@ local Calc = require("mod.elona.api.Calc")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.tools.api.Itemgen")
 local I18N = require("api.I18N")
+local God = require("mod.elona.api.God")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    if curse_state == "doomed" then
@@ -624,6 +625,7 @@ data:add {
          cnt = cnt + 1
       end
 
+      target:refresh()
       Save.autosave()
 
       return true
@@ -677,6 +679,60 @@ data:add {
          local cb = Anim.load("elona.anim_smoke", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
+
+      target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_gain_faith",
+   _type = "elona_sys.magic",
+   elona_id = 1107,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local god_id = target:calc("god")
+      if god_id == nil then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      if Effect.is_cursed(params.curse_state) then
+         Gui.mes("magic.faith.doubt")
+         Gui.play_sound("base.curse3", target.x, target.y)
+         local cb = Anim.load("elona.anim_curse", target.x, target.y)
+         Gui.start_draw_callback(cb)
+         Skill.gain_skill_exp(target, "elona.faith", -1000)
+         return true
+      end
+
+      local god_name = "god." .. god_id .. ".name"
+      Gui.mes_c("magic.faith.apply", "Green", god_name)
+
+      local cb = Anim.miracle({{ x = target.x, y = target.y }})
+      Gui.start_draw_callback(cb)
+      Gui.play_sound("base.pray2")
+
+      target.prayer_charge = target.prayer_charge + 500
+      God.modify_piety(target, 75)
+      local exp = 1000
+      if params.curse_state == "blessed" then
+         exp = exp + 750
+      end
+      Skill.gain_skill_exp(target, "elona.faith", exp, 6, 1000)
 
       target:refresh()
 
