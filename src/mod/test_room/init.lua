@@ -3,6 +3,7 @@ local Item = require("api.Item")
 local Pos = require("api.Pos")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local function test_room(self, player)
    local width = 20
@@ -18,11 +19,9 @@ local function test_room(self, player)
    player:mod_base_skill_level("elona.stat_magic", 10000)
 
    data["base.skill"]:iter()
-      :filter(function(s) return s.type == "spell" or s.type == "action" end)
-         :each(function(m)
-               player:gain_skill(m._id, 1000)
-               player:set_spell_stock(m._id, 100000)
-              end)
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 42, 1234)
+           end)
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)

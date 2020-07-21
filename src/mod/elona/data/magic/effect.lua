@@ -13,6 +13,7 @@ local Enum = require("api.Enum")
 local Calc = require("mod.elona.api.Calc")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.tools.api.Itemgen")
+local I18N = require("api.I18N")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    if curse_state == "doomed" then
@@ -486,6 +487,85 @@ data:add {
 
       local cb = Anim.heal(target.x, target.y, "base.heal_effect", "base.heal1")
       Gui.start_draw_callback(cb)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_gain_knowledge",
+   _type = "elona_sys.magic",
+   elona_id = 1104,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local times = 1
+      if params.curse_state == "blessed" then
+         times = times + 1
+      end
+
+      local candidates = data["base.skill"]:iter():filter(function(skill) return skill.type == "spell" end):to_list()
+      local did_something = true
+
+      for i = 1, times do
+         Gui.update_screen()
+
+         for _ = 1, 2000 do
+            local consider = true
+
+            local spell = Rand.choice(candidates)
+
+            -- HACK
+            if spell._id == "elona.wish" and not Rand.one_in(10) then
+               consider = false
+            end
+
+            if consider then
+               local spell_name = "ability." .. spell._id .. ".name"
+
+               if not Effect.is_cursed(params.curse_state) then
+                  if spell.related_skill ~= nil then
+                     local mes
+                     if i == 1 then
+                        mes = "magic.gain_knowledge.suddenly"
+                     else
+                        mes = "magic.gain_knowledge.furthermore"
+                     end
+                     Skill.gain_skill(target, spell._id, 1, 100 * 2)
+                     Gui.mes_c(I18N.get(mes) .. I18N.get("magic.gain_knowledge.gain", spell_name), "Green")
+                     did_something = true
+                     break
+                  end
+               else
+                  if target.spell_stocks[spell._id] > 0 then
+                     target.spell_stocks[spell._id] = 0
+                     Gui.mes("magic.common.it_is_cursed")
+                     Gui.mes_c("magic.gain_knowledge.lose", "Red", spell_name, target)
+                     did_something = true
+                     break
+                  end
+               end
+            end
+         end
+      end
+
+      if not did_something then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Save.autosave()
 
       return true
    end

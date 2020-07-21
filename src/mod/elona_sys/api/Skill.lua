@@ -104,7 +104,8 @@ function Skill.calc_chara_exp_from_skill_exp(required_exp, level, skill_exp, exp
    return Rand.rnd(required_exp * skill_exp / 1000 / (level + exp_divisor) + 1) + Rand.rnd(2)
 end
 
-function Skill.modify_potential(potential, level_delta)
+function Skill.modify_potential_from_level(chara, skill, level_delta)
+   local potential = chara:skill_potential(skill)
    if level_delta > 0 then
       for _=0,level_delta do
          potential = math.max(math.floor(potential * 0.9), 1)
@@ -114,7 +115,13 @@ function Skill.modify_potential(potential, level_delta)
          potential = math.min(math.floor(potential * 1.1) + 1, 400)
       end
    end
+   chara.skills["base.skill:" .. skill].potential = potential
    return potential
+end
+
+function Skill.modify_potential(chara, skill, delta)
+   local potential = math.clamp(chara:skill_potential(skill) + delta, 2, 400)
+   chara.skills["base.skill:" .. skill].potential = potential
 end
 
 local function skill_change_text(chara, skill_id, is_increase)
@@ -136,13 +143,15 @@ local function skill_change_text(chara, skill_id, is_increase)
    end
 end
 
-local function proc_leveling(chara, skill, new_exp, level, potential)
+local function proc_leveling(chara, skill, new_exp, level)
+   local potential
+
    if new_exp >= 1000 then
       local level_delta = math.floor(new_exp / 1000)
       new_exp = new_exp % 1000
       level = level + level_delta
-      potential = Skill.modify_potential(potential, level_delta)
-      chara:set_base_skill(skill, level, potential, new_exp)
+      potential = Skill.modify_potential_from_level(chara, skill, level_delta)
+      chara:set_base_skill(skill, level, nil, new_exp)
       if Map.is_in_fov(chara.x, chara.y) then
          local color = "White"
          if chara:is_allied() then
@@ -164,8 +173,8 @@ local function proc_leveling(chara, skill, new_exp, level, potential)
       end
 
       level = level - level_delta
-      potential = Skill.modify_potential(potential, -level_delta)
-      chara:set_base_skill(skill, level, potential, new_exp)
+      potential = Skill.modify_potential_from_level(chara, skill, -level_delta)
+      chara:set_base_skill(skill, level, nil, new_exp)
       if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
          Gui.mes_c(skill_change_text(chara, skill, false), "Red")
          Gui.mes_alert()
@@ -238,7 +247,7 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    end
 
    local new_exp = exp + chara:skill_experience(skill)
-   proc_leveling(chara, skill, new_exp, level, potential)
+   proc_leveling(chara, skill, new_exp, level)
 end
 
 local function get_random_body_part()
@@ -628,6 +637,38 @@ function Skill.get_description(skill_id, chara)
    desc = desc .. " "
 
    return desc .. I18N.get("ability." .. skill_id .. ".description")
+end
+
+function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
+   local skill = data["base.skill"]:ensure(skill_id)
+
+   chara.skills["base.skill:" .. skill_id] = chara.skills["base.skill:" .. skill_id] or
+      {
+         level = 0,
+         potential = 0,
+         experience = 0,
+      }
+
+   if skill.type == "spell" and chara:is_player() then
+      initial_stock = initial_stock or 0
+      chara.spell_stocks[skill_id] = (chara.spell_stocks[skill_id] or 0) + initial_stock
+      Skill.modify_potential(chara, skill_id, 1)
+   end
+
+   if chara:base_skill_level(skill_id) ~= 0 and skill.type ~= "spell" then
+      Skill.modify_potential(chara, skill_id, 20)
+      return
+   end
+
+   local new_level = math.max(chara:base_skill_level(skill_id) + (initial_level or 0), 1)
+   if skill.type == "spell" then
+      Skill.modify_potential(chara, skill_id, 200)
+   else
+      Skill.modify_potential(chara, skill_id, 50)
+   end
+   chara.skills["base.skill:" .. skill_id].level = new_level
+   pause()
+   chara:refresh()
 end
 
 return Skill

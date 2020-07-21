@@ -383,4 +383,12 @@ function Draw.make_text(text)
    return love.graphics.newText(love.graphics.getFont(), text)
 end
 
+function Draw.current_layer(i)
+   local tbl = draw.get_layer(i or -1)
+   if tbl then
+      return tbl.layer
+   end
+   return nil
+end
+
 return Draw
