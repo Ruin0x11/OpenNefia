@@ -15,6 +15,7 @@ local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.tools.api.Itemgen")
 local I18N = require("api.I18N")
 local God = require("mod.elona.api.God")
+local AliasPrompt = require("api.gui.AliasPrompt")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -1115,6 +1116,56 @@ data:add {
       Gui.play_sound("base.curse1", target.x, target.y)
 
       target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_name",
+   _type = "elona_sys.magic",
+   elona_id = 1145,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(target, "elona.inv_equipment")
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local item = result.result
+      item:separate()
+
+      if item.quality < Enum.Quality.Miracle or item.quality == Enum.Quality.Special then
+         Gui.mes("common.it_is_impossible")
+         return true, { obvious = false }
+      end
+
+      Gui.mes("magic.name.prompt")
+
+      result, canceled = AliasPrompt:new("weapon"):query()
+      Rand.set_seed()
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local seed = result.seed
+      item.subname = seed
+
+      Gui.mes("magic.name.apply", result.alias)
 
       return true
    end

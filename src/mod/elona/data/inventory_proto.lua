@@ -583,24 +583,43 @@ local inv_identify = {
 }
 data:add(inv_identify)
 
-local inv_draw_charge = {
-   _type = "elona_sys.inventory_proto",
-   _id = "inv_draw_charge",
-   elona_id = 23,
-   elona_sub_id = 3,
+-- HACK
+local EQUIPMENT_CATEGORIES = {
+   "elona.furniture",
+   "elona.equip_melee",
+   "elona.equip_head",
+   "elona.equip_shield",
+   "elona.equip_body",
+   "elona.equip_leg",
+   "elona.equip_cloak",
+   "elona.equip_back",
+   "elona.equip_wrist",
+   "elona.equip_ranged",
+   "elona.equip_ammo",
+   "elona.equip_ring",
+   "elona.equip_neck",
+}
 
-   sources = { "chara", "equipment" },
+local inv_equipment = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_equipment",
+   elona_id = 23,
+   elona_sub_id = 0,
+
+   sources = { "chara" },
    icon = 17,
    show_money = false,
    query_amount = false,
    text = "ui.inventory_command.identify",
 
    filter = function(ctxt, item)
-      return item.has_charge
+      local Log = require("api.Log")
+      return fun.iter(EQUIPMENT_CATEGORIES):any(function(cat) return item:has_category(cat) end)
    end,
 
    on_select = function(ctxt, item, amount)
+      item:separate()
       return "inventory_continue"
    end
 }
-data:add(inv_draw_charge)
+data:add(inv_equipment)

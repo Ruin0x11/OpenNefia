@@ -433,7 +433,7 @@ Event.register("base.generate_title", "Elona title generation", function(_, para
                   if result and result ~= "" then
                      return result
                   end
-                  return Text.random_title(params.kind)
+                  return Text.random_title(params.kind, params.seed or nil)
 end)
 
 Event.register("base.on_chara_generated", "npc memory", function(chara) NpcMemory.on_generated(chara._id) end)
