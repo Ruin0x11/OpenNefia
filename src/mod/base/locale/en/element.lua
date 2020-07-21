@@ -210,103 +210,102 @@ return {
                starving = "starving"
             },
          },
-         resist = {
-            gain = {
-               elona = {
-
-                  fire = function(_1)
-                     return ("Suddenly, %s feel%s very hot.")
-                        :format(name(_1), s(_1))
-                  end,
-                  cold = function(_1)
-                     return ("Suddenly, %s feel%s very cool.")
-                        :format(name(_1), s(_1))
-                  end,
-                  lightning = function(_1)
-                     return ("%s%s struck by an electric shock.")
-                        :format(name(_1), is(_1))
-                  end,
-                  darkness = function(_1)
-                     return ("%s no longer fear%s darkness.")
-                        :format(name(_1), s(_1))
-                  end,
-                  mind = function(_1)
-                     return ("Suddenly, %s%s mind becomes very clear.")
-                        :format(name(_1), his_owned(_1))
-                  end,
-                  poison = function(_1)
-                     return ("%s now %s antibodies to poisons.")
-                        :format(name(_1), have(_1))
-                  end,
-                  nether = function(_1)
-                     return ("%s %s no longer afraid of hell.")
-                        :format(name(_1), is(_1))
-                  end,
-                  sound = function(_1)
-                     return ("%s%s eardrums get thick.")
-                        :format(name(_1), his_owned(_1))
-                  end,
-                  nerve = function(_1)
-                     return ("%s%s nerve is sharpened.")
-                        :format(name(_1), his_owned(_1))
-                  end,
-                  chaos = function(_1)
-                     return ("Suddenly, %s understand%s chaos.")
-                        :format(name(_1), s(_1))
-                  end,
-                  magic = function(_1)
-                     return ("%s%s body is covered by a magical aura.")
-                        :format(name(_1), his_owned(_1))
-                  end
-               }
-            },
-            lose = {
-               elona = {
-                  fire = function(_1)
-                     return ("%s sweat%s.")
-                        :format(name(_1), s(_1))
-                  end,
-                  cold = function(_1)
-                     return ("%s shiver%s.")
-                        :format(name(_1), s(_1))
-                  end,
-                  lightning = function(_1)
-                     return ("%s %s shocked.")
-                        :format(name(_1), is(_1))
-                  end,
-                  darkness = function(_1)
-                     return ("Suddenly, %s fear%s darkness.")
-                        :format(name(_1), s(_1))
-                  end,
-                  mind = function(_1)
-                     return ("%s%s mind becomes slippery.")
-                        :format(name(_1), his_owned(_1))
-                  end,
-                  poison = function(_1)
-                     return ("%s lose%s antibodies to poisons.")
-                        :format(name(_1), s(_1))
-                  end,
-                  nether = function(_1)
-                     return ("%s %s afraid of hell.")
-                        :format(name(_1), is(_1))
-                  end,
-                  sound = function(_1)
-                     return ("%s become%s very sensitive to noises.")
-                        :format(name(_1), s(_1))
-                  end,
-                  nerve = function(_1)
-                     return ("%s become%s dull.")
-                        :format(name(_1), s(_1))
-                  end,
-                  chaos = function(_1)
-                     return ("%s no longer understand%s chaos.")
-                        :format(name(_1), s(_1))
-                  end,
-                  magic = function(_1)
-                     return ("The magical aura disappears from %s%s body.")
-                        :format(name(_1), his_owned(_1))
-                  end
-               }
+      },
+      resist = {
+         gain = {
+            elona = {
+               fire = function(_1)
+                  return ("Suddenly, %s feel%s very hot.")
+                     :format(name(_1), s(_1))
+               end,
+               cold = function(_1)
+                  return ("Suddenly, %s feel%s very cool.")
+                     :format(name(_1), s(_1))
+               end,
+               lightning = function(_1)
+                  return ("%s %s struck by an electric shock.")
+                     :format(name(_1), is(_1))
+               end,
+               darkness = function(_1)
+                  return ("%s no longer fear%s darkness.")
+                     :format(name(_1), s(_1))
+               end,
+               mind = function(_1)
+                  return ("Suddenly, %s%s mind becomes very clear.")
+                     :format(name(_1), his_owned(_1))
+               end,
+               poison = function(_1)
+                  return ("%s now %s antibodies to poisons.")
+                     :format(name(_1), have(_1))
+               end,
+               nether = function(_1)
+                  return ("%s %s no longer afraid of hell.")
+                     :format(name(_1), is(_1))
+               end,
+               sound = function(_1)
+                  return ("%s%s eardrums get thick.")
+                     :format(name(_1), his_owned(_1))
+               end,
+               nerve = function(_1)
+                  return ("%s%s nerve is sharpened.")
+                     :format(name(_1), his_owned(_1))
+               end,
+               chaos = function(_1)
+                  return ("Suddenly, %s understand%s chaos.")
+                     :format(name(_1), s(_1))
+               end,
+               magic = function(_1)
+                  return ("%s%s body is covered by a magical aura.")
+                     :format(name(_1), his_owned(_1))
+               end
+            }
+         },
+         lose = {
+            elona = {
+               fire = function(_1)
+                  return ("%s sweat%s.")
+                     :format(name(_1), s(_1))
+               end,
+               cold = function(_1)
+                  return ("%s shiver%s.")
+                     :format(name(_1), s(_1))
+               end,
+               lightning = function(_1)
+                  return ("%s %s shocked.")
+                     :format(name(_1), is(_1))
+               end,
+               darkness = function(_1)
+                  return ("Suddenly, %s fear%s darkness.")
+                     :format(name(_1), s(_1))
+               end,
+               mind = function(_1)
+                  return ("%s%s mind becomes slippery.")
+                     :format(name(_1), his_owned(_1))
+               end,
+               poison = function(_1)
+                  return ("%s lose%s antibodies to poisons.")
+                     :format(name(_1), s(_1))
+               end,
+               nether = function(_1)
+                  return ("%s %s afraid of hell.")
+                     :format(name(_1), is(_1))
+               end,
+               sound = function(_1)
+                  return ("%s become%s very sensitive to noises.")
+                     :format(name(_1), s(_1))
+               end,
+               nerve = function(_1)
+                  return ("%s become%s dull.")
+                     :format(name(_1), s(_1))
+               end,
+               chaos = function(_1)
+                  return ("%s no longer understand%s chaos.")
+                     :format(name(_1), s(_1))
+               end,
+               magic = function(_1)
+                  return ("The magical aura disappears from %s%s body.")
+                     :format(name(_1), his_owned(_1))
+               end
             }
          }
       }

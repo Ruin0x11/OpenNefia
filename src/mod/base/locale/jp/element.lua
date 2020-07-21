@@ -168,102 +168,102 @@ return {
                starving = "飢えた"
             },
          },
-         resist = {
-            gain = {
-               elona = {
-                  fire = function(_1)
-                     return ("%sの身体は急に火照りだした。")
-                        :format(name(_1))
-                  end,
-                  cold = function(_1)
-                     return ("%sの身体は急に冷たくなった。")
-                        :format(name(_1))
-                  end,
-                  lightning = function(_1)
-                     return ("%sの身体に電気が走った。")
-                        :format(name(_1))
-                  end,
-                  darkness = function(_1)
-                     return ("%sは急に暗闇が怖くなくなった。")
-                        :format(name(_1))
-                  end,
-                  mind = function(_1)
-                     return ("%sは急に明晰になった。")
-                        :format(name(_1))
-                  end,
-                  poison = function(_1)
-                     return ("%sの毒への耐性は強くなった。")
-                        :format(name(_1))
-                  end,
-                  nether = function(_1)
-                     return ("%sの魂は地獄に近づいた。")
-                        :format(name(_1))
-                  end,
-                  sound = function(_1)
-                     return ("%sは騒音を気にしなくなった。")
-                        :format(name(_1))
-                  end,
-                  nerve = function(_1)
-                     return ("%sは急に神経が図太くなった。")
-                        :format(name(_1))
-                  end,
-                  chaos = function(_1)
-                     return ("%sは騒音を気にしなくなった。")
-                        :format(name(_1))
-                  end,
-                  magic = function(_1)
-                     return ("%sの皮膚は魔力のオーラに包まれた。")
-                        :format(name(_1))
-                  end
-               }
-            },
-            lose = {
-               elona = {
-                  fire = function(_1)
-                     return ("%sは急に汗をかきだした。")
-                        :format(name(_1))
-                  end,
-                  cold = function(_1)
-                     return ("%sは急に寒気を感じた。")
-                        :format(name(_1))
-                  end,
-                  lightning = function(_1)
-                     return ("%sは急に電気に敏感になった。")
-                        :format(name(_1))
-                  end,
-                  darkness = function(_1)
-                     return ("%sは急に暗闇が怖くなった。")
-                        :format(name(_1))
-                  end,
-                  mind = function(_1)
-                     return ("%sは以前ほど明晰ではなくなった。")
-                        :format(name(_1))
-                  end,
-                  poison = function(_1)
-                     return ("%sの毒への耐性は薄れた。")
-                        :format(name(_1))
-                  end,
-                  nether = function(_1)
-                     return ("%sの魂は地獄から遠ざかった。")
-                        :format(name(_1))
-                  end,
-                  sound = function(_1)
-                     return ("%sは急に辺りをうるさく感じた。")
-                        :format(name(_1))
-                  end,
-                  nerve = function(_1)
-                     return ("%sの神経は急に萎縮した。")
-                        :format(name(_1))
-                  end,
-                  chaos = function(_1)
-                     return ("%sはカオスへの理解を失った。")
-                        :format(name(_1))
-                  end,
-                  magic = function(_1)
-                     return ("%sの皮膚から魔力のオーラが消えた。")
-                        :format(name(_1))
-                  end
-               }
+      },
+      resist = {
+         gain = {
+            elona = {
+               fire = function(_1)
+                  return ("%sの身体は急に火照りだした。")
+                     :format(name(_1))
+               end,
+               cold = function(_1)
+                  return ("%sの身体は急に冷たくなった。")
+                     :format(name(_1))
+               end,
+               lightning = function(_1)
+                  return ("%sの身体に電気が走った。")
+                     :format(name(_1))
+               end,
+               darkness = function(_1)
+                  return ("%sは急に暗闇が怖くなくなった。")
+                     :format(name(_1))
+               end,
+               mind = function(_1)
+                  return ("%sは急に明晰になった。")
+                     :format(name(_1))
+               end,
+               poison = function(_1)
+                  return ("%sの毒への耐性は強くなった。")
+                     :format(name(_1))
+               end,
+               nether = function(_1)
+                  return ("%sの魂は地獄に近づいた。")
+                     :format(name(_1))
+               end,
+               sound = function(_1)
+                  return ("%sは騒音を気にしなくなった。")
+                     :format(name(_1))
+               end,
+               nerve = function(_1)
+                  return ("%sは急に神経が図太くなった。")
+                     :format(name(_1))
+               end,
+               chaos = function(_1)
+                  return ("%sは騒音を気にしなくなった。")
+                     :format(name(_1))
+               end,
+               magic = function(_1)
+                  return ("%sの皮膚は魔力のオーラに包まれた。")
+                     :format(name(_1))
+               end
+            }
+         },
+         lose = {
+            elona = {
+               fire = function(_1)
+                  return ("%sは急に汗をかきだした。")
+                     :format(name(_1))
+               end,
+               cold = function(_1)
+                  return ("%sは急に寒気を感じた。")
+                     :format(name(_1))
+               end,
+               lightning = function(_1)
+                  return ("%sは急に電気に敏感になった。")
+                     :format(name(_1))
+               end,
+               darkness = function(_1)
+                  return ("%sは急に暗闇が怖くなった。")
+                     :format(name(_1))
+               end,
+               mind = function(_1)
+                  return ("%sは以前ほど明晰ではなくなった。")
+                     :format(name(_1))
+               end,
+               poison = function(_1)
+                  return ("%sの毒への耐性は薄れた。")
+                     :format(name(_1))
+               end,
+               nether = function(_1)
+                  return ("%sの魂は地獄から遠ざかった。")
+                     :format(name(_1))
+               end,
+               sound = function(_1)
+                  return ("%sは急に辺りをうるさく感じた。")
+                     :format(name(_1))
+               end,
+               nerve = function(_1)
+                  return ("%sの神経は急に萎縮した。")
+                     :format(name(_1))
+               end,
+               chaos = function(_1)
+                  return ("%sはカオスへの理解を失った。")
+                     :format(name(_1))
+               end,
+               magic = function(_1)
+                  return ("%sの皮膚から魔力のオーラが消えた。")
+                     :format(name(_1))
+               end
             }
          }
       }

@@ -241,12 +241,12 @@ data:add {
 
    type = "skill",
    params = {
-      "source"
+      "target"
    },
 
    cast = function(self, params)
-      local source = params.source
-      if not source:is_player() then
+      local target = params.target
+      if not target:is_player() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -256,10 +256,13 @@ data:add {
          Gui.mes("magic.return.cancel")
          s.turns_until_cast_return = 0
       else
-         local map_uid = Effect.query_return_location(source)
+         local map_uid = Effect.query_return_location(target)
+
+         -- TODO quest
+         -- TODO dungeon boss
 
          if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
-            Gui.mes("jail") -- TODO
+            Gui.mes("TODO jail") -- TODO
          end
 
          if map_uid then

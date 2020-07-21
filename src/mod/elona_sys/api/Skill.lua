@@ -6,6 +6,7 @@ local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Action = require("api.Action")
+local Anim = require("mod.elona_sys.api.Anim")
 
 local Skill = {}
 
@@ -15,6 +16,10 @@ end
 
 function Skill.iter_base_stats()
    return Skill.iter_stats():filter(function(s) return s._id ~= "elona.stat_speed" and s._id ~= "elona.stat_luck" end)
+end
+
+function Skill.iter_resistances()
+   return data["base.element"]:iter():filter(function(e) return e.can_resist end)
 end
 
 function Skill.random_stat()
@@ -671,6 +676,28 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
       Skill.modify_potential(chara, skill_id, 50)
    end
    chara.skills["base.skill:" .. skill_id].level = new_level
+   chara:refresh()
+end
+
+function Skill.modify_resist_level(chara, element_id, delta, no_message)
+   local level = math.clamp(chara:base_resist_level(element_id) + delta, 50, 200)
+
+   if not no_message then
+      if delta >= 50 then
+         Gui.mes_c("element.resist.gain." .. element_id, "Green", chara)
+      elseif delta <= -50 then
+         Gui.mes_c("element.resist.lose." .. element_id, "Red", chara)
+      end
+   end
+
+   chara.skills["base.element:" .. element_id].level = level
+
+   if not no_message then
+      Gui.play_sound("base.atk_elec", chara.x, chara.y)
+      local cb = Anim.load("elona.anim_elec", chara.x, chara.y)
+      Gui.start_draw_callback(cb)
+   end
+
    chara:refresh()
 end
 

@@ -1854,3 +1854,73 @@ data:add {
       return true
    end
 }
+
+local function make_gain_ally(opts)
+   data:add {
+      _id = "effect_" .. opts._id,
+      _type = "elona_sys.magic",
+      elona_id = opts.elona_id,
+
+      type = "action",
+      params = {
+         "source",
+      },
+
+      cast = function(self, params)
+         local source = params.source
+         local map = params.source:current_map()
+
+         if not source:is_player() then
+            Gui.mes("common.nothing_happens")
+            return true, { obvious = false }
+         end
+
+         local level = source:calc("level") / 2 + 5
+         local quality = Enum.Quality.Great
+         local chara_id = opts.chara_id or nil
+         local tag_filters = nil
+
+         if Rand.one_in(3) then
+            tag_filters = { "man" }
+         end
+
+         if opts.message then
+            Gui.mes(opts.message)
+         end
+
+         local chara = Charagen.create(source.x, source.y, { level = level, quality = quality, id = chara_id, tag_filters = tag_filters, level_scaling = "fixed" }, map)
+         chara:recruit_as_ally()
+
+         return true
+      end
+   }
+end
+
+make_gain_ally {
+   _id = "gain_ally",
+   elona_id = 1122
+}
+
+make_gain_ally {
+   _id = "gain_younger_sister",
+   elona_id = 1123,
+
+   chara_id = "elona.younger_sister",
+   message = "magic.diary.younger_sister"
+}
+
+make_gain_ally {
+   _id = "gain_young_lady",
+   elona_id = 1137,
+
+   chara_id = "elona.young_lady",
+   message = "magic.diary.young_lady"
+}
+
+make_gain_ally {
+   _id = "gain_cat_sister",
+   elona_id = 1138,
+
+   chara_id = "elona.younger_cat_sister",
+   message = "magic.diary.cat_sister"
+}

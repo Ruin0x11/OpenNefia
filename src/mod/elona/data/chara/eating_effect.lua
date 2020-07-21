@@ -14,7 +14,7 @@ end
 
 local function mod_resist_chance(chara, elem, chance)
    if Rand.one_in(chance) then
-      chara:mod_base_resist(elem, 50)
+      Skill.modify_resist_level(elem, 50)
    end
 end
 
@@ -58,12 +58,12 @@ function eating_effect.vesda(corpse, params)
       return
    end
    eat_message(params.chara, "vesda", "Green")
-   params.chara:mod_base_resist("elona.fire", 100)
+   params.Skill.modify_resist_level("elona.fire", 100)
 end
 
 function eating_effect.insanity(corpse, params)
    eat_message(params.chara, "insanity", "Purple")
-   params.chara:mod_base_resist("elona.mind", 50)
+   params.Skill.modify_resist_level("elona.mind", 50)
    Effect.damage_insanity(params.chara, 500)
    params.chara:apply_effect("elona.insanity", 1000)
 end

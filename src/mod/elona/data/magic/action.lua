@@ -68,7 +68,7 @@ local function proc_pregnancy(chara)
       Gui.mes_visible("misc.pregnant.something_breaks_out", chara)
       chara:apply_effect("elona.bleeding", 15)
       local level = chara:calc("level") / 2 + 1
-      local alien = Chara.create("elona.alien", chara.x, chara.y, { level = level }, map)
+      local alien = Chara.create("elona.alien", chara.x, chara.y, { level = level, level_scaling = "fixed" }, map)
       if alien then
          if utf8.wide_len(chara.name) > 10 or string.match(chara.name, I18N.get("chara.job.alien.child")) then
             alien.name = I18N.get("chara.job.alien.alien_kid")

@@ -874,3 +874,248 @@ data:add {
       return true
    end
 }
+
+data:add {
+   _id = "effect_troll_blood",
+   _type = "elona_sys.magic",
+   elona_id = 1139,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes("magic.troll_blood.apply", target)
+      local amount = per_curse_state(params.curse_state, -4000, -1000, 8000, 12000)
+      Skill.gain_skill_exp(target, "elona.stat_speed", amount)
+      if params.curse_state == "blessed" then
+         Skill.modify_potential(target, "elona.stat_speed", 15)
+         Gui.mes_c("magic.troll_blood.blessed", "Green")
+      end
+
+      target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_troll_blood",
+   _type = "elona_sys.magic",
+   elona_id = 1139,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes("magic.troll_blood.apply", target)
+      local amount = per_curse_state(params.curse_state, -4000, -1000, 8000, 12000)
+      Skill.gain_skill_exp(target, "elona.stat_speed", amount)
+      if params.curse_state == "blessed" then
+         Skill.modify_potential(target, "elona.stat_speed", 15)
+         Gui.mes_c("magic.troll_blood.blessed", "Green")
+      end
+
+      target:refresh()
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_escape",
+   _type = "elona_sys.magic",
+   elona_id = 1141,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local s = save.elona
+      if s.turns_until_cast_return ~= 0 then
+         Gui.mes("magic.escape.cancel")
+         s.turns_until_cast_return = 0
+      else
+         -- TODO quest
+         -- TODO dungeon boss
+
+         if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
+            Gui.mes("TODO jail") -- TODO
+         end
+
+         Gui.mes("misc.return.air_becomes_charged")
+
+         -- TODO map
+         Gui.mes("TODO")
+
+         -- if map_uid then
+         --    s.return_destination_map_uid = map_uid
+         --    s.turns_until_cast_return = 5 + Rand.rnd(10)
+         -- end
+      end
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_poison",
+   _type = "elona_sys.magic",
+   elona_id = 1108,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes_visible("magic.poison_attack", target)
+      if target:calc("is_pregnant") then
+         target:reset("is_pregnant", false)
+         Gui.mes_visible("common.melts_alien_children", target)
+      end
+
+      target:apply_effect("elona.poison", params.power)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_confuse",
+   _type = "elona_sys.magic",
+   elona_id = 1109,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes_visible("magic.confusion", target)
+
+      target:apply_effect("elona.confusion", params.power)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_paralyze",
+   _type = "elona_sys.magic",
+   elona_id = 1110,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes_visible("magic.paralysis", target)
+
+      target:apply_effect("elona.paralysis", params.power)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_blind",
+   _type = "elona_sys.magic",
+   elona_id = 1111,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes_visible("magic.ink_attack", target)
+
+      target:apply_effect("elona.blindness", params.power)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_sleep",
+   _type = "elona_sys.magic",
+   elona_id = 1112,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      Gui.mes_visible("magic.sleep", target)
+
+      target:apply_effect("elona.sleep", params.power)
+
+      return true
+   end
+}
+
+data:add {
+   _id = "effect_weaken_resistance",
+   _type = "elona_sys.magic",
+   elona_id = 1118,
+
+   type = "effect",
+   params = {
+      "target"
+   },
+
+   cast = function(self, params)
+      local target = params.target
+
+      local total_weakened = 0
+
+      for _, element in Skill.iter_resistances() do
+         if target:base_resist_level(element._id) >= 150 then
+            total_weakened = total_weakened + 1
+            Skill.modify_resist_level(target, element._id, -50)
+            if total_weakened >= params.power / 100 then
+               break
+            end
+         end
+      end
+
+      if total_weakened == 0 then
+         Gui.mes("magic.weaken_resistance.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.play_sound("base.curse1", target.x, target.y)
+
+      target:refresh()
+
+      return true
+   end
+}
