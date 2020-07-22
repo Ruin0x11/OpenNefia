@@ -46,7 +46,7 @@ local function is_in_screen(sx, sy)
 end
 
 function Anim.load(anim_id, tx, ty)
-   -- >>>>>>>> shade2/chara_func.hsp:614 #deffunc animeLoad int p,int tc ..
+   -- >>>>>>>> shade2/chara_func.hsp:614:DONE #deffunc animeLoad int p,int tc ..
    local t = UiTheme.load()
    local anim = data["elona_sys.basic_anim"]:ensure(anim_id)
    local sx, sy = Gui.tile_to_screen(tx, ty)
@@ -130,7 +130,7 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
 end
 
 function Anim.failure_to_cast(tx, ty)
-   -- >>>>>>>> shade2/screen.hsp:478 	case aniFizzle ..
+   -- >>>>>>>> shade2/screen.hsp:478:DONE 	case aniFizzle ..
    if not Map.is_in_fov(tx, ty) then
       return function() end
    end
@@ -152,7 +152,7 @@ function Anim.failure_to_cast(tx, ty)
 end
 
 function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
-   -- >>>>>>>> shade2/screen.hsp:497 	case aniCurse ..
+   -- >>>>>>>> shade2/screen.hsp:497:DONE 	case aniCurse ..
    rot_delta = rot_delta or -1
    wait = wait or config["base.anim_wait"]
 
@@ -191,7 +191,7 @@ function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
 end
 
 function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y, range, map)
-   -- >>>>>>>> shade2/screen.hsp:588 	case aniBolt ...
+   -- >>>>>>>> shade2/screen.hsp:588:DONE 	case aniBolt ...
    color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
 
@@ -275,7 +275,7 @@ Event.register("base.on_hotload_end", "hotload chip batch (Anim)",
 end)
 
 function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, impact_sound)
-   -- >>>>>>>> shade2/screen.hsp:644 	case rsThrow ...
+   -- >>>>>>>> shade2/screen.hsp:644:DONE 	case rsThrow ...
    return function(draw_x, draw_y)
       chip_batch = chip_batch or Draw.make_chip_batch("chip")
 
@@ -324,7 +324,7 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
 end
 
 function Anim.swarm(tx, ty)
-   -- >>>>>>>> shade2/screen.hsp:686 	case aniAttack ...
+   -- >>>>>>>> shade2/screen.hsp:686:DONE 	case aniAttack ...
    local scx, scy = pos_centered(tx, ty)
    local tw, _ = Draw.get_coords():get_size()
 
@@ -341,7 +341,7 @@ function Anim.swarm(tx, ty)
 end
 
 function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
-   -- >>>>>>>> shade2/screen.hsp:701 	case aniNormalAttack ...
+   -- >>>>>>>> shade2/screen.hsp:701:DONE 	case aniNormalAttack ...
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -423,7 +423,7 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
 end
 
 function Anim.gene_engineering(tx, ty)
-   -- >>>>>>>> shade2/screen.hsp:751 	case aniGene ...
+   -- >>>>>>>> shade2/screen.hsp:751:DONE 	case aniGene ...
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -457,7 +457,7 @@ end
 --- @tparam {{x=int,y=int},...} positions
 --- @tparam[opt] id:base.sound sound
 function Anim.miracle(positions, sound)
-   -- >>>>>>>> shade2/screen.hsp:775 	case aniHoly ...
+   -- >>>>>>>> shade2/screen.hsp:775:DONE 	case aniHoly ...
    sound = sound or "base.heal1"
 
    local t = UiTheme.load()
@@ -627,7 +627,7 @@ function Anim.ragnarok()
 end
 
 function Anim.breaking(tx, ty)
-   -- >>>>>>>> shade2/screen.hsp:920 	case aniCrush ..
+   -- >>>>>>>> shade2/screen.hsp:920:DONE 	case aniCrush ..
    if not Map.is_in_fov(tx, ty) then
       return function() end
    end
@@ -662,7 +662,7 @@ function Anim.breaking(tx, ty)
 end
 
 function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target_y, map)
-   -- >>>>>>>> shade2/screen.hsp:532 	case aniBreath ..
+   -- >>>>>>>> shade2/screen.hsp:532:DONE 	case aniBreath ..
    color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
 
@@ -698,7 +698,7 @@ function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target
 end
 
 function Anim.ball(positions, color, sound, center_x, center_y, map)
-   -- >>>>>>>> shade2/screen.hsp:553 	case aniBallNuke ..
+   -- >>>>>>>> shade2/screen.hsp:553:DONE 	case aniBallNuke ..
    color = color or {255, 255, 255}
 
    local t = UiTheme.load()
@@ -736,7 +736,7 @@ function Anim.ball(positions, color, sound, center_x, center_y, map)
 end
 
 function Anim.death(tx, ty, asset, element_id)
-   -- >>>>>>>> shade2/chara_func.hsp:646 	if cfg_animeWait@=0:return ..
+   -- >>>>>>>> shade2/chara_func.hsp:646:DONE 	if cfg_animeWait@=0:return ..
    if config["base.anim_wait"] <= 0 then
       return function() end
    end

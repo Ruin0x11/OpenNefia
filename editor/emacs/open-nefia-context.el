@@ -52,6 +52,16 @@
   "Face for the `body' version of a conflict.")
 (defvar open-nefia-context-body-face 'open-nefia-context-body)
 
+(defface open-nefia-context-todo-body
+  '((((class color) (min-colors 88) (background light))
+     :background "#aa8888")
+    (((class color) (min-colors 88) (background dark))
+     :background "#403030")
+    (((class color))
+     :foreground "red"))
+  "Face for the `body' version of a conflict.")
+(defvar open-nefia-context-todo-body-face 'open-nefia-context-todo-body)
+
 (defface open-nefia-context-markers
   '((((background light))
      (:background "grey75"))
@@ -60,7 +70,7 @@
   "Face for the conflict markers.")
 (defvar open-nefia-context-markers-face 'open-nefia-context-markers)
 
-(defconst open-nefia-context-begin-re "^ *-- >>>>>>>> shade2/\\([^:]*\\):\\([0-9]+\\)\\(.*\\)\n")
+(defconst open-nefia-context-begin-re "^ *-- >>>>>>>> shade2/\\([^:]*\\):\\([0-9]+\\)\\(DONE\\)?\\(.*\\)\n")
 (defconst open-nefia-context-end-re "^ *-- <<<<<<<< shade2/\\([^:]*\\):\\([0-9]+\\)\\(.*\\)\n")
 
 (defvar open-nefia-context-conflict-style nil
@@ -87,6 +97,7 @@ An error is raised if not inside a conflict."
 	       (start (match-beginning 0))
 	       (upper-start (match-end 0))
 	       (filename (or (match-string 1) ""))
+	       (done (or (match-string 3) ""))
 
 	       (upper-end (match-beginning 0))
 	       (lower-start (match-end 0))
@@ -122,15 +133,21 @@ An error is raised if not inside a conflict."
 		     (equal filename "ANCESTOR")
 		     (string-match "\\`[.0-9]+\\'" filename)))
 	    ;; a same-diff conflict
-	    (setq base-start upper-start)
-	    (setq base-end   upper-end)
-	    (setq upper-start lower-start)
-	    (setq upper-end   lower-end)))
+	    (setq base-start upper-start
+	          base-end   upper-end
+	          upper-start lower-start
+	          upper-end   lower-end)))
+
+    (when (not (string= done "DONE"))
+      (message done)
+      (setq base-start lower-start
+            base-end lower-end))
 
 	  (store-match-data (list start end
 				  upper-start upper-end
 				  lower-start lower-end
           lower-end end
+          base-start base-end
 				  ))
 	  t)
       (search-failed (user-error "Point not in conflict region")))))
@@ -270,6 +287,7 @@ Point is moved to the end of the conflict."
      (2 open-nefia-context-body-face prepend t)
      ;; FIXME: `keep' doesn't work right with syntactic fontification.
      (3 open-nefia-context-markers-face prepend t)
+     (4 open-nefia-context-todo-body-face prepend nil)
      ;(3 nil t t)
      ;(4 open-nefia-context-lower-face prepend t)
      ))

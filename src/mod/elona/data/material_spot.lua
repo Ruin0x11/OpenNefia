@@ -1,4 +1,5 @@
 local CodeGenerator = require("api.CodeGenerator")
+local Material = require("mod.elona.api.Material")
 
 data:add_type {
    name = "material_spot",

@@ -399,8 +399,13 @@ data:add {
 }
 
 local function proc_treasure_map(map, params)
+   -- >>>>>>>> shade2/proc.hsp:1012 	if mType=mTypeWorld{ ..
    local chara = params.chara
    local _type = params.type
+
+   if not Map.is_world_map(map) then
+      return
+   end
 
    local filter = function(item)
       return item._id == "elona.treasure_map"
@@ -433,6 +438,7 @@ local function proc_treasure_map(map, params)
       treasure_map.amount = treasure_map.amount - 1
       Save.save_game() -- TODO autosave
    end
+   -- <<<<<<<< shade2/proc.hsp:1033 		} ..
 end
 
 Event.register("elona.on_search_finish", "Proc treasure map", proc_treasure_map)
@@ -1177,6 +1183,7 @@ data:add {
    end
 }
 
+-- >>>>>>>> shade2/proc.hsp:2993 	case effGarokHammer ..
 data:add {
    _id = "effect_garoks_hammer",
    _type = "elona_sys.magic",
@@ -1250,7 +1257,9 @@ data:add {
       return true
    end
 }
-
+-- <<<<<<<< shade2/proc.hsp:3029 	swbreak ...
+--
+-- >>>>>>>> shade2/proc.hsp:3031 	case effMaterialKit ..
 local function do_change_material(target, material_kit, target_item, power)
    if target_item:calc("quality") == Enum.Quality.Unique then
       if power < 350  then
@@ -1311,6 +1320,7 @@ data:add {
    type = "effect",
    params = {
       "target",
+      "item"
    },
 
    cast = function(self, params)
@@ -1343,6 +1353,7 @@ data:add {
    type = "effect",
    params = {
       "target",
+      "item"
    },
 
    cast = function(self, params)
@@ -1371,3 +1382,50 @@ data:add {
       return do_change_material(target, material_kit, target_item, params.power)
    end
 }
+-- <<<<<<<< shade2/proc.hsp:3068 	swbreak ..
+
+-- >>>>>>>> shade2/proc.hsp:2340 	case efMakeMaterial ..
+data:add {
+   _id = "effect_create_material",
+   _type = "elona_sys.magic",
+   elona_id = 1117,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      local item = params.item
+
+      if not target:is_allied() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local mes
+      if params.curse_state == "none" or params.curse_state == "blessed" then
+         mes = "magic.create_material.junks"
+      else
+         mes = "magic.create_material.materials"
+      end
+
+      Gui.play_sound("base.ding2")
+      Gui.mes("magic.create_material.apply", mes)
+
+      Save.autosave()
+
+      local times = Rand.rnd(3) + 3
+      if params.curse_state == "blessed" then
+         times = times + 6
+      end
+
+      for _ = 1, times do
+         Gui.mes_continue_sentence()
+
+         -- TODO material spot
+      end
+   end
+}
+-- <<<<<<<< shade2/proc.hsp:2350 	swbreak ..

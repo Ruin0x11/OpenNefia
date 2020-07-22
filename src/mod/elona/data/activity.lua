@@ -15,6 +15,7 @@ local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
+local Material = require("mod.elona.api.Material")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -559,24 +560,28 @@ data:add {
 }
 
 local function performance_calc_earned_gold(chara, instrument, audience, activity)
-      local gold = math.floor(activity.performance_quality * activity.performance_quality * (100 + (instrument:calc("performance_quality") or 0) / 5) / 100 / 1000 + Rand.rnd(10))
-      gold = math.clamp(gold, 1, 100)
-      gold = math.clamp(audience.gold * gold / 125, 0, chara:skill_level("elona.performer") * 100)
-      if chara:is_party_leader_of(audience) then
-         gold = Rand.rnd(math.clamp(gold, 1, 100)) + 1
-      end
-      -- TODO character_role
+   -- >>>>>>>> shade2/proc.hsp:254 				p=(cPerformScore(cc)*cPerformScore(cc))*(100+i ..
+   local gold = math.floor(activity.performance_quality * activity.performance_quality * (100 + (instrument:calc("performance_quality") or 0) / 5) / 100 / 1000 + Rand.rnd(10))
+   gold = math.clamp(gold, 1, 100)
+   gold = math.clamp(audience.gold * gold / 125, 0, chara:skill_level("elona.performer") * 100)
+   if chara:is_party_leader_of(audience) then
+      gold = Rand.rnd(math.clamp(gold, 1, 100)) + 1
+   end
+   -- TODO character_role
 
-      return math.min(gold, audience.gold)
+   return math.min(gold, audience.gold)
+   -- <<<<<<<< shade2/proc.hsp:261 				cGold(tc)-=p:cGold(cc)+=p:gold+=p ..
 end
 
 local function performance_bad(chara, instrument, audience, activity)
+   -- >>>>>>>> shade2/proc.hsp:241 				cPerformScore(cc)-=cLevel(tc)/2 ..
    activity.performace_quality = activity.performance_quality - math.floor(audience:calc("level") / 2)
 
    Gui.mes_visible("angry ", chara.x, chara.y, "SkyBlue")
    Gui.mes_visible("throws rock ", chara.x, chara.y)
    local damage = audience:emit("elona.calc_bad_performance_damage", {chara=chara,instrument=instrument,activity=activity}, Rand.rnd(audience:calc("level") + 1) + 1)
    chara:damage_hp(damage, "elona.performer")
+   -- <<<<<<<< shade2/proc.hsp:250 				dmgHP cc,dmg,dmgFromPerform:if cExist(cc)=cDea ..
 end
 
 local function pos_nearby(x, y, map)
@@ -590,6 +595,7 @@ local function pos_nearby(x, y, map)
 end
 
 local function performance_throw_item(chara, instrument, audience, activity, x, y)
+   -- >>>>>>>> shade2/proc.hsp:285 					if encFindSpec(ci,encStrad)!falseM{ ..
    if instrument:has_enchantment("elona.increases_performer_rewards") then
    else
    end
@@ -598,9 +604,11 @@ local function performance_throw_item(chara, instrument, audience, activity, x, 
    if item then
       activity.number_of_tips = activity.number_of_tips + 1
    end
+   -- <<<<<<<< shade2/proc.hsp:307 						} ..
 end
 
 local function performance_good(chara, instrument, audience, activity)
+-- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
    local level = audience:calc("level")
    local quality_delta = Rand.rnd(level + 1) + 1
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 2 + 1) then
@@ -636,9 +644,11 @@ local function performance_good(chara, instrument, audience, activity)
          end
       end
    end
+   -- <<<<<<<< shade2/proc.hsp:309 				} ..
 end
 
 local function performance_apply(chara, instrument, audience, activity)
+   -- >>>>>>>> shade2/proc.hsp:209 			if cExist(cnt)!cAlive	:continue ..
    local gold_earned = 0
 
    if not Chara.is_alive(audience) then
@@ -711,12 +721,8 @@ local function performance_apply(chara, instrument, audience, activity)
 
    performance_good(chara, instrument, audience, activity)
 
-   if gold_earned > 0 then
-      activity.tip_gold = activity.tip_gold + gold_earned
-      if chara:is_in_fov() then
-         Gui.play_sound("base.getgold1")
-      end
-   end
+   return gold_earned
+   -- <<<<<<<< shade2/proc.hsp:310  ..
 end
 
 data:add {
@@ -735,6 +741,7 @@ data:add {
          name = "start",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:189 	if cRowAct(cc)=false{ ..
             self.performance_quality = 40
             self.tip_gold = 0
             self.number_of_tips = 0
@@ -742,6 +749,7 @@ data:add {
             if not Item.is_alive(self.instrument) then
                return "stop"
             end
+            -- <<<<<<<< shade2/proc.hsp:197 		} ..
          end
       },
       {
@@ -749,6 +757,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:199 	if cActionPeriod(cc)>0{ ..
             local chara = params.chara
             if self.turns % 10 == 0 then
                if Rand.one_in(10) then
@@ -759,15 +768,24 @@ data:add {
             if self.turns % 20 == 0 then
                Calc.make_sound(chara.x, chara.y, 5, 1, 1, chara)
 
+               local gold_earned = 0
                for _, audience in chara:current_map():iter_charas() do
-                  performance_apply(chara, self.instrument, audience, self)
+                  gold_earned = gold_earned + performance_apply(chara, self.instrument, audience, self)
                   if not Chara.is_alive(chara) then
                      return "turn_end"
+                  end
+               end
+
+               if gold_earned > 0 then
+                  self.tip_gold = self.tip_gold + gold_earned
+                  if chara:is_in_fov() then
+                     Gui.play_sound("base.getgold1", chara.x, chara.y)
                   end
                end
             end
 
             return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:315 		} ..
          end
       },
       {
@@ -775,6 +793,7 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:318 	repeat 1 ..
             local quality = self.performance_quality
 
             if params.chara:is_player() then
@@ -815,6 +834,7 @@ data:add {
             if exp > 0 then
                Skill.gain_skill_exp(params.chara, "elona.performer", exp, 0, 0)
             end
+            -- <<<<<<<< shade2/proc.hsp:338 	return ..
          end
       }
    }
@@ -826,7 +846,9 @@ data:add {
 
    params = { item = "table" },
    default_turns = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:443:DONE 			cActionPeriod(cc)=2+limit(iWeight(ci)/500,0,50) ..
       return 2 + math.clamp(self.item:calc("weight") / 500, 0, 50)
+      -- <<<<<<<< shade2/proc.hsp:444 		;	if develop:cActionPeriod(cc)=1 ..
    end,
 
    animation_wait = 2,
@@ -838,10 +860,12 @@ data:add {
          name = "start",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:441:DONE 		if gRowAct=rowActSteal{ ..
             if not Item.is_alive(self.item) then
                return "stop"
             end
-            Gui.mes("steal start")
+            Gui.mes("action.look.target", self.item)
+            -- <<<<<<<< shade2/proc.hsp:445 			} ..
          end
       },
       {
@@ -849,6 +873,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:513 		if gRowAct=rowActSteal{ ..
             local chara = params.chara
 
             local result = self.item:emit("elona.on_steal_attempt", params)
@@ -980,6 +1005,7 @@ data:add {
             end
 
             return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:569 			} ..
          end
       },
       {
@@ -987,6 +1013,7 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:574 	if gRowAct=rowActSteal{ ..
             local chara = params.chara
             local owner = self.item:get_owner()
             if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
@@ -996,12 +1023,15 @@ data:add {
             end
 
             Gui.mes("steal")
+            -- TODO
+            -- <<<<<<<< shade2/proc.hsp:606 		} ..
          end
       }
    }
 }
 
 local function dig_random_site(activity, params)
+   -- >>>>>>>> shade2/proc.hsp:10 *randomSite ..
    local feat = activity.feat
    local chara = params.chara
 
@@ -1062,6 +1092,7 @@ local function dig_random_site(activity, params)
    end
 
    return false
+   -- <<<<<<<< shade2/proc.hsp:64 	return ..
 end
 
 data:add {
@@ -1080,9 +1111,12 @@ data:add {
          name = "start",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:996 	if cRowAct(cc)=false{ ..
             if not Feat.is_alive(self.feat) then
                return "stop"
             end
+            Gui.mes("activity.dig_spot.start.other")
+            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
          end
       },
       {
@@ -1090,6 +1124,7 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1004 	if rowActRE!false:gosub *randomSite:return ..
             local finished = dig_random_site(self, params)
             if finished then
                return self:finish()
@@ -1098,6 +1133,7 @@ data:add {
                Gui.mes_c("activity.dig_spot.sound", "Blue")
             end
             return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
          end
       },
       {
@@ -1105,12 +1141,18 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
+            Gui.mes("activity.dig_spot.finish")
+            -- <<<<<<<< shade2/proc.hsp:1012 	if mType=mTypeWorld{ ..
+
+            -- >>>>>>>> shade2/proc.hsp:1035:DONE 	spillFrag refX,refY,1 ..
             if self.feat then
                self.feat:remove_ownership()
             end
             local map = params.chara:current_map()
             Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
          end
+         -- <<<<<<<< shade2/proc.hsp:1037 	return ..
       }
    }
 }
@@ -1120,7 +1162,7 @@ data:add {
    _id = "digging_spot",
 
    params = {},
-   default_turns = 20,
+   default_turns = 0,
 
    animation_wait = 2,
 
@@ -1131,7 +1173,9 @@ data:add {
          name = "start",
 
          callback = function(self, params)
-            Gui.mes("activity.dig_spot.start.other")
+            -- >>>>>>>> shade2/proc.hsp:996:DONE 	if cRowAct(cc)=false{ ..
+            Gui.mes("activity.dig_spot.start.global")
+            -- <<<<<<<< shade2/proc.hsp:1002 		} ..
          end
       },
       {
@@ -1139,10 +1183,12 @@ data:add {
          name = "pass turns",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1006:DONE 	if cActionPeriod(cc)>0{ ..
             if self.turns % 5 == 0 then
                Gui.mes_c("activity.dig_spot.sound", "Blue")
             end
             return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1009 		} ..
          end
       },
       {
@@ -1150,10 +1196,12 @@ data:add {
          name = "finish",
 
          callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1011:DONE 	txt lang("地面を掘り終えた。","You finish digging.") ..
             Gui.mes("activity.dig_spot.finish")
             local map = params.chara:current_map()
             map:emit("elona.on_search_finish", {chara=params.chara})
             Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
+            -- <<<<<<<< shade2/proc.hsp:1037:DONE 	return ..
          end
       }
    }
