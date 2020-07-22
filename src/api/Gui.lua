@@ -186,6 +186,7 @@ function Gui.report_error(err, msg)
    Log.error("%s:\n\t%s", msg, err)
 end
 
+-- >>>>>>>> shade2/init.hsp:4568 	dim c_col,3,30 ..
 local Color = {
    White =         { { 255, 255, 255 }, "white"          },
    Green =         { { 175, 255, 175 }, "green"          },
@@ -207,6 +208,7 @@ local Color = {
    LightGreen =    { { 215, 255, 215 }, "green bright"   },
    Talk =          { { 210, 250, 160 }, "yellow bright"  },
 }
+-- <<<<<<<< shade2/init.hsp:4588 		c_col(0,coTalk)		=45,5,95 ..
 
 --- Prints a localized message in the HUD message window. You can pass
 --- in an I18N ID with arguments and it will be localized, or any

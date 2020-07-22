@@ -1286,9 +1286,9 @@ local function do_change_material(target, material_kit, target_item, power)
       local level = power / 10
       local quality = power / 100
 
+      -- >>>>>>>> shade2/item_data.hsp:1144 	if cm : mtLv = cLevel(rc)/15 + 1 :else: mtLv=rnd( ..
       local mat_level = math.floor(Rand.rnd(level + 1) / 10 + 1)
 
-      -- >>>>>>>> shade2/item_data.hsp:1145 	if iId(ci)=idMaterialKit:mtLv=rnd(mtLv+ ...
       if material_kit._id == "elona.material_kit" then
          mat_level = Rand.rnd(mat_level + 1)
          if not fixed_material and Rand.one_in(3) then

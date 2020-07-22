@@ -425,6 +425,7 @@ end
 Event.register("base.after_chara_damaged", "Apply element damage.", IChara.after_chara_damaged)
 
 function IChara.on_kill_chara(victim, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1689 			if dmgSource!pc:customTalk dmgSource,dbModeTxtK ..
    local attacker = params.attacker
 
    if attacker then
@@ -440,14 +441,16 @@ function IChara.on_kill_chara(victim, params)
          attacker:set_target(nil)
          attacker:get_party_leader():set_target(nil)
       end
+      attacker.ai_state.hate = 0
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
 Event.register("base.on_kill_chara", "Default kill handler.", IChara.on_kill_chara)
 
 function IChara.apply_hostile_action(victim, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1583 		if dmgSource>=0{ ..
    local attacker = params.attacker
 
-   -- shade2/chara_func.hsp:1583 		if dmgSource>=0{ ...
    if attacker == nil then
       return
    end
@@ -483,6 +486,7 @@ function IChara.apply_hostile_action(victim, params)
          victim.ai_state.hate = victim.ai_state.hate + 2
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1593 		} ..
 end
 Event.register("base.on_damage_chara", "Hostile action towards AI", IChara.apply_hostile_action)
 
@@ -500,12 +504,14 @@ Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply
 --- @tparam boolean no_magic_reaction
 --- @tparam boolean quiet
 function IChara:damage_mp(amount, no_magic_reaction, quiet)
+   -- >>>>>>>> shade2/chara_func.hsp:1776 #deffunc dmgMP int tc ,int dmg ..
    self.mp = math.floor(math.max(self.mp - amount, -999999))
    self:emit("base.on_damage_chara_mp", { amount = amount, no_magic_reaction = no_magic_reaction, quiet = quiet })
+   -- <<<<<<<< shade2/chara_func.hsp:1777 	cMP(tc)-=dmg:if cMP(tc)<-999999:cMP(tc)=-999999 ..
 end
 
 local function magic_reaction(source, p)
-   -- shade2/chara_func.hsp:1778 	if cMP(tc)<0{	 ...
+   -- >>>>>>>> shade2/chara_func.hsp:1778 	if cMP(tc)<0{	 ..
    if source.mp < 0 and not p.no_magic_reaction then
       source:emit("base.on_magic_reaction", {})
       local Skill = require("mod.elona_sys.api.Skill")
@@ -524,6 +530,7 @@ local function magic_reaction(source, p)
       Gui.mes("damage.magic_reaction_hurts", source)
       source:damage_hp(damage, "elona.magic_overcast")
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1789 	return true ..
 end
 Event.register("base.on_damage_chara_mp", "Magic reaction", magic_reaction)
 
@@ -575,6 +582,7 @@ function IChara:kill(source)
       return
    end
 
+   -- >>>>>>>> shade2/chara_func.hsp:1662  ..
    if class.is_an(IChara, source) then
       local death_type = Rand.rnd(4)
    else
@@ -597,6 +605,7 @@ function IChara:kill(source)
    self:refresh_cell_on_map()
 
    self:emit("base.on_chara_killed", {source=source})
+   -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
 
 --- Removes this character completely.
@@ -624,6 +633,7 @@ function IChara:revive()
       return false
    end
 
+   -- >>>>>>>> shade2/chara.hsp:589 *resurrect ..
    self.state = "Alive"
    self.is_solid = true
    self.hp = math.floor(self:calc("max_hp") / 3)
@@ -640,9 +650,11 @@ function IChara:revive()
    self:emit("base.on_chara_revived")
 
    return true
+   -- <<<<<<<< shade2/chara.hsp:602 	cHunger(rc)	=8000 ..
 end
 
 function IChara:renew_status()
+   -- >>>>>>>> shade2/chara.hsp:604 *renewStatus ..
    self:remove_activity()
    self:remove_all_effects()
    self:remove_all_buffs()
@@ -652,6 +664,9 @@ function IChara:renew_status()
    self.ai_state.hate = 0
 
    self:refresh()
+
+   self:emit("base.on_chara_revived")
+   -- >>>>>>>> shade2/chara.hsp:637 	return ..
 end
 
 --- Revives this character and moves them to the current/given map.

@@ -105,6 +105,7 @@ data:add_multi(
       { _id = "on_mef_instantiated" },
       { _id = "on_mef_updated" },
       { _id = "on_object_removed" },
+      { _id = "on_chara_renewed" },
    }
 )
 
