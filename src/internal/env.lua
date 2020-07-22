@@ -395,7 +395,7 @@ local function gen_require(chunk_loader, can_load_path)
 
       if not hotload and package.loaded[req_path] then
          LOADING_STACK[#LOADING_STACK] = nil
-         update_documentation(path, req_path)
+         -- update_documentation(path, req_path)
          return package.loaded[req_path]
       end
 
@@ -443,7 +443,7 @@ local function gen_require(chunk_loader, can_load_path)
          package.loaded[req_path] = result
       end
 
-      update_documentation(path, req_path, package.loaded[req_path])
+      -- update_documentation(path, req_path, package.loaded[req_path])
 
       if hotload then
          HOTLOADED[req_path] = true

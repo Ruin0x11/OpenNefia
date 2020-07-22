@@ -45,9 +45,10 @@ end
 Event.register("base.on_chara_turn_end", "Proc effect on_turn_end", proc_effects_turn_end)
 
 local function update_awake_hours()
+   -- >>>>>>>> shade2/main.hsp:627 	if mType=mTypeWorld{ ...
    local s = save.elona_sys
    local map = Map.current()
-   if map:calc("is_world_map") then
+   if Map.is_world_map(map) then
       if Rand.one_in(3) then
          s.awake_hours = s.awake_hours + 1
       end
@@ -59,6 +60,7 @@ local function update_awake_hours()
    if map:calc("adds_awake_hours") then
       s.awake_hours = s.awake_hours + 1
    end
+   -- <<<<<<<< shade2/main.hsp:632 		} ...
 end
 
 Event.register("base.on_hour_passed", "Update awake hours", update_awake_hours)
@@ -67,6 +69,7 @@ local function init_save()
    local s = save.elona_sys
    s.awake_hours = 0
    s.npc_memory = { killed = {}, generated = {} }
+   s.item_memory = { known = {}, generated = {} }
    s.quest = {
       clients = {},
       towns = {},
@@ -75,7 +78,7 @@ local function init_save()
    s.sidequest = {}
 end
 
-Event.register("base.on_init_save", "Init save", init_save)
+Event.register("base.on_init_save", "Init save (elona_sys)", init_save)
 
 local function init_map(map)
    local fallbacks = {
@@ -110,6 +113,7 @@ local function show_element_text_death(target, source, tense, element)
 end
 
 local function show_text_death(target, source, tense)
+   -- >>>>>>>> shade2/chara_func.hsp:1603 				p=rnd(4) ...
    local death_type = Rand.rnd(4)
 
    if tense == "ally" then
@@ -135,6 +139,7 @@ local function show_text_death(target, source, tense)
          Gui.mes_c("death_by.chara.killed.passive", "Red", target, source)
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1608 				} ...
 end
 
 local function show_damage_text(chara, weapon, target, damage_level, was_killed,
@@ -144,6 +149,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
       return
    end
 
+   -- >>>>>>>> shade2/action.hsp:1277 		if sync(tc){ ...
    if extra_attacks > 0 then
       Gui.mes("damage.furthermore")
       Gui.mes_continue_sentence()
@@ -154,6 +160,7 @@ local function show_damage_text(chara, weapon, target, damage_level, was_killed,
    if weapon then
       skill = weapon:calc("skill")
    end
+   -- <<<<<<<< shade2/action.hsp:1291 			} ...
 
    local source = chara
 

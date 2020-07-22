@@ -13,6 +13,7 @@ local ItemMaterial = {}
 -- To make this moddable we'd have to change the formula since it assumes a
 -- fixed 5x4 array of possible materials to choose from.
 
+-- >>>>>>>> shade2/item_data.hsp:1122 	mtListMetal(0,0)	=mtBronze	,mtLead		,mtMica		,mtC ..
 ItemMaterial.MATERIALS_METAL = {
     {"elona.bronze", "elona.lead", "elona.mica", "elona.coral"},
     {"elona.iron", "elona.silver", "elona.glass", "elona.obsidian"},
@@ -20,7 +21,9 @@ ItemMaterial.MATERIALS_METAL = {
     {"elona.chrome", "elona.crystal", "elona.emerald", "elona.adamantium"},
     {"elona.titanium", "elona.diamond", "elona.rubynus", "elona.ether"}
 }
+-- <<<<<<<< shade2/item_data.hsp:1127  ..
 
+-- >>>>>>>> shade2/item_data.hsp:1128 	mtListLeather(0,0)	=mtCloth	,mtSilk		,mtPaper	,mt ..
 ItemMaterial.MATERIALS_SOFT = {
    {"elona.cloth", "elona.silk", "elona.paper", "elona.bone"},
    {"elona.leather", "elona.scale", "elona.glass", "elona.obsidian"},
@@ -28,26 +31,27 @@ ItemMaterial.MATERIALS_SOFT = {
    {"elona.zylon", "elona.gold", "elona.spirit", "elona.dragon"},
    {"elona.dusk", "elona.griffon", "elona.rubynus", "elona.ether"}
 }
+-- <<<<<<<< shade2/item_data.hsp:1133 	return ..
 
-function ItemMaterial.choose_random_material(item, base_material, base_level, base_quality, chara)
-   -- <<<< shade2/item_data.hsp:1143 *choose_material ...
+function ItemMaterial.choose_random_material(item, base_material, base_level, base_quality, chara_level)
+   -- >>>>>>>> shade2/item_data.hsp:1143 *choose_material ...
    base_level = base_level or (item and item:calc("level")) or 0
    base_quality = base_quality or (item and item:calc("quality")) or 0
-   local is_chara_make = chara ~= nil
+   local is_chara_make = chara_level ~= nil
 
    local level
 
    if is_chara_make then
-      level = math.floor(chara:calc("level") / 15) + 1
+      level = math.floor(chara_level / 15) + 1
    else
       level = math.floor(Rand.rnd(base_level+1) / 10 + 1)
    end
-   -- >>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
+   -- <<<<<<<< shade2/item_data.hsp:1146  ..
 
-   return ItemMaterial.choose_random_material(item, level, base_quality, base_material, chara)
+   return ItemMaterial.choose_random_material(item, level, base_quality, base_material, chara_level)
 end
 
-function ItemMaterial.choose_random_material_2(item, level, base_quality, material, chara)
+function ItemMaterial.choose_random_material_2(item, level, base_quality, material, chara_level)
    level = math.floor(level)
    base_quality = math.floor(base_quality)
 
@@ -60,9 +64,9 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
    end
 
    base_quality = base_quality or (item and item:calc("quality")) or 0
-   local is_chara_make = chara ~= nil
+   local is_chara_make = chara_level ~= nil
 
-   -- >>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
+   -- >>>>>>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
    local i = Rand.rnd(100)
    local idx
    if i < 5 then
@@ -112,20 +116,21 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
    assert(material and material ~= "elona.metal" and material ~= "elona.soft")
 
    return material
-   -- <<<< shade2/item_data.hsp:1170 	return ...
+   -- <<<<<<<< shade2/item_data.hsp:1170 	return ...
 end
 
-local function apply_material_enchantments(item, material)
+function ItemMaterial.apply_material_enchantments(item, material)
    -- TODO enchantments
 end
 
-local function remove_material_enchantments(item, material)
+function ItemMaterial.remove_material_enchantments(item, material)
    -- TODO enchantments
 end
 
 function ItemMaterial.change_item_material(item, new_material)
+   -- >>>>>>>> shade2/item_data.hsp:1175 	iCol(ci)=0 ..
    local cur_material = data["elona.item_material"]:ensure(item.material)
-   remove_material_enchantments(item)
+   ItemMaterial.remove_material_enchantments(item)
    local proto = item.proto
    item.weight = proto.weight or 0
    item.hit_bonus = proto.hit_bonus or 0
@@ -139,9 +144,11 @@ function ItemMaterial.change_item_material(item, new_material)
    new_material = new_material or ItemMaterial.choose_random_material(item)
 
    ItemMaterial.apply_item_material(item, new_material)
+   -- <<<<<<<< shade2/item_data.hsp:1187 	gosub *apply_material ..
 end
 
 function ItemMaterial.apply_item_material(item, material)
+   -- >>>>>>>> shade2/item_data.hsp:1194  ..
    if item:has_category("elona.furniture") then
       if data["elona.item_material"]:ensure(material).no_furniture then
          material = "elona.wood"
@@ -185,14 +192,17 @@ function ItemMaterial.apply_item_material(item, material)
       item.dice_y = math.floor(mat_data.dice_y * item.dice_y / (coeff + Rand.rnd(25)))
    end
 
-   apply_material_enchantments(item, material)
+   ItemMaterial.apply_material_enchantments(item, material)
+   -- <<<<<<<< shade2/item_data.hsp:1224 	return ..
 
+   -- >>>>>>>> shade2/item_data.hsp:1189 	gosub *item_value ..
    item.value = Calc.calc_item_value(item)
 
    local owner = item:get_owning_chara()
    if owner then
       owner:refresh()
    end
+   -- <<<<<<<< shade2/item_data.hsp:1191 	return ..
 end
 
 return ItemMaterial

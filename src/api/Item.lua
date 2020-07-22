@@ -4,6 +4,8 @@ local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
 local Enum = require("api.Enum")
+local I18N = require("api.I18N")
+local Log = require("api.Log")
 
 local data = require("internal.data")
 local field = require("game.field")

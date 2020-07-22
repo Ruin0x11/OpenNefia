@@ -107,6 +107,7 @@ end
 local function do_generate_item_id(params)
    local fltselect = get_fltselect(params.categories)
 
+   -- >>>>>>>> shade2/item.hsp:596 		if fltSelect=0 : if mode!mode_shop{ ...
    if fltselect == nil and not params.is_shop then
       if params.quality == 3 and Rand.one_in(1000) then
          set_fltselect(params.categories, "elona.unique_item")
@@ -130,6 +131,7 @@ local function do_generate_item_id(params)
    if id == nil and params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
    end
+   -- >>>>>>>> shade2/item.hsp:609 		} ...
 
    return id
 end

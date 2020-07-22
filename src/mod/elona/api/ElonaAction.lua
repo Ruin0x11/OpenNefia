@@ -94,6 +94,7 @@ function ElonaAction.proc_weapon_enchantments(chara, weapon, target)
 end
 
 local function show_miss_text(chara, target, extra_attacks)
+   -- >>>>>>>> shade2/action.hsp:1365 	if hit=atkEvade:if sync(cc){ ...
    if not Map.is_in_fov(chara.x, chara.y) then
       return
    end
@@ -106,9 +107,11 @@ local function show_miss_text(chara, target, extra_attacks)
    else
       Gui.mes("damage.miss.other", chara, target)
    end
+   -- <<<<<<<< shade2/action.hsp:1368 		} ...
 end
 
 local function show_evade_text(chara, target, extra_attacks)
+   -- >>>>>>>> shade2/action.hsp:1369 	if hit=atkEvadePlus:if sync(cc){ ...
    if not Map.is_in_fov(chara.x, chara.y) then
       return
    end
@@ -121,6 +124,7 @@ local function show_evade_text(chara, target, extra_attacks)
    else
       Gui.mes("damage.evade.other", chara, target)
    end
+   -- <<<<<<<< shade2/action.hsp:1372 		} ...
 end
 
 local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
@@ -128,6 +132,7 @@ local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, atta
 
    local color = {255, 255, 255}
 
+   -- >>>>>>>> shade2/screen.hsp:654 	preparePicItem 6,aniCol ...
    if attack_skill == "elona.bow" then
       chip = "elona.item_projectile_arrow"
       sound = "base.bow1"
@@ -146,6 +151,7 @@ local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, atta
       chip = weapon:calc("image")
       sound = "base.throw1"
    end
+   -- <<<<<<<< shade2/screen.hsp:665 	if animeId=aniArrow	:snd seArrow1 ...
 
    if chara:is_in_fov() then
       local cb = Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, nil)

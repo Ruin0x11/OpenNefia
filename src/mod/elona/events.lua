@@ -804,6 +804,7 @@ local function init_save()
    s.holy_well_count = 0
    s.guild = nil
    s.four_dimensional_pocket = nil
+   s.artifact_locations = {}
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

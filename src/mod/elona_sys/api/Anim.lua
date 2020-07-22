@@ -46,6 +46,7 @@ local function is_in_screen(sx, sy)
 end
 
 function Anim.load(anim_id, tx, ty)
+   -- >>>>>>>> shade2/chara_func.hsp:614 #deffunc animeLoad int p,int tc ..
    local t = UiTheme.load()
    local anim = data["elona_sys.basic_anim"]:ensure(anim_id)
    local sx, sy = Gui.tile_to_screen(tx, ty)
@@ -78,6 +79,7 @@ function Anim.load(anim_id, tx, ty)
          frame = frame + frames_passed
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:642 	return ..
 end
 
 function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)
@@ -128,6 +130,7 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
 end
 
 function Anim.failure_to_cast(tx, ty)
+   -- >>>>>>>> shade2/screen.hsp:478 	case aniFizzle ..
    if not Map.is_in_fov(tx, ty) then
       return function() end
    end
@@ -145,9 +148,50 @@ function Anim.failure_to_cast(tx, ty)
    end
 
    return Anim.make_animation(scx, scy, "base.failure_to_cast_effect", 12, draw)
+   -- <<<<<<<< shade2/screen.hsp:495 	swbreak ..
+end
+
+function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
+   -- >>>>>>>> shade2/screen.hsp:497 	case aniCurse ..
+   rot_delta = rot_delta or -1
+   wait = wait or config["base.anim_wait"]
+
+   local particles = {}
+
+   local t = UiTheme.load()
+   asset = t[asset]
+
+   return function (draw_x, draw_y)
+      if sound then
+         Gui.play_sound(sound, tx, ty)
+      end
+
+      local frame = 1
+
+      local scx, scy = Gui.tile_to_visible_screen(tx, ty)
+      local tw, th = Draw.get_coords():get_size()
+
+      for i = 1, 15 do
+         particles[i] = { x = Rand.rnd(tw), y = Rand.rnd(th) - 8, rot = (Rand.rnd(4) + 1) * rot_delta }
+      end
+
+      while frame <= 10 do
+         local frame2 = frame * 2 - 1
+
+         for j = 1, 15 do
+            local p = particles[j]
+            asset:draw(scx + p.x, scy + p.y + frame2 / p.rot, tw - frame2 * 2, th - frame2 * 2, nil, true, frame2 * p.rot)
+         end
+
+         local _, _, delta = Draw.yield(wait)
+         frame = frame + delta
+      end
+   end
+   -- <<<<<<<< shade2/screen.hsp:530 	swbreak ..
 end
 
 function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y, range, map)
+   -- >>>>>>>> shade2/screen.hsp:588 	case aniBolt ...
    color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
 
@@ -205,7 +249,7 @@ function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y
                      t.base.anim_shock:draw_region(frames[j].frame, draw_x + frames[j].x, draw_y + frames[j].y, nil, nil, color, true, rotation)
                   end
                   if changed then
-                  frames[j].frame = frames[j].frame + 1
+                     frames[j].frame = frames[j].frame + 1
                   end
                end
             end
@@ -220,6 +264,7 @@ function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y
          Gui.play_sound(sound, chara_x, chara_y)
       end
    end
+   -- <<<<<<<< shade2/screen.hsp:621 	swbreak ...
 end
 
 local chip_batch = nil
@@ -230,6 +275,7 @@ Event.register("base.on_hotload_end", "hotload chip batch (Anim)",
 end)
 
 function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, impact_sound)
+   -- >>>>>>>> shade2/screen.hsp:644 	case rsThrow ...
    return function(draw_x, draw_y)
       chip_batch = chip_batch or Draw.make_chip_batch("chip")
 
@@ -274,24 +320,28 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
          Gui.play_sound(impact_sound, end_x, end_y)
       end
    end
+   -- <<<<<<<< shade2/screen.hsp:679 	if aniSound:snd aniSound,0,1 ...
 end
 
 function Anim.swarm(tx, ty)
-   Gui.play_sound("base.atk1", tx, ty)
+   -- >>>>>>>> shade2/screen.hsp:686 	case aniAttack ...
    local scx, scy = pos_centered(tx, ty)
    local tw, _ = Draw.get_coords():get_size()
 
    local draw = function(asset, x, y, frame)
+      Gui.play_sound("base.atk1", tx, ty)
       local scaling = (frame * 8 + 18) / tw
       local w = math.floor(asset:get_width() * scaling)
       local h = math.floor(asset:get_height() * scaling)
       asset:draw(x, y, w, h, {255,255,255}, true, 30 * frame - 45)
    end
+   -- <<<<<<<< shade2/screen.hsp:698 	loop ...
 
    return Anim.make_animation(scx, scy, "base.swarm_effect", 4, draw)
 end
 
 function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
+   -- >>>>>>>> shade2/screen.hsp:701 	case aniNormalAttack ...
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -369,9 +419,11 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
          frame = frame + frames_passed
       end
    end
+   -- <<<<<<<< shade2/screen.hsp:746 	loop ...
 end
 
 function Anim.gene_engineering(tx, ty)
+   -- >>>>>>>> shade2/screen.hsp:751 	case aniGene ...
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -399,11 +451,13 @@ function Anim.gene_engineering(tx, ty)
          i = i + frames_passed
       end
    end
+   -- <<<<<<<< shade2/screen.hsp:772 	swbreak ...
 end
 
 --- @tparam {{x=int,y=int},...} positions
 --- @tparam[opt] id:base.sound sound
 function Anim.miracle(positions, sound)
+   -- >>>>>>>> shade2/screen.hsp:775 	case aniHoly ...
    sound = sound or "base.heal1"
 
    local t = UiTheme.load()
@@ -494,218 +548,11 @@ function Anim.miracle(positions, sound)
          loops = loops + delta
       end
    end
-end
-
-function Anim.ragnarok()
-   return function(draw_x, draw_y)
-      -- TODO
-   end
-end
-
-function Anim.breaking(tx, ty)
-   if not Map.is_in_fov(tx, ty) then
-      return function() end
-   end
-
-   local _, th = Draw.get_coords():get_size()
-
-   local create = function() return Rand.rnd(24) - 12, Rand.rnd(8) end
-   local draw = function(asset, x, y, frame, px, py, i)
-      local x = x + px
-      local add = 0
-      if i % 2 == 0 then
-         add = 1
-      end
-      if px < 4 then
-         x = x - (1 + add) * frame
-      end
-      if px > -4 then
-         x = x + (1 + add) * frame
-      end
-
-      local y = y - th / 4 + py + frame * frame / 3
-
-      local w = asset:get_width() / 2
-      local h = asset:get_height() / 2
-      asset:draw(x, y, w, h, nil, true, 23 * i)
-   end
-
-   local scx, scy = pos_centered(tx, ty)
-
-   return Anim.make_particle_animation(scx, scy, "base.breaking_effect", 5, 4, create, draw)
-end
-
-function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target_y, map)
-   color = color or {255, 255, 255}
-   local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
-
-   local t = UiTheme.load()
-
-   return function(draw_x, draw_y)
-      Gui.play_sound("base.breath1", chara_x, chara_y)
-
-      local frame = 1
-      local tw, th = Draw.get_coords():get_size()
-      tw = math.floor(tw / 2)
-      th = math.floor(th / 2)
-      while frame < 6 do
-         for _, pos in ipairs(positions) do
-            local tx = pos[1]
-            local ty = pos[2]
-            if map:has_los(chara_x, chara_y, tx, ty) then
-               local sx, sy = Gui.tile_to_screen(tx, ty)
-
-               t.base.anim_breath:draw_region(frame, draw_x + sx + tw, draw_y + sy + th, nil, nil, color, true, rotation)
-            end
-         end
-
-         local _, _, delta = Draw.yield(config["base.anim_wait"])
-         frame = frame + delta
-      end
-
-      if sound then
-         Gui.play_sound(sound, chara_x, chara_y)
-      end
-   end
-end
-
-function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
-   rot_delta = rot_delta or -1
-   wait = wait or config["base.anim_wait"]
-
-   local particles = {}
-
-   local t = UiTheme.load()
-   asset = t[asset]
-
-   return function (draw_x, draw_y)
-      if sound then
-         Gui.play_sound(sound, tx, ty)
-      end
-
-      local frame = 1
-
-      local scx, scy = Gui.tile_to_visible_screen(tx, ty)
-      local tw, th = Draw.get_coords():get_size()
-
-      for i = 1, 15 do
-         particles[i] = { x = Rand.rnd(tw), y = Rand.rnd(th) - 8, rot = (Rand.rnd(4) + 1) * rot_delta }
-      end
-
-      while frame <= 10 do
-         local frame2 = frame * 2 - 1
-
-         for j = 1, 15 do
-            local p = particles[j]
-            asset:draw(scx + p.x, scy + p.y + frame2 / p.rot, tw - frame2 * 2, th - frame2 * 2, nil, true, frame2 * p.rot)
-         end
-
-         local _, _, delta = Draw.yield(wait)
-         frame = frame + delta
-      end
-   end
-end
-
-function Anim.ball(positions, color, sound, center_x, center_y, map)
-   color = color or {255, 255, 255}
-
-   local t = UiTheme.load()
-
-   return function(draw_x, draw_y)
-      Gui.play_sound("base.ball1", center_x, center_y)
-
-      local frame = 1
-      local tw, th = Draw.get_coords():get_size()
-      tw = tw / 2
-      th = th / 2
-
-      while frame <= 10 do
-         color[4] = 255
-         for _, pos in ipairs(positions) do
-            local tx = pos[1]
-            local ty = pos[2]
-            local sx, sy = Gui.tile_to_screen(tx, ty)
-            t.base.anim_ball_2:draw_region(frame, draw_x + sx, draw_y + sy, nil, nil, color)
-         end
-
-         color[4] = 250 - frame * frame * 2
-         local sx, sy = Gui.tile_to_screen(center_x, center_y)
-         t.base.anim_ball:draw_region(frame, draw_x + sx - tw, draw_y + sy - th, nil, nil, color)
-
-         local _, _, delta = Draw.yield(config["base.anim_wait"])
-         frame = frame + delta
-      end
-
-      if sound then
-         Gui.play_sound(sound, center_x, center_y)
-      end
-   end
-end
-
-function Anim.death(tx, ty, asset, element_id)
-   if config["base.anim_wait"] <= 0 then
-      return function() end
-   end
-
-   local t = UiTheme.load()
-   asset = t[asset]
-
-   local element_anim
-   local element_anim_dy
-   local element_anim_frames
-   if element_id then
-      local element_data = data["base.element"]:ensure(element_id)
-      if element_data.death_anim then
-         element_anim = t[element_data.death_anim]
-         element_anim_dy = element_data.death_anim_dy or -16
-         element_anim_frames = #element_anim.quads
-      end
-   end
-
-   local tw, th = Draw.get_coords():get_size()
-
-   local point = function()
-      return { x = Rand.rnd(tw) - math.floor(tw / 2), y = math.floor(th / 2) }
-   end
-   local particles = fun.tabulate(point):take(20):to_list()
-
-   local wait = 15
-   if element_anim then
-      wait = wait + 20
-   end
-
-   return function(draw_x, draw_y)
-      local sx, sy = Gui.tile_to_screen(tx, ty)
-
-      local frame = 0
-
-      while frame < 6 do
-         local frame2 = frame * 2
-
-         if element_anim and frame < element_anim_frames then
-            element_anim:draw_region(frame+1, draw_x + sx - tw / 2, draw_y + sy - (3 * th / 4) + element_anim_dy)
-         end
-
-         for i, pos in ipairs(particles) do
-            local add_x = ((pos.x < 3)  and 1 or 0) * -(1 + ((i % 2 == 0) and 1 or 0)) * frame2
-                        + ((pos.x > -4) and 1 or 0) *  (1 + ((i % 2 == 0) and 1 or 0)) * frame2
-
-            asset:draw(draw_x + sx + tw / 2 + pos.x + add_x,
-                       draw_y + sy + frame2 * frame2 / 2 - 12 + i,
-                       (tw/2) - frame2 * 2,
-                       (th/2) - frame2 * 2,
-                       nil,
-                       true,
-                       0.2 * i)
-         end
-
-         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait/2)
-         frame = frame + delta
-      end
-   end
+   -- <<<<<<<< shade2/screen.hsp:825 	swbreak ...
 end
 
 function Anim.meteor()
+   -- >>>>>>>> shade2/screen.hsp:829 	case aniMeteor ...
    local t = UiTheme.load()
 
    local asset_meteor = t.base.anim_meteor
@@ -751,7 +598,7 @@ function Anim.meteor()
             Gui.play_sound("base.atk_fire")
          end
 
-        -- step frame
+         -- step frame
          for _ = 1, delta do
             for i, m in ipairs(meteors) do
                if m.frame < 9 then
@@ -768,6 +615,189 @@ function Anim.meteor()
          frame = frame + delta
       until not drew_any
    end
+   -- <<<<<<<< shade2/screen.hsp:874 	swbreak ...
+end
+
+function Anim.ragnarok()
+   -- >>>>>>>> shade2/screen.hsp:876 	case aniRagna ..
+   return function(draw_x, draw_y)
+      -- TODO
+   end
+   -- <<<<<<<< shade2/screen.hsp:918 	swbreak ..
+end
+
+function Anim.breaking(tx, ty)
+   -- >>>>>>>> shade2/screen.hsp:920 	case aniCrush ..
+   if not Map.is_in_fov(tx, ty) then
+      return function() end
+   end
+
+   local _, th = Draw.get_coords():get_size()
+
+   local create = function() return Rand.rnd(24) - 12, Rand.rnd(8) end
+   local draw = function(asset, x, y, frame, px, py, i)
+      local x = x + px
+      local add = 0
+      if i % 2 == 0 then
+         add = 1
+      end
+      if px < 4 then
+         x = x - (1 + add) * frame
+      end
+      if px > -4 then
+         x = x + (1 + add) * frame
+      end
+
+      local y = y - th / 4 + py + frame * frame / 3
+
+      local w = asset:get_width() / 2
+      local h = asset:get_height() / 2
+      asset:draw(x, y, w, h, nil, true, 23 * i)
+   end
+
+   local scx, scy = pos_centered(tx, ty)
+
+   return Anim.make_particle_animation(scx, scy, "base.breaking_effect", 5, 4, create, draw)
+   -- <<<<<<<< shade2/screen.hsp:951 	swbreak ..
+end
+
+function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target_y, map)
+   -- >>>>>>>> shade2/screen.hsp:532 	case aniBreath ..
+   color = color or {255, 255, 255}
+   local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
+
+   local t = UiTheme.load()
+
+   return function(draw_x, draw_y)
+      Gui.play_sound("base.breath1", chara_x, chara_y)
+
+      local frame = 1
+      local tw, th = Draw.get_coords():get_size()
+      tw = math.floor(tw / 2)
+      th = math.floor(th / 2)
+      while frame < 6 do
+         for _, pos in ipairs(positions) do
+            local tx = pos[1]
+            local ty = pos[2]
+            if map:has_los(chara_x, chara_y, tx, ty) then
+               local sx, sy = Gui.tile_to_screen(tx, ty)
+
+               t.base.anim_breath:draw_region(frame, draw_x + sx + tw, draw_y + sy + th, nil, nil, color, true, rotation)
+            end
+         end
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         frame = frame + delta
+      end
+
+      if sound then
+         Gui.play_sound(sound, chara_x, chara_y)
+      end
+   end
+   -- <<<<<<<< shade2/screen.hsp:551 	swbreak ..
+end
+
+function Anim.ball(positions, color, sound, center_x, center_y, map)
+   -- >>>>>>>> shade2/screen.hsp:553 	case aniBallNuke ..
+   color = color or {255, 255, 255}
+
+   local t = UiTheme.load()
+
+   return function(draw_x, draw_y)
+      Gui.play_sound("base.ball1", center_x, center_y)
+
+      local frame = 1
+      local tw, th = Draw.get_coords():get_size()
+      tw = tw / 2
+      th = th / 2
+
+      while frame <= 10 do
+         color[4] = 255
+         for _, pos in ipairs(positions) do
+            local tx = pos[1]
+            local ty = pos[2]
+            local sx, sy = Gui.tile_to_screen(tx, ty)
+            t.base.anim_ball_2:draw_region(frame, draw_x + sx, draw_y + sy, nil, nil, color)
+         end
+
+         color[4] = 250 - frame * frame * 2
+         local sx, sy = Gui.tile_to_screen(center_x, center_y)
+         t.base.anim_ball:draw_region(frame, draw_x + sx - tw, draw_y + sy - th, nil, nil, color)
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         frame = frame + delta
+      end
+
+      if sound then
+         Gui.play_sound(sound, center_x, center_y)
+      end
+   end
+   -- <<<<<<<< shade2/screen.hsp:586 	swbreak ..
+end
+
+function Anim.death(tx, ty, asset, element_id)
+   -- >>>>>>>> shade2/chara_func.hsp:646 	if cfg_animeWait@=0:return ..
+   if config["base.anim_wait"] <= 0 then
+      return function() end
+   end
+
+   local t = UiTheme.load()
+   asset = t[asset]
+
+   local element_anim
+   local element_anim_dy
+   local element_anim_frames
+   if element_id then
+      local element_data = data["base.element"]:ensure(element_id)
+      if element_data.death_anim then
+         element_anim = t[element_data.death_anim]
+         element_anim_dy = element_data.death_anim_dy or -16
+         element_anim_frames = #element_anim.quads
+      end
+   end
+
+   local tw, th = Draw.get_coords():get_size()
+
+   local point = function()
+      return { x = Rand.rnd(tw) - math.floor(tw / 2), y = math.floor(th / 2) }
+   end
+   local particles = fun.tabulate(point):take(20):to_list()
+
+   local wait = 15
+   if element_anim then
+      wait = wait + 20
+   end
+
+   return function(draw_x, draw_y)
+      local sx, sy = Gui.tile_to_screen(tx, ty)
+
+      local frame = 0
+
+      while frame < 6 do
+         local frame2 = frame * 2
+
+         if element_anim and frame < element_anim_frames then
+            element_anim:draw_region(frame+1, draw_x + sx - tw / 2, draw_y + sy - (3 * th / 4) + element_anim_dy)
+         end
+
+         for i, pos in ipairs(particles) do
+            local add_x = ((pos.x < 3)  and 1 or 0) * -(1 + ((i % 2 == 0) and 1 or 0)) * frame2
+               + ((pos.x > -4) and 1 or 0) *  (1 + ((i % 2 == 0) and 1 or 0)) * frame2
+
+            asset:draw(draw_x + sx + tw / 2 + pos.x + add_x,
+                       draw_y + sy + frame2 * frame2 / 2 - 12 + i,
+                       (tw/2) - frame2 * 2,
+                       (th/2) - frame2 * 2,
+                       nil,
+                       true,
+                       0.2 * i)
+         end
+
+         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait/2)
+         frame = frame + delta
+      end
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:684 	return ..
 end
 
 return Anim

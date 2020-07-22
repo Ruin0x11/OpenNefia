@@ -115,6 +115,9 @@ function IItem:get_owning_chara()
       if self.location:has_item(self) then
          return self.location
       end
+   elseif class.is_an(EquipSlots, self.location) then
+      -- HACK
+      return self.location.owner
    end
 
    return nil

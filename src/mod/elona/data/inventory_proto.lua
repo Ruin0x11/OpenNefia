@@ -8,6 +8,7 @@ local Map = require("api.Map")
 local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
+local elona_Item = require("mod.elona.api.Item")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -584,27 +585,6 @@ local inv_identify = {
 }
 data:add(inv_identify)
 
--- HACK
-local EQUIPMENT_CATEGORIES = {
-   "elona.furniture",
-   "elona.equip_melee",
-   "elona.equip_head",
-   "elona.equip_shield",
-   "elona.equip_body",
-   "elona.equip_leg",
-   "elona.equip_cloak",
-   "elona.equip_back",
-   "elona.equip_wrist",
-   "elona.equip_ranged",
-   "elona.equip_ammo",
-   "elona.equip_ring",
-   "elona.equip_neck",
-}
-
-local function is_equipment(item)
-   return fun.iter(EQUIPMENT_CATEGORIES):any(function(cat) return item:has_category(cat) end)
-end
-
 local inv_equipment = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_equipment",
@@ -618,7 +598,7 @@ local inv_equipment = {
    text = "ui.inventory_command.target",
 
    filter = function(ctxt, item)
-      return item:has_category("elona.furniture") or is_equipment(item)
+      return item:has_category("elona.furniture") or elona_Item.is_equipment(item)
    end,
 
    on_select = function(ctxt, item, amount)
@@ -645,7 +625,7 @@ local inv_garoks_hammer = {
    text = "ui.inventory_command.target",
 
    filter = function(ctxt, item)
-      return item:calc("quality") < Enum.Quality.Great and is_equipment(item)
+      return item:calc("quality") < Enum.Quality.Great and elona_Item.is_equipment(item)
    end,
 
    on_select = function(ctxt, item, amount)
