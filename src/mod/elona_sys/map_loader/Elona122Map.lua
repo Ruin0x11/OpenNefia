@@ -192,7 +192,7 @@ function Elona122Map.generate(name)
             if not item then
                Log.warn("Failed to create item %s (%d) at (%d, %d): %s", id, data[1], x, y, err)
             else
-               item.ownership = own_state
+               item.own_state = own_state
             end
          elseif data[5] == 1 then
             local id = Compat.convert_122_id("base.chara", data[1])

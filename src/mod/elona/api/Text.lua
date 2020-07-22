@@ -268,4 +268,8 @@ function Text.unidentified_item_params(item, seed)
    return item.name, item.color
 end
 
+function Text.random_subname_seed()
+   return 40000 + Rand.rnd(30000)
+end
+
 return Text

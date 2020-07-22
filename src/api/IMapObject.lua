@@ -84,15 +84,26 @@ end
 --- and so forth, returning if any location up the tree is an instanced map.
 ---
 --- @treturn[opt] InstancedMap
+--- @treturn[opt] IMapObject containing location in the map
 --- @see IMapObject:current_map()
 function IMapObject:containing_map()
    local InstancedMap = require("api.InstancedMap")
    local location = self.location
+   local containing = self.location
 
    while location ~= nil do
       if class.is_an(InstancedMap, location) then
-         return location
+         return location, containing
       end
+      containing = location
+      -- TODO: have to think this over more carefully.
+      --
+      -- This doesn't handle items being equipped on an EquipSlots, because
+      -- EquipSlots has no `location` field - the "location" is its character,
+      -- but there is no interface for getting at this location in a standard
+      -- way. IOwned doesn't work since EquipSlots isn't a game object, so it
+      -- doesn't have a `uid` field (it's required for IOwned). Maybe `uid`
+      -- should be removed from IOwned then.
       location = location.location
    end
 

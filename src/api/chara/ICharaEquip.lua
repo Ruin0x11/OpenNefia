@@ -8,7 +8,7 @@ local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 function ICharaEquip:init()
    self.body_parts = self.body_parts or {}
    -- TODO resolver
-   self.equip = EquipSlots:new(self.body_parts)
+   self.equip = EquipSlots:new(self.body_parts, self)
    self.equipment_weight = 0
 end
 

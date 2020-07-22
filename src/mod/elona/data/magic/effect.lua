@@ -17,6 +17,10 @@ local I18N = require("api.I18N")
 local God = require("mod.elona.api.God")
 local AliasPrompt = require("api.gui.AliasPrompt")
 local Log = require("api.Log")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
+local Text = require("mod.elona.api.Text")
+local Enchant = require("mod.elona.api.Enchant")
+local IMapObject = require("api.IMapObject")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -1162,7 +1166,6 @@ data:add {
       Gui.mes("magic.name.prompt")
 
       result, canceled = AliasPrompt:new("weapon"):query()
-      Rand.set_seed()
 
       if not result or canceled then
          return true, { obvious = false }
@@ -1189,6 +1192,7 @@ data:add {
 
    cast = function(self, params)
       local target = params.target
+      local hammer = params.item
 
       if not target:is_player() then
          Gui.mes("common.nothing_happens")
@@ -1201,27 +1205,53 @@ data:add {
          return true, { obvious = false }
       end
 
-      local item = result.result
-      item:separate()
+      local target_item = result.result
+      target_item:separate()
 
-      if item.quality < Enum.Quality.Great or item.quality == Enum.Quality.Unique then
-         Gui.mes("common.it_is_impossible")
-         return true, { obvious = false }
+      if target_item.quality >= Enum.Quality.Great or target_item:calc("is_living") then
+         return true
       end
 
-      Gui.mes("magic.name.prompt")
+      -- TODO itemgen
+      hammer.params.garoks_hammer = { seed = Rand.rnd(20000)+1 }
+      local seed = hammer.params.garoks_hammer.seed
+      assert(seed)
 
-      result, canceled = AliasPrompt:new("weapon"):query()
+      -- Prevent save scumming by using a predefined seed when regenerating the
+      -- item.
+      Rand.set_seed(seed)
+
+      local material = hammer:calc("material")
+
+      local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+      Gui.start_draw_callback(cb)
+
+      ItemMaterial.change_item_material(target_item, material)
+
+      Rand.set_seed(seed)
+
+      target_item:reset("quality", Enum.Quality.Great)
+      target_item.subname = Text.random_subname_seed()
+
+      local times = Rand.rnd(Rand.rnd(Rand.rnd(10) + 1) + 3) + 3
+      local enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Enchant.MAX_LEVEL) + 1)
+
+      for _ = 1, times do
+         Rand.set_seed(seed)
+         -- TODO enchantment add
+      end
+
       Rand.set_seed()
 
-      if not result or canceled then
-         return true, { obvious = false }
+      Gui.mes("magic.garoks_hammer.apply", target_item)
+
+      target:refresh()
+
+      hammer.amount = hammer.amount - 1
+      local map, obj = hammer:containing_map()
+      if map and class.is_an(IMapObject, obj) then
+         map:refresh_tile(obj.x, obj.y)
       end
-
-      local seed = result.seed
-      item.subname = seed
-
-      Gui.mes("magic.name.apply", result.alias)
 
       return true
    end

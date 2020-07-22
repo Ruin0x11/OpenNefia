@@ -110,13 +110,16 @@ function Calc.round_margin(a, b)
 end
 
 function Calc.make_sound(chara, map)
+   -- TODO
 end
 
 function Calc.make_guards_hostile(map)
+   -- TODO
 end
 
 function Calc.calc_item_value(item, mode)
-   return item:calc("value")
+   -- TODO
+   return 0
 end
 
 return Calc

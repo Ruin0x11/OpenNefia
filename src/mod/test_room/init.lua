@@ -4,10 +4,9 @@ local Pos = require("api.Pos")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local Skill = require("mod.elona_sys.api.Skill")
+local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 
-local function test_room(self, player)
-   local width = 20
-   local height = 20
+local function make_map(width, height)
    local map = InstancedMap:new(width, height)
    map:clear("elona.cobble")
    map.is_indoor = true
@@ -15,7 +14,10 @@ local function test_room(self, player)
    for _, x, y in Pos.iter_border(0, 0, width - 1, height - 1) do
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end
+   return map
+end
 
+local function test_room(self, player)
    player:mod_base_skill_level("elona.stat_magic", 10000)
 
    data["base.skill"]:iter()
@@ -34,12 +36,15 @@ local function test_room(self, player)
 
    player:heal_to_max()
 
+   local map = Elona122Map.generate("palmia")
+   local tx, ty = 18, 22
+
    for _, x, y in map:iter_tiles() do
       map:memorize_tile(x, y)
    end
 
    Map.set_map(map)
-   map:take_object(player, width / 2, height / 2)
+   map:take_object(player, tx, ty)
 end
 
 data:add {

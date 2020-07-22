@@ -135,10 +135,12 @@ end
 function AliasPrompt:update()
    if self.list.chosen then
       local item = self.list:selected_item()
+      Rand.set_seed()
       return { alias = item.text, seed = item.seed }
    end
 
    if self.canceled then
+      Rand.set_seed()
       return nil, "canceled"
    end
 

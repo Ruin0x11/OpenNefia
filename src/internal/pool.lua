@@ -40,8 +40,8 @@ function pool:take_object(obj, x, y)
       return nil
    end
 
-   x = x or 0
-   y = y or 0
+   x = math.floor(x or 0)
+   y = math.floor(y or 0)
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
 

@@ -14,6 +14,7 @@ config["base.default_font"] = "kochi-gothic-subst.ttf"
 if fs.is_file("data/font/MS-Gothic.ttf") then
    config["base.default_font"] = "MS-Gothic.ttf"
 end
+config["autosave"] = false
 
 config["base.quickstart_on_startup"] = false
 

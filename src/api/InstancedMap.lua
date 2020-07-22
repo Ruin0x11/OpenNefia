@@ -528,6 +528,9 @@ end
 
 function InstancedMap:refresh_tile(x, y)
    local tile = self:tile(x, y)
+   if tile == nil then
+      return
+   end
 
    -- TODO: maybe map tiles should be map objects, or at least support
    -- IMapObject:calc() by extracting its interface.

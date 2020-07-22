@@ -7,6 +7,7 @@ local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
 local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -600,26 +601,60 @@ local EQUIPMENT_CATEGORIES = {
    "elona.equip_neck",
 }
 
+local function is_equipment(item)
+   return fun.iter(EQUIPMENT_CATEGORIES):any(function(cat) return item:has_category(cat) end)
+end
+
 local inv_equipment = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_equipment",
    elona_id = 23,
    elona_sub_id = 0,
 
-   sources = { "chara" },
+   sources = { "chara", "equipment" },
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.identify",
+   text = "ui.inventory_command.target",
 
    filter = function(ctxt, item)
-      local Log = require("api.Log")
-      return fun.iter(EQUIPMENT_CATEGORIES):any(function(cat) return item:has_category(cat) end)
+      return item:has_category("elona.furniture") or is_equipment(item)
    end,
 
    on_select = function(ctxt, item, amount)
-      item:separate()
       return "inventory_continue"
+   end,
+
+   on_return_item = function(ctxt, item, amount)
+      -- TODO
+      item:separate()
    end
 }
 data:add(inv_equipment)
+
+local inv_garoks_hammer = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_garoks_hammer",
+   elona_id = 23,
+   elona_sub_id = 7,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   text = "ui.inventory_command.target",
+
+   filter = function(ctxt, item)
+      return item:calc("quality") < Enum.Quality.Great and is_equipment(item)
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end,
+
+   on_return_item = function(ctxt, item, amount)
+      -- TODO
+      item:separate()
+   end
+}
+data:add(inv_garoks_hammer)

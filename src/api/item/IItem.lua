@@ -202,14 +202,20 @@ end
 
 --- @tparam id:base.body_part body_part_type
 --- @treturn bool
-function IItem:is_equipped_at(body_part_type)
+function IItem:slot_equipped_in()
    if not self:is_equipped() then
-      return false
+      return nil
    end
 
    local slot = self.location:equip_slot_of(self)
+   return slot and slot.type
+end
 
-   return slot and slot.type == body_part_type
+-- TODO remove
+--- @tparam id:base.body_part body_part_type
+--- @treturn bool
+function IItem:is_equipped_at(body_part_type)
+   return self:slot_equipped_in() == body_part_type
 end
 
 function IItem:remove_activity(no_message)

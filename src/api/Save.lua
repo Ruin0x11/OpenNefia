@@ -103,7 +103,9 @@ end
 
 -- TODO
 function Save.autosave()
-   Save.save_game()
+   if config["base.autosave"] then
+      Save.save_game()
+   end
 end
 
 return Save

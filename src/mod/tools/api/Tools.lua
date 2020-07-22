@@ -625,4 +625,7 @@ function Tools.clear_mefs()
    Mef.iter():each(IOwned.remove_ownership)
 end
 
+function Tools.player_pos()
+   return Chara.player().x, Chara.player().y
+end
 return Tools

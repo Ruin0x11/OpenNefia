@@ -7,11 +7,11 @@ local data = require("internal.data")
 local EquipSlots = class.class("EquipSlots", ILocation)
 
 --- @tparam {id:base.body_part,...} body_parts
---- @tparam uid:IChara owner_uid
-function EquipSlots:init(body_parts, owner_uid)
+--- @tparam uid:IChara owner
+function EquipSlots:init(body_parts, owner)
    body_parts = body_parts or {}
 
-   self.owner_uid = owner_uid
+   self.owner = owner
 
    local init = function(_type)
       data["base.body_part"]:ensure(_type)

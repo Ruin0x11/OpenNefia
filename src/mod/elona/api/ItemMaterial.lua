@@ -20,7 +20,7 @@ local MATERIALS_SOFT = {
    {"elona.dusk", "elona.griffon", "elona.rubynus", "elona.ether"}
 }
 
-function ItemMaterial.get_starting_material(item, chara, chara_make)
+function ItemMaterial.choose_random_material(item, chara, chara_make)
    local level
    local material = item.material
    if chara then
@@ -96,24 +96,25 @@ local function remove_material_enchantments(item, material)
    -- TODO
 end
 
-function ItemMaterial.change_item_material(item, material, do_reset)
-   if do_reset then
-      local cur_material = data["elona.item_material"]:ensure(item.material)
-      remove_material_enchantments(item)
-      local proto = item.proto
-      item.weight = proto.weight
-      item.hit_bonus = proto.hit_bonus
-      item.damage_bonus = proto.damage_bonus
-      item.dv = proto.dv
-      item.pv = proto.pv
-      item.dice_y = proto.dice_y
-      item.color = proto.color
-      item.value = math.floor(item.value * 100 / cur_material.value)
-   end
+function ItemMaterial.change_item_material(item, new_material)
+   local cur_material = data["elona.item_material"]:ensure(item.material)
+   remove_material_enchantments(item)
+   local proto = item.proto
+   item.weight = proto.weight or 0
+   item.hit_bonus = proto.hit_bonus or 0
+   item.damage_bonus = proto.damage_bonus or 0
+   item.dv = proto.dv or 0
+   item.pv = proto.pv or 0
+   item.dice_y = proto.dice_y or 0
+   item.color = proto.color or nil
+   item.value = math.floor(item.value * 100 / cur_material.value)
 
-   if material == nil then
-      material = ItemMaterial.get_starting_material(item)
-   end
+   new_material = new_material or ItemMaterial.choose_random_material(item)
+
+   ItemMaterial.apply_item_material(item, new_material)
+end
+
+function ItemMaterial.apply_item_material(item, material)
 
    if item:has_category("elona.furniture") then
       if data["elona.item_material"]:ensure(material).no_furniture then
@@ -160,7 +161,7 @@ function ItemMaterial.change_item_material(item, material, do_reset)
 
    apply_material_enchantments(item, material)
 
-   item.value = Calc.item_value(item)
+   item.value = Calc.calc_item_value(item)
 
    local owner = item:get_owning_chara()
    if owner then

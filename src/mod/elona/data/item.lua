@@ -3488,7 +3488,7 @@ local item =
          subcategory = 60002,
          coefficient = 100,
 
-         params = { god_id = "" },
+         params = { altar = { god_id = "" } },
 
          categories = {
             "elona.furniture_altar",
