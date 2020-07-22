@@ -326,10 +326,7 @@ end
 function IItem:remove()
    self.amount = 0
 
-   local map = self:current_map()
-   if map then
-      map:refresh_tile(self.x, self.y)
-   end
+   self:refresh_cell_on_map()
 
    self:remove_ownership()
 end

@@ -5,6 +5,7 @@ local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
 local Magic = require("mod.elona.api.Magic")
 local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 
 local function calc_initial_gold(item, owner)
    local amount
@@ -1363,7 +1364,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 155, 154, 153 },
          pierce_rate = 10,
@@ -1402,7 +1403,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
          pierce_rate = 25,
@@ -1570,7 +1571,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
          pierce_rate = 15,
@@ -1612,7 +1613,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
          pierce_rate = 15,
@@ -1822,7 +1823,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 155, 154, 153 },
          pierce_rate = 20,
@@ -4272,7 +4273,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
          pierce_rate = 20,
@@ -4316,7 +4317,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 155, 154, 153 },
 
@@ -7182,7 +7183,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -7237,7 +7238,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -7279,7 +7280,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.equip_ring_ring",
             "elona.unique_item",
@@ -7322,7 +7323,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.equip_melee_staff",
             "elona.unique_item",
@@ -7353,7 +7354,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
          pierce_rate = 40,
@@ -7388,7 +7389,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          enchantments = {
             { id = 41, power = 100 },
             { id = 10019, power = 700 },
@@ -10804,7 +10805,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          tags = { "sf" },
 
@@ -13125,7 +13126,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 215, 175 },
 
@@ -13342,7 +13343,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_weapon",
             "elona.misc_item"
@@ -13382,7 +13383,7 @@ local item =
 
          is_precious = true,
          food_rank = 7,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
 
@@ -13425,7 +13426,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.container",
             "elona.unique_item"
@@ -13658,7 +13659,7 @@ local item =
 
          is_precious = true,
          food_rank = 7,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
 
@@ -13773,7 +13774,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -13805,7 +13806,7 @@ local item =
 
          is_precious = true,
          food_rank = 7,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -13827,7 +13828,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.junk"
@@ -13879,7 +13880,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 240,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -13902,7 +13903,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 120,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -14000,7 +14001,7 @@ local item =
 
          elona_function = 28,
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -14019,7 +14020,7 @@ local item =
 
          elona_function = 29,
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -14047,7 +14048,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
 
@@ -14088,7 +14089,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -14129,7 +14130,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 255, 175 },
          pierce_rate = 15,
@@ -14173,7 +14174,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 215, 255, 215 },
 
@@ -14218,7 +14219,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          pierce_rate = 30,
          enchantments = {
             { id = 80023, power = 350 },
@@ -14258,7 +14259,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 215, 175 },
          pierce_rate = 10,
@@ -14298,7 +14299,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 215, 175 },
 
@@ -14337,7 +14338,7 @@ local item =
          param1 = 446,
          param2 = 300,
          param3 = 12,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
 
@@ -14365,7 +14366,7 @@ local item =
          param1 = 404,
          param2 = 400,
          param3 = 8,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
 
@@ -14391,7 +14392,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 72,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 255, 175 },
 
@@ -14419,7 +14420,7 @@ local item =
          param1 = 1132,
          param2 = 100,
          param3 = 24,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -14484,7 +14485,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 720,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -14680,7 +14681,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -14831,7 +14832,7 @@ local item =
 
          is_precious = true,
          food_rank = 4,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -14890,7 +14891,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          enchantments = {
             { id = 48, power = 100 },
             { id = 10017, power = 450 },
@@ -14940,7 +14941,7 @@ local item =
          elona_function = 17,
          is_precious = true,
          param1 = 180,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          enchantments = {
             { id = 49, power = 100 }
          },
@@ -15163,7 +15164,7 @@ local item =
          skill = "elona.throwing",
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 50,categories = {
             "elona.equip_ranged_thrown",
             "elona.unique_item",
@@ -15213,7 +15214,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -15255,7 +15256,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          enchantments = {
             { id = 44, power = 250 },
             { id = 39, power = 200 },
@@ -15311,7 +15312,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 480,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -15334,7 +15335,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 185, 155, 215 },
 
@@ -15368,7 +15369,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 215, 175 },
 
@@ -15432,7 +15433,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 215, 175 },
 
@@ -15470,7 +15471,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 255, 175 },
 
@@ -15508,7 +15509,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -15544,7 +15545,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
 
@@ -15806,7 +15807,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",pierce_rate = 65,enchantments = {
+         quality = Enum.Quality.Unique,pierce_rate = 65,enchantments = {
             { id = 80002, power = 400 },
             { id = 70054, power = 850 },
             { id = 10016, power = 34500 },
@@ -15837,7 +15838,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
 
@@ -15877,7 +15878,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
          pierce_rate = 20,
@@ -15908,7 +15909,7 @@ local item =
          originalnameref2 = "license",
 
          is_precious = true,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          elona_type = "normal_book",
 
@@ -16256,7 +16257,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
 
@@ -16297,7 +16298,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          tags = { "sf" },
          color = { 155, 154, 153 },
@@ -16354,7 +16355,7 @@ local item =
          elona_function = 49,
          is_precious = true,
          param1 = Resolver.make("base.between", { min = 1, coefficient = 20000 }),
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          medal_value = 94,
          categories = {
             "elona.unique_item",
@@ -16380,7 +16381,7 @@ local item =
          elona_function = 17,
          is_precious = true,
          param1 = 200,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          color = { 255, 255, 255 },
 
@@ -16567,7 +16568,7 @@ local item =
          rarity = 5000,
          coefficient = 0,
 
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
 
          on_drink = function(item, params)
             return Magic.drink_potion(1147, 100, item, params)
@@ -16658,7 +16659,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 240,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -16681,7 +16682,7 @@ local item =
          is_precious = true,
          has_cooldown_time = true,
          param3 = 240,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          categories = {
             "elona.unique_item",
             "elona.misc_item"
@@ -16955,7 +16956,7 @@ local item =
 
          is_precious = true,
          identify_difficulty = 500,
-         fixlv = "special",
+         quality = Enum.Quality.Unique,
          enchantments = {
             { id = 57, power = 300 },
             { id = 61, power = 200 }

@@ -20,12 +20,16 @@ function IMapObject:init()
    self.y = 0
 end
 
+function IMapObject:refresh_cell_on_map()
+   local map, obj = self:containing_map()
+   if map and class.is_an(IMapObject, obj) then
+      map:refresh_tile(obj.x, obj.y)
+   end
+end
+
 --- Refreshes this map object.
 function IMapObject:on_refresh()
-   local map = self:current_map()
-   if map then
-      map:refresh_tile(self.x, self.y)
-   end
+   self:refresh_cell_on_map()
 end
 
 --- Sets the position of this map object.
@@ -137,6 +141,20 @@ end
 --- @treturn[opt] table
 function IMapObject:produce_memory()
    return nil
+end
+
+function IMapObject:replace_with(other)
+   assert(class.is_an(IMapObject, other))
+   assert(self._type == other._type)
+   assert(other.location == nil)
+
+   local uid = self.uid
+   local location = self.location
+
+   table.replace_with(self, other)
+
+   self.uid = uid
+   self.location = location
 end
 
 --- @function IMapObject.refresh

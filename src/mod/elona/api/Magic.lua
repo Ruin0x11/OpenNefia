@@ -220,9 +220,8 @@ function Magic.zap_wand(magic_id, power, item, params)
       end
    end
 
-   if Item.is_alive(item) and not item:is_on_ground() then
-      local map = item:current_map()
-      map:refresh_tile(item.x, item.y)
+   if Item.is_alive(item) then
+      item:refresh_cell_on_map()
    end
 
    local sep = item:separate()

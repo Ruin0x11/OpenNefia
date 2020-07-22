@@ -588,7 +588,7 @@ local categories2 = {
          if self.param2 > 0 then
             self.image = self.params.cooked_images[self.param2]
          end
-         if self.material == "elona.raw" then
+         if self.material == "elona.fresh" then
             local hours = 24
             self.param3 = self.param3 + hours
          end

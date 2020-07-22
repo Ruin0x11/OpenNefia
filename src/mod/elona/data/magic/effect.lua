@@ -368,10 +368,7 @@ data:add {
       if Effect.is_cursed(params.curse_state) and Rand.one_in(5) then
          Gui.mes("magic.map.cursed")
          item.amount = item.amount - 1
-         local item_map = item:current_map()
-         if item_map then
-            item_map:refresh_tile(item.x, item.y)
-         end
+         item:refresh_cell_on_map()
          return true
       end
 
@@ -1248,11 +1245,129 @@ data:add {
       target:refresh()
 
       hammer.amount = hammer.amount - 1
-      local map, obj = hammer:containing_map()
-      if map and class.is_an(IMapObject, obj) then
-         map:refresh_tile(obj.x, obj.y)
-      end
+      hammer:refresh_cell_on_map()
 
       return true
+   end
+}
+
+local function do_change_material(target, material_kit, target_item, power)
+   if target_item:calc("quality") == Enum.Quality.Unique then
+      if power < 350  then
+         Gui.mes("magic.change_material.more_power_needed")
+         return true
+      end
+
+      local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+      Gui.start_draw_callback(cb)
+
+      Gui.mes("magic.change_material.artifact_reconstructed", target, target_item)
+
+      material_kit.amount = material_kit.amount - 1
+      target_item:refresh_cell_on_map()
+      local new_item = Item.create(target_item._id, nil, nil, { ownerless = true })
+      target_item:replace_with(new_item)
+   else
+      local cb = Anim.load("elona.anim_smoke", target.x, target.y)
+      Gui.start_draw_callback(cb)
+      local fixed_material = nil
+      if power <= 50 and Rand.one_in(3) then
+         fixed_material = "elona.fresh"
+      end
+      local level = power / 10
+      local quality = power / 100
+
+      local mat_level = math.floor(Rand.rnd(level + 1) / 10 + 1)
+
+      -- >>>>>>>> shade2/item_data.hsp:1145 	if iId(ci)=idMaterialKit:mtLv=rnd(mtLv+ ...
+      if material_kit._id == "elona.material_kit" then
+         mat_level = Rand.rnd(mat_level + 1)
+         if not fixed_material and Rand.one_in(3) then
+            fixed_material = "elona.soft"
+         else
+            fixed_material = "elona.metal"
+         end
+      end
+      -- <<<<<<<< shade2/item_data.hsp:1146  ...
+
+      local old_name = target_item:build_name()
+
+      local material_id = ItemMaterial.choose_random_material_2(target_item, mat_level, quality, fixed_material, nil)
+      ItemMaterial.change_item_material(target_item, material_id)
+
+      Gui.mes("magic.change_material.apply", target, old_name, target_item)
+   end
+
+   target:refresh()
+
+   return true
+end
+
+data:add {
+   _id = "effect_material_kit",
+   _type = "elona_sys.magic",
+   elona_id = 21,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      local material_kit = params.item
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(target, "elona.inv_equipment")
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local target_item = result.result
+      target_item:separate()
+
+      return do_change_material(target, material_kit, target_item, params.power)
+   end
+}
+
+data:add {
+   _id = "effect_change_material",
+   _type = "elona_sys.magic",
+   elona_id = 1127,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      local material_kit = params.item
+
+      if not target:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(target, "elona.inv_equipment")
+
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local target_item = result.result
+      target_item:separate()
+
+      if target_item.quality == Enum.Quality.God or target_item:calc("is_living") then
+         Gui.mes("common.nothing_happens")
+         return true, {obvious = false}
+      end
+
+      return do_change_material(target, material_kit, target_item, params.power)
    end
 }

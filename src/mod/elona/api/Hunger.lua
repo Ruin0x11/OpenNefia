@@ -140,7 +140,7 @@ function Hunger.print_quality(chara, item)
          end
       end
 
-      if item.material == "elona.raw" and item:calc("time_until_rot") < 0 then
+      if item.material == "elona.fresh" and item:calc("time_until_rot") < 0 then
          Gui.mes("food: rotten")
          return
       end
@@ -168,7 +168,7 @@ function Hunger.print_quality(chara, item)
 
       Gui.mes("food: delicious")
 
-   elseif item.material == "elona.raw" and item:calc("time_until_rot") < 0 then
+   elseif item.material == "elona.fresh" and item:calc("time_until_rot") < 0 then
       Gui.mes("food other: rotten")
       return
    end

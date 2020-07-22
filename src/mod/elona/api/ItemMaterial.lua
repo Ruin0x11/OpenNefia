@@ -1,10 +1,19 @@
 local Calc = require("mod.elona.api.Calc")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
+local Log = require("api.Log")
 
 local ItemMaterial = {}
 
-local MATERIALS_METAL = {
+-- These are global generation tables for materials. The material chosen depends
+-- on the quality of the item/material and the level of the item/character
+-- wielding it. The first dimension is chosen at random using a hardcoded
+-- formula. The second dimension is indexed by quality from worst to best.
+--
+-- To make this moddable we'd have to change the formula since it assumes a
+-- fixed 5x4 array of possible materials to choose from.
+
+ItemMaterial.MATERIALS_METAL = {
     {"elona.bronze", "elona.lead", "elona.mica", "elona.coral"},
     {"elona.iron", "elona.silver", "elona.glass", "elona.obsidian"},
     {"elona.steel", "elona.platinum", "elona.pearl", "elona.mithril"},
@@ -12,7 +21,7 @@ local MATERIALS_METAL = {
     {"elona.titanium", "elona.diamond", "elona.rubynus", "elona.ether"}
 }
 
-local MATERIALS_SOFT = {
+ItemMaterial.MATERIALS_SOFT = {
    {"elona.cloth", "elona.silk", "elona.paper", "elona.bone"},
    {"elona.leather", "elona.scale", "elona.glass", "elona.obsidian"},
    {"elona.chain", "elona.platinum", "elona.pearl", "elona.mithril"},
@@ -20,24 +29,40 @@ local MATERIALS_SOFT = {
    {"elona.dusk", "elona.griffon", "elona.rubynus", "elona.ether"}
 }
 
-function ItemMaterial.choose_random_material(item, chara, chara_make)
+function ItemMaterial.choose_random_material(item, base_material, base_level, base_quality, chara)
+   -- <<<< shade2/item_data.hsp:1143 *choose_material ...
+   base_level = base_level or (item and item:calc("level")) or 0
+   base_quality = base_quality or (item and item:calc("quality")) or 0
+   local is_chara_make = chara ~= nil
+
    local level
-   local material = item.material
-   if chara then
+
+   if is_chara_make then
       level = math.floor(chara:calc("level") / 15) + 1
    else
-      level = Rand.rnd(item:calc("level") / 10) + 1
+      level = math.floor(Rand.rnd(base_level+1) / 10 + 1)
+   end
+   -- >>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
+
+   return ItemMaterial.choose_random_material(item, level, base_quality, base_material, chara)
+end
+
+function ItemMaterial.choose_random_material_2(item, level, base_quality, material, chara)
+   level = math.floor(level)
+   base_quality = math.floor(base_quality)
+
+   if material == nil then
+      material = data["base.item"]:ensure(item._id).material
+   end
+   if material == nil then
+      Log.warn("Missing default material for item '%s', falling back to 'elona.fresh'")
+      material = "elona.fresh"
    end
 
-   if item.id == "elona.item_material_kit" then
-      level = Rand.rnd(level + 1)
-      if Rand.one_in(3) then
-         material = "elona.metal"
-      else
-         material = "elona.soft"
-      end
-   end
+   base_quality = base_quality or (item and item:calc("quality")) or 0
+   local is_chara_make = chara ~= nil
 
+   -- >>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
    local i = Rand.rnd(100)
    local idx
    if i < 5 then
@@ -50,13 +75,13 @@ function ItemMaterial.choose_random_material(item, chara, chara_make)
       idx = 1
    end
 
-   if chara_make then
+   if is_chara_make then
       level = 0
       idx = 1
    end
 
-   level = math.min(level, 5-1)
-   level = math.clamp(Rand.rnd(level+1) + item:calc("quality"), 0, 5-1)
+   level = math.clamp(Rand.rnd(level+1) + base_quality, 0, 5-1)
+   level = level + 1
 
    if item:has_category("elona.furniture") then
       if Rand.one_in(2) then
@@ -68,16 +93,15 @@ function ItemMaterial.choose_random_material(item, chara, chara_make)
 
    if material == "elona.metal" then
       if not Rand.one_in(10) then
-         material = MATERIALS_METAL[idx][level+1]
+         material = ItemMaterial.MATERIALS_METAL[level][idx]
       else
-         material = MATERIALS_SOFT[idx][level+1]
+         material = ItemMaterial.MATERIALS_SOFT[level][idx]
       end
-   end
-   if material == "elona.soft" then
+   elseif material == "elona.soft" then
       if not Rand.one_in(10) then
-         material = MATERIALS_SOFT[idx][level+1]
+         material = ItemMaterial.MATERIALS_SOFT[level][idx]
       else
-         material = MATERIALS_METAL[idx][level+1]
+         material = ItemMaterial.MATERIALS_METAL[level][idx]
       end
    end
 
@@ -85,15 +109,18 @@ function ItemMaterial.choose_random_material(item, chara, chara_make)
       material = "elona.fresh"
    end
 
-   return material or item.material or "elona.sand"
+   assert(material and material ~= "elona.metal" and material ~= "elona.soft")
+
+   return material
+   -- <<<< shade2/item_data.hsp:1170 	return ...
 end
 
 local function apply_material_enchantments(item, material)
-   -- TODO
+   -- TODO enchantments
 end
 
 local function remove_material_enchantments(item, material)
-   -- TODO
+   -- TODO enchantments
 end
 
 function ItemMaterial.change_item_material(item, new_material)
@@ -115,7 +142,6 @@ function ItemMaterial.change_item_material(item, new_material)
 end
 
 function ItemMaterial.apply_item_material(item, material)
-
    if item:has_category("elona.furniture") then
       if data["elona.item_material"]:ensure(material).no_furniture then
          material = "elona.wood"

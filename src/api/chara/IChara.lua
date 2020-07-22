@@ -594,10 +594,7 @@ function IChara:kill(source)
    end
    self.is_solid = nil
 
-   local map = self:current_map()
-   if map then
-      map:refresh_tile(self.x, self.y)
-   end
+   self:refresh_cell_on_map()
 
    self:emit("base.on_chara_killed", {source=source})
 end
@@ -611,10 +608,7 @@ function IChara:vanquish()
    self.state = "Dead"
    self.is_solid = nil
 
-   local map = self:current_map()
-   if map then
-      map:refresh_tile(self.x, self.y)
-   end
+   self:refresh_cell_on_map()
 
    if self:is_ally() then
       table.iremove_value(save.base.allies, self.uid)

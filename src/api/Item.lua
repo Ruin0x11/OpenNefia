@@ -3,6 +3,7 @@
 local ILocation = require("api.ILocation")
 local Map = require("api.Map")
 local MapObject = require("api.MapObject")
+local Enum = require("api.Enum")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -76,8 +77,7 @@ end
 ---  - approximate_pos (bool): If position is not accessable, put the item somewhere close.
 ---  - copy (table): A dict of fields to copy to the newly created item. Overrides fix_level, quality, and amount.
 ---  - amount (int): Amount of the item to create.
----  - fix_level (int): Fix level of the item.
----  - quality (int): Quality of the item (1-6).
+---  - quality (Enum.Quality): Quality of the item. Defaults to Quality.Bad.
 --- @tparam[opt] ILocation map Where to instantiate this item.
 ---   Defaults to the current map.
 --- @treturn[opt] IItem
@@ -102,9 +102,10 @@ function Item.create(id, x, y, params, where)
       end
    end
 
+   local item_data = data["base.item"]:ensure(id)
+
    local copy = params.copy or {}
-   copy.fix_level = params.fix_level or 1
-   copy.quality = params.quality or 1
+   copy.quality = params.quality or item_data.quality or Enum.Quality.Bad
    copy.amount = math.max(1, params.amount or 1)
 
    local gen_params = {

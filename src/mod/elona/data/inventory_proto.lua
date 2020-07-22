@@ -146,7 +146,7 @@ local inv_eat = {
    text = "ui.inventory_command.eat",
    filter = function(ctxt, item)
       return item:calc("can_eat")
-         or item:calc("material") == "elona.raw" -- TODO
+         or item:calc("material") == "elona.fresh" -- TODO
    end,
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
