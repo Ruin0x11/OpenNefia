@@ -271,6 +271,7 @@ Event.register("base.on_damage_chara", "Damage text and blood", function(chara, 
                   params.message_tense = "passive"
 end)
 Event.register("base.on_kill_chara", "Damage text and kill handling", function(chara, params)
+                  -- >>>>>>>> shade2/chara_func.hsp:1597 		se=eleInfo(ele,1):if se:snd se,0,1 ..
                   if params.element and params.element.sound then
                      Gui.play_sound(params.element.sound, chara.x, chara.y)
                   end
@@ -292,12 +293,15 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                      end
                      Map.spill_fragments(chara.x, chara.y, 3, chara:current_map())
                   else
-                     Gui.play_sound(Rand.choice({"base.kill1", "base.kill2"}), chara.x, chara.y)
-                     local cb = Anim.death(chara.x, chara.y, "base.death_blood", params.element and params.element._id)
-                     Gui.start_draw_callback(cb)
+                     if chara:is_in_fov() then
+                        Gui.play_sound(Rand.choice({"base.kill1", "base.kill2"}), chara.x, chara.y)
+                        local cb = Anim.death(chara.x, chara.y, "base.death_blood", params.element and params.element._id)
+                        Gui.start_draw_callback(cb)
+                     end
                      Map.spill_blood(chara.x, chara.y, 4)
                   end
                   Gui.update_screen()
+                  -- <<<<<<<< shade2/chara_func.hsp:1661 			} ..
 end)
 
 
