@@ -18,15 +18,19 @@ function PicViewer:init(drawable)
       self.width = drawable:get_width() + 20
       self.height = drawable:get_height() + 20
 
-      if drawable.quads then
+      if type(drawable.quads) == "table" then
          local to_region = function(q)
-            local tx, ty, tw, th, iw, ih = q:getViewport()
-            return {
-               x = tx,
-               y = ty,
-               width = tw,
-               height = th
-            }
+            if q.typeOf and q:typeOf("Text") then
+               local tx, ty, tw, th, iw, ih = q:getViewport()
+               return {
+                  x = tx,
+                  y = ty,
+                  width = tw,
+                  height = th
+               }
+            end
+
+            return nil
          end
          self.regions = fun.iter(drawable.quads):map(to_region):to_list()
       end

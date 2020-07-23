@@ -45,6 +45,10 @@ function ReplLayer:init(env, params)
    self.canvas = nil
    self.redraw = false
 
+   -- Modify the size of the REPL inside the REPL, using
+   -- `field.repl.height_percentage = 0.5`
+   self.height_percentage = 0.3
+
    -- quake pulldown
    self.pulldown = true
    self.pulldown_y = 0
@@ -404,7 +408,8 @@ function ReplLayer:relayout(x, y, width, height)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
-   self.height = Draw.get_height() / 3
+   local win_height = Draw.get_height()
+   self.height = math.floor(math.clamp(win_height * self.height_percentage, win_height / 3, win_height))
    self.font_size = 15
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())

@@ -59,15 +59,15 @@ Event.register("base.on_hotload_end", "Hotload field renderer",
                   end
                end)
 
-Event.register("base.on_hotload_prototype", "Hotload UI theme",
-               function(_, args)
-                  if args.entry._type == "base.theme" then
-                     local UiTheme = require("api.gui.UiTheme")
-                     UiTheme.clear()
-                     local default_theme = "base.default"
-                     UiTheme.add_theme(default_theme)
-                  end
-               end)
+-- Event.register("base.on_hotload_prototype", "Hotload UI theme",
+--                function(_, args)
+--                   if args.entry._type == "base.theme" then
+--                      local UiTheme = require("api.gui.UiTheme")
+--                      UiTheme.clear()
+--                      local default_theme = "base.default"
+--                      UiTheme.add_theme(default_theme)
+--                   end
+--                end)
 
 Event.register("base.on_hotload_end", "Hotload chips",
                function(_, params)

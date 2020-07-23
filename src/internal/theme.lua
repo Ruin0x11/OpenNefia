@@ -99,11 +99,11 @@ function theme.build_overrides()
    --    ...
    -- }
    --
-   -- Shallow copy each original entry to avoid mutating it. We want to be able
-   -- to go back to a clean state if the user disables themes in the config
-   -- menu, without the need to restart.
+   -- Deepcopy each original entry to avoid mutating it. We want to be able to
+   -- go back to a clean state if the user disables themes in the config menu,
+   -- without the need to restart.
    local make_entry_map = function(ty)
-      return ty, data[ty]:iter():map(function(t) return t._id, table.shallow_copy(t) end):to_map()
+      return ty, data[ty]:iter():map(function(t) return t._id, table.deepcopy(t) end):to_map()
    end
    local supported_types = table.keys(types)
    local t = fun.iter(supported_types):map(make_entry_map):to_map()

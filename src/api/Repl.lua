@@ -7,6 +7,7 @@ local env = require("internal.env")
 local field = require("game.field")
 local repl = require("internal.repl")
 local fs = require("util.fs")
+local main_state = require("internal.global.main_state")
 
 local Repl = {}
 
@@ -151,7 +152,7 @@ local paused = false
 --- the REPL with all local variables in scope captured in its
 --- environment. If any modifications are made to local variables,
 --- they will be reflected when execution resumes.
-function Repl.pause()
+function Repl.pause(force)
    if Env.is_headless() or paused then
       return
    end
