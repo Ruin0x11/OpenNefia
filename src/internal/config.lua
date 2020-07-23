@@ -31,6 +31,10 @@ config["base._basic_attributes"] = {
    "elona.stat_charisma",
 }
 
+config["base.themes"] = {
+--   "beautify.beautify"
+}
+
 -- Don't overwrite existing values in the current config.
 config.on_hotload = function(old, new)
    for k, v in pairs(new) do

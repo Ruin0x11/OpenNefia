@@ -933,10 +933,13 @@ Function called on game begin. Is passed the created player.
 
 data:add_type {
    name = "theme",
-   schema = schema.Record {
-      target = schema.Optional(schema.String),
-      assets = schema.Table,
-   },
+   fields = {
+      {
+         name = "overrides",
+         default = {},
+         template = true,
+      }
+   }
 }
 
 data:add_type {

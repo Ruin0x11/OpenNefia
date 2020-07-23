@@ -7,6 +7,7 @@ local field = require("game.field")
 local main_state = require("internal.global.main_state")
 local UiTheme = require("api.gui.UiTheme")
 local bmp_convert = require("internal.bmp_convert")
+local config = require("internal.config")
 
 local theme = {}
 
@@ -14,8 +15,124 @@ function theme.get_tile_size()
    return draw.get_coords():get_size()
 end
 
-function theme.load_tilemap_tile()
-   local map_tiles = data["base.map_tile"]:iter():to_list()
+local types = {}
+
+types["base.chip"] = function(old, new)
+   local fields = {
+      image = new.image,
+      width = new.width,
+      height = new.height,
+      tall = new.tall,
+      key_color = new.key_color
+   }
+   if fields.tall == nil then
+      fields.tall = old.tall
+   end
+   return table.merge(old, fields)
+end
+
+types["base.sound"] = function(old, new)
+   local fields = {
+      file = new.file
+   }
+   return table.merge(old, fields)
+end
+
+types["base.map_tile"] = function(old, new)
+   local fields = {
+      image = new.image
+   }
+   return table.merge(old, fields)
+end
+
+types["base.portrait"] = function(old, new)
+   local fields = {
+      image = new.image
+   }
+   return table.merge(old, fields)
+end
+
+types["base.pcc_part"] = function(old, new)
+   local fields = {
+      image = new.image,
+      key_color = new.key_color
+   }
+   return table.merge(old, fields)
+end
+
+--- Builds a modified table of all supported assets with the overrides set in
+--- the config option `base.themes`.
+function theme.build_overrides()
+   -- Build a table of all unmodified assets like this:
+   --
+   -- {
+   --    ["base.chip"] = {
+   --      ["elona.chara_putit"] = { _id = "elona.chara_putit", image = "..." },
+   --      ["elona.chara_yeek"] = { _id = "elona.chara_yeek", image = "..." },
+   --      ...
+   --    },
+   --    ["base.map_tile"] = { ... },
+   --    ...
+   -- }
+   --
+   -- Shallow copy each original entry to avoid mutating it. We want to be able
+   -- to go back to a clean state if the user disables themes in the config
+   -- menu, without the need to restart.
+   local make_entry_map = function(ty)
+      return ty, data[ty]:iter():map(function(t) return t._id, table.shallow_copy(t) end):to_map()
+   end
+   local supported_types = table.keys(types)
+   local t = fun.iter(supported_types):map(make_entry_map):to_map()
+
+   -- Get the list of overrides for each theme.
+   local active_themes = config["base.themes"] or {}
+   active_themes = fun.iter(active_themes):map(function(_id) return data["base.theme"]:ensure(_id) end)
+
+   -- later themes override earlier ones
+   for _, active_theme in active_themes:unwrap() do
+      -- For each supported type, iterate each override for it.
+      for _, new_entry in ipairs(active_theme.overrides) do
+         local _type = new_entry._type
+         local _id = new_entry._id
+
+         assert(types[_type], ("Unsupported theme type '%s'"):format(_type))
+
+         -- Get the original entry in the working copy and modify it.
+         local old_entry = t[_type][_id]
+         if old_entry then
+            t[_type][_id] = types[_type](old_entry, new_entry)
+         else
+            Log.error("Theme '%s' overrides '%s.%s', but it was missing. Are you missing a mod?", active_theme._id, _type, _id)
+         end
+      end
+   end
+
+   -- The shape of the final data looks like this:
+   --
+   -- {
+   --    ["base.chip"] = {
+   --      { _id = "elona.chara_putit", image = "..." },
+   --      { _id = "elona.chara_yeek", image = "..." },
+   --      ...
+   --    },
+   --    ["base.map_tile"] = { ... },
+   --    ...
+   -- }
+   local final = {}
+
+   for _type, entries in pairs(t) do
+      local list = {}
+      for _, entry in pairs(entries) do
+         list[#list+1] = entry
+      end
+      final[_type] = list
+   end
+
+   return final
+end
+
+function theme.load_tilemap_tile(map_tiles)
+   map_tiles = map_tiles or data["base.map_tile"]:iter():to_list()
 
    local tw, th = theme.get_tile_size()
 
@@ -24,8 +141,14 @@ function theme.load_tilemap_tile()
    return tile_atlas
 end
 
-function theme.load_tilemap_tile_overhang()
-   local map_overhang_tiles = data["base.map_tile"]:iter()
+function theme.load_tilemap_tile_overhang(map_tiles)
+   local iter
+   if map_tiles then
+      iter = fun.iter(map_tiles)
+   else
+      iter = data["base.map_tile"]:iter()
+   end
+   local map_overhang_tiles = iter
        :filter(function(t) return t.wall_kind ~= nil end)
        :to_list()
 
@@ -45,8 +168,8 @@ function theme.load_tilemap_tile_overhang()
    return tile_overhang_atlas
 end
 
-function theme.load_tilemap_item_shadow()
-   local chip_tiles = data["base.chip"]:iter():to_list()
+function theme.load_tilemap_item_shadow(chip_tiles)
+   chip_tiles = chip_tiles or data["base.chip"]:iter():to_list()
 
    local tw, th = theme.get_tile_size()
 
@@ -64,8 +187,8 @@ function theme.load_tilemap_item_shadow()
    return item_shadow_atlas
 end
 
-function theme.load_tilemap_chip()
-   local chip_tiles = data["base.chip"]:iter():to_list()
+function theme.load_tilemap_chip(chip_tiles)
+   chip_tiles = chip_tiles or data["base.chip"]:iter():to_list()
 
    local tw, th =  theme.get_tile_size()
    local chip_atlas = atlas:new(tw, th)
@@ -73,8 +196,8 @@ function theme.load_tilemap_chip()
    return chip_atlas
 end
 
-function theme.load_tilemap_portrait()
-   local portrait_tiles = data["base.portrait"]:iter():to_list()
+function theme.load_tilemap_portrait(portrait_tiles)
+   portrait_tiles = portrait_tiles or data["base.portrait"]:iter():to_list()
 
    local portrait_atlas = atlas:new(48, 72)
    portrait_atlas:load(portrait_tiles)
@@ -88,26 +211,31 @@ function theme.reload_all(log_cb)
 
    bmp_convert.clear_cache()
 
+   local overrides = theme.build_overrides()
+   local map_tiles = overrides["base.map_tile"]
+   local chip_tiles = overrides["base.chip"]
+   local portrait_tiles = overrides["base.portrait"]
+
    local sw = Stopwatch:new()
 
    log_cb("Loading tilemaps (tile)...")
-   local tile_atlas = theme.load_tilemap_tile()
+   local tile_atlas = theme.load_tilemap_tile(map_tiles)
    Log.info("%s", sw:measure_and_format("Load tilemap: tile"))
 
    log_cb("Loading tilemaps (overhang)...")
-   local tile_overhang_atlas = theme.load_tilemap_tile_overhang()
+   local tile_overhang_atlas = theme.load_tilemap_tile_overhang(map_tiles)
    Log.info("%s", sw:measure_and_format("Load tilemap: overhang"))
 
    log_cb("Loading tilemaps (item shadow)...")
-   local item_shadow_atlas = theme.load_tilemap_item_shadow()
+   local item_shadow_atlas = theme.load_tilemap_item_shadow(chip_tiles)
    Log.info("%s", sw:measure_and_format("Load tilemap: item shadow"))
 
    log_cb("Loading tilemaps (chip)...")
-   local chip_atlas = theme.load_tilemap_chip()
+   local chip_atlas = theme.load_tilemap_chip(chip_tiles)
    Log.info("%s", sw:measure_and_format("Load tilemap: chip"))
 
    log_cb("Loading tilemaps (portrait)...")
-   local portrait_atlas = theme.load_tilemap_portrait()
+   local portrait_atlas = theme.load_tilemap_portrait(portrait_tiles)
    Log.info("%s", sw:measure_and_format("Load tilemap: portrait"))
 
    local atlases = require("internal.global.atlases")
