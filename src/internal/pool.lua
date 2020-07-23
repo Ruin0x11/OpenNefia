@@ -139,8 +139,21 @@ local function iter(state, index)
       return nil
    end
 
-   local data = state.content[state.uids[index]].data
-   index = index + 1
+   -- We have to be careful of stale iterators, since state.uids is a deepcopy
+   -- from the parent. If this iterator is created as a standalone object and
+   -- any objects referred to inside state.uids are removed from the pool
+   -- afterwards, they should be skipped over.
+   local content
+   while content == nil and index <= #state.uids do
+      content = state.content[state.uids[index]]
+      index = index + 1
+   end
+
+   if content == nil then
+      return nil
+   end
+
+   local data = content.data
    return index, data
 end
 
