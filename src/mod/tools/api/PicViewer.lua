@@ -19,9 +19,18 @@ function PicViewer:init(drawable)
       self.height = drawable:get_height() + 20
 
       if type(drawable.quads) == "table" then
-         local to_region = function(q)
-            if q.typeOf and q:typeOf("Text") then
+         local to_region = function(q, tbl)
+            if q.typeOf and q:typeOf("Quad") then
                local tx, ty, tw, th, iw, ih = q:getViewport()
+               return {
+                  x = tx,
+                  y = ty,
+                  width = tw,
+                  height = th
+               }
+            elseif tbl and tbl.typeOf and tbl:typeOf("Quad") then
+               -- ["region_id"] = <Quad>
+               local tx, ty, tw, th, iw, ih = tbl:getViewport()
                return {
                   x = tx,
                   y = ty,
@@ -80,14 +89,14 @@ function PicViewer:draw()
    Draw.filled_rect(x, y, self.width, self.height, {0, 0, 0})
    Draw.line_rect(x+9, y+9, self.width-18, self.height-18, {255, 255, 255})
 
-   for _, r in ipairs(self.regions) do
-      Draw.line_rect(x + r.x + 10, y + r.y + 10, r.width, r.height, {255, 0, 0})
-   end
-
    if self.drawable.draw then
       self.drawable:draw(x + 10, y + 10, nil, nil, {255, 255, 255})
    else
       Draw.image(self.drawable, x + 10, y + 10, nil, nil, {255, 255, 255})
+   end
+
+   for _, r in ipairs(self.regions) do
+      Draw.line_rect(x + r.x + 10, y + r.y + 10, r.width, r.height, {255, 0, 0})
    end
 end
 
