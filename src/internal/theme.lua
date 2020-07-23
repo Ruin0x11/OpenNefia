@@ -60,6 +60,30 @@ types["base.pcc_part"] = function(old, new)
    return table.merge(old, fields)
 end
 
+types["base.asset"] = function(old, new)
+   local fields = {
+      -- TODO: maybe use only "image" and detect type based on x/y/width/height
+      -- parameter presence, like all other asset types
+      image = new.image,
+      source = new.source,
+
+      x = new.x,
+      y = new.y,
+      width = new.width,
+      height = new.height,
+      count_x = new.count_x,
+      count_y = new.count_y,
+      key_color = new.key_color,
+
+      -- XXX: probably a bad idea to mod this, given the pervasive amount of
+      -- fixed offsets used when rendering. The better option would to be code
+      -- entirely new GUIs instead.
+      --
+      -- regions = new.regions
+   }
+   return table.merge(old, fields)
+end
+
 --- Builds a modified table of all supported assets with the overrides set in
 --- the config option `base.themes`.
 function theme.build_overrides()
@@ -245,15 +269,18 @@ function theme.reload_all(log_cb)
                chip_atlas,
                portrait_atlas)
 
+   log_cb("Loading theme...")
+
+   local asset_map = fun.iter(overrides["base.asset"])
+      :map(function(a) return a._id, a end)
+      :to_map()
+
+   UiTheme.clear()
+   UiTheme.set_assets(asset_map)
+
    -- Check if we're changing the theme in-game, and if so, do some special
    -- cleanup.
    if main_state.is_main_title_reached then
-      -- Clear the cache of loaded theme assets.
-      local id = UiTheme.theme_id()
-      assert(id)
-      UiTheme.clear()
-      UiTheme.add_theme(id)
-
       -- Call :relayout() on every active layer. This should fully propagate the
       -- theme change, because the way things are designed is that each UI
       -- component is responsible for updating the theme in its :relayout()
@@ -262,7 +289,7 @@ function theme.reload_all(log_cb)
       -- handled automatically, but for now it works, so I won't complain...
       draw.resize(nil, nil)
 
-      -- Update each draw layer with the new atlases.
+      -- Update each draw layer with the new tile/chip atlases.
       field:on_theme_switched()
    end
 end

@@ -6,7 +6,7 @@ local fs = require("util.fs")
 local data = require("internal.data")
 local asset_drawable = require("internal.draw.asset_drawable")
 
-local active_themes = {}
+local assets = {}
 local cache = {}
 
 local theme_proxy = class.class("theme_proxy")
@@ -14,18 +14,6 @@ local theme_proxy = class.class("theme_proxy")
 function theme_proxy:init(namespace)
    assert(type(namespace) == "string")
    self._namespace = namespace
-end
-
-local function find_asset(asset)
-   for i = #active_themes, 1, -1 do
-      local theme = active_themes[i]
-      local proto = theme.assets[asset]
-      if proto then
-         return proto, theme
-      end
-   end
-
-   return data["base.asset"][asset]
 end
 
 local function load_asset(id)
@@ -40,7 +28,7 @@ local function load_asset(id)
    -- is expensive and it takes almost a minute to load it all at once I'd
    -- rather just load it lazily for the time being.
 
-   local proto, theme = find_asset(id)
+   local proto = assets[id]
    if not proto then
       return nil
    end
@@ -104,28 +92,17 @@ function UiTheme.clear_cache()
 end
 
 function UiTheme.clear()
-   active_themes = {}
+   assets = {}
    cache = {}
 end
 
-function UiTheme.add_theme(id)
-   local theme = data["base.theme"]:ensure(id)
-   active_themes[#active_themes+1] = theme
+function UiTheme.set_assets(_assets)
+   assets = _assets
    cache = {}
-   -- TEMP: validate file existence
-   local p = theme_holder:new()
-end
-
-function UiTheme.theme_id()
-   return active_themes[1] and active_themes[1]._id
 end
 
 function UiTheme.load(instance)
    return theme_holder:new()
-end
-
-function UiTheme.load_asset(id)
-   return UiTheme.load(nil)[id]
 end
 
 function UiTheme.preload_all()
@@ -133,9 +110,6 @@ function UiTheme.preload_all()
 end
 
 function UiTheme.on_hotload(old, new)
-   local id = old.theme_id()
-   assert(id)
-   new.add_theme(id)
    table.replace_with(old, new)
    new.preload_all()
 end

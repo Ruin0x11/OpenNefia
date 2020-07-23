@@ -129,11 +129,6 @@ function startup.run(mods)
 
    i18n.switch_language(config["base.language"])
 
-   progress("Loading theme...")
-
-   local default_theme = "base.default"
-   UiTheme.add_theme(default_theme)
-
    field:setup_repl()
 
    Event.trigger("base.on_game_startup")
