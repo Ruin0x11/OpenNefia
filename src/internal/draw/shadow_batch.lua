@@ -46,22 +46,31 @@ local shadowmap = {
     0, 9, 10, 5, 12, 7, 0, 1, 11, 0, 6, 3, 8, 4, 2, 0, 0,
 };
 
-function shadow_batch:relayout()
+function shadow_batch:init(width, height)
+   self.width = width
+   self.height = height
+
+   self.tiles = table.of_2d(0, width + 4, height + 4, true)
+
+   self.quad = {}
+   self.corner_quad = {}
+   self.edge_quad = {}
+
+   self.updated = true
+   self.tile_width = 48
+   self.tile_height = 48
+
+   self.shadow_strength = 70
+end
+
+function shadow_batch:on_theme_switched(atlas, coords)
+   self.coords = coords
+
    self.t = UiTheme.load(self)
    self.image = self.t.base.shadow.image
    self.edge_image = self.t.base.shadow_edges.image
    self.batch = love.graphics.newSpriteBatch(self.image)
    self.edge_batch = love.graphics.newSpriteBatch(self.edge_image)
-end
-
-function shadow_batch:init(width, height, coords)
-   self.width = width
-   self.height = height
-   self.coords = coords
-
-   self.tiles = table.of_2d(0, width + 4, height + 4, true)
-
-   self:relayout()
 
    self.quad = {}
    self.corner_quad = {}
@@ -89,10 +98,9 @@ function shadow_batch:init(width, height, coords)
    end
 
    self.updated = true
-   self.tile_width = 48
-   self.tile_height = 48
+end
 
-   self.shadow_strength = 70
+function shadow_batch:relayout()
 end
 
 function shadow_batch:find_bounds(x, y)

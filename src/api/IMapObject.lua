@@ -93,7 +93,7 @@ end
 function IMapObject:containing_map()
    local InstancedMap = require("api.InstancedMap")
    local location = self.location
-   local containing = self.location
+   local containing = self
 
    while location ~= nil do
       if class.is_an(InstancedMap, location) then

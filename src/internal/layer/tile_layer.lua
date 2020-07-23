@@ -3,15 +3,25 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 local save = require("internal.global.save")
+local atlases = require("internal.global.atlases")
 
 local tile_layer = class.class("tile_layer", IDrawLayer)
 
-function tile_layer:init(width, height, coords)
-   local coords = Draw.get_coords()
-   local tile_atlas = require("internal.global.atlases").get().tile
+function tile_layer:init(width, height)
+   self.width = width
+   self.height = height
+
+   self.tile_batch = tile_batch:new(self.width, self.height)
+   self.tile_width = nil
+   self.tile_height = nil
+end
+
+function tile_layer:on_theme_switched(coords)
+   self.coords = coords
+   local tile_atlas = atlases.get().tile
    local tw, th = coords:get_size()
 
-   self.tile_batch = tile_batch:new(width, height, tile_atlas, coords)
+   self.tile_batch:on_theme_switched(tile_atlas, coords)
    self.tile_width = tw
    self.tile_height = th
 end

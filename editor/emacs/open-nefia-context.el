@@ -70,7 +70,7 @@
   "Face for the conflict markers.")
 (defvar open-nefia-context-markers-face 'open-nefia-context-markers)
 
-(defconst open-nefia-context-begin-re "^ *-- >>>>>>>> shade2/\\([^:]*\\):\\([0-9]+\\)\\(DONE\\)?\\(.*\\)\n")
+(defconst open-nefia-context-begin-re "^ *-- >>>>>>>> shade2/\\([^:]*\\):\\([0-9]+\\)\\(:\\(DONE\\)\\)?\\(.*\\)\n")
 (defconst open-nefia-context-end-re "^ *-- <<<<<<<< shade2/\\([^:]*\\):\\([0-9]+\\)\\(.*\\)\n")
 
 (defvar open-nefia-context-conflict-style nil
@@ -108,7 +108,8 @@ An error is raised if not inside a conflict."
 	       (lower-end (match-beginning 0))
 	       (end (match-end 0))
 
-	       base-start base-end)
+	       (base-start 0)
+         (base-end 0))
 
 	  ;; handle the various conflict styles
 	  (cond
@@ -138,8 +139,7 @@ An error is raised if not inside a conflict."
 	          upper-start lower-start
 	          upper-end   lower-end)))
 
-    (when (not (string= done "DONE"))
-      (message done)
+    (when (not (string= done ":DONE"))
       (setq base-start lower-start
             base-end lower-end))
 

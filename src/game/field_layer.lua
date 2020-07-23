@@ -93,6 +93,19 @@ function field_layer:relayout(x, y, width, height)
    self.hud:relayout(self.x, self.y, self.width, self.height)
 end
 
+function field_layer:on_theme_switched()
+   -- Make sure that we redraw all tiles regardless of the FOV of the player. If
+   -- we don't do this those tiles will get cleared from the theme switch, but
+   -- not redrawn, so they will become black squares.
+   if self.map then
+      self.map:redraw_all_tiles()
+   end
+
+   if self.renderer then
+      self.renderer:on_theme_switched()
+   end
+end
+
 function field_layer:turn_cost()
    return self.map.turn_cost
 end

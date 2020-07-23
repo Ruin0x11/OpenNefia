@@ -8,14 +8,14 @@ local Chara = require("api.Chara")
 local emotion_icon_layer = class.class("emotion_icon_layer", IDrawLayer)
 
 function emotion_icon_layer:init(width, height, coords)
-   self.coords = Draw.get_coords()
-   local tw, th = coords:get_size()
-
    self.asset = nil
    self.batch = nil
-   self.tile_width = tw
-   self.tile_height = th
    self.parts = {}
+end
+
+function emotion_icon_layer:on_theme_switched(coords)
+   self.coords = coords
+   self.asset = nil
 end
 
 function emotion_icon_layer:relayout()
@@ -23,9 +23,11 @@ function emotion_icon_layer:relayout()
 end
 
 function emotion_icon_layer:reset()
+   self.batch = nil
    self.parts = {}
 end
 
+-- >>>>>>>> shade2/init.hsp:631:DONE 	#enum global emoHappy=6 ..
 local EMOTION_ICONS = {
 	["elona.happy"] = 6,
 	["elona.silent"] = 7,
@@ -48,7 +50,8 @@ local EMOTION_ICONS = {
 	["elona.insane"] = 24,
 	["elona.party"] = 25,
 }
-
+-- <<<<<<<< shade2/init.hsp:650 	#enum global emoParty ...
+--
 function emotion_icon_layer:update(dt, screen_updated)
    if not screen_updated then return end
 

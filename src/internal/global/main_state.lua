@@ -5,7 +5,7 @@ return {
    ---
    --- as this is tightly coupled with the main loop it has to be here instead
    --- of a module
-   reached_main_title = false,
+   is_main_title_reached = false,
 
    stop_low_power = false,
 

@@ -21,6 +21,8 @@ local sorted_layers = {}
 local handler = nil
 local gamma_correct = nil
 
+local cur_width, cur_height
+
 --
 --
 -- Internal engine functions
@@ -59,6 +61,8 @@ end
 function draw.init()
    love.window.setTitle("OpenNefia")
    set_window_mode(WIDTH, HEIGHT)
+   cur_width = love.graphics.getWidth()
+   cur_height = love.graphics.getHeight()
 
    love.graphics.setLineStyle("rough")
    love.graphics.setDefaultFilter("nearest", "nearest", 1)
@@ -426,6 +430,7 @@ function draw.copy_to_canvas()
    return love.graphics.newImage(canvas_last:newImageData())
 end
 
+
 --
 --
 -- Event callbacks
@@ -433,15 +438,18 @@ end
 --
 
 function draw.resize(w, h)
-   canvas = create_canvas(w, h)
-   canvas_last = create_canvas(w, h)
-   error_canvas = create_canvas(w, h)
+   cur_width = w or cur_width
+   cur_height = h or cur_height
+
+   canvas = create_canvas(cur_width, cur_height)
+   canvas_last = create_canvas(cur_width, cur_height)
+   error_canvas = create_canvas(cur_width, cur_height)
 
    for _, entry in ipairs(layers) do
-      entry.layer:relayout(0, 0, w, h)
+      entry.layer:relayout(0, 0, cur_width, cur_height)
    end
 
-   global_widgets:relayout(0, 0, w, h)
+   global_widgets:relayout(0, 0, cur_width, cur_height)
 
    require("api.Gui").update_screen()
 

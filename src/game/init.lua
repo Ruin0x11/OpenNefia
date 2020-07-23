@@ -25,7 +25,7 @@ game.in_game = false
 
 local function main_title()
    -- enable on low power mode
-   main_state.reached_main_title = true
+   main_state.is_main_title_reached = true
 
    game.in_game = false
 

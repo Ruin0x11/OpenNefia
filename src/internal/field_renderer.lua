@@ -5,11 +5,11 @@ local sound_manager = require("internal.global.sound_manager")
 
 local field_renderer = class.class("field_renderer")
 
-function field_renderer:init(width, height, layers)
+function field_renderer:init(map_width, map_height, layers)
    local coords = Draw.get_coords()
 
-   self.width = width
-   self.height = height
+   self.width = map_width
+   self.height = map_height
    self.coords = coords
    self.draw_x = 0
    self.draw_y = 0
@@ -33,13 +33,23 @@ function field_renderer:init(width, height, layers)
       end
       local IDrawLayer = require("api.gui.IDrawLayer")
 
-      local instance = layer:new(width, height, coords)
+      local instance = layer:new(map_width, map_height)
       class.assert_is_an(IDrawLayer, instance)
 
       -- TODO
+      instance:on_theme_switched(coords)
+      instance:reset()
       instance:relayout()
 
       self.layers[#self.layers+1] = instance
+   end
+end
+
+function field_renderer:on_theme_switched()
+   local coords = Draw.get_coords()
+   for _, layer in ipairs(self.layers) do
+      layer:on_theme_switched(coords)
+      layer:relayout()
    end
 end
 

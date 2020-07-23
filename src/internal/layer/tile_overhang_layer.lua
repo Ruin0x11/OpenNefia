@@ -3,26 +3,41 @@ local IDrawLayer = require("api.gui.IDrawLayer")
 local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 local save = require("internal.global.save")
+local atlases = require("internal.global.atlases")
 
 local tile_overhang_layer = class.class("tile_overhang_layer", IDrawLayer)
 
-function tile_overhang_layer:init(width, height, coords)
-   local coords = Draw.get_coords()
-   local tile_overhang_atlas = require("internal.global.atlases").get().tile_overhang
-   local tw, th = coords:get_size()
-
-   self.overhang_batch = tile_batch:new(width, height, tile_overhang_atlas, coords, tw, th)
+function tile_overhang_layer:init(width, height)
+   self.width = width
+   self.height = height
+   self.coords = nil
+   self.overhang_batch = tile_batch:new(self.width, self.height)
+   self.width = width
+   self.height = height
    self.top_shadows = {}
    self.bottom_shadows = {}
+   self.tile_width = nil
+   self.tile_height = nil
+end
+
+function tile_overhang_layer:on_theme_switched(coords)
+   local tile_overhang_atlas = atlases.get().tile_overhang
+
+   local tw, th = coords:get_size()
+
+   self.coords = coords
    self.tile_width = tw
    self.tile_height = th
+   self.overhang_batch:on_theme_switched(tile_overhang_atlas, self.coords)
 end
 
 function tile_overhang_layer:relayout()
 end
 
 function tile_overhang_layer:reset()
-   self.batch_inds = {}
+   self.top_shadows = {}
+   self.bottom_shadows = {}
+   self.overhang_batch:set_tiles({})
 end
 
 function tile_overhang_layer:update(dt, screen_updated)

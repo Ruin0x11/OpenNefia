@@ -6,30 +6,37 @@ local Draw = require("api.Draw")
 
 local debris_layer = class.class("debris_layer", IDrawLayer)
 
-function debris_layer:init(width, height, coords)
-   self.coords = Draw.get_coords()
-   local tw, th = self.coords:get_size()
-
+function debris_layer:init(width, height)
    self.top_shadows = {}
    self.bottom_shadows = {}
-   self.tile_width = tw
-   self.tile_height = th
+   self.tile_width = nil
+   self.tile_height = nil
 
-   self.t = UiTheme.load()
-
-   self.blood_asset = self.t.base.debris_blood:make_instance()
-   self.fragment_asset = self.t.base.debris_fragment:make_instance()
+   self.t = nil
 
    self.blood_batch = nil
    self.fragment_batch = nil
 end
 
+function debris_layer:on_theme_switched(coords)
+   self.coords = coords
+   local tw, th = self.coords:get_size()
+
+   self.tile_width = tw
+   self.tile_height = th
+end
+
 function debris_layer:relayout()
    self.t = UiTheme.load()
+   self.blood_asset = self.t.base.debris_blood:make_instance()
+   self.fragment_asset = self.t.base.debris_fragment:make_instance()
 end
 
 function debris_layer:reset()
-   self.batch_inds = {}
+   self.top_shadows = {}
+   self.bottom_shadows = {}
+   self.blood_batch = nil
+   self.fragment_batch = nil
 end
 
 function debris_layer:update(dt, screen_updated)

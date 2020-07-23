@@ -9,22 +9,12 @@ local atlases = require("internal.global.atlases")
 local chip_layer = class.class("chip_layer", IDrawLayer)
 
 function chip_layer:init(width, height)
-   local coords = Draw.get_coords()
-   local chip_atlas = atlases.get().chip
-   local item_shadow_atlas = atlases.get().item_shadow
+   self.width = width
+   self.height = height
+   self.chip_batch = sparse_batch:new(self.width, self.height)
+   self.shadow_batch = sparse_batch:new(self.width, self.height)
+   self.drop_shadow_batch = sparse_batch:new(self.width, self.height)
 
-   local shadow_atlas = atlas:new(48, 48)
-   self.t = UiTheme.load(self)
-
-   local tiles = {{
-         _id = "shadow",
-         image = self.t.base.character_shadow
-   }}
-   shadow_atlas:load(tiles, coords)
-
-   self.chip_batch = sparse_batch:new(width, height, chip_atlas, coords)
-   self.shadow_batch = sparse_batch:new(width, height, shadow_atlas, coords)
-   self.drop_shadow_batch = sparse_batch:new(width, height, item_shadow_atlas, coords)
    self.chip_batch_inds = {}
    self.shadow_batch_inds = {}
    self.drop_shadow_batch_inds = {}
@@ -38,12 +28,32 @@ vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
 ]])
 end
 
+function chip_layer:on_theme_switched(coords)
+   local chip_atlas = atlases.get().chip
+   local item_shadow_atlas = atlases.get().item_shadow
+
+   local shadow_atlas = atlas:new(48, 48)
+   self.t = UiTheme.load(self)
+
+   local tiles = {{
+         _id = "shadow",
+         image = self.t.base.character_shadow
+   }}
+   shadow_atlas:load(tiles, coords)
+
+   self.chip_batch:on_theme_switched(chip_atlas, coords)
+   self.shadow_batch:on_theme_switched(shadow_atlas, coords)
+   self.drop_shadow_batch:on_theme_switched(item_shadow_atlas, coords)
+end
+
 function chip_layer:relayout()
    self.t = UiTheme.load(self)
 end
 
 function chip_layer:reset()
    self.chip_batch_inds = {}
+   self.shadow_batch_inds = {}
+   self.drop_shadow_batch_inds = {}
 end
 local it = 0
 

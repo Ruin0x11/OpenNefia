@@ -8,6 +8,7 @@ function Stopwatch:init(precision, log_level)
    self.framerate = 60
    self.precision = precision or 5
    self.log_level = log_level or "debug"
+   self:measure()
 end
 
 function Stopwatch:measure()

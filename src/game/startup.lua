@@ -13,6 +13,7 @@ local Rand = require("api.Rand")
 local Repl = require("api.Repl")
 local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
 local config = require("internal.config")
+local theme = require("internal.theme")
 
 local startup = {}
 
@@ -157,18 +158,6 @@ local function get_map_tiles()
    return data["base.map_tile"]:iter():to_list()
 end
 
-local function get_map_overhang_tiles()
-   return data["base.map_tile"]:iter():filter(function(t) return t.wall_kind ~= nil end):to_list()
-end
-
-local function get_chip_tiles()
-   return data["base.chip"]:iter():to_list()
-end
-
-local function get_portrait_tiles()
-   return data["base.portrait"]:iter():to_list()
-end
-
 local tile_size = 48
 
 function startup.load_batches()
@@ -177,63 +166,7 @@ function startup.load_batches()
    local coords = require("internal.draw.coords.tiled_coords"):new()
    draw.set_coords(coords)
 
-   local sw = Stopwatch:new()
-   sw:measure()
-
-   progress("Loading tilemaps (tile)...")
-   local tile_atlas = atlas:new(tile_size, tile_size)
-   tile_atlas:load(get_map_tiles(), coords)
-
-   sw:p("load_batches.tile")
-
-   progress("Loading tilemaps (overhang)...")
-   local tw, th = coords:get_size()
-   local load_tile = function(atlas, proto)
-      local draw = function(tile, quad, x, y)
-         local qx, qy, _, _ = quad:getViewport()
-         quad:setViewport(qx, qy, tw, math.floor(th / 4))
-         love.graphics.draw(tile, quad, x, y)
-      end
-      atlas:load_one(proto, draw)
-   end
-   local tile_overhang_atlas = atlas:new(tile_size, tile_size)
-   tile_overhang_atlas:load(get_map_overhang_tiles(), nil, load_tile)
-
-   sw:p("load_batches.tile_overhang")
-
-   -- HACK
-   progress("Loading tilemaps (item shadow)...")
-   local load_tile = function(atlas, proto)
-      local draw = function(tile, quad, x, y)
-         love.graphics.setColor(0, 0, 0)
-         love.graphics.draw(tile, quad, x, y)
-         love.graphics.setColor(1, 1, 1)
-      end
-      atlas:load_one(proto, draw)
-   end
-   local item_shadow_atlas = atlas:new(tile_size, tile_size)
-   item_shadow_atlas:load(get_chip_tiles(), nil, load_tile)
-
-   sw:p("load_batches.item_shadow")
-
-   progress("Loading tilemaps (chip)...")
-   local chip_atlas = atlas:new(tile_size, tile_size)
-   chip_atlas:load(get_chip_tiles())
-
-   sw:p("load_batches.feat")
-
-   progress("Loading tilemaps (portrait)...")
-   local portrait_atlas = atlas:new(48, 72)
-   portrait_atlas:load(get_portrait_tiles())
-
-   sw:p("load_batches.portrait")
-
-   local atlases = require("internal.global.atlases")
-   atlases.set(tile_atlas,
-               tile_overhang_atlas,
-               item_shadow_atlas,
-               chip_atlas,
-               portrait_atlas)
+   theme.reload_all(progress)
 end
 
 return startup

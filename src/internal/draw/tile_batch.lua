@@ -2,19 +2,27 @@ local IBatch = require("internal.draw.IBatch")
 local Draw = require("api.Draw")
 local tile_batch = class.class("tile_batch", IBatch)
 
-function tile_batch:init(width, height, atlas, coords, tile_width, tile_height, offset_x, offset_y)
+function tile_batch:init(width, height, offset_x, offset_y)
    self.width = width
    self.height = height
-   self.atlas = atlas
-   self.coords = coords
+   self.tile_width = nil
+   self.tile_height = nil
 
    self.shadow = {5, 5, 5}
 
    self.tiles = {}
-   self.batch = love.graphics.newSpriteBatch(atlas.image)
+   self.batch = nil
    self.updated = true
-   self.tile_width = tile_width or self.atlas.tile_width
-   self.tile_height = tile_height or self.atlas.tile_height
+end
+
+function tile_batch:on_theme_switched(atlas, coords)
+   self.atlas = atlas
+   self.coords = coords
+   self.batch = love.graphics.newSpriteBatch(atlas.image)
+   self.tiles = {}
+   self.updated = true
+   self.tile_width = self.atlas.tile_width
+   self.tile_height = self.atlas.tile_height
 end
 
 function tile_batch:find_bounds(x, y)

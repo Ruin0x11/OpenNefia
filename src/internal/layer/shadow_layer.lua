@@ -11,12 +11,18 @@ local UiTheme = require("api.gui.UiTheme")
 
 local shadow_layer = class.class("shadow_layer", IDrawLayer)
 
-function shadow_layer:init(width, height, coords)
-   self.coords = coords
-   self.shadow_batch = shadow_batch:new(width, height, coords)
+function shadow_layer:init(width, height)
+   self.width = width
+   self.height = height
+   self.shadow_batch = shadow_batch:new(self.width, self.height)
    self.lights = {}
    self.frames = 0
    self.reupdate_light = false
+end
+
+function shadow_layer:on_theme_switched(coords)
+   self.coords = coords
+   self.shadow_batch:on_theme_switched(nil, coords)
 end
 
 function shadow_layer:relayout()
@@ -26,6 +32,8 @@ end
 function shadow_layer:reset()
    self.batch_inds = {}
    self.lights = {}
+   self.frames = 0
+   self.reupdate_light = false
 end
 
 function shadow_layer:rebuild_light(map)

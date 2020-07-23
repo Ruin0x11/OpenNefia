@@ -217,6 +217,12 @@ local function convert_luajit(filepath, key_color)
 end
 
 if jit and vips then
+   -- libvips has an image cache. If the file changes on disk but the image is
+   -- still in memory from a previous load, the pointer to the cached image will
+   -- be returned from vips.Image.new_from_file(). To support updating the file
+   -- outside the program, disable the cache for now.
+   vips.set_max(0)
+
    bmp_convert.convert = convert_luajit
 else
    bmp_convert.convert = convert_lua51

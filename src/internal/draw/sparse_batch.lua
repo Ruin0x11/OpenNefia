@@ -5,11 +5,11 @@ local IChipRenderable = require("api.gui.IChipRenderable")
 local SkipList = require("api.SkipList")
 local sparse_batch = class.class("sparse_batch", IBatch)
 
-function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
+function sparse_batch:init(width, height, offset_x, offset_y)
    self.width = width
    self.height = height
-   self.atlas = atlas
-   self.coords = coords
+   self.atlas = nil
+   self.coords = nil
 
    self.tiles = {}
    self.xcoords = {}
@@ -30,11 +30,19 @@ function sparse_batch:init(width, height, atlas, coords, offset_x, offset_y)
    self.to_draw_inds = {}
    self.to_draw_drawables = {}
    self.updated = true
-   self.tile_width = self.atlas.tile_width
-   self.tile_height = self.atlas.tile_height
+   self.tile_width = nil
+   self.tile_height = nil
    self.offset_x = offset_x or 0
    self.offset_y = offset_y or 0
    self.ordering = SkipList:new()
+end
+
+function sparse_batch:on_theme_switched(atlas, coords)
+   self.atlas = atlas
+   self.coords = coords
+   self.tile_width = self.atlas.tile_width
+   self.tile_height = self.atlas.tile_height
+   self:clear()
 end
 
 function sparse_batch:get_tile(ind)
@@ -134,7 +142,7 @@ function sparse_batch:clear()
 end
 
 function sparse_batch:set_tiles(tiles)
-   self.tiles = tiles
+   self.tiles = tiles or {}
    self.updated = true
 end
 

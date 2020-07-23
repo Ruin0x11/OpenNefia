@@ -6,8 +6,13 @@ local easing = require("mod.damage_popups.lib.easing")
 local DamagePopupLayer = class.class("DamagePopupLayer", IDrawLayer)
 
 function DamagePopupLayer:init()
-   self.coords = Draw.get_coords()
+   self.w = nil
+   self.h = nil
    self.icons = {}
+end
+
+function DamagePopupLayer:on_theme_switched(coords)
+   self.coords = Draw.get_coords()
    self.w, self.h = self.coords:get_size()
    self.w = math.floor(self.w/2)
    self.h = math.floor(self.h/2)

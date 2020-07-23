@@ -94,7 +94,7 @@ function PicViewer:update(dt)
 end
 
 function PicViewer.start(asset, _type)
-   local drawable
+   local drawable = asset
 
    if type(asset) == "string" then
       _type = _type or "base.asset"
@@ -110,6 +110,10 @@ function PicViewer.start(asset, _type)
       else
          error("unknown type " .. _type)
       end
+   elseif class.is_an("internal.draw.atlas", asset) then
+      drawable = asset.image
+   elseif class.is_an("internal.draw.tile_batch", asset) then
+      drawable = asset.atlas.image
    end
 
    PicViewer:new(drawable):query()

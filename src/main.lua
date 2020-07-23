@@ -165,7 +165,7 @@ function love.draw()
 end
 
 function love.focus(focused)
-   if main_state.reached_main_title and enable_low_power_mode then
+   if main_state.is_main_title_reached and enable_low_power_mode then
       if focused then
          low_power_mode = false
       else
