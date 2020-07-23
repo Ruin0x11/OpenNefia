@@ -284,8 +284,8 @@ function theme.reload_all(log_cb)
       -- Call :relayout() on every active layer. This should fully propagate the
       -- theme change, because the way things are designed is that each UI
       -- component is responsible for updating the theme in its :relayout()
-      -- function, using "self.t = UiTheme.load()" or similar. Maybe this isn't
-      -- a good way of standardizing things for modders, seeing as this is not
+      -- method, using "self.t = UiTheme.load()" or similar. Maybe this isn't a
+      -- good way of standardizing things for modders, seeing as this is not
       -- handled automatically, but for now it works, so I won't complain...
       draw.resize(nil, nil)
 

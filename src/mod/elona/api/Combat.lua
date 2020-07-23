@@ -169,24 +169,24 @@ function Combat.calc_evasion(target, attacker, weapon, attack_skill, attack_coun
 end
 
 local function mod_attack_hit_for_status_ailments(result, chara, target, is_ranged)
-   if chara:has_status_ailment("elona.dimming") then
+   if chara:has_effect("elona.dimming") then
       if Rand.one_in(4) then
          result.result = "critical"
          return result, "blocked"
       end
       result.evasion = result.evasion / 2
    end
-   if chara:has_status_ailment("elona.blind") then
+   if chara:has_effect("elona.blindness") then
       result.to_hit = result.to_hit / 2
    end
-   if target:has_status_ailment("elona.blind") then
+   if target:has_effect("elona.blindness") then
       result.evasion = result.evasion / 2
    end
-   if target:has_status_ailment("elona.sleep") then
+   if target:has_effect("elona.sleep") then
       result.result = "hit"
       return result, "blocked"
    end
-   if chara:has_status_ailment("elona.confusion") or chara:has_status_ailment("elona.dim") then
+   if chara:has_effect("elona.confusion") or chara:has_effect("elona.dimming") then
       if is_ranged then
          result.to_hit = result.to_hit / 5
       else

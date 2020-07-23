@@ -100,8 +100,8 @@ local function find_override_path(source, mod_root_path)
    -- directory with the same basename as the source file, e.g. matching
    -- "^character%." for "character.bmp".
    --
-   -- I think this is safe since there's never more than one file that shares
-   -- the same basename from original game files.
+   -- I think this is safe since there's no file that shares its basename with a
+   -- different file in the same directory, in the original game files.
    --
    -- TODO: Cache this to speed it up.
    local dir = fs.join(mod_root_path, parent)

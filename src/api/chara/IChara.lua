@@ -739,16 +739,6 @@ end
 --
 --
 
--- TEMP
-function IChara:status_ailment_turns(status_ailment)
-   return 0
-end
-
--- TEMP
-function IChara:has_status_ailment(status_ailment)
-   return self:status_ailment_turns(status_ailment) > 0
-end
-
 Codegen.generate_object_getter(IChara, "ammo", "base.item")
 
 function IChara:calc_initial_gold()

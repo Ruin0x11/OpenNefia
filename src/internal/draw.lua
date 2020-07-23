@@ -430,7 +430,6 @@ function draw.copy_to_canvas()
    return love.graphics.newImage(canvas_last:newImageData())
 end
 
-
 --
 --
 -- Event callbacks
