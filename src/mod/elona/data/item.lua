@@ -474,6 +474,7 @@ local item =
       {
          _id = "decorative_ring",
          elona_id = 13,
+         knownnameref = "ring",
          image = "elona.item_decorative_ring",
          value = 450,
          weight = 50,
@@ -491,6 +492,7 @@ local item =
       {
          _id = "scroll_of_identify",
          elona_id = 14,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 480,
          weight = 20,
@@ -511,6 +513,7 @@ local item =
       {
          _id = "scroll_of_oracle",
          elona_id = 15,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 12000,
          weight = 20,
@@ -531,6 +534,7 @@ local item =
       {
          _id = "scroll_of_teleportation",
          elona_id = 16,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 200,
          weight = 20,
@@ -551,6 +555,7 @@ local item =
       {
          _id = "scroll_of_incognito",
          elona_id = 17,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 3500,
          weight = 20,
@@ -572,6 +577,7 @@ local item =
       {
          _id = "rod_of_identify",
          elona_id = 18,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1080,
          weight = 800,
@@ -596,6 +602,7 @@ local item =
       {
          _id = "rod_of_teleportation",
          elona_id = 19,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 840,
          weight = 800,
@@ -619,6 +626,7 @@ local item =
       {
          _id = "spellbook_of_teleportation",
          elona_id = 20,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3200,
          weight = 380,
@@ -643,6 +651,7 @@ local item =
       {
          _id = "spellbook_of_identify",
          elona_id = 21,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5600,
          weight = 380,
@@ -668,6 +677,7 @@ local item =
       {
          _id = "spellbook_of_uncurse",
          elona_id = 22,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
@@ -789,6 +799,7 @@ local item =
       {
          _id = "potion_of_blindness",
          elona_id = 27,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 20,
          weight = 120,
@@ -811,6 +822,7 @@ local item =
       {
          _id = "potion_of_confusion",
          elona_id = 28,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 30,
          weight = 120,
@@ -833,6 +845,7 @@ local item =
       {
          _id = "potion_of_paralysis",
          elona_id = 29,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 40,
          weight = 120,
@@ -855,6 +868,7 @@ local item =
       {
          _id = "sleeping_drug",
          elona_id = 30,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 120,
          weight = 120,
@@ -895,6 +909,7 @@ local item =
       {
          _id = "spellbook_of_ice_bolt",
          elona_id = 32,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
@@ -919,6 +934,7 @@ local item =
       {
          _id = "spellbook_of_fire_bolt",
          elona_id = 33,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
@@ -943,6 +959,7 @@ local item =
       {
          _id = "spellbook_of_lightning_bolt",
          elona_id = 34,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
@@ -1680,6 +1697,7 @@ local item =
       {
          _id = "decorative_amulet",
          elona_id = 67,
+         knownnameref = "amulet",
          image = "elona.item_decorative_amulet",
          value = 200,
          weight = 50,
@@ -1697,6 +1715,7 @@ local item =
       {
          _id = "potion_of_cure_minor_wound",
          elona_id = 68,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 150,
          weight = 120,
@@ -1718,6 +1737,7 @@ local item =
       {
          _id = "potion_of_cure_major_wound",
          elona_id = 69,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 300,
          weight = 120,
@@ -1740,6 +1760,7 @@ local item =
       {
          _id = "potion_of_cure_critical_wound",
          elona_id = 70,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 1280,
          weight = 120,
@@ -1762,6 +1783,7 @@ local item =
       {
          _id = "potion_of_healing",
          elona_id = 71,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 3000,
          weight = 120,
@@ -1785,6 +1807,7 @@ local item =
       {
          _id = "potion_of_healer",
          elona_id = 72,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 5000,
          weight = 120,
@@ -1844,6 +1867,7 @@ local item =
       {
          _id = "potion_of_healer_odina",
          elona_id = 74,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 7500,
          weight = 120,
@@ -1867,6 +1891,7 @@ local item =
       {
          _id = "potion_of_healer_eris",
          elona_id = 75,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 10000,
          weight = 120,
@@ -1890,6 +1915,7 @@ local item =
       {
          _id = "potion_of_healer_jure",
          elona_id = 76,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 15000,
          weight = 120,
@@ -2551,6 +2577,7 @@ local item =
       {
          _id = "spellbook_of_minor_teleportation",
          elona_id = 116,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2400,
          weight = 380,
@@ -2592,6 +2619,7 @@ local item =
       {
          _id = "spellbook_of_summon_monsters",
          elona_id = 118,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6000,
          weight = 380,
@@ -2617,6 +2645,7 @@ local item =
       {
          _id = "rod_of_cure_minor_wound",
          elona_id = 119,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 650,
          weight = 800,
@@ -2641,6 +2670,7 @@ local item =
       {
          _id = "rod_of_magic_missile",
          elona_id = 120,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 800,
          weight = 800,
@@ -2665,6 +2695,7 @@ local item =
       {
          _id = "rod_of_summon_monsters",
          elona_id = 121,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 700,
          weight = 800,
@@ -2688,6 +2719,7 @@ local item =
       {
          _id = "rod_of_ice_bolt",
          elona_id = 122,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1460,
          weight = 800,
@@ -2712,6 +2744,7 @@ local item =
       {
          _id = "rod_of_fire_bolt",
          elona_id = 123,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1600,
          weight = 800,
@@ -2750,6 +2783,7 @@ local item =
       {
          _id = "rod_of_heal",
          elona_id = 125,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4800,
          weight = 800,
@@ -3569,6 +3603,7 @@ local item =
       {
          _id = "rod_of_lightning_bolt",
          elona_id = 175,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1900,
          weight = 800,
@@ -3593,6 +3628,7 @@ local item =
       {
          _id = "rod_of_slow",
          elona_id = 176,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1500,
          weight = 800,
@@ -4096,6 +4132,7 @@ local item =
       {
          _id = "rod_of_magic_mapping",
          elona_id = 202,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 3250,
          weight = 800,
@@ -4120,6 +4157,7 @@ local item =
       {
          _id = "rod_of_cure",
          elona_id = 203,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 2600,
          weight = 800,
@@ -4335,6 +4373,7 @@ local item =
       {
          _id = "scroll_of_uncurse",
          elona_id = 209,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 1050,
          weight = 20,
@@ -4904,6 +4943,7 @@ local item =
       {
          _id = "scroll_of_return",
          elona_id = 236,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 750,
          weight = 20,
@@ -5010,6 +5050,7 @@ local item =
       {
          _id = "scroll_of_magical_map",
          elona_id = 242,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 480,
          weight = 20,
@@ -5030,6 +5071,7 @@ local item =
       {
          _id = "scroll_of_gain_attribute",
          elona_id = 243,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 240000,
          weight = 20,
@@ -5055,6 +5097,7 @@ local item =
       {
          _id = "scroll_of_wonder",
          elona_id = 244,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 8000,
          weight = 20,
@@ -5077,6 +5120,7 @@ local item =
       {
          _id = "scroll_of_minor_teleportation",
          elona_id = 245,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 200,
          weight = 20,
@@ -5097,6 +5141,7 @@ local item =
       {
          _id = "spellbook_of_magic_mapping",
          elona_id = 246,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
@@ -5123,6 +5168,7 @@ local item =
       {
          _id = "spellbook_of_oracle",
          elona_id = 247,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 25000,
          weight = 380,
@@ -5149,6 +5195,7 @@ local item =
       {
          _id = "spellbook_of_return",
          elona_id = 248,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8900,
          weight = 380,
@@ -5175,6 +5222,7 @@ local item =
       {
          _id = "spellbook_of_cure_minor_wound",
          elona_id = 249,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
@@ -5199,6 +5247,7 @@ local item =
       {
          _id = "spellbook_of_cure_critical_wound",
          elona_id = 250,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 9000,
          weight = 380,
@@ -5224,6 +5273,7 @@ local item =
       {
          _id = "spellbook_of_cure_eris",
          elona_id = 251,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 15000,
          weight = 380,
@@ -5250,6 +5300,7 @@ local item =
       {
          _id = "spellbook_of_cure_jure",
          elona_id = 252,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 35000,
          weight = 380,
@@ -5350,6 +5401,7 @@ local item =
       {
          _id = "spellbook_of_magic_arrow",
          elona_id = 257,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2500,
          weight = 380,
@@ -5453,6 +5505,7 @@ local item =
       {
          _id = "poison",
          elona_id = 262,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 120,
          weight = 120,
@@ -5474,6 +5527,7 @@ local item =
       {
          _id = "spellbook_of_nether_eye",
          elona_id = 263,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 7200,
          weight = 380,
@@ -5499,6 +5553,7 @@ local item =
       {
          _id = "spellbook_of_chaos_eye",
          elona_id = 264,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 9600,
          weight = 380,
@@ -5525,6 +5580,7 @@ local item =
       {
          _id = "spellbook_of_nerve_eye",
          elona_id = 265,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
@@ -5574,6 +5630,7 @@ local item =
       {
          _id = "spellbook_of_darkness_beam",
          elona_id = 267,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
@@ -5599,6 +5656,7 @@ local item =
       {
          _id = "spellbook_of_illusion_beam",
          elona_id = 268,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5500,
          weight = 380,
@@ -5624,6 +5682,7 @@ local item =
       {
          _id = "spellbook_of_ice_ball",
          elona_id = 269,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5400,
          weight = 380,
@@ -5649,6 +5708,7 @@ local item =
       {
          _id = "spellbook_of_fire_ball",
          elona_id = 270,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5400,
          weight = 380,
@@ -5674,6 +5734,7 @@ local item =
       {
          _id = "spellbook_of_sound_ball",
          elona_id = 271,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8400,
          weight = 380,
@@ -5700,6 +5761,7 @@ local item =
       {
          _id = "spellbook_of_chaos_ball",
          elona_id = 272,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 12000,
          weight = 380,
@@ -5899,6 +5961,7 @@ local item =
       {
          _id = "potion_of_restore_body",
          elona_id = 285,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 280,
          weight = 120,
@@ -5920,6 +5983,7 @@ local item =
       {
          _id = "potion_of_restore_spirit",
          elona_id = 286,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 280,
          weight = 120,
@@ -5941,6 +6005,7 @@ local item =
       {
          _id = "potion_of_potential",
          elona_id = 287,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 50000,
          weight = 120,
@@ -5965,6 +6030,7 @@ local item =
       {
          _id = "scroll_of_curse",
          elona_id = 288,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 150,
          weight = 20,
@@ -5988,6 +6054,7 @@ local item =
       {
          _id = "spellbook_of_wishing",
          elona_id = 289,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 40000,
          weight = 380,
@@ -6013,6 +6080,7 @@ local item =
       {
          _id = "rod_of_wishing",
          elona_id = 290,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 300000,
          weight = 800,
@@ -7394,6 +7462,7 @@ local item =
       {
          _id = "scroll_of_greater_identify",
          elona_id = 362,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 3500,
          weight = 20,
@@ -7416,6 +7485,7 @@ local item =
       {
          _id = "scroll_of_vanish_curse",
          elona_id = 363,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 4400,
          weight = 20,
@@ -7438,6 +7508,7 @@ local item =
       {
          _id = "potion_of_defender",
          elona_id = 364,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 150,
          weight = 120,
@@ -7457,6 +7528,7 @@ local item =
       {
          _id = "spellbook_of_holy_shield",
          elona_id = 365,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2800,
          weight = 380,
@@ -7482,6 +7554,7 @@ local item =
       {
          _id = "rod_of_silence",
          elona_id = 366,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 1080,
          weight = 800,
@@ -7506,6 +7579,7 @@ local item =
       {
          _id = "spellbook_of_silence",
          elona_id = 367,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8400,
          weight = 380,
@@ -7532,6 +7606,7 @@ local item =
       {
          _id = "potion_of_silence",
          elona_id = 368,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 40,
          weight = 120,
@@ -7554,6 +7629,7 @@ local item =
       {
          _id = "spellbook_of_regeneration",
          elona_id = 369,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4400,
          weight = 380,
@@ -7580,6 +7656,7 @@ local item =
       {
          _id = "potion_of_troll_blood",
          elona_id = 370,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 800,
          weight = 120,
@@ -7600,6 +7677,7 @@ local item =
       {
          _id = "spellbook_of_resistance",
          elona_id = 371,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 7500,
          weight = 380,
@@ -7626,6 +7704,7 @@ local item =
       {
          _id = "potion_of_resistance",
          elona_id = 372,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 700,
          weight = 120,
@@ -7646,6 +7725,7 @@ local item =
       {
          _id = "spellbook_of_speed",
          elona_id = 373,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 12000,
          weight = 380,
@@ -7672,6 +7752,7 @@ local item =
       {
          _id = "spellbook_of_slow",
          elona_id = 374,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4800,
          weight = 380,
@@ -7698,6 +7779,7 @@ local item =
       {
          _id = "potion_of_speed",
          elona_id = 375,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 850,
          weight = 120,
@@ -7718,6 +7800,7 @@ local item =
       {
          _id = "potion_of_slow",
          elona_id = 376,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 30,
          weight = 120,
@@ -7740,6 +7823,7 @@ local item =
       {
          _id = "rod_of_speed",
          elona_id = 377,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4200,
          weight = 800,
@@ -7764,6 +7848,7 @@ local item =
       {
          _id = "spellbook_of_hero",
          elona_id = 378,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2600,
          weight = 380,
@@ -7789,6 +7874,7 @@ local item =
       {
          _id = "potion_of_hero",
          elona_id = 379,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 450,
          weight = 120,
@@ -7808,6 +7894,7 @@ local item =
       {
          _id = "spellbook_of_weakness",
          elona_id = 380,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2500,
          weight = 380,
@@ -7833,6 +7920,7 @@ local item =
       {
          _id = "spellbook_of_elemental_scar",
          elona_id = 381,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6400,
          weight = 380,
@@ -7859,6 +7947,7 @@ local item =
       {
          _id = "potion_of_weakness",
          elona_id = 382,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 30,
          weight = 120,
@@ -7881,6 +7970,7 @@ local item =
       {
          _id = "spellbook_of_holy_veil",
          elona_id = 383,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 11000,
          weight = 380,
@@ -7907,6 +7997,7 @@ local item =
       {
          _id = "scroll_of_holy_veil",
          elona_id = 384,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 1500,
          weight = 20,
@@ -7929,6 +8020,7 @@ local item =
       {
          _id = "rod_of_holy_light",
          elona_id = 385,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 3600,
          weight = 800,
@@ -7954,6 +8046,7 @@ local item =
       {
          _id = "spellbook_of_holy_light",
          elona_id = 386,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3500,
          weight = 380,
@@ -7980,6 +8073,7 @@ local item =
       {
          _id = "spellbook_of_holy_rain",
          elona_id = 387,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 9800,
          weight = 380,
@@ -8006,6 +8100,7 @@ local item =
       {
          _id = "scroll_of_holy_light",
          elona_id = 388,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 350,
          weight = 20,
@@ -8027,6 +8122,7 @@ local item =
       {
          _id = "scroll_of_holy_rain",
          elona_id = 389,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 1400,
          weight = 20,
@@ -8049,6 +8145,7 @@ local item =
       {
          _id = "scroll_of_mana",
          elona_id = 390,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 2400,
          weight = 20,
@@ -8071,6 +8168,7 @@ local item =
       {
          _id = "rod_of_mana",
          elona_id = 391,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4100,
          weight = 800,
@@ -8148,6 +8246,7 @@ local item =
       {
          _id = "scroll_of_gain_material",
          elona_id = 395,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 3800,
          weight = 20,
@@ -8170,6 +8269,7 @@ local item =
       {
          _id = "spellbook_of_nightmare",
          elona_id = 396,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3400,
          weight = 380,
@@ -8196,6 +8296,7 @@ local item =
       {
          _id = "spellbook_of_knowledge",
          elona_id = 397,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3800,
          weight = 380,
@@ -8222,6 +8323,7 @@ local item =
       {
          _id = "scroll_of_knowledge",
          elona_id = 398,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 1800,
          weight = 20,
@@ -8428,6 +8530,7 @@ local item =
       {
          _id = "spellbook_of_detect_objects",
          elona_id = 410,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4000,
          weight = 380,
@@ -8453,6 +8556,7 @@ local item =
       {
          _id = "scroll_of_detect_objects",
          elona_id = 411,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 350,
          weight = 20,
@@ -8473,6 +8577,7 @@ local item =
       {
          _id = "rod_of_uncurse",
          elona_id = 412,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 3800,
          weight = 800,
@@ -8957,6 +9062,7 @@ local item =
       {
          _id = "potion_of_weaken_resistance",
          elona_id = 429,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 150,
          weight = 120,
@@ -8979,6 +9085,7 @@ local item =
       {
          _id = "scroll_of_growth",
          elona_id = 430,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 15000,
          weight = 20,
@@ -9005,6 +9112,7 @@ local item =
       {
          _id = "scroll_of_faith",
          elona_id = 431,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 12000,
          weight = 20,
@@ -9031,6 +9139,7 @@ local item =
       {
          _id = "potion_of_mutation",
          elona_id = 432,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 5000,
          weight = 120,
@@ -9055,6 +9164,7 @@ local item =
       {
          _id = "potion_of_cure_mutation",
          elona_id = 433,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 4000,
          weight = 120,
@@ -9076,6 +9186,7 @@ local item =
       {
          _id = "spellbook_of_mutation",
          elona_id = 434,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 20000,
          weight = 380,
@@ -9770,6 +9881,7 @@ local item =
       {
          _id = "peridot",
          elona_id = 468,
+         knownnameref = "amulet",
          image = "elona.item_peridot",
          value = 4400,
          weight = 50,
@@ -9789,6 +9901,7 @@ local item =
       {
          _id = "talisman",
          elona_id = 469,
+         knownnameref = "amulet",
          image = "elona.item_talisman",
          value = 4400,
          weight = 50,
@@ -9808,6 +9921,7 @@ local item =
       {
          _id = "neck_guard",
          elona_id = 470,
+         knownnameref = "amulet",
          image = "elona.item_neck_guard",
          value = 2200,
          weight = 50,
@@ -9827,6 +9941,7 @@ local item =
       {
          _id = "charm",
          elona_id = 471,
+         knownnameref = "amulet",
          image = "elona.item_charm",
          value = 2000,
          weight = 50,
@@ -9848,6 +9963,7 @@ local item =
       {
          _id = "bejeweled_amulet",
          elona_id = 472,
+         knownnameref = "amulet",
          image = "elona.item_bejeweled_amulet",
          value = 1800,
          weight = 50,
@@ -9866,6 +9982,7 @@ local item =
       {
          _id = "engagement_amulet",
          elona_id = 473,
+         knownnameref = "amulet",
          image = "elona.item_engagement_amulet",
          value = 5000,
          weight = 50,
@@ -9884,6 +10001,7 @@ local item =
       {
          _id = "composite_ring",
          elona_id = 474,
+         knownnameref = "ring",
          image = "elona.item_composite_ring",
          value = 450,
          weight = 50,
@@ -9903,6 +10021,7 @@ local item =
       {
          _id = "armored_ring",
          elona_id = 475,
+         knownnameref = "ring",
          image = "elona.item_armored_ring",
          value = 450,
          weight = 50,
@@ -9922,6 +10041,7 @@ local item =
       {
          _id = "ring",
          elona_id = 476,
+         knownnameref = "ring",
          image = "elona.item_ring",
          value = 450,
          weight = 50,
@@ -9940,6 +10060,7 @@ local item =
       {
          _id = "engagement_ring",
          elona_id = 477,
+         knownnameref = "ring",
          image = "elona.item_engagement_ring",
          value = 5200,
          weight = 50,
@@ -9974,6 +10095,7 @@ local item =
       {
          _id = "scroll_of_ally",
          elona_id = 479,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 9000,
          weight = 20,
@@ -9996,6 +10118,7 @@ local item =
       {
          _id = "rod_of_domination",
          elona_id = 480,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 16000,
          weight = 800,
@@ -10025,6 +10148,7 @@ local item =
       {
          _id = "spellbook_of_domination",
          elona_id = 481,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 28000,
          weight = 380,
@@ -10103,6 +10227,7 @@ local item =
       {
          _id = "spellbook_of_web",
          elona_id = 484,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4500,
          weight = 380,
@@ -10128,6 +10253,7 @@ local item =
       {
          _id = "rod_of_web",
          elona_id = 485,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 3500,
          weight = 800,
@@ -10448,6 +10574,7 @@ local item =
       {
          _id = "scroll_of_inferior_material",
          elona_id = 500,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 600,
          weight = 20,
@@ -10471,6 +10598,7 @@ local item =
       {
          _id = "scroll_of_change_material",
          elona_id = 501,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 5000,
          weight = 20,
@@ -10493,6 +10621,7 @@ local item =
       {
          _id = "scroll_of_superior_material",
          elona_id = 502,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 20000,
          weight = 20,
@@ -10549,6 +10678,7 @@ local item =
       {
          _id = "little_sisters_diary",
          elona_id = 505,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8000,
          weight = 380,
@@ -10573,6 +10703,7 @@ local item =
       {
          _id = "scroll_of_enchant_weapon",
          elona_id = 506,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 8000,
          weight = 20,
@@ -10594,6 +10725,7 @@ local item =
       {
          _id = "scroll_of_greater_enchant_weapon",
          elona_id = 507,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 14000,
          weight = 20,
@@ -10616,6 +10748,7 @@ local item =
       {
          _id = "scroll_of_enchant_armor",
          elona_id = 508,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 8000,
          weight = 20,
@@ -10637,6 +10770,7 @@ local item =
       {
          _id = "scroll_of_greater_enchant_armor",
          elona_id = 509,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 14000,
          weight = 20,
@@ -10805,6 +10939,7 @@ local item =
       {
          _id = "scroll_of_recharge",
          elona_id = 515,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 2500,
          weight = 20,
@@ -10846,6 +10981,7 @@ local item =
       {
          _id = "rod_of_change_creature",
          elona_id = 517,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4500,
          weight = 800,
@@ -10871,6 +11007,7 @@ local item =
       {
          _id = "rod_of_alchemy",
          elona_id = 518,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 6000,
          weight = 800,
@@ -10896,6 +11033,7 @@ local item =
       {
          _id = "bottle_of_dye",
          elona_id = 519,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 500,
          weight = 120,
@@ -11387,7 +11525,11 @@ local item =
          coefficient = 100,
 
          elona_function = 6,
-         param1 = Resolver.make("elona.music_disc_id"),
+
+         params = { disc_music_id = "" },
+         on_init_params = function(self, params)
+            self.disc_music_id = Rand.choice(data["base.music"]:iter())._id
+         end,
 
          tags = { "sf" },
          _copy = {
@@ -11402,6 +11544,7 @@ local item =
       {
          _id = "rod_of_wall_creation",
          elona_id = 545,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4000,
          weight = 800,
@@ -11427,6 +11570,7 @@ local item =
       {
          _id = "spellbook_of_wall_creation",
          elona_id = 546,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6800,
          weight = 380,
@@ -11475,6 +11619,7 @@ local item =
       {
          _id = "spellbook_of_healing_rain",
          elona_id = 548,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 9500,
          weight = 380,
@@ -11501,6 +11646,7 @@ local item =
       {
          _id = "scroll_of_healing_rain",
          elona_id = 549,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 3500,
          weight = 20,
@@ -11526,6 +11672,7 @@ local item =
       {
          _id = "spellbook_of_healing_hands",
          elona_id = 550,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5800,
          weight = 380,
@@ -11552,6 +11699,7 @@ local item =
       {
          _id = "rod_of_healing_hands",
          elona_id = 551,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 5600,
          weight = 800,
@@ -11662,6 +11810,10 @@ local item =
 
          prevent_sell_in_own_shop = true,
 
+         params = {
+            shelter_serial_no = 0
+         },
+
          categories = {
             "elona.misc_item"
          },
@@ -11719,6 +11871,7 @@ local item =
       {
          _id = "aurora_ring",
          elona_id = 558,
+         knownnameref = "ring",
          image = "elona.item_engagement_ring",
          value = 17000,
          weight = 50,
@@ -11744,6 +11897,7 @@ local item =
       {
          _id = "potion_of_cure_corruption",
          elona_id = 559,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 100000,
          weight = 120,
@@ -11850,6 +12004,7 @@ local item =
       {
          _id = "spellbook_of_acid_ground",
          elona_id = 564,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 7500,
          weight = 380,
@@ -11876,6 +12031,7 @@ local item =
       {
          _id = "rod_of_acid_ground",
          elona_id = 565,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 4400,
          weight = 800,
@@ -11901,6 +12057,7 @@ local item =
       {
          _id = "acidproof_liquid",
          elona_id = 566,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 1900,
          weight = 120,
@@ -11963,6 +12120,7 @@ local item =
       {
          _id = "spellbook_of_fire_wall",
          elona_id = 569,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 5800,
          weight = 380,
@@ -11989,6 +12147,7 @@ local item =
       {
          _id = "rod_of_fire_wall",
          elona_id = 570,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 3800,
          weight = 800,
@@ -12170,6 +12329,7 @@ local item =
       {
          _id = "molotov",
          elona_id = 577,
+         knownnameref = "potion",
          image = "elona.item_molotov",
          value = 400,
          weight = 50,
@@ -12266,6 +12426,7 @@ local item =
       {
          _id = "rod_of_make_door",
          elona_id = 581,
+         knownnameref = "staff",
          image = "elona.item_rod",
          value = 2000,
          weight = 800,
@@ -12290,6 +12451,7 @@ local item =
       {
          _id = "spellbook_of_make_door",
          elona_id = 582,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 2000,
          weight = 380,
@@ -13038,6 +13200,7 @@ local item =
       {
          _id = "cat_sisters_diary",
          elona_id = 623,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 15000,
          weight = 380,
@@ -13062,6 +13225,7 @@ local item =
       {
          _id = "girls_diary",
          elona_id = 624,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 10000,
          weight = 380,
@@ -13106,6 +13270,7 @@ local item =
       {
          _id = "bottle_of_hermes_blood",
          elona_id = 626,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 50000,
          weight = 120,
@@ -13174,6 +13339,7 @@ local item =
       {
          _id = "spellbook_of_incognito",
          elona_id = 628,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 7000,
          weight = 380,
@@ -13265,6 +13431,7 @@ local item =
       {
          _id = "flying_scroll",
          elona_id = 632,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 40000,
          weight = 5,
@@ -13381,6 +13548,7 @@ local item =
       {
          _id = "scroll_of_escape",
          elona_id = 638,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 450,
          weight = 20,
@@ -13766,6 +13934,7 @@ local item =
       {
          _id = "spellbook_of_darkness_arrow",
          elona_id = 660,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 3500,
          weight = 380,
@@ -13871,6 +14040,7 @@ local item =
       {
          _id = "speed_ring",
          elona_id = 664,
+         knownnameref = "ring",
          image = "elona.item_engagement_ring",
          value = 50000,
          weight = 50,
@@ -14751,6 +14921,7 @@ local item =
       {
          _id = "spellbook_of_magic_ball",
          elona_id = 696,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 14200,
          weight = 380,
@@ -14777,6 +14948,7 @@ local item =
       {
          _id = "spellbook_of_magic_laser",
          elona_id = 697,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 12500,
          weight = 380,
@@ -14958,6 +15130,7 @@ local item =
       {
          _id = "potion_of_descent",
          elona_id = 706,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 4500,
          weight = 120,
@@ -15007,6 +15180,7 @@ local item =
       {
          _id = "book_of_resurrection",
          elona_id = 708,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 6000,
          weight = 380,
@@ -15031,6 +15205,7 @@ local item =
       {
          _id = "scroll_of_contingency",
          elona_id = 709,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 3500,
          weight = 20,
@@ -15056,6 +15231,7 @@ local item =
       {
          _id = "spellbook_of_contingency",
          elona_id = 710,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
@@ -15082,6 +15258,7 @@ local item =
       {
          _id = "potion_of_evolution",
          elona_id = 711,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 12000,
          weight = 120,
@@ -15663,6 +15840,7 @@ local item =
       {
          _id = "spellbook_of_4_dimensional_pocket",
          elona_id = 731,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 8500,
          weight = 380,
@@ -15689,6 +15867,7 @@ local item =
       {
          _id = "spellbook_of_harvest",
          elona_id = 732,
+         knownnameref = "spellbook",
          image = "elona.item_spellbook",
          value = 4000,
          weight = 380,
@@ -15775,6 +15954,7 @@ local item =
       {
          _id = "fireproof_liquid",
          elona_id = 736,
+         knownnameref = "potion",
          image = "elona.item_potion",
          value = 1500,
          weight = 120,
@@ -15797,6 +15977,7 @@ local item =
       {
          _id = "scroll_of_name",
          elona_id = 737,
+         knownnameref = "scroll",
          image = "elona.item_scroll",
          value = 7500,
          weight = 20,
