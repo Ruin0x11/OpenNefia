@@ -698,7 +698,7 @@ local item =
          weight = 80,
          on_read = function(self)
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-            Effect.identify_item(self, "partly")
+            Effect.identify_item(self, Enum.IdentifyState.Name)
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new("text", true):query()
             return false
@@ -723,7 +723,7 @@ local item =
          weight = 80,
          on_read = function(self)
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
-            Effect.identify_item(self, "partly")
+            Effect.identify_item(self, Enum.IdentifyState.Name)
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new("text", true):query()
             return false
@@ -12858,11 +12858,6 @@ local item =
          rarity = 400000,
          coefficient = 100,
 
-         _copy = {
-            identify_state = "completely",
-            curse_state = "none"
-         },
-
          is_precious = true,
 
          medal_value = 5,
@@ -13032,11 +13027,6 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-
-         _copy = {
-            identify_state = "completely",
-            curse_state = "none"
-         },
 
          tags = { "noshop" },
          rftags = { "ore" },
@@ -13985,7 +13975,11 @@ local item =
          coefficient = 0,
 
          param1 = 1,
-         param2 = Resolver.make("base.between", { min = 1, coefficient = 4 }),
+
+         params = { book_of_rachel_no = 1 },
+         on_init_params = function(self)
+            self.params.book_of_rachel_no = Rand.rnd(4) + 1
+         end,
 
          elona_type = "normal_book",
 
@@ -14007,7 +14001,7 @@ local item =
          rarity = 150000,
          coefficient = 100,
 
-         param1 = 7,
+         params = { cargo_quality = 7 },
 
          categories = {
             "elona.cargo"
@@ -14023,7 +14017,7 @@ local item =
          category = 92000,
          coefficient = 100,
 
-         param1 = 7,
+         params = { cargo_quality = 7 },
 
          categories = {
             "elona.cargo"
@@ -15456,11 +15450,6 @@ local item =
 
          is_precious = true,
 
-         _copy = {
-            identify_state = "completely",
-            curse_state = "none"
-         },
-
          tags = { "noshop" },
          rftags = { "ore" },
          categories = {
@@ -15662,11 +15651,6 @@ local item =
          originalnameref2 = "token",
 
          is_precious = true,
-
-         _copy = {
-            identify_state = "completely",
-            curse_state = "none"
-         },
 
          tags = { "noshop" },
          rftags = { "ore" },
@@ -16106,7 +16090,11 @@ local item =
          originalnameref2 = "book",
 
          param1 = 1,
-         param2 = Resolver.make("base.between", { min = 1, coefficient = 4 }),
+
+         params = { book_of_bokonon_no = 1 },
+         on_init_params = function(self)
+            self.params.book_of_bokonon_no = Rand.rnd(4) + 1
+         end,
 
          elona_type = "normal_book",
 

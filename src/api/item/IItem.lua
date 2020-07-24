@@ -10,6 +10,7 @@ local I18N = require("api.I18N")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
 local data = require("internal.data")
+local Enum = require("api.Enum")
 
 local IItem = class.interface("IItem",
                          {},
@@ -300,7 +301,7 @@ function IItem:calc_ui_color()
         return {120, 80, 0}
    end
 
-   if self:calc("identify_state") == "completely" then
+   if self:calc("identify_state") == Enum.IdentifyState.Full then
       local curse_state = self:calc("curse_state")
       if     curse_state == "doomed"  then return {100, 10, 100}
       elseif curse_state == "cursed"  then return {150, 10, 10}

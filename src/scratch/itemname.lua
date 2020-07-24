@@ -13,17 +13,17 @@ local function name(id)
    local i = Item.find(id) or Item.create(id)
    i.quality = Enum.Quality.God
 
-   i.identify_state = "unidentified"
-   print("== unident ", Itemname.en(i, nil, true))
+   i.identify_state = Enum.IdentifyState.None
+   print("== unident ", Itemname.build_name(i, nil, true))
 
-   i.identify_state = "partly"
-   print("== partly  ", Itemname.en(i, nil, true))
+   i.identify_state = Enum.IdentifyState.Name
+   print("== partly  ", Itemname.build_name(i, nil, true))
 
-   i.identify_state = "almost"
-   print("== almost  ", Itemname.en(i, nil, true))
+   i.identify_state = Enum.IdentifyState.Quality
+   print("== almost  ", Itemname.build_name(i, nil, true))
 
-   i.identify_state = "completely"
-   print("== completely", Itemname.en(i, nil, true))
+   i.identify_state = Enum.IdentifyState.Full
+   print("== completely", Itemname.build_name(i, nil, true))
 end
 
 name("elona.dagger")

@@ -409,8 +409,7 @@ function ReplLayer:relayout(x, y, width, height)
    self.y = 0
    self.width = Draw.get_width()
    local win_height = Draw.get_height()
-   self.height = math.floor(math.clamp(win_height * self.height_percentage, win_height / 3, win_height))
-   self.font_size = 15
+   self.height = math.floor(math.clamp(win_height * self.height_percentage, win_height / 3, win_height - 1))
    Draw.set_font(self.font_size)
    self.max_lines = math.floor((self.height - 5) / Draw.text_height())
 

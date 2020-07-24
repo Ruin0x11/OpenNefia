@@ -9,6 +9,7 @@ local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local elona_Item = require("mod.elona.api.Item")
+local Enum = require("api.Enum")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -344,7 +345,7 @@ local inv_sell = {
       ctxt.chara.gold = ctxt.chara.gold + cost
 
       separated.own_state = "none"
-      separated.identify_state = "completely"
+      separated.identify_state = Enum.IdentifyState.Full
 
       return "inventory_continue"
    end
@@ -576,7 +577,7 @@ local inv_identify = {
    text = "ui.inventory_command.identify",
 
    filter = function(ctxt, item)
-      return item.identify_state ~= "completely"
+      return item.identify_state ~= Enum.IdentifyState.Full
    end,
 
    on_select = function(ctxt, item, amount)

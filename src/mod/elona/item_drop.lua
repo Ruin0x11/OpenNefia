@@ -44,7 +44,7 @@ local function should_drop_player_item(item, player, map)
             result = true
          end
       end
-   elseif item:calc("identify_state") == "completely" then
+   elseif item:calc("identify_state") == Enum.IdentifyState.Full then
       if Rand.one_in(4) then
          result = false
       end

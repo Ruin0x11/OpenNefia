@@ -4,6 +4,7 @@ local Item = require("api.Item")
 local Scene = require("mod.elona_sys.scene.api.Scene")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Enum = require("api.Enum")
 
 local function load_towns()
    local pred = function(map)
@@ -34,7 +35,7 @@ local function initialize_player(player)
 
    for _, item in player:iter_items() do
       if Item.is_alive(item) then
-         item.identify_state = "completely"
+         item.identify_state = Enum.IdentifyState.Full
       end
    end
 

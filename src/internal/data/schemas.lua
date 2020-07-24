@@ -2,6 +2,7 @@ local schema = require("thirdparty.schema")
 local data = require("internal.data")
 local Doc = require("api.Doc")
 local CodeGenerator = require("api.CodeGenerator")
+local Enum = require("api.Enum")
 
 data:add_type {
    name = "event",
@@ -655,7 +656,7 @@ Hours until the item spoils. Used for items of material "elona.fresh" only.
          amount = 1,
          ownership = "none",
          curse_state = "none",
-         identify_state = "completely",
+         identify_state = Enum.IdentifyState.Full,
          bonus = 0,
          name = "item",
          ammo_type = "",

@@ -6,6 +6,7 @@ local I18N = require("api.I18N")
 local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local Enum = require("api.Enum")
 
 local common = require("mod.elona.data.dialog.common")
 
@@ -168,7 +169,7 @@ data:add {
             function()
                Gui.mes("common.something_is_put_on_the_ground")
                local scroll = Item.create("elona.scroll_of_identify", Chara.player().x, Chara.player().y)
-               scroll.identify_state = "completely"
+               scroll.identify_state = Enum.IdentifyState.Full
             end,
             {"tutorial.after_dig.dialog"},
          },
@@ -283,7 +284,7 @@ data:add {
          on_finish = function()
             local corpse = Item.create("elona.corpse", Chara.player().x, Chara.player().y)
             corpse.params = { chara_id = "elona.beggar" }
-            corpse.identify_state = "completely"
+            corpse.identify_state = Enum.IdentifyState.Full
             Gui.mes("common.something_is_put_on_the_ground")
             Sidequest.set_progress("elona.tutorial", 1)
          end
@@ -345,7 +346,7 @@ data:add {
             item.curse_state = "none"
 
             item = Item.create("elona.scroll_of_vanish_curse", Chara.player().x, Chara.player().y)
-            item.identify_state = "completely"
+            item.identify_state = Enum.IdentifyState.Full
             item.curse_state = "blessed"
 
             Gui.mes("common.something_is_put_on_the_ground")
@@ -369,7 +370,7 @@ data:add {
                putit.is_not_targeted_by_ai = true
             end
             local item = Item.create("elona.potion_of_cure_minor_wound", Chara.player().x, Chara.player().y)
-            item.identify_state = "completely"
+            item.identify_state = Enum.IdentifyState.Full
             Sidequest.set_progress("elona.tutorial", 6)
          end
       }

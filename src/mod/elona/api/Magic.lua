@@ -10,6 +10,7 @@ local Input = require("api.Input")
 local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
+local Enum = require("api.Enum")
 
 local Magic = {}
 
@@ -44,7 +45,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    local did_something, result = Magic.cast(magic_id, magic_params)
 
    if result and chara:is_player() and result.obvious then
-      Effect.identify_item(item, "partly")
+      Effect.identify_item(item, Enum.IdentifyState.Name)
    end
    -- Event will be triggered globally if potion is consumed
    -- through spilling, since there will be no item to pass
@@ -159,7 +160,7 @@ function Magic.read_scroll(magic_id, power, item, params)
    local did_something, result = Magic.cast(magic_id, {power=power,item=item,source=params.chara})
 
    if result and chara:is_player() and result.obvious then
-      Effect.identify_item(item, "partly")
+      Effect.identify_item(item, Enum.IdentifyState.Name)
    end
 
    return "turn_end"
@@ -209,7 +210,7 @@ function Magic.zap_wand(magic_id, power, item, params)
       })
 
       if result and chara:is_player() and result.obvious then
-         Effect.identify_item(item, "partly")
+         Effect.identify_item(item, Enum.IdentifyState.Name)
       end
       if chara:is_player() then
          Skill.gain_skill_exp(chara, "elona.magic_device", 40)

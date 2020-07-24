@@ -11,6 +11,7 @@ local ExHelp = require("mod.elona.api.ExHelp")
 local Event = require("api.Event")
 local Map = require("api.Map")
 local Input = require("api.Input")
+local Enum = require("api.Enum")
 
 local Effect = {}
 
@@ -273,7 +274,7 @@ function Effect.eat_food(chara, food)
    food:emit("elona_sys.on_item_eat", {chara=chara})
 
    if chara:is_player() then
-      Effect.identify_item(food, "partly")
+      Effect.identify_item(food, Enum.IdentifyState.Name)
    end
 
    if chara:unequip_item(food) then
@@ -331,10 +332,10 @@ local identify_states = {
 }
 
 function Effect.do_identify_item(item, level)
-   if item.identify_state == "almost" then
+   if item.identify_state == Enum.IdentifyState.Quality then
       for _, cat in ipairs(item.categories) do
          if autoidentify[cat] then
-            level = "completely"
+            level = Enum.IdentifyState.Full
             break
          end
       end
@@ -367,9 +368,9 @@ end
 function Effect.try_to_identify_item(item, power)
    local level
    if power >= item:calc("difficulty_of_identification") then
-      level = "completely"
+      level = Enum.IdentifyState.Full
    else
-      level = "unidentified"
+      level = Enum.IdentifyState.None
    end
    return Effect.identify_item(item, level)
 end

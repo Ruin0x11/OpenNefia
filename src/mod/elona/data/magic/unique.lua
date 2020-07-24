@@ -472,12 +472,12 @@ data:add {
 
       local level = "unidentified"
       if params.power >= item:calc("identify_difficulty") then
-         level = "completely"
+         level = Item.IdentifyState.Full
       end
 
       local success = Effect.identify_item(item, level)
       if success then
-         if item.identify_state ~= "completely" then
+         if item.identify_state ~= Enum.IdentifyState.Full then
             Gui.mes("ui.inv.identify.partially", item)
          else
             Gui.mes("ui.inv.identify.fully", item)

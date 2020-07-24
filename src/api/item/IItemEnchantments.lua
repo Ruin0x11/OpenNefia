@@ -80,4 +80,9 @@ function IItemEnchantments:remove_enchantment(enc)
    self:refresh()
 end
 
+function IItemEnchantments:iter_enchantments()
+   -- TODO enchantment
+   return fun.iter({})
+end
+
 return IItemEnchantments

@@ -463,12 +463,12 @@ function Item.fix_item(item, params)
    end
 
    if NORMAL_ITEMS[item._id] then
-      item.identify_state = "completely"
+      item.identify_state = Enum.IdentifyState.Full
       item.curse_state = Enum.CurseState.Normal
    end
 
    if item:has_category("elona.cargo") then
-      item.identify_state = "completely"
+      item.identify_state = Enum.IdentifyState.Full
       item.curse_state = Enum.CurseState.Normal
       ItemMemory.set_known(item._id, true)
    end
