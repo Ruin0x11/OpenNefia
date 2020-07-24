@@ -59,6 +59,9 @@ local item = {
     },
     name = "ancient book",
 
+    title = function(title)
+       return (" titled <%s>"):format(title)
+    end,
     titles = {
       _0 = "Voynich Manuscript",
       _1 = "Dhol Chants",

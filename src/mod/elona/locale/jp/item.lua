@@ -100,6 +100,9 @@ local item = {
     },
     name = "古書物",
 
+    title = function(title)
+       return ("《%s》という題名の"):format(title)
+    end,
     titles = {
       _0 = "ヴォイニッチ写本",
       _1 = "ドール賛歌",

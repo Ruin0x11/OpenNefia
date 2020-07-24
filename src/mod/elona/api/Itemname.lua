@@ -104,7 +104,8 @@ local function item_name_sub(s, item, jp)
          s = s .. "解読済みの"
       end
       if identify >= IdentifyState.Full then
-         s = s .. I18N.get("item.info." .. _id .. ".ancient_book.titles", item.params.ancient_book_difficulty)
+         local title = "item.info." .. _id .. ".titles._" .. item.params.ancient_book_difficulty
+         s = s .. I18N.get("item.info." .. _id .. ".title", title)
       end
    elseif _id == "elona.recipe" then
       -- TODO recipe
@@ -227,7 +228,7 @@ function itemname.en(item, amount, no_article)
    local s2 = ""
    local s3 = ""
    if not (item.has_random_name and identify < IdentifyState.Name) then
-      s2 = item.originalnameref2 or item.knownnameref or ""
+      s2 = item.originalnameref2 or ""
 
       if string.match(name, "with") then
          s3 = "with"
