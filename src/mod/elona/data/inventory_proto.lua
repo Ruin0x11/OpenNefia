@@ -612,6 +612,60 @@ local inv_equipment = {
 }
 data:add(inv_equipment)
 
+local inv_equipment_weapon = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_equipment_weapon",
+   elona_id = 23,
+   elona_sub_id = 1,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   text = "ui.inventory_command.target",
+
+   filter = function(ctxt, item)
+      return item:has_category("elona.equip_melee") or item:has_category("elona.equip_ranged")
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end,
+
+   on_return_item = function(ctxt, item, amount)
+      -- TODO
+      item:separate()
+   end
+}
+data:add(inv_equipment_weapon)
+
+local inv_equipment_armor = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_equipment_armor",
+   elona_id = 23,
+   elona_sub_id = 2,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   text = "ui.inventory_command.target",
+
+   filter = function(ctxt, item)
+      return elona_Item.is_armor(item)
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end,
+
+   on_return_item = function(ctxt, item, amount)
+      -- TODO
+      item:separate()
+   end
+}
+data:add(inv_equipment_armor)
+
 local inv_garoks_hammer = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_garoks_hammer",

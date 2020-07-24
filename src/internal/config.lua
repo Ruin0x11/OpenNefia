@@ -31,9 +31,9 @@ config["base._basic_attributes"] = {
    "elona.stat_charisma",
 }
 
-config["base.themes"] = {
---   "beautify.beautify"
-}
+config["base.themes"] = {}
+
+config["base.debug_autoidentify"] = false
 
 -- Don't overwrite existing values in the current config.
 config.on_hotload = function(old, new)

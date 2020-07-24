@@ -25,6 +25,11 @@ end
 
 function RandomGenerator:rnd(n)
    self.seed = (214013 * self.seed + 2531011) % 4294967296
+
+   if n <= 0 then
+      return 0
+   end
+
    return bit.band(bit.rshift(self.seed, 16), 0x7FFF) % n
 end
 

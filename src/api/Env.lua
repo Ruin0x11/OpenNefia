@@ -4,6 +4,7 @@
 local socket = require("socket")
 local env = require("internal.env")
 local Queue = require("api.Queue")
+local mod = require("internal.mod")
 
 local Env = {}
 
@@ -117,6 +118,12 @@ end
 --- @tparam number time
 function Env.real_time(format, time)
    return os.date(format, time)
+end
+
+--- @tparam string mod_id
+--- @treturn boolean
+function Env.is_mod_loaded(mod_id)
+   return mod.is_loaded(mod_id)
 end
 
 return Env

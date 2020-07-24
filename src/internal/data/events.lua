@@ -45,7 +45,7 @@ data:add_multi(
       { _id = "on_chara_revived", },
       { _id = "on_talk", },
       { _id = "on_calc_chara_equipment_stats", },
-      { _id = "on_game_startup", },
+      { _id = "on_engine_init", },
       { _id = "on_data_add" },
       { _id = "on_build_chara" },
       { _id = "on_build_item" },
@@ -106,6 +106,8 @@ data:add_multi(
       { _id = "on_mef_updated" },
       { _id = "on_object_removed" },
       { _id = "on_chara_renewed" },
+      { _id = "before_engine_init", },
+      { _id = "on_item_init_params", },
    }
 )
 
@@ -182,6 +184,7 @@ local function init_save()
    s.has_light_source = false
    s.deepest_level = 0
    s.map_registry = {}
+   s.containers = {}
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

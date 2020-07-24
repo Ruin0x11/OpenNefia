@@ -716,7 +716,7 @@ local item = {
     },
     name = "かがり台"
   },
-  book_a = {
+  book_unreadable = {
     desc = {
       _0 = {
         footnote = "〜本の為の本〜",

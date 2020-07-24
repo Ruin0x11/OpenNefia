@@ -6,6 +6,15 @@ local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Rand = require("api.Rand")
 local CharaMake = require("api.CharaMake")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
+local Event = require("api.Event")
+local InstancedMap = require("api.InstancedMap")
+local IMapObject = require("api.IMapObject")
+local Chara = require("api.Chara")
+local World = require("api.World")
+local Inventory = require("api.Inventory")
+local Effect = require("mod.elona.api.Effect")
+local IChara = require("api.chara.IChara")
+local api_Item = require("api.Item")
 
 local Item = {}
 
@@ -35,6 +44,7 @@ function Item.generate_oracle_text(item)
    -- <<<<<<<< shade2/item.hsp:636  	} ...
 end
 
+-- >>>>>>>> shade2/item.hsp:708 	if (refType=fltGold)or(refType=fltPlat)or(iId(ci) ..
 local NORMAL_ITEMS = table.set {
    "elona.platinum_coin",
    "elona.gold_piece",
@@ -43,8 +53,10 @@ local NORMAL_ITEMS = table.set {
    "elona.token_of_friendship",
    "elona.bill",
 }
+-- <<<<<<<< shade2/item.hsp:708 	if (refType=fltGold)or(refType=fltPlat)or(iId(ci) ...
 
--- HACK
+-- >>>>>>>> shade2/command.hsp:3399 		if invCtrl(1)=1: if (refType!fltWeapon)&(refType ..
+-- TODO add "elona.equipment" instead
 local EQUIPMENT_CATEGORIES = {
    "elona.equip_melee",
    "elona.equip_head",
@@ -59,8 +71,26 @@ local EQUIPMENT_CATEGORIES = {
    "elona.equip_ring",
    "elona.equip_neck",
 }
+-- <<<<<<<< shade2/command.hsp:3399 		if invCtrl(1)=1: if (refType!fltWeapon)&(refType ...
 
--- HACK
+-- >>>>>>>> shade2/command.hsp:3400 		if invCtrl(1)=2: if (refType<fltHeadArmor)or(ref ..
+-- NOTE: Excludes ammo.
+-- TODO add "elona.equipment_armor" instead
+local ARMOR_CATEGORIES = {
+   "elona.equip_head",
+   "elona.equip_shield",
+   "elona.equip_body",
+   "elona.equip_leg",
+   "elona.equip_cloak",
+   "elona.equip_back",
+   "elona.equip_wrist",
+   "elona.equip_ring",
+   "elona.equip_neck",
+}
+-- <<<<<<<< shade2/command.hsp:3400 		if invCtrl(1)=2: if (refType<fltHeadArmor)or(ref ...
+
+-- >>>>>>>> shade2/item.hsp:520 	if refType<fltFurniture{ ..
+-- TODO add "elona.non_usable" instead
 local NON_USEABLE_CATEGORIES = {
    "elona.furniture",
    "elona.furniture_well",
@@ -76,15 +106,23 @@ local NON_USEABLE_CATEGORIES = {
    "elona.cargo",
    "elona.bug",
 }
+-- <<<<<<<< shade2/item.hsp:520 	if refType<fltFurniture{ ..
 
 local function has_any_category(item, cats)
    return fun.iter(cats):any(function(cat) return item:has_category(cat) end)
 end
 
+-- TODO remove
 function Item.is_equipment(item)
    return has_any_category(item, EQUIPMENT_CATEGORIES)
 end
 
+-- TODO remove
+function Item.is_armor(item)
+   return has_any_category(item, ARMOR_CATEGORIES)
+end
+
+-- TODO remove
 function Item.is_non_useable(item)
    return has_any_category(item, NON_USEABLE_CATEGORIES)
 end
@@ -100,7 +138,7 @@ local function apply_enchantments(item)
 end
 
 local function fix_item_2(item, params)
-   -- >>>>>>>> shade2/item.hsp:519 *item_fix ...
+   -- >>>>>>>> shade2/item.hsp:519 *item_fix ..
    if not Item.is_non_useable(item) then
       if Rand.one_in(12) then
          item.curse_state = "blessed"
@@ -152,8 +190,219 @@ local function fix_item_2(item, params)
          item.quality = Enum.Quality.Normal
       end
    end
-   -- >>>>>>>> shade2/item.hsp:549 	return ...
+   -- <<<<<<<< shade2/item.hsp:549 	return ..
 end
+
+local function get_map(params)
+   -- TODO make this into a method on ILocation?
+   if class.is_an(InstancedMap, params.location) then
+      return params.location
+   elseif class.is_an(IMapObject, params.location) then
+      return params.location:containing_map()
+   end
+
+   return nil
+end
+
+local function get_owner(params)
+   if class.is_an(IChara, params.location) then
+      return params.location
+   end
+
+   return nil
+end
+
+-- >>>>>>>> shade2/item.hsp:685 	if refType=fltChest{ ..
+local function init_container(item, params)
+   local map = get_map(params)
+   local map_level = (map and map:calc("dungeon_level")) or 1
+
+   -- TODO shelter
+   local is_shelter = false
+   local item_level = 5 + ((not is_shelter) and 1 or 0) * map_level
+
+   -- TODO make moddable
+   if item._id == "elona.suitcase" then
+      item_level = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
+   elseif item._id == "elona.treasure_ball" or item._id == "elona.rare_treasure_ball" then
+      item_level = Chara.player():calc("level")
+   end
+
+   local difficulty = Rand.rnd(((not is_shelter) and 1 or 0) * math.abs(map_level) + 1)
+
+   if item._id == "elona.wallet" or item._id == "elona.suitcase" then
+      difficulty = Rand.rnd(15)
+   elseif item._id == "elona.small_gamble_chest" then
+      difficulty = Rand.rnd(Rand.rnd(100) + 1) + 1
+      item.value = difficulty * 25 + 150
+      local amount = Rand.rnd(8)
+      if amount > 0 then
+         item.amount = amount
+      end
+   end
+
+   item.params.chest_item_level = math.floor(item_level)
+   item.params.chest_lockpick_difficulty = difficulty
+   item.params.chest_random_seed = Rand.rnd(30000)
+
+   if item.container_params then
+      if item.container_params.type == "local" then
+         item.inv = Inventory:new()
+      end
+   end
+end
+
+-- <<<<<<<< shade2/item.hsp:695 	} ..
+local FOOD_CHIPS = {
+   ["elona.bread"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_sweet_5",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_sweet_5",
+      [5] = "elona.item_dish_bread_5",
+      [6] = "elona.item_dish_bread_6",
+      [7] = "elona.item_dish_bread_7",
+      [8] = "elona.item_dish_bread_8",
+      [9] = "elona.item_dish_bread_9"
+   },
+   ["elona.egg"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_egg_3",
+      [4] = "elona.item_dish_meat_8",
+      [5] = "elona.item_dish_egg_3",
+      [6] = "elona.item_dish_vegetable_4",
+      [7] = "elona.item_hero_cheese",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_meat_7"
+   },
+   ["elona.fish"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_fish_3",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_vegetable_4",
+      [6] = "elona.item_dish_fish_3",
+      [7] = "elona.item_dish_fish_7",
+      [8] = "elona.item_dish_fish_3",
+      [9] = "elona.item_dish_fish_3"
+   },
+   ["elona.fruit"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_fruit_4",
+      [6] = "elona.item_dish_fruit_6",
+      [7] = "elona.item_dish_fruit_6",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_fruit_4"
+   },
+   ["elona.meat"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_3",
+      [4] = "elona.item_dish_meat_4",
+      [5] = "elona.item_dish_meat_5",
+      [6] = "elona.item_dish_meat_5",
+      [7] = "elona.item_dish_meat_7",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_4"
+   },
+   ["elona.pasta"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_meat_8",
+      [3] = "elona.item_dish_pasta_3",
+      [4] = "elona.item_dish_pasta_4",
+      [5] = "elona.item_dish_pasta_4",
+      [6] = "elona.item_dish_pasta_3",
+      [7] = "elona.item_dish_pasta_3",
+      [8] = "elona.item_dish_pasta_4",
+      [9] = "elona.item_dish_pasta_3"
+   },
+   ["elona.sweet"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_sweet_5",
+      [6] = "elona.item_dish_fruit_4",
+      [7] = "elona.item_dish_egg_8",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_egg_8"
+   },
+   ["elona.vegetable"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_meat_7",
+      [6] = "elona.item_dish_meat_8",
+      [7] = "elona.item_dish_vegetable_4",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_7"
+   }
+}
+
+-- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
+function Item.get_food_image(food_type, food_quality)
+   local t = FOOD_CHIPS[food_type]
+   if not t then
+      return "elona.item_dish_charred"
+   end
+
+   local image = t[food_quality]
+
+   return image or "elona.item_dish_charred"
+end
+-- <<<<<<<< shade2/text.hsp:655 	return ...
+
+
+-- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
+function Item.make_dish(item, quality)
+   local food_type = item.params and item.params.food_type
+   assert(food_type, ("'%s' isn't a cookable food."):format(item._id))
+
+   item.image = Item.get_food_image(food_type, quality)
+   item.weight = 500
+   if item.spoilage_date and item.spoilage_date >= 0 then
+      item.spoilage_date = 72 + World.date_hours()
+   end
+   item.params.food_quality = quality
+
+   return item
+end
+-- <<<<<<<< shade2/item_func.hsp:709 	return ..
+
+-- >>>>>>>> shade2/item.hsp:697 	if refType=fltFood : if iParam1(ci)!0{ ..
+local function init_food(item, params)
+   item.params.food_quality = item.params.food_quality or 0
+
+   if params.is_shop then
+      if Rand.one_in(2) then
+         item.params.food_quality = 0
+      else
+         item.params.food_quality = 3 + Rand.rnd(3)
+      end
+   end
+
+   if item.params.food_type and item.params.food_quality ~= 0 then
+      item.image = Item.get_food_image(item.params.food_type, item.params.food_quality)
+   end
+
+   if item.material == "elona.fresh" then
+      item.spoilage_date = item.spoilage_hours + World.date_hours()
+   end
+end
+-- <<<<<<<< shade2/item.hsp:701 	} ..
 
 function Item.fix_item(item, params)
    -- If true:
@@ -170,7 +419,9 @@ function Item.fix_item(item, params)
    -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
    local _, default_color = Text.unidentified_item_params(item)
    item.color = default_color
+   -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 
+   -- >>>>>>>> shade2/item.hsp:628 	itemMemory(1,dbId)++ ..
    ItemMemory.on_generated(item._id)
    item.quality = params.quality or item.quality
 
@@ -178,26 +429,47 @@ function Item.fix_item(item, params)
       local text = Item.generate_oracle_text(item)
       table.insert(save.elona.artifact_locations, text)
    end
-   -- >>>>>>>> shade2/item.hsp:636  	} ...
+   -- <<<<<<<< shade2/item.hsp:636  	} ...
+
+   local ev_params = table.shallow_copy(params)
+   ev_params.owner = get_owner(params)
+   ev_params.map = get_map(params)
+
+   item:emit("base.on_item_init_params", ev_params)
+
+   -- The above event can allow for removing the item. For example, gold is
+   -- removed automatically if it's spawned directly on an owning character, and
+   -- the amount is instead added to the character's `gold` property.
+   if not api_Item.is_alive(item) then
+      return
+   end
+
+   if item:has_category("elona.container") then
+      init_container(item, params)
+   end
+
+   if item:has_category("elona.food") then
+      init_food(item, params)
+   end
 
    -- >>>>>>>> shade2/item.hsp:705 	if refType=fltFurniture:if rnd(3)=0:iSubName(ci)= ...
    fix_item_2(item, params)
 
    if item:has_category("elona.furniture") then
-      item.subname = 0
+      item.params.furniture_quality = 0
       if Rand.one_in(3) then
-         item.subname = Rand.rnd(Rand.rnd(12) + 1)
+         item.params.furniture_quality = Rand.rnd(Rand.rnd(12) + 1)
       end
    end
 
    if NORMAL_ITEMS[item._id] then
       item.identify_state = "completely"
-      item.curse_state = "none"
+      item.curse_state = Enum.CurseState.Normal
    end
 
    if item:has_category("elona.cargo") then
       item.identify_state = "completely"
-      item.curse_state = "none"
+      item.curse_state = Enum.CurseState.Normal
       ItemMemory.set_known(item._id, true)
    end
 
@@ -205,9 +477,35 @@ function Item.fix_item(item, params)
       or item:has_category("elona.junk")
       or item:has_category("elona.ore")
    then
-      item.curse_state = "none"
+      item.curse_state = Enum.CurseState.Normal
    end
-   -- <<<<<<<< shade2/item.hsp:711  ...
+
+   if config["base.debug_autoidentify"] then
+      Effect.identify_item(item, config["base.debug_autoidentify"])
+   else
+      if not is_shop and Item.is_equipment(item) then
+         if Rand.rnd(Chara.player():skill_level("elona.sense_quality")+1) > 5 then
+            item.identify_state = Enum.IdentifyState.Quality
+         end
+      end
+   end
+
+   item.value = ItemMaterial.recalc_quality(item)
+   -- <<<<<<<< shade2/item.hsp:726 	gosub *item_value ..
 end
+
+local function item_fix_on_generate(obj, params)
+   if obj._type == "base.item" then
+      Item.fix_item(obj, params)
+   end
+end
+Event.register("base.on_generate", "Apply Item.fix_item", item_fix_on_generate)
+
+local function apply_item_on_init_params(item, params)
+   if item.proto.on_init_params then
+      item.proto.on_init_params(item, params)
+   end
+end
+Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)
 
 return Item

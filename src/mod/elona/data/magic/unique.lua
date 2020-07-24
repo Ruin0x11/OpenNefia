@@ -304,12 +304,7 @@ data:add {
       Gui.play_sound("base.teleport1")
       Gui.mes("magic.four_dimensional_pocket")
 
-      local s = save.elona
-      if s.four_dimensional_pocket == nil then
-         s.four_dimensional_pocket = Inventory:new()
-      end
-
-      local pocket = s.four_dimensional_pocket
+      local pocket = Inventory.get_or_create("elona.four_dimensional_pocket")
       pocket:set_max_size(math.clamp(math.floor(params.power / 10 + 10), 10, 300))
       pocket.max_weight = params.power * 100
 

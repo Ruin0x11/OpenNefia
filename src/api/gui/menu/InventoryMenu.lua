@@ -133,15 +133,21 @@ function InventoryMenu:show_item_description()
    ItemDescriptionMenu:new(item, rest):query()
 end
 
-function InventoryMenu:can_select(item)
+function InventoryMenu:can_select()
    local item = self:selected_item_object()
    return self.ctxt:can_select(item)
 end
 
 function InventoryMenu:on_select()
    local item = self:selected_item_object()
+
+   local amount, canceled = self.ctxt:query_item_amount(item)
+   if canceled then
+      return nil, canceled
+   end
+
    self.is_drawing = false
-   local result = self.ctxt:on_select(item, nil, self.pages:iter_all_pages())
+   local result = self.ctxt:on_select(item, amount, self.pages:iter_all_pages())
    self.is_drawing = true
    return result
 end

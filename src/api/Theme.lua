@@ -106,6 +106,11 @@ local function find_override_path(source, mod_root_path)
    -- TODO: Cache this to speed it up.
    local dir = fs.join(mod_root_path, parent)
    local filename_part = "^" .. fs.filename_part(source) .. "%."
+
+   if not fs.is_directory(dir) then
+      return nil
+   end
+
    for _, item in fs.iter_directory_items(dir) do
       if item:match(filename_part) then
          return fs.join(dir, item)

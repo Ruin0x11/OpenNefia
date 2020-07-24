@@ -48,7 +48,7 @@ function ItemMaterial.choose_random_material(item, base_material, base_level, ba
    end
    -- <<<<<<<< shade2/item_data.hsp:1146  ..
 
-   return ItemMaterial.choose_random_material(item, level, base_quality, base_material, chara_level)
+   return ItemMaterial.choose_random_material_2(item, level, base_quality, base_material, chara_level)
 end
 
 function ItemMaterial.choose_random_material_2(item, level, base_quality, material, chara_level)
@@ -59,8 +59,7 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
       material = data["base.item"]:ensure(item._id).material
    end
    if material == nil then
-      Log.warn("Missing default material for item '%s', falling back to 'elona.fresh'")
-      material = "elona.fresh"
+      material = "elona.sand"
    end
 
    base_quality = base_quality or (item and item:calc("quality")) or 0
@@ -196,13 +195,21 @@ function ItemMaterial.apply_item_material(item, material)
    -- <<<<<<<< shade2/item_data.hsp:1224 	return ..
 
    -- >>>>>>>> shade2/item_data.hsp:1189 	gosub *item_value ..
-   item.value = Calc.calc_item_value(item)
+   item.value = ItemMaterial.recalc_quality(item)
 
    local owner = item:get_owning_chara()
    if owner then
       owner:refresh()
    end
    -- <<<<<<<< shade2/item_data.hsp:1191 	return ..
+end
+
+function ItemMaterial.recalc_quality(item)
+   if item:has_category("elona.furniture") and (item.params.furniture_quality or 0) > 0 then
+      return item.value * (80 + item.params.furniture_quality * 20) / 100
+   end
+
+   return item.value
 end
 
 return ItemMaterial

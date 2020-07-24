@@ -9,6 +9,7 @@ local IMapObject = require("api.IMapObject")
 local field = require("game.field")
 local ansicolors = require("thirdparty.ansicolors")
 local config = require("internal.config")
+local Enum = require("api.Enum")
 
 local Gui = {}
 
@@ -187,26 +188,26 @@ function Gui.report_error(err, msg)
 end
 
 -- >>>>>>>> shade2/init.hsp:4568 	dim c_col,3,30 ..
-local Color = {
-   White =         { { 255, 255, 255 }, "white"          },
-   Green =         { { 175, 255, 175 }, "green"          },
-   Red =           { { 255, 155, 155 }, "red"            },
-   Blue =          { { 175, 175, 255 }, "blue"           },
-   Yellow =        { { 255, 215, 175 }, "yellow"         },
-   Brown  =        { { 255, 255, 175 }, "yellow"         },
-   Black =         { { 155, 154, 153 }, "white dim"      },
-   Purple =        { { 185, 155, 215 }, "magenta"        },
-   SkyBlue =       { { 155, 205, 205 }, "cyan"           },
-   Pink =          { { 255, 195, 185 }, "red bright"     },
-   Orange =        { { 235, 215, 155 }, "yellow bright"  },
-   Fresh =         { { 225, 215, 185 }, "yellow dim"     },
-   DarkGreen =     { { 105, 235, 105 }, "green dim"      },
-   Gray =          { { 205, 205, 205 }, "white dim"      },
-   LightRed =      { { 255, 225, 225 }, "red dim"        },
-   LightBlue =     { { 225, 225, 255 }, "blue bright"    },
-   LightPurple =   { { 225, 195, 255 }, "magenta bright" },
-   LightGreen =    { { 215, 255, 215 }, "green bright"   },
-   Talk =          { { 210, 250, 160 }, "yellow bright"  },
+local TERMINAL_COLORS = {
+   White       = "white",
+   Green       = "green",
+   Red         = "red",
+   Blue        = "blue",
+   Yellow      = "yellow",
+   Brown       = "yellow",
+   Black       = "white dim",
+   Purple      = "magenta",
+   SkyBlue     = "cyan",
+   Pink        = "red bright",
+   Orange      = "yellow bright",
+   Fresh       = "yellow dim",
+   DarkGreen   = "green dim",
+   Gray        = "white dim",
+   LightRed    = "red dim",
+   LightBlue   = "blue bright",
+   LightPurple = "magenta bright",
+   LightGreen  = "green bright",
+   Talk        = "yellow bright",
 }
 -- <<<<<<<< shade2/init.hsp:4588 		c_col(0,coTalk)		=45,5,95 ..
 
@@ -235,13 +236,11 @@ function Gui.mes_c(text, color, ...)
       color = {210, 250, 160}
    end
 
-   local dat
+   local color_tbl
    if type(color) == "string" then
-      dat = Color[color]
-      if dat then
-         color = dat[1]
-      else
-         color = {255, 255, 255}
+      color_tbl = Enum.Color:try_get(color)
+      if not color_tbl then
+         color_tbl = {255, 255, 255}
       end
    end
 
@@ -256,13 +255,13 @@ function Gui.mes_c(text, color, ...)
 
    if Env.is_headless() then
       if Log.has_level("info") then
-         color = dat and dat[2] or "white"
+         color = TERMINAL_COLORS[color] or "white"
          local mes = ("<mes> %%{%s}%s%%{reset}"):format(color, text)
          print(ansicolors(mes))
       end
    else
       if field.is_active then
-         field:get_message_window():message(text, color)
+         field:get_message_window():message(text, color_tbl)
       end
    end
 end

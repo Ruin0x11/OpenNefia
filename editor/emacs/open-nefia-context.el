@@ -284,10 +284,10 @@ Point is moved to the end of the conflict."
 (defconst open-nefia-context-font-lock-keywords
   '((open-nefia-context-find-conflict
      (1 open-nefia-context-markers-face prepend t)
-     (2 open-nefia-context-body-face prepend t)
+     (2 open-nefia-context-body-face append t)
      ;; FIXME: `keep' doesn't work right with syntactic fontification.
      (3 open-nefia-context-markers-face prepend t)
-     (4 open-nefia-context-todo-body-face prepend nil)
+     (4 open-nefia-context-todo-body-face append t)
      ;(3 nil t t)
      ;(4 open-nefia-context-lower-face prepend t)
      ))

@@ -224,7 +224,7 @@ local function env_dofile(path, mod_env)
    mod_env = mod_env or _G
    setfenv(chunk, mod_env)
 
-   local success, err = pcall(chunk)
+   local success, err = xpcall(chunk, debug.traceback)
    if not success then
       return nil, err
    end

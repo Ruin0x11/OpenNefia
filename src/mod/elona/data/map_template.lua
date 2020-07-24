@@ -1452,7 +1452,7 @@ local your_home = {
 
    elona_id = 7,
    map = function()
-      return HomeMap.generate("elona.cave")
+      return HomeMap.generate("elona.cave") -- TODO
    end,
    image = "elona.feat_area_your_dungeon",
    unique = true,
@@ -1914,10 +1914,10 @@ end
 data:add(pyramid)
 
 local pyramid_2 = {
-   _id = "pyramid",
+   _id = "pyramid_2",
    _type = "base.map_template",
 
-   elona_id = 37,
+   -- elona_id = 37,
    map = generate_122("sqPyramid2"),
    image = "elona.feat_area_pyramid",
    unique = true,

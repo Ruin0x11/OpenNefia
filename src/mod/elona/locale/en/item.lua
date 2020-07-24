@@ -388,7 +388,7 @@ local item = {
     },
     name = "bonfire"
   },
-  book_a = {
+  book_unreadable = {
     desc = {
       main = {
         text = "A leather bound book,"

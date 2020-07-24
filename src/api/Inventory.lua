@@ -47,6 +47,27 @@ function Inventory:len()
    return self.pool:object_count()
 end
 
+-- Gets or creates a new inventory at the given ID.
+--
+-- @tparam string id
+-- @treturn Inventory
+function Inventory.get_or_create(id)
+   local i = save.base.inventories[id]
+   if i == nil then
+      i = Inventory.create(id)
+   end
+   return i
+end
+
+-- Creates a new inventory at the given ID, overwriting any existing one.
+--
+-- @tparam string id
+-- @treturn Inventory
+function Inventory.create(id)
+   save.base.inventories[id] = Inventory:new()
+   return save.base.inventories[id]
+end
+
 --
 -- ILocation impl
 --

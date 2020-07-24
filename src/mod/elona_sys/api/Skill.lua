@@ -22,8 +22,16 @@ function Skill.iter_resistances()
    return data["base.element"]:iter():filter(function(e) return e.can_resist end)
 end
 
+function Skill.iter_skills()
+   return data["base.skill"]:iter():filter(function(s) return s.type == nil or s.type == "skill" end)
+end
+
 function Skill.random_stat()
    return Rand.choice(Skill.iter_stats())._id
+end
+
+function Skill.random_skill()
+   return Rand.choice(Skill.iter_skills())._id
 end
 
 function Skill.calc_initial_potential(skill, level, knows_skill)

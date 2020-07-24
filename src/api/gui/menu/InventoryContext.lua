@@ -256,13 +256,7 @@ function InventoryContext:query_item_amount(item)
 end
 
 function InventoryContext:on_select(item, amount, rest)
-   if amount == nil then
-      local canceled
-      amount, canceled = self:query_item_amount(item)
-      if canceled then
-         return nil, canceled
-      end
-   end
+   assert(type(amount) == "number")
 
    if self.proto.on_select then
       return self.proto.on_select(self, item, amount, rest)

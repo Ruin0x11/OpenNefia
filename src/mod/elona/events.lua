@@ -498,7 +498,6 @@ Event.register("elona_sys.on_player_bumped_into_chara",
 
 
 local function calc_dialog_choices(speaker, params, result)
-   print("calc1")
    table.insert(result, {"talk", "talk.npc.common.choices.talk"})
 
    if speaker.roles then
@@ -803,8 +802,8 @@ local function init_save()
    s.return_destination_map_uid = nil
    s.holy_well_count = 0
    s.guild = nil
-   s.four_dimensional_pocket = nil
    s.artifact_locations = {}
+   s.inheritable_item_count = 0
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

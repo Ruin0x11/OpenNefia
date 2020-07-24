@@ -11,6 +11,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Mef = require("api.Mef")
 local IOwned = require("api.IOwned")
+local elona_Item = require("mod.elona.api.Item")
 
 local Tools = {}
 
@@ -628,4 +629,16 @@ end
 function Tools.player_pos()
    return Chara.player().x, Chara.player().y
 end
+
+function Tools.make_foods(x, y)
+   local foods = data["base.item"]:iter():filter(function(i) return i.params and i.params.food_type end):extract("_id")
+
+   for _, i, _id in foods:enumerate() do
+      for quality=0, 9 do
+         local food = Item.create(_id, x + i, y + quality - 1, {})
+         elona_Item.make_dish(food, quality)
+      end
+   end
+end
+
 return Tools

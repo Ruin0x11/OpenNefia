@@ -114,7 +114,6 @@ function theme.build_overrides()
 
    -- later themes override earlier ones
    for _, active_theme in active_themes:unwrap() do
-      -- For each supported type, iterate each override for it.
       for _, new_entry in ipairs(active_theme.overrides) do
          local _type = new_entry._type
          local _id = new_entry._id
@@ -122,6 +121,9 @@ function theme.build_overrides()
          assert(types[_type], ("Unsupported theme type '%s'"):format(_type))
 
          -- Get the original entry in the working copy and modify it.
+         --
+         -- TODO if this theme offers more than one override for the same _id,
+         -- allow the user to configure which one gets chosen.
          local old_entry = t[_type][_id]
          if old_entry then
             t[_type][_id] = types[_type](old_entry, new_entry)

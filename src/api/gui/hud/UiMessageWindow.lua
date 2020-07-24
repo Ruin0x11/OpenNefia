@@ -84,7 +84,6 @@ function UiMessageWindow:push_text(text, color)
    -- calculation to be correct.
    Draw.set_font(14) -- 14 - en * 2
    color = color or {255, 255, 255}
-   assert(color[1] and color[2] and color[3], "invalid color")
 
    if self.each_line:len() == 0 then
       self:newline()
@@ -247,6 +246,10 @@ function UiMessageWindow:new_turn()
 end
 
 function UiMessageWindow:message(text, color)
+   if color and not (color[1] and color[2] and color[3]) then
+      error(("Invalid color '%s'"):format(inspect(color)))
+   end
+
    text = tostring(text)
 
    if self.is_new_turn then

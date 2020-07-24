@@ -460,7 +460,9 @@ function ReplLayer.format_repl_result(result)
    if type(result) == "table" then
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
-      if result._type and result._id then
+      if result.__enum then
+         result_text = inspect(result)
+      elseif result._type and result._id then
          result_text = inspect(Object.make_prototype(result), {process=remove_all_metatables})
       elseif tostring(result) == "<generator>" then
          -- Wrap in a protected function in case running the generator

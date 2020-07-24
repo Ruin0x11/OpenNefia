@@ -2,6 +2,7 @@ local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Skill = require("mod.elona_sys.api.Skill")
 local Item = require("api.Item")
+local Env = require("api.Env")
 
 local function level_up()
    local player = Chara.player()
@@ -13,6 +14,13 @@ local function level_up()
    end
 
    player:gain_skill("elona.mining", 10000)
+   player:mod_base_skill_level("elona.stat_magic", 10000)
+   player:mod_base_skill_level("elona.stat_mana", 10000)
+
+   data["base.skill"]:iter()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1234)
+           end)
 
    player.gold = 10000000
    player.platinum = 10000
@@ -21,3 +29,27 @@ local function level_up()
 end
 
 Event.register("base.on_new_game", "Make player stronger", level_up)
+
+local function enable_themes()
+   local themes = {}
+
+   if Env.is_mod_loaded("beautify") then
+      themes[#themes+1] = "beautify.beautify"
+   end
+
+   if Env.is_mod_loaded("scrounged_theme") then
+      themes[#themes+1] = "scrounged_theme.scrounged"
+   end
+
+   if Env.is_mod_loaded("scrounged_theme") then
+      themes[#themes+1] = "scrounged_theme.scrounged"
+   end
+
+   if Env.is_mod_loaded("elonapack") then
+      themes[#themes+1] = "elonapack.elonapack"
+   end
+
+   config["base.themes"] = themes
+end
+
+Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)

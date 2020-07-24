@@ -219,6 +219,8 @@ function Chara.create(id, x, y, params, where)
       where = where or field.map
    end
 
+   params.location = where
+
    if not class.is_an(ILocation, where) and not params.ownerless then
       return nil
    end

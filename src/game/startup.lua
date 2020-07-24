@@ -121,6 +121,8 @@ function startup.run(mods)
    --    doc.alias_api_tables()
    -- end
 
+   Event.trigger("base.before_engine_init")
+
    progress("Loading tilemaps...")
 
    startup.load_batches()
@@ -131,7 +133,7 @@ function startup.run(mods)
 
    field:setup_repl()
 
-   Event.trigger("base.on_game_startup")
+   Event.trigger("base.on_engine_init")
 
    load_keybinds()
 

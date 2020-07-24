@@ -270,7 +270,7 @@ data:add {
          if Rand.one_in(2) then
             local item = Item.create("elona.egg", chara.x, chara.y, {}, chara:current_map())
             if item then
-               item.params = { chara_id = chara._id }
+               item.params.chara_id = chara._id
                local weight = chara:calc("weight")
                item.weight = weight * 10 + 250
                item.value = math.clamp(math.floor(weight * weight / 10000), 200, 40000)
@@ -278,7 +278,7 @@ data:add {
          else
             local item = Item.create("elona.bottle_of_milk", chara.x, chara.y, {}, chara:current_map())
             if item then
-               item.params = { chara_id = chara._id }
+               item.params.chara_id = chara._id
             end
          end
 
@@ -373,12 +373,13 @@ data:add {
       end
 
       local item_map = item:containing_map()
-      if item.params.treasure_map == nil then
+      if item.params.treasure_map_x == nil then
          item:separate()
 
          local tx, ty = find_treasure_location(item_map)
          if tx and ty then
-            item.params.treasure_map = { x = tx, y = ty }
+            item.params.treasure_map_x = tx
+            item.params.treasure_map_y = ty
          end
       end
 
@@ -390,8 +391,8 @@ data:add {
       Gui.mes("magic.map.apply")
 
       TreasureMapWindow:new(item_map,
-                            item.params.treasure_map.x,
-                            item.params.treasure_map.y)
+                            item.params.treasure_map_x,
+                            item.params.treasure_map_y)
          :query()
 
       return true
@@ -917,33 +918,6 @@ data:add {
 }
 
 data:add {
-   _id = "effect_troll_blood",
-   _type = "elona_sys.magic",
-   elona_id = 1139,
-
-   type = "effect",
-   params = {
-      "target",
-   },
-
-   cast = function(self, params)
-      local target = params.target
-
-      Gui.mes("magic.troll_blood.apply", target)
-      local amount = per_curse_state(params.curse_state, -4000, -1000, 8000, 12000)
-      Skill.gain_skill_exp(target, "elona.stat_speed", amount)
-      if params.curse_state == "blessed" then
-         Skill.modify_potential(target, "elona.stat_speed", 15)
-         Gui.mes_c("magic.troll_blood.blessed", "Green")
-      end
-
-      target:refresh()
-
-      return true
-   end
-}
-
-data:add {
    _id = "effect_escape",
    _type = "elona_sys.magic",
    elona_id = 1141,
@@ -1216,9 +1190,7 @@ data:add {
          return true
       end
 
-      -- TODO itemgen
-      hammer.params.garoks_hammer = { seed = Rand.rnd(20000)+1 }
-      local seed = hammer.params.garoks_hammer.seed
+      local seed = hammer.params.garoks_hammer_seed
       assert(seed)
 
       -- Prevent save scumming by using a predefined seed when regenerating the
@@ -1283,10 +1255,11 @@ local function do_change_material(target, material_kit, target_item, power)
       if power <= 50 and Rand.one_in(3) then
          fixed_material = "elona.fresh"
       end
+-- <<<<<<<< shade2/proc.hsp:3051 			if efP<=50:if rnd(3)=0 : fixMaterial=mtFresh ..
+      -- >>>>>>>> shade2/item_data.hsp:1144 	if cm : mtLv = cLevel(rc)/15 + 1 :else: mtLv=rnd( ..
       local level = power / 10
       local quality = power / 100
 
-      -- >>>>>>>> shade2/item_data.hsp:1144 	if cm : mtLv = cLevel(rc)/15 + 1 :else: mtLv=rnd( ..
       local mat_level = math.floor(Rand.rnd(level + 1) / 10 + 1)
 
       if material_kit._id == "elona.material_kit" then
@@ -1298,7 +1271,7 @@ local function do_change_material(target, material_kit, target_item, power)
          end
       end
       -- <<<<<<<< shade2/item_data.hsp:1146  ...
-
+-- >>>>>>>> shade2/proc.hsp:3052 			s=itemName(ci,1,1) ..
       local old_name = target_item:build_name()
 
       local material_id = ItemMaterial.choose_random_material_2(target_item, mat_level, quality, fixed_material, nil)
@@ -1426,6 +1399,106 @@ data:add {
 
          -- TODO material spot
       end
+
+      return true
    end
 }
 -- <<<<<<<< shade2/proc.hsp:2350 	swbreak ..
+
+-- >>>>>>>> shade2/proc.hsp:3070:DONE 	case efHeirDeed ..
+data:add {
+   _id = "effect_deed_of_inheritance",
+   _type = "elona_sys.magic",
+   elona_id = 1128,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.play_sound("base.ding2")
+      local amount = math.floor(Rand.rnd(params.power + 1) / 100 + 1)
+      local s = save.elona
+      s.inheritable_item_count = s.inheritable_item_count + amount
+      Gui.mes_c("magic.deed_of_inheritance.claim", "Yellow", amount)
+      Gui.mes("magic.deed_of_inheritance.can_now_inherit", s.inheritable_item_count)
+
+      return true
+   end
+}
+-- <<<<<<<< shade2/proc.hsp:3076 	swbreak ..
+
+local function do_enchant(inventory_proto, source, power)
+   local result, canceled = Input.query_item(source, inventory_proto)
+   if not result or canceled then
+      return true, { obvious = false }
+   end
+
+   local item = result.item
+
+   item:separate()
+
+   if item.level < power / 100 then
+      Gui.mes("base.ding2")
+      Gui.mes("magic.enchant.apply", item)
+      item.level = item.level + 1
+   else
+      Gui.mes("magic.common.resists", item)
+   end
+
+   source:refresh()
+
+   return true
+end
+
+data:add {
+   _id = "effect_enchant_weapon",
+   _type = "elona_sys.magic",
+   elona_id = 1124,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      return do_enchant("inv.equipment_weapon", source, params.power)
+   end
+}
+
+data:add {
+   _id = "effect_enchant_armor",
+   _type = "elona_sys.magic",
+   elona_id = 1125,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      return do_enchant("inv.equipment_armor", source, params.power)
+   end
+}

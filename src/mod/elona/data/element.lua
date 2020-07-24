@@ -3,6 +3,10 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Effect = require("mod.elona.api.Effect")
 local Event = require("api.Event")
+local Mef = require("api.Mef")
+local IMapObject = require("api.IMapObject")
+local IChara = require("api.chara.IChara")
+local Enum = require("api.Enum")
 
 local element = {
    {
@@ -16,27 +20,33 @@ local element = {
       death_anim_dy = -20,
 
       on_modify_damage = function(chara, damage)
+         -- >>>>>>>> shade2/chara_func.hsp:1459 		if (ele=rsResFire)or(dmgSource=dmgFromFire):dmg= ..
          if chara:has_effect("elona.wet") then
             damage = damage / 3
          end
 
          return damage
+         -- <<<<<<<< shade2/chara_func.hsp:1459 		if (ele=rsResFire)or(dmgSource=dmgFromFire):dmg= ..
       end,
 
       on_damage_tile = function(self, x, y, chara)
          Effect.damage_map_fire(x, y, chara)
       end,
 
-      on_damage = function(chara, damage)
+      on_damage = function(chara, params)
          if not chara:has_effect("elona.wet") then
             Gui.mes("Mef add fire")
          end
       end,
 
-      on_kill = function(chara, damage)
-         if not chara:has_effect("elona.wet") then
-            Gui.mes("Mef add fire")
+      on_kill = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1643 		if (dmgSource=dmgFromFire)or(ele=rsResFire){ ..
+         local origin
+         if class.is_an(IMapObject, params.source) then
+            origin = params.source
          end
+         Mef.create("elona.fire", chara.x, chara.y, { duration = Rand.rnd(10) + 5, power = 100, origin = origin })
+         -- <<<<<<<< shade2/chara_func.hsp:1645 			} ..
       end
    },
    {
@@ -48,6 +58,7 @@ local element = {
       death_anim = "base.anim_elem_cold",
 
       on_damage_tile = function(self, x, y, chara)
+-- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
          Effect.damage_map_ice(x, y, chara)
       end,
    },
@@ -61,21 +72,25 @@ local element = {
       death_anim = "base.anim_elem_lightning",
 
       on_modify_damage = function(chara, damage)
+         -- >>>>>>>> shade2/chara_func.hsp:1460 		if ele=rsResLightning	:dmg=dmg*3/2 ..
          if chara:has_effect("elona.wet") then
             damage = damage * 3 / 2
          end
 
          return damage
+         -- <<<<<<<< shade2/chara_func.hsp:1460 		if ele=rsResLightning	:dmg=dmg*3/2 ..
       end,
 
       on_damage = function(chara)
+         -- >>>>>>>> shade2/chara_func.hsp:1549 			if ele=rsResLightning	: if rnd(3+(cQuality(tc)> ..
          local chance = 3
-         if chara.quality >= 4 then -- miracle
+         if chara:calc("quality") >= Enum.Quality.Great then -- miracle
             chance = chance + 3
          end
          if Rand.one_in(chance) then
             chara:apply_effect("elona.paralysis", 1)
          end
+         -- <<<<<<<< shade2/chara_func.hsp:1549 			if ele=rsResLightning	: if rnd(3+(cQuality(tc)> ..
       end
    },
    {
@@ -88,8 +103,10 @@ local element = {
       death_anim = "base.anim_elem_darkness",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1550 			if ele=rsResDarkness 	: dmgCon tc,conBlind,rnd( ..
          chara:apply_effect("elona.blindness",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1550 			if ele=rsResDarkness 	: dmgCon tc,conBlind,rnd( ..
       end
    },
    {
@@ -103,8 +120,10 @@ local element = {
       death_anim = "base.anim_elem_mind",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1552 			if ele=rsResMind	: dmgCon tc,conConfuse,rnd(ele ..
          chara:apply_effect("elona.confusion",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1552 			if ele=rsResMind	: dmgCon tc,conConfuse,rnd(ele ..
       end
    },
    {
@@ -118,6 +137,7 @@ local element = {
       death_anim_dy = -24,
 
       after_apply_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1471 	if ele=rsResNether : if dmgSource >= dmgFromChara ..
          local damage = params.damage
          if params.source and damage > 0 then
             params.source:heal_hp(
@@ -127,13 +147,16 @@ local element = {
                         150 + params.element_power * 2) / 1000 + 10), 1, params.source:calc(
                      "max_hp") / 10 + Rand.rnd(5)))
          end
+         -- <<<<<<<< shade2/chara_func.hsp:1471 	if ele=rsResNether : if dmgSource >= dmgFromChara ..
       end,
 
       on_kill = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1646 		if ele=rsResNether	: if dmgSource >= dmgFromChar ..
          local damage = params.damage
-         if not Chara.is_alive(chara) then
+         if class.is_an(IChara, params.source) then
             params.source:heal_hp(Rand.rnd(damage * (200 + params.element_power) / 1000 + 5))
          end
+         -- <<<<<<<< shade2/chara_func.hsp:1646 		if ele=rsResNether	: if dmgSource >= dmgFromChar ..
       end
    },
    {
@@ -146,8 +169,10 @@ local element = {
       death_anim = "base.anim_elem_poison",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
          chara:apply_effect("elona.poison",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
       end
    },
    {
@@ -160,8 +185,10 @@ local element = {
       death_anim = "base.anim_elem_sound",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1553 			if ele=rsResSound	: dmgCon tc,conConfuse,rnd(el ..
          chara:apply_effect("elona.confusion",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1553 			if ele=rsResSound	: dmgCon tc,conConfuse,rnd(el ..
       end
    },
    {
@@ -175,6 +202,7 @@ local element = {
       death_anim = "base.anim_elem_chaos",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1542 			if ele=rsResChaos{ ..
          local elep = params.element_power
          local power = function()
             return Rand.rnd(elep / 3 * 2 + 1)
@@ -195,6 +223,7 @@ local element = {
          if Rand.rnd(20) < elep / 50 + 4 then
             chara:apply_effect("elona.sleep", power())
          end
+         -- <<<<<<<< shade2/chara_func.hsp:1548 				} ..
       end,
    },
    {
@@ -208,8 +237,10 @@ local element = {
       death_anim = "base.anim_elem_nerve",
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
          chara:apply_effect("elona.paralysis",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
       end
    },
    {
@@ -219,10 +250,12 @@ local element = {
       can_resist = true,
 
       calc_initial_resist_level = function(chara, level)
+         -- >>>>>>>> shade2/calculation.hsp:979 	if ((cnt=rsResMagic)&(p<500))or(cLevel(r1)=1):p=1 ..
          if level < 500 then
             return 100
          end
          return level
+         -- <<<<<<<< shade2/calculation.hsp:979 	if ((cnt=rsResMagic)&(p<500))or(cLevel(r1)=1):p=1 ..
       end
    },
    {
@@ -230,8 +263,10 @@ local element = {
       elona_id = 61,
 
       on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1555 			if ele=rsResCut		: dmgCon tc,conBleed,rnd(eleP+ ..
          chara:apply_effect("elona.bleeding",
                             Rand.rnd(params.element_power + 1))
+         -- <<<<<<<< shade2/chara_func.hsp:1555 			if ele=rsResCut		: dmgCon tc,conBleed,rnd(eleP+ ..
       end
    },
    {
@@ -273,6 +308,7 @@ local element = {
 
 data:add_multi("base.element", element)
 
+-- >>>>>>>> shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..
 local function vorpal_damage(chara, params, result)
    if params.element and params.element._id == "elona.vorpal" then
       result = params.original_damage
@@ -281,3 +317,4 @@ local function vorpal_damage(chara, params, result)
 end
 
 Event.register("base.hook_calc_damage", "Proc vorpal damage", vorpal_damage)
+-- <<<<<<<< shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..

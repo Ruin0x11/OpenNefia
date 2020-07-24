@@ -102,10 +102,16 @@ end
 --- defined selection action when an item is selected, the selected
 --- item is returned.
 ---
+--- A result table is returned on success. It contains:
+---   - result (IItem): The item selected.
+---   - operation (id:base.inventory_proto): The inventory screen the item was
+---     selected on. This is to allow preserving the last selected screen in the
+---     examine menu.
+---
 --- @tparam IChara chara
 --- @tparam id:elona_sys.inventory_proto operation
 --- @tparam[opt] table params
---- @treturn[opt] IItem
+--- @treturn[opt] {result=IItem?,operation=string}
 --- @treturn[opt] string "canceled" if the prompt was canceled
 function Input.query_item(chara, operation, params)
    return query_inventory(chara, operation, params, true)

@@ -5,6 +5,7 @@ local Item = require("api.Item")
 local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
 local Log = require("api.Log")
+local Enum = require("api.Enum")
 
 -- This shouldn't be in base, since it has a lot of logic specific to
 -- elona.
@@ -21,6 +22,7 @@ local function item_gen_weight(item, objlv)
    return math.floor((item.rarity or 1000000) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
 end
 
+-- >>>>>>>> shade2/db_item.hsp:4 	dbMax = 0 : dbSum = 0  ..
 function Itemgen.random_item_id_raw(objlv, categories)
    objlv = objlv or 0
    categories = categories or {}
@@ -76,6 +78,7 @@ function Itemgen.random_item_id_raw(objlv, categories)
 
    return sampler:sample()
 end
+-- <<<<<<<< shade2/db_item.hsp:11117 	return ...
 
 -- fltselect is always active in vanilla, so setting it to 0 will
 -- still exclude items with a different fltselect, unlike flttypemajor
@@ -105,14 +108,14 @@ end
 
 
 local function do_generate_item_id(params)
+   -- >>>>>>>> shade2/item.hsp:595 	if dbId=-1{ ..
    local fltselect = get_fltselect(params.categories)
 
-   -- >>>>>>>> shade2/item.hsp:596 		if fltSelect=0 : if mode!mode_shop{ ...
    if fltselect == nil and not params.is_shop then
-      if params.quality == 3 and Rand.one_in(1000) then
+      if params.quality == Enum.Quality.Good and Rand.one_in(1000) then
          set_fltselect(params.categories, "elona.unique_item")
       end
-      if params.quality == 4 and Rand.one_in(100) then
+      if params.quality == Enum.Quality.Great and Rand.one_in(100) then
          set_fltselect(params.categories, "elona.unique_item")
       end
    end
@@ -121,7 +124,7 @@ local function do_generate_item_id(params)
 
    if id == nil then
       if get_fltselect(params.categories) == "elona.unique_item" then
-         params.quality = 4
+         params.quality = Enum.Quality.Great
       end
       params.level = params.level + 10
       set_fltselect(params.categories, nil)
@@ -131,9 +134,9 @@ local function do_generate_item_id(params)
    if id == nil and params.categories["elona.furniture_altar"] then
       id = "elona.scroll_of_change_material"
    end
-   -- >>>>>>>> shade2/item.hsp:609 		} ...
 
    return id
+   -- <<<<<<<< shade2/item.hsp:609 		} ..
 end
 
 --- Creates a random item.
@@ -148,8 +151,8 @@ end
 function Itemgen.create(x, y, params, where)
    params = params or {}
 
-   params.quality = params.quality or 0
-   params.level = params.level or 0
+   params.quality = params.quality or Enum.Quality.Bad
+   params.level = params.level or 1
    if type(params.categories) == "string" then
       params.categories = {params.categories}
    end
@@ -158,10 +161,12 @@ function Itemgen.create(x, y, params, where)
    local create_params = params.create_params or {}
    create_params.ownerless = params.ownerless
 
-   local chara = Chara.player()
-   if params.quality < 5 and chara and chara:skill_level("elona.stat_luck") > Rand.rnd(5000) then
+   -- >>>>>>>> shade2/item.hsp:609 		} ...
+   local player = Chara.player()
+   if player and params.quality < 5 and player:skill_level("elona.stat_luck") > Rand.rnd(5000) then
       params.quality = params.quality + 1
    end
+   -- <<<<<<<< shade2/item.hsp:559 		} ..
 
    local id = params.id or nil
    if id == nil then

@@ -130,6 +130,10 @@ local categories = {
          "elona.bug"
       }
    },
+   {
+      _id = "equip_armor"
+      -- (refType<fltHeadArmor)or(refType>=fltHeadRange) : if (refType<fltHeadRing)or(refType>=fltHeadItem) :continue
+   }
 }
 
 local subcategories = {
@@ -514,137 +518,3 @@ data:add_multi("base.item_type", categories)
 data:add_multi("base.item_type", subcategories)
 data:add_multi("base.item_type", tags)
 data:add_multi("base.item_type", categories3)
-
-local categories2 = {
-   {
-      _id = "autoidentified",
-
-      copy_to_item = {
-         identify_state = "completely",
-         curse_state = "none"
-      }
-   },
-   {
-      _id = "automemorized",
-
-      copy_to_item = {
-         identify_state = "completely",
-         curse_state = "none"
-      },
-
-      on_generate = function(self)
-         local ItemMemory = require("mod.elona_sys.api.ItemMemory")
-         Item.set_known(self, true)
-      end
-   },
-   {
-      _id = "uncursed",
-
-      copy_to_item = {
-         curse_state = "none"
-      }
-   },
-   {
-      _id = "can_sense",
-
-      params = { threshold = 5 },
-
-      on_generate = function(self, cat)
-         local Chara = require("api.Chara")
-         if Rand.rnd(Chara.player():skill("elona.sense_quality") + 1) > cat.params.threshold then
-            self.identify_state = "almost"
-         end
-      end
-   },
-   {
-      _id = "container",
-
-      on_generate = function(self, cat)
-         self.param1 = Resolver.resolve("elona.scale_with_dungeon_level") + 5
-         self.param2 = Resolver.resolve("elona.scale_with_dungeon_level") + 1
-         self.param3 = Rand.rnd(30000)
-      end
-   },
-   {
-      _id = "food",
-      ordering = 57000,
-
-      params = { min_quality = 3, max_quality = 5, cooked_chance = 50 },
-
-      on_generate = function(self, cat, is_shop)
-         local can_cook = true
-         if not can_cook then
-            return
-         end
-
-         local Rand = require("api.Rand")
-         if is_shop then
-            if Rand.percent_chance(cat.cooked_chance) then
-               self.param2 = 0
-            else
-               self.param2 = Rand.between(cat.min_quality, cat.max_quality)
-            end
-         end
-         if self.param2 > 0 then
-            self.image = self.params.cooked_images[self.param2]
-         end
-         if self.material == "elona.fresh" then
-            local hours = 24
-            self.param3 = self.param3 + hours
-         end
-      end
-   },
-   {
-      _id = "furniture",
-      ordering = 60000,
-
-      params = {
-         subtitles = {
-            "test1",
-            "test2",
-            "test3",
-         },
-         subtitle_chance = 3 -- TODO
-      },
-
-      on_generate = function(self, cat)
-         local Rand = require("api.Rand")
-         if Rand.one_in(cat.params.subtitle_chance) then
-            self.params.subtitle = Rand.choice(cat.params.subtitles)
-         else
-            self.params.subtitle = nil
-         end
-      end,
-
-      on_add_data = function(self)
-         self.prevent_sell_in_own_shop = true
-      end
-   },
-   {
-      _id = "bed",
-      ordering = 60004,
-
-      on_add_data = function(self)
-         local event = {
-            id = "base.on_use_item",
-            name = "Use bed",
-
-            callback = function(self, params)
-               if save.elona_sys.awake_hours < 15 then
-                  Gui.mes("not sleepy.")
-                  return false
-               end
-
-               params.chara:start_activity("elona.prepare_to_sleep", {bed=self})
-
-               return true
-            end
-         }
-         table.insert(self.events, event)
-      end
-   },
-   {
-      _id = "gold",
-      ordering = 68000,
-   }
-}

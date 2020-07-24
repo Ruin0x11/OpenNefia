@@ -1,10 +1,9 @@
 --- Character generation algorithm for Elona.
 --- @module Charagen
 local Chara = require("api.Chara")
-local Event = require("api.Event")
-local Map = require("api.Map")
 local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
+local Enum = require("api.Enum")
 
 local Charagen = {}
 
@@ -74,10 +73,10 @@ end
 
 local function do_get_chara_id(params)
    if params.category == 0 and #params.tag_filters == 0 and params.race_filter == nil then
-      if params.quality == 3 and Rand.one_in(20) then
+      if params.quality == Enum.Quality.Good and Rand.one_in(20) then
          params.fltselect = 2
       end
-      if params.quality == 4 and Rand.one_in(10) then
+      if params.quality == Enum.Quality.Great and Rand.one_in(10) then
          params.fltselect = 2
       end
    end
@@ -85,8 +84,8 @@ local function do_get_chara_id(params)
    local id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
 
    if id == nil then
-      if params.fltselect == 2 or params.quality == 6 then
-         params.quality = 4
+      if params.fltselect == 2 or params.quality == Enum.Quality.Unique then
+         params.quality = Enum.Quality.Great
       end
       params.level = params.level + 10
       id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
@@ -107,8 +106,8 @@ end
 function Charagen.create(x, y, params, where)
    params = params or {}
 
-   params.quality = params.quality or 0
-   params.level = params.level or 0
+   params.quality = params.quality or Enum.Quality.Bad
+   params.level = params.level or 1
    params.fltselect = params.fltselect or nil
    params.category = params.category or nil
    params.create_params = params.create_params or {}

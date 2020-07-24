@@ -86,12 +86,16 @@ end
 --- @treturn[opt] string error
 function Item.create(id, x, y, params, where)
    params = params or {}
+   params.level = params.level or 1
+   params.quality = params.quality or Enum.Quality.Bad
 
    if params.ownerless then
       where = nil
    else
       where = where or field.map
    end
+
+   params.location = where
 
    if not class.is_an(ILocation, where) and not params.ownerless then
       return nil, "invalid location"
@@ -125,7 +129,7 @@ function Item.create(id, x, y, params, where)
    end
 
    item:instantiate()
-   item:emit("base.on_generate")
+   item:emit("base.on_generate", params)
 
    if not params.no_stack then
       item:stack()

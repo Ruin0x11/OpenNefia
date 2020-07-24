@@ -483,6 +483,7 @@ end
 ---    walls/floors.
 --- @tparam[opt] InstancedMap map
 function Map.find_free_position(x, y, params, map)
+   -- >>>>>>>> shade2/item.hsp:565 	if (val=-1)&(mode!mode_shop){	;set location ..
    params = params or {}
    map = map or Map.current()
 
@@ -531,6 +532,7 @@ function Map.find_free_position(x, y, params, map)
    until tries == 100
 
    return nil
+   -- <<<<<<<< shade2/item.hsp:593 		} ..
 end
 
 --- Tries to find an open tile to place a character.

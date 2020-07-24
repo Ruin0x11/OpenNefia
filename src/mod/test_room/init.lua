@@ -18,12 +18,6 @@ local function make_map(width, height)
 end
 
 local function test_room(self, player)
-   player:mod_base_skill_level("elona.stat_magic", 10000)
-
-   data["base.skill"]:iter()
-      :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1234)
-           end)
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)
@@ -36,7 +30,8 @@ local function test_room(self, player)
 
    player:heal_to_max()
 
-   local map = Elona122Map.generate("palmia")
+   -- local map = Elona122Map.generate("palmia")
+   local map = make_map(50, 50)
    local tx, ty = 18, 22
 
    for _, x, y in map:iter_tiles() do

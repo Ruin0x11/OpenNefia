@@ -590,8 +590,15 @@ What gods this item can be offered to.
          },
          {
             name = "material",
-            default = nil,
-            type = "number?"
+            default = "elona.sand",
+            template = true,
+            type = "id:base.material",
+            doc = [[
+Material of this item.
+
+You can set it to "elona.metal" or "elona.soft" to autogenerate a material based
+on vanilla's formula.
+]]
          },
          {
             name = "effective_range",
@@ -635,6 +642,13 @@ Ambient light information.
                     the light. normally lights are only
                     displayed if 17 < date.hour || date.hour < 6.
 ]]
+         },
+         {
+            name = "spoilage_hours",
+            default = nil,
+            doc = [[
+Hours until the item spoils. Used for items of material "elona.fresh" only.
+]]
          }
       },
       fallbacks = {
@@ -649,6 +663,8 @@ Ambient light information.
          params = {},
 
          cargo_weight = 0,
+
+         spoilage_date = nil,
 
          is_melee_weapon = nil,
          is_ranged_weapon = nil,

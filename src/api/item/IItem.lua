@@ -30,7 +30,7 @@ function IItem:normal_build()
 
    self.name = self._id
 
-   self:set_image()
+   self.image = self.proto.image
 end
 
 function IItem:build()
@@ -44,20 +44,6 @@ end
 function IItem:instantiate()
    IObject.instantiate(self)
    self:emit("base.on_item_instantiated")
-end
-
-function IItem:set_image(image)
-   if image then
-      self.image = image
-      local chip = data["base.chip"][self.image]
-      self.y_offset = chip.y_offset
-   else
-      self.image = self.proto.image
-      local chip = data["base.chip"][self.proto.image]
-      if chip then
-         self.y_offset = chip.y_offset
-      end
-   end
 end
 
 function IItem:build_name(amount)
@@ -131,7 +117,7 @@ function IItem:produce_memory()
    local is_tall = false
    local x_offset = self:calc("x_offset")
    local y_offset = self:calc("y_offset")
-   local image = data["base.chip"][self.image]
+   local image = data["base.chip"][self.image or self.proto.image]
    if image then
       shadow_angle = image.shadow
       stack_height = image.stack_height or 8

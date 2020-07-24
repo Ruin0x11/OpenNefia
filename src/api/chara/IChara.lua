@@ -490,12 +490,13 @@ function IChara.apply_hostile_action(victim, params)
 end
 Event.register("base.on_damage_chara", "Hostile action towards AI", IChara.apply_hostile_action)
 
--- shade2/chara_func.hsp:1541 		if ele{ ...
+-- >>>>>>>> shade2/chara_func.hsp:1541 		if ele{ ...
 function IChara.apply_element_on_damage(victim, params)
    if params.element and params.element.on_damage then
       params.element.on_damage(victim, params)
    end
 end
+-- <<<<<<<< shade2/chara_func.hsp:1558 			} ..
 Event.register("base.on_damage_chara", "Element on_damage effects", IChara.apply_element_on_damage)
 
 --- Damages this character's mana points.
@@ -607,6 +608,15 @@ function IChara:kill(source)
    self:emit("base.on_chara_killed", {source=source})
    -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
+
+-- >>>>>>>> shade2/chara_func.hsp:1541 		if ele{ ...
+local function apply_element_on_kill(victim, params)
+   if params.element and params.element.on_kill then
+      params.element.on_damage(victim, params)
+   end
+end
+-- <<<<<<<< shade2/chara_func.hsp:1558 			} ..
+Event.register("base.on_chara_killed", "Element on_kill effects", apply_element_on_kill)
 
 --- Removes this character completely.
 function IChara:vanquish()

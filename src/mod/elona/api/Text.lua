@@ -233,15 +233,17 @@ local function string_to_int(str)
    return fun.iter(hash_chunks):foldl(fun.op.add, 0)
 end
 
+-- >>>>>>>> shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ..
 -- TODO hardcoded
 local RANDOM_COLORS = {
    { 255, 255, 255 },
    { 175, 255, 175 },
-   { 255, 155, 155 },
    { 175, 175, 255 },
-   { 255, 215, 175 },
    { 255, 255, 175 },
+   { 255, 215, 175 },
+   { 255, 155, 155 },
 }
+-- <<<<<<<< shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ...
 
 --- Gets the name and color of an unidentified item.
 --- @tparam base.item|IItem item

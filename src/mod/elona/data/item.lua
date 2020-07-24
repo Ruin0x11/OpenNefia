@@ -6,46 +6,40 @@ local Resolver = require("api.Resolver")
 local Magic = require("mod.elona.api.Magic")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
+local Skill = require("mod.elona_sys.api.Skill")
 
-local function calc_initial_gold(item, owner)
-   local amount
-   if owner then
-      amount = owner:calc("calc_initial_gold")
-   else
-      local dungeon_level = 1
-      local base = dungeon_level * 25
-      local is_shelter = false
+-- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
+local function calc_initial_gold(_, params, result)
+   local item = params.item
+   local owner = params.owner
+   local map = params.map
+
+   if not owner then
+      local base = map.dungeon_level * 25
+      local is_shelter = false -- TODO shelter
       if is_shelter then
          base = 1
       end
 
-      amount = Rand.rnd(base + 10) + 1
+      return Rand.rnd(base + 10) + 1
    end
 
-   if item then
-      local quality = item:calc("quality")
-
-      -- TODO make number instead of enum
-      if quality == 3 then -- great
-         amount = amount * 2
-      end
-
-      if quality >= 4 then -- miracle
-         amount = amount * 4
-      end
+   local calc = owner.proto.calc_initial_gold
+   if calc then
+      return calc(owner)
    end
 
-   return amount
+   return item.amount
 end
+-- <<<<<<<< shade2/calculation.hsp:863 	return rnd(cLevel(c)*25+10)+1 ...
 
 local hook_calc_initial_gold =
    Event.define_hook("calc_initial_gold",
                      "Initial gold amount.",
                      1,
                      nil,
-                     function(_, params, result)
-                        return calc_initial_gold(params.item, params.owner)
-   end)
+                     calc_initial_gold)
 
 local light = {
    lantern = {
@@ -697,15 +691,18 @@ local item =
          }
       },
       {
-         _id = "book_a",
+         _id = "book_unreadable",
          elona_id = 23,
          image = "elona.item_book",
          value = 100,
          weight = 80,
          on_read = function(self)
+            -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
             Effect.identify_item(self, "partly")
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new("text", true):query()
+            return false
+            -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
          end,
          fltselect = 1,
          category = 55000,
@@ -719,26 +716,31 @@ local item =
          }
       },
       {
-         _id = "book_b",
+         _id = "book",
          elona_id = 24,
          image = "elona.item_book",
          value = 500,
          weight = 80,
          on_read = function(self)
+            -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
             Effect.identify_item(self, "partly")
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new("text", true):query()
+            return false
+            -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
          end,
          category = 55000,
          rarity = 2000000,
          coefficient = 100,
 
-         params = { book_id = "string" },
+         params = { book_id = nil },
 
-         on_generate = function(self)
+         on_init_params = function(self)
+            -- >>>>>>>> shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
             if not self.params.book_id then
-               self.params.book_id = ""
+               self.params.book_id = 1 -- TODO book
             end
+            -- <<<<<<<< shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
          end,
 
          elona_type = "normal_book",
@@ -1303,16 +1305,21 @@ local item =
             }
          },
 
-         on_generate = function(self, is_shop, owner)
-            local Rand = require("api.Rand")
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:650 	if iId(ci)=idGold{ ..
+            self.amount = hook_calc_initial_gold({item=self,owner=params.owner,map=params.map})
+            if self:calc("quality") == Enum.Quality.Good then
+               self.amount = self.amount * 2
+            end
+            if self:calc("quality") >= Enum.Quality.Great then
+               self.amount = self.amount * 4
+            end
 
-            self.amount = hook_calc_initial_gold({item=self,owner=owner})
-            print("Amount,", self.amount)
-
-            if owner then
-               owner.gold = owner.gold + self.amount
+            if params.owner then
+               params.owner.gold = params.owner.gold + self.amount
                self:remove_ownership()
             end
+            -- <<<<<<<< shade2/item.hsp:655 		} ..
          end,
 
          categories = {
@@ -1961,7 +1968,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         param1 = 100,
+         params = { bed_quality = 100 },
 
          categories = {
             "elona.furniture_bed",
@@ -2103,7 +2110,7 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 200,
+         params = { instrument_quality = 200 },
          categories = {
             "elona.furniture_instrument",
             "elona.furniture"
@@ -2496,7 +2503,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 150,
+         params = { cooking_quality = 150 },
 
          tags = { "sf" },
 
@@ -3029,7 +3036,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 200,
+         params = { cooking_quality = 200 },
          categories = {
             "elona.furniture"
          }
@@ -3202,7 +3209,7 @@ local item =
          },
 
          elona_function = 15,
-         param1 = 100,
+         params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
          }
@@ -3222,7 +3229,7 @@ local item =
          },
 
          elona_function = 15,
-         param1 = 100,
+         params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
          }
@@ -3242,7 +3249,7 @@ local item =
          },
 
          elona_function = 15,
-         param1 = 100,
+         params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
          }
@@ -3552,7 +3559,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         param1 = 110,
+         params = { bed_quality = 110 },
 
          categories = {
             "elona.furniture_bed",
@@ -3614,13 +3621,12 @@ local item =
          value = 80,
          weight = 160,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 72,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 72,
          categories = {
             "elona.food_vegetable",
             "elona.food"
@@ -3633,13 +3639,12 @@ local item =
          value = 70,
          weight = 170,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 72,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 72,
          categories = {
             "elona.food_vegetable",
             "elona.food"
@@ -3652,13 +3657,12 @@ local item =
          value = 60,
          weight = 100,
          material = "elona.fresh",
-         expiration_date = 48,
          category = 57000,
          subcategory = 64000,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 48,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 48,
 
          gods = { "elona.kumiromi" },
 
@@ -3674,13 +3678,12 @@ local item =
          value = 180,
          weight = 720,
          material = "elona.fresh",
-         expiration_date = 16,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 16,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 16,
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3693,13 +3696,12 @@ local item =
          value = 220,
          weight = 510,
          material = "elona.fresh",
-         expiration_date = 16,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 16,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 16,
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3712,13 +3714,12 @@ local item =
          value = 190,
          weight = 440,
          material = "elona.fresh",
-         expiration_date = 12,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 12,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 12,
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3731,13 +3732,12 @@ local item =
          value = 170,
          weight = 220,
          material = "elona.fresh",
-         expiration_date = 16,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 16,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 16,
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3750,13 +3750,13 @@ local item =
          value = 80,
          weight = 620,
          material = "elona.fresh",
-         expiration_date = 8,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 8,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 8,
+
          categories = {
             "elona.food_vegetable",
             "elona.food"
@@ -3769,13 +3769,12 @@ local item =
          value = 40,
          weight = 420,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -3791,13 +3790,12 @@ local item =
          value = 50,
          weight = 950,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -3816,7 +3814,7 @@ local item =
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
+         params = { food_type = "elona.vegetable" },
 
          gods = { "elona.kumiromi" },
 
@@ -3835,13 +3833,12 @@ local item =
          value = 50,
          weight = 650,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -3872,7 +3869,7 @@ local item =
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
+         params = { food_type = "elona.vegetable" },
 
          gods = { "elona.kumiromi" },
 
@@ -3891,7 +3888,7 @@ local item =
          subcategory = 64000,
          coefficient = 100,
 
-         param1 = 4000,
+         params = { food_type = "elona.sweet" },
 
          categories = {
             "elona.junk_in_field",
@@ -3905,13 +3902,13 @@ local item =
          value = 260,
          weight = 720,
          material = "elona.fresh",
-         expiration_date = 16,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 16,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 16,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3927,7 +3924,7 @@ local item =
          subcategory = 64000,
          coefficient = 100,
 
-         param1 = 2000,
+         params = { food_type = "elona.vegetable" },
 
          gods = { "elona.kumiromi" },
 
@@ -3943,13 +3940,13 @@ local item =
          value = 220,
          weight = 1070,
          material = "elona.fresh",
-         expiration_date = 8,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 8,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 8,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3962,13 +3959,13 @@ local item =
          value = 100,
          weight = 560,
          material = "elona.fresh",
-         expiration_date = 12,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 12,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 12,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -3981,13 +3978,13 @@ local item =
          value = 130,
          weight = 880,
          material = "elona.fresh",
-         expiration_date = 8,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 8,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 8,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -4000,13 +3997,13 @@ local item =
          value = 240,
          weight = 440,
          material = "elona.fresh",
-         expiration_date = 12,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 3000,
-         param3 = 12,
+         params = { food_type = "elona.fruit" },
+         spoilage_hours = 12,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -4019,13 +4016,12 @@ local item =
          value = 260,
          weight = 360,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -4041,13 +4037,12 @@ local item =
          value = 80,
          weight = 970,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -4063,13 +4058,12 @@ local item =
          value = 30,
          weight = 840,
          material = "elona.fresh",
-         expiration_date = 72,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 72,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 72,
 
          gods = { "elona.kumiromi" },
 
@@ -4085,13 +4079,12 @@ local item =
          value = 70,
          weight = 550,
          material = "elona.fresh",
-         expiration_date = 2,
          category = 57000,
          subcategory = 57003,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 2,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 2,
 
          gods = { "elona.kumiromi" },
 
@@ -4156,15 +4149,11 @@ local item =
          value = 80,
          weight = 2000,
          material = "elona.fresh",
-         expiration_date = 4,
          category = 57000,
          coefficient = 100,
 
-         param1 = 1000,
-         param3 = 4,
-         params = {
-            chara_id = nil
-         },
+         params = { food_type = "elona.meat", chara_id = nil },
+         spoilage_hours = 4,
 
          gods = { "any" },
 
@@ -4621,7 +4610,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 60,
+         params = { cooking_quality = 60 },
          categories = {
             "elona.misc_item"
          }
@@ -4860,7 +4849,7 @@ local item =
          category = 57000,
          coefficient = 100,
 
-         food_rank = 3,
+         params = { food_quality = 3 },
 
          categories = {
             "elona.food"
@@ -5317,7 +5306,7 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 110,
+         params = { instrument_quality = 110 },
 
          tags = { "fest" },
 
@@ -5337,7 +5326,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 40,
+         params = { cooking_quality = 40 },
          categories = {
             "elona.misc_item"
          },
@@ -5353,7 +5342,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 80,
+         params = { cooking_quality = 80 },
          categories = {
             "elona.misc_item"
          }
@@ -5392,7 +5381,7 @@ local item =
          category = 57000,
          coefficient = 100,
 
-         food_rank = 3,
+         params = { food_quality = 3 },
 
          categories = {
             "elona.food"
@@ -5405,15 +5394,15 @@ local item =
          value = 280,
          weight = 400,
          material = "elona.fresh",
-         expiration_date = 24,
          level = 3,
          category = 57000,
          subcategory = 57002,
          rarity = 5000000,
          coefficient = 100,
 
-         param1 = 5000,
-         param3 = 24,
+         params = { food_type = "elona.pasta" },
+         spoilage_hours = 24,
+
          categories = {
             "elona.food_noodle",
             "elona.food"
@@ -5425,7 +5414,6 @@ local item =
          image = "elona.item_sack",
          value = 280,
          weight = 800,
-         expiration_date = 240,
          level = 3,
          category = 57000,
          subcategory = 57001,
@@ -5433,8 +5421,9 @@ local item =
          coefficient = 100,
          originalnameref2 = "sack",
 
-         param1 = 7000,
-         param3 = 240,
+         params = { food_type = "elona.bread" },
+         spoilage_hours = 240,
+
          categories = {
             "elona.food_flour",
             "elona.food"
@@ -5447,14 +5436,13 @@ local item =
          value = 280,
          weight = 350,
          material = "elona.fresh",
-         expiration_date = 6,
          level = 3,
          category = 57000,
          rarity = 5000000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 6,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 6,
 
          gods = { "elona.ehekatl" },
 
@@ -5886,11 +5874,6 @@ local item =
 
          param2 = Resolver.make("base.random", { rnd = 15 }),
 
-         on_generate = function(self)
-            local Chara = require("api.Chara")
-            self.param1 = (Rand.rnd(10) + 1) * (Chara.player():calc("level") / 10 + 1)
-         end,
-
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -6150,7 +6133,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         param1 = 150,
+         params = { bed_quality = 150 },
 
          categories = {
             "elona.furniture_bed",
@@ -6245,7 +6228,7 @@ local item =
          rarity = 400000,
          coefficient = 100,
 
-         param1 = 120,
+         params = { bed_quality = 120 },
 
          categories = {
             "elona.furniture_bed",
@@ -6263,7 +6246,7 @@ local item =
          subcategory = 60004,
          coefficient = 100,
 
-         param1 = 100,
+         params = { bed_quality = 100 },
 
          categories = {
             "elona.furniture_bed",
@@ -6283,7 +6266,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         param1 = 130,
+         params = { bed_quality = 130 },
 
          categories = {
             "elona.furniture_bed",
@@ -6301,7 +6284,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 200,
+         params = { bed_quality = 200 },
 
          tags = { "sf" },
 
@@ -6322,7 +6305,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         param1 = 130,
+         params = { bed_quality = 130 },
 
          categories = {
             "elona.furniture_bed",
@@ -6373,7 +6356,7 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         param1 = 130,
+         params = { bed_quality = 130 },
 
          categories = {
             "elona.furniture_bed",
@@ -6513,7 +6496,7 @@ local item =
          rarity = 600000,
          coefficient = 100,
 
-         param1 = 0,
+         params = { bed_quality = 0 },
 
          categories = {
             "elona.furniture_bed",
@@ -6606,7 +6589,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         param1 = 130,
+         params = { bed_quality = 130 },
 
          categories = {
             "elona.furniture_bed",
@@ -6654,7 +6637,7 @@ local item =
          coefficient = 100,
 
          elona_function = 17,
-         param1 = 150,
+         params = { instrument_quality = 150 },
          categories = {
             "elona.furniture"
          },
@@ -6727,7 +6710,7 @@ local item =
          category = 91000,
          coefficient = 100,
 
-         food_rank = 3,
+         params = { food_quality = 3 },
 
          categories = {
             "elona.cargo_food"
@@ -6893,18 +6876,17 @@ local item =
 
          param1 = 1,
 
-         params = { building_id = "" },
+         params = { deed_home_id = "elona.cave" },
 
-         on_generate = function(self, is_shop)
-            self.param1 = Rand.rnd(5) + 1
-            if not is_shop then
-               self.param1 = 2
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:644 	if iId(ci)=idDeedHouse{ ..
+            self.params.deed_home_id = "elona.cave" -- TODO
+            if not params.is_shop then
+               self.params.deed_home_id = "elona.cave" -- TODO
             end
-            -- self.value = data["elona.building"][self.params.building_id].value
-            self.value = 5000 + 4500 * self.param1 * self.param1 * self.param1 + self.param1 * 20000
-            if self.param1 == 5 then
-               self.value = self.value * 2
-            end
+            local home_data = data["elona.home"]:ensure(self.params.deed_home_id)
+            self.value = home_data.value
+            -- <<<<<<<< shade2/item.hsp:650 	if iId(ci)=idGold{ ..
          end,
 
          efid = 1115,
@@ -6924,14 +6906,13 @@ local item =
          value = 900,
          weight = 800,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 12,
          category = 57000,
          rarity = 500000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -6949,14 +6930,13 @@ local item =
          value = 1200,
          weight = 1250,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 15,
          category = 57000,
          rarity = 300000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -6974,14 +6954,13 @@ local item =
          value = 700,
          weight = 900,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 10,
          category = 57000,
          rarity = 400000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -6999,14 +6978,13 @@ local item =
          value = 1500,
          weight = 2400,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 17,
          category = 57000,
          rarity = 200000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7024,13 +7002,12 @@ local item =
          value = 150,
          weight = 800,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 3,
          category = 57000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7048,13 +7025,12 @@ local item =
          value = 170,
          weight = 600,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 3,
          category = 57000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7072,14 +7048,13 @@ local item =
          value = 320,
          weight = 550,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 5,
          category = 57000,
          rarity = 600000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7097,14 +7072,13 @@ local item =
          value = 640,
          weight = 700,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 7,
          category = 57000,
          rarity = 500000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7122,14 +7096,13 @@ local item =
          value = 620,
          weight = 600,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 7,
          category = 57000,
          rarity = 500000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -7147,14 +7120,13 @@ local item =
          value = 380,
          weight = 450,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 5,
          category = 57000,
          rarity = 600000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -8279,7 +8251,7 @@ local item =
          category = 92000,
          coefficient = 100,
 
-         param1 = 1,
+         params = { cargo_quality = 1 },
 
          categories = {
             "elona.cargo"
@@ -8295,7 +8267,7 @@ local item =
          category = 92000,
          coefficient = 100,
 
-         param1 = 2,
+         params = { cargo_quality = 2 },
 
          categories = {
             "elona.cargo"
@@ -8312,7 +8284,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         param1 = 4,
+         params = { cargo_quality = 4 },
 
          categories = {
             "elona.cargo"
@@ -8328,7 +8300,7 @@ local item =
          category = 92000,
          coefficient = 100,
 
-         param1 = 5,
+         params = { cargo_quality = 5 },
 
          categories = {
             "elona.cargo"
@@ -8345,7 +8317,7 @@ local item =
          rarity = 700000,
          coefficient = 100,
 
-         param1 = 3,
+         params = { cargo_quality = 3 },
 
          categories = {
             "elona.cargo"
@@ -8362,7 +8334,7 @@ local item =
          rarity = 1500000,
          coefficient = 100,
 
-         param1 = 0,
+         params = { cargo_quality = 0 },
 
          categories = {
             "elona.cargo"
@@ -8379,7 +8351,7 @@ local item =
          rarity = 800000,
          coefficient = 100,
 
-         param1 = 3,
+         params = { cargo_quality = 3 },
 
          categories = {
             "elona.cargo"
@@ -8396,7 +8368,7 @@ local item =
          rarity = 2000000,
          coefficient = 100,
 
-         param1 = 0,
+         params = { cargo_quality = 0 },
 
          categories = {
             "elona.cargo"
@@ -8413,7 +8385,7 @@ local item =
          rarity = 600000,
          coefficient = 100,
 
-         param1 = 2,
+         params = { cargo_quality = 2 },
 
          categories = {
             "elona.cargo"
@@ -8430,7 +8402,7 @@ local item =
          rarity = 500000,
          coefficient = 100,
 
-         param1 = 1,
+         params = { cargo_quality = 1 },
 
          categories = {
             "elona.cargo"
@@ -8447,7 +8419,7 @@ local item =
          rarity = 1500000,
          coefficient = 100,
 
-         param1 = 5,
+         params = { cargo_quality = 5 },
 
          categories = {
             "elona.cargo"
@@ -8570,8 +8542,6 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         param1 = Resolver.make("base.player_level"),
-
          categories = {
             "elona.container"
          }
@@ -8586,8 +8556,6 @@ local item =
          rarity = 25000,
          coefficient = 100,
          tags = { "spshop" },
-
-         param1 = Resolver.make("base.player_level"),
 
          categories = {
             "elona.container",
@@ -8607,7 +8575,7 @@ local item =
          coefficient = 100,
 
          _copy = {
-            food_rank = 1,
+            params = { food_quality = 1 },
          },
 
          gods = { "elona.kumiromi" },
@@ -8632,7 +8600,7 @@ local item =
          rarity = 800000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -8656,7 +8624,7 @@ local item =
          rarity = 100000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -8683,7 +8651,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -8705,7 +8673,7 @@ local item =
          rarity = 20000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -8730,7 +8698,7 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          nutrition = 500,
          food_buffs = {
@@ -8775,7 +8743,7 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         food_rank = 4,
+         params = { food_quality = 4 },
 
          nutrition = 500,
          food_buffs = {
@@ -8820,7 +8788,7 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         food_rank = 3,
+         params = { food_quality = 3 },
 
          nutrition = 500,
          food_buffs = {
@@ -8864,7 +8832,7 @@ local item =
          subcategory = 58005,
          coefficient = 100,
 
-         food_rank = 6,
+         params = { food_quality = 6 },
 
          nutrition = 2500,
          food_buffs = {
@@ -8907,7 +8875,7 @@ local item =
          rarity = 80000,
          coefficient = 100,
 
-         food_rank = 3,
+         params = { food_quality = 3 },
 
          nutrition = 500,
          food_buffs = {
@@ -8949,7 +8917,7 @@ local item =
          subcategory = 58005,
          coefficient = 100,
 
-         food_rank = 7,
+         params = { food_quality = 7 },
 
          nutrition = 20000,
          food_buffs = {
@@ -8978,7 +8946,7 @@ local item =
          subcategory = 60004,
          coefficient = 0,
 
-         param1 = 0,
+         params = { bed_quality = 0 },
 
          categories = {
             no_implicit = true,
@@ -10425,7 +10393,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         food_rank = 5,
+         params = { food_quality = 5 },
 
          tags = { "sf", "fest" },
 
@@ -10446,7 +10414,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         food_rank = 6,
+         params = { food_quality = 6 },
 
          tags = { "sf", "fest" },
 
@@ -10467,7 +10435,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         food_rank = 7,
+         params = { food_quality = 7 },
 
          tags = { "sf", "fest" },
 
@@ -10697,6 +10665,14 @@ local item =
          fltselect = 1,
          category = 72000,
          coefficient = 100,
+
+         -- >>>>>>>> shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
+         container_params = {
+            type = "shared",
+            id = "elona.heir_trunk"
+         },
+         -- <<<<<<<< shade2/item.hsp:680 	if iId(ci)=idBagOfHolding		:iFile(ci)=roleFileGen ..
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -10929,12 +10905,15 @@ local item =
          originalnameref2 = "bottle",
          has_random_name = true,
 
-         on_drink = function(item, params)
-            return Magic.drink_potion(1108, 150, item, params)
+         on_drink = function(self, params)
+            return Magic.drink_potion(1108, 150, self, params)
+         end,
+
+         on_init_params = function(self, params)
+            self.color = Rand.choice(table.values(Enum.Color))
          end,
 
          tags = { "nogive" },
-         color = "RandomAny",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -11480,6 +11459,14 @@ local item =
          fltselect = 1,
          category = 72000,
          coefficient = 100,
+
+         -- >>>>>>>> shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
+         container_params = {
+            type = "shared",
+            id = "elona.salary_chest"
+         },
+         -- <<<<<<<< shade2/item.hsp:682 	if iId(ci)=idChestIncome		:iFile(ci)=roleFileInco ..
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -11624,7 +11611,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -11648,7 +11635,7 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          gods = { "elona.kumiromi" },
 
@@ -11802,6 +11789,13 @@ local item =
          category = 72000,
          coefficient = 100,
 
+         -- >>>>>>>> shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
+         container_params = {
+            type = "shared",
+            id = "elona.shop_strongbox"
+         },
+         -- <<<<<<<< shade2/item.hsp:681 	if iId(ci)=idChestShopIncome		:iFile(ci)=roleFile ..
+
          prevent_sell_in_own_shop = true,
 
          categories = {
@@ -11840,7 +11834,12 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
-         param1 = 0,
+         params = { textbook_skill = nil },
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
+            self.params.textbook_skill = Skill.random_skill()
+            -- <<<<<<<< shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
+         end,
 
          elona_type = "normal_book",
 
@@ -12023,7 +12022,7 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         food_rank = 5,
+         params = { food_quality = 5 },
 
          events = {
             {
@@ -12081,15 +12080,12 @@ local item =
          image = "elona.item_egg",
          value = 500,
          weight = 300,
-         expiration_date = 240,
          category = 57000,
          rarity = 300000,
          coefficient = 100,
 
-         params = { chara_id = "" },
-
-         param1 = 8000,
-         param3 = 240,
+         params = { food_type = "elona.egg", chara_id = nil },
+         spoilage_hours = 240,
 
          events = {
             {
@@ -12206,6 +12202,23 @@ local item =
 
          elona_function = 11,
 
+         params = {
+            bank_gold_stored = 0,
+            bank_gold_increment = 0,
+         },
+
+         on_init_params = function(self, params)
+            require("api.Log").info("%s", inspect(table.keys(params)))
+            -- >>>>>>>> shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
+            local BANK_INCREMENTS = { 500, 2000, 10000, 50000, 500000, 5000000, 100000000 }
+            -- <<<<<<<< shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
+            -- >>>>>>>> shade2/item.hsp:661 	if iId(ci)=idMoneyBox{ ..
+            local idx = Rand.rnd(Rand.rnd(#BANK_INCREMENTS) + 1) + 1
+            self.params.bank_gold_increment = BANK_INCREMENTS[idx]
+            self.value = 2000 + idx * idx + idx * 100
+            -- <<<<<<<< shade2/item.hsp:664 		} ..
+         end,
+
          categories = {
             "elona.misc_item"
          },
@@ -12223,6 +12236,14 @@ local item =
          category = 72000,
          rarity = 50000,
          coefficient = 100,
+
+         -- >>>>>>>> shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
+         container_params = {
+            type = "shared",
+            id = "elona.freezer"
+         },
+         -- <<<<<<<< shade2/item.hsp:683 	if iId(ci)=idFreezer			:iFile(ci)=roleFileFreezer ..
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -12534,7 +12555,7 @@ local item =
          rarity = 600000,
          coefficient = 100,
 
-         param1 = 6,
+         params = { cargo_quality = 6 },
 
          categories = {
             "elona.cargo"
@@ -12553,7 +12574,7 @@ local item =
          rarity = 800000,
          coefficient = 100,
 
-         param1 = 6,
+         params = { cargo_quality = 6 },
 
          categories = {
             "elona.cargo"
@@ -12698,7 +12719,7 @@ local item =
          coefficient = 100,
 
          elona_function = 15,
-         param1 = 225,
+         params = { cooking_quality = 225 },
          categories = {
             "elona.furniture"
          }
@@ -12805,7 +12826,7 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
-         param1 = 180,
+         params = { bed_quality = 180 },
 
          categories = {
             "elona.furniture_bed",
@@ -12888,10 +12909,22 @@ local item =
 
          params = { bait_rank = 0 },
 
-         on_generate = function()
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:638:DONE 	if iId(ci)=idBite{ ..
             self.params.bait_rank = Rand.rnd(6)
-            self.image = "elona.item_bait"
+
+            local BAIT_IMAGES = {
+               "elona.item_bait_rank_0",
+               "elona.item_bait_rank_1",
+               "elona.item_bait_rank_2",
+               "elona.item_bait_rank_3",
+               "elona.item_bait_rank_4",
+               "elona.item_bait_rank_5",
+            }
+            self.image = BAIT_IMAGES[self.params.bait_rank+1]
+
             self.value = self.params.bait_rank * self.params.bait_rank * 500 + 200
+            -- <<<<<<<< shade2/item.hsp:642 		} ..
          end,
 
          categories = {
@@ -12906,15 +12939,14 @@ local item =
          value = 1200,
          weight = 1250,
          material = "elona.fresh",
-         expiration_date = 4,
          level = 15,
          fltselect = 1,
          category = 57000,
          rarity = 300000,
          coefficient = 100,
 
-         param1 = 6000,
-         param3 = 4,
+         params = { food_type = "elona.fish" },
+         spoilage_hours = 4,
 
          gods = { "elona.ehekatl" },
 
@@ -13208,6 +13240,13 @@ local item =
 
          elona_function = 21,
 
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:669 	if iId(ci)=idMaterialKit{ ..
+            local material = ItemMaterial.choose_random_material(self)
+            ItemMaterial.apply_item_material(self, material)
+            -- <<<<<<<< shade2/item.hsp:672 		} ..
+         end,
+
          tags = { "noshop", "spshop" },
 
          categories = {
@@ -13382,7 +13421,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         food_rank = 7,
+         params = { food_quality = 7 },
          quality = Enum.Quality.Unique,
 
          color = { 225, 225, 255 },
@@ -13425,6 +13464,10 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
+         container_params = {
+            type = "local"
+         },
+
          is_precious = true,
          quality = Enum.Quality.Unique,
          categories = {
@@ -13456,7 +13499,7 @@ local item =
          rarity = 200000,
          coefficient = 0,
 
-         param1 = 130,
+         params = { bed_quality = 130 },
 
          categories = {
             "elona.furniture_bed",
@@ -13640,7 +13683,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         param1 = 160,
+         params = { bed_quality = 160 },
 
          categories = {
             "elona.furniture_bed",
@@ -13658,7 +13701,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         food_rank = 7,
+         params = { food_quality = 7 },
          quality = Enum.Quality.Unique,
 
          color = { 175, 175, 255 },
@@ -13805,7 +13848,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         food_rank = 7,
+         params = { food_quality = 7 },
          quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
@@ -13869,7 +13912,6 @@ local item =
          image = "elona.item_statue_of_opatos",
          value = 100000,
          weight = 15000,
-         expiration_date = 240,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -13892,7 +13934,6 @@ local item =
          image = "elona.item_statue_of_lulwy",
          value = 100000,
          weight = 14000,
-         expiration_date = 120,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -13921,9 +13962,11 @@ local item =
          rarity = 250000,
          coefficient = 100,
 
+         -- >>>>>>>> shade2/item.hsp:676 	if iId(ci)=idSisterLunch{ ..
          is_handmade = true,
+         -- <<<<<<<< shade2/item.hsp:678 	} ..
 
-         food_rank = 7,
+         params = { food_quality = 7 },
 
          categories = {
             "elona.no_generate",
@@ -14325,7 +14368,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 12,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -14353,7 +14395,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 8,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -14381,7 +14422,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 72,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -14407,7 +14447,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 24,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -14459,9 +14498,17 @@ local item =
 
          elona_function = 33,
 
-         on_generate = function(self)
-            self.param2 = Rand.rnd(self:calc("level") + 1) + 1
-            self.value = 2000 + self.param2 * self.param2 + self.param2 * 100
+         params = {
+            monster_ball_captured_chara_id = nil,
+            monster_ball_max_level = 0
+         },
+
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:665 	if iId(ci)=idMonsterBall{ ..
+            self.params.monster_ball_max_level = Rand.rnd(params.level + 1) + 1
+            self.value = 2000 + self.params.monster_ball_max_level * self.params.monster_ball_max_level
+               + self.params.monster_ball_max_level * 100
+            -- <<<<<<<< shade2/item.hsp:668 		} ..
          end,
 
          categories = {
@@ -14474,7 +14521,6 @@ local item =
          image = "elona.item_statue_of_jure",
          value = 100000,
          weight = 12000,
-         expiration_date = 720,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -14509,9 +14555,19 @@ local item =
             has_charge = true,
          },
 
-         on_generate = function(self)
-            local Rand = require("api.Rand")
-            self.param1 = Rand.rnd(Rand.rnd(math.clamp(math.floor(self:calc("level") / 2), 1, 15)) + 1)
+         params = {
+            ancient_book_difficulty = 0,
+            ancient_book_is_deciphered = false,
+         },
+
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:30 	#define global maxMageBook 14 ..
+            local MAX_LEVEL = 14
+            -- <<<<<<<< shade2/item.hsp:30 	#define global maxMageBook 14 ..
+            -- >>>>>>>> shade2/item.hsp:673 	if iId(ci)=idMageBook{ ..
+            local object_level = params.level
+            self.params.ancient_book_difficulty = Rand.rnd(Rand.rnd(math.floor(math.clamp(object_level / 2, 0, MAX_LEVEL))) + 1)
+            -- <<<<<<<< shade2/item.hsp:675 		} ..
          end,
 
          elona_type = "book",
@@ -14569,7 +14625,7 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 150,
+         params = { instrument_quality = 150 },
 
          tags = { "fest" },
 
@@ -14593,7 +14649,7 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 130,
+         params = { instrument_quality = 130 },
 
          tags = { "fest" },
 
@@ -14616,7 +14672,7 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 70,
+         params = { instrument_quality = 70 },
 
          tags = { "fest" },
 
@@ -14640,7 +14696,8 @@ local item =
 
          skill = "elona.performer",
          elona_function = 17,
-         param1 = 175,
+         params = { instrument_quality = 175 },
+
          categories = {
             "elona.furniture_instrument",
             "elona.furniture"
@@ -14831,7 +14888,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         food_rank = 4,
+         params = { food_quality = 4 },
          quality = Enum.Quality.Unique,
 
          color = { 255, 155, 155 },
@@ -14940,7 +14997,8 @@ local item =
 
          elona_function = 17,
          is_precious = true,
-         param1 = 180,
+         params = { instrument_quality = 180 },
+
          quality = Enum.Quality.Unique,
          enchantments = {
             { id = 49, power = 100 }
@@ -15282,7 +15340,7 @@ local item =
          rarity = 2000,
          coefficient = 100,
 
-         param1 = 200,
+         params = { bed_quality = 200 },
 
          tags = { "noshop" },
          _copy = {
@@ -15301,7 +15359,6 @@ local item =
          image = "elona.item_statue_of_ehekatl",
          value = 100000,
          weight = 12000,
-         expiration_date = 480,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -15572,6 +15629,20 @@ local item =
          category = 60000,
          rarity = 5000,
          coefficient = 0,
+
+         params = { gift_value = 0 },
+
+         on_init_params = function(self, params)
+            -- >>>>>>>> shade2/item.hsp:70 	giftValue=10,20,30,50,75,100 ..
+            local GIFT_VALUES = { 10, 20, 30, 50, 75, 100 }
+            -- <<<<<<<< shade2/item.hsp:70 	giftValue=10,20,30,50,75,100 ..
+            -- >>>>>>>> shade2/item.hsp:656 	if iId(ci)=idGift{	 ..
+            local idx = Rand.rnd(Rand.rnd(Rand.rnd(#GIFT_VALUES)+1)+1)+1
+            self.params.gift_quality = GIFT_VALUES[idx]
+            assert(self.params.gift_quality)
+               -- <<<<<<<< shade2/item.hsp:659 		} ..
+         end,
+
          tags = { "spshop" },
          categories = {
             "elona.tag_spshop",
@@ -15774,7 +15845,7 @@ local item =
          rarity = 400000,
          coefficient = 0,
 
-         food_rank = 6,
+         params = { food_quality = 6 },
 
          nutrition = 750,
 
@@ -15926,7 +15997,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 24,
          fltselect = 1,
          category = 59000,
          rarity = 800000,
@@ -15953,7 +16023,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 24,
          fltselect = 1,
          category = 59000,
          rarity = 800000,
@@ -15979,7 +16048,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 24,
          fltselect = 1,
          category = 59000,
          rarity = 800000,
@@ -16005,7 +16073,6 @@ local item =
          image = "elona.item_gemstone",
          value = 50000,
          weight = 1200,
-         expiration_date = 24,
          fltselect = 1,
          category = 59000,
          rarity = 800000,
@@ -16176,7 +16243,7 @@ local item =
          rarity = 400000,
          coefficient = 0,
 
-         food_rank = 6,
+         params = { food_quality = 6 },
 
          events = {
             {
@@ -16212,7 +16279,7 @@ local item =
          rarity = 150000,
          coefficient = 0,
 
-         food_rank = 7,
+         params = { food_quality = 7 },
 
          tags = { "fest" },
 
@@ -16354,7 +16421,12 @@ local item =
 
          elona_function = 49,
          is_precious = true,
-         param1 = Resolver.make("base.between", { min = 1, coefficient = 20000 }),
+
+         params = { garoks_hammer_seed = 0 },
+         on_init_params = function(self)
+            self.params.garoks_hammer_seed = Rand.rnd(20000) + 1
+         end,
+
          quality = Enum.Quality.Unique,
          medal_value = 94,
          categories = {
@@ -16380,7 +16452,7 @@ local item =
 
          elona_function = 17,
          is_precious = true,
-         param1 = 200,
+         params = { instrument_quality = 200 },
          quality = Enum.Quality.Unique,
 
          color = { 255, 255, 255 },
@@ -16489,7 +16561,7 @@ local item =
          rarity = 25000,
          coefficient = 100,
 
-         param1 = 0,
+         params = { bed_quality = 0 },
 
          categories = {
             "elona.furniture_bed",
@@ -16585,13 +16657,13 @@ local item =
          value = 90,
          weight = 330,
          material = "elona.fresh",
-         expiration_date = 32,
          category = 57000,
          subcategory = 57004,
          coefficient = 100,
 
-         param1 = 2000,
-         param3 = 32,
+         params = { food_type = "elona.vegetable" },
+         spoilage_hours = 32,
+
          categories = {
             "elona.food_fruit",
             "elona.food"
@@ -16637,7 +16709,7 @@ local item =
          coefficient = 100,
 
          is_precious = true,
-         food_rank = 8,
+         params = { food_quality = 8 },
          categories = {
             "elona.food"
          }
@@ -16648,7 +16720,6 @@ local item =
          image = "elona.item_statue_of_kumiromi",
          value = 100000,
          weight = 15000,
-         expiration_date = 240,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -16671,7 +16742,6 @@ local item =
          image = "elona.item_statue_of_mani",
          value = 100000,
          weight = 15000,
-         expiration_date = 240,
          fltselect = 3,
          category = 59000,
          rarity = 800000,
@@ -16814,7 +16884,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "bottle",
 
-         food_rank = 1,
+         params = { food_quality = 1 },
 
          rftags = { "flavor" },
 
@@ -16833,7 +16903,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "sack",
 
-         food_rank = 4,
+         params = { food_quality = 4 },
 
          rftags = { "flavor" },
 
@@ -16847,14 +16917,14 @@ local item =
          image = "elona.item_puff_puff_bread",
          value = 350,
          weight = 350,
-         expiration_date = 720,
          level = 3,
          category = 57000,
          rarity = 100000,
          coefficient = 100,
 
-         food_rank = 5,
-         param3 = 720,
+         params = { food_quality = 5 },
+         spoilage_hours = 720,
+
          categories = {
             "elona.food"
          }
@@ -16978,7 +17048,7 @@ local item =
          rarity = 150000,
          coefficient = 0,
 
-         food_rank = 8,
+         params = { food_quality = 8 },
 
          categories = {
             "elona.no_generate",
