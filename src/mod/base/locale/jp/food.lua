@@ -183,275 +183,277 @@ return {
          dialog = "「むがっ」"
       },
       names = {
-         _1 = {
-            _1 = function(_1)
-               return ("グロテスクな%sの肉")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("焼け焦げた%sの肉")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sのこんがり肉")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%s肉のオードブル")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("%sのピリ辛炒め")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sコロッケ")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("%sのハンバーグ")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%s肉の大葉焼き")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%sステーキ")
-                  :format(_1)
-            end,
-            default_origin = "動物"
-         },
-         _2 = {
-            _1 = function(_1)
-               return ("生ごみ同然の%s")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("悪臭を放つ%s")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sのサラダ")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%sの炒め物")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("%s風味の肉じゃが")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sの天ぷら")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("%sの煮込み")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%sシチュー")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%s風カレー")
-                  :format(_1)
-            end,
-            default_origin = "野菜"
-         },
-         _3 = {
-            _1 = function(_1)
-               return ("食べてはならない%s")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("べっちょりした%s")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sのフルーツサラダ")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%sのプリン")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("%sシャーベット")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sシェイク")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("%sクレープ")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%sフルーツケーキ")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%sパフェ")
-                  :format(_1)
-            end,
-            default_origin = "果物"
-         },
-         _4 = {
-            _1 = function(_1)
-               return ("原型を留めない%s")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("まずそうな%s")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sクッキー")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%sのゼリー")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("%sパイ")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sまんじゅう")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("%s風味のシュークリーム")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%sのケーキ")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%s風ザッハトルテ")
-                  :format(_1)
-            end,
-            default_origin = "お菓子"
-         },
-         _5 = {
-            _1 = function(_1)
-               return ("禁断の%s")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("のびてふにゃった%s")
-                  :format(_1)
-            end,
-            _3 = "サラダパスタ",
-            _4 = "うどん",
-            _5 = "冷やし蕎麦",
-            _6 = "ペペロンチーノ",
-            _7 = "カルボナーラ",
-            _8 = "ラーメン",
-            _9 = "ミートスパゲティ",
-            default_origin = "麺"
-         },
-         _6 = {
-            _1 = function(_1)
-               return ("%sの残骸")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("骨だけ残った%s")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sのフライ")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%sの煮込み")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("%sスープ")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sの天ぷら")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("%sソーセージ")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%sの刺身")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%sの活け作り")
-                  :format(_1)
-            end,
-            default_origin = "魚"
-         },
-         _7 = {
-            _1 = function(_1)
-               return ("恐怖の%s")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("ガチガチの%s")
-                  :format(_1)
-            end,
-            _3 = "くるみパン",
-            _4 = "アップルパイ",
-            _5 = "サンドイッチ",
-            _6 = "クロワッサン",
-            _7 = "コロッケパン",
-            _8 = "カレーパン",
-            _9 = "メロンパン",
-            default_origin = "パン"
-         },
-         _8 = {
-            _1 = function(_1)
-               return ("グロテスクな%sの卵")
-                  :format(_1)
-            end,
-            _2 = function(_1)
-               return ("焦げた%sの卵")
-                  :format(_1)
-            end,
-            _3 = function(_1)
-               return ("%sの卵の目玉焼き")
-                  :format(_1)
-            end,
-            _4 = function(_1)
-               return ("%s風味のキッシュ")
-                  :format(_1)
-            end,
-            _5 = function(_1)
-               return ("半熟%s")
-                  :format(_1)
-            end,
-            _6 = function(_1)
-               return ("%sの卵入りスープ")
-                  :format(_1)
-            end,
-            _7 = function(_1)
-               return ("熟成%sチーズ")
-                  :format(_1)
-            end,
-            _8 = function(_1)
-               return ("%sのレアチーズケーキ")
-                  :format(_1)
-            end,
-            _9 = function(_1)
-               return ("%s風オムライス")
-                  :format(_1)
-            end,
-            default_origin = "鳥"
+         elona = {
+            meat = {
+               _1 = function(_1)
+                  return ("グロテスクな%sの肉")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("焼け焦げた%sの肉")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sのこんがり肉")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%s肉のオードブル")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("%sのピリ辛炒め")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sコロッケ")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("%sのハンバーグ")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%s肉の大葉焼き")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%sステーキ")
+                     :format(_1)
+               end,
+               default_origin = "動物"
+            },
+            vegetable = {
+               _1 = function(_1)
+                  return ("生ごみ同然の%s")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("悪臭を放つ%s")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sのサラダ")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%sの炒め物")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("%s風味の肉じゃが")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sの天ぷら")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("%sの煮込み")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%sシチュー")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%s風カレー")
+                     :format(_1)
+               end,
+               default_origin = "野菜"
+            },
+            fruit = {
+               _1 = function(_1)
+                  return ("食べてはならない%s")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("べっちょりした%s")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sのフルーツサラダ")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%sのプリン")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("%sシャーベット")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sシェイク")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("%sクレープ")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%sフルーツケーキ")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%sパフェ")
+                     :format(_1)
+               end,
+               default_origin = "果物"
+            },
+            sweet = {
+               _1 = function(_1)
+                  return ("原型を留めない%s")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("まずそうな%s")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sクッキー")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%sのゼリー")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("%sパイ")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sまんじゅう")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("%s風味のシュークリーム")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%sのケーキ")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%s風ザッハトルテ")
+                     :format(_1)
+               end,
+               default_origin = "お菓子"
+            },
+            pasta = {
+               _1 = function(_1)
+                  return ("禁断の%s")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("のびてふにゃった%s")
+                     :format(_1)
+               end,
+               _3 = "サラダパスタ",
+               _4 = "うどん",
+               _5 = "冷やし蕎麦",
+               _6 = "ペペロンチーノ",
+               _7 = "カルボナーラ",
+               _8 = "ラーメン",
+               _9 = "ミートスパゲティ",
+               default_origin = "麺"
+            },
+            fish = {
+               _1 = function(_1)
+                  return ("%sの残骸")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("骨だけ残った%s")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sのフライ")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%sの煮込み")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("%sスープ")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sの天ぷら")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("%sソーセージ")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%sの刺身")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%sの活け作り")
+                     :format(_1)
+               end,
+               default_origin = "魚"
+            },
+            bread = {
+               _1 = function(_1)
+                  return ("恐怖の%s")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("ガチガチの%s")
+                     :format(_1)
+               end,
+               _3 = "くるみパン",
+               _4 = "アップルパイ",
+               _5 = "サンドイッチ",
+               _6 = "クロワッサン",
+               _7 = "コロッケパン",
+               _8 = "カレーパン",
+               _9 = "メロンパン",
+               default_origin = "パン"
+            },
+            egg = {
+               _1 = function(_1)
+                  return ("グロテスクな%sの卵")
+                     :format(_1)
+               end,
+               _2 = function(_1)
+                  return ("焦げた%sの卵")
+                     :format(_1)
+               end,
+               _3 = function(_1)
+                  return ("%sの卵の目玉焼き")
+                     :format(_1)
+               end,
+               _4 = function(_1)
+                  return ("%s風味のキッシュ")
+                     :format(_1)
+               end,
+               _5 = function(_1)
+                  return ("半熟%s")
+                     :format(_1)
+               end,
+               _6 = function(_1)
+                  return ("%sの卵入りスープ")
+                     :format(_1)
+               end,
+               _7 = function(_1)
+                  return ("熟成%sチーズ")
+                     :format(_1)
+               end,
+               _8 = function(_1)
+                  return ("%sのレアチーズケーキ")
+                     :format(_1)
+               end,
+               _9 = function(_1)
+                  return ("%s風オムライス")
+                     :format(_1)
+               end,
+               default_origin = "鳥"
+            }
          }
       },
       not_affected_by_rotten = function(_1)

@@ -241,8 +241,8 @@ function IChara:refresh_weight()
       weight = weight + i:calc("weight")
       cargo_weight = cargo_weight + i:calc("cargo_weight")
    end
-   self.inventory_weight = weight
-   self.cargo_weight = cargo_weight
+   self:reset("inventory_weight", weight)
+   self:reset("cargo_weight", cargo_weight)
    self.max_inventory_weight = 45000
    self.inventory_weight_type = 0
    self:emit("base.on_refresh_weight")

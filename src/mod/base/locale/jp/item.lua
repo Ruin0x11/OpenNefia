@@ -10,23 +10,6 @@ end,
   :format(name(_1), itemname(_2))
 end
     },
-    ancient_book_title = {
-      _0 = "ヴォイニッチ写本",
-      _1 = "ドール賛歌",
-      _10 = "ネクロノミコン",
-      _11 = "ルルイエ異本",
-      _12 = "エルトダウン・シャールズ",
-      _13 = "金枝篇",
-      _14 = "終焉の書",
-      _2 = "ポナペ教教典",
-      _3 = "グラーキ黙示録",
-      _4 = "グ＝ハーン断章",
-      _5 = "断罪の書",
-      _6 = "ドジアンの書",
-      _7 = "エイボンの書",
-      _8 = "大いなる教書",
-      _9 = "セラエノ断章"
-    },
     approximate_curse_state = {
       cursed = "(恐ろしい)",
       doomed = "(禍々しい)"
@@ -36,18 +19,28 @@ end
       light = "(軽装備)",
       medium = "(中装備)"
     },
-    bait_rank = {
-      _0 = "ミジンコ",
-      _1 = "バッタ",
-      _2 = "テントウ",
-      _3 = "トンボ",
-      _4 = "セミ",
-      _5 = "ヘラクレス"
-    },
     charges = function(_1)
   return ("(残り%s回)")
   :format(_1)
 end,
+    chest_empty = "(空っぽ)",
+    cargo_buying_price = function(price)
+       return ("(仕入れ値 %sg)"):format(price)
+    end,
+    aphrodisiac = "(媚薬混入)",
+    poisoned = "(毒物混入)",
+    interval = function(hours)
+       return ("(%s時間)"):format(hours)
+    end,
+    serial_no = function(serial_no)
+       return (" シリアルNo.%s"):format(serial_no)
+    end,
+    altar_god_name = function(god_name)
+       return ("%sの"):format(god_name)
+    end,
+    harvest_grown = function(weight)
+       return ("%s育った"):format(weight)
+    end,
     chip = {
       dryrock = "日干し岩",
       field = "畑"
@@ -121,18 +114,6 @@ end,
   return ("%sは灰と化した。")
   :format(itemname(_1, 1))
 end,
-    gift_rank = {
-      _0 = "つまらない",
-      _1 = "普通の",
-      _2 = "ちょっとドキドキする",
-      _3 = "高価な",
-      _4 = "気絶しそうなほど素晴らしい",
-      _5 = "王様が羨むほどの"
-    },
-    godly_paren = function(_1)
-  return ("《%s》")
-  :format(_1)
-end,
     item_on_the_ground_breaks_to_pieces = function(_1)
   return ("地面の%sは粉々に砕けた。")
   :format(_1)
@@ -159,10 +140,14 @@ end,
       _5 = "500万金貨",
       _6 = "1億金貨"
     },
-    miracle_paren = function(_1)
-  return ("『%s』")
-  :format(_1)
-end,
+    title_paren = {
+       great = function(_1)
+          return ("『%s』"):format(_1)
+       end,
+       god = function(_1)
+          return ("《%s》"):format(_1)
+       end,
+    },
     someones_item_breaks_to_pieces = function(_1, _2, _3)
   return ("%sの%sは粉々に砕けた。")
   :format(name(_3), _1)

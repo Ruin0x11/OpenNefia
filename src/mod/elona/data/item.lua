@@ -6773,7 +6773,7 @@ local item =
          elona_id = 333,
          image = "elona.item_travelers_food",
          value = 40,
-         weight = -2000,
+         cargo_weight = 2000,
          is_cargo = true,
          category = 91000,
          coefficient = 100,
@@ -6840,6 +6840,7 @@ local item =
          weight = 1500,
          category = 62000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains"
          }
@@ -6853,6 +6854,7 @@ local item =
          category = 62000,
          rarity = 200000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains"
          }
@@ -6866,6 +6868,7 @@ local item =
          category = 62000,
          rarity = 400000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains"
          }
@@ -6879,6 +6882,7 @@ local item =
          category = 62000,
          rarity = 100000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains"
          }
@@ -6891,6 +6895,7 @@ local item =
          weight = 1500,
          category = 62000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains"
          }
@@ -8348,7 +8353,7 @@ local item =
          elona_id = 399,
          image = "elona.item_rag_doll",
          value = 700,
-         weight = -6500,
+         cargo_weight = 6500,
          is_cargo = true,
          category = 92000,
          coefficient = 100,
@@ -8364,7 +8369,7 @@ local item =
          elona_id = 400,
          image = "elona.item_barrel",
          value = 420,
-         weight = -10000,
+         cargo_weight = 10000,
          is_cargo = true,
          category = 92000,
          coefficient = 100,
@@ -8380,7 +8385,7 @@ local item =
          elona_id = 401,
          image = "elona.item_piano",
          value = 4000,
-         weight = -50000,
+         cargo_weight = 50000,
          is_cargo = true,
          category = 92000,
          rarity = 200000,
@@ -8397,7 +8402,7 @@ local item =
          elona_id = 402,
          image = "elona.item_rope",
          value = 550,
-         weight = -4800,
+         cargo_weight = 4800,
          is_cargo = true,
          category = 92000,
          coefficient = 100,
@@ -8413,7 +8418,7 @@ local item =
          elona_id = 403,
          image = "elona.item_coffin",
          value = 2200,
-         weight = -12000,
+         cargo_weight = 12000,
          is_cargo = true,
          category = 92000,
          rarity = 700000,
@@ -8430,7 +8435,7 @@ local item =
          elona_id = 404,
          image = "elona.item_manboo",
          value = 800,
-         weight = -10000,
+         cargo_weight = 10000,
          is_cargo = true,
          category = 92000,
          rarity = 1500000,
@@ -8447,7 +8452,7 @@ local item =
          elona_id = 405,
          image = "elona.item_grave",
          value = 2800,
-         weight = -48000,
+         cargo_weight = 48000,
          is_cargo = true,
          category = 92000,
          rarity = 800000,
@@ -8464,7 +8469,7 @@ local item =
          elona_id = 406,
          image = "elona.item_tuna_fish",
          value = 350,
-         weight = -7500,
+         cargo_weight = 7500,
          is_cargo = true,
          category = 92000,
          rarity = 2000000,
@@ -8481,7 +8486,7 @@ local item =
          elona_id = 407,
          image = "elona.item_whisky",
          value = 1400,
-         weight = -16000,
+         cargo_weight = 16000,
          is_cargo = true,
          category = 92000,
          rarity = 600000,
@@ -8498,7 +8503,7 @@ local item =
          elona_id = 408,
          image = "elona.item_noble_toy",
          value = 1200,
-         weight = -32000,
+         cargo_weight = 32000,
          is_cargo = true,
          category = 92000,
          rarity = 500000,
@@ -8515,7 +8520,7 @@ local item =
          elona_id = 409,
          image = "elona.item_inner_tube",
          value = 340,
-         weight = -1500,
+         cargo_weight = 1500,
          is_cargo = true,
          category = 92000,
          rarity = 1500000,
@@ -10655,6 +10660,7 @@ local item =
          category = 62000,
          rarity = 100000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains",
             "elona.no_generate"
@@ -10670,6 +10676,7 @@ local item =
          category = 62000,
          rarity = 100000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.remains",
             "elona.no_generate"
@@ -12283,7 +12290,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "bottle",
 
-         params = { chara_id = "" },
+         params = { chara_id = nil },
 
          on_drink = function(item, params)
             return Magic.drink_potion(1101, 100, item, params)
@@ -12301,6 +12308,7 @@ local item =
          category = 64000,
          rarity = 250000,
          coefficient = 100,
+         params = { chara_id = nil },
          categories = {
             "elona.junk"
          }
@@ -12368,7 +12376,6 @@ local item =
          },
 
          on_init_params = function(self, params)
-            require("api.Log").info("%s", inspect(table.keys(params)))
             -- >>>>>>>> shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
             local BANK_INCREMENTS = { 500, 2000, 10000, 50000, 500000, 5000000, 100000000 }
             -- <<<<<<<< shade2/item.hsp:69 	moneyBox =500,2000,10000,50000,500000,5000000,100 ..
@@ -12711,7 +12718,7 @@ local item =
          elona_id = 597,
          image = "elona.item_christmas_tree",
          value = 3500,
-         weight = -60000,
+         cargo_weight = 60000,
          is_cargo = true,
          category = 92000,
          rarity = 600000,
@@ -12730,7 +12737,7 @@ local item =
          elona_id = 598,
          image = "elona.item_snow_man",
          value = 1200,
-         weight = -11000,
+         cargo_weight = 11000,
          is_cargo = true,
          category = 92000,
          rarity = 800000,
@@ -13023,6 +13030,10 @@ local item =
          is_precious = true,
 
          medal_value = 5,
+
+         params = {
+            bill_gold_amount = 0
+         },
 
          categories = {
             "elona.scroll",
@@ -14165,7 +14176,7 @@ local item =
          elona_id = 669,
          image = "elona.item_painting_of_landscape",
          value = 3800,
-         weight = -35000,
+         cargo_weight = 35000,
          is_cargo = true,
          category = 92000,
          rarity = 150000,
@@ -14182,7 +14193,7 @@ local item =
          elona_id = 670,
          image = "elona.item_canvas",
          value = 750,
-         weight = -7000,
+         cargo_weight = 7000,
          is_cargo = true,
          category = 92000,
          coefficient = 100,
@@ -15804,8 +15815,8 @@ local item =
             -- <<<<<<<< shade2/item.hsp:70 	giftValue=10,20,30,50,75,100 ..
             -- >>>>>>>> shade2/item.hsp:656 	if iId(ci)=idGift{	 ..
             local idx = Rand.rnd(Rand.rnd(Rand.rnd(#GIFT_VALUES)+1)+1)+1
-            self.params.gift_quality = GIFT_VALUES[idx]
-            assert(self.params.gift_quality)
+            self.params.gift_value = GIFT_VALUES[idx]
+            assert(self.params.gift_value)
                -- <<<<<<<< shade2/item.hsp:659 		} ..
          end,
 

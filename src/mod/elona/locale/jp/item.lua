@@ -98,7 +98,25 @@ local item = {
         text = "古代の知識が書き込まれた書。読むことができる。"
       }
     },
-    name = "古書物"
+    name = "古書物",
+
+    titles = {
+      _0 = "ヴォイニッチ写本",
+      _1 = "ドール賛歌",
+      _2 = "ポナペ教教典",
+      _3 = "グラーキ黙示録",
+      _4 = "グ＝ハーン断章",
+      _5 = "断罪の書",
+      _6 = "ドジアンの書",
+      _7 = "エイボンの書",
+      _8 = "大いなる教書",
+      _9 = "セラエノ断章",
+      _10 = "ネクロノミコン",
+      _11 = "ルルイエ異本",
+      _12 = "エルトダウン・シャールズ",
+      _13 = "金枝篇",
+      _14 = "終焉の書"
+    },
   },
   ancient_tomb = {
     desc = {
@@ -307,7 +325,16 @@ local item = {
     unidentified_name = "巨大な斧"
   },
   bait = {
-    name = ""
+        name = "",
+
+    rank = {
+      _0 = "ミジンコ",
+      _1 = "バッタ",
+      _2 = "テントウ",
+      _3 = "トンボ",
+      _4 = "セミ",
+      _5 = "ヘラクレス"
+    },
   },
   banded_mail = {
     desc = {
@@ -551,7 +578,11 @@ local item = {
       }
     },
     name = "請求書",
-    unidentified_name = "いやな紙切れ"
+    unidentified_name = "いやな紙切れ",
+
+    title = function(gold)
+       return ("%sgoldの"):format(gold)
+    end
   },
   black_board = {
     desc = {
@@ -730,7 +761,7 @@ local item = {
     name = "本",
     unidentified_name = "本"
   },
-  book_b = {
+  book = {
     desc = {
       _0 = {
         footnote = "〜本の為の本〜",
@@ -742,7 +773,11 @@ local item = {
       }
     },
     name = "本",
-    unidentified_name = "本"
+    unidentified_name = "本",
+
+    title = function(title)
+       return ("《%s》という題名の"):format(title)
+    end
   },
   book_of_bokonon = {
     _0 = {
@@ -762,7 +797,11 @@ local item = {
         text = "ある童話作家の書いた本。読むことができる。"
       }
     },
-    name = "レイチェルの絵本"
+    name = "レイチェルの絵本",
+
+    title = function(no)
+       return ("第%s巻目の"):format(no)
+    end
   },
   book_of_resurrection = {
     desc = {
@@ -2370,7 +2409,11 @@ local item = {
         text = "読むことで家を建てることができる権利書だ。"
       }
     },
-    name = "権利書"
+    name = "権利書",
+
+    title = function(home_name)
+       return ("%sの"):format(home_name)
+    end
   },
   deed_of_dungeon = {
     desc = {
@@ -3031,7 +3074,11 @@ local item = {
         text = "釣りの際に必要な道具。使用することができる。"
       }
     },
-    name = "釣竿"
+    name = "釣竿",
+
+    remaining = function(bait, charges)
+       return ("(%s残り%s匹)"):format(bait, charges)
+    end
   },
   five_horned_helm = {
     desc = {
@@ -3454,7 +3501,16 @@ local item = {
         text = "人に渡すと友好度が上がるアイテムだ。"
       }
     },
-    name = "おみやげ"
+    name = "おみやげ",
+
+    ranks = {
+      _10 = "つまらない",
+      _20 = "普通の",
+      _30 = "ちょっとドキドキする",
+      _50 = "高価な",
+      _75 = "気絶しそうなほど素晴らしい",
+      _100 = "王様が羨むほどの"
+    },
   },
   girdle = {
     desc = {
@@ -4248,7 +4304,20 @@ local item = {
         text = "指定された額ごとに貯金できる箱。使用することができる。"
       }
     },
-    name = "貯金箱"
+    name = "貯金箱",
+
+    amount = function(amount)
+       return ("%s"):format(amount)
+    end,
+    names = {
+       _500       = "5百金貨",
+       _2000      = "2千金貨",
+       _10000     = "1万金貨",
+       _50000     = "5万金貨",
+       _500000    = "50万金貨",
+       _5000000   = "500万金貨",
+       _100000000 = "1億金貨"
+    }
   },
   kiwi = {
     desc = {
@@ -5193,7 +5262,11 @@ local item = {
         text = "モンスターを捕獲できる玉。投げることができる。"
       }
     },
-    name = "モンスターボール"
+    name = "モンスターボール",
+
+    level = function(lv)
+       return (" Lv %s (空)"):format(lv)
+    end
   },
   monster_heart = {
     desc = {
@@ -7916,7 +7989,17 @@ local item = {
       }
     },
     name = "秘宝",
-    unidentified_name = "謎の宝石"
+    unidentified_name = "謎の宝石",
+    of = {
+       elona = {
+          perm_good   = "善人の",
+          perm_evil   = "悪人の",
+          god_luck    = "エヘカトルの",
+          god_earth   = "オパートスの",
+          god_element = "イツパロトルの",
+          god_heal    = "ジュアの"
+       }
+    }
   },
   server = {
     desc = {
@@ -8072,7 +8155,9 @@ local item = {
         text = "武器防具が入ったカバン。開けることができる。"
       }
     },
-    name = "商人のカバン"
+    name = "商人のカバン",
+
+    temporal = "(移動時消滅)"
   },
   short_bow = {
     desc = {
@@ -8356,7 +8441,11 @@ local item = {
         text = "中に小銭、稀に大金の入った箱。開けることができる。"
       }
     },
-    name = "小さな宝くじ箱"
+    name = "小さな宝くじ箱",
+
+    level = function(lv)
+       return (" Lv%s"):format(lv)
+    end
   },
   small_medal = {
     desc = {
@@ -9807,7 +9896,11 @@ local item = {
       }
     },
     name = "学習書",
-    unidentified_name = "本"
+    unidentified_name = "本",
+
+    title = function(skill_name)
+       return ("《%s》という題名の"):format(skill_name)
+    end
   },
   thick_gauntlets = {
     desc = {

@@ -256,7 +256,8 @@ function InventoryContext:query_item_amount(item)
 end
 
 function InventoryContext:on_select(item, amount, rest)
-   assert(type(amount) == "number")
+   -- assert(type(amount) == "number")
+   amount = amount or item.amount
 
    if self.proto.on_select then
       return self.proto.on_select(self, item, amount, rest)

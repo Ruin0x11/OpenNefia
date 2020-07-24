@@ -2789,7 +2789,7 @@ local shop = {
    }
 }
 function shop.on_generate(map)
-   local item = Item.create("elona.book_b", 17, 14, nil, map)
+   local item = Item.create("elona.book", 17, 14, nil, map)
    item.params.book_id = 8
 
    Item.create("elona.shop_strongbox", 19, 10, nil, map)
@@ -2811,7 +2811,7 @@ local crop = {
    }
 }
 function crop.on_generate(map)
-   local item = Item.create("elona.book_b", 17, 14, nil, map)
+   local item = Item.create("elona.book", 17, 14, nil, map)
    item.params.book_id = 9
 end
 data:add(crop)
@@ -2830,7 +2830,7 @@ local ranch = {
    }
 }
 function ranch.on_generate(map)
-   local item = Item.create("elona.book_b", 23, 8, nil, map)
+   local item = Item.create("elona.book", 23, 8, nil, map)
    item.params.book_id = 11
 
    Item.create("elona.register", 22, 6, nil, map)
@@ -2851,7 +2851,7 @@ local dungeon = {
    }
 }
 function dungeon.on_generate(map)
-   local item = Item.create("elona.book_b", 39, 54, nil, map)
+   local item = Item.create("elona.book", 39, 54, nil, map)
    item.params.book_id = 15
 end
 data:add(dungeon)

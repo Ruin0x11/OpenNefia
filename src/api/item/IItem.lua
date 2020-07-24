@@ -47,22 +47,10 @@ function IItem:instantiate()
    self:emit("base.on_item_instantiated")
 end
 
-function IItem:build_name(amount)
-   amount = amount or self.amount
-
-   local s = self.name
-   if amount ~= 1 then
-      s = string.format("%d %s", amount, self.name)
-   end
-
-   local b = self:calc("bonus")
-   if b > 0 then
-      s = s .. " +" .. b
-   elseif b < 0 then
-      s = s .. " " .. b
-   end
-
-   return s
+local Itemname = nil
+function IItem:build_name(amount, no_article)
+   Itemname = Itemname or require("mod.elona.api.Itemname")
+   return Itemname.build_name(self, amount, no_article)
 end
 
 local function is_melee_weapon(item)
@@ -242,7 +230,7 @@ function IItem:can_stack_with(other)
 
    local ok, err = IEventEmitter.compare_events(self, other)
    if not ok then
-      return err
+      return false, "events don't match"
    end
 
    for field, my_val in pairs(self) do

@@ -192,289 +192,291 @@ end,
       dialog = "Mm-ghmm"
     },
     names = {
-      _1 = {
-        _1 = function(_1)
-  return ("grotesque %s meat")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("charred %s meat")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("roast %s")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("deep fried %s")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("skewer grilled %s")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("%s croquette")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("%s hamburger")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("%s cutlet")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s steak")
-  :format(_1)
-end,
-        default_origin = "beast"
-      },
-      _2 = {
-        _1 = function(_1)
-  return ("kitchen refuse %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("smelly %s")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("%s salad")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("fried %s")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("%s roll")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("%s tempura")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("%s gratin")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("meat and %s stew")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s curry")
-  :format(_1)
-end,
-        default_origin = "vegetable"
-      },
-      _3 = {
-        _1 = function(_1)
-  return ("dangerous %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("doubtful %s")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("%s jelly salad")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("%s pudding")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("%s sherbet")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("%s ice cream")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("%s crepe")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("%s fruit cake")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s grand parfait")
-  :format(_1)
-end,
-        default_origin = "fruit"
-      },
-      _4 = {
-        _1 = function(_1)
-  return ("collapsed %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("nasty %s")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("%s cookie")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("%s jelly")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("%s pie")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("%s bun")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("%s cream puff")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("%s cake")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s sachertorte")
-  :format(_1)
-end,
-        default_origin = "candy"
-      },
-      _5 = {
-        _1 = function(_1)
-  return ("risky %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("exhausted %s")
-  :format(_1)
-end,
-        _3 = "salad pasta",
-        _4 = "udon",
-        _5 = "soba",
-        _6 = "peperoncino",
-        _7 = "carbonara",
-        _8 = "ramen",
-        _9 = "meat spaghetti",
-        default_origin = "noodle"
-      },
-      _6 = {
-        _1 = function(_1)
-  return ("leftover %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("bony %s")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("fried %s")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("stewed %s")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("%s soup")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("%s tempura")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("%s sausage")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("%s sashimi")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s sushi")
-  :format(_1)
-end,
-        default_origin = "fish"
-      },
-      _7 = {
-        _1 = function(_1)
-  return ("fearsome %s")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("hard %s")
-  :format(_1)
-end,
-        _3 = "walnut bread",
-        _4 = "apple pie",
-        _5 = "sandwich",
-        _6 = "croissant",
-        _7 = "croquette sandwich",
-        _8 = "chocolate babka",
-        _9 = "melon flavored bread",
-        default_origin = "bread"
-      },
-      _8 = {
-        _1 = function(_1)
-  return ("grotesque %s egg")
-  :format(_1)
-end,
-        _2 = function(_1)
-  return ("overcooked %s egg")
-  :format(_1)
-end,
-        _3 = function(_1)
-  return ("fried %s egg")
-  :format(_1)
-end,
-        _4 = function(_1)
-  return ("%s egg toast")
-  :format(_1)
-end,
-        _5 = function(_1)
-  return ("soft boiled %s egg")
-  :format(_1)
-end,
-        _6 = function(_1)
-  return ("soup with %s egg")
-  :format(_1)
-end,
-        _7 = function(_1)
-  return ("mature %s cheese")
-  :format(_1)
-end,
-        _8 = function(_1)
-  return ("%s cheese cake")
-  :format(_1)
-end,
-        _9 = function(_1)
-  return ("%s omlet")
-  :format(_1)
-end,
-        default_origin = "animal"
-      }
+       elona = {
+          meat = {
+             _1 = function(_1)
+                return ("grotesque %s meat")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("charred %s meat")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("roast %s")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("deep fried %s")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("skewer grilled %s")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("%s croquette")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("%s hamburger")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("%s cutlet")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s steak")
+                   :format(_1)
+             end,
+             default_origin = "beast"
+          },
+          vegetable = {
+             _1 = function(_1)
+                return ("kitchen refuse %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("smelly %s")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("%s salad")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("fried %s")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("%s roll")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("%s tempura")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("%s gratin")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("meat and %s stew")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s curry")
+                   :format(_1)
+             end,
+             default_origin = "vegetable"
+          },
+          fruit = {
+             _1 = function(_1)
+                return ("dangerous %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("doubtful %s")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("%s jelly salad")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("%s pudding")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("%s sherbet")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("%s ice cream")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("%s crepe")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("%s fruit cake")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s grand parfait")
+                   :format(_1)
+             end,
+             default_origin = "fruit"
+          },
+          sweet = {
+             _1 = function(_1)
+                return ("collapsed %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("nasty %s")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("%s cookie")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("%s jelly")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("%s pie")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("%s bun")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("%s cream puff")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("%s cake")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s sachertorte")
+                   :format(_1)
+             end,
+             default_origin = "candy"
+          },
+          pasta = {
+             _1 = function(_1)
+                return ("risky %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("exhausted %s")
+                   :format(_1)
+             end,
+             _3 = "salad pasta",
+             _4 = "udon",
+             _5 = "soba",
+             _6 = "peperoncino",
+             _7 = "carbonara",
+             _8 = "ramen",
+             _9 = "meat spaghetti",
+             default_origin = "noodle"
+          },
+          fish = {
+             _1 = function(_1)
+                return ("leftover %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("bony %s")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("fried %s")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("stewed %s")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("%s soup")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("%s tempura")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("%s sausage")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("%s sashimi")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s sushi")
+                   :format(_1)
+             end,
+             default_origin = "fish"
+          },
+          bread = {
+             _1 = function(_1)
+                return ("fearsome %s")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("hard %s")
+                   :format(_1)
+             end,
+             _3 = "walnut bread",
+             _4 = "apple pie",
+             _5 = "sandwich",
+             _6 = "croissant",
+             _7 = "croquette sandwich",
+             _8 = "chocolate babka",
+             _9 = "melon flavored bread",
+             default_origin = "bread"
+          },
+          egg = {
+             _1 = function(_1)
+                return ("grotesque %s egg")
+                   :format(_1)
+             end,
+             _2 = function(_1)
+                return ("overcooked %s egg")
+                   :format(_1)
+             end,
+             _3 = function(_1)
+                return ("fried %s egg")
+                   :format(_1)
+             end,
+             _4 = function(_1)
+                return ("%s egg toast")
+                   :format(_1)
+             end,
+             _5 = function(_1)
+                return ("soft boiled %s egg")
+                   :format(_1)
+             end,
+             _6 = function(_1)
+                return ("soup with %s egg")
+                   :format(_1)
+             end,
+             _7 = function(_1)
+                return ("mature %s cheese")
+                   :format(_1)
+             end,
+             _8 = function(_1)
+                return ("%s cheese cake")
+                   :format(_1)
+             end,
+             _9 = function(_1)
+                return ("%s omlet")
+                   :format(_1)
+             end,
+             default_origin = "animal"
+          }
+       }
     },
     not_affected_by_rotten = function(_1)
-  return ("But %s%s stomach isn't affected.")
-  :format(name(_1), his_owned(_1))
-end,
+       return ("But %s%s stomach isn't affected.")
+          :format(name(_1), his_owned(_1))
+    end,
     passed_rotten = { "Yuck!!", "....!!", "W-What...", "Are you teasing me?", "You fool!" },
     spits_alien_children = function(_1)
-  return ("%s spit%s alien children from %s body!")
-  :format(name(_1), s(_1), his(_1))
-end,
+       return ("%s spit%s alien children from %s body!")
+          :format(name(_1), s(_1), his(_1))
+    end,
     vomits = function(_1)
-  return ("%s vomit%s.")
-  :format(name(_1), s(_1))
-end
+       return ("%s vomit%s.")
+          :format(name(_1), s(_1))
+    end
   }
 }

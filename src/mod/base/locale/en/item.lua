@@ -10,23 +10,6 @@ end,
   :format(name(_1), his_owned(_1), itemname(_2, 0, false))
 end
     },
-    ancient_book_title = {
-      _0 = "Voynich Manuscript",
-      _1 = "Dhol Chants",
-      _10 = "Necronomicon",
-      _11 = "The R'lyeh Text",
-      _12 = "Eltdown Shards",
-      _13 = "The Golden Bough",
-      _14 = "Apocalypse",
-      _2 = "Ponape Scripture",
-      _3 = "Revelations of Glaaki",
-      _4 = "G'harne Fragments",
-      _5 = "Liber Damnatus",
-      _6 = "Book of Dzyan",
-      _7 = "Book of Eibon",
-      _8 = "Grand Grimoire",
-      _9 = "Celaeno Fragments"
-    },
     approximate_curse_state = {
       cursed = "(Scary)",
       doomed = "(Dreadful)"
@@ -36,18 +19,28 @@ end
       light = "(Light)",
       medium = "(Medium)"
     },
-    bait_rank = {
-      _0 = "water flea",
-      _1 = "grasshopper",
-      _2 = "ladybug",
-      _3 = "dragonfly",
-      _4 = "locust",
-      _5 = "beetle"
-    },
     charges = function(_1)
   return ("(Charges: %s)")
   :format(_1)
 end,
+    chest_empty = "(Empty)",
+    cargo_buying_price = function(price)
+       return ("(Buying price: %s)"):format(price)
+    end,
+    aphrodisiac = "(Aphrodisiac)",
+    poisoned = "(Poisoned)",
+    interval = function(hours)
+       return ("(Next: %sh.)"):format(hours)
+    end,
+    serial_no = function(serial_no)
+       return (" serial no.%s"):format(serial_no)
+    end,
+    altar_god_name = function(god_name)
+       return (" <%s>"):format(god_name)
+    end,
+    harvest_grown = function(weight)
+       return (" grown %s"):format(weight)
+    end,
     chip = {
       dryrock = "a dryrock",
       field = "a field"
@@ -121,18 +114,6 @@ end,
   return ("%s turns to dust.")
   :format(itemname(_1, 1))
 end,
-    gift_rank = {
-      _0 = "cheap",
-      _1 = "so so",
-      _2 = "exciting",
-      _3 = "expensive",
-      _4 = "hot and gorgeous",
-      _5 = "crazy epic"
-    },
-    godly_paren = function(_1)
-  return ("{%s}")
-  :format(_1)
-end,
     item_on_the_ground_breaks_to_pieces = function(_1, _2)
   return ("%s on the ground break%s to pieces.")
   :format(_1, s(_2))
@@ -159,10 +140,14 @@ end,
       _5 = "(5M GP)",
       _6 = "(500M GP)"
     },
-    miracle_paren = function(_1)
-  return ("<%s>")
-  :format(_1)
-end,
+    title_paren = {
+       great = function(_1)
+          return ("<%s>"):format(_1)
+       end,
+       god = function(_1)
+          return ("{%s}"):format(_1)
+       end,
+    },
     someones_item_breaks_to_pieces = function(_1, _2, _3)
   return ("%s%s %s break%s to pieces.")
   :format(name(_3), his_owned(_3), _1, s(_2))

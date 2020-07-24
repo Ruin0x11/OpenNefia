@@ -1149,7 +1149,7 @@ data:add {
       end
 
       local seed = result.seed
-      item.subname = seed
+      item.title_seed = seed
 
       Gui.mes("magic.name.apply", result.alias)
 

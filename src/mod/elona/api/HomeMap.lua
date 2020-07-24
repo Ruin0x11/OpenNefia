@@ -46,7 +46,7 @@ data:add {
          item = Item.create("elona.freezer", 9, 8, {}, map)
          item.count = 4
 
-         item = Item.create("elona.book_b", 18, 19, {}, map)
+         item = Item.create("elona.book", 18, 19, {}, map)
          item.params = { book_id = 1 }
       end
       -- <<<<<<<< shade2/map.hsp:884 				flt:item_create -1,idBook,18,19:iBookId(ci)=1 ..

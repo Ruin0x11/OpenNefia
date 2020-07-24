@@ -34,6 +34,7 @@ config["base._basic_attributes"] = {
 config["base.themes"] = {}
 
 config["base.debug_autoidentify"] = false
+config["base.debug_no_weight"] = false
 
 -- Don't overwrite existing values in the current config.
 config.on_hotload = function(old, new)

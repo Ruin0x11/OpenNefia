@@ -492,7 +492,7 @@ local function refresh_max_inventory_weight(chara)
    local weight = chara:calc("inventory_weight")
    local mod = math.floor(weight * (100 - chara:trait_level("elona.ether_gravity") * 10 +
                                        chara:trait_level("elona.ether_feather") * 20) / 100)
-   chara:mod("inventory_weight", mod)
+   chara:mod("inventory_weight", mod, "set")
 
    chara:mod("max_inventory_weight",
              chara:skill_level("elona.stat_strength") * 500 +
@@ -517,6 +517,10 @@ local function refresh_weight(chara)
       chara.inventory_weight_type = 1 -- burdened
    else
       chara.inventory_weight_type = 0 -- normal
+   end
+
+   if config["base.debug_no_weight"] then
+      chara.inventory_weight_type = 0
    end
 
    Skill.refresh_speed(chara)

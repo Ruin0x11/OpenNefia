@@ -393,8 +393,6 @@ end
     furniture = {
       _0 = "",
       _1 = "stupid",
-      _10 = "heavenly",
-      _11 = "godly",
       _2 = "lame",
       _3 = "cool",
       _4 = "madam's favorite",
@@ -402,7 +400,9 @@ end
       _6 = "maniac",
       _7 = "magnificent",
       _8 = "royal",
-      _9 = "masterpiece"
+      _9 = "masterpiece",
+      _10 = "heavenly",
+      _11 = "godly"
     },
     gold = " gold pieces",
     hint = {
@@ -418,12 +418,14 @@ end
       shortcut = "0~9 [Shortcut]  "
     },
     home = {
-      _0 = "cave",
-      _1 = "shack",
-      _2 = "cozy house",
-      _3 = "estate",
-      _4 = "cyber house",
-      _5 = "small castle"
+       elona = {
+          cave = "cave",
+          shack = "shack",
+          cozy_house = "cozy house",
+          estate = "estate",
+          cyber_house = "cyber house",
+          small_castle = "small castle"
+       }
     },
     impression = {
       _0 = "Foe",
@@ -703,7 +705,7 @@ end
         _5 = "rusty",
         name = "ring"
       },
-      rod = {
+      staff = {
         _0 = "iron",
         _1 = "ivy",
         _2 = "sapphire",

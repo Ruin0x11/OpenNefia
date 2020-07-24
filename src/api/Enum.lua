@@ -60,10 +60,10 @@ Enum.OwnState = enum("OwnState", {
 })
 
 Enum.IdentifyState = enum("IdentifyState", {
-	None    = "none",       -- 0
-	Name    = "partly",     -- 1
-	Quality = "almost",     -- 2
-	Full    = "completely", -- 3
+	None    =  0,
+	Name    =  1,
+	Quality =  2,
+	Full    =  3
 })
 
 Enum.CurseState = enum("CurseState", {

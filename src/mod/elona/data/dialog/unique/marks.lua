@@ -57,7 +57,7 @@ return {
 
                Chara.player().gold = Chara.player().gold - 20000
                GUI.play_sound("core.paygold1")
-               local book = Item.create(Chara.player().position, "core.book_b", 0)
+               local book = Item.create(Chara.player().position, "core.book", 0)
                book.param1 = 13
             end,
             {"quest.pay"},

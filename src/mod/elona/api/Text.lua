@@ -258,11 +258,13 @@ function Text.unidentified_item_params(item, seed)
    local has_random_name = item.has_random_name
 
    if has_random_name then
+      local ref = item.knownnameref
+      assert(ref, ("Item '%s' does not have a knownnameref"):format(item._id))
       seed = seed or save.base.random_seed
       local index = (string_to_int(item._id) % seed) % 6
-      unknown_name = I18N.get("ui.random_item." .. item.originalnameref2 .. "._" .. index)
+      unknown_name = I18N.get("ui.random_item." .. ref .. "._" .. index)
          .. I18N.space()
-         .. I18N.get("ui.random_item." .. item.originalnameref2 .. ".name")
+         .. I18N.get("ui.random_item." .. ref .. ".name")
       local color = RANDOM_COLORS[index+1]
       return unknown_name, color
    end

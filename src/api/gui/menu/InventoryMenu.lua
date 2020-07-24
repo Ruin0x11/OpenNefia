@@ -30,7 +30,7 @@ local UiListExt = function(inventory_menu)
    local E = {}
 
    function E:get_item_text(entry)
-      return entry.item:build_name()
+      return entry.text
    end
    function E:get_item_color(entry)
       return entry.item:calc_ui_color()
@@ -42,7 +42,7 @@ local UiListExt = function(inventory_menu)
 
       UiList.draw_select_key(self, entry, i, key_name, x, y)
 
-      inventory_menu.chip_batch:add(entry.icon, x - 21, y + 11, nil, nil, nil, true)
+      inventory_menu.chip_batch:add(entry.icon, x - 21, y + 11, nil, nil, entry.color, true)
 
       if entry.source.on_draw then
          entry.source:on_draw(x, y, entry.item, inventory_menu)
@@ -203,7 +203,12 @@ function InventoryMenu:update_filtering()
    for _, source in pairs(self.ctxt.sources) do
       local items = source.getter(self.ctxt)
       items = items:map(function(item)
-                           return { item = item, source = source }
+            return {
+               item = item,
+               source = source,
+               text = item:build_name(),
+               color = item:calc("color")
+            }
       end)
 
       all[#all+1] = items

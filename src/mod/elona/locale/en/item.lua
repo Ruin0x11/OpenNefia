@@ -57,7 +57,25 @@ local item = {
         text = "A book written in a dead language,"
       }
     },
-    name = "ancient book"
+    name = "ancient book",
+
+    titles = {
+      _0 = "Voynich Manuscript",
+      _1 = "Dhol Chants",
+      _2 = "Ponape Scripture",
+      _3 = "Revelations of Glaaki",
+      _4 = "G'harne Fragments",
+      _5 = "Liber Damnatus",
+      _6 = "Book of Dzyan",
+      _7 = "Book of Eibon",
+      _8 = "Grand Grimoire",
+      _9 = "Celaeno Fragments",
+      _10 = "Necronomicon",
+      _11 = "The R'lyeh Text",
+      _12 = "Eltdown Shards",
+      _13 = "The Golden Bough",
+      _14 = "Apocalypse"
+    },
   },
   ancient_tomb = {
     desc = {
@@ -177,7 +195,16 @@ local item = {
         text = "Bait for a fishing pole,"
       }
     },
-    name = "bait"
+    name = "bait",
+
+    rank = {
+      _0 = "water flea",
+      _1 = "grasshopper",
+      _2 = "ladybug",
+      _3 = "dragonfly",
+      _4 = "locust",
+      _5 = "beetle"
+    },
   },
   banded_mail = {
     desc = {
@@ -397,14 +424,18 @@ local item = {
     name = "book",
     unidentified_name = "book"
   },
-  book_b = {
+  book = {
     desc = {
       main = {
         text = "A book with watermarks,"
       }
     },
     name = "book",
-    unidentified_name = "book"
+    unidentified_name = "book",
+
+    title = function(title)
+       return (" titled <%s>"):format(title)
+    end
   },
   book_of_bokonon = {
     name = "Bokonon"
@@ -415,7 +446,11 @@ local item = {
         text = "A book decorated with pictures,"
       }
     },
-    name = "book"
+    name = "book",
+
+    title = function(no)
+       return (" of Rachel No.%s"):format(no)
+    end
   },
   book_of_resurrection = {
     desc = {
@@ -1341,7 +1376,11 @@ local item = {
     name = "decorative ring"
   },
   deed = {
-    name = "deed"
+     name = "deed",
+
+     title = function(home_name)
+        return (" of %s"):format(home_name)
+     end
   },
   deed_of_dungeon = {
     name = "dungeon"
@@ -1671,7 +1710,11 @@ local item = {
         text = "A pole used for bait fishing,"
       }
     },
-    name = "fishing pole"
+    name = "fishing pole",
+
+    remaining = function(bait, charges)
+       return ("(%s %s)"):format(charges, bait)
+    end
   },
   five_horned_helm = {
     name = "<Five Horned Helm>",
@@ -1894,7 +1937,16 @@ local item = {
         text = "It's hard to open,"
       }
     },
-    name = "gift"
+    name = "gift",
+
+    ranks = {
+      _10 = "cheap",
+      _20 = "so so",
+      _30 = "exciting",
+      _50 = "expensive",
+      _75 = "hot and gorgeous",
+      _100 = "crazy epic"
+    },
   },
   girdle = {
     desc = {
@@ -2301,7 +2353,20 @@ local item = {
         text = "Please don't break me,..., Nyu?"
       }
     },
-    name = "kitty bank"
+    name = "kitty bank",
+
+    amount = function(amount)
+       return ("(%s)"):format(amount)
+    end,
+    names = {
+       _500       = "500 GP",
+       _2000      = "2k GP",
+       _10000     = "10K GP",
+       _50000     = "50K GP",
+       _500000    = "500K GP",
+       _5000000   = "5M GP",
+       _100000000 = "500M GP"
+    }
   },
   kiwi = {
     desc = {
@@ -2791,7 +2856,11 @@ local item = {
         text = "A strange item invented by a mad scientist...,"
       }
     },
-    name = "monster ball"
+    name = "monster ball",
+
+    level = function(lv)
+       return (" Level %s(Empty)"):format(lv)
+    end
   },
   monster_heart = {
     desc = {
@@ -4312,7 +4381,18 @@ local item = {
         }
       },
       name = "secret treasure",
-      unidentified_name = "mysterious jewel"
+      unidentified_name = "mysterious jewel",
+
+      of = {
+         elona = {
+            perm_good = " of saint",
+            perm_evil = " of wicked",
+            god_luck = " of Ehekatl",
+            god_earth = " of Opatos",
+            god_element = " of Itzpalt",
+            god_heal = " of Jure",
+         }
+      }
     },
     server = {
       desc = {
@@ -4387,7 +4467,9 @@ local item = {
       name = "shop strongbox"
     },
     shopkeepers_trunk = {
-      name = "shopkeeper's trunk"
+      name = "shopkeeper's trunk",
+
+      temporal = "(Temporal)"
     },
     short_bow = {
       desc = {
@@ -4542,7 +4624,11 @@ local item = {
           text = "Popular among gamblers,"
         }
       },
-      name = "small gamble chest"
+      name = "small gamble chest",
+
+      level = function(lv)
+         return (" Level %s"):format(lv)
+      end
     },
     small_medal = {
       desc = {
@@ -5364,7 +5450,11 @@ local item = {
         }
       },
       name = "textbook",
-      unidentified_name = "book"
+      unidentified_name = "book",
+
+      title = function(skill_name)
+         return (" titled <Art of %s>"):format(skill_name)
+      end
     },
     thick_gauntlets = {
       desc = {
