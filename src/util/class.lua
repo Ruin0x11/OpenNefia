@@ -29,7 +29,7 @@ local function make_tostring(kind, tbl)
       end
       return tbl[self]
          and string.format("%s '%s' (%s)", kind, rawget(self, "__name") or "?", addr)
-         or self
+         or string.tostring_raw(self)
    end
 end
 

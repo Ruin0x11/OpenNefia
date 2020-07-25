@@ -40,16 +40,3 @@ function math.round(v, digits)
    local bracket = 1 / (10 ^ digits)
    return math.floor(v/bracket + math.sign(v) * 0.5) * bracket
 end
-
--- Replace Lua's implementation of the RNG with the one from HSP.
-local Rand = require("api.Rand")
-math.random = function(n, m)
-   if n and m then
-      return Rand.between(n, m) + 1
-   elseif n then
-      return Rand.rnd(n) + 1
-   end
-
-   return Rand.rnd_float()
-end
-math.randomseed = Rand.set_seed

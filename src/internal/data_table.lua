@@ -571,6 +571,10 @@ function proxy:__index(k)
       return self.data.schemas[self._type].doc
    end
 
+   if k == "_fallbacks" then
+      return self.data.fallbacks[self._type]
+   end
+
    local _type = rawget(self, "_type")
    local for_type = rawget(self.data.inner, _type)
    if for_type == nil then
