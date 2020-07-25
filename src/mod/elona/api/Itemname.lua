@@ -15,6 +15,7 @@ local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Effect = require("mod.elona.api.Effect")
 local elona_Item = require("mod.elona.api.Item")
 local Ui = require("api.Ui")
+local World = require("api.World")
 
 local Itemname = {}
 
@@ -195,6 +196,227 @@ end
 -- <<<<<<<< shade2/item_func.hsp:457 	return ...
 
 local itemname = {}
+
+local function starts_with_katakana(s)
+   local cp = utf8.codepoint(s, 1, 1)
+   return cp >= 0x30A0 and cp <= 0x30FF
+end
+
+function itemname.jp(item, amount, no_article)
+   local _id = item._id
+   local quality = item:calc("quality")
+   local identify = item:calc("identify_state")
+   local curse = item:calc("curse_state")
+   local name = item:calc("name")
+
+   local is_cooked_dish =
+      item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
+
+   local s = ""
+   local s2 = ""
+
+   -- >>>>>>>> shade2/item_func.hsp:473 	if jp@{ ..
+   if amount > 1 then
+      s2 = "個の"
+      if item:has_category("elona.equip_body") then s2 = "着の" end
+      if item:has_category("elona.spellbook")
+         or item:has_category("elona.book")
+      then
+         if _id == "elona.recipe" then s2 = "枚の" else s2 = "冊の" end
+      end
+      if item:has_category("elona.equip_melee") then s2 = "本の" end
+      if item:has_category("elona.drink") then s2 = "服の" end
+      if item:has_category("elona.scroll") then s2 = "巻の" end
+      if item:has_category("elona.equip_wrist")
+         or item:has_category("elona.equip_leg")
+      then
+         s2 = "対の"
+      end
+      if item:has_category("elona.gold")
+         or item:has_category("elona.platinum")
+         or _id == "elona.small_medal"
+         or _id == "elona.music_ticket"
+         or _id == "elona.token_of_friendship"
+      then
+         s2 = "枚の"
+      end
+      if _id == "elona.fish" then s2 = "匹の" end
+
+      s = ("%d%s"):format(amount, s2)
+   end
+
+   if identify >= IdentifyState.Full then
+      if curse == CurseState.Blessed then
+         s = s .. I18N.get("ui.curse_state.blessed")
+      elseif curse == CurseState.Cursed then
+         s = s .. I18N.get("ui.curse_state.cursed")
+      elseif curse == CurseState.Doomed then
+         s = s .. I18N.get("ui.curse_state.doomed")
+      end
+   end
+   -- <<<<<<<< shade2/item_func.hsp:494  ..
+
+   -- >>>>>>>> shade2/item_func.hsp:523 	if iMaterial(id)=mtFresh{ ..
+   if item.material == "elona.fresh" and (item.spoilage_date or 0) < 0 then
+      s = s .. "rotten "
+   end
+   -- <<<<<<<< shade2/item_func.hsp:525 		} ..
+
+   -- >>>>>>>> shade2/item_func.hsp:545 	if iId(id)=idMaterialKit:s+=""+mtName@(0,iMateria ..
+   if _id == "elona.material_kit" then
+      s = s .. I18N.get("item_material." .. item.material .. ".name") .. "製の"
+   end
+
+   local skip
+   s, skip = item_name_sub(s, item, true)
+
+   if item:has_category("elona.furniture") and item.material then
+      s = s .. I18N.get("item_material." .. item.material .. ".name") .. "細工の"
+   end
+
+   if _id == "elona.gift" then
+      s = s .. I18N.get("item.info." .. _id .. ".ranks._" .. item.params.gift_value)
+   end
+
+   local katakana = false
+   if not skip then
+      if identify >= IdentifyState.Full and elona_Item.is_equipment(item) then
+         if item:calc("is_eternal_force") then
+            s = s .. "eternal force" .. I18N.space()
+         else
+            if item.enchant_major_name_id then
+               s = s .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+            end
+            if item.enchant_minor_name_id then
+               s = s .. I18N.get("enchantment.item_ego.minor._" .. item.enchant_minor_name_id)
+            end
+
+            if quality ~= Quality.Unique and quality >= Quality.Great then
+               s = s .. I18N.get("item_material." .. item.material .. ".alias")
+            else
+               local material_name = I18N.get("item_material." .. item.material .. ".name")
+               s = s .. material_name
+               if starts_with_katakana(material_name) then
+                  katakana = true
+               else
+                  s = s .. "の"
+               end
+            end
+         end
+      end
+   end
+
+   local unknown_name = Text.unidentified_item_params(item)
+   if identify == IdentifyState.None then
+      s = s .. unknown_name
+   elseif identify < IdentifyState.Full then
+      if quality < Quality.Great or not elona_Item.is_equipment(item) then
+         s = s .. name
+      else
+         s = s .. unknown_name
+      end
+   else
+      if quality == Quality.Unique or item:calc("is_precious") then
+         s = "★" .. s .. name
+      else
+         if quality >= Quality.Great then
+            s = "☆" .. s
+         end
+         if katakana then
+            s = s .. I18N.get("item.info." .. _id .. ".katakana_name")
+         else
+            s = s .. name
+         end
+
+         local title_seed = item:calc("title_seed")
+         if title_seed then
+            local title = Text.random_title("weapon", title_seed)
+            if quality == Quality.Great then
+               s = s .. I18N.get("item.title_paren.great", title)
+            else
+               s = s .. I18N.get("item.title_paren.god", title)
+            end
+         end
+      end
+   end
+   -- <<<<<<<< shade2/item_func.hsp:605 *skipName ..
+
+   -- <<<<<<<< shade2/item_func.hsp:616 	if iKnown(id)>=knownFull{ ..
+   if identify >= IdentifyState.Full then
+      s = s .. item_known_info(item)
+   end
+   -- <<<<<<<< shade2/item_func.hsp:615 		} ..
+
+   -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
+   if _id == "elona.fishing_pole" then
+      if item.charges > 0 then
+         s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
+      end
+   elseif _id == "elona.monster_ball" then
+      local chara_id = item.params.monster_ball_captured_chara_id
+      if chara_id then
+         local chara_name = I18N.get("chara." .. chara_id .. ".name")
+         s = s .. ("(%s)"):format(chara_name)
+      else
+         s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
+      end
+   elseif _id == "elona.small_gamble_chest" then
+      s = s .. I18N.get("item.info." .. _id .. ".level", item.params.lockpick_difficulty)
+   end
+
+   if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then
+      local material_name = "item_material." .. item.material .. ".name"
+      s = s .. I18N.get("ui.sense_quality", "ui.quality._" .. quality, material_name)
+      if curse == CurseState.Cursed then
+         s = s .. I18N.get("item.approximate_curse_state.cursed")
+      elseif curse == CurseState.Doomed then
+         s = s .. I18N.get("item.approximate_curse_state.doomed")
+      end
+   end
+
+   if item:has_category("elona.container") then
+      if _id == "elona.shopkeepers_trunk" then
+         s = s .. I18N.get("item.info." .. _id .. ".temporal")
+      else
+         if item.inv == nil and item.params.chest_item_level == 0 then
+            s = s .. I18N.get("item.chest_empty")
+         end
+      end
+   end
+
+   if item:has_category("elona.cargo") and item.params.cargo_buying_price then
+      s = s .. I18N.get("item.cargo_buying_price", item.params.cargo_buying_price)
+   end
+
+   if item:calc("is_spiked_with_love_potion") then
+      s = s .. I18N.get("item.aphrodisiac")
+   end
+
+   if item:calc("is_poisoned") then
+      s = s .. I18N.get("item.poisoned")
+   end
+
+   if item.next_use_date then
+      local date = World.date_hours()
+      if date < item.next_use_date then
+         s = s .. I18N.get("item.interval", item.next_use_date - date)
+      end
+   end
+
+   if _id == "elona.shelter" then
+      s = s .. I18N.get("item.serial_no", item.params.shelter_serial_no)
+   elseif _id == "elona.disc" then
+      local bgm_number = "???"
+      local music = data["base.music"][item.params.disc_music_id]
+      if music and music.elona_id then
+         bgm_number = tostring(music.elona_id)
+      end
+      s = s .. (" <BGM%s>"):format(bgm_number)
+   end
+
+   return s
+   -- <<<<<<<< shade2/item_func.hsp:685 	return s ..
+end
 
 local VOWELS = table.set { "a", "e", "i", "o", "u" }
 local function starts_with_vowel(s)
@@ -378,7 +600,7 @@ function itemname.en(item, amount, no_article)
    end
    -- <<<<<<<< shade2/item_func.hsp:638 		} ..
 
--- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
+   -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
       if item.charges > 0 then
          s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
@@ -396,7 +618,8 @@ function itemname.en(item, amount, no_article)
    end
 
    if identify == IdentifyState.Quality and elona_Item.is_equipment(item) then
-      s = s .. (" (%s)"):format(I18N.capitalize(I18N.get("ui.quality._" .. quality)))
+      local material_name = "item_material." .. item.material .. ".name"
+      s = s .. I18N.get("ui.sense_quality", "ui.quality._" .. quality, material_name)
       if curse == CurseState.Cursed then
          s = s .. I18N.get("item.approximate_curse_state.cursed")
       elseif curse == CurseState.Doomed then
