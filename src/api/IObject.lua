@@ -48,6 +48,11 @@ function IObject:instantiate()
    self:emit("base.on_object_instantiated")
 end
 
+function IObject:clone_base(owned)
+   local MapObject = require("api.MapObject")
+   return MapObject.clone_base(self, owned)
+end
+
 function IObject:clone(owned)
    local MapObject = require("api.MapObject")
    return MapObject.clone(self, owned)

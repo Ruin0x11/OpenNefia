@@ -602,7 +602,7 @@ local mod_require = function(path)
 end
 
 function env.generate_sandbox(mod_name, is_strict)
-   assert(type(mod_name) == "string")
+   assert(type(mod_name) == "string", "mod_name is required")
 
    local sandbox = {}
 

@@ -188,6 +188,9 @@ function InventoryContext:init(proto, params)
    end
 end
 
+function InventoryContext:additional_keybinds()
+end
+
 function InventoryContext:can_select(item)
    if self.proto.can_select then
       return self.proto.can_select(self, item)

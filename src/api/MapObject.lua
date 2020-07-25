@@ -46,7 +46,7 @@ end
 -- @tparam bool owned
 -- @treturn[1] IMapObject
 -- @treturn[2] nil
-function MapObject.clone(obj, owned)
+function MapObject.clone_base(obj, owned)
    owned = owned or false
 
    -- TODO: the nomenclature is confusing. things like
@@ -59,9 +59,7 @@ function MapObject.clone(obj, owned)
    -- Generate a new object using the stripped object as a prototype.
    local new_object = MapObject.generate(proto, {no_build=true})
 
-   -- TODO: move
-   local IMapObject = require("api.IMapObject")
-   if owned and class.is_an(IMapObject, obj) then
+   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps
@@ -79,7 +77,51 @@ function MapObject.clone(obj, owned)
       assert(obj.location:take_object(new_object, x, y))
    end
 
-   Event.trigger("base.on_object_cloned", {object=obj})
+   Event.trigger("base.on_object_cloned", {object=obj, type="base"})
+
+   return new_object
+end
+
+function MapObject.clone(obj, owned)
+   local new_object = {}
+
+   local ignored_fields = table.set {
+      "uid",
+      "location"
+   }
+
+   for k, v in pairs(obj) do
+      if not ignored_fields[k] then
+         if type(v) == "table" then
+            new_object[k] = table.deepcopy(v)
+         else
+            new_object[k] = v
+         end
+      end
+   end
+
+   local mt = getmetatable(obj)
+   setmetatable(new_object, mt)
+
+   if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
+      -- HACK: This makes cloning characters harder, since the
+      -- location also has to be changed manually, or there will be
+      -- more than one character on the same square. Perhaps
+      -- IMapObject:find_free_pos(x, y) would help.
+      local x = new_object.x or 0
+      local y = new_object.y or 0
+
+      if not obj.location:can_take_object(new_object, x, y) then
+         Log.warn("Tried to clone object %d (%s), but the location %s couldn't take the object.",
+                  obj.uid, obj._type, tostring(obj.location))
+         new_object:remove_ownership()
+         return nil
+      end
+
+      assert(obj.location:take_object(new_object, x, y))
+   end
+
+   Event.trigger("base.on_object_cloned", {object=obj, type="full"})
 
    return new_object
 end

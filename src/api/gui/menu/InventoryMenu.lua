@@ -50,7 +50,7 @@ local UiListExt = function(inventory_menu)
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       -- on_display_item_value
-      local subtext = Ui.display_weight(entry.item:calc("weight"))
+      local subtext = Ui.display_weight(entry.item:calc("weight") * entry.item.amount)
 
       if entry.source.on_get_name then
          item_name = entry.source:on_get_name(item_name, entry.item, inventory_menu)
@@ -104,6 +104,7 @@ function InventoryMenu:init(ctxt, returns_item)
    -- TODO
    -- self.pages:register("on_chosen", self.on_chosen)
    self.input:bind_keys(self:make_keymap())
+   self.input:bind_keys(self.ctxt:additional_keybinds())
 
    self:update_filtering()
 end

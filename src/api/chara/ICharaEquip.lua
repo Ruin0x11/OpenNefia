@@ -62,10 +62,10 @@ function ICharaEquip:equip_item(item, force)
       return nil, "not_owned"
    end
 
-   local result = self.equip:equip(item)
+   local result, err = self.equip:equip(item)
    item:refresh()
 
-   return result
+   return result, err
 end
 
 function ICharaEquip:has_item_equipped(item)

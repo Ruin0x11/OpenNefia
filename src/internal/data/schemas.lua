@@ -656,7 +656,7 @@ Hours until the item spoils. Used for items of material "elona.fresh" only.
          amount = 1,
          ownership = "none",
          curse_state = "none",
-         identify_state = Enum.IdentifyState.Full,
+         identify_state = Enum.IdentifyState.None,
          bonus = 0,
          name = "item",
          ammo_type = "",

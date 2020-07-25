@@ -1,5 +1,8 @@
 local Stopwatch = require("api.Stopwatch")
 local config = require("internal.config")
+local Rand = require("api.Rand")
+
+local QuickCheck = {}
 
 local function cartesian_product(lists)
     local result = {}
@@ -25,77 +28,6 @@ local function cartesian_product(lists)
     return result
 end
 
-local Charagen = require("mod.tools.api.Charagen")
-
-local IGenerator = class.interface("IGenerator", {
-                                      gen = "function",
-                                      shrink = "function"
-})
-
-local TableGen = class.class("TableGen", IGenerator)
-
-function TableGen:init(cb)
-   self.bases = {}
-   self.cb = cb
-end
-
-local function random_string(length)
-	local res = ""
-	for i = 1, length do
-		res = res .. string.char(math.random(97, 122))
-	end
-	return res
-end
-
-function TableGen:gen(size)
-   local base = self.cb(size)
-   local new = table.deepcopy(base)
-   self.bases[new] = base
-   local props = table.keys(base)
-   for _ = 1, size do
-      local done
-      repeat
-         done = true
-         local prop = Rand.choice(props)
-         local v = new[prop]
-         local ty = type(v)
-         if ty == "string" then
-            new[prop] = random_string(size)
-         elseif ty == "number" then
-            if math.floor(v) == v then
-               new[prop] = Rand.rnd(1, 1000000)
-            else
-               new[prop] = rand.rnd_float()
-            end
-         elseif ty == "boolean" then
-            new[prop] = Rand.one_in(2)
-         else
-            done = false
-         end
-      until done
-   end
-   return new
-end
-
-function TableGen:shrink(tbl)
-   local t = {}
-   local base = self.bases[tbl]
-
-   for k, v in pairs(tbl) do
-      local fb = base[k]
-      if fb and v ~= fb then
-         local new = table.shallow_copy(tbl)
-         local mt = getmetatable(tbl)
-         setmetatable(new, mt)
-         self.bases[new] = base
-         rawset(new, k, fb)
-         t[#t+1] = new
-      end
-   end
-
-   return t
-end
-
 local function do_check(check, gens, ...)
    local ok, res = pcall(check, ...)
    if not ok then
@@ -116,7 +48,7 @@ end
 local function prop(check, generators)
    local iters = fun.iter(generators):map(
       function(g)
-         return fun.range(math.huge):map(function(i) return g:gen(i) end)
+         return fun.range(math.huge):map(function(i) return g:pick(i) end)
       end):to_list()
 
    local wrapped_check = function(...)
@@ -150,7 +82,7 @@ end
 
 local function shrink(result, check, child_count, depth)
    local children = get_children(result)
-   if #children == 0 or #children >= child_count then
+   if #children == 0 or #children > child_count then
       return true, smallest_shrink(result, depth)
    end
    for _, new_args in ipairs(children) do
@@ -172,7 +104,9 @@ local function shrink(result, check, child_count, depth)
    return false, result
 end
 
-local function quick_check(check, gens, times, opts)
+local DEFAULT_TIMES = 100
+
+local function quick_check(check, gens, opts)
    opts = opts or {}
 
    local seed = opts.seed or math.floor(socket.gettime())
@@ -181,7 +115,7 @@ local function quick_check(check, gens, times, opts)
    Rand.set_seed(seed)
    math.randomseed(seed)
 
-   assert(type(times) == "number", "Must pass in 'times', a number")
+   local times = opts.times or DEFAULT_TIMES
 
    local iter = prop(check, gens)
 
@@ -221,45 +155,31 @@ local function quick_check(check, gens, times, opts)
    }
 end
 
-local function test(ok, r)
+function QuickCheck.assert(...)
+   local ok, r = quick_check(...)
+
    if not ok then
-      print("Property failed: " .. inspect(r, {depth = 4, override_mt = true}), 0)
+      local res = t.shrunk.result
+      local t = "Result"
+      if r.shrunk.error then
+         res = t.shrunk.error
+         t = "Error"
+      end
+      local err = ([[
+Property failed (after %d/%d runs):
+
+%s
+
+%s: %s
+]]):format(r.failed_after, r.num_tests, inspect(r.shrunk.smallest, {depth = 2, override_mt = true}), t, res)
+      local t = { err, _ = r.shrunk.smallest, __result = r }
+      for i, v in ipairs(r.shrunk.smallest) do
+         t["_" .. i] = v
+      end
+      error(t)
    end
 
-   return true
+   return true, nil
 end
 
-local function prop_same_name(a, b)
-   return a.name == b.name
-end
-
-local function prop_same_quality(a, b)
-   return a.quality == b.quality
-end
-
-local cb = function(size)
-   return Charagen.create(nil, nil, { ownerless = true, quality = 1 })
-end
-
--- test(quick_check(prop_same_quality, {TableGen:new(cb), TableGen:new(cb)}, 10))
--- test(quick_check(prop_same_name, {TableGen:new(cb), TableGen:new(cb)}, 10))
-
-local cb = function(size)
-   return Itemgen.create(nil, nil, { ownerless = true, amount = 2 })
-end
-
-local function prop_can_stack_with(item)
-   local new = item:separate()
-   return new:can_stack_with(item)
-end
-
-test(quick_check(prop_can_stack_with, {TableGen:new(cb)}, 10))
-
--- local g = TableGen:new()
--- local a = g:shrink(g:gen())
--- local b = g:shrink(g:gen())
--- local prod = cartesian_product({a, b})
---
--- print(inspect(prod, {depth=3,override_mt=true}))
-
--- print(inspect(prod, {depth=3,override_mt=true}))
+return QuickCheck

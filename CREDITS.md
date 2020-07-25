@@ -29,3 +29,4 @@ The following is a list of third-party projects whose code is used in OpenNefia.
 - [ansicolors](https://github.com/kikito/ansicolors.lua) (MIT)
 - [struct](https://github.com/iryont/lua-struct) (MIT)
 - [sha1](https://github.com/mpeterv/sha1) (MIT)
+- [lua-quickcheck](https://github.com/luc-tielen/lua-quickcheck) (MIT)

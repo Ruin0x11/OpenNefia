@@ -7,7 +7,6 @@ local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 local Map = require("api.Map")
 local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
-local Enum = require("api.Enum")
 local elona_Item = require("mod.elona.api.Item")
 local Enum = require("api.Enum")
 
@@ -19,7 +18,7 @@ local function fail_in_world_map(ctxt)
 end
 
 local function can_take(item)
-   if item.own_state == "not_owned" or item.own_state == "shop" then
+   if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Shop then
       Gui.play_sound("base.fail1")
       if item.own_state == "not_owned" then
          Gui.mes("action.get.not_owned")
@@ -37,7 +36,7 @@ local inv_examine = {
    elona_id = 1,
 
    keybinds = {
-      x = function(ctxt, item)
+      mode2 = function(ctxt, item)
          item.flags.no_drop = not item.flags.no_drop
          print("nodrop toggle")
       end
@@ -62,7 +61,7 @@ local inv_drop = {
    elona_id = 2,
 
    keybinds = {
-      x = function(ctxt, item)
+      mode2 = function(ctxt, item)
          if not ctxt.multi_drop then
             ctxt.multi_drop = true
          end

@@ -452,7 +452,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
       ;; response is received (it's supposed to run every frame as
       ;; a coroutine in LOVE)
       (when (open-nefia--headless-mode-p)
-        (lua-send-string "server:step()"))))
+        (lua-send-string "require('internal.elona_repl').step_server()"))))
 
   ;; Show the REPL if we're executing code.
   (when (string-equal cmd "run")
@@ -743,23 +743,26 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defvar open-nefia--repl-errors-buffer "*open-nefia-repl-errors*")
 (defvar open-nefia--repl-name "open-nefia-repl")
+(defvar open-nefia--repl-entrypoint "src/repl.lua")
+(defvar open-nefia--test-entrypoint "src/test/main.lua")
 
-(defun open-nefia--repl-file ()
-  (string-join (list (projectile-project-root) "src/repl.lua")))
+(defun open-nefia--repl-file (file)
+  (string-join (list (projectile-project-root) file)))
 
-(defun open-nefia--test-repl ()
+(defun open-nefia--test-repl (file)
   (with-current-buffer (get-buffer-create open-nefia--repl-errors-buffer)
     (erase-buffer)
     (apply 'call-process "luajit" nil
            (current-buffer)
            nil
-           (list (open-nefia--repl-file) "test"))))
+           (list (open-nefia--repl-file file) "test"))))
 
-(defun open-nefia-start-repl (&optional arg)
-  (interactive "P")
-  (let* ((buffer-name (string-join (list "*" open-nefia--repl-name "*")))
-         (buffer (get-buffer buffer-name))
-         (default-directory (file-name-directory (directory-file-name (open-nefia--repl-file))))
+(defun open-nefia--repl-buffer ()
+  (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
+
+(defun open-nefia--start-repl-1 (file &optional arg)
+  (let* ((buffer (open-nefia--repl-buffer))
+         (default-directory (file-name-directory (directory-file-name (open-nefia--repl-file open-nefia--repl-entrypoint))))
          (switch (or (and arg "load") "")))
     (when-let ((buf (get-buffer open-nefia--repl-errors-buffer))
                (dir default-directory))
@@ -767,21 +770,31 @@ removed.  Return the new string.  If STRING is nil, return nil."
         (setq-local default-directory dir)))
     (if (and (buffer-live-p buffer) (process-live-p (get-buffer-process buffer)))
         (progn
-          (setq next-error-last-buffer (get-buffer buffer-name))
+          (setq next-error-last-buffer (open-nefia--repl-buffer))
           (pop-to-buffer buffer)
           (comint-goto-process-mark))
-      (let ((result (open-nefia--test-repl)))
+      (let ((result (open-nefia--test-repl open-nefia--repl-entrypoint)))
         (if (eq result 0)
             (progn
-              (run-lua open-nefia--repl-name "luajit" nil (open-nefia--repl-file) switch)
-              (setq next-error-last-buffer (get-buffer buffer-name))
-              (pop-to-buffer buffer-name)
+              (run-lua open-nefia--repl-name "luajit" nil (open-nefia--repl-file file) switch)
+              (setq next-error-last-buffer (open-nefia--repl-buffer))
+              (pop-to-buffer (open-nefia--repl-buffer))
               (setq-local company-backends '(company-etags)))
           (progn
             (with-current-buffer open-nefia--repl-errors-buffer
               (ansi-color-apply-on-region (point-min) (point-max)))
             (pop-to-buffer open-nefia--repl-errors-buffer)
             (error "REPL startup failed with code %s." result)))))))
+
+(defun open-nefia-start-repl (&optional arg)
+  (interactive "P")
+  (open-nefia--start-repl-1 open-nefia--repl-entrypoint arg))
+
+(defun open-nefia-run-tests (&optional arg)
+  (interactive "P")
+  (if-let ((repl-buffer (open-nefia--repl-buffer)))
+      (kill-buffer repl-buffer))
+  (open-nefia--start-repl-1 open-nefia--test-entrypoint arg))
 
 (defun open-nefia-insert-template ()
   (interactive)

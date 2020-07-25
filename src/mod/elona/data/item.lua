@@ -14742,6 +14742,7 @@ local item =
             -- >>>>>>>> shade2/item.hsp:673 	if iId(ci)=idMageBook{ ..
             local object_level = params.level
             self.params.ancient_book_difficulty = Rand.rnd(Rand.rnd(math.floor(math.clamp(object_level / 2, 0, MAX_LEVEL))) + 1)
+            require("api.Log").info("LEVEL %d %d", object_level, self.params.ancient_book_difficulty )
             -- <<<<<<<< shade2/item.hsp:675 		} ..
          end,
 

@@ -5,9 +5,9 @@ local IRandomGenerator = class.interface("IRandomGenerator",
                           set_seed = "function"
                        })
 
-function IRandomGenerator:rnd_between(n, m)
-   m = m or n
-   return self:rnd(n) + (m - n)
+function IRandomGenerator:rnd_between(min, max)
+   max = max or min
+   return min + self:rnd(max - min)
 end
 
 return IRandomGenerator

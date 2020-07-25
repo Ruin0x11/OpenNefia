@@ -160,6 +160,11 @@ function Itemgen.create(x, y, params, where)
 
    local create_params = params.create_params or {}
    create_params.ownerless = params.ownerless
+   create_params.level = params.level
+   create_params.quality = params.quality
+
+   -- TODO this changes depending on the item
+   create_params.amount = params.amount
 
    -- >>>>>>>> shade2/item.hsp:609 		} ...
    local player = Chara.player()
@@ -177,10 +182,7 @@ function Itemgen.create(x, y, params, where)
    local bug_id = "elona.bug"
    id = id or bug_id
 
-   local item = Item.create(id, x, y, params.create_params, where)
-   if item then
-      item.quality = params.quality
-   end
+   local item = Item.create(id, x, y, create_params, where)
 
    return item
 end

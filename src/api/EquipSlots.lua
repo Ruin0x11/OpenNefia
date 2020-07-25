@@ -74,8 +74,12 @@ function EquipSlots:equip(obj, slot)
       slot = self:find_free_slot(obj)
    end
 
-   if obj == nil or type(slot) ~= "number" then
-      return nil, "invalid_params"
+   if type(slot) ~= "number" then
+      return nil, "invalid_slot"
+   end
+
+   if obj == nil then
+      return nil, "invalid_object"
    end
 
    if slot <= 0 or slot > #self.body_parts then
