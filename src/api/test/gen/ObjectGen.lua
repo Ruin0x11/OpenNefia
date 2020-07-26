@@ -1,3 +1,7 @@
+local BooleanGen = require("api.test.gen.BooleanGen")
+local StringGen = require("api.test.gen.StringGen")
+local IntGen = require("api.test.gen.IntGen")
+local FloatGen = require("api.test.gen.FloatGen")
 local IGenerator = require("api.test.gen.IGenerator")
 local Rand = require("api.Rand")
 
@@ -7,16 +11,15 @@ function ObjectGen:init(cb, ignore)
    self.bases = {}
    self.cb = cb
    self.ignore = ignore or {}
-   ignore.uid = true
-   ignore.location = true
-end
+   self.ignore._type = true
+   self.ignore._id = true
+   self.ignore.uid = true
+   self.ignore.location = true
 
-local function random_string(length)
-	local res = ""
-	for i = 1, length do
-		res = res .. string.char(math.random(97, 122))
-	end
-	return res
+   self.gen_string = StringGen:new()
+   self.gen_int = IntGen:new()
+   self.gen_float = FloatGen:new()
+   self.gen_boolean = BooleanGen:new()
 end
 
 function ObjectGen:pick(size)
@@ -37,15 +40,15 @@ function ObjectGen:pick(size)
          local v = new[prop]
          local ty = type(v)
          if ty == "string" then
-            new[prop] = random_string(size)
+            new[prop] = self.gen_string:pick(size)
          elseif ty == "number" then
             if math.floor(v) == v then
-               new[prop] = Rand.rnd(1, 1000000)
+               new[prop] = self.gen_int:pick(size)
             else
-               new[prop] = Rand.rnd_float()
+               new[prop] = self.gen_float:pick(size)
             end
          elseif ty == "boolean" then
-            new[prop] = Rand.one_in(2)
+            new[prop] = self.gen_boolean:pick(size)
          else
             done = false
          end

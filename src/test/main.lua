@@ -21,6 +21,7 @@ local Rand = require("api.Rand")
 local config = require("internal.config")
 local elona_repl = require("internal.elona_repl")
 local Repl = require("api.Repl")
+local ansicolors = require("thirdparty.ansicolors")
 
 if not fs.exists(fs.get_save_directory()) then
    fs.create_directory(fs.get_save_directory())
@@ -107,11 +108,11 @@ local function test_file(file)
       local ok, err = xpcall(test_fn, capture)
 
       if ok then
-         io.write(".")
+         io.write(ansicolors("%{green}.%{reset}"))
       else
-         io.write("F\n" .. name .. "\n============\n" .. err .. "\n\n")
+         io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
 
-         if opts.debug_on_error then
+         if opts.debug_on_error and false then
             local repl_env, history = Repl.generate_env(locals)
             elona_repl.set_environment(repl_env)
             print(inspect(table.keys(locals)))

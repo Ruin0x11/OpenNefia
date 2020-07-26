@@ -128,7 +128,11 @@ elseif arg[1] == "load" then
 end
 
 local Env = require("api.Env")
+local Repl = require("api.Repl")
 local elona_repl = require("internal.elona_repl")
+
+local repl_env = Repl.generate_env()
+elona_repl.set_environment(repl_env)
 
 print(string.format("OpenNefia REPL\nVersion: %s  LÖVE version: %s  Lua version: %s  OS: %s",
                     Env.version(), Env.love_version(), Env.lua_version(), Env.os()))

@@ -80,13 +80,15 @@ function UnicodeGen:pick(size)
    local cp = gen:pick(size)
    assert(not is_reserved(cp))
 
-   return utf8.char(cp)
+   local c = utf8.char(cp)
+   self.cache[c] = gen
+   return c
 end
 
 
 function UnicodeGen:shrink(prev)
-   print(inspect(prev))
-   local cp = self.int_gen:shrink(utf8.byte(prev))[1]
+   local gen = self.cache[prev]
+   local cp = gen:shrink(utf8.byte(prev))[1]
    if is_reserved(cp) then
       return {}
    end
@@ -99,6 +101,7 @@ function UnicodeGen:init(planes)
 
    self.int_gen = IntGen:new()
    self.sampler = WeightedSampler:new()
+   self.cache = {}
 
    planes = planes or PLANES
 
@@ -143,6 +146,5 @@ local PLANES_KANA = {
 function UnicodeGen:new_kana()
    return UnicodeGen:new(PLANES_KANA)
 end
-
 
 return UnicodeGen

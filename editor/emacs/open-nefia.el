@@ -398,6 +398,13 @@ removed.  Return the new string.  If STRING is nil, return nil."
 	   (substring string (length pre) (- (length post)))
 	 string)))
 
+(defsubst open-nefia--escape-string (str)
+  "Escape quotes and newlines in STR."
+  (replace-regexp-in-string
+   "\n" "\\\\\n"
+   (replace-regexp-in-string
+    "\"" "\\\\\"" str)))
+
 (defsubst open-nefia--unescape-string (str)
   "Unescape escaped commas, semicolons and newlines in STR."
   (open-nefia--unbracket-string "'" "'"
@@ -485,7 +492,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
       (progn
         (lua-send-string str)
         (message (open-nefia--get-lua-result)))
-    (open-nefia--send "run" (list :code (format "local success, err = require('api.Repl').send([[\n%s\n]]); if not success then error(err) end" str)))))
+    (open-nefia--send "run" (list :code (format "local success, err = require('api.Repl').send(\"%s\"); if not success then error(err) end" (open-nefia--escape-string str))))))
 
 (defun open-nefia-send-region (start end)
   (interactive "r")
@@ -761,6 +768,8 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
 
 (defun open-nefia--start-repl-1 (file &optional arg)
+  (save-some-buffers (not compilation-ask-about-save)
+                     compilation-save-buffers-predicate)
   (let* ((buffer (open-nefia--repl-buffer))
          (default-directory (file-name-directory (directory-file-name (open-nefia--repl-file open-nefia--repl-entrypoint))))
          (switch (or (and arg "load") "")))

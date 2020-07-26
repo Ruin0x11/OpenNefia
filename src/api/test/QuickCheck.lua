@@ -1,6 +1,7 @@
 local Stopwatch = require("api.Stopwatch")
 local config = require("internal.config")
 local Rand = require("api.Rand")
+local socket = require("socket")
 
 local QuickCheck = {}
 
@@ -106,7 +107,7 @@ end
 
 local DEFAULT_TIMES = 100
 
-local function quick_check(check, gens, opts)
+function QuickCheck.quick_check(check, gens, opts)
    opts = opts or {}
 
    local seed = opts.seed or math.floor(socket.gettime())
@@ -155,23 +156,23 @@ local function quick_check(check, gens, opts)
    }
 end
 
-function QuickCheck.assert(...)
-   local ok, r = quick_check(...)
+function QuickCheck.assert(check, gens, opts)
+   local ok, r = QuickCheck.quick_check(check, gens, opts)
 
    if not ok then
-      local res = t.shrunk.result
+      local res = r.shrunk.result
       local t = "Result"
       if r.shrunk.error then
          res = t.shrunk.error
          t = "Error"
       end
       local err = ([[
-Property failed (after %d/%d runs):
+Property failed (after %d/%d runs, %d shrink(s)):
 
 %s
 
 %s: %s
-]]):format(r.failed_after, r.num_tests, inspect(r.shrunk.smallest, {depth = 2, override_mt = true}), t, res)
+]]):format(r.failed_after, r.num_tests, r.shrunk.depth, inspect(r.shrunk.smallest, {depth = 2, override_mt = true}), t, res)
       local t = { err, _ = r.shrunk.smallest, __result = r }
       for i, v in ipairs(r.shrunk.smallest) do
          t["_" .. i] = v

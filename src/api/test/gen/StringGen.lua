@@ -112,7 +112,7 @@ end
 function StringGen:do_generic_pick(size)
    local result = {}
    for _ = 1, size do
-      result[#result + 1] = self.char_gen:pick()
+      result[#result + 1] = self.char_gen:pick(size)
    end
    return table.concat(result)
 end

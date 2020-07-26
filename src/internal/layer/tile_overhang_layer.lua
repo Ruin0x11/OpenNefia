@@ -72,7 +72,7 @@ function tile_overhang_layer:update(dt, screen_updated)
 
          if t.wall_kind ~= nil then
             local one_tile_up = map:tile(x, y-1)
-            if one_tile_up ~= nil and one_tile_up.wall_kind == nil then
+            if map:is_memorized(x, y-1) and one_tile_up ~= nil and one_tile_up.wall_kind == nil then
                self.overhang_batch:update_tile(x, y, id)
                self.top_shadows[x+y*self.overhang_batch.width] = true
             else
@@ -136,7 +136,6 @@ function tile_overhang_layer:draw_shadows(draw_x, draw_y, offx, offy)
 end
 
 function tile_overhang_layer:draw(draw_x, draw_y, offx, offy)
-   Draw.set_color(255, 255, 255)
    self.overhang_batch:draw(draw_x + offx, draw_y + offy + 12)
 
    self:draw_shadows(draw_x, draw_y, offx, offy)
