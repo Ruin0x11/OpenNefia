@@ -84,7 +84,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.ctxt = ctxt
    self.returns_item = returns_item
 
-   self.win = UiWindow:new(self.ctxt.proto.text, true, "key help")
+   self.win = UiWindow:new(self.ctxt.proto.window_title, true, "key help")
    self.pages = UiList:new_paged({}, 16)
    table.merge(self.pages, UiListExt(self))
 
@@ -120,13 +120,13 @@ end
 function InventoryMenu:on_query()
    self.canceled = false
    self.result = nil
-   if self.ctxt.proto.window_title then
+   if self.ctxt.proto.query_text then
       local params = {}
       if self.ctxt.proto.locale_params then
          params = {self.ctxt.proto:locale_params()}
       end
       Gui.mes_newline()
-      Gui.mes(self.ctxt.proto.window_title, table.unpack(params))
+      Gui.mes(self.ctxt.proto.query_text, table.unpack(params))
    end
 end
 

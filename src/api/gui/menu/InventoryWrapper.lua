@@ -47,7 +47,7 @@ function InventoryWrapper:init(proto_id, params, returns_item, group_id)
                end
                return {
                   icon = proto.icon+1,
-                  text = I18N.get(proto.text)
+                  text = I18N.get(proto.window_title)
                }
              end)
          :to_list()

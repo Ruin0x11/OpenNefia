@@ -207,7 +207,7 @@ function itemname.jp(item, amount, no_article)
    local quality = item:calc("quality")
    local identify = item:calc("identify_state")
    local curse = item:calc("curse_state")
-   local name = item:calc("name")
+   local name = I18N.get("item.info." .. _id .. ".name")
 
    local is_cooked_dish =
       item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0
@@ -341,7 +341,7 @@ function itemname.jp(item, amount, no_article)
    end
    -- <<<<<<<< shade2/item_func.hsp:605 *skipName ..
 
-   -- <<<<<<<< shade2/item_func.hsp:616 	if iKnown(id)>=knownFull{ ..
+   -- >>>>>>>> shade2/item_func.hsp:616 	if iKnown(id)>=knownFull{ ..
    if identify >= IdentifyState.Full then
       s = s .. item_known_info(item)
    end
@@ -429,7 +429,7 @@ function itemname.en(item, amount, no_article)
    local quality = item:calc("quality")
    local identify = item:calc("identify_state")
    local curse = item:calc("curse_state")
-   local name = item:calc("name")
+   local name = I18N.get("item.info." .. _id .. ".name")
 
    local is_cooked_dish =
       item:has_category("elona.food") and item.params.food_type and (item.params.food_quality or 0) > 0

@@ -269,7 +269,7 @@ function Text.unidentified_item_params(item, seed)
       return unknown_name, color
    end
 
-   return item.name, item.color
+   return I18N.get("item.info." .. item._id .. ".name"), item.color
 end
 
 function Text.random_subname_seed()

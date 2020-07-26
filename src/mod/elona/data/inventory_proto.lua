@@ -45,8 +45,8 @@ local inv_examine = {
    sources = { "chara", "equipment", "ground" },
    shortcuts = true,
    icon = 7,
-   text = "ui.inventory_command.general",
-   window_title = "ui.inv.title.general",
+   window_title = "ui.inventory_command.general",
+   query_text = "ui.inv.title.general",
    on_select = function(ctxt, item, amount, rest)
       local list = rest:to_list()
       ItemDescriptionMenu:new(item, list):query()
@@ -71,8 +71,8 @@ local inv_drop = {
 
    sources = { "chara" },
    icon = 8,
-   text = "ui.inventory_command.drop",
-   window_title = "ui.inv.title.drop",
+   window_title = "ui.inventory_command.drop",
+   query_text = "ui.inv.title.drop",
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
@@ -117,8 +117,8 @@ local inv_get = {
 
    sources = { "ground" },
    icon = 7,
-   text = "ui.inventory_command.get",
-   window_title = "ui.inv.title.get",
+   window_title = "ui.inventory_command.get",
+   query_text = "ui.inv.title.get",
    on_select = function(ctxt, item, amount)
       if not can_take(item) then
          return "turn_end"
@@ -147,8 +147,8 @@ local inv_eat = {
    sources = { "chara", "equipment", "ground" },
    shortcuts = true,
    icon = 2,
-   text = "ui.inventory_command.eat",
-   window_title = "ui.inv.title.eat",
+   window_title = "ui.inventory_command.eat",
+   query_text = "ui.inv.title.eat",
    filter = function(ctxt, item)
       return item:calc("can_eat")
          or item:calc("material") == "elona.fresh" -- TODO
@@ -174,8 +174,8 @@ local inv_equip = {
    params = { body_part_id = "string" },
    sources = { "chara" },
    icon = nil,
-   text = "ui.inventory_command.equip",
-   window_title = "ui.inv.title.equip",
+   window_title = "ui.inventory_command.equip",
+   query_text = "ui.inv.title.equip",
    filter = function(ctxt, item)
       return item:can_equip_at(ctxt.body_part_id)
    end,
@@ -198,8 +198,8 @@ local inv_read = {
    sources = { "chara", "ground" },
    shortcuts = true,
    icon = 3,
-   text = "ui.inventory_command.read",
-   window_title = "ui.inv.title.read",
+   window_title = "ui.inventory_command.read",
+   query_text = "ui.inv.title.read",
    filter = function(ctxt, item)
       if ctxt.chara:current_map():has_type("world_map") then
          if not (item:calc("can_read_in_world_map")) then
@@ -223,8 +223,8 @@ local inv_drink = {
    sources = { "chara", "ground" },
    shortcuts = true,
    icon = 0,
-   text = "ui.inventory_command.drink",
-   window_title = "ui.inv.title.drink",
+   window_title = "ui.inventory_command.drink",
+   query_text = "ui.inv.title.drink",
    filter = function(ctxt, item)
       return item:calc("can_drink")
    end,
@@ -242,8 +242,8 @@ local inv_zap = {
    sources = { "chara", "ground" },
    shortcuts = true,
    icon = 1,
-   text = "ui.inventory_command.zap",
-   window_title = "ui.inv.title.zap",
+   window_title = "ui.inventory_command.zap",
+   query_text = "ui.inv.title.zap",
    filter = function(ctxt, item)
       return item:calc("can_zap")
    end,
@@ -264,8 +264,8 @@ local inv_buy = {
    icon = nil,
    query_amount = true,
    show_money = true,
-   text = "ui.inventory_command.buy",
-   window_title = "ui.inv.title.buy",
+   window_title = "ui.inventory_command.buy",
+   query_text = "ui.inv.title.buy",
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
@@ -316,8 +316,8 @@ local inv_sell = {
    icon = nil,
    query_amount = true,
    show_money = true,
-   text = "ui.inventory_command.sell",
-   window_title = "ui.inv.title.sell",
+   window_title = "ui.inventory_command.sell",
+   query_text = "ui.inv.title.sell",
    can_select = function(ctxt, item)
       if item:calc("is_no_drop") then
          return false, "marked as no drop"
@@ -370,8 +370,8 @@ local inv_use = {
    shortcuts = true,
    icon = 5,
    allow_special_owned = true,
-   text = "ui.inventory_command.use",
-   window_title = "ui.inv.title.use",
+   window_title = "ui.inventory_command.use",
+   query_text = "ui.inv.title.use",
    filter = function(ctxt, item)
       return item:calc("can_use")
    end,
@@ -389,8 +389,8 @@ local inv_open = {
    sources = { "chara", "ground" },
    shortcuts = true,
    icon = 4,
-   text = "ui.inventory_command.open",
-   window_title = "ui.inv.title.open",
+   window_title = "ui.inventory_command.open",
+   query_text = "ui.inv.title.open",
    filter = function(ctxt, item)
       return item:calc("can_open")
    end,
@@ -408,8 +408,8 @@ local inv_cook = {
 
    sources = { "chara" },
    icon = nil,
-   text = "ui.inventory_command.cook",
-   window_title = "ui.inv.title.cook",
+   window_title = "ui.inventory_command.cook",
+   query_text = "ui.inv.title.cook",
    filter = function(ctxt, item)
       if not item:has_category("elona.food") then
          return false
@@ -432,8 +432,8 @@ local inv_dip_source = {
 
    sources = { "chara", "ground" },
    icon = 6,
-   text = "ui.inventory_command.dip_source",
-   window_title = "ui.inv.title.dip_source",
+   window_title = "ui.inventory_command.dip_source",
+   query_text = "ui.inv.title.dip_source",
    filter = function(ctxt, item)
       return item:has_category("elona.drink")
          or item:calc("can_dip_source")
@@ -453,8 +453,8 @@ local inv_throw = {
    sources = { "chara", "ground" },
    icon = 18,
    on_shortcut = fail_in_world_map,
-   text = "ui.inventory_command.throw",
-   window_title = "ui.inv.title.throw",
+   window_title = "ui.inventory_command.throw",
+   query_text = "ui.inv.title.throw",
    filter = function(ctxt, item)
       return item:calc("can_throw")
    end,
@@ -472,8 +472,8 @@ local inv_steal = {
    sources = { "target" },
    icon = 7,
    show_money = true,
-   text = "ui.inventory_command.steal",
-   window_title = "ui.inv.title.steal",
+   window_title = "ui.inventory_command.steal",
+   query_text = "ui.inv.title.steal",
    after_filter = function(ctxt, filtered)
       if #filtered == 0 then
          Gui.mes("ui.inv.steal.has_nothing", ctxt.target)
@@ -502,8 +502,8 @@ local inv_get_pocket = {
    icon = 17,
    show_money = false,
    query_amount = true,
-   text = "ui.inventory_command.put",
-   window_title = "ui.inv.title.put",
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
 
    can_select = function(ctxt, item)
       local success = Effect.do_stamina_check(ctxt.chara, 10)
@@ -537,8 +537,8 @@ local inv_put_pocket = {
    icon = 17,
    show_money = false,
    query_amount = true,
-   text = "ui.inventory_command.put",
-   window_title = "ui.inv.title.put",
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
 
    can_select = function(ctxt, item)
       local success = Effect.do_stamina_check(ctxt.chara, 10)
@@ -591,8 +591,8 @@ local inv_identify = {
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.identify",
-   window_title = "ui.inv.title.identify",
+   window_title = "ui.inventory_command.identify",
+   query_text = "ui.inv.title.identify",
 
    filter = function(ctxt, item)
       return item.identify_state ~= Enum.IdentifyState.Full
@@ -614,8 +614,8 @@ local inv_equipment = {
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.target",
-   window_title = "ui.inv.title.target",
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
       return item:has_category("elona.furniture") or elona_Item.is_equipment(item)
@@ -642,8 +642,8 @@ local inv_equipment_weapon = {
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.target",
-   window_title = "ui.inv.title.target",
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
       return item:has_category("elona.equip_melee") or item:has_category("elona.equip_ranged")
@@ -670,8 +670,8 @@ local inv_equipment_armor = {
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.target",
-   window_title = "ui.inv.title.target",
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
       return elona_Item.is_armor(item)
@@ -698,8 +698,8 @@ local inv_garoks_hammer = {
    icon = 17,
    show_money = false,
    query_amount = false,
-   text = "ui.inventory_command.target",
-   window_title = "ui.inv.title.target",
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
       return item:calc("quality") < Enum.Quality.Great and elona_Item.is_equipment(item)
