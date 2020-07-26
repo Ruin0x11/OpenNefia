@@ -84,8 +84,8 @@ function InventoryMenu:init(ctxt, returns_item)
    self.ctxt = ctxt
    self.returns_item = returns_item
 
-   self.win = UiWindow:new("ui.inv.window.name", true, "key help")
-   self.pages = UiList:new_paged(table.of("hoge", 100), 16)
+   self.win = UiWindow:new(self.ctxt.proto.text, true, "key help")
+   self.pages = UiList:new_paged({}, 16)
    table.merge(self.pages, UiListExt(self))
 
    self.total_weight = 0
@@ -120,6 +120,14 @@ end
 function InventoryMenu:on_query()
    self.canceled = false
    self.result = nil
+   if self.ctxt.proto.window_title then
+      local params = {}
+      if self.ctxt.proto.locale_params then
+         params = {self.ctxt.proto:locale_params()}
+      end
+      Gui.mes_newline()
+      Gui.mes(self.ctxt.proto.window_title, table.unpack(params))
+   end
 end
 
 -- TODO: IList needs refactor to "selected_entry" to avoid naming

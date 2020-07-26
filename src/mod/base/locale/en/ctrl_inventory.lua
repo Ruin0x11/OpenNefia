@@ -209,40 +209,40 @@ end
         location_is_blocked = "The location is blocked."
       },
       title = {
-        _1 = "Examine what? ",
-        _10 = "Which item do you want to give? ",
-        _11 = "What do you want to buy? ",
-        _12 = "What do you want to sell? ",
-        _13 = "Which item do you want to identify? ",
-        _14 = "Use what? ",
-        _15 = "Open what? ",
-        _16 = "Cook what? ",
-        _17 = "Blend what? ",
-        _18 = function(_1)
+        general = "Examine what? ",
+        give = "Which item do you want to give? ",
+        buy = "What do you want to buy? ",
+        sell = "What do you want to sell? ",
+        identify = "Which item do you want to identify? ",
+        use = "Use what? ",
+        open = "Open what? ",
+        cook = "Cook what? ",
+        dip_source = "Blend what? ",
+        dip = function(_1)
   return ("Which item do you want to apply the effect of %s?")
   :format(_1)
 end,
-        _19 = "What do you want to offer to your God? ",
-        _2 = "Drop what? ",
-        _20 = "Which item do you want to trade? ",
-        _21 = function(_1)
+        offer = "What do you want to offer to your God? ",
+        drop = "Drop what? ",
+        trade = "Which item do you want to trade? ",
+        present = function(_1)
   return ("What do you offer for %s?")
   :format(_1)
 end,
-        _22 = "Take what? ",
-        _23 = "Target what? ",
-        _24 = "Put what? ",
-        _25 = "Which item do you want to take? ",
-        _26 = "Throw what? ",
-        _27 = "Steal what? ",
-        _28 = "Trade what? ",
-        _29 = "Which item do you want to reserve? ",
-        _3 = "Which item do you want to pick up? ",
-        _4 = "Equip what?",
-        _5 = "Eat what? ",
-        _7 = "Read what? ",
-        _8 = "Drink what? ",
-        _9 = "Zap what? "
+        take = "Take what? ",
+        target = "Target what? ",
+        put = "Put what? ",
+        receive = "Which item do you want to take? ",
+        throw = "Throw what? ",
+        steal = "Steal what? ",
+        trade2 = "Trade what? ",
+        reserve = "Which item do you want to reserve? ",
+        get = "Which item do you want to pick up? ",
+        eat = "Equip what?",
+        equip = "Eat what? ",
+        read = "Read what? ",
+        drink = "Drink what? ",
+        zap = "Zap what? "
       },
       trade = {
         too_low_value = function(_1)
