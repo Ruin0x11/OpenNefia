@@ -1,6 +1,7 @@
 --- @module World
 
 local Event = require("api.Event")
+local I18N = require("api.I18N")
 local save = require("internal.global.save")
 
 local World = {}
@@ -109,6 +110,11 @@ end
 --- @treturn int
 function World.date_hours()
    return save.base.date:hours()
+end
+
+function World.time_to_text(hour)
+   local idx = math.floor(hour / 4 + 1)
+   return I18N.get_optional("ui.time._" .. idx) or ""
 end
 
 return World

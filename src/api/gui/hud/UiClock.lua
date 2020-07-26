@@ -3,19 +3,9 @@ local ISettable = require("api.gui.ISettable")
 local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 local DateTime = require("api.DateTime")
+local World = require("api.World")
 
 local UiClock = class.class("UiClock", {IUiWidget, ISettable})
-
-local times = {
-   "Midnight",
-   "Dawn",
-   "Morning",
-   "Noon",
-   "Dusk",
-   "Night",
-   "",
-   "",
-}
 
 function UiClock:init()
    self.date = DateTime:new()
@@ -50,7 +40,7 @@ function UiClock:draw()
              self.x + 120,
              self.y + 17, -- + vfix
              self.t.base.text_color)
-   Draw.text_shadowed(times[self.date.hour / 4 + 1] or "",
+   Draw.text_shadowed(World.time_to_text(self.date.hour),
                       self.x + 120 + 6,
                       self.y + 35,
                       self.t.base.text_color_light,

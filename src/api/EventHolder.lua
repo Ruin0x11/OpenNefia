@@ -174,6 +174,10 @@ end
 function EventHolder:trigger(event_id, source, args, default)
    check_event(event_id)
 
+   if args then
+      local ty = type(args)
+      assert(ty == "table", ("Expected argument table, got '%s'"):format(ty))
+   end
    args = args or {}
    local result = default
 
