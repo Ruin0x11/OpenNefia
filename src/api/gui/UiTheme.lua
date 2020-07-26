@@ -8,6 +8,7 @@ local asset_drawable = require("internal.draw.asset_drawable")
 
 local assets = {}
 local cache = {}
+local holder_cache = {}
 
 local theme_proxy = class.class("theme_proxy")
 
@@ -79,19 +80,17 @@ local theme_holder = class.class("theme_holder")
 function theme_holder:init()
 end
 
-local cache = {}
-
 function theme_holder:__index(namespace)
    if data["base.asset"][namespace] then
       return load_asset(namespace)
    end
 
-   if cache[namespace] then
-      return cache[namespace]
+   if holder_cache[namespace] then
+      return holder_cache[namespace]
    end
 
    local proxy = theme_proxy:new(namespace)
-   cache[namespace] = proxy
+   holder_cache[namespace] = proxy
    return proxy
 end
 

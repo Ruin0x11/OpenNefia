@@ -6909,6 +6909,8 @@ local item =
          category = 59000,
          coefficient = 100,
 
+         charges = 0,
+
          elona_function = 16,
          param1 = 60,
          categories = {
@@ -11995,10 +11997,10 @@ local item =
          rarity = 50000,
          coefficient = 100,
 
-         params = { textbook_skill = nil },
+         params = { textbook_skill_id = nil },
          on_init_params = function(self, params)
             -- >>>>>>>> shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
-            self.params.textbook_skill = Skill.random_skill()
+            self.params.textbook_skill_id = Skill.random_skill()
             -- <<<<<<<< shade2/item.hsp:619 	if iId(ci)=idBookSkill	:if iBookId(ci)=0:iBookId( ..
          end,
 
@@ -12985,7 +12987,7 @@ local item =
       {
          _id = "kings_bed",
          elona_id = 613,
-         image = "elona.item_bait",
+         image = "elona.item_kings_bed",
          value = 35000,
          weight = 24000,
          on_use = function() end,
@@ -13064,7 +13066,7 @@ local item =
       {
          _id = "bait",
          elona_id = 617,
-         image = "elona.item_bait",
+         image = "elona.item_bait_rank_0",
          value = 1000,
          weight = 250,
          fltselect = 1,
@@ -14235,6 +14237,8 @@ local item =
          category = 59000,
          rarity = 800000,
          coefficient = 100,
+
+         params = { secret_treasure_trait = "elona.perm_good" },
 
          elona_function = 29,
          is_precious = true,

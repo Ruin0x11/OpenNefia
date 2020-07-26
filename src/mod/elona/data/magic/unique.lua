@@ -347,7 +347,7 @@ local function do_sense(self, params, passes, reveal_cb, forget_cb, message)
 
    local cb = Anim.load("elona.anim_sparkle", source.x, source.y)
    Gui.start_draw_callback(cb)
-   -- TODO refresh minimap
+   Gui.update_minimap()
 end
 
 data:add {

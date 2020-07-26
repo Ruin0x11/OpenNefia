@@ -11,7 +11,7 @@ function gen.goto_map(layout, width, height)
    Map.travel_to(map)
 end
 
-function gen.test_1(w, h)
+function gen.test_1(w, h, opts)
    local layout = {
       tiles = [[
 .....#
@@ -24,6 +24,27 @@ function gen.test_1(w, h)
          ["#"] = "elona.wall_brick_top",
          ["."] = "elona.wood_floor_5",
          ["o"] = "elona.carpet_5"
+      }
+   }
+
+   gen.goto_map(layout, w, h)
+end
+
+function gen.test_2(w, h, opts)
+   local layout = {
+      tiles = [[
+...o....
+.##o#ww.
+.#ooopww
+ooooopww
+.##o#.w.
+...o....]],
+      tileset = {
+         ["#"] = "elona.wall_palace_2_top",
+         ["."] = "elona.wood_floor_5",
+         ["p"] = "elona.palace_fountain",
+         ["w"] = "elona.water",
+         ["o"] = "elona.grey_floor"
       }
    }
 

@@ -178,8 +178,8 @@ local function item_name_sub(s, item, jp)
       s = s .. I18N.get("item.info." .. _id .. ".title", home_name)
    elseif _id == "elona.bill" then
       s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_amount)
-   elseif _id == "elona.vomit" then
-      local chara_name = I18N.get("chara." .. item.params.vomit_chara_id .. ".name")
+   elseif _id == "elona.vomit" and item.params.chara_id then
+      local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
          s = s .. "of "
       end

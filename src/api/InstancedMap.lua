@@ -398,8 +398,11 @@ function InstancedMap:memorize_tile(x, y)
 end
 
 function InstancedMap:is_memorized(x, y)
+   local memory = self._memory
    local ind = y * self._width + x + 1;
-   return (self._in_sight[ind] or 0) > 0
+   return memory["base.map_tile"]
+      and memory["base.map_tile"][ind]
+      and memory["base.map_tile"][ind][1]._id == self:tile(x, y)._id
 end
 
 function InstancedMap:reveal_tile(x, y, tile_id)

@@ -53,6 +53,14 @@ local assets = {
       height = 88
    },
    {
+      _id = "minimap_marker_player",
+      source = "graphic/interface.bmp",
+      x = 15,
+      y = 338,
+      width = 6,
+      height = 6
+   },
+   {
       _id = "map_name_icon",
       source = "graphic/interface.bmp",
       x = 208,

@@ -27,7 +27,7 @@ function UiFpsCounter:default_widget_position(x, y, width, height)
 end
 
 function UiFpsCounter:relayout(x, y, width, height)
-   self.x = Draw.get_width() - Draw.text_width(self.buff) - 5
+   self.x = Draw.get_width() - Draw.text_width(self.buff) - 20
    self.y = y or self.y
 end
 

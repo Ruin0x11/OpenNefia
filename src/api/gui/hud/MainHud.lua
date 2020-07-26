@@ -65,16 +65,14 @@ function MainHud:update_from_player(player)
       return
    end
 
+   -- TODO These should get called when Gui.update_screen() gets called.
    self.widgets:get("hud_hp_bar"):widget():set_data(player.hp, player:calc("max_hp"))
    self.widgets:get("hud_mp_bar"):widget():set_data(player.mp, player:calc("max_mp"))
    self.widgets:get("hud_level"):widget():set_data(player.level, player.experience)
    self.widgets:get("hud_status_effects"):widget():set_data()
    self.widgets:get("hud_stats_bar"):widget():set_data(player)
    self.widgets:get("hud_clock"):widget():set_data(save.base.date)
-end
-
-function MainHud:draw_minimap()
-   self.t.base.hud_minimap:draw(self.x, self.height - (16 + 72), 136, 16 + 72)
+   self.widgets:get("hud_minimap"):widget():refresh_visible()
 end
 
 function MainHud:draw()

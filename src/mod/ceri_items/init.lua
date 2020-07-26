@@ -31,7 +31,7 @@ local function set_item_image_on_generate(obj, params)
       return
    end
 
-   if ItemMemory.is_known(obj._id) and Theme.is_active("ceri_items.ceri_items") then
+   if (ItemMemory.is_known(obj._id) or params.is_shop) and Theme.is_active("ceri_items.ceri_items") then
       local mapping = FFHP.mapping_for(obj._id)
       if mapping then
          obj.image = mapping.chip_on_identify

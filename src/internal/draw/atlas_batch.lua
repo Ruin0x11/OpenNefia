@@ -20,6 +20,8 @@ function atlas_batch:add(chip, x, y, width, height, color, centered, rotation)
       tile = self.atlas.tiles[chip .. "#default:1"]
    end
 
+   assert(tile, ("Unknown tile '%s'"):format(chip))
+
    local _, _, ttw, tth = tile.quad:getViewport()
    local sx = 1
    local sy = 1
@@ -83,10 +85,10 @@ function atlas_batch:clear()
    self.height = 0
 end
 
-function atlas_batch:draw(x, y)
+function atlas_batch:draw(x, y, w, h)
    self.batch:flush()
    Draw.set_color(255, 255, 255)
-   love.graphics.draw(self.batch, x or 0, y or 0)
+   Draw.image(self.batch, x or 0, y or 0, w, h)
 end
 
 function atlas_batch:release()

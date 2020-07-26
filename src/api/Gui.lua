@@ -21,6 +21,7 @@ local newline = true
 function Gui.update_screen(dt)
    field:update_screen(scroll, dt)
    scroll = false
+   Gui.update_minimap()
 end
 
 --- Sets the center position that rendering will start from. Call this
@@ -454,6 +455,41 @@ end
 
 function Gui.run_keybind_action(action, ...)
    return field:run_keybind_action(action, true, ...)
+end
+
+function Gui.update_minimap()
+   Gui.hud_widget("hud_minimap"):widget():refresh_visible()
+end
+
+function Gui.render_tilemap_to_image()
+   local map = field.map
+   if not (field.is_active and map) then
+      return
+   end
+
+   local tw, th = Draw.get_coords():get_size()
+
+   local cw = map:width() * tw
+   local ch = map:height() * th
+
+   local canvas = love.graphics.newCanvas(cw, ch)
+
+   local function draw_to_canvas()
+      -- HACK
+      local draw_x_back = field.renderer.draw_x
+      local draw_y_back = field.renderer.draw_y
+
+      field.renderer:set_draw_pos(0, 0)
+      field.renderer:draw(0, 0, cw, ch) -- TODO draw layers to specified width
+      field.renderer:set_draw_pos(draw_x_back, draw_y_back)
+   end
+
+   Draw.with_canvas(canvas, draw_to_canvas)
+
+   local image_data = canvas:newImageData()
+   canvas:release()
+
+   return image_data
 end
 
 return Gui
