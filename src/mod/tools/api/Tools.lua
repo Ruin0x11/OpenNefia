@@ -641,4 +641,12 @@ function Tools.make_foods(x, y)
    end
 end
 
+function Tools.roundup(iter, x, y, width)
+   for i, obj in iter:unwrap() do
+      local tx = (i-1) % width
+      local ty = math.floor((i-1) / width)
+      obj:set_pos(x + tx, y + ty)
+   end
+end
+
 return Tools

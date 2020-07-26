@@ -341,17 +341,15 @@ function Effect.do_identify_item(item, level)
       end
    end
 
-   local old = identify_states[item.identify_state]
-   local new = identify_states[level]
-   assert(old, item.identify_state)
-   assert(new, level)
+   local old = item.identify_state
+   local new = level
 
    if old >= new then
       return false, "unidentified"
    end
 
-   if old > identify_states.partly then
-      ItemMemory.set_known(item, 1)
+   if old >= Enum.IdentifyState.Name then
+      ItemMemory.set_known(item, true)
    end
 
    return true, level

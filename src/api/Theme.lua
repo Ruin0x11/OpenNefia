@@ -1,5 +1,6 @@
 local data = require("internal.data")
 local fs = require("util.fs")
+local theme = require("internal.theme")
 
 local Theme = {}
 
@@ -154,6 +155,10 @@ end
 -- for Elona to run (graphic/, sound/, etc.) are present in the mod's directory.
 function Theme.generate_all_asset_overrides(mod_root_path)
    return Theme.generate_asset_overrides(mod_root_path)
+end
+
+function Theme.is_active(theme_id)
+   return theme.is_active(theme_id)
 end
 
 return Theme

@@ -29,7 +29,11 @@ local event = {
       { _id = "calc_map_music" },
       { _id = "on_step_dialog" },
       { _id = "on_mef_stepped_on" },
-      { _id = "on_mef_stepped_off" }
+      { _id = "on_mef_stepped_off" },
+      { _id = "on_item_memorize_generated" },
+      { _id = "on_item_memorize_known" },
+      { _id = "on_item_check_generated" },
+      { _id = "on_item_check_known" }
 }
 
 data:add_multi("base.event", event)

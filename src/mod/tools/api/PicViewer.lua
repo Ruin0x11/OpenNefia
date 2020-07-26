@@ -110,22 +110,26 @@ function PicViewer:update(dt)
    end
 end
 
+local function is_type(_type, comp, _id)
+   return _type == comp or (comp == nil and data[_type][_id])
+end
+
 function PicViewer.start(asset, _type)
    local drawable = asset
 
    if type(asset) == "string" then
-      _type = _type or "base.asset"
-      if _type == "base.asset" then
+      if is_type("base.asset", _type, asset) then
          drawable = UiTheme.load()[asset]
          if drawable == nil then
             error("unknown asset " .. asset)
          end
-      elseif _type == "base.chip" then
+      elseif is_type("base.chip", _type, asset) then
          local width, height = Draw.get_coords():get_size()
          drawable = Draw.make_chip_batch("chip")
          drawable:add(asset, 0, 0, width, height)
+         require("api.Log").info("get")
       else
-         error("unknown type " .. _type)
+         error(("unknown type %s"):format(_type))
       end
    elseif class.is_an("internal.draw.atlas", asset) then
       drawable = asset.image

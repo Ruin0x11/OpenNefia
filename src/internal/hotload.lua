@@ -1,6 +1,6 @@
 local env = require("internal.env")
 local Event = require("api.Event")
-local atlases = require("internal.global.atlases")
+local theme = require("internal.theme")
 
 local hotload = {}
 
@@ -69,13 +69,21 @@ Event.register("base.on_hotload_end", "Hotload field renderer",
 --                   end
 --                end)
 
-Event.register("base.on_hotload_end", "Hotload chips",
+local THEME_TYPES = table.set {
+   "base.theme",
+   "base.chip",
+   "base.asset",
+   "base.portrait",
+   "base.map_tile",
+   "base.sound",
+   "base.pcc_part"
+}
+
+Event.register("base.on_hotload_end", "Reload theme if assets were hotloaded",
                function(_, params)
-                  local chips = fun.iter(params.hotloaded_data)
-                      :filter(function(d) return d._type == "base.chip" end)
-                      :to_list()
-                  if #chips > 0 then
-                     atlases.get().chip:hotload(chips)
+                  local need_reload = fun.iter(params.hotloaded_data):any(function(d) return THEME_TYPES[d._type] end)
+                  if need_reload then
+                     theme.reload_all()
                   end
                end)
 

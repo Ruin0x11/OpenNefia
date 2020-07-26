@@ -49,6 +49,10 @@ local function enable_themes()
       themes[#themes+1] = "elonapack.elonapack"
    end
 
+   if Env.is_mod_loaded("ceri_items") then
+      themes[#themes+1] = "ceri_items.ceri_items"
+   end
+
    config["base.themes"] = themes
 end
 

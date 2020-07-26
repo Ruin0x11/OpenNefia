@@ -109,8 +109,8 @@ function theme.build_overrides()
    local t = fun.iter(supported_types):map(make_entry_map):to_map()
 
    -- Get the list of overrides for each theme.
-   local active_themes = config["base.themes"] or {}
-   active_themes = fun.iter(active_themes):map(function(_id) return data["base.theme"]:ensure(_id) end)
+   local active_theme_ids = table.shallow_copy(config["base.themes"] or {})
+   local active_themes = fun.iter(active_theme_ids):map(function(_id) return data["base.theme"]:ensure(_id) end)
 
    -- later themes override earlier ones
    for _, active_theme in active_themes:unwrap() do
@@ -154,7 +154,7 @@ function theme.build_overrides()
       final[_type] = list
    end
 
-   return final
+   return final, active_theme_ids
 end
 
 function theme.load_tilemap_tile(map_tiles)
@@ -230,6 +230,12 @@ function theme.load_tilemap_portrait(portrait_tiles)
    return portrait_atlas
 end
 
+local active_themes = table.set {}
+
+function theme.is_active(theme_id)
+   return not not active_themes[theme_id]
+end
+
 function theme.reload_all(log_cb)
    log_cb = log_cb or Log.info
 
@@ -237,7 +243,7 @@ function theme.reload_all(log_cb)
 
    bmp_convert.clear_cache()
 
-   local overrides = theme.build_overrides()
+   local overrides, _active_themes = theme.build_overrides()
    local map_tiles = overrides["base.map_tile"]
    local chip_tiles = overrides["base.chip"]
    local portrait_tiles = overrides["base.portrait"]
@@ -279,6 +285,8 @@ function theme.reload_all(log_cb)
 
    UiTheme.clear()
    UiTheme.set_assets(asset_map)
+
+   active_themes = table.set(_active_themes)
 
    -- Check if we're changing the theme in-game, and if so, do some special
    -- cleanup.

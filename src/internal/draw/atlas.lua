@@ -242,32 +242,6 @@ function atlas:load_one(proto, draw_tile)
    self.existing[proto._id] = true
 end
 
-function atlas:hotload(protos)
-   -- make atlas image into canvas
-   local canvas = love.graphics.newCanvas(self.image_width, self.image_height)
-
-   love.graphics.setCanvas(canvas)
-   love.graphics.setBlendMode("alpha")
-   love.graphics.setColor(1, 1, 1, 1)
-
-   love.graphics.draw(self.image)
-
-   local cb = function(self, proto) self:load_one(proto) end
-
-   for _, proto in ipairs(protos) do
-      cb(self, proto)
-   end
-
-   love.graphics.setCanvas()
-
-   self.image = love.graphics.newImage(canvas:newImageData())
-   canvas:release()
-
-   self.batch = love.graphics.newSpriteBatch(self.image)
-
-   Log.info("Hotloaded %d tiles.", #protos)
-end
-
 function atlas:load(protos, coords, cb)
    assert(self.tile_count_x == nil)
    -- self.coords = coords -- TODO

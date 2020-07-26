@@ -1,0 +1,49 @@
+require("mod.ceri_items.data.chip")
+require("mod.ceri_items.data.theme")
+
+local Event = require("api.Event")
+local ItemMemory = require("mod.elona_sys.api.ItemMemory")
+local Item = require("api.Item")
+local Chara = require("api.Chara")
+local Theme = require("api.Theme")
+local FFHP = require("mod.ceri_items.api.FFHP")
+
+local function iter_all_items()
+   -- TODO chain everything in other character inventories
+   return fun.chain(Item.iter(), Chara.player():iter_items())
+end
+
+local function set_item_image_on_memorize(_, params)
+   if params.is_known and Theme.is_active("ceri_items.ceri_items") then
+      local mapping = FFHP.mapping_for(params._id)
+      if mapping then
+         for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
+            item.image = mapping.chip_on_identify
+         end
+      end
+   end
+end
+
+Event.register("elona_sys.on_item_memorize_known", "Set item image to FFHP override", set_item_image_on_memorize)
+
+local function set_item_image_on_generate(obj, params)
+   if obj._type ~= "base.item" then
+      return
+   end
+
+   if ItemMemory.is_known(obj._id) and Theme.is_active("ceri_items.ceri_items") then
+      local mapping = FFHP.mapping_for(obj._id)
+      if mapping then
+         obj.image = mapping.chip_on_identify
+      end
+   end
+end
+
+Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
+
+Event.register("base.on_hotload_end", "Clear FFHP mapping cache", function(_, params)
+                  local need_clear = fun.iter(params.hotloaded_data):any(function(d) return d._type == "ceri_items.ffhp_mapping" end)
+                  if need_clear then
+                     FFHP.clear_cache()
+                  end
+end)

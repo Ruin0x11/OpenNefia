@@ -832,7 +832,7 @@ end,
 
     now_loading = "Now Loading...",
 
-    sense_perception = function(_1, _2)
+    sense_quality = function(_1, _2)
        return (" (%s)[%s]"):format(capitalize(_1), capitalize(_2))
     end
   }

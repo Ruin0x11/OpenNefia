@@ -832,7 +832,7 @@ return {
 
       now_loading = "ロード中…",
 
-      sense_perception = function(_1, _2)
+      sense_quality = function(_1, _2)
          return (" (%s)[%s製]"):format(_1, _2)
       end
    }
