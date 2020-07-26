@@ -51,6 +51,7 @@ function PicViewer:init(drawable)
    self.offset_x = 0
    self.offset_y = 0
    self.delta = 50
+   self.draw_border = true
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
@@ -67,6 +68,7 @@ function PicViewer:make_keymap()
       south = function() self.offset_y = self.offset_y - self.delta end,
       east = function() self.offset_x = self.offset_x - self.delta end,
       west = function() self.offset_x = self.offset_x + self.delta end,
+      mode = function() self.draw_border = not self.draw_border end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
       enter = function() self.canceled = true end,
@@ -86,8 +88,10 @@ function PicViewer:draw()
    local x = self.x + self.offset_x
    local y = self.y + self.offset_y
 
-   Draw.filled_rect(x, y, self.width, self.height, {0, 0, 0})
-   Draw.line_rect(x+9, y+9, self.width-18, self.height-18, {255, 255, 255})
+   if self.draw_border then
+      Draw.filled_rect(x, y, self.width, self.height, {0, 0, 0})
+      Draw.line_rect(x+9, y+9, self.width-17, self.height-17, {255, 255, 255})
+   end
 
    if self.drawable.draw then
       self.drawable:draw(x + 10, y + 10, nil, nil, {255, 255, 255})
@@ -127,6 +131,8 @@ function PicViewer.start(asset, _type)
       drawable = asset.image
    elseif class.is_an("internal.draw.tile_batch", asset) then
       drawable = asset.atlas.image
+   elseif asset.typeOf and asset:typeOf("ImageData") then
+      drawable = Draw.new_image(asset)
    end
 
    PicViewer:new(drawable):query()

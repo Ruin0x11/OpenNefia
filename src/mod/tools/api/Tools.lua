@@ -615,7 +615,7 @@ function Tools.memorize_map()
 end
 
 function Tools.forget_map()
-   Map.current():iter_tiles():each(function(x, y) Map.current():reveal_tile(x, y, "elona.grass") end)
+   Map.current():iter_tiles():each(function(x, y) Map.current():reveal_tile(x, y, "elona.wall_stone_4_fog") end)
 end
 
 function Tools.fill_with_mef(id, duration, power)

@@ -189,6 +189,7 @@ function InventoryContext:init(proto, params)
 end
 
 function InventoryContext:additional_keybinds()
+   return {}
 end
 
 function InventoryContext:can_select(item)

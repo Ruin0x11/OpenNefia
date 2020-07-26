@@ -362,8 +362,20 @@ function Draw.msecs_to_frames(msecs)
    return frames
 end
 
-function Draw.load_image_data(path)
-   return love.image.newImageData(path)
+function Draw.new_image_data(width, height)
+   return love.image.newImageData(width, height)
+end
+
+function Draw.new_image(data)
+   return love.graphics.newImage(data)
+end
+
+function Draw.color_to_bytes(r, g, b, a)
+   return love.math.colorToBytes(r, g, b, a)
+end
+
+function Draw.color_from_bytes(r, g, b, a)
+   return love.math.colorFromBytes(r, g, b, a)
 end
 
 local supports_subtract = Env.os() ~= "Android"
