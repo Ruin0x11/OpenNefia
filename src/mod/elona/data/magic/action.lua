@@ -1123,7 +1123,6 @@ data:add {
 
    cast = function(self, params)
       local source = params.source
-      local map = params.source:current_map()
 
       if not source:is_player() then
          Gui.mes("common.nothing_happens")
@@ -1159,7 +1158,6 @@ data:add {
 
    cast = function(self, params)
       local source = params.source
-      local map = params.source:current_map()
 
       local result, canceled = Input.query_item(source, "elona.inv_draw_charge")
       if canceled then

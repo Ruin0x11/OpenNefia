@@ -28,17 +28,14 @@ function UiSkillTrackerEx:set_data(player)
       local skill = data["base.skill"]:ensure(i)
       return {
          _id = i,
-         name = utf8.sub(I18N.get("ability." .. i .. ".name"), 0, 12),
+         name = utf8.sub(I18N.get("ability." .. i .. ".name"), 0, 14),
          icon = Ui.skill_icon(i),
          type = skill.type
       }
    end
 
-   local tracked_pairs = fun.iter(tracked_ids)
-      :map(map)
-      :to_list()
+   local tracked_pairs = fun.iter(tracked_ids):map(map):to_list()
 
-   -- TODO save.base
    self.tracked_skill_ids = {
       [self.player_uid] = tracked_pairs
    }
@@ -89,7 +86,7 @@ function UiSkillTrackerEx:draw()
                desc = desc .. (" [%d]"):format(chara:spell_stock(entry._id))
             end
 
-            Draw.text_shadowed(desc, self.x + 16 + 100, y, color)
+            Draw.text_shadowed(desc, self.x + 16 + 104, y, color)
 
             y = y + self.text_height
          end

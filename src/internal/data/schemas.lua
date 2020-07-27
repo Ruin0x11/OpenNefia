@@ -671,6 +671,8 @@ Hours until the item spoils. Used for items of material "elona.fresh" only.
          is_ranged_weapon = nil,
          x_offset = nil,
          y_offset = nil,
+
+         cannot_use_flight_on = nil -- elona.cooler_box
       }
    },
    { interface = IItem }

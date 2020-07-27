@@ -20,7 +20,6 @@ function UiSkillTracker:set_data(player)
       :map(function(i) return { _id = i, name = utf8.sub(I18N.get("ability." .. i .. ".name"), 0, 6)} end)
       :to_list()
 
-   -- TODO save.base
    self.tracked_skill_ids = {
       [self.player_uid] = tracked_pairs
    }

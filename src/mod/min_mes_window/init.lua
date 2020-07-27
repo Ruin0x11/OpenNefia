@@ -1,7 +1,7 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 
-config["min_mes_window.enabled"] = true
+config["min_mes_window.enabled"] = false
 config["min_mes_window.max_width"] = 400
 config["min_mes_window.max_height"] = 100
 

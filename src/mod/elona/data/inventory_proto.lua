@@ -623,11 +623,6 @@ local inv_equipment = {
 
    on_select = function(ctxt, item, amount)
       return "inventory_continue"
-   end,
-
-   on_return_item = function(ctxt, item, amount)
-      -- TODO
-      item:separate()
    end
 }
 data:add(inv_equipment)
@@ -651,11 +646,6 @@ local inv_equipment_weapon = {
 
    on_select = function(ctxt, item, amount)
       return "inventory_continue"
-   end,
-
-   on_return_item = function(ctxt, item, amount)
-      -- TODO
-      item:separate()
    end
 }
 data:add(inv_equipment_weapon)
@@ -679,14 +669,34 @@ local inv_equipment_armor = {
 
    on_select = function(ctxt, item, amount)
       return "inventory_continue"
-   end,
-
-   on_return_item = function(ctxt, item, amount)
-      -- TODO
-      item:separate()
    end
 }
 data:add(inv_equipment_armor)
+
+local inv_equipment_flight = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_equipment_flight",
+   elona_id = 23,
+   elona_sub_id = 6,
+
+   sources = { "chara", "equipment" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
+      return item.weight > 1 and not item:calc("cannot_use_flight_on")
+      -- <<<<<<<< shade2/command.hsp:3404 		if invCtrl(1)=6: if (iWeight(cnt)<=0)or(iId(cnt) ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end
+}
+data:add(inv_equipment_flight)
 
 local inv_garoks_hammer = {
    _type = "elona_sys.inventory_proto",
@@ -707,11 +717,6 @@ local inv_garoks_hammer = {
 
    on_select = function(ctxt, item, amount)
       return "inventory_continue"
-   end,
-
-   on_return_item = function(ctxt, item, amount)
-      -- TODO
-      item:separate()
    end
 }
 data:add(inv_garoks_hammer)

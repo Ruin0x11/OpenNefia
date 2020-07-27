@@ -306,6 +306,7 @@ function Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_coun
 end
 
 local function calc_damage_params_default(chara, weapon, target, attack_skill, ammo)
+   -- >>>>>>>> shade2/calculation.hsp:256 		dmgFix	= cDmg(cc) + iDmg(cw) +iLevel(cw)+(iStatu ..
    local dmgfix = chara:calc("damage_bonus") + weapon:calc("damage_bonus") + weapon:calc("bonus")
    if weapon:is_blessed() then
       dmgfix = dmgfix + 1
@@ -340,6 +341,7 @@ local function calc_damage_params_default(chara, weapon, target, attack_skill, a
       multiplier = multiplier,
       pierce_rate = pierce_rate
    }
+   -- <<<<<<<< shade2/calculation.hsp:264 		} ..
 end
 
 local function calc_raw_damage_for_skills(result, chara, weapon, target, is_ranged)

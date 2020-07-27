@@ -1437,19 +1437,20 @@ data:add {
 -- <<<<<<<< shade2/proc.hsp:3076 	swbreak ..
 
 local function do_enchant(inventory_proto, source, power)
+   -- >>>>>>>> shade2/proc.hsp:3083 	if efId=efEnchantWeapon:invCtrl=23,1:else:invCtrl ..
    local result, canceled = Input.query_item(source, inventory_proto)
    if not result or canceled then
       return true, { obvious = false }
    end
 
-   local item = result.item
+   local item = result.result
 
    item:separate()
 
-   if item.level < power / 100 then
-      Gui.mes("base.ding2")
+   if item.bonus < power / 100 then
+      Gui.play_sound("base.ding2")
       Gui.mes("magic.enchant.apply", item)
-      item.level = item.level + 1
+      item.bonus = item.bonus + 1
    else
       Gui.mes("magic.common.resists", item)
    end
@@ -1457,6 +1458,7 @@ local function do_enchant(inventory_proto, source, power)
    source:refresh()
 
    return true
+   -- <<<<<<<< shade2/proc.hsp:3100 	swbreak ..
 end
 
 data:add {
@@ -1477,7 +1479,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      return do_enchant("inv.equipment_weapon", source, params.power)
+      return do_enchant("elona.inv_equipment_weapon", source, params.power)
    end
 }
 
@@ -1499,6 +1501,75 @@ data:add {
          return true, { obvious = false }
       end
 
-      return do_enchant("inv.equipment_armor", source, params.power)
+      return do_enchant("elona.inv_equipment_armor", source, params.power)
+   end
+}
+
+data:add {
+   _id = "effect_flight",
+   _type = "elona_sys.magic",
+   elona_id = 1140,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:3187 	if cc!pc:txtNothingHappen:obvious=false:swbreak ..
+      local source = params.source
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(source, "elona.inv_equipment_flight")
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      Save.autosave()
+
+      local item = result.result
+
+      item:separate()
+
+      local cb = Anim.load("elona.anim_smoke", source.x, source.y)
+      Gui.start_draw_callback(cb)
+
+      if params.curse_state == Enum.CurseState.Normal or params.curse_state == Enum.CurseState.Blessed then
+         if item.weight > 0 then
+            item.weight = math.clamp(math.floor(item.weight * (100 - params.power/10) / 100), 1, item.weight)
+            if item.pv > 0 then
+               item.pv = math.floor(item.pv - item.pv / 10 + 1)
+               if params.curse_state ~= Enum.CurseState.Blessed then
+                  item.pv = item.pv - 1
+               end
+            end
+            if item.damage_bonus > 0 then
+               item.damage_bonus = math.floor(item.damage_bonus - item.damage_bonus / 10 + 1)
+               if params.curse_state ~= Enum.CurseState.Blessed then
+                  item.damage_bonus = item.damage_bonus - 1
+               end
+            end
+         end
+         Gui.mes("magic.flying.apply", item)
+      else
+         item.weight = math.floor(item.weight * 150 / 100 + 1000)
+         if item.pv > 0 then
+            item.pv = item.pv + math.clamp(item.pv / 10, 1, 5)
+         end
+         if item.damage_bonus > 0 then
+            item.damage_bonus = item.damage_bonus + math.clamp(item.damage_bonus / 10, 1, 5)
+         end
+         Gui.mes("magic.flying.cursed", item)
+      end
+
+      source:refresh_weight()
+      source:refresh()
+
+      return true
+      -- <<<<<<<< shade2/proc.hsp:3211 	swbreak ..
    end
 }

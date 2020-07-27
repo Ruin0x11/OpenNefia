@@ -64,17 +64,9 @@ Draw.wait_global_draw_callbacks = draw.wait_global_draw_callbacks
 --- @tparam[opt] int a
 function Draw.set_color(r, g, b, a)
    if type(r) == "table" then
-      love.graphics.setColor(
-         r[1] / 255,
-         r[2] / 255,
-         r[3] / 255,
-         (r[4] or 255) / 255)
+      love.graphics.setColor(love.math.colorFromBytes(r[1], r[2], r[3], r[4]))
    else
-      love.graphics.setColor(
-         r / 255,
-         g / 255,
-         b / 255,
-         (a or 255) / 255)
+      love.graphics.setColor(love.math.colorFromBytes(r, g, b, a))
    end
 end
 

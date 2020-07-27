@@ -521,6 +521,7 @@ function proxy:init(_type, data)
 end
 
 function proxy:__newindex(k, v)
+   return nil
 end
 
 function proxy:edit(name, func)

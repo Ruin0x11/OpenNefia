@@ -13,12 +13,21 @@ local function iter_all_items()
    return fun.chain(Item.iter(), Chara.player():iter_items())
 end
 
+local function apply_mapping(mapping, item)
+   if mapping.chip_on_identify then
+      item.image = mapping.chip_on_identify
+   end
+   if mapping.color_on_identify then
+      item.color = table.deepcopy(mapping.color_on_identify)
+   end
+end
+
 local function set_item_image_on_memorize(_, params)
    if params.is_known and Theme.is_active("ceri_items.ceri_items") then
       local mapping = FFHP.mapping_for(params._id)
       if mapping then
          for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
-            item.image = mapping.chip_on_identify
+            apply_mapping(mapping, item)
          end
       end
    end
@@ -34,7 +43,7 @@ local function set_item_image_on_generate(obj, params)
    if (ItemMemory.is_known(obj._id) or params.is_shop) and Theme.is_active("ceri_items.ceri_items") then
       local mapping = FFHP.mapping_for(obj._id)
       if mapping then
-         obj.image = mapping.chip_on_identify
+         apply_mapping(mapping, obj)
       end
    end
 end

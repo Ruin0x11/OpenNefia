@@ -13641,6 +13641,9 @@ local item =
 
          is_precious = true,
          quality = Enum.Quality.Unique,
+
+         cannot_use_flight_on = true,
+
          categories = {
             "elona.container",
             "elona.unique_item"
