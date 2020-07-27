@@ -30,7 +30,7 @@ local function cartesian_product(lists)
 end
 
 local function do_check(check, gens, ...)
-   local ok, res = pcall(check, ...)
+   local ok, res, mes = pcall(check, ...)
    if not ok then
       return {
          error = res,
@@ -41,6 +41,7 @@ local function do_check(check, gens, ...)
 
    return {
       result = res,
+      message = mes,
       gens = gens,
       args = {...}
    }
@@ -76,6 +77,7 @@ local function smallest_shrink(result, depth)
    return {
       smallest = result.args,
       result = result.result,
+      message = result.message,
       error = result.error,
       depth = depth
    }
@@ -160,19 +162,21 @@ function QuickCheck.assert(check, gens, opts)
    local ok, r = QuickCheck.quick_check(check, gens, opts)
 
    if not ok then
-      local res = r.shrunk.result
-      local t = "Result"
+      local t
       if r.shrunk.error then
-         res = t.shrunk.error
-         t = "Error"
+         t = ("Error: %s"):format(r.shrunk.error)
+      elseif r.shrunk.message then
+         t = ("Result: %s, %s"):format(r.shrunk.result, r.shrunk.message)
+      else
+         t = ("Result: %s"):format(r.shrunk.result)
       end
       local err = ([[
 Property failed (after %d/%d runs, %d shrink(s)):
 
 %s
 
-%s: %s
-]]):format(r.failed_after, r.num_tests, r.shrunk.depth, inspect(r.shrunk.smallest, {depth = 2, override_mt = true}), t, res)
+%s
+]]):format(r.failed_after, r.num_tests, r.shrunk.depth, inspect(r.shrunk.smallest, {depth = 2, override_mt = true}), t)
       local t = { err, _ = r.shrunk.smallest, __result = r }
       for i, v in ipairs(r.shrunk.smallest) do
          t["_" .. i] = v

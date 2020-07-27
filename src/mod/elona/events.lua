@@ -915,14 +915,17 @@ end
 Event.register("elona.calc_wand_success", "Default", calc_wand_success)
 
 local function calc_exp_modifier(target)
+   -- >>>>>>>> shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
    local map = target:current_map()
    return 1 + ((target:calc("is_hung_on_sand_bag") and 15) or 0)
       + ((target:calc("splits") and 1) or 0)
       + ((target:calc("splits2") and 1) or 0)
       + (map:calc("exp_modifier") or 0)
+   -- <<<<<<<< shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
 end
 
 local function proc_on_physical_attack_miss(chara, params)
+   -- >>>>>>>> shade2/action.hsp:1356 		if (sdata(attackSkill,cc)>sEvade(tc))or(rnd(5)=0 ..
    local exp_modifier = calc_exp_modifier(params.target)
    local attack_skill = chara:skill_level(params.attack_skill)
    local target_evasion = params.target:skill_level("elona.evasion")
@@ -931,6 +934,7 @@ local function proc_on_physical_attack_miss(chara, params)
       Skill.gain_skill_exp(params.target, "elona.evasion", exp, 0, 4)
       Skill.gain_skill_exp(params.target, "elona.greater_evasion", exp, 0, 4)
    end
+   -- <<<<<<<< shade2/action.hsp:1360 			} ..
 end
 Event.register("elona.on_physical_attack_miss", "Gain evasion experience", proc_on_physical_attack_miss, 100000)
 

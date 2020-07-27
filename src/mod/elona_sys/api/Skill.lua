@@ -161,14 +161,12 @@ local function skill_change_text(chara, skill_id, is_increase)
 end
 
 local function proc_leveling(chara, skill, new_exp, level)
-   local potential
-
    if new_exp >= 1000 then
       local level_delta = math.floor(new_exp / 1000)
       new_exp = new_exp % 1000
       level = level + level_delta
-      potential = Skill.modify_potential_from_level(chara, skill, level_delta)
-      chara:set_base_skill(skill, level, nil, new_exp)
+      local potential = Skill.modify_potential_from_level(chara, skill, level_delta)
+      chara:set_base_skill(skill, level, potential, new_exp)
       if Map.is_in_fov(chara.x, chara.y) then
          local color = "White"
          if chara:is_allied() then
@@ -190,16 +188,14 @@ local function proc_leveling(chara, skill, new_exp, level)
       end
 
       level = level - level_delta
-      potential = Skill.modify_potential_from_level(chara, skill, -level_delta)
-      chara:set_base_skill(skill, level, nil, new_exp)
+      local potential = Skill.modify_potential_from_level(chara, skill, -level_delta)
+      chara:set_base_skill(skill, level, potential, new_exp)
       if Map.is_in_fov(chara.x, chara.y) and level_delta ~= 0 then
          Gui.mes_c(skill_change_text(chara, skill, false), "Red")
          Gui.mes_alert()
       end
       chara:refresh()
    end
-
-   chara:set_base_skill(skill, level, potential, new_exp)
 end
 
 function Skill.gain_fixed_skill_exp(chara, skill, exp)
@@ -250,9 +246,11 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    end
 
    local map = chara:current_map()
-   local exp_divisor = map:calc("exp_divisor")
-   if exp_divisor then
-      exp = exp / exp_divisor
+   if map then
+      local exp_divisor = map:calc("exp_divisor")
+      if exp_divisor then
+         exp = exp / exp_divisor
+      end
    end
 
    if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level ~= 1000 then
