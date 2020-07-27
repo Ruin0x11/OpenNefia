@@ -16,6 +16,8 @@ local function setup_min_mes_window()
    if config["min_mes_window.enabled"] then
       holder:set_position(mes_window_position)
 
+      -- TODO: this is an ugly hack and should not exist. figure out how this
+      -- HUD modding thing should be stabilized. (#37)
       local position
       position = function(self, x, y, width, height)
          return math.floor((width - 84) / 2) - 100, height - 32

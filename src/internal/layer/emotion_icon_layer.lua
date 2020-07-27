@@ -61,16 +61,18 @@ function emotion_icon_layer:update(dt, screen_updated)
    assert(map ~= nil)
 
    for _, c in Chara.iter(map) do
-      local id
-      local emo = c:calc("emotion_icon")
-      if emo then
-         id = EMOTION_ICONS[emo] + 1
-      end
+      if c:is_in_fov() then
+         local id
+         local emo = c:calc("emotion_icon")
+         if emo then
+            id = EMOTION_ICONS[emo] + 1
+         end
 
-      if id then
-         local x, y = Gui.tile_to_screen(c.x, c.y)
-         local memory = c:produce_memory()
-         self.parts[#self.parts+1] = { id, x + 4 + 16, y - (memory.offset_y or 0) - 16 }
+         if id then
+            local x, y = Gui.tile_to_screen(c.x, c.y)
+            local memory = c:produce_memory()
+            self.parts[#self.parts+1] = { id, x + 4 + 16, y - (memory.offset_y or 0) - 16 }
+         end
       end
    end
 
