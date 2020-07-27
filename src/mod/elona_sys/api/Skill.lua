@@ -195,6 +195,8 @@ local function proc_leveling(chara, skill, new_exp, level)
          Gui.mes_alert()
       end
       chara:refresh()
+   else
+      chara:set_base_skill(skill, level, nil, new_exp)
    end
 end
 

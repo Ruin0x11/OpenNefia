@@ -29,9 +29,16 @@ Event.register("base.on_hotload_end",
                   enabled = true
                end)
 
-function Debug.hook(tbl, fn_name, level, depth)
+function Debug.hook(tbl, fn_name, depth, level)
    local log_cb = Log[level or "warn"]
-   local inspect_opts = {override_mt = true, depth = depth or 1}
+   depth = depth or 1
+   local p
+   if depth <= 0 then
+      p = tostring
+   else
+      local inspect_opts = {override_mt = true, depth = depth or 1}
+      p = function(arg) return inspect(arg, inspect_opts) end
+   end
 
    local fn = tbl[fn_name]
    assert(type(fn) == "function", ("'%s' must be a function"):format(fn_name))
@@ -45,9 +52,9 @@ function Debug.hook(tbl, fn_name, level, depth)
       for i = 1, max do
          local arg = a[i]
          if i == 1 then
-            s = inspect(arg, inspect_opts)
+            s = p(arg)
          else
-            s = s .. ", " .. inspect(arg, inspect_opts)
+            s = s .. ", " .. p(arg)
          end
       end
       log_cb(s)

@@ -212,7 +212,7 @@ function ElonaCommand.increment_sleep_potential(player)
          break
       end
       local skill = Rand.choice(config["base._basic_attributes"])
-      player:mod_base_skill_potential(skill, 1)
+      player:mod_skill_potential(skill, 1)
       grown_count = grown_count + 1
       if grown_count > 6 then
          if Rand.one_in(5) then

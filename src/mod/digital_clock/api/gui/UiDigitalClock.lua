@@ -46,7 +46,9 @@ function UiDigitalClock:draw()
    Draw.set_color(213, 213, 255)
    self.t.digital_clock.digits:draw_region(digit_h_1 + 1, self.x + self.padding,                                   self.y + self.padding)
    self.t.digital_clock.digits:draw_region(digit_h_2 + 1, self.x + self.padding + self.digit_w,                    self.y + self.padding)
-   self.t.digital_clock.colon:draw(                       self.x + self.padding + self.digit_w * 2,                self.y + self.padding)
+   if math.floor(self.frame * 2) % 2 == 1 then
+      self.t.digital_clock.colon:draw(                       self.x + self.padding + self.digit_w * 2,                self.y + self.padding)
+   end
    self.t.digital_clock.digits:draw_region(digit_m_1 + 1, self.x + self.padding + self.digit_w * 2 + self.colon_w, self.y + self.padding)
    self.t.digital_clock.digits:draw_region(digit_m_2 + 1, self.x + self.padding + self.digit_w * 3 + self.colon_w, self.y + self.padding)
 

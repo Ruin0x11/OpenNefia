@@ -186,6 +186,7 @@ local function init_save()
    s.deepest_level = 0
    s.map_registry = {}
    s.containers = {}
+   s.tracked_skill_ids = { "elona.bow", "elona.evasion", "elona.eye_of_mind", "elona.spell_crystal_spear" }
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

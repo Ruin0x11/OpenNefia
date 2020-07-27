@@ -5,6 +5,7 @@ local Rand = require("api.Rand")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
+local data = require("internal.data")
 
 -- Commonly used functions for UI rendering.
 -- @module Ui
@@ -270,7 +271,9 @@ local SKILL_ICONS = {
 }
 
 function Ui.skill_icon(skill_id)
-   return SKILL_ICONS[skill_id] or 1
+   local skill = data["base.skill"]:ensure(skill_id)
+   local related_skill = skill.related_skill or skill._id
+   return SKILL_ICONS[related_skill] or nil
 end
 
 return Ui

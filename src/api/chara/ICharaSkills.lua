@@ -5,6 +5,8 @@ local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
 
 local MAX_LEVEL = 2000
+local MAX_POTENTIAL = 400
+local MAX_EXPERIENCE = 1000
 
 function ICharaSkills:init()
    self.skills = self.skills or {}
@@ -159,27 +161,107 @@ end
 
 -- TODO: keep eveything in one "skills" field, to prevent needing to
 -- distinguish by type, and instead prefix each ID with the type name
-generate_methods(ICharaSkills, "skill", "base.skill")
 generate_methods(ICharaSkills, "resist", "base.element")
 
---- @function ICharaSkills:skill_level(skill_id)
---- @tparam id:base.skill skill_id
---- @treturn[opt] number
+--- Obtains the character's original skill level, before applying buffs.
+function ICharaSkills:base_skill_level(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   skill_id = ("base.skill:%s"):format(skill_id)
+   return self.skills[skill_id] and self.skills[skill_id].level or 0
+end
 
---- @function ICharaSkills:base_skill_level(skill_id)
---- @tparam id:base.skill skill_id
---- @treturn[opt] number
+--- Obtains the character's skill level after applying buffs.
+function ICharaSkills:skill_level(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   local temp = self.temp["skills"]
+   if not temp then
+      return self:base_skill_level(skill_id)
+   end
+   local skill_entry = temp["base.skill:" .. skill_id]
+   if not skill_entry then
+      return self:base_skill_level(skill_id)
+   end
+   return skill_entry.level or 0
+end
 
---- @function ICharaSkills:mod_skill_level(skill_id, amount, op)
---- @tparam id:base.skill skill_id
---- @tparam number amount
---- @tparam[opt] string op
---- @treturn[opt] number
+--- Returns true if the character knows a skill. If true, you can call
+--- ICharaSkills:skill_level() and get back a non-zero level.
+function ICharaSkills:has_skill(skill_id)
+   return self:skill_level(skill_id) > 0
+end
 
---- @function ICharaSkills:mod_base_skill_level(skill_id, amount, op)
---- @tparam id:base.skill skill_id
---- @tparam number amount
---- @tparam[opt] string op
---- @treturn[opt] number
+function ICharaSkills:skill_potential(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   skill_id = ("base.skill:%s"):format(skill_id)
+   return self.skills[skill_id] and self.skills[skill_id].potential or 0
+end
+
+function ICharaSkills:skill_experience(skill_id)
+   data["base.skill"]:ensure(skill_id)
+   skill_id = ("base.skill:%s"):format(skill_id)
+   return self.skills[skill_id] and self.skills[skill_id].experience or 0
+end
+
+function ICharaSkills:mod_skill_level(skill_id, amount, op)
+   data["base.skill"]:ensure(skill_id)
+   if not self:has_skill(skill_id) then
+      return
+   end
+   skill_id = ("base.skill:%s"):format(skill_id)
+   local result = self:mod("skills", { [skill_id] = { level = math.floor(amount) } }, op)
+   local level = self.temp.skills[skill_id].level
+   level = math.clamp(level, 0, MAX_LEVEL)
+   self.temp.skills[skill_id].level = level
+   return result
+end
+
+function ICharaSkills:mod_base_skill_level(skill_id, amount, op)
+   data["base.skill"]:ensure(skill_id)
+   if not self:has_skill(skill_id) then
+      self:set_base_skill(skill_id, 1, 100, 0)
+   end
+   skill_id = ("base.skill:%s"):format(skill_id)
+   local result = self:mod_base("skills", { [skill_id] = { level = math.floor(amount) } }, op)
+   local level = self.skills[skill_id].level
+   level = math.clamp(level, 0, MAX_LEVEL)
+   self.skills[skill_id].level = level
+   return result
+end
+
+function ICharaSkills:mod_skill_potential(skill_id, amount, op)
+   data["base.skill"]:ensure(skill_id)
+   if not self:has_skill(skill_id) then
+      self:set_base_skill(skill_id, 1, 100, 0)
+   end
+   skill_id = ("base.skill:%s"):format(skill_id)
+   local result = self:mod_base("skills", { [skill_id] = { potential = math.floor(amount) } }, op)
+   local potential = self.skills[skill_id].potential
+   potential = math.clamp(potential, 0, MAX_POTENTIAL)
+   self.skills[skill_id].potential = potential
+   return result
+end
+
+function ICharaSkills:mod_skill_experience(skill_id, amount, op)
+   data["base.skill"]:ensure(skill_id)
+   if not self:has_skill(skill_id) then
+      self:set_base_skill(skill_id, 1, 100, 0)
+   end
+   skill_id = ("base.skill:%s"):format(skill_id)
+   local result = self:mod_base("skills", { [skill_id] = { experience = math.floor(amount) } }, op)
+   local experience = self.skills[skill_id].experience
+   experience = math.clamp(experience, 0, MAX_EXPERIENCE)
+   self.skills[skill_id].experience = experience
+   return result
+end
+
+function ICharaSkills:set_base_skill(skill_id, level, potential, experience)
+   data["base.skill"]:ensure(skill_id)
+   skill_id = ("base.skill:%s"):format(skill_id)
+   local s = self.skills[skill_id] or {}
+   s.level = math.clamp(math.floor(level or s.level or 0), 0, MAX_LEVEL)
+   s.potential = math.clamp(math.floor(potential or s.potential or 100), 0, MAX_POTENTIAL)
+   s.experience = math.clamp(math.floor(experience or s.experience or 0), 0, MAX_EXPERIENCE)
+   self.skills[skill_id] = s
+end
 
 return ICharaSkills

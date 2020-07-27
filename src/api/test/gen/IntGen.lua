@@ -15,26 +15,23 @@ function IntGen:pick_bounded(min, max)
 end
 
 
---- Helper function for finding number closest to 0.
--- @param a number 1
--- @param b number 2
--- @return number closest to 0
-local function find_closest_to_zero(a, b)
-  return (math.abs(a) < math.abs(b)) and a or b
-end
-
-
 --- Helper function for shrinking integer, bounded by min and max. (min <= int <= max)
 -- @param min minimum value
 -- @param max maximum value
 -- @return shrunk integer (shrinks towards 0 / closest value to 0 determined
 --         by min and max)
 function IntGen:shrink_bounded(min, max)
-  local bound_limit = find_closest_to_zero(min, max)
   local function do_shrink(self, previous)
-    if previous == 0 or previous == bound_limit then return {} end
-    if previous > 0 then return { math.floor(previous / 2) } end
-    return { math.ceil(previous / 2) }
+     local t = {}
+     local i = math.floor((previous - min) / 2) + min
+     if i > min then
+        t[#t+1] = i
+     end
+     local j = math.ceil((max - previous) / 2) + previous
+     if j < max then
+        t[#t+1] = j
+     end
+     return t
   end
   return do_shrink
 end

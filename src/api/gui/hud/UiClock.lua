@@ -26,10 +26,15 @@ function UiClock:relayout(x, y)
 end
 
 function UiClock:draw()
+   Draw.set_font(13)
+
+   -- >>>>>>>> shade2/screen.hsp:326 					;clock ..
    Draw.set_color(255, 255, 255)
    self.t.base.clock:draw(self.x, self.y)
    self.t.base.date_label_frame:draw(self.x + 78, self.y + 8)
+   -- <<<<<<<< shade2/screen.hsp:332 	gcopy selInf,448,376,128,24 ...
 
+   -- >>>>>>>> shade2/screen.hsp:345 	color 0 ..
    local hour_rot = self.date.hour * 30 + self.date.minute / 2 + self.date.second / 60
    local minute_rot = self.date.minute * 6 + self.date.second / 10
 
@@ -45,6 +50,7 @@ function UiClock:draw()
                       self.y + 35,
                       self.t.base.text_color_light,
                       self.t.base.text_color_light_shadow)
+   -- <<<<<<<< shade2/screen.hsp:351  ..
 end
 
 function UiClock:update()
