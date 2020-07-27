@@ -158,7 +158,6 @@ function EquipSlots:items_equipped_at(body_part_type)
    local pred = function(v)
       return v.equipped and v.body_part._id == body_part_type
    end
-   _ppr("iter",body_part_type,self:iter_body_parts():extract("body_part"):extract("_id"):to_list())
    return self:iter_body_parts(false):filter(pred):extract("equipped")
 end
 

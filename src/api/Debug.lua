@@ -12,13 +12,6 @@ function Debug.print(...)
    print(...)
 end
 
-function Debug._ppr(...)
-   if not enabled then
-      return
-   end
-   _ppr(...)
-end
-
 function Debug.print_end(e)
    enabled = e or false
 end

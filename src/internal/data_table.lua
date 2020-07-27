@@ -286,7 +286,6 @@ function data_table:add(dat)
    end
 
    if not is_valid_ident(_id) then
-      _ppr(dat)
       self:error("'%s' is not a valid identifier (must consist of lowercase letters, numbers and underscores only, cannot start with a number)", _id)
       return nil
    end

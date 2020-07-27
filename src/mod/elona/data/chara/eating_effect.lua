@@ -69,7 +69,6 @@ function eating_effect.insanity(corpse, params)
 end
 
 function eating_effect.putit(corpse, params)
-   _ppr(table.keys(params))
    eat_message(params.chara, "putit", "Green")
    Skill.gain_skill_exp(params.chara, "elona.stat_charisma", 150)
 end

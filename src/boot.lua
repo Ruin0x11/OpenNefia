@@ -50,37 +50,6 @@ require("ext")
 inspect = require("thirdparty.inspect")
 fun = require("thirdparty.fun")
 
-local function remove_all_metatables(item, path)
-  if path[#path] ~= inspect.METATABLE then return item end
-end
-
-function _ppr(...)
-   local t = {...}
-   local max = 0
-
-   -- nil values in varargs will mess up ipairs, so iterate by the
-   -- largest array index found instead and assume everything in
-   -- between was passed as nil.
-   for k, _ in pairs(t) do
-      max = math.max(max, k)
-   end
-
-   for i=1,max do
-      local v = t[i]
-      if v == nil then
-         io.write("nil")
-      else
-         io.write(inspect(v, {process = remove_all_metatables}))
-      end
-      io.write("\t")
-   end
-   if #{...} == 0 then
-      io.write("nil")
-   end
-   io.write("\n")
-   return ...
-end
-
 if is_windows then
    -- Do not buffer stdout for Emacs compatibility.
    -- Requires LOVE's source to be modified to use stdin/stdout pipes

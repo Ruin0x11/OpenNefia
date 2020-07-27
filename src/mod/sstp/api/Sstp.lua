@@ -61,7 +61,6 @@ function Sstp.send_raw(op, protocol, params, ip, port)
 
    assert(client:send(req))
 
-   _ppr(req)
    local resp = assert(client:receive("*all"))
    client:close()
 

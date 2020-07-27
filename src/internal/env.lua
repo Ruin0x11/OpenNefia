@@ -10,7 +10,7 @@ local doc_store = require("internal.global.doc_store")
 --- that can update the result of `require` in-place if a hotload is
 --- requested. This is not without some caveats though:
 ---
---- 1. The results of `require` should be a table to enable hotloading.
+--- 1. The result of `require` should be a table to enable hotloading.
 --- 2. All local upvalues inside the chunk will be lost on hotloading.
 ---    To support hotloading, code should minimize the usage of
 ---    top-level locals or otherwise provide support for hotloading by
@@ -65,7 +65,6 @@ local SANDBOX_GLOBALS = {
    "fun",
    "help",
    "pause",
-   "_ppr",
 }
 
 local UNSAFE_HOTLOAD_PATHS = {

@@ -117,7 +117,6 @@ end
 function profile.query(limit)
   local t = {}
   for f, n in pairs(_ncalls) do
-     _ppr(f, n, _defined[f])
     if n > 0 then
       t[#t + 1] = f
     end
