@@ -1,3 +1,9 @@
+--
+-- This file is loaded at the very beginning of the program, before LÖVE is
+-- initialized. It creates the minimal set of globals used everywhere, like
+-- `class` and `fun`, and replaces the default `require` to support hotloading.
+--
+
 _DEBUG = false
 _CONSOLE = _CONSOLE or false
 
