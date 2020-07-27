@@ -15,6 +15,7 @@ local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
 local IChara = require("api.chara.IChara")
 local api_Item = require("api.Item")
+local Util = require("mod.elona_sys.api.Util")
 
 local Item = {}
 
@@ -404,6 +405,24 @@ local function init_food(item, params)
 end
 -- <<<<<<<< shade2/item.hsp:701 	} ..
 
+-- >>>>>>>> shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ..
+-- TODO hardcoded
+local RANDOM_COLORS = {
+   { 255, 255, 255 },
+   { 175, 255, 175 },
+   { 175, 175, 255 },
+   { 255, 255, 175 },
+   { 255, 215, 175 },
+   { 255, 155, 155 },
+}
+-- <<<<<<<< shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ...
+
+function Item.random_item_color(item, seed)
+   seed = seed or save.base.random_seed
+   local index = (Util.string_to_integer(item._id) % seed) % 6
+   return RANDOM_COLORS[index+1]
+end
+
 function Item.fix_item(item, params)
    -- If true:
    --  - Do not autoidentify with Sense Quality immediately upon creation.
@@ -417,8 +436,9 @@ function Item.fix_item(item, params)
    local no_oracle = params.no_oracle or is_shop
 
    -- >>>>>>>> shade2/item.hsp:615 	iCol(ci)=iColOrg(ci) ...
-   local _, default_color = Text.unidentified_item_params(item)
-   item.color = default_color
+   if item.color == "Random" then
+      item.color = Item.random_item_color(item)
+   end
    -- <<<<<<<< shade2/item.hsp:616 	if iCol(ci)=coRand	:iCol(ci)=randColor(rnd(length ..
 
    -- >>>>>>>> shade2/item.hsp:628 	itemMemory(1,dbId)++ ..
@@ -507,5 +527,6 @@ local function apply_item_on_init_params(item, params)
    end
 end
 Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)
+
 
 return Item

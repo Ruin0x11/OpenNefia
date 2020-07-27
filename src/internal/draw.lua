@@ -159,6 +159,14 @@ function draw.layer_count()
    return #layers
 end
 
+function draw.get_max_z_order()
+   local max = 0
+   for _, v in ipairs(layers) do
+      max = math.max(max, v.priority)
+   end
+   return max
+end
+
 function draw.is_layer_active(layer)
    for _, pair in ipairs(layers) do
       if pair.layer == layer then

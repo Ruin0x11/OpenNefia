@@ -36,6 +36,7 @@ config["base.themes"] = {}
 config["base.debug_autoidentify"] = false
 config["base.debug_no_weight"] = false
 config["base.debug_default_seed"] = nil
+config["base.development_mode"] = false
 
 -- Don't overwrite existing values in the current config.
 config.on_hotload = function(old, new)

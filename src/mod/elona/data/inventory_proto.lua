@@ -283,7 +283,7 @@ local inv_buy = {
          return "inventory_continue"
       end
 
-      local cost = Calc.calc_item_value(item) * amount
+      local cost = Calc.calc_item_value(item, "buy") * amount
 
       if cost > ctxt.chara.gold then
          Gui.mes("ui.inv.buy.not_enough_money")
@@ -672,6 +672,31 @@ local inv_equipment_armor = {
    end
 }
 data:add(inv_equipment_armor)
+
+local inv_equipment_alchemy = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_equipment_alchemy",
+   elona_id = 23,
+   elona_sub_id = 4,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.target",
+   query_text = "ui.inv.title.target",
+
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3402 		if invCtrl(1)=4: if iEquip(cnt)!0 :continue ..
+      return true
+      -- <<<<<<<< shade2/command.hsp:3402 		if invCtrl(1)=4: if iEquip(cnt)!0 :continue ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      return "inventory_continue"
+   end
+}
+data:add(inv_equipment_alchemy)
 
 local inv_equipment_flight = {
    _type = "elona_sys.inventory_proto",

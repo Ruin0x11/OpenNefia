@@ -13,7 +13,7 @@ local IUiLayer = class.interface("IUiLayer",
                                  { IDrawable, IInput })
 
 function IUiLayer:default_z_order()
-   return 100000
+   return nil
 end
 
 local function trimmed_traceback(err, regex)
@@ -43,7 +43,7 @@ function IUiLayer:query(z_order)
    end
 
    if z_order == nil then
-      z_order = self:default_z_order() or 100000
+      z_order = self:default_z_order() or draw.get_max_z_order() or 100000
    end
 
    assert(type(z_order) == "number", ("Z order must be number (got: %s)"):format(z_order))

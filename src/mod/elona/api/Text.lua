@@ -1,8 +1,7 @@
-local IItem = require("api.item.IItem")
-local Sha1 = require("mod.extlibs.api.Sha1")
 local Csv = require("mod.elona_sys.api.Csv")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
+local Util = require("mod.elona_sys.api.Util")
 
 local Text = {}
 
@@ -228,31 +227,14 @@ function Text.random_title(kind, seed)
    return result
 end
 
-local function string_to_int(str)
-   local hash_chunks = {Sha1.sha1(str)} -- list of ints
-   return fun.iter(hash_chunks):foldl(fun.op.add, 0)
-end
-
--- >>>>>>>> shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ..
--- TODO hardcoded
-local RANDOM_COLORS = {
-   { 255, 255, 255 },
-   { 175, 255, 175 },
-   { 175, 175, 255 },
-   { 255, 255, 175 },
-   { 255, 215, 175 },
-   { 255, 155, 155 },
-}
--- <<<<<<<< shade2/text.hsp:213 	_randColor	=coDefault	,coGreen	,coBlue		,coYellow ...
-
 --- Gets the name and color of an unidentified item.
 --- @tparam base.item|IItem item
 --- @tparam[opt] uint seed Seed used for randomized color/name
 --- @treturn string,color
-function Text.unidentified_item_params(item, seed)
+function Text.unidentified_item_name(item, seed)
    local unknown_name = I18N.get_optional("item.info." .. item._id .. ".unidentified_name")
    if unknown_name then
-      return unknown_name, item.color
+      return unknown_name
    end
 
    local has_random_name = item.has_random_name
@@ -261,15 +243,14 @@ function Text.unidentified_item_params(item, seed)
       local ref = item.knownnameref
       assert(ref, ("Item '%s' does not have a knownnameref"):format(item._id))
       seed = seed or save.base.random_seed
-      local index = (string_to_int(item._id) % seed) % 6
+      local index = (Util.string_to_integer(item._id) % seed) % 6
       unknown_name = I18N.get("ui.random_item." .. ref .. "._" .. index)
          .. I18N.space()
          .. I18N.get("ui.random_item." .. ref .. ".name")
-      local color = RANDOM_COLORS[index+1]
-      return unknown_name, color
+      return unknown_name
    end
 
-   return I18N.get("item.info." .. item._id .. ".name"), item.color
+   return I18N.get("item.info." .. item._id .. ".name")
 end
 
 function Text.random_subname_seed()

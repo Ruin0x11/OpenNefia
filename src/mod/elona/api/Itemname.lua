@@ -306,7 +306,7 @@ function itemname.jp(item, amount, no_article)
       end
    end
 
-   local unknown_name = Text.unidentified_item_params(item)
+   local unknown_name = Text.unidentified_item_name(item)
    if identify == IdentifyState.None then
       s = s .. unknown_name
    elseif identify < IdentifyState.Full then
@@ -539,7 +539,7 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   local unknown_name = Text.unidentified_item_params(item)
+   local unknown_name = Text.unidentified_item_name(item)
    if identify == IdentifyState.None then
       s = s .. unknown_name
    elseif identify < IdentifyState.Full then

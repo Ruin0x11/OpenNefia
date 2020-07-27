@@ -2,82 +2,102 @@ local categories = {
    {
       _id = "equip_melee",
       ordering = 10000,
+      is_major = true
    },
    {
       _id = "equip_head",
       ordering = 12000,
+      is_major = true
    },
    {
       _id = "equip_shield",
       ordering = 14000,
+      is_major = true
    },
    {
       _id = "equip_body",
       ordering = 16000,
+      is_major = true
    },
    {
       _id = "equip_leg",
       ordering = 18000,
+      is_major = true
    },
    {
       _id = "equip_cloak",
       ordering = 19000,
+      is_major = true
    },
    {
       _id = "equip_back",
       ordering = 20000,
+      is_major = true
    },
    {
       _id = "equip_wrist",
       ordering = 22000,
+      is_major = true
    },
    {
       _id = "equip_ranged",
       ordering = 24000,
+      is_major = true
    },
    {
       _id = "equip_ammo",
       ordering = 25000,
+      is_major = true
    },
    {
       _id = "equip_ring",
       ordering = 32000,
+      is_major = true
    },
    {
       _id = "equip_neck",
       ordering = 34000,
+      is_major = true
    },
    {
       _id = "drink",
       ordering = 52000,
+      is_major = true
    },
    {
       _id = "scroll",
       ordering = 53000,
+      is_major = true
    },
    {
       _id = "spellbook",
       ordering = 54000,
+      is_major = true
    },
    {
       _id = "book",
       ordering = 55000,
+      is_major = true
    },
    {
       _id = "rod",
       ordering = 56000,
+      is_major = true
    },
    {
       _id = "food",
       ordering = 57000,
+      is_major = true
    },
    {
       _id = "misc_item",
       ordering = 59000,
+      is_major = true
    },
    {
       _id = "furniture",
       ordering = 60000,
+      is_major = true
    },
    {
       _id = "furniture_well",
@@ -86,42 +106,52 @@ local categories = {
    {
       _id = "furniture_altar",
       ordering = 60002,
+      is_major = true
    },
    {
       _id = "remains",
       ordering = 62000,
+      is_major = true
    },
    {
       _id = "junk",
       ordering = 64000,
+      is_major = true
    },
    {
       _id = "gold",
       ordering = 68000,
+      is_major = true
    },
    {
       _id = "platinum",
       ordering = 69000,
+      is_major = true
    },
    {
       _id = "container",
       ordering = 72000,
+      is_major = true
    },
    {
       _id = "ore",
       ordering = 77000,
+      is_major = true
    },
    {
       _id = "tree",
       ordering = 80000,
+      is_major = true
    },
    {
       _id = "cargo_food",
       ordering = 91000,
+      is_major = true
    },
    {
       _id = "cargo",
       ordering = 92000,
+      is_major = true
    },
    {
       _id = "bug",

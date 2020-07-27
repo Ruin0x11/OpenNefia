@@ -187,7 +187,7 @@ function HomeMap.generate(home_id)
 
    if home.copy then
       local copy = Resolver.resolve(home.copy)
-      table.merge(map, copy)
+      table.merge_ex(map, copy)
    end
 
    if home.on_generate then

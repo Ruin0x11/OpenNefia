@@ -70,14 +70,14 @@ data:add {
 
 data:add {
    _type = "base.resolver",
-   _id = "item_count",
+   _id = "item_charges",
 
    ordering = 300000,
    method = "merge",
-   invariants = { count = "number" },
+   invariants = { charges = "number" },
 
    resolve = function(self)
-      return self.count - Rand.rnd(self.count) + Rand.rnd(self.count)
+      return self.charges - Rand.rnd(self.charges) + Rand.rnd(self.charges)
    end
 }
 

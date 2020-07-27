@@ -501,7 +501,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 411,
          efp = 100,
@@ -522,7 +522,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 413,
          efp = 100,
@@ -543,7 +543,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 408,
          efp = 100,
@@ -565,7 +565,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 458,
          efp = 300,
@@ -588,9 +588,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 411,
@@ -612,9 +614,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 12 }),
+         on_init_params = function(self)
+            self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
          has_charge = true,
 
          efid = 409,
@@ -636,9 +640,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 408,
@@ -662,9 +668,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 411,
@@ -688,9 +696,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 412,
@@ -813,7 +823,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -836,7 +846,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -859,7 +869,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -881,7 +891,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -919,9 +929,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 419,
@@ -944,9 +956,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 420,
@@ -969,9 +983,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 421,
@@ -1724,7 +1740,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(400, 100, item, params)
@@ -1747,7 +1763,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(400, 300, item, params)
@@ -1770,7 +1786,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(401, 100, item, params)
@@ -1794,7 +1810,7 @@ local item =
          coefficient = 50,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(401, 300, item, params)
@@ -1818,7 +1834,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(401, 400, item, params)
@@ -1878,7 +1894,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(402, 100, item, params)
@@ -1902,7 +1918,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(402, 300, item, params)
@@ -1926,7 +1942,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(403, 100, item, params)
@@ -2587,9 +2603,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 410,
@@ -2630,9 +2648,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 424,
@@ -2656,9 +2676,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 400,
@@ -2681,9 +2703,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 10 }),
+         on_init_params = function(self)
+            self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
          has_charge = true,
 
          efid = 414,
@@ -2705,9 +2729,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 424,
@@ -2730,9 +2756,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 419,
@@ -2755,9 +2783,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 10 }),
+         on_init_params = function(self)
+            self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
          has_charge = true,
 
          efid = 420,
@@ -2795,9 +2825,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 402,
@@ -3614,9 +3646,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 10 }),
+         on_init_params = function(self)
+            self.charges = 10 + Rand.rnd(10) - Rand.rnd(10)
+         end,
          has_charge = true,
 
          efid = 421,
@@ -3639,9 +3673,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 447,
@@ -4143,9 +4179,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 9 }),
+         on_init_params = function(self)
+            self.charges = 9 + Rand.rnd(9) - Rand.rnd(9)
+         end,
          has_charge = true,
 
          efid = 429,
@@ -4169,9 +4207,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 401,
@@ -4382,7 +4422,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 412,
          efp = 100,
@@ -4953,7 +4993,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 428,
          efp = 100,
@@ -5059,7 +5099,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 429,
          efp = 500,
@@ -5088,7 +5128,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -5108,7 +5148,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1104,
          efp = 100,
@@ -5129,7 +5169,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 408,
          efp = 100,
@@ -5153,9 +5193,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 429,
@@ -5180,9 +5222,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 413,
@@ -5207,9 +5251,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 428,
@@ -5232,9 +5278,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 400,
@@ -5258,9 +5306,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 401,
@@ -5285,9 +5335,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 402,
@@ -5312,9 +5364,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 403,
@@ -5411,9 +5465,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 414,
@@ -5518,7 +5574,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -5538,9 +5594,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 415,
@@ -5565,9 +5623,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 417,
@@ -5591,9 +5651,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 416,
@@ -5641,9 +5703,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 422,
@@ -5667,9 +5731,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 423,
@@ -5693,9 +5759,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 431,
@@ -5719,9 +5787,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 432,
@@ -5746,9 +5816,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 434,
@@ -5773,9 +5845,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 433,
@@ -5970,7 +6044,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(439, 100, item, params)
@@ -5992,7 +6066,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(440, 100, item, params)
@@ -6021,7 +6095,7 @@ local item =
          end,
 
          tags = { "spshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_spshop"
@@ -6045,7 +6119,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -6065,9 +6139,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 1 }),
+         on_init_params = function(self)
+            self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
+         end,
          has_charge = true,
 
          efid = 441,
@@ -6092,7 +6168,9 @@ local item =
          originalnameref2 = "rod",
          has_random_name = true,
 
-         count = Resolver.make("elona.item_count", { count = 1 }),
+         on_init_params = function(self)
+            self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
+         end,
          has_charge = true,
 
          is_zap_always_successful = true,
@@ -6101,7 +6179,7 @@ local item =
          efp = 100,
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.rod",
             "elona.tag_noshop"
@@ -7480,7 +7558,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 411,
          efp = 2000,
@@ -7503,7 +7581,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 412,
          efp = 2500,
@@ -7523,7 +7601,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(442, 200, item, params)
@@ -7546,9 +7624,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 442,
@@ -7572,9 +7652,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 7 }),
+         on_init_params = function(self)
+            self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
+         end,
          has_charge = true,
 
          efid = 443,
@@ -7598,9 +7680,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 443,
@@ -7627,7 +7711,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7648,9 +7732,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 444,
@@ -7672,7 +7758,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(444, 300, item, params)
@@ -7696,9 +7782,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 445,
@@ -7720,7 +7808,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(445, 250, item, params)
@@ -7744,9 +7832,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 446,
@@ -7771,9 +7861,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 447,
@@ -7795,7 +7887,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(446, 250, item, params)
@@ -7821,7 +7913,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7841,9 +7933,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 446,
@@ -7866,9 +7960,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 448,
@@ -7889,7 +7985,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(448, 250, item, params)
@@ -7912,9 +8008,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 449,
@@ -7939,9 +8037,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 450,
@@ -7968,7 +8068,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -7989,9 +8089,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 451,
@@ -8015,7 +8117,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 451,
          efp = 250,
@@ -8039,9 +8141,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 6 }),
+         on_init_params = function(self)
+            self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
+         end,
          has_charge = true,
 
          efid = 407,
@@ -8065,9 +8169,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 406,
@@ -8092,9 +8198,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 407,
@@ -8117,7 +8225,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 406,
          efp = 300,
@@ -8140,7 +8248,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 407,
          efp = 300,
@@ -8163,7 +8271,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 621,
          efp = 250,
@@ -8187,9 +8295,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 621,
@@ -8264,7 +8374,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1117,
          efp = 250,
@@ -8288,9 +8398,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 452,
@@ -8315,9 +8427,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 453,
@@ -8341,7 +8455,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 453,
          efp = 250,
@@ -8548,9 +8662,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 430,
@@ -8572,7 +8688,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 430,
          efp = 500,
@@ -8596,10 +8712,12 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          _copy = {
-            count = Resolver.make("elona.item_count", { count = 3 }),
+            on_init_params = function(self)
+               self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+            end,
          },
 
          has_charge = true,
@@ -9083,7 +9201,7 @@ local item =
          end,
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_neg"
@@ -9109,7 +9227,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          medal_value = 5,
          categories = {
             "elona.scroll",
@@ -9136,7 +9254,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          medal_value = 8,
          categories = {
             "elona.scroll",
@@ -9162,7 +9280,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -9181,7 +9299,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(1121, 200, item, params)
@@ -9205,9 +9323,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 454,
@@ -10113,7 +10233,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1122,
          efp = 100,
@@ -10138,14 +10258,16 @@ local item =
          originalnameref2 = "rod",
          has_random_name = true,
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 435,
          efp = 100,
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          medal_value = 20,
          categories = {
             "elona.rod",
@@ -10167,9 +10289,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 435,
@@ -10245,9 +10369,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 436,
@@ -10272,9 +10398,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 8 }),
+         on_init_params = function(self)
+            self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
+         end,
          has_charge = true,
 
          efid = 436,
@@ -10596,7 +10724,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "neg" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_neg"
@@ -10616,7 +10744,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1127,
          efp = 180,
@@ -10645,7 +10773,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "spshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          medal_value = 7,
          categories = {
             "elona.scroll",
@@ -10697,7 +10825,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          is_precious = true,
 
@@ -10722,7 +10850,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1124,
          efp = 200,
@@ -10745,7 +10873,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1124,
          efp = 400,
@@ -10767,7 +10895,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1125,
          efp = 200,
@@ -10790,7 +10918,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1125,
          efp = 400,
@@ -10959,7 +11087,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1129,
          efp = 300,
@@ -11002,9 +11130,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 628,
@@ -11028,9 +11158,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 1132,
@@ -11565,9 +11697,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 7 }),
+         on_init_params = function(self)
+            self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
+         end,
          has_charge = true,
 
          efid = 438,
@@ -11591,9 +11725,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 438,
@@ -11640,9 +11776,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 404,
@@ -11672,7 +11810,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -11693,9 +11831,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 405,
@@ -11720,9 +11860,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 405,
@@ -11915,7 +12057,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(1131, 200, item, params)
@@ -12025,9 +12167,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 455,
@@ -12052,9 +12196,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 455,
@@ -12080,7 +12226,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -12097,7 +12243,9 @@ local item =
          rarity = 500000,
          coefficient = 0,
 
-         count = Resolver.make("elona.item_count", { count = 12 }),
+         on_init_params = function(self)
+            self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
          has_charge = true,
 
          color = { 255, 155, 155 },
@@ -12117,7 +12265,9 @@ local item =
          rarity = 500000,
          coefficient = 0,
 
-         count = Resolver.make("elona.item_count", { count = 12 }),
+         on_init_params = function(self)
+            self.charges = 12 + Rand.rnd(12) - Rand.rnd(12)
+         end,
          has_charge = true,
 
          color = { 175, 175, 255 },
@@ -12141,9 +12291,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 456,
@@ -12168,9 +12320,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 456,
@@ -12353,7 +12507,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -12446,9 +12600,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "rod",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 6 }),
+         on_init_params = function(self)
+            self.charges = 6 + Rand.rnd(6) - Rand.rnd(6)
+         end,
          has_charge = true,
 
          efid = 457,
@@ -12471,9 +12627,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 457,
@@ -13223,7 +13381,7 @@ local item =
          rarity = 1000,
          coefficient = 0,
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          is_precious = true,
 
@@ -13248,7 +13406,7 @@ local item =
          rarity = 5000,
          coefficient = 0,
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          is_precious = true,
 
@@ -13301,7 +13459,7 @@ local item =
          end,
 
          tags = { "spshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          medal_value = 30,
          categories = {
             "elona.drink",
@@ -13364,9 +13522,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
 
          efid = 458,
@@ -13390,7 +13550,9 @@ local item =
          coefficient = 0,
 
          elona_function = 20,
-         count = Resolver.make("elona.item_count", { count = 4 }),
+         on_init_params = function(self)
+            self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
+         end,
          has_charge = true,
          categories = {
             "elona.misc_item"
@@ -13453,7 +13615,7 @@ local item =
          rarity = 25000,
          coefficient = 0,
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1140,
          efp = 150,
@@ -13571,7 +13733,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "scroll",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          efid = 1141,
          efp = 100,
@@ -13961,9 +14123,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 5 }),
+         on_init_params = function(self)
+            self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
+         end,
          has_charge = true,
 
          efid = 418,
@@ -14733,7 +14897,9 @@ local item =
          coefficient = 0,
 
          _copy = {
-            count = Resolver.make("elona.item_count", { count = 2 }),
+            on_init_params = function(self)
+               self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+            end,
             has_charge = true,
          },
 
@@ -14951,9 +15117,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 460,
@@ -14978,9 +15146,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 2 }),
+         on_init_params = function(self)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+         end,
          has_charge = true,
 
          efid = 459,
@@ -15157,7 +15327,7 @@ local item =
          coefficient = 100,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(1143, 100, item, params)
@@ -15214,7 +15384,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.book",
             "elona.tag_noshop"
@@ -15240,7 +15410,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"
@@ -15261,9 +15431,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 462,
@@ -15285,7 +15457,7 @@ local item =
          coefficient = 0,
          originalnameref2 = "potion",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
          on_drink = function(item, params)
             return Magic.drink_potion(1144, 100, item, params)
@@ -15824,7 +15996,7 @@ local item =
             local idx = Rand.rnd(Rand.rnd(Rand.rnd(#GIFT_VALUES)+1)+1)+1
             self.params.gift_value = GIFT_VALUES[idx]
             assert(self.params.gift_value)
-               -- <<<<<<<< shade2/item.hsp:659 		} ..
+            -- <<<<<<<< shade2/item.hsp:659 		} ..
          end,
 
          tags = { "spshop" },
@@ -15870,9 +16042,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 463,
@@ -15897,9 +16071,11 @@ local item =
          coefficient = 0,
          originalnameref2 = "spellbook",
          has_random_name = true,
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
 
-         count = Resolver.make("elona.item_count", { count = 3 }),
+         on_init_params = function(self)
+            self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
+         end,
          has_charge = true,
 
          efid = 464,
@@ -15986,7 +16162,7 @@ local item =
          end,
 
          tags = { "nogive" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -16012,7 +16188,7 @@ local item =
          elona_type = "scroll",
 
          tags = { "noshop" },
-         color = Resolver.make("elona.random_item_color"),
+         color = "Random",
          categories = {
             "elona.scroll",
             "elona.tag_noshop"

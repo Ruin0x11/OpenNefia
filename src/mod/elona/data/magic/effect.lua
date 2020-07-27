@@ -1573,3 +1573,79 @@ data:add {
       -- <<<<<<<< shade2/proc.hsp:3211 	swbreak ..
    end
 }
+
+data:add {
+   _id = "effect_alchemy",
+   _type = "elona_sys.magic",
+   elona_id = 1132,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:3213 	case efChangeItem ..
+      local source = params.source
+      local map = params.source:current_map()
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      local result, canceled = Input.query_item(source, "elona.inv_equipment_alchemy")
+      if not result or canceled then
+         return true, { obvious = false }
+      end
+
+      local item = result.result
+
+      if item.quality > Enum.Quality.Great or item:calc("is_precious") then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Save.autosave()
+
+      item:separate()
+
+      local cb = Anim.load("elona.anim_smoke", source.x, source.y)
+      Gui.start_draw_callback(cb)
+
+      local value_prev = Calc.calc_item_value(item, "buy")
+
+      local major_categories = {}
+      for _, cat in ipairs(item.categories) do
+         if data["base.item_type"]:ensure(cat).is_major then
+            table.insert(major_categories, cat)
+         end
+      end
+
+      item:remove()
+
+      local new_item
+      local i = 0
+      while true do
+         local level = Calc.calc_object_level(params.power / 10 + 5, map)
+         local quality = Calc.calc_object_quality(Enum.Quality.Good)
+         local gen_params = { level = level, quality = quality, ownerless = true }
+         if i < 10 then
+            gen_params.categories = major_categories
+         end
+         new_item = Itemgen.create(nil, nil, gen_params)
+         if new_item and new_item.value <= (value_prev * 3 / 2) + 1000 then
+            break
+         end
+         i = i + 1
+      end
+
+      Gui.mes("magic.alchemy", new_item)
+
+      source:take_object(new_item)
+      source:refresh_weight()
+
+      return true
+      -- <<<<<<<< shade2/proc.hsp:3236 	swbreak ..
+   end
+}
