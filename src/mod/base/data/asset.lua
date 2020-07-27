@@ -102,6 +102,9 @@ local assets = {
       width = 192,
       height = 72,
       regions = {
+         top_bar = { 0, 0, 192, 5 },
+         body = { 0, 6, 192, 62 },
+         bottom_bar = { 0, 69, 192, 5 },
          window_title = { 0, 53, 192, 18 }
       }
    },

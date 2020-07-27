@@ -50,6 +50,7 @@ function UiMessageWindow:relayout(x, y, width, height)
    Draw.set_font(14) -- 14 - en * 2
    self.max_lines = math.floor(self.height / Draw.text_height()) - 1
    self.y_offset = -(self.height % Draw.text_height())
+   self.each_line = CircularBuffer:new(self.max_lines)
 
    self.i_message_window = self.t.base.message_window:make_instance()
 
@@ -217,7 +218,12 @@ function UiMessageWindow:redraw_window()
    Draw.clear(0, 0, 0)
    Draw.set_color(255, 255, 255)
 
+   -- TODO asset_drawable:get_region_viewport("body")
+   local _, _, _, window_height = self.i_message_window.quads["body"]:getViewport()
    self.i_message_window:draw_bar(0, 0, self.width)
+   for i = 2, math.ceil(self.height / window_height) do
+      self.i_message_window:draw_bar(0, (i - 1) * window_height, self.width, "body")
+   end
 
    self.the_width = 0
 

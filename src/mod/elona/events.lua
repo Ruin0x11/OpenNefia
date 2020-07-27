@@ -728,7 +728,7 @@ local function gain_experience_at_turn_start(chara)
       gain_weight_lifting_experience(chara)
    elseif turn == 4 then
       if not chara:has_activity() then
-         chara:heal_stamina(2)
+         chara:heal_stamina(2, true)
       end
    end
 end

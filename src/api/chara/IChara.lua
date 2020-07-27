@@ -563,8 +563,9 @@ end
 --- Heals this character's stamina points.
 ---
 --- @tparam int add
-function IChara:heal_stamina(add)
+function IChara:heal_stamina(add, quiet)
    self.stamina = math.floor(math.max(self.stamina + math.max(add, 0), self:calc("max_stamina")))
+   self:emit("base.on_heal_chara_stamina", { amount = add, quiet = quiet })
 end
 
 --- Fully heals this character's health, mana and stamina.

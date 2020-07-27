@@ -58,7 +58,11 @@ function ElonaCommand.bash(player)
 end
 
 function ElonaCommand.read(player, item)
-   return Input.query_inventory(player, "elona.inv_read", nil, "elona.main")
+   local result, canceled = Input.query_inventory(player, "elona.inv_read", nil, "elona.main")
+   if canceled then
+      return result, canceled
+   end
+   return result.result, canceled
 end
 
 function ElonaCommand.do_eat(player, item)

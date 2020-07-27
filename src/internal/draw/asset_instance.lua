@@ -14,6 +14,10 @@ function asset_instance:init(asset, width, height)
    self.bar_quad = love.graphics.newQuad(1, 1, 1, 1,
                                          self.asset:get_width(),
                                          self.asset:get_height())
+   self.bar_quad_remainder = love.graphics.newQuad(1, 1, 1, 1,
+                                         self.asset:get_width(),
+                                         self.asset:get_height())
+   self.bar_region = nil
 
    self:resize(width, height)
 end
@@ -131,25 +135,34 @@ function asset_instance:draw_region_stretched(quad, x, y, tx, ty, color, centere
    end
    Draw.image_region_stretched(self.asset.image, self.quads[quad], x, y, tx, ty, color, centered, rotation)
 end
+local Log = require("api.Log")
 
-function asset_instance:draw_bar(x, y, width)
+function asset_instance:draw_bar(x, y, width, region)
    local iw = self.asset:get_width()
    local ih = self.asset:get_height()
 
    local last_width = width
-   if self.bar_width ~= last_width then
+   local last_region = region
+   if self.bar_width ~= last_width or self.bar_region ~= last_region then
       self.bar_width = last_width
-      self.bar_quad:setViewport(0, 0, last_width, ih)
+      self.bar_region = last_region
+      if self.bar_region then
+         local q = assert(self.quads[self.bar_region])
+         local tx, ty, tw, th = q:getViewport()
+         self.bar_quad:setViewport(tx, ty, iw, ih)
+         self.bar_quad_remainder:setViewport(tx, ty, last_width, th)
+      else
+         self.bar_quad:setViewport(0, 0, iw, ih)
+         self.bar_quad_remainder:setViewport(0, 0, iw % last_width, ih)
+      end
    end
 
-   local step = math.floor(width / iw)
-   for i=0,step do
+   local step = math.ceil(width / iw)
+   for i=0,step-1 do
       if i == step - 1 then
-         step = width % iw
          Draw.image_region(self.asset.image, self.bar_quad, i * iw + x, y)
       else
-         step = iw
-         Draw.image(self.asset.image, i * iw + x, y)
+         Draw.image_region(self.asset.image, self.bar_quad_remainder, i * iw + x, y)
       end
    end
 end

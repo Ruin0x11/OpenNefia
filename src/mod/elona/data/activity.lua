@@ -394,11 +394,11 @@ data:add {
             local chara = params.chara
 
             if self.turns % 2 == 0 then
-               chara:heal_stamina(1)
+               chara:heal_stamina(1, true)
             end
             if self.turns % 3 == 0 then
-               chara:heal_hp(1)
-               chara:heal_mp(1)
+               chara:heal_hp(1, true)
+               chara:heal_mp(1, true)
             end
 
             if save.elona_sys.awake_hours >= 30 then

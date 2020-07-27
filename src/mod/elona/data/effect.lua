@@ -115,8 +115,8 @@ local effect = {
 
       on_turn_end = function(chara)
          chara:set_emotion_icon("elona.sleep")
-         chara:heal_hp(1)
-         chara:heal_mp(1)
+         chara:heal_hp(1, true)
+         chara:heal_mp(1, true)
       end
    },
    {

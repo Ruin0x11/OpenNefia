@@ -108,6 +108,7 @@ data:add_multi(
       { _id = "on_chara_renewed" },
       { _id = "before_engine_init", },
       { _id = "on_item_init_params", },
+      { _id = "on_heal_chara_stamina", },
    }
 )
 
