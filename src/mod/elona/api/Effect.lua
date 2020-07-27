@@ -587,9 +587,11 @@ function Effect.get_wet(chara, amount)
 end
 
 function Effect.damage_map_fire(x, y, origin)
+   -- TODO
 end
 
 function Effect.damage_map_ice(x, y, origin)
+   -- TODO
 end
 
 function Effect.start_incognito(source)

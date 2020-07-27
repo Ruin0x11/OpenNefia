@@ -21,6 +21,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Text = require("mod.elona.api.Text")
 local Enchant = require("mod.elona.api.Enchant")
 local IMapObject = require("api.IMapObject")
+local Mef = require("api.Mef")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -1647,5 +1648,65 @@ data:add {
 
       return true
       -- <<<<<<<< shade2/proc.hsp:3236 	swbreak ..
+   end
+}
+
+data:add {
+   _id = "effect_cure_corruption",
+   _type = "elona_sys.magic",
+   elona_id = 1131,
+
+   type = "effect",
+   params = {
+      "source",
+   },
+
+   cast = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:3361 	case efCureCorrupt ..
+      local source = params.source
+
+      if not source:is_player() then
+         Gui.mes("common.nothing_happens")
+         return true, { obvious = false }
+      end
+
+      Gui.play_sound("base.pray1", source.x, source.y)
+
+      if params.curse_state == "none" or params.curse_state == "blessed" then
+         Gui.mes_c("magic.cure_corruption.apply", "Green")
+         Effect.modify_corruption(source, params.power * -10)
+      else
+         Gui.mes_c("magic.cure_corruption.cursed", "Purple")
+         Effect.modify_corruption(source, 200)
+      end
+
+      return true
+      -- <<<<<<<< shade2/proc.hsp:3371 	swbreak ..
+   end
+}
+
+data:add {
+   _id = "effect_molotov",
+   _type = "elona_sys.magic",
+   elona_id = 1133,
+
+   type = "effect",
+   params = {
+      "source",
+      "target"
+   },
+
+   cast = function(self, params)
+      -- >>>>>>>> shade2/proc.hsp:3406 	case efMorotov ..
+      local source = params.source
+      local target = params.target
+
+      Gui.mes_visible("magic.molotov", target)
+      Mef.create("elona.fire", target.x, target.y, { duration = Rand.rnd(15) + 25, params.power, origin = source })
+
+      Effect.damage_map_fire(target.x, target.y, source)
+
+      return true
+      -- <<<<<<<< shade2/proc.hsp:3409 	swbreak ..
    end
 }
