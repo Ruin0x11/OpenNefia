@@ -18,6 +18,8 @@ local Magic = {}
 -- characters other than the player using items!
 
 function Magic.drink_potion(magic_id, power, item, params)
+   -- TODO: allow multiple magic IDs to be passed at once, or maybe a callback
+   -- function even.
    local chara = params.chara
    local triggered_by = params.triggered_by or "potion"
    local curse_state = params.curse_state or item:calc("curse_state") or "none"
@@ -131,6 +133,8 @@ function Magic.drink_well(item, params)
 end
 
 function Magic.read_scroll(magic_id, power, item, params)
+   -- TODO: allow multiple magic IDs to be passed at once, or maybe a callback
+   -- function even.
    local chara = params.chara
 
    if chara:has_effect("elona.blindness") then
@@ -167,6 +171,8 @@ function Magic.read_scroll(magic_id, power, item, params)
 end
 
 function Magic.zap_wand(magic_id, power, item, params)
+   -- TODO: allow multiple magic IDs to be passed at once, or maybe a callback
+   -- function even.
    local magic = data["elona_sys.magic"]:ensure(magic_id)
    local chara = params.chara
 

@@ -6,7 +6,6 @@ TAGS
 /src/deps
 /src/internal/global/__COMMIT__.lua
 /doc/out
-/lib
 /src/data/font/MS-Gothic.ttf
 /editor/vscode/out
 /editor/vscode/node_modules

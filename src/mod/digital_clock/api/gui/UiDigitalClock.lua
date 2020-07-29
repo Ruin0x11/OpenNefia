@@ -6,11 +6,11 @@ local DateTime = require("api.DateTime")
 
 local UiDigitalClock = class.class("UiDigitalClock", IUiWidget)
 
-function UiDigitalClock:init()
+function UiDigitalClock:init(display_seconds)
    self.frame = 0
    self.time_of_day_text = ""
    self.date = DateTime:new()
-   self.display_seconds = true
+   self.display_seconds = display_seconds
 end
 
 function UiDigitalClock:default_widget_position(x, y, width, height)

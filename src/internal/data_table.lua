@@ -1,7 +1,6 @@
 local CodeGenerator = require("api.CodeGenerator")
 local EventTree = require ("api.EventTree")
 local Log = require ("api.Log")
-local doc = require("internal.doc")
 local env = require ("internal.env")
 local fs = require("util.fs")
 local schema = require("thirdparty.schema")
@@ -164,7 +163,6 @@ function data_table:add_type(schema, params)
             relative = fs.normalize(loc.short_src),
             line = loc.lastlinedefined
          }
-         doc.add_for_data_type(_type, schema._defined_in, schema.doc, true)
       else
          schema._defined_in = {
             relative = ".",
@@ -193,7 +191,6 @@ function data_table:add_type(schema, params)
          relative = fs.normalize(loc.short_src),
          line = loc.lastlinedefined
       }
-      doc.add_for_data_type(_type, schema._defined_in, schema.doc)
    else
       schema._defined_in = {
          relative = ".",
@@ -255,7 +252,6 @@ local function update_docs(dat, _schema, loc, is_hotloading)
       if _schema.on_document then
          the_doc =_schema.on_document(dat)
       end
-      doc.add_for_data(dat._type, dat._id, the_doc, dat._defined_in, dat, is_hotloading)
    end
 end
 

@@ -107,8 +107,8 @@ function UiSkillTrackerEx:update()
       end
    end
 
-   for _, remove in ipairs(remove) do
-      self.tracked_skill_ids[remove] = nil
+   for _, i in ipairs(remove) do
+      self.tracked_skill_ids[i] = nil
    end
 end
 

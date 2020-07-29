@@ -1,9 +1,7 @@
 local Log = require("api.Log")
 local fs = require("util.fs")
-local doc = require("internal.doc")
 local paths = require("internal.paths")
-
-local doc_store = require("internal.global.doc_store")
+local config = require("internal.config")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -77,8 +75,6 @@ local HOTLOAD_DEPS = false
 local HOTLOADED = {}
 local LOADING = {}
 local LOADING_STACK = {}
-local DOCS_LOADED = {}
-local DOCS_HOTLOADED = {}
 local LOADING_MODS = {}
 
 -- To determine the require path of a chunk, it is necessary to keep a
@@ -147,13 +143,26 @@ local LOVE2D_REQUIRES = table.set {
 
 local global_require = require
 
+local function can_load_native_libs(mod_env)
+   local setting = config["base.enable_native_libs"]
+   if setting == "base" then
+      return not not mod_env
+   elseif setting then
+      return true
+   end
+
+   return false
+end
+
 local function get_require_path(path, mod_env)
    local resolved = package.searchpath(path, package.path)
 
-   if resolved == nil and not mod_env and _CONSOLE then
+   if resolved == nil and can_load_native_libs(mod_env) then
       -- Also try cpath, but only when not using the love runtime
       -- (tests). Mods shouldn't be able to load arbitrary native
       -- libraries.
+      Log.debug("Searching cpath for lib '%s'", path)
+
       resolved = package.searchpath(path, package.cpath)
       if resolved then
          return path, true -- return the original path
@@ -192,8 +201,14 @@ local function env_dofile(path, mod_env)
 
    if resolved == nil then
       local tried_paths = ""
-      for _, s in ipairs(string.split(package.path, ";")) do
-         tried_paths = tried_paths .. "\n" .. s
+      local function split_path(path_string)
+         for _, s in ipairs(string.split(path_string, ";")) do
+            tried_paths = tried_paths .. "\n" .. s
+         end
+      end
+      split_path(package.path)
+      if can_load_native_libs(mod_env) then
+          split_path(package.cpath)
       end
       return nil, ("Cannot find path '%s'. Tried searching the following: %s"):format(path, tried_paths)
    end
@@ -253,6 +268,8 @@ local function get_load_type(path)
       return "mod"
    elseif THIRDPARTY_REQUIRES[path] then
       return "thirdparty"
+   elseif package.searchpath(path, package.cpath) then
+      return "native"
    end
 
    return nil
@@ -297,6 +314,9 @@ local function safe_load_chunk(path)
 
       Log.debug("Loading chunk %s with mod sandbox for %s.", path, mod_name)
       return env.load_sandboxed_chunk(path, mod_name)
+   elseif load_type == "native" then
+      Log.debug("Attempting to load native library '%s'", path)
+      return env_dofile(path)
    end
 
    return nil
@@ -310,47 +330,6 @@ local function env_dofile_or_safe_load(path)
    end
 
    return env_dofile(path)
-end
-
-local function update_documentation(path, req_path)
-   if not doc.can_load() or (DOCS_LOADED[req_path] and HOTLOADING_PATH ~= path) then
-      return
-   end
-   if HOTLOADING_PATH and DOCS_HOTLOADED[req_path] then
-      return true
-   end
-
-   DOCS_LOADED[req_path] = true
-   DOCS_HOTLOADED[req_path] = true
-
-   if not get_load_type(req_path) then
-      return
-   end
-
-   local resolved = package.searchpath(path, package.path)
-   if resolved then
-      resolved = fs.normalize(resolved)
-
-      local file = doc_store.entries[resolved]
-      local info
-      if _IS_LOVEJS then
-         info = { modtime = 0 }
-      else
-         info = fs.get_info(resolved)
-      end
-
-      if info then
-         local modify_time = info.modtime
-         if not file or file.last_updated < modify_time or HOTLOADING_PATH then
-            local ok, err = pcall(doc.build_for_file, path)
-            if not ok then
-               Log.error("Doc parse error: %s", err)
-            end
-         end
-      else
-         Log.warn("Can't load docs at %s (%s)", path, resolved)
-      end
-   end
 end
 
 local function gen_require(chunk_loader, can_load_path)
@@ -394,7 +373,6 @@ local function gen_require(chunk_loader, can_load_path)
 
       if not hotload and package.loaded[req_path] then
          LOADING_STACK[#LOADING_STACK] = nil
-         -- update_documentation(path, req_path)
          return package.loaded[req_path]
       end
 
@@ -442,8 +420,6 @@ local function gen_require(chunk_loader, can_load_path)
          package.loaded[req_path] = result
       end
 
-      -- update_documentation(path, req_path, package.loaded[req_path])
-
       if hotload then
          HOTLOADED[req_path] = true
       end
@@ -485,7 +461,6 @@ function env.hotload_path(path, also_deps)
    path = paths.convert_to_require_path(path)
 
    HOTLOADED = {}
-   DOCS_HOTLOADED = {}
 
    if not can_hotload(path) then
       error("Can't hotload the path " .. path)
