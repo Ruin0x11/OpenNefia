@@ -833,8 +833,9 @@ function Map.spill_blood(x, y, amount, map)
       end
 
       if Map.is_in_bounds(tx, ty, map) and Map.is_floor(tx, ty, map) then
-         local d = map.debris[ty*map._width+tx+1]
-         d.blood = math.min(d.blood + 1, 5)
+         local d = map.debris[ty*map._width+tx+1] or {}
+         d.blood = math.min((d.blood or 0) + 1, 5)
+         map.debris[ty*map._width+tx+1] = d
       end
    end
 end
@@ -854,15 +855,16 @@ function Map.spill_fragments(x, y, amount, map)
       end
 
       if Map.is_in_bounds(tx, ty, map) and Map.is_floor(tx, ty, map) then
-         local d = map.debris[ty*map._width+tx+1]
-         d.fragments = math.min(d.fragments + 1, 4)
+         local d = map.debris[ty*map._width+tx+1] or {}
+         d.fragments = math.min((d.fragments or 0) + 1, 4)
+         map.debris[ty*map._width+tx+1] = d
       end
    end
 end
 
 function Map.clear_debris(map)
    map = map or field.map
-   map.debris = table.of(function() return { blood = 0, fragments = 0 } end, map:width() * map:height())
+   map.debris = {}
 end
 
 function Map.max_chara_count(map)

@@ -98,7 +98,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._tiles_dirty = {}
    self._uids = uids
 
-   self.debris = table.of(function() return { blood = 0, fragments = 0 } end, width * height)
+   self.debris = {}
 
    self.default_tile = "base.floor"
 
