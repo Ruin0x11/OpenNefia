@@ -15,6 +15,7 @@ local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
+local Magic = require("mod.elona_sys.api.Magic")
 
 --
 --
@@ -554,6 +555,19 @@ end
 
 Event.register("base.on_refresh", "Update invisibility", refresh_invisibility)
 
+local function apply_buff_effects(chara, params, result)
+   for _, buff in ipairs(chara.buffs) do
+      if buff.duration > 0 then
+         local buff_data = data["elona_sys.buff"]:ensure(buff._id)
+         if buff_data.on_refresh then
+            buff_data.on_refresh(buff, chara)
+         end
+      end
+   end
+end
+
+Event.register("base.on_refresh", "Apply buff effects", apply_buff_effects)
+
 local function refresh_other_chara(chara, params)
    if not chara:is_allied() then
       chara.hp = chara:calc("max_hp")
@@ -877,7 +891,9 @@ Event.register("elona_sys.calc_map_music", "Play default map music",
                play_default_map_music)
 
 local function calc_wand_success(chara, params)
-   local magic = data["elona_sys.magic"]:ensure(params.magic_id)
+   -- >>>>>>>> shade2/proc.hsp:1511 	if (efId>=headSpell)&(efId<tailSpell){ ..
+   local skill_data = Magic.skills_for_magic(params.magic_id)[1] or nil
+
    local item = params.item
 
    if not chara:is_player() or item:calc("is_zap_always_successful") then
@@ -887,7 +903,7 @@ local function calc_wand_success(chara, params)
    local magic_device = chara:skill_level("elona.magic_device")
 
    local success
-   if magic.type == "magic" then
+   if skill_data and skill_data.type == "spell" then
       success = false
 
       local skill = magic_device * 20 + 100
@@ -899,7 +915,7 @@ local function calc_wand_success(chara, params)
       elseif Rand.one_in(2) then
          success = true
       end
-      if Rand.rnd(magic.difficulty + 1) / 2 <= skill then
+      if Rand.rnd(skill_data.difficulty + 1) / 2 <= skill then
          success = true
       end
    else
@@ -911,6 +927,7 @@ local function calc_wand_success(chara, params)
    end
 
    return success
+   -- <<<<<<<< shade2/proc.hsp:1521 	if rnd(30)=0:f=false ..
 end
 Event.register("elona.calc_wand_success", "Default", calc_wand_success)
 

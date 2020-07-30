@@ -7,12 +7,12 @@ return {
                   :format(name(_1), s(_1))
             end,
             description = function(_1)
-               return ("Increases PV by %s /RES+ fear")
+               return ("Increases PV by %s/RES+ fear")
                   :format(_1)
             end,
             name = "Holy Shield"
          },
-         daze = {
+         mist_of_silence = {
             apply = function(_1)
                return ("%s get%s surrounded by hazy mist.")
                   :format(name(_1), s(_1))
@@ -28,7 +28,7 @@ return {
             description = "Enhances regeneration",
             name = "Regeneration"
          },
-         res_ele = {
+         elemental_shield = {
             apply = function(_1)
                return ("%s obtain%s resistance to element.")
                   :format(name(_1), s(_1))
@@ -36,7 +36,7 @@ return {
             description = "RES+ fire,cold,lightning",
             name = "Elemental Shield"
          },
-         speed_up = {
+         speed = {
             apply = function(_1)
                return ("%s speed%s up.")
                   :format(name(_1), s(_1))
@@ -47,7 +47,7 @@ return {
             end,
             name = "Speed"
          },
-         speed_down = {
+         slow = {
             apply = function(_1)
                return ("%s slow%s down.")
                   :format(name(_1), s(_1))
@@ -64,12 +64,12 @@ return {
                   :format(name(_1), s(_1))
             end,
             description = function(_1)
-               return ("Increases STR,DEX by %s /RES+ fear,confusion")
+               return ("Increases STR,DEX by %s/RES+ fear,confusion")
                   :format(_1)
             end,
             name = "Hero"
          },
-         weak_armor = {
+         mist_of_frailness = {
             apply = function(_1)
                return ("%s feel%s weak.")
                   :format(name(_1), s(_1))
@@ -77,7 +77,7 @@ return {
             description = "Halves DV and PV",
             name = "Mist of Frailness"
          },
-         weak_ele = {
+         element_scar = {
             apply = function(_1)
                return ("%s lose%s resistance to element.")
                   :format(name(_1), s(_1))
@@ -104,29 +104,29 @@ return {
             description = "RES- mind,nerve",
             name = "Nightmare"
          },
-         knowledge = {
+         divine_wisdom = {
             apply = function(_1)
                return ("%s start%s to think clearly.")
                   :format(name(_1), s(_1))
             end,
-            description = function(_1, _2)
+            description = function(_1)
                return ("Increases LER,MAG by %s, literacy skill by %s")
-                  :format(_1, _2)
+                  :format(_1[1], _1[2])
             end,
             name = "Divine Wisdom"
          },
-         punish = {
+         punishment = {
             apply = function(_1)
                return ("%s incur%s the wrath of God.")
                   :format(name(_1), s(_1))
             end,
-            description = function(_1, _2)
-               return ("Decreases speed by %s, PV by %s%")
-                  :format(_1, _2)
+            description = function(_1)
+               return ("Decreases speed by %s, PV by %s%%")
+                  :format(_1[1], _1[2])
             end,
             name = "Punishment"
          },
-         god_wind = {
+         lulwys_trick = {
             apply = function(_1)
                return ("%s repeat%s the name of Lulwy.")
                   :format(name(_1), s(_1))
@@ -145,7 +145,7 @@ return {
             description = "Grants new identity",
             name = "Incognito"
          },
-         death = {
+         death_word = {
             apply = function(_1)
                return ("%s receive%s death verdict.")
                   :format(name(_1), s(_1))
@@ -170,7 +170,7 @@ return {
                   :format(name(_1), s(_1))
             end,
             description = function(_1)
-               return ("%s% chances taking a lethal damage heals you instead")
+               return ("%s%% chances taking a lethal damage heals you instead")
                   :format(_1)
             end,
             name = "Contingency"

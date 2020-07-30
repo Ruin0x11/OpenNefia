@@ -66,4 +66,9 @@ function Midi.send_message(port, a, b, c, channel)
    state.midi.sendMessage(port, a, b, c, channel)
 end
 
+function Midi.change_program(port, program, channel)
+   channel = channel or 0
+   Midi.send_message(port, 0xCF + channel, program)
+end
+
 return Midi

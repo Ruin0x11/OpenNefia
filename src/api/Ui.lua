@@ -268,6 +268,11 @@ local SKILL_ICONS = {
    ["elona.stat_will"] = 6,
    ["elona.stat_magic"] = 7,
    ["elona.stat_charisma"] = 8,
+
+   -- This is the same icon as the item chip for scrolls, because of an
+   -- off-by-one error. There isn't actually a proper icon for LUK. The behavior
+   -- is preserved here.
+   ["elona.stat_luck"] = 9,
 }
 
 function Ui.skill_icon(skill_id)

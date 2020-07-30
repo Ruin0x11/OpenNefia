@@ -366,7 +366,7 @@ data:add {
 data:add {
    _id = "magic_map",
    _type = "elona_sys.magic",
-   elona_id = 463,
+   elona_id = 429,
 
    type = "skill",
    params = {
@@ -472,7 +472,7 @@ data:add {
 
       local level = "unidentified"
       if params.power >= item:calc("identify_difficulty") then
-         level = Item.IdentifyState.Full
+         level = Enum.IdentifyState.Full
       end
 
       local success = Effect.identify_item(item, level)

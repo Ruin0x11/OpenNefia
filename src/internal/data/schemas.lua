@@ -382,7 +382,9 @@ AI callback to run on this character's turn.
          emotion_icon_turns = 0,
 
          god = nil,
-         prayer_charge = 0
+         prayer_charge = 0,
+
+         buffs = {}
       }
    },
    { interface = IChara }

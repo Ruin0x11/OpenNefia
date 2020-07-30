@@ -807,6 +807,7 @@ end
 
 make_heal {
    _id = "heal_light",
+   elona_id = 400,
    message = "magic.healed.slightly",
    dice_x = function(p, l) return 1 + l / 30 end,
    dice_y = function(p, l) return p / 40 + 5 end,
@@ -817,6 +818,7 @@ make_heal {
 
 make_heal {
    _id = "heal_critical",
+   elona_id = 401,
    message = "magic.healed.normal",
    dice_x = function(p, l) return 2 + l / 26 end,
    dice_y = function(p, l) return p / 25 + 5 end,
@@ -827,6 +829,7 @@ make_heal {
 
 make_heal {
    _id = "healing_touch",
+   elona_id = 405,
    message = "magic.healed.normal",
    dice_x = function(p, l) return 2 + l / 22 end,
    dice_y = function(p, l) return p / 18 + 5 end,
@@ -838,6 +841,7 @@ make_heal {
 
 make_heal {
    _id = "cure_of_eris",
+   elona_id = 402,
    message = "magic.healed.greatly",
    dice_x = function(p, l) return 3 + l / 15 end,
    dice_y = function(p, l) return p / 12 + 5 end,
@@ -848,6 +852,7 @@ make_heal {
 
 make_heal {
    _id = "cure_of_jure",
+   elona_id = 403,
    message = "magic.healed.completely",
    dice_x = function(p, l) return 5 + l / 10 end,
    dice_y = function(p, l) return p / 7 + 5 end,
@@ -1393,7 +1398,31 @@ local function make_remove_hex(opts)
 
          local dice = self:dice(params)
 
-         Gui.mes("TODO")
+         local remove = {}
+
+         for _, buff in ipairs(target.buffs) do
+            local buff_data = data["elona_sys.buff"]:ensure(buff._id)
+            if buff_data.type == "hex" then
+               if not buff_data.no_remove_on_heal then
+                  local buff_power = buff.power
+                  if type(buff_power) == "table" then
+                     buff_power = buff_power[1]
+                  end
+                  if Rand.rnd(params.power * 2 + 1) > Rand.rnd(buff_power + 1) then
+                     remove[#remove+1] = buff
+                     if opts.max and #remove >= opts.max then
+                        break
+                     end
+                  end
+               end
+            end
+         end
+
+         for _, buff in ipairs(remove) do
+            target:remove_buff(buff)
+         end
+
+         Effect.add_buff(target, params.source, "elona.holy_veil", params.power, 5 + params.power / 30)
 
          local cb = Anim.load("elona.anim_buff", target.x, target.y)
          Gui.start_draw_callback(cb)
@@ -1408,6 +1437,7 @@ make_remove_hex {
    elona_id = 406,
    cost = 15,
    difficulty = 400,
+   max = 1,
    bonus = function(p, l) return l * 5 + p * 2 end
 }
 
@@ -1473,6 +1503,8 @@ local function make_summon(opts)
       range = RANGE_BOLT,
       difficulty = 200,
       target_type = "enemy",
+
+      alignment = "negative",
 
       on_check_can_cast = summon_check_can_cast,
       on_choose_target = summon_choose_target

@@ -646,7 +646,7 @@ function Skill.get_description(skill_id, chara)
    local dice = Skill.get_dice(skill_id, chara, power)
 
    if skill_entry.calc_desc then
-      desc = skill_entry.calc_desc(chara, dice)
+      return skill_entry.calc_desc(chara, power, dice)
    elseif dice.x > 0 then
       desc = desc .. ("%dd%d"):format(dice.x, dice.y)
       if dice.bonus > 0 then

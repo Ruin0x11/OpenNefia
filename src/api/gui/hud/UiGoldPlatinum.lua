@@ -21,8 +21,11 @@ function UiGoldPlatinum:relayout(x, y)
    self.t = UiTheme.load(self)
 end
 
+local Chara
+
 function UiGoldPlatinum:draw()
-   local Chara = require("api.Chara")
+   -- HACK hud
+   Chara = Chara or require("api.Chara")
    local chara = Chara.player()
    if not chara then
       return

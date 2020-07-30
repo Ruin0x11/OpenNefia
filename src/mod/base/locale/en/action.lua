@@ -760,11 +760,11 @@ return {
             book_of_rachel = "It's a lovely fairy tale written by Rachel.",
             falls_apart = function(_1)
                return ("%s falls apart.")
-                  :format(itemname(_1, 1))
+                  :format(_1)
             end,
             finished_decoding = function(_1)
                return ("You finished decoding %s!")
-                  :format(itemname(_1, 1))
+                  :format(_1)
             end,
             not_interested = "You are not interested in this book. Do you want to read it anyway? ",
             void_permit = "According to the card, you are permitted to explore the void now."
@@ -784,7 +784,7 @@ return {
             end,
             execute = function(_1, _2)
                return ("%s read%s %s.")
-                  :format(name(_1), s(_1), itemname(_2, 1))
+                  :format(name(_1), s(_1), _2)
             end
          }
       },
@@ -958,7 +958,7 @@ return {
       zap = {
          execute = function(_1)
             return ("You zap %s.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end,
          fail = function(_1)
             return ("%s fail to use the power of the rod.")

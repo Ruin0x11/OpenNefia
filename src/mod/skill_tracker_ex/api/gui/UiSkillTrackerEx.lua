@@ -22,7 +22,7 @@ end
 function UiSkillTrackerEx:set_data(player)
    self.player_uid = player.uid
 
-   local tracked_ids = save.base.tracked_skill_ids
+   local tracked_ids = save.base.tracked_skill_ids or {}
 
    local function map(i)
       local skill = data["base.skill"]:ensure(i)

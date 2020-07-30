@@ -344,14 +344,8 @@ function ElonaAction.bash(chara, x, y)
 end
 
 function ElonaAction.read(chara, item)
-   if chara:has_effect("elona.blindness") then
-      if chara:is_in_fov() then
-         Gui.mes("action.read.cannot_see", chara)
-      end
-      return "turn_end"
-   end
-
    local result = item:emit("elona_sys.on_item_read", {chara=chara,triggered_by="read"}, "turn_end")
+
    return result
 end
 
@@ -383,14 +377,6 @@ function ElonaAction.drink(chara, item)
 end
 
 function ElonaAction.zap(chara, item)
-   if item.count <= 0 then
-      if chara:is_in_fov(chara) then
-         Gui.mes("action.zap.execute", item)
-         Gui.mes("common.nothing_happens")
-      end
-      return "player_turn_query"
-   end
-
    local result = item:emit("elona_sys.on_item_zap", {chara=chara,triggered_by="wand"}, "turn_end")
    return result
 end

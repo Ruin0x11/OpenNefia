@@ -81,9 +81,13 @@ local assets = {
       source = "graphic/item.bmp",
       x = 0,
       y = 672,
-      width = 48 * 8,
+
+      -- This is bugged, actually. There isn't a proper skill icon for LUK, but
+      -- because of an off-by-one error it ends up being the item chip for
+      -- scrolls. There are only 8 proper skill icons in the item sheet.
+      width = 48 * 9,
       height = 48,
-      count_x = 8
+      count_x = 9
    },
    {
       _id = "hud_skill_icons",
@@ -179,6 +183,15 @@ local assets = {
       y = 376,
       width = 128,
       height = 24
+   },
+   {
+      _id = "buff_icons",
+      source = "graphic/character.bmp",
+      x = 0,
+      y = 1120,
+      width = 32 * 29,
+      height = 32,
+      count_x = 29
    },
    {
       _id = "book",
@@ -345,15 +358,6 @@ local assets = {
       y = 336,
       width = 12,
       height = 24
-   },
-   {
-      _id = "buff_icon",
-      source = "graphic/character.bmp",
-      x = 0,
-      y = 1120,
-      width = 32 * 19,
-      height = 32,
-      count_x = 19
    },
    {
       _id = "debris_blood",

@@ -14,7 +14,7 @@ local Input = require("api.Input")
 local Pos = require("api.Pos")
 local Feat = require("api.Feat")
 
-local RANGE_BOLT = 2
+local RANGE_BOLT = 6
 
 data:add {
    _id = "action_pregnant",
@@ -700,7 +700,7 @@ data:add {
 data:add {
    _id = "eye_of_ether",
    _type = "elona_sys.magic",
-   elona_id = 632,
+   elona_id = 633,
 
    params = {
       "source",
@@ -889,7 +889,7 @@ local function make_distant_attack(range, elona_id)
    data:add {
       _id = "distant_attack_" .. range,
       _type = "elona_sys.magic",
-      elona_id = 652,
+      elona_id = elona_id,
 
       params = {
          "source",
@@ -1273,56 +1273,12 @@ data:add {
 
       local cheer = function(chara)
          Gui.mes_c_visible("magic.cheer.is_excited", chara, "Blue")
-         -- TODO buff
+         Effect.add_buff(chara, source, "elona.speed", source:skill_level("elona.stat_charisma") * 5 + 15, 15)
+         Effect.add_buff(chara, source, "elona.hero", source:skill_level("elona.stat_charisma") * 5 + 100, 60)
+         Effect.add_buff(chara, source, "elona.contingency", 1500, 30)
       end
 
       Chara.iter():filter(filter):each(cheer)
-
-      return true
-   end
-}
-
-data:add {
-   _id = "action_mewmewmew",
-   _type = "base.skill",
-   elona_id = 657,
-
-   type = "action",
-   effect_id = "elona.mewmewmew",
-   related_skill = "elona.stat_luck",
-   cost = 1,
-   range = 1,
-   difficulty = 500,
-   target_type = "self_or_nearby",
-}
-data:add {
-   _id = "mewmewmew",
-   _type = "elona_sys.magic",
-   elona_id = 657,
-
-   params = {
-      "source"
-   },
-
-   cast = function(self, params)
-      local source = params.source
-
-      local filter = function(chara)
-         if not Chara.is_alive(source) or chara == source then
-            return false
-         end
-
-         return true
-      end
-
-      Gui.mes_c("magic.mewmewmew", "Blue")
-
-      local positions = Chara.iter():filter(filter):map(function(c) return { x = c.x, y = c.y } end):to_list()
-
-      local cb = Anim.miracle(positions)
-      Gui.start_draw_callback(cb)
-
-      Chara.iter():filter(filter):each(function(chara) chara:damage_hp(9999999, source) end)
 
       return true
    end

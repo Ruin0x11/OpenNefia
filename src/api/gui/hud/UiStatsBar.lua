@@ -87,6 +87,7 @@ function UiStatsBar:draw()
                 self.y + 3) -- inf_bary + 3 + vfix - en
    end
 
+   -- >>>>>>>> shade2/screen.hsp:173 	fontSize 13,0:color 0,0,0 ..
    -- attributes
    local item_width = math.max((Draw.get_width() - 148 - 136) / 11, 47)
    local attrs = {
@@ -143,6 +144,7 @@ function UiStatsBar:draw()
          Draw.text(tostring(self.stats[a]), x, y, color)
       end
    end
+   -- <<<<<<<< shade2/screen.hsp:193 	loop ..
 end
 
 function UiStatsBar:update(dt)

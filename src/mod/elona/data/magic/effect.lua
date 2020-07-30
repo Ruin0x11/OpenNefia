@@ -110,9 +110,43 @@ data:add {
 }
 
 data:add {
+   _id = "effect_deed",
+   _type = "elona_sys.magic",
+   elona_id = 1115,
+
+   type = "effect",
+   params = {
+      "target",
+   },
+
+   cast = function(self, params)
+      local target = params.target
+      if target:is_in_fov() then
+         if target:is_player() then
+            Gui.mes("magic.acid.self")
+         end
+         Gui.mes("magic.acid.apply", target)
+      end
+
+      if target.is_pregnant then
+         target.is_pregnant = false
+         if target:is_in_fov() then
+            Gui.mes("magic.common.melts_alien_children", target)
+         end
+      end
+
+      target:damage_hp(params.power * per_curse_state(params.curse_state, 500, 400, 100, 50) / 1000,
+                       "elona.acid",
+                       {element="elona.acid", element_power=params.power})
+
+      return true
+   end
+}
+
+data:add {
    _id = "effect_sulfuric",
    _type = "elona_sys.magic",
-   elona_id = 1102,
+   elona_id = 1116,
 
    type = "effect",
    params = {

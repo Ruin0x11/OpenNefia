@@ -12,7 +12,7 @@ return {
             end,
             name = "聖なる盾"
          },
-         daze = {
+         mist_of_silence = {
             apply = function(_1)
                return ("%sはぼやけた霧に覆われた。")
                   :format(name(_1))
@@ -28,7 +28,7 @@ return {
             description = "自然回復強化",
             name = "リジェネレーション"
          },
-         res_ele = {
+         elemental_shield = {
             apply = function(_1)
                return ("%sは元素への耐性を得た。")
                   :format(name(_1))

@@ -69,7 +69,7 @@ return {
             description = "Indicates your skill with blunt weapons.",
             name = "Blunt"
          },
-         boost = {
+         buff_boost = {
             name = "Boost"
          },
          bow = {
@@ -108,7 +108,7 @@ return {
             description = "Breath(Cold)",
             name = "Cold Breath"
          },
-         contingency = {
+         buff_contingency = {
             name = "Contingency"
          },
          control_magic = {
@@ -151,7 +151,7 @@ return {
             description = "Breath(Darkness)",
             name = "Darkness Breath"
          },
-         death_word = {
+         buff_death_word = {
             name = "Death Word"
          },
          action_decapitation = {
@@ -176,7 +176,7 @@ return {
          action_distant_attack_7 = {
             name = "Distant Attack"
          },
-         divine_wisdom = {
+         buff_divine_wisdom = {
             name = "Divine Wisdom"
          },
          spell_dominate = {
@@ -207,10 +207,10 @@ return {
             description = "Used when wielding two weapoms at the same time.",
             name = "Dual Wield"
          },
-         element_scar = {
+         buff_element_scar = {
             name = "Element Scar"
          },
-         elemental_shield = {
+         buff_elemental_shield = {
             name = "Elemental Shield"
          },
          action_ether_ground = {
@@ -331,17 +331,17 @@ return {
             description = "Skill to effectively act while wearing heavy armor.",
             name = "Heavy Armor"
          },
-         spell_hero = {
+         buff_hero = {
             name = "Hero"
          },
          spell_holy_light = {
             description = "Remove one hex",
             name = "Holy Light"
          },
-         spell_holy_shield = {
+         buff_holy_shield = {
             name = "Holy Shield"
          },
-         spell_holy_veil = {
+         buff_holy_veil = {
             name = "Holy Veil"
          },
          spell_ice_ball = {
@@ -356,7 +356,7 @@ return {
             description = "Identify one item",
             name = "Identify"
          },
-         incognito = {
+         buff_incognito = {
             name = "Incognito"
          },
          action_insult = {
@@ -396,7 +396,7 @@ return {
             description = "Indicates your skill with long swords.",
             name = "Long Sword"
          },
-         lulwys_trick = {
+         buff_lulwys_trick = {
             name = "Lulwy's Trick"
          },
          magic_capacity = {
@@ -473,10 +473,10 @@ return {
             description = "Create mist",
             name = "Mist of Darkness"
          },
-         mist_of_frailness = {
+         buff_mist_of_frailness = {
             name = "Mist of frailness"
          },
-         mist_of_silence = {
+         buff_mist_of_silence = {
             name = "Mist of Silence"
          },
          spell_mutation = {
@@ -538,7 +538,7 @@ return {
             description = "Pregnant target",
             name = "Pregnant"
          },
-         punishment = {
+         buff_punishment = {
             name = "Punishment"
          },
          spell_raging_roar = {
@@ -549,7 +549,7 @@ return {
             description = "Cure insane area",
             name = "Rain of sanity"
          },
-         regeneration = {
+         buff_regeneration = {
             name = "Regeneration"
          },
          spell_restore_body = {
@@ -604,14 +604,14 @@ return {
             description = "Teleport self",
             name = "Short Teleport"
          },
-         slow = {
+         buff_slow = {
             name = "Slow"
          },
          action_sound_breath = {
             description = "Breath(Sound)",
             name = "Sound Breath"
          },
-         speed = {
+         buff_speed = {
             name = "Speed"
          },
          stave = {

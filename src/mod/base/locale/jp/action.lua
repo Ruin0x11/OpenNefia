@@ -772,11 +772,11 @@ end,
         book_of_rachel = "レイチェルという作家による、心あたたまる童話集だ。",
         falls_apart = function(_1)
   return ("%sは塵となって崩れ落ちた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         finished_decoding = function(_1)
   return ("%sを解読した！")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         not_interested = "この本の内容には興味がない。それでも読む？ ",
         void_permit = "すくつの探索を許可する、という内容の文面が形式的に書いてある。"
@@ -799,7 +799,7 @@ end
 end,
         execute = function(_1, _2)
   return ("%s%sを読んだ。")
-  :format(kare_wa(_1), itemname(_2, 1))
+  :format(kare_wa(_1), _2)
 end
       }
     },
@@ -958,7 +958,7 @@ end,
     zap = {
       execute = function(_1)
   return ("%sを振った。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       fail = function(_1)
   return ("%sは杖をうまく使えなかった。")

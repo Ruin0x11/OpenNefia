@@ -136,6 +136,7 @@ doc = [[
       },
    },
 }
+add_elona_id("elona_sys.magic")
 
 data:add_type {
    name = "buff",

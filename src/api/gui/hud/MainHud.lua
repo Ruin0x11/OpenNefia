@@ -2,6 +2,7 @@ local IHud = require("api.gui.hud.IHud")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local UiBar = require("api.gui.hud.UiBar")
+local UiBuffs = require("api.gui.hud.UiBuffs")
 local UiClock = require("api.gui.hud.UiClock")
 local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
 local UiGoldPlatinum = require("api.gui.hud.UiGoldPlatinum")
@@ -30,6 +31,7 @@ function MainHud:init()
    self.widgets:add(UiLevel:new(), "hud_level")
    self.widgets:add(UiStatsBar:new(), "hud_stats_bar")
    self.widgets:add(UiMinimap:new(), "hud_minimap")
+   self.widgets:add(UiBuffs:new(), "hud_buffs")
 
    local position
    position = function(self, x, y, width, height)
@@ -76,6 +78,7 @@ function MainHud:update_from_player(player)
    self.widgets:get("hud_clock"):widget():set_data(save.base.date)
    self.widgets:get("hud_minimap"):widget():refresh_visible()
    self.widgets:get("hud_skill_tracker"):widget():set_data(player)
+   self.widgets:get("hud_buffs"):widget():set_data(player)
 end
 
 function MainHud:draw()

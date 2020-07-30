@@ -12,17 +12,17 @@ function UiSkillTracker:init()
 end
 
 function UiSkillTracker:set_data(player)
+   self.tracked_skill_ids = {}
+
    self.player_uid = player.uid
 
-   local tracked_ids = save.base.tracked_skill_ids
+   local tracked_ids = save.base.tracked_skill_ids or {}
 
    local tracked_pairs = fun.iter(tracked_ids)
       :map(function(i) return { _id = i, name = utf8.sub(I18N.get("ability." .. i .. ".name"), 0, 6)} end)
       :to_list()
 
-   self.tracked_skill_ids = {
-      [self.player_uid] = tracked_pairs
-   }
+   self.tracked_skill_ids[self.player_uid] = tracked_pairs
 end
 
 function UiSkillTracker:default_widget_position(x, y, width, height)

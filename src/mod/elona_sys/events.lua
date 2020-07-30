@@ -98,7 +98,7 @@ local function show_element_text_death(target, source, tense, element)
       Gui.mes_continue_sentence()
       local text = I18N.get_optional("element.death." .. element._id .. ".active", target, source)
       if text then
-         Gui.mes_c(text)
+         Gui.mes_c(text, "Red")
       else
          Gui.mes_c("element.death.elona.default.active", "Red", target, source)
       end
@@ -518,12 +518,14 @@ Event.register("base.on_mef_instantiated", "Connect mef events",
                {priority = 10000})
 
 local function mef_stepped_on_handler(chara, p, result)
+   -- >>>>>>>> shade2/main.hsp:747 	if map(cX(tc),cY(tc),8)!0{ ..
    local mef = Mef.at(chara.x, chara.y, chara:current_map())
    if mef then
       mef:emit("elona_sys.on_mef_stepped_on", {chara=chara})
    end
 
    return result
+   -- <<<<<<<< shade2/main.hsp:770 		} ..
 end
 Event.register("base.on_chara_moved", "Mef stepped on behavior", mef_stepped_on_handler)
 
@@ -539,6 +541,29 @@ local function mef_stepped_off_handler(chara, p, result)
    return result
 end
 Event.register("base.before_chara_moved", "Mef stepped off behavior", mef_stepped_off_handler)
+
+local function update_buffs(chara, p)
+   -- >>>>>>>> shade2/main.hsp:772 	if cBuff(0,cc)!0{ ..
+   local remove = {}
+   for i = #chara.buffs, 1, -1 do
+      local buff = chara.buffs[i]
+      buff.duration = buff.duration - 1
+      if buff.duration <= 0 then
+         remove[#remove+1] = i
+      end
+   end
+
+   for _, idx in ipairs(remove) do
+      local buff = chara.buffs[idx]
+      local buff_data = data["elona_sys.buff"]:ensure(buff._id)
+      if buff_data.on_expire then
+         buff_data.on_expire(buff, chara)
+      end
+      chara:remove_buff(idx)
+   end
+   -- <<<<<<<< shade2/main.hsp:782 		} ..
+end
+Event.register("base.on_chara_moved", "Update character buffs", update_buffs)
 
 local function play_map_music(map)
    local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)

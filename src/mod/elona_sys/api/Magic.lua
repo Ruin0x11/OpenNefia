@@ -151,7 +151,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
          if target == nil then
             return true, {
                no_effect = true,
-               not_obvious = true
+               obvious = false
             }
          end
 
@@ -169,7 +169,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
       if not Map.has_los(caster.x, caster.y, target_location.x, target_location.y) then
          Gui.mes("action.which_direction.cannot_see_location")
          return false, {
-            not_obvious = true,
+            obvious = false,
          }
       end
 
@@ -183,7 +183,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
       if not x then
          Gui.mes("action.which_direction.cannot_see_location")
          return false, {
-            not_obvious = true,
+            obvious = false,
          }
       end
       return true, {
@@ -205,14 +205,14 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
       local target = Action.find_target(caster)
       if target == nil then
          return false, {
-            not_obvious = true,
+            obvious = false,
          }
       end
 
       if target_type == "enemy" and caster:reaction_towards(target) >= 0 then
          if not ElonaAction.prompt_really_attack(caster, target) then
             return false, {
-               not_obvious = true
+               obvious = false
             }
          end
       end
@@ -244,7 +244,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
       if dir == nil then
          Gui.mes("common.it_is_impossible")
          return false, {
-            not_obvious = true
+            obvious = false
          }
       end
 
@@ -344,9 +344,14 @@ function Magic.cast(id, params)
 
    local did_something, result = magic:cast(params)
 
-   Gui.update_screen()
-
    return did_something, result
+end
+
+function Magic.skills_for_magic(magic_id)
+   if magic_id == nil then
+      return nil
+   end
+   return data["base.skill"]:iter():filter(function(s) return s.effect_id == magic_id end):to_list()
 end
 
 return Magic

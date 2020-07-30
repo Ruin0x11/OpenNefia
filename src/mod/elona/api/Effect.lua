@@ -154,6 +154,7 @@ function Effect.apply_general_eating_effect(chara, food)
 end
 
 function Effect.apply_food_curse_state(chara, curse_state)
+   -- >>>>>>>> shade2/chara_func.hsp:1930 	if cExist(c)!cAlive:return ..
    if not Chara.is_alive(chara) then
       return
    end
@@ -169,11 +170,12 @@ function Effect.apply_food_curse_state(chara, curse_state)
          Gui.mes("food.eat_status.good", chara)
       end
       if Rand.one_in(5) then
-         -- TODO buff
+         Effect.add_buff(chara, chara, "elona.lucky", 100, 500 + Rand.rnd(500))
       end
 
-      Effect.damage_insanity(chara, 2)
+      Effect.heal_insanity(chara, 2)
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1941 	return ..
 end
 
 function Effect.vomit(chara)
@@ -675,6 +677,102 @@ function Effect.act_hostile_towards(source, target)
       end
       Chara.iter():filter(function(c) return target.is_livestock end):each(anger)
    end
+end
+
+function Effect.create_new_building(deed)
+   -- >>>>>>>> shade2/map_user.hsp:30 *building_new ..
+   -- TODO
+   return "player_turn_query"
+   -- <<<<<<<< shade2/map_user.hsp:136 	goto *turn_end ..
+end
+
+local function resists_hex(chara, buff_id, power, duration)
+   data["elona_sys.buff"]:ensure(buff_id)
+   local magic_resist = chara:resist_level("elona.magic")
+   local quality = chara:calc("quality")
+
+   -- Buffs sometimes have more than one power component (for example Divine
+   -- Wisdom, which increases both Learning and Magic)
+   if type(power) == "table" then
+      power = power[1]
+   end
+
+   local fixed_duration = duration
+
+   local resists = false
+
+   if magic_resist / 2 > Rand.rnd(power * 2 + 100) then
+      resists = true
+   end
+
+   if power * 3 < magic_resist then
+      resists = true
+   end
+
+   if power / 3 < magic_resist then
+      resists = false
+   end
+
+   if quality > Enum.Quality.Good then
+      if Rand.one_in(4) then
+         resists = true
+      else
+         fixed_duration = duration / 5 + 1
+      end
+   end
+
+   if quality >= Enum.Quality.Great and buff_id == "elona.death_word" then
+      resists = true
+   end
+
+   local buff = chara:get_buff("elona.holy_veil")
+   if buff then
+      if buff.power + 50 > power * 5 / 2 or Rand.rnd(buff.power + 50) > Rand.rnd(power + 1) then
+         Gui.mes("magic.buff.holy_veil_repels")
+         return "done"
+      end
+   end
+
+   return resists, fixed_duration
+end
+
+function Effect.add_buff(target, source, buff_id, power, duration)
+   local buff = data["elona_sys.buff"]:ensure(buff_id)
+
+   if duration <= 0 then
+      return false
+   end
+
+   if target:has_buff(buff_id) then
+      Gui.mes("magic.buff.no_effect")
+      return false
+   end
+
+   local fixed_duration
+
+   if buff.type == "hex" then
+      local resists
+      resists, fixed_duration = resists_hex(target, buff_id, power, duration)
+      if resists == "done" then
+         return false
+      elseif resists then
+         Gui.mes_visible("magic.buff.resists", target)
+         return false
+      end
+
+      if source and source:is_player() then
+         source:act_hostile_towards(target)
+      end
+   else
+      fixed_duration = duration
+   end
+
+   local apply_mes = "buff." .. buff_id .. ".apply"
+
+   Gui.mes_visible(apply_mes, target)
+   target:add_buff(buff_id, power, fixed_duration)
+
+   return true
 end
 
 return Effect

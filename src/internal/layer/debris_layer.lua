@@ -53,6 +53,7 @@ function debris_layer:update(dt, screen_updated)
       local y = math.floor((ind-1) / map:width())
       local sx, sy = Gui.tile_to_screen(x, y)
 
+      -- TODO we shouldn't have to allocate new tables here
       if (d.blood or 0) > 0 then
          blood_parts[#blood_parts+1] = { d.blood, sx, sy }
       end
