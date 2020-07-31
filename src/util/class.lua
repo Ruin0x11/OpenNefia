@@ -488,6 +488,9 @@ function class.hotload(old, new)
          rawset(old, k, v)
       end
 
+      -- BUG: This means when you hotload the class, the "new" function will
+      -- never get updated. We'd have to regenerate another "new" function for
+      -- the class here.
       rawset(old, "new", method_new)
       rawset(old, "__index", method___index)
       rawset(old, "__newindex", method___newindex)

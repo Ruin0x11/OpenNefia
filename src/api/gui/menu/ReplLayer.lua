@@ -459,6 +459,8 @@ function ReplLayer.format_repl_result(result)
    if type(result) == "table" then
       -- HACK: Don't print out unnecessary class fields. In the future
       -- `inspect` should be modified to account for this.
+      local mt = getmetatable(result)
+
       if result.__enum then
          result_text = inspect(result)
       elseif result._type and result._id then
@@ -486,6 +488,8 @@ function ReplLayer.format_repl_result(result)
          end, debug.traceback)
          result_text = rest
          stop = true
+      elseif mt and mt.__tostring then
+         result_text = mt.__tostring(result)
       else
          result_text = inspect(result, {process=remove_all_metatables})
       end

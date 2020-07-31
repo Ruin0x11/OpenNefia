@@ -139,7 +139,14 @@ function env.find_calling_mod(offset)
 end
 
 local LOVE2D_REQUIRES = table.set {
-   "socket"
+   "socket",
+   "socket.http",
+   "socket.https",
+   "ltn12",
+}
+
+local NATIVE_REQUIRES = table.set {
+   "vips",
 }
 
 local global_require = require
@@ -169,7 +176,11 @@ local function get_require_path(path, mod_env)
          return path, true -- return the original path
       end
 
-      if path == "ffi" then
+      if NATIVE_REQUIRES[path] then
+         return path, true
+      end
+
+      if not mod_env and path == "ffi" then
          return path, true
       end
    end
@@ -257,19 +268,15 @@ function env.load_sandboxed_chunk(path, mod_name)
    return env_dofile(path, mod_env)
 end
 
--- list of require paths that are allowed in mods.
-local THIRDPARTY_REQUIRES = table.set {
-   "socket"
-}
 
 local function get_load_type(path)
    if string.match(path, "^api%.") or string.match(path, "^thirdparty%.") then
       return "api"
    elseif path_is_in_mod(path) then
       return "mod"
-   elseif THIRDPARTY_REQUIRES[path] then
+   elseif LOVE2D_REQUIRES[path] then
       return "thirdparty"
-   elseif package.searchpath(path, package.cpath) then
+   elseif NATIVE_REQUIRES[path] or package.searchpath(path, package.cpath) then
       return "native"
    end
 
@@ -342,7 +349,7 @@ local function gen_require(chunk_loader, can_load_path)
 
       if can_load_path and not can_load_path(req_path) then
          LOADING_STACK[#LOADING_STACK] = nil
-         return nil
+         error(("cannot load path '%s'"):format(req_path))
       end
 
       if LOADING[req_path] then

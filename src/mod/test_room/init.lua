@@ -23,6 +23,10 @@ end
 local function mkarea(map)
    local floors = {}
 
+   local my_area = Area.for_map(map)
+   assert(my_area)
+   my_area.image = "elona.item_carrot"
+
    local area = InstancedArea:new("elona.feat_area_castle")
 
    for i = 1, 10 do
@@ -35,14 +39,12 @@ local function mkarea(map)
       local next_floor = floors[i+1]
 
       if prev_floor then
-         -- TODO why is this neccessary?
          local stairs = assert(Feat.create("elona.stairs_down", 8, 13, {}, prev_floor))
          stairs.area_uid = area.uid
          stairs.area_floor = i
       end
 
       if next_floor then
-         -- TODO why is this neccessary?
          local stairs = assert(Feat.create("elona.stairs_up", 12, 19, {}, next_floor))
          stairs.area_uid = area.uid
          stairs.area_floor = i
@@ -51,18 +53,15 @@ local function mkarea(map)
 
    for floor_number, floor in ipairs(floors) do
       area:add_floor(floor, floor_number)
+      if floor_number == 1 then
+         assert(Area.create_entrance(my_area, 5, 5, {}, floor))
+      end
       Map.save(floor)
    end
 
    Area.register(area)
 
-   Map.save(map)
-
-   local my_area = Area.for_map(map)
-   assert(my_area)
-
    assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), {}, map))
-   assert(Area.create_entrance(my_area, math.floor(floors[1]:width()/2), math.floor(floors[1]:height()/2), {}, floors[1]))
 end
 
 local function test_room(self, player)
@@ -83,6 +82,7 @@ local function test_room(self, player)
    -- local map = Elona122Map.generate("palmia")
    local map = make_map(50, 50)
    local tx, ty = 22, 22
+   Map.save(map)
 
    for _, x, y in map:iter_tiles() do
       map:memorize_tile(x, y)
