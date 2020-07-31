@@ -503,7 +503,7 @@ return {
             description = "Breath(Nether)",
             name = "Nether Breath"
          },
-         nightmare = {
+         buff_nightmare = {
             name = "Nightmare"
          },
          spell_oracle = {

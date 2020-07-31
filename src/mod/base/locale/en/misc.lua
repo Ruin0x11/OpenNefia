@@ -199,7 +199,7 @@ return {
          air_becomes_charged = "The air around you becomes charged.",
          forbidden = "Returning while taking a quest is forbidden. Are you sure you want to return?",
          lord_of_dungeon_might_disappear = "The lord of the dungeon might disappear if you escape now.",
-         no_location = "You don't know any location you can return to",
+         no_location = "You don't know any location you can return to.",
          where_do_you_want_to_go = "Where do you want to go?"
       },
       save = {

@@ -59,7 +59,7 @@ local function mkarea(map)
       Map.save(floor)
    end
 
-   Area.register(area)
+   Area.register(area, { parent = my_area })
 
    assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), {}, map))
 end
@@ -80,8 +80,11 @@ local function test_room(self, player)
    player.title = Text.random_title()
 
    -- local map = Elona122Map.generate("palmia")
+   local root = InstancedArea:new()
    local map = make_map(50, 50)
    local tx, ty = 22, 22
+   root:add_floor(map)
+   Area.register(root, { parent = "root" })
    Map.save(map)
 
    for _, x, y in map:iter_tiles() do

@@ -488,8 +488,6 @@ function ReplLayer.format_repl_result(result)
          end, debug.traceback)
          result_text = rest
          stop = true
-      elseif mt and mt.__tostring then
-         result_text = mt.__tostring(result)
       else
          result_text = inspect(result, {process=remove_all_metatables})
       end

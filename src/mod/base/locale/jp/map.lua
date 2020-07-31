@@ -86,6 +86,7 @@ end,
     you_see_an_entrance = function(_1, _2)
   return ("%sへの入り口がある(入り口の危険度は%s階相当)。")
   :format(_1, _2)
-end
+end,
+    default_name = "新規マップ"
   }
 }

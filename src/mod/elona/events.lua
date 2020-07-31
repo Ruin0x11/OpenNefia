@@ -16,6 +16,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Magic = require("mod.elona_sys.api.Magic")
+local Input = require("api.Input")
 
 --
 --
@@ -813,13 +814,13 @@ local function proc_return(chara)
 
          Gui.play_sound("base.teleport1")
          Gui.mes("magic.return.door_opens")
-         -- TODO
-         Gui.mes_halt()
          Gui.update_screen()
+         Input.query_more()
          local map_uid = s.return_destination_map_uid
          s.return_destination_map_uid = nil
 
-         Map.travel_to(map_uid)
+         local _, new_map = assert(Map.load(map_uid))
+         Map.travel_to(new_map)
       end
    end
 end

@@ -11,6 +11,8 @@ function InstancedArea:init(image, area_generator, uids)
    self.image = image or nil
    self.area_generator = area_generator or nil
    self.metadata = {}
+   self.name = nil
+   self.parent_area = nil
 end
 
 function InstancedArea:add_floor(map, floor)
@@ -22,6 +24,7 @@ function InstancedArea:add_floor(map, floor)
       error(("Map already registered in area '%d'"):format(map.area_uid))
    end
    self.maps[floor] = { uid = map.uid }
+   self.name = self.name or map.name
    map.area_uid = self.uid
 end
 

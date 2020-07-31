@@ -83,6 +83,7 @@ end,
     you_see_an_entrance = function(_1, _2)
   return ("You see an entrance leading to %s.(Approximate danger level: %s) ")
   :format(_1, _2)
-end
+end,
+    default_name = "New Map"
   }
 }

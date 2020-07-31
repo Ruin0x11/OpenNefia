@@ -8,6 +8,7 @@ local IModdable = require("api.IModdable")
 local Draw = require("api.Draw")
 local ILocation = require("api.ILocation")
 local ITypedLocation = require("api.ITypedLocation")
+local I18N = require("api.I18N")
 
 local InstancedMap = class.class("InstancedMap", { ITypedLocation, IModdable, IEventEmitter })
 
@@ -103,6 +104,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._memorized = {}
 
    self.default_tile = "base.floor"
+   self.name = I18N.get("map.default_name")
 
    self:init_map_data()
 

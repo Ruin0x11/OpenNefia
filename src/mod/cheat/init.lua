@@ -18,7 +18,7 @@ local function level_up()
 
    data["base.skill"]:iter()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 100, 1)
+            Skill.gain_skill(player, m._id, 100, 1000)
            end)
 
    Skill.gain_skill(player, "elona.mining", 10000)

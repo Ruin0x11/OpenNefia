@@ -256,16 +256,17 @@ data:add {
          Gui.mes("magic.return.cancel")
          s.turns_until_cast_return = 0
       else
-         local map_uid = Effect.query_return_location(target)
-
          -- TODO quest
-         -- TODO dungeon boss
+
+         local map_uid = Effect.query_return_location(target)
 
          if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then
             Gui.mes("TODO jail") -- TODO
          end
 
          if map_uid then
+            Gui.mes("misc.return.air_becomes_charged")
+            -- TODO dungeon boss
             s.return_destination_map_uid = map_uid
             s.turns_until_cast_return = 15 + Rand.rnd(15)
          end

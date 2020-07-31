@@ -12,6 +12,7 @@ local Map = require("api.Map")
 local Input = require("api.Input")
 local Enum = require("api.Enum")
 local IChara = require("api.chara.IChara")
+local Area = require("api.Area")
 
 local Effect = {}
 
@@ -525,22 +526,31 @@ function Effect.query_return_location(chara)
       end
    end
 
-   local outer_map = Map.world_map_containing(chara:current_map())
-   assert(outer_map)
-
-   local to_prompt = function(map_entrance)
-      return {
-         text = "name"
-      }
-   end
-
-   error("TODO")
    local maps = {}
 
+   local map = chara:current_map()
+   local outer_area = Area.parent(map)
+   if outer_area then
+      maps = Area.iter_children(outer_area)
+         :filter(function(uid, area) return area.metadata.can_return_to end)
+         :map(function(uid, area)
+               return {
+                  text = area.name,
+                  map_uid = area:starting_floor()
+               }
+             end)
+         :to_list()
+   end
+
+   if #maps == 0 then
+      Gui.mes("misc.return.no_location")
+      return nil
+   end
+
+   Gui.mes("misc.return.where_do_you_want_to_go")
    local result, canceled = Input.prompt(maps)
 
    if canceled then
-      Gui.mes("misc.return.no_location")
       return nil
    end
 
