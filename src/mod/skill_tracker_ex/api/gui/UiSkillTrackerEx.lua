@@ -62,7 +62,9 @@ function UiSkillTrackerEx:relayout(x, y)
    self.text_height = Draw.text_height()
    self.gradient = ColorBand:new(COLORS)
    self.exp_gradient = ColorBand:new(EXP_COLORS)
-   self.log_widget:relayout(self.x, self.y + self.text_height * table.count(self.tracked_skill_ids[self.player_uid]) + 10, self.y, 200, 200)
+   if self.player_uid and self.tracked_skill_ids[self.player_uid] then
+      self.log_widget:relayout(self.x, self.y + self.text_height * table.count(self.tracked_skill_ids[self.player_uid]) + 10, self.y, 200, 200)
+   end
 end
 
 function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount)

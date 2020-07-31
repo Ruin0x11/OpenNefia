@@ -13,8 +13,32 @@ local DeathMenu = class.class("DeathMenu", IUiLayer)
 
 DeathMenu:delegate("input", IInput)
 
-function DeathMenu:init(data)
-   self.data = data
+local function build_death_desc(bone)
+   local desc = ("%s %s %s "):format(bone.title, bone.name, bone.last_words)
+   desc = ("%-60s"):format(desc)
+   desc = desc .. I18N.get("misc.death.date", bone.date.year, bone.date.month, bone.date.day)
+
+   local cause = I18N.get("misc.death.you_died", bone.death_cause, bone.map_name)
+
+   return desc, cause
+end
+
+function DeathMenu:init(bones, this_bone)
+   self.this_bone_idx = fun.iter(bones):index(this_bone)
+   assert(self.this_bone_idx)
+
+   local function map(bone)
+      local desc, cause = build_death_desc(bone)
+      return {
+         description = desc,
+         death_cause = cause,
+         image = bone.image,
+         color = bone.color,
+         score = bone.score
+      }
+   end
+   self.bones = fun.iter(bones):take(8):map(map):to_list()
+
    self.caption = CharaMakeCaption:new("misc.death.you_are_about_to_be_buried")
    self.prompt = Prompt:new({"misc.death.crawl_up", "misc.death.lie_on_your_back"}, 240)
 
@@ -50,38 +74,31 @@ function DeathMenu:draw()
    local x = 135
    local y = 134
    Draw.set_font(14) -- 14 - en * 2
-   local p = #self.data - 4
-   if p >= 80 then
-      p = 72
-   elseif p < 0 then
-      p = 0
-   end
 
    Draw.set_color(138, 131, 100)
-   for i = p+1, p + 8 do
-      local p = i * 4
+   for i = 1, 8 do
       y = y + 46
 
       local text
-      if i == #self.data then
+      if i == self.this_bone_idx then
          text = "New!"
       else
-         text = I18N.get("misc.score.rank", i + 1)
+         text = I18N.get("misc.score.rank", i)
       end
 
-      Draw.text(text, x - 80, y + 10, {10, 10, 10})
+      Draw.set_color(10, 10, 10)
 
-      local no_entry = i > #self.data
+      Draw.text(text, x - 80, y + 10)
+
+      local no_entry = i > #self.bones
       if no_entry then
-         Draw.text("no_entry", x, y, {10, 10, 10})
+         Draw.text("no_entry", x, y)
       else
-         Draw.text(self.data[i].last_words, x, y, {10, 10, 10})
-
-         Draw.text(self.data[i].death_cause, x, y + 20, {10, 10, 10})
-
-         Draw.text(I18N.get("misc.score.score", 9999), x + 480, y + 20)
-
-         self.chip_batch:add(self.data[i].image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
+         local bone = self.bones[i]
+         Draw.text(bone.description, x, y)
+         Draw.text(bone.death_cause, x, y + 20)
+         Draw.text(I18N.get("misc.score.score", bone.score), x + 480, y + 20)
+         self.chip_batch:add(bone.image, x - 22, y + 12, nil, nil, {255, 255, 255}, true)
       end
    end
 

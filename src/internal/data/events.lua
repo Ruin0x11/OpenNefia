@@ -187,6 +187,9 @@ local function init_save()
    s.map_registry = {}
    s.containers = {}
    s.tracked_skill_ids = {}
+   s.bones = {}
+   s.total_killed = 0
+   s.total_deaths = 0
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

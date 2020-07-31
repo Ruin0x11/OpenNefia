@@ -82,7 +82,9 @@ data:add {
       end
       local damage = Rand.rnd(self.power / 25 + 5) + 1
       chara:damage_hp(damage, "elona.mef_acid", { element = "elona.acid", element_power = self.power })
-      -- TODO check_kill
+      if not Chara.is_alive(chara) then
+         Effect.on_kill(self.origin, chara)
+      end
    end,
 }
 
@@ -149,7 +151,9 @@ data:add {
       end
       local damage = Rand.rnd(self.power / 15 + 5) + 1
       chara:damage_hp(damage, "elona.mef_fire", { element = "elona.fire", element_power = self.power })
-      -- TODO check_kill
+      if not Chara.is_alive(chara) then
+         Effect.on_kill(self.origin, chara)
+      end
    end,
 
    events = {
@@ -213,7 +217,9 @@ data:add {
          Log.warn("Potion mef '%s' missing 'on_drink' callback", self.item_id)
       end
 
-      -- TODO check_kill
+      if not Chara.is_alive(chara) then
+         Effect.on_kill(self.origin, chara)
+      end
 
       self:remove_ownership()
    end,

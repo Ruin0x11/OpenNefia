@@ -117,4 +117,19 @@ function World.time_to_text(hour)
    return I18N.get_optional("ui.time._" .. idx) or ""
 end
 
+-- TODO move
+function World.calc_score()
+   local Chara = require("api.Chara")
+   local chara = Chara.player()
+   local deepest = save.base.deepest_level
+   local score = chara.level * chara.level + deepest * deepest + save.base.total_killed
+   if save.base.total_deaths > 1 then
+      score = math.floor(score / 10 + 1)
+   end
+   if save.base.is_wizard then
+      score = 0
+   end
+   return score
+end
+
 return World

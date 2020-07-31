@@ -97,7 +97,7 @@ function field_logic.turn_begin()
    if not Chara.is_alive(player) then
       -- NOTE: should be an internal event, separate from ones that
       -- event callbacks may return.
-      return "player_died"
+      return "player_died", player
    end
 
    -- In Elona, the player always goes first at the start of each
@@ -266,7 +266,7 @@ function field_logic.player_turn_query()
 
    local player = Chara.player()
    if not Chara.is_alive(player) then
-      return "player_died"
+      return "player_died", player
    end
 
    Gui.update_screen(dt)
@@ -346,26 +346,61 @@ local function revive_player()
    Map.travel_to(map)
 end
 
-function field_logic.player_died()
+function field_logic.player_died(player)
    Gui.play_sound("base.dead1")
    Gui.mes("misc.death.good_bye")
    Gui.mes("misc.death.you_leave_dying_message")
    Gui.update_screen()
 
    local last_words = Input.query_text(16, true)
-   if last_words == nil then
-      last_words = I18N.get("system.last_words")
+   if last_words == nil or last_words == "" then
+      last_words = I18N.get("misc.death.dying_message", "system.last_words")
    else
       last_words = I18N.get("misc.death.dying_message", last_words)
    end
 
-   local result, canceled = DeathMenu:new({
-         {
-            last_words = last_words,
-            death_cause = "death cause",
-            image = Chara.player():calc("image")
-         }
-   }):query()
+   local bones = save.base.bones
+
+   --[[
+   {
+      title = "Elegant crimson",
+      name = "Xero",
+      last_words = "\"Gee, that smarts!\"",
+      date = DateTime:new(),
+      death_cause = "died from loss of blood",
+      map_name = "Lesimas",
+      score = 9999,
+      image = "elona.human_male",
+      color = {255, 255, 255}
+   }
+   --]]
+
+   local map = Map.current()
+
+   local bone = {
+      title = player.title,
+      name = player.name,
+      last_words = last_words,
+      date = table.deepcopy(save.base.date),
+      death_cause = "TODO",
+      map_name = map.name,
+      score = World.calc_score(),
+      image = player.image,
+      color = player.color or {255, 255, 255}
+   }
+
+   local MAX_BONES = 80
+   if #bones > MAX_BONES then
+      -- Remove lowest scoring record.
+      bones[#bones] = bone
+   else
+      bones[#bones+1] = bone
+   end
+
+   table.sort(bones, function(a, b) return a.score > b.score end)
+   save.base.bones = bones
+
+   local result, canceled = DeathMenu:new(bones, bone):query()
    if canceled or result.index == 1 then
       revive_player()
       return "turn_begin"

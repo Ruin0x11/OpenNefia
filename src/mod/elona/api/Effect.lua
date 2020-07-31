@@ -12,6 +12,7 @@ local Event = require("api.Event")
 local Map = require("api.Map")
 local Input = require("api.Input")
 local Enum = require("api.Enum")
+local IChara = require("api.chara.IChara")
 
 local Effect = {}
 
@@ -773,6 +774,18 @@ function Effect.add_buff(target, source, buff_id, power, duration)
    target:add_buff(buff_id, power, fixed_duration)
 
    return true
+end
+
+function Effect.on_kill(attacker, victim)
+   -- >>>>>>>> shade2/chara_func.hsp:1121 #deffunc check_kill int cc,int tc ..
+   -- TODO arena
+
+   if class.is_an(IChara, attacker) then
+      if attacker:is_allied() then
+         save.base.total_killed = save.base.total_killed + 1
+      end
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1146 	return ..
 end
 
 return Effect

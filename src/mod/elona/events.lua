@@ -446,7 +446,23 @@ Event.register("base.on_object_cloned", "npc memory",
                end)
 Event.register("base.on_kill_chara", "npc memory",
                function(victim, params)
-                  NpcMemory.on_killed(victim._id)
+                  -- >>>>>>>> shade2/chara_func.hsp:1685 		if tc=pc : gDeath++	 ..
+                  if victim:is_player() then
+                     save.base.total_deaths = save.base.total_deaths + 1
+                  end
+                  -- <<<<<<<< shade2/chara_func.hsp:1685 		if tc=pc : gDeath++	 ..
+                  -- >>>>>>>> shade2/chara_func.hsp:1726 		if tc!pc{ ..
+                  if not victim:is_player() then
+                     NpcMemory.on_killed(victim._id)
+                     -- TODO custom talk
+                     if victim:is_allied() then
+                        Gui.mes("damage.you_feel_sad")
+                     end
+                  end
+                  Effect.on_kill(params.source, victim)
+                  -- TODO riding
+                  -- TODO crowd
+                  -- <<<<<<<< shade2/chara_func.hsp:1735 		check_kill dmgSource,tc ..
                end)
 Event.register("base.on_map_leave", "npc memory",
                function(map)

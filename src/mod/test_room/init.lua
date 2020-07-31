@@ -5,6 +5,7 @@ local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local Skill = require("mod.elona_sys.api.Skill")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
+local Text = require("mod.elona.api.Text")
 
 local function make_map(width, height)
    local map = InstancedMap:new(width, height)
@@ -29,6 +30,8 @@ local function test_room(self, player)
    Item.create("elona.stomafillia", nil, nil, {}, player)
 
    player:heal_to_max()
+
+   player.title = Text.random_title()
 
    -- local map = Elona122Map.generate("palmia")
    local map = make_map(50, 50)
