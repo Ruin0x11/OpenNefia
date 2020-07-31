@@ -1057,7 +1057,6 @@ local function do_recharge(source, item, power)
       return true
    end
 
-   pause()
    if item.charges > charge_level then
       Gui.mes("magic.fill_charge.cannot_recharge_anymore", item)
       return true

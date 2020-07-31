@@ -19,6 +19,7 @@ local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Magic = require("mod.elona_sys.api.Magic")
 local I18N = require("api.I18N")
 local ExHelp = require("mod.elona.api.ExHelp")
+local Area = require("api.Area")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -415,4 +416,61 @@ data:add {
       self:remove_ownership()
       params.chara:damage_hp(100+Rand.rnd(200), "elona.trap")
    end,
+}
+
+local function travel2(self, params)
+   local chara = params.chara
+   if not chara:is_player() then return end
+
+   Gui.play_sound("base.exitmap1")
+
+   local area = Area.get(self.area_uid)
+   if area == nil then
+      Log.error("Missing area with UID '%d'", self.area_uid)
+      return "player_turn_query"
+   end
+
+   local ok, map = area:load_floor(self.area_floor)
+   if not ok then
+      error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.area_floor, area.uid, map))
+      return "player_turn_query"
+   end
+
+   local travel_params = {
+      feat = self,
+      start_pos = nil -- TODO
+   }
+
+   Map.travel_to(map, travel_params)
+
+   return "player_turn_query"
+end
+
+data:add {
+   _type = "base.feat",
+   _id = "stairs_2",
+
+   image = "elona.feat_stairs_down",
+   is_solid = false,
+   is_opaque = false,
+
+   params = {
+      area_uid = "number",
+      area_floor = "number"
+   },
+
+   on_refresh = function(self)
+      self:mod("can_activate", true)
+   end,
+
+   on_stepped_on = function(self, params)
+      Gui.mes_c(("This leads to: %s %s"):format(self.area_uid, self.area_floor))
+   end,
+
+   on_activate = travel2,
+
+   on_descend = function(self, params)
+      Gui.mes("Descending!")
+      self:on_activate(params.chara)
+   end
 }

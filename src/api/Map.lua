@@ -20,6 +20,8 @@ local World = require("api.World")
 local I18N = require("api.I18N")
 local save = require("internal.global.save")
 local map_template = require("internal.map_template")
+local Area = require("api.Area")
+local InstancedArea = require("api.InstancedArea")
 
 local Map = {}
 
@@ -72,7 +74,32 @@ function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
    Log.info("Saving map %d to %s", map.uid, path)
-   return SaveFs.write(path, map)
+
+   local ok, err = SaveFs.write(path, map)
+   if not ok then
+      return ok, err
+   end
+
+   if map.area_uid == nil then
+      Log.warn("Autogenerating new area for map '%d'", map.uid)
+      local area = InstancedArea:new()
+      area:add_floor(map)
+      Area.register(area)
+   end
+
+   return ok, err
+end
+
+function Map.is_saved(map_or_uid)
+   local uid
+   if class.is_an(InstancedMap, map_or_uid) then
+      uid = map_or_uid.uid
+   else
+      uid = map_or_uid
+   end
+   assert(type(uid) == "number")
+   local path = Fs.join("map", tostring(uid))
+   return SaveFs.exists(path)
 end
 
 local function run_generator_load_callback(map)
@@ -327,8 +354,6 @@ function Map.calc_start_position(map, previous_map, feat, start_pos)
          .pos(map, previous_map, feat)
    elseif type(start_pos) == "function" then
       x, y = start_pos(map, previous_map, feat)
-   else
-      error("invalid map start pos: " .. tostring(start_pos))
    end
 
    return x, y
@@ -651,27 +676,16 @@ end
 --- different map. This is the recommended function to call to
 --- transport the player to another map.
 ---
---- @tparam InstancedMap|uid:InstancedMap map_or_uid
+--- @tparam InstancedMap map
 --- @tparam[opt] table params Extra parameters.
 ---   - feat (IFeat): feat used to travel to this map, like stairs.
 ---   - start_pos ({x=uint,y=uint}|base.map_entrance|function):
 ---     logic to run to determine the start position on the map. Can
 ---     be a table of coordinates, an ID of a base.map_entrance entry,
 ---     or a function that returns a table of {x,y}.
-function Map.travel_to(map_or_uid, params)
+function Map.travel_to(map, params)
    params = params or {}
-
-   local success, map
-   if type(map_or_uid) == "number" then
-      local uid = map_or_uid
-      success, map = Map.load(uid)
-      if not success then
-         error(string.format("Error loading map %d: %s", uid, map))
-      end
-   else
-      class.assert_is_an(InstancedMap, map_or_uid)
-      map = map_or_uid
-   end
+   class.assert_is_an(InstancedMap, map)
 
    local current = field.map
    Log.info("Traveling: %d -> %d", current.uid, map.uid)
@@ -692,7 +706,11 @@ function Map.travel_to(map_or_uid, params)
                                         start_pos)
 
    Log.warn("Start position: %s %s (%s)", x, y, inspect(start_pos))
-   assert(x and y)
+   if not (x and y) then
+      Log.error("Map does not declare a start position. Defaulting to the center of the map.")
+      x = math.floor(map:width() / 2)
+      y = math.floor(map:height() / 2)
+   end
 
    -- take the player, allies and any items they carry.
    --
@@ -708,8 +726,8 @@ function Map.travel_to(map_or_uid, params)
    player:remove_activity()
    player:reset_ai()
 
-   success = Map.try_place_chara(player, x, y, map)
-   assert(success)
+   local success = Map.try_place_chara(player, x, y, map)
+   assert(success, "Could not place player in map")
 
    for _, uid in ipairs(allies) do
       -- TODO: try to find a place to put the ally. If they can't fit,

@@ -390,7 +390,7 @@ function field_logic.player_died(player)
    }
 
    local MAX_BONES = 80
-   if #bones > MAX_BONES then
+   if #bones >= MAX_BONES then
       -- Remove lowest scoring record.
       bones[#bones] = bone
    else

@@ -175,11 +175,11 @@ local function init_save()
    s.play_time = 0
    s.play_turns = 0
    s.play_days = 0
-   s.area_mapping = area_mapping:new()
    s.player = nil
    s.allies = {}
    s.uids = uid_tracker:new()
    s.map_uids = uid_tracker:new()
+   s.area_uids = uid_tracker:new()
    s.random_seed = Rand.rnd(800) + 2
    s.shadow = 70
    s.has_light_source = false
@@ -190,6 +190,10 @@ local function init_save()
    s.bones = {}
    s.total_killed = 0
    s.total_deaths = 0
+   s.areas = {}
+
+   -- TODO remove
+   s.area_mapping = area_mapping:new()
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

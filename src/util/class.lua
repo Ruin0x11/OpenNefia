@@ -306,6 +306,10 @@ function class.class(name, ifaces, opts)
          return
       end
 
+      if k == "new" then
+         error("Cannot overwrite 'new' method")
+      end
+
       local field_name = d[k]
       if field_name then
          local going = true

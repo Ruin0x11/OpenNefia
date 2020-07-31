@@ -10,19 +10,15 @@ files["scratch/**/*.lua"].ignore = {
 
 globals = {
    "require",
-   "data",
-   "config",
    "mobdebug",
    "_CONSOLE",
    "_DEBUG",
    "_IS_LOVEJS",
-   "_MOD_NAME",
    "love",
    "class",
    "inspect",
    "fun",
    "_ppr",
-   "save",
    "utf8",
    "help",
    "pause",
@@ -42,6 +38,15 @@ globals = {
          "unpack"
       }
    },
+}
+
+files["mod/**/*.lua"] = {
+   globals = {
+      "data",
+      "save",
+      "config",
+      "_MOD_NAME",
+   }
 }
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}
