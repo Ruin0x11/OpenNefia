@@ -333,7 +333,11 @@ local item = {
   },
   bill = {
     name = "bill",
-    unidentified_name = "lousy paper"
+    unidentified_name = "lousy paper",
+
+    title = function(amount)
+       return ("<%s gp>"):format(amount)
+    end
   },
   black_board = {
     desc = {

@@ -350,10 +350,6 @@ function Effect.do_identify_item(item, level)
       return false, "unidentified"
    end
 
-   if old >= Enum.IdentifyState.Name then
-      ItemMemory.set_known(item, true)
-   end
-
    return true, level
 end
 
@@ -361,6 +357,10 @@ function Effect.identify_item(item, level)
    local do_change_level, new_level = Effect.do_identify_item(item, level)
    if do_change_level then
       item.identify_state = level
+
+      if level >= Enum.IdentifyState.Name then
+         ItemMemory.set_known(item._id, true)
+      end
    end
    return do_change_level, new_level
 end

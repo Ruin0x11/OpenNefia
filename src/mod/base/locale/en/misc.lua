@@ -88,7 +88,7 @@ return {
                :format(name(_1), is(_1))
          end,
          mana_is_absorbed = function(_1)
-            return ("%s mana is absorbed.")
+            return ("%s%s mana is absorbed.")
                :format(name(_1), his_owned(_1))
          end,
          too_difficult = "It's too difficult!"

@@ -8,6 +8,7 @@ local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Skill = require("mod.elona_sys.api.Skill")
+local ItemFunction = require("mod.elona.api.ItemFunction")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -644,7 +645,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.teleport", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_teleport", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -672,7 +673,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.identify", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_identify", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -700,7 +701,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.uncurse", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_uncurse", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -932,7 +933,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.ice_bolt", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_ice_bolt", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -959,7 +960,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.fire_bolt", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_fire_bolt", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -986,7 +987,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.lightning_bolt", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_lightning_bolt", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -2606,7 +2607,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.dimensional_move", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_dimensional_move", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -2651,7 +2652,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.summon_monsters", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_summon_monsters", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -3676,7 +3677,7 @@ local item =
         color = "Random",
 
         on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_speed_down", 100, params)
+            return Magic.zap_wand(self, "elona.buff_slow", 100, params)
         end,
         on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -5196,7 +5197,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.magic_map", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_magic_map", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5225,7 +5226,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.oracle", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_oracle", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -5254,7 +5255,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.return", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_return", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5281,7 +5282,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.heal_light", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_heal_light", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -5309,7 +5310,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.heal_critical", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_heal_critical", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5338,7 +5339,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.cure_of_eris", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_cure_of_eris", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5367,7 +5368,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.cure_of_jure", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_cure_of_jure", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -5468,7 +5469,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.magic_dart", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_magic_dart", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -5597,7 +5598,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.nether_arrow", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_nether_arrow", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5626,7 +5627,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.chaos_eye", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_chaos_eye", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5654,7 +5655,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.nerve_arrow", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_nerve_arrow", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -5706,7 +5707,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.darkness_bolt", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_darkness_bolt", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5734,7 +5735,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.mind_bolt", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_mind_bolt", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5762,7 +5763,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.ice_ball", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_ice_ball", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5790,7 +5791,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.fire_ball", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_fire_ball", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5819,7 +5820,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.raging_roar", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_raging_roar", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -5848,7 +5849,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.chaos_ball", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_chaos_ball", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -6142,12 +6143,13 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.wish", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_wish", params)
         end,
         on_init_params = function(self)
             self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
         end,
         has_charge = true,
+        can_be_recharged = false,
 
         elona_type = "book",
         categories = {
@@ -6175,6 +6177,7 @@ local item =
             self.charges = 1 + Rand.rnd(1) - Rand.rnd(1)
         end,
         has_charge = true,
+        can_be_recharged = false,
 
         is_zap_always_successful = true,
 
@@ -7625,7 +7628,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_holy_shield", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_holy_shield", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -7653,7 +7656,7 @@ local item =
         color = "Random",
 
         on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_daze", 100, params)
+            return Magic.zap_wand(self, "elona.buff_mist_of_silence", 100, params)
         end,
         on_init_params = function(self)
             self.charges = 7 + Rand.rnd(7) - Rand.rnd(7)
@@ -7681,7 +7684,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_daze", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_mist_of_silence", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -7733,7 +7736,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_regeneration", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_regeneration", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -7783,7 +7786,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_elemental_shield", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_elemental_shield", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -7833,7 +7836,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_speed_up", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_speed", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -7862,7 +7865,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_speed_down", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_slow", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -7934,7 +7937,7 @@ local item =
         color = "Random",
 
         on_zap = function(self, params)
-            return Magic.zap_wand(self, "elona.buff_speed_up", 100, params)
+            return Magic.zap_wand(self, "elona.buff_speed", 100, params)
         end,
         on_init_params = function(self)
             self.charges = 8 + Rand.rnd(8) - Rand.rnd(8)
@@ -7961,7 +7964,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_hero", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_hero", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -8009,7 +8012,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_weak_armor", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_mist_of_frailness", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8038,7 +8041,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_weak_ele", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_element_scar", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8090,7 +8093,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_holy_veil", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_holy_veil", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8170,7 +8173,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.holy_light", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_holy_light", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8199,7 +8202,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.vanquish_hex", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_vanquish_hex", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -8399,7 +8402,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_nightmare", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_nightmare", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -8428,7 +8431,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_knowledge", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_divine_wisdom", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -8448,7 +8451,7 @@ local item =
         value = 1800,
         weight = 20,
         on_read = function(self, params)
-            return Magic.read_scroll(self, {{ _id = "elona.buff_knowledge", power = 250 }}, params)
+            return Magic.read_scroll(self, {{ _id = "elona.buff_divine_wisdom", power = 250 }}, params)
         end,
         level = 3,
         category = 53000,
@@ -8663,7 +8666,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.sense_object", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_sense_object", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -9322,7 +9325,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.mutation", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_mutation", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -10261,7 +10264,7 @@ local item =
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
         end,
         has_charge = true,
-
+        can_be_recharged = false,
 
         tags = { "noshop" },
         color = "Random",
@@ -10288,7 +10291,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.dominate", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_dominate", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -10368,7 +10371,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.web", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_web", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -11726,7 +11729,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.wall_creation", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_wall_creation", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -11777,7 +11780,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.healing_rain", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_healing_rain", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -11832,7 +11835,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.healing_touch", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_healing_touch", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12167,7 +12170,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.acid_ground", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_acid_ground", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12291,7 +12294,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.fire_wall", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_fire_wall", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -12627,7 +12630,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.door_creation", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_door_creation", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -13190,7 +13193,7 @@ local item =
         medal_value = 5,
 
         params = {
-            bill_gold_amount = 0
+            bill_amount_gold = 0
         },
 
         categories = {
@@ -13523,7 +13526,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_incognito", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_incognito", params)
         end,
         on_init_params = function(self)
             self.charges = 4 + Rand.rnd(4) - Rand.rnd(4)
@@ -14124,7 +14127,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.dark_eye", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_dark_eye", params)
         end,
         on_init_params = function(self)
             self.charges = 5 + Rand.rnd(5) - Rand.rnd(5)
@@ -14902,8 +14905,12 @@ local item =
 
         params = {
             ancient_book_difficulty = 0,
-            ancient_book_is_deciphered = false,
+            ancient_book_is_decoded = false,
         },
+
+        on_read = function(self, params)
+           return ItemFunction.read_ancient_book(self, params)
+        end,
 
         on_init_params = function(self, params)
             -- >>>>>>>> shade2/item.hsp:30 	#define global maxMageBook 14 ..
@@ -14912,6 +14919,9 @@ local item =
             -- >>>>>>>> shade2/item.hsp:673 	if iId(ci)=idMageBook{ ..
             local object_level = params.level
             self.params.ancient_book_difficulty = Rand.rnd(Rand.rnd(math.floor(math.clamp(object_level / 2, 0, MAX_LEVEL))) + 1)
+            self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
+            self.has_charges = true
+            self.can_be_recharged = false
             -- <<<<<<<< shade2/item.hsp:675 		} ..
         end,
 
@@ -15116,7 +15126,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.magic_storm", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_magic_storm", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -15145,7 +15155,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.crystal_spear", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_crystal_spear", params)
         end,
         on_init_params = function(self)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
@@ -15430,7 +15440,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.buff_contingency", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.buff_contingency", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -16041,7 +16051,7 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.four_dimensional_power", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_four_dimensional_power", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
@@ -16070,12 +16080,13 @@ local item =
         color = "Random",
 
         on_read = function(self, params)
-            return Magic.read_spellbook(self, {{ _id = "elona.wizards_harvest", power = 100 }}, params)
+            return Magic.read_spellbook(self, "elona.spell_wizards_harvest", params)
         end,
         on_init_params = function(self)
             self.charges = 3 + Rand.rnd(3) - Rand.rnd(3)
         end,
         has_charge = true,
+        can_be_recharged = false,
 
         elona_type = "book",
         categories = {

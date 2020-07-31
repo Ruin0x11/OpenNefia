@@ -182,7 +182,7 @@ end,
 end,
       start = function(_1, _2)
   return ("%s start%s to read %s.")
-  :format(name(_1), s(_1), itemname(_2, 1))
+  :format(name(_1), s(_1), _2)
 end
     },
     rest = {

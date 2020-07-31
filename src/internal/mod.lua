@@ -4,13 +4,13 @@ local paths = require("internal.paths")
 local fs = require("util.fs")
 local env = require("internal.env")
 local tsort = require("thirdparty.resty.tsort")
+local main_state = require("internal.global.main_state")
 
 if env.is_hotloading() then
    return "no_hotload"
 end
 
 local mod = {}
-local loaded = {}
 
 local MOD_DIR = "mod"
 
@@ -25,7 +25,9 @@ local function load_mod(mod_name, root_path)
       -- always be deterministic.
       Rand.set_seed(0)
 
+      main_state.currently_loading_mod = mod_name
       chunk, err = env.safe_require(req_path)
+      main_state.currently_loading_mod = nil
 
       if err then
          return nil, err
@@ -39,13 +41,13 @@ local function load_mod(mod_name, root_path)
       Log.info("Loaded mod %s without init.lua.", mod_name)
    end
 
-   loaded[mod_name] = true
+   main_state.loaded_mods[mod_name] = true
 
    return chunk
 end
 
 function mod.is_loaded(mod_name)
-   return not not loaded[mod_name]
+   return not not main_state.loaded_mods[mod_name]
 end
 
 local function load_manifest(manifest_path)
@@ -145,7 +147,7 @@ function mod.calculate_load_order(mods)
    -- Associate mod IDs with the root path containing mod.lua/init.lua
    -- while preserving load order
    local final = {}
-   for i, mod_id in ipairs(order) do
+   for _, mod_id in ipairs(order) do
       final[#final+1] = paths[mod_id]
    end
 
@@ -211,7 +213,7 @@ end
 function mod.iter_loaded()
    local all = mod.scan_mod_dir()
    local load_order = mod.calculate_load_order(all)
-   local mods_loaded = fun.iter(load_order):filter(function(mod) return loaded[mod.id] end):to_list()
+   local mods_loaded = fun.iter(load_order):filter(function(mod) return main_state.loaded_mods[mod.id] end):to_list()
    return fun.iter(mods_loaded)
 end
 

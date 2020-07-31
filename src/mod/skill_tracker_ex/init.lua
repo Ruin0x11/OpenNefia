@@ -6,6 +6,17 @@ local Chara = require("api.Chara")
 config["skill_tracker_ex.enabled"] = true
 
 local function setup_skill_tracker_ex()
+   save.base.tracked_skill_ids = {
+      "elona.bow",
+      "elona.evasion",
+      "elona.eye_of_mind",
+      "elona.spell_crystal_spear",
+      "elona.tactics",
+      "elona.literacy",
+      "elona.memorization",
+      "elona.stat_learning",
+   }
+
    local enable = config["skill_tracker_ex.enabled"]
    Gui.hud_widget("hud_skill_tracker"):set_enabled(not enable)
    Gui.hud_widget("skill_tracker_ex.skill_tracker_ex"):set_enabled(enable)
@@ -20,3 +31,17 @@ local function add_skill_tracker_ex()
 end
 
 Event.register("base.before_engine_init", "Add enhanced skill tracker", add_skill_tracker_ex)
+
+local function log_skill_exp_gain(chara, params)
+   if not chara:is_player() then
+      return
+   end
+
+   local holder = Gui.hud_widget("skill_tracker_ex.skill_tracker_ex")
+
+   if holder then
+      holder:widget():on_gain_skill_exp(params.skill_id, params.base_exp_amount, params.actual_exp_amount)
+   end
+end
+
+Event.register("elona_sys.on_gain_skill_exp", "Log skill exp gain", log_skill_exp_gain)

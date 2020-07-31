@@ -1,3 +1,5 @@
+local Charagen = require("mod.tools.api.Charagen")
+local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Gui = require("api.Gui")
@@ -325,6 +327,93 @@ function Magic.check_can_cast_spell(skill_id, caster)
    return true
 end
 
+function Magic.calc_spellbook_success(chara, difficulty, skill_level)
+   -- >>>>>>>> shade2/calculation.hsp:1079 *calcReadCheck	 ..
+   if chara:has_effect("elona.blindness") then
+      return false
+   end
+
+   if chara:has_effect("elona.confusion") or chara:has_effect("elona.dimming") then
+      if not Rand.one_in(4) then
+         return false
+      else
+         return true
+      end
+   end
+
+   if Rand.rnd(chara:skill_level("elona.literacy") * skill_level * 4 + 250) < Rand.rnd(difficulty + 1) then
+      if Rand.one_in(7) then
+         return false
+      end
+      if skill_level * 10 < difficulty and Rand.rnd(skill_level * 10 + 1) < Rand.rnd(difficulty + 1) then
+         return false
+      end
+      if skill_level * 20 < difficulty and Rand.rnd(skill_level * 20 + 1) < Rand.rnd(difficulty + 1) then
+         return false
+      end
+      if skill_level * 30 < difficulty and Rand.rnd(skill_level * 30 + 1) < Rand.rnd(difficulty + 1) then
+         return false
+      end
+   end
+   -- <<<<<<<< shade2/calculation.hsp:1094 	if f=true:return true ..
+
+   return true
+end
+
+-- Tries to read a spellbook, and on failure causes a negative effect to happen.
+function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
+   -- >>>>>>>> shade2/calculation.hsp:1096 	if rnd(4)=0{ ..
+   local success = Magic.calc_spellbook_success(chara, difficulty, skill_level)
+   if success then
+      return true
+   end
+
+   if Rand.one_in(4) then
+      Gui.mes_visible("misc.fail_to_cast.mana_is_absorbed", chara)
+      if chara:is_player() then
+         chara:damage_mp(chara:calc("max_mp"))
+      else
+         chara:damage_mp(chara:calc("max_mp") / 3)
+      end
+      return false
+   end
+
+   if Rand.one_in(4) then
+      if chara:is_in_fov() then
+         if chara:has_effect("elona.confusion") then
+            Gui.mes("misc.fail_to_cast.is_confused_more", chara)
+         else
+            Gui.mes("misc.fail_to_cast.too_difficult")
+         end
+      end
+      chara:apply_effect("elona.confusion", 100)
+      return false
+   end
+
+   if Rand.one_in(4) then
+      Gui.mes_visible("misc.fail_to_cast.creatures_are_summoned")
+      local player = Chara.player()
+      local player_level = player:calc("level")
+      local map = player:current_map()
+      for i = 1, 2 + Rand.rnd(3) do
+         local level = Calc.calc_object_level(player_level * 3 / 2 + 3, map)
+         local quality = Calc.calc_object_level(Enum.Quality.Normal)
+         local spawned = Charagen.create(player.x, player.y, { level = level, quality = quality })
+         -- TODO faction
+         if spawned and chara:reaction_towards(player) <= -3 then
+            spawned:set_reaction_at(player, -1)
+         end
+      end
+      return false
+   end
+
+   Gui.mes_visible("misc.fail_to_cast.dimension_door_opens", chara)
+   elona_sys_Magic.cast("elona.teleport", { source = chara, target = chara })
+
+   return false
+   -- <<<<<<<< shade2/calculation.hsp:1118 	return false ..
+end
+
 function Magic.do_cast_spell(skill_id, caster, use_mp)
    local skill_data = data["base.skill"]:ensure(skill_id)
    local params = {
@@ -378,6 +467,10 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
       Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
+      local success = Magic.calc_spellbook_success()
+      if not success then
+         return true
+      end
    else
       if caster:is_player() then
          Gui.mes_visible("action.cast.self", caster.x, caster.y, caster, "ability." .. skill_id .. ".name")
@@ -539,6 +632,28 @@ function Magic.apply_buff(buff_id, params)
 
    return true
    -- <<<<<<<< shade2/proc.hsp:1682 		goto *effect_end ..
+end
+
+function Magic.read_spellbook(item, skill_id, params)
+   -- >>>>>>>> shade2/proc.hsp:1168 *readSpellbook ..
+   local chara = params.chara or item:get_owning_chara()
+
+   if chara:has_effect("elona.blindness") then
+      Gui.mes_visible("action.read.cannot_see", chara)
+      return "turn_end"
+   end
+
+   local skill_data = data["base.skill"]:ensure(skill_id)
+
+   local sep = item:separate()
+   sep.chara_using = chara
+   assert(Item.is_alive(sep))
+
+   local turns = skill_data.difficulty / (2 * chara:skill_level("elona.literacy")) + 1
+   chara:start_activity("elona.read_spellbook", { skill_id = skill_id, spellbook = sep }, turns)
+
+   return "turn_end"
+   -- <<<<<<<< shade2/proc.hsp:1191 		} ..
 end
 
 return Magic

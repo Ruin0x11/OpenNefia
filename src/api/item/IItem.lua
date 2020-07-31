@@ -301,12 +301,22 @@ function IItem:calc_ui_color()
     return {0, 0, 0}
 end
 
-function IItem:remove()
-   self.amount = 0
+function IItem:remove(amount)
+   if amount == nil then
+      amount = self.amount
+   end
+   self.amount = math.clamp(self.amount - amount, 0, self.amount)
 
    self:refresh_cell_on_map()
 
-   self:remove_ownership()
+   local chara = self:get_owning_chara()
+   if chara then
+      chara:refresh_weight()
+   end
+
+   if self.amount == 0 then
+      self:remove_ownership()
+   end
 end
 
 function IItem:has_category(cat)

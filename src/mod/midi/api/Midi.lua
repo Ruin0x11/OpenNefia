@@ -25,6 +25,7 @@ function Midi.close()
       state.midi.gc()
    end
    state.midi = nil
+   state.ports = nil
 end
 
 function Midi.output_ports()
@@ -32,18 +33,26 @@ function Midi.output_ports()
       return {}
    end
 
-   return state.midi.enumerateoutports()
+   if state.ports == nil then
+      state.ports = state.midi.enumerateoutports()
+   end
+
+   return state.ports
+end
+
+function Midi.is_port_available(port)
+   return Midi.is_opened() and Midi.output_ports()[port] ~= nil
 end
 
 function Midi.raw_note_on(port, note, vel, channel)
-   if not Midi.is_opened() then
+   if not Midi.is_port_available(port) then
       return
    end
    state.midi.noteOn(port, note, vel, channel)
 end
 
 function Midi.raw_note_off(port, note, vel, channel)
-   if not Midi.is_opened() then
+   if not Midi.is_port_available(port) then
       return
    end
    state.midi.noteOff(port, note, vel, channel)
@@ -60,7 +69,7 @@ function Midi.note_off(port, note, vel, channel)
 end
 
 function Midi.send_message(port, a, b, c, channel)
-   if not Midi.is_opened() then
+   if not Midi.is_port_available(port) then
       return
    end
    state.midi.sendMessage(port, a, b, c, channel)

@@ -177,7 +177,7 @@ local function item_name_sub(s, item, jp)
       local home_name = "ui.home." .. item.params.deed_home_id
       s = s .. I18N.get("item.info." .. _id .. ".title", home_name)
    elseif _id == "elona.bill" then
-      s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_amount)
+      s = s .. I18N.get("item.info." .. _id .. ".title", item.params.bill_amount_gold)
    elseif _id == "elona.vomit" and item.params.chara_id then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then

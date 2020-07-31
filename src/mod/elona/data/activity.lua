@@ -16,6 +16,7 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Material = require("mod.elona.api.Material")
+local Magic = require("mod.elona.api.Magic")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -146,7 +147,7 @@ data:add {
    params = { food = "table", no_message = "boolean" },
    default_turns = 8,
 
-   animation_wait = 5,
+   animation_wait = 100,
 
    on_interrupt = "prompt",
 
@@ -223,7 +224,7 @@ data:add {
    params = {},
    default_turns = 100,
 
-   animation_wait = 2,
+   animation_wait = 40,
 
    on_interrupt = "stop",
    events = {
@@ -310,7 +311,7 @@ data:add {
    params = { x = "number", y = "number", chara = "IChara" },
    default_turns = 40,
 
-   animation_wait = 2,
+   animation_wait = 15,
 
    on_interrupt = "stop",
    events = {
@@ -374,7 +375,7 @@ data:add {
    params = { bed = "table" },
    default_turns = 50,
 
-   animation_wait = 2,
+   animation_wait = 5,
 
    on_interrupt = "stop",
    events = {
@@ -436,7 +437,7 @@ data:add {
    params = { bed = "table" },
    default_turns = 20,
 
-   animation_wait = 2,
+   animation_wait = 5,
 
    on_interrupt = "stop",
    events = {
@@ -485,7 +486,7 @@ data:add {
       return 25 + Rand.rnd(10)
    end,
 
-   animation_wait = 2,
+   animation_wait = 50,
 
    on_interrupt = "stop",
    events = {
@@ -732,7 +733,7 @@ data:add {
    params = { instrument = "table", impressions = "table", performace_quality = "number", tip_gold = "number", number_of_tips = "number" },
    default_turns = 61,
 
-   animation_wait = 2,
+   animation_wait = 40,
 
    on_interrupt = "stop",
    events = {
@@ -851,7 +852,7 @@ data:add {
       -- <<<<<<<< shade2/proc.hsp:444 		;	if develop:cActionPeriod(cc)=1 ..
    end,
 
-   animation_wait = 2,
+   animation_wait = 15,
 
    on_interrupt = "stop",
    events = {
@@ -1102,7 +1103,7 @@ data:add {
    params = { feat = "table", type = "string" },
    default_turns = 20,
 
-   animation_wait = 2,
+   animation_wait = 15,
 
    on_interrupt = "stop",
    events = {
@@ -1164,7 +1165,7 @@ data:add {
    params = {},
    default_turns = 0,
 
-   animation_wait = 2,
+   animation_wait = 15,
 
    on_interrupt = "stop",
    events = {
@@ -1202,6 +1203,187 @@ data:add {
             map:emit("elona.on_search_finish", {chara=params.chara})
             Map.spill_fragments(params.chara.x, params.chara.y, 1, map)
             -- <<<<<<<< shade2/proc.hsp:1037:DONE 	return ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "read_spellbook",
+
+   params = { skill_id = "string", spellbook = "table", },
+   default_turns = 10,
+
+   animation_wait = 25,
+
+   on_interrupt = "prompt",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+            Gui.mes_visible("activity.read.start", params.chara, self.spellbook:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
+            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
+
+            local skill_data = data["base.skill"]:ensure(self.skill_id)
+            local difficulty = skill_data.difficulty
+            local curse = self.spellbook:calc("curse_state")
+
+            if curse == Enum.CurseState.Blessed then
+               difficulty = difficulty * 100 / 120
+            elseif Effect.is_cursed(curse) then
+               difficulty = difficulty * 150 / 100
+            end
+
+            local skill_level = params.chara:skill_level(self.skill_id)
+            local success = Magic.try_to_read_spellbook(params.chara, difficulty, skill_level)
+
+            if not success then
+               params.chara:remove_activity()
+               self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
+               if self.spellbook.charges <= 0 then
+                  self.spellbook:remove(1)
+                  if params.chara:is_in_fov() then
+                     Gui.mes("action.read.book_falls_apart", self.spellbook:build_name(1))
+                  end
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
+            local chara = params.chara
+
+            Gui.mes_visible("activity.read.finish", chara, self.spellbook:build_name(1))
+
+            local function calc_gained_stock(memorization, current_stock)
+               local BASE_STOCK = 100
+               return (Rand.rnd(BASE_STOCK / 2 + 1) + BASE_STOCK / 2)
+                  * (90 + memorization + ((memorization > 0) and 1 or 0) * 20)
+                  / math.clamp((100 + current_stock) / 2, 50, 100)
+                  + 1
+            end
+
+            local memorization = chara:skill_level("elona.memorization")
+            local current_stock = chara:spell_stock(self.skill_id)
+            local skill_data = data["base.skill"]:ensure(self.skill_id)
+            local difficulty = skill_data.difficulty
+
+            Skill.gain_skill(params.chara, self.skill_id, 1, calc_gained_stock(memorization, current_stock))
+            Skill.gain_skill_exp(params.chara, "elona.memorization", 10 + difficulty / 5)
+            save.elona_sys.reservable_spellbook_ids[self.spellbook._id] = true
+
+            Effect.identify_item(self.spellbook, Enum.IdentifyState.Name)
+
+            self.spellbook.charges = math.max(self.spellbook.charges - 1, 0)
+            if self.spellbook.charges <= 0 then
+               self.spellbook:remove(1)
+               if params.chara:is_in_fov() then
+                  Gui.mes("action.read.book_falls_apart", self.spellbook:build_name(1))
+               end
+            end
+            -- <<<<<<<< shade2/proc.hsp:1232 		if iReserve(iId(ci))=0 : iReserve(iId(ci))=1 ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "read_ancient_book",
+
+   params = { ancient_book = "table", },
+   default_turns = 10,
+
+   animation_wait = 25,
+
+   on_interrupt = "prompt",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+            Gui.mes_visible("activity.read.start", params.chara, self.ancient_book:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:1188 		if sync(cc) : txt lang(npcN(cc)+itemName(ci,1)+" ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1193 	if cActionPeriod(cc)>0{ ..
+            Skill.gain_skill_exp(params.chara, "elona.literacy", 15, 10, 100)
+
+            local base_diff = self.ancient_book.params.ancient_book_difficulty
+            local difficulty = 50 + base_diff * 50 + base_diff * base_diff * 20
+            local curse = self.ancient_book:calc("curse_state")
+
+            if curse == Enum.CurseState.Blessed then
+               difficulty = difficulty * 100 / 120
+            elseif Effect.is_cursed(curse) then
+               difficulty = difficulty * 150 / 100
+            end
+
+            local stat_level = params.chara:skill_level("elona.stat_magic")
+            local success = Magic.try_to_read_spellbook(params.chara, difficulty, stat_level)
+
+            if not success then
+               params.chara:remove_activity()
+               self.ancient_book.charges = math.max(self.ancient_book.charges - 1, 0)
+               if self.ancient_book.charges <= 0 then
+                  self.ancient_book:remove(1)
+                  if params.chara:is_in_fov() then
+                     Gui.mes("action.read.book.falls_apart", self.ancient_book:build_name(1))
+                  end
+               end
+            end
+
+            return "turn_end"
+            -- <<<<<<<< shade2/proc.hsp:1211 		} ..
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:1230 		skillGain cc,efId,1,(rnd(defSpellStock/2+1)+defS ..
+            local chara = params.chara
+
+            Gui.mes_visible("activity.read.finish", chara, self.ancient_book:build_name(1))
+
+            Effect.identify_item(self.ancient_book, Enum.IdentifyState.Full)
+            Gui.mes("action.read.book.finished_decoding", self.ancient_book:build_name(1))
+            self.ancient_book.params.ancient_book_is_decoded = true
+            self.ancient_book.has_charge = false
+            self.ancient_book.charges = 1
+
+            -- TODO: shade2/proc.hsp:3118 ((iId(ci)=idMageBook)&(iParam2(ci)!0))
+
+            self.ancient_book:stack()
+            -- <<<<<<<< shade2/proc.hsp:1228 		item_stack pc,ci,1 ..
          end
       }
    }

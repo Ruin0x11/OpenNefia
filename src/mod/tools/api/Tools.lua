@@ -12,6 +12,8 @@ local Input = require("api.Input")
 local Mef = require("api.Mef")
 local IOwned = require("api.IOwned")
 local elona_Item = require("mod.elona.api.Item")
+local Enum = require("api.Enum")
+local Effect = require("mod.elona.api.Effect")
 
 local Tools = {}
 
@@ -642,10 +644,15 @@ function Tools.make_foods(x, y)
 end
 
 function Tools.roundup(iter, x, y, width)
-   for i, obj in iter:unwrap() do
+   width = width or 20
+   x = x or Chara.player().x - math.floor(width / 2)
+   y = y or Chara.player().y
+   local i = 1
+   for _, obj in iter:unwrap() do
       local tx = (i-1) % width
       local ty = math.floor((i-1) / width)
       obj:set_pos(x + tx, y + ty)
+       i = i + 1
    end
 end
 
@@ -662,5 +669,26 @@ function Tools.apply_all_buffs(type, chara, power)
    Tools.iter_buffs(type):each(function(b) Magic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
 end
 
+function Tools.create_magic_items(x, y, width)
+   local categories = table.set {
+      "elona.spellbook",
+      "elona.rod",
+      "elona.potion",
+      "elona.scroll",
+   }
+   local filter = function(i)
+      for _, cat in ipairs(i.categories or {}) do
+         if categories[cat] then
+            return true
+         end
+      end
+      return false
+   end
+   Tools.roundup(data["base.item"]:iter():filter(filter):map(function(i) return Item.create(i._id) end), x, y, width)
+end
+
+function Tools.identify_all()
+   Item.iter():each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
+end
 
 return Tools

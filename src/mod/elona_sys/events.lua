@@ -76,6 +76,7 @@ local function init_save()
       quests = {}
    }
    s.sidequest = {}
+   s.reservable_spellbook_ids = table.set {}
 end
 
 Event.register("base.on_init_save", "Init save (elona_sys)", init_save)

@@ -39,6 +39,10 @@ config["base.debug_default_seed"] = nil
 config["base.development_mode"] = false
 config["base.enable_native_libs"] = true
 
+-- XXX: strict loading order should always be enforced, but doing so requires
+-- some refactoring.
+config["base.disable_strict_load_order"] = true
+
 -- Don't overwrite existing values in the current config.
 config.on_hotload = function(old, new)
    for k, v in pairs(new) do

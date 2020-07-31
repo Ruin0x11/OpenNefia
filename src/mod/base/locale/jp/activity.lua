@@ -184,11 +184,11 @@ end
     read = {
       finish = function(_1, _2)
   return ("%s%sを読み終えた。")
-  :format(kare_wa(_1), itemname(_2, 1))
+  :format(kare_wa(_1), _2)
 end,
       start = function(_1, _2)
   return ("%s%sを読み始めた。")
-  :format(kare_wa(_1), itemname(_2, 1))
+  :format(kare_wa(_1), _2)
 end
     },
     rest = {

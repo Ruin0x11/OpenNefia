@@ -46,8 +46,9 @@ function ICharaActivity:_proc_activity_interrupted()
 end
 
 function ICharaActivity:pass_activity_turn()
-   Gui.wait(5 * self.activity.animation_wait)
-   Gui.update_screen()
+   -- TODO the performance of Gui.update_screen() is terrible, so this causes a
+   -- lot of lag. There has to be some amount of optimization we can do.
+   Gui.wait(self.activity.animation_wait)
 
    if self.activity and (self.activity.turns or 0) <= 0 then
       self:finish_activity()
@@ -65,6 +66,7 @@ local function make_activity(id, params)
    for k, v in pairs(params) do
       local ty = activity.params[k]
       if ty and type(v) == ty then
+         -- TODO obj.params[k] = v
          obj[k] = v
       end
    end
@@ -80,7 +82,7 @@ function ICharaActivity:start_activity(id, params, turns)
    self.activity = make_activity(id, params)
 
    if turns then
-      self.activity.turns = turns
+      self.activity.turns = math.floor(turns)
    elseif self.activity.default_turns then
       local d = self.activity.default_turns
       if type(d) == "function" then
@@ -94,11 +96,11 @@ function ICharaActivity:start_activity(id, params, turns)
       self.activity.turns = 10
    end
 
-   if self.activity:start(self) == "stop" then
+   local ok, result = pcall(self.activity.start, self.activity, self)
+
+   if not ok or result == "stop" then
       self:remove_activity()
    end
-
-   Gui.update_screen()
 end
 
 -- Creates and immediately finishes an activity without firing start

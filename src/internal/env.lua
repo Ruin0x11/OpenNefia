@@ -2,6 +2,7 @@ local Log = require("api.Log")
 local fs = require("util.fs")
 local paths = require("internal.paths")
 local config = require("internal.config")
+local main_state = require("internal.global.main_state")
 
 --- Module and mod environment functions. This module implements
 --- seamless hotloading by replacing the global `require` with one
@@ -307,10 +308,11 @@ local function safe_load_chunk(path)
    elseif load_type == "mod" then
       local mod_name = extract_mod_name(path)
 
-      --
-      -- TODO: prevent require if mod is not loaded, or is loading but
-      --       is not the calling mod.
-      --
+      if not config["base.disable_strict_load_order"]
+         and not (mod_name == main_state.currently_loading_mod or main_state.loaded_mods[mod_name])
+      then
+         error(("Mod name '%s' is not yet loaded. Please ensure you've specified it as a dependency of %s."):format(mod_name, main_state.currently_loading_mod))
+      end
 
       Log.debug("Loading chunk %s with mod sandbox for %s.", path, mod_name)
       return env.load_sandboxed_chunk(path, mod_name)

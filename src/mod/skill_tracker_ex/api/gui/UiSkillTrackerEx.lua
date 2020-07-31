@@ -5,6 +5,7 @@ local UiTheme = require("api.gui.UiTheme")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local ColorBand = require("mod.skill_tracker_ex.api.gui.ColorBand")
+local LogWidget = require("mod.tools.api.gui.LogWidget")
 
 local UiSkillTrackerEx = class.class("UiSkillTrackerEx", {IUiWidget, ISettable})
 
@@ -15,8 +16,16 @@ local COLORS = {
    { color = {200, 130, 130}, time = 0.0  }
 }
 
+local EXP_COLORS = {
+   { color = {100, 200, 130}, time = 1.0  },
+   { color = {130, 200, 225}, time = 0.5  },
+   { color = {255, 200, 130}, time = 0.00001 },
+   { color = {200, 130, 130}, time = 0.0 },
+}
+
 function UiSkillTrackerEx:init()
    self.tracked_skill_ids = {}
+   self.log_widget = LogWidget:new(4.0, 1.0)
 end
 
 function UiSkillTrackerEx:set_data(player)
@@ -52,6 +61,18 @@ function UiSkillTrackerEx:relayout(x, y)
    Draw.set_font(13)
    self.text_height = Draw.text_height()
    self.gradient = ColorBand:new(COLORS)
+   self.exp_gradient = ColorBand:new(EXP_COLORS)
+   self.log_widget:relayout(self.x, self.y + self.text_height * table.count(self.tracked_skill_ids[self.player_uid]) + 10, self.y, 200, 200)
+end
+
+function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount)
+   local color = self.exp_gradient:evaluate(actual_amount / 50.0)
+   local sign = "+"
+   if actual_amount < 0 then
+      sign = ""
+   end
+   local skill_name = I18N.get("ability." .. skill_id .. ".name")
+   self.log_widget:print_raw(("%s    %s%d (%s%d)"):format(skill_name, sign, base_amount, sign, actual_amount), color)
 end
 
 local Map
@@ -92,9 +113,11 @@ function UiSkillTrackerEx:draw()
          end
       end
    end
+
+   self.log_widget:draw()
 end
 
-function UiSkillTrackerEx:update()
+function UiSkillTrackerEx:update(dt)
    -- HACK
    Map = Map or require("api.Map")
    Chara = Chara or require("api.Chara")
@@ -110,6 +133,8 @@ function UiSkillTrackerEx:update()
    for _, i in ipairs(remove) do
       self.tracked_skill_ids[i] = nil
    end
+
+   self.log_widget:update(dt)
 end
 
 return UiSkillTrackerEx

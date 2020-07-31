@@ -212,6 +212,8 @@ function Skill.gain_fixed_skill_exp(chara, skill, exp)
    end
 
    proc_leveling(chara, skill, new_exp, level, potential)
+
+   chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, exp_amount = exp })
 end
 
 function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divisor_level)
@@ -265,6 +267,8 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
 
    local new_exp = exp + chara:skill_experience(skill)
    proc_leveling(chara, skill, new_exp, level)
+
+   chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, base_exp_amount = base_exp, actual_exp_amount = exp })
 end
 
 local function get_random_body_part()
@@ -671,7 +675,7 @@ function Skill.gain_skill(chara, skill_id, initial_level, initial_stock)
       }
 
    if skill.type == "spell" and chara:is_player() then
-      initial_stock = initial_stock or 0
+      initial_stock = math.floor(initial_stock or 0)
       chara.spell_stocks[skill_id] = (chara.spell_stocks[skill_id] or 0) + initial_stock
       Skill.modify_potential(chara, skill_id, 1)
    end

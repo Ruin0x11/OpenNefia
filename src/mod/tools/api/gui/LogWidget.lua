@@ -4,14 +4,14 @@ local CircularBuffer = require("api.CircularBuffer")
 
 local LogWidget = class.class("LogWidget", IUiWidget)
 
-function LogWidget:init()
+function LogWidget:init(message_duration, fade_duration)
    self.max_lines = 10
    self.padding = 10
    self.buffer = CircularBuffer:new(self.max_lines)
    self.show_source = true
 
-   self.message_duration = 10.0
-   self.fade_duration = 3.0
+   self.message_duration = message_duration or 10.0
+   self.fade_duration = fade_duration or 3.0
 end
 
 function LogWidget:default_widget_position(x, y, width, height)
@@ -28,9 +28,10 @@ function LogWidget:relayout(x, y, width, height)
    self.width = width + self.padding * 2
    self.height = height
    self.x = x
-   self.y = math.floor(Draw.get_height() / 2)
+   self.y = y or math.floor(Draw.get_height() / 2)
 end
 
+-- TODO theme
 local COLORS = {
    trace = { 185, 155, 215 },
    debug = { 155, 154, 153 },
@@ -41,18 +42,26 @@ local COLORS = {
 
 local shadow_color = {0, 0, 0, 255}
 
-function LogWidget:print(level, message, source)
-   Draw.set_font(12)
+function LogWidget:print(level, message, source, color)
+   color = color or COLORS[level]
+
    local formatted = ("[%s][%s] %s"):format(level:sub(1, 1):upper(), source or "?", message)
-   local success, err, wrapped = xpcall(function() return Draw.wrap_text(formatted, self.width) end, debug.traceback)
+   self:print_raw(formatted, color)
+end
+
+function LogWidget:print_raw(str, color)
+   color = color or COLORS["info"]
+
+   Draw.set_font(12)
+   local success, err, wrapped = xpcall(function() return Draw.wrap_text(str, self.width) end, debug.traceback)
    if success then
       for _, line in ipairs(wrapped) do
          local text = Draw.make_text(line)
-         self.buffer:push({color=COLORS[level],text=text,time=self.message_duration})
+         self.buffer:push({color=color,text=text,time=self.message_duration})
       end
    else
-      local text = Draw.make_text(formatted)
-      self.buffer:push({color=COLORS[level],text=text,time=self.message_duration})
+      local text = Draw.make_text(str)
+      self.buffer:push({color=color,text=text,time=self.message_duration})
    end
 end
 
