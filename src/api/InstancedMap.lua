@@ -100,6 +100,8 @@ function InstancedMap:init(width, height, uids, tile)
 
    self.debris = {}
 
+   self._memorized = {}
+
    self.default_tile = "base.floor"
 
    self:init_map_data()
@@ -395,14 +397,23 @@ function InstancedMap:memorize_tile(x, y)
    end
 
    self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+   self._memorized[ind] = true
 end
 
 function InstancedMap:is_memorized(x, y)
    local memory = self._memory
    local ind = y * self._width + x + 1;
-   return memory["base.map_tile"]
+
+   if self._memorized[ind] ~= nil then
+      return self._memorized[ind]
+   end
+
+   local result = memory["base.map_tile"]
       and memory["base.map_tile"][ind]
       and memory["base.map_tile"][ind][1]._id == self:tile(x, y)._id
+
+   self._memorized[ind] = result
+   return result
 end
 
 function InstancedMap:reveal_tile(x, y, tile_id)
@@ -418,6 +429,7 @@ function InstancedMap:reveal_tile(x, y, tile_id)
    memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
 
    self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+   self._memorized[ind] = nil
 end
 
 function InstancedMap:reveal_objects(x, y)

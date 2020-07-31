@@ -10,6 +10,7 @@ local field = require("game.field")
 local ansicolors = require("thirdparty.ansicolors")
 local config = require("internal.config")
 local Enum = require("api.Enum")
+local Stopwatch = require("api.Stopwatch")
 
 local Gui = {}
 
@@ -19,9 +20,18 @@ local newline = true
 
 --- Refreshes and scrolls the screen and recalculates FOV.
 function Gui.update_screen(dt)
+   local sw
+   if Log.has_level("debug") then
+      sw = Stopwatch:new()
+   end
+
    field:update_screen(scroll, dt)
    scroll = false
    Gui.update_minimap()
+
+   if sw then
+      sw:p("screen update")
+   end
 end
 
 --- Sets the center position that rendering will start from. Call this

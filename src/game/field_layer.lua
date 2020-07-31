@@ -151,7 +151,6 @@ function field_layer:update_screen(scroll, dt)
       end
    end
 
-
    if center_x then
       self.renderer:update_draw_pos(center_x, center_y, scroll_frames)
    end
