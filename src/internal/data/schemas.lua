@@ -1135,13 +1135,6 @@ data:add_type {
 }
 
 data:add_type {
-   name = "map_entrance",
-   schema = schema.Record {
-      pos = schema.Function
-   }
-}
-
-data:add_type {
    name = "map_template",
    schema = schema.Record {
       map = schema.String,

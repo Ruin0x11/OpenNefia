@@ -1,6 +1,5 @@
 local Gui = require("api.Gui")
 local Item = require("api.Item")
-local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Anim = require("mod.elona_sys.api.Anim")
@@ -499,7 +498,7 @@ function Effect.modify_corruption(chara, delta)
 end
 
 function Effect.can_return_to(entrance)
-   local area = MapArea.area_for_map(entrance.map_uid)
+   error("TODO")
 
    if not area then
       return false
@@ -535,10 +534,8 @@ function Effect.query_return_location(chara)
       }
    end
 
-   local maps = MapArea.iter_map_entrances("generated", outer_map)
-      :filter(Effect.can_return_to)
-      :map(to_prompt)
-      :to_list()
+   error("TODO")
+   local maps = {}
 
    local result, canceled = Input.prompt(maps)
 

@@ -164,7 +164,6 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
 end)
 
 local DateTime = require("api.DateTime")
-local area_mapping = require("internal.area_mapping")
 local uid_tracker = require("internal.uid_tracker")
 local Rand = require("api.Rand")
 local save = require("internal.global.save")
@@ -191,9 +190,6 @@ local function init_save()
    s.total_killed = 0
    s.total_deaths = 0
    s.areas = {}
-
-   -- TODO remove
-   s.area_mapping = area_mapping:new()
 end
 
 Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

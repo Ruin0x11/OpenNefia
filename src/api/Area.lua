@@ -78,10 +78,6 @@ function Area.register(area)
 
    for _, _, map in area:iter_maps() do
       assert(Map.is_saved(map.uid), ("Map '%d' must be saved before registering an area with it"):format(map.uid))
-      local area_for_map = Area.for_map(map.uid)
-      if area_for_map then
-         error(("Map '%d' has already been registered with area '%d'"):format(map.uid, area_for_map.uid))
-      end
    end
 
    mapping = nil
@@ -100,7 +96,7 @@ function Area.create_entrance(area, x, y, params, map)
    assert(floor, "Map not registered with area")
 
    local Feat = require("api.Feat")
-   local feat, err = Feat.create("elona.stairs_2", x, y, params, map)
+   local feat, err = Feat.create("elona.stairs_down", x, y, params, map)
 
    if not feat then
       return feat, err
@@ -108,6 +104,9 @@ function Area.create_entrance(area, x, y, params, map)
 
    feat.area_uid = area.uid
    feat.area_floor = floor
+   if area.image then
+      feat.image = area.image
+   end
 
    return feat, nil
 end

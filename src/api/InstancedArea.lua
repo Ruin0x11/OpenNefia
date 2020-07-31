@@ -46,6 +46,10 @@ function InstancedArea:iter_maps()
    return fun.iter_pairs(self.maps)
 end
 
+function InstancedArea:iter_maps()
+   return fun.iter_pairs(self.maps)
+end
+
 function InstancedArea:get_floor(floor)
    local map = self.maps[floor]
    if map == nil then

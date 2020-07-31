@@ -5,7 +5,6 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Item = require("api.Item")
 local Map = require("api.Map")
-local MapArea = require("api.MapArea")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
@@ -19,7 +18,8 @@ local Command = {}
 
 local function travel_to_map_hook(source, params, result)
    local cur = Map.current()
-   local map_result, err = MapArea.load_outer_map(cur)
+
+   error("TODO")
 
    if not map_result then
       return {false, "Could not load outer map: " .. err}
@@ -90,8 +90,7 @@ function Command.move(player, x, y)
       return result
    end
 
-   local area = save.base.area_mapping:area_for_map(Map.current())
-   local has_outer_area = area and area.outer_map_uid
+   local has_outer_area = false -- TODO area
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y)
       and Map.current():calc("can_exit_from_edge")

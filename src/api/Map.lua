@@ -338,7 +338,7 @@ end
 -- @tparam InstancedMap map
 -- @tparam[opt] InstancedMap previous_map
 -- @tparam[opt] IFeat feat
--- @tparam[opt] {x=uint,y=uint}|base.map_entrance|function start_pos
+-- @tparam[opt] {x=uint,y=uint}|function start_pos
 function Map.calc_start_position(map, previous_map, feat, start_pos)
    if start_pos == nil then
       start_pos = map.player_start_pos
@@ -348,10 +348,6 @@ function Map.calc_start_position(map, previous_map, feat, start_pos)
    if type(start_pos) == "table" then
       x = start_pos.x
       y = start_pos.y
-   elseif type(start_pos) == "string" then
-      x, y = data["base.map_entrance"]
-         :ensure(start_pos)
-         .pos(map, previous_map, feat)
    elseif type(start_pos) == "function" then
       x, y = start_pos(map, previous_map, feat)
    end
@@ -679,10 +675,9 @@ end
 --- @tparam InstancedMap map
 --- @tparam[opt] table params Extra parameters.
 ---   - feat (IFeat): feat used to travel to this map, like stairs.
----   - start_pos ({x=uint,y=uint}|base.map_entrance|function):
----     logic to run to determine the start position on the map. Can
----     be a table of coordinates, an ID of a base.map_entrance entry,
----     or a function that returns a table of {x,y}.
+---   - start_pos ({x=uint,y=uint}|function): logic to run to determine the
+---     start position on the map. Can be a table of coordinates, or a function
+---     that returns a table of {x,y}.
 function Map.travel_to(map, params)
    params = params or {}
    class.assert_is_an(InstancedMap, map)
@@ -762,36 +757,18 @@ end
 
 --- Returns the world map which is directly accessable by this map.
 ---
---- NOTE: This only works in maps on the overworld for now, not nested
---- dungeons.
----
 --- @tparam[opt] InstancedMap map
 --- @treturn[opt] InstancedMap
 function Map.world_map_containing(map)
-   map = map or Map.current()
-
-   local area = save.base.area_mapping:area_for_map(map)
-   if area == nil or area.outer_map_uid == nil then
-      return nil, ("Map %d (%s) doesn't have an outer map in area: %s"):format(map.uid, map.gen_id, inspect(area))
-   end
-
-   return Map.load(area.outer_map_uid)
+   error("TODO")
 end
 
 --- Finds the location of this map in its containing world map.
---- TODO: needs to support nested dungeons.
 ---  - A group of maps is contained in one area.
 ---  - The area has a containing world map.
 --- @tparam InstancedMap map
 function Map.position_in_world_map(map)
-   map = map or Map.current()
-
-   local area = save.base.area_mapping:area_for_map(map)
-   if area == nil then
-      return nil, nil
-   end
-
-   return area.x, area.y
+   error("TODO")
 end
 
 -- @tparam uint hour

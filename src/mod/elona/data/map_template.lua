@@ -13,6 +13,8 @@ local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local HomeMap = require("mod.elona.api.HomeMap")
 
 local function entrance_edge(chara, map)
+   -- TODO map archetype
+   error("TODO")
    return data["base.map_entrance"]["base.edge"].pos(chara, map)
 end
 

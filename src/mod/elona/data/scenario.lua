@@ -47,9 +47,7 @@ local function create_first_map()
    local world_map = Map.generate2("elona.north_tyris")
 
    -- TODO set this up automatically, as "root map" or similar
-   local area = save.base.area_mapping:create_area()
-   save.base.area_mapping:add_map_to_area(area.uid, world_map.uid)
-   area.outer_map_uid = world_map.uid
+   error("TODO")
 
    return world_map
 end
@@ -71,7 +69,10 @@ local function start(self, player)
    -- Save the world map since the entrances on it were modified.
    Map.save(world_map)
 
+   -- TODO map archetype
+   error("TODO")
    local x, y = data["base.map_entrance"]["base.center"].pos(home, player)
+
    assert(home:take_object(player, x, y))
    initialize_player(player)
 

@@ -475,25 +475,6 @@ function InstancedMap:is_in_bounds(x, y)
    return x >= 0 and y >= 0 and x < self._width and y < self._height
 end
 
-function InstancedMap:set_outer_map(map_or_uid, x, y)
-   local uid = map_or_uid
-   if type(map_or_uid) == "table" then
-      class.assert_is_an(InstancedMap, map_or_uid)
-      uid = map_or_uid.uid
-   end
-
-   local area = save.base.area_mapping:area_for_outer_map(uid)
-   if area == nil then
-      area = save.base.area_mapping:create_area(uid, x, y)
-   end
-
-   area.x = x
-   area.y = y
-   area.outer_map_uid = uid
-
-   save.base.area_mapping:add_map_to_area(area.uid, self.uid)
-end
-
 function InstancedMap:is_floor(x, y)
    return self:is_in_bounds(x, y) and not self:tile(x, y).is_solid
 end

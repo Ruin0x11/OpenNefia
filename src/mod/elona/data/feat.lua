@@ -2,7 +2,6 @@ local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Log = require("api.Log")
 local Map = require("api.Map")
-local MapArea = require("api.MapArea")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local ElonaAction = require("mod.elona.api.ElonaAction")
@@ -155,7 +154,24 @@ local function travel(self, params)
 
    Gui.play_sound("base.exitmap1")
 
-   -- Map.travel_to(map, params)
+   local area = Area.get(self.area_uid)
+   if area == nil then
+      Log.error("Missing area with UID '%d'", self.area_uid)
+      return "player_turn_query"
+   end
+
+   local ok, map = area:load_floor(self.area_floor)
+   if not ok then
+      error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.area_floor, area.uid, map))
+      return "player_turn_query"
+   end
+
+   local travel_params = {
+      feat = self,
+      start_pos = nil -- TODO
+   }
+
+   Map.travel_to(map, travel_params)
 
    return "player_turn_query"
 end
@@ -176,11 +192,16 @@ local function gen_stair(down)
       is_opaque = false,
 
       params = {
-         map_uid = "number",
+         area_uid = "number",
+         area_floor = "number",
       },
 
       on_refresh = function(self)
          self:mod("can_activate", true)
+      end,
+
+      on_stepped_on = function(self, params)
+         Gui.mes_c(("This leads to: %s %s"):format(self.area_uid, self.area_floor))
       end,
 
       on_activate = travel,
@@ -203,7 +224,8 @@ data:add
    is_opaque = false,
 
    params = {
-      map_uid = "number",
+      area_uid = "number",
+      area_floor = "number",
    },
 
    on_refresh = function(self)
@@ -416,61 +438,4 @@ data:add {
       self:remove_ownership()
       params.chara:damage_hp(100+Rand.rnd(200), "elona.trap")
    end,
-}
-
-local function travel2(self, params)
-   local chara = params.chara
-   if not chara:is_player() then return end
-
-   Gui.play_sound("base.exitmap1")
-
-   local area = Area.get(self.area_uid)
-   if area == nil then
-      Log.error("Missing area with UID '%d'", self.area_uid)
-      return "player_turn_query"
-   end
-
-   local ok, map = area:load_floor(self.area_floor)
-   if not ok then
-      error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.area_floor, area.uid, map))
-      return "player_turn_query"
-   end
-
-   local travel_params = {
-      feat = self,
-      start_pos = nil -- TODO
-   }
-
-   Map.travel_to(map, travel_params)
-
-   return "player_turn_query"
-end
-
-data:add {
-   _type = "base.feat",
-   _id = "stairs_2",
-
-   image = "elona.feat_stairs_down",
-   is_solid = false,
-   is_opaque = false,
-
-   params = {
-      area_uid = "number",
-      area_floor = "number"
-   },
-
-   on_refresh = function(self)
-      self:mod("can_activate", true)
-   end,
-
-   on_stepped_on = function(self, params)
-      Gui.mes_c(("This leads to: %s %s"):format(self.area_uid, self.area_floor))
-   end,
-
-   on_activate = travel2,
-
-   on_descend = function(self, params)
-      Gui.mes("Descending!")
-      self:on_activate(params.chara)
-   end
 }

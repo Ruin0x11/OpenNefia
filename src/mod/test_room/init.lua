@@ -35,18 +35,17 @@ local function mkarea(map)
       local next_floor = floors[i+1]
 
       if prev_floor then
-         Log.warn("prev")
-         local stairs = assert(Feat.create("elona.stairs_2", 8, 8, {}, prev_floor))
+         -- TODO why is this neccessary?
+         local stairs = assert(Feat.create("elona.stairs_down", 8, 13, {}, prev_floor))
          stairs.area_uid = area.uid
          stairs.area_floor = i
       end
 
       if next_floor then
-         Log.warn("next")
-         local stairs = assert(Feat.create("elona.stairs_2", 10, 10, {}, next_floor))
+         -- TODO why is this neccessary?
+         local stairs = assert(Feat.create("elona.stairs_up", 12, 19, {}, next_floor))
          stairs.area_uid = area.uid
          stairs.area_floor = i
-         stairs.image = "elona.feat_stairs_up"
       end
    end
 
@@ -62,8 +61,8 @@ local function mkarea(map)
    local my_area = Area.for_map(map)
    assert(my_area)
 
-   assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), map))
-   assert(Area.create_entrance(my_area, math.floor(floors[1]:width()/2), math.floor(floors[1]:height()/2), floors[1]))
+   assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), {}, map))
+   assert(Area.create_entrance(my_area, math.floor(floors[1]:width()/2), math.floor(floors[1]:height()/2), {}, floors[1]))
 end
 
 local function test_room(self, player)
