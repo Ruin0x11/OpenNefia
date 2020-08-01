@@ -118,7 +118,6 @@ function InventoryMenu:make_keymap()
 end
 
 function InventoryMenu:on_query()
-   Gui.play_sound("base.inv")
    self.canceled = false
    self.result = nil
    if self.ctxt.proto.query_text then

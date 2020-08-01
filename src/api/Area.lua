@@ -4,16 +4,31 @@ local field = require("game.field")
 local save = require("internal.global.save")
 local Log = require("api.Log")
 
---- An area is a collection of maps. Areas commonly represent dungeons or world maps.
+--- An area is a collection of maps. Areas commonly represent dungeons or world
+--- maps.
 ---
---- When you save a map, if it is not associated with an area then one will be created and registered for it.
+--- When you save a map, if it is not associated with an area then one will be
+--- created and registered for it.
 --- 
 --- The process of creating an area is as follows:
 ---
---- 1. Create one or more instances of InstancedMap and *be sure to call Map.save() on each one* before continuing. To keep things in sync the map must exist on disk before registering an area that contains it.
---- 2. Create an InstancedArea and call :add_floor(map[, floor_number]) to add the floors of the area in sequence.
---- 3. Call Area.register(instanced_area, { parent = parent }) to register the area globally. To make this area a root area (nothing parented with it, e.g. world maps) then pass the string "root" as `parent`. Otherwise, pass in an InstancedArea that has already been registered with Area.register() (for example from Area.get(uid) or Area.for_map(instanced_map)).
---- 4. Call Area.create_entrance(instanced_area, x, y, feat_params, map) to create an entrance to the area on a given map. If you do this after registering an area *don't forget to call* `Map.save(map)`, or the newly created entrance will be lost when you load the map from disk.
+--- 1. Create one or more instances of InstancedMap and *be sure to call
+--- Map.save() on each one* before continuing. To keep things in sync the map
+--- must exist on disk before registering an area that contains it.
+---
+--- 2. Create an InstancedArea and call :add_floor(map[, floor_number]) to add
+--- the floors of the area in sequence.
+---
+--- 3. Call Area.register(instanced_area, { parent = parent }) to register the
+--- area globally. To make this area a root area (nothing parented with it, e.g.
+--- world maps) then pass the string "root" as `parent`. Otherwise, pass in an
+--- InstancedArea that has already been registered with Area.register() (for
+--- example from Area.get(uid) or Area.for_map(instanced_map)).
+---
+--- 4. Call Area.create_entrance(instanced_area, x, y, feat_params, map) to
+--- create an entrance to the area on a given map. If you do this after
+--- registering an area *don't forget to call* `Map.save(map)`, or the newly
+--- created entrance will be lost when you load the map from disk.
 local Area = {}
 
 function Area.metadata(map)
@@ -114,11 +129,13 @@ function Area.register(area, opts)
       area.parent_area = opts.parent.uid
    end
 
-   if area.parent_area == nil and not opts.parent == "root" then
+   if area.parent_area == nil and opts.parent ~= "root" then
       error(("Area '%s' should have parent world map area set"):format(area.name))
    end
 
-   assert(save.base.areas[area.parent_area], ("Parent area '%d' has not been registered yet"):format(area.parent_area))
+   if opts.parent ~= "root" then
+      assert(save.base.areas[area.parent_area], ("Parent area '%d' has not been registered yet"):format(area.parent_area))
+   end
 
    local areas = save.base.areas
 
@@ -128,9 +145,11 @@ function Area.register(area, opts)
 
    Log.info("Registering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
-   for _, _, map in area:iter_maps() do
-      assert(Map.is_saved(map.uid), ("Map '%d' must be saved before registering an area with it"):format(map.uid))
-   end
+   -- for _, _, map in area:iter_maps() do
+   --    if not Map.is_saved(map.uid) then
+   --       Log.warn("Map '%d' is not yet saved, call `Map.save(uid)` afterwards", map.uid, map.uid)
+   --    end
+   -- end
 
    mapping = nil
    areas[area.uid] = area

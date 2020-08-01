@@ -321,7 +321,7 @@ return {
          no_invitation_to_pyramid = "You don't have an invitation.",
          not_permitted = "You are not permitted to explore this dungeon.",
          returned_to = function(_1)
-            return ("You returned to %s")
+            return ("You returned to %s.")
                :format(_1)
          end,
          surface = {

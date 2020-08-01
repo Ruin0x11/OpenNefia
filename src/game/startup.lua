@@ -14,6 +14,7 @@ local Repl = require("api.Repl")
 local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
 local config = require("internal.config")
 local theme = require("internal.theme")
+local events = require("internal.events")
 
 local startup = {}
 
@@ -132,6 +133,9 @@ function startup.run(mods)
    i18n.switch_language(config["base.language"])
 
    field:setup_repl()
+
+   -- Load built-in event hooks.
+   events.require_all()
 
    Event.trigger("base.on_engine_init")
 

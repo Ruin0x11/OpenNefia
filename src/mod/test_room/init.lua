@@ -23,8 +23,10 @@ end
 local function mkarea(map)
    local floors = {}
 
-   local my_area = Area.for_map(map)
-   assert(my_area)
+   local my_area = InstancedArea:new()
+   my_area:add_floor(map)
+   Area.register(my_area, { parent = "root" })
+
    my_area.image = "elona.item_carrot"
 
    local area = InstancedArea:new("elona.feat_area_castle")
@@ -56,12 +58,16 @@ local function mkarea(map)
       if floor_number == 1 then
          assert(Area.create_entrance(my_area, 5, 5, {}, floor))
       end
-      Map.save(floor)
    end
 
    Area.register(area, { parent = my_area })
 
    assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), {}, map))
+
+   Map.save(map)
+   for _, floor in ipairs(floors) do
+      Map.save(floor)
+   end
 end
 
 local function test_room(self, player)
@@ -80,12 +86,8 @@ local function test_room(self, player)
    player.title = Text.random_title()
 
    -- local map = Elona122Map.generate("palmia")
-   local root = InstancedArea:new()
    local map = make_map(50, 50)
    local tx, ty = 22, 22
-   root:add_floor(map)
-   Area.register(root, { parent = "root" })
-   Map.save(map)
 
    for _, x, y in map:iter_tiles() do
       map:memorize_tile(x, y)

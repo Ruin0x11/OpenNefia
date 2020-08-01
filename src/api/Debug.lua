@@ -1,58 +1,109 @@
-local Event = require("api.Event")
 local Log = require("api.Log")
+local env = require("internal.env")
+local repl = require("internal.repl")
 
-local enabled = false
+local debug_state = require("internal.global.debug_state")
 
 local Debug = {}
 
-function Debug.print(...)
-   if not enabled then
-      return
+local function quote_tostring(obj)
+   if type(obj) == "string" then
+      return ("\"%s\""):format(obj)
    end
-   print(...)
+   return tostring(obj)
 end
-
-function Debug.print_end(e)
-   enabled = e or false
-end
-
-Event.register("base.on_hotload_end",
-               "enable Debug.print",
-               function()
-                  enabled = true
-               end)
 
 function Debug.hook(tbl, fn_name, depth, level)
-   local log_cb = Log[level or "warn"]
+   level = level or "warn"
    depth = depth or 1
+
+   debug_state.hooked_fns[tbl] = debug_state.hooked_fns[tbl] or {}
+   if debug_state.hooked_fns[tbl][fn_name] then
+      return
+   end
+
+   local require_path = env.get_require_path(tbl) or "<?>"
+   local ident = require_path .. "." .. fn_name
+   local log_cb = Log[level or "warn"]
    local p
    if depth <= 0 then
-      p = tostring
+      p = quote_tostring
    else
       local inspect_opts = {override_mt = true, depth = depth or 1}
-      p = function(arg) return inspect(arg, inspect_opts) end
+      p = function(arg)
+         if type(arg) == "table" then
+            return inspect(arg, inspect_opts)
+         end
+         return quote_tostring(arg)
+      end
    end
 
    local fn = tbl[fn_name]
    assert(type(fn) == "function", ("'%s' must be a function"):format(fn_name))
+
+   debug_state.hooked_fns[tbl][fn_name] = fn
+
    tbl[fn_name] = function(...)
-      local s
+      local s = ident
       local a = {...}
+
       local max = 0
       for k, _ in pairs(a) do
          max = math.max(max, k)
       end
-      for i = 1, max do
-         local arg = a[i]
-         if i == 1 then
-            s = p(arg)
-         else
-            s = s .. ", " .. p(arg)
+
+      if max == 0 then
+         s = s .. "()"
+      else
+         for i = 1, max do
+            local arg = a[i]
+            if i == 1 then
+               s = s .. "(" .. p(arg)
+            else
+               s = s .. ", " .. p(arg)
+            end
+            if i == max then
+               s = s .. ")"
+            end
          end
       end
+
       log_cb(s)
+
       return fn(...)
    end
+end
+
+function Debug.unhook(tbl, fn_name)
+   if not (debug_state.hooked_fns[tbl] and debug_state.hooked_fns[tbl][fn_name]) then
+      return
+   end
+
+   tbl[fn_name] = debug_state.hooked_fns[tbl][fn_name]
+   debug_state.hooked_fns[tbl][fn_name] = nil
+end
+
+function Debug.unhook_all()
+   for tbl, fns in pairs(debug_state.hooked_fns) do
+      for fn_name, fn in pairs(fns) do
+         tbl[fn_name] = fn
+      end
+   end
+   debug_state.hooked_fns = {}
+end
+
+function Debug.print(local_names, level)
+   level = level or "warn"
+   local s = ""
+   local locals = repl.capture_locals(1)
+   for i, local_name in ipairs(local_names) do
+      local val = locals[local_name] or "?"
+      s = s .. local_name .. ": " .. quote_tostring(val)
+      if i < #local_names then
+         s = s .. "\t"
+      end
+   end
+   Log[level](s)
 end
 
 return Debug

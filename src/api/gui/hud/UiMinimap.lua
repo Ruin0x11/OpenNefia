@@ -31,10 +31,14 @@ end
 local Map
 local Chara
 
-function UiMinimap:refresh_visible()
+function UiMinimap:refresh_visible(map)
+   if not self.tile_batch then
+      return
+   end
+
    Map = Map or require("api.Map")
    Chara = Chara or require("api.Chara")
-   local map = Map.current()
+   map = map or Map.current()
    if map == nil then
       return
    end

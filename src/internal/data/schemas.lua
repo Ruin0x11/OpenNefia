@@ -324,7 +324,7 @@ AI callback to run on this character's turn.
          is_quest_target = nil,
          was_passed_item = nil,
 
-         date_to_revive_on = 0,
+         respawn_date = 0,
 
          aquirable_feat_count = 0,
          skill_bonus = 0,
@@ -1161,5 +1161,53 @@ List of fields to copy to the map when it is instantiated.
 List of map entrances to other maps contained in this map.
 ]]
       },
+   }
+}
+
+data:add_type {
+   name = "map_archetype",
+   fields = {
+      {
+         name = "on_spawn_monster",
+         default = CodeGenerator.gen_literal [[
+function(map)
+   end]],
+         template = true,
+         type = "function(InstancedMap)",
+         doc = [[
+Callback run when a monster is spawned in the map.
+]]
+      },
+      {
+         name = "on_map_restock",
+         default = CodeGenerator.gen_literal [[
+function(map)
+   end]],
+         template = true,
+         type = "function(InstancedMap)",
+         doc = [[
+Callback run when this map is restocked, refreshing things like shop inventories.
+]]
+      },
+      {
+         name = "on_map_renew",
+         default = CodeGenerator.gen_literal [[
+function(map)
+   end]],
+         template = true,
+         type = "function(InstancedMap)",
+         doc = [[
+Callback run when this map is renewed, in order to regenerate its geometry.
+]]
+      },
+      {
+         name = "_events",
+         default = {},
+         template = false,
+         type = "table",
+         doc = [[
+Additional events to bind to this map when it is loaded.
+]]
+      }
    }
 }

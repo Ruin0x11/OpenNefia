@@ -109,87 +109,9 @@ data:add_multi(
       { _id = "before_engine_init", },
       { _id = "on_item_init_params", },
       { _id = "on_heal_chara_stamina", },
+      { _id = "on_item_renew_major" },
+      { _id = "on_map_renew_major", },
+      { _id = "on_map_renew_minor" },
+      { _id = "on_map_major_events" },
    }
 )
-
--- The following adds support for cleaning up missing events
--- automatically if a chunk is hotloaded. It assumes only one chunk is
--- being loaded at a time, and does not handle hotloading dependencies
--- recursively.
-
-local function on_hotload_begin(_, params)
-   -- strip trailing "init" to make the path unique
-   local path = paths.convert_to_require_path(params.path_or_class)
-   Event.global():_begin_register(path)
-end
-
-local function on_hotload_end()
-   Event.global():_end_register()
-end
-
-Event.register("base.on_hotload_begin", "Clean up events missing in chunk on hotload", on_hotload_begin, {priority = 1})
-Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotload", on_hotload_end, {priority = 9999999999})
-
-Event.register("base.on_map_loaded", "init all event callbacks",
-               function(map)
-                  for _, v in map:iter() do
-                     -- Event callbacks will not be serialized since
-                     -- they are functions, so they have to be copied
-                     -- from the prototype each time.
-                     if class.is_an(IEventEmitter, v) then
-                        IEventEmitter.init(v)
-                     end
-                     v:instantiate()
-                  end
-               end)
-
-Event.register("base.on_hotload_end", "Notify objects in map of prototype hotload",
-               function(_, params)
-                  local map = Map.current()
-                  if map then
-                     local hotloaded = {}
-                     for _, v in ipairs(params.hotloaded_data) do
-                        hotloaded[v._type] = hotloaded[v._type] or {}
-                        hotloaded[v._type][v._id] = true
-                     end
-                     for _, obj in map:iter() do
-                        if class.is_an(IEventEmitter, obj)
-                           and hotloaded[obj._type]
-                           and hotloaded[obj._type][obj._id]
-                        then
-                           obj:emit("base.on_hotload_object", params)
-                        end
-                     end
-                  end
-end)
-
-local DateTime = require("api.DateTime")
-local uid_tracker = require("internal.uid_tracker")
-local Rand = require("api.Rand")
-local save = require("internal.global.save")
-
-local function init_save()
-   local s = save.base
-   s.date = DateTime:new(517, 8, 12, 16, 10, 0)
-   s.play_time = 0
-   s.play_turns = 0
-   s.play_days = 0
-   s.player = nil
-   s.allies = {}
-   s.uids = uid_tracker:new()
-   s.map_uids = uid_tracker:new()
-   s.area_uids = uid_tracker:new()
-   s.random_seed = Rand.rnd(800) + 2
-   s.shadow = 70
-   s.has_light_source = false
-   s.deepest_level = 0
-   s.map_registry = {}
-   s.containers = {}
-   s.tracked_skill_ids = {}
-   s.bones = {}
-   s.total_killed = 0
-   s.total_deaths = 0
-   s.areas = {}
-end
-
-Event.register("base.on_init_save", "Init save (base)", init_save, {priority = 0})

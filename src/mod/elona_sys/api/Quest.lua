@@ -13,6 +13,7 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
+local Area = require("api.Area")
 
 local Quest = {}
 
@@ -446,7 +447,7 @@ end
 function Quest.update_in_map(map)
    -- This overwrites and updates the quest info for the map if it
    -- goes out of date (like the entrance was moved for some reason)
-   if map:has_type("town") and Map.world_map_containing(map) then
+   if map:has_type("town") and Area.parent(map) then
       Quest.register_town(map)
    end
 

@@ -268,7 +268,7 @@ function atlas:load(protos, coords, cb)
       cb(self, proto)
    end
 
-   Log.info("%d/%d tiles filled.", count, self.tile_count_x * self.tile_count_y)
+   Log.debug("%d/%d tiles filled.", count, self.tile_count_x * self.tile_count_y)
 
    love.graphics.setCanvas()
 

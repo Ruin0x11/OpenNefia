@@ -585,50 +585,6 @@ end
 
 Event.register("base.on_refresh", "Apply buff effects", apply_buff_effects)
 
-local function refresh_other_chara(chara, params)
-   if not chara:is_allied() then
-      chara.hp = chara:calc("max_hp")
-      chara.hp = chara:calc("max_mp")
-      chara:remove_effect("elona.insanity")
-
-      local map = chara:current_map()
-      assert(map)
-
-      if map:calc("has_anchored_npcs") then
-         chara.initial_x = chara.x
-         chara.initial_y = chara.y
-      end
-
-      if not chara.is_quest_target then
-         chara:reset_ai()
-      end
-
-      if Role.has(chara, "elona.guard") then
-         if Chara.player():calc("karma") < -30 then
-            if Chara.player():calc("level") > chara:calc("level") then
-               Skill.gain_level(chara)
-            end
-            if not Chara.player():has_effect("elona.incognito") then
-               chara.ai_state.hate = 200
-               chara:mod_reaction_at(Chara.player(), -1000)
-            end
-         end
-      end
-
-      if map:has_type({"town", "guild"}) then
-         chara:remove_effect("elona.sleep")
-         local date = World.date()
-         if date.hour >= 22 or date.hour < 7 then
-            if Rand.one_in(6) then
-               chara:set_effect_turns("elona.sleep", Rand.rnd(400))
-            end
-         end
-      end
-   end
-end
-
-Event.register("base.on_chara_refresh_in_map", "Refresh other character", refresh_other_chara)
-
 local footstep = 0
 local footsteps = {"base.foot1a", "base.foot1b"}
 local snow_footsteps = {"base.foot2a", "base.foot2b", "base.foot2c"}

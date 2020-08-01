@@ -22,44 +22,30 @@ local save = require("internal.global.save")
 local map_template = require("internal.map_template")
 local Area = require("api.Area")
 local InstancedArea = require("api.InstancedArea")
+local Const = require("api.Const")
 
 local Map = {}
-
-Event.register("base.on_map_enter", "reveal fog",
-               function(map, params)
-                  if map:has_type({"town", "world_map", "player_owned", "guild"}) then
-                     map:mod("reveals_fog", true)
-                  end
-                  if map:calc("reveals_fog") then
-                     for _, x, y in map:iter_tiles() do
-                        map:memorize_tile(x, y)
-                     end
-                  end
-end)
-
-Event.register("base.on_map_leave", "common events",
-               function(prev_map, params)
-                  if prev_map:has_type({"town", "guild"}) or prev_map:calc("is_travel_destination") then
-                     save.base.departure_date = World.date_hours()
-                  end
-end)
 
 --- Replaces the current map without running any cleanup events on the
 --- previous map or moving the player over. This is low-level, and you
 --- should probably use `Map.travel_to` instead.
 ---
 --- @tparam InstancedMap map
+--- @tparam string load_type One of "full" (default), "traveled", "initialize", "continue"
 --- @see Map.travel_to
-function Map.set_map(map)
+function Map.set_map(map, load_type)
+   load_type = load_type or "full"
    assert(class.is_an(InstancedMap, map))
    if field.map == map then return end
    if field.map then
       Map.clear_debris(field.map)
    end
-   map:emit("base.on_map_enter")
+   if load_type ~= "traveled" then
+      Gui.mes_clear()
+   end
+   map:emit("base.on_map_enter", {load_type=load_type})
    map.visit_times = map.visit_times + 1
    field:set_map(map)
-   Gui.mes_clear()
    return field.map
 end
 
@@ -73,7 +59,7 @@ end
 function Map.save(map)
    class.assert_is_an(InstancedMap, map)
    local path = Fs.join("map", tostring(map.uid))
-   Log.info("Saving map %d to %s", map.uid, path)
+   Log.debug("Saving map %d to %s", map.uid, path)
 
    local ok, err = SaveFs.write(path, map)
    if not ok then
@@ -145,7 +131,7 @@ function Map.load(id)
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))
-   Log.info("Loading map %d from %s", uid, path)
+   Log.debug("Loading map %d from %s", uid, path)
    local success, map = SaveFs.read(path)
    if not success then
       return false, map
@@ -366,108 +352,6 @@ function Map.generate2(map_template_id, opts)
    return map
 end
 
-local function relocate_chara(chara, map)
-   local x, y
-   for i=1, 1000 do
-      if i <= 100 then
-         x = chara.x + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
-         y = chara.y + Rand.rnd(math.floor(i / 2) + 2) - Rand.rnd(math.floor(i / 2) + 2)
-      else
-         x = Rand.rnd(map:width())
-         y = Rand.rnd(map:height())
-      end
-
-      if Map.can_access(x, y, map) then
-         chara:set_pos(x, y)
-         break
-      end
-   end
-end
-
-local function refresh_chara(chara, map)
-   chara.was_passed_item = nil
-
-   local is_initializing_economy = false
-   if is_initializing_economy then
-      -- TODO return if adventurer/ally
-   end
-
-   if chara.state == "CitizenDead" then
-      if World.date_hours() >= chara.date_to_revive_on then
-         chara:revive()
-      else
-         return
-      end
-   end
-
-   local Chara = require("api.Chara")
-   if not Chara.is_alive(chara, map) then
-      return
-   end
-
-   chara:emit("base.on_chara_refresh_in_map")
-
-   local can_access = Map.recalc_access(chara.x, chara.y, {exclude=chara}, map)
-
-   if not can_access then
-      relocate_chara(chara, map)
-   end
-end
-
-local function regenerate_map(map)
-   local Item = require("api.Item")
-   local first_time = map.next_regenerate_date == 0
-
-   Log.info("Regenerating map %d (%s)", map.uid, map.gen_id)
-
-   if not first_time then
-      for _, item in map:iter_items() do
-         if map:has_type({"town", "guild"}) then
-            -- Remove player-owned items on the ground.
-            if not Item.is_alive(item) or item.own_state == "none" then
-               item:remove_ownership()
-            else
-               item:emit("base.on_regenerate")
-            end
-         end
-      end
-
-      for _, chara in map:iter_charas() do
-         chara:clear_status_effects()
-
-         if Chara.is_alive(chara) and chara.is_temporary and Rand.one_in(2) then
-            chara:remove_ownership()
-         else
-            chara:emit("base.on_regenerate")
-         end
-      end
-   end
-
-   map.next_regenerate_date = World.date_hours() + 120
-end
-
-Event.register("base.on_regenerate_map", "regenerate map", regenerate_map, {priority=50000})
-
-function Map.refresh(map)
-   Log.info("Refreshing map %d (%s)", map.uid, map.gen_id)
-
-   if not map.is_not_regenerated and World.date_hours() >= map.next_regenerate_date then
-      map:emit("base.on_regenerate_map")
-   end
-
-   if not map.is_generated_every_time then
-      map:emit("base.before_map_refresh")
-      -- three_years_later
-      -- update_adventureres
-
-      for _, chara in Chara.iter(map) do
-         refresh_chara(chara, map)
-      end
-   end
-
-   return map, nil
-end
-
 --- Clears a position on a map so it can be accessable by a character.
 ---
 --- @tparam int x
@@ -683,7 +567,7 @@ function Map.travel_to(map, params)
    class.assert_is_an(InstancedMap, map)
 
    local current = field.map
-   Log.info("Traveling: %d -> %d", current.uid, map.uid)
+   Log.debug("Traveling: %d -> %d", current.uid, map.uid)
 
    if map.visit_times > 0 and map.is_generated_every_time then
       rebuild_map(map, params)
@@ -700,12 +584,15 @@ function Map.travel_to(map, params)
                                         params.feat,
                                         start_pos)
 
-   Log.warn("Start position: %s %s (%s)", x, y, inspect(start_pos))
+   Log.debug("Start position: %s %s (%s)", x, y, inspect(start_pos))
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
       x = math.floor(map:width() / 2)
       y = math.floor(map:height() / 2)
    end
+
+   -- >>>>>>>> shade2/map.hsp:1863 	randomize ..
+   Rand.set_seed()
 
    -- take the player, allies and any items they carry.
    --
@@ -739,15 +626,16 @@ function Map.travel_to(map, params)
       assert(new_ally ~= nil)
    end
 
+   Gui.mes_clear()
+
    current:emit("base.on_map_leave", {next_map=map})
+   -- <<<<<<<< shade2/map.hsp:1892 	loop ..
 
    if not current.is_temporary then
       Map.save(current)
    end
 
-   Map.refresh(map)
-
-   Map.set_map(map)
+   Map.set_map(map, "traveled")
    Gui.update_screen()
 
    collectgarbage()
@@ -864,12 +752,7 @@ end
 
 function Map.max_chara_count(map)
    -- TODO implement artificial charcter count
-   local maxFollower = 16
-   local maxNullChara = 1
-   local maxAdv = 40-maxNullChara
-   local maxSaveChara = maxFollower+maxAdv+1+maxNullChara
-   local maxChara = 245
-   return maxChara-maxSaveChara
+   return Const.MAX_CHARAS_OTHER
 end
 
 return Map

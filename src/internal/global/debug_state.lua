@@ -1,0 +1,3 @@
+return {
+   hooked_fns = {}
+}

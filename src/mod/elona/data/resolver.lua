@@ -95,18 +95,6 @@ data:add {
 
 data:add {
    _type = "base.resolver",
-   _id = "fruit_tree",
-
-   ordering = 300000,
-   method = "merge",
-
-   resolve = function()
-      return 5
-   end
-}
-
-data:add {
-   _type = "base.resolver",
    _id = "random_portrait",
 
    ordering = 300000,

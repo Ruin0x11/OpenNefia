@@ -11330,8 +11330,22 @@ local item =
         coefficient = 100,
         originalnameref2 = "tree",
 
-        param1 = Resolver.make("base.between", { min = 2, coefficient = 5 }),
-        param2 = Resolver.make("elona.fruit_tree"),
+        params = {
+           fruit_tree_amount = 0,
+           fruit_tree_item_id = "elona.apple"
+        },
+        on_init_params = function(self)
+           local FRUITS = {
+              "elona.apple",
+              "elona.grape",
+              "elona.orange",
+              "elona.lemon",
+              "elona.strawberry",
+              "elona.cherry"
+           }
+           self.params.fruit_tree_amount = Rand.rnd(2) + 3
+           self.params.fruit_tree_item_id = Rand.choice(FRUITS)
+        end,
 
         events = {
             {
@@ -11375,12 +11389,12 @@ local item =
                 end
             },
             {
-                id = "base.on_regenerate",
+                id = "base.on_item_renew_major",
                 name = "Fruit tree restock",
 
                 callback = function(self)
-                    if self.params.fruits < 10 then
-                        self.params.fruits = self.params.fruits + 1
+                    if self.params.fruit_tree_amount < 10 then
+                        self.params.fruit_tree_amount = self.params.fruit_tree_amount + 1
                         self.image = "elona.item_tree_of_fruits"
                     end
                 end

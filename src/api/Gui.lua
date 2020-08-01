@@ -467,8 +467,8 @@ function Gui.run_keybind_action(action, ...)
    return field:run_keybind_action(action, true, ...)
 end
 
-function Gui.update_minimap()
-   Gui.hud_widget("hud_minimap"):widget():refresh_visible()
+function Gui.update_minimap(map)
+   Gui.hud_widget("hud_minimap"):widget():refresh_visible(map)
 end
 
 function Gui.render_tilemap_to_image()

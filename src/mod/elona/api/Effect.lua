@@ -13,6 +13,8 @@ local Input = require("api.Input")
 local Enum = require("api.Enum")
 local IChara = require("api.chara.IChara")
 local Area = require("api.Area")
+local World = require("api.World")
+local Const = require("api.Const")
 
 local Effect = {}
 
@@ -112,11 +114,11 @@ function Effect.modify_karma(chara, delta)
 
    Gui.mes_c("chara_status.karma.changed", color, delta)
    if delta > 0 then
-      if chara.karma < -30 and chara.karma + delta >= -30 then
+      if chara.karma < Const.KARMA_BAD and chara.karma + delta >= Const.KARMA_BAD then
          Gui.mes_c("chara_status.karma.you_are_no_longer_criminal", "Green")
       end
    elseif delta < 0 then
-      if chara.karma >= -30 and chara.karma + delta < -30 then
+      if chara.karma >= Const.KARMA_BAD and chara.karma + delta < Const.KARMA_BAD then
          Gui.mes_c("chara_status.karma.you_are_criminal_now", "Purple")
          Calc.make_guards_hostile()
       end
@@ -273,6 +275,7 @@ function Effect.get_hungry(chara)
 end
 
 function Effect.eat_food(chara, food)
+   -- >>>>>>>> shade2/proc.hsp:1128 *insta_eat ..
    Effect.apply_general_eating_effect(chara, food)
    food:emit("elona_sys.on_item_eat", {chara=chara})
 
@@ -295,12 +298,27 @@ function Effect.eat_food(chara, food)
          chara.item_to_be_used = nil
       end
 
-      -- TODO quest
+      if chara.is_eating_traded_item then
+         chara.is_eating_traded_item = false
+         if food.spoilage_date and food.spoilage_date < World.date_hours() then
+            Gui.mes_c("food.passed_rotten", "SkyBlue")
+            chara:damage_hp(999, "elona.rotten_food")
+            local player = Chara.player()
+            if not Chara.is_alive(chara) and chara:reaction_towards() > 0 then
+               Effect.modify_karma(player, -5)
+            else
+               Effect.modify_karma(player, -1)
+            end
+            Effect.modify_impression(chara, -25)
+            return
+         end
+      end
    end
 
    Effect.proc_anorexia(chara)
 
    food:emit("elona.on_eat_item_finish", {chara=chara})
+   -- <<<<<<<< shade2/proc.hsp:1155 	return ..
 end
 
 -- TODO all categories with elona_id >= 50000
@@ -631,7 +649,7 @@ end
 
 function Effect.end_incognito(source)
    local filter = function(chara)
-      return not chara:is_player() and chara:has_role("elona.guard") and source:calc("karma") < -30
+      return not chara:is_player() and chara:has_role("elona.guard") and source:calc("karma") < Const.KARMA_BAD
    end
 
    local apply = function(chara)

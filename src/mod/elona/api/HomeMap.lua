@@ -194,6 +194,8 @@ function HomeMap.generate(home_id)
       home.on_generate(map)
    end
 
+   home.is_travel_destination = true
+
    return map
 end
 

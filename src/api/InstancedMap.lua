@@ -103,6 +103,8 @@ function InstancedMap:init(width, height, uids, tile)
 
    self._memorized = {}
 
+   self._archetype = nil
+
    self.default_tile = "base.floor"
    self.name = I18N.get("map.default_name")
 
@@ -140,7 +142,8 @@ local fallbacks = {
    can_exit_from_edge = true,
    cannot_mine_items = nil,
 
-   next_regenerate_date = 0,
+   renew_major_date = 0,
+   renew_minor_date = 0,
    visit_times = 0
 }
 
@@ -579,6 +582,20 @@ function InstancedMap:deserialize()
    self:redraw_all_tiles()
 end
 
+function InstancedMap:set_archetype(archetype_id)
+   if archetype_id ~= nil then
+      -- TODO refresh events from previous archetype
+      data["base.map_archetype"]:ensure(archetype_id)
+   end
+   self._archetype = archetype_id
+end
+
+function InstancedMap:archetype()
+   if self._archetype then
+      return data["base.map_archetype"]:ensure(self._archetype)
+   end
+   return nil
+end
 
 --
 -- ILocation impl

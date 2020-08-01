@@ -306,12 +306,6 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
 end)
 
 
-local function register_quest_town(map, _, _)
-   Quest.update_in_map(map)
-end
-
-Event.register("base.on_map_loaded_from_entrance", "register town as quest endpoint", register_quest_town)
-
 Event.register("base.on_chara_killed", "Refresh sidequests (when chara killed)",
                function(chara)
                   local map = chara:current_map()

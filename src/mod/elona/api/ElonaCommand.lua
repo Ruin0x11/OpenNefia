@@ -319,7 +319,7 @@ function ElonaCommand.wake_up_everyone(map)
    map = map or Map.current()
    local hour = save.base.date.hour
    if hour >= 7 or hour <= 22 then
-      for _, chara in Chara.iter() do
+      for _, chara in Chara.iter(map) do
          if not chara:is_ally() and chara:has_effect("elona.sleep") then
             if Rand.one_in(10) then
                chara:remove_effect("elona.sleep")

@@ -76,4 +76,8 @@ function InstancedArea:load_starting_floor()
    return self:load_floor(self:starting_floor())
 end
 
+function InstancedArea:__tostring()
+   return ("Area %d (%s)"):format(self.uid, self.name or "")
+end
+
 return InstancedArea

@@ -30,8 +30,14 @@ end
 
 --- @tparam[opt] InstancedMap map
 --- @treturn Iterator(IItem)
-function Item.iter(map)
+function Item.iter_all(map)
    return (map or field.map):iter_items()
+end
+
+--- @tparam[opt] InstancedMap map
+--- @treturn Iterator(IItem)
+function Item.iter(map)
+   return Item.iter_all(map):filter(Item.is_alive)
 end
 
 --- @tparam[opt] InstancedMap map
