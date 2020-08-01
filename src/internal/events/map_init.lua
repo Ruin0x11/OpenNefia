@@ -18,10 +18,6 @@ local ExHelp = require("mod.elona.api.ExHelp")
 local save = require("internal.global.save")
 local Log = require("api.Log")
 
-local function on_renew_geometry(map)
-   error()
-end
-
 local function relocate_chara(chara, map)
    local x, y
    for i=1, 1000 do
@@ -100,7 +96,7 @@ local function prepare_savable_map(map, load_type)
    -- >>>>>>>> shade2/map.hsp:1896 		if dateID>=mRenew:if mNoRenew=false:if mRenew!0: .
    if not map.is_not_renewable then
       if World.date_hours() > map.renew_major_date and not is_first_renewal then
-         on_renew_geometry()
+         map:emit("base.on_map_renew_geometry")
       end
    end
    -- <<<<<<<< shade2/map.hsp:1913 		} ..
@@ -134,8 +130,7 @@ local function renew_major(map)
    end
 
    -- TODO material spot
-   map:emit("base.on_map_renew_minor")
-
+   map:emit("base.on_map_renew_major")
    -- <<<<<<<< shade2/map.hsp:2221 			} ..
 end
 
@@ -183,15 +178,23 @@ local function update_quests(map)
 end
 
 local function proc_scene()
+   -- >>>>>>>> shade2/map.hsp:1995 	proc "Map:Proc scene" ..
    -- TODO main quest
+   -- this should get folded into base.on_map_minor_events
+   -- <<<<<<<< shade2/map.hsp:2015 		} ..
 end
 
 local function proc_area_minor_events(map)
+   -- >>>>>>>> shade2/map.hsp:2018 	proc "Map:Area specific" ..
    -- TODO
+   map:emit("base.on_map_minor_events")
+   -- <<<<<<<< shade2/map.hsp:2054 		} ..
 end
 
 local function init_world_map(map)
+   -- >>>>>>>> shade2/map.hsp:2065 	proc "Map:Init world" ..
    -- TODO
+   -- <<<<<<<< shade2/map.hsp:2070 		} ..
 end
 
 local function proc_area_major_events(map)
@@ -247,7 +250,7 @@ end
 local function prepare_map(map, params)
    local load_type = assert(params.load_type)
 
-   if map.is_saveable then
+   if not map.is_temporary then
       prepare_savable_map(map, load_type)
    end
 

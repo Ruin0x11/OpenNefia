@@ -8,9 +8,50 @@ local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 local Feat = require("api.Feat")
 local Log = require("api.Log")
+local Rand = require("api.Rand")
+local Gui = require("api.Gui")
+local World = require("api.World")
+
+local arc = {
+   _type = "base.map_archetype",
+   _id = "test_room"
+}
+
+function arc.on_map_renew_minor(map)
+   for _=1, 50 do
+      local x = Rand.rnd(map:width())
+      local y = Rand.rnd(map:height())
+      map:set_tile(x, y, "elona.brick_1")
+   end
+end
+
+function arc.on_map_renew_major(map)
+   for _=1, 50 do
+      local x = Rand.rnd(map:width())
+      local y = Rand.rnd(map:height())
+      map:set_tile(x, y, "elona.cobble_caution")
+   end
+end
+
+function arc.on_map_minor_events(map)
+   local to_minor = map.renew_minor_date - World.date_hours()
+   local to_major = map.renew_major_date - World.date_hours()
+   Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Gold")
+   Gui.mes_c("Time to major renew: " .. to_major .. " hours", "Gold")
+end
+
+function arc.on_map_renew_geometry(map)
+   pause()
+   for _, x, y in Pos.iter_rect(10, 10, 20, 20) do
+      map:set_tile(x, y, "elona.wall_dirt_dark_top")
+   end
+end
+
+data:add(arc)
 
 local function make_map(width, height)
    local map = InstancedMap:new(width, height)
+   map:set_archetype("test_room.test_room")
    map:clear("elona.cobble")
    map.is_indoor = true
    map.name = "Test Room"

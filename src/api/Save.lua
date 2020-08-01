@@ -72,7 +72,7 @@ function Save.load_game(save_id)
       error("Load error: " .. map)
    end
 
-   Map.set_map(map)
+   Map.set_map(map, "continue")
    Chara.set_player(map:get_object(player_uid))
 
    collectgarbage()

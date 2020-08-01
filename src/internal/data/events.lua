@@ -110,8 +110,10 @@ data:add_multi(
       { _id = "on_item_init_params", },
       { _id = "on_heal_chara_stamina", },
       { _id = "on_item_renew_major" },
-      { _id = "on_map_renew_major", },
       { _id = "on_map_renew_minor" },
+      { _id = "on_map_renew_major", },
+      { _id = "on_map_renew_geometry" },
+      { _id = "on_map_minor_events" },
       { _id = "on_map_major_events" },
    }
 )

@@ -47,7 +47,7 @@ local function proc_area_changed(prev_map, params)
    if player:calc("cargo_weight") > player:calc("max_cargo_weight") then
       Gui.mes("action.exit_map.burdened_by_cargo")
    end
-   -- >>>>>>>> shade2/map.hsp:219 		} ..
+   -- <<<<<<<< shade2/map.hsp:219 		} ..
 end
 
 Event.register("base.on_map_leave", "Events on area change", proc_area_changed)
