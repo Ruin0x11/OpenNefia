@@ -41,7 +41,6 @@ function arc.on_map_minor_events(map)
 end
 
 function arc.on_map_renew_geometry(map)
-   pause()
    for _, x, y in Pos.iter_rect(10, 10, 20, 20) do
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end

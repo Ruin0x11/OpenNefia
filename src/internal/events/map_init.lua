@@ -114,7 +114,7 @@ local function renew_major(map)
 
       for _, item in Item.iter(map) do
          item:emit("base.on_item_renew_major")
-         if i.own_state == Enum.OwnState.None then
+         if item.own_state == Enum.OwnState.None then
             item:remove()
          end
       end

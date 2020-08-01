@@ -11349,17 +11349,6 @@ local item =
 
         events = {
             {
-                id = "base.on_build_item",
-                name = "Generate fruit.",
-
-                callback = function(self)
-                    self.params = {
-                        fruits = 5,
-                        fruit_id = "elona.lemon"
-                    }
-                end
-            },
-            {
                 id = "elona_sys.on_bash",
                 name = "Fruit tree bash behavior",
 
@@ -11367,13 +11356,13 @@ local item =
                     self = self:separate()
                     Gui.play_sound("base.bash1")
                     Gui.mes("action.bash.tree.execute", self)
-                    local fruits = self:calc("params").fruits or 0
+                    local fruits = self.params.fruit_tree_amount
                     if self:calc("own_state") == "unobtainable" or fruits <= 0 then
                         Gui.mes("action.bash.tree.no_fruits")
                         return "turn_end"
                     end
-                    self.params.fruits = self.params.fruits - 1
-                    if self.params.fruits <= 0 then
+                    self.params.fruit_tree_amount = fruits - 1
+                    if self.params.fruit_tree_amount <= 0 then
                         self.image = "elona.item_tree_of_fruitless"
                     end
 
@@ -11383,7 +11372,7 @@ local item =
                     if y + 1 < map:height() and map:can_access(x, y + 1) then
                         y = y + 1
                     end
-                    Item.create(self.params.fruit_id, x, y, {amount=0})
+                    Item.create(self.params.fruit_tree_item_id, x, y, {amount=0})
 
                     return "turn_end"
                 end
