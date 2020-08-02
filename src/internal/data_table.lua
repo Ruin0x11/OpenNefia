@@ -54,6 +54,7 @@ function data_table:init()
 
     rawset(self, "global_edits", {})
     rawset(self, "single_edits", {})
+    rawset(self, "proxy_cache", setmetatable({}, { __mode = "kv" }))
 end
 
 function data_table:clear()
@@ -636,7 +637,11 @@ function data_table:__index(k)
     -- initialize things like the sound manager only
     -- after mods have been loaded.
     if data_table[k] then return data_table[k] end
-    return proxy:new(k, self)
+    if self.proxy_cache[k] then
+       return self.proxy_cache[k]
+    end
+    self.proxy_cache[k] = proxy:new(k, self)
+    return self.proxy_cache[k]
 end
 
 function data_table:__newindex(k, v)
