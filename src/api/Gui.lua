@@ -141,6 +141,14 @@ function Gui.tile_to_screen(tx, ty)
    return draw.get_coords():tile_to_screen(tx+1, ty+1)
 end
 
+--- Converts from screen space to map tile space.
+---
+--- @tparam int sx Screen X coordinate
+--- @tparam int sy Screen Y coordinate
+function Gui.screen_to_tile(sx, sy)
+   return draw.get_coords():screen_to_tile(sx, sy)
+end
+
 --- Converts from map tile space to visible screen space.
 ---
 --- @tparam int tx Tile X coordinate
@@ -251,6 +259,7 @@ function Gui.mes_c(text, color, ...)
    if type(color) == "string" then
       color_tbl = Enum.Color:try_get(color)
       if not color_tbl then
+         Log.error("Unknown message color '%s'", color)
          color_tbl = {255, 255, 255}
       end
    end

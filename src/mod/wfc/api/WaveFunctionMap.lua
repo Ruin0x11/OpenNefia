@@ -1,4 +1,4 @@
-local Layout = require("mod.wfc.api.Layout")
+local Layout = require("mod.tools.api.Layout")
 local OverlappingModel = require("mod.wfc.api.model.OverlappingModel")
 
 local WaveFunctionMap = {}

@@ -100,10 +100,6 @@ function Area.for_map(map_or_uid)
       end
    end
 
-   if mapping[uid] == nil then
-      pause()
-   end
-
    return mapping[uid]
 end
 
@@ -194,7 +190,7 @@ end
 
 function Area.create_stairs_down(area, floor_number, x, y, params, map)
    local Feat = require("api.Feat")
-   local stairs = Feat.create("elona.stairs_down", x, y, {}, map)
+   local stairs = Feat.create("elona.stairs_down", x, y, params, map)
    if stairs then
       stairs.params.area_uid = area.uid
       stairs.params.area_floor = floor_number
@@ -204,7 +200,7 @@ end
 
 function Area.create_stairs_up(area, floor_number, x, y, params, map)
    local Feat = require("api.Feat")
-   local stairs = Feat.create("elona.stairs_up", x, y, {}, map)
+   local stairs = Feat.create("elona.stairs_up", x, y, params, map)
    if stairs then
       stairs.params.area_uid = area.uid
       stairs.params.area_floor = floor_number

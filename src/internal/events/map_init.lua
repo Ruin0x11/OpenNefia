@@ -140,9 +140,6 @@ end
 
 local function check_renew(map)
    local area = Area.for_map(map)
-   if area == nil then
-      pause()
-   end
    assert(area)
    local area_meta = area.metadata
    -- >>>>>>>> shade2/map.hsp:2173 *check_renew ..
@@ -290,7 +287,7 @@ end
 
 Event.register("base.on_map_enter", "Prepare map after load", prepare_map)
 
-Event.register("base.on_map_enter", "reveal fog",
+Event.register("base.on_map_enter", "Reveal fog if town",
                function(map, params)
                   if map:has_type({"town", "world_map", "player_owned", "guild"}) then
                      map:mod("reveals_fog", true)
@@ -301,3 +298,5 @@ Event.register("base.on_map_enter", "reveal fog",
                      end
                   end
 end)
+
+Event.register("base.on_map_loaded", "Clear all debris", Map.clear_debris)

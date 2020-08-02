@@ -582,12 +582,22 @@ function InstancedMap:deserialize()
    self:redraw_all_tiles()
 end
 
-function InstancedMap:set_archetype(archetype_id)
+function InstancedMap:set_archetype(archetype_id, opts)
+   opts = opts or {}
    if archetype_id ~= nil then
       -- TODO refresh events from previous archetype
       data["base.map_archetype"]:ensure(archetype_id)
    end
    self._archetype = archetype_id
+
+   if opts.set_properties and self._archetype then
+      local arc = self:archetype()
+      if arc.properties then
+         for k, v in pairs(arc.properties) do
+            self[k] = v
+         end
+      end
+   end
 end
 
 function InstancedMap:archetype()

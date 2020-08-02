@@ -101,7 +101,19 @@ function InstancedArea:load_or_generate_floor(floor)
       return false, "no_archetype"
    end
 
-   local map = archetype.on_generate_floor(self, floor)
+   local map
+
+   if archetype.floors and archetype.floors[floor] then
+      local map_archetype_id = archetype.floors[floor]
+      local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
+      assert(type(map_archetype.on_generate_floor) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
+
+      map = map_archetype.on_generate_floor(self, floor)
+      map:set_archetype(map_archetype_id, { set_properties = true })
+   else
+      map = archetype.on_generate_floor(self, floor)
+   end
+
    assert(class.is_an(InstancedMap, map))
    self:add_floor(map, floor)
 

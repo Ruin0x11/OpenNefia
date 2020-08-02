@@ -169,7 +169,7 @@ function MapEditLayer:update(dt)
   end
 
   local mouse_x, mouse_y = Input.mouse_pos()
-  self.target_x, self.target_y = Gui.visible_screen_to_tile(mouse_x, mouse_y)
+  self.target_x, self.target_y = Gui.screen_to_tile(mouse_x, mouse_y)
   local map = Map.current()
 
   if self.placing and map:is_in_bounds(self.target_x, self.target_y) then

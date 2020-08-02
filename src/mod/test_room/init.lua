@@ -4,13 +4,13 @@ local Pos = require("api.Pos")
 local Map = require("api.Map")
 local InstancedMap = require("api.InstancedMap")
 local Text = require("mod.elona.api.Text")
-local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
-local Feat = require("api.Feat")
 local Log = require("api.Log")
 local Rand = require("api.Rand")
 local Gui = require("api.Gui")
 local World = require("api.World")
+local Layout = require("mod.tools.api.Layout")
+local Chara = require("api.Chara")
 
 local arc = {
    _type = "base.map_archetype",
@@ -36,8 +36,8 @@ end
 function arc.on_map_minor_events(map)
    local to_minor = map.renew_minor_date - World.date_hours()
    local to_major = map.renew_major_date - World.date_hours()
-   Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Gold")
-   Gui.mes_c("Time to major renew: " .. to_major .. " hours", "Gold")
+   Gui.mes_c("Time to minor renew: " .. to_minor .. " hours", "Yellow")
+   Gui.mes_c("Time to major renew: " .. to_major .. " hours", "Yellow")
 end
 
 function arc.on_map_renew_geometry(map)
@@ -49,29 +49,79 @@ end
 data:add(arc)
 
 
-local test_room = {
-   _type = "base.area_archetype",
-   _id = "test_room"
+local putit_room = {
+   _type = "base.map_archetype",
+   _id = "putit_room"
 }
 
-function test_room.on_generate_floor(area, floor)
-   local map = InstancedMap:new(50, 50)
-   map:set_archetype("test_room.test_room")
-   map:clear("elona.cobble")
-   map.is_indoor = true
-   map.name = "Test Room"
-   for _, x, y in Pos.iter_border(0, 0, 50 - 1, 50 - 1) do
-      map:set_tile(x, y, "elona.wall_dirt_dark_top")
+function putit_room.on_map_minor_events(map)
+   Gui.mes_c("*puti*", "Yellow")
+end
+
+function putit_room.on_generate_floor(area, floor)
+   local tiles = [[
+OOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOO
+OOOOOOOOOOO##OOO
+OOOOOOOOOO#..#OO
+OOO#######...#OO
+OO#..........#OO
+O#..x...x....#OO
+O#..x...x....#OO
+O#..x...x....#OO
+O#...........#OO
+O#...........#OO
+OO#........##OOO
+OOO########OOOOO
+OOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOO]]
+
+   local tileset = {
+      ["."] = "elona.cobble_diagonal",
+      ["#"] = "elona.wall_stone_3_top",
+      ["O"] = "elona.wall_dirt_dark_top",
+      ["x"] = "elona.cyber_4"
+   }
+
+   local map = Layout.to_map({tiles = tiles, tileset = tileset})
+
+   for _ = 1, 20 do
+      Chara.create("elona.putit", nil, nil, {}, map)
    end
 
-   for _, x, y in map:iter_tiles() do
-      map:memorize_tile(x, y)
-   end
+   local parent_area = Area.parent(area)
+   assert(Area.create_stairs_up(parent_area, 1, 7, 7, { force = true }, map))
 
    return map
 end
 
-data:add(test_room)
+putit_room.properties = {
+   is_indoor = true,
+   turn_cost = 1000000,
+   name = "Putit Room",
+   default_tile = "elona.wall_stone_3_fog"
+}
+
+data:add(putit_room)
+data:add {
+   _type = "base.area_archetype",
+   _id = "putit_room",
+
+   floors = {
+      [1] = "test_room.putit_room"
+   },
+
+   image = "elona.feat_area_tent",
+
+   parent_area = {
+      _id = "test_room.test_room",
+      on_floor = 1,
+      x = 23,
+      y = 25,
+      start_floor = 1
+   }
+}
 
 
 local the_dungeon = {
@@ -83,6 +133,9 @@ local the_dungeon = {
 function the_dungeon.on_generate_floor(area, floor)
    local map = InstancedMap:new(20, 25)
    map:clear("elona.hardwood_floor_5")
+   map.name = "The Dungeon"
+   map.is_indoor = true
+   map.default_tile = "elona.wall_stone_3_fog"
 
    if floor == 1 then
       local parent_area = Area.parent(area)
@@ -110,7 +163,32 @@ the_dungeon.parent_area = {
 data:add(the_dungeon)
 
 
-local function test_room(self, player)
+local test_room = {
+   _type = "base.area_archetype",
+   _id = "test_room"
+}
+
+function test_room.on_generate_floor(area, floor)
+   local map = InstancedMap:new(50, 50)
+   map:set_archetype("test_room.test_room")
+   map:clear("elona.cobble")
+   map.is_indoor = true
+   map.name = "Test Room"
+   for _, x, y in Pos.iter_border(0, 0, 50 - 1, 50 - 1) do
+      map:set_tile(x, y, "elona.wall_dirt_dark_top")
+   end
+
+   for _, x, y in map:iter_tiles() do
+      map:memorize_tile(x, y)
+   end
+
+   return map
+end
+
+data:add(test_room)
+
+
+local function on_game_start(self, player)
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)
    item = Item.create("elona.arrow", nil, nil, {}, player)
@@ -135,5 +213,5 @@ data:add {
    _type = "base.scenario",
    _id = "test_room",
 
-   on_game_start = test_room
+   on_game_start = on_game_start
 }

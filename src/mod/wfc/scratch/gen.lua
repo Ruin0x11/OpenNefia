@@ -1,7 +1,7 @@
 local Map = require("api.Map")
 local WaveFunctionMap = require("mod.wfc.api.WaveFunctionMap")
 local Draw = require("api.Draw")
-local Layout = require("mod.wfc.api.Layout")
+local Layout = require("mod.tools.api.Layout")
 local layouts = require("mod.wfc.scratch.layouts")
 
 local gen = {}

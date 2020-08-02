@@ -1201,6 +1201,25 @@ Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
+         name = "on_generate_floor",
+         default = CodeGenerator.gen_literal [[
+function(area, floor)
+   return InstancedMap(20, 20)
+end
+]],
+         template = true,
+         type = "function(InstancedArea, int)?",
+         doc = [[
+How this map should be generated for the first time.
+
+This is to be used for generating areas from `base.area_archetype` so you don't
+have to create a new instance of `base.area_archetype` every single time for its
+`on_generate_floor` callback if all you want is an area containing a single map.
+If you don't list this map archetype in the `floors` property of any area
+archetype, then this function can be omitted.
+]]
+      },
+      {
          name = "properties",
          default = CodeGenerator.gen_literal [[
 {
@@ -1258,15 +1277,6 @@ set `is_temporary` to `true` on the generated map.
          type = "id:base.chip",
          doc = [[
 Image this area will have when created with Area.create_entrance().
-]]
-      },
-      {
-         name = "color",
-         default = "elona.feat_area_village",
-         template = true,
-         type = "color",
-         doc = [[
-Color of the image this area will have when created with Area.create_entrance().
 ]]
       },
       {
