@@ -17,7 +17,7 @@ function UiFpsCounter:init()
    self.now = Env.get_time()
    self.buff = ""
 
-   self.fps_graph = UiFpsGraph:new({0, 0, 255, 128})
+   self.fps_graph = UiFpsGraph:new({0, 0, 255, 128}, 0.10)
    self.ram_graph = UiFpsGraph:new({255, 0, 0, 128})
    self.ram_diff_graph = UiFpsGraph:new({0, 255, 0, 128})
 end

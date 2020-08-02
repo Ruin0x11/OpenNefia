@@ -791,6 +791,8 @@ local function init_save()
    s.guild = nil
    s.artifact_locations = {}
    s.inheritable_item_count = 0
+   s.fire_giant_uid = nil
+   s.home_rank = "elona.cave"
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

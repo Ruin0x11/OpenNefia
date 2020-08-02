@@ -58,7 +58,7 @@ function putit_room.on_map_minor_events(map)
    Gui.mes_c("*puti*", "Yellow")
 end
 
-function putit_room.on_generate_floor(area, floor)
+function putit_room.on_generate_map(area, floor)
    local tiles = [[
 OOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOO
@@ -189,10 +189,10 @@ data:add(test_room)
 
 
 local function on_game_start(self, player)
-   local item = Item.create("elona.long_bow", nil, nil, {}, player)
-   player:equip_item(item)
-   item = Item.create("elona.arrow", nil, nil, {}, player)
-   player:equip_item(item)
+   local bow = Item.create("elona.long_bow", nil, nil, { ownerless = true })
+   local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })
+   player:equip_item(bow, true)
+   player:equip_item(arrow, true)
 
    Item.create("elona.putitoro", nil, nil, {}, player)
    Item.create("elona.rod_of_identify", nil, nil, {}, player)
@@ -203,7 +203,10 @@ local function on_game_start(self, player)
    player.title = Text.random_title()
 
    local root_area = Area.create_unique("test_room.test_room", "root")
-   local ok, map = assert(root_area:load_or_generate_floor(1))
+   local _, map = assert(root_area:load_or_generate_floor(1))
+
+   local north_tyris = Area.create_unique("elona.north_tyris", root_area)
+   assert(Area.create_entrance(north_tyris, 1, 25, 23, {}, map))
 
    Map.set_map(map)
    map:take_object(player, 25, 25)

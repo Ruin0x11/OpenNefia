@@ -1201,7 +1201,7 @@ Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
-         name = "on_generate_floor",
+         name = "on_generate_map",
          default = CodeGenerator.gen_literal [[
 function(area, floor)
    return InstancedMap(20, 20)

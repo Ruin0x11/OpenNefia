@@ -1,4 +1,3 @@
-local data = require("internal.data")
 local save = require("internal.global.save")
 local Feat = require("api.Feat")
 local Event = require("api.Event")
@@ -9,14 +8,7 @@ local function generate_entrances_of_parent_area(parent_map, params)
    local parent_area = params.area
    local floor = params.floor_number
 
-   local filter = function(arc)
-      return arc.parent_area
-         and parent_area._archetype == arc.parent_area._id
-         and floor == arc.parent_area.on_floor
-   end
-   local child_areas = data["base.area_archetype"]:iter():filter(filter)
-
-   for _, child_area in child_areas:unwrap() do
+   for _, child_area in parent_area:iter_child_areas(floor) do
       -- First check if an entrance to this area already exists in the parent
       -- area. If so, do nothing.
       local pred = function(feat)

@@ -68,6 +68,9 @@ function Debug.hook(tbl, fn_name, depth, level)
          end
       end
 
+      local tb_line = string.split(debug.traceback())[3] or ""
+      s = s .. "  " .. tb_line
+
       log_cb(s)
 
       return fn(...)

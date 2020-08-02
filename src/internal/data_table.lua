@@ -341,8 +341,7 @@ function data_table:add(dat)
 
          return dat
       else
-         Log.error("ID is already taken on type '%s': '%s'", _type, full_id)
-         -- self:error(string.format("ID is already taken on type '%s': '%s'", _type, full_id))
+         self:error(("ID is already taken on type '%s': '%s'"):format(_type, full_id))
          return nil
       end
    end

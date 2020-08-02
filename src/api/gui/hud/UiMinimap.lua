@@ -43,8 +43,8 @@ function UiMinimap:refresh_visible(map)
       return
    end
 
-   self.tw = self.width / map:width()
-   self.th = self.height / map:height()
+   self.tw = math.ceil(self.width / map:width())
+   self.th = math.ceil(self.height / map:height())
 
    self.tile_batch:clear()
 
@@ -63,7 +63,7 @@ function UiMinimap:refresh_visible(map)
             -- sprite batch.
             color = sub
          end
-         self.tile_batch:add(tile._id, x * self.tw, y * self.th, self.tw, self.th, color)
+         self.tile_batch:add(tile._id, math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th, color)
       end
    end
    -- <<<<<<<< shade2/screen.hsp:1290 	return ..

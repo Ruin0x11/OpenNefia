@@ -27,7 +27,6 @@ function Gui.update_screen(dt)
 
    field:update_screen(scroll, dt)
    scroll = false
-   Gui.update_minimap()
 
    if sw then
       sw:p("screen update")

@@ -4,21 +4,24 @@ local CircularBuffer = require("api.CircularBuffer")
 
 local UiFpsGraph = class.class("UiFpsGraph", IUiElement)
 
-function UiFpsGraph:init(color)
+function UiFpsGraph:init(color, smoothing_factor)
    self.max = 0
    self.min = 0
    self.use_min = true
    self.step = 1
-   self.points = CircularBuffer:new(2)
+   self.points = CircularBuffer:new(100)
+   self.smoothed = CircularBuffer:new(100)
    self.color = color or {0, 0, 255, 128}
+   self.smoothing_factor = smoothing_factor or 1.0
 end
 
 function UiFpsGraph:relayout(x, y, width, height)
    self.x = x
    self.y = y
    local size = math.max(math.floor(self.width / self.step), 2)
-   if size ~= self.points.max_length then
+   if size > self.points.max_length then
       self.points = CircularBuffer:new(size)
+      self.smoothed = CircularBuffer:new(size)
    end
    self.width = width
    self.height = height
@@ -29,17 +32,25 @@ end
 
 function UiFpsGraph:clear()
    self.max = 0
-   self.points = CircularBuffer:new(2)
+   self.points = CircularBuffer:new(100)
 end
 
 function UiFpsGraph:add_point(n)
    self.points:push(n)
+   local prev = self.smoothed:get(1)
+   if prev then
+      local smoothed = self.smoothing_factor * n + (1 - self.smoothing_factor) * prev
+      self.smoothed:push(smoothed)
+   else
+      self.smoothed:push(n)
+   end
+
    -- self.max = math.max(self.max, n)
    -- self.min = math.min(self.min, n)
 
-   self.max = self.points:get(1)
-   self.min = self.points:get(1)
-   for _, point in self.points:iter() do
+   self.max = self.smoothed:get(1)
+   self.min = self.smoothed:get(1)
+   for _, point in self.smoothed:iter() do
       self.max = math.max(self.max, point)
       self.min = math.min(self.min, point)
    end
@@ -50,7 +61,7 @@ function UiFpsGraph:draw()
    Draw.line_rect(self.x, self.y, self.width, self.height)
 
    Draw.set_color(self.color)
-   for i, point in self.points:iter_reverse() do
+   for i, point in self.smoothed:iter_reverse() do
       local x = self.x + self.width - (i * self.step) + 1
       local ratio
       if self.use_min then

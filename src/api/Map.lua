@@ -46,6 +46,7 @@ function Map.set_map(map, load_type)
    map:emit("base.on_map_enter", {load_type=load_type})
    map.visit_times = map.visit_times + 1
    field:set_map(map)
+   Gui.update_minimap()
    return field.map
 end
 
@@ -177,7 +178,7 @@ end
 --- @tparam[opt] InstancedMap map
 --- @treturn bool
 function Map.is_world_map(map)
-   return (map or field.map):calc("is_world_map")
+   return (map or field.map):has_type("world_map")
 end
 
 --- Returns the current map. This can only be nil if a game has not
@@ -588,7 +589,17 @@ function Map.travel_to(map, params)
       y = math.floor(map:height() / 2)
    end
 
-   assert(Area.for_map(map) ~= nil, "Map is not registered with an area")
+   if map.area_uid == nil then
+      Log.warn("Autogenerating new area for map '%d'", map.uid)
+      local player = Chara.player()
+      local area = InstancedArea:new()
+      local floor = Area.floor_number(current)
+      area.parent_x = player.x
+      area.parent_y = player.y
+      area.parent_floor = floor
+      area:add_floor(map)
+      Area.register(area, { parent = Area.for_map(current) })
+   end
 
    -- >>>>>>>> shade2/map.hsp:1863 	randomize ..
    Rand.set_seed()
@@ -642,20 +653,41 @@ function Map.travel_to(map, params)
    return true
 end
 
---- Returns the world map which is directly accessable by this map.
----
---- @tparam[opt] InstancedMap map
---- @treturn[opt] InstancedMap
-function Map.world_map_containing(map)
-   error("TODO")
+function Map.load_parent_map(map)
+   local area = Area.for_map(map)
+   local parent = Area.parent(map)
+   if parent == nil then
+      return nil
+   end
+
+   local floor = area.parent_floor or 1
+   return parent:load_or_generate_floor(floor)
 end
 
---- Finds the location of this map in its containing world map.
----  - A group of maps is contained in one area.
----  - The area has a containing world map.
+--- Finds the location of an entrance to this map in its containing world area.
+---
+--- NOTE: Currently the implementation assumes the map's area and parent area
+--- both have area archetypes. This is to prevent having to load the entire
+--- world map from disk just to know the position. This might have to be
+--- redesigned later.
+---
 --- @tparam InstancedMap map
-function Map.position_in_world_map(map)
-   error("TODO")
+function Map.position_in_parent_map(map)
+   local area = Area.for_map(map)
+   local parent = Area.parent(map)
+   if parent == nil then
+      return nil, nil
+   end
+
+   -- Try seeing if there is a custom position set first.
+   if area.parent_x and area.parent_y then
+      return area.parent_x, area.parent_y
+   end
+
+   local floor = area.parent_floor or 1
+
+   -- Look in the area's archetype definition for a child map.
+   return parent:position_of_child(area, floor)
 end
 
 -- @tparam uint hour

@@ -12,6 +12,7 @@ local FieldMap = require("mod.elona.api.FieldMap")
 local elona_Magic = require("mod.elona.api.Magic")
 local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
 local Log = require("api.Log")
+local Area = require("api.Area")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -19,19 +20,13 @@ local Command = {}
 local function travel_to_map_hook(source, params, result)
    local cur = Map.current()
 
-   error("TODO")
-
-   if not map_result then
-      return {false, "Could not load outer map: " .. err}
-   end
-
-   local map = map_result.map
-   map_result.map = nil
+   local ok, outer_map = assert(Map.load_parent_map(cur))
+   local x, y = Map.position_in_parent_map(cur)
+   assert(x and y)
 
    save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
 
-   local start_pos = map_result.start_pos
-   assert(Map.travel_to(map, {start_pos = start_pos}))
+   assert(Map.travel_to(outer_map, { start_x = x, start_y = y }))
 
    return {true, "player_turn_query"}
 end
@@ -90,11 +85,12 @@ function Command.move(player, x, y)
       return result
    end
 
-   local has_outer_area = false -- TODO area
+   local map = player:current_map()
+   local parent_area = Area.parent(map)
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y)
       and Map.current():calc("can_exit_from_edge")
-      and has_outer_area
+      and parent_area ~= nil
    then
       -- Player is trying to move out of the map.
 

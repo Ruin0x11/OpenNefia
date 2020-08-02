@@ -81,6 +81,10 @@ local role = {
       elona_id = 17
    },
    {
+      _id = "sister",
+      elona_id = 19
+   },
+   {
       _id = "returner",
       elona_id = 21,
    },

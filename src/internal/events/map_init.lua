@@ -36,12 +36,8 @@ local function relocate_chara(chara, map)
    end
 end
 
-local function reset_chara_flags(map, load_type)
+local function reset_chara_flags(map)
    -- >>>>>>>> shade2/map.hsp:1914 		repeat mHeight ..
-   if load_type ~= "full" and load_type ~= "traveled" then
-      return
-   end
-
    for _, chara in Chara.iter_all(map) do
       if chara.state == "CitizenDead" and World.date_hours() >= chara.respawn_date then
          chara:revive()
@@ -101,7 +97,9 @@ local function prepare_savable_map(map, load_type)
    end
    -- <<<<<<<< shade2/map.hsp:1913 		} ..
 
-   reset_chara_flags(map, load_type)
+   if load_type == "full" or load_type == "traveled" then
+      reset_chara_flags(map)
+   end
 end
 
 local function renew_major(map)
@@ -113,7 +111,9 @@ local function renew_major(map)
                     :each(IMapObject.remove_ownership)
 
       for _, item in Item.iter(map) do
+         -- Restocks fruit trees.
          item:emit("base.on_item_renew_major")
+
          if item.own_state == Enum.OwnState.None then
             item:remove()
          end
@@ -247,7 +247,7 @@ local function proc_quest_message(map)
    -- TODO
 end
 
-local function prepare_map(map, params)
+local function initialize_map(map, params)
    local load_type = assert(params.load_type)
 
    if not map.is_temporary then
@@ -258,9 +258,15 @@ local function prepare_map(map, params)
 
    recalculate_crowd(map)
 
-   Gui.update_minimap(map)
-
    update_quests(map)
+end
+
+Event.register("base.on_map_initialize", "Initialize map renewal, crowding and quests", initialize_map)
+
+local function prepare_map(map, params)
+   local load_type = assert(params.load_type)
+
+   map:emit("base.on_map_initialize", {load_type=load_type})
 
    if load_type == "initialize" then
       return

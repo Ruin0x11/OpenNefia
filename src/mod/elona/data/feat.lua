@@ -203,6 +203,11 @@ local function travel(start_pos_fn)
       local prev_area = Area.for_map(prev_map)
       local starting_pos
 
+      local map_archetype = map:archetype()
+      if map_archetype and map_archetype.starting_pos then
+         start_pos_fn = map_archetype.starting_pos
+      end
+
       -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
       if area.uid ~= prev_area.uid then
          -- If the area we're trying to travel to is the parent of this area, then

@@ -372,12 +372,12 @@ function Quest.register_town(map)
    if map.is_generated_every_time then
       return nil, "Map must be able to be regenerated (is_generated_every_time = false)"
    end
-   local ok, world_map = Map.world_map_containing(map)
-   if not ok then
-      return nil, "Map must have containing world map"
+   local parent = Area.parent(map)
+   if not parent then
+      return nil, "Map must have parent_area"
    end
 
-   local x, y = Map.position_in_world_map(map)
+   local x, y = Map.position_in_parent_map(map)
    assert(x)
 
    Log.debug("Register quest endpoint %d", map.uid)
@@ -386,7 +386,7 @@ function Quest.register_town(map)
       uid = map.uid,
       name = map.name,
       gen_id = map.gen_id,
-      world_map_uid = world_map.uid,
+      world_map_area_uid = parent.uid,
       world_map_x = x,
       world_map_y = y,
    }

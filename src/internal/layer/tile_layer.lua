@@ -1,9 +1,9 @@
 local Map = require("api.Map")
 local IDrawLayer = require("api.gui.IDrawLayer")
-local Draw = require("api.Draw")
 local tile_batch = require("internal.draw.tile_batch")
 local save = require("internal.global.save")
 local atlases = require("internal.global.atlases")
+local Debug = require("api.Debug")
 
 local tile_layer = class.class("tile_layer", IDrawLayer)
 

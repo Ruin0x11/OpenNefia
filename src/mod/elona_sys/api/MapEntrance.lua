@@ -44,7 +44,7 @@ end
 function MapEntrance.edge(map, chara)
    local pos = save.base.player_pos_on_map_leave
    if pos then
-      return pos.x, pos.y
+      return pos
    end
    local next_dir = Chara.player().direction
    local x = 0

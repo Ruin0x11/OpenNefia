@@ -58,8 +58,14 @@ function ICharaEquip:apply_item_stats(item)
 end
 
 function ICharaEquip:equip_item(item, force)
-   if not (self:has_item(item) or force) then
-      return nil, "not_owned"
+   if not self:has_item(item) then
+      if force then
+         if not self:take_item(item) then
+            return nil, "cannot_take"
+         end
+      else
+         return nil, "not_owned"
+      end
    end
 
    local result, err = self.equip:equip(item)

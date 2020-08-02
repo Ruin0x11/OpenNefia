@@ -1,0 +1,68 @@
+local Enum = require("api.Enum")
+local Chara = require("api.Chara")
+local Calc = require("mod.elona.api.Calc")
+local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
+local Charagen = require("mod.tools.api.Charagen")
+
+local util = {}
+
+function util.generate_122(elona122_map_id)
+   return function()
+      return Elona122Map.generate(elona122_map_id)
+   end
+end
+
+function util.reload_122_map_geometry(current, elona122_map_id)
+   local temp = Elona122Map.generate(elona122_map_id)
+   assert(current:width() == temp:width())
+   assert(current:height() == temp:height())
+
+   for _, x, y, tile in temp:iter_tiles() do
+      current:set_tile(x, y, tile)
+   end
+end
+
+function util.chara_filter_town(callback)
+   return function(map)
+      -- >>>>>>>> shade2/map.hsp:9 	if (mType=mTypeTown)or(mType=mTypeVillage){ ..
+      local level = Calc.calc_object_level(10, map)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+      local filter = {
+         level = level,
+         quality = quality,
+         fltselect = 5
+      }
+
+      if callback == nil then
+         return filter
+      end
+
+      local result = callback(map)
+      if result ~= nil and type(result) == "table" then
+         return table.merge(filter, result)
+      end
+
+      return filter
+      -- <<<<<<<< shade2/map.hsp:29 		} ..
+   end
+end
+
+function util.generate_chara(map, x, y, extra_params)
+   local params
+   local archetype = map:archetype()
+   if archetype.chara_filter then
+      params = archetype.chara_filter(map)
+      assert(type(params) == "table")
+   else
+      local player = Chara.player()
+      local level = Calc.calc_object_level((player and player.level) or 1)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+      params = { level = level, quality = quality }
+   end
+   if extra_params then
+      table.merge(params, extra_params)
+   end
+   return Charagen.create(x, y, params, map)
+end
+
+return util

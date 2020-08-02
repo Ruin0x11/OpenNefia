@@ -140,7 +140,7 @@ function Area.register(area, opts)
 
    assert(areas[area.uid] == nil, "Area has already been registered")
 
-   Log.info("Registering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
+   Log.debug("Registering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
    -- for _, _, map in area:iter_maps() do
    --    if not Map.is_saved(map.uid) then

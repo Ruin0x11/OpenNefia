@@ -1,10 +1,10 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local InstancedMap = require("api.InstancedMap")
-local Resolver = require("api.Resolver")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local I18N = require("api.I18N")
+local Log = require("api.Log")
 
 local HomeMap = {}
 
@@ -22,7 +22,7 @@ data:add {
    value = value(0),
    image = "elona.feat_area_your_dungeon",
 
-   copy = {
+   properties = {
       home_scale = 0,
       max_item_count = 100,
       home_rank_points = 1000
@@ -62,7 +62,7 @@ data:add {
    image = "elona.feat_area_town",
 
    -- >>>>>>>> shade2/map_user.hsp:7 	if gHomeLevel=1{ ..
-   copy = {
+   properties = {
       home_scale = 1,
       max_item_count = 150,
       home_rank_points = 3000
@@ -78,7 +78,7 @@ data:add {
    value = value(2),
 
    -- >>>>>>>> shade2/map_user.hsp:11 	if gHomeLevel=2{ ..
-   copy = {
+   properties = {
       home_scale = 2,
       max_item_count = 200,
       home_rank_points = 5000
@@ -94,7 +94,7 @@ data:add {
    value = value(3),
 
    -- >>>>>>>> shade2/map_user.hsp:15 	if gHomeLevel=3{ ..
-   copy = {
+   properties = {
       home_scale = 3,
       max_item_count = 300,
       home_rank_points = 7000
@@ -111,7 +111,7 @@ data:add {
    image = "elona.feat_area_tent",
 
    -- >>>>>>>> shade2/map_user.hsp:19 	if gHomeLevel=4{ ..
-   copy = {
+   properties = {
       home_scale = 4,
       max_item_count = 350,
       home_rank_points = 8000,
@@ -131,7 +131,7 @@ data:add {
    image = "elona.feat_area_castle",
 
    -- >>>>>>>> shade2/map_user.hsp:24 	if gHomeLevel=5{ ..
-   copy = {
+   properties = {
       home_scale = 0,
       max_item_count = 100,
       home_rank_points = 1000
@@ -174,23 +174,25 @@ data:add {
    end
 }
 
-function HomeMap.generate(home_id)
+function HomeMap.generate(home_id, opts)
+   opts = opts or {}
+
    local home = data["elona.home"]:ensure(home_id)
 
    local map
    if home.map then
       map = Elona122Map.generate(home.map)
    else
+      Log.error("Missing map name for home '%s'", home_id)
       map = InstancedMap:new(30, 20)
       map:clear("elona.grass")
    end
 
-   if home.copy then
-      local copy = Resolver.resolve(home.copy)
-      table.merge_ex(map, copy)
+   if home.properties then
+      table.merge_ex(map, home.properties)
    end
 
-   if home.on_generate then
+   if not opts.no_callbacks and home.on_generate then
       home.on_generate(map)
    end
 

@@ -14,11 +14,13 @@ function InstancedArea:init(image, area_generator, uids)
    self.metadata = {}
    self.name = nil
    self.parent_area = nil
+   self.parent_x = nil
+   self.parent_y = nil
 end
 
 function InstancedArea:add_floor(map, floor)
-   assert(math.type(floor) == "integer")
    floor = floor or (self:deepest_floor() + 1)
+   assert(math.type(floor) == "integer")
    assert(class.is_an(InstancedMap, map))
 
    assert(self.maps[floor] == nil, ("Map already exists at floor '%d'"):format(floor))
@@ -106,10 +108,12 @@ function InstancedArea:load_or_generate_floor(floor)
    if archetype.floors and archetype.floors[floor] then
       local map_archetype_id = archetype.floors[floor]
       local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
-      assert(type(map_archetype.on_generate_floor) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
+      assert(type(map_archetype.on_generate_map) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
 
-      map = map_archetype.on_generate_floor(self, floor)
-      map:set_archetype(map_archetype_id, { set_properties = true })
+      map = map_archetype.on_generate_map(self, floor)
+      if map._archetype == nil then
+         map:set_archetype(map_archetype_id, { set_properties = true })
+      end
    else
       map = archetype.on_generate_floor(self, floor)
    end
@@ -120,6 +124,37 @@ function InstancedArea:load_or_generate_floor(floor)
    map:emit("base.on_generate_area_floor", {area=self, floor_number=floor})
 
    return true, map
+end
+
+function InstancedArea:iter_child_areas(floor)
+   assert(math.type(floor) == "integer")
+   if self._archetype == nil then
+      return fun.iter({})
+   end
+
+   local filter = function(arc)
+      return arc.parent_area
+         and self._archetype == arc.parent_area._id
+         and floor == arc.parent_area.on_floor
+   end
+   return data["base.area_archetype"]:iter():filter(filter)
+end
+
+function InstancedArea:position_of_child(child, floor)
+   assert(class.is_an(InstancedArea, child))
+   assert(math.type(floor) == "integer")
+
+   if self._archetype == nil or child._archetype == nil then
+      return nil, nil
+   end
+
+   local child_archetype = self:iter_child_areas(floor):filter(function(arc) return arc._id == child._archetype end):nth(1)
+   if child_archetype == nil then
+      return nil, nil
+   end
+
+   local parent = child_archetype.parent_area
+   return parent.x, parent.y
 end
 
 function InstancedArea:load_starting_floor()

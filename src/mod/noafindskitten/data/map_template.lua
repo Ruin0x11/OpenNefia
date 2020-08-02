@@ -39,7 +39,8 @@ data:add {
          Gui.mes("noafindskitten.kitten_found", "Green")
          Input.query_more()
          self:current_map()._quest.state = "completed"
-         Map.travel_to(self:current_map()._outer_map)
+         local _, map = assert(Map.load(self:current_map()._outer_map))
+         Map.travel_to(map)
       else
          Gui.play_sound("base.chat")
          Gui.mes_c(self.description)
