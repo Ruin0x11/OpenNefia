@@ -3,6 +3,7 @@ local InstancedArea = require("api.InstancedArea")
 local field = require("game.field")
 local save = require("internal.global.save")
 local Log = require("api.Log")
+local data = require("internal.data")
 
 --- An area is a collection of maps. Areas commonly represent dungeons or world
 --- maps.
@@ -40,8 +41,6 @@ function Area.metadata(map)
 
    return area.metadata
 end
-
-local mapping
 
 function Area.current()
    return Area.for_map(field.map)
@@ -94,15 +93,15 @@ function Area.for_map(map_or_uid)
 
    local areas = save.base.areas
 
-   if mapping == nil then
-      local map_to_area = fun.iter(areas)
-         :map(function(area) return area:iter_maps():map(function(floor, map) return map.uid, area end):to_map() end)
-      mapping = {}
-      for _, m in map_to_area:unwrap() do
-         for map_uid, area in pairs(m) do
-            mapping[map_uid] = area
-         end
+   local mapping = {}
+   for _, _, area in fun.iter_pairs(areas) do
+      for _, _, map_meta in area:iter_maps() do
+         mapping[map_meta.uid] = area
       end
+   end
+
+   if mapping[uid] == nil then
+      pause()
    end
 
    return mapping[uid]
@@ -116,14 +115,18 @@ function Area.get(uid)
    return areas[uid] or nil
 end
 
+function Area.is_registered(area)
+   local uid = area
+   if class.is_an(InstancedArea, area) then
+      uid = area.uid
+   end
+   return save.base.areas[uid] ~= nil
+end
+
 function Area.register(area, opts)
    opts = opts or {}
    opts.parent = opts.parent or nil
    assert(class.is_an(InstancedArea, area))
-
-   if area.name == nil then
-      error(("Area '%d' should have a name set"):format(area.uid))
-   end
 
    if class.is_an(InstancedArea, opts.parent) then
       area.parent_area = opts.parent.uid
@@ -141,8 +144,6 @@ function Area.register(area, opts)
 
    assert(areas[area.uid] == nil, "Area has already been registered")
 
-   local Map = require("api.Map")
-
    Log.info("Registering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
    -- for _, _, map in area:iter_maps() do
@@ -151,22 +152,29 @@ function Area.register(area, opts)
    --    end
    -- end
 
-   mapping = nil
    areas[area.uid] = area
 
    area.metadata.can_return_to = true
 end
 
-function Area.create_entrance(area, x, y, params, map)
+function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
    params = params or {}
    params.force = true
-
    map = map or field.map
+
    assert(class.is_an(InstancedArea, area))
    assert(class.is_an(InstancedMap, map))
-   local floor = Area.floor_number(map)
-   assert(Area.get(area.uid), "Area is not registered")
-   assert(floor, "Map not registered with area")
+
+   local floor
+   if class.is_an(InstancedMap, map_or_floor_number) then
+      floor = Area.floor_number(map)
+      assert(map.area_uid == area.uid, "Map is not registered with this area")
+      assert(floor, "Map does not have a floor in the area")
+   elseif math.type(map_or_floor_number) == "integer" then
+      floor = map_or_floor_number
+   else
+      error(("unknown floor number '%s'"):format(map_or_floor_number))
+   end
 
    local Feat = require("api.Feat")
    local feat, err = Feat.create("elona.stairs_down", x, y, params, map)
@@ -175,8 +183,8 @@ function Area.create_entrance(area, x, y, params, map)
       return feat, err
    end
 
-   feat.area_uid = area.uid
-   feat.area_floor = floor
+   feat.params.area_uid = area.uid
+   feat.params.area_floor = floor
    if area.image then
       feat.image = area.image
    end
@@ -184,12 +192,59 @@ function Area.create_entrance(area, x, y, params, map)
    return feat, nil
 end
 
-function Area.is_generated(unique_area_id)
-   error("TODO")
+function Area.create_stairs_down(area, floor_number, x, y, params, map)
+   local Feat = require("api.Feat")
+   local stairs = Feat.create("elona.stairs_down", x, y, {}, map)
+   if stairs then
+      stairs.params.area_uid = area.uid
+      stairs.params.area_floor = floor_number
+   end
+   return stairs
 end
 
-function Area.get_or_create(unique_area_id)
-   error("TODO")
+function Area.create_stairs_up(area, floor_number, x, y, params, map)
+   local Feat = require("api.Feat")
+   local stairs = Feat.create("elona.stairs_up", x, y, {}, map)
+   if stairs then
+      stairs.params.area_uid = area.uid
+      stairs.params.area_floor = floor_number
+   end
+   return stairs
+end
+
+function Area.is_created(area_archetype_id)
+   return save.base.unique_areas[area_archetype_id] ~= nil
+end
+
+function Area.get_unique(area_archetype_id)
+   local entry = save.base.unique_areas[area_archetype_id]
+   if entry ~= nil then
+      return Area.get(entry.area_uid)
+   end
+
+   return nil
+end
+
+function Area.create_unique(area_archetype_id, parent)
+   local area_archetype = data["base.area_archetype"]:ensure(area_archetype_id)
+   assert(parent == "root" or class.is_an(InstancedArea, parent), "Invalid parent area")
+
+   local image = area_archetype.image or nil
+   local area = InstancedArea:new(image)
+   if area_archetype.color then
+      area.color = area_archetype.color
+   end
+
+   area:set_archetype(area_archetype_id)
+
+   Area.register(area, { parent = parent })
+
+   save.base.unique_areas[area_archetype_id] = {
+      area_uid = area.uid,
+      entrance_was_generated = false
+   }
+
+   return area
 end
 
 return Area

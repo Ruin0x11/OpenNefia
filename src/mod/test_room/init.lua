@@ -48,70 +48,69 @@ end
 
 data:add(arc)
 
-local function make_map(width, height)
-   local map = InstancedMap:new(width, height)
+
+local test_room = {
+   _type = "base.area_archetype",
+   _id = "test_room"
+}
+
+function test_room.on_generate_floor(area, floor)
+   local map = InstancedMap:new(50, 50)
    map:set_archetype("test_room.test_room")
    map:clear("elona.cobble")
    map.is_indoor = true
    map.name = "Test Room"
-   for _, x, y in Pos.iter_border(0, 0, width - 1, height - 1) do
+   for _, x, y in Pos.iter_border(0, 0, 50 - 1, 50 - 1) do
       map:set_tile(x, y, "elona.wall_dirt_dark_top")
    end
+
+   for _, x, y in map:iter_tiles() do
+      map:memorize_tile(x, y)
+   end
+
    return map
 end
 
-local function mkarea(map)
-   local floors = {}
+data:add(test_room)
 
-   local my_area = InstancedArea:new()
-   my_area:add_floor(map)
-   Area.register(my_area, { parent = "root" })
 
-   my_area.image = "elona.item_carrot"
+local the_dungeon = {
+   _type = "base.area_archetype",
+   _id = "the_dungeon",
+   image = "elona.feat_area_crypt"
+}
 
-   local area = InstancedArea:new("elona.feat_area_castle")
+function the_dungeon.on_generate_floor(area, floor)
+   local map = InstancedMap:new(20, 25)
+   map:clear("elona.hardwood_floor_5")
 
-   for i = 1, 10 do
-      floors[i] = InstancedMap:new(20, 30)
-      floors[i]:clear("elona.hardwood_floor_5")
+   if floor == 1 then
+      local parent_area = Area.parent(area)
+      assert(Area.create_stairs_up(parent_area, 1, 5, 5, {}, map))
    end
 
-   for i = 1, 10 do
-      local prev_floor = floors[i-1]
-      local next_floor = floors[i+1]
-
-      if prev_floor then
-         local stairs = assert(Feat.create("elona.stairs_down", 8, 13, {}, prev_floor))
-         stairs.area_uid = area.uid
-         stairs.area_floor = i
-      end
-
-      if next_floor then
-         local stairs = assert(Feat.create("elona.stairs_up", 12, 19, {}, next_floor))
-         stairs.area_uid = area.uid
-         stairs.area_floor = i
-      end
+   if floor > 1 then
+      assert(Area.create_stairs_down(area, floor - 1, 12, 15, {}, map))
+   end
+   if floor < 10 then
+      assert(Area.create_stairs_up(area, floor + 1, 8, 15, {}, map))
    end
 
-   for floor_number, floor in ipairs(floors) do
-      area:add_floor(floor, floor_number)
-      if floor_number == 1 then
-         assert(Area.create_entrance(my_area, 5, 5, {}, floor))
-      end
-   end
-
-   Area.register(area, { parent = my_area })
-
-   assert(Area.create_entrance(area, math.floor(map:width()/2), math.floor(map:height()/2), {}, map))
-
-   Map.save(map)
-   for _, floor in ipairs(floors) do
-      Map.save(floor)
-   end
+   return map
 end
 
-local function test_room(self, player)
+the_dungeon.parent_area = {
+   _id = "test_room.test_room",
+   on_floor = 1,
+   x = 27,
+   y = 25,
+   start_floor = 1
+}
 
+data:add(the_dungeon)
+
+
+local function test_room(self, player)
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    player:equip_item(item)
    item = Item.create("elona.arrow", nil, nil, {}, player)
@@ -125,18 +124,11 @@ local function test_room(self, player)
 
    player.title = Text.random_title()
 
-   -- local map = Elona122Map.generate("palmia")
-   local map = make_map(50, 50)
-   local tx, ty = 22, 22
-
-   for _, x, y in map:iter_tiles() do
-      map:memorize_tile(x, y)
-   end
-
-   mkarea(map)
+   local root_area = Area.create_unique("test_room.test_room", "root")
+   local ok, map = assert(root_area:load_or_generate_floor(1))
 
    Map.set_map(map)
-   map:take_object(player, tx, ty)
+   map:take_object(player, 25, 25)
 end
 
 data:add {

@@ -1,9 +1,28 @@
 local Event = require("api.Event")
 
-
 -- TODO
 -- local function archetype_on_spawn_monster(map)
 -- end
+
+local function archetype_starting_pos(map, params, result)
+   local archetype = map:archetype()
+   if not (archetype and archetype.starting_pos) then
+      return result
+   end
+
+   if type(archetype.starting_pos) == "table" then
+      local pos = archetype.starting_pos
+      assert(pos.x and pos.y, "`starting_pos` must declare `x` and `y` fields if table")
+      return pos
+   end
+
+   local chara = params.chara
+   local prev_map = params.prev_map
+   local feat = params.feat
+   return archetype.starting_pos(map, chara, prev_map, feat)
+end
+
+Event.register("base.calc_map_starting_pos", "Archetype callback (starting_pos)", archetype_starting_pos)
 
 local function archetype_on_map_renew_minor(map)
    local archetype = map:archetype()

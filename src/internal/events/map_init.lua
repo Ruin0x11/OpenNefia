@@ -140,6 +140,9 @@ end
 
 local function check_renew(map)
    local area = Area.for_map(map)
+   if area == nil then
+      pause()
+   end
    assert(area)
    local area_meta = area.metadata
    -- >>>>>>>> shade2/map.hsp:2173 *check_renew ..

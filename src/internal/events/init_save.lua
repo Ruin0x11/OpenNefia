@@ -25,7 +25,8 @@ local function init_save()
    s.bones = {}
    s.total_killed = 0
    s.total_deaths = 0
-   s.areas = {}
+   s.areas = table.set {}
+   s.unique_areas = table.set {}
    s.travel_distance = 0
    s.travel_date = 0
    s.travel_date = 0

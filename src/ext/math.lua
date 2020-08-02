@@ -40,3 +40,20 @@ function math.round(v, digits)
    local bracket = 1 / (10 ^ digits)
    return math.floor(v/bracket + math.sign(v) * 0.5) * bracket
 end
+
+--- Returns "integer" if x is an integer, "float" if it is a float, or nil if x is not a number.
+---
+--- Ported from 5.3.
+--- @param x
+--- @treturn string
+function math.type(x)
+   if type(x) ~= "number" then
+      return nil
+   end
+
+   if math.floor(x) == x then
+      return "integer"
+   end
+
+   return "float"
+end

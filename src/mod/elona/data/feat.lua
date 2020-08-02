@@ -19,6 +19,7 @@ local Magic = require("mod.elona_sys.api.Magic")
 local I18N = require("api.I18N")
 local ExHelp = require("mod.elona.api.ExHelp")
 local Area = require("api.Area")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -148,32 +149,97 @@ data:add {
    }
 }
 
-local function travel(self, params)
-   local chara = params.chara
-   if not chara:is_player() then return end
 
-   Gui.play_sound("base.exitmap1")
-
-   local area = Area.get(self.area_uid)
-   if area == nil then
-      Log.error("Missing area with UID '%d'", self.area_uid)
-      return "player_turn_query"
+local function entrance_in_parent_map(map, chara, prev)
+   local x, y
+   local prev_area = Area.for_map(prev)
+   local find_area_entrance = function(feat)
+      return feat.params.area_uid == prev_area.uid
+   end
+   local entrance = map:iter_feats():filter(find_area_entrance):nth(1)
+   if entrance == nil then
+      return nil
+   else
+      x = entrance.x
+      y = entrance.y
    end
 
-   local ok, map = area:load_floor(self.area_floor)
-   if not ok then
-      error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.area_floor, area.uid, map))
-      return "player_turn_query"
+   local index = 0
+   for i, c in Chara.iter_allies() do
+      if c.uid == chara.uid then
+         index = i
+         break
+      end
    end
 
-   local travel_params = {
-      feat = self,
-      start_pos = nil -- TODO
-   }
+   return { x = x + Rand.rnd(math.floor(index / 5) + 1), y = y + Rand.rnd(math.floor(index / 5) + 1) }
+end
 
-   Map.travel_to(map, travel_params)
+local function travel(start_pos_fn)
+   return function(self, params)
+      local chara = params.chara
+      if not chara:is_player() then return end
 
-   return "player_turn_query"
+      Gui.play_sound("base.exitmap1")
+
+      local area = Area.get(self.params.area_uid)
+      if area == nil then
+         Log.error("Missing area with UID '%d'", self.params.area_uid)
+         return "player_turn_query"
+      end
+
+      local ok, map = area:load_or_generate_floor(self.params.area_floor)
+      if not ok then
+         local err = map
+         if err == "no_archetype" then
+            Log.error("Area does not specify an archetype, so there is no way to know what kind of map should be generated. Use InstancedArea:set_archetype(archetype_id) to set one.")
+         else
+            error(("Missing map with floor number '%d' in area '%d' (%s)"):format(self.params.area_floor, area.uid, err))
+         end
+         return "player_turn_query"
+      end
+
+      local prev_map = self:current_map()
+      local prev_area = Area.for_map(prev_map)
+      local starting_pos
+
+      -- >>>>>>>> shade2/map.hsp:152 		if feat(1)=objDownstairs :msgTemp+=lang("階段を降りた。 ..
+      if area.uid ~= prev_area.uid then
+         -- If the area we're trying to travel to is the parent of this area, then
+         -- put the player directly on the area's entrance.
+         if Area.parent(prev_area) == area then
+            -- TODO allow configuring ally start positions in Map.travel_to() (mStartWorld)
+            starting_pos = entrance_in_parent_map(map, chara, prev_map)
+            if starting_pos == nil then
+               -- Assume there will be stairs in the connecting map.
+               starting_pos = start_pos_fn(map, chara, prev_map, self)
+            end
+         else
+            -- We're going into a dungeon. Always assume there's stairs there.
+            -- TODO: allow maps to declare arbitrary start positions.
+            starting_pos = start_pos_fn(map, chara, prev_map, self)
+         end
+      else
+         starting_pos = start_pos_fn(map, chara, prev_map, self)
+      end
+
+      local start_x, start_y
+      if starting_pos.x and starting_pos.y then
+         start_x = starting_pos.x
+         start_y = starting_pos.y
+      end
+      -- <<<<<<<< shade2/map.hsp:153 		if feat(1)=objUpstairs	 :msgTemp+=lang("階段を昇った。" ..
+
+      local travel_params = {
+         feat = self,
+         start_x = start_x,
+         start_y = start_y
+      }
+
+      Map.travel_to(map, travel_params)
+
+      return "player_turn_query"
+   end
 end
 
 local function gen_stair(down)
@@ -181,6 +247,7 @@ local function gen_stair(down)
    local id = (down and "stairs_down") or "stairs_up"
    local elona_id = (down and 11) or 10
    local image = (down and "elona.feat_stairs_down") or "elona.feat_stairs_up"
+   local start_pos_fn = (down and MapEntrance.stairs_up) or MapEntrance.stairs_down
 
    return {
       _type = "base.feat",
@@ -192,8 +259,8 @@ local function gen_stair(down)
       is_opaque = false,
 
       params = {
-         area_uid = "number",
-         area_floor = "number",
+         area_uid = nil,
+         area_floor = nil,
       },
 
       on_refresh = function(self)
@@ -201,10 +268,10 @@ local function gen_stair(down)
       end,
 
       on_stepped_on = function(self, params)
-         Gui.mes_c(("This leads to: %s %s"):format(self.area_uid, self.area_floor))
+         Gui.mes_c(("This leads to: %s %s"):format(self.params.area_uid, self.params.area_floor))
       end,
 
-      on_activate = travel,
+      on_activate = travel(start_pos_fn),
 
       [field] = function(self, params) self:on_activate(params.chara) end
    }
@@ -224,15 +291,15 @@ data:add
    is_opaque = false,
 
    params = {
-      area_uid = "number",
-      area_floor = "number",
+      area_uid = nil,
+      area_floor = nil,
    },
 
    on_refresh = function(self)
       self:mod("can_activate", true)
    end,
 
-   on_activate = travel,
+   on_activate = travel(MapEntrance.stairs_up),
 
    on_stepped_on = function(self, params)
       local area = { gen_id = "elona.vernis", types = {} }

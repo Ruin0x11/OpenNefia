@@ -188,7 +188,7 @@ function class.is_an(interface, obj)
    end
 
    if type(obj) ~= "table" then
-      return false, "not a table"
+      return false, ("Needed class '%s', got value of type '%s'"):format(tostring(interface), type(obj))
    end
 
    if _classes[interface] then

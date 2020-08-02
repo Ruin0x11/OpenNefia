@@ -115,5 +115,7 @@ data:add_multi(
       { _id = "on_map_renew_geometry" },
       { _id = "on_map_minor_events" },
       { _id = "on_map_major_events" },
+      { _id = "calc_map_starting_pos" },
+      { _id = "on_generate_area_floor" },
    }
 )

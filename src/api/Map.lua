@@ -325,18 +325,12 @@ end
 -- @tparam[opt] InstancedMap previous_map
 -- @tparam[opt] IFeat feat
 -- @tparam[opt] {x=uint,y=uint}|function start_pos
-function Map.calc_start_position(map, previous_map, feat, start_pos)
-   if start_pos == nil then
-      start_pos = map.player_start_pos
-   end
+function Map.calc_start_position(map, previous_map, feat)
+   local chara = Chara.player()
+   local pos = map:emit("base.calc_map_starting_pos", { prev_map = previous_map, feat = feat, chara = chara }, { x = nil, y = nil })
 
-   local x, y
-   if type(start_pos) == "table" then
-      x = start_pos.x
-      y = start_pos.y
-   elseif type(start_pos) == "function" then
-      x, y = start_pos(map, previous_map, feat)
-   end
+   local x = pos.x
+   local y = pos.y
 
    return x, y
 end
@@ -559,9 +553,8 @@ end
 --- @tparam InstancedMap map
 --- @tparam[opt] table params Extra parameters.
 ---   - feat (IFeat): feat used to travel to this map, like stairs.
----   - start_pos ({x=uint,y=uint}|function): logic to run to determine the
----     start position on the map. Can be a table of coordinates, or a function
----     that returns a table of {x,y}.
+---   - start_x (uint)
+---   - start_y (uint)
 function Map.travel_to(map, params)
    params = params or {}
    class.assert_is_an(InstancedMap, map)
@@ -578,18 +571,24 @@ function Map.travel_to(map, params)
       return
    end
 
-   local start_pos = params.start_pos or nil
-   local x, y = Map.calc_start_position(map,
-                                        current,
-                                        params.feat,
-                                        start_pos)
+   local x, y
+   if type(params.start_x) == "number" and type(params.start_y) == "number" then
+      x = params.start_x
+      y = params.start_y
+   else
+      x, y = Map.calc_start_position(map,
+                                     current,
+                                     params.feat)
+   end
 
-   Log.debug("Start position: %s %s (%s)", x, y, inspect(start_pos))
+   Log.debug("Start position: %d %d (%s)", x, y)
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
       x = math.floor(map:width() / 2)
       y = math.floor(map:height() / 2)
    end
+
+   assert(Area.for_map(map) ~= nil, "Map is not registered with an area")
 
    -- >>>>>>>> shade2/map.hsp:1863 	randomize ..
    Rand.set_seed()

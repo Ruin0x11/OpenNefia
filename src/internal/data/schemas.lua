@@ -1201,6 +1201,19 @@ Callback run when this map is renewed, in order to regenerate its geometry.
 ]]
       },
       {
+         name = "properties",
+         default = CodeGenerator.gen_literal [[
+{
+   is_indoor = true,
+   level = 10
+}]],
+         template = true,
+         type = "table",
+         doc = [[
+Properties to copy to this map after it is generated. Does not override any values already set in the `on_generate` callback.
+]]
+      },
+      {
          name = "_events",
          default = {},
          template = false,
@@ -1208,6 +1221,84 @@ Callback run when this map is renewed, in order to regenerate its geometry.
          doc = [[
 Additional events to bind to this map when it is loaded.
 ]]
-      }
+      },
+   }
+}
+
+data:add_type {
+   name = "area_archetype",
+   fields = {
+      {
+         name = "on_generate_floor",
+         default = CodeGenerator.gen_literal [[
+   function(area, floor)
+      return InstancedMap:new(25, 25)
+end
+]],
+         template = true,
+         type = "function(InstancedArea, int)",
+         doc = [[
+Map generator for this area. Determines how maps in this area should be created
+when they're initially generated. Takes an area and a floor number and returns a
+new map for that floor.
+
+Note that this function is responsible for setting up the entrances to adjacent
+maps in the same area. As in, if this function does not create the stairs
+leading to the other floors, then the player won't be able to access them.
+
+To prevent the floor from being saved, for example if you want to emulate the
+behavior of the Puppy Cave or The Void where the floor is generated every time,
+set `is_temporary` to `true` on the generated map.
+]]
+      },
+      {
+         name = "image",
+         default = "elona.feat_area_village",
+         template = true,
+         type = "id:base.chip",
+         doc = [[
+Image this area will have when created with Area.create_entrance().
+]]
+      },
+      {
+         name = "color",
+         default = "elona.feat_area_village",
+         template = true,
+         type = "color",
+         doc = [[
+Color of the image this area will have when created with Area.create_entrance().
+]]
+      },
+      {
+         name = "parent_area",
+         default = nil,
+         template = true,
+         type = "{_id=id:base.unique_area,on_floor=uint,x=uint,y=uint,start_floor=uint}",
+         doc = [[
+Parent area that this area is contained in. If present, an entrance leading to
+this area on floor `start_floor` will be created when the given parent area's
+floor is generated for the first time.
+
+This is merely for convenience; you can always create an entrance leading to
+this area as follows:
+
+```lua
+local parent_map = Map.current()
+local parent_area = Area.for_map(parent_map)
+local parent_floor = Area.floor_number(parent_map)
+
+local _id = "elona.north_tyris"
+local on_floor = 1
+
+if parent_area._id == _id and parent_floor == on_floor then
+   local my_area = Area.get_unique("elona.vernis")
+   local start_floor = my_area:starting_floor()
+   local entrance = Area.create_entrance(my_area, start_floor, 10, 10, {}, parent_map)
+   assert(entrance.params.area_uid == my_area.uid)
+   assert(entrance.params.area_floor == floor_number)
+end
+```
+]]
+      },
    }
 }

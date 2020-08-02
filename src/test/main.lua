@@ -2,10 +2,11 @@ _CONSOLE = true
 require("boot")
 
 local Log = require("api.Log")
-local level = "warn"
-if arg[1] == "test" then
-   level = "error"
+local filter = ".*:.*"
+if arg[1] then
+   filter = arg[1]
 end
+local level = "warn"
 Log.set_level(level)
 
 require("internal.data.base")
@@ -76,6 +77,46 @@ config["base.default_seed"] = seed
 print("Seed: " .. seed)
 print("")
 
+local spl = string.split(filter, ":")
+local filter_file_name = spl[1]
+local filter_test_name = spl[2]
+
+Log.warn("Test filter: %s:%s", filter_file_name, filter_test_name)
+
+local function run_test(name, test_fn)
+   Rand.set_seed(seed)
+
+   local locals
+   local function capture(err)
+      local repl = require("internal.repl")
+      locals = repl.capture_locals(2)
+      if type(err) == "table" then
+         for k, v in pairs(err) do
+            if type(k) == "string" then
+               rawset(locals, k, v)
+            end
+         end
+         err = tostring(err[1])
+      end
+      return debug.traceback(err)
+   end
+
+   local ok, err = xpcall(test_fn, capture)
+
+   if ok then
+      io.write(ansicolors("%{green}.%{reset}"))
+   else
+      io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
+
+      if opts.debug_on_error and false then
+         local repl_env, history = Repl.generate_env(locals)
+         elona_repl.set_environment(repl_env)
+         print(inspect(table.keys(locals)))
+         elona_repl:run()
+      end
+   end
+end
+
 local function test_file(file)
    local chunk = assert(loadfile(file))
    local test_env, mt = make_test_env()
@@ -88,41 +129,15 @@ local function test_file(file)
       local name = pair[1]
       local test_fn = pair[2]
 
-      Rand.set_seed(seed)
-
-      local locals
-      local function capture(err)
-         local repl = require("internal.repl")
-         locals = repl.capture_locals(2)
-         if type(err) == "table" then
-            for k, v in pairs(err) do
-               if type(k) == "string" then
-                  rawset(locals, k, v)
-               end
-            end
-            err = tostring(err[1])
-         end
-         return debug.traceback(err)
-      end
-
-      local ok, err = xpcall(test_fn, capture)
-
-      if ok then
-         io.write(ansicolors("%{green}.%{reset}"))
-      else
-         io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
-
-         if opts.debug_on_error and false then
-            local repl_env, history = Repl.generate_env(locals)
-            elona_repl.set_environment(repl_env)
-            print(inspect(table.keys(locals)))
-            elona_repl:run()
-         end
+      if string.match(name, filter_test_name) then
+         run_test(name, test_fn)
       end
    end
 end
 
 for _, file in fs.iter_directory_items("test/unit/") do
-   local path = fs.join("test/unit/", file)
-   test_file(path)
+   if string.match(file, filter_file_name) then
+      local path = fs.join("test/unit/", file)
+      test_file(path)
+   end
 end

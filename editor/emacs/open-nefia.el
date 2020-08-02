@@ -767,12 +767,11 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia--repl-buffer ()
   (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
 
-(defun open-nefia--start-repl-1 (file &optional arg)
+(defun open-nefia--start-repl-1 (file &rest switches)
   (save-some-buffers (not compilation-ask-about-save)
                      compilation-save-buffers-predicate)
   (let* ((buffer (open-nefia--repl-buffer))
-         (default-directory (file-name-directory (directory-file-name (open-nefia--repl-file open-nefia--repl-entrypoint))))
-         (switch (or (and arg "load") "")))
+         (default-directory (file-name-directory (directory-file-name (open-nefia--repl-file open-nefia--repl-entrypoint)))))
     (when-let ((buf (get-buffer open-nefia--repl-errors-buffer))
                (dir default-directory))
       (with-current-buffer buf
@@ -785,7 +784,8 @@ removed.  Return the new string.  If STRING is nil, return nil."
       (let ((result (open-nefia--test-repl open-nefia--repl-entrypoint)))
         (if (eq result 0)
             (progn
-              (run-lua open-nefia--repl-name "luajit" nil (open-nefia--repl-file file) switch)
+              (apply 'run-lua (append (list open-nefia--repl-name "luajit" nil (open-nefia--repl-file file))
+                                      switches))
               (setq next-error-last-buffer (open-nefia--repl-buffer))
               (pop-to-buffer (open-nefia--repl-buffer))
               (setq-local company-backends '(company-etags)))
@@ -797,13 +797,21 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defun open-nefia-start-repl (&optional arg)
   (interactive "P")
-  (open-nefia--start-repl-1 open-nefia--repl-entrypoint arg))
+  (open-nefia--start-repl-1 open-nefia--repl-entrypoint))
 
 (defun open-nefia-run-tests (&optional arg)
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1 open-nefia--test-entrypoint arg))
+  (open-nefia--start-repl-1 open-nefia--test-entrypoint))
+
+(defun open-nefia-run-tests-this-file (&optional arg)
+  (interactive "P")
+  (if-let ((repl-buffer (open-nefia--repl-buffer)))
+      (kill-buffer repl-buffer))
+  (open-nefia--start-repl-1
+   open-nefia--test-entrypoint
+   (format "%s:%s" (file-name-base (buffer-file-name)) ".*")))
 
 (defun open-nefia-insert-template ()
   (interactive)
