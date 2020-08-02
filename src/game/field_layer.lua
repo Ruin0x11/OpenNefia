@@ -198,6 +198,7 @@ function field_layer:update(dt, ran_action, result)
    self.renderer:update(dt)
    self.draw_callbacks:update(dt)
    self.sound_manager:update(dt)
+   self.hud:update(dt)
 end
 
 function field_layer:add_async_draw_callback(cb, tag)
@@ -223,6 +224,7 @@ function field_layer:draw()
 
    self.renderer:draw()
    self.draw_callbacks:draw(self.renderer.draw_x, self.renderer.draw_y)
+   self.hud:draw()
 end
 
 function field_layer:query_repl()

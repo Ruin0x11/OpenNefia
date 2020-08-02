@@ -480,7 +480,6 @@ function field_logic.query()
 
    field.is_active = true
 
-   draw.push_layer(field.hud, 1000000)
    draw.push_layer(field)
 
    Gui.update_screen()
