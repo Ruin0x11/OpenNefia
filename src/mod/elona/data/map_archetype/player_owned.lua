@@ -48,6 +48,6 @@ data:add {
       on_floor = 1,
       x = 22,
       y = 21,
-      start_floor = 1
+      starting_floor = 1
    }
 }

@@ -13,8 +13,11 @@ function Fs.open(filepath, mode)
    mode = mode:gsub("b$", "")
 
    local file = love.filesystem.newFile(filepath)
-   file:open(mode)
-   return file
+   local ok, err = file:open(mode)
+   if not ok then
+      return nil, err
+   end
+   return file, nil
 end
 
 function Fs.read_all(filepath)

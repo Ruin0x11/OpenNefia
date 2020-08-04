@@ -8,7 +8,7 @@ local thieves_guild = {
    _type = "base.map_archetype",
    _id = "thieves_guild",
 
-   starting_pos = MapEntrance.stair_up,
+   starting_pos = MapEntrance.stairs_up,
 
    properties = {
       music = "elona.ruin",
@@ -76,7 +76,7 @@ local fighters_guild = {
    _type = "base.map_archetype",
    _id = "fighters_guild",
 
-   starting_pos = MapEntrance.stair_up,
+   starting_pos = MapEntrance.stairs_up,
 
    properties = {
       music = "elona.ruin",
@@ -137,7 +137,7 @@ local mages_guild = {
    _type = "base.map_archetype",
    _id = "mages_guild",
 
-   starting_pos = MapEntrance.stair_up,
+   starting_pos = MapEntrance.stairs_up,
 
    properties = {
       music = "elona.ruin",

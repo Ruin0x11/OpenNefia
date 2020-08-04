@@ -129,15 +129,15 @@ function Elona122Map.generate(name)
       error(string.format("Map doesn't exist: %s", base .. ".map"))
    end
 
-   local idx = Fs.open(base .. ".idx", "rb")
+   local idx = assert(Fs.open(base .. ".idx", "rb"))
    local width, height, atlas_no, regen, stair_up = struct.unpack("iiiii", idx:read(4 * 5))
-   Log.trace("Map %s: w:%d h:%d atlas:%d regen:%d stair_up:%d", base, width, height, atlas_no, regen, stair_up)
+   Log.debug("Map %s: w:%d h:%d atlas:%d regen:%d stair_up:%d", base, width, height, atlas_no, regen, stair_up)
 
    local result = InstancedMap:new(width, height)
 
    idx:close()
 
-   local map = Fs.open(base .. ".map", "rb")
+   local map = assert(Fs.open(base .. ".map", "rb"))
 
    local function unp(cnt, i)
       return { struct.unpack(string.rep("i", cnt), i:read(4 * cnt)) }
@@ -171,10 +171,17 @@ function Elona122Map.generate(name)
 
    map:close()
 
-   local obj = Fs.open(base .. ".obj", "rb")
+   local obj = assert(Fs.open(base .. ".obj", "rb"))
 
-   for j=1,300 do
-      local data = { struct.unpack("iiiii", obj:read(4 * 5)) }
+   for _ = 1, 400 do
+      local buf = obj:read(4 * 5)
+      if buf == "" then
+         -- There is not enough space for 400 items in the .obj file, so bail
+         -- out early.
+         break
+      end
+
+      local data = { struct.unpack("iiiii", buf) }
 
       if data[1] ~= 0 then
          if data[5] == 0 then

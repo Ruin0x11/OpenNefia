@@ -139,7 +139,7 @@ local fallbacks = {
    is_generated_every_time = false,
    is_not_regenerated = false,
    is_temporary = false,
-   can_exit_from_edge = true,
+   can_exit_from_edge = false,
    cannot_mine_items = nil,
 
    renew_major_date = 0,

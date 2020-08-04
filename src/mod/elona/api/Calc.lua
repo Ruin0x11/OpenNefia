@@ -14,7 +14,7 @@ function Calc.calc_object_level(base, map)
 
    local ret = base or 0
    if base < 0 then
-      ret = map:calc("dungeon_level")
+      ret = map:calc("level")
    end
 
    local map_base = map:calc("base_object_level")
@@ -37,21 +37,8 @@ function Calc.calc_object_level(base, map)
    return ret
 end
 
--- TODO enum
-local QUALITY = {
-   bad = 1,
-   good = 2,
-   great = 3,
-   miracle = 4,
-   godly = 5,
-   special = 6
-}
-
 function Calc.calc_object_quality(quality)
-   if type(quality) == "string" then
-      assert(QUALITY[quality], ("Unknown quality %s"):format(quality))
-      quality = QUALITY[quality]
-   end
+   assert(Enum.Quality:has_value(quality))
 
    local ret = quality or 2
    if ret == 0 then

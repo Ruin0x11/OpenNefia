@@ -168,7 +168,7 @@ data:add {
       on_floor = 1,
       x = 26,
       y = 23,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -317,7 +317,7 @@ data:add {
       on_floor = 1,
       x = 43,
       y = 32,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -536,7 +536,7 @@ data:add {
       on_floor = 1,
       x = 53,
       y = 24,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -675,7 +675,7 @@ data:add {
       on_floor = 1,
       x = 14,
       y = 35,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -845,7 +845,7 @@ data:add {
       on_floor = 1,
       x = 3,
       y = 15,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -1177,7 +1177,7 @@ data:add {
       on_floor = 1,
       x = 89,
       y = 14,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -1364,6 +1364,6 @@ data:add {
       on_floor = 1,
       x = 61,
       y = 32,
-      start_floor = 1
+      starting_floor = 1
    }
 }

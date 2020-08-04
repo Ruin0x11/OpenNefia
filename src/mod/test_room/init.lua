@@ -119,7 +119,7 @@ data:add {
       on_floor = 1,
       x = 23,
       y = 25,
-      start_floor = 1
+      starting_floor = 1
    }
 }
 
@@ -157,7 +157,7 @@ the_dungeon.parent_area = {
    on_floor = 1,
    x = 27,
    y = 25,
-   start_floor = 1
+   starting_floor = 1
 }
 
 data:add(the_dungeon)

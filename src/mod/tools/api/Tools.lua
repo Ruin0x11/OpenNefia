@@ -14,6 +14,7 @@ local IOwned = require("api.IOwned")
 local elona_Item = require("mod.elona.api.Item")
 local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
+local Area = require("api.Area")
 
 local Tools = {}
 
@@ -43,10 +44,6 @@ function Tools.spawn_equipped_foes(count)
          c:refresh()
       end
    end
-end
-
-function Tools.show_equipment(chara)
-   return require("api.gui.menu.EquipmentMenu"):new(chara):query()
 end
 
 function Tools.spawn_allies(count)
@@ -689,6 +686,85 @@ end
 
 function Tools.identify_all()
    Item.iter():each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
+end
+
+function Tools.goto_area(area_archetype_id, floor)
+   local area
+   if not Area.is_created(area_archetype_id) then
+      area = Area.create_unique(area_archetype_id, Area.current() or "root")
+   else
+      area = Area.get_unique(area_archetype_id)
+   end
+
+   local ok, map = area:load_or_generate_floor(floor or 1)
+   if not ok then
+      error(map)
+   end
+
+   assert(Map.save(map))
+   assert(Map.travel_to(map))
+end
+
+function Tools.percent_bar(p)
+   local style = "░▒▓█"
+   local symbols = fun.wrap(utf8.chars(style)):to_list()
+   local full_symbol = symbols[#symbols]
+   local n = #symbols - 1
+
+   p = math.clamp(p, 0.0, 1.0)
+   if p == 1.0 then
+      return string.rep(full_symbol, 10)
+   end
+
+   local min = 1
+   local max = 10
+   local min_delta = math.huge
+   local r = ""
+
+   for i=min, max do
+      local x = p * i
+      local full = math.floor(x)
+      local rest = x - full
+      local middle = math.floor(rest * n)
+      local Log = require("api.Log")
+      Log.info("%d %d %d", full, rest, middle)
+      if p > 0.0 and full == 0 and middle == 0 then
+         middle = 1
+      end
+      local d = math.abs(p - (full + middle / n) / i) * 100
+      if d < min_delta then
+         min_delta = d
+         local m = symbols[middle+1]
+         if full == i then
+            m = ""
+         end
+         r = string.rep(full_symbol, full) .. m .. string.rep(symbols[1], i - full - 1)
+      end
+   end
+
+   return r, min_delta
+end
+
+function Tools.print_frequency(tbl)
+   assert(type(tbl) == "table")
+   if tostring(tbl) == "generator" then
+      tbl = tbl:take(1000):to_list()
+   end
+
+   local counts = {}
+   for _, v in ipairs(tbl) do
+      counts[v] = (counts[v] or 0) + 1
+   end
+
+   local percents = {}
+   for k, v in pairs(counts) do
+      percents[k] = v / #counts
+   end
+
+   local s = ""
+   for k, v in pairs(percents) do
+      s = s .. ("%-6s"):format(tostring(k):sub(1, 6))
+   end
 end
 
 return Tools

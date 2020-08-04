@@ -121,6 +121,7 @@ Event.register("base.on_get_item", "Pick up item",
                   if picked_up then
                      Gui.mes("action.pick_up.execute", params.chara, item:build_name(params.amount))
                      Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), params.chara.x, params.chara.y)
+                     params.chara:refresh_weight()
                      return picked_up
                   end
 
@@ -161,6 +162,7 @@ function Action.drop(chara, item, amount)
    if dropped then
       Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
+      chara:refresh_weight()
       return true
    end
 
@@ -172,8 +174,7 @@ end
 --- @tparam[opt] int amount
 --- @treturn bool success
 function Action.get_from_container(chara, item, amount)
-   -- TODO food rotting
-   return item:emit("base.on_get_item", {chara=chara,amount=amount}, false)
+   return item:emit("base.on_get_item", {chara=chara,amount=amount,source=item.location}, false)
 end
 
 --- @tparam ILocation container
@@ -185,8 +186,7 @@ function Action.put_in_container(container, item, amount)
       return false
    end
 
-   -- TODO food rotting
-   -- item:emit("base.on_put_item", {chara=chara,amount=amount}, false) -- rotting
+   item:emit("base.on_put_item", {amount=amount,target=container}, false)
 
    local success = item:move_some(amount, container)
    if success then

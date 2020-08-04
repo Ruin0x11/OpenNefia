@@ -63,18 +63,35 @@ function MapEntrance.edge(map, chara)
    return { x = x, y = y }
 end
 
-function MapEntrance.stairs_up(map, chara, prev)
-   local prev_area = Area.for_map(prev)
-   local this_floor = Area.floor_number(prev)
+local function find_stairs(_id, prev_area, this_floor, map)
+   -- Prefer stairs that are interconnected from the previous area, and fall
+   -- back to any existing stairs if one is not found.
+   --
+   -- TODO allow specifying a tag for which stairs to start on, instead of
+   -- whichever one is first
    local search = function(f)
-      return f._id == "elona.stairs_up"
+      return f._id == _id
          and f.params.area_uid == prev_area.uid
          and f.params.area_floor == this_floor
    end
 
-   -- TODO allow specifying a tag for which stairs to start on, instead of
-   -- whichever one is first
    local feat = map:iter_feats():filter(search):nth(1)
+
+   if feat then
+      return feat
+   end
+
+   search = function(f)
+      return f._id == _id
+   end
+   return map:iter_feats():filter(search):nth(1)
+end
+
+function MapEntrance.stairs_up(map, chara, prev)
+   local prev_area = Area.for_map(prev)
+   local this_floor = Area.floor_number(prev)
+
+   local feat = find_stairs("elona.stairs_up", prev_area, this_floor, map)
    if not feat then
       Log.warn("No stairs up on were found in map.")
       return MapEntrance.center(map, chara, prev)
@@ -86,15 +103,8 @@ end
 function MapEntrance.stairs_down(map, chara, prev)
    local prev_area = Area.for_map(prev)
    local this_floor = Area.floor_number(prev)
-   local search = function(f)
-      return f._id == "elona.stairs_down"
-         and f.params.area_uid == prev_area.uid
-         and f.params.area_floor == this_floor
-   end
 
-   -- TODO allow specifying a tag for which stairs to start on, instead of
-   -- whichever one is first
-   local feat = map:iter_feats():filter(search):nth(1)
+   local feat = find_stairs("elona.stairs_up", prev_area, this_floor, map)
    if not feat then
       Log.warn("No stairs down were found in map.")
       return MapEntrance.center(map, chara, prev)

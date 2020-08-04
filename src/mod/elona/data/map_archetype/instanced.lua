@@ -7,7 +7,7 @@ local the_mine = {
    _id = "the_mine",
 
    on_generate_map = util.generate_122("puti"),
-   starting_pos = MapEntrance.stair_up,
+   starting_pos = MapEntrance.stairs_up,
 
    properties = {
       music = "elona.puti",
@@ -61,7 +61,7 @@ local the_sewer = {
    _id = "the_sewer",
 
    on_generate_map = util.generate_122("sqSewer"),
-   starting_pos = MapEntrance.stair_up,
+   starting_pos = MapEntrance.stairs_up,
 
    properties = {
       music = "elona.puti",

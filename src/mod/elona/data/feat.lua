@@ -273,7 +273,10 @@ local function gen_stair(down)
       end,
 
       on_stepped_on = function(self, params)
-         Gui.mes_c(("This leads to: %s %s"):format(self.params.area_uid, self.params.area_floor))
+         local area = Area.get(self.params.area_uid)
+         if area then
+            Gui.mes(("This leads to: %s %s"):format(area, self.params.area_floor))
+         end
       end,
 
       on_activate = travel(start_pos_fn),

@@ -1,6 +1,7 @@
 local Map = require("api.Map")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
+local save = require("internal.global.save")
 
 local Inventory = class.class("Inventory", ILocation)
 

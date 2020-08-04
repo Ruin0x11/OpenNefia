@@ -582,7 +582,7 @@ function Map.travel_to(map, params)
                                      params.feat)
    end
 
-   Log.debug("Start position: %d %d (%s)", x, y)
+   Log.debug("Start position: %s %s (%s)", x, y)
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
       x = math.floor(map:width() / 2)

@@ -1280,13 +1280,22 @@ Image this area will have when created with Area.create_entrance().
 ]]
       },
       {
+         name = "deepest_floor",
+         default = nil,
+         template = false,
+         type = "int?",
+         doc = [[
+Deepest floor of this area. Used with generating dungeons.
+]]
+      },
+      {
          name = "parent_area",
          default = nil,
          template = true,
-         type = "{_id=id:base.unique_area,on_floor=uint,x=uint,y=uint,start_floor=uint}",
+         type = "{_id=id:base.unique_area,on_floor=uint,x=uint,y=uint,starting_floor=uint}",
          doc = [[
 Parent area that this area is contained in. If present, an entrance leading to
-this area on floor `start_floor` will be created when the given parent area's
+this area on floor `starting_floor` will be created when the given parent area's
 floor is generated for the first time.
 
 This is merely for convenience; you can always create an entrance leading to
@@ -1302,8 +1311,8 @@ local on_floor = 1
 
 if parent_area._id == _id and parent_floor == on_floor then
    local my_area = Area.get_unique("elona.vernis")
-   local start_floor = my_area:starting_floor()
-   local entrance = Area.create_entrance(my_area, start_floor, 10, 10, {}, parent_map)
+   local starting_floor = my_area:starting_floor()
+   local entrance = Area.create_entrance(my_area, starting_floor, 10, 10, {}, parent_map)
    assert(entrance.params.area_uid == my_area.uid)
    assert(entrance.params.area_floor == floor_number)
 end

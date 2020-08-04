@@ -68,6 +68,19 @@ function UiStatsBar:relayout(x, y, width, height)
    self.i_hud_bar = self.t.base.hud_bar:make_instance()
 end
 
+local ATTRS = {
+   "elona.stat_strength",
+   "elona.stat_constitution",
+   "elona.stat_dexterity",
+   "elona.stat_perception",
+   "elona.stat_learning",
+   "elona.stat_will",
+   "elona.stat_magic",
+   "elona.stat_charisma",
+   "elona.stat_speed",
+   "dv_pv"
+}
+
 function UiStatsBar:draw()
    -- bar
    Draw.set_color(255, 255, 255)
@@ -90,22 +103,10 @@ function UiStatsBar:draw()
    -- >>>>>>>> shade2/screen.hsp:173 	fontSize 13,0:color 0,0,0 ..
    -- attributes
    local item_width = math.max((Draw.get_width() - 148 - 136) / 11, 47)
-   local attrs = {
-      "elona.stat_strength",
-      "elona.stat_constitution",
-      "elona.stat_dexterity",
-      "elona.stat_perception",
-      "elona.stat_learning",
-      "elona.stat_will",
-      "elona.stat_magic",
-      "elona.stat_charisma",
-      "elona.stat_speed",
-      "dv_pv"
-   }
 
    -- icons
    Draw.set_color(255, 255, 255)
-   for i, a in ipairs(attrs) do
+   for i, a in ipairs(ATTRS) do
       local x_offset = 0
       if a == "elona.stat_speed" then
          x_offset = 8
@@ -122,7 +123,7 @@ function UiStatsBar:draw()
    Draw.set_font(self.t.base.attribute_font) -- 13 - en * 2
    local x
    local y = self.y + 2 -- + vfix
-   for i, a in ipairs(attrs) do
+   for i, a in ipairs(ATTRS) do
       x = self.x + 136 + item_width * (i - 1) + 166
       local color = self.t.base.text_color
 

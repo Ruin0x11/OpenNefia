@@ -89,13 +89,21 @@ data:add {
    cast = function(self, params)
       local source = params.source
       local target = params.target
+      local map = params.source:current_map()
 
       if not source:is_player() or target:is_allied() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
 
-      -- TODO dominate restriction
+      local prevents_domination = map:calc("prevents_domination")
+      if prevents_domination then
+         if source:is_in_fov() then
+            Gui.mes("magic.domination.does_not_work_in_area")
+         end
+         return true
+      end
+
       -- TODO item: monster heart
 
       local success = Rand.rnd(params.power / 15 + 5) < target:calc("level")

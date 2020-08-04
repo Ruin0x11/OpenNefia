@@ -1,28 +1,41 @@
 local Enum = {}
 
+local function try_get(self, k)
+   local v = rawget(self, k)
+   if v == nil then
+      return nil, ("Unknown enum variant '%s.%s'"):format(self.__name, k)
+   end
+   return v, nil
+end
+
+local function has_value(self, v)
+   for k, o in pairs(self) do
+      if v == o then
+         return true
+      end
+   end
+   return false
+end
+
 local function enum_index(name)
    return function(t, k)
       if k == "__enum" then
          return true
       end
-      local v = rawget(t, k)
+      if k == "__name" then
+         return name
+      end
+      local v, err = try_get(t, k)
       if not v then
-         error(("Unknown enum variant '%s.%s'"):format(name, k))
+         error(err)
       end
       return v
    end
 end
 
-local function try_get(self, k)
-   return rawget(self, k)
-end
-
-local function to_list(self)
-   return rawget(self, k)
-end
-
 local function enum(name, tbl)
    tbl.try_get = try_get
+   tbl.has_value = has_value
    return setmetatable(tbl, { __index = enum_index(name) })
 end
 
@@ -94,5 +107,16 @@ Enum.Color = enum("Color", {
    LightGreen =    { 215, 255, 215 },
    Talk =          { 210, 250, 160 },
 })
+
+-- >>>>>>>> shade2/init.hsp:280 	#enum global aiNull=0 ..
+Enum.AiBehavior = enum("AiBehavior", {
+   Null = 0,
+   Roam = 1,
+   Dull = 2,
+   Stand = 3,
+   Follow = 4,
+   Special = 5
+})
+-- <<<<<<<< shade2/init.hsp:285 	#enum global aiSpecial ..
 
 return Enum

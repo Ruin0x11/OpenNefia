@@ -905,7 +905,9 @@ data:add {
 -- teleport
 
 local function teleport_to(chara, x, y, check_cb, pos_cb, success_message, ...)
-   local prevents_teleport = false -- TODO
+   local map = chara:current_map()
+
+   local prevents_teleport = map:calc("prevents_teleport")
    if prevents_teleport then
       if chara:is_in_fov() then
          Gui.mes("magic.teleport.prevented")
@@ -921,7 +923,6 @@ local function teleport_to(chara, x, y, check_cb, pos_cb, success_message, ...)
       Gui.play_sound("base.teleport1", chara.x, chara.y)
    end
 
-   local map = chara:current_map()
    for attempt = 1, 200 do
       local next_x, next_y = pos_cb(x, y, attempt)
       next_x = math.floor(next_x)

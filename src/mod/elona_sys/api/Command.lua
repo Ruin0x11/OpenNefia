@@ -88,8 +88,8 @@ function Command.move(player, x, y)
    local map = player:current_map()
    local parent_area = Area.parent(map)
 
-   if not Map.is_in_bounds(next_pos.x, next_pos.y)
-      and Map.current():calc("can_exit_from_edge")
+   if not Map.is_in_bounds(next_pos.x, next_pos.y, map)
+      and (map:calc("can_exit_from_edge") or not map.is_indoor)
       and parent_area ~= nil
    then
       -- Player is trying to move out of the map.

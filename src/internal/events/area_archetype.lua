@@ -44,7 +44,7 @@ local function generate_entrances_of_parent_area(parent_map, params)
          if not entry.entrance_was_generated then
             local x = assert(child_area.parent_area.x)
             local y = assert(child_area.parent_area.y)
-            local area_floor = assert(child_area.parent_area.start_floor)
+            local area_floor = assert(child_area.parent_area.starting_floor)
 
             Log.info("Autogenerating area entrance of '%s' (floor %d) in parent '%s' at (%d, %d)", child_area._id, area_floor, area._archetype, x, y)
 

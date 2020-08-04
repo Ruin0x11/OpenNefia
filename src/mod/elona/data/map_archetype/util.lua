@@ -3,6 +3,9 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local Charagen = require("mod.tools.api.Charagen")
+local Feat = require("api.Feat")
+local Area = require("api.Area")
+local Map = require("api.Map")
 
 local util = {}
 
@@ -63,6 +66,27 @@ function util.generate_chara(map, x, y, extra_params)
       table.merge(params, extra_params)
    end
    return Charagen.create(x, y, params, map)
+end
+
+--- Fixes up stairs in maps converted from 1.22's format.
+function util.connect_existing_stairs(map, area, floor)
+   local is_stair = function(f)
+      return f._id == "elona.stairs_up" or f._id == "elona.stairs_down"
+   end
+
+   for _, f in Feat.iter(map):filter(is_stair) do
+      local delta = (f._id == "elona.stairs_up") and -1 or 1
+      local next_floor = floor + delta
+      local area_uid = area.uid
+      if next_floor <= 0 then
+         local parent = assert(Area.for_map(Map.current()))
+         area_uid = parent.uid
+         next_floor = parent:starting_floor()
+      end
+
+      f.params.area_uid = area_uid
+      f.params.area_floor = next_floor
+   end
 end
 
 return util

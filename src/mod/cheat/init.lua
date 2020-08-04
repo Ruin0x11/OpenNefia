@@ -13,12 +13,12 @@ local function level_up()
       Skill.grow_primary_skills(player)
    end
 
-   player:mod_base_skill_level("elona.stat_magic", 10)
+   player:mod_base_skill_level("elona.stat_magic", 10000)
    player:mod_base_skill_level("elona.stat_mana", 10000)
 
    data["base.skill"]:iter()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 100, 1000)
+            Skill.gain_skill(player, m._id, 2000, 1000)
            end)
 
    Skill.gain_skill(player, "elona.mining", 10000)
