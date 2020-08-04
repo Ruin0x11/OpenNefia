@@ -5,20 +5,37 @@ local socket = require("socket")
 local env = require("internal.env")
 local Queue = require("api.Queue")
 local mod = require("internal.mod")
+local API_VERSION = require("internal.global.api_version")
 
 local Env = {}
 
-local VERSION = "0.0.1"
+function Env.commit_hash()
+   local ok, commit = pcall(require, "internal.global.__COMMIT__")
+   if ok then
+      return commit
+   end
 
---- Returns the version of OpenNefia as a string.
+   return nil
+end
+
+--- Returns the current version of OpenNefia's API as an integer.
+---
+--- @treturn uint
+function Env.api_version()
+   return API_VERSION
+end
+
+--- Returns the version of OpenNefia as a formatted string, for printing
+--- purposes.
 ---
 --- @treturn string
 function Env.version()
-   local ok, commit = pcall(require, "internal.global.__COMMIT__")
-   if ok then
-      return ("%s (%s)"):format(VERSION, commit)
+   local version_string = ("%d"):format(API_VERSION)
+   local commit = Env.commit_hash()
+   if commit then
+      version_string = ("%s (%s)"):format(version_string, commit)
    end
-   return VERSION
+   return version_string
 end
 
 --- @treturn string
