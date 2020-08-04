@@ -6,6 +6,7 @@ local Rand = {}
 local rng = RandomGenerator:new(0)
 
 --- Returns a random integer in `[0, n)`.
+---
 --- @tparam int n
 --- @treturn int
 function Rand.rnd(n)
@@ -13,6 +14,7 @@ function Rand.rnd(n)
 end
 
 --- Returns a random integer in `[n, m)`.
+---
 --- @tparam int n
 --- @tparam int m
 function Rand.between(n, m)
@@ -25,8 +27,20 @@ function Rand.rnd_float()
    return rng:rnd_float()
 end
 
---- Returns true one out of every `n` times.
+--- Returns a random integer in `[0, n)`. This uses a separate RNG from
+--- `Rand.rnd()`, due to compatibility issues.
 ---
+--- HSP's rnd() function will not return a value larger than 32768, whereas this
+--- function always will, but as a result the values returned from this function
+--- will differ from `Rand.rnd()` when starting from the same seed.
+---
+--- @tparam int n
+--- @treturn int
+function Rand.rnd_huge(n)
+   return rng:rnd_huge(math.floor(n))
+end
+
+--- Returns true one out of every `n` times.
 --- @tparam int n
 --- @treturn bool
 function Rand.one_in(n)
@@ -60,7 +74,7 @@ function Rand.choice(arr_or_iter)
    if #arr == 0 then
       return nil
    end
-   local i = arr[Rand.rnd(#arr)+1]
+   local i = arr[Rand.rnd_huge(#arr)+1]
    return i
 end
 
@@ -78,7 +92,7 @@ function Rand.roll_dice(dice_x, dice_y, add)
    dice_y = math.max(dice_y, 1)
    local result = 0
    for _ in fun.range(1, dice_x) do
-      result = result + Rand.rnd(dice_y) + 1
+      result = result + Rand.rnd_huge(dice_y) + 1
    end
 
    return result + add
@@ -101,7 +115,7 @@ function Rand.shuffle(tbl)
    local res = table.shallow_copy(tbl)
 
    for i=1, #res do
-      local j = Rand.rnd(#res-i+1) + i
+      local j = Rand.rnd_huge(#res-i+1) + i
       local tmp = res[j]
       res[j] = res[i]
       res[i] = tmp

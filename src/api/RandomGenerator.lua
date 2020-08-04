@@ -24,7 +24,19 @@ function RandomGenerator:set_seed(seed)
    self.seed = seed
 end
 
-function RandomGenerator:rnd(n)
+function RandomGenerator:rnd_huge(n)
+   self.seed = (214013 * self.seed + 2531011) % 4294967296
+
+   if n <= 0 then
+      return 0
+   end
+
+   return self.seed % n
+end
+
+--- NOTE this function is for compatibility with HSP, where rnd() will not
+--- return a value larger than 32768.
+function RandomGenerator:rnd_small(n)
    self.seed = (214013 * self.seed + 2531011) % 4294967296
 
    if n <= 0 then
@@ -32,6 +44,19 @@ function RandomGenerator:rnd(n)
    end
 
    return bit.band(bit.rshift(self.seed, 16), 0x7FFF) % n
+end
+
+function RandomGenerator:rnd(n)
+   -- If we're trying to generate a large number, do not use HSP's legacy
+   -- behavior and return a 64-bit value.
+   if n > 0x7FFF then
+      return self:rnd_huge(n)
+   end
+
+   -- Otherwise, behave exactly the same as HSP does. This is so a random seed
+   -- will return the exact same values as it would in HSP so long as the
+   -- largest random number limit is not exceeded.
+   return self:rnd_small(n)
 end
 
 function RandomGenerator:rnd_float()
