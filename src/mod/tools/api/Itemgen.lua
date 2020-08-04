@@ -6,6 +6,8 @@ local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
 local Log = require("api.Log")
 local Enum = require("api.Enum")
+local Hash = require("mod.elona_sys.api.Hash")
+local Event = require("api.Event")
 
 -- This shouldn't be in base, since it has a lot of logic specific to
 -- elona.
@@ -18,8 +20,20 @@ local Itemgen = {}
 --  3: gem_stone_of_mani, wind_bow, magic_fruit, statue_of_jure, diablo
 --  8: tree_of_naked, tree_of_fir, christmas_tree
 
+local sampler = nil
+local hash = ""
+
+local function clear_cache_itemgen(_, params)
+   if params.hotloaded_types["base.item"] then
+      sampler = nil
+      hash = ""
+   end
+end
+
+Event.register("base.on_hotload_end", "Clear itemgen cache", clear_cache_itemgen)
+
 local function item_gen_weight(item, objlv)
-   return math.floor((item.rarity or 1000000) / (1000 + math.abs((item.level or 0) - objlv) * (item.coefficient or 0)) + 1)
+   return math.floor((item.rarity or 1000000) / (1000 + math.abs(objlv - (item.level or 0)) * (item.coefficient or 0)) + 1)
 end
 
 -- >>>>>>>> shade2/db_item.hsp:4 	dbMax = 0 : dbSum = 0  ..
@@ -31,45 +45,55 @@ function Itemgen.random_item_id_raw(objlv, categories)
       categories = table.set(categories)
    end
 
-   local filter = function(item)
-      if (item.level or 0) > objlv then
-         return false
-      end
-
-      if next(categories) then
-         local found = {}
-         for _, v in ipairs(item.categories or {}) do
-            if categories[v] then
-               found[v] = true
-            end
-         end
-         for k, _ in pairs(categories) do
-            if not found[k] then
-               return false
-            end
-         end
-      end
-
-      -- fltselect compatibility - item types with no_generate set to
-      -- true means they will not be randomly generated unless
-      -- explicitly asked for.
-      for _, cat in ipairs(item.categories or {}) do
-         if data["base.item_type"]:ensure(cat).no_generate then
-            if not categories[cat] then
-               return false
-            end
-         end
-      end
-
-      return true
+   -- Speed up multiple consecutive generations with the exact same parameters
+   -- by hashing them and comparing the hash to that of the last generation.
+   local new_hash = Hash.hash(objlv, categories)
+   if new_hash ~= hash then
+      sampler = nil
    end
+   hash = new_hash
 
-   local candidates = data["base.item"]:iter():filter(filter)
-   local sampler = WeightedSampler:new()
+   if sampler == nil then
+      local filter = function(item)
+         if (item.level or 0) > objlv then
+            return false
+         end
 
-   for _, item in candidates:unwrap() do
-      local weight = item_gen_weight(item, objlv)
-      sampler:add(item._id, weight)
+         if next(categories) then
+            local found = {}
+            for _, v in ipairs(item.categories or {}) do
+               if categories[v] then
+                  found[v] = true
+               end
+            end
+            for k, _ in pairs(categories) do
+               if not found[k] then
+                  return false
+               end
+            end
+         end
+
+         -- fltselect compatibility - item types with no_generate set to
+         -- true means they will not be randomly generated unless
+         -- explicitly asked for.
+         for _, cat in ipairs(item.categories or {}) do
+            if data["base.item_type"]:ensure(cat).no_generate then
+               if not categories[cat] then
+                  return false
+               end
+            end
+         end
+
+         return true
+      end
+
+      local candidates = data["base.item"]:iter():filter(filter)
+      sampler = WeightedSampler:new()
+
+      for _, item in candidates:unwrap() do
+         local weight = item_gen_weight(item, objlv)
+         sampler:add(item._id, weight)
+      end
    end
 
    if sampler:len() == 0 then
@@ -102,8 +126,8 @@ end
 
 local function get_fltselect(categories)
    return fun.iter(categories)
-       :filter(function(cat) return data["base.item_type"]:ensure(cat).no_generate end)
-       :nth(1)
+   :filter(function(cat) return data["base.item_type"]:ensure(cat).no_generate end)
+      :nth(1)
 end
 
 

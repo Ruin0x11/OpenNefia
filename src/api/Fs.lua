@@ -14,7 +14,7 @@ function Fs.open(filepath, mode)
 
    local file = love.filesystem.newFile(filepath)
    local ok, err = file:open(mode)
-   if not ok then
+   if not ok and err then
       return nil, err
    end
    return file, nil

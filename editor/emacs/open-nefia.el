@@ -556,9 +556,8 @@ removed.  Return the new string.  If STRING is nil, return nil."
       (open-nefia--send "hotload" (list :require_path lua-path))
       (message "Hotloaded %s." lua-path))))
 
-(defun open-nefia-require-this-file ()
-  (interactive)
-  (let* ((pair (open-nefia--require-path-of-file (buffer-file-name)))
+(defun open-nefia--require-file (file)
+  (let* ((pair (open-nefia--require-path-of-file file))
          (lua-path (car pair))
          (lua-name (cdr pair))
          (cmd (format
@@ -568,6 +567,18 @@ removed.  Return the new string.  If STRING is nil, return nil."
     (save-buffer)
     (open-nefia--send-to-repl cmd)
     (message "%s" cmd)))
+
+(defun open-nefia-require-this-file ()
+  (interactive)
+  (open-nefia--require-file (buffer-file-name)))
+
+(defun open-nefia-require-file ()
+  (interactive)
+  (let* ((files (open-nefia--api-file-cands))
+         (file (projectile-completing-read "File: " files)))
+    (when file
+      (open-nefia--require-file
+       (string-join (list (projectile-project-root) file))))))
 
 (defun open-nefia--require-path (file)
   (let* ((pair (open-nefia--require-path-of-file file))

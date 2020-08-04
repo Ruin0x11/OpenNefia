@@ -4,6 +4,9 @@ local Chara = require("api.Chara")
 local Rand = require("api.Rand")
 local WeightedSampler = require("mod.tools.api.WeightedSampler")
 local Enum = require("api.Enum")
+local NpcMemory = require("mod.elona_sys.api.NpcMemory")
+local Hash = require("mod.elona_sys.api.Hash")
+local Event = require("api.Event")
 
 local Charagen = {}
 
@@ -18,6 +21,18 @@ local Charagen = {}
 -- quality:
 --  1 is bad, 6 is special
 
+local sampler = nil
+local hash = ""
+
+local function clear_cache_itemgen(_, params)
+   if params.hotloaded_types["base.chara"] then
+      sampler = nil
+      hash = ""
+   end
+end
+
+Event.register("base.on_hotload_end", "Clear charagen cache", clear_cache_itemgen)
+
 local function chara_gen_weight(chara, objlv)
    return math.floor((chara.rarity or 100000) / (500 + math.abs(chara.level - objlv) * chara.coefficient))
 end
@@ -29,69 +44,78 @@ function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, t
    race_filter = race_filter or nil
    tag_filters = tag_filters or {}
 
-   local pred = function(chara)
-      if (chara.level or 0) > objlv then
-         return false
-      end
+   -- Speed up multiple consecutive generations with the exact same parameters
+   -- by hashing them and comparing the hash to that of the last generation.
+   local new_hash = Hash.hash(objlv, fltselect, category, race_filter, tag_filters)
+   if new_hash ~= hash then
+      sampler = nil
+   end
+   hash = new_hash
 
-      if fltselect ~= (chara.fltselect or 0) then
-         return false
-      end
-
-      local has_seen = false -- TODO
-      if chara.is_unique and has_seen then
-         return false
-      end
-
-      if category ~= 0 and category ~= chara.category then
-         return false
-      end
-
-      if race_filter ~= nil and race_filter ~= chara.race then
-         return false
-      end
-
-      for _, tag in ipairs(tag_filters) do
-         if not table.has_value(chara.tags or {}, tag) then
+   if sampler == nil then
+      local pred = function(chara)
+         if (chara.level or 0) > objlv then
             return false
          end
+
+         if fltselect ~= (chara.fltselect or 0) then
+            return false
+         end
+
+         if chara.is_unique and NpcMemory.generated(chara._id) > 0 then
+            return false
+         end
+
+         if category ~= 0 and category ~= chara.category then
+            return false
+         end
+
+         if race_filter ~= nil and race_filter ~= chara.race then
+            return false
+         end
+
+         for _, tag in ipairs(tag_filters) do
+            if not table.has_value(chara.tags or {}, tag) then
+               return false
+            end
+         end
+
+         return true
       end
 
-      return true
-   end
+      local candidates = data["base.chara"]:iter():filter(pred)
+      sampler = WeightedSampler:new()
 
-   local candidates = data["base.chara"]:iter():filter(pred)
-   local sampler = WeightedSampler:new()
-
-   for _, chara in candidates:unwrap() do
-      local weight = chara_gen_weight(chara, objlv)
-      sampler:add(chara._id, weight)
+      for _, chara in candidates:unwrap() do
+         local weight = chara_gen_weight(chara, objlv)
+         sampler:add(chara._id, weight)
+      end
    end
 
    return sampler:sample()
 end
 
-local function do_get_chara_id(params)
-   if params.category == 0 and #params.tag_filters == 0 and params.race_filter == nil then
-      if params.quality == Enum.Quality.Good and Rand.one_in(20) then
-         params.fltselect = 2
+function Charagen.random_chara_id(level, quality, fltselect, category, race_filter, tag_filters)
+   if category == 0 and #tag_filters == 0 and race_filter == nil then
+      if quality == Enum.Quality.Good and Rand.one_in(20) then
+         fltselect = 2
       end
-      if params.quality == Enum.Quality.Great and Rand.one_in(10) then
-         params.fltselect = 2
+      if quality == Enum.Quality.Great and Rand.one_in(10) then
+         fltselect = 2
       end
    end
 
-   local id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
+   local id = Charagen.random_chara_id_raw(level, fltselect, category, race_filter, tag_filters)
 
    if id == nil then
-      if params.fltselect == 2 or params.quality == Enum.Quality.Unique then
-         params.quality = Enum.Quality.Great
+      if fltselect == 2 or quality == Enum.Quality.Unique then
+         quality = Enum.Quality.Great
       end
-      params.level = params.level + 10
-      id = Charagen.random_chara_id_raw(params.level, params.fltselect, params.category, params.race_filter, params.tag_filters)
+      level = level + 10
+      id = Charagen.random_chara_id_raw(level, fltselect, category, race_filter, tag_filters)
    end
 
-   return id
+   return id or "elona.bug", quality
 end
 
 --- Creates a random character.
@@ -116,11 +140,17 @@ function Charagen.create(x, y, params, where)
 
    local id = params.id or nil
    if id == nil then
-      id = do_get_chara_id(params)
+      local quality
+      id, quality = Charagen.random_chara_id(params.level,
+                                             params.quality,
+                                             params.fltselect,
+                                             params.category,
+                                             params.race_filter,
+                                             params.tag_filters)
+      if quality then
+         params.quality = quality
+      end
    end
-
-   local bug_id = "elona.bug"
-   id = id or bug_id
 
    local create_params = params.create_params
    create_params.quality = params.quality

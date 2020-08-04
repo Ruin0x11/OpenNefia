@@ -15,6 +15,7 @@ local elona_Item = require("mod.elona.api.Item")
 local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
+local Charagen = require("mod.tools.api.Charagen")
 
 local Tools = {}
 
@@ -705,19 +706,39 @@ function Tools.goto_area(area_archetype_id, floor)
    assert(Map.travel_to(map))
 end
 
-function Tools.percent_bar(p)
-   local style = "░▒▓█"
+local BAR_STYLES = {
+    '▁▂▃▄▅▆▇█',
+    '⣀⣄⣤⣦⣶⣷⣿',
+    '⣀⣄⣆⣇⣧⣷⣿',
+    '○◔◐◕⬤',
+    '□◱◧▣■',
+    '□◱▨▩■',
+    '□◱▥▦■',
+    '░▒▓█',
+    '░█',
+    '⬜⬛',
+    '▱▰',
+    '▭◼',
+    '▯▮',
+    '◯⬤',
+    '⚪⚫',
+}
+
+--- from https://changaco.oy.lc/unicode-progress-bars/
+function Tools.percent_bar(p, min, max)
+   min = min or 10
+   max = max or min
+
+   local style = BAR_STYLES[8]
    local symbols = fun.wrap(utf8.chars(style)):to_list()
    local full_symbol = symbols[#symbols]
    local n = #symbols - 1
 
    p = math.clamp(p, 0.0, 1.0)
    if p == 1.0 then
-      return string.rep(full_symbol, 10)
+      return string.rep(full_symbol, max)
    end
 
-   local min = 1
-   local max = 10
    local min_delta = math.huge
    local r = ""
 
@@ -726,8 +747,6 @@ function Tools.percent_bar(p)
       local full = math.floor(x)
       local rest = x - full
       local middle = math.floor(rest * n)
-      local Log = require("api.Log")
-      Log.info("%d %d %d", full, rest, middle)
       if p > 0.0 and full == 0 and middle == 0 then
          middle = 1
       end
@@ -745,26 +764,151 @@ function Tools.percent_bar(p)
    return r, min_delta
 end
 
-function Tools.print_frequency(tbl)
-   assert(type(tbl) == "table")
-   if tostring(tbl) == "generator" then
-      tbl = tbl:take(1000):to_list()
+local function left_pad(s, count, pad)
+    return s .. string.rep(pad or " ", count - #s)
+end
+
+local function get_list(tbl, count, ...)
+   if type(tbl) == "function" then
+      local args = {...}
+      local cb = tbl
+      local f = function() return cb(table.unpack(args)) end
+      tbl = fun.tabulate(f)
    end
 
+   assert(type(tbl) == "table")
+   if tostring(tbl) == "<generator>" then
+      tbl = tbl:take(count):to_list()
+   end
+
+   return tbl
+end
+
+function Tools.print_frequency(tbl, count, ...)
+   count = math.clamp(count or 1000, 0, 1000000)
+   local tbl = get_list(tbl, count, ...)
+
    local counts = {}
-   for _, v in ipairs(tbl) do
+   for i, v in ipairs(tbl) do
+      if i > count then
+         break
+      end
       counts[v] = (counts[v] or 0) + 1
    end
 
    local percents = {}
    for k, v in pairs(counts) do
-      percents[k] = v / #counts
+      local percent = v / #tbl
+      percents[#percents+1] = { key = k, percent = percent, total = v }
+   end
+
+   table.sort(percents, function(a, b) return a.percent < b.percent end)
+   local max = percents[#percents].percent
+
+   return Tools.print_frequency_2(percents, max)
+end
+
+function Tools.print_frequency_2(percents, max)
+   local max_len = 0
+   local max_name_len = 0
+   local names = {}
+   local amounts = {}
+   for _, pair in ipairs(percents) do
+      local percent = pair.percent
+      local total = pair.total
+      local amount = ("%.02f%% (%d)"):format(percent * 100, total)
+      local name = tostring(pair.key)
+      if name:len() > 25 then
+         name = name:sub(1, 25) .. "..."
+      end
+      amounts[#amounts+1] = amount
+      names[#names+1] = name
+      max_len = math.max(max_len, amount:len())
+      max_name_len = math.max(max_name_len, name:len())
    end
 
    local s = ""
-   for k, v in pairs(percents) do
-      s = s .. ("%-6s"):format(tostring(k):sub(1, 6))
+   for i, pair in ipairs(percents) do
+      local name = left_pad(names[i], max_name_len)
+      local percent = pair.percent
+      local amount = amounts[i]
+      local bar = Tools.percent_bar(percent / max, 40)
+      s = s .. ("\n%-6s %s %s"):format(name, left_pad(amount, max_len), bar)
    end
+
+   return s
+end
+
+function Tools.test_frequency(f, match, inputs, count)
+   count = math.clamp(count or 1000, 0, 1000000)
+   inputs = get_list(inputs, count)
+
+   local percents = {}
+   local max = 0.0
+
+   for _, input in ipairs(inputs) do
+      local tbl = get_list(f, count, input)
+      local total = 0
+      for _, result in ipairs(tbl) do
+         if result == match then
+            total = total + 1
+         end
+      end
+      local percent = total / #tbl
+      max = math.max(max, percent)
+      percents[#percents+1] = {
+         percent = percent,
+         key = input,
+         total = total
+      }
+   end
+
+   return Tools.print_frequency_2(percents, max)
+end
+
+function Tools.print_plot(tbl, count, sort)
+   count = math.clamp(count or 1000, 0, 1000000)
+   tbl = get_list(tbl, count)
+   local percents = {}
+   local sum = fun.iter(table.values(tbl)):sum()
+   local max = 0.0
+
+   for k, v in pairs(tbl) do
+      local percent = v / sum
+      max = math.max(max, percent)
+      percents[#percents+1] = {
+         percent = percent,
+         key = k,
+         total = v
+      }
+   end
+
+   if sort then
+      table.sort(percents, function(a, b) return a.percent < b.percent end)
+   end
+
+   return Tools.print_frequency_2(percents, max)
+end
+
+function Tools.chara_id_for_map(map_archetype_id)
+   local archetype = data["base.map_archetype"]:ensure(map_archetype_id)
+   local filter = {}
+   if archetype.chara_filter then
+      filter = archetype.chara_filter(Map.current())
+   end
+
+   if filter.id then
+      return filter.id
+   end
+
+   local level = filter.level
+   local quality = filter.quality
+   local fltselect = filter.fltselect
+   local category = filter.category
+   local race_filter = filter.race_filter
+   local tag_filters = filter.tag_filters
+
+   return Charagen.random_chara_id(level, quality, fltselect, category, race_filter, tag_filters)
 end
 
 return Tools

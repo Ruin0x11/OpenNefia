@@ -5,12 +5,15 @@ local theme = require("internal.theme")
 local hotload = {}
 
 local hotloaded_data = {}
+local hotloaded_types = table.set {}
 
 local function clear_hotloaded_data()
    hotloaded_data = {}
+   hotloaded_types = table.set {}
 end
 local function add_hotloaded_data(_, args)
    hotloaded_data[#hotloaded_data+1] = args.entry
+   hotloaded_types[args.entry._type] = true
 end
 
 -- Pass a list of everything hotloaded when hotloading finishes.
@@ -41,7 +44,14 @@ function hotload.hotload(path_or_class, also_deps)
 
    local ok, result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
 
-   pcall(Event.trigger, "base.on_hotload_end", {hotloaded_data=hotloaded_data,path_or_class=path_or_class,also_deps=also_deps,ok=ok,result=result})
+   pcall(Event.trigger, "base.on_hotload_end", {
+            hotloaded_data=hotloaded_data,
+            hotloaded_types=hotloaded_types,
+            path_or_class=path_or_class,
+            also_deps=also_deps,
+            ok=ok,
+            result=result
+                                               })
 
    if not ok then
       error(result)
@@ -81,7 +91,8 @@ local THEME_TYPES = table.set {
 
 Event.register("base.on_hotload_end", "Reload theme if assets were hotloaded",
                function(_, params)
-                  local need_reload = fun.iter(params.hotloaded_data):any(function(d) return THEME_TYPES[d._type] end)
+                  local need_reload = fun.iter(table.keys(params.hotloaded_types))
+                      :any(function(_type) return THEME_TYPES[_type] end)
                   if need_reload then
                      theme.reload_all()
                   end

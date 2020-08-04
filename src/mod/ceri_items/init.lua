@@ -51,8 +51,7 @@ end
 Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
 
 Event.register("base.on_hotload_end", "Clear FFHP mapping cache", function(_, params)
-                  local need_clear = fun.iter(params.hotloaded_data):any(function(d) return d._type == "ceri_items.ffhp_mapping" end)
-                  if need_clear then
+                  if params.hotloaded_types["ceri_items.ffhp_mapping"] then
                      FFHP.clear_cache()
                   end
 end)

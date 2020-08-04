@@ -120,8 +120,7 @@ end
 local fallbacks = {
    turn_cost = 10000,
    is_indoor = false,
-   dungeon_level = 1,
-   deepest_dungeon_level = 1,
+   level = 1,
    player_start_pos = nil,
    types = {},
    appearance = "",
