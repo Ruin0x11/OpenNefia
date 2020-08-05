@@ -167,6 +167,8 @@ function mod.scan_mod_dir()
    return mods
 end
 
+local MOD_ID_REGEX = "[a-z][_a-z0-9]*"
+
 -- Called when hotloading code from a mod that has not been loaded
 -- yet. Checks the manifest to ensure all the mod's dependencies are
 -- loaded first.
@@ -182,6 +184,7 @@ function mod.hotload_mod(mod_id, root_path)
    end
 
    assert(manifest.id == mod_id, "Mod ID must match manifest ID")
+   assert(mod_id:match(MOD_ID_REGEX), "Mod ID must start with a letter and consist of letters, numbers or underscores only")
 
    for dep_id, version in pairs(manifest.dependencies) do
       -- TODO check version

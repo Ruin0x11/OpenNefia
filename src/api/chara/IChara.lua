@@ -630,13 +630,10 @@ function IChara:clear_status_effects()
    self:refresh()
 end
 
---
---
--- Elona
---
---
+function IChara:has_tag(tag)
+   return table.set(self.tags)[tag]
+end
 
-Codegen.generate_object_getter(IChara, "ammo", "base.item")
 
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1

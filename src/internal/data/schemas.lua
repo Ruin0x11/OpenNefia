@@ -384,7 +384,16 @@ AI callback to run on this character's turn.
          god = nil,
          prayer_charge = 0,
 
-         buffs = {}
+         buffs = {},
+
+         travel_speed = 0,
+
+         vorpal_rate = 0,
+         extra_melee_attacks = 0,
+         extra_ranged_attacks = 0,
+         damage_resistance = 0,
+         damage_immunity = 0,
+         damage_reflection = 0,
       }
    },
    { interface = IChara }
@@ -792,13 +801,136 @@ data:add_type {
 
 data:add_type {
    name = "enchantment",
-   schema = schema.Record {
-      item_method = schema.String,
-      item = schema.Table,
-      wielder_method = schema.String,
-      wielder = schema.Table,
-      orientation = schema.String,
-   },
+   fields = {
+      {
+         name = "level",
+         default = 1,
+         template = true,
+         doc = [[
+Level of this enchantment.
+]]
+      },
+      {
+         name = "value",
+         default = 100,
+         template = true,
+         doc = [[
+Value of this enchantment.
+]]
+      },
+      {
+         name = "level",
+         default = 100,
+         template = true,
+         doc = [[
+Rarity of this enchantment. Lower means more rare.
+]]
+      },
+      {
+         name = "categories",
+         default = { "elona.equip_melee" },
+         template = true,
+         doc = [[
+Valid item categories this enchantment applies to.
+]]
+      },
+      {
+         name = "alignment",
+         default = "positive",
+         template = true,
+         doc = [[
+Determines if this enchantment is beneficial or not. One of "positive" or "negative".
+]]
+      },
+      {
+         name = "power",
+         default = CodeGenerator.gen_literal [[
+function(power, item, wearer)
+      return power / 50
+   end
+]],
+         template = true,
+         doc = [[
+How to adjust the power when applying the enchantment.
+]]
+      },
+   }
+}
+
+data:add_type {
+   name = "enchantment_skill",
+   fields = {
+      {
+         name = "skill_id",
+         default = "elona.short_teleport",
+         template = true,
+         doc = [[
+Skill to trigger.
+]]
+      },
+      {
+         name = "target_type",
+         default = "self",
+         template = true,
+         doc = [[
+The target of the skill. Same format as that of "base.skill". Usually either "self" or "enemy".
+]]
+      },
+      {
+         name = "rarity",
+         default = 100,
+         template = true,
+         doc = [[
+Rarity of this enchantment skill when generating an enchantment containing it.
+]]
+      },
+      {
+         name = "categories",
+         default = { "elona.equip_melee" },
+         template = true,
+         doc = [[
+Valid item categories this enchantment skill applies to.
+]]
+      },
+      {
+         name = "power",
+         default = 10,
+         template = true,
+         doc = [[
+Power of the skill when it is triggered.
+]]
+      }
+   }
+}
+
+data:add_type {
+   name = "ammo_enchantment",
+   fields = {
+      {
+         name = "ammo_amount",
+         default = 30,
+         template = true,
+         doc = [[
+Controls the starting amount of ammo.
+]]
+      },
+      {
+         name = "ammo_factor",
+         default = 70,
+         template = true,
+         doc = [[
+Controls the starting amount of ammo.
+]]
+      },
+      {
+         name = "stamina_cost",
+         default = 1,
+         template = true,
+         doc = [[
+Stamina cost of the ammo when fired.
+]]
+      }
+   }
 }
 
 data:add_type {

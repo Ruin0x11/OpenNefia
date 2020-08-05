@@ -31,7 +31,7 @@ function RandomGenerator:rnd_huge(n)
       return 0
    end
 
-   return self.seed % n
+   return math.floor(self.seed % n)
 end
 
 --- NOTE this function is for compatibility with HSP, where rnd() will not

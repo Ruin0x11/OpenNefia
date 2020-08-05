@@ -88,6 +88,7 @@ local keybinds = {
    repl_copy = "ctrl_c",
    repl_clear = "ctrl_l",
    repl_complete = "tab",
+   repl_toggle_fullscreen = "ctrl_f",
 }
 
 local dualshock = {

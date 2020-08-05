@@ -197,6 +197,8 @@ function ItemMaterial.apply_item_material(item, material)
    -- >>>>>>>> shade2/item_data.hsp:1189 	gosub *item_value ..
    item.value = ItemMaterial.recalc_quality(item)
 
+   item:refresh()
+
    local owner = item:get_owning_chara()
    if owner then
       owner:refresh()

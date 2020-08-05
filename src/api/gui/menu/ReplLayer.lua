@@ -147,6 +147,16 @@ function ReplLayer:make_keymap()
       repl_clear = function()
          self:clear()
       end,
+      repl_toggle_fullscreen = function()
+         if not self.finished and self.pulldown_y == 0 then
+            if self.height_percentage >= 1.0 then
+               self.height_percentage = 0.3
+            else
+               self.height_percentage = 1.0
+            end
+            self:relayout()
+         end
+      end,
       repl_complete = function()
          local function complete(cand)
             local text = self.completion.base .. cand.text

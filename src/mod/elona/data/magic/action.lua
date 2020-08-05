@@ -1284,6 +1284,52 @@ data:add {
 }
 
 data:add {
+   _id = "action_mewmewmew",
+   _type = "base.skill",
+   elona_id = 657,
+
+   type = "action",
+   effect_id = "elona.mewmewmew",
+   related_skill = "elona.stat_luck",
+   cost = 1,
+   range = 1,
+   difficulty = 500,
+   target_type = "self_or_nearby",
+}
+data:add {
+   _id = "mewmewmew",
+   _type = "elona_sys.magic",
+   elona_id = 657,
+
+   params = {
+      "source"
+   },
+
+   cast = function(self, params)
+      local source = params.source
+
+      local filter = function(chara)
+         if not Chara.is_alive(source) or chara == source then
+            return false
+         end
+
+         return true
+      end
+
+      Gui.mes_c("magic.mewmewmew", "Blue")
+
+      local positions = Chara.iter():filter(filter):map(function(c) return { x = c.x, y = c.y } end):to_list()
+
+      local cb = Anim.miracle(positions)
+      Gui.start_draw_callback(cb)
+
+      Chara.iter():filter(filter):each(function(chara) chara:damage_hp(9999999, source) end)
+
+      return true
+   end
+}
+
+data:add {
    _id = "action_mirror",
    _type = "base.skill",
    elona_id = 626,

@@ -66,7 +66,6 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 }
 }
---mtEnc(0,p)=0
 
 data:add {
     _type="elona.item_material",
@@ -85,7 +84,6 @@ data:add {
     dice_y=100,
     color={ 255, 215, 175 }
 }
---mtEnc(0,p)=0
 
 data:add {
     _type="elona.item_material",
@@ -104,9 +102,12 @@ data:add {
     dice_y=100,
     color={ 255, 255, 175 },
 
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.mind" } }
+    },
+
     no_furniture = true
 }
---mtEnc(0,p)=encRes(rsResMind),50
 
 data:add {
     _type="elona.item_material",
@@ -127,7 +128,6 @@ data:add {
 
     no_furniture = true
 }
---mtEnc(0,p)=0
 
 data:add {
     _type="elona.item_material",
@@ -144,9 +144,12 @@ data:add {
     dv=12,
     pv=11,
     dice_y=120,
-    color={ 255, 195, 185 }
+    color={ 255, 195, 185 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } }
+    },
 }
---mtEnc(0,p)=encRes(rsResFire),50
 
 data:add {
     _type="elona.item_material",
@@ -163,10 +166,16 @@ data:add {
     dv=17,
     pv=0,
     dice_y=100,
-    color={ 175, 175, 255 }
+    color={ 175, 175, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 150, params = { skill_id = "elona.stat_speed" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsSPD),150
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -183,10 +192,17 @@ data:add {
     dv=25,
     pv=17,
     dice_y=190,
-    color={ 175, 255, 175 }
+    color={ 175, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.casting" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encSkill(rsCasting),100
---mtBit(0,p)=iAcidProof,iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -203,10 +219,17 @@ data:add {
     dv=35,
     pv=8,
     dice_y=250,
-    color={ 175, 175, 255 }
+    color={ 175, 175, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_speed" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsSPD),200
---mtBit(0,p)=iAcidProof,iFireproof
 
 data:add {
     _type="elona.item_material",
@@ -223,10 +246,12 @@ data:add {
     dv=8,
     pv=18,
     dice_y=140,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=0
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -243,10 +268,16 @@ data:add {
     dv=3,
     pv=14,
     dice_y=130,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 25, params = { element_id = "elona.fire" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResFire),25
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -263,9 +294,12 @@ data:add {
     dv=16,
     pv=19,
     dice_y=150,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_magic" } }
+    }
 }
---mtEnc(0,p)=encAttb(rsMAG),100
 
 data:add {
     _type="elona.item_material",
@@ -282,9 +316,12 @@ data:add {
     dv=1,
     pv=5,
     dice_y=100,
-    color={ 255, 215, 175 }
+    color={ 255, 215, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.lightning" } }
+    }
 }
---mtEnc(0,p)=encRes(rsResLightning),50
 
 data:add {
     _type="elona.item_material",
@@ -301,9 +338,12 @@ data:add {
     dv=13,
     pv=31,
     dice_y=220,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.lightning" } }
+    }
 }
---mtEnc(0,p)=encRes(rsResLightning),100
 
 data:add {
     _type="elona.item_material",
@@ -320,10 +360,16 @@ data:add {
     dv=34,
     pv=6,
     dice_y=100,
-    color={ 175, 175, 255 }
+    color={ 175, 175, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_speed" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsSPD),200
---mtBit(0,p)=iAcidProof
 
 data:add {
     _type="elona.item_material",
@@ -340,10 +386,17 @@ data:add {
     dv=31,
     pv=24,
     dice_y=190,
-    color={ 255, 155, 155 }
+    color={ 255, 155, 155 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 125, params = { skill_id = "elona.stat_life" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsHP),125
---mtBit(0,p)=iAcidProof,iFireproof
 
 data:add {
     _type="elona.item_material",
@@ -361,6 +414,10 @@ data:add {
     pv=0,
     dice_y=100,
     color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.evasion" } }
+    },
 
     no_furniture = true
 }
@@ -381,9 +438,12 @@ data:add {
     dv=35,
     pv=15,
     dice_y=100,
-    color={ 175, 175, 255 }
+    color={ 175, 175, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_mana" } }
+    }
 }
---mtEnc(0,p)=encAttb(rsMP),200
 
 data:add {
     _type="elona.item_material",
@@ -400,10 +460,16 @@ data:add {
     dv=12,
     pv=11,
     dice_y=140,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.nether" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResNether),100
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -420,10 +486,16 @@ data:add {
     dv=17,
     pv=14,
     dice_y=100,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.darkness" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResDarkness),50
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -440,9 +512,12 @@ data:add {
     dv=13,
     pv=14,
     dice_y=130,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.chaos" } }
+    }
 }
---mtEnc(0,p)=encRes(rsResChaos),100
 
 data:add {
     _type="elona.item_material",
@@ -461,9 +536,12 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 },
 
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_luck" } }
+    },
+
     no_furniture = true
 }
---mtEnc(0,p)=encAttb(rsLUC),100
 
 data:add {
     _type="elona.item_material",
@@ -480,9 +558,12 @@ data:add {
     dv=18,
     pv=12,
     dice_y=140,
-    color={ 255, 195, 185 }
+    color={ 255, 195, 185 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_perception" } }
+    }
 }
---mtEnc(0,p)=encAttb(rsPER),100
 
 
 data:add {
@@ -500,9 +581,12 @@ data:add {
     dv=18,
     pv=28,
     dice_y=190,
-    color={ 175, 255, 175 }
+    color={ 175, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.nerve" } }
+    }
 }
---mtEnc(0,p)=encRes(rsResNerve),100
 
 data:add {
     _type="elona.item_material",
@@ -519,10 +603,18 @@ data:add {
     dv=29,
     pv=24,
     dice_y=160,
-    color={ 175, 255, 175 }
+    color={ 175, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } }
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.cold" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResFire),50,encRes(rsResCold),50
---mtBit(0,p)=iAcidProof,iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -539,10 +631,16 @@ data:add {
     dv=7,
     pv=11,
     dice_y=130,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.darkness" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResDarkness),50
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -559,10 +657,16 @@ data:add {
     dv=14,
     pv=17,
     dice_y=140,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.darkness" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encRes(rsResDarkness),100
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -579,9 +683,12 @@ data:add {
     dv=21,
     pv=16,
     dice_y=100,
-    color={ 175, 175, 255 }
+    color={ 175, 175, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.nether" } }
+    }
 }
---mtEnc(0,p)=encRes(rsResNether),50
 
 data:add {
     _type="elona.item_material",
@@ -598,9 +705,12 @@ data:add {
     dv=32,
     pv=24,
     dice_y=120,
-    color={ 175, 255, 175 }
+    color={ 175, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.evasion" } }
+    }
 }
---mtEnc(0,p)=encSkill(rsEvade),100
 
 data:add {
     _type="elona.item_material",
@@ -617,10 +727,16 @@ data:add {
     dv=19,
     pv=22,
     dice_y=160,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_strength" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsSTR),100
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -639,7 +755,6 @@ data:add {
     dice_y=150,
     color={ 255, 255, 255 }
 }
---mtEnc(0,p)=0
 
 data:add {
     _type="elona.item_material",
@@ -656,7 +771,16 @@ data:add {
     dv=8,
     pv=42,
     dice_y=240,
-    color={ 255, 195, 185 }
+    color={ 255, 195, 185 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_constitution" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+       item:mod("is_fireproof", true)
+    end
 }
 --mtEnc(0,p)=encAttb(rsEND),100
 --mtBit(0,p)=iAcidProof,iFireProof
@@ -676,10 +800,16 @@ data:add {
     dv=14,
     pv=22,
     dice_y=140,
-    color={ 255, 255, 175 }
+    color={ 255, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_strength" } }
+    },
+
+    on_refresh = function(item)
+       item:mod("is_fireproof", true)
+    end
 }
---mtEnc(0,p)=encAttb(rsSTR),100
---mtBit(0,p)=iFireProof
 
 data:add {
     _type="elona.item_material",
@@ -696,7 +826,11 @@ data:add {
     dv=10,
     pv=7,
     dice_y=120,
-    color={ 255, 255, 175 }
+    color={ 255, 255, 175 },
+
+    fixed_enchantments = {
+       { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.lightning" } }
+    }
 }
 --mtEnc(0,p)=encRes(rsResLightning),100
 
@@ -715,7 +849,11 @@ data:add {
     dv=-3,
     pv=11,
     dice_y=100,
-    color={ 255, 255, 255 }
+    color={ 255, 255, 255 },
+
+    on_refresh = function(item)
+       item:mod("is_acidproof", true)
+    end
 }
 --mtEnc(0,p)=0
 --mtBit(0,p)=iAcidProof
@@ -737,7 +875,6 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 }
 }
---mtEnc(0,p)=0
 
 data:add {
     _type="elona.item_material",
@@ -756,7 +893,6 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 }
 }
---mtEnc(0,p)=0
 
 
 -- placeholders for random generation

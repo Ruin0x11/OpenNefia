@@ -18,6 +18,7 @@ local element = {
       sound = "base.atk_fire",
       death_anim = "base.anim_elem_fire",
       death_anim_dy = -20,
+      rarity = 1,
 
       on_modify_damage = function(chara, damage)
          -- >>>>>>>> shade2/chara_func.hsp:1459 		if (ele=rsResFire)or(dmgSource=dmgFromFire):dmg= ..
@@ -56,6 +57,7 @@ local element = {
       ui_color = { 0, 0, 150 },
       sound = "base.atk_ice",
       death_anim = "base.anim_elem_cold",
+      rarity = 1,
 
       on_damage_tile = function(self, x, y, chara)
 -- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
@@ -70,6 +72,7 @@ local element = {
       can_resist = true,
       sound = "base.atk_elec",
       death_anim = "base.anim_elem_lightning",
+      rarity = 1,
 
       on_modify_damage = function(chara, damage)
          -- >>>>>>>> shade2/chara_func.hsp:1460 		if ele=rsResLightning	:dmg=dmg*3/2 ..
@@ -101,6 +104,7 @@ local element = {
       can_resist = true,
       sound = "base.atk_dark",
       death_anim = "base.anim_elem_darkness",
+      rarity = 2,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1550 			if ele=rsResDarkness 	: dmgCon tc,conBlind,rnd( ..
@@ -118,6 +122,7 @@ local element = {
       preserves_sleep = true,
       sound = "base.atk_mind",
       death_anim = "base.anim_elem_mind",
+      rarity = 2,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1552 			if ele=rsResMind	: dmgCon tc,conConfuse,rnd(ele ..
@@ -135,6 +140,7 @@ local element = {
       sound = "base.atk_hell",
       death_anim = "base.anim_elem_mind",
       death_anim_dy = -24,
+      rarity = 4,
 
       after_apply_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1471 	if ele=rsResNether : if dmgSource >= dmgFromChara ..
@@ -167,6 +173,7 @@ local element = {
       can_resist = true,
       sound = "base.atk_poison",
       death_anim = "base.anim_elem_poison",
+      rarity = 3,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1554 			if ele=rsResPoison	: dmgCon tc,conPoison,rnd(el ..
@@ -183,6 +190,7 @@ local element = {
       can_resist = true,
       sound = "base.atk_sound",
       death_anim = "base.anim_elem_sound",
+      rarity = 3,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1553 			if ele=rsResSound	: dmgCon tc,conConfuse,rnd(el ..
@@ -200,6 +208,7 @@ local element = {
       preserves_sleep = true,
       sound = "base.atk_chaos",
       death_anim = "base.anim_elem_chaos",
+      rarity = 4,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1542 			if ele=rsResChaos{ ..
@@ -235,6 +244,7 @@ local element = {
       preserves_sleep = true,
       sound = "base.atk_nerve",
       death_anim = "base.anim_elem_nerve",
+      rarity = 3,
 
       on_damage = function(chara, params)
          -- >>>>>>>> shade2/chara_func.hsp:1551 			if ele=rsResNerve 	: dmgCon tc,conParalyze,rnd( ..
@@ -248,6 +258,7 @@ local element = {
       elona_id = 60,
       ui_color = { 150, 100, 100 },
       can_resist = true,
+      rarity = 5,
 
       calc_initial_resist_level = function(chara, level)
          -- >>>>>>>> shade2/calculation.hsp:979 	if ((cnt=rsResMagic)&(p<500))or(cLevel(r1)=1):p=1 ..

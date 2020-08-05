@@ -19,9 +19,8 @@ local AliasPrompt = require("api.gui.AliasPrompt")
 local Log = require("api.Log")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Text = require("mod.elona.api.Text")
-local Enchant = require("mod.elona.api.Enchant")
-local IMapObject = require("api.IMapObject")
 local Mef = require("api.Mef")
+local Const = require("api.Const")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -1245,7 +1244,8 @@ data:add {
       target_item.subname = Text.random_subname_seed()
 
       local times = Rand.rnd(Rand.rnd(Rand.rnd(10) + 1) + 3) + 3
-      local enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Enchant.MAX_LEVEL) + 1)
+      -- TODO enchantment
+      local enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Const.MAX_ENCHANTMENT_LEVEL) + 1)
 
       for _ = 1, times do
          Rand.set_seed(seed)

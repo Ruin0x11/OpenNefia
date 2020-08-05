@@ -1,7 +1,7 @@
 local Event = require("api.Event")
 local EquipSlots = require("api.EquipSlots")
 local ICharaInventory = require("api.chara.ICharaInventory")
-local ILocation = require("api.ILocation")
+local data = require("internal.data")
 
 local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 
@@ -12,49 +12,62 @@ function ICharaEquip:init()
    self.equipment_weight = 0
 end
 
+local function apply_item_enchantments(chara, item)
+   -- >>>>>>>> shade2/calculation.hsp:448 	repeat maxItemEnc ..
+   for _, enc in item:iter_enchantments() do
+      local enc_data = data["base.enchantment"]:ensure(enc._id)
+      if enc_data.on_refresh then
+         enc_data:on_refresh(item, chara)
+      end
+   end
+   -- <<<<<<<< shade2/calculation.hsp:492 	loop ..
+end
+
+local function apply_item_stats(chara, item)
+   -- >>>>>>>> shade2/calculation.hsp:434 	cEqWeight(r1)+=iWeight(rp) ..
+   chara:mod("equipment_weight", item:calc("weight"), "add")
+   chara:mod("dv", item:calc("dv"), "add")
+   chara:mod("pv", item:calc("pv"), "add")
+   chara:mod("hit_bonus", item:calc("hit_bonus"), "add")
+   chara:mod("damage_bonus", item:calc("damage_bonus"), "add")
+
+   if item:calc("is_melee_weapon") then
+      chara:mod("number_of_weapons", 1, "add")
+   elseif item:calc("is_armor") then
+      local bonus = 0
+      if item:is_blessed() then
+         bonus = 2
+      end
+      chara:mod("pv", item:calc("bonus") * 2 + bonus, "add")
+   end
+
+   local curse_state = item:calc("curse_state")
+   if curse_state == "cursed" then
+      chara:mod("curse_power", 20, "add")
+   elseif curse_state == "cursed" then
+      chara:mod("curse_power", 100, "add")
+   end
+
+   local is_ether = item:calc("material") == "elona.ether"
+   if is_ether then
+      chara:mod("ether_disease_speed", 5, "add")
+   end
+   -- <<<<<<<< shade2/calculation.hsp:446 	if iMaterial(rp)=mtEther : if r1=pc : gEtherSpeed ...
+
+   apply_item_enchantments(chara, item)
+
+   Event.trigger("base.on_calc_chara_equipment_stats", {chara=chara,item=item})
+end
+
 function ICharaEquip:on_refresh()
    for _, part in self:iter_body_parts() do
       local item = part.equipped
       if item then
          item:refresh()
 
-         self:apply_item_stats(item)
+         apply_item_stats(self, item)
       end
    end
-end
-
-function ICharaEquip:apply_item_stats(item)
-   self:mod("equipment_weight", item:calc("weight"), "add")
-   self:mod("dv", item:calc("dv"), "add")
-   self:mod("pv", item:calc("pv"), "add")
-   self:mod("hit_bonus", item:calc("hit_bonus"), "add")
-   self:mod("damage_bonus", item:calc("damage_bonus"), "add")
-
-   if item:calc("is_melee_weapon") then
-      self:mod("number_of_weapons", 1, "add")
-   elseif item:calc("is_armor") then
-      local bonus = 0
-      if item:is_blessed() then
-         bonus = 2
-      end
-      self:mod("pv", item:calc("bonus") * 2 + bonus, "add")
-   end
-
-   local curse_state = item:calc("curse_state")
-   if curse_state == "cursed" then
-      self:mod("curse_power", 20, "add")
-   elseif curse_state == "cursed" then
-      self:mod("curse_power", 100, "add")
-   end
-
-   local is_ether = false
-   if is_ether then
-      self:mod("ether_disease_speed", 5, "add")
-   end
-
-   item:apply_enchantments_to_wielder(self)
-
-   Event.trigger("base.on_calc_chara_equipment_stats", {chara=self,item=item})
 end
 
 function ICharaEquip:equip_item(item, force)
