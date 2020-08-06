@@ -90,7 +90,7 @@ end,
         it_can_be_wielded = "それは武器として扱うことができる",
         light = "それは片手でも扱いやすい",
         dice = function(dice_x, dice_y, pierce)
-           return ("(%dd%d 貫通 %d%)")
+           return ("(%dd%d 貫通 %d%%)")
               :format(dice_x, dice_y, pierce)
         end
       },

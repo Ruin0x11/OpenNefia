@@ -133,11 +133,18 @@ end
 -- TODO: IList needs refactor to "selected_entry" to avoid naming
 -- confusion
 function InventoryMenu:selected_item_object()
-   return self.pages:selected_item().item
+   local selected = self.pages:selected_item()
+   if selected == nil then
+      return nil
+   end
+   return selected.item
 end
 
 function InventoryMenu:show_item_description()
    local item = self:selected_item_object()
+   if item == nil then
+      return
+   end
    local rest = self.pages:iter_all_pages():extract("item"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
 end

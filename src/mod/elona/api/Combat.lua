@@ -1,3 +1,4 @@
+local Gui = require("api.Gui")
 local Const = require("api.Const")
 local Event = require("api.Event")
 local Rand = require("api.Rand")
@@ -464,7 +465,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
    local damage_params = Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged, ammo)
    local protection_params = Combat.calc_protection(target, chara, weapon, attack_skill, is_ranged)
 
-   -- shade2/calculation.hsp:297 	if dmgFix<-100:dmgFix=-100 ...
+   -- >>>>>>>> shade2/calculation.hsp:297 	if dmgFix<-100:dmgFix=-100 ..
    damage_params.multiplier = math.floor(damage_params.multiplier * 100)
    local damage = Rand.roll_dice(damage_params.dice_x, damage_params.dice_y, math.max(damage_params.dmgfix, -100))
 
@@ -510,9 +511,12 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
          damage = damage / 10
       end
    else
-      if Rand.percent_chance(chara:calc("pierce_chance")) then
+      if Rand.percent_chance(chara:calc("vorpal_rate")) then
          damage_params.pierce_rate = 100
          pierced = true
+         if chara:is_in_fov() then
+            Gui.mes_c("damage.vorpal.melee", "Yellow")
+         end
       end
    end
 
@@ -545,6 +549,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
       pierce_damage = pierce_damage,
       original_damage = original_damage
    }
+   -- <<<<<<<< shade2/calculation.hsp:343 	return damage ..
 end
 
 return Combat

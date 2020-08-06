@@ -858,7 +858,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_melee_attacks", self:adjusted_power(), "add")
+      chara:mod("extra_melee_attack_rate", self:adjusted_power(), "add")
    end
 }
 
@@ -877,7 +877,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_ranged_attacks", self:adjusted_power(), "add")
+      chara:mod("extra_ranged_attack_rate", self:adjusted_power(), "add")
    end
 }
 

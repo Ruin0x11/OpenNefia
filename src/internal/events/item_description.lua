@@ -88,7 +88,7 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("is_melee_weapon")
+         return i:calc("dice_x") > 0
       end,
       desc = function(i)
          local dice_x = i:calc("dice_x")
@@ -103,14 +103,14 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("is_melee_weapon") and i:calc("weight") <= Const.WEAPON_WEIGHT_LIGHT
+         return i:calc("dice_x") > 0 and i:calc("weight") <= Const.WEAPON_WEIGHT_LIGHT
       end,
       desc = "item.desc.weapon.light",
       icon = 5
    },
    {
       pred = function(i)
-         return i:calc("is_melee_weapon") and i:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY
+         return i:calc("dice_x") > 0 and i:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY
       end,
       desc = "item.desc.weapon.heavy",
       icon = 5

@@ -1,8 +1,8 @@
 local Area = require("api.Area")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
-local Env = require("api.Env")
 local Input = require("api.Input")
+local state = require("mod.test_room.internal.global.state")
 
 function prompt_paged(cands)
 end
@@ -16,7 +16,7 @@ data:add {
    is_opaque = false,
 
    on_bumped_into = function(self, params)
-      local pred = Env.mod_filter(_MOD_NAME)
+      local pred = function(arc) return state.is_test_map[arc._id] end
       local arcs = data["base.map_archetype"]:iter():filter(pred)
 
       local choices = arcs:map(function(arc) return arc._id:gsub("^.*%.", "") end):to_list()

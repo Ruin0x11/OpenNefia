@@ -21,6 +21,7 @@ function IFeat:build()
 end
 
 function IFeat:instantiate()
+   self.params = self.params or {}
    IObject.instantiate(self)
    self:emit("base.on_feat_instantiated")
 end

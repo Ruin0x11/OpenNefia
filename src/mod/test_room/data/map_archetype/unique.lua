@@ -86,7 +86,7 @@ OOOOOOOOOOOOOOOO]]
       Chara.create("elona.putit", nil, nil, {}, map)
    end
 
-   local parent_area = Area.parent(area)
+   local parent_area = Area.parent(area) or area
    assert(Area.create_stairs_up(parent_area, 1, 7, 7, { force = true }, map))
 
    return map

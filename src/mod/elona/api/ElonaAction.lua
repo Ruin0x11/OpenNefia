@@ -248,8 +248,8 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       show_evade_text(chara, target, extra_attacks)
    end
 
-   -- interrupt activity
-   -- living weapon
+   target:interrupt_activity()
+   -- TODO living weapon
 
    chara:emit("elona.after_physical_attack", {weapon=weapon,target=target,hit=hit,is_ranged=is_ranged,attack_skill=attack_skill})
 end
@@ -259,17 +259,21 @@ function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_
    local going
 
    repeat
+      local Log = require("api.Log")
+      if chara:is_player() then
+         Log.info("PHysical attack %d", attacks)
+      end
       do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
       going = false
       if attacks == 0 then
          if is_ranged then
-            if Rand.percent_chance(chara:calc("extra_shot") or 0) then
+            if Rand.percent_chance(chara:calc("extra_ranged_attack_rate") or 0) then
                attacks = attacks + 1
                going = true
                -- TODO: remove ammo proc
             end
          else
-            if Rand.percent_chance(chara:calc("extra_attack") or 0) then
+            if Rand.percent_chance(chara:calc("extra_melee_attack_rate") or 0) then
                attacks = attacks + 1
                going = true
             end

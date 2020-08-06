@@ -91,8 +91,8 @@ end
 
 function EquipmentMenu:make_keymap()
    return {
-      x = function() self:show_item_description() end,
-      shift = function() self.canceled = true end,
+      identify = function() self:show_item_description() end,
+      cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
    }
 end
@@ -101,9 +101,20 @@ function EquipmentMenu:on_hotload_layer()
    table.merge(self.pages, UiListExt(self))
 end
 
+function EquipmentMenu:selected_item_object()
+   local selected = self.pages:selected_item()
+   if selected == nil then
+      return nil
+   end
+   return selected.equipped
+end
+
 function EquipmentMenu:show_item_description()
    local item = self:selected_item_object()
-   local rest = self.pages:iter_all_pages():extract("item"):to_list()
+   if item == nil then
+      return
+   end
+   local rest = self.pages:iter_all_pages():extract("equipped"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
 end
 

@@ -90,7 +90,7 @@ end,
         it_can_be_wielded = "It can be wielded as a weapon.",
         light = "It is a light weapon.",
         dice = function(dice_x, dice_y, pierce)
-           return ("(%dd%d Pierce %d%)")
+           return ("(%dd%d Pierce %d%%)")
               :format(dice_x, dice_y, pierce)
         end
       },

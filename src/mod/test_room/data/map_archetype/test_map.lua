@@ -1,5 +1,6 @@
 local Fs = require("api.Fs")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local state = require("mod.test_room.internal.global.state")
 
 local function require_all_in(dir)
    return Fs.iter_directory_items(dir, "full_path")
@@ -27,6 +28,7 @@ local function add_test_maps(maps)
             types = { "guild" }
          }
       }
+      state.is_test_map[_MOD_NAME .. "." .. _id] = true
    end
 end
 

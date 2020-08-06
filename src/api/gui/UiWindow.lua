@@ -104,11 +104,11 @@ function UiWindow:draw()
    Draw.set_font(15) -- 15 + en - en * 2
 
    Draw.text_shadowed(title,
-                      x + (Draw.text_width(title) / 4)
-                      + math.clamp(Draw.text_width(title) - 120, 0, 200) / 2,
-                      y + 4, -- y + 4 + vfix
-                      {255, 255, 255},
-                      {20, 10, 0})
+                      x + 45 * width / 200 + 34 - (Draw.text_width(title) / 2)
+                         + math.clamp(Draw.text_width(title) - 120, 0, 200) / 2,
+   y + 4, -- y + 4 + vfix
+   {255, 255, 255},
+   {20, 10, 0})
 
    Draw.set_color(0, 0, 0)
    Draw.set_font(12) -- 12 + sizefix - en * 2

@@ -318,7 +318,6 @@ AI callback to run on this character's turn.
 
          nutrition = 0;
 
-         pierce_chance = 0,
          physical_damage_reduction = 0,
 
          is_quest_target = nil,
@@ -389,8 +388,8 @@ AI callback to run on this character's turn.
          travel_speed = 0,
 
          vorpal_rate = 0,
-         extra_melee_attacks = 0,
-         extra_ranged_attacks = 0,
+         extra_melee_attack_rate = 0,
+         extra_ranged_attack_rate = 0,
          damage_resistance = 0,
          damage_immunity = 0,
          damage_reflection = 0,
@@ -705,6 +704,9 @@ data:add_type(
          params = schema.Table,
          on_instantiate = schema.Optional(schema.Function),
       },
+      fallbacks = {
+         params = {}
+      }
    },
    { interface = IFeat }
 )
