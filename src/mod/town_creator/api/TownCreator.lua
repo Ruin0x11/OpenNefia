@@ -1,3 +1,0 @@
-local TownCreator = {}
-
-return TownCreator
