@@ -143,4 +143,13 @@ function Env.is_mod_loaded(mod_id)
    return mod.is_loaded(mod_id)
 end
 
+--- Returns a filter to be used with data[_type]:iter():filter(filter) matching
+--- on entries originating from the mod `mod_id`.
+function Env.mod_filter(mod_id)
+   local regex = ("^%s%%."):format(mod_id)
+   return function(entry)
+      return entry._id:match(regex)
+   end
+end
+
 return Env

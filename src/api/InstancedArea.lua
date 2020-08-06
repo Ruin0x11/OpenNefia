@@ -1,4 +1,5 @@
 local InstancedMap = require("api.InstancedMap")
+local Log = require("api.Log")
 local save = require("internal.global.save")
 local data = require("internal.data")
 
@@ -71,48 +72,62 @@ end
 
 function InstancedArea:get_floor(floor)
    assert(math.type(floor) == "integer")
-   local map = self.maps[floor]
-   if map == nil then
+   local map_meta = self.maps[floor]
+   if map_meta == nil then
       return false, "missing_floor"
    end
 
-   return map
+   return true, map_meta
 end
 
 function InstancedArea:load_floor(floor)
    assert(math.type(floor) == "integer")
-   local map = self.maps[floor]
-   if map == nil then
-      return false, "missing_floor"
+   local ok, map_meta = self:get_floor(floor)
+   if not ok then
+      return nil, map_meta
    end
 
    local Map = require("api.Map")
-   return Map.load(map.uid)
+   local ok, map =  Map.load(map_meta.uid)
+   if ok then
+      return ok, map
+   end
+
+   -- Map is now invalid, clear it.
+   self.maps[floor] = nil
+
+   return nil, map
 end
 
-function InstancedArea:load_or_generate_floor(floor)
+function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    assert(math.type(floor) == "integer")
-   local map_meta = self.maps[floor]
-   if map_meta then
-      local Map = require("api.Map")
-      return Map.load(map_meta.uid)
+   local ok, map = self:load_floor(floor)
+   if ok then
+      return ok, map
    end
 
    local archetype = self:archetype()
-   if archetype == nil then
-      return false, "no_archetype"
+
+   if map_archetype_id == nil then
+      if archetype == nil then
+         return false, "no_archetype"
+      end
+
+      if archetype.floors and archetype.floors[floor] then
+         map_archetype_id = archetype.floors[floor]
+      end
    end
 
-   local map
-
-   if archetype.floors and archetype.floors[floor] then
-      local map_archetype_id = archetype.floors[floor]
+   if map_archetype_id then
       local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
       assert(type(map_archetype.on_generate_map) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
 
       map = map_archetype.on_generate_map(self, floor)
       if map._archetype == nil then
+         Log.debug("Map archetype unset on new floor, setting to %s", map_archetype_id)
          map:set_archetype(map_archetype_id, { set_properties = true })
+      else
+         Log.warn("Map archetype was already set to %s on generation", map._archetype)
       end
    else
       map = archetype.on_generate_floor(self, floor)
@@ -122,6 +137,8 @@ function InstancedArea:load_or_generate_floor(floor)
    self:add_floor(map, floor)
 
    map:emit("base.on_generate_area_floor", {area=self, floor_number=floor})
+
+   Log.debug("Generated area floor with map archetype %s", map._archetype)
 
    return true, map
 end

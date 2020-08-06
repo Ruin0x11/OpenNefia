@@ -35,8 +35,12 @@ function Skill.random_skill()
 end
 
 function Skill.random_resistance()
+   return Rand.choice(Skill.iter_resistances())._id
+end
+
+function Skill.random_resistance_by_rarity()
    local element_data = data["base.element"]:ensure(Skill.random_resistance())
-   for i = 1, element_data.rarity do
+   for _ = 1, element_data.rarity do
       local other_element = data["base.element"]:ensure(Skill.random_resistance())
       if other_element.rarity < element_data.rarity and Rand.one_in(2) then
          element_data = other_element

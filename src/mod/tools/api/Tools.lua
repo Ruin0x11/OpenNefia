@@ -16,6 +16,7 @@ local Enum = require("api.Enum")
 local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
 local Charagen = require("mod.tools.api.Charagen")
+local SaveFs = require("api.SaveFs")
 
 local Tools = {}
 
@@ -909,6 +910,29 @@ function Tools.chara_id_for_map(map_archetype_id)
    local tag_filters = filter.tag_filters
 
    return Charagen.random_chara_id(level, quality, fltselect, category, race_filter, tag_filters)
+end
+
+function Tools.items_in_category(cat)
+   local filter = function(i)
+      for _, c in ipairs(i.categories or {}) do
+         if cat == c then
+            return true
+         end
+      end
+      return false
+   end
+   return data["base.item"]:iter():filter(filter):extract("_id"):to_list()
+end
+
+function Tools.savecycle_object(obj)
+   return SaveFs.deserialize(SaveFs.serialize(obj))
+end
+
+function Tools.item_desc(item)
+   item = item or Tools.thing_at("base.item")
+
+   local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
+   ItemDescriptionMenu:new(item):query()
 end
 
 return Tools

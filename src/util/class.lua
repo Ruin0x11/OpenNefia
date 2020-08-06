@@ -160,13 +160,12 @@ local function verify(instance, interface)
    return err
 end
 
--- TODO: this system is really bloated and doesn't preserve "self"
--- inside nested delegated calls, leading to much confusion. All that
--- is actually needed is generating a function call that calls the
--- delegate's version of the method, but instead passing the parent
--- "self".
+-- TODO: this system is really bloated and doesn't preserve "self" inside nested
+-- delegated calls (object schizophrenia), leading to much confusion. All that
+-- is actually needed is generating a function call that calls the delegate's
+-- version of the method, but instead passing the parent "self".
 local function delegate(c, field, params)
-   local set = {}
+   assert(type(field) == "string", "Must pass field name")
 
    if params == nil or _classes[params] then error("Invalid delegate parameter for " .. c.__name .. "." .. field .. ": " .. tostring(params)) end
    if _interfaces[params] or type(params) == "string" then params = {params} end

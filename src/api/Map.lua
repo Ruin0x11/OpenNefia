@@ -330,6 +330,13 @@ function Map.calc_start_position(map, previous_map, feat)
    local chara = Chara.player()
    local pos = map:emit("base.calc_map_starting_pos", { prev_map = previous_map, feat = feat, chara = chara }, { x = nil, y = nil })
 
+   if not (pos and pos.x and pos.y) then
+      local archetype = map:archetype()
+      if archetype and archetype.starting_pos then
+         pos = archetype.starting_pos(map, chara)
+      end
+   end
+
    local x = pos.x
    local y = pos.y
 

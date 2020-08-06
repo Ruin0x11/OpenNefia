@@ -17,7 +17,7 @@ local function apply_item_enchantments(chara, item)
    for _, enc in item:iter_enchantments() do
       local enc_data = data["base.enchantment"]:ensure(enc._id)
       if enc_data.on_refresh then
-         enc_data:on_refresh(item, chara)
+         enc_data.on_refresh(enc, item, chara)
       end
    end
    -- <<<<<<<< shade2/calculation.hsp:492 	loop ..

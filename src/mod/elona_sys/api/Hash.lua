@@ -7,11 +7,15 @@ local function hash_string(h, str)
 end
 
 local function hash_boolean(h, bool)
-   return Sha1.hex(h .. "boolean:" .. bool)
+   return Sha1.hex(h .. "boolean:" .. tostring(bool))
 end
 
 local function hash_number(h, num)
    return Sha1.hex(h .. "number:" .. num)
+end
+
+local function hash_function(h, fun)
+   return Sha1.hex(h .. "function:" .. Sha1.hex(string.dump(fun)))
 end
 
 local function hash_nil(h)
@@ -70,6 +74,8 @@ local function hash_one(h, thing)
       return hash_number(h, thing)
    elseif ty == "boolean" then
       return hash_boolean(h, thing)
+   elseif ty == "function" then
+      return hash_function(h, thing)
    elseif ty == "table" then
       return hash_table(h, thing)
    elseif ty == "nil" then
@@ -84,9 +90,10 @@ end
 --- This has the following limitations:
 ---
 --- - You can't hash userdata or thread values.
---- - You can't hash tables with table, userdata or thread keys.
+--- - You can't hash tables with function, table, userdata or thread keys.
 --- - The value of the hash returned is not guaranteed to be identical for
----   structually equivalent objects between different versions of the engine.
+---   structually equivalent objects between different versions of the engine or
+---   different Lua runtimes.
 ---
 --- @tparam any ...
 --- @treturn string SHA-1 of the hashed objects

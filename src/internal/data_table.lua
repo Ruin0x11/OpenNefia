@@ -57,6 +57,10 @@ function data_table:init()
     rawset(self, "proxy_cache", setmetatable({}, { __mode = "kv" }))
 end
 
+function data_table:__inspect()
+   return string.tostring_raw(self)
+end
+
 function data_table:clear()
    self.inner = {}
    self.index = {}

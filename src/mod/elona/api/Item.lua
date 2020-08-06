@@ -457,13 +457,6 @@ function Item.fix_item(item, params)
 
    item:emit("base.on_item_init_params", ev_params)
 
-   -- The above event can allow for removing the item. For example, gold is
-   -- removed automatically if it's spawned directly on an owning character, and
-   -- the amount is instead added to the character's `gold` property.
-   if not api_Item.is_alive(item) then
-      return
-   end
-
    if item:has_category("elona.container") then
       init_container(item, params)
    end
@@ -514,12 +507,10 @@ function Item.fix_item(item, params)
    -- <<<<<<<< shade2/item.hsp:726 	gosub *item_value ..
 end
 
-local function item_fix_on_generate(obj, params)
-   if obj._type == "base.item" then
-      Item.fix_item(obj, params)
-   end
+local function item_fix_on_build(obj, params)
+   Item.fix_item(obj, params)
 end
-Event.register("base.on_generate", "Apply Item.fix_item", item_fix_on_generate)
+Event.register("base.on_build_item", "Apply Item.fix_item", item_fix_on_build)
 
 local function apply_item_on_init_params(item, params)
    if item.proto.on_init_params then

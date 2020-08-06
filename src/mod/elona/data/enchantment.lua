@@ -24,6 +24,10 @@ data:add {
    _id = "modify_attribute",
    elona_id = 1,
 
+   level = 1,
+   value = 120,
+   rarity = 3000,
+
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:555 		if enc=encModAttb{ ..
@@ -77,10 +81,14 @@ data:add {
    _id = "modify_resistance",
    elona_id = 2,
 
+   level = 2,
+   value = 150,
+   rarity = 2500,
+
    params = { element_id = "id:base.element" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:560 		if enc=encModRes{ ..
-      self.params.element_id = Skill.random_resistance()
+      self.params.element_id = Skill.random_resistance_by_rarity()
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
@@ -125,6 +133,10 @@ data:add {
    _type = "base.enchantment",
    _id = "modify_skill",
    elona_id = 3,
+
+   level = 0,
+   value = 120,
+   rarity = 4500,
 
    params = { element_id = "id:base.skill" },
    on_generate = function(self, item, params)
@@ -182,6 +194,10 @@ data:add {
    _id = "sustain_attribute",
    elona_id = 6,
 
+   level = 0,
+   value = 120,
+   rarity = 4500,
+
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:570 		if enc=encSustain{ ..
@@ -214,10 +230,15 @@ data:add {
    _id = "elemental_damage",
    elona_id = 7,
 
+   level = 1,
+   value = 120,
+   rarity = 300,
+   categories = { "elona.equip_melee", "elona.equip_ranged" },
+
    params = { element_id = "id:base.element" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:574 		if enc=encEleDmg{ ..
-      self.params.element_id = Skill.random_resistance()
+      self.params.element_id = Skill.random_resistance_by_rarity()
       -- <<<<<<<< shade2/item_data.hsp:577 			} ..
    end,
 
@@ -241,6 +262,10 @@ data:add {
    _type = "base.enchantment",
    _id = "invoke_skill",
    elona_id = 8,
+
+   level = 99,
+   value = 300,
+   rarity = 15000,
 
    params = { enchantment_skill_id = "id:base.enchantment_skill" },
    on_generate = function(self, item, params)
@@ -292,6 +317,11 @@ data:add {
    _type = "base.enchantment",
    _id = "ammo",
    elona_id = 9,
+
+   level = 1,
+   value = 120,
+   rarity = 50000,
+   categories = { "elona.equip_ammo" },
 
    params = {
       ammo_enchantment_id = "id:base.ammo_enchantment",
@@ -348,7 +378,6 @@ data:add {
    level = -1,
    value = 50,
    rarity = 75,
-   categories = 0,
    alignment = "negative",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -369,7 +398,6 @@ data:add {
    level = -1,
    value = 50,
    rarity = 100,
-   categories = 0,
    alignment = "negative",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -390,7 +418,6 @@ data:add {
    level = -1,
    value = 50,
    rarity = 100,
-   categories = 0,
    alignment = "negative",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -411,7 +438,6 @@ data:add {
    level = -1,
    value = 50,
    rarity = 50,
-   categories = 0,
    alignment = "negative",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -432,7 +458,6 @@ data:add {
    level = 1,
    value = 150,
    rarity = 150,
-   categories = 0,
    alignment = "positive",
 }
 
@@ -444,7 +469,6 @@ data:add {
    level = 1,
    value = 120,
    rarity = 400,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -460,7 +484,6 @@ data:add {
    level = 2,
    value = 120,
    rarity = 300,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -476,7 +499,6 @@ data:add {
    level = 1,
    value = 120,
    rarity = 400,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -492,7 +514,6 @@ data:add {
    level = 1,
    value = 120,
    rarity = 600,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -508,7 +529,6 @@ data:add {
    level = 1,
    value = 120,
    rarity = 600,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -524,7 +544,6 @@ data:add {
    level = 2,
    value = 120,
    rarity = 500,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -540,7 +559,6 @@ data:add {
    level = 99,
    value = 300,
    rarity = 1500,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -556,7 +574,6 @@ data:add {
    level = 99,
    value = 300,
    rarity = 2000,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -624,7 +641,6 @@ data:add {
    level = 1,
    value = 120,
    rarity = 300,
-   categories = 0,
    alignment = "positive"
 }
 
@@ -636,7 +652,6 @@ data:add {
    level = 1,
    value = 130,
    rarity = 250,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -652,7 +667,6 @@ data:add {
    level = 3,
    value = 160,
    rarity = 200,
-   categories = 0,
    alignment = "positive"
 }
 
@@ -887,7 +901,6 @@ data:add {
    level = 99,
    value = 150,
    rarity = 2000,
-   categories = 0,
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -979,7 +992,6 @@ data:add {
    level = 0,
    value = 200,
    rarity = 30,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -1045,7 +1057,6 @@ data:add {
    level = 0,
    value = 200,
    rarity = 30,
-   categories = 0,
    alignment = "positive",
 
    on_refresh = function(self, item, chara)

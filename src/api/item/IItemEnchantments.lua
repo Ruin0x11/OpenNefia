@@ -1,6 +1,7 @@
 local IObject = require("api.IObject")
 local data = require("internal.data")
 local Const = require("api.Const")
+local InstancedEnchantment = require("api.item.InstancedEnchantment")
 
 local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 
@@ -23,7 +24,7 @@ end
 
 function IItemEnchantments:add_enchantment(enc)
    -- >>>>>>>> shade2/item_data.hsp:603  ..
-   local enc_data = data["base.enchantment"]:ensure(enc._id)
+   assert(class.is_an(InstancedEnchantment, enc))
    assert(type(enc.power) == "number")
 
    local idx
@@ -47,7 +48,7 @@ function IItemEnchantments:add_enchantment(enc)
 
    self.enchantments[idx] = enc
 
-   local adjusted_value = math.floor(self.value * enc_data.value / 100)
+   local adjusted_value = math.floor(self.value * enc.proto.value / 100)
    if adjusted_value > 0 then
       self.value = adjusted_value
    end
@@ -87,11 +88,11 @@ end
 local function add_fixed_enchantment(item, fixed_enc)
    data["base.enchantment"]:ensure(fixed_enc._id)
 
-   local enc = {
-      _id = fixed_enc._id,
-      power = fixed_enc.power,
-      params = table.deepcopy(fixed_enc.params or {}),
-   }
+   local enc = InstancedEnchantment:new(
+       fixed_enc._id,
+       fixed_enc.power,
+       table.deepcopy(fixed_enc.params or {})
+   )
 
    table.insert(item.temp["enchantments"], enc)
 end
@@ -106,7 +107,7 @@ local function refresh_temporary_enchantments(item)
    end
 
    local material = item:calc("material")
-   local material_data = data["base.material"]:ensure(material)
+   local material_data = data["elona.item_material"]:ensure(material)
    if material_data.fixed_enchantments then
       for _, fixed_enc in ipairs(material_data.fixed_enchantments) do
          add_fixed_enchantment(item, fixed_enc)

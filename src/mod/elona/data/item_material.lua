@@ -606,7 +606,7 @@ data:add {
     color={ 175, 255, 175 },
 
     fixed_enchantments = {
-       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } }
+       { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } },
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.cold" } }
     },
 
