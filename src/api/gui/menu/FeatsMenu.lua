@@ -253,7 +253,11 @@ function FeatsMenu:update()
             self.chara.feats_acquirable = self.chara.feats_acquirable - 1
             Gui.play_sound("base.ding3")
             self.chara:increment_trait(item.trait._id, true)
-            self.chara:refresh()
+            if not self.chara_make then
+               -- In character making, `self.chara` has not been built yet by `IChara:built`.
+               -- Because most callbacks expect the given character to be built, you cannot call `refresh` during character making.
+               self.chara:refresh()
+            end
             self.data = FeatsMenu.generate_list(self.chara)
             self.pages:set_data(self.data)
 
