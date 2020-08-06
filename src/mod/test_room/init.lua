@@ -5,8 +5,6 @@ local Map = require("api.Map")
 local Text = require("mod.elona.api.Text")
 local Area = require("api.Area")
 
-require("mod.test_room.data")
-
 local function on_game_start(self, player)
    local bow = Item.create("elona.long_bow", nil, nil, { ownerless = true })
    local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })
