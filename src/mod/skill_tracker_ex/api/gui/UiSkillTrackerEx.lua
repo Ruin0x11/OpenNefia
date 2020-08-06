@@ -43,7 +43,10 @@ function UiSkillTrackerEx:set_data(player)
       }
    end
 
-   local tracked_pairs = fun.iter(tracked_ids):map(map):to_list()
+   local tracked_pairs = fun.iter(tracked_ids)
+      :filter(function(i) return player:has_skill(i) end)
+      :map(map)
+      :to_list()
 
    self.tracked_skill_ids = {
       [self.player_uid] = tracked_pairs

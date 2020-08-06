@@ -1220,7 +1220,7 @@ data:add {
       local target_item = result.result
       target_item:separate()
 
-      if target_item.quality >= Enum.Quality.Great or target_item:calc("is_living") then
+      if target_item.quality >= Enum.Quality.Great or target_item:calc("is_alive") then
          return true
       end
 
@@ -1382,7 +1382,7 @@ data:add {
       local target_item = result.result
       target_item:separate()
 
-      if target_item.quality == Enum.Quality.God or target_item:calc("is_living") then
+      if target_item.quality == Enum.Quality.God or target_item:calc("is_alive") then
          Gui.mes("common.nothing_happens")
          return true, {obvious = false}
       end

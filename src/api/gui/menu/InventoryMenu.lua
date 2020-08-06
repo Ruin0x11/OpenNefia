@@ -138,7 +138,7 @@ end
 
 function InventoryMenu:show_item_description()
    local item = self:selected_item_object()
-   local rest = self.pages:iter_all_pages():to_list()
+   local rest = self.pages:iter_all_pages():extract("item"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
 end
 
@@ -156,7 +156,7 @@ function InventoryMenu:on_select()
    end
 
    self.is_drawing = false
-   local result = self.ctxt:on_select(item, amount, self.pages:iter_all_pages())
+   local result = self.ctxt:on_select(item, amount, self.pages:iter_all_pages():extract("item"))
    self.is_drawing = true
    return result
 end

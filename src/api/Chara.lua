@@ -1,3 +1,4 @@
+local Enum = require("api.Enum")
 --- Functions for manipulating characters.
 --- @module Chara
 local MapObject = require("api.MapObject")
@@ -210,7 +211,7 @@ local hook_generate_chara =
 function Chara.create(id, x, y, params, where)
    params = params or {}
    params.level = params.level or 1
-   params.quality = params.quality or 0
+   params.quality = params.quality or Enum.Quality.Bad
    where = where or field.map
 
    if params.ownerless then

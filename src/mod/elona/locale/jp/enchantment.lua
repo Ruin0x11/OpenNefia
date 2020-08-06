@@ -42,7 +42,7 @@ local enchantment = {
       fast_travel = {
          description = "速度を上げ、ワールドマップでの移動時間を短くする"
       },
-      res_ether_wind = {
+      res_etherwind = {
          description = "エーテルの風からあなたを保護する"
       },
       res_weather = {

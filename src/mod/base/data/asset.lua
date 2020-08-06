@@ -432,9 +432,9 @@ local assets = {
       source = "graphic/interface.bmp",
       x = 72,
       y = 336,
-      width = 24 * 9,
+      width = 24 * 10,
       height = 24,
-      count_x = 9
+      count_x = 10
    },
    {
       _id = "inheritance_icon",

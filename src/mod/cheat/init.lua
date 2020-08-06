@@ -7,16 +7,21 @@ local Env = require("api.Env")
 local function level_up()
    local player = Chara.player()
 
-   local levels = 100
-   for _= 1, levels do
-      Skill.gain_level(player)
-      Skill.grow_primary_skills(player)
-   end
+   --local levels = 100
+   --for _= 1, levels do
+   --   Skill.gain_level(player)
+   --   Skill.grow_primary_skills(player)
+   --end
 
-   player:mod_base_skill_level("elona.stat_magic", 10000)
-   player:mod_base_skill_level("elona.stat_mana", 10000)
+   --player:mod_base_skill_level("elona.stat_magic", 10000)
+   --player:mod_base_skill_level("elona.stat_mana", 10000)
 
-   data["base.skill"]:iter()
+   Skill.iter_stats()
+      :each(function(m)
+            player:mod_base_skill_level(m._id, 100, "set")
+           end)
+
+   Skill.iter_skills()
       :each(function(m)
             Skill.gain_skill(player, m._id, 2000, 1000)
            end)

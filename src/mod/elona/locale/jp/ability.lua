@@ -71,7 +71,7 @@ return {
             description = "鈍器を扱う技術",
             name = "鈍器"
          },
-         boost = {
+         buff_boost = {
             name = "ブースト"
          },
          bow = {
@@ -111,7 +111,7 @@ return {
             description = "冷気のブレス",
             name = "冷気のブレス"
          },
-         contingency = {
+         buff_contingency = {
             name = "契約"
          },
          control_magic = {
@@ -155,7 +155,7 @@ return {
             description = "暗黒のブレス",
             name = "暗黒のブレス"
          },
-         death_word = {
+         buff_death_word = {
             name = "死の宣告"
          },
          action_decapitation = {
@@ -184,7 +184,7 @@ return {
             description = "遠距離打撃",
             name = "遠距離打撃"
          },
-         divine_wisdom = {
+                  buff_divine_wisdom = {
             name = "知者の加護"
          },
          spell_dominate = {
@@ -215,10 +215,10 @@ return {
             description = "複数の武器を扱う技術",
             name = "二刀流"
          },
-         element_scar = {
+         buff_element_scar = {
             name = "元素の傷跡"
          },
-         elemental_shield = {
+         buff_elemental_shield = {
             name = "元素保護"
          },
          action_ether_ground = {
@@ -345,18 +345,18 @@ return {
             enchantment_description = "重装備の技術を上昇させる",
             name = "重装備"
          },
-         spell_hero = {
+         buff_hero = {
             name = "英雄"
          },
          spell_holy_light = {
             description = "1つの呪い(hex)除去",
             name = "清浄なる光"
          },
-         spell_holy_shield = {
+         buff_holy_shield = {
             description = "防御力強化",
             name = "聖なる盾"
          },
-         spell_holy_veil = {
+         buff_holy_veil = {
             name = "ホーリーヴェイル"
          },
          spell_ice_ball = {
@@ -371,7 +371,7 @@ return {
             description = "アイテム鑑定",
             name = "鑑定"
          },
-         incognito = {
+         buff_incognito = {
             name = "インコグニート"
          },
          action_insult = {
@@ -414,7 +414,7 @@ return {
             description = "刃渡りの長い剣を扱う技術",
             name = "長剣"
          },
-         lulwys_trick = {
+         buff_lulwys_trick = {
             name = "ルルウィの憑依"
          },
          magic_capacity = {
@@ -496,10 +496,10 @@ return {
             description = "霧の発生",
             name = "闇の霧"
          },
-         mist_of_frailness = {
+         buff_mist_of_frailness = {
             name = "脆弱の霧"
          },
-         mist_of_silence = {
+         buff_mist_of_silence = {
             description = "魔法使用不可",
             name = "沈黙の霧"
          },
@@ -528,7 +528,7 @@ return {
             description = "地獄のブレス",
             name = "地獄のブレス"
          },
-         nightmare = {
+         buff_nightmare = {
             name = "ナイトメア"
          },
          spell_oracle = {
@@ -565,7 +565,7 @@ return {
             description = "対象妊娠",
             name = "妊娠"
          },
-         punishment = {
+         buff_punishment = {
             name = "神罰"
          },
          spell_raging_roar = {
@@ -576,7 +576,7 @@ return {
             description = "狂気回復の球",
             name = "狂気治癒の雨"
          },
-         regeneration = {
+         buff_regeneration = {
             name = "リジェネレーション"
          },
          spell_restore_body = {
@@ -632,14 +632,14 @@ return {
             description = "近くへの瞬間移動",
             name = "ショートテレポート"
          },
-         slow = {
+         buff_slow = {
             name = "鈍足"
          },
          action_sound_breath = {
             description = "轟音のブレス",
             name = "轟音のブレス"
          },
-         speed = {
+         buff_speed = {
             name = "加速"
          },
          stave = {

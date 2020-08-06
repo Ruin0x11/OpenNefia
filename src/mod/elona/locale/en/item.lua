@@ -5254,7 +5254,7 @@ local item = {
     },
     statue_of_ehekatl = {
       name = "Ehekatl",
-      unidentified_name = "goddess"
+      unidentified_name = "celestial statue"
     },
     statue_of_holy_cross = {
       desc = {
@@ -5266,11 +5266,11 @@ local item = {
     },
     statue_of_jure = {
       name = "Jure",
-      unidentified_name = "goddess"
+      unidentified_name = "celestial statue"
     },
     statue_of_kumiromi = {
       name = "Kumiromi",
-      unidentified_name = "god"
+      unidentified_name = "celestial statue"
     },
     statue_of_lulwy = {
       desc = {
@@ -5279,19 +5279,19 @@ local item = {
         }
       },
       name = "Lulwy",
-      unidentified_name = "goddess"
+      unidentified_name = "celestial statue"
     },
     statue_of_mani = {
       name = "Mani",
-      unidentified_name = "god"
+      unidentified_name = "celestial statue"
     },
-    statue_of_money = {
+    golden_statue = {
       desc = {
         main = {
           text = "A statue common in Asseria style casinos,"
         }
       },
-      name = "money"
+      name = "golden statue"
     },
     statue_of_opatos = {
       desc = {
@@ -5300,7 +5300,7 @@ local item = {
         }
       },
       name = "Opatos",
-      unidentified_name = "god"
+      unidentified_name = "celestial statue"
     },
     stethoscope = {
       desc = {

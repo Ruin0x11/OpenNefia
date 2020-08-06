@@ -28,8 +28,8 @@ ItemMaterial.MATERIALS_SOFT = {
    {"elona.cloth", "elona.silk", "elona.paper", "elona.bone"},
    {"elona.leather", "elona.scale", "elona.glass", "elona.obsidian"},
    {"elona.chain", "elona.platinum", "elona.pearl", "elona.mithril"},
-   {"elona.zylon", "elona.gold", "elona.spirit", "elona.dragon"},
-   {"elona.dusk", "elona.griffon", "elona.rubynus", "elona.ether"}
+   {"elona.zylon", "elona.gold", "elona.spirit_cloth", "elona.dragon_scale"},
+   {"elona.dawn_cloth", "elona.griffon_scale", "elona.rubynus", "elona.ether"}
 }
 -- <<<<<<<< shade2/item_data.hsp:1133 	return ..
 

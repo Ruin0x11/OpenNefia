@@ -347,7 +347,7 @@ data:add {
 
 data:add {
     _type="elona.item_material",
-    _id="spirit",
+    _id="spirit_cloth",
     elona_id=14,
     a="霊布",
     b="この世ならざる",
@@ -425,7 +425,7 @@ data:add {
 
 data:add {
     _type="elona.item_material",
-    _id="dusk",
+    _id="dawn_cloth",
     elona_id=17,
     a="宵晒",
     b="宵闇を纏いし",
@@ -590,7 +590,7 @@ data:add {
 
 data:add {
     _type="elona.item_material",
-    _id="dragon",
+    _id="dragon_scale",
     elona_id=24,
     a="竜鱗",
     b="竜を統べし",
@@ -692,7 +692,7 @@ data:add {
 
 data:add {
     _type="elona.item_material",
-    _id="griffon",
+    _id="griffon_scale",
     elona_id=28,
     a="翼鳥鱗",
     b="翼を折られし",

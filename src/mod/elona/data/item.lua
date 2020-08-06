@@ -36,11 +36,11 @@ end
 -- <<<<<<<< shade2/calculation.hsp:863 	return rnd(cLevel(c)*25+10)+1 ...
 
 local hook_calc_initial_gold =
-Event.define_hook("calc_initial_gold",
-"Initial gold amount.",
-1,
-nil,
-calc_initial_gold)
+    Event.define_hook("calc_initial_gold",
+                      "Initial gold amount.",
+                      1,
+                      nil,
+                      calc_initial_gold)
 
 -- >>>>>>>> shade2/chips.hsp:392 	dim lightData,10,tailLight ..
 local light = {
@@ -346,12 +346,14 @@ local item =
         equip_slots = { "elona.head" },
         subcategory = 12002,
         coefficient = 100,
-        enchantments = {
-            { id = 33, power = 100 }
-        },
+        
         categories = {
             "elona.equip_head_hat",
             "elona.equip_head"
+        },
+
+        enchantments = {
+            { _id = "elona.res_mutation", power = 100 },
         }
     },
     {
@@ -1410,19 +1412,21 @@ local item =
 
         color = { 155, 154, 153 },
         pierce_rate = 10,
-        enchantments = {
-            { id = 40, power = 300 },
-            { id = 70058, power = 400 },
-            { id = 10018, power = 300 },
-            { id = 24, power = 100 }
-        },
+        
         medal_value = 65,
         categories = {
             "elona.equip_melee_long_sword",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.stop_time", power = 300 },
+            { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.nerve" } },
+            { _id = "elona.modify_attribute", power = 300, params = { skill_id = "elona.stat_speed" } },
+            { _id = "elona.res_paralyze", power = 100 },
+        }
     },
     {
         _id = "zantetsu",
@@ -1449,18 +1453,20 @@ local item =
 
         color = { 175, 175, 255 },
         pierce_rate = 25,
-        enchantments = {
-            { id = 39, power = 400 },
-            { id = 25, power = 100 },
-            { id = 10010, power = 300 },
-            { id = 20058, power = 200 }
-        },
+        
         categories = {
             "elona.equip_melee_long_sword",
             "elona.unique_weapon",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.vopal", power = 400 },
+            { _id = "elona.res_confuse", power = 100 },
+            { _id = "elona.modify_attribute", power = 300, params = { skill_id = "elona.stat_strength" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.nerve" } },
+        }
     },
     {
         _id = "long_bow",
@@ -1617,19 +1623,21 @@ local item =
 
         color = { 255, 155, 155 },
         pierce_rate = 15,
-        enchantments = {
-            { id = 32, power = 100 },
-            { id = 38, power = 500 },
-            { id = 34, power = 450 },
-            { id = 20060, power = 250 },
-            { id = 80025, power = 100 }
-        },
+        
         categories = {
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.float", power = 100 },
+            { _id = "elona.absorb_mana", power = 500 },
+            { _id = "elona.power_magic", power = 450 },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.magic" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+        }
     },
     {
         _id = "mournblade",
@@ -1659,20 +1667,22 @@ local item =
 
         color = { 175, 175, 255 },
         pierce_rate = 15,
-        enchantments = {
-            { id = 36, power = 300 },
-            { id = 70059, power = 300 },
-            { id = 70056, power = 250 },
-            { id = 30166, power = 300 },
-            { id = 20059, power = 250 },
-            { id = 20056, power = 200 }
-        },
+        
         categories = {
             "elona.equip_melee_long_sword",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.absorb_stamina", power = 300 },
+            { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.chaos" } },
+            { _id = "elona.elemental_damage", power = 250, params = { element_id = "elona.nether" } },
+            { _id = "elona.modify_skill", power = 300, params = { skill_id = "elona.dual_wield" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.chaos" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.nether" } },
+        }
     },
     {
         _id = "light_cloak",
@@ -1880,7 +1890,11 @@ local item =
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.ragnarok", power = 100 },
+        }
     },
     {
         _id = "potion_of_healer_odina",
@@ -4332,12 +4346,7 @@ local item =
         skill = "elona.short_sword",
 
         _copy = {
-            enchantments = {
-                { id = 80000, power = 200 },
-                { id = 70052, power = 300 },
-                { id = 20052, power = 250 },
-                { id = 30172, power = 350 },
-            }
+            
         },
 
         is_precious = true,
@@ -4351,10 +4360,17 @@ local item =
             "elona.unique_weapon",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_element_scar" } },
+            { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.lightning" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.lightning" } },
+            { _id = "elona.modify_skill", power = 350, params = { skill_id = "elona.casting" } },
+        }
     },
     {
-        _id = "bow_of_vinderre",
+        _id = "bow_of_vindale",
         elona_id = 207,
         image = "elona.item_long_bow",
         value = 60000,
@@ -4374,14 +4390,7 @@ local item =
         skill = "elona.bow",
 
         _copy = {
-            enchantments = {
-                { id = 80001, power = 100 },
-                { id = 60012, power = 100 },
-                { id = 60013, power = 100 },
-                { id = 10012, power = 450 },
-                { id = 20055, power = 300 },
-                { id = 70055, power = 300 },
-            }
+            
         },
 
         is_precious = true,
@@ -4397,7 +4406,16 @@ local item =
             "elona.unique_weapon",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_draw_charge" } },
+            { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_dexterity" } },
+            { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_perception" } },
+            { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_dexterity" } },
+            { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.poison" } },
+            { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.poison" } },
+        }
     },
     {
         _id = "worthless_fake_gold_bar",
@@ -4475,14 +4493,16 @@ local item =
         skill = "elona.scythe",
 
         _copy = {
-            enchantments = {
-                { id = 80025, power = 100 },
-            }
+            
         },
         pierce_rate = 5,
         categories = {
             "elona.equip_melee_scythe",
             "elona.equip_melee"
+        },
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
         }
     },
     {
@@ -7030,7 +7050,7 @@ local item =
         prevent_sell_in_own_shop = true,
 
         on_read = function(self)
-           return Effect.create_building(self)
+            return Effect.create_building(self)
         end,
 
         params = { deed_home_id = "elona.cave" },
@@ -7314,15 +7334,7 @@ local item =
 
         color = { 255, 155, 155 },
 
-        enchantments = {
-            { id = 39, power = 150 },
-            { id = 20050, power = 550 },
-            { id = 10010, power = 400 },
-            { id = 20057, power = 200 },
-            { id = 30166, power = 450 },
-            { id = 10019, power = 500 },
-            { id = 25, power = 100 }
-        },
+        
 
         categories = {
             "elona.equip_wrist_glove",
@@ -7330,7 +7342,17 @@ local item =
             "elona.equip_wrist"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.vopal", power = 150 },
+            { _id = "elona.modify_resistance", power = 550, params = { element_id = "elona.fire" } },
+            { _id = "elona.modify_attribute", power = 400, params = { skill_id = "elona.stat_strength" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.sound" } },
+            { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.dual_wield" } },
+            { _id = "elona.modify_attribute", power = 500, params = { skill_id = "elona.stat_luck" } },
+            { _id = "elona.res_confuse", power = 100 },
+        }
     },
     {
         _id = "blood_moon",
@@ -7353,14 +7375,7 @@ local item =
         skill = "elona.blunt",
 
         _copy = {
-            enchantments = {
-                { id = 38, power = 300 },
-                { id = 20050, power = 200 },
-                { id = 20056, power = 250 },
-                { id = 70050, power = 350 },
-                { id = 25, power = 100 },
-                { id = 26, power = 100 },
-            }
+            
         },
 
         is_precious = true,
@@ -7375,7 +7390,16 @@ local item =
             "elona.equip_melee"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.absorb_mana", power = 300 },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.fire" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.nether" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.fire" } },
+            { _id = "elona.res_confuse", power = 100 },
+            { _id = "elona.res_fear", power = 100 },
+        }
     },
     {
         _id = "ring_of_steel_dragon",
@@ -7393,16 +7417,7 @@ local item =
         coefficient = 100,
 
         _copy = {
-            enchantments = {
-                { id = 42, power = 100 },
-                { id = 20060, power = 250 },
-                { id = 20052, power = 450 },
-                { id = 10010, power = 450 },
-                { id = 30153, power = 550 },
-                { id = 10018, power = -1400 },
-                { id = 26, power = 100 },
-                { id = 24, power = 100 },
-            }
+            
         },
 
         is_precious = true,
@@ -7413,7 +7428,18 @@ local item =
             "elona.unique_item",
             "elona.equip_ring"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.eater", power = 100 },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.magic" } },
+            { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.lightning" } },
+            { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_strength" } },
+            { _id = "elona.modify_skill", power = 550, params = { skill_id = "elona.weight_lifting" } },
+            { _id = "elona.modify_attribute", power = -1400, params = { skill_id = "elona.stat_speed", } },
+            { _id = "elona.res_fear", power = 100 },
+            { _id = "elona.res_paralyze", power = 100 },
+        }
     },
     {
         _id = "staff_of_insanity",
@@ -7438,14 +7464,7 @@ local item =
         skill = "elona.stave",
 
         _copy = {
-            enchantments = {
-                { id = 80002, power = 400 },
-                { id = 70054, power = 350 },
-                { id = 70058, power = 350 },
-                { id = 10016, power = 450 },
-                { id = 34, power = 350 },
-                { id = 30172, power = 420 },
-            }
+            
         },
 
         is_precious = true,
@@ -7456,7 +7475,16 @@ local item =
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_nightmare" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.mind" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.nerve" } },
+            { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_magic" } },
+            { _id = "elona.power_magic", power = 350 },
+            { _id = "elona.modify_skill", power = 420, params = { skill_id = "elona.casting" } },
+        }
     },
     {
         _id = "rankis",
@@ -7485,18 +7513,20 @@ local item =
 
         color = { 255, 155, 155 },
         pierce_rate = 40,
-        enchantments = {
-            { id = 40, power = 400 },
-            { id = 70056, power = 400 },
-            { id = 20056, power = 300 },
-            { id = 26, power = 100 }
-        },
+        
         categories = {
             "elona.equip_melee_lance",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.stop_time", power = 400 },
+            { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.nether" } },
+            { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.nether" } },
+            { _id = "elona.res_fear", power = 100 },
+        }
     },
     {
         _id = "palmia_pride",
@@ -7517,20 +7547,22 @@ local item =
         is_precious = true,
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
-        enchantments = {
-            { id = 41, power = 100 },
-            { id = 10019, power = 700 },
-            { id = 10018, power = 350 },
-            { id = 10017, power = 550 },
-            { id = 20053, power = 200 },
-            { id = 20059, power = 200 }
-        },
+        
         categories = {
             "elona.equip_ring_ring",
             "elona.unique_item",
             "elona.equip_ring"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.res_steal", power = 100 },
+            { _id = "elona.modify_attribute", power = 700, params = { skill_id = "elona.stat_luck" } },
+            { _id = "elona.modify_attribute", power = 350, params = { skill_id = "elona.stat_speed" } },
+            { _id = "elona.modify_attribute", power = 550, params = { skill_id = "elona.stat_charisma" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.darkness" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.chaos" } },
+        }
     },
     {
         _id = "shopkeepers_trunk",
@@ -10956,7 +10988,7 @@ local item =
         value = 10000,
         weight = 500,
         on_read = function(self)
-           return Magic.read_scroll(self, {{ _id = "elona.effect_deed_of_inheritance", power = self.params.deed_of_heirship_quality }})
+            return Magic.read_scroll(self, {{ _id = "elona.effect_deed_of_inheritance", power = self.params.deed_of_heirship_quality }})
         end,
         level = 3,
         category = 53000,
@@ -10966,7 +10998,7 @@ local item =
 
         params = { deed_of_heirship_quality = 0 },
         on_init_params = function(self)
-           self.params.deed_of_heirship_quality = 100 + Rand.rnd(200)
+            self.params.deed_of_heirship_quality = 100 + Rand.rnd(200)
         end,
 
         elona_type = "scroll",
@@ -11060,20 +11092,22 @@ local item =
 
         effective_range = { 100, 100, 100, 100, 100, 100, 100, 50, 20, 20 },
         pierce_rate = 5,
-        enchantments = {
-            { id = 80003, power = 350 },
-            { id = 80004, power = 300 },
-            { id = 70058, power = 300 },
-            { id = 20057, power = 300 },
-            { id = 20059, power = 300 }
-        },
+        
         categories = {
             "elona.equip_ranged_laser_gun",
             "elona.tag_sf",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_raging_roar" } },
+            { _id = "elona.invoke_skill", power = 300, params = { enchantment_skill_id = "elona.spell_chaos_ball" } },
+            { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.nerve" } },
+            { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.sound" } },
+            { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.chaos" } },
+        }
     },
     {
         _id = "scroll_of_recharge",
@@ -11215,12 +11249,14 @@ local item =
         subcategory = 20001,
         rarity = 500000,
         coefficient = 100,
-        enchantments = {
-            { id = 32, power = 100 }
-        },
+        
         categories = {
             "elona.equip_back_cloak",
             "elona.equip_back"
+        },
+
+        enchantments = {
+            { _id = "elona.float", power = 100 },
         }
     },
     {
@@ -11230,7 +11266,7 @@ local item =
         value = 140000,
         weight = 500,
         on_read = function()
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11256,7 +11292,7 @@ local item =
         value = 200000,
         weight = 500,
         on_read = function()
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11331,20 +11367,20 @@ local item =
         originalnameref2 = "tree",
 
         params = {
-           fruit_tree_amount = 0,
-           fruit_tree_item_id = "elona.apple"
+            fruit_tree_amount = 0,
+            fruit_tree_item_id = "elona.apple"
         },
         on_init_params = function(self)
-           local FRUITS = {
-              "elona.apple",
-              "elona.grape",
-              "elona.orange",
-              "elona.lemon",
-              "elona.strawberry",
-              "elona.cherry"
-           }
-           self.params.fruit_tree_amount = Rand.rnd(2) + 3
-           self.params.fruit_tree_item_id = Rand.choice(FRUITS)
+            local FRUITS = {
+                "elona.apple",
+                "elona.grape",
+                "elona.orange",
+                "elona.lemon",
+                "elona.strawberry",
+                "elona.cherry"
+            }
+            self.params.fruit_tree_amount = Rand.rnd(2) + 3
+            self.params.fruit_tree_item_id = Rand.choice(FRUITS)
         end,
 
         events = {
@@ -11618,7 +11654,7 @@ local item =
         value = 45000,
         weight = 500,
         on_read = function()
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11642,7 +11678,7 @@ local item =
         value = 10000,
         weight = 500,
         on_read = function()
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11894,12 +11930,14 @@ local item =
         subcategory = 20001,
         rarity = 100000,
         coefficient = 100,
-        enchantments = {
-            { id = 32, power = 100 }
-        },
+        
         categories = {
             "elona.equip_back",
             "elona.equip_back_cloak"
+        },
+
+        enchantments = {
+            { _id = "elona.float", power = 100 },
         }
     },
     {
@@ -11992,12 +12030,14 @@ local item =
         subcategory = 18002,
         rarity = 25000,
         coefficient = 100,
-        enchantments = {
-            { id = 29, power = 500 }
-        },
+        
         categories = {
             "elona.equip_leg_shoes",
             "elona.equip_leg"
+        },
+
+        enchantments = {
+            { _id = "elona.fast_travel", power = 500 },
         }
     },
     {
@@ -12016,12 +12056,14 @@ local item =
         subcategory = 20001,
         rarity = 10000,
         coefficient = 100,
-        enchantments = {
-            { id = 30, power = 100 }
-        },
+        
         categories = {
             "elona.equip_back",
             "elona.equip_back_cloak"
+        },
+
+        enchantments = {
+            { _id = "elona.res_etherwind", power = 100 },
         }
     },
     {
@@ -12041,13 +12083,15 @@ local item =
         rarity = 25000,
         coefficient = 100,
         has_random_name = true,
-        enchantments = {
-            { id = 31, power = 100 },
-            { id = 20057, power = 100 }
-        },
+        
         categories = {
             "elona.equip_ring_ring",
             "elona.equip_ring"
+        },
+
+        enchantments = {
+            { _id = "elona.res_weather", power = 100 },
+            { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.sound" } },
         }
     },
     {
@@ -12383,7 +12427,7 @@ local item =
         value = 80000,
         weight = 500,
         on_read = function(self)
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -13493,14 +13537,7 @@ local item =
 
         color = { 255, 215, 175 },
 
-        enchantments = {
-            { id = 25, power = 100 },
-            { id = 35, power = 100 },
-            { id = 10016, power = 200 },
-            { id = 20054, power = 250 },
-            { id = 20060, power = 150 },
-            { id = 30161, power = 300 }
-        },
+        
 
         medal_value = 55,
 
@@ -13510,7 +13547,16 @@ local item =
             "elona.equip_head"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.res_confuse", power = 100 },
+            { _id = "elona.see_invisi", power = 100 },
+            { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_magic" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.mind" } },
+            { _id = "elona.modify_resistance", power = 150, params = { element_id = "elona.magic" } },
+            { _id = "elona.modify_skill", power = 300, params = { skill_id = "elona.anatomy" } },
+        }
     },
     {
         _id = "spellbook_of_incognito",
@@ -13646,13 +13692,16 @@ local item =
         coefficient = 100,
 
         skill = "elona.throwing",
-        effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 5,
-        enchantments = {
-            { id = 70054, power = 800 }
-        },
+        effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },
+        pierce_rate = 5,
+        
         categories = {
             "elona.equip_ranged_thrown",
             "elona.equip_ranged"
+        },
+
+        enchantments = {
+            { _id = "elona.elemental_damage", power = 800, params = { element_id = "elona.mind" } },
         }
     },
     {
@@ -14165,12 +14214,7 @@ local item =
 
         color = { 255, 155, 155 },
 
-        enchantments = {
-            { id = 43, power = 100 },
-            { id = 29, power = 100 },
-            { id = 10012, power = 250 },
-            { id = 30182, power = 200 }
-        },
+        
 
         categories = {
             "elona.equip_leg_shoes",
@@ -14178,7 +14222,14 @@ local item =
             "elona.equip_leg"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.res_curse", power = 100 },
+            { _id = "elona.fast_travel", power = 100 },
+            { _id = "elona.modify_attribute", power = 250, params = { skill_id = "elona.stat_dexterity" } },
+            { _id = "elona.modify_skill", power = 200, params = { skill_id = "elona.traveling" } },
+        }
     },
     {
         _id = "magic_fruit",
@@ -14238,18 +14289,16 @@ local item =
         coefficient = 100,
         has_random_name = true,
 
-        params = { min_power = 400, coefficient = 1000 },
-
         on_generate = function(self)
-            local Rand = require("api.Rand")
-            local power = self.params.min_power + Rand.rnd(Rand.rnd(self.params.coefficient) + 1)
-            self:add_enchantment("base.mod_skill", { power = power })
+            local power = Rand.rnd(Rand.rnd(1000) + 1)
+            local enc = InstancedEnchantment:new("elona.modify_attribute", power, { skill_id = "elona.stat_speed" })
+            assert(self:add_enchantment(enc))
         end,
 
         categories = {
             "elona.equip_ring_ring",
             "elona.equip_ring"
-        }
+        },
     },
     {
         _id = "statue_of_opatos",
@@ -14447,18 +14496,20 @@ local item =
 
         effective_range = { 50, 90, 100, 90, 80, 80, 70, 60, 50, 20 },
         pierce_rate = 20,
-        enchantments = {
-            { id = 80014, power = 200 },
-            { id = 80005, power = 200 },
-            { id = 10018, power = 250 },
-            { id = 20052, power = 300 }
-        },
+        
         categories = {
             "elona.equip_ranged_bow",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_speed" } },
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_lulwys_trick" } },
+            { _id = "elona.modify_attribute", power = 250, params = { skill_id = "elona.stat_speed" } },
+            { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.lightning" } },
+        }
     },
     {
         _id = "winchester_premium",
@@ -14488,18 +14539,20 @@ local item =
 
         effective_range = { 100, 40, 20, 20, 20, 20, 20, 20, 20, 20 },
         pierce_rate = 30,
-        enchantments = {
-            { id = 80017, power = 350 },
-            { id = 43, power = 200 },
-            { id = 30110, power = 450 },
-            { id = 20057, power = 350 }
-        },
+        
         categories = {
             "elona.equip_ranged_gun",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.buff_mist_of_silence" } },
+            { _id = "elona.res_curse", power = 200 },
+            { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.marksman" } },
+            { _id = "elona.modify_resistance", power = 350, params = { element_id = "elona.sound" } },
+        }
     },
     {
         _id = "kumiromi_scythe",
@@ -14511,7 +14564,7 @@ local item =
         dice_y = 38,
         hit_bonus = 5,
         damage_bonus = 2,
-        material = "elona.spirit",
+        material = "elona.spirit_cloth",
         level = 60,
         fltselect = 3,
         category = 10000,
@@ -14527,21 +14580,23 @@ local item =
 
         color = { 175, 255, 175 },
         pierce_rate = 15,
-        enchantments = {
-            { id = 30184, power = 600 },
-            { id = 42, power = 100 },
-            { id = 30180, power = 1100 },
-            { id = 30163, power = 800 },
-            { id = 10010, power = 550 },
-            { id = 20059, power = 400 },
-            { id = 80025, power = 100 }
-        },
+        
         categories = {
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.modify_skill", power = 600, params = { skill_id = "elona.cooking" } },
+            { _id = "elona.eater", power = 100 },
+            { _id = "elona.modify_skill", power = 1100, params = { skill_id = "elona.gardening" } },
+            { _id = "elona.modify_skill", power = 800, params = { skill_id = "elona.mining" } },
+            { _id = "elona.modify_attribute", power = 550, params = { skill_id = "elona.stat_strength" } },
+            { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.chaos" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+        }
     },
     {
         _id = "elemental_staff",
@@ -14571,23 +14626,23 @@ local item =
 
         color = { 215, 255, 215 },
 
-        enchantments = {
-            { id = 80000, power = 400 },
-            { id = 70050, power = 350 },
-            { id = 70051, power = 350 },
-            { id = 70052, power = 350 },
-            { id = 20050, power = 250 },
-            { id = 20051, power = 250 },
-            { id = 20052, power = 250 }
-        },
-
         categories = {
             "elona.equip_melee_staff",
             "elona.unique_item",
             "elona.equip_melee"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_element_scar" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.fire" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.cold" } },
+            { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.lightning" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.fire" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.cold" } },
+            { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.lightning" } },
+        }
     },
     {
         _id = "holy_lance",
@@ -14614,19 +14669,21 @@ local item =
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
         pierce_rate = 30,
-        enchantments = {
-            { id = 80023, power = 350 },
-            { id = 80012, power = 450 },
-            { id = 10015, power = 650 },
-            { id = 20053, power = 200 },
-            { id = 20056, power = 150 }
-        },
+        
         categories = {
             "elona.equip_melee_lance",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_healing_rain" } },
+            { _id = "elona.invoke_skill", power = 450, params = { enchantment_skill_id = "elona.buff_holy_veil" } },
+            { _id = "elona.modify_attribute", power = 650, params = { skill_id = "elona.stat_will" } },
+            { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.darkness" } },
+            { _id = "elona.modify_resistance", power = 150, params = { element_id = "elona.nether" } },
+        }
     },
     {
         _id = "lucky_dagger",
@@ -14656,19 +14713,21 @@ local item =
 
         color = { 255, 215, 175 },
         pierce_rate = 10,
-        enchantments = {
-            { id = 41, power = 100 },
-            { id = 35, power = 100 },
-            { id = 10019, power = 1500 },
-            { id = 36, power = 400 },
-            { id = 30185, power = 600 }
-        },
+        
         categories = {
             "elona.equip_melee_short_sword",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.res_steal", power = 100 },
+            { _id = "elona.see_invisi", power = 100 },
+            { _id = "elona.modify_attribute", power = 1500, params = { skill_id = "elona.stat_luck" } },
+            { _id = "elona.absorb_stamina", power = 400 },
+            { _id = "elona.modify_skill", power = 600, params = { skill_id = "elona.fishing" } },
+        }
     },
     {
         _id = "gaia_hammer",
@@ -14696,21 +14755,21 @@ local item =
 
         color = { 255, 215, 175 },
 
-        enchantments = {
-            { id = 39, power = 350 },
-            { id = 80013, power = 500 },
-            { id = 10010, power = 600 },
-            { id = 30167, power = 450 },
-            { id = 20054, power = 400 }
-        },
-
         categories = {
             "elona.equip_melee_hammer",
             "elona.unique_item",
             "elona.equip_melee"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.vopal", power = 350 },
+            { _id = "elona.invoke_skill", power = 500, params = { enchantment_skill_id = "elona.buff_hero" } },
+            { _id = "elona.modify_attribute", power = 600, params = { skill_id = "elona.stat_strength" } },
+            { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.two_hand" } },
+            { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.mind" } },
+        }
     },
     {
         _id = "lulwys_gem_stone_of_god_speed",
@@ -14857,7 +14916,7 @@ local item =
             -- >>>>>>>> shade2/item.hsp:665 	if iId(ci)=idMonsterBall{ ..
             self.params.monster_ball_max_level = Rand.rnd(params.level + 1) + 1
             self.value = 2000 + self.params.monster_ball_max_level * self.params.monster_ball_max_level
-            + self.params.monster_ball_max_level * 100
+                + self.params.monster_ball_max_level * 100
             -- <<<<<<<< shade2/item.hsp:668 		} ..
         end,
 
@@ -14912,7 +14971,7 @@ local item =
         },
 
         on_read = function(self, params)
-           return ItemFunction.read_ancient_book(self, params)
+            return ItemFunction.read_ancient_book(self, params)
         end,
 
         on_init_params = function(self, params)
@@ -15100,9 +15159,7 @@ local item =
 
         color = { 255, 155, 155 },
 
-        enchantments = {
-            { id = 44, power = 750 }
-        },
+        
 
         categories = {
             "elona.equip_melee_axe",
@@ -15110,7 +15167,11 @@ local item =
             "elona.equip_melee"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.crit", power = 750 },
+        }
     },
     {
         _id = "spellbook_of_magic_ball",
@@ -15313,17 +15374,19 @@ local item =
         is_precious = true,
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
-        enchantments = {
-            { id = 48, power = 100 },
-            { id = 10017, power = 450 },
-            { id = 41, power = 100 }
-        },
+        
         categories = {
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.res_pregnancy", power = 100 },
+            { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_charisma" } },
+            { _id = "elona.res_steal", power = 100 },
+        }
     },
     {
         _id = "potion_of_descent",
@@ -15365,15 +15428,17 @@ local item =
         params = { instrument_quality = 180 },
 
         quality = Enum.Quality.Unique,
-        enchantments = {
-            { id = 49, power = 100 }
-        },
+        
         categories = {
             "elona.furniture_instrument",
             "elona.unique_item",
             "elona.furniture"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.strad", power = 100 },
+        }
     },
     {
         _id = "book_of_resurrection",
@@ -15483,7 +15548,7 @@ local item =
         value = 500000,
         weight = 500,
         on_read = function()
-           return Effect.create_new_building(self)
+            return Effect.create_new_building(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -15518,13 +15583,16 @@ local item =
         coefficient = 100,
 
         skill = "elona.throwing",
-        effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 15,
-        enchantments = {
-            { id = 70061, power = 100 }
-        },
+        effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
+        pierce_rate = 15,
+        
         categories = {
             "elona.equip_ranged_thrown",
             "elona.equip_ranged"
+        },
+
+        enchantments = {
+            { _id = "elona.elemental_damage", power = 100, params = { element_id = "elona.cut" } },
         }
     },
     {
@@ -15546,12 +15614,14 @@ local item =
         skill = "elona.throwing",
         effective_range = { 80, 100, 90, 80, 60, 20, 20, 20, 20, 20 },
         pierce_rate = 0,
-        enchantments = {
-            { id = 80024, power = 100 }
-        },
+        
         categories = {
             "elona.equip_ranged_thrown",
             "elona.equip_ranged"
+        },
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_grenade" } },
         }
     },
     {
@@ -15594,7 +15664,8 @@ local item =
         is_precious = true,
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
-        effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },pierce_rate = 50,categories = {
+        effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
+        pierce_rate = 50,categories = {
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
@@ -15649,19 +15720,21 @@ local item =
 
         effective_range = { 50, 100, 50, 20, 20, 20, 20, 20, 20, 20 },
         pierce_rate = 5,
-        enchantments = {
-            { id = 40, power = 350 },
-            { id = 70054, power = 1200 },
-            { id = 10017, power = 450 },
-            { id = 48, power = 100 },
-            { id = 30, power = 500 }
-        },
+        
         categories = {
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.stop_time", power = 350 },
+            { _id = "elona.elemental_damage", power = 1200, params = { element_id = "elona.mind" } },
+            { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_charisma" } },
+            { _id = "elona.res_pregnancy", power = 100 },
+            { _id = "elona.res_etherwind", power = 500 },
+        }
     },
     {
         _id = "claymore_unique",
@@ -15686,17 +15759,19 @@ local item =
         is_precious = true,
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
-        enchantments = {
-            { id = 44, power = 250 },
-            { id = 39, power = 200 },
-            { id = 33, power = 100 }
-        },
+        
         categories = {
             "elona.equip_melee_broadsword",
             "elona.unique_item",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.crit", power = 250 },
+            { _id = "elona.vopal", power = 200 },
+            { _id = "elona.res_mutation", power = 100 },
+        }
     },
     {
         _id = "happy_bed",
@@ -15767,10 +15842,7 @@ local item =
 
         color = { 185, 155, 215 },
 
-        enchantments = {
-            { id = 51, power = 600 },
-            { id = 30109, power = 700 }
-        },
+        
 
         categories = {
             "elona.equip_neck_armor",
@@ -15778,7 +15850,12 @@ local item =
             "elona.equip_neck"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.extra_shoot", power = 600 },
+            { _id = "elona.modify_skill", power = 700, params = { skill_id = "elona.crossbow" } },
+        }
     },
     {
         _id = "twin_edge",
@@ -15801,10 +15878,7 @@ local item =
 
         color = { 255, 215, 175 },
 
-        enchantments = {
-            { id = 50, power = 600 },
-            { id = 30166, power = 650 }
-        },
+        
 
         categories = {
             "elona.equip_neck_armor",
@@ -15812,7 +15886,12 @@ local item =
             "elona.equip_neck"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.extra_melee", power = 600 },
+            { _id = "elona.modify_skill", power = 650, params = { skill_id = "elona.dual_wield" } },
+        }
     },
     {
         _id = "music_ticket",
@@ -15862,17 +15941,19 @@ local item =
 
         effective_range = { 60, 100, 70, 20, 20, 20, 20, 20, 20, 20 },
         pierce_rate = 0,
-        enchantments = {
-            { id = 70059, power = 400 },
-            { id = 30183, power = -700 },
-            { id = 44, power = 450 }
-        },
+        
         categories = {
             "elona.equip_ranged_thrown",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.chaos" } },
+            { _id = "elona.modify_skill", power = -700, params = { skill_id = "elona.performer" } },
+            { _id = "elona.crit", power = 450 },
+        }
     },
     {
         _id = "alud",
@@ -15898,11 +15979,7 @@ local item =
 
         color = { 255, 255, 175 },
 
-        enchantments = {
-            { id = 30183, power = -450 },
-            { id = 52, power = 400 },
-            { id = 53, power = 400 }
-        },
+        
 
         categories = {
             "elona.equip_shield_shield",
@@ -15910,7 +15987,13 @@ local item =
             "elona.equip_shield"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.modify_skill", power = -450, params = { skill_id = "elona.performer" } },
+            { _id = "elona.res_damage", power = 400 },
+            { _id = "elona.immune_damage", power = 400 },
+        }
     },
     {
         _id = "shield_of_thorn",
@@ -15936,18 +16019,18 @@ local item =
 
         color = { 255, 155, 155 },
 
-        enchantments = {
-            { id = 54, power = 1000 },
-            { id = 20058, power = 450 }
-        },
-
         categories = {
             "elona.equip_shield_shield",
             "elona.unique_weapon",
             "elona.equip_shield"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.reflect_damage", power = 1000 },
+            { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.nerve" } },
+        }
     },
     {
         _id = "crimson_plate",
@@ -15972,19 +16055,19 @@ local item =
 
         color = { 255, 155, 155 },
 
-        enchantments = {
-            { id = 55, power = 100 },
-            { id = 20056, power = 450 },
-            { id = 20050, power = 350 }
-        },
-
         categories = {
             "elona.equip_back_girdle",
             "elona.unique_item",
             "elona.equip_cloak"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.cure_bleeding", power = 100 },
+            { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.nether" } },
+            { _id = "elona.modify_resistance", power = 350, params = { element_id = "elona.fire" } },
+        }
     },
     {
         _id = "gift",
@@ -16123,7 +16206,6 @@ local item =
         coefficient = 100,
 
         on_generate = function(self)
-            local Rand = require("api.Rand")
             self.param2 = Rand.rnd(Rand.rnd(100) + 1) + 1
             self.value = self.param2 * 25 + 150
             self.amount = Rand.rnd(8)
@@ -16149,11 +16231,15 @@ local item =
         subcategory = 10011,
         coefficient = 100,
 
-        skill = "elona.scythe",pierce_rate = 5,enchantments = {
-            { id = 80025, power = 100 }
-        },categories = {
+        skill = "elona.scythe",
+        pierce_rate = 5,
+        categories = {
             "elona.equip_melee_scythe",
             "elona.equip_melee"
+        },
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
         }
     },
     {
@@ -16248,18 +16334,23 @@ local item =
 
         is_precious = true,
         identify_difficulty = 500,
-        quality = Enum.Quality.Unique,pierce_rate = 65,enchantments = {
-            { id = 80002, power = 400 },
-            { id = 70054, power = 850 },
-            { id = 10016, power = 34500 },
-            { id = 80025, power = 100 },
-            { id = 37, power = 100 },
-            { id = 80003, power = 350 }
-        },categories = {
+        quality = Enum.Quality.Unique,
+        pierce_rate = 65,
+        categories = {
             "elona.equip_melee_scythe",
             "elona.unique_item",
             "elona.equip_melee"
-        },light = light.item
+        },
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_nightmare" } },
+            { _id = "elona.elemental_damage", power = 850, params = { element_id = "elona.mind" } },
+            { _id = "elona.modify_attribute", power = 34500, params = { skill_id = "elona.stat_magic" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.ragnarok", power = 100 },
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_raging_roar" } },
+        }
     },
     {
         _id = "unknown_shell",
@@ -16283,19 +16374,19 @@ local item =
 
         color = { 175, 175, 255 },
 
-        enchantments = {
-            { id = 56, power = 100 },
-            { id = 30181, power = 550 },
-            { id = 20057, power = 400 }
-        },
-
         categories = {
             "elona.equip_neck_armor",
             "elona.unique_item",
             "elona.equip_neck"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.god_talk", power = 100 },
+            { _id = "elona.modify_skill", power = 550, params = { skill_id = "elona.faith" } },
+            { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.sound" } },
+        }
     },
     {
         _id = "hiryu_to",
@@ -16323,18 +16414,20 @@ local item =
 
         color = { 255, 155, 155 },
         pierce_rate = 20,
-        enchantments = {
-            { id = 20050, power = 550 },
-            { id = 70052, power = 400 },
-            { id = 57, power = 1150 },
-            { id = 10011, power = 720 }
-        },
+        
         categories = {
             "elona.equip_melee_long_sword",
             "elona.unique_weapon",
             "elona.equip_melee"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.modify_resistance", power = 550, params = { element_id = "elona.fire" } },
+            { _id = "elona.elemental_damage", power = 400, params = { element_id = "elona.lightning" } },
+            { _id = "elona.dragon_bane", power = 1150 },
+            { _id = "elona.modify_attribute", power = 720, params = { skill_id = "elona.stat_constitution" } },
+        }
     },
     {
         _id = "license_of_the_void_explorer",
@@ -16700,21 +16793,21 @@ local item =
 
         color = { 175, 175, 255 },
 
-        enchantments = {
-            { id = 59, power = 100 },
-            { id = 50, power = 200 },
-            { id = 51, power = 150 },
-            { id = 54, power = 180 },
-            { id = 33, power = 100 }
-        },
-
         categories = {
             "elona.equip_head_helm",
             "elona.unique_item",
             "elona.equip_head"
         },
 
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.god_detect", power = 100 },
+            { _id = "elona.extra_melee", power = 200 },
+            { _id = "elona.extra_shoot", power = 150 },
+            { _id = "elona.reflect_damage", power = 180 },
+            { _id = "elona.res_mutation", power = 100 },
+        }
     },
     {
         _id = "mauser_c96_custom",
@@ -16741,17 +16834,20 @@ local item =
 
         tags = { "sf" },
         color = { 155, 154, 153 },
-        effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },pierce_rate = 35,
-        enchantments = {
-            { id = 35, power = 100 }
-        },
+        effective_range = { 100, 90, 70, 50, 20, 20, 20, 20, 20, 20 },
+        pierce_rate = 35,
+        
         categories = {
             "elona.equip_ranged_gun",
             "elona.tag_sf",
             "elona.unique_item",
             "elona.equip_ranged"
         },
-        light = light.item
+        light = light.item,
+
+        enchantments = {
+            { _id = "elona.see_invisi", power = 100 },
+        }
     },
     {
         _id = "lightsabre",
@@ -16829,9 +16925,7 @@ local item =
 
         color = { 255, 255, 255 },
 
-        enchantments = {
-            { id = 60, power = 100 }
-        },
+        
 
         categories = {
             "elona.furniture_instrument",
@@ -16839,7 +16933,11 @@ local item =
             "elona.furniture"
         },
 
-        light = light.item_middle
+        light = light.item_middle,
+
+        enchantments = {
+            { _id = "elona.gould", power = 100 },
+        }
     },
     {
         _id = "festival_wreath",
@@ -17398,14 +17496,16 @@ local item =
         is_precious = true,
         identify_difficulty = 500,
         quality = Enum.Quality.Unique,
-        enchantments = {
-            { id = 57, power = 300 },
-            { id = 61, power = 200 }
-        },
+        
         categories = {
             "elona.equip_melee_broadsword",
             "elona.unique_item",
             "elona.equip_melee"
+        },
+
+        enchantments = {
+            { _id = "elona.dragon_bane", power = 300 },
+            { _id = "elona.god_bane", power = 200 },
         }
     },
     {

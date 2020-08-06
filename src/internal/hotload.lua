@@ -1,3 +1,4 @@
+local Log = require("api.Log")
 local env = require("internal.env")
 local Event = require("api.Event")
 local theme = require("internal.theme")
@@ -40,18 +41,25 @@ function hotload.hotload(path_or_class, also_deps)
       path_or_class = path
    end
 
-   pcall(Event.trigger, "base.on_hotload_begin", {path_or_class=path_or_class,also_deps=also_deps})
+   local ok, result
+   ok, result = pcall(Event.trigger, "base.on_hotload_begin", {path_or_class=path_or_class,also_deps=also_deps})
+   if not ok then
+      Log.error("Error on on_hotload_begin: %s", result)
+   end
 
-   local ok, result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
+   ok, result = xpcall(env.hotload_path, debug.traceback, path_or_class, also_deps)
+   if not ok then
+      Log.error("Error on hotload-path: %s", result)
+   end
 
-   pcall(Event.trigger, "base.on_hotload_end", {
-            hotloaded_data=hotloaded_data,
-            hotloaded_types=hotloaded_types,
-            path_or_class=path_or_class,
-            also_deps=also_deps,
-            ok=ok,
-            result=result
-                                               })
+   ok, result = pcall(Event.trigger, "base.on_hotload_end", {
+                         hotloaded_data=hotloaded_data,
+                         hotloaded_types=hotloaded_types,
+                         path_or_class=path_or_class,
+                         also_deps=also_deps,
+                         ok=ok,
+                         result=result
+   })
 
    if not ok then
       error(result)

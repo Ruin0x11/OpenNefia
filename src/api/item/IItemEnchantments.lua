@@ -94,14 +94,33 @@ local function add_fixed_enchantment(item, fixed_enc)
        table.deepcopy(fixed_enc.params or {})
    )
 
-   table.insert(item.temp["enchantments"], enc)
+   local idx
+   for i, v in ipairs(item.temp["enchantments"]) do
+      if v._id == enc._id then
+         idx = i
+      end
+   end
+
+   if idx == nil then
+      if #item.temp["enchantments"] >= Const.MAX_ENCHANTMENTS then
+         return false
+      end
+
+      idx = #item.temp["enchantments"] + 1
+   end
+
+   if item.temp["enchantments"][idx] then
+      enc.power = enc.power + item.temp["enchantments"][idx].power
+   end
+
+   item.temp["enchantments"][idx] = enc
 end
 
 local function refresh_temporary_enchantments(item)
    item.temp["enchantments"] = table.deepcopy(item.enchantments)
 
-   if item.proto.fixed_enchantments then
-      for _, fixed_enc in ipairs(item.proto.fixed_enchantments) do
+   if item.proto.enchantments then
+      for _, fixed_enc in ipairs(item.proto.enchantments) do
          add_fixed_enchantment(item, fixed_enc)
       end
    end

@@ -203,7 +203,7 @@ local hook = function(name, f) return f end
 local can_unequip = hook("can_unequip",
                          function(item)
                             if item:is_cursed() then
-                               return false, "cursed"
+                               return false, "is_cursed"
                             end
 
                             return true
@@ -221,7 +221,7 @@ function Action.unequip(chara, item)
 
    local able, reason = can_unequip(item)
    if not able then
-      return able,reason
+      return able, reason
    end
 
    chara:unequip_item(item)
@@ -242,7 +242,6 @@ function Action.equip(chara, item)
 
    chara:equip_item(item)
    chara:refresh()
-   Gui.play_sound("base.equip1");
 
    return true
 end

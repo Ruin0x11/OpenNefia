@@ -9591,7 +9591,7 @@ local item = {
     name = "マニ像",
     unidentified_name = "神の彫像"
   },
-  statue_of_money = {
+  golden_statue = {
     desc = {
       _0 = {
         footnote = "〜嘘と勘違いされる全くの作り話・第２巻〜",

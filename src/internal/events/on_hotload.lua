@@ -1,5 +1,7 @@
+local Map = require("api.Map")
 local IEventEmitter = require("api.IEventEmitter")
 local Event = require("api.Event")
+local paths = require("internal.paths")
 
 -- The following adds support for cleaning up missing events
 -- automatically if a chunk is hotloaded. It assumes only one chunk is

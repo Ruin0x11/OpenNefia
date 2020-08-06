@@ -118,5 +118,6 @@ data:add_multi(
       { _id = "calc_map_starting_pos" },
       { _id = "on_generate_area_floor" },
       { _id = "on_map_initialize" },
+      { _id = "on_item_build_description" },
    }
 )

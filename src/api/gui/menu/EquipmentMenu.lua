@@ -1,3 +1,5 @@
+local Const = require("api.Const")
+local Enum = require("api.Enum")
 local Action = require("api.Action")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
@@ -101,7 +103,7 @@ end
 
 function EquipmentMenu:show_item_description()
    local item = self:selected_item_object()
-   local rest = self.pages:iter_all_pages():to_list()
+   local rest = self.pages:iter_all_pages():extract("item"):to_list()
    ItemDescriptionMenu:new(item, rest):query()
 end
 
@@ -189,10 +191,43 @@ function EquipmentMenu:draw()
    self.pages:draw()
 end
 
+function EquipmentMenu.message_weapon_stats(chara)
+   -- >>>>>>>> shade2/command.hsp:3052 *show_weaponStat ..
+   local attack_count = 0
+   for _, part in chara:iter_body_parts() do
+      if part.body_part._id == "elona.hand" then
+         local equipped = part.equipped
+         local weight = equipped:calc("weight")
+         if equipped and equipped:calc("is_melee_weapon") then
+            attack_count = attack_count + 1
+            if chara:calc("is_wielding_two_handed") and weight >= Const.WEAPON_WEIGHT_HEAVY then
+               Gui.mes("action.equip.two_handed.fits_well", equipped)
+            end
+            if chara:calc("is_dual_wielding") then
+               if attack_count == 1 then
+                  if weight >= Const.WEAPON_WEIGHT_HEAVY then
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                  end
+               else
+                  if weight > Const.WEAPON_WEIGHT_LIGHT then
+                     Gui.mes("action.equip.two_handed.too_heavy_other_hand", equipped)
+                  end
+               end
+            end
+
+            -- TODO riding
+            if chara:is_player() then
+            end
+         end
+      end
+   end
+   -- <<<<<<<< shade2/command.hsp:3074 	return ..
+end
+
 function EquipmentMenu:update()
    if self.canceled then
       if self.changed_equipment then
-         Gui.mes(self.chara.uid .. " changes equipment. ")
+         Gui.mes("action.equip.you_change")
          return "turn_end"
       end
 
@@ -205,18 +240,39 @@ function EquipmentMenu:update()
 
       if entry.equipped then
          local success, err = Action.unequip(self.chara, entry.equipped)
+         self.changed_equipment = true
          if success then
-            self.changed_equipment = true
             self:update_from_chara()
          else
-            Gui.mes("Can't unequip: " .. err)
+            if err == "is_cursed" then
+               Gui.mes("ui.equip.cannot_be_taken_off", entry.equipped)
+            else
+               Gui.mes("ui.equip.cannot_be_taken_off", entry.equipped)
+            end
          end
       else
          local result, canceled = Input.query_item(self.chara, "elona.inv_equip", { body_part_id = entry.body_part._id })
          if not canceled then
             local selected_item = result.result
             assert(Action.equip(self.chara, selected_item))
+            -- >>>>>>>> shade2/command.hsp:3743 			snd seEquip ..
+            Gui.play_sound("base.equip1")
+            Gui.mes_newline()
+            Gui.mes("ui.inv.equip.you_equip", selected_item)
             self.changed_equipment = true
+            local curse = selected_item:calc("curse_state")
+            if curse == Enum.CurseState.Cursed then
+               Gui.mes("ui.inv.equip.cursed", self.chara)
+            elseif curse == Enum.CurseState.Doomed then
+               Gui.mes("ui.inv.equip.doomed", self.chara)
+            elseif curse == Enum.CurseState.Blessed then
+               Gui.mes("ui.inv.equip.blessed", self.chara)
+            end
+            if entry.body_part._id == "elona.hand" then
+               EquipmentMenu.message_weapon_stats(self.chara)
+            end
+            -- <<<<<<<< shade2/command.hsp:3749 			if (cData(body,cc)/extBody)=bodyHand : gosub *s ..
+
             self:update_from_chara()
          end
       end

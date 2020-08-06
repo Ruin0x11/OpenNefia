@@ -447,9 +447,11 @@ function itemname.en(item, amount, no_article)
       end
    end
 
+   local unidentified_name = I18N.get_optional("item.info." .. item._id .. ".unidentified_name")
+
    local s2 = ""
    local s3 = ""
-   if not (item.has_random_name and identify < IdentifyState.Name) then
+   if not ((item.has_random_name or unidentified_name ~= nil) and identify < IdentifyState.Name) then
       s2 = item.originalnameref2 or ""
 
       if string.match(name, "with") then

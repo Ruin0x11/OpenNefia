@@ -60,14 +60,37 @@ local function apply_item_stats(chara, item)
 end
 
 function ICharaEquip:on_refresh()
+   local attack_count = 0
    for _, part in self:iter_body_parts() do
       local item = part.equipped
       if item then
          item:refresh()
 
          apply_item_stats(self, item)
+
+         if part.body_part._id == "elona.hand" then
+            attack_count = attack_count + 1
+         end
+         if item:has_category("elona.equip_shield") then
+            self:mod("is_wielding_shield", true)
+         end
       end
    end
+
+   -- >>>>>>>> shade2/calculation.hsp:530 	if cAttackStyle(r1)&styleShield{ ..
+   if self:calc("is_wielding_shield") then
+      local pv = self:calc("pv")
+      if pv > 0 then
+         self:mod("pv", pv * math.floor( 120 + math.sqrt(self:skill_level("elona.shield")) * 2 ) / 100)
+      end
+   else
+      if attack_count == 1 then
+         self:mod("is_wielding_two_handed", true)
+      elseif attack_count > 0 then
+         self:mod("is_dual_wielding", true)
+      end
+   end
+   -- <<<<<<<< shade2/calculation.hsp:534 		} ..
 end
 
 function ICharaEquip:equip_item(item, force)

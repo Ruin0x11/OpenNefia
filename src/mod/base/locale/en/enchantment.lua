@@ -1,11 +1,12 @@
 return {
   enchantment = {
-    it = "It ",
+    it = function(desc)
+       return ("It %s"):format(desc)
+    end,
     item_ego = {
       major = {
         _0 = "of fire",
         _1 = "of silence",
-        _10 = "of resist sleep",
         _2 = "of cold",
         _3 = "of lightning",
         _4 = "of defender",
@@ -13,7 +14,8 @@ return {
         _6 = "of resist blind",
         _7 = "of resist paralysis",
         _8 = "of resist confusion",
-        _9 = "of resist fear"
+        _9 = "of resist fear",
+        _10 = "of resist sleep"
       },
       minor = {
         _0 = "singing",

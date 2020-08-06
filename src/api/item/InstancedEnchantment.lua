@@ -1,3 +1,4 @@
+local I18N = require("api.I18N")
 local data = require("internal.data")
 local InstancedEnchantment = class.class("InstancedEnchantment")
 
@@ -7,6 +8,9 @@ function InstancedEnchantment:init(_id, power, params)
    self.power = power
    self.params = params or {}
    self.proto = data["base.enchantment"]:ensure(_id)
+
+   -- NOTE: unused in vanilla
+   self.is_inheritable = true
 end
 
 function InstancedEnchantment:serialize()
@@ -51,12 +55,12 @@ function InstancedEnchantment:adjusted_power()
    return self.power
 end
 
-function InstancedEnchantment:localize()
+function InstancedEnchantment:localize(item)
    if self.proto.localize then
-      return self.proto.localize(self)
+      return self.proto.localize(self, item)
    end
 
-   return ""
+   return I18N.get("_.base.enchantment." .. self._id .. ".description")
 end
 
 return InstancedEnchantment

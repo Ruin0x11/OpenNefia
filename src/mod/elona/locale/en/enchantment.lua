@@ -42,7 +42,7 @@ local enchantment = {
       fast_travel = {
          description = "speeds up your travel progress."
       },
-      res_ether_wind = {
+      res_etherwind = {
          description = "protects you from Etherwind."
       },
       res_weather = {
@@ -119,6 +119,9 @@ local enchantment = {
       },
       gould = {
          description = "makes audience drunk with haunting tones."
+      },
+      god_bane = {
+         description = "inflicts massive damage to Gods."
       }
    }
 }

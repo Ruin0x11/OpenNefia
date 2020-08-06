@@ -62,7 +62,7 @@ end,
         fireproof = "It is fireproof.",
         handmade = "It is a hand-made item.",
         precious = "It is precious.",
-        show_room_only = "It can be only used in a show room.",
+        showroom_only = "It can be only used in a show room.",
         stolen = "It is a stolen item."
       },
       bonus = function(_1, _2)
@@ -79,13 +79,20 @@ end,
   return ("It is made of %s.")
   :format(_1)
 end,
+      living_weapon = function(growth, experience)
+         return ("[Lv:%d Exp:%d%%]")
+            :format(growth, experience)
+      end,
       no_information = "There is no information about this object.",
       speeds_up_ether_disease = "It speeds up the ether disease while equipping.",
       weapon = {
         heavy = "It is a heavy weapon.",
         it_can_be_wielded = "It can be wielded as a weapon.",
         light = "It is a light weapon.",
-        pierce = " Pierce "
+        dice = function(dice_x, dice_y, pierce)
+           return ("(%dd%d Pierce %d%)")
+              :format(dice_x, dice_y, pierce)
+        end
       },
       window = {
         error = "Unknown item definition. If possible, please report which menu the Known info menu (x key) was opened from (e.g. Drink, Zap, Eat, etc.).",

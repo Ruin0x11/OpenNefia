@@ -73,6 +73,14 @@ function IItem:refresh()
    IMapObject.on_refresh(self)
    IItemEnchantments.on_refresh(self)
 
+   local material_id = self:calc("material")
+   if material_id then
+      local material_data = data["elona.item_material"]:ensure(material_id)
+      if material_data.on_refresh then
+         material_data.on_refresh(self)
+      end
+   end
+
    self:mod("is_melee_weapon", is_melee_weapon(self))
    self:mod("is_ranged_weapon", is_ranged_weapon(self))
    self:mod("is_ammo", is_ammo(self))

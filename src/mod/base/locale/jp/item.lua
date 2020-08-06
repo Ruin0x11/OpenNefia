@@ -62,7 +62,7 @@ end,
         fireproof = "それは炎では燃えない",
         handmade = "それは心温まる手作り品だ",
         precious = "それは貴重な品だ",
-        show_room_only = "それはショウルームでのみ使用できる。",
+        showroom_only = "それはショウルームでのみ使用できる。",
         stolen = "それは盗品だ"
       },
       bonus = function(_1, _2)
@@ -79,13 +79,20 @@ end,
   return ("それは%sで作られている")
   :format(_1)
 end,
+      living_weapon = function(growth, experience)
+         return ("[Lv:%d Exp:%d%%]")
+            :format(growth, experience)
+      end,
       no_information = "特に情報はない",
       speeds_up_ether_disease = "それは装備している間、エーテルの病の進行を早める",
       weapon = {
         heavy = "それは両手持ちに適している",
         it_can_be_wielded = "それは武器として扱うことができる",
         light = "それは片手でも扱いやすい",
-        pierce = " 貫通 "
+        dice = function(dice_x, dice_y, pierce)
+           return ("(%dd%d 貫通 %d%)")
+              :format(dice_x, dice_y, pierce)
+        end
       },
       window = {
         error = "暫定エラー回避処置です。お手数ですが、どの持ち物メニュー(例えば飲む、振る、食べるなど）から調査(xキー)を押したか報告お願いします。",

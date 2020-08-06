@@ -28,6 +28,9 @@ data:add {
    value = 120,
    rarity = 3000,
 
+   icon = 2,
+   color = { 0, 0, 100 },
+
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:555 		if enc=encModAttb{ ..
@@ -85,6 +88,9 @@ data:add {
    value = 150,
    rarity = 2500,
 
+   icon = 3,
+   color = { 80, 100, 0 },
+
    params = { element_id = "id:base.element" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:560 		if enc=encModRes{ ..
@@ -138,10 +144,13 @@ data:add {
    value = 120,
    rarity = 4500,
 
-   params = { element_id = "id:base.skill" },
+   icon = 1,
+   color = { 0, 100, 0 },
+
+   params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:565 		if enc=encModSkill{ ..
-      self.params.element_id = Skill.random_skill()
+      self.params.skill_id = Skill.random_skill()
       if params.curse_power > 0 and Rand.rnd(100) < params.curse_power then
          self.power = self.power * - 2
       end
@@ -197,6 +206,9 @@ data:add {
    level = 0,
    value = 120,
    rarity = 4500,
+
+   icon = 8,
+   color = { 0, 100, 100 },
 
    params = { skill_id = "id:base.skill" },
    on_generate = function(self, item, params)
@@ -307,7 +319,7 @@ data:add {
       -- >>>>>>>> shade2/item_data.hsp:398 		if val(10)=encProc{ ..
       local power = self:adjusted_power()
       local enc_skill_data = data["base.enchantment_skill"]:ensure(self.params.enchantment_skill_id)
-      local skill_name = "skill." .. enc_skill_data.skill_id .. ".name"
+      local skill_name = "ability." .. enc_skill_data.skill_id .. ".name"
       return I18N.get("enchantment.with_parameters.invokes", skill_name) .. " " .. Enchantment.power_text(power)
       -- <<<<<<<< shade2/item_data.hsp:403 			} ..
    end
@@ -342,11 +354,11 @@ data:add {
 
       local idx = Rand.rnd(Rand.rnd(#cands) + 1) + 1
 
-      self.params.ammo_enchantment_id = cands[idx]
+      self.params.ammo_enchantment_id = cands[idx]._id
       local ammo_enc_data = data["base.ammo_enchantment"]:ensure(self.params.ammo_enchantment_id)
 
-      self.ammo_current = math.floor(math.clamp(self.power, 0, 500) * ammo_enc_data.ammo_factor / 500) + ammo_enc_data.ammo_amount
-      self.ammo_max = self.ammo_current
+      self.params.ammo_current = math.floor(math.clamp(self.power, 0, 500) * ammo_enc_data.ammo_factor / 500) + ammo_enc_data.ammo_amount
+      self.params.ammo_max = self.params.ammo_current
       -- <<<<<<<< shade2/item_data.hsp:594 			} ..
    end,
 
@@ -358,7 +370,7 @@ data:add {
 
    localize = function(self, item)
       -- >>>>>>>> shade2/item_data.hsp:405 		if val(10)=encAmmo{ ..
-      local ammo_name = "_.ammo_enchantment." .. self.params.ammo_enchantment_id .. ".name"
+      local ammo_name = "_.base.ammo_enchantment." .. self.params.ammo_enchantment_id .. ".name"
       local s = I18N.get("enchantment.with_parameters.ammo.text", ammo_name)
       s = s .. I18N.get("enchantment.with_parameters.ammo.max", self.params.ammo_max)
       return s
@@ -472,7 +484,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.blindness"] = true
+      chara:add_effect_immunity("elona.blindness")
    end
 }
 
@@ -487,7 +499,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.paralysis"] = true
+      chara:add_effect_immunity("elona.paralysis")
    end
 }
 
@@ -502,7 +514,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.confusion"] = true
+      chara:add_effect_immunity("elona.confusion")
    end
 }
 
@@ -517,7 +529,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.fear"] = true
+      chara:add_effect_immunity("elona.fear")
    end
 }
 
@@ -532,7 +544,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.sleep"] = true
+      chara:add_effect_immunity("elona.sleep")
    end
 }
 
@@ -547,7 +559,7 @@ data:add {
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
-      chara.temp["effect_immunities"]["elona.poison"] = true
+      chara:add_effect_immunity("elona.poison")
    end
 }
 
@@ -603,7 +615,7 @@ data:add {
 
 data:add {
    _type = "base.enchantment",
-   _id = "res_ether_wind",
+   _id = "res_etherwind",
    elona_id = 35,
 
    level = 3,
@@ -756,9 +768,9 @@ data:add {
                map:set_tile(x, y, "elona.destroyed")
             end
 
-            -- TODO
-            local sx, sy, ox, oy = Draw.get_coords():get_start_offset(x, y, Draw.get_width(), Draw.get_height())
-            local tx, ty, tdx, tdy = Draw.get_coords():find_bounds(x, y, self.width, self.height)
+            Gui.mes("TODO")
+            -- local sx, sy, ox, oy = Draw.get_coords():get_start_offset(x, y, Draw.get_width(), Draw.get_height())
+            -- local tx, ty, tdx, tdy = Draw.get_coords():find_bounds(x, y, self.width, self.height)
          end
       end
       DeferredEvent.add(ragnarok)
@@ -808,7 +820,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("vorpal_rate", self:power(), "add")
+      chara:mod("vorpal_rate", self:adjusted_power(), "add")
    end
 }
 
@@ -827,7 +839,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("critical_rate", self:power(), "add")
+      chara:mod("critical_rate", self:adjusted_power(), "add")
    end
 }
 
@@ -846,7 +858,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_melee_attacks", self:power(), "add")
+      chara:mod("extra_melee_attacks", self:adjusted_power(), "add")
    end
 }
 
@@ -865,7 +877,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_ranged_attacks", self:power(), "add")
+      chara:mod("extra_ranged_attacks", self:adjusted_power(), "add")
    end
 }
 
@@ -934,7 +946,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("damage_resistance", self:power(), "add")
+      chara:mod("damage_resistance", self:adjusted_power(), "add")
    end
 }
 

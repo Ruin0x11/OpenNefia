@@ -7,7 +7,7 @@ local ICharaEffects = class.interface("ICharaEffects")
 
 function ICharaEffects:init()
    self.effects = {}
-   self.effect_immunities = table.set(self.effect_immunities or {}, true)
+   self.effect_immunities = {}
 end
 
 function ICharaEffects:effect_turns(id)
@@ -16,7 +16,21 @@ function ICharaEffects:effect_turns(id)
    return self:calc("effects")[id] or 0
 end
 
+function ICharaEffects:add_effect_immunity(id)
+   data["base.effect"]:ensure(id)
+
+   self.temp["effect_immunities"] = self.temp["effect_immunities"]
+      or table.deepcopy(self.effect_immunities or {})
+
+   self.temp["effect_immunities"][id] = true
+end
+
 function ICharaEffects:is_immune_to_effect(id)
+   data["base.effect"]:ensure(id)
+
+   self.temp["effect_immunities"] = self.temp["effect_immunities"]
+      or table.deepcopy(self.effect_immunities or {})
+
    return not not self:calc("effect_immunities")[id]
 end
 

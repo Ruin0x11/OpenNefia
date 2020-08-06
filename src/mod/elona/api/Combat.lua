@@ -1,3 +1,4 @@
+local Const = require("api.Const")
 local Event = require("api.Event")
 local Rand = require("api.Rand")
 local Pos = require("api.Pos")
@@ -55,16 +56,16 @@ local function mod_accuracy_for_equip_type(accuracy, chara, weapon, params)
    else
       if chara:calc("is_wielding_two_handed") then
          accuracy = accuracy + 25
-         if weapon:calc("weight") >= 4000 then
+         if weapon:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY then
             accuracy = accuracy + chara:skill_level("elona.two_hand")
          end
       elseif chara:calc("is_dual_wielding") then
          if params.attack_count == 1 then
-            if weapon:calc("weight") >= 4000 then
-               accuracy = accuracy - (weapon:calc("weight") - 4000 + 400) / (10 + chara:skill_level("elona.dual_wield") / 5)
+            if weapon:calc("weight") >= Const.WEAPON_WEIGHT_HEAVY then
+               accuracy = accuracy - (weapon:calc("weight") - Const.WEAPON_WEIGHT_HEAVY + 400) / (10 + chara:skill_level("elona.dual_wield") / 5)
             end
-         elseif weapon:calc("weight") > 1500 then
-            accuracy = accuracy - (weapon:calc("weight") - 1500 + 100) / (10 + chara:skill_level("elona.dual_wield") / 5)
+         elseif weapon:calc("weight") > Const.WEAPON_WEIGHT_LIGHT then
+            accuracy = accuracy - (weapon:calc("weight") - Const.WEAPON_WEIGHT_LIGHT + 100) / (10 + chara:skill_level("elona.dual_wield") / 5)
          end
       end
    end
@@ -73,6 +74,7 @@ local function mod_accuracy_for_equip_type(accuracy, chara, weapon, params)
 end
 
 local function mod_accuracy_for_mount(accuracy, chara, weapon, is_ranged)
+   -- TODO riding
    if not chara:get_mount() then
       return false
    end

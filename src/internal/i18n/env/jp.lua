@@ -8,11 +8,11 @@ function jp.you()
 end
 
 function jp.name(obj)
-   if obj.is_player then
-      return jp.you()
-   end
-
    if type(obj) == "table" then
+      if obj.is_player then
+         return jp.you()
+      end
+
       return obj.name or i18n.get("chara.something")
    end
 

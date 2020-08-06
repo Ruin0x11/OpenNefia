@@ -38,7 +38,7 @@ function Enchantment.create(_id, power, item, opts)
    return enc
 end
 
-function Enchantment.power_text(grade)
+function Enchantment.power_text(grade, no_brackets)
    grade = math.abs(grade)
    local grade_str = I18N.get("enchantment.level")
    local s = ""
@@ -48,6 +48,9 @@ function Enchantment.power_text(grade)
          break
       end
       s = s .. grade_str
+   end
+   if not no_brackets then
+      s = "[" .. s .. "]"
    end
    return s
 end

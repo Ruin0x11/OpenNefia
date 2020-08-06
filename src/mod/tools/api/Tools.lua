@@ -928,11 +928,35 @@ function Tools.savecycle_object(obj)
    return SaveFs.deserialize(SaveFs.serialize(obj))
 end
 
-function Tools.item_desc(item)
-   item = item or Tools.thing_at("base.item")
+function Tools.item_desc(iter)
+   iter = iter or Item.iter()
+   local items = iter:to_list()
+   if items[1] == nil then
+      return
+   end
 
    local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
-   ItemDescriptionMenu:new(item):query()
+   ItemDescriptionMenu:new(items[1], items):query()
+end
+
+function Tools.iter_in_area(_type)
+   _type = _type or "base.item"
+   Gui.mes("Upper left position.")
+   local sx, sy = Input.query_position()
+   if not sx then
+      return
+   end
+   Gui.mes("Lower right position.")
+   local ex, ey = Input.query_position()
+   if not ex then
+      return
+   end
+
+   local filter = function(obj)
+      return sx <= obj.x and sy <= obj.y and obj.x <= ex and obj.y <= ey
+   end
+
+   return Map.current():iter_type(_type):filter(filter)
 end
 
 return Tools
