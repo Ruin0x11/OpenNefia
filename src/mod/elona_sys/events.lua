@@ -120,6 +120,7 @@ local function show_text_death(target, source, tense)
    if tense == "ally" then
       Gui.mes_continue_sentence()
 
+      pause()
       if death_type == 0 then
          Gui.mes_c("death_by.chara.transformed_into_meat.active", "Red", target, source)
       elseif death_type == 1 then
@@ -270,7 +271,8 @@ Event.register("base.on_damage_chara", "Damage text and blood", function(chara, 
                   -- passive tense or messages like "kills it. kills
                   -- it. " will print.
                   params.message_tense = "passive"
-end)
+end, { priority = 50000 })
+
 Event.register("base.on_kill_chara", "Damage text and kill handling", function(chara, params)
                   -- >>>>>>>> shade2/chara_func.hsp:1597 		se=eleInfo(ele,1):if se:snd se,0,1 ..
                   if params.element and params.element.sound then
@@ -307,7 +309,7 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                   end
                   Gui.update_screen()
                   -- <<<<<<<< shade2/chara_func.hsp:1661 			} ..
-end)
+end, { priority = 50000 })
 
 
 Event.register("base.on_chara_killed", "Refresh sidequests (when chara killed)",
@@ -399,55 +401,30 @@ Event.register("base.on_hotload_object", "reload events for item", function(obj)
                   end
 end)
 
-Event.register("base.on_feat_instantiated", "Connect feat events",
-               function(feat)
-                  if feat.proto.on_bash then
-                     feat:connect_self("elona_sys.on_bash",
-                                       "Feat prototype on_bash handler",
-                                       feat.proto.on_bash)
-                  end
-                  if feat.proto.on_activate then
-                     feat:connect_self("elona_sys.on_feat_activate",
-                                       "Feat prototype on_activate handler",
-                                       feat.proto.on_activate)
-                  end
-                  if feat.proto.on_search then
-                     feat:connect_self("elona_sys.on_feat_search",
-                                       "Feat prototype on_search handler",
-                                       feat.proto.on_search)
-                  end
-                  if feat.proto.on_open then
-                     feat:connect_self("elona_sys.on_feat_open",
-                                       "Feat prototype on_open handler",
-                                       feat.proto.on_open)
-                  end
-                  if feat.proto.on_close then
-                     feat:connect_self("elona_sys.on_feat_close",
-                                       "Feat prototype on_close handler",
-                                       feat.proto.on_close)
-                  end
-                  if feat.proto.on_descend then
-                     feat:connect_self("elona_sys.on_feat_descend",
-                                       "Feat prototype on_descend handler",
-                                       feat.proto.on_descend)
-                  end
-                  if feat.proto.on_ascend then
-                     feat:connect_self("elona_sys.on_feat_ascend",
-                                       "Feat prototype on_ascend handler",
-                                       feat.proto.on_ascend)
-                  end
-                  if feat.proto.on_bumped_into then
-                     feat:connect_self("elona_sys.on_feat_bumped_into",
-                                       "Feat prototype on_bumped_into handler",
-                                       feat.proto.on_bumped_into)
-                  end
-                  if feat.proto.on_stepped_on then
-                     feat:connect_self("elona_sys.on_feat_stepped_on",
-                                       "Feat prototype on_stepped_on handler",
-                                       feat.proto.on_stepped_on)
-                  end
-               end,
-               {priority = 10000})
+-- Create event handlers to call the function callbacks with these names when
+-- the corresponding event is triggered.
+local feat_events = {
+   on_bash = "elona_sys.on_bash",
+   on_activate = "elona_sys.on_feat_activate",
+   on_search = "elona_sys.on_bash",
+   on_open = "elona_sys.on_feat_open",
+   on_close = "elona_sys.on_feat_close",
+   on_descend = "elona_sys.on_feat_descend",
+   on_ascend = "elona_sys.on_feat_ascend",
+   on_bumped_into = "elona_sys.on_feat_bumped_into",
+   on_stepped_on = "elona_sys.on_feat_stepped_on",
+}
+
+for cb_name, event_id in pairs(feat_events) do
+   local name = ("Feat prototype %s handler"):format(cb_name)
+   local handler = function(feat, params, result)
+      if feat.proto[cb_name] then
+         result = feat.proto[cb_name](feat, params, result) or result
+      end
+      return result
+   end
+   Event.register(event_id, name, handler, { priority = 100000 })
+end
 
 local IFeat = require("api.feat.IFeat")
 Event.register("base.on_hotload_object", "reload events for feat", function(obj)

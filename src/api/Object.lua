@@ -75,25 +75,24 @@ local mock = function(mt)
    return mock
 end
 
-function Object.generate_from(_type, id, params)
+function Object.generate_from(_type, id)
    -- strip non-copiable fields, which are prefixed with '_'
    local proto = Object.make_prototype(data[_type]:ensure(id))
 
-   return Object.generate(proto, params)
+   return Object.generate(proto)
 end
 
-function Object.generate(proto, params)
-   params = params or {}
+function Object.generate(proto)
    assert(proto._type)
    assert(proto._id)
    local obj = object.deserialize(proto)
    assert(obj.proto)
 
-   if params.copy then
-      for k, v in pairs(params.copy) do
-         obj[k] = v
-      end
-   end
+   return obj
+end
+
+function Object.finalize(obj, params)
+   params = params or {}
 
    if not params.no_pre_build then
       obj:pre_build()
@@ -103,8 +102,6 @@ function Object.generate(proto, params)
          obj:finalize()
       end
    end
-
-   return obj
 end
 
 local IMockObject = class.interface("IMockObject", {}, IObject)

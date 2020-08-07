@@ -6,14 +6,13 @@ local Log = require("api.Log")
 
 local MapObject = {}
 
-function MapObject.generate_from(_type, id, params, uid_tracker)
-   params = params or {}
+function MapObject.generate_from(_type, id, uid_tracker)
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
-   local obj = Object.generate_from(_type, id, params)
+   local obj = Object.generate_from(_type, id)
 
    rawset(obj, "uid", uid)
 
@@ -22,19 +21,23 @@ function MapObject.generate_from(_type, id, params, uid_tracker)
    return obj
 end
 
-function MapObject.generate(proto, params, uid_tracker)
+function MapObject.generate(proto, uid_tracker)
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
 
    local uid = uid_tracker:get_next_and_increment()
 
    -- params.no_pre_build = true
-   local obj = Object.generate(proto, params)
+   local obj = Object.generate(proto)
 
    rawset(obj, "uid", uid)
 
    -- class.assert_is_an(IMapObject, obj)
 
    return obj
+end
+
+function MapObject.finalize(obj, params)
+   return Object.finalize(obj, params)
 end
 
 --- Copies all non-class fields in an object to a new object, giving
@@ -57,7 +60,8 @@ function MapObject.clone_base(obj, owned)
    assert(proto.location == nil)
 
    -- Generate a new object using the stripped object as a prototype.
-   local new_object = MapObject.generate(proto, {no_build=true})
+   local new_object = MapObject.generate(proto)
+   MapObject.finalize(new_object, { no_build=true })
 
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
       -- HACK: This makes cloning characters harder, since the

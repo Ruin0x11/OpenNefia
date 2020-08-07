@@ -198,7 +198,24 @@ end
 Event.register("base.after_chara_damaged",
                "Proc sandbag talk", proc_sandbag_talk, {priority = 500000})
 
+local function fix_level_and_quality(chara)
+   -- >>>>>>>> shade2/chara.hsp:492 *chara_fix ..
+   if chara.quality == Enum.Quality.Great then
+      chara.name = I18N.get("chara.quality.great", chara.name)
+      chara.level = math.floor(chara.level * 10 / 8)
+   end
+   if chara.quality == Enum.Quality.God then
+      chara.name = I18N.get("chara.quality.god", chara.name)
+      chara.level = math.floor(chara.level * 10 / 6)
+   end
+   -- <<<<<<<< shade2/chara.hsp:503 	return ..
+end
+
+Event.register("base.on_build_chara",
+               "Fix character level and quality", fix_level_and_quality)
+
 local function calc_initial_resistance_level(chara, element)
+   -- >>>>>>>> shade2/calculation.hsp:976 	repeat tailResist-headResist,headResist ..
    if chara:is_player() then
       return 100
    end
@@ -216,6 +233,7 @@ local function calc_initial_resistance_level(chara, element)
       level = element.calc_initial_resist_level(chara, level)
    end
    return level
+   -- <<<<<<<< shade2/calculation.hsp:981 	loop ..
 end
 
 -- >>>>>>>> shade2/calculation.hsp:983 	i=4 ..
@@ -246,8 +264,6 @@ local initial_skills = {
 
 local function init_skills_from_table(chara, tbl)
    for skill_id, level in pairs(tbl) do
-      local Log = require("api.Log")
-      Log.error("TODO skill")
       local init = Skill.calc_initial_skill_level(skill_id, level, chara:base_skill_level(skill_id), chara:calc("level"), chara)
       chara:set_base_skill(skill_id, init.level, init.potential, 0)
    end
@@ -451,6 +467,7 @@ Event.register(
    "base.hook_generate_chara",
    "Shade generation",
    function(_, params, result)
+      -- >>>>>>>> shade2/chara.hsp:473 	npcMemory(1,dbId)++ 	 ..
       if params.id ~= "elona.shade" then
          return result
       end
@@ -460,18 +477,21 @@ Event.register(
       end
 
       params.level = params.level * 2
-      if params.quality > 3 then
-         params.quality = 3
+      if params.quality > Enum.Quality.Good then
+         params.quality = Enum.Quality.Good
       end
       local Charagen = require("mod.tools.api.Charagen")
       params.id = Charagen.random_chara_id_raw(params.level, params.filter, params.category)
 
       -- using Chara.create would cause recursion
-      local chara = MapObject.generate_from("base.chara", params.id, params.gen_params)
+      local chara = MapObject.generate_from("base.chara", params.id)
 
       chara.is_shade = true
       chara.title = "shade"
       chara.image = "elona.chara_shade"
+      -- <<<<<<<< shade2/chara.hsp:485 	if cmShade:cnName(rc)=lang("シェイド","shade"):	cPic( ...
+
+      chara = MapObject.build(chara, params.gen_params)
 
       return chara
 end)

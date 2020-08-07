@@ -96,7 +96,9 @@ local skill = {
       range = 0,
 
       calc_initial_level = function(level, chara)
+         -- >>>>>>>> shade2/calculation.hsp:954 	if sId=rsSPD : p(1)=a*(100+cLevel(c)*2)/100 : els ..
          return math.floor(level * (100 + chara.level * 2) / 100)
+         -- <<<<<<<< shade2/calculation.hsp:954 	if sId=rsSPD : p(1)=a*(100+cLevel(c)*2)/100 : els ..
       end
    },
    {

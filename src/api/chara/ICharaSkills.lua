@@ -1,12 +1,9 @@
+local Const = require("api.Const")
 --- @classmod ICharaSkills
 local Enum = require("api.Enum")
 
 local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
-
-local MAX_LEVEL = 2000
-local MAX_POTENTIAL = 400
-local MAX_EXPERIENCE = 1000
 
 function ICharaSkills:init()
    self.skills = self.skills or {}
@@ -92,7 +89,7 @@ local function generate_methods(iface, name, ty)
 
       if self.skills[skill].level == 0 then
          level = level or 1
-         level = math.clamp(level, 1, MAX_LEVEL)
+         level = math.clamp(level, 1, Const.MAX_SKILL_LEVEL)
          self.skills[skill].level = level
       end
    end
@@ -105,7 +102,7 @@ local function generate_methods(iface, name, ty)
 
       skill = get_id(skill)
       local s = self.skills[skill]
-      s.level = math.clamp(math.floor(level or s.level), 0, MAX_LEVEL)
+      s.level = math.clamp(math.floor(level or s.level), 0, Const.MAX_SKILL_LEVEL)
       s.potential = math.floor(potential or s.potential)
       s.experience = math.floor(experience or s.experience)
    end
@@ -139,7 +136,7 @@ local function generate_methods(iface, name, ty)
          skill = get_id(skill)
          local result = self:mod("skills", { [skill] = { [subfield] = math.floor(amount) } }, op)
          local level = self.temp.skills[skill][subfield]
-         level = math.clamp(level, 0, MAX_LEVEL)
+         level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
          self.temp.skills[skill][subfield] = level
          return result
       end
@@ -152,7 +149,7 @@ local function generate_methods(iface, name, ty)
          skill = get_id(skill)
          local result = self:mod_base("skills", { [skill] = { [subfield] = math.floor(amount) } }, op)
          local level = self.skills[skill][subfield]
-         level = math.clamp(level, 0, MAX_LEVEL)
+         level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
          self.skills[skill][subfield] = level
          return result
       end
@@ -210,7 +207,7 @@ function ICharaSkills:mod_skill_level(skill_id, amount, op)
    skill_id = ("base.skill:%s"):format(skill_id)
    local result = self:mod("skills", { [skill_id] = { level = math.floor(amount) } }, op)
    local level = self.temp.skills[skill_id].level
-   level = math.clamp(level, 0, MAX_LEVEL)
+   level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
    self.temp.skills[skill_id].level = level
    return result
 end
@@ -223,7 +220,7 @@ function ICharaSkills:mod_base_skill_level(skill_id, amount, op)
    skill_id = ("base.skill:%s"):format(skill_id)
    local result = self:mod_base("skills", { [skill_id] = { level = math.floor(amount) } }, op)
    local level = self.skills[skill_id].level
-   level = math.clamp(level, 0, MAX_LEVEL)
+   level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
    self.skills[skill_id].level = level
    return result
 end
@@ -236,7 +233,7 @@ function ICharaSkills:mod_skill_potential(skill_id, amount, op)
    skill_id = ("base.skill:%s"):format(skill_id)
    local result = self:mod_base("skills", { [skill_id] = { potential = math.floor(amount) } }, op)
    local potential = self.skills[skill_id].potential
-   potential = math.clamp(potential, 0, MAX_POTENTIAL)
+   potential = math.clamp(potential, 0, Const.MAX_SKILL_POTENTIAL)
    self.skills[skill_id].potential = potential
    return result
 end
@@ -249,7 +246,7 @@ function ICharaSkills:mod_skill_experience(skill_id, amount, op)
    skill_id = ("base.skill:%s"):format(skill_id)
    local result = self:mod_base("skills", { [skill_id] = { experience = math.floor(amount) } }, op)
    local experience = self.skills[skill_id].experience
-   experience = math.clamp(experience, 0, MAX_EXPERIENCE)
+   experience = math.clamp(experience, 0, Const.MAX_SKILL_EXPERIENCE)
    self.skills[skill_id].experience = experience
    return result
 end
@@ -258,9 +255,9 @@ function ICharaSkills:set_base_skill(skill_id, level, potential, experience)
    data["base.skill"]:ensure(skill_id)
    skill_id = ("base.skill:%s"):format(skill_id)
    local s = self.skills[skill_id] or {}
-   s.level = math.clamp(math.floor(level or s.level or 0), 0, MAX_LEVEL)
-   s.potential = math.clamp(math.floor(potential or s.potential or 100), 0, MAX_POTENTIAL)
-   s.experience = math.clamp(math.floor(experience or s.experience or 0), 0, MAX_EXPERIENCE)
+   s.level = math.clamp(math.floor(level or s.level or 0), 0, Const.MAX_SKILL_LEVEL)
+   s.potential = math.clamp(math.floor(potential or s.potential or 100), 0, Const.MAX_SKILL_POTENTIAL)
+   s.experience = math.clamp(math.floor(experience or s.experience or 0), 0, Const.MAX_SKILL_EXPERIENCE)
    self.skills[skill_id] = s
 end
 

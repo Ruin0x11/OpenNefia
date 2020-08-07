@@ -173,11 +173,11 @@ end,
 end
     },
     quality = {
-      godly = function(_1)
+      god = function(_1)
   return ("《%s》")
   :format(_1)
 end,
-      miracle = function(_1)
+      great = function(_1)
   return ("『%s』")
   :format(_1)
 end
