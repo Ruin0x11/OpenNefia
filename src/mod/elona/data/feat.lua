@@ -117,7 +117,7 @@ data:add {
    end,
    on_bash = function(self, params)
       -- >>>>>>>> elona122/shade2/action.hsp:443 		if feat(1)=objDoorClosed{ ..
-      if not self.opened then
+      if self.opened then
          return nil
       end
 

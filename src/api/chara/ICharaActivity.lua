@@ -62,6 +62,7 @@ end
 
 local function make_activity(id, params)
    local obj = Object.generate_from("base.activity", id)
+   Object.finalize(obj)
    local activity = data["base.activity"]:ensure(id)
    for k, v in pairs(params) do
       local ty = activity.params[k]

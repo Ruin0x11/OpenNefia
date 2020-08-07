@@ -102,7 +102,9 @@ function Feat.create(id, x, y, params, where)
    local gen_params = {
       no_build = params.no_build
    }
-   local feat = MapObject.generate_from("base.feat", id, gen_params)
+   local feat = MapObject.generate_from("base.feat", id)
+
+   MapObject.finalize(feat, gen_params)
 
    if where then
       feat = where:take_object(feat, x, y)

@@ -1,3 +1,4 @@
+local Const = require("api.Const")
 local Rand = require("api.Rand")
 local Map = require("api.Map")
 local Chara = require("api.Chara")
@@ -52,6 +53,7 @@ end
 function Skill.calc_initial_potential(skill, level, knows_skill)
    local p
 
+   -- >>>>>>>> shade2/calculation.hsp:947 	if sid >= headWeaponSkill{ ..
    if skill.type == "stat" then
       p = math.min(level * 20, 400)
    else
@@ -62,19 +64,23 @@ function Skill.calc_initial_potential(skill, level, knows_skill)
          p = p + 100
       end
    end
+   -- <<<<<<<< shade2/calculation.hsp:953 		} ..
 
    return p
 end
 
 function Skill.calc_initial_decayed_potential(base_potential, chara_level)
+   -- >>>>>>>> shade2/calculation.hsp:955 	if cLevel(c)>1	:p=int(pow@(growthDec,cLevel(c))*p ..
    if chara_level <= 1 then
       return base_potential
    end
 
-   return math.floor(math.exp(math.log(0.9) * chara_level) * base_potential)
+   return math.floor(math.exp(math.log(Const.POTENTIAL_DECAY_RATE) * chara_level) * base_potential)
+   -- <<<<<<<< shade2/calculation.hsp:955 	if cLevel(c)>1	:p=int(pow@(growthDec,cLevel(c))*p ..
 end
 
 function Skill.calc_initial_skill_level(skill, initial_level, original_level, chara_level, chara)
+   -- >>>>>>>> shade2/calculation.hsp:945 #deffunc skillInit int sid,int c,int a ..
    local sk = data["base.skill"]:ensure(skill)
 
    -- if not chara:has_skill(skill) then
@@ -106,12 +112,13 @@ function Skill.calc_initial_skill_level(skill, initial_level, original_level, ch
 
    potential = math.max(1, potential)
 
-   level = math.clamp(level, 0, 2000)
+   level = math.clamp(level, 0, Const.MAX_SKILL_LEVEL)
 
    return {
       level = level,
       potential = potential
    }
+   -- <<<<<<<< shade2/calculation.hsp:961 	return ..
 end
 
 function Skill.calc_related_stat_exp(exp, exp_divisor)
@@ -140,11 +147,11 @@ function Skill.modify_potential_from_level(chara, skill, level_delta)
    local potential = chara:skill_potential(skill)
    if level_delta > 0 then
       for _=0,level_delta do
-         potential = math.max(math.floor(potential * 0.9), 1)
+         potential = math.max(math.floor(potential * Const.POTENTIAL_DECAY_RATE), 1)
       end
    elseif level_delta < 0 then
       for _=0,-level_delta do
-         potential = math.min(math.floor(potential * 1.1) + 1, 400)
+         potential = math.min(math.floor(potential * (1.0 + (1.0 - Const.POTENTIAL_DECAY_RATE))) + 1, 400)
       end
    end
    chara.skills["base.skill:" .. skill].potential = potential

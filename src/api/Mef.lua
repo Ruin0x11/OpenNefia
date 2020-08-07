@@ -107,10 +107,16 @@ function Mef.create(id, x, y, params, where)
       origin = params.origin
    end
 
+   local mef = MapObject.generate_from("base.mef", id)
+
+   mef.origin = origin
+   mef.turns = params.duration or 10
+   mef.power = params.power or 0
+
    local gen_params = {
       no_build = params.no_build
    }
-   local mef = MapObject.generate_from("base.mef", id, gen_params)
+   MapObject.finalize(mef, gen_params)
 
    if where then
       local other_mef = Mef.at(x, y, where)
@@ -129,10 +135,6 @@ function Mef.create(id, x, y, params, where)
       assert(mef.location == where)
       assert(mef:current_map())
    end
-
-   mef.origin = origin
-   mef.turns = params.duration or 10
-   mef.power = params.power or 0
 
    mef:instantiate()
 

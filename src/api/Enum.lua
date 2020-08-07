@@ -17,6 +17,15 @@ local function has_value(self, v)
    return false
 end
 
+local function to_string(self, v)
+   for k, o in pairs(self) do
+      if v == o then
+         return k
+      end
+   end
+   error(("Unknown enum value '%s.%s'"):format(self.__name, v))
+end
+
 local function enum_index(name)
    return function(t, k)
       if k == "__enum" then
@@ -36,6 +45,7 @@ end
 local function enum(name, tbl)
    tbl.try_get = try_get
    tbl.has_value = has_value
+   tbl.to_string = to_string
    return setmetatable(tbl, { __index = enum_index(name) })
 end
 

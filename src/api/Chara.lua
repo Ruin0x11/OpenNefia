@@ -211,8 +211,6 @@ local hook_generate_chara =
 --- @treturn[opt] string error
 function Chara.create(id, x, y, params, where)
    params = params or {}
-   params.level = params.level or 1
-   params.quality = params.quality or Enum.Quality.Bad
    where = where or field.map
 
    if params.ownerless then
@@ -227,14 +225,10 @@ function Chara.create(id, x, y, params, where)
       return nil
    end
 
-   local chara_data = data["base.chara"]:ensure(id)
-   local copy = params.copy or {}
-   copy.level = params.level or chara_data.level
-   copy.quality = params.quality or chara_data.quality
+   assert(params.copy == nil)
 
    local gen_params = {
       no_build = params.no_build,
-      copy = copy
    }
 
    params.id = id
@@ -246,7 +240,12 @@ function Chara.create(id, x, y, params, where)
    local chara = hook_generate_chara(params)
 
    if chara == nil then
-      chara = MapObject.generate_from("base.chara", id, gen_params)
+      chara = MapObject.generate_from("base.chara", id)
+
+      chara.level = params.level or chara.level
+      chara.quality = params.quality or chara.quality
+
+      MapObject.finalize(chara, gen_params)
    end
 
    if where then

@@ -412,9 +412,9 @@ function IChara:damage_hp(amount, source, params)
    -- shade2/chara_func.hsp:1596 	if cHp(tc)<0{ ...
    local killed = false
    if victim.hp < 0 then
-      victim:kill(source)
-
       victim:emit("base.on_kill_chara", event_params)
+
+      victim:kill(source)
 
       killed = not Chara.is_alive(victim)
    end

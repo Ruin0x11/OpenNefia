@@ -92,8 +92,6 @@ end
 --- @treturn[opt] string error
 function Item.create(id, x, y, params, where)
    params = params or {}
-   params.level = params.level or 1
-   params.quality = params.quality or Enum.Quality.Bad
 
    if params.ownerless then
       where = nil
@@ -114,17 +112,15 @@ function Item.create(id, x, y, params, where)
       end
    end
 
-   local item_data = data["base.item"]:ensure(id)
-
-   local copy = params.copy or {}
-   copy.quality = params.quality or item_data.quality or Enum.Quality.Bad
-   copy.amount = math.max(1, params.amount or 1)
-
    local gen_params = {
-      no_build = params.no_build,
-      copy = copy
+      no_build = params.no_build
    }
-   local item = MapObject.generate_from("base.item", id, gen_params)
+   local item = MapObject.generate_from("base.item", id)
+
+   item.quality = params.quality or Enum.Quality.Bad
+   item.amount = math.max(1, params.amount or item.amount or 1)
+
+   MapObject.finalize(item, gen_params)
 
    if where then
       item = where:take_object(item, x, y)
