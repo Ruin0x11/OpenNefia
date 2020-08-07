@@ -1,3 +1,5 @@
+local Enum = require("api.Enum")
+local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
 local Log = require("api.Log")
@@ -111,34 +113,62 @@ data:add {
       self:refresh()
    end,
    on_bash = function(self, params)
+      -- >>>>>>>> elona122/shade2/action.hsp:443 		if feat(1)=objDoorClosed{ ..
+      if not self.opened then
+         return nil
+      end
+
       local basher = params.chara
       Gui.play_sound("base.bash1")
+
       local difficulty = self.difficulty * 3 + 30
+      local is_jail = self:current_map()._archetype == "elona.jail"
+
+      if is_jail then
+         difficulty = difficulty * 20
+      end
 
       local str = basher:skill_level("elona.stat_strength")
 
       if Rand.rnd(difficulty) < str and Rand.one_in(2) then
-         Gui.mes("Door is destroyed.")
+         Gui.mes("action.bash.door.destroyed")
          if self.difficulty > str then
-            Skill.gain_skill_action("elona.stat_strength", (difficulty - str) * 15)
+            Skill.gain_skill_exp("elona.stat_strength", (self.difficulty - str) * 15)
          end
          self:remove_ownership()
          return "turn_end"
       else
-         Gui.mes("Door is bashed.")
+         Gui.mes("action.bash.door.execute")
+         if is_jail then
+            Gui.mes("action.bash.door.jail")
+         end
 
-         if Rand.one_in(4) then Gui.mes("magic1") end
-         if Rand.one_in(3) then Gui.mes("magic2") end
-         if Rand.one_in(3) then Gui.mes("hurtself", "Purple") end
+         if Rand.one_in(4) then
+            basher:apply_effect("elona.confusion", 200)
+         end
+         if Rand.one_in(3) then
+            basher:apply_effect("elona.paralysis", 200)
+         end
+         if Rand.one_in(3) then
+            if basher:calc("quality") < Enum.Quality.Great
+               and not Effect.has_sustain_enchantment(basher, "elona.stat_strength")
+            then
+               basher:add_stat_adjustment("elona.stat_strength", -1)
+               basher:refresh()
+               Gui.mes_c("action.bash.door.hurt", "Purple", basher)
+            end
+         end
          if Rand.one_in(3) then
             if self.difficulty > 0 then
                self.difficulty = self.difficulty - 1
-               Gui.mes_visible("The door cracks.", basher.x, basher.y)
+               Gui.mes_visible("action.bash.door.cracked", basher)
             end
          end
       end
 
+
       return "turn_end"
+      -- <<<<<<<< elona122/shade2/action.hsp:464 		} ..
    end,
    events = {
       {

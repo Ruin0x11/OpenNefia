@@ -59,6 +59,22 @@ local function apply_item_stats(chara, item)
    Event.trigger("base.on_calc_chara_equipment_stats", {chara=chara,item=item})
 end
 
+function ICharaEquip:iter_enchantments()
+   local iters = self:iter_equipment():map(
+      function(i)
+         local enc_iter = i:iter_enchantments();
+         -- (i, enc) -> (i, enc, item_with_enc)
+         local item_dup = fun.duplicate(i)
+         return fun.zip(enc_iter, item_dup)
+      end):to_list()
+   return fun.chain(table.unpack(iters))
+end
+
+function ICharaEquip:find_enchantment(_id)
+   data["base.enchantment"]:ensure(_id)
+   return self:iter_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
+end
+
 function ICharaEquip:on_refresh()
    local attack_count = 0
    for _, part in self:iter_body_parts() do
@@ -112,10 +128,6 @@ end
 
 function ICharaEquip:has_item_equipped(item)
    return self.equip:has_object(item)
-end
-
-function ICharaEquip:has_enchantment(id)
-   return false
 end
 
 function ICharaEquip:items_equipped_at(body_part_type)

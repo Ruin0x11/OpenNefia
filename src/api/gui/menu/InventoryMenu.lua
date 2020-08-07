@@ -264,7 +264,7 @@ function InventoryMenu:update_filtering()
    self.cargo_weight = Ui.display_weight(self.ctxt.chara:calc("cargo_weight"))
 
    if self.ctxt.show_money and self.ctxt.target then
-      self.money = self.ctxt.target:calc("gold")
+      self.money = self.ctxt.target.gold
    end
 
    -- Run after filter actions that can return a turn result, like

@@ -461,7 +461,7 @@ function Combat.calc_protection(target, attacker, weapon, attack_skill, is_range
    })
 end
 
-function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
+function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo, ammo_enc)
    local damage_params = Combat.calc_attack_raw_damage(chara, weapon, target, attack_skill, is_ranged, ammo)
    local protection_params = Combat.calc_protection(target, chara, weapon, attack_skill, is_ranged)
 
@@ -491,27 +491,32 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
       damage = damage * 100 / (100 + protection_params.amount)
    end
 
-   if is_ranged and ammo then
-      local ammo_type = ammo:calc("ammo_type")
-      if ammo_type == "vorpal" then
-         damage_params.pierce_rate = 60
-         pierced = true
-      end
+   if is_ranged then
+      if ammo_enc then
+         local ammo_enc_data = data["base.ammo_enc_data"]:ensure(ammo_enc)
+         if ammo_enc_data.on_calc_damage then
+            local params = {
+               chara = chara,
+               weapon = weapon,
+               target = target,
+               attack_skill = attack_skill,
+               original_damage = original_damage,
 
-      -- TODO
-      local ammoprocbk = 0
-      if ammoprocbk == 0 then
-         damage = damage / 2
-      end
-      if ammoprocbk == 5 then
-         damage = damage / 3
-      end
+               damage = damage,
+               pierced = pierced
+            }
 
-      if ammo_type == "???" then
-         damage = damage / 10
+            local result = ammo_enc_data.on_calc_damage(ammo, params)
+            if result then
+               damage = result.damage or damage
+               if result.pierced ~= nil then
+                  pierced = result.pierced
+               end
+            end
+         end
       end
    else
-      if Rand.percent_chance(chara:calc("vorpal_rate")) then
+      if Rand.percent_chance(chara:calc("pierce_rate")) then
          damage_params.pierce_rate = 100
          pierced = true
          if chara:is_in_fov() then
@@ -534,13 +539,12 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
       damage = damage * 95 / 100
    end
 
-   local damage_reduction = target:calc("physical_damage_reduction")
-   if damage_reduction ~= 0 then
-      damage = damage * 100 / math.clamp(100 + damage_reduction, 25, 1000)
+   local damage_resistance = target:calc("damage_resistance")
+   if damage_resistance ~= 0 then
+      damage = damage * 100 / math.clamp(100 + damage_resistance, 25, 1000)
    end
 
-   damage = math.max(damage, 0)
-   damage = math.floor(damage)
+   damage = math.max(math.floor(damage), 0)
 
    return {
       damage = damage,

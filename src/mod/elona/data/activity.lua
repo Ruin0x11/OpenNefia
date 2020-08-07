@@ -1,3 +1,4 @@
+local Filters = require("mod.elona.api.Filters")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Event = require("api.Event")
@@ -595,17 +596,72 @@ local function pos_nearby(x, y, map)
    return x, y
 end
 
+local function get_thrown_item_filter(chara, instrument, audience, activity)
+   local level, quality
+   local map = chara:current_map()
+
+   if instrument:find_enchantment("elona.strad") then
+      level = Calc.calc_object_level(activity.performance_quality / 8, map)
+      quality = Enum.Quality.Good
+      if Rand.one_in(4) then
+         quality = Enum.Quality.Great
+      end
+      quality = Calc.calc_object_quality(quality)
+   else
+      level = Calc.calc_object_level(activity.performance_quality / 10, map)
+      quality = Calc.calc_object_level(activity.performance_quality / 8)
+   end
+
+   local categories = Filters.fsetperform
+   local id = nil
+
+   -- TODO quest performance
+   local is_perform_quest = false
+   if is_perform_quest then
+      if Rand.one_in(150) then
+         id = "elona.safe"
+      end
+      if Rand.one_in(150) then
+         id = "elona.small_medal"
+      end
+      if audience:calc("level") > 15 and Rand.one_in(1000) then
+         id = "elona.kill_kill_piano"
+      end
+      if audience:calc("level") > 15 and Rand.one_in(1000) then
+         id = "elona.kill_kill_piano"
+      end
+   else
+      if Rand.one_in(10) then
+         id = "elona.music_ticket"
+      end
+      if Rand.one_in(250) then
+         id = "elona.platinum_coin"
+      end
+   end
+
+   return {
+      level = level,
+      quality = quality,
+      categories = categories,
+      id = id
+   }
+end
+
 local function performance_throw_item(chara, instrument, audience, activity, x, y)
    -- >>>>>>>> shade2/proc.hsp:285 					if encFindSpec(ci,encStrad)!falseM{ ..
-   if instrument:has_enchantment("elona.increases_performer_rewards") then
-   else
-   end
-   print("throwitem", x, y)
-   local item = Item.create("elona.putitoro", x, y)
+   local map = chara:current_map()
+   local filter = get_thrown_item_filter(chara, instrument, audience, activity)
+   filter.ownerless = true
+   local item = Itemgen.create(nil, nil, filter)
+
    if item then
+      local cb = Anim.ranged_attack(x, y, chara.x, chara.y, item:calc("image"), item:calc("color"))
+      Gui.start_draw_callback(cb)
+      assert(map:take_object(item, x, y))
+      item:refresh_cell_on_map()
       activity.number_of_tips = activity.number_of_tips + 1
    end
-   -- <<<<<<<< shade2/proc.hsp:307 						} ..
+   -- <<<<<<<< elona122/shade2/proc.hsp:307 						} ..
 end
 
 local function performance_good(chara, instrument, audience, activity)
@@ -621,7 +677,9 @@ local function performance_good(chara, instrument, audience, activity)
       end
    end
 
-   -- TODO enchantment
+   if instrument:find_enchantment("elona.gould") and Rand.one_in(15) then
+      audience:apply_effect("elona.drunk", 500)
+   end
 
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 5 + 1) then
       if Rand.one_in(3) then

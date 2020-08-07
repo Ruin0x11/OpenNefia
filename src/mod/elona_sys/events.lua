@@ -286,6 +286,10 @@ Event.register("base.on_kill_chara", "Damage text and kill handling", function(c
                      params.attacker:heal_hp(Rand.rnd(params.damage * (200 + params.element_power) / 1000 + 5))
                   end
 
+                  -- This is so the chip will become hidden when the below
+                  -- animation is played.
+                  Gui.update_screen()
+
                   if chara:calc("breaks_into_debris") then
                      if chara:is_in_fov() then
                         Gui.play_sound("base.crush1", chara.x, chara.y)

@@ -295,7 +295,8 @@ function Action.target_text(chara, x, y, visible_only)
    end
 
    local target = Chara.at(x, y)
-   if target and target:calc("can_target") then
+   local Effect = require("mod.elona.api.Effect") -- TODO move
+   if target and Effect.is_visible(target) then
       local dist = Pos.dist(chara.x, chara.y, target.x, target.y)
       text[#text+1] = Action.target_level_text(chara, target)
       text[#text+1] = I18N.get("action.target.you_are_targeting", target, dist)
@@ -315,6 +316,8 @@ function Action.target_text(chara, x, y, visible_only)
 end
 
 function Action.build_target_list(chara)
+   local Effect = require("mod.elona.api.Effect") -- TODO move
+
    local filter = function(other)
       if chara ~= other and other:is_in_fov() then
          local consider = true
@@ -328,7 +331,7 @@ function Action.build_target_list(chara)
             consider = false
          end
 
-         if not chara:calc("can_target") then
+         if not Effect.is_visible(chara) then
             consider = false
          end
 
@@ -346,7 +349,6 @@ function Action.build_target_list(chara)
    local sort = function(a, b)
       return Pos.dist(chara.x, chara.y, a.x, a.y) < Pos.dist(chara.x, chara.y, b.x, b.y)
    end
-
    table.sort(targets, sort)
 
    return targets

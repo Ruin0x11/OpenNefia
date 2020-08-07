@@ -1244,12 +1244,12 @@ data:add {
       target_item.subname = Text.random_subname_seed()
 
       local times = Rand.rnd(Rand.rnd(Rand.rnd(10) + 1) + 3) + 3
-      -- TODO enchantment
+      -- TODO random enchantment
       local enchant_level = Rand.rnd(math.clamp(Rand.rnd(30/10+3), 0, Const.MAX_ENCHANTMENT_LEVEL) + 1)
 
       for _ = 1, times do
          Rand.set_seed(seed)
-         -- TODO enchantment add
+         -- TODO random enchantment
       end
 
       Rand.set_seed()

@@ -1,3 +1,5 @@
+local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 local Skill = require("mod.elona_sys.api.Skill")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
@@ -63,19 +65,22 @@ local effect = {
       ordering = 20000,
 
       on_turn_end = function(chara)
+         -- >>>>>>>> elona122/shade2/calculation.hsp:1201:DONE 	if cSick(r1)>0{ ..
          local result
 
          if Rand.one_in(80) then
             local stat = Skill.random_stat()
-            local delta = chara:base_skill_level(stat) / 25 + 1
-            chara:add_stat_adjustment(stat, delta)
-            chara:refresh()
+            if not Effect.has_sustain_enchantment(chara, stat) then
+               local delta = chara:base_skill_level(stat) / 25 + 1
+               chara:add_stat_adjustment(stat, delta)
+               chara:refresh()
+            end
          end
          if Rand.one_in(5) then
             result = { regeneration = false }
          end
          if not chara:is_allied() then
-            if chara.quality >= 4 then -- miracle
+            if chara.quality >= Enum.Quality.Great then
                if Rand.one_in(200) then
                   chara:heal_effect("elona.sick")
                end
@@ -83,6 +88,7 @@ local effect = {
          end
 
          return result
+         -- <<<<<<<< elona122/shade2/calculation.hsp:1211 		} ..
       end
    },
    {

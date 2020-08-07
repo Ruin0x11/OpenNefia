@@ -72,7 +72,7 @@ local enchantment = {
       absorb_mana = {
          description = "攻撃対象からマナを吸収する"
       },
-      vopal = {
+      pierce = {
          description = "完全貫通攻撃発動の機会を増やす"
       },
       crit = {
@@ -93,13 +93,13 @@ local enchantment = {
       strad = {
          description = "演奏報酬の品質を上げる"
       },
-      res_damage = {
+      damage_resistance = {
          description = "被る物理ダメージを軽減する"
       },
-      immune_damage = {
+      damage_immunity = {
          description = "被るダメージを稀に無効にする"
       },
-      reflect_damage = {
+      damage_reflection = {
          description = "攻撃された時、相手に切り傷のダメージを与える"
       },
       cure_bleeding = {

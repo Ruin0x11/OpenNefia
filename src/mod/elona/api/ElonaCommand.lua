@@ -1,3 +1,5 @@
+local Skill = require("mod.elona_sys.api.Skill")
+local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Item = require("api.Item")
@@ -152,6 +154,7 @@ function ElonaCommand.dig(player)
 end
 
 function ElonaCommand.fire(player)
+   -- >>>>>>>> elona122/shade2/command.hsp:4272 *com_fire ..
    local target = Action.find_target(player)
 
    if not target then
@@ -164,8 +167,9 @@ function ElonaCommand.fire(player)
       end
    end
 
-   local ranged, err = ElonaAction.get_ranged_weapon_and_ammo(player)
-   if ranged == nil then
+   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(player)
+   if weapon == nil then
+      local err = ammo
       if err == "no_ranged_weapon" then
          Gui.mes_duplicate()
          Gui.mes("action.ranged.equip.need_weapon")
@@ -179,13 +183,14 @@ function ElonaCommand.fire(player)
       return "player_turn_query"
    end
 
-   local result = ElonaAction.ranged_attack(player, target)
+   local result = ElonaAction.ranged_attack(player, target, weapon, ammo)
 
    if not result then
       return "player_turn_query"
    end
 
    return "turn_end"
+   -- <<<<<<<< elona122/shade2/command.hsp:4282 	gosub *act_fire:goto *turn_end ..
 end
 
 function ElonaCommand.rest(player)
@@ -211,7 +216,7 @@ function ElonaCommand.increment_sleep_potential(player)
       elseif grown_count ~= 0 then
          break
       end
-      local skill = Rand.choice(config["base._basic_attributes"])
+      local skill = Skill.random_attribute()
       player:mod_skill_potential(skill, 1)
       grown_count = grown_count + 1
       if grown_count > 6 then
@@ -327,6 +332,117 @@ function ElonaCommand.wake_up_everyone(map)
          end
       end
    end
+end
+
+local function get_ammo_enchantments(ammo)
+   --- How ammo works in vanilla:
+   ---
+   --- There is a field named iAmmo(ci) that holds the index into the item's
+   --- enchantments array of the currently used ammo enchantment. When getting the
+   --- ammo's capacity or effect, do iEnc(iAmmo(ci), ci). The list of enchantments,
+   --- iEnc, is for the most part static.
+   ---
+   --- How ammo works in OpenNefia:
+   ---
+   --- The above no longer works, because enchantments are now tracked by the
+   --- temporary values system. Consider the following.
+   ---
+   ---    local ammo = Item.create("elona.bullet")
+   ---    local enc = InstancedEnchantment:new("elona.ammo",  100,  { ... })
+   ---    ammo:add_temporary_enchantment(enc)
+   ---    ammo.params.ammo_loaded = #ammo.temp["enchantments"] -- set by reference to enchantment table
+   ---    -- ...
+   ---    local prev = ammo.params.ammo_loaded
+   ---    ammo:refresh() -- clears ammo.temp
+   ---    local enc = InstancedEnchantment:new("elona.ammo",  100,  { ... })
+   ---    ammo:add_temporary_enchantment(enc)
+   ---    ammo.params.ammo_loaded = #ammo.temp["enchantments"]
+   ---    assert(ammo.params.ammo_loaded == prev) -- fails
+   ---
+   --- This is basically due to the fact that trying to track the enchantment's
+   --- index in `ammo.temp["enchantments"]` like with `iAmmo(ci)` won't work if a
+   --- temporary enchantment is removed, which changes the maximum size of the
+   --- enchantments list.
+   ---
+   --- For now, only allow selecting ammo that is in `ammo.enchantments` and not
+   --- in `ammo.temp["enchantments"]` by calling fun.iter(ammo.enchantments)
+   --- instead of `ammo:iter_enchantments()`. This is a special behavior
+   --- specifically for the enchantment "elona.ammo". This still works since
+   --- values in `ammo.enchantments["temp"]` are references to the original
+   --- objects in `ammo.enchantments`. This is not how IModdable usually works
+   --- as most of the time values are supposed to be deepcopied into `temp`, but
+   --- maintaining references to temporary clones of enchantments would be
+   --- unreasonably difficult.
+   ---
+   --- To implement an effect like "improves the power of all active
+   --- enchantments of type X", we'd have to implement IModdable for
+   --- InstancedEnchantment, which I think is reasonable to do.
+   local iter = fun.iter(ammo.enchantments):filter(function(enc) return enc._id == "elona.ammo" end)
+
+   -- Comparison is by reference, not value
+   local current_idx = iter:index_by(function(enc) return ammo.params.ammo_loaded == enc end)
+
+   return iter:to_list(), current_idx
+end
+
+function ElonaCommand.ammo(player)
+   -- >>>>>>>> elona122/shade2/command.hsp:4694 *com_ammo ..
+   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(player)
+
+   if ammo == nil then
+      Gui.mes("action.ammo.need_to_equip")
+      return "player_turn_query"
+   end
+
+   local ammo_encs, current_idx = get_ammo_enchantments(ammo)
+   local ammo_enc_count = #ammo_encs
+
+   if ammo_enc_count == 0 then
+      ammo.params.ammo_loaded = nil
+      Gui.mes("action.ammo.is_not_capable", ammo)
+      return "player_turn_query"
+   end
+
+   Gui.play_sound("base.ammo")
+
+   if current_idx == nil then
+      current_idx = 1
+   else
+      current_idx = current_idx + 1
+      if current_idx > ammo_enc_count then
+         current_idx = nil
+      end
+   end
+
+   if current_idx then
+      ammo.params.ammo_loaded = nil
+   else
+      ammo.params.ammo_loaded = ammo_encs[current_idx]
+   end
+
+   Gui.mes("action.ammo.current")
+   for i = 0, #ammo_encs do -- off by one
+      local name, capacity
+      if i == 0 then
+         name = I18N.get("action.ammo.normal")
+         capacity = I18N.get("action.ammo.unlimited")
+      else
+         local ammo_enc = ammo_encs[i]
+         name = I18N.get("_.base.ammo_enchantment." .. ammo_enc._id .. ".name")
+         capacity = ("%d/%d"):format(ammo_enc.params.ammo_current, ammo_enc.params.ammo_max)
+      end
+      local s, color
+      if current_idx == i then
+         s = ("[%s:%s]"):format(name, capacity)
+         color = "Blue"
+      else
+         s = (" %s:%s "):format(name, capacity)
+      end
+      Gui.mes_c(s, color)
+   end
+
+   return "player_turn_query"
+   -- <<<<<<<< elona122/shade2/command.hsp:4739 	goto *pc_turn ..
 end
 
 return ElonaCommand

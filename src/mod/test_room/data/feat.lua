@@ -33,6 +33,7 @@ data:add {
          Gui.mes_c("Could not generate map: " .. map, "Red")
       end
 
+      Gui.play_sound("base.exitmap1")
       Map.travel_to(map)
 
       return "player_turn_query"

@@ -1,3 +1,4 @@
+local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Calc = require("mod.elona.api.Calc")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
@@ -119,17 +120,34 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
 end
 
 function ItemMaterial.apply_material_enchantments(item, material)
-   -- TODO enchantments
-end
+   material = material or item:calc("material")
+   if material == nil then
+      return
+   end
 
-function ItemMaterial.remove_material_enchantments(item, material)
-   -- TODO enchantments
+   local remove = {}
+   for i, enc in ipairs(item.enchantments) do
+      if enc.source == "material" then
+         remove[#remove+1] = i
+      end
+   end
+   table.remove_indices(item.enchantments, remove)
+
+   local material_data = data["elona.item_material"]:ensure(material)
+   for _, fixed_enc in ipairs(material_data.enchantments or {}) do
+      local enc = InstancedEnchantment:new(
+         fixed_enc._id,
+         fixed_enc.power,
+         table.deepcopy(fixed_enc.params or {}),
+         "material"
+      )
+      item:add_enchantment(enc)
+   end
 end
 
 function ItemMaterial.change_item_material(item, new_material)
    -- >>>>>>>> shade2/item_data.hsp:1175 	iCol(ci)=0 ..
    local cur_material = data["elona.item_material"]:ensure(item.material)
-   ItemMaterial.remove_material_enchantments(item)
    local proto = item.proto
    item.weight = proto.weight or 0
    item.hit_bonus = proto.hit_bonus or 0

@@ -1015,6 +1015,7 @@ data:add {
    cast = function(self, params)
       local x = params.x
       local y = params.y
+      local source = params.source
       local map = params.source:current_map()
 
       local target = Chara.at(x, y, map)
@@ -1022,6 +1023,11 @@ data:add {
       if target == nil then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
+      end
+
+      if source:find_enchantment("elona.prevent_tele") then
+         Gui.mes("magic.teleport.prevented")
+         return true
       end
 
       local pos = function(x, y, attempt)
@@ -1079,6 +1085,11 @@ data:add {
          source.y + (3 - attempt / 70 + Rand.rnd(5)) * (Rand.one_in(2) and -1 or 1)
       end
 
+      if source:find_enchantment("elona.prevent_tele") then
+         Gui.mes("magic.teleport.prevented")
+         return true
+      end
+
       return teleport_to(source, params.x, params.y, nil, pos, nil)
    end
 }
@@ -1116,6 +1127,11 @@ data:add {
          y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
       end
 
+      if target:find_enchantment("elona.prevent_tele") then
+         Gui.mes("magic.teleport.prevented")
+         return true
+      end
+
       return teleport_to(source, target.x, target.y, nil, pos, "magic.teleport.shadow_step", source, target)
    end
 }
@@ -1151,6 +1167,11 @@ data:add {
       local pos = function(x, y, attempt)
          return x + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2),
          y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
+      end
+
+      if source:find_enchantment("elona.prevent_tele") then
+         Gui.mes("magic.teleport.prevented")
+         return true
       end
 
       return teleport_to(target, source.x, source.y, nil, pos, "magic.teleport.draw_shadow", target)
@@ -1644,6 +1665,11 @@ make_summon {
 
 
 local function do_mutation(source, target, curse_state, times, no_negative_traits)
+   if target:find_enchantment("elona.res_mutation") and not Rand.one_in(5) then
+      Gui.mes("magic.mutation.resist")
+      return true
+   end
+
    local candidates = data["base.trait"]:iter():filter(function(t) return t.type == "mutation" end):to_list()
    local did_something = false
 
@@ -1736,8 +1762,6 @@ data:add {
          return true
       end
 
-      -- TODO enchantment: resist mutation
-
       local times = 1
       return do_mutation(source, target, params.curse_state, times)
    end
@@ -1776,8 +1800,6 @@ data:add {
          return Magic.cast("elona.change")
       end
 
-      -- TODO enchantment: resist mutation
-
       local times = 1
       return do_mutation(source, target, params.curse_state, times)
    end
@@ -1810,8 +1832,6 @@ data:add {
       if not target:is_player() then
          return Magic.cast("elona.change")
       end
-
-      -- TODO enchantment: resist mutation
 
       local times = 2 + Rand.rnd(3)
       return do_mutation(source, target, params.curse_state, times, true)

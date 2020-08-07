@@ -19,16 +19,9 @@ end
 function IModdable:calc(key, ...)
    if self.temp[key] ~= nil then
       return self.temp[key]
-   elseif self[key] ~= nil then
-      local can_call = type(self[key]) == "function"
-      if can_call then
-         return self[key](self, ...)
-      else
-         return self[key]
-      end
-   else
-      return nil
    end
+
+   return self[key]
 end
 
 

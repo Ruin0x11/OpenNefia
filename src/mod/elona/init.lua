@@ -1,23 +1,3 @@
-data:extend_type(
-   "base.element",
-   {
-      preserves_sleep = schema.Boolean,
-      sound = schema.Optional(schema.String),
-   }
-)
-
-data:extend_type(
-   "base.chara",
-   {
-      splits = schema.Boolean,
-      splits2 = schema.Boolean,
-      is_quick_tempered = schema.Boolean,
-      has_lay_hand = schema.Boolean,
-      is_lay_hand_available = schema.Boolean,
-      cut_counterattack = schema.Number
-   }
-)
-
 require("mod.elona.init.god")
 
 require("mod.elona.data")

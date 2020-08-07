@@ -6,8 +6,12 @@ local Enchantment = {}
 function Enchantment.create(_id, power, item, opts)
    -- >>>>>>>> shade2/item_data.hsp:538 	#deffunc encAdd int id,int EncOrg,int EncPorg,int ..
    opts = opts or {}
+   local source = "generated"
+   if opts.source then
+      source = opts.source
+   end
 
-   local enc = InstancedEnchantment:new(_id, power, {})
+   local enc = InstancedEnchantment:new(_id, power, {}, source)
 
    if not opts.force then
       if enc.proto.categories and #enc.proto.categories > 0 then

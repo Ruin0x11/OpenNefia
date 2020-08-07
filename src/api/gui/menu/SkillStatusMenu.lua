@@ -82,6 +82,7 @@ local UiListExt = function(skills_menu)
 
          local show_train_cost = false
          local is_training = false
+         -- TODO enchantment
          local has_enchantment = true
          if show_train_cost then
             local train_cost = "10p"

@@ -1,6 +1,7 @@
+local Enum = require("api.Enum")
+local Const = require("api.Const")
 local Chara = require("api.Chara")
 local Combat = require("mod.elona.api.Combat")
-local Event = require("api.Event")
 local Feat = require("api.Feat")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
@@ -9,23 +10,25 @@ local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Anim = require("mod.elona_sys.api.Anim")
-local UiTheme = require("api.gui.UiTheme")
 local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
 
 local ElonaAction = {}
 
-local function shield_bash(chara, target)
+local function proc_shield_bash(chara, target)
+   -- >>>>>>>> elona122/shade2/action.hsp:1213         if sync(cc):txt lang(name(cc)+"は盾で"+name(t ..
    local shield = chara:skill_level("elona.shield")
-   local do_bash = math.clamp(math.sqrt(shield) - 3, 1, 5) + ((chara:calc("has_power_bash") and 5) or 0)
+   local do_bash = math.clamp(math.sqrt(shield) - 3, 1, 5) + ((chara:calc("has_shield_bash") and 5) or 0)
    if Rand.percent_chance(do_bash) then
-      Gui.mes_visible("Shield bash by " .. chara.uid)
+      Gui.mes_visible("action.melee.shield_bash", chara)
       target:damage_hp(Rand.rnd(shield) + 1, chara)
       target:apply_effect("elona.dimming", 50 + math.floor(math.sqrt(shield)) * 15)
       target:add_effect_turns("elona.paralysis", Rand.rnd(3))
    end
+   -- <<<<<<<< elona122/shade2/action.hsp:1216         cParalyze(tc)+=rnd(3) ..
 end
 
+-- >>>>>>>> elona122/shade2/action.hsp:1219     repeat sizeBody ..
 local function body_part_where_equipped(flag)
    return function(entry) return entry.equipped and entry.equipped:calc(flag) end
 end
@@ -34,10 +37,14 @@ function ElonaAction.get_melee_weapons(chara)
    local pred = body_part_where_equipped "is_melee_weapon"
    return chara:iter_body_parts():filter(pred):extract("equipped")
 end
+-- <<<<<<<< elona122/shade2/action.hsp:1229     return ..
 
 function ElonaAction.melee_attack(chara, target)
+   -- >>>>>>>> elona122/shade2/action.hsp:1197 *act_melee ..
+   -- TODO ai damage reaction
+
    if chara:calc("is_wielding_shield") then
-      shield_bash(chara, target)
+      proc_shield_bash(chara, target)
    end
 
    local attack_number = 0
@@ -51,6 +58,7 @@ function ElonaAction.melee_attack(chara, target)
    if attack_number == 0 then
       ElonaAction.physical_attack(chara, nil, target, "elona.martial_arts", 0, attack_number, false)
    end
+   -- <<<<<<<< elona122/shade2/action.hsp:1229     return ..
 end
 
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
@@ -76,21 +84,45 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
    return ranged, ammo
 end
 
-function ElonaAction.ranged_attack(chara, target)
-   local weapon, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
-   if not weapon then
-      local err = ammo
-      Gui.mes(err)
-      return false, err
+function ElonaAction.ranged_attack(chara, target, weapon, ammo)
+   -- >>>>>>>> elona122/shade2/action.hsp:1148 *act_fire ..
+   local ammo_enchantment_id = nil
+   local ammo_enchantment_data = nil
+
+   if ammo then
+      local enc = ammo.params.ammo_loaded
+      if enc then
+         if ammo.params.ammo_current <= 0 then
+            Gui.mes("action.ranged.load_normal_ammo")
+            ammo.params.ammo_loaded = nil
+         else
+            -- get the `base.ammo_enchantment` ID of this InstancedEnchantment
+            ammo_enchantment_id = enc.params.ammo_enchantment_id
+            ammo_enchantment_data = data["base.ammo_enchantment"]:ensure(ammo_enchantment_id)
+
+            if chara:is_player() then
+               if chara.stamina < Const.FATIGUE_LIGHT and chara.stamina < Rand.rnd(Const.FATIGUE_LIGHT * 1.5) then
+                  Gui.mes("magic.common.too_exhausted")
+                  chara:damage_sp(ammo_enchantment_data.stamina_cost / 2 + 1)
+                  return true
+               end
+               chara:damage_sp(ammo_enchantment_data.stamina_cost+ 1)
+               enc.params.ammo_current = enc.params.ammo_current - 1
+            end
+         end
+      end
    end
 
    local skill = weapon:calc("skill")
-   ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo)
+
+   if ammo_enchantment_data and ammo_enchantment_data.on_ranged_attack then
+      ammo_enchantment_data.on_ranged_attack(chara, weapon, target, skill, ammo, ammo_enchantment_id)
+   else
+      ElonaAction.physical_attack(chara, weapon, target, skill, 0, 0, true, ammo, ammo_enchantment_id)
+   end
 
    return true
-end
-
-function ElonaAction.proc_weapon_enchantments(chara, weapon, target)
+   -- <<<<<<<< elona122/shade2/action.hsp:1195 	return ..
 end
 
 local function show_miss_text(chara, target, extra_attacks)
@@ -159,15 +191,17 @@ local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, atta
    end
 end
 
-local function do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
+local function do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo, ammo_enc)
+   -- >>>>>>>> elona122/shade2/action.hsp:1233 *act_attack ..
    if not Chara.is_alive(chara) or not Chara.is_alive(target) then
       return
    end
 
    if chara:has_effect("elona.fear") then
-      Gui.mes(chara.uid .. " is frightened")
+      Gui.mes("damage.is_frightened", chara)
       return
    end
+   -- <<<<<<<< elona122/shade2/action.hsp:1237  ..
 
    local event_params = {
       weapon = weapon,
@@ -183,13 +217,16 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       return
    end
 
+   -- >>>>>>>> elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..
    if is_ranged then
       -- TODO: inherit color if weapon has enchantments
       play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, attack_skill, weapon)
    end
+   -- <<<<<<<< elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..
 
    attack_skill = attack_skill or "elona.martial_arts"
 
+   -- >>>>>>>> elona122/shade2/action.hsp:1253 	hit=calcAttackHit() ..
    local hit = Combat.calc_attack_hit(chara, weapon, target, attack_skill, attack_number, is_ranged, ammo)
    local did_hit = hit == "hit" or hit == "critical"
    local is_critical = hit == "critical"
@@ -197,17 +234,18 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    if did_hit then
       if chara:is_player() then
          if is_critical then
-            Gui.mes("Critical!", "Red")
+            Gui.mes("damage.critical_hit", "Red")
             Gui.play_sound("base.atk2", target.x, target.y)
          else
             Gui.play_sound("base.atk1", target.x, target.y)
          end
       end
 
-      local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo)
+      local raw_damage = Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_ranged, is_critical, ammo, ammo_enc)
       local damage = raw_damage.damage
+      local original_damage = raw_damage.original_damage
 
-      local play_animation = did_hit and chara:is_player()
+      local play_animation = chara:is_player()
       if play_animation then
          local damage_percent = damage * 100 / target:calc("max_hp")
          local kind = data["base.skill"]:ensure(attack_skill).attack_animation or 0
@@ -217,7 +255,12 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
 
       local element, element_power
       if weapon then
-         Gui.mes(chara.uid .. " wields proudly the " .. weapon:build_name() .. ". ")
+         if weapon:calc("quality") >= Enum.Quality.Great then
+            -- TODO ego name
+            if Rand.one_in(5) then
+               Gui.mes_c_visible("damage.wields_proudly", chara, "SkyBlue", weapon)
+            end
+         end
       else
          element = chara:calc("unarmed_element")
          element_power = chara:calc("unarmed_element_power")
@@ -232,8 +275,9 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
       end
 
       local killed, base_damage, actual_damage = target:damage_hp(damage, chara, {element=element,element_power=element_power,extra_attacks=extra_attacks,weapon=weapon,message_tense=tense})
+      -- <<<<<<<< elona122/shade2/action.hsp:1292  ..
 
-      chara:emit("elona.on_physical_attack_hit", {weapon=weapon,target=target,hit=hit,damage=damage,base_damage=base_damage,actual_damage=actual_damage,is_ranged=is_ranged,attack_skill=attack_skill,killed=killed})
+      chara:emit("elona.on_physical_attack_hit", {weapon=weapon,target=target,hit=hit,damage=damage,base_damage=base_damage,actual_damage=actual_damage,original_damage=original_damage,is_ranged=is_ranged,attack_skill=attack_skill,killed=killed,ammo=ammo,ammo_enchantment=ammo_enc})
    else
       local play_sound = chara:is_player()
       if play_sound then
@@ -254,23 +298,20 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    chara:emit("elona.after_physical_attack", {weapon=weapon,target=target,hit=hit,is_ranged=is_ranged,attack_skill=attack_skill})
 end
 
-function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
+function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo, ammo_enc)
    local attacks = extra_attacks
    local going
 
    repeat
-      local Log = require("api.Log")
-      if chara:is_player() then
-         Log.info("PHysical attack %d", attacks)
-      end
-      do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo)
+      do_physical_attack(chara, weapon, target, attack_skill, extra_attacks, attack_number, is_ranged, ammo, ammo_enc)
       going = false
+      -- >>>>>>>> elona122/shade2/action.hsp:1383     if extraAttack=false{ ..
       if attacks == 0 then
          if is_ranged then
             if Rand.percent_chance(chara:calc("extra_ranged_attack_rate") or 0) then
                attacks = attacks + 1
                going = true
-               -- TODO: remove ammo proc
+               ammo_enc = nil
             end
          else
             if Rand.percent_chance(chara:calc("extra_melee_attack_rate") or 0) then
@@ -279,6 +320,7 @@ function ElonaAction.physical_attack(chara, weapon, target, attack_skill, extra_
             end
          end
       end
+      -- <<<<<<<< elona122/shade2/action.hsp:1389     } ..
    until not going
 end
 
@@ -298,6 +340,7 @@ function ElonaAction.prompt_really_attack(chara, target)
 end
 
 function ElonaAction.bash(chara, x, y)
+   -- >>>>>>>> elona122/shade2/action.hsp:388     if map(x,y,5)!0{ ..
    for _, item in Item.at(x, y) do
       local result = item:emit("elona_sys.on_bash", {chara=chara}, nil)
       if result then return result end
@@ -345,6 +388,7 @@ function ElonaAction.bash(chara, x, y)
    Gui.play_sound("base.miss", x, y)
 
    return true
+   -- <<<<<<<< elona122/shade2/action.hsp:467     goto *turn_end ..
 end
 
 function ElonaAction.read(chara, item)
@@ -354,6 +398,7 @@ function ElonaAction.read(chara, item)
 end
 
 function ElonaAction.eat(chara, item)
+   -- >>>>>>>> elona122/shade2/action.hsp:364     if cc=pc{ ..
    if chara:is_player() then
       if item.chara_using and item.chara_using.uid ~= chara.uid then
          Gui.mes("action.someone_else_is_using")
@@ -373,6 +418,7 @@ function ElonaAction.eat(chara, item)
    chara:start_activity("elona.eating", {food=item})
 
    return "turn_end"
+   -- <<<<<<<< elona122/shade2/action.hsp:372     goto *turn_end ..
 end
 
 function ElonaAction.drink(chara, item)

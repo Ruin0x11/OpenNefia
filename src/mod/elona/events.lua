@@ -304,6 +304,7 @@ Event.register("base.on_build_chara",
 
 
 local function calc_damage_fury(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1441 	dmg = dmgOrg * (1+(cAngry(tc)>0)) ..
    if chara:has_effect("elona.fury") then
       result = result * 2
    end
@@ -311,6 +312,7 @@ local function calc_damage_fury(chara, params, result)
       result = result * 2
    end
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1442 	if dmgSource>=0 : if cAngry(dmgSource)>0:dmg*=2 ..
 end
 
 Event.register("base.hook_calc_damage",
@@ -318,6 +320,7 @@ Event.register("base.hook_calc_damage",
 
 
 local function calc_damage_resistance(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1444 	if (ele=false)or(ele>=tailResist){ ..
    local element = params.element
    if element and element.can_resist then
       local resistance = math.floor(chara:resist_level(element._id) / 50)
@@ -331,54 +334,79 @@ local function calc_damage_resistance(chara, params, result)
       result = result * 100 / (chara:resist_level("elona.magic") / 2 + 50)
    end
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1454 		} ..
 end
 
 Event.register("base.hook_calc_damage",
                "Proc elemental resistance", calc_damage_resistance)
 
 local function calc_element_damage(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1458 	if cWet(tc)>0{ ..
    local element = params.element
    if element and element.on_modify_damage then
       result = element.on_modify_damage(chara, result)
    end
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1461 		} ..
 end
 
 Event.register("base.hook_calc_damage",
                "Proc elemental damage", calc_element_damage)
 
 local function is_immune_to_elemental_damage(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1463 	if ele:if ele!rsResMagic:if cBit(cResEle,tc):dmg= ..
    if chara:calc("is_immune_to_elemental_damage") then
       if params.element and params.element._id ~= "elona.magic" then
          result = 0
       end
    end
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1463 	if ele:if ele!rsResMagic:if cBit(cResEle,tc):dmg= ..
 end
 
 Event.register("base.hook_calc_damage",
                "Proc elemental damage immunity", is_immune_to_elemental_damage)
 
 local function is_metal_damage(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1464 	if cBit(cMetal,tc):dmg=rnd(dmg/10+2) ..
    if chara:calc("is_metal") then
       result = Rand.rnd(result / 10 + 2)
    end
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1464 	if cBit(cMetal,tc):dmg=rnd(dmg/10+2) ..
 end
 
 Event.register("base.hook_calc_damage",
                "Proc is_metal damage", is_metal_damage)
 
-local function nullify_damage(chara, params, result)
-   local chance = chara:calc("nullify_damage") or 0
-   if chance > 0 and Rand.percent_chance(chance) then
-      result = 0
+local function proc_contingency(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1465 	if cBit(cContingency,tc):if cHp(tc)-dmg<=0:if cal ..
+   if chara.hp - result <= 0 then
+      local buff = chara:find_buff("elona.contingency")
+      if buff and buff.power >= Rand.rnd(100) then
+         result = -result
+      end
    end
+
    return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1465 	if cBit(cContingency,tc):if cHp(tc)-dmg<=0:if cal ..
 end
 
 Event.register("base.hook_calc_damage",
-               "Proc nullify damage", nullify_damage)
+               "Proc contingency", proc_contingency)
+
+local function proc_damage_immunity(chara, params, result)
+   -- >>>>>>>> elona122/shade2/chara_func.hsp:1466 	if cImmuneDamage(tc)>0:if cImmuneDamage(tc)>rnd(1 ..
+   local chance = chara:calc("damage_immunity_rate") or 0
+   if chance > 0 and chance > Rand.one_in(100) then
+      result = 0
+   end
+   return result
+   -- <<<<<<<< elona122/shade2/chara_func.hsp:1466 	if cImmuneDamage(tc)>0:if cImmuneDamage(tc)>rnd(1 ..
+end
+
+Event.register("base.hook_calc_damage",
+               "Proc damage immunity", proc_damage_immunity)
 
 local function calc_kill_exp(victim, params)
    local level = victim:calc("level")
@@ -565,12 +593,6 @@ local function refresh_hp_mp_stamina(chara, params, result)
 end
 
 Event.register("base.on_refresh", "Update max HP/MP/stamina", refresh_hp_mp_stamina)
-
-local function refresh_invisibility(chara, params, result)
-   Effect.refresh_visibility(chara)
-end
-
-Event.register("base.on_refresh", "Update invisibility", refresh_invisibility)
 
 local function apply_buff_effects(chara, params, result)
    for _, buff in ipairs(chara.buffs) do
@@ -931,6 +953,7 @@ end
 Event.register("elona.on_physical_attack_miss", "Gain evasion experience", proc_on_physical_attack_miss, 100000)
 
 local function proc_on_physical_attack(chara, params)
+   -- >>>>>>>> elona122/shade2/action.hsp:1295 		if critical : skillExp rsCritical,cc,60/expModif ..
    local exp_modifier = calc_exp_modifier(params.target)
    local base_damage = params.base_damage
    local attack_skill = params.attack_skill
@@ -949,7 +972,7 @@ local function proc_on_physical_attack(chara, params)
       if not params.is_ranged then
          Skill.gain_skill_exp(chara, "elona.tactics", 20 / exp_modifier, 0, 4)
          if chara:calc("is_wielding_two_handed") then
-            Skill.gain_skill_exp(chara, "elona.two_handed", 20 / exp_modifier, 0, 4)
+            Skill.gain_skill_exp(chara, "elona.two_hand", 20 / exp_modifier, 0, 4)
          end
          if chara:calc("is_dual_wielding") then
             Skill.gain_skill_exp(chara, "elona.dual_wield", 20 / exp_modifier, 0, 4)
@@ -960,7 +983,7 @@ local function proc_on_physical_attack(chara, params)
          Skill.gain_skill_exp(chara, "elona.marksman", 25 / exp_modifier, 0, 4)
       end
 
-      -- mount
+      -- TODO mount
 
       local target = params.target
       if Chara.is_alive(target) then
@@ -971,20 +994,50 @@ local function proc_on_physical_attack(chara, params)
          end
       end
    end
+
+   -- <<<<<<<< elona122/shade2/action.hsp:1312 		} ..
 end
 Event.register("elona.on_physical_attack_hit", "Gain skill experience", proc_on_physical_attack, 100000)
 
 local function proc_weapon_enchantments(chara, params)
+   local weapon = params.weapon
    if params.weapon then
-      ElonaAction.proc_weapon_enchantments(chara, params.weapon, params.target)
+      -- >>>>>>>> elona122/shade2/action.hsp:1395 *act_attackSub ..
+      for _, enc in weapon:iter_enchantments() do
+         enc:on_attack_hit(chara, params)
+      end
+      -- <<<<<<<< elona122/shade2/action.hsp:1479 	return ..
    end
+
+   -- >>>>>>>> elona122/shade2/calculation.hsp:325 		if ammoProc=encAmmoVopal : pierce=60 		:if sync( ..
+   if params.ammo_enchantment then
+      local ammo_enc_data = data["base.ammo_enchantment"]:ensure(params.ammo_enchantment)
+      if ammo_enc_data.on_attack_hit then
+         ammo_enc_data.on_attack_hit(chara, params)
+      end
+   end
+   -- <<<<<<<< elona122/shade2/calculation.hsp:328 		if ammoProc=encAmmoMagic : damage/=10 ..
 end
 Event.register("elona.on_physical_attack_hit", "Proc weapon enchantments", proc_weapon_enchantments, 200000)
 
-local function proc_cut_counterattack(chara, params)
-   local cut = params.target:calc("cut_counterattack") or 0
-   if cut > 0 and not params.is_ranged then
-      chara:damage_hp(params.damage * cut / 100 + 1, params.target, {element="elona.cut", element_power=100})
+local function proc_damage_reflection(chara, params)
+   local damage_reflection = params.target:calc("damage_reflection")
+   if damage_reflection > 0 and not params.is_ranged then
+      chara:damage_hp(params.damage * damage_reflection / 100 + 1, params.target, { element = "elona.cut", element_power = 100 })
    end
 end
-Event.register("elona.on_physical_attack_hit", "Proc cut counterattack", proc_cut_counterattack, 300000)
+Event.register("elona.on_physical_attack_hit", "Proc damage reflection", proc_damage_reflection, 300000)
+
+local function proc_damage_reaction(chara, params)
+   -- >>>>>>>> elona122/shade2/action.hsp:1323         if cBarrier(tc)!0{ ..
+   local damage_reaction = params.target:calc("damage_reaction")
+   if damage_reaction then
+      local damage_reaction_data = data["base.damage_reaction"]:ensure(damage_reaction._id)
+      local power = damage_reaction.power
+      if damage_reaction_data.on_damage then
+         damage_reaction_data.on_damage(chara, power, params)
+      end
+   end
+   -- <<<<<<<< elona122/shade2/action.hsp:1352         } ..
+end
+Event.register("elona.on_physical_attack_hit", "Proc damage reaction", proc_damage_reaction, 400000)

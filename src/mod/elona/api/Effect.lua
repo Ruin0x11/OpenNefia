@@ -25,8 +25,7 @@ end
 
 --- @tparam IChara chara
 function Effect.impregnate(chara)
-   -- TODO enchantment
-   if chara:has_enchantment("elona.prevents_pregnancy") then
+   if chara:find_enchantment("elona.res_pregnancy") then
       Gui.mes("misc.pregnant.pukes_out", chara)
       return false
    end
@@ -597,9 +596,9 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
    return true
 end
 
-function Effect.refresh_visibility(chara)
-   local hidden = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
-   chara:mod("can_target", not hidden)
+function Effect.is_visible(chara)
+   local is_invisible = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
+   return not is_invisible
 end
 
 -- Applies wetness effect and shows the invisibility message.
@@ -611,7 +610,6 @@ function Effect.get_wet(chara, amount)
          Gui.mes("misc.wet.is_revealed")
       end
    end
-   Effect.refresh_visibility(chara)
 end
 
 function Effect.damage_map_fire(x, y, origin)
@@ -769,7 +767,7 @@ function Effect.add_buff(target, source, buff_id, power, duration)
       return false
    end
 
-   if target:has_buff(buff_id) then
+   if target:find_buff(buff_id) then
       Gui.mes("magic.buff.no_effect")
       return false
    end
@@ -811,6 +809,14 @@ function Effect.on_kill(attacker, victim)
       end
    end
    -- <<<<<<<< shade2/chara_func.hsp:1146 	return ..
+end
+
+function Effect.has_sustain_enchantment(chara, attribute_id)
+   local is_sustain_enc = function(enc)
+      return enc._id == "elona.sustain_attribute"
+         and enc.params.skill_id == attribute_id
+   end
+   return chara:iter_enchantments():any(is_sustain_enc)
 end
 
 return Effect

@@ -1,3 +1,12 @@
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local ItemFunction = require("mod.elona.api.ItemFunction")
+local Effect = require("mod.elona.api.Effect")
+local Mef = require("api.Mef")
+local Enum = require("api.Enum")
+local Charagen = require("mod.tools.api.Charagen")
+local Calc = require("mod.elona.api.Calc")
+local Map = require("api.Map")
+local Magic = require("mod.elona_sys.api.Magic")
 local Anim = require("mod.elona_sys.api.Anim")
 local Input = require("api.Input")
 local Enchantment = require("mod.elona.api.Enchantment")
@@ -267,6 +276,25 @@ data:add {
       local element_name = "element." .. self.params.element_id .. ".name"
       return I18N.get("enchantment.with_parameters.extra_damage", element_name) .. " " .. Enchantment.power_text(grade)
       -- <<<<<<<< shade2/item_data.hsp:372 			} ..
+   end,
+
+   on_attack_hit = function(self, chara, params)
+      -- >>>>>>>> elona122/shade2/action.hsp:1448 		if i=encEleDmg{ ..
+      if params.original_damage <= 1 then
+         return
+      end
+
+      if not Chara.is_alive(params.target) then
+         return
+      end
+
+      local damage = Rand.rnd(params.original_damage * (100 + self.power) / 1000 + 1) + 5
+      local dmg_params = {
+         element = self.params.element_id,
+         element_power = self.power / 2 + 100
+      }
+      params.target:damage_hp(damage, chara, dmg_params)
+      -- <<<<<<<< elona122/shade2/action.hsp:1453 			continue} ..
    end
 }
 
@@ -322,6 +350,30 @@ data:add {
       local skill_name = "ability." .. enc_skill_data.skill_id .. ".name"
       return I18N.get("enchantment.with_parameters.invokes", skill_name) .. " " .. Enchantment.power_text(power)
       -- <<<<<<<< shade2/item_data.hsp:403 			} ..
+   end,
+
+   on_attack_hit = function(self, chara, params)
+      -- >>>>>>>> elona122/shade2/action.hsp:1454 		if i=encProc{ ..
+      if not Chara.is_alive(params.target) then
+         return
+      end
+
+      local enc_skill_data = data["base.enchantment_skill"]:ensure(self.params.enchantment_skill_id)
+      local target = params.target
+      local target_type = enc_skill_data.target_type
+      if target_type == "self_or_nearby" or target_type == "self" then
+         target = chara
+      end
+
+      if Rand.rnd(100) < enc_skill_data.chance then
+         local magic_params = {
+            source = chara,
+            target = target,
+            power = self.power + chara:skill_level(params.skill) * 10
+         }
+         Magic.cast(enc_skill_data.effect_id, magic_params)
+      end
+      -- <<<<<<<< elona122/shade2/action.hsp:1465 			continue} ..
    end
 }
 
@@ -400,6 +452,17 @@ data:add {
       chara:mod("has_cursed_enchantment", true)
       -- <<<<<<<< shade2/calculation.hsp:485 		if (rp2=encRandomTele)or(rp2=encSuckBlood)or(rp2 ..
    end,
+
+   on_turns_passed = function(self, item, chara)
+      local map = chara:current_map()
+      if Map.is_world_map(map) then
+         return
+      end
+
+      if Rand.rnd(25) < math.clamp(math.abs(self.power) / 50, 1, 25) then
+         Magic.cast("elona.teleport", { source = chara, target = chara })
+      end
+   end
 }
 
 data:add {
@@ -420,6 +483,14 @@ data:add {
       chara:mod("has_cursed_enchantment", true)
       -- <<<<<<<< shade2/calculation.hsp:485 		if (rp2=encRandomTele)or(rp2=encSuckBlood)or(rp2 ..
    end,
+
+   on_turns_passed = function(self, item, chara)
+      if Rand.one_in(4) then
+         Gui.mes_c_visible("misc.curse.blood_sucked", chara, "Purple")
+         local amount = math.abs(self.power) / 25 + 3
+         chara:apply_effect("elona.bleeding", amount)
+      end
+   end
 }
 
 data:add {
@@ -440,6 +511,14 @@ data:add {
       chara:mod("has_cursed_enchantment", true)
       -- <<<<<<<< shade2/calculation.hsp:485 		if (rp2=encRandomTele)or(rp2=encSuckBlood)or(rp2 ..
    end,
+
+   on_turns_passed = function(self, item, chara)
+      if Rand.one_in(20) then
+         Gui.mes_c_visible("misc.curse.experience_reduced", chara, "Purple")
+         local lost_exp = chara.required_experience / (300 - math.clamp(math.abs(self.power) / 2, 0, 50)) + Rand.rnd(100)
+         chara.experience = math.max(chara.experience - lost_exp, 0)
+      end
+   end
 }
 
 data:add {
@@ -460,6 +539,24 @@ data:add {
       chara:mod("has_cursed_enchantment", true)
       -- <<<<<<<< shade2/calculation.hsp:485 		if (rp2=encRandomTele)or(rp2=encSuckBlood)or(rp2 ..
    end,
+
+   on_turns_passed = function(self, item, chara)
+      -- >>>>>>>> elona122/shade2/item.hsp:482 	if iEnc(cnt,ci)=encSummonMonster:if mType!mTypeWo ..
+      local map = chara:current_map()
+      if Map.is_world_map(map) or map:has_type("player_owned") then
+         return
+      end
+
+      if Rand.rnd(50) < math.clamp(math.abs(self.power) / 50, 1, 50) then
+         Gui.mes_c_visible("misc.fail_to_cast.creatures_are_summoned", chara, "Purple")
+         for i = 1, Rand.rnd(3) + 1 do
+            local level = Calc.calc_object_level(Chara.player():calc("level") * 3 / 2 + 3, map)
+            local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+            Charagen.create(chara.x, chara.y, { level, quality }, map)
+         end
+      end
+      -- <<<<<<<< elona122/shade2/item.hsp:488 		} ..
+   end
 }
 
 data:add {
@@ -727,13 +824,12 @@ data:add {
        return math.floor(self.power / 50)
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1400 	if enc=encAbsorbStamina{ ..
-      local attacker = params.attacker
       local target = params.target
       local amount = Rand.rnd(self:adjusted_power() + 1) + 1
-      attacker:heal_stamina(amount)
-      target:damage_stamina(amount / 2)
+      chara:heal_stamina(amount)
+      target:damage_sp(amount / 2)
       -- <<<<<<<< shade2/action.hsp:1405 		} ..
    end
 }
@@ -749,31 +845,14 @@ data:add {
    categories = { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1413 	if enc=encRagnarok{ ..
-      local attacker = params.attacker
-      local ragnarok = function()
-         -- TODO weather
-         Gui.mes("event.ragnarok")
-         Input.query_more()
-         local cb = Anim.ragnarok()
-         Gui.start_draw_callback(cb)
-
-         local map = attacker:current_map()
-
-         for _ = 1, 200 do
-            for _ = 1, 2 do
-               local x = Rand.rnd(map:width())
-               local y = Rand.rnd(map:height())
-               map:set_tile(x, y, "elona.destroyed")
-            end
-
-            Gui.mes("TODO")
-            -- local sx, sy, ox, oy = Draw.get_coords():get_start_offset(x, y, Draw.get_width(), Draw.get_height())
-            -- local tx, ty, tdx, tdy = Draw.get_coords():find_bounds(x, y, self.width, self.height)
+      if Rand.one_in(66) then
+         local ragnarok = function()
+            return DeferredEvents.ragnarok(chara)
          end
+         DeferredEvent.add(ragnarok)
       end
-      DeferredEvent.add(ragnarok)
       -- <<<<<<<< shade2/action.hsp:1416 		} ..
    end
 }
@@ -792,12 +871,11 @@ data:add {
        return math.floor(self.power / 50)
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1406 	if enc=encAbsorbMana{ ..
-      local attacker = params.attacker
       local target = params.target
       local amount = Rand.rnd(self:adjusted_power() * 2 + 1) + 1
-      attacker:heal_mp(amount / 5)
+      chara:heal_mp(amount / 5)
       if Chara.is_alive(target) then
          target:damage_mp(amount)
       end
@@ -807,7 +885,7 @@ data:add {
 
 data:add {
    _type = "base.enchantment",
-   _id = "vopal",
+   _id = "pierce",
    elona_id = 45,
 
    level = 99,
@@ -820,7 +898,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("vorpal_rate", self:adjusted_power(), "add")
+      chara:mod("pierce_rate", math.floor(self.power / 50), "add")
    end
 }
 
@@ -839,7 +917,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("critical_rate", self:adjusted_power(), "add")
+      chara:mod("critical_rate", math.floor(self.power / 50), "add")
    end
 }
 
@@ -858,7 +936,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_melee_attack_rate", self:adjusted_power(), "add")
+      chara:mod("extra_melee_attack_rate", math.floor(self.power / 15), "add")
    end
 }
 
@@ -877,7 +955,7 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("extra_ranged_attack_rate", self:adjusted_power(), "add")
+      chara:mod("extra_ranged_attack_rate", math.floor(self.power / 15), "add")
    end
 }
 
@@ -895,10 +973,10 @@ data:add {
       return self.power
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1417 	if enc=encStopTime:if gTimeStopTime=0{ ..
       if Rand.one_in(25) then
-         Gui.mes_c("action.time_stop.begins", "SkyBlue", params.attacker)
+         Gui.mes_c("action.time_stop.begins", "SkyBlue", chara)
          Gui.mes("TODO")
       end
       -- <<<<<<<< shade2/action.hsp:1423 		} ..
@@ -933,7 +1011,7 @@ data:add {
 
 data:add {
    _type = "base.enchantment",
-   _id = "res_damage",
+   _id = "damage_resistance",
    elona_id = 52,
 
    level = 1,
@@ -946,13 +1024,13 @@ data:add {
    end,
 
    on_refresh = function(self, item, chara)
-      chara:mod("damage_resistance", self:adjusted_power(), "add")
+      chara:mod("damage_resistance", math.floor(self.power / 40 + 5), "add")
    end
 }
 
 data:add {
    _type = "base.enchantment",
-   _id = "immune_damage",
+   _id = "damage_immunity",
    elona_id = 53,
 
    level = 2,
@@ -962,12 +1040,16 @@ data:add {
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
+   end,
+
+   on_refresh = function(self, item, chara)
+      chara:mod("damage_immunity_rate", math.floor(self.power / 60 + 3), "add")
    end
 }
 
 data:add {
    _type = "base.enchantment",
-   _id = "reflect_damage",
+   _id = "damage_reflection",
    elona_id = 54,
 
    level = 3,
@@ -977,6 +1059,10 @@ data:add {
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
+   end,
+
+   on_refresh = function(self, item, chara)
+      chara:mod("damage_reflection", math.floor(self.power / 5), "add")
    end
 }
 
@@ -1025,12 +1111,12 @@ data:add {
        return math.floor(self.power / 50)
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1424 	if enc=encDragonBane{ ..
       local target = params.target
       if target:has_tag("dragon") then
          local damage = params.original_damage
-         target:damage_hp(damage / 2, params.attacker, { tense = "ally" })
+         target:damage_hp(damage / 2, chara, { tense = "enemy" })
       end
       -- <<<<<<<< shade2/action.hsp:1430 	} ..
    end
@@ -1050,12 +1136,12 @@ data:add {
        return math.floor(self.power / 50)
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1438 	if enc=encUndeadBane{ ..
       local target = params.target
       if target:has_tag("undead") then
          local damage = params.original_damage
-         target:damage_hp(damage / 2, params.attacker, { tense = "ally" })
+         target:damage_hp(damage / 2, chara, { tense = "enemy" })
       end
       -- <<<<<<<< shade2/action.hsp:1444 	} ..
    end
@@ -1102,12 +1188,12 @@ data:add {
        return math.floor(self.power / 50)
    end,
 
-   on_attack = function (self, params)
+   on_attack_hit = function (self, chara, params)
       -- >>>>>>>> shade2/action.hsp:1431 	if enc=encGodBane{ ..
       local target = params.target
       if target:has_tag("god") then
          local damage = params.original_damage
-         target:damage_hp(damage / 2, params.attacker, { tense = "ally" })
+         target:damage_hp(damage / 2, chara, { tense = "enemy" })
       end
       -- <<<<<<<< shade2/action.hsp:1437 	} ..
    end

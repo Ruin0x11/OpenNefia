@@ -7,6 +7,8 @@ local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 
 function IItemEnchantments:init()
    self.enchantments = {}
+
+   self:rebuild_enchantments_from_proto()
 end
 
 local function sort_enchantments(a, b)
@@ -46,6 +48,7 @@ function IItemEnchantments:add_enchantment(enc)
       enc.power = enc.power + self.enchantments[idx].power
    end
 
+   enc.is_temporary = false
    self.enchantments[idx] = enc
 
    local adjusted_value = math.floor(self.value * enc.proto.value / 100)
@@ -55,6 +58,7 @@ function IItemEnchantments:add_enchantment(enc)
 
    table.insertion_sort(self.enchantments, sort_enchantments)
 
+   self:emit("base.on_item_add_enchantment", {index=idx, enchantment=enc})
    self:refresh()
 
    return true
@@ -75,68 +79,50 @@ function IItemEnchantments:remove_enchantment(_id, power)
       end
    end
 
+   local enc
    if idx then
-      table.remove(self.enchantments, idx)
+      enc = table.remove(self.enchantments, idx)
    end
 
-   table.insertion_sort(self.enchantments, sort_enchantments)
-
-   self:refresh()
+   if enc then
+      table.insertion_sort(self.enchantments, sort_enchantments)
+      self:emit("base.on_item_remove_enchantment", {index=idx, enchantment=enc})
+      self:refresh()
+   end
    -- <<<<<<<< shade2/item_data.hsp:536 	return ..
 end
 
-local function add_fixed_enchantment(item, fixed_enc)
-   data["base.enchantment"]:ensure(fixed_enc._id)
-
-   local enc = InstancedEnchantment:new(
-       fixed_enc._id,
-       fixed_enc.power,
-       table.deepcopy(fixed_enc.params or {})
-   )
-
-   local idx
-   for i, v in ipairs(item.temp["enchantments"]) do
-      if v._id == enc._id then
-         idx = i
+-- NOTE: Only call this if the item's prototype has changed, to preserve the
+-- state of things like ammo.
+function IItemEnchantments:rebuild_enchantments_from_proto()
+   local remove = {}
+   for i, enc in ipairs(self.enchantments) do
+      if enc.source == "item" then
+         remove[#remove+1] = i
       end
    end
+   table.remove_indices(self.enchantments, remove)
 
-   if idx == nil then
-      if #item.temp["enchantments"] >= Const.MAX_ENCHANTMENTS then
-         return false
-      end
-
-      idx = #item.temp["enchantments"] + 1
+   for _, fixed_enc in ipairs(self.proto.enchantments or {}) do
+      local enc = InstancedEnchantment:new(
+         fixed_enc._id,
+         fixed_enc.power,
+         table.deepcopy(fixed_enc.params or {}),
+         "item"
+      )
+      self:add_enchantment(enc)
    end
-
-   if item.temp["enchantments"][idx] then
-      enc.power = enc.power + item.temp["enchantments"][idx].power
-   end
-
-   item.temp["enchantments"][idx] = enc
 end
 
 local function refresh_temporary_enchantments(item)
-   item.temp["enchantments"] = table.deepcopy(item.enchantments)
-
-   if item.proto.enchantments then
-      for _, fixed_enc in ipairs(item.proto.enchantments) do
-         add_fixed_enchantment(item, fixed_enc)
-      end
-   end
-
-   local material = item:calc("material")
-   local material_data = data["elona.item_material"]:ensure(material)
-   if material_data.fixed_enchantments then
-      for _, fixed_enc in ipairs(material_data.fixed_enchantments) do
-         add_fixed_enchantment(item, fixed_enc)
-      end
-   end
+   -- Temporary enchantments will be references to their original copies in
+   -- item.enchantments if available.
+   item.temp["enchantments"] = table.shallow_copy(item.enchantments)
 
    table.insertion_sort(item.temp["enchantments"], sort_enchantments)
 end
 
-function IItemEnchantments:get_enchantment(_id)
+function IItemEnchantments:find_enchantment(_id)
    return self:iter_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
 end
 

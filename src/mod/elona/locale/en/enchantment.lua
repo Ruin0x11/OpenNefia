@@ -72,7 +72,7 @@ local enchantment = {
       absorb_mana = {
          description = "absorbs MP from an enemy."
       },
-      vopal = {
+      pierce = {
          description = "gives you a chance to throw an absolute piercing attak."
       },
       crit = {
@@ -93,13 +93,13 @@ local enchantment = {
       strad = {
          description = "increases the qualitiy of reward."
       },
-      res_damage = {
+      damage_resistance = {
          description = "decreases physical damage you take."
       },
-      immune_damage = {
+      damage_immunity = {
          description = "sometimes nullifies damage you take."
       },
-      reflect_damage = {
+      damage_reflection = {
          description = "deals cut damage to the attacker."
       },
       cure_bleeding = {

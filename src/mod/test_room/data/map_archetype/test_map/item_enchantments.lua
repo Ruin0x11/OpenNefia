@@ -1,33 +1,10 @@
+local utils = require("mod.test_room.data.map_archetype.utils")
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Enchantment = require("mod.elona.api.Enchantment")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
-local InstancedMap = require("api.InstancedMap")
-local Pos = require("api.Pos")
 local Item = require("api.Item")
-local Area = require("api.Area")
 local Rand = require("api.Rand")
-
-local function create_map(width, height)
-   width = width or 50
-   height = height or 50
-   local map = InstancedMap:new(width, height)
-   map:clear("elona.cobble")
-   map.is_indoor = true
-   for _, x, y in Pos.iter_border(0, 0, width - 1, height - 1) do
-      map:set_tile(x, y, "elona.wall_dirt_dark_top")
-   end
-
-   for _, x, y in map:iter_tiles() do
-      map:memorize_tile(x, y)
-   end
-
-   return map
-end
-
-local function create_stairs(x, y, area, map)
-   assert(Area.create_stairs_up(area, 1, x, y, {}, map))
-end
 
 local function items_in_category(cat)
    local filter = function(i)
@@ -155,7 +132,6 @@ local function make_ammo_enchantments(x, y, map)
 end
 
 local function make_fixed_enchantments(x, y, map)
-   local ids = items_in_category("elona.equip_ammo")
 
    local filter = function(i)
       return i.enchantments ~= nil
@@ -177,13 +153,12 @@ local function make_fixed_enchantments(x, y, map)
 end
 
 local function generate_map(area, floor)
-   local map = create_map(20, 100)
-   create_stairs(3, 3, area, map)
+   local map = utils.create_map(20, 25)
+   utils.create_stairs(3, 3, area, map)
 
    local x = 3
    local y = 5
 
-   local ids = {}
 
    x, y = make_material_enchantments(x, y, map)
    x, y = make_enchantments(x, y, map)

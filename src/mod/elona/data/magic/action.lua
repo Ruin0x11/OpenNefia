@@ -1,3 +1,5 @@
+local Skill = require("mod.elona_sys.api.Skill")
+local Magic = require("mod.elona_sys.api.Magic")
 local Event = require("api.Event")
 local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
@@ -56,6 +58,7 @@ local function proc_pregnancy(chara)
       return
    end
 
+   -- >>>>>>>> elona122/shade2/item.hsp:449 *pregnant ..
    if Rand.one_in(15) then
       if chara:is_in_fov() then
          Gui.mes("misc.pregnant.pats_stomach", chara)
@@ -77,20 +80,59 @@ local function proc_pregnancy(chara)
          end
       end
    end
+   -- <<<<<<<< elona122/shade2/item.hsp:463 	return ..
 end
 
-local function event_pregnancy(source, params, result)
+local function proc_curse(chara)
+   local curse_power = chara:calc("curse_power")
+   if curse_power <= 0 then
+      return
+   end
+   -- >>>>>>>> elona122/shade2/item.hsp:437 *curse ..
+   if Rand.one_in(4) then
+      local damage = chara.hp * (5 + curse_power / 5) / 100
+      chara:damage_hp(damage, "elona.curse")
+      return
+   end
+   if not Map.is_world_map(chara:current_map()) then
+      if Rand.one_in(10 - math.clamp(curse_power / 10, 0, 9)) then
+         Magic.cast("elona.teleport", { source = chara, target = chara })
+         return
+      end
+   end
+   if Rand.one_in(10) and chara.gold > 0 then
+      local lose_amount = math.min(Rand.rnd(chara.gold) / 100 + Rand.rnd(10) + 1, chara.gold)
+      chara.gold = chara.gold - lose_amount
+      Gui.mes_c_visible("misc.curse.gold_stolen", chara, "Purple")
+      return
+   end
+   -- <<<<<<<< elona122/shade2/item.hsp:446 	return ..
+end
+
+local function proc_cursed_enchantments(chara)
+   -- >>>>>>>> elona122/shade2/item.hsp:465 *curse_enc ..
+   for _, enc, item in chara:iter_enchantments() do
+      enc:on_turns_passed(item, chara)
+   end
+   -- <<<<<<<< elona122/shade2/item.hsp:491 	return ..
+end
+
+local function event_pregnancy_curse(source, params, result)
    if result and result.blocked then
       return result
    end
 
+   -- >>>>>>>> elona122/shade2/main.hsp:830 	if cTurn(cc)¥25=0{ ..
    if source.turns_alive % 25 == 0 then
+      proc_curse(source)
+      proc_cursed_enchantments(source)
       proc_pregnancy(source)
    end
+   -- <<<<<<<< elona122/shade2/main.hsp:834 		} ...
 
    return result
 end
-Event.register("base.on_chara_pass_turn", "Proc pregnancy", event_pregnancy)
+Event.register("base.on_chara_pass_turn", "Proc pregnancy and curse", event_pregnancy_curse)
 
 -- fov
 
@@ -436,21 +478,21 @@ make_touch {
 
    on_damage = function(self, params, dice)
       local target = params.target
-      local attribute = Rand.choice(config["base._basic_attributes"])
-      local sustains_enchantment = "" -- TODO enchantment: sustains attribute
+      local attribute_id = Skill.random_attribute()
+
+      local sustain_enc = Effect.has_sustain_enchantment(target, attribute_id)
+
       local proceed = true
-      if (target:calc("quality") >= Enum.Quality.Great and Rand.one_in(4))
-         or target:has_enchantment(sustains_enchantment)
-      then
+      if (target:calc("quality") >= Enum.Quality.Great and Rand.one_in(4)) or sustain_enc then
          proceed = false
       end
 
       if proceed then
-         local adj = target:stat_adjustment(attribute)
-         local diff = target:base_skill_level(attribute) - adj
+         local adj = target:stat_adjustment(attribute_id)
+         local diff = target:base_skill_level(attribute_id) - adj
          if diff > 0 then
             diff = diff * params.power / 2000 + 1
-            target:set_stat_adjustment(attribute, adj - diff)
+            target:set_stat_adjustment(attribute_id, adj - diff)
          end
          Gui.mes_c_visible("magic.weaken", target, "Purple")
          target:refresh()

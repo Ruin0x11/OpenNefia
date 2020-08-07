@@ -266,6 +266,14 @@ Color to display on the character's sprite.
             doc = [[
 AI callback to run on this character's turn.
 ]]
+         },
+         {
+            name = "damage_reaction",
+            default = nil,
+            type = "{_id=id:base.damage_reaction,power=int}",
+            doc = [[
+A damage reaction to trigger if this character is melee attacked.
+]]
          }
       },
       fallbacks = {
@@ -317,8 +325,6 @@ AI callback to run on this character's turn.
          max_stamina = 1,
 
          nutrition = 0;
-
-         physical_damage_reduction = 0,
 
          is_quest_target = nil,
          was_passed_item = nil,
@@ -387,12 +393,20 @@ AI callback to run on this character's turn.
 
          travel_speed = 0,
 
-         vorpal_rate = 0,
+         pierce_rate = 0,
          extra_melee_attack_rate = 0,
          extra_ranged_attack_rate = 0,
          damage_resistance = 0,
-         damage_immunity = 0,
+         damage_immunity_rate = 0,
          damage_reflection = 0,
+
+         splits = nil,
+         splits2 = nil,
+         is_quick_tempered = nil,
+         has_lay_hand = nil,
+         is_lay_hand_available = nil,
+         is_invisible = nil,
+         is_summoned = nil
       }
    },
    { interface = IChara }
@@ -603,7 +617,7 @@ What gods this item can be offered to.
             name = "material",
             default = "elona.sand",
             template = true,
-            type = "id:base.material",
+            type = "id:elona.item_material",
             doc = [[
 Material of this item.
 
@@ -669,7 +683,6 @@ Hours until the item spoils. Used for items of material "elona.fresh" only.
          identify_state = Enum.IdentifyState.None,
          bonus = 0,
          name = "item",
-         ammo_type = "",
          value = 1,
          params = {},
 
@@ -756,6 +769,8 @@ data:add_type(
    {
       name = "element",
       schema = schema.Record {
+         preserves_sleep = schema.Boolean,
+         sound = schema.Optional(schema.String),
       },
    }
 )
@@ -1451,6 +1466,24 @@ if parent_area._id == _id and parent_floor == on_floor then
    assert(entrance.params.area_floor == floor_number)
 end
 ```
+]]
+      },
+   }
+}
+
+data:add_type {
+   name = "damage_reaction",
+   fields = {
+      {
+         name = "on_damage",
+         default = CodeGenerator.gen_literal [[
+   function(chara, power, params)
+end
+]],
+         template = true,
+         type = "function(IChara, int, table)",
+         doc = [[
+Behavior to trigger when this character is melee attacked.
 ]]
       },
    }

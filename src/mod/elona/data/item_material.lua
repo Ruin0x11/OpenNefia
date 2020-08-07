@@ -102,7 +102,7 @@ data:add {
     dice_y=100,
     color={ 255, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.mind" } }
     },
 
@@ -146,7 +146,7 @@ data:add {
     dice_y=120,
     color={ 255, 195, 185 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } }
     },
 }
@@ -168,7 +168,7 @@ data:add {
     dice_y=100,
     color={ 175, 175, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 150, params = { skill_id = "elona.stat_speed" } }
     },
 
@@ -194,7 +194,7 @@ data:add {
     dice_y=190,
     color={ 175, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.casting" } }
     },
 
@@ -221,7 +221,7 @@ data:add {
     dice_y=250,
     color={ 175, 175, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_speed" } }
     },
 
@@ -270,7 +270,7 @@ data:add {
     dice_y=130,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 25, params = { element_id = "elona.fire" } }
     },
 
@@ -296,7 +296,7 @@ data:add {
     dice_y=150,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_magic" } }
     }
 }
@@ -318,7 +318,7 @@ data:add {
     dice_y=100,
     color={ 255, 215, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.lightning" } }
     }
 }
@@ -340,7 +340,7 @@ data:add {
     dice_y=220,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.lightning" } }
     }
 }
@@ -362,7 +362,7 @@ data:add {
     dice_y=100,
     color={ 175, 175, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_speed" } }
     },
 
@@ -388,7 +388,7 @@ data:add {
     dice_y=190,
     color={ 255, 155, 155 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 125, params = { skill_id = "elona.stat_life" } }
     },
 
@@ -415,7 +415,7 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.evasion" } }
     },
 
@@ -440,7 +440,7 @@ data:add {
     dice_y=100,
     color={ 175, 175, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 200, params = { skill_id = "elona.stat_mana" } }
     }
 }
@@ -462,7 +462,7 @@ data:add {
     dice_y=140,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.nether" } }
     },
 
@@ -488,7 +488,7 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.darkness" } }
     },
 
@@ -514,7 +514,7 @@ data:add {
     dice_y=130,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.chaos" } }
     }
 }
@@ -536,7 +536,7 @@ data:add {
     dice_y=100,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_luck" } }
     },
 
@@ -560,7 +560,7 @@ data:add {
     dice_y=140,
     color={ 255, 195, 185 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_perception" } }
     }
 }
@@ -583,7 +583,7 @@ data:add {
     dice_y=190,
     color={ 175, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.nerve" } }
     }
 }
@@ -605,7 +605,7 @@ data:add {
     dice_y=160,
     color={ 175, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.fire" } },
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.cold" } }
     },
@@ -633,7 +633,7 @@ data:add {
     dice_y=130,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.darkness" } }
     },
 
@@ -659,7 +659,7 @@ data:add {
     dice_y=140,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.darkness" } }
     },
 
@@ -685,7 +685,7 @@ data:add {
     dice_y=100,
     color={ 175, 175, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 50, params = { element_id = "elona.nether" } }
     }
 }
@@ -707,7 +707,7 @@ data:add {
     dice_y=120,
     color={ 175, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_skill", power = 100, params = { skill_id = "elona.evasion" } }
     }
 }
@@ -729,7 +729,7 @@ data:add {
     dice_y=160,
     color={ 255, 255, 255 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_strength" } }
     },
 
@@ -773,7 +773,7 @@ data:add {
     dice_y=240,
     color={ 255, 195, 185 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_constitution" } }
     },
 
@@ -802,7 +802,7 @@ data:add {
     dice_y=140,
     color={ 255, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_attribute", power = 100, params = { skill_id = "elona.stat_strength" } }
     },
 
@@ -828,7 +828,7 @@ data:add {
     dice_y=120,
     color={ 255, 255, 175 },
 
-    fixed_enchantments = {
+    enchantments = {
        { _id = "elona.modify_resistance", power = 100, params = { element_id = "elona.lightning" } }
     }
 }

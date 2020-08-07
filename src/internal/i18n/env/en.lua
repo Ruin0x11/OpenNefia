@@ -7,9 +7,14 @@ function en.you()
 end
 
 function en.name(obj)
+   -- >>>>>>>> shade2/init.hsp:4082 	#defcfunc name int tc ..
    if type(obj) == "table" then
       if obj.is_player then
          return en.you()
+      end
+
+      if not obj.is_visible then
+         return i18n.get("chara.something")
       end
 
       local name = obj.name or i18n.get("chara.something")
@@ -22,12 +27,16 @@ function en.name(obj)
          return name
       end
    end
+   -- <<<<<<<< shade2/init.hsp:4090 	return cnName(tc) ..
 
    return i18n.get("chara.something")
 end
 
 function en.basename(obj)
    if type(obj) == "table" then
+      if not obj.is_visible then
+         return i18n.get("chara.something")
+      end
       return obj.basename or obj.name or i18n.get("chara.something")
    end
 

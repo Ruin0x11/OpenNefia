@@ -173,6 +173,27 @@ function Gui.visible_screen_to_tile(sx, sy)
    return draw.get_coords():screen_to_tile(sx + draw_x + start_x, sy + draw_y + start_y)
 end
 
+--- Returns the bounds of the visible tile positions on-screen.
+---
+--- @tparam uint x
+--- @tparam uint y
+--- @tparam uint width
+--- @tparam uint height
+--- @treturn uint tx upper-left x
+--- @treturn uint ty upper-left y
+--- @treturn uint tdx lower-right x
+--- @treturn uint tdy lower-right y
+function Gui.visible_tile_bounds(x, y, width, height)
+   if not (x and y) and field.renderer then
+      x = field.renderer.draw_x
+      y = field.renderer.draw_y
+   end
+   width = width or Draw.get_width()
+   height = height or Draw.get_height()
+
+   return Draw.get_coords():find_bounds(x, y, width, height)
+end
+
 --- Returns the screen Y coordinate of the message window. Use for
 --- checking occlusion of a point with the message window.
 function Gui.message_window_y()

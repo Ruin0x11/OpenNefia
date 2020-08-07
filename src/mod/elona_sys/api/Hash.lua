@@ -47,25 +47,26 @@ local function sort_keys(tbl)
    return string_keys, number_keys, boolean_keys
 end
 
+local hash_one
 local function hash_table(h, tbl)
    h = Sha1.hex(h .. "table:")
    local string_keys, number_keys, boolean_keys = sort_keys(tbl)
    for k, v in ipairs(string_keys) do
       h = hash_string(h, k)
-      h = Hash.hash_one(h, v)
+      h = hash_one(h, v)
    end
    for k, v in ipairs(number_keys) do
       h = hash_number(h, k)
-      h = Hash.hash_one(h, v)
+      h = hash_one(h, v)
    end
    for k, v in ipairs(boolean_keys) do
       h = hash_boolean(h, k)
-      h = Hash.hash_one(h, v)
+      h = hash_one(h, v)
    end
    return h
 end
 
-local function hash_one(h, thing)
+hash_one = function(h, thing)
    h = h or ""
    local ty = type(thing)
    if ty == "string" then

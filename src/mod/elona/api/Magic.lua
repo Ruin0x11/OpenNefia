@@ -415,6 +415,7 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
 end
 
 function Magic.do_cast_spell(skill_id, caster, use_mp)
+   -- >>>>>>>> elona122/shade2/proc.hsp:1282 *cast_proc ..
    local skill_data = data["base.skill"]:ensure(skill_id)
    local params = {
       triggered_by = "spell",
@@ -500,7 +501,10 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
       return true
    end
 
-   -- TODO enchantment: enhances your spells
+   local enc = caster:find_enchantment("elona.power_magic")
+   if enc then
+      params.power = params.power * (100 + enc.power / 10) / 100
+   end
 
    local rapid_magic
    if caster:calc("can_cast_rapid_magic") and skill_data.is_rapid_magic then
@@ -524,6 +528,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
    end
 
    return true
+   -- <<<<<<<< elona122/shade2/proc.hsp:1350 	return true ..
 end
 
 local function gain_spell_and_casting_experience(skill_id, caster)

@@ -619,9 +619,50 @@ function Anim.meteor()
 end
 
 function Anim.ragnarok()
+   local make_flame = function()
+      return {
+         x = Rand.rnd(Draw.get_width()),
+         y = Rand.rnd(Draw.get_height()) - 96 - 24,
+         frame = 0 - Rand.rnd(3)
+      }
+   end
+   local flames = fun.tabulate(make_flame):take(100):to_list()
+   local t = UiTheme.load()
+
    -- >>>>>>>> shade2/screen.hsp:876 	case aniRagna ..
-   return function(draw_x, draw_y)
-      -- TODO
+   return function()
+      local did_something
+      local cur_frame = 0
+      local delta = 0
+      repeat
+         did_something = false
+         -- TODO screen shake
+         for _, flame in ipairs(flames) do
+            local x = flame.x
+            local y = flame.y
+            local frame = flame.frame
+
+            if frame < 10 then
+               did_something = true
+
+               if frame >= 0 then
+                  t.base.anim_flame:draw_region(frame + 1, x, y)
+                  t.base.anim_flame:draw_region(frame + 1, x, y - 96)
+                  flame.frame = flame.frame + 1 * delta
+               else
+                  flame.frame = flame.frame + Rand.rnd(2) * delta
+               end
+            end
+         end
+
+         if cur_frame % 2 == 0 and cur_frame < 8 and cur_frame / 3 < #flames then
+            Gui.play_sound("base.atk_fire")
+         end
+
+         local _
+         _, _, delta = Draw.yield(config["base.anim_wait"] + 40)
+         cur_frame = cur_frame + delta
+      until not did_something
    end
    -- <<<<<<<< shade2/screen.hsp:918 	swbreak ..
 end

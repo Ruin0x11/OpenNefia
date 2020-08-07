@@ -8,7 +8,7 @@ return {
          end
       },
       ammo = {
-         current = "Current Ammo Type",
+         current = "Current Ammo Type:",
          is_not_capable = function(_1)
             return ("%s isn't capable of changing ammos.")
                :format(itemname(_1))

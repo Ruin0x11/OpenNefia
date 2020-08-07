@@ -122,6 +122,7 @@ function PositionPrompt:on_query()
    Gui.play_sound("base.pop2")
 end
 
+local Effect -- TODO move
 local function should_draw_line(origin_x, origin_y, target_x, target_y)
    local chara = Chara.at(target_x, target_y)
    if not chara then
@@ -136,7 +137,8 @@ local function should_draw_line(origin_x, origin_y, target_x, target_y)
       return false
    end
 
-   if not chara:calc("can_target") then
+   Effect = Effect or require("mod.elona.api.Effect")
+   if not Effect.is_visible(chara) then
       return false
    end
 

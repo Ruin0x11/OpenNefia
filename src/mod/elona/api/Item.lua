@@ -180,11 +180,9 @@ local function fix_item_2(item, params)
       end
    end
 
-   -- TODO enchantments: fixed
-
    -- NOTE: fltPotion instead of fltHeadItem
    if Item.is_equipment(item) then
-      -- TODO enchant item
+      -- TODO random enchantments
       apply_enchantments(item)
    else
       if item.quality ~= Enum.Quality.Unique then

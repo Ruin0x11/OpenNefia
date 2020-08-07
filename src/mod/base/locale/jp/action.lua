@@ -8,7 +8,7 @@ return {
 end
     },
     ammo = {
-      current = "現在の装填弾",
+      current = "現在の装填弾:",
       is_not_capable = function(_1)
   return ("%sは切り替えに対応していない。")
   :format(itemname(_1))

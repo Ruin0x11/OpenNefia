@@ -319,13 +319,13 @@ local element = {
 
 data:add_multi("base.element", element)
 
--- >>>>>>>> shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..
 local function vorpal_damage(chara, params, result)
+   -- >>>>>>>> shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..
    if params.element and params.element._id == "elona.vorpal" then
       result = params.original_damage
    end
    return result
+   -- <<<<<<<< shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..
 end
 
 Event.register("base.hook_calc_damage", "Proc vorpal damage", vorpal_damage)
--- <<<<<<<< shade2/chara_func.hsp:1467 	if ele=actFinish:dmg=dmgOrg ..

@@ -85,6 +85,8 @@ function IItem:refresh()
    self:mod("is_ranged_weapon", is_ranged_weapon(self))
    self:mod("is_ammo", is_ammo(self))
    self:mod("is_armor", self:calc("dice_x") == 0)
+
+   self:emit("base.on_item_refresh")
 end
 
 function IItem:on_refresh()

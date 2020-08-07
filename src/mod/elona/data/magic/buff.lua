@@ -669,7 +669,7 @@ data:add {
    end,
 
    on_refresh = function(self, chara)
-      chara:mod("is_under_contingency", true)
+      -- No-op, handled in events
    end
 }
 

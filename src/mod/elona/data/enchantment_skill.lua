@@ -3,312 +3,312 @@
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_element_scar",
+   _id = "element_scar",
    elona_id = 0,
 
-   skill_id = "elona.buff_element_scar",
+   effect_id = "elona.element_scar",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 10
+   chance = 10
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_draw_charge",
+   _id = "draw_charge",
    elona_id = 1,
 
-   skill_id = "elona.action_draw_charge",
+   effect_id = "elona.draw_charge",
    target_type = "enemy",
    rarity = 6000,
    categories = { "elona.equip_ranged" },
-   power = 50
+   chance = 50
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_nightmare",
+   _id = "nightmare",
    elona_id = 2,
 
-   skill_id = "elona.buff_nightmare",
+   effect_id = "elona.nightmare",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 10
+   chance = 10
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_raging_roar",
+   _id = "raging_roar",
    elona_id = 3,
 
-   skill_id = "elona.spell_raging_roar",
+   effect_id = "elona.raging_roar",
    target_type = "enemy",
    rarity = 800,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 12
+   chance = 12
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_chaos_ball",
+   _id = "chaos_ball",
    elona_id = 4,
 
-   skill_id = "elona.spell_chaos_ball",
+   effect_id = "elona.chaos_ball",
    target_type = "enemy",
    rarity = 600,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 12
+   chance = 12
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_lulwys_trick",
+   _id = "lulwys_trick",
    elona_id = 5,
 
-   skill_id = "elona.buff_lulwys_trick",
+   effect_id = "elona.lulwys_trick",
    target_type = "self_or_nearby",
    rarity = 400,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 2
+   chance = 2
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_dimensional_move",
+   _id = "dimensional_move",
    elona_id = 6,
 
-   skill_id = "elona.action_dimensional_move",
+   effect_id = "elona.dimensional_move",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 50
+   chance = 50
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_shadow_step",
+   _id = "shadow_step",
    elona_id = 7,
 
-   skill_id = "elona.action_shadow_step",
+   effect_id = "elona.shadow_step",
    target_type = "enemy",
    rarity = 4000,
    categories = { "elona.equip_ranged" },
-   power = 50
+   chance = 50
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_lightning_breath",
+   _id = "lightning_breath",
    elona_id = 8,
 
-   skill_id = "elona.action_lightning_breath",
+   effect_id = "elona.lightning_breath",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_nerve_breath",
+   _id = "nerve_breath",
    elona_id = 9,
 
-   skill_id = "elona.action_nerve_breath",
+   effect_id = "elona.nerve_breath",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_nether_breath",
+   _id = "nether_breath",
    elona_id = 10,
 
-   skill_id = "elona.action_nether_breath",
+   effect_id = "elona.nether_breath",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_divine_wisdom",
+   _id = "divine_wisdom",
    elona_id = 11,
 
-   skill_id = "elona.buff_divine_wisdom",
+   effect_id = "elona.divine_wisdom",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 4
+   chance = 4
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_holy_veil",
+   _id = "holy_veil",
    elona_id = 12,
 
-   skill_id = "elona.buff_holy_veil",
+   effect_id = "elona.holy_veil",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 4
+   chance = 4
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_hero",
+   _id = "hero",
    elona_id = 13,
 
-   skill_id = "elona.buff_hero",
+   effect_id = "elona.hero",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 4
+   chance = 4
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_speed",
+   _id = "speed",
    elona_id = 14,
 
-   skill_id = "elona.buff_speed",
+   effect_id = "elona.speed",
    target_type = "self_or_nearby",
    rarity = 400,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 1
+   chance = 1
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_regeneration",
+   _id = "regeneration",
    elona_id = 15,
 
-   skill_id = "elona.buff_regeneration",
+   effect_id = "elona.regeneration",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 3
+   chance = 3
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_holy_shield",
+   _id = "holy_shield",
    elona_id = 16,
 
-   skill_id = "elona.buff_holy_shield",
+   effect_id = "elona.holy_shield",
    target_type = "self_or_nearby",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 2
+   chance = 2
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "buff_mist_of_silence",
+   _id = "mist_of_silence",
    elona_id = 17,
 
-   skill_id = "elona.buff_mist_of_silence",
+   effect_id = "elona.mist_of_silence",
    target_type = "enemy",
    rarity = 800,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 10
+   chance = 10
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_web",
+   _id = "web",
    elona_id = 18,
 
-   skill_id = "elona.spell_web",
+   effect_id = "elona.web",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 10
+   chance = 10
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_lightning_bolt",
+   _id = "lightning_bolt",
    elona_id = 19,
 
-   skill_id = "elona.spell_lightning_bolt",
+   effect_id = "elona.lightning_bolt",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_darkness_bolt",
+   _id = "darkness_bolt",
    elona_id = 20,
 
-   skill_id = "elona.spell_darkness_bolt",
+   effect_id = "elona.darkness_bolt",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_mind_bolt",
+   _id = "mind_bolt",
    elona_id = 21,
 
-   skill_id = "elona.spell_mind_bolt",
+   effect_id = "elona.mind_bolt",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_ice_bolt",
+   _id = "ice_bolt",
    elona_id = 22,
 
-   skill_id = "elona.spell_ice_bolt",
+   effect_id = "elona.ice_bolt",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 15
+   chance = 15
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "spell_healing_rain",
+   _id = "healing_rain",
    elona_id = 23,
 
-   skill_id = "elona.spell_healing_rain",
+   effect_id = "elona.healing_rain",
    target_type = "self_or_nearby",
    rarity = 800,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 2
+   chance = 2
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_grenade",
+   _id = "grenade",
    elona_id = 24,
 
-   skill_id = "elona.action_grenade",
+   effect_id = "elona.grenade",
    target_type = "enemy",
    rarity = 200,
    categories = { "elona.equip_melee", "elona.equip_ranged" },
-   power = 90
+   chance = 90
 }
 
 data:add {
    _type = "base.enchantment_skill",
-   _id = "action_decapitation",
+   _id = "decapitation",
    elona_id = 25,
 
-   skill_id = "elona.action_decapitation",
+   effect_id = "elona.decapitation",
    target_type = "enemy",
    rarity = 1000,
    categories = { "elona.equip_melee" },
-   power = 100
+   chance = 100
 }

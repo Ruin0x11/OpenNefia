@@ -1462,7 +1462,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.vopal", power = 400 },
+            { _id = "elona.pierce", power = 400 },
             { _id = "elona.res_confuse", power = 100 },
             { _id = "elona.modify_attribute", power = 300, params = { skill_id = "elona.stat_strength" } },
             { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.nerve" } },
@@ -7345,7 +7345,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.vopal", power = 150 },
+            { _id = "elona.pierce", power = 150 },
             { _id = "elona.modify_resistance", power = 550, params = { element_id = "elona.fire" } },
             { _id = "elona.modify_attribute", power = 400, params = { skill_id = "elona.stat_strength" } },
             { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.sound" } },
@@ -14764,7 +14764,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.vopal", power = 350 },
+            { _id = "elona.pierce", power = 350 },
             { _id = "elona.invoke_skill", power = 500, params = { enchantment_skill_id = "elona.buff_hero" } },
             { _id = "elona.modify_attribute", power = 600, params = { skill_id = "elona.stat_strength" } },
             { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.two_hand" } },
@@ -15769,7 +15769,7 @@ local item =
 
         enchantments = {
             { _id = "elona.crit", power = 250 },
-            { _id = "elona.vopal", power = 200 },
+            { _id = "elona.pierce", power = 200 },
             { _id = "elona.res_mutation", power = 100 },
         }
     },
@@ -15991,8 +15991,8 @@ local item =
 
         enchantments = {
             { _id = "elona.modify_skill", power = -450, params = { skill_id = "elona.performer" } },
-            { _id = "elona.res_damage", power = 400 },
-            { _id = "elona.immune_damage", power = 400 },
+            { _id = "elona.damage_resistance", power = 400 },
+            { _id = "elona.damage_immunity", power = 400 },
         }
     },
     {
@@ -16028,7 +16028,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.reflect_damage", power = 1000 },
+            { _id = "elona.damage_reflection", power = 1000 },
             { _id = "elona.modify_resistance", power = 450, params = { element_id = "elona.nerve" } },
         }
     },
@@ -16805,7 +16805,7 @@ local item =
             { _id = "elona.god_detect", power = 100 },
             { _id = "elona.extra_melee", power = 200 },
             { _id = "elona.extra_shoot", power = 150 },
-            { _id = "elona.reflect_damage", power = 180 },
+            { _id = "elona.damage_reflection", power = 180 },
             { _id = "elona.res_mutation", power = 100 },
         }
     },
@@ -16924,8 +16924,6 @@ local item =
         quality = Enum.Quality.Unique,
 
         color = { 255, 255, 255 },
-
-        
 
         categories = {
             "elona.furniture_instrument",

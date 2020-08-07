@@ -28,8 +28,8 @@ function ICharaBuffs:remove_all_buffs(force)
    end
 end
 
-function ICharaBuffs:has_buff(buff_id)
-   return fun.iter(self.buffs):any(function(b) return b._id == buff_id end)
+function ICharaBuffs:find_buff(buff_id)
+   return fun.iter(self.buffs):filter(function(b) return b._id == buff_id end):nth(1)
 end
 
 function ICharaBuffs:add_buff(buff_id, power, duration)

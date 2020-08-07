@@ -179,6 +179,8 @@ local PCC_DIRS = {
    Southeast = 1,
 }
 
+local Effect
+
 --- @treturn[opt] table
 --- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
@@ -202,9 +204,13 @@ function IChara:produce_memory()
       end
    end
 
+   -- TODO move
+   Effect = Effect or require("mod.elona.api.Effect")
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
+
    return {
       uid = self.uid,
-      show = Chara.is_alive(self, self:current_map()),
+      show = show,
       image = image,
       color = self:calc("color"),
       x_offset = x_offset or nil,
@@ -219,11 +225,13 @@ end
 --- @treturn table
 --- @overrides ILocalizable:produce_locale_data
 function IChara:produce_locale_data()
+   Effect = Effect or require("mod.elona.api.Effect")
+   local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
    return {
       name = self:calc("name"),
       gender = self:calc("gender"),
       is_player = self:is_player(),
-      is_visible = self:is_in_fov(),
+      is_visible = self:is_in_fov() and show,
       has_own_name = self:calc("has_own_name"),
       talk_type = self:calc("talk_type")
    }

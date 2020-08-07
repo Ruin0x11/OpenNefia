@@ -128,8 +128,13 @@ local function do_curse(self, params)
    if Effect.is_cursed(params.curse_state) then
       chance = chance * 100
    end
+
    local resistance = 75 + target:skill_level("elona.stat_luck")
-   -- TODO enchantment: resist curse
+   local enc = source:get_enchantment("elona.res_curse")
+   if enc then
+      resistance = resistance + enc.power / 2
+   end
+
    if Rand.rnd(resistance) > chance then
       return true
    end

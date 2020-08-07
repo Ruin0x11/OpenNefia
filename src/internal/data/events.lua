@@ -119,5 +119,8 @@ data:add_multi(
       { _id = "on_generate_area_floor" },
       { _id = "on_map_initialize" },
       { _id = "on_item_build_description" },
+      { _id = "on_item_refresh" },
+      { _id = "on_item_add_enchantment" },
+      { _id = "on_item_remove_enchantment" },
    }
 )

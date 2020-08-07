@@ -8,13 +8,19 @@ function jp.you()
 end
 
 function jp.name(obj)
+   -- >>>>>>>> shade2/init.hsp:4082 	#defcfunc name int tc ..
    if type(obj) == "table" then
       if obj.is_player then
          return jp.you()
       end
 
+      if not obj.is_visible then
+         return i18n.get("chara.something")
+      end
+
       return obj.name or i18n.get("chara.something")
    end
+   -- <<<<<<<< shade2/init.hsp:4090 	return cnName(tc) ..
 
    return i18n.get("chara.something")
 end
