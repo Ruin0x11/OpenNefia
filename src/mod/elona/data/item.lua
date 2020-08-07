@@ -1,3 +1,4 @@
+local Map = require("api.Map")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Item = require("api.Item")
@@ -9,14 +10,15 @@ local Enum = require("api.Enum")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
+local InstancedEnchantment = require("api.item.InstancedEnchantment")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
     local item = params.item
     local owner = params.owner
-    local map = params.map
 
     if not owner then
+        local map = Map.current()
         local base = map.dungeon_level * 25
         local is_shelter = false -- TODO shelter
         if is_shelter then
@@ -1344,7 +1346,7 @@ local item =
 
         on_init_params = function(self, params)
             -- >>>>>>>> shade2/item.hsp:650 	if iId(ci)=idGold{ ..
-            self.amount = hook_calc_initial_gold({item=self,owner=params.owner,map=params.map})
+            self.amount = hook_calc_initial_gold({item=self,owner=params.owner})
             if self:calc("quality") == Enum.Quality.Good then
                 self.amount = self.amount * 2
             end
@@ -1636,7 +1638,7 @@ local item =
             { _id = "elona.absorb_mana", power = 500 },
             { _id = "elona.power_magic", power = 450 },
             { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.magic" } },
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
         }
     },
     {
@@ -4363,7 +4365,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_element_scar" } },
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.element_scar" } },
             { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.lightning" } },
             { _id = "elona.modify_resistance", power = 250, params = { element_id = "elona.lightning" } },
             { _id = "elona.modify_skill", power = 350, params = { skill_id = "elona.casting" } },
@@ -4409,7 +4411,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_draw_charge" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.draw_charge" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_dexterity" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_perception" } },
             { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_dexterity" } },
@@ -4502,7 +4504,7 @@ local item =
         },
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
         }
     },
     {
@@ -7478,7 +7480,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_nightmare" } },
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.nightmare" } },
             { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.mind" } },
             { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.nerve" } },
             { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_magic" } },
@@ -11102,8 +11104,8 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_raging_roar" } },
-            { _id = "elona.invoke_skill", power = 300, params = { enchantment_skill_id = "elona.spell_chaos_ball" } },
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.raging_roar" } },
+            { _id = "elona.invoke_skill", power = 300, params = { enchantment_skill_id = "elona.chaos_ball" } },
             { _id = "elona.elemental_damage", power = 300, params = { element_id = "elona.nerve" } },
             { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.sound" } },
             { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.chaos" } },
@@ -14505,8 +14507,8 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_speed" } },
-            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.buff_lulwys_trick" } },
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.speed" } },
+            { _id = "elona.invoke_skill", power = 200, params = { enchantment_skill_id = "elona.lulwys_trick" } },
             { _id = "elona.modify_attribute", power = 250, params = { skill_id = "elona.stat_speed" } },
             { _id = "elona.modify_resistance", power = 300, params = { element_id = "elona.lightning" } },
         }
@@ -14548,7 +14550,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.buff_mist_of_silence" } },
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.mist_of_silence" } },
             { _id = "elona.res_curse", power = 200 },
             { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.marksman" } },
             { _id = "elona.modify_resistance", power = 350, params = { element_id = "elona.sound" } },
@@ -14595,7 +14597,7 @@ local item =
             { _id = "elona.modify_skill", power = 800, params = { skill_id = "elona.mining" } },
             { _id = "elona.modify_attribute", power = 550, params = { skill_id = "elona.stat_strength" } },
             { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.chaos" } },
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
         }
     },
     {
@@ -14635,7 +14637,7 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_element_scar" } },
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.element_scar" } },
             { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.fire" } },
             { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.cold" } },
             { _id = "elona.elemental_damage", power = 350, params = { element_id = "elona.lightning" } },
@@ -14678,8 +14680,8 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_healing_rain" } },
-            { _id = "elona.invoke_skill", power = 450, params = { enchantment_skill_id = "elona.buff_holy_veil" } },
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.healing_rain" } },
+            { _id = "elona.invoke_skill", power = 450, params = { enchantment_skill_id = "elona.holy_veil" } },
             { _id = "elona.modify_attribute", power = 650, params = { skill_id = "elona.stat_will" } },
             { _id = "elona.modify_resistance", power = 200, params = { element_id = "elona.darkness" } },
             { _id = "elona.modify_resistance", power = 150, params = { element_id = "elona.nether" } },
@@ -14765,7 +14767,7 @@ local item =
 
         enchantments = {
             { _id = "elona.pierce", power = 350 },
-            { _id = "elona.invoke_skill", power = 500, params = { enchantment_skill_id = "elona.buff_hero" } },
+            { _id = "elona.invoke_skill", power = 500, params = { enchantment_skill_id = "elona.hero" } },
             { _id = "elona.modify_attribute", power = 600, params = { skill_id = "elona.stat_strength" } },
             { _id = "elona.modify_skill", power = 450, params = { skill_id = "elona.two_hand" } },
             { _id = "elona.modify_resistance", power = 400, params = { element_id = "elona.mind" } },
@@ -14979,7 +14981,7 @@ local item =
             local MAX_LEVEL = 14
             -- <<<<<<<< shade2/item.hsp:30 	#define global maxMageBook 14 ..
             -- >>>>>>>> shade2/item.hsp:673 	if iId(ci)=idMageBook{ ..
-            local object_level = params.level
+            local object_level = self.level
             self.params.ancient_book_difficulty = Rand.rnd(Rand.rnd(math.floor(math.clamp(object_level / 2, 0, MAX_LEVEL))) + 1)
             self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
             self.has_charges = true
@@ -15621,7 +15623,7 @@ local item =
         },
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_grenade" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.grenade" } },
         }
     },
     {
@@ -16239,7 +16241,7 @@ local item =
         },
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
         }
     },
     {
@@ -16344,12 +16346,12 @@ local item =
         light = light.item,
 
         enchantments = {
-            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.buff_nightmare" } },
+            { _id = "elona.invoke_skill", power = 400, params = { enchantment_skill_id = "elona.nightmare" } },
             { _id = "elona.elemental_damage", power = 850, params = { element_id = "elona.mind" } },
             { _id = "elona.modify_attribute", power = 34500, params = { skill_id = "elona.stat_magic" } },
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.action_decapitation" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.decapitation" } },
             { _id = "elona.ragnarok", power = 100 },
-            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.spell_raging_roar" } },
+            { _id = "elona.invoke_skill", power = 350, params = { enchantment_skill_id = "elona.raging_roar" } },
         }
     },
     {

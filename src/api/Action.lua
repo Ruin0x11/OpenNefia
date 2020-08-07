@@ -320,24 +320,21 @@ function Action.build_target_list(chara)
 
    local filter = function(other)
       if chara ~= other and other:is_in_fov() then
-         local consider = true
          if chara:is_allied() then
             if other:is_player() then
-               consider = false
+               return false
             end
          end
 
          if not chara:has_los(other.x, other.y) then
-            consider = false
+            return false
          end
 
-         if not Effect.is_visible(chara) then
-            consider = false
+         if not Effect.is_visible(other) then
+            return false
          end
 
-         if consider then
-            return true
-         end
+         return true
       end
 
       return false

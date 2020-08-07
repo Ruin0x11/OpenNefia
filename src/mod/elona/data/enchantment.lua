@@ -369,9 +369,10 @@ data:add {
          local magic_params = {
             source = chara,
             target = target,
-            power = self.power + chara:skill_level(params.skill) * 10
+            power = self.power + chara:skill_level(params.attack_skill) * 10
          }
-         Magic.cast(enc_skill_data.effect_id, magic_params)
+         local skill_data = data["base.skill"]:ensure(enc_skill_data.skill_id)
+         Magic.cast(skill_data.effect_id, magic_params)
       end
       -- <<<<<<<< elona122/shade2/action.hsp:1465 			continue} ..
    end

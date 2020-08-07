@@ -53,7 +53,7 @@ function UiMinimap:refresh_visible(map)
    for _, x, y, tile in map:iter_tiles() do
       if map:is_memorized(x, y) then
          local color
-         if not map:can_access(x, y) then
+         if tile.is_solid then
             -- TODO Use subtractive blending, since the original code uses
             -- `gfdec2` on top of impassible tiles. Essentially, draw another
             -- sprite batch for blending purposes only with squares of either

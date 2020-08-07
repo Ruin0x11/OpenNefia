@@ -426,7 +426,7 @@ return {
             description = "無属性の矢",
             name = "魔法の矢"
          },
-         spell_magic_device = {
+         magic_device = {
             description = "道具から魔力を効果的に引き出す",
             enchantment_description = "魔道具の効果を上げる",
             name = "魔道具"

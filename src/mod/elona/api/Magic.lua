@@ -391,13 +391,13 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
    end
 
    if Rand.one_in(4) then
-      Gui.mes_visible("misc.fail_to_cast.creatures_are_summoned")
+      Gui.mes_visible("misc.fail_to_cast.creatures_are_summoned", chara)
       local player = Chara.player()
       local player_level = player:calc("level")
       local map = player:current_map()
       for i = 1, 2 + Rand.rnd(3) do
          local level = Calc.calc_object_level(player_level * 3 / 2 + 3, map)
-         local quality = Calc.calc_object_level(Enum.Quality.Normal)
+         local quality = Calc.calc_object_quality(Enum.Quality.Normal)
          local spawned = Charagen.create(player.x, player.y, { level = level, quality = quality })
          -- TODO faction
          if spawned and chara:reaction_towards(player) <= -3 then
