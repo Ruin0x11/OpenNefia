@@ -1,3 +1,4 @@
+local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
@@ -170,13 +171,32 @@ Event.register("base.after_chara_damaged",
                "Proc lay hand", proc_lay_hand)
 
 local function proc_sandbag(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
    if chara.hp < 0 and chara:calc("is_hung_on_sandbag") then
       chara.hp = chara:calc("max_hp")
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1499 		if cBit(cSandBag,tc):cHp(tc)=cMhp(tc) ..
 end
 
 Event.register("base.after_chara_damaged",
                "Proc sandbag", proc_sandbag)
+
+local function proc_sandbag_talk(chara, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1769 	if cBit(cSandBag,tc):if sync(tc):txt "("+dmg+")"+ ..
+   if chara:calc("is_hung_on_sandbag") then
+      if chara:is_in_fov() then
+         local mes = ("(%d)%s"):format(params.damage, I18N.space())
+         Gui.mes(mes)
+         if Rand.one_in(20) then
+            Gui.mes_c(I18N.quote_speech("damage.sand_bag"), "Talk")
+         end
+      end
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1769 	if cBit(cSandBag,tc):if sync(tc):txt "("+dmg+")"+ ..
+end
+
+Event.register("base.after_chara_damaged",
+               "Proc sandbag talk", proc_sandbag_talk, {priority = 500000})
 
 local function calc_initial_resistance_level(chara, element)
    if chara:is_player() then
@@ -514,7 +534,7 @@ local function bump_into_chara(player, params, result)
    local on_cell = params.chara
    local reaction = on_cell:reaction_towards(player)
 
-   if reaction > 0 then
+   if reaction > 0 and not on_cell:calc("is_hung_on_sandbag") then
       if on_cell:is_ally() or on_cell.faction == "base.citizen" or Gui.player_is_running() then
          if player:swap_places(on_cell) then
             Gui.mes("action.move.displace.text", on_cell)
@@ -931,7 +951,7 @@ Event.register("elona.calc_wand_success", "Default", calc_wand_success)
 local function calc_exp_modifier(target)
    -- >>>>>>>> shade2/action.hsp:1251 	expModifer=1+cBit(cSandBag,tc)*15+cBit(cSplit,tc) ..
    local map = target:current_map()
-   return 1 + ((target:calc("is_hung_on_sand_bag") and 15) or 0)
+   return 1 + ((target:calc("is_hung_on_sandbag") and 15) or 0)
       + ((target:calc("splits") and 1) or 0)
       + ((target:calc("splits2") and 1) or 0)
       + (map:calc("exp_modifier") or 0)

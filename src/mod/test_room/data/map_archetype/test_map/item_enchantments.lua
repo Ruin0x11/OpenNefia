@@ -159,6 +159,7 @@ local function generate_map(area, floor)
    local x = 3
    local y = 5
 
+   utils.create_sandbag(5, 3, map)
 
    x, y = make_material_enchantments(x, y, map)
    x, y = make_enchantments(x, y, map)

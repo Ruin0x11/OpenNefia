@@ -1,3 +1,5 @@
+local Item = require("api.Item")
+local Chara = require("api.Chara")
 local InstancedMap = require("api.InstancedMap")
 local Pos = require("api.Pos")
 local Area = require("api.Area")
@@ -23,6 +25,14 @@ end
 
 function utils.create_stairs(x, y, area, map)
    assert(Area.create_stairs_up(area, 1, x, y, {}, map))
+end
+
+function utils.create_sandbag(x, y, map, chara_id)
+   chara_id = chara_id or "elona.lomias"
+   local sandbag = assert(Item.create("elona.sand_bag", x, y, {}, map))
+   local chara = assert(Chara.create(chara_id, x, y, {}, map))
+   chara.is_hung_on_sandbag = true
+   chara.faction = "base.enemy"
 end
 
 return utils

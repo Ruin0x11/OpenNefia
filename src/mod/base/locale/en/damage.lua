@@ -100,12 +100,12 @@ return {
             :format(name(_1), s(_1))
       end,
       sand_bag = {
-         _0 = "Kill me already!",
-         _1 = "No..not yet...!",
-         _2 = "I can't take it anymore...",
-         _3 = "Argh!",
-         _4 = "Uhhh",
-         _5 = "Ugggg"
+         "Kill me already!",
+         "No..not yet...!",
+         "I can't take it anymore...",
+         "Argh!",
+         "Uhhh",
+         "Ugggg"
       },
       sleep_is_disturbed = function(_1)
          return ("%s%s sleep %s disturbed")

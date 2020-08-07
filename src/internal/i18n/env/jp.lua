@@ -7,14 +7,14 @@ function jp.you()
    return i18n.get("chara.you")
 end
 
-function jp.name(obj)
+function jp.name(obj, ignore_sight)
    -- >>>>>>>> shade2/init.hsp:4082 	#defcfunc name int tc ..
    if type(obj) == "table" then
       if obj.is_player then
          return jp.you()
       end
 
-      if not obj.is_visible then
+      if not obj.is_visible and not ignore_sight then
          return i18n.get("chara.something")
       end
 
@@ -45,7 +45,7 @@ function jp.he(obj)
       return "彼"
    end
 
-   if obj.gender == "Male" then
+   if obj.gender == "male" then
       return "彼"
    else
       return "彼女"
@@ -59,7 +59,7 @@ function jp.his(obj)
 
    if obj.is_player then
       return "あなたの"
-   elseif obj.gender == "Male" then
+   elseif obj.gender == "male" then
       return "彼の"
    else
       return "彼女の"
@@ -71,7 +71,7 @@ function jp.him(obj)
       return "彼"
    end
 
-   if obj.gender == "Male" then
+   if obj.gender == "male" then
       return "彼"
    else
       return "彼女"
@@ -453,7 +453,7 @@ for name, list in pairs(endings) do
       mark = mark or 1
 
       local gender_index
-      if obj.gender == "Male" then
+      if obj.gender == "male" then
          gender_index = 1
       else
          gender_index = 2

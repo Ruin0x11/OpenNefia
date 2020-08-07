@@ -8,6 +8,7 @@ function events.require_all()
    require("internal.events.map_exit")
    require("internal.events.map_archetype")
    require("internal.events.area_archetype")
+   require("internal.events.chara_refresh")
    require("internal.events.item_description")
    require("internal.events.item_refresh")
 end

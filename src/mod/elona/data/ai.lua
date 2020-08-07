@@ -1,10 +1,13 @@
+local I18N = require("api.I18N")
+local Gui = require("api.Gui")
+-- TODO This will need to be rewritten once all dependencies are implemented.
+
 local Action = require("api.Action")
 local Item = require("api.Item")
 local Event = require("api.Event")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Ai = require("api.Ai")
 local Chara = require("api.Chara")
-local Log = require("api.Log")
 local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
@@ -634,8 +637,17 @@ local function ai_talk(chara, params)
 end
 
 local function elona_default_ai(chara, params)
-   -- sandbag
-   -- leash
+   if chara:calc("is_hung_on_sandbag") then
+      if chara:is_in_fov() then
+         if Rand.one_in(30) then
+            Gui.mes_c(I18N.quote_speech("action.npc.sand_bag"), "Talk")
+         end
+      end
+      chara.ai_state.hate = 0
+      return true
+   end
+
+   -- TODO leash
    if chara:calc("is_about_to_explode") then
       Magic.cast("elona.suicide_attack", {source = chara, x = chara.x, y = chara.y})
       return true
@@ -651,13 +663,13 @@ local function elona_default_ai(chara, params)
    end
 
    -- EVENT: on_decide_action
-   -- pet arena
-   -- noyel
-   -- mount
+   -- TODO pet arena
+   -- TODO noyel
+   -- TODO mount
 
    Ai.run("elona.ai_talk", chara)
 
-   -- choked
+   -- TODO choked
    local leader = chara:get_party_leader()
    if Chara.is_alive(leader) and leader:has_effect("elona.choking") then
       if Pos.dist(chara.x, chara.y, leader.x, leader.y) == 1 then

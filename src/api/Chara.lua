@@ -1,3 +1,4 @@
+local data = require("internal.data")
 local Enum = require("api.Enum")
 --- Functions for manipulating characters.
 --- @module Chara
@@ -226,9 +227,10 @@ function Chara.create(id, x, y, params, where)
       return nil
    end
 
+   local chara_data = data["base.chara"]:ensure(id)
    local copy = params.copy or {}
-   copy.level = params.level
-   copy.quality = params.quality
+   copy.level = params.level or chara_data.level
+   copy.quality = params.quality or chara_data.quality
 
    local gen_params = {
       no_build = params.no_build,

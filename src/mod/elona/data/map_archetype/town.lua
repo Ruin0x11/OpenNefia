@@ -1032,7 +1032,7 @@ local function reload_noyel_christmas(map)
 
    chara = Chara.create("elona.punk", 38, 19, nil, map)
    chara.is_only_in_christmas = true
-   chara.is_hung_on_sand_bag = true
+   chara.is_hung_on_sandbag = true
    chara.name = I18N.get("chara.job.fanatic")
 
    chara = Chara.create("elona.fanatic", 35, 19, nil, map)

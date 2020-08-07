@@ -605,13 +605,13 @@ end,
 end
       },
       sand_bag = { function(_1)
-  return ("「もっとぶって%s」")
+  return ("もっとぶって%s")
   :format(yo(_1, 2))
 end, function(_1)
-  return ("「こんなことして、許さない%s」")
+  return ("こんなことして、許さない%s")
   :format(yo(_1))
 end, function(_1)
-  return ("「何をする%s」")
+  return ("何をする%s")
   :format(nda(_1, 2))
 end }
     },
