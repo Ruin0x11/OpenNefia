@@ -37,7 +37,8 @@ end
 function IItem:build()
    self.name = I18N.get("item.info." .. self._id .. ".name")
 
-   self:emit("base.on_build_item")
+   -- TODO remove params
+   self:emit("base.on_build_item", {location=self.location,level=self.level})
 
    self:refresh()
 end

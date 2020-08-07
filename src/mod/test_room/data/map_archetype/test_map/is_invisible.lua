@@ -4,7 +4,7 @@ local utils = require("mod.test_room.data.map_archetype.utils")
 
 local function generate_map(area, floor)
    local map = utils.create_map(20, 20)
-   utils.create_stairs(3, 3, area, map)
+   utils.create_stairs(2, 2, area, map)
 
    local ids = data["base.chara"]:iter():filter(function(c) return c.is_invisible end):to_list()
 

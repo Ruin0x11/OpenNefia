@@ -1314,7 +1314,7 @@ data:add {
                if self.spellbook.charges <= 0 then
                   self.spellbook:remove(1)
                   if params.chara:is_in_fov() then
-                     Gui.mes("action.read.book_falls_apart", self.spellbook:build_name(1))
+                     Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
                   end
                end
             end
@@ -1356,7 +1356,7 @@ data:add {
             if self.spellbook.charges <= 0 then
                self.spellbook:remove(1)
                if params.chara:is_in_fov() then
-                  Gui.mes("action.read.book_falls_apart", self.spellbook:build_name(1))
+                  Gui.mes("action.read.book.falls_apart", self.spellbook:build_name(1))
                end
             end
             -- <<<<<<<< shade2/proc.hsp:1232 		if iReserve(iId(ci))=0 : iReserve(iId(ci))=1 ..

@@ -407,7 +407,7 @@ return {
             description = "Target(Magic)",
             name = "Magic Dart"
          },
-         spell_magic_device = {
+         magic_device = {
             description = "Improves effectiveness of magic devices.",
             name = "Magic Device"
          },

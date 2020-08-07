@@ -526,7 +526,7 @@ local function mef_stepped_on_handler(chara, p, result)
    return result
    -- <<<<<<<< shade2/main.hsp:770 		} ..
 end
-Event.register("base.on_chara_moved", "Mef stepped on behavior", mef_stepped_on_handler)
+Event.register("base.on_chara_pass_turn", "Mef stepped on behavior", mef_stepped_on_handler)
 
 local function mef_stepped_off_handler(chara, p, result)
    local mef = Mef.at(chara.x, chara.y, chara:current_map())
@@ -562,7 +562,7 @@ local function update_buffs(chara, p)
    end
    -- <<<<<<<< shade2/main.hsp:782 		} ..
 end
-Event.register("base.on_chara_moved", "Update character buffs", update_buffs)
+Event.register("base.on_chara_pass_turn", "Update character buffs", update_buffs)
 
 local function play_map_music(map)
    local music_id = map:emit("elona_sys.calc_map_music", {}, map.music)

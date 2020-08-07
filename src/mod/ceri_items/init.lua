@@ -50,6 +50,17 @@ end
 
 Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
 
+local function set_item_image_on_map_enter(map, params)
+   for _, item in Item.iter(map) do
+      local mapping = FFHP.mapping_for(item._id)
+      if mapping then
+         apply_mapping(mapping, item)
+      end
+   end
+end
+
+Event.register("base.on_map_enter", "Set item image to FFHP override", set_item_image_on_map_enter)
+
 Event.register("base.on_hotload_end", "Clear FFHP mapping cache", function(_, params)
                   if params.hotloaded_types["ceri_items.ffhp_mapping"] then
                      FFHP.clear_cache()

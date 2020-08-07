@@ -73,7 +73,7 @@ data:add {
       if Chara.is_alive(target) then
          local dmg_params = {
             element = Skill.random_resistance(),
-            element_power = chara:skill_level(params.skill) * 10 + 100,
+            element_power = chara:skill_level(params.attack_skill) * 10 + 100,
             tense = "enemy"
          }
          target:damage_hp(params.original_damage * 2 / 3, chara, dmg_params)

@@ -37,7 +37,7 @@ local function make_material_enchantments(x, y, map)
       ItemMaterial.change_item_material(item, mat)
    end
 
-   return 3, iy + 2
+   return 2, iy + 2
 end
 
 local function make_enchantments(x, y, map)
@@ -72,7 +72,7 @@ local function make_enchantments(x, y, map)
       end
    end
 
-   return 3, iy + 2
+   return 2, iy + 2
 end
 
 local function make_enchantment_skills(x, y, map)
@@ -103,7 +103,7 @@ local function make_enchantment_skills(x, y, map)
       end
    end
 
-   return 3, iy + 2
+   return 2, iy + 2
 end
 
 local function make_ammo_enchantments(x, y, map)
@@ -128,7 +128,7 @@ local function make_ammo_enchantments(x, y, map)
       end
    end
 
-   return 3, iy + 2
+   return 2, iy + 2
 end
 
 local function make_fixed_enchantments(x, y, map)
@@ -149,17 +149,17 @@ local function make_fixed_enchantments(x, y, map)
       assert(Item.create(item._id, ix, iy, {}, map))
    end
 
-   return 3, iy + 2
+   return 2, iy + 2
 end
 
 local function generate_map(area, floor)
-   local map = utils.create_map(20, 25)
-   utils.create_stairs(3, 3, area, map)
+   local map = utils.create_map(20, 30)
+   utils.create_stairs(2, 2, area, map)
 
-   local x = 3
+   local x = 2
    local y = 5
 
-   utils.create_sandbag(5, 3, map)
+   utils.create_sandbag(4, 2, map)
 
    x, y = make_material_enchantments(x, y, map)
    x, y = make_enchantments(x, y, map)
