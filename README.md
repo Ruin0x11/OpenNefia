@@ -29,7 +29,9 @@ If you're using a Unix-like platform, ensure the `love` binary, `wget` and `unzi
 Then, run `OpenNefia.bat` (Windows) or `OpenNefia` (Unix).
 
 ## Contributing
-Any feedback or contributions to the project are appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+OpenNefia uses the [Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow). Please branch off of `develop` when developing new features or porting things. `master` will be reserved for stable releases and hotfixes only once the engine becomes stable enough to use.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Credits
 See [CREDITS.md](CREDITS.md) for third-party code information.
