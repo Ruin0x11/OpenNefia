@@ -493,7 +493,7 @@ function Combat.calc_attack_damage(chara, weapon, target, attack_skill, is_range
 
    if is_ranged then
       if ammo_enc then
-         local ammo_enc_data = data["base.ammo_enc_data"]:ensure(ammo_enc)
+         local ammo_enc_data = data["base.ammo_enchantment"]:ensure(ammo_enc)
          if ammo_enc_data.on_calc_damage then
             local params = {
                chara = chara,

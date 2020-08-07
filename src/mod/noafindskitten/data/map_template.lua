@@ -89,7 +89,7 @@ data:add {
       music = "elona.ruin",
       types = { "quest" },
       player_start_pos = "base.center",
-      dungeon_level = 1,
+      level = 1,
       is_indoor = true,
       max_crowd_density = 0,
       reveals_fog = true

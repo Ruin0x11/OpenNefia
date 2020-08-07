@@ -425,7 +425,7 @@ data:add {
       -- >>>>>>>> shade2/item_data.hsp:405 		if val(10)=encAmmo{ ..
       local ammo_name = "_.base.ammo_enchantment." .. self.params.ammo_enchantment_id .. ".name"
       local s = I18N.get("enchantment.with_parameters.ammo.text", ammo_name)
-      s = s .. I18N.get("enchantment.with_parameters.ammo.max", self.params.ammo_max)
+      s = s .. " " .. I18N.get("enchantment.with_parameters.ammo.max", self.params.ammo_max)
       return s
       -- <<<<<<<< shade2/item_data.hsp:409 			} ..
    end

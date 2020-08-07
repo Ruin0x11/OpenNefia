@@ -92,9 +92,9 @@ function ElonaAction.ranged_attack(chara, target, weapon, ammo)
    if ammo then
       local enc = ammo.params.ammo_loaded
       if enc then
-         if ammo.params.ammo_current <= 0 then
+         if enc.params.ammo_current <= 0 then
             Gui.mes("action.ranged.load_normal_ammo")
-            ammo.params.ammo_loaded = nil
+            enc.params.ammo_loaded = nil
          else
             -- get the `base.ammo_enchantment` ID of this InstancedEnchantment
             ammo_enchantment_id = enc.params.ammo_enchantment_id
@@ -159,7 +159,7 @@ local function show_evade_text(chara, target, extra_attacks)
    -- <<<<<<<< shade2/action.hsp:1372 		} ...
 end
 
-local function play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
+function ElonaAction.play_ranged_animation(chara, start_x, start_y, end_x, end_y, attack_skill, weapon)
    local chip, sound
 
    local color = {255, 255, 255}
@@ -220,7 +220,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    -- >>>>>>>> elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..
    if is_ranged then
       -- TODO: inherit color if weapon has enchantments
-      play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, attack_skill, weapon)
+      ElonaAction.play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, attack_skill, weapon)
    end
    -- <<<<<<<< elona122/shade2/action.hsp:1248 	if attackRange=true:call anime,(animeId=attackSki ..
 
@@ -234,7 +234,7 @@ local function do_physical_attack(chara, weapon, target, attack_skill, extra_att
    if did_hit then
       if chara:is_player() then
          if is_critical then
-            Gui.mes("damage.critical_hit", "Red")
+            Gui.mes_c("damage.critical_hit", "Red")
             Gui.play_sound("base.atk2", target.x, target.y)
          else
             Gui.play_sound("base.atk1", target.x, target.y)

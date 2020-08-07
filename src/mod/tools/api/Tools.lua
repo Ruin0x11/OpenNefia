@@ -668,24 +668,6 @@ function Tools.apply_all_buffs(type, chara, power)
    Tools.iter_buffs(type):each(function(b) Magic.apply_buff(b._id, { target = chara, source = chara, power = power }) end)
 end
 
-function Tools.create_magic_items(x, y, width)
-   local categories = table.set {
-      "elona.spellbook",
-      "elona.rod",
-      "elona.potion",
-      "elona.scroll",
-   }
-   local filter = function(i)
-      for _, cat in ipairs(i.categories or {}) do
-         if categories[cat] then
-            return true
-         end
-      end
-      return false
-   end
-   Tools.roundup(data["base.item"]:iter():filter(filter):map(function(i) return Item.create(i._id) end), x, y, width)
-end
-
 function Tools.identify_all()
    Item.iter():each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)
 end
@@ -957,6 +939,16 @@ function Tools.iter_in_area(_type)
    end
 
    return Map.current():iter_type(_type):filter(filter)
+end
+
+function Tools.refill_ammo()
+   local enc = Chara.player():iter_enchantments():filter(function(enc) return enc._id == "elona.ammo" end):nth(1)
+   if not enc then
+      return
+   end
+
+   enc.params.ammo_max = 9999
+   enc.params.ammo_current = enc.params.ammo_max
 end
 
 return Tools

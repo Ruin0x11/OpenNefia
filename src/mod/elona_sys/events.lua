@@ -399,14 +399,6 @@ Event.register("base.on_hotload_object", "reload events for item", function(obj)
                   end
 end)
 
-local function print_feat_description(feat)
-   local desc = feat.proto.description
-   if type(desc) == "function" then
-      desc = desc(feat)
-   end
-   Gui.mes(desc)
-end
-
 Event.register("base.on_feat_instantiated", "Connect feat events",
                function(feat)
                   if feat.proto.on_bash then
@@ -453,12 +445,6 @@ Event.register("base.on_feat_instantiated", "Connect feat events",
                      feat:connect_self("elona_sys.on_feat_stepped_on",
                                        "Feat prototype on_stepped_on handler",
                                        feat.proto.on_stepped_on)
-                  end
-
-                  if feat.proto.description then
-                     feat:connect_self("elona_sys.on_feat_stepped_on",
-                                       "Print feat message",
-                                       print_feat_description)
                   end
                end,
                {priority = 10000})

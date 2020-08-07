@@ -106,33 +106,7 @@ local function make_enchantment_skills(x, y, map)
    return 2, iy + 2
 end
 
-local function make_ammo_enchantments(x, y, map)
-   local ids = items_in_category("elona.equip_ammo")
-
-   local ix = x
-   local iy = y
-   for _, idx, enc_skill in data["base.ammo_enchantment"]:iter():enumerate() do
-      ix = x + ((idx - 1) % (map:width() - x - 2))
-      iy = y + math.floor((idx - 1) / (map:width() - x - 2))
-      if not map:can_access(ix, iy) then
-         break
-      end
-
-      local _id = Rand.choice(ids)
-      for i= -1, 1, 2 do
-         local power = 150 * i
-         local item = assert(Item.create(_id, ix, iy, {}, map))
-         local e = assert(Enchantment.create("elona.ammo", power, item, { is_from_material = true }))
-         e.params.enchantment_skill_id = enc_skill._id
-         item:add_enchantment(e)
-      end
-   end
-
-   return 2, iy + 2
-end
-
 local function make_fixed_enchantments(x, y, map)
-
    local filter = function(i)
       return i.enchantments ~= nil
    end
@@ -164,7 +138,6 @@ local function generate_map(area, floor)
    x, y = make_material_enchantments(x, y, map)
    x, y = make_enchantments(x, y, map)
    x, y = make_enchantment_skills(x, y, map)
-   x, y = make_ammo_enchantments(x, y, map)
    x, y = make_fixed_enchantments(x, y, map)
 
    Item.iter(map):each(function(i) Effect.identify_item(i, Enum.IdentifyState.Full) end)

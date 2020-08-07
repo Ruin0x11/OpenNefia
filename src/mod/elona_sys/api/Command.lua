@@ -85,11 +85,13 @@ function Command.move(player, x, y)
       return result
    end
 
+   -- >>>>>>>> shade2/action.hsp:581 	if (gLevel=1)or(mType=mTypeField):if mType!mTypeW ..
    local map = player:current_map()
    local parent_area = Area.parent(map)
+   local can_exit_from_edge = Area.floor_number(map) == 1 and not Map.is_world_map(map)
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y, map)
-      and (map:calc("can_exit_from_edge") or not map.is_indoor)
+      and (can_exit_from_edge or not map.is_indoor)
       and parent_area ~= nil
    then
       -- Player is trying to move out of the map.
@@ -132,6 +134,7 @@ function Command.move(player, x, y)
    -- proc confusion text
 
    return "turn_end"
+   -- >>>>>>>> shade2/action.hsp:598 		} ..
 end
 
 function Command.get(player)

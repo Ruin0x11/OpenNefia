@@ -6,10 +6,10 @@ local ammo_enchantment = {
       bomb = {
          name = "explosive ammo"
       },
-      magic = {
+      vopal = {
          name = "piercing ammo"
       },
-      vopal = {
+      magic = {
          name = "magic ammo"
       },
       time = {

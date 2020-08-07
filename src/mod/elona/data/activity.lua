@@ -69,8 +69,7 @@ Event.register("elona.on_dig_success", "Create item", function(map, params)
    if item == "gold" then
       Item.create("elona.gold_piece", x, y, map)
    elseif item == "item" then
-      local Calc = require("mod.elona.api.Calc")
-      local params = Calc.filter(map:calc("dungeon_level"), 2, nil, map)
+      local params = Calc.filter(map:calc("level"), 2, nil, map)
       params.categories = { "elona.ore" }
 
       Itemgen.create(x, y, params, map)
@@ -1095,7 +1094,7 @@ local function dig_random_site(activity, params)
    local chara = params.chara
 
    local map = chara:current_map()
-   local level = map:calc("dungeon_level")
+   local level = map:calc("level")
    local site = map:calc("material_type") or "elona.field"
 
    if map:has_type("world_map") then

@@ -16,10 +16,10 @@ local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local function calc_initial_gold(_, params, result)
     local item = params.item
     local owner = params.owner
+    local map = params.map or Map.current()
 
     if not owner then
-        local map = Map.current()
-        local base = map.dungeon_level * 25
+        local base = map.level * 25
         local is_shelter = false -- TODO shelter
         if is_shelter then
             base = 1

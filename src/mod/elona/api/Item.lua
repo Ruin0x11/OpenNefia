@@ -214,7 +214,7 @@ end
 -- >>>>>>>> shade2/item.hsp:685 	if refType=fltChest{ ..
 local function init_container(item, params)
    local map = get_map(params)
-   local map_level = (map and map:calc("dungeon_level")) or 1
+   local map_level = (map and map:calc("level")) or 1
 
    -- TODO shelter
    local is_shelter = false

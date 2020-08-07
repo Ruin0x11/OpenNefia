@@ -47,4 +47,7 @@ Gui.bind_keys {
    rest = function(_, me)
       return ElonaCommand.rest(me)
    end,
+   ammo = function(_, me)
+      return ElonaCommand.ammo(me)
+   end,
 }

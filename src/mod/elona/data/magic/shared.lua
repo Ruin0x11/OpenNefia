@@ -417,8 +417,8 @@ local function make_ball(opts)
       cast = function(self, params)
          local source = params.source
          local map = params.source:current_map()
-         local x = params.source.x
-         local y = params.source.y
+         local x = params.x or source.x
+         local y = params.y or source.y
 
          local positions = ElonaPos.make_ball(x, y, params.range, map)
 
@@ -449,7 +449,7 @@ local function make_ball(opts)
 end
 
 local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, params)
-   if x == tx and y == ty then
+   if x == source.x and y == source.y then
       return
    end
 
@@ -461,8 +461,14 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
    local dice = self:dice(params)
    local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
 
-   local success, damage = SkillCheck.handle_control_magic(source, target, damage)
-   if not success then
+   local passed_through
+   if source:is_allied_with(target) then
+      passed_through, damage = SkillCheck.handle_control_magic(source, target, damage)
+   else
+      passed_through = false
+   end
+
+   if not passed_through then
       local tense = "enemy"
       if not target:is_ally() then
          tense = "ally"

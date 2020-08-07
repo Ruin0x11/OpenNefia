@@ -28,8 +28,10 @@ local function get_map_display_name(area, description)
       return ""
    end
 
-   local desc = I18N.get("map.unique." .. area.gen_id .. ".desc")
-   local name = I18N.get("map.unique." .. area.gen_id .. ".name")
+   local _id = area._archetype or "<no archetype>"
+
+   local desc = I18N.get("map.unique." .. _id .. ".desc")
+   local name = I18N.get("map.unique." .. _id .. ".name")
    if name == nil and desc then
       name = desc
    end
@@ -39,8 +41,9 @@ local function get_map_display_name(area, description)
    end
 
    local text
-   if area.types["elona.nefia"] then
-      text = I18N.get("map.you_see_an_entrance", name, area.starting_dungeon_level)
+   local is_nefia = false -- TODO area metadata: type
+   if is_nefia then
+      text = I18N.get("map.you_see_an_entrance", name, 999999)
    elseif desc then
       text = desc
    else
@@ -340,16 +343,14 @@ data:add
    on_activate = travel(MapEntrance.stairs_up),
 
    on_stepped_on = function(self, params)
-      local area = { gen_id = "elona.vernis", types = {} }
-      if area.types["elona.nefia"] then
-         -- TODO
+      local area = Area.get(self.params.area_uid)
+      local is_nefia = false -- TODO area metadata: type
+      if is_nefia then
          ExHelp.maybe_show("elona.random_dungeon")
       end
-   end,
-
-   description = function(self)
-      local area = { gen_id = "elona.vernis", types = {} }
-      return get_map_display_name(area, true)
+      if area then
+         Gui.mes(get_map_display_name(area, true))
+      end
    end,
 
    on_descend = function(self, params) self:on_activate(params.chara) end
@@ -372,7 +373,7 @@ data:add {
 
       self.image = nil
 
-      local level = map:calc("dungeon_level")
+      local level = map:calc("level")
       if map.gen_id == "elona.shelter" then level = 0 end
 
       Itemgen.create(self.x, self.y, Calc.filter(level, 1), map)

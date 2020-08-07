@@ -1,3 +1,5 @@
+local Effect = require("mod.elona.api.Effect")
+local Enum = require("api.Enum")
 local Item = require("api.Item")
 local Chara = require("api.Chara")
 local InstancedMap = require("api.InstancedMap")
@@ -33,6 +35,14 @@ function utils.create_sandbag(x, y, map, chara_id)
    local chara = assert(Chara.create(chara_id, x, y, {}, map))
    chara.is_hung_on_sandbag = true
    chara.faction = "base.enemy"
+end
+
+function utils.normalize_items(map)
+   local normalize = function(i)
+      Effect.identify_item(i, Enum.IdentifyState.Full)
+      i.curse_state = Enum.CurseState.Normal
+   end
+   Item.iter(map):each(normalize)
 end
 
 return utils

@@ -354,7 +354,7 @@ local function find_treasure_location(map)
 
    local point = function()
       local tx = 4 + Rand.rnd(map:width() - 8)
-      local ty = 3 + Rand.rnd(map:width() - 6)
+      local ty = 3 + Rand.rnd(map:height() - 6)
       return tx, ty
    end
 
@@ -406,7 +406,7 @@ data:add {
          return true
       end
 
-      local item_map = item:containing_map()
+      local item_map = source:current_map()
       if item.params.treasure_map_x == nil then
          item:separate()
 
@@ -417,8 +417,8 @@ data:add {
          end
       end
 
-      if not item.params.treasure_map then
-         Log.warn("No treasure map location found.")
+      if not item.params.treasure_map_x then
+         Log.error("No treasure map location found.")
          return true
       end
 
@@ -444,9 +444,8 @@ local function proc_treasure_map(map, params)
 
    local filter = function(item)
       return item._id == "elona.treasure_map"
-         and type(item.params.treasure_map) == "table"
-         and item.params.treasure_map.x == chara.x
-         and item.params.treasure_map.y == chara.y
+         and item.params.treasure_map_x == chara.x
+         and item.params.treasure_map_y == chara.y
    end
    local treasure_map = chara:iter_inventory():filter(filter):nth(1)
 

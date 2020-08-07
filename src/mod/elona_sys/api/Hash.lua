@@ -51,17 +51,17 @@ local hash_one
 local function hash_table(h, tbl)
    h = Sha1.hex(h .. "table:")
    local string_keys, number_keys, boolean_keys = sort_keys(tbl)
-   for k, v in ipairs(string_keys) do
+   for _, k in ipairs(string_keys) do
       h = hash_string(h, k)
-      h = hash_one(h, v)
+      h = hash_one(h, tbl[k])
    end
-   for k, v in ipairs(number_keys) do
+   for _, k in ipairs(number_keys) do
       h = hash_number(h, k)
-      h = hash_one(h, v)
+      h = hash_one(h, tbl[k])
    end
-   for k, v in ipairs(boolean_keys) do
+   for _, k in ipairs(boolean_keys) do
       h = hash_boolean(h, k)
-      h = hash_one(h, v)
+      h = hash_one(h, tbl[k])
    end
    return h
 end

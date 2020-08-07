@@ -216,7 +216,7 @@ function IChara:produce_memory()
       x_offset = x_offset or nil,
       y_offset = y_offset or nil,
       hp_bar = hp_bar,
-      hp_ratio = self:calc("hp") / self:calc("max_hp"),
+      hp_ratio = self.hp / self:calc("max_hp"),
       shadow_type = "normal",
       drawables = self.drawables
    }
@@ -448,7 +448,8 @@ end
 --- @tparam int add
 --- @tparam boolean quiet
 function IChara:heal_hp(add, quiet)
-   self.hp = math.floor(math.min(self.hp + math.max(add, 0), self:calc("max_hp")))
+   add = math.max(math.floor(add), 0)
+   self.hp = math.floor(math.min(self.hp + add, self:calc("max_hp")))
    self:emit("base.on_heal_chara_hp", { amount = add, quiet = quiet })
 end
 
@@ -457,7 +458,8 @@ end
 --- @tparam int add
 --- @tparam boolean quiet
 function IChara:heal_mp(add, quiet)
-   self.mp = math.floor(math.min(self.mp + math.max(add, 0), self:calc("max_mp")))
+   add = math.max(math.floor(add), 0)
+   self.mp = math.floor(math.min(self.mp + add, self:calc("max_mp")))
    self:emit("base.on_heal_chara_mp", { amount = add, quiet = quiet })
 end
 

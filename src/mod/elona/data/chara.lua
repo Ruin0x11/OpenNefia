@@ -5228,12 +5228,15 @@ local chara = {
             name = "Set image",
 
             callback = function(self)
+               -- >>>>>>>> shade2/chara.hsp:513 	if cId(rc)=205{ ..
+               -- TODO
                local id = Rand.rnd(33) * 2 + 1
                if self.gender == "female" then
                   id = id + 1
                end
                self.image = data["base.chip"]:iter():filter(function(c) return c.elona_id == id end):extract("_id"):nth(1)
                assert(self.image)
+               -- <<<<<<<< shade2/chara.hsp:515 		} ..
             end
          }
       }

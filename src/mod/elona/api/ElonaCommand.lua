@@ -414,7 +414,7 @@ function ElonaCommand.ammo(player)
       end
    end
 
-   if current_idx then
+   if current_idx == nil then
       ammo.params.ammo_loaded = nil
    else
       ammo.params.ammo_loaded = ammo_encs[current_idx]
@@ -428,11 +428,11 @@ function ElonaCommand.ammo(player)
          capacity = I18N.get("action.ammo.unlimited")
       else
          local ammo_enc = ammo_encs[i]
-         name = I18N.get("_.base.ammo_enchantment." .. ammo_enc._id .. ".name")
+         name = I18N.get("_.base.ammo_enchantment." .. ammo_enc.params.ammo_enchantment_id .. ".name")
          capacity = ("%d/%d"):format(ammo_enc.params.ammo_current, ammo_enc.params.ammo_max)
       end
       local s, color
-      if current_idx == i then
+      if current_idx == i or (current_idx == nil and i == 0) then
          s = ("[%s:%s]"):format(name, capacity)
          color = "Blue"
       else

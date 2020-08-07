@@ -218,7 +218,7 @@ local element = {
          end
 
          if Rand.rnd(10) < elep / 75 + 4 then
-            chara:apply_effect("elona.blind", power())
+            chara:apply_effect("elona.blindness", power())
          end
          if Rand.rnd(20) < elep / 50 + 4 then
             chara:apply_effect("elona.paralysis", power())

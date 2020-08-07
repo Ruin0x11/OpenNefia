@@ -69,7 +69,7 @@ end
 ---
 --- @treturn Iterator(IChara)
 function Chara.iter_party(map)
-   local party = table.append({ save.base.player }, save.base.allies)
+   local party = table.append({ Chara.player().uid }, save.base.allies)
    return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
 end
 

@@ -34,7 +34,7 @@ return {
     with_parameters = {
       ammo = {
         max = function(_1)
-  return ("最大%s発")
+  return ("[最大%s発]")
   :format(_1)
 end,
         text = function(_1)

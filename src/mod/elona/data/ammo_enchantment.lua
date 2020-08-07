@@ -5,6 +5,7 @@ local Chara = require("api.Chara")
 local Action = require("api.Action")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Anim = require("mod.elona_sys.api.Anim")
 
 data:add {
    _type = "base.ammo_enchantment",
@@ -48,12 +49,14 @@ data:add {
    stamina_cost = 10,
 
    on_ranged_attack = function(chara, weapon, target, skill, ammo, ammo_enchantment_id)
+      ElonaAction.play_ranged_animation(chara, chara.x, chara.y, target.x, target.y, skill, weapon)
       local params = {
          source = chara,
          target = target,
          power = chara:skill_level(skill) * 8 + 10,
          x = target.x,
-         y = target.y
+         y = target.y,
+         range = data["base.skill"]:ensure("elona.spell_magic_storm").range
       }
       Magic.cast("elona.magic_storm", params)
    end

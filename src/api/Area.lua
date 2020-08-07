@@ -173,7 +173,7 @@ function Area.create_entrance(area, map_or_floor_number, x, y, params, map)
    end
 
    local Feat = require("api.Feat")
-   local feat, err = Feat.create("elona.stairs_down", x, y, params, map)
+   local feat, err = Feat.create("elona.map_entrance", x, y, params, map)
 
    if not feat then
       return feat, err

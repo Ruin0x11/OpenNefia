@@ -218,6 +218,7 @@ local function calc_initial_resistance_level(chara, element)
    return level
 end
 
+-- >>>>>>>> shade2/calculation.hsp:983 	i=4 ..
 local initial_skills = {
    ["elona.axe"] = 4,
    ["elona.blunt"] = 4,
@@ -241,9 +242,12 @@ local initial_skills = {
    ["elona.stealth"] = 4,
    ["elona.throwing"] = 4
 }
+-- <<<<<<<< shade2/calculation.hsp:1006 	skillInit rsLUC,r1,50 ...
 
 local function init_skills_from_table(chara, tbl)
    for skill_id, level in pairs(tbl) do
+      local Log = require("api.Log")
+      Log.error("TODO skill")
       local init = Skill.calc_initial_skill_level(skill_id, level, chara:base_skill_level(skill_id), chara:calc("level"), chara)
       chara:set_base_skill(skill_id, init.level, init.potential, 0)
    end
@@ -676,7 +680,7 @@ Event.register("base.on_regenerate", "Regenerate HP/MP", on_regenerate)
 
 local function gain_healing_meditation_exp(chara)
    local exp = 0
-   if chara:calc("hp") ~= chara:calc("max_hp") then
+   if chara.hp ~= chara:calc("max_hp") then
       local healing = chara:skill_level("elona.healing")
       if healing < chara:skill_level("elona.stat_constitution") then
          exp = 5 + healing / 5
@@ -685,7 +689,7 @@ local function gain_healing_meditation_exp(chara)
    Skill.gain_skill_exp(chara, "elona.healing", exp, 1000)
 
    exp = 0
-   if chara:calc("mp") ~= chara:calc("max_mp") then
+   if chara.mp ~= chara:calc("max_mp") then
       local meditation = chara:skill_level("elona.meditation")
       if meditation < chara:skill_level("elona.stat_magic") then
          exp = 5 + meditation / 5

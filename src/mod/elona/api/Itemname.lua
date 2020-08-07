@@ -49,7 +49,7 @@ local function item_known_info(item)
    if bonus ~= 0 then
       s = s .. number_string(bonus)
    end
-   if item.charges and item.charges > 0 then
+   if item.has_charge and item.charges then
       s = s .. I18N.get("item.charges", item.charges)
    end
 
@@ -604,7 +604,7 @@ function itemname.en(item, amount, no_article)
 
    -- >>>>>>>> shade2/item_func.hsp:640 	if iId(id)=idFishingPole{ ..
    if _id == "elona.fishing_pole" then
-      if item.charges > 0 then
+      if item.has_charge and item.charges then
          s = s .. I18N.get("item.info." .. _id .. ".remaining", "item.info.elona.bait.rank." .. item.params.fishing_pole_bait, item.charges)
       end
    elseif _id == "elona.monster_ball" then
