@@ -545,3 +545,12 @@ data:add {
       params.chara:damage_hp(100+Rand.rnd(200), "elona.trap")
    end,
 }
+
+-- For dungeon generation.
+data:add {
+   _type = "base.feat",
+   _id = "mapgen_block",
+
+   is_solid = true,
+   is_opaque = true
+}

@@ -4262,3 +4262,34 @@ for _, tile in ipairs(tiles) do
 
    data:add(tile)
 end
+
+-- For dungeon generation.
+data:add_multi(
+   "base.map_tile",
+   {
+      {
+         _id = "mapgen_floor",
+         image = "graphic/default/floor.png",
+         is_solid = true
+      },
+      {
+         _id = "mapgen_tunnel",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+      {
+         _id = "mapgen_wall",
+         image = "graphic/default/floor.png",
+         is_solid = true
+      },
+      {
+         _id = "mapgen_room",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+      {
+         _id = "mapgen_floor_2",
+         image = "graphic/default/floor.png",
+         is_solid = false
+      },
+})

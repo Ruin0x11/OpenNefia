@@ -333,7 +333,7 @@ end
 
 function Tools.print_map(map)
    map = map or Map.current()
-   local res = ""
+   local res = "\n"
    for _, x, y in Pos.iter_rect(0, 0, map:width()-1, map:height()-1) do
       local c
       if Map.is_floor(x, y, map) then

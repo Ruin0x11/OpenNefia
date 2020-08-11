@@ -1,417 +1,309 @@
+local DungeonMap = require("mod.elona.api.DungeonMap")
 local Dungeon = require("mod.elona.api.Dungeon")
 local Rand = require("api.Rand")
-local Map = require("api.Map")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
-local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 
-data:add_type {
-   name = "dungeon_template",
-   schema = schema.Record {
-      generator = schema.Function
+local dungeon_template = {}
+
+function dungeon_template.type_1(area, floor)
+   local gen = Dungeon.gen_type_1
+   return DungeonMap.generate(gen, area, floor, {})
+end
+
+function dungeon_template.type_2(area, floor)
+   local gen = Dungeon.gen_type_2
+   return DungeonMap.generate(gen, area, floor, { has_monster_houses = true })
+end
+
+local function type_3_calc_density(map)
+   local crowd_density = map:calc("max_crowd_density")
+   return {
+      mob = crowd_density / 2,
+      item = crowd_density / 3
    }
-}
+end
+function dungeon_template.type_3(area, floor)
+   local gen = Dungeon.gen_type_3
+   return DungeonMap.generate(gen, area, floor, { calc_density = type_3_calc_density })
+end
 
-data:add_multi(
-   "base.map_tile",
-   {
-      {
-         _id = "mapgen_floor",
-         image = "graphic/default/floor.png",
-         is_solid = true
-      },
-      {
-         _id = "mapgen_tunnel",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-      {
-         _id = "mapgen_wall",
-         image = "graphic/default/floor.png",
-         is_solid = true
-      },
-      {
-         _id = "mapgen_room",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-      {
-         _id = "mapgen_floor_2",
-         image = "graphic/default/floor.png",
-         is_solid = false
-      },
-})
+function dungeon_template.type_4(area, floor)
+   local gen = Dungeon.gen_type_4
+   return DungeonMap.generate(gen, area, floor, {})
+end
 
-data:add {
-   _type = "base.feat",
-   _id = "mapgen_block",
+function dungeon_template.type_5(area, floor)
+   local gen = Dungeon.gen_type_5
+   return DungeonMap.generate(gen, area, floor, {})
+end
 
-   is_solid = true,
-   is_opaque = true
-}
+function dungeon_template.type_6(area, floor)
+   local gen = Dungeon.gen_type_6
+   return DungeonMap.generate(gen, area, floor, {})
+end
 
-data:add(
-   {
-      _id = "type_1",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_1
+local function type_8_calc_density(map)
+   local crowd_density = map:calc("max_crowd_density")
+   return {
+      mob = crowd_density / 4,
+      item = crowd_density / 10
    }
-)
+end
+function dungeon_template.type_8(area, floor)
+   local gen = Dungeon.gen_type_8
+   return DungeonMap.generate(gen, area, floor, { calc_density = type_8_calc_density })
+end
 
-data:add(
-   {
-      _id = "type_2",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_2,
-
-      has_monster_houses = true
+local function type_9_calc_density(map)
+   local crowd_density = map:calc("max_crowd_density")
+   return {
+      mob = crowd_density / 3,
+      item = crowd_density / 10
    }
-)
+end
+local function type_9_after_generate(map)
+   Itemgen.create(nil, nil, {categories=Filters.fsetwear, quality=6})
+end
+function dungeon_template.type_9(area, floor)
+   local gen = Dungeon.gen_type_9
+   return DungeonMap.generate(gen, area, floor, { calc_density = type_9_calc_density, after_generate = type_9_after_generate })
+end
 
-data:add(
-   {
-      _id = "type_3",
-      _type = "elona.dungeon_template",
+local function type_10_calc_density(map)
+   local crowd_density = map:calc("max_crowd_density")
+   return {
+      mob = crowd_density / 3,
+      item = crowd_density / 6
+   }
+end
+function dungeon_template.type_10(area, floor)
+   local gen = Dungeon.gen_type_10
+   return DungeonMap.generate(gen, area, floor, { calc_density = type_10_calc_density })
+end
 
-      generate = Dungeon.gen_type_3,
 
-      calc_density = function(map)
-         local crowd_density = map:calc("max_crowd_density")
-         return {
-            mob = crowd_density / 2,
-            item = crowd_density / 3
-         }
+function dungeon_template.dungeon(area, floor)
+   local tileset = "elona.dungeon"
+
+   local gen = dungeon_template.type_2
+   if Rand.one_in(4) then
+      gen = dungeon_template.type_1
+   end
+   if Rand.one_in(6) then
+      gen = dungeon_template.type_10
+   end
+   if Rand.one_in(10) then
+      gen = dungeon_template.type_4
+   end
+   if Rand.one_in(25) then
+      gen = dungeon_template.type_8
+   end
+   if Rand.one_in(25) then
+      tileset = "elona.water"
+   end
+
+   local map = gen(area, floor)
+
+   if map == nil then
+      return nil
+   end
+
+   map.tileset = tileset
+
+   return map
+end
+-- image = "elona.feat_area_cave",
+
+function dungeon_template.tower(area, floor)
+   local tileset = "elona.tower_1"
+
+   local gen = dungeon_template.type_1
+   if Rand.one_in(5) then
+      gen = dungeon_template.type_4
+   end
+   if Rand.one_in(10) then
+      gen = dungeon_template.type_3
+   end
+   if Rand.one_in(25) then
+      gen = dungeon_template.type_2
+   end
+   if Rand.one_in(40) then
+      tileset = "elona.water"
+   end
+
+   local map = gen(area, floor)
+
+   if map == nil then
+      return nil
+   end
+
+   map.tileset = tileset
+
+   return map
+end
+-- image = "elona.feat_area_tower",
+
+function dungeon_template.forest(area, floor)
+   local tileset = "elona.dungeon_forest"
+
+   local gen = dungeon_template.type_2
+   if Rand.one_in(6) then
+      gen = dungeon_template.type_1
+   end
+   if Rand.one_in(6) then
+      gen = dungeon_template.type_10
+   end
+   if Rand.one_in(25) then
+      gen = dungeon_template.type_8
+   end
+   if Rand.one_in(20) then
+      gen = dungeon_template.type_4
+   end
+
+   local map = gen(area, floor)
+
+   if map == nil then
+      return nil
+   end
+
+   map.tileset = tileset
+
+   return map
+end
+-- image = "elona.feat_area_tree",
+
+function dungeon_template.castle(area, floor)
+   local tileset = "elona.dungeon_castle"
+
+   local gen = dungeon_template.type_1
+   if Rand.one_in(5) then
+      gen = dungeon_template.type_4
+   end
+   if Rand.one_in(6) then
+      gen = dungeon_template.type_5
+   end
+   if Rand.one_in(7) then
+      gen = dungeon_template.type_2
+   end
+   if Rand.one_in(40) then
+      tileset = "elona.water"
+   end
+
+   local map = gen(area, floor)
+
+   if map == nil then
+      return nil
+   end
+
+   map.tileset = tileset
+
+   return map
+end
+-- image = "elona.feat_area_temple",
+
+function dungeon_template.lesimas(area, floor)
+   local tileset = "elona.lesimas"
+
+   if Rand.one_in(20) then
+      tileset = "elona.water"
+   end
+   if floor < 35 then
+      tileset = "elona.dirt"
+   end
+   if floor < 20 then
+      tileset = "elona.tower_1"
+   end
+   if floor < 10 then
+      tileset = "elona.tower_2"
+   end
+   if floor < 5 then
+      tileset = "elona.dirt"
+   end
+
+   local gen = dungeon_template.type_1
+   if Rand.one_in(30) then
+      gen = dungeon_template.type_3
+   end
+
+   local levels = {
+      [1] = dungeon_template.type_2,
+      [5] = dungeon_template.type_5,
+      [10] = dungeon_template.type_3,
+      [15] = dungeon_template.type_5,
+      [20] = dungeon_template.type_3,
+      [25] = dungeon_template.type_5,
+      [30] = dungeon_template.type_3,
+   }
+
+   if levels[floor] then
+      gen = levels[floor]
+   else
+      if floor < 30 and Rand.one_in(4) then
+         gen = dungeon_template.type_2
       end
-   }
-)
 
-data:add(
-   {
-      _id = "type_4",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_4
-   }
-)
-
-data:add(
-   {
-      _id = "type_5",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_5
-   }
-)
-
-data:add(
-   {
-      _id = "type_6",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_6
-   }
-)
-
-data:add(
-   {
-      _id = "type_8",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_8,
-
-      calc_density = function(map)
-         local crowd_density = map:calc("max_crowd_density")
-         return {
-            mob = crowd_density / 4,
-            item = crowd_density / 10
-         }
+      if Rand.one_in(5) then
+         gen = dungeon_template.type_4
       end
-   }
-)
-
-data:add(
-   {
-      _id = "type_9",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_9,
-
-      after_generate = function(map)
-         Itemgen.create(nil, nil, {categories=Filters.fsetwear, quality=6})
-      end,
-
-      calc_density = function(map)
-         local crowd_density = map:calc("max_crowd_density")
-         return {
-            mob = crowd_density / 3,
-            item = crowd_density / 10
-         }
+      if Rand.one_in(20) then
+         gen = dungeon_template.type_8
       end
-   }
-)
-
-data:add(
-   {
-      _id = "type_10",
-      _type = "elona.dungeon_template",
-
-      generate = Dungeon.gen_type_10,
-
-      calc_density = function(map)
-         local crowd_density = map:calc("max_crowd_density")
-         return {
-            mob = crowd_density / 3,
-            item = crowd_density / 6
-         }
+      if Rand.one_in(6) then
+         gen = dungeon_template.type_10
       end
-   }
-)
+   end
 
-data:add(
-   {
-      _id = "dungeon",
-      _type = "elona.dungeon_template",
+   local map = gen(area, floor)
 
-      image = "elona.feat_area_cave",
+   if map == nil then
+      return nil
+   end
 
-      generate = function(rooms, params, opts)
-         params.tileset = "elona.dungeon"
+   map.tileset = tileset
+   map.max_crowd_density = map.max_crowd_density + math.floor(map.level / 2)
 
-         local kind = "elona.type_2"
-         if Rand.one_in(4) then
-            kind = "elona.type_1"
-         end
-         if Rand.one_in(6) then
-            kind = "elona.type_10"
-         end
-         if Rand.one_in(10) then
-            kind = "elona.type_4"
-         end
-         if Rand.one_in(25) then
-            kind = "elona.type_8"
-         end
-         if Rand.one_in(25) then
-            params.tileset = "elona.water"
-         end
+   return map
+end
+-- image = "elona.feat_area_cave",
 
-         return kind, params
-      end
-   }
-)
+function dungeon_template.tower_of_fire(area, floor)
+   local map = dungeon_template.type_1(area, floor)
 
-data:add(
-   {
-      _id = "tower",
-      _type = "elona.dungeon_template",
+   if map == nil then
+      return nil
+   end
 
-      image = "elona.feat_area_tower",
+   map.tileset = "elona.tower_of_fire"
+   map.max_crowd_density = map.max_crowd_density + math.floor(map.level / 2)
 
-      generate = function(rooms, params, opts)
-         params.tileset = "elona.tower_1"
+   return map
+end
 
-         local kind = "elona.type_1"
-         if Rand.one_in(5) then
-            kind = "elona.type_4"
-         end
-         if Rand.one_in(10) then
-            kind = "elona.type_3"
-         end
-         if Rand.one_in(25) then
-            kind = "elona.type_2"
-         end
-         if Rand.one_in(40) then
-            params.tileset = "elona.water"
-         end
+function dungeon_template.crypt_of_the_damned(area, floor)
+   local map = dungeon_template.type_1(area, floor)
 
-         return kind, params
-      end
-   }
-)
+   if map == nil then
+      return nil
+   end
 
-data:add(
-   {
-      _id = "forest",
-      _type = "elona.dungeon_template",
+   map.tileset = "elona.dirt"
+   map.max_crowd_density = map.max_crowd_density + math.floor(map.level / 2)
 
-      image = "elona.feat_area_tree",
+   return map
+end
 
-      generate = function(rooms, params, opts)
-         params.tileset = "elona.dungeon_forest"
+function dungeon_template.ancient_castle(area, floor)
+   local map = dungeon_template.type_1(area, floor)
 
-         local kind = "elona.type_2"
-         if Rand.one_in(6) then
-            kind = "elona.type_1"
-         end
-         if Rand.one_in(6) then
-            kind = "elona.type_10"
-         end
-         if Rand.one_in(25) then
-            kind = "elona.type_8"
-         end
-         if Rand.one_in(20) then
-            kind = "elona.type_4"
-         end
+   if map == nil then
+      return nil
+   end
 
-         return kind, params
-      end
-   }
-)
+   map.tileset = "elona.dungeon_castle"
+   map.max_crowd_density = map.max_crowd_density + math.floor(map.level / 2)
 
-data:add(
-   {
-      _id = "castle",
-      _type = "elona.dungeon_template",
+   return map
+end
 
-      image = "elona.feat_area_temple",
-
-      generate = function(rooms, params, opts)
-         params.tileset = "elona.dungeon_castle"
-
-         local kind = "elona.type_1"
-         if Rand.one_in(5) then
-            kind = "elona.type_4"
-         end
-         if Rand.one_in(6) then
-            kind = "elona.type_5"
-         end
-         if Rand.one_in(7) then
-            kind = "elona.type_2"
-         end
-         if Rand.one_in(40) then
-            params.tileset = "elona.water"
-         end
-
-         return kind, params
-      end
-   }
-)
-
-data:add(
-   {
-      _id = "lesimas",
-      _type = "elona.dungeon_template",
-
-      image = "elona.feat_area_cave",
-
-      generate = function(rooms, params, opts)
-         local tileset = "elona.lesimas"
-
-         if Rand.one_in(20) then
-            tileset = "elona.water"
-         end
-         if params.dungeon_level < 35 then
-            tileset = "elona.dirt"
-         end
-         if params.dungeon_level < 20 then
-            tileset = "elona.tower_1"
-         end
-         if params.dungeon_level < 10 then
-            tileset = "elona.tower_2"
-         end
-         if params.dungeon_level < 5 then
-            tileset = "elona.dirt"
-         end
-
-         params.tileset = tileset
-
-         local kind = "elona.type_1"
-         if Rand.one_in(30) then
-            kind = "elona.type_3"
-         end
-
-         local levels = {
-            [1] = "elona.type_2",
-            [5] = "elona.type_5",
-            [10] = "elona.type_3",
-            [15] = "elona.type_5",
-            [20] = "elona.type_3",
-            [25] = "elona.type_5",
-            [30] = "elona.type_3",
-         }
-
-         if levels[params.dungeon_level] then
-            kind = levels[params.dungeon_level]
-         else
-            if params.dungeon_level < 30 and Rand.one_in(4) then
-               kind = "elona.type_2"
-            end
-
-            if Rand.one_in(5) then
-               kind = "elona.type_4"
-            end
-            if Rand.one_in(20) then
-               kind = "elona.type_8"
-            end
-            if Rand.one_in(6) then
-               kind = "elona.type_10"
-            end
-         end
-
-         params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-
-         return kind, params
-      end
-   }
-)
-
-data:add(
-   {
-      _id = "tower_of_fire",
-      _type = "elona.dungeon_template",
-
-      generate = function(rooms, params, opts)
-         if params.is_deepest_level then
-            local map =  Elona122Map.generate("firet1")
-            map.max_crowd_density = 0
-            map.music = "elona.last_boss"
-            return map
-         else
-            params.tileset = "elona.tower_of_fire"
-            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-            return "elona.type_1", params
-         end
-      end
-   }
-)
-
-data:add(
-   {
-      _id = "crypt_of_the_damned",
-      _type = "elona.dungeon_template",
-
-      generate = function(rooms, params, opts)
-         if params.is_deepest_level then
-            local map =  Elona122Map.generate("undeadt1")
-            map.max_crowd_density = 0
-            map.music = "elona.last_boss"
-            return map
-         else
-            params.tileset = "elona.dirt"
-            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-            return "elona.type_1", params
-         end
-      end
-   }
-)
-
-data:add(
-   {
-      _id = "ancient_castle",
-      _type = "elona.dungeon_template",
-
-      generate = function(rooms, params, opts)
-         if params.is_deepest_level then
-            local map =  Elona122Map.generate("undeadt1")
-            map.max_crowd_density = 0
-            map.music = "elona.last_boss"
-            return map
-         else
-            params.tileset = "elona.dungeon_castle"
-            params.max_crowd_density = params.max_crowd_density + math.floor(params.dungeon_level / 2)
-            return "elona.type_1", params
-         end
-      end
-   }
-)
+return dungeon_template

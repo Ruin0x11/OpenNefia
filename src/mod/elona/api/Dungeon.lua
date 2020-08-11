@@ -1,3 +1,5 @@
+local Item = require("api.Item")
+local Enum = require("api.Enum")
 local Feat = require("api.Feat")
 local Pos = require("api.Pos")
 local Map = require("api.Map")
@@ -38,14 +40,22 @@ local room_kinds = {
    },
 }
 
-function Dungeon.create_map(params, width, height, max_crowd_density)
+function Dungeon.default_chara_filter(dungeon)
+   -- >>>>>>>> shade2/map.hsp:89 	if mType>=headDungeon{ ..
+   return {
+      level = Calc.calc_object_level(dungeon.level, dungeon),
+      quality = Calc.calc_object_quality(Enum.Quality.Normal),
+   }
+   -- <<<<<<<< shade2/map.hsp:92 		} ..
+end
+
+function Dungeon.create_map(floor, params, width, height)
    width = width or params.width
    height = height or params.height
 
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")
-   map.dungeon_level = params.dungeon_level
-   map.max_crowd_density = max_crowd_density or params.max_crowd_density
+   map.level = floor
    return map
 end
 
@@ -118,7 +128,7 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
 
    local x, y, w, h, dir
 
-   for i = 1, 100 do
+   for _ = 1, 100 do
       local success = false
 
       while true do
@@ -174,9 +184,12 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
    return nil, "gave up after 100 tries"
 end
 
+local ROOM_ITEMS = { "elona.cabinet", "elona.neat_bar_table", "elona.pachisuro_machine", "elona.green_plant" }
+
 function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
+   -- >>>>>>>> shade2/map_func.hsp:616  ..
    local base = room_kinds[kind or 0]
-   local params = table.merge_missing(params, base)
+   params = table.merge_missing(params, base)
 
    local room = Dungeon.calc_valid_room(params.pos, min_size, max_size, rooms, map)
    if room == nil then
@@ -216,9 +229,10 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
                      tile = "wall"
                      if i ~= 0 and i ~= room.width - 1 then
                         if Rand.one_in(3) then
-                           print "itemcreate1"
+                           local _id = Rand.choice(ROOM_ITEMS)
+                           Item.create(_id, x, y + 1, {}, map)
                         elseif i % 2 == 1 then
-                           print "itemcreate2"
+                           Item.create("elona.candle", x, y + 1, {}, map)
                         end
                      end
                   end
@@ -228,9 +242,10 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
                   if tile2 == 2 and j == room.height - 1 then
                      tile = "wall"
                      if Rand.one_in(3) then
-                        print "itemcreate3"
+                        local _id = Rand.choice(ROOM_ITEMS)
+                        Item.create(_id, x, y + 1, {}, map)
                      elseif i % 2 == 1 then
-                        print "itemcreate4"
+                        Item.create("elona.candle", x, y + 1, {}, map)
                      end
                   end
                end
@@ -250,9 +265,11 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
    end
 
    return room
+   -- <<<<<<<< shade2/map_func.hsp:762 	return true ..
 end
 
 function Dungeon.create_room_door(room, dir, place_door, map)
+   -- >>>>>>>> shade2/map_func.hsp:577 #deffunc map_createRoomDoor ..
    dir = dir or room.dir or 0
 
    local pos
@@ -301,20 +318,24 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       for i=1, 2 do
          local dx = x + dirs1[i]
          local dy = y + dirs2[i]
+         --map:set_tile(dx, dy, "elona.mapgen_room")
+         --Item.create("elona.putitoro", dx, dy, {}, map)
          if dx < 0 or dy < 0 or dx >= map:width() or dy >= map:height() then
             success = false
             break
          end
-         if Map.tile(dx, dy, map) == "elona.mapgen_wall" then
+         if Map.tile(dx, dy, map)._id == "elona.mapgen_wall" then
             success = false
             break
          end
+local Log = require("api.Log")
+Log.info("%d %d %s", dx, dy, Map.tile(dx, dy, map)._id)
       end
 
       if success then
          Map.set_tile(x, y, "elona.mapgen_room", map)
          if place_door then
-            local difficulty = Rand.rnd(math.floor(math.abs(map:calc("dungeon_level") * 3 / 2)) + 1)
+            local difficulty = Rand.rnd(math.floor(math.abs(map.level * 3 / 2)) + 1)
             Feat.create("elona.door", x, y, {difficulty = difficulty}, map)
          end
          return true
@@ -322,6 +343,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
    end
 
    return false
+   -- <<<<<<<< shade2/map_func.hsp:606 	return ..
 end
 
 function Dungeon.place_stairs_up_in_room(room, map)
@@ -777,8 +799,10 @@ end
 ---
 
 --- Rooms connected by tunnels.
-function Dungeon.gen_type_1(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_1(area, floor, params)
+   local map = Dungeon.create_map(floor, params)
+
+   local rooms = {}
 
    if not maybe_dig_room(1, params.min_size, params.max_size, rooms, map) then
       return nil, "could not place room for upstairs"
@@ -800,12 +824,16 @@ function Dungeon.gen_type_1(rooms, params)
       return nil, "could not connect rooms"
    end
 
+   map.rooms = rooms
+
    return map
 end
 
-function Dungeon.gen_type_2(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_2(area, floor, params)
+   local map = Dungeon.create_map(floor, params)
    params.max_size = 3
+
+   local rooms = {}
 
    local x = math.floor(map:width() / 2)
    local y = math.floor(map:height() / 2)
@@ -898,14 +926,17 @@ function Dungeon.gen_type_2(rooms, params)
       end
    end
 
+   map.rooms = rooms
+
    return map
 end
 
 --- One large room spanning the entire map.
-function Dungeon.gen_type_3(rooms, params)
+function Dungeon.gen_type_3(area, floor, params)
    local width = (48 + Rand.rnd(20))
    local height = 22
-   local map = Dungeon.create_map(params, width, height, width * height / 20)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 20
 
    for _, x, y in map:iter_tiles() do
       local is_border = x == 0 or y == 0 or x + 1 == map:width() or y + 1 == map:height()
@@ -934,10 +965,12 @@ function Dungeon.gen_type_3(rooms, params)
 end
 
 -- Large room/tunnel in middle, with rooms on outer extremities
-function Dungeon.gen_type_4(rooms, params)
-   local map = Dungeon.create_map(params)
-
+function Dungeon.gen_type_4(area, floor, params)
+   local map = Dungeon.create_map(floor, params)
    params.min_size = 8
+
+   local rooms = {}
+
    local n = params.min_size - 1
 
    for _, x, y in map:iter_tiles() do
@@ -978,32 +1011,30 @@ function Dungeon.gen_type_4(rooms, params)
       end
    end
 
+   map.rooms = rooms
+
    return map
 end
 
 -- Same as type 4 but wider.
-function Dungeon.gen_type_5(rooms, params)
+function Dungeon.gen_type_5(area, floor, params)
    params.width = 48 + Rand.rnd(20)
    params.height = 22
 
-   local map, err = Dungeon.gen_type_4(rooms, params)
-   if map then
-      map.max_crowd_density = math.floor(map:width() * map:height() / 20)
+   local map, err = Dungeon.gen_type_4(area, floor, params)
+   if map == nil then
+      return nil
    end
+
+   map.max_crowd_density = math.floor(map:width() * map:height() / 20)
 
    return map
 end
 
-local function set_filter(map)
-   return {
-      level = Calc.calc_object_level(10, map),
-      quality = Calc.calc_object_quality(1),
-   }
-end
-
 -- Maps used in hunting quests.
-function Dungeon.gen_type_6(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_6(area, floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:305 *map_createDungeonHunt ..
+   local map = Dungeon.create_map(floor, params)
    map.is_indoors = false
    map:clear("elona.mapgen_room")
 
@@ -1014,15 +1045,12 @@ function Dungeon.gen_type_6(rooms, params)
    end
 
    if params.outer_map_id == "elona.noyel" then
-      -- TODO
-      -- params.tileset = "elona.noyel_fields"
+      map.tileset = "elona.noyel_fields"
    end
-
-   -- TODO support early return
 
    map.max_crowd_density = 0
    for _=1, 10 + Rand.rnd(6) do
-      local chara = Charagen.create(nil, nil, set_filter(map), map)
+      local chara = Charagen.create(nil, nil, Dungeon.default_chara_filter(map), map)
       if chara then
          chara.faction = "base.enemy"
       end
@@ -1030,9 +1058,7 @@ function Dungeon.gen_type_6(rooms, params)
 
    for _=1, 10 + Rand.rnd(6) do
       local item = Itemgen.create(nil, nil,
-                                  {
-                                     categories = {"elona.tree"}
-                                  },
+                                  {categories = {"elona.tree"}},
                                   map)
       if item then
          item.own_state = "not_owned"
@@ -1040,13 +1066,15 @@ function Dungeon.gen_type_6(rooms, params)
    end
 
    return map
+   -- <<<<<<<< shade2/map_rand.hsp:331 	return true ..
 end
 
 -- Long vertical tunnel.
-function Dungeon.gen_type_8(rooms, params)
+function Dungeon.gen_type_8(area, floor, params)
    local width = 30
    local height = (60 + Rand.rnd(60))
-   local map = Dungeon.create_map(params, width, height, width * height / 20)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 20
 
    local tunnel_width = 6
    local dx = math.floor(map:width() / 2) - math.floor(tunnel_width / 2)
@@ -1107,29 +1135,37 @@ function Dungeon.gen_type_8(rooms, params)
 end
 
 -- Maze with corridors of width 4 (Minotaur's Nest).
-function Dungeon.gen_type_9(rooms, params)
+function Dungeon.gen_type_9(area, floor, params)
    local class = 12
    local bold = 2
 
    local width = (class * (bold * 2) - bold + 8)
    local height = params.width
-   local map = Dungeon.create_map(params, width, height, width * height / 12)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 12
+
+   local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)
    Dungeon.dig_maze(map, rooms, params, class, bold)
 
+   map.rooms = rooms
+
    return map
 end
 
 -- Large cavern with walls interspersed throughout (Puppy's Cave).
-function Dungeon.gen_type_10(rooms, params)
+function Dungeon.gen_type_10(area, floor, params)
    local class = 5 + Rand.rnd(4)
    local bold = 2
 
    local width = (class * (bold * 2) - bold + 8)
    local height = params.width
-   local map = Dungeon.create_map(params, width, height, width * height / 12)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 12
+
+   local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)
@@ -1206,7 +1242,7 @@ function Dungeon.gen_type_10(rooms, params)
    end
 
 
-   local door_difficulty_max = math.floor(math.abs(params.dungeon_level * 3 / 2)) + 1
+   local door_difficulty_max = math.floor(math.abs(map:calc("level") * 3 / 2)) + 1
 
    local try_place_door = function(x, y)
       if map:tile(x, y)._id ~= "elona.mapgen_tunnel" then
@@ -1249,6 +1285,8 @@ function Dungeon.gen_type_10(rooms, params)
          try_place_door(x, y)
       end
    end
+
+   map.rooms = rooms
 
    return map
 end

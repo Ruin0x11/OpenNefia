@@ -165,6 +165,18 @@ data:add_multi(
          fog = "elona.wall_stone_1_fog"
       },
       {
+         _id = "noyel_fields",
+
+         tiles = {
+            ["elona.mapgen_floor"] = "elona.wall_forest_top",
+            ["elona.mapgen_tunnel"] = "elona.grass",
+            ["elona.mapgen_wall"] = "elona.wall_forest_top",
+            ["elona.mapgen_room"] = pick({"elona.snow", "elona.snow_mound", "elona.snow_plants", "elona.snow_rock", "elona.snow_stump", "elona.snow_flowers_1"}, 6)
+         },
+
+         fog = "elona.wall_stone_1_fog"
+      },
+      {
          _id = "tower_1",
          elona_id = 100,
 
