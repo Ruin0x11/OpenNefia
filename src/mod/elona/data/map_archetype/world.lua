@@ -1,31 +1,36 @@
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local util = require("mod.elona.data.map_archetype.util")
 
-data:add {
-   _type = "base.map_archetype",
-   _id = "north_tyris",
-   elona_id = 4,
+do
+   data:add {
+      _type = "base.map_archetype",
+      _id = "north_tyris",
+      elona_id = 4,
 
-   on_generate_map = util.generate_122("ntyris"),
+      starting_pos = MapEntrance.world_map,
 
-   properties = {
-      types = { "world_map" },
-      tileset = "elona.world_map",
-      turn_cost = 50000,
-      is_indoor = false,
-      has_anchored_npcs = true,
-      default_ai_calm = 0,
-   },
-}
+      on_generate_map = util.generate_122("ntyris"),
 
-data:add {
-   _type = "base.area_archetype",
-   _id = "north_tyris",
-   elona_id = 4,
-
-   floors = {
-      [1] = "elona.north_tyris"
+      properties = {
+         types = { "world_map" },
+         tileset = "elona.world_map",
+         turn_cost = 50000,
+         is_indoor = false,
+         has_anchored_npcs = true,
+         default_ai_calm = 0,
+      },
    }
-}
+
+   data:add {
+      _type = "base.area_archetype",
+      _id = "north_tyris",
+      elona_id = 4,
+
+      floors = {
+         [1] = "elona.north_tyris"
+      }
+   }
+end
 
 -- { map = generate_122("elona.vernis"), x = 26, y = 23 },
 -- { map = generate_122("elona.yowyn"), x = 43, y = 32 },
@@ -60,3 +65,76 @@ data:add {
 -- { map = generate_122("elona.fort_of_chaos_machine"), x = 51, y = 32 },
 -- { map = generate_122("elona.fort_of_chaos_collapsed"), x = 35, y = 10 },
 -- { map = generate_122("elona.test_site"), x = 20, y = 20 },
+
+
+do
+   local south_tyris = {
+      _id = "south_tyris",
+      _type = "base.map_archetype",
+      elona_id = 44,
+
+      on_generate_map = util.generate_122("styris"),
+
+      starting_pos = MapEntrance.world_map,
+
+      properties = {
+         types = { "world_map" },
+         tileset = "elona.world_map",
+         turn_cost = 50000,
+         level = 1,
+         is_indoor = false,
+         has_anchored_npcs = true,
+         max_crowd_density = 0,
+         default_ai_calm = 0
+      }
+      -- areas = {
+      --    { map = generate_122("elona.south_tyris_north_border"), x = 42, y = 1 },
+      --    { map = generate_122("elona.the_smoke_and_pipe"), x = 39, y = 13 },
+      -- }
+   }
+
+   data:add(south_tyris)
+
+   data:add {
+      _type = "base.area_archetype",
+      _id = "south_tyris",
+      elona_id = 48,
+
+      floors = {
+         [1] = "elona.south_tyris"
+      },
+   }
+end
+
+do
+   local test_world = {
+      _id = "test_world",
+      _type = "base.map_archetype",
+      elona_id = 47,
+
+      on_generate_map = util.generate_122("test"),
+
+      starting_pos = MapEntrance.world_map,
+
+      properties = {
+         types = { "world_map" },
+         tileset = "elona.world_map",
+         turn_cost = 50000,
+         level = 1,
+         is_indoor = false,
+         has_anchored_npcs = true,
+         default_ai_calm = 0
+      },
+   }
+   data:add(test_world)
+
+   data:add {
+      _type = "base.area_archetype",
+      _id = "test_world",
+      elona_id = 47,
+
+      floors = {
+         [1] = "elona.test_world"
+      }
+   }
+end

@@ -20,9 +20,13 @@ local Command = {}
 local function travel_to_map_hook(source, params, result)
    local cur = Map.current()
 
-   local ok, outer_map = assert(Map.load_parent_map(cur))
+   local _, outer_map = assert(Map.load_parent_map(cur))
    local x, y = Map.position_in_parent_map(cur)
-   assert(x and y)
+   if not x and y then
+      Log.error("No position in parent map, defaulting to center.")
+      x = outer_map:width() / 2
+      y = outer_map:height() / 2
+   end
 
    save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
 

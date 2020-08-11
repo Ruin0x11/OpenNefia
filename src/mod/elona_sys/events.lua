@@ -120,7 +120,6 @@ local function show_text_death(target, source, tense)
    if tense == "ally" then
       Gui.mes_continue_sentence()
 
-      pause()
       if death_type == 0 then
          Gui.mes_c("death_by.chara.transformed_into_meat.active", "Red", target, source)
       elseif death_type == 1 then

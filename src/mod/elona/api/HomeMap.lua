@@ -24,7 +24,7 @@ data:add {
 
    properties = {
       home_scale = 0,
-      max_item_count = 100,
+      item_on_floor_limit = 100,
       home_rank_points = 1000
    },
 
@@ -64,7 +64,7 @@ data:add {
    -- >>>>>>>> shade2/map_user.hsp:7 	if gHomeLevel=1{ ..
    properties = {
       home_scale = 1,
-      max_item_count = 150,
+      item_on_floor_limit = 150,
       home_rank_points = 3000
    },
    -- <<<<<<<< shade2/map_user.hsp:10 		} ..
@@ -80,7 +80,7 @@ data:add {
    -- >>>>>>>> shade2/map_user.hsp:11 	if gHomeLevel=2{ ..
    properties = {
       home_scale = 2,
-      max_item_count = 200,
+      item_on_floor_limit = 200,
       home_rank_points = 5000
    },
    -- <<<<<<<< shade2/map_user.hsp:14 		} ..
@@ -96,7 +96,7 @@ data:add {
    -- >>>>>>>> shade2/map_user.hsp:15 	if gHomeLevel=3{ ..
    properties = {
       home_scale = 3,
-      max_item_count = 300,
+      item_on_floor_limit = 300,
       home_rank_points = 7000
    },
    -- <<<<<<<< shade2/map_user.hsp:18 		} ..
@@ -113,7 +113,7 @@ data:add {
    -- >>>>>>>> shade2/map_user.hsp:19 	if gHomeLevel=4{ ..
    properties = {
       home_scale = 4,
-      max_item_count = 350,
+      item_on_floor_limit = 350,
       home_rank_points = 8000,
       tileset = "elona.sf"
    },
@@ -133,7 +133,7 @@ data:add {
    -- >>>>>>>> shade2/map_user.hsp:24 	if gHomeLevel=5{ ..
    properties = {
       home_scale = 0,
-      max_item_count = 100,
+      item_on_floor_limit = 100,
       home_rank_points = 1000
    },
    -- <<<<<<<< shade2/map_user.hsp:27 		} ..

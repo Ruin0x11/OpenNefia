@@ -1020,7 +1020,7 @@ local feat_chips = {
       elona_id = 233,
       elona_atlas = 1,
       offset_bottom = 48,
-      offset_top = 56
+      y_offset = 56
    },
    {
       _id = "trap",
@@ -1194,7 +1194,7 @@ local area_chips = {
       _id = "area_tree",
       elona_id = 135,
       elona_atlas = 0,
-      offset_top = 8
+      y_offset = 8
    },
    {
       _id = "area_palace",
@@ -1205,7 +1205,7 @@ local area_chips = {
       _id = "area_tower",
       elona_id = 137,
       elona_atlas = 0,
-      offset_top = 16
+      y_offset = 16
    },
    {
       _id = "area_your_dungeon",
@@ -1221,7 +1221,7 @@ local area_chips = {
       _id = "area_temple",
       elona_id = 140,
       elona_atlas = 0,
-      offset_top = 6
+      y_offset = 6
    },
    {
       _id = "area_crypt",
@@ -1247,7 +1247,7 @@ local area_chips = {
       _id = "area_tower_of_fire",
       elona_id = 145,
       elona_atlas = 0,
-      offset_top = 16
+      y_offset = 16
    },
    {
       _id = "area_dungeon",
@@ -1268,7 +1268,7 @@ local area_chips = {
       _id = "area_god",
       elona_id = 149,
       elona_atlas = 0,
-      offset_top = 16
+      y_offset = 16
    },
    {
       _id = "area_museum",

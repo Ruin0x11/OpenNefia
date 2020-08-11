@@ -118,25 +118,30 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
       end
    end
 
+   local params = {
+      -- used by mansion of younger sister
+      is_first_generation = true
+   }
+
    if map_archetype_id then
       local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
       assert(type(map_archetype.on_generate_map) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
 
-      map = map_archetype.on_generate_map(self, floor)
+      map = map_archetype.on_generate_map(self, floor, params)
       if map._archetype == nil then
          Log.debug("Map archetype unset on new floor, setting to %s", map_archetype_id)
          map:set_archetype(map_archetype_id, { set_properties = true })
       else
-         Log.warn("Map archetype was already set to %s on generation", map._archetype)
+         Log.debug("Map archetype was already set to %s on generation", map._archetype)
       end
    else
-      map = archetype.on_generate_floor(self, floor)
+      map = archetype.on_generate_floor(self, floor, params)
    end
 
    assert(class.is_an(InstancedMap, map))
    self:add_floor(map, floor)
 
-   map:emit("base.on_generate_area_floor", {area=self, floor_number=floor})
+   map:emit("base.on_generate_area_floor", {area=self, floor_number=floor, is_first_generation=params.is_first_generation})
 
    Log.debug("Generated area floor with map archetype %s", map._archetype)
 

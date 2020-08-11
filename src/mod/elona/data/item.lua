@@ -14379,11 +14379,9 @@ local item =
         rarity = 50000,
         coefficient = 0,
 
-        param1 = 1,
-
-        params = { book_of_rachel_no = 1 },
+        params = { book_of_rachel_number = 1 },
         on_init_params = function(self)
-            self.params.book_of_rachel_no = Rand.rnd(4) + 1
+            self.params.book_of_rachel_number = Rand.rnd(4) + 1
         end,
 
         elona_type = "normal_book",
