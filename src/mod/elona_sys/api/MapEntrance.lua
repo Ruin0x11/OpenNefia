@@ -113,4 +113,9 @@ function MapEntrance.stairs_down(map, chara, prev)
    return { x = feat.x, y = feat.y }
 end
 
+function MapEntrance.world_map(map, chara, prev)
+   -- TODO
+   return MapEntrance.center(map, chara, prev)
+end
+
 return MapEntrance

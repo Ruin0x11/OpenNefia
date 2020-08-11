@@ -129,4 +129,18 @@ Enum.AiBehavior = enum("AiBehavior", {
 })
 -- <<<<<<<< shade2/init.hsp:285 	#enum global aiSpecial ..
 
+-- >>>>>>>> shade2/init.hsp:815 	#enum global fltSp=1 ..
+Enum.FltSelect = enum("FltSelect", {
+	Sp = 1,
+	Unique = 2,
+	SpUnique = 3,
+	Friend = 4,
+	Town = 5,
+	SfTown = 6,
+	Shop = 7,
+	Snow = 8,
+	TownSp = 9,
+})
+-- <<<<<<<< shade2/init.hsp:823 	#enum global fltTownSp ..
+
 return Enum
