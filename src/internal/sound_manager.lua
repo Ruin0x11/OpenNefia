@@ -7,7 +7,7 @@ function sound_manager:init(data)
    self.data = data
    self.sources = {}
    self.looping_sources = {}
-   self.music_id = nil
+   self.music_src = nil
 
    love.audio.setDistanceModel("inverse")
 end
@@ -29,70 +29,75 @@ function sound_manager:update()
    end
 end
 
-function sound_manager:play_looping(id, ty)
+function sound_manager:get_source(id_or_data, ty, source_type)
+   if id_or_data:sub(1, 4) == "RIFF" then
+      local file_data = love.filesystem.newFileData(id_or_data)
+      return love.audio.newSource(file_data, source_type), "@wav"
+   end
+
+   local sound = self.data[ty][id_or_data]
+   if sound == nil then
+      return nil
+   end
+
+   local src = love.audio.newSource(sound.file, source_type)
+   local loop_id = ty .. ":" .. id_or_data
+
+   if sound.volume then
+      src:setVolume(sound.volume)
+   end
+
+   return src, loop_id
+end
+
+function sound_manager:play_looping(src, loop_id, x, y)
    if _IS_LOVEJS then
       -- sound is completely broken in love.js (introduces lag and
       -- doesn't even play properly...)
       return
    end
 
-   local sound = self.data[ty][id]
-   if sound == nil then
-      Log.warn("Unknown sound %s:%s", ty, id)
-      return
-   end
-
-   local src = love.audio.newSource(sound.file, "stream")
    src:setLooping(true)
    if src:getChannelCount() == 1 then
       src:setRelative(true)
       src:setAttenuationDistances(0, 0)
    end
 
-   if sound.volume then
-      src:setVolume(sound.volume)
-   end
-
    src:play()
 
-   self.looping_sources[ty .. ":" .. id] = src
+   self.looping_sources[loop_id] = src
+
+   return loop_id
 end
 
-function sound_manager:stop_looping(id, ty)
+function sound_manager:stop_looping(loop_id)
    if _IS_LOVEJS then
       return
    end
 
-   if id == nil then
+   if loop_id == nil then
       for k, _ in pairs(self.looping_sources) do
-         if k ~= "music:" .. self.music_id then
-            self:stop_looping(k, ty)
+         if k ~= "@music" then
+            self:stop_looping(k)
          end
       end
 
       return
    end
 
-   local src = self.looping_sources[ty .. ":" .. id]
+   local src = self.looping_sources[loop_id]
    if src == nil then return end
 
    love.audio.stop(src)
 
-   self.looping_sources[ty .. ":" .. id] = nil
+   self.looping_sources[loop_id] = nil
 end
 
-function sound_manager:play(id, x, y, channel)
+function sound_manager:play(src, x, y, channel)
    if _IS_LOVEJS then
       return
    end
 
-   local sound = self.data.sound[id]
-   if sound == nil then
-      Log.warn("Unknown sound %s", tostring(id))
-      return
-   end
-
-   local src = love.audio.newSource(sound.file, "static")
    src:setLooping(false)
 
    if src:getChannelCount() == 1 then
@@ -105,10 +110,6 @@ function sound_manager:play(id, x, y, channel)
          src:setRelative(true)
          src:setAttenuationDistances(0, 0)
       end
-   end
-
-   if sound.volume then
-      src:setVolume(sound.volume)
    end
 
    love.audio.play(src)
@@ -134,29 +135,24 @@ function sound_manager:stop(channel)
    self.sources[channel] = nil
 end
 
-function sound_manager:play_music(sound_id)
+function sound_manager:play_music(src)
    if _IS_LOVEJS then
       return
    end
 
-   assert(type(sound_id) == "string")
-
-   if self.music_id == sound_id then
+   if self.music_src == src then
       return
    end
 
-   if self.music_id ~= nil then
+   if self.music_src ~= nil then
       self:stop_music()
    end
 
-   self:play_looping(sound_id, "music")
-   self.music_id = sound_id
+   self:play_looping(src, "@music")
 end
 
 function sound_manager:stop_music()
-   if self.music_id then
-      self:stop_looping(self.music_id, "music")
-   end
+   self:stop_looping("@music")
 end
 
 return sound_manager

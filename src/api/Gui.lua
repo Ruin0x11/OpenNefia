@@ -410,11 +410,18 @@ function Gui.play_sound(sound_id, x, y, channel)
    local sound_manager = require("internal.global.sound_manager")
    local coords = draw.get_coords()
 
+   local source, _ = sound_manager:get_source(sound_id, "base.sound", "static")
+
+   if source == nil then
+      Log.warn("Unknown sound %s", sound_id)
+      return
+   end
+
    if config["base.positional_audio"] and x ~= nil and y ~= nil then
       local sx, sy = coords:tile_to_screen(x, y)
-      sound_manager:play(sound_id, sx, sy, channel)
+      sound_manager:play(source, sx, sy, channel)
    else
-      sound_manager:play(sound_id, nil, nil, channel)
+      sound_manager:play(source, nil, nil, channel)
    end
 end
 
@@ -425,7 +432,11 @@ end
 function Gui.play_background_sound(sound_id)
    local sound_manager = require("internal.global.sound_manager")
 
-   sound_manager:play_looping(sound_id)
+   local source, loop_id = sound_manager:get_source(sound_id, "base.sound", "static")
+
+   sound_manager:play_looping(source, loop_id)
+
+   return loop_id
 end
 
 --- Stops playing a sound that was started with
@@ -433,10 +444,10 @@ end
 ---
 --- @tparam id:base.sound sound_id
 --- @see Gui.play_background_sound
-function Gui.stop_background_sound(sound_id)
+function Gui.stop_background_sound(loop_id)
    local sound_manager = require("internal.global.sound_manager")
 
-   sound_manager:stop_looping(sound_id)
+   sound_manager:stop_looping(loop_id)
 end
 
 --- Plays music.
@@ -450,7 +461,9 @@ function Gui.play_music(music_id)
       return
    end
 
-   sound_manager:play_music(music_id)
+   local source = sound_manager:get_source(music_id, "base.music", "stream")
+
+   sound_manager:play_music(source)
 end
 
 --- Stops the currently playing music.
