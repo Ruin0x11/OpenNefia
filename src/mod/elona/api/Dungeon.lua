@@ -1,3 +1,5 @@
+local Item = require("api.Item")
+local Enum = require("api.Enum")
 local Feat = require("api.Feat")
 local Pos = require("api.Pos")
 local Map = require("api.Map")
@@ -10,68 +12,110 @@ local Calc = require("mod.elona.api.Calc")
 -- functions for nefia generation used by Elona 1.22's map generators.
 local Dungeon = {}
 
+local RoomType = {
+   Anywhere = 0,
+   NonEdge = 1,
+   Edge = 2,
+   Small = 3,
+   Random = 4,
+}
+
+local WallType = {
+   None = 0,
+   Wall = 1,
+   Floor = 2,
+   Room = 3
+}
+
+local DoorType = {
+   None = 0,
+   Room = 1,
+   Random = 2,
+   RandomNoDoor = 3,
+}
+
+-- >>>>>>>> shade2/init.hsp:275 	#define global DOWN 		0 ..
+local Direction = {
+   Down = 0,
+   Left = 1,
+   Right = 2,
+   Up = 3
+}
+-- <<<<<<<< shade2/init.hsp:278 	#define global UP		3 ...
+
 local room_kinds = {
-   [0] = {
-      pos = "0",
-      wall = "0",
-      door = "0",
+   [RoomType.Anywhere] = {
+      pos = RoomType.Anywhere,
+      wall = WallType.None,
+      door = DoorType.None
    },
-   [1] = {
-      pos = "1",
-      wall = "1",
-      door = "0",
+   [RoomType.NonEdge] = {
+      pos = RoomType.NonEdge,
+      wall = WallType.Wall,
+      door = DoorType.None
    },
-   [2] = {
-      pos = "2",
-      wall = "1",
-      door = "1",
+   [RoomType.Edge] = {
+      pos = RoomType.Edge,
+      wall = WallType.Wall,
+      door = DoorType.Room
    },
-   [3] = {
-      pos = "3",
-      wall = "2",
-      door = "3",
+   [RoomType.Small] = {
+      pos = RoomType.Small,
+      wall = WallType.Floor,
+      door = DoorType.Random2
    },
-   [4] = {
-      pos = "4",
-      wall = "3",
-      door = "0",
+   [RoomType.Random] = {
+      pos = RoomType.Random,
+      wall = WallType.Room,
+      door = DoorType.None
    },
 }
 
-function Dungeon.create_map(params, width, height, max_crowd_density)
+function Dungeon.default_chara_filter(dungeon)
+   -- >>>>>>>> shade2/map.hsp:89 	if mType>=headDungeon{ ..
+   return {
+      level = Calc.calc_object_level(dungeon.level, dungeon),
+      quality = Calc.calc_object_quality(Enum.Quality.Normal),
+   }
+   -- <<<<<<<< shade2/map.hsp:92 		} ..
+end
+
+function Dungeon.create_map(floor, params, width, height)
    width = width or params.width
    height = height or params.height
 
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")
-   map.dungeon_level = params.dungeon_level
-   map.max_crowd_density = max_crowd_density or params.max_crowd_density
+   map.level = floor
+   if params.max_crowd_density then
+      map.max_crowd_density = params.max_crowd_density
+   end
    return map
 end
 
 function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
    local x, y, w, h, dir
 
-   if pos == "0" then
+   if pos == RoomType.Anywhere then
       -- room anywhere
       w = Rand.rnd(max_size) + min_size
       h = Rand.rnd(max_size) + min_size
       x = Rand.rnd(map_width) + 2
       y = Rand.rnd(map_height) + 2
-   elseif pos == "1" then
+   elseif pos == RoomType.NonEdge then
       -- room anywhere, away from edges
       w = math.floor((Rand.rnd(max_size) + min_size) / 3 * 3) + 5
       h = math.floor((Rand.rnd(max_size) + min_size) / 3 * 3) + 5
       x = math.floor(Rand.rnd(map_width) / 3 * 3) + 2
       y = math.floor(Rand.rnd(map_height) / 3 * 3) + 2
-   elseif pos == "2" then
+   elseif pos == RoomType.Edge then
       -- room on the edge
       dir = Rand.rnd(4)
-      if dir == 3 or dir == 0 then
+      if dir == Direction.Up or dir == Direction.Down then
          x = Rand.rnd(math.floor(map_width - min_size * 3 / 2 - 2)) + math.floor(min_size / 2)
          w = Rand.rnd(min_size) + math.floor(min_size / 2) + 3
          h = min_size
-         if dir == 3 then
+         if dir == Direction.Up then
             y = 0
          else
             y = map_height - h
@@ -80,13 +124,13 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
          y = Rand.rnd(math.floor(map_height - min_size * 3 / 2 - 2)) + math.floor(min_size / 2)
          w = min_size
          h = Rand.rnd(min_size) + math.floor(min_size / 2) + 3
-         if dir == 1 then
+         if dir == Direction.Left then
             x = 0
          else
             x = map_width - w
          end
       end
-   elseif pos == "3" then
+   elseif pos == RoomType.Small then
       -- small fixed size room
       w = 3
       h = 3
@@ -100,7 +144,7 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
       end
       x = min_size + 1 + Rand.rnd(x_range)
       y = min_size + 1 + Rand.rnd(y_range)
-   elseif pos == "4" then
+   elseif pos == RoomType.Random then
       w = Rand.rnd(max_size) + min_size
       h = Rand.rnd(max_size) + min_size
       x = Rand.rnd(map_width - max_size - 8) + 3
@@ -118,7 +162,7 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
 
    local x, y, w, h, dir
 
-   for i = 1, 100 do
+   for _ = 1, 100 do
       local success = false
 
       while true do
@@ -135,13 +179,13 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
             break
          end
 
-         if pos == "1" then
+         if pos == RoomType.NonEdge then
             if mx >= map_width + 1 or my >= map_height + 1 then
                break
             end
          end
 
-         if pos == "3" then
+         if pos == RoomType.Small then
             if Map.tile(mx, my, map)._id ~= "elona.mapgen_room" then
                break
             end
@@ -174,9 +218,12 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
    return nil, "gave up after 100 tries"
 end
 
+local ROOM_ITEMS = { "elona.cabinet", "elona.neat_bar_table", "elona.pachisuro_machine", "elona.green_plant" }
+
 function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
-   local base = room_kinds[kind or 0]
-   local params = table.merge_missing(params, base)
+   -- >>>>>>>> shade2/map_func.hsp:616  ..
+   local base = room_kinds[kind or RoomType.Anywhere]
+   params = table.merge_missing(params, base)
 
    local room = Dungeon.calc_valid_room(params.pos, min_size, max_size, rooms, map)
    if room == nil then
@@ -201,13 +248,13 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
 
          local tile = "room"
 
-         if params.wall ~= "0" then
+         if params.wall ~= WallType.None then
             if i == 0 or j == 0 or i == room.width-1 or j == room.height - 1 then
-               if params.wall == "1" then
+               if params.wall == WallType.Wall then
                   tile = "wall"
-               elseif params.wall == "2" then
-                  tile = "floor_2"
-               elseif params.wall == "3" then
+               elseif params.wall == WallType.Floor then
+                  tile = "default"
+               elseif params.wall == WallType.Room then
                   tile = "room"
                   if tile1 == 1 and i == 0 then
                      tile = "wall"
@@ -216,9 +263,10 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
                      tile = "wall"
                      if i ~= 0 and i ~= room.width - 1 then
                         if Rand.one_in(3) then
-                           print "itemcreate1"
+                           local _id = Rand.choice(ROOM_ITEMS)
+                           Item.create(_id, x, y + 1, {}, map)
                         elseif i % 2 == 1 then
-                           print "itemcreate2"
+                           Item.create("elona.candle", x, y + 1, {}, map)
                         end
                      end
                   end
@@ -228,9 +276,10 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
                   if tile2 == 2 and j == room.height - 1 then
                      tile = "wall"
                      if Rand.one_in(3) then
-                        print "itemcreate3"
+                        local _id = Rand.choice(ROOM_ITEMS)
+                        Item.create(_id, x, y + 1, {}, map)
                      elseif i % 2 == 1 then
-                        print "itemcreate4"
+                        Item.create("elona.candle", x, y + 1, {}, map)
                      end
                   end
                end
@@ -241,23 +290,26 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
       end
    end
 
-   if params.door == "1" then
+   if params.door == DoorType.Room then
       Dungeon.create_room_door(room, nil, true, map)
-   elseif params.door == "2" or params.door == "3" then
+   elseif params.door == DoorType.Random or params.door == DoorType.RandomNoDoor then
       for dir=0, 3 do
-         Dungeon.create_room_door(room, dir, params.door ~= "3", map)
+         local place_door = params.door ~= DoorType.RandomNoDoor
+         Dungeon.create_room_door(room, dir, place_door, map)
       end
    end
 
    return room
+   -- <<<<<<<< shade2/map_func.hsp:762 	return true ..
 end
 
 function Dungeon.create_room_door(room, dir, place_door, map)
-   dir = dir or room.dir or 0
+   -- >>>>>>>> shade2/map_func.hsp:577 #deffunc map_createRoomDoor ..
+   dir = dir or room.dir or Direction.Down
 
    local pos
 
-   if dir == 3 or dir == 0 then
+   if dir == Direction.Up or dir == Direction.Down then
       pos = room.width
    else
       pos = room.height
@@ -275,22 +327,22 @@ function Dungeon.create_room_door(room, dir, place_door, map)
    local x, y
 
    for _, pos in ipairs(door_positions) do
-      if dir == 3 then
+      if dir == Direction.Up then
          x = pos + room.x + 1
          y = room.y + room.height - 1
          dirs1 = { 0, 0 }
          dirs2 = {-1, 1 }
-      elseif dir == 0 then
+      elseif dir == Direction.Down then
          x = pos + room.x + 1
          y = room.y
          dirs1 = { 0, 0 }
          dirs2 = {-1, 1 }
-      elseif dir == 1 then
+      elseif dir == Direction.Left then
          x = room.x + room.width - 1
          y = pos + room.y + 1
          dirs1 = {-1, 1 }
          dirs2 = { 0, 0 }
-      elseif dir == 2 then
+      elseif dir == Direction.Right then
          x = room.x
          y = pos + room.y + 1
          dirs1 = {-1, 1 }
@@ -301,11 +353,13 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       for i=1, 2 do
          local dx = x + dirs1[i]
          local dy = y + dirs2[i]
+         --map:set_tile(dx, dy, "elona.mapgen_room")
+         --Item.create("elona.putitoro", dx, dy, {}, map)
          if dx < 0 or dy < 0 or dx >= map:width() or dy >= map:height() then
             success = false
             break
          end
-         if Map.tile(dx, dy, map) == "elona.mapgen_wall" then
+         if Map.tile(dx, dy, map)._id == "elona.mapgen_wall" then
             success = false
             break
          end
@@ -314,7 +368,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
       if success then
          Map.set_tile(x, y, "elona.mapgen_room", map)
          if place_door then
-            local difficulty = Rand.rnd(math.floor(math.abs(map:calc("dungeon_level") * 3 / 2)) + 1)
+            local difficulty = Rand.rnd(math.floor(math.abs(map.level * 3 / 2)) + 1)
             Feat.create("elona.door", x, y, {difficulty = difficulty}, map)
          end
          return true
@@ -322,6 +376,7 @@ function Dungeon.create_room_door(room, dir, place_door, map)
    end
 
    return false
+   -- <<<<<<<< shade2/map_func.hsp:606 	return ..
 end
 
 function Dungeon.place_stairs_up_in_room(room, map)
@@ -358,10 +413,10 @@ local function calc_room_entrance(room, map)
       elseif dir == "East" then
          x = room.x + room.width - 1
          y = room.y + Rand.rnd(room.height - 2) + 1
-      elseif dir == "South" then
+      elseif dir == "North" then
          x = room.x + Rand.rnd(room.width - 2) + 1
          y = room.y
-      elseif dir == "North" then
+      elseif dir == "South" then
          x = room.x + Rand.rnd(room.width - 2) + 1
          y = room.y + room.height - 1
       end
@@ -408,6 +463,9 @@ function Dungeon.connect_rooms(rooms, place_doors, params, map)
          end
 
          success = success or Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, true, params.hidden_path_chance, map)
+         if success then
+            break
+         end
       end
 
       if not success then
@@ -438,62 +496,62 @@ local function next_dir(dir, tx, ty, end_x, end_y, map)
 
    if tx >= end_x - 4 and tx <= end_x + 4 and ty >= end_y - 4 and tx <= end_y + 4 then
       if tx < end_x then
-         dir = 2
+         dir = Direction.Right
          if ty > end_y then
-            dest = 3
+            dest = Direction.Up
          else
-            dest = 0
+            dest = Direction.Down
          end
       end
       if tx > end_x then
-         dir = 1
+         dir = Direction.Left
          if ty > end_y then
-            dest = 3
+            dest = Direction.Up
          else
-            dest = 0
+            dest = Direction.Down
          end
       end
       if ty < end_y then
-         dir = 0
+         dir = Direction.Down
          if tx > end_x then
-            dest = 1
+            dest = Direction.Left
          else
-            dest = 2
+            dest = Direction.Right
          end
       end
       if ty > end_y then
-         dir = 3
+         dir = Direction.Up
          if tx > end_x then
-            dest = 1
+            dest = Direction.Left
          else
-            dest = 2
+            dest = Direction.Right
          end
       end
 
       return dir, dest
    end
 
-   if dir == 1 or dir == 2 then
+   if dir == Direction.Left or dir == Direction.Right then
       if ty > end_y then
-         dir = 3
+         dir = Direction.Up
       else
-         dir = 0
+         dir = Direction.Down
       end
       if tx > end_x then
-         dest = 1
+         dest = Direction.Left
       else
-         dest = 2
+         dest = Direction.Right
       end
    else
       if tx > end_x then
-         dir = 1
+         dir = Direction.Left
       else
-         dir = 2
+         dir = Direction.Right
       end
       if ty > end_y then
-         dest = 3
+         dest = Direction.Up
       else
-         dest = 0
+         dest = Direction.Down
       end
    end
 
@@ -513,35 +571,35 @@ local function next_dir_2(dir, last_dir, tx, ty, end_x, end_y, map)
    end
 
    if last_dir then
-      if last_dir == 1 and can_dig(tx - 1, ty, map) then
+      if last_dir == Direction.Left and can_dig(tx - 1, ty, map) then
          swap(tx == end_x)
-      elseif last_dir == 2 and can_dig(tx + 1, ty, map) then
+      elseif last_dir == Direction.Right and can_dig(tx + 1, ty, map) then
          swap(tx == end_x)
-      elseif last_dir == 3 and can_dig(tx, ty - 1, map) then
+      elseif last_dir == Direction.Up and can_dig(tx, ty - 1, map) then
          swap(ty == end_y)
-      elseif last_dir == 0 and can_dig(tx, ty + 1, map) then
+      elseif last_dir == Direction.Down and can_dig(tx, ty + 1, map) then
          swap(ty == end_y)
       end
    end
 
-   if dir == 1 or dir == 2 then
+   if dir == Direction.Left or dir == Direction.Right then
       if tx == end_x then
          if ty > end_y and can_dig(tx, ty - 1, map) then
             last_dir = dir
-            dir = 3
+            dir = Direction.Up
          elseif ty < end_y and can_dig(tx, ty + 1, map) then
             last_dir = dir
-            dir = 0
+            dir = Direction.Down
          end
       end
    else
       if ty == end_y  then
          if tx > end_x and can_dig(tx - 1, ty, map) then
             last_dir = dir
-            dir = 1
+            dir = Direction.Left
          elseif tx < end_x and can_dig(tx + 1, ty, map) then
             last_dir = dir
-            dir = 2
+            dir = Direction.Right
          end
       end
    end
@@ -582,13 +640,13 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
       dx = tx
       dy = ty
 
-      if dir == 1 then
+      if dir == Direction.Left then
          dx = tx - 1
-      elseif dir == 2 then
+      elseif dir == Direction.Right then
          dx = tx + 1
-      elseif dir == 3 then
+      elseif dir == Direction.Up then
          dy = ty - 1
-      elseif dir == 0 then
+      elseif dir == Direction.Down then
          dy = ty + 1
       end
 
@@ -597,31 +655,31 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
          ty = dy
          Map.set_tile(dx, dy, "elona.mapgen_tunnel", map)
          if Rand.rnd(200) < hidden_path_chance then
-            Map.set_tile(dx, dy, "elona.mapgen_floor_2", map)
+            Map.set_tile(dx, dy, "elona.mapgen_default", map)
             Feat.create("elona.hidden_path", dx, dy, {}, map)
          end
          -- if not straight and Rand.one_in(4) then
          --    dir, dest = next_dir(dir, tx, ty, end_x, end_y, map)
          -- end
       else
-         if dest == 1 then
+         if dest == Direction.Left then
             if can_dig(tx - 1, ty, map) then
-               dir = 1
+               dir = Direction.Left
                dest = -2
             end
-         elseif dest == 2 then
+         elseif dest == Direction.Right then
             if can_dig(tx + 1, ty, map) then
-               dir = 2
+               dir = Direction.Right
                dest = -2
             end
-         elseif dest == 3 then
+         elseif dest == Direction.Up then
             if can_dig(tx, ty - 1, map) then
-               dir = 3
+               dir = Direction.Up
                dest = -2
             end
-         elseif dest == 0 then
+         elseif dest == Direction.Down then
             if can_dig(tx, ty + 1, map) then
-               dir = 0
+               dir = Direction.Down
                dest = -2
             end
          end
@@ -658,25 +716,25 @@ function Dungeon.dig_maze(map, rooms, params, class, bold)
       local try_dig = function(dir)
          prev_ind = ind
 
-         if dir == 0 then
+         if dir == Direction.Down then
             if math.floor(prev_ind / class) == 0 then
                return false
             else
                ind = ind - class
             end
-         elseif dir == 1 then
+         elseif dir == Direction.Left then
             if prev_ind % class == class - 1 then
                return false
             else
                ind = ind + 1
             end
-         elseif dir == 2 then
+         elseif dir == Direction.Right then
             if math.floor(prev_ind / class) == class - 1 then
                return false
             else
                ind = ind + class
             end
-         elseif dir == 3 then
+         elseif dir == Direction.Up then
             if prev_ind % class == 0 then
                return false
             else
@@ -777,8 +835,10 @@ end
 ---
 
 --- Rooms connected by tunnels.
-function Dungeon.gen_type_1(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_1(area, floor, params)
+   local map = Dungeon.create_map(floor, params)
+
+   local rooms = {}
 
    if not maybe_dig_room(1, params.min_size, params.max_size, rooms, map) then
       return nil, "could not place room for upstairs"
@@ -800,12 +860,16 @@ function Dungeon.gen_type_1(rooms, params)
       return nil, "could not connect rooms"
    end
 
+   map.rooms = rooms
+
    return map
 end
 
-function Dungeon.gen_type_2(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_2(area, floor, params)
+   local map = Dungeon.create_map(floor, params)
    params.max_size = 3
+
+   local rooms = {}
 
    local x = math.floor(map:width() / 2)
    local y = math.floor(map:height() / 2)
@@ -820,28 +884,28 @@ function Dungeon.gen_type_2(rooms, params)
          dir = Rand.rnd(4)
       end
 
-      if dir == 2 then
+      if dir == Direction.Right then
          x = x + 1
          if x > map:width() - 2 then
             dir = 0
             x = map:width() - 2
          end
       end
-      if dir == 1 then
+      if dir == Direction.Left then
          x = x - 1
          if x < 1 then
             dir = 3
             x = 1
          end
       end
-      if dir == 0 then
+      if dir == Direction.Down then
          y = y + 1
          if y > map:height() - 2 then
             dir = 1
             y = map:height() - 2
          end
       end
-      if dir == 3 then
+      if dir == Direction.Up then
          y = y - 1
          if y < 1 then
             dir = 2
@@ -898,14 +962,17 @@ function Dungeon.gen_type_2(rooms, params)
       end
    end
 
+   map.rooms = rooms
+
    return map
 end
 
 --- One large room spanning the entire map.
-function Dungeon.gen_type_3(rooms, params)
+function Dungeon.gen_type_3(area, floor, params)
    local width = (48 + Rand.rnd(20))
    local height = 22
-   local map = Dungeon.create_map(params, width, height, width * height / 20)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 20
 
    for _, x, y in map:iter_tiles() do
       local is_border = x == 0 or y == 0 or x + 1 == map:width() or y + 1 == map:height()
@@ -934,13 +1001,17 @@ function Dungeon.gen_type_3(rooms, params)
 end
 
 -- Large room/tunnel in middle, with rooms on outer extremities
-function Dungeon.gen_type_4(rooms, params)
-   local map = Dungeon.create_map(params)
-
+function Dungeon.gen_type_4(area, floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:417 *map_createDungeonResident ..
+   local map = Dungeon.create_map(floor, params)
    params.min_size = 8
+
+   local rooms = {}
+
    local n = params.min_size - 1
 
    for _, x, y in map:iter_tiles() do
+      Map.set_tile(x, y, "elona.mapgen_wall", map)
       if x > n and y > n and x + 1 < map:width() - n and y + 1 < map:height() - n then
          Map.set_tile(x, y, "elona.mapgen_tunnel", map)
       end
@@ -978,32 +1049,31 @@ function Dungeon.gen_type_4(rooms, params)
       end
    end
 
+   map.rooms = rooms
+
    return map
+   -- <<<<<<<< shade2/map_rand.hsp:456 	return true ..
 end
 
 -- Same as type 4 but wider.
-function Dungeon.gen_type_5(rooms, params)
+function Dungeon.gen_type_5(area, floor, params)
    params.width = 48 + Rand.rnd(20)
    params.height = 22
 
-   local map, err = Dungeon.gen_type_4(rooms, params)
-   if map then
-      map.max_crowd_density = math.floor(map:width() * map:height() / 20)
+   local map, err = Dungeon.gen_type_4(area, floor, params)
+   if map == nil then
+      return nil
    end
+
+   map.max_crowd_density = math.floor(map:width() * map:height() / 20)
 
    return map
 end
 
-local function set_filter(map)
-   return {
-      level = Calc.calc_object_level(10, map),
-      quality = Calc.calc_object_quality(1),
-   }
-end
-
 -- Maps used in hunting quests.
-function Dungeon.gen_type_6(rooms, params)
-   local map = Dungeon.create_map(params)
+function Dungeon.gen_type_6(area, floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:305 *map_createDungeonHunt ..
+   local map = Dungeon.create_map(floor, params)
    map.is_indoors = false
    map:clear("elona.mapgen_room")
 
@@ -1014,15 +1084,12 @@ function Dungeon.gen_type_6(rooms, params)
    end
 
    if params.outer_map_id == "elona.noyel" then
-      -- TODO
-      -- params.tileset = "elona.noyel_fields"
+      map.tileset = "elona.noyel_fields"
    end
-
-   -- TODO support early return
 
    map.max_crowd_density = 0
    for _=1, 10 + Rand.rnd(6) do
-      local chara = Charagen.create(nil, nil, set_filter(map), map)
+      local chara = Charagen.create(nil, nil, Dungeon.default_chara_filter(map), map)
       if chara then
          chara.faction = "base.enemy"
       end
@@ -1030,9 +1097,7 @@ function Dungeon.gen_type_6(rooms, params)
 
    for _=1, 10 + Rand.rnd(6) do
       local item = Itemgen.create(nil, nil,
-                                  {
-                                     categories = {"elona.tree"}
-                                  },
+                                  {categories = {"elona.tree"}},
                                   map)
       if item then
          item.own_state = "not_owned"
@@ -1040,13 +1105,15 @@ function Dungeon.gen_type_6(rooms, params)
    end
 
    return map
+   -- <<<<<<<< shade2/map_rand.hsp:331 	return true ..
 end
 
 -- Long vertical tunnel.
-function Dungeon.gen_type_8(rooms, params)
+function Dungeon.gen_type_8(area, floor, params)
    local width = 30
    local height = (60 + Rand.rnd(60))
-   local map = Dungeon.create_map(params, width, height, width * height / 20)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 20
 
    local tunnel_width = 6
    local dx = math.floor(map:width() / 2) - math.floor(tunnel_width / 2)
@@ -1107,29 +1174,37 @@ function Dungeon.gen_type_8(rooms, params)
 end
 
 -- Maze with corridors of width 4 (Minotaur's Nest).
-function Dungeon.gen_type_9(rooms, params)
+function Dungeon.gen_type_9(area, floor, params)
    local class = 12
    local bold = 2
 
    local width = (class * (bold * 2) - bold + 8)
    local height = params.width
-   local map = Dungeon.create_map(params, width, height, width * height / 12)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 12
+
+   local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)
    Dungeon.dig_maze(map, rooms, params, class, bold)
 
+   map.rooms = rooms
+
    return map
 end
 
 -- Large cavern with walls interspersed throughout (Puppy's Cave).
-function Dungeon.gen_type_10(rooms, params)
+function Dungeon.gen_type_10(area, floor, params)
    local class = 5 + Rand.rnd(4)
    local bold = 2
 
    local width = (class * (bold * 2) - bold + 8)
    local height = params.width
-   local map = Dungeon.create_map(params, width, height, width * height / 12)
+   local map = Dungeon.create_map(floor, params, width, height)
+   map.max_crowd_density = width * height / 12
+
+   local rooms = {}
 
    Dungeon.dig_maze(map, rooms, params, class, bold)
    Dungeon.place_stairs_in_maze(map)
@@ -1206,7 +1281,7 @@ function Dungeon.gen_type_10(rooms, params)
    end
 
 
-   local door_difficulty_max = math.floor(math.abs(params.dungeon_level * 3 / 2)) + 1
+   local door_difficulty_max = math.floor(math.abs(map:calc("level") * 3 / 2)) + 1
 
    local try_place_door = function(x, y)
       if map:tile(x, y)._id ~= "elona.mapgen_tunnel" then
@@ -1249,6 +1324,8 @@ function Dungeon.gen_type_10(rooms, params)
          try_place_door(x, y)
       end
    end
+
+   map.rooms = rooms
 
    return map
 end

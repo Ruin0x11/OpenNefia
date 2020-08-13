@@ -72,18 +72,6 @@ function Area.iter_children(map_or_area)
    return Area.iter():filter(function(uid, a) return a.parent_area == area.uid end)
 end
 
-function Area.floor_number(map)
-   map = map or field.map
-   local area = Area.for_map(map)
-   if area == nil then
-      return 1
-   end
-
-   local floor = area:iter_maps():filter(function(floor, m) return m.uid == map.uid end):nth(1)
-
-   return floor
-end
-
 function Area.for_map(map_or_uid)
    local uid = map_or_uid
    if class.is_an(InstancedMap, map_or_uid) then
@@ -101,6 +89,18 @@ function Area.for_map(map_or_uid)
    end
 
    return mapping[uid]
+end
+
+function Area.floor_number(map)
+   map = map or field.map
+   local area = Area.for_map(map)
+   if area == nil then
+      return 1
+   end
+
+   local floor = area:iter_maps():filter(function(floor, m) return m.uid == map.uid end):nth(1)
+
+   return floor
 end
 
 function Area.get(uid)
@@ -213,6 +213,7 @@ function Area.is_created(area_archetype_id)
 end
 
 function Area.get_unique(area_archetype_id)
+   data["base.area_archetype"]:ensure(area_archetype_id)
    local entry = save.base.unique_areas[area_archetype_id]
    if entry ~= nil then
       return Area.get(entry.area_uid)
@@ -241,6 +242,14 @@ function Area.create_unique(area_archetype_id, parent)
    }
 
    return area
+end
+
+function Area.get_or_create_unique(area_archetype_id, parent)
+   if Area.is_created(area_archetype_id) then
+      return Area.get_unique(area_archetype_id)
+   end
+
+   return Area.create_unique(area_archetype_id, parent)
 end
 
 return Area

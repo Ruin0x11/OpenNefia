@@ -129,6 +129,34 @@ Enum.AiBehavior = enum("AiBehavior", {
 })
 -- <<<<<<<< shade2/init.hsp:285 	#enum global aiSpecial ..
 
+-- >>>>>>>> shade2/init.hsp:825 	#enum global fltGoblin=1 ..
+Enum.CharaCategory = enum("CharaCategory", {
+   Goblin = 1,
+   Orc = 2,
+   Slime = 3,
+   Elea = 4,
+   Kobolt = 5,
+   Spider = 6,
+   Yeek = 7,
+   Mercenary = 8,
+   Zombie = 9,
+   Dog = 10,
+   Bear = 11,
+   Kamikaze = 12,
+   Mummy = 13,
+   HoundFire = 14,
+   HoundIce = 15,
+   HoundLightning = 16,
+   HoundDarkness = 17,
+   HoundMind = 18,
+   HoundNerve = 19,
+   HoundPoison = 20,
+   HoundSound = 21,
+   HoundNether = 22,
+   HoundChaos = 23,
+})
+-- <<<<<<<< shade2/init.hsp:847 	#enum global fltHoundChaos ...
+
 -- >>>>>>>> shade2/init.hsp:815 	#enum global fltSp=1 ..
 Enum.FltSelect = enum("FltSelect", {
 	Sp = 1,

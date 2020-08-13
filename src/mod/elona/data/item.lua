@@ -8832,14 +8832,13 @@ local item =
         image = "elona.item_seed",
         value = 240,
         weight = 40,
-        material = 36,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         coefficient = 100,
 
         _copy = {
-            params = { food_quality = 1 },
+            params = { food_quality = 1, seed_material = 36 },
         },
 
         gods = { "elona.kumiromi" },
@@ -8857,14 +8856,13 @@ local item =
         image = "elona.item_seed",
         value = 280,
         weight = 40,
-        material = 37,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         rarity = 800000,
         coefficient = 100,
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 37 },
 
         gods = { "elona.kumiromi" },
 
@@ -8881,14 +8879,13 @@ local item =
         image = "elona.item_seed",
         value = 1800,
         weight = 40,
-        material = 38,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         rarity = 100000,
         coefficient = 100,
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 38 },
 
         gods = { "elona.kumiromi" },
 
@@ -8905,7 +8902,6 @@ local item =
         image = "elona.item_seed",
         value = 2500,
         weight = 40,
-        material = 39,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
@@ -8915,7 +8911,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
         },
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 39 },
 
         gods = { "elona.kumiromi" },
 
@@ -8930,14 +8926,13 @@ local item =
         image = "elona.item_seed",
         value = 120000,
         weight = 40,
-        material = 40,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         rarity = 20000,
         coefficient = 100,
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 40 },
 
         gods = { "elona.kumiromi" },
 
@@ -11948,14 +11943,13 @@ local item =
         image = "elona.item_seed",
         value = 4500,
         weight = 40,
-        material = 41,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 41 },
 
         gods = { "elona.kumiromi" },
 
@@ -11972,14 +11966,13 @@ local item =
         image = "elona.item_seed",
         value = 3500,
         weight = 40,
-        material = 42,
         on_use = function() end,
         category = 57000,
         subcategory = 58500,
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1 },
+        params = { food_quality = 1, seed_material = 42 },
 
         gods = { "elona.kumiromi" },
 
