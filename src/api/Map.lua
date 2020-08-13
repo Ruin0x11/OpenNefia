@@ -576,7 +576,7 @@ function Map.travel_to(map, params)
 
    if map.uid == current.uid then
       -- Nothing to do.
-      return
+      return true
    end
 
    local x, y
@@ -592,9 +592,12 @@ function Map.travel_to(map, params)
    Log.debug("Start position: %s %s (%s)", x, y)
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
-      x = math.floor(map:width() / 2)
-      y = math.floor(map:height() / 2)
+      x = map:width() / 2
+      y = map:height() / 2
    end
+
+   x = math.floor(x)
+   y = math.floor(y)
 
    if map.area_uid == nil then
       Log.warn("Autogenerating new area for map '%d'", map.uid)

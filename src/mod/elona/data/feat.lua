@@ -306,9 +306,11 @@ local function gen_stair(down)
       end,
 
       on_stepped_on = function(self, params)
-         local area = Area.get(self.params.area_uid)
-         if area then
-            Gui.mes(("This leads to: %s %s"):format(area, self.params.area_floor))
+         if params.chara:is_player() and self.params.area_uid then
+            local area = Area.get(self.params.area_uid)
+            if area then
+               Gui.mes(("This leads to: %s %s"):format(area, self.params.area_floor))
+            end
          end
       end,
 

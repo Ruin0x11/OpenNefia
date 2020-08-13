@@ -33,7 +33,7 @@ function util.chara_filter_town(callback)
       local filter = {
          level = level,
          quality = quality,
-         fltselect = 5
+         fltselect = Enum.FltSelect.Town
       }
 
       if callback == nil then

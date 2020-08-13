@@ -98,17 +98,17 @@ end
 function Charagen.random_chara_id(level, quality, fltselect, category, race_filter, tag_filters)
    if category == 0 and #tag_filters == 0 and race_filter == nil then
       if quality == Enum.Quality.Good and Rand.one_in(20) then
-         fltselect = 2
+         fltselect = Enum.FltSelect.Unique
       end
       if quality == Enum.Quality.Great and Rand.one_in(10) then
-         fltselect = 2
+         fltselect = Enum.FltSelect.Unique
       end
    end
 
    local id = Charagen.random_chara_id_raw(level, fltselect, category, race_filter, tag_filters)
 
    if id == nil then
-      if fltselect == 2 or quality == Enum.Quality.Unique then
+      if fltselect == Enum.FltSelect.Unique or quality == Enum.Quality.Unique then
          quality = Enum.Quality.Great
       end
       level = level + 10

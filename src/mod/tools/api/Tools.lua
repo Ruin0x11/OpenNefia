@@ -676,6 +676,8 @@ function Tools.goto_area(area_archetype_id, floor)
    local area
    if not Area.is_created(area_archetype_id) then
       area = Area.create_unique(area_archetype_id, Area.current() or "root")
+      area.parent_x = Chara.player().x
+      area.parent_y = Chara.player().y
    else
       area = Area.get_unique(area_archetype_id)
    end

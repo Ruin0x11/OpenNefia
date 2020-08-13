@@ -2787,7 +2787,7 @@ local shop = {
       types = { "player_owned" },
       player_start_pos = "base.south",
       is_indoor = true,
-      max_items = 10,
+      item_on_floor_limit = 10,
    }
 }
 function shop.on_generate(map)
@@ -2809,7 +2809,7 @@ local crop = {
       types = { "player_owned" },
       player_start_pos = "base.south",
       is_indoor = false,
-      max_items = 80,
+      item_on_floor_limit = 80,
    }
 }
 function crop.on_generate(map)
@@ -2828,7 +2828,7 @@ local ranch = {
       types = { "player_owned" },
       player_start_pos = "base.south",
       is_indoor = false,
-      max_items = 80,
+      item_on_floor_limit = 80,
    }
 }
 function ranch.on_generate(map)
@@ -2849,7 +2849,7 @@ local dungeon = {
       types = { "player_owned" },
       player_start_pos = "base.south",
       is_indoor = false,
-      max_items = 350,
+      item_on_floor_limit = 350,
    }
 }
 function dungeon.on_generate(map)
@@ -2868,7 +2868,7 @@ local storage = {
       types = { "player_owned" },
       player_start_pos = "base.south",
       is_indoor = false,
-      max_items = 200,
+      item_on_floor_limit = 200,
    }
 }
 data:add(storage)
