@@ -127,7 +127,10 @@ function PicViewer.start(asset, _type)
          local width, height = Draw.get_coords():get_size()
          drawable = Draw.make_chip_batch("chip")
          drawable:add(asset, 0, 0, width, height)
-         require("api.Log").info("get")
+      elseif is_type("base.map_tile", _type, asset) then
+         local width, height = Draw.get_coords():get_size()
+         drawable = Draw.make_chip_batch("tile")
+         drawable:add(asset, 0, 0, width, height)
       else
          error(("unknown type %s"):format(_type))
       end

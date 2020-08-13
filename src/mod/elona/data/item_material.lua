@@ -48,6 +48,7 @@ data:add_type {
         }
     },
 }
+data:add_index("elona.item_material", "elona_id")
 
 data:add {
     _type="elona.item_material",

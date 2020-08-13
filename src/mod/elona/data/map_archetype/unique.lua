@@ -1181,3 +1181,115 @@ do
       --}
    }
 end
+
+
+do
+   local pyramid = {
+      _id = "pyramid",
+      _type = "base.map_archetype",
+      elona_id = 37,
+
+      starting_pos = MapEntrance.stairs_up,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         player_start_pos = "elona.stair_up",
+         level = 20,
+         is_indoor = true,
+         has_anchored_npcs = true,
+         default_ai_calm = 0,
+         max_crowd_density = 40,
+         prevents_teleport = true,
+      }
+   }
+
+   function pyramid.chara_filter(map)
+      local level = Calc.calc_object_level(map.level, map)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+
+      return {
+         level = level,
+         quality = quality,
+         category = 13
+      }
+   end
+
+   function pyramid.on_generate_map(area, floor)
+      local map = Elona122Map.generate("sqPyramid")
+      map:set_archetype("elona.pyramid", { set_properties = true })
+
+      for _ = 1, map:calc("max_crowd_density") + 1 do
+         util.generate_chara(map)
+      end
+
+      util.connect_existing_stairs(map, area, floor)
+
+      return map
+   end
+
+   data:add(pyramid)
+
+   local pyramid_2 = {
+      _id = "pyramid_2",
+      _type = "base.map_archetype",
+      -- elona_id = 37,
+
+      starting_pos = MapEntrance.stairs_up,
+
+      properties = {
+         music = "elona.puti",
+         types = { "dungeon" },
+         level = 21,
+         is_indoor = true,
+         has_anchored_npcs = true,
+         default_ai_calm = 0,
+         max_crowd_density = 0,
+         prevents_teleport = true,
+      }
+   }
+
+   function pyramid_2.chara_filter(map)
+      local level = Calc.calc_object_level(map.level, map)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+
+      return {
+         level = level,
+         quality = quality,
+         category = 13
+      }
+   end
+
+   function pyramid_2.on_generate_map(area, floor)
+      local map = Elona122Map.generate("sqPyramid2")
+      map:set_archetype("elona.pyramid_2", { set_properties = true })
+
+      util.connect_existing_stairs(map, area, floor)
+
+      return map
+   end
+
+   data:add(pyramid_2)
+
+   local area_pyramid = {
+      _type = "base.area_archetype",
+      _id = "pyramid",
+
+      image = "elona.feat_area_pyramid",
+
+      floors = {
+         [1] = "elona.pyramid",
+         [2] = "elona.pyramid_2",
+      },
+
+      parent_area = {
+         _id = "elona.north_tyris",
+         on_floor = 1,
+         x = 4,
+         y = 11,
+         starting_floor = 1
+      }
+   }
+
+   data:add(area_pyramid)
+end

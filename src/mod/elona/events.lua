@@ -26,6 +26,7 @@ local Input = require("api.Input")
 --
 
 local function retreat_in_fear(chara, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1535 		if cHp(tc)<cMhp(tc)/5:if tc!pc:if cFear(tc)=0:if ..
    if chara.hp < chara:calc("max_hp") / 5 then
       if chara:is_player() or chara:has_effect("elona.fear") then
          return
@@ -35,7 +36,7 @@ local function retreat_in_fear(chara, params)
          return
       end
 
-      local retreats = params.damage * 100 / chara:calc("max_hp") + 10 > Rand.rnd(200)
+      local retreats = (params.damage * 100 / chara:calc("max_hp") + 10) > Rand.rnd(200)
 
       if params.attacker and params.attacker:has_trait("elona.no_fear") then
          retreats = false
@@ -46,6 +47,7 @@ local function retreat_in_fear(chara, params)
          Gui.mes_c_visible("damage.runs_away_in_terror", chara.x, chara.y, "Blue", chara)
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1539 			} ..
 end
 
 Event.register("base.on_damage_chara",
@@ -1076,7 +1078,7 @@ local function proc_damage_reaction(chara, params)
    -- >>>>>>>> elona122/shade2/action.hsp:1323         if cBarrier(tc)!0{ ..
    local damage_reaction = params.target:calc("damage_reaction")
    if damage_reaction then
-      local damage_reaction_data = data["base.damage_reaction"]:ensure(damage_reaction._id)
+      local damage_reaction_data = data["base.damage_reaction"]:ensure(damage_reaction.id)
       local power = damage_reaction.power
       if damage_reaction_data.on_damage then
          damage_reaction_data.on_damage(chara, power, params)
