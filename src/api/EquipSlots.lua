@@ -1,17 +1,20 @@
 --- @module EquipSlots
 
 local ILocation = require("api.ILocation")
+local IOwned = require("api.IOwned")
 local pool = require("internal.pool")
 local data = require("internal.data")
 
-local EquipSlots = class.class("EquipSlots", ILocation)
+local EquipSlots = class.class("EquipSlots", {ILocation, IOwned})
 
 --- @tparam {id:base.body_part,...} body_parts
 --- @tparam uid:IChara owner
 function EquipSlots:init(body_parts, owner)
+   if owner then
+      assert(class.is_an(IOwned, owner))
+      self.location = owner
+   end
    body_parts = body_parts or {}
-
-   self.owner = owner
 
    local init = function(_type)
       data["base.body_part"]:ensure(_type)

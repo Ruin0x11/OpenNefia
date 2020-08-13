@@ -9,6 +9,7 @@ local IObject = class.interface("IObject",
                           {
                              _id = "string",
                              _type = "string",
+                             uid = "number",
                              pre_build = "function",
                              normal_build = "function",
                              build = "function",
