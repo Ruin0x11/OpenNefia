@@ -321,7 +321,7 @@ function chip_layer:draw_hp_bars(draw_x, draw_y, offx, offy)
             self["i_" .. ind.hp_bar] = self.t.base[ind.hp_bar]:make_instance()
          end
 
-         local ratio = ind.hp_ratio or 0.9
+         local ratio = math.clamp(ind.hp_ratio or 1.0, 0.0, 1.0)
          self["i_" .. ind.hp_bar]:draw_percentage_bar(sx - draw_x + offx + ind.x * 48 + 9,
                                                       sy - draw_y + offy + ind.y * 48 + CONFIG["base.chara"].y_offset + 48,
                                                       ratio * 30, 3, ratio * 30)

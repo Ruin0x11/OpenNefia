@@ -30,8 +30,8 @@ local function get_map_display_name(area, description)
 
    local _id = area._archetype or "<no archetype>"
 
-   local desc = I18N.get("map.unique." .. _id .. ".desc")
-   local name = I18N.get("map.unique." .. _id .. ".name")
+   local desc = I18N.get_optional("map.unique." .. _id .. ".desc")
+   local name = I18N.get_optional("map.unique." .. _id .. ".name")
    if name == nil and desc then
       name = desc
    end

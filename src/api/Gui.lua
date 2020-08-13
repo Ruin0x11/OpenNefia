@@ -57,6 +57,10 @@ end
 
 --- Starts a draw callback to be run asynchronously.
 function Gui.start_draw_callback(cb, async, tag)
+   if Env.is_headless() then
+      return
+   end
+
    field:add_async_draw_callback(cb, tag)
 
    if not async then
@@ -71,6 +75,10 @@ end
 
 --- Waits for all draw callbacks to finish before continuing.
 function Gui.wait_for_draw_callbacks()
+   if Env.is_headless() then
+      return
+   end
+
    field:wait_for_draw_callbacks()
 end
 

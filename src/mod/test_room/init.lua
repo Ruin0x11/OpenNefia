@@ -4,6 +4,7 @@ local Item = require("api.Item")
 local Map = require("api.Map")
 local Text = require("mod.elona.api.Text")
 local Area = require("api.Area")
+local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
 require("mod.test_room.data")
 
@@ -12,6 +13,13 @@ local function on_game_start(self, player)
    local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })
    player:equip_item(bow, true)
    player:equip_item(arrow, true)
+
+   local armors = { "elona.chain_mail", "elona.composite_helm", "elona.composite_boots", "elona.composite_girdle" }
+   for _, _id in ipairs(armors) do
+      local armor = Item.create(_id, nil, nil, { ownerless = true })
+      ItemMaterial.change_item_material(armor, "elona.diamond")
+      player:equip_item(armor, true)
+   end
 
    Item.create("elona.putitoro", nil, nil, {}, player)
    Item.create("elona.rod_of_identify", nil, nil, {}, player)

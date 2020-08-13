@@ -1,9 +1,6 @@
-local Rand = require("api.Rand")
 local Item = require("api.Item")
 local Enchantment = require("mod.elona.api.Enchantment")
 local utils = require("mod.test_room.data.map_archetype.utils")
-local Effect = require("mod.elona.api.Effect")
-local Enum = require("api.Enum")
 
 local function make_ammo_enchantments(x, y, map)
    local ix = x

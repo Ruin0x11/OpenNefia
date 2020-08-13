@@ -87,6 +87,9 @@ function Dungeon.create_map(floor, params, width, height)
    local map = InstancedMap:new(width, height)
    map:clear("elona.mapgen_floor")
    map.level = floor
+   if params.max_crowd_density then
+      map.max_crowd_density = params.max_crowd_density
+   end
    return map
 end
 
@@ -250,7 +253,7 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
                if params.wall == WallType.Wall then
                   tile = "wall"
                elseif params.wall == WallType.Floor then
-                  tile = "floor_2"
+                  tile = "default"
                elseif params.wall == WallType.Room then
                   tile = "room"
                   if tile1 == 1 and i == 0 then
@@ -652,7 +655,7 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
          ty = dy
          Map.set_tile(dx, dy, "elona.mapgen_tunnel", map)
          if Rand.rnd(200) < hidden_path_chance then
-            Map.set_tile(dx, dy, "elona.mapgen_floor_2", map)
+            Map.set_tile(dx, dy, "elona.mapgen_default", map)
             Feat.create("elona.hidden_path", dx, dy, {}, map)
          end
          -- if not straight and Rand.one_in(4) then

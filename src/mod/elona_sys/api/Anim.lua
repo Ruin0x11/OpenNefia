@@ -54,7 +54,8 @@ function Anim.load(anim_id, tx, ty)
    assert(asset, ("Asset not found: %s"):format(anim.asset))
    assert(asset.count_x)
 
-   if not Map.is_in_fov(tx, ty) or config["base.anim_wait"] == 0 then
+   local map = Map.current()
+   if not map or not map:is_in_fov(tx, ty) or config["base.anim_wait"] == 0 then
       return function() end
    end
 

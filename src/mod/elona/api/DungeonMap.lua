@@ -1,3 +1,4 @@
+local Area = require("api.Area")
 local Dungeon = require("mod.elona.api.Dungeon")
 local Enum = require("api.Enum")
 local Feat = require("api.Feat")
@@ -133,7 +134,7 @@ end
 ---
 --- This function handles picking out a valid dungeon map by repeatedly calling
 --- the generator with a set of random parameters.
-function DungeonMap.generate_raw(generator, area, floor, width, height, attempts)
+function DungeonMap.generate_raw(generator, area, floor, width, height, attempts, on_generate_params)
    attempts = attempts or 2000
 
    local dungeon, err, gen_params
@@ -155,9 +156,14 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
          tunnel_length = w * h,
          hidden_path_chance = 5,
          creature_packs = 1,
-         dungeon_level = floor,
+         level = floor,
          max_crowd_density = w * h / 100
       }
+
+      if on_generate_params then
+         gen_params = on_generate_params(gen_params)
+         assert(type(gen_params) == "table")
+      end
 
       dungeon, err = generator(area, floor, gen_params)
 
@@ -169,25 +175,60 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
    return dungeon, gen_params
 end
 
+local function find_feat(map, _id)
+   local pred = function(feat) return feat._id == _id end
+   return map:iter_feats():filter(pred):nth(1)
+end
+
+-- TODO: Allow reversing direction.
+local function connect_stairs(map, area, floor)
+   local down = find_feat(map, "elona.stairs_down")
+   if down then
+      down.params.area_uid = area.uid
+      down.params.area_floor = floor + 1
+   end
+
+   local up = find_feat(map, "elona.stairs_up")
+   if up then
+      local area_uid
+      local area_floor
+      if floor == 1 then
+         local parent_area = assert(Area.parent(area))
+         area_uid = parent_area.uid
+         area_floor = parent_area:starting_floor() -- TODO find entrance of map in parent area?
+      else
+         area_uid = area.uid
+         area_floor = floor - 1
+      end
+
+      up.params.area_uid = area_uid
+      up.params.area_floor = area_floor
+   else
+      Log.warn("No up stairs in dungeon.")
+   end
+end
+
 --- Generates a single floor of a dungeon, separate from other floors.
 ---
 --- It needs to be added to an area later, as part of a set of dungeon
 --- floors.
-function DungeonMap.generate(generator, area, floor, opts)
+function DungeonMap.generate(area, floor, generator, opts)
    opts = opts or {}
    local width = opts.width
    local height = opts.height
    local attempts = opts.attempts
-   local creature_packs = opts.creature_packs
    local has_monster_houses = opts.has_monster_houses
 
-   local map, gen_params = DungeonMap.generate_raw(generator, area, floor, width, height, attempts)
+   local map, gen_params = DungeonMap.generate_raw(generator, area, floor, width, height, attempts, opts.on_generate_params)
 
    if map == nil then
       return nil
    end
 
-   local tileset = map.tileset or "elona.dirt"
+   map.level = opts.level or map.level
+
+   local tileset = opts.tileset or map.tileset or "elona.dirt"
+   map.tileset = tileset
    MapTileset.apply(tileset, map)
 
    local chara_filter = opts.chara_filter
@@ -202,7 +243,7 @@ function DungeonMap.generate(generator, area, floor, opts)
    end
 
    Log.info("Populating dungeon rooms.")
-   populate_rooms(map, creature_packs, has_monster_houses, chara_filter)
+   populate_rooms(map, gen_params.creature_packs, has_monster_houses, chara_filter)
 
    -- HACK: Block the starting positions so nothing gets generated
    -- there. This was done in Elona by just placing the player on the
@@ -236,6 +277,9 @@ function DungeonMap.generate(generator, area, floor, opts)
       block:remove_ownership()
    end
 
+   Log.info("Connecting stairs.")
+   connect_stairs(map, area, floor)
+
    Log.info("Generation finished: %d", map.uid)
 
    return map
@@ -253,7 +297,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
    for _=1, item_density do
       Itemgen.create(nil, nil,
                      {
-                        level = dungeon.dungeon_level,
+                        level = dungeon.level,
                         quality = 1,
                         categories = {Filters.dungeon()}
                      },
@@ -262,7 +306,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
 
    Log.info("Placing traps.")
    for _=0, Rand.rnd(dungeon:width() * dungeon:height() / 80) do
-      place_trap(0, 0, dungeon.dungeon_level, dungeon)
+      place_trap(0, 0, dungeon.level, dungeon)
    end
 
    if Rand.one_in(5) then
@@ -271,7 +315,7 @@ function DungeonMap.add_mobs_and_traps(dungeon, crowd_density, mob_density, item
          n = Rand.rnd(dungeon:width() * dungeon:height() / 5)
       end
       for _=1, n do
-         place_web(0, 0, dungeon.dungeon_level * 10 + 100, dungeon)
+         place_web(0, 0, dungeon.level * 10 + 100, dungeon)
       end
    end
 

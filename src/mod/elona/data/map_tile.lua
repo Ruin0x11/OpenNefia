@@ -4288,7 +4288,7 @@ data:add_multi(
          is_solid = false
       },
       {
-         _id = "mapgen_floor_2",
+         _id = "mapgen_default",
          image = "graphic/default/floor.png",
          is_solid = false
       },

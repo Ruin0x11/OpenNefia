@@ -494,8 +494,9 @@ function Item.fix_item(item, params)
    if config["base.debug_autoidentify"] then
       Effect.identify_item(item, config["base.debug_autoidentify"])
    else
-      if not is_shop and Item.is_equipment(item) then
-         if Rand.rnd(Chara.player():skill_level("elona.sense_quality")+1) > 5 then
+      local player = Chara.player()
+      if player and not is_shop and Item.is_equipment(item) then
+         if Rand.rnd(player:skill_level("elona.sense_quality")+1) > 5 then
             item.identify_state = Enum.IdentifyState.Quality
          end
       end
