@@ -1,24 +1,17 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
-local Item = require("api.Item")
-local Inventory = require("api.Inventory")
-local Input = require("api.Input")
 local I18N = require("api.I18N")
 
 local IInput = require("api.gui.IInput")
-local UiWindow = require("api.gui.UiWindow")
 local UiList = require("api.gui.UiList")
 local UiTheme = require("api.gui.UiTheme")
-local Window = require("api.gui.Window")
 local IPaged = require("api.gui.IPaged")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
-local TopicWindow = require("api.gui.TopicWindow")
 local UiWindow = require("api.gui.UiWindow")
 local ItemDescriptionMenu = require("api.gui.menu.ItemDescriptionMenu")
 
-local ResistanceLayout = require("api.gui.menu.inv.ResistanceLayout")
 
 --- A menu for a single inventory action, like getting or eating.
 local InventoryMenu = class.class("InventoryMenu", {IUiLayer, IPaged})
@@ -94,6 +87,7 @@ function InventoryMenu:init(ctxt, returns_item)
    self.layout = nil -- ResistanceLayout:new()
    self.subtext_column = "subtext"
    self.is_drawing = true
+   self.total_weight_text = ""
 
    self.result = nil
 
@@ -274,6 +268,8 @@ function InventoryMenu:update_filtering()
    if result then
       self.result = result
    end
+
+   self.total_weight_text = I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight)
 end
 
 function InventoryMenu:draw()
@@ -298,8 +294,7 @@ function InventoryMenu:draw()
 
    Ui.draw_topic(self.subtext_column, self.x + 526, self.y + 30)
 
-   local weight_note = string.format("%d items  (%s)", self.pages:len(),
-                                I18N.get("ui.inv.window.total_weight", self.total_weight, self.max_weight, self.cargo_weight))
+   local weight_note = string.format("%d items  (%s)", self.pages:len(), self.total_weight_text)
    Ui.draw_note(weight_note, self.x, self.y, self.width, self.height, 0)
 
    -- on_draw

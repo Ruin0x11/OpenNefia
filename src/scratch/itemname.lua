@@ -5,8 +5,8 @@ local Enum = require("api.Enum")
 
 if not field.is_active then lo() end
 
-if I18N.language() ~= "en" then
-   I18N.switch_language("en")
+if I18N.language_id() ~= "base.english" then
+   I18N.switch_language("base.english")
 end
 
 local function name(id)

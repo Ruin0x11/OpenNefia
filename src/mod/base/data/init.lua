@@ -1,3 +1,4 @@
+require("mod.base.data.language")
 require("mod.base.data.doc")
 require("mod.base.data.keybind")
 require("mod.base.data.asset")

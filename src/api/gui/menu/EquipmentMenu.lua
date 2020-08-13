@@ -43,7 +43,7 @@ local UiListExt = function(equipment_menu)
       equipment_menu.t.base.body_part_icons:draw_region(icon, x - 66, y - 2) -- wx + 88 - 66 = wx + 22
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
 
-      Draw.text(I18N.get("ui.body_part." .. entry.body_part._id), x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46
+      Draw.text(entry.body_part_text, x - 42, y + 3, {0, 0, 0}) -- wx + 88 - y = wx + 46
    end
    function E:draw_item_text(item_name, entry, i, x, y, x_offset, color)
       local subtext = entry.subtext
@@ -132,6 +132,7 @@ function EquipmentMenu:update_from_chara()
       local entry = {}
 
       entry.body_part = i.body_part
+      entry.body_part_text = I18N.get("ui.body_part." .. i.body_part._id)
       entry.equipped = nil
       entry.icon = nil
       entry.color = {10, 10, 10}

@@ -1489,3 +1489,24 @@ Behavior to trigger when this character is melee attacked.
       },
    }
 }
+
+data:add_type {
+   name = "language",
+   fields = {
+      {
+         name = "language_code",
+         template = true,
+         default = "",
+         doc = [[
+The language code for this language.
+
+Translations will be loaded from the folder with this language code under the
+locale/ folder of each mod. Prefer using an ISO 639-2/B code if available.
+
+You can reuse the language code of an existing language, for example if you
+wanted to create a mod that modifies the translated text using English as a
+base.
+]]
+      }
+   }
+}
