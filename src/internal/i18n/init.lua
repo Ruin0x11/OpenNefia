@@ -4,6 +4,7 @@ local Stopwatch = require("api.Stopwatch")
 local mod = require("internal.mod")
 local fs = require("util.fs")
 local dawg = require("internal.dawg")
+local data = require("internal.data")
 
 local i18n = {}
 i18n.db = {}
@@ -70,8 +71,10 @@ end
 i18n.load_translations = load_translations
 
 function i18n.switch_language(lang, force)
-   i18n.language = lang
-   local ok, env = pcall(require, "internal.i18n.env." .. lang)
+   local lang_data = data["base.language"]:ensure(lang)
+   i18n.language_id = lang
+   i18n.language = lang_data.language_code
+   local ok, env = pcall(require, "internal.i18n.env." .. i18n.language)
    if not ok then
       error(("Could not require I18N environment '%s': %s"):format(lang, env))
    end
@@ -80,8 +83,8 @@ function i18n.switch_language(lang, force)
    i18n.env["get"] = i18n.get
    i18n.env["rnd"] = Rand.rnd
 
-   if i18n.db[lang] == nil or force then
-      i18n.db[lang] = {}
+   if i18n.db[i18n.language] == nil or force then
+      i18n.db[i18n.language] = {}
    end
 
    i18n.index = nil
@@ -92,18 +95,22 @@ function i18n.switch_language(lang, force)
       local path = fs.join(mod.root_path, "locale")
 
       if fs.is_directory(path) then
-         local path = fs.join(path, lang)
+         local path = fs.join(path, i18n.language)
          if fs.is_directory(path) then
-            i18n.load_translations(path, i18n.db[lang])
+            i18n.load_translations(path, i18n.db[i18n.language])
          end
       end
    end
 
-   Log.info("Translations for language '%s' loaded in %02.02fms", lang, sw:measure())
+   Log.info("Translations for language '%s' loaded in %02.02fms", i18n.language_id, sw:measure())
 end
 
 function i18n.get_language()
    return i18n.language
+end
+
+function i18n.get_language_id()
+   return i18n.language_id
 end
 
 function i18n.get(key, ...)
@@ -182,7 +189,7 @@ end
 
 function i18n.on_hotload(old, new)
    table.replace_with(old, new)
-   i18n.switch_language(old.language or "en")
+   i18n.switch_language(old.language or "base.english")
 end
 
 return i18n

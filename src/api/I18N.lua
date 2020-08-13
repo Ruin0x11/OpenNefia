@@ -1,3 +1,4 @@
+local Event = require("api.Event")
 -- Interface to the text localization system.
 -- @module I18N
 
@@ -7,11 +8,18 @@ local i18n = require("internal.i18n")
 
 local I18N = {}
 
---- Returns the current langauge identifier as a string.
+--- Returns the current language identifier as a string.
 ---
 --- @treturn string
 function I18N.language()
    return i18n.language
+end
+
+--- Returns the current language ID.
+---
+--- @treturn string
+function I18N.language_id()
+   return i18n.language_id
 end
 
 --- @treturn string
@@ -62,7 +70,12 @@ function I18N.get_optional(text, ...)
          args[i] = I18N.get_optional(arg) or arg
       end
    end
-   return i18n.get(text, table.unpack(args))
+
+   local result = i18n.get(text, table.unpack(args))
+
+   result = Event.trigger("base.after_get_translation", { language_id = i18n.language_id, id = text, args = args }, result)
+
+   return result
 end
 
 --- Localizes a string with arguments. Pass the ID of a localized

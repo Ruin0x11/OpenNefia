@@ -2,7 +2,7 @@ local fs = require("util.fs")
 
 local config = {}
 
-config["base.language"] = "en"
+config["base.language"] = "base.english"
 config["base.keybinds"] = {}
 config["base.play_music"] = false
 config["base.anim_wait"] = 40 * 0.5

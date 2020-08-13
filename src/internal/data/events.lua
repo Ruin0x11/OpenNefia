@@ -122,5 +122,6 @@ data:add_multi(
       { _id = "on_item_refresh" },
       { _id = "on_item_add_enchantment" },
       { _id = "on_item_remove_enchantment" },
+      { _id = "after_get_translation" },
    }
 )
