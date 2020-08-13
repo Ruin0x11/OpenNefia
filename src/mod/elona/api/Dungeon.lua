@@ -85,7 +85,7 @@ function Dungeon.create_map(floor, params, width, height)
    height = height or params.height
 
    local map = InstancedMap:new(width, height)
-   map:clear("elona.mapgen_wall")
+   map:clear("elona.mapgen_floor")
    map.level = floor
    return map
 end
@@ -410,10 +410,10 @@ local function calc_room_entrance(room, map)
       elseif dir == "East" then
          x = room.x + room.width - 1
          y = room.y + Rand.rnd(room.height - 2) + 1
-      elseif dir == "South" then
+      elseif dir == "North" then
          x = room.x + Rand.rnd(room.width - 2) + 1
          y = room.y
-      elseif dir == "North" then
+      elseif dir == "South" then
          x = room.x + Rand.rnd(room.width - 2) + 1
          y = room.y + room.height - 1
       end
@@ -460,6 +460,9 @@ function Dungeon.connect_rooms(rooms, place_doors, params, map)
          end
 
          success = success or Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, true, params.hidden_path_chance, map)
+         if success then
+            break
+         end
       end
 
       if not success then
@@ -996,6 +999,7 @@ end
 
 -- Large room/tunnel in middle, with rooms on outer extremities
 function Dungeon.gen_type_4(area, floor, params)
+   -- >>>>>>>> shade2/map_rand.hsp:417 *map_createDungeonResident ..
    local map = Dungeon.create_map(floor, params)
    params.min_size = 8
 
@@ -1004,6 +1008,7 @@ function Dungeon.gen_type_4(area, floor, params)
    local n = params.min_size - 1
 
    for _, x, y in map:iter_tiles() do
+      Map.set_tile(x, y, "elona.mapgen_wall", map)
       if x > n and y > n and x + 1 < map:width() - n and y + 1 < map:height() - n then
          Map.set_tile(x, y, "elona.mapgen_tunnel", map)
       end
@@ -1044,6 +1049,7 @@ function Dungeon.gen_type_4(area, floor, params)
    map.rooms = rooms
 
    return map
+   -- <<<<<<<< shade2/map_rand.hsp:456 	return true ..
 end
 
 -- Same as type 4 but wider.
