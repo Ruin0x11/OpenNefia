@@ -90,9 +90,4 @@ function Resolver.resolve(proto, params)
    return result
 end
 
-function Resolver.run(id, invariants, params)
-   local resolver = Resolver.make(id, invariants)
-   return Resolver.resolve(resolver, params)
-end
-
 return Resolver

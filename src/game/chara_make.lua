@@ -5,6 +5,7 @@ local field = require("game.field")
 
 local chara_make = {}
 
+--[[
 chara_make.sections = {
    "api.gui.menu.chara_make.SelectScenarioMenu",
    "api.gui.menu.chara_make.SelectRaceMenu",
@@ -15,6 +16,12 @@ chara_make.sections = {
    "api.gui.menu.chara_make.SelectAliasMenu",
    "api.gui.menu.ChangeAppearanceMenu",
    "api.gui.menu.chara_make.CharacterFinalizeMenu"
+}
+--]]
+
+chara_make.sections = {
+   "api.gui.menu.chara_make.SelectScenarioMenu",
+   "api.gui.menu.chara_make.ex.TestMenu",
 }
 
 chara_make.wrapper = nil

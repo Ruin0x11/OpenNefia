@@ -11,7 +11,6 @@ local World = require("api.World")
 local Resolver = require("api.Resolver")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local MapObject = require("api.MapObject")
-local Role = require("mod.elona_sys.api.Role")
 local Text = require("mod.elona.api.Text")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Effect = require("mod.elona.api.Effect")
@@ -200,6 +199,14 @@ end
 Event.register("base.after_chara_damaged",
                "Proc sandbag talk", proc_sandbag_talk, {priority = 500000})
 
+local function fix_name_gender_age(chara)
+   if chara.proto.has_random_name then
+      chara.name = Text.random_name()
+   end
+end
+
+Event.register("base.on_build_chara", "Fix character name, age, gender", fix_name_gender_age)
+
 local function fix_level_and_quality(chara)
    -- >>>>>>>> shade2/chara.hsp:492 *chara_fix ..
    if chara.quality == Enum.Quality.Great then
@@ -285,12 +292,8 @@ Event.register("base.on_build_chara",
                "Init skills", init_skills)
 
 local function apply_race_class(chara)
-   -- TODO merge with charamake
-   local race_data = Resolver.run("elona.race", {}, { chara = chara })
-   local class_data = Resolver.run("elona.class", {}, { chara = chara })
-
-   chara:mod_base_with(race_data, "merge")
-   chara:mod_base_with(class_data, "merge")
+   Skill.apply_race_params(chara, chara.race)
+   Skill.apply_class_params(chara, chara.class)
 
    local rest = Resolver.resolve(chara, {object = chara, diff_only = true, override_method = true})
    chara:mod_base_with(rest, "set")

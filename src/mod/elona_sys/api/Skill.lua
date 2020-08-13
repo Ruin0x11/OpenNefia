@@ -739,4 +739,65 @@ function Skill.modify_resist_level(chara, element_id, delta, no_message)
    chara:refresh()
 end
 
+--- Takes a map of skill IDs to initial skill levels and a character, and rolls
+--- a set of complete skill levels/potentials for that character.
+function Skill.roll_skill_levels(chara, skills)
+   local result = {}
+
+   local chara_level = chara:calc("level")
+
+   for skill_id, base_level in pairs(skills) do
+      local chara_base_level = chara:base_skill_level(skill_id)
+      result[skill_id] = Skill.calc_initial_skill_level(skill_id, base_level, chara_base_level, chara_level, chara)
+   end
+
+   return result
+end
+
+--- Applies the properties and base skill levels of a race for a character.
+---
+--- As this is based off of the existing skill levels of the character, it
+--- should only be run once.
+---
+--- This is typically run before applying class properties.
+---
+--- @see Skill.apply_class_params
+function Skill.apply_race_params(chara, race_id)
+   local race_data = data["base.race"]:ensure(race_id)
+
+   for k, v in pairs(race_data.properties or {}) do
+      chara[k] = v
+   end
+
+   local skills = Skill.roll_skill_levels(chara, race_data.skills)
+   for skill_id, skill in pairs(skills) do
+      chara:set_base_skill(skill_id, skill.level, skill.potential, 0)
+   end
+
+   for trait_id, level in pairs(race_data.traits or {}) do
+      chara.traits[trait_id] = { level = level }
+   end
+end
+
+--- Applies the properties and base skill levels of a class for a character.
+---
+--- As this is based off of the existing skill levels of the character, it
+--- should only be run once.
+---
+--- This is typically run after applying racial properties.
+---
+--- @see Skill.apply_race_params
+function Skill.apply_class_params(chara, class_id)
+   local class_data = data["base.class"]:ensure(class_id)
+
+   for k, v in pairs(class_data.properties or {}) do
+      chara[k] = v
+   end
+
+   local skills = Skill.roll_skill_levels(chara, class_data.skills)
+   for skill_id, skill in pairs(skills) do
+      chara:set_base_skill(skill_id, skill.level, skill.potential, 0)
+   end
+end
+
 return Skill

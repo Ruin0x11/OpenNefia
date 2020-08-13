@@ -5,7 +5,7 @@ local class = {
       _id = "warrior",
       ordering = 10010,
 
-      copy_to_chara = {
+      properties = {
          item_type = 1,
          equipment_type = 1
       },
@@ -39,7 +39,7 @@ local class = {
       _id = "thief",
       ordering = 10020,
 
-      copy_to_chara = {
+      properties = {
          item_type = 7,
          equipment_type = 7
       },
@@ -70,7 +70,7 @@ local class = {
       _id = "wizard",
       ordering = 10030,
 
-      copy_to_chara = {
+      properties = {
          item_type = 2,
          equipment_type = 2
       },
@@ -105,7 +105,7 @@ local class = {
       _id = "farmer",
       ordering = 10040,
 
-      copy_to_chara = {
+      properties = {
          item_type = 1,
          equipment_type = 1
       },
@@ -140,7 +140,7 @@ local class = {
       ordering = 20010,
       is_extra = true,
 
-      copy_to_chara = {
+      properties = {
          item_type = 0,
          equipment_type = 0
       },
@@ -162,7 +162,7 @@ local class = {
       _id = "archer",
       ordering = 10050,
 
-      copy_to_chara = {
+      properties = {
          item_type = 3,
          equipment_type = 3
       },
@@ -193,7 +193,7 @@ local class = {
       _id = "warmage",
       ordering = 10060,
 
-      copy_to_chara = {
+      properties = {
          item_type = 5,
          equipment_type = 5
       },
@@ -228,7 +228,7 @@ local class = {
       _id = "tourist",
       ordering = 10070,
 
-      copy_to_chara = {
+      properties = {
          item_type = 0,
          equipment_type = 0
       },
@@ -251,7 +251,7 @@ local class = {
       _id = "pianist",
       ordering = 10080,
 
-      copy_to_chara = {
+      properties = {
          item_type = 3,
          equipment_type = 3
       },
@@ -285,7 +285,7 @@ local class = {
       ordering = 20020,
       is_extra = true,
 
-      copy_to_chara = {
+      properties = {
          item_type = 4,
          equipment_type = 4
       },
@@ -311,7 +311,7 @@ local class = {
       _id = "priest",
       ordering = 10090,
 
-      copy_to_chara = {
+      properties = {
          item_type = 6,
          equipment_type = 6
       },
@@ -346,7 +346,7 @@ local class = {
       _id = "claymore",
       ordering = 10100,
 
-      copy_to_chara = {
+      properties = {
          item_type = 8,
          equipment_type = 8
       },

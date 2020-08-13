@@ -120,16 +120,14 @@ function RollAttributesMenu:on_query()
    self.alist.chosen = false
 end
 
-local function calc_rolled_attributes(race, class)
+local function calc_rolled_attributes(race_id, class_id)
    -- TODO
    local temp = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
    temp.level = 0
 
-   local race_data = Resolver.run("elona.race", { race = race }, { chara = temp })
-   local class_data = Resolver.run("elona.class", { class = class }, { chara = temp })
-
-   temp:mod_base_with(race_data, "merge")
-   temp:mod_base_with(class_data, "merge")
+   local Skill = require("mod.elona_sys.api.Skill")
+   Skill.apply_race_params(temp, race_id)
+   Skill.apply_class_params(temp, class_id)
 
    return temp.skills
 end
