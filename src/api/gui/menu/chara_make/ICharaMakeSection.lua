@@ -4,19 +4,15 @@ local ICharaMakeSection = class.interface("ICharaMakeSection",
                  {
                     caption = "string",
                     intro_sound = "string",
-                    on_make_chara = "function",
-                    on_resume_query = "function"
+                    on_charamake_finish = "function",
+                    on_charamake_query_menu = "function"
                  },
                  { IUiLayer })
 
-function ICharaMakeSection.charamake_result(chara)
-   return nil
+function ICharaMakeSection.on_charamake_finish(result)
 end
 
-function ICharaMakeSection.on_make_chara(chara)
-end
-
-function ICharaMakeSection.on_resume_query()
+function ICharaMakeSection.on_charamake_query_menu()
 end
 
 return ICharaMakeSection

@@ -15,8 +15,8 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Role = require("mod.elona_sys.api.Role")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local ExHelp = require("mod.elona.api.ExHelp")
+local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local save = require("internal.global.save")
-local Log = require("api.Log")
 
 local function relocate_chara(chara, map)
    local x, y

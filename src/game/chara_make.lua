@@ -26,10 +26,6 @@ chara_make.sections = {
 
 chara_make.wrapper = nil
 
-function chara_make.get_section_result(menu)
-   return chara_make.wrapper and chara_make.wrapper:get_section_result(menu)
-end
-
 function chara_make.make_chara()
    return chara_make.wrapper and chara_make.wrapper:make_chara()
 end

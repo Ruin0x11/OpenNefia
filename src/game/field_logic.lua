@@ -8,6 +8,7 @@ local Map = require("api.Map")
 local World = require("api.World")
 local Log = require("api.Log")
 local Env = require("api.Env")
+local IChara = require("api.chara.IChara")
 local draw = require("internal.draw")
 local field = require("game.field")
 local config = require("internal.config")
@@ -23,7 +24,7 @@ function field_logic.setup_new_game(player)
 
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
 
-   assert(player)
+   assert(class.is_an(IChara, player))
 
    Chara.set_player(player)
    scenario:on_game_start(player)

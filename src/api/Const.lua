@@ -32,4 +32,10 @@ Const.MAX_SKILL_POTENTIAL = 400
 Const.MAX_SKILL_EXPERIENCE = 1000
 Const.POTENTIAL_DECAY_RATE = 0.9
 
+-- >>>>>>>> shade2/init.hsp:88 	#define global initYear		517 ..
+Const.INITIAL_YEAR = 517
+Const.INITIAL_MONTH = 8
+Const.INITIAL_DAY = 12
+-- <<<<<<<< shade2/init.hsp:90 	#define global initDay		12 ..
+
 return Const

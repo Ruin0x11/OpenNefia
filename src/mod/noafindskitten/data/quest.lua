@@ -54,7 +54,8 @@ data:add {
    root = "quest.noafindskitten.noafindskitten.dialog",
    nodes = {
       accept = function(t)
-         local map = Map.generate2("noafindskitten.quest_noafindskitten")
+         error("TODO")
+         -- local map = Map.generate2("noafindskitten.quest_noafindskitten")
 
          -- TODO remove
          map._outer_map = t.speaker:current_map().uid

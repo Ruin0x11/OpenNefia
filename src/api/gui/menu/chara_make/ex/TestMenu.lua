@@ -137,6 +137,7 @@ function TestMenu:update()
       local name = self.list:selected_item().text
       self.charamake_data.chara = Chara.create("elona.putit", nil, nil, { ownerless = true })
       self.charamake_data.chara.name = name
+      self.charamake_data.chara.class = "elona.warrior"
       return self.charamake_data
    end
 

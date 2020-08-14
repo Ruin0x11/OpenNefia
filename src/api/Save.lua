@@ -47,7 +47,7 @@ function Save.save_game()
    SaveFs.save_game(save_id)
 
    Gui.play_sound("base.write1")
-   Gui.mes("Game saved.")
+   Gui.mes("action.quicksave")
 end
 
 --- Loads the current save.

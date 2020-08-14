@@ -15,10 +15,6 @@ Mx.make_interactive("input_reload_keybinds", Input, "reload_keybinds")
 local Tools = require("mod.tools.api.Tools")
 Mx.make_interactive("goto_down_stairs", Tools, "goto_down_stairs")
 Mx.make_interactive("goto_up_stairs", Tools, "goto_up_stairs")
-Mx.make_interactive("goto_map", Tools, "goto_map",
-                    {
-                       { type="base.map_template" }
-                    })
 
 
 local Chara = require("api.Chara")

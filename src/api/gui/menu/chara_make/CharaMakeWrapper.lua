@@ -1,3 +1,4 @@
+local Env = require("api.Env")
 local Chara = require("api.Chara")
 local Draw = require("api.Draw")
 local Event = require("api.Event")
@@ -25,7 +26,7 @@ function CharaMakeWrapper:init(menus)
    self.width = Draw.get_width()
    self.height = Draw.get_height()
    self.menus = menus
-   self.trail = {}
+   self.submenu_trail = {}
    self.results = {}
    self.gene_used = "gene"
 
@@ -45,16 +46,19 @@ function CharaMakeWrapper:set_caption(text)
    self.caption:set_data(text)
 end
 
+function CharaMakeWrapper:current_result()
+   return self.results[#self.submenu_trail]
+end
+
 function CharaMakeWrapper:proceed()
    local menu_id
    if self.submenu then
-      menu_id = self.menus[#self.trail+2]
+      menu_id = self.menus[#self.submenu_trail+2]
    else
-      menu_id = self.menus[#self.trail+1]
+      menu_id = self.menus[#self.submenu_trail+1]
    end
 
-   local success, layer_class = xpcall(function() return env.safe_require(menu_id) end,
-      function(err) return debug.traceback(err) end)
+   local success, layer_class = xpcall(env.safe_require, debug.traceback, menu_id)
 
    if not success then
       local err = layer_class
@@ -68,9 +72,13 @@ function CharaMakeWrapper:proceed()
       return
    end
 
+   -- Get the result returned from the last menu, or a blank one if
+   -- still on the first menu.
+   local in_progress_result = self:current_result() or { chara = nil }
+
    local submenu
    success, submenu = xpcall(function()
-         local sm = layer_class:new()
+         local sm = layer_class:new(in_progress_result)
          class.assert_is_an(ICharaMakeSection, sm)
          return sm
    end, debug.traceback)
@@ -82,7 +90,7 @@ function CharaMakeWrapper:proceed()
    end
 
    if self.submenu then
-      table.insert(self.trail, self.submenu)
+      table.insert(self.submenu_trail, self.submenu)
    end
    self.submenu = submenu
 
@@ -96,10 +104,10 @@ function CharaMakeWrapper:proceed()
 end
 
 function CharaMakeWrapper:go_back()
-   if #self.trail == 0 then return end
+   if #self.submenu_trail == 0 then return end
 
-   self.submenu = table.remove(self.trail)
-   self.submenu:on_resume_query()
+   self.submenu = table.remove(self.submenu_trail)
+   self.submenu:on_charamake_query_menu()
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -109,49 +117,13 @@ function CharaMakeWrapper:go_back()
 end
 
 function CharaMakeWrapper:go_to_start()
-   while #self.trail > 0 do
+   while #self.submenu_trail > 0 do
       self:go_back()
    end
 
    -- call the constructor of the first menu again.
    self.submenu = nil
    self:proceed()
-end
-
-function CharaMakeWrapper:get_section_result(fq_name)
-   for _, menu in ipairs(self.trail) do
-      if env.get_require_path(menu) == fq_name then
-         return menu:charamake_result()
-      end
-   end
-
-   return nil
-end
-
-local on_initialize_player = Event.create(
-   "on_initialize_player",
-   { chara = "IChara", results = "{any,...}" },
-   [[
-Called when the player character's stats have finished being rerolled.
-]]
-)
-
-function CharaMakeWrapper:make_chara()
-   local default_id = "content.player" -- TODO
-   local chara = Chara.create(default_id, nil, nil, {no_build = true, ownerless = true})
-
-   local make_pairs = function(menu) return env.get_require_path(menu), menu:charamake_result() end
-   local results = fun.iter(self.trail):map(make_pairs):to_map()
-
-   for _, menu in ipairs(self.trail) do
-      menu:on_make_chara(chara, results)
-   end
-
-   on_initialize_player({chara=chara})
-
-   chara:build()
-
-   return chara
 end
 
 function CharaMakeWrapper:relayout(x, y, width, height)
@@ -187,13 +159,16 @@ end
 function CharaMakeWrapper:handle_action(act)
    if act == "go_to_start" then
       self:go_to_start()
-   else
-      if #self.trail == 0 then
-         self.canceled = true
-      else
-         self:go_back()
-      end
    end
+end
+
+function CharaMakeWrapper:initialize_player(chara)
+   assert(chara.name, "Character must have name set")
+   assert(chara.race, "Character must have race set")
+   assert(chara.class, "Character must have class set")
+
+   Event.trigger("base.on_initialize_player", {chara=chara})
+   config["base._save_id"] = chara.name
 end
 
 function CharaMakeWrapper:update()
@@ -202,22 +177,35 @@ function CharaMakeWrapper:update()
    end
 
    local result, canceled = self.submenu:update()
-   if canceled then
-      local act = table.maybe(result, "chara_make_action")
-      self:handle_action(act)
-   elseif result then
-      self.results[self.submenu.__class.__name] = result
+   local action = result and result.chara_make_action
 
-      local has_next = self.menus[#self.trail+2] ~= nil
+   if canceled then
+      if action then
+         self:handle_action(action)
+      else
+         if #self.submenu_trail == 0 then
+            self.canceled = true
+         else
+            self:go_back()
+         end
+      end
+   elseif result then
+      assert(type(result) == "table", "Charamake menu result must be table")
+      result.menu_id = Env.get_require_path(self.submenu.__class)
+
+      local has_next = self.menus[#self.submenu_trail+2] ~= nil
       if has_next then
+         self.results[#self.submenu_trail+1] = table.deepcopy(result)
          self:proceed()
-      elseif class.is_an(IChara, result) then
+      else
+         assert(class.is_an(IChara, result.chara))
+
          local success, err = xpcall(
             function()
-               for _, menu in ipairs(self.trail) do
-                  menu:on_make_chara(result)
+               for _, menu in ipairs(self.submenu_trail) do
+                  menu:on_charamake_finish(result)
                end
-               self.submenu:on_make_chara(result)
+               self.submenu:on_charamake_finish(result)
             end,
             debug.traceback)
 
@@ -225,11 +213,9 @@ function CharaMakeWrapper:update()
             Log.error("Error running final character making step:\n\t%s", err)
             self.submenu:on_query() -- reset canceled
          else
-            config["base._save_id"] = result.name
+            self:initialize_player(result.chara)
             return result
          end
-      else
-         Log.error("No character was returned by the final character making screen.")
       end
    end
 

@@ -52,12 +52,13 @@ local function main_title()
             action = "start"
          end
       elseif choice == "generate" then
-         local chara, canceled = chara_make.query()
+         local result, canceled = chara_make.query()
          if not canceled then
             going = false
 
-            if chara then
-               field_logic.setup_new_game(chara)
+            if result then
+               local player = result.chara
+               field_logic.setup_new_game(player)
                action = "start"
             end
          end

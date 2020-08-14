@@ -9,6 +9,7 @@ local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
+
 local DeferredEvents = {}
 
 function DeferredEvents.ragnarok(chara)
@@ -73,6 +74,19 @@ function DeferredEvents.ragnarok(chara)
       end
    end
    -- <<<<<<<< shade2/action.hsp:1416 		} ..
+end
+
+function DeferredEvents.first_ally()
+   local prompt = RandomEventPrompt:new(
+      "event.popup.reunion_with_pet.title",
+      "event.popup.reunion_with_pet.text",
+      "base.bg_re13",
+      {
+        "event.popup.reunion_with_pet.choices._0",
+        "event.popup.reunion_with_pet.choices._1",
+        "event.popup.reunion_with_pet.choices._2",
+        "event.popup.reunion_with_pet.choices._3"
+      })
 end
 
 return DeferredEvents

@@ -43,7 +43,7 @@ function SelectFeatsMenu:on_make_chara(chara)
    chara.traits = self.chara.traits
 end
 
-function SelectFeatsMenu:on_resume_query()
+function SelectFeatsMenu:on_charamake_query_menu()
    self.chara = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
    self.chara.feats_acquirable = 3
    self.inner = FeatsMenu:new(self.chara, true)

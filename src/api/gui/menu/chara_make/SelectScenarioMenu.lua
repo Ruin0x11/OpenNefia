@@ -27,7 +27,8 @@ local UiListExt = function()
    return E
 end
 
-function SelectScenarioMenu:init()
+function SelectScenarioMenu:init(charamake_data)
+   self.charamake_data = {}
    self.width = 680
    self.height = 500
 
@@ -61,7 +62,7 @@ function SelectScenarioMenu:make_keymap()
    }
 end
 
-function SelectScenarioMenu:on_make_chara()
+function SelectScenarioMenu:on_charamake_finish()
    save.base.scenario = self.scenario._id
 end
 
@@ -89,7 +90,7 @@ end
 function SelectScenarioMenu:update()
    if self.list.chosen then
       self.scenario = self.list:selected_item().data
-      return true
+      return self.charamake_data
    elseif self.list.changed then
       self.text:set_data({self.list:selected_item().description})
    end

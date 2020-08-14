@@ -105,30 +105,7 @@ end
 --- @tparam uid:InstancedMap|InstancedMap|string id
 --- @treturn bool success
 --- @treturn InstancedMap|string result/error
-function Map.load(id)
-   assert(id)
-   local uid
-
-   if type(id) == "number" then
-      uid = id
-   elseif type(id) == "string" then
-      local store = save.base.map_registry
-
-      if store[id] == nil then
-         local template = data["base.map_template"]:ensure(id)
-         if not template.unique then
-            return false, ("Map template %s is not a unique map."):format(id)
-         end
-
-         local map = Map.generate2(id)
-
-         Map.save(map)
-         store[id] = map.uid
-      end
-
-      uid = store[id]
-   end
-
+function Map.load(uid)
    assert(type(uid) == "number")
 
    local path = Fs.join("map", tostring(uid))
@@ -343,25 +320,12 @@ function Map.calc_start_position(map, previous_map, feat)
    return x, y
 end
 
-function Map.generate2(map_template_id, opts)
-   opts = opts or {}
-
-   local map = map_template.generate(map_template_id, opts)
-
-   map.id = map.id or ("_%d"):format(map.uid)
-   map.name = map.name or I18N.get("map.unique." .. map.id .. ".name")
-
-   return map
-end
-
 --- Clears a position on a map so it can be accessable by a character.
 ---
 --- @tparam int x
 --- @tparam int y
 --- @tparam[opt] InstancedMap map
 function Map.force_clear_pos(x, y, map)
-   local Chara = require("api.Chara")
-
    if not Map.is_floor(x, y, map) then
       map:set_tile(x, y, "base.floor")
    end
@@ -375,7 +339,6 @@ function Map.force_clear_pos(x, y, map)
 end
 
 local function can_place_chara_at(x, y, map)
-   local Chara = require("api.Chara")
    return Map.can_access(x, y, map)
 end
 
@@ -544,14 +507,7 @@ function Map.try_place_chara(chara, x, y, map)
 end
 
 local function rebuild_map(map, params)
-   Log.info("Rebuilding map.")
-
-   -- Regenerate the map with the same parameters.
-   local new_map = Map.generate2(map.id)
-
-   map:emit("base.on_map_rebuild", {new_map=new_map,travel_to_params=params})
-
-   map:replace_with(new_map)
+   Log.error("TODO")
 end
 
 --- Cleans up the current map and moves the player and allies to a

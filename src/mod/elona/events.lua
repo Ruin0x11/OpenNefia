@@ -17,6 +17,7 @@ local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
+local Log = require("api.Log")
 
 --
 --
@@ -292,8 +293,14 @@ Event.register("base.on_build_chara",
                "Init skills", init_skills)
 
 local function apply_race_class(chara)
-   Skill.apply_race_params(chara, chara.race)
-   Skill.apply_class_params(chara, chara.class)
+   -- TODO: Should not be applied on player
+   -- It is actually possible for characters to lack a class, but usually not a race.
+   if chara.race ~= nil then
+      Skill.apply_race_params(chara, chara.race)
+   end
+   if chara.class ~= nil then
+      Skill.apply_class_params(chara, chara.class)
+   end
 
    local rest = Resolver.resolve(chara, {object = chara, diff_only = true, override_method = true})
    chara:mod_base_with(rest, "set")
@@ -312,9 +319,13 @@ Event.register("base.on_build_chara",
                "Init lay hand", init_lay_hand)
 
 local function init_chara_defaults(chara)
+   -- >>>>>>>> shade2/chara.hsp:509 	cInterest(rc)=100 ..
    chara.performance_interest = chara.performance_interest or 0
    chara.performance_interest_revive_date = chara.performance_interest_revive_date or 0
+   chara.fov = 14
+   -- <<<<<<<< shade2/chara.hsp:511 	cFov(rc)=14 ..
 
+   -- >>>>>>>> shade2/chara.hsp:516 	if rc=pc:cHunger(rc)=9000:else:cHunger(rc)=defAll ..
    if chara:is_player() then
       chara.nutrition = 9000
    else
@@ -324,11 +335,14 @@ local function init_chara_defaults(chara)
    chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
 
    chara.required_experience = Skill.calc_required_experience(chara)
+   -- <<<<<<<< shade2/chara.hsp:521 	call calcExpToNextLevel,(r1=rc) ..
 
+   -- >>>>>>>> shade2/chara.hsp:532 	if rc=pc{ ..
    if chara:is_player() then
       chara.initial_max_cargo_weight = 80000
       chara.max_cargo_weight = chara.initial_max_cargo_weight
    end
+   -- <<<<<<<< shade2/chara.hsp:534 		} ..
 end
 
 Event.register("base.on_build_chara",
@@ -864,6 +878,7 @@ local function init_save()
    s.inheritable_item_count = 0
    s.fire_giant_uid = nil
    s.home_rank = "elona.cave"
+   s.flag_has_met_ally = false
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

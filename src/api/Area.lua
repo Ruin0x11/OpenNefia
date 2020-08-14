@@ -32,14 +32,12 @@ local data = require("internal.data")
 --- created entrance will be lost when you load the map from disk.
 local Area = {}
 
-function Area.metadata(map)
-   local area = Area.for_map(map or field.map)
+function Area.get(uid)
+   assert(type(uid) == "number")
 
-   if area == nil then
-      return nil
-   end
+   local areas = save.base.areas
 
-   return area.metadata
+   return areas[uid] or nil
 end
 
 function Area.current()
@@ -48,6 +46,29 @@ end
 
 function Area.iter()
    return fun.iter_pairs(save.base.areas)
+end
+
+function Area.iter_in_parent(parent_map)
+   local is_area_entrance = function(feat)
+      -- TODO: this might be too permissive of a filter, but that's
+      -- what I get for using a dynamic language...
+      return feat.params.area_uid and feat.params.area_floor
+
+   end
+   local to_area = function(feat)
+      return Area.get(feat.params.area_uid)
+   end
+   return parent_map:iter_feats():filter(is_area_entrance):map(to_area)
+end
+
+function Area.metadata(map)
+   local area = Area.for_map(map or field.map)
+
+   if area == nil then
+      return nil
+   end
+
+   return area.metadata
 end
 
 local function get_area(map_or_area)
@@ -101,14 +122,6 @@ function Area.floor_number(map)
    local floor = area:iter_maps():filter(function(floor, m) return m.uid == map.uid end):nth(1)
 
    return floor
-end
-
-function Area.get(uid)
-   assert(type(uid) == "number")
-
-   local areas = save.base.areas
-
-   return areas[uid] or nil
 end
 
 function Area.is_registered(area)
@@ -223,6 +236,10 @@ function Area.get_unique(area_archetype_id)
 end
 
 function Area.create_unique(area_archetype_id, parent)
+   if Area.is_created(area_archetype_id) then
+      return Area.get_unique(area_archetype_id)
+   end
+
    local area_archetype = data["base.area_archetype"]:ensure(area_archetype_id)
    assert(parent == "root" or class.is_an(InstancedArea, parent), "Invalid parent area")
 
@@ -233,6 +250,11 @@ function Area.create_unique(area_archetype_id, parent)
    end
 
    area:set_archetype(area_archetype_id)
+   if area_archetype.metadata then
+      for k, v in pairs(area_archetype.metadata) do
+         area.metadata[k] = table.deepcopy(v)
+      end
+   end
 
    Area.register(area, { parent = parent })
 
@@ -242,14 +264,6 @@ function Area.create_unique(area_archetype_id, parent)
    }
 
    return area
-end
-
-function Area.get_or_create_unique(area_archetype_id, parent)
-   if Area.is_created(area_archetype_id) then
-      return Area.get_unique(area_archetype_id)
-   end
-
-   return Area.create_unique(area_archetype_id, parent)
 end
 
 return Area
