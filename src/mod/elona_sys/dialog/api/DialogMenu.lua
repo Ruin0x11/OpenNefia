@@ -93,8 +93,8 @@ function DialogMenu:draw()
    -- NOTE: ignored by Ui.draw_topic
    Draw.set_font(10) -- 10 - en * 2
 
-   Ui.draw_topic("impress", self.x + 28, self.y + 170)
-   Ui.draw_topic("attract", self.x + 28, self.y + 215)
+   Ui.draw_topic("talk.window.impress", self.x + 28, self.y + 170)
+   Ui.draw_topic("talk.window.attract", self.x + 28, self.y + 215)
 
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
    Draw.text(self.speaker_name, self.x + 120, self.y + 16, {20, 10, 5})

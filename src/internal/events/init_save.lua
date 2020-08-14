@@ -1,3 +1,4 @@
+local Const = require("api.Const")
 local Event = require("api.Event")
 local DateTime = require("api.DateTime")
 local uid_tracker = require("internal.uid_tracker")
@@ -6,7 +7,7 @@ local save = require("internal.global.save")
 
 local function init_save()
    local s = save.base
-   s.date = DateTime:new(517, 8, 12, 16, 10, 0)
+   s.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
    s.play_time = 0
    s.play_turns = 0
    s.play_days = 0
@@ -19,7 +20,6 @@ local function init_save()
    s.shadow = 70
    s.has_light_source = false
    s.deepest_level = 0
-   s.map_registry = {}
    s.containers = {}
    s.tracked_skill_ids = {}
    s.bones = {}

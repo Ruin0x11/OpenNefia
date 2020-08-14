@@ -1,3 +1,4 @@
+local Area = require("api.Area")
 local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -11,7 +12,7 @@ local Enum = require("api.Enum")
 local common = require("mod.elona.data.dialog.common")
 
 Event.register("elona.hook_calc_dig_success", "Digging in tutorial", function(map, _, result)
-                  if map.gen_id == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
+                  if Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
                      return true
                   end
 
@@ -19,7 +20,7 @@ Event.register("elona.hook_calc_dig_success", "Digging in tutorial", function(ma
 end)
 
 Event.register("elona.on_dig_success", "Digging in tutorial", function(map, params)
-                  if map.gen_id == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
+                  if Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
                      Map.force_clear_pos(params.dig_x, params.dig_y, map)
                      local item = Item.create("elona.worthless_fake_gold_bar", params.dig_x, params.dig_y, {}, map)
                      item.curse_state = "cursed"

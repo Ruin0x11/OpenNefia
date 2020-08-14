@@ -1,3 +1,7 @@
+local Save = require("api.Save")
+local DateTime = require("api.DateTime")
+local Const = require("api.Const")
+local Area = require("api.Area")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
 local Item = require("api.Item")
@@ -5,18 +9,12 @@ local Scene = require("mod.elona_sys.scene.api.Scene")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Enum = require("api.Enum")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
-local function load_towns()
-   local pred = function(map)
-      return table.set(map.copy.types)["town"] ~= nil
-   end
-   for _, town in data["base.map_template"]:iter():filter(pred) do
-      Map.load(town._id)
-   end
-end
-
+-- TODO: move this into an event, to be shared by multiple scenarios.
 local function initialize_player(player)
-   player.quality = 2
+   -- >>>>>>>> shade2/chara.hsp:539 *cm_finishPC ..
+   player.quality = Enum.Quality.Normal
    Item.create("elona.cargo_travelers_food", nil, nil, {amount=8}, player)
    Item.create("elona.ration", nil, nil, {amount=8}, player)
    Item.create("elona.bottle_of_crim_ale", nil, nil, {amount=2}, player)
@@ -40,40 +38,61 @@ local function initialize_player(player)
    end
 
    player:refresh()
+   -- <<<<<<<< shade2/chara.hsp:579 	return ..
 end
 
-local function create_first_map()
-   -- Generate the world map.
-   local world_map = Map.generate2("elona.north_tyris")
+local function load_towns(north_tyris)
+   for _, area in Area.iter_in_parent(north_tyris) do
+      -- See if there are any maps in this area that need early
+      -- initialization.
+      if area.metadata.town_floors then
+         -- For every floor that is marked to be initialized on save
+         -- creation, generate it and initialize things like quest
+         -- data. This is so quests that interlink between maps
+         -- (delivery, escort) have proper connections to one another
+         -- ahead of time.
+         for _, floor in ipairs(area.metadata.town_floors) do
+            local ok, map = assert(area:load_or_generate_floor(floor))
 
-   -- TODO set this up automatically, as "root map" or similar
-   error("TODO")
+            -- Initialize quests, etc. in this map. (initialize_map() in events/map_init.lua)
+            map:emit("base.on_map_initialize", {load_type = "initialize"})
 
-   return world_map
+            Map.save(map)
+         end
+      end
+   end
 end
 
 local function start(self, player)
    Scene.play("elona.story0")
 
-   local world_map = create_first_map()
+   -- >>>>>>>> shade2/main.hsp:457 		gYear		=initYear,initMonth,initDay,1,10	 ..
+   save.base.date = DateTime:new(Const.INITIAL_YEAR, Const.INITIAL_MONTH, Const.INITIAL_DAY, 1, 10)
+   -- TODO weather
+   -- <<<<<<<< shade2/main.hsp:461 		gWorld		=areaNorthTyris ..
+
+   local north_tyris_area = Area.create_unique("elona.north_tyris", "root")
+   local ok, north_tyris = assert(north_tyris_area:load_or_generate_floor(north_tyris_area:starting_floor()))
 
    -- Load the player's home.
-   local home = Map.generate2("elona.your_home")
-   Map.save(home)
-   Map.set_map(home)
-   save.base.home_map_uid = home.uid
+   local your_home_area = Area.create_unique("elona.your_home", north_tyris_area)
+   local ok, your_home = assert(your_home_area:load_or_generate_floor(your_home_area:starting_floor()))
+   Map.save(your_home)
+   Map.set_map(your_home)
+   save.base.home_map_uid = your_home.uid
+
+   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+   Save.save_game()
+   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
 
    -- Load all towns.
-   load_towns(world_map)
+   load_towns(north_tyris)
 
-   -- Save the world map since the entrances on it were modified.
-   Map.save(world_map)
+   -- Save the world map since we created new entrance feats in it.
+   Map.save(north_tyris)
 
-   -- TODO map archetype
-   error("TODO")
-   local x, y = data["base.map_entrance"]["base.center"].pos(home, player)
-
-   assert(home:take_object(player, x, y))
+   local pos = MapEntrance.center(your_home, player)
+   assert(your_home:take_object(player, pos.x, pos.y))
    initialize_player(player)
 
    save.base.should_reset_world_map = true

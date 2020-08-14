@@ -9,6 +9,9 @@ local World = require("api.World")
 local util = require("mod.elona.data.map_archetype.util")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local Scene = require("mod.elona_sys.scene.api.Scene")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Gui = require("api.Gui")
 
 do
    local vernis = {
@@ -152,6 +155,20 @@ do
       util.reload_122_map_geometry(map, "vernis")
    end
 
+   function vernis.on_map_minor_events(map)
+      -- >>>>>>>> shade2/map.hsp:2035 	if gArea=areaVernis{ ..
+      if Sidequest.progress("elona.main_quest") == 0 then
+         Scene.play("elona.story1")
+         Sidequest.set_progress("elona.main_quest", 1)
+      end
+      if not save.elona.flag_has_met_ally then
+         save.elona.flag_has_met_ally = true
+
+         DeferredEvent.add(first_ally)
+      end
+      -- <<<<<<<< shade2/map.hsp:2038 		} ..
+   end
+
    data:add(vernis)
 
    data:add {
@@ -162,6 +179,10 @@ do
       image = "elona.feat_area_city",
       floors = {
          [1] = "elona.vernis"
+      },
+
+      metadata = {
+         town_floors = { 1 }
       },
 
       parent_area = {
@@ -312,6 +333,10 @@ do
       image = "elona.feat_area_village",
       floors = {
          [1] = "elona.yowyn"
+      },
+
+      metadata = {
+         town_floors = { 1 }
       },
 
       parent_area = {
@@ -534,6 +559,10 @@ do
          [1] = "elona.palmia"
       },
 
+      metadata = {
+         town_floors = { 1 }
+      },
+
       parent_area = {
          _id = "elona.north_tyris",
          on_floor = 1,
@@ -672,6 +701,10 @@ do
 
       floors = {
          [1] = "elona.derphy"
+      },
+
+      metadata = {
+         town_floors = { 1 }
       },
 
       parent_area = {
@@ -843,6 +876,10 @@ do
 
       floors = {
          [1] = "elona.port_kapul"
+      },
+
+      metadata = {
+         town_floors = { 1 }
       },
 
       parent_area = {
@@ -1176,6 +1213,10 @@ do
          [1] = "elona.noyel"
       },
 
+      metadata = {
+         town_floors = { 1 }
+      },
+
       parent_area = {
          _id = "elona.north_tyris",
          on_floor = 1,
@@ -1362,6 +1403,10 @@ do
 
       floors = {
          [1] = "elona.lumiest"
+      },
+
+      metadata = {
+         town_floors = { 1 }
       },
 
       parent_area = {

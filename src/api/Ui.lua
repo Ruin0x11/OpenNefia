@@ -33,6 +33,7 @@ function Ui.params_centered(width, height, tiled)
    return x, y, width, height
 end
 
+local topic_cache = setmetatable({}, { __mode = "kv" })
 local t
 -- @tparam string topic
 -- @tparam int x
@@ -43,7 +44,8 @@ function Ui.draw_topic(topic, x, y)
    Draw.set_color(255, 255, 255)
    t.base.tip_icons:draw_region(1, x, y + 7)
    Draw.set_color(0, 0, 0)
-   local text = I18N.get_optional(topic) or topic
+   local text = topic_cache[topic] or I18N.get_optional(topic) or topic
+   topic_cache[topic] = text
    Draw.text(text, x + 26, y + 8) -- y + vfix + 8
    Draw.line(x + 22, y + 21, x + Draw.text_width(text) + 36, y + 21)
    Draw.set_color(255, 255, 255)

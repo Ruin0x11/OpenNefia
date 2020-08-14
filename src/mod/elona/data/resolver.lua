@@ -26,7 +26,7 @@ data:add {
    params = { chara = "IChara" },
 
    resolve = function(self, params)
-      return self[params.chara.gender or "female"]
+      return self[params.object.gender or "female"]
    end
 }
 

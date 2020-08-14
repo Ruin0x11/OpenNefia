@@ -4,7 +4,7 @@ local Event = require("api.Event")
 local Log = require("api.Log")
 local Area = require("api.Area")
 
-local function generate_entrances_of_parent_area(parent_map, params)
+local function generate_entrances_of_area_children(parent_map, params)
    local parent_area = params.area
    local floor = params.floor_number
 
@@ -59,4 +59,4 @@ local function generate_entrances_of_parent_area(parent_map, params)
    end
 end
 
-Event.register("base.on_generate_area_floor", "Generate entrances of parent area", generate_entrances_of_parent_area)
+Event.register("base.on_generate_area_floor", "Generate entrances for the areas contained in the area", generate_entrances_of_area_children)

@@ -168,11 +168,6 @@ function Tools.goto_thing(thing)
    end
 end
 
-function Tools.goto_map(id)
-   local map = Map.generate2(id)
-   return Map.travel_to(map)
-end
-
 function Tools.go_home()
    return Map.travel_to(save.base.home_map_uid)
 end

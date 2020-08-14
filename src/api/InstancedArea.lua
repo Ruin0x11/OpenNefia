@@ -47,14 +47,24 @@ end
 
 function InstancedArea:deepest_floor()
    if #self.maps == 0 then
-      return 0
+      local archetype = self:archetype()
+      if archetype and archetype.floors then
+         return fun.iter(table.keys(archetype.floors)):max()
+      end
+
+      return 1
    end
    return fun.iter(table.keys(self.maps)):max()
 end
 
 function InstancedArea:starting_floor()
    if #self.maps == 0 then
-      return 0
+      local archetype = self:archetype()
+      if archetype and archetype.floors then
+         return fun.iter(table.keys(archetype.floors)):min()
+      end
+
+      return 1
    end
    return fun.iter(table.keys(self.maps)):min()
 end

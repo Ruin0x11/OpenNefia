@@ -36,6 +36,10 @@ local function get_map_display_name(area, description)
       name = desc
    end
 
+   if name == nil then
+      name = area.name
+   end
+
    if not description then
       return name
    end
@@ -309,7 +313,7 @@ local function gen_stair(down)
          if params.chara:is_player() and self.params.area_uid then
             local area = Area.get(self.params.area_uid)
             if area then
-               Gui.mes(("This leads to: %s %s"):format(area, self.params.area_floor))
+               Gui.mes(("This leads to: %s floor %s"):format(area, self.params.area_floor))
             end
          end
       end,

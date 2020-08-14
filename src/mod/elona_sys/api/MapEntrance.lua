@@ -6,7 +6,6 @@ local Area = require("api.Area")
 local MapEntrance = {}
 
 function MapEntrance.center(map, chara)
-   assert(class.is_an("api.InstancedMap", map))
    local x = math.floor(map:width() / 2)
    local y = math.floor(map:height() / 2)
 
@@ -104,7 +103,7 @@ function MapEntrance.stairs_down(map, chara, prev)
    local prev_area = Area.for_map(prev)
    local this_floor = Area.floor_number(prev)
 
-   local feat = find_stairs("elona.stairs_up", prev_area, this_floor, map)
+   local feat = find_stairs("elona.stairs_down", prev_area, this_floor, map)
    if not feat then
       Log.warn("No stairs down were found in map.")
       return MapEntrance.center(map, chara, prev)

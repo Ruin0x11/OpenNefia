@@ -35,7 +35,7 @@ local function create_static_dungeons(x, y, map, area)
          break
       end
 
-      local dungeon_area = Area.get_or_create_unique(area_archetype._id, area)
+      local dungeon_area = Area.create_unique(area_archetype._id, area)
       assert(Area.create_entrance(dungeon_area, 1, ix, iy, {}, map))
    end
 

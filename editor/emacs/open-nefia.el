@@ -640,6 +640,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
          (paths (-non-nil (-map (lambda (n) (open-nefia--api-name-to-path n cands)) apis))))
     (save-excursion
       (beginning-of-buffer)
+      (forward-paragraph)
       (-each paths 'open-nefia-insert-require-for-file)
       (save-buffer)
       (flycheck-buffer))))

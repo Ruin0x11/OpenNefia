@@ -1,3 +1,4 @@
+local Resolver = require("api.Resolver")
 local Const = require("api.Const")
 local Rand = require("api.Rand")
 local Map = require("api.Map")
@@ -766,7 +767,15 @@ function Skill.apply_race_params(chara, race_id)
    local race_data = data["base.race"]:ensure(race_id)
 
    for k, v in pairs(race_data.properties or {}) do
-      chara[k] = v
+      -- HACK: I seriously forgot how this works...
+      if type(v) == "table" and v.__resolver then
+         chara[k] = Resolver.resolve(v, { object = chara })
+         if type(chara[k]) == "table" and chara[k].__value then
+            chara[k] = chara[k].__value
+         end
+      else
+         chara[k] = v
+      end
    end
 
    local skills = Skill.roll_skill_levels(chara, race_data.skills)
@@ -791,7 +800,15 @@ function Skill.apply_class_params(chara, class_id)
    local class_data = data["base.class"]:ensure(class_id)
 
    for k, v in pairs(class_data.properties or {}) do
-      chara[k] = v
+      -- HACK: I seriously forgot how this works...
+      if type(v) == "table" and v.__resolver then
+         chara[k] = Resolver.resolve(v, { object = chara })
+         if type(chara[k]) == "table" and chara[k].__value then
+            chara[k] = chara[k].__value
+         end
+      else
+         chara[k] = v
+      end
    end
 
    local skills = Skill.roll_skill_levels(chara, class_data.skills)
