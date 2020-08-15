@@ -113,7 +113,7 @@ data:add_multi(
          fog = "elona.wall_stone_3_fog"
       },
       {
-         _id = "dirt",
+         _id = "dungeon",
          elona_id = 0,
 
          tiles = {

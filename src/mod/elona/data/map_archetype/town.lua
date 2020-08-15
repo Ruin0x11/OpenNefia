@@ -12,6 +12,7 @@ local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local Scene = require("mod.elona_sys.scene.api.Scene")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
+local DeferredEvents = require("mod.elona.api.DeferredEvents")
 
 do
    local vernis = {
@@ -163,8 +164,7 @@ do
       end
       if not save.elona.flag_has_met_ally then
          save.elona.flag_has_met_ally = true
-
-         DeferredEvent.add(first_ally)
+         DeferredEvent.add(DeferredEvents.first_ally)
       end
       -- <<<<<<<< shade2/map.hsp:2038 		} ..
    end

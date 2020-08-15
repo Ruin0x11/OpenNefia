@@ -11,6 +11,7 @@ local Filters = require("mod.elona.api.Filters")
 local Calc = require("mod.elona.api.Calc")
 local Log = require("api.Log")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local InstancedMap = require("api.InstancedMap")
 
 local DungeonMap = {}
 
@@ -168,6 +169,7 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
       dungeon, err = generator(area, floor, gen_params)
 
       if dungeon then
+         assert(class.is_an(InstancedMap, dungeon))
          break
       end
    end
@@ -227,7 +229,7 @@ function DungeonMap.generate(area, floor, generator, opts)
 
    map.level = opts.level or map.level
 
-   local tileset = opts.tileset or map.tileset or "elona.dirt"
+   local tileset = opts.tileset or map.tileset or "elona.dungeon"
    map.tileset = tileset
    MapTileset.apply(tileset, map)
 

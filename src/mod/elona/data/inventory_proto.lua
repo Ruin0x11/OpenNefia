@@ -296,7 +296,7 @@ local inv_buy = {
          return "inventory_continue"
       end
 
-      Gui.mes(ctxt.chara.uid .. " buys " .. item:build_name(amount))
+      Gui.mes("action.pick_up.you_buy", item:build_name(amount))
       Gui.play_sound("base.paygold1", ctxt.chara.x, ctxt.chara.y)
       ctxt.chara.gold = ctxt.chara.gold - cost
       ctxt.target.gold = ctxt.target.gold + cost
@@ -337,18 +337,18 @@ local inv_sell = {
 
       local cost = math.floor((item:calc("value") * amount) / 5)
 
-      if cost > ctxt.target.gold then -- TODO
-         Gui.mes("shopkeeper doesn't have enough money")
+      if cost > ctxt.target.gold then
+         Gui.mes("ui.inv.sell.not_enough_money")
          return "inventory_continue"
       end
 
       local separated = Action.get(ctxt.target, item, amount)
       if not separated then
-         Gui.mes("shopkeeper's inventory is full")
+         Gui.mes("action.pick_up.shopkeepers_inventory_is_full")
          return "inventory_continue"
       end
 
-      Gui.mes(ctxt.chara.uid .. " sells " .. item:build_name(amount))
+      Gui.mes("action.pick_up.you_sell", item:build_name(amount))
       Gui.play_sound("base.getgold1", ctxt.chara.x, ctxt.chara.y)
       ctxt.target.gold = ctxt.target.gold - cost
       ctxt.chara.gold = ctxt.chara.gold + cost

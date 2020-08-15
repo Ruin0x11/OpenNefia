@@ -433,7 +433,7 @@ do
    }
 
    function area_dragons_nest.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.dungeon(area, floor, { level = 30 })
+      local gen, params = DungeonTemplate.nefia_dungeon(area, floor, { level = 30 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.dragons_nest", { set_properties = true })
       return map
