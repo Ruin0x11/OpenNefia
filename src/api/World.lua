@@ -132,4 +132,9 @@ function World.calc_score()
    return score
 end
 
+function World.belongs_to_guild(guild_id)
+   -- TODO guild
+   return false
+end
+
 return World

@@ -51,10 +51,12 @@ end
 Event.register("base.on_generate", "Set item image to FFHP override", set_item_image_on_generate)
 
 local function set_item_image_on_map_enter(map, params)
-   for _, item in Item.iter(map) do
-      local mapping = FFHP.mapping_for(item._id)
-      if mapping then
-         apply_mapping(mapping, item)
+   if Theme.is_active("ceri_items.ceri_items") then
+      for _, item in Item.iter(map) do
+         local mapping = FFHP.mapping_for(item._id)
+         if mapping then
+            apply_mapping(mapping, item)
+         end
       end
    end
 end

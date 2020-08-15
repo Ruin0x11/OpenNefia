@@ -90,7 +90,7 @@ end
 
 function DungeonTemplate.nefia_dungeon(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   params.tileset "elona.dungeon"
+   params.tileset = "elona.dungeon"
 
    local gen = DungeonTemplate.type_2
    if Rand.one_in(4) then
@@ -109,7 +109,7 @@ function DungeonTemplate.nefia_dungeon(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen, params
+   return gen(area, floor, params)
 end
 -- image = "elona.feat_area_cave",
 
@@ -131,7 +131,7 @@ function DungeonTemplate.nefia_tower(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen, params
+   return gen(area, floor, params)
 end
 -- image = "elona.feat_area_tower",
 
@@ -153,7 +153,7 @@ function DungeonTemplate.nefia_forest(area, floor, params)
       gen = DungeonTemplate.type_4
    end
 
-   return gen, params
+   return gen(area, floor, params)
 end
 -- image = "elona.feat_area_tree",
 
@@ -175,7 +175,7 @@ function DungeonTemplate.nefia_castle(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen, params
+   return gen(area, floor, params)
 end
 -- image = "elona.feat_area_temple",
 
@@ -193,7 +193,7 @@ function DungeonTemplate.lesimas(area, floor, params)
       params.tileset = "elona.water"
    end
    if floor < 35 then
-      params.tileset = "elona.dirt"
+      params.tileset = "elona.dungeon"
    end
    if floor < 20 then
       params.tileset = "elona.tower_1"
@@ -202,7 +202,7 @@ function DungeonTemplate.lesimas(area, floor, params)
       params.tileset = "elona.tower_2"
    end
    if floor < 5 then
-      params.tileset = "elona.dirt"
+      params.tileset = "elona.dungeon"
    end
 
    local gen = DungeonTemplate.type_1
@@ -211,13 +211,13 @@ function DungeonTemplate.lesimas(area, floor, params)
    end
 
    local levels = {
-      [1] = Dungeon.gen_type_2,
-      [5] = Dungeon.gen_type_5,
-      [10] = Dungeon.gen_type_3,
-      [15] = Dungeon.gen_type_5,
-      [20] = Dungeon.gen_type_3,
-      [25] = Dungeon.gen_type_5,
-      [30] = Dungeon.gen_type_3,
+      [1] = DungeonTemplate.type_2,
+      [5] = DungeonTemplate.type_5,
+      [10] = DungeonTemplate.type_3,
+      [15] = DungeonTemplate.type_5,
+      [20] = DungeonTemplate.type_3,
+      [25] = DungeonTemplate.type_5,
+      [30] = DungeonTemplate.type_3,
    }
 
    if levels[floor] then
@@ -238,7 +238,7 @@ function DungeonTemplate.lesimas(area, floor, params)
       end
    end
 
-   return gen, params
+   return gen(area, floor, params)
 end
 -- image = "elona.feat_area_cave",
 
@@ -252,7 +252,7 @@ end
 
 function DungeonTemplate.crypt_of_the_damned(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   params.tileset = "elona.dirt"
+   params.tileset = "elona.dungeon"
    params.on_generate_params = scale_density_with_floor
 
    return Dungeon.gen_type_1, params

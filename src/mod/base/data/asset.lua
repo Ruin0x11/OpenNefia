@@ -710,77 +710,77 @@ local assets = {
    },
    {
        _id = "bg_re1",
-       image = "bg_re1.bmp",
+       image = "graphic/bg_re1.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re2",
-       image = "bg_re2.bmp",
+       image = "graphic/bg_re2.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re3",
-       image = "bg_re3.bmp",
+       image = "graphic/bg_re3.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re4",
-       image = "bg_re4.bmp",
+       image = "graphic/bg_re4.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re5",
-       image = "bg_re5.bmp",
+       image = "graphic/bg_re5.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re6",
-       image = "bg_re6.bmp",
+       image = "graphic/bg_re6.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re7",
-       image = "bg_re7.bmp",
+       image = "graphic/bg_re7.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re8",
-       image = "bg_re8.bmp",
+       image = "graphic/bg_re8.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re9",
-       image = "bg_re9.bmp",
+       image = "graphic/bg_re9.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re10",
-       image = "bg_re10.bmp",
+       image = "graphic/bg_re10.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re11",
-       image = "bg_re11.bmp",
+       image = "graphic/bg_re11.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re12",
-       image = "bg_re12.bmp",
+       image = "graphic/bg_re12.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re13",
-       image = "bg_re13.bmp",
+       image = "graphic/bg_re13.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re14",
-       image = "bg_re14.bmp",
+       image = "graphic/bg_re14.bmp",
        key_color = "none"
    },
    {
        _id = "bg_re15",
-       image = "bg_re15.bmp",
+       image = "graphic/bg_re15.bmp",
        key_color = "none"
    },
    {

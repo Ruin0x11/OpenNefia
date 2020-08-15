@@ -179,7 +179,7 @@ function Magic.read_scroll(item, magic, params)
       local magic_id = pair._id
       local power = pair.power
       assert(magic_id and power, ("Missing _id (%s) or power (%s) for magic callback"):format(magic_id, power))
-      did_something, result = elona_sys_Magic.cast(magic_id, {power=power,item=item,source=chara})
+      did_something, result = elona_sys_Magic.cast(magic_id, {power=power,item=item,source=chara,target=chara})
    end
 
    result = result or {}
