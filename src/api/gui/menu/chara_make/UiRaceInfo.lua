@@ -10,9 +10,7 @@ local data = require("internal.data")
 local UiRaceInfo = class.class("UiRaceInfo", {IUiElement, ISettable})
 
 function UiRaceInfo:init(race)
-   self.race = race
-
-   self:set_data()
+   self:set_data(race)
 end
 
 -- @tparam {proto=base.race,name=string,desc=string} race
@@ -90,9 +88,6 @@ local WEAPON_SKILLS = {
    "elona.throwing",
 }
 
--- TODO better way of telling if a skill is "normal"
-local NORMAL_SKILLS = table.set(table.merge(table.deepcopy(ATTRIBUTES), WEAPON_SKILLS))
-
 local function right_pad(str, amount)
    local len = utf8.wide_len(str)
    local count = math.max(amount - len, 0)
@@ -100,10 +95,11 @@ local function right_pad(str, amount)
 end
 
 function UiRaceInfo:draw()
+   -- >>>>>>>> shade2/chara.hsp:1109 	color 0,0,0:fontSize 14 ..
    Draw.set_font(14) -- 14 - en * 2
 
    for i, line in ipairs(self.wrapped) do
-      Draw.text(line, self.x + 230, self.y + 62 + (i - 1) * Draw.text_height(), {0, 0, 0})
+      Draw.text(line, self.x + 230 - 20, self.y + 62 + (i - 1) * Draw.text_height(), {0, 0, 0})
    end
 
    Ui.draw_topic("chara_make.select_race.race_info.attribute_bonus.text", self.x + 200, self.y + 166)
@@ -119,8 +115,7 @@ function UiRaceInfo:draw()
          end
 
          local skill_id = ATTRIBUTES[i * 3 + j + 1]
-         local skill_entry = data["base.skill"]:ensure(skill_id)
-         local skill_name = I18N.get("ability." .. skill_id .. ".name")
+         local skill_name = utf8.wide_sub(I18N.get("ability." .. skill_id .. ".name"), 0, 2)
          local skill_level = self.race.proto.skills[skill_id] or 0
          local text_color, proficiency = skill_info(skill_level)
          local skill_text = ("%s: %s"):format(skill_name, proficiency)
@@ -184,7 +179,6 @@ function UiRaceInfo:draw()
       rows = 1
    end
 
-   -- TODO better way of telling if a skill is "normal"
    local is_normal_skill = function(proto)
       return proto.type == nil or proto.type == "skill"
    end
@@ -208,8 +202,8 @@ function UiRaceInfo:draw()
 
          local skill_desc = I18N.get("ability." .. proto._id .. ".description")
 
-         if utf8.wide_len(skill_desc) > 45 then
-            skill_desc = utf8.wide_sub(skill_desc, 1, 43) .. "..."
+         if utf8.wide_len(skill_desc) > 43 then
+            skill_desc = utf8.wide_sub(skill_desc, 0, 40) .. "..."
          end
 
          Draw.text(skill_name .. skill_desc,
@@ -220,6 +214,7 @@ function UiRaceInfo:draw()
          rows = rows + 1
       end
    end
+   -- <<<<<<<< shade2/chara.hsp:1179 	loop ..
 end
 
 return UiRaceInfo

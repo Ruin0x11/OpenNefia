@@ -12,7 +12,8 @@ local SelectBalanceMenu = class.class("SelectBalanceMenu", ICharaMakeSection)
 
 SelectBalanceMenu:delegate("input", IInput)
 
-function SelectBalanceMenu:init()
+function SelectBalanceMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 680
    self.height = 500
 
@@ -39,7 +40,7 @@ function SelectBalanceMenu:make_keymap()
    }
 end
 
-function SelectBalanceMenu:on_make_chara()
+function SelectBalanceMenu:on_charamake_finish()
    return self.list:selected_item()
 end
 

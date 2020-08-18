@@ -13,10 +13,11 @@ local UiBuffList = require("api.gui.menu.UiBuffList")
 local UiTextGroup = require("api.gui.UiTextGroup")
 local UiTheme = require("api.gui.UiTheme")
 local I18N = require("api.I18N")
+local ISettable = require("api.gui.ISettable")
 local Env = require("api.Env")
 local save = require("internal.global.save")
 
-local CharacterSheetMenu = class.class("CharacterSheetMenu", IUiLayer)
+local CharacterSheetMenu = class.class("CharacterSheetMenu", { IUiLayer, ISettable })
 
 CharacterSheetMenu:delegate("input", IInput)
 
@@ -24,15 +25,6 @@ function CharacterSheetMenu:init(behavior, chara)
    self.width = 700
    self.height = 400
    self.chara = chara
-
-   self.portrait = self.chara:calc("portrait")
-   self.chara_image = self.chara:calc("image")
-   self.pcc = self.chara:calc("pcc")
-   if self.pcc then
-      self.pcc = table.deepcopy(self.pcc)
-      self.pcc.dir = 1
-      self.pcc.frame = 2
-   end
 
    self.topic_win = TopicWindow:new(1, 10)
 
@@ -48,6 +40,8 @@ function CharacterSheetMenu:init(behavior, chara)
    self.portrait_batch = nil
 
    self.caption = "chara_make.final_screen.caption"
+
+   self:set_data()
 end
 
 function CharacterSheetMenu:make_keymap()
@@ -60,6 +54,30 @@ function CharacterSheetMenu:make_keymap()
    }
 end
 
+function CharacterSheetMenu:set_data(chara)
+   self.chara = chara or self.chara
+   self.x = self.x or 0
+   self.y = self.y or 0
+
+   self.portrait = self.chara:calc("portrait")
+   self.chara_image = self.chara:calc("image")
+   self.pcc = self.chara:calc("pcc")
+   if self.pcc then
+      self.pcc = table.deepcopy(self.pcc)
+      self.pcc.dir = 1
+      self.pcc.frame = 2
+   end
+
+   self.texts = {}
+
+   self:text_level()
+   self:text_name()
+   self:text_attr()
+   self:text_time()
+   self:text_weight()
+   self:text_fame()
+end
+
 function CharacterSheetMenu:on_query()
    Gui.play_sound("base.chara")
 end
@@ -68,7 +86,7 @@ function CharacterSheetMenu:text_level()
    local level = 10
    local exp = 1000
    local required_exp = 1000
-   local god_name = self.chara:calc("god") or "eyth"
+   local god_name = self.chara:calc("god") or "elona.eyth"
    local guild_name = save.elona.guild or "none"
 
    self.texts["level"] =
@@ -100,8 +118,8 @@ function CharacterSheetMenu:text_name()
    local gender = self.chara:calc("gender")
    local class = self.chara:calc("class")
    local age = self.chara:calc("age")
-   local height = ("%d cm"):format(self.chara:calc("height"))
-   local weight = ("%d kg"):format(self.chara:calc("weight"))
+   local height = ("%d cm"):format(self.chara:calc("height") or 0)
+   local weight = ("%d kg"):format(self.chara:calc("weight") or 0)
 
    self.texts["name"] =
       UiTextGroup:new({
@@ -122,7 +140,7 @@ function CharacterSheetMenu:text_name()
          name,
          title,
          I18N.get("race." .. race .. ".name"),
-         I18N.get("ui.sex3." .. gender),
+         I18N.capitalize(I18N.get("ui.sex3." .. gender)),
          I18N.get("class." .. class .. ".name"),
          I18N.get("ui.chara_sheet.personal.age_counter", age),
          height,
@@ -149,8 +167,12 @@ local ATTRS = {
 
 function CharacterSheetMenu:text_attr()
    local attr = fun.iter(ATTRS):map(function(id) return "ability." .. id .. ".short_name" end):to_list()
-   self.texts["attr"] = UiTextGroup:new(attr, 12)
-   self.texts["attr"]:relayout(self.x + 54, self.y + 151)
+   local font_size = 14
+   if I18N.is_fullwidth() then
+      font_size = 12
+   end
+   self.texts["attr"] = UiTextGroup:new(attr, font_size)
+   self.texts["attr"]:relayout(self.x + 54, self.y + 152)
 end
 
 local function conv_play_time(time)
@@ -183,14 +205,13 @@ function CharacterSheetMenu:text_time()
          conv_play_time(time)
       }, 14)
    self.texts["time_val"]:relayout(self.x + 80, self.y + 299)
-
 end
 
 function CharacterSheetMenu:text_weight()
-   local cargo_weight = self.chara:calc("cargo_weight")
-   local cargo_limit = self.chara:calc("max_cargo_weight")
-   local equip_weight = self.chara:calc("equipment_weight")
-   local deepest_level = save.base.deepest_level
+   local cargo_weight = self.chara:calc("cargo_weight") or 0
+   local cargo_limit = self.chara:calc("max_cargo_weight") or 0
+   local equip_weight = self.chara:calc("equipment_weight") or 0
+   local deepest_level = save.base.deepest_level or 0
 
    self.texts["weight"] =
       UiTextGroup:new({
@@ -268,14 +289,7 @@ function CharacterSheetMenu:relayout(x, y)
    self.chip_batch = Draw.make_chip_batch("chip")
    self.portrait_batch = Draw.make_chip_batch("portrait")
 
-   self.texts = {}
-
-   self:text_level()
-   self:text_name()
-   self:text_attr()
-   self:text_time()
-   self:text_weight()
-   self:text_fame()
+   self:set_data()
 end
 
 function CharacterSheetMenu:draw_text()

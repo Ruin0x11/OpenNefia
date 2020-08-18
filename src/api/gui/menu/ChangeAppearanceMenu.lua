@@ -25,16 +25,16 @@ local ChangeAppearanceListExt = function(change_appearance_menu)
    return E
 end
 
-function ChangeAppearanceMenu:init(chara)
+function ChangeAppearanceMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 380
    self.height = 340
-   self.chara = chara or nil
 
    self.win = UiWindow:new("appearance", true, "key_help")
 
    self.list = ChangeAppearanceList:new()
 
-   self.preview = ChangeAppearancePreview:new(chara)
+   self.preview = ChangeAppearancePreview:new(self.charamake_data.chara)
 
    table.merge(self.list, ChangeAppearanceListExt(self))
 
@@ -53,7 +53,7 @@ function ChangeAppearanceMenu:make_keymap()
    }
 end
 
-function ChangeAppearanceMenu:on_make_chara()
+function ChangeAppearanceMenu:on_charamake_finish()
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -79,6 +79,10 @@ end
 function ChangeAppearanceMenu:on_query()
    self.canceled = false
    self.list:update()
+end
+
+function ChangeAppearanceMenu:get_charamake_result(charamake_data)
+   return charamake_data
 end
 
 function ChangeAppearanceMenu:update()

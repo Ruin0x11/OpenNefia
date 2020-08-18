@@ -42,6 +42,10 @@ local UiListExt = function(skills_menu)
       UiList.draw_select_key(self, item, i, key_name, x, y)
    end
 
+   function E:get_item_text(entry)
+      return entry.name
+   end
+
    function E:draw_item_text(text, item, i, x, y, x_offset)
       if item.kind == "header" then
          Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
@@ -52,11 +56,12 @@ local UiListExt = function(skills_menu)
          local is_basic = false
          local icon
          if is_basic then
-            icon = "STR"
+            icon = "elona.stat_strength"
          else
-            icon = "STR"
+            icon = "elona.stat_strength"
          end
 
+         icon = Ui.skill_icon(icon)
          skills_menu.t.base.skill_icons:draw_region(icon, x - 20, y + 9, nil, nil, {255, 255, 255}, true)
 
          local new_x
@@ -86,7 +91,7 @@ local UiListExt = function(skills_menu)
          local has_enchantment = true
          if show_train_cost then
             local train_cost = "10p"
-            Draw.text(train_cost, x + 264 - Draw.text_length(train_cost), y + 2)
+            Draw.text(train_cost, x + 264 - Draw.text_width(train_cost), y + 2)
          elseif has_enchantment then
             local enchantment_level = "[****+]"
             Draw.text(enchantment_level, x + 224, y + 2)
@@ -118,6 +123,10 @@ function SkillStatusMenu:init(show_bonus)
    self.input:forward_to(self.pages)
 end
 
+function SkillStatusMenu:make_keymap()
+   return {}
+end
+
 function SkillStatusMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 10
@@ -128,6 +137,7 @@ end
 
 function SkillStatusMenu:draw()
    self.t.base.ie_sheet:draw(self.x, self.y)
+   Draw.set_color(0, 0, 0)
    if self.show_bonus then
       Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local tips = "You can spend " .. 10 .. " bonus points."

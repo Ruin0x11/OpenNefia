@@ -103,10 +103,6 @@ function SpellsMenu:relayout(x, y)
    self.win:set_pages(self.pages)
 end
 
-function SpellsMenu:charamake_result()
-   return {}
-end
-
 function SpellsMenu:draw()
    self.win:draw()
 

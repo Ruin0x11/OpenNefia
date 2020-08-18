@@ -767,20 +767,20 @@ function Skill.apply_race_params(chara, race_id)
    local race_data = data["base.race"]:ensure(race_id)
 
    for k, v in pairs(race_data.properties or {}) do
-      -- HACK: I seriously forgot how this works...
-      if type(v) == "table" and v.__resolver then
-         chara[k] = Resolver.resolve(v, { object = chara })
-         if type(chara[k]) == "table" and chara[k].__value then
-            chara[k] = chara[k].__value
+      if chara[k] == nil then
+         if type(v) == "table" and v.__resolver then
+            chara[k] = Resolver.resolve(v, { object = chara, value = true })
+         else
+            chara[k] = v
          end
-      else
-         chara[k] = v
       end
    end
 
    local skills = Skill.roll_skill_levels(chara, race_data.skills)
    for skill_id, skill in pairs(skills) do
-      chara:set_base_skill(skill_id, skill.level, skill.potential, 0)
+      local chara_base_level = chara:base_skill_level(skill_id)
+      local chara_potential = chara:skill_potential(skill_id)
+      chara:set_base_skill(skill_id, chara_base_level + skill.level, chara_potential + skill.potential, 0)
    end
 
    for trait_id, level in pairs(race_data.traits or {}) do
@@ -800,20 +800,20 @@ function Skill.apply_class_params(chara, class_id)
    local class_data = data["base.class"]:ensure(class_id)
 
    for k, v in pairs(class_data.properties or {}) do
-      -- HACK: I seriously forgot how this works...
-      if type(v) == "table" and v.__resolver then
-         chara[k] = Resolver.resolve(v, { object = chara })
-         if type(chara[k]) == "table" and chara[k].__value then
-            chara[k] = chara[k].__value
+      if chara[k] == nil then
+         if type(v) == "table" and v.__resolver then
+            chara[k] = Resolver.resolve(v, { object = chara, value = true })
+         else
+            chara[k] = v
          end
-      else
-         chara[k] = v
       end
    end
 
    local skills = Skill.roll_skill_levels(chara, class_data.skills)
    for skill_id, skill in pairs(skills) do
-      chara:set_base_skill(skill_id, skill.level, skill.potential, 0)
+      local chara_base_level = chara:base_skill_level(skill_id)
+      local chara_potential = chara:skill_potential(skill_id)
+      chara:set_base_skill(skill_id, chara_base_level + skill.level, chara_potential + skill.potential, 0)
    end
 end
 

@@ -32,7 +32,11 @@ function Debug.hook(tbl, fn_name, depth, level)
       local inspect_opts = {override_mt = true, depth = depth or 1}
       p = function(arg)
          if type(arg) == "table" then
-            return inspect(arg, inspect_opts)
+            if arg._id then
+               return quote_tostring(arg)
+            else
+               return inspect(arg, inspect_opts)
+            end
          end
          return quote_tostring(arg)
       end
@@ -68,12 +72,28 @@ function Debug.hook(tbl, fn_name, depth, level)
          end
       end
 
+      local results = { fn(...) }
+
+      s = s .. " -> "
+
+      if #results == 0 then
+         s = s .. "()"
+      else
+         for i, result in ipairs(results) do
+            if i == 1 then
+               s = s .. p(result)
+            else
+               s = s .. ", " .. p(result)
+            end
+         end
+      end
+
       local tb_line = string.split(debug.traceback())[3] or ""
       s = s .. "  " .. tb_line
 
       log_cb(s)
 
-      return fn(...)
+      return unpack(results)
    end
 end
 

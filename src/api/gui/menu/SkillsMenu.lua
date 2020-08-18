@@ -99,10 +99,6 @@ function SkillsMenu:relayout(x, y)
    self.win:set_pages(self.pages)
 end
 
-function SkillsMenu:charamake_result()
-   return {}
-end
-
 function SkillsMenu:draw()
    self.win:draw()
 

@@ -3,6 +3,7 @@ local Calc = require("mod.elona.api.Calc")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local Log = require("api.Log")
+local CharaMake = require("api.CharaMake")
 
 local ItemMaterial = {}
 
@@ -64,7 +65,6 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
    end
 
    base_quality = base_quality or (item and item:calc("quality")) or 0
-   local is_chara_make = chara_level ~= nil
 
    -- >>>>>>>> shade2/item_data.hsp:1147 	p=rnd(100) ...
    local i = Rand.rnd(100)
@@ -79,7 +79,7 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
       idx = 1
    end
 
-   if is_chara_make then
+   if CharaMake.is_active() then
       level = 0
       idx = 1
    end

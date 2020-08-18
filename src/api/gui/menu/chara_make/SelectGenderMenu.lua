@@ -22,7 +22,8 @@ local UiListExt = function()
    return E
 end
 
-function SelectGenderMenu:init()
+function SelectGenderMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 370
    self.height = 168
 
@@ -56,8 +57,7 @@ function SelectGenderMenu:make_keymap()
    }
 end
 
-function SelectGenderMenu:on_make_chara(chara)
-   chara.gender = self.list:selected_item().gender
+function SelectGenderMenu:on_charamake_finish(chara)
 end
 
 function SelectGenderMenu:relayout()
@@ -84,9 +84,14 @@ function SelectGenderMenu:draw()
    self.list:draw()
 end
 
+function SelectGenderMenu:get_charamake_result(charamake_data, retval)
+   charamake_data.chara.gender = retval
+   return charamake_data
+end
+
 function SelectGenderMenu:update()
    if self.list.chosen then
-      return self.list:selected_item()
+      return self.list:selected_item().gender
    end
 
    if self.canceled then

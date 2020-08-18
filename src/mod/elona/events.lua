@@ -333,6 +333,7 @@ local function init_chara_defaults(chara)
    end
 
    chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
+   chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
 
    chara.required_experience = Skill.calc_required_experience(chara)
    -- <<<<<<<< shade2/chara.hsp:521 	call calcExpToNextLevel,(r1=rc) ..

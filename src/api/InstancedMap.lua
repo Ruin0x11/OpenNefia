@@ -597,6 +597,10 @@ function InstancedMap:set_archetype(archetype_id, opts)
          end
       end
    end
+
+   if self._archetype then
+      self.name = I18N.get_optional("map.unique." .. self._archetype .. ".name") or self.name
+   end
 end
 
 function InstancedMap:archetype()

@@ -203,10 +203,6 @@ function FeatsMenu:relayout(x, y)
    self.win:set_pages(self.pages)
 end
 
-function FeatsMenu:charamake_result()
-   return {}
-end
-
 function FeatsMenu:draw()
    self.win:draw()
 

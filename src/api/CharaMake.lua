@@ -6,8 +6,8 @@ local chara_make = require("game.chara_make")
 -- @module CharaMake
 local CharaMake = {}
 
-CharaMake.make_chara = chara_make.make_chara
 CharaMake.set_caption = chara_make.set_caption
 CharaMake.is_active = chara_make.is_active
+CharaMake.get_in_progress_result = chara_make.get_in_progress_result
 
 return CharaMake
