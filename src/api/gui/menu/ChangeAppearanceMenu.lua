@@ -99,8 +99,9 @@ function ChangeAppearanceMenu:build_preview()
       local value_ty = entry.value_type[1]
       if value_ty == "pcc_part" then
          local pcc_part_kind = entry.value_type[2]
+         local pcc_part_id = entry.value_type[3] or pcc_part_kind
          if entry.value ~= "none" then
-            pcc_parts[pcc_part_kind] = { id = entry.value }
+            pcc_parts[pcc_part_id] = { id = entry.value }
          end
       elseif value_ty == "portrait" then
          self.charamake_data.chara.portrait = entry.value
@@ -115,10 +116,10 @@ function ChangeAppearanceMenu:build_preview()
       if value_ty == "color" then
          -- Color pickers can change the color of more than one PCC part at once
          -- (hair/subhair).
-         local pcc_part_kinds = entry.value_type[2]
-         for _, kind in ipairs(pcc_part_kinds) do
-            if pcc_parts[kind] then
-               pcc_parts[kind].color = entry.value
+         local pcc_part_ids = entry.value_type[2]
+         for _, id in ipairs(pcc_part_ids) do
+            if pcc_parts[id] then
+               pcc_parts[id].color = entry.value
             end
          end
       end
