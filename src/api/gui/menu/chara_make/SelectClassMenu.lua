@@ -36,11 +36,15 @@ function SelectClassMenu:init(charamake_result)
 
    local classes = data["base.class"]:iter()
       :map(function(entry)
-              return {
-                 proto = data["base.class"]:ensure(entry._id),
-                 name = I18N.get("class." .. entry._id .. ".name"),
-                 desc = I18N.get_optional("class." .. entry._id .. ".description") or ""
-              }
+            local name = I18N.get("class." .. entry._id .. ".name")
+            if entry.is_extra then
+               name = name .. "(extra)"
+            end
+            return {
+               proto = data["base.class"]:ensure(entry._id),
+               name = name,
+               desc = I18N.get_optional("class." .. entry._id .. ".description") or ""
+            }
           end)
 
    if not config["base.show_charamake_extras"] then
