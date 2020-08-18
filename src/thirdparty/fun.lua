@@ -2140,4 +2140,16 @@ local iter_pairs = function(obj)
 end
 exports.iter_pairs = iter_pairs
 
+--- Unwraps this iterator as a list, allocating a new table, and
+--- returns a new iterator in sorted order.
+---
+--- As it uses table.sort internally, the sort is not stable.
+local into_sorted = function(comparator, gen, param, state)
+   local list = totable(gen, param, state)
+   table.sort(list, comparator)
+   return iter(list)
+end
+methods.into_sorted = method1(into_sorted)
+exports.into_sorted = export1(into_sorted)
+
 return exports

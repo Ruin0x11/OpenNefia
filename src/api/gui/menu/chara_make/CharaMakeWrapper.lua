@@ -176,12 +176,12 @@ function CharaMakeWrapper:initialize_player(chara)
    config["base._save_id"] = chara.name
 end
 
-function CharaMakeWrapper:update()
+function CharaMakeWrapper:update(dt)
    if not self.submenu then
       return nil, "canceled"
    end
 
-   local result, canceled = self.submenu:update()
+   local result, canceled = self.submenu:update(dt)
 
    if canceled then
       if type(result) == "table" and result.chara_make_action then
