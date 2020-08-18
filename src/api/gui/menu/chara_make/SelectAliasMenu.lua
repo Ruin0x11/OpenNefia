@@ -40,7 +40,8 @@ local UiListExt = function(select_alias_menu)
    return E
 end
 
-function SelectAliasMenu:init()
+function SelectAliasMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 400
    self.height = 458
 
@@ -74,14 +75,6 @@ function SelectAliasMenu:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
-end
-
-function SelectAliasMenu:on_make_chara(chara)
-   chara.alias = self.list:selected_item().text
-end
-
-function SelectAliasMenu:charamake_result()
-   return self.list:selected_item().text
 end
 
 function SelectAliasMenu:lock(i)
@@ -133,6 +126,11 @@ function SelectAliasMenu:draw()
       self.height - 80,
       {255, 255, 255, 40},
       true)
+end
+
+function SelectAliasMenu:get_charamake_result(charamake_data, retval)
+   charamake_data.chara.title = retval
+   return charamake_data
 end
 
 function SelectAliasMenu:update()

@@ -1,11 +1,10 @@
 local Chara = require("api.Chara")
-local CharaMake = require("api.CharaMake")
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Rand = require("api.Rand")
-local Resolver = require("api.Resolver")
 local Ui = require("api.Ui")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local UiWindow = require("api.gui.UiWindow")
@@ -51,7 +50,8 @@ local ATTRIBUTES = {
    "elona.stat_charisma",
 }
 
-function RollAttributesMenu:init()
+function RollAttributesMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 360
    self.height = 352
 
@@ -108,24 +108,14 @@ function RollAttributesMenu:make_keymap()
    }
 end
 
-function RollAttributesMenu:on_make_chara(chara)
-   for _, v in ipairs(self.data) do
-      if v.value then
-         chara.skills[v.id] = v.value
-      end
-   end
-end
-
 function RollAttributesMenu:on_query()
    self.alist.chosen = false
 end
 
 local function calc_rolled_attributes(race_id, class_id)
-   -- TODO
-   local temp = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
+   local temp = Chara.create("base.player", nil, nil, {no_build = true, ownerless = true})
    temp.level = 0
 
-   local Skill = require("mod.elona_sys.api.Skill")
    Skill.apply_race_params(temp, race_id)
    Skill.apply_class_params(temp, class_id)
 
@@ -133,8 +123,8 @@ local function calc_rolled_attributes(race_id, class_id)
 end
 
 function RollAttributesMenu:reroll(play_sound, minimum)
-   local race = CharaMake.get_section_result("api.gui.menu.chara_make.SelectRaceMenu")
-   local class = CharaMake.get_section_result("api.gui.menu.chara_make.SelectClassMenu")
+   local race = self.charamake_data.chara.race
+   local class = self.charamake_data.chara.class
 
    local skills = calc_rolled_attributes(race, class)
    for _, v in ipairs(self.data) do
@@ -171,21 +161,10 @@ function RollAttributesMenu:lock(attr)
    Gui.play_sound("base.ok1")
 end
 
-local quads = {
-      ["elona.stat_strength"] = 1,
-      ["elona.stat_constitution"] = 2,
-      ["elona.stat_dexterity"] = 3,
-      ["elona.stat_perception"] = 4,
-      ["elona.stat_learning"] = 5,
-      ["elona.stat_will"] = 6,
-      ["elona.stat_magic"] = 7,
-      ["elona.stat_charisma"] = 8,
-}
-
 function RollAttributesMenu:draw_attribute(item, i, x, y)
    Draw.set_font(15, "bold")
 
-   local quad = quads[item.id]
+   local quad = Ui.skill_icon(item.id)
    if quad then
       self.t.base.skill_icons:draw_region(quad, x + 160, y + 10, nil, nil, {255, 255, 255}, true)
    end
@@ -223,9 +202,24 @@ function RollAttributesMenu:draw()
    self.alist:draw()
 end
 
+function RollAttributesMenu:get_charamake_result(charamake_data, retval)
+   local chara = charamake_data.chara
+   for skill_id, skill in pairs(retval) do
+      chara:set_base_skill(skill_id, skill.level, skill.potential, 0)
+   end
+   return charamake_data
+end
+
 function RollAttributesMenu:update()
    if self.alist.chosen then
-      return true
+      local result = {}
+      for _, v in ipairs(self.data) do
+         if v.value then
+            result[v.id] = v.value
+         end
+      end
+
+      return result
    end
 
    self.win:update()

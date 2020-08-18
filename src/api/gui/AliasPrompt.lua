@@ -4,7 +4,7 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local Rand = require("api.Rand")
 
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local IUiLayer = require("api.gui.IUiLayer")
 local Event = require("api.Event")
 local UiList = require("api.gui.UiList")
 local UiWindow = require("api.gui.UiWindow")
@@ -12,7 +12,7 @@ local InputHandler = require("api.gui.InputHandler")
 local IInput = require("api.gui.IInput")
 local UiTheme = require("api.gui.UiTheme")
 
-local AliasPrompt = class.class("AliasPrompt", ICharaMakeSection)
+local AliasPrompt = class.class("AliasPrompt", IUiLayer)
 
 AliasPrompt:delegate("input", IInput)
 AliasPrompt:delegate("list", "items")
@@ -63,9 +63,6 @@ function AliasPrompt:init(kind, seed)
    self.input:forward_to(self.list)
    self.input:bind_keys(self:make_keymap())
 
-   self.caption = "chara_make.select_alias.caption"
-   self.intro_sound = "base.ok1"
-
    self:reroll(false)
 end
 
@@ -77,14 +74,6 @@ function AliasPrompt:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end
    }
-end
-
-function AliasPrompt:on_make_chara(chara)
-   chara.alias = self.list:selected_item().text
-end
-
-function AliasPrompt:charamake_result()
-   return self.list:selected_item().text
 end
 
 function AliasPrompt:lock(i)

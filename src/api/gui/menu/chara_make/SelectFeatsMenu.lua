@@ -14,14 +14,10 @@ local SelectFeatsMenu = class.class("SelectFeatsMenu", ICharaMakeSection)
 
 SelectFeatsMenu:delegate("input", IInput)
 
-function SelectFeatsMenu:init()
-   self.chara = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
-   self.chara.feats_acquirable = 3
-   assert(self.chara)
-   self.inner = FeatsMenu:new(self.chara, true)
+function SelectFeatsMenu:init(charamake_data)
+   self.charamake_data = charamake_data
 
-   self.input = InputHandler:new()
-   self.input:forward_to(self.inner)
+   self:on_charamake_query_menu()
 
    self.caption = "chara_make.select_feats.caption"
    self.intro_sound = "base.feat"
@@ -39,21 +35,17 @@ function SelectFeatsMenu:draw()
    self.inner:draw()
 end
 
-function SelectFeatsMenu:on_make_chara(chara)
-   chara.traits = self.chara.traits
-end
-
 function SelectFeatsMenu:on_charamake_query_menu()
-   self.chara = Chara.create("content.player", nil, nil, {no_build = true, ownerless = true})
-   self.chara.feats_acquirable = 3
-   self.inner = FeatsMenu:new(self.chara, true)
+   local chara = self.charamake_data.chara
+   chara.feats_acquirable = 3
+   self.inner = FeatsMenu:new(chara, true)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
 end
 
 function SelectFeatsMenu:update()
-   if self.chara.feats_acquirable == 0 then
+   if self.charamake_data.chara.feats_acquirable == 0 then
       return true
    end
 

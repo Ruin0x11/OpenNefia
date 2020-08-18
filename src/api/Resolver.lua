@@ -87,6 +87,10 @@ function Resolver.resolve(proto, params)
       result = proto
    end
 
+   if params.value and type(result) == "table" and result.__value then
+      return result.__value
+   end
+
    return result
 end
 

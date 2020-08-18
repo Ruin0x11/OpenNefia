@@ -34,6 +34,10 @@ function CharaMakeWrapper:init(menus)
 
    self.input = InputHandler:new()
 
+   self.results[0] = {
+      chara = Chara.create("base.player", nil, nil, {ownerless = true, no_build = true})
+   }
+
    self:proceed()
 end
 
@@ -46,8 +50,8 @@ function CharaMakeWrapper:set_caption(text)
    self.caption:set_data(text)
 end
 
-function CharaMakeWrapper:current_result()
-   return self.results[#self.submenu_trail]
+function CharaMakeWrapper:get_in_progress_result()
+   return self.results[#self.results]
 end
 
 function CharaMakeWrapper:proceed()
@@ -74,7 +78,7 @@ function CharaMakeWrapper:proceed()
 
    -- Get the result returned from the last menu, or a blank one if
    -- still on the first menu.
-   local in_progress_result = self:current_result() or { chara = nil }
+   local in_progress_result = self:get_in_progress_result()
 
    local submenu
    success, submenu = xpcall(function()
@@ -85,8 +89,7 @@ function CharaMakeWrapper:proceed()
 
    if not success then
       local err = submenu
-      Log.error("Error instantiating charamake menu:\n\t%s", err)
-      return
+      error(err)
    end
 
    if self.submenu then
@@ -108,6 +111,8 @@ function CharaMakeWrapper:go_back()
 
    self.submenu = table.remove(self.submenu_trail)
    self.submenu:on_charamake_query_menu()
+
+   table.remove(self.results)
 
    self.caption:set_data(self.submenu.caption)
    self:relayout()
@@ -177,11 +182,10 @@ function CharaMakeWrapper:update()
    end
 
    local result, canceled = self.submenu:update()
-   local action = result and result.chara_make_action
 
    if canceled then
-      if action then
-         self:handle_action(action)
+      if type(result) == "table" and result.chara_make_action then
+         self:handle_action(result.chara_make_action)
       else
          if #self.submenu_trail == 0 then
             self.canceled = true
@@ -190,22 +194,24 @@ function CharaMakeWrapper:update()
          end
       end
    elseif result then
-      assert(type(result) == "table", "Charamake menu result must be table")
-      result.menu_id = Env.get_require_path(self.submenu.__class)
+      local in_progress_result = self:get_in_progress_result()
+      local new_cm_result = self.submenu:get_charamake_result(table.deepcopy(in_progress_result), result) or in_progress_result
+      assert(type(new_cm_result) == "table", "Charamake menu result must be table")
+      new_cm_result.menu_id = Env.get_require_path(self.submenu.__class)
 
       local has_next = self.menus[#self.submenu_trail+2] ~= nil
       if has_next then
-         self.results[#self.submenu_trail+1] = table.deepcopy(result)
+         self.results[#self.submenu_trail+1] = new_cm_result
          self:proceed()
       else
-         assert(class.is_an(IChara, result.chara))
+         assert(class.is_an(IChara, new_cm_result.chara))
 
          local success, err = xpcall(
             function()
                for _, menu in ipairs(self.submenu_trail) do
-                  menu:on_charamake_finish(result)
+                  menu:on_charamake_finish(new_cm_result)
                end
-               self.submenu:on_charamake_finish(result)
+               self.submenu:on_charamake_finish(new_cm_result)
             end,
             debug.traceback)
 
@@ -213,8 +219,8 @@ function CharaMakeWrapper:update()
             Log.error("Error running final character making step:\n\t%s", err)
             self.submenu:on_query() -- reset canceled
          else
-            self:initialize_player(result.chara)
-            return result
+            self:initialize_player(new_cm_result.chara)
+            return new_cm_result
          end
       end
    end

@@ -34,13 +34,15 @@ function SelectScenarioMenu:init(charamake_data)
 
    local scenarios = data["base.scenario"]:iter()
       :map(function(s) return {
-         data = s,
+         id = s,
          name = I18N.get("scenario._." .. s._id .. ".name"),
          description = I18N.get("scenario._." .. s._id .. ".description")
       }
       end)
       :to_list()
    table.sort(scenarios, function(a, b) return a.name < b.name end)
+
+   self.scenario_id = nil
 
    self.win = UiWindow:new("select_scenario.title")
    self.list = UiList:new(scenarios)
@@ -63,7 +65,7 @@ function SelectScenarioMenu:make_keymap()
 end
 
 function SelectScenarioMenu:on_charamake_finish()
-   save.base.scenario = self.scenario._id
+   save.base.scenario = self.scenario_id
 end
 
 function SelectScenarioMenu:relayout()
@@ -89,8 +91,8 @@ end
 
 function SelectScenarioMenu:update()
    if self.list.chosen then
-      self.scenario = self.list:selected_item().data
-      return self.charamake_data
+      self.scenario_id = self.list:selected_item().id
+      return self.scenario_id
    elseif self.list.changed then
       self.text:set_data({self.list:selected_item().description})
    end

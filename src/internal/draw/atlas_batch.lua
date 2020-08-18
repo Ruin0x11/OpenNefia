@@ -75,6 +75,10 @@ function atlas_batch:tile_size(chip)
       tile = self.atlas.tiles[chip .. "#default:1"]
    end
 
+   if tile == nil then
+      return 0, 0
+   end
+
    local _, _, ttw, tth = tile.quad:getViewport()
    return ttw, tth
 end

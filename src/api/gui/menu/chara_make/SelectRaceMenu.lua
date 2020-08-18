@@ -26,7 +26,8 @@ local UiListExt = function()
    return E
 end
 
-function SelectRaceMenu:init()
+function SelectRaceMenu:init(charamake_data)
+   self.charamake_data = charamake_data
    self.width = 680
    self.height = 500
 
@@ -104,23 +105,17 @@ function SelectRaceMenu:draw()
    self.race_info:draw()
 end
 
-function SelectRaceMenu:on_query()
-end
-
-function SelectRaceMenu:on_make_chara(chara)
-   chara.race = self:charamake_result()
-end
-
-function SelectRaceMenu:charamake_result()
-   return self.pages:selected_item().proto._id
+function SelectRaceMenu:get_charamake_result(charamake_data, retval)
+   charamake_data.chara.race = retval
+   return charamake_data
 end
 
 function SelectRaceMenu:update()
    if self.pages.model.chosen then
-      return self.pages:selected_item()
+      return self.pages:selected_item().proto._id
    elseif self.pages.changed then
-      local race = self.pages:selected_item()
-      self.race_info:set_data(race)
+      local race_info = self.pages:selected_item()
+      self.race_info:set_data(race_info)
 
       self.win:set_pages(self.pages)
    end

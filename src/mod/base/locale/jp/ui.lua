@@ -615,7 +615,7 @@ return {
       no_gold = "(所持金が足りない！)",
       npc_list = {
          age_counter = function(_1)
-            return (" %s歳")
+            return ("%s歳")
                :format(_1)
          end,
          gold_counter = function(_1)
@@ -634,7 +634,7 @@ return {
       },
       platinum = " plat",
       playtime = function(_1, _2, _3)
-         return ("%s時間%s分%s秒")
+         return ("%02d時間%02d分%02d秒")
             :format(_1, _2, _3)
       end,
       politics = {

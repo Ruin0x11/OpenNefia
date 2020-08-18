@@ -3,6 +3,10 @@ local Draw = require("api.Draw")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
+local Skill = require("mod.elona_sys.api.Skill")
+local Enum = require("api.Enum")
+local Item = require("api.Item")
+local data = require("internal.data")
 
 local Prompt = require("api.gui.Prompt")
 local I18N = require("api.I18N")
@@ -17,11 +21,11 @@ local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeSec
 
 CharacterFinalizeMenu:delegate("input", IInput)
 
-function CharacterFinalizeMenu:init()
-   local chara = Chara.create("content.player", nil, nil, {ownerless = true}) -- TODO skills
-   chara.name = "????"
-   chara.title = CharaMake.get_section_result("api.gui.menu.chara_make.SelectAliasMenu")
+function CharacterFinalizeMenu:init(charamake_data)
+   self.charamake_data = charamake_data
 
+   local chara = self.charamake_data.chara
+   self.skills = table.deepcopy(chara.skills)
    self.inner = CharacterSheetMenu:new(nil, chara)
 
    self.input = InputHandler:new()
@@ -51,16 +55,57 @@ function CharacterFinalizeMenu:on_query()
    self.canceled = false
 end
 
-function CharacterFinalizeMenu:on_make_chara(chara)
-   if self.name then
-      chara.name = self.name
-   else
-      chara.name = Event.trigger("base.generate_chara_name", {}, "player")
+-- TODO: move this into an event, to be shared by multiple scenarios.
+function CharacterFinalizeMenu.finalize_chara(chara)
+   -- >>>>>>>> shade2/chara.hsp:539 *cm_finishPC ..
+   chara.quality = Enum.Quality.Normal
+   Item.create("elona.cargo_travelers_food", nil, nil, {amount=8}, chara)
+   Item.create("elona.ration", nil, nil, {amount=8}, chara)
+   Item.create("elona.bottle_of_crim_ale", nil, nil, {amount=2}, chara)
+   if chara:skill_level("elona.literacy") == 0 then
+      Item.create("elona.potion_of_cure_minor_wound", nil, nil, {amount=3}, chara)
    end
+
+   local klass = data["base.class"]:ensure(chara.class)
+   if klass.on_init_chara then
+      klass.on_init_chara(chara)
+   end
+
+   local skill_bonus = 5 + chara:trait_level("elona.perm_skill_point")
+   chara.skill_bonus = chara.skill_bonus + skill_bonus
+   chara.total_skill_bonus = chara.total_skill_bonus + skill_bonus
+
+   for _, item in chara:iter_items() do
+      if Item.is_alive(item) then
+         item.identify_state = Enum.IdentifyState.Full
+      end
+   end
+
+   chara:refresh()
+   -- <<<<<<<< shade2/chara.hsp:579 	return ..
 end
 
 function CharacterFinalizeMenu:reroll(play_sound)
-   self.chara = require("api.CharaMake").make_chara()
+   -- >>>>>>>> shade2/chara.hsp:1025 	del_chara 0	 ..
+   local chara = self.charamake_data.chara
+
+   chara.skills = {}
+   chara.height = nil
+   chara.age = nil
+   Skill.apply_race_params(chara, chara.race)
+   Skill.apply_class_params(chara, chara.class)
+
+   chara.name = "????"
+   chara.level = 1
+
+   for skill_id, skill in pairs(self.skills) do
+      chara.skills[skill_id] = skill
+   end
+
+   chara:build()
+
+   table.replace_with(self.charamake_data.chara, chara)
+   self.inner:set_data(self.charamake_data.chara)
 
    if play_sound then
       Gui.play_sound("base.dice")
@@ -80,6 +125,17 @@ function CharacterFinalizeMenu:draw()
    self.inner:draw()
 
    self.title:draw()
+end
+
+function CharacterFinalizeMenu:get_charamake_result(charamake_result, retval)
+   local chara = charamake_result.chara
+   if self.name then
+      chara.name = self.name
+   else
+      chara.name = Event.trigger("base.generate_chara_name", {}, "player")
+   end
+   CharacterFinalizeMenu.finalize_chara(chara)
+   return charamake_result
 end
 
 local function prompt_final()
@@ -104,7 +160,7 @@ function CharacterFinalizeMenu:update()
          local name, canceled = Input.query_text(10)
          if not canceled then
             self.name = name
-            return self.chara
+            return true
          end
       elseif res.index == 2 then
          -- pass

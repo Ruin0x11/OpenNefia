@@ -243,7 +243,7 @@ end,
       history = "Trace",
       personal = {
         age = "Age",
-        age_counter = function(_1) return "" end,
+        age_counter = function(_1) return ("%s"):format(_1) end,
         aka = "Aka",
         class = "Class",
         height = "Height",
@@ -634,7 +634,7 @@ end,
     },
     platinum = " platinum pieces",
     playtime = function(_1, _2, _3)
-  return ("%s:%s:%s Sec")
+  return ("%02d:%02d:%02d Sec")
   :format(_1, _2, _3)
 end,
     politics = {

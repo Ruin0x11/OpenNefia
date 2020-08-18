@@ -26,12 +26,13 @@ local UiListExt = function()
    return E
 end
 
-function SelectClassMenu:init()
+function SelectClassMenu:init(charamake_result)
+   self.charamake_result = charamake_result
    self.width = 680
    self.height = 500
 
-   self.race = CharaMake.get_section_result("api.gui.menu.chara_make.SelectRaceMenu")
-   self.race_name = I18N.get("race." .. self.race .. ".name")
+   self.race_id = self.charamake_result.chara.race
+   self.race_name = I18N.get("race." .. self.race_id .. ".name")
 
    local classes = data["base.class"]:iter()
       :map(function(entry)
@@ -56,9 +57,11 @@ function SelectClassMenu:init()
    self.bg = Ui.random_cm_bg()
 
    self.chip_batch = nil
-   local image = data["base.race"]:ensure(self.race).copy_to_chara.image
-   self.chip_male = ""
-   self.chip_female = ""
+   local image = data["base.race"]:ensure(self.race_id).properties.image
+   self.chip_male = nil
+   self.chip_female = nil
+
+   -- TODO remove resolver code
    if type(image) == "table" and image.male then
       self.chip_male = image.male
       self.chip_female = image.female
@@ -87,22 +90,20 @@ function SelectClassMenu:make_keymap()
    }
 end
 
-function SelectClassMenu:on_make_chara(chara)
-   chara.class = self:charamake_result().proto._id
-end
-
-function SelectClassMenu:charamake_result()
-   return self.pages:selected_item()
-end
-
 function SelectClassMenu:relayout()
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y + 20
 
    self.chip_batch = Draw.make_chip_batch("chip")
 
-   self.chip_male_height = select(2, self.chip_batch:tile_size(self.chip_male))
-   self.chip_female_height = select(2, self.chip_batch:tile_size(self.chip_female))
+   self.chip_male_height = 0
+   self.chip_female_height = 0
+   if self.chip_male then
+      self.chip_male_height = select(2, self.chip_batch:tile_size(self.chip_male))
+   end
+   if self.chip_female then
+      self.chip_female_height = select(2, self.chip_batch:tile_size(self.chip_female))
+   end
 
    self.win:relayout(self.x, self.y, self.width, self.height)
    self.pages:relayout(self.x + 38, self.y + 66)
@@ -127,12 +128,16 @@ function SelectClassMenu:draw()
    self.pages:draw()
 
    self.chip_batch:clear()
-   self.chip_batch:add(self.chip_male,
-                       self.x + 380,
-                       self.y - 48 + 60)
-   self.chip_batch:add(self.chip_female,
-                       self.x + 350,
-                       self.y - 48 + 60)
+   if self.chip_male then
+      self.chip_batch:add(self.chip_male,
+                          self.x + 380,
+                          self.y - 48 + 60)
+   end
+   if self.chip_female then
+      self.chip_batch:add(self.chip_female,
+                          self.x + 350,
+                          self.y - 48 + 60)
+   end
    self.chip_batch:draw()
    -- Draw.image(self.chip_male, self.x + 380, self.y - self.chip_male:getHeight() + 60)
    -- Draw.image(self.chip_female, self.x + 350, self.y - self.chip_female:getHeight() + 60)
@@ -143,12 +148,17 @@ function SelectClassMenu:draw()
    self.race_info:draw()
 end
 
+function SelectClassMenu:get_charamake_result(charamake_data, retval)
+   charamake_data.chara.class = retval
+   return charamake_data
+end
+
 function SelectClassMenu:update()
    if self.pages.chosen then
-      return self.pages:selected_item()
+      return self.pages:selected_item().proto._id
    elseif self.pages.changed then -- TODO remove
-      local class = self.pages:selected_item()
-      self.race_info:set_data(class)
+      local class_info = self.pages:selected_item()
+      self.race_info:set_data(class_info)
 
       self.win:set_pages(self.pages)
    end

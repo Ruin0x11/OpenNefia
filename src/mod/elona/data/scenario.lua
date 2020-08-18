@@ -11,36 +11,6 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Enum = require("api.Enum")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 
--- TODO: move this into an event, to be shared by multiple scenarios.
-local function initialize_player(player)
-   -- >>>>>>>> shade2/chara.hsp:539 *cm_finishPC ..
-   player.quality = Enum.Quality.Normal
-   Item.create("elona.cargo_travelers_food", nil, nil, {amount=8}, player)
-   Item.create("elona.ration", nil, nil, {amount=8}, player)
-   Item.create("elona.bottle_of_crim_ale", nil, nil, {amount=2}, player)
-   if player:skill_level("elona.literacy") == 0 then
-      Item.create("elona.potion_of_cure_minor_wound", nil, nil, {amount=3}, player)
-   end
-
-   local klass = data["base.class"]:ensure(player.class)
-   if klass.on_init_player then
-      klass.on_init_player(player)
-   end
-
-   local skill_bonus = 5 + player:trait_level("elona.perm_skill_point")
-   player.skill_bonus = player.skill_bonus + skill_bonus
-   player.total_skill_bonus = player.total_skill_bonus + skill_bonus
-
-   for _, item in player:iter_items() do
-      if Item.is_alive(item) then
-         item.identify_state = Enum.IdentifyState.Full
-      end
-   end
-
-   player:refresh()
-   -- <<<<<<<< shade2/chara.hsp:579 	return ..
-end
-
 local function load_towns(north_tyris)
    for _, area in Area.iter_in_parent(north_tyris) do
       -- See if there are any maps in this area that need early
@@ -93,7 +63,6 @@ local function start(self, player)
 
    local pos = MapEntrance.center(your_home, player)
    assert(your_home:take_object(player, pos.x, pos.y))
-   initialize_player(player)
 
    save.base.should_reset_world_map = true
 

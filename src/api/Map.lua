@@ -19,7 +19,6 @@ local SaveFs = require("api.SaveFs")
 local World = require("api.World")
 local I18N = require("api.I18N")
 local save = require("internal.global.save")
-local map_template = require("internal.map_template")
 local Area = require("api.Area")
 local InstancedArea = require("api.InstancedArea")
 local Const = require("api.Const")
@@ -89,15 +88,6 @@ function Map.is_saved(map_or_uid)
    return SaveFs.exists(path)
 end
 
-local function run_generator_load_callback(map)
-   -- TODO: need a better way of determining this
-   local is_templated_map = map.id and not string.match(map.id, "^_")
-   if is_templated_map then
-      Log.info("Binding events to map: %s", map.id)
-      map_template.load(map)
-   end
-end
-
 --- Loads a map from the current save. If you modify it be sure to
 --- call `Map.save` to persist the changes if you don't set it as the
 --- current map.
@@ -114,9 +104,6 @@ function Map.load(uid)
    if not success then
       return false, map
    end
-
-   -- This binds the events on the map.
-   run_generator_load_callback(map)
 
    map:emit("base.on_map_loaded")
 
