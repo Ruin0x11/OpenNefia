@@ -3,7 +3,8 @@ local IUiLayer = require("api.gui.IUiLayer")
 local ICharaMakeSection = class.interface("ICharaMakeSection",
                  {
                     caption = "string",
-                    intro_sound = "string",
+                    -- TODO remove
+                    -- intro_sound = "string",
                     on_charamake_finish = "function",
                     on_charamake_query_menu = "function",
                     get_charamake_result = "function"

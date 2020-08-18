@@ -8,6 +8,7 @@ local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local I18N = require("api.I18N")
 local data = require("internal.data")
+local Rand = require("api.Rand")
 
 local ChangeAppearanceList = class.class("ChangeAppearanceList", IUiList)
 
@@ -164,13 +165,18 @@ function ChangeAppearanceList:set_appearance_from_chara(chara)
       return nil
    end
 
-   -- Disable all PCC parts and copy the ones from the character instead.
-   for _, entry in pairs(lookup_type["pcc_part"]) do
-      entry.index = 1 -- "none"
+
+   if chara.use_pcc then
+      lookup["basic.custom"].index = 2 -- true
+   else
+      lookup["basic.custom"].index = 1 -- false
    end
 
    if chara.pcc then
-      lookup["basic.custom"].index = 2 -- true
+      -- Disable all PCC parts and copy the ones from the character instead.
+      for _, entry in pairs(lookup_type["pcc_part"]) do
+         entry.index = 1 -- "none"
+      end
 
       for _, _, part in chara.pcc.parts:iterate() do
          local color_entry = lookup_type["color"][part.kind]
@@ -183,8 +189,6 @@ function ChangeAppearanceList:set_appearance_from_chara(chara)
             pcc_part_entry.index = find_idx(pcc_part_entry.values, part._id) or pcc_part_entry.index
          end
       end
-   else
-      lookup["basic.custom"].index = 1 -- false
    end
 
    if chara.portrait then

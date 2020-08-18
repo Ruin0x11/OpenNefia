@@ -100,7 +100,9 @@ function CharaMakeWrapper:proceed()
    self:set_caption(self.submenu.caption)
    self:relayout()
 
-   Gui.play_sound(self.submenu.intro_sound)
+   if self.submenu.intro_sound then
+      Gui.play_sound(self.submenu.intro_sound)
+   end
 
    self.input:forward_to(self.submenu)
    self.input:halt_input()
