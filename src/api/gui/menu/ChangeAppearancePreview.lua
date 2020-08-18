@@ -36,7 +36,7 @@ function ChangeAppearancePreview:draw()
             self.portrait_batch:add(self.chara.portrait, self.x + 4, self.y + 4, 80, 112)
             self.portrait_batch:draw()
          end
-      elseif self.chara.pcc then
+      elseif self.chara.use_pcc and self.chara.pcc then
          self.chara.pcc.frame = math.floor(self.pcc_frame / 4) % 4 + 1
          self.chara.pcc.dir = math.floor(self.pcc_frame / 16) % 4 + 1
          self.chara.pcc:draw(self.x + 36 - 24, self.y + 59 - 40, 2.0, 2.0)

@@ -47,7 +47,9 @@ end
 function CharacterSheetMenu:make_keymap()
    return {
       portrait = function()
-         ChangeAppearanceMenu:new():query()
+         local charamake_data = { chara = self.chara }
+         ChangeAppearanceMenu:new(charamake_data):query()
+         self:set_data()
       end,
       cancel = function() self.canceled = true end,
       escape = function() self.canceled = true end,
@@ -61,11 +63,14 @@ function CharacterSheetMenu:set_data(chara)
 
    self.portrait = self.chara:calc("portrait")
    self.chara_image = self.chara:calc("image")
-   self.pcc = self.chara:calc("pcc")
-   if self.pcc then
+   local pcc = self.chara:calc("pcc")
+   if self.chara.use_pcc and pcc then
+      self.pcc = pcc
       self.pcc = table.deepcopy(self.pcc)
       self.pcc.dir = 1
       self.pcc.frame = 2
+   else
+      self.pcc = nil
    end
 
    self.texts = {}

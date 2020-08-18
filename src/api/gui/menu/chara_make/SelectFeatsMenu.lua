@@ -37,6 +37,7 @@ end
 
 function SelectFeatsMenu:on_charamake_query_menu()
    local chara = self.charamake_data.chara
+   chara.traits = {}
    chara.feats_acquirable = 3
    self.inner = FeatsMenu:new(chara, true)
 

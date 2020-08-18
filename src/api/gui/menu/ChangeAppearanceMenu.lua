@@ -2,6 +2,8 @@ local Ui = require("api.Ui")
 local Pcc = require("api.gui.Pcc")
 local data = require("internal.data")
 local Skill = require("mod.elona_sys.api.Skill")
+local Gui = require("api.Gui")
+local CharaMake = require("api.CharaMake")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -51,20 +53,24 @@ function ChangeAppearanceMenu:init(charamake_data)
    self.width = 380
    self.height = 340
 
-   -- Apply race/class properties to make sure we have the default character
-   -- image provided by race/class
-
    local chara = self.charamake_data.chara
-   Skill.apply_race_params(chara, chara.race)
-   Skill.apply_class_params(chara, chara.class)
-   chara.pcc = make_default_pcc()
+
+   if CharaMake.is_active() then
+      -- Apply race/class properties to make sure we have the default character
+      -- image provided by race/class
+      Skill.apply_race_params(chara, chara.race)
+      Skill.apply_class_params(chara, chara.class)
+      chara.use_pcc = true
+   end
+
+   chara.pcc = chara.pcc or make_default_pcc()
 
    self.win = UiWindow:new("ui.appearance.basic.title", true, "key_help")
 
    self.list = ChangeAppearanceList:new()
-   self.list:set_appearance_from_chara(self.charamake_data.chara)
+   self.list:set_appearance_from_chara(chara)
 
-   self.preview = ChangeAppearancePreview:new(self.charamake_data.chara)
+   self.preview = ChangeAppearancePreview:new(chara)
 
    table.merge(self.list, ChangeAppearanceListExt(self))
 
@@ -73,7 +79,6 @@ function ChangeAppearanceMenu:init(charamake_data)
    self.input:bind_keys(self:make_keymap())
 
    self.caption = "chara_make.customize_appearance.caption"
-   self.intro_sound = "base.port"
 
    self:build_preview()
 end
@@ -86,7 +91,6 @@ function ChangeAppearanceMenu:make_keymap()
 end
 
 function ChangeAppearanceMenu:build_preview()
-   local use_pcc = self.charamake_data.chara.pcc ~= nil
    local pcc_parts = {}
 
    local list_values = self.list:get_appearance_values()
@@ -101,7 +105,7 @@ function ChangeAppearanceMenu:build_preview()
       elseif value_ty == "portrait" then
          self.charamake_data.chara.portrait = entry.value
       elseif value_ty == "custom" then
-         use_pcc = entry.value
+         self.charamake_data.chara.use_pcc = entry.value
       end
    end
 
@@ -120,14 +124,10 @@ function ChangeAppearanceMenu:build_preview()
       end
    end
 
-   if use_pcc then
-      pcc_parts = table.values(pcc_parts)
-      local pcc = Pcc:new(pcc_parts)
-      pcc:refresh()
-      self.charamake_data.chara.pcc = pcc
-   else
-      self.charamake_data.chara.pcc = nil
-   end
+   pcc_parts = table.values(pcc_parts)
+   local pcc = Pcc:new(pcc_parts)
+   pcc:refresh()
+   self.charamake_data.chara.pcc = pcc
 end
 
 function ChangeAppearanceMenu:relayout()
@@ -151,6 +151,7 @@ function ChangeAppearanceMenu:draw()
 end
 
 function ChangeAppearanceMenu:on_query()
+   Gui.play_sound("base.port")
    self.canceled = false
    self.list:update()
 end

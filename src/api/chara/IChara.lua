@@ -192,7 +192,7 @@ function IChara:produce_memory()
    local x_offset = self:calc("x_offset")
    local y_offset = self:calc("y_offset")
    local image
-   if self.pcc then
+   if self.use_pcc and self.pcc then
       self.pcc.dir = PCC_DIRS[self.direction] or 4
       self.pcc.frame = self.turns_alive % 4 + 1
       image = self.pcc
