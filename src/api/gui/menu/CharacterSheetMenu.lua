@@ -511,9 +511,7 @@ function CharacterSheetMenu:draw()
       self.pcc:draw(self.x + 596, self.y + 86)
    elseif self.chara_image then
       self.chip_batch:clear()
-      --TODO
-      local width = 48
-      local height = 48
+      local width, height = Draw.get_coords():get_size()
       self.chip_batch:add(self.chara_image,
                            self.x + 596,
                            self.y + 86,

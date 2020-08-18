@@ -3,8 +3,29 @@ local SkipList = require("api.SkipList")
 local IChipRenderable = require("api.gui.IChipRenderable")
 local bmp_convert = require("internal.bmp_convert")
 local data = require("internal.data")
+local Log = require("api.Log")
 
 local Pcc = class.class("Pcc", IChipRenderable)
+
+local DEFAULT_Z_ORDER = {
+   mantle = 1000,
+   hairbk = 2000,
+   ridebk = 3000,
+   body = 4000,
+   eye = 5000,
+   pants = 6000,
+   cloth = 7000,
+   chest = 8000,
+   leg = 9000,
+   belt = 10000,
+   glove = 11000,
+   ride = 12000,
+   mantlebk = 13000,
+   hair = 14000,
+   subhair = 15000,
+   etc = 16000,
+   boots = 17000,
+}
 
 function Pcc:init(parts)
    self.parts = SkipList:new()
@@ -13,8 +34,10 @@ function Pcc:init(parts)
    for _, part in ipairs(parts) do
       local entry = data["base.pcc_part"]:ensure(part.id)
       assert(entry.image)
-      self.parts:insert(part.z_order,
+      self.parts:insert(part.z_order or DEFAULT_Z_ORDER[entry.kind] or 100000,
                         {
+                           _id = entry._id,
+                           kind = entry.kind,
                            image = entry.image,
                            key_color = entry.key_color,
                            color = part.color
@@ -25,8 +48,14 @@ function Pcc:init(parts)
    self.image = nil
    self.frame = 1
    self.dir = 1
-   self.quads = {}
    self.full_size = false
+
+   self.quads = {}
+   for i = 1, 16 do
+      local x = math.floor((i-1) / 4)
+      local y = (i-1) % 4
+      self.quads[i] = love.graphics.newQuad(x * 32, y * 48, 32, 48, 128, 192)
+   end
 end
 
 function Pcc:deserialize()
@@ -34,12 +63,6 @@ function Pcc:deserialize()
 end
 
 function Pcc:refresh()
-   for i = 1, 16 do
-      local x = math.floor((i-1) / 4)
-      local y = (i-1) % 4
-      self.quads[i] = love.graphics.newQuad(x * 32, y * 48, 32, 48, 128, 192)
-   end
-
    local canvas = love.graphics.newCanvas(128, 192)
 
    Draw.with_canvas(canvas, function()
@@ -74,12 +97,15 @@ function Pcc:on_scroll()
    self.frame = (self.frame + 1) % 16
 end
 
-function Pcc:draw(x, y)
+function Pcc:draw(x, y, scale_x, scale_y)
    if self.dirty then
       self:refresh()
    end
 
    local width, height, offset_x, offset_y
+   scale_x = scale_x or 1.0
+   scale_y = scale_y or 1.0
+
    if self.full_size then
       offset_x = 8
       offset_y = -4
@@ -90,12 +116,15 @@ function Pcc:draw(x, y)
       offset_y = 4
    end
 
-   local quad = self.quads[self.dir + (self.frame-1) * 4]
+   local index = self.dir + (self.frame - 1) * 4
+   -- Log.info("frame %d", index)
+   local quad = self.quads[index]
    if quad == nil then
       return
    end
 
-   Draw.image_region(self.image, quad, x + offset_x, y + offset_y, width, height)
+   Draw.set_color(255, 255, 255)
+   Draw.image_region(self.image, quad, x + offset_x, y + offset_y, width * scale_x, height * scale_y)
 end
 
 return Pcc
