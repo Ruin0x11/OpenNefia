@@ -880,6 +880,7 @@ local function init_save()
    s.fire_giant_uid = nil
    s.home_rank = "elona.cave"
    s.flag_has_met_ally = false
+   s.total_skills_learned = 0
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

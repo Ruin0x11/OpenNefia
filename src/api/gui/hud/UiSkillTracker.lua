@@ -16,7 +16,7 @@ function UiSkillTracker:set_data(player)
 
    self.player_uid = player.uid
 
-   local tracked_ids = save.base.tracked_skill_ids or {}
+   local tracked_ids = table.keys(save.base.tracked_skill_ids or {})
 
    local tracked_pairs = fun.iter(tracked_ids)
       :filter(function(i) return player:has_skill(i) end)

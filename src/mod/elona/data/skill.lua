@@ -115,6 +115,7 @@ local skill = {
    },
    {
       _id = "long_sword",
+      type = "weapon_proficiency",
       elona_id = 100,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -125,6 +126,7 @@ local skill = {
    },
    {
       _id = "short_sword",
+      type = "weapon_proficiency",
       elona_id = 101,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -135,6 +137,7 @@ local skill = {
    },
    {
       _id = "axe",
+      type = "weapon_proficiency",
       elona_id = 102,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -145,6 +148,7 @@ local skill = {
    },
    {
       _id = "blunt",
+      type = "weapon_proficiency",
       elona_id = 103,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -153,6 +157,7 @@ local skill = {
    },
    {
       _id = "polearm",
+      type = "weapon_proficiency",
       elona_id = 104,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -163,6 +168,7 @@ local skill = {
    },
    {
       _id = "stave",
+      type = "weapon_proficiency",
       elona_id = 105,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -171,6 +177,7 @@ local skill = {
    },
    {
       _id = "martial_arts",
+      type = "weapon_proficiency",
       elona_id = 106,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -206,6 +213,7 @@ local skill = {
    },
    {
       _id = "scythe",
+      type = "weapon_proficiency",
       elona_id = 107,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -216,6 +224,7 @@ local skill = {
    },
    {
       _id = "bow",
+      type = "weapon_proficiency",
       elona_id = 108,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -227,6 +236,7 @@ local skill = {
    },
    {
       _id = "crossbow",
+      type = "weapon_proficiency",
       elona_id = 109,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -237,6 +247,7 @@ local skill = {
    },
    {
       _id = "firearm",
+      type = "weapon_proficiency",
       elona_id = 110,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -247,6 +258,7 @@ local skill = {
    },
    {
       _id = "throwing",
+      type = "weapon_proficiency",
       elona_id = 111,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -257,6 +269,7 @@ local skill = {
    },
    {
       _id = "shield",
+      type = "skill",
       elona_id = 168,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -265,6 +278,7 @@ local skill = {
    },
    {
       _id = "evasion",
+      type = "skill",
       elona_id = 173,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -275,6 +289,7 @@ local skill = {
    },
    {
       _id = "dual_wield",
+      type = "skill",
       elona_id = 166,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -283,6 +298,7 @@ local skill = {
    },
    {
       _id = "two_hand",
+      type = "skill",
       elona_id = 167,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -375,6 +391,7 @@ local skill = {
    },
    {
       _id = "weight_lifting",
+      type = "skill",
       elona_id = 153,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -383,6 +400,7 @@ local skill = {
    },
    {
       _id = "tactics",
+      type = "skill",
       elona_id = 152,
       related_skill = "elona.stat_strength",
       ability_type = 0,
@@ -391,6 +409,7 @@ local skill = {
    },
    {
       _id = "marksman",
+      type = "skill",
       elona_id = 189,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -399,6 +418,7 @@ local skill = {
    },
    {
       _id = "healing",
+      type = "skill",
       elona_id = 154,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -407,6 +427,7 @@ local skill = {
    },
    {
       _id = "mining",
+      type = "skill",
       elona_id = 163,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -415,6 +436,7 @@ local skill = {
    },
    {
       _id = "carpentry",
+      type = "skill",
       elona_id = 176,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -423,6 +445,7 @@ local skill = {
    },
    {
       _id = "heavy_armor",
+      type = "skill",
       elona_id = 169,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -435,6 +458,7 @@ local skill = {
    },
    {
       _id = "medium_armor",
+      type = "skill",
       elona_id = 170,
       related_skill = "elona.stat_constitution",
       ability_type = 0,
@@ -447,6 +471,7 @@ local skill = {
    },
    {
       _id = "light_armor",
+      type = "skill",
       elona_id = 171,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -455,6 +480,7 @@ local skill = {
    },
    {
       _id = "lock_picking",
+      type = "skill",
       elona_id = 158,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -463,6 +489,7 @@ local skill = {
    },
    {
       _id = "disarm_trap",
+      type = "skill",
       elona_id = 175,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -471,6 +498,7 @@ local skill = {
    },
    {
       _id = "tailoring",
+      type = "skill",
       elona_id = 177,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -479,6 +507,7 @@ local skill = {
    },
    {
       _id = "jeweler",
+      type = "skill",
       elona_id = 179,
       related_skill = "elona.stat_dexterity",
       ability_type = 0,
@@ -487,6 +516,7 @@ local skill = {
    },
    {
       _id = "stealth",
+      type = "skill",
       elona_id = 157,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -495,6 +525,7 @@ local skill = {
    },
    {
       _id = "detection",
+      type = "skill",
       elona_id = 159,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -503,6 +534,7 @@ local skill = {
    },
    {
       _id = "sense_quality",
+      type = "skill",
       elona_id = 162,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -511,6 +543,7 @@ local skill = {
    },
    {
       _id = "eye_of_mind",
+      type = "skill",
       elona_id = 186,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -519,6 +552,7 @@ local skill = {
    },
    {
       _id = "greater_evasion",
+      type = "skill",
       elona_id = 187,
       related_skill = "elona.stat_perception",
       ability_type = 0,
@@ -527,6 +561,7 @@ local skill = {
    },
    {
       _id = "anatomy",
+      type = "skill",
       elona_id = 161,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -535,6 +570,7 @@ local skill = {
    },
    {
       _id = "literacy",
+      type = "skill",
       elona_id = 150,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -543,6 +579,7 @@ local skill = {
    },
    {
       _id = "memorization",
+      type = "skill",
       elona_id = 165,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -551,6 +588,7 @@ local skill = {
    },
    {
       _id = "alchemy",
+      type = "skill",
       elona_id = 178,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -559,6 +597,7 @@ local skill = {
    },
    {
       _id = "gardening",
+      type = "skill",
       elona_id = 180,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -567,6 +606,7 @@ local skill = {
    },
    {
       _id = "gene_engineer",
+      type = "skill",
       elona_id = 151,
       related_skill = "elona.stat_learning",
       ability_type = 0,
@@ -575,6 +615,7 @@ local skill = {
    },
    {
       _id = "meditation",
+      type = "skill",
       elona_id = 155,
       related_skill = "elona.stat_magic",
       ability_type = 0,
@@ -583,6 +624,7 @@ local skill = {
    },
    {
       _id = "magic_device",
+      type = "skill",
       elona_id = 174,
       related_skill = "elona.stat_magic",
       ability_type = 0,
@@ -591,6 +633,7 @@ local skill = {
    },
    {
       _id = "casting",
+      type = "skill",
       elona_id = 172,
       related_skill = "elona.stat_magic",
       ability_type = 0,
@@ -599,6 +642,7 @@ local skill = {
    },
    {
       _id = "control_magic",
+      type = "skill",
       elona_id = 188,
       related_skill = "elona.stat_magic",
       ability_type = 0,
@@ -607,6 +651,7 @@ local skill = {
    },
    {
       _id = "magic_capacity",
+      type = "skill",
       elona_id = 164,
       related_skill = "elona.stat_will",
       ability_type = 0,
@@ -615,6 +660,7 @@ local skill = {
    },
    {
       _id = "faith",
+      type = "skill",
       elona_id = 181,
       related_skill = "elona.stat_will",
       ability_type = 0,
@@ -623,6 +669,7 @@ local skill = {
    },
    {
       _id = "traveling",
+      type = "skill",
       elona_id = 182,
       related_skill = "elona.stat_will",
       ability_type = 0,
@@ -631,6 +678,7 @@ local skill = {
    },
    {
       _id = "negotiation",
+      type = "skill",
       elona_id = 156,
       related_skill = "elona.stat_charisma",
       ability_type = 0,
@@ -639,6 +687,7 @@ local skill = {
    },
    {
       _id = "investing",
+      type = "skill",
       elona_id = 160,
       related_skill = "elona.stat_charisma",
       ability_type = 0,

@@ -85,9 +85,9 @@ local assets = {
       -- This is bugged, actually. There isn't a proper skill icon for LUK, but
       -- because of an off-by-one error it ends up being the item chip for
       -- scrolls. There are only 8 proper skill icons in the item sheet.
-      width = 48 * 9,
+      width = 48 * 11,
       height = 48,
-      count_x = 9
+      count_x = 11
    },
    {
       _id = "hud_skill_icons",

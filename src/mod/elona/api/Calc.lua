@@ -232,4 +232,16 @@ function Calc.calc_item_value(item, mode, is_shop)
    -- <<<<<<<< shade2/calculation.hsp:670 	return value ..
 end
 
+-- >>>>>>>> shade2/calculation.hsp:802 #defcfunc calcTrainCost int id,int c,int mode ..
+function Calc.calc_train_cost(skill_id, chara)
+   return math.floor(chara:base_skill_level(skill_id) / 5 + 2)
+end
+-- <<<<<<<< shade2/calculation.hsp:811 	return value ..
+
+-- >>>>>>>> shade2/calculation.hsp:815 #defcfunc calcLearnCost int id,int c,int mode ..
+function Calc.calc_learn_cost(skill_id, chara)
+   return math.floor(15 + 3 * save.elona.total_skills_learned)
+end
+-- <<<<<<<< shade2/calculation.hsp:818 	return value ...
+
 return Calc

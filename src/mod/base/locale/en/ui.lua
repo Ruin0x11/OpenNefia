@@ -254,9 +254,8 @@ end,
       },
       skill = {
         detail = "Detail",
-        level = "Lv",
+        level = "Lv(Potential)",
         name = "Name",
-        potential = "Potential",
         resist = function(_1)
   return ("Resist %s")
   :format(_1)
