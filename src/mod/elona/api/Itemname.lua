@@ -489,7 +489,7 @@ function itemname.en(item, amount, no_article)
       end
    end
 
-   if item.material == "elona.fresh" and (item.spoilage_date or 0) < 0 then
+   if item.material == "elona.fresh" and (item.spoilage_date or World.date_hours()) < World.date_hours() then
       s = s .. "rotten "
    end
    -- <<<<<<<< shade2/item_func.hsp:521 		} ..

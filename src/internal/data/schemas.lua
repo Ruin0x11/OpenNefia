@@ -352,6 +352,7 @@ A damage reaction to trigger if this character is melee attacked.
          personality = 0,
          talk_type = 0,
          interest = 0,
+         interest_renew_date = 0,
          impression = 0,
 
          shop_rank = 0,
@@ -1509,4 +1510,8 @@ base.
 ]]
       }
    }
+}
+
+data:add_type {
+   name = "role",
 }

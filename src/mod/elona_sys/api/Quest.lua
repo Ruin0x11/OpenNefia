@@ -1,6 +1,5 @@
 --- @module Quest
 
-local Role = require("mod.elona_sys.api.Role")
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
@@ -323,7 +322,7 @@ end
 ---
 --- - You must be able to talk to the character.
 --- - The character must have at least one role.
---- - The character must not have the role "role.non_quest_client".
+--- - The character must not have the role "elona.special".
 --- - The character must be on a map.
 --- - The character's map must be registered as a town using
 ---   Quest.register_town().
@@ -337,10 +336,10 @@ function Quest.register_client(chara)
    if not chara.can_talk then
       return nil, "Cannot talk to character."
    end
-   if next(chara.roles) == nil then
+   if not chara:has_any_roles() then
       return nil, "Character has no role."
    end
-   if Role.has(chara, "elona.non_quest_client") then
+   if chara:find_role("elona.special") then
       return nil, "Character is marked as being unable to be a quest client."
    end
 
@@ -454,7 +453,7 @@ function Quest.update_in_map(map)
    if Quest.town_info(map) then
       -- Register all characters that can be quest targets.
       for _, chara in Chara.iter_others(map) do
-         if chara.quality < 6 and not Role.has(chara, "elona.special") then
+         if chara.quality < 6 and not chara:find_role("elona.special") then
             Quest.register_client(chara)
          end
       end

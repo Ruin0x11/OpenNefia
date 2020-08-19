@@ -98,13 +98,13 @@ do
 
       if floor == 3 then
          local chara = assert(Chara.create("elona.slan", Chara.player().x, Chara.player().y, {}, map))
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
          chara.ai_calm = Enum.AiBehavior.Stand
       end
 
       if floor == 17 then
          local chara = assert(Chara.create("elona.karam", Chara.player().x, Chara.player().y, {}, map))
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
          chara.ai_calm = Enum.AiBehavior.Stand
       end
 

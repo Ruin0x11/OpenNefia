@@ -199,28 +199,28 @@ end
 
 local function on_generate_border(map)
    local chara = Chara.create("elona.shopkeeper", 7, 23, nil, map)
-   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.general_vendor" }
+   chara:add_role("elona.shopkeeper", { inventory_id = "elona.general_vendor" })
    chara.shop_rank = 10
    chara.name = I18N.get("chara.job.general_vendor", chara.name)
    chara.ai_calm = 3
 
    chara = Chara.create("elona.shopkeeper", 5, 17, nil, map)
-   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+   chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
    chara.shop_rank = 12
    chara.name = I18N.get("chara.job.trader", chara.name)
    chara.ai_calm = 3
 
    chara = Chara.create("elona.shopkeeper", 16, 19, nil, map)
-   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-   chara.roles["elona.innkeeper"] = true
+   chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+   chara:add_role("elona.innkeeper")
    chara.shop_rank = 8
    chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
    chara = Chara.create("elona.bartender", 17, 13, nil, map)
-   chara.roles["elona.bartender"] = true
+   chara:add_role("elona.bartender")
 
    chara = Chara.create("elona.caravan_master", 7, 3, nil, map)
-   chara.roles["elona.caravan_master"] = {dest=""}
+   chara:add_role("elona.caravan_master", {dest=""})
 
    for _=1,2 do
       chara = Chara.create("elona.beggar", nil, nil, nil, map)
@@ -236,11 +236,11 @@ local function on_generate_border(map)
    end
 
    chara = Chara.create("elona.guard", 5, 7, nil, map)
-   chara.roles["elona.guard"] = true
+   chara:add_role("elona.guard")
    chara.ai_calm = 3
 
    chara = Chara.create("elona.guard", 8, 7, nil, map)
-   chara.roles["elona.guard"] = true
+   chara:add_role("elona.guard")
    chara.ai_calm = 3
 end
 
@@ -274,8 +274,8 @@ do
 
       DeferredEvent.add(function()
             for _, ally in Chara.iter_allies() do
-               if not ally.roles["elona.adventurer"]
-                  and not ally.roles["elona.special"]
+               if not ally:find_role("elona.adventurer")
+                  and not ally:find_role("elona.special")
                then
                   ally:set_emotion_icon("elona.blind", 20)
                   Gui.mes("event.my_eyes", ally)
@@ -442,13 +442,13 @@ do
       map:set_archetype("elona.the_smoke_and_pipe", { set_properties = true })
 
       local chara = Chara.create("elona.shopkeeper", 19, 10, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.the_leopard_warrior", 26, 16, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.town_child", 25, 15, nil, map)
@@ -467,7 +467,7 @@ do
       chara.ai_calm = 3
 
       chara = Chara.create("elona.silvia", 4, 3, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       Chara.create("elona.rogue", 4, 2, nil, map)
       Chara.create("elona.farmer", 3, 3, nil, map)
@@ -545,14 +545,14 @@ do
       map:set_archetype("elona.miral_and_garoks_workshop", { set_properties = true })
 
       local chara = Chara.create("elona.garokk", 17, 11, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.miral", 8, 16, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.miral"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.miral"})
 
       for _=1,5 do
          chara = Chara.create("elona.cat", nil, nil, nil, map)
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
       end
 
       return map
@@ -613,16 +613,16 @@ do
       end
 
       local chara = Chara.create("elona.younger_sister_of_mansion", 12, 6, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.younger_sister_of_mansion"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.younger_sister_of_mansion"})
 
       for _=1,6 do
          chara = Chara.create("elona.young_lady", nil, nil, nil, map)
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
       end
 
       for _=1,8 do
          chara = Chara.create("elona.silver_cat", nil, nil, nil, map)
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
       end
 
       return map
@@ -686,23 +686,23 @@ do
       item.own_state = "not_owned"
 
       local chara = Chara.create("elona.sales_person", 9, 16, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.cyber_dome"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.cyber_dome"})
       chara.shop_rank = 10
 
       chara = Chara.create("elona.sales_person", 9, 8, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.cyber_dome"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.cyber_dome"})
       chara.shop_rank = 10
 
       chara = Chara.create("elona.strange_scientist", 28, 7, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
       chara.shop_rank = 10
 
       for _=1,4 do
          chara = Chara.create("elona.citizen_of_cyber_dome", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen_of_cyber_dome2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,math.floor(map:calc("max_crowd_density")/2) do
@@ -765,20 +765,20 @@ do
       map:set_archetype("elona.larna", { set_properties = true })
 
       local chara = Chara.create("elona.wizard", 21, 23, nil, map)
-      chara.roles["elona.returner"] = true
+      chara:add_role("elona.returner")
 
       chara = Chara.create("elona.shopkeeper", 9, 44, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.dye_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.dye_vendor" })
       chara.shop_rank = 5
       chara.name = I18N.get("chara.job.dye_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 13, 37, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.souvenir_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.souvenir_vendor" })
       chara.shop_rank = 30
       chara.name = I18N.get("chara.job.souvenir_vendor", chara.name)
 
       chara = Chara.create("elona.bartender", 24, 48, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       Chara.create("elona.hot_spring_maniac", 7, 36, nil, map)
       Chara.create("elona.hot_spring_maniac", 9, 38, nil, map)
@@ -789,10 +789,10 @@ do
 
       for _=1,7 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          Chara.create("elona.hot_spring_maniac", nil, nil, nil, map)
       end
@@ -858,32 +858,32 @@ do
       map:set_archetype("elona.embassy", { set_properties = true })
 
       local chara = Chara.create("elona.sales_person", 9, 2, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.embassy"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.embassy"})
       chara.shop_rank = 10
 
       chara = Chara.create("elona.sales_person", 15, 2, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.embassy"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.embassy"})
       chara.shop_rank = 10
 
       chara = Chara.create("elona.sales_person", 21, 2, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.deed"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.deed"})
       chara.shop_rank = 10
 
       chara = Chara.create("elona.sales_person", 3, 2, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.deed"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.deed"})
       chara.shop_rank = 10
 
       for _=1,3 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for i=1,4 do
          chara = Chara.create("elona.guard", 3+(i-1)*6, 9, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       return map

@@ -669,12 +669,6 @@ return {
             end
          }
       },
-      tag = {
-         ref = function(_1)
-            return ("%s")
-               :format(_1)
-         end
-      },
       will_not_listen = function(_1)
          return ("%sは耳を貸さない。")
             :format(name(_1))

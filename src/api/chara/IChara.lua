@@ -3,7 +3,6 @@
 local data = require("internal.data")
 local field = require("game.field")
 local Chara = require("api.Chara")
-local Codegen = require("api.Codegen")
 local Rand = require("api.Rand")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
@@ -19,6 +18,7 @@ local ICharaActivity = require("api.chara.ICharaActivity")
 local ICharaSkills = require("api.chara.ICharaSkills")
 local ICharaTraits = require("api.chara.ICharaTraits")
 local ICharaBuffs = require("api.chara.ICharaBuffs")
+local ICharaRoles = require("api.chara.ICharaRoles")
 local IObject = require("api.IObject")
 local ILocalizable = require("api.ILocalizable")
 local ICharaTalk = require("api.chara.ICharaTalk")
@@ -45,12 +45,11 @@ local IChara = class.interface("IChara",
                             ICharaTraits,
                             ICharaEffects,
                             ICharaActivity,
-                            ICharaBuffs
+                            ICharaBuffs,
+                            ICharaRoles
                          })
 
 IChara._type = "base.chara"
-
--- TODO schema
 
 -- Must be available before generation.
 local defaults = {
@@ -75,8 +74,11 @@ function IChara:pre_build()
    ICharaEquip.init(self)
    ICharaTalk.init(self)
    ICharaSkills.init(self)
-   ICharaEffects.init(self)
    ICharaTraits.init(self)
+   ICharaEffects.init(self)
+   ICharaActivity.init(self)
+   ICharaBuffs.init(self)
+   ICharaRoles.init(self)
 
    self:emit("base.on_pre_build")
 
@@ -229,6 +231,7 @@ function IChara:produce_locale_data()
    local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
    return {
       name = self:calc("name"),
+      title = self:calc("title"),
       gender = self:calc("gender"),
       is_player = self:is_player(),
       is_visible = self:is_in_fov() and show,
@@ -500,7 +503,7 @@ function IChara:kill(source)
    if self:is_ally() then
       self.state = "PetDead"
       -- TODO modify impression/bodyguard/is escorting
-   elseif next(self.roles) then
+   elseif self:has_any_roles() then
       self.state = "CitizenDead"
       self.respawn_date = World.date_hours() + Const.CITIZEN_RESPAWN_HOURS
       -- TODO adventurer
@@ -647,10 +650,6 @@ end
 
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1
-end
-
-function IChara:has_role(role)
-   return self.roles[role] ~= nil
 end
 
 function IChara:set_emotion_icon(icon, duration)

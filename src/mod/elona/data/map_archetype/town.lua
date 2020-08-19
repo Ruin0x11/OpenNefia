@@ -52,91 +52,91 @@ do
       local chara = Chara.create("elona.whom_dwell_in_the_vanity", 39, 3, nil, map)
 
       chara = Chara.create("elona.loyter", 42, 23, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.miches", 24, 5, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.shena", 40, 24, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.dungeon_cleaner", 40, 25, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.rilian", 30, 5, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 42, 24, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.shopkeeper", 47, 9, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.fisher" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.fisher" })
       chara.shop_rank = 5
       chara.name = I18N.get("chara.job.fisher", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 14, 12, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.blacksmith" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.blacksmith" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 39, 27, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 10, 15, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.general_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.general_vendor" })
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.wizard", 7, 26, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 14, 25, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 22, 26, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
       chara.shop_rank = 9
       chara.image = "elona.chara_baker"
       chara.name = I18N.get("chara.job.baker", chara.name)
 
       chara = Chara.create("elona.wizard", 28, 16, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.bartender", 38, 27, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.healer", 6, 25, nil, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       chara = Chara.create("elona.elder", 10, 7, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_vernis", chara.name)
 
       chara = Chara.create("elona.trainer", 27, 16, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.informer", 25, 16, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       for _=1,4 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,4 do
          chara = Chara.create("elona.guard", nil, nil, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       for _=1,25 do
@@ -235,81 +235,81 @@ do
       --stair.area_params = { outer_map_id = map._id }
 
       local chara = Chara.create("elona.ainc", 3, 17, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.tam", 26, 11, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.gilbert_the_colonel", 14, 20, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.shopkeeper", 11, 5, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 25, 8, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 7, 8, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.goods_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 14, 14, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 35, 18, nil, map)
-      chara.roles["elona.horse_master"] = true
+      chara:add_role("elona.horse_master")
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.horse_master", chara.name)
 
       chara = Chara.create("elona.lame_horse", 33, 16, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.lame_horse", 37, 19, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.yowyn_horse", 34, 19, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.yowyn_horse", 38, 16, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.elder", 3, 4, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_yowyn", chara.name)
 
       chara = Chara.create("elona.trainer", 20, 14, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 24, 16, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 26, 16, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       chara = Chara.create("elona.gwen", 14, 12, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
 
       for _=1,2 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,3 do
          chara = Chara.create("elona.guard", nil, nil, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       for _=1,15 do
@@ -397,143 +397,143 @@ do
       map:set_archetype("elona.palmia", { set_properties = true })
 
       local chara = Chara.create("elona.bartender", 42, 27, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.healer", 34, 3, nil, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       chara = Chara.create("elona.arena_master", 22, 31, nil, map)
-      chara.roles["elona.arena_master"] = true
+      chara:add_role("elona.arena_master")
 
       chara = Chara.create("elona.erystia", 5, 15, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.mia", 41, 11, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.conery", 5, 6, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 24, 6, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 15, 22, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 15, 22, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       if Sidequest.progress("elona.mias_dream") == 1000 then
          local silver_cat = Chara.create("elona.silver_cat", 42, 11, {}, map, nil, map)
-         silver_cat.roles["elona.special"] = true
+         silver_cat:add_role("elona.special")
       end
 
       chara = Chara.create("elona.shopkeeper", 48, 18, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 30, 17, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 48, 3, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.goods_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 42, 17, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 11, 14, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
       chara.shop_rank = 9
       chara.image = "elona.chara_baker"
       chara.name = I18N.get("chara.job.baker", chara.name)
 
       chara = Chara.create("elona.wizard", 41, 3, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 41, 28, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.stersha", 7, 2, nil, map)
-      chara.roles["elona.royal_family"] = true
+      chara:add_role("elona.royal_family")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.xabi", 6, 2, nil, map)
-      chara.roles["elona.royal_family"] = true
+      chara:add_role("elona.royal_family")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.elder", 49, 11, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_palmia", chara.name)
 
       chara = Chara.create("elona.trainer", 30, 27, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 32, 27, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 29, 28, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       chara = Chara.create("elona.guard", 16, 5, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 16, 9, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 5, 3, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 8, 3, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 35, 14, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 38, 14, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 29, 2, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 19, 18, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       chara = Chara.create("elona.guard", 22, 18, nil, map)
-      chara.roles["elona.guard"] = true
+      chara:add_role("elona.guard")
       chara.ai_calm = 3
 
       for _=1,5 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,4 do
          chara = Chara.create("elona.guard", nil, nil, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       for _=1,25 do
@@ -609,75 +609,75 @@ do
       map:set_archetype("elona.derphy", { set_properties = true })
 
       local chara = Chara.create("elona.marks", 23, 14, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.noel", 13, 18, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.abyss", 16, 17, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.shopkeeper", 10, 17, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.bartender", 15, 15, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.shopkeeper", 13, 3, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 29, 23, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 26, 7, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.goods_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 30, 4, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blackmarket"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.blackmarket", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 29, 4, nil, map)
-      chara.roles["elona.slaver"] = true
+      chara:add_role("elona.slaver")
       chara.name = I18N.get("chara.job.slave_master", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 10, 6, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.arena_master", 7, 15, nil, map)
-      chara.roles["elona.arena_master"] = true
+      chara:add_role("elona.arena_master")
 
       chara = Chara.create("elona.elder", 9, 18, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_derphy", chara.name)
 
       chara = Chara.create("elona.trainer", 13, 18, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 5, 26, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 3, 28, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       for _=1,4 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,20 do
@@ -744,116 +744,116 @@ do
       map:set_archetype("elona.port_kapul", { set_properties = true })
 
       local chara = Chara.create("elona.raphael", 15, 18, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.arnord", 36, 27, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.icolle", 5, 26, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.doria", 29, 3, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 24, 21, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 12, 26, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 8, 11, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 8, 14, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.shopkeeper", 16, 17, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 23, 7, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 32, 14, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 22, 14, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.goods_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 16, 25, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blackmarket"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.blackmarket", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 17, 28, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.food_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.food_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.food_vendor", chara.name)
 
       chara = Chara.create("elona.wizard", 22, 22, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 35, 3, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.bartender", 15, 15, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.arena_master", 26, 3, nil, map)
-      chara.roles["elona.arena_master"] = true
+      chara:add_role("elona.arena_master")
 
       chara = Chara.create("elona.pet_arena_master", 25, 4, nil, map)
-      chara.roles["elona.arena_master"] = true
+      chara:add_role("elona.arena_master")
 
       chara = Chara.create("elona.elder", 8, 12, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_port_kapul", chara.name)
 
       chara = Chara.create("elona.trainer", 16, 4, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 14, 4, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 17, 5, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       chara = Chara.create("elona.healer", 27, 11, nil, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       for _=1,2 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,4 do
          chara = Chara.create("elona.sailor", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,5 do
          chara = Chara.create("elona.guard_port_kapul", nil, nil, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       chara = Chara.create("elona.captain", 7, 6, nil, map)
-      chara.roles["elona.citizen"] = true
+      chara:add_role("elona.citizen")
 
       for _=1,20 do
          util.generate_chara(map)
@@ -942,104 +942,104 @@ do
       map:set_archetype("elona.noyel", { set_properties = true })
 
       local chara = Chara.create("elona.ebon", 46, 18, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
       save.elona.fire_giant_uid = chara.uid
 
       chara = Chara.create("elona.moyer_the_crooked", 47, 18, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.moyer"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.moyer"})
 
       chara = Chara.create("elona.town_child", 47, 20, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.town_child", 15, 19, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.town_child", 49, 20, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 28, 22, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.pael", 19, 3, {}, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       -- TODO sidequest
       if true then
          chara = Chara.create("elona.lily", 19, 2, {}, map)
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
       end
 
       chara = Chara.create("elona.bartender", 40, 33, {}, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.healer", 44, 6, {}, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       chara = Chara.create("elona.healer", 44, 3, {}, map)
-      chara.roles["elona.nun"] = true
+      chara:add_role("elona.nun")
 
       chara = Chara.create("elona.shopkeeper", 19, 31, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 11, 31, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 38, 34, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 5, 27, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
       chara.shop_rank = 9
       chara.image = "elona.chara_baker"
       chara.name = I18N.get("chara.job.baker", chara.name)
 
       chara = Chara.create("elona.wizard", 56, 5, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 39, 35, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.elder", 5, 18, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_noyel", chara.name)
 
       chara = Chara.create("elona.trainer", 18, 20, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 4, 33, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 6, 33, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       for _ = 1, 3 do
          chara = Chara.create("elona.citizen", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _ = 1, 3 do
          chara = Chara.create("elona.guard", Rand.rnd(32), Rand.rnd(map:height()), nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       for _ = 1, 8 do
          chara = util.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
-         chara.roles["elona.special"] = true
+         chara:add_role("elona.special")
       end
 
       for _ = 1, 20 do
@@ -1064,11 +1064,11 @@ do
       item.own_state = "unobtainable"
 
       local chara = Chara.create("elona.kaneda_bike", 48, 19, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
       chara.is_only_in_christmas = true
 
       chara = Chara.create("elona.part_time_worker", 30, 17, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
       chara.is_only_in_christmas = true
 
       chara = Chara.create("elona.punk", 38, 19, nil, map)
@@ -1094,7 +1094,7 @@ do
       chara = Chara.create("elona.bartender", 17, 8, nil, map)
       chara.ai_calm = 3
       chara.is_only_in_christmas = true
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.food_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.food_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.food_vendor", chara.name)
 
@@ -1102,7 +1102,7 @@ do
       chara.ai_calm = 3
       chara.faction = "base.citizen"
       chara.is_only_in_christmas = true
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
       chara.shop_rank = 30
       chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
@@ -1110,13 +1110,13 @@ do
       chara.ai_calm = 3
       chara.faction = "base.citizen"
       chara.is_only_in_christmas = true
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.souvenir_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
       chara.shop_rank = 30
       chara.name = I18N.get("chara.job.souvenir_vendor", Text.random_name())
 
       chara = Chara.create("elona.shopkeeper", 38, 12, nil, map)
       chara.ai_calm = 3
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.blackmarket"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.blackmarket"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.blackmarket", Text.random_name())
       chara.is_only_in_christmas = true
@@ -1125,7 +1125,7 @@ do
       chara.ai_calm = 3
       chara.faction = "base.citizen"
       chara.is_only_in_christmas = true
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
       chara.shop_rank = 30
       chara.name = I18N.get("chara.job.street_vendor", Text.random_name())
 
@@ -1133,7 +1133,7 @@ do
       chara.ai_calm = 3
       chara.faction = "base.citizen"
       chara.is_only_in_christmas = true
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.street_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
       chara.shop_rank = 30
       chara.name = I18N.get("chara.job.street_vendor2", Text.random_name())
 
@@ -1286,100 +1286,100 @@ do
       --stair.area_params = { outer_map_id = map._id }
 
       local chara = Chara.create("elona.renton", 12, 24, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.balzak", 21, 3, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.lexus", 5, 20, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.cleaner", 28, 29, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 41, 19, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 32, 43, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 29, 28, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 16, 45, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bard", 13, 24, nil, map)
-      chara.roles["elona.special"] = true
+      chara:add_role("elona.special")
 
       chara = Chara.create("elona.bartender", 41, 42, nil, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.healer", 10, 16, nil, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       chara = Chara.create("elona.shopkeeper", 47, 30, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.general_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.general_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 24, 47, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.innkeeper" }
-      chara.roles["elona.innkeeper"] = true
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
+      chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
       chara.name = I18N.get("chara.job.inkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 37, 30, nil, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+      chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 37, 12, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.bakery" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
       chara.shop_rank = 9
       chara.image = "elona.chara_baker"
       chara.name = I18N.get("chara.job.baker", chara.name)
 
       chara = Chara.create("elona.wizard", 6, 15, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 33, 43, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.trader" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.trader" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.trader", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 47, 12, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.fisher" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.fisher" })
       chara.shop_rank = 5
       chara.name = I18N.get("chara.job.fisher", chara.name)
 
       chara = Chara.create("elona.elder", 3, 38, nil, map)
-      chara.roles["elona.elder"] = true
+      chara:add_role("elona.elder")
       chara.name = I18N.get("chara.job.of_lumiest", chara.name)
 
       chara = Chara.create("elona.trainer", 21, 28, nil, map)
-      chara.roles["elona.trainer"] = true
+      chara:add_role("elona.trainer")
       chara.name = I18N.get("chara.job.trainer", chara.name)
 
       chara = Chara.create("elona.wizard", 21, 30, nil, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.informer", 23, 38, nil, map)
-      chara.roles["elona.informer"] = true
+      chara:add_role("elona.informer")
 
       for _=1,6 do
          chara = Chara.create("elona.citizen", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
 
          chara = Chara.create("elona.citizen2", nil, nil, nil, map)
-         chara.roles["elona.citizen"] = true
+         chara:add_role("elona.citizen")
       end
 
       for _=1,7 do
          chara = Chara.create("elona.guard", nil, nil, nil, map)
-         chara.roles["elona.guard"] = true
+         chara:add_role("elona.guard")
       end
 
       for _=1,25 do

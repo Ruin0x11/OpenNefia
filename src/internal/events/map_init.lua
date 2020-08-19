@@ -12,10 +12,8 @@ local IMapObject = require("api.IMapObject")
 local Item = require("api.Item")
 local Enum = require("api.Enum")
 local Quest = require("mod.elona_sys.api.Quest")
-local Role = require("mod.elona_sys.api.Role")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 local ExHelp = require("mod.elona.api.ExHelp")
-local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
 local save = require("internal.global.save")
 
 local function relocate_chara(chara, map)
@@ -58,7 +56,7 @@ local function reset_chara_flags(map)
                chara:reset_ai()
             end
 
-            if Role.has(chara, "elona.guard") then
+            if chara:find_role("elona.guard") then
                local player = Chara.player()
                if player:calc("karma") < Const.KARMA_BAD then
                   if player:calc("level") > chara:calc("level") then
