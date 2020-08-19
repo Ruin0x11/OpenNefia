@@ -995,7 +995,7 @@ data:add {
       end
 
       -- TODO adventurer
-      if target:calc("quality") >= Enum.Quality.Great or next(target.roles) or target:calc("is_not_changeable") then
+      if target:calc("quality") >= Enum.Quality.Great or target:has_any_roles() or target:calc("is_not_changeable") then
          success = "impossible"
       end
       if target:is_allied() then

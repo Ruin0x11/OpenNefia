@@ -297,7 +297,9 @@ function Inspector:putValue(v)
     self:puts(tostring(v))
   elseif tv == 'table' then
     local mt = getmetatable(v)
-    if not self.override_mt and mt and mt.__inspect then
+    if not self.override_mt and mt and mt.__literal then
+      self:puts(mt.__literal)
+    elseif not self.override_mt and mt and mt.__inspect then
       self:puts('<' .. mt.__inspect(v) .. '>')
     else
       self:putTable(v)

@@ -27,7 +27,7 @@ function Item.generate_oracle_text(item)
    local owner = item:get_owning_chara()
 
    if owner then
-      if owner.roles["elona.adventurer"] then
+      if owner:find_role("elona.adventurer") then
          -- TODO adventurer
          local map_name = "TODO"
          return I18N.get("magic.oracle.was_held_by", known_name, owner, map_name, date.day, date.month, date.year)

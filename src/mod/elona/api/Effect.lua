@@ -622,13 +622,13 @@ end
 
 function Effect.start_incognito(source)
    local filter = function(chara)
-      if chara:has_role("elona.shopkeeper")
-         and chara.roles["elona.shopkeeper"].inventory_id == "elona.wandering_merchant"
-      then
+      local is_wandering_merchant = chara:iter_roles("elona.shopkeeper")
+          :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
+      if is_wandering_merchant then
          return false
       end
 
-      if chara:has_role("elona.shop_guard") then
+      if chara:find_role("elona.shop_guard") then
          return false
       end
 
@@ -647,7 +647,7 @@ end
 
 function Effect.end_incognito(source)
    local filter = function(chara)
-      return not chara:is_player() and chara:has_role("elona.guard") and source:calc("karma") < Const.KARMA_BAD
+      return not chara:is_player() and chara:find_role("elona.guard") and source:calc("karma") < Const.KARMA_BAD
    end
 
    local apply = function(chara)

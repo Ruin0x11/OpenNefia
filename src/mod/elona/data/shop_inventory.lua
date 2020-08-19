@@ -337,7 +337,8 @@ data:add_multi(
          elona_id = 1009,
          rules = {
             { categories = "elona.cargo" },
-         }
+         },
+         restock_interval = 2 * 24
       },
       {
          _id = "the_fence",

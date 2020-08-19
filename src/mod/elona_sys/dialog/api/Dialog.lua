@@ -1,4 +1,5 @@
 --- @module Dialog
+local Enum = require("api.Enum")
 
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -65,7 +66,36 @@ local function resolve_response(obj, args, choices_root)
 end
 
 local function speaker_name(chara)
-   return chara:calc("name")
+   -- >>>>>>>> shade2/chat.hsp:3206 	if cnAka(tc)="":s=cnName(tc)+" ":else:s=lang(cnAk ..
+   local name = chara:calc("name")
+   local title = chara:calc("title") or ""
+   if title == "" then
+      name = name .. " "
+   else
+      name = I18N.get("talk.window.of", name, title) .. " "
+   end
+
+   name = name .. I18N.capitalize(I18N.get("ui.sex3." .. chara:calc("gender")))
+
+   if title ~= "" then
+      name = name .. " " .. I18N.get("talk.window.fame", chara:calc("fame"))
+   end
+
+   if chara:find_role("elona.shopkeeper") then
+      name = name .. " " .. I18N.get("talk.window.shop_rank", chara:calc("shop_rank"))
+   end
+
+   if Chara.player():calc("can_detect_religion") then
+      local god = chara:calc("god") or "elona.eyth"
+      name = name .. (" (%s)"):format(I18N.get("god." .. god .. ".name"))
+   end
+
+   if config["base.development_mode"] then
+      name = name .. " imp:" .. tostring(chara:calc("impression"))
+   end
+
+   return name
+   -- <<<<<<<< shade2/chat.hsp:3212 	if sceneMode:s=actor(0,rc) ..
 end
 
 --- Opens a single talk window choice.
@@ -75,13 +105,6 @@ end
 -- @tparam[opt] int default_choice index of default choice if window is canceled
 -- @treturn string Response ID of the choice selected.
 local function query(talk, text, choices, default_choice, choices_root)
-   local show_impress = true
-   if talk.speaker.quality == 6 -- special
-      and not talk.speaker:is_ally()
-   then
-      show_impress = false
-   end
-
    if #choices == 1 then
       default_choice = 1
    end
@@ -110,24 +133,23 @@ local function query(talk, text, choices, default_choice, choices_root)
       end
    end
 
-   local menu
-   if show_impress then
-      menu = DialogMenu:new(text,
-                            the_choices,
-                            speaker_name(talk.speaker),
-                            talk.speaker:calc("portrait"),
-                            talk.speaker:calc("image"),
-                            default_choice,
-                            talk.speaker.impression,
-                            talk.speaker.interest)
-   else
-      menu = DialogMenu:new(text,
-                            the_choices,
-                            speaker_name(talk.speaker),
-                            talk.speaker:calc("portrait"),
-                            talk.speaker:calc("image"),
-                            default_choice)
+   -- >>>>>>>> shade2/chat.hsp:60 	chatVal(1)=false,true ..
+   local impression, interest
+   if talk.speaker:calc("quality") < Enum.Quality.Unique then
+      impression = talk.speaker.impression
+      interest = talk.speaker.interest
    end
+   -- <<<<<<<< shade2/chat.hsp:61 	if cQuality(tc)=fixUnique:chatVal(1)=cId(tc),fals ..
+
+   local menu = DialogMenu:new(text,
+                               the_choices,
+                               speaker_name(talk.speaker),
+                               talk.speaker:calc("portrait"),
+                               talk.speaker:calc("image"),
+                               default_choice,
+                               true,
+                               impression,
+                               interest)
 
    local result = menu:query()
 
@@ -205,7 +227,7 @@ get_choices = function(node, talk, state, node_data, choice_key, found)
       choices = {{"__END__", choice_key}}
    elseif type(choices) == "function" then
       local ok
-      ok, choices = pcall(choices, talk, state, node_data.opts)
+      ok, choices = xpcall(choices, debug.traceback, talk, state, node_data.opts)
       if not ok then
          dialog_error(talk, "Error running choices function", choices)
       end
@@ -301,7 +323,7 @@ local function step_dialog(node_data, talk, state)
       local texts = node.text
       if type(texts) == "function" then
          local ok
-         ok, texts = pcall(texts, talk, state, node_data.opts)
+         ok, texts = xpcall(texts, debug.traceback, talk, state, node_data.opts)
          if not ok then
             dialog_error(talk, "Error getting dialog text", texts)
          end
@@ -433,11 +455,6 @@ function Dialog.start(chara, dialog_id)
    while next_node ~= nil do
       next_node = step_dialog(next_node, talk, state)
    end
-end
-
-function Dialog.talk_to_chara(chara)
-   local dialog_id = chara:calc("dialog") or "elona.default"
-   Dialog.start(chara, dialog_id)
 end
 
 --- Adds a dialog choice to a list of possible choices if it doesn't

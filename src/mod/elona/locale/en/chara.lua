@@ -750,7 +750,7 @@ return {
          mitra = {
             name = "mitra"
          },
-         moyer = {
+         moyer_the_crooked = {
             name = "<Moyer> the crooked",
             text_100 = { "Hey now, I stopped, I stopped!", "Behold! a Legendary Giant of Fire! Be careful you aren't burned now.", "And if you think that's special, wait till you see what I got over here!" }
          },

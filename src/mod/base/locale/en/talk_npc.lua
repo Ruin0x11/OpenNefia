@@ -543,12 +543,6 @@ end,
         ["return"] = "I'm practicing a spell of return. Would you like to take my service?"
       }
     },
-    tag = {
-      ref = function(_1)
-  return ("%s guest%s")
-  :format(_1, s(_1))
-end
-    },
     will_not_listen = function(_1)
   return ("%s won't listen.")
   :format(name(_1))

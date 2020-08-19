@@ -18,6 +18,8 @@ local Enum = require("api.Enum")
 local Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
 local Log = require("api.Log")
+local Const = require("api.Const")
+local CharaMake = require("api.CharaMake")
 
 --
 --
@@ -295,11 +297,13 @@ Event.register("base.on_build_chara",
 local function apply_race_class(chara)
    -- TODO: Should not be applied on player
    -- It is actually possible for characters to lack a class, but usually not a race.
-   if chara.race ~= nil then
-      Skill.apply_race_params(chara, chara.race)
-   end
-   if chara.class ~= nil then
-      Skill.apply_class_params(chara, chara.class)
+   if not CharaMake.is_active() then
+      if chara.race ~= nil then
+         Skill.apply_race_params(chara, chara.race)
+      end
+      if chara.class ~= nil then
+         Skill.apply_class_params(chara, chara.class)
+      end
    end
 
    local rest = Resolver.resolve(chara, {object = chara, diff_only = true, override_method = true})
@@ -320,8 +324,8 @@ Event.register("base.on_build_chara",
 
 local function init_chara_defaults(chara)
    -- >>>>>>>> shade2/chara.hsp:509 	cInterest(rc)=100 ..
-   chara.performance_interest = chara.performance_interest or 0
-   chara.performance_interest_revive_date = chara.performance_interest_revive_date or 0
+   chara.interest = 100
+   chara.impression = Const.IMPRESSION_NORMAL
    chara.fov = 14
    -- <<<<<<<< shade2/chara.hsp:511 	cFov(rc)=14 ..
 
@@ -336,7 +340,11 @@ local function init_chara_defaults(chara)
    chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
 
    chara.required_experience = Skill.calc_required_experience(chara)
-   -- <<<<<<<< shade2/chara.hsp:521 	call calcExpToNextLevel,(r1=rc) ..
+
+   -- TODO custom talk
+   -- See mod/elona/locale/en/talk_random.lua (talk.random.personality.<n>)
+   chara.personality = Rand.rnd(4)
+   -- <<<<<<<< shade2/chara.hsp:524 	cPersonality(rc)=rnd(rangePS) ..
 
    -- >>>>>>>> shade2/chara.hsp:532 	if rc=pc{ ..
    if chara:is_player() then
@@ -574,6 +582,38 @@ Event.register("base.on_map_leave", "npc memory",
 --- Dialog
 ---
 
+local function try_to_chat(chara, player)
+   -- >>>>>>>> elona122/shade2/chat.hsp:42 *chat ..
+   if chara:reaction_towards(player) < 0 then
+      Gui.mes("talk.will_not_listen")
+      return
+   end
+
+   if World.date_hours() >= chara.interest_renew_date then
+      chara.interest = 100
+   end
+   -- <<<<<<<< elona122/shade2/chat.hsp:52 	if dateID>=cInterestRenew(tc):cInterest(tc)=100 ..
+
+   -- >>>>>>>> elona122/shade2/chat.hsp:66 	if cSleep(tc)!0{ ..
+   if chara:has_effect("elona.sleep") then
+      Dialog.start(chara, "elona.is_sleeping")
+      return
+   end
+
+   if chara:has_activity() then
+      Dialog.start(chara, "elona.is_busy")
+      return
+   end
+
+   if chara:is_player() then
+      return
+   end
+   -- <<<<<<<< elona122/shade2/chat.hsp:75 	if tc=pc:goto *chat_end ..
+
+   local dialog_id = chara:calc("dialog") or "elona.default"
+   Dialog.start(chara, dialog_id)
+end
+
 local function bump_into_chara(player, params, result)
    local on_cell = params.chara
    local reaction = on_cell:reaction_towards(player)
@@ -588,7 +628,7 @@ local function bump_into_chara(player, params, result)
          return "turn_end"
       end
 
-      Dialog.talk_to_chara(on_cell)
+      try_to_chat(on_cell, player)
       return "player_turn_query"
    end
 
@@ -610,20 +650,19 @@ Event.register("elona_sys.on_player_bumped_into_chara",
 local function calc_dialog_choices(speaker, params, result)
    table.insert(result, {"talk", "talk.npc.common.choices.talk"})
 
-   if speaker.roles then
-      for id, _ in pairs(speaker.roles) do
-         local role_data = data["elona.role"]:ensure(id)
-         if role_data.dialog_choices then
-            for _, choice in ipairs(role_data.dialog_choices) do
-               if type(choice) == "function" then
-                  local choices = choice(speaker, params)
-                  assert(type(choices) == "table")
-                  for _, choice in ipairs(choices) do
-                     table.insert(result, choice)
-                  end
-               else
+   for _, role in ipairs(speaker.roles) do
+      local id = role._id
+      local role_data = data["base.role"]:ensure(id)
+      if role_data.dialog_choices then
+         for _, choice in ipairs(role_data.dialog_choices) do
+            if type(choice) == "function" then
+               local choices = choice(speaker, params)
+               assert(type(choices) == "table")
+               for _, choice in ipairs(choices) do
                   table.insert(result, choice)
                end
+            else
+               table.insert(result, choice)
             end
          end
       end
@@ -880,6 +919,7 @@ local function init_save()
    s.fire_giant_uid = nil
    s.home_rank = "elona.cave"
    s.flag_has_met_ally = false
+   s.waiting_guests = 0
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

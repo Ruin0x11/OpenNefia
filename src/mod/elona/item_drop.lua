@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
+local Enum = require("api.Enum")
 
 local function should_drop_player_item(item, player, map)
    if not Item.is_alive(item) then
@@ -58,28 +59,28 @@ local function should_drop_item(item, chara)
       return false
    end
 
-   if chara:calc("role") == 20 then -- TODO
+   if chara:find_role("elona.custom_chara") then
       return false
    end
 
    local result = false
-   if item:calc("quality") >= 5 then -- godly
+   if item:calc("quality") >= Enum.Quality.God then
       result = true
    end
    if Rand.one_in(30) then
       result = true
    end
-   if item:calc("quality") >= 4 then -- miracle
+   if item:calc("quality") >= Enum.Quality.Great then
       if Rand.one_in(2) then
          result = true
       end
    end
-   if chara:calc("role") == 13 then
+   if chara:find_role("elona.adventurer") then
       if Rand.one_in(5) then
          result = false
       end
    end
-   if item:calc("quality") == 6 then -- special
+   if item:calc("quality") == Enum.Quality.Unique then
       result = true
    end
    if item:calc("always_drop") then

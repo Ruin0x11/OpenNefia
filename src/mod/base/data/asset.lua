@@ -797,6 +797,14 @@ local assets = {
       height = 18,
    },
    {
+      _id = "impression_icon",
+      source = "graphic/interface.bmp",
+      x = 16,
+      y = 360,
+      width = 16,
+      height = 16
+   },
+   {
       _id = "list_bullet",
       source = "graphic/interface.bmp",
       x = 48,
