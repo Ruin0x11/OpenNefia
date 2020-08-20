@@ -15,9 +15,10 @@ local function calculate_page_handlers(sublayers)
       if class.is_an(IPaged, layer) then
          size = layer.page_max
       else
-         size = 1
+         size = 0
       end
-      for i=1,size do
+      for i=0,size do
+         -- TODO: PagedListModel should be 1-indexed instead of 0-indexed
          page_handlers[index] = { layer = layer, page = i }
          index = index + 1
       end

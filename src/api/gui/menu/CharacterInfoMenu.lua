@@ -53,11 +53,13 @@ end
 function CharacterInfoMenu:next_page()
    self.sublayers:next_page()
    self.input:forward_to(self.sublayers:current_sublayer())
+   Gui.play_sound("base.pop1")
 end
 
 function CharacterInfoMenu:previous_page()
    self.sublayers:previous_page()
    self.input:forward_to(self.sublayers:current_sublayer())
+   Gui.play_sound("base.pop1")
 end
 
 function CharacterInfoMenu:on_query()

@@ -218,8 +218,6 @@ function UiMessageWindow:recalc_lines()
    for i=index_of_first_text,1,-1 do
       local t = self.history:get(i)
       if t.newline then
-         local Log = require("api.Log")
-         Log.info("NEWLINE")
          self:newline()
       else
          self:push_text(t.text, t.color)
