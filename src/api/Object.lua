@@ -99,7 +99,7 @@ function Object.finalize(obj, params)
 
       if not params.no_build then
          obj:normal_build()
-         obj:finalize()
+         obj:finalize(params.build_params)
       end
    end
 end

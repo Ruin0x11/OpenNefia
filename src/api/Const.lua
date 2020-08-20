@@ -40,4 +40,16 @@ Const.INITIAL_DAY = 12
 
 Const.SKILL_POINT_EXPERIENCE_GAIN = 400
 
+-- >>>>>>>> elona122/shade2/init.hsp:19 	#define global defImpEnemy	0 ..
+Const.IMPRESSION_ENEMY = 0
+Const.IMPRESSION_HATE = 25
+Const.IMPRESSION_NORMAL = 50
+Const.IMPRESSION_PARTY = 53
+Const.IMPRESSION_AMIABLE = 75
+Const.IMPRESSION_FRIEND = 100
+Const.IMPRESSION_FELLOW = 150
+Const.IMPRESSION_MARRY = 200
+Const.IMPRESSION_SOULMATE = 300
+-- <<<<<<<< elona122/shade2/init.hsp:27 	#define global defImpSoulMate	300 ..
+
 return Const

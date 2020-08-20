@@ -485,19 +485,22 @@ function Skill.calc_required_experience(chara)
    return math.clamp(lv * (lv + 1) * (lv + 2) * (lv + 3) + 3000, 0, 100000000)
 end
 
+-- >>>>>>>> shade2/chara_func.hsp:130 #defcfunc impLevel int a ..
 function Skill.impression_level(impression)
-   if     impression < 10  then return 0
-   elseif impression < 25  then return 1
-   elseif impression < 40  then return 2
-   elseif impression < 75  then return 3
-   elseif impression < 100 then return 4
-   elseif impression < 150 then return 5
-   elseif impression < 200 then return 6
-   elseif impression < 300 then return 7
-   else                         return 8
+   if     impression < 10                             then return 0
+   elseif impression < Const.IMPRESSION_HATE          then return 1
+   elseif impression < Const.IMPRESSION_NORMAL - 10   then return 2
+   elseif impression < Const.IMPRESSION_AMIABLE       then return 3
+   elseif impression < Const.IMPRESSION_FRIEND        then return 4
+   elseif impression < Const.IMPRESSION_FELLOW        then return 5
+   elseif impression < Const.IMPRESSION_MARRY         then return 6
+   elseif impression < Const.IMPRESSION_SOULMATE      then return 7
+   else                                                    return 8
    end
 end
+-- <<<<<<<< shade2/chara_func.hsp:139 	return 8 ..
 
+-- >>>>>>>> shade2/chara_func.hsp:141 #deffunc modImp int c,int a ..
 function Skill.modify_impression(chara, delta)
    delta = math.floor(delta)
    local level = Skill.impression_level(chara.impression)
@@ -508,7 +511,7 @@ function Skill.modify_impression(chara, delta)
       end
    end
 
-   chara.impression = chara.impression + delta
+   chara.impression = math.floor(chara.impression + delta)
    local new_level = Skill.impression_level(chara.impression)
    if level > new_level then
       Gui.mes_c("chara.impression.lose", "Purple", chara, "ui.impression._" .. new_level)
@@ -516,6 +519,7 @@ function Skill.modify_impression(chara, delta)
       Gui.mes_c("chara.impression.gain", "Green", chara, "ui.impression._" .. new_level)
    end
 end
+-- <<<<<<<< shade2/chara_func.hsp:155 	return ..
 
 --
 --

@@ -3,7 +3,7 @@ local RandomGenerator = require("api.RandomGenerator")
 
 local Rand = {}
 
-local rng = RandomGenerator:new(0)
+local rng = RandomGenerator:new()
 
 --- Returns a random integer in `[0, n)`.
 ---
@@ -74,8 +74,7 @@ function Rand.choice(arr_or_iter)
    if #arr == 0 then
       return nil
    end
-   local i = arr[Rand.rnd_huge(#arr)+1]
-   return i
+   return arr[Rand.rnd_huge(#arr)+1]
 end
 
 function Rand.percent_chance(percent)

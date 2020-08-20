@@ -1,19 +1,15 @@
 local I18N = require("api.I18N")
 local Log = require("api.Log")
 local Enum = require("api.Enum")
-local Text = require("mod.elona.api.Text")
 local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Rand = require("api.Rand")
 local CharaMake = require("api.CharaMake")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Event = require("api.Event")
-local InstancedMap = require("api.InstancedMap")
-local IMapObject = require("api.IMapObject")
 local Chara = require("api.Chara")
 local World = require("api.World")
 local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
-local IChara = require("api.chara.IChara")
 local api_Item = require("api.Item")
 local Util = require("mod.elona_sys.api.Util")
 
@@ -27,7 +23,7 @@ function Item.generate_oracle_text(item)
    local owner = item:get_owning_chara()
 
    if owner then
-      if owner.roles["elona.adventurer"] then
+      if owner:find_role("elona.adventurer") then
          -- TODO adventurer
          local map_name = "TODO"
          return I18N.get("magic.oracle.was_held_by", known_name, owner, map_name, date.day, date.month, date.year)
@@ -168,8 +164,8 @@ local function fix_item_2(item, params)
             -- TODO need the level of the generated character
             chara_level = 1
          end
-         local level = params.level
-         local quality = params.quality
+         local level = item.level
+         local quality = item.quality
          local material = ItemMaterial.choose_random_material(item, nil, level, quality, chara_level)
          ItemMaterial.apply_item_material(item, material)
       else
@@ -192,28 +188,9 @@ local function fix_item_2(item, params)
    -- <<<<<<<< shade2/item.hsp:549 	return ..
 end
 
-local function get_map(params)
-   -- TODO make this into a method on ILocation?
-   if class.is_an(InstancedMap, params.location) then
-      return params.location
-   elseif class.is_an(IMapObject, params.location) then
-      return params.location:containing_map()
-   end
-
-   return nil
-end
-
-local function get_owner(params)
-   if class.is_an(IChara, params.location) then
-      return params.location
-   end
-
-   return nil
-end
-
 -- >>>>>>>> shade2/item.hsp:685 	if refType=fltChest{ ..
 local function init_container(item, params)
-   local map = get_map(params)
+   local map = item:containing_map()
    local map_level = (map and map:calc("level")) or 1
 
    -- TODO shelter
@@ -450,8 +427,8 @@ function Item.fix_item(item, params)
    -- <<<<<<<< shade2/item.hsp:636  	} ...
 
    local ev_params = table.shallow_copy(params)
-   ev_params.owner = get_owner(params)
-   ev_params.map = get_map(params)
+   ev_params.owner = item:get_owning_chara()
+   ev_params.map = item:containing_map()
 
    item:emit("base.on_item_init_params", ev_params)
 
@@ -471,6 +448,10 @@ function Item.fix_item(item, params)
       if Rand.one_in(3) then
          item.params.furniture_quality = Rand.rnd(Rand.rnd(12) + 1)
       end
+   end
+
+   if is_shop then
+      item.identify_state = Enum.IdentifyState.Full
    end
 
    if NORMAL_ITEMS[item._id] then

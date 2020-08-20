@@ -447,7 +447,7 @@ local function failed_to_place(chara)
       chara.state = "Dead"
       Gui.mes("chara.place_failure.other", chara)
    end
-   if next(chara.roles) then
+   if chara:has_any_roles() then
       chara.state = "CitizenDead"
    end
 

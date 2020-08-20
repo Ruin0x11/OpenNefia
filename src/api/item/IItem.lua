@@ -34,11 +34,12 @@ function IItem:normal_build()
    self.image = self.proto.image
 end
 
-function IItem:build()
+function IItem:build(params)
+   params = params or {}
    self.name = I18N.get("item.info." .. self._id .. ".name")
 
    -- TODO remove params
-   self:emit("base.on_build_item", {location=self.location,level=self.level})
+   self:emit("base.on_build_item", params)
 
    self:refresh()
 end

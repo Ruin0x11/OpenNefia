@@ -1,14 +1,7 @@
-data:add_type {
-   name = "role",
-   schema = schema.Record {
-   }
-}
-
 local role = {
    {
       _id = "shopkeeper",
-      params = {},
-      elona_id = 1000,
+      elona_id = 1,
 
       dialog_choices = {
          {"elona.shopkeeper:buy", "talk.npc.shop.choices.buy"},
@@ -16,36 +9,15 @@ local role = {
       }
    },
    {
-      _id = "guard",
-      elona_id = 14,
-      params = {},
-
-      dialog_choices = {
-         function()
-            return {{"elona.guard:where_is", "where_is"}}
-         end,
-         function()
-            return {{"elona.guard:lost_item", "lost wallet"}}
-         end,
-         function()
-            return {{"elona.guard:lost_item", "lost suitcase"}}
-         end,
-      }
+      _id = "special",
+      elona_id = 3,
    },
    {
       _id = "citizen",
       elona_id = 4,
    },
    {
-      _id = "special",
-      elona_id = 3,
-   },
-   {
-      _id = "bartender",
-      elona_id = 9,
-   },
-   {
-      _id = "wizard",
+      _id = "identifier",
       elona_id = 5,
    },
    {
@@ -61,12 +33,41 @@ local role = {
       elona_id = 8,
    },
    {
+      _id = "bartender",
+      elona_id = 9,
+   },
+   {
       _id = "arena_master",
       elona_id = 10,
    },
    {
+      _id = "pet_arena_master",
+      elona_id = 11,
+   },
+   {
       _id = "healer",
       elona_id = 12,
+   },
+   {
+      _id = "adventurer",
+      elona_id = 13,
+   },
+   {
+      _id = "guard",
+      elona_id = 14,
+
+      dialog_choices = {
+         function()
+            -- TODO quest
+            return {{"elona.guard:where_is", "talk.npc.guard.where_is"}}
+         end,
+         function()
+            return {{"elona.guard:lost_item", "talk.npc.guard.lost_wallet"}}
+         end,
+         function()
+            return {{"elona.guard:lost_item", "talk.npc.guard.lost_suitcase"}}
+         end,
+      }
    },
    {
       _id = "royal_family",
@@ -81,12 +82,24 @@ local role = {
       elona_id = 17
    },
    {
+      _id = "maid",
+      elona_id = 18
+   },
+   {
       _id = "sister",
       elona_id = 19
    },
    {
+      _id = "custom_chara",
+      elona_id = 20,
+   },
+   {
       _id = "returner",
       elona_id = 21,
+   },
+   {
+      _id = "horse_master",
+      elona_id = 22
    },
    {
       _id = "caravan_master",
@@ -102,4 +115,4 @@ local role = {
    },
 }
 
-data:add_multi("elona.role", role)
+data:add_multi("base.role", role)

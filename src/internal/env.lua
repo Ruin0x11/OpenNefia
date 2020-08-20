@@ -93,6 +93,9 @@ local LOADING_MODS = {}
 local require_path_cache = setmetatable({}, { __mode = "k" })
 
 
+-- This table supports retrieving a module/class table given a function object.
+local fn_to_module = setmetatable({}, { __mode = "k" })
+
 -- This flag is used for e.g. relayouting all UI layers on hotload so
 -- the changes are visible immediately and on_hotload() can be called.
 local hotloaded_this_frame = false
@@ -435,6 +438,21 @@ local function gen_require(chunk_loader, can_load_path)
 
       if type(result) == "table" then
          require_path_cache[result] = req_path
+
+         for k, v in pairs(result) do
+            if type(v) == "function" then
+               -- Save the module and identifier of this function.
+               --
+               -- NOTE: This will overwrite the existing metadata for a function
+               -- defined elsewhere that is later copied to another module. For
+               -- example, the `Draw` module copies a set of functions from the
+               -- internal `draw` module using assignment, instead of defining a
+               -- new function that calls the internal one, so the function
+               -- returned from the two modules will reference the same object
+               -- in memory.
+               fn_to_module[v] = { module = package.loaded[req_path], identifier = k }
+            end
+         end
       end
 
       return package.loaded[req_path]
@@ -541,7 +559,11 @@ function env.hotload_path(path, also_deps)
 
    hotloaded_this_frame = true
 
-   return result
+   return {
+      result = result,
+      require_path = path,
+      module = package.loaded[path]
+   }
 end
 
 function env.hotload_all()
@@ -642,6 +664,17 @@ function env.get_require_path(tbl)
    end
 
    return path
+end
+
+-- Given a function defined on a module or class, returns its module/class and
+-- identifier.
+function env.get_module_of_member(fn)
+   local entry = fn_to_module[fn]
+   if entry == nil then
+      return nil, nil
+   end
+
+   return entry.module, entry.identifier
 end
 
 function env.is_loaded(path)

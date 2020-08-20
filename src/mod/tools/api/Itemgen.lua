@@ -182,13 +182,7 @@ function Itemgen.create(x, y, params, where)
    end
    params.categories = table.set(params.categories or {})
 
-   local create_params = params.create_params or {}
-   create_params.ownerless = params.ownerless
-   create_params.level = params.level
-   create_params.quality = params.quality
-
-   -- TODO this changes depending on the item
-   create_params.amount = params.amount
+   local create_params = params.create_params or table.shallow_copy(params)
 
    -- >>>>>>>> shade2/item.hsp:609 		} ...
    local player = Chara.player()

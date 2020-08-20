@@ -30,27 +30,27 @@ function thieves_guild.on_generate_map()
    map:set_archetype("elona.thieves_guild", { set_properties = true })
 
    local chara = Chara.create("elona.sin", 21, 9, nil, map)
-   chara.roles["elona.special"] = true
+   chara:add_role("elona.special")
 
    chara = Chara.create("elona.trainer", 3, 6, nil, map)
-   chara.roles["elona.trainer"] = true
+   chara:add_role("elona.trainer")
    chara.name = I18N.get("chara.job.trainer", chara.name)
 
    chara = Chara.create("elona.wizard", 3, 12, nil, map)
-   chara.roles["elona.wizard"] = true
+   chara:add_role("elona.identifier")
 
    chara = Chara.create("elona.shopkeeper", 5, 18, nil, map)
-   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+   chara:add_role("elona.shopkeeper", {inventory_id = "elona.blackmarket"})
    chara.shop_rank = 10
    chara.name = I18N.get("chara.job.blackmarket", chara.name)
 
    chara = Chara.create("elona.shopkeeper", 27, 13, nil, map)
-   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blackmarket"}
+   chara:add_role("elona.shopkeeper", {inventory_id = "elona.blackmarket"})
    chara.shop_rank = 10
    chara.name = I18N.get("chara.job.blackmarket", chara.name)
 
    chara = Chara.create("elona.shopkeeper", 21, 19, nil, map)
-   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.the_fence"}
+   chara:add_role("elona.shopkeeper", {inventory_id = "elona.the_fence"})
    chara.shop_rank = 10
    chara.name = I18N.get("chara.job.fence", chara.name)
 
@@ -98,20 +98,20 @@ function fighters_guild.on_generate_map()
    map:set_archetype("elona.fighters_guild", { set_properties = true })
 
    local chara = Chara.create("elona.fray", 27, 4, nil, map)
-   chara.roles["elona.special"] = true
+   chara:add_role("elona.special")
 
    chara = Chara.create("elona.healer", 28, 10, nil, map)
-   chara.roles["elona.healer"] = true
+   chara:add_role("elona.healer")
 
    chara = Chara.create("elona.trainer", 15, 10, nil, map)
-   chara.roles["elona.trainer"] = true
+   chara:add_role("elona.trainer")
    chara.name = I18N.get("chara.job.trainer", chara.name)
 
    chara = Chara.create("elona.wizard", 14, 18, nil, map)
-   chara.roles["elona.wizard"] = true
+   chara:add_role("elona.identifier")
 
    chara = Chara.create("elona.blacksmith", 29, 15, nil, map)
-   chara.roles["elona.shopkeeper"] = {inventory_id = "elona.blacksmith"}
+   chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
    chara.shop_rank = 12
    chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
@@ -159,27 +159,27 @@ function mages_guild.on_generate_map()
    map:set_archetype("elona.mages_guild", { set_properties = true })
 
    local chara = Chara.create("elona.revlus", 24, 3, nil, map)
-   chara.roles["elona.special"] = true
+   chara:add_role("elona.special")
 
    chara = Chara.create("elona.wizard", 27, 8, nil, map)
-   chara.roles["elona.shopkeeper"] = {inventory_id="spell_writer"}
-   chara.roles["elona.spell_writer"] = true
+   chara:add_role("elona.shopkeeper", {inventory_id="spell_writer"})
+   chara:add_role("elona.spell_writer")
    chara.name = I18N.get("chara.job.spell_writer", chara.name)
 
    chara = Chara.create("elona.wizard", 22, 8, nil, map)
-   chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+   chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
    chara.shop_rank = 11
    chara.name = I18N.get("chara.job.magic_vendor", chara.name)
 
    chara = Chara.create("elona.healer", 3, 9, nil, map)
-   chara.roles["elona.healer"] = true
+   chara:add_role("elona.healer")
 
    chara = Chara.create("elona.trainer", 12, 6, nil, map)
-   chara.roles["elona.trainer"] = true
+   chara:add_role("elona.trainer")
    chara.name = I18N.get("chara.job.trainer", chara.name)
 
    chara = Chara.create("elona.wizard", 3, 3, nil, map)
-   chara.roles["elona.wizard"] = true
+   chara:add_role("elona.identifier")
 
    for _=1, 16 do
       Chara.create("elona.mage_guild_member", nil, nil, nil, map)

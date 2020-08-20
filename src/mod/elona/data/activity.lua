@@ -713,9 +713,9 @@ local function performance_apply(chara, instrument, audience, activity)
       return
    end
 
-   local date = audience:calc("performance_interest_revive_date")
+   local date = audience:calc("interest_renew_date")
    if World.date_hours() >= date then
-      audience.performance_interest = 100
+      audience.interest = 100
    end
 
    if chara:is_in_fov() then
@@ -726,7 +726,7 @@ local function performance_apply(chara, instrument, audience, activity)
       return
    end
 
-   if audience:calc("performance_interest") <= 0 then
+   if audience:calc("interest") <= 0 then
       return
    end
 
@@ -748,14 +748,14 @@ local function performance_apply(chara, instrument, audience, activity)
 
    if chara:is_player() then
       -- TODO: if temp is active, modify temp. Else, modify base.
-      -- audience:change("performance_interest", -Rand.rnd(15))
-      audience.performance_interest = audience.performance_interest - Rand.rnd(15)
-      audience.performance_interest_revive_date = World.date_hours() + 12
+      -- audience:change("interest", -Rand.rnd(15))
+      audience.interest = audience.interest - Rand.rnd(15)
+      audience.interest_renew_date = World.date_hours() + 12
    end
 
-   if audience:calc("performance_interest") <= 0 then
+   if audience:calc("interest") <= 0 then
       Gui.mes_visible("disinterest", audience.x, audience.y, "SkyBlue")
-      audience:reset("performance_interest", 0)
+      audience:reset("interest", 0)
       return
    end
 

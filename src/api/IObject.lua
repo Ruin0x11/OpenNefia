@@ -41,8 +41,9 @@ function IObject:on_refresh()
    IModdable.on_refresh(self)
 end
 
-function IObject:finalize()
-   self:build()
+function IObject:finalize(build_params)
+   -- TODO this is redundant
+   self:build(build_params)
 end
 
 function IObject:instantiate()

@@ -32,10 +32,10 @@ data:add {
       -- >>>>>>>> shade2/map.hsp:877 	 		if gHomeLevel=0{ ..
       if Sidequest.progress("elona.main_quest") == 0 then
          local chara = Chara.create("elona.larnneire", 18, 10, {}, map)
-         chara.roles = {["elona.special"] = {}}
+         chara:add_role("elona.special")
 
          chara = Chara.create("elona.lomias", 16, 11, {}, map)
-         chara.roles = {["elona.special"] = {}}
+         chara:add_role("elona.special")
 
          local item = Item.create("elona.heir_trunk", 6, 10, {}, map)
          item.count = 3
@@ -143,31 +143,31 @@ data:add {
       local chara
 
       chara = Chara.create("elona.shopkeeper", 31, 20, {}, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.general_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.general_vendor" })
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.general_vendor", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 9, 20, {}, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.blacksmith" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.blacksmith" })
       chara.shop_rank = 12
       chara.name = I18N.get("chara.job.blacksmith", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 4, 20, {}, map)
-      chara.roles["elona.shopkeeper"] = {inventory_id="elona.goods_vendor"}
+      chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
       chara.shop_rank = 10
       chara.name = I18N.get("chara.job.goods_vendor", chara.name)
 
       chara = Chara.create("elona.wizard", 4, 11, {}, map)
-      chara.roles["elona.wizard"] = true
+      chara:add_role("elona.identifier")
 
       chara = Chara.create("elona.bartender", 30, 11, {}, map)
-      chara.roles["elona.bartender"] = true
+      chara:add_role("elona.bartender")
 
       chara = Chara.create("elona.healer", 30, 4, nil, map)
-      chara.roles["elona.healer"] = true
+      chara:add_role("elona.healer")
 
       chara = Chara.create("elona.wizard", 4, 4, nil, map)
-      chara.roles["elona.shopkeeper"] = { inventory_id = "elona.magic_vendor" }
+      chara:add_role("elona.shopkeeper", { inventory_id = "elona.magic_vendor" })
       chara.shop_rank = 11
       chara.name = I18N.get("chara.job.magic_vendor", chara.name)
       -- <<<<<<<< shade2/map.hsp:909 				} ..

@@ -86,7 +86,9 @@ function MapObject.clone_base(obj, owned)
    return new_object
 end
 
-function MapObject.clone(obj, owned)
+function MapObject.clone(obj, owned, uid_tracker)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
+
    local new_object = {}
 
    local ignored_fields = table.set {
@@ -103,6 +105,8 @@ function MapObject.clone(obj, owned)
          end
       end
    end
+
+   new_object.uid = uid_tracker:get_next_and_increment()
 
    local mt = getmetatable(obj)
    setmetatable(new_object, mt)

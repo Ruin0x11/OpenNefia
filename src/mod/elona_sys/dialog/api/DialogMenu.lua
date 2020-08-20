@@ -2,6 +2,8 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Ui = require("api.Ui")
+local Skill = require("mod.elona_sys.api.Skill")
+local Const = require("api.Const")
 
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
@@ -13,7 +15,7 @@ local DialogMenu = class.class("DialogMenu", IUiLayer)
 
 DialogMenu:delegate("input", IInput)
 
-function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, default_choice, is_in_game)
+function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, image_color, default_choice, is_in_game, impression, interest)
    self.width = 600
    self.height = 380
 
@@ -23,9 +25,12 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.speaker_name = speaker_name or ""
    self.portrait = portrait
    self.chara_image = chara_image
+   self.image_color = image_color
    self.default_choice = default_choice
    self.can_cancel = default_choice ~= nil
    self.is_in_game = is_in_game
+   self.impression = impression
+   self.interest = interest
 
    self.chip_batch = nil
    self.portrait_batch = nil
@@ -85,31 +90,50 @@ function DialogMenu:draw()
                            self.y + 125 + height, -- TODO offset_y
                            width * 2,
                            height * 2,
-                           nil,
+                           self.image_color,
                            true)
       self.chip_batch:draw()
    end
 
-   -- NOTE: ignored by Ui.draw_topic
-   Draw.set_font(10) -- 10 - en * 2
-
+   -- >>>>>>>> shade2/chat.hsp:3201  ..
    Ui.draw_topic("talk.window.impress", self.x + 28, self.y + 170)
    Ui.draw_topic("talk.window.attract", self.x + 28, self.y + 215)
 
-   Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-   Draw.text(self.speaker_name, self.x + 120, self.y + 16, {20, 10, 5})
+   Draw.set_font(12, "bold") -- 12 + sizefix
+   Draw.set_color(20, 10, 5)
+   Draw.text(self.speaker_name, self.x + 120, self.y + 16)
 
-   Draw.set_font(13) -- 13 - en * 2
-   -- TODO: impress/interest
-   Draw.text("-", self.x + 60, self.y + 198, {0, 0, 0})
-   Draw.text("-", self.x + 60, self.y + 245, {0, 0, 0})
+   Draw.set_font(13)
+   if self.impression and self.interest then
+      local impression_level = I18N.get("ui.impression._" .. Skill.impression_level(self.impression))
+      local impression_value
+      if self.impression < Const.IMPRESSION_FELLOW then
+         impression_value = tostring(self.impression)
+      else
+         impression_value = "???"
+      end
+      Draw.text(("(%s)%s"):format(impression_value, impression_level), self.x + 32, self.y + 198)
+      if self.interest >= 0 then
+         local icon_count = math.min(math.floor(self.interest / 5 + 1), 20)
+         Draw.set_color(255, 255, 255)
+         for i = 1, icon_count do
+            self.t.base.impression_icon:draw(self.x + 26 + (i - 1) * 4, self.y + 245)
+         end
+      end
+   else
+      Draw.set_color(0, 0, 0)
+      Draw.text("-", self.x + 60, self.y + 198)
+      Draw.text("-", self.x + 60, self.y + 245)
+   end
 
-   Draw.set_font(14) -- 14 - en * 2
+   Draw.set_font(14)
+   Draw.set_color(20, 10, 5)
    for i, line in ipairs(self.wrapped) do
-      Draw.text(line, self.x + 150, self.y + 43 + (i - 1) * 19, {20, 10, 5})
+      Draw.text(line, self.x + 150, self.y + 43 + (i - 1) * 19)
    end
 
    self.pages:draw()
+   -- <<<<<<<< shade2/chat.hsp:3239 	loop ..
 end
 
 function DialogMenu:update()

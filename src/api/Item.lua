@@ -113,7 +113,8 @@ function Item.create(id, x, y, params, where)
    end
 
    local gen_params = {
-      no_build = params.no_build
+      no_build = params.no_build,
+      build_params = params
    }
    local item = MapObject.generate_from("base.item", id)
 
