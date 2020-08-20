@@ -38,4 +38,6 @@ Const.INITIAL_MONTH = 8
 Const.INITIAL_DAY = 12
 -- <<<<<<<< shade2/init.hsp:90 	#define global initDay		12 ..
 
+Const.SKILL_POINT_EXPERIENCE_GAIN = 400
+
 return Const

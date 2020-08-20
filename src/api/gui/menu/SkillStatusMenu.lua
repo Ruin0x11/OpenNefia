@@ -14,9 +14,10 @@ local IUiLayer = require("api.gui.IUiLayer")
 local UiTheme = require("api.gui.UiTheme")
 local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
+local ISettable = require("api.gui.ISettable")
 local InputHandler = require("api.gui.InputHandler")
 
-local SkillStatusMenu = class.class("SkillStatusMenu", { IUiLayer, IPaged })
+local SkillStatusMenu = class.class("SkillStatusMenu", { IUiLayer, IPaged, ISettable })
 
 SkillStatusMenu:delegate("pages", IPaged)
 SkillStatusMenu:delegate("input", IInput)
@@ -243,14 +244,15 @@ function SkillStatusMenu:init(chara, mode, opts)
 
    self.item_count = 0
 
-   local skills = SkillStatusMenu.build_list(chara, self.mode)
-   self.pages = UiList:new_paged(skills, 16)
+   self.pages = UiList:new_paged({}, 16)
 
    table.merge(self.pages, UiListExt(self))
 
    self.input = InputHandler:new()
    self.input:forward_to(self.pages)
    self.input:bind_keys(self:make_keymap())
+
+   self:set_data()
 end
 
 function SkillStatusMenu:make_keymap()
@@ -263,15 +265,21 @@ function SkillStatusMenu:make_keymap()
          if entry.kind == "skill" then
             if save.base.tracked_skill_ids[entry._id] then
                save.base.tracked_skill_ids[entry._id] = nil
-               entry.name = I18N.get("ability." .. entry._id .. ".name")
             else
                save.base.tracked_skill_ids[entry._id] = true
-               entry.name = "*" .. I18N.get("ability." .. entry._id .. ".name")
             end
             Gui.play_sound("base.ok1")
+            self:set_data()
          end
       end,
    }
+end
+
+function SkillStatusMenu:set_data(chara)
+   self.chara = chara or self.chara
+
+   local skills = SkillStatusMenu.build_list(self.chara, self.mode)
+   self.pages:set_data(skills)
 end
 
 function SkillStatusMenu:relayout(x, y)
@@ -287,7 +295,7 @@ function SkillStatusMenu:draw()
    Draw.set_color(0, 0, 0)
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
    if self.show_bonus then
-      local tips = "You can spend " .. 10 .. " bonus points."
+      local tips = I18N.get("ui.chara_sheet.you_can_spend_bonus", self.chara.skill_bonus)
       Draw.text(tips, self.x + self.width - Draw.text_width(tips) - 140, self.y + self.height - 24 - self.height % 8)
    end
 

@@ -97,8 +97,8 @@ function UiPagedContainer:draw()
 end
 
 function UiPagedContainer:update(dt)
-   self:current_sublayer():update(dt)
    self.changed_page = false
+   return self:current_sublayer():update(dt)
 end
 
 return UiPagedContainer

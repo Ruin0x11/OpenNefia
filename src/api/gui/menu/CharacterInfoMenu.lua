@@ -1,6 +1,10 @@
 local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Ui = require("api.Ui")
+local save = require("internal.global.save")
+local config = require("internal.config")
+local Skill = require("mod.elona_sys.api.Skill")
+local Const = require("api.Const")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -78,11 +82,42 @@ function CharacterInfoMenu:draw()
    Draw.text(page_str, self.x + self.width - Draw.text_width(page_str) - 40, self.y + self.height - 24 - self.height % 8)
 end
 
+function CharacterInfoMenu.apply_skill_point(chara, skill_id)
+   -- >>>>>>>> shade2/command.hsp:2737 		if sORG(csSkill,pc)=0:snd seFail1:goto *com_char ..
+   Skill.gain_skill_exp(chara, skill_id, Const.SKILL_POINT_EXPERIENCE_GAIN)
+   Skill.modify_potential(chara, skill_id, math.floor(15 - chara:skill_potential(skill_id) / 15, 2, 15))
+   -- <<<<<<<< shade2/command.hsp:2743 		goto *com_charaInfo_loop ..
+end
+
 function CharacterInfoMenu:update(dt)
    if self.canceled then
       return nil, "canceled"
    end
 
+   local result = self.sublayers:update(dt)
+
+   if result then
+      local sublayer = self.sublayers:current_sublayer()
+      if class.is_an(SkillStatusMenu, sublayer) then
+         if self.mode == "chara_status"
+            and result.kind == "skill"
+            and self.chara.skill_bonus > 0
+         then
+            if not self.chara:has_skill(result._id) then
+               Gui.play_sound("base.fail1")
+            else
+               Gui.play_sound("base.spend1")
+               CharacterInfoMenu.apply_skill_point(self.chara, result._id)
+
+               if not config["base.debug_infinite_skill_points"] then
+                  self.chara.skill_bonus = self.chara.skill_bonus - 1
+               end
+
+               sublayer:set_data(self.chara)
+            end
+         end
+      end
+   end
 end
 
 return CharacterInfoMenu
