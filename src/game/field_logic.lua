@@ -48,6 +48,7 @@ function field_logic.quickstart()
    assert(save.base.scenario)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
+   me:emit("base.on_finalize_player")
    field_logic.setup_new_game(me)
 
    Gui.mes("Quickstarted game.")
@@ -236,7 +237,7 @@ function field_logic.pass_turns()
    if chara:has_activity() then
       local turn_result = chara:pass_activity_turn()
       if turn_result then
-         return turn_result
+         return turn_result, chara
       end
    end
 

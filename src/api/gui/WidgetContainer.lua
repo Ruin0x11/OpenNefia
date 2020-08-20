@@ -46,7 +46,8 @@ function WidgetContainer:add(widget, tag, opts)
    self.holders[idx] = WidgetHolder:new(widget,
                                         tag,
                                         opts.z_order or widget:default_widget_z_order(),
-                                        opts.position or nil)
+                                        opts.position or nil,
+                                        opts.refresh or nil)
 
    self:update_sorting()
 end
@@ -74,12 +75,21 @@ end
 
 function WidgetContainer:relayout(x, y, width, height)
    for _, holder in self:iter() do
-      local position = holder:position() or holder:widget().default_widget_position
-      local _x, _y, _width, _height = position(self.widget, x, y, width, height)
+      local widget = holder:widget()
+      local position = holder:position() or widget.default_widget_position
+      local _x, _y, _width, _height = position(widget, x, y, width, height)
 
       holder:widget():relayout(_x, _y, _width, _height)
    end
    self:update_sorting()
+end
+
+function WidgetContainer:refresh(player)
+   for _, holder in self:iter() do
+      local widget = holder:widget()
+      local refresh = holder:refresh() or widget.default_widget_refresh
+      refresh(widget, player)
+   end
 end
 
 function WidgetContainer:draw()

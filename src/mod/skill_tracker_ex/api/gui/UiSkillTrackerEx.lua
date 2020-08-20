@@ -6,6 +6,7 @@ local I18N = require("api.I18N")
 local Ui = require("api.Ui")
 local ColorBand = require("mod.skill_tracker_ex.api.gui.ColorBand")
 local LogWidget = require("mod.tools.api.gui.LogWidget")
+local UiShadowedText = require("api.gui.UiShadowedText")
 
 local UiSkillTrackerEx = class.class("UiSkillTrackerEx", {IUiWidget, ISettable})
 
@@ -28,33 +29,55 @@ function UiSkillTrackerEx:init()
    self.log_widget = LogWidget:new(4.0, 1.0)
 end
 
+function UiSkillTrackerEx:default_widget_refresh(player)
+   self:set_data(player)
+end
+
+function UiSkillTrackerEx:default_widget_position(x, y, width, height)
+   return x, y + 155
+end
+
 function UiSkillTrackerEx:set_data(player)
    self.player_uid = player.uid
 
-   local tracked_ids = save.base.tracked_skill_ids or {}
+   local tracked_ids = table.keys(save.base.tracked_skill_ids or {})
 
-   local function map(i)
-      local skill = data["base.skill"]:ensure(i)
+   local function map(skill_id)
+      local skill = data["base.skill"]:ensure(skill_id)
+
+      local potential = player:skill_potential(skill_id)
+      local color = self.gradient:evaluate(potential / 400.0)
+
+      local name = utf8.sub(I18N.get("ability." .. skill_id .. ".name"), 0, 14)
+
+      local desc = ("%d.%03d (%d%%)"):format(player:base_skill_level(skill_id),
+                                             player:skill_experience(skill_id) % 1000,
+                                             potential)
+      if skill.type == "spell" then
+         desc = desc .. (" [%d]"):format(player:spell_stock(skill_id))
+      end
+
       return {
-         _id = i,
-         name = utf8.sub(I18N.get("ability." .. i .. ".name"), 0, 14),
-         icon = Ui.skill_icon(i),
+         _id = skill_id,
+         name_text = UiShadowedText:new(name, 13, color),
+         desc_text = UiShadowedText:new(desc, 13, color),
+         icon = Ui.skill_icon(skill_id),
          type = skill.type
       }
    end
 
    local tracked_pairs = fun.iter(tracked_ids)
-      :filter(function(i) return player:has_skill(i) end)
+   :filter(function(skill_id) return player:has_skill(skill_id) end)
       :map(map)
       :to_list()
 
    self.tracked_skill_ids = {
       [self.player_uid] = tracked_pairs
    }
-end
 
-function UiSkillTrackerEx:default_widget_position(x, y, width, height)
-   return x + 16, y + 155
+   if self.x and self.y then
+      self:relayout(self.x, self.y)
+   end
 end
 
 function UiSkillTrackerEx:relayout(x, y)
@@ -66,7 +89,7 @@ function UiSkillTrackerEx:relayout(x, y)
    self.gradient = ColorBand:new(COLORS)
    self.exp_gradient = ColorBand:new(EXP_COLORS)
    if self.player_uid and self.tracked_skill_ids[self.player_uid] then
-      self.log_widget:relayout(self.x, self.y + self.text_height * table.count(self.tracked_skill_ids[self.player_uid]) + 10, self.y, 200, 200)
+      self.log_widget:relayout(self.x + 24, self.y + self.log_widget.padding + self.text_height * (table.count(self.tracked_skill_ids[self.player_uid]) - 1), self.y, 200, 200)
    end
 end
 
@@ -99,20 +122,14 @@ function UiSkillTrackerEx:draw()
          for _, entry in ipairs(tracked) do
             if entry.icon then
                Draw.set_color(255, 255, 255)
-               self.t.base.skill_icons:draw_region(entry.icon, self.x - 16, y - 16)
-            end
-            local potential = chara:skill_potential(entry._id)
-            local color = self.gradient:evaluate(potential / 400.0)
-            Draw.text_shadowed(entry.name, self.x + 16, y, color)
-
-            local desc = ("%d.%03d (%d%%)"):format(chara:base_skill_level(entry._id),
-                                                   chara:skill_experience(entry._id) % 1000,
-                                                   potential)
-            if entry.type == "spell" then
-               desc = desc .. (" [%d]"):format(chara:spell_stock(entry._id))
+               self.t.base.skill_icons:draw_region(entry.icon, self.x, y - 16)
             end
 
-            Draw.text_shadowed(desc, self.x + 16 + 104, y, color)
+            entry.name_text:relayout(self.x + 34, y)
+            entry.name_text:draw()
+
+            entry.desc_text:relayout(self.x + 34 + 104, y)
+            entry.desc_text:draw()
 
             y = y + self.text_height
          end

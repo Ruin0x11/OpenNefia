@@ -1,10 +1,9 @@
-local Draw = require("api.Draw")
-local Input = require("api.Input")
 local IPaged = require("api.gui.IPaged")
 local ISettable = require("api.gui.ISettable")
 local IUiLayer = require("api.gui.IUiLayer")
+local IUiElement = require("api.gui.IUiElement")
 
-local UiPagedContainer = class.class("UiPagedContainer", {ISettable, IPaged, IUiLayer})
+local UiPagedContainer = class.class("UiPagedContainer", {ISettable, IPaged, IUiElement})
 
 -- @return a mapping from page number to the sublayer layer and its
 -- inner page, if any.
@@ -16,65 +15,49 @@ local function calculate_page_handlers(sublayers)
       if class.is_an(IPaged, layer) then
          size = layer.page_max
       else
-         size = 1
+         size = 0
       end
-      for i=1,size do
+      for i=0,size do
+         -- TODO: PagedListModel should be 1-indexed instead of 0-indexed
          page_handlers[index] = { layer = layer, page = i }
          index = index + 1
       end
    end
-   return page_handlers
+   return page_handlers, index - 1
 end
 
-function UiPagedContainer:init(x, y, width, height, sublayers)
+function UiPagedContainer:init(sublayers)
+   self.sublayers = sublayers
+   self.page = 1
+   self.page_handlers, self.page_max = calculate_page_handlers(sublayers)
+   self.page_size = 1
+   self.changed_page = true
+
+   self:set_data()
+end
+
+function UiPagedContainer:relayout(x, y, width, height)
    self.x = x
    self.y = y
    self.width = width
    self.height = height
 
-   self.sublayers = sublayers
-   self.page = 1
-   self.page_handlers = calculate_page_handlers(sublayers)
-   self.page_max = #self.page_handlers
-   self.page_size = 1
-
-   self:set_data()
-end
-
-function UiPagedContainer:bind()
-end
-
-function UiPagedContainer:focus()
-   self:current_sublayer():focus()
-end
-
-function UiPagedContainer:relayout(x, y, width, height)
-   self:current_sublayer():relayout(x, y, width, height)
+   for _, sublayer in ipairs(self.sublayers) do
+      sublayer:relayout(self.x, self.y, self.width, self.height)
+   end
 end
 
 function UiPagedContainer:set_data(sublayers)
    self.sublayers = sublayers or self.sublayers
 
-   for _, layer in pairs(sublayers) do
+   for _, layer in pairs(self.sublayers) do
       class.assert_is_an(IUiLayer, layer)
-      layer.x = self.x
-      layer.y = self.y
-      layer.width = self.width
-      layer.height = self.height
    end
 
-   self.page_max = #self.sublayers
+   self.page_handlers, self.page_max = calculate_page_handlers(self.sublayers)
    self.page_size = 1
 
    self:select_page(1)
-end
-
-function UiPagedContainer:update(dt)
-   self:current_sublayer():update(dt)
-end
-
-function UiPagedContainer:draw()
-   self:current_sublayer():draw()
 end
 
 function UiPagedContainer:current_sublayer()
@@ -86,11 +69,12 @@ function UiPagedContainer:select_page(page)
    self.page = page or self.page
 
    local layer, inner_page = self:current_sublayer()
-   layer:relayout(self.x, self.y, self.width, self.height)
 
    if class.is_an(IPaged, layer) then
       layer:select_page(inner_page)
    end
+
+   self.changed_page = true
 end
 
 function UiPagedContainer:next_page()
@@ -107,6 +91,15 @@ function UiPagedContainer:previous_page()
       page = self.page_max
    end
    self:select_page(page)
+end
+
+function UiPagedContainer:draw()
+   self:current_sublayer():draw()
+end
+
+function UiPagedContainer:update(dt)
+   self.changed_page = false
+   return self:current_sublayer():update(dt)
 end
 
 return UiPagedContainer

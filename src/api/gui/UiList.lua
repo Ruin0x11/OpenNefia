@@ -144,11 +144,22 @@ end
 
 function UiList:update()
    -- HACK: shouldn't have to keep track of update here.
-   self.changed = false
-   self.chosen = false
+   local result = nil
+
+   if self.changed then
+      self.changed = false
+      result = "changed"
+   end
+   if self.chosen then
+      self.chosen = false
+      result = "chosen"
+   end
+
    if class.is_an(IPaged, self.model) then
       self.changed_page = false
    end
+
+   return result
 end
 
 return UiList

@@ -3,8 +3,6 @@ local Gui = require("api.Gui")
 local Ui = require("api.Ui")
 
 local ChangeAppearanceMenu = require("api.gui.menu.ChangeAppearanceMenu")
-local Chara = require("api.Chara")
-local CharaMake = require("api.CharaMake")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local InputHandler = require("api.gui.InputHandler")
@@ -21,7 +19,7 @@ local CharacterSheetMenu = class.class("CharacterSheetMenu", { IUiLayer, ISettab
 
 CharacterSheetMenu:delegate("input", IInput)
 
-function CharacterSheetMenu:init(behavior, chara)
+function CharacterSheetMenu:init(chara)
    self.width = 700
    self.height = 400
    self.chara = chara
@@ -38,8 +36,6 @@ function CharacterSheetMenu:init(behavior, chara)
 
    self.chip_batch = nil
    self.portrait_batch = nil
-
-   self.caption = "chara_make.final_screen.caption"
 
    self:set_data()
 end
@@ -284,9 +280,8 @@ function CharacterSheetMenu:text_fame()
 end
 
 function CharacterSheetMenu:relayout(x, y)
-   self.x, self.y = Ui.params_centered(self.width, self.height)
-   self.x = self.x + x
-   self.y = self.y + y
+   self.x = x
+   self.y = y
    self.t = UiTheme.load(self)
 
    self.topic_win:relayout(self.x + 557, self.y + 23, 87, 120)

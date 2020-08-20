@@ -4,6 +4,7 @@ local ISettable = require("api.gui.ISettable")
 local IUiElement = require("api.gui.IUiElement")
 local Ui = require("api.Ui")
 local UiTheme = require("api.gui.UiTheme")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local data = require("internal.data")
 
@@ -73,21 +74,6 @@ local ATTRIBUTES = {
    "elona.stat_charisma",
 }
 
-local WEAPON_SKILLS = {
-   "elona.long_sword",
-   "elona.short_sword",
-   "elona.axe",
-   "elona.blunt",
-   "elona.polearm",
-   "elona.stave",
-   "elona.martial_arts",
-   "elona.scythe",
-   "elona.bow",
-   "elona.crossbow",
-   "elona.firearm",
-   "elona.throwing",
-}
-
 local function right_pad(str, amount)
    local len = utf8.wide_len(str)
    local count = math.max(amount - len, 0)
@@ -151,9 +137,9 @@ function UiRaceInfo:draw()
    local skill_text = I18N.get("chara_make.select_race.race_info.trained_skill.proficient_in")
    skill_text = right_pad(skill_text, pad_size)
 
-   for _, skill_id in ipairs(WEAPON_SKILLS) do
-      local skill_name = I18N.get("ability." .. skill_id .. ".name")
-      local skill_level = self.race.proto.skills[skill_id] or 0
+   for _, proto in Skill.iter_weapon_proficiencies() do
+      local skill_name = I18N.get("ability." .. proto._id .. ".name")
+      local skill_level = self.race.proto.skills[proto._id] or 0
       if skill_level > 0 then
          if skill_count == 0 then
             skill_text = skill_text .. skill_name
@@ -179,13 +165,7 @@ function UiRaceInfo:draw()
       rows = 1
    end
 
-   local is_normal_skill = function(proto)
-      return proto.type == nil or proto.type == "skill"
-   end
-
-   local all_skills = data["base.skill"]:iter():filter(is_normal_skill)
-
-   for _, proto in all_skills:unwrap() do
+   for _, proto in Skill.iter_normal_skills() do
       local skill_level = self.race.proto.skills[proto._id] or 0
       if skill_level > 0 then
          local skill_name = I18N.get("ability." .. proto._id .. ".name")

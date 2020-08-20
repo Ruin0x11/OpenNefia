@@ -4,6 +4,7 @@ local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
 local DateTime = require("api.DateTime")
 local World = require("api.World")
+local save = require("internal.global.save")
 
 local UiClock = class.class("UiClock", {IUiWidget, ISettable})
 
@@ -11,12 +12,16 @@ function UiClock:init()
    self.date = DateTime:new()
 end
 
-function UiClock:set_data(date)
-   self.date = date
-end
-
 function UiClock:default_widget_position(x, y, width, height)
    return x, y
+end
+
+function UiClock:default_widget_refresh()
+   self:set_data(save.base.date)
+end
+
+function UiClock:set_data(date)
+   self.date = date
 end
 
 function UiClock:relayout(x, y)

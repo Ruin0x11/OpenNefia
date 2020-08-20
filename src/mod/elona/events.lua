@@ -738,7 +738,8 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then
       local Calc = require("mod.elona.api.Calc")
-      --Calc.respawn_mobs()
+      -- TODO
+      -- Calc.respawn_mobs()
    end
 end
 
@@ -919,6 +920,7 @@ local function init_save()
    s.fire_giant_uid = nil
    s.home_rank = "elona.cave"
    s.flag_has_met_ally = false
+   s.total_skills_learned = 0
    s.waiting_guests = 0
 end
 

@@ -19,6 +19,10 @@ function UiLevel:default_widget_position(x, y, width, height)
    return x + 4, height - (72 + 16) - 16
 end
 
+function UiLevel:default_widget_refresh(player)
+   self:set_data(player:calc("level"), player.experience)
+end
+
 function UiLevel:default_widget_z_order()
    return 75000
 end

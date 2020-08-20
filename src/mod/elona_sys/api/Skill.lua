@@ -25,7 +25,15 @@ function Skill.iter_resistances()
 end
 
 function Skill.iter_skills()
-   return data["base.skill"]:iter():filter(function(s) return s.type == nil or s.type == "skill" end)
+   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" or s.type == "weapon_proficiency" end)
+end
+
+function Skill.iter_normal_skills()
+   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" end)
+end
+
+function Skill.iter_weapon_proficiencies()
+   return data["base.skill"]:iter():filter(function(s) return s.type == "weapon_proficiency" end)
 end
 
 function Skill.random_stat()

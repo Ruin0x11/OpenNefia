@@ -37,6 +37,8 @@ config["base.themes"] = {}
 config["base.debug_autoidentify"] = false
 config["base.debug_no_weight"] = false
 config["base.debug_default_seed"] = nil
+config["base.debug_show_all_skills"] = false
+config["base.debug_infinite_skill_points"] = false
 config["base.development_mode"] = false
 config["base.enable_native_libs"] = true
 

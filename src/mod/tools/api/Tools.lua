@@ -602,8 +602,8 @@ function Tools.chara_sheet()
       return
    end
 
-   local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
-   CharacterSheetMenu:new(nil, chara):query()
+   local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
+   CharacterInfoMenu:new(chara):query()
 end
 
 function Tools.memorize_map()

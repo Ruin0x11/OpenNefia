@@ -12,10 +12,10 @@ local Prompt = require("api.gui.Prompt")
 local I18N = require("api.I18N")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local WindowTitle = require("api.gui.menu.WindowTitle")
 local CharaMake = require("api.CharaMake")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 
 local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeSection)
 
@@ -26,7 +26,7 @@ function CharacterFinalizeMenu:init(charamake_data)
 
    local chara = self.charamake_data.chara
    self.skills = table.deepcopy(chara.skills)
-   self.inner = CharacterSheetMenu:new(nil, chara)
+   self.inner = CharacterInfoMenu:new(nil, chara)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
@@ -55,8 +55,7 @@ function CharacterFinalizeMenu:on_query()
    self.canceled = false
 end
 
--- TODO: move this into an event, to be shared by multiple scenarios.
-function CharacterFinalizeMenu.finalize_chara(chara)
+local function finalize_player(chara)
    -- >>>>>>>> shade2/chara.hsp:539 *cm_finishPC ..
    chara.quality = Enum.Quality.Normal
    Item.create("elona.cargo_travelers_food", nil, nil, {amount=8}, chara)
@@ -83,6 +82,12 @@ function CharacterFinalizeMenu.finalize_chara(chara)
 
    chara:refresh()
    -- <<<<<<<< shade2/chara.hsp:579 	return ..
+end
+
+Event.register("base.on_finalize_player", "Default finalize player", finalize_player)
+
+function CharacterFinalizeMenu.finalize_chara(chara)
+   chara:emit("base.on_finalize_player")
 end
 
 function CharacterFinalizeMenu:reroll(play_sound)

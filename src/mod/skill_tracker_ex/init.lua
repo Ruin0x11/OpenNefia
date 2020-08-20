@@ -6,7 +6,7 @@ local Chara = require("api.Chara")
 config["skill_tracker_ex.enabled"] = true
 
 local function setup_skill_tracker_ex()
-   save.base.tracked_skill_ids = {
+   save.base.tracked_skill_ids = table.set {
       "elona.bow",
       "elona.evasion",
       "elona.eye_of_mind",

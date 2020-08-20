@@ -162,7 +162,7 @@ function EquipmentMenu:update_from_chara()
       damage_bonus = self.chara:calc("damage_bonus"),
    }
 
-   Gui.update_hud()
+   Gui.refresh_hud()
 end
 
 function EquipmentMenu:on_query()

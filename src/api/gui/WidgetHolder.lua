@@ -2,11 +2,12 @@ local IUiWidget = require("api.gui.IUiWidget")
 
 local WidgetHolder = class.class("WidgetHolder")
 
-function WidgetHolder:init(widget, tag, z_order, position)
+function WidgetHolder:init(widget, tag, z_order, position, refresh)
    class.assert_is_an(IUiWidget, widget)
    self._tag = tag
    self._z_order = z_order or 0
    self._position = position
+   self._refresh = refresh
    self._widget = widget
    self._enabled = true
 end
@@ -39,6 +40,15 @@ end
 function WidgetHolder:set_position(position)
    self.updated = true
    self._position = position
+end
+
+function WidgetHolder:refresh()
+   return self._refresh
+end
+
+function WidgetHolder:set_refresh(refresh)
+   self.updated = true
+   self._refresh = refresh
 end
 
 function WidgetHolder:remove()

@@ -33,16 +33,22 @@ function MainHud:init()
    self.widgets:add(UiMinimap:new(), "hud_minimap")
    self.widgets:add(UiBuffs:new(), "hud_buffs")
 
-   local position
+   local position, refresh
    position = function(self, x, y, width, height)
       return math.floor((width - 84) / 2) - 100, height - (72 + 16) - 12
    end
-   self.widgets:add(UiBar:new("hud_hp_bar", 0, 0, true), "hud_hp_bar", { position = position })
+   refresh = function(self, player)
+      self:set_data(player.hp, player:calc("max_hp"))
+   end
+   self.widgets:add(UiBar:new("hud_hp_bar", 0, 0, true), "hud_hp_bar", { position = position, refresh = refresh })
 
    position = function(self, x, y, width, height)
       return math.floor((width - 84) / 2) + 40, height - (72 + 16) - 12
    end
-   self.widgets:add(UiBar:new("hud_mp_bar", 0, 0, true), "hud_mp_bar", { position = position })
+   refresh = function(self, player)
+      self:set_data(player.mp, player:calc("max_mp"))
+   end
+   self.widgets:add(UiBar:new("hud_mp_bar", 0, 0, true), "hud_mp_bar", { position = position, refresh = refresh })
 
    self.widgets:add(UiFpsCounter:new(), "fps_counter")
 end
@@ -60,25 +66,12 @@ function MainHud:relayout(x, y, width, height)
    self.widgets:relayout(self.x, self.y, self.width, self.height)
 end
 
-function MainHud:set_date(date)
-   self.widgets:get("hud_clock"):set_data(date)
-end
-
-function MainHud:update_from_player(player)
+function MainHud:refresh(player)
    if player == nil then
       return
    end
 
-   -- TODO These should get called when Gui.update_screen() gets called.
-   self.widgets:get("hud_hp_bar"):widget():set_data(player.hp, player:calc("max_hp"))
-   self.widgets:get("hud_mp_bar"):widget():set_data(player.mp, player:calc("max_mp"))
-   self.widgets:get("hud_level"):widget():set_data(player.level, player.experience)
-   self.widgets:get("hud_status_effects"):widget():set_data()
-   self.widgets:get("hud_stats_bar"):widget():set_data(player)
-   self.widgets:get("hud_clock"):widget():set_data(save.base.date)
-   self.widgets:get("hud_minimap"):widget():refresh_visible()
-   self.widgets:get("hud_skill_tracker"):widget():set_data(player)
-   self.widgets:get("hud_buffs"):widget():set_data(player)
+   self.widgets:refresh(player)
 end
 
 function MainHud:draw()

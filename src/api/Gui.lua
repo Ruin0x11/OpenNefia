@@ -46,8 +46,8 @@ end
 
 --- Updates the HUD. Call this if you change anything that might need
 --- to be reflected in the HUD, such as player equipment.
-function Gui.update_hud()
-   field:update_hud()
+function Gui.refresh_hud()
+   field:refresh_hud()
 end
 
 --- Returns the screen coordinates of the tilemap renderer.
@@ -386,7 +386,7 @@ end
 --- Starts a new line in the HUD message window.
 -- TODO: just use \n inline
 function Gui.mes_newline()
-   field:get_message_window():newline()
+   field:get_message_window():do_newline()
    newline = true
 end
 

@@ -254,9 +254,8 @@ return {
          },
          skill = {
             detail = "効果",
-            level = "Lv",
+            level = "Lv(潜在)",
             name = "能力の名称",
-            potential = "潜在",
             resist = function(_1)
                return ("%s耐性")
                   :format(_1)
