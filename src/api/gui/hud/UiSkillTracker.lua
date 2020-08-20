@@ -11,6 +11,14 @@ function UiSkillTracker:init()
    self.tracked_skill_ids = {}
 end
 
+function UiSkillTracker:default_widget_position(x, y, width, height)
+   return x + 16, y + 155
+end
+
+function UiSkillTracker:default_widget_refresh(player)
+   self:set_data(player)
+end
+
 function UiSkillTracker:set_data(player)
    self.tracked_skill_ids = {}
 
@@ -24,10 +32,6 @@ function UiSkillTracker:set_data(player)
       :to_list()
 
    self.tracked_skill_ids[self.player_uid] = tracked_pairs
-end
-
-function UiSkillTracker:default_widget_position(x, y, width, height)
-   return x + 16, y + 155
 end
 
 function UiSkillTracker:relayout(x, y)

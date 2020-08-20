@@ -20,6 +20,10 @@ function UiBar:recalc_inner_width()
    self.inner_width = math.min(math.floor(self.value * 84 / self.max), 100)
 end
 
+function UiBar:default_widget_refresh(player)
+   self:set_data(1, 1)
+end
+
 function UiBar:default_widget_z_order()
    return 80000
 end

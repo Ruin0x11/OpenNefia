@@ -28,6 +28,14 @@ function UiSkillTrackerEx:init()
    self.log_widget = LogWidget:new(4.0, 1.0)
 end
 
+function UiSkillTrackerEx:default_widget_refresh(player)
+   self:set_data(player)
+end
+
+function UiSkillTrackerEx:default_widget_position(x, y, width, height)
+   return x + 16, y + 155
+end
+
 function UiSkillTrackerEx:set_data(player)
    self.player_uid = player.uid
 
@@ -51,10 +59,6 @@ function UiSkillTrackerEx:set_data(player)
    self.tracked_skill_ids = {
       [self.player_uid] = tracked_pairs
    }
-end
-
-function UiSkillTrackerEx:default_widget_position(x, y, width, height)
-   return x + 16, y + 155
 end
 
 function UiSkillTrackerEx:relayout(x, y)

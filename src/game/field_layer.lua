@@ -119,7 +119,7 @@ function field_layer:set_camera_pos(x, y)
    self.camera_y = y
    self.renderer:update_draw_pos(x, y, 0)
    self.renderer:update(0)
-   self:update_hud()
+   self:refresh_hud()
 end
 
 function field_layer:update_screen(scroll, dt)
@@ -169,7 +169,7 @@ function field_layer:update_screen(scroll, dt)
          dt = coroutine.yield() or 0
       end
 
-      self:update_hud()
+      self:refresh_hud()
    end
 
    self.no_scroll = false
@@ -184,9 +184,9 @@ function field_layer:player_is_running()
    return self.keys.keys.pressed["shift"]
 end
 
-function field_layer:update_hud()
+function field_layer:refresh_hud()
    local player = self.player
-   self.hud:update_from_player(player)
+   self.hud:refresh(player)
 end
 
 

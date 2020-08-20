@@ -13,6 +13,10 @@ function UiStatsBar:init()
    self.stat_adjusts = {}
 end
 
+function UiStatsBar:default_widget_refresh(player)
+   self:set_data(player)
+end
+
 function UiStatsBar:set_data(player)
    self.stats["dv"] = player:calc("dv")
    self.stats["pv"] = player:calc("pv")

@@ -29,6 +29,10 @@ local function make_status_indicators(_, params, result)
    return result
 end
 
+function UiStatusEffects:default_widget_refresh(player)
+   self:set_data(player)
+end
+
 local hook_make_status_indicators =
    Event.define_hook("make_status_indicators",
                      "Gets the list of status indicators to display.",
@@ -36,11 +40,10 @@ local hook_make_status_indicators =
    nil,
    make_status_indicators)
 
-function UiStatusEffects:set_data()
+function UiStatusEffects:set_data(player)
    self.indicators = {}
     -- TODO: allow source in hook
-   local Chara = require("api.Chara")
-   local raw = hook_make_status_indicators({chara=Chara.player()})
+   local raw = hook_make_status_indicators({chara=player})
 
    for _, ind in ipairs(raw) do
       if type(ind) == "table" then

@@ -165,7 +165,7 @@ function Chara.set_player(chara)
    c:heal_to_max()
    c:refresh()
 
-   field.hud:update_from_player(c)
+   field.hud:refresh(c)
 end
 
 --- Returns true if this character is in the alive state. Will also

@@ -94,7 +94,7 @@ function ElonaAction.ranged_attack(chara, target, weapon, ammo)
       if enc then
          if enc.params.ammo_current <= 0 then
             Gui.mes("action.ranged.load_normal_ammo")
-            enc.params.ammo_loaded = nil
+            ammo.params.ammo_loaded = nil
          else
             -- get the `base.ammo_enchantment` ID of this InstancedEnchantment
             ammo_enchantment_id = enc.params.ammo_enchantment_id

@@ -17,13 +17,13 @@ function UiDigitalClock:default_widget_position(x, y, width, height)
    return x + 16, y + 16
 end
 
-function UiDigitalClock:default_widget_z_order()
-   return 75000
-end
-
-function UiDigitalClock:on_refresh_screen()
+function UiDigitalClock:default_widget_refresh()
    self.date = World.date()
    self.time_of_day_text = World.time_to_text(self.date.hour)
+end
+
+function UiDigitalClock:default_widget_z_order()
+   return 75000
 end
 
 function UiDigitalClock:relayout(x, y)
@@ -76,8 +76,6 @@ function UiDigitalClock:draw()
 end
 
 function UiDigitalClock:update(dt)
-   -- TODO hud
-   self:on_refresh_screen()
    self.frame = self.frame + dt
 end
 

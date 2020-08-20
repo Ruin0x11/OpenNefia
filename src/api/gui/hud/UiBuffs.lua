@@ -14,6 +14,10 @@ function UiBuffs:default_widget_position(x, y, width, height)
    return width - 40, height - (72 + 16) - 40
 end
 
+function UiBuffs:default_widget_refresh(player)
+   self:set_data(player)
+end
+
 function UiBuffs:default_widget_z_order()
    return 75000
 end
