@@ -27,10 +27,13 @@ local function level_up()
            end)
 
    Skill.gain_skill(player, "elona.mining", 10000)
+   player:mod_base_skill_level("elona.healing", 100, "set")
+   player:mod_base_skill_level("elona.meditation", 100, "set")
 
    player.gold = 10000000
    player.platinum = 10000
 
+   player:refresh()
    player:heal_to_max()
 end
 
