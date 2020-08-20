@@ -55,8 +55,7 @@ function CharacterFinalizeMenu:on_query()
    self.canceled = false
 end
 
--- TODO: move this into an event, to be shared by multiple scenarios.
-function CharacterFinalizeMenu.finalize_chara(chara)
+local function finalize_player(chara)
    -- >>>>>>>> shade2/chara.hsp:539 *cm_finishPC ..
    chara.quality = Enum.Quality.Normal
    Item.create("elona.cargo_travelers_food", nil, nil, {amount=8}, chara)
@@ -83,6 +82,12 @@ function CharacterFinalizeMenu.finalize_chara(chara)
 
    chara:refresh()
    -- <<<<<<<< shade2/chara.hsp:579 	return ..
+end
+
+Event.register("base.on_finalize_player", "Default finalize player", finalize_player)
+
+function CharacterFinalizeMenu.finalize_chara(chara)
+   chara:emit("base.on_finalize_player")
 end
 
 function CharacterFinalizeMenu:reroll(play_sound)

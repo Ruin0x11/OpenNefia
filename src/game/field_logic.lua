@@ -48,6 +48,7 @@ function field_logic.quickstart()
    assert(save.base.scenario)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
+   me:emit("base.on_finalize_player")
    field_logic.setup_new_game(me)
 
    Gui.mes("Quickstarted game.")
