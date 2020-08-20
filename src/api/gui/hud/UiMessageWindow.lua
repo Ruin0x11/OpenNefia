@@ -17,6 +17,7 @@ function UiMessageWindow:init()
 
    self.y_offset = 0
    self.current_width = 0
+   self.padding = 0
    self.canvas = nil
    self.redraw = true
    self.is_new_turn = true
@@ -47,7 +48,8 @@ function UiMessageWindow:relayout(x, y, width, height)
    self.first_index = 1
    self.the_width = 0
 
-   Draw.set_font(14) -- 14 - en * 2
+   Draw.set_font(14)
+   self.padding = Draw.text_width(" ")
    self.max_lines = math.floor(self.height / Draw.text_height()) - 1
    self.y_offset = -(self.height % Draw.text_height())
    self.each_line = CircularBuffer:new(self.max_lines)
@@ -58,16 +60,15 @@ function UiMessageWindow:relayout(x, y, width, height)
 end
 
 function UiMessageWindow:draw_one_text(text, color, x, y)
-   local max_width, wrapped = Draw.wrap_text(text, self.width - self.the_width)
+   local max_width, wrapped = Draw.wrap_text(text, self.width - self.padding - self.the_width)
    Draw.text(wrapped[1], x, y)
    self.the_width = self.the_width + Draw.text_width(wrapped[1])
    x = self.the_width
-   local width_remain = self.width - self.the_width
 
    if #wrapped > 1 then
       local rest = string.strip_prefix(text, wrapped[1])
       self.the_width = 0
-      max_width, wrapped = Draw.wrap_text(rest, self.width - self.the_width)
+      max_width, wrapped = Draw.wrap_text(rest, self.width - self.padding - self.the_width)
       for i=1,#wrapped do
          x = 0
          y = y + Draw.text_height()
@@ -99,7 +100,7 @@ function UiMessageWindow:push_text(text, color)
    for _, s in utf8.chars(text) do
       -- TODO: handle halfwidth text wrapping (English)
       local width = Draw.text_width(s)
-      if first.width + width > self.width then
+      if first.width + width > self.width - self.padding then
          first.text[#first.text+1] = {color = color, text = work, width = first.width}
          self:newline()
          first = self.each_line:get(1)
@@ -141,9 +142,9 @@ end
 function UiMessageWindow:calc_start_offset()
    -- NOTE: The global font has to be set now for the text width
    -- calculation to be correct.
-   Draw.set_font(14) -- 14 - en * 2
+   Draw.set_font(14)
 
-   local width_remain = self.width
+   local width_remain = self.width - self.padding
    local lines = 0
    local cutoff = ""
    local index_of_first_text = self.history:len()
@@ -159,34 +160,46 @@ function UiMessageWindow:calc_start_offset()
       local t = self.history:get(i)
       local text = t.text
       cutoff = text
-      local tw = Draw.text_width(text)
-      while tw > width_remain do
-         -- Amount of width (in pixels) the text goes over by.
-         local diff = tw - width_remain
 
-         width_remain = self.width - tw
-
-         local max_width, wrapped = Draw.wrap_text(t.text, diff)
-
-         -- Text that fit in the previous line before wrapping.
-         local first = wrapped[1]
-
-         -- The text that overflowed into the next line.
-         local rest = wrapped[2]
-
+      if t.newline then
          lines = lines + 1
-         text = first
-         found = rest
-         tw = Draw.text_width(text)
+         found = text
+         width_remain = self.width - self.padding
          if lines > 3 then
+            index_of_first_text = i
+            cutoff = found
             break
          end
-      end
-      width_remain = width_remain - tw
-      if lines > 3 then
-         index_of_first_text = i
-         cutoff = found
-         break
+      else
+         local tw = Draw.text_width(text)
+         while tw > width_remain do
+            -- Amount of width (in pixels) the text goes over by.
+            local diff = tw - width_remain
+
+            width_remain = self.width - self.padding - tw
+
+            local max_width, wrapped = Draw.wrap_text(t.text, diff)
+
+            -- Text that fit in the previous line before wrapping.
+            local first = wrapped[1]
+
+            -- The text that overflowed into the next line.
+            local rest = wrapped[2]
+
+            lines = lines + 1
+            text = first
+            found = rest
+            tw = Draw.text_width(text)
+            if lines > 3 then
+               break
+            end
+         end
+         width_remain = width_remain - tw
+         if lines > 3 then
+            index_of_first_text = i
+            cutoff = found
+            break
+         end
       end
    end
 
@@ -204,7 +217,13 @@ function UiMessageWindow:recalc_lines()
 
    for i=index_of_first_text,1,-1 do
       local t = self.history:get(i)
-      self:push_text(t.text, t.color)
+      if t.newline then
+         local Log = require("api.Log")
+         Log.info("NEWLINE")
+         self:newline()
+      else
+         self:push_text(t.text, t.color)
+      end
    end
 end
 
@@ -235,7 +254,11 @@ function UiMessageWindow:redraw_window()
       self:draw_one_line(x, y, line)
       y = y - Draw.text_height()
    end
+end
 
+function UiMessageWindow:do_newline()
+   self.history:push({ newline = true, text = "", color = {255, 255, 255} })
+   self:newline()
 end
 
 function UiMessageWindow:newline(text)
@@ -267,7 +290,7 @@ function UiMessageWindow:message(text, color)
       else
          text = string.format("  %s", minute, text)
       end
-      self:newline()
+      self:do_newline()
    end
 
    self.history:push({text = text, color = color})
