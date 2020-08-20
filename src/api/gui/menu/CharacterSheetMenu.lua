@@ -63,6 +63,7 @@ function CharacterSheetMenu:set_data(chara)
 
    self.portrait = self.chara:calc("portrait")
    self.chara_image = self.chara:calc("image")
+   self.image_color = self.chara:calc("color")
    local pcc = self.chara:calc("pcc")
    if self.chara.use_pcc and pcc then
       self.pcc = pcc
@@ -521,7 +522,8 @@ function CharacterSheetMenu:draw()
                            self.x + 596,
                            self.y + 86,
                            width,
-                           height)
+                           height,
+                           self.image_color)
       self.chip_batch:draw()
    end
 

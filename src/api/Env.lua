@@ -56,6 +56,9 @@ Env.is_hotloading = env.is_hotloading
 -- @function Env.get_require_path
 Env.get_require_path = env.get_require_path
 
+-- @function Env.get_require_path
+Env.get_module_of_member = env.get_module_of_member
+
 -- @function Env.get_time
 Env.get_time = socket.gettime
 
