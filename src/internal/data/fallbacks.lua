@@ -15,5 +15,7 @@ data:add {
    _type = "base.chara",
    _id = "player",
 
-   level = 1
+   level = 1,
+   rarity = 0,
+   coefficient = 0
 }
