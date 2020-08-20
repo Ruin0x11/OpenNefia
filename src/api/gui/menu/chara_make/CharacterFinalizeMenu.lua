@@ -12,10 +12,10 @@ local Prompt = require("api.gui.Prompt")
 local I18N = require("api.I18N")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
-local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local WindowTitle = require("api.gui.menu.WindowTitle")
 local CharaMake = require("api.CharaMake")
+local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 
 local CharacterFinalizeMenu = class.class("CharacterFinalizeMenu", ICharaMakeSection)
 
@@ -26,7 +26,7 @@ function CharacterFinalizeMenu:init(charamake_data)
 
    local chara = self.charamake_data.chara
    self.skills = table.deepcopy(chara.skills)
-   self.inner = CharacterSheetMenu:new(nil, chara)
+   self.inner = CharacterInfoMenu:new(nil, chara)
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)

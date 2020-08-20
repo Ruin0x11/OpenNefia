@@ -8,7 +8,7 @@ local Enchantment = require("mod.elona.api.Enchantment")
 local Calc = require("mod.elona.api.Calc")
 local save = require("internal.global.save")
 local Gui = require("api.Gui")
-local Log = require("api.Log")
+local IPaged = require("api.gui.IPaged")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local UiTheme = require("api.gui.UiTheme")
@@ -16,9 +16,9 @@ local UiList = require("api.gui.UiList")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 
-local SkillStatusMenu = class.class("SkillStatusMenu", IUiLayer)
+local SkillStatusMenu = class.class("SkillStatusMenu", { IUiLayer, IPaged })
 
-SkillStatusMenu:delegate("pages", {"page", "page_max"})
+SkillStatusMenu:delegate("pages", IPaged)
 SkillStatusMenu:delegate("input", IInput)
 
 local UiListExt = function(skills_menu)
@@ -274,9 +274,9 @@ function SkillStatusMenu:make_keymap()
    }
 end
 
-function SkillStatusMenu:relayout()
-   self.x, self.y = Ui.params_centered(self.width, self.height)
-   self.y = self.y - 10
+function SkillStatusMenu:relayout(x, y)
+   self.x = x
+   self.y = y
    self.t = UiTheme.load(self)
 
    self.pages:relayout(self.x + 58, self.y + 64)
@@ -285,14 +285,11 @@ end
 function SkillStatusMenu:draw()
    self.t.base.ie_sheet:draw(self.x, self.y)
    Draw.set_color(0, 0, 0)
+   Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
    if self.show_bonus then
-      Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
       local tips = "You can spend " .. 10 .. " bonus points."
       Draw.text(tips, self.x + self.width - Draw.text_width(tips) - 140, self.y + self.height - 24 - self.height % 8)
    end
-
-   local page_str = string.format("Page.%d/%d", self.page, self.page_max)
-   Draw.text(page_str, self.x + self.width - Draw.text_width(page_str) - 40, self.y + self.height - 24 - self.height % 8)
 
    Ui.draw_topic("ui.chara_sheet.skill.name", self.x + 28, self.y + 36)
    Ui.draw_topic("ui.chara_sheet.skill.level", self.x + 182, self.y + 36)

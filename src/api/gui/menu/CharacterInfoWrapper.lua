@@ -3,7 +3,7 @@ local Gui = require("api.Gui")
 local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 
-local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
 local IInput = require("api.gui.IInput")
 local IUiLayer = require("api.gui.IUiLayer")
 local IconBar = require("api.gui.menu.IconBar")
@@ -68,7 +68,7 @@ end
 
 function CharacterInfoWrapper:switch_context()
    Gui.play_sound("base.chara")
-   self.submenu = CharacterSheetMenu:new(nil, Chara.player())
+   self.submenu = CharacterInfoMenu:new(Chara.player())
    self.input:forward_to(self.submenu)
 
    self.icon_bar:select(self.selected_index)
