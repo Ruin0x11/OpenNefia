@@ -850,14 +850,14 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
-         (script (if (eq system-type 'windows-nt) "OpenNefia_REPL.bat" "./OpenNefia_REPL"))
+         (script (if (eq system-type 'windows-nt) "./OpenNefia_REPL.bat" "./OpenNefia_REPL"))
          (cmd (format "%s batch %s" script path))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 
 (defun open-nefia-start-game ()
   (interactive)
-  (let* ((cmd (if (eq system-type 'windows-nt) "OpenNefia.bat" "./OpenNefia"))
+  (let* ((cmd (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
          (default-directory (projectile-project-root)))
     (setq compilation-search-path (list nil "src"))
     (compile cmd)))
