@@ -401,9 +401,11 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defsubst open-nefia--escape-string (str)
   "Escape quotes and newlines in STR."
   (replace-regexp-in-string
-   "\n" "\\\\\n"
+   "\n" "\\\\n"
    (replace-regexp-in-string
-    "\"" "\\\\\"" str)))
+    "\"" "\\\\\""
+    (replace-regexp-in-string
+     "'" "\\\\'" str))))
 
 (defsubst open-nefia--unescape-string (str)
   "Unescape escaped commas, semicolons and newlines in STR."

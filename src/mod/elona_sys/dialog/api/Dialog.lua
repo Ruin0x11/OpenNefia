@@ -146,6 +146,7 @@ local function query(talk, text, choices, default_choice, choices_root)
                                speaker_name(talk.speaker),
                                talk.speaker:calc("portrait"),
                                talk.speaker:calc("image"),
+                               talk.speaker:calc("color"),
                                default_choice,
                                true,
                                impression,

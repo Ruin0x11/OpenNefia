@@ -201,6 +201,8 @@ function table.deepcompare(t1,t2,ignore_mt,eps)
 end
 
 --- Returns the number of items in a dictionary-like table.
+---
+--- TODO: This is actually included in standard Lua as `table.maxn`.
 -- @tparam table tbl
 -- @treturn int
 function table.count(tbl)
@@ -274,6 +276,23 @@ function table.iremove_value(tbl, value)
    end
 
    return result
+end
+
+function table.iremove_by(arr, pred)
+   local inds = {}
+   for i, v in ipairs(arr) do
+      if pred(v) then
+         inds[#inds+1] = i
+      end
+   end
+
+   local offset = 0
+   for _, ind in ipairs(inds) do
+      table.remove(arr, ind-offset)
+      offset = offset + 1
+   end
+
+   return inds
 end
 
 --- Flattens an list-like table one layer down.

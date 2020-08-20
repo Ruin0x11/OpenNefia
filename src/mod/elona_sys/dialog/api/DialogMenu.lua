@@ -15,7 +15,7 @@ local DialogMenu = class.class("DialogMenu", IUiLayer)
 
 DialogMenu:delegate("input", IInput)
 
-function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, default_choice, is_in_game, impression, interest)
+function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, image_color, default_choice, is_in_game, impression, interest)
    self.width = 600
    self.height = 380
 
@@ -25,6 +25,7 @@ function DialogMenu:init(text, choices, speaker_name, portrait, chara_image, def
    self.speaker_name = speaker_name or ""
    self.portrait = portrait
    self.chara_image = chara_image
+   self.image_color = image_color
    self.default_choice = default_choice
    self.can_cancel = default_choice ~= nil
    self.is_in_game = is_in_game
@@ -89,7 +90,7 @@ function DialogMenu:draw()
                            self.y + 125 + height, -- TODO offset_y
                            width * 2,
                            height * 2,
-                           nil,
+                           self.image_color,
                            true)
       self.chip_batch:draw()
    end
