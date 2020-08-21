@@ -3,6 +3,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Chara = require("api.Chara")
 local Color = require("mod.elona_sys.api.Color")
 local Rand = require("api.Rand")
+local Log = require("api.Log")
 
 local function all_rubynus()
    return "elona.rubynus"

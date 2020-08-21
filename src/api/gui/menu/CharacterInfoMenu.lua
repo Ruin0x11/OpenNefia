@@ -91,6 +91,32 @@ function CharacterInfoMenu.apply_skill_point(chara, skill_id)
    -- <<<<<<<< shade2/command.hsp:2743 		goto *com_charaInfo_loop ..
 end
 
+function CharacterInfoMenu:handle_select_skill(result)
+   -- >>>>>>>> shade2/command.hsp:2733 	if p!-1:if csCtrl!4{ ..
+   local sublayer = self.sublayers:current_sublayer()
+
+   if self.mode == "chara_status" then
+      if result.kind == "skill" and self.chara.skill_bonus > 0 then
+         if not self.chara:has_skill(result._id) then
+            Gui.play_sound("base.fail1")
+         else
+            Gui.play_sound("base.spend1")
+            CharacterInfoMenu.apply_skill_point(self.chara, result._id)
+
+            if not config["base.debug_infinite_skill_points"] then
+               self.chara.skill_bonus = self.chara.skill_bonus - 1
+            end
+
+            sublayer:set_data(self.chara)
+         end
+      end
+
+      return nil
+   elseif self.mode == "trainer_train" or self.mode == "trainer_learn" then
+   end
+   -- <<<<<<<< shade2/command.hsp:2744 		} ..
+end
+
 function CharacterInfoMenu:update(dt)
    if self.canceled then
       return nil, "canceled"
@@ -101,23 +127,7 @@ function CharacterInfoMenu:update(dt)
    if result then
       local sublayer = self.sublayers:current_sublayer()
       if class.is_an(SkillStatusMenu, sublayer) then
-         if self.mode == "chara_status"
-            and result.kind == "skill"
-            and self.chara.skill_bonus > 0
-         then
-            if not self.chara:has_skill(result._id) then
-               Gui.play_sound("base.fail1")
-            else
-               Gui.play_sound("base.spend1")
-               CharacterInfoMenu.apply_skill_point(self.chara, result._id)
-
-               if not config["base.debug_infinite_skill_points"] then
-                  self.chara.skill_bonus = self.chara.skill_bonus - 1
-               end
-
-               sublayer:set_data(self.chara)
-            end
-         end
+         return self:handle_select_skill(result)
       end
    end
 end
