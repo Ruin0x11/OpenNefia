@@ -198,20 +198,23 @@ function InventoryMenu:update_icons_this_page()
    end
 end
 
-function InventoryMenu:update_filtering()
-   local filtered = {}
+function InventoryMenu.filter_item(ctxt, item)
+   return ctxt:filter(item)
+end
 
+function InventoryMenu.build_list(ctxt)
+   local filtered = {}
    local all = {}
 
-   local sources = self.ctxt.sources
+   local sources = ctxt.sources
    if type(sources) == "string" then
       sources = {sources}
    end
 
    -- Obtain an iterator of IItem for each source. For example, calls
    -- IChara:iter_inventory() for the "chara" and "target" sources.
-   for _, source in pairs(self.ctxt.sources) do
-      local items = source.getter(self.ctxt)
+   for _, source in pairs(sources) do
+      local items = source.getter(ctxt)
       items = items:map(function(item)
             return {
                item = item,
@@ -234,7 +237,7 @@ function InventoryMenu:update_filtering()
       if item.amount <= 0 then
          item:remove_ownership()
       else
-         if self.ctxt:filter(item) then
+         if InventoryMenu.filter_item(ctxt, item) then
             filtered[#filtered+1] = entry
          end
       end
@@ -245,7 +248,13 @@ function InventoryMenu:update_filtering()
 
    -- NOTE: This needs to be a stable sort, which table.sort isn't. If
    -- correctness is not important, it should use merge sort...
-   table.insertion_sort(filtered, self.ctxt:gen_sort())
+   table.insertion_sort(filtered, ctxt:gen_sort())
+
+   return filtered
+end
+
+function InventoryMenu:update_filtering()
+   local filtered = InventoryMenu.build_list(self.ctxt)
 
    self.pages:set_data(filtered)
    self:update_icons_this_page()

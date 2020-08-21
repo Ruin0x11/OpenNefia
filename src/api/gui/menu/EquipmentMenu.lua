@@ -74,7 +74,7 @@ function EquipmentMenu:init(chara)
    self.height = 428
 
    self.chara = chara
-   self.win = UiWindow:new("equipment_menu")
+   self.win = UiWindow:new("ui.equip.title")
    self.pages = UiList:new_paged({}, 14)
    table.merge(self.pages, UiListExt(self))
    self.input = InputHandler:new()
@@ -126,9 +126,10 @@ function EquipmentMenu:refresh_item_icons()
    end
 end
 
-function EquipmentMenu:update_from_chara()
-   local data = {}
-   for _, i in self.chara:iter_body_parts(true) do
+function EquipmentMenu.build_list(chara)
+   local list = {}
+
+   for _, i in chara:iter_body_parts(true) do
       local entry = {}
 
       entry.body_part = i.body_part
@@ -147,10 +148,16 @@ function EquipmentMenu:update_from_chara()
          entry.subtext = Ui.display_weight(i.equipped:calc("weight"))
       end
 
-      data[#data + 1] = entry
+      list[#list + 1] = entry
    end
 
-   self.pages:set_data(data)
+   return list
+end
+
+function EquipmentMenu:update_from_chara()
+   local list = EquipmentMenu.build_list(self.chara)
+
+   self.pages:set_data(list)
    self.win:set_pages(self.pages)
    self:refresh_item_icons()
 

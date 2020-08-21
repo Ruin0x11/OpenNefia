@@ -10,7 +10,9 @@ local Event = require("api.Event")
 ---
 --- Some caveats:
 ---   - It only works on publicly exported functions in modules or classes,
----     since it hooks into the module loading system.
+---     since it hooks into the module loading system. You can't use it on
+---     things like callbacks inside data definitions (though it might be
+---     possible to implement this at some point).
 ---   - You have to be sure the function's return values and arguments match
 ---     those of the advised functions you add. This could change because of
 ---     updates to the engine or mods.
@@ -41,7 +43,8 @@ local Advice = {}
 
 local MAX_IDENTIFIER_LEN = 128
 
-
+-- Possible ways of calling the new/old function. Taken directly from Emacs'
+-- `nadvice` module.
 local locations = {}
 
 function locations.before(fn, old_fn, ...)
@@ -122,9 +125,7 @@ end
 
 -- Rebuilds the final merged advice callback from a sequence of locations and
 -- callbacks.
-local function sort_advice_fns(advice)
-   table.sort(advice.advice_fns, function(a, b) return a.priority < b.priority end)
-
+local function rebuild_merged_advice_fn(advice)
    -- The final function needs to be recursive, so here we build a single
    -- "merged" callback that calls each advice callback in order of priority
    -- in a recursive maner.
@@ -137,7 +138,7 @@ local function sort_advice_fns(advice)
       end
    end
 
-   advice.merged_fn = merged_fns[#merged_fns]
+   return merged_fns[#merged_fns]
 end
 
 --- Adds new code to a publicly exported function in a module or class.
@@ -208,7 +209,9 @@ function Advice.add(where, place, identifier, fn, opts)
       identifier = identifier
    }
 
-   sort_advice_fns(advice)
+   table.sort(advice.advice_fns, function(a, b) return a.priority < b.priority end)
+
+   advice.merged_fn = rebuild_merged_advice_fn(advice)
 
    advice_state.advice[place] = nil
    advice_state.advice[advice.merged_fn] = advice
@@ -286,6 +289,7 @@ local function update_hotloaded_module_advice(_, params)
       local advice = advice_for_mod[ident]
       if advice and type(field) == "function" then
          advice.original_fn = field
+         advice.merged_fn = rebuild_merged_advice_fn(advice)
          mod[ident] = advice.merged_fn
          advice_state.advice[advice.merged_fn] = advice
       end
