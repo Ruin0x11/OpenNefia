@@ -94,6 +94,8 @@ function Draw.clear(r, g, b, a)
    end
 end
 
+local text_cache = setmetatable({}, { __mode = "kv" })
+
 --- Draws text.
 ---
 --- @tparam string str
@@ -111,7 +113,9 @@ function Draw.text(str, x, y, color, size)
    if str.typeOf and str:typeOf("Text") then
       love.graphics.draw(str, x, y)
    else
-      love.graphics.print(str, x, y)
+      local text = text_cache[str] or Draw.make_text(str)
+      text_cache[str] = text
+      love.graphics.draw(text, x, y)
    end
 end
 

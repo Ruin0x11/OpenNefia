@@ -107,6 +107,8 @@ function Pcc:draw(x, y, scale_x, scale_y)
    scale_y = scale_y or 1.0
 
    if self.full_size then
+      width = 32
+      height = 48
       offset_x = 8
       offset_y = -4
    else
