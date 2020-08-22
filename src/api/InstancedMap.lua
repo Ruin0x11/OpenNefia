@@ -71,7 +71,7 @@ function InstancedMap:init(width, height, uids, tile)
    self._width = width
    self._height = height
 
-   self._multi_pool = multi_pool:new(width, height, uids)
+   self._multi_pool = multi_pool:new(width, height)
    self._last_sight_id = 1
    self._in_sight = table.of(0, width * height)
 

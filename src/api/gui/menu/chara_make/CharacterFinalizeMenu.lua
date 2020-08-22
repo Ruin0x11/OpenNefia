@@ -92,7 +92,8 @@ end
 
 function CharacterFinalizeMenu:reroll(play_sound)
    -- >>>>>>>> shade2/chara.hsp:1025 	del_chara 0	 ..
-   local chara = self.charamake_data.chara
+   -- XXX: Unsure if this works. It's certainly not efficient...
+   local chara = self.charamake_data.chara:clone()
 
    chara.skills = {}
    chara.height = nil
@@ -109,7 +110,7 @@ function CharacterFinalizeMenu:reroll(play_sound)
 
    chara:build()
 
-   table.replace_with(self.charamake_data.chara, chara)
+   self.charamake_data.chara = chara
    self.inner:set_data(self.charamake_data.chara)
 
    if play_sound then

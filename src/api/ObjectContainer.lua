@@ -7,8 +7,7 @@ local ObjectContainer = class.class("ObjectContainer", ILocation)
 
 --- @tparam string ty
 function ObjectContainer:init(ty)
-   local uids = require("internal.global.save").base.uids
-   self.pool = pool:new(ty, uids, 1, 1)
+   self.pool = pool:new(ty, 1, 1)
 end
 
 --

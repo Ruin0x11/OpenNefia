@@ -4,12 +4,9 @@ local ITypedLocation = require("api.ITypedLocation")
 -- A pool that stores objects of multiple types.
 local multi_pool = class.class("multi_pool", ITypedLocation)
 
-function multi_pool:init(width, height, uids)
-   uids = uids or require("internal.global.save").base.uids
-
+function multi_pool:init(width, height)
    self.width = width
    self.height = height
-   self.uids = uids
 
    self.subpools = {}
    self.refs = setmetatable({}, { __mode = "v" })
@@ -19,7 +16,7 @@ end
 
 function multi_pool:get_subpool(type_id)
    -- TODO: preregister known objects types beforehand
-   self.subpools[type_id] = self.subpools[type_id] or pool:new(type_id, self.uids, self.width, self.height)
+   self.subpools[type_id] = self.subpools[type_id] or pool:new(type_id, self.width, self.height)
    return self.subpools[type_id]
 end
 
