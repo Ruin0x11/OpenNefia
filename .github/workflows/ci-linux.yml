@@ -12,6 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache vanilla assets
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-vanilla-assets
+      with:
+        path: src/deps/elona
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('src/deps/elona/elona/version_en.txt') }}
     - name: Set up LuaJIT
       run: |
         sudo apt-get -yqq install wget unzip luajit libluajit-5.1-dev
