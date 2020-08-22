@@ -60,7 +60,7 @@ function field_layer:setup_repl()
 
    local repl_env, history = Repl.generate_env()
 
-   self.repl = ReplLayer:new(repl_env, { history = history })
+   self.repl = ReplLayer:new(repl_env, { history = history, history_file = "data/repl_history" })
    self.repl:relayout()
 end
 

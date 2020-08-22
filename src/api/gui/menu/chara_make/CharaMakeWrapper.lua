@@ -5,6 +5,7 @@ local Event = require("api.Event")
 local Gui = require("api.Gui")
 local IChara = require("api.chara.IChara")
 local Log = require("api.Log")
+local MapObject = require("api.MapObject")
 
 local config = require("internal.config")
 local env = require("internal.env")
@@ -197,7 +198,14 @@ function CharaMakeWrapper:update(dt)
       end
    elseif result then
       local in_progress_result = self:get_in_progress_result()
-      local new_cm_result = self.submenu:get_charamake_result(table.deepcopy(in_progress_result), result) or in_progress_result
+
+      -- Be careful not to call table.deepcopy on `in_progress_result.chara`, as
+      -- that can cause all sorts of weirdness. We have to use
+      -- `MapObject.clone()` instead, since it has awareness of things like
+      -- location reparenting and not trying to clone class definition tables.
+      local new_cm_result = MapObject.deepcopy(in_progress_result, nil, { preserve_uid = true })
+      new_cm_result = self.submenu:get_charamake_result(new_cm_result, result) or in_progress_result
+
       assert(type(new_cm_result) == "table", "Charamake menu result must be table")
       new_cm_result.menu_id = Env.get_require_path(self.submenu.__class)
 

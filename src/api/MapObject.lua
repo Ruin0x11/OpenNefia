@@ -88,19 +88,16 @@ function MapObject.clone_base(obj, owned)
    return new_object
 end
 
-local function is_map_object(thing)
-   return type(thing) == "table" and thing._id and thing._type
+function MapObject.is_map_object(t)
+   return type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.
-local function clone_pool(the_pool, uids, cache)
+local function clone_pool(the_pool, uids, cache, opts)
    local new_pool = pool:new(the_pool.type_id, the_pool.width, the_pool.height)
 
-   if not the_pool.uids then
-      pause()
-   end
    for _, obj in the_pool:iter() do
-      local new_obj = MapObject.clone(obj, false, uids, cache)
+      local new_obj = MapObject.clone(obj, false, uids, cache, opts)
       assert(new_pool:take_object(new_obj, obj.x, obj.y))
    end
 
@@ -109,23 +106,27 @@ end
 
 -- Another modification of penlight's algorithm that also calls :clone() on any
 -- map objects it finds in the table.
-local function cycle_aware_copy(t, cache, uids, first)
+local function cycle_aware_copy(t, cache, uids, first, opts)
    if type(t) ~= 'table' then return t end
    if cache[t] then return cache[t] end
-   if not first and is_map_object(t) then
-      local new_obj = MapObject.clone(t, false, uids, cache)
+   if class.is_class_or_interface(t) then
+      cache[t] = t
+      return t
+   end
+   if not first and MapObject.is_map_object(t) then
+      local new_obj = MapObject.clone(t, false, uids, cache, opts)
       cache[t] = new_obj
       return new_obj
    end
    if class.is_an(pool, t) then
-      local new_pool = clone_pool(t, uids, cache)
+      local new_pool = clone_pool(t, uids, cache, opts)
       cache[t] = new_pool
       return new_pool
    end
    local res = {}
    cache[t] = res
    local mt = getmetatable(t)
-   for k,v in pairs(t) do
+   for k, v in pairs(t) do
       -- TODO: standardize no-save fields
       -- NOTE: preserves the UID for now.
       -- HACK: workaround for delegation memoization referring to the original
@@ -133,26 +134,99 @@ local function cycle_aware_copy(t, cache, uids, first)
       if k == "__memoized" then
          res[k] = {}
       elseif k ~= "location" and k ~= "proto" then
-         k = cycle_aware_copy(k, cache)
-         v = cycle_aware_copy(v, cache)
-         res[k] = v
+         local nk = cycle_aware_copy(k, cache, uids, false)
+         local nv = cycle_aware_copy(v, cache, uids, false)
+         res[nk] = nv
+
+         -- Special case for classes like `EquipSlots` that have a `_parent`
+         -- field for use with IOwned:containing_map() and similar.
+         if type(v) == "table" and v._parent == t then
+            nv._parent = res
+         end
       end
    end
+   if t.__class and class.is_class_or_interface(mt) then
+      res.__class = mt
+   end
    setmetatable(res,mt)
+
+   -- This is tricky. A lot of implementers of `ILocation` first call
+   -- pool:take_object() and then manually set the `location` field on the
+   -- object afterwards. Because we deliberately don't try to clone `location`
+   -- as it's a back reference, we have to determine what to set `location` to
+   -- by hand. There are two cases here:
+   --
+   -- 1. `location` lies outside the object, so it doesn't get cloned. Hopefully
+   --    this should only ever happen at the top level, at the original call to
+   --    MapObject.clone(). In this case we don't have to do anything since
+   --    MapObject.clone() will try to reconnect the object's location if the
+   --    `owned` argument is set to `true`.
+   --
+   -- 2. `location` refers to something nested inside the cloned table. In this
+   --    case `location` will itself be cloned onto the new table and we have to
+   --    reassociate the cloned object with it, because `pool:take_object()`
+   --    will set `location` but it has no knowledge of any implementer of
+   --    `ILocation` that uses it as a field.
+   --
+   -- The below code handles the second case.
+   if class.is_an(ILocation, t) then
+      -- Try to see if this is a class instance that implements ILocation and
+      -- manually sets the `location` field.
+      local sets_location
+      if class.is_class_or_interface(t.__class) then
+         assert(class.is_class_instance(res))
+         local obj = t:iter():nth(1)
+         if obj and obj.location == t then
+            sets_location = true
+         end
+      end
+
+      -- If not, see if the previous location was a map object. Map objects
+      -- can implement `ILocation` even though they aren't class instances.
+      if not sets_location and MapObject.is_map_object(t) then
+         local obj = t:iter():nth(1)
+         if obj and obj.location == t then
+            sets_location = true
+         end
+      end
+
+      -- If we've determined that the thing acts like an `ILocation` and
+      -- manually sets `location`, update the `location` field on the newly
+      -- cloned object to match.
+      if sets_location then
+         for _, new_obj in res:iter() do
+            Log.warn("Set location %s %s %s", new_obj, res.__class, res)
+            new_obj.location = res
+         end
+      end
+   end
    return res
 end
 
-function MapObject.clone(obj, owned, uid_tracker, cache)
+--- Similar to `table.deepcopy()`, but has awareness of map objects.
+function MapObject.deepcopy(t, uid_tracker, opts)
+   if MapObject.is_map_object(t) then
+      return MapObject.clone(t, false, uid_tracker, {}, opts)
+   end
+
+   return cycle_aware_copy(t, {}, uid_tracker, true, opts)
+end
+
+function MapObject.clone(obj, owned, uid_tracker, cache, opts)
    uid_tracker = uid_tracker or require("internal.global.save").base.uids
+   local preserve_uid = (opts and opts.preserve_uid) or false
 
-   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true)
+   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true, opts)
 
-   new_object.uid = uid_tracker:get_next_and_increment()
+   if not preserve_uid then
+      new_object.uid = uid_tracker:get_next_and_increment()
+   end
 
    local mt = getmetatable(obj)
    setmetatable(new_object, mt)
 
    if owned and class.is_an("api.IMapObject", obj) and class.is_an("api.ILocation", obj.location) then
+      assert(not preserve_uid, "Cannot preserve UID for owned object")
       -- HACK: This makes cloning characters harder, since the
       -- location also has to be changed manually, or there will be
       -- more than one character on the same square. Perhaps
@@ -170,7 +244,7 @@ function MapObject.clone(obj, owned, uid_tracker, cache)
       assert(obj.location:take_object(new_object, x, y))
    end
 
-   Event.trigger("base.on_object_cloned", {object=obj, type="full"})
+   Event.trigger("base.on_object_cloned", {object=obj, type="full", owned=owned})
 
    return new_object
 end

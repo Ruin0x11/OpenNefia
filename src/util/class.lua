@@ -413,6 +413,10 @@ function class.is_class_or_interface(tbl)
    return _classes[tbl] or _interfaces[tbl]
 end
 
+function class.is_class_instance(tbl)
+   return _classes[tbl.__class]
+end
+
 function class.uses_interface(klass_or_iface, iface)
    local ifaces
    if _interfaces[klass_or_iface] then

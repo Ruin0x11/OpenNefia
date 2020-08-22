@@ -541,7 +541,7 @@ end)
 Event.register("base.on_chara_generated", "npc memory", function(chara) NpcMemory.on_generated(chara._id) end)
 Event.register("base.on_object_cloned", "npc memory",
                function(_, params)
-                  if params.object._type == "base.chara" then
+                  if params.owned and params.object._type == "base.chara" then
                      NpcMemory.on_generated(params.object._id)
                   end
                end)

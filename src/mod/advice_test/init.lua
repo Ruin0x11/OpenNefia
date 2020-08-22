@@ -9,7 +9,7 @@ local function all_rubynus()
    return "elona.rubynus"
 end
 
-Advice.add("filter_return", ItemMaterial.choose_random_material_2, "All materials are now rubynus", all_rubynus)
+-- Advice.add("filter_return", ItemMaterial.choose_random_material_2, "All materials are now rubynus", all_rubynus)
 
 local function to_putit(chara)
    if chara then
@@ -20,4 +20,4 @@ local function to_putit(chara)
    return chara
 end
 
-Advice.add("filter_return", Chara.create, "Everyone looks like a putit", to_putit)
+-- Advice.add("filter_return", Chara.create, "Everyone looks like a putit", to_putit)
