@@ -781,7 +781,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 (defun open-nefia--repl-buffer ()
   (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
 
-(defun open-nefia--start-repl-1 (file &rest switches)
+(defun open-nefia--start-repl-1 (file &optional switches)
   (save-some-buffers (not compilation-ask-about-save)
                      compilation-save-buffers-predicate)
   (let* ((buffer (open-nefia--repl-buffer))
@@ -799,7 +799,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
         (if (eq result 0)
             (progn
               (apply 'run-lua (append (list open-nefia--repl-name "luajit" nil (open-nefia--repl-file file))
-                                      switches))
+                                      switches ))
               (setq next-error-last-buffer (open-nefia--repl-buffer))
               (pop-to-buffer (open-nefia--repl-buffer))
               (setq-local company-backends '(company-etags)))
@@ -817,15 +817,18 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1 open-nefia--test-entrypoint))
+  (open-nefia--start-repl-1 open-nefia--test-entrypoint (if arg '("--debug-on-failure") '())))
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1
-   open-nefia--test-entrypoint
-   (format "%s:%s" (file-name-base (buffer-file-name)) ".*")))
+  (let ((filter (format "%s:%s" (file-name-base (buffer-file-name)) ".*")))
+    (open-nefia--start-repl-1
+     open-nefia--test-entrypoint
+     (if arg
+         (list "--debug-on-failure" "--filter" filter)
+       (list "--filter" filter)))))
 
 (defun open-nefia-insert-template ()
   (interactive)

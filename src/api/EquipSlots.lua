@@ -20,6 +20,29 @@ function EquipSlots:init(body_parts, owner)
       data["base.body_part"]:ensure(_type)
       return {
          type = _type,
+
+         -- XXX: This is a reference to an item object in this class's
+         -- `self.pool` field. It used to be a UID, but the problem is that
+         -- MapObject.clone() has no knowledge of classes that use UIDs like
+         -- this, so when the clone happens and a bunch of new map objects get
+         -- created with new UIDs, the UIDs stored in `equipped` will not be
+         -- updated and everything blows up.
+         --
+         -- However, I think using a UID here would be cleaner and avoid bugs
+         -- involving the reference unintentionally getting cloned when calling
+         -- MapObject.clone().
+         --
+         -- Ideally there would be a "mapping" that MapObject.clone() keeps of
+         -- old to newly cloned map object UIDs. Then there would be an
+         -- interface like ICloneable where we could do the following:.
+         --
+         -- function EquipSlots:on_clone(map_object_uids)
+         --    for _, body_part in ipairs(self.body_parts) do
+         --       if body_part.equipped then
+         --          body_part.equipped = assert(map_object_uids[body_part.equipped])
+         --       end
+         --    end
+         -- end
          equipped = nil
       }
    end
@@ -88,7 +111,7 @@ function EquipSlots:equip(obj, slot)
       return nil, "slot_out_of_range"
    end
 
-   if self.equipped[obj.uid] then
+   if self.equipped[obj] then
       return nil, "is_equipped"
    end
 
@@ -97,8 +120,8 @@ function EquipSlots:equip(obj, slot)
    end
 
    obj.location = self
-   self.equipped[obj.uid] = slot
-   self.body_parts[slot].equipped = obj.uid
+   self.equipped[obj] = slot
+   self.body_parts[slot].equipped = obj
 
    return obj
 end
@@ -113,7 +136,7 @@ function EquipSlots:unequip(obj)
       return nil
    end
 
-   local slot = self.equipped[obj.uid]
+   local slot = self.equipped[obj]
    if not slot then
       return nil
    end
@@ -123,7 +146,7 @@ function EquipSlots:unequip(obj)
    end
 
    assert(obj.location == nil)
-   self.equipped[obj.uid] = nil
+   self.equipped[obj] = nil
    self.body_parts[slot].equipped = nil
 
    return obj
@@ -174,7 +197,7 @@ local function iter_body_parts(state, index)
       local body_part = state.body_parts[index]
       entry = {
          body_part = data["base.body_part"]:ensure(body_part.type),
-         equipped = state.pool:get_object(body_part.equipped)
+         equipped = body_part.equipped
       }
       index = index + 1
    until (entry.equipped ~= nil or state.also_empty)
@@ -188,7 +211,7 @@ function EquipSlots:iter_body_parts(also_empty)
 end
 
 function EquipSlots:equip_slot_of(item)
-   local slot = self.equipped[item.uid]
+   local slot = self.equipped[item]
    if slot == nil then return nil end
 
    return self.body_parts[slot]

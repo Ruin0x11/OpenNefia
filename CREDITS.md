@@ -30,3 +30,4 @@ The following is a list of third-party projects whose code is used in OpenNefia.
 - [struct](https://github.com/iryont/lua-struct) (MIT)
 - [sha1](https://github.com/mpeterv/sha1) (MIT)
 - [lua-quickcheck](https://github.com/luc-tielen/lua-quickcheck) (MIT)
+- [argparse](https://github.com/mpeterv/argparse) (MIT)

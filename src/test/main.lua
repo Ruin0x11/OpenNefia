@@ -1,11 +1,28 @@
 _CONSOLE = true
 require("boot")
 
-local Log = require("api.Log")
-local filter = ".*:.*"
-if arg[1] then
-   filter = arg[1]
+local argparse = require("thirdparty.argparse")
+
+local function arg_parser()
+   local parser = argparse("test-runner", "Runs tests for OpenNefia.")
+
+   parser:flag("-d --debug-on-failure", "Open a REPL on failing tests.")
+
+   parser:option("-s --seed", "Random seed to use.")
+         :argname("<number>")
+
+   parser:option("-f --filter", "Lua pattern containing a test filter to use (in format `module:name`)")
+         :argname("<pattern>")
+
+   return parser
 end
+
+local parser = arg_parser()
+local args = parser:parse()
+
+local Log = require("api.Log")
+local filter = args.filter or ".*:.*"
+
 local level = "warn"
 Log.set_level(level)
 
@@ -65,13 +82,7 @@ local function make_test_env()
    return setmetatable(tests, mt), mt
 end
 
-local opts = {
-   debug_on_error = true,
-   seed = nil,
-   selector = nil
-}
-
-local seed = opts.seed or math.floor(socket.gettime())
+local seed = args.seed or math.floor(socket.gettime())
 config["base.default_seed"] = seed
 
 print("Seed: " .. seed)
@@ -89,7 +100,7 @@ local function run_test(name, test_fn)
    local locals
    local function capture(err)
       local repl = require("internal.repl")
-      locals = repl.capture_locals(2)
+      locals = repl.capture_locals(1)
       if type(err) == "table" then
          for k, v in pairs(err) do
             if type(k) == "string" then
@@ -108,7 +119,7 @@ local function run_test(name, test_fn)
    else
       io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
 
-      if opts.debug_on_error and false then
+      if args.debug_on_failure then
          local repl_env, history = Repl.generate_env(locals)
          elona_repl.set_environment(repl_env)
          print(inspect(table.keys(locals)))
