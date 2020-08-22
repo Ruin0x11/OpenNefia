@@ -1,4 +1,3 @@
-local internal = require("internal")
 local mod = require("internal.mod")
 local i18n = require("internal.i18n")
 local data = require("internal.data")
@@ -74,9 +73,9 @@ function startup.run_all(mods)
    alias_api_tables = false
 
    local coro = coroutine.create(function() startup.run(mods) end)
-   while startup.get_progress() ~= "progress_finished" do
+   while startup.get_progress() ~= nil do
       local ok, err = coroutine.resume(coro)
-      if not ok then
+      if not ok or err then
          error(debug.traceback(coro, err))
       end
    end

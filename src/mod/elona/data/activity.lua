@@ -1138,6 +1138,7 @@ data:add {
             if self.type then
                Gui.mes("activity.dig_spot.finish")
             end
+            local map = params.chara:current_map()
             map:emit("elona.on_search_finish", {chara=params.chara,type=self.type})
             -- TODO spillFrag
          end

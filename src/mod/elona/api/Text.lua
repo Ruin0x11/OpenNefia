@@ -1,4 +1,3 @@
-local IItem = require("api.item.IItem")
 local Sha1 = require("mod.extlibs.api.Sha1")
 local Csv = require("mod.elona_sys.api.Csv")
 local I18N = require("api.I18N")

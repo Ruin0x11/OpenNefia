@@ -1,3 +1,4 @@
+local Feat = require("api.Feat")
 local Gui = require("api.Gui")
 
 local Material = {}
@@ -38,6 +39,16 @@ function Material.lose(chara, id, num)
    num = math.max(num, 1)
    chara.materials[id] = math.max((chara.materials[id] or 0) - num, 0)
    Gui.mes("matlose", "Blue")
+end
+
+function Material.create_spot(spot_id, x, y, map)
+   local feat, err = Feat.create("elona.material_spot", x, y, {}, map)
+   if not feat then
+      return nil, err
+   end
+   feat.params.type = spot_id
+
+   local spot_data = data["elona.material_spot"]:ensure(spot_id)
 end
 
 return Material

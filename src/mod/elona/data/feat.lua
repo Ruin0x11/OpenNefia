@@ -144,7 +144,8 @@ data:add {
          name = "Set difficulty.",
          callback = function(self) self.difficulty = 5 end
       }
-}}
+   }
+}
 
 local function gen_stair(down)
    local field = (down and "on_descend") or "on_ascend"
@@ -152,56 +153,67 @@ local function gen_stair(down)
    local elona_id = (down and 11) or 10
    local image = (down and "elona.feat_stairs_down") or "elona.feat_stairs_up"
 
-   return {_type = "base.feat", _id = id, elona_id = elona_id, image = image,
-           is_solid = false, is_opaque = false, params = {
-              generator_params = "table",
-              area_params = "table",
-              map_uid = "number",
-           }, on_refresh = function(self) self:mod("can_activate", true)
-           end,
-           on_activate = function(self, params)
-              local chara = params.chara
-              if not chara:is_player() then return end
+   return {
+      _type = "base.feat",
+      _id = id,
+      elona_id = elona_id,
+      image = image,
+      is_solid = false,
+      is_opaque = false,
+      params = {
+         generator_params = "table",
+         area_params = "table",
+         map_uid = "number",
+      },
+      on_refresh = function(self)
+         self:mod("can_activate", true)
+      end,
+      on_activate = function(self, params)
+         local chara = params.chara
+         if not chara:is_player() then return end
 
-              Gui.play_sound("base.exitmap1")
+         Gui.play_sound("base.exitmap1")
 
-              local success, map, was_generated = MapArea.load_map_of_entrance(self, true)
-              if not success then
-                 Gui.report_error(map)
-                 return "player_turn_query"
-              end
+         local success, map, was_generated = MapArea.load_map_of_entrance(self, true)
+         if not success then
+            Gui.report_error(map)
+            return "player_turn_query"
+         end
 
-              local start_pos
-              local inner_area = save.base.area_mapping:area_for_map(self:current_map())
-              local outer_area = save.base.area_mapping:area_for_map(map)
-              assert(inner_area and outer_area,
-                     ("%s %s %s"):format(self:current_map().uid, map.uid,
-                                         inspect(save.base.area_mapping.maps)))
-              if inner_area ~= outer_area then
-                 assert(map.uid == inner_area.outer_map_uid)
-                 start_pos = { x = inner_area.x, y = inner_area.y }
-              else
-                 if id == "stair_up" then
-                    start_pos = "elona.stair_down"
-                 else
-                    start_pos = "elona.stair_up"
-                 end
-              end
+         local start_pos
+         local inner_area = save.base.area_mapping:area_for_map(self:current_map())
+         local outer_area = save.base.area_mapping:area_for_map(map)
+         assert(inner_area and outer_area,
+                ("%s %s %s"):format(self:current_map().uid,
+                                    map.uid,
+                                    inspect(save.base.area_mapping.maps)))
+         if inner_area ~= outer_area then
+            assert(map.uid == inner_area.outer_map_uid)
+            start_pos = { x = inner_area.x, y = inner_area.y }
+         else
+            if id == "stair_up" then
+               start_pos = "elona.stair_down"
+            else
+               start_pos = "elona.stair_up"
+            end
+         end
 
-              params = {
-                 start_pos = start_pos,
-                 maybe_regenerate = true,
-                 feat = self
-              }
+         params = {
+            start_pos = start_pos,
+            maybe_regenerate = true,
+            feat = self
+         }
 
-              Log.debug("Map starting pos: %s", inspect(params.start_pos))
-              Log.debug("My location: %d %d", self.x, self.y)
+         Log.debug("Map starting pos: %s", inspect(params.start_pos))
+         Log.debug("My location: %d %d", self.x, self.y)
 
-              Map.travel_to(map, params)
+         Map.travel_to(map, params)
 
-              return "player_turn_query"
-           end,
-           [field] = function(self, params) self:on_activate(params.chara) end
+         return "player_turn_query"
+      end,
+      [field] = function(self, params)
+         self:on_activate(params.chara)
+      end
    }
 end
 
@@ -210,11 +222,18 @@ data:add(gen_stair(false))
 
 data:add
 {
-   _type = "base.feat", _id = "map_entrance", elona_id = 15,
-   image = "elona.feat_area_city", is_solid = false, is_opaque = false, params = {
+   _type = "base.feat",
+   _id = "map_entrance",
+   elona_id = 15,
+   image = "elona.feat_area_city",
+   is_solid = false,
+   is_opaque = false,
+   params = {
       generator_params = "table",
       map_uid = "number",
-   }, on_refresh = function(self) self:mod("can_activate", true)
+   },
+   on_refresh = function(self) self:mod("can_activate",
+                                        true)
    end,
    on_activate = function(self, params)
       local chara = params.chara
@@ -232,13 +251,16 @@ data:add
       assert(inner_area ~= outer_area)
 
       local start_pos = map.player_start_pos or "elona.stair_up"
-      Map.travel_to(map, {maybe_regenerate = true, start_pos = start_pos})
+      Map.travel_to(map,
+                    {maybe_regenerate = true,
+                     start_pos = start_pos})
 
       return "player_turn_query"
    end,
 
    on_stepped_on = function(self, params)
-      local area = { gen_id = "elona.vernis", types = {} }
+      local area = { gen_id = "elona.vernis",
+                     types = {} }
       if area.types["elona.nefia"] then
          -- TODO
          ExHelp.maybe_show("elona.random_dungeon")
@@ -246,18 +268,26 @@ data:add
    end,
 
    description = function(self)
-      local area = { gen_id = "elona.vernis", types = {} }
-      return get_map_display_name(area, true)
+      local area = { gen_id = "elona.vernis",
+                     types = {} }
+      return get_map_display_name(area,
+                                  true)
    end,
 
-   on_descend = function(self, params) self:on_activate(params.chara) end
+   on_descend = function(self,
+                         params) self:on_activate(params.chara) end
 }
 
 data:add {
-   _type = "base.feat", _id = "pot", elona_id = 30,
-   image = "elona.feat_pot", is_solid = false, is_opaque = false,
+   _type = "base.feat",
+   _id = "pot",
+   elona_id = 30,
+   image = "elona.feat_pot",
+   is_solid = false,
+   is_opaque = false,
    params = {},
-   on_bash = function(self, params)
+   on_bash = function(self,
+                      params)
       local map = self:current_map()
       local basher = params.chara
 
@@ -295,8 +325,12 @@ data:add {
 }
 
 data:add {
-   _type = "base.feat", _id = "hidden_path", elona_id = 22,
-   image = "elona.feat_hidden", is_solid = false, is_opaque = false,
+   _type = "base.feat",
+   _id = "hidden_path",
+   elona_id = 22,
+   image = "elona.feat_hidden",
+   is_solid = false,
+   is_opaque = false,
    on_search = function(self, params)
       local chara = params.chara
 
@@ -312,10 +346,16 @@ data:add {
          Gui.mes("action.search.discover.hidden_path")
       end
    end,
-   params = {}, events = {}}
+   params = {},
+   events = {}
+}
 
-local function visit_quest_giver(feat, player, quest)
-   local client = Chara.find(quest.client_uid, "all", feat:current_map())
+local function visit_quest_giver(feat,
+                                 player,
+                                 quest)
+   local client = Chara.find(quest.client_uid,
+                             "all",
+                             feat:current_map())
    assert(client)
    Magic.cast("elona.shadow_step", {source=player, target=client})
    if Chara.is_alive(client) then
@@ -327,8 +367,12 @@ local function visit_quest_giver(feat, player, quest)
 end
 
 data:add {
-   _type = "base.feat", _id = "quest_board", elona_id = 23,
-   image = "elona.feat_quest_board", is_solid = true, is_opaque = false,
+   _type = "base.feat",
+   _id = "quest_board",
+   elona_id = 23,
+   image = "elona.feat_quest_board",
+   is_solid = true,
+   is_opaque = false,
    on_bumped_into = function(self, params)
       local pred = function(quest) return quest.originating_map_uid == self:current_map().uid end
       local quests_here = Quest.iter():filter(pred):to_list()
@@ -339,20 +383,33 @@ data:add {
 
       return visit_quest_giver(self, params.chara, quest)
    end,
-   params = {}, events = {}}
+   params = {},
+   events = {}
+}
 
 data:add {
-   _type = "base.feat", _id = "voting_box", elona_id = 31,
-   image = "elona.feat_voting_box", is_solid = true, is_opaque = false,
-   on_bumped_into = function(self, params)
+   _type = "base.feat",
+   _id = "voting_box",
+   elona_id = 31,
+   image = "elona.feat_voting_box",
+   is_solid = true,
+   is_opaque = false,
+   on_bumped_into = function(self,
+                             params)
       Gui.play_sound("base.chat")
       Gui.mes("Voting box.")
    end,
-   params = {}, events = {}}
+   params = {},
+   events = {}
+}
 
 data:add {
-   _type = "base.feat", _id = "small_medal", elona_id = 32,
-   image = "elona.feat_hidden", is_solid = false, is_opaque = false,
+   _type = "base.feat",
+   _id = "small_medal",
+   elona_id = 32,
+   image = "elona.feat_hidden",
+   is_solid = false,
+   is_opaque = false,
    on_search = function(self, params)
       local chara = params.chara
       if chara.x == self.x and chara.y == self.y then
@@ -368,13 +425,38 @@ data:add {
          end
       end
    end,
-   params = {}, events = {}}
+   params = {},
+   events = {}
+}
 
 data:add {
-   _type = "base.feat", _id = "politics_board", elona_id = 33,
-   image = "elona.feat_politics_board", is_solid = true,
-   is_opaque = false, on_bumped_into = function(self, params)
+   _type = "base.feat",
+   _id = "politics_board",
+   elona_id = 33,
+   image = "elona.feat_politics_board",
+   is_solid = true,
+   is_opaque = false,
+   on_bumped_into = function(self, params)
       Gui.play_sound("base.chat")
       Gui.mes("Politics board.")
    end,
-   params = {}, events = {}}
+   params = {},
+   events = {}
+}
+
+data:add {
+   _type = "base.feat",
+   _id = "material_spot",
+   elona_id = 24,
+   image = "elona.feat_material_crafting",
+   is_solid = false,
+   is_opaque = false,
+   params = {
+      type = "string"
+   },
+   on_search = function(self)
+      Log.info("Yo")
+      data["elona.material_spot"]:ensure(self.type)
+   end
+}
+
