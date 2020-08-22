@@ -5,6 +5,7 @@ local save = require("internal.global.save")
 local config = require("internal.config")
 local Skill = require("mod.elona_sys.api.Skill")
 local Const = require("api.Const")
+local I18N = require("api.I18N")
 
 local IInput = require("api.gui.IInput")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
@@ -13,25 +14,35 @@ local UiPagedContainer = require("api.gui.UiPagedContainer")
 local CharacterSheetMenu = require("api.gui.menu.CharacterSheetMenu")
 local SkillStatusMenu = require("api.gui.menu.SkillStatusMenu")
 local ISettable = require("api.gui.ISettable")
+local WindowTitle = require("api.gui.menu.WindowTitle")
+local IUiLayer = require("api.gui.IUiLayer")
 
-local CharacterInfoMenu = class.class("CharacterInfoMenu", { ICharaMakeSection, ISettable })
+local CharacterInfoMenu = class.class("CharacterInfoMenu", { IUiLayer, ISettable })
 
 CharacterInfoMenu:delegate("input", IInput)
 
-function CharacterInfoMenu:init(chara, mode)
+function CharacterInfoMenu:init(chara, mode, opts)
    self.chara = chara
-   self.mode = self.mode or "chara_status"
+   self.mode = mode or "chara_status"
 
    self.sublayers = UiPagedContainer:new {
-      CharacterSheetMenu:new(self.chara),
-      SkillStatusMenu:new(self.chara, self.mode)
+      CharacterSheetMenu:new(self.chara, self.mode),
+      SkillStatusMenu:new(self.chara, self.mode, opts)
    }
+
+   self.title = WindowTitle:new()
 
    self.input = InputHandler:new()
    self.input:forward_to(self.sublayers:current_sublayer())
    self.input:bind_keys(self:make_keymap())
 
    self.caption = "chara_make.final_screen.caption"
+
+   if self.mode == "trainer_train" or self.mode == "trainer_learn" then
+      self:select_page(2)
+   end
+
+   self:refresh()
 end
 
 function CharacterInfoMenu:make_keymap()
@@ -45,20 +56,64 @@ function CharacterInfoMenu:make_keymap()
    }
 end
 
+function CharacterInfoMenu:refresh()
+   -- >>>>>>>> shade2/command.hsp:2452 	if csCtrl=0:if page=0:s=lang("ｶｰｿﾙ [祝福と呪いの情報]  ", ..
+   local title_string
+
+   -- TODO
+   if self.mode == "chara_make" then
+         title_string = I18N.get("ui.chara_sheet.hint.reroll")
+            .. I18N.get("ui.hint.portrait")
+            .. I18N.get("ui.chara_sheet.hint.confirm")
+   elseif self.mode == "chara_status" then
+      if self.sublayers.page == 1 then
+         title_string = I18N.get("ui.chara_sheet.hint.hint")
+      else
+         title_string = I18N.get("ui.chara_sheet.hint.spend_bonus")
+      end
+   elseif self.mode == "trainer_train" then
+      if self.sublayers.page == 1 then
+         title_string = I18N.get("ui.hint.portrait")
+      else
+         title_string = I18N.get("ui.chara_sheet.hint.train_skill")
+      end
+   elseif self.mode == "trainer_learn" then
+      if self.sublayers.page == 1 then
+         title_string = I18N.get("ui.hint.portrait")
+      else
+         title_string = I18N.get("ui.chara_sheet.hint.learn_skill")
+      end
+   end
+
+   if self.mode ~= "trainer_learn" then
+      -- title_string = title_string .. I18N.get("ui.chara_sheet.hint.track_skill")
+   end
+
+   self.title:set_data(title_string)
+   -- <<<<<<<< shade2/command.hsp:2457 	if csCtrl!1:if page!0:s+=""+key_mode2+" ["+lang(" ..
+
+   self.input:forward_to(self.sublayers:current_sublayer())
+end
+
 function CharacterInfoMenu:set_data(chara)
    self.chara = chara or self.chara
    self.sublayers.sublayers[1]:set_data(self.chara)
 end
 
+function CharacterInfoMenu:select_page(page)
+   self.sublayers:select_page(page)
+   self:refresh()
+end
+
 function CharacterInfoMenu:next_page()
    self.sublayers:next_page()
-   self.input:forward_to(self.sublayers:current_sublayer())
+   self:refresh()
    Gui.play_sound("base.pop1")
 end
 
 function CharacterInfoMenu:previous_page()
    self.sublayers:previous_page()
-   self.input:forward_to(self.sublayers:current_sublayer())
+   self:refresh()
    Gui.play_sound("base.pop1")
 end
 
@@ -72,6 +127,11 @@ function CharacterInfoMenu:relayout(x, y, width, height)
    self.x, self.y = Ui.params_centered(self.width, self.height)
 
    self.sublayers:relayout(self.x, self.y, self.width, self.height)
+   if self.mode == "chara_make" then
+      self.title:relayout(240, Draw.get_height() - 16, Draw.get_width() - 240, 16)
+   else
+      self.title:relayout(236 - 10, 0, Draw.get_width() - 236 - 10, 16)
+   end
 end
 
 function CharacterInfoMenu:draw()
@@ -82,12 +142,14 @@ function CharacterInfoMenu:draw()
 
    local page_str = string.format("Page.%d/%d", self.sublayers.page, self.sublayers.page_max)
    Draw.text(page_str, self.x + self.width - Draw.text_width(page_str) - 40, self.y + self.height - 24 - self.height % 8)
+   self.title:draw()
 end
 
 function CharacterInfoMenu.apply_skill_point(chara, skill_id)
    -- >>>>>>>> shade2/command.hsp:2737 		if sORG(csSkill,pc)=0:snd seFail1:goto *com_char ..
    Skill.gain_skill_exp(chara, skill_id, Const.SKILL_POINT_EXPERIENCE_GAIN)
    Skill.modify_potential(chara, skill_id, math.floor(15 - chara:skill_potential(skill_id) / 15, 2, 15))
+   chara:refresh()
    -- <<<<<<<< shade2/command.hsp:2743 		goto *com_charaInfo_loop ..
 end
 
@@ -113,7 +175,10 @@ function CharacterInfoMenu:handle_select_skill(result)
 
       return nil
    elseif self.mode == "trainer_train" or self.mode == "trainer_learn" then
+      return result
    end
+
+   return nil
    -- <<<<<<<< shade2/command.hsp:2744 		} ..
 end
 

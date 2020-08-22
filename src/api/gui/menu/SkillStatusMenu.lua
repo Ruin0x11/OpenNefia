@@ -77,7 +77,7 @@ local UiListExt = function(skills_menu)
 
          if item.detail then
             if item.right_align then
-               Draw.text(item.detail, x + 264 - Draw.text_width(item.detail), y + 2)
+               Draw.text(item.detail, x + 244 - Draw.text_width(item.detail), y + 2)
             else
                Draw.text(item.detail, x + 194, y + 2)
             end
@@ -88,13 +88,63 @@ local UiListExt = function(skills_menu)
    return E
 end
 
-function SkillStatusMenu.build_list(chara, mode)
-   -- >>>>>>>> shade2/command.hsp:2370 	if dbg_showAllSkill:if (csCtrl!2)&(csCtrl!3)&(csC ..
+function SkillStatusMenu:init(chara, mode, opts)
+   opts = opts or {}
+   self.chara = chara
+   self.width = 700
+   self.height = 400
+   self.mode = mode or "chara_status"
+
+   self.trainer_skills = opts.trainer_skills or {}
+
+   self.item_count = 0
+
+   self.pages = UiList:new_paged({}, 16)
+
+   table.merge(self.pages, UiListExt(self))
+
+   self.input = InputHandler:new()
+   self.input:forward_to(self.pages)
+   self.input:bind_keys(self:make_keymap())
+
+   self:set_data()
+end
+
+function SkillStatusMenu:make_keymap()
+   return {
+      escape = function() self.canceled = true end,
+      cancel = function() self.canceled = true end,
+      mode2 = function()
+         if self.mode == "trainer_learn" then
+            return
+         end
+
+         local entry = self.pages:selected_item()
+         -- TODO track resistances
+         if entry.kind == "skill" then
+            if save.base.tracked_skill_ids[entry._id] then
+               save.base.tracked_skill_ids[entry._id] = nil
+            else
+               save.base.tracked_skill_ids[entry._id] = true
+            end
+            Gui.play_sound("base.ok1")
+            self:set_data()
+         end
+      end,
+   }
+end
+
+function SkillStatusMenu:set_data(chara)
+   self.chara = chara or self.chara
+
+   local skills = SkillStatusMenu.build_list(self.chara, self.mode, self.trainer_skills)
+   self.pages:set_data(skills)
+end
+
+function SkillStatusMenu.build_list(chara, mode, trainer_skills)
    local list = {}
 
    local right_align = mode == "trainer_train" or mode == "trainer_learn"
-
-   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.skill"), kind = "header", ordering = 100000 }
 
    -- >>>>>>>> shade2/command.hsp:2654 				p(1)=limit(sdata(list(0,p),cc)/resistGrade,0,6 ..
    local skill_power = function(skill_id)
@@ -129,16 +179,16 @@ function SkillStatusMenu.build_list(chara, mode)
       local s = ""
 
       if mode == "trainer_train" then
-         s = ("%sp "):format(Calc.calc_train_cost())
+         s = ("%sp "):format(Calc.calc_train_cost(skill_id, chara))
       elseif mode == "trainer_learn" then
-         s = ("%sp "):format(Calc.calc_learn_cost())
+         s = ("%sp "):format(Calc.calc_learn_cost(skill_id, chara))
       else
          local base_level = chara:base_skill_level(skill_id)
          local level = chara:skill_level(skill_id)
 
          if level ~= base_level then
             local grade = (level - base_level) / 5
-            s = Enchantment.power_text(grade)
+            s = Enchantment.power_text(grade, true)
          end
       end
 
@@ -149,22 +199,31 @@ function SkillStatusMenu.build_list(chara, mode)
    end
    -- <<<<<<<< shade2/command.hsp:2679 				} ..
 
+   local has_skill = function(skill_entry) return chara:has_skill(skill_entry._id) end
+
+   -- >>>>>>>> shade2/command.hsp:2382 	list(0,listMax)=-1,20000:listn(0,listMax)=lang("◆ ..
+   list[#list+1] = { name = I18N.get("ui.chara_sheet.category.skill"), kind = "header", ordering = 100000 }
+
+   local skill_iter
+
    if mode == "trainer_learn" then
-      error("TODO")
+      skill_iter = fun.iter(trainer_skills):map(function(_id) return data["base.skill"]:ensure(_id) end)
    else
-      for _, skill_entry in Skill.iter_normal_skills() do
-         list[#list+1] = {
-            _id = skill_entry._id,
-            name = I18N.get("ability." .. skill_entry._id .. ".name"),
-            desc = I18N.get("ability." .. skill_entry._id .. ".description"),
-            power = skill_power(skill_entry._id),
-            detail = skill_detail(skill_entry._id),
-            kind = "skill",
-            icon = Ui.skill_icon(skill_entry.related_skill),
-            right_align = right_align,
-            ordering = (skill_entry.elona_id or 0) + 110000
-         }
-      end
+      skill_iter = Skill.iter_normal_skills():filter(has_skill)
+   end
+
+   for _, skill_entry in skill_iter:unwrap() do
+      list[#list+1] = {
+         _id = skill_entry._id,
+         name = I18N.get("ability." .. skill_entry._id .. ".name"),
+         desc = I18N.get("ability." .. skill_entry._id .. ".description"),
+         power = skill_power(skill_entry._id),
+         detail = skill_detail(skill_entry._id),
+         kind = "skill",
+         icon = Ui.skill_icon(skill_entry.related_skill),
+         right_align = right_align,
+         ordering = (skill_entry.elona_id or 0) + 110000
+      }
    end
 
    list[#list+1] = { name = I18N.get("ui.chara_sheet.category.weapon_proficiency"), kind = "header", ordering = 200000 }
@@ -176,6 +235,8 @@ function SkillStatusMenu.build_list(chara, mode)
          if chara:has_skill(skill_entry._id) or skill_entry.related_skill == nil then
             add = false
          end
+      else
+         add = has_skill(skill_entry)
       end
 
       if add then
@@ -214,7 +275,7 @@ function SkillStatusMenu.build_list(chara, mode)
 
    local tracked = save.base.tracked_skill_ids or {}
    for _, entry in ipairs(list) do
-      if tracked[entry._id] then
+      if tracked[entry._id] and chara:has_skill(entry._id) then
          entry.name = "*" .. entry.name
       end
    end
@@ -233,55 +294,6 @@ function SkillStatusMenu.build_list(chara, mode)
    -- <<<<<<<< shade2/command.hsp:2415 	gosub *sort_list ..
 end
 
-function SkillStatusMenu:init(chara, mode, opts)
-   opts = opts or {}
-   self.chara = chara
-   self.width = 700
-   self.height = 400
-   self.mode = mode or "chara_status"
-
-   self.show_bonus = opts.show_bonus or true
-
-   self.item_count = 0
-
-   self.pages = UiList:new_paged({}, 16)
-
-   table.merge(self.pages, UiListExt(self))
-
-   self.input = InputHandler:new()
-   self.input:forward_to(self.pages)
-   self.input:bind_keys(self:make_keymap())
-
-   self:set_data()
-end
-
-function SkillStatusMenu:make_keymap()
-   return {
-      escape = function() self.canceled = true end,
-      cancel = function() self.canceled = true end,
-      mode2 = function()
-         local entry = self.pages:selected_item()
-         -- TODO track resistances
-         if entry.kind == "skill" then
-            if save.base.tracked_skill_ids[entry._id] then
-               save.base.tracked_skill_ids[entry._id] = nil
-            else
-               save.base.tracked_skill_ids[entry._id] = true
-            end
-            Gui.play_sound("base.ok1")
-            self:set_data()
-         end
-      end,
-   }
-end
-
-function SkillStatusMenu:set_data(chara)
-   self.chara = chara or self.chara
-
-   local skills = SkillStatusMenu.build_list(self.chara, self.mode)
-   self.pages:set_data(skills)
-end
-
 function SkillStatusMenu:relayout(x, y)
    self.x = x
    self.y = y
@@ -291,10 +303,11 @@ function SkillStatusMenu:relayout(x, y)
 end
 
 function SkillStatusMenu:draw()
+   Draw.set_color(255, 255, 255)
    self.t.base.ie_sheet:draw(self.x, self.y)
    Draw.set_color(0, 0, 0)
    Draw.set_font(12, "bold") -- 12 + sizefix - en * 2
-   if self.show_bonus then
+   if self.mode == "chara_status" then
       local tips = I18N.get("ui.chara_sheet.you_can_spend_bonus", self.chara.skill_bonus)
       Draw.text(tips, self.x + self.width - Draw.text_width(tips) - 140, self.y + self.height - 24 - self.height % 8)
    end
@@ -303,16 +316,27 @@ function SkillStatusMenu:draw()
    Ui.draw_topic("ui.chara_sheet.skill.level", self.x + 182, self.y + 36)
    Ui.draw_topic("ui.chara_sheet.skill.detail", self.x + 320, self.y + 36)
 
+   self.item_count = 0
    self.pages:draw()
+end
+
+function SkillStatusMenu:handle_select_item()
+   local entry = self.pages:selected_item()
+   if entry.kind ~= "header" then
+      return {
+         _id = entry._id,
+         kind = entry.kind
+      }
+   end
 end
 
 function SkillStatusMenu:update()
    local result = self.pages:update()
 
    if result == "chosen" then
-      local entry = self.pages:selected_item()
-      if entry.kind ~= "header" then
-         return entry
+      local result = self:handle_select_item()
+      if result then
+         return result
       end
    end
 

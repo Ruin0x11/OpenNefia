@@ -24,6 +24,9 @@ local function generate_map(area, floor)
 
    chara = Chara.create("elona.prostitute", x + 4, y, {}, map)
 
+   chara = Chara.create("elona.trainer", x + 5, y, {}, map)
+   chara:add_role("elona.trainer")
+
    return map
 end
 

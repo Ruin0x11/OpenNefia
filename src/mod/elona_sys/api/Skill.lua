@@ -9,6 +9,7 @@ local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Action = require("api.Action")
 local Anim = require("mod.elona_sys.api.Anim")
+local ICharaEquip = require("api.chara.ICharaEquip")
 
 local Skill = {}
 
@@ -234,7 +235,7 @@ end
 function Skill.gain_fixed_skill_exp(chara, skill, exp)
    data["base.skill"]:ensure(skill)
 
-   local level = chara:skill_level(skill)
+   local level = chara:base_skill_level(skill)
    local potential = chara:skill_potential(skill)
    local new_exp = chara:skill_experience(skill) + exp
 
@@ -261,7 +262,7 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
       Skill.gain_skill_exp(chara, skill_data.related_stat, exp)
    end
 
-   local level = chara:skill_level(skill)
+   local level = chara:base_skill_level(skill)
    local potential = chara:skill_potential(skill)
    if potential == 0 then return end
 
@@ -774,6 +775,9 @@ end
 ---
 --- This is typically run before applying class properties.
 ---
+--- NOTE: This also clears all body parts and reinitializes them to the race's
+--- values.
+---
 --- @see Skill.apply_class_params
 function Skill.apply_race_params(chara, race_id)
    local race_data = data["base.race"]:ensure(race_id)
@@ -798,6 +802,13 @@ function Skill.apply_race_params(chara, race_id)
    for trait_id, level in pairs(race_data.traits or {}) do
       chara.traits[trait_id] = { level = level }
    end
+
+   -- >>>>>>>> shade2/chara.hsp:341 *set_figure ..
+   chara.body_parts = table.deepcopy(race_data.body_parts or {})
+   table.insert(chara.body_parts, "elona.ranged")
+   table.insert(chara.body_parts, "elona.ammo")
+   ICharaEquip.init(chara)
+   -- <<<<<<<< shade2/chara.hsp:376 	return ..
 end
 
 --- Applies the properties and base skill levels of a class for a character.

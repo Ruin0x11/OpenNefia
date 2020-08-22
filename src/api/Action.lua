@@ -24,7 +24,7 @@ local function item_on_cell_text(x, y)
       return nil
    end
 
-   if #items > 4 then
+   if #items > 3 then
       return I18N.get("action.move.item_on_cell.more_than_three", #items)
    end
 

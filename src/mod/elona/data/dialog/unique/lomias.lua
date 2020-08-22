@@ -48,8 +48,8 @@ data:add {
       easter_egg = {
          text = {
             function() Chara.player():apply_effect("elona.blindness", 100) end,
-            {"begin.easter_egg._0", speaker = "elona.larnneire"},
-            {"begin.easter_egg._1", speaker = "elona.lomias"},
+            {"talk.unique.lomias.begin.easter_egg._0", speaker = "elona.larnneire"},
+            {"talk.unique.lomias.begin.easter_egg._1", speaker = "elona.lomias"},
             function()
                Gui.update_screen()
                Gui.wait(3000)
@@ -62,14 +62,14 @@ data:add {
                Gui.wait(500)
                Gui.wait(500)
             end,
-            {"begin.easter_egg._2", speaker = "elona.larnneire"},
-            {"begin.easter_egg._3", speaker = "elona.lomias"},
-            {"begin.easter_egg._4", speaker = "elona.larnneire"},
-            {"begin.easter_egg._5", speaker = "elona.lomias"},
-            {"begin.easter_egg._6", speaker = "elona.larnneire"},
+            {"talk.unique.lomias.begin.easter_egg._2", speaker = "elona.larnneire"},
+            {"talk.unique.lomias.begin.easter_egg._3", speaker = "elona.lomias"},
+            {"talk.unique.lomias.begin.easter_egg._4", speaker = "elona.larnneire"},
+            {"talk.unique.lomias.begin.easter_egg._5", speaker = "elona.lomias"},
+            {"talk.unique.lomias.begin.easter_egg._6", speaker = "elona.larnneire"},
          },
          choices = {
-            {"game_begin", "__MORE__"}
+            {"game_begin", "ui.more"}
          },
          on_finish = function()
             Gui.wait(1500)
@@ -82,14 +82,14 @@ data:add {
       game_begin = {
          text = {
             function() Gui.mes("talk.unique.lomias.begin.regain_consciousness") end,
-            {"begin._0"},
-            {"begin._1"},
-            {"begin._2"},
-            {"begin._3", speaker = "elona.larnneire"},
-            {"begin._4", args = common.args_name, speaker = "elona.lomias"},
+            {"talk.unique.lomias.begin._0"},
+            {"talk.unique.lomias.begin._1"},
+            {"talk.unique.lomias.begin._2"},
+            {"talk.unique.lomias.begin._3", speaker = "elona.larnneire"},
+            {"talk.unique.lomias.begin._4", args = common.args_name, speaker = "elona.lomias"},
          },
          choices = {
-            {"elona.lomias:__start", "__MORE__"}
+            {"elona.lomias:__start", "ui.more"}
          },
          on_finish = function(t)
             t.speaker:current_map().music = "elona.home"
@@ -103,7 +103,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "lomias",
 
-   root = "talk.unique.lomias",
    nodes = {
       __start = function()
          local flag = Sidequest.progress("elona.tutorial")
@@ -135,34 +134,34 @@ data:add {
       end,
       tutorial_0 = {
          text = {
-            {"tutorial.before.dialog"},
+            {"talk.unique.lomias.tutorial.before.dialog"},
          },
          choices = {
-            {"start_tutorial", "tutorial.before.choices.yes"},
-            {"__END__", "tutorial.before.choices.no"},
-            {"get_out", "after.choices.get_out"}
+            {"start_tutorial", "talk.unique.lomias.tutorial.before.choices.yes"},
+            {"__END__", "talk.unique.lomias.tutorial.before.choices.no"},
+            {"get_out", "talk.unique.lomias.after.choices.get_out"}
          }
       },
       tutorial_1 = {
          text = {
-            {"tutorial.movement.dialog._0"},
-            {"tutorial.movement.dialog._1"},
-            {"tutorial.movement.dialog._2"},
-            {"tutorial.movement.dialog._3"},
+            {"talk.unique.lomias.tutorial.movement.dialog._0"},
+            {"talk.unique.lomias.tutorial.movement.dialog._1"},
+            {"talk.unique.lomias.tutorial.movement.dialog._2"},
+            {"talk.unique.lomias.tutorial.movement.dialog._3"},
          },
          choices = {
-            {"__END__", "tutorial.movement.choices.alright"},
-            {"ate", "tutorial.movement.choices.ate"}
+            {"__END__", "talk.unique.lomias.tutorial.movement.choices.alright"},
+            {"ate", "talk.unique.lomias.tutorial.movement.choices.ate"}
          }
       },
       tutorial_2 = {
          text = {
-            {"tutorial.skills.dialog._0"},
-            {"tutorial.skills.dialog._1"},
-            {"tutorial.skills.dialog._2"},
+            {"talk.unique.lomias.tutorial.skills.dialog._0"},
+            {"talk.unique.lomias.tutorial.skills.dialog._1"},
+            {"talk.unique.lomias.tutorial.skills.dialog._2"},
          },
          choices = {
-            {"__END__", "tutorial.skills.response"}
+            {"__END__", "talk.unique.lomias.tutorial.skills.response"}
          }
       },
       tutorial_3 = {
@@ -172,10 +171,10 @@ data:add {
                local scroll = Item.create("elona.scroll_of_identify", Chara.player().x, Chara.player().y)
                scroll.identify_state = Enum.IdentifyState.Full
             end,
-            {"tutorial.after_dig.dialog"},
+            {"talk.unique.lomias.tutorial.after_dig.dialog"},
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 4)
@@ -183,22 +182,22 @@ data:add {
       },
       tutorial_4 = {
          text = {
-            {"tutorial.identify.dialog._0"},
-            {"tutorial.identify.dialog._1"},
-            {"tutorial.identify.dialog._2"},
+            {"talk.unique.lomias.tutorial.identify.dialog._0"},
+            {"talk.unique.lomias.tutorial.identify.dialog._1"},
+            {"talk.unique.lomias.tutorial.identify.dialog._2"},
          },
          choices = {
-            {"__END__", "tutorial.identify.choices.alright"},
-            {"identify_done", "tutorial.identify.choices.done"},
+            {"__END__", "talk.unique.lomias.tutorial.identify.choices.alright"},
+            {"identify_done", "talk.unique.lomias.tutorial.identify.choices.done"},
          }
       },
       tutorial_5 = {
          text = {
-            {"tutorial.equip.dialog"}
+            {"talk.unique.lomias.tutorial.equip.dialog"}
          },
          choices = {
-            {"__END__", "tutorial.equip.choices.alright"},
-            {"equip_done", "tutorial.equip.choices.done"},
+            {"__END__", "talk.unique.lomias.tutorial.equip.choices.alright"},
+            {"equip_done", "talk.unique.lomias.tutorial.equip.choices.done"},
          }
       },
       tutorial_6 = function()
@@ -209,15 +208,15 @@ data:add {
       end,
       tutorial_6_not_finished = {
          text = {
-            {"tutorial.combat.not_finished"}
+            {"talk.unique.lomias.tutorial.combat.not_finished"}
          }
       },
       tutorial_6_finished = {
          text = {
-            {"tutorial.combat.finished"}
+            {"talk.unique.lomias.tutorial.combat.finished"}
          },
          choices = {
-            {"tutorial_7", "__MORE__"}
+            {"talk.unique.lomias.tutorial_7", "ui.more"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 7)
@@ -225,8 +224,8 @@ data:add {
       },
       tutorial_7 = {
          text = {
-            {"tutorial.chests.dialog._0"},
-            {"tutorial.chests.dialog._1"},
+            {"talk.unique.lomias.tutorial.chests.dialog._0"},
+            {"talk.unique.lomias.tutorial.chests.dialog._1"},
             function()
                local chest = Item.create("elona.chest", Chara.player().x, Chara.player().y)
                chest.param1 = 35
@@ -234,10 +233,10 @@ data:add {
                Item.create("elona.lockpick", Chara.player().x, Chara.player().y, {amount=2})
                Gui.mes("common.something_is_put_on_the_ground")
             end,
-            {"tutorial.chests.dialog._2"},
+            {"talk.unique.lomias.tutorial.chests.dialog._2"},
          },
          choices = {
-            {"__END__", "tutorial.chests.response"}
+            {"__END__", "talk.unique.lomias.tutorial.chests.response"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 8)
@@ -245,13 +244,13 @@ data:add {
       },
       tutorial_8 = {
          text = {
-            {"tutorial.house.dialog._0"},
-            {"tutorial.house.dialog._1"},
-            {"tutorial.house.dialog._2"},
-            {"tutorial.house.dialog._3"}
+            {"talk.unique.lomias.tutorial.house.dialog._0"},
+            {"talk.unique.lomias.tutorial.house.dialog._1"},
+            {"talk.unique.lomias.tutorial.house.dialog._2"},
+            {"talk.unique.lomias.tutorial.house.dialog._3"}
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 99)
@@ -259,8 +258,8 @@ data:add {
       },
       tutorial_99 = {
          text = {
-            {"tutorial.end.dialog._0"},
-            {"tutorial.end.dialog._1"}
+            {"talk.unique.lomias.tutorial.end.dialog._0"},
+            {"talk.unique.lomias.tutorial.end.dialog._1"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", -1)
@@ -268,19 +267,19 @@ data:add {
       },
       tutorial_after = {
          text = {
-            {"after.dialog"}
+            {"talk.unique.lomias.after.dialog"}
          },
          choices = {
-            {"__END__", "after.choices.nothing"},
-            {"get_out", "after.choices.get_out"}
+            {"__END__", "talk.unique.lomias.after.choices.nothing"},
+            {"get_out", "talk.unique.lomias.after.choices.get_out"}
          }
       },
       start_tutorial = {
          text = {
-            {"tutorial.before.yes"}
+            {"talk.unique.lomias.tutorial.before.yes"}
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
             local corpse = Item.create("elona.corpse", Chara.player().x, Chara.player().y)
@@ -295,16 +294,16 @@ data:add {
          if not Chara.is_alive(larnneire) then
             local lomias = Chara.find("elona.lomias", "others")
             Chara.player():act_hostile_towards(lomias)
-            t:say("after.get_out.larnneire_died", "__BYE__")
+            t:say("talk.unique.lomias.after.get_out.larnneire_died", "__BYE__")
             return "__END__"
          end
          return "get_out_1"
       end,
       get_out_1 = {
          text = {
-            {"after.get_out.dialog._0", args = common.args_name, speaker = "elona.larnneire"},
-            {"after.get_out.dialog._1", speaker = "elona.lomias"},
-            {"after.get_out.dialog._2", args = common.args_title},
+            {"talk.unique.lomias.after.get_out.dialog._0", args = common.args_name, speaker = "elona.larnneire"},
+            {"talk.unique.lomias.after.get_out.dialog._1", speaker = "elona.lomias"},
+            {"talk.unique.lomias.after.get_out.dialog._2", args = common.args_title},
          },
          on_finish = function()
             Chara.find("elona.larnneire", "others"):vanquish()
@@ -320,12 +319,12 @@ data:add {
       },
       ate = {
          text = {
-            {"tutorial.movement.ate.dialog._0", choice = "tutorial.movement.ate.response"},
-            {"tutorial.movement.ate.dialog._1"},
-            {"tutorial.movement.ate.dialog._2"},
+            {"talk.unique.lomias.tutorial.movement.ate.dialog._0", choice = "talk.unique.lomias.tutorial.movement.ate.response"},
+            {"talk.unique.lomias.tutorial.movement.ate.dialog._1"},
+            {"talk.unique.lomias.tutorial.movement.ate.dialog._2"},
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 2)
@@ -333,11 +332,11 @@ data:add {
       },
       identify_done = {
          text = {
-            {"tutorial.identify.done.dialog._0"},
-            {"tutorial.identify.done.dialog._1"},
+            {"talk.unique.lomias.tutorial.identify.done.dialog._0"},
+            {"talk.unique.lomias.tutorial.identify.done.dialog._1"},
          },
          choices = {
-            {"__start", "__MORE__"}
+            {"__start", "ui.more"}
          },
          on_finish = function()
             local item = Item.create("elona.long_bow", Chara.player().x, Chara.player().y)
@@ -357,12 +356,12 @@ data:add {
       },
       equip_done = {
          text = {
-            {"tutorial.equip.done.dialog._0"},
-            {"tutorial.equip.done.dialog._1"},
-            {"tutorial.equip.done.dialog._2"}
+            {"talk.unique.lomias.tutorial.equip.done.dialog._0"},
+            {"talk.unique.lomias.tutorial.equip.done.dialog._1"},
+            {"talk.unique.lomias.tutorial.equip.done.dialog._2"}
          },
          choices = {
-            {"__END__", "__MORE__"}
+            {"__END__", "ui.more"}
          },
          on_finish = function()
             Gui.mes_c("talk.unique.lomias.tutorial.equip.done.lomias_releases", "SkyBlue")

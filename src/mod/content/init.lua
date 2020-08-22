@@ -4,7 +4,7 @@ data:add {
 
    name = "player",
    race = "elona.norland",
-   class = "elona.gunner",
+   class = "elona.tourist",
    faction = "base.enemy",
    image = "elona.chara_rabbit",
    level = 1,

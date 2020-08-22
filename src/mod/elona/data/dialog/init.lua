@@ -9,15 +9,17 @@ local Const = require("api.Const")
 local Rand = require("api.Rand")
 local Area = require("api.Area")
 local Skill = require("mod.elona_sys.api.Skill")
+local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
+local Calc = require("mod.elona.api.Calc")
+local Gui = require("api.Gui")
 
 data:add {
    _type = "elona_sys.dialog",
    _id = "is_sleeping",
-   root = "talk",
    nodes = {
       __start = {
          text = {
-            {"is_sleeping", args = function(t) return {t.speaker} end},
+            {"talk.is_sleeping", args = function(t) return {t.speaker} end},
          }
       },
    }
@@ -26,11 +28,10 @@ data:add {
 data:add {
    _type = "elona_sys.dialog",
    _id = "is_busy",
-   root = "talk",
    nodes = {
       __start = {
          text = {
-            {"is_busy", args = function(t) return {t.speaker} end},
+            {"talk.is_busy", args = function(t) return {t.speaker} end},
          }
       },
    }
@@ -109,30 +110,30 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "default",
 
-   root = "",
    nodes = {
       __start = {
+         on_start = function(t)
+            modify_impress_and_interest(t.speaker)
+         end,
          text = talk_text,
          choices = function(t)
             local speaker = t.speaker
             local choices = speaker:emit("elona.calc_dialog_choices", {}, {})
 
-            table.insert(choices, {"__END__", "__BYE__"})
-
-            modify_impress_and_interest(speaker)
+            table.insert(choices, {"__END__", "ui.bye"})
 
             return choices
          end
       },
       talk = {
          text = talk_text,
-         choices = "__start"
+         jump_to = "__start"
       },
       you_kidding = {
          text = {
             {"talk.npc.common.you_kidding"}
          },
-         choices = "__start"
+         jump_to = "__start"
       },
    },
 }
@@ -183,13 +184,13 @@ data:add {
          text = {
             {"about.too_many_unfinished"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       accept = {
          text = {
             {"about.thanks"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       finish = function(t)
          local quest = Quest.for_client(t.speaker)
@@ -229,7 +230,6 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "shopkeeper",
 
-   root = "",
    nodes = {
       buy = function(t)
          if t.speaker.shop_inventory == nil
@@ -248,11 +248,109 @@ data:add {
    }
 }
 
+local function train_skill(player, skill_id, cost)
+   Gui.play_sound("base.paygold1")
+   -- >>>>>>>> shade2/chat.hsp:3095 			cPlat(pc)-=calcTrainCost(csSkill,cc) ..
+   player.platinum = player.platinum - cost
+   Skill.gain_skill(player, skill_id)
+   save.elona.total_skills_learned = save.elona.total_skills_learned + 1
+   -- <<<<<<<< shade2/chat.hsp:3096 			modGrowth cc,csSkill,limit(15-sGrowth(csSkill,c ..
+end
+
+local function learn_skill(player, skill_id, cost)
+   Gui.play_sound("base.paygold1")
+   -- >>>>>>>> shade2/chat.hsp:3095 			cPlat(pc)-=calcTrainCost(csSkill,cc) ..
+   player.platinum = player.platinum - cost
+   local amount = math.clamp(15 - player:skill_potential(skill_id) / 15, 2, 15)
+   Skill.modify_potential(player, skill_id, amount)
+   -- <<<<<<<< shade2/chat.hsp:3096 			modGrowth cc,csSkill,limit(15-sGrowth(csSkill,c ..
+end
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "trainer",
+
+   nodes = {
+      -- >>>>>>>> shade2/chat.hsp:3076 *chat_train ..
+      train = function(t, state)
+         local result, canceled = CharacterInfoMenu:new(Chara.player(), "trainer_train", {}):query()
+         if result and not canceled then
+            state.skill_id = result._id
+            state.cost = Calc.calc_train_cost(result._id, Chara.player())
+            return "train_confirm"
+         end
+         return "come_again"
+      end,
+      train_confirm = {
+         text = function(t, state)
+            return {
+               I18N.get("talk.npc.trainer.cost.training", "ability." .. state.skill_id .. ".name", state.cost)
+            }
+         end,
+         choices = function(t, state)
+            local choices = {}
+
+            if Chara.player().platinum >= state.cost then
+               table.insert(choices, { "train_accept", "talk.npc.trainer.choices.train.accept" })
+            end
+            table.insert(choices, { "come_again", "talk.npc.trainer.choices.go_back" })
+
+            return choices
+         end
+      },
+      train_accept = {
+         on_start = function(t, state)
+            learn_skill(Chara.player(), state.skill_id, state.cost)
+         end,
+         text = "talk.npc.trainer.finish.training",
+         jump_to = "elona.default:__start"
+      },
+      learn = function(t, state)
+         local trainer_skills = Calc.calc_trainer_skills(t.speaker, Chara.player())
+         local result, canceled = CharacterInfoMenu:new(Chara.player(), "trainer_learn", { trainer_skills = trainer_skills }):query()
+         if result and not canceled then
+            state.skill_id = result._id
+            state.cost = Calc.calc_learn_cost(result._id, Chara.player())
+            return "learn_confirm"
+         end
+         return "come_again"
+      end,
+      learn_confirm = {
+         text = function(t, state)
+            return {
+               I18N.get("talk.npc.trainer.cost.learning", "ability." .. state.skill_id .. ".name", state.cost)
+            }
+         end,
+         choices = function(t, state)
+            local choices = {}
+
+            if Chara.player().platinum >= state.cost then
+               table.insert(choices, { "learn_accept", "talk.npc.trainer.choices.learn.accept" })
+            end
+            table.insert(choices, { "come_again", "talk.npc.trainer.choices.go_back" })
+
+            return choices
+         end
+      },
+      learn_accept = {
+         on_start = function(t, state)
+            train_skill(Chara.player(), state.skill_id, state.cost)
+         end,
+         text = "talk.npc.trainer.finish.learning",
+         jump_to = "elona.default:__start"
+      },
+      come_again = {
+         text = "talk.npc.trainer.leave",
+         jump_to = "elona.default:__start"
+      }
+   }
+   -- <<<<<<<< shade2/chat.hsp:3107 	goto *chat_default ..
+}
+
 data:add {
    _type = "elona_sys.dialog",
    _id = "guard",
 
-   root = "",
    nodes = {
       where_is = function(t)
          return "elona.default:talk"

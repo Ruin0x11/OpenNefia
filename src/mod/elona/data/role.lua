@@ -27,6 +27,10 @@ local role = {
    {
       _id = "trainer",
       elona_id = 7,
+      dialog_choices = {
+         {"elona.trainer:train", "talk.npc.trainer.choices.train.ask"},
+         {"elona.trainer:learn", "talk.npc.trainer.choices.learn.ask"}
+      }
    },
    {
       _id = "informer",

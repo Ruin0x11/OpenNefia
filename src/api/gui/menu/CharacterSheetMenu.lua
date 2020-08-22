@@ -19,10 +19,11 @@ local CharacterSheetMenu = class.class("CharacterSheetMenu", { IUiLayer, ISettab
 
 CharacterSheetMenu:delegate("input", IInput)
 
-function CharacterSheetMenu:init(chara)
+function CharacterSheetMenu:init(chara, mode)
    self.width = 700
    self.height = 400
    self.chara = chara
+   self.mode = mode
 
    self.topic_win = TopicWindow:new(1, 10)
 
@@ -81,7 +82,9 @@ function CharacterSheetMenu:set_data(chara)
 end
 
 function CharacterSheetMenu:on_query()
-   Gui.play_sound("base.chara")
+   if not self.mode == "chara_make" then
+      Gui.play_sound("base.chara")
+   end
 end
 
 function CharacterSheetMenu:text_level()

@@ -21,3 +21,5 @@ local function to_putit(chara)
 end
 
 -- Advice.add("filter_return", Chara.create, "Everyone looks like a putit", to_putit)
+
+-- require("mod.advice_test.event.skip_train_confirm")

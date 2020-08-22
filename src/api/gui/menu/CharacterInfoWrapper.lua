@@ -33,8 +33,6 @@ function CharacterInfoWrapper:init()
    }
    self.menu_count = 3
 
-   self.title = WindowTitle:new()
-
    self.selected_index = 1
    self:switch_context()
 end
@@ -73,12 +71,6 @@ function CharacterInfoWrapper:switch_context()
 
    self.icon_bar:select(self.selected_index)
 
-   local title_string = I18N.get("ui.chara_sheet.hint.reroll")
-      .. I18N.get("ui.hint.portrait")
-      .. I18N.get("ui.chara_sheet.hint.confirm")
-
-   self.title:set_data(title_string)
-
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
 end
 
@@ -91,14 +83,12 @@ function CharacterInfoWrapper:relayout(x, y, width, height)
 
    self.icon_bar:relayout(self.width - (44 * self.menu_count + 60), 34, 44 * self.menu_count + 40, 22)
    self.submenu:relayout(self.x, self.y + 25, self.width, self.height)
-   self.title:relayout(236 - 10, 0, Draw.get_width() - 236 - 10, 16)
 end
 
 function CharacterInfoWrapper:draw()
    Draw.set_color(255, 255, 255)
    self.icon_bar:draw()
    self.submenu:draw()
-   self.title:draw()
 end
 
 function CharacterInfoWrapper:update()

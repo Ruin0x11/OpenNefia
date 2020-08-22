@@ -32,6 +32,15 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          max_crowd_density = 40,
+         trainer_skills = {
+            "elona.alchemy",
+            "elona.healing",
+            "elona.cooking",
+            "elona.mining",
+            "elona.traveling",
+            "elona.fishing",
+            "elona.lock_picking",
+         }
       },
    }
 
@@ -182,7 +191,7 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
       },
 
       parent_area = {
@@ -212,6 +221,17 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          quest_town_id = 2,
+         trainer_skills = {
+            "elona.healing",
+            "elona.sense_quality",
+            "elona.cooking",
+            "elona.carpentry",
+            "elona.tailoring",
+            "elona.gardening",
+            "elona.riding",
+            "elona.two_hand",
+            "elona.weight_lifting",
+         }
       }
    }
 
@@ -336,7 +356,7 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
       },
 
       parent_area = {
@@ -365,6 +385,17 @@ do
          default_ai_calm = 1,
          max_crowd_density = 45,
          quest_town_id = 3,
+         trainer_skills = {
+            "elona.gene_engineer",
+            "elona.literacy",
+            "elona.anatomy",
+            "elona.jeweler",
+            "elona.riding",
+            "elona.negotiation",
+            "elona.investing",
+            "elona.casting",
+            "elona.alchemy",
+         }
       },
    }
 
@@ -560,7 +591,7 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
       },
 
       parent_area = {
@@ -591,6 +622,16 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          quest_town_id = 4,
+         trainer_skills = {
+            "elona.lock_picking",
+            "elona.stealth",
+            "elona.medium_armor",
+            "elona.light_armor",
+            "elona.carpentry",
+            "elona.magic_device",
+            "elona.performer",
+            "elona.mining",
+         }
       }
    }
 
@@ -734,6 +775,14 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          quest_town_id = 5,
+         trainer_skills = {
+            "elona.negotiation",
+            "elona.investing",
+            "elona.performer",
+            "elona.fishing",
+            "elona.magic_device",
+            "elona.gene_engineer",
+         }
       }
    }
 
@@ -910,6 +959,15 @@ do
          quest_town_id = 6,
          villagers_make_snowmen = true,
          max_crowd_density = 35,
+         trainer_skills = {
+            "elona.faith",
+            "elona.literacy",
+            "elona.sense_quality",
+            "elona.cooking",
+            "elona.traveling",
+            "elona.meditation",
+            "elona.weight_lifting",
+         }
       }
    }
 
@@ -976,7 +1034,7 @@ do
       chara:add_role("elona.healer")
 
       chara = Chara.create("elona.healer", 44, 3, {}, map)
-      chara:add_role("elona.nun")
+      chara:add_role("elona.sister")
 
       chara = Chara.create("elona.shopkeeper", 19, 31, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
@@ -1214,7 +1272,7 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
       },
 
       parent_area = {
@@ -1242,6 +1300,16 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          quest_town_id = 7,
+         trainer_skills = {
+            "elona.casting",
+            "elona.healing",
+            "elona.literacy",
+            "elona.magic_device",
+            "elona.fishing",
+            "elona.light_armor",
+            "elona.investing",
+            "elona.two_hand",
+         }
       }
    }
 

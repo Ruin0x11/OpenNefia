@@ -58,7 +58,7 @@ end
 
 function PagedListModel:select(i)
    i = math.clamp(i or 1, 1, #self.items_)
-   local page = math.floor(i / self.page_size)
+   local page = math.floor((i - 1) / self.page_size)
    local index = i % self.page_size
    self:select_page(page)
    self.model:select(index)

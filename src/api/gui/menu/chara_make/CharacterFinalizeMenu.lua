@@ -12,7 +12,6 @@ local Prompt = require("api.gui.Prompt")
 local I18N = require("api.I18N")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
-local WindowTitle = require("api.gui.menu.WindowTitle")
 local CharaMake = require("api.CharaMake")
 local ICharaMakeSection = require("api.gui.menu.chara_make.ICharaMakeSection")
 local CharacterInfoMenu = require("api.gui.menu.CharacterInfoMenu")
@@ -26,7 +25,7 @@ function CharacterFinalizeMenu:init(charamake_data)
 
    local chara = self.charamake_data.chara
    self.skills = table.deepcopy(chara.skills)
-   self.inner = CharacterInfoMenu:new(nil, chara)
+   self.inner = CharacterInfoMenu:new(chara, "chara_make")
 
    self.input = InputHandler:new()
    self.input:forward_to(self.inner)
@@ -34,12 +33,6 @@ function CharacterFinalizeMenu:init(charamake_data)
 
    self.caption = "chara_make.final_screen.caption"
    self.intro_sound = "base.skill"
-
-   local title_string = I18N.get("ui.chara_sheet.hint.reroll")
-      .. I18N.get("ui.hint.portrait")
-      .. I18N.get("ui.chara_sheet.hint.confirm")
-
-   self.title = WindowTitle:new(title_string)
 
    self:reroll()
 end
@@ -124,13 +117,10 @@ function CharacterFinalizeMenu:relayout(x, y, width, height)
    self.width = width
    self.height = height
    self.inner:relayout(x, y - 10, width, height)
-   self.title:relayout(240, Draw.get_height() - 16, Draw.get_width() - 240, 16)
 end
 
 function CharacterFinalizeMenu:draw()
    self.inner:draw()
-
-   self.title:draw()
 end
 
 function CharacterFinalizeMenu:get_charamake_result(charamake_result, retval)
