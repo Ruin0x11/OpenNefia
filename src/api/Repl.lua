@@ -147,6 +147,7 @@ function Repl.generate_env(locals)
 end
 
 local paused = false
+local debug_repl_history
 
 --- Stops execution at the point this function is called and starts
 --- the REPL with all local variables in scope captured in its
@@ -160,6 +161,9 @@ function Repl.pause(force)
 
    local locals = repl.capture_locals(1)
    local repl_env, history = Repl.generate_env(locals)
+   if debug_repl_history == nil then
+      debug_repl_history = history
+   end
 
    repl_env["_tb"] = debug.traceback()
 
@@ -174,7 +178,7 @@ function Repl.pause(force)
 
    local mes = ("Breakpoint%s.\nLocals: %s"):format(loc_string, table.concat(table.keys(locals), ", "))
    local params = {
-      history = history,
+      history = debug_repl_history,
       color = {65, 17, 17, 192},
       message = mes
    }

@@ -12,7 +12,7 @@ local EquipSlots = class.class("EquipSlots", {ILocation, IOwned})
 function EquipSlots:init(body_parts, owner)
    if owner then
       assert(class.is_an(IOwned, owner))
-      self.location = owner
+      self._parent = owner
    end
    body_parts = body_parts or {}
 

@@ -24,6 +24,7 @@ function ReplLayer:init(env, params)
    params = params or {}
 
    self.history = params.history or {}
+   self.history_file = params.history_file or nil
    self.color = params.color or {17, 17, 65, 192}
    self.message = params.message or nil
 
@@ -579,7 +580,9 @@ function ReplLayer:submit()
 end
 
 function ReplLayer:save_history()
-   SaveFs.write("data/repl_history", self.history)
+   if self.history_file then
+      SaveFs.write(self.history_file, self.history)
+   end
 end
 
 function ReplLayer:last_input()

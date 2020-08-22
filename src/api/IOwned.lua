@@ -2,7 +2,8 @@ local ILocation = require("api.ILocation")
 
 local IOwned = class.interface("IOwned",
                          {
-                            location = { type = ILocation, optional = true }
+                            location = { type = ILocation, optional = true },
+                            _parent = { type = ILocation, optional = true }
                          })
 
 function IOwned:remove_ownership(no_events)
@@ -42,7 +43,7 @@ end
 --- @see IOwned:current_map()
 function IOwned:containing_map()
    local InstancedMap = require("api.InstancedMap")
-   local location = self.location
+   local location = self.location or self._parent
    local containing = self
 
    while location ~= nil do
@@ -50,7 +51,7 @@ function IOwned:containing_map()
          return location, containing
       end
       containing = location
-      location = location.location
+      location = location.location or location._parent
    end
 
    return nil

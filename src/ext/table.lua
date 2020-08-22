@@ -122,9 +122,16 @@ function table.replace_with(tbl, other)
    return tbl
 end
 
+local function is_map_object(t)
+   return type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
+end
+
 local function cycle_aware_copy(t, cache)
     if type(t) ~= 'table' then return t end
     if cache[t] then return cache[t] end
+    if is_map_object(t) then
+       error("Map object detected; do not call table.deepcopy() on map objects as it can lead to all sorts of weirdness. Use MapObject.deepcopy() instead.")
+    end
     local res = {}
     cache[t] = res
     local mt = getmetatable(t)
@@ -144,7 +151,7 @@ end
 -- @tparam table t A table
 -- @treturn table new table
 function table.deepcopy(t)
-    return cycle_aware_copy(t,{})
+   return cycle_aware_copy(t,{})
 end
 
 --- Makes a shallow copy of a table.
