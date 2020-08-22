@@ -161,7 +161,7 @@ local function item_name_sub(s, item, jp)
    if item.params.chara_id and item.own_state ~= "harvested" then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
-         s = s .. "of "
+         s = s .. " of "
       end
       s = s .. chara_name
       if jp then
@@ -181,7 +181,7 @@ local function item_name_sub(s, item, jp)
    elseif _id == "elona.vomit" and item.params.chara_id then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
-         s = s .. "of "
+         s = s .. " of "
       end
       s = s .. chara_name
       if jp then

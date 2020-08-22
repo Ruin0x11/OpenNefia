@@ -47,7 +47,7 @@ end
 
 function DialogMenu:make_keymap()
    return {
-      shift = function() self:cancel() end,
+      cancel = function() self:cancel() end,
       escape = function() self:cancel() end,
    }
 end
@@ -116,7 +116,7 @@ function DialogMenu:draw()
       if self.interest >= 0 then
          local icon_count = math.min(math.floor(self.interest / 5 + 1), 20)
          Draw.set_color(255, 255, 255)
-         for i = 1, icon_count do
+         for i = 1, icon_count-1 do
             self.t.base.impression_icon:draw(self.x + 26 + (i - 1) * 4, self.y + 245)
          end
       end

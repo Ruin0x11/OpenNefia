@@ -20,18 +20,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 150,
             gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -51,8 +39,20 @@ local race =
             ["elona.pickpocket"] = 3,
             ["elona.stealth"] = 2,
             ["elona.magic_device"] = 3,
-         }
+         },
 
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
       },
       {
@@ -65,17 +65,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 150,
             gender = Resolver.make("elona.gender", { male_ratio = 51 }),
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -95,8 +84,19 @@ local race =
             ["elona.healing"] = 3,
             ["elona.heavy_armor"] = 3,
             ["elona.shield"] = 3,
-         }
+         },
 
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
       },
       {
@@ -110,15 +110,6 @@ local race =
             height = 400,
             gender = Resolver.make("elona.gender", { male_ratio = 51 }),
             pv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.waist"
-            },
 
          },
 
@@ -136,8 +127,17 @@ local race =
             ["elona.stat_speed"] = 60,
             ["elona.martial_arts"] = 3,
             ["elona.healing"] = 40,
-         }
+         },
 
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.waist"
+         },
 
       },
       {
@@ -151,17 +151,6 @@ local race =
             height = 240,
             gender = Resolver.make("elona.gender", { male_ratio = 51 }),
             dv_correction = 120,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -181,8 +170,19 @@ local race =
             ["elona.polearm"] = 3,
             ["elona.shield"] = 3,
             ["elona.evasion"] = 2,
-         }
+         },
 
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
       },
       {
@@ -195,15 +195,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 350,
             gender = Resolver.make("elona.gender", { male_ratio = 51 }),
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -222,8 +213,17 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.tactics"] = 4,
             ["elona.eye_of_mind"] = 3,
-         }
+         },
 
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
       },
       {
@@ -242,19 +242,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 34 }),
             height = 165,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
          },
 
          traits = {
@@ -278,7 +265,21 @@ local race =
             ["elona.literacy"] = 3,
             ["elona.negotiation"] = 2,
             ["elona.throwing"] = 3,
-         }
+         },
+
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
       },
       {
          _id = "norland",
@@ -294,19 +295,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 34 }),
             height = 170,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -327,7 +315,20 @@ local race =
             ["elona.tactics"] = 3,
             ["elona.two_hand"] = 3,
             ["elona.control_magic"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -347,19 +348,6 @@ local race =
             age = Resolver.make("base.between", { min = 16, max = 35 }),
             height = 175,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -383,7 +371,20 @@ local race =
             ["elona.casting"] = 5,
             ["elona.literacy"] = 3,
             ["elona.magic_device"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -409,19 +410,6 @@ local race =
                ["elona.chaos"] = 200,
             },
             dv_correction = 250,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -446,7 +434,20 @@ local race =
             ["elona.casting"] = 5,
             ["elona.pickpocket"] = 3,
             ["elona.light_armor"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -461,13 +462,6 @@ local race =
             height = 220,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
             dv_correction = 200,
-            body_parts = {
-               "elona.hand",
-               "elona.hand",
-               "elona.hand",
-               "elona.hand",
-               "elona.neck"
-            },
 
          },
 
@@ -487,7 +481,14 @@ local race =
             ["elona.dual_wield"] = 30,
             ["elona.greater_evasion"] = 6,
             ["elona.anatomy"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.hand",
+            "elona.hand",
+            "elona.hand",
+            "elona.neck"
+         },
 
 
       },
@@ -502,9 +503,6 @@ local race =
             age = Resolver.make("base.between", { min = 1, max = 10 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 54 }),
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -523,7 +521,10 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.evasion"] = 2,
             ["elona.performer"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -538,14 +539,6 @@ local race =
             height = 100,
             gender = Resolver.make("elona.gender", { male_ratio = 55 }),
             dv_correction = 140,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -564,7 +557,15 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.evasion"] = 2,
             ["elona.greater_evasion"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -580,19 +581,6 @@ local race =
             age = Resolver.make("base.between", { min = 20, max = 79 }),
             height = 100,
             gender = Resolver.make("elona.gender", { male_ratio = 56 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -617,7 +605,20 @@ local race =
             ["elona.cooking"] = 4,
             ["elona.jeweler"] = 3,
             ["elona.mining"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -637,19 +638,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 165,
             gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -675,7 +663,20 @@ local race =
             ["elona.lock_picking"] = 2,
             ["elona.negotiation"] = 2,
             ["elona.throwing"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -695,16 +696,6 @@ local race =
                ["elona.nether"] = 500,
                ["elona.fire"] = 80,
             },
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist"
-            },
 
          },
 
@@ -723,7 +714,17 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.cooking"] = 3,
             ["elona.fishing"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist"
+         },
 
 
       },
@@ -743,19 +744,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 209 }),
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -780,7 +768,20 @@ local race =
             ["elona.magic_capacity"] = 5,
             ["elona.casting"] = 2,
             ["elona.memorization"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -794,13 +795,6 @@ local race =
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.ring"
-            },
 
          },
 
@@ -818,7 +812,14 @@ local race =
             ["elona.stat_speed"] = 100,
             ["elona.martial_arts"] = 1,
             ["elona.riding"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.ring"
+         },
 
 
       },
@@ -832,14 +833,6 @@ local race =
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 150,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -858,7 +851,15 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.healing"] = 3,
             ["elona.anatomy"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -872,7 +873,6 @@ local race =
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 10,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {4},
 
          },
 
@@ -891,8 +891,11 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.performer"] = 3,
             ["elona.investing"] = 2,
-         }
+         },
 
+         body_parts = {
+            "elona.body"
+         },
 
       },
       {
@@ -905,11 +908,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 10,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.back",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -927,7 +925,12 @@ local race =
             ["elona.stat_speed"] = 70,
             ["elona.martial_arts"] = 1,
             ["elona.eye_of_mind"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.back",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -941,9 +944,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 8,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.back"
-            },
 
          },
 
@@ -961,7 +961,10 @@ local race =
             ["elona.stat_speed"] = 25,
             ["elona.martial_arts"] = 1,
             ["elona.throwing"] = 5,
-         }
+         },
+         body_parts = {
+            "elona.back"
+         },
 
 
       },
@@ -975,10 +978,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 25,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.back"
-            },
 
          },
 
@@ -998,7 +997,11 @@ local race =
             ["elona.memorization"] = 3,
             ["elona.literacy"] = 2,
             ["elona.magic_capacity"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.back"
+         },
 
 
       },
@@ -1013,9 +1016,6 @@ local race =
             height = 10,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 140,
-            body_parts = {
-               "elona.neck"
-            },
 
          },
 
@@ -1034,7 +1034,10 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.detection"] = 3,
             ["elona.stealth"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck"
+         },
 
 
       },
@@ -1050,10 +1053,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 20,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck"
-            },
 
          },
 
@@ -1072,7 +1071,11 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.tailoring"] = 3,
             ["elona.alchemy"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck"
+         },
 
 
       },
@@ -1088,9 +1091,6 @@ local race =
             height = 70,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 320,
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -1108,7 +1108,10 @@ local race =
             ["elona.stat_speed"] = 140,
             ["elona.martial_arts"] = 2,
             ["elona.greater_evasion"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -1122,13 +1125,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1500,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -1147,7 +1143,14 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.healing"] = 2,
             ["elona.carpentry"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -1171,19 +1174,6 @@ local race =
             },
             dv_correction = 190,
             pv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -1209,7 +1199,20 @@ local race =
             ["elona.meditation"] = 5,
             ["elona.magic_device"] = 3,
             ["elona.casting"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -1225,13 +1228,6 @@ local race =
             height = 160,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 120,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.leg"
-            },
 
          },
 
@@ -1250,7 +1246,14 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.detection"] = 4,
             ["elona.performer"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.leg"
+         },
 
 
       },
@@ -1272,16 +1275,6 @@ local race =
                ["elona.fire"] = 80,
             },
             dv_correction = 160,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1300,7 +1293,17 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.magic_capacity"] = 4,
             ["elona.magic_device"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1314,16 +1317,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 100,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1342,7 +1335,17 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.casting"] = 3,
             ["elona.control_magic"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1357,9 +1360,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -1378,7 +1378,10 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.detection"] = 3,
             ["elona.anatomy"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -1393,12 +1396,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1600,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1417,7 +1414,13 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.literacy"] = 3,
             ["elona.traveling"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1433,9 +1436,6 @@ local race =
             height = 80,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 220,
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -1453,7 +1453,10 @@ local race =
             ["elona.stat_speed"] = 100,
             ["elona.martial_arts"] = 2,
             ["elona.greater_evasion"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -1467,14 +1470,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1800,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -1494,7 +1489,15 @@ local race =
             ["elona.anatomy"] = 3,
             ["elona.magic_device"] = 2,
             ["elona.carpentry"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -1510,15 +1513,6 @@ local race =
             height = 80,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 200,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1537,7 +1531,16 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.memorization"] = 3,
             ["elona.control_magic"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1551,13 +1554,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 70,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1575,7 +1571,14 @@ local race =
             ["elona.stat_speed"] = 70,
             ["elona.martial_arts"] = 2,
             ["elona.eye_of_mind"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1590,8 +1593,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 50,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {4},
-
          },
 
          skills = {
@@ -1608,7 +1609,12 @@ local race =
             ["elona.stat_speed"] = 70,
             ["elona.martial_arts"] = 2,
             ["elona.stealth"] = 4,
-         }
+         },
+
+         body_parts = {
+            "elona.body"
+         },
+
 
 
       },
@@ -1624,12 +1630,6 @@ local race =
             height = 1400,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1648,7 +1648,13 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.traveling"] = 3,
             ["elona.fishing"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1664,19 +1670,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 140,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -1702,7 +1695,20 @@ local race =
             ["elona.fishing"] = 2,
             ["elona.mining"] = 2,
             ["elona.eye_of_mind"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -1717,15 +1723,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 280,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -1745,7 +1742,16 @@ local race =
             ["elona.healing"] = 3,
             ["elona.performer"] = 2,
             ["elona.eye_of_mind"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -1761,16 +1767,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 300,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.waist"
-            },
 
          },
 
@@ -1789,7 +1785,17 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.lock_picking"] = 3,
             ["elona.magic_device"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.waist"
+         },
 
 
       },
@@ -1804,15 +1810,6 @@ local race =
             height = 160,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 140,
-            body_parts = {
-               "elona.body",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -1831,7 +1828,16 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.magic_capacity"] = 3,
             ["elona.control_magic"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.body",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -1846,15 +1852,6 @@ local race =
             height = 120,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 200,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -1873,7 +1870,16 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.literacy"] = 4,
             ["elona.control_magic"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1894,15 +1900,6 @@ local race =
                ["elona.fire"] = 80,
             },
             pv_correction = 200,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
          skills = {
@@ -1920,7 +1917,16 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.stealth"] = 3,
             ["elona.disarm_trap"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -1934,16 +1940,6 @@ local race =
             height = 140,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 150,
-            body_parts = {
-               "elona.neck",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
          skills = {
@@ -1961,7 +1957,17 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.magic_capacity"] = 3,
             ["elona.magic_device"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -1977,12 +1983,6 @@ local race =
             height = 2400,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -2001,7 +2001,13 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.traveling"] = 3,
             ["elona.jeweler"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -2017,12 +2023,6 @@ local race =
             height = 2000,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 120,
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -2041,7 +2041,13 @@ local race =
             ["elona.martial_arts"] = 4,
             ["elona.traveling"] = 3,
             ["elona.greater_evasion"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -2056,15 +2062,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1200,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.ring",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
 
@@ -2083,7 +2080,16 @@ local race =
             ["elona.martial_arts"] = 3,
             ["elona.detection"] = 3,
             ["elona.tailoring"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.ring",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -2100,10 +2106,6 @@ local race =
             height = 60,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             dv_correction = 170,
-            body_parts = {
-               "elona.ring",
-               "elona.ring"
-            },
 
             can_pass_through_webs = true
          },
@@ -2123,7 +2125,11 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.stealth"] = 3,
             ["elona.anatomy"] = 5,
-         }
+         },
+         body_parts = {
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -2141,19 +2147,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 140,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2177,7 +2170,20 @@ local race =
             ["elona.martial_arts"] = 4,
             ["elona.weight_lifting"] = 5,
             ["elona.mining"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2193,9 +2199,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 200,
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -2214,7 +2217,10 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.weight_lifting"] = 3,
             ["elona.mining"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -2230,14 +2236,6 @@ local race =
             height = 50,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-            body_parts = {
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -2256,7 +2254,15 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.disarm_trap"] = 2,
             ["elona.shield"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -2277,19 +2283,6 @@ local race =
                ["elona.nether"] = 500,
                ["elona.fire"] = 80,
             },
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2309,7 +2302,20 @@ local race =
             ["elona.long_sword"] = 3,
             ["elona.shield"] = 2,
             ["elona.lock_picking"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2325,18 +2331,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist"
-            },
 
          },
 
@@ -2355,7 +2349,19 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.magic_capacity"] = 2,
             ["elona.literacy"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist"
+         },
 
 
       },
@@ -2371,15 +2377,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 60,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
 
@@ -2399,7 +2396,16 @@ local race =
             ["elona.performer"] = 2,
             ["elona.greater_evasion"] = 3,
             ["elona.evasion"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -2414,15 +2420,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 80,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
 
@@ -2442,7 +2439,16 @@ local race =
             ["elona.weight_lifting"] = 3,
             ["elona.performer"] = 2,
             ["elona.detection"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -2457,19 +2463,6 @@ local race =
             height = 150,
             gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2489,7 +2482,20 @@ local race =
             ["elona.meditation"] = 3,
             ["elona.literacy"] = 4,
             ["elona.investing"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2504,12 +2510,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 30,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.back",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2528,7 +2528,13 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.stealth"] = 3,
             ["elona.anatomy"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.back",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2544,9 +2550,6 @@ local race =
             height = 120,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 340,
-            body_parts = {
-               "elona.leg"
-            },
 
          },
 
@@ -2565,7 +2568,10 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.meditation"] = 3,
             ["elona.sense_quality"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.leg"
+         },
 
 
       },
@@ -2581,15 +2587,6 @@ local race =
             height = 120,
             gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 250,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -2609,7 +2606,16 @@ local race =
             ["elona.evasion"] = 3,
             ["elona.greater_evasion"] = 3,
             ["elona.eye_of_mind"] = 2,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -2625,16 +2631,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2652,7 +2648,17 @@ local race =
             ["elona.stat_speed"] = 70,
             ["elona.martial_arts"] = 5,
             ["elona.firearm"] = 30,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2666,15 +2672,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1500,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -2693,7 +2690,16 @@ local race =
             ["elona.martial_arts"] = 4,
             ["elona.control_magic"] = 3,
             ["elona.magic_capacity"] = 5,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -2709,19 +2715,6 @@ local race =
             height = 240,
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2741,7 +2734,20 @@ local race =
             ["elona.meditation"] = 3,
             ["elona.lock_picking"] = 3,
             ["elona.disarm_trap"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2756,9 +2762,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -2777,7 +2780,10 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.control_magic"] = 3,
             ["elona.magic_capacity"] = 5,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -2792,9 +2798,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 40,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.head"
-            },
 
          },
 
@@ -2813,7 +2816,10 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.anatomy"] = 3,
             ["elona.meditation"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head"
+         },
 
 
       },
@@ -2835,14 +2841,6 @@ local race =
                ["elona.fire"] = 80,
             },
             dv_correction = 130,
-            body_parts = {
-               "elona.neck",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -2861,7 +2859,15 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.eye_of_mind"] = 3,
             ["elona.stealth"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.neck",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -2876,19 +2882,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 13 }),
             height = 140,
             gender = Resolver.make("elona.gender", { male_ratio = 0 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2907,7 +2900,20 @@ local race =
             ["elona.martial_arts"] = 4,
             ["elona.two_hand"] = 6,
             ["elona.tactics"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -2923,10 +2929,6 @@ local race =
             age = Resolver.make("base.between", { min = 25, max = 74 }),
             height = 180,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.body",
-               "elona.hand"
-            },
 
          },
 
@@ -2949,7 +2951,11 @@ local race =
             ["elona.martial_arts"] = 2,
             ["elona.magic_capacity"] = 3,
             ["elona.healing"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.body",
+            "elona.hand"
+         },
 
 
       },
@@ -2963,19 +2969,6 @@ local race =
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 90,
             gender = Resolver.make("elona.gender", { male_ratio = 50 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -2994,7 +2987,20 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.meditation"] = 3,
             ["elona.negotiation"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -3010,16 +3016,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 950,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.hand",
-               "elona.hand",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring"
-            },
 
          },
 
@@ -3039,7 +3035,17 @@ local race =
             ["elona.control_magic"] = 4,
             ["elona.meditation"] = 3,
             ["elona.faith"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.hand",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring"
+         },
 
 
       },
@@ -3053,19 +3059,6 @@ local race =
             age = Resolver.make("base.between", { min = 100, max = 299 }),
             height = 165,
             gender = Resolver.make("elona.gender", { male_ratio = 52 }),
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
 
          },
 
@@ -3089,7 +3082,20 @@ local race =
             ["elona.dual_wield"] = 4,
             ["elona.firearm"] = 4,
             ["elona.two_hand"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
 
       },
@@ -3104,11 +3110,6 @@ local race =
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 250,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
-            body_parts = {
-               "elona.body",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
 
@@ -3126,7 +3127,12 @@ local race =
             ["elona.stat_speed"] = 125,
             ["elona.martial_arts"] = 1,
             ["elona.healing"] = 4,
-         }
+         },
+         body_parts = {
+            "elona.body",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -3142,10 +3148,6 @@ local race =
             gender = Resolver.make("elona.gender", { male_ratio = 0 }),
             dv_correction = 300,
             pv_correction = 200,
-            body_parts = {
-               "elona.hand",
-               "elona.hand"
-            },
 
          },
 
@@ -3170,7 +3172,11 @@ local race =
             ["elona.dual_wield"] = 7,
             ["elona.two_hand"] = 5,
             ["elona.tactics"] = 7,
-         }
+         },
+         body_parts = {
+            "elona.hand",
+            "elona.hand"
+         },
 
 
       },
@@ -3188,17 +3194,6 @@ local race =
                ["elona.magic"] = 500,
             },
             dv_correction = 550,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.leg"
-            },
 
          },
 
@@ -3218,7 +3213,18 @@ local race =
             ["elona.stealth"] = 3,
             ["elona.evasion"] = 7,
             ["elona.greater_evasion"] = 6,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.leg"
+         },
 
 
       },
@@ -3238,11 +3244,6 @@ local race =
             },
             dv_correction = 150,
             pv_correction = 1000,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back"
-            },
 
          },
 
@@ -3261,7 +3262,12 @@ local race =
             ["elona.martial_arts"] = 1,
             ["elona.magic_capacity"] = 4,
             ["elona.greater_evasion"] = 6,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back"
+         },
 
 
       },
@@ -3278,16 +3284,6 @@ local race =
             breaks_into_debris = true,
             gender = Resolver.make("elona.gender", { male_ratio = 53 }),
             pv_correction = 150,
-            body_parts = {
-               "elona.head",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.waist",
-               "elona.leg",
-               "elona.leg"
-            },
 
          },
 
@@ -3307,7 +3303,17 @@ local race =
             ["elona.evasion"] = 11,
             ["elona.lock_picking"] = 3,
             ["elona.disarm_trap"] = 3,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.waist",
+            "elona.leg",
+            "elona.leg"
+         },
 
 
       },
@@ -3319,19 +3325,6 @@ local race =
 
          properties = {
             dv_correction = 1000,
-            body_parts = {
-               "elona.head",
-               "elona.neck",
-               "elona.body",
-               "elona.back",
-               "elona.hand",
-               "elona.hand",
-               "elona.ring",
-               "elona.ring",
-               "elona.ring",
-               "elona.waist",
-               "elona.leg"
-            },
          },
 
          skills = {
@@ -3347,7 +3340,20 @@ local race =
             ["elona.stat_charisma"] = 100,
             ["elona.stat_speed"] = 500,
             ["elona.mining"] = 100,
-         }
+         },
+         body_parts = {
+            "elona.head",
+            "elona.neck",
+            "elona.body",
+            "elona.back",
+            "elona.hand",
+            "elona.hand",
+            "elona.ring",
+            "elona.ring",
+            "elona.ring",
+            "elona.waist",
+            "elona.leg"
+         },
 
       },
    }

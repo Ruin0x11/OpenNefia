@@ -21,32 +21,22 @@ local function dialog_error(talk, msg, err)
    end
 end
 
---- Converts a root and key suffix to a full i18n key.
---- "talk.root" + "key"   = "talk.root.key"
---- "" + "talk.other.key" = "talk.other.key"
-local function resolve_translated_text(root, key, args)
-   local full_key = key
+local function resolve_translated_text(key, args)
+   args = args or {}
 
-   if root and root ~= "" then
-      full_key = root .. "." .. key
-   end
-
-   return I18N.get_optional(full_key, table.unpack(args or {})) or key
+   return I18N.get_optional(key, table.unpack(args)) or key
 end
 
 --- Convert a response localization key to the full localization key.
 --- obj can be one of the following.
----  * __MORE__                - "(More)"
----  * __BYE__                 - "Bye bye."
----  * key.fragment            - dialog.root.key.fragment
 ---  * dialog.key              - dialog.key
 ---  * {"key.fragment", args = {"arg1", "arg2"}}  - (localized with arguments)
-local function resolve_response(obj, args, choices_root)
-   local args = args or {}
+local function resolve_response(obj, args)
+   args = args or {}
    local key
 
    if obj == nil then
-      key = "__MORE__"
+      key = "ui.more"
    elseif type(obj) == "table" then
       key = obj[1]
       args = obj.args
@@ -54,15 +44,7 @@ local function resolve_response(obj, args, choices_root)
       key = obj
    end
 
-   if key == "__BYE__" then
-      choices_root = ""
-      key = "ui.bye"
-   elseif key == "__MORE__" then
-      choices_root = ""
-      key = "ui.more"
-   end
-
-   return resolve_translated_text(choices_root, key, args)
+   return resolve_translated_text(key, args)
 end
 
 local function speaker_name(chara)
@@ -104,7 +86,7 @@ end
 -- @tparam table choices List of choices in format {"response_id", "core.locale.key"}
 -- @tparam[opt] int default_choice index of default choice if window is canceled
 -- @treturn string Response ID of the choice selected.
-local function query(talk, text, choices, default_choice, choices_root)
+local function query(talk, text, choices, default_choice)
    if #choices == 1 then
       default_choice = 1
    end
@@ -115,9 +97,14 @@ local function query(talk, text, choices, default_choice, choices_root)
       for i = 3, #choice do
          rest[i-2] = choice[i]
       end
-      the_choices[i] =  resolve_response(choice[2], rest, choices_root)
+      the_choices[i] =  resolve_response(choice[2], rest)
       if default_choice == nil and choice[1] == "__END__" then
          default_choice = i
+      end
+
+      -- Turn each node ID into a fully qualified one.
+      if not string.match(choice[1], ":") and choice[1] ~= "__END__" then
+         choice[1] = talk.dialog._id .. ":" .. choice[1]
       end
    end
 
@@ -161,7 +148,7 @@ local function query(talk, text, choices, default_choice, choices_root)
       print(ansicolors(mes))
    end
 
-   return choices[result][1]
+   return choices[result][1], choices[result].params or {}
 end
 
 --- Initializes the dialog control data.
@@ -204,20 +191,22 @@ local function find_dialog(cur, id)
       dialog_id = arr[1]
       node_id = arr[2]
    else
-      return nil, nil
+      return nil, nil, nil
    end
 
    local dialog_data = data["elona_sys.dialog"][dialog_id]
    if dialog_data == nil then
-      return nil, nil
+      return nil, nil, nil
    end
 
    local node_data = dialog_data.nodes[node_id]
    if node_data == nil then
-      return nil, nil
+      return nil, nil, nil
    end
 
-   return dialog_data, node_data
+   local full_id = ("%s:%s"):format(dialog_id, node_id)
+
+   return dialog_data, node_data, full_id
 end
 
 local get_choices
@@ -228,48 +217,47 @@ get_choices = function(node, talk, state, node_data, choice_key, found)
       choices = {{"__END__", choice_key}}
    elseif type(choices) == "function" then
       local ok
-      ok, choices = xpcall(choices, debug.traceback, talk, state, node_data.opts)
+      ok, choices = xpcall(choices, debug.traceback, talk, state, node_data.params)
       if not ok then
          dialog_error(talk, "Error running choices function", choices)
       end
-   elseif type(choices) == "string" then
-      local new_dialog, new_node = find_dialog(talk.dialog, choices)
-      if new_dialog then
-         if found[choices] then
-            dialog_error(talk, "Infinite recursion when retrieving external node for dialog choices", choices)
-         end
-         found[choices] = true
-         -- root = new_dialog.root
-         choices = get_choices(new_node, talk, state, node_data, choice_key, found) -- recurse
-      else
-         dialog_error(talk, "Cannot find external node for dialog choices", choices)
-      end
+   elseif type(choices) ~= "table" then
+      error("Unknown choices property: " .. tostring(choices))
    end
 
-   return choices
+   return choices, node
 end
 
-local function step_dialog(node_data, talk, state)
-   local event_data = Event.trigger("elona_sys.on_step_dialog", {talk=talk}, {choice=node_data.choice})
-   node_data.choice = event_data.choice or node_data.choice
+-- Fully qualify the node's ID if it omits the dialog ID.
+local function fully_qualify_node_id(node_id, talk)
+   if not string.match(node_id, ":") and node_id ~= "__END__" then
+      node_id = talk.dialog._id .. ":" .. node_id
+   end
+   return node_id
+end
 
-   if node_data.choice == "__END__" then
+local function step_dialog(node_data, talk, state, prev_node_id)
+   node_data.node_id = fully_qualify_node_id(node_data.node_id, talk)
+   node_data = Event.trigger("elona_sys.on_step_dialog", {talk=talk,state=state,prev_node_id=prev_node_id}, node_data)
+   local prev = node_data.node_id
+
+   if node_data.node_id == "__END__" then
       return nil
    end
-   if node_data.choice == nil then
+   if node_data.node_id == nil then
       return nil
    end
 
-   local node = talk.dialog.nodes[node_data.choice]
+   local node = talk.dialog.nodes[node_data.node_id]
    if node == nil then
       -- try to jump to another dialog, like "mod.dialog_id:node_name"
-      local new_dialog, new_node = find_dialog(talk.dialog, node_data.choice)
+      local new_dialog, new_node = find_dialog(talk.dialog, node_data.node_id)
 
       if new_dialog and new_node then
          talk.dialog = new_dialog
          node = new_node
       else
-         dialog_error(talk, "No node with ID " .. node_data.choice .. " found")
+         dialog_error(talk, "No node with ID " .. node_data.node_id .. " found")
       end
    end
 
@@ -278,12 +266,17 @@ local function step_dialog(node_data, talk, state)
    if type(node) == "function" then
       -- Run function. It is expected to return either a string or
       -- table containing the next node to jump to.
-      local ok, result = xpcall(node, debug.traceback, talk, state, node_data.opts)
+      local ok, result = xpcall(node, debug.traceback, talk, state, node_data.params)
       if ok then
          if type(result) == "string" then
-            next_node = {choice = result, opts = {}}
+            next_node = {node_id = result, params = {}}
          elseif type(result) == "table" then
-            next_node = result
+            assert(result.node_id, "Dialog function must return a table like {node_id='elona.default:talk', params={...}}")
+
+            if result.params then
+               assert(type(result.params) == "table")
+            end
+            next_node = { node_id = result.node_id, params = result.params }
          end
       else
          dialog_error(talk, "Error running dialog inline function", result)
@@ -300,31 +293,29 @@ local function step_dialog(node_data, talk, state)
       -- choices (table): array of choices, displayed at last text entry. If nil, end the dialog at the last one.
       --     choices[1][1] (string): Node ID to jump to
       --     choices[1][2] (string): locale key of choice. Defaults to "more" or "bye".
+      -- on_start: Function run when this node is entered.
       -- on_finish: Function run when this node is exited.
       -- default_choice: If provided, dialog option is cancellable with this response as the default.
-      -- inherit (string[opt]): node to inherit all values from. Must resolve to a table.
+      -- jump_to (string[opt]): node to jump to after printing all text.
 
-      -- Find another dialog node and merge its values into a copy of
-      -- this one.
-      if node.inherit then
-         local dialog, inherit_node = find_dialog(talk.dialog, node.inherit)
-         if dialog and inherit_node then
-            print("inherit")
-            if type(inherit_node) ~= "table" then
-               dialog_error(talk, "Inherit node '%s' must be a table, got '%s'", node.inherit, type(inherit_node))
-            end
-
-            node = table.deepcopy(node)
-            table.merge_missing(node, inherit_node)
-         else
-            error(("cannot find node with ID %s"):format(node.inherit))
+      -- Run on_start callback.
+      if node.on_start then
+         local ok, result = pcall(node.on_start, talk, state, node_data.params)
+         if not ok then
+            dialog_error(talk, "Error running on_start function", result)
          end
       end
 
-      local texts = node.text
-      if type(texts) == "function" then
+      -- `prev_text` supports setting custom text while inheriting the
+      -- choices/callbacks of a different node. See chat2.hsp:*chat_default
+      -- which checks if the chat buffer wasn't previously set. (buff="")
+      local texts = node_data.prev_text or node.text
+
+      if type(texts) == "string" then
+         texts = { texts }
+      elseif type(texts) == "function" then
          local ok
-         ok, texts = xpcall(texts, debug.traceback, talk, state, node_data.opts)
+         ok, texts = xpcall(texts, debug.traceback, talk, state, node_data.params)
          if not ok then
             dialog_error(talk, "Error getting dialog text", texts)
          end
@@ -334,13 +325,17 @@ local function step_dialog(node_data, talk, state)
          end
       end
 
-      for i, text in ipairs(texts) do
-         if texts[i+1] == nil then
-            if type(text) ~= "table" then
-               dialog_error(talk, "Last text entry must be table (got: " .. type(text) .. ")")
-            end
+      if node.jump_to then
+         local dialog, jumped_node, jumped_node_id = find_dialog(talk.dialog, node.jump_to)
+         if dialog and jumped_node then
+            next_node = { node_id = jumped_node_id, params = {}, prev_text = texts }
+            return next_node, prev
+         else
+            error(("cannot find node with ID %s"):format(node.inherit))
          end
+      end
 
+      for i, text in ipairs(texts) do
          if type(text) == "string" then
             text = {text}
          end
@@ -351,7 +346,7 @@ local function step_dialog(node_data, talk, state)
             local args = {talk.speaker}
             if text.args then
                local ok
-               ok, args = pcall(text.args, talk, state, node_data.opts)
+               ok, args = pcall(text.args, talk, state, node_data.params)
                if not ok then
                   dialog_error(talk, "Error getting I18N arguments", args)
                end
@@ -372,14 +367,15 @@ local function step_dialog(node_data, talk, state)
             local choice_key = text.choice
             if choice_key == nil then
                if texts[i+1] == nil then
-                  choice_key = "__BYE__"
+                  choice_key = "ui.bye"
                else
-                  choice_key = "__MORE__"
+                  choice_key = "ui.more"
                end
             end
 
             -- Build choices. Default to ending the dialog.
-            local choices = get_choices(node, talk, state, node_data, choice_key)
+            local choices
+            choices, node = get_choices(node, talk, state, node_data, choice_key)
 
             -- Set the default choice to select if window is
             -- cancelled. If nil, prevent cancellation.
@@ -396,19 +392,19 @@ local function step_dialog(node_data, talk, state)
             end
 
             -- Resolve localized text.
-            local tex = resolve_translated_text(talk.dialog.root, text[1], args)
+            local tex = resolve_translated_text(text[1], args)
 
             -- Prompt for choice if on the last text entry or
             -- `next_node` is non-nil, otherwise show single choice.
             if texts[i+1] == nil then
-               local choice = query(talk, tex, choices, default_choice, talk.dialog.root)
-               next_node = {choice = choice, opts = {}}
+               local node_id, params = query(talk, tex, choices, default_choice)
+               next_node = {node_id = node_id, params = params}
             else
                query(talk, tex, {{"dummy", choice_key}})
             end
          elseif type(text) == "function" then
             -- Call an arbitrary function. The result is ignored.
-            local ok, err = pcall(text, talk, state, node_data.opts)
+            local ok, err = pcall(text, talk, state, node_data.params)
             if not ok then
                dialog_error(talk, "Error running text function", err)
             end
@@ -419,7 +415,7 @@ local function step_dialog(node_data, talk, state)
 
       -- Run on_finish callback.
       if node.on_finish then
-         local ok, result = pcall(node.on_finish, talk, state, node_data.opts)
+         local ok, result = pcall(node.on_finish, talk, state, node_data.params)
          if not ok then
             dialog_error(talk, "Error running on_finish function", result)
          end
@@ -428,7 +424,9 @@ local function step_dialog(node_data, talk, state)
       dialog_error(talk, "Invalid node, must be string or table (got: " .. type(node) .. ")")
    end
 
-   return next_node
+   next_node.node_id = fully_qualify_node_id(next_node.node_id, talk)
+
+   return next_node, prev
 end
 
 function Dialog.start(chara, dialog_id)
@@ -438,23 +436,26 @@ function Dialog.start(chara, dialog_id)
 
    dialog_id = dialog_id or "elona_sys.ignores_you"
 
-   local start_node = "__start"
+   local start_node
    local colon_pos = string.find(dialog_id, ":")
    if colon_pos then
-      start_node = dialog_id:sub(colon_pos+1)
+      start_node = dialog_id
       dialog_id = dialog_id:sub(1, colon_pos-1)
+   else
+      start_node = dialog_id .. ":__start"
    end
 
    local dialog = data["elona_sys.dialog"]:ensure(dialog_id)
 
    local talk = make_talk(chara, dialog, dialog_id)
    local state = {}
-   local next_node = {choice = start_node, opts = {}}
+   local next_node = {node_id = start_node, params = {}}
+   local prev_node_id
 
    Gui.play_sound("base.chat")
 
    while next_node ~= nil do
-      next_node = step_dialog(next_node, talk, state)
+      next_node, prev_node_id = step_dialog(next_node, talk, state, prev_node_id)
    end
 end
 

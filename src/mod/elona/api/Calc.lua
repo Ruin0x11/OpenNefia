@@ -6,6 +6,7 @@ local InstancedMap = require("api.InstancedMap")
 local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
 local Resolver = require("api.Resolver")
+local Area = require("api.Area")
 
 local Calc = {}
 
@@ -243,5 +244,26 @@ function Calc.calc_learn_cost(skill_id, chara)
    return math.floor(15 + 3 * save.elona.total_skills_learned)
 end
 -- <<<<<<<< shade2/calculation.hsp:818 	return value ...
+
+function Calc.calc_trainer_skills(trainer, player)
+   local skills = {
+      "elona.detection",
+      "elona.evasion"
+   }
+
+   local map = trainer:current_map()
+
+   if map and map.trainer_skills then
+      skills = table.imerge(skills, map.trainer_skills)
+   end
+
+   skills = fun.iter(skills)
+      :filter(function(skill_id)
+            return not player:has_skill(skill_id)
+             end)
+      :to_list()
+
+   return skills
+end
 
 return Calc

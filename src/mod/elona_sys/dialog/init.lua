@@ -11,11 +11,10 @@ data:add_type {
 data:add {
    _type = "elona_sys.dialog",
    _id = "ignores_you",
-   root = "talk",
    nodes = {
       __start = {
          text = {
-            {"ignores_you", args = function(t) return {t.speaker} end},
+            {"talk.ignores_you", args = function(t) return {t.speaker} end},
          }
       },
    }

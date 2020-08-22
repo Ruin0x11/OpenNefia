@@ -60,6 +60,16 @@ function UiPagedContainer:set_data(sublayers)
    self:select_page(1)
 end
 
+function UiPagedContainer:refresh_page_from_sublayer()
+   local sublayer = self:current_sublayer()
+   for i, v in ipairs(self.page_handlers) do
+      if v.layer == sublayer and v.page == sublayer.page then
+         self:select_page(i)
+         break
+      end
+   end
+end
+
 function UiPagedContainer:current_sublayer()
    local inner = self.page_handlers[self.page]
    return inner.layer, inner.page

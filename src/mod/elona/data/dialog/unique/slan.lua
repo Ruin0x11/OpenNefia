@@ -8,7 +8,7 @@ local Rand = require("game.Rand")
 
 return {
    id = "slan",
-   root = "core.talk.unique.slan",
+
    nodes = {
       __start = function()
          local flag = Internal.get_quest_flag("main_quest")
@@ -21,9 +21,9 @@ return {
       dialog = {
          text = {
             function() Internal.set_quest_flag("main_quest", 30) end,
-            {"dialog._0"},
-            {"dialog._1"},
-            {"dialog._2"},
+            {"core.talk.unique.slan.dialog._0"},
+            {"core.talk.unique.slan.dialog._1"},
+            {"core.talk.unique.slan.dialog._2"},
          },
          on_finish = function(t)
             for i=0,3 do

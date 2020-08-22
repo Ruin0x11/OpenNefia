@@ -16,6 +16,13 @@ local thieves_guild = {
       level = 3,
       is_indoor = true,
       max_crowd_density = 25,
+      trainer_skills = {
+         "elona.pickpocket",
+         "elona.disarm_trap",
+         "elona.lock_picking",
+         "elona.stealth",
+         "elona.marksman",
+      }
    },
 }
 
@@ -84,6 +91,16 @@ local fighters_guild = {
       level = 3,
       is_indoor = true,
       max_crowd_density = 25,
+      trainer_skills = {
+         "elona.weight_lifting",
+         "elona.dual_wield",
+         "elona.two_hand",
+         "elona.heavy_armor",
+         "elona.tactics",
+         "elona.marksman",
+         "elona.shield",
+         "elona.eye_of_mind",
+      }
    },
 }
 
@@ -145,6 +162,16 @@ local mages_guild = {
       level = 3,
       is_indoor = true,
       max_crowd_density = 25,
+      trainer_skills = {
+         "elona.casting",
+         "elona.memorization",
+         "elona.meditation",
+         "elona.magic_capacity",
+         "elona.alchemy",
+         "elona.control_magic",
+         "elona.light_armor",
+         "elona.greater_evasion",
+      }
    }
 }
 
