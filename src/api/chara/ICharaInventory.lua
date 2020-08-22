@@ -1,5 +1,6 @@
 local Inventory = require("api.Inventory")
 local ILocation = require("api.ILocation")
+local Log = require("api.Log")
 
 --- Interface for character inventory. Allows characters to store map
 --- objects.

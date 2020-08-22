@@ -1,4 +1,6 @@
 local object = require("internal.object")
+local ILocation = require("api.ILocation")
+local pool = require("internal.pool")
 
 local Event = require("api.Event")
 local Object = require("api.Object")
@@ -86,25 +88,64 @@ function MapObject.clone_base(obj, owned)
    return new_object
 end
 
-function MapObject.clone(obj, owned, uid_tracker)
-   uid_tracker = uid_tracker or require("internal.global.save").base.uids
+local function is_map_object(thing)
+   return type(thing) == "table" and thing._id and thing._type
+end
 
-   local new_object = {}
+-- NOTE: We could have an interface for classes that need special cloning logic.
+local function clone_pool(the_pool, uids, cache)
+   local new_pool = pool:new(the_pool.type_id, the_pool.width, the_pool.height)
 
-   local ignored_fields = table.set {
-      "uid",
-      "location"
-   }
+   if not the_pool.uids then
+      pause()
+   end
+   for _, obj in the_pool:iter() do
+      local new_obj = MapObject.clone(obj, false, uids, cache)
+      assert(new_pool:take_object(new_obj, obj.x, obj.y))
+   end
 
-   for k, v in pairs(obj) do
-      if not ignored_fields[k] then
-         if type(v) == "table" then
-            new_object[k] = table.deepcopy(v)
-         else
-            new_object[k] = v
-         end
+   return new_pool
+end
+
+-- Another modification of penlight's algorithm that also calls :clone() on any
+-- map objects it finds in the table.
+local function cycle_aware_copy(t, cache, uids, first)
+   if type(t) ~= 'table' then return t end
+   if cache[t] then return cache[t] end
+   if not first and is_map_object(t) then
+      local new_obj = MapObject.clone(t, false, uids, cache)
+      cache[t] = new_obj
+      return new_obj
+   end
+   if class.is_an(pool, t) then
+      local new_pool = clone_pool(t, uids, cache)
+      cache[t] = new_pool
+      return new_pool
+   end
+   local res = {}
+   cache[t] = res
+   local mt = getmetatable(t)
+   for k,v in pairs(t) do
+      -- TODO: standardize no-save fields
+      -- NOTE: preserves the UID for now.
+      -- HACK: workaround for delegation memoization referring to the original
+      -- object
+      if k == "__memoized" then
+         res[k] = {}
+      elseif k ~= "location" and k ~= "proto" then
+         k = cycle_aware_copy(k, cache)
+         v = cycle_aware_copy(v, cache)
+         res[k] = v
       end
    end
+   setmetatable(res,mt)
+   return res
+end
+
+function MapObject.clone(obj, owned, uid_tracker, cache)
+   uid_tracker = uid_tracker or require("internal.global.save").base.uids
+
+   local new_object = cycle_aware_copy(obj, cache or {}, uid_tracker, true)
 
    new_object.uid = uid_tracker:get_next_and_increment()
 

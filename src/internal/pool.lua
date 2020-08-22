@@ -1,4 +1,3 @@
-local uid_tracker = require("internal.uid_tracker")
 local ILocation = require("api.ILocation")
 
 -- Low-level storage for map objects of the same types. Pretty much
@@ -8,17 +7,13 @@ local pool = class.class("pool", ILocation, { no_inspect = false })
 -- serialization ID for binser
 pool.__id = "pool"
 
-function pool:init(type_id, tracker, width, height)
-   tracker = tracker or uid_tracker:new()
+function pool:init(type_id, width, height)
    width = width or 1
    height = height or 1
-
-   class.assert_is_an(uid_tracker, tracker)
 
    self.type_id = type_id
    self.content = setmetatable({}, { __inspect = tostring })
    self.uids = {}
-   self.uid_tracker = tracker
    self.width = width
    self.height = height
 
