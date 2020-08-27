@@ -113,8 +113,10 @@ function Draw.text(str, x, y, color, size)
    if str.typeOf and str:typeOf("Text") then
       love.graphics.draw(str, x, y)
    else
-      local text = text_cache[str] or Draw.make_text(str)
-      text_cache[str] = text
+      size = size or love.graphics.getFont():getHeight()
+      text_cache[str] = text_cache[str] or setmetatable({}, { __mode = "kv" })
+      local text = text_cache[str][size] or Draw.make_text(str)
+      text_cache[str][size] = text
       love.graphics.draw(text, x, y)
    end
 end

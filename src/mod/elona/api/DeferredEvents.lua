@@ -95,7 +95,7 @@ function DeferredEvents.first_ally()
    local ALLIES = {
       [1] = "elona.dog",
       [2] = "elona.cat",
-      [3] = "elona.bear",
+      [3] = "elona.brown_bear",
       [4] = "elona.little_girl",
    }
    -- <<<<<<<< shade2/main.hsp:1709 	swbreak ..

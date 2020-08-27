@@ -187,6 +187,10 @@ function ICharaSkills:has_skill(skill_id)
    return self:skill_level(skill_id) > 0
 end
 
+function ICharaSkills:has_base_skill(skill_id)
+   return self:base_skill_level(skill_id) > 0
+end
+
 function ICharaSkills:skill_potential(skill_id)
    data["base.skill"]:ensure(skill_id)
    skill_id = ("base.skill:%s"):format(skill_id)

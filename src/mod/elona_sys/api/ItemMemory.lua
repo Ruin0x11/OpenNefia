@@ -9,6 +9,12 @@ function ItemMemory.on_generated(id)
    Event.trigger("elona_sys.on_item_memorize_generated", {_id = id, generated_count = memory.generated[id]})
 end
 
+function ItemMemory.forget_generated(id)
+   data["base.item"]:ensure(id)
+   local memory = save.elona_sys.item_memory
+   memory.generated[id] = math.max((memory.generated[id] or 0) - 1, 0)
+end
+
 function ItemMemory.set_known(id, known)
    data["base.item"]:ensure(id)
    local memory = save.elona_sys.item_memory

@@ -47,11 +47,11 @@ end,
     },
     wish_death = "それがお望みなら…",
     wish_ehekatl = "「うみみゅみゅぁ！」",
-    wish_god_inside = "中の人も大変ね。",
+    wish_man_inside = "中の人も大変ね。",
     wish_gold = "金貨が降ってきた！",
     wish_kumiromi = "工事中。",
     wish_lulwy = "「アタシを呼びつけるとは生意気ね。」",
-    wish_man_inside = "中の神も大変…あ…中の神なんているわけないじゃない！…ねえ、聞かなかったことにしてね。",
+    wish_god_inside = "中の神も大変…あ…中の神なんているわけないじゃない！…ねえ、聞かなかったことにしてね。",
     wish_mani = "工事中。",
     wish_opatos = "工事中。",
     wish_platinum = "プラチナ硬貨が降ってきた！",
@@ -74,7 +74,7 @@ end,
   :format(_1)
 end,
     your_wish = function(_1)
-  return ("「%s！！」")
+  return ("%s！！")
   :format(_1)
 end
   }

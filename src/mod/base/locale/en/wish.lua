@@ -47,11 +47,11 @@ end,
     },
     wish_death = "If you wish so...",
     wish_ehekatl = "Meeewmew!",
-    wish_god_inside = "There's no man inside.",
+    wish_man_inside = "There's no man inside.",
     wish_gold = "Lots of gold pieces appear.",
     wish_kumiromi = "Under construction.",
     wish_lulwy = "You dare to call my name?",
-    wish_man_inside = "There's no God inside.",
+    wish_god_inside = "There's no God inside.",
     wish_mani = "Under construction.",
     wish_opatos = "Under construction.",
     wish_platinum = "Platinum pieces appear.",
@@ -63,7 +63,7 @@ end,
   return ("%s become %s!")
   :format(name(_1), _2)
 end,
-    wish_small_medal = "Some small coins appear.",
+    wish_small_medal = "A small coin appears.",
     wish_youth = "A typical wish.",
     you_learn_skill = function(_1)
   return ("You learn %s!")
@@ -74,7 +74,7 @@ end,
   :format(_1)
 end,
     your_wish = function(_1)
-  return ("\"%s!!\"")
+  return ("%s!!")
   :format(_1)
 end
   }

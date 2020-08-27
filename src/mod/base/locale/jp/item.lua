@@ -173,6 +173,9 @@ end,
   return ("%sをまとめた(計%s個) ")
   :format(itemname(_1, 1), _2)
 end,
-    unknown_item = "未知のアイテム(バージョン非互換)"
-  }
+    unknown_item = "未知のアイテム(バージョン非互換)",
+    qualified_name = function(name, originalnameref2)
+       return name
+    end
+  },
 }

@@ -18,6 +18,7 @@ local Charagen = require("mod.tools.api.Charagen")
 local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Skill = require("mod.elona_sys.api.Skill")
 local I18N = require("api.I18N")
+local Wish = require("mod.elona.api.Wish")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -990,9 +991,8 @@ data:add {
 
    cast = function(self, params)
       local source = params.source
-      local map = params.source:current_map()
 
-      Gui.mes("TODO")
+      Wish.query_wish()
 
       return true
    end

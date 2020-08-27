@@ -685,4 +685,11 @@ function Itemname.build_name(item, amount, no_article)
    return f(item, amount, no_article)
 end
 
+-- >>>>>>>> shade2/init.hsp:254 	#defcfunc cnvItemName int id ..
+function Itemname.qualify_name(item_id)
+   local item_entry = data["base.item"]:ensure(item_id)
+   return I18N.get("item.qualified_name", "item.info." .. item_id .. ".name", item_entry.originalnameref2)
+end
+-- <<<<<<<< shade2/init.hsp:257 	return iOriginalNameRef2@(id)+" of "+iOriginalNam ..
+
 return Itemname
