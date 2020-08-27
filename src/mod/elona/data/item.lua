@@ -15,6 +15,7 @@ local Calc = require("mod.elona.api.Calc")
 local InstancedArea = require("api.InstancedArea")
 local Area = require("api.Area")
 local Building = require("mod.elona.api.Building")
+local I18N = require("api.I18N")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -763,8 +764,9 @@ local item =
         on_read = function(self)
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
             Effect.identify_item(self, Enum.IdentifyState.Name)
+            local text = I18N.get("book." .. self.params.book_id .. ".text")
             local BookMenu = require("api.gui.menu.BookMenu")
-            BookMenu:new("text", true):query()
+            BookMenu:new(text, true):query()
             return false
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
         end,
@@ -777,7 +779,11 @@ local item =
         on_init_params = function(self)
             -- >>>>>>>> shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
             if not self.params.book_id then
-                self.params.book_id = 1 -- TODO book
+               local cands = data["elona.book"]:iter()
+                  :filter(function(book) return book.is_randomly_generated end)
+                  :extract("_id")
+                  :to_list()
+               self.params.book_id = Rand.choice(cands)
             end
             -- <<<<<<<< shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
         end,
