@@ -12,6 +12,9 @@ local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Calc = require("mod.elona.api.Calc")
+local InstancedArea = require("api.InstancedArea")
+local Area = require("api.Area")
+local Building = require("mod.elona.api.Building")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -44,6 +47,12 @@ local hook_calc_initial_gold =
                       1,
                       nil,
                       calc_initial_gold)
+
+local function deed_callback(area_archetype_id, name)
+   return function(self, params)
+      Building.build_area(area_archetype_id, name, params.x, params.y, params.map)
+   end
+end
 
 -- >>>>>>>> shade2/chips.hsp:392 	dim lightData,10,tailLight ..
 local light = {
@@ -11323,8 +11332,8 @@ local item =
         image = "elona.item_deed",
         value = 140000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11332,6 +11341,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         param1 = 1,
 
@@ -11341,6 +11351,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.museum", "item.info.elona.deed_of_museum.building_name")
+            },
         }
     },
     {
@@ -11349,8 +11368,8 @@ local item =
         image = "elona.item_deed",
         value = 200000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11358,6 +11377,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         param1 = 1,
 
@@ -11367,6 +11387,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.shop", "item.info.elona.deed_of_shop.building_name")
+            },
         }
     },
     {
@@ -11711,8 +11740,8 @@ local item =
         image = "elona.item_deed",
         value = 45000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11720,6 +11749,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 225, 225, 255 },
 
@@ -11727,6 +11757,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.crop", "item.info.elona.deed_of_farm.building_name")
+            },
         }
     },
     {
@@ -11735,8 +11774,8 @@ local item =
         image = "elona.item_deed",
         value = 10000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11744,6 +11783,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 255, 225, 225 },
 
@@ -11751,6 +11791,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.storage", "item.info.elona.deed_of_storage_house.building_name")
+            },
         }
     },
     {
@@ -12517,7 +12566,7 @@ local item =
         value = 80000,
         weight = 500,
         on_read = function(self)
-            return Effect.create_new_building(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -12525,6 +12574,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 235, 215, 155 },
 
@@ -12532,6 +12582,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.ranch", "item.info.elona.deed_of_ranch.building_name")
+            },
         }
     },
     {
@@ -15690,8 +15749,8 @@ local item =
         image = "elona.item_deed",
         value = 500000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -15699,6 +15758,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 175, 175, 255 },
 
@@ -15706,6 +15766,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.dungeon", "item.info.elona.deed_of_.building_name")
+            },
         }
     },
     {

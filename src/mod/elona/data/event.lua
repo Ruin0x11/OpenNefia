@@ -20,6 +20,7 @@ local event = {
    { _id = "calc_return_forbidden" },
    { _id = "before_physical_attack" },
    { _id = "on_item_created_from_wish" },
+   { _id = "on_deed_use" },
 }
 
 data:add_multi("base.event", event)

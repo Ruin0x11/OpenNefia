@@ -132,6 +132,7 @@ function Area.is_registered(area)
    return save.base.areas[uid] ~= nil
 end
 
+-- TODO move `parent` into a required parameter
 function Area.register(area, opts)
    opts = opts or {}
    opts.parent = opts.parent or nil
@@ -142,7 +143,7 @@ function Area.register(area, opts)
    end
 
    if area.parent_area == nil and opts.parent ~= "root" then
-      error(("Area '%s' should have parent world map area set"):format(area.name))
+      error(("%s should have parent world map area set"):format(area))
    end
 
    if opts.parent ~= "root" then

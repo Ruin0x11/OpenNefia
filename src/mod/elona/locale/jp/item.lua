@@ -2429,7 +2429,8 @@ local item = {
         text = "読むことで住居としてのダンジョンを作ることができる権利書だ。"
       }
     },
-    name = "ダンジョンの権利書"
+    name = "ダンジョンの権利書",
+    building_name = "ダンジョン"
   },
   deed_of_farm = {
     desc = {
@@ -2446,7 +2447,8 @@ local item = {
         text = "読むことで畑を作ることができる権利書だ。"
       }
     },
-    name = "畑の権利書"
+    name = "畑の権利書",
+    building_name = "畑"
   },
   deed_of_heirship = {
     desc = {
@@ -2476,7 +2478,8 @@ local item = {
         text = "読むことで博物館を建てることができる権利書だ。"
       }
     },
-    name = "博物館の権利書"
+    name = "博物館の権利書",
+    building_name = "博物館"
   },
   deed_of_ranch = {
     desc = {
@@ -2489,7 +2492,8 @@ local item = {
         text = "読むことで牧場を作ることができる権利書だ。"
       }
     },
-    name = "牧場の権利書"
+    name = "牧場の権利書",
+    building_name = "牧場"
   },
   deed_of_shop = {
     desc = {
@@ -2502,7 +2506,8 @@ local item = {
         text = "読むことで店を建てることができる権利書だ。"
       }
     },
-    name = "店の権利書"
+    name = "店の権利書",
+    building_name = "店"
   },
   deed_of_storage_house = {
     desc = {
@@ -2515,7 +2520,8 @@ local item = {
         text = "読むことで倉庫を建てることができる権利書だ。"
       }
     },
-    name = "倉庫の権利書"
+    name = "倉庫の権利書",
+    building_name = "倉庫"
   },
   deer_head = {
     desc = {
