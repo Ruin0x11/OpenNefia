@@ -278,6 +278,9 @@ end
 -- it will become outdated. This function updates `advice.original_fn` for the
 -- old function's advice.
 local function update_hotloaded_module_advice(_, params)
+   if type(params.result) ~= "table" then
+      return
+   end
    local mod = params.result.module -- this is a table in package.loaded
 
    local advice_for_mod = advice_state.for_module[mod]

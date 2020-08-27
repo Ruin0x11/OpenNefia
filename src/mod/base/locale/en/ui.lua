@@ -758,8 +758,8 @@ end
       you_can_play = "You can play the unlocked scenes."
     },
     sex = {
-      _0 = "Male",
-      _1 = "Female"
+      male = "Male",
+      female = "Female"
     },
     sex2 = {
       _0 = "boy",

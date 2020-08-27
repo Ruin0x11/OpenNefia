@@ -307,6 +307,7 @@ local skill = {
    },
    {
       _id = "element_fire",
+      type = "resistance",
       elona_id = 50,
       ability_type = 0,
       cost = 0,
@@ -314,6 +315,7 @@ local skill = {
    },
    {
       _id = "element_cold",
+      type = "resistance",
       elona_id = 51,
       ability_type = 0,
       cost = 0,
@@ -321,6 +323,7 @@ local skill = {
    },
    {
       _id = "element_lightning",
+      type = "resistance",
       elona_id = 52,
       ability_type = 0,
       cost = 0,
@@ -328,6 +331,7 @@ local skill = {
    },
    {
       _id = "element_darkness",
+      type = "resistance",
       elona_id = 53,
       ability_type = 0,
       cost = 0,
@@ -335,6 +339,7 @@ local skill = {
    },
    {
       _id = "element_mind",
+      type = "resistance",
       elona_id = 54,
       ability_type = 0,
       cost = 0,
@@ -342,6 +347,7 @@ local skill = {
    },
    {
       _id = "element_nether",
+      type = "resistance",
       elona_id = 56,
       ability_type = 0,
       cost = 0,
@@ -349,6 +355,7 @@ local skill = {
    },
    {
       _id = "element_poison",
+      type = "resistance",
       elona_id = 55,
       ability_type = 0,
       cost = 0,
@@ -356,27 +363,31 @@ local skill = {
    },
    {
       _id = "element_sound",
+      type = "resistance",
       elona_id = 57,
       ability_type = 0,
       cost = 0,
       range = 3,
    },
    {
-      _id = "element_chaos",
-      elona_id = 59,
-      ability_type = 0,
-      cost = 0,
-      range = 4,
-   },
-   {
       _id = "element_nerve",
+      type = "resistance",
       elona_id = 58,
       ability_type = 0,
       cost = 0,
       range = 3,
    },
    {
+      _id = "element_chaos",
+      type = "resistance",
+      elona_id = 59,
+      ability_type = 0,
+      cost = 0,
+      range = 4,
+   },
+   {
       _id = "element_magic",
+      type = "resistance",
       elona_id = 60,
       ability_type = 0,
       cost = 0,
@@ -384,6 +395,7 @@ local skill = {
    },
    {
       _id = "element_cut",
+      type = "resistance",
       elona_id = 61,
       ability_type = 0,
       cost = 0,

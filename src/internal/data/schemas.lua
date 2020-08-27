@@ -488,7 +488,7 @@ The item's image.
          },
          {
             name = "rarity",
-            default = 1000000,
+            default = 0,
             type = "uint",
             template = true,
             doc = [[
@@ -497,7 +497,7 @@ Variable affecting the chance this item is generated.
          },
          {
             name = "coefficient",
-            default = 100,
+            default = 0,
             type = "uint",
             template = true,
             doc = [[
@@ -675,6 +675,13 @@ Ambient light information.
             default = nil,
             doc = [[
 Hours until the item spoils. Used for items of material "elona.fresh" only.
+]]
+         },
+         {
+            name = "is_wishable",
+            default = true,
+            doc = [[
+If false, this item cannot be wished for.
 ]]
          }
       },

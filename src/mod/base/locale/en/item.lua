@@ -173,6 +173,12 @@ end,
   return ("%s has been stacked. (Total:%s)")
   :format(itemname(_1, 1), _2)
 end,
-    unknown_item = "unknown item (incompatible version)"
-  }
+    unknown_item = "unknown item (incompatible version)",
+    qualified_name = function(name, originalnameref2)
+       if (originalnameref2 or "") == "" then
+          return name
+       end
+       return ("%s of %s"):format(originalnameref2, name)
+    end
+  },
 }

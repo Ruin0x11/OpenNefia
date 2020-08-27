@@ -113,6 +113,21 @@ function i18n.get_language_id()
    return i18n.language_id
 end
 
+function i18n.get_array(key, ...)
+   local entry = i18n.db[i18n.language][key]
+   if not entry then
+      return nil
+   end
+
+   if type(entry) == "table" and entry[1] then
+      return entry
+   elseif type(entry) ~= nil then
+      return { entry }
+   end
+
+   return nil
+end
+
 function i18n.get(key, ...)
    local entry = i18n.db[i18n.language][key]
    if not entry then

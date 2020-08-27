@@ -298,6 +298,13 @@ function data_table:add(dat)
       return nil
    end
 
+   local fallbacks = self.fallbacks[_type]
+   for field, fallback in pairs(fallbacks) do
+      if dat[field] == nil then
+         dat[field] = fallback
+      end
+   end
+
    local errs = schema.CheckSchema(dat, _schema.schema)
    local failed = false
 

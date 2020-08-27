@@ -11,6 +11,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
+local Calc = require("mod.elona.api.Calc")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -220,7 +221,8 @@ local item =
             "elona.bug",
             "elona.no_generate"
         },
-        light = light.item
+        light = light.item,
+        is_wishable = false
     },
     {
         _id = "long_sword",
@@ -734,6 +736,7 @@ local item =
         fltselect = 1,
         category = 55000,
         coefficient = 100,
+        is_wishable = false,
 
         param1 = 1,
         elona_type = "normal_book",
@@ -1341,7 +1344,17 @@ local item =
                     self:remove_ownership()
                     return true
                 end
-            }
+            },
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self, params)
+                   -- >>>>>>>> shade2/command.hsp:1595 		if iId(ci)=idGold:iNum(ci)=cLevel(pc)*cLevel(pc) ..
+                   self.amount = params.chara:calc("level") * params.chara:calc("level") * 50 + 20000
+                   -- <<<<<<<< shade2/command.hsp:1595 		if iId(ci)=idGold:iNum(ci)=cLevel(pc)*cLevel(pc) ..
+                end
+            },
         },
 
         on_init_params = function(self, params)
@@ -1376,14 +1389,34 @@ local item =
         tags = { "noshop" },
         always_drop = true,
 
-        on_get = function(self, getter)
-            getter.platinum = getter.platinum + self.amount
-            self:remove_ownership()
-        end,
-
         categories = {
             "elona.platinum",
             "elona.tag_noshop"
+        },
+
+        events = {
+            {
+                id = "base.on_get_item",
+                name = "Add platinum to inventory",
+                priority = 50000,
+
+                callback = function(self, params)
+                   Gui.mes("action.pick_up.execute", params.chara, self:build_name(params.amount))
+                   Gui.play_sound(Rand.choice({"base.get1", "base.get2"}), params.chara.x, params.chara.y)
+                   params.chara.platinum = params.chara.platinum + self.amount
+                   self:remove_ownership()
+                end
+            },
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self, params)
+                   -- >>>>>>>> shade2/command.hsp:1596 		if iId(ci)=idPlat:iNum(ci)=8+rnd(5) ..
+                   self.amount = 8 + Rand.rnd(5)
+                   -- <<<<<<<< shade2/command.hsp:1596 		if iId(ci)=idPlat:iNum(ci)=8+rnd(5) ..
+                end
+            },
         }
     },
     {
@@ -5156,7 +5189,20 @@ local item =
         categories = {
             "elona.scroll",
             "elona.tag_noshop"
-        }
+        },
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self)
+                   -- >>>>>>>> shade2/command.hsp:1601 			if iId(ci)=idPotionChangeMaterialSuper	:iNum(ci ..
+                   self.amount = 1
+                   -- <<<<<<<< shade2/command.hsp:1601 			if iId(ci)=idPotionChangeMaterialSuper	:iNum(ci ..
+                end
+            },
+        },
     },
     {
         _id = "scroll_of_wonder",
@@ -6172,6 +6218,7 @@ local item =
         end,
         has_charge = true,
         can_be_recharged = false,
+        is_wishable = false,
 
         elona_type = "book",
         categories = {
@@ -7578,7 +7625,8 @@ local item =
         categories = {
             "elona.container",
             "elona.no_generate"
-        }
+        },
+        is_wishable = false,
     },
     {
         _id = "scroll_of_greater_identify",
@@ -10807,7 +10855,20 @@ local item =
         categories = {
             "elona.scroll",
             "elona.tag_spshop"
-        }
+        },
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self)
+                   -- >>>>>>>> shade2/command.hsp:1601 			if iId(ci)=idPotionChangeMaterialSuper	:iNum(ci ..
+                   self.amount = 2
+                   -- <<<<<<<< shade2/command.hsp:1601 			if iId(ci)=idPotionChangeMaterialSuper	:iNum(ci ..
+                end
+            },
+        },
     },
     {
         _id = "figurine",
@@ -12025,6 +12086,13 @@ local item =
         subcategory = 18002,
         rarity = 25000,
         coefficient = 100,
+
+        before_wish = function(filter, chara)
+           -- >>>>>>>> shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+           filter.quality = Calc.calc_object_quality(Enum.Quality.Good)
+           return filter
+           -- <<<<<<<< shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+        end,
         
         categories = {
             "elona.equip_leg_shoes",
@@ -12051,7 +12119,14 @@ local item =
         subcategory = 20001,
         rarity = 10000,
         coefficient = 100,
-        
+
+        before_wish = function(filter, chara)
+           -- >>>>>>>> shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+           filter.quality = Calc.calc_object_quality(Enum.Quality.Good)
+           return filter
+           -- <<<<<<<< shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+        end,
+
         categories = {
             "elona.equip_back",
             "elona.equip_back_cloak"
@@ -12078,7 +12153,14 @@ local item =
         rarity = 25000,
         coefficient = 100,
         has_random_name = true,
-        
+
+        before_wish = function(filter, chara)
+           -- >>>>>>>> shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+           filter.quality = Calc.calc_object_quality(Enum.Quality.Good)
+           return filter
+           -- <<<<<<<< shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+        end,
+
         categories = {
             "elona.equip_ring_ring",
             "elona.equip_ring"
@@ -12109,7 +12191,20 @@ local item =
         medal_value = 10,
         categories = {
             "elona.drink",
-        }
+        },
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self)
+                   -- >>>>>>>> shade2/command.hsp:1600 			if iId(ci)=idPotionCureCorrupt		:iNum(ci)=2+rnd ..
+                   self.amount = 2 + Rand.rnd(2)
+                   -- <<<<<<<< shade2/command.hsp:1600 			if iId(ci)=idPotionCureCorrupt		:iNum(ci)=2+rnd ..
+                end
+            },
+        },
     },
     {
         _id = "masters_delivery_chest",
@@ -13031,7 +13126,22 @@ local item =
             "elona.no_generate"
         },
 
-        light = light.item
+        light = light.item,
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Replace with water",
+
+                callback = function(self, params)
+                   -- >>>>>>>> shade2/command.hsp:1597 		if iId(ci)=idHolyWell:iNum(ci)=0:flt:item_create ..
+                   local water = Item.create("elona.water", nil, nil, { ownerless = true, amount = 3 })
+                   self:replace_with(water)
+                   Gui.mes("wish.it_is_sold_out")
+                   -- <<<<<<<< shade2/command.hsp:1597 		if iId(ci)=idHolyWell:iNum(ci)=0:flt:item_create ..
+                end
+            },
+        }
     },
     {
         _id = "presidents_chair",
@@ -13391,7 +13501,20 @@ local item =
             "elona.scroll",
             "elona.tag_noshop",
             "elona.tag_spshop"
-        }
+        },
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self)
+                   -- >>>>>>>> shade2/command.hsp:1603 			if iId(ci)=idTreasureMap		:iNum(ci)=1 ..
+                   self.amount = 1
+                   -- <<<<<<<< shade2/command.hsp:1603 			if iId(ci)=idTreasureMap		:iNum(ci)=1 ..
+                end
+            },
+        },
     },
     {
         _id = "small_medal",
@@ -13622,6 +13745,13 @@ local item =
             local material = ItemMaterial.choose_random_material(self)
             ItemMaterial.apply_item_material(self, material)
             -- <<<<<<<< shade2/item.hsp:672 		} ..
+        end,
+
+        before_wish = function(filter, chara)
+           -- >>>>>>>> shade2/command.hsp:1587 		if p=idMaterialKit:objFix=2 ..
+           filter.quality = Enum.Quality.Normal
+           return filter
+           -- <<<<<<<< shade2/command.hsp:1587 		if p=idMaterialKit:objFix=2 ..
         end,
 
         tags = { "noshop", "spshop" },
@@ -14284,10 +14414,17 @@ local item =
         coefficient = 100,
         has_random_name = true,
 
-        on_generate = function(self)
+        on_init_params = function(self)
             local power = Rand.rnd(Rand.rnd(1000) + 1)
             local enc = InstancedEnchantment:new("elona.modify_attribute", power, { skill_id = "elona.stat_speed" })
             assert(self:add_enchantment(enc))
+        end,
+
+        before_wish = function(filter, chara)
+           -- >>>>>>>> shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
+           filter.quality = Calc.calc_object_quality(Enum.Quality.Good)
+           return filter
+           -- <<<<<<<< shade2/command.hsp:1586 		if (p=idRingAurora)or(p=idBootsSeven)or(p=idCloa ..
         end,
 
         categories = {
@@ -15400,7 +15537,20 @@ local item =
         end,
         categories = {
             "elona.drink",
-        }
+        },
+
+        events = {
+            {
+                id = "elona.on_item_created_from_wish",
+                name = "Adjust amount",
+
+                callback = function(self)
+                   -- >>>>>>>> shade2/command.hsp:1604 			if iId(ci)=idPotionDescent		:iNum(ci)=1 ..
+                   self.amount = 1
+                   -- <<<<<<<< shade2/command.hsp:1604 			if iId(ci)=idPotionDescent		:iNum(ci)=1 ..
+                end
+            },
+        },
     },
     {
         _id = "stradivarius",

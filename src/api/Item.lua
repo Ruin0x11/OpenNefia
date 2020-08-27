@@ -119,7 +119,6 @@ function Item.create(id, x, y, params, where)
    local item = MapObject.generate_from("base.item", id)
 
    item.quality = params.quality or Enum.Quality.Bad
-   item.amount = math.max(1, params.amount or item.amount or 1)
 
    MapObject.finalize(item, gen_params)
 
@@ -134,11 +133,17 @@ function Item.create(id, x, y, params, where)
    item:instantiate()
    item:emit("base.on_generate", params)
 
+   -- >>>>>>>> shade2/item.hsp:728 	if initNum!0:iNum(ci)=initNum ..
+   if type(params.amount) == "number" then
+      item.amount = params.amount
+   end
+
    if not params.no_stack then
       item:stack()
    end
 
    item:refresh()
+   -- <<<<<<<< shade2/item.hsp:730 	if val=-1:cell_refresh iX(ci),iY(ci) ..
 
    return item
 end

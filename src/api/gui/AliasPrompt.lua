@@ -42,7 +42,7 @@ local UiListExt = function(select_alias_menu)
 end
 
 function AliasPrompt:init(kind, seed)
-   self.kind = kind or "weapon"
+   self.kind = kind or "character"
    self.seed = seed or 10500
    self.width = 400
    self.height = 458

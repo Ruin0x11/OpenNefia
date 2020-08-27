@@ -93,6 +93,8 @@ function I18N.get(text, ...)
    return I18N.get_optional(text, ...) or ("<error: %s>"):format(text)
 end
 
+I18N.get_array = i18n.get_array
+
 
 -- TODO for itemname, provide a set of "cut points" so the user can
 -- split the string and insert whatever.
