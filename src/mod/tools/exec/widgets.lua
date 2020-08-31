@@ -1,5 +1,6 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
+local PerfPlot = require("mod.tools.api.PerfPlot")
 
 local LogWidget = require("mod.tools.api.gui.LogWidget")
 
@@ -22,3 +23,5 @@ Event.register("base.on_turn_begin", "Update watches on turn begin",
                function()
                   Watcher.update_watches()
                end)
+
+Gui.add_global_widget(PerfPlot:new(), "tools.perf_plot")

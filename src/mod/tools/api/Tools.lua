@@ -948,4 +948,12 @@ function Tools.refill_ammo()
    enc.params.ammo_current = enc.params.ammo_max
 end
 
+function Tools.performance_stats()
+   local fps = Gui.global_widget("fps_counter")
+   if not fps then
+      return 0, 0, 0
+   end
+   return fps:widget():get_stats()
+end
+
 return Tools

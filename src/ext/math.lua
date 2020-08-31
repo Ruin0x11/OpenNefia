@@ -57,3 +57,16 @@ function math.type(x)
 
    return "float"
 end
+
+function math.map(n, a_min, a_max, b_min, b_max, bound)
+   local new = (n - a_min) / (a_max - a_min) * (b_max - b_min) + b_min
+   if not bound then
+      return new
+   end
+
+   if b_min < b_max then
+      return math.clamp(new, b_min, b_max)
+   else
+      return math.clamp(new, b_max, b_min)
+   end
+end

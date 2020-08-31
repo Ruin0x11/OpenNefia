@@ -84,7 +84,7 @@ end
 
 function CircularBuffer:init(max_length)
     if type(max_length) ~= 'number' or max_length <= 1 then
-        error("Buffer length must be a positive integer")
+        error("Buffer length must be greater than 1")
     end
 
     self.history = {}

@@ -102,10 +102,14 @@ function love.update(dt)
       return
    end
 
-   draw.update_global_widgets(dt)
+   local ok, err = xpcall(draw.update_global_widgets, debug.traceback, dt)
+   if not ok then
+      start_halt()
+      halt_error = err
+   end
    draw.update_global_draw_callbacks(dt)
 
-   local ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
+   ok, err = coroutine.resume(loop_coro, dt, pop_draw_layer)
    pop_draw_layer = false
    if not ok or err ~= nil then
       print("Error in loop:\n\t" .. debug.traceback(loop_coro, err))
@@ -156,7 +160,11 @@ function love.draw()
 
    love.graphics.getStats(main_state.draw_stats)
 
-   draw.draw_global_widgets()
+   ok, err = xpcall(draw.draw_global_widgets, debug.traceback)
+   if not ok then
+      start_halt()
+      halt_error = err
+   end
    draw.draw_global_draw_callbacks()
 
    draw.draw_end()

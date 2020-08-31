@@ -17,6 +17,7 @@ ElonaCommand = require("mod.elona.api.ElonaCommand")
 PicViewer = require("mod.tools.api.PicViewer")
 Skill = require("mod.elona_sys.api.Skill")
 Wish = require("mod.elona.api.Wish")
+PlotViewer = require("mod.plot.api.PlotViewer")
 
 Log.set_level("info")
 
@@ -27,3 +28,7 @@ Event.unregister("base.on_game_initialize", "debug")
 Event.register("base.on_game_initialize", "debug", function() Repl.defer_execute(test) end)
 
 p = Chara.player()
+
+-- Local Variables:
+-- open-nefia-always-send-to-repl: t
+-- End:

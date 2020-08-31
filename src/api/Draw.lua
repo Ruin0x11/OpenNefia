@@ -401,4 +401,12 @@ function Draw.current_layer(i)
    return nil
 end
 
+function Draw.set_line_style(style)
+   love.graphics.setLineStyle(style or "rough")
+end
+
+function Draw.set_default_filter(min, mag, anisotropy)
+   love.graphics.setDefaultFilter(min or "nearest", mag or "nearest", anisotropy or 1)
+end
+
 return Draw

@@ -16,6 +16,7 @@ function UiFpsCounter:init()
    self.prev_ram = 0
    self.now = Env.get_time()
    self.buff = ""
+   self.last = {}
 
    self.fps_graph = UiFpsGraph:new({0, 0, 255, 128}, 0.10)
    self.ram_graph = UiFpsGraph:new({255, 0, 0, 128})
@@ -40,6 +41,10 @@ function UiFpsCounter:draw()
    self.fps_graph:draw()
    self.ram_graph:draw()
    self.ram_diff_graph:draw()
+end
+
+function UiFpsCounter:get_stats()
+   return self.prev_fps, self.prev_ram, self.prev_diff
 end
 
 function UiFpsCounter:update()
