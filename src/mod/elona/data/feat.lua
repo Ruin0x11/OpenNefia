@@ -212,7 +212,7 @@ local function entrance_in_parent_map(map, chara, prev)
    return { x = x + Rand.rnd(math.floor(index / 5) + 1), y = y + Rand.rnd(math.floor(index / 5) + 1) }
 end
 
-local function travel(start_pos_fn)
+local function travel(start_pos_fn, set_prev_map)
    return function(self, params)
       local chara = params.chara
       if not chara:is_player() then return end
@@ -277,6 +277,12 @@ local function travel(start_pos_fn)
          start_x = start_x,
          start_y = start_y
       }
+
+      -- If we're entering from the world map, set the previous map so we know
+      -- where to go if exiting from the edge.
+      if set_prev_map then
+         map:set_previous_map_and_location(prev_map, self.x, self.y)
+      end
 
       Map.travel_to(map, travel_params)
 
@@ -346,7 +352,7 @@ data:add
       self:mod("can_activate", true)
    end,
 
-   on_activate = travel(MapEntrance.stairs_up),
+   on_activate = travel(MapEntrance.stairs_up, true),
 
    on_stepped_on = function(self, params)
       local area = Area.get(self.params.area_uid)

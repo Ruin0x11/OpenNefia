@@ -76,7 +76,11 @@ function Map.save(map)
    return ok, err
 end
 
-function Map.is_saved(map_or_uid)
+function Map.exists(map_or_uid)
+   if map_or_uid == nil then
+      return false
+   end
+
    local uid
    if class.is_an(InstancedMap, map_or_uid) then
       uid = map_or_uid.uid

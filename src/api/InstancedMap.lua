@@ -105,6 +105,10 @@ function InstancedMap:init(width, height, uids, tile)
 
    self._archetype = nil
 
+   -- Map to travel to when exiting this map from the edge. Set when entering a
+   -- map from the world map or similar.
+   self._previous_map = nil
+
    self.default_tile = "base.floor"
    self.name = I18N.get("map.default_name")
 
@@ -576,9 +580,19 @@ function InstancedMap:replace_with(other)
    self.uid = uid
 end
 
+local function set_events_on_self(map)
+   local archetype = map:archetype()
+   if archetype == nil then
+      return
+   end
+
+   IEventEmitter.init(map, archetype.events)
+end
+
 function InstancedMap:deserialize()
    ILocation.deserialize(self)
    self:redraw_all_tiles()
+   set_events_on_self(self)
 end
 
 function InstancedMap:set_archetype(archetype_id, opts)
@@ -596,6 +610,8 @@ function InstancedMap:set_archetype(archetype_id, opts)
             self[k] = v
          end
       end
+
+      set_events_on_self(self)
    end
 
    if self._archetype then
@@ -608,6 +624,27 @@ function InstancedMap:archetype()
       return data["base.map_archetype"]:ensure(self._archetype)
    end
    return nil
+end
+
+function InstancedMap:set_previous_map_and_location(map, x, y)
+   assert(class.is_an("api.InstancedMap", map))
+   assert(type(x) == "number")
+   assert(type(y) == "number")
+
+   self._previous_map = {
+      map_uid = map.uid,
+      x = x,
+      y = y
+   }
+end
+
+function InstancedMap:previous_map_and_location(area, floor, x, y)
+   local prev = self._previous_map
+   if prev == nil then
+      return nil, nil, nil
+   end
+
+   return prev.map_uid, prev.x, prev.y
 end
 
 --

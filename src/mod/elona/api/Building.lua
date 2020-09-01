@@ -43,13 +43,21 @@ function Building.query_build(deed)
 end
 
 function Building.build_area(area_archetype_id, name, x, y, map)
-   local area = InstancedArea:new()
-   area:set_archetype(area_archetype_id)
+   local area = InstancedArea:new(area_archetype_id)
    area.metadata.is_player_owned = true
    Area.register(area, { parent = Area.for_map(map) })
    Area.create_entrance(area, 1, x, y, {}, map)
    Gui.play_sound("base.build1", x, y)
    Gui.mes_c("building.built_new", "Yellow", name)
+
+   local metadata = {
+      area_archetype_id = area._archetype,
+      area_uid = area.uid,
+      name = area.name,
+      tax_cost = area.metadata.tax_cost or 0
+   }
+
+   table.insert(save.elona.player_owned_buildings, metadata)
 end
 
 return Building

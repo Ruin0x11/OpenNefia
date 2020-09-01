@@ -922,6 +922,7 @@ local function init_save()
    s.flag_has_met_ally = false
    s.total_skills_learned = 0
    s.waiting_guests = 0
+   s.player_owned_buildings = {}
 end
 
 Event.register("base.on_init_save", "Init save (Elona)", init_save)

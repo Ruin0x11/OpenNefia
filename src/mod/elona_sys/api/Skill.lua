@@ -168,6 +168,7 @@ function Skill.modify_potential_from_level(chara, skill, level_delta)
    return potential
 end
 
+-- TODO replace with ICharaSkills:mod_skill_potential()
 function Skill.modify_potential(chara, skill, delta)
    local potential = math.clamp(math.floor(chara:skill_potential(skill) + delta), 2, 400)
    chara.skills["base.skill:" .. skill].potential = potential
@@ -294,7 +295,7 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
       end
    end
 
-   if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level ~= 1000 then
+   if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level <= 1000 then
       local lvl_exp = Skill.calc_chara_exp_from_skill_exp(chara:calc("required_experience"), chara:calc("level"), exp, exp_divisor_level)
       chara.experience = chara.experience + lvl_exp
       if chara:is_player() then
