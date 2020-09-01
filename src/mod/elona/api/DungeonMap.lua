@@ -19,16 +19,6 @@ local function populate_rooms(map, creature_packs, has_monster_houses, chara_fil
    -- >>>>>>>> shade2/map_rand.hsp:175 	rdMonsterHouse	=false ..
    local has_monster_house = false
 
-   if chara_filter == nil then
-      local archetype = map:archetype()
-      if archetype then
-         chara_filter = archetype.chara_filter
-      end
-   end
-   if chara_filter == nil then
-      chara_filter = Dungeon.default_chara_filter
-   end
-
    local rooms = map.rooms or {}
 
    for _, room in ipairs(rooms) do
@@ -135,10 +125,11 @@ end
 ---
 --- This function handles picking out a valid dungeon map by repeatedly calling
 --- the generator with a set of random parameters.
-function DungeonMap.generate_raw(generator, area, floor, width, height, attempts, on_generate_params)
+function DungeonMap.generate_raw(generator, area, floor, width, height, attempts, on_generate_params, chara_filter)
    attempts = attempts or 2000
 
-   local dungeon, err, gen_params
+   local dungeon, err
+   local gen_params = {}
 
    for _ = 1, attempts do
       Rand.set_seed()
@@ -158,7 +149,8 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
          hidden_path_chance = 5,
          creature_packs = 1,
          level = floor,
-         max_crowd_density = w * h / 100
+         max_crowd_density = w * h / 100,
+         chara_filter = chara_filter
       }
 
       if on_generate_params then
@@ -220,8 +212,9 @@ function DungeonMap.generate(area, floor, generator, opts)
    local height = opts.height
    local attempts = opts.attempts
    local has_monster_houses = opts.has_monster_houses
+   local chara_filter = opts.chara_filter
 
-   local map, gen_params = DungeonMap.generate_raw(generator, area, floor, width, height, attempts, opts.on_generate_params)
+   local map, gen_params = DungeonMap.generate_raw(generator, area, floor, width, height, attempts, opts.on_generate_params, chara_filter)
 
    if map == nil then
       return nil
@@ -232,17 +225,6 @@ function DungeonMap.generate(area, floor, generator, opts)
    local tileset = opts.tileset or map.tileset or "elona.dungeon"
    map.tileset = tileset
    MapTileset.apply(tileset, map)
-
-   local chara_filter = opts.chara_filter
-   if chara_filter == nil then
-      local archetype = map:archetype()
-      if archetype then
-         chara_filter = archetype.chara_filter
-      end
-   end
-   if chara_filter == nil then
-      chara_filter = Dungeon.default_chara_filter
-   end
 
    Log.info("Populating dungeon rooms.")
    populate_rooms(map, gen_params.creature_packs, has_monster_houses, chara_filter)
