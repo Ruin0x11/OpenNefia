@@ -89,7 +89,7 @@ do
       map:set_archetype("elona.ranch", { set_properties = true })
 
       local item = Item.create("elona.book", 23, 8, nil, map)
-      item.params.book_id = 11
+      item.params.book_id = "elona.breeders_guide"
 
       Item.create("elona.register", 22, 6, nil, map)
 
@@ -136,7 +136,7 @@ do
       map:set_archetype("elona.dungeon", { set_properties = true })
 
       local item = Item.create("elona.book", 39, 54, nil, map)
-      item.params.book_id = 15
+      item.params.book_id = "elona.dungeon_guide"
 
       return map
    end
@@ -176,7 +176,7 @@ do
       map:set_archetype("elona.museum", { set_properties = true })
 
       local item = Item.create("elona.book", 15, 17, nil, map)
-      item.params.book_id = 4
+      item.params.book_id = "elona.museum_guide"
 
       return map
    end
@@ -265,7 +265,7 @@ do
       map:set_archetype("elona.shop", { set_properties = true })
 
       local item = Item.create("elona.book", 17, 14, nil, map)
-      item.params.book_id = 8
+      item.params.book_id = "elona.shopkeeper_guide"
 
       Item.create("elona.shop_strongbox", 19, 10, nil, map)
       Item.create("elona.register", 17, 11, nil, map)
@@ -297,12 +297,21 @@ do
          Chara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
+
+      -- >>>>>>>> shade2/map_user.hsp:620 *shop_update ..
+      map.max_crowd_density = math.floor((100 - save.elona.ranks["elona.shop"] / 100) / 4 + 1)
+
+      for _, item in Item.iter(map) do
+         item:refresh_cell_on_map()
+      end
+      -- <<<<<<<< shade2/map_user.hsp:637 	return ..
    end
 
    function shop.on_map_pass_turn(map)
-      Gui.mes_c("misc.map.shop.chats", "SkyBlue")
       if map.crowd_density >= 0 and Rand.one_in(25) then
-         -- BUG: figure out the automatic text coloring
+         -- BUG: figure out the automatic text coloring. The color differs
+         -- depending on if the text starts with a quote, but the localized text
+         -- is a list with both quoted and non-quoted items...
          Gui.mes_c("misc.map.shop.chats", "SkyBlue")
       end
    end
@@ -364,7 +373,7 @@ do
       map:set_archetype("elona.crop", { set_properties = true })
 
       local item = Item.create("elona.book", 17, 14, nil, map)
-      item.params.book_id = 9
+      item.params.book_id = "elona.easy_gardening"
 
       return map
    end

@@ -20,6 +20,7 @@ local Input = require("api.Input")
 local Log = require("api.Log")
 local Const = require("api.Const")
 local CharaMake = require("api.CharaMake")
+local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
 
 --
 --
@@ -923,9 +924,20 @@ local function init_save()
    s.total_skills_learned = 0
    s.waiting_guests = 0
    s.player_owned_buildings = {}
+   s.ranks = {
+      ["elona.arena"] = 0,
+      ["elona.petArena"] = 0,
+      ["elona.crawler"] = 0,
+      ["elona.museum"] = 0,
+      ["elona.home"] = 0,
+      ["elona.shop"] = 0,
+      ["elona.vote"] = 0,
+      ["elona.fishing"] = 0,
+      ["elona.guild"] = 0
+   }
 end
 
-Event.register("base.on_init_save", "Init save (Elona)", init_save)
+Event.register("base.on_init_save", "Init save (elona)", init_save)
 
 local function decrease_nutrition(chara, params, result)
    if not chara:is_player() then
@@ -1149,3 +1161,17 @@ local function proc_damage_reaction(chara, params)
    -- <<<<<<<< elona122/shade2/action.hsp:1352         } ..
 end
 Event.register("elona.on_physical_attack_hit", "Proc damage reaction", proc_damage_reaction, 400000)
+
+local function day_passes()
+   local guests = save.elona.waiting_guests
+   if guests < 3 and Rand.one_in(8 + guests * 5) then
+      save.elona.waiting_guests = guests + 1
+   end
+   Gui.mes_c("action.new_day", "Yellow")
+end
+
+Event.register("base.on_day_passed", "Day passing message/update guests", day_passes, 100000)
+
+-- >>>>>>>> shade2/main.hsp:641 		gosub *shop_turn ..
+Event.register("base.on_day_passed", "Update shop every day", function() ElonaBuilding.update_shops() end, 110000)
+-- <<<<<<<< shade2/main.hsp:641 		gosub *shop_turn ..

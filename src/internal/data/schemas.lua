@@ -415,7 +415,9 @@ A damage reaction to trigger if this character is melee attacked.
          is_lay_hand_available = nil,
          is_invisible = nil,
          is_summoned = nil,
-         is_hung_on_sandbag = nil
+         is_hung_on_sandbag = nil,
+
+         prevent_sell_in_own_shop = nil
       }
    },
    { interface = IChara }
