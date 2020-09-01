@@ -89,6 +89,7 @@ function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, t
       for _, chara in candidates:unwrap() do
          local weight = chara_gen_weight(chara, objlv)
          sampler:add(chara._id, weight)
+         print("Add", chara._id, weight)
       end
    end
 

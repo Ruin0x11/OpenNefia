@@ -536,7 +536,11 @@ sキー		降伏
 }
 
 return {
-   book = {
-      elona = book
+   _ = {
+      elona = {
+         book = {
+            elona = book
+         }
+      }
    }
 }

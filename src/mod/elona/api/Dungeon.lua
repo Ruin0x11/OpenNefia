@@ -80,6 +80,15 @@ function Dungeon.default_chara_filter(dungeon)
    -- <<<<<<<< shade2/map.hsp:92 		} ..
 end
 
+function Dungeon.random_chara_filter(map)
+   local archetype = map:archetype()
+   if archetype and archetype.chara_filter then
+      return archetype.chara_filter
+   end
+
+   return Dungeon.default_chara_filter
+end
+
 function Dungeon.create_map(floor, params, width, height)
    width = width or params.width
    height = height or params.height
@@ -1087,9 +1096,11 @@ function Dungeon.gen_type_6(area, floor, params)
       map.tileset = "elona.noyel_fields"
    end
 
+   local chara_filter = params.chara_filter or Dungeon.random_chara_filter(map)
+
    map.max_crowd_density = 0
    for _=1, 10 + Rand.rnd(6) do
-      local chara = Charagen.create(nil, nil, Dungeon.default_chara_filter(map), map)
+      local chara = Charagen.create(nil, nil, chara_filter(map), map)
       if chara then
          chara.faction = "base.enemy"
       end

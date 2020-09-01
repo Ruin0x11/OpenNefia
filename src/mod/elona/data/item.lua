@@ -764,7 +764,7 @@ local item =
         on_read = function(self)
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
             Effect.identify_item(self, Enum.IdentifyState.Name)
-            local text = I18N.get("book." .. self.params.book_id .. ".text")
+            local text = I18N.get("_.elona.book." .. self.params.book_id .. ".text")
             local BookMenu = require("api.gui.menu.BookMenu")
             BookMenu:new(text, true):query()
             return false

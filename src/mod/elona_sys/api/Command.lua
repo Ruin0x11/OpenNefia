@@ -18,28 +18,12 @@ local Area = require("api.Area")
 local Command = {}
 
 local function travel_to_map_hook(source, params, result)
-   local cur = Map.current()
+   assert(Map.travel_to(params.outer_map, { start_x = params.x, start_y = params.y }))
 
-   local _, outer_map = assert(Map.load_parent_map(cur))
-   local x, y = Map.position_in_parent_map(cur)
-   if not x and y then
-      Log.error("No position in parent map, defaulting to center.")
-      x = outer_map:width() / 2
-      y = outer_map:height() / 2
-   end
-
-   save.base.player_pos_on_map_leave = { x = Chara.player().x, y = Chara.player().y }
-
-   assert(Map.travel_to(outer_map, { start_x = x, start_y = y }))
-
-   return {true, "player_turn_query"}
+   return "player_turn_query"
 end
 
-local hook_travel_to_map = Event.define_hook("travel_to_map",
-                                        "Hook when traveling to a new map.",
-                                        { false, "Error running hook." },
-                                        nil,
-                                        travel_to_map_hook)
+Event.register("elona_sys.on_travel_to_outer_map", "Hook when traveling to a new map.", travel_to_map_hook)
 
 local hook_player_move = Event.define_hook("player_move",
                                       "Hook when the player moves.",
@@ -91,32 +75,27 @@ function Command.move(player, x, y)
 
    -- >>>>>>>> shade2/action.hsp:581 	if (gLevel=1)or(mType=mTypeField):if mType!mTypeW ..
    local map = player:current_map()
-   local parent_area = Area.parent(map)
-   local can_exit_from_edge = Area.floor_number(map) == 1 and not Map.is_world_map(map)
+   local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
 
-   if not Map.is_in_bounds(next_pos.x, next_pos.y, map)
-      and (can_exit_from_edge or not map.is_indoor)
-      and parent_area ~= nil
-   then
-      -- Player is trying to move out of the map.
+   if not Map.is_in_bounds(next_pos.x, next_pos.y, map) then
+      local can_exit_from_edge = not Map.is_world_map(map) and not map.is_indoor and Map.exists(prev_map_uid)
+      if can_exit_from_edge then
+         local ok, prev_map = Map.load(prev_map_uid)
+         if prev_map and prev_x and prev_y then
+            -- Player is trying to move out of the map.
+            Event.trigger("elona_sys.before_player_map_leave", {player=player})
 
-      Event.trigger("elona_sys.before_player_map_leave", {player=player})
+            if Input.yes_no() then
+               Gui.play_sound("base.exitmap1")
+               Gui.update_screen()
 
-      if Input.yes_no() then
-         Gui.play_sound("base.exitmap1")
-         Gui.update_screen()
+               local result = Event.trigger("elona_sys.on_travel_to_outer_map", {outer_map=prev_map, x=prev_x, y=prev_y}, "player_turn_query")
+               return result
+            end
 
-         local success, result = table.unpack(hook_travel_to_map())
-
-         if not success then
-            Gui.report_error(result)
             return "player_turn_query"
          end
-
-         return result
       end
-
-      return "player_turn_query"
    else
       for _, obj in Map.current():objects_at_pos(next_pos.x, next_pos.y) do
          if obj:calc("is_solid") then

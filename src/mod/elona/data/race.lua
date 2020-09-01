@@ -329,8 +329,6 @@ local race =
             "elona.waist",
             "elona.leg"
          },
-
-
       },
       {
          _id = "eulderna",

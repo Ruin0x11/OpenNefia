@@ -5,18 +5,22 @@ local data = require("internal.data")
 
 local InstancedArea = class.class("InstancedArea")
 
-function InstancedArea:init(image, area_generator, uids)
+function InstancedArea:init(archetype_id, area_generator, uids)
    self.uid = save.base.area_uids:get_next_and_increment()
 
    self._archetype = nil
    self.maps = {}
-   self.image = image or nil
+   self.image = nil
    self.area_generator = area_generator or nil
    self.metadata = {}
    self.name = nil
    self.parent_area = nil
    self.parent_x = nil
    self.parent_y = nil
+
+   if archetype_id then
+      self:set_archetype(archetype_id, { set_properties = true })
+   end
 end
 
 function InstancedArea:add_floor(map, floor)
@@ -40,9 +44,20 @@ function InstancedArea:archetype()
    return data["base.area_archetype"]:ensure(self._archetype)
 end
 
-function InstancedArea:set_archetype(area_archetype_id)
+function InstancedArea:set_archetype(area_archetype_id, params)
    data["base.area_archetype"]:ensure(area_archetype_id)
    self._archetype = area_archetype_id
+
+   local archetype = self:archetype()
+   if archetype and params and params.set_properties then
+      self.image = self.image or archetype.image
+      self.color = self.color or archetype.color
+      if archetype.metadata then
+         for k, v in pairs(archetype.metadata) do
+            self.metadata[k] = table.deepcopy(v)
+         end
+      end
+   end
 end
 
 function InstancedArea:deepest_floor()
@@ -172,16 +187,21 @@ function InstancedArea:iter_child_areas(floor)
    return data["base.area_archetype"]:iter():filter(filter)
 end
 
+-- Given a child area, tries to find its location in this area. Used for
+-- determining where to place the player when returning to the world map from a
+-- town or dungeon.
 function InstancedArea:position_of_child(child, floor)
-   assert(class.is_an(InstancedArea, child))
+   -- assert(class.is_an(InstancedArea, child)) BUG: See #108.
    assert(math.type(floor) == "integer")
 
    if self._archetype == nil or child._archetype == nil then
       return nil, nil
    end
 
+   -- BUG: Doesn't work with dynamically added areas.
    local child_archetype = self:iter_child_areas(floor):filter(function(arc) return arc._id == child._archetype end):nth(1)
    if child_archetype == nil then
+      pause()
       return nil, nil
    end
 

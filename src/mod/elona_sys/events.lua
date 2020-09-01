@@ -576,7 +576,7 @@ local function proc_quest_abandonment(_, params)
    end
    save.elona_sys.instanced_quest = nil
 end
-Event.register("elona_sys.hook_travel_to_map", "Warn about abandoning instanced quest", proc_quest_abandonment)
+Event.register("elona_sys.on_travel_to_outer_map", "Warn about abandoning instanced quest", proc_quest_abandonment)
 
 
 

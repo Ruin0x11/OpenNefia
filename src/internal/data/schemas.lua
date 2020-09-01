@@ -182,18 +182,25 @@ The character's gender, either "male" or "female".
          },
          {
             name = "rarity",
-            default = 0,
+            default = 100000,
             template = true,
             doc = [[
-Variable affecting the chance this character is generated.
+Controls how common this character is.
+
+Increase to make more common; set to 0 to disable random generation entirely.
 ]]
          },
          {
             name = "coefficient",
-            default = 0,
+            default = 400,
             template = true,
             doc = [[
-Variable affecting the chance this character is generated.
+Controls the chance this character will be randomly generated in dungeons with a
+large level difference against the character's level.
+
+Higher means a smaller range of dungeon levels the character appears in. Lower
+means the character has a greater chance of appearing in both high-level and
+low-level dungeons.
 ]]
          },
          {
@@ -489,19 +496,24 @@ The item's image.
          {
             name = "rarity",
             default = 0,
-            type = "uint",
             template = true,
             doc = [[
-Variable affecting the chance this item is generated.
+Controls how common this item is.
+
+Increase to make more common; set to 0 to disable random generation entirely.
 ]]
          },
          {
             name = "coefficient",
             default = 0,
-            type = "uint",
             template = true,
             doc = [[
-Variable affecting the chance this item is generated.
+Controls the chance this item will be randomly generated in dungeons with a
+large level difference against the item's level.
+
+Higher means a smaller range of dungeon levels the item appears in. Lower means
+the item has a greater chance of appearing in both high-level and low-level
+dungeons.
 ]]
          },
          {

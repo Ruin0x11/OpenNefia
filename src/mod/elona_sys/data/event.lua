@@ -34,7 +34,8 @@ local event = {
       { _id = "on_item_memorize_known" },
       { _id = "on_item_check_generated" },
       { _id = "on_item_check_known" },
-      { _id = "on_gain_skill_exp" }
+      { _id = "on_gain_skill_exp" },
+      { _id = "on_travel_to_outer_map" }
 }
 
 data:add_multi("base.event", event)

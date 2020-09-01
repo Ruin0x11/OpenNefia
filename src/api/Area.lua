@@ -157,7 +157,7 @@ function Area.register(area, opts)
    Log.debug("Registering area '%s' with maps: %s", area.name, inspect(fun.iter(area.maps):extract("uid"):to_list()))
 
    -- for _, _, map in area:iter_maps() do
-   --    if not Map.is_saved(map.uid) then
+   --    if not Map.exists(map.uid) then
    --       Log.warn("Map '%d' is not yet saved, call `Map.save(uid)` afterwards", map.uid, map.uid)
    --    end
    -- end
@@ -241,22 +241,11 @@ function Area.create_unique(area_archetype_id, parent)
       return Area.get_unique(area_archetype_id)
    end
 
-   local area_archetype = data["base.area_archetype"]:ensure(area_archetype_id)
+   data["base.area_archetype"]:ensure(area_archetype_id)
+
    assert(parent == "root" or class.is_an(InstancedArea, parent), "Invalid parent area")
 
-   local image = area_archetype.image or nil
-   local area = InstancedArea:new(image)
-   if area_archetype.color then
-      area.color = area_archetype.color
-   end
-
-   area:set_archetype(area_archetype_id)
-   if area_archetype.metadata then
-      for k, v in pairs(area_archetype.metadata) do
-         area.metadata[k] = table.deepcopy(v)
-      end
-   end
-
+   local area = InstancedArea:new(area_archetype_id)
    Area.register(area, { parent = parent })
 
    save.base.unique_areas[area_archetype_id] = {

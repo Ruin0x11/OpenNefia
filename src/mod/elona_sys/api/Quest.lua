@@ -377,7 +377,7 @@ function Quest.register_town(map)
    end
 
    local x, y = Map.position_in_parent_map(map)
-   assert(x)
+   assert(x, "Town must have an area archetype with `parent_area` set")
 
    Log.debug("Register quest endpoint %d", map.uid)
 

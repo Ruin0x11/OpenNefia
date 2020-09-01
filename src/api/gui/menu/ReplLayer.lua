@@ -68,6 +68,9 @@ function ReplLayer:init(env, params)
    self.can_search = true
    self.max_search_size = 1000
 
+   -- formatting options
+   self.show_metatables = false
+
    self.deferred = Queue:new()
 
    self.print_varargs = false
@@ -463,7 +466,9 @@ local function remove_all_metatables(item, path)
   if path[#path] ~= inspect.METATABLE then return item end
 end
 
-function ReplLayer.format_repl_result(result)
+local inspect_opts = {process=remove_all_metatables}
+
+function ReplLayer.format_repl_result(result, show_metatables)
    local result_text
    local stop = false
 
@@ -475,7 +480,7 @@ function ReplLayer.format_repl_result(result)
       if result.__enum then
          result_text = inspect(result)
       elseif result._type and result._id then
-         result_text = inspect(Object.make_prototype(result), {process=remove_all_metatables})
+         result_text = inspect(Object.make_prototype(result), inspect_opts)
       elseif tostring(result) == "<generator>" then
          -- Wrap in a protected function in case running the generator
          -- returns an error
@@ -488,11 +493,11 @@ function ReplLayer.format_repl_result(result)
                   list = list:map(Object.make_prototype)
                end
                if list:length() == max + 1 then
-                  text = "(iterator): " .. inspect(list:take(10):to_list(), {process=remove_all_metatables})
+                  text = "(iterator): " .. inspect(list:take(10):to_list(), inspect_opts)
                   text = string.strip_suffix(text, " }")
                   text = text .. ", <...> }"
                else
-                  text = "(iterator): " .. inspect(list:to_list(), {process=remove_all_metatables})
+                  text = "(iterator): " .. inspect(list:to_list(), inspect_opts)
                end
 
                return text
@@ -500,7 +505,11 @@ function ReplLayer.format_repl_result(result)
          result_text = rest
          stop = true
       else
-         result_text = inspect(result, {process=remove_all_metatables})
+         local opts
+         if show_metatables then
+            opts = inspect_opts
+         end
+         result_text = inspect(result, opts)
       end
    elseif type(result) == "string" then
       result_text = ("\"%s\""):format(result)
@@ -511,7 +520,7 @@ function ReplLayer.format_repl_result(result)
    return result_text, stop
 end
 
-function ReplLayer.format_results(results, print_varargs)
+function ReplLayer.format_results(results, print_varargs, show_metatables)
    local result_text
 
    if type(results) == "table" then
@@ -525,7 +534,7 @@ function ReplLayer.format_results(results, print_varargs)
             count = 1
          end
          for i=1, count do
-            tbl[i] = ReplLayer.format_repl_result(results[i])
+            tbl[i] = ReplLayer.format_repl_result(results[i], show_metatables)
          end
          if #tbl == 0 then
             result_text = "nil"
@@ -533,7 +542,7 @@ function ReplLayer.format_results(results, print_varargs)
             result_text = table.concat(tbl, "\t")
          end
       else
-         result_text = ReplLayer.format_repl_result(results[1])
+         result_text = ReplLayer.format_repl_result(results[1], show_metatables)
       end
 
       if result_text == nil then
@@ -562,7 +571,7 @@ function ReplLayer:submit()
 
    local success, results = self.mode:submit(text, self.env)
 
-   local result_text = ReplLayer.format_results(results, true)
+   local result_text = ReplLayer.format_results(results, true, self.show_metatables)
 
    local color
    if not success then
