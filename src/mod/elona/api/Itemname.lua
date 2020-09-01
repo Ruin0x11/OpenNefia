@@ -119,7 +119,7 @@ local function item_name_sub(s, item, jp)
       elseif _id == "elona.book_of_rachel" then
          s = s .. I18N.get("item.info." .. _id .. ".title", item.params.book_of_rachel_no)
       elseif _id == "elona.book" then
-         s = s .. I18N.get("item.info." .. _id .. ".title", "book." .. item.params.book_id .. ".title")
+         s = s .. I18N.get("item.info." .. _id .. ".title", "_.elona.book." .. item.params.book_id .. ".title")
       end
    end
 

@@ -78,7 +78,7 @@ function Command.move(player, x, y)
    local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
 
    if not Map.is_in_bounds(next_pos.x, next_pos.y, map) then
-      local can_exit_from_edge = not Map.is_world_map(map) and not map.is_indoor and Map.exists(prev_map_uid)
+      local can_exit_from_edge = not Map.is_world_map(map) and Map.exists(prev_map_uid)
       if can_exit_from_edge then
          local ok, prev_map = Map.load(prev_map_uid)
          if prev_map and prev_x and prev_y then
@@ -223,6 +223,7 @@ function Command.enter_action(player)
    if is_world_map then
       local stood_tile = Map.tile(player.x, player.y)
       local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
+      map:set_previous_map_and_location(Map.current(), player.x, player.y)
 
       Gui.play_sound("base.exitmap1")
       assert(Map.travel_to(map))

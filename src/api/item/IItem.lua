@@ -350,4 +350,15 @@ function IItem:has_category(cat)
    return false
 end
 
+function IItem:major_categories()
+   local categories = {}
+   for _, category in ipairs(self.categories) do
+      local item_type = data["base.item_type"]:ensure(category)
+      if item_type.is_major then
+         categories[#categories+1] = category
+      end
+   end
+   return categories
+end
+
 return IItem
