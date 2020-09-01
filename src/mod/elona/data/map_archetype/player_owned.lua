@@ -199,7 +199,7 @@ do
       }
    end
 
-   function museum.on_map_major_events(map)
+   function museum.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
          Chara.spawn_mobs(map)
@@ -291,7 +291,7 @@ do
       }
    end
 
-   function shop.on_map_major_events(map)
+   function shop.on_map_entered_events(map)
       -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
       for _ = 1, 5 do
          Chara.spawn_mobs(map)
