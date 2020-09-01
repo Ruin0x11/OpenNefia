@@ -78,3 +78,21 @@ local function archetype_on_map_major_events(map)
 end
 
 Event.register("base.on_map_major_events", "Archetype callback (on_map_major_events)", archetype_on_map_major_events)
+
+local function archetype_on_map_pass_turn(chara, params, result)
+   -- >>>>>>>> shade2/main.hsp:733  ..
+   local map = chara:current_map()
+   if not chara:is_player() or not map then
+      return result
+   end
+
+   local archetype = map:archetype()
+   if not (archetype and archetype.on_map_pass_turn) then
+      return
+   end
+
+   archetype.on_map_pass_turn(map)
+   -- <<<<<<<< shade2/main.hsp:735 	 ..
+end
+
+Event.register("base.before_chara_turn_start", "Archetype callback (on_map_pass_turn)", archetype_on_map_pass_turn)

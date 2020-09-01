@@ -196,11 +196,13 @@ local function init_world_map(map)
 end
 
 local function proc_area_major_events(map)
+   -- >>>>>>>> shade2/map.hsp:2084 	proc "Map:Update area" ..
    ElonaCommand.wake_up_everyone(map)
    Chara.player():reset_ai()
 
    -- TODO
    map:emit("base.on_map_major_events")
+   -- <<<<<<<< shade2/map.hsp:2087 	mode=mode_Main:screenUpdate=-1:gosub *screen_refr ..
 end
 
 local function proc_map_entered(map)

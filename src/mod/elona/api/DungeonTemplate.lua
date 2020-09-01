@@ -1,4 +1,3 @@
-local DungeonMap = require("mod.elona.api.DungeonMap")
 local Dungeon = require("mod.elona.api.Dungeon")
 local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")

@@ -3,6 +3,12 @@ local util = require("mod.elona.data.map_archetype.util")
 local Item = require("api.Item")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local HomeMap = require("mod.elona.api.HomeMap")
+local Calc = require("mod.elona.api.Calc")
+local Enum = require("api.Enum")
+local Rand = require("api.Rand")
+local Chara = require("mod.elona.api.Chara")
+local Charagen = require("mod.tools.api.Charagen")
+local Gui = require("api.Gui")
 
 --
 -- Your Home
@@ -97,10 +103,14 @@ do
       _id = "ranch",
       elona_id = 31,
 
-      image = "elona.area_ranch",
+      image = "elona.feat_area_ranch",
 
       floors = {
          [1] = "elona.ranch"
+      },
+
+      metadata = {
+         tax_cost = 1000
       }
    }
 end
@@ -138,7 +148,7 @@ do
       _id = "dungeon",
       elona_id = 39,
 
-      image = "elona.area_your_dungeon",
+      image = "elona.feat_area_your_dungeon",
 
       floors = {
          [1] = "elona.dungeon"
@@ -171,6 +181,50 @@ do
       return map
    end
 
+   function museum.chara_filter(map)
+      local level = Calc.calc_object_level(100, map)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+      local fltselect
+
+      if Rand.one_in(1) then
+         fltselect = Enum.FltSelect.Town
+      else
+         fltselect = Enum.FltSelect.Shop
+      end
+
+      return {
+         level = level,
+         quality = quality,
+         fltselect = fltselect
+      }
+   end
+
+   function museum.on_map_major_events(map)
+      -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
+      for _ = 1, 5 do
+         Chara.spawn_mobs(map)
+      end
+      -- <<<<<<<< shade2/map.hsp:2121 		} ..
+   end
+
+   museum.events = {}
+   museum.events[#museum.events+1] = {
+      id = "elona.before_spawn_mobs",
+      name = "Spawn more mobs when entering",
+      priority = 90000,
+
+      callback = function(map, params)
+         -- >>>>>>>> shade2/map.hsp:105 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
+         local density = map:calc("max_crowd_density")
+         if map.crowd_density < density / 2 and Rand.one_in(4) then
+            local filter = params.chara_filter(map)
+            filter.id = filter.id or params.chara_id
+            Charagen.create(nil, nil, filter, map)
+         end
+         -- <<<<<<<< shade2/map.hsp:107 		} ..
+      end
+   }
+
    data:add(museum)
 
    data:add {
@@ -178,10 +232,14 @@ do
       _id = "museum",
       elona_id = 101,
 
-      image = "elona.area_museum",
+      image = "elona.feat_area_museum",
 
       floors = {
          [1] = "elona.museum"
+      },
+
+      metadata = {
+         tax_cost = 1500
       }
    }
 end
@@ -201,6 +259,7 @@ do
          item_on_floor_limit = 10,
       }
    }
+
    function shop.on_generate_map(area, floor)
       local map = Elona122Map.generate("shop_1")
       map:set_archetype("elona.shop", { set_properties = true })
@@ -214,6 +273,58 @@ do
       return map
    end
 
+   function shop.chara_filter(map)
+      local level = Calc.calc_object_level(100, map)
+      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
+      local fltselect
+
+      if Rand.one_in(1) then
+         fltselect = Enum.FltSelect.Town
+      else
+         fltselect = Enum.FltSelect.Shop
+      end
+
+      return {
+         level = level,
+         quality = quality,
+         fltselect = fltselect
+      }
+   end
+
+   function shop.on_map_major_events(map)
+      -- >>>>>>>> shade2/map.hsp:2117 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
+      for _ = 1, 5 do
+         Chara.spawn_mobs(map)
+      end
+      -- <<<<<<<< shade2/map.hsp:2121 		} ..
+   end
+
+   function shop.on_map_pass_turn(map)
+      Gui.mes_c("misc.map.shop.chats", "SkyBlue")
+      if map.crowd_density >= 0 and Rand.one_in(25) then
+         -- BUG: figure out the automatic text coloring
+         Gui.mes_c("misc.map.shop.chats", "SkyBlue")
+      end
+   end
+
+   shop.events = {}
+   shop.events[#shop.events+1] = {
+      id = "elona.before_spawn_mobs",
+      name = "Spawn more mobs when entering",
+      priority = 90000,
+
+      callback = function(map, params)
+         -- >>>>>>>> shade2/map.hsp:105 	if (areaId(gArea)=areaMuseum)or(areaId(gArea)=are ..
+         local density = map:calc("max_crowd_density")
+         if map.crowd_density < density / 2 and Rand.one_in(4) then
+            local filter = params.chara_filter(map)
+            filter.id = filter.id or params.chara_id
+            Charagen.create(nil, nil, filter, map)
+         end
+         -- <<<<<<<< shade2/map.hsp:107 		} ..
+      end
+   }
+
    data:add(shop)
 
    data:add {
@@ -221,10 +332,14 @@ do
       _id = "shop",
       elona_id = 102,
 
-      image = "elona.area_shop",
+      image = "elona.feat_area_shop",
 
       floors = {
          [1] = "elona.shop"
+      },
+
+      metadata = {
+         tax_cost = 5000
       }
    }
 end
@@ -260,10 +375,14 @@ do
       _id = "crop",
       elona_id = 103,
 
-      image = "elona.area_crop",
+      image = "elona.feat_area_crop",
 
       floors = {
          [1] = "elona.crop"
+      },
+
+      metadata = {
+         tax_cost = 750
       }
    }
 end
@@ -293,10 +412,14 @@ do
       _id = "storage",
       elona_id = 104,
 
-      image = "elona.area_storage_house",
+      image = "elona.feat_area_storage_house",
 
       floors = {
          [1] = "elona.storage"
+      },
+
+      metadata = {
+         tax_cost = 750
       }
    }
 end
