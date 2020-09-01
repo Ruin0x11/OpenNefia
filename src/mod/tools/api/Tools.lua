@@ -17,6 +17,7 @@ local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
 local Charagen = require("mod.tools.api.Charagen")
 local SaveFs = require("api.SaveFs")
+local Log = require("api.Log")
 
 local Tools = {}
 
@@ -946,6 +947,17 @@ function Tools.refill_ammo()
 
    enc.params.ammo_max = 9999
    enc.params.ammo_current = enc.params.ammo_max
+end
+
+function Tools.museum_items()
+   for _ = 1, 50 do
+      local id = Rand.choice({"elona.card", "elona.figurine"})
+      local item = Item.create(id)
+      if not item then
+         break
+      end
+      item.params.chara_id = Charagen.random_chara_id_raw(100)
+   end
 end
 
 return Tools

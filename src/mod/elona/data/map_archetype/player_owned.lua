@@ -9,6 +9,8 @@ local Rand = require("api.Rand")
 local Chara = require("mod.elona.api.Chara")
 local Charagen = require("mod.tools.api.Charagen")
 local Gui = require("api.Gui")
+local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
+local Rank = require("mod.elona.api.Rank")
 
 --
 -- Your Home
@@ -205,6 +207,10 @@ do
          Chara.spawn_mobs(map)
       end
       -- <<<<<<<< shade2/map.hsp:2121 		} ..
+
+      -- >>>>>>>> shade2/map_user.hsp:656 *museum_update ..
+      ElonaBuilding.update_museum(map)
+      -- <<<<<<<< shade2/map_user.hsp:684 	return ..
    end
 
    museum.events = {}

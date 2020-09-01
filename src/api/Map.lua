@@ -603,9 +603,9 @@ function Map.travel_to(map, params)
    end
 
    Map.set_map(map, "traveled")
-   Gui.update_screen()
-
    collectgarbage()
+
+   Gui.update_screen()
 
    return true
 end
