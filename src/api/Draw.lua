@@ -294,7 +294,25 @@ function Draw.make_chip_batch(atlas)
    return the_atlas:make_batch()
 end
 
-function Draw.chip(chip, x, y, width, height, color, centered, rotation)
+function Draw.get_chip_size(kind, id)
+   local the_atlas = atlases.get()[kind]
+   if not the_atlas then
+      error(("Atlas '%s' doesn't exist."):format(kind))
+   end
+   local anim = the_atlas.anims[id]
+   if not anim then
+      return nil, nil
+   end
+   local default = anim.default.frames[1]
+   if not default then
+      return nil, nil
+   end
+   local tile = the_atlas.tiles[default.image]
+   if not tile then
+      return nil, nil
+   end
+   local _, _, tile_width, tile_height = tile.quad:getViewport()
+   return tile_width, tile_height
 end
 
 --- Waits the specified number of milliseconds. Be careful with this

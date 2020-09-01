@@ -10,6 +10,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Rank = require("mod.elona.api.Rank")
 local Log = require("api.Log")
 local Map = require("api.Map")
+local Draw = require("api.Draw")
 
 local ElonaBuilding = {}
 
@@ -232,9 +233,9 @@ function ElonaBuilding.calc_museum_item_value(item, seen)
       value = chara_entry.level / 10 + 2
       -- TODO
       local chip = "elona.chara_race_slime"
-      local chip_entry = data["base.chip"][chip]
-      local is_tall = false
-      if chip_entry and is_tall then
+      local chip_width, chip_height = Draw.get_chip_size("chip", chip)
+      local is_tall = chip_width and (chip_height > chip_width)
+      if is_tall then
          value = value / 2 * 3 + 40
       end
       if chara_entry.rarity < 80 * 1000 then
