@@ -10,13 +10,13 @@ local socket = require("socket")
 local config = require("internal.config")
 
 function LuaRandomGenerator:init(seed)
-   if seed == nil then
-      seed = config["base.debug_random_seed"] or socket.gettime()
-   end
    self:set_seed(seed)
 end
 
 function LuaRandomGenerator:set_seed(seed)
+   if seed == nil then
+      seed = config["base.debug_random_seed"] or socket.gettime()
+   end
    math.randomseed(seed)
 end
 
