@@ -21,6 +21,7 @@ local Log = require("api.Log")
 local Const = require("api.Const")
 local CharaMake = require("api.CharaMake")
 local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
+local Area = require("api.Area")
 
 --
 --
@@ -1175,3 +1176,17 @@ Event.register("base.on_day_passed", "Day passing message/update guests", day_pa
 -- >>>>>>>> shade2/main.hsp:641 		gosub *shop_turn ..
 Event.register("base.on_day_passed", "Update shop every day", function() ElonaBuilding.update_shops() end, 110000)
 -- <<<<<<<< shade2/main.hsp:641 		gosub *shop_turn ..
+
+-- >>>>>>>> shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..
+local function update_museum()
+   local map = Map.current()
+   local area = Area.for_map(map)
+   if area._archetype == "elona.museum" then
+      ElonaBuilding.update_museum(map)
+   end
+end
+
+Event.register("base.on_hour_passed", "Update museum every hour", update_museum, 100000)
+Event.register("base.on_get_item", "Update museum on item take", update_museum, 150000)
+Event.register("base.on_drop_item", "Update museum on item drop", update_museum, 150000)
+-- <<<<<<<< shade2/main.hsp:571 	if areaId(gArea)=areaMuseum 	: gosub *museum_upda ..

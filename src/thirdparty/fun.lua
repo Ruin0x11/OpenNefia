@@ -2152,4 +2152,18 @@ end
 methods.into_sorted = method1(into_sorted)
 exports.into_sorted = export1(into_sorted)
 
+local to_set = function(gen_x, param_x, state_x)
+    local tab, key, val = {}
+    while true do
+        state_x, val = gen_x(param_x, state_x)
+        if state_x == nil then
+            break
+        end
+        tab[val] = true
+    end
+    return tab
+end
+methods.to_set = method0(to_set)
+exports.to_set = export0(to_set)
+
 return exports

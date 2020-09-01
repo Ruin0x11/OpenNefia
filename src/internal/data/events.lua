@@ -125,5 +125,6 @@ data:add_multi(
       { _id = "after_get_translation" },
       { _id = "on_initialize_player" },
       { _id = "on_finalize_player" },
+      { _id = "on_drop_item" },
    }
 )

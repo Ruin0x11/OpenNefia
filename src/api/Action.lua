@@ -160,6 +160,7 @@ function Action.drop(chara, item, amount)
 
    local dropped = chara:drop_item(item, amount)
    if dropped then
+      dropped:emit("base.on_drop_item", {chara=chara,amount=amount})
       Gui.mes("action.drop.execute", item:build_name(amount))
       Gui.play_sound("base.drop1", chara.x, chara.y)
       chara:refresh_weight()

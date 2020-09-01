@@ -38,7 +38,7 @@ function ElonaBuilding.calc_shop_customer_count(shop_level, shopkeeper)
    return customers
 end
 
-function ElonaBuilding.can_sell_item_in_shop(item)
+function ElonaBuilding.is_item_sellable_in_shop(item)
    if not Item.is_alive(item) then
       return false
    end
@@ -123,7 +123,7 @@ function ElonaBuilding.update_shop(area)
    local shop_level = math.floor(100 - shop_rank / 100)
    local customer_count = ElonaBuilding.calc_shop_customer_count(shop_level, shopkeeper)
 
-   local sellable = Item.iter_all(map):filter(ElonaBuilding.can_sell_item_in_shop):to_list()
+   local sellable = Item.iter_all(map):filter(ElonaBuilding.is_item_sellable_in_shop):to_list()
 
    for _ = 1, customer_count do
       if #sellable == 0 then
@@ -220,5 +220,74 @@ function ElonaBuilding.update_shop(area)
    end
 end
 -- <<<<<<<< shade2/map_user.hsp:616 	return ..
+
+-- >>>>>>>> shade2/map_user.hsp:639 *museum_value ..
+function ElonaBuilding.calc_museum_item_value(item, seen)
+   local chara_entry = data["base.chara"]:ensure(item.params.chara_id)
+
+   local value
+   if chara_entry.quality == Enum.Quality.Unique then
+      value = 70 + chara_entry.level
+   else
+      value = chara_entry.level / 10 + 2
+      -- TODO
+      local chip = "elona.chara_race_slime"
+      local chip_entry = data["base.chip"][chip]
+      local is_tall = false
+      if chip_entry and is_tall then
+         value = value / 2 * 3 + 40
+      end
+      if chara_entry.rarity < 80 * 1000 then
+         value = value + 80 - (chara_entry.rarity / 1000)
+      end
+   end
+
+   if seen[chara_entry._id] then
+      value = math.min(value / 3, 15)
+   end
+
+   if item._id == "elona.card" then
+      value = value / 2
+   end
+
+   return math.floor(value)
+end
+-- <<<<<<<< shade2/map_user.hsp:653 	return ..
+
+function ElonaBuilding.calc_museum_rank(map)
+   local filter = function(item)
+      return (item._id == "elona.card" or item._id == "elona.figurine")
+         and data["base.chara"][item.params.chara_id] ~= nil
+   end
+   local new_rank = 0
+   local seen = table.set {}
+
+   for _, item in Item.iter(map):filter(filter) do
+      local value = ElonaBuilding.calc_museum_item_value(item, seen)
+      new_rank = new_rank + value
+      seen[item.params.chara_id] = true
+   end
+   new_rank = math.max(10000 - math.sqrt(new_rank) * 100, 100)
+   return new_rank
+end
+
+function ElonaBuilding.update_museum(map)
+   local original_rank = Rank.get("elona.museum")
+   local new_rank = ElonaBuilding.calc_museum_rank(map)
+   Rank.set("elona.museum", new_rank)
+
+   if original_rank ~= new_rank then
+      local color
+      if original_rank > new_rank then
+         color = "Green"
+      else
+         color = "Purple"
+      end
+      -- TODO
+      Gui.mes_c("building.museum.rank_change", color, math.floor(original_rank / 100), math.floor(new_rank / 100), "???")
+   end
+
+   map.max_crowd_density = (100 - new_rank / 100) / 2 + 1
+end
 
 return ElonaBuilding
