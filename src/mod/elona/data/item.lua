@@ -8900,9 +8900,7 @@ local item =
         subcategory = 58500,
         coefficient = 100,
 
-        _copy = {
-            params = { food_quality = 1, seed_material = 36 },
-        },
+        params = { food_quality = 1, seed_plant_id = "elona.vegetable" },
 
         gods = { "elona.kumiromi" },
 
@@ -8925,7 +8923,7 @@ local item =
         rarity = 800000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 37 },
+        params = { food_quality = 1, seed_plant_id = "elona.fruit" },
 
         gods = { "elona.kumiromi" },
 
@@ -8948,7 +8946,7 @@ local item =
         rarity = 100000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 38 },
+        params = { food_quality = 1, seed_plant_id = "elona.herb" },
 
         gods = { "elona.kumiromi" },
 
@@ -8974,7 +8972,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
         },
 
-        params = { food_quality = 1, seed_material = 39 },
+        params = { food_quality = 1, seed_plant_id = "elona.unknown" },
 
         gods = { "elona.kumiromi" },
 
@@ -8995,7 +8993,7 @@ local item =
         rarity = 20000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 40 },
+        params = { food_quality = 1, seed_plant_id = "elona.artifact" },
 
         gods = { "elona.kumiromi" },
 
@@ -10111,7 +10109,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10131,7 +10129,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10151,7 +10149,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10171,7 +10169,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         tags = { "fest" },
         categories = {
             "elona.equip_neck_armor",
@@ -10192,7 +10190,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10211,7 +10209,7 @@ local item =
         subcategory = 34001,
         rarity = 800000,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -12065,7 +12063,7 @@ local item =
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 41 },
+        params = { food_quality = 1, seed_plant_id = "elona.gem" },
 
         gods = { "elona.kumiromi" },
 
@@ -12088,7 +12086,7 @@ local item =
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 42 },
+        params = { food_quality = 1, seed_plant_id = "elona.staff" },
 
         gods = { "elona.kumiromi" },
 
@@ -15152,13 +15150,6 @@ local item =
         category = 54000,
         rarity = 5000000,
         coefficient = 0,
-
-        _copy = {
-            on_init_params = function(self)
-                self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
-            end,
-            has_charge = true,
-        },
 
         params = {
             ancient_book_difficulty = 0,

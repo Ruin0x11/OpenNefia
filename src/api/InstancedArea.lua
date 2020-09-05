@@ -201,7 +201,6 @@ function InstancedArea:position_of_child(child, floor)
    -- BUG: Doesn't work with dynamically added areas.
    local child_archetype = self:iter_child_areas(floor):filter(function(arc) return arc._id == child._archetype end):nth(1)
    if child_archetype == nil then
-      pause()
       return nil, nil
    end
 

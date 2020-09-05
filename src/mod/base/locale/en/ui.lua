@@ -704,6 +704,9 @@ end
         _5 = "rusty",
         name = "ring"
       },
+      amulet = {
+        name = "amulet"
+      },
       staff = {
         _0 = "iron",
         _1 = "ivy",

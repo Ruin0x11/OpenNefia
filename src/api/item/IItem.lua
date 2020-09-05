@@ -314,6 +314,7 @@ function IItem:calc_ui_color()
 end
 
 function IItem:remove(amount)
+   -- >>>>>>>> elona122/shade2/item_func.hsp:191 #deffunc removeItem int id,int num ..
    if amount == nil then
       amount = self.amount
    end
@@ -329,6 +330,7 @@ function IItem:remove(amount)
    if self.amount == 0 then
       self:remove_ownership()
    end
+   -- <<<<<<<< elona122/shade2/item_func.hsp:202 	return ..
 end
 
 function IItem:has_category(cat)
