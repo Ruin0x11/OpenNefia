@@ -566,3 +566,33 @@ data:add {
    is_solid = true,
    is_opaque = true
 }
+
+data:add {
+   _type = "base.feat",
+   _id = "plant",
+   elona_id = 29,
+
+   image = "elona.feat_plant_0",
+   is_solid = false,
+   is_opaque = false,
+
+   params = {
+     plant_id = "string",
+     plant_growth_stage = "number",
+     plant_time_to_growth_days = "number"
+   },
+
+   on_stepped_on = function(self, params)
+     Gui.mes("plant")
+   end,
+
+   events = {
+      {
+         id = "elona.on_harvest_plant",
+         name = "Harvest plant.",
+         callback = function(self, params)
+           data["elona.plant"]:ensure(self.plant_id).on_harvest(self, params)
+         end
+      }
+   }
+}

@@ -728,16 +728,16 @@ return {
          cannot_plant_it_here = "You can't plant it here.",
          execute = function(_1)
             return ("You plant %s.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end,
          harvest = function(_1)
             return ("You harvest %s.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end,
          new_plant_grows = "A new plant grows!",
          on_field = function(_1)
             return ("You plant %s on the field.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end
       },
       playtime_report = function(_1)

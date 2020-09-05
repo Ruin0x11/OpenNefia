@@ -6,11 +6,12 @@ local HomeMap = require("mod.elona.api.HomeMap")
 local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
-local Chara = require("mod.elona.api.Chara")
 local Charagen = require("mod.tools.api.Charagen")
 local Gui = require("api.Gui")
 local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
-local Rank = require("mod.elona.api.Rank")
+local Event = require("api.Event")
+local Gardening = require("mod.elona.api.Gardening")
+local Chara = require("api.Chara")
 
 --
 -- Your Home
@@ -400,6 +401,16 @@ do
          tax_cost = 750
       }
    }
+
+   local function grow_plants(map, params)
+     if map.is_not_renewable then
+       return
+     end
+
+     Gardening.grow_plants(map, Chara.player(), params.renew_steps)
+   end
+
+   Event.register("base.on_map_renew_minor", "Grow all plants in map", grow_plants)
 end
 
 do

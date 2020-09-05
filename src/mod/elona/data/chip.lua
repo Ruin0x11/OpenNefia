@@ -1088,22 +1088,22 @@ local feat_chips = {
       elona_atlas = 1,
    },
    {
-      _id = "plant_1",
+      _id = "plant_0",
       elona_id = 247,
       elona_atlas = 1,
    },
    {
-      _id = "plant_2",
+      _id = "plant_1",
       elona_id = 248,
       elona_atlas = 1,
    },
    {
-      _id = "plant_3",
+      _id = "plant_2",
       elona_id = 249,
       elona_atlas = 1,
    },
    {
-      _id = "ant",
+      _id = "plant_3",
       elona_id = 250,
       elona_atlas = 1,
    },

@@ -21,6 +21,7 @@ local event = {
    { _id = "before_physical_attack" },
    { _id = "on_item_created_from_wish" },
    { _id = "on_deed_use" },
+   { _id = "on_harvest_plant" },
 }
 
 data:add_multi("base.event", event)

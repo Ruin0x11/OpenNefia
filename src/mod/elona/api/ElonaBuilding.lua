@@ -11,6 +11,8 @@ local Rank = require("mod.elona.api.Rank")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local Draw = require("api.Draw")
+local Feat = require("api.Feat")
+local Const = require("api.Const")
 
 local ElonaBuilding = {}
 

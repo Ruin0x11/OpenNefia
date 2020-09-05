@@ -18,6 +18,8 @@ local Area = require("api.Area")
 local Charagen = require("mod.tools.api.Charagen")
 local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Filters = require("mod.elona.api.Filters")
 
 local Tools = {}
 
@@ -957,6 +959,15 @@ function Tools.museum_items()
          break
       end
       item.params.chara_id = Charagen.random_chara_id_raw(100)
+   end
+end
+
+function Tools.random_artifacts(count)
+   count = count or 10
+   local player = Chara.player()
+   for _ = 1, count do
+      local item = Itemgen.create(nil, nil, { categories = Rand.choice(Filters.fsetwear), quality = Enum.Quality.Great }, player)
+      Effect.identify_item(item, Enum.IdentifyState.Full)
    end
 end
 

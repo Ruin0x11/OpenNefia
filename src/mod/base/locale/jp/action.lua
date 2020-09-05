@@ -740,16 +740,16 @@ end,
       cannot_plant_it_here = "この場所には埋められない。",
       execute = function(_1)
   return ("%sを埋めた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       harvest = function(_1)
   return ("%sを収穫した。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
       new_plant_grows = "新しい芽が息吹いている！",
       on_field = function(_1)
   return ("畑に%sを埋めた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
     },
     playtime_report = function(_1)

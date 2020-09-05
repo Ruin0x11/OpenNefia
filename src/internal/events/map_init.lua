@@ -133,7 +133,15 @@ local function renew_major(map)
 end
 
 local function renew_minor(map)
-   map:emit("base.on_map_renew_minor")
+  local renew_steps
+  -- >>>>>>>> elona122/shade2/map.hsp:2227 		if mRenewMinor=0:renewMulti=1:else:renewMulti=(d ..
+  if map.renew_minor_date == 0 then
+    renew_steps = 1
+  else
+    renew_steps = math.floor((World.date_hours() - map.renew_minor_date) / Const.MAP_RENEW_MINOR_HOURS)
+  end
+  -- <<<<<<<< elona122/shade2/map.hsp:2227 		if mRenewMinor=0:renewMulti=1:else:renewMulti=(d ..
+  map:emit("base.on_map_renew_minor", {renew_steps=renew_steps})
 end
 
 local function check_renew(map)
@@ -143,7 +151,7 @@ local function check_renew(map)
    -- >>>>>>>> shade2/map.hsp:2173 *check_renew ..
    if area_meta.arena_seed_renew_date and World.date_hours() >= area_meta.arena_seed_renew_date then
       area_meta.arena_seed = Rand.rnd(10000)
-      area_meta.arena_seed_renew_date = World.date_hours() + 24
+      area_meta.arena_seed_renew_date = World.date_hours() + Const.MAP_RENEW_MINOR_HOURS
    end
 
    if World.date_hours() > map.renew_major_date then

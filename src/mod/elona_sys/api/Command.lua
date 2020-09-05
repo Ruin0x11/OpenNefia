@@ -125,6 +125,10 @@ function Command.get(player)
    -- traps
    -- buildings
    -- snow
+   local result = player:emit("elona_sys.on_get")
+   if result then
+      return "turn_end"
+   end
 
    local items = Item.at(player.x, player.y):to_list()
    if #items == 0 then

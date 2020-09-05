@@ -429,6 +429,7 @@ function Item.fix_item(item, params)
    local ev_params = table.shallow_copy(params)
    ev_params.owner = item:get_owning_chara()
    ev_params.map = item:containing_map()
+   ev_params.level = ev_params.level or (ev_params.location and ev_params.location:calc("level")) or 1
 
    item:emit("base.on_item_init_params", ev_params)
 
