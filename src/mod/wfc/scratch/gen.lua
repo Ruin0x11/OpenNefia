@@ -2,7 +2,6 @@ local Map = require("api.Map")
 local WaveFunctionMap = require("mod.wfc.api.WaveFunctionMap")
 local Draw = require("api.Draw")
 local Layout = require("mod.tools.api.Layout")
-local layouts = require("mod.wfc.scratch.layouts")
 
 local gen = {}
 
@@ -52,12 +51,14 @@ ooooopww
 end
 
 function gen.layout(name, w, h, opts)
+   local layouts = require("mod.wfc.scratch.layouts")
    local layout = layouts[name:lower()]
    assert(layout, ("No layout with name '%s'"):format(name))
    gen.goto_map(layout, w, h, opts)
 end
 
 function gen.all_layouts()
+   local layouts = require("mod.wfc.scratch.layouts")
    return table.keys(layouts)
 end
 

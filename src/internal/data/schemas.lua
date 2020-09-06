@@ -141,7 +141,7 @@ The class of this character.
          },
          {
             name = "image",
-            default = "elona.chara_race_slime",
+            default = nil,
             template = true,
             type = "id:base.chip",
             doc = [[
@@ -1006,10 +1006,10 @@ The related magic of this skill to trigger when its entry in the menu is selecte
       },
       {
          name = "related_skill",
-         default = "elona.stat_strength",
+         default = nil,
          template = true,
          doc = [[
-A related skill to improve when this skill is used. Affects the skill's icon in the menus.
+A related stat to improve when this skill is used. Affects the skill's icon in the menus.
 ]]
       },
       {

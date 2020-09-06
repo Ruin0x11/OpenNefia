@@ -24,57 +24,57 @@ end
 
 Event.register("base.calc_map_starting_pos", "Archetype callback (starting_pos)", archetype_starting_pos)
 
-local function archetype_on_map_renew_minor(map)
+local function archetype_on_map_renew_minor(map, params)
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_renew_minor) then
       return
    end
 
-   archetype.on_map_renew_minor(map)
+   archetype.on_map_renew_minor(map, params)
 end
 
 Event.register("base.on_map_renew_minor", "Archetype callback (on_map_renew_minor)", archetype_on_map_renew_minor)
 
-local function archetype_on_map_renew_major(map)
+local function archetype_on_map_renew_major(map, params)
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_renew_major) then
       return
    end
 
-   archetype.on_map_renew_major(map)
+   archetype.on_map_renew_major(map, params)
 end
 
 Event.register("base.on_map_renew_major", "Archetype callback (on_map_renew_major)", archetype_on_map_renew_major)
 
-local function archetype_on_map_renew_geometry(map)
+local function archetype_on_map_renew_geometry(map, params)
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_renew_geometry) then
       return
    end
 
-   archetype.on_map_renew_geometry(map)
+   archetype.on_map_renew_geometry(map, params)
 end
 
 Event.register("base.on_map_renew_geometry", "Archetype callback (on_map_renew_geometry)", archetype_on_map_renew_geometry)
 
-local function archetype_on_map_loaded_events(map)
+local function archetype_on_map_loaded_events(map, params)
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_loaded_events) then
       return
    end
 
-   archetype.on_map_loaded_events(map)
+   archetype.on_map_loaded_events(map, params)
 end
 
 Event.register("base.on_map_loaded_events", "Archetype callback (on_map_loaded_events)", archetype_on_map_loaded_events)
 
-local function archetype_on_map_entered_events(map)
+local function archetype_on_map_entered_events(map, params)
    local archetype = map:archetype()
    if not (archetype and archetype.on_map_entered_events) then
       return
    end
 
-   archetype.on_map_entered_events(map)
+   archetype.on_map_entered_events(map, params)
 end
 
 Event.register("base.on_map_entered_events", "Archetype callback (on_map_entered_events)", archetype_on_map_entered_events)
@@ -91,7 +91,7 @@ local function archetype_on_map_pass_turn(chara, params, result)
       return
    end
 
-   archetype.on_map_pass_turn(map)
+   archetype.on_map_pass_turn(map, params)
    -- <<<<<<<< shade2/main.hsp:735 	 ..
 end
 

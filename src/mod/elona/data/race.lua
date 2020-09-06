@@ -16,6 +16,7 @@ local race =
          ordering = 20010,
 
          properties = {
+            breed_power = 250,
             image = "elona.chara_kobold",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 150,
@@ -61,6 +62,7 @@ local race =
          ordering = 20020,
 
          properties = {
+            breed_power = 300,
             image = "elona.chara_orc",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 150,
@@ -105,6 +107,7 @@ local race =
          ordering = 20030,
 
          properties = {
+            breed_power = 250,
             image = "elona.chara_troll",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 400,
@@ -146,6 +149,7 @@ local race =
          ordering = 20040,
 
          properties = {
+            breed_power = 300,
             image = "elona.chara_lizardman",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 240,
@@ -191,6 +195,7 @@ local race =
          ordering = 20050,
 
          properties = {
+            breed_power = 300,
             image = "elona.chara_minotaur",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 350,
@@ -232,7 +237,6 @@ local race =
          ordering = 10010,
 
          properties = {
-
             breed_power = 220,
             image = Resolver.make("elona.by_gender",
                                   {
@@ -287,6 +291,7 @@ local race =
          ordering = 20060,
 
          properties = {
+            breed_power = 220,
             image = Resolver.make("elona.by_gender",
                                   {
                                      male = "elona.chara_human_male",
@@ -336,7 +341,6 @@ local race =
          ordering = 10020,
 
          properties = {
-
             breed_power = 180,
             image = Resolver.make("elona.by_gender",
                                   {
@@ -392,7 +396,6 @@ local race =
          ordering = 10030,
 
          properties = {
-
             breed_power = 180,
             image = "elona.chara_fairy",
             age = Resolver.make("base.between", { min = 5, max = 104 }),
@@ -455,6 +458,7 @@ local race =
          ordering = 20070,
 
          properties = {
+            breed_power = 100,
             image = "elona.chara_asura",
             age = Resolver.make("base.between", { min = 15, max = 34 }),
             height = 220,
@@ -496,6 +500,7 @@ local race =
          ordering = 20080,
 
          properties = {
+            breed_power = 700,
             image = "elona.chara_race_slime",
             cast_style = "spill",
             age = Resolver.make("base.between", { min = 1, max = 10 }),
@@ -532,6 +537,7 @@ local race =
          ordering = 20090,
 
          properties = {
+            breed_power = 800,
             image = "elona.chara_wolf",
             age = Resolver.make("base.between", { min = 2, max = 11 }),
             height = 100,
@@ -573,7 +579,6 @@ local race =
          ordering = 10040,
 
          properties = {
-
             breed_power = 150,
             image = "elona.chara_dwarf",
             age = Resolver.make("base.between", { min = 20, max = 79 }),
@@ -626,7 +631,6 @@ local race =
          ordering = 10050,
 
          properties = {
-
             breed_power = 210,
             image = Resolver.make("elona.by_gender",
                                   {
@@ -684,6 +688,7 @@ local race =
          ordering = 20100,
 
          properties = {
+            breed_power = 100,
             image = "elona.chara_zombie",
             age = Resolver.make("base.between", { min = 10, max = 209 }),
             height = 160,
@@ -732,7 +737,6 @@ local race =
          ordering = 10060,
 
          properties = {
-
             breed_power = 120,
             image = Resolver.make("elona.by_gender",
                                   {
@@ -789,6 +793,7 @@ local race =
          ordering = 20110,
 
          properties = {
+            breed_power = 800,
             image = "elona.chara_rabbit",
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 40,
@@ -827,6 +832,7 @@ local race =
          ordering = 20120,
 
          properties = {
+            breed_power = 1000,
             image = "elona.chara_sheep",
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 150,
@@ -867,6 +873,7 @@ local race =
          ordering = 20130,
 
          properties = {
+            breed_power = 600,
             image = "elona.chara_frog",
             age = Resolver.make("base.between", { min = 2, max = 6 }),
             height = 10,
@@ -902,6 +909,7 @@ local race =
          ordering = 20140,
 
          properties = {
+            breed_power = 400,
             image = "elona.chara_centipede",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 10,
@@ -938,6 +946,7 @@ local race =
          ordering = 10070,
 
          properties = {
+            breed_power = 500,
             image = "elona.chara_snail",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 8,
@@ -972,6 +981,7 @@ local race =
          ordering = 20150,
 
          properties = {
+            breed_power = 80,
             image = "elona.chara_mandrake",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 25,
@@ -1009,6 +1019,7 @@ local race =
          ordering = 20160,
 
          properties = {
+            breed_power = 750,
             image = "elona.chara_beetle",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 10,
@@ -1045,6 +1056,7 @@ local race =
          ordering = 20170,
 
          properties = {
+            breed_power = 440,
             image = "elona.chara_mushroom",
             melee_style = "spore",
             cast_style = "spore",
@@ -1083,6 +1095,7 @@ local race =
          ordering = 20180,
 
          properties = {
+            breed_power = 350,
             image = "elona.chara_bat",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1119,6 +1132,7 @@ local race =
          ordering = 20190,
 
          properties = {
+            breed_power = 35,
             image = "elona.chara_ent",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1500,
@@ -1158,7 +1172,6 @@ local race =
          ordering = 10080,
 
          properties = {
-
             breed_power = 25,
             image = "elona.chara_lich",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1220,6 +1233,7 @@ local race =
          ordering = 20200,
 
          properties = {
+            breed_power = 540,
             image = "elona.chara_hound",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1261,6 +1275,7 @@ local race =
          ordering = 20210,
 
          properties = {
+            breed_power = 30,
             image = "elona.chara_ghost",
             melee_style = "touch",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1311,6 +1326,7 @@ local race =
          ordering = 20220,
 
          properties = {
+            breed_power = 25,
             image = "elona.chara_spirit",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 100,
@@ -1353,6 +1369,7 @@ local race =
          ordering = 20230,
 
          properties = {
+            breed_power = 50,
             image = "elona.chara_eye",
             melee_style = "gaze",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1389,6 +1406,7 @@ local race =
          ordering = 20240,
 
          properties = {
+            breed_power = 100,
             image = "elona.chara_wyvern",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1428,6 +1446,7 @@ local race =
          ordering = 20250,
 
          properties = {
+            breed_power = 580,
             image = "elona.chara_wasp",
             melee_style = "sting",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1464,6 +1483,7 @@ local race =
          ordering = 20260,
 
          properties = {
+            breed_power = 60,
             image = "elona.chara_giant",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1800,
@@ -1505,6 +1525,7 @@ local race =
          ordering = 20270,
 
          properties = {
+            breed_power = 240,
             image = "elona.chara_imp",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1548,6 +1569,7 @@ local race =
          ordering = 20280,
 
          properties = {
+            breed_power = 160,
             image = "elona.chara_hand",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 70,
@@ -1586,6 +1608,7 @@ local race =
          ordering = 20290,
 
          properties = {
+            breed_power = 430,
             image = "elona.chara_snake",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1622,6 +1645,7 @@ local race =
          ordering = 20300,
 
          properties = {
+            breed_power = 120,
             image = "elona.chara_drake",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1662,7 +1686,6 @@ local race =
          ordering = 10090,
 
          properties = {
-
             breed_power = 290,
             image = "elona.chara_goblin",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1716,6 +1739,7 @@ local race =
          ordering = 20310,
 
          properties = {
+            breed_power = 350,
             image = "elona.chara_bear",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -1759,6 +1783,7 @@ local race =
          ordering = 20320,
 
          properties = {
+            breed_power = 40,
             image = "elona.chara_armor",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 550,
@@ -1803,6 +1828,7 @@ local race =
          ordering = 20330,
 
          properties = {
+            breed_power = 180,
             image = "elona.chara_medusa",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 160,
@@ -1845,6 +1871,7 @@ local race =
          ordering = 20340,
 
          properties = {
+            breed_power = 350,
             image = "elona.chara_cupid",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 120,
@@ -1886,6 +1913,7 @@ local race =
          is_extra = true,
          ordering = 20350,
          properties = {
+            breed_power = 35,
             image = "elona.chara_phantom",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 450,
@@ -1933,6 +1961,7 @@ local race =
          is_extra = true,
          ordering = 20360,
          properties = {
+            breed_power = 420,
             image = "elona.chara_harpy",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 140,
@@ -1975,6 +2004,7 @@ local race =
          ordering = 20370,
 
          properties = {
+            breed_power = 20,
             image = "elona.chara_dragon",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2015,6 +2045,7 @@ local race =
          ordering = 20380,
 
          properties = {
+            breed_power = 100,
             image = "elona.chara_dinosaur",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2055,6 +2086,7 @@ local race =
          ordering = 20390,
 
          properties = {
+            breed_power = 80,
             image = "elona.chara_cerberus",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2097,6 +2129,7 @@ local race =
          ordering = 20400,
 
          properties = {
+            breed_power = 560,
             image = "elona.chara_spider",
             melee_style = "bite",
             cast_style = "spider",
@@ -2137,7 +2170,6 @@ local race =
          ordering = 10100,
 
          properties = {
-
             breed_power = 40,
             image = "elona.chara_golem",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2191,6 +2223,7 @@ local race =
          ordering = 20410,
 
          properties = {
+            breed_power = 200,
             image = "elona.chara_rock",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 500,
@@ -2228,6 +2261,7 @@ local race =
          ordering = 20420,
 
          properties = {
+            breed_power = 420,
             image = "elona.chara_crab",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2270,6 +2304,7 @@ local race =
          ordering = 20430,
 
          properties = {
+            breed_power = 30,
             image = "elona.chara_skeleton",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 160,
@@ -2323,6 +2358,7 @@ local race =
          ordering = 20440,
 
          properties = {
+            breed_power = 25,
             image = "elona.chara_piece",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 750,
@@ -2369,6 +2405,7 @@ local race =
          ordering = 20450,
 
          properties = {
+            breed_power = 950,
             image = "elona.chara_cat",
             melee_style = "claw",
             cast_style = "gaze",
@@ -2413,6 +2450,7 @@ local race =
          ordering = 20460,
 
          properties = {
+            breed_power = 920,
             image = "elona.chara_dog",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2456,6 +2494,7 @@ local race =
          ordering = 20470,
 
          properties = {
+            breed_power = 220,
             image = "elona.chara_roran",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 150,
@@ -2503,6 +2542,7 @@ local race =
          ordering = 20480,
 
          properties = {
+            breed_power = 1100,
             image = "elona.chara_rat",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2542,6 +2582,7 @@ local race =
          ordering = 20490,
 
          properties = {
+            breed_power = 450,
             image = "elona.chara_shell",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2579,6 +2620,7 @@ local race =
          ordering = 20500,
 
          properties = {
+            breed_power = 5,
             image = "elona.chara_catgod",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2623,6 +2665,7 @@ local race =
          ordering = 20510,
 
          properties = {
+            breed_power = 5,
             image = "elona.chara_machinegod",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 3000,
@@ -2666,6 +2709,7 @@ local race =
          ordering = 20520,
 
          properties = {
+            breed_power = 5,
             image = "elona.chara_undeadgod",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 1500,
@@ -2707,6 +2751,7 @@ local race =
          ordering = 20530,
 
          properties = {
+            breed_power = 15,
             image = "elona.chara_machine",
             cast_style = "machine",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2755,6 +2800,7 @@ local race =
          ordering = 20540,
 
          properties = {
+            breed_power = 25,
             image = "elona.chara_wisp",
             melee_style = "gaze",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2791,6 +2837,7 @@ local race =
          ordering = 20550,
 
          properties = {
+            breed_power = 1000,
             image = "elona.chara_chicken",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2827,6 +2874,7 @@ local race =
          ordering = 20560,
 
          properties = {
+            breed_power = 25,
             image = "elona.chara_stalker",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -2875,6 +2923,7 @@ local race =
          ordering = 20570,
 
          properties = {
+            breed_power = 5,
             image = "elona.chara_catsister",
             melee_style = "claw",
             age = Resolver.make("base.between", { min = 10, max = 13 }),
@@ -2921,7 +2970,6 @@ local race =
          ordering = 10110,
 
          properties = {
-
             breed_power = 50,
             image = "elona.chara_mutant",
             age = Resolver.make("base.between", { min = 25, max = 74 }),
@@ -2963,6 +3011,7 @@ local race =
          ordering = 20580,
 
          properties = {
+            breed_power = 500,
             image = "elona.chara_yeek",
             age = Resolver.make("base.between", { min = 15, max = 44 }),
             height = 90,
@@ -3008,6 +3057,7 @@ local race =
          ordering = 20590,
 
          properties = {
+            breed_power = 25,
             image = "elona.chara_yith",
             melee_style = "touch",
             cast_style = "tentacle",
@@ -3053,6 +3103,7 @@ local race =
          ordering = 20600,
 
          properties = {
+            breed_power = 5,
             image = "elona.chara_servant",
             age = Resolver.make("base.between", { min = 100, max = 299 }),
             height = 165,
@@ -3103,6 +3154,7 @@ local race =
          ordering = 20610,
 
          properties = {
+            breed_power = 1000,
             image = "elona.chara_horse",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -3140,6 +3192,7 @@ local race =
          ordering = 20620,
 
          properties = {
+            breed_power = 1,
             image = "elona.chara_lulwy",
             age = Resolver.make("base.between", { min = 999999, max = 999999 }),
             height = 180,
@@ -3184,6 +3237,7 @@ local race =
          ordering = 20630,
 
          properties = {
+            breed_power = 1,
             image = "elona.chara_quickling",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
             height = 25,
@@ -3232,6 +3286,7 @@ local race =
          ordering = 20640,
 
          properties = {
+            breed_power = 1,
             image = "elona.chara_metal",
             melee_style = "bite",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
@@ -3275,6 +3330,7 @@ local race =
          ordering = 20650,
 
          properties = {
+            breed_power = 15,
             image = "elona.chara_bike",
             cast_style = "machine",
             age = Resolver.make("base.between", { min = 10, max = 19 }),
