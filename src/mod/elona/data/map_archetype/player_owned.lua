@@ -99,6 +99,18 @@ do
       return map
    end
 
+   function ranch.on_map_renew_minor(map, params)
+      -- >>>>>>>> elona122/shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
+      ElonaBuilding.update_ranch(map, params.renew_steps)
+      -- <<<<<<<< elona122/shade2/map.hsp:2228 		if areaId(gArea)=areaRanch : gosub *ranch_update ..
+   end
+
+   function ranch.on_map_entered_events(map)
+      -- >>>>>>>> elona122/shade2/map.hsp:2128 	if areaId(gArea)=areaRanch{ ..
+      ElonaBuilding.ranch_reset_aggro(map)
+      -- <<<<<<<< elona122/shade2/map.hsp:2132 		} ..
+   end
+
    data:add(ranch)
 
    data:add {
@@ -403,11 +415,11 @@ do
    }
 
    local function grow_plants(map, params)
-     if map.is_not_renewable then
-       return
-     end
+      if map.is_not_renewable then
+         return
+      end
 
-     Gardening.grow_plants(map, Chara.player(), params.renew_steps)
+      Gardening.grow_plants(map, Chara.player(), params.renew_steps)
    end
 
    Event.register("base.on_map_renew_minor", "Grow all plants in map", grow_plants)

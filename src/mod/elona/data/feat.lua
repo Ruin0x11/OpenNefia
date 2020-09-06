@@ -374,7 +374,7 @@ data:add {
    elona_id = 30,
 
    image = "elona.feat_pot",
-   is_solid = false,
+   is_solid = true,
    is_opaque = false,
 
    params = {},

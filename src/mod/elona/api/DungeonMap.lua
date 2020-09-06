@@ -221,6 +221,7 @@ function DungeonMap.generate(area, floor, generator, opts)
    end
 
    map.level = opts.level or map.level
+   chara_filter = chara_filter or Dungeon.random_chara_filter(map)
 
    local tileset = opts.tileset or map.tileset or "elona.dungeon"
    map.tileset = tileset

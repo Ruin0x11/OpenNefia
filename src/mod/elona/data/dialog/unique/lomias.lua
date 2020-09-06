@@ -216,7 +216,7 @@ data:add {
             {"talk.unique.lomias.tutorial.combat.finished"}
          },
          choices = {
-            {"talk.unique.lomias.tutorial_7", "ui.more"}
+            {"tutorial_7", "ui.more"}
          },
          on_finish = function()
             Sidequest.set_progress("elona.tutorial", 7)

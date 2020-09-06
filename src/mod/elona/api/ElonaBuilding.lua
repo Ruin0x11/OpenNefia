@@ -11,8 +11,8 @@ local Rank = require("mod.elona.api.Rank")
 local Log = require("api.Log")
 local Map = require("api.Map")
 local Draw = require("api.Draw")
-local Feat = require("api.Feat")
-local Const = require("api.Const")
+local Chara = require("api.Chara")
+local Charagen = require("mod.tools.api.Charagen")
 
 local ElonaBuilding = {}
 
@@ -291,6 +291,173 @@ function ElonaBuilding.update_museum(map)
    end
 
    map.max_crowd_density = (100 - new_rank / 100) / 2 + 1
+end
+
+-- >>>>>>>> elona122/shade2/map_user.hsp:753 #defcfunc cBreeder int c ..
+function ElonaBuilding.calc_breeder_power(breeder)
+   local breed_power = breeder:calc("breed_power") or 100
+   return math.floor(breed_power * 100 / (100 + breeder:calc("level") * 5))
+end
+-- <<<<<<<< elona122/shade2/map_user.hsp:757 	return p ..
+
+-- >>>>>>>> elona122/shade2/map_user.hsp:762 *ranch_update ..
+function ElonaBuilding.ranch_generate_item(map, chara, x, y)
+   local filter = {
+      level = Calc.calc_object_level(chara:calc("level"), map),
+      quality = Enum.Quality.Normal
+   }
+
+   local item
+   local total_generated = 0
+
+   local option = Rand.choice({"egg", "milk", "shit", "bone"})
+   if option == "egg" then
+      local success = Rand.one_in(60)
+      if chara.race == "elona.chicken" and Rand.one_in(20) then -- TODO
+         success = true
+      end
+      if success then
+         total_generated = total_generated + 1
+         item = Item.create("elona.egg", x, y, filter, map)
+         if item then
+            item.params.chara_id = chara._id
+            item.weight = chara:calc("weight") * 10 + 250
+            item.value = math.floor(math.clamp(item.weight * item.weight / 10000, 200, 40000))
+         end
+      end
+   elseif option == "milk" then
+      local success = Rand.one_in(60)
+      if chara.race == "elona.sheep" and Rand.one_in(20) then -- TODO
+         success = true
+      end
+      if success then
+         total_generated = total_generated + 1
+         item = Item.create("elona.bottle_of_milk", x, y, filter, map)
+         if item then
+            item.params.chara_id = chara._id
+         end
+      end
+   elseif option == "shit" then
+      local success = Rand.one_in(80)
+      if success then
+         item = Item.create("elona.shit", x, y, filter, map)
+         if item then
+            item.params.chara_id = chara._id
+            item.weight = chara:calc("weight") * 40 + 300
+            item.value = math.floor(math.clamp(item.weight * item.weight / 5000, 1, 20000))
+         end
+      end
+   elseif option == "bone" then
+      local success = Rand.one_in(80)
+      if success then
+         local id = "elona.remains_bone"
+         if Rand.one_in(2) then
+            id = "elona.garbage"
+         end
+         item = Item.create(id, x, y, filter, map)
+      end
+   end
+
+   return item, total_generated
+end
+
+function ElonaBuilding.update_ranch(map, days_passed)
+   map = map or Map.current()
+   days_passed = days_passed or 1
+
+   local area = Area.for_map(map)
+   local breeder_uid = area.metadata.breeder_uid
+
+   local breeder
+   if breeder_uid then
+      breeder = map:get_object(breeder_uid)
+   end
+
+   local is_livestock = function(c) return c.is_livestock end
+   local total_livestock = Chara.iter(map):filter(is_livestock):length()
+
+   for _ = 1, days_passed do
+      if breeder then
+         local should_breed = true
+         local breed_power = ElonaBuilding.calc_breeder_power(breeder)
+         if Rand.rnd(5000) > breed_power * 100 / (100 + total_livestock * 20) - total_livestock * 2 then
+            if total_livestock > 0 or not Rand.one_in(30) then
+               should_breed = false
+            end
+         end
+
+         if should_breed then
+            local filter = {
+               level = Calc.calc_object_level(breeder:calc("level"), map),
+               quality = Enum.Quality.Bad
+            }
+            if Rand.one_in(2) then
+               filter.id = breeder._id
+            end
+            if not Rand.one_in(10) then
+               filter.race_filter = breeder.race
+            end
+            -- BUG does not filter out randomly selected ID
+            if breeder._id == "elona.little_sister" then
+               filter.id = "elona.younger_sister"
+            end
+            local chara = Charagen.create(4 + Rand.rnd(11), 4 + Rand.rnd(8), filter, map)
+            if chara then
+               chara.is_livestock = true
+               total_livestock = total_livestock + 1
+            end
+         end
+
+         local total_generated = 0
+
+         for _, chara in Chara.iter(map):filter(is_livestock) do
+            -- TODO custom map
+            local x = Rand.rnd(11) + 4
+            local y = Rand.rnd(8) + 4
+            if Item.at(x, y):length() == 0 then
+               local should_generate = true
+
+               if Rand.rnd(total_generated + 1) > 2 then
+                  should_generate = false
+               end
+               if total_livestock > 10 and Rand.one_in(4) then
+                  should_generate = false
+               end
+               if total_livestock > 20 and Rand.one_in(4) then
+                  should_generate = false
+               end
+               if total_livestock > 30 and Rand.one_in(4) then
+                  should_generate = false
+               end
+               if total_livestock > 40 and Rand.one_in(4) then
+                  should_generate = false
+               end
+
+               if should_generate then
+                  local item, generated = ElonaBuilding.ranch_generate_item(map, chara, x, y)
+                  total_generated = total_generated + generated
+               end
+            end
+         end
+      end
+   end
+end
+-- <<<<<<<< elona122/shade2/map_user.hsp:832 	return ..
+
+function ElonaBuilding.ranch_reset_aggro(map)
+   map = map or Map.current()
+
+   for _, chara in Chara.iter(map) do
+      if chara.is_livestock then
+         chara.ai_state.hate = 0
+         -- TODO relation faction
+         -- relation cnt,cDislike
+         for _, member in Chara.iter_party() do
+            chara:set_reaction_at(member, 1)
+            member:set_reaction_at(chara, 1)
+         end
+      end
+   end
 end
 
 return ElonaBuilding

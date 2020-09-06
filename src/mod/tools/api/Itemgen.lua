@@ -38,7 +38,7 @@ end
 
 -- >>>>>>>> shade2/db_item.hsp:4 	dbMax = 0 : dbSum = 0  ..
 function Itemgen.random_item_id_raw(objlv, categories)
-   objlv = objlv or 0
+   objlv = objlv or 1
    categories = categories or {}
    assert(type(categories) == "table")
    if categories[1] then
