@@ -73,6 +73,7 @@ local function load_manifest(manifest_path)
 
    local valid_keys = {
       id = { required = true },
+      description = { required = false }, -- TODO make required?
       dependencies = { required = true },
       version = { required = true }
    }

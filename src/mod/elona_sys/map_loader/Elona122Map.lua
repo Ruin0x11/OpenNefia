@@ -5,10 +5,9 @@ local Fs = require("api.Fs")
 local Log = require("api.Log")
 local InstancedMap = require("api.InstancedMap")
 local Compat = require("mod.elona_sys.api.Compat")
+local struct = require("mod.extlibs.api.struct")
 
 local Elona122Map = {}
-
-local struct = require("mod.elona_sys.map_loader.thirdparty.struct")
 
 local own_states = {
    [-2] = "inherited",

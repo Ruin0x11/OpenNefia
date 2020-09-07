@@ -1,6 +1,7 @@
 local binser = require("thirdparty.binser")
 local fs = require("util.fs")
 local Log = require("api.Log")
+local Compress = require("api.Compress")
 
 --- @module SaveFs
 local SaveFs = {}
@@ -9,14 +10,14 @@ local function compress(str)
    if love.data == nil then
       return str
    end
-   return love.data.compress("string", "gzip", str, -1)
+   return Compress.compress("string", "gzip", str, -1)
 end
 
 local function decompress(dat)
    if love.data == nil then
       return dat
    end
-   return love.data.decompress("string", "gzip", dat)
+   return Compress.decompress("string", "gzip", dat)
 end
 
 function SaveFs.serialize(obj)

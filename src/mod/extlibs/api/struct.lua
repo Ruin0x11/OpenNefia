@@ -20,7 +20,7 @@
  * THE SOFTWARE.
 ]]
 
-struct = {}
+local struct = {}
 
 function struct.pack(format, ...)
   local stream = {}
