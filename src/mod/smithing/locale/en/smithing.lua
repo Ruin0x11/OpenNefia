@@ -18,12 +18,18 @@ return {
                elona = {
                   equip_melee_broadsword = "Claymore",
                   equip_melee_long_sword = "Long sword",
-                  equip_melee_dagger = "Dagger",
+                  equip_melee_short_sword = "Dagger",
                   equip_melee_lance = "Spear",
                   equip_melee_halberd = "Halberd",
                   equip_melee_hand_axe = "Axe",
                   equip_melee_axe = "Bardish",
                   equip_melee_scythe = "Scythe",
+
+                  equip_body_mail = "Armor",
+                  equip_head_helm = "Helmet",
+                  equip_shield_shield = "Shield",
+                  equip_leg_heavy_boots = "Heavy boots",
+                  equip_wrist_gauntlet = "Gauntlets"
                }
             },
 

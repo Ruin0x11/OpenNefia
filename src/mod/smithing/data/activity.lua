@@ -43,7 +43,7 @@ data:add {
 
 data:add {
    _type = "base.activity",
-   _id = "create_weapon_from_ore",
+   _id = "create_item",
 
    params = { hammer = "table", extend = "number", categories = "table", target_item = "table", material_item = "table" },
    default_turns = Smithing.calc_hammer_activity_turns,

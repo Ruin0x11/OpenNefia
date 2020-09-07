@@ -7,7 +7,7 @@ data:add {
    elona_id = 30,
    elona_sub_id = 0,
 
-   sources = { "chara", "equipment" },
+   sources = { "chara", "equipment", "ground" },
    params = { hammer = "table" },
    icon = nil,
    show_money = false,
@@ -16,11 +16,7 @@ data:add {
    -- query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return Smithing.can_smith_item(item, ctxt.hammer)
-   end,
-
-   on_select = function(ctxt, item, amount)
-      return "inventory_continue"
+      return Smithing.can_smith_item(item, ctxt.hammer, {})
    end
 }
 
@@ -31,8 +27,8 @@ data:add {
    elona_id = 30,
    elona_sub_id = 1,
 
-   sources = { "chara", "equipment" },
-   params = { hammer = "table" },
+   sources = { "chara", "equipment", "ground" },
+   params = { hammer = "table", selected_items = "table" },
    icon = nil,
    show_money = false,
    query_amount = false,
@@ -40,10 +36,6 @@ data:add {
    -- query_text = "ui.inv.title.target",
 
    filter = function(ctxt, item)
-      return Smithing.can_use_item_as_weapon_material(item, ctxt.hammer)
-   end,
-
-   on_select = function(ctxt, item, amount)
-      return "inventory_continue"
+      return Smithing.can_use_item_as_weapon_material(item, ctxt.hammer, ctxt.selected_items)
    end
 }

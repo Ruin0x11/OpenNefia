@@ -55,29 +55,40 @@ function Smithing.repair_item(hammer, chara, item)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98491                     cQualityOfPerformance(cc) = 2 ..
 end
 
-function Smithing.prompt_item_type()
-   Gui.mes("smithing.blacksmith_hammer.create.prompt")
-   local choices = {
-      "elona.equip_melee_broadsword",
-      "elona.equip_melee_long_sword",
-      "elona.equip_melee_dagger",
-      "elona.equip_melee_lance",
-      "elona.equip_melee_halberd",
-      "elona.equip_melee_hand_axe",
-      "elona.equip_melee_axe",
-      "elona.equip_melee_scythe",
-   }
-   local map = function(c) return { text = "smithing.blacksmith_hammer.create.item_types." .. c, data = c } end
-   choices = fun.iter(choices)
-      :map(map)
-      :to_list()
+local function item_type_prompt(choices)
+   return function()
+      Gui.mes("smithing.blacksmith_hammer.create.prompt")
+      local map = function(c) return { text = "smithing.blacksmith_hammer.create.item_types." .. c, data = c } end
+      local choices = fun.iter(choices)
+         :map(map)
+         :to_list()
 
-   local result, canceled = Input.prompt(choices)
-   if canceled then
-      return nil, canceled
+      local result, canceled = Input.prompt(choices)
+      if canceled then
+         return nil, canceled
+      end
+      return result.item.data
    end
-   return result.item.data
 end
+
+Smithing.prompt_weapon_type = item_type_prompt {
+   "elona.equip_melee_broadsword",
+   "elona.equip_melee_long_sword",
+   "elona.equip_melee_short_sword",
+   "elona.equip_melee_lance",
+   "elona.equip_melee_halberd",
+   "elona.equip_melee_hand_axe",
+   "elona.equip_melee_axe",
+   "elona.equip_melee_scythe",
+}
+
+Smithing.prompt_armor_type = item_type_prompt {
+   "elona.equip_body_mail",
+   "elona.equip_head_helm",
+   "elona.equip_shield_shield",
+   "elona.equip_leg_heavy_boots",
+   "elona.equip_wrist_gauntlet"
+}
 
 function Smithing.calc_required_hammer_levels_to_next_bonus(hammer)
    local bonus = hammer
@@ -87,7 +98,15 @@ function Smithing.calc_required_hammer_levels_to_next_bonus(hammer)
    return 2000 * (bonus + 1)
 end
 
-function Smithing.can_smith_item(item, hammer)
+function Smithing.can_smith_item(item, hammer, selected_items)
+   if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Unobtainable then
+      return false
+   end
+
+   if fun.iter(selected_items):any(function(i) return item.uid == i.uid end) then
+      return false
+   end
+
    -- >>>>>>>> oomSEST/src/southtyris.hsp:104957 			reftype@m18 = refitem(iId(__invNo), 5, __invNo) ..
    if item._id == "elona.broken_sword" then
       return true
@@ -106,7 +125,15 @@ function Smithing.can_smith_item(item, hammer)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:104977 			goto *label_1958 ..
 end
 
-function Smithing.can_use_item_as_weapon_material(item, hammer)
+function Smithing.can_use_item_as_weapon_material(item, hammer, selected_items)
+   if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Unobtainable then
+      return false
+   end
+
+   if fun.iter(selected_items):any(function(i) return item.uid == i.uid end) then
+      return false
+   end
+
    -- >>>>>>>> oomSEST/src/southtyris.hsp:104980 			reftypeminor@m18 = refitem(iId(__invNo), 9, __i ..
    if item:has_category("elona.ore_valuable") then
       return true
@@ -125,12 +152,12 @@ end
 function Smithing.on_use_blacksmith_hammer(hammer, chara)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:83523 		cw = ci ..
    Gui.play_sound("base.inv")
-   local result, canceled = Input.query_item(chara, "smithing.hammer_target", { hammer = hammer })
+   local result, canceled = Input.query_item(chara, "smithing.hammer_target", { hammer = hammer, selected_items = {} })
    if canceled then
       return false
    end
 
-   local item = result.result
+   local item = result.result:separate()
 
    if item._id == "elona.broken_sword" then
       local anvil = Item.find("elona.anvil", "all")
@@ -140,24 +167,37 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
          return false
       end
 
-      local item_type, canceled = Smithing.prompt_item_type()
+      local item_type, canceled = Smithing.prompt_weapon_type()
       if canceled then
          return false
       end
 
-      result, canceled = Input.query_item(chara, "smithing.hammer_weapon_material", { hammer = hammer })
+      result, canceled = Input.query_item(chara, "smithing.hammer_weapon_material", { hammer = hammer, selected_items = {item} })
       if canceled then
          return false
       end
 
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98505                 if (reftypeminor == 77001 | iId(ci ..
       local material_item = result.result:separate()
-      chara:start_activity("smithing.create_weapon_from_ore", {hammer=hammer, categories={item_type}, target_item=item, material_item=material_item})
+      chara:start_activity("smithing.create_item", {hammer=hammer, categories={item_type}, target_item=item, material_item=material_item})
       return true
       -- <<<<<<<< oomSEST/src/southtyris.hsp:98515             } ..
    elseif item._id == "elona.remains_skin" then
-      -- TODO
-      return false
+      local anvil = Item.find("elona.anvil", "all")
+      local furnace = Item.find("elona.furnace", "all")
+      if not (anvil and furnace) then
+         Gui.mes("smithing.blacksmith_hammer.requires_anvil_and_furnace")
+         return false
+      end
+
+      local item_type, canceled = Smithing.prompt_armor_type()
+      if canceled then
+         return false
+      end
+      -- >>>>>>>> oomSEST/src/southtyris.hsp:98505                 if (reftypeminor == 77001 | iId(ci ..
+      chara:start_activity("smithing.create_item", {hammer=hammer, categories={item_type}, target_item=item, material_item=nil})
+      return true
+      -- <<<<<<<< oomSEST/src/southtyris.hsp:98515             } ..
    elseif item:has_category("base.furniture") then
       -- TODO
       return false
@@ -222,7 +262,7 @@ end
 -- <<<<<<<< oomSEST/src/southtyris.hsp:104931 	return 1 ..
 
 function Smithing.material_for_chara(chara_id)
--- >>>>>>>> oomSEST/src/southtyris.hsp:98595             s = refchara(iSubname(ci), 8, 1) ..
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:98595             s = refchara(iSubname(ci), 8, 1) ..
    local chara_data = data["base.chara"]:ensure(chara_id)
 
    if table.set(chara_data.tags or {})["dragon"] then
@@ -311,8 +351,12 @@ function Smithing.create_item(hammer, chara, target_item, material, categories, 
    quality = quality + target_item:calc("value")
    target_item:remove(1)
 
-   quality = quality + material:calc("value")
-   material:remove(1)
+   if material then
+      quality = quality + material:calc("value")
+      material:remove(1)
+   else
+      material = target_item
+   end
 
    Rand.set_seed(hammer.params.hammer_level * 1000000 + hammer.params.hammer_experience)
 
@@ -333,7 +377,7 @@ function Smithing.create_item(hammer, chara, target_item, material, categories, 
       return nil
    end
 
-   local filter, item_material = Smithing.random_item_filter_and_material(hammer, material, categories)
+   local filter, item_material = Smithing.random_item_filter_and_material(hammer, material, categories, quality)
 
    local created = Itemgen.create(nil, nil, filter, chara)
    if not created then
