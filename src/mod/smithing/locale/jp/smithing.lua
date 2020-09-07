@@ -4,8 +4,6 @@ return {
          forge = "鍛える",
       },
       blacksmith_hammer = {
-         is_not_upgradeable = "鍛冶の必要はない。",
-         no_repairs_are_necessary = "鍛冶の必要はない。",
          requires_anvil = "金床が必要だ。",
          requires_anvil_and_furnace = "溶鉱炉と金床が必要だ。",
          sound = { " *カキーン* ", " *カーン* " },
@@ -43,9 +41,31 @@ return {
             prompt_name_artifact = "銘は？"
          },
 
-         upgrade_hammer = function(hammer)
-            return ("%sは転生した。"):format(itemname(hammer))
-         end,
+         repair_furniture = {
+            prompt = "何を素材にする？",
+            finished = function(item)
+               return ("%sの加工を終えた。"):format(itemname(item))
+            end
+         },
+
+         repair_equipment = {
+            no_repairs_are_necessary = "鍛冶の必要はない。",
+            finished = {
+               repair = function(item)
+                  return ("%sの修理を終えた。"):format(itemname(item))
+               end,
+               upgrade = function(item)
+                  return ("%sを打ち直した。"):format(itemname(item))
+               end
+            }
+         },
+
+         upgrade_hammer = {
+            is_not_upgradeable = "鍛冶の必要はない。",
+            finished = function(hammer)
+               return ("%sは転生した。"):format(itemname(hammer))
+            end,
+         },
 
          skill_increases = "あなたは鍛冶の技術の向上を感じた。"
       }

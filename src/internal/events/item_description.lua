@@ -190,34 +190,40 @@ local function build_description(item, _, result)
       if item:calc("is_eternal_force") then
          result[#result+1] = { text = I18N.get("item.desc.bit.eternal_force"), icon = 4, color = {80, 50, 0} }
       end
-
-      -- NOTE: unused in vanilla
-      local show_footnote = false
-      if show_footnote then
-         local footnote = I18N.get_optional("item.info." .. item._id .. ".desc.main.footnote")
-         if footnote then
-            result[#result+1] = { text = "" }
-            result[#result+1] = { text = footnote, type = "flavor_italic" }
-         end
-      end
-
-      local i = 0
-      repeat
-         local extra_desc = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".text")
-         if extra_desc then
-            result[#result+1] = { text = "" }
-            result[#result+1] = { text = extra_desc, type = "flavor" }
-         end
-         local extra_footnote = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".footnote")
-         if extra_footnote then
-            result[#result+1] = { text = extra_footnote, type = "flavor_italic" }
-         end
-         i = i + 1
-      until extra_desc == nil
    end
-   -- <<<<<<<< shade2/command.hsp:4199 	} ..
+   -- <<<<<<<< elona122/shade2/command.hsp:4148 			} ..
 
    return result
 end
 
 Event.register("base.on_item_build_description", "Build description", build_description, {priority = 50000})
+
+local function add_flavor_text(item, params, result)
+   -- >>>>>>>> elona122/shade2/command.hsp:4150 		 ..
+   -- NOTE: unused in vanilla
+   local show_footnote = false
+   if show_footnote then
+      local footnote = I18N.get_optional("item.info." .. item._id .. ".desc.main.footnote")
+      if footnote then
+         result[#result+1] = { text = "" }
+         result[#result+1] = { text = footnote, type = "flavor_italic" }
+      end
+   end
+
+   local i = 0
+   repeat
+      local extra_desc = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".text")
+      if extra_desc then
+         result[#result+1] = { text = "" }
+         result[#result+1] = { text = extra_desc, type = "flavor" }
+      end
+      local extra_footnote = I18N.get_optional("item.info." .. item._id .. ".desc._" .. i .. ".footnote")
+      if extra_footnote then
+         result[#result+1] = { text = extra_footnote, type = "flavor_italic" }
+      end
+      i = i + 1
+   until extra_desc == nil
+   -- <<<<<<<< shade2/command.hsp:4199 	} ..
+end
+
+Event.register("base.on_item_build_description", "Add flavor text", add_flavor_text, {priority = 150000})

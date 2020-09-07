@@ -4,8 +4,6 @@ return {
          forge = "Forge"
       },
       blacksmith_hammer = {
-         is_not_upgradeable = "This hammer has not \"reached\".",
-         no_repairs_are_necessary = "No repairs are necessary.",
          requires_anvil = "Requires an anvil.",
          requires_anvil_and_furnace = "Requires a furnace and an anvil.",
          sound = { "*clank*", "*clang*" },
@@ -43,9 +41,31 @@ return {
             prompt_name_artifact = "What do you want to name this artifact?"
          },
 
-         upgrade_hammer = function(hammer)
-            return ("Upgrade of %s was finished."):format(itemname(hammer))
-         end,
+         repair_furniture = {
+            prompt = "What will you create from?",
+            finished = function(item)
+               return ("Repair of %s was finished."):format(itemname(item))
+            end
+         },
+
+         repair_equipment = {
+            no_repairs_are_necessary = "No repairs are necessary.",
+            finished = {
+               repair = function(item)
+                  return ("Finished repairing %s."):format(itemname(item))
+               end,
+               upgrade = function(item)
+                  return ("Finished upgrading %s."):format(itemname(item))
+               end
+            }
+         },
+
+         upgrade_hammer = {
+            is_not_upgradeable = "This hammer has not \"reached\".",
+            finished = function(hammer)
+               return ("Upgrade of %s was finished."):format(itemname(hammer))
+            end,
+         },
 
          skill_increases = "Your Smithing skill increases."
       }

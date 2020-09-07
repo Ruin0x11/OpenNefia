@@ -18,43 +18,6 @@ function Smithing.calc_hammer_activity_turns(act, params, chara)
    return 25 - chara:trait_level("smithing.blacksmith") * 5 + Rand.rnd(11)
 end
 
-function Smithing.upgrade_hammer(hammer, chara)
-   -- >>>>>>>> oomSEST/src/southtyris.hsp:98787             ci = craftref(0) ..
-   Gui.mes_c("smithing.blacksmith_hammer", "Green", hammer)
-   Gui.play_sound("base.build1")
-   hammer.bonus = hammer.bonus + 1
-   hammer.params.hammer_level = 1
-   hammer.params.hammer_experience = 0
-   hammer.params.hammer_total_uses = 0
-   Skill.gain_skill_exp(chara, "elona.stat_constitution", 500)
-   chara:refresh()
-   -- <<<<<<<< oomSEST/src/southtyris.hsp:98798         gosub *chara_refresh ..
-end
-
-function Smithing.repair_item(hammer, chara, item)
-   -- >>>>>>>> oomSEST/src/southtyris.hsp:98458                     notfound = 1 ..
-   if item.bonus >= 0 then
-      local anvil = Item.find("elona.anvil", "all")
-      if anvil == nil then
-         Gui.mes("smithing.blacksmith_hammer.requires_anvil")
-         return false
-      end
-
-      local power = math.min(math.floor(hammer.params.hammer_level * 9 / 20), 900)
-      if hammer.params.hammer_level >= 2000 then
-         power = power + 50
-      end
-      if hammer.bonus > 0 then
-         power = power + 50
-      end
-      if not (hammer.params.hammer_level >= 21 and item.bonus < power) then
-         Gui.mes("smithing.blacksmith_hammer.no_repairs_are_necessary")
-         return false
-      end
-   end
-   -- <<<<<<<< oomSEST/src/southtyris.hsp:98491                     cQualityOfPerformance(cc) = 2 ..
-end
-
 local function item_type_prompt(choices)
    return function()
       Gui.mes("smithing.blacksmith_hammer.create.prompt")
@@ -115,7 +78,7 @@ function Smithing.can_smith_item(item, hammer, selected_items)
    elseif item._id == "elona.remains_skin" then
       return true
    elseif item._id == "smithing.blacksmith_hammer" then
-      if hammer.level >= Smithing.calc_required_hammer_levels_to_next_bonus(item.bonus) and hammer.uid == item.uid then
+      if hammer.params.hammer_level >= Smithing.calc_required_hammer_levels_to_next_bonus(item.bonus) and hammer.uid == item.uid then
          return true
       end
    elseif item:has_category("elona.furniture") and not item.is_no_drop then
@@ -149,6 +112,26 @@ function Smithing.can_use_item_as_weapon_material(item, hammer, selected_items)
    -- <<<<<<<< oomSEST/src/southtyris.hsp:104991 			goto *label_1958 ..
 end
 
+function Smithing.can_use_item_as_furniture_material(item, hammer, selected_items)
+   if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Unobtainable then
+      return false
+   end
+
+   if fun.iter(selected_items):any(function(i) return item.uid == i.uid end) then
+      return false
+   end
+
+   -- >>>>>>>> oomSEST/src/hammer.hsp:892 		if (iId(__invNo) == iId_skin | iId(__invNo) == i ..
+   if item._id == "elona.remains_skin" or item._id == "elona.remains_bone" or item._id == "elona.corpse" then
+      if item.params.chara_id or item.is_precious then
+         return true
+      end
+   end
+
+   return false
+   -- <<<<<<<< oomSEST/src/hammer.hsp:896 		} ..
+end
+
 function Smithing.on_use_blacksmith_hammer(hammer, chara)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:83523 		cw = ci ..
    Gui.play_sound("base.inv")
@@ -179,7 +162,7 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
 
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98505                 if (reftypeminor == 77001 | iId(ci ..
       local material_item = result.result:separate()
-      chara:start_activity("smithing.create_item", {hammer=hammer, categories={item_type}, target_item=item, material_item=material_item})
+      chara:start_activity("smithing.create_equipment", {hammer=hammer, categories={item_type}, target_item=item, material_item=material_item})
       return true
       -- <<<<<<<< oomSEST/src/southtyris.hsp:98515             } ..
    elseif item._id == "elona.remains_skin" then
@@ -195,25 +178,65 @@ function Smithing.on_use_blacksmith_hammer(hammer, chara)
          return false
       end
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98505                 if (reftypeminor == 77001 | iId(ci ..
-      chara:start_activity("smithing.create_item", {hammer=hammer, categories={item_type}, target_item=item, material_item=nil})
+      chara:start_activity("smithing.create_equipment", {hammer=hammer, categories={item_type}, target_item=item, material_item=nil})
       return true
       -- <<<<<<<< oomSEST/src/southtyris.hsp:98515             } ..
-   elseif item:has_category("base.furniture") then
-      -- TODO
-      return false
+   elseif item:has_category("elona.furniture") then
+      -- >>>>>>>> oomSEST/src/hammer.hsp:148 					anvil = 0 ..
+      local anvil = Item.find("elona.anvil", "all")
+      if anvil == nil then
+         Gui.mes("smithing.blacksmith_hammer.requires_anvil")
+         return false
+      end
+
+      Gui.mes("smithing.blacksmith_hammer.repair_furniture.prompt")
+
+      result, canceled = Input.query_item(chara, "smithing.hammer_furniture_material", { hammer = hammer, selected_items = {item} })
+      if canceled then
+         return false
+      end
+      -- <<<<<<<< oomSEST/src/hammer.hsp:166 					invctrl(1) = 3 ..
+
+      local material_item = result.result:separate()
+      chara:start_activity("smithing.repair_furniture", {hammer=hammer, target_item=item, material_item=material_item})
+      return true
    elseif item._id == "smithing.blacksmith_hammer" then
       -- >>>>>>>> oomSEST/src/southtyris.hsp:98447                     notfound = 1 ..
       if item.params.hammer_level < Smithing.calc_required_hammer_levels_to_next_bonus(item) then
-         Gui.mes("smithing.blacksmith_hammer.is_not_upgradeable")
+         Gui.mes("smithing.blacksmith_hammer.upgrade_hammer.is_not_upgradeable")
          return false
       end
       -- <<<<<<<< oomSEST/src/southtyris.hsp:98456                     cQualityOfPerformance(cc) = 6 ..
 
       chara:start_activity("smithing.upgrade_hammer", {hammer=item})
       return true
-   end
+   else
+      -- >>>>>>>> oomSEST/src/southtyris.hsp:98458                     notfound = 1 ..
+      local power = 0
+      if item.bonus >= 0 then
+         local anvil = Item.find("elona.anvil", "all")
+         if anvil == nil then
+            Gui.mes("smithing.blacksmith_hammer.requires_anvil")
+            return false
+         end
 
-   return Smithing.repair_item(hammer, chara, item)
+         power = math.min(math.floor(hammer.params.hammer_level * 9 / 20), 900)
+         if hammer.params.hammer_level >= 2000 then
+            power = power + 50
+         end
+         if hammer.bonus > 0 then
+            power = power + 50
+         end
+         if not (hammer.params.hammer_level >= 21 and item.bonus < power) then
+            Gui.mes("smithing.blacksmith_hammer.repair_equipment.no_repairs_are_necessary")
+            return false
+         end
+      end
+
+      chara:start_activity("smithing.repair_equipment", {hammer=hammer, target_item=item, power=power})
+      return true
+      -- <<<<<<<< oomSEST/src/southtyris.hsp:98491                     cQualityOfPerformance(cc) = 2 ..
+   end
    -- <<<<<<<< oomSEST/src/southtyris.hsp:83534 		goto *label_1454 ..
 end
 
@@ -344,7 +367,7 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    return filter, item_material
 end
 
-function Smithing.create_item(hammer, chara, target_item, material, categories, extend)
+function Smithing.create_equipment(hammer, chara, target_item, material, categories, extend)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98549 		quality = 0 ..
    local quality = 0
 
@@ -431,6 +454,76 @@ function Smithing.create_item(hammer, chara, target_item, material, categories, 
 
    return created
    -- <<<<<<<< oomSEST/src/southtyris.hsp:98697 		} ..
+end
+
+function Smithing.repair_furniture(hammer, chara, target_item, material)
+   -- >>>>>>>> oomSEST/src/hammer.hsp:722 		ci = craftref(0) ..
+   Gui.mes_c("smithing.blacksmith_hammer.repair_furniture.finished", "Green", target_item)
+   Gui.play_sound("base.build1", chara.x, chara.y)
+
+   -- TODO this is probably an omake added feature
+   --[[
+      target_item.params.chara_id = material.params.chara_id
+      if target_item.params.chara_id == "elona.user" then
+      -- TODO
+      end
+      if material.is_precious then
+      target_item.params_chara_id = 999
+      end
+   --]]
+
+   local item_material
+   if material._id == "elona.remains_skin" then
+      item_material = Smithing.material_for_chara(material.params.chara_id)
+   elseif material._id == "elona.remains_bone" then
+      item_material = "elona.bone"
+   elseif material._id == "elona.remains_corpse" then
+      item_material = "elona.fresh"
+   end
+   ItemMaterial.change_item_material(target_item, item_material)
+
+   -- TODO
+   -- ibitmod 21, ci, 1
+
+   material:remove(1)
+
+   local exp_gain = 1 + Rand.rnd(10) + math.min(material:calc("value") / 200, 100)
+   Smithing.gain_hammer_experience(hammer, exp_gain)
+   Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
+   chara:refresh()
+   -- <<<<<<<< oomSEST/src/hammer.hsp:766 		gosub *chara_refresh ..
+end
+
+function Smithing.upgrade_hammer(hammer, chara)
+   -- >>>>>>>> oomSEST/src/southtyris.hsp:98787             ci = craftref(0) ..
+   Gui.mes_c("smithing.blacksmith_hammer.upgrade_hammer.finished", "Green", hammer)
+   Gui.play_sound("base.build1", chara.x, chara.y)
+   hammer.bonus = hammer.bonus + 1
+   hammer.params.hammer_level = 1
+   hammer.params.hammer_experience = 0
+   hammer.params.hammer_total_uses = 0
+   Skill.gain_skill_exp(chara, "elona.stat_constitution", 500)
+   chara:refresh()
+   -- <<<<<<<< oomSEST/src/southtyris.hsp:98798         gosub *chara_refresh ..
+end
+
+function Smithing.repair_equipment(hammer, chara, item, power)
+   if item.bonus < 0 then
+      Gui.mes_c("smithing.blacksmith_hammer.repair_equipment.finished.repair", "Green", item)
+   else
+      Gui.mes_c("smithing.blacksmith_hammer.repair_equipment.finished.upgrade", "Green", item)
+   end
+   Gui.play_sound("base.build1", chara.x, chara.y)
+   if item.bonus > 0 then
+      item.bonus = math.min(item.bonus + item.bonus + 1, power)
+   else
+      item.bonus = item.bonus + 1
+   end
+
+   local exp_gain = 1 + Rand.rnd(math.max(10 / hammer.params.hammer_level, 1))
+   Smithing.gain_hammer_experience(hammer, exp_gain)
+   Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
+   chara:refresh()
 end
 
 return Smithing
