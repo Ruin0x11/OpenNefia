@@ -288,4 +288,8 @@ function Calc.calc_building_taxes(player)
    return cost
 end
 
+function Calc.calc_living_weapon_required_exp(level)
+   return level * 100
+end
+
 return Calc

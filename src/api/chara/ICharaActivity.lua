@@ -87,7 +87,7 @@ function ICharaActivity:start_activity(id, params, turns)
    elseif self.activity.default_turns then
       local d = self.activity.default_turns
       if type(d) == "function" then
-         self.activity.turns = d(self.activity, params)
+         self.activity.turns = d(self.activity, params, self)
       elseif type(d) == "number" then
          self.activity.turns = d
       else

@@ -85,7 +85,7 @@ local item_spec = {
    ibitvaluable = { to = "is_precious", cb = function(valuable) if valuable ~= 0 then return true end end },
    relaskill    = { to = "skill", cb = function(skill_id) return assert(Compat.convert_122_id("base.skill", skill_id)) end },
    -- irangepow    = { to = "effective_power", type = "int_list", default = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }, -- TODO
-   author       = { to = "citem_author", type = "string" },
+   author       = { to = "custom_item_author", type = "string" },
    ieffect = {
       to = "on_use",
       cb = function(_)
@@ -253,7 +253,7 @@ function CustomItemDecoder.decode(content, mod_id, item_id)
 
    local result = {
       _type = "base.item",
-      _id = ("%s.%s"):format(mod_id, item_id)
+      _id = item_id
    }
 
    apply_spec(result, item_spec, item_data)

@@ -38,6 +38,16 @@ function string.strip_whitespace(s)
    return from > #s and "" or s:match(".*%S", from)
 end
 
+function string.left_pad(s, length, pad)
+   local res = string.rep(pad or ' ', length - #s) .. s
+   return res, res ~= s
+end
+
+function string.right_pad(s, length, pad)
+   local res = s .. string.rep(pad or ' ', length - #s)
+   return res, res ~= s
+end
+
 --- Splits a string `str` on separator `sep`.
 ---
 --- @tparam string str

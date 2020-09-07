@@ -41,7 +41,7 @@ function Prompt:init(choices, width)
    Draw.set_font(14) -- 14 - en * 2
    for i, choice in ipairs(choices) do
       if type(choice) == "string" then
-         choice = { text = choice, key = KEYS:sub(i, i) }
+         choice = { text = choice, key = KEYS:sub(i, i), data = nil }
          choices[i] = choice
       end
       choice.text = I18N.get_optional(choice.text) or choice.text
