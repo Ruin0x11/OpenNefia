@@ -18,12 +18,18 @@ return {
                elona = {
                   equip_melee_broadsword = "大剣",
                   equip_melee_long_sword = "長剣",
-                  equip_melee_dagger = "短剣",
+                  equip_melee_short_sword = "短剣",
                   equip_melee_lance = "槍",
                   equip_melee_halberd = "鉾槍",
                   equip_melee_hand_axe = "斧",
                   equip_melee_axe = "大斧",
                   equip_melee_scythe = "鎌",
+
+                  equip_body_mail = "鎧",
+                  equip_head_helm = "兜",
+                  equip_shield_shield = "盾",
+                  equip_leg_heavy_boots = "重靴",
+                  equip_wrist_gauntlet = "ガントレット"
                }
             },
 
