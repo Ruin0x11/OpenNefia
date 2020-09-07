@@ -6,6 +6,7 @@ local MapObject = require("api.MapObject")
 local Enum = require("api.Enum")
 local I18N = require("api.I18N")
 local Log = require("api.Log")
+local Chara = require("api.Chara")
 
 local data = require("internal.data")
 local field = require("game.field")
@@ -207,7 +208,19 @@ function Item.find(id, kind, map)
 
    kind = kind or "ground"
 
-   local iter = Item.iter(map)
+   local iter
+   if kind == "ground" then
+      iter = Item.iter(map)
+   elseif kind == "all" then
+      local chain = {}
+      chain[#chain+1] = Item.iter(map)
+      for _, chara in Chara.iter(map) do
+         chain[#chain+1] = chara:iter_items()
+      end
+      iter = fun.chain(table.unpack(chain))
+   else
+      error(("Unknown Item.find kind '%s'"):format(kind))
+   end
 
    local compare_field
    if type(id) == "number" then

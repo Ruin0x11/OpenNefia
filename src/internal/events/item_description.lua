@@ -220,4 +220,4 @@ local function build_description(item, _, result)
    return result
 end
 
-Event.register("base.on_item_build_description", "Build description", build_description)
+Event.register("base.on_item_build_description", "Build description", build_description, {priority = 50000})

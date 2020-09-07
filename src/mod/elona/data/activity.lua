@@ -104,7 +104,7 @@ local function sex_check_end(chara, partner)
    end
 
    if chara:is_player() then
-      if not Skill.do_stamina_check(chara, 1 + Rand.rnd(2)) then
+      if not Effect.do_stamina_check(chara, 1 + Rand.rnd(2)) then
          Gui.mes("common.too_exhausted")
          partner:remove_activity()
          chara:remove_activity()

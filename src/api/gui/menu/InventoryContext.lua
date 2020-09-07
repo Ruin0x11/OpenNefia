@@ -156,6 +156,7 @@ function InventoryContext:init(proto, params)
    self.container = params.container or nil
    self.map = params.map or nil
    self.shop = params.shop or nil
+   self.params = params.params or nil
 
    self.icon = (self.proto.icon or 0) + 1
 
@@ -183,6 +184,7 @@ function InventoryContext:init(proto, params)
             error(string.format("Inventory context parameter has a name conflict: %s", name))
          end
 
+         -- TODO move to ctxt.params
          self[name] = val
       end
    end
