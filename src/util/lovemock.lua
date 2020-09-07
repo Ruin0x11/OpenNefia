@@ -104,8 +104,14 @@ end
 love.audio.play = function() end
 love.keyboard.setKeyRepeat = function() end
 love.keyboard.setTextInput = function() end
-love.data.compress = function(_, _, obj) return obj end
-love.data.decompress = function(_, _, str) return str end
+love.data.compress = function(_, _, obj)
+   local zlib = require("zlib")
+   return zlib.deflate()(obj, "full")
+end
+love.data.decompress = function(_, _, str)
+   local zlib = require("zlib")
+   return zlib.inflate()(str)
+end
 love.timer.sleep = function() end
 love.system.getOS = function() return "lovemock" end
 love.filesystem.setRequirePath = function() end
@@ -121,6 +127,9 @@ love.filesystem.newFile = function(filepath)
       end,
       close = function(self)
          self._inner:close()
+      end,
+      seek = function(self, kind)
+         return self._inner:seek(kind)
       end
    }
 end
