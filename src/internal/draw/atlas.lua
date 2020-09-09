@@ -285,7 +285,7 @@ function atlas:make_anim(tile_id)
 
    local anims = self.anims[tile_id]
    if not anims then
-      Log.warn("Missing animation for '%s'", tile_id)
+      Log.error("Missing animation for '%s'", tile_id)
       return
    end
 
@@ -295,7 +295,7 @@ end
 function atlas:update_anim(the_anim, tile_id)
    local anims = self.anims[tile_id]
    if not anims then
-      Log.warn("Missing animation for '%s' (update)", tile_id)
+      Log.error("Missing animation for '%s' (update)", tile_id)
       return
    end
 

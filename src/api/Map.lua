@@ -76,7 +76,11 @@ function Map.save(map)
    return ok, err
 end
 
-function Map.is_saved(map_or_uid)
+function Map.exists(map_or_uid)
+   if map_or_uid == nil then
+      return false
+   end
+
    local uid
    if class.is_an(InstancedMap, map_or_uid) then
       uid = map_or_uid.uid
@@ -532,7 +536,7 @@ function Map.travel_to(map, params)
                                      params.feat)
    end
 
-   Log.debug("Start position: %s %s (%s)", x, y)
+   Log.debug("Start position: %s %s", x, y)
    if not (x and y) then
       Log.error("Map does not declare a start position. Defaulting to the center of the map.")
       x = map:width() / 2
@@ -599,9 +603,9 @@ function Map.travel_to(map, params)
    end
 
    Map.set_map(map, "traveled")
-   Gui.update_screen()
-
    collectgarbage()
+
+   Gui.update_screen()
 
    return true
 end

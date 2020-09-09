@@ -12,7 +12,7 @@ local event = {
    { _id = "calc_feat_materials" },
    { _id = "calc_dialog_choices" },
    { _id = "calc_bad_performance_damage" },
-   { _id = "before_respawn_mobs" },
+   { _id = "before_spawn_mobs" },
    { _id = "before_cast_return" },
    { _id = "on_displaced" },
    { _id = "calc_wand_success" },
@@ -20,6 +20,8 @@ local event = {
    { _id = "calc_return_forbidden" },
    { _id = "before_physical_attack" },
    { _id = "on_item_created_from_wish" },
+   { _id = "on_deed_use" },
+   { _id = "on_harvest_plant" },
 }
 
 data:add_multi("base.event", event)

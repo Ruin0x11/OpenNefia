@@ -19,6 +19,8 @@ local function load_mod(mod_name, root_path)
    local chunk, err
 
    if init_lua_path then
+      local Stopwatch = require("api.Stopwatch")
+      local sw = Stopwatch:new()
       local req_path = paths.convert_to_require_path(init_lua_path)
 
       -- Reset the random seed before loading each mod loading can
@@ -36,7 +38,7 @@ local function load_mod(mod_name, root_path)
       -- Mods are not expected to return anything in init.lua.
       package.loaded[req_path] = true
 
-      Log.info("Loaded mod %s to %s.", mod_name, req_path)
+      Log.info("Loaded mod %s to %s in %02.02f ms.", mod_name, req_path, sw:measure())
    else
       Log.info("Loaded mod %s without init.lua.", mod_name)
    end
@@ -71,6 +73,7 @@ local function load_manifest(manifest_path)
 
    local valid_keys = {
       id = { required = true },
+      description = { required = false }, -- TODO make required?
       dependencies = { required = true },
       version = { required = true }
    }

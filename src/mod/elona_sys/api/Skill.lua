@@ -168,6 +168,7 @@ function Skill.modify_potential_from_level(chara, skill, level_delta)
    return potential
 end
 
+-- TODO replace with ICharaSkills:mod_skill_potential()
 function Skill.modify_potential(chara, skill, delta)
    local potential = math.clamp(math.floor(chara:skill_potential(skill) + delta), 2, 400)
    chara.skills["base.skill:" .. skill].potential = potential
@@ -210,6 +211,7 @@ local function proc_leveling(chara, skill, new_exp, level)
          Gui.mes_c(skill_change_text(chara, skill, true), color)
       end
       chara:refresh()
+      return level_delta
    elseif new_exp < 0 then
       local level_delta = math.floor(-new_exp / 1000 + 1)
       new_exp = 1000 + new_exp % 1000
@@ -228,8 +230,10 @@ local function proc_leveling(chara, skill, new_exp, level)
          Gui.mes_alert()
       end
       chara:refresh()
+      return level_delta
    else
       chara:set_base_skill(skill, level, nil, new_exp)
+      return 0
    end
    -- <<<<<<<< shade2/module.hsp:346 	sdata@(sID+rangeSdata,c)=limit(lv,0,2000)*1000000 ..
 end
@@ -246,9 +250,11 @@ function Skill.gain_fixed_skill_exp(chara, skill, exp)
       return
    end
 
-   proc_leveling(chara, skill, new_exp, level, potential)
+   local level_delta = proc_leveling(chara, skill, new_exp, level, potential)
 
    chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, base_exp_amount = exp, actual_exp_amount = exp })
+
+   return level_delta
 end
 -- <<<<<<<< shade2/module.hsp:281 	return ..
 
@@ -294,7 +300,7 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
       end
    end
 
-   if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level ~= 1000 then
+   if exp > 0 and skill_data.apply_exp_divisor and exp_divisor_level <= 1000 then
       local lvl_exp = Skill.calc_chara_exp_from_skill_exp(chara:calc("required_experience"), chara:calc("level"), exp, exp_divisor_level)
       chara.experience = chara.experience + lvl_exp
       if chara:is_player() then
@@ -303,9 +309,11 @@ function Skill.gain_skill_exp(chara, skill, base_exp, exp_divisor_stat, exp_divi
    end
 
    local new_exp = exp + chara:skill_experience(skill)
-   proc_leveling(chara, skill, new_exp, level)
+   local level_delta = proc_leveling(chara, skill, new_exp, level)
 
    chara:emit("elona_sys.on_gain_skill_exp", { skill_id = skill, base_exp_amount = base_exp, actual_exp_amount = exp })
+
+   return level_delta, exp
 end
 -- <<<<<<<< shade2/module.hsp:349 	#defcfunc calcFame int c,int per ..
 

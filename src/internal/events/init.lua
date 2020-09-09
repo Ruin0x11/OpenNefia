@@ -11,6 +11,7 @@ function events.require_all()
    require("internal.events.chara_refresh")
    require("internal.events.item_description")
    require("internal.events.item_refresh")
+   require("internal.events.chara_activity")
 end
 
 return events

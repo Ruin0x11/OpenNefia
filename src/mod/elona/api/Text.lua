@@ -240,13 +240,15 @@ function Text.unidentified_item_name(item, seed)
    local has_random_name = item.has_random_name
 
    if has_random_name then
-      local ref = item.knownnameref
-      assert(ref, ("Item '%s' does not have a knownnameref"):format(item._id))
+      local ref = (type(has_random_name) == "string" and has_random_name) -- HACK remove
+         or item.knownnameref
+      local knownnameref = item.knownnameref
+      assert(knownnameref, ("Item '%s' does not have a knownnameref"):format(item._id))
       seed = seed or save.base.random_seed
       local index = (Util.string_to_integer(item._id) % seed) % 6
       unknown_name = I18N.get("ui.random_item." .. ref .. "._" .. index)
          .. I18N.space()
-         .. I18N.get("ui.random_item." .. ref .. ".name")
+         .. I18N.get("ui.random_item." .. knownnameref .. ".name")
       return unknown_name
    end
 

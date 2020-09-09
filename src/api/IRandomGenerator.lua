@@ -1,8 +1,6 @@
 local IRandomGenerator = class.interface("IRandomGenerator",
                        {
                           rnd = "function",
-                          rnd_small = "function",
-                          rnd_huge = "function",
                           rnd_float = "function",
                           set_seed = "function"
                        })

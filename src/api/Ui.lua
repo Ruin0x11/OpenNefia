@@ -280,7 +280,7 @@ local SKILL_ICONS = {
 function Ui.skill_icon(skill_id)
    local skill = data["base.skill"]:ensure(skill_id)
    local related_skill = skill.related_skill or skill._id
-   return SKILL_ICONS[related_skill] or nil
+   return SKILL_ICONS[related_skill]
 end
 
 return Ui

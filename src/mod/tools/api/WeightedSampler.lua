@@ -26,7 +26,7 @@ function WeightedSampler:sample()
       return nil
    end
 
-   local n = Rand.rnd_huge(self.sum)
+   local n = Rand.rnd(self.sum)
 
    for _, cand in ipairs(self.candidates) do
       if cand[2] > n then

@@ -17,6 +17,9 @@ local Effect = require("mod.elona.api.Effect")
 local Area = require("api.Area")
 local Charagen = require("mod.tools.api.Charagen")
 local SaveFs = require("api.SaveFs")
+local Log = require("api.Log")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Filters = require("mod.elona.api.Filters")
 
 local Tools = {}
 
@@ -954,6 +957,26 @@ function Tools.performance_stats()
       return 0, 0, 0
    end
    return fps:widget():get_stats()
+end
+
+function Tools.museum_items()
+   for _ = 1, 50 do
+      local id = Rand.choice({"elona.card", "elona.figurine"})
+      local item = Item.create(id)
+      if not item then
+         break
+      end
+      item.params.chara_id = Charagen.random_chara_id_raw(100)
+   end
+end
+
+function Tools.random_artifacts(count)
+   count = count or 10
+   local player = Chara.player()
+   for _ = 1, count do
+      local item = Itemgen.create(nil, nil, { categories = Rand.choice(Filters.fsetwear), quality = Enum.Quality.Great }, player)
+      Effect.identify_item(item, Enum.IdentifyState.Full)
+   end
 end
 
 return Tools

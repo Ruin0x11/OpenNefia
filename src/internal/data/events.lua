@@ -113,8 +113,8 @@ data:add_multi(
       { _id = "on_map_renew_minor" },
       { _id = "on_map_renew_major", },
       { _id = "on_map_renew_geometry" },
-      { _id = "on_map_minor_events" },
-      { _id = "on_map_major_events" },
+      { _id = "on_map_loaded_events" },
+      { _id = "on_map_entered_events" },
       { _id = "calc_map_starting_pos" },
       { _id = "on_generate_area_floor" },
       { _id = "on_map_initialize" },
@@ -125,5 +125,6 @@ data:add_multi(
       { _id = "after_get_translation" },
       { _id = "on_initialize_player" },
       { _id = "on_finalize_player" },
+      { _id = "on_drop_item" },
    }
 )

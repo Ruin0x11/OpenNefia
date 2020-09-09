@@ -52,4 +52,7 @@ Const.IMPRESSION_MARRY = 200
 Const.IMPRESSION_SOULMATE = 300
 -- <<<<<<<< elona122/shade2/init.hsp:27 	#define global defImpSoulMate	300 ..
 
+Const.MAP_MINOR_RENEW_STEP_HOURS = 24
+Const.PLANT_GROWTH_DAYS = 4
+
 return Const

@@ -12,6 +12,10 @@ local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Calc = require("mod.elona.api.Calc")
+local InstancedArea = require("api.InstancedArea")
+local Area = require("api.Area")
+local Building = require("mod.elona.api.Building")
+local I18N = require("api.I18N")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -44,6 +48,12 @@ local hook_calc_initial_gold =
                       1,
                       nil,
                       calc_initial_gold)
+
+local function deed_callback(area_archetype_id, name)
+   return function(self, params)
+      Building.build_area(area_archetype_id, name, params.x, params.y, params.map)
+   end
+end
 
 -- >>>>>>>> shade2/chips.hsp:392 	dim lightData,10,tailLight ..
 local light = {
@@ -754,8 +764,9 @@ local item =
         on_read = function(self)
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
             Effect.identify_item(self, Enum.IdentifyState.Name)
+            local text = I18N.get("_.elona.book." .. self.params.book_id .. ".text")
             local BookMenu = require("api.gui.menu.BookMenu")
-            BookMenu:new("text", true):query()
+            BookMenu:new(text, true):query()
             return false
             -- >>>>>>>> shade2/proc.hsp:1254 	item_identify ci,knownName ..
         end,
@@ -768,7 +779,11 @@ local item =
         on_init_params = function(self)
             -- >>>>>>>> shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
             if not self.params.book_id then
-                self.params.book_id = 1 -- TODO book
+               local cands = data["elona.book"]:iter()
+                  :filter(function(book) return book.is_randomly_generated end)
+                  :extract("_id")
+                  :to_list()
+               self.params.book_id = Rand.choice(cands)
             end
             -- <<<<<<<< shade2/item.hsp:618 	if iId(ci)=idBook	:if iBookId(ci)=0:iBookId(ci)=i ..
         end,
@@ -8885,9 +8900,7 @@ local item =
         subcategory = 58500,
         coefficient = 100,
 
-        _copy = {
-            params = { food_quality = 1, seed_material = 36 },
-        },
+        params = { food_quality = 1, seed_plant_id = "elona.vegetable" },
 
         gods = { "elona.kumiromi" },
 
@@ -8910,7 +8923,7 @@ local item =
         rarity = 800000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 37 },
+        params = { food_quality = 1, seed_plant_id = "elona.fruit" },
 
         gods = { "elona.kumiromi" },
 
@@ -8933,7 +8946,7 @@ local item =
         rarity = 100000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 38 },
+        params = { food_quality = 1, seed_plant_id = "elona.herb" },
 
         gods = { "elona.kumiromi" },
 
@@ -8959,7 +8972,7 @@ local item =
             color = Resolver.make("elona.furniture_color"),
         },
 
-        params = { food_quality = 1, seed_material = 39 },
+        params = { food_quality = 1, seed_plant_id = "elona.unknown" },
 
         gods = { "elona.kumiromi" },
 
@@ -8980,7 +8993,7 @@ local item =
         rarity = 20000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 40 },
+        params = { food_quality = 1, seed_plant_id = "elona.artifact" },
 
         gods = { "elona.kumiromi" },
 
@@ -10096,7 +10109,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10116,7 +10129,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10136,7 +10149,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10156,7 +10169,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         tags = { "fest" },
         categories = {
             "elona.equip_neck_armor",
@@ -10177,7 +10190,7 @@ local item =
         equip_slots = { "elona.neck" },
         subcategory = 34001,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -10196,7 +10209,7 @@ local item =
         subcategory = 34001,
         rarity = 800000,
         coefficient = 100,
-        has_random_name = true,
+        has_random_name = "ring",
         categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
@@ -11323,8 +11336,8 @@ local item =
         image = "elona.item_deed",
         value = 140000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11332,6 +11345,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         param1 = 1,
 
@@ -11341,6 +11355,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.museum", "item.info.elona.deed_of_museum.building_name")
+            },
         }
     },
     {
@@ -11349,8 +11372,8 @@ local item =
         image = "elona.item_deed",
         value = 200000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11358,6 +11381,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         param1 = 1,
 
@@ -11367,6 +11391,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.shop", "item.info.elona.deed_of_shop.building_name")
+            },
         }
     },
     {
@@ -11711,8 +11744,8 @@ local item =
         image = "elona.item_deed",
         value = 45000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11720,6 +11753,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 225, 225, 255 },
 
@@ -11727,6 +11761,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.crop", "item.info.elona.deed_of_farm.building_name")
+            },
         }
     },
     {
@@ -11735,8 +11778,8 @@ local item =
         image = "elona.item_deed",
         value = 10000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -11744,6 +11787,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 255, 225, 225 },
 
@@ -11751,6 +11795,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.storage", "item.info.elona.deed_of_storage_house.building_name")
+            },
         }
     },
     {
@@ -12010,7 +12063,7 @@ local item =
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 41 },
+        params = { food_quality = 1, seed_plant_id = "elona.gem" },
 
         gods = { "elona.kumiromi" },
 
@@ -12033,7 +12086,7 @@ local item =
         rarity = 250000,
         coefficient = 100,
 
-        params = { food_quality = 1, seed_material = 42 },
+        params = { food_quality = 1, seed_plant_id = "elona.staff" },
 
         gods = { "elona.kumiromi" },
 
@@ -12517,7 +12570,7 @@ local item =
         value = 80000,
         weight = 500,
         on_read = function(self)
-            return Effect.create_new_building(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -12525,6 +12578,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 235, 215, 155 },
 
@@ -12532,6 +12586,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.ranch", "item.info.elona.deed_of_ranch.building_name")
+            },
         }
     },
     {
@@ -15088,13 +15151,6 @@ local item =
         rarity = 5000000,
         coefficient = 0,
 
-        _copy = {
-            on_init_params = function(self)
-                self.charges = 2 + Rand.rnd(2) - Rand.rnd(2)
-            end,
-            has_charge = true,
-        },
-
         params = {
             ancient_book_difficulty = 0,
             ancient_book_is_decoded = false,
@@ -15690,8 +15746,8 @@ local item =
         image = "elona.item_deed",
         value = 500000,
         weight = 500,
-        on_read = function()
-            return Effect.create_new_building(self)
+        on_read = function(self)
+            return Building.query_build(self)
         end,
         fltselect = 1,
         category = 53000,
@@ -15699,6 +15755,7 @@ local item =
         rarity = 1000,
         coefficient = 100,
         originalnameref2 = "deed",
+        can_read_in_world_map = true,
 
         color = { 175, 175, 255 },
 
@@ -15706,6 +15763,15 @@ local item =
             "elona.scroll",
             "elona.scroll_deed",
             "elona.no_generate"
+        },
+
+        events = {
+            {
+                id = "elona.on_deed_use",
+                name = "Create building",
+
+                callback = deed_callback("elona.dungeon", "item.info.elona.deed_of_.building_name")
+            },
         }
     },
     {

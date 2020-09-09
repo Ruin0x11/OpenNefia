@@ -6,7 +6,7 @@ function Compat.convert_122_id(_type, elona_id)
       return it._id
    end
 
-   return nil
+   return nil, ("Cannot find entry of type '%s' with elona_id '%s'"):format(_type, elona_id)
 end
 
 function Compat.convert_122_ids(_type, ids)

@@ -12,8 +12,7 @@ data:add {
    end
 }
 function test_area_autogenerate()
-   local area = InstancedArea:new()
-   area:set_archetype("base.test")
+   local area = InstancedArea:new("base.test")
    local ok, map = assert(area:load_or_generate_floor(1))
    Test.assert_eq(Area.for_map(map), area)
 end

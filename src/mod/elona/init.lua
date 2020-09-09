@@ -7,6 +7,9 @@ require("mod.elona.events")
 local Gui = require("api.Gui")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
 
+-- "none", "could_not_sell", "all"
+config["elona.hide_shop_results"] = "none"
+
 Gui.bind_keys {
    quick_inv = function(_, me)
       return ElonaCommand.quick_inv(me)

@@ -7,6 +7,7 @@ local Enum = require("api.Enum")
 local Util = require("mod.elona_sys.api.Util")
 local Resolver = require("api.Resolver")
 local Area = require("api.Area")
+local Const = require("api.Const")
 
 local Calc = {}
 
@@ -264,6 +265,31 @@ function Calc.calc_trainer_skills(trainer, player)
       :to_list()
 
    return skills
+end
+
+function Calc.calc_tax_multiplier(player)
+   -- >>>>>>>> shade2/calculation.hsp:710 #define calcAccountant 	cost=cost * limit(100-limi ..
+   local karma = player:calc("karma")
+   local tax_trait_level = player:trait_level("elona.tax")
+   return math.clamp(100 - math.clamp(karma/2, 0, 50) - (7 * tax_trait_level) - (((karma >= Const.KARMA_GOOD) and 5) or 0), 25, 200) / 100
+   -- <<<<<<<< shade2/calculation.hsp:710 #define calcAccountant 	cost=cost * limit(100-limi ..
+end
+
+function Calc.calc_building_taxes(player)
+   local cost = 0
+
+   cost = cost + save.elona.home_rank ^ 2 * 200
+   for _, building in ipairs(save.elona.player_owned_buildings) do
+      cost = cost + building.tax_cost
+   end
+
+   cost = cost * Calc.calc_tax_multiplier(player)
+
+   return cost
+end
+
+function Calc.calc_living_weapon_required_exp(level)
+   return level * 100
 end
 
 return Calc

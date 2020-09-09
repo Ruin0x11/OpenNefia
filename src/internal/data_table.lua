@@ -145,6 +145,25 @@ local function is_valid_ident(name)
    return string.match(name, "^[_a-z][_a-z0-9]*$")
 end
 
+local function make_fallbacks(fallbacks, fields)
+   local result = table.deepcopy(fallbacks)
+   for _, field in ipairs(fields) do
+      local default = field.default
+      if type(field.default) == "table" then
+         local mt = getmetatable(field.default)
+         if mt then
+            if mt.__codegen_type == "block_string" then
+               default = field.default[1]
+            elseif mt.__codegen_type == "literal" then
+               default = nil
+            end
+         end
+      end
+      result[field.name] = default
+   end
+   return result
+end
+
 function data_table:add_type(schema, params)
    schema.fields = schema.fields or {}
    schema.fallbacks = schema.fallbacks or {}
@@ -176,10 +195,7 @@ function data_table:add_type(schema, params)
       end
       table.replace_with(self.schemas[_type], schema)
 
-      local fallbacks = table.deepcopy(schema.fallbacks)
-      for _, field in ipairs(schema.fields) do
-         fallbacks[field.name] = field.default
-      end
+      local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
       self.fallbacks[_type] = fallbacks
       return
    end
@@ -211,10 +227,7 @@ function data_table:add_type(schema, params)
 
    self.global_edits[_type] = EventTree:new()
 
-   local fallbacks = table.deepcopy(schema.fallbacks)
-   for _, field in ipairs(schema.fields) do
-      fallbacks[field.name] = field.default
-   end
+   local fallbacks = make_fallbacks(schema.fallbacks, schema.fields)
    self.fallbacks[_type] = fallbacks
 end
 
@@ -457,7 +470,7 @@ function data_table:make_template(_type, opts)
          for _, field in ipairs(self.schemas[_type].fields) do
             local do_comment = true
             local do_write = pred(field) and opts.scope == "optional_commented"
-                and not field.default and not field.template
+               and not field.default and not field.template
             if do_write then
                if first then
                   gen:tabify()
@@ -640,19 +653,19 @@ function proxy:print()
 end
 
 function data_table:__index(k)
-    -- This always returns a table instead of nil so
-    -- that references to data type tables can be
-    -- populated later, after mods have finished
-    -- loading. As an example, if this returned nil if
-    -- a type was nonexistent, it would be necessary to
-    -- initialize things like the sound manager only
-    -- after mods have been loaded.
-    if data_table[k] then return data_table[k] end
-    if self.proxy_cache[k] then
-       return self.proxy_cache[k]
-    end
-    self.proxy_cache[k] = proxy:new(k, self)
-    return self.proxy_cache[k]
+   -- This always returns a table instead of nil so
+   -- that references to data type tables can be
+   -- populated later, after mods have finished
+   -- loading. As an example, if this returned nil if
+   -- a type was nonexistent, it would be necessary to
+   -- initialize things like the sound manager only
+   -- after mods have been loaded.
+   if data_table[k] then return data_table[k] end
+   if self.proxy_cache[k] then
+      return self.proxy_cache[k]
+   end
+   self.proxy_cache[k] = proxy:new(k, self)
+   return self.proxy_cache[k]
 end
 
 function data_table:__newindex(k, v)

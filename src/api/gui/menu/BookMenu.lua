@@ -69,18 +69,18 @@ end
 function BookMenu:make_keymap()
    return {
       escape = function() self.canceled = true end,
-      shift = function() self.canceled = true end,
-      left = function()
+      cancel = function() self.canceled = true end,
+      west = function()
          if self:previous_page() then
             Gui.play_sound("base.card1")
          end
       end,
-      right = function()
+      east = function()
          if self:next_page() then
             Gui.play_sound("base.card1")
          end
       end,
-      ["return"] = function() self.canceled = true end
+      enter = function() self.canceled = true end
    }
 end
 
