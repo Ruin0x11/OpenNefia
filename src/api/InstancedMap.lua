@@ -1,6 +1,8 @@
 local data = require("internal.data")
 local multi_pool = require("internal.multi_pool")
 local save = require("internal.global.save")
+local IModDataHolder = require("api.IModDataHolder")
+local ModExtTable = require("api.ModExtTable")
 
 local Pos = require("api.Pos")
 local IEventEmitter = require("api.IEventEmitter")
@@ -10,7 +12,12 @@ local ILocation = require("api.ILocation")
 local ITypedLocation = require("api.ITypedLocation")
 local I18N = require("api.I18N")
 
-local InstancedMap = class.class("InstancedMap", { ITypedLocation, IModdable, IEventEmitter })
+local InstancedMap = class.class("InstancedMap", {
+                                    ITypedLocation,
+                                    IModdable,
+                                    IEventEmitter,
+                                    IModDataHolder
+                                                 })
 
 local fov_cache = {}
 
@@ -108,6 +115,8 @@ function InstancedMap:init(width, height, uids, tile)
    -- Map to travel to when exiting this map from the edge. Set when entering a
    -- map from the world map or similar.
    self._previous_map = nil
+
+   self._mod_data = ModExtTable:new()
 
    self.default_tile = "base.floor"
    self.name = I18N.get("map.default_name")
@@ -703,5 +712,8 @@ end
 function InstancedMap:can_take_object(obj)
    return true
 end
+
+
+InstancedMap:delegate("_mod_data", IModDataHolder)
 
 return InstancedMap

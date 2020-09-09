@@ -329,13 +329,13 @@ local function do_sleep(chara, _, result)
       return
    end
 
-   chara:current_map():mod("is_town", true)
-   if chara:current_map():calc("is_town") then
+   if chara:current_map():has_type {"elona.town", "elona.guild"} then
       local hour = save.base.date.hour
       if hour >= 22 or hour < 7 then
-         -- TODO has activity
-         if Rand.one_in(100) then
-            chara:apply_effect("elona.sleep", 4000)
+         if not chara:has_activity() then
+            if Rand.one_in(100) then
+               chara:apply_effect("elona.sleep", 4000)
+            end
          end
       end
    end

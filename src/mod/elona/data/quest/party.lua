@@ -1,5 +1,35 @@
 local Chara = require("api.Chara")
 local Rand = require("api.Rand")
+local Quest = require("mod.elona_sys.api.Quest")
+local Map = require("api.Map")
+local QuestMap = require("mod.elona.api.QuestMap")
+
+local map_party = {
+   _type = "base.map_archetype",
+   _id = "quest_party",
+
+   properties = {
+      types = { "temporary" },
+      tileset = "elona.castle",
+      level = 1,
+      is_indoor = false,
+      max_crowd_density = 0,
+      default_ai_calm = 0,
+      shows_floor_count_in_name = true,
+      prevents_building_shelter = true
+   }
+}
+
+-- >>>>>>>> elona122/shade2/map_rand.hsp:676 	gLevelStartOn=mStartSpec ..
+function map_party.starting_pos(map, chara)
+   return {
+      x = Rand.rnd(map:width()  / 3)  + map:width()  / 3,
+      y = Rand.rnd(map:height() / 3)  + map:height() / 3
+   }
+end
+-- <<<<<<<< elona122/shade2/map_rand.hsp:678 	map_placePlayer	 ..
+
+data:add(map_party)
 
 local party = {
    _id = "party",
@@ -13,7 +43,7 @@ local party = {
 
    min_fame = 0,
    chance = function(client, town)
-      if town.gen_id == "elona.palmia" then
+      if town._archetype == "elona.palmia" then
          return 8
       end
 
@@ -44,4 +74,47 @@ function party.generate(self, client)
    return true
 end
 
--- data:add(party)
+function party.on_accept(self)
+   return true, "elona.quest_party:accept"
+end
+
+function party.on_complete()
+   return "quest.elona.party.dialog.complete"
+end
+
+data:add(party)
+
+---
+--- Dialog
+---
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_party",
+
+   nodes = {
+      accept = {
+         text = "quest.elona.party.dialog.accept",
+         on_finish = function(t)
+            local party_map = QuestMap.generate_party()
+            local current_map = t.speaker:current_map()
+            local player = Chara.player()
+            party_map:set_previous_map_and_location(current_map, player.x, player.y)
+
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+
+            local ext = party_map:get_mod_data("elona")
+            ext.immediate_quest = quest
+            ext.time_limit = 60
+            ext.time_limit_notice_interval = 9999
+
+            Map.travel_to(party_map)
+         end
+      },
+      complete = {
+         text = "quest.elona.party.dialog.complete",
+         jump_to = "elona.default:__start"
+      }
+   }
+}

@@ -10,3 +10,4 @@ TAGS
 /editor/vscode/out
 /editor/vscode/node_modules
 /editor/vscode/.vscode-test/
+.DS_Store
