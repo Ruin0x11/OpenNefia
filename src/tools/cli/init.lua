@@ -30,6 +30,7 @@ local function build_app()
    local run_command = parser:command("run", "Runs the game.")
 
    local verify_command = parser:command("verify", "Ensures the environment can initialize properly.")
+   verify_command:flag("-l --load-game", "Load the full game when verifying.")
    -- local gen_command = parser:command("gen", "Generate a Lua file for one or more tl script.")
    -- gen_command:argument("script", "The tl script."):args("+")
    -- gen_command:option("-o --output", "Write to <filename> instead.")

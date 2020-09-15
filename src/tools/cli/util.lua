@@ -6,7 +6,7 @@ local Log = require("api.Log")
 local util = {}
 
 function util.load_game()
-   Log.info("Attempting to load game headlessly.")
+   Log.info("Attempting to start the game headlessly.")
 
    field.is_active = false
    field_logic.quickstart()

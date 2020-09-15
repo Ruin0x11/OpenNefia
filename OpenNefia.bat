@@ -15,7 +15,7 @@ rem ordered first to avoid missing entry point errors
 set PATH=%cd%\lib\luajit-2.0;%cd%\lib\luautf8;%cd%\lib\libvips;%PATH%
 
 pushd src
-luajit opennefia.lua --working-dir "src/" "$@"
+luajit opennefia.lua --working-dir "src/" %*
 popd
 
 :end
