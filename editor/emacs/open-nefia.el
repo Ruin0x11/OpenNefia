@@ -849,8 +849,8 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
-         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat repl" "./OpenNefia repl"))
-         (cmd (format "%s batch %s" script path))
+         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+         (cmd (format "%s exec %s" script path))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 

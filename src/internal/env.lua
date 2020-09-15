@@ -46,6 +46,7 @@ local SANDBOX_GLOBALS = {
    "type",
    "unpack",
    "xpcall",
+   "collectgarbage",
 
    -- Lua stdlib
    "table",

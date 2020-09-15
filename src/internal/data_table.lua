@@ -351,6 +351,8 @@ function data_table:add(dat)
 
    local full_id = mod_name .. "." .. _id
 
+   Log.debug("Adding data entry %s:%s", _type, full_id)
+
    if self.inner[_type][full_id] ~= nil then
       if env.is_hotloading() then
          Log.debug("In-place update of %s:%s", _type, full_id)
