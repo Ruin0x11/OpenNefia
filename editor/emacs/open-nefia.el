@@ -764,8 +764,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defvar open-nefia--repl-errors-buffer "*open-nefia-repl-errors*")
 (defvar open-nefia--repl-name "open-nefia-repl")
-(defvar open-nefia--repl-entrypoint "src/repl.lua")
-(defvar open-nefia--test-entrypoint "src/test/main.lua")
+(defvar open-nefia--repl-entrypoint "src/opennefia.lua")
 
 (defun open-nefia--repl-file (file)
   (string-join (list (projectile-project-root) file)))
@@ -776,7 +775,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
     (apply 'call-process "luajit" nil
            (current-buffer)
            nil
-           (list (open-nefia--repl-file file) "test"))))
+           (list (open-nefia--repl-file file) "verify"))))
 
 (defun open-nefia--repl-buffer ()
   (get-buffer (string-join (list "*" open-nefia--repl-name "*"))))
@@ -811,13 +810,13 @@ removed.  Return the new string.  If STRING is nil, return nil."
 
 (defun open-nefia-start-repl (&optional arg)
   (interactive "P")
-  (open-nefia--start-repl-1 open-nefia--repl-entrypoint))
+  (open-nefia--start-repl-1 open-nefia--repl-entrypoint "repl"))
 
 (defun open-nefia-run-tests (&optional arg)
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1 open-nefia--test-entrypoint))
+  (open-nefia--start-repl-1 open-nefia--repl-entrypoint "test"))
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
@@ -850,7 +849,7 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
-         (script (if (eq system-type 'windows-nt) "./OpenNefia_REPL.bat" "./OpenNefia_REPL"))
+         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat repl" "./OpenNefia repl"))
          (cmd (format "%s batch %s" script path))
          (default-directory (projectile-project-root)))
     (compile cmd)))

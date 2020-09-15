@@ -26,14 +26,25 @@ end
 if not love or love.getVersion() == "lovemock" then
    local ok, lfs = pcall(require, "lfs")
    assert(ok, "luafilesystem not installed")
-   fs.get_directory_items = function(dir)
+   fs.get_directory_items = function(dir, recursive)
       dir = fs.to_relative(dir)
       local items = {}
-      for path in lfs.dir(dir) do
-         if path ~= "." and path ~= ".." then
-            items[#items+1] = path
+
+      local function get_paths(dir, rest)
+         for path in lfs.dir(dir) do
+            if path ~= "." and path ~= ".." then
+               local child_path = fs.join(dir, path)
+               local child_path_rel = fs.join(rest, path)
+               items[#items+1] = child_path_rel
+               if recursive and fs.is_directory(child_path) then
+                  get_paths(child_path, child_path_rel)
+               end
+            end
          end
       end
+
+      get_paths(dir, "")
+
       return items
    end
    fs.get_info = function(path)
@@ -96,7 +107,22 @@ if not love or love.getVersion() == "lovemock" then
 
    fs.attributes = lfs.attributes
 else
-   fs.get_directory_items = wrap(love.filesystem.getDirectoryItems)
+   fs.get_directory_items = function(path, recursive)
+      local items = {}
+      local function get_paths(dir)
+         for _, item in ipairs(love.filesystem.getDirectoryItems(dir)) do
+            items[#items+1] = item
+            local child_path = fs.join(dir, item)
+            if recursive and fs.is_directory(child_path) then
+               get_paths(child_path, items)
+            end
+         end
+      end
+
+      get_paths(fs.to_relative(path))
+
+      return items
+   end
    fs.get_info = wrap(love.filesystem.getInfo)
    fs.get_save_directory = love.filesystem.getSaveDirectory
    fs.create_directory = wrap(love.filesystem.createDirectory)
@@ -104,19 +130,19 @@ else
    fs.read = wrap(love.filesystem.read)
    fs.remove = function(path)
       local function recursively_delete(item)
-         if fs.get_info(item, "directory") then
-             for _, child in pairs(fs.get_directory_items(item)) do
-                 local child_path = fs.join(item, child)
-                 recursively_delete(child_path)
-                 love.filesystem.remove(child_path)
-             end
+         if fs.is_directory(item) then
+            for _, child in pairs(fs.get_directory_items(item)) do
+               local child_path = fs.join(item, child)
+               recursively_delete(child_path)
+               love.filesystem.remove(child_path)
+            end
          elseif fs.get_info(item) then
             love.filesystem.remove(item)
          end
          love.filesystem.remove(item)
-     end
-     recursively_delete(fs.to_relative(path))
-     return true
+      end
+      recursively_delete(fs.to_relative(path))
+      return true
    end
    fs.get_working_directory = love.filesystem.getWorkingDirectory
 
@@ -142,14 +168,37 @@ else
    end
 end
 
-function fs.to_relative(filepath)
+function fs.to_relative(filepath, parent)
+   parent = fs.normalize(parent or fs.get_working_directory())
    filepath = fs.normalize(filepath)
-   filepath = string.strip_prefix(filepath, fs.get_working_directory() .. "/")
+   filepath = string.strip_prefix(filepath, parent .. "/")
    return filepath
 end
 
-function fs.iter_directory_items(dir)
-   return ipairs(fs.get_directory_items(dir))
+function fs.iter_directory_items(dir, recursive)
+   return ipairs(fs.get_directory_items(dir, recursive))
+end
+
+local function iter_paths(state, index)
+   if index > #state.dirs then
+      return nil
+   end
+
+   local path
+   repeat
+      path = fs.join(state.base, state.dirs[index])
+      index = index + 1
+   until index > #state.dirs or fs.is_file(path)
+
+   if index > #state.dirs + 1 then
+      return nil
+   end
+
+   return index, path
+end
+
+function fs.iter_directory_paths(dir, recursive)
+   return iter_paths, {dirs=fs.get_directory_items(dir, recursive), base=dir}, 1
 end
 
 function fs.exists(path)

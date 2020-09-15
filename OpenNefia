@@ -8,6 +8,6 @@ fi
 ./runtime/commit_hash
 
 export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-pushd $DIR/src
-love .
-popd
+pushd $DIR/src > /dev/null
+luajit opennefia.lua --working-dir "src/" "$@"
+popd > /dev/null

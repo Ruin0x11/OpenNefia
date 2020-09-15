@@ -238,8 +238,15 @@ end
 function data_table:extend_type(type_id, delta)
 end
 
+-- Apply data edits.
+--
+-- This system is here for mods that modify existing data added by other mods in
+-- a nondestructive manner. It takes the original copy of the data and applies a
+-- sequence of edits to produce new values. That way, if anything in the chain
+-- of edits is changed with a hotload, the entire process can be repeated from
+-- scratch without a program restart.
 function data_table:run_all_edits()
-   Log.info("Running all data edits.")
+   Log.debug("Running all data edits.")
    for _type, tree in pairs(self.global_edits) do
       for k, v in self[_type]:iter() do
          -- TODO: store base separately

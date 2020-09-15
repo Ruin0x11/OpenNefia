@@ -12,10 +12,10 @@ if not exist src\\deps\\elona (
 
 rem LuaJIT ffi bindings depend on PATH; ensure versioned libs are
 rem ordered first to avoid missing entry point errors
-set PATH=%cd%\lib\luautf8;%cd%\lib\libvips;%PATH%
+set PATH=%cd%\lib\luajit-2.0;%cd%\lib\luautf8;%cd%\lib\libvips;%PATH%
 
 pushd src
-"%programfiles%\LOVE\love.exe" --console .
+luajit opennefia.lua --working-dir "src/" "$@"
 popd
 
 :end

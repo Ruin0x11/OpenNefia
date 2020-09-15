@@ -658,6 +658,7 @@ end
 function Parser:command(...)
    local command = Command():add_help(true)(...)
    command._parent = self
+   command._command_target = self._command_target
    table.insert(self._commands, command)
    return command
 end
@@ -1908,6 +1909,16 @@ function ParseState:invoke(option, name)
    end
 end
 
+local function build_command_target(command)
+   local target = command._target or command._name
+   local parent = command._parent
+   while parent and parent._parent do
+      target = (parent._target or parent._name) .. "." .. target
+      parent = parent._parent
+   end
+   return target
+end
+
 function ParseState:pass(arg)
    if self.option then
       if not self.option:pass(arg) then
@@ -1922,10 +1933,12 @@ function ParseState:pass(arg)
       end
    else
       local command = self:get_command(arg)
-      self.result[command._target or command._name] = true
+      if #command._commands == 0 then
+         self.result[command._target or build_command_target(command)] = true
+      end
 
       if self.parser._command_target then
-         self.result[self.parser._command_target] = command._name
+         self.result[self.parser._command_target] = build_command_target(command)
       end
 
       self:switch(command)

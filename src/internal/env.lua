@@ -407,7 +407,7 @@ local function gen_require(chunk_loader, can_load_path)
       if type(package.loaded[req_path]) == "table"
          and type(result) == "table"
       then
-         Log.info("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
+         Log.debug("Hotload: %s %s <- %s", req_path, string.tostring_raw(package.loaded[req_path]), string.tostring_raw(result))
          if Log.has_level("trace") then
             Log.trace("\n%s\n========\n%s",
                       inspect(package.loaded[req_path], {override_mt = true}),
