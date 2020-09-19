@@ -415,7 +415,7 @@ end
 --- @tparam[opt] int y
 --- @tparam[opt] int channel
 function Gui.play_sound(sound_id, x, y, channel)
-   local sound_manager = require("internal.global.sound_manager")
+   local sound_manager = require("internal.global.global_sound_manager")
    local coords = draw.get_coords()
 
    if config["base.positional_audio"] and x ~= nil and y ~= nil then
@@ -431,7 +431,7 @@ end
 --- @tparam id:base.sound sound_id
 --- @see Gui.stop_background_sound
 function Gui.play_background_sound(sound_id)
-   local sound_manager = require("internal.global.sound_manager")
+   local sound_manager = require("internal.global.global_sound_manager")
 
    sound_manager:play_looping(sound_id)
 end
@@ -442,7 +442,7 @@ end
 --- @tparam id:base.sound sound_id
 --- @see Gui.play_background_sound
 function Gui.stop_background_sound(sound_id)
-   local sound_manager = require("internal.global.sound_manager")
+   local sound_manager = require("internal.global.global_sound_manager")
 
    sound_manager:stop_looping(sound_id)
 end
@@ -451,7 +451,7 @@ end
 ---
 --- @tparam id:base.music music_id
 function Gui.play_music(music_id)
-   local sound_manager = require("internal.global.sound_manager")
+   local sound_manager = require("internal.global.global_sound_manager")
 
    if not config["base.play_music"] then
       sound_manager:stop_music()
@@ -463,7 +463,7 @@ end
 
 --- Stops the currently playing music.
 function Gui.stop_music()
-   local sound_manager = require("internal.global.sound_manager")
+   local sound_manager = require("internal.global.global_sound_manager")
 
    sound_manager:stop_music()
 end

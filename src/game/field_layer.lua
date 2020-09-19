@@ -28,7 +28,7 @@ function field_layer:init()
    self.map_changed = false
    self.no_scroll = true
    self.waiting_for_draw_callbacks = false
-   self.sound_manager = require("internal.global.sound_manager")
+   self.sound_manager = require("internal.global.global_sound_manager")
    self.draw_callbacks = draw_callbacks:new()
 
    local keys = KeyHandler:new(true)

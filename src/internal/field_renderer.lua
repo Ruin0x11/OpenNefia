@@ -1,7 +1,7 @@
 local Draw = require("api.Draw")
 local Log = require("api.Log")
 
-local sound_manager = require("internal.global.sound_manager")
+local sound_manager = require("internal.global.global_sound_manager")
 
 local field_renderer = class.class("field_renderer")
 

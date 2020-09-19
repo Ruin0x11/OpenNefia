@@ -239,7 +239,7 @@ end
 function theme.reload_all(log_cb)
    log_cb = log_cb or Log.info
 
-   Log.info("Reloading theme.")
+   Log.debug("Reloading theme.")
 
    bmp_convert.clear_cache()
 
@@ -252,23 +252,23 @@ function theme.reload_all(log_cb)
 
    log_cb("Loading tilemaps (tile)...")
    local tile_atlas = theme.load_tilemap_tile(map_tiles)
-   Log.info("%s", sw:measure_and_format("Load tilemap: tile"))
+   Log.debug("%s", sw:measure_and_format("Load tilemap: tile"))
 
    log_cb("Loading tilemaps (overhang)...")
    local tile_overhang_atlas = theme.load_tilemap_tile_overhang(map_tiles)
-   Log.info("%s", sw:measure_and_format("Load tilemap: overhang"))
+   Log.debug("%s", sw:measure_and_format("Load tilemap: overhang"))
 
    log_cb("Loading tilemaps (item shadow)...")
    local item_shadow_atlas = theme.load_tilemap_item_shadow(chip_tiles)
-   Log.info("%s", sw:measure_and_format("Load tilemap: item shadow"))
+   Log.debug("%s", sw:measure_and_format("Load tilemap: item shadow"))
 
    log_cb("Loading tilemaps (chip)...")
    local chip_atlas = theme.load_tilemap_chip(chip_tiles)
-   Log.info("%s", sw:measure_and_format("Load tilemap: chip"))
+   Log.debug("%s", sw:measure_and_format("Load tilemap: chip"))
 
    log_cb("Loading tilemaps (portrait)...")
    local portrait_atlas = theme.load_tilemap_portrait(portrait_tiles)
-   Log.info("%s", sw:measure_and_format("Load tilemap: portrait"))
+   Log.debug("%s", sw:measure_and_format("Load tilemap: portrait"))
 
    local atlases = require("internal.global.atlases")
    atlases.set(tile_atlas,
