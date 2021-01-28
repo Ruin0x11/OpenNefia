@@ -82,15 +82,45 @@ end
 
 function Area.parent(map_or_area)
    local area = get_area(map_or_area)
-   if area == nil or area.parent_area == nil then
+   if area == nil or area.parent_area == nil or area.parent_area == "root" then
       return nil
    end
    return Area.get(area.parent_area)
 end
 
+function Area.get_root_area(map_or_area)
+   local area = get_area(map_or_area)
+   while area do
+      if area.parent_area == nil then
+         return area
+      end
+      area = Area.parent(area)
+   end
+   return nil
+end
+
 function Area.iter_children(map_or_area)
    local area = get_area(map_or_area)
    return Area.iter():filter(function(uid, a) return a.parent_area == area.uid end)
+end
+
+function Area.iter_all_contained_in(map_or_area)
+   local area = get_area(map_or_area)
+   local found = table.set {}
+   local stack = {area}
+   local result = {}
+   while #stack > 0 do
+      local area = stack[#stack]
+      stack[#stack] = nil
+      if not found[area] then
+         result[#result+1] = area
+         found[area] = true
+         for _, child in Area.iter_children(area) do
+            stack[#stack+1] = Area.get(child)
+         end
+      end
+   end
+   return fun.iter(result):map(function(a) return a.uid, a end)
 end
 
 function Area.for_map(map_or_uid)
@@ -163,8 +193,6 @@ function Area.register(area, opts)
    -- end
 
    areas[area.uid] = area
-
-   area.metadata.can_return_to = true
 end
 
 function Area.create_entrance(area, map_or_floor_number, x, y, params, map)

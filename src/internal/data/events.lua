@@ -126,5 +126,6 @@ data:add_multi(
       { _id = "on_initialize_player" },
       { _id = "on_finalize_player" },
       { _id = "on_drop_item" },
+      { _id = "on_player_death" },
    }
 )

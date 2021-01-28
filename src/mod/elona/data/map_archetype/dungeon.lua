@@ -24,7 +24,6 @@ do
          is_indoor = true,
          has_anchored_npcs = true,
          default_ai_calm = 0,
-         can_return_to = true,
          shows_floor_count_in_name = true,
       }
    }
@@ -54,6 +53,10 @@ do
       image = "elona.feat_area_lesimas",
 
       deepest_floor = 45,
+
+      metadata = {
+         can_return_to = true
+      },
 
       parent_area = {
          _id = "elona.north_tyris",
@@ -127,7 +130,6 @@ do
          types = { "dungeon" },
          is_indoor = true,
          default_ai_calm = 0,
-         can_return_to = true,
          prevents_domination = true,
       }
    }
@@ -149,6 +151,10 @@ do
       _id = "the_void",
 
       image = "elona.feat_area_lesimas",
+
+      metadata = {
+         can_return_to = true
+      },
 
       parent_area = {
          _id = "elona.north_tyris",

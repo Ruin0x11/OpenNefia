@@ -596,7 +596,6 @@ do
          is_indoor = false,
          has_anchored_npcs = true,
          default_ai_calm = 1,
-         can_return_to = true,
          villagers_make_snowmen = true,
          max_crowd_density = 0,
          is_hidden_in_world_map = true
@@ -637,6 +636,10 @@ do
 
       floors = {
          [1] = "elona.mansion_of_younger_sister"
+      },
+
+      metadata = {
+         can_return_to = true,
       },
 
       parent_area = {
@@ -751,7 +754,6 @@ do
          is_indoor = false,
          has_anchored_npcs = true,
          default_ai_calm = 1,
-         can_return_to = true,
          max_crowd_density = 20,
       }
    }
@@ -819,6 +821,10 @@ do
 
       floors = {
          [1] = "elona.larna"
+      },
+
+      metadata = {
+         can_return_to = true,
       },
 
       parent_area = {

@@ -647,7 +647,7 @@ function InstancedMap:set_previous_map_and_location(map, x, y)
    }
 end
 
-function InstancedMap:previous_map_and_location(area, floor, x, y)
+function InstancedMap:previous_map_and_location()
    local prev = self._previous_map
    if prev == nil then
       return nil, nil, nil

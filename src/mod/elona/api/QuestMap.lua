@@ -50,6 +50,7 @@ function QuestMap.generate_party(difficulty)
    map:set_archetype("elona.quest_party", { set_properties = true })
    map.is_indoor = true
    map.tileset = "elona.castle"
+   map.types = { "quest" }
 
    local room_count = 80
 

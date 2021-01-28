@@ -37,6 +37,10 @@ function Skill.iter_weapon_proficiencies()
    return data["base.skill"]:iter():filter(function(s) return s.type == "weapon_proficiency" end)
 end
 
+function Skill.iter_spells()
+   return data["base.skill"]:iter():filter(function(s) return s.type == "spell" end)
+end
+
 function Skill.random_stat()
    return Rand.choice(Skill.iter_stats())._id
 end

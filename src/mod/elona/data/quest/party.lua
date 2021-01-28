@@ -3,6 +3,12 @@ local Rand = require("api.Rand")
 local Quest = require("mod.elona_sys.api.Quest")
 local Map = require("api.Map")
 local QuestMap = require("mod.elona.api.QuestMap")
+local Gui = require("api.Gui")
+local Input = require("api.Input")
+local Event = require("api.Event")
+local elona_Quest = require("mod.elona.api.Quest")
+local I18N = require("api.I18N")
+local Item = require("api.Item")
 
 local map_party = {
    _type = "base.map_archetype",
@@ -63,12 +69,44 @@ local party = {
 
    locale_data = function(self)
       return { required_points = self.params.required_points }
+   end,
+
+   on_time_expired = function(self)
+      -- >>>>>>>> shade2/main.hsp:1609 	if gQuest=qPerform{ ..
+      Gui.mes("quest.party.is_over")
+
+      local map = Map.current()
+      local score = elona_Quest.calc_party_score(map)
+      local bonus = elona_Quest.calc_party_score_bonus(map)
+      if bonus > 0 then
+         Gui.mes("quest.party.total_bonus", bonus)
+      end
+      score = math.floor(score * (100+bonus)/100)
+      self.params.current_points = score
+
+      Gui.mes("quest.party.final_score", score)
+      if score >= self.params.required_points then
+         self.state = "completed"
+         Gui.mes_c("quest.party.complete", "Green")
+         Input.query_more()
+      else
+         self.state = "failed"
+         Gui.mes_c("quest.party.fail", "Purple")
+      end
+      -- <<<<<<<< shade2/main.hsp:1623 		} ..
+
+      local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
+      Gui.play_sound("base.exitmap1")
+      Gui.update_screen()
+      local ok, prev_map = assert(Map.load(prev_map_uid))
+      Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
    end
 }
 
 function party.generate(self, client)
    self.params = {
-      required_points = self.difficulty * 10 + Rand.rnd(50)
+      required_points = self.difficulty * 10 + Rand.rnd(50),
+      current_points = 0
    }
 
    return true
@@ -79,7 +117,7 @@ function party.on_accept(self)
 end
 
 function party.on_complete()
-   return "quest.elona.party.dialog.complete"
+   return "elona.quest_party:complete"
 end
 
 data:add(party)
@@ -87,6 +125,10 @@ data:add(party)
 ---
 --- Dialog
 ---
+
+local function is_party_great_success(quest)
+   return quest.params.required_points * 150 / 100 < quest.params.current_points
+end
 
 data:add {
    _type = "elona_sys.dialog",
@@ -96,25 +138,53 @@ data:add {
       accept = {
          text = "quest.elona.party.dialog.accept",
          on_finish = function(t)
-            local party_map = QuestMap.generate_party()
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+
+            local party_map = QuestMap.generate_party(quest.difficulty)
             local current_map = t.speaker:current_map()
             local player = Chara.player()
             party_map:set_previous_map_and_location(current_map, player.x, player.y)
 
-            local quest = Quest.for_client(t.speaker)
-            assert(quest)
-
-            local ext = party_map:get_mod_data("elona")
-            ext.immediate_quest = quest
-            ext.time_limit = 60
-            ext.time_limit_notice_interval = 9999
+            Quest.set_immediate_quest(quest)
+            Quest.set_immediate_quest_time_limit(quest, 60)
 
             Map.travel_to(party_map)
          end
       },
       complete = {
-         text = "quest.elona.party.dialog.complete",
+         text = function(t)
+            local text = I18N.get("quest.giver.complete.done_well", t.speaker)
+
+            -- >>>>>>>> shade2/text.hsp:1253 		if qExist(rq)=qPerform:if qParam1(rq)*150/100<qP ..
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+            if is_party_great_success(quest) then
+               text = text .. I18N.space() .. I18N.get("quest.giver.complete.music_tickets", t.speaker)
+            end
+            -- <<<<<<<< shade2/text.hsp:1253 		if qExist(rq)=qPerform:if qParam1(rq)*150/100<qP ..
+
+            return {text}
+         end,
+         on_start = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+            Quest.complete(quest, t.speaker)
+         end,
          jump_to = "elona.default:__start"
       }
    }
 }
+
+local function add_music_tickets(_, params)
+   local quest = params.quest
+   -- >>>>>>>> shade2/quest.hsp:463 	if qExist(rq)=qPerform:if qParam1(rq)*150/100<qPa ..
+   if is_party_great_success(quest) then
+      local player = Chara.player()
+      local amount = 1 + quest.params.current_points / 10
+      Item.create("elona.music_ticket", player.x, player.y, { amount = amount })
+   end
+   -- <<<<<<<< shade2/quest.hsp:463 	if qExist(rq)=qPerform:if qParam1(rq)*150/100<qPa ..
+end
+
+Event.register("elona_sys.on_quest_completed", "Add music tickets if perform quest score high enough", add_music_tickets)

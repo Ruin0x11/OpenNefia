@@ -72,7 +72,7 @@ end,
       you_have_been_buried = "あなたは埋められた。さようなら…（キーを押すと終了します）",
       you_leave_dying_message = "遺言は？"
     },
-    dungeon_level = "階",
+    dungeon_level = function(_1, _2) return ("%s %s階"):format(_1, ordinal(_2)) end,
     extract_seed = function(_1)
   return ("あなたは%sから種を取り出した。")
   :format(itemname(_1))

@@ -19,6 +19,7 @@ local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Skill = require("mod.elona_sys.api.Skill")
 local I18N = require("api.I18N")
 local Wish = require("mod.elona.api.Wish")
+local Quest = require("mod.elona_sys.api.Quest")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -235,6 +236,16 @@ data:add {
    cast = do_curse
 }
 
+-- >>>>>>>> shade2/command.hsp:4378 *check_return ..
+local function is_non_returnable_quest_active()
+   local pred = function(q)
+      local proto = data["elona_sys.quest"]:ensure(q._id)
+      return q.state == "accepted" and proto.no_return_allowed
+   end
+   return Quest.iter():any(pred)
+end
+-- <<<<<<<< shade2/command.hsp:4384 	return f ..
+
 data:add {
    _id = "spell_return",
    _type = "base.skill",
@@ -270,7 +281,12 @@ data:add {
          Gui.mes("magic.return.cancel")
          s.turns_until_cast_return = 0
       else
-         -- TODO quest
+         if is_non_returnable_quest_active() then
+            Gui.mes("misc.return.forbidden")
+            if not Input.yes_no() then
+               return false
+            end
+         end
 
          local map_uid = Effect.query_return_location(target)
 

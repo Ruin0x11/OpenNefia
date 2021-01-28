@@ -36,7 +36,7 @@ local function on_game_start(self, player)
    local root_area = Area.create_unique("test_room.test_room", "root")
    local _, map = assert(root_area:load_or_generate_floor(1))
 
-   local north_tyris = Area.create_unique("elona.north_tyris", root_area)
+   local north_tyris = Area.create_unique("elona.north_tyris", "root")
    assert(Area.create_entrance(north_tyris, 1, 25, 23, {}, map))
 
    Map.set_map(map)

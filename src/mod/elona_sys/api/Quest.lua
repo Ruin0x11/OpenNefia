@@ -1,4 +1,5 @@
 --- @module Quest
+local Save = require("api.Save")
 
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
@@ -28,6 +29,10 @@ end
 --- @treturn iterator(IQuest)
 function Quest.iter_accepted()
    return Quest.iter():filter(function(q) return q.state ~= "not_accepted" end)
+end
+
+function Quest.get(uid)
+   return fun.iter(save.elona_sys.quest.quests):filter(function(q) return q.uid == uid end):nth(1)
 end
 
 --- Returns the quest this character is giving as a client, if any.
@@ -70,15 +75,23 @@ function Quest.generate_from_proto(proto_id, chara, map)
       return nil, "Character is not a valid quest client."
    end
 
+   local existing_quest = Quest.for_client(uid)
+   if existing_quest then
+      Log.warn("Overwriting quest for client " .. uid .. " as they are already giving one.")
+      assert(table.iremove_value(save.elona_sys.quest.quests, existing_quest))
+   end
+
    local town = save.elona_sys.quest.towns[client.originating_map_uid]
    assert(town)
 
    Log.debug("generate quest ID: '%s'", proto_id)
 
    local quest = {
+      uid = save.elona_sys.quest_uids:get_next_and_increment(),
       _id = "",
       client_chara_type = 0,
       difficulty = 0,
+      -- not_accepted, accepted, failed, completed
       state = "not_accepted",
       expiration_date = 0,
       deadline_days = nil,
@@ -303,6 +316,11 @@ function Quest.iter_clients()
    return fun.wrap(pairs(save.elona_sys.quest.clients))
 end
 
+--- Iterates all potential quest client characters in this map.
+function Quest.iter_clients_in_map(map)
+   return Quest.iter_clients():filter(function(c) return c.originating_map_uid == map.uid end)
+end
+
 --- Iterates all potential quest destinations.
 function Quest.iter_towns()
    return fun.wrap(pairs(save.elona_sys.quest.towns))
@@ -454,7 +472,10 @@ function Quest.update_in_map(map)
       -- Register all characters that can be quest targets.
       for _, chara in Chara.iter_others(map) do
          if chara.quality < 6 and not chara:find_role("elona.special") then
-            Quest.register_client(chara)
+            local ok, err = Quest.register_client(chara)
+            if not ok then
+               Log.debug(err)
+            end
          end
       end
 
@@ -470,17 +491,13 @@ function Quest.update_in_map(map)
       table.remove_indices(save.elona_sys.quest.clients, remove)
 
       -- Generate quests for characters that are not already quest givers.
-      local clients = Quest.iter_clients():filter(function(c) return c.originating_map_uid == map.uid end)
-      for _, client in clients:unwrap() do
+      for _, client in Quest.iter_clients_in_map(map) do
          local quest = Quest.for_client(client)
          local do_generate = quest == nil
             or (World.date():hours() > quest.expiration_date
                    and quest.state == "not_accepted")
          if do_generate then
             if not Rand.one_in(3) then
-               if quest then
-                  assert(table.iremove_value(save.elona_sys.quest.quests, quest))
-               end
                Quest.generate(client.uid, map)
             end
          end
@@ -490,26 +507,21 @@ end
 
 function Quest.complete(quest, client)
    local reward_text = get_reward_text(quest)
-   local text = I18N.get("quest.giver.complete.done_well", client)
+   local next_node = "elona.quest_giver:complete_default"
    if reward_text then
       Gui.mes("quest.giver.complete.take_reward", reward_text, client)
-   end
-
-   local proto = data["elona_sys.quest"]:ensure(quest._id)
-
-   if proto.on_complete then
-      text = proto.on_complete(quest, client, text) or text
    end
 
    Event.trigger("elona_sys.on_quest_completed", {quest=quest, client=client})
 
    table.iremove_value(save.elona_sys.quest.quests, quest)
 
-   Gui.mes_c("quest.completed_taken_from", "Green", client.name)
    Gui.play_sound("base.complete1")
    Gui.update_screen()
 
-   return "elona.default:__start", {text}
+   Save.autosave()
+
+   return next_node
 end
 
 function Quest.fail(quest)
@@ -522,13 +534,44 @@ function Quest.fail(quest)
    table.iremove_value(save.elona_sys.quest.quests, quest)
 end
 
+local function calc_reward_gold(quest)
+   -- >>>>>>>> shade2/quest.hsp:455 	p=qReward(rq)	 ..
+   local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
+   local gold = quest.reward_gold
+
+   if quest_proto.calc_reward_gold then
+      gold = quest_proto.calc_reward_gold(quest, gold)
+   end
+
+   return gold
+   -- <<<<<<<< shade2/quest.hsp:456 	if qExist(rq)=qHarvest:if qParam1(rq)!0:if qParam ..
+end
+
+local function calc_reward_platinum(quest)
+-- >>>>>>>> shade2/quest.hsp:458 	if qExist(rq)=qDeliver : p=rnd(2)+1:else:p=1 ..
+   local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
+   local platinum = 1
+
+   if quest_proto.calc_reward_platinum then
+      platinum = quest_proto.calc_reward_platinum(quest, platinum)
+   end
+
+   return platinum
+   -- <<<<<<<< shade2/quest.hsp:462 	flt:item_create -1,idPlat,cX(pc),cY(pc),p ..
+end
+
+local function calc_reward_item_count(quest)
+   return Rand.rnd(Rand.rnd(4) + 1) + 1
+end
+
 --- @tparam table quest
 --- @tparam[opt] uint gold
 --- @tparam[opt] uint platinum
 --- @tparam[opt] uint item_count
 function Quest.create_rewards(quest, gold, platinum, item_count)
-   gold = gold or quest.reward_gold
-   platinum = platinum or 1
+   -- >>>>>>>> shade2/quest.hsp:453 *quest_success ..
+   local gold = gold or calc_reward_gold(quest)
+   local platinum = platinum or calc_reward_platinum(quest)
 
    local player = Chara.player()
    local map = player:current_map()
@@ -541,7 +584,7 @@ function Quest.create_rewards(quest, gold, platinum, item_count)
    end
 
    if quest.reward then
-      item_count = item_count or Rand.rnd(Rand.rnd(4) + 1) + 1
+      item_count = item_count or calc_reward_item_count(quest)
 
       for _=1, item_count do
          local reward_proto = data["elona_sys.quest_reward"]:ensure(quest.reward._id)
@@ -549,17 +592,35 @@ function Quest.create_rewards(quest, gold, platinum, item_count)
          Itemgen.create(player.x, player.y, filter, map)
       end
    end
+   -- <<<<<<<< shade2/quest.hsp:491 	txtQuestItem ..
+end
 
-   Gui.play_sound("base.complete1")
+function Quest.set_immediate_quest(quest)
+   assert(type(quest) == "table")
+   save.elona_sys.immediate_quest_uid = quest.uid
+end
 
-   Effect.modify_karma(player, 1)
+function Quest.set_immediate_quest_time_limit(quest, limit_mins)
+   assert(type(quest) == "table")
+   assert(save.elona_sys.immediate_quest_uid == quest.uid)
+   save.elona_sys.quest_time_limit = math.max(limit_mins, 0)
+   save.elona_sys.quest_time_limit_notice_interval = math.huge
+end
 
-   local fame_gained = Calc.calc_fame_gained(player, quest.difficulty * 3 + 10)
-   Gui.mes_c("quest.completed_taken_from", "Green", quest.client_name)
-   Gui.mes_c("quest.gain_fame", "Green", fame_gained)
-   player.fame = player.fame + fame_gained
+function Quest.is_in_immediate_quest_map()
+   local player = Chara.player()
+   local map = player:current_map()
+   return map:has_type("quest") and save.elona_sys.immediate_quest_uid
+end
 
-   Gui.mes("common.something_is_put_on_the_ground")
+function Quest.is_immediate_quest_active()
+   if not Quest.is_in_immediate_quest_map() then
+      return false
+   end
+
+   local uid = save.elona_sys.instanced_quest_uid
+   local quest = assert(Quest.get(uid))
+   return quest.state == "accepted"
 end
 
 return Quest

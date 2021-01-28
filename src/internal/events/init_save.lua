@@ -1,7 +1,7 @@
 local Const = require("api.Const")
 local Event = require("api.Event")
 local DateTime = require("api.DateTime")
-local uid_tracker = require("internal.uid_tracker")
+local UidTracker = require("api.UidTracker")
 local Rand = require("api.Rand")
 local save = require("internal.global.save")
 
@@ -13,9 +13,9 @@ local function init_save()
    s.play_days = 0
    s.player = nil
    s.allies = {}
-   s.uids = uid_tracker:new()
-   s.map_uids = uid_tracker:new()
-   s.area_uids = uid_tracker:new()
+   s.uids = UidTracker:new()
+   s.map_uids = UidTracker:new()
+   s.area_uids = UidTracker:new()
    s.random_seed = Rand.rnd(800) + 2
    s.shadow = 70
    s.has_light_source = false

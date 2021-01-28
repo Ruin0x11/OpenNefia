@@ -17,6 +17,7 @@ function InstancedArea:init(archetype_id, area_generator, uids)
    self.parent_area = nil
    self.parent_x = nil
    self.parent_y = nil
+   self.deepest_level_visited = 0
 
    if archetype_id then
       self:set_archetype(archetype_id, { set_properties = true })
@@ -91,8 +92,12 @@ function InstancedArea:iter_maps()
    return fun.iter_pairs(self.maps)
 end
 
-function InstancedArea:iter_maps()
-   return fun.iter_pairs(self.maps)
+function InstancedArea:floor_of_map(map_uid)
+   local pred = function(floor_no, map_meta)
+      return map_meta.uid == map_uid
+   end
+   local floor_no = self:iter_maps():filter(pred):nth(1)
+   return floor_no
 end
 
 function InstancedArea:get_floor(floor)

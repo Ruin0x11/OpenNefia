@@ -443,8 +443,10 @@ data:add {
    end,
 }
 
-local function visit_quest_giver(feat, player, quest)
-   local client = Chara.find(quest.client_uid, "all", feat:current_map())
+local function visit_quest_giver(quest)
+   local player = Chara.player()
+   local map = player:current_map()
+   local client = Chara.find(quest.client_uid, "all", map)
    assert(client)
    Magic.cast("elona.shadow_step", {source=player, target=client})
    if Chara.is_alive(client) then
@@ -475,7 +477,7 @@ data:add {
          return
       end
 
-      return visit_quest_giver(self, params.chara, quest)
+      return visit_quest_giver(quest)
    end,
 }
 

@@ -852,11 +852,19 @@ end
 
 Event.register("base.before_chara_turn_start", "Gain experience", gain_experience_at_turn_start)
 
+local function set_return_restriction(map)
+   if map:has_type("quest") then
+      map.prevents_return = true
+   end
+end
+Event.register("base.on_map_entered_events", "Set return restriction", set_return_restriction)
+
 local function proc_return(chara)
    if not chara:is_player() then
       return
    end
 
+   -- >>>>>>>> shade2/main.hsp:707 		if gReturn!0{ ..
    local s = save.elona
    if s.turns_until_cast_return > 0 then
       s.turns_until_cast_return = s.turns_until_cast_return - 1
@@ -909,6 +917,7 @@ local function proc_return(chara)
          Map.travel_to(new_map)
       end
    end
+   -- <<<<<<<< shade2/main.hsp:732 			} ..
 end
 
 Event.register("base.before_chara_turn_start", "Proc return event", proc_return)

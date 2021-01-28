@@ -34,7 +34,6 @@ local your_home = {
       tileset = "elona.home",
 
       is_fixed = true,
-      can_return_to = false
    }
 }
 
