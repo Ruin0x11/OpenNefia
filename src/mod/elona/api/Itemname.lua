@@ -539,34 +539,34 @@ function itemname.en(item, amount, no_article)
             end
          end
       end
-   end
 
-   local unknown_name = Text.unidentified_item_name(item)
-   if identify == IdentifyState.None then
-      s = s .. unknown_name
-   elseif identify < IdentifyState.Full then
-      if quality < Quality.Great or not elona_Item.is_equipment(item) then
-         s = s .. name
-      else
+      local unknown_name = Text.unidentified_item_name(item)
+      if identify == IdentifyState.None then
          s = s .. unknown_name
-      end
-   else
-      if quality == Quality.Unique or item:calc("is_precious") then
-         s = s .. name
-      else
-         if elona_Item.is_equipment(item) and item.enchant_major_name_id then
-            s = s .. " " .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+      elseif identify < IdentifyState.Full then
+         if quality < Quality.Great or not elona_Item.is_equipment(item) then
+            s = s .. name
+         else
+            s = s .. unknown_name
          end
+      else
+         if quality == Quality.Unique or item:calc("is_precious") then
+            s = s .. name
+         else
+            if elona_Item.is_equipment(item) and item.enchant_major_name_id then
+               s = s .. " " .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+            end
 
-         s = s .. name
+            s = s .. name
 
-         local title_seed = item:calc("title_seed")
-         if title_seed then
-            local title = Text.random_title("weapon", title_seed)
-            if quality == Quality.Great then
-               s = s .. I18N.get("item.title_paren.great", title)
-            else
-               s = s .. I18N.get("item.title_paren.god", title)
+            local title_seed = item:calc("title_seed")
+            if title_seed then
+               local title = Text.random_title("weapon", title_seed)
+               if quality == Quality.Great then
+                  s = s .. I18N.get("item.title_paren.great", title)
+               else
+                  s = s .. I18N.get("item.title_paren.god", title)
+               end
             end
          end
       end

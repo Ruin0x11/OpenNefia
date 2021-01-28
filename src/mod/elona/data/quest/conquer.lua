@@ -7,6 +7,7 @@ local Map = require("api.Map")
 local elona_Quest = require("mod.elona.api.Quest")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
+local Gui = require("api.Gui")
 
 local conquer = {
    _id = "conquer",
@@ -63,6 +64,19 @@ local conquer = {
       -- >>>>>>>> shade2/quest.hsp:466 		if (qExist(rq)=qConquer)or(qExist(rq)=qHuntEx):p ..
       return count + 2
       -- <<<<<<<< shade2/quest.hsp:466 		if (qExist(rq)=qConquer)or(qExist(rq)=qHuntEx):p ..
+   end,
+
+   on_time_expired = function(self)
+      -- >>>>>>>> shade2/main.hsp:1635 	if gQuest=qConquer{ ..
+      Gui.mes_c("quest.conquer.fail", "Purple")
+      -- <<<<<<<< shade2/main.hsp:1637 		} ..
+
+      local map = Map.current()
+      local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
+      Gui.play_sound("base.exitmap1")
+      Gui.update_screen()
+      local ok, prev_map = assert(Map.load(prev_map_uid))
+      Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
    end,
 
    prevents_pickpocket = true

@@ -1,134 +1,136 @@
 local quest = {
    cook = {
       food_type = {
-         _1 = {
-            _1 = {
-               title = "肉！",
-               desc = function(player, speaker, params)
-                  return ("どうしようもなく肉が食べたい%s！そう%s、料理は%sがいい%s。報酬は%s%s！")
-                     :format(noda(speaker, 4), dana(speaker, 4), params.objective, na(speaker, 4), params.reward, da(speaker, 4))
-               end,
+         elona = {
+            meat = {
+               _1 = {
+                  title = "肉！",
+                  desc = function(player, speaker, params)
+                     return ("どうしようもなく肉が食べたい%s！そう%s、料理は%sがいい%s。報酬は%s%s！")
+                        :format(noda(speaker, 4), dana(speaker, 4), params.objective, na(speaker, 4), params.reward, da(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "おもてなし",
+                  desc = function(player, speaker, params)
+                     return ("今日は大事な人と会う予定%s。肉料理をふるまいたいので、%sを料理して%s。%sを払%s。")
+                        :format(da(speaker, 4), params.objective, kure(speaker, 4), params.reward, u(speaker, 4))
+                  end
+               },
             },
-            _2 = {
-               title = "おもてなし",
-               desc = function(player, speaker, params)
-                  return ("今日は大事な人と会う予定%s。肉料理をふるまいたいので、%sを料理して%s。%sを払%s。")
-                     :format(da(speaker, 4), params.objective, kure(speaker, 4), params.reward, u(speaker, 4))
-               end
+            vegetable = {
+               _1 = {
+                  title = "ダイエット食",
+                  desc = function(player, speaker, params)
+                     return ("野菜がダイエットにいいのは常識%s。%sを料理して来て%s。代金は%s%s。")
+                        :format(dana(speaker, 4), params.objective, kure(speaker, 4), params.reward, da(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "好き嫌いの改善",
+                  desc = function(player, speaker, params)
+                     return ("%sが依頼の報酬%s。子供がどうしても野菜を食べないので困ってい%s！%sなら食べるかも知れないので料理してきて%s。")
+                        :format(params.reward, da(speaker, 4), ru(speaker, 4), params.objective, kure(speaker, 4))
+                  end
+               },
             },
-         },
-         _2 = {
-            _1 = {
-               title = "ダイエット食",
-               desc = function(player, speaker, params)
-                  return ("野菜がダイエットにいいのは常識%s。%sを料理して来て%s。代金は%s%s。")
-                     :format(dana(speaker, 4), params.objective, kure(speaker, 4), params.reward, da(speaker, 4))
-               end,
+            fruit = {
+               _1 = {
+                  title = "ディナーのデザート",
+                  desc = function(player, speaker, params)
+                     return ("報酬は%sで十分%s？今晩のディナーのデザートに%sが食べたくなったので、配達をお願いする%s。")
+                        :format(params.reward, kana(speaker, 4), params.objective, yo(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "フルーツ料理",
+                  desc = function(player, speaker, params)
+                     return ("パーティーでフルーツ料理をふるまいたい%s。%sを用意してくれれば、%sを払%s。")
+                        :format(noda(speaker, 4), params.objective, params.reward, u(speaker, 4))
+                  end
+               }
             },
-            _2 = {
-               title = "好き嫌いの改善",
-               desc = function(player, speaker, params)
-                  return ("%sが依頼の報酬%s。子供がどうしても野菜を食べないので困ってい%s！%sなら食べるかも知れないので料理してきて%s。")
-                     :format(params.reward, da(speaker, 4), ru(speaker, 4), params.objective, kure(speaker, 4))
-               end
+            sweet = {
+               _1 = {
+                  title = "甘党のお好み",
+                  desc = function(player, speaker, params)
+                     return ("甘〜いお菓子を食べたい%s！%sと引き換えに%sをあげ%s。")
+                        :format(noda(speaker, 4), params.objective, params.reward, ru(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "子供のおやつ",
+                  desc = function(player, speaker, params)
+                     return ("子供のおやつに%sを出そうと思っている%s。持ってきてくれれば、%sを払%s。")
+                        :format(params.objective, noda(speaker, 4), params.reward, u(speaker, 4))
+                  end
+               }
             },
-         },
-         _3 = {
-            _1 = {
-               title = "ディナーのデザート",
-               desc = function(player, speaker, params)
-                  return ("報酬は%sで十分%s？今晩のディナーのデザートに%sが食べたくなったので、配達をお願いする%s。")
-                     :format(params.reward, kana(speaker, 4), params.objective, yo(speaker, 4))
-               end,
+            pasta = {
+               _1 = {
+                  title = "麺マニア",
+                  desc = function(player, speaker, params)
+                     return ("報酬は%s%s。パスター、ラーメン、蕎麦…麺類をこよなく愛する%sに%sを食べさせて%s！")
+                        :format(params.reward, da(speaker, 4), ore(speaker, 4), params.objective, kure(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "喉ごしがたまらない",
+                  desc = function(player, speaker, params)
+                     return ("つるんと食べられる%sを食べたい%s。%sを払うので、配達して%s。")
+                        :format(params.objective, na(speaker, 4), params.reward, kure(speaker, 4))
+                  end
+               }
             },
-            _2 = {
-               title = "フルーツ料理",
-               desc = function(player, speaker, params)
-                  return ("パーティーでフルーツ料理をふるまいたい%s。%sを用意してくれれば、%sを払%s。")
-                     :format(noda(speaker, 4), params.objective, params.reward, u(speaker, 4))
-               end
+            fish = {
+               _1 = {
+                  title = "健康食を",
+                  desc = function(player, speaker, params)
+                     return ("魚は身体に非常に良いそう%s。%sを料理して納入してくれるなら、%sを払%s。")
+                        :format(da(speaker, 4), params.objective, params.reward, u(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "魚を食べさせたい",
+                  desc = function(player, speaker, params)
+                     return ("子供に魚を食べさせたいのだ%s、好き嫌いが激しくなかなか食べない%s。%sなら食べられるかもしないので、料理を依頼したい%s。報酬は%sでどう%s？")
+                        :format(ga(speaker, 4), noda(speaker, 4), params.objective, noda(speaker, 4), params.reward, kana(speaker, 4))
+                  end
+               }
+            },
+            bread = {
+               _1 = {
+                  title = "パン党",
+                  desc = function(player, speaker, params)
+                     return ("%sはパン党？それともご飯党%s？%sは断然パンがいい%s。%sと引き換えに%sを料理して%s。")
+                        :format(kimi(speaker, 4), kana(speaker, 4), ore(speaker, 4), na(speaker, 4), params.reward, params.objective, kure(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "ピクニックのお供",
+                  desc = function(player, speaker, params)
+                     return ("報酬は%s、これ以上は出せない%s。明日のピクニックに%sを持って行きたいので、よろしく%s！")
+                        :format(params.reward, yo(speaker, 4), params.objective, tanomu(speaker, 4))
+                  end
+               }
+            },
+            egg = {
+               _1 = {
+                  title = "料理家の野望",
+                  desc = function(player, speaker, params)
+                     return ("新しい料理を研究している%s。参考にする料理として、%sと引き換えに、%sを持ってきて%s。")
+                        :format(noda(speaker, 4), params.reward, params.objective, kure(speaker, 4))
+                  end,
+               },
+               _2 = {
+                  title = "美味しいものが食べたい",
+                  desc = function(player, speaker, params)
+                     return ("%sが食べたくなった%s。料理を届けてくれれば、報酬として%sを払%s。")
+                        :format(params.objective, yo(speaker, 4), params.reward, u(speaker, 4))
+                  end
+               },
             }
          },
-         _4 = {
-            _1 = {
-               title = "甘党のお好み",
-               desc = function(player, speaker, params)
-                  return ("甘〜いお菓子を食べたい%s！%sと引き換えに%sをあげ%s。")
-                     :format(noda(speaker, 4), params.objective, params.reward, ru(speaker, 4))
-               end,
-            },
-            _2 = {
-               title = "子供のおやつ",
-               desc = function(player, speaker, params)
-                  return ("子供のおやつに%sを出そうと思っている%s。持ってきてくれれば、%sを払%s。")
-                     :format(params.objective, noda(speaker, 4), params.reward, u(speaker, 4))
-               end
-            }
-         },
-         _5 = {
-            _1 = {
-               title = "麺マニア",
-               desc = function(player, speaker, params)
-                  return ("報酬は%s%s。パスター、ラーメン、蕎麦…麺類をこよなく愛する%sに%sを食べさせて%s！")
-                     :format(params.reward, da(speaker, 4), ore(speaker, 4), params.objective, kure(speaker, 4))
-               end,
-            },
-            _2 = {
-               title = "喉ごしがたまらない",
-               desc = function(player, speaker, params)
-                  return ("つるんと食べられる%sを食べたい%s。%sを払うので、配達して%s。")
-                     :format(params.objective, na(speaker, 4), params.reward, kure(speaker, 4))
-               end
-            }
-         },
-         _6 = {
-            _1 = {
-               title = "健康食を",
-               desc = function(player, speaker, params)
-                  return ("魚は身体に非常に良いそう%s。%sを料理して納入してくれるなら、%sを払%s。")
-                     :format(da(speaker, 4), params.objective, params.reward, u(speaker, 4))
-               end,
-            },
-            _2 = {
-               title = "魚を食べさせたい",
-               desc = function(player, speaker, params)
-                  return ("子供に魚を食べさせたいのだ%s、好き嫌いが激しくなかなか食べない%s。%sなら食べられるかもしないので、料理を依頼したい%s。報酬は%sでどう%s？")
-                     :format(ga(speaker, 4), noda(speaker, 4), params.objective, noda(speaker, 4), params.reward, kana(speaker, 4))
-               end
-            }
-         },
-         _7 = {
-            _1 = {
-               title = "パン党",
-               desc = function(player, speaker, params)
-                  return ("%sはパン党？それともご飯党%s？%sは断然パンがいい%s。%sと引き換えに%sを料理して%s。")
-                     :format(kimi(speaker, 4), kana(speaker, 4), ore(speaker, 4), na(speaker, 4), params.reward, params.objective, kure(speaker, 4))
-               end,
-            },
-            _2 = {
-               title = "ピクニックのお供",
-               desc = function(player, speaker, params)
-                  return ("報酬は%s、これ以上は出せない%s。明日のピクニックに%sを持って行きたいので、よろしく%s！")
-                     :format(params.reward, yo(speaker, 4), params.objective, tanomu(speaker, 4))
-               end
-            }
-         },
-         _8 = {
-            _1 = {
-               title = "料理家の野望",
-               desc = function(player, speaker, params)
-                  return ("新しい料理を研究している%s。参考にする料理として、%sと引き換えに、%sを持ってきて%s。")
-                     :format(noda(speaker, 4), params.reward, params.objective, kure(speaker, 4))
-               end,
-            },
-            _2 = {
-               title = "美味しいものが食べたい",
-               desc = function(player, speaker, params)
-                  return ("%sが食べたくなった%s。料理を届けてくれれば、報酬として%sを払%s。")
-                     :format(params.objective, yo(speaker, 4), params.reward, u(speaker, 4))
-               end
-            },
-         }
       },
       general = {
          _1 = {
