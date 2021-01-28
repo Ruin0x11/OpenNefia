@@ -68,7 +68,8 @@ local party = {
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
 
    locale_data = function(self)
-      return { required_points = self.params.required_points }
+      local required_points = ("%d%s%s"):format(self.params.required_points, I18N.space(), I18N.get("quest.party.points"))
+      return { required_points = required_points }
    end,
 
    on_time_expired = function(self)
@@ -136,7 +137,7 @@ data:add {
 
    nodes = {
       accept = {
-         text = "quest.elona.party.dialog.accept",
+         text = "talk.npc.quest_giver.accept.party",
          on_finish = function(t)
             local quest = Quest.for_client(t.speaker)
             assert(quest)

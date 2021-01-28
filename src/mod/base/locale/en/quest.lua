@@ -172,9 +172,10 @@ end,
   :format(basename(_1), is(_1))
 end,
       total_bonus = function(_1)
-  return ("(Total Bonus:%s%)")
+  return ("(Total Bonus:%s%%)")
   :format(_1)
-end
+      end,
+      points = "points"
     },
     you_were_defeated = "You were defeated."
   }

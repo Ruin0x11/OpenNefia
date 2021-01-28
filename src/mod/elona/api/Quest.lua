@@ -25,13 +25,13 @@ function Quest.calc_party_score_bonus(map, silent)
    local bonus = 0
    for _, chara in Chara.iter_others(map):filter(Chara.is_alive) do
       if chara.impression >= Const.IMPRESSION_PARTY and chara:calc("quality") >= Enum.Quality.Great then
-         bonus = bonus + 20 + chara:calc("level") / 2
+         bonus = math.floor(bonus + 20 + chara:calc("level") / 2)
          if not silent then
             Gui.mes("quest.party.is_satisfied", chara)
          end
       end
    end
-   return math.floor(bonus)
+   return bonus
 end
 -- <<<<<<<< shade2/calculation.hsp:1359 	return  ..
 
