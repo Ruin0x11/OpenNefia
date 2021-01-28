@@ -14,6 +14,7 @@ local field = require("game.field")
 local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
+local Area = require("api.Area")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 
@@ -350,9 +351,15 @@ end
 
 function field_logic.player_died(player)
    Gui.play_sound("base.dead1")
+   Gui.update_screen()
+
+   local result = Event.trigger("base.on_player_death", {player = player})
+   if result then
+      return result
+   end
+
    Gui.mes("misc.death.good_bye")
    Gui.mes("misc.death.you_leave_dying_message")
-   Gui.update_screen()
 
    local last_words = Input.query_text(16, true)
    if last_words == nil or last_words == "" then

@@ -40,6 +40,8 @@ local conquer = {
    end,
    locale_data = function(self)
       return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
-   end
+   end,
+
+   prevents_pickpocket = true
 }
 -- data:add(conquer)

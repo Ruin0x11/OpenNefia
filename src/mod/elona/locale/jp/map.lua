@@ -200,6 +200,9 @@ local unique = {
    },
    thieves_guild = {
       name = "盗賊ギルド"
+   },
+   quest_party = {
+      name = "パーティー場"
    }
 }
 

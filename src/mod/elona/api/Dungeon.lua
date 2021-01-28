@@ -12,7 +12,7 @@ local Calc = require("mod.elona.api.Calc")
 -- functions for nefia generation used by Elona 1.22's map generators.
 local Dungeon = {}
 
-local RoomType = {
+Dungeon.RoomType = {
    Anywhere = 0,
    NonEdge = 1,
    Edge = 2,
@@ -20,14 +20,14 @@ local RoomType = {
    Random = 4,
 }
 
-local WallType = {
+Dungeon.WallType = {
    None = 0,
    Wall = 1,
    Floor = 2,
    Room = 3
 }
 
-local DoorType = {
+Dungeon.DoorType = {
    None = 0,
    Room = 1,
    Random = 2,
@@ -35,7 +35,7 @@ local DoorType = {
 }
 
 -- >>>>>>>> shade2/init.hsp:275 	#define global DOWN 		0 ..
-local Direction = {
+Dungeon.Direction = {
    Down = 0,
    Left = 1,
    Right = 2,
@@ -44,30 +44,30 @@ local Direction = {
 -- <<<<<<<< shade2/init.hsp:278 	#define global UP		3 ...
 
 local room_kinds = {
-   [RoomType.Anywhere] = {
-      pos = RoomType.Anywhere,
-      wall = WallType.None,
-      door = DoorType.None
+   [Dungeon.RoomType.Anywhere] = {
+      pos = Dungeon.RoomType.Anywhere,
+      wall = Dungeon.WallType.None,
+      door = Dungeon.DoorType.None
    },
-   [RoomType.NonEdge] = {
-      pos = RoomType.NonEdge,
-      wall = WallType.Wall,
-      door = DoorType.None
+   [Dungeon.RoomType.NonEdge] = {
+      pos = Dungeon.RoomType.NonEdge,
+      wall = Dungeon.WallType.Wall,
+      door = Dungeon.DoorType.None
    },
-   [RoomType.Edge] = {
-      pos = RoomType.Edge,
-      wall = WallType.Wall,
-      door = DoorType.Room
+   [Dungeon.RoomType.Edge] = {
+      pos = Dungeon.RoomType.Edge,
+      wall = Dungeon.WallType.Wall,
+      door = Dungeon.DoorType.Room
    },
-   [RoomType.Small] = {
-      pos = RoomType.Small,
-      wall = WallType.Floor,
-      door = DoorType.Random2
+   [Dungeon.RoomType.Small] = {
+      pos = Dungeon.RoomType.Small,
+      wall = Dungeon.WallType.Floor,
+      door = Dungeon.DoorType.Random2
    },
-   [RoomType.Random] = {
-      pos = RoomType.Random,
-      wall = WallType.Room,
-      door = DoorType.None
+   [Dungeon.RoomType.Random] = {
+      pos = Dungeon.RoomType.Random,
+      wall = Dungeon.WallType.Room,
+      door = Dungeon.DoorType.None
    },
 }
 
@@ -105,26 +105,26 @@ end
 function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
    local x, y, w, h, dir
 
-   if pos == RoomType.Anywhere then
+   if pos == Dungeon.RoomType.Anywhere then
       -- room anywhere
       w = Rand.rnd(max_size) + min_size
       h = Rand.rnd(max_size) + min_size
       x = Rand.rnd(map_width) + 2
       y = Rand.rnd(map_height) + 2
-   elseif pos == RoomType.NonEdge then
+   elseif pos == Dungeon.RoomType.NonEdge then
       -- room anywhere, away from edges
       w = math.floor((Rand.rnd(max_size) + min_size) / 3 * 3) + 5
       h = math.floor((Rand.rnd(max_size) + min_size) / 3 * 3) + 5
       x = math.floor(Rand.rnd(map_width) / 3 * 3) + 2
       y = math.floor(Rand.rnd(map_height) / 3 * 3) + 2
-   elseif pos == RoomType.Edge then
+   elseif pos == Dungeon.RoomType.Edge then
       -- room on the edge
       dir = Rand.rnd(4)
-      if dir == Direction.Up or dir == Direction.Down then
+      if dir == Dungeon.Direction.Up or dir == Dungeon.Direction.Down then
          x = Rand.rnd(math.floor(map_width - min_size * 3 / 2 - 2)) + math.floor(min_size / 2)
          w = Rand.rnd(min_size) + math.floor(min_size / 2) + 3
          h = min_size
-         if dir == Direction.Up then
+         if dir == Dungeon.Direction.Up then
             y = 0
          else
             y = map_height - h
@@ -133,13 +133,13 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
          y = Rand.rnd(math.floor(map_height - min_size * 3 / 2 - 2)) + math.floor(min_size / 2)
          w = min_size
          h = Rand.rnd(min_size) + math.floor(min_size / 2) + 3
-         if dir == Direction.Left then
+         if dir == Dungeon.Direction.Left then
             x = 0
          else
             x = map_width - w
          end
       end
-   elseif pos == RoomType.Small then
+   elseif pos == Dungeon.RoomType.Small then
       -- small fixed size room
       w = 3
       h = 3
@@ -153,7 +153,7 @@ function Dungeon.calc_room_size(pos, min_size, max_size, map_width, map_height)
       end
       x = min_size + 1 + Rand.rnd(x_range)
       y = min_size + 1 + Rand.rnd(y_range)
-   elseif pos == RoomType.Random then
+   elseif pos == Dungeon.RoomType.Random then
       w = Rand.rnd(max_size) + min_size
       h = Rand.rnd(max_size) + min_size
       x = Rand.rnd(map_width - max_size - 8) + 3
@@ -188,13 +188,13 @@ function Dungeon.calc_valid_room(pos, min_size, max_size, rooms, map)
             break
          end
 
-         if pos == RoomType.NonEdge then
+         if pos == Dungeon.RoomType.NonEdge then
             if mx >= map_width + 1 or my >= map_height + 1 then
                break
             end
          end
 
-         if pos == RoomType.Small then
+         if pos == Dungeon.RoomType.Small then
             if Map.tile(mx, my, map)._id ~= "elona.mapgen_room" then
                break
             end
@@ -231,7 +231,7 @@ local ROOM_ITEMS = { "elona.cabinet", "elona.neat_bar_table", "elona.pachisuro_m
 
 function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
    -- >>>>>>>> shade2/map_func.hsp:616  ..
-   local base = room_kinds[kind or RoomType.Anywhere]
+   local base = room_kinds[kind or Dungeon.RoomType.Anywhere]
    params = table.merge_missing(params, base)
 
    local room = Dungeon.calc_valid_room(params.pos, min_size, max_size, rooms, map)
@@ -257,13 +257,13 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
 
          local tile = "room"
 
-         if params.wall ~= WallType.None then
+         if params.wall ~= Dungeon.WallType.None then
             if i == 0 or j == 0 or i == room.width-1 or j == room.height - 1 then
-               if params.wall == WallType.Wall then
+               if params.wall == Dungeon.WallType.Wall then
                   tile = "wall"
-               elseif params.wall == WallType.Floor then
+               elseif params.wall == Dungeon.WallType.Floor then
                   tile = "default"
-               elseif params.wall == WallType.Room then
+               elseif params.wall == Dungeon.WallType.Room then
                   tile = "room"
                   if tile1 == 1 and i == 0 then
                      tile = "wall"
@@ -299,11 +299,11 @@ function Dungeon.dig_room(kind, min_size, max_size, rooms, params, map)
       end
    end
 
-   if params.door == DoorType.Room then
+   if params.door == Dungeon.DoorType.Room then
       Dungeon.create_room_door(room, nil, true, map)
-   elseif params.door == DoorType.Random or params.door == DoorType.RandomNoDoor then
+   elseif params.door == Dungeon.DoorType.Random or params.door == Dungeon.DoorType.RandomNoDoor then
       for dir=0, 3 do
-         local place_door = params.door ~= DoorType.RandomNoDoor
+         local place_door = params.door ~= Dungeon.DoorType.RandomNoDoor
          Dungeon.create_room_door(room, dir, place_door, map)
       end
    end
@@ -314,11 +314,11 @@ end
 
 function Dungeon.create_room_door(room, dir, place_door, map)
    -- >>>>>>>> shade2/map_func.hsp:577 #deffunc map_createRoomDoor ..
-   dir = dir or room.dir or Direction.Down
+   dir = dir or room.dir or Dungeon.Direction.Down
 
    local pos
 
-   if dir == Direction.Up or dir == Direction.Down then
+   if dir == Dungeon.Direction.Up or dir == Dungeon.Direction.Down then
       pos = room.width
    else
       pos = room.height
@@ -336,22 +336,22 @@ function Dungeon.create_room_door(room, dir, place_door, map)
    local x, y
 
    for _, pos in ipairs(door_positions) do
-      if dir == Direction.Up then
+      if dir == Dungeon.Direction.Up then
          x = pos + room.x + 1
          y = room.y + room.height - 1
          dirs1 = { 0, 0 }
          dirs2 = {-1, 1 }
-      elseif dir == Direction.Down then
+      elseif dir == Dungeon.Direction.Down then
          x = pos + room.x + 1
          y = room.y
          dirs1 = { 0, 0 }
          dirs2 = {-1, 1 }
-      elseif dir == Direction.Left then
+      elseif dir == Dungeon.Direction.Left then
          x = room.x + room.width - 1
          y = pos + room.y + 1
          dirs1 = {-1, 1 }
          dirs2 = { 0, 0 }
-      elseif dir == Direction.Right then
+      elseif dir == Dungeon.Direction.Right then
          x = room.x
          y = pos + room.y + 1
          dirs1 = {-1, 1 }
@@ -505,62 +505,62 @@ local function next_dir(dir, tx, ty, end_x, end_y, map)
 
    if tx >= end_x - 4 and tx <= end_x + 4 and ty >= end_y - 4 and tx <= end_y + 4 then
       if tx < end_x then
-         dir = Direction.Right
+         dir = Dungeon.Direction.Right
          if ty > end_y then
-            dest = Direction.Up
+            dest = Dungeon.Direction.Up
          else
-            dest = Direction.Down
+            dest = Dungeon.Direction.Down
          end
       end
       if tx > end_x then
-         dir = Direction.Left
+         dir = Dungeon.Direction.Left
          if ty > end_y then
-            dest = Direction.Up
+            dest = Dungeon.Direction.Up
          else
-            dest = Direction.Down
+            dest = Dungeon.Direction.Down
          end
       end
       if ty < end_y then
-         dir = Direction.Down
+         dir = Dungeon.Direction.Down
          if tx > end_x then
-            dest = Direction.Left
+            dest = Dungeon.Direction.Left
          else
-            dest = Direction.Right
+            dest = Dungeon.Direction.Right
          end
       end
       if ty > end_y then
-         dir = Direction.Up
+         dir = Dungeon.Direction.Up
          if tx > end_x then
-            dest = Direction.Left
+            dest = Dungeon.Direction.Left
          else
-            dest = Direction.Right
+            dest = Dungeon.Direction.Right
          end
       end
 
       return dir, dest
    end
 
-   if dir == Direction.Left or dir == Direction.Right then
+   if dir == Dungeon.Direction.Left or dir == Dungeon.Direction.Right then
       if ty > end_y then
-         dir = Direction.Up
+         dir = Dungeon.Direction.Up
       else
-         dir = Direction.Down
+         dir = Dungeon.Direction.Down
       end
       if tx > end_x then
-         dest = Direction.Left
+         dest = Dungeon.Direction.Left
       else
-         dest = Direction.Right
+         dest = Dungeon.Direction.Right
       end
    else
       if tx > end_x then
-         dir = Direction.Left
+         dir = Dungeon.Direction.Left
       else
-         dir = Direction.Right
+         dir = Dungeon.Direction.Right
       end
       if ty > end_y then
-         dest = Direction.Up
+         dest = Dungeon.Direction.Up
       else
-         dest = Direction.Down
+         dest = Dungeon.Direction.Down
       end
    end
 
@@ -580,35 +580,35 @@ local function next_dir_2(dir, last_dir, tx, ty, end_x, end_y, map)
    end
 
    if last_dir then
-      if last_dir == Direction.Left and can_dig(tx - 1, ty, map) then
+      if last_dir == Dungeon.Direction.Left and can_dig(tx - 1, ty, map) then
          swap(tx == end_x)
-      elseif last_dir == Direction.Right and can_dig(tx + 1, ty, map) then
+      elseif last_dir == Dungeon.Direction.Right and can_dig(tx + 1, ty, map) then
          swap(tx == end_x)
-      elseif last_dir == Direction.Up and can_dig(tx, ty - 1, map) then
+      elseif last_dir == Dungeon.Direction.Up and can_dig(tx, ty - 1, map) then
          swap(ty == end_y)
-      elseif last_dir == Direction.Down and can_dig(tx, ty + 1, map) then
+      elseif last_dir == Dungeon.Direction.Down and can_dig(tx, ty + 1, map) then
          swap(ty == end_y)
       end
    end
 
-   if dir == Direction.Left or dir == Direction.Right then
+   if dir == Dungeon.Direction.Left or dir == Dungeon.Direction.Right then
       if tx == end_x then
          if ty > end_y and can_dig(tx, ty - 1, map) then
             last_dir = dir
-            dir = Direction.Up
+            dir = Dungeon.Direction.Up
          elseif ty < end_y and can_dig(tx, ty + 1, map) then
             last_dir = dir
-            dir = Direction.Down
+            dir = Dungeon.Direction.Down
          end
       end
    else
       if ty == end_y  then
          if tx > end_x and can_dig(tx - 1, ty, map) then
             last_dir = dir
-            dir = Direction.Left
+            dir = Dungeon.Direction.Left
          elseif tx < end_x and can_dig(tx + 1, ty, map) then
             last_dir = dir
-            dir = Direction.Right
+            dir = Dungeon.Direction.Right
          end
       end
    end
@@ -649,13 +649,13 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
       dx = tx
       dy = ty
 
-      if dir == Direction.Left then
+      if dir == Dungeon.Direction.Left then
          dx = tx - 1
-      elseif dir == Direction.Right then
+      elseif dir == Dungeon.Direction.Right then
          dx = tx + 1
-      elseif dir == Direction.Up then
+      elseif dir == Dungeon.Direction.Up then
          dy = ty - 1
-      elseif dir == Direction.Down then
+      elseif dir == Dungeon.Direction.Down then
          dy = ty + 1
       end
 
@@ -671,24 +671,24 @@ function Dungeon.dig_to_entrance(start_x, start_y, end_x, end_y, straight, hidde
          --    dir, dest = next_dir(dir, tx, ty, end_x, end_y, map)
          -- end
       else
-         if dest == Direction.Left then
+         if dest == Dungeon.Direction.Left then
             if can_dig(tx - 1, ty, map) then
-               dir = Direction.Left
+               dir = Dungeon.Direction.Left
                dest = -2
             end
-         elseif dest == Direction.Right then
+         elseif dest == Dungeon.Direction.Right then
             if can_dig(tx + 1, ty, map) then
-               dir = Direction.Right
+               dir = Dungeon.Direction.Right
                dest = -2
             end
-         elseif dest == Direction.Up then
+         elseif dest == Dungeon.Direction.Up then
             if can_dig(tx, ty - 1, map) then
-               dir = Direction.Up
+               dir = Dungeon.Direction.Up
                dest = -2
             end
-         elseif dest == Direction.Down then
+         elseif dest == Dungeon.Direction.Down then
             if can_dig(tx, ty + 1, map) then
-               dir = Direction.Down
+               dir = Dungeon.Direction.Down
                dest = -2
             end
          end
@@ -725,25 +725,25 @@ function Dungeon.dig_maze(map, rooms, params, class, bold)
       local try_dig = function(dir)
          prev_ind = ind
 
-         if dir == Direction.Down then
+         if dir == Dungeon.Direction.Down then
             if math.floor(prev_ind / class) == 0 then
                return false
             else
                ind = ind - class
             end
-         elseif dir == Direction.Left then
+         elseif dir == Dungeon.Direction.Left then
             if prev_ind % class == class - 1 then
                return false
             else
                ind = ind + 1
             end
-         elseif dir == Direction.Right then
+         elseif dir == Dungeon.Direction.Right then
             if math.floor(prev_ind / class) == class - 1 then
                return false
             else
                ind = ind + class
             end
-         elseif dir == Direction.Up then
+         elseif dir == Dungeon.Direction.Up then
             if prev_ind % class == 0 then
                return false
             else
@@ -893,28 +893,28 @@ function Dungeon.gen_type_2(area, floor, params)
          dir = Rand.rnd(4)
       end
 
-      if dir == Direction.Right then
+      if dir == Dungeon.Direction.Right then
          x = x + 1
          if x > map:width() - 2 then
             dir = 0
             x = map:width() - 2
          end
       end
-      if dir == Direction.Left then
+      if dir == Dungeon.Direction.Left then
          x = x - 1
          if x < 1 then
             dir = 3
             x = 1
          end
       end
-      if dir == Direction.Down then
+      if dir == Dungeon.Direction.Down then
          y = y + 1
          if y > map:height() - 2 then
             dir = 1
             y = map:height() - 2
          end
       end
-      if dir == Direction.Up then
+      if dir == Dungeon.Direction.Up then
          y = y - 1
          if y < 1 then
             dir = 2

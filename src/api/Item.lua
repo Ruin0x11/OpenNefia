@@ -136,7 +136,7 @@ function Item.create(id, x, y, params, where)
 
    -- >>>>>>>> shade2/item.hsp:728 	if initNum!0:iNum(ci)=initNum ..
    if type(params.amount) == "number" then
-      item.amount = params.amount
+      item.amount = math.floor(params.amount)
    end
 
    if not params.no_stack then

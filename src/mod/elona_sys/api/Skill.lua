@@ -26,15 +26,23 @@ function Skill.iter_resistances()
 end
 
 function Skill.iter_skills()
-   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" or s.type == "weapon_proficiency" end)
+   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" or s.type == "skill_action" or s.type == "weapon_proficiency" end)
 end
 
 function Skill.iter_normal_skills()
-   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" end)
+   return data["base.skill"]:iter():filter(function(s) return s.type == "skill" or s.type == "skill_action" end)
 end
 
 function Skill.iter_weapon_proficiencies()
    return data["base.skill"]:iter():filter(function(s) return s.type == "weapon_proficiency" end)
+end
+
+function Skill.iter_spells()
+   return data["base.skill"]:iter():filter(function(s) return s.type == "spell" end)
+end
+
+function Skill.iter_actions()
+   return data["base.skill"]:iter():filter(function(s) return s.type == "action" end)
 end
 
 function Skill.random_stat()

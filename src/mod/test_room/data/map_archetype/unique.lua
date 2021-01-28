@@ -7,6 +7,7 @@ local Chara = require("api.Chara")
 local Area = require("api.Area")
 local InstancedMap = require("api.InstancedMap")
 local Feat = require("api.Feat")
+local Item = require("api.Item")
 
 local arc = {
    _type = "base.map_archetype",
@@ -123,7 +124,11 @@ data:add {
 local the_dungeon = {
    _type = "base.area_archetype",
    _id = "the_dungeon",
-   image = "elona.feat_area_crypt"
+   image = "elona.feat_area_crypt",
+
+   metadata = {
+      can_return_to = true
+   },
 }
 
 function the_dungeon.on_generate_floor(area, floor)
@@ -159,9 +164,90 @@ the_dungeon.parent_area = {
 data:add(the_dungeon)
 
 
+local quest_room = {
+   _type = "base.map_archetype",
+   _id = "quest_room"
+}
+
+function quest_room.on_generate_map(area, floor)
+   local tiles = [[
+OOOOOOOOOOOOOOOO
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+O..............O
+OOOOOOOOOOOOOOOO]]
+
+   local tileset = {
+      ["."] = "elona.cobble_diagonal",
+      ["O"] = "elona.wall_dirt_dark_top"
+   }
+
+   local map = Layout.to_map({tiles = tiles, tileset = tileset})
+
+   assert(Feat.create("test_room.select_quest", 7, 7, {}, map))
+
+   assert(Item.create("elona.harmonica", 8, 8, {}, map))
+   assert(Item.create("elona.stradivarius", 8, 8, {}, map))
+
+   local parent_area = Area.parent(area) or area
+   assert(Area.create_stairs_up(parent_area, 1, 7, 8, { force = true }, map))
+
+   local chara = Chara.create("elona.shopkeeper", nil, nil, {}, map)
+   chara:add_role("elona.citizen")
+
+   return map
+end
+
+quest_room.properties = {
+   is_indoor = true,
+   name = "Quest Room",
+   default_tile = "elona.wall_stone_3_fog",
+   types = { "town" }
+}
+
+data:add(quest_room)
+data:add {
+   _type = "base.area_archetype",
+   _id = "quest_room",
+
+   floors = {
+      [1] = "test_room.quest_room"
+   },
+
+   image = "elona.feat_area_castle",
+
+   metadata = {
+      can_return_to = true
+   },
+
+   parent_area = {
+      _id = "test_room.test_room",
+      on_floor = 1,
+      x = 27,
+      y = 23,
+      starting_floor = 1
+   }
+}
+
+
 local test_room = {
    _type = "base.area_archetype",
-   _id = "test_room"
+   _id = "test_room",
+
+   metadata = {
+      can_return_to = true
+   },
 }
 
 function test_room.on_generate_floor(area, floor)

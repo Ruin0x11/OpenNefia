@@ -154,7 +154,7 @@ function Charagen.create(x, y, params, where)
 
    local create_params = params.create_params
    create_params.quality = params.quality
-   create_params.level = params.level
+   create_params.level = params.initial_level or params.level
    create_params.ownerless = params.ownerless
    local chara = Chara.create(id, x, y, create_params, where)
 

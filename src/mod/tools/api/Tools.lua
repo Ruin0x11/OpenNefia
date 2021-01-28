@@ -20,6 +20,8 @@ local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
+local Quest = require("mod.elona_sys.api.Quest")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local Tools = {}
 
@@ -977,6 +979,35 @@ function Tools.random_artifacts(count)
       local item = Itemgen.create(nil, nil, { categories = Rand.choice(Filters.fsetwear), quality = Enum.Quality.Great }, player)
       Effect.identify_item(item, Enum.IdentifyState.Full)
    end
+end
+
+function Tools.end_quest()
+   if save.elona_sys.immediate_quest_uid and save.elona_sys.quest_time_limit > 0 then
+      save.elona_sys.quest_time_limit = 1
+   end
+end
+
+function Tools.learn_all_skills()
+   local player = Chara.player()
+   player:mod_base_skill_level("elona.stat_magic", 10000)
+   player:mod_base_skill_level("elona.stat_mana", 10000)
+
+   Skill.iter_skills()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1000)
+           end)
+
+   Skill.iter_spells()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1000)
+           end)
+
+   Skill.iter_actions()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1000)
+           end)
+
+   player:heal_to_max()
 end
 
 return Tools

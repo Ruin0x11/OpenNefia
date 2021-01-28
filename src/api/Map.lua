@@ -7,17 +7,13 @@
 --- @module Map
 
 local field = require("game.field")
-local data = require("internal.data")
 local Chara = require("api.Chara")
-local Event = require("api.Event")
 local Log = require("api.Log")
 local Gui = require("api.Gui")
 local InstancedMap = require("api.InstancedMap")
 local Rand = require("api.Rand")
 local Fs = require("api.Fs")
 local SaveFs = require("api.SaveFs")
-local World = require("api.World")
-local I18N = require("api.I18N")
 local save = require("internal.global.save")
 local Area = require("api.Area")
 local InstancedArea = require("api.InstancedArea")
@@ -155,6 +151,19 @@ end
 --- @treturn[opt] InstancedMap
 function Map.current()
    return field.map
+end
+
+--- Gets the floor number of this map in its containing area. This is
+--- separate from the map's "level" property, and is only used for
+--- bookkeeping.
+---
+--- @treturn[opt] uint
+function Map.floor_number(map)
+   local area = Area.for_map(map)
+   if area == nil then
+      return nil
+   end
+   return assert(area:floor_of_map(map.uid))
 end
 
 --- @tparam[opt] InstancedMap map
@@ -592,8 +601,6 @@ function Map.travel_to(map, params)
       local new_ally = Map.try_place_chara(ally, x, y, map)
       assert(new_ally ~= nil)
    end
-
-   Gui.mes_clear()
 
    current:emit("base.on_map_leave", {next_map=map})
    -- <<<<<<<< shade2/map.hsp:1892 	loop ..

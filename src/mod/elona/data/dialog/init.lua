@@ -195,8 +195,15 @@ data:add {
       finish = function(t)
          local quest = Quest.for_client(t.speaker)
          assert(quest, "Character doesn't have a quest.")
-         return Quest.complete(quest, t.speaker)
-      end
+         local next_node = Quest.complete(quest, t.speaker)
+         return next_node
+      end,
+      complete_default = {
+         text = {
+            {"quest.giver.complete.done_well"}
+         },
+         jump_to = "elona.default:__start"
+      }
    },
 }
 

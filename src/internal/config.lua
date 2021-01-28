@@ -6,6 +6,7 @@ config["base.language"] = "base.english"
 config["base.keybinds"] = {}
 config["base.play_music"] = false
 config["base.anim_wait"] = 40 * 0.5
+config["base.auto_turn_speed"] = "highest"
 config["base.screen_sync"] = 6
 config["base.positional_audio"] = false
 config["base.show_charamake_extras"] = false

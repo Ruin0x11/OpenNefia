@@ -36,7 +36,9 @@ local deliver = {
 
    difficulty = 0,
 
-   expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end
+   expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
+
+   prevents_return = true
 }
 
 function deliver.generate(self, client, start)

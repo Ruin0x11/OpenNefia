@@ -470,7 +470,7 @@ end
 ---
 --- @tparam int add
 function IChara:heal_stamina(add, quiet)
-   self.stamina = math.floor(math.max(self.stamina + math.max(add, 0), self:calc("max_stamina")))
+   self.stamina = math.floor(math.min(self.stamina + math.max(add, 0), self:calc("max_stamina")))
    self:emit("base.on_heal_chara_stamina", { amount = add, quiet = quiet })
 end
 

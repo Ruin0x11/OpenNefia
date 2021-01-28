@@ -124,8 +124,12 @@ end
 
 function en.does(obj)
    local n = obj
-   if type(obj) == "table" and obj.amount then
-      n = obj.amount
+   if type(obj) == "table" then
+      if obj.amount then
+         n = obj.amount
+      elseif obj.is_player then
+         return "do"
+      end
    end
 
    if n == 1 then

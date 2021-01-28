@@ -3,6 +3,9 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Pos = require("api.Pos")
 local Chara = require("api.Chara")
 
+-- if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0:return:else:txtMore:txt lang("あなたはクライアントを置き去りにした。","You left
+-- your client.")
+
 local escort = {
    _id = "escort",
    _type = "elona_sys.quest",
@@ -24,7 +27,9 @@ local escort = {
 
    locale_data = function(self)
       return {map = self.params.destination_map_name}, "difficulty._" .. self.params.escort_difficulty
-   end
+   end,
+
+   prevents_return = true
 }
 
 function escort.generate(self, client, start)

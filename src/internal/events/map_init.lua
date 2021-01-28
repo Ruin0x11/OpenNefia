@@ -214,6 +214,12 @@ local function proc_map_entered_events(map)
 end
 
 local function proc_map_entered(map)
+   -- >>>>>>>> shade2/map.hsp:286 	if gDeepest<gLevel:if gArea!areaShelter:gDeepest= ..
+   local area = Area.for_map(map)
+   assert(area)
+   area.deepest_level_visited = math.max(area.deepest_level_visited, Map.floor_number(map))
+   -- <<<<<<<< shade2/map.hsp:287 	if areaDeepest(gArea)<gLevel:areaDeepest(gArea)=g ..
+
    if Map.is_world_map(map) then
       ExHelp.maybe_show(2)
    elseif map:has_type("town") then

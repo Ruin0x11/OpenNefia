@@ -72,7 +72,7 @@ return {
          you_have_been_buried = "You have been buried. Bye...(Hit any key to exit)",
          you_leave_dying_message = "You leave a dying message."
       },
-      dungeon_level = " Lv",
+      dungeon_level = function(_1, _2) return ("%s %s Lv"):format(_1, ordinal(_2)) end,
       extract_seed = function(_1)
          return ("You extract plant seeds from %s.")
             :format(itemname(_1))

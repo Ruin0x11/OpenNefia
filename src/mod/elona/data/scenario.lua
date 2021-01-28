@@ -62,7 +62,6 @@ local function start(self, player)
    your_home:set_previous_map_and_location(north_tyris, 22, 21)
    -- <<<<<<<< shade2/main.hsp:461 		gWorld		=areaNorthTyris ..
 
-
    -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
    Save.save_game()
    -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..

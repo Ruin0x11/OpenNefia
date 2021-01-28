@@ -7,6 +7,14 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Feat = require("api.Feat")
 local Anim = require("mod.elona_sys.api.Anim")
 local Mef = require("api.Mef")
+local UidTracker = require("api.UidTracker")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Log = require("api.Log")
+local Input = require("api.Input")
+local Skill = require("mod.elona_sys.api.Skill")
+local Effect = require("mod.elona.api.Effect")
+local Calc = require("mod.elona.api.Calc")
+local Chara = require("api.Chara")
 
 --
 --
@@ -75,6 +83,10 @@ local function init_save()
       towns = {},
       quests = {}
    }
+   s.quest_uids = UidTracker:new()
+   s.immediate_quest_uid = nil
+   s.quest_time_limit = 0
+   s.quest_time_limit_notice_interval = 0
    s.sidequest = {}
    s.reservable_spellbook_ids = table.set {}
 end
@@ -365,13 +377,22 @@ Event.register("base.on_item_instantiated", "Connect item events",
                   }
 
                   for _, action in ipairs(actions) do
-                     if item.proto["on_" .. action] then
-                        item:connect_self("elona_sys.on_item_" .. action,
-                                          "Item prototype on_" .. action .. " handler",
-                                          item.proto["on_" .. action])
+                     local event_id = "elona_sys.on_item_" .. action
+                     local event_name = "Item prototype on_" .. action .. " handler"
+
+                     -- If a handler is left over from previous instantiation
+                     if item:has_event_handler(event_id) then
+                        item:disconnect_self(event_id, event_name)
                      end
+
+                     if item.proto["on_" .. action] then
+                        item:connect_self(event_id, event_name, item.proto["on_" .. action])
+                     end
+
                      if item:has_event_handler("elona_sys.on_item_" .. action) then
                         item["can_" .. action] = true
+                     else
+                        item["can_" .. action] = nil
                      end
                   end
 end)
@@ -559,32 +580,139 @@ end
 Event.register("base.on_set_player", "Add player light", add_player_light)
 
 local function warn_quest_abandonment(_, params)
-   local quest = save.elona_sys.instanced_quest
-   if quest and quest.state ~= "completed" then
+   if Quest.is_immediate_quest_active() then
       Gui.mes("action.leave.abandoning_quest")
    end
 end
 Event.register("elona_sys.before_player_map_leave", "Warn about abandoning instanced quest", warn_quest_abandonment)
 
-require("mod.elona_sys.api.Command") -- HACK
-local function proc_quest_abandonment(_, params)
-   local quest = save.elona_sys.instanced_quest
-   if quest then
-      if quest.state ~= "completed" then
-         Quest.fail(quest)
-      end
-   end
-   save.elona_sys.instanced_quest = nil
-end
-Event.register("elona_sys.on_travel_to_outer_map", "Warn about abandoning instanced quest", proc_quest_abandonment)
-
-
-
 local function complete_quest(_, params, result)
-   local quest = Quest.for_client(params.talk.speaker)
+   local client = params.talk.speaker
+   local quest = Quest.for_client(client)
    if quest and quest.state == "completed" then
-      result.choice = "elona.quest_giver:finish"
+      local proto = data["elona_sys.quest"]:ensure(quest._id)
+
+      local next_node = "elona.quest_giver:finish"
+      if proto.on_complete then
+         next_node = proto.on_complete(quest, client) or next_node
+      end
+
+      result.node_id = next_node
    end
    return result
 end
 Event.register("elona_sys.on_step_dialog", "If speaker has finished quest, complete it", complete_quest)
+
+local function update_quest_time_limit(_, params)
+   local map = Map.current()
+   if not map then
+      return
+   end
+
+   local s = save.elona_sys
+
+   if s.quest_time_limit and s.quest_time_limit > 0 then
+      s.quest_time_limit = s.quest_time_limit - params.minutes
+      if s.quest_time_limit_notice_interval > math.floor(s.quest_time_limit / 10) then
+         Gui.mes_c("quest.minutes_left", "SkyBlue", (s.quest_time_limit + 1))
+         s.quest_time_limit_notice_interval = math.floor(s.quest_time_limit / 10)
+      end
+      if s.quest_time_limit <= 0 then
+         s.quest_time_limit = 0
+         s.quest_time_limit_notice_interval = 0
+
+         local cb = function()
+            local uid = s.immediate_quest_uid
+            if not uid then
+               Log.error("No immediate quest was set when quest time ran out.")
+               return
+            end
+
+            local quest = assert(Quest.get(uid))
+            local quest_data = data["elona_sys.quest"]:ensure(quest._id)
+            if quest_data.on_time_expired then
+               quest_data.on_time_expired(quest)
+            else
+               Log.warn("Time ran out, but immediate quest has no on_time_expired callback.")
+            end
+         end
+         DeferredEvent.add(cb)
+      end
+   end
+end
+
+Event.register("base.on_minute_passed", "Update immediate quest time limit", update_quest_time_limit, 100000)
+
+
+-- >>>>>>>> shade2/quest.hsp:313 *quest_exit ..
+local function on_quest_exit(quest)
+   local quest_data = data["elona_sys.quest"]:ensure(quest._id)
+   if quest_data.on_quest_exit then
+      quest_data.on_quest_exit(quest)
+   end
+
+   if quest.state ~= "completed" then
+      Quest.fail(quest)
+      Input.query_more()
+   end
+
+   local s = save.elona_sys
+   s.immediate_quest_uid = nil
+   s.quest_time_limit = 0
+   s.quest_time_limit_notice_interval = 0
+end
+-- <<<<<<<< shade2/quest.hsp:329 	return ..
+
+-- >>>>>>>> shade2/map.hsp:176 	if mType=mTypeQuest{ ..
+local function quest_exit_on_leave(map, params)
+   local s = save.elona_sys
+
+   if map:has_type("quest") and s.immediate_quest_uid then
+      local quest = assert(Quest.get(s.immediate_quest_uid))
+      on_quest_exit(quest)
+   end
+end
+-- <<<<<<<< shade2/map.hsp:182 		} ..
+
+Event.register("base.on_map_leave", "Check quest status", quest_exit_on_leave, 100000)
+
+-- >>>>>>>> shade2/quest.hsp:331 *quest_death ..
+local function quest_on_death(_, params)
+   if not Quest.is_in_immediate_quest_map() then
+      return
+   end
+
+   local player = params.player
+   local map = player:current_map()
+   assert(player:revive())
+
+   Skill.gain_skill_exp(player, "elona.stat_charisma", -500)
+   Skill.gain_skill_exp(player, "elona.stat_will", -500)
+
+   local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
+   local ok, prev_map = assert(Map.load(prev_map_uid))
+
+   -- quest_exit_on_leave above also gets called from base.on_map_leave, which
+   -- will fail the current quest.
+   assert(Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y }))
+
+   return "turn_begin"
+end
+-- <<<<<<<< shade2/quest.hsp:337 	goto *map_exit ..
+
+Event.register("base.on_player_death", "Revive if inside quest", quest_on_death, 100000)
+
+local function quest_create_rewards(_, params)
+   local quest = params.quest
+   Quest.create_rewards(quest)
+
+   local player = Chara.player()
+   Effect.modify_karma(player, 1)
+
+   local fame_gained = Calc.calc_fame_gained(player, quest.difficulty * 3 + 10)
+   Gui.mes_c("quest.completed_taken_from", "Green", quest.client_name)
+   Gui.mes_c("quest.gain_fame", "Green", fame_gained)
+   player.fame = player.fame + fame_gained
+   Gui.mes("common.something_is_put_on_the_ground")
+end
+Event.register("elona_sys.on_quest_completed", "Create default quest rewards", quest_create_rewards, 200000)

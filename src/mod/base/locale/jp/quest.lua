@@ -190,9 +190,10 @@ end,
   :format(basename(_1))
 end,
       total_bonus = function(_1)
-  return ("(合計ボーナス:%s%) ")
+  return ("(合計ボーナス:%s%%) ")
   :format(_1)
-end
+      end,
+      points = "ポイント"
     },
     you_were_defeated = "あなたは敗北した。"
   }

@@ -3,16 +3,16 @@ local Effect = require("mod.elona.api.Effect")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Input = require("api.Input")
+local Quest = require("mod.elona_sys.api.Quest")
 
 data:add {
    _id = "performer",
    _type = "base.skill",
    elona_id = 183,
 
-   type = "action",
+   type = "skill_action",
    effect_id = "elona.performer",
    related_skill = "elona.stat_charisma",
-   cost = 25,
    range = 0,
    target_type = "self"
 }
@@ -27,6 +27,7 @@ data:add {
       "source",
       "target",
    },
+   cost = 25,
 
    cast = function(self, params)
       local source = params.source
@@ -56,7 +57,7 @@ data:add {
          return true
       end
 
-      source:start_activity("elona.performer")
+      source:start_activity("elona.performer", {instrument = params.item})
 
       return true
    end
@@ -75,10 +76,9 @@ data:add {
    _type = "base.skill",
    elona_id = 184,
 
-   type = "action",
+   type = "skill_action",
    effect_id = "elona.cooking",
    related_skill = "elona.stat_learning",
-   cost = 15,
    target_type = "self",
 }
 
@@ -127,10 +127,9 @@ data:add {
    _type = "base.skill",
    elona_id = 185,
 
-   type = "action",
+   type = "skill_action",
    effect_id = "elona.fishing",
    related_skill = "elona.stat_perception",
-   cost = 5,
    target_type = "self",
 }
 
@@ -144,6 +143,7 @@ data:add {
       "source",
       "target",
    },
+   cost = 5,
 
    cast = function(self, params)
       Gui.mes("TODO")
@@ -157,13 +157,18 @@ data:add {
    _type = "base.skill",
    elona_id = 300,
 
-   type = "action",
+   type = "skill_action",
    effect_id = "elona.pickpocket",
    related_skill = "elona.stat_dexterity",
-   cost = 20,
    target_type = "nearby",
    message_nothing_happens = false
 }
+
+local function quest_prevents_stealing()
+   local quest = assert(Quest.get_immediate_quest())
+   local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
+   return quest_proto.prevents_pickpocket
+end
 
 data:add {
    _id = "pickpocket",
@@ -181,8 +186,7 @@ data:add {
    range = 8000,
 
    cast = function(self, params)
-      -- TODO instanced quest
-      if false then
+      if quest_prevents_stealing() then
          Gui.mes("magic.steal.in_quest")
          return false
       end
@@ -204,11 +208,10 @@ data:add {
    _type = "base.skill",
    elona_id = 301,
 
-   type = "action",
+   type = "skill_action",
    effect_id = "elona.riding",
    related_skill = "elona.stat_will",
    ability_type = 0,
-   cost = 20,
    target_type = "nearby",
 }
 
@@ -222,6 +225,7 @@ data:add {
       "source",
       "target",
    },
+   cost = 20,
 
    cast = function(self, params)
       Gui.mes("TODO")

@@ -15,6 +15,7 @@ local IChara = require("api.chara.IChara")
 local Area = require("api.Area")
 local World = require("api.World")
 local Const = require("api.Const")
+local I18N = require("api.I18N")
 
 local Effect = {}
 
@@ -515,14 +516,14 @@ function Effect.modify_corruption(chara, delta)
    chara:refresh()
 end
 
-function Effect.can_return_to(entrance)
-   error("TODO")
+function Effect.can_return_to(area_uid)
+   local area = Area.get(area_uid)
 
    if not area then
       return false
    end
 
-   if not area.can_return_to then
+   if not area.metadata.can_return_to then
       return false
    end
 
@@ -533,6 +534,7 @@ function Effect.can_return_to(entrance)
    return true
 end
 
+-- >>>>>>>> shade2/command.hsp:4386 *com_return ..
 function Effect.query_return_location(chara)
    local forbidden = Event.trigger("elona.calc_return_forbidden", {chara=chara}, false)
    if forbidden then
@@ -546,14 +548,17 @@ function Effect.query_return_location(chara)
    local maps = {}
 
    local map = chara:current_map()
-   local outer_area = Area.parent(map)
-   if outer_area then
-      maps = Area.iter_children(outer_area)
-         :filter(function(uid, area) return area.metadata.can_return_to end)
+   local world_area = Area.get_root_area(map)
+   if world_area then
+      maps = Area.iter_all_contained_in(world_area)
+         :filter(Effect.can_return_to)
          :map(function(uid, area)
+               local deepest = area.deepest_level_visited
+               local text = I18N.get("misc.dungeon_level", area.name, deepest)
+               local ok, map_meta = assert(area:get_floor(deepest))
                return {
-                  text = area.name,
-                  map_uid = area:starting_floor()
+                  text = text,
+                  map_uid = map_meta.uid
                }
              end)
          :to_list()
@@ -573,8 +578,9 @@ function Effect.query_return_location(chara)
 
    Gui.update_screen()
 
-   return maps[result.index].map_uid, 15 + Rand.rnd(15)
+   return maps[result.index].map_uid
 end
+-- <<<<<<<< shade2/command.hsp:4426 		}	 ..
 
 function Effect.decrement_fame(chara, fraction)
    local delta = chara.fame / fraction + 5

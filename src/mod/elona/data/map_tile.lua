@@ -1555,6 +1555,11 @@ local tiles = {
       elona_atlas = 1,
    },
    {
+      _id = "ballroom_room_floor",
+      elona_id = 69,
+      elona_atlas = 1,
+   },
+   {
       _id = "hardwood_floor_1",
       elona_id = 70,
       elona_atlas = 1,

@@ -1,6 +1,7 @@
 local data = require("internal.data")
 local Gui = require("api.Gui")
 local Object = require("api.Object")
+local config = require("internal.config")
 
 local ICharaActivity = class.interface("ICharaActivity")
 
@@ -48,7 +49,13 @@ end
 function ICharaActivity:pass_activity_turn()
    -- TODO the performance of Gui.update_screen() is terrible, so this causes a
    -- lot of lag. There has to be some amount of optimization we can do.
-   Gui.wait(self.activity.animation_wait)
+   local auto_turn = config["base.auto_turn_speed"]
+
+   if auto_turn == "high" then
+      Gui.wait(self.activity.animation_wait, true)
+   elseif auto_turn == "normal" then
+      Gui.wait(self.activity.animation_wait)
+   end
 
    if self.activity and (self.activity.turns or 0) <= 0 then
       self:finish_activity()
