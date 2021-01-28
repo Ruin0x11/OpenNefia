@@ -8,6 +8,12 @@ local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
+local InstancedArea = require("api.InstancedArea")
+local DungeonTemplate = require("mod.elona.api.DungeonTemplate")
+local DungeonMap = require("mod.elona.api.DungeonMap")
+local Area = require("api.Area")
+local Map = require("api.Map")
+local I18N = require("api.I18N")
 
 local QuestMap = {}
 
@@ -47,10 +53,10 @@ local PARTY_RANDOM_ITEMS = {
 function QuestMap.generate_party(difficulty)
    -- >>>>>>>> elona122/shade2/map_rand.hsp:584 *map_createDungeonPerform ..
    local map = InstancedMap:new(38, 28)
-   map:set_archetype("elona.quest_party", { set_properties = true })
-   map.is_indoor = true
+   map:set_archetype("elona.quest", { set_properties = true })
    map.tileset = "elona.castle"
-   map.types = { "quest" }
+   map.music = "elona.casino"
+   map.name = I18N.get("map.quest.party_room")
 
    local room_count = 80
 
@@ -219,14 +225,39 @@ function QuestMap.generate_party(difficulty)
    -- <<<<<<<< elona122/shade2/map_rand.hsp:703 	return true ..
 end
 
+-- >>>>>>>> shade2/map.hsp:70 	if gArea=areaQuest{ ..
+local function quest_chara_filter(difficulty)
+   return function(map)
+      return {
+         level = Calc.calc_object_level(difficulty + 1, map),
+         quality = Calc.calc_object_quality(Enum.Quality.Normal),
+      }
+   end
+end
+-- <<<<<<<< shade2/map.hsp:76 		} ..
+
 function QuestMap.generate_hunt(difficulty)
+-- >>>>>>>> shade2/map_rand.hsp:117 		if gQuest=qHunt{ ..
    local params = {
+      tileset = "elona.dungeon_forest",
       width = 28 + Rand.rnd(6),
       height = 20 + Rand.rnd(6),
+      chara_filter = quest_chara_filter(difficulty)
    }
-   local map = Dungeon.gen_type_hunt(area, floor, params)
 
-   map.types = { "quest" }
+   local area = InstancedArea:new()
+   local floor = 1
+   local gen, params = DungeonTemplate.type_hunt(floor, params)
+   local map = DungeonMap.generate(area, floor, gen, params)
+   area:add_floor(map)
+   Area.register(area, { parent = Area.for_map(Map.current()) })
+   -- <<<<<<<< shade2/map_rand.hsp:122 			} ..
+
+   map:set_archetype("elona.quest", { set_properties = true })
+   map.is_indoor = false
+   map.music = "elona.battle1"
+   map.name = I18N.get("map.quest.outskirts")
+
    return map
 end
 

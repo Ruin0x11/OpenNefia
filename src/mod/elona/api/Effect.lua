@@ -584,7 +584,7 @@ end
 
 function Effect.decrement_fame(chara, fraction)
    local delta = chara.fame / fraction + 5
-   delta = delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2)
+   delta = math.floor(delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2))
    chara.fame = math.max(chara.fame - math.floor(delta), 0)
    return delta
 end

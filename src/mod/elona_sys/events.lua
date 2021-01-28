@@ -581,7 +581,7 @@ Event.register("base.on_set_player", "Add player light", add_player_light)
 
 local function warn_quest_abandonment(_, params)
    if Quest.is_immediate_quest_active() then
-      Gui.mes("action.leave.abandoning_quest")
+      Gui.mes("action.move.leave.abandoning_quest")
    end
 end
 Event.register("elona_sys.before_player_map_leave", "Warn about abandoning instanced quest", warn_quest_abandonment)

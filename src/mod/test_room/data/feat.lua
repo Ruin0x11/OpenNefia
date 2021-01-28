@@ -61,7 +61,7 @@ data:add {
    is_opaque = false,
 
    on_bumped_into = function(self, params)
-      local pred = function(q) return q.on_time_expired ~= nil end
+      local pred = function(q) return q.deadline_days == nil end
       local quests = data["elona_sys.quest"]:iter():filter(pred)
 
       local choices = quests:map(function(q) return q._id:gsub("^.*%.", "") end):to_list()

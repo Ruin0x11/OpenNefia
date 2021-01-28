@@ -460,7 +460,7 @@ end
 --- Plays music.
 ---
 --- @tparam id:base.music music_id
-function Gui.play_music(music_id)
+function Gui.play_music(music_id, no_loop)
    local sound_manager = require("internal.global.global_sound_manager")
 
    if not config["base.play_music"] then

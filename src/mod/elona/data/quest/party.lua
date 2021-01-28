@@ -181,7 +181,7 @@ data:add {
 local function add_music_tickets(_, params)
    local quest = params.quest
    -- >>>>>>>> shade2/quest.hsp:463 	if qExist(rq)=qPerform:if qParam1(rq)*150/100<qPa ..
-   if is_party_great_success(quest) then
+   if quest._id == "elona.party" and is_party_great_success(quest) then
       local player = Chara.player()
       local amount = 1 + quest.params.current_points / 10
       Item.create("elona.music_ticket", player.x, player.y, { amount = amount })
