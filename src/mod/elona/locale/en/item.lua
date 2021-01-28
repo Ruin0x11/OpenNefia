@@ -2043,7 +2043,7 @@ local item = {
     },
     name = "grape"
   },
-  grave_ornamented_with_flowers = {
+  grave_of_ornamented_with_flowers = {
     desc = {
       main = {
         text = "A recent grave with flowers for the departed... The name is still readable,"

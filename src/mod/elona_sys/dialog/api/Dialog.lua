@@ -415,7 +415,7 @@ local function step_dialog(node_data, talk, state, prev_node_id)
 
       -- Run on_finish callback.
       if node.on_finish then
-         local ok, result = pcall(node.on_finish, talk, state, node_data.params)
+         local ok, result = xpcall(node.on_finish, debug.traceback, talk, state, node_data.params)
          if not ok then
             dialog_error(talk, "Error running on_finish function", result)
          end

@@ -1,6 +1,10 @@
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
+local Quest = require("mod.elona_sys.api.Quest")
+local QuestMap = require("mod.elona.api.QuestMap")
+local Map = require("api.Map")
+local I18N = require("api.I18N")
 
 local huntex = {
    _id = "huntex",
@@ -39,9 +43,46 @@ local huntex = {
       return true
    end,
    locale_data = function(self)
-      return { objective = self.params.enemy_id, enemy_level = self.params.enemy_level }
+      local objective = I18N.get("chara." .. self.params.enemy_id .. ".name")
+      return { objective = objective, enemy_level = self.params.enemy_level }
    end,
 
    prevents_pickpocket = true
 }
--- data:add(huntex)
+
+function huntex.on_accept(self)
+   return true, "elona.quest_huntex:accept"
+end
+
+data:add(huntex)
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_huntex",
+
+   nodes = {
+      accept = {
+         text = "talk.npc.quest_giver.accept.hunt",
+         on_finish = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+
+            local current_map = t.speaker:current_map()
+            local archetype = current_map:archetype()
+            local archetype_id
+            if archetype == nil or archetype.on_generate_map == nil then
+               archetype_id = "elona.vernis"
+            else
+               archetype_id = archetype._id
+            end
+            local hunt_map = QuestMap.generate_huntex(archetype_id, quest.params.enemy_id, quest.params.enemy_level, quest.difficulty)
+            local player = Chara.player()
+            hunt_map:set_previous_map_and_location(current_map, player.x, player.y)
+
+            Quest.set_immediate_quest(quest)
+
+            Map.travel_to(hunt_map)
+         end
+      },
+   }
+}

@@ -3689,7 +3689,7 @@ local item = {
     },
     name = "ブドウ"
   },
-  grave_ornamented_with_flowers = {
+  grave_of_ornamented_with_flowers = {
     desc = {
       _0 = {
         footnote = "〜死にゆく者へ贈る書〜",

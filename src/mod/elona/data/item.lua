@@ -2556,8 +2556,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,
@@ -3669,8 +3669,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,
@@ -13184,8 +13184,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,

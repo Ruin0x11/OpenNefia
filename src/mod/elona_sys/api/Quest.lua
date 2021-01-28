@@ -618,6 +618,7 @@ function Quest.is_immediate_quest_active()
       return false
    end
 
+   local uid = save.elona_sys.instanced_quest_uid
    return Quest.get_immediate_quest().state == "accepted"
 end
 

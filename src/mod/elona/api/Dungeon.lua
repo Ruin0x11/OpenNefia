@@ -1083,7 +1083,7 @@ end
 function Dungeon.gen_type_hunt(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:305 *map_createDungeonHunt ..
    local map = Dungeon.create_map(floor, params)
-   map.is_indoors = false
+   map.is_indoor = false
    map:clear("elona.mapgen_room")
 
    for _ = 1, Rand.rnd(map:width() * map:height() / 30) do

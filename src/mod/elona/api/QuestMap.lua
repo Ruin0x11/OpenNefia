@@ -14,6 +14,9 @@ local DungeonMap = require("mod.elona.api.DungeonMap")
 local Area = require("api.Area")
 local Map = require("api.Map")
 local I18N = require("api.I18N")
+local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
+local Feat = require("api.Feat")
+local IOwned = require("api.IOwned")
 
 local QuestMap = {}
 
@@ -259,6 +262,58 @@ function QuestMap.generate_hunt(difficulty)
    map.name = I18N.get("map.quest.outskirts")
 
    return map
+end
+
+-- >>>>>>>> shade2/map_rand.hsp:709 *map_createDungeonConquer ..
+function QuestMap.generate_derived_hunt(map_archetype_id, create_cb)
+   local area = InstancedArea:new()
+   local floor = 1
+   local params = {}
+
+   local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
+   local map = map_archetype.on_generate_map(area, floor, params)
+   map:set_archetype("elona.quest_huntex", { set_properties = true })
+   map.name = I18N.get("map.quest.urban_area")
+   Rand.set_seed()
+
+   map:iter_feats():each(IOwned.remove_ownership)
+   map:iter_charas():each(IOwned.remove_ownership)
+
+   create_cb(map)
+
+   for _, item in Item.iter(map) do
+      if item._id == "elona.well" or item._id == "elona.fountain" then
+         item.params.amount_remaining = item.params.amount_remaining - 10
+      end
+      if item._id == "elona.safe" then
+         item.params.chest_item_level = 0
+      end
+   end
+
+   area:add_floor(map)
+   Area.register(area, { parent = Area.for_map(Map.current()) })
+
+   return map
+end
+-- <<<<<<<< shade2/map_rand.hsp:744 	return ..
+
+function QuestMap.generate_huntex(map_archetype_id, chara_id, enemy_level, difficulty)
+   -- >>>>>>>> shade2/map_rand.hsp:722 	if gQuest=qHuntEx{ ..
+   local gen_charas = function(map)
+      local count = Rand.rnd(6) + 4
+      for i = 1, count do
+         local filter = {
+            level = difficulty * 3 / 2,
+            initial_level = enemy_level,
+            quality = Enum.Quality.Bad,
+            id = chara_id
+         }
+         Charagen.create(nil, nil, filter, map)
+      end
+   end
+   -- <<<<<<<< shade2/map_rand.hsp:726 		} ..
+
+   return QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
 end
 
 return QuestMap
