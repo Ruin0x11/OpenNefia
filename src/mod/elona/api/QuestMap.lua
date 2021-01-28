@@ -220,8 +220,11 @@ function QuestMap.generate_party(difficulty)
 end
 
 function QuestMap.generate_hunt(difficulty)
-   local map = InstancedMap:new(38, 28)
-
+   local params = {
+      width = 28 + Rand.rnd(6),
+      height = 20 + Rand.rnd(6),
+   }
+   local map = Dungeon.gen_type_hunt(area, floor, params)
 
    map.types = { "quest" }
    return map

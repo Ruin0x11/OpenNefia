@@ -5,18 +5,18 @@ local Filters = require("mod.elona.api.Filters")
 
 local DungeonTemplate = {}
 
-function DungeonTemplate.type_standard(area, floor, params)
+function DungeonTemplate.type_standard(floor, params)
    params.level = (params.level or 1) + floor - 1
    return Dungeon.gen_type_standard, params
 end
 
-function DungeonTemplate.type_wide(area, floor, params)
+function DungeonTemplate.type_wide(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.has_monster_houses = true
    return Dungeon.gen_type_wide, params
 end
 
-function DungeonTemplate.type_big_room(area, floor, params)
+function DungeonTemplate.type_big_room(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -29,22 +29,22 @@ function DungeonTemplate.type_big_room(area, floor, params)
    return Dungeon.gen_type_big_room, params
 end
 
-function DungeonTemplate.type_resident(area, floor, params)
+function DungeonTemplate.type_resident(floor, params)
    params.level = (params.level or 1) + floor - 1
    return Dungeon.gen_type_resident, params
 end
 
-function DungeonTemplate.type_jail(area, floor, params)
+function DungeonTemplate.type_jail(floor, params)
    params.level = (params.level or 1) + floor - 1
    return Dungeon.gen_type_jail, params
 end
 
-function DungeonTemplate.type_hunt(area, floor, params)
+function DungeonTemplate.type_hunt(floor, params)
    params.level = (params.level or 1) + floor - 1
    return Dungeon.gen_type_hunt, params
 end
 
-function DungeonTemplate.type_long(area, floor, params)
+function DungeonTemplate.type_long(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -57,7 +57,7 @@ function DungeonTemplate.type_long(area, floor, params)
    return Dungeon.gen_type_long, params
 end
 
-function DungeonTemplate.type_maze(area, floor, params)
+function DungeonTemplate.type_maze(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -73,7 +73,7 @@ function DungeonTemplate.type_maze(area, floor, params)
    return Dungeon.gen_type_maze, params
 end
 
-function DungeonTemplate.type_puppy_cave(area, floor, params)
+function DungeonTemplate.type_puppy_cave(floor, params)
    params.level = (params.level or 1) + floor - 1
    function params.calc_density(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -87,7 +87,7 @@ function DungeonTemplate.type_puppy_cave(area, floor, params)
 end
 
 
-function DungeonTemplate.nefia_dungeon(area, floor, params)
+function DungeonTemplate.nefia_dungeon(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
 
@@ -108,11 +108,11 @@ function DungeonTemplate.nefia_dungeon(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen(area, floor, params)
+   return gen(floor, params)
 end
 -- image = "elona.feat_area_cave",
 
-function DungeonTemplate.nefia_tower(area, floor, params)
+function DungeonTemplate.nefia_tower(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.tower_1"
 
@@ -130,11 +130,11 @@ function DungeonTemplate.nefia_tower(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen(area, floor, params)
+   return gen(floor, params)
 end
 -- image = "elona.feat_area_tower",
 
-function DungeonTemplate.nefia_forest(area, floor, params)
+function DungeonTemplate.nefia_forest(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_forest"
 
@@ -152,11 +152,11 @@ function DungeonTemplate.nefia_forest(area, floor, params)
       gen = DungeonTemplate.type_resident
    end
 
-   return gen(area, floor, params)
+   return gen(floor, params)
 end
 -- image = "elona.feat_area_tree",
 
-function DungeonTemplate.nefia_castle(area, floor, params)
+function DungeonTemplate.nefia_castle(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
 
@@ -174,7 +174,7 @@ function DungeonTemplate.nefia_castle(area, floor, params)
       params.tileset = "elona.water"
    end
 
-   return gen(area, floor, params)
+   return gen(floor, params)
 end
 -- image = "elona.feat_area_temple",
 
@@ -183,7 +183,7 @@ local function scale_density_with_floor(gen_params)
    return gen_params
 end
 
-function DungeonTemplate.lesimas(area, floor, params)
+function DungeonTemplate.lesimas(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.lesimas"
    params.on_generate_params = scale_density_with_floor
@@ -237,11 +237,11 @@ function DungeonTemplate.lesimas(area, floor, params)
       end
    end
 
-   return gen(area, floor, params)
+   return gen(floor, params)
 end
 -- image = "elona.feat_area_cave",
 
-function DungeonTemplate.tower_of_fire(area, floor, params)
+function DungeonTemplate.tower_of_fire(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.tower_of_fire"
    params.on_generate_params = scale_density_with_floor
@@ -249,7 +249,7 @@ function DungeonTemplate.tower_of_fire(area, floor, params)
    return Dungeon.gen_type_standard, params
 end
 
-function DungeonTemplate.crypt_of_the_damned(area, floor, params)
+function DungeonTemplate.crypt_of_the_damned(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
    params.on_generate_params = scale_density_with_floor
@@ -257,7 +257,7 @@ function DungeonTemplate.crypt_of_the_damned(area, floor, params)
    return Dungeon.gen_type_standard, params
 end
 
-function DungeonTemplate.ancient_castle(area, floor, params)
+function DungeonTemplate.ancient_castle(floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
    params.on_generate_params = scale_density_with_floor

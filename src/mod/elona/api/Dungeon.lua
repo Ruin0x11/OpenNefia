@@ -844,7 +844,7 @@ end
 ---
 
 --- Rooms connected by tunnels.
-function Dungeon.gen_type_standard(area, floor, params)
+function Dungeon.gen_type_standard(floor, params)
    local map = Dungeon.create_map(floor, params)
 
    local rooms = {}
@@ -874,7 +874,7 @@ function Dungeon.gen_type_standard(area, floor, params)
    return map
 end
 
-function Dungeon.gen_type_wide(area, floor, params)
+function Dungeon.gen_type_wide(floor, params)
    local map = Dungeon.create_map(floor, params)
    params.max_size = 3
 
@@ -977,7 +977,7 @@ function Dungeon.gen_type_wide(area, floor, params)
 end
 
 --- One large room spanning the entire map.
-function Dungeon.gen_type_big_room(area, floor, params)
+function Dungeon.gen_type_big_room(floor, params)
    local width = (48 + Rand.rnd(20))
    local height = 22
    local map = Dungeon.create_map(floor, params, width, height)
@@ -1010,7 +1010,7 @@ function Dungeon.gen_type_big_room(area, floor, params)
 end
 
 -- Large room/tunnel in middle, with rooms on outer extremities
-function Dungeon.gen_type_resident(area, floor, params)
+function Dungeon.gen_type_resident(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:417 *map_createDungeonResident ..
    local map = Dungeon.create_map(floor, params)
    params.min_size = 8
@@ -1065,11 +1065,11 @@ function Dungeon.gen_type_resident(area, floor, params)
 end
 
 -- Same as type 4 but wider.
-function Dungeon.gen_type_jail(area, floor, params)
+function Dungeon.gen_type_jail(floor, params)
    params.width = 48 + Rand.rnd(20)
    params.height = 22
 
-   local map, err = Dungeon.gen_type_resident(area, floor, params)
+   local map, err = Dungeon.gen_type_resident(floor, params)
    if map == nil then
       return nil
    end
@@ -1080,7 +1080,7 @@ function Dungeon.gen_type_jail(area, floor, params)
 end
 
 -- Maps used in hunting quests.
-function Dungeon.gen_type_hunt(area, floor, params)
+function Dungeon.gen_type_hunt(floor, params)
    -- >>>>>>>> shade2/map_rand.hsp:305 *map_createDungeonHunt ..
    local map = Dungeon.create_map(floor, params)
    map.is_indoors = false
@@ -1120,7 +1120,7 @@ function Dungeon.gen_type_hunt(area, floor, params)
 end
 
 -- Long vertical tunnel.
-function Dungeon.gen_type_long(area, floor, params)
+function Dungeon.gen_type_long(floor, params)
    local width = 30
    local height = (60 + Rand.rnd(60))
    local map = Dungeon.create_map(floor, params, width, height)
@@ -1185,7 +1185,7 @@ function Dungeon.gen_type_long(area, floor, params)
 end
 
 -- Maze with corridors of width 4 (Minotaur's Nest).
-function Dungeon.gen_type_maze(area, floor, params)
+function Dungeon.gen_type_maze(floor, params)
    local class = 12
    local bold = 2
 
@@ -1206,7 +1206,7 @@ function Dungeon.gen_type_maze(area, floor, params)
 end
 
 -- Large cavern with walls interspersed throughout (Puppy's Cave).
-function Dungeon.gen_type_puppy_cave(area, floor, params)
+function Dungeon.gen_type_puppy_cave(floor, params)
    local class = 5 + Rand.rnd(4)
    local bold = 2
 
