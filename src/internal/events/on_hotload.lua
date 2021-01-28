@@ -2,6 +2,9 @@ local Map = require("api.Map")
 local IEventEmitter = require("api.IEventEmitter")
 local Event = require("api.Event")
 local paths = require("internal.paths")
+local IMapObject = require("api.IMapObject")
+local ILocation = require("api.ILocation")
+local Log = require("api.Log")
 
 -- The following adds support for cleaning up missing events
 -- automatically if a chunk is hotloaded. It assumes only one chunk is
@@ -43,12 +46,31 @@ Event.register("base.on_hotload_end", "Notify objects in map of prototype hotloa
                         hotloaded[v._type] = hotloaded[v._type] or {}
                         hotloaded[v._type][v._id] = true
                      end
-                     for _, obj in map:iter() do
-                        if class.is_an(IEventEmitter, obj)
-                           and hotloaded[obj._type]
-                           and hotloaded[obj._type][obj._id]
-                        then
-                           obj:emit("base.on_hotload_object", params)
+
+                     local stack = {map}
+                     local found = table.set {}
+
+                     -- Handle nested containers and hotload all inner objects
+                     while #stack > 0 do
+                        local thing = stack[#stack]
+                        stack[#stack] = nil
+
+                        if not found[thing] then
+                           found[thing] = true
+                           if class.is_an(IMapObject, thing)
+                              and class.is_an(IEventEmitter, thing)
+                              and hotloaded[thing._type]
+                              and hotloaded[thing._type][thing._id]
+                           then
+                              Log.debug("Load " .. thing._type .. " " .. thing._id)
+                              thing:emit("base.on_hotload_object", params)
+                           end
+
+                           if class.is_an(ILocation, thing) then
+                              for _, obj in thing:iter() do
+                                 stack[#stack+1] = obj
+                              end
+                           end
                         end
                      end
                   end

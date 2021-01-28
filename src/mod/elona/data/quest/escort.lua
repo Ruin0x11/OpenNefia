@@ -29,7 +29,7 @@ local escort = {
       return {map = self.params.destination_map_name}, "difficulty._" .. self.params.escort_difficulty
    end,
 
-   no_return_allowed = true
+   prevents_return = true
 }
 
 function escort.generate(self, client, start)

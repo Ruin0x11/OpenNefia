@@ -7,6 +7,7 @@ local Chara = require("api.Chara")
 local Area = require("api.Area")
 local InstancedMap = require("api.InstancedMap")
 local Feat = require("api.Feat")
+local Item = require("api.Item")
 
 local arc = {
    _type = "base.map_archetype",
@@ -195,6 +196,9 @@ OOOOOOOOOOOOOOOO]]
    local map = Layout.to_map({tiles = tiles, tileset = tileset})
 
    assert(Feat.create("test_room.select_quest", 7, 7, {}, map))
+
+   assert(Item.create("elona.harmonica", 8, 8, {}, map))
+   assert(Item.create("elona.stradivarius", 8, 8, {}, map))
 
    local parent_area = Area.parent(area) or area
    assert(Area.create_stairs_up(parent_area, 1, 7, 8, { force = true }, map))

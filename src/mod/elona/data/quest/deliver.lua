@@ -38,7 +38,7 @@ local deliver = {
 
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
 
-   no_return_allowed = true
+   prevents_return = true
 }
 
 function deliver.generate(self, client, start)

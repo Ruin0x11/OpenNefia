@@ -377,13 +377,22 @@ Event.register("base.on_item_instantiated", "Connect item events",
                   }
 
                   for _, action in ipairs(actions) do
-                     if item.proto["on_" .. action] then
-                        item:connect_self("elona_sys.on_item_" .. action,
-                                          "Item prototype on_" .. action .. " handler",
-                                          item.proto["on_" .. action])
+                     local event_id = "elona_sys.on_item_" .. action
+                     local event_name = "Item prototype on_" .. action .. " handler"
+
+                     -- If a handler is left over from previous instantiation
+                     if item:has_event_handler(event_id) then
+                        item:disconnect_self(event_id, event_name)
                      end
+
+                     if item.proto["on_" .. action] then
+                        item:connect_self(event_id, event_name, item.proto["on_" .. action])
+                     end
+
                      if item:has_event_handler("elona_sys.on_item_" .. action) then
                         item["can_" .. action] = true
+                     else
+                        item["can_" .. action] = nil
                      end
                   end
 end)

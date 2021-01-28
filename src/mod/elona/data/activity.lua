@@ -18,6 +18,9 @@ local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Material = require("mod.elona.api.Material")
 local Magic = require("mod.elona.api.Magic")
+local Quest = require("mod.elona_sys.api.Quest")
+local elona_Quest = require("mod.elona.api.Quest")
+local I18N = require("api.I18N")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -97,7 +100,7 @@ end
 local function sex_check_end(chara, partner)
    if not Chara.is_alive(partner)
    or not partner:has_activity("elona.sex") then
-      Gui.mes_visible("partner: spare life", partner.x, partner.y)
+      Gui.mes_visible("activity.sex.spare_life", chara.x, chara.y, partner, I18N.get("ui.sex2." .. chara:calc("gender")))
       partner:remove_activity()
       chara:remove_activity()
       return true
@@ -500,7 +503,7 @@ data:add {
             end
 
             if self.is_host then
-               Gui.mes("start sex", params.chara.x, params.chara.y)
+               Gui.mes("activity.sex.take_clothes_off", params.chara.x, params.chara.y, params.chara)
                self.partner:start_activity("elona.sex", {partner=params.chara}, self.turns * 2)
             end
          end
@@ -516,7 +519,7 @@ data:add {
             end
 
             if not self.is_host and self.turns % 5 == 0 then
-               Gui.mes_visible("*noise*", params.chara.x, params.chara.y, "SkyBlue")
+               Gui.mes_visible("activity.sex.dialog", params.chara.x, params.chara.y, "SkyBlue")
             end
 
             return "turn_end"
@@ -541,16 +544,34 @@ data:add {
 
             local gold_earned = params.chara:skill_level("elona.stat_charisma") * (50 + Rand.rnd(50)) + 100
 
-            Gui.mes_visible("take money", params.chara.x, params.chara.y)
+            Gui.mes_c_visible("activity.sex.after_dialog", params.chara.x, params.chara.y)
 
-            self.partner.gold = self.partner.gold - gold_earned
+            if not self.partner:is_player() then
+               if self.partner.gold >= gold_earned then
+                  Gui.mes_visible("activity.sex.take", params.chara, self.partner)
+               else
+                  if params.chara:is_in_fov() then
+                     Gui.mes("activity.sex.take_all_i_have", self.partner)
+                     if Rand.one_in(3) and not params.chara:is_player() then
+                        Gui.mes("activity.sex.gets_furious", params.chara)
+                        params.chara:set_target(self.partner)
+                        params.chara.ai_state.hate = 20
+                     end
+                  end
+                  self.partner.gold = math.max(self.partner.gold, 1)
+                  gold_earned = self.partner.gold
+               end
 
-            if params.chara:is_player() then
-               -- TODO modify_impression
-               Item.create("elona.gold_piece", params.chara.x, params.chara.y, {amount = gold_earned})
-               -- TODO modify_karma
-            else
-               params.chara.gold = params.chara.gold + gold_earned
+               self.partner.gold = self.partner.gold - gold_earned
+
+               if params.chara:is_player() then
+                  Effect.modify_impression(self.partner, 5)
+                  Item.create("elona.gold_piece", params.chara.x, params.chara.y, {amount = gold_earned})
+                  Gui.mes("common.something_is_put_on_the_ground")
+                  Effect.modify_karma(params.chara, -1)
+               else
+                  params.chara.gold = params.chara.gold + gold_earned
+               end
             end
 
             self.partner:remove_activity()
@@ -568,7 +589,9 @@ local function performance_calc_earned_gold(chara, instrument, audience, activit
    if chara:is_party_leader_of(audience) then
       gold = Rand.rnd(math.clamp(gold, 1, 100)) + 1
    end
-   -- TODO character_role
+   if chara:find_role("elona.shopkeeper") then
+      gold = math.floor(gold / 5)
+   end
 
    return math.min(gold, audience.gold)
    -- <<<<<<<< shade2/proc.hsp:261 				cGold(tc)-=p:cGold(cc)+=p:gold+=p ..
@@ -578,8 +601,8 @@ local function performance_bad(chara, instrument, audience, activity)
    -- >>>>>>>> shade2/proc.hsp:241 				cPerformScore(cc)-=cLevel(tc)/2 ..
    activity.performace_quality = activity.performance_quality - math.floor(audience:calc("level") / 2)
 
-   Gui.mes_visible("angry ", chara.x, chara.y, "SkyBlue")
-   Gui.mes_visible("throws rock ", chara.x, chara.y)
+   Gui.mes_c_visible("activity.perform.dialog.angry", audience.x, audience.y, "SkyBlue")
+   Gui.mes_visible("activity.perform.throws_rock", audience.x, audience.y, audience)
    local damage = audience:emit("elona.calc_bad_performance_damage", {chara=chara,instrument=instrument,activity=activity}, Rand.rnd(audience:calc("level") + 1) + 1)
    chara:damage_hp(damage, "elona.performer")
    -- <<<<<<<< shade2/proc.hsp:250 				dmgHP cc,dmg,dmgFromPerform:if cExist(cc)=cDea ..
@@ -587,7 +610,7 @@ end
 
 local function pos_nearby(x, y, map)
    x = math.clamp(x - 1 + Rand.rnd(3), 0, map:width() - 1)
-   y = math.clamp(x - 1 + Rand.rnd(3), 0, map:height() - 1)
+   y = math.clamp(y - 1 + Rand.rnd(3), 0, map:height() - 1)
    if not map:can_access(x, y) then
       return nil
    end
@@ -611,12 +634,11 @@ local function get_thrown_item_filter(chara, instrument, audience, activity)
       quality = Calc.calc_object_level(activity.performance_quality / 8)
    end
 
-   local categories = Filters.fsetperform
+   local categories = Rand.choice(Filters.fsetperform)
    local id = nil
 
-   -- TODO quest performance
-   local is_perform_quest = false
-   if is_perform_quest then
+   local quest = Quest.get_immediate_quest()
+   if quest and quest._id == "elona.party" then
       if Rand.one_in(150) then
          id = "elona.safe"
       end
@@ -654,7 +676,7 @@ local function performance_throw_item(chara, instrument, audience, activity, x, 
    local item = Itemgen.create(nil, nil, filter)
 
    if item then
-      local cb = Anim.ranged_attack(x, y, chara.x, chara.y, item:calc("image"), item:calc("color"))
+      local cb = Anim.ranged_attack(audience.x, audience.y, x, y, item:calc("image"), item:calc("color"))
       Gui.start_draw_callback(cb)
       assert(map:take_object(item, x, y))
       item:refresh_cell_on_map()
@@ -663,12 +685,31 @@ local function performance_throw_item(chara, instrument, audience, activity, x, 
    -- <<<<<<<< elona122/shade2/proc.hsp:307 						} ..
 end
 
+local function update_quest_score(audience)
+   local quest = Quest.get_immediate_quest()
+   if quest and quest._id == "elona.party" then
+      if not audience:is_allied() then
+         audience.impression = audience.impression + Rand.rnd(3)
+         local score = elona_Quest.calc_party_score(audience:current_map())
+         -- >>>>>>>> shade2/calculation.hsp:1346 	if p>qParam2(gQuestRef) : txtEf coBlue: txt "(+"+ ..
+         local diff = score - quest.params.current_points
+         if diff > 0 then
+            Gui.mes_c(("(+%d) "):format(diff), "Blue")
+         elseif diff < 0 then
+            Gui.mes_c(("(%d) "):format(diff), "Red")
+         end
+         quest.params.current_points = score
+         -- <<<<<<<< shade2/calculation.hsp:1349 	return  ..
+      end
+   end
+end
+
 local function performance_good(chara, instrument, audience, activity)
 -- >>>>>>>> shade2/proc.hsp:265 			p=rnd(cLevel(tc)+1)+1 ..
    local level = audience:calc("level")
    local quality_delta = Rand.rnd(level + 1) + 1
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 2 + 1) then
-      -- TODO party quest
+      update_quest_score(audience)
       if Rand.one_in(2) then
          activity.performance_quality = activity.performance_quality + quality_delta
       elseif Rand.one_in(2) then
@@ -682,7 +723,7 @@ local function performance_good(chara, instrument, audience, activity)
 
    if Rand.rnd(chara:skill_level("elona.performer") + 1) > Rand.rnd(level * 5 + 1) then
       if Rand.one_in(3) then
-         Gui.mes_visible("perform interest ", chara.x, chara.y, "SkyBlue")
+         Gui.mes_c_visible("activity.perform.dialog.interest", chara.x, chara.y, "SkyBlue", audience, chara)
          activity.performance_quality = activity.performance_quality + level + 5
 
          local receive_goods = chara:calc("perform_receives_goods")
@@ -740,21 +781,19 @@ local function performance_apply(chara, instrument, audience, activity)
 
    if audience:reaction_towards(chara) <= 0 then -- TODO == -3
       if audience:get_hate_at(chara) == 0 then
-         Gui.mes_visible("perform gets angry", audience.x, audience.y)
+         Gui.mes_visible("activity.perform.gets_angry", audience.x, audience.y, audience)
       end
       audience.ai_state.hate = 30
       return
    end
 
    if chara:is_player() then
-      -- TODO: if temp is active, modify temp. Else, modify base.
-      -- audience:change("interest", -Rand.rnd(15))
       audience.interest = audience.interest - Rand.rnd(15)
       audience.interest_renew_date = World.date_hours() + 12
    end
 
    if audience:calc("interest") <= 0 then
-      Gui.mes_visible("disinterest", audience.x, audience.y, "SkyBlue")
+      Gui.mes_c_visible("activity.perform.disinterest", audience.x, audience.y, "SkyBlue")
       audience:reset("interest", 0)
       return
    end
@@ -785,9 +824,9 @@ end
 
 data:add {
    _type = "base.activity",
-   _id = "performance",
+   _id = "performer",
 
-   params = { instrument = "table", impressions = "table", performace_quality = "number", tip_gold = "number", number_of_tips = "number" },
+   params = { instrument = "table", performace_quality = "number", tip_gold = "number", number_of_tips = "number" },
    default_turns = 61,
 
    animation_wait = 40,
@@ -807,6 +846,7 @@ data:add {
             if not Item.is_alive(self.instrument) then
                return "stop"
             end
+            Gui.mes_visible("activity.perform.start", params.chara.x, params.chara.y, params.chara, self.instrument)
             -- <<<<<<<< shade2/proc.hsp:197 		} ..
          end
       },
@@ -819,16 +859,17 @@ data:add {
             local chara = params.chara
             if self.turns % 10 == 0 then
                if Rand.one_in(10) then
-                  Gui.mes_visible("*sound*", chara.x, chara.y, "Blue")
+                  Gui.mes_c_visible("activity.perform.sound.random", chara.x, chara.y, "Blue")
                end
-               Gui.mes("*cha*", "Blue")
+               Gui.mes_c("activity.perform.sound.cha", "Blue")
             end
             if self.turns % 20 == 0 then
                Calc.make_sound(chara.x, chara.y, 5, 1, 1, chara)
 
                local gold_earned = 0
                for _, audience in chara:current_map():iter_charas() do
-                  gold_earned = gold_earned + performance_apply(chara, self.instrument, audience, self)
+                  local gold = performance_apply(chara, self.instrument, audience, self) or 0
+                  gold_earned = gold_earned + math.floor(gold)
                   if not Chara.is_alive(chara) then
                      return "turn_end"
                   end
@@ -877,7 +918,7 @@ data:add {
                else
                   mes = 9
                end
-               Gui.mes("perform finish: " .. mes)
+               Gui.mes("activity.perform.quality._" .. mes)
             end
 
             if quality > 40 then
@@ -885,7 +926,7 @@ data:add {
             end
 
             if self.tip_gold ~= 0 then
-               Gui.mes_visible("total tips: " .. self.tip_gold, params.chara.x, params.chara.y)
+               Gui.mes_visible("activity.perform.tip", params.chara.x, params.chara.y, params.chara, self.tip_gold)
             end
 
             local exp = quality - params.chara:skill_level("elona.performer") + 50

@@ -240,7 +240,7 @@ data:add {
 local function is_non_returnable_quest_active()
    local pred = function(q)
       local proto = data["elona_sys.quest"]:ensure(q._id)
-      return q.state == "accepted" and proto.no_return_allowed
+      return q.state == "accepted" and proto.prevents_return
    end
    return Quest.iter():any(pred)
 end

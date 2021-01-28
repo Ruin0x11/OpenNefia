@@ -987,7 +987,7 @@ function Tools.end_quest()
    end
 end
 
-function Tools.learn_all_spells()
+function Tools.learn_all_skills()
    local player = Chara.player()
    player:mod_base_skill_level("elona.stat_magic", 10000)
    player:mod_base_skill_level("elona.stat_mana", 10000)
@@ -998,6 +998,11 @@ function Tools.learn_all_spells()
            end)
 
    Skill.iter_spells()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1000)
+           end)
+
+   Skill.iter_actions()
       :each(function(m)
             Skill.gain_skill(player, m._id, 2000, 1000)
            end)
