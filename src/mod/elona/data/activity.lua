@@ -565,7 +565,7 @@ data:add {
                self.partner.gold = self.partner.gold - gold_earned
 
                if params.chara:is_player() then
-                  Effect.modify_impression(self.partner, 5)
+                  Skill.modify_impression(self.partner, 5)
                   Item.create("elona.gold_piece", params.chara.x, params.chara.y, {amount = gold_earned})
                   Gui.mes("common.something_is_put_on_the_ground")
                   Effect.modify_karma(params.chara, -1)

@@ -16,6 +16,7 @@ local Area = require("api.Area")
 local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
+local Quest = require("mod.elona_sys.api.Quest")
 
 local Effect = {}
 
@@ -309,7 +310,7 @@ function Effect.eat_food(chara, food)
             else
                Effect.modify_karma(player, -1)
             end
-            Effect.modify_impression(chara, -25)
+            Skill.modify_impression(chara, -25)
             return
          end
       end
@@ -824,5 +825,15 @@ function Effect.has_sustain_enchantment(chara, attribute_id)
    end
    return chara:iter_enchantments():any(is_sustain_enc)
 end
+
+-- >>>>>>>> shade2/command.hsp:4378 *check_return ..
+function Effect.is_non_returnable_quest_active()
+   local pred = function(q)
+      local proto = data["elona_sys.quest"]:ensure(q._id)
+      return q.state == "accepted" and proto.prevents_return
+   end
+   return Quest.iter():any(pred)
+end
+-- <<<<<<<< shade2/command.hsp:4384 	return f ..
 
 return Effect

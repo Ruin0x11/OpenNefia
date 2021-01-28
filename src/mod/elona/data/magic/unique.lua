@@ -236,16 +236,6 @@ data:add {
    cast = do_curse
 }
 
--- >>>>>>>> shade2/command.hsp:4378 *check_return ..
-local function is_non_returnable_quest_active()
-   local pred = function(q)
-      local proto = data["elona_sys.quest"]:ensure(q._id)
-      return q.state == "accepted" and proto.prevents_return
-   end
-   return Quest.iter():any(pred)
-end
--- <<<<<<<< shade2/command.hsp:4384 	return f ..
-
 data:add {
    _id = "spell_return",
    _type = "base.skill",
@@ -281,7 +271,7 @@ data:add {
          Gui.mes("magic.return.cancel")
          s.turns_until_cast_return = 0
       else
-         if is_non_returnable_quest_active() then
+         if Effect.is_non_returnable_quest_active() then
             Gui.mes("misc.return.forbidden")
             if not Input.yes_no() then
                return false

@@ -2,9 +2,45 @@ local Rand = require("api.Rand")
 local Quest = require("mod.elona_sys.api.Quest")
 local Pos = require("api.Pos")
 local Chara = require("api.Chara")
+local QuestMap = require("mod.elona.api.QuestMap")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Event = require("api.Event")
+local Gui = require("api.Gui")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local Enum = require("api.Enum")
+local Charagen = require("mod.tools.api.Charagen")
+local Map = require("api.Map")
+local Effect = require("mod.elona.api.Effect")
+local Skill = require("mod.elona_sys.api.Skill")
 
 -- if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0:return:else:txtMore:txt lang("あなたはクライアントを置き去りにした。","You left
 -- your client.")
+
+local function escort_for_quest(quest, map)
+   -- >>>>>>>> shade2/map.hsp:2104 			repeat maxFollower ..
+   local pred = function(chara)
+      return chara.is_being_escorted
+         and Chara.is_alive(chara)
+         and quest.params.escort_chara_uid == chara.uid
+   end
+   return Chara.iter_allies(map):filter(pred):nth(1)
+   -- <<<<<<<< shade2/map.hsp:2107 			} ..
+end
+
+local function escort_for_quest_died(quest, map)
+   -- >>>>>>>> shade2/map.hsp:2104 			repeat maxFollower ..
+   local pred = function(chara)
+      return chara.is_being_escorted
+         and not Chara.is_alive(chara)
+         and quest.params.escort_chara_uid == chara.uid
+   end
+
+   local dead = Chara.iter_allies(map):filter(pred):nth(1)
+   local not_in_party = not fun.iter(save.base.allies):any(function(uid) return uid == quest.params.escort_chara_uid end)
+
+   return dead or not_in_party
+   -- <<<<<<<< shade2/map.hsp:2107 			} ..
+end
 
 local escort = {
    _id = "escort",
@@ -58,7 +94,7 @@ function escort.generate(self, client, start)
       self.difficulty = math.clamp(math.floor(self.reward_fix / 20) + 1, 1, 40)
    end
 
-   if start.gen_id == "elona.noyel" or dest.gen_id == "elona.noyel" then
+   if start.archetype_id == "elona.noyel" or dest.archetype_id == "elona.noyel" then
       self.reward_fix = math.floor(self.reward_fix * 180 / 100)
    end
 
@@ -71,4 +107,161 @@ function escort.generate(self, client, start)
    return true
 end
 
--- data:add(escort)
+function escort.on_accept(self)
+   -- TODO party limit
+   return true, "elona.quest_escort:accept"
+end
+
+function escort.on_failure(self)
+   -- >>>>>>>> shade2/quest.hsp:356 			txtMore:txtEf coPurple:txt lang("あなたは護衛の任務を果たせな ..
+   Gui.mes_c("quest.escort.you_failed_to_protect", "Purple")
+   local chara = escort_for_quest(self)
+   if chara then
+      chara.is_being_escorted = nil
+      if Chara.is_alive(chara) then
+         local difficulty = self.params.escort_difficulty
+         local damage_source
+         if difficulty == 0 then
+            Gui.mes_c("quest.escort.failed.assassin", "SkyBlue", chara)
+            damage_source = "elona.unknown"
+         elseif difficulty == 1 then
+            Gui.mes_c("quest.escort.failed.poison", "SkyBlue", chara)
+            damage_source = "elona.from_poison"
+         elseif difficulty == 2 then
+            Gui.mes_c("quest.escort.failed.deadline", "SkyBlue", chara)
+            damage_source = "elona.from_fire"
+         end
+         chara:damage_hp(999999, damage_source)
+      end
+      chara.state = "Dead"
+      if chara:is_ally() then
+         table.iremove_value(save.base.allies, chara.uid)
+      end
+   end
+   Effect.modify_karma(Chara.player(), -10)
+   -- <<<<<<<< shade2/quest.hsp:371 			} ..
+end
+
+data:add(escort)
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_escort",
+
+   nodes = {
+      accept = function(t)
+         -- >>>>>>>> shade2/chat.hsp:3022 			repeat  ..
+         local quest = Quest.for_client(t.speaker)
+         local map = t.speaker:current_map()
+         assert(quest)
+
+         local target
+         for i = 1, 100 do
+            local id
+            if i == 100 then
+               id = "elona.town_child"
+            end
+            local filter = { level = quest.difficulty + i - 1, quality = Enum.Quality.Bad, id = id, ownerless = true }
+            target = Charagen.create(nil, nil, filter)
+            if target then
+               local pred = function(chara)
+                  return chara._id == target._id and chara.is_being_escorted
+               end
+
+               if not Chara.iter_allies(map):any(pred) then
+                  break
+               end
+            end
+         end
+
+         local player = Chara.player()
+         assert(Map.try_place_chara(target, player.x, player.y, map))
+
+         target:recruit_as_ally()
+         target.is_being_escorted = true
+         target.is_not_changeable = true
+         quest.params.escort_chara_uid = target.uid
+         -- <<<<<<<< shade2/chat.hsp:3035 			qParam2(rq)=cId(rc) ..
+
+         return "elona.quest_giver:accept"
+      end,
+      complete = {
+         text = "talk.npc.quest_giver.finish.escort"
+      }
+   }
+}
+
+local function check_escort_destination_reached(map)
+   local pred = function(quest)
+      return quest._id == "elona.escort" and quest.state == "accepted"
+   end
+
+   for _, quest in Quest.iter():filter(pred) do
+      -- >>>>>>>> shade2/main.hsp:1776 	case evClientReached ..
+      local target = escort_for_quest(quest, map)
+
+      if target and map.uid == quest.params.destination_map_uid then
+         local cb = function()
+            Gui.mes("quest.escort.complete")
+            Dialog.start(target, "elona.quest_escort:complete")
+            Quest.complete(quest, nil)
+            target:vanquish()
+         end
+         -- <<<<<<<< shade2/main.hsp:1780 	swbreak ..
+         DeferredEvent.add(cb)
+      elseif escort_for_quest_died(quest, map) then
+         Quest.fail(quest)
+      end
+   end
+end
+Event.register("base.on_map_enter", "Check if escort destination is reached", check_escort_destination_reached)
+
+local function event_client_dead(chara)
+   -- >>>>>>>> shade2/main.hsp:1782 	case evClientDead ..
+   return function()
+      for _, quest in Quest.iter() do
+         if quest._id == "elona.escort"
+            and quest.state == "accepted"
+            and chara.uid == quest.params.escort_chara_uid
+         then
+            Quest.fail(quest)
+            break
+         end
+      end
+   end
+   -- <<<<<<<< shade2/main.hsp:1785 	loop ..
+end
+
+local function check_escort_killed(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1674 		if tc!pc :if tc<maxFollower { ..
+   if chara:is_player() or not chara:is_allied() then
+      return
+   end
+
+   Skill.modify_impression(chara, -10)
+
+   if chara.is_being_escorted then
+      chara.state = "Dead"
+      if chara:is_ally() then
+         table.iremove_value(save.base.allies, chara.uid)
+      end
+      DeferredEvent.add(event_client_dead(chara))
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1683 			} ..
+end
+
+Event.register("base.on_chara_killed", "Check if escort was killed", check_escort_killed)
+
+local function check_escort_left_behind(_, params)
+   -- >>>>>>>> shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
+   local quest = params.quest
+   if quest._id == "elona.escort" and quest.state ~= "accepted" then
+      save.elona_sys.immediate_quest_uid = nil
+      return true
+   end
+
+   Gui.mes("quest.escort.you_left_your_client")
+   return nil
+   -- <<<<<<<< shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
+end
+Event.register("elona_sys.on_quest_map_leave", "Check if escort was left behind", check_escort_left_behind)

@@ -1023,18 +1023,24 @@ local function visit_quest_giver(quest)
    end
 end
 
-function Tools.quick_quest()
-   local quests = data["elona_sys.quest"]:iter()
-   local choices = quests:map(function(q) return q._id:gsub("^.*%.", "") end):to_list()
-   local choice, canceled = Input.prompt(choices)
-   if canceled then
-      return
+function Tools.quick_quest(quest_id)
+   if quest_id == nil then
+      local quests = data["elona_sys.quest"]:iter()
+      local choices = quests:map(function(q) return q._id:gsub("^.*%.", "") end):to_list()
+      local choice, canceled = Input.prompt(choices)
+      if canceled then
+         return
+      end
+      quest_id = quests:nth(choice.index)._id
    end
-   local quest = quests:nth(choice.index)
 
    local map = Chara.player():current_map()
    local client = assert(Quest.iter_clients_in_map(map):nth(1))
-   local new_quest = Quest.generate_from_proto(quest._id, client, map)
+   local new_quest = Quest.generate_from_proto(quest_id, client, map)
+
+   if new_quest == nil then
+      return nil
+   end
 
    visit_quest_giver(new_quest)
 end

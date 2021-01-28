@@ -972,7 +972,12 @@ data:add {
          Gui.mes("magic.escape.cancel")
          s.turns_until_cast_return = 0
       else
-         -- TODO quest
+         if Effect.is_non_returnable_quest_active() then
+            Gui.mes("misc.return.forbidden")
+            if not Input.yes_no() then
+               return false
+            end
+         end
          -- TODO dungeon boss
 
          if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then

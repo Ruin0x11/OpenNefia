@@ -131,7 +131,7 @@ function Quest.generate_from_proto(proto_id, chara, map)
    if proto.generate then
       local success = proto.generate(quest, client, town, map)
       if not success then
-         local mes = ("Tried to generate quest '%s' but did not succeed"):format(quest._id)
+         local mes = ("Tried to generate quest '%s' but did not succeed"):format(proto_id)
          Log.warn(mes)
          return nil, mes
       end
@@ -402,7 +402,7 @@ function Quest.register_town(map)
    local town = {
       uid = map.uid,
       name = map.name,
-      gen_id = map.gen_id,
+      archetype_id = map._archetype,
       world_map_area_uid = parent.uid,
       world_map_x = x,
       world_map_y = y,
@@ -508,7 +508,7 @@ end
 function Quest.complete(quest, client)
    local reward_text = get_reward_text(quest)
    local next_node = "elona.quest_giver:complete_default"
-   if reward_text then
+   if reward_text and client then
       Gui.mes("quest.giver.complete.take_reward", reward_text, client)
    end
 
@@ -525,9 +525,9 @@ function Quest.complete(quest, client)
 end
 
 function Quest.fail(quest)
+   Gui.mes("quest.failed_taken_from", quest.client_name)
    Event.trigger("elona_sys.on_quest_failed", {quest=quest})
 
-   Gui.mes("quest.failed_taken_from", quest.client_name)
    local fame_delta = Effect.decrement_fame(Chara.player(), 40)
    Gui.mes_c("quest.lose_fame", "Red", fame_delta)
 

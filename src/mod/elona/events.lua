@@ -883,7 +883,7 @@ local function proc_return(chara)
          local has_escort = Chara.iter_allies()
             :filter(Chara.is_alive)
             :extract("is_quest_escort")
-            :any()
+            :any(function(i) return i end)
 
          if has_escort then
             Gui.mes("magic.return.prevented.normal")
@@ -899,6 +899,11 @@ local function proc_return(chara)
          if dest == nil or dest == map.uid then
             Gui.mes("common.nothing_happens")
             return
+         end
+
+         if Effect.is_non_returnable_quest_active() then
+            Gui.mes("quest.deliver.you_commit_a_serious_crime")
+            Effect.modify_karma(chara, -10)
          end
 
          local blocked = Event.trigger("elona.before_cast_return", {}, false)

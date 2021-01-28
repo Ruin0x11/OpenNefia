@@ -15,6 +15,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
+local elona_Quest = require("mod.elona.api.Quest")
 
 --
 --
@@ -652,6 +653,10 @@ local function on_quest_exit(quest)
    end
 
    if quest.state ~= "completed" then
+      local result = Event.trigger("elona_sys.on_quest_map_leave", {quest = quest})
+      if result then
+         return
+      end
       Quest.fail(quest)
       Input.query_more()
    end
@@ -716,3 +721,20 @@ local function quest_create_rewards(_, params)
    Gui.mes("common.something_is_put_on_the_ground")
 end
 Event.register("elona_sys.on_quest_completed", "Create default quest rewards", quest_create_rewards, 200000)
+
+local function quest_failed_callback(_, params)
+   local quest = params.quest
+   local quest_data = data["elona_sys.quest"]:ensure(quest._id)
+   if quest_data.on_failed then
+      quest_data.on_failed(quest)
+   end
+end
+Event.register("elona_sys.on_quest_failed", "Run on_quest_failed callback", quest_failed_callback, 200000)
+
+local function check_escort_quest_targets(map)
+   local quest = Quest.get_immediate_quest()
+   if quest and quest._id == "elona.escort" then
+      elona_Quest.update_target_count_escort(quest, map)
+   end
+end
+Event.register("elona_sys.on_quest_check", "Check escort quest targets", check_escort_quest_targets)

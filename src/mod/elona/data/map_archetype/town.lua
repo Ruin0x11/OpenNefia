@@ -192,6 +192,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -357,6 +358,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -592,6 +594,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -745,7 +748,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -928,7 +932,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -1273,6 +1278,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -1474,7 +1480,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
