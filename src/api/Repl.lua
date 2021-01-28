@@ -95,8 +95,6 @@ function Repl.generate_env(locals)
 
    repl_env._traceback = debug.traceback("", nil, 2)
 
-   repl_env["save"] = require("internal.global.save")
-
    local history = {}
    if SaveFs.exists("data/repl_history") then
       local ok

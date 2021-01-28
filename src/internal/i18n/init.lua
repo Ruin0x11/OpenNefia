@@ -102,7 +102,7 @@ function i18n.switch_language(lang, force)
       end
    end
 
-   Log.info("Translations for language '%s' loaded in %02.02fms", i18n.language_id, sw:measure())
+   Log.debug("Translations for language '%s' loaded in %02.02fms", i18n.language_id, sw:measure())
 end
 
 function i18n.get_language()

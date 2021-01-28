@@ -38,9 +38,9 @@ local function load_mod(mod_name, root_path)
       -- Mods are not expected to return anything in init.lua.
       package.loaded[req_path] = true
 
-      Log.info("Loaded mod %s to %s in %02.02f ms.", mod_name, req_path, sw:measure())
+      Log.debug("Loaded mod %s to %s in %02.02f ms.", mod_name, req_path, sw:measure())
    else
-      Log.info("Loaded mod %s without init.lua.", mod_name)
+      Log.debug("Loaded mod %s without init.lua.", mod_name)
    end
 
    main_state.loaded_mods[mod_name] = true
@@ -52,23 +52,23 @@ function mod.is_loaded(mod_name)
    return not not main_state.loaded_mods[mod_name]
 end
 
-local function load_manifest(manifest_path)
+function mod.load_manifest(manifest_path)
    if not fs.is_file(manifest_path) then
-      return false, "Cannot find mod manifest at " .. manifest_path
+      return nil, "Cannot find mod manifest at " .. manifest_path
    end
 
    local chunk, err = love.filesystem.load(manifest_path)
    if chunk == nil then
-      return false, err
+      return nil, err
    end
    setfenv(chunk, {})
-   local success, manifest = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
-   if success == false then
+   local ok, manifest = xpcall(chunk, function(err) return debug.traceback(err, 2) end)
+   if not ok then
       local err = manifest
-      return success, err
+      return nil, err
    end
    if type(manifest) ~= "table" then
-      return false, (("Manifest must be table (got %s): %s"):format(type(manifest), manifest_path))
+      return nil, (("Manifest must be table (got %s): %s"):format(type(manifest), manifest_path))
    end
 
    local valid_keys = {
@@ -79,27 +79,21 @@ local function load_manifest(manifest_path)
    }
    for k, _ in pairs(manifest) do
       if not valid_keys[k] then
-         return false, ("Invalid manifest key '%s': %s"):format(k, manifest_path)
+         return nil, ("Invalid manifest key '%s': %s"):format(k, manifest_path)
       else
          valid_keys[k].seen = true
       end
    end
    for k, v in pairs(valid_keys) do
       if v.required and not v.seen then
-         return false, ("Missing required manifest key '%s': %s"):format(k, manifest_path)
+         return nil, ("Missing required manifest key '%s': %s"):format(k, manifest_path)
       end
    end
-
-   return true, manifest
-end
-
-local function extract_mod_id(manifest_file)
-   local r, count = string.gsub(manifest_file, ".+/([^/]+)/mod.%lua$", "%1")
-   if count == 0 then
-      return nil
+   if type(manifest.dependencies) ~= "table" then
+      error("Manifest must specify dependencies. " .. manifest.id)
    end
 
-   return r
+   return manifest, nil
 end
 
 function mod.calculate_load_order(mods)
@@ -112,10 +106,9 @@ function mod.calculate_load_order(mods)
    local seen = {}
 
    for _, manifest_file in ipairs(mods) do
-      local success, manifest = load_manifest(manifest_file)
-      if not success then
-         local err = manifest
-         error(string.format("Error initializing %s:\n\t%s", manifest.id, err))
+      local manifest, err = mod.load_manifest(manifest_file)
+      if not manifest then
+         error(string.format("Error initializing %s:\n\t%s", manifest_file, err))
       end
 
       local mod_id = manifest.id
@@ -128,16 +121,12 @@ function mod.calculate_load_order(mods)
       end
       seen[mod_id] = true
 
-      if type(manifest.dependencies) == "table" then
-         graph:add(0, mod_id) -- root
-         for dep_id, version in pairs(manifest.dependencies) do
-            graph:add(dep_id, mod_id)
-         end
-      else
-         error("Manifest must specify dependencies. " .. mod_id)
+      graph:add(0, mod_id) -- root
+      for dep_id, version in pairs(manifest.dependencies) do
+         graph:add(dep_id, mod_id)
       end
 
-      paths[mod_id] = { root_path = fs.parent(manifest_file), id = mod_id }
+      paths[mod_id] = { manifest_path = manifest_file, root_path = fs.parent(manifest_file), id = mod_id }
    end
 
    local order, cycle = graph:sort()
@@ -170,24 +159,22 @@ function mod.scan_mod_dir()
    return mods
 end
 
-local MOD_ID_REGEX = "[a-z][_a-z0-9]*"
+local MOD_ID_REGEX = "^[a-z][_a-z0-9]*$"
+function mod.is_valid_mod_identifier(mod_id)
+   return mod_id:match(MOD_ID_REGEX) ~= nil
+end
 
 -- Called when hotloading code from a mod that has not been loaded
 -- yet. Checks the manifest to ensure all the mod's dependencies are
 -- loaded first.
-function mod.hotload_mod(mod_id, root_path)
-   root_path = root_path or fs.join(MOD_DIR, mod_id)
-   local manifest_file = fs.find_loadable(root_path, "mod")
-   if not manifest_file then
-      return false, "No mod manifest found."
-   end
-   local ok, manifest = load_manifest(manifest_file)
-   if not ok then
-      return ok, manifest
+function mod.hotload_mod(mod_id, manifest_path)
+   local manifest, err = mod.load_manifest(manifest_path)
+   if not manifest then
+      return nil, err
    end
 
    assert(manifest.id == mod_id, "Mod ID must match manifest ID")
-   assert(mod_id:match(MOD_ID_REGEX), "Mod ID must start with a letter and consist of letters, numbers or underscores only")
+   assert(mod.is_valid_mod_identifier(mod_id), "Mod ID must start with a letter and consist of letters, numbers or underscores only")
 
    for dep_id, version in pairs(manifest.dependencies) do
       -- TODO check version
@@ -196,22 +183,27 @@ function mod.hotload_mod(mod_id, root_path)
       end
    end
 
-   Log.info("Hotloading mod %s at %s", mod_id, root_path)
+   local root_path = fs.parent(manifest_path)
+   Log.debug("Hotloading mod %s at %s", mod_id, root_path)
    return load_mod(mod_id, root_path)
 end
 
 function mod.load_mods(mods)
-   local load_order = mod.calculate_load_order(mods)
+   local Stopwatch = require("api.Stopwatch")
+   local sw = Stopwatch:new()
 
+   local load_order = mod.calculate_load_order(mods)
    local mod_names = table.concat(fun.iter(load_order):extract("id"):to_list(), " ")
    Log.info("Loading mods: %s", mod_names)
 
    for _, m in ipairs(load_order) do
-      local chunk, err = mod.hotload_mod(m.id, m.root_path)
+      local chunk, err = mod.hotload_mod(m.id, m.manifest_path)
       if err then
          error(err)
       end
    end
+
+   Log.info("Loaded mods in %02.02fms.", sw:measure())
 
    Rand.set_seed()
 end

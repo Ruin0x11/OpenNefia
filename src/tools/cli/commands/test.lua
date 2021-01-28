@@ -1,16 +1,3 @@
-_CONSOLE = true
-require("boot")
-
-local Log = require("api.Log")
-local filter = ".*:.*"
-if arg[1] then
-   filter = arg[1]
-end
-local level = "warn"
-Log.set_level(level)
-
-require("internal.data.base")
-
 local field = require("game.field")
 local mod = require("internal.mod")
 local startup = require("game.startup")
@@ -23,17 +10,10 @@ local config = require("internal.config")
 local elona_repl = require("internal.elona_repl")
 local Repl = require("api.Repl")
 local ansicolors = require("thirdparty.ansicolors")
+local Log = require("api.Log")
 
-if not fs.exists(fs.get_save_directory()) then
-   fs.create_directory(fs.get_save_directory())
-end
-
-local mods = mod.scan_mod_dir()
-startup.run_all(mods)
-
-Event.trigger("base.on_startup")
-field:init_global_data()
-
+-- Make an environment rejecting the setting of global variables except
+-- functions that are named "test_*".
 local function make_test_env()
    local tests = env.generate_sandbox("__test__")
 
@@ -65,25 +45,7 @@ local function make_test_env()
    return setmetatable(tests, mt), mt
 end
 
-local opts = {
-   debug_on_error = true,
-   seed = nil,
-   selector = nil
-}
-
-local seed = opts.seed or math.floor(socket.gettime())
-config["base.default_seed"] = seed
-
-print("Seed: " .. seed)
-print("")
-
-local spl = string.split(filter, ":")
-local filter_file_name = spl[1]
-local filter_test_name = spl[2]
-
-Log.warn("Test filter: %s:%s", filter_file_name, filter_test_name)
-
-local function run_test(name, test_fn)
+local function run_test(name, test_fn, seed, debug_on_error)
    Rand.set_seed(seed)
 
    local locals
@@ -105,19 +67,22 @@ local function run_test(name, test_fn)
 
    if ok then
       io.write(ansicolors("%{green}.%{reset}"))
+      return true
    else
       io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
 
-      if opts.debug_on_error and false then
+      if debug_on_error then
          local repl_env, history = Repl.generate_env(locals)
          elona_repl.set_environment(repl_env)
          print(inspect(table.keys(locals)))
          elona_repl:run()
       end
+
+      return false
    end
 end
 
-local function test_file(file)
+local function test_file(file, filter_test_name, seed, debug_on_error)
    local chunk = assert(loadfile(file))
    local test_env, mt = make_test_env()
 
@@ -125,19 +90,61 @@ local function test_file(file)
 
    chunk()
 
+   local failures = 0
+   local total = 0
+
    for _, pair in ipairs(mt.__tests) do
       local name = pair[1]
       local test_fn = pair[2]
 
       if string.match(name, filter_test_name) then
-         run_test(name, test_fn)
+         local success = run_test(name, test_fn, seed, debug_on_error)
+         if not success then
+            failures = failures + 1
+         end
+         total = total + 1
       end
    end
+
+   return failures, total
 end
 
-for _, file in fs.iter_directory_items("test/unit/") do
-   if string.match(file, filter_file_name) then
-      local path = fs.join("test/unit/", file)
-      test_file(path)
+return function(args)
+   if not fs.exists(fs.get_save_directory()) then
+      fs.create_directory(fs.get_save_directory())
+   end
+
+   local mods = mod.scan_mod_dir()
+   startup.run_all(mods)
+
+   Event.trigger("base.on_startup")
+   field:init_global_data()
+
+   local seed = args.seed or math.floor(socket.gettime())
+   config["base.default_seed"] = seed
+
+   print("Seed: " .. seed)
+   print("")
+
+   local spl = string.split(args.filter, ":")
+   local filter_file_name = spl[1]
+   local filter_test_name = spl[2] or ".*"
+
+   Log.warn("Test filter: %s:%s", filter_file_name, filter_test_name)
+
+   local failures = 0
+   local total = 0
+
+   for _, file in fs.iter_directory_items("test/unit/") do
+      if string.match(file, filter_file_name) then
+         local path = fs.join("test/unit/", file)
+         local failures_, total_ = test_file(path, filter_test_name, seed, args.debug_on_error)
+         failures = failures + failures_
+         total = total + total_
+      end
+   end
+
+   if failures > 0 then
+      error(("%d/%d failing tests."):format(failures, total))
    end
 end

@@ -4,11 +4,6 @@ ignore = {
    "631"  -- line is too long
 }
 
-files["scratch/**/*.lua"].ignore = {
-   "111", -- setting non-standard global variable 'X'
-   "113"  -- accessing undefined variable 'X'
-}
-
 globals = {
    "require",
    "mobdebug",
@@ -48,6 +43,10 @@ files["mod/**/*.lua"] = {
       "config",
       "_MOD_NAME",
    }
+}
+files["scratch/**/*.lua"].globals = files["mod/**/*.lua"].globals
+files["scratch/**/*.lua"].ignore = {
+   "111", -- setting non-standard global variable 'X'
 }
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}

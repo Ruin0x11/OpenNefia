@@ -21,4 +21,4 @@ jobs:
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('src/deps/elona/elona/version_en.txt') }}
     - name: Run REPL test
       run: |
-        ./OpenNefia_REPL test
+        ./OpenNefia verify -l

@@ -8,6 +8,14 @@ fi
 ./runtime/commit_hash
 
 export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-pushd $DIR/src
-love .
-popd
+pushd $DIR/src > /dev/null
+
+# Don't try to load luafilesystem, etc. if no arguments are provided, so the
+# user doesn't have to install a full luajit environment just to run the game.
+if [ $# -eq 0 ]; then
+    love .
+else
+    luajit opennefia.lua --working-dir "src/" "$@"
+fi
+
+popd > /dev/null
