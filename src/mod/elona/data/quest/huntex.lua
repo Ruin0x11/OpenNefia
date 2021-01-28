@@ -47,6 +47,22 @@ local huntex = {
       return { objective = objective, enemy_level = self.params.enemy_level }
    end,
 
+   calc_reward_platinum = function(self)
+      -- >>>>>>>> shade2/quest.hsp:459 	if (qExist(rq)=qConquer)or(qExist(rq)=qHuntEx){ ..
+      local plat = 2
+      if Rand.rnd(100) < Rand.rnd(Chara.player():calc("fame") / 5000 + 1) then
+         plat = plat + 1
+      end
+      return plat
+      -- <<<<<<<< shade2/quest.hsp:461 		} ..
+   end,
+
+   calc_reward_item_count = function(self, count)
+      -- >>>>>>>> shade2/quest.hsp:466 		if (qExist(rq)=qConquer)or(qExist(rq)=qHuntEx):p ..
+      return count + 2
+      -- <<<<<<<< shade2/quest.hsp:466 		if (qExist(rq)=qConquer)or(qExist(rq)=qHuntEx):p ..
+   end,
+
    prevents_pickpocket = true
 }
 

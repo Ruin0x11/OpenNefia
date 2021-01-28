@@ -116,6 +116,12 @@ function deliver.locale_data(self)
    return params, key
 end
 
+function deliver.calc_reward_platinum(self)
+   -- >>>>>>>> shade2/quest.hsp:458 	if qExist(rq)=qDeliver : p=rnd(2)+1:else:p=1 ..
+   return Rand.rnd(2) + 1
+   -- <<<<<<<< shade2/quest.hsp:458 	if qExist(rq)=qDeliver : p=rnd(2)+1:else:p=1 ..
+end
+
 function deliver.on_accept(self)
    local player = Chara.player()
    local item = Item.create(self.params.item_id, player.x, player.y, {ownerless=true})

@@ -561,7 +561,14 @@ local function calc_reward_platinum(quest)
 end
 
 local function calc_reward_item_count(quest)
-   return Rand.rnd(Rand.rnd(4) + 1) + 1
+   local quest_proto = data["elona_sys.quest"]:ensure(quest._id)
+   local item_count = Rand.rnd(Rand.rnd(4) + 1) + 1
+
+   if quest_proto.calc_reward_item_count then
+      item_count = quest_proto.calc_reward_platinum(quest, item_count)
+   end
+
+   return item_count
 end
 
 --- @tparam table quest

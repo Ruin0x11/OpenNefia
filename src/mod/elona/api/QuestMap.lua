@@ -17,6 +17,7 @@ local I18N = require("api.I18N")
 local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local Feat = require("api.Feat")
 local IOwned = require("api.IOwned")
+local Quest = require("mod.elona_sys.api.Quest")
 
 local QuestMap = {}
 
@@ -308,10 +309,33 @@ function QuestMap.generate_huntex(map_archetype_id, chara_id, enemy_level, diffi
             quality = Enum.Quality.Bad,
             id = chara_id
          }
-         Charagen.create(nil, nil, filter, map)
+         local chara = Charagen.create(nil, nil, filter, map)
+         chara.faction = "base.enemy"
       end
    end
    -- <<<<<<<< shade2/map_rand.hsp:726 		} ..
+
+   return QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
+end
+
+function QuestMap.generate_conquer(map_archetype_id, quest)
+   -- >>>>>>>> shade2/map_rand.hsp:718 	if gQuest=qConquer{ ..
+   local difficulty = quest.difficulty
+   local enemy_level = quest.params.enemy_level
+   local chara_id = quest.params.enemy_id
+
+   local gen_charas = function(map)
+      local filter = {
+         level = difficulty,
+         initial_level = enemy_level,
+         quality = Enum.Quality.God,
+         id = chara_id
+      }
+      local chara = Charagen.create(nil, nil, filter, map)
+      chara.faction = "base.enemy"
+      quest.params.target_chara_uid = chara.uid
+   end
+   -- <<<<<<<< shade2/map_rand.hsp:721 		} ..
 
    return QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
 end

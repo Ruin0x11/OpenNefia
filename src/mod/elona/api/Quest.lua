@@ -60,4 +60,26 @@ function Quest.update_target_count_hunt(quest, map)
    -- <<<<<<<< shade2/chara_func.hsp:197 		} ..
 end
 
+local function event_quest_eliminate_conquer(quest)
+   return function()
+      Gui.play_music("elona.fanfare", true)
+      save.elona_sys.quest_time_limit = 0
+      quest.state = "completed"
+      Gui.mes_c("quest.conquer.complete", "Green")
+   end
+end
+
+function Quest.update_target_count_conquer(quest, map)
+   if quest.state == "completed" then
+      return
+   end
+
+   -- >>>>>>>> shade2/chara_func.hsp:194 		if gQuest=qConquer{ ..
+   local target = map:get_object_of_type("base.chara", quest.params.target_chara_uid)
+   if not Chara.is_alive(target) then
+      DeferredEvent.add(event_quest_eliminate_conquer(quest))
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:196 			} ..
+end
+
 return Quest
