@@ -281,6 +281,7 @@ function Magic.zap_wand(item, magic_id, power, params)
          curse_state=curse_state,
          x = magic_pos.x,
          y = magic_pos.y,
+         range = skill_data.range,
          source = magic_pos.source,
          target = magic_pos.target
       }
