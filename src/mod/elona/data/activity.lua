@@ -631,7 +631,7 @@ local function get_thrown_item_filter(chara, instrument, audience, activity)
       quality = Calc.calc_object_quality(quality)
    else
       level = Calc.calc_object_level(activity.performance_quality / 10, map)
-      quality = Calc.calc_object_level(activity.performance_quality / 8)
+      quality = Calc.calc_object_quality(Enum.Quality.Good)
    end
 
    local categories = Rand.choice(Filters.fsetperform)

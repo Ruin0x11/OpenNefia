@@ -83,10 +83,20 @@ function Gui.wait_for_draw_callbacks()
 end
 
 --- Waits for the specified number of milliseconds.
-function Gui.wait(ms)
+function Gui.wait(ms, no_update)
+   local frames = ms / 16.66 -- TODO assumes 60 FPS
    local anim = function()
-      Gui.update_screen(ms / 1000.0)
-      Draw.yield(ms)
+      local frame = 0
+      while true do
+         if not no_update then
+            Gui.update_screen(16.66 / 1000)
+         end
+         if frame >= frames then
+            return
+         end
+         local _, _, frame_delta = Draw.yield(16.66)
+         frame = frame + frame_delta
+      end
    end
    Gui.start_draw_callback(anim)
    Gui.wait_for_draw_callbacks()

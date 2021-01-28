@@ -9,6 +9,7 @@ local Event = require("api.Event")
 local elona_Quest = require("mod.elona.api.Quest")
 local I18N = require("api.I18N")
 local Item = require("api.Item")
+local Const = require("api.Const")
 
 local map_party = {
    _type = "base.map_archetype",
@@ -189,3 +190,17 @@ local function add_music_tickets(_, params)
 end
 
 Event.register("elona_sys.on_quest_completed", "Add music tickets if perform quest score high enough", add_music_tickets)
+
+local function set_party_emotion_icon(chara)
+   -- >>>>>>>> shade2/calculation.hsp:1295 	if gQuest=qPerform{ ..
+   if not chara:is_allied() then
+      local quest = Quest.get_immediate_quest()
+      if quest and quest._id == "elona.party" then
+         if chara.impression >= Const.IMPRESSION_PARTY then
+            chara:set_emotion_icon("elona.party", 100)
+         end
+      end
+   end
+   -- <<<<<<<< shade2/calculation.hsp:1297 		} ..
+end
+Event.register("base.on_chara_turn_end", "Set emotion icon if guest satisfied", set_party_emotion_icon)
