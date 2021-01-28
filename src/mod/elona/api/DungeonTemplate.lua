@@ -5,18 +5,18 @@ local Filters = require("mod.elona.api.Filters")
 
 local DungeonTemplate = {}
 
-function DungeonTemplate.type_1(area, floor, params)
+function DungeonTemplate.type_standard(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   return Dungeon.gen_type_1, params
+   return Dungeon.gen_type_standard, params
 end
 
-function DungeonTemplate.type_2(area, floor, params)
+function DungeonTemplate.type_wide(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.has_monster_houses = true
-   return Dungeon.gen_type_2, params
+   return Dungeon.gen_type_wide, params
 end
 
-function DungeonTemplate.type_3(area, floor, params)
+function DungeonTemplate.type_big_room(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -26,25 +26,25 @@ function DungeonTemplate.type_3(area, floor, params)
       }
    end
 
-   return Dungeon.gen_type_3, params
+   return Dungeon.gen_type_big_room, params
 end
 
-function DungeonTemplate.type_4(area, floor, params)
+function DungeonTemplate.type_resident(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   return Dungeon.gen_type_4, params
+   return Dungeon.gen_type_resident, params
 end
 
-function DungeonTemplate.type_5(area, floor, params)
+function DungeonTemplate.type_jail(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   return Dungeon.gen_type_5, params
+   return Dungeon.gen_type_jail, params
 end
 
-function DungeonTemplate.type_6(area, floor, params)
+function DungeonTemplate.type_hunt(area, floor, params)
    params.level = (params.level or 1) + floor - 1
-   return Dungeon.gen_type_6, params
+   return Dungeon.gen_type_hunt, params
 end
 
-function DungeonTemplate.type_8(area, floor, params)
+function DungeonTemplate.type_long(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -54,10 +54,10 @@ function DungeonTemplate.type_8(area, floor, params)
       }
    end
 
-   return Dungeon.gen_type_8, params
+   return Dungeon.gen_type_long, params
 end
 
-function DungeonTemplate.type_9(area, floor, params)
+function DungeonTemplate.type_maze(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.calc_density = function(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -70,10 +70,10 @@ function DungeonTemplate.type_9(area, floor, params)
       Itemgen.create(nil, nil, {categories=Rand.choice(Filters.fsetwear), quality=6}, map)
    end
 
-   return Dungeon.gen_type_9, params
+   return Dungeon.gen_type_maze, params
 end
 
-function DungeonTemplate.type_10(area, floor, params)
+function DungeonTemplate.type_puppy_cave(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    function params.calc_density(map)
       local crowd_density = map:calc("max_crowd_density")
@@ -83,7 +83,7 @@ function DungeonTemplate.type_10(area, floor, params)
       }
    end
 
-   return Dungeon.gen_type_10, params
+   return Dungeon.gen_type_puppy_cave, params
 end
 
 
@@ -91,18 +91,18 @@ function DungeonTemplate.nefia_dungeon(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon"
 
-   local gen = DungeonTemplate.type_2
+   local gen = DungeonTemplate.type_wide
    if Rand.one_in(4) then
-      gen = DungeonTemplate.type_1
+      gen = DungeonTemplate.type_standard
    end
    if Rand.one_in(6) then
-      gen = DungeonTemplate.type_10
+      gen = DungeonTemplate.type_puppy_cave
    end
    if Rand.one_in(10) then
-      gen = DungeonTemplate.type_4
+      gen = DungeonTemplate.type_resident
    end
    if Rand.one_in(25) then
-      gen = DungeonTemplate.type_8
+      gen = DungeonTemplate.type_long
    end
    if Rand.one_in(25) then
       params.tileset = "elona.water"
@@ -116,15 +116,15 @@ function DungeonTemplate.nefia_tower(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.tower_1"
 
-   local gen = DungeonTemplate.type_1
+   local gen = DungeonTemplate.type_standard
    if Rand.one_in(5) then
-      gen = DungeonTemplate.type_4
+      gen = DungeonTemplate.type_resident
    end
    if Rand.one_in(10) then
-      gen = DungeonTemplate.type_3
+      gen = DungeonTemplate.type_big_room
    end
    if Rand.one_in(25) then
-      gen = DungeonTemplate.type_2
+      gen = DungeonTemplate.type_wide
    end
    if Rand.one_in(40) then
       params.tileset = "elona.water"
@@ -138,18 +138,18 @@ function DungeonTemplate.nefia_forest(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_forest"
 
-   local gen = DungeonTemplate.type_2
+   local gen = DungeonTemplate.type_wide
    if Rand.one_in(6) then
-      gen = DungeonTemplate.type_1
+      gen = DungeonTemplate.type_standard
    end
    if Rand.one_in(6) then
-      gen = DungeonTemplate.type_10
+      gen = DungeonTemplate.type_puppy_cave
    end
    if Rand.one_in(25) then
-      gen = DungeonTemplate.type_8
+      gen = DungeonTemplate.type_long
    end
    if Rand.one_in(20) then
-      gen = DungeonTemplate.type_4
+      gen = DungeonTemplate.type_resident
    end
 
    return gen(area, floor, params)
@@ -160,15 +160,15 @@ function DungeonTemplate.nefia_castle(area, floor, params)
    params.level = (params.level or 1) + floor - 1
    params.tileset = "elona.dungeon_castle"
 
-   local gen = DungeonTemplate.type_1
+   local gen = DungeonTemplate.type_standard
    if Rand.one_in(5) then
-      gen = DungeonTemplate.type_4
+      gen = DungeonTemplate.type_resident
    end
    if Rand.one_in(6) then
-      gen = DungeonTemplate.type_5
+      gen = DungeonTemplate.type_jail
    end
    if Rand.one_in(7) then
-      gen = DungeonTemplate.type_2
+      gen = DungeonTemplate.type_wide
    end
    if Rand.one_in(40) then
       params.tileset = "elona.water"
@@ -204,36 +204,36 @@ function DungeonTemplate.lesimas(area, floor, params)
       params.tileset = "elona.dungeon"
    end
 
-   local gen = DungeonTemplate.type_1
+   local gen = DungeonTemplate.type_standard
    if Rand.one_in(30) then
-      gen = DungeonTemplate.type_3
+      gen = DungeonTemplate.type_big_room
    end
 
    local levels = {
-      [1] = DungeonTemplate.type_2,
-      [5] = DungeonTemplate.type_5,
-      [10] = DungeonTemplate.type_3,
-      [15] = DungeonTemplate.type_5,
-      [20] = DungeonTemplate.type_3,
-      [25] = DungeonTemplate.type_5,
-      [30] = DungeonTemplate.type_3,
+      [1] = DungeonTemplate.type_wide,
+      [5] = DungeonTemplate.type_jail,
+      [10] = DungeonTemplate.type_big_room,
+      [15] = DungeonTemplate.type_jail,
+      [20] = DungeonTemplate.type_big_room,
+      [25] = DungeonTemplate.type_jail,
+      [30] = DungeonTemplate.type_big_room,
    }
 
    if levels[floor] then
       gen = levels[floor]
    else
       if floor < 30 and Rand.one_in(4) then
-         gen = DungeonTemplate.type_2
+         gen = DungeonTemplate.type_wide
       end
 
       if Rand.one_in(5) then
-         gen = DungeonTemplate.type_4
+         gen = DungeonTemplate.type_resident
       end
       if Rand.one_in(20) then
-         gen = DungeonTemplate.type_8
+         gen = DungeonTemplate.type_long
       end
       if Rand.one_in(6) then
-         gen = DungeonTemplate.type_10
+         gen = DungeonTemplate.type_puppy_cave
       end
    end
 
@@ -246,7 +246,7 @@ function DungeonTemplate.tower_of_fire(area, floor, params)
    params.tileset = "elona.tower_of_fire"
    params.on_generate_params = scale_density_with_floor
 
-   return Dungeon.gen_type_1, params
+   return Dungeon.gen_type_standard, params
 end
 
 function DungeonTemplate.crypt_of_the_damned(area, floor, params)
@@ -254,7 +254,7 @@ function DungeonTemplate.crypt_of_the_damned(area, floor, params)
    params.tileset = "elona.dungeon"
    params.on_generate_params = scale_density_with_floor
 
-   return Dungeon.gen_type_1, params
+   return Dungeon.gen_type_standard, params
 end
 
 function DungeonTemplate.ancient_castle(area, floor, params)
@@ -262,7 +262,7 @@ function DungeonTemplate.ancient_castle(area, floor, params)
    params.tileset = "elona.dungeon_castle"
    params.on_generate_params = scale_density_with_floor
 
-   return Dungeon.gen_type_1, params
+   return Dungeon.gen_type_standard, params
 end
 
 return DungeonTemplate

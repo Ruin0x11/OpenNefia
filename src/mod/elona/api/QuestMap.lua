@@ -219,4 +219,12 @@ function QuestMap.generate_party(difficulty)
    -- <<<<<<<< elona122/shade2/map_rand.hsp:703 	return true ..
 end
 
+function QuestMap.generate_hunt(difficulty)
+   local map = InstancedMap:new(38, 28)
+
+
+   map.types = { "quest" }
+   return map
+end
+
 return QuestMap

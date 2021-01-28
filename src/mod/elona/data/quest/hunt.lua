@@ -1,6 +1,10 @@
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
+local Quest = require("mod.elona_sys.api.Quest")
+local QuestMap = require("mod.elona.api.QuestMap")
+local Map = require("api.Map")
+local I18N = require("api.I18N")
 
 local hunt = {
    _id = "hunt",
@@ -31,5 +35,28 @@ local hunt = {
       return true
    end
 }
--- data:add(hunt)
+data:add(hunt)
 
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_hunt",
+
+   nodes = {
+      accept = {
+         text = "talk.npc.quest_giver.accept.hunt",
+         on_finish = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+
+            local hunt_map = QuestMap.generate_hunt(quest.difficulty)
+            local current_map = t.speaker:current_map()
+            local player = Chara.player()
+            hunt_map:set_previous_map_and_location(current_map, player.x, player.y)
+
+            Quest.set_immediate_quest(quest)
+
+            Map.travel_to(hunt_map)
+         end
+      },
+   }
+}

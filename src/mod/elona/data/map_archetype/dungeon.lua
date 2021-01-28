@@ -484,7 +484,7 @@ do
    }
 
    function area_mountain_pass.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_8(area, floor, { level = 25 })
+      local gen, params = DungeonTemplate.type_long(area, floor, { level = 25 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.mountain_pass", { set_properties = true })
 
@@ -536,7 +536,7 @@ do
    }
 
    function area_puppy_cave.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_10(area, floor, { level = 2 })
+      local gen, params = DungeonTemplate.type_puppy_cave(area, floor, { level = 2 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.puppy_cave", { set_properties = true })
 
@@ -606,7 +606,7 @@ do
    }
 
    function area_minotaurs_nest.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_9(area, floor, { level = 23 })
+      local gen, params = DungeonTemplate.type_maze(area, floor, { level = 23 })
       local map =  DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.minotaurs_nest", { set_properties = true })
       return map
