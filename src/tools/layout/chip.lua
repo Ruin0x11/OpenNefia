@@ -563,7 +563,7 @@ local item = {
    { id = 185, name = "healthy_leaf" },
    { id = 186, name = "rainbow_fruit" },
    { id = 187, name = "qucche" },
-   { id = 188, name = "tangerine" },
+   { id = 188, name = "orange" },
    { id = 189, name = "magic_fruit" },
    { id = 190, name = "_190" },
    { id = 191, name = "cbocchi" },

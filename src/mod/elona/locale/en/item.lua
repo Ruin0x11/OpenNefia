@@ -5438,7 +5438,7 @@ local item = {
     tamers_whip = {
       name = "tamer's whip"
     },
-    tangerine = {
+    orange = {
       desc = {
         main = {
           text = "A type of fruit,"

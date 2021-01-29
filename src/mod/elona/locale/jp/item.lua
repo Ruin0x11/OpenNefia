@@ -9866,7 +9866,7 @@ local item = {
     },
     name = "調教鞭"
   },
-  tangerine = {
+  orange = {
     desc = {
       _0 = {
         footnote = "〜移り変わりゆくティリスの食〜",

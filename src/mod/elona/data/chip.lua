@@ -540,7 +540,7 @@ local item_chips = {
    { elona_id = 185, _id = "healthy_leaf" },
    { elona_id = 186, _id = "rainbow_fruit" },
    { elona_id = 187, _id = "qucche" },
-   { elona_id = 188, _id = "tangerine" },
+   { elona_id = 188, _id = "orange" },
    { elona_id = 189, _id = "magic_fruit" },
    { elona_id = 190, _id = "dish_egg_3" },
    { elona_id = 191, _id = "cbocchi" },

@@ -4125,9 +4125,9 @@ local item =
          }
       },
       {
-         _id = "tangerine",
+         _id = "orange",
          elona_id = 196,
-         image = "elona.item_tangerine",
+         image = "elona.item_orange",
          value = 130,
          weight = 880,
          material = "elona.fresh",

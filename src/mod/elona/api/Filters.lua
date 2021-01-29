@@ -181,7 +181,7 @@ Filters.isetdeed = {
 Filters.isetfruit = {
    "elona.apple",
    "elona.grape",
-   "elona.tangerine",
+   "elona.orange",
    "elona.lemon",
    "elona.strawberry",
    "elona.cherry",

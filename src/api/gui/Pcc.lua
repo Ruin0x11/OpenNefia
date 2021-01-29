@@ -51,11 +51,6 @@ function Pcc:init(parts)
    self.full_size = false
 
    self.quads = {}
-   for i = 1, 16 do
-      local x = math.floor((i-1) / 4)
-      local y = (i-1) % 4
-      self.quads[i] = love.graphics.newQuad(x * 32, y * 48, 32, 48, 128, 192)
-   end
 end
 
 function Pcc:deserialize()
@@ -85,6 +80,12 @@ function Pcc:refresh()
    self.image = love.graphics.newImage(canvas:newImageData())
 
    canvas:release()
+
+   for i = 1, 16 do
+      local x = math.floor((i-1) / 4)
+      local y = (i-1) % 4
+      self.quads[i] = love.graphics.newQuad(x * 32, y * 48, 32, 48, 128, 192)
+   end
 
    self.dirty = false
 end
