@@ -195,6 +195,8 @@ function Command.search(player)
    end
 
    player:emit("elona_sys.on_search")
+
+   return "turn_end"
 end
 
 function Command.help()

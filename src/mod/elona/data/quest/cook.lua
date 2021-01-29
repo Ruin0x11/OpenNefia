@@ -5,6 +5,7 @@ local Gui = require("api.Gui")
 local Chara = require("api.Chara")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Event = require("api.Event")
+local Itemname = require("mod.elona.api.Itemname")
 
 local cook = {
    _id = "cook",
@@ -31,7 +32,7 @@ local cook = {
 
    locale_data = function(self)
       local ingredient = "food.names." .. self.params.food_type .. ".default_origin"
-      local objective = I18N.get("food.names." .. self.params.food_type .. "._" .. self.params.food_quality, ingredient)
+      local objective = Itemname.qualify_article(I18N.get("food.names." .. self.params.food_type .. "._" .. self.params.food_quality, ingredient))
       local params = { objective = objective }
       local key = "food_type." .. self.params.food_type
       return params, key
