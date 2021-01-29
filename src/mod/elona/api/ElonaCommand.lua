@@ -27,7 +27,7 @@ function ElonaCommand.quick_inv(player)
    last_op = result.operation
 
    if canceled then
-      return result, canceled
+      return nil, canceled
    end
    return result.result, canceled
 end
@@ -35,7 +35,7 @@ end
 local function query_inventory(player, op)
    local result, canceled = Input.query_inventory(player, op, nil, "elona.main")
    if canceled then
-      return result, canceled
+      return nil, canceled
    end
    return result.result, canceled
 end
@@ -65,7 +65,7 @@ end
 function ElonaCommand.read(player, item)
    local result, canceled = Input.query_inventory(player, "elona.inv_read", nil, "elona.main")
    if canceled then
-      return result, canceled
+      return nil, canceled
    end
    return result.result, canceled
 end

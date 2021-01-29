@@ -83,6 +83,7 @@ function Command.move(player, x, y)
          local ok, prev_map = Map.load(prev_map_uid)
          if prev_map and prev_x and prev_y then
             -- Player is trying to move out of the map.
+            Gui.mes("action.move.leave.prompt", map.name)
             Event.trigger("elona_sys.before_player_map_leave", {player=player})
 
             if Input.yes_no() then

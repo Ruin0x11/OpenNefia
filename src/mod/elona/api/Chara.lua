@@ -54,8 +54,6 @@ function Chara.spawn_mobs(map, chara_id)
       filter.id = filter.id or chara_id
       Charagen.create(nil, nil, filter, map)
    end
-
-   Log.info("Spawned mobs.")
    -- <<<<<<<< shade2/map.hsp:113 	return ..
 end
 

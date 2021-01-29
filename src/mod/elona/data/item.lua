@@ -11526,7 +11526,8 @@ local item =
                   if y + 1 < map:height() and map:can_access(x, y + 1) then
                      y = y + 1
                   end
-                  Item.create(self.params.fruit_tree_item_id, x, y, {amount=0})
+                  local item = Item.create(self.params.fruit_tree_item_id, x, y, {}, map)
+                  Gui.mes("action.bash.tree.falls_down", item:build_name(1))
 
                   return "turn_end"
                end
