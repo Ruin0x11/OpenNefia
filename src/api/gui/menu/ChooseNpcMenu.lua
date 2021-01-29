@@ -55,7 +55,7 @@ function ChooseNpcMenu.generate_list(filter)
          return false
       end
 
-      if chara:calc("is_being_escorted") then
+      if chara.is_being_escorted then
          return false
       end
 

@@ -374,7 +374,7 @@ end,
           here_is_delivery = "Here's your delivery.",
           here_is_item = function(_1)
   return ("Here is %s you asked.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
         },
         finish = {

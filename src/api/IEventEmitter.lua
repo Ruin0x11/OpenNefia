@@ -13,15 +13,15 @@ function IEventEmitter:init(events)
 
    local events = events or (self.proto and self.proto.events)
    if events then
-      self:connect_self_multiple(events)
+      self:connect_self_multiple(events, true)
    end
 end
 
 function IEventEmitter:on_reload_prototype()
    local events = self.proto and self.proto.events
    if events then
-      Log.info("Hotloading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
-      self:connect_self_multiple(events)
+      Log.debug("Hotloading %d events of %s:%s for object %d", #events, self._type, self._id, self.uid)
+      self:connect_self_multiple(events, true)
    end
 end
 
@@ -119,10 +119,14 @@ end
 --- @tparam function cb Event callback.
 --- @tparam[opt] table opts
 --- @tparam[opt] EventHolder global_events
-function IEventEmitter:connect_self(event_id, name, cb, opts, global_events)
+function IEventEmitter:connect_self(event_id, name, cb, opts, global_events, force)
    data["base.event"]:ensure(event_id)
 
    register_global_handler_if_needed(self, event_id, global_events)
+
+   if self:has_event_handler(event_id, name) and force then
+      self:disconnect_self(event_id, name)
+   end
 
    self._events:register(event_id, name, cb, opts)
 end
@@ -141,9 +145,9 @@ function IEventEmitter:disconnect_self(event_id, name)
    end
 end
 
-function IEventEmitter:connect_self_multiple(events)
+function IEventEmitter:connect_self_multiple(events, force)
    for _, event in ipairs(events) do
-      self:connect_self(event.id, event.name, event.callback, event.priority or 100000)
+      self:connect_self(event.id, event.name, event.callback, event.priority or 100000, nil, force)
    end
 end
 

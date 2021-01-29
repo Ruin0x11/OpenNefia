@@ -46,6 +46,10 @@ function Inventory:len()
    return self.pool:object_count()
 end
 
+function Inventory:free_slots()
+   return self.max_size - self:len()
+end
+
 -- Gets or creates a new inventory at the given ID.
 --
 -- @tparam string id

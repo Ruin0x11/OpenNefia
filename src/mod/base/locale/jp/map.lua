@@ -61,7 +61,8 @@ end
       },
       outskirts = "街近辺",
       party_room = "パーティー場",
-      urban_area = "市街地"
+      urban_area = "市街地",
+      harvest = "街周辺の畑",
     },
     since_leaving = {
       time_passed = function(_1, _2, _3, _4)

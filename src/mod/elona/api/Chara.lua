@@ -3,12 +3,15 @@ local Map = require("api.Map")
 local Rand = require("api.Rand")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
+local api_Chara = require("api.Chara")
+local Log = require("api.Log")
+
 
 local Chara = {}
 
 function Chara.default_filter(map)
    return {
-      level = Calc.calc_object_level(Chara.player():calc("level"), map),
+      level = Calc.calc_object_level(api_Chara.player():calc("level"), map),
       quality = Calc.calc_object_quality(Enum.Quality.Normal)
    }
 end

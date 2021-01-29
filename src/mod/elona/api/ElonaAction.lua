@@ -437,8 +437,8 @@ function ElonaAction.use(chara, item)
 end
 
 function ElonaAction.open(chara, item)
-   Gui.mes("common.nothing_happens")
-   return "player_turn_query"
+   local result = item:emit("elona_sys.on_item_open", {chara=chara,triggered_by="open"}, "turn_end")
+   return result
 end
 
 function ElonaAction.dip(chara, item)
@@ -449,6 +449,13 @@ end
 function ElonaAction.throw(chara, item)
    Gui.mes("common.nothing_happens")
    return "player_turn_query"
+end
+
+function ElonaAction.trade(player, target)
+   local cb = function(i) i.identify_state = Enum.IdentifyState.Full end
+   target:iter_items():each(cb)
+   local result, canceled = Input.query_inventory(player, "elona.inv_trade", {target=target})
+   return result, canceled
 end
 
 return ElonaAction

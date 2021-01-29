@@ -50,24 +50,6 @@ function util.chara_filter_town(callback)
    end
 end
 
-function util.generate_chara(map, x, y, extra_params)
-   local params
-   local archetype = map:archetype()
-   if archetype.chara_filter then
-      params = archetype.chara_filter(map)
-      assert(type(params) == "table")
-   else
-      local player = Chara.player()
-      local level = Calc.calc_object_level((player and player.level) or 1)
-      local quality = Calc.calc_object_quality(Enum.Quality.Normal)
-      params = { level = level, quality = quality }
-   end
-   if extra_params then
-      table.merge(params, extra_params)
-   end
-   return Charagen.create(x, y, params, map)
-end
-
 --- Fixes up stairs in maps converted from 1.22's format.
 function util.connect_existing_stairs(map, area, floor)
    local is_stair = function(f)

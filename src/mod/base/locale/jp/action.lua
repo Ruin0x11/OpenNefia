@@ -75,7 +75,7 @@ end,
 end,
         falls_down = function(_1)
   return ("%sが降ってきた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         no_fruits = "もう実はないようだ… "
       }

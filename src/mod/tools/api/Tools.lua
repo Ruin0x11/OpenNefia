@@ -22,6 +22,9 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 local Quest = require("mod.elona_sys.api.Quest")
 local Skill = require("mod.elona_sys.api.Skill")
+local Magic = require("mod.elona_sys.api.Magic")
+local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local World = require("api.World")
 
 local Tools = {}
 
@@ -449,6 +452,16 @@ end
 
 function Tools.thing_at(ty)
    return Tools.things_at(ty):nth(1)
+end
+
+function Tools.tile_at()
+   local PositionPrompt = require("api.gui.PositionPrompt")
+   local result, canceled = PositionPrompt:new():query()
+   if not result or canceled then
+      return fun.iter({})
+   end
+
+   return Map.current():tile(result.x, result.y)
 end
 
 -- Converts an array of sequential probabilities into percent
@@ -984,6 +997,7 @@ end
 function Tools.end_quest()
    if save.elona_sys.immediate_quest_uid and save.elona_sys.quest_time_limit > 0 then
       save.elona_sys.quest_time_limit = 1
+      World.pass_time_in_seconds(120)
    end
 end
 
@@ -1008,6 +1022,39 @@ function Tools.learn_all_skills()
            end)
 
    player:heal_to_max()
+end
+
+local function visit_quest_giver(quest)
+   local player = Chara.player()
+   local map = player:current_map()
+   local client = Chara.find(quest.client_uid, "all", map)
+   assert(client)
+   Magic.cast("elona.shadow_step", {source=player, target=client})
+   if Chara.is_alive(client) then
+      Dialog.start(client, "elona.quest_giver:quest_about")
+   end
+end
+
+function Tools.quick_quest(quest_id)
+   if quest_id == nil then
+      local quests = data["elona_sys.quest"]:iter()
+      local choices = quests:map(function(q) return q._id:gsub("^.*%.", "") end):to_list()
+      local choice, canceled = Input.prompt(choices)
+      if canceled then
+         return
+      end
+      quest_id = quests:nth(choice.index)._id
+   end
+
+   local map = Chara.player():current_map()
+   local client = assert(Quest.iter_clients_in_map(map):nth(1))
+   local new_quest = Quest.generate_from_proto(quest_id, client, map)
+
+   if new_quest == nil then
+      return nil
+   end
+
+   visit_quest_giver(new_quest)
 end
 
 return Tools

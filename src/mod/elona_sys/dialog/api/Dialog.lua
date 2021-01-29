@@ -277,6 +277,8 @@ local function step_dialog(node_data, talk, state, prev_node_id)
                assert(type(result.params) == "table")
             end
             next_node = { node_id = result.node_id, params = result.params }
+         else
+            next_node = {node_id = "__END__", params = {}}
          end
       else
          dialog_error(talk, "Error running dialog inline function", result)
@@ -415,7 +417,7 @@ local function step_dialog(node_data, talk, state, prev_node_id)
 
       -- Run on_finish callback.
       if node.on_finish then
-         local ok, result = pcall(node.on_finish, talk, state, node_data.params)
+         local ok, result = xpcall(node.on_finish, debug.traceback, talk, state, node_data.params)
          if not ok then
             dialog_error(talk, "Error running on_finish function", result)
          end

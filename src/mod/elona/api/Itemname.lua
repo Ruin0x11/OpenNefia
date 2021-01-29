@@ -147,9 +147,9 @@ local function item_name_sub(s, item, jp)
          end
       end
 
-      if item.own_state == "harvested" then
-         local weight = 1234 -- TODO quest harvest
-         s = s .. I18N.get("item.harvest_grown", Ui.format_weight(weight))
+      if item.own_state == Enum.OwnState.Quest and item.params.harvest_weight_class then
+         local weight = item.params.harvest_weight_class
+         s = s .. I18N.get("item.harvest_grown", "ui.weight._" .. tostring(weight))
       end
    end
 
@@ -158,7 +158,7 @@ local function item_name_sub(s, item, jp)
       s = s .. fish_name
    end
 
-   if item.params.chara_id and item.own_state ~= "harvested" then
+   if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
          s = s .. " of "
@@ -539,34 +539,34 @@ function itemname.en(item, amount, no_article)
             end
          end
       end
-   end
 
-   local unknown_name = Text.unidentified_item_name(item)
-   if identify == IdentifyState.None then
-      s = s .. unknown_name
-   elseif identify < IdentifyState.Full then
-      if quality < Quality.Great or not elona_Item.is_equipment(item) then
-         s = s .. name
-      else
+      local unknown_name = Text.unidentified_item_name(item)
+      if identify == IdentifyState.None then
          s = s .. unknown_name
-      end
-   else
-      if quality == Quality.Unique or item:calc("is_precious") then
-         s = s .. name
-      else
-         if elona_Item.is_equipment(item) and item.enchant_major_name_id then
-            s = s .. " " .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+      elseif identify < IdentifyState.Full then
+         if quality < Quality.Great or not elona_Item.is_equipment(item) then
+            s = s .. name
+         else
+            s = s .. unknown_name
          end
+      else
+         if quality == Quality.Unique or item:calc("is_precious") then
+            s = s .. name
+         else
+            if elona_Item.is_equipment(item) and item.enchant_major_name_id then
+               s = s .. " " .. I18N.get("enchantment.item_ego.major._" .. item.enchant_major_name_id)
+            end
 
-         s = s .. name
+            s = s .. name
 
-         local title_seed = item:calc("title_seed")
-         if title_seed then
-            local title = Text.random_title("weapon", title_seed)
-            if quality == Quality.Great then
-               s = s .. I18N.get("item.title_paren.great", title)
-            else
-               s = s .. I18N.get("item.title_paren.god", title)
+            local title_seed = item:calc("title_seed")
+            if title_seed then
+               local title = Text.random_title("weapon", title_seed)
+               if quality == Quality.Great then
+                  s = s .. I18N.get("item.title_paren.great", title)
+               else
+                  s = s .. I18N.get("item.title_paren.god", title)
+               end
             end
          end
       end
@@ -691,5 +691,14 @@ function Itemname.qualify_name(item_id)
    return I18N.get("item.qualified_name", "item.info." .. item_id .. ".name", item_entry.originalnameref2)
 end
 -- <<<<<<<< shade2/init.hsp:257 	return iOriginalNameRef2@(id)+" of "+iOriginalNam ..
+
+-- >>>>>>>> shade2/init.hsp:248 	#defcfunc cnvArticle str s1 ...
+function Itemname.qualify_article(str)
+   if I18N.language() == "jp" then
+      return str
+   end
+   return ("[%s]"):format(str)
+end
+-- <<<<<<<< shade2/init.hsp:252 ;	if (s2="a")or(s2="o")or(s2="i")or(s2="u")or(s2=" ..
 
 return Itemname

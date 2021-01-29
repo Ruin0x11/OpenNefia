@@ -2043,7 +2043,7 @@ local item = {
     },
     name = "grape"
   },
-  grave_ornamented_with_flowers = {
+  grave_of_ornamented_with_flowers = {
     desc = {
       main = {
         text = "A recent grave with flowers for the departed... The name is still readable,"
@@ -3127,21 +3127,21 @@ local item = {
   pillar = {
     name = "pillar"
   },
-  pillar_ornamented_with_flowers = {
+  statue_ornamented_with_flowers = {
     desc = {
       main = {
         text = "A pillar designed after one's common in Eludernia,"
       }
     },
-    name = "ornamented with flowers"
+    name = "statue ornamented with flowers"
   },
-  pillar_ornamented_with_plants = {
+  statue_ornamented_with_plants = {
     desc = {
       main = {
         text = "A pillar designed after one's common in Eludernia,"
       }
     },
-    name = "ornamented with plants"
+    name = "statue ornamented with plants"
   },
   pistol = {
     desc = {
@@ -5438,7 +5438,7 @@ local item = {
     tamers_whip = {
       name = "tamer's whip"
     },
-    tangerine = {
+    orange = {
       desc = {
         main = {
           text = "A type of fruit,"

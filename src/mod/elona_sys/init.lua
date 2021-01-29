@@ -255,14 +255,8 @@ Gui.bind_keys {
    close = function(_, me)
       return Command.close(me)
    end,
-   open = function(_, me)
-      return Command.open(me)
-   end,
    search = function(_, me)
       return Command.search(me)
-   end,
-   enter = function(_, me)
-      return Command.enter_action(me)
    end,
    wait = function()
       return "turn_end"

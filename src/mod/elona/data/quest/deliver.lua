@@ -3,11 +3,12 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Pos = require("api.Pos")
 local Filters = require("mod.elona.api.Filters")
 local Itemgen = require("mod.tools.api.Itemgen")
-local I18N = require("api.I18N")
 local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Gui = require("api.Gui")
 local Event = require("api.Event")
+local Itemname = require("mod.elona.api.Itemname")
+local elona_Item = require("mod.elona.api.Item")
 
 ---
 --- Data
@@ -70,7 +71,7 @@ function deliver.generate(self, client, start)
 
    self.reward_fix = 70 + Pos.dist(start.world_map_x, start.world_map_y, dest.world_map_x, dest.world_map_y) * 2
 
-   if start.gen_id == "elona.noyel" or dest.gen_id == "elona.noyel" then
+   if start.archetype_id == "elona.noyel" or dest.archetype_id == "elona.noyel" then
       self.reward_fix = math.floor(self.reward_fix * 175 / 100)
    end
 
@@ -108,12 +109,18 @@ end
 function deliver.locale_data(self)
    local params = {
       item_category = self.params.item_category,
-      item_name = I18N.get("item.info." .. self.params.item_id .. ".name"),
+      item_name = Itemname.qualify_article(Itemname.qualify_name(self.params.item_id)),
       target_name = self.params.target_name,
       map = self.params.target_map_name
    }
    local key = self.params.item_category
    return params, key
+end
+
+function deliver.calc_reward_platinum(self)
+   -- >>>>>>>> shade2/quest.hsp:458 	if qExist(rq)=qDeliver : p=rnd(2)+1:else:p=1 ..
+   return Rand.rnd(2) + 1
+   -- <<<<<<<< shade2/quest.hsp:458 	if qExist(rq)=qDeliver : p=rnd(2)+1:else:p=1 ..
 end
 
 function deliver.on_accept(self)
@@ -166,15 +173,15 @@ data:add {
    nodes = {
       backpack_full = {
          text = {
-            {"about.backpack_full"}
+            {"talk.npc.quest_giver.about.backpack_full"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       accept = {
          text = {
-            {"about.here_is_package"}
+            {"talk.npc.quest_giver.about.here_is_package"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       finish = function(t)
          local quest = delivery_quest_for(t.speaker)
@@ -183,6 +190,7 @@ data:add {
          local item = find_delivery_item(t.speaker)
 
          Gui.mes("talk.npc.common.hand_over", item)
+         elona_Item.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
 

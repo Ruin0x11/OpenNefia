@@ -158,7 +158,7 @@ function DungeonMap.generate_raw(generator, area, floor, width, height, attempts
          assert(type(gen_params) == "table")
       end
 
-      dungeon, err = generator(area, floor, gen_params)
+      dungeon, err = generator(floor, gen_params)
 
       if dungeon then
          assert(class.is_an(InstancedMap, dungeon))

@@ -112,6 +112,13 @@ end
 
 Event.register("base.on_get_item", "Pick up item",
                function(item, params, result)
+                  if type(result) == "string" then
+                     -- HACK for the harvest quest, eventually we need some way
+                     -- of skipping the other event callbacks like returning
+                     -- ("turn_end", Event.ACT_SKIP_REST)
+                     return result
+                  end
+
                   if not Item.is_alive(item) then
                      return result
                   end
@@ -135,7 +142,8 @@ Event.register("base.on_get_item", "Pick up item",
 --- @tparam IChara chara
 --- @tparam IItem item
 --- @tparam[opt] int amount
---- @treturn bool success
+--- @treturn[1] bool success
+--- @treturn[2] string turn_result
 function Action.get(chara, item, amount)
    if item == nil then
       local items = Item.at(chara.x, chara.y):to_list()
@@ -173,7 +181,8 @@ end
 --- @tparam IChara chara
 --- @tparam IItem item
 --- @tparam[opt] int amount
---- @treturn bool success
+--- @treturn[1] bool success
+--- @treturn[2] string turn_result
 function Action.get_from_container(chara, item, amount)
    return item:emit("base.on_get_item", {chara=chara,amount=amount,source=item.location}, false)
 end

@@ -1,6 +1,11 @@
 local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
+local Quest = require("mod.elona_sys.api.Quest")
+local QuestMap = require("mod.elona.api.QuestMap")
+local Map = require("api.Map")
+local elona_Quest = require("mod.elona.api.Quest")
+local Event = require("api.Event")
 
 local hunt = {
    _id = "hunt",
@@ -31,5 +36,41 @@ local hunt = {
       return true
    end
 }
--- data:add(hunt)
 
+function hunt.on_accept(self)
+   return true, "elona.quest_hunt:accept"
+end
+
+data:add(hunt)
+
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "quest_hunt",
+
+   nodes = {
+      accept = {
+         text = "talk.npc.quest_giver.accept.hunt",
+         on_finish = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+
+            local hunt_map = QuestMap.generate_hunt(quest.difficulty)
+            local current_map = t.speaker:current_map()
+            local player = Chara.player()
+            hunt_map:set_previous_map_and_location(current_map, player.x, player.y)
+
+            Quest.set_immediate_quest(quest)
+
+            Map.travel_to(hunt_map)
+         end
+      },
+   }
+}
+
+local function check_hunt_quest_targets(map)
+   local quest = Quest.get_immediate_quest()
+   if quest and (quest._id == "elona.hunt" or quest._id == "elona.huntex") then
+      elona_Quest.update_target_count_hunt(quest, map)
+   end
+end
+Event.register("elona_sys.on_quest_check", "Check hunt quest targets", check_hunt_quest_targets)

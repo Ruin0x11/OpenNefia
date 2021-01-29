@@ -70,4 +70,12 @@ function ICharaInventory:iter_inventory()
    return self.inv:iter()
 end
 
+function ICharaInventory:free_inventory_slots()
+   return self.inv:free_slots()
+end
+
+function ICharaInventory:is_inventory_full()
+   return self.inv:is_full()
+end
+
 return ICharaInventory

@@ -72,7 +72,7 @@ return {
             end,
             falls_down = function(_1)
                return ("%s falls down from the tree.")
-                  :format(itemname(_1, 1))
+                  :format(_1)
             end,
             no_fruits = "It seems there are no fruits left on the tree."
          }

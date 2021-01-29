@@ -149,7 +149,7 @@ function chip_layer:draw_one(ind, x, y, i, chip_type, stack_height)
    local image = i.drawable or i.image
    local x_offset = i.x_offset or 0
    local y_offset_base = CONFIG[chip_type].y_offset
-   local y_offset = (i.y_offset or y_offset_base or 0) - (stack_height or 0)
+   local y_offset = (i.y_offset or 0) + y_offset_base - (stack_height or 0)
    if batch_ind == nil or batch_ind == 0 then
       -- tiles at the top of the screen should be drawn
       -- first, so they have the lowest z-order. conveniently

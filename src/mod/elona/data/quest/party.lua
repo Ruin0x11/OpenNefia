@@ -50,7 +50,7 @@ local party = {
 
    min_fame = 0,
    chance = function(client, town)
-      if town._archetype == "elona.palmia" then
+      if town.archetype_id == "elona.palmia" then
          return 8
       end
 
@@ -97,11 +97,7 @@ local party = {
       end
       -- <<<<<<<< shade2/main.hsp:1623 		} ..
 
-      local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
-      Gui.play_sound("base.exitmap1")
-      Gui.update_screen()
-      local ok, prev_map = assert(Map.load(prev_map_uid))
-      Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
+      elona_Quest.travel_to_previous_map()
    end
 }
 
@@ -181,14 +177,13 @@ data:add {
 local function add_music_tickets(_, params)
    local quest = params.quest
    -- >>>>>>>> shade2/quest.hsp:463 	if qExist(rq)=qPerform:if qParam1(rq)*150/100<qPa ..
-   if is_party_great_success(quest) then
+   if quest._id == "elona.party" and is_party_great_success(quest) then
       local player = Chara.player()
       local amount = 1 + quest.params.current_points / 10
       Item.create("elona.music_ticket", player.x, player.y, { amount = amount })
    end
    -- <<<<<<<< shade2/quest.hsp:463 	if qExist(rq)=qPerform:if qParam1(rq)*150/100<qPa ..
 end
-
 Event.register("elona_sys.on_quest_completed", "Add music tickets if perform quest score high enough", add_music_tickets)
 
 local function set_party_emotion_icon(chara)
@@ -204,3 +199,13 @@ local function set_party_emotion_icon(chara)
    -- <<<<<<<< shade2/calculation.hsp:1297 		} ..
 end
 Event.register("base.on_chara_turn_end", "Set emotion icon if guest satisfied", set_party_emotion_icon)
+
+local function display_quest_message_party(map)
+   local quest = Quest.get_immediate_quest()
+   -- >>>>>>>> shade2/map.hsp:2158 		if gQuest=qPerform{ ...
+   if quest and quest._id == "elona.party" then
+      Gui.mes_c("map.quest.on_enter.party", "SkyBlue", save.elona_sys.quest_time_limit, quest.params.required_points)
+   end
+   -- <<<<<<<< shade2/map.hsp:2160 			} ..
+end
+Event.register("base.on_map_entered_events", "Display quest message (party)", display_quest_message_party)

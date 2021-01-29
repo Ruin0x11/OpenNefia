@@ -24,6 +24,12 @@ local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
 local Area = require("api.Area")
 local Gardening = require("mod.elona.api.Gardening")
 local Feat = require("api.Feat")
+local Quest = require("mod.elona.api.Quest")
+local elona_Chara = require("mod.elona.api.Chara")
+local Item = require("api.Item")
+local Calc = require("mod.elona.api.Calc")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Equipment = require("mod.elona.api.Equipment")
 
 --
 --
@@ -564,6 +570,8 @@ Event.register("base.on_kill_chara", "npc memory",
                         Gui.mes("damage.you_feel_sad")
                      end
                   end
+                  local map = victim:current_map()
+                  map.crowd_density = map.crowd_density - 1
                   Effect.on_kill(params.source, victim)
                   -- TODO riding
                   -- TODO crowd
@@ -741,9 +749,7 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
 
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then
-      local Calc = require("mod.elona.api.Calc")
-      -- TODO
-      -- Calc.respawn_mobs()
+      elona_Chara.spawn_mobs()
    end
 end
 
@@ -883,7 +889,7 @@ local function proc_return(chara)
          local has_escort = Chara.iter_allies()
             :filter(Chara.is_alive)
             :extract("is_quest_escort")
-            :any()
+            :any(function(i) return i end)
 
          if has_escort then
             Gui.mes("magic.return.prevented.normal")
@@ -899,6 +905,11 @@ local function proc_return(chara)
          if dest == nil or dest == map.uid then
             Gui.mes("common.nothing_happens")
             return
+         end
+
+         if Quest.is_non_returnable_quest_active() then
+            Gui.mes("quest.deliver.you_commit_a_serious_crime")
+            Effect.modify_karma(chara, -10)
          end
 
          local blocked = Event.trigger("elona.before_cast_return", {}, false)
@@ -1228,3 +1239,48 @@ local function get_plant(chara, params, result)
 end
 
 Event.register("elona_sys.on_get", "Get plant", get_plant)
+
+local function on_map_renew_minor(map)
+-- >>>>>>>> shade2/map.hsp:2253 			if (mType=mTypeTown)or(mType=mTypeVillage)or(gA ...
+   if map:has_type("town") or map:has_type("guild")
+      or map.uid == save.base.home_map_uid
+   then
+      for _, chara in Chara.iter_others(map):filter(Chara.is_alive) do
+         Effect.generate_money(chara)
+
+         if chara._id == "elona.bard" then
+            local pred = function(i) return i:has_category("elona.furniture_instrument") end
+            if not chara:iter_items():any(pred) and Rand.one_in(150) then
+               Item.create("elona.stradivarius", nil, nil, nil, chara)
+            else
+               local filter = {
+                  level = Calc.calc_object_level(chara:calc("level"), map),
+                  quality = Calc.calc_object_quality(Enum.Quality.Normal),
+                  categories = "elona.furniture_instrument"
+               }
+               Itemgen.create(nil, nil, filter, chara)
+            end
+         end
+
+         if Rand.one_in(5) then
+            Equipment.generate_and_equip(chara)
+         end
+
+         if Rand.one_in(2) then
+            if chara:iter_items():length() < 8 then
+               local filter = {
+                  level = Calc.calc_object_level(chara:calc("level"), map),
+                  quality = Calc.calc_object_quality(Enum.Quality.Normal),
+               }
+               local item = Itemgen.create(nil, nil, filter, chara)
+               if (item:calc("cargo_weight") or 0) > 0 or item:calc("weight") <= 0 or item:calc("weight") >= 4000 then
+                  item.amount = 0
+                  item:remove_ownership()
+               end
+            end
+         end
+      end
+   end
+-- <<<<<<<< shade2/map.hsp:2264 				} ..
+end
+Event.register("base.on_map_renew_minor", "Map renew minor events", on_map_renew_minor)

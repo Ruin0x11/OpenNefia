@@ -21,6 +21,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Text = require("mod.elona.api.Text")
 local Mef = require("api.Mef")
 local Const = require("api.Const")
+local Quest = require("mod.elona.api.Quest")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
    assert(type(curse_state) == "string")
@@ -972,7 +973,12 @@ data:add {
          Gui.mes("magic.escape.cancel")
          s.turns_until_cast_return = 0
       else
-         -- TODO quest
+         if Quest.is_non_returnable_quest_active() then
+            Gui.mes("misc.return.forbidden")
+            if not Input.yes_no() then
+               return false
+            end
+         end
          -- TODO dungeon boss
 
          if Effect.is_cursed(params.curse_state) and Rand.one_in(3) then

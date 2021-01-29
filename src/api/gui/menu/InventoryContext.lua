@@ -4,6 +4,8 @@ local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
 local Ui = require("api.Ui")
 local ILocation = require("api.ILocation")
+local Map = require("api.Map")
+local Event = require("api.Event")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -36,6 +38,10 @@ end
 
 local function source_equipment(ctxt)
    return ctxt.chara:iter_equipment()
+end
+
+local function source_target_equipment(ctxt)
+   return ctxt.target:iter_equipment()
 end
 
 local function source_shop(ctxt)
@@ -90,6 +96,20 @@ local sources = {
       end,
       params = {
          chara = "IChara"
+      }
+   },
+   {
+      name = "target_equipment",
+      getter = source_target_equipment,
+      order = 8000,
+      on_get_name = function(self, name, item, menu)
+         return name .. " (main hand)"
+      end,
+      on_draw = function(self, x, y, item, menu)
+         menu.t.base.equipped_icon:draw(x - 12, y + 14)
+      end,
+      params = {
+         target = "IChara"
       }
    },
    {
@@ -225,11 +245,15 @@ function InventoryContext:on_shortcut(item)
 end
 
 function InventoryContext:filter(item)
+   local result = true
+
    if self.proto.filter then
-      return self.proto.filter(self, item)
+      result = self.proto.filter(self, item)
    end
 
-   return true
+   result = Event.trigger("base.on_inventory_context_filter", {context=self, item=item}, result)
+
+   return result
 end
 
 function InventoryContext:after_filter(filtered)

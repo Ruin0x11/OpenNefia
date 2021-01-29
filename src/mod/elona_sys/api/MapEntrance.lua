@@ -117,4 +117,8 @@ function MapEntrance.world_map(map, chara, prev)
    return MapEntrance.center(map, chara, prev)
 end
 
+function MapEntrance.random(map, chara, prev)
+   return { x = Rand.rnd(map:width() - 5) + 2, y = Rand.rnd(map:height() - 5) + 2 }
+end
+
 return MapEntrance

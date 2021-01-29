@@ -247,11 +247,11 @@ end,
       trade = {
         too_low_value = function(_1)
   return ("You don't have stuff that match %s.")
-  :format(itemname(_1))
+  :format(_1)
 end,
         you_receive = function(_1, _2)
   return ("You receive %s in exchange for %s.")
-  :format(itemname(_2), itemname(_1))
+  :format(_2, _1)
 end
       },
       trade_medals = {

@@ -2,6 +2,7 @@ local InstancedMap = require("api.InstancedMap")
 local Log = require("api.Log")
 local save = require("internal.global.save")
 local data = require("internal.data")
+local MapArchetype = require("api.MapArchetype")
 
 local InstancedArea = class.class("InstancedArea")
 
@@ -136,6 +137,9 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
       return ok, map
    end
 
+   -- WARNING: Map.save() should always be called on the map this returns, or
+   -- weird things will happen!
+
    local archetype = self:archetype()
 
    if map_archetype_id == nil then
@@ -154,16 +158,7 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
    }
 
    if map_archetype_id then
-      local map_archetype = data["base.map_archetype"]:ensure(map_archetype_id)
-      assert(type(map_archetype.on_generate_map) == "function", ("Map archetype '%s' was associated with floor '%d' of area archetype '%s', but it doesn't have an `on_generate_floor` callback."):format(map_archetype_id, floor, self._archetype))
-
-      map = map_archetype.on_generate_map(self, floor, params)
-      if map._archetype == nil then
-         Log.debug("Map archetype unset on new floor, setting to %s", map_archetype_id)
-         map:set_archetype(map_archetype_id, { set_properties = true })
-      else
-         Log.debug("Map archetype was already set to %s on generation", map._archetype)
-      end
+      map = MapArchetype.generate_map(map_archetype_id, self, floor, params)
    else
       map = archetype.on_generate_floor(self, floor, params)
    end

@@ -17,21 +17,21 @@ local ItemMaterial = {}
 
 -- >>>>>>>> shade2/item_data.hsp:1122 	mtListMetal(0,0)	=mtBronze	,mtLead		,mtMica		,mtC ..
 ItemMaterial.MATERIALS_METAL = {
-    {"elona.bronze", "elona.lead", "elona.mica", "elona.coral"},
-    {"elona.iron", "elona.silver", "elona.glass", "elona.obsidian"},
-    {"elona.steel", "elona.platinum", "elona.pearl", "elona.mithril"},
-    {"elona.chrome", "elona.crystal", "elona.emerald", "elona.adamantium"},
-    {"elona.titanium", "elona.diamond", "elona.rubynus", "elona.ether"}
+    {"elona.bronze",    "elona.lead",      "elona.mica",     "elona.coral"},
+    {"elona.iron",      "elona.silver",    "elona.glass",    "elona.obsidian"},
+    {"elona.steel",     "elona.platinum",  "elona.pearl",    "elona.mithril"},
+    {"elona.chrome",    "elona.crystal",   "elona.emerald",  "elona.adamantium"},
+    {"elona.titanium",  "elona.diamond",   "elona.rubynus",  "elona.ether"}
 }
 -- <<<<<<<< shade2/item_data.hsp:1127  ..
 
 -- >>>>>>>> shade2/item_data.hsp:1128 	mtListLeather(0,0)	=mtCloth	,mtSilk		,mtPaper	,mt ..
 ItemMaterial.MATERIALS_SOFT = {
-   {"elona.cloth", "elona.silk", "elona.paper", "elona.bone"},
-   {"elona.leather", "elona.scale", "elona.glass", "elona.obsidian"},
-   {"elona.chain", "elona.platinum", "elona.pearl", "elona.mithril"},
-   {"elona.zylon", "elona.gold", "elona.spirit_cloth", "elona.dragon_scale"},
-   {"elona.dawn_cloth", "elona.griffon_scale", "elona.rubynus", "elona.ether"}
+   {"elona.cloth",       "elona.silk",           "elona.paper",         "elona.bone"},
+   {"elona.leather",     "elona.scale",          "elona.glass",         "elona.obsidian"},
+   {"elona.chain",       "elona.platinum",       "elona.pearl",         "elona.mithril"},
+   {"elona.zylon",       "elona.gold",           "elona.spirit_cloth",  "elona.dragon_scale"},
+   {"elona.dawn_cloth",  "elona.griffon_scale",  "elona.rubynus",       "elona.ether"}
 }
 -- <<<<<<<< shade2/item_data.hsp:1133 	return ..
 
@@ -70,11 +70,11 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
    local i = Rand.rnd(100)
    local idx
    if i < 5 then
-      idx = 2
+      idx = 4
    elseif i < 25 then
       idx = 3
    elseif i < 55 then
-      idx = 4
+      idx = 2
    else
       idx = 1
    end
@@ -85,7 +85,6 @@ function ItemMaterial.choose_random_material_2(item, level, base_quality, materi
    end
 
    level = math.clamp(Rand.rnd(level+1) + base_quality, 0, 5-1)
-   level = level + 1
 
    if item:has_category("elona.furniture") then
       if Rand.one_in(2) then

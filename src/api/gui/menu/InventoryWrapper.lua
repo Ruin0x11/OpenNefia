@@ -154,13 +154,13 @@ end
 function InventoryWrapper:update()
    local result, canceled = self.submenu:update()
    if canceled then
-      return nil, "canceled"
+      return { result = nil, operation = self.proto_id }, "canceled"
    elseif result then
       return { result = result, operation = self.proto_id }
    end
 
    if self.canceled then
-      return nil, "canceled"
+      return { result = nil, operation = self.proto_id }, "canceled"
    end
 end
 

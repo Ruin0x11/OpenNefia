@@ -500,5 +500,27 @@ local function apply_item_on_init_params(item, params)
 end
 Event.register("base.on_item_init_params", "Default item on_init_params callback", apply_item_on_init_params)
 
+function Item.convert_artifact(item, mode)
+   if not Item.is_equipment(item) then return end
+   if item.quality ~= Enum.Quality.Unique then return end
+   if item:is_equipped() then return end
+   Log.error("TODO")
+end
+
+function Item.ensure_free_item_slot(chara)
+   -- >>>>>>>> shade2/adv.hsp:151 *chara_adjustInv ..
+   if not chara:is_inventory_full() then
+      return
+   end
+   for _ = 1, 100 do
+      local item = Rand.choice(chara:iter_items())
+      if not item:is_equipped() then
+         item:remove_activity()
+         item.amount = 0
+         item:remove_ownership()
+      end
+   end
+   -- <<<<<<<< shade2/adv.hsp:164 	return p ..
+end
 
 return Item

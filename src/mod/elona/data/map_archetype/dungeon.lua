@@ -94,7 +94,7 @@ do
       if floor == area:archetype().deepest_floor then
          map = last_boss_map(area, floor)
       else
-         local gen, params = DungeonTemplate.lesimas(area, floor, { level = 1 })
+         local gen, params = DungeonTemplate.lesimas(floor, { level = 1 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.lesimas", { set_properties = true })
       end
@@ -166,7 +166,7 @@ do
    }
 
    function area_the_void.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.nefia_dungeon(area, floor, { level = 50 })
+      local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 50 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.the_void", { set_properties = true })
 
@@ -237,7 +237,7 @@ do
 
          util.connect_existing_stairs(map, area, floor)
       else
-         local gen, params = DungeonTemplate.tower_of_fire(area, floor, { level = 15 })
+         local gen, params = DungeonTemplate.tower_of_fire(floor, { level = 15 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.tower_of_fire", { set_properties = true })
       end
@@ -307,7 +307,7 @@ do
 
          util.connect_existing_stairs(map, area, floor)
       else
-         local gen, params = DungeonTemplate.crypt_of_the_damned(area, floor, { level = 25 })
+         local gen, params = DungeonTemplate.crypt_of_the_damned(floor, { level = 25 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.crypt_of_the_damned", { set_properties = true })
       end
@@ -382,7 +382,7 @@ do
 
          util.connect_existing_stairs(map, area, floor)
       else
-         local gen, params = DungeonTemplate.ancient_castle(area, floor, { level = 17 })
+         local gen, params = DungeonTemplate.ancient_castle(floor, { level = 17 })
          map = DungeonMap.generate(area, floor, gen, params)
          map:set_archetype("elona.ancient_castle", { set_properties = true })
       end
@@ -439,7 +439,7 @@ do
    }
 
    function area_dragons_nest.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.nefia_dungeon(area, floor, { level = 30 })
+      local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 30 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.dragons_nest", { set_properties = true })
       return map
@@ -484,7 +484,7 @@ do
    }
 
    function area_mountain_pass.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_8(area, floor, { level = 25 })
+      local gen, params = DungeonTemplate.type_long(floor, { level = 25 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.mountain_pass", { set_properties = true })
 
@@ -536,7 +536,7 @@ do
    }
 
    function area_puppy_cave.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_10(area, floor, { level = 2 })
+      local gen, params = DungeonTemplate.type_puppy_cave(floor, { level = 2 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.puppy_cave", { set_properties = true })
 
@@ -606,7 +606,7 @@ do
    }
 
    function area_minotaurs_nest.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.type_9(area, floor, { level = 23 })
+      local gen, params = DungeonTemplate.type_maze(floor, { level = 23 })
       local map =  DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.minotaurs_nest", { set_properties = true })
       return map
@@ -668,7 +668,7 @@ do
    }
 
    function area_yeeks_nest.on_generate_floor(area, floor)
-      local gen, params = DungeonTemplate.nefia_dungeon(area, floor, { level = 5 })
+      local gen, params = DungeonTemplate.nefia_dungeon(floor, { level = 5 })
       local map = DungeonMap.generate(area, floor, gen, params)
       map:set_archetype("elona.yeeks_nest", { set_properties = true })
       return map

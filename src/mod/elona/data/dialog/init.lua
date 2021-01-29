@@ -135,6 +135,12 @@ data:add {
          },
          jump_to = "__start"
       },
+      thanks = {
+         text = {
+            {"talk.npc.common.thanks"}
+         },
+         jump_to = "__start"
+      },
    },
 }
 
@@ -152,8 +158,8 @@ data:add {
             return {{desc}}
          end,
          choices = {
-            {"before_accept", "about.choices.take"},
-            {"elona.default:you_kidding", "about.choices.leave"}
+            {"before_accept", "talk.npc.quest_giver.about.choices.take"},
+            {"elona.default:you_kidding", "talk.npc.quest_giver.about.choices.leave"}
          }
       },
       before_accept = function(t)
@@ -182,13 +188,13 @@ data:add {
       end,
       too_many_unfinished = {
          text = {
-            {"about.too_many_unfinished"}
+            {"talk.npc.quest_giver.about.too_many_unfinished"}
          },
          jump_to = "elona.default:__start"
       },
       accept = {
          text = {
-            {"about.thanks"}
+            {"talk.npc.quest_giver.about.thanks"}
          },
          jump_to = "elona.default:__start"
       },

@@ -120,7 +120,7 @@ do
       starting_pos = MapEntrance.center,
 
       properties = {
-         types = { "temporary" },
+         types = { "temporary", "quest" },
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = false,

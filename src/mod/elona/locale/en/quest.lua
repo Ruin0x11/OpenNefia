@@ -1,78 +1,80 @@
 local quest = {
    cook = {
       food_type = {
-         _1 = {
-            _1 = {
-               title = "A reception.",
-               desc = function(player, speaker, params)
-                  return ("We will be hosting this very important reception tonight. The guests must be satisfied and made to feel gorgeous. I want you to prepare %s and %s are yours.")
-                     :format(params.objective, params.reward)
-               end,
+         elona = {
+            meat = {
+               _1 = {
+                  title = "A reception.",
+                  desc = function(player, speaker, params)
+                     return ("We will be hosting this very important reception tonight. The guests must be satisfied and made to feel gorgeous. I want you to prepare %s and %s are yours.")
+                        :format(params.objective, params.reward)
+                  end,
+               },
             },
-         },
-         _2 = {
-            _1 = {
-               title = "On a diet",
-               desc = function(player, speaker, params)
-                  return ("Vegetables are essential parts of a healthy diet. Cook %s for me. Your rewards are %s.")
-                     :format(params.objective, params.reward)
-               end,
+            vegetable = {
+               _1 = {
+                  title = "On a diet",
+                  desc = function(player, speaker, params)
+                     return ("Vegetables are essential parts of a healthy diet. Cook %s for me. Your rewards are %s.")
+                        :format(params.objective, params.reward)
+                  end,
+               },
             },
-         },
-         _3 = {
-            _1 = {
-               title = "Cocktail party!",
-               desc = function(player, speaker, params)
-                  return ("Run a small errand for us and earn %s. We need a wicked relish for our cocktail party. Say, %s sounds decent.")
-                     :format(params.reward, params.objective)
-               end,
+            fruit = {
+               _1 = {
+                  title = "Cocktail party!",
+                  desc = function(player, speaker, params)
+                     return ("Run a small errand for us and earn %s. We need a wicked relish for our cocktail party. Say, %s sounds decent.")
+                        :format(params.reward, params.objective)
+                  end,
+               },
             },
-         },
-         _4 = {
-            _1 = {
-               title = "Sweet sweet.",
-               desc = function(player, speaker, params)
-                  return ("I prefer cakes and candies to alcoholic drinks. You want %s? Gimme %s!")
-                     :format(params.reward, params.objective)
-               end,
+            sweet = {
+               _1 = {
+                  title = "Sweet sweet.",
+                  desc = function(player, speaker, params)
+                     return ("I prefer cakes and candies to alcoholic drinks. You want %s? Gimme %s!")
+                        :format(params.reward, params.objective)
+                  end,
+               },
             },
-         },
-         _5 = {
-            _1 = {
-               title = "I love noodles!",
-               desc = function(player, speaker, params)
-                  return ("I love noodles! Is there anyone that hates noodles? I want to eat %s now! Rewards? Of course. %s sound good? ")
-                     :format(params.objective, params.reward)
-               end,
+            pasta = {
+               _1 = {
+                  title = "I love noodles!",
+                  desc = function(player, speaker, params)
+                     return ("I love noodles! Is there anyone that hates noodles? I want to eat %s now! Rewards? Of course. %s sound good? ")
+                        :format(params.objective, params.reward)
+                  end,
+               }
+            },
+            fish = {
+               _1 = {
+                  title = "Fussy taste.",
+                  desc = function(player, speaker, params)
+                     return ("My children won't eat fish. It's killing me. I'm gonna give %s to anyone that makes %s delicious enough to sweep their fuss!")
+                        :format(params.reward, params.objective)
+                  end,
+               },
+            },
+            bread = {
+               _1 = {
+                  title = "Going on a picnic.",
+                  desc = function(player, speaker, params)
+                     return ("First off, the rewards are no more than %s, ok? My kid needs %s for a picnic tomorrow. Please hurry.")
+                        :format(params.reward, params.objective)
+                  end,
+               },
+            },
+            egg = {
+               _1 = {
+                  title = "A new recipe!",
+                  desc = function(player, speaker, params)
+                     return ("As in the capacity of a cooking master, I'm always eager to learn a new recipe. Bring me %s and I'll pay you %s.")
+                        :format(params.objective, params.reward)
+                  end,
+               },
             }
          },
-         _6 = {
-            _1 = {
-               title = "Fussy taste.",
-               desc = function(player, speaker, params)
-                  return ("My children won't eat fish. It's killing me. I'm gonna give %s to anyone that makes %s delicious enough to sweep their fuss!")
-                     :format(params.reward, params.objective)
-               end,
-            },
-         },
-         _7 = {
-            _1 = {
-               title = "Going on a picnic.",
-               desc = function(player, speaker, params)
-                  return ("First off, the rewards are no more than %s, ok? My kid needs %s for a picnic tomorrow. Please hurry.")
-                     :format(params.reward, params.objective)
-               end,
-            },
-         },
-         _8 = {
-            _1 = {
-               title = "A new recipe!",
-               desc = function(player, speaker, params)
-                  return ("As in the capacity of a cooking master, I'm always eager to learn a new recipe. Bring me %s and I'll pay you %s.")
-                     :format(params.objective, params.reward)
-               end,
-            },
-         }
       },
       general = {
          _1 = {
@@ -226,12 +228,14 @@ return {
          elona = quest
       },
       reward = {
-         wear = "equipment",
-         magic = "magical goods",
-         armor = "armor",
-         weapon = "weapons",
-         supply = "ores",
-         furniture = "furnitures" -- TODO unused?
+         elona = {
+            wear = "equipment",
+            magic = "magical goods",
+            armor = "armor",
+            weapon = "weapons",
+            supply = "ores",
+            furniture = "furnitures" -- TODO unused?
+         }
       }
    }
 }

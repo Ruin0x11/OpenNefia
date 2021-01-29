@@ -12,7 +12,7 @@ return {
       },
       cook = function(_1, _2, _3)
          return ("%sで%sを料理して、%sを作った。")
-            :format(itemname(_2, 1), _1, itemname(_3, 1))
+            :format(_2, _1, _3)
       end,
       eat_status = {
          bad = function(_1)

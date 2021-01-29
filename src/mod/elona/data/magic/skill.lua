@@ -4,6 +4,8 @@ local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Input = require("api.Input")
 local Quest = require("mod.elona_sys.api.Quest")
+local elona_Item = require("mod.elona.api.Item")
+local Skill = require("mod.elona_sys.api.Skill")
 
 data:add {
    _id = "performer",
@@ -63,13 +65,36 @@ data:add {
    end
 }
 
+-- >>>>>>>> shade2/item.hsp:813 *item_cook ...
 local function cook(chara, item, cooking_tool)
    Gui.play_sound("base.cook1")
    local cooking = chara:skill_level("elona.cooking")
 
-   local food_quality = Rand.rnd(cooking + 7) + Rand.rnd
-   Gui.mes("TODO")
+   local item = item:separate()
+   local name = item:build_name()
+
+   local food_quality = math.min(Rand.rnd(cooking + 6) + Rand.rnd(cooking_tool.params.cooking_quality/50+1, math.floor(cooking / 5 + 7)))
+   food_quality = Rand.rnd(food_quality + 1)
+   if food_quality > 3 then
+      food_quality = Rand.rnd(food_quality)
+   end
+   if cooking >= 5 and food_quality < 3 and Rand.one_in(4) then
+      food_quality = 3
+   end
+   if cooking >= 10 and food_quality < 3 and Rand.one_in(3) then
+      food_quality = 3
+   end
+   food_quality = math.clamp(math.floor(food_quality + cooking_tool.params.cooking_quality/100), 1, 9)
+
+   elona_Item.make_dish(item, food_quality)
+
+   Gui.mes("food.cook", name, cooking_tool:build_name(1), item:build_name(1))
+   if item.params.food_quality > 2 then
+      Skill.gain_skill_exp(chara, "elona.cooking", 30 + item.params.food_quality * 5)
+   end
+   chara:refresh_weight()
 end
+-- <<<<<<<< shade2/item.hsp:833 	return ..
 
 data:add {
    _id = "cooking",

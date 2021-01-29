@@ -4,6 +4,7 @@ local Calc = require("mod.elona.api.Calc")
 local Quest = require("mod.elona_sys.api.Quest")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
+local MapArchetype = require("api.MapArchetype")
 
 
 data:add {
@@ -16,7 +17,7 @@ data:add {
    reward_fix = 135,
 
    min_fame = 0,
-   chance = 1, -- 4,
+   chance = 4,
 
    params = {},
 
@@ -38,7 +39,7 @@ data:add {
       return true, "noafindskitten.quest:accept"
    end,
    on_complete = function()
-      return "quest.noafindskitten.noafindskitten.dialog.complete"
+      return "noafindskitten.quest:complete"
    end
 }
 
@@ -51,19 +52,28 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "quest",
 
-   root = "quest.noafindskitten.noafindskitten.dialog",
    nodes = {
       accept = function(t)
-         error("TODO")
-         -- local map = Map.generate2("noafindskitten.quest_noafindskitten")
-
-         -- TODO remove
-         map._outer_map = t.speaker:current_map().uid
-
          local quest = Quest.for_client(t.speaker)
          assert(quest)
-         map._quest = quest
-         Map.travel_to(map)
-      end
+
+         local current_map = t.speaker:current_map()
+         local quest_map = MapArchetype.generate_map_and_area("noafindskitten.quest_noafindskitten")
+         local player = Chara.player()
+         quest_map:set_previous_map_and_location(current_map, player.x, player.y)
+
+         Quest.set_immediate_quest(quest)
+
+         Map.travel_to(quest_map)
+      end,
+      complete = {
+         text = "quest.types.noafindskitten.noafindskitten.complete",
+         on_start = function(t)
+            local quest = Quest.for_client(t.speaker)
+            assert(quest)
+            Quest.complete(quest, t.speaker)
+         end,
+         jump_to = "elona.default:__start"
+      }
    }
 }

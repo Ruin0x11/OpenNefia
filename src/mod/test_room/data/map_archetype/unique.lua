@@ -206,6 +206,9 @@ OOOOOOOOOOOOOOOO]]
    local chara = Chara.create("elona.shopkeeper", nil, nil, {}, map)
    chara:add_role("elona.citizen")
 
+   chara = Chara.create("elona.bartender", nil, nil, {}, map)
+   chara:add_role("elona.citizen")
+
    return map
 end
 

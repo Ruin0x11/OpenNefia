@@ -22,6 +22,7 @@ local I18N = require("api.I18N")
 local ExHelp = require("mod.elona.api.ExHelp")
 local Area = require("api.Area")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local Filters = require("mod.elona.api.Filters")
 
 local function get_map_display_name(area, description)
    if area.is_hidden then
@@ -386,9 +387,14 @@ data:add {
       self.image = nil
 
       local level = map:calc("level")
-      if map.gen_id == "elona.shelter" then level = 0 end
+      if map._archetype == "elona.shelter" then level = 0 end
 
-      Itemgen.create(self.x, self.y, Calc.filter(level, 1), map)
+      local filter = {
+         level = Calc.calc_object_level(level, map),
+         quality = Calc.calc_object_quality(Enum.Quality.Good),
+         categories = Rand.choice(Filters.fsetbarrel)
+      }
+      Itemgen.create(self.x, self.y, filter, map)
 
       map:memorize_tile(self.x, self.y)
       Gui.update_screen()

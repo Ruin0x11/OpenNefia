@@ -22,7 +22,7 @@ local function surrender()
       end
    end
 
-   Chara.player():refresh_burden_state()
+   Chara.player():refresh_weight()
 end
 
 return {

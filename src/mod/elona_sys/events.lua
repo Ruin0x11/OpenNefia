@@ -15,6 +15,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Effect = require("mod.elona.api.Effect")
 local Calc = require("mod.elona.api.Calc")
 local Chara = require("api.Chara")
+local elona_Quest = require("mod.elona.api.Quest")
 
 --
 --
@@ -581,7 +582,7 @@ Event.register("base.on_set_player", "Add player light", add_player_light)
 
 local function warn_quest_abandonment(_, params)
    if Quest.is_immediate_quest_active() then
-      Gui.mes("action.leave.abandoning_quest")
+      Gui.mes("action.move.leave.abandoning_quest")
    end
 end
 Event.register("elona_sys.before_player_map_leave", "Warn about abandoning instanced quest", warn_quest_abandonment)
@@ -597,7 +598,13 @@ local function complete_quest(_, params, result)
          next_node = proto.on_complete(quest, client) or next_node
       end
 
+      if params.state.__quest_complete then
+         Log.error("Infinite loop detected, did you call Quest.complete() in your dialog?")
+         Quest.complete(quest)
+      end
+
       result.node_id = next_node
+      params.state.__quest_complete = true
    end
    return result
 end
@@ -649,6 +656,11 @@ local function on_quest_exit(quest)
    local quest_data = data["elona_sys.quest"]:ensure(quest._id)
    if quest_data.on_quest_exit then
       quest_data.on_quest_exit(quest)
+   end
+
+   local result = Event.trigger("elona_sys.on_quest_map_leave", {quest = quest})
+   if result then
+      return
    end
 
    if quest.state ~= "completed" then
@@ -716,3 +728,20 @@ local function quest_create_rewards(_, params)
    Gui.mes("common.something_is_put_on_the_ground")
 end
 Event.register("elona_sys.on_quest_completed", "Create default quest rewards", quest_create_rewards, 200000)
+
+local function quest_failed_callback(_, params)
+   local quest = params.quest
+   local quest_data = data["elona_sys.quest"]:ensure(quest._id)
+   if quest_data.on_failed then
+      quest_data.on_failed(quest)
+   end
+end
+Event.register("elona_sys.on_quest_failed", "Run on_quest_failed callback", quest_failed_callback, 200000)
+
+local function check_escort_quest_targets(map)
+   local quest = Quest.get_immediate_quest()
+   if quest and quest._id == "elona.escort" then
+      elona_Quest.update_target_count_escort(quest, map)
+   end
+end
+Event.register("elona_sys.on_quest_check", "Check escort quest targets", check_escort_quest_targets)

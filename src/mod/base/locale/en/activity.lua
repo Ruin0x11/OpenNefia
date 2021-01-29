@@ -24,10 +24,6 @@ end,
   :format(itemname(_1, 1))
 end
     },
-    dig = function(_1)
-  return ("You start to pick %s.")
-  :format(itemname(_1, 1))
-end,
     dig_mining = {
       fail = "Your back hurts...You give up digging.",
       finish = {
@@ -76,9 +72,13 @@ end,
     },
     guillotine = "Suddenly, the guillotine is activated.",
     harvest = {
+       start = function(_1)
+  return ("You start to pick %s.")
+  :format(_1)
+end,
       finish = function(_1, _2)
   return ("You harvest %s. (%s)")
-  :format(itemname(_1, 1), _2)
+  :format(_1, _2)
 end,
       sound = { "*sing*", "*pull*", "*thud*", "*rumble*", "*gasp*" }
     },

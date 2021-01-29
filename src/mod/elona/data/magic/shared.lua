@@ -436,7 +436,7 @@ local function make_ball(opts)
             local tx = pos[1]
             local ty = pos[2]
 
-            local target = Chara.at(tx, ty)
+            local target = Chara.at(tx, ty, map)
 
             if target then
                opts.ball_cb(self, x, y, tx, ty, source, target, element, params)
@@ -449,7 +449,7 @@ local function make_ball(opts)
 end
 
 local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, params)
-   if x == source.x and y == source.y then
+   if tx == source.x and ty == source.y then
       return
    end
 

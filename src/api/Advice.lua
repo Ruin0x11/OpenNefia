@@ -128,7 +128,7 @@ end
 local function rebuild_merged_advice_fn(advice)
    -- The final function needs to be recursive, so here we build a single
    -- "merged" callback that calls each advice callback in order of priority
-   -- in a recursive maner.
+   -- in a recursive manner.
    local merged_fns = {advice.original_fn}
    for i, advice_fn in ipairs(advice.advice_fns) do
       local next_fn = advice_fn.fn

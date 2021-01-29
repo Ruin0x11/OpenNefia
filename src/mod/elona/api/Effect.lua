@@ -309,7 +309,7 @@ function Effect.eat_food(chara, food)
             else
                Effect.modify_karma(player, -1)
             end
-            Effect.modify_impression(chara, -25)
+            Skill.modify_impression(chara, -25)
             return
          end
       end
@@ -584,7 +584,7 @@ end
 
 function Effect.decrement_fame(chara, fraction)
    local delta = chara.fame / fraction + 5
-   delta = delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2)
+   delta = math.floor(delta + Rand.rnd(delta / 2) - Rand.rnd(delta / 2))
    chara.fame = math.max(chara.fame - math.floor(delta), 0)
    return delta
 end
@@ -823,6 +823,19 @@ function Effect.has_sustain_enchantment(chara, attribute_id)
          and enc.params.skill_id == attribute_id
    end
    return chara:iter_enchantments():any(is_sustain_enc)
+end
+
+function Effect.generate_money(chara)
+   -- >>>>>>>> shade2/calculation.hsp:703 #deffunc generateMoney int id ...
+   local gold = Rand.rnd(100) + Rand.rnd(chara:calc("level") * 50 + 1)
+   local shop = chara:find_role("elona.shopkeeper")
+   if shop then
+      gold = gold + 2500 + chara:calc("shop_rank") * 250
+   end
+   if chara.gold < gold / 2 then
+      chara.gold = gold
+   end
+   -- <<<<<<<< shade2/calculation.hsp:707 	return ..
 end
 
 return Effect

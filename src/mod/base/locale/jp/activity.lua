@@ -24,10 +24,6 @@ end,
   :format(itemname(_1, 1))
 end
     },
-    dig = function(_1)
-  return ("%sを掘り始めた。")
-  :format(itemname(_1, 1))
-end,
     dig_mining = {
       fail = "背中が痛い…掘るのを諦めた。",
       finish = {
@@ -76,9 +72,13 @@ end,
     },
     guillotine = "突然ギロチンが落ちてきた！",
     harvest = {
+       start = function(_1)
+  return ("%sを掘り始めた。")
+  :format(_1)
+end,
       finish = function(_1, _2)
   return ("%sを収穫した(%s)")
-  :format(itemname(_1, 1), _2)
+  :format(_1, _2)
 end,
       sound = { " *ザクッ* ", " *♪* ", " *ズシュ* ", " *ジャリ* " }
     },

@@ -17,6 +17,8 @@ local Area = require("api.Area")
 local Building = require("mod.elona.api.Building")
 local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
+local Input = require("api.Input")
+local Log = require("api.Log")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -2556,8 +2558,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,
@@ -2613,7 +2615,9 @@ local item =
          rarity = 150000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 150 },
 
          tags = { "sf" },
@@ -3170,7 +3174,9 @@ local item =
          rarity = 150000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 200 },
          categories = {
             "elona.furniture"
@@ -3343,7 +3349,9 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
@@ -3363,7 +3371,9 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
@@ -3383,7 +3393,9 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 100 },
          categories = {
             "elona.furniture"
@@ -3669,8 +3681,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,
@@ -4113,9 +4125,9 @@ local item =
          }
       },
       {
-         _id = "tangerine",
+         _id = "orange",
          elona_id = 196,
-         image = "elona.item_tangerine",
+         image = "elona.item_orange",
          value = 130,
          weight = 880,
          material = "elona.fresh",
@@ -4763,7 +4775,9 @@ local item =
          category = 59000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 60 },
          categories = {
             "elona.misc_item"
@@ -5520,7 +5534,9 @@ local item =
          category = 59000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 40 },
          categories = {
             "elona.misc_item"
@@ -5536,7 +5552,9 @@ local item =
          category = 59000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 80 },
          categories = {
             "elona.misc_item"
@@ -6521,7 +6539,9 @@ local item =
          rarity = 200000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { bed_quality = 200 },
 
          tags = { "sf" },
@@ -11506,7 +11526,8 @@ local item =
                   if y + 1 < map:height() and map:can_access(x, y + 1) then
                      y = y + 1
                   end
-                  Item.create(self.params.fruit_tree_item_id, x, y, {amount=0})
+                  local item = Item.create(self.params.fruit_tree_item_id, x, y, {}, map)
+                  Gui.mes("action.bash.tree.falls_down", item:build_name(1))
 
                   return "turn_end"
                end
@@ -12277,6 +12298,13 @@ local item =
          coefficient = 100,
 
          is_precious = true,
+
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            Input.query_inventory(params.chara, "elona.inv_harvest_delivery_chest", nil, nil)
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            return "player_turn_query"
+         end,
 
          categories = {
             "elona.container",
@@ -13184,8 +13212,8 @@ local item =
 
          param2 = 100,
          params = {
-            count_1 = 0,
-            count_2 = 0,
+            amount_remaining = 0,
+            amount_dryness = 0,
          },
 
          on_drink = Magic.drink_well,
@@ -13270,7 +13298,9 @@ local item =
          rarity = 150000,
          coefficient = 100,
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
          params = { cooking_quality = 225 },
          categories = {
             "elona.furniture"
@@ -13847,7 +13877,11 @@ local item =
             "elona.no_generate",
             "elona.furniture"
          },
-         light = light.gate
+         light = light.gate,
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "flying_scroll",
@@ -16858,7 +16892,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "downstairs",
@@ -16873,7 +16911,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "new_years_gift",
@@ -16907,7 +16949,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "daruma",
@@ -17661,7 +17707,6 @@ local item =
          image = "elona.item_pot_for_testing",
          value = 1000,
          weight = 500,
-         on_use = function() end,
          category = 59000,
          subcategory = 59500,
          coefficient = 100,
@@ -17669,7 +17714,9 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
 
          categories = {
             "elona.misc_item_crafting",
@@ -17682,7 +17729,6 @@ local item =
          image = "elona.item_frying_pan_for_testing",
          value = 1000,
          weight = 500,
-         on_use = function() end,
          category = 59000,
          subcategory = 59500,
          coefficient = 100,
@@ -17690,7 +17736,9 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 15,
+         on_use = function(self, params)
+            elona_sys_Magic.cast("elona.cooking", { source = params.chara, item = self })
+         end,
 
          categories = {
             "elona.misc_item_crafting",

@@ -13,6 +13,7 @@ local Scene = require("mod.elona_sys.scene.api.Scene")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 do
    local vernis = {
@@ -149,7 +150,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       -- TODO only if sidequest
@@ -272,7 +273,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 7, 8, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -333,7 +334,7 @@ do
       end
 
       for _=1,15 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -357,6 +358,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -468,7 +470,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 48, 3, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -568,7 +570,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -592,6 +594,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -675,7 +678,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 26, 7, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -722,7 +725,7 @@ do
       end
 
       for _=1,20 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -745,7 +748,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -905,7 +909,7 @@ do
       chara:add_role("elona.citizen")
 
       for _=1,20 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -928,7 +932,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -1050,7 +1055,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 5, 27, nil, map)
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
@@ -1096,12 +1101,12 @@ do
       end
 
       for _ = 1, 8 do
-         chara = util.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
+         chara = MapgenUtils.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
          chara:add_role("elona.special")
       end
 
       for _ = 1, 20 do
-         util.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
+         MapgenUtils.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
       end
 
       return map
@@ -1273,6 +1278,7 @@ do
 
       metadata = {
          town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {
@@ -1395,7 +1401,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 37, 30, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})
@@ -1451,7 +1457,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -1474,7 +1480,8 @@ do
       },
 
       metadata = {
-         town_floors = { 1 }
+         town_floors = { 1 },
+         can_return_to = true
       },
 
       parent_area = {

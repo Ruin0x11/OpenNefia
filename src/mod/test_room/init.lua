@@ -9,6 +9,30 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
 require("mod.test_room.data")
 
+config["test_room.load_towns"] = false
+
+local function load_towns(north_tyris)
+   for _, area in Area.iter_in_parent(north_tyris) do
+      -- See if there are any maps in this area that need early
+      -- initialization.
+      if area.metadata.town_floors then
+         -- For every floor that is marked to be initialized on save
+         -- creation, generate it and initialize things like quest
+         -- data. This is so quests that interlink between maps
+         -- (delivery, escort) have proper connections to one another
+         -- ahead of time.
+         for _, floor in ipairs(area.metadata.town_floors) do
+            local ok, map = assert(area:load_or_generate_floor(floor))
+
+            -- Initialize quests, etc. in this map. (initialize_map() in events/map_init.lua)
+            map:emit("base.on_map_initialize", {load_type = "initialize"})
+
+            Map.save(map)
+         end
+      end
+   end
+end
+
 local function on_game_start(self, player)
    local bow = Item.create("elona.long_bow", nil, nil, { ownerless = true })
    local arrow = Item.create("elona.arrow", nil, nil, { ownerless = true })
@@ -38,6 +62,11 @@ local function on_game_start(self, player)
 
    local north_tyris = Area.create_unique("elona.north_tyris", "root")
    assert(Area.create_entrance(north_tyris, 1, 25, 23, {}, map))
+   if config["test_room.load_towns"] then
+      local ok, north_tyris_map = assert(north_tyris:load_or_generate_floor(1))
+      load_towns(north_tyris_map)
+      Map.save(north_tyris_map)
+   end
 
    Map.set_map(map)
    map:take_object(player, 25, 25)
