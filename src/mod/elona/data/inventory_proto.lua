@@ -422,7 +422,7 @@ local inv_cook = {
          return false
       end
 
-      if item:calc("food_quality") then
+      if (item.params.food_quality or 0) > 0  then
          -- Item is already cooked.
          return false
       end

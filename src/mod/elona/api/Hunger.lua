@@ -69,7 +69,7 @@ end
 
 function Hunger.calc_base_nutrition(item)
    local buffs = {}
-   local quality = item:calc("food_quality") or item:calc("food_rank") or 0
+   local quality = item.params.food_quality or item.params.food_rank or 0
 
    for _, v in ipairs(item:calc("base_food_buffs") or lists[1]) do
       local power = v.power
@@ -105,7 +105,7 @@ end
 
 function Hunger.calc_nutrition(item)
    local curse_state = item:calc("curse_state")
-   local quality = item:calc("food_quality") or item:calc("food_rank") or 0
+   local quality = item.params.food_quality or item.params.food_rank or 0
 
    local nutrition = item:calc("base_nutrition") or 2500
 
@@ -131,7 +131,7 @@ end
 
 function Hunger.print_quality(chara, item)
    if chara:is_player() then
-      local quality = item:calc("food_quality") or item:calc("food_rank") or 0
+      local quality = item.params.food_quality or item.params.food_rank or 0
       if chara:has_trait("elona.eat_human") then
          local is_human = item._id == "elona.corpse" and false
          if is_human then

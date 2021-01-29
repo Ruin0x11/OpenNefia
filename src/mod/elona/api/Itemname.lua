@@ -692,4 +692,13 @@ function Itemname.qualify_name(item_id)
 end
 -- <<<<<<<< shade2/init.hsp:257 	return iOriginalNameRef2@(id)+" of "+iOriginalNam ..
 
+-- >>>>>>>> shade2/init.hsp:248 	#defcfunc cnvArticle str s1 ...
+function Itemname.qualify_article(str)
+   if I18N.language() == "jp" then
+      return str
+   end
+   return ("[%s]"):format(str)
+end
+-- <<<<<<<< shade2/init.hsp:252 ;	if (s2="a")or(s2="o")or(s2="i")or(s2="u")or(s2=" ..
+
 return Itemname

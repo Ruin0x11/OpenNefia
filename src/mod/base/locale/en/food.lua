@@ -12,7 +12,7 @@ end
     },
     cook = function(_1, _2, _3)
   return ("You cook %s with %s and make %s.")
-  :format(_1, itemname(_2, 1), itemname(_3, 1))
+  :format(_1, _2, _3)
 end,
     eat_status = {
       bad = function(_1)

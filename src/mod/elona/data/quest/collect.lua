@@ -7,6 +7,7 @@ local Rand = require("api.Rand")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 local I18N = require("api.I18N")
+local Itemname = require("mod.elona.api.Itemname")
 
 local collect = {
    _id = "collect",
@@ -70,7 +71,7 @@ local collect = {
    end,
    locale_data = function(self)
       return {
-         item_name = I18N.get("item.info." .. self.params.target_item_id .. ".name"),
+         item_name = Itemname.qualify_article(Itemname.qualify_name(self.params.target_item_id)),
          target_name = self.params.target_name
       }
    end

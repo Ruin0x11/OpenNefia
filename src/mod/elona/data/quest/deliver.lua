@@ -8,6 +8,7 @@ local Chara = require("api.Chara")
 local Item = require("api.Item")
 local Gui = require("api.Gui")
 local Event = require("api.Event")
+local Itemname = require("mod.elona.api.Itemname")
 
 ---
 --- Data
@@ -108,7 +109,7 @@ end
 function deliver.locale_data(self)
    local params = {
       item_category = self.params.item_category,
-      item_name = I18N.get("item.info." .. self.params.item_id .. ".name"),
+      item_name = Itemname.qualify_article(Itemname.qualify_name(self.params.item_id)),
       target_name = self.params.target_name,
       map = self.params.target_map_name
    }
