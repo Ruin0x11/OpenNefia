@@ -11,6 +11,8 @@ local elona_Item = require("mod.elona.api.Item")
 local Enum = require("api.Enum")
 local Quest = require("mod.elona_sys.api.Quest")
 local Ui = require("api.Ui")
+local I18N = require("api.I18N")
+local Equipment = require("mod.elona.api.Equipment")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -285,12 +287,12 @@ local inv_buy = {
       return true
    end,
    on_select = function(ctxt, item, amount)
-      Gui.mes("ui.inv.buy.prompt", item:build_name(amount), amount)
+      local cost = Calc.calc_item_value(item, "buy") * amount
+
+      Gui.mes("ui.inv.buy.prompt", item:build_name(amount), cost)
       if not Input.yes_no() then
          return "inventory_continue"
       end
-
-      local cost = Calc.calc_item_value(item, "buy") * amount
 
       if cost > ctxt.chara.gold then
          Gui.mes("ui.inv.buy.not_enough_money")
@@ -452,6 +454,87 @@ local inv_dip_source = {
 }
 data:add(inv_dip_source)
 
+local inv_trade = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_trade",
+   elona_id = 20,
+
+   sources = { "target", "target_equipment" },
+   window_title = "ui.inventory_command.trade",
+   query_text = "ui.inv.title.trade",
+   filter = function(ctxt, item)
+      return item._id ~= "elona.gold_piece" and item._id ~= "elona.platinum_coin"
+   end,
+   on_select = function(ctxt, item, amount, rest)
+      local result, canceled = Input.query_inventory(ctxt.chara, "elona.inv_present", {target=ctxt.target, params={trade_item=item}})
+      if result and not canceled then
+         return "player_turn_query"
+      end
+      return "inventory_cancel"
+   end
+}
+data:add(inv_trade)
+
+local inv_present = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_present",
+   elona_id = 20,
+
+   sources = { "chara" },
+   window_title = "ui.inventory_command.present",
+   query_text = function(ctxt)
+      return I18N.get("ui.inv.title.present", ctxt.params.trade_item:build_name())
+   end,
+   filter = function(ctxt, item)
+      -- >>>>>>>> shade2/command.hsp:3390 	if invCtrl=21{ ..
+      local trade_item = ctxt.params.trade_item
+      local trade_value = Calc.calc_item_value(trade_item) * trade_item.amount
+      local offer_value = Calc.calc_item_value(item) * item.amount
+      return offer_value >= trade_value / 2 * 3
+         and not item:calc("is_stolen")
+      -- <<<<<<<< shade2/command.hsp:3393 		} ..
+   end,
+   after_filter = function(ctxt, filtered)
+      if #filtered == 0 then
+         Gui.mes("ui.inv.trade.too_low_value", ctxt.params.trade_item:build_name())
+         return "inventory_cancel"
+      end
+   end,
+   on_select = function(ctxt, item, amount, rest)
+      -- >>>>>>>> shade2/command.hsp:3872 		if invCtrl=21{ ...
+      if item:calc("is_no_drop") then
+         return "inventory_continue"
+      end
+
+      local trade_item = ctxt.params.trade_item
+      Gui.play_sound("base.equip1")
+      item:remove_activity()
+      trade_item:remove_activity()
+      trade_item.always_drop = false
+      Gui.mes("ui.inv.trade.you_receive", trade_item:build_name(), item:build_name())
+      trade_item:unequip()
+
+      trade_item:remove_ownership()
+      item:remove_ownership()
+      assert(ctxt.chara:take_item(trade_item))
+      assert(ctxt.target:take_item(item))
+
+      elona_Item.convert_artifact(trade_item)
+      Equipment.equip_all_optimally(ctxt.target)
+      if not ctxt.target:is_allied() then
+         Equipment.generate_and_equip(ctxt.target)
+      end
+      elona_Item.ensure_free_item_slot(ctxt.target)
+      ctxt.target:refresh()
+      ctxt.target:refresh_weight()
+      ctxt.chara:refresh_weight()
+
+      return "player_turn_query"
+      -- <<<<<<<< shade2/command.hsp:3892 			} ..
+   end
+}
+data:add(inv_present)
+
 local inv_throw = {
    _type = "elona_sys.inventory_proto",
    _id = "inv_throw",
@@ -509,8 +592,8 @@ local inv_get_pocket = {
    icon = 17,
    show_money = false,
    query_amount = true,
-   window_title = "ui.inventory_command.put",
-   query_text = "ui.inv.title.put",
+   window_title = "ui.inventory_command.take",
+   query_text = "ui.inv.title.take",
 
    can_select = function(ctxt, item)
       local success = Effect.do_stamina_check(ctxt.chara, 10)

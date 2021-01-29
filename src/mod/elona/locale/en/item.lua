@@ -3127,21 +3127,21 @@ local item = {
   pillar = {
     name = "pillar"
   },
-  pillar_ornamented_with_flowers = {
+  statue_ornamented_with_flowers = {
     desc = {
       main = {
         text = "A pillar designed after one's common in Eludernia,"
       }
     },
-    name = "ornamented with flowers"
+    name = "statue ornamented with flowers"
   },
-  pillar_ornamented_with_plants = {
+  statue_ornamented_with_plants = {
     desc = {
       main = {
         text = "A pillar designed after one's common in Eludernia,"
       }
     },
-    name = "ornamented with plants"
+    name = "statue ornamented with plants"
   },
   pistol = {
     desc = {

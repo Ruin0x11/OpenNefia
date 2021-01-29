@@ -273,7 +273,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 7, 8, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -470,7 +470,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 48, 3, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -678,7 +678,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 26, 7, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.goods_vendor"})
@@ -1055,7 +1055,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 5, 27, nil, map)
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.bakery" })
@@ -1401,7 +1401,7 @@ do
       chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
       chara:add_role("elona.innkeeper")
       chara.shop_rank = 8
-      chara.name = I18N.get("chara.job.inkeeper", chara.name)
+      chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
       chara = Chara.create("elona.shopkeeper", 37, 30, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id = "elona.blacksmith"})

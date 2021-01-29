@@ -26,6 +26,10 @@ local Gardening = require("mod.elona.api.Gardening")
 local Feat = require("api.Feat")
 local Quest = require("mod.elona.api.Quest")
 local elona_Chara = require("mod.elona.api.Chara")
+local Item = require("api.Item")
+local Calc = require("mod.elona.api.Calc")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Equipment = require("mod.elona.api.Equipment")
 
 --
 --
@@ -1235,3 +1239,48 @@ local function get_plant(chara, params, result)
 end
 
 Event.register("elona_sys.on_get", "Get plant", get_plant)
+
+local function on_map_renew_minor(map)
+-- >>>>>>>> shade2/map.hsp:2253 			if (mType=mTypeTown)or(mType=mTypeVillage)or(gA ...
+   if map:has_type("town") or map:has_type("guild")
+      or map.uid == save.base.home_map_uid
+   then
+      for _, chara in Chara.iter_others(map):filter(Chara.is_alive) do
+         Effect.generate_money(chara)
+
+         if chara._id == "elona.bard" then
+            local pred = function(i) return i:has_category("elona.furniture_instrument") end
+            if not chara:iter_items():any(pred) and Rand.one_in(150) then
+               Item.create("elona.stradivarius", nil, nil, nil, chara)
+            else
+               local filter = {
+                  level = Calc.calc_object_level(chara:calc("level"), map),
+                  quality = Calc.calc_object_quality(Enum.Quality.Normal),
+                  categories = "elona.furniture_instrument"
+               }
+               Itemgen.create(nil, nil, filter, chara)
+            end
+         end
+
+         if Rand.one_in(5) then
+            Equipment.generate_and_equip(chara)
+         end
+
+         if Rand.one_in(2) then
+            if chara:iter_items():length() < 8 then
+               local filter = {
+                  level = Calc.calc_object_level(chara:calc("level"), map),
+                  quality = Calc.calc_object_quality(Enum.Quality.Normal),
+               }
+               local item = Itemgen.create(nil, nil, filter, chara)
+               if (item:calc("cargo_weight") or 0) > 0 or item:calc("weight") <= 0 or item:calc("weight") >= 4000 then
+                  item.amount = 0
+                  item:remove_ownership()
+               end
+            end
+         end
+      end
+   end
+-- <<<<<<<< shade2/map.hsp:2264 				} ..
+end
+Event.register("base.on_map_renew_minor", "Map renew minor events", on_map_renew_minor)

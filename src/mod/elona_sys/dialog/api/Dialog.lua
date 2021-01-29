@@ -277,6 +277,8 @@ local function step_dialog(node_data, talk, state, prev_node_id)
                assert(type(result.params) == "table")
             end
             next_node = { node_id = result.node_id, params = result.params }
+         else
+            next_node = {node_id = "__END__", params = {}}
          end
       else
          dialog_error(talk, "Error running dialog inline function", result)

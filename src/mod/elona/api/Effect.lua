@@ -825,4 +825,17 @@ function Effect.has_sustain_enchantment(chara, attribute_id)
    return chara:iter_enchantments():any(is_sustain_enc)
 end
 
+function Effect.generate_money(chara)
+   -- >>>>>>>> shade2/calculation.hsp:703 #deffunc generateMoney int id ...
+   local gold = Rand.rnd(100) + Rand.rnd(chara:calc("level") * 50 + 1)
+   local shop = chara:find_role("elona.shopkeeper")
+   if shop then
+      gold = gold + 2500 + chara:calc("shop_rank") * 250
+   end
+   if chara.gold < gold / 2 then
+      chara.gold = gold
+   end
+   -- <<<<<<<< shade2/calculation.hsp:707 	return ..
+end
+
 return Effect

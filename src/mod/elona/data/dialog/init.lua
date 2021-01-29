@@ -135,6 +135,12 @@ data:add {
          },
          jump_to = "__start"
       },
+      thanks = {
+         text = {
+            {"talk.npc.common.thanks"}
+         },
+         jump_to = "__start"
+      },
    },
 }
 

@@ -60,6 +60,10 @@ local function gen_fov_radius(fov_max)
    return fov_cache[fov_max]
 end
 
+local function t(o)
+   return setmetatable(o or {}, { __inspect = tostring })
+end
+
 function InstancedMap:init(width, height, uids, tile)
    IModdable.init(self)
    IEventEmitter.init(self)
@@ -80,35 +84,35 @@ function InstancedMap:init(width, height, uids, tile)
 
    self._multi_pool = multi_pool:new(width, height)
    self._last_sight_id = 1
-   self._in_sight = table.of(0, width * height)
+   self._in_sight = t(table.of(0, width * height))
 
    -- Map of shadows to be drawn. This is coordinate-local to the
    -- visible screen area only, with (1, 1) being the tile at the
    -- upper left corner of the game window.
-   self._shadow_map = {}
+   self._shadow_map = t()
 
    -- Locations that are treated as solid. Can be changed by mods to
    -- make objects that act solid, like map features.
-   self._solid = table.of(false, width * height)
+   self._solid = t(table.of(false, width * height))
 
    -- Locations that are treated as opaque. Can be changed by mods to
    -- make objects that act opaque.
-   self._opaque = table.of(false, width * height)
+   self._opaque = t(table.of(false, width * height))
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
-   self._memory = {}
+   self._memory = t()
 
    -- Ambient light information. See IItem.light.
-   self._light = {}
+   self._light = t()
 
-   self._tiles = table.of(function() return {} end, width * height)
-   self._tiles_dirty = {}
+   self._tiles = t(table.of(function() return {} end, width * height))
+   self._tiles_dirty = t()
    self._uids = uids
 
-   self.debris = {}
+   self.debris = t()
 
-   self._memorized = {}
+   self._memorized = t()
 
    self._archetype = nil
 
@@ -287,7 +291,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    local stw = math.min(Draw.get_tiled_width(), self._width)
    local sth = math.min(Draw.get_tiled_height(), self._height)
 
-   self._shadow_map = {}
+   self._shadow_map = t()
    for i=0,stw + 4 do
       self._shadow_map[i] = {}
       for j=0,sth + 4 do

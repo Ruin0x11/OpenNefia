@@ -598,7 +598,13 @@ local function complete_quest(_, params, result)
          next_node = proto.on_complete(quest, client) or next_node
       end
 
+      if params.state.__quest_complete then
+         Log.error("Infinite loop detected, did you call Quest.complete() in your dialog?")
+         Quest.complete(quest)
+      end
+
       result.node_id = next_node
+      params.state.__quest_complete = true
    end
    return result
 end

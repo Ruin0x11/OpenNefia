@@ -8,6 +8,7 @@ local Gui = require("api.Gui")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local Event = require("api.Event")
 local Itemname = require("mod.elona.api.Itemname")
+local elona_Item = require("mod.elona.api.Item")
 
 local supply = {
    _id = "supply",
@@ -82,6 +83,7 @@ data:add {
          local item = find_item(Chara.player(), quest.params.target_item_id)
 
          Gui.mes("talk.npc.common.hand_over", item)
+         elona_Item.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
 
@@ -97,7 +99,7 @@ local function add_give_dialog_choice(speaker, _, choices)
    if quest then
       local item = find_item(Chara.player(), quest.params.target_item_id)
       if item then
-         Dialog.add_choice("elona.quest_supply:give", I18N.get("talk.npc.quest_giver.choices.here_is_item", item), choices)
+         Dialog.add_choice("elona.quest_supply:give", I18N.get("talk.npc.quest_giver.choices.here_is_item", item:build_name(1)), choices)
       end
    end
    return choices

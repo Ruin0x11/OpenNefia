@@ -214,7 +214,7 @@ local function on_generate_border(map)
    chara:add_role("elona.shopkeeper", { inventory_id = "elona.innkeeper" })
    chara:add_role("elona.innkeeper")
    chara.shop_rank = 8
-   chara.name = I18N.get("chara.job.inkeeper", chara.name)
+   chara.name = I18N.get("chara.job.innkeeper", chara.name)
 
    chara = Chara.create("elona.bartender", 17, 13, nil, map)
    chara:add_role("elona.bartender")

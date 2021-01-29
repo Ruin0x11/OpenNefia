@@ -5757,7 +5757,7 @@ local item = {
     },
     name = "扇形の柱"
   },
-  pillar_ornamented_with_flowers = {
+  statue_ornamented_with_flowers = {
     desc = {
       _0 = {
         footnote = "〜ルミエスト美術目録〜",
@@ -5770,7 +5770,7 @@ local item = {
     },
     name = "花で飾られた柱"
   },
-  pillar_ornamented_with_plants = {
+  statue_ornamented_with_plants = {
     desc = {
       _0 = {
         footnote = "〜ルミエスト美術目録〜",

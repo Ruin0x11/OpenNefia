@@ -8,6 +8,8 @@ local Itemgen = require("mod.tools.api.Itemgen")
 local Filters = require("mod.elona.api.Filters")
 local I18N = require("api.I18N")
 local Itemname = require("mod.elona.api.Itemname")
+local elona_Item = require("mod.elona.api.Item")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 local collect = {
    _id = "collect",
@@ -48,7 +50,7 @@ local collect = {
                local category = Rand.choice(Filters.fsetcollect)
                local item = Itemgen.create(nil, nil, { level = 40, quality = 2, categories = {category} }, chara)
                if item then
-                  item.count = 0 -- TODO
+                  item.always_drop = true
                   target_chara = chara
                   target_item = item
                   break
@@ -96,7 +98,14 @@ data:add {
    root = "talk.npc.quest_giver",
    nodes = {
       trade = function(t)
-         Gui.mes_c("TODO", "Yellow")
+         -- >>>>>>>> shade2/chat.hsp:2443 	if chatVal=20{ ..
+         local result, canceled = ElonaAction.trade(Chara.player(), t.speaker)
+
+         if canceled then
+            return "elona.default:you_kidding"
+         end
+         return "elona.default:thanks"
+         -- <<<<<<<< shade2/chat.hsp:2452 		} ..
       end,
       give = function(t)
          -- TODO generalize with dialog argument
@@ -106,6 +115,7 @@ data:add {
          local item = find_item(Chara.player(), quest.params.target_item_id)
 
          Gui.mes("talk.npc.common.hand_over", item)
+         elona_Item.ensure_free_item_slot(t.speaker)
          local sep = assert(item:move_some(1, t.speaker))
          t.speaker.item_to_use = sep
 
@@ -134,7 +144,7 @@ local function add_give_dialog_choice(speaker, _, choices)
    if quest then
       local item = find_item(Chara.player(), quest.params.target_item_id)
       if item then
-         Dialog.add_choice("elona.quest_collect:give", I18N.get("talk.npc.quest_giver.choices.here_is_item", item), choices)
+         Dialog.add_choice("elona.quest_collect:give", I18N.get("talk.npc.quest_giver.choices.here_is_item", item:build_name(1)), choices)
       end
    end
    return choices

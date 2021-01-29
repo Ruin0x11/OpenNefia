@@ -113,14 +113,18 @@ end
 
 function InventoryMenu:on_query()
    self.canceled = false
-   self.result = nil
-   if self.ctxt.proto.query_text then
+   if self.ctxt.proto.query_text and self.result == nil then
       local params = {}
       if self.ctxt.proto.locale_params then
          params = {self.ctxt.proto:locale_params()}
       end
       Gui.mes_newline()
-      Gui.mes(self.ctxt.proto.query_text, table.unpack(params))
+
+      local text = self.ctxt.proto.query_text
+      if type(text) == "function" then
+         text = text(self.ctxt)
+      end
+      Gui.mes(text, table.unpack(params))
    end
 end
 
@@ -344,6 +348,8 @@ function InventoryMenu:update()
          if not canceled then
             if result == "inventory_continue" then
                self:update_filtering()
+            elseif result == "inventory_cancel" then
+               return nil, "canceled"
             else
                return result
             end
@@ -352,6 +358,9 @@ function InventoryMenu:update()
    end
 
    if self.result and self.result ~= "inventory_continue" then
+      if self.result == "inventory_cancel" then
+         return nil, "canceled"
+      end
       return self.result
    end
 
@@ -363,7 +372,7 @@ function InventoryMenu:update()
       end
 
       local result = self:on_menu_exit()
-      return result
+      return result, "canceled"
    end
 
    self.pages:update()

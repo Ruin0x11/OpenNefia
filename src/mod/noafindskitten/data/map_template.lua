@@ -5,9 +5,12 @@ local I18N = require("api.I18N")
 local Feat = require("api.Feat")
 local Rand = require("api.Rand")
 local Input = require("api.Input")
-local Map = require("api.Map")
 local Anim = require("mod.elona_sys.api.Anim")
 local Color = require("mod.elona_sys.api.Color")
+local Quest = require("mod.elona_sys.api.Quest")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+local elona_Quest = require("mod.elona.api.Quest")
+
 
 data:add {
    _type = "base.chip",
@@ -38,9 +41,11 @@ data:add {
          Gui.update_screen()
          Gui.mes("noafindskitten.kitten_found", "Green")
          Input.query_more()
-         self:current_map()._quest.state = "completed"
-         local _, map = assert(Map.load(self:current_map()._outer_map))
-         Map.travel_to(map)
+
+         local quest = assert(Quest.get_immediate_quest())
+         quest.state = "completed"
+
+         elona_Quest.travel_to_previous_map()
       else
          Gui.play_sound("base.chat")
          Gui.mes_c(self.description)
@@ -58,7 +63,23 @@ data:add {
    events = {}
 }
 
-local function generate_map()
+local quest_noafindskitten = {
+   _type = "base.map_archetype",
+   _id = "quest_noafindskitten",
+
+   starting_pos = MapEntrance.center,
+
+   properties = {
+      music = "elona.ruin",
+      types = { "temporary", "quest" },
+      level = 1,
+      is_indoor = true,
+      max_crowd_density = 0,
+      reveals_fog = true
+   },
+}
+
+function quest_noafindskitten.on_generate_map(area, floor, params)
    local map = InstancedMap:new(40, 40)
    map:clear("elona.cobble")
    for _, x, y in Pos.iter_border(0, 0, map:width() - 1, map:height() - 1) do
@@ -74,24 +95,9 @@ local function generate_map()
          object.color = Color.hsv_to_rgb(Rand.rnd(256), 255, 255)
       end
    end
-   Rand.choice(Feat.iter(map)).is_kitten = true
+   Rand.choice(Feat.iter(map):filter(function(i) return i._id == "noafindskitten.object" end)).is_kitten = true
 
    return map, "noafindskitten.noafindskitten"
 end
 
-data:add {
-   _type = "base.map_template",
-   _id = "quest_noafindskitten",
-
-   map = generate_map,
-
-   copy = {
-      music = "elona.ruin",
-      types = { "quest" },
-      player_start_pos = "base.center",
-      level = 1,
-      is_indoor = true,
-      max_crowd_density = 0,
-      reveals_fog = true
-   },
-}
+data:add(quest_noafindskitten)

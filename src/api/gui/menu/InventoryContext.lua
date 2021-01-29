@@ -40,6 +40,10 @@ local function source_equipment(ctxt)
    return ctxt.chara:iter_equipment()
 end
 
+local function source_target_equipment(ctxt)
+   return ctxt.target:iter_equipment()
+end
+
 local function source_shop(ctxt)
    class.assert_is_an(ILocation, ctxt.shop)
    return ctxt.shop:iter()
@@ -92,6 +96,20 @@ local sources = {
       end,
       params = {
          chara = "IChara"
+      }
+   },
+   {
+      name = "target_equipment",
+      getter = source_target_equipment,
+      order = 8000,
+      on_get_name = function(self, name, item, menu)
+         return name .. " (main hand)"
+      end,
+      on_draw = function(self, x, y, item, menu)
+         menu.t.base.equipped_icon:draw(x - 12, y + 14)
+      end,
+      params = {
+         target = "IChara"
       }
    },
    {
