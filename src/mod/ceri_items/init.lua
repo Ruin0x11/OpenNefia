@@ -7,6 +7,7 @@ local Item = require("api.Item")
 local Chara = require("api.Chara")
 local Theme = require("api.Theme")
 local FFHP = require("mod.ceri_items.api.FFHP")
+local elona_Item = require("mod.elona.api.Item")
 
 local function iter_all_items()
    -- TODO chain everything in other character inventories
@@ -23,12 +24,21 @@ local function apply_mapping(mapping, item)
 end
 
 local function set_item_image_on_memorize(_, params)
-   if params.is_known and Theme.is_active("ceri_items.ceri_items") then
+   if not Theme.is_active("ceri_items.ceri_items") then
+      return
+   end
+
+   if params.is_known then
       local mapping = FFHP.mapping_for(params._id)
       if mapping then
          for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
             apply_mapping(mapping, item)
          end
+      end
+   else
+      for _, item in iter_all_items():filter(function(i) return i._id == params._id end) do
+         item.image = item.proto.image
+         item.color = elona_Item.random_item_color(item)
       end
    end
 end
