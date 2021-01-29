@@ -314,8 +314,19 @@ function Map.calc_start_position(map, previous_map, feat)
       end
    end
 
-   local x = math.floor(pos.x)
-   local y = math.floor(pos.y)
+   if not (pos and pos.x and pos.y) then
+      if map.player_start_pos then
+         pos = map.player_start_pos
+      end
+   end
+
+   local x, y
+   if pos.x then
+      x = math.floor(pos.x)
+   end
+   if pos.y then
+      y = math.floor(pos.y)
+   end
 
    return x, y
 end
@@ -497,6 +508,7 @@ function Map.try_place_chara(chara, x, y, map)
 
       local result = map:take_object(chara, real_x, real_y)
       if result then
+         map.crowd_density = map.crowd_density + 1
          map:refresh_tile(real_x, real_y)
       end
       return result

@@ -65,6 +65,7 @@ local function on_game_start(self, player)
    if config["test_room.load_towns"] then
       local ok, north_tyris_map = assert(north_tyris:load_or_generate_floor(1))
       load_towns(north_tyris_map)
+      Map.save(north_tyris_map)
    end
 
    Map.set_map(map)

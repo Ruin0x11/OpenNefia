@@ -172,15 +172,15 @@ data:add {
    nodes = {
       backpack_full = {
          text = {
-            {"about.backpack_full"}
+            {"talk.npc.quest_giver.about.backpack_full"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       accept = {
          text = {
-            {"about.here_is_package"}
+            {"talk.npc.quest_giver.about.here_is_package"}
          },
-         choices = "elona.default:__start"
+         jump_to = "elona.default:__start"
       },
       finish = function(t)
          local quest = delivery_quest_for(t.speaker)

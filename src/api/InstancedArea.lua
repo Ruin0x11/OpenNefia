@@ -136,6 +136,9 @@ function InstancedArea:load_or_generate_floor(floor, map_archetype_id)
       return ok, map
    end
 
+   -- WARNING: Map.save() should always be called on the map this returns, or
+   -- weird things will happen!
+
    local archetype = self:archetype()
 
    if map_archetype_id == nil then

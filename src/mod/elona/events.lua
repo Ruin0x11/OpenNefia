@@ -25,6 +25,7 @@ local Area = require("api.Area")
 local Gardening = require("mod.elona.api.Gardening")
 local Feat = require("api.Feat")
 local Quest = require("mod.elona.api.Quest")
+local elona_Chara = require("mod.elona.api.Chara")
 
 --
 --
@@ -565,6 +566,8 @@ Event.register("base.on_kill_chara", "npc memory",
                         Gui.mes("damage.you_feel_sad")
                      end
                   end
+                  local map = victim:current_map()
+                  map.crowd_density = map.crowd_density - 1
                   Effect.on_kill(params.source, victim)
                   -- TODO riding
                   -- TODO crowd
@@ -742,9 +745,7 @@ Event.register("elona_sys.hook_player_move", "Leave footsteps",
 
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then
-      local Calc = require("mod.elona.api.Calc")
-      -- TODO
-      -- Calc.respawn_mobs()
+      elona_Chara.spawn_mobs()
    end
 end
 

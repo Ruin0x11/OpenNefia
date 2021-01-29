@@ -20,14 +20,16 @@ end
 function MapgenUtils.generate_chara(map, x, y, extra_params)
    local params
    local archetype = map:archetype()
-   if archetype.chara_filter then
+   if archetype and archetype.chara_filter then
       params = archetype.chara_filter(map)
       assert(type(params) == "table")
    else
+      -- >>>>>>>> shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ...
       local player = Chara.player()
-      local level = Calc.calc_object_level((player and player.level) or 1)
+      local level = Calc.calc_object_level((player and player.level) or 1, map)
       local quality = Calc.calc_object_quality(Enum.Quality.Normal)
       params = { level = level, quality = quality }
+      -- <<<<<<<< shade2/map.hsp:100 	flt calcObjLv(cLevel(pc)),calcFixLv(fixNormal) ..
    end
    if extra_params then
       table.merge(params, extra_params)

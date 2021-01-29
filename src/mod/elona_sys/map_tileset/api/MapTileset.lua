@@ -1,4 +1,5 @@
 local MapTileset = {}
+local InstancedMap = require("api.InstancedMap")
 
 local function convert_fog(tileset, map)
    local fog = tileset.fog
@@ -90,8 +91,13 @@ function MapTileset.apply(tileset_id, map)
    end
 end
 
-function MapTileset.get(tile_id, map)
-   local tileset = data["elona_sys.map_tileset"]:ensure(map.tileset)
+function MapTileset.get(tile_id, map_or_tileset, no_fallback)
+   local tileset_id = map_or_tileset
+   if class.is_an(InstancedMap, map_or_tileset) then
+      tileset_id = map_or_tileset:calc("tileset")
+   end
+
+   local tileset = data["elona_sys.map_tileset"]:ensure(tileset_id)
    local match = tileset.tiles[tile_id]
 
    local id
@@ -102,6 +108,10 @@ function MapTileset.get(tile_id, map)
       elseif type(match) == "function" then
          id = match()
       end
+   end
+
+   if id == nil and not no_fallback then
+      return MapTileset.get(tile_id, "elona.default", true)
    end
 
    return id

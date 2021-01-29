@@ -119,7 +119,7 @@ local function add_collect_dialog_choice(speaker, _, choices)
    local function has_collect_quest(q)
       return q._id == "elona.collect" and q.params.target_chara_uid == speaker.uid
    end
-   if Quest.iter():any(has_collect_quest) then
+   if Quest.iter_accepted():any(has_collect_quest) then
       Dialog.add_choice("elona.quest_collect:trade", "talk.npc.common.choices.trade", choices)
    end
    return choices

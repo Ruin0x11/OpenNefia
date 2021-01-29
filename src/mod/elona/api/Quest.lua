@@ -102,9 +102,9 @@ end
 function Quest.is_non_returnable_quest_active()
    local pred = function(q)
       local proto = data["elona_sys.quest"]:ensure(q._id)
-      return q.state == "accepted" and proto.prevents_return
+      return proto.prevents_return
    end
-   return Quest.iter():any(pred)
+   return Quest.iter_accepted():any(pred)
 end
 -- <<<<<<<< shade2/command.hsp:4384 	return f ..
 

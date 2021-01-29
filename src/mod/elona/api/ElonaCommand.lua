@@ -452,11 +452,6 @@ function ElonaCommand.ammo(player)
    -- <<<<<<<< elona122/shade2/command.hsp:4739 	goto *pc_turn ..
 end
 
-local function activate(player, feat)
-   Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
-   feat:emit("elona_sys.on_feat_activate", {chara=player})
-end
-
 local function choose_command_dwim(player)
    -- >>>>>>>> shade2/main.hsp:1242 		inv_getHeader -1 :p=0 ..
    local command
@@ -487,9 +482,14 @@ local function choose_command_dwim(player)
    -- <<<<<<<< shade2/main.hsp:1255 		loop ..
 end
 
+local function activate(player, feat)
+   Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
+   feat:emit("elona_sys.on_feat_activate", {chara=player})
+end
+
 local function feats_under(player, field)
    local Feat = require("api.Feat")
-   return Feat.at(player.x, player.y):filter(function(f) return f:calc(field) end)
+   return Feat.at(player.x, player.y, player:current_map()):filter(function(f) return f:calc(field) end)
 end
 
 function ElonaCommand.enter_action(player)
