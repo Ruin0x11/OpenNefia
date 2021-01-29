@@ -25,7 +25,7 @@ local function give_monster_balls()
       end
    end
 
-   Chara.player():refresh_burden_state()
+   Chara.player():refresh_weight()
 
    Internal.set_quest_flag("ambitious_scientist", flag)
    return found

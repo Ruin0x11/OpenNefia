@@ -3,6 +3,7 @@ local Const = require("api.Const")
 local Enum = require("api.Enum")
 local Gui = require("api.Gui")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Map = require("api.Map")
 
 local Quest = {}
 
@@ -95,6 +96,25 @@ function Quest.update_target_count_conquer(quest, map)
       DeferredEvent.add(event_quest_eliminate_conquer(quest))
    end
    -- <<<<<<<< shade2/chara_func.hsp:196 			} ..
+end
+
+-- >>>>>>>> shade2/command.hsp:4378 *check_return ..
+function Quest.is_non_returnable_quest_active()
+   local pred = function(q)
+      local proto = data["elona_sys.quest"]:ensure(q._id)
+      return q.state == "accepted" and proto.prevents_return
+   end
+   return Quest.iter():any(pred)
+end
+-- <<<<<<<< shade2/command.hsp:4384 	return f ..
+
+function Quest.travel_to_previous_map()
+   local map = Chara.player():current_map()
+   local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
+   Gui.play_sound("base.exitmap1")
+   Gui.update_screen()
+   local ok, prev_map = assert(Map.load(prev_map_uid))
+   Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
 end
 
 return Quest

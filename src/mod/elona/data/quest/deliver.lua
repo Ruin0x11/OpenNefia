@@ -70,7 +70,7 @@ function deliver.generate(self, client, start)
 
    self.reward_fix = 70 + Pos.dist(start.world_map_x, start.world_map_y, dest.world_map_x, dest.world_map_y) * 2
 
-   if start.gen_id == "elona.noyel" or dest.gen_id == "elona.noyel" then
+   if start.archetype_id == "elona.noyel" or dest.archetype_id == "elona.noyel" then
       self.reward_fix = math.floor(self.reward_fix * 175 / 100)
    end
 

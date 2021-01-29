@@ -9,7 +9,7 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 
 require("mod.test_room.data")
 
-local do_load_towns = true
+config["test_room.load_towns"] = false
 
 local function load_towns(north_tyris)
    for _, area in Area.iter_in_parent(north_tyris) do
@@ -62,7 +62,7 @@ local function on_game_start(self, player)
 
    local north_tyris = Area.create_unique("elona.north_tyris", "root")
    assert(Area.create_entrance(north_tyris, 1, 25, 23, {}, map))
-   if do_load_towns then
+   if config["test_room.load_towns"] then
       local ok, north_tyris_map = assert(north_tyris:load_or_generate_floor(1))
       load_towns(north_tyris_map)
    end

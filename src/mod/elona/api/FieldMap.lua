@@ -1,18 +1,7 @@
 local InstancedMap = require("api.InstancedMap")
-local Rand = require("api.Rand")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 local FieldMap = {}
-
-local function spray_tile(map, tile_id, density)
-   local n = math.floor(map:width() * map:height() * density / 100 + 1)
-   print(n,tile_id)
-
-   for _=1,n do
-      local x = Rand.rnd(map:width())
-      local y = Rand.rnd(map:height())
-      map:set_tile(x, y, tile_id)
-   end
-end
 
 local default_field_type = "elona.plains"
 
@@ -32,7 +21,7 @@ function FieldMap.generate(stood_tile, width, height, outer_map)
 
    if field.tiles then
       for _, v in ipairs(field.tiles) do
-         spray_tile(map, v.id, v.density)
+         MapgenUtils.spray_tile(map, v.id, v.density)
       end
    end
 

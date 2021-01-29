@@ -13,6 +13,7 @@ local Scene = require("mod.elona_sys.scene.api.Scene")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 do
    local vernis = {
@@ -149,7 +150,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       -- TODO only if sidequest
@@ -192,7 +193,6 @@ do
 
       metadata = {
          town_floors = { 1 },
-         can_return_to = true
       },
 
       parent_area = {
@@ -334,7 +334,7 @@ do
       end
 
       for _=1,15 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -570,7 +570,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -725,7 +725,7 @@ do
       end
 
       for _=1,20 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -909,7 +909,7 @@ do
       chara:add_role("elona.citizen")
 
       for _=1,20 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -1101,12 +1101,12 @@ do
       end
 
       for _ = 1, 8 do
-         chara = util.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
+         chara = MapgenUtils.generate_chara(map, Rand.rnd(11) + 25, Rand.rnd(5) + 15, { id = "elona.town_child" })
          chara:add_role("elona.special")
       end
 
       for _ = 1, 20 do
-         util.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
+         MapgenUtils.generate_chara(map, Rand.rnd(55), Rand.rnd(map:height()))
       end
 
       return map
@@ -1457,7 +1457,7 @@ do
       end
 
       for _=1,25 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map

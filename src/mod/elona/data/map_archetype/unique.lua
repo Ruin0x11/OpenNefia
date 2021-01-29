@@ -45,7 +45,7 @@ do
       map:set_archetype("elona.lumiest_graveyard", { set_properties = true })
 
       for _=1,math.floor(map:calc("max_crowd_density"/2)) do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -121,7 +121,7 @@ do
       mkaltar("elona.jure", 20, 13)
 
       for _=1,math.floor(map:calc("max_crowd_density")/2) do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -709,7 +709,7 @@ do
       end
 
       for _=1,math.floor(map:calc("max_crowd_density")/2) do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -804,7 +804,7 @@ do
       end
 
       for _=1,math.floor(map:calc("max_crowd_density"/2)) do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       return map
@@ -1226,7 +1226,7 @@ do
       map:set_archetype("elona.pyramid", { set_properties = true })
 
       for _ = 1, map:calc("max_crowd_density") + 1 do
-         util.generate_chara(map)
+         MapgenUtils.generate_chara(map)
       end
 
       util.connect_existing_stairs(map, area, floor)

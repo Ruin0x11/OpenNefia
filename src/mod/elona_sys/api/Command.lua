@@ -166,11 +166,6 @@ local function feats_surrounding(player, field)
    return Pos.iter_surrounding(player.x, player.y):flatmap(Feat.at):filter(function(f) return f:calc(field) end)
 end
 
-local function feats_under(player, field)
-   local Feat = require("api.Feat")
-   return Feat.at(player.x, player.y):filter(function(f) return f:calc(field) end)
-end
-
 function Command.close(player)
    local f = feats_surrounding(player, "can_close"):nth(1)
    if f then
@@ -200,42 +195,6 @@ function Command.search(player)
    end
 
    player:emit("elona_sys.on_search")
-end
-
-function Command.open(player)
-   for _, f in feats_surrounding(player, "can_open") do
-      Gui.mes(player.name .. " opens the " .. f.uid .. " ")
-      f:emit("elona_sys.on_feat_open", {chara=player})
-   end
-end
-
-local function activate(player, feat)
-   Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
-   feat:emit("elona_sys.on_feat_activate", {chara=player})
-end
-
-function Command.enter_action(player)
-   -- TODO iter objects on square, emit get_enter_action
-   local f = feats_under(player, "can_activate"):nth(1)
-   if f then
-      activate(player, f)
-      return "player_turn_query" -- TODO could differ per feat
-   end
-
-   local is_world_map = Map.current():has_type("world_map")
-
-   if is_world_map then
-      local stood_tile = Map.tile(player.x, player.y)
-      local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
-      map:set_previous_map_and_location(Map.current(), player.x, player.y)
-
-      Gui.play_sound("base.exitmap1")
-      assert(Map.travel_to(map))
-
-      return "turn_begin"
-   end
-
-   return "player_turn_query"
 end
 
 function Command.help()

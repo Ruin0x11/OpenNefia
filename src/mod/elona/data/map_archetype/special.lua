@@ -134,27 +134,6 @@ do
 end
 
 do
-   local quest_huntex = {
-      _type = "base.map_archetype",
-      _id = "quest_huntex",
-
-      starting_pos = MapEntrance.random,
-
-      properties = {
-         types = { "temporary", "quest" },
-         tileset = "elona.tower_1",
-         level = 1,
-         is_indoor = false,
-         max_crowd_density = 0,
-         default_ai_calm = 0,
-         shows_floor_count_in_name = true,
-         prevents_building_shelter = true
-      }
-   }
-   data:add(quest_huntex)
-end
-
-do
    local rq = {
       _id = "rq",
       _type = "base.map_archetype",

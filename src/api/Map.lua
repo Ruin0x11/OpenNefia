@@ -314,8 +314,8 @@ function Map.calc_start_position(map, previous_map, feat)
       end
    end
 
-   local x = pos.x
-   local y = pos.y
+   local x = math.floor(pos.x)
+   local y = math.floor(pos.y)
 
    return x, y
 end

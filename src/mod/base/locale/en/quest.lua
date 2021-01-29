@@ -6,7 +6,7 @@ return {
       your_team_is_defeated = "Your team is defeated.",
       your_team_is_victorious = "Your team is victorious!"
     },
-    collect = {
+    harvest = {
       complete = "You complete the task!",
       fail = "You fail to fulfill your task..."
     },

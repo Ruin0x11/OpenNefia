@@ -18,6 +18,9 @@ local Elona122Map = require("mod.elona_sys.map_loader.Elona122Map")
 local Feat = require("api.Feat")
 local IOwned = require("api.IOwned")
 local Quest = require("mod.elona_sys.api.Quest")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local Filters = require("mod.elona.api.Filters")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local QuestMap = {}
 
@@ -259,7 +262,9 @@ function QuestMap.generate_hunt(difficulty)
 
    map:set_archetype("elona.quest", { set_properties = true })
    map.is_indoor = false
+   -- >>>>>>>> shade2/sound.hsp:412 			if gQuest=qHunt		:music=mcBattle1 ...
    map.music = "elona.battle1"
+   -- <<<<<<<< shade2/sound.hsp:411 		if gArea=areaQuest{ ..
    map.name = I18N.get("map.quest.outskirts")
 
    return map
@@ -315,7 +320,11 @@ function QuestMap.generate_huntex(map_archetype_id, chara_id, enemy_level, diffi
    end
    -- <<<<<<<< shade2/map_rand.hsp:726 		} ..
 
-   return QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
+   local map = QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
+-- >>>>>>>> shade2/sound.hsp:416 			if gQuest=qHuntEx	:music=mcArena ...
+   map.music = "elona.arena"
+-- <<<<<<<< shade2/sound.hsp:415 			if gQuest=qConquer	:music=mcBoss ..
+   return map
 end
 
 function QuestMap.generate_conquer(map_archetype_id, quest)
@@ -337,7 +346,90 @@ function QuestMap.generate_conquer(map_archetype_id, quest)
    end
    -- <<<<<<<< shade2/map_rand.hsp:721 		} ..
 
-   return QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
+   local map = QuestMap.generate_derived_hunt(map_archetype_id, gen_charas)
+-- >>>>>>>> shade2/sound.hsp:415 			if gQuest=qConquer	:music=mcBoss ...
+   map.music = "elona.boss"
+-- <<<<<<<< shade2/sound.hsp:414 			if gQuest=qPerform	:music=mcCasino ..
+   return map
+end
+
+function QuestMap.generate_harvest(difficulty)
+   -- >>>>>>>> shade2/map_rand.hsp:337 	mField=mFieldOutdoor ..
+   local map = InstancedMap:new(58 + Rand.rnd(16), 50 + Rand.rnd(16))
+   map:set_archetype("elona.quest_harvest", { set_properties = true })
+   map:clear(MapTileset.get("elona.mapgen_floor", map))
+   map.name = I18N.get("map.quest.harvest")
+
+   MapgenUtils.spray_tile(map, "elona.grass_bush_3", 10)
+   MapgenUtils.spray_tile(map, "elona.grass_patch_3", 10)
+   MapgenUtils.spray_tile(map, "elona.grass", 30)
+   MapgenUtils.spray_tile(map, "elona.grass_violets", 4)
+   MapgenUtils.spray_tile(map, "elona.grass_tall_2", 2)
+   MapgenUtils.spray_tile(map, "elona.grass_tall_1", 2)
+   MapgenUtils.spray_tile(map, "elona.grass_tall_2", 2)
+   MapgenUtils.spray_tile(map, "elona.grass_patch_1", 2)
+
+   for _ = 1, 30 do
+      local width = Rand.rnd(5) + 5
+      local height = Rand.rnd(4) + 4
+      local dx = Rand.rnd(map:width())
+      local dy = Rand.rnd(map:height())
+
+      local tile = "elona.field_1"
+      if Rand.one_in(2) then
+         tile = "elona.field_2"
+      end
+
+      local size = math.floor(math.clamp(Pos.dist(dx, dy, map:width()/2, map:height()/2)/8, 0, 8))
+      local crop_item_id = Rand.choice(Filters.isetcrop)
+
+      for y = dy, dy + height do
+         if y >= map:height() then
+            break
+         end
+         for x = dx, dx + width do
+            if x >= map:width() then
+               break
+            end
+
+            map:set_tile(x, y, tile)
+            if Rand.one_in(10) and Item.at(x, y, map):length() == 0 then
+               local item_id
+               if Rand.one_in(4) then
+                  item_id = crop_item_id
+               else
+                  item_id = Rand.choice(Filters.isetcrop)
+               end
+               local crop = Item.create(item_id, x, y, {}, map)
+               crop.own_state = Enum.OwnState.Quest
+               local weight = math.floor(math.clamp(size + Rand.rnd(Rand.rnd(4) + 1), 0, 9))
+               crop.weight = math.floor(crop.weight * (80 + weight * weight * 100) / 100)
+               crop.params.harvest_weight_class = weight
+            end
+         end
+      end
+   end
+
+   for _ = 1, 70 + Rand.rnd(20) do
+      local x = Rand.rnd(map:width())
+      local y = Rand.rnd(map:height())
+      local tile = map:tile(x, y)._id
+      if tile ~= "elona.field_1" and tile ~= "elona.field_2" and Item.at(x, y, map):length() == 0 then
+         if Rand.one_in(8) then
+            local tree = Itemgen.create(x, y, { categories = "elona.tree" }, map)
+            tree.own_state = Enum.OwnState.NotOwned
+         else
+            Feat.create("elona.pot", x, y, {}, map)
+         end
+      end
+   end
+
+   for _ = 1, 30 do
+      MapgenUtils.generate_chara(map)
+   end
+
+   return map
+   -- <<<<<<<< shade2/map_rand.hsp:393 	return true ..
 end
 
 return QuestMap

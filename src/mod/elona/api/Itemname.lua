@@ -147,9 +147,9 @@ local function item_name_sub(s, item, jp)
          end
       end
 
-      if item.own_state == "harvested" then
-         local weight = 1234 -- TODO quest harvest
-         s = s .. I18N.get("item.harvest_grown", Ui.format_weight(weight))
+      if item.own_state == Enum.OwnState.Quest and item.params.harvest_weight_class then
+         local weight = item.params.harvest_weight_class
+         s = s .. I18N.get("item.harvest_grown", "ui.weight._" .. tostring(weight))
       end
    end
 
@@ -158,7 +158,7 @@ local function item_name_sub(s, item, jp)
       s = s .. fish_name
    end
 
-   if item.params.chara_id and item.own_state ~= "harvested" then
+   if item.params.chara_id and item.own_state ~= Enum.OwnState.Quest then
       local chara_name = I18N.get("chara." .. item.params.chara_id .. ".name")
       if not jp then
          s = s .. " of "

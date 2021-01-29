@@ -17,6 +17,8 @@ local Area = require("api.Area")
 local Building = require("mod.elona.api.Building")
 local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
+local Input = require("api.Input")
+local Log = require("api.Log")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -12278,6 +12280,13 @@ local item =
 
          is_precious = true,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            Input.query_inventory(params.chara, "elona.inv_harvest_delivery_chest", nil, nil)
+            -- <<<<<<<< shade2/action.hsp:895 	if iId(ci)=idChestPay:invCtrl=24,0:snd seInv:goto ..
+            return "player_turn_query"
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -13847,7 +13856,11 @@ local item =
             "elona.no_generate",
             "elona.furniture"
          },
-         light = light.gate
+         light = light.gate,
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "flying_scroll",
@@ -16858,7 +16871,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "downstairs",
@@ -16873,7 +16890,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "new_years_gift",
@@ -16907,7 +16928,11 @@ local item =
          categories = {
             "elona.no_generate",
             "elona.furniture"
-         }
+         },
+
+         on_enter_action = function(self)
+            Log.error("TODO")
+         end
       },
       {
          _id = "daruma",

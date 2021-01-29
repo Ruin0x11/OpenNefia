@@ -6,7 +6,7 @@ return {
       your_team_is_defeated = "あなたのチームは敗北した。",
       your_team_is_victorious = "あなたのチームは勝利した！"
     },
-    collect = {
+    harvest = {
       complete = "無事に納入を終えた！",
       fail = "納入は間に合わなかった…"
     },

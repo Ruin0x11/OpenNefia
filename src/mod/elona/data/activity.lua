@@ -21,6 +21,8 @@ local Magic = require("mod.elona.api.Magic")
 local Quest = require("mod.elona_sys.api.Quest")
 local elona_Quest = require("mod.elona.api.Quest")
 local I18N = require("api.I18N")
+local Action = require("api.Action")
+local Ui = require("api.Ui")
 
 local function calc_dig_success(map, params, result)
    local chara = params.chara
@@ -1482,6 +1484,76 @@ data:add {
 
             self.ancient_book:stack()
             -- <<<<<<<< shade2/proc.hsp:1228 		item_stack pc,ci,1 ..
+         end
+      }
+   }
+}
+
+data:add {
+   _type = "base.activity",
+   _id = "harvest",
+
+   params = { item = "table", },
+   default_turns = function(self, params, chara)
+      -- >>>>>>>> shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ...
+      local item = params.item
+      return 10 + math.clamp(item:calc("weight") / (1 + chara:skill_level("elona.stat_strength") * 10 + chara:skill_level("elona.gardening") * 40), 1, 100)
+      -- <<<<<<<< shade2/proc.hsp:467 			cActionPeriod(cc)=10+limit(iWeight(ci)/(1+sSTR( ..
+   end,
+
+   -- >>>>>>>> shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ...
+   animation_wait = 40,
+   -- <<<<<<<< shade2/main.hsp:848 			if gRowAct=rowActHarvest:at 40:else:if gRowAct= ..
+
+   on_interrupt = "prompt",
+   events = {
+      {
+         id = "base.on_activity_start",
+         name = "start",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ...
+            Gui.mes("activity.harvest.start", self.item:build_name(1))
+            -- <<<<<<<< shade2/proc.hsp:466 			txt lang(itemName(ci,1)+"を掘り始めた。","You start to ..
+         end
+      },
+      {
+         id = "base.on_activity_pass_turns",
+         name = "pass turns",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:487 		if gRowAct=rowActHarvest{ ...
+            local chara = params.chara
+
+            if Rand.one_in(5) then
+               Skill.gain_skill_exp(chara, "elona.gardening", 20, 4)
+            end
+            if Rand.one_in(6) and Rand.rnd(55) > chara:base_skill_level("elona.stat_strength") + 25 then
+               Skill.gain_skill_exp(chara, "elona.stat_strength", 50)
+            end
+            if Rand.one_in(8) and Rand.rnd(55) > chara:base_skill_level("elona.stat_constitution") + 28 then
+               Skill.gain_skill_exp(chara, "elona.stat_constitution", 50)
+            end
+            if Rand.one_in(10) and Rand.rnd(55) > chara:base_skill_level("elona.stat_will") + 30 then
+               Skill.gain_skill_exp(chara, "elona.stat_will", 50)
+            end
+            if Rand.one_in(4) then
+               Gui.mes_c("activity.harvest.sound", "SkyBlue")
+            end
+            -- <<<<<<<< shade2/proc.hsp:497 			} ..
+
+            return "turn_end"
+         end
+      },
+      {
+         id = "base.on_activity_finish",
+         name = "finish",
+
+         callback = function(self, params)
+            -- >>>>>>>> shade2/proc.hsp:623 	if gRowAct=rowActHarvest{ ...
+            Gui.mes("activity.harvest.finish", self.item:build_name(1), Ui.display_weight(self.item:calc("weight")))
+            Action.get(params.chara, self.item)
+            -- <<<<<<<< shade2/proc.hsp:626 		} ..
          end
       }
    }

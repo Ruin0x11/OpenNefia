@@ -652,11 +652,12 @@ local function on_quest_exit(quest)
       quest_data.on_quest_exit(quest)
    end
 
+   local result = Event.trigger("elona_sys.on_quest_map_leave", {quest = quest})
+   if result then
+      return
+   end
+
    if quest.state ~= "completed" then
-      local result = Event.trigger("elona_sys.on_quest_map_leave", {quest = quest})
-      if result then
-         return
-      end
       Quest.fail(quest)
       Input.query_more()
    end

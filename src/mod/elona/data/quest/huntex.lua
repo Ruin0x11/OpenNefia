@@ -5,6 +5,26 @@ local Quest = require("mod.elona_sys.api.Quest")
 local QuestMap = require("mod.elona.api.QuestMap")
 local Map = require("api.Map")
 local I18N = require("api.I18N")
+local MapEntrance = require("mod.elona_sys.api.MapEntrance")
+
+local quest_huntex = {
+   _type = "base.map_archetype",
+   _id = "quest_huntex",
+
+   starting_pos = MapEntrance.random,
+
+   properties = {
+      types = { "temporary", "quest" },
+      tileset = "elona.tower_1",
+      level = 1,
+      is_indoor = false,
+      max_crowd_density = 0,
+      default_ai_calm = 0,
+      shows_floor_count_in_name = true,
+      prevents_building_shelter = true
+   }
+}
+data:add(quest_huntex)
 
 local huntex = {
    _id = "huntex",

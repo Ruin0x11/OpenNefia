@@ -13,6 +13,9 @@ local UiTheme = require("api.gui.UiTheme")
 local World = require("api.World")
 local Action = require("api.Action")
 local Enum = require("api.Enum")
+local Log = require("api.Log")
+local Command = require("mod.elona_sys.api.Command")
+local FieldMap = require("mod.elona.api.FieldMap")
 
 local ElonaCommand = {}
 
@@ -97,6 +100,10 @@ end
 
 function ElonaCommand.use(player)
    return query_inventory(player, "elona.inv_use")
+end
+
+function ElonaCommand.open(player)
+   return query_inventory(player, "elona.inv_open")
 end
 
 function ElonaCommand.dip(player)
@@ -443,6 +450,74 @@ function ElonaCommand.ammo(player)
 
    return "player_turn_query"
    -- <<<<<<<< elona122/shade2/command.hsp:4739 	goto *pc_turn ..
+end
+
+local function activate(player, feat)
+   Gui.mes(player.name .. " activates the " .. feat.uid .. " ")
+   feat:emit("elona_sys.on_feat_activate", {chara=player})
+end
+
+local function choose_command_dwim(player)
+   -- >>>>>>>> shade2/main.hsp:1242 		inv_getHeader -1 :p=0 ..
+   local command
+
+   for _, item in Item.at(player.x, player.y, player:current_map()) do
+      if item:has_category("elona.container") then
+         command = ElonaCommand.open
+      elseif item:has_category("elona.furniture_well") then
+         Log.error("TODO")
+         -- command = Command.dip
+      elseif item:has_category("elona.furniture_altar") then
+         Log.error("TODO")
+         if player:calc("god") then
+            --command = Command.offer
+         else
+            --command = Command.pray
+         end
+      elseif item:calc("can_use") then
+         command = ElonaCommand.use
+      elseif item:calc("can_read") then
+         command = ElonaCommand.read
+      elseif item.proto.on_enter_action then
+         command = item.proto.on_enter_action(item)
+      end
+   end
+
+   return command or Command.search
+   -- <<<<<<<< shade2/main.hsp:1255 		loop ..
+end
+
+local function feats_under(player, field)
+   local Feat = require("api.Feat")
+   return Feat.at(player.x, player.y):filter(function(f) return f:calc(field) end)
+end
+
+function ElonaCommand.enter_action(player)
+   -- TODO iter objects on square, emit get_enter_action
+   -- >>>>>>>> shade2/main.hsp:1238 		cell_featRead cX(cc),cY(cc) ..
+   local f = feats_under(player, "can_activate"):nth(1)
+   if f then
+      activate(player, f)
+      return "player_turn_query" -- TODO could differ per feat
+   end
+   -- <<<<<<<< shade2/main.hsp:1240 		if feat(1)=objUpstairs   :key=key_goUp ..
+
+   local is_world_map = Map.current():has_type("world_map")
+
+   if is_world_map then
+      local stood_tile = Map.tile(player.x, player.y)
+      local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
+      map:set_previous_map_and_location(Map.current(), player.x, player.y)
+
+      Gui.play_sound("base.exitmap1")
+      assert(Map.travel_to(map))
+
+      return "turn_begin"
+   end
+
+   local command = choose_command_dwim(player)
+
+   return command(player)
 end
 
 return ElonaCommand

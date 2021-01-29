@@ -145,7 +145,9 @@ function EventTree:traverse(source, args, default)
       -- was easy for one event in the chain to forget to do this,
       -- causing errors, and it was difficult to remember which events
       -- required 'result' to be returned or not.
-      result = new_result or result
+      if new_result ~= nil then
+         result = new_result
+      end
 
       if status == "blocked" then
          break

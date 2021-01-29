@@ -532,6 +532,8 @@ function env.hotload_path(path, also_deps)
 
          i18n.load_single_translation(filepath, i18n.db[lang])
 
+         i18n.index = nil
+
          return nil
       end
    end

@@ -52,7 +52,8 @@ function hotload.hotload(path_or_class, also_deps)
       Log.error("Error on hotload-path: %s", result)
    end
 
-   ok, result = pcall(Event.trigger, "base.on_hotload_end", {
+   ok, result = xpcall(Event.trigger, debug.traceback,
+                       "base.on_hotload_end", {
                          hotloaded_data=hotloaded_data,
                          hotloaded_types=hotloaded_types,
                          path_or_class=path_or_class,
@@ -62,6 +63,7 @@ function hotload.hotload(path_or_class, also_deps)
    })
 
    if not ok then
+      Log.error(result)
       error(result)
    end
 

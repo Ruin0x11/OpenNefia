@@ -78,7 +78,7 @@ Enum.OwnState = enum("OwnState", {
     NotOwned     = "not_owned",    -- 1
     Shop         = "shop",         -- 2
     Shelter      = "shelter",      -- 3
-    Harvested    = "harvested",    -- 4
+    Quest        = "quest",        -- 4
     Unobtainable = "unobtainable", -- 5
 })
 

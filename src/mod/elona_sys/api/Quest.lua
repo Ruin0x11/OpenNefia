@@ -543,7 +543,7 @@ local function calc_reward_gold(quest)
       gold = quest_proto.calc_reward_gold(quest, gold)
    end
 
-   return gold
+   return math.floor(gold)
    -- <<<<<<<< shade2/quest.hsp:456 	if qExist(rq)=qHarvest:if qParam1(rq)!0:if qParam ..
 end
 
@@ -556,7 +556,7 @@ local function calc_reward_platinum(quest)
       platinum = quest_proto.calc_reward_platinum(quest, platinum)
    end
 
-   return platinum
+   return math.floor(platinum)
    -- <<<<<<<< shade2/quest.hsp:462 	flt:item_create -1,idPlat,cX(pc),cY(pc),p ..
 end
 

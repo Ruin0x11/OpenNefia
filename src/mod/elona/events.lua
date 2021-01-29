@@ -24,6 +24,7 @@ local ElonaBuilding = require("mod.elona.api.ElonaBuilding")
 local Area = require("api.Area")
 local Gardening = require("mod.elona.api.Gardening")
 local Feat = require("api.Feat")
+local Quest = require("mod.elona.api.Quest")
 
 --
 --
@@ -901,7 +902,7 @@ local function proc_return(chara)
             return
          end
 
-         if Effect.is_non_returnable_quest_active() then
+         if Quest.is_non_returnable_quest_active() then
             Gui.mes("quest.deliver.you_commit_a_serious_crime")
             Effect.modify_karma(chara, -10)
          end

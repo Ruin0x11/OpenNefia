@@ -15,7 +15,7 @@ local own_states = {
    [1]  = "not_owned",
    [2]  = "shop",
    [3]  = "shelter",
-   [4]  = "harvested",
+   [4]  = "quest",
    [5]  = "unobtainable",
 }
 

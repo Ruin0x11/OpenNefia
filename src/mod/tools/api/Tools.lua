@@ -24,6 +24,7 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Skill = require("mod.elona_sys.api.Skill")
 local Magic = require("mod.elona_sys.api.Magic")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
+local World = require("api.World")
 
 local Tools = {}
 
@@ -451,6 +452,16 @@ end
 
 function Tools.thing_at(ty)
    return Tools.things_at(ty):nth(1)
+end
+
+function Tools.tile_at()
+   local PositionPrompt = require("api.gui.PositionPrompt")
+   local result, canceled = PositionPrompt:new():query()
+   if not result or canceled then
+      return fun.iter({})
+   end
+
+   return Map.current():tile(result.x, result.y)
 end
 
 -- Converts an array of sequential probabilities into percent
@@ -986,6 +997,7 @@ end
 function Tools.end_quest()
    if save.elona_sys.immediate_quest_uid and save.elona_sys.quest_time_limit > 0 then
       save.elona_sys.quest_time_limit = 1
+      World.pass_time_in_seconds(120)
    end
 end
 

@@ -19,7 +19,7 @@ local ChooseNpcMenu = require("api.gui.menu.ChooseNpcMenu")
 local Skill = require("mod.elona_sys.api.Skill")
 local I18N = require("api.I18N")
 local Wish = require("mod.elona.api.Wish")
-local Quest = require("mod.elona_sys.api.Quest")
+local Quest = require("mod.elona.api.Quest")
 
 local RANGE_BOLT = 6
 local RANGE_BALL = 2
@@ -271,7 +271,7 @@ data:add {
          Gui.mes("magic.return.cancel")
          s.turns_until_cast_return = 0
       else
-         if Effect.is_non_returnable_quest_active() then
+         if Quest.is_non_returnable_quest_active() then
             Gui.mes("misc.return.forbidden")
             if not Input.yes_no() then
                return false

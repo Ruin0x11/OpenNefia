@@ -437,8 +437,8 @@ function ElonaAction.use(chara, item)
 end
 
 function ElonaAction.open(chara, item)
-   Gui.mes("common.nothing_happens")
-   return "player_turn_query"
+   local result = item:emit("elona_sys.on_item_open", {chara=chara,triggered_by="open"}, "turn_end")
+   return result
 end
 
 function ElonaAction.dip(chara, item)

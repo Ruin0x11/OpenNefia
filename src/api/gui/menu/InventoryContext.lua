@@ -4,6 +4,8 @@ local Log = require("api.Log")
 local InputHandler = require("api.gui.InputHandler")
 local Ui = require("api.Ui")
 local ILocation = require("api.ILocation")
+local Map = require("api.Map")
+local Event = require("api.Event")
 
 --- The underlying behavior of an inventory screen. Separating it like
 --- this allows trivial creation of item shortcuts, since all that is
@@ -225,11 +227,15 @@ function InventoryContext:on_shortcut(item)
 end
 
 function InventoryContext:filter(item)
+   local result = true
+
    if self.proto.filter then
-      return self.proto.filter(self, item)
+      result = self.proto.filter(self, item)
    end
 
-   return true
+   result = Event.trigger("base.on_inventory_context_filter", {context=self, item=item}, result)
+
+   return result
 end
 
 function InventoryContext:after_filter(filtered)

@@ -255,6 +255,11 @@ Event.register("base.on_chara_killed", "Check if escort was killed", check_escor
 local function check_escort_left_behind(_, params)
    -- >>>>>>>> shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
    local quest = params.quest
+
+   if quest.state == "completed" then
+      return
+   end
+
    if quest._id == "elona.escort" and quest.state ~= "accepted" then
       save.elona_sys.immediate_quest_uid = nil
       return true

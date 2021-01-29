@@ -58,7 +58,8 @@ end
       },
       outskirts = "The outskirts",
       party_room = "Party Room",
-      urban_area = "Urban area"
+      urban_area = "Urban area",
+      harvest = "Outskirts Fields",
     },
     since_leaving = {
       time_passed = function(_1, _2, _3)

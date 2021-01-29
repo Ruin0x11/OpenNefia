@@ -71,12 +71,7 @@ local conquer = {
       Gui.mes_c("quest.conquer.fail", "Purple")
       -- <<<<<<<< shade2/main.hsp:1637 		} ..
 
-      local map = Map.current()
-      local prev_map_uid, prev_x, prev_y = map:previous_map_and_location()
-      Gui.play_sound("base.exitmap1")
-      Gui.update_screen()
-      local ok, prev_map = assert(Map.load(prev_map_uid))
-      Map.travel_to(prev_map, { start_x = prev_x, start_y = prev_y })
+      elona_Quest.travel_to_previous_map()
    end,
 
    prevents_pickpocket = true
@@ -126,3 +121,14 @@ local function check_conquer_quest_targets(map)
    end
 end
 Event.register("elona_sys.on_quest_check", "Check conquer quest targets", check_conquer_quest_targets)
+
+local function display_quest_message_conquer(map)
+   local quest = Quest.get_immediate_quest()
+   -- >>>>>>>> shade2/map.hsp:2165 		if gQuest=qConquer{ ...
+   if quest and quest._id == "elona.conquer" then
+      local objective = I18N.get("chara." .. quest.params.enemy_id .. ".name")
+      Gui.mes_c("map.quest.on_enter.conquer", "SkyBlue", objective, save.elona_sys.quest_time_limit)
+   end
+   -- <<<<<<<< shade2/map.hsp:2167 			} ..
+end
+Event.register("base.on_map_entered_events", "Display quest message (conquer)", display_quest_message_conquer)

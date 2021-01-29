@@ -9,6 +9,8 @@ local Calc = require("mod.elona.api.Calc")
 local Effect = require("mod.elona.api.Effect")
 local elona_Item = require("mod.elona.api.Item")
 local Enum = require("api.Enum")
+local Quest = require("mod.elona_sys.api.Quest")
+local Ui = require("api.Ui")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -126,7 +128,12 @@ local inv_get = {
 
       local result = Action.get(ctxt.chara, item, amount)
 
-      -- TODO: handle harvest action
+      if type(result) == "string" then
+         -- This is a turn result like "turn_end", used by the harvest quest to
+         -- indicate the harvesting action should start instead of staying in
+         -- the inventory screen.
+         return result
+      end
 
       return "inventory_continue"
    end,
@@ -526,6 +533,49 @@ local inv_get_pocket = {
    end
 }
 data:add(inv_get_pocket)
+
+local inv_harvest_delivery_chest = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_harvest_delivery_chest",
+   elona_id = 24,
+   elona_sub_id = 0,
+
+   sources = { "chara" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   window_title = "ui.inventory_command.put",
+   query_text = "ui.inv.title.put",
+
+   filter = function(ctxt, item)
+      return not item:has_category("elona.container")
+      -- >>>>>>>> shade2/command.hsp:3413 				if iProperty(cnt)!propQuest:continue ..
+         and item.own_state == Enum.OwnState.Quest
+         and item.params.harvest_weight_class
+      -- <<<<<<<< shade2/command.hsp:3413 				if iProperty(cnt)!propQuest:continue ..
+   end,
+
+   on_select = function(ctxt, item, amount)
+      -- >>>>>>>> shade2/command.hsp:3898 			if invCtrl(1)=0{ ...
+      Gui.play_sound("base.inv")
+      local quest = assert(Quest.get_immediate_quest())
+      assert(quest._id == "elona.harvest", quest._id)
+      quest.params.current_weight = quest.params.current_weight + item:calc("weight") * item.amount
+      Gui.mes_c("ui.inv.put.harvest", "Green",
+                item,
+                Ui.display_weight(item:calc("weight") * item.amount),
+                Ui.display_weight(quest.params.current_weight),
+                Ui.display_weight(quest.params.required_weight))
+
+      item.amount = 0
+      item:remove_ownership()
+      ctxt.chara:refresh_weight()
+
+      return "inventory_continue"
+      -- <<<<<<<< shade2/command.hsp:3911 				} ...      return "inventory_continue"
+   end
+}
+data:add(inv_harvest_delivery_chest)
 
 local inv_put_pocket = {
    _type = "elona_sys.inventory_proto",

@@ -104,6 +104,8 @@ function ICharaActivity:start_activity(id, params, turns)
       self.activity.turns = 10
    end
 
+   self.activity.turns = math.floor(self.activity.turns)
+
    local ok, result = pcall(self.activity.start, self.activity, self)
 
    if not ok or result == "stop" then
