@@ -15,13 +15,14 @@ local UiFpsCounter = require("api.gui.hud.UiFpsCounter")
 local config = require("internal.config")
 local theme = require("internal.theme")
 local events = require("internal.events")
+local config_store = require("internal.config_store")
 
 local startup = {}
 
 local progress_step = 0
 local status = ""
 function startup.get_progress()
-   return status, progress_step, 12
+   return status, progress_step, 13
 end
 
 local function progress(_status)
@@ -121,6 +122,17 @@ function startup.run(mods)
    -- if alias_api_tables then
    --    doc.alias_api_tables()
    -- end
+
+   progress("Loading config...")
+
+   -- Initialize the config and load it from disk, if possible,
+   config_store.clear()
+   config_store.initialize()
+   local ok = config_store.load()
+   if not ok then
+      Log.warn("Saving the config for the first time.")
+      config_store.save()
+   end
 
    Event.trigger("base.before_engine_init")
 

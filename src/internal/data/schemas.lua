@@ -1536,3 +1536,45 @@ base.
 data:add_type {
    name = "role",
 }
+
+data:add_type {
+   name = "config_option",
+   fields = {
+      {
+         name = "type",
+         template = true,
+         default = "boolean",
+         doc = [[
+Type of this config option.
+
+One of "boolean", "string", "number", "integer" "enum", "data_id" or "any".
+]]
+      },
+      {
+         name = "default",
+         template = true,
+         default = true,
+         doc = [[
+Default value of this config option.
+]]
+      },
+      {
+         name = "choices",
+         default = CodeGenerator.gen_literal "{}",
+         doc = [[
+Only used if the type is "enum".
+
+The list of enum variants of this config option.
+]]
+      },
+      {
+         name = "data_type",
+         default = "base.chara",
+         doc = [[
+Only used if the type is "data_id".
+
+The data type of the ID in this config option.
+]]
+      }
+   }
+}
