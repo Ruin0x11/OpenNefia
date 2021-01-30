@@ -89,7 +89,7 @@ function KeybindTranslator:disable(actions)
 end
 
 function KeybindTranslator:reload()
-   local keybinds = config["base.keybinds"]
+   local keybinds = config.base.keybinds
    self.translations = {}
    for action, kb in pairs(keybinds) do
       if self.accepts[action] then

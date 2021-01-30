@@ -34,18 +34,18 @@ function field_logic.setup_new_game(player)
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
-   config["base._save_id"] = ("%s_%d"):format(Chara.player().name, os.time())
+   config.base._save_id = ("%s_%d"):format(Chara.player().name, os.time())
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")
 end
 
 function field_logic.quickstart()
-   config["base._save_id"] = "quickstart"
+   config.base._save_id = "quickstart"
    field:init_global_data()
 
-   save.base.scenario = config["base.quickstart_scenario"]
-   assert(config["base.quickstart_scenario"])
+   save.base.scenario = config.base.quickstart_scenario
+   assert(config.base.quickstart_scenario)
    assert(save.base.scenario)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})

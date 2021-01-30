@@ -121,7 +121,7 @@ return function(args)
    field:init_global_data()
 
    local seed = args.seed or math.floor(socket.gettime())
-   config["base.default_seed"] = seed
+   config.base.default_seed = seed
 
    print("Seed: " .. seed)
    print("")

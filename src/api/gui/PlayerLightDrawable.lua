@@ -17,7 +17,7 @@ function PlayerLightDrawable:init()
 end
 
 function PlayerLightDrawable:update(dt)
-   self.frames = self.frames + dt * config["base.screen_sync"]
+   self.frames = self.frames + dt * config.base.screen_sync
    if self.frames > 1 then
       self.frames = math.fmod(self.frames, 1)
       local hour = save.base.date.hour

@@ -153,7 +153,7 @@ function SkillStatusMenu.build_list(chara, mode, trainer_skills)
       local exp = chara:skill_experience(skill_id)
       local s = ("%01.03f"):format(base_level + exp / 1000)
 
-      if config["base.debug_show_all_skills"] then
+      if config.base.debug_show_all_skills then
          if level ~= base_level then
             local diff = level - base_level
             if diff >= 0 then

@@ -193,7 +193,7 @@ function ElonaBuilding.update_shop(area)
       end
    end
 
-   local hide = config["elona.hide_shop_results"]
+   local hide = config.elona.hide_shop_results
 
    if total_sold == 0 then
       if hide == "none" then

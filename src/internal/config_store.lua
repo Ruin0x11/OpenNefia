@@ -1,5 +1,4 @@
 local env = require ("internal.env")
-local mod = require("internal.mod")
 local config_holder = require("internal.config_holder")
 
 local SaveFs = require("api.SaveFs")
@@ -17,7 +16,7 @@ function config_store.for_mod(mod_id)
    --    error(string.format("Mod %s is not loaded.", mod_id))
    -- end
    if not config_data[mod_id] then
-      config_data[mod_id] = {}
+      return nil
    end
 
    return config_data[mod_id]
@@ -45,6 +44,7 @@ function config_store.load()
 end
 
 function config_store.initialize()
+   local mod = require("internal.mod")
    for _, mod in mod.iter_loaded() do
       config_data[mod.id] = config_holder:new(mod.id)
    end

@@ -1547,7 +1547,7 @@ data:add_type {
          doc = [[
 Type of this config option.
 
-One of "boolean", "string", "number", "integer" "enum", "data_id" or "any".
+One of "boolean", "string", "number", "integer" "enum", "table", "data_id" or "any".
 ]]
       },
       {

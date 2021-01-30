@@ -55,7 +55,7 @@ function Anim.load(anim_id, tx, ty)
    assert(asset.count_x)
 
    local map = Map.current()
-   if not map or not map:is_in_fov(tx, ty) or config["base.anim_wait"] == 0 then
+   if not map or not map:is_in_fov(tx, ty) or config.base.anim_wait == 0 then
       return function() end
    end
 
@@ -76,7 +76,7 @@ function Anim.load(anim_id, tx, ty)
       while frame <= frames do
          asset:draw_region(frame, sx + 24, sy + 8, nil, nil, {255, 255, 255}, rotation * frame)
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] + wait/2)
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait + wait/2)
          frame = frame + frames_passed
       end
    end
@@ -96,7 +96,7 @@ function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)
       while frame <= duration - 1 do
          draw_cb(asset, scx, scy, frame)
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait)
          frame = frame + frames_passed
       end
    end
@@ -124,7 +124,7 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
             draw_cb(asset, scx, scy, frame, p[1], p[2], i-1)
          end
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait)
          frame = frame + frames_passed
       end
    end
@@ -155,7 +155,7 @@ end
 function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
    -- >>>>>>>> shade2/screen.hsp:497:DONE 	case aniCurse ..
    rot_delta = rot_delta or -1
-   wait = wait or config["base.anim_wait"]
+   wait = wait or config.base.anim_wait
 
    local particles = {}
 
@@ -256,7 +256,7 @@ function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y
             end
          end
 
-         local _, _, delta = Draw.yield(config["base.anim_wait"] + 30)
+         local _, _, delta = Draw.yield(config.base.anim_wait + 30)
          frame = frame + delta
          changed = delta > 0
       end
@@ -313,7 +313,7 @@ function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, 
             chip_batch:draw()
          end
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] / 2)
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait / 2)
          frame = frame + frames_passed
       end
 
@@ -416,7 +416,7 @@ function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
             end
          end
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"])
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait)
          frame = frame + frames_passed
       end
    end
@@ -448,7 +448,7 @@ function Anim.gene_engineering(tx, ty)
             end
          end
 
-         local _, _, frames_passed = Draw.yield(config["base.anim_wait"] * 2.25)
+         local _, _, frames_passed = Draw.yield(config.base.anim_wait * 2.25)
          i = i + frames_passed
       end
    end
@@ -545,7 +545,7 @@ function Anim.miracle(positions, sound)
          end
 
          local _
-         _, _, delta = Draw.yield(config["base.anim_wait"] * 2.25)
+         _, _, delta = Draw.yield(config.base.anim_wait * 2.25)
          loops = loops + delta
       end
    end
@@ -612,7 +612,7 @@ function Anim.meteor()
          end
 
          local _
-         _, _, delta = Draw.yield(config["base.anim_wait"] + 40)
+         _, _, delta = Draw.yield(config.base.anim_wait + 40)
          frame = frame + delta
       until not drew_any
    end
@@ -661,7 +661,7 @@ function Anim.ragnarok()
          end
 
          local _
-         _, _, delta = Draw.yield(config["base.anim_wait"] + 40)
+         _, _, delta = Draw.yield(config.base.anim_wait + 40)
          cur_frame = cur_frame + delta
       until not did_something
    end
@@ -728,7 +728,7 @@ function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target
             end
          end
 
-         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         local _, _, delta = Draw.yield(config.base.anim_wait)
          frame = frame + delta
       end
 
@@ -766,7 +766,7 @@ function Anim.ball(positions, color, sound, center_x, center_y, map)
          local sx, sy = Gui.tile_to_screen(center_x, center_y)
          t.base.anim_ball:draw_region(frame, draw_x + sx - tw, draw_y + sy - th, nil, nil, color)
 
-         local _, _, delta = Draw.yield(config["base.anim_wait"])
+         local _, _, delta = Draw.yield(config.base.anim_wait)
          frame = frame + delta
       end
 
@@ -779,7 +779,7 @@ end
 
 function Anim.death(tx, ty, asset, element_id)
    -- >>>>>>>> shade2/chara_func.hsp:646:DONE 	if cfg_animeWait@=0:return ..
-   if config["base.anim_wait"] <= 0 then
+   if config.base.anim_wait <= 0 then
       return function() end
    end
 
@@ -835,7 +835,7 @@ function Anim.death(tx, ty, asset, element_id)
                        0.2 * i)
          end
 
-         local _, _, delta = Draw.yield(config["base.anim_wait"] + wait/2)
+         local _, _, delta = Draw.yield(config.base.anim_wait + wait/2)
          frame = frame + delta
       end
    end

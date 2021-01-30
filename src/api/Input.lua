@@ -171,7 +171,7 @@ end
 function Input.reload_keybinds()
    Log.debug("Reloading keybinds.")
 
-   local kbs = config["base.keybinds"]
+   local kbs = config.base.keybinds
    for _, kb in data["base.keybind"]:iter() do
       local id = kb._id
 

@@ -581,7 +581,7 @@ local function refresh_weight(chara)
       chara.inventory_weight_type = 0 -- normal
    end
 
-   if config["base.debug_no_weight"] then
+   if config.base.debug_no_weight then
       chara.inventory_weight_type = 0
    end
 

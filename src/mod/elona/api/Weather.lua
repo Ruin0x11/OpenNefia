@@ -71,7 +71,7 @@ local function mkrain(mod_y, length_y, speed_x, speed_y)
             end
          end
 
-         frames_passed = select(3, Draw.yield(config["base.anim_wait"]))
+         frames_passed = select(3, Draw.yield(config.base.anim_wait))
       end
    end
 end

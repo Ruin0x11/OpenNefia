@@ -134,7 +134,7 @@ input.set_key_repeat = love.keyboard.setKeyRepeat
 input.set_text_input = love.keyboard.setTextInput
 
 function input.set_keybinds(kbs)
-   config["base.keybinds"] = kbs
+   config.base.keybinds = kbs
 end
 
 return input

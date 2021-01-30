@@ -309,7 +309,7 @@ local function item(wish, chara)
 
       local consider = true
       if created:calc("is_precious") or created.quality == Enum.Quality.Unique then
-         if not (save.base.is_wizard or config["base.development_mode"]) then
+         if not (save.base.is_wizard or config.base.development_mode) then
             consider = false
          end
       end

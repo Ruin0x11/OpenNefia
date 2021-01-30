@@ -114,7 +114,7 @@ function QuickCheck.quick_check(check, gens, opts)
 
    local seed = opts.seed or math.floor(socket.gettime())
 
-   config["base.default_seed"] = seed
+   config.base.default_seed = seed
    Rand.set_seed(seed)
    math.randomseed(seed)
 
@@ -148,7 +148,7 @@ function QuickCheck.quick_check(check, gens, opts)
       end
    end
 
-   config["base.default_seed"] = nil
+   config.base.default_seed = nil
    Rand.set_seed()
 
    return true, {

@@ -176,7 +176,7 @@ function CharaMakeWrapper:initialize_player(chara)
    assert(chara.class, "Character must have class set")
 
    Event.trigger("base.on_initialize_player", {chara=chara})
-   config["base._save_id"] = chara.name
+   config.base._save_id = chara.name
 end
 
 function CharaMakeWrapper:update(dt)

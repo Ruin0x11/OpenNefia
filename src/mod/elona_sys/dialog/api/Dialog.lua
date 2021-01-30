@@ -72,7 +72,7 @@ local function speaker_name(chara)
       name = name .. (" (%s)"):format(I18N.get("god." .. god .. ".name"))
    end
 
-   if config["base.development_mode"] then
+   if config.base.development_mode then
       name = name .. " imp:" .. tostring(chara:calc("impression"))
    end
 

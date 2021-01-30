@@ -155,7 +155,7 @@ function TextPrompt:draw()
 end
 
 function TextPrompt:update(dt)
-   self.frames = self.frames + dt * config["base.screen_sync"]
+   self.frames = self.frames + dt * config.base.screen_sync
    self.caret_alpha = math.sin(self.frames) * 255 * 2 -- TODO
 
    if self.finished then

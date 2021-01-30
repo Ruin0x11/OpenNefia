@@ -89,7 +89,7 @@ function game.loop()
    Event.trigger("base.on_startup")
 
    local cb
-   if config["base.quickstart_on_startup"] then
+   if config.base.quickstart_on_startup then
       field_logic.quickstart()
       cb = run_field
    else

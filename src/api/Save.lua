@@ -16,7 +16,7 @@ local Save = {}
 
 --- Saves the game.
 function Save.save_game()
-   local save_id = config["base._save_id"]
+   local save_id = config.base._save_id
    assert(save_id)
 
    local map = Map.current()
@@ -52,9 +52,9 @@ end
 
 --- Loads the current save.
 function Save.load_game(save_id)
-   save_id = save_id or config["base._save_id"]
+   save_id = save_id or config.base._save_id
    assert(save_id)
-   config["base._save_id"] = save_id
+   config.base._save_id = save_id
 
    local success, map
 
@@ -106,7 +106,7 @@ end
 
 -- TODO
 function Save.autosave()
-   if config["base.autosave"] then
+   if config.base.autosave then
       Save.save_game()
    end
 end

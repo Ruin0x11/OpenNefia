@@ -134,6 +134,8 @@ function startup.run(mods)
       config_store.save()
    end
 
+   draw.set_default_font(config.base.default_font)
+
    Event.trigger("base.before_engine_init")
 
    progress("Loading tilemaps...")
@@ -142,7 +144,7 @@ function startup.run(mods)
 
    progress("Loading translations...")
 
-   i18n.switch_language(config["base.language"])
+   i18n.switch_language(config.base.language)
 
    field:setup_repl()
 

@@ -67,7 +67,7 @@ Mx.make_interactive("start_watching", Watcher, "start_watching_object",
                           return {
                              ("%d (%s)"):format(object.uid, object.name or object._id),
                              object,
-                             config["tools.default_watches"]
+                             config.tools.default_watches
                           }
                        end)
 

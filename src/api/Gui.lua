@@ -428,7 +428,7 @@ function Gui.play_sound(sound_id, x, y, channel)
    local sound_manager = require("internal.global.global_sound_manager")
    local coords = draw.get_coords()
 
-   if config["base.positional_audio"] and x ~= nil and y ~= nil then
+   if config.base.positional_audio and x ~= nil and y ~= nil then
       local sx, sy = coords:tile_to_screen(x, y)
       sound_manager:play(sound_id, sx, sy, channel)
    else
@@ -463,7 +463,7 @@ end
 function Gui.play_music(music_id, no_loop)
    local sound_manager = require("internal.global.global_sound_manager")
 
-   if not config["base.play_music"] then
+   if not config.base.enable_music then
       sound_manager:stop_music()
       return
    end
