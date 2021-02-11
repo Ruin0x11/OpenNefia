@@ -159,8 +159,8 @@ return {
                doc = "ウィンドウとフルスクリーンを切り替えます。\nフルスクリーン2は、スクリーンと同じサイズのウィンドウを生成し擬似的にフルスクリーンとします。\n",
                name = "画面モード*",
                variants = {
-                  desktop_fullscreen = "フルスクリーン2",
-                  fullscreen = "フルスクリーン",
+                  desktop = "フルスクリーン2",
+                  exclusive = "フルスクリーン",
                   windowed = "ウィンドウ"
                }
             },

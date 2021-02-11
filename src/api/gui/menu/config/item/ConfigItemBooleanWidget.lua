@@ -1,6 +1,7 @@
 local UiTheme = require("api.gui.UiTheme")
 local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
 local Draw = require("api.Draw")
+local I18N = require("api.I18N")
 
 local ConfigItemBooleanWidget = class.class("ConfigItemBooleanWidget", IConfigItemWidget)
 
@@ -8,7 +9,8 @@ function ConfigItemBooleanWidget:init(item)
    IConfigItemWidget.init(self, item)
 
    self.item = item
-   self.value = false
+   self.text = ""
+   self:set_value(false)
 end
 
 function ConfigItemBooleanWidget:relayout(x, y, width, height)
@@ -33,6 +35,9 @@ end
 
 function ConfigItemBooleanWidget:set_value(value)
    self.value = value
+
+   local yes_no = I18N.get_optional("config.option." .. self.item._id .. ".yes_no") or "config.common.yes_no.default"
+   self.text = I18N.get(yes_no .. "." .. (self.value and "yes" or "no"))
 end
 
 function ConfigItemBooleanWidget:can_choose()
@@ -57,7 +62,7 @@ function ConfigItemBooleanWidget:draw()
    end
 
    Draw.set_color(color)
-   Draw.text(tostring(self.value), self.x, self.y)
+   Draw.text(self.text, self.x, self.y)
 end
 
 function ConfigItemBooleanWidget:update()

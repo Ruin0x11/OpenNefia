@@ -150,8 +150,8 @@ return {
                doc = "Fullscreen mode.\n'Full screen' will use a hardware fullscreen mode.\n'Desktop fullscr' will create a borderless window the same size as the screen.\n",
                name = "Screen Mode*",
                variants = {
-                  desktop_fullscreen = "Desktop fullscr",
-                  fullscreen = "Full screen",
+                  desktop = "Desktop fullscr",
+                  exclusive = "Full screen",
                   windowed = "Window mode"
                }
             },

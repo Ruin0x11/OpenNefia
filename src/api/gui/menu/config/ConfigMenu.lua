@@ -34,6 +34,7 @@ end
 
 function ConfigMenu:on_query()
    self.canceled = false
+   self.list:refresh_localized_text()
 end
 
 function ConfigMenu:relayout()

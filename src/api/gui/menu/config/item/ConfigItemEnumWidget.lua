@@ -1,6 +1,7 @@
 local UiTheme = require("api.gui.UiTheme")
 local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
 local Draw = require("api.Draw")
+local I18N = require("api.I18N")
 
 local ConfigItemEnumWidget = class.class("ConfigItemEnumWidget", IConfigItemWidget)
 
@@ -8,12 +9,13 @@ function ConfigItemEnumWidget:init(item)
    IConfigItemWidget.init(self, item)
 
    self.item = item
+   self.text = ""
    self.choices = self.item.choices
    if type(self.choices) == "function" then
       self.choices = self.choices()
       assert(type(self.choices) == "table")
    end
-   self.value = assert(self.choices[1])
+   self:set_value(assert(self.choices[1]))
 end
 
 function ConfigItemEnumWidget:relayout(x, y, width, height)
@@ -41,6 +43,11 @@ end
 
 function ConfigItemEnumWidget:set_value(value)
    self.value = value
+   if self.item.formatter then
+      self.text = self.item.formatter(self.item._id, self.value)
+   else
+      self.text = I18N.get_optional("config.option." .. self.item._id .. ".variants." .. self.value) or tostring(self.value)
+   end
 end
 
 function ConfigItemEnumWidget:can_choose()
@@ -63,7 +70,7 @@ function ConfigItemEnumWidget:draw()
    end
 
    Draw.set_color(color)
-   Draw.text(tostring(self.value), self.x, self.y)
+   Draw.text(self.text, self.x, self.y)
 end
 
 function ConfigItemEnumWidget:update()

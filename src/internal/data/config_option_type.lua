@@ -163,8 +163,13 @@ data:add_multi(
          fields = {},
          widget = function(proto)
             local ConfigItemEnumWidget = require("api.gui.menu.config.item.ConfigItemEnumWidget")
+            local I18N = require("api.I18N")
             local sort = function(a, b) return a < b end
             local proto = {
+               _id = proto._id,
+               formatter = function(_id, value)
+                  return I18N.get("ui.language." .. value)
+               end,
                choices = data[proto.data_type]:iter():extract("_id"):into_sorted(sort):to_list()
             }
             return ConfigItemEnumWidget:new(proto)

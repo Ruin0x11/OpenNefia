@@ -164,6 +164,16 @@ function ConfigMenuList:run_on_changed(item)
    self:update_from_config()
 end
 
+function ConfigMenuList:refresh_localized_text()
+   for _, item in self.model:iter() do
+      if item.menu then
+         item.text = I18N.get("config.menu." .. item.menu .. ".name")
+      else
+         item.text = I18N.get("config.option." .. item.proto._id .. ".name")
+      end
+   end
+end
+
 --- Called after something changes in the config, to account for things like
 --- "on_changed" mutating more than one config option at once.
 function ConfigMenuList:update_from_config()

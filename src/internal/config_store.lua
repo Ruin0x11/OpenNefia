@@ -69,7 +69,8 @@ end
 function config_store.proxy()
    return setmetatable({}, {
          __index = function(_, k) return config_store.for_mod(k) end,
-         __newindex = function() end
+         __newindex = function() end,
+         __completions = function() return table.keys(config_data) end
    })
 end
 

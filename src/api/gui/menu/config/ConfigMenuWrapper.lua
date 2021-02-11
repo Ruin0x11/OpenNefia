@@ -12,7 +12,7 @@ local ConfigMenuWrapper = class.class("ConfigMenuWrapper", IUiLayer)
 
 ConfigMenuWrapper:delegate("input", IInput)
 
-function ConfigMenuWrapper:init(is_title_screen)
+function ConfigMenuWrapper:init(is_title_screen, menu_id)
    self.x = 0
    self.y = 0
    self.width = Draw.get_width()
@@ -22,7 +22,8 @@ function ConfigMenuWrapper:init(is_title_screen)
 
    self.input = InputHandler:new()
 
-   self:push_menu("base.default")
+   menu_id = menu_id or "base.default"
+   self:push_menu(menu_id)
 end
 
 function ConfigMenuWrapper:make_keymap()

@@ -1,6 +1,7 @@
 local UiTheme = require("api.gui.UiTheme")
 local IConfigItemWidget = require("api.gui.menu.config.item.IConfigItemWidget")
 local Draw = require("api.Draw")
+local I18N = require("api.I18N")
 
 local ConfigItemIntegerWidget = class.class("ConfigItemIntegerWidget", IConfigItemWidget)
 
@@ -8,7 +9,7 @@ function ConfigItemIntegerWidget:init(item)
    IConfigItemWidget.init(self, item)
 
    self.item = item
-   self.value = 0
+   self:set_value(0)
    self.min_value = item.min_value or nil
    self.max_value = item.max_value or nil
 end
