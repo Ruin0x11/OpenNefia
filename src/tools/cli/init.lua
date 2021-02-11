@@ -31,10 +31,6 @@ local function build_app()
 
    local verify_command = parser:command("verify", "Ensures the environment can initialize properly.")
    verify_command:flag("-l --load-game", "Load the full game when verifying.")
-   -- local gen_command = parser:command("gen", "Generate a Lua file for one or more tl script.")
-   -- gen_command:argument("script", "The tl script."):args("+")
-   -- gen_command:option("-o --output", "Write to <filename> instead.")
-   --    :argname("<filename>")
 
    local repl_command = parser:command("repl", "Starts the REPL.")
    repl_command:flag("-l --load-game", "Load the full game on startup.")
@@ -61,12 +57,6 @@ local function build_app()
    exec_command:flag("-l --load-game", "Load the full game before executing.")
    exec_command:option("-e --exec-code", "A string containing Lua code to execute.")
    exec_command:argument("lua_file", "The Lua script to execute. Defaults to standard input.", "-")
-
-   -- local build_command = parser:command("build", "Build your project according to tlconfig.lua by type checking and compiling each specified file.")
-   -- build_command:option("-b --build-dir", "Put all generated files in <directory>.")
-   --    :argname("<directory>")
-   -- build_command:option("-s --source-dir", "Compile all *.tl files in <directory> (and all subdirectories).")
-   --    :argname("<directory>")
 
    return parser
 end

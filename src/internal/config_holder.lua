@@ -10,71 +10,21 @@ function config_holder:init(mod_id)
    rawset(self, "_data", {})
 end
 
-local function typecheck(value, ty)
-   local our_ty = type(value)
-   if our_ty ~= ty then
-      return false, ("expected value of type '%s', got '%s'"):format(ty, our_ty)
-   end
-   return true, nil
-end
-
 local function verify_option(value, option)
    if option.optional and value == nil then
       return true
    end
 
-   if option.type == "boolean" then
-      local ok, err = typecheck(value, "boolean")
-      if not ok then
-         return false, err
-      end
-      return true
-   elseif option.type == "number" then
-      local ok, err = typecheck(value, "number")
-      if not ok then
-         return false, err
-      end
-      return true
-   elseif option.type == "integer" then
-      if math.type(value) ~= "integer" then
-         return false, ("expected integer, got %s"):format(math.type(value))
-      end
-      return true
-   elseif option.type == "enum" then
-      if not table.set(option.choices)[value] then
-         return false, ("value '%s' is not contained in choices set '%s'"):format(value, inspect(option.choices, {newline=" "}))
-      end
-      return true
-   elseif option.type == "string" then
-      local ok, err = typecheck(value, "string")
-      if not ok then
-         return false, err
-      end
-      return true
-   elseif option.type == "table" then
-      local ok, err = typecheck(value, "table")
-      if not ok then
-         return false, err
-      end
-      return true
-   elseif option.type == "data_id" then
-      local ok, err = typecheck(value, "string")
-      if not ok then
-         return false, err
-      end
-
-      local proxy = data[option.data_type]
-      ok, err = pcall(proxy.ensure, proxy, value)
-      if not ok then
-         return false, err
-      end
-
-      return true
-   elseif option.type == "any" then
-      return true
-   else
-      return false, ("invalid option type '%s'"):format(option.type)
+   local ty = option.type
+   if not string.find(ty, "%.") then
+      ty = "base." .. ty
    end
+   local config_option_type = data["base.config_option_type"][ty]
+   if config_option_type == nil then
+      return false, ("invalid option type '%s'"):format(ty)
+   end
+
+   return config_option_type.validate(option, value)
 end
 
 local function set_default_option(option)
@@ -122,6 +72,10 @@ function config_holder:__newindex(k, v)
    end
 
    self._data[k] = v
+
+   if option.on_changed then
+      option.on_changed(v)
+   end
 end
 
 function config_holder:serialize()

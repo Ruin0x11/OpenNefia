@@ -638,3 +638,31 @@ function table.merge_ex(tbl, add, defaults, method)
 
    return tbl
 end
+
+--- http://lua-users.org/wiki/RecursiveReadOnlyTables
+function table.readonly(t)
+   for x, y in pairs(t) do
+      if type(x) == "table" then
+         if type(y) == "table" then
+            t[table.readonly(x)] = table.readonly[y]
+         else
+            t[table.readonly(x)] = y
+         end
+      elseif type(y) == "table" then
+         t[x] = table.readonly(y)
+      end
+   end
+
+   local proxy = {}
+   local mt = {
+      -- hide the actual table being accessed
+      __metatable = "read only table",
+      __index = function(tab, k) return t[k] end,
+      __pairs = function() return pairs(t) end,
+      __newindex = function (t,k,v)
+         error("attempt to update a read-only table", 2)
+      end
+   }
+   setmetatable(proxy, mt)
+   return proxy
+end

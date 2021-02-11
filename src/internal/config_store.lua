@@ -1,5 +1,6 @@
 local env = require ("internal.env")
 local config_holder = require("internal.config_holder")
+local Log = require("api.Log")
 
 local SaveFs = require("api.SaveFs")
 
@@ -27,10 +28,12 @@ function config_store.clear()
 end
 
 function config_store.save()
+   Log.info("Saving config.")
    return SaveFs.write("config", config_data)
 end
 
 function config_store.load()
+   Log.info("Loading config.")
    local success, from_disk = SaveFs.read("config")
    if not success then
       return false, from_disk

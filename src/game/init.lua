@@ -7,6 +7,7 @@ local Event = require("api.Event")
 local SaveFs = require("api.SaveFs")
 local RestoreSaveMenu = require("api.gui.menu.RestoreSaveMenu")
 local Save = require("api.Save")
+local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 
 local chara_make = require("game.chara_make")
 local config = require("internal.config")
@@ -62,6 +63,8 @@ local function main_title()
                action = "start"
             end
          end
+      elseif choice == "options" then
+         ConfigMenuWrapper:new(true):query()
       elseif choice == "exit" then
          going = false
          action = "quit"

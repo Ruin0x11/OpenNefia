@@ -1538,6 +1538,41 @@ data:add_type {
 }
 
 data:add_type {
+   name = "config_option_type",
+   fields = {
+      {
+         name = "validate",
+         template = true,
+         default = CodeGenerator.gen_literal [[
+   function(value, option)
+      return true
+end
+]],
+         doc = [[
+Used to validate if a value for this option is valid.
+]]
+      },
+      {
+         name = "widget",
+         template = true,
+         type = "string",
+         doc = [[
+Require path of the widget used to display this config option.
+
+It must implement IConfigItemWidget.
+]]
+      },
+      {
+         name = "fields",
+         type = "table",
+         doc = [[
+Extra fields for configuring this config option.
+]]
+      }
+   }
+}
+
+data:add_type {
    name = "config_option",
    fields = {
       {

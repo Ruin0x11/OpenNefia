@@ -146,7 +146,7 @@ function Draw.line_rect(x, y, width, height, color)
    if color then
       Draw.set_color(color[1], color[2], color[3], color[4])
    end
-   love.graphics.polygon("line", x, y, x + width, y, x + width, y + height, x, y + height)
+   love.graphics.polygon("line", x+1, y, x+1 + width-1, y, x+1 + width-1, y + height-1, x+1, y + height-1)
 end
 
 --- Draws a line.

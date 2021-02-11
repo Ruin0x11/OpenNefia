@@ -7,13 +7,27 @@ data:add_multi(
          _id = "enable_music",
 
          type = "boolean",
-         default = true
+         default = true,
+
+         on_changed = function(value)
+            local Gui = require("api.Gui")
+
+            if not value then
+               Gui.stop_music()
+            end
+         end
       },
       {
-         _id = "screen_sync",
+         _id = "screen_refresh",
 
          type = "integer",
-         default = 6
+         -- >>>>>>>> elona122/shade2/help.hsp:773 	if cfg_scrSync=0	:cfg_scrSync=3 ...
+         default = 3,
+         -- <<<<<<<< elona122/shade2/help.hsp:773 	if cfg_scrSync=0	:cfg_scrSync=3 ..
+         -- >>>>>>>> elona122/shade2/help.hsp:1241 			if cs=3:configSelect cfg_scrSync,"scr_sync.",p, ...
+         min_value = 2,
+         max_value = 25,
+         -- <<<<<<<< elona122/shade2/help.hsp:1241 			if cs=3:configSelect cfg_scrSync,"scr_sync.",p, ..
       },
       {
          _id = "anim_wait",
