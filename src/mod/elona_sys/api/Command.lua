@@ -13,6 +13,7 @@ local elona_Magic = require("mod.elona.api.Magic")
 local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
 local Log = require("api.Log")
 local Area = require("api.Area")
+local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -221,12 +222,34 @@ function Command.load_game()
 end
 
 function Command.quit_game()
+   -- >>>>>>>> shade2/command.hsp:4351 *com_save ..
    Gui.mes_newline()
-   Gui.mes("Do you want to save the game and exit? ")
-   if Input.yes_no() then
+   Gui.mes("action.exit.prompt")
+   local choices = {
+      { text = "ui.yes", key = "y" },
+      { text = "ui.no", key = "n" },
+      { text = "action.exit.choices.game_setting", key = "c" },
+      { text = "action.exit.choices.return_to_title", key = "t" },
+   }
+   local res = Input.prompt(choices)
+   if res.index == 1 then
+      local can_save = true -- TODO showroom
+      if can_save then
+         Gui.play_sound("base.write1")
+         Save.save_game()
+         Gui.mes("action.exit.saved")
+         Gui.mes("action.exit.you_close_your_eyes")
+         Input.query_more()
+      end
+      Gui.wait(300)
       return "quit"
+   elseif res.index == 3 then
+      ConfigMenuWrapper:new():query()
+   elseif res.index == 4 then
+      return "title_screen"
    end
    return "player_turn_query"
+   -- <<<<<<<< shade2/command.hsp:4374 	goto *pc_turn ..
 end
 
 local CharacterInfoWrapper = require("api.gui.menu.CharacterInfoWrapper")

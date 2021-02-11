@@ -296,7 +296,8 @@ end
       choices = {
         cancel = "いいえ",
         exit = "はい",
-        game_setting = "ゲーム設定"
+        game_setting = "ゲーム設定",
+        return_to_title = "タイトルに戻る"
       },
       prompt = "これまでの冒険を記録して終了する？",
       saved = "無事に記録された。",

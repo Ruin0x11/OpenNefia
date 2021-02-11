@@ -108,10 +108,12 @@ function game.loop()
       else
          if action == "start" then
             cb = run_field
-         elseif action == "title" then
+         elseif action == "title_screen" then
             cb = main_title
          elseif action == "quit" then
             going = false
+         else
+            error("unknown top-level action " .. tostring(action))
          end
       end
    end

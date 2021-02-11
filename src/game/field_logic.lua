@@ -415,7 +415,7 @@ function field_logic.player_died(player)
       return "turn_begin"
    end
 
-   return "quit"
+   return "title_screen"
 end
 
 function field_logic.run_one_event(event, target_chara)
@@ -455,8 +455,10 @@ function field_logic.run_one_event(event, target_chara)
       cb = field_logic.npc_turn
    elseif event == "pass_turns" then
       cb = field_logic.pass_turns
+   elseif event == "title_screen" then
+      return false, event
    elseif event == "quit" then
-      return false
+      return false, event
    end
 
    if type(cb) ~= "function" then
@@ -503,7 +505,7 @@ function field_logic.query()
    field.map = nil
    field.is_active = false
 
-   return "title"
+   return event
 end
 
 return field_logic
