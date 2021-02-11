@@ -1,0 +1,78 @@
+rules:
+  - id: table-ctor-in-hot-loop
+    pattern-either:
+      - pattern: Draw.$X(..., {..., ..., ...}, ...)
+      - pattern: |
+          $X = {$X, $Y, $Z}
+          ...
+          Draw.$Y(..., $X, ...)
+      - pattern: self.t.$X.$Y:$Z(..., {..., ..., ...}, ...)
+      - pattern: 
+          $X = {$X, $Y, $Z}
+          ...
+          self.t.$X.$Y:$Z(..., {$X, $Y, $Z}, ...)
+      - pattern: function $X:draw(...) ... $Y(..., {..., ..., ...}, ...) ... end
+      - pattern: function $X:update(...) ... $Y(..., {..., ..., ...}, ...) ... end
+    message: "Draw call passing table in hot loop"
+    languages: [lua]
+    paths:
+      exclude:
+        - src/mod/*/data/**/*.lua
+    severity: ERROR
+  - id: implicit-global-map-argument
+    pattern-either:
+      - pattern: Chara.create($X, $Y, $Z)
+      - pattern: Charagen.create($X, $Y, $Z)
+      - pattern: Item.create($X, $Y, $Z)
+      - pattern: Itemgen.create($X, $Y, $Z)
+      - pattern: Chara.create($X, $Y, $Z, $W)
+      - pattern: Charagen.create($X, $Y, $Z, $W)
+      - pattern: Item.create($X, $Y, $Z, $W)
+      - pattern: Itemgen.create($X, $Y, $Z, $W)
+    message: "Function with implicit global map argument"
+    languages: [lua]
+    paths:
+      exclude:
+        - src/mod/*/data/**/*.lua
+    severity: ERROR
+  - id: implicit-global-map-argument-in-defn
+    pattern-either:
+      - pattern: $X = $X or field.map
+    message: "Function definition with implicit global map argument"
+    languages: [lua]
+    paths:
+      exclude:
+        - src/mod/*/data/**/*.lua
+    severity: WARNING
+  - id: deprecated-ai-syntax
+    pattern-either:
+      - pattern: $X.ai_state
+      - pattern: $X.item_using
+      - pattern: $X:reset_reaction_at(...)
+      - pattern: $X:get_reaction_at(...)
+      - pattern: $X:base_reaction_towards(...)
+      - pattern: $X:reaction_towards(...)
+      - pattern: $X:reaction_towards(...)
+      - pattern: $X:mod_reaction_towards(...)
+      - pattern: $X:reset_all_reactions(...)
+      - pattern: $X:mod_hate_at(...)
+      - pattern: $X:set_hate_at(...)
+      - pattern: $X:get_hate_at(...)
+      - pattern: $X:is_allied()
+      - pattern: $X:is_ally()
+      - pattern: $X:set_target()
+      - pattern: $X:get_target()
+      - pattern: $X:get_party_leader()
+      - pattern: $X:reset_ai()
+    message: "Deprecated AI syntax"
+    languages: [lua]
+    paths:
+      exclude:
+        - src/mod/*/data/**/*.lua
+    severity: ERROR
+  - id: deprecated-functions
+    pattern-either:
+      - pattern: string.nonempty(...)
+    message: "Deprecated functions"
+    languages: [lua]
+    severity: ERROR
