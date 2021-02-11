@@ -39,6 +39,7 @@ end
 
 function ConfigItemIntegerWidget:set_value(value)
    self.value = math.clamp(value, self.min_value or value, self.max_value or value)
+   self.text = I18N.get_optional("config.option." .. self.item._id .. ".formatter", self.value) or tostring(self.value)
 end
 
 function ConfigItemIntegerWidget:can_choose()

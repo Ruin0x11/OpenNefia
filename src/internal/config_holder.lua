@@ -137,4 +137,8 @@ function config_holder:__inspect()
    return ("config %s:%s"):format(self._mod_id, options)
 end
 
+function config_holder:__completions()
+   return table.keys(self._data)
+end
+
 return config_holder
