@@ -9,6 +9,7 @@ function ConfigItemIntegerWidget:init(item)
    IConfigItemWidget.init(self, item)
 
    self.item = item
+   self.text = ""
    self:set_value(0)
    self.min_value = item.min_value or nil
    self.max_value = item.max_value or nil
@@ -39,7 +40,13 @@ end
 
 function ConfigItemIntegerWidget:set_value(value)
    self.value = math.clamp(value, self.min_value or value, self.max_value or value)
-   self.text = I18N.get_optional("config.option." .. self.item._id .. ".formatter", self.value) or tostring(self.value)
+
+   local formatter = I18N.get_optional("config.option." .. self.item._id .. ".formatter", value)
+   if formatter then
+      self.text = I18N.get_optional(formatter, self.value) or formatter
+   else
+      self.text = tostring(self.value)
+   end
 end
 
 function ConfigItemIntegerWidget:can_choose()
@@ -60,7 +67,7 @@ function ConfigItemIntegerWidget:draw()
    end
 
    Draw.set_color(color)
-   Draw.text(tostring(self.value), self.x, self.y)
+   Draw.text(self.text, self.x, self.y)
 end
 
 function ConfigItemIntegerWidget:update()

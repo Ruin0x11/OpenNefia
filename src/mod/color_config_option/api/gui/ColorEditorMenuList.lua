@@ -28,6 +28,8 @@ function ColorEditorMenuList:make_keymap()
       enter = function() self.chosen = true end,
       west = function() self:change(self.model:selected_index(), -1) end,
       east = function() self:change(self.model:selected_index(), 1) end,
+      escape = function() self.canceled = true end,
+      cancel = function() self.canceled = true end,
    }
 end
 
@@ -96,6 +98,9 @@ function ColorEditorMenuList:draw()
 end
 
 function ColorEditorMenuList:update(dt)
+   if self.canceled then
+      return self.color, "canceled"
+   end
    if self.chosen then
       self.chosen = false
       return self.color

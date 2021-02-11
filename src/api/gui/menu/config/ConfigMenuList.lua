@@ -228,13 +228,18 @@ function ConfigMenuList:draw_item(item, i, x, y)
 
       local left, right = item.widget:can_change()
 
-      Draw.set_color(255, 255, 255)
       if left then
-         self.t.base.arrow_left:draw(x + 164, y - 5)
+         Draw.set_color(255, 255, 255)
+      else
+         Draw.set_color(255, 255, 255, 100)
       end
+      self.t.base.arrow_left:draw(x + 164, y - 5)
       if right then
-         self.t.base.arrow_right:draw(x + 302, y - 5)
+         Draw.set_color(255, 255, 255)
+      else
+         Draw.set_color(255, 255, 255, 100)
       end
+         self.t.base.arrow_right:draw(x + 302, y - 5)
    end
 end
 

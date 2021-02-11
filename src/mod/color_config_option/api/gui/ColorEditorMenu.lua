@@ -23,8 +23,6 @@ end
 
 function ColorEditorMenu:make_keymap()
    return {
-      escape = function() self.canceled = true end,
-      cancel = function() self.canceled = true end,
    }
 end
 
@@ -56,11 +54,7 @@ end
 function ColorEditorMenu:update(dt)
    self.win:update(dt)
 
-   if self.canceled then
-      return nil, "canceled"
-   end
-
-   local color = self.list:update(dt)
+   local color, canceled = self.list:update(dt)
    if color then
       Gui.play_sound("base.ok1")
       return color

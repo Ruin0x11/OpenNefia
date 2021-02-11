@@ -288,8 +288,8 @@ return {
             transparency = {
                doc = "古いメッセージをこのパーセンテージだけ透明にして表示します。",
                formatter = function(_1)
-                  return ("%s*10 %")
-                     :format(_1)
+                  return ("%s %%")
+                     :format(_1*10)
                end,
                name = "過去のﾒｯｾｰｼﾞの透過"
             },

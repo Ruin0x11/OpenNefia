@@ -282,8 +282,8 @@ return {
             transparency = {
                doc = "Controls the amount of transparency older message log messages receive.",
                formatter = function(_1)
-                  return ("%s*10 %")
-                     :format(_1)
+                  return ("%s %%")
+                     :format(_1*10)
                end,
                name = "Transparency"
             },
