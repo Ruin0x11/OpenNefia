@@ -149,17 +149,19 @@ local function make_fallbacks(fallbacks, fields)
    local result = table.deepcopy(fallbacks)
    for _, field in ipairs(fields) do
       local default = field.default
-      if type(field.default) == "table" then
-         local mt = getmetatable(field.default)
-         if mt then
-            if mt.__codegen_type == "block_string" then
-               default = field.default[1]
-            elseif mt.__codegen_type == "literal" then
-               default = nil
+      if not field.no_fallback then
+         if type(field.default) == "table" then
+            local mt = getmetatable(field.default)
+            if mt then
+               if mt.__codegen_type == "block_string" then
+                  default = field.default[1]
+               elseif mt.__codegen_type == "literal" then
+                  default = nil
+               end
             end
          end
+         result[field.name] = default
       end
-      result[field.name] = default
    end
    return result
 end

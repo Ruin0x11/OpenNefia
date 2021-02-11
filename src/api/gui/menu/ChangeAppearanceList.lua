@@ -38,13 +38,8 @@ local COLORS = {
    { 210, 250, 160 },
 }
 
-function ChangeAppearanceList:init()
-   self.model = ListModel:new({})
-   self.item_height = 21
-   self.chosen = false
-
-   self.input = InputHandler:new()
-   self.input:bind_keys {
+function ChangeAppearanceList:make_keymap()
+   return {
       north = function()
          self:select_previous()
          Gui.play_sound("base.cursor1")
@@ -57,6 +52,15 @@ function ChangeAppearanceList:init()
       west = function() self:decrement(self.model:selected_item()) end,
       east = function() self:increment(self.model:selected_item()) end,
    }
+end
+
+function ChangeAppearanceList:init()
+   self.model = ListModel:new({})
+   self.item_height = 21
+   self.chosen = false
+
+   self.input = InputHandler:new()
+   self.input:bind_keys(self:make_keymap())
 
    self.list_data = {
       [1] = {

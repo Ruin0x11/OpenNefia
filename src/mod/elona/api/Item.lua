@@ -473,8 +473,8 @@ function Item.fix_item(item, params)
       item.curse_state = Enum.CurseState.Normal
    end
 
-   if config["base.debug_autoidentify"] then
-      Effect.identify_item(item, config["base.debug_autoidentify"])
+   if config.base.debug_autoidentify then
+      Effect.identify_item(item, config.base.debug_autoidentify)
    else
       local player = Chara.player()
       if player and not is_shop and Item.is_equipment(item) then

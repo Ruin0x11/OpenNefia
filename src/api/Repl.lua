@@ -132,7 +132,7 @@ function Repl.generate_env(locals)
                keys[#keys+1] = ind
             end
          end,
-         __keys = keys
+         __completions = keys
    })
 
    if fs.exists("repl_startup.lua") then

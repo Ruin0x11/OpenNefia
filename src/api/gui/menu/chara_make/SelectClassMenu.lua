@@ -47,7 +47,7 @@ function SelectClassMenu:init(charamake_result)
             }
           end)
 
-   if not config["base.show_charamake_extras"] then
+   if not config.base.show_charamake_extras then
       classes = classes:filter(function(entry)
             return not entry.proto.is_extra
       end)

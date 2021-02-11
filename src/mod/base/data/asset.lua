@@ -1281,6 +1281,11 @@ local assets = {
       type = "color",
       color = {0, 0, 0}
    },
+   {
+      _id = "text_color_disabled",
+      type = "color",
+      color = {0, 0, 0, 128}
+   },
 
    {
       _id = "stat_penalty_color",

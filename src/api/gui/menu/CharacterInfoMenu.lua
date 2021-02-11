@@ -165,7 +165,7 @@ function CharacterInfoMenu:handle_select_skill(result)
             Gui.play_sound("base.spend1")
             CharacterInfoMenu.apply_skill_point(self.chara, result._id)
 
-            if not config["base.debug_infinite_skill_points"] then
+            if not config.base.debug_infinite_skill_points then
                self.chara.skill_bonus = self.chara.skill_bonus - 1
             end
 

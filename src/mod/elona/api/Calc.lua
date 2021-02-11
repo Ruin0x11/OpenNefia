@@ -226,7 +226,7 @@ function Calc.calc_item_value(item, mode, is_shop)
       end
    end
 
-   if config["base.development_mode"] and value <= 0 then
+   if config.base.development_mode and value <= 0 then
       value = 1
    end
 

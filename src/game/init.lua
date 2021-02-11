@@ -7,6 +7,7 @@ local Event = require("api.Event")
 local SaveFs = require("api.SaveFs")
 local RestoreSaveMenu = require("api.gui.menu.RestoreSaveMenu")
 local Save = require("api.Save")
+local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
 
 local chara_make = require("game.chara_make")
 local config = require("internal.config")
@@ -62,6 +63,8 @@ local function main_title()
                action = "start"
             end
          end
+      elseif choice == "options" then
+         ConfigMenuWrapper:new(true):query()
       elseif choice == "exit" then
          going = false
          action = "quit"
@@ -89,7 +92,7 @@ function game.loop()
    Event.trigger("base.on_startup")
 
    local cb
-   if config["base.quickstart_on_startup"] then
+   if config.base.quickstart_on_startup then
       field_logic.quickstart()
       cb = run_field
    else
@@ -105,10 +108,12 @@ function game.loop()
       else
          if action == "start" then
             cb = run_field
-         elseif action == "title" then
+         elseif action == "title_screen" then
             cb = main_title
          elseif action == "quit" then
             going = false
+         else
+            error("unknown top-level action " .. tostring(action))
          end
       end
    end

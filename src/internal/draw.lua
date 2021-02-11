@@ -357,6 +357,15 @@ function draw.use_shader(filename)
    love.graphics.setShader(filename)
 end
 
+local FALLBACK_FONT = fs.join("data/font", "kochi-gothic-subst.ttf")
+local default_font = FALLBACK_FONT
+
+function draw.set_default_font(font)
+   local path = fs.join("data/font", font)
+   assert(fs.exists(path), "Font file " .. path .. " does not exist")
+   default_font = default_font
+end
+
 local font_cache = setmetatable({}, { __mode = "v" })
 function draw.set_font(size, style, filename)
    if type(size) == "table" then
@@ -366,7 +375,7 @@ function draw.set_font(size, style, filename)
    end
    assert(type(size) == "number")
    style = style or "normal"
-   filename = filename or fs.join("data/font", config["base.default_font"])
+   filename = filename or default_font
    if not font_cache[size] then font_cache[size] = setmetatable({}, { __mode = "v" }) end
    font_cache[size][filename] = font_cache[size][filename]
       or love.graphics.newFont(filename, size, "mono")
@@ -414,17 +423,18 @@ end
 
 function draw.set_fullscreen(kind, width, height)
    if not width or not height then
-      width = WIDTH
-      height = HEIGHT
+      local w, h = love.window.getMode()
+      width = w
+      height = h
    end
 
    local mode = {}
    if kind == "windowed" then
       mode.fullscreen = false
-   elseif kind == "fullscreen" then
+   elseif kind == "exclusive" then
       mode.fullscreen = true
       mode.fullscreentype = "exclusive"
-   elseif kind == "desktop_fullscreen" then
+   elseif kind == "desktop" then
       mode.fullscreen = true
       mode.fullscreentype = "desktop"
    else

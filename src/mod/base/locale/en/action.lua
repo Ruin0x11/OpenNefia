@@ -293,7 +293,8 @@ return {
          choices = {
             cancel = "Cancel",
             exit = "Exit",
-            game_setting = "Game Setting"
+            game_setting = "Game Setting",
+            return_to_title = "Return to Title"
          },
          prompt = "Do you want to save the game and exit?",
          saved = "Your game has been saved successfully.",

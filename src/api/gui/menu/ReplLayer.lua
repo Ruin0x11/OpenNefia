@@ -477,9 +477,9 @@ function ReplLayer.format_repl_result(result, show_metatables)
       -- `inspect` should be modified to account for this.
       local mt = getmetatable(result)
 
-      if result.__enum then
+      if pcall(function() return result.__enum end) then
          result_text = inspect(result)
-      elseif result._type and result._id then
+      elseif pcall(function() return result._type and result._id end) then
          result_text = inspect(Object.make_prototype(result), inspect_opts)
       elseif tostring(result) == "<generator>" then
          -- Wrap in a protected function in case running the generator

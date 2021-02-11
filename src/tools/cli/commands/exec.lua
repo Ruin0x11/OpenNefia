@@ -19,6 +19,8 @@ local function get_chunk(args)
 end
 
 return function(args)
+   local chunk = get_chunk(args)
+
    if not fs.exists(fs.get_save_directory()) then
       fs.create_directory(fs.get_save_directory())
    end
@@ -33,7 +35,6 @@ return function(args)
       util.load_game()
    end
 
-   local chunk = get_chunk(args)
    local exec_env = env.generate_sandbox("exec")
    setfenv(chunk, exec_env)
    chunk()

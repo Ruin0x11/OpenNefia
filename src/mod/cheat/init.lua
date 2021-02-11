@@ -62,7 +62,7 @@ local function enable_themes()
       themes[#themes+1] = "ceri_items.ceri_items"
    end
 
-   config["base.themes"] = themes
+   config.base.themes = themes
 end
 
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)

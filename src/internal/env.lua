@@ -1,7 +1,6 @@
 local Log = require("api.Log")
 local fs = require("util.fs")
 local paths = require("internal.paths")
-local config = require("internal.config")
 local main_state = require("internal.global.main_state")
 
 --- Module and mod environment functions. This module implements
@@ -156,10 +155,10 @@ local NATIVE_REQUIRES = table.set {
 local global_require = require
 
 local function can_load_native_libs(mod_env)
-   local setting = config["base.enable_native_libs"]
+   local setting = "always"
    if setting == "base" then
       return not not mod_env
-   elseif setting then
+   elseif setting == "always" then
       return true
    end
 
@@ -319,7 +318,8 @@ local function safe_load_chunk(path)
    elseif load_type == "mod" then
       local mod_name = extract_mod_name(path)
 
-      if not config["base.disable_strict_load_order"]
+      local disable_strict_load_order = true
+      if not disable_strict_load_order
          and not (mod_name == main_state.currently_loading_mod or main_state.loaded_mods[mod_name])
       then
          error(("Mod name '%s' is not yet loaded. Please ensure you've specified it as a dependency of %s."):format(mod_name, main_state.currently_loading_mod))

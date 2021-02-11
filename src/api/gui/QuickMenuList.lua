@@ -194,7 +194,7 @@ function QuickMenuList:draw_item(item, i, x, y, key_name)
       asset = self.t.base.quick_menu_item
    end
 
-   local frame = math.floor(self.frame * config["base.anim_wait"])
+   local frame = math.floor(self.frame * config.base.anime_wait)
    local cnt = frame + i - 1
    local alpha = cnt % 10 * cnt % 10 * 12 * (((cnt % 50) < 10) and 1 or 0)
 

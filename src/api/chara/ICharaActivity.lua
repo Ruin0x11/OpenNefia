@@ -49,7 +49,7 @@ end
 function ICharaActivity:pass_activity_turn()
    -- TODO the performance of Gui.update_screen() is terrible, so this causes a
    -- lot of lag. There has to be some amount of optimization we can do.
-   local auto_turn = config["base.auto_turn_speed"]
+   local auto_turn = config.base.auto_turn_speed
 
    if auto_turn == "high" then
       Gui.wait(self.activity.animation_wait, true)

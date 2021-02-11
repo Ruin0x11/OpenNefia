@@ -486,7 +486,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
       return true
    end
 
-   if not config["base.debug_no_spell_failure"] then
+   if not config.base.debug_no_spell_failure then
       if Rand.rnd(100) >= Skill.calc_spell_success_chance(skill_id, caster) then
          if caster:is_in_fov() then
             Gui.mes("action.cast.fail", caster)

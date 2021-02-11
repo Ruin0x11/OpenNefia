@@ -77,7 +77,7 @@ local quality_info = {
    },
    {
       pred = function(i)
-         return i:calc("is_alive") and config["base.development_mode"]
+         return i:calc("is_alive") and config.base.development_mode
       end,
       desc = function(i)
          -- TODO living weapon

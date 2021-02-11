@@ -34,18 +34,18 @@ function field_logic.setup_new_game(player)
 
    save.base.home_map_uid = save.base.home_map_uid or Map.current().uid
    assert(save.base.home_map_uid)
-   config["base._save_id"] = ("%s_%d"):format(Chara.player().name, os.time())
+   config.base._save_id = ("%s_%d"):format(Chara.player().name, os.time())
    Env.update_play_time()
 
    Event.trigger("base.on_new_game")
 end
 
 function field_logic.quickstart()
-   config["base._save_id"] = "quickstart"
+   config.base._save_id = "quickstart"
    field:init_global_data()
 
-   save.base.scenario = config["base.quickstart_scenario"]
-   assert(config["base.quickstart_scenario"])
+   save.base.scenario = config.base.quickstart_scenario
+   assert(config.base.quickstart_scenario)
    assert(save.base.scenario)
 
    local me = Chara.create("content.player", nil, nil, {ownerless=true})
@@ -415,7 +415,7 @@ function field_logic.player_died(player)
       return "turn_begin"
    end
 
-   return "quit"
+   return "title_screen"
 end
 
 function field_logic.run_one_event(event, target_chara)
@@ -455,8 +455,10 @@ function field_logic.run_one_event(event, target_chara)
       cb = field_logic.npc_turn
    elseif event == "pass_turns" then
       cb = field_logic.pass_turns
+   elseif event == "title_screen" then
+      return false, event
    elseif event == "quit" then
-      return false
+      return false, event
    end
 
    if type(cb) ~= "function" then
@@ -503,7 +505,7 @@ function field_logic.query()
    field.map = nil
    field.is_active = false
 
-   return "title"
+   return event
 end
 
 return field_logic

@@ -1,19 +1,24 @@
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 
-config["min_mes_window.enabled"] = false
-config["min_mes_window.max_width"] = 400
-config["min_mes_window.max_height"] = 100
+data:add_multi(
+   "base.config_option",
+   {
+      { _id = "enabled", type = "boolean", default = true },
+      { _id = "max_width", type = "integer", default = 400 },
+      { _id = "max_height", type = "integer", default = 100 },
+   }
+)
 
 local function mes_window_position(self, x, y, width, height)
-   local w = config["min_mes_window.max_width"]
-   local h = config["min_mes_window.max_height"]
+   local w = config.min_mes_window.max_width
+   local h = config.min_mes_window.max_height
    return x + 124, height - (h + 16), math.min(width - 124, w), h
 end
 
 local function setup_min_mes_window()
    local holder = Gui.hud_widget("hud_message_window")
-   if config["min_mes_window.enabled"] then
+   if config.min_mes_window.enabled then
       holder:set_position(mes_window_position)
 
       -- TODO: this is an ugly hack and should not exist. figure out how this

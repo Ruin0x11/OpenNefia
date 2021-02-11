@@ -1536,3 +1536,84 @@ base.
 data:add_type {
    name = "role",
 }
+
+data:add_type {
+   name = "config_option_type",
+   fields = {
+      {
+         name = "validate",
+         template = true,
+         default = CodeGenerator.gen_literal [[
+   function(value, option)
+      return true
+end
+]],
+         doc = [[
+Used to validate if a value for this option is valid.
+]]
+      },
+      {
+         name = "widget",
+         template = true,
+         type = "string",
+         doc = [[
+Require path of the widget used to display this config option.
+
+It must implement IConfigItemWidget.
+]]
+      },
+      {
+         name = "fields",
+         type = "table",
+         doc = [[
+Extra fields for configuring this config option.
+]]
+      }
+   }
+}
+
+data:add_type {
+   name = "config_option",
+   fields = {
+      {
+         name = "type",
+         template = true,
+         default = "boolean",
+         no_fallback = true,
+         doc = [[
+Type of this config option.
+
+One of "boolean", "string", "number", "integer" "enum", "table", "data_id" or "any".
+]]
+      },
+      {
+         name = "default",
+         template = true,
+         default = true,
+         no_fallback = true,
+         doc = [[
+Default value of this config option.
+]]
+      },
+      {
+         name = "choices",
+         default = CodeGenerator.gen_literal "{}",
+         no_fallback = true,
+         doc = [[
+Only used if the type is "enum".
+
+The list of enum variants of this config option.
+]]
+      },
+      {
+         name = "data_type",
+         default = "base.chara",
+         no_fallback = true,
+         doc = [[
+Only used if the type is "data_id".
+
+The data type of the ID in this config option.
+]]
+      }
+   }
+}

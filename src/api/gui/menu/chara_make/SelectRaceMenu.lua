@@ -44,7 +44,7 @@ function SelectRaceMenu:init(charamake_data)
             }
           end)
 
-   if not config["base.show_charamake_extras"] then
+   if not config.base.show_charamake_extras then
       races = races:filter(function(entry)
             return not entry.proto.is_extra
       end)

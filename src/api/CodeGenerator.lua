@@ -201,7 +201,11 @@ function CodeGenerator:write_table(t)
             local count = 0
             for i=1, sequence_length do
                if count > 0 then self:write(',') end
-               self:write(' ')
+               if self.always_tabify then
+                  self:tabify()
+               else
+                  self:puts(' ')
+               end
                self:write_value(t[i])
                count = count + 1
             end
@@ -217,7 +221,7 @@ function CodeGenerator:write_table(t)
             end
       end)
 
-      if non_sequential_keys_length > 0 or type(mt) == 'table' then -- result is multi-lined. Justify closing }
+    if non_sequential_keys_length > 0 or type(mt) == 'table' or self.always_tabify then -- result is multi-lined. Justify closing }
          self:tabify()
       elseif sequence_length > 0 then -- array tables have one extra space before closing }
          self:write(' ')
@@ -247,8 +251,10 @@ function CodeGenerator:write_value(v)
       else
          self:write_table(v)
       end
-   else
+   elseif self.strict then
       error(("cannot output value of type '%s' as lua code"):format(tv))
+   else
+      self:write(tostring(v))
    end
 end
 
@@ -331,9 +337,14 @@ end
 function CodeGenerator:init(options)
    options       = options or {}
 
-   local depth   = options.depth   or math.huge
-   local newline = options.newline or '\n'
-   local indent  = options.indent  or '  '
+   local depth         = options.depth   or math.huge
+   local newline       = options.newline or '\n'
+   local indent        = options.indent  or '  '
+   local always_tabify = options.always_tabify or nil
+   local strict        = options.strict
+   if strict == nil then
+      strict = true
+   end
 
    self.depth            = depth
    self.level            = 0
@@ -343,6 +354,8 @@ function CodeGenerator:init(options)
    self.in_table         = {}
    self.newline          = newline
    self.indent           = indent
+   self.always_tabify    = always_tabify
+   self.strict           = strict
    self.bol              = true
 end
 

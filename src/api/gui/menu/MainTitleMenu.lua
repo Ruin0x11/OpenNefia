@@ -101,7 +101,8 @@ function MainTitleMenu:relayout(x, y, width, height)
 end
 
 function MainTitleMenu:draw()
-   self.t.base.title:draw(0, 0, Draw.get_width(), Draw.get_height(), {255, 255, 255})
+   Draw.set_color(255, 255, 255)
+   self.t.base.title:draw(0, 0, Draw.get_width(), Draw.get_height())
 
    Draw.set_font(13)
 
