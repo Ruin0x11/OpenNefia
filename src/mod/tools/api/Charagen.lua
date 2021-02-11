@@ -75,7 +75,7 @@ function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, t
          end
 
          for _, tag in ipairs(tag_filters) do
-            if not table.has_value(chara.tags or {}, tag) then
+            if not table.index_of(chara.tags or {}, tag) then
                return false
             end
          end

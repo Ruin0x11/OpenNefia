@@ -12,26 +12,14 @@ data:add_multi(
          -- <<<<<<<< elona122/shade2/help.hsp:873 		dx=370:dy=270 ..
 
          items = {
-            { _type = "base.config_menu", _id = "base.anime" }
-         }
-      }
-   }
-)
-
-data:add_multi(
-   "base.config_menu",
-   {
-      {
-         _id = "anime",
-
-         -- >>>>>>>> elona122/shade2/help.hsp:898 		dx=440:dy=300 ...
-         menu_width = 440,
-         menu_height = 300,
-         -- <<<<<<<< elona122/shade2/help.hsp:898 		dx=440:dy=300 ..
-
-         items = {
-            "base.screen_refresh",
-            "base.skip_scene_playback"
+            { _type = "base.config_menu", _id = "base.game" },
+            { _type = "base.config_menu", _id = "base.screen" },
+            { _type = "base.config_menu", _id = "base.net" },
+            { _type = "base.config_menu", _id = "base.anime" },
+            { _type = "base.config_menu", _id = "base.input" },
+            { _type = "base.config_menu", _id = "base.keybindings" },
+            { _type = "base.config_menu", _id = "base.message" },
+            { _type = "base.config_menu", _id = "base.language" }
          }
       }
    }

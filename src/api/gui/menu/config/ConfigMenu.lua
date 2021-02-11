@@ -15,8 +15,6 @@ ConfigMenu:delegate("input", IInput)
 function ConfigMenu:init(config_menu_id)
    local config_menu = data["base.config_menu"]:ensure(config_menu_id)
 
-   self.width = config_menu.menu_width or 440
-   self.height = config_menu.menu_height or math.max(260 + #config_menu.items * 20, 300)
    self.config_menu = config_menu
 
    self.win = UiWindow:new("config.menu." .. config_menu_id .. ".name", true)
@@ -39,6 +37,8 @@ function ConfigMenu:on_query()
 end
 
 function ConfigMenu:relayout()
+   self.width = self.config_menu.menu_width or 440
+   self.height = self.config_menu.menu_height or math.max(160 + #self.config_menu.items * 20, 300)
    self.x, self.y = Ui.params_centered(self.width, self.height)
    self.y = self.y - 12
 

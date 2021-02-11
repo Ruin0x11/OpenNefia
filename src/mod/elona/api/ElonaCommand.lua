@@ -320,7 +320,7 @@ function ElonaCommand.do_sleep(player, bed, params)
 
    if not params.no_animation then
       Gui.mes_halt()
-      Gui.play_music()
+      -- Gui.play_music()
    end
 
    -- TODO autosave

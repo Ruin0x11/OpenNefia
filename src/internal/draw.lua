@@ -423,17 +423,18 @@ end
 
 function draw.set_fullscreen(kind, width, height)
    if not width or not height then
-      width = WIDTH
-      height = HEIGHT
+      local w, h = love.window.getMode()
+      width = w
+      height = h
    end
 
    local mode = {}
    if kind == "windowed" then
       mode.fullscreen = false
-   elseif kind == "fullscreen" then
+   elseif kind == "exclusive" then
       mode.fullscreen = true
       mode.fullscreentype = "exclusive"
-   elseif kind == "desktop_fullscreen" then
+   elseif kind == "desktop" then
       mode.fullscreen = true
       mode.fullscreentype = "desktop"
    else

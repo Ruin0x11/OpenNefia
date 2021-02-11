@@ -28,20 +28,38 @@ local function verify_option(value, option)
 end
 
 local function set_default_option(option)
+   local default = option.default
+
    if option.default == nil then
-      return
+      -- If this option does not specify a default, fall back to the default for
+      -- this type overall. For example, numbers should return 0, strings should
+      -- return "", enums should return the first choice in the list, etc.
+      local ty = option.type
+      if not string.find(ty, "%.") then
+         ty = "base." .. ty
+      end
+      local config_option_type = data["base.config_option_type"]:ensure(ty)
+      default = config_option_type.default
+      print(default)
+      if type(default) == "function" then
+         default = default(option)
+      end
+
+      if default == nil then
+         return
+      end
    end
 
-   local ok, err = verify_option(option.default, option)
+   local ok, err = verify_option(default, option)
    if not ok then
       error(("Invalid default for config option '%s': %s"):format(option._id, err))
    end
 
    if type(option.default) == "table" then
-      return table.deepcopy(option.default)
+      return table.deepcopy(default)
    end
 
-   return option.default
+   return default
 end
 
 function config_holder:__index(k)

@@ -527,14 +527,14 @@ function table.insertion_sort(arr, f)
    end
 end
 
-function table.has_value(tbl, value)
-   for _, v in ipairs(tbl) do
+function table.index_of(tbl, value)
+   for i, v in ipairs(tbl) do
       if v == value then
-         return true
+         return i
       end
    end
 
-   return false
+   return nil
 end
 
 

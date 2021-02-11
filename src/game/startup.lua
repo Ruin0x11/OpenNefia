@@ -133,6 +133,7 @@ function startup.run(mods)
       Log.warn("Saving the config for the first time.")
       config_store.save()
    end
+   config_store.trigger_on_changed()
 
    draw.set_default_font(config.base.default_font)
 

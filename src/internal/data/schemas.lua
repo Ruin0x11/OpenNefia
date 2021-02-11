@@ -1579,6 +1579,7 @@ data:add_type {
          name = "type",
          template = true,
          default = "boolean",
+         no_fallback = true,
          doc = [[
 Type of this config option.
 
@@ -1589,6 +1590,7 @@ One of "boolean", "string", "number", "integer" "enum", "table", "data_id" or "a
          name = "default",
          template = true,
          default = true,
+         no_fallback = true,
          doc = [[
 Default value of this config option.
 ]]
@@ -1596,6 +1598,7 @@ Default value of this config option.
       {
          name = "choices",
          default = CodeGenerator.gen_literal "{}",
+         no_fallback = true,
          doc = [[
 Only used if the type is "enum".
 
@@ -1605,6 +1608,7 @@ The list of enum variants of this config option.
       {
          name = "data_type",
          default = "base.chara",
+         no_fallback = true,
          doc = [[
 Only used if the type is "data_id".
 

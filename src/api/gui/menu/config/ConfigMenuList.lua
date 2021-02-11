@@ -81,7 +81,7 @@ function ConfigMenuList:make_keymap()
          self:select_next()
          Gui.play_sound("base.cursor1")
       end,
-      enter = function() self:choose(self.model:selected_item(), self.model:selected_index()) end,
+      enter = function() self:choose(self.model:selected_index()) end,
       west = function() self:change(self.model:selected_item(), -1) end,
       east = function() self:change(self.model:selected_item(), 1) end,
    }
@@ -138,8 +138,10 @@ function ConfigMenuList:can_choose(item, i)
    return item.widget:can_choose()
 end
 
-function ConfigMenuList:choose(item, i)
-   if not self:can_choose(item) then
+function ConfigMenuList:choose(i)
+   local item = self.model:get(i)
+
+   if not item or not self:can_choose(item) then
       return
    end
 

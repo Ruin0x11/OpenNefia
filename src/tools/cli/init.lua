@@ -12,14 +12,6 @@ local Log = require("api.Log")
 local function build_app()
    local parser = argparse("opennefia", "An open-source engine reimplementation of Elona.")
 
-   -- parser:option("-l --preload", "Execute the equivalent of require('modulename') before executing the tl script(s).")
-   --    :argname("<modulename>")
-   --    :count("*")
-
-   -- parser:option("-I --include-dir", "Prepend this directory to the module search path.")
-   --    :argname("<directory>")
-   --    :count("*")
-
    parser:flag("--version", "Prints the version and exits.")
    parser:option("--log-level", "Sets the log level.", "info"):choices({"error", "warn", "info", "debug", "trace"})
    parser:option("--working-dir", "Sets the working directory.", "src/")
@@ -71,7 +63,6 @@ for _, filepath in fs.iter_directory_paths("tools/cli/commands", true) do
 end
 
 local function run_app(argv, opts)
-   print(inspect(argv), inspect(opts))
    opts = opts or {}
    local app = build_app()
    local args = app:parse(argv)

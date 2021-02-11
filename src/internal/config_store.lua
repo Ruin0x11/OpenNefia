@@ -27,6 +27,19 @@ function config_store.clear()
    table.replace_with(config_data, {})
 end
 
+function config_store.trigger_on_changed()
+   local data = require("internal.data")
+   for mod_id, store in pairs(config_data) do
+      for k, _ in pairs(store._data) do
+         local option = data["base.config_option"]:ensure(mod_id .. "." .. k)
+         if option.on_changed then
+            Log.debug("Running on_changed callback: " .. k)
+            option.on_changed(store[k], true)
+         end
+      end
+   end
+end
+
 function config_store.save()
    Log.info("Saving config.")
    return SaveFs.write("config", config_data)

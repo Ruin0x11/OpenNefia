@@ -17,6 +17,8 @@ data:add_multi(
          fields = {},
          widget = "api.gui.menu.config.item.ConfigItemBooleanWidget",
 
+         default = false,
+
          validate = function(option, value)
             local ok, err = typecheck(value, "boolean")
             if not ok then
@@ -30,6 +32,10 @@ data:add_multi(
 
          fields = { min_value = "number", max_value = "number" },
          widget = "api.gui.menu.config.item.ConfigItemNumberWidget",
+
+         default = function(option)
+            return option.min_value or 0
+         end,
 
          validate = function(option, value)
             local ok, err = typecheck(value, "number")
@@ -61,6 +67,10 @@ data:add_multi(
          fields = { min_value = "integer", max_value = "integer" },
          widget = "api.gui.menu.config.item.ConfigItemIntegerWidget",
 
+         default = function(option)
+            return option.min_value or 0
+         end,
+
          validate = function(option, value)
             if math.type(value) ~= "integer" then
                return false, ("expected integer, got %s"):format(math.type(value))
@@ -91,9 +101,28 @@ data:add_multi(
          fields = { choices = "table" },
          widget = "api.gui.menu.config.item.ConfigItemEnumWidget",
 
+         default = function(option)
+            local choices = option.choices
+            if type(choices) == "function" then
+               choices = choices()
+               if not type(choices) == "table" then
+                  error(("Choices returned from callback must be table, got: %s"):format(tostring(choices)))
+               end
+            end
+            print(inspect(choices))
+            return choices[1]
+         end,
+
          validate = function(option, value)
-            if not table.set(option.choices)[value] then
-               return false, ("value '%s' is not contained in choices set '%s'"):format(value, inspect(option.choices, {newline=" "}))
+            local choices = option.choices
+            if type(choices) == "function" then
+               choices = choices()
+               if not type(choices) == "table" then
+                  return false, ("Choices returned from callback must be table, got: %s"):format(tostring(choices))
+               end
+            end
+            if not table.set(choices)[value] then
+               return false, ("value '%s' is not contained in choices set '%s'"):format(value, inspect(choices, {newline=" "}))
             end
             return true
          end,
@@ -103,6 +132,8 @@ data:add_multi(
 
          fields = { max_length = "integer" },
          widget = "api.gui.menu.config.item.ConfigItemStringWidget",
+
+         default = "",
 
          validate = function(option, value)
             local ok, err = typecheck(value, "string")
@@ -132,7 +163,15 @@ data:add_multi(
          fields = {},
          widget = function(proto)
             local ConfigItemEnumWidget = require("api.gui.menu.config.item.ConfigItemEnumWidget")
+            local sort = function(a, b) return a < b end
+            local proto = {
+               choices = data[proto.data_type]:iter():extract("_id"):into_sorted(sort):to_list()
+            }
             return ConfigItemEnumWidget:new(proto)
+         end,
+
+         default = function(option)
+            return data[option.data_type]:iter():nth(1)._id
          end,
 
          validate = function(option, value)
@@ -142,6 +181,11 @@ data:add_multi(
             end
 
             local proxy = data[option.data_type]
+            local len = proxy:iter():length()
+            if len == 0 then
+               return false, ("Data type %s has no entries"):format(option.data_type)
+            end
+
             ok, err = pcall(proxy.ensure, proxy, value)
             if not ok then
                return false, err

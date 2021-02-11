@@ -7,7 +7,7 @@ local SceneLayer = require("mod.elona_sys.scene.api.SceneLayer")
 local Scene = {}
 
 function Scene.play(id)
-   if config.base.skip_scene_playback then
+   if not config.base.story then
       return
    end
    local scene_data = data["elona_sys.scene"][id]

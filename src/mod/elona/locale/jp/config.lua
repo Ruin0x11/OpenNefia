@@ -315,8 +315,8 @@ end,
         },
         start_run_wait = {
           formatter = function(_1)
-  return ("%s %s+1 steps")
-  :format(After , _1)
+  return ("After %s+1 steps")
+  :format(_1)
 end,
           name = "走り開始の速さ"
         },
