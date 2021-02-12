@@ -93,7 +93,7 @@ data:add {
       local target = params.target
       local map = params.source:current_map()
 
-      if not source:is_player() or target:is_allied() then
+      if not source:is_player() or target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -113,7 +113,7 @@ data:add {
       if target:calc("quality") >= Enum.Quality.Good then
          Gui.mes("magic.domination.cannot_be_charmed")
       elseif success then
-         target:recruit_as_ally()
+         source:recruit_as_ally(target)
       else
          Gui.mes("magic.common.resists")
       end
@@ -141,7 +141,7 @@ local function do_curse(self, params)
       return true
    end
 
-   if target:is_allied() then
+   if target:is_in_player_party() then
       if target:has_trait("elona.res_curse") and Rand.one_in(3) then
          Gui.mes("magic.curse.no_effect")
          return true
@@ -342,7 +342,7 @@ local function do_sense(self, params, passes, reveal_cb, forget_cb, message)
    local power = params.power
    local map = params.source:current_map()
 
-   if not source:is_allied() then
+   if not source:is_in_player_party() then
       Gui.mes("common.nothing_happens")
       return false, { obvious = false }
    end
@@ -649,7 +649,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      if not target:is_allied() then
+      if not target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true
       end
@@ -1089,7 +1089,7 @@ data:add {
 
       if source:is_player() then
          Skill.modify_impression(ally, 15)
-         if not ally:is_allied() then
+         if not ally:is_in_player_party() then
             Effect.modify_karma(source, 2)
          end
       end

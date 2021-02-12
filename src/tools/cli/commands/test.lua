@@ -16,6 +16,7 @@ local Log = require("api.Log")
 -- functions that are named "test_*".
 local function make_test_env()
    local tests = env.generate_sandbox("__test__")
+   tests.require = require
 
    local mt = { __tests = {}, __declared = {} }
 
@@ -114,14 +115,14 @@ return function(args)
       fs.create_directory(fs.get_save_directory())
    end
 
-   local mods = mod.scan_mod_dir()
+   local enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+   local mods = mod.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
 
    Event.trigger("base.on_startup")
    field:init_global_data()
 
    local seed = args.seed or math.floor(socket.gettime())
-   config.base.default_seed = seed
 
    print("Seed: " .. seed)
    print("")
@@ -135,16 +136,31 @@ return function(args)
    local failures = 0
    local total = 0
 
-   for _, file in fs.iter_directory_items("test/unit/") do
-      if string.match(file, filter_file_name) then
-         local path = fs.join("test/unit/", file)
-         local failures_, total_ = test_file(path, filter_test_name, seed, args.debug_on_error)
-         failures = failures + failures_
-         total = total + total_
+   local function get_files(path)
+      local items = fs.get_directory_items(path)
+      local files = fun.iter(items):map(function(f) return fs.join(path, f) end):to_list()
+      return files
+   end
+   local files = get_files("test/unit/")
+
+   while #files > 0 do
+      local path = files[#files]
+      files[#files] = nil
+      if fs.is_directory(path) then
+         table.append(files, get_files(path))
+      else
+         if string.match(path, filter_file_name) then
+            local failures_, total_ = test_file(path, filter_test_name, seed, args.debug_on_error)
+            failures = failures + failures_
+            total = total + total_
+         end
       end
    end
 
+   print()
    if failures > 0 then
-      error(("%d/%d failing tests."):format(failures, total))
+      print(ansicolors(("%%{red}%d/%d tests failed.%%{reset}"):format(failures, total)))
+   else
+      print(ansicolors(("%%{green}%d tests passed.%%{reset}"):format(total)))
    end
 end

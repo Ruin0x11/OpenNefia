@@ -39,3 +39,4 @@ jobs:
       run: |
         set -e
         ./OpenNefia verify -l
+        ./OpenNefia test

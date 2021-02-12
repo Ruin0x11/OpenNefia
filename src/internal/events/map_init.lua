@@ -42,7 +42,7 @@ local function reset_chara_flags(map)
       end
 
       if Chara.is_alive(chara) then
-         if not chara:is_allied() then
+         if not chara:is_in_player_party() then
             chara.hp = chara:calc("max_hp")
             chara.mp = chara:calc("max_mp")
             chara.insanity = 0
@@ -124,6 +124,12 @@ local function renew_major(map)
          if chara.is_summoned and Rand.one_in(2) then
             chara:remove_ownership()
          end
+      elseif chara.state == "Dead" then
+         local party = chara:get_party()
+         if party then
+            assert(save.base.parties:remove_member(party.uid, chara))
+         end
+         chara:remove_ownership()
       end
    end
 
@@ -173,7 +179,7 @@ local function recalculate_crowd(map)
       if not map.no_aggro_refresh then
          chara:reset_ai()
       end
-      if not chara:is_allied() and chara.state ~= "Dead" then
+      if not chara:is_in_player_party() and chara.state ~= "Dead" then
          map.crowd_density = map.crowd_density + 1
       end
    end

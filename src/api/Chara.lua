@@ -64,15 +64,6 @@ function Chara.iter(map)
    return Chara.iter_all(map):filter(Chara.is_alive)
 end
 
---- Iterates the characters in the player's party, including the
---- player themselves.
----
---- @treturn Iterator(IChara)
-function Chara.iter_party(map)
-   local party = table.append({ Chara.player().uid }, save.base.allies)
-   return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
-end
-
 --- Iterates the characters in the player's party, not including the
 --- player.
 ---
@@ -86,7 +77,7 @@ end
 --- @treturn Iterator(IChara)
 function Chara.iter_others(map)
    map = map or field.map
-   return map:iter_charas():filter(function(c) return not c:is_allied() end)
+   return map:iter_charas():filter(function(c) return not c:is_in_player_party() end)
 end
 
 --- Looks for a character with the given UID or base.chara ID in the
@@ -154,6 +145,13 @@ function Chara.set_player(chara)
    end
 
    chara:emit("base.on_set_player", {previous_player=field.player})
+
+   local party_id = chara:get_party()
+   if not party_id then
+      party_id = save.base.parties:add_party()
+      save.base.parties:add_member(party_id, chara)
+   end
+   save.base.parties:set_leader(party_id, chara)
 
    field.player = chara
 

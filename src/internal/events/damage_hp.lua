@@ -43,7 +43,7 @@ local function on_kill_chara(victim, params)
       if attacker:is_player() then
          attacker.sleep_experience = attacker.sleep_experience + gained_exp
       end
-      if attacker:is_in_party() then
+      if attacker:get_party() then
          attacker:set_target(nil)
          attacker:get_party_leader():set_target(nil)
       end

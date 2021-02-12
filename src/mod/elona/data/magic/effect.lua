@@ -1412,7 +1412,7 @@ data:add {
       local target = params.target
       local item = params.item
 
-      if not target:is_allied() then
+      if not target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end

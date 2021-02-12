@@ -146,13 +146,21 @@ function mod.calculate_load_order(mods)
    return final
 end
 
-function mod.scan_mod_dir()
+--- @tparam table mod_ids list of mod_ids to scan for
+function mod.scan_mod_dir(mod_ids)
+   mod_ids = mod_ids or nil
+   if mod_ids then
+      mod_ids = table.set(mod_ids)
+   end
+
    local mods = {}
 
    for _, mod_id in fs.iter_directory_items(MOD_DIR .. "/") do
-      local manifest_file = fs.find_loadable(MOD_DIR, mod_id, "mod")
-      if manifest_file then
-         mods[#mods+1] = manifest_file
+      if not mod_ids or (mod_ids[mod_id]) then
+         local manifest_file = fs.find_loadable(MOD_DIR, mod_id, "mod")
+         if manifest_file then
+            mods[#mods+1] = manifest_file
+         end
       end
    end
 

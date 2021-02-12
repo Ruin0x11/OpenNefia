@@ -11,7 +11,7 @@ function SkillCheck.try_to_reveal(chara)
 end
 
 function SkillCheck.proc_control_magic(source, target, damage)
-   if source:has_skill("elona.control_magic") and source:is_in_same_faction(target) then
+   if source:has_skill("elona.control_magic") and source:is_in_same_party(target) then
       local level = source:skill_level("elona.control_magic")
       if level * 5 > Rand.rnd(damage+1) then
          damage = 0

@@ -188,7 +188,7 @@ Event.register("elona_sys.on_quest_completed", "Add music tickets if perform que
 
 local function set_party_emotion_icon(chara)
    -- >>>>>>>> shade2/calculation.hsp:1295 	if gQuest=qPerform{ ..
-   if not chara:is_allied() then
+   if not chara:is_in_player_party() then
       local quest = Quest.get_immediate_quest()
       if quest and quest._id == "elona.party" then
          if chara.impression >= Const.IMPRESSION_PARTY then

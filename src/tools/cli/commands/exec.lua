@@ -5,6 +5,7 @@ local Event = require("api.Event")
 local field = require("game.field")
 local env = require("internal.env")
 local util = require("tools.cli.util")
+local Repl = require("api.Repl")
 
 local function get_chunk(args)
    if args.exec_code then
@@ -35,7 +36,15 @@ return function(args)
       util.load_game()
    end
 
-   local exec_env = env.generate_sandbox("exec")
+   local exec_env
+   if args.repl_env then
+      exec_env = Repl.generate_env()
+      rawset(exec_env, "pass_turn", util.pass_turn)
+      rawset(exec_env, "load_game", util.load_game)
+   else
+      exec_env = env.generate_sandbox("exec")
+   end
+
    setfenv(chunk, exec_env)
    chunk()
 end

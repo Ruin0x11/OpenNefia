@@ -202,7 +202,7 @@ local function move_towards_target(chara, params)
       end
    end
 
-   if not chara:is_allied() then
+   if not chara:is_in_player_party() then
       if chara.quality > Great and chara:reaction_towards(chara:get_target()) < 0 then -- or -2
          if Map.is_in_bounds(nx, ny) then
             -- crush if wall
@@ -593,7 +593,7 @@ local function decide_targeted_action(chara, params)
       return true
    end
 
-   if chara:is_in_party() then
+   if chara:get_party() then
       return Ai.run("elona.decide_ally_targeted_action", chara)
    end
 
@@ -652,7 +652,7 @@ local function elona_default_ai(chara, params)
       Magic.cast("elona.suicide_attack", {source = chara, x = chara.x, y = chara.y})
       return true
    end
-   if chara:is_in_party() then
+   if chara:get_party() then
       Ai.run("elona.decide_ally_target", chara)
    end
 
@@ -682,7 +682,7 @@ local function elona_default_ai(chara, params)
    end
 
    target = chara:get_target()
-   if Chara.is_alive(target) and (chara.ai_state.hate > 0 or chara:is_in_party()) then
+   if Chara.is_alive(target) and (chara.ai_state.hate > 0 or chara:get_party()) then
       return Ai.run("elona.decide_targeted_action", chara)
    end
 

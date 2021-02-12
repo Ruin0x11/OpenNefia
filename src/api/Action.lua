@@ -330,7 +330,7 @@ function Action.build_target_list(chara)
 
    local filter = function(other)
       if chara ~= other and other:is_in_fov() then
-         if chara:is_allied() then
+         if chara:is_in_player_party() then
             if other:is_player() then
                return false
             end

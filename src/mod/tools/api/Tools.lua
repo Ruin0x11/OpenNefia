@@ -62,7 +62,7 @@ function Tools.spawn_allies(count)
       local x, y = Map.find_position_for_chara()
       if x then
          local c = Chara.create("elona.putit", x, y)
-         if not c:recruit_as_ally() then
+         if not Chara.player():recruit_as_ally(c) then
             return
          end
       end
@@ -331,7 +331,7 @@ function Tools.partition(tbl, key, extract)
 end
 
 function Tools.mkplayer(id)
-   return Chara.create(id or "content.player", nil, nil, {ownerless=true})
+   return Chara.create(id or "base.player", nil, nil, {ownerless=true})
 end
 
 function Tools.print_map(map)
@@ -604,7 +604,7 @@ end
 
 function Tools.restart_scenario()
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
-   local player = Chara.create("content.player", nil, nil, {ownerless=true})
+   local player = Chara.create("base.player", nil, nil, {ownerless=true})
 
    local params = scenario:on_game_start(player)
    Chara.set_player(player)

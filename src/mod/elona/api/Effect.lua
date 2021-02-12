@@ -217,8 +217,8 @@ function Effect.vomit(chara)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_constitution", -75)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_charisma", -100)
    else
-      if (chara:is_allied() and chara.anorexia_count > 10)
-         or (not chara:is_allied() and Rand.one_in(4))
+      if (chara:is_in_player_party() and chara.anorexia_count > 10)
+         or (not chara:is_in_player_party() and Rand.one_in(4))
       then
          if Rand.one_in(5) then
             chara.has_anorexia = true
@@ -405,7 +405,7 @@ function Effect.damage_insanity(chara, delta)
    end
 
    delta = math.floor(delta / resistance)
-   if chara:is_allied() and chara:has_trait("elona.god_heal") then
+   if chara:is_in_player_party() and chara:has_trait("elona.god_heal") then
       delta = delta - Rand.rnd(4)
    end
 
@@ -667,46 +667,6 @@ function Effect.end_incognito(source)
 end
 
 function Effect.act_hostile_towards(source, target)
-   if not source:is_allied() or target:is_player() then
-      return
-   end
-
-   if target:reaction_towards(source) >= 0 then
-      target:set_emotion_icon("elona.angry", 4)
-   end
-
-   if target:reaction_towards(source) >= 1000 then
-      Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
-   else
-      if target:reaction_towards(source) >= 100 then
-         Effect.modify_karma(source, -2)
-      end
-      -- TODO fire giant
-      if target:reaction_towards(source) > 0 then
-         Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
-         target:set_reaction_at(source, 0) -- reaction towards "base.friendly" is 100
-      else
-         if target:reaction_towards(source) >= 0 then
-            Gui.mes_c("misc.hostile_action.gets_furious", "Purple", target)
-         end
-         target:set_reaction_at(source, -100)
-         target.ai_state.hate = 80
-         target:set_target(source)
-      end
-   end
-
-   if target.is_livestock and Rand.one_in(50) then
-      Gui.mes_c("misc.hostile_action.get_excited", "Red")
-      local anger = function(chara)
-         chara:set_reaction_at(source, -100)
-         chara:set_target(source)
-         chara.ai_state.hate = 20
-         if target:reaction_towards(source) >= 0 then
-            target:set_emotion_icon("elona.angry", 3)
-         end
-      end
-      Chara.iter():filter(function(c) return target.is_livestock end):each(anger)
-   end
 end
 
 function Effect.create_new_building(deed)
@@ -810,7 +770,7 @@ function Effect.on_kill(attacker, victim)
    -- TODO arena
 
    if class.is_an(IChara, attacker) then
-      if attacker:is_allied() then
+      if attacker:is_in_player_party() then
          save.base.total_killed = save.base.total_killed + 1
       end
    end

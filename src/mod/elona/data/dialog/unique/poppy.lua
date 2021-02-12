@@ -32,7 +32,7 @@ data:add {
       },
       take = function(t)
          Gui.mes("talk.unique.poppy.find.you_must_return", t.speaker)
-         t.speaker:recruit_as_ally()
+         Chara.player():recruit_as_ally(t.speaker)
          t.speaker.is_being_escorted = true
          t.speaker:refresh()
 

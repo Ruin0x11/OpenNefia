@@ -211,7 +211,7 @@ local function proc_leveling(chara, skill, new_exp, level)
       chara:set_base_skill(skill, level, potential, new_exp)
       if Map.is_in_fov(chara.x, chara.y) then
          local color = "White"
-         if chara:is_allied() then
+         if chara:is_in_player_party() then
             Gui.play_sound("base.ding3")
             Gui.mes_alert()
             color = "Green"
@@ -478,7 +478,7 @@ function Skill.gain_level(chara, show_message)
       chara.max_level = chara.level
    end
 
-   if not chara:is_allied() then
+   if not chara:is_in_player_party() then
       Skill.grow_primary_skills(chara, show_message)
    end
 

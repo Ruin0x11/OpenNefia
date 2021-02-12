@@ -177,7 +177,7 @@ data:add {
          local player = Chara.player()
          assert(Map.try_place_chara(target, player.x, player.y, map))
 
-         target:recruit_as_ally()
+         player:recruit_as_ally(target)
          target.is_being_escorted = true
          target.is_not_changeable = true
          quest.params.escort_chara_uid = target.uid
@@ -234,7 +234,7 @@ end
 
 local function check_escort_killed(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1674 		if tc!pc :if tc<maxFollower { ..
-   if chara:is_player() or not chara:is_allied() then
+   if chara:is_player() or not chara:is_in_player_party() then
       return
    end
 

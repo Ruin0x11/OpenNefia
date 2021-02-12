@@ -6,7 +6,8 @@ local util = require("tools.cli.util")
 return function(args)
    require("internal.data.base")
 
-   local mods = mod.scan_mod_dir()
+   local enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+   local mods = mod.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
 
    repl.require_all_apis()

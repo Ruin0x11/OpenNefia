@@ -462,7 +462,7 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
    local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
 
    local passed_through
-   if source:is_allied_with(target) then
+   if source:is_in_same_party(target) then
       passed_through, damage = SkillCheck.handle_control_magic(source, target, damage)
    else
       passed_through = false
@@ -1948,7 +1948,7 @@ local function make_gain_ally(opts)
          end
 
          local chara = Charagen.create(source.x, source.y, { level = level, quality = quality, id = chara_id, tag_filters = tag_filters, level_scaling = "fixed" }, map)
-         chara:recruit_as_ally()
+         source:recruit_as_ally(chara)
 
          return true
       end

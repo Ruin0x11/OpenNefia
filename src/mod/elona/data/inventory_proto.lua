@@ -521,7 +521,7 @@ local inv_present = {
 
       elona_Item.convert_artifact(trade_item)
       Equipment.equip_all_optimally(ctxt.target)
-      if not ctxt.target:is_allied() then
+      if not ctxt.target:is_in_player_party() then
          Equipment.generate_and_equip(ctxt.target)
       end
       elona_Item.ensure_free_item_slot(ctxt.target)

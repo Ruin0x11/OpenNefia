@@ -103,7 +103,7 @@ function DeferredEvents.first_ally()
 
    local player = Chara.player()
    local ally = Chara.create(id, player.x, player.y, { level = player:calc("level") * 2 / 3 + 1 }, player:current_map())
-   ally:recruit_as_ally()
+   player:recruit_as_ally(ally)
 end
 
 return DeferredEvents

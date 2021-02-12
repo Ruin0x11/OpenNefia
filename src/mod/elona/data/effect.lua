@@ -79,7 +79,7 @@ local effect = {
          if Rand.one_in(5) then
             result = { regeneration = false }
          end
-         if not chara:is_allied() then
+         if not chara:is_in_player_party() then
             if chara.quality >= Enum.Quality.Great then
                if Rand.one_in(200) then
                   chara:heal_effect("elona.sick")

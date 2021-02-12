@@ -1,6 +1,7 @@
 local object = require("internal.object")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
+local IOwned = require("api.IOwned")
 
 local Event = require("api.Event")
 local Object = require("api.Object")
@@ -140,7 +141,7 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
 
          -- Special case for classes like `EquipSlots` that have a `_parent`
          -- field for use with IOwned:containing_map() and similar.
-         if type(v) == "table" and v._parent == t then
+         if class.is_an(IOwned, v) and v._parent == t then
             nv._parent = res
          end
       end
@@ -154,16 +155,20 @@ local function cycle_aware_copy(t, cache, uids, first, opts)
    -- pool:take_object() and then manually set the `location` field on the
    -- object afterwards. Because we deliberately don't try to clone `location`
    -- as it's a back reference, we have to determine what to set `location` to
-   -- by hand. There are two cases here:
+   -- by hand.
    --
-   -- 1. `location` lies outside the object, so it doesn't get cloned. Hopefully
-   --    this should only ever happen at the top level, at the original call to
-   --    MapObject.clone(). In this case we don't have to do anything since
-   --    MapObject.clone() will try to reconnect the object's location if the
-   --    `owned` argument is set to `true`.
+   -- So at this point, `location` on the cloned object is nil. There are two
+   -- cases:
    --
-   -- 2. `location` refers to something nested inside the cloned table. In this
-   --    case `location` will itself be cloned onto the new table and we have to
+   -- 1. `location` lied outside the original object, so it didn't get cloned.
+   --    Hopefully this should only ever happen at the top level, with the
+   --    original call to MapObject.clone(). In this case we don't have to do
+   --    anything since MapObject.clone() will try to reconnect the object's
+   --    location if the `owned` argument is set to `true`.
+   --
+   -- 2. `location` referred to something nested inside a parent object, like
+   --    EquipSlots. In this case the thing that was originally the object's
+   --    `location` will itself be cloned onto the new object and we have to
    --    reassociate the cloned object with it, because `pool:take_object()`
    --    will set `location` but it has no knowledge of any implementer of
    --    `ILocation` that uses it as a field.

@@ -187,7 +187,7 @@ local Effect
 --- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
    local hp_bar = "hp_bar_other"
-   if self:is_allied() then
+   if self:is_in_player_party() then
       hp_bar = "hp_bar_ally"
    end
 
@@ -288,31 +288,31 @@ function IChara:is_player()
    return field.player and field.player.uid == self.uid
 end
 
---- Returns true if this character is an ally of the player.
+--- Attempts to recruit a character as an ally.
 ---
---- @treturn bool
-function IChara:is_ally()
-   return fun.iter(save.base.allies):index(self.uid) ~= nil
-end
-
---- Attempts to recruit this character as an ally.
----
---- @tparam bool no_message
+--- @tparam IChara ally
+--- @tparam[opt] bool no_message
 --- @treturn bool true on success.
-function IChara:recruit_as_ally(no_message)
-   if self:is_ally() then
+function IChara:recruit_as_ally(target, no_message)
+   assert(class.is_an(IChara, target))
+
+   if self:is_party_leader_of(target) then
       return false
    end
-   save.base.allies[#save.base.allies+1] = self.uid
 
-   self.faction = "base.friendly"
-   self:refresh()
+   if not self:can_recruit_allies() then
+      return false
+   end
 
-   if not no_message then
-      Gui.mes_c("action.ally_joins.success", "Yellow", self)
+   save.base.parties:add_member(self:get_party(), target)
+
+   target:refresh()
+
+   if self:is_player() and not no_message then
+      Gui.mes_c("action.ally_joins.success", "Yellow", target)
       Gui.play_sound("base.pray1");
    end
-   self:emit("base.on_recruited_as_ally", { no_message = no_message })
+   target:emit("base.on_recruited_as_ally", { no_message = no_message })
    return true
 end
 
@@ -514,6 +514,8 @@ function IChara:kill(source)
 
    self:refresh_cell_on_map()
 
+   map.crowd_density = map.crowd_density - 1
+
    self:emit("base.on_chara_killed", {source=source})
    -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
@@ -529,8 +531,9 @@ function IChara:vanquish()
 
    self:refresh_cell_on_map()
 
-   if self:is_ally() then
-      table.iremove_value(save.base.allies, self.uid)
+   local party = self:get_party()
+   if party then
+      assert(save.base.parties:remove_member(party.uid, self))
    end
 
    self:emit("base.on_chara_vanquished")

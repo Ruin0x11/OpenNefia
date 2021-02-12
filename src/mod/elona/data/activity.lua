@@ -690,7 +690,7 @@ end
 local function update_quest_score(audience)
    local quest = Quest.get_immediate_quest()
    if quest and quest._id == "elona.party" then
-      if not audience:is_allied() then
+      if not audience:is_in_player_party() then
          audience.impression = audience.impression + Rand.rnd(3)
          local score = elona_Quest.calc_party_score(audience:current_map())
          -- >>>>>>>> shade2/calculation.hsp:1346 	if p>qParam2(gQuestRef) : txtEf coBlue: txt "(+"+ ..
