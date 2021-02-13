@@ -598,7 +598,7 @@ function Map.travel_to(map, params)
    local success = Map.try_place_chara(player, x, y, map)
    assert(success, "Could not place player in map")
 
-   for _, ally in player:iter_other_party_members() do
+   for _, ally in player:iter_other_party_members(current) do
       -- TODO: try to find a place to put the ally. If they can't fit,
       -- then delay adding them to the map until the player moves. If
       -- the player moves back before the allies have a chance to

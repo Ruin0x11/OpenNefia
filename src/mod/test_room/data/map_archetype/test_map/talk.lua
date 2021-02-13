@@ -2,7 +2,11 @@ local utils = require("mod.test_room.data.map_archetype.utils")
 local Chara = require("api.Chara")
 local Const = require("api.Const")
 
-local function generate_map(area, floor)
+local talk = {
+   _id = "talk"
+}
+
+function talk.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
@@ -30,6 +34,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   talk = generate_map
-}
+return talk

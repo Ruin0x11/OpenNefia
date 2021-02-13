@@ -4,6 +4,7 @@
 -- indicating if the action was successful and a string indicating any
 -- errors.
 -- @module Action
+local Enum = require("api.Enum")
 
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -371,7 +372,7 @@ function Action.find_target(chara)
    if target == nil then
       local targets = Action.build_target_list(chara)
       local filter = function(other)
-         return chara:reaction_towards(other) < 0
+         return chara:relation_towards(other) <= Enum.Relation.Enemy
       end
       target = fun.iter(targets):filter(filter):nth(1)
       if target then

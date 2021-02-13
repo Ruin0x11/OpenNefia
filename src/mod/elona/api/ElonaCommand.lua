@@ -161,14 +161,14 @@ function ElonaCommand.dig(player)
 end
 
 function ElonaCommand.fire(player)
-   -- >>>>>>>> elona122/shade2/command.hsp:4272 *com_fire ..
+   -- >>>>>>>> shade2/command.hsp:4278 *com_fire ...
    local target = Action.find_target(player)
 
    if not target then
       return "player_turn_query"
    end
 
-   if player:reaction_towards(target) >= 0 then
+   if player:relation_towards(target) >= Enum.Relation.Neutral then
       if not ElonaAction.prompt_really_attack(player, target) then
          return "player_turn_query"
       end
@@ -197,7 +197,7 @@ function ElonaCommand.fire(player)
    end
 
    return "turn_end"
-   -- <<<<<<<< elona122/shade2/command.hsp:4282 	gosub *act_fire:goto *turn_end ..
+   -- <<<<<<<< shade2/command.hsp:4288 	gosub *act_fire:goto *turn_end ..
 end
 
 function ElonaCommand.rest(player)

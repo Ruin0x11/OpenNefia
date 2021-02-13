@@ -8,6 +8,7 @@ local Gui = require("api.Gui")
 local Pos = require("api.Pos")
 local Action = require("api.Action")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Enum = require("api.Enum")
 
 local Magic = {}
 
@@ -128,6 +129,7 @@ end
 --- @tparam[opt] string triggered_by
 --- @treturn table
 function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
+   -- >>>>>>>> shade2/proc.hsp:1561 *effect_selectTg ..
    assert(target_type, "Skill does not support targeting")
 
    local source = caster
@@ -209,7 +211,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
          }
       end
 
-      if target_type == "enemy" and caster:reaction_towards(target) >= 0 then
+      if target_type == "enemy" and caster:relation_towards(target) >= Enum.Relation.Neutral then
          if not ElonaAction.prompt_really_attack(caster, target) then
             return false, {
                obvious = false
@@ -261,6 +263,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
    error(("Unknown skill target_type '%s'"):format(target_type))
 
    return false, {}
+   -- <<<<<<<< shade2/proc.hsp:1640 	return true ..
 end
 
 function Magic.get_magic_location(target_type, range, caster, triggered_by, ai_target, check_ranged_if_self, on_choose_cb)

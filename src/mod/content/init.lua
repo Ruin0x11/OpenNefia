@@ -1,3 +1,5 @@
+local Enum = require("api.Enum")
+
 data:add {
    _type = "base.chara",
    _id = "player",
@@ -5,7 +7,7 @@ data:add {
    name = "player",
    race = "elona.norland",
    class = "elona.tourist",
-   faction = "base.enemy",
+   relation = Enum.Relation.Neutral,
    image = "elona.chara_rabbit",
    level = 1,
    max_hp = 50,

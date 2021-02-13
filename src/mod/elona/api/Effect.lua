@@ -304,7 +304,7 @@ function Effect.eat_food(chara, food)
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")
             local player = Chara.player()
-            if not Chara.is_alive(chara) and chara:reaction_towards() > 0 then
+            if not Chara.is_alive(chara) and chara:relation_towards() > Enum.Relation.Neutral then
                Effect.modify_karma(player, -5)
             else
                Effect.modify_karma(player, -1)
@@ -602,8 +602,9 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
    return true
 end
 
-function Effect.is_visible(chara)
-   local is_invisible = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
+function Effect.is_visible(chara, viewer)
+   viewer = viewer or Chara.player()
+   local is_invisible = chara:calc("is_invisible") and not (viewer:calc("can_see_invisible") or chara:has_effect("elona.wet"))
    return not is_invisible
 end
 
@@ -638,13 +639,13 @@ function Effect.start_incognito(source)
          return false
       end
 
-      return chara:base_reaction_towards(source) >= 0
-         and chara:reaction_towards(source) < 0
+      return chara:base_relation_towards(source) >= Enum.Relation.Hate
+         and chara:relation_towards(source) <= Enum.Relation.Hate
    end
 
    local apply = function(chara)
-      chara.ai_state.hate = 0
-      chara:reset_reaction_at(source)
+      chara.aggro = 0
+      chara:reset_relation_towards(source)
       chara:set_emotion_icon("elona.question", 2)
    end
 
@@ -657,10 +658,9 @@ function Effect.end_incognito(source)
    end
 
    local apply = function(chara)
-      chara:mod_reaction_at(source, -100)
-      chara.ai_state.hate = 80
+      chara:set_relation_towards(source, Enum.Relation.Enemy)
+      chara:set_aggro(source, 80)
       chara:set_emotion_icon("elona.angry", 2)
-      require("api.Log").info("%s", chara.name)
    end
 
    Chara.iter():filter(filter):each(apply)

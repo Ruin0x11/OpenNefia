@@ -4,6 +4,7 @@ local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 local Input = require("api.Input")
 local Map = require("api.Map")
+local Enum = require("api.Enum")
 
 local Pathing = require("mod.autoexplore.api.Pathing")
 local Util = require("mod.autoexplore.api.Util")
@@ -76,7 +77,7 @@ local function step_autoexplore()
 
    for _, x, y in iter_fov() do
       local chara = Chara.at(x, y)
-      if chara and chara:reaction_towards(Chara.player()) < 0 then
+      if chara and chara:relation_towards(Chara.player()) <= Enum.Relation.Enemy then
          Gui.mes("autoexplore.enemy_sighted", chara, I18N.get("autoexplore." .. pathing.type .. ".name"))
          Autoexplore.stop()
          return

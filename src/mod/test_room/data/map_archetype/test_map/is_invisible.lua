@@ -2,7 +2,11 @@ local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local utils = require("mod.test_room.data.map_archetype.utils")
 
-local function generate_map(area, floor)
+local is_invisible = {
+   _id = "is_invisible"
+}
+
+function is_invisible.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
@@ -16,6 +20,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   is_invisible = generate_map
-}
+return is_invisible

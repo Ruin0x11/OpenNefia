@@ -447,17 +447,15 @@ end
 function ElonaBuilding.ranch_reset_aggro(map)
    map = map or Map.current()
 
+   -- >>>>>>>> shade2/map.hsp:2128 	if areaId(gArea)=areaRanch{ ...
    for _, chara in Chara.iter(map) do
       if chara.is_livestock then
-         chara.ai_state.hate = 0
-         -- TODO relation faction
-         -- relation cnt,cDislike
-         for _, member in Chara.iter_party() do
-            chara:set_reaction_at(member, 1)
-            member:set_reaction_at(chara, 1)
-         end
+         chara:reset_aggro()
+         chara:reset_all_relations()
+         chara.relation = Enum.Relation.Dislike
       end
    end
+   -- <<<<<<<< shade2/map.hsp:2132 		} ..
 end
 
 return ElonaBuilding

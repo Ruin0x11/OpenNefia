@@ -63,8 +63,8 @@ local function reset_chara_flags(map)
                      Skill.gain_level(chara, false)
                   end
                   if not player:has_effect("elona.incognito") then
-                     chara.ai_state.hate = 200
-                     chara:mod_reaction_at(player, -1000)
+                     chara:set_aggro(player, 200)
+                     chara:set_relation_towards(player, Enum.Relation.Enemy)
                   end
                end
             end

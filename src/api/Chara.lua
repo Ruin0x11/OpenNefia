@@ -43,6 +43,7 @@ local function iter(a, i)
    end
 
    local d = a.map:get_object_of_type("base.chara", a.uids[i])
+   assert(d ~= nil, a.uids[i])
    i = i + 1
 
    return i, d
@@ -157,9 +158,9 @@ function Chara.set_player(chara)
 
    local c = Chara.player()
 
-   c.faction = "base.friendly"
+   c.relation = Enum.Relation.Ally
 
-   c:reset_all_reactions()
+   c:reset_all_relations()
    c:heal_to_max()
    c:refresh()
 

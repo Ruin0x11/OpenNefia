@@ -1,6 +1,7 @@
 local Chara = require("api.Chara")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
+local Enum = require("api.Enum")
 
 local Sidequest = {}
 
@@ -34,8 +35,7 @@ function Sidequest.set_quest_targets(map)
    for _, v in Chara.iter_others(map) do
       if Chara.is_alive(v, map) then
          v.is_quest_target = true
-         v.faction = "base.enemy"
-         v:mod_reaction_at(Chara.player(), -1000)
+         v.relation = Enum.Relation.Enemy
       end
    end
 end

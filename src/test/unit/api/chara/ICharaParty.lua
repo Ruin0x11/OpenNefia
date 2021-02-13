@@ -21,6 +21,22 @@ function test_ICharaParty_get_party()
    assert(ICharaParty.get_party(ally) ~= nil)
 end
 
+function test_ICharaParty_get_party_leader()
+   local map = InstancedMap:new(10, 10)
+   map:clear("elona.cobble")
+
+   local player = Chara.create("base.player", 5, 5, {}, map)
+   local ally = Chara.create("base.player", 5, 5, {}, map)
+   Chara.set_player(player)
+
+   assert(ICharaParty.get_party_leader(player) == player)
+   assert(ICharaParty.get_party_leader(ally) == nil)
+
+   player:recruit_as_ally(ally)
+
+   assert(ICharaParty.get_party_leader(ally) == player)
+end
+
 function test_ICharaParty_is_in_same_party()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
@@ -39,8 +55,6 @@ function test_ICharaParty_is_in_same_party()
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
-   local party_id = save.base.parties:add_party()
-   save.base.parties:add_member(party_id, leader)
    assert(leader:recruit_as_ally(other_ally))
 
    assert(ICharaParty.is_in_same_party(leader, other_ally))
@@ -65,8 +79,6 @@ function test_ICharaParty_is_party_leader_of()
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
-   local party_id = save.base.parties:add_party()
-   save.base.parties:add_member(party_id, leader)
    assert(leader:recruit_as_ally(other_ally))
 
    assert(not ICharaParty.is_party_leader_of(player, leader))
@@ -91,8 +103,6 @@ function test_ICharaParty_is_in_player_party()
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
-   local party_id = save.base.parties:add_party()
-   save.base.parties:add_member(party_id, leader)
    assert(leader:recruit_as_ally(other_ally))
 
    assert(not ICharaParty.is_in_player_party(leader))
@@ -117,8 +127,6 @@ function test_ICharaParty_is_ally()
 
    local leader = Chara.create("base.player", 5, 5, {}, map)
    local other_ally = Chara.create("base.player", 5, 5, {}, map)
-   local party_id = save.base.parties:add_party()
-   save.base.parties:add_member(party_id, leader)
    assert(leader:recruit_as_ally(other_ally))
 
    assert(not ICharaParty.is_ally(leader))

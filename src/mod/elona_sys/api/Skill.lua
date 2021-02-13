@@ -10,6 +10,7 @@ local Input = require("api.Input")
 local Action = require("api.Action")
 local Anim = require("mod.elona_sys.api.Anim")
 local ICharaEquip = require("api.chara.ICharaEquip")
+local Enum = require("api.Enum")
 
 local Skill = {}
 
@@ -538,7 +539,7 @@ function Skill.modify_impression(chara, delta)
    local new_level = Skill.impression_level(chara.impression)
    if level > new_level then
       Gui.mes_c("chara.impression.lose", "Purple", chara, "ui.impression._" .. new_level)
-   elseif new_level > level and chara:reaction_towards(Chara.player()) > 0 then
+   elseif new_level > level and chara:relation_towards(Chara.player()) > Enum.Relation.Enemy then
       Gui.mes_c("chara.impression.gain", "Green", chara, "ui.impression._" .. new_level)
    end
 end

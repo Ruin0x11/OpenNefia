@@ -1,6 +1,12 @@
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
 -- TODO This will need to be rewritten once all dependencies are implemented.
+local Enum = require("api.Enum")
+local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
+local Map = require("api.Map")
+local Anim = require("mod.elona_sys.api.Anim")
+local Effect = require("mod.elona.api.Effect")
+local SkillCheck = require("mod.elona.api.SkillCheck")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -8,7 +14,6 @@ local Event = require("api.Event")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Ai = require("api.Ai")
 local Chara = require("api.Chara")
-local Map = require("api.Map")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
 local Magic = require("mod.elona_sys.api.Magic")
@@ -42,6 +47,7 @@ local function dir_check(chara, dir, reverse)
    local nx = 0
    local ny = 0
    local blocked_by_chara = false
+   local map = chara:current_map()
 
    local start, finish
    if reverse then
@@ -67,13 +73,13 @@ local function dir_check(chara, dir, reverse)
          ny = chara.y - 1
       end
 
-      if Map.can_access(nx, ny) then
+      if map:can_access(nx, ny) then
          return nx, ny, blocked_by_chara
       end
 
-      local on_cell = Chara.at(nx, ny)
+      local on_cell = Chara.at(nx, ny, map)
       if on_cell ~= nil then
-         if chara:reaction_towards(on_cell) <0 then
+         if chara:relation_towards(on_cell) <= Enum.Relation.Enemy then
             chara:set_target(on_cell)
          else
             blocked_by_chara = true
@@ -183,19 +189,19 @@ local function move_towards_target(chara, params)
    local dx, dy = Pos.direction_in(chara.x, chara.y, chara.ai_state.last_target_x, chara.ai_state.last_target_y)
    local nx, ny = chara.x + dx, chara.y + dy
 
-   if Map.can_access(nx, ny) then
+   local map = chara:current_map()
+
+   if map:can_access(nx, ny) then
       Action.move(chara, nx, ny)
       return true
    end
 
-   local on_cell = Chara.at(nx, ny)
-   local Great = 3
+   local on_cell = Chara.at(nx, ny, map)
    if on_cell ~= nil then
-      if chara:reaction_towards(on_cell) < 0 then
-         chara:set_target(on_cell)
-         chara.ai_state.hate = chara.ai_state.hate + 4
+      if chara:relation_towards(on_cell) <= Enum.Relation.Enemy then
+         chara:set_target(on_cell, chara:get_aggro(on_cell) + 4)
          return Ai.run("elona.basic_action", chara)
-      elseif on_cell.quality > Great and on_cell.level > target.level then
+      elseif on_cell.quality > Enum.Quality.Great and on_cell.level > target.level then
          if on_cell:get_target() ~= chara:get_target() then
             return Chara.swap_positions(chara, chara:get_target())
          end
@@ -203,10 +209,16 @@ local function move_towards_target(chara, params)
    end
 
    if not chara:is_in_player_party() then
-      if chara.quality > Great and chara:reaction_towards(chara:get_target()) < 0 then -- or -2
-         if Map.is_in_bounds(nx, ny) then
-            -- crush if wall
+      if chara.quality > Enum.Quality.Great and chara:relation_towards(chara:get_target()) <= Enum.Relation.Hate then
+         if map:is_in_bounds(nx, ny) then
             if Rand.one_in(4) then
+               local tile = MapTileset.get("elona.mapgen_tunnel", map)
+               map:set_tile(nx, ny, tile)
+               Map.spill_fragments(nx, ny, 2, map)
+               Gui.play_sound("base.crush1")
+               local anim = Anim.breaking(nx, ny)
+               Gui.start_draw_callback(anim)
+               Gui.mes_visible("ai.crushes_wall", chara, chara)
                return true
             end
          end
@@ -220,7 +232,7 @@ local function move_towards_target(chara, params)
 
    if chara.ai_state.wants_movement > 0 then
       nx, ny = Pos.random_direction(chara.x, chara.y)
-      if Map.can_access(nx, ny) then
+      if map:can_access(nx, ny) then
          Action.move(chara, nx, ny)
          return true
       end
@@ -264,7 +276,8 @@ local function go_to_position(chara, params)
       nx, ny = Pos.random_direction(chara.x, chara.y)
    end
 
-   if Map.can_access(nx, ny) then
+   local map = chara:current_map()
+   if map:can_access(nx, ny) then
       Action.move(chara, nx, ny)
       return true
    end
@@ -281,13 +294,14 @@ local function go_to_preset_anchor(chara, params)
 end
 
 local function wander(chara, params)
-   if chara:calc("ai_calm") == 2 and Map.current():calc("has_anchored_npcs") then
+   local map = chara:current_map()
+   if chara:calc("ai_calm") == 2 and map:calc("has_anchored_npcs") then
       return Ai.run("elona.go_to_position", chara, { x = chara.initial_x, y = chara.initial_y })
    end
 
    if (chara:calc("ai_calm") or 1) == 1 then
       local nx, ny = Pos.random_direction(chara.x, chara.y)
-      if Map.can_access(nx, ny) then
+      if map:can_access(nx, ny) then
          Action.move(chara, nx, ny)
          return true
       end
@@ -354,7 +368,8 @@ local function do_eat(chara, _, result)
    end
 
    if chara.nutrition <= 6000 then
-      if not Map.is_in_fov(chara.x, chara.y) or Rand.one_in(5) then
+      local map = chara:current_map()
+      if not map:is_in_fov(chara.x, chara.y) or Rand.one_in(5) then
          if chara:calc("has_anorexia") then
             chara.nutrition = chara.nutrition - 5000
          else
@@ -376,7 +391,7 @@ local function attempt_melee_attack(chara, params)
    if target_damage_reaction then
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
       local can_do_ranged_attack = false
-      if can_do_ranged_attack and dist < 6 and Map.has_los(chara.x, chara.y, target.x, target.y) then
+      if can_do_ranged_attack and dist < 6 and chara:has_los(target.x, target.y) then
          Action.ranged(chara, target)
       end
 
@@ -404,7 +419,7 @@ local function default_action(chara, params)
       return Ai.run("elona.attempt_melee_attack", chara)
    end
 
-   if dist < 6 and Map.has_los(chara.x, chara.y, target.x, target.y) then
+   if dist < 6 and chara:has_los(target.x, target.y) then
       chara:say("base.ai_ranged")
       local can_do_ranged_attack = false
       if can_do_ranged_attack then
@@ -420,7 +435,7 @@ local function default_action(chara, params)
    end
 
    if Rand.one_in(5) then
-      chara.ai_state.hate = chara.ai_state.hate - 1
+      chara:set_aggro(chara:get_target(), chara:get_aggro() - 1)
    end
 
    if Rand.percent_chance(chara.ai_move) then
@@ -437,9 +452,12 @@ local function get_actions(chara, _type)
 end
 
 local function basic_action(chara, params)
+   -- >>>>>>>> shade2/ai.hsp:470 *ai_actMain ..
    local target = chara:get_target()
 
-   chara:act_hostile_towards(target)
+   if target:is_party_leader() then
+      save.base.parties:get(target:get_party()).metadata.leader_attacker = chara.uid
+   end
 
    local choosing_sub_act = Rand.percent_chance(chara.ai_act_sub_freq)
    local choice
@@ -455,26 +473,27 @@ local function basic_action(chara, params)
    end
 
    return Ai.run(choice.id, choice.params)
+   -- <<<<<<<< shade2/ai.hsp:527 	 ..
 end
 
 local function search_for_target(chara, params)
    local search_radius = params.search_radius or 5
    local x, y
+   local map = chara:current_map()
 
    for j=0,search_radius - 1 do
       y = chara.y - 2 + j
 
-      if y >= 0 and y <= Map.height() then
+      if y >= 0 and y <= map:height() then
          for i=0,search_radius - 1 do
             x = chara.x - 2 + i
 
-            if x >= 0 and y < Map.width() then
-               local on_cell = Chara.at(x, y)
+            if x >= 0 and y < map:width() then
+               local on_cell = Chara.at(x, y, map)
                if on_cell ~= nil and not on_cell:is_player() and not on_cell:calc("is_not_targeted_by_ai") then
-                  if chara:reaction_towards(on_cell) < 0 then
+                  if chara:relation_towards(on_cell) <= Enum.Relation.Enemy then
                      if not chara:calc("is_not_targeted_by_ai") then
-                        chara.ai_state.hate = 30
-                        chara:set_target(on_cell)
+                        chara:set_target(on_cell, 30)
                         return true
                      end
                   end
@@ -488,36 +507,37 @@ local function search_for_target(chara, params)
 end
 
 local function decide_ally_target(chara, params)
-   chara.ai_state.hate = chara.ai_state.hate - 1
+   chara:set_aggro(chara:get_target(), chara:get_aggro() - 1)
 
    local target = chara:get_target()
    local being_targeted = Chara.is_alive(target)
       and target:get_target() ~= nil
-   -- TODO will want proper character equality, by UID
-      and target:get_target().uid == chara.uid
+      and target:get_target() == chara
 
    local target_not_important = target ~= nil
-      and chara:reaction_towards(target) >= 0
+      and chara:relation_towards(target) >= Enum.Relation.Hate
       and not being_targeted
 
    if not Chara.is_alive(target)
       or target:is_party_leader_of(chara)
-      or chara.ai_state.hate <= 0
+      or chara:get_aggro(target) <= 0
       or target_not_important
    then
       -- Follow the leader.
       chara:set_target(chara:get_party_leader())
 
-      if chara.ai_state.leader_attacker ~= nil then
-         if Chara.is_alive(chara.ai_state.leader_attacker) then
-            if chara:reaction_towards(chara.ai_state.leader_attacker) < 0 then
-               if Map.has_los(chara.x, chara.y, chara.ai_state.leader_attacker.x, chara.ai_state.leader_attacker.y) then
-                  chara.ai_state.hate = 5
-                  chara:set_target(chara.ai_state.leader_attacker)
+      local party = save.base.parties:get(chara:get_party())
+      local map = chara:current_map()
+      local leader_attacker = map:get_object_of_type("base.chara", party.metadata.leader_attacker)
+      if leader_attacker ~= nil then
+         if Chara.is_alive(leader_attacker) then
+            if chara:relation_towards(leader_attacker) <= Enum.Relation.Enemy then
+               if chara:has_los(leader_attacker.x, leader_attacker.y) then
+                  chara:set_target(leader_attacker, 5)
                end
             end
          else
-            chara.ai_state.leader_attacker = nil
+            party.metadata.leader_attacker = nil
          end
       end
 
@@ -526,17 +546,18 @@ local function decide_ally_target(chara, params)
 
          if Chara.is_alive(leader) then
             local leader_target = leader:get_target()
-            if Chara.is_alive(leader_target) and leader:reaction_towards(leader_target) < 0 then
-               if Map.has_los(chara.x, chara.y, leader_target.x, leader_target.y) then
-                  chara.ai_state.hate = 5
-                  chara:set_target(leader_target)
+            if Chara.is_alive(leader_target) and leader:relation_towards(leader_target) <= Enum.Relation.Enemy then
+               if chara:has_los(leader_target.x, leader_target.y) then
+                  chara:set_target(leader_target, 5)
                end
             end
          end
       end
-      -- EVENT: base.on_calculate_ally_target
-      -- wet/invisible
-      -- EVENT: on_set_target?
+
+      target = chara:get_target()
+      if target and not Effect.is_visible(target, chara) and Rand.one_in(5) then
+         chara:set_target(chara:get_party_leader())
+      end
    end
 end
 
@@ -625,7 +646,7 @@ local function ai_talk(chara, params)
          if Rand.one_in(4) then
             local leader = chara:get_party_leader()
             if leader and Pos.is_in_square(chara.x, chara.y, leader.x, leader.y, 20) then
-               if chara.ai_state.hate <= 0 then
+               if chara.aggro <= 0 then
                   chara:say("base.ai_calm")
                else
                   chara:say("base.ai_aggro")
@@ -643,7 +664,7 @@ local function elona_default_ai(chara, params)
             Gui.mes_c(I18N.quote_speech("action.npc.sand_bag"), "Talk")
          end
       end
-      chara.ai_state.hate = 0
+      chara.aggro = 0
       return true
    end
 
@@ -658,8 +679,7 @@ local function elona_default_ai(chara, params)
 
    local target = chara:get_target()
    if target == nil or not Chara.is_alive(target) then
-      chara:set_target(default_target(chara))
-      chara.ai_state.hate = 0
+      chara:set_target(default_target(chara), 0)
    end
 
    -- EVENT: on_decide_action
@@ -682,7 +702,7 @@ local function elona_default_ai(chara, params)
    end
 
    target = chara:get_target()
-   if Chara.is_alive(target) and (chara.ai_state.hate > 0 or chara:get_party()) then
+   if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:get_party()) then
       return Ai.run("elona.decide_targeted_action", chara)
    end
 
@@ -695,9 +715,9 @@ local function elona_default_ai(chara, params)
 
    target = chara:get_target()
    if target:is_player() then
-      local perceived = true
-      if perceived and chara:reaction_towards(target) < 0 then
-         chara.ai_state.hate = 30
+      local perceived = SkillCheck.try_to_perceive(target, chara)
+      if perceived and chara:relation_towards(target) <= Enum.Relation.Enemy then
+         chara:set_aggro(target, 30)
       end
    end
 

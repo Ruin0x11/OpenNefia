@@ -1102,7 +1102,7 @@ function Dungeon.gen_type_hunt(floor, params)
    for _=1, 10 + Rand.rnd(6) do
       local chara = Charagen.create(nil, nil, chara_filter(map), map)
       if chara then
-         chara.faction = "base.enemy"
+         chara.relation = Enum.Relation.Enemy
       end
    end
 

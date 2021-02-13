@@ -349,7 +349,7 @@ function ElonaAction.bash(chara, x, y)
    local target = Chara.at(x, y)
    if target then
       if not target:has_effect("elona.sleep") then
-         if chara:is_player() and target:reaction_towards(chara) > 0 then
+         if chara:is_player() and target:relation_towards(chara) >= Enum.Relation.Neutral then
             if not ElonaAction.prompt_really_attack(chara, target) then
                return "player_turn_query"
             end

@@ -557,7 +557,7 @@ data:add {
                      if Rand.one_in(3) and not params.chara:is_player() then
                         Gui.mes("activity.sex.gets_furious", params.chara)
                         params.chara:set_target(self.partner)
-                        params.chara.ai_state.hate = 20
+                        params.chara.aggro = 20
                      end
                   end
                   self.partner.gold = math.max(self.partner.gold, 1)
@@ -781,11 +781,11 @@ local function performance_apply(chara, instrument, audience, activity)
       return
    end
 
-   if audience:reaction_towards(chara) <= 0 then -- TODO == -3
-      if audience:get_hate_at(chara) == 0 then
+   if audience:relation_towards(chara) <= Enum.Relation.Enemy then
+      if audience:get_aggro(chara) <= 0 then
          Gui.mes_visible("activity.perform.gets_angry", audience.x, audience.y, audience)
       end
-      audience.ai_state.hate = 30
+      audience:set_aggro(chara, 30)
       return
    end
 
@@ -984,7 +984,7 @@ data:add {
 
             local from_enemy = false
             local owner = self.item:current_owner()
-            if owner and owner:reaction_towards(chara) < 0 then -- TODO == -3
+            if owner and owner:relation_towards(chara) <= Enum.Relation.Enemy then
                from_enemy = true
             end
 

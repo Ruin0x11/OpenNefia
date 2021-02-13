@@ -181,7 +181,10 @@ function ReplLayer:make_keymap()
 
          if not self.completion then
             local cp = ReplCompletion:new()
-            self.completion = cp:complete(self.text, self.env)
+            local ok, completion = xpcall(cp.complete, debug.traceback, cp, self.text, self.env)
+            if ok then
+               self.completion = completion
+            end
             if self.completion then
                local complete_single = true
                if #self.completion.candidates == 1 and complete_single then

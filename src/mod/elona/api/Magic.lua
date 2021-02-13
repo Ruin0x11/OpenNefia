@@ -400,9 +400,8 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
          local level = Calc.calc_object_level(player_level * 3 / 2 + 3, map)
          local quality = Calc.calc_object_quality(Enum.Quality.Normal)
          local spawned = Charagen.create(player.x, player.y, { level = level, quality = quality })
-         -- TODO faction
-         if spawned and chara:reaction_towards(player) <= -3 then
-            spawned:set_reaction_at(player, -1)
+         if spawned and chara:relation_towards(player) <= Enum.Relation.Enemy then
+            spawned:set_relation_towards(player, Enum.Relation.Dislike)
          end
       end
       return false
@@ -517,7 +516,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
          elona_sys_Magic.cast(skill_data.effect_id, params)
          if not Chara.is_alive(params.target) then
             local target = Action.find_target(caster)
-            if target == nil or caster:reaction_towards(target) > 0 then
+            if target == nil or caster:relation_towards(target) > Enum.Relation.Enemy then
                break
             else
                params.target = target

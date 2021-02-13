@@ -14,6 +14,7 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local Enum = require("api.Enum")
 
 do
    local vernis = {
@@ -1156,6 +1157,7 @@ do
 
       chara = Chara.create("elona.bartender", 17, 8, nil, map)
       chara.ai_calm = 3
+      chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.food_vendor"})
       chara.shop_rank = 10
@@ -1163,7 +1165,7 @@ do
 
       chara = Chara.create("elona.hot_spring_maniac", 25, 8, nil, map)
       chara.ai_calm = 3
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
       chara.shop_rank = 30
@@ -1171,7 +1173,7 @@ do
 
       chara = Chara.create("elona.rogue", 24, 22, nil, map)
       chara.ai_calm = 3
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.souvenir_vendor"})
       chara.shop_rank = 30
@@ -1186,7 +1188,7 @@ do
 
       chara = Chara.create("elona.rogue", 28, 9, nil, map)
       chara.ai_calm = 3
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
       chara.shop_rank = 30
@@ -1194,7 +1196,7 @@ do
 
       chara = Chara.create("elona.rogue", 29, 24, nil, map)
       chara.ai_calm = 3
-      chara.faction = "base.citizen"
+      chara.faction = Enum.Relation.Neutral
       chara.is_only_in_christmas = true
       chara:add_role("elona.shopkeeper", {inventory_id="elona.street_vendor"})
       chara.shop_rank = 30

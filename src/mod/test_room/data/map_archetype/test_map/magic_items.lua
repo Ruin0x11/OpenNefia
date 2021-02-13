@@ -1,9 +1,12 @@
 local Effect = require("mod.elona.api.Effect")
 local Enum = require("api.Enum")
 local Item = require("api.Item")
-local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local utils = require("mod.test_room.data.map_archetype.utils")
+
+local magic_items = {
+   _id = "magic_items"
+}
 
 local function roundup(tbl, x, y, width)
    width = width or 20
@@ -49,7 +52,7 @@ local function create_magic_items(x, y, width, map)
    roundup(items, x, y, width)
 end
 
-local function generate_map(area, floor)
+function magic_items.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
    utils.create_sandbag(4, 2, map)
@@ -59,6 +62,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   magic_items = generate_map
-}
+return magic_items

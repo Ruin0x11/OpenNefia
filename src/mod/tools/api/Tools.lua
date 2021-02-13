@@ -93,22 +93,22 @@ function Tools.other()
    return Rand.choice(Chara.iter_others())
 end
 
-local function gen_faction_pred(faction)
+local function gen_relation_pred(relation)
    return function ()
       local pred = function(c)
-         return c.faction == faction
+         return c:relation_towards(Chara.player()) == relation
       end
       return Chara.iter():filter(pred)
    end
 end
 
-Tools.enemies = gen_faction_pred("base.enemy")
+Tools.enemies = gen_relation_pred(Enum.Relation.Enemy)
 
 function Tools.enemy()
    return Rand.choice(Tools.enemies())
 end
 
-Tools.citizens = gen_faction_pred("base.citizen")
+Tools.citizens = gen_relation_pred(Enum.Relation.Neutral)
 
 function Tools.citizen()
    return Rand.choice(Tools.citizens())

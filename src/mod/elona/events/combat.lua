@@ -34,12 +34,16 @@ Event.register("base.on_damage_chara",
                "Retreat in fear", retreat_in_fear)
 
 local function disturb_sleep(chara, params)
+   -- >>>>>>>> shade2/chara_func.hsp:1563 		if cSleep(tc)!0: if (ele!rsResMind)&(ele!rsResNe ...
    if not params.element or not params.element.preserves_sleep then
       if chara:has_effect("elona.sleep") then
          chara:remove_effect("elona.sleep")
-         Gui.mes("sleep is disturbed " .. chara.uid)
+         Gui.mes("damage.sleep_is_disturbed", chara)
       end
    end
+   params.attacker.noise = 100
+   params.attacker:act_hostile_towards(chara)
+   -- <<<<<<<< shade2/chara_func.hsp:1567 			} ..
 end
 
 Event.register("base.on_damage_chara",
@@ -106,6 +110,7 @@ Event.register("base.on_damage_chara",
 
 local function is_quick_tempered(chara, params)
    if chara:calc("is_quick_tempered") then
+      -- >>>>>>>> shade2/chara_func.hsp:1578 		if cBit(cTemper,tc):if dmgType!dmgSub:if cAngry( ...
       if not chara:has_effect("elona.fury") then
          if Rand.one_in(20) then
             Gui.mes_visible(chara.uid .. " engulfed in fury", chara.x, chara.y, "Blue")
@@ -113,6 +118,7 @@ local function is_quick_tempered(chara, params)
          end
       end
    end
+   -- <<<<<<<< shade2/chara_func.hsp:1581 		} ..
 end
 
 Event.register("base.on_damage_chara",

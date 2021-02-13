@@ -107,18 +107,14 @@ If true, you can talk to this character by bumping into them.
 ]]
          },
          {
-            name = "faction",
-            default = "base.enemy",
+            name = "relation",
+            default = CodeGenerator.gen_literal [[ Enum.Relation.Enemy ]],
             template = true,
-            type = "id:base.faction",
+            type = "integer",
             doc = [[
 What alignment this character has.
 
 This determines if it will act hostile toward the player on first sight.
-- base.enemy: hostile towards the player
-- base.citizen: shopkeepers, etc.
-- base.neutral: ignores the player, can swap places with them
-- base.friendly: acts like an ally
 ]]
          },
          {
@@ -407,6 +403,9 @@ A damage reaction to trigger if this character is melee attacked.
          damage_resistance = 0,
          damage_immunity_rate = 0,
          damage_reflection = 0,
+         aggro = 0,
+         noise = 0,
+         relation = 0,
 
          splits = nil,
          splits2 = nil,
@@ -1179,13 +1178,6 @@ data:add_type {
    schema = schema.Record {
       target = schema.String,
    }
-}
-
-data:add_type {
-   name = "faction",
-   schema = schema.Record {
-      reactions = schema.Table,
-   },
 }
 
 data:add_type {

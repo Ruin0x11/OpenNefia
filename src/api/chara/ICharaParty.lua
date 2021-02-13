@@ -1,8 +1,7 @@
 local Chara = require("api.Chara")
-local IFactioned = require("api.IFactioned")
 local save = require("internal.global.save")
 
-local ICharaParty = class.interface("ICharaParty", {}, IFactioned)
+local ICharaParty = class.interface("ICharaParty", {})
 
 function ICharaParty:is_party_leader()
    local parties = save.base.parties
@@ -78,7 +77,7 @@ function ICharaParty:is_ally()
 end
 
 local function mkiter(and_self)
-   return function(self)
+   return function(self, map)
       if not self:get_party() then
          return fun.iter {}
       end
@@ -89,7 +88,7 @@ local function mkiter(and_self)
          iter = iter:filter(function(uid) return uid ~= self.uid end)
       end
 
-      local map = self:current_map()
+      map = map or self:current_map()
       if map == nil then
          return fun.iter {}
       end

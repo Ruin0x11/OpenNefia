@@ -171,4 +171,14 @@ Enum.FltSelect = enum("FltSelect", {
 })
 -- <<<<<<<< shade2/init.hsp:823 	#enum global fltTownSp ..
 
+-- >>>>>>>> shade2/init.hsp:366 	#define global cAlly		10 ...
+Enum.Relation = enum("Relation", {
+    Ally = 10,
+    Neutral = 0,
+    Dislike = -1,
+    Hate = -2,
+    Enemy = -3
+})
+-- <<<<<<<< shade2/init.hsp:370 	#define global cEnemy		-3 ..
+
 return Enum

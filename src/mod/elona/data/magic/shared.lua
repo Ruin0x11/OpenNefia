@@ -579,13 +579,15 @@ make_ball{
 }
 
 local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element, params)
-   if source:reaction_towards(target) >= 0 then
+   -- >>>>>>>> shade2/proc.hsp:1744 		if (cc=pc)or(cRelation(cc)>=cNeutral){ ...
+   if source:relation_towards(target) >= Enum.Relation.Neutral then
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("damage.is_healed", target.x, target.y, target)
       local dice = self:dice(params)
       Effect.heal(target, dice.x, dice.y, dice.bonus)
    end
+   -- <<<<<<<< shade2/proc.hsp:1753 			} ..
 end
 
 make_ball {
@@ -603,13 +605,15 @@ make_ball {
 }
 
 local function ball_cb_rain_of_sanity(self, x, y, tx, ty, source, target, element, params)
-   if source:reaction_towards(target) >= 0 then
+   -- >>>>>>>> shade2/proc.hsp:1758 		if (cc=pc)or(cRelation(cc)>=cNeutral){ ...
+   if source:relation_towards(target) >= Enum.Relation.Neutral then
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("magic.rain_of_sanity", target.x, target.y, target)
       Effect.heal_insanity(target, params.power / 10)
       target:heal_effect("elona.insanity", 9999)
    end
+   -- <<<<<<<< shade2/proc.hsp:1768 			} ..
 end
 
 make_ball {

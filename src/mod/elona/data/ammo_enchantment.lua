@@ -6,6 +6,7 @@ local Action = require("api.Action")
 local Gui = require("api.Gui")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Anim = require("mod.elona_sys.api.Anim")
+local Enum = require("api.Enum")
 
 data:add {
    _type = "base.ammo_enchantment",
@@ -150,15 +151,15 @@ data:add {
          end
 
          local target = Rand.choice(targets)
-         if chara:is_player() or chara:reaction_towards(Chara.player()) >= 0 then
-            if target:reaction_towards(Chara.player()) >= 0 and i > 1 then
+         if chara:is_player() or chara:relation_towards(target) >= Enum.Relation.Neutral then
+            if target:relation_towards(chara) >= Enum.Relation.Neutral and i > 1 then
                consider = false
                if Rand.one_in(5) then
                   max = max + 1
                end
             end
          else
-            if target:reaction_towards(Chara.player()) < 0 then
+            if target:relation_towards(chara) <= Enum.Relation.Enemy then
                consider = false
                if Rand.one_in(5) then
                   max = max + 1

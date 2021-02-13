@@ -159,6 +159,8 @@ end
 Event.register("base.before_chara_turn_start", "Check if character leveled up", proc_enough_exp_for_level, {priority = 90000})
 
 local function gain_experience_at_turn_start(chara)
+   chara.noise = 0
+
    if not chara:is_player() then
       return
    end

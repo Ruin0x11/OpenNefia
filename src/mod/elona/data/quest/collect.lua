@@ -10,6 +10,7 @@ local I18N = require("api.I18N")
 local Itemname = require("mod.elona.api.Itemname")
 local elona_Item = require("mod.elona.api.Item")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Enum = require("api.Enum")
 
 local collect = {
    _id = "collect",
@@ -44,7 +45,7 @@ local collect = {
       for _, chara in ipairs(charas)  do
          if chara.uid ~= client.uid then
             if Chara.is_alive(chara, map)
-               and chara:base_reaction_towards(Chara.player()) > 0
+               and chara:relation_towards(Chara.player()) == Enum.Relation.Neutral
                and (chara:find_role("elona.guard") or chara:find_role("elona.citizen"))
             then
                local category = Rand.choice(Filters.fsetcollect)
