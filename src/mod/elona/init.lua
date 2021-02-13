@@ -57,6 +57,9 @@ Gui.bind_keys {
    ammo = function(_, me)
       return ElonaCommand.ammo(me)
    end,
+   open = function(_, me)
+      return ElonaCommand.open(me)
+   end,
    enter = function(_, me)
       return ElonaCommand.enter_action(me)
    end,

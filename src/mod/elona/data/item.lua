@@ -19,6 +19,7 @@ local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
 local Log = require("api.Log")
+local Chara = require("api.Chara")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -13177,6 +13178,26 @@ local item =
          coefficient = 100,
 
          is_precious = true,
+
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:899 		snd seLocked : txt lang("足枷を外した。","You unlock th ...
+            Gui.play_sound("base.locked1")
+            Gui.mes("action.open.shackle.text")
+            local map = params.chara:current_map()
+            if map and map._archetype == "elona.noyel" and not save.elona.is_fire_giant_released then
+               local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
+               if Chara.is_alive(fire_giant) then
+                  local moyer = Chara.find("elona.moyer_the_crooked")
+                  if Chara.is_alive(moyer) then
+                     Gui.mes_c("action.open.shackle.dialog", "SkyBlue")
+                     fire_giant:set_target(moyer, 1000)
+                  end
+               end
+               save.elona.is_fire_giant_released = true
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:908 		goto *turn_end ..
+         end,
 
          categories = {
             "elona.container",

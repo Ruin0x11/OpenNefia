@@ -676,7 +676,7 @@ return {
          only_in_home = "You can only use it at your home.",
          only_in_shop = "You can only use it at your shop",
          shackle = {
-            dialog = "Moyer yells, You idiot!",
+            dialog = "Moyer yells, \"You idiot!\"",
             text = "You unlock the shackle."
          },
          text = function(_1)

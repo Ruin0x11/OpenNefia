@@ -9,6 +9,7 @@ local function init_save()
    s.artifact_locations = {}
    s.inheritable_item_count = 0
    s.fire_giant_uid = nil
+   s.is_fire_giant_released = false
    s.home_rank = "elona.cave"
    s.flag_has_met_ally = false
    s.total_skills_learned = 0

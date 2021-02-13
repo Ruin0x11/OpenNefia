@@ -84,6 +84,7 @@ Remove this to use the character's sprite instead.
          {
             name = "resistances",
             default = {},
+            no_fallback = true
          },
          {
             name = "item_type",
@@ -277,6 +278,15 @@ AI callback to run on this character's turn.
             doc = [[
 A damage reaction to trigger if this character is melee attacked.
 ]]
+         },
+         {
+            name = "skills",
+            default = nil,
+            type = "table?",
+            no_fallback = true,
+            doc = [[
+Skills this character will already know on creation.
+]]
          }
       },
       fallbacks = {
@@ -317,8 +327,6 @@ A damage reaction to trigger if this character is melee attacked.
             on_low_hp = nil,
             on_idle_action = nil
          },
-
-         known_abilities = {},
 
          hp = 1,
          mp = 1,

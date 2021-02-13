@@ -5184,6 +5184,18 @@ local chara = {
       resistances = {
          ["elona.fire"] = 500,
       },
+      skills = {
+         "elona.action_fire_breath"
+      },
+      ai_actions = {
+         main = {
+            { id = "elona.melee" }
+         },
+         sub = {
+            { id = "elona.magic", skill_id = "elona.action_fire_breath" }
+         },
+         sub_chance = 65
+      },
       gender = "male",
       image = "elona.chara_ebon2",
       quality = Enum.Quality.Unique,

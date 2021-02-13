@@ -247,18 +247,18 @@ function Chara.create(id, x, y, params, where)
       MapObject.finalize(chara, gen_params)
    end
 
-   if where then
-      -- TODO: may want to return status
-      local Map = require("api.Map")
-      Map.try_place_chara(chara, x, y, where)
-   end
-
    if chara and not params.no_build then
       chara:refresh()
    end
 
    chara:instantiate()
    chara:emit("base.on_chara_generated")
+
+   if where then
+      -- TODO: may want to return status
+      local Map = require("api.Map")
+      Map.try_place_chara(chara, x, y, where)
+   end
 
    return chara
 end

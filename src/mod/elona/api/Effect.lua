@@ -590,6 +590,10 @@ function Effect.decrement_fame(chara, fraction)
 end
 
 function Effect.do_stamina_check(source, base_cost, related_skill_id)
+   if not source:is_player() then
+      return true
+   end
+
    local sp_cost = base_cost / 2 + 1
    if source.stamina < 50 and source.stamina < Rand.rnd(75) then
       source:damage_sp(sp_cost)
@@ -664,9 +668,6 @@ function Effect.end_incognito(source)
    end
 
    Chara.iter():filter(filter):each(apply)
-end
-
-function Effect.act_hostile_towards(source, target)
 end
 
 function Effect.create_new_building(deed)

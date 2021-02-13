@@ -658,11 +658,22 @@ function Skill.calc_spell_success_chance(skill_id, chara)
 end
 
 function Skill.calc_spell_power(skill_id, chara)
+   -- >>>>>>>> shade2/calculation.hsp:867 #defcfunc calcSpellPower int id,int c ...
    local skill_entry = data["base.skill"]:ensure(skill_id)
    if skill_entry.type ~= "spell" then
-      if chara:has_skill(skill_id) then
+      -- NOTE: In vanilla, power was calculated by multipying the enum
+      -- value of the skill's type (bolt, arrow, ball, etc.) and
+      -- adding 10. This means bolt spells were the least powerful and
+      -- ball spells were more powerful. This is changed here (and in
+      -- omake overhaul) to be the skill level of the action or the
+      -- character's level.
+      if not chara:is_player() then
+         return chara:calc("level") * 6 + 10
+      end
+      if chara:is_player() and chara:has_skill(skill_id) then
          return chara:skill_level(skill_id) * 6 + 10
       end
+
       return 100
    end
 
@@ -670,11 +681,13 @@ function Skill.calc_spell_power(skill_id, chara)
       return chara:skill_level(skill_id) * 10 + 50
    end
 
+   -- TODO customize AI spell power
    if not chara:has_skill("elona.casting") and not chara:is_ally() then
       return chara:calc("level") * 6 + 10
    end
 
    return chara:skill_level("elona.casting") * 6 + 10
+   -- <<<<<<<< shade2/calculation.hsp:874 	return sCasting(c)*6+10 ..
 end
 
 function Skill.get_dice(skill_id, chara, power)

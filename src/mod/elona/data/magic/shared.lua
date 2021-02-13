@@ -662,10 +662,9 @@ data:add {
    },
 
    dice = function(self, params)
-      local level = params.source:skill_level("elona.action_suicide_attack")
       return {
-         x = 1 + level / 25,
-         y = 15 + level / 5 + 1,
+         x = 1 + params.power / 25,
+         y = 15 + params.power / 5 + 1,
          bonus = 0
       }
    end,
@@ -895,10 +894,9 @@ data:add {
    },
 
    dice = function(self, params)
-      local level = params.source:skill_level("elona.action_prayer_of_jure")
       local piety = params.source:calc("piety")
       return {
-         x = 1 + level / 10,
+         x = 1 + params.power / 10,
          y = piety / 70 + 1 + 1,
          bonus = 0
       }
@@ -1291,11 +1289,10 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
       },
 
       dice = function(self, params)
-         local level = params.source:skill_level("elona.action_" .. id)
          return {
-            x = 1 + level / dice_x,
+            x = 1 + params.power / dice_x,
             y = dice_y + 1,
-            bonus = level / bonus
+            bonus = params.power / bonus
          }
       end,
 

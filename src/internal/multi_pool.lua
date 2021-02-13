@@ -122,7 +122,7 @@ function multi_pool:get_object_of_type(_type, uid)
    if obj == nil then
       return nil
    end
-   assert(obj._type == _type)
+   assert(obj._type == _type, obj._type)
    return obj
 end
 

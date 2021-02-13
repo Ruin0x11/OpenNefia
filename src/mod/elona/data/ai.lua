@@ -1,6 +1,4 @@
-local I18N = require("api.I18N")
 local Gui = require("api.Gui")
--- TODO This will need to be rewritten once all dependencies are implemented.
 local Enum = require("api.Enum")
 local MapTileset = require("mod.elona_sys.map_tileset.api.MapTileset")
 local Map = require("api.Map")
@@ -16,7 +14,7 @@ local Ai = require("api.Ai")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Rand = require("api.Rand")
-local Magic = require("mod.elona_sys.api.Magic")
+local elona_Magic = require("mod.elona.api.Magic")
 
 local function default_target(chara)
    return chara:get_party_leader() or Chara.player()
@@ -85,8 +83,11 @@ local function dir_check(chara, dir, reverse)
             blocked_by_chara = true
          end
       end
-      -- EVENT: on_ai_dir_check
-      -- if is door, then space is open
+
+      local can_access = chara:emit("elona.on_ai_dir_check", {x=nx, y=ny}, false)
+      if not can_access then
+         return nx, ny, blocked_by_chara
+      end
    end
 
    return nil, nil, blocked_by_chara
@@ -383,72 +384,32 @@ end
 
 Event.register("elona.on_ai_calm_action", "Eat if hungry", do_eat)
 
-local function attempt_melee_attack(chara, params)
-   local target_damage_reaction = nil
-   local target = params.target or chara:get_target()
-   if not Chara.is_alive(target) then return false end
-
-   if target_damage_reaction then
-      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
-      local can_do_ranged_attack = false
-      if can_do_ranged_attack and dist < 6 and chara:has_los(target.x, target.y) then
-         Action.ranged(chara, target)
-      end
-
-      local element
-      if element == "elona.cut" and chara.hp < chara:calc("max_hp") / 2 then
-         return false
-      end
-   end
-
-   ElonaAction.melee_attack(chara, target)
-
-   return true
-end
-
-local function default_action(chara, params)
-   local target = params.target or chara:get_target()
-   if not Chara.is_alive(target) then
-      return false
-   end
-
+local function attempt_to_melee(chara, params)
+   -- >>>>>>>> shade2/ai.hsp:519 	if distance=1{ ...
+   local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
-
    if dist == 1 then
-      chara:say("base.ai_melee")
-      return Ai.run("elona.attempt_melee_attack", chara)
-   end
+      local target_damage_reaction = target:calc("damage_reaction")
+      if not Chara.is_alive(target) then return false end
 
-   if dist < 6 and chara:has_los(target.x, target.y) then
-      chara:say("base.ai_ranged")
-      local can_do_ranged_attack = false
-      if can_do_ranged_attack then
-         Action.ranged(chara, target)
-         return true
+      if target_damage_reaction then
+         local can_do_ranged_attack = false
+         if can_do_ranged_attack and dist < 6 and chara:has_los(target.x, target.y) then
+            Action.ranged(chara, target)
+         end
+
+         if target_damage_reaction == "elona.cut" and chara.hp < chara:calc("max_hp") / 2 then
+            return false
+         end
       end
+
+      ElonaAction.melee_attack(chara, target)
+
+      return true
    end
 
-   if chara.ai_dist <= dist then
-      if Rand.one_in(3) then
-         return true
-      end
-   end
-
-   if Rand.one_in(5) then
-      chara:set_aggro(chara:get_target(), chara:get_aggro() - 1)
-   end
-
-   if Rand.percent_chance(chara.ai_move) then
-      return Ai.run("elona.idle_action", chara)
-   end
-
-   return true
-end
-
-local function get_actions(chara, _type)
-   local pred = function(a) return a.type == _type end
-
-   return fun.iter(chara:calc("known_abilities")):filter(pred):to_list()
+   return false
+   -- <<<<<<<< shade2/ai.hsp:521 	} ..
 end
 
 local function basic_action(chara, params)
@@ -459,20 +420,30 @@ local function basic_action(chara, params)
       save.base.parties:get(target:get_party()).metadata.leader_attacker = chara.uid
    end
 
-   local choosing_sub_act = Rand.percent_chance(chara.ai_act_sub_freq)
+   if not chara.ai_actions then
+      return Ai.run("elona.melee", chara)
+   end
+
+   local choosing_sub_act = Rand.percent_chance(chara.ai_actions.sub_action_chance or 0)
    local choice
 
    if choosing_sub_act then
-      choice = Rand.choice(get_actions(chara, "main"))
+      choice = Rand.choice(chara.ai_actions.main or {})
    else
-      choice = Rand.choice(get_actions(chara, "sub"))
+      choice = Rand.choice(chara.ai_actions.sub or {})
    end
 
-   if not choice then
-      return Ai.run("elona.default_action", chara)
+   if choice then
+      if Ai.run(choice.id, chara, choice) then
+         return true
+      end
    end
 
-   return Ai.run(choice.id, choice.params)
+   if choice.id == "elona.melee" then
+      return true
+   end
+
+   return Ai.run("elona.melee", chara)
    -- <<<<<<<< shade2/ai.hsp:527 	 ..
 end
 
@@ -614,7 +585,7 @@ local function decide_targeted_action(chara, params)
       return true
    end
 
-   if chara:get_party() then
+   if chara:is_in_player_party() then
       return Ai.run("elona.decide_ally_targeted_action", chara)
    end
 
@@ -631,7 +602,7 @@ local function decide_targeted_action(chara, params)
 
    local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
-   if chara.ai_dist <= dist then
+   if dist ~= chara.ai_dist then
       if Rand.percent_chance(chara.ai_move) then
          return Ai.run("elona.move_towards_target", chara)
       end
@@ -658,22 +629,12 @@ local function ai_talk(chara, params)
 end
 
 local function elona_default_ai(chara, params)
-   if chara:calc("is_hung_on_sandbag") then
-      if chara:is_in_fov() then
-         if Rand.one_in(30) then
-            Gui.mes_c(I18N.quote_speech("action.npc.sand_bag"), "Talk")
-         end
-      end
-      chara.aggro = 0
+   local blocked = chara:emit("elona.before_default_ai_action")
+   if blocked then
       return true
    end
 
-   -- TODO leash
-   if chara:calc("is_about_to_explode") then
-      Magic.cast("elona.suicide_attack", {source = chara, x = chara.x, y = chara.y})
-      return true
-   end
-   if chara:get_party() then
+   if chara:is_in_player_party() then
       Ai.run("elona.decide_ally_target", chara)
    end
 
@@ -682,18 +643,31 @@ local function elona_default_ai(chara, params)
       chara:set_target(default_target(chara), 0)
    end
 
-   -- EVENT: on_decide_action
    -- TODO pet arena
    -- TODO noyel
    -- TODO mount
+   blocked = chara:emit("elona.on_default_ai_action")
+   if blocked then
+      return true
+   end
 
    Ai.run("elona.ai_talk", chara)
 
-   -- TODO choked
    local leader = chara:get_party_leader()
    if Chara.is_alive(leader) and leader:has_effect("elona.choking") then
       if Pos.dist(chara.x, chara.y, leader.x, leader.y) == 1 then
          ElonaAction.bash(chara, leader.x, leader.y)
+         return true
+      end
+   else
+      leader = Chara.player()
+      if chara:relation_towards(leader) >= Enum.Relation.Neutral
+         and Chara.is_alive(leader)
+         and leader:has_effect("elona.choking")
+         and Pos.dist(chara.x, chara.y, leader.x, leader.y) == 1
+      then
+         ElonaAction.bash(chara, leader.x, leader.y)
+         return true
       end
    end
 
@@ -702,7 +676,7 @@ local function elona_default_ai(chara, params)
    end
 
    target = chara:get_target()
-   if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:get_party()) then
+   if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:is_in_player_party()) then
       return Ai.run("elona.decide_targeted_action", chara)
    end
 
@@ -732,19 +706,98 @@ data:add_multi(
       { _id = "go_to_position",              act = go_to_position },
       { _id = "wander",                      act = wander },
       { _id = "go_to_preset_anchor",         act = go_to_preset_anchor },
-      { _id = "attempt_melee_attack",        act = attempt_melee_attack },
       { _id = "follow_player",               act = follow_player },
       { _id = "move_towards_target",         act = move_towards_target },
-      { _id = "default_action",              act = default_action },
       { _id = "basic_action",                act = basic_action },
       { _id = "search_for_target",           act = search_for_target },
       { _id = "decide_ally_target",          act = decide_ally_target },
       { _id = "ai_talk",                     act = ai_talk },
       { _id = "try_to_heal",                 act = try_to_heal },
+      { _id = "attempt_to_melee",            act = attempt_to_melee },
       { _id = "idle_action",                 act = idle_action },
       { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },
       { _id = "on_status_effect",            act = on_status_effect },
       { _id = "decide_targeted_action",      act = decide_targeted_action },
-      { _id = "elona_default_ai",            act = elona_default_ai }
+      { _id = "elona_default_ai",            act = elona_default_ai },
    }
 )
+
+data:add {
+   _type = "base.ai_action",
+   _id = "melee",
+
+   act = function(chara, params)
+      local target = chara:get_target()
+      if not Chara.is_alive(target) then
+         return false
+      end
+
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+
+      if dist == 1 then
+         chara:say("base.ai_melee")
+         return Ai.run("elona.attempt_to_melee", chara)
+      end
+
+      if dist < 6 and chara:has_los(target.x, target.y) then
+         chara:say("base.ai_ranged")
+         local can_do_ranged_attack = false
+         if can_do_ranged_attack then
+            Action.ranged(chara, target)
+            return true
+         end
+      end
+
+      if chara.ai_dist <= dist then
+         if Rand.one_in(3) then
+            return true
+         end
+      end
+
+      if Rand.one_in(5) then
+         chara:set_aggro(chara:get_target(), chara:get_aggro() - 1)
+      end
+
+      if Rand.percent_chance(chara.ai_move) then
+         return Ai.run("elona.idle_action", chara)
+      end
+
+      return true
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
+   _id = "magic",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:500 	if act>=headSpell : if act<tailSpell{ ...
+      local skill = data["base.skill"]:ensure(params.skill_id)
+      if skill.type == "spell" then
+         if chara.mp < chara:calc("max_mp") / 7 then
+            if not Rand.one_in(3)
+               or chara:is_in_player_party()
+               or chara:calc("quality") >= Enum.Quality.Great
+               or chara:calc("ai_regenerates_mana")
+            then
+               chara:heal_mp(chara:calc("level") / 4 + 5)
+               return true
+            end
+         end
+         local did_something = elona_Magic.cast_spell(skill._id, chara, true)
+         if did_something then
+            return true
+         end
+      end
+
+      if skill.type == "action" then
+         local did_something = elona_Magic.do_action(skill._id, chara)
+         if did_something then
+            return true
+         end
+      end
+
+      return false
+      -- <<<<<<<< shade2/ai.hsp:511 	} ..
+   end
+}

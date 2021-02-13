@@ -15,6 +15,8 @@ local Gui = require("api.Gui")
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
 local Enum = require("api.Enum")
+local Event = require("api.Event")
+local Charagen = require("mod.tools.api.Charagen")
 
 do
    local vernis = {
@@ -1245,12 +1247,15 @@ do
    end
 
    function noyel.on_map_renew_geometry(map)
+      -- >>>>>>>> shade2/map.hsp:3395 	inv_getHeader -1 ...
       for _, item in Item.iter_ground(map) do
          if item.id ~= "elona.shelter" and item.id ~= "elona.giants_shackle" then
             item:remove()
          end
       end
+      -- <<<<<<<< shade2/map.hsp:3400 	loop ..
 
+      -- >>>>>>>> shade2/map.hsp:1904 				if gMonth=12{ ...
       if World.date().month == 12 then
          if not map.is_noyel_christmas_festival then
             map.is_noyel_christmas_festival = true
@@ -1264,6 +1269,25 @@ do
          end
          util.reload_122_map_geometry(map, "noyel")
       end
+
+      save.elona.is_fire_giant_released = false
+      -- <<<<<<<< shade2/map.hsp:1911 				flagFireGiant=false ..
+   end
+
+   function noyel.on_map_pass_turn(map)
+      -- >>>>>>>> shade2/map.hsp:3295 	if gArea=areaNoyel:if flagFireGiant=true:if cExis ...
+      if save.elona.is_fire_giant_released then
+         local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
+         if Chara.is_alive(fire_giant) and map:calc("crowd_density") < 30 then
+            if Rand.one_in(4) then
+               Charagen.create(nil, nil, { id = "elona.palmian_elite_soldier", quality = Enum.Quality.Bad }, map)
+            end
+            if Rand.one_in(10) then
+               Charagen.create(nil, nil, { id = "elona.tourist", quality = Enum.Quality.Bad }, map)
+            end
+         end
+      end
+      -- <<<<<<<< shade2/map.hsp:3300 	} ..
    end
 
    data:add(noyel)
@@ -1291,6 +1315,23 @@ do
          starting_floor = 1
       }
    }
+
+   local function target_fire_giant(chara, params, result)
+      -- >>>>>>>> shade2/ai.hsp:86 	if gArea=areaNoyel{ ...
+      local map = chara:current_map()
+      if map and map._archetype == "elona.noyel" and save.elona.fire_giant_uid ~= nil then
+         local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
+         if chara.uid ~= save.elona.fire_giant_uid
+            and not chara:is_in_player_party()
+            and save.elona.is_fire_giant_released
+            and Chara.is_alive(fire_giant)
+         then
+            chara:set_target(fire_giant, 500)
+         end
+      end
+      -- <<<<<<<< shade2/ai.hsp:90 		} ..
+   end
+   Event.register("elona.on_default_ai_action", "Target fire giant if escaped", target_fire_giant)
 end
 
 do

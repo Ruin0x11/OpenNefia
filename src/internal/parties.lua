@@ -18,7 +18,7 @@ function parties:get(id)
 end
 
 function parties:get_party_id_of_chara(chara)
-   assert(class.is_an(IChara, chara))
+   class.assert_is_an(IChara, chara)
    local id = self.chara_to_party[chara.uid]
    if id == nil then
       return nil
@@ -27,7 +27,7 @@ function parties:get_party_id_of_chara(chara)
 end
 
 function parties:add_member(id, chara)
-   assert(class.is_an(IChara, chara))
+   class.assert_is_an(IChara, chara)
    local party = self:get(id)
    if party == nil then
       error(("unknown party %d"):format(id))
@@ -44,7 +44,7 @@ function parties:add_member(id, chara)
 end
 
 function parties:has_member(id, chara)
-   assert(class.is_an(IChara, chara))
+   class.assert_is_an(IChara, chara)
    local party = self:get(id)
    if party == nil then
       error(("unknown party %d"):format(id))
@@ -53,7 +53,7 @@ function parties:has_member(id, chara)
 end
 
 function parties:set_leader(id, chara)
-   assert(class.is_an(IChara, chara))
+   class.assert_is_an(IChara, chara)
    local party = self:get(id)
    if party == nil then
       error(("unknown party %d"):format(id))
@@ -73,7 +73,7 @@ function parties:get_leader(id)
 end
 
 function parties:remove_member(id, chara)
-   assert(class.is_an(IChara, chara))
+   class.assert_is_an(IChara, chara)
    local party = self:get(id)
    if party == nil then
       error(("unknown party %d"):format(id))

@@ -1,6 +1,6 @@
 local IFactioned = require("api.IFactioned")
 
-local ICharaAi = class.interface("ICharaAi", { IFactioned })
+local ICharaAi = class.interface("ICharaAi", {}, { IFactioned })
 
 --- Resets the AI state of this character.
 function ICharaAi:reset_ai()
