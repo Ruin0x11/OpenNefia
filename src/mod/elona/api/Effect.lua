@@ -763,6 +763,10 @@ local FLAMMABLE_CATEGORIES = {
 
 function Effect.damage_item_fire(item, fireproof_blanket)
    -- >>>>>>>> shade2/chara_func.hsp:1195 	rowAct_item ci ...
+   if not Item.is_alive(item) then
+      return false
+   end
+
    local owner = item:get_owning_chara()
 
    item:remove_activity()
@@ -795,16 +799,15 @@ function Effect.damage_item_fire(item, fireproof_blanket)
    local is_flammable = fun.iter(FLAMMABLE_CATEGORIES):any(function(cat) return item:has_category(cat) end)
 
    if not is_flammable then
-      if Rand.one_in(4) then
+      if not Rand.one_in(4) then
          return false
       end
-      if owner == nil and Rand.one_in(4) then
+      if owner == nil and not Rand.one_in(4) then
          return false
       end
    end
 
    if fireproof_blanket and Item.is_alive(fireproof_blanket) then
-      print(tostring(owner))
       if owner then
          Gui.mes_visible("item.fireproof_blanket.protects_item", owner.x, owner.y, fireproof_blanket:build_name(1), owner)
       end
@@ -891,20 +894,124 @@ function Effect.damage_map_fire(x, y, origin, map)
             mef:remove_ownership()
          end
          Mef.create("elona.fire", x, y, { duration = Rand.rnd(10) + 5, 100, origin = origin }, map)
-         map:refresh_tile(x, y)
       end
+      map:refresh_tile(x, y)
    end
    -- <<<<<<<< shade2/chara_func.hsp:1246 	return ..
 end
 
-function Effect.damage_map_ice(x, y, origin)
-   -- TODO
+function Effect.damage_item_ice(item, coldproof_blanket)
+   -- >>>>>>>> shade2/chara_func.hsp:1265 	if max=0:return false ...
+   if not Item.is_alive(item) then
+      return false
+   end
+
+   local owner = item:get_owning_chara()
+
+   item:remove_activity()
+
+   if item:calc("is_precious") then
+      return false
+   end
+
+   if item:has_category("elona.container")
+      or item:has_category("elona.misc_item")
+      or item:has_category("elona.gold")
+   then
+      return false
+   end
+
+   if item:calc("quality") >= Enum.Quality.Great or item:is_equipped() then
+      return false
+   end
+
+   if not item:has_category("elona.drink") and not Rand.one_in(30) then
+      return false
+   end
+
+   if coldproof_blanket and Item.is_alive(coldproof_blanket) then
+      if owner then
+         Gui.mes_visible("item.coldproof_blanket.protects_item", owner.x, owner.y, coldproof_blanket:build_name(1), owner)
+      end
+      if coldproof_blanket.charges > 0 then
+         coldproof_blanket.charges = coldproof_blanket.charges - 1
+      else
+         if Rand.one_in(20) then
+            coldproof_blanket.amount = coldproof_blanket.amount - 1
+            if owner then
+               Gui.mes_visible("item.coldproof_blanket.is_broken_to_pieces", owner.x, owner.y, coldproof_blanket:build_name(1))
+            end
+            return true
+         end
+      end
+      return false
+   end
+
+   local lost_amount = math.floor(Rand.rnd(item.amount) / 2 + 1)
+
+   if owner then
+      Gui.mes_c_visible("item.someones_item.breaks_to_pieces", owner.x, owner.y, "Purple", item:build_name(lost_amount, true), lost_amount, owner)
+   else
+      Gui.mes_c_visible("item.item_on_the_ground.breaks_to_pieces", item.x, item.y, "Purple", item:build_name(lost_amount), lost_amount)
+   end
+
+   item.amount = item.amount - lost_amount
+   item:refresh_cell_on_map()
+   if owner then
+      owner:refresh_weight()
+   end
+
+   return true
+   -- <<<<<<<< shade2/chara_func.hsp:1289 	return f ..
+end
+
+function Effect.damage_chara_items_cold(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1252 	if tc!-1{ ...
+   if chara:resist_level("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+      return false
+   end
+
+   local targets = {}
+   local coldproof_blanket
+   for _, item in chara:iter_items() do
+      if Item.is_alive(item) then
+         if item._id == "elona.coldproof_blanket" and not coldproof_blanket then
+            coldproof_blanket = item:separate()
+         else
+            targets[#targets+1] = item
+         end
+      end
+   end
+
+   if #targets == 0 then
+      return false
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1263 		} ..
+
+   local did_something = false
+   for _ = 1, 3 do
+      local target = Rand.choice(targets)
+
+      did_something = Effect.damage_item_ice(target, coldproof_blanket) or did_something
+   end
+
+   return did_something
+end
+
+function Effect.damage_map_cold(x, y, origin, map)
+   -- >>>>>>>> shade2/chara_func.hsp:1291 #deffunc mapitem_cold int x,int y ...
+   local item = Item.at(x, y, map):nth(1)
+   if item then
+      Effect.damage_item_ice(item)
+      map:refresh_tile(x, y)
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1302 	return ..
 end
 
 function Effect.start_incognito(source)
    local filter = function(chara)
       local is_wandering_merchant = chara:iter_roles("elona.shopkeeper")
-          :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
+      :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
       if is_wandering_merchant then
          return false
       end

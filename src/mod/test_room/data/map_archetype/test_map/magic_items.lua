@@ -25,7 +25,7 @@ local function create_magic_items(x, y, width, map)
    local categories = table.set {
       "elona.spellbook",
       "elona.rod",
-      "elona.potion",
+      "elona.drink_potion",
       "elona.scroll",
    }
    local filter = function(i)

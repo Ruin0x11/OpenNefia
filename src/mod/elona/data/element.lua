@@ -30,9 +30,9 @@ local element = {
          -- <<<<<<<< shade2/chara_func.hsp:1459 		if (ele=rsResFire)or(dmgSource=dmgFromFire):dmg= ..
       end,
 
-      on_damage_tile = function(self, x, y, chara)
+      on_damage_tile = function(self, x, y, source)
          -- >>>>>>>> shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ...
-         Effect.damage_map_fire(x, y, chara, chara:current_map())
+         Effect.damage_map_fire(x, y, source, source:current_map())
          -- <<<<<<<< shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ..
       end,
 
@@ -61,9 +61,16 @@ local element = {
       death_anim = "base.anim_elem_cold",
       rarity = 1,
 
-      on_damage_tile = function(self, x, y, chara)
--- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
-         Effect.damage_map_ice(x, y, chara)
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ...
+         Effect.damage_chara_items_cold(chara)
+         -- <<<<<<<< shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
+      end,
+
+      on_damage_tile = function(self, x, y, source)
+         -- >>>>>>>> shade2/proc.hsp:1706 	if ele=rsResCold:mapitem_cold dx,dy ...
+         Effect.damage_map_cold(x, y, source, source:current_map())
+         -- <<<<<<<< shade2/proc.hsp:1706 	if ele=rsResCold:mapitem_cold dx,dy ..
       end,
    },
    {

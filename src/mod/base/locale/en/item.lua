@@ -48,11 +48,11 @@ return {
       coldproof_blanket = {
          protects_item = function(_1, _2)
             return ("%s protects %s%s stuff from cold.")
-               :format(itemname(_1, 1), name(_2), his_owned(_2))
+               :format(_1, name(_2), his_owned(_2))
          end,
          is_broken_to_pieces = function(_1)
             return ("%s is broken to pieces.")
-               :format(itemname(_1, 1))
+               :format(_1)
          end,
       },
       desc = {
@@ -164,7 +164,7 @@ return {
          end,
          gets_broiled = function(_1, _2)
             return ("%s%s %s get%s perfectly broiled.")
-               :format(name(_2), his_owned(_2), itemname(_1), s(_1))
+               :format(name(_2), his_owned(_2), _1, s(_1))
          end,
          turns_to_dust = function(_1, _2, _3)
             return ("%s%s %s turn%s to dust.")
@@ -179,7 +179,7 @@ return {
       },
       stacked = function(_1, _2)
          return ("%s has been stacked. (Total:%s)")
-            :format(itemname(_1, 1), _2)
+            :format(_1, _2)
       end,
       unknown_item = "unknown item (incompatible version)",
       qualified_name = function(name, originalnameref2)

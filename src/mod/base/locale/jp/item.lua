@@ -118,11 +118,11 @@ return {
       fireproof_blanket = {
          protects_item = function(_1, _2)
             return ("%sが%sの持ち物を炎から守った。")
-               :format(itemname(_1, 1), name(_2))
+               :format(_1, name(_2))
          end,
          turns_to_dust = function(_1)
             return ("%sは灰と化した。")
-               :format(itemname(_1, 1))
+               :format(_1)
          end,
       },
       item_on_the_ground = {
@@ -132,7 +132,7 @@ return {
          end,
          gets_broiled = function(_1)
             return ("地面の%sはこんがりと焼き上がった。")
-               :format(itemname(_1))
+               :format(_1)
          end,
          turns_to_dust = function(_1)
             return ("地面の%sは灰と化した。")
