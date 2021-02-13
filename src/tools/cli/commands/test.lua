@@ -6,11 +6,12 @@ local Event = require("api.Event")
 local env = require("internal.env")
 local socket = require("socket")
 local Rand = require("api.Rand")
-local config = require("internal.config")
 local elona_repl = require("internal.elona_repl")
 local Repl = require("api.Repl")
 local ansicolors = require("thirdparty.ansicolors")
 local Log = require("api.Log")
+local config_store = require("internal.config_store")
+local save_store = require("internal.save_store")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
@@ -46,7 +47,21 @@ local function make_test_env()
    return setmetatable(tests, mt), mt
 end
 
+local function cleanup_globals()
+   config_store.clear()
+   save_store.clear()
+   field:init_global_data()
+end
+
+local function print_result(result)
+   io.write(ansicolors("%{red}\nFailure: " .. result.test_name .. "\n"))
+   io.write(ansicolors("============(traceback)\n%{reset}" .. result.traceback .. "\n"))
+   io.write("============(stdout)\n" .. result.stdout .. "")
+   io.write("============\n")
+end
+
 local function run_test(name, test_fn, seed, debug_on_error)
+   cleanup_globals()
    Rand.set_seed(seed)
 
    local locals
@@ -64,22 +79,36 @@ local function run_test(name, test_fn, seed, debug_on_error)
       return debug.traceback(err)
    end
 
+   local StringIO = require("mod.extlibs.api.StringIO")
+   local _print = print
+   local redir_out = StringIO.create()
+   print = function(...) for _, i in ipairs({...}) do redir_out:write(i .. "\n") end end
+
    local ok, err = xpcall(test_fn, capture)
+
+   print = _print
 
    if ok then
       io.write(ansicolors("%{green}.%{reset}"))
-      return true
+      return true, nil
    else
-      io.write(ansicolors("%{red}F\n" .. name .. "\n============\n%{reset}" .. err .. "\n\n"))
+      io.write(ansicolors("%{red}F"))
+
+      local result = {
+         test_name = name,
+         traceback = err,
+         stdout = tostring(redir_out)
+      }
 
       if debug_on_error then
+         print_result(result)
          local repl_env, history = Repl.generate_env(locals)
          elona_repl.set_environment(repl_env)
          print(inspect(table.keys(locals)))
          elona_repl:run()
       end
 
-      return false
+      return false, result
    end
 end
 
@@ -91,7 +120,7 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
 
    chunk()
 
-   local failures = 0
+   local failures = {}
    local total = 0
 
    for _, pair in ipairs(mt.__tests) do
@@ -99,9 +128,9 @@ local function test_file(file, filter_test_name, seed, debug_on_error)
       local test_fn = pair[2]
 
       if string.match(name, filter_test_name) then
-         local success = run_test(name, test_fn, seed, debug_on_error)
+         local success, result = run_test(name, test_fn, seed, debug_on_error)
          if not success then
-            failures = failures + 1
+            failures[#failures+1] = result
          end
          total = total + 1
       end
@@ -131,9 +160,9 @@ return function(args)
    local filter_file_name = spl[1]
    local filter_test_name = spl[2] or ".*"
 
-   Log.warn("Test filter: %s:%s", filter_file_name, filter_test_name)
+   Log.debug("Test filter: %s:%s", filter_file_name, filter_test_name)
 
-   local failures = 0
+   local failures = {}
    local total = 0
 
    local function get_files(path)
@@ -151,15 +180,20 @@ return function(args)
       else
          if string.match(path, filter_file_name) then
             local failures_, total_ = test_file(path, filter_test_name, seed, args.debug_on_error)
-            failures = failures + failures_
+            failures = table.append(failures, failures_)
             total = total + total_
          end
       end
    end
 
    print()
-   if failures > 0 then
-      print(ansicolors(("%%{red}%d/%d tests failed.%%{reset}"):format(failures, total)))
+   if #failures > 0 then
+      if not args.debug_on_error then
+         for _, result in ipairs(failures) do
+            print_result(result)
+         end
+      end
+      print(ansicolors(("%%{red}%d/%d tests failed.%%{reset}"):format(#failures, total)))
    else
       print(ansicolors(("%%{green}%d tests passed.%%{reset}"):format(total)))
    end

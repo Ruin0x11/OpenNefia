@@ -41,8 +41,10 @@ local function disturb_sleep(chara, params)
          Gui.mes("damage.sleep_is_disturbed", chara)
       end
    end
-   params.attacker.noise = 100
-   params.attacker:act_hostile_towards(chara)
+   if params.attacker then
+      params.attacker.noise = 100
+      params.attacker:act_hostile_towards(chara)
+   end
    -- <<<<<<<< shade2/chara_func.hsp:1567 			} ..
 end
 

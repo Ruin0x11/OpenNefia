@@ -31,13 +31,15 @@ local element = {
       end,
 
       on_damage_tile = function(self, x, y, chara)
-         Effect.damage_map_fire(x, y, chara)
+         -- >>>>>>>> shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ...
+         Effect.damage_map_fire(x, y, chara, chara:current_map())
+         -- <<<<<<<< shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ..
       end,
 
       on_damage = function(chara, params)
-         if not chara:has_effect("elona.wet") then
-            Gui.mes("Mef add fire")
-         end
+         -- >>>>>>>> shade2/chara_func.hsp:1560 		if (ele=rsResFire)or(dmgSource=dmgFromFire): ite ...
+         Effect.damage_chara_items_fire(chara)
+         -- <<<<<<<< shade2/chara_func.hsp:1560 		if (ele=rsResFire)or(dmgSource=dmgFromFire): ite ..
       end,
 
       on_kill = function(chara, params)
@@ -46,7 +48,7 @@ local element = {
          if class.is_an(IMapObject, params.source) then
             origin = params.source
          end
-         Mef.create("elona.fire", chara.x, chara.y, { duration = Rand.rnd(10) + 5, power = 100, origin = origin })
+         Mef.create("elona.fire", chara.x, chara.y, { duration = Rand.rnd(10) + 5, power = 100, origin = origin }, chara:current_map())
          -- <<<<<<<< shade2/chara_func.hsp:1645 			} ..
       end
    },

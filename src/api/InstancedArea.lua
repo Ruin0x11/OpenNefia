@@ -27,8 +27,9 @@ end
 
 function InstancedArea:add_floor(map, floor)
    floor = floor or (self:deepest_floor() + 1)
-   assert(math.type(floor) == "integer")
+
    assert(class.is_an(InstancedMap, map))
+   assert(math.type(floor) == "integer")
 
    assert(self.maps[floor] == nil, ("Map already exists at floor '%d'"):format(floor))
    if map.area_uid then

@@ -10,7 +10,6 @@ local Chara = require("api.Chara")
 local World = require("api.World")
 local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
-local api_Item = require("api.Item")
 local Util = require("mod.elona_sys.api.Util")
 
 local Item = {}
@@ -223,140 +222,10 @@ local function init_container(item, params)
 
    if item.container_params then
       if item.container_params.type == "local" then
-         item.inv = Inventory:new()
+         item.inv = Inventory:new(nil, "base.item", item)
       end
    end
 end
-
--- <<<<<<<< shade2/item.hsp:695 	} ..
-local FOOD_CHIPS = {
-   ["elona.bread"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_sweet_5",
-      [3] = "elona.item_dish_sweet_3",
-      [4] = "elona.item_dish_sweet_5",
-      [5] = "elona.item_dish_bread_5",
-      [6] = "elona.item_dish_bread_6",
-      [7] = "elona.item_dish_bread_7",
-      [8] = "elona.item_dish_bread_8",
-      [9] = "elona.item_dish_bread_9"
-   },
-   ["elona.egg"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_egg_3",
-      [4] = "elona.item_dish_meat_8",
-      [5] = "elona.item_dish_egg_3",
-      [6] = "elona.item_dish_vegetable_4",
-      [7] = "elona.item_hero_cheese",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_meat_7"
-   },
-   ["elona.fish"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_fish_3",
-      [4] = "elona.item_dish_vegetable_4",
-      [5] = "elona.item_dish_vegetable_4",
-      [6] = "elona.item_dish_fish_3",
-      [7] = "elona.item_dish_fish_7",
-      [8] = "elona.item_dish_fish_3",
-      [9] = "elona.item_dish_fish_3"
-   },
-   ["elona.fruit"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_8",
-      [4] = "elona.item_dish_fruit_4",
-      [5] = "elona.item_dish_fruit_4",
-      [6] = "elona.item_dish_fruit_6",
-      [7] = "elona.item_dish_fruit_6",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_fruit_4"
-   },
-   ["elona.meat"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_3",
-      [4] = "elona.item_dish_meat_4",
-      [5] = "elona.item_dish_meat_5",
-      [6] = "elona.item_dish_meat_5",
-      [7] = "elona.item_dish_meat_7",
-      [8] = "elona.item_dish_meat_8",
-      [9] = "elona.item_dish_meat_4"
-   },
-   ["elona.pasta"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_meat_8",
-      [3] = "elona.item_dish_pasta_3",
-      [4] = "elona.item_dish_pasta_4",
-      [5] = "elona.item_dish_pasta_4",
-      [6] = "elona.item_dish_pasta_3",
-      [7] = "elona.item_dish_pasta_3",
-      [8] = "elona.item_dish_pasta_4",
-      [9] = "elona.item_dish_pasta_3"
-   },
-   ["elona.sweet"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_sweet_3",
-      [4] = "elona.item_dish_fruit_4",
-      [5] = "elona.item_dish_sweet_5",
-      [6] = "elona.item_dish_fruit_4",
-      [7] = "elona.item_dish_egg_8",
-      [8] = "elona.item_dish_egg_8",
-      [9] = "elona.item_dish_egg_8"
-   },
-   ["elona.vegetable"] = {
-      [0] = "elona.item_dish_charred",
-      [1] = "elona.item_dish_charred",
-      [2] = "elona.item_dish_charred",
-      [3] = "elona.item_dish_meat_8",
-      [4] = "elona.item_dish_vegetable_4",
-      [5] = "elona.item_dish_meat_7",
-      [6] = "elona.item_dish_meat_8",
-      [7] = "elona.item_dish_vegetable_4",
-      [8] = "elona.item_dish_meat_8",
-      [9] = "elona.item_dish_meat_7"
-   }
-}
-
--- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
-function Item.get_food_image(food_type, food_quality)
-   local t = FOOD_CHIPS[food_type]
-   if not t then
-      return "elona.item_dish_charred"
-   end
-
-   local image = t[food_quality]
-
-   return image or "elona.item_dish_charred"
-end
--- <<<<<<<< shade2/text.hsp:655 	return ...
-
-
--- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
-function Item.make_dish(item, quality)
-   local food_type = item.params and item.params.food_type
-   assert(food_type, ("'%s' isn't a cookable food."):format(item._id))
-
-   item.image = Item.get_food_image(food_type, quality)
-   item.weight = 500
-   if item.spoilage_date and item.spoilage_date >= 0 then
-      item.spoilage_date = 72 + World.date_hours()
-   end
-   item.params.food_quality = quality
-
-   return item
-end
--- <<<<<<<< shade2/item_func.hsp:709 	return ..
 
 -- >>>>>>>> shade2/item.hsp:697 	if refType=fltFood : if iParam1(ci)!0{ ..
 local function init_food(item, params)

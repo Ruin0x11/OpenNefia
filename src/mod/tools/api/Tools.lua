@@ -650,7 +650,7 @@ function Tools.make_foods(x, y)
    for _, i, _id in foods:enumerate() do
       for quality=0, 9 do
          local food = Item.create(_id, x + i, y + quality - 1, {})
-         elona_Item.make_dish(food, quality)
+         Effect.make_dish(food, quality)
       end
    end
 end

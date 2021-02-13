@@ -32,7 +32,7 @@ function test_IMapObject_containing_map()
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    containing, obj = IMapObject.containing_map(item)
-   assert(item.location == player)
+   assert(item.location == player.inv)
    assert(containing == map)
    assert(obj == player)
 

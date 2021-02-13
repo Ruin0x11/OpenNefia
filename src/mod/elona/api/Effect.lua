@@ -8,7 +8,6 @@ local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Calc = require("mod.elona.api.Calc")
 local ExHelp = require("mod.elona.api.ExHelp")
 local Event = require("api.Event")
-local Map = require("api.Map")
 local Input = require("api.Input")
 local Enum = require("api.Enum")
 local IChara = require("api.chara.IChara")
@@ -16,6 +15,7 @@ local Area = require("api.Area")
 local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
+local Mef = require("api.Mef")
 
 local Effect = {}
 
@@ -394,6 +394,136 @@ function Effect.try_to_identify_item(item, power)
    return Effect.identify_item(item, level)
 end
 
+-- <<<<<<<< shade2/item.hsp:695 	} ..
+local FOOD_CHIPS = {
+   ["elona.bread"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_sweet_5",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_sweet_5",
+      [5] = "elona.item_dish_bread_5",
+      [6] = "elona.item_dish_bread_6",
+      [7] = "elona.item_dish_bread_7",
+      [8] = "elona.item_dish_bread_8",
+      [9] = "elona.item_dish_bread_9"
+   },
+   ["elona.egg"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_egg_3",
+      [4] = "elona.item_dish_meat_8",
+      [5] = "elona.item_dish_egg_3",
+      [6] = "elona.item_dish_vegetable_4",
+      [7] = "elona.item_hero_cheese",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_meat_7"
+   },
+   ["elona.fish"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_fish_3",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_vegetable_4",
+      [6] = "elona.item_dish_fish_3",
+      [7] = "elona.item_dish_fish_7",
+      [8] = "elona.item_dish_fish_3",
+      [9] = "elona.item_dish_fish_3"
+   },
+   ["elona.fruit"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_fruit_4",
+      [6] = "elona.item_dish_fruit_6",
+      [7] = "elona.item_dish_fruit_6",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_fruit_4"
+   },
+   ["elona.meat"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_3",
+      [4] = "elona.item_dish_meat_4",
+      [5] = "elona.item_dish_meat_5",
+      [6] = "elona.item_dish_meat_5",
+      [7] = "elona.item_dish_meat_7",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_4"
+   },
+   ["elona.pasta"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_meat_8",
+      [3] = "elona.item_dish_pasta_3",
+      [4] = "elona.item_dish_pasta_4",
+      [5] = "elona.item_dish_pasta_4",
+      [6] = "elona.item_dish_pasta_3",
+      [7] = "elona.item_dish_pasta_3",
+      [8] = "elona.item_dish_pasta_4",
+      [9] = "elona.item_dish_pasta_3"
+   },
+   ["elona.sweet"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_sweet_5",
+      [6] = "elona.item_dish_fruit_4",
+      [7] = "elona.item_dish_egg_8",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_egg_8"
+   },
+   ["elona.vegetable"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_meat_7",
+      [6] = "elona.item_dish_meat_8",
+      [7] = "elona.item_dish_vegetable_4",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_7"
+   }
+}
+
+-- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
+function Item.get_food_image(food_type, food_quality)
+   local t = FOOD_CHIPS[food_type]
+   if not t then
+      return "elona.item_dish_charred"
+   end
+
+   local image = t[food_quality]
+
+   return image or "elona.item_dish_charred"
+end
+-- <<<<<<<< shade2/text.hsp:655 	return ...
+
+
+-- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
+function Effect.make_dish(item, quality)
+   local food_type = item.params and item.params.food_type
+   assert(food_type, ("'%s' isn't a cookable food."):format(item._id))
+
+   item.image = Item.get_food_image(food_type, quality)
+   item.weight = 500
+   if item.spoilage_date and item.spoilage_date >= 0 then
+      item.spoilage_date = 72 + World.date_hours()
+   end
+   item.params.food_quality = quality
+
+   return item
+end
+-- <<<<<<<< shade2/item_func.hsp:709 	return ..
+
 function Effect.damage_insanity(chara, delta)
    if chara:calc("quality") >= 4 then
       return
@@ -623,8 +753,148 @@ function Effect.get_wet(chara, amount)
    end
 end
 
-function Effect.damage_map_fire(x, y, origin)
-   -- TODO
+local FLAMMABLE_CATEGORIES = {
+   "elona.rod",
+   "elona.tree",
+   "elona.book",
+   "elona.scroll",
+   "elona.spellbook",
+}
+
+function Effect.damage_item_fire(item, fireproof_blanket)
+   -- >>>>>>>> shade2/chara_func.hsp:1195 	rowAct_item ci ...
+   local owner = item:get_owning_chara()
+
+   item:remove_activity()
+
+   if item:calc("is_fireproof") or item:calc("is_precious") then
+      return false
+   end
+
+   if item:has_category("elona.food") and item.params.food_quality == 0 then
+      if owner then
+         Gui.mes_c_visible("item.someones_item.get_broiled", owner, "Orange", item, owner)
+      else
+         Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
+      end
+      Effect.make_dish(item, Rand.rnd(5) + 1)
+      return true
+   end
+
+   if item:has_category("elona.container")
+      or item:has_category("elona.misc_item")
+      or item:has_category("elona.gold")
+   then
+      return false
+   end
+
+   if item:is_equipped() and Rand.one_in(2) then
+      return false
+   end
+
+   local is_flammable = fun.iter(FLAMMABLE_CATEGORIES):any(function(cat) return item:has_category(cat) end)
+
+   if not is_flammable then
+      if Rand.one_in(4) then
+         return false
+      end
+      if owner == nil and Rand.one_in(4) then
+         return false
+      end
+   end
+
+   if fireproof_blanket and Item.is_alive(fireproof_blanket) then
+      print(tostring(owner))
+      if owner then
+         Gui.mes_visible("item.fireproof_blanket.protects_item", owner.x, owner.y, fireproof_blanket:build_name(1), owner)
+      end
+      if fireproof_blanket.charges > 0 then
+         fireproof_blanket.charges = fireproof_blanket.charges - 1
+      else
+         if Rand.one_in(20) then
+            fireproof_blanket.amount = fireproof_blanket.amount - 1
+            if owner then
+               Gui.mes_visible("item.fireproof_blanket.turns_to_dust", owner.x, owner.y, fireproof_blanket:build_name(1))
+            end
+            return true
+         end
+      end
+      return false
+   end
+
+   local lost_amount = math.floor(Rand.rnd(item.amount) / 2 + 1)
+
+   if owner then
+      if item:is_equipped() then
+         Gui.mes_c_visible("item.someones_item.equipment_turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount), lost_amount, owner)
+         item:unequip()
+         item:remove_ownership()
+         owner:refresh()
+      else
+         Gui.mes_c_visible("item.someones_item.turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount, true), lost_amount, owner)
+      end
+   else
+      Gui.mes_c_visible("item.item_on_the_ground.turns_to_dust", item.x, item.y, "Purple", item:build_name(lost_amount), lost_amount)
+   end
+
+   item.amount = item.amount - lost_amount
+   item:refresh_cell_on_map()
+   if owner then
+      owner:refresh_weight()
+   end
+
+   return true
+   -- <<<<<<<< shade2/chara_func.hsp:1233 	return f ..
+end
+
+function Effect.damage_chara_items_fire(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1174 #deffunc item_fire int tc,int ciRef ...
+   if chara:resist_level("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+      return false
+   end
+
+   local targets = {}
+   local fireproof_blanket
+   for _, item in chara:iter_items() do
+      if Item.is_alive(item) then
+         if item._id == "elona.fireproof_blanket" and not fireproof_blanket then
+            fireproof_blanket = item:separate()
+         else
+            targets[#targets+1] = item
+         end
+      end
+   end
+
+   if #targets == 0 then
+      return false
+   end
+
+   local did_something = false
+   for _ = 1, 3 do
+      local target = Rand.choice(targets)
+
+      did_something = Effect.damage_item_fire(target, fireproof_blanket) or did_something
+   end
+
+   return did_something
+   -- <<<<<<<< shade2/chara_func.hsp:1233 	return f ..
+end
+
+function Effect.damage_map_fire(x, y, origin, map)
+   -- >>>>>>>> shade2/chara_func.hsp:1235 #deffunc mapitem_fire int x,int y ...
+   local item = Item.at(x, y, map):nth(1)
+   if item then
+      local did_something = Effect.damage_item_fire(item)
+      if did_something then
+         local mef = Mef.at(x, y, map)
+         if mef then
+            mef:remove_ownership()
+         end
+         Mef.create("elona.fire", x, y, { duration = Rand.rnd(10) + 5, 100, origin = origin }, map)
+         map:refresh_tile(x, y)
+      end
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1246 	return ..
 end
 
 function Effect.damage_map_ice(x, y, origin)

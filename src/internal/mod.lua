@@ -205,10 +205,12 @@ function mod.load_mods(mods)
    Log.info("Loading mods: %s", mod_names)
 
    for _, m in ipairs(load_order) do
+      local mod_sw = Stopwatch:new()
       local chunk, err = mod.hotload_mod(m.id, m.manifest_path)
       if err then
          error(err)
       end
+      Log.debug("   %s: %02.02fms", m.id, mod_sw:measure())
    end
 
    Log.info("Loaded mods in %02.02fms.", sw:measure())

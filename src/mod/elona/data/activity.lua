@@ -1116,7 +1116,7 @@ data:add {
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:574 	if gRowAct=rowActSteal{ ..
             local chara = params.chara
-            local owner = self.item:get_owner()
+            local owner = self.item:get_owning_chara()
             if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
                Gui.mes("you stop stealing")
                chara:remove_activity()

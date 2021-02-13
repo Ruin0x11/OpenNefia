@@ -34,7 +34,7 @@ function utils.create_sandbag(x, y, map, chara_id)
    local sandbag = assert(Item.create("elona.sand_bag", x, y, {}, map))
    local chara = assert(Chara.create(chara_id, x, y, {}, map))
    chara.is_hung_on_sandbag = true
-   chara.relatoin = Enum.Relation.Enemy
+   chara.relation = Enum.Relation.Enemy
 end
 
 function utils.normalize_items(map)

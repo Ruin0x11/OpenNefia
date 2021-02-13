@@ -162,6 +162,10 @@ function object.deserialize(self, _type, _id)
                    __index = object.__index,
                    __proto = proto,
                    __iface = iface,
+                   __tostring = function(t)
+                      local addr = string.gsub(string.tostring_raw(self), "^table: (.*)", "%1")
+                      return ("<object ('%s', uid %d) %s>"):format(t._type, t.uid, addr)
+                   end,
                    __inspect = function(t)
                       local n = {}
                       for k, v in pairs(t) do

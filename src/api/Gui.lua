@@ -376,6 +376,7 @@ function Gui.mes_c_visible(text, x, y, color, ...)
       local obj = x
       if obj:is_in_fov() then
          color = y
+         -- TODO do not implictly pass obj
          Gui.mes_c(text, color, obj, ...)
       end
    else

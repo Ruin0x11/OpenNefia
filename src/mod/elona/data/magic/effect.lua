@@ -1739,11 +1739,12 @@ data:add {
       -- >>>>>>>> shade2/proc.hsp:3406 	case efMorotov ..
       local source = params.source
       local target = params.target
+      local map = target:current_map()
 
       Gui.mes_visible("magic.molotov", target)
-      Mef.create("elona.fire", target.x, target.y, { duration = Rand.rnd(15) + 25, params.power, origin = source })
+      Mef.create("elona.fire", target.x, target.y, { duration = Rand.rnd(15) + 25, params.power, origin = source }, map)
 
-      Effect.damage_map_fire(target.x, target.y, source)
+      Effect.damage_map_fire(target.x, target.y, source, map)
 
       return true
       -- <<<<<<<< shade2/proc.hsp:3409 	swbreak ..

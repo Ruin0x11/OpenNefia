@@ -130,7 +130,7 @@ data:add {
             if map:is_floor(x, y) then
                local duration = Rand.rnd(15) + 20
                Mef.create("elona.fire", x, y, { origin = self.origin, duration = duration, power = 50 } )
-               Effect.damage_map_fire(x, y, self.origin)
+               Effect.damage_map_fire(x, y, self.origin, map)
             else
                -- Destroy walls.
                map:set_tile(x, y, "elona.destroyed")
