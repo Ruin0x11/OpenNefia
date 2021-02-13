@@ -97,14 +97,15 @@ end
 --- @treturn[opt] IChara
 function IItem:get_owning_chara()
    local IChara = require("api.chara.IChara")
+   local location = self.location
 
-   if class.is_an(IChara, self.location) then
-      if self.location:has_item(self) then
-         return self.location
+   while location ~= nil do
+      if class.is_an(IChara, location) then
+         if location:has_item(self) then
+            return location
+         end
       end
-   elseif class.is_an(EquipSlots, self.location) then
-      -- HACK
-      return self.location.owner
+      location = location._parent or nil
    end
 
    return nil

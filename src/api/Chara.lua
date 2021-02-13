@@ -112,7 +112,7 @@ function Chara.find(id, kind, map)
    end
 
    local pred = function(chara)
-      return Chara.is_alive(chara, map) and chara[compare_field] == id
+      return Chara.is_alive(chara) and chara[compare_field] == id
    end
 
    return iter:filter(pred):nth(1)

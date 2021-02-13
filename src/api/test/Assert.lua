@@ -1,7 +1,7 @@
 local Assert = {}
 
-function Assert.is_true(actual)
-   assert(actual)
+function Assert.is_true(actual, msg)
+   assert(actual, msg)
 end
 
 function Assert.eq(expected, actual)

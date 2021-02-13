@@ -230,7 +230,7 @@ function Item.find(id, kind, map)
    end
 
    local pred = function(item)
-      return Item.is_alive(item, map) and item[compare_field] == id
+      return Item.is_alive(item) and item[compare_field] == id
    end
 
    return iter:filter(pred):nth(1)
