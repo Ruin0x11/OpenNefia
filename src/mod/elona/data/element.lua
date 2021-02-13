@@ -303,6 +303,14 @@ local element = {
       elona_id = 63,
       sound = "base.atk_poison",
       death_anim = "base.anim_elem_poison",
+
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1557 			if ele=rsResAcid	: if (tc=pc)or(rnd(3)=0):item_ ...
+         if chara:is_player() or Rand.one_in(3) then
+            Effect.damage_chara_item_acid(chara)
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:1557 			if ele=rsResAcid	: if (tc=pc)or(rnd(3)=0):item_ ..
+      end
    },
    {
       _id = "hunger",

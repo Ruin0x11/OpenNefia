@@ -133,7 +133,7 @@ end
 -- @tparam base.body_part _type
 function EquipSlots:add_body_part(_type)
    data["base.body_part"]:ensure(_type)
-   self.body_parts[self.body_parts+1] = { type = _type, equipped = nil }
+   self.body_parts[#self.body_parts+1] = { type = _type, equipped = nil }
 end
 
 --- Removes a body part at slot. Fails if an item is equipped there;

@@ -3,11 +3,11 @@ return {
       acid = {
          damaged = function(_1, _2)
             return ("%s%s %s is damaged by acid.")
-               :format(name(_1), his_owned(_1), itemname(_2, 0, false))
+               :format(name(_1), his_owned(_1), _2)
          end,
          immune = function(_1, _2)
             return ("%s%s %s is immune to acid.")
-               :format(name(_1), his_owned(_1), itemname(_2, 0, false))
+               :format(name(_1), his_owned(_1), _2)
          end
       },
       approximate_curse_state = {

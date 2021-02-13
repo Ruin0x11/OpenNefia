@@ -43,8 +43,7 @@ local function bump_into_chara(player, params, result)
    local relation = player:relation_towards(on_cell)
 
    if relation >= Enum.Relation.Ally
-      or (relation == Enum.Relation.Dislike and not config.base.attack_neutral_npcs)
-      or Gui.player_is_running()
+      or (relation == Enum.Relation.Dislike and (not config.base.attack_neutral_npcs or Gui.player_is_running()))
    then
       if not on_cell:calc("is_hung_on_sandbag") then
          if player:swap_places(on_cell) then

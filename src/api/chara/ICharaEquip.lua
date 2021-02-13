@@ -174,7 +174,7 @@ end
 -- Adds a new body part to this character.
 -- @tparam base.body_part _type
 function ICharaEquip:add_body_part(_type)
-   -- TODO
+   self.equip:add_body_part(_type)
 end
 
 -- Attempts to remove a body part. If something is equipped there,

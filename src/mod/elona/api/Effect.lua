@@ -761,6 +761,34 @@ local FLAMMABLE_CATEGORIES = {
    "elona.spellbook",
 }
 
+function Effect.damage_item_acid(item)
+   local owner = item:get_owning_chara()
+
+   if not item:calc("is_acidproof") then
+      Gui.mes("item.acid.damaged", owner, item:build_name(nil, true))
+      item.bonus = item.bonus - 1
+      return true
+   else
+      Gui.mes("item.acid.immune", owner, item:build_name(nil, true))
+      return false
+   end
+end
+
+function Effect.damage_chara_item_acid(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1152 	if ciRef!-1:ci=ciRef:else{ ...
+   local elona_Item = require("mod.elona.api.Item")
+
+   local pred = function(item) return Rand.one_in(math.clamp(30, 1, 30)) and item:calc("bonus") > -4 end
+   local target = chara:iter_equipment():filter(pred):nth(1)
+   if target == nil or not elona_Item.is_equipment(target) then
+      return false
+   end
+
+   return Effect.damage_item_acid(target)
+   -- <<<<<<<< shade2/chara_func.hsp:1161 	if iType(ci)>=fltHeadItem : return ...
+
+end
+
 function Effect.damage_item_fire(item, fireproof_blanket)
    -- >>>>>>>> shade2/chara_func.hsp:1195 	rowAct_item ci ...
    if not Item.is_alive(item) then
