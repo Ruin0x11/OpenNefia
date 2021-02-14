@@ -15201,7 +15201,6 @@ local item =
          image = "elona.item_monster_ball",
          value = 4500,
          weight = 1400,
-         on_use = function() end,
          category = 59000,
          rarity = 400000,
          coefficient = 100,
@@ -15246,7 +15245,7 @@ local item =
                      return "turn_end"
                   end
 
-                  if target:calc("level") > self.params.monster_ball_max_level then
+                  if target:calc("level") > clone.params.monster_ball_max_level then
                      Gui.mes("action.throw.monster_ball.not_enough_power")
                      return "turn_end"
                   end
@@ -15261,10 +15260,11 @@ local item =
                local anim = Anim.load("elona.anim_smoke", params.x, params.y)
                Gui.start_draw_callback(anim)
 
-               self.params.monster_ball_captured_chara_id = target._id
-               self.params.monster_ball_captured_chara_level = target.level
-               self.weight = math.clamp(target.weight, 10000, 100000)
-               self.value = 1000
+               clone.params.monster_ball_captured_chara_id = target._id
+               clone.params.monster_ball_captured_chara_level = target.level
+               clone.weight = math.clamp(target.weight, 10000, 100000)
+               clone.value = 1000
+               clone.can_throw = false
                -- <<<<<<<< shade2/action.hsp:43 				 ..
 
                -- >>>>>>>> shade2/action.hsp:49 			chara_vanquish tc ...
@@ -15274,6 +15274,29 @@ local item =
             -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
 
             return "turn_end"
+         end,
+
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:2082 	case effMonsterBall ...
+            local source = params.chara
+            if self.params.monster_ball_captured_chara_id == nil then
+               Gui.mes("action.use.monster_ball.empty")
+               return "player_turn_query"
+            end
+
+            if not source:can_recruit_allies() then
+               Gui.mes("action.use.monster_ball.party_is_full")
+               return "player_turn_query"
+            end
+
+            Gui.mes("action.use.monster_ball.use", self:build_name(1))
+            self.amount = self.amount - 1
+            self:refresh_cell_on_map()
+
+            -- TODO void
+            local chara = Chara.create(self.params.monster_ball_captured_chara_id, source.x, source.y, {}, source:current_map())
+            source:recruit_as_ally(chara)
+            -- <<<<<<<< shade2/action.hsp:2089 	swbreak ..
          end,
 
          categories = {

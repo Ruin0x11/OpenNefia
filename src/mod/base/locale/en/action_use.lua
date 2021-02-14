@@ -162,13 +162,13 @@ end,
         party_is_full = "Your party is full.",
         use = function(_1)
   return ("You activate %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       music_disc = {
         play = function(_1)
   return ("You play %s.")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       not_sleepy = "You don't feel sleepy yet.",

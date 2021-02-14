@@ -162,13 +162,13 @@ end,
         party_is_full = "仲間はこれ以上増やせない。",
         use = function(_1)
   return ("%sを使用した。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       music_disc = {
         play = function(_1)
   return ("%sを再生した。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end
       },
       not_sleepy = "まだ眠たくない。",
