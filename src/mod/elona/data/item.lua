@@ -830,7 +830,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1130, item, params)
+            return Magic.drink_potion("elona.effect_dirty_water", item, params)
          end,
          categories = {
             "elona.drink",
@@ -849,7 +849,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1111, 200, item, params)
+            return Magic.drink_potion("elona.effect_blind", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -872,7 +872,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1109, 150, item, params)
+            return Magic.drink_potion("elona.effect_confuse", 150, item, params)
          end,
 
          tags = { "neg" },
@@ -895,7 +895,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1110, 200, item, params)
+            return Magic.drink_potion("elona.effect_paralyze", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -917,7 +917,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1112, 200, item, params)
+            return Magic.drink_potion("elona.effect_sleep", 200, item, params)
          end,
 
          tags = { "nogive" },
@@ -939,7 +939,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 300, item, params)
+            return Magic.drink_potion("elona.effect_ale", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1811,7 +1811,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(400, 100, item, params)
+            return Magic.drink_potion("elona.heal_light", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1834,7 +1834,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(400, 300, item, params)
+            return Magic.drink_potion("elona.heal_light", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1857,7 +1857,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 100, item, params)
+            return Magic.drink_potion("elona.heal_critical", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1881,7 +1881,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 300, item, params)
+            return Magic.drink_potion("elona.heal_critical", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1905,7 +1905,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 400, item, params)
+            return Magic.drink_potion("elona.heal_critical", 400, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1969,7 +1969,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(402, 100, item, params)
+            return Magic.drink_potion("elona.cure_of_eris", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1993,7 +1993,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(402, 300, item, params)
+            return Magic.drink_potion("elona.cure_of_eris", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2017,7 +2017,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(403, 100, item, params)
+            return Magic.drink_potion("elona.cure_of_jure", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -4384,7 +4384,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 500, item, params)
+            return Magic.drink_potion("elona.effect_ale", 500, item, params)
          end,
          categories = {
             "elona.drink",
@@ -5495,7 +5495,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 200, item, params)
+            return Magic.drink_potion("elona.effect_ale", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -5681,7 +5681,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1108, 200, item, params)
+            return Magic.drink_potion("elona.effect_poison", 200, item, params)
          end,
 
          tags = { "nogive" },
@@ -6158,7 +6158,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(439, 100, item, params)
+            return Magic.drink_potion("elona.restore_body", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6180,7 +6180,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(440, 100, item, params)
+            return Magic.drink_potion("elona.restore_spirit", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6202,7 +6202,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1113, 100, item, params)
+            return Magic.drink_potion("elona.effect_gain_potential", 100, item, params)
          end,
 
          tags = { "spshop" },
@@ -7733,7 +7733,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(442, 200, item, params)
+            return Magic.drink_potion("elona.buff_holy_shield", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -7836,7 +7836,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(443, 400, item, params)
+            return Magic.drink_potion("elona.buff_mist_of_silence", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -7890,7 +7890,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(444, 300, item, params)
+            return Magic.drink_potion("elona.buff_regeneration", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -7940,7 +7940,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(445, 250, item, params)
+            return Magic.drink_potion("elona.buff_elemental_shield", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8019,7 +8019,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(446, 250, item, params)
+            return Magic.drink_potion("elona.buff_speed", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8038,7 +8038,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(447, 400, item, params)
+            return Magic.drink_potion("elona.buff_slow", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -8117,7 +8117,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(448, 250, item, params)
+            return Magic.drink_potion("elona.buff_hero", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8193,7 +8193,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(449, 250, item, params)
+            return Magic.drink_potion("elona.buff_mist_of_frailness", 250, item, params)
          end,
 
          tags = { "neg" },
@@ -8448,7 +8448,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 100, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -9317,7 +9317,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1118, 100, item, params)
+            return Magic.drink_potion("elona.effect_weaken_resistance", 100, item, params)
          end,
 
          tags = { "neg" },
@@ -9396,7 +9396,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(454, 100, item, params)
+            return Magic.drink_potion("elona.mutation", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -9422,7 +9422,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1121, 200, item, params)
+            return Magic.drink_potion("elona.effect_cure_mutation", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -11245,7 +11245,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1103, 100, item, params)
+            return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
          medal_value = 3,
          categories = {
@@ -11322,7 +11322,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(self, params)
-            return Magic.drink_potion(1108, 150, self, params)
+            return Magic.drink_potion("elona.effect_poison", 150, self, params)
          end,
 
          on_init_params = function(self, params)
@@ -12270,7 +12270,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1131, 200, item, params)
+            return Magic.drink_potion("elona.effect_cure_corruption", 200, item, params)
          end,
          medal_value = 10,
          categories = {
@@ -12451,7 +12451,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 250, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -12688,7 +12688,7 @@ local item =
          params = { chara_id = nil },
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1101, 100, item, params)
+            return Magic.drink_potion("elona.milk", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -12742,7 +12742,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1133, 100, item, params)
+            return Magic.drink_potion("elona.effect_molotov", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -12969,7 +12969,7 @@ local item =
          elona_function = 14,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1103, 100, item, params)
+            return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -13589,7 +13589,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1135, 100, item, params)
+            return Magic.drink_potion("elona.effect_love_potion", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -13745,7 +13745,7 @@ local item =
          is_precious = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1139, 500, item, params)
+            return Magic.drink_potion("elona.effect_troll_blood", 500, item, params)
          end,
 
          tags = { "spshop" },
@@ -15545,7 +15545,7 @@ local item =
          originalnameref2 = "potion",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1142, 100, item, params)
+            return Magic.drink_potion("elona.effect_salt", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15652,7 +15652,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1130, 100, item, params)
+            return Magic.drink_potion("elona.effect_dirty_water", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15705,7 +15705,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1143, 100, item, params)
+            return Magic.drink_potion("elona.effect_descent", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15852,7 +15852,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1144, 100, item, params)
+            return Magic.drink_potion("elona.evolution", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -16582,7 +16582,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 250, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -17427,7 +17427,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1146, 100, item, params)
+            return Magic.drink_potion("elona.effect_soda", 100, item, params)
          end,
 
          tags = { "fest" },
@@ -17452,7 +17452,7 @@ local item =
          quality = Enum.Quality.Unique,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1147, 100, item, params)
+            return Magic.drink_potion("elona.effect_cupsule", 100, item, params)
          end,
          categories = {
             "elona.drink",
