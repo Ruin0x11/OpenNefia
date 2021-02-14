@@ -1,8 +1,8 @@
 --- @module IObject
 
-local Event = require("api.Event")
+local IModDataHolder = require("api.IModDataHolder")
 local IModdable = require("api.IModdable")
-local Resolver = require("api.Resolver")
+
 
 -- An object instance backed by a data prototype.
 local IObject = class.interface("IObject",
@@ -16,7 +16,7 @@ local IObject = class.interface("IObject",
                              refresh = "function",
                              finalize = "function",
                           },
-                          IModdable
+                          { IModdable, IModDataHolder }
 )
 
 function IObject:pre_build()
@@ -35,6 +35,7 @@ end
 
 function IObject:init()
    IModdable.init(self)
+   IModDataHolder.init(self)
 end
 
 function IObject:on_refresh()

@@ -66,6 +66,7 @@ end
 
 function InstancedMap:init(width, height, uids, tile)
    IModdable.init(self)
+   IModDataHolder.init(self)
    IEventEmitter.init(self)
 
    self.uid = save.base.map_uids:get_next_and_increment()
@@ -119,8 +120,6 @@ function InstancedMap:init(width, height, uids, tile)
    -- Map to travel to when exiting this map from the edge. Set when entering a
    -- map from the world map or similar.
    self._previous_map = nil
-
-   self._mod_data = ModExtTable:new()
 
    self.default_tile = "base.floor"
    self.name = I18N.get("map.default_name")
@@ -716,8 +715,5 @@ end
 function InstancedMap:can_take_object(obj)
    return true
 end
-
-
-InstancedMap:delegate("_mod_data", IModDataHolder)
 
 return InstancedMap
