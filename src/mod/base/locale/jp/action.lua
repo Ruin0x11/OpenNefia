@@ -856,7 +856,7 @@ end
     throw = {
       execute = function(_1, _2)
   return ("%sは%sを投げた。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
       hits = function(_1)
   return ("%sに見事に命中した！")

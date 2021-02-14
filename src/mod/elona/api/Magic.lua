@@ -46,7 +46,7 @@ function Magic.drink_potion(magic_id, power, item, params)
       curse_state = curse_state,
       triggered_by = triggered_by
    }
-   local did_something, result = Magic.cast(magic_id, magic_params)
+   local did_something, result = elona_sys_Magic.cast(magic_id, magic_params)
 
    if result and chara:is_player() and result.obvious then
       Effect.identify_item(item, Enum.IdentifyState.Name)

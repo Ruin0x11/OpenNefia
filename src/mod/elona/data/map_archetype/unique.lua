@@ -597,7 +597,7 @@ do
          is_indoor = false,
          has_anchored_npcs = true,
          default_ai_calm = 1,
-         villagers_make_snowmen = true,
+         has_snow = true,
          max_crowd_density = 0,
          is_hidden_in_world_map = true
       }

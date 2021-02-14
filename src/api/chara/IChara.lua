@@ -645,4 +645,8 @@ function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon_turns = duration or 2
 end
 
+function IChara:iter()
+   return self:iter_items()
+end
+
 return IChara

@@ -965,7 +965,7 @@ do
          has_anchored_npcs = true,
          default_ai_calm = 1,
          quest_town_id = 6,
-         villagers_make_snowmen = true,
+         has_snow = true,
          max_crowd_density = 35,
          trainer_skills = {
             "elona.faith",

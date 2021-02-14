@@ -549,7 +549,16 @@ local inv_throw = {
       return item:calc("can_throw")
    end,
    on_select = function(ctxt, item, amount, rest)
-      return ElonaAction.throw(ctxt.chara, item)
+      local x, y, can_see = Input.query_position()
+      if not can_see then
+         Gui.mes("action.which_direction.cannot_see_location")
+         return "player_turn_query"
+      end
+      if not Map.is_floor(x, y, ctxt.chara:current_map()) then
+         Gui.mes("ui.inv.throw.location_is_blocked")
+         return "player_turn_query"
+      end
+      return ElonaAction.throw(ctxt.chara, item, x, y)
    end
 }
 data:add(inv_throw)

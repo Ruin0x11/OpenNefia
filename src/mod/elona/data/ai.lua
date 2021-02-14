@@ -6,6 +6,7 @@ local Anim = require("mod.elona_sys.api.Anim")
 local Effect = require("mod.elona.api.Effect")
 local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
+local I18N = require("api.I18N")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -322,7 +323,52 @@ local function follow_player(chara, params)
    end
 end
 
+local function do_drink(chara, _, result)
+   -- >>>>>>>> shade2/ai.hsp:211 	if cDrunk(cc)!0:if sync(cc):if cnRace(cc)="cat"{ ...
+   if result then
+      return result
+   end
+   if not chara:has_effect("elona.drunk") or not chara:is_in_fov() or chara.race ~= "elona.cat" then
+      return result
+   end
+
+   if chara:effect_turns("elona.drunk") < 5 then
+      chara:add_effect_turns("elona.drunk", 40)
+   end
+
+   if I18N.language() == "jp" then
+      local text, color
+      if Rand.one_in(3) then
+         text = Rand.choice { "「米さ米種だろ♪」","「飲ま飲まイェイ！！」","「飲ま飲ま飲まイェイ！！」" }
+      elseif Rand.one_in(4) then
+         text = Rand.choice { "「字ベロ♪指♪ラマ♪ｸﾏｰ!!して♪パンチラ♪」","「アロー♪アーロン♪スゲェ♪ピカソ♪算段ビーフ♪」","「キスすごい肉♪脱線してんの♪さらに肉♪」" }
+      elseif Rand.one_in(4) then
+         text = Rand.choice { "「キープダルシム♪アゴスタディーイェイ♪並フェイスで大きい筆入れ♪」","「ハロー♪猿ー♪すげー♪うん入る♪」" }
+      elseif Rand.one_in(4) then
+         text = " *ﾋﾟﾛﾘ〜ﾋﾟﾛﾘ〜* "
+         color = "Blue"
+      else
+         text = Rand.choice { "「マイアヒー♪」","「マイアフゥー♪」","「マイアホー♪」" }
+      end
+      Gui.mes_c(text, color)
+   else
+      local text
+      if Rand.one_in(2) then
+         text = Rand.choice { "Vrei sa pleci dar♪","Numa numa yay!!","Numa numa numa yay!!" }
+      else
+         text = Rand.choice { "Mai-Ya-Hi♪","Mai-Ya-Hoo♪","Mai-Ya-Ha Ma Mi A♪" }
+      end
+      Gui.mes_c(text)
+   end
+   -- <<<<<<<< shade2/ai.hsp:226 	}	 ..
+end
+Event.register("elona.on_ai_calm_action", "Drink if cat", do_drink, { priority = 40000 })
+
 local function do_sleep(chara, _, result)
+   -- >>>>>>>> shade2/ai.hsp:228 	if cc>maxFollower : if (mType=mTypeTown)or(mType= ...
+   if result then
+      return result
+   end
    if chara:is_ally() then
       return
    end
@@ -339,36 +385,22 @@ local function do_sleep(chara, _, result)
    end
 
    return result
+   -- <<<<<<<< shade2/ai.hsp:230 		} ..
 end
-
-Event.register("elona.on_ai_calm_action", "Sleep if nighttime", do_sleep)
+Event.register("elona.on_ai_calm_action", "Sleep if nighttime", do_sleep, { priority = 50000 })
 
 local function do_eat(chara, _, result)
-   if not Item.is_alive(chara.item_to_use) then
-      return
+   if result then
+      return result
    end
-   if chara:is_ally() then
-      return
-   end
-
-   if chara.nutrition <= Const.ALLY_HUNGER_THRESHOLD then
-      local map = chara:current_map()
-      if not map:is_in_fov(chara.x, chara.y) or Rand.one_in(5) then
-         if chara:calc("has_anorexia") then
-            chara.nutrition = chara.nutrition - 3000
-         else
-            chara.nutrition = chara.nutrition + 5000
-         end
-      end
-   end
-
-   return result
 end
-
 Event.register("elona.on_ai_calm_action", "Eat if hungry", do_eat)
 
 local function do_eat_ally(chara, _, result)
    -- >>>>>>>> shade2/ai.hsp:148 			if map(cX(cc),cY(cc),4)!0{ ...
+   if result then
+      return result
+   end
    local target = chara:get_target()
    if not target or not target:is_player() then
       return result
@@ -592,6 +624,43 @@ local function try_to_heal(chara, params)
    end
 end
 
+local function try_to_use_item(chara, params, result)
+   -- >>>>>>>> shade2/ai.hsp:134 	if a=fltFood:if (cRelation(cc)=cAlly)&(cHunger(cc ...
+   if not Item.is_alive(chara.item_to_use) then
+      chara.item_to_use = nil
+      return result
+   end
+
+   local item = chara.item_to_use
+
+   if chara:relation_towards(Chara.player()) ~= Enum.Relation.Neutral then
+      chara.item_to_use = nil
+   end
+
+   if item:has_category("elona.food")
+      and not (chara:relation_towards(Chara.player()) == Enum.Relation.Ally
+                  and chara.nutrition > Const.ALLY_HUNGER_THRESHOLD)
+   then
+      ElonaAction.eat(chara, item)
+      return true
+   end
+
+   if item:has_category("elona.drink") then
+      ElonaAction.drink(chara, item)
+      return true
+   end
+
+   if item:has_category("elona.scroll") then
+      ElonaAction.read(chara, item)
+      return true
+   end
+
+   chara.item_to_use = nil
+
+   return result
+   -- <<<<<<<< shade2/ai.hsp:136 		} ..
+end
+
 local function decide_ally_targeted_action(chara, params)
    -- >>>>>>>> shade2/ai.hsp:147 		if cRelation(cc)=cAlly:if tc=pc{ ...
    local target = chara:get_target()
@@ -722,6 +791,10 @@ local function elona_default_ai(chara, params)
       end
    end
 
+   if Ai.run("elona.try_to_use_item", chara) then
+      return true
+   end
+
    target = chara:get_target()
    if Chara.is_alive(target) and (chara:get_aggro(target) > 0 or chara:is_in_player_party()) then
       return Ai.run("elona.decide_targeted_action", chara)
@@ -760,6 +833,7 @@ data:add_multi(
       { _id = "decide_ally_target",          act = decide_ally_target },
       { _id = "ai_talk",                     act = ai_talk },
       { _id = "try_to_heal",                 act = try_to_heal },
+      { _id = "try_to_use_item",             act = try_to_use_item },
       { _id = "attempt_to_melee",            act = attempt_to_melee },
       { _id = "idle_action",                 act = idle_action },
       { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },

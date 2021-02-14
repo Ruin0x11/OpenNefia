@@ -359,6 +359,11 @@ end)
 
 Event.register("base.on_item_instantiated", "Connect item events",
                function(item)
+                  -- This is where the callbacks on item prototypes
+                  -- like "on_use" and "on_drink" get used. It might
+                  -- be a bit difficult to find with the function name
+                  -- generation.
+                  --
                   -- The reason there are boolean flags indicating if
                   -- an action can be taken ("can_eat", "can_open") is
                   -- because it makes it easier to temporarily disable

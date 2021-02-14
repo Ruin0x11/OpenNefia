@@ -1402,6 +1402,7 @@ local chara = {
       female_image = "elona.chara_town_child_female",
       fltselect = Enum.FltSelect.Town,
       coefficient = 400,
+      can_use_snow = true,
    },
    {
       _id = "old_person",
@@ -4622,6 +4623,7 @@ local chara = {
       fltselect = Enum.FltSelect.Sp,
       coefficient = 400,
       flags = { "IsSuitableForMount" },
+      can_use_snow = true,
    },
    {
       _id = "utima",

@@ -15,8 +15,7 @@ ICharaInventory:delegate("inv",
                            "is_in_bounds",
                            "objects_at_pos",
                            "get_object",
-                           "has_object",
-                           "iter"
+                           "has_object"
                         })
 
 function ICharaInventory:init()

@@ -26,7 +26,11 @@ Event.register("base.on_hotload_end", "Clean up events missing in chunk on hotlo
 
 Event.register("base.on_map_loaded", "init all event callbacks",
                function(map)
-                  for _, v in map:iter() do
+                  local objs = map:iter():to_list()
+                  while #objs > 0 do
+                     local v = objs[#objs]
+                     objs[#objs] = nil
+
                      -- Event callbacks will not be serialized since
                      -- they are functions, so they have to be copied
                      -- from the prototype each time.
@@ -34,6 +38,9 @@ Event.register("base.on_map_loaded", "init all event callbacks",
                         IEventEmitter.init(v)
                      end
                      v:instantiate()
+                     if class.is_an(ILocation, v) then
+                        table.append(objs, v:iter():to_list())
+                     end
                   end
                end)
 

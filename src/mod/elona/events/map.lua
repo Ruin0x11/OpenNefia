@@ -8,6 +8,7 @@ local Calc = require("mod.elona.api.Calc")
 local Enum = require("api.Enum")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Equipment = require("mod.elona.api.Equipment")
+local Gui = require("api.Gui")
 
 local function decrease_nutrition(chara, params, result)
    if not chara:is_player() then
@@ -119,3 +120,35 @@ local function on_map_renew_minor(map)
 -- <<<<<<<< shade2/map.hsp:2264 				} ..
 end
 Event.register("base.on_map_renew_minor", "Map renew minor events", on_map_renew_minor)
+
+local function ai_snow(chara, _, result)
+   if result then
+      return result -- TODO implement in event system
+   end
+
+   if chara.item_to_use or chara:relation_towards(Chara.player()) == Enum.Relation.Ally then
+      return result
+   end
+
+   -- >>>>>>>> shade2/ai.hsp:241 		if (gArea=areaNoyel)or(gArea=areaSister):if (cId ...
+   if not chara:calc("can_use_snow") or not chara:is_in_fov() then
+      return result
+   end
+
+   local map = chara:current_map()
+   if map:tile(chara.x, chara.y).kind ~= Enum.TileRole.Snow then
+      return result
+   end
+
+   if save.elona.fire_giant_uid then
+      local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
+      if Rand.one_in(4) and Chara.is_alive(fire_giant) and fire_giant:is_in_fov() then
+         local snow = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
+         if snow then
+            Gui.mes_c("ai.fire_giant", "SkyBlue")
+         end
+      end
+   end
+   -- <<<<<<<< shade2/ai.hsp:257 			} ..
+end
+Event.register("elona.on_ai_calm_action", "Use snow if available", ai_snow, { priority = 70000 })

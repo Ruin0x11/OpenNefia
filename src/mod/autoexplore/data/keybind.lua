@@ -7,5 +7,5 @@ data:add {
 data:add {
    _type = "base.keybind",
    _id = "travel",
-   default = "T"
+   default = "Y"
 }

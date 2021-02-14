@@ -15210,6 +15210,7 @@ local item =
 
          params = {
             monster_ball_captured_chara_id = nil,
+            monster_ball_captured_chara_level = 0,
             monster_ball_max_level = 0
          },
 
@@ -15219,6 +15220,60 @@ local item =
             self.value = 2000 + self.params.monster_ball_max_level * self.params.monster_ball_max_level
                + self.params.monster_ball_max_level * 100
             -- <<<<<<<< shade2/item.hsp:668 		} ..
+         end,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:17 	if iId(ci)=idMonsterBall{ ...
+            local map = params.chara:current_map()
+            local clone = self:clone()
+            if map and map:can_take_object(clone) then
+               assert(map:take_object(clone, params.x, params.y))
+               clone.amount = 1
+            end
+            -- <<<<<<<< shade2/action.hsp:21 		} ..
+
+            -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
+            Gui.play_sound("base.throw2", params.x, params.y)
+            map:refresh_tile(params.x, params.y)
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+
+               -- >>>>>>>> shade2/action.hsp:32 			if iId(ci)=idMonsterBall{ ...
+               if not config.base.development_mode then
+                  if target:is_ally() or target:has_any_roles() or target:calc("quality") == Enum.Quality.Unique or target:calc("is_precious") then
+                     Gui.mes("action.throw.monster_ball.cannot_be_captured")
+                     return "turn_end"
+                  end
+
+                  if target:calc("level") > self.params.monster_ball_max_level then
+                     Gui.mes("action.throw.monster_ball.not_enough_power")
+                     return "turn_end"
+                  end
+
+                  if target.hp > target:calc("max_hp") / 10 then
+                     Gui.mes("action.throw.monster_ball.not_weak_enough")
+                     return "turn_end"
+                  end
+               end
+
+               Gui.mes_c("action.throw.monster_ball.capture", "Green", target)
+               local anim = Anim.load("elona.anim_smoke", params.x, params.y)
+               Gui.start_draw_callback(anim)
+
+               self.params.monster_ball_captured_chara_id = target._id
+               self.params.monster_ball_captured_chara_level = target.level
+               self.weight = math.clamp(target.weight, 10000, 100000)
+               self.value = 1000
+               -- <<<<<<<< shade2/action.hsp:43 				 ..
+
+               -- >>>>>>>> shade2/action.hsp:49 			chara_vanquish tc ...
+               target:vanquish() -- triggers "elona_sys.on_quest_check" via "base.on_chara_vanquished"
+               -- <<<<<<<< shade2/action.hsp:50 			check_quest ..
+            end
+            -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
+
+            return "turn_end"
          end,
 
          categories = {
@@ -15569,7 +15624,36 @@ local item =
             "elona.misc_item"
          },
 
-         light = light.item
+         light = light.item,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
+            local map = params.chara:current_map()
+
+            Gui.play_sound("base.throw2", params.x, params.y)
+            map:refresh_tile(params.x, params.y)
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+
+               -- >>>>>>>> shade2/action.hsp:45 				if (cId(tc)!319)or(tc<maxFollower):txtNothingH ...
+               if target._id ~= "elona.little_sister" or target:is_ally() then
+                  Gui.mes("common.nothing_happens")
+               end
+
+               -- TODO arena
+               -- TODO pet arena
+               -- TODO show house
+
+               Chara.player():recruit_as_ally(target)
+               -- <<<<<<<< shade2/action.hsp:47 				rc=tc:gosub *add_ally ..
+
+               map:emit("elona_sys.on_quest_check") -- TODO move to IChara:recruit_as_ally()
+            end
+            -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
+
+            return "turn_end"
+         end
       },
       {
          _id = "town_book",

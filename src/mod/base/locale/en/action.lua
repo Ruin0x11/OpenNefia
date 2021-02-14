@@ -859,7 +859,7 @@ return {
       throw = {
          execute = function(_1, _2)
             return ("%s throw%s %s.")
-               :format(name(_1), s(_1), itemname(_2, 1))
+               :format(name(_1), s(_1), _2)
          end,
          hits = function(_1)
             return ("It hits %s!")
