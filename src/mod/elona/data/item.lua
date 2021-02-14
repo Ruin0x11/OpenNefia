@@ -20,6 +20,8 @@ local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
 local Log = require("api.Log")
 local Chara = require("api.Chara")
+local Pos = require("api.Pos")
+local Anim = require("mod.elona_sys.api.Anim")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -13960,12 +13962,56 @@ local item =
          image = "elona.item_leash",
          value = 1200,
          weight = 1200,
-         on_use = function() end,
          category = 59000,
          rarity = 500000,
          coefficient = 0,
 
          elona_function = 23,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:1872 	case effLeash ...
+            local chara = params.chara
+            Gui.mes("action.use.leash.prompt")
+            local dir, canceled = Input.query_direction()
+            if canceled then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            local x, y = Pos.add_direction(dir, chara.x, chara.y)
+            local target = Chara.at(x, y)
+            if target == nil then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            if target:is_player() then
+               Gui.mes("action.use.leash.self")
+            else
+               if target.leashed_to == nil then
+                  if not target:is_in_player_party() and Rand.one_in(5) then
+                     Gui.mes("action.use.leash.other.start.resists", target)
+                     self.amount = self.amount - 1
+                     self:refresh_cell_on_map()
+                     chara:refresh_weight()
+                     return "turn_end"
+                  end
+
+                  target.leashed_to = chara.uid
+                  Gui.mes("action.use.leash.other.start.text", target)
+                  Gui.mes_c("action.use.leash.other.start.dialog", "SkyBlue", target)
+               else
+                  target.leashed_to = nil
+                  Gui.mes("action.use.leash.other.stop.text", target)
+                  Gui.mes_c("action.use.leash.other.stop.dialog", "SkyBlue", target)
+               end
+            end
+
+            local anim = Anim.load("elona.anim_smoke", target.x, target.y)
+            Gui.start_draw_callback(anim)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:1894 	swbreak ..
+         end,
 
          categories = {
             "elona.misc_item"

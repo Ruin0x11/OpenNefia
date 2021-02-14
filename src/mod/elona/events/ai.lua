@@ -109,7 +109,8 @@ local function check_if_leashed(chara, params, result)
                   Gui.mes_c("action.npc.leash.untangle", "SkyBlue", chara)
                end
             end
-            Magic.cast("elona.teleport_other", { source = leader, target = chara })
+
+            Magic.cast("elona.shadow_step", { source = chara, target = leader })
             return true
          end
       end

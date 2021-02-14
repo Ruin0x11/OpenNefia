@@ -12,6 +12,7 @@ local TreemapViewer = class.class("TreemapViewer", IUiLayer)
 TreemapViewer:delegate("input", IInput)
 
 function TreemapViewer:init(t, depth)
+   assert(type(t) == "table")
    if next(t) == nil then
       error("Table has no elements.")
    end

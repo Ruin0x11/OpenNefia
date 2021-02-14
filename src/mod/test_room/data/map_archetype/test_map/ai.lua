@@ -30,7 +30,6 @@ function ai.on_generate_map(area, floor)
    end
 
    player.is_not_targeted_by_ai = true
-   player.fov = 50
 
    return map
 end
