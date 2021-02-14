@@ -24,9 +24,9 @@ end
 local function can_take(item)
    if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Shop then
       Gui.play_sound("base.fail1")
-      if item.own_state == "not_owned" then
+      if item.own_state == Enum.OwnState.NotOwned then
          Gui.mes("action.get.not_owned")
-      elseif item.own_state == "shop" then
+      elseif item.own_state == Enum.OwnState.Shop then
          Gui.mes("action.get.cannot_carry")
       end
       return false
@@ -362,7 +362,7 @@ local inv_sell = {
       ctxt.target.gold = ctxt.target.gold - cost
       ctxt.chara.gold = ctxt.chara.gold + cost
 
-      separated.own_state = "none"
+      separated.own_state = Enum.OwnState.None
       separated.identify_state = Enum.IdentifyState.Full
 
       return "inventory_continue"

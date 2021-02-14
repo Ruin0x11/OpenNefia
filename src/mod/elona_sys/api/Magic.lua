@@ -14,13 +14,13 @@ local Magic = {}
 
 local function calc_adjusted_power(magic, power, curse_state)
    if magic.alignment == "negative" then
-      if curse_state == "blessed" then
+      if curse_state == Enum.CurseState.Blessed then
          return 50
       elseif Effect.is_cursed(curse_state) then
          return power * 150 / 100
       end
    else
-      if curse_state == "blessed" then
+      if curse_state == Enum.CurseState.Blessed then
          return power * 150 / 100
       elseif Effect.is_cursed(curse_state) then
          return 50
@@ -336,12 +336,12 @@ function Magic.cast(id, params)
       params.y = params.y or params.source.y
    end
 
-   local curse_state = "none"
+   local curse_state = Enum.CurseState.Normal
 
    if class.is_an(IItem, params.item) then
       params.curse_state = params.curse_state or params.item:calc("curse_state")
    end
-   params.curse_state = params.curse_state or "none"
+   params.curse_state = params.curse_state or Enum.CurseState.Normal
 
    params.power = calc_adjusted_power(magic, params.power, curse_state)
 

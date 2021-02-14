@@ -5,6 +5,7 @@ local Map = require("api.Map")
 local Anim = require("mod.elona_sys.api.Anim")
 local Effect = require("mod.elona.api.Effect")
 local SkillCheck = require("mod.elona.api.SkillCheck")
+local Const = require("api.Const")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -321,24 +322,6 @@ local function follow_player(chara, params)
    end
 end
 
-local function on_ai_calm_actions(chara, params)
-   return chara:emit("elona.on_ai_calm_action", params, false)
-end
-
-local function on_ai_ally_actions(chara, params)
-   return chara:emit("elona.on_ai_ally_action", params, false)
-end
-
-local idle_action = {
-   "elona.follow_player",
-   function()
-      if not Rand.one_in(5) then return true end
-   end,
-   "elona.on_ai_calm_actions",
-   "elona.go_to_preset_anchor",
-   "elona.wander",
-}
-
 local function do_sleep(chara, _, result)
    if chara:is_ally() then
       return
@@ -368,11 +351,11 @@ local function do_eat(chara, _, result)
       return
    end
 
-   if chara.nutrition <= 6000 then
+   if chara.nutrition <= Const.ALLY_HUNGER_THRESHOLD then
       local map = chara:current_map()
       if not map:is_in_fov(chara.x, chara.y) or Rand.one_in(5) then
          if chara:calc("has_anorexia") then
-            chara.nutrition = chara.nutrition - 5000
+            chara.nutrition = chara.nutrition - 3000
          else
             chara.nutrition = chara.nutrition + 5000
          end
@@ -383,6 +366,73 @@ local function do_eat(chara, _, result)
 end
 
 Event.register("elona.on_ai_calm_action", "Eat if hungry", do_eat)
+
+local function do_eat_ally(chara, _, result)
+   -- >>>>>>>> shade2/ai.hsp:148 			if map(cX(cc),cY(cc),4)!0{ ...
+   local target = chara:get_target()
+   if not target or not target:is_player() then
+      return result
+   end
+
+   local item = Item.at(chara.x, chara.y, chara:current_map()):nth(1)
+   if item then
+      if chara.nutrition <= Const.ALLY_HUNGER_THRESHOLD then
+         if item:has_category("elona.food")
+            and item:calc("own_state") <= Enum.OwnState.None
+            and item:calc("curse_state") >= Enum.CurseState.Normal
+         then
+            ElonaAction.eat(chara, item)
+            return true
+         end
+
+         if item:has_category("elona.furniture_well")
+            and item:calc("own_state") <= Enum.OwnState.NotOwned
+            and item.params.amount_remaining >= -5
+            and item.params.amount_dryness < 20
+            and item._id ~= "elona.holy_well"
+         then
+            ElonaAction.drink(chara, item)
+            return true
+         end
+      end
+   end
+   -- <<<<<<<< shade2/ai.hsp:158 				} ..
+
+   return result
+end
+
+Event.register("elona.on_ai_ally_action", "Eat if hungry", do_eat_ally)
+
+local function on_ai_calm_actions(chara, params)
+   if not Rand.one_in(5) then
+      return true
+   end
+
+   local blocked = chara:emit("elona.on_ai_calm_action", params, false)
+   if blocked then
+      return true
+   end
+end
+
+local function on_ai_ally_actions(chara, params)
+   local blocked = chara:emit("elona.on_ai_ally_action", params, false)
+   if blocked then
+      return true
+   end
+
+   -- >>>>>>>> shade2/ai.hsp:159 			if cArea(cc)=gArea : if cBit(cHired,cc)=false : ...
+   -- TODO shopkeeper idle movement
+   -- <<<<<<<< shade2/ai.hsp:159 			if cArea(cc)=gArea : if cBit(cHired,cc)=false : ..
+
+   return false
+end
+
+local idle_action = {
+   "elona.follow_player",
+   "elona.on_ai_calm_actions",
+   "elona.go_to_preset_anchor",
+   "elona.wander",
+}
 
 local function attempt_to_melee(chara, params)
    -- >>>>>>>> shade2/ai.hsp:519 	if distance=1{ ...
@@ -535,22 +585,23 @@ end
 local function try_to_heal(chara, params)
    local threshold = params.threshold or chara:calc("max_hp") / 4
    local chance = params.chance or 5
-   if type(chara.on_low_hp) == "function" then
-      if chara.hp < threshold then
-         if chara.mp > 0 and Rand.one_in(chance) then
-            return chara:on_low_hp(chara)
-         end
+   if chara.hp < threshold then
+      if chara.mp > 0 and Rand.one_in(chance) then
+         return Ai.run(params.action.id, chara. params.action)
       end
    end
 end
 
 local function decide_ally_targeted_action(chara, params)
+   -- >>>>>>>> shade2/ai.hsp:147 		if cRelation(cc)=cAlly:if tc=pc{ ...
    local target = chara:get_target()
    if Chara.is_alive(target) then
       -- item on space
 
-      if Ai.run("elona.on_ai_ally_actions", chara) then
-         return true
+      if chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
+         if Ai.run("elona.on_ai_ally_actions", chara) then
+            return true
+         end
       end
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
@@ -563,9 +614,7 @@ local function decide_ally_targeted_action(chara, params)
    end
 
    return false
-end
-
-local function on_status_effect(chara, params)
+   -- <<<<<<<< shade2/ai.hsp:161 			} ..
 end
 
 local function decide_targeted_action(chara, params)
@@ -581,15 +630,10 @@ local function decide_targeted_action(chara, params)
       end
    end
 
-   if Ai.run("elona.on_status_effect", chara) then
-      return true
-   end
-
    if chara:is_in_player_party() then
       return Ai.run("elona.decide_ally_targeted_action", chara)
    end
 
-   -- EVENT: proc status effect
    if chara:has_effect("elona.fear") then
       return Ai.run("elona.move_towards_target", chara, {retreat=true})
    end
@@ -671,8 +715,11 @@ local function elona_default_ai(chara, params)
       end
    end
 
-   if Ai.run("elona.try_to_heal", chara) then
-      return true
+   if chara.ai_actions and chara.ai_actions.on_low_health then
+      assert(chara.ai_actions.on_low_health.action)
+      if Ai.run("elona.try_to_heal", chara, chara.actions.on_low_health) then
+         return true
+      end
    end
 
    target = chara:get_target()
@@ -716,7 +763,6 @@ data:add_multi(
       { _id = "attempt_to_melee",            act = attempt_to_melee },
       { _id = "idle_action",                 act = idle_action },
       { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },
-      { _id = "on_status_effect",            act = on_status_effect },
       { _id = "decide_targeted_action",      act = decide_targeted_action },
       { _id = "elona_default_ai",            act = elona_default_ai },
    }

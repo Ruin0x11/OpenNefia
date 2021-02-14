@@ -28,7 +28,7 @@ local function should_drop_player_item(item, player, map)
          result = false
       end
 
-      if item:calc("curse_state") == "blessed" then
+      if item:calc("curse_state") == Enum.CurseState.Blessed then
          if Rand.one_in(2) then
             result = false
          end
@@ -40,7 +40,7 @@ local function should_drop_player_item(item, player, map)
          end
       end
 
-      if item:calc("curse_state") == "doomed" then
+      if item:calc("curse_state") == Enum.CurseState.Doomed then
          if Rand.one_in(2) then
             result = true
          end
@@ -104,7 +104,7 @@ local function calc_dropped_player_items(player, result)
          if Rand.one_in(4) then
             remove = true
          end
-         if item:calc("curse_state") == "blessed" then
+         if item:calc("curse_state") == Enum.CurseState.Blessed then
             if Rand.one_in(3) then
                remove = false
             end
@@ -114,7 +114,7 @@ local function calc_dropped_player_items(player, result)
                remove = true
             end
          end
-         if item:calc("curse_state") == "doomed" then
+         if item:calc("curse_state") == Enum.CurseState.Doomed then
             if Rand.one_in(3) then
                remove = true
             end

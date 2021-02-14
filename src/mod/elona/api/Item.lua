@@ -137,23 +137,22 @@ local function fix_item_2(item, params)
    -- >>>>>>>> shade2/item.hsp:519 *item_fix ..
    if not Item.is_non_useable(item) then
       if Rand.one_in(12) then
-         item.curse_state = "blessed"
+         item.curse_state = Enum.CurseState.Blessed
       end
       if Rand.one_in(13) then
-         item.curse_state = "cursed"
+         item.curse_state = Enum.CurseState.Cursed
          if Item.is_equipment(item) and Rand.one_in(4) then
-            item.curse_state = "doomed"
+            item.curse_state = Enum.CurseState.Doomed
          end
       end
    end
 
-   -- HACK
    if CharaMake.is_active() then
-      item.curse_state = "none"
+      item.curse_state = Enum.CurseState.Normal
    end
 
    if item.quality == Enum.Quality.Unique then
-      item.curse_state = "none"
+      item.curse_state = Enum.CurseState.Normal
    end
 
    if Item.is_equipment(item) or item:has_category("elona.furniture") and Rand.one_in(5) then

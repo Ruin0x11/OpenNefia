@@ -24,7 +24,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    -- function even.
    local chara = params.chara
    local triggered_by = params.triggered_by or "potion"
-   local curse_state = params.curse_state or item:calc("curse_state") or "none"
+   local curse_state = params.curse_state or item:calc("curse_state") or Enum.CurseState.Normal
 
    if triggered_by == "potion_thrown" then
       local throw_power = params.throw_power or 100
@@ -214,8 +214,8 @@ function Magic.zap_wand(item, magic_id, power, params)
    end
 
    local curse_state = item:calc("curse_state")
-   if curse_state == "blessed" then
-      curse_state = "none"
+   if curse_state == Enum.CurseState.Blessed then
+      curse_state = Enum.CurseState.Normal
    end
 
    local magic_pos

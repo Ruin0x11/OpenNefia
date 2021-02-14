@@ -21,7 +21,7 @@ local Effect = {}
 
 --- @tparam curse_state curse_state
 function Effect.is_cursed(curse_state)
-   return curse_state == "cursed" or curse_state == "doomed"
+   return curse_state == Enum.CurseState.Cursed or curse_state == Enum.CurseState.Doomed
 end
 
 --- @tparam IChara chara
@@ -168,7 +168,7 @@ function Effect.apply_food_curse_state(chara, curse_state)
          Gui.mes("food.eat_status.bad", chara)
       end
       Effect.vomit(chara)
-   elseif curse_state == "blessed" then
+   elseif curse_state == Enum.CurseState.Blessed then
       if chara:is_in_fov() then
          Gui.mes("food.eat_status.good", chara)
       end

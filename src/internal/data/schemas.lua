@@ -708,8 +708,8 @@ If false, this item cannot be wished for.
       },
       fallbacks = {
          amount = 1,
-         ownership = "none",
-         curse_state = "none",
+         own_state = Enum.OwnState.None,
+         curse_state = Enum.CurseState.Normal,
          identify_state = Enum.IdentifyState.None,
          bonus = 0,
          name = "item",

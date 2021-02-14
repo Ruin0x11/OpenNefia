@@ -38,9 +38,9 @@ local function item_on_cell_text(x, y)
    end
 
    local own_state = items[1].own_state
-   if own_state == "none" then
+   if own_state == Enum.OwnState.None then
       return I18N.get("action.move.item_on_cell.item", mes)
-   elseif own_state == "shelter" then
+   elseif own_state == Enum.OwnState.Shelter then
       return I18N.get("action.move.item_on_cell.building", mes)
    else
       return I18N.get("action.move.item_on_cell.not_owned", mes)

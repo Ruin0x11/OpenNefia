@@ -1111,7 +1111,7 @@ function Dungeon.gen_type_hunt(floor, params)
                                   {categories = {"elona.tree"}},
                                   map)
       if item then
-         item.own_state = "not_owned"
+         item.own_state = Enum.OwnState.NotOwned
       end
    end
 

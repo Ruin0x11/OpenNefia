@@ -2,6 +2,8 @@ local Rand = require("api.Rand")
 local Item = require("api.Item")
 local World = require("api.World")
 local Filters = require("mod.elona.api.Filters")
+local schema = require("thirdparty.schema")
+local Enum = require("api.Enum")
 
 -- Generates a list to be used with "choices" which will set the
 -- provided field to one of the choices in "list".
@@ -452,7 +454,7 @@ data:add_multi(
          item_number = function() return #medal_items end,
          on_generate_item = function(args)
             args.item.number = 1
-            args.item.curse_state = "none"
+            args.item.curse_state = Enum.CurseState.Normal
             if args.item.id == "elona.rod_of_domination" then
                args.item.count = 4
             end

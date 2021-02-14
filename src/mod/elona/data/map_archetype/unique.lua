@@ -687,7 +687,7 @@ do
 
       local item = Item.create("elona.altar", 19, 5, {}, map)
       item.params.god_id = "elona.mani"
-      item.own_state = "not_owned"
+      item.own_state = Enum.OwnState.NotOwned
 
       local chara = Chara.create("elona.sales_person", 9, 16, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.cyber_dome"})

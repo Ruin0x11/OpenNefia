@@ -166,7 +166,7 @@ data:add {
             local chara = params.chara
             if chara:is_in_fov() then
                Gui.play_sound("base.eat1")
-               if self.food.own_state == "not_owned" and chara:is_ally() then
+               if self.food.own_state == Enum.OwnState.NotOwned and chara:is_ally() then
                   Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
                   Gui.mes("activity.eat.start.normal", chara, self.food)

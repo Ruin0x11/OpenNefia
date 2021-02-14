@@ -8,6 +8,7 @@ local Chara = require("api.Chara")
 local Input = require("api.Input")
 local Map = require("api.Map")
 local Quest = require("mod.elona.api.Quest")
+local Enum = require("api.Enum")
 
 local function set_return_restriction(map)
    if map:has_type("quest") then
@@ -101,7 +102,7 @@ local function calc_wand_success(chara, params)
       success = false
 
       local skill = magic_device * 20 + 100
-      if item:calc("curse_state") == "blessed" then
+      if item:calc("curse_state") == Enum.CurseState.Blessed then
          skill = skill * 125 / 100
       end
       if Effect.is_cursed(item:calc("curse_state")) then

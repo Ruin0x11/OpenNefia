@@ -752,7 +752,7 @@ data:add {
 local function do_heal(target, curse_state, dice)
    Effect.heal(target, dice.x, dice.y, dice.bonus)
 
-   if curse_state == "blessed" then
+   if curse_state == Enum.CurseState.Blessed then
       target:heal_effect("elona.sick", 5 + Rand.rnd(5))
    else
       if Rand.one_in(3) then
@@ -1704,7 +1704,7 @@ local function do_mutation(source, target, curse_state, times, no_negative_trait
             end
          else
             if delta < 0 then
-               if curse_state == "blessed" and Rand.one_in(3) or no_negative_traits then
+               if curse_state == Enum.CurseState.Blessed and Rand.one_in(3) or no_negative_traits then
                   proceed = false
                end
             end
@@ -1869,9 +1869,9 @@ data:add {
       end
 
       local times = 1 + Rand.rnd(2)
-      if params.curse_state == "none" then
+      if params.curse_state == Enum.CurseState.Normal then
          times = times + 1
-      elseif params.curse_state == "blessed" then
+      elseif params.curse_state == Enum.CurseState.Blessed then
          times = times + 2
       end
 

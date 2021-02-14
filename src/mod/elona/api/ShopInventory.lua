@@ -3,6 +3,7 @@ local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
 local ObjectContainer = require("api.ObjectContainer")
 local Rand = require("api.Rand")
+local Enum = require("api.Enum")
 
 local ShopInventory = {}
 
@@ -283,7 +284,7 @@ function ShopInventory.generate(inv_id, shopkeeper)
       end
 
       -- Blessed items are never generated in multiple (per cycle).
-      if item.curse_state == "blessed" then
+      if item.curse_state == Enum.CurseState.Blessed then
          item.number = 1
       end
 
