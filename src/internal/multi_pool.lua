@@ -15,7 +15,7 @@ function multi_pool:init(width, height)
    self.subpools = t()
    self.refs = setmetatable({}, { __mode = "v", __inspect = tostring })
 
-   self.positional = t(table.of(function() return {} end, width * height))
+   self.positional = {}
 end
 
 function multi_pool:get_subpool(type_id)
@@ -40,7 +40,11 @@ function multi_pool:take_object(obj, x, y)
    obj.location = self
 
    self.refs[obj.uid] = subpool:get_object(obj.uid)
-   table.insert(self.positional[obj.y*self.width+obj.x+1], obj)
+   local idx = obj.y*self.width+obj.x+1
+   if self.positional[idx] == nil then
+      self.positional[idx] = {}
+   end
+   table.insert(self.positional[idx], obj)
 
    return obj
 end
@@ -49,8 +53,12 @@ function multi_pool:remove_object(obj)
    local obj = self:get_subpool(obj._type):remove_object(obj)
    assert(obj.location == nil)
 
+   local idx = obj.y*self.width+obj.x+1
    self.refs[obj.uid] = nil
-   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
+   table.iremove_value(self.positional[idx], obj)
+   if #self.positional[idx] == 0 then
+      self.positional[idx] = nil
+   end
 
    return obj
 end
@@ -60,8 +68,16 @@ function multi_pool:move_object(obj, x, y)
 
    local obj = self:get_subpool(obj._type):move_object(obj, x, y)
 
-   table.iremove_value(self.positional[prev_y*self.width+prev_x+1], obj)
-   table.insert(self.positional[y*self.width+x+1], obj)
+   local prev_idx = prev_y*self.width+prev_x+1
+   table.iremove_value(self.positional[prev_idx], obj)
+   if #self.positional[prev_idx] == 0 then
+      self.positional[prev_idx] = nil
+   end
+   local new_idx = y*self.width+x+1
+   if self.positional[new_idx] == nil then
+      self.positional[new_idx] = {}
+   end
+   table.insert(self.positional[new_idx], obj)
 
    return obj
 end
@@ -70,7 +86,7 @@ function multi_pool:objects_at_pos(x, y)
    if not self:is_in_bounds(x, y) then
       return fun.iter({})
    end
-   return fun.iter(table.shallow_copy(self.positional[y*self.width+x+1]))
+   return fun.iter(table.shallow_copy(self.positional[y*self.width+x+1] or {}))
 end
 
 function multi_pool:get_object(uid)
