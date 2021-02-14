@@ -15662,6 +15662,7 @@ local item =
                -- >>>>>>>> shade2/action.hsp:45 				if (cId(tc)!319)or(tc<maxFollower):txtNothingH ...
                if target._id ~= "elona.little_sister" or target:is_ally() then
                   Gui.mes("common.nothing_happens")
+                  return "turn_end"
                end
 
                -- TODO arena
