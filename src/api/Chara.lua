@@ -70,7 +70,9 @@ end
 ---
 --- @treturn Iterator(IChara)
 function Chara.iter_allies(map)
-   return fun.wrap(iter, {map = map or field.map, uids = save.base.allies}, 1)
+   local party = Chara.player():get_party()
+   local members = save.base.parties:get(party).members
+   return fun.wrap(iter, {map = map or field.map, uids = table.shallow_copy(members)}, 1)
 end
 
 --- Iterates all characters that are not allied (the player or a pet).

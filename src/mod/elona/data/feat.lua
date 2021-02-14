@@ -203,7 +203,7 @@ local function entrance_in_parent_map(map, chara, prev)
    end
 
    local index = 0
-   for i, c in Chara.iter_allies() do
+   for i, c in Chara.iter_allies(prev) do
       if c.uid == chara.uid then
          index = i
          break
