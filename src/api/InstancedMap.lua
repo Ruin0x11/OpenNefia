@@ -94,11 +94,11 @@ function InstancedMap:init(width, height, uids, tile)
 
    -- Locations that are treated as solid. Can be changed by mods to
    -- make objects that act solid, like map features.
-   self._solid = t(table.of(false, width * height))
+   self._solid = t(table.of(nil, width * height))
 
    -- Locations that are treated as opaque. Can be changed by mods to
    -- make objects that act opaque.
-   self._opaque = t(table.of(false, width * height))
+   self._opaque = t(table.of(nil, width * height))
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
@@ -573,6 +573,12 @@ function InstancedMap:refresh_tile(x, y)
 
          self._light[ind] = tile_light
       end
+   end
+   if solid == false then
+      solid = nil
+   end
+   if opaque == false then
+      opaque = nil
    end
    self._solid[ind] = solid
    self._opaque[ind] = opaque
