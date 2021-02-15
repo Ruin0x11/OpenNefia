@@ -29,6 +29,14 @@ data:add_type {
          type = "string",
       },
       {
+         name = "target_filter",
+         type = "function",
+      },
+      {
+         name = "target_order",
+         type = "function",
+      },
+      {
          name = "ordering",
          type = "number",
          default = 10000,

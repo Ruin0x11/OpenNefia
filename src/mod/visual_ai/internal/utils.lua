@@ -20,6 +20,10 @@ end
 function utils.get_default_var_value(var)
    assert(type(var) == "table")
 
+   if var.default then
+      return var.default
+   end
+
    local ty = var.type
 
    if ty == "comparator" then
@@ -46,7 +50,7 @@ end
 
 local DEFAULT_ICONS = {
    condition = "visual_ai.icon_down_right",
-   target = "visual_ai.icon_figurine",
+   target = "visual_ai.icon_singleplayer",
    action = "visual_ai.icon_flag",
 }
 

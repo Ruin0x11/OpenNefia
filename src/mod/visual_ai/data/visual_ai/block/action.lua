@@ -1,6 +1,7 @@
 local AiUtil = require("mod.elona.api.AiUtil")
 local Action = require("api.Action")
 local UidTracker = require("api.UidTracker")
+local Pos = require("api.Pos")
 
 local order = UidTracker:new(30000)
 
@@ -23,7 +24,42 @@ data:add {
          return false
       end
 
+      if chara == target then
+         return false
+      end
+
+      if Pos.dist(chara.x, chara.y, target.x, target.y) <= 1 then
+         return true
+      end
+
       return AiUtil.move_towards_target(chara, target, false)
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
+   _id = "action_retreat_from_target",
+
+   type = "action",
+   vars = {},
+
+   is_terminal = true,
+   ordering = order:get_next_and_increment(),
+
+   -- format_name = function(self)
+   --    return I18N.get("visual_ai.block." .. self._id .. ".name")
+   -- end,
+
+   action = function(self, chara, target)
+      if chara:current_map() ~= target:current_map() then
+         return false
+      end
+
+      if chara == target then
+         return false
+      end
+
+      return AiUtil.move_towards_target(chara, target, true)
    end
 }
 
@@ -45,6 +81,33 @@ data:add {
 
    action = function(self, chara, target)
       return true
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
+   _id = "action_pick_up",
+
+   type = "action",
+   vars = {},
+
+   is_terminal = true,
+   color = {50, 180, 100},
+   ordering = order:get_next_and_increment(),
+
+   -- format_name = function(self)
+   --    return I18N.get("visual_ai.block." .. self._id .. ".name")
+   -- end,
+
+   action = function(self, chara, target)
+      if chara.x ~= target.x or chara.y ~= target.y then
+         return false
+      end
+      if chara:has_item(target)  then
+         return false
+      end
+
+      return Action.get(chara, target)
    end
 }
 

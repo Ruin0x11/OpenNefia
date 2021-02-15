@@ -43,10 +43,12 @@ function VisualAIBlockList:make_keymap()
       north = function()
          self:select_previous()
          Gui.play_sound("base.cursor1")
+         self:_recalc_layout()
       end,
       south = function()
          self:select_next()
          Gui.play_sound("base.cursor1")
+         self:_recalc_layout()
       end,
       west = function() self:change_category(self.model:selected_index(), -1) end,
       east = function() self:change_category(self.model:selected_index(), 1) end,
@@ -130,6 +132,7 @@ function VisualAIBlockList:select_block(block_id)
          break
       end
    end
+   self:_recalc_layout()
 end
 
 function VisualAIBlockList:change_category(index, delta)
@@ -169,7 +172,7 @@ function VisualAIBlockList:draw()
    Draw.set_scissor(self.x + 10, self.y + 10 + 8, self.width, self.height - 28 - 16)
    for i, item in self.model:iter() do
       local x = self.x + 10
-      local y = (i - 1) * self.item_height + self.y + 10
+      local y = (i - 1) * self.item_height + self.y + 10 + self.offset_y
       item.tile.selected = i == self:selected_index()
       if y > self.y - self.item_height and self.y and y < self.y + self.height then
          self:draw_item(item, i, x, y)

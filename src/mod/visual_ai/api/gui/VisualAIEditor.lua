@@ -13,9 +13,12 @@ local VisualAIEditor = class.class("VisualAIEditor", IUiLayer)
 
 VisualAIEditor:delegate("input", IInput)
 
-function VisualAIEditor:init(plan)
+function VisualAIEditor:init(plan, opts)
+   opts = opts or {}
+
    self.plan = plan or VisualAIPlan:new()
    self.last_category = nil
+   self.interactive = opts.interactive
 
    self.win = UiWindow:new("Visual AI", true)
    self.grid = VisualAIPlanGrid:new(self.plan)
@@ -148,15 +151,15 @@ function VisualAIEditor:update(dt)
    end
 
    self.win:update(dt)
-   local chosen = self.grid:update(dt)
+   self.grid:update(dt)
    self.trail:update(dt)
 
-   if chosen then
-      return true, nil
-   end
-
    if self.canceled then
-      return nil, "canceled"
+      if self.interactive then
+         return self.plan, nil
+      else
+         return nil, "canceled"
+      end
    end
 end
 

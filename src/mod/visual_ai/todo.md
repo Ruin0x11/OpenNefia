@@ -2,11 +2,12 @@
 
 ## MVP
 
-- [] Block view.
-- [] Branch aware delete/insert.
+- [x] Block view.
+- [x] Branch aware delete/insert.
 - [] Jump statement.
-- [] Error checking for unended terminals.
+- [x] Error checking for unended terminals.
 - [] Error checking for infinite jump statements.
+- [] Undo/redo.
 
 ## Extra
 

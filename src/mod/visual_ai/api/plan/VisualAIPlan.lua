@@ -13,6 +13,10 @@ function VisualAIPlan:current_block()
    return self.blocks[#self.blocks]
 end
 
+function VisualAIPlan:iter_blocks()
+   return fun.iter(self.blocks)
+end
+
 function VisualAIPlan:can_add_block()
    local cur = self:current_block()
    if cur == nil then
@@ -95,6 +99,39 @@ function VisualAIPlan:iter_tiles(x, y)
    end
 
    return CoIter.iter(f)
+end
+
+function VisualAIPlan:check_for_errors(x, y)
+   x = x or 0
+   y = y or 0
+
+   local errors = {}
+
+   for i, block in ipairs(self.blocks) do
+      x = x + 1
+   end
+
+   local last_block = self:current_block()
+
+   if last_block == nil then
+      errors[#errors+1] = { message = "Branch is missing a final block.", x = x, y = y }
+   elseif last_block.proto.type == "condition" then
+      assert(self.subplan_true ~= nil)
+      assert(self.subplan_false ~= nil)
+
+      table.append(errors, self.subplan_true:check_for_errors(x, y))
+
+      local _, height = self.subplan_true:tile_size()
+      table.append(errors, self.subplan_false:check_for_errors(x - 1, y + height))
+   elseif last_block.proto.type == "target" then
+      errors[#errors+1] = { message = "Target block is missing next block.", x = x - 1, y = y }
+   elseif last_block.proto.type == "action" then
+      if last_block.proto.is_terminal == false then
+         errors[#errors+1] = { message = "Non-terminal action is missing next block.", x = x - 1, y = y }
+      end
+   end
+
+   return errors
 end
 
 local function make_block(proto_id)

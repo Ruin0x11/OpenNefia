@@ -272,4 +272,10 @@ function en.capitalize(str)
    return str:gsub("^%l", string.upper)
 end
 
+function en.plural(count, suffix)
+   suffix = suffix or "s"
+   return count == 1 and "" or suffix
+
+end
+
 return en

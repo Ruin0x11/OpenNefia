@@ -113,6 +113,7 @@ stds.i18n_en = {
       "trim_job",
       "name_nojob",
       "capitalize",
+      "plural"
    }
 }
 
