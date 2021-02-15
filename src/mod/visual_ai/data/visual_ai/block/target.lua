@@ -171,7 +171,8 @@ data:add {
    target_source = "any",
 
    target_filter = function(self, chara, candidate, ty)
-      return candidate == chara:get_mod_data("visual_ai").stored_target
+      local target = chara:get_mod_data("visual_ai").stored_target
+      return Chara.is_alive(target) and candidate == target
    end
 }
 
@@ -190,7 +191,7 @@ data:add {
    target_filter = function(self, chara, candidate)
       local player = Chara.player()
       local target = player:get_target() or player
-      return candidate == target
+      return Chara.is_alive(target) and candidate == target
    end
 }
 

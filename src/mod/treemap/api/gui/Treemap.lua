@@ -37,7 +37,7 @@ function Treemap.calc_sizes(t, depth)
          local ty = type(v)
          if ty == "table" then
             size = table.count(v)
-            color = {Color:new_hsl(25, (size) % 255 + 100 % 255, 100):to_rgb()}
+            color = {Color:new_hsl(25, 0.5, 100/255):to_rgb()}
             if depth > 0 then
                child = Treemap:new(v, depth - 1)
             end

@@ -12,7 +12,7 @@ local function to_putit(chara)
    if chara then
       chara.image = "elona.chara_race_slime"
       chara.portrait = nil
-      chara.color = {Color:new_hsl(Rand.rnd(256), 255, 255):to_rgb()}
+      chara.color = {Color:new_hsl(Rand.rnd(360), 1, 1):to_rgb()}
    end
    return chara
 end

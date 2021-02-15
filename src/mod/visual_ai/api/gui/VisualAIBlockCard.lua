@@ -2,6 +2,7 @@ local IUiElement = require("api.gui.IUiElement")
 local TopicWindow = require("api.gui.TopicWindow")
 local VisualAIPlanGrid = require("mod.visual_ai.api.gui.VisualAIPlanGrid")
 local Draw = require("api.Draw")
+local Color = require("mod.extlibs.api.Color")
 
 local VisualAIBlockCard = class.class("VisualAIBlockCard", IUiElement)
 
@@ -9,8 +10,9 @@ function VisualAIBlockCard:init(text, color, icon, index)
    self.text = text
    self.color = color
    self.icon = icon
-   self.index = index or nil
+   self.index = index and tostring(index) or nil
 
+   self.dark_color = {Color:new_rgb(color):lighten_by(0.5):to_rgb()}
    self.wrapped = {}
    self.window = TopicWindow:new(4, 1)
    self.selected = true
@@ -52,11 +54,11 @@ function VisualAIBlockCard:draw()
    local offset_x = 0
    if self.index then
       Draw.set_font(20)
-      Draw.text_shadowed(tostring(self.index), self.x + 20, self.y + self.height / 2 - Draw.text_height() / 2)
+      Draw.text_shadowed(self.index, self.x + 20, self.y + self.height / 2 - Draw.text_height() / 2)
       offset_x = 20
    end
 
-   VisualAIPlanGrid.draw_tile(self.icon, self.color, self.selected,
+   VisualAIPlanGrid.draw_tile(self.icon, self.selected and self.color or self.dark_color, self.selected,
                               self.x + 20 + offset_x, self.y + self.height / 2 - self.tile_size_px / 2, self.tile_size_px, 8)
 
    Draw.set_font(14)

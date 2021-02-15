@@ -176,11 +176,15 @@ end
 
 local function run_one_plan(chara, plan, state)
    for _, block in plan:iter_blocks() do
+      Log.debug("Running block: %s", block.proto._id)
+
       if block.proto.type == "condition" then
          local success = run_block_condition(chara, block, state)
          if success then
+            Log.debug("Branch: true", block.proto._id)
             return plan.subplan_true
          else
+            Log.debug("Branch: false", block.proto._id)
             return plan.subplan_false
          end
       elseif block.proto.type == "target" then
@@ -194,6 +198,7 @@ local function run_one_plan(chara, plan, state)
       end
    end
 
+   Log.debug("Plan finished.")
    return nil
 end
 

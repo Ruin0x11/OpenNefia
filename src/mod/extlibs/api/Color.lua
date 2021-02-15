@@ -22,25 +22,37 @@ local Color = class.class("Color")
 -- @return               an instance of Color
 -----------------------------------------------------------------------------
 function Color:init(H, S, L, A)
-   self.H = math.clamp(H, 0, 1)
+   if type(H) == "table" then
+      local t = H
+      H, S, L, A = t[1], t[2], t[3], t[4]
+   end
+   self.H = math.clamp(H, 0, 360)
    self.S = math.clamp(S, 0, 1)
    self.L = math.clamp(L, 0, 1)
    self.A = math.clamp(A or 1, 0, 1)
 end
 
 function Color:new_hsl(H, S, L, A)
-   return Color:new(H/255, S/255, L/255, A and A/255)
-end
-
-function Color:new_rgb(R, G, B, A)
-   return Color:new(Color.rgb_to_hsl(R/255, G/255, B/255, A and A/255))
-end
-
-function Color:new_hsl_float(H, S, L, A)
+   if type(H) == "table" then
+      local t = H
+      H, S, L, A = t[1], t[2], t[3], t[4]
+   end
    return Color:new(H, S, L, A)
 end
 
+function Color:new_rgb(R, G, B, A)
+   if type(R) == "table" then
+      local t = R
+      R, G, B, A = t[1], t[2], t[3], t[4]
+   end
+   return Color:new(Color.rgb_to_hsl(R/255, G/255, B/255, A and A/255))
+end
+
 function Color:new_rgb_float(R, G, B, A)
+   if type(R) == "table" then
+      local t = R
+      R, G, B, A = t[1], t[2], t[3], t[4]
+   end
    return Color:new(Color.rgb_to_hsl(R, G, B, A and A))
 end
 
@@ -165,7 +177,7 @@ end
 -- @return               a new instance of Color.
 -----------------------------------------------------------------------------
 function Color:hue_offset(delta)
-   return Color:new((self.H + delta) % 360, self.S, self.L)
+   return Color:new((self.H + delta) % 360, self.S, self.L, self.A)
 end
 
 -----------------------------------------------------------------------------
@@ -216,7 +228,7 @@ end
 -- @return               a new instance of Color
 -----------------------------------------------------------------------------
 function Color:desaturate_to(saturation)
-   return Color:new(self.H, saturation, self.L)
+   return Color:new(self.H, saturation, self.L, self.A)
 end
 
 -----------------------------------------------------------------------------
@@ -226,7 +238,7 @@ end
 -- @return               a new instance of Color
 -----------------------------------------------------------------------------
 function Color:desaturate_by(r)
-   return Color:new(self.H, self.S*r, self.L)
+   return Color:new(self.H, self.S*r, self.L, self.A)
 end
 
 -----------------------------------------------------------------------------
@@ -236,7 +248,7 @@ end
 -- @return               a new instance of Color
 -----------------------------------------------------------------------------
 function Color:lighten_to(lightness)
-   return Color:new(self.H, self.S, lightness)
+   return Color:new(self.H, self.S, lightness, self.A)
 end
 
 -----------------------------------------------------------------------------
@@ -246,7 +258,7 @@ end
 -- @return               a new instance of Color
 -----------------------------------------------------------------------------
 function Color:lighten_by(r)
-   return Color:new(self.H, self.S, self.L*r)
+   return Color:new(self.H, self.S, self.L*r, self.A)
 end
 
 -----------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 local IUiElement = require("api.gui.IUiElement")
 local Draw = require("api.Draw")
 local UiTheme = require("api.gui.UiTheme")
+local Color = require("mod.extlibs.api.Color")
 
 local TreemapCell = class.class("TreemapCell", IUiElement)
 
@@ -31,18 +32,19 @@ end
 function TreemapCell:draw()
    Draw.set_font(self.font_size)
    local pad = Draw.text_height() + 10
+   local color = Color:new_rgb(self.color)
    if self.height > pad then
-      Draw.set_color(self.color[1] * 0.7, self.color[2] * 0.7, self.color[3] * 0.7)
+      Draw.set_color(color:lighten_by(0.7):to_rgb())
       Draw.filled_rect(self.x, self.y, self.width, self.height)
 
-      Draw.set_color(self.color)
+      Draw.set_color(color:to_rgb())
       Draw.filled_rect(self.x, self.y + pad, self.width, self.height - pad)
 
-      Draw.set_color(self.color[1] * 2.2, self.color[2] * 2.2, self.color[3] * 2.2)
+      Draw.set_color(color:lighten_by(2.2):to_rgb())
       Draw.text(self.label, self.x + 5, self.y + 5)
 
       if self.height > pad + Draw.text_height() + 5 then
-         Draw.set_color(self.color[1] * 2.2, self.color[2] * 2.2, self.color[3] * 2.2)
+         Draw.set_color(color:lighten_by(2.2):to_rgb())
          Draw.text(self.value_label, self.x + 5, self.y + 5 + pad)
       end
 
@@ -54,7 +56,7 @@ function TreemapCell:draw()
       Draw.filled_rect(self.x, self.y, self.width, self.height)
 
       if self.height > pad then
-         Draw.set_color(self.color[1] * 2.2, self.color[2] * 2.2, self.color[3] * 2.2)
+         Draw.set_color(color:lighten_by(2.2):to_rgb())
          Draw.text(self.value_label, self.x + 5, self.y + 5)
       end
    end

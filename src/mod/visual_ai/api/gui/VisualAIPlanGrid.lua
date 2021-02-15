@@ -3,7 +3,7 @@ local InputHandler = require("api.gui.InputHandler")
 local UiTheme = require("api.gui.UiTheme")
 local IUiElement = require("api.gui.IUiElement")
 local Draw = require("api.Draw")
-local I18N = require("api.I18N")
+local Color = require("mod.extlibs.api.Color")
 local utils = require("mod.visual_ai.internal.utils")
 
 local VisualAIPlanGrid = class.class("VisselfIPlanGrid", {IUiElement, IInput})
@@ -178,14 +178,12 @@ end
 function VisualAIPlanGrid.draw_tile(icon, color, selected, x, y, tile_size_px, tile_padding)
    local size = tile_size_px - tile_padding * 2
 
-   if selected then
-      Draw.set_color(color)
-   else
-      Draw.set_color(color[1] * 0.5, color[2] * 0.5, color[3] * 0.5)
-   end
+   Draw.set_color(255, 255, 255)
+   Draw.filled_rect(x + tile_padding - 2, y + tile_padding - 2, size + 4, size + 4)
+   Draw.set_color(0, 0, 0)
+   Draw.filled_rect(x + tile_padding - 1, y + tile_padding - 1, size + 2, size + 2)
+   Draw.set_color(color)
    Draw.filled_rect(x + tile_padding, y + tile_padding, size, size)
-   Draw.set_color(180, 180, 180)
-   Draw.line_rect(x + tile_padding, y + tile_padding, size, size)
    if icon then
       if selected then
          Draw.set_color(255, 255, 255)
@@ -240,7 +238,8 @@ function VisualAIPlanGrid:draw()
          Draw.set_color(200, 40, 40)
          Draw.line_rect(x + self.tile_padding, y + self.tile_padding, size, size)
       else
-         VisualAIPlanGrid.draw_tile(tile.icon, tile.color, tile.selected, x, y, self.tile_size_px, self.tile_padding)
+         tile.dark_color = tile.dark_color or {Color:new_rgb(tile.color):lighten_by(0.5):to_rgb()}
+         VisualAIPlanGrid.draw_tile(tile.icon, tile.selected and tile.color or tile.dark_color, tile.selected, x, y, self.tile_size_px, self.tile_padding)
       end
    end
 
