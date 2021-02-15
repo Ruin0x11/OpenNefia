@@ -17,6 +17,30 @@ data:add_type {
          type = "table",
          default = {},
          template = true
+      },
+      {
+         name = "color",
+         type = "string|table",
+         default = {},
+         template = true
+      },
+      {
+         name = "target_source",
+         type = "string",
+      },
+      {
+         name = "ordering",
+         type = "number",
+         default = 10000,
+         template = true
+      },
+      {
+         name = "is_terminal",
+         type = "boolean?"
+      },
+      {
+         name = "format_name",
+         type = "function"
       }
    }
 }

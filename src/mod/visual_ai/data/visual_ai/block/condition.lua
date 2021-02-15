@@ -1,5 +1,8 @@
 local I18N = require("api.I18N")
 local utils = require("mod.visual_ai.internal.utils")
+local UidTracker = require("api.UidTracker")
+
+local order = UidTracker:new(10000)
 
 data:add {
    _type = "visual_ai.block",
@@ -10,9 +13,10 @@ data:add {
       comparator = { type = "comparator" },
       threshold = { type = "integer", min_value = 0, max_value = 100 }
    },
+   ordering = order:get_next_and_increment(),
 
-   format_name = function(self)
-      return I18N.get("visual_ai.block." .. self._id .. ".name", self.vars.comparator, self.vars.threshold)
+   format_name = function(proto, vars)
+      return I18N.get("visual_ai.block." .. proto._id .. ".name", vars.comparator, vars.threshold)
    end,
 
    condition = function(self, chara, targets)

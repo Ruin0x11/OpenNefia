@@ -1,7 +1,7 @@
 local UidTracker = class.class("UidTracker")
 
-function UidTracker:init()
-   self.uid = 1
+function UidTracker:init(uid)
+   self.uid = uid or 1
 end
 
 function UidTracker:get_next()

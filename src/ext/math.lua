@@ -70,3 +70,7 @@ function math.map(n, a_min, a_max, b_min, b_max, bound)
       return math.clamp(new, b_max, b_min)
    end
 end
+
+function math.wrap(x, min, max)
+   return (((x - min) % (max - min)) + (max - min)) % (max - min) + min
+end

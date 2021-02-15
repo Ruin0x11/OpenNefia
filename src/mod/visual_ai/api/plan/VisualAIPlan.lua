@@ -1,5 +1,6 @@
 local VisualAIPlan = class.class("VisualAIPlan")
 local CoIter = require("mod.visual_ai.api.CoIter")
+local utils = require("mod.visual_ai.internal.utils")
 
 function VisualAIPlan:init()
    self.blocks = {}
@@ -94,30 +95,12 @@ function VisualAIPlan:iter_tiles(x, y)
    return CoIter.iter(f)
 end
 
-local function get_default_var_value(var)
-   assert(type(var) == "table")
-
-   local ty = var.type
-
-   if ty == "comparator" then
-      return "<"
-   elseif ty == "number" or ty == "integer" then
-      return var.max_value or var.min_value or 0
-   else
-      error("unknown block variable type ".. tostring(ty))
-   end
-end
-
 function VisualAIPlan:_insert_block(proto_id)
    assert(self:can_add_block())
 
    local proto = data["visual_ai.block"]:ensure(proto_id)
 
-   local vars = {}
-   for k, var in pairs(proto.vars or {}) do
-      local value = get_default_var_value(var)
-      vars[k] = assert(value)
-   end
+   local vars = utils.get_default_vars(proto.vars)
 
    self.blocks[#self.blocks+1] = {
       _id = proto_id,

@@ -1,10 +1,13 @@
 local blocks = {
    condition_hp_threshold = {
       name = function(comparator, threshold)
-         return ("My HP is %s %s"):format(comparator, threshold)
+         return ("My HP is %s %s%%"):format(comparator, threshold)
       end
    },
 
+   target_inventory = {
+      name = "Inventory"
+   },
    target_player = {
       name = "Player"
    },

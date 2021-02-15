@@ -4,8 +4,9 @@ local UiTheme = require("api.gui.UiTheme")
 local IUiElement = require("api.gui.IUiElement")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
+local utils = require("mod.visual_ai.internal.utils")
 
-local VisualAIPlanGrid = class.class("VisualAIPlanGrid", {IUiElement, IInput})
+local VisualAIPlanGrid = class.class("VisselfIPlanGrid", {IUiElement, IInput})
 
 VisualAIPlanGrid:delegate("input", IInput)
 
@@ -39,13 +40,9 @@ function VisualAIPlanGrid:make_keymap()
    }
 end
 
-local function wrap(x, min, max)
-   return (((x - min) % (max - min)) + (max - min)) % (max - min) + min
-end
-
 function VisualAIPlanGrid:move_cursor(dx, dy)
-   self.cursor_x = wrap(self.cursor_x + dx, 1, self.canvas_width + 1)
-   self.cursor_y = wrap(self.cursor_y + dy, 1, self.canvas_height + 1)
+   self.cursor_x = math.wrap(self.cursor_x + dx, 1, self.canvas_width + 1)
+   self.cursor_y = math.wrap(self.cursor_y + dy, 1, self.canvas_height + 1)
    self:_recalc_active_trail()
    self.changed = true
 end
@@ -61,12 +58,6 @@ function VisualAIPlanGrid:_resize_canvas_from_plan()
    self.cursor_x = math.clamp(self.cursor_x, 1, self.canvas_width)
    self.cursor_y = math.clamp(self.cursor_y, 1, self.canvas_height)
 end
-
-local DEFAULT_ICONS = {
-   condition = "visual_ai.icon_down_right",
-   target = "visual_ai.icon_figurine",
-   action = "visual_ai.icon_flag",
-}
 
 function VisualAIPlanGrid:_recalc_active_trail()
    local selected = self:selected_tile()
@@ -137,33 +128,9 @@ function VisualAIPlanGrid:_recalc_layout()
             selected = false
          }
       elseif state == "block" then
-         local color
-         if type(block.proto.color) == "string" then
-            color = self.t[block.proto.color]
-            assert(color)
-         elseif block.proto.color then
-            color = block.proto.color
-         else
-            color = self.t.visual_ai[("color_block_" .. block.proto.type)]
-         end
-
-         local icon
-         if block.proto.icon then
-            icon = self.t[block.proto.icon]
-         else
-            local default = DEFAULT_ICONS[block.proto.type]
-            if default then
-               icon = self.t[default]
-            end
-         end
-
-         local text
-         if block.proto.format_name then
-            text = block.proto.format_name(block)
-         else
-            text = I18N.get("visual_ai.block." .. block.proto._id .. ".name")
-         end
-         assert(type(text) == "string")
+         local color = utils.get_block_color(block.proto, self.t)
+         local icon = utils.get_block_icon(block.proto, self.t)
+         local text = utils.get_block_text(block.proto, block.vars)
 
          self.tiles[idx] = {
             x = x,

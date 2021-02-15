@@ -96,7 +96,6 @@ function VisualAIPlanTrail:draw()
             Draw.set_color(0, 0, 0, 128)
             Draw.filled_rect(entry.window.x, entry.window.y, entry.window.width, entry.window.height)
          end
-
       end
       y = y + self.item_height
    end
