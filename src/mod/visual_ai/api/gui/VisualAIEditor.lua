@@ -32,6 +32,8 @@ function VisualAIEditor:make_keymap()
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end,
 
+      ["visual_ai.insert"]            = function() self:insert("true_branch") end,
+      ["visual_ai.insert_down"]       = function() self:insert("false_branch") end,
       ["visual_ai.delete"]            = function() self:delete("true_branch") end,
       ["visual_ai.delete_merge_down"] = function() self:delete("false_branch") end,
       ["visual_ai.delete_to_right"]   = function() self:delete_to_right() end,
@@ -70,6 +72,22 @@ function VisualAIEditor:choose()
       tile.plan:replace_block(tile.block, result.block_id)
    end
 
+   self:refresh_grid()
+end
+
+function VisualAIEditor:insert(split_type)
+   local tile = self.grid:selected_tile()
+   if tile == nil then
+      return
+   end
+
+   local result, canceled = VisualAIInsertMenu:new(self.last_category):query()
+   self.last_category = result.last_category
+   if canceled then
+      return
+   end
+
+   tile.plan:insert_block_before(tile.block, result.block_id, split_type)
    self:refresh_grid()
 end
 

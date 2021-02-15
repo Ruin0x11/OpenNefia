@@ -1,5 +1,17 @@
 data:add {
    _type = "base.keybind",
+   _id = "insert",
+   default = "ctrl_return"
+}
+
+data:add {
+   _type = "base.keybind",
+   _id = "insert_down",
+   default = "alt_return"
+}
+
+data:add {
+   _type = "base.keybind",
    _id = "delete",
    default = "backspace"
 }

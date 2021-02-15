@@ -77,7 +77,7 @@ function VisualAIInsertMenu:update(dt)
       return chosen, nil
    end
    if self.canceled then
-      return nil, "canceled"
+      return { last_category = self.list.category }, "canceled"
    end
 end
 

@@ -230,6 +230,62 @@ function VisualAIPlan:merge_plan(other)
    table.append(self.blocks, other.blocks)
 end
 
+function VisualAIPlan:split(idx)
+   assert(idx > 0 and idx <= #self.blocks)
+   local right = VisualAIPlan:new()
+   for i = idx, #self.blocks do
+      local block = self.blocks[i]
+      if block.proto.type == "condition" then
+         assert(i == #self.blocks)
+         pause()
+         right:add_condition_block(block.proto._id, self.subplan_true, self.subplan_false)
+      else
+         right:add_block(block.proto._id)
+      end
+      self.blocks[i] = nil
+   end
+   self.subplan_true = nil
+   self.subplan_false = nil
+   return right
+end
+
+function VisualAIPlan:insert_block_before(block, proto_id, split_type)
+   local idx = table.index_of(self.blocks, block)
+   if idx == nil then
+      error(("No block '%s' in this plan."):format(tostring(block)))
+   end
+
+   local proto = data["visual_ai.block"]:ensure(proto_id)
+
+   local function snip_rest()
+      for i = idx, #self.blocks do
+         self.blocks[i] = nil
+      end
+   end
+
+   if proto.type == "condition" then
+      local right = self:split(idx)
+      if split_type == "true_branch" then
+         self:add_condition_block(proto_id, right, nil)
+      elseif split_type == "false_branch" then
+         self:add_condition_block(proto_id, nil, right)
+      else
+         error("unknown split type " .. tostring(split_type))
+      end
+   elseif proto.type == "target" then
+      table.insert(self.blocks, idx, make_block(proto_id))
+   elseif proto.type == "action" then
+      if proto.is_terminal then
+         snip_rest()
+         self:add_action_block(proto_id)
+      else
+         table.insert(self.blocks, idx, make_block(proto_id))
+      end
+   else
+      error("TODO")
+   end
+end
+
 function VisualAIPlan:remove_block(block, merge_type)
    local idx = table.index_of(self.blocks, block)
    if idx == nil then
