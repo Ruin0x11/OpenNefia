@@ -2018,6 +2018,22 @@ local chara = {
       female_image = "elona.chara_wizard_of_elea_female",
       category = 4,
       coefficient = 400,
+      skills = {
+         "elona.spell_magic_dart",
+         "elona.spell_nerve_arrow",
+         "elona.spell_short_teleport",
+      },
+      ai_actions = {
+         main = {
+            { id = "elona.melee" },
+            { id = "elona.magic", skill_id = "elona.spell_magic_dart" }
+         },
+         sub = {
+            { id = "elona.magic", skill_id = "elona.spell_nerve_arrow" },
+            { id = "elona.magic", skill_id = "elona.spell_short_teleport" }
+         },
+         sub_action_chance = 20
+      },
    },
    {
       _id = "asura",
@@ -5196,7 +5212,7 @@ local chara = {
          sub = {
             { id = "elona.magic", skill_id = "elona.action_fire_breath" }
          },
-         sub_chance = 65
+         sub_action_chance = 65
       },
       gender = "male",
       image = "elona.chara_ebon2",

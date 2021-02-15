@@ -161,6 +161,12 @@ Event.register("base.before_chara_turn_start", "Check if character leveled up", 
 local function gain_experience_at_turn_start(chara)
    chara.noise = 0
 
+   local target = chara:get_target()
+   if not Chara.is_alive(target) then
+      chara:set_target(nil)
+      chara:set_aggro(nil, 0)
+   end
+
    if not chara:is_player() then
       return
    end

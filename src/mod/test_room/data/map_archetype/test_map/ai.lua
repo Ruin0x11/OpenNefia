@@ -28,7 +28,7 @@ function ai.on_generate_map(area, floor)
    local player = Chara.player()
 
    if player:iter_other_party_members():length() == 0 then
-      local ally = Chara.create("elona.putit", 5, 10, {}, map)
+      local ally = Chara.create("elona.wizard_of_elea", 5, 10, {}, map)
       player:recruit_as_ally(ally)
    end
 

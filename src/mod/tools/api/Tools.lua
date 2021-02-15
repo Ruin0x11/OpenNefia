@@ -56,12 +56,12 @@ function Tools.spawn_equipped_foes(count)
    end
 end
 
-function Tools.spawn_allies(count)
+function Tools.spawn_allies(count, id)
    count = count or 4
    for _=1,count do
       local x, y = Map.find_position_for_chara()
       if x then
-         local c = Chara.create("elona.putit", x, y)
+         local c = Chara.create(id or "elona.wizard_of_elea", x, y)
          if not Chara.player():recruit_as_ally(c) then
             return
          end
@@ -1001,27 +1001,31 @@ function Tools.end_quest()
    end
 end
 
-function Tools.learn_all_skills()
-   local player = Chara.player()
-   player:mod_base_skill_level("elona.stat_magic", 10000)
-   player:mod_base_skill_level("elona.stat_mana", 10000)
+function Tools.powerup(chara, levels)
+   for _= 1, levels or 50 do
+      Skill.gain_level(chara)
+      Skill.grow_primary_skills(chara)
+   end
+
+   chara:mod_base_skill_level("elona.stat_magic", 10000)
+   chara:mod_base_skill_level("elona.stat_mana", 10000)
 
    Skill.iter_skills()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
    Skill.iter_spells()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
    Skill.iter_actions()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
-   player:heal_to_max()
+   chara:heal_to_max()
 end
 
 local function visit_quest_giver(quest)

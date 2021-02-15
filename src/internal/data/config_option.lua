@@ -588,6 +588,12 @@ data:add_multi(
          default = false
       },
       {
+         _id = "debug_no_spell_failure",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "max_inspect_length",
 
          type = "integer",

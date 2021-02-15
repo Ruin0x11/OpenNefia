@@ -5,6 +5,7 @@ local SkillCheck = require("mod.elona.api.SkillCheck")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
 local AiUtil = require("mod.elona.api.AiUtil")
+local Log = require("api.Log")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -253,9 +254,15 @@ local function basic_action(chara, params)
    local choice
 
    if choosing_sub_act then
-      choice = Rand.choice(chara.ai_actions.main or {})
-   else
+      if chara:is_ally() then
+         Log.info("Sub act")
+      end
       choice = Rand.choice(chara.ai_actions.sub or {})
+   else
+      if chara:is_ally() then
+         Log.info("Main act")
+      end
+      choice = Rand.choice(chara.ai_actions.main or {})
    end
 
    if choice then
@@ -404,7 +411,7 @@ local function try_to_use_item(chara, params, result)
    -- <<<<<<<< shade2/ai.hsp:136 		} ..
 end
 
-local function decide_ally_targeted_action(chara, params)
+local function decide_ally_idle_action(chara, params)
    -- >>>>>>>> shade2/ai.hsp:147 		if cRelation(cc)=cAlly:if tc=pc{ ...
    local target = chara:get_target()
    if Chara.is_alive(target) then
@@ -442,8 +449,9 @@ local function decide_targeted_action(chara, params)
       end
    end
 
-   if chara:is_in_player_party() then
-      return Ai.run("elona.decide_ally_targeted_action", chara)
+   local target = chara:get_target()
+   if chara:is_in_player_party() and target and target:is_player() then
+      return Ai.run("elona.decide_ally_idle_action", chara)
    end
 
    if chara:has_effect("elona.fear") then
@@ -579,7 +587,7 @@ data:add_multi(
       { _id = "try_to_use_item",             act = try_to_use_item },
       { _id = "attempt_to_melee",            act = attempt_to_melee },
       { _id = "idle_action",                 act = idle_action },
-      { _id = "decide_ally_targeted_action", act = decide_ally_targeted_action },
+      { _id = "decide_ally_idle_action", act = decide_ally_idle_action },
       { _id = "decide_targeted_action",      act = decide_targeted_action },
       { _id = "elona_default_ai",            act = elona_default_ai },
    }
