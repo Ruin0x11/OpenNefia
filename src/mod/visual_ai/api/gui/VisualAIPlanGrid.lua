@@ -175,32 +175,24 @@ function VisualAIPlanGrid:relayout(x, y, width, height)
    self:refresh()
 end
 
-function VisualAIPlanGrid.draw_tile(tile, x, y, tile_size_px, tile_padding)
+function VisualAIPlanGrid.draw_tile(icon, color, selected, x, y, tile_size_px, tile_padding)
    local size = tile_size_px - tile_padding * 2
 
-   if tile.type == "empty" then
-      Draw.set_color(tile.color)
-      Draw.filled_rect(x + tile_padding, y + tile_padding, size, size)
-      Draw.set_color(200, 40, 40)
-      Draw.line_rect(x + tile_padding, y + tile_padding, size, size)
-   elseif tile.type == "block" then
-      if tile.selected then
-         Draw.set_color(tile.color)
+   if selected then
+      Draw.set_color(color)
+   else
+      Draw.set_color(color[1] * 0.5, color[2] * 0.5, color[3] * 0.5)
+   end
+   Draw.filled_rect(x + tile_padding, y + tile_padding, size, size)
+   Draw.set_color(180, 180, 180)
+   Draw.line_rect(x + tile_padding, y + tile_padding, size, size)
+   if icon then
+      if selected then
+         Draw.set_color(255, 255, 255)
       else
-         Draw.set_color(tile.color[1] * 0.5, tile.color[2] * 0.5, tile.color[3] * 0.5)
+         Draw.set_color(128, 128, 128)
       end
-      Draw.filled_rect(x + tile_padding, y + tile_padding, size, size)
-      Draw.set_color(180, 180, 180)
-      Draw.line_rect(x + tile_padding, y + tile_padding, size, size)
-      if tile.icon then
-         if tile.selected then
-            Draw.set_color(255, 255, 255)
-         else
-            Draw.set_color(128, 128, 128)
-         end
-         tile.icon:draw(x + tile_padding - 4 + 1, y + tile_padding - 4 + 1, size + 4, size + 4)
-         -- tile.icon:draw(x + tile_padding, y + tile_padding, size, size)
-      end
+      icon:draw(x + tile_padding - 4 + 1, y + tile_padding - 4 + 1, size + 4, size + 4)
    end
 end
 
@@ -242,7 +234,14 @@ function VisualAIPlanGrid:draw()
    for _, tile in pairs(self.tiles) do
       local x = self.x + tile.x * self.tile_size_px
       local y = self.y + tile.y * self.tile_size_px
-      VisualAIPlanGrid.draw_tile(tile, x, y, self.tile_size_px, self.tile_padding)
+      if tile.type == "empty" then
+         Draw.set_color(tile.color)
+         Draw.filled_rect(x + self.tile_padding, y + self.tile_padding, size, size)
+         Draw.set_color(200, 40, 40)
+         Draw.line_rect(x + self.tile_padding, y + self.tile_padding, size, size)
+      else
+         VisualAIPlanGrid.draw_tile(tile.icon, tile.color, tile.selected, x, y, self.tile_size_px, self.tile_padding)
+      end
    end
 
    local x = self.x + (self.cursor_x-1) * self.tile_size_px

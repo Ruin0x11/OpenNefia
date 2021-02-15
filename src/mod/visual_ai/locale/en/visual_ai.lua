@@ -34,8 +34,8 @@ local blocks = {
    target_inventory = {
       name = "Inventory"
    },
-   target_previous = {
-      name = "Previous target"
+   target_stored = {
+      name = "Previously preserved target"
    },
    target_player_targeting_character = {
       name = "Target of player"
@@ -70,6 +70,9 @@ local blocks = {
    },
    action_equip = {
       name = "Equip"
+   },
+   action_store_target = {
+      name = "Preserve current target to next turn"
    },
    action_do_nothing = {
       name = "Do nothing"

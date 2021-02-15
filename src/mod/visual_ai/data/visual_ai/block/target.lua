@@ -160,7 +160,7 @@ data:add {
 
 data:add {
    _type = "visual_ai.block",
-   _id = "target_previous",
+   _id = "target_stored",
 
    type = "target",
    color = {100, 40, 100},
@@ -171,13 +171,7 @@ data:add {
    target_source = "any",
 
    target_filter = function(self, chara, candidate, ty)
-      if ty == "map_object" then
-         return candidate == chara:get_target()
-      elseif ty == "position" then
-         return chara.target_location
-            and chara.target_location.x == candidate.x
-            and chara.target_location.y == candidate.y
-      end
+      return candidate == chara:get_mod_data("visual_ai").stored_target
    end
 }
 

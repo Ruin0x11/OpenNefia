@@ -60,43 +60,47 @@ function VisualAIPlan:iter_tiles(x, y)
    y = y or 0
 
    local f = function()
-      local i = 1
-      while self.blocks[i] do
-         coroutine.yield("block", x, y, self.blocks[i], self)
-         if i < #self.blocks then
-            coroutine.yield("line", x, y, { "right", x + 1, y }, self)
+      while true do
+         local i = 1
+         while self.blocks[i] do
+            coroutine.yield("block", x, y, self.blocks[i], self)
+            if i < #self.blocks then
+               coroutine.yield("line", x, y, { "right", x + 1, y }, self)
+            end
+
+            i = i + 1
+            x = x + 1
          end
 
-         i = i + 1
-         x = x + 1
-      end
+         local last_block = self:current_block()
 
-      local last_block = self:current_block()
+         if last_block == nil then
+            -- empty plan
+            coroutine.yield("empty", x, y, "", self)
+         elseif last_block.proto.type == "condition" then
+            coroutine.yield("line", x-1, y, { "right", x, y }, self.subplan_true)
+            for _, state, cx, cy, block, plan in self.subplan_true:iter_tiles(x, y) do
+               coroutine.yield(state, cx, cy, block, plan)
+            end
 
-      if last_block == nil then
-         -- empty plan
-         coroutine.yield("empty", x, y, "", self)
-      elseif last_block.proto.type == "condition" then
-         coroutine.yield("line", x-1, y, { "right", x, y }, self.subplan_true)
-         for _, state, cx, cy, block, plan in self.subplan_true:iter_tiles(x, y) do
-            coroutine.yield(state, cx, cy, block, plan)
-         end
-
-         local _, height = self.subplan_true:tile_size()
-         coroutine.yield("line", x - 1, y, { "down", x - 1, y + height }, self.subplan_false)
-         for _, state, cx, cy, block, plan in self.subplan_false:iter_tiles(x-1, y + height) do
-            coroutine.yield(state, cx, cy, block, plan)
-         end
-      elseif last_block.proto.type == "target" then
-         coroutine.yield("line", x-1, y, { "right", x, y }, self)
-         coroutine.yield("empty", x, y, "", self)
-      elseif last_block.proto.type == "action"
-         or last_block.proto.type == "special"
-      then
-         if not last_block.proto.is_terminal then
+            local _, height = self.subplan_true:tile_size()
+            coroutine.yield("line", x - 1, y, { "down", x - 1, y + height }, self.subplan_false)
+            for _, state, cx, cy, block, plan in self.subplan_false:iter_tiles(x-1, y + height) do
+               coroutine.yield(state, cx, cy, block, plan)
+            end
+         elseif last_block.proto.type == "target" then
             coroutine.yield("line", x-1, y, { "right", x, y }, self)
             coroutine.yield("empty", x, y, "", self)
+         elseif last_block.proto.type == "action"
+            or last_block.proto.type == "special"
+         then
+            if not last_block.proto.is_terminal then
+               coroutine.yield("line", x-1, y, { "right", x, y }, self)
+               coroutine.yield("empty", x, y, "", self)
+            end
          end
+
+         coroutine.yield(nil)
       end
    end
 

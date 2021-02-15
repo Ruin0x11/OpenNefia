@@ -11,6 +11,7 @@ local ListModel = require("api.gui.ListModel")
 local TopicWindow = require("api.gui.TopicWindow")
 local utils = require("mod.visual_ai.internal.utils")
 local VisualAIPlanGrid = require("mod.visual_ai.api.gui.VisualAIPlanGrid")
+local VisualAIBlockCard = require("mod.visual_ai.api.gui.VisualAIBlockCard")
 
 local VisualAIBlockList = class.class("VisualAIBlockList", IUiList)
 
@@ -68,11 +69,9 @@ function VisualAIBlockList:_recalc_layout()
    local y = self.y + 10 + self.offset_y
 
    Draw.set_font(14)
-   for _, entry in self.model:iter() do
-      entry.window:relayout(x + 5, y + 2.5, self.width - 40, self.item_height - 2.5)
-
-      local _, wrapped = Draw.wrap_text(entry.text, self.width - 40 - 40)
-      entry.wrapped = wrapped
+   for i, entry in self.model:iter() do
+      entry.card:relayout(x, y, self.width - 40, self.item_height)
+      entry.card.selected = i == self:selected_index()
 
       y = y + self.item_height
    end
@@ -102,17 +101,8 @@ function VisualAIBlockList:set_category(category_idx)
       local text = utils.get_block_text(e, vars)
 
       return {
-         window = TopicWindow:new(4, 1),
-         text = text,
+         card = VisualAIBlockCard:new(text, color, icon),
          proto = e,
-         wrapped = {},
-
-         tile = {
-            selected = false,
-            type = "block",
-            color = color,
-            icon = icon,
-         }
       }
    end
    local entries = data["visual_ai.block"]:iter():filter(pred):map(map):to_list()
@@ -153,30 +143,11 @@ function VisualAIBlockList:relayout(x, y, width, height)
    self:_recalc_layout()
 end
 
-function VisualAIBlockList:draw_item(item, i, x, y)
-   item.window:draw()
-
-   VisualAIPlanGrid.draw_tile(item.tile, x + 20, y + self.item_height / 2 - self.tile_size_px / 2, self.tile_size_px, 8)
-
-   Draw.set_font(14)
-   for i, line in ipairs(item.wrapped) do
-      Draw.text_shadowed(line, x + 24 + self.tile_size_px + 5, y + 5 + i * Draw.text_height())
-   end
-
-   if not item.tile.selected then
-      Draw.set_color(0, 0, 0, 64)
-      Draw.filled_rect(item.window.x, item.window.y, item.window.width, item.window.height)
-   end
-end
-
 function VisualAIBlockList:draw()
    Draw.set_scissor(self.x + 10, self.y + 10 + 8, self.width, self.height - 28 - 16)
-   for i, item in self.model:iter() do
-      local x = self.x + 10
-      local y = (i - 1) * self.item_height + self.y + 10 + self.offset_y
-      item.tile.selected = i == self:selected_index()
-      if y > self.y - self.item_height and self.y and y < self.y + self.height then
-         self:draw_item(item, i, x, y)
+   for i, entry in self.model:iter() do
+      if entry.card.y > self.y - entry.card.height and self.y and entry.card.y < self.y + self.height then
+         entry.card:draw()
       end
    end
    Draw.set_scissor()

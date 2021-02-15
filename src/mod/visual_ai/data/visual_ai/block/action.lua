@@ -166,6 +166,28 @@ data:add {
 
 data:add {
    _type = "visual_ai.block",
+   _id = "action_store_target",
+
+   type = "action",
+   vars = {},
+
+   is_terminal = false,
+   color = {100, 40, 100},
+   icon = "visual_ai.icon_download",
+   ordering = order:get_next_and_increment(),
+
+   applies_to = "map_object",
+
+   action = function(self, chara, target)
+      local ext = chara:get_mod_data("visual_ai")
+      ext.stored_target = target
+
+      return true
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
    _id = "action_do_nothing",
 
    type = "action",

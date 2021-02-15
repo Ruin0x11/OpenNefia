@@ -198,7 +198,8 @@ local function run_one_plan(chara, plan, state)
 end
 
 function VisualAI.run(chara, plan)
-   plan = plan or chara:get_mod_data("visual_ai").visual_ai_plan
+   local ext = chara:get_mod_data("visual_ai")
+   plan = plan or ext.visual_ai_plan
 
    -- BUG: #118
    -- class.assert_is_an(IChara, chara)
@@ -209,6 +210,10 @@ function VisualAI.run(chara, plan)
       local concat = function(acc, t) return (acc and (acc .. "  ") or "  ") .. ("(%d,%d): %s\n"):format(t.x, t.y, t.message) end
       local error_text = fun.iter(errors):foldl(concat)
       error(("Plan has %d errors:\n%s"):format(#errors, error_text))
+   end
+
+   if ext.stored_target and not target_filter_in_fov.filter(nil, chara, ext.stored_target) then
+      ext.stored_target = nil
    end
 
    local state = {
@@ -224,12 +229,12 @@ function VisualAI.run(chara, plan)
       plan = run_one_plan(chara, plan, state)
    end
 
-   local target = state.chosen_target
-   if MapObject.is_map_object(target) and target._type == "base.chara" then
-      chara:set_target(target)
-   elseif is_position(target) then
-      chara.target_location = { x = target.x, y = target.y }
-   end
+   -- local target = state.chosen_target
+   -- if MapObject.is_map_object(target) and target._type == "base.chara" then
+   --    chara:set_target(target)
+   -- elseif is_position(target) then
+   --    chara.target_location = { x = target.x, y = target.y }
+   -- end
 end
 
 function VisualAI.set_plan(chara, plan)

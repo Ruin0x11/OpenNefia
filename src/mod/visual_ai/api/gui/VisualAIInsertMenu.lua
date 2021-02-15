@@ -95,7 +95,7 @@ function VisualAIInsertMenu:update(dt)
       local block = utils.make_block(chosen.block_id)
       if next(block.proto.vars) then
          local var_defs = make_var_defs(block)
-         local vars, canceled = VisualAIConfigureBlockMenu:new(var_defs):query()
+         local vars, canceled = VisualAIConfigureBlockMenu:new(block.proto, var_defs):query()
          if not canceled then
             block.vars = vars
             return { last_category = chosen.last_category, block = block }, nil

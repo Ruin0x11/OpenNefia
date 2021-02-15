@@ -102,6 +102,8 @@ function VisualAIConfigureBlockList:change(item, delta)
          widget:on_change(delta)
       end
    end
+
+   self.changed = true
 end
 
 function VisualAIConfigureBlockList:can_choose(item, i)

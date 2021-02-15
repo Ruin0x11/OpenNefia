@@ -2,7 +2,7 @@ local CoIter = {}
 
 local function iter(co, i)
    local res = {coroutine.resume(co, i)}
-   if coroutine.status(co) == "dead" then
+   if res[2] == nil or coroutine.status(co) == "dead" then
       if not res[1] then
          error(res[2])
       end
