@@ -30,7 +30,11 @@ function VisualAIEditor:make_keymap()
    return {
       enter = function() self:choose() end,
       escape = function() self.canceled = true end,
-      cancel = function() self.canceled = true end
+      cancel = function() self.canceled = true end,
+
+      ["visual_ai.delete"]            = function() self:delete("true_branch") end,
+      ["visual_ai.delete_merge_down"] = function() self:delete("false_branch") end,
+      ["visual_ai.delete_to_right"]   = function() self:delete_to_right() end,
    }
 end
 
@@ -50,21 +54,42 @@ function VisualAIEditor:choose()
    end
 
    if tile.type == "empty" then
+      print(self.last_category)
       local result, canceled = VisualAIInsertMenu:new(self.last_category):query()
+      self.last_category = result.last_category
       if canceled then
          return
       end
       tile.plan:add_block(result.block_id)
-      self.last_category = result.last_category
    elseif tile.type == "block" then
-      local result, canceled = VisualAIInsertMenu:new(tile.block.proto.category, tile.block.proto._id):query()
+      local result, canceled = VisualAIInsertMenu:new(tile.block.proto.type, tile.block.proto._id):query()
+      self.last_category = tile.block.proto.type
       if canceled then
          return
       end
       tile.plan:replace_block(tile.block, result.block_id)
-      self.last_category = tile.block.proto.category
    end
 
+   self:refresh_grid()
+end
+
+function VisualAIEditor:delete(merge_type)
+   local tile = self.grid:selected_tile()
+   if tile == nil or tile.type ~= "block" then
+      return
+   end
+
+   tile.plan:remove_block(tile.block, merge_type)
+   self:refresh_grid()
+end
+
+function VisualAIEditor:delete_to_right()
+   local tile = self.grid:selected_tile()
+   if tile == nil or tile.type ~= "block" then
+      return
+   end
+
+   tile.plan:remove_block_and_rest(tile.block)
    self:refresh_grid()
 end
 

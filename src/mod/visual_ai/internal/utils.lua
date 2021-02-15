@@ -59,7 +59,7 @@ function utils.get_block_color(proto, t)
    else
       color = t.visual_ai[("color_block_" .. proto.type)]
    end
-   assert(color)
+   assert(color and color[1])
    return color
 end
 

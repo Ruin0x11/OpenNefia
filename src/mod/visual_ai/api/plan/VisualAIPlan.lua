@@ -182,12 +182,10 @@ function VisualAIPlan:replace_block(block, proto_id)
    end
 
    local function snip_rest()
-      local len = #self.blocks
-      for i = idx, len do
+      for i = idx, #self.blocks do
          self.blocks[i] = nil
       end
    end
-
 
    local proto = data["visual_ai.block"]:ensure(proto_id)
 
@@ -215,10 +213,67 @@ function VisualAIPlan:replace_block(block, proto_id)
    end
 end
 
-function VisualAIPlan:remove_block(block)
+function VisualAIPlan:merge_plan(other)
+   assert(self:can_add_block())
+   self.subplan_true = nil
+   self.subplan_false = nil
+
+   if other.subplan_true then
+      other.subplan_true.parent = self
+      self.subplan_true = other.subplan_true
+   end
+   if other.subplan_false then
+      other.subplan_false.parent = self
+      self.subplan_false = other.subplan_false
+   end
+
+   table.append(self.blocks, other.blocks)
+end
+
+function VisualAIPlan:remove_block(block, merge_type)
    local idx = table.index_of(self.blocks, block)
    if idx == nil then
       error(("No block '%s' in this plan."):format(tostring(block)))
+   end
+
+   local to_merge
+
+   if block.proto.type == "condition" then
+      -- This block must be at the end.
+      assert(idx == #self.blocks)
+      if merge_type == "true_branch" then
+         to_merge = self.subplan_true
+      elseif merge_type == "false_branch" then
+         to_merge = self.subplan_false
+      else
+         error("unknown merge type " .. tostring(merge_type))
+      end
+      self.subplan_true = nil
+      self.subplan_false = nil
+   end
+
+   table.remove(self.blocks, idx)
+
+   if to_merge then
+      self:merge_plan(to_merge)
+   end
+end
+
+function VisualAIPlan:remove_block_and_rest(block)
+   local idx = table.index_of(self.blocks, block)
+   if idx == nil then
+      error(("No block '%s' in this plan."):format(tostring(block)))
+   end
+
+   if block.type == "condition" then
+      -- This block must be at the end.
+      assert(idx == #self.blocks)
+      self.subplan_true = nil
+      self.subplan_false = nil
+   end
+
+   for i = idx, #self.blocks do
+      self.blocks[i] = nil
    end
 end
 

@@ -20,8 +20,8 @@ data:add_type {
       },
       {
          name = "color",
-         type = "string|table",
-         default = {},
+         type = "string|table|nil",
+         default = nil,
          template = true
       },
       {

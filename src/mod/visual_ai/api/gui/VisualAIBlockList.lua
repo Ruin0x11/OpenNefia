@@ -18,22 +18,6 @@ VisualAIBlockList:delegate("model", IList)
 VisualAIBlockList:delegate("model", IPaged)
 VisualAIBlockList:delegate("input", IInput)
 
-function VisualAIBlockList:make_keymap()
-   return {
-      north = function()
-         self:select_previous()
-         Gui.play_sound("base.cursor1")
-      end,
-      south = function()
-         self:select_next()
-         Gui.play_sound("base.cursor1")
-      end,
-      west = function() self:change_category(self.model:selected_index(), -1) end,
-      east = function() self:change_category(self.model:selected_index(), 1) end,
-      enter = function() self.chosen = true end,
-   }
-end
-
 local CATEGORIES = {
    "condition",
    "target",
@@ -52,6 +36,22 @@ function VisualAIBlockList:init()
 
    self.input = InputHandler:new()
    self.input:bind_keys(self:make_keymap())
+end
+
+function VisualAIBlockList:make_keymap()
+   return {
+      north = function()
+         self:select_previous()
+         Gui.play_sound("base.cursor1")
+      end,
+      south = function()
+         self:select_next()
+         Gui.play_sound("base.cursor1")
+      end,
+      west = function() self:change_category(self.model:selected_index(), -1) end,
+      east = function() self:change_category(self.model:selected_index(), 1) end,
+      enter = function() self.chosen = true end,
+   }
 end
 
 function VisualAIBlockList:_recalc_layout()
@@ -80,6 +80,11 @@ function VisualAIBlockList:set_category(category_idx)
    self.t = self.t or UiTheme.load(self)
 
    local category = CATEGORIES[category_idx]
+   if category == nil then
+      category_idx = table.index_of(CATEGORIES, category_idx)
+      category = CATEGORIES[category_idx]
+   end
+
    if category == nil then
       category_idx = 1
       category = CATEGORIES[category_idx]

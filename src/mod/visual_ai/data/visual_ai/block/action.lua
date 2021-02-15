@@ -36,6 +36,7 @@ data:add {
 
    is_terminal = false,
    color = {50, 180, 100},
+   icon = "visual_ai.icon_joystick_right",
    ordering = order:get_next_and_increment(),
 
    -- format_name = function(self)
