@@ -118,6 +118,15 @@ function VisualAIBlockList:set_category(category_idx)
    self:_recalc_layout()
 end
 
+function VisualAIBlockList:select_block(block_id)
+   for i, item in self.model:iter() do
+      if item.proto._id == block_id then
+         self.model:select(i)
+         break
+      end
+   end
+end
+
 function VisualAIBlockList:change_category(index, delta)
    Gui.play_sound("base.cursor1")
    local category_idx = math.wrap(self.category_idx + delta, 1, #CATEGORIES)
@@ -171,7 +180,7 @@ function VisualAIBlockList:update(dt)
    if self.chosen then
       self.chosen = false
       return {
-         _id = self:selected_item().proto._id,
+         block_id = self:selected_item().proto._id,
          last_category = self.category_idx
       }
    end

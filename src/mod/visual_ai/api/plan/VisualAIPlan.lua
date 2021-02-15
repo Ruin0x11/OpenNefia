@@ -71,8 +71,7 @@ function VisualAIPlan:iter_tiles(x, y)
 
       if last_block == nil then
          -- empty plan
-         coroutine.yield("line", x-1, y, { "right", x, y }, self)
-         coroutine.yield("empty", x, y, self)
+         coroutine.yield("empty", x, y, "", self)
       elseif last_block.proto.type == "condition" then
          coroutine.yield("line", x-1, y, { "right", x, y }, self.subplan_true)
          for _, state, cx, cy, block, plan in self.subplan_true:iter_tiles(x, y) do
@@ -84,10 +83,13 @@ function VisualAIPlan:iter_tiles(x, y)
          for _, state, cx, cy, block, plan in self.subplan_false:iter_tiles(x-1, y + height) do
             coroutine.yield(state, cx, cy, block, plan)
          end
+      elseif last_block.proto.type == "target" then
+         coroutine.yield("line", x-1, y, { "right", x, y }, self)
+         coroutine.yield("empty", x, y, "", self)
       elseif last_block.proto.type == "action" then
          if last_block.proto.is_terminal == false then
             coroutine.yield("line", x-1, y, { "right", x, y }, self)
-            coroutine.yield("empty", x, y, self)
+            coroutine.yield("empty", x, y, "", self)
          end
       end
    end
@@ -95,18 +97,21 @@ function VisualAIPlan:iter_tiles(x, y)
    return CoIter.iter(f)
 end
 
-function VisualAIPlan:_insert_block(proto_id)
-   assert(self:can_add_block())
-
+local function make_block(proto_id)
    local proto = data["visual_ai.block"]:ensure(proto_id)
 
    local vars = utils.get_default_vars(proto.vars)
 
-   self.blocks[#self.blocks+1] = {
+   return {
       _id = proto_id,
       proto = proto,
       vars = vars
    }
+end
+
+function VisualAIPlan:_insert_block(proto_id)
+   assert(self:can_add_block())
+   self.blocks[#self.blocks+1] = make_block(proto_id)
 end
 
 function VisualAIPlan:add_condition_block(proto_id, subplan_true, subplan_false)
@@ -157,8 +162,64 @@ function VisualAIPlan:add_action_block(proto_id)
    self:_insert_block(proto_id)
 end
 
+function VisualAIPlan:add_block(proto_id)
+   local proto = data["visual_ai.block"]:ensure(proto_id)
+   if proto.type == "condition" then
+      self:add_condition_block(proto_id, nil, nil)
+   elseif proto.type == "target" then
+      self:add_target_block(proto_id)
+   elseif proto.type == "action" then
+      self:add_action_block(proto_id)
+   else
+      error("TODO")
+   end
+end
+
+function VisualAIPlan:replace_block(block, proto_id)
+   local idx = table.index_of(self.blocks, block)
+   if idx == nil then
+      error(("No block '%s' in this plan."):format(tostring(block)))
+   end
+
+   local function snip_rest()
+      local len = #self.blocks
+      for i = idx, len do
+         self.blocks[i] = nil
+      end
+   end
+
+
+   local proto = data["visual_ai.block"]:ensure(proto_id)
+
+   if self:current_block().proto.type == "condition" and proto.type ~= "condition" then
+      self.subplan_true = nil
+      self.subplan_false = nil
+   end
+
+   if proto.type == "condition" then
+      if block.proto.type == "condition" then
+         self.blocks[idx] = make_block(proto_id)
+      else
+         snip_rest()
+         self:add_condition_block(proto_id, nil, nil)
+      end
+   elseif proto.type == "target" then
+      self.blocks[idx] = make_block(proto_id)
+   elseif proto.type == "action" then
+      if proto.is_terminal then
+         snip_rest()
+      end
+      self:add_action_block(proto_id)
+   else
+      error("TODO")
+   end
+end
+
 function VisualAIPlan:remove_block(block)
-   error("TODO")
+   local idx = table.index_of(self.blocks, block)
+   if idx == nil then
+      error(("No block '%s' in this plan."):format(tostring(block)))
+   end
 end
 
 function VisualAIPlan:serialize()

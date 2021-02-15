@@ -159,6 +159,12 @@ function VisualAIPlanGrid:_recalc_layout()
    self:_recalc_active_trail()
 end
 
+function VisualAIPlanGrid:refresh()
+   self:_resize_canvas_from_plan()
+   self:_recalc_layout()
+   self.changed = true
+end
+
 function VisualAIPlanGrid:relayout(x, y, width, height)
    self.x = x
    self.y = y
@@ -166,9 +172,7 @@ function VisualAIPlanGrid:relayout(x, y, width, height)
    self.height = height
    self.t = UiTheme.load(self)
 
-   self:_resize_canvas_from_plan()
-   self:_recalc_layout()
-   self.changed = true
+   self:refresh()
 end
 
 function VisualAIPlanGrid.draw_tile(tile, x, y, tile_size_px, tile_padding)

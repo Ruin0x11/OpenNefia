@@ -57,6 +57,10 @@ function VisualAIPlanTrail:_recalc_layout()
    end
 end
 
+function VisualAIPlanTrail:refresh()
+   self:_recalc_layout()
+end
+
 function VisualAIPlanTrail:relayout(x, y, width, height)
    self.x = x
    self.y = y

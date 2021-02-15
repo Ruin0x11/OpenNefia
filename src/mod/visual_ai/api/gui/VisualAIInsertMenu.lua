@@ -13,7 +13,7 @@ local VisualAIInsertMenu = class.class("VisualAIInsertMenu", IUiLayer)
 
 VisualAIInsertMenu:delegate("input", IInput)
 
-function VisualAIInsertMenu:init(category_idx)
+function VisualAIInsertMenu:init(category_idx, item_id)
    self.win = UiWindow:new("Insert Block", true)
    self.list = VisualAIBlockList:new()
    self.category_win = TopicWindow:new(1, 1)
@@ -24,6 +24,9 @@ function VisualAIInsertMenu:init(category_idx)
    self.input:bind_keys(self:make_keymap())
 
    self.list:set_category(category_idx or 1)
+   if item_id then
+      self.list:select_block(item_id)
+   end
 end
 
 function VisualAIInsertMenu:make_keymap()
