@@ -43,19 +43,17 @@ data:add_multi(
                return false, err
             end
 
-            if option.min_value or option.max_value then
-               if not (option.min_value and option.max_value) then
-                  return false, ("Both 'min_value' and 'max_value' must be specified if one is declared (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if type(option.min_value) ~= "number" or type(option.max_value) ~= "number" then
-                  return false, ("'min_value' and 'max_value' must both be numbers (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if option.min_value > option.max_value then
-                  return false, ("'min_value' must be less than max_value (got: %d, %d)")
-                     :format(option.min_value, option.max_value)
-               end
+            if option.min_value and type(option.min_value) ~= "number" then
+               return false, ("'min_value' must be a number (got: %s)")
+                  :format(option.min_value)
+            end
+            if option.max_value and type(option.max_value) ~= "number" then
+               return false, ("'max_value' must be a number (got: %s)")
+                  :format(option.max_value)
+            end
+            if option.min_value and option.max_value and option.min_value > option.max_value then
+               return false, ("'min_value' must be less than max_value (got: %d, %d)")
+                  :format(option.min_value, option.max_value)
             end
 
             return true
@@ -76,19 +74,17 @@ data:add_multi(
                return false, ("expected integer, got %s"):format(math.type(value))
             end
 
-            if option.min_value or option.max_value then
-               if not (option.min_value and option.max_value) then
-                  return false, ("Both 'min_value' and 'max_value' must be specified if one is declared (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if math.type(option.min_value) ~= "integer" or math.type(option.max_value) ~= "integer" then
-                  return false, ("'min_value' and 'max_value' must both be integers (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if option.min_value > option.max_value then
-                  return false, ("'min_value' must be less than max_value (got: %d, %d)")
-                     :format(option.min_value, option.max_value)
-               end
+            if option.min_value and math.type(option.min_value) ~= "integer" then
+               return false, ("'min_value' must be an integer (got: %s)")
+                  :format(option.min_value)
+            end
+            if option.max_value and math.type(option.max_value) ~= "integer" then
+               return false, ("'max_value' must be an integer (got: %s)")
+                  :format(option.max_value)
+            end
+            if option.min_value and option.max_value and option.min_value > option.max_value then
+               return false, ("'min_value' must be less than max_value (got: %d, %d)")
+                  :format(option.min_value, option.max_value)
             end
 
             return true

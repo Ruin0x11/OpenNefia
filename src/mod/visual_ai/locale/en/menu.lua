@@ -4,7 +4,9 @@ return {
          menu = {
             category = function(category)
                return ("Category: %s"):format(category)
-            end
+            end,
+            insert_block = "Insert Block",
+            replace_block = "Replace Block",
          },
          category = {
             condition = "Condition",

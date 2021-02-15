@@ -90,7 +90,7 @@ function MapObject.clone_base(obj, owned)
 end
 
 function MapObject.is_map_object(t)
-   return type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
+   return type(t) == "table" and type(t._id) == "string" and type(t._type) == "string" and type(t.uid) == "number"
 end
 
 -- NOTE: We could have an interface for classes that need special cloning logic.

@@ -8,6 +8,7 @@ local VisualAIPlanTrail = require("mod.visual_ai.api.gui.VisualAIPlanTrail")
 local VisualAIPlanGrid = require("mod.visual_ai.api.gui.VisualAIPlanGrid")
 local VisualAIInsertMenu = require("mod.visual_ai.api.gui.VisualAIInsertMenu")
 local VisualAIPlan = require("mod.visual_ai.api.plan.VisualAIPlan")
+local utils = require("mod.visual_ai.internal.utils")
 
 local VisualAIEditor = class.class("VisualAIEditor", IUiLayer)
 
@@ -31,7 +32,7 @@ end
 
 function VisualAIEditor:make_keymap()
    return {
-      enter = function() self:choose() end,
+      enter = function() self:add() end,
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end,
 
@@ -52,7 +53,7 @@ function VisualAIEditor:refresh_grid()
    self.trail:refresh()
 end
 
-function VisualAIEditor:choose()
+function VisualAIEditor:add()
    local tile = self.grid:selected_tile()
    if tile == nil then
       return
@@ -60,19 +61,25 @@ function VisualAIEditor:choose()
 
    if tile.type == "empty" then
       print(self.last_category)
-      local result, canceled = VisualAIInsertMenu:new(self.last_category):query()
+      local result, canceled = VisualAIInsertMenu:new("visual_ai.gui.menu.insert_block", self.last_category):query()
       self.last_category = result.last_category
       if canceled then
          return
       end
-      tile.plan:add_block(result.block_id)
+      local block = tile.plan:add_block(result.block)
+      if not utils.is_block_terminal(block) then
+         self.grid:move_cursor(1, 0)
+      end
    elseif tile.type == "block" then
-      local result, canceled = VisualAIInsertMenu:new(tile.block.proto.type, tile.block.proto._id):query()
+      local result, canceled = VisualAIInsertMenu:new("visual_ai.gui.menu.replace_block", tile.block.proto.type, tile.block.proto._id):query()
       self.last_category = tile.block.proto.type
       if canceled then
          return
       end
-      tile.plan:replace_block(tile.block, result.block_id)
+      local block = tile.plan:replace_block(tile.block, result.block)
+      if not utils.is_block_terminal(block) then
+         self.grid:move_cursor(1, 0)
+      end
    end
 
    self:refresh_grid()
@@ -84,13 +91,13 @@ function VisualAIEditor:insert(split_type)
       return
    end
 
-   local result, canceled = VisualAIInsertMenu:new(self.last_category):query()
+   local result, canceled = VisualAIInsertMenu:new("visual_ai.gui.menu.insert_block", self.last_category):query()
    self.last_category = result.last_category
    if canceled then
       return
    end
 
-   tile.plan:insert_block_before(tile.block, result.block_id, split_type)
+   tile.plan:insert_block_before(tile.block, result.block, split_type)
    self:refresh_grid()
 end
 

@@ -198,7 +198,7 @@ function VisualAIPlanGrid.draw_tile(tile, x, y, tile_size_px, tile_padding)
          else
             Draw.set_color(128, 128, 128)
          end
-         tile.icon:draw(x + tile_padding - 4, y + tile_padding - 4, size + 4, size + 4)
+         tile.icon:draw(x + tile_padding - 4 + 1, y + tile_padding - 4 + 1, size + 4, size + 4)
          -- tile.icon:draw(x + tile_padding, y + tile_padding, size, size)
       end
    end

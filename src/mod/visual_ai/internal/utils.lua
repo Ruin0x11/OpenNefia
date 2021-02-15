@@ -1,5 +1,7 @@
-local utils = {}
 local I18N = require("api.I18N")
+local Config = require("api.Config")
+
+local utils = {}
 
 local COMPARATORS = {
    ["<"]  = function(a, b) return a <  b end,
@@ -7,6 +9,10 @@ local COMPARATORS = {
    ["=="] = function(a, b) return a == b end,
    [">="] = function(a, b) return a >= b end,
    [">"]  = function(a, b) return a >  b end,
+}
+
+utils.vars = {
+   comparator = { type = "enum", choices = { "<", "<=", "==", ">=", ">" } }
 }
 
 function utils.compare(a, comp, b)
@@ -17,24 +23,6 @@ function utils.compare(a, comp, b)
    return comparator(a, b)
 end
 
-function utils.get_default_var_value(var)
-   assert(type(var) == "table")
-
-   if var.default then
-      return var.default
-   end
-
-   local ty = var.type
-
-   if ty == "comparator" then
-      return "<"
-   elseif ty == "number" or ty == "integer" then
-      return var.max_value or var.min_value or 0
-   else
-      error("unknown block variable type ".. tostring(ty))
-   end
-end
-
 function utils.get_default_vars(vars)
    if vars == nil then
       return {}
@@ -42,7 +30,7 @@ function utils.get_default_vars(vars)
 
    local result = {}
    for k, var in pairs(vars) do
-      local value = utils.get_default_var_value(var)
+      local _ok, value = assert(Config.get_default_option(var))
       result[k] = assert(value)
    end
    return result
@@ -90,6 +78,25 @@ function utils.get_block_text(proto, vars)
       text = I18N.get("visual_ai.block." .. proto._id .. ".name")
    end
    return text
+end
+
+function utils.is_block_terminal(block)
+   if block.proto.type == "action" or block.proto.type == "special" then
+      return block.proto.is_terminal
+   end
+   return false
+end
+
+function utils.make_block(proto_id)
+   local proto = data["visual_ai.block"]:ensure(proto_id)
+
+   local vars = utils.get_default_vars(proto.vars)
+
+   return {
+      _id = proto_id,
+      proto = proto,
+      vars = vars
+   }
 end
 
 return utils

@@ -44,11 +44,18 @@ data:add_type {
       },
       {
          name = "is_terminal",
-         type = "boolean?"
+         type = "boolean",
+         default = true
       },
       {
          name = "format_name",
          type = "function"
+      },
+      {
+         name = "applies_to",
+         type = "string",
+         default = "any",
+         template = true
       }
    }
 }
@@ -56,3 +63,4 @@ data:add_type {
 require("mod.visual_ai.data.visual_ai.block.condition")
 require("mod.visual_ai.data.visual_ai.block.target")
 require("mod.visual_ai.data.visual_ai.block.action")
+require("mod.visual_ai.data.visual_ai.block.special")

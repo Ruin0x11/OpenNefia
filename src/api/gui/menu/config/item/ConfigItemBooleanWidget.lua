@@ -36,7 +36,7 @@ end
 function ConfigItemBooleanWidget:set_value(value)
    self.value = value
 
-   local yes_no = I18N.get_optional("config.option." .. self.item._id .. ".yes_no") or "config.common.yes_no.default"
+   local yes_no = (self.item._id and I18N.get_optional("config.option." .. self.item._id .. ".yes_no")) or "config.common.yes_no.default"
    self.text = I18N.get(yes_no .. "." .. (self.value and "yes" or "no"))
 end
 

@@ -264,12 +264,12 @@ end
 -- @tparam int x
 -- @tparam int y
 -- @tparam[opt] int max_dist
-function AiUtil.go_to_position(chara, params)
-   local dist = params.max_dist or 2
+function AiUtil.go_to_position(chara, x, y, max_dist, retreat)
+   local dist = max_dist or 2
    local nx, ny
 
-   if Pos.dist(chara.x, chara.y, params.x, params.y) > dist then
-      nx, ny = drift_towards_pos(chara.x, chara.y, params.x, params.y)
+   if Pos.dist(chara.x, chara.y, x, y) > dist then
+      nx, ny = drift_towards_pos(chara.x, chara.y, x, y)
    else
       nx, ny = Pos.random_direction(chara.x, chara.y)
    end

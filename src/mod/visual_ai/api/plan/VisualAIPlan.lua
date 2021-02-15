@@ -23,8 +23,8 @@ function VisualAIPlan:can_add_block()
       return true
    end
 
-   if cur.proto.type == "action" then
-      if cur.proto.is_terminal ~= false then
+   if cur.proto.type == "action" or cur.proto.type == "special" then
+      if cur.proto.is_terminal then
          return false, ("Plan ends in terminal action (%s)."):format(cur.proto._id)
       end
    end
@@ -90,8 +90,10 @@ function VisualAIPlan:iter_tiles(x, y)
       elseif last_block.proto.type == "target" then
          coroutine.yield("line", x-1, y, { "right", x, y }, self)
          coroutine.yield("empty", x, y, "", self)
-      elseif last_block.proto.type == "action" then
-         if last_block.proto.is_terminal == false then
+      elseif last_block.proto.type == "action"
+         or last_block.proto.type == "special"
+      then
+         if not last_block.proto.is_terminal then
             coroutine.yield("line", x-1, y, { "right", x, y }, self)
             coroutine.yield("empty", x, y, "", self)
          end
@@ -125,8 +127,8 @@ function VisualAIPlan:check_for_errors(x, y)
       table.append(errors, self.subplan_false:check_for_errors(x - 1, y + height))
    elseif last_block.proto.type == "target" then
       errors[#errors+1] = { message = "Target block is missing next block.", x = x - 1, y = y }
-   elseif last_block.proto.type == "action" then
-      if last_block.proto.is_terminal == false then
+   elseif last_block.proto.type == "action" or last_block.type == "special" then
+      if not last_block.proto.is_terminal then
          errors[#errors+1] = { message = "Non-terminal action is missing next block.", x = x - 1, y = y }
       end
    end
@@ -134,30 +136,22 @@ function VisualAIPlan:check_for_errors(x, y)
    return errors
 end
 
-local function make_block(proto_id)
-   local proto = data["visual_ai.block"]:ensure(proto_id)
-
-   local vars = utils.get_default_vars(proto.vars)
-
-   return {
-      _id = proto_id,
-      proto = proto,
-      vars = vars
-   }
-end
-
-function VisualAIPlan:_insert_block(proto_id)
+function VisualAIPlan:_insert_block(block)
    assert(self:can_add_block())
-   self.blocks[#self.blocks+1] = make_block(proto_id)
+   assert(block._id)
+   assert(block.proto)
+   assert(block.vars)
+
+   self.blocks[#self.blocks+1] = block
+   return self.blocks[#self.blocks]
 end
 
-function VisualAIPlan:add_condition_block(proto_id, subplan_true, subplan_false)
-   local proto = data["visual_ai.block"]:ensure(proto_id)
-   if proto.type ~= "condition" then
+function VisualAIPlan:add_condition_block(block, subplan_true, subplan_false)
+   if block.proto.type ~= "condition" then
       error("Block prototype must be 'condition'.")
    end
 
-   self:_insert_block(proto_id)
+   local block = self:_insert_block(block)
 
    if subplan_true then
       -- BUG #118
@@ -179,40 +173,54 @@ function VisualAIPlan:add_condition_block(proto_id, subplan_true, subplan_false)
 
    self.subplan_true = subplan_true
    self.subplan_false = subplan_false
+
+   return block
 end
 
-function VisualAIPlan:add_target_block(proto_id)
-   local proto = data["visual_ai.block"]:ensure(proto_id)
-   if proto.type ~= "target" then
+function VisualAIPlan:add_target_block(block)
+   if block.proto.type ~= "target" then
       error("Block prototype must be 'target'.")
    end
 
-   self:_insert_block(proto_id)
+   return self:_insert_block(block)
 end
 
-function VisualAIPlan:add_action_block(proto_id)
-   local proto = data["visual_ai.block"]:ensure(proto_id)
-   if proto.type ~= "action" then
+function VisualAIPlan:add_action_block(block)
+   if block.proto.type ~= "action" then
       error("Block prototype must be 'action'.")
    end
 
-   self:_insert_block(proto_id)
+   return self:_insert_block(block)
 end
 
-function VisualAIPlan:add_block(proto_id)
-   local proto = data["visual_ai.block"]:ensure(proto_id)
+function VisualAIPlan:add_special_block(block)
+   if block.proto.type ~= "special" then
+      error("Block prototype must be 'special'.")
+   end
+
+   return self:_insert_block(block)
+end
+
+function VisualAIPlan:add_block(block)
+   local idx = table.index_of(self.blocks, block)
+   if idx ~= nil then
+      error(("Block '%s' already exists in this plan."):format(tostring(block)))
+   end
+   local proto = block.proto
    if proto.type == "condition" then
-      self:add_condition_block(proto_id, nil, nil)
+      return self:add_condition_block(block, nil, nil)
    elseif proto.type == "target" then
-      self:add_target_block(proto_id)
+      return self:add_target_block(block)
    elseif proto.type == "action" then
-      self:add_action_block(proto_id)
+      return self:add_action_block(block)
+   elseif proto.type == "special" then
+      return self:add_special_block(block)
    else
-      error("TODO")
+      error("unknown block type " .. tostring(proto.type))
    end
 end
 
-function VisualAIPlan:replace_block(block, proto_id)
+function VisualAIPlan:replace_block(block, new_block)
    local idx = table.index_of(self.blocks, block)
    if idx == nil then
       error(("No block '%s' in this plan."):format(tostring(block)))
@@ -224,33 +232,45 @@ function VisualAIPlan:replace_block(block, proto_id)
       end
    end
 
-   local proto = data["visual_ai.block"]:ensure(proto_id)
+   local proto = new_block.proto
 
-   if self:current_block().proto.type == "condition" and proto.type ~= "condition" then
+   local current = self:current_block()
+   if block == current and current.proto.type == "condition" and proto.type ~= "condition" then
       self.subplan_true = nil
       self.subplan_false = nil
    end
 
    if proto.type == "condition" then
       if block.proto.type == "condition" then
-         self.blocks[idx] = make_block(proto_id)
+         self.blocks[idx] = new_block
       else
          snip_rest()
-         self:add_condition_block(proto_id, nil, nil)
+         self:add_condition_block(new_block, nil, nil)
       end
    elseif proto.type == "target" then
-      self.blocks[idx] = make_block(proto_id)
+      self.blocks[idx] = new_block
    elseif proto.type == "action" then
       if proto.is_terminal then
          snip_rest()
+         self:add_action_block(new_block)
+      else
+         self.blocks[idx] = new_block
       end
-      self:add_action_block(proto_id)
+   elseif proto.type == "special" then
+      if proto.is_terminal then
+         snip_rest()
+         self:add_special_block(new_block)
+      else
+         self.blocks[idx] = new_block
+      end
    else
-      error("TODO")
+      error("unknown block type " .. tostring(proto.type))
    end
+
+   return self.blocks[idx]
 end
 
-function VisualAIPlan:merge_plan(other)
+function VisualAIPlan:merge(other)
    assert(self:can_add_block())
    self.subplan_true = nil
    self.subplan_false = nil
@@ -274,10 +294,9 @@ function VisualAIPlan:split(idx)
       local block = self.blocks[i]
       if block.proto.type == "condition" then
          assert(i == #self.blocks)
-         pause()
-         right:add_condition_block(block.proto._id, self.subplan_true, self.subplan_false)
+         right:add_condition_block(block, self.subplan_true, self.subplan_false)
       else
-         right:add_block(block.proto._id)
+         right:add_block(block)
       end
       self.blocks[i] = nil
    end
@@ -286,13 +305,13 @@ function VisualAIPlan:split(idx)
    return right
 end
 
-function VisualAIPlan:insert_block_before(block, proto_id, split_type)
+function VisualAIPlan:insert_block_before(block, new_block, split_type)
    local idx = table.index_of(self.blocks, block)
    if idx == nil then
       error(("No block '%s' in this plan."):format(tostring(block)))
    end
 
-   local proto = data["visual_ai.block"]:ensure(proto_id)
+   local proto = new_block.proto
 
    local function snip_rest()
       for i = idx, #self.blocks do
@@ -303,24 +322,33 @@ function VisualAIPlan:insert_block_before(block, proto_id, split_type)
    if proto.type == "condition" then
       local right = self:split(idx)
       if split_type == "true_branch" then
-         self:add_condition_block(proto_id, right, nil)
+         self:add_condition_block(new_block, right, nil)
       elseif split_type == "false_branch" then
-         self:add_condition_block(proto_id, nil, right)
+         self:add_condition_block(new_block, nil, right)
       else
          error("unknown split type " .. tostring(split_type))
       end
    elseif proto.type == "target" then
-      table.insert(self.blocks, idx, make_block(proto_id))
+      table.insert(self.blocks, idx, new_block)
    elseif proto.type == "action" then
       if proto.is_terminal then
          snip_rest()
-         self:add_action_block(proto_id)
+         self:add_action_block(new_block)
       else
-         table.insert(self.blocks, idx, make_block(proto_id))
+         table.insert(self.blocks, idx, new_block)
+      end
+   elseif proto.type == "special" then
+      if proto.is_terminal then
+         snip_rest()
+         self:add_special_block(new_block)
+      else
+         table.insert(self.blocks, idx, new_block)
       end
    else
-      error("TODO")
+      error("unknown block type " .. tostring(proto.type))
    end
+
+   return self.blocks[idx]
 end
 
 function VisualAIPlan:remove_block(block, merge_type)
@@ -348,7 +376,7 @@ function VisualAIPlan:remove_block(block, merge_type)
    table.remove(self.blocks, idx)
 
    if to_merge then
-      self:merge_plan(to_merge)
+      self:merge(to_merge)
    end
 end
 

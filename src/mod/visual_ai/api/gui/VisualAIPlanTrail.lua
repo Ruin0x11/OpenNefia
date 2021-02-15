@@ -50,7 +50,7 @@ function VisualAIPlanTrail:_recalc_layout()
    for _, entry in ipairs(self.trail) do
       entry.window:relayout(x + 5, y + 2.5, self.width - 40, self.item_height - 2.5)
 
-      local _, wrapped = Draw.wrap_text(entry.text, self.width - 40 - 40)
+      local _, wrapped = Draw.wrap_text(entry.text, self.width - 40 - 100)
       entry.wrapped = wrapped
 
       y = y + self.item_height

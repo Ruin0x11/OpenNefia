@@ -8,13 +8,15 @@ local UiWindow = require("api.gui.UiWindow")
 local TopicWindow = require("api.gui.TopicWindow")
 local Draw = require("api.Draw")
 local I18N = require("api.I18N")
+local utils = require("mod.visual_ai.internal.utils")
+local VisualAIConfigureBlockMenu = require("mod.visual_ai.api.gui.VisualAIConfigureBlockMenu")
 
 local VisualAIInsertMenu = class.class("VisualAIInsertMenu", IUiLayer)
 
 VisualAIInsertMenu:delegate("input", IInput)
 
-function VisualAIInsertMenu:init(category_idx, item_id)
-   self.win = UiWindow:new("Insert Block", true)
+function VisualAIInsertMenu:init(title, category_idx, item_id)
+   self.win = UiWindow:new(title or "", true)
    self.list = VisualAIBlockList:new()
    self.category_win = TopicWindow:new(1, 1)
    self.category_text = ""
@@ -27,6 +29,7 @@ function VisualAIInsertMenu:init(category_idx, item_id)
    if item_id then
       self.list:select_block(item_id)
    end
+   self.category_text = I18N.get("visual_ai.gui.menu.category", "visual_ai.gui.category." .. self.list.category)
 end
 
 function VisualAIInsertMenu:make_keymap()
@@ -64,6 +67,21 @@ function VisualAIInsertMenu:draw()
                       self.category_win.y + self.category_win.height / 2 - Draw.text_height() / 2)
 end
 
+local function make_var_defs(block)
+   local values = block.vars
+   local defs = block.proto.vars
+
+   local result = {}
+   for var_name, def in pairs(defs) do
+      result[#result+1] = {
+         name = var_name,
+         def = def,
+         value = assert(values[var_name])
+      }
+   end
+   return result
+end
+
 function VisualAIInsertMenu:update(dt)
    if self.list.changed then
       self.category_text = I18N.get("visual_ai.gui.menu.category", "visual_ai.gui.category." .. self.list.category)
@@ -74,7 +92,17 @@ function VisualAIInsertMenu:update(dt)
    self.category_win:update(dt)
 
    if chosen then
-      return chosen, nil
+      local block = utils.make_block(chosen.block_id)
+      if next(block.proto.vars) then
+         local var_defs = make_var_defs(block)
+         local vars, canceled = VisualAIConfigureBlockMenu:new(var_defs):query()
+         if not canceled then
+            block.vars = vars
+            return { last_category = chosen.last_category, block = block }, nil
+         end
+      else
+         return { last_category = chosen.last_category, block = block }, nil
+      end
    end
    if self.canceled then
       return { last_category = self.list.category }, "canceled"

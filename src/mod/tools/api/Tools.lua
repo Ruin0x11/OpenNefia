@@ -86,7 +86,7 @@ function Tools.item()
 end
 
 function Tools.ally()
-   return Rand.choice(Chara.iter_allies())
+   return Rand.choice(Chara.player():iter_other_party_members())
 end
 
 function Tools.other()

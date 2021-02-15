@@ -28,7 +28,7 @@ local function move_towards_target(chara, params)
 end
 
 local function go_to_position(chara, params)
-   return AiUtil.go_to_position(chara, params.x, params.y)
+   return AiUtil.go_to_position(chara, params.x, params.y, params.max_dist)
 end
 
 local function go_to_preset_anchor(chara, params)

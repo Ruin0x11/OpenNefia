@@ -7,12 +7,26 @@ local order = UidTracker:new(10000)
 
 data:add {
    _type = "visual_ai.block",
+   _id = "condition_target_in_sight",
+
+   type = "condition",
+   vars = {},
+   ordering = order:get_next_and_increment(),
+
+   condition = function(self, chara, target, ty)
+      return chara:has_los(target.x, target.y)
+         and Pos.dist(chara.x, chara.y, target.x, target.y) <= chara:calc("fov") / 2
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
    _id = "condition_hp_threshold",
 
    type = "condition",
    vars = {
-      comparator = { type = "comparator" },
-      threshold = { type = "integer", min_value = 0, max_value = 100 }
+      comparator = utils.vars.comparator,
+      threshold = { type = "integer", min_value = 0, max_value = 100, default = 100, increment_amount = 10 }
    },
    ordering = order:get_next_and_increment(),
 
@@ -32,7 +46,7 @@ data:add {
 
    type = "condition",
    vars = {
-      comparator = { type = "comparator" },
+      comparator = utils.vars.comparator,
       threshold = { type = "integer", min_value = 0, default = 3 }
    },
    ordering = order:get_next_and_increment(),
@@ -42,6 +56,6 @@ data:add {
    end,
 
    condition = function(self, chara, target)
-      return Pos.dist(chara.x, chara.y, target.x, target.y) < self.vars.threshold
+      return utils.compare(Pos.dist(chara.x, chara.y, target.x, target.y), self.vars.comparator, self.vars.threshold)
    end
 }
