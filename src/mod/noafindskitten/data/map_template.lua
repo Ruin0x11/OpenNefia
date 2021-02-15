@@ -6,11 +6,10 @@ local Feat = require("api.Feat")
 local Rand = require("api.Rand")
 local Input = require("api.Input")
 local Anim = require("mod.elona_sys.api.Anim")
-local Color = require("mod.elona_sys.api.Color")
+local Color = require("mod.extlibs.api.Color")
 local Quest = require("mod.elona_sys.api.Quest")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local elona_Quest = require("mod.elona.api.Quest")
-
 
 data:add {
    _type = "base.chip",
@@ -92,7 +91,7 @@ function quest_noafindskitten.on_generate_map(area, floor, params)
       local object = Feat.create("noafindskitten.object", nil, nil, {}, map)
       if object then
          object.description = I18N.get("noafindskitten.nki")
-         object.color = Color.hsv_to_rgb(Rand.rnd(256), 255, 255)
+         object.color = {Color:new_hsl(Rand.rnd(256), 255, 255):to_rgb()}
       end
    end
    Rand.choice(Feat.iter(map):filter(function(i) return i._id == "noafindskitten.object" end)).is_kitten = true

@@ -1,7 +1,7 @@
 local IModel = require("mod.wfc.api.model.IModel")
 local Model = require("mod.wfc.api.model.Model")
 local Draw = require("api.Draw")
-local Color = require("mod.elona_sys.api.Color")
+local Color = require("mod.extlibs.api.Color")
 
 local SimpleTiledModel = class.class("SimpleTiledModel", IModel)
 
@@ -179,7 +179,7 @@ function SimpleTiledModel:__construct(data, subsetName, width, height, periodic,
                local imageData = assert(data.tile_image[target], "missing tileimage " .. target)
 
                self.tiles[#self.tiles + 1] = tile(function(x, y)
-                  return Color.to_number(Draw.color_to_bytes(imageData:getPixel(x, y)))
+                 return Color:new_rgb_float(imageData:getPixel(x, y)):to_number()
                end)
                self.tilenames[#self.tilenames + 1] = target
             end
@@ -187,7 +187,7 @@ function SimpleTiledModel:__construct(data, subsetName, width, height, periodic,
             local imageData = assert(data.tile_image[tilename], "missing tileimage " .. tilename)
 
             self.tiles[#self.tiles + 1] = tile(function(x, y)
-               return Color.to_number(Draw.color_to_bytes(imageData:getPixel(x, y)))
+               return Color:new_rgb_float(imageData:getPixel(x, y)):to_number()
             end)
             self.tilenames[#self.tilenames + 1] = tilename .. " 0"
 

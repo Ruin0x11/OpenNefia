@@ -1,6 +1,6 @@
 local IUiElement = require("api.gui.IUiElement")
 local TreemapCell = require("mod.treemap.api.gui.TreemapCell")
-local Color = require("mod.elona_sys.api.Color")
+local Color = require("mod.extlibs.api.Color")
 
 local Treemap = class.class("Treemap", IUiElement)
 
@@ -37,7 +37,7 @@ function Treemap.calc_sizes(t, depth)
          local ty = type(v)
          if ty == "table" then
             size = table.count(v)
-            color = Color.hsv_to_rgb(25, (size) % 255 + 100 % 255, 100)
+            color = {Color:new_hsl(25, (size) % 255 + 100 % 255, 100):to_rgb()}
             if depth > 0 then
                child = Treemap:new(v, depth - 1)
             end
