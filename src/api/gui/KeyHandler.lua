@@ -115,6 +115,9 @@ function KeyHandler:halt_input()
    self.frames_held = 0
    self.keybinds_held = {}
    self:clear_macro_queue()
+   for _, forward in ipairs(self.forwards) do
+      forward:halt_input()
+   end
 end
 
 -- Special key repeat for keys bound to a movement action.
