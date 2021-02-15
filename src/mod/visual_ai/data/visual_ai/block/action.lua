@@ -9,6 +9,7 @@ data:add {
    vars = {},
 
    is_terminal = false,
+   color = {50, 180, 100},
 
    -- format_name = function(self)
    --    return I18N.get("visual_ai.block." .. self._id .. ".name")
@@ -27,6 +28,7 @@ data:add {
    vars = {},
 
    is_terminal = true,
+   color = {50, 180, 100},
 
    -- format_name = function(self)
    --    return I18N.get("visual_ai.block." .. self._id .. ".name")

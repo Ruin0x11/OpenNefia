@@ -5,6 +5,7 @@ function VisualAIPlan:init()
    self.blocks = {}
    self.subplan_true = nil
    self.subplan_false = nil
+   self.parent = nil
 end
 
 function VisualAIPlan:current_block()
@@ -56,9 +57,9 @@ function VisualAIPlan:iter_tiles(x, y)
    local f = function()
       local i = 1
       while self.blocks[i] do
-         coroutine.yield("block", x, y, self.blocks[i])
+         coroutine.yield("block", x, y, self.blocks[i], self)
          if i < #self.blocks then
-            coroutine.yield("line", x, y, { "right", x + 1, y })
+            coroutine.yield("line", x, y, { "right", x + 1, y }, self)
          end
 
          i = i + 1
@@ -69,23 +70,23 @@ function VisualAIPlan:iter_tiles(x, y)
 
       if last_block == nil then
          -- empty plan
-         coroutine.yield("line", x-1, y, { "right", x, y })
-         coroutine.yield("empty", x, y)
+         coroutine.yield("line", x-1, y, { "right", x, y }, self)
+         coroutine.yield("empty", x, y, self)
       elseif last_block.proto.type == "condition" then
-         coroutine.yield("line", x-1, y, { "right", x, y })
-         for _, state, cx, cy, block in self.subplan_true:iter_tiles(x, y) do
-            coroutine.yield(state, cx, cy, block)
+         coroutine.yield("line", x-1, y, { "right", x, y }, self.subplan_true)
+         for _, state, cx, cy, block, plan in self.subplan_true:iter_tiles(x, y) do
+            coroutine.yield(state, cx, cy, block, plan)
          end
 
          local _, height = self.subplan_true:tile_size()
-         coroutine.yield("line", x - 1, y, { "down", x - 1, y + height })
-         for _, state, cx, cy, block in self.subplan_false:iter_tiles(x-1, y + height) do
-            coroutine.yield(state, cx, cy, block)
+         coroutine.yield("line", x - 1, y, { "down", x - 1, y + height }, self.subplan_false)
+         for _, state, cx, cy, block, plan in self.subplan_false:iter_tiles(x-1, y + height) do
+            coroutine.yield(state, cx, cy, block, plan)
          end
       elseif last_block.proto.type == "action" then
          if last_block.proto.is_terminal == false then
-            coroutine.yield("line", x-1, y, { "right", x, y })
-            coroutine.yield("empty", x, y)
+            coroutine.yield("line", x-1, y, { "right", x, y }, self)
+            coroutine.yield("empty", x, y, self)
          end
       end
    end
@@ -148,6 +149,9 @@ function VisualAIPlan:add_condition_block(proto_id, subplan_true, subplan_false)
       subplan_false = VisualAIPlan:new()
    end
 
+   subplan_true.parent = self
+   subplan_false.parent = self
+
    self.subplan_true = subplan_true
    self.subplan_false = subplan_false
 end
@@ -183,7 +187,7 @@ end
 function VisualAIPlan:deserialize()
    for _, block in ipairs(self.blocks) do
       -- TODO remove block if invalid, don't throw an error
-      block.proto = data["visual_ai.block"]:ensure(proto_id)
+      block.proto = data["visual_ai.block"]:ensure(block._id)
    end
 end
 

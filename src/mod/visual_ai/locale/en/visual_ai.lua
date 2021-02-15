@@ -9,6 +9,12 @@ local blocks = {
       name = "Player"
    },
 
+   action_change_ammo = {
+      name = "Change ammo to"
+   },
+   action_equip = {
+      name = "Equip"
+   },
    action_move_close_as_possible = {
       name = "Move as close to target as possible"
    }
