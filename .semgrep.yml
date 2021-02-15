@@ -76,3 +76,9 @@ rules:
     message: "Deprecated functions"
     languages: [lua]
     severity: ERROR
+  - id: assert-type-eq
+    pattern-either:
+      - pattern: assert(type($X) == $Y)
+    message: "Typecheck with plain `assert`; use `class.assert_is_an(...) instead`"
+    languages: [lua]
+    severity: WARNING

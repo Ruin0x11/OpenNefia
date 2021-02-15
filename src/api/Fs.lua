@@ -6,6 +6,8 @@ local Fs = {}
 Fs.exists = fs.exists
 Fs.join = fs.join
 Fs.basename = fs.basename
+Fs.filename_part = fs.filename_part
+Fs.extension_part = fs.extension_part
 Fs.convert_to_require_path = paths.convert_to_require_path
 
 function Fs.open(filepath, mode)

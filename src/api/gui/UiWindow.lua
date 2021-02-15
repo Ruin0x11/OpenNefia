@@ -12,7 +12,7 @@ local UiWindow = class.class("UiWindow", IUiElement)
 function UiWindow:init(title, shadow, key_help, x_offset, y_offset)
    self.x_offset = x_offset or 0
    self.y_offset = y_offset or 0
-   self.title = I18N.get_optional(self.title) or self.title or ""
+   self.title = I18N.get_optional(title) or title or ""
    self.key_help = key_help or ""
    self.key_help = I18N.get_optional(self.key_help) or self.key_help
    self.page = 0
