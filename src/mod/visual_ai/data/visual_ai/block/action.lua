@@ -304,7 +304,11 @@ data:add {
 
    action = function(self, chara, target, ty)
       if self.vars.skill_id == "none" then
-         return
+         return false
+      end
+
+      if not chara:has_skill(self.vars.skill_id) then
+         return false
       end
 
       chara:set_target(target)
@@ -326,14 +330,12 @@ data:add {
    applies_to = "map_object",
 
    action = function(self, chara, target)
-      print("get1")
       if chara.x ~= target.x or chara.y ~= target.y then
          return false
       end
       if chara:has_item(target)  then
          return false
       end
-      print("get")
 
       return Action.get(chara, target)
    end

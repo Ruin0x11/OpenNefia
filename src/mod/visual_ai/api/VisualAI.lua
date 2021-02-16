@@ -72,6 +72,7 @@ local function choose_target(chara, block, state)
       for _, f in ipairs(state.target_filters) do
          local target_type = is_position(candidate) and "position" or "map_object"
          if not f.filter(f.block, chara, candidate, target_type) then
+            Log.debug("Failed predicate %s", f.block and f.block.proto._id)
             return false
          end
       end
@@ -84,7 +85,8 @@ local function choose_target(chara, block, state)
 
    if state.target_order then
       local sort = function(a, b)
-         return state.target_order(block, chara, a, b)
+         local t = state.target_order
+         return t.order(t.block, chara, a, b)
       end
       table.sort(candidates, sort)
    end
@@ -132,7 +134,7 @@ local function run_block_target(chara, block, state)
    end
 
    if block.proto.target_order then
-      state.target_order = block.proto.target_order
+      state.target_order = { block = block, order = block.proto.target_order }
    end
 
    if block.proto.target_source then

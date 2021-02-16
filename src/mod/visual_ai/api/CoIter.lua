@@ -14,7 +14,7 @@ end
 
 function CoIter.iter(f)
    local co = coroutine.create(f)
-   return fun.wrap(iter, co, 0)
+   return fun.wrap(iter, co, 1)
 end
 
 return CoIter

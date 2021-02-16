@@ -63,6 +63,10 @@ end
 --- @tparam IFactioned other
 --- @treturn Enum.Relation
 function IFactioned:base_relation_towards(other)
+   if self == other then
+      return Enum.Relation.Ally
+   end
+
    local our_relation = self.relation
    local their_relation = other.relation
 
@@ -78,6 +82,10 @@ end
 --- @tparam IFactioned other
 --- @treturn Enum.Relation
 function IFactioned:relation_towards(other)
+   if self == other then
+      return Enum.Relation.Ally
+   end
+
    local us = self
    if class.is_an(ICharaParty, self) then
       us = self:get_party_leader() or us

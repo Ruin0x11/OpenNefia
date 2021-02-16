@@ -213,6 +213,7 @@ data:add {
 
    target_order = function(self, chara, candidate_a, candidate_b)
       local max_var = utils.hp_mp_sp_var(self.vars.kind)
+      print(inspect(self))
       local ratio_a = (candidate_a[self.vars.kind] / candidate_a:calc(max_var)) * 100
       local ratio_b = (candidate_b[self.vars.kind] / candidate_b:calc(max_var)) * 100
       return utils.compare(ratio_a, self.vars.comparator, ratio_b)
