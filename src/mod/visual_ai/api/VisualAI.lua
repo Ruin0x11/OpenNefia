@@ -70,7 +70,8 @@ local function choose_target(chara, block, state)
 
    local pred = function(candidate)
       for _, f in ipairs(state.target_filters) do
-         if not f.filter(f.block, chara, candidate, state.target_type) then
+         local target_type = is_position(candidate) and "position" or "map_object"
+         if not f.filter(f.block, chara, candidate, target_type) then
             return false
          end
       end
@@ -116,14 +117,17 @@ end
 
 local function run_block_target(chara, block, state)
    if state.chosen_target then
+      Log.debug("Target already chosen")
       return false
    end
 
-   if block.proto.applies_to and not applies_to(block.proto.applies_to, state.target_type) then
+   if not block.proto.applies_to and not applies_to(block.proto.applies_to, state.target_type) then
+      Log.debug("Block does not apply: %s %s", block.proto._id, state.target_type)
       return false
    end
 
    if block.proto.target_filter then
+      Log.debug("Add target filter")
       table.insert(state.target_filters, { block = block, filter = block.proto.target_filter })
    end
 
@@ -139,6 +143,7 @@ local function run_block_target(chara, block, state)
          end
       else
          state.target_source = block.proto.target_source
+         state.target_type = TARGET_SOURCES[block.proto.target_source].type
       end
    end
 end
@@ -209,6 +214,8 @@ function VisualAI.run(chara, plan)
    -- BUG: #118
    -- class.assert_is_an(IChara, chara)
    -- class.assert_is_an(VisualAIPlan, plan)
+
+   Log.debug("+++ Running Visual AI for %s +++", chara.name)
 
    local errors = plan:check_for_errors()
    if #errors > 0 then

@@ -1,6 +1,7 @@
 local Enum = require("api.Enum")
 local Rand = require("api.Rand")
 local Resolver = require("api.Resolver")
+local Filters = require("mod.elona.api.Filters")
 
 local eating_effect = require("mod.elona.data.chara.eating_effect")
 
@@ -4640,6 +4641,23 @@ local chara = {
       coefficient = 400,
       flags = { "IsSuitableForMount" },
       can_use_snow = true,
+      skills = {
+         "elona.buff_mist_of_frailness",
+         "elona.buff_slow",
+         "elona.spell_healing_rain",
+      },
+      ai_actions = {
+         main = {
+            { id = "elona.melee" },
+         },
+         sub = {
+            { id = "elona.throw_potion", id_set = Filters.idsetthrowpotionmajor },
+            { id = "elona.magic", skill_id = "elona.buff_mist_of_frailness" },
+            { id = "elona.magic", skill_id = "elona.buff_slow" },
+         },
+         sub_action_chance = 20,
+         low_health_action = { id = "elona.magic", skill_id = "elona.spell_healing_rain" }
+      },
    },
    {
       _id = "utima",

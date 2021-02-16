@@ -9068,8 +9068,8 @@ local item =
                name = "morgia effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(10, 2)
-                  params.chara:mod_skill_potential(11, 2)
+                  params.chara:mod_skill_potential("elona.stat_strength", 2)
+                  params.chara:mod_skill_potential("elona.stat_constitution", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: morgia")
                   end
@@ -9113,8 +9113,8 @@ local item =
                name = "marelion effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(16, 2)
-                  params.chara:mod_skill_potential(15, 2)
+                  params.chara:mod_skill_potential("elona.stat_magic", 2)
+                  params.chara:mod_skill_potential("elona.stat_will", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: marelion")
                   end
@@ -9158,8 +9158,8 @@ local item =
                name = "spenseweed effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(12, 2)
-                  params.chara:mod_skill_potential(13, 2)
+                  params.chara:mod_skill_potential("elona.stat_dexterity", 2)
+                  params.chara:mod_skill_potential("elona.stat_perception", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: spenseweed")
                   end
@@ -9244,8 +9244,8 @@ local item =
                name = "alraunia effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(17, 2)
-                  params.chara:mod_skill_potential(14, 2)
+                  params.chara:mod_skill_potential("elona.stat_charisma", 2)
+                  params.chara:mod_skill_potential("elona.stat_learning", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: alarunia")
                   end

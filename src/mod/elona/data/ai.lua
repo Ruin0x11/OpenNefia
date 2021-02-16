@@ -6,6 +6,7 @@ local Const = require("api.Const")
 local I18N = require("api.I18N")
 local AiUtil = require("mod.elona.api.AiUtil")
 local Log = require("api.Log")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -536,9 +537,9 @@ local function elona_default_ai(chara, params)
       end
    end
 
-   if chara.ai_actions and chara.ai_actions.on_low_health then
-      assert(chara.ai_actions.on_low_health.action)
-      if Ai.run("elona.try_to_heal", chara, chara.actions.on_low_health) then
+   if chara.ai_actions and chara.ai_actions.low_health_action then
+      assert(chara.ai_actions.low_health_action)
+      if Ai.run("elona.try_to_heal", chara, { action = chara.ai_actions.low_health_action, threshold = chara.ai_actions.low_health_threshold }) then
          return true
       end
    end
@@ -671,5 +672,27 @@ data:add {
 
       return false
       -- <<<<<<<< shade2/ai.hsp:511 	} ..
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
+   _id = "throw_potion",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:478 		if (act>=headActThrow)&(act<tailActThrow):if dis ...
+      local target = chara:get_target()
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+
+      if dist < Const.AI_THROWING_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+         local potion = Itemgen.create(nil, nil, { amount = 1, categories = "elona.drink", id = Rand.choice(params.id_set) }, chara)
+         if potion then
+            ElonaAction.throw(chara, potion, target.x, target.y)
+         end
+         return true
+      end
+
+      return false
+      -- <<<<<<<< shade2/ai.hsp:486 		} ..
    end
 }

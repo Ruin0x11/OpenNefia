@@ -6,11 +6,6 @@ local blocks = {
       name = function(kind, comparator, threshold)
          return ("My %s is %s %s%%"):format(kind, comparator, threshold)
       end,
-      kind = {
-         hp = "HP",
-         mp = "MP",
-         stamina = "Stamina"
-      }
    },
    condition_can_do_melee_attack = {
       name = "Can do melee attack"
@@ -69,12 +64,26 @@ local blocks = {
    target_player_targeting_position = {
       name = "Target position of player"
    },
+   target_hp_mp_sp_threshold = {
+      name = function(kind, comparator, threshold)
+         return ("Target with %s %s %s%%"):format(kind, comparator, threshold)
+      end,
+   },
 
    target_order_nearest = {
       name = "Thing nearest to me"
    },
    target_order_furthest = {
       name = "Thing furthest from me"
+   },
+   target_order_hp_mp_sp = {
+      name = function(comparator, kind)
+         return ("Target with the %s %s remaining"):format(comparator, kind)
+      end,
+      comparator = {
+         [">"] = "most",
+         ["<"] = "least",
+      }
    },
 
    action_move_close_as_possible = {
@@ -118,6 +127,12 @@ local blocks = {
    action_equip = {
       name = "Equip"
    },
+   action_throw_potion = {
+      name = "Throw a potion"
+   },
+   action_throw_monster_ball = {
+      name = "Throw a monster ball"
+   },
    action_store_target = {
       name = "Preserve current target to next turn"
    },
@@ -135,6 +150,13 @@ local blocks = {
 
 return {
    visual_ai = {
+      var = {
+         hp_mp_sp = {
+            hp = "HP",
+            mp = "MP",
+            stamina = "Stamina"
+         }
+      },
       block = {
          visual_ai = blocks
       }

@@ -13,6 +13,7 @@ local COMPARATORS = {
 
 utils.vars = {
    comparator = { type = "enum", choices = { "<", "<=", "==", ">=", ">" } },
+   comparator_partial = { type = "enum", choices = { "<", ">" } },
    known_skill ={
       type = "data_id",
       data_type = "base.skill",
@@ -115,6 +116,18 @@ function utils.make_block(proto_id)
       proto = proto,
       vars = vars
    }
+end
+
+function utils.hp_mp_sp_var(kind)
+   local max_var
+   if kind == "mp" then
+      max_var = "max_mp"
+   elseif kind == "stamina" then
+      max_var = "max_stamina"
+   else
+      max_var = "max_hp"
+   end
+   return max_var
 end
 
 return utils

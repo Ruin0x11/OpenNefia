@@ -6,7 +6,7 @@ local Draw = require("api.Draw")
 local Color = require("mod.extlibs.api.Color")
 local utils = require("mod.visual_ai.internal.utils")
 
-local VisualAIPlanGrid = class.class("VisselfIPlanGrid", {IUiElement, IInput})
+local VisualAIPlanGrid = class.class("VisualAIPlanGrid", {IUiElement, IInput})
 
 VisualAIPlanGrid:delegate("input", IInput)
 
@@ -20,6 +20,8 @@ function VisualAIPlanGrid:init(plan)
    self.cursor_y = 1
    self.trail_idx = 1
 
+   self.offset_x = 0
+   self.offset_y = 0
    self.canvas_width = 1
    self.canvas_height = 1
    self.tile_size_px = 48
@@ -41,8 +43,9 @@ function VisualAIPlanGrid:make_keymap()
 end
 
 function VisualAIPlanGrid:move_cursor(dx, dy)
-   self.cursor_x = math.wrap(self.cursor_x + dx, 1, self.canvas_width + 1)
-   self.cursor_y = math.wrap(self.cursor_y + dy, 1, self.canvas_height + 1)
+   self.cursor_x = math.wrap(self.cursor_x + dx, 1, self.tile_count_x + 1)
+   self.cursor_y = math.wrap(self.cursor_y + dy, 1, self.tile_count_y + 1)
+   self:_recalc_offsets()
    self:_recalc_active_trail()
    self.changed = true
 end
@@ -57,6 +60,20 @@ function VisualAIPlanGrid:_resize_canvas_from_plan()
 
    self.cursor_x = math.clamp(self.cursor_x, 1, self.canvas_width)
    self.cursor_y = math.clamp(self.cursor_y, 1, self.canvas_height)
+end
+
+function VisualAIPlanGrid:_recalc_offsets()
+   self.offset_x = 0
+   local selected_x = self.cursor_x * self.tile_size_px
+   if selected_x + self.tile_size_px > self.width then
+      self.offset_x = math.max(self.width - (selected_x + self.tile_size_px), math.floor(self.tile_count_x - (self.width / self.tile_size_px)) * -self.tile_size_px)
+   end
+
+   self.offset_y = 0
+   local selected_y = self.cursor_y * self.tile_size_px
+   if selected_y + self.tile_size_px > self.height then
+      self.offset_y = math.max(self.height - (selected_y + self.tile_size_px), math.floor(self.tile_count_y - (self.height / self.tile_size_px)) * -self.tile_size_px)
+   end
 end
 
 function VisualAIPlanGrid:_recalc_active_trail()
@@ -111,8 +128,8 @@ function VisualAIPlanGrid:_recalc_layout()
    local tw, th = self.plan:tile_size()
    self.tiles = {}
    self.lines = {}
-   self.tile_width = math.max(tw, self.canvas_width)
-   self.tile_height = math.max(th, self.canvas_height)
+   self.tile_count_x = math.max(tw, self.canvas_width)
+   self.tile_count_y = math.max(th, self.canvas_height)
 
    self:_resize_canvas_from_plan()
 
@@ -156,12 +173,14 @@ function VisualAIPlanGrid:_recalc_layout()
       end
    end
 
+   self:_recalc_offsets()
    self:_recalc_active_trail()
 end
 
 function VisualAIPlanGrid:refresh()
    self:_resize_canvas_from_plan()
    self:_recalc_layout()
+   self:_recalc_offsets()
    self.changed = true
 end
 
@@ -196,12 +215,16 @@ end
 
 function VisualAIPlanGrid:draw()
    local size = self.tile_size_px - self.tile_padding * 2
+   local ox = self.x + self.offset_x
+   local oy = self.y + self.offset_y
+
+   Draw.set_scissor(self.x, self.y, self.width, self.height)
 
    Draw.set_color(0, 0, 0, 20)
-   for y = 1, self.canvas_height do
-      for x = 1, self.canvas_width do
-         local x = self.x + (x-1) * self.tile_size_px
-         local y = self.y + (y-1) * self.tile_size_px
+   for y = 1, self.tile_count_y do
+      for x = 1, self.tile_count_x do
+         local x = ox + (x-1) * self.tile_size_px
+         local y = oy + (y-1) * self.tile_size_px
          Draw.filled_rect(x + self.tile_padding, y + self.tile_padding, size, size)
       end
    end
@@ -221,17 +244,17 @@ function VisualAIPlanGrid:draw()
             Draw.set_color(100, 50, 50)
          end
       end
-      local sx = self.x + (line.sx) * self.tile_size_px + self.tile_size_px / 2
-      local sy = self.y + (line.sy) * self.tile_size_px + self.tile_size_px / 2
-      local ex = self.x + (line.ex) * self.tile_size_px + self.tile_size_px / 2
-      local ey = self.y + (line.ey) * self.tile_size_px + self.tile_size_px / 2
+      local sx = ox + (line.sx) * self.tile_size_px + self.tile_size_px / 2
+      local sy = oy + (line.sy) * self.tile_size_px + self.tile_size_px / 2
+      local ex = ox + (line.ex) * self.tile_size_px + self.tile_size_px / 2
+      local ey = oy + (line.ey) * self.tile_size_px + self.tile_size_px / 2
       Draw.line(sx, sy, ex, ey)
    end
    Draw.set_line_width()
 
    for _, tile in pairs(self.tiles) do
-      local x = self.x + tile.x * self.tile_size_px
-      local y = self.y + tile.y * self.tile_size_px
+      local x = ox + tile.x * self.tile_size_px
+      local y = oy + tile.y * self.tile_size_px
       if tile.type == "empty" then
          Draw.set_color(tile.color)
          Draw.filled_rect(x + self.tile_padding, y + self.tile_padding, size, size)
@@ -243,14 +266,16 @@ function VisualAIPlanGrid:draw()
       end
    end
 
-   local x = self.x + (self.cursor_x-1) * self.tile_size_px
-   local y = self.y + (self.cursor_y-1) * self.tile_size_px
+   local x = ox + (self.cursor_x-1) * self.tile_size_px
+   local y = oy + (self.cursor_y-1) * self.tile_size_px
    Draw.set_color(230, 230, 255, 128)
    Draw.filled_rect(x, y, self.tile_size_px, self.tile_size_px)
    Draw.set_line_width(2)
    Draw.set_color(64, 64, 64, 128)
    Draw.line_rect(x, y, self.tile_size_px, self.tile_size_px)
    Draw.set_line_width()
+
+   Draw.set_scissor()
 end
 
 function VisualAIPlanGrid:update(dt)

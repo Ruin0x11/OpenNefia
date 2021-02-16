@@ -105,7 +105,6 @@ data:add_multi(
                   error(("Choices returned from callback must be table, got: %s"):format(tostring(choices)))
                end
             end
-            print(inspect(choices))
             return choices[1]
          end,
 

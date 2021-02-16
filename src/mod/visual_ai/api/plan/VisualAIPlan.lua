@@ -420,8 +420,15 @@ function VisualAIPlan:swap_branches(block)
 end
 
 function VisualAIPlan:serialize()
+   self.parent = nil
    for _, block in ipairs(self.blocks) do
       block.proto = nil
+   end
+   if self.subplan_true then
+      self.subplan_true.parent = nil
+   end
+   if self.subplan_false then
+      self.subplan_false.parent = nil
    end
 end
 
@@ -429,6 +436,13 @@ function VisualAIPlan:deserialize()
    for _, block in ipairs(self.blocks) do
       -- TODO remove block if invalid, don't throw an error
       block.proto = data["visual_ai.block"]:ensure(block._id)
+      assert(block.proto)
+   end
+   if self.subplan_true then
+      self.subplan_true.parent = self
+   end
+   if self.subplan_false then
+      self.subplan_false.parent = self
    end
 end
 

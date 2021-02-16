@@ -7,6 +7,10 @@ local Magic = require("mod.elona.api.Magic")
 local utils = require("mod.visual_ai.internal.utils")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Const = require("api.Const")
+local Itemgen = require("mod.tools.api.Itemgen")
+local Rand = require("api.Rand")
+local Filters = require("mod.elona.api.Filters")
+local Item = require("api.Item")
 
 local order = UidTracker:new(30000)
 
@@ -381,6 +385,59 @@ data:add {
 
    action = function(self, chara, target)
       return true
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
+   _id = "action_throw_potion",
+
+   type = "action",
+   vars = {},
+
+   is_terminal = true,
+   color = {50, 180, 100},
+   icon = "visual_ai.icon_diamond",
+   ordering = order:get_next_and_increment(),
+
+   applies_to = "any",
+
+   action = function(self, chara, target, ty)
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+      if dist < Const.AI_THROWING_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+         local potion = Itemgen.create(nil, nil, { amount = 1, categories = "elona.drink", id = Rand.choice(Filters.isetthrowpotionmajor) }, chara)
+         if potion then
+            ElonaAction.throw(chara, potion, target.x, target.y)
+         end
+         return true
+      end
+   end
+}
+
+data:add {
+   _type = "visual_ai.block",
+   _id = "action_throw_monster_ball",
+
+   type = "action",
+   vars = {},
+
+   is_terminal = true,
+   color = {100, 50, 180},
+   icon = "visual_ai.icon_target",
+   ordering = order:get_next_and_increment(),
+
+   applies_to = "any",
+
+   action = function(self, chara, target, ty)
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+      if dist < Const.AI_THROWING_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+         local item = Item.create("elona.monster_ball", nil, nil, {}, chara)
+         if item then
+            item.params.monster_ball_max_level = 10
+            ElonaAction.throw(chara, item, target.x, target.y)
+         end
+         return true
+      end
    end
 }
 

@@ -35,19 +35,11 @@ data:add {
    ordering = order:get_next_and_increment(),
 
    format_name = function(proto, vars)
-      local root = "visual_ai.block." .. proto._id
-      return I18N.get(root .. ".name", root .. ".kind." .. vars.kind, vars.comparator, vars.threshold)
+      return I18N.get("visual_ai.block." .. proto._id .. ".name", "visual_ai.var.hp_mp_sp." .. vars.kind, vars.comparator, vars.threshold)
    end,
 
    condition = function(self, chara, target)
-      local max_var
-      if self.vars.kind == "mp" then
-         max_var = "max_mp"
-      elseif self.vars.kind == "stamina" then
-         max_var = "max_stamina"
-      else
-         max_var = "max_hp"
-      end
+      local max_var = utils.hp_mp_sp_var(self.vars.kind)
       local ratio = (chara[self.vars.kind] / chara:calc(max_var)) * 100
       return utils.compare(ratio, self.vars.comparator, self.vars.threshold)
    end

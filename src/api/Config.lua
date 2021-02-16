@@ -32,14 +32,10 @@ function Config.get_default_option(option)
       end
       local config_option_type = data["base.config_option_type"]:ensure(ty)
       default = config_option_type.default
-      print(default)
       if type(default) == "function" then
          default = default(option)
       end
-
-      if default == nil then
-         return
-      end
+      assert(default)
    end
 
    local ok, err = Config.verify_option(default, option)
@@ -48,7 +44,7 @@ function Config.get_default_option(option)
    end
 
    if type(option.default) == "table" then
-      return table.deepcopy(default)
+      return true, table.deepcopy(default)
    end
 
    return true, default

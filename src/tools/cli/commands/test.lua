@@ -144,7 +144,12 @@ return function(args)
       fs.create_directory(fs.get_save_directory())
    end
 
-   local enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+   local enabled_mods
+   if args.load_all_mods then
+      enabled_mods = nil
+   else
+      enabled_mods = { "base", "elona_sys", "elona", "extlibs" }
+   end
    local mods = mod.scan_mod_dir(enabled_mods)
    startup.run_all(mods)
 
