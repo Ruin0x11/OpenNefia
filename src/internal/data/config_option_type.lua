@@ -156,29 +156,38 @@ data:add_multi(
       {
          _id = "data_id",
 
-         fields = {},
          widget = function(proto)
             local ConfigItemEnumWidget = require("api.gui.menu.config.item.ConfigItemEnumWidget")
             local I18N = require("api.I18N")
+            local filter = proto.filter or function(i) return i end
+            local formatter = proto.formatter or function(_id, value) return I18N.get("ui.language." .. value) end
             local sort = function(a, b) return a < b end
+            local choices = data[proto.data_type]:iter():extract("_id"):filter(filter):into_sorted(sort):to_list()
+            if #choices == 0 then
+               choices = { "none" }
+            end
             local proto = {
                _id = proto._id,
-               formatter = function(_id, value)
-                  return I18N.get("ui.language." .. value)
-               end,
-               choices = data[proto.data_type]:iter():extract("_id"):into_sorted(sort):to_list()
+               formatter = formatter,
+               choices = choices
             }
             return ConfigItemEnumWidget:new(proto)
          end,
 
          default = function(option)
-            return data[option.data_type]:iter():nth(1)._id
+            local filter = option.filter or function(i) return i end
+            local result = data[option.data_type]:iter():extract("_id"):filter(filter):nth(1)
+            return result or "none"
          end,
 
          validate = function(option, value)
             local ok, err = typecheck(value, "string")
             if not ok then
                return false, err
+            end
+
+            if value == "none" then
+               return true
             end
 
             local proxy = data[option.data_type]

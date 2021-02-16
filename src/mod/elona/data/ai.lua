@@ -219,9 +219,10 @@ local function attempt_to_melee(chara, params)
       if not Chara.is_alive(target) then return false end
 
       if target_damage_reaction then
-         local can_do_ranged_attack = false
-         if can_do_ranged_attack and dist < 6 and chara:has_los(target.x, target.y) then
-            Action.ranged(chara, target)
+         local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+         if ranged and dist < Const.AI_RANGED_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+            ElonaAction.ranged_attack(chara, target, ranged, ammo)
+            return true
          end
 
          if target_damage_reaction == "elona.cut" and chara.hp < chara:calc("max_hp") / 2 then
@@ -610,11 +611,11 @@ data:add {
          return Ai.run("elona.attempt_to_melee", chara)
       end
 
-      if dist < 6 and chara:has_los(target.x, target.y) then
+      if dist < Const.AI_RANGED_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
          chara:say("base.ai_ranged")
-         local can_do_ranged_attack = false
-         if can_do_ranged_attack then
-            Action.ranged(chara, target)
+         local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+         if ranged then
+            ElonaAction.ranged_attack(chara, target, ranged, ammo)
             return true
          end
       end

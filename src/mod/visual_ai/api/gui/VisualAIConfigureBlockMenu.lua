@@ -72,17 +72,6 @@ function VisualAIConfigureBlockMenu:draw()
 
    Ui.draw_topic("Options", self.x + 34, self.y + 36)
 
-   local bg_width = self.width / 5 * 3
-   local bg_height = self.height - 80
-   Draw.set_color(255, 255, 255, 50)
-   self.t.base.g2:draw(
-      self.x + self.width / 3,
-      self.y + self.height / 2,
-      bg_width,
-      bg_height,
-      nil,
-      true)
-
    self.card:draw()
    self.list:draw()
    -- <<<<<<<< elona122/shade2/help.hsp:979 	cs_list s,wX+56+x ,wY+66+cnt*19-1,19,0 ..

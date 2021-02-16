@@ -131,7 +131,7 @@ function VisualAIPlan:check_for_errors(x, y)
       table.append(errors, self.subplan_false:check_for_errors(x - 1, y + height))
    elseif last_block.proto.type == "target" then
       errors[#errors+1] = { message = "Target block is missing next block.", x = x - 1, y = y }
-   elseif last_block.proto.type == "action" or last_block.type == "special" then
+   elseif last_block.proto.type == "action" or last_block.proto.type == "special" then
       if not last_block.proto.is_terminal then
          errors[#errors+1] = { message = "Non-terminal action is missing next block.", x = x - 1, y = y }
       end
@@ -294,10 +294,12 @@ end
 function VisualAIPlan:split(idx)
    assert(idx > 0 and idx <= #self.blocks)
    local right = VisualAIPlan:new()
-   for i = idx, #self.blocks do
+
+   local len = #self.blocks
+   for i = idx, len do
       local block = self.blocks[i]
       if block.proto.type == "condition" then
-         assert(i == #self.blocks)
+         assert(i == len)
          right:add_condition_block(block, self.subplan_true, self.subplan_false)
       else
          right:add_block(block)
@@ -390,7 +392,7 @@ function VisualAIPlan:remove_block_and_rest(block)
       error(("No block '%s' in this plan."):format(tostring(block)))
    end
 
-   if block.type == "condition" then
+   if block.proto.type == "condition" then
       -- This block must be at the end.
       assert(idx == #self.blocks)
       self.subplan_true = nil
@@ -400,6 +402,21 @@ function VisualAIPlan:remove_block_and_rest(block)
    for i = idx, #self.blocks do
       self.blocks[i] = nil
    end
+end
+
+function VisualAIPlan:swap_branches(block)
+   local idx = table.index_of(self.blocks, block)
+   if idx == nil then
+      error(("No block '%s' in this plan."):format(tostring(block)))
+   end
+
+   if block.proto.type ~= "condition" then
+      return
+   end
+
+   local temp = self.subplan_true
+   self.subplan_true = self.subplan_false
+   self.subplan_false = temp
 end
 
 function VisualAIPlan:serialize()

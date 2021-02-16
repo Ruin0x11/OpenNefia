@@ -27,3 +27,9 @@ data:add {
    _id = "delete_to_right",
    default = "delete"
 }
+
+data:add {
+   _type = "base.keybind",
+   _id = "swap_branches",
+   default = "S"
+}

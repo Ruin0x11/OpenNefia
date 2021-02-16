@@ -257,15 +257,6 @@ function Action.equip(chara, item)
    return true
 end
 
---- @tparam IChara chara
---- @tparam IChara target
---- @treturn bool success
---- @treturn[opt] string error
-function Action.melee(chara, target)
-   target:damage_hp(Rand.rnd(10), chara, {})
-   return true
-end
-
 function Action.target_level_text(chara, target)
    local clvl = chara:calc("level")
    local tlvl = target:calc("level")

@@ -16,6 +16,9 @@ VisualAIEditor:delegate("input", IInput)
 
 function VisualAIEditor:init(plan, opts)
    opts = opts or {}
+   if opts.chara then
+      save.visual_ai.editing_chara = opts.chara
+   end
 
    self.plan = plan or VisualAIPlan:new()
    self.last_category = nil
@@ -34,13 +37,13 @@ function VisualAIEditor:make_keymap()
    return {
       enter = function() self:add() end,
       escape = function() self.canceled = true end,
-      cancel = function() self.canceled = true end,
 
       ["visual_ai.insert"]            = function() self:insert("true_branch") end,
       ["visual_ai.insert_down"]       = function() self:insert("false_branch") end,
       ["visual_ai.delete"]            = function() self:delete("true_branch") end,
       ["visual_ai.delete_merge_down"] = function() self:delete("false_branch") end,
       ["visual_ai.delete_to_right"]   = function() self:delete_to_right() end,
+      ["visual_ai.swap_branches"]     = function() self:swap_branches() end,
    }
 end
 
@@ -121,6 +124,17 @@ function VisualAIEditor:delete_to_right()
    self:refresh_grid()
 end
 
+function VisualAIEditor:swap_branches()
+   local tile = self.grid:selected_tile()
+   if tile == nil or tile.type ~= "block" then
+      return
+   end
+
+   tile.plan:swap_branches(tile.block)
+   self:refresh_grid()
+   self:halt_input()
+end
+
 function VisualAIEditor:relayout(x, y, width, height)
    self.width = 800
    self.height = 480
@@ -162,6 +176,7 @@ function VisualAIEditor:update(dt)
    self.trail:update(dt)
 
    if self.canceled then
+      save.visual_ai.editing_chara = nil
       if self.interactive then
          return self.plan, nil
       else

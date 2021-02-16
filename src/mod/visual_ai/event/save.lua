@@ -4,8 +4,7 @@ local Event = require("api.Event")
 
 local function init_save()
    local s = save.visual_ai
-   -- s.high_score = 0
-   -- s.my_data = { ... }
+   s.editing_chara = nil
 end
 
 Event.register("base.on_init_save", "Init save (visual_ai)", init_save)

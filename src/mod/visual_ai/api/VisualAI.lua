@@ -30,7 +30,7 @@ local target_filter_in_fov = {
          return chara:has_los(candidate.x, candidate.y)
             and Pos.dist(chara.x, chara.y, candidate.x, candidate.y) <= chara:calc("fov") / 2
       end
-      return true
+      return false
    end
 }
 
@@ -251,7 +251,7 @@ end
 function VisualAI.edit(chara)
    local ext = chara:get_mod_data("visual_ai")
    local plan = ext.visual_ai_plan or VisualAIPlan:new()
-   local ok, canceled = VisualAIEditor:new(plan):query()
+   local ok, canceled = VisualAIEditor:new(plan, {chara=chara}):query()
 
    ext.visual_ai_plan = plan
    ext.visual_ai_enabled = true

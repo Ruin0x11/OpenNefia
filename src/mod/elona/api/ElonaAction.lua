@@ -63,6 +63,7 @@ function ElonaAction.melee_attack(chara, target)
 end
 
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
+   -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
    local pred = body_part_where_equipped "is_ranged_weapon"
    local ranged = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
 
@@ -83,6 +84,7 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
    end
 
    return ranged, ammo
+   -- <<<<<<<< shade2/command.hsp:4302 	return true ..
 end
 
 function ElonaAction.ranged_attack(chara, target, weapon, ammo)

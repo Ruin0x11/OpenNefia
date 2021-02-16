@@ -551,14 +551,6 @@ function Magic.cast_spell(skill_id, caster, use_mp)
    return false
 end
 
-local function damage_sp_action(chara, skill_data)
-   if not chara:is_player() then
-      return
-   end
-
-
-end
-
 function Magic.do_action(skill_id, caster)
    -- TODO: action: death word
    --

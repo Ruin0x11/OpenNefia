@@ -12,7 +12,25 @@ local COMPARATORS = {
 }
 
 utils.vars = {
-   comparator = { type = "enum", choices = { "<", "<=", "==", ">=", ">" } }
+   comparator = { type = "enum", choices = { "<", "<=", "==", ">=", ">" } },
+   known_skill ={
+      type = "data_id",
+      data_type = "base.skill",
+      filter = function(skill)
+         local chara = save.visual_ai.editing_chara
+         if chara == nil then
+            return false
+         end
+         return data["base.skill"]:ensure(skill).type == "spell" and chara:has_skill(skill)
+      end,
+      formatter = function(_id, skill_id)
+         if skill_id == "none" then
+            return "<none>"
+         else
+            return I18N.get("ability." .. skill_id .. ".name")
+         end
+      end
+   }
 }
 
 function utils.compare(a, comp, b)
