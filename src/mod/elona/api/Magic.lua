@@ -24,7 +24,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    -- function even.
    local chara = params.chara
    local triggered_by = params.triggered_by or "potion"
-   local curse_state = params.curse_state or item:calc("curse_state") or Enum.CurseState.Normal
+   local curse_state = params.curse_state or (item and item:calc("curse_state")) or Enum.CurseState.Normal
 
    if triggered_by == "potion_thrown" then
       local throw_power = params.throw_power or 100
@@ -36,6 +36,8 @@ function Magic.drink_potion(magic_id, power, item, params)
          Gui.play_sound("base.drink1", chara.x, chara.y)
          Gui.mes("action.drink.potion", chara, item)
       end
+   elseif triggered_by == "potion_spilt" then
+      -- pass
    end
    local magic_params = {
       source = chara,
@@ -48,7 +50,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    }
    local did_something, result = elona_sys_Magic.cast(magic_id, magic_params)
 
-   if result and chara:is_player() and result.obvious then
+   if result and item and chara:is_player() and result.obvious then
       Effect.identify_item(item, Enum.IdentifyState.Name)
    end
    -- Event will be triggered globally if potion is consumed

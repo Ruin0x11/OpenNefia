@@ -880,7 +880,7 @@ return {
             dialog = { "Hey!", "Now you did it.", "*chuckle*", "Tee-hee-hee!", "You'll pay for this.", "*grin*" },
             hits_snowman = function(_1)
                return ("It hits %s and breaks it.")
-                  :format(itemname(_1, 1))
+                  :format(_1)
             end,
             melts = "It falls on the ground and melts."
          },

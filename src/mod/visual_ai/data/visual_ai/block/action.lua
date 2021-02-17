@@ -46,7 +46,7 @@ data:add {
             return true
          end
 
-         return AiUtil.go_to_position(chara, target.x, target.y, 0)
+         return AiUtil.stay_near_position(chara, target.x, target.y, 0)
       end
    end
 }
@@ -84,7 +84,7 @@ data:add {
 
          return AiUtil.move_towards_target(chara, target, false)
       elseif ty == "position" then
-         return AiUtil.go_to_position(chara, target.x, target.y, self.vars.threshold)
+         return AiUtil.stay_near_position(chara, target.x, target.y, self.vars.threshold)
       end
    end
 }
@@ -134,7 +134,7 @@ data:add {
 
          return AiUtil.move_towards_target(chara, target, false)
       elseif ty == "position" then
-         return AiUtil.go_to_position(chara, target.x, target.y, range)
+         return AiUtil.stay_near_position(chara, target.x, target.y, range)
       end
    end
 }

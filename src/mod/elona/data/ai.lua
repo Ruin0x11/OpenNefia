@@ -30,13 +30,13 @@ local function move_towards_target(chara, params)
    return AiUtil.move_towards_target(chara, target, params.retreat)
 end
 
-local function go_to_position(chara, params)
-   return AiUtil.go_to_position(chara, params.x, params.y, params.max_dist)
+local function stay_near_position(chara, params)
+   return AiUtil.stay_near_position(chara, params.x, params.y, params.max_dist)
 end
 
 local function go_to_preset_anchor(chara, params)
    if chara.ai_state.is_anchored then
-      return Ai.run("elona.go_to_position", chara, { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
+      return Ai.run("elona.stay_near_position", chara, { x = chara.ai_state.anchor_x, y = chara.ai_state.anchor_y })
    end
 
    return false
@@ -44,23 +44,38 @@ end
 
 local function wander(chara, params)
    local map = chara:current_map()
-   if chara:calc("ai_calm") == 2 and map:calc("has_anchored_npcs") then
-      return Ai.run("elona.go_to_position", chara, { x = chara.initial_x, y = chara.initial_y })
-   end
 
-   if (chara:calc("ai_calm") or 1) == 1 then
+   local calm_action = chara.ai_actions and chara.ai_actions.calm_action
+
+   -- >>>>>>>> shade2/ai.hsp:318 	if cAiCalm(cc)=aiRoam{ ...
+   if calm_action == "elona.calm_roam" then
       local nx, ny = Pos.random_direction(chara.x, chara.y)
       if map:can_access(nx, ny) then
          Action.move(chara, nx, ny)
          return true
       end
    end
+   -- <<<<<<<< shade2/ai.hsp:323 		} ..
+
+   -- >>>>>>>> shade2/ai.hsp:325 	if cAiCalm(cc)=aiDull{ ...
+   if calm_action == "elona.calm_dull" then
+      if map:calc("has_anchored_npcs") then
+         return Ai.run("elona.stay_near_position", chara, { x = chara.initial_x, y = chara.initial_y })
+      else
+         local nx, ny = Pos.random_direction(chara.x, chara.y)
+         if map:can_access(nx, ny) then
+            Action.move(chara, nx, ny)
+            return true
+         end
+      end
+   end
+   -- <<<<<<<< shade2/ai.hsp:336 		} ..
 
    return false
 end
 
 local function follow_player(chara, params)
-   if chara:calc("ai_calm") == 4 then
+   if chara.ai_actions and chara.ai_actions.calm_action == "elona.calm_follow" then
       local target = Chara.player()
       if Chara.is_alive(target) then
          chara:set_target(target)
@@ -113,7 +128,7 @@ Event.register("elona.on_ai_calm_action", "Drink if cat", do_drink, { priority =
 local function do_sleep(chara, _, result)
    -- >>>>>>>> shade2/ai.hsp:228 	if cc>maxFollower : if (mType=mTypeTown)or(mType= ...
    if result then
-      return result
+      return result -- TODO move to event system
    end
    if chara:is_ally() then
       return
@@ -137,8 +152,56 @@ Event.register("elona.on_ai_calm_action", "Sleep if nighttime", do_sleep, { prio
 
 local function do_eat(chara, _, result)
    if result then
+      return result -- TODO move to event system
+   end
+
+   -- >>>>>>>> shade2/ai.hsp:232 	if cAiItem(cc)=0:if cRelation(cc)!cAlly{ ...
+   if chara.item_to_use or chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
       return result
    end
+   -- <<<<<<<< shade2/ai.hsp:232 	if cAiItem(cc)=0:if cRelation(cc)!cAlly{ ..
+
+   -- >>>>>>>> shade2/ai.hsp:259 		if cHunger(cc)<=defAllyHunger{ ...
+   if chara.nutrition > Const.ALLY_HUNGER_THRESHOLD then
+      return result
+   end
+
+   if not chara:is_in_fov() or not Rand.one_in(5) then
+      if chara:calc("is_anorexic") then
+         chara.nutrition = chara.nutrition + 5000
+      else
+         chara.nutrition = chara.nutrition - 3000
+      end
+   else
+      local filter = {
+         level = 20
+      }
+
+      local choice = Rand.rnd(4)
+
+      if choice == 0 or chara:calc("is_anorexic") then
+         filter.categories = "elona.food"
+      elseif choice == 1 then
+         filter.categories = "elona.drink"
+      else
+         filter.categories = "elona.drink_alcohol"
+      end
+
+      local item = Itemgen.create(nil, nil, filter, chara)
+      if item then
+         if item._id == "elona.molotov" and Rand.one_in(5) then
+            item:remove_ownership()
+         else
+            chara.item_to_use = item
+            if not chara:calc("is_anorexic") then
+               chara.nutrition = chara.nutrition + 5000
+            else
+               chara.nutrition = chara.nutrition - 3000
+            end
+         end
+      end
+   end
+   -- <<<<<<<< shade2/ai.hsp:276 			} ..
 end
 Event.register("elona.on_ai_calm_action", "Eat if hungry", do_eat)
 
@@ -373,6 +436,7 @@ local function search_for_target(chara, params)
                   if chara:relation_towards(on_cell) <= Enum.Relation.Enemy then
                      if not chara:calc("is_not_targeted_by_ai") then
                         chara:set_target(on_cell, 30)
+                        chara:set_emotion_icon("elona.angry", 2)
                         return true
                      end
                   end
@@ -650,7 +714,7 @@ data:add_multi(
    {
       { _id = "on_ai_calm_actions",          act = on_ai_calm_actions },
       { _id = "on_ai_ally_actions",          act = on_ai_ally_actions },
-      { _id = "go_to_position",              act = go_to_position },
+      { _id = "stay_near_position",          act = stay_near_position },
       { _id = "wander",                      act = wander },
       { _id = "go_to_preset_anchor",         act = go_to_preset_anchor },
       { _id = "follow_player",               act = follow_player },
@@ -663,7 +727,7 @@ data:add_multi(
       { _id = "try_to_use_item",             act = try_to_use_item },
       { _id = "attempt_to_melee",            act = attempt_to_melee },
       { _id = "idle_action",                 act = idle_action },
-      { _id = "decide_ally_idle_action", act = decide_ally_idle_action },
+      { _id = "decide_ally_idle_action",     act = decide_ally_idle_action },
       { _id = "decide_targeted_action",      act = decide_targeted_action },
       { _id = "elona_default_ai",            act = elona_default_ai },
    }
@@ -791,7 +855,13 @@ data:add {
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
       if dist < Const.AI_THROWING_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
-         local potion = Itemgen.create(nil, nil, { amount = 1, categories = "elona.drink", id = Rand.choice(params.id_set) }, chara)
+         local item_id
+         if params.item_id then
+            item_id = params.item_id
+         else
+            item_id = Rand.choice(params.id_set)
+         end
+         local potion = Itemgen.create(nil, nil, { amount = 1, categories = "elona.drink", id = item_id }, chara)
          if potion then
             ElonaAction.throw(chara, potion, target.x, target.y)
          end

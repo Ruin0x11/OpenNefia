@@ -23,7 +23,7 @@ end
 
 local function create_throw(x, y, width, map)
    local filter = function(i)
-      return i.on_throw
+      return i.on_throw or table.set(i.categories)["elona.drink"]
    end
 
    local create = function(i)

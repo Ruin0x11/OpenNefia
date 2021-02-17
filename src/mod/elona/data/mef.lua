@@ -188,6 +188,7 @@ data:add {
    },
 
    on_stepped_on = function(self, params)
+      -- >>>>>>>> shade2/main.hsp:761 		if mefExist(ef)=mefPotion:if (cBit(cFloat,tc)=fa ...
       local chara = params.chara
 
       if SkillCheck.is_floating(chara) then
@@ -195,7 +196,7 @@ data:add {
       end
 
       if chara:is_in_fov() then
-         Gui.play_sound("base.fire1", self.x, self.y)
+         Gui.play_sound("base.water", self.x, self.y)
          Gui.mes("mef.steps_in_pool", chara)
       end
 
@@ -205,16 +206,16 @@ data:add {
          self.origin:act_hostile_towards(chara)
       end
 
-      local item_data = data["base.item"]:ensure(self.item_id)
+      local item_data = data["base.item"]:ensure(self.params.item_id)
       if item_data.on_drink then
-         local params = {
+         local drink_params = {
             chara = chara,
-            curse_state = self.curse_state,
+            curse_state = self.params.curse_state,
             triggered_by = "potion_spilt"
          }
-         item_data.on_drink(nil, params)
+         item_data.on_drink(nil, drink_params)
       else
-         Log.warn("Potion mef '%s' missing 'on_drink' callback", self.item_id)
+         Log.warn("Potion mef '%s' missing 'on_drink' callback", self.params.item_id)
       end
 
       if not Chara.is_alive(chara) then
@@ -222,6 +223,7 @@ data:add {
       end
 
       self:remove_ownership()
+      -- <<<<<<<< shade2/main.hsp:769 			} ..
    end,
 }
 

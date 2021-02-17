@@ -217,12 +217,12 @@ local function ai_drink_in_party(chara, _, result)
       return result -- TODO implement in event system
    end
 
-   if chara.item_to_use or chara:relation_towards(Chara.player()) == Enum.Relation.Ally then
+   if chara.item_to_use or chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
       return result
    end
 
-   local quest = Quest.get_immediate_quest()
    -- >>>>>>>> shade2/map.hsp:2158 		if gQuest=qPerform{ ...
+   local quest = Quest.get_immediate_quest()
    if quest and quest._id == "elona.party" and Rand.one_in(30) then
       local level = 20
       local category

@@ -746,11 +746,28 @@ end
 function Effect.get_wet(chara, amount)
    chara:apply_effect("elona.wet", amount)
    if chara:is_in_fov() then
-      Gui.mes("misc.wet.gets_wet")
+      Gui.mes("misc.wet.gets_wet", chara)
       if chara:calc("is_invisible") then
-         Gui.mes("misc.wet.is_revealed")
+         Gui.mes("misc.wet.is_revealed", chara)
       end
    end
+end
+
+function Effect.create_potion_puddle(x, y, item, chara)
+   -- >>>>>>>> shade2/action.hsp:111 		efP=50+sThrow(cc)*10 ...
+   local map = chara:current_map()
+   local power = 50 + chara:skill_level("elona.throwing") * 10
+   if item.proto.on_create_potion_puddle then
+      item.proto.on_create_potion_puddle(item, x, y, chara)
+   else
+      local puddle = Mef.create("elona.potion", x, y, { origin = chara, duration = -1, power = power }, map)
+      if puddle then
+         puddle.color = item:calc("color")
+         puddle.params.item_id = item._id
+         puddle.params.curse_state = item:calc("curse_state")
+      end
+   end
+   -- <<<<<<<< shade2/action.hsp:114 		addMef tlocX,tlocY,mefPotion,27,-1,efP,cc,iId(ci ..
 end
 
 local FLAMMABLE_CATEGORIES = {

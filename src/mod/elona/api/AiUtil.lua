@@ -265,13 +265,10 @@ function AiUtil.move_towards_target(chara, target, retreat)
    return false
 end
 
--- Move chara closer position x, y. This is Elona's default
--- pathfinding algorithm.
---
 -- @tparam int x
 -- @tparam int y
 -- @tparam[opt] int max_dist
-function AiUtil.go_to_position(chara, x, y, max_dist, retreat)
+function AiUtil.stay_near_position(chara, x, y, max_dist, retreat)
    local dist = max_dist or 2
    local nx, ny
 

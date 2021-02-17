@@ -130,6 +130,16 @@ local effect = {
       ordering = 50000,
 
       stops_activity = true,
+
+      on_add = function(chara)
+         -- >>>>>>>> shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ...
+         chara:mod("fov", 2, "set")
+         -- <<<<<<<< shade2/screen.hsp:1028 	if cBlind(pc)!0 : if (sx!cX(pc)) or (sy!cY(pc)):: ..
+      end,
+
+      on_remove = function(chara)
+         chara.temp["fov"] = nil
+      end
    },
    {
       _id = "paralysis",

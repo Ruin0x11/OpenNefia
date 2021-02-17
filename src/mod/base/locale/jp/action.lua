@@ -877,7 +877,7 @@ end,
         dialog = { "「いてー！」", "「やったな」", " *クスクス* ", "「キャハハ」", "「こやつめ」", "「むむっ」" },
         hits_snowman = function(_1)
   return ("%sに命中して、雪だるまは崩れた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         melts = "それは地面に落ちて溶けた。"
       },

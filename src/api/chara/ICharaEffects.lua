@@ -2,6 +2,7 @@ local data = require("internal.data")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
+local I18N = require("api.I18N")
 
 local ICharaEffects = class.interface("ICharaEffects")
 
@@ -39,16 +40,24 @@ function ICharaEffects:has_effect(id)
 end
 
 function ICharaEffects:set_effect_turns(id, turns, force)
-   data["base.effect"]:ensure(id)
+   local effect_proto = data["base.effect"]:ensure(id)
 
    if self:is_immune_to_effect(id) and not force then
       self.effects[id] = nil
       return false
    end
 
+   local has_effect = self:has_effect(id)
    self.effects[id] = turns
    if self.effects[id] <= 0 then
+      if has_effect and effect_proto.on_remove then
+         effect_proto.on_remove(self)
+      end
       self.effects[id] = nil
+   else
+      if not has_effect and effect_proto.on_add then
+         effect_proto.on_add(self)
+      end
    end
 
    return true
@@ -132,7 +141,10 @@ function ICharaEffects:apply_effect(id, power, params)
    if current == nil or current <= 0 then
       success = self:set_effect_turns(id, turns)
       if success and not params.no_message then
-         Gui.mes_c_visible("effect." .. id .. ".apply", self, "Purple")
+         local key = "effect." .. id .. ".apply"
+         if I18N.get_optional(key) then
+            Gui.mes_c_visible(key, self, "Purple")
+         end
       end
    else
       local additive = effect.additive_power

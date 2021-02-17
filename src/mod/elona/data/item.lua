@@ -22,6 +22,7 @@ local Log = require("api.Log")
 local Chara = require("api.Chara")
 local Pos = require("api.Pos")
 local Anim = require("mod.elona_sys.api.Anim")
+local World = require("api.World")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -220,6 +221,10 @@ local light = {
 
 -- TODO: Some fields should not be stored on the prototype as
 -- defaults, but instead copied on generation.
+
+-- IMPORTANT: Fields like "on_throw", "on_drink", "on_use" and similar are tied
+-- to event handlers that are dynamically generated in elona_sys.events. See the
+-- "Connect item events" handler there for details.
 
 local item =
    {
@@ -12971,6 +12976,51 @@ local item =
          on_drink = function(item, params)
             return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
+            local chara = params.chara
+            local map = chara:current_map()
+            if map:is_in_fov(params.x, params.y) then
+               Gui.play_sound("base.snow", params.x, params.y)
+            end
+
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+               Effect.get_wet(target, 25)
+               target:interrupt_activity()
+               if not target:is_player() then
+                  Gui.mes_c_visible("action.throw.snow.dialog", target.x, target.y, "SkyBlue")
+               end
+               return "turn_end"
+            end
+            -- <<<<<<<< shade2/action.hsp:69 			} ..
+
+            -- >>>>>>>> shade2/action.hsp:86 		if iId(ci)=idSnow:if map(tlocX,tlocY,4)!0{ ...
+            local snowman = Item.at(params.x, params.y, map):filter(function(i) return i._id == "elona.snow_man" end):nth(1)
+            if snowman then
+               if snowman:is_in_fov() then
+                  Gui.mes("action.throw.snow.hits_snowman", snowman:build_name(1))
+               end
+               snowman:remove(1)
+               return "turn_end"
+            end
+            -- <<<<<<<< shade2/action.hsp:98 			} ..
+
+            -- >>>>>>>> shade2/action.hsp:100 		if iId(ci)=idSnow{ ...
+            if map:tile(params.x, params.y).kind == Enum.TileRole.Snow then
+               return "turn_end"
+            end
+            if map:is_in_fov(params.x, params.y) then
+               Gui.mes("action.throw.snow.melts")
+            end
+
+            Effect.create_potion_puddle(params.x, params.y, self, chara)
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:102 			if sync(tlocX,tlocY) :txtMore:txt lang("それは地面に落 ...         end,
+         end,
+
          categories = {
             "elona.drink",
          },
@@ -13217,6 +13267,15 @@ local item =
          category = 52000,
          rarity = 800000,
          coefficient = 100,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:118 	if sync(tlocX,tlocY) : txt lang("それは地面に落ちて砕けた。"," ...
+            Gui.mes("action.throw.shatters")
+            Gui.play_sound("base.crush2", params.x, params.y)
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:120 	goto *turn_end ..
+         end,
+
          categories = {
             "elona.drink",
          }
@@ -15234,7 +15293,7 @@ local item =
             -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
             Gui.play_sound("base.throw2", params.x, params.y)
             map:refresh_tile(params.x, params.y)
-            local target = Chara.at(params.x, params.y)
+            local target = Chara.at(params.x, params.y, map)
             if target then
                Gui.mes("action.throw.hits", target)
 
@@ -17580,6 +17639,37 @@ local item =
 
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 32,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
+            local map = params.chara:current_map()
+            if map:is_in_fov(params.x, params.y) then
+               Gui.play_sound("base.crush2", params.x, params.y)
+            end
+
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+               -- <<<<<<<< shade2/action.hsp:69 			} ..
+               -- >>>>>>>> shade2/action.hsp:70 			if iId(ci)=idTomato{ ...
+               if map:is_in_fov(params.x, params.y) then
+                  Gui.mes_c("action.throw.tomato", "Blue")
+               end
+               if self.spoilage_date >= World.date_hours() then
+                  Gui.mes_c_visible("damage.is_engulfed_in_fury", target, "Blue")
+                  target:add_effect_turns("elona.fury", Rand.rnd(10) + 5)
+               end
+               return "turn_end"
+               -- <<<<<<<< shade2/action.hsp:77 			}	 ...               return "turn_end"
+            end
+
+            -- >>>>>>>> shade2/action.hsp:106 		if iId(ci)=idTomato{ ...
+            if map:is_in_fov(params.x, params.y) then
+               Gui.mes_c("action.throw.tomato", "Blue")
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:109 		} ...            return "turn_end"
+         end,
 
          categories = {
             "elona.food_fruit",

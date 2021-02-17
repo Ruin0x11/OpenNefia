@@ -53,7 +53,7 @@ local function compare_relations(our_relation, their_relation)
       end
    end
 
-   return Enum.Relation.Neutral
+   return math.min(our_relation, their_relation)
 end
 
 --- Returns the relation of this object towards another based on

@@ -372,14 +372,14 @@ Event.register("base.on_item_instantiated", "Connect item events",
                   -- it is difficult to preserve the state of event
                   -- handlers across serialization.
                   local actions = {
-                     "use",
-                     "eat",
-                     "drink",
-                     "read",
-                     "zap",
-                     "open",
-                     "dip_source",
-                     "throw"
+                     "use",        -- on_use,        can_use,        elona_sys.on_item_use
+                     "eat",        -- on_eat,        can_eat,        elona_sys.on_item_eat
+                     "drink",      -- on_drink,      can_drink,      elona_sys.on_item_drink
+                     "read",       -- on_read,       can_read,       elona_sys.on_item_read
+                     "zap",        -- on_zap,        can_zap,        elona_sys.on_item_zap
+                     "open",       -- on_open,       can_open,       elona_sys.on_item_open
+                     "dip_source", -- on_dip_source, can_dip_source, elona_sys.on_item_dip_source
+                     "throw"       -- on_throw,      can_throw,      elona_sys.on_item_throw
                   }
 
                   for _, action in ipairs(actions) do

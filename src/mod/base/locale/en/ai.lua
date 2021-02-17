@@ -17,7 +17,7 @@ end,
     fire_giant = { "Filthy monster!", "Go to hell!", "I'll get rid of you.", "Eat this!" },
     makes_snowman = function(_1, _2)
   return ("%s make%s %s!")
-  :format(name(_1), s(_1), itemname(_2))
+  :format(name(_1), s(_1), _2)
 end,
     snail = { "Snail!", "Kill!" },
     snowball = { "*grin*", "Fire in the hole!", "Tee-hee-hee!", "Eat this!", "Watch out!", "Scut!" },

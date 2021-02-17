@@ -115,7 +115,7 @@ local function is_quick_tempered(chara, params)
       -- >>>>>>>> shade2/chara_func.hsp:1578 		if cBit(cTemper,tc):if dmgType!dmgSub:if cAngry( ...
       if not chara:has_effect("elona.fury") then
          if Rand.one_in(20) then
-            Gui.mes_visible(chara.uid .. " engulfed in fury", chara.x, chara.y, "Blue")
+            Gui.mes_c_visible("damage.is_engulfed_in_fury", chara, "Blue")
             chara:set_effect_turns("elona.fury", Rand.rnd(30) + 15)
          end
       end

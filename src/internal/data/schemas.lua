@@ -47,29 +47,18 @@ Relative strength of this character.
 ]]
          },
          {
-            name = "ai_move",
+            name = "ai_move_chance",
             default = 100,
             doc = [[
 Chance this unit will take an idle action if they have no target.
 ]]
          },
          {
-            name = "ai_dist",
+            name = "ai_distance",
             default = 1,
             doc = [[
 Minimum distance before this unit starts moving toward their target.
 ]]
-         },
-         {
-            name = "ai_calm",
-            default = 1,
-            doc = [[
-Controls the default AI's idle behavior.
-]]
-         },
-         {
-            name = "ai_act_sub_freq",
-            default = 0,
          },
          {
             name = "portrait",
@@ -773,6 +762,7 @@ data:add_type(
       fields = {
       },
       fallbacks = {
+         params = {},
       }
    },
    { interface = IMef }

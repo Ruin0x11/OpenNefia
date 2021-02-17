@@ -17,7 +17,7 @@ end,
     fire_giant = { "「化け物め！」", "「くたばれっ」", "「退治してやるぅ！」", "「くらえー！」" },
     makes_snowman = function(_1, _2)
   return ("%sは%sを作った！")
-  :format(name(_1), itemname(_2))
+  :format(name(_1), _2)
 end,
     snail = { "「なめくじだ！」", "「殺す！」" },
     snowball = { " *クスクス* ", "「えいっ」", "「うりゃ」", "「くらえー！」", "「危ないっ！」", "「避けてー」" },

@@ -1365,8 +1365,7 @@ local chara = {
       ai_actions = {
          calm_action = "elona.calm_special",
          sub = {
-            { id = "elona.throw_potion",
-              item = "elona.salt" }
+            { id = "elona.throw_potion", item_id = "elona.bottle_of_salt" }
          },
          sub_action_chance = 30
       },

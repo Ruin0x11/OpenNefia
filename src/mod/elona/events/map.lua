@@ -9,6 +9,7 @@ local Enum = require("api.Enum")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Equipment = require("mod.elona.api.Equipment")
 local Gui = require("api.Gui")
+local ElonaAction = require("mod.elona.api.ElonaAction")
 
 local function decrease_nutrition(chara, params, result)
    if not chara:is_player() then
@@ -131,11 +132,15 @@ local function ai_snow(chara, _, result)
    end
 
    -- >>>>>>>> shade2/ai.hsp:241 		if (gArea=areaNoyel)or(gArea=areaSister):if (cId ...
+   local map = chara:current_map()
+   if not map:calc("has_snow") then
+      return result
+   end
+
    if not chara:calc("can_use_snow") or not chara:is_in_fov() then
       return result
    end
 
-   local map = chara:current_map()
    if map:tile(chara.x, chara.y).kind ~= Enum.TileRole.Snow then
       return result
    end
@@ -143,12 +148,73 @@ local function ai_snow(chara, _, result)
    if save.elona.fire_giant_uid then
       local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
       if Rand.one_in(4) and Chara.is_alive(fire_giant) and fire_giant:is_in_fov() then
-         local snow = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
-         if snow then
+         local snowball = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
+         if snowball then
             Gui.mes_c("ai.fire_giant", "SkyBlue")
+            ElonaAction.throw(chara, snowball, fire_giant.x, fire_giant.y)
+            return true
          end
+      end
+   end
+
+   if Rand.one_in(12) then
+      local snowman = Item.iter(map):filter(function(i) return i._id == "elona.snow_man" and i:is_in_fov() end):nth(1)
+      if snowman then
+         local snowball = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
+         if snowball then
+            ElonaAction.throw(chara, snowball, snowman.x, snowman.y)
+            return true
+         end
+      end
+   end
+
+   if Rand.one_in(10) then
+      if Item.at(chara.x, chara.y, map):length() == 0 then
+         local snowman = Item.create("elona.snow_man", chara.x, chara.y, {}, map)
+         if snowman then
+            Gui.play_sound("base.snow", chara.x, chara.y)
+            Gui.mes("ai.makes_snowman", chara, snowman:build_name())
+            return true
+         end
+      end
+   end
+
+   if Rand.one_in(12) then
+      local snowball = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
+      if snowball then
+         local player = Chara.player()
+         Gui.mes_c("ai.snowball", "SkyBlue")
+         ElonaAction.throw(chara, snowball, player.x, player.y)
+         return true
       end
    end
    -- <<<<<<<< shade2/ai.hsp:257 			} ..
 end
 Event.register("elona.on_ai_calm_action", "Use snow if available", ai_snow, { priority = 70000 })
+
+-- >>>>>>>> shade2/command.hsp:3220 	cell_itemOnCell cX(pc),cY(pc)	 ...
+local function scoop_up_snow(chara, params, result)
+   local map = chara:current_map()
+   if map:has_type("town") or map:has_type("guild") then
+      if map:tile(chara.x, chara.y).kind == Enum.TileRole.Snow then
+         Gui.play_sound("base.foot2a", chara.x, chara.y)
+         Gui.mes("action.get.snow")
+         if not Effect.do_stamina_check(chara, 10) then
+            Gui.mes("common.too_exhausted")
+            return true
+         end
+         local snow = Item.create("elona.handful_of_snow", nil, nil, {}, chara)
+         if snow then
+            snow.curse_state = Enum.CurseState.Normal
+            snow.identify_state = Enum.IdentifyState.Full
+            snow:stack(true)
+            return true
+         end
+      end
+   end
+
+   return result
+end
+
+Event.register("elona_sys.on_get", "Scoop up snow", scoop_up_snow)
+-- <<<<<<<< shade2/command.hsp:3228 			} ..
