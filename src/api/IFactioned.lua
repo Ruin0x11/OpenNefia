@@ -64,6 +64,11 @@ end
 --- @treturn Enum.Relation
 function IFactioned:base_relation_towards(other)
    if self == other then
+      -- I think we should all be allies of ourselves. This is an important
+      -- sentiment that I keep trying to remind myself of.
+      --
+      -- If not, one day you might get the sudden urge to cook yourself into a
+      -- hamburger.
       return Enum.Relation.Ally
    end
 
