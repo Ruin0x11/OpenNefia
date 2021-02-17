@@ -99,17 +99,15 @@ function Mef.create(id, x, y, params, where)
       end
    end
 
-   -- TODO: Would prefer "owner" but this conflicts with "ownerless" in the
-   -- parameters of Mef.create().
-   local origin
+   local origin_uid
    if params.origin then
       assert(class.is_an("api.IMapObject", params.origin))
-      origin = params.origin
+      origin_uid = params.origin.uid
    end
 
    local mef = MapObject.generate_from("base.mef", id)
 
-   mef.origin = origin
+   mef.origin_uid = origin_uid
    mef.turns = params.duration or 10
    mef.power = params.power or 0
 

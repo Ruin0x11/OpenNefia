@@ -77,13 +77,15 @@ data:add {
          Gui.mes("mef.melts", chara)
       end
 
-      if self.origin and self.origin:is_player() and not chara:is_player() then
-         self.origin:act_hostile_towards(chara)
+      local origin = self:get_origin()
+      if origin and origin:is_player() and not chara:is_player() then
+         origin:act_hostile_towards(chara)
       end
+
       local damage = Rand.rnd(self.power / 25 + 5) + 1
       chara:damage_hp(damage, "elona.mef_acid", { element = "elona.acid", element_power = self.power })
       if not Chara.is_alive(chara) then
-         Effect.on_kill(self.origin, chara)
+         Effect.on_kill(origin or nil, chara)
       end
    end,
 }
@@ -129,8 +131,9 @@ data:add {
          if map:is_in_bounds(x, y) then
             if map:is_floor(x, y) then
                local duration = Rand.rnd(15) + 20
-               Mef.create("elona.fire", x, y, { origin = self.origin, duration = duration, power = 50 } )
-               Effect.damage_map_fire(x, y, self.origin, map)
+               local origin = self:get_origin()
+               Mef.create("elona.fire", x, y, { origin = origin, duration = duration, power = 50 } )
+               Effect.damage_map_fire(x, y, origin, map)
             else
                -- Destroy walls.
                map:set_tile(x, y, "elona.destroyed")
@@ -146,13 +149,14 @@ data:add {
          Gui.mes("mef.is_burnt", chara)
       end
 
-      if self.origin and self.origin:is_player() and not chara:is_player() then
-         self.origin:act_hostile_towards(chara)
+      local origin = self:get_origin()
+      if origin and origin:is_player() and not chara:is_player() then
+         origin:act_hostile_towards(chara)
       end
       local damage = Rand.rnd(self.power / 15 + 5) + 1
       chara:damage_hp(damage, "elona.mef_fire", { element = "elona.fire", element_power = self.power })
       if not Chara.is_alive(chara) then
-         Effect.on_kill(self.origin, chara)
+         Effect.on_kill(origin or nil, chara)
       end
    end,
 
@@ -202,8 +206,9 @@ data:add {
 
       Effect.get_wet(chara, 25)
 
-      if self.origin and self.origin:is_player() and not chara:is_player() then
-         self.origin:act_hostile_towards(chara)
+      local origin = self:get_origin()
+      if origin and origin:is_player() and not chara:is_player() then
+         origin:act_hostile_towards(chara)
       end
 
       local item_data = data["base.item"]:ensure(self.params.item_id)
@@ -219,7 +224,7 @@ data:add {
       end
 
       if not Chara.is_alive(chara) then
-         Effect.on_kill(self.origin, chara)
+         Effect.on_kill(origin or nil, chara)
       end
 
       self:remove_ownership()

@@ -70,7 +70,7 @@ function test_IFactioned_party_personal_relation()
    test(Enum.Relation.Neutral)
 
    leader:set_relation_towards(player, Enum.Relation.Dislike)
-   test(Enum.Relation.Neutral)
+   test(Enum.Relation.Dislike)
 
    leader:set_relation_towards(player, Enum.Relation.Enemy)
    test(Enum.Relation.Enemy)

@@ -14,7 +14,7 @@ function test_mef_serialize_origin()
       test_util.register_map(map)
 
       local mef = Mef.create("elona.potion", 5, 4, { origin = player, duration = -1, power = 50 }, map)
-      Assert.eq(mef.origin, player)
+      Assert.eq(mef:get_origin(), player)
    end
 
    test_util.save_cycle()
@@ -24,6 +24,6 @@ function test_mef_serialize_origin()
       local map = player:current_map()
       local mef = Mef.iter(map):nth(1)
 
-      Assert.eq(mef.origin, player)
+      Assert.eq(mef:get_origin(), player)
    end
 end

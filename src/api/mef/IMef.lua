@@ -78,4 +78,17 @@ function IMef:set_pos(x, y, force)
    return IMapObject.set_pos(self, x, y, force)
 end
 
+function IMef:get_origin()
+   if self.origin_uid == nil then
+      return nil
+   end
+
+   local map = self:current_map()
+   if not map then
+      return nil
+   end
+
+   return map:get_object(self.origin_uid)
+end
+
 return IMef

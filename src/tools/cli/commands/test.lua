@@ -192,14 +192,19 @@ return function(args)
    end
 
    print()
-   if #failures > 0 then
+   if total == 0 then
+      print(ansicolors("%{red}No tests matched the filter.%{reset}"))
+      return 1
+   elseif #failures > 0 then
       if not args.debug_on_error then
          for _, result in ipairs(failures) do
             print_result(result)
          end
       end
       print(ansicolors(("%%{red}%d/%d tests failed.%%{reset}"):format(#failures, total)))
+      return #failures
    else
       print(ansicolors(("%%{green}%d tests passed.%%{reset}"):format(total)))
+      return 0
    end
 end
