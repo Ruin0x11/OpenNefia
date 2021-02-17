@@ -32,7 +32,7 @@
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --]]
 
-local sjis_tables = require("mod.sjis.internal.sjis_tables")
+local sjis_tables = require("mod.extlibs.internal.sjis_tables")
 
 local sju_8140 = sjis_tables.sju_8140
 local sju_e040 = sjis_tables.sju_e040
@@ -322,7 +322,7 @@ local function iter_codes(a, i)
       return nil
    end
 
-   if b <= 0x80 or (b >= 0xa0 and x <= 0xdf) then
+   if b <= 0x80 or (b >= 0xa0 and b <= 0xdf) then
       return i + 1, b
    else
       b = bit.bor(bit.lshift(b, 8), string.byte(a.s, i+ 1))

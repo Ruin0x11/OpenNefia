@@ -155,6 +155,7 @@ data:add {
    animation_wait = 100,
 
    on_interrupt = "prompt",
+   interrupt_on_displace = true,
 
    events = {
       {

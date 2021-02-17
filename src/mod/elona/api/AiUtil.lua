@@ -196,9 +196,16 @@ function AiUtil.move_towards_target(chara, target, retreat)
       if chara:relation_towards(on_cell) <= Enum.Relation.Enemy then
          chara:set_target(on_cell, chara:get_aggro(on_cell) + 4)
          return Ai.run("elona.basic_action", chara)
-      elseif on_cell.quality > Enum.Quality.Great and on_cell.level > target.level then
+      elseif on_cell.quality > Enum.Quality.Good and on_cell.level > target.level then
          if on_cell:get_target() ~= chara:get_target() then
-            return Chara.swap_positions(chara, chara:get_target())
+            if chara:swap_places(on_cell) then
+               Gui.mes_visible("ai.swap.displace", chara.x, chara.y, chara, on_cell)
+               local activity = on_cell:get_activity()
+               if activity and activity.proto.interrupt_on_displace then
+                  Gui.mes_visible("ai.swap.glare", chara.x, chara.y, chara, on_cell)
+                  chara:remove_activity()
+               end
+            end
          end
       end
    end

@@ -271,10 +271,10 @@ local function basic_action(chara, params)
       if Ai.run(choice.id, chara, choice) then
          return true
       end
-   end
 
-   if choice.id == "elona.melee" then
-      return true
+      if choice.id == "elona.melee" then
+         return true
+      end
    end
 
    return Ai.run("elona.melee", chara)
@@ -641,7 +641,7 @@ data:add {
 
 data:add {
    _type = "base.ai_action",
-   _id = "magic",
+   _id = "skill",
 
    act = function(chara, params)
       -- >>>>>>>> shade2/ai.hsp:500 	if act>=headSpell : if act<tailSpell{ ...

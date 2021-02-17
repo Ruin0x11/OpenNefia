@@ -9,6 +9,10 @@ function ICharaActivity:init()
    self.activity = nil
 end
 
+function ICharaActivity:get_activity()
+   return self.activity
+end
+
 function ICharaActivity:has_activity(id)
    if id == nil then
       return self.activity ~= nil
@@ -39,7 +43,6 @@ function ICharaActivity:_proc_activity_interrupted()
    local should_stop = self.activity:proc_interrupted()
 
    if should_stop then
-      Gui.mes_visible(self.uid .. " cancels the activity " .. self.activity._id, self.x, self.y)
       self:remove_activity()
    end
 

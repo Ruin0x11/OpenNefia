@@ -1,4 +1,5 @@
 local Fs = require("api.Fs")
+local Sjis = require("mod.extlibs.api.Sjis")
 
 local Csv = {}
 
@@ -29,22 +30,55 @@ function Csv.parse_line (s)
   return t
 end
 
-function Csv.parse(s)
-   local iter = fun.wrap(fun.dup(string.lines(s))):map(Csv.parse_line)
-   local first = iter:nth(1)
-   if first then
+function Csv.parse(line_iter, opts)
+   opts = opts or {}
+   local header = opts.header
+   local shift_jis = opts.shift_jis
+   local strict = opts.strict
+
+   local iter = line_iter
+   if shift_jis then
+      iter = iter:map(Sjis.to_utf8)
+   end
+
+   iter = iter:map(Csv.parse_line)
+
+   local header_
+   if header then
+      header_ = iter:nth(1)
+      iter = iter:drop(1)
+   end
+
+   local first = header_ or iter:nth(1)
+   if strict and first then
       iter = iter:filter(function(l) return #l == #first end)
    end
 
-   return iter
+   if header then
+      local map = function(r)
+         local res = {}
+         for i, k in ipairs(header_) do
+            res[k] = r[i] or ""
+         end
+         return res
+      end
+      iter = iter:map(map)
+   end
+
+   return iter:unwrap_with_self()
 end
 
-function Csv.parse_file(filename)
+function Csv.parse_string(s, opts)
+   local iter = fun.wrap(fun.dup(string.lines(s)))
+   return Csv.parse(iter, opts)
+end
+
+function Csv.parse_file(filename, opts)
    local s, err = Fs.read_all(filename)
    if s == nil then
       return nil, err
    end
-   return Csv.parse(s)
+   return Csv.parse_string(s, opts)
 end
 
 return Csv

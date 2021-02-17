@@ -225,6 +225,7 @@ local function make_arrow(opts)
    data:add {
       _id = "spell_" .. id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = "spell",
       effect_id = "elona." .. id,
@@ -642,6 +643,7 @@ end
 data:add {
    _id = "action_suicide_attack",
    _type = "base.skill",
+   elona_id = 644,
 
    type = "action",
    effect_id = "elona.suicide_attack",
@@ -772,6 +774,7 @@ local function make_heal(opts)
    data:add {
       _id = "spell_" .. opts._id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = "spell",
       effect_id = "elona." .. opts._id,
@@ -1268,6 +1271,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
    data:add {
       _id = "action_" .. id,
       _type = "base.skill",
+      elona_id = elona_id,
 
       type = "action",
       effect_id = "elona." .. id,
