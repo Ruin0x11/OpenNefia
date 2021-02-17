@@ -58,6 +58,8 @@ function ICharaActivity:pass_activity_turn()
       Gui.wait(self.activity.animation_wait, true)
    elseif auto_turn == "normal" then
       Gui.wait(self.activity.animation_wait)
+   elseif auto_turn == "highest" then
+      -- don't wait at all
    end
 
    if self.activity and (self.activity.turns or 0) <= 0 then

@@ -7,6 +7,7 @@ local I18N = require("api.I18N")
 local AiUtil = require("mod.elona.api.AiUtil")
 local Log = require("api.Log")
 local Itemgen = require("mod.tools.api.Itemgen")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local Action = require("api.Action")
 local Item = require("api.Item")
@@ -23,7 +24,7 @@ local function default_target(chara)
 end
 
 local function move_towards_target(chara, params)
-   local target = chara:get_target()
+   local target = params.target or chara:get_target()
    assert(target ~= nil)
 
    return AiUtil.move_towards_target(chara, target, params.retreat)
@@ -59,11 +60,11 @@ local function wander(chara, params)
 end
 
 local function follow_player(chara, params)
-   --if chara.ai_config.follow_player_when_calm then
    if chara:calc("ai_calm") == 4 then
       local target = Chara.player()
       if Chara.is_alive(target) then
-         return Ai.run("elona.go_to_position", chara, { x = target.x, y = target.y })
+         chara:set_target(target)
+         return Ai.run("elona.move_towards_target", chara)
       end
    end
 end
@@ -179,6 +180,79 @@ local function do_eat_ally(chara, _, result)
 end
 
 Event.register("elona.on_ai_ally_action", "Eat if hungry", do_eat_ally)
+
+-- >>>>>>>> shade2/ai.hsp:342 	if mType=mTypeTown:if cc<maxFollower{ ...
+local function sell_ores(chara)
+   local items_sold = 0
+   local gold_earned = 0
+   local filter = function(item) return item:has_category("elona.ore") end
+   local each = function(item)
+      local gold_value = item:calc("value") * item.amount
+      items_sold = items_sold + item.amount
+      gold_earned = gold_earned + gold_value
+      item:remove_ownership()
+
+      chara.gold = chara.gold + gold_value
+   end
+
+   chara:iter_inventory():filter(filter):each(each)
+
+   if items_sold > 0 then
+      Gui.mes_c("ai.ally.sells_items", "SkyBlue", chara, items_sold, gold_earned)
+   end
+end
+
+local function train_potential(chara)
+   local cost = chara:calc("level") * 500
+   if chara.gold < cost then
+      return false
+   end
+
+   chara.gold = chara.gold - cost
+
+   Gui.play_sound("base.ding2")
+   Gui.mes_c("ai.ally.visits_trainer", "SkyBlue", chara)
+
+   for _ = 1, 4 do
+      local skill
+      for _ = 1, 9999 do
+         if Rand.one_in(4) then
+            skill = Rand.choice(Skill.iter_stats())
+         else
+            skill = Rand.choice(Skill.iter_weapon_proficiencies())
+         end
+
+         if chara:has_skill(skill._id) then
+            chara:mod_skill_potential(skill._id, 4)
+            break
+         end
+      end
+   end
+
+   chara:refresh()
+
+   return true
+end
+
+local function sell_ores_and_train_potential(chara, _, result)
+   local map = chara:current_map()
+   if not chara:is_in_player_party() or not map or not map:has_type("town") then
+      return result
+   end
+
+   if Rand.one_in(100) then
+      sell_ores(chara)
+   end
+
+   if Rand.one_in(100) then
+      train_potential(chara)
+   end
+
+   return result
+end
+
+Event.register("elona.on_ai_ally_action", "If ally and in town, sell ores and train potential", sell_ores_and_train_potential)
+-- <<<<<<<< shade2/ai.hsp:371 		} ..
 
 local function on_ai_calm_actions(chara, params)
    if not Rand.one_in(5) then
@@ -600,6 +674,7 @@ data:add {
    _id = "melee",
 
    act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:518 	 ...
       local target = chara:get_target()
       if not Chara.is_alive(target) then
          return false
@@ -608,12 +683,10 @@ data:add {
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
       if dist == 1 then
-         chara:say("base.ai_melee")
          return Ai.run("elona.attempt_to_melee", chara)
       end
 
       if dist < Const.AI_RANGED_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
-         chara:say("base.ai_ranged")
          local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
          if ranged then
             ElonaAction.ranged_attack(chara, target, ranged, ammo)
@@ -636,6 +709,39 @@ data:add {
       end
 
       return true
+      -- <<<<<<<< shade2/ai.hsp:528  ..
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
+   _id = "wait_melee",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:513 	if act=actWaitMelee{	 ...
+      local target = chara:get_target()
+      if not Chara.is_alive(target) then
+         return false
+      end
+
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+
+      if dist == 1 then
+         return Ai.run("elona.attempt_to_melee", chara)
+      end
+
+      if Rand.one_in(3) or chara:is_in_player_party() then
+         if dist < Const.AI_RANGED_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+            local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+            if ranged then
+               ElonaAction.ranged_attack(chara, target, ranged, ammo)
+               return true
+            end
+         end
+      end
+
+      return true
+      -- <<<<<<<< shade2/ai.hsp:517 	} ..
    end
 }
 

@@ -3,7 +3,7 @@ return {
     ally = {
       sells_items = function(_1, _2, _3)
   return ("%s sells %s item%s and earns %s gold piece%s.")
-  :format(name(_1), _2, s(_2), _3, s(_3))
+  :format(name(_1), _2, plural(_2), _3, s(_3))
 end,
       visits_trainer = function(_1)
   return ("%s visits a trainer and develops %s potential!")

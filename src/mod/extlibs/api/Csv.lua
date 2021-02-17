@@ -36,7 +36,7 @@ function Csv.parse(line_iter, opts)
    local shift_jis = opts.shift_jis
    local strict = opts.strict
 
-   local iter = line_iter
+   local iter = line_iter:filter(function(i) return not i:match("^%s*$") end)
    if shift_jis then
       iter = iter:map(Sjis.to_utf8)
    end
