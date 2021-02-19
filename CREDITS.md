@@ -14,7 +14,6 @@ The following is a list of third-party projects whose code is used in OpenNefia.
 - [luacheck](https://github.com/mpeterv/luacheck) (MIT) [excerpts]
 - [luafun](https://github.com/luafun/luafun) (MIT/X11)
 - [mobdebug](https://github.com/pkulchenko/MobDebug) (MIT) [excerpts]
-- [serpent](https://github.com/pkulchenko/serpent) (MIT)
 - [Penlight](https://github.com/stevedonovan/Penlight) (MIT)
 - [profile.lua](https://bitbucket.org/itraykov/profile.lua) (unlicensed)
 - [strict.lua](http://lua-users.org/lists/lua-l/2005-08/msg00737.html) (unlicensed)

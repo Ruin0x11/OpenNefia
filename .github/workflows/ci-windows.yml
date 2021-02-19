@@ -19,6 +19,9 @@ jobs:
       with:
         path: src/deps/elona
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('src/deps/elona/elona/version_en.txt') }}
+    - name: Run REPL verify
+      run: |
+        ./OpenNefia verify -m
     - name: Run REPL test
       run: |
-        ./OpenNefia verify -l
+        ./OpenNefia test

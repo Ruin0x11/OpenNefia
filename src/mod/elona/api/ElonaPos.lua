@@ -9,7 +9,7 @@ function ElonaPos.make_breath(start_x, start_y, end_x, end_y, range, map)
    local dx
    local dy
 
-   for _, x, y in Pos.iter_line(start_x, start_y, end_x, end_y) do
+   for _, x, y in Pos.iter_line(start_x, start_y, end_x, end_y, true):take(range) do
       dx = x
       dy = y
       if count < 6 then

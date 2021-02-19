@@ -1,5 +1,6 @@
 local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
+local Enum = require("api.Enum")
 
 local Hunger = {}
 
@@ -119,10 +120,10 @@ function Hunger.calc_nutrition(item)
       nutrition = override_nutrition
    end
 
-   if curse_state == "blessed" then
+   if curse_state == Enum.CurseState.Blessed then
       nutrition = nutrition * 150 / 100
    end
-   if curse_state == "cursed" or curse_state == "doomed" then
+   if curse_state == Enum.CurseState.Cursed or curse_state == Enum.CurseState.Doomed then
       nutrition = nutrition * 50 / 100
    end
 

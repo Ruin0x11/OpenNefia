@@ -1,9 +1,6 @@
 local Advice = require("api.Advice")
-local ItemMaterial = require("mod.elona.api.ItemMaterial")
-local Chara = require("api.Chara")
-local Color = require("mod.elona_sys.api.Color")
 local Rand = require("api.Rand")
-local Log = require("api.Log")
+local Color = require("mod.extlibs.api.Color")
 
 local function all_rubynus()
    return "elona.rubynus"
@@ -15,7 +12,7 @@ local function to_putit(chara)
    if chara then
       chara.image = "elona.chara_race_slime"
       chara.portrait = nil
-      chara.color = Color.hsv_to_rgb(Rand.rnd(256), 255, 255)
+      chara.color = {Color:new_hsl(Rand.rnd(360), 1, 1):to_rgb()}
    end
    return chara
 end

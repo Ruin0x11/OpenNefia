@@ -28,7 +28,7 @@ return {
          default_choice = "query_join_no"
       },
       query_join_yes = function()
-         if not Chara.can_recruit_allies() then
+         if not Chara.player():can_recruit_allies() then
             return "party_full"
          end
 
@@ -49,7 +49,7 @@ return {
             {"after_drug.yes.dialog"},
          },
          on_finish = function(t)
-            t.speaker:recruit_as_ally()
+            Chara.player():recruit_as_ally(t.speaker)
             Internal.set_quest_flag("blue_capsule_drug", 0)
          end
       },

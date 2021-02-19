@@ -7,7 +7,7 @@ function test_IMapObject_current_map()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local player = Chara.create("content.player", 5, 5, {}, map)
+   local player = Chara.create("base.player", 5, 5, {}, map)
    Chara.set_player(player)
 
    assert(IMapObject.current_map(player) == map)
@@ -23,7 +23,7 @@ function test_IMapObject_containing_map()
    local map = InstancedMap:new(10, 10)
    map:clear("elona.cobble")
 
-   local player = Chara.create("content.player", 5, 5, {}, map)
+   local player = Chara.create("base.player", 5, 5, {}, map)
    Chara.set_player(player)
    local containing, obj = IMapObject.containing_map(player)
    assert(player.location == map)
@@ -32,7 +32,7 @@ function test_IMapObject_containing_map()
 
    local item = Item.create("elona.long_bow", nil, nil, {}, player)
    containing, obj = IMapObject.containing_map(item)
-   assert(item.location == player)
+   assert(item.location == player.inv)
    assert(containing == map)
    assert(obj == player)
 

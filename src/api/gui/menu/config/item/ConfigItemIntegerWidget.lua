@@ -41,7 +41,7 @@ end
 function ConfigItemIntegerWidget:set_value(value)
    self.value = math.clamp(value, self.min_value or value, self.max_value or value)
 
-   local formatter = I18N.get_optional("config.option." .. self.item._id .. ".formatter", value)
+   local formatter = self.item._id and I18N.get_optional("config.option." .. self.item._id .. ".formatter", value)
    if formatter then
       self.text = I18N.get_optional(formatter, self.value) or formatter
    else
@@ -57,7 +57,7 @@ function ConfigItemIntegerWidget:on_choose()
 end
 
 function ConfigItemIntegerWidget:on_change(delta)
-   self:set_value(self.value + delta)
+   self:set_value(self.value + delta * (self.item.increment_amount or 1))
 end
 
 function ConfigItemIntegerWidget:draw()

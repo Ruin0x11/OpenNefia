@@ -487,7 +487,7 @@ end
 --- @tparam[opt] InstancedMap map
 function Map.try_place_chara(chara, x, y, map)
    local scope = "npc"
-   if chara:is_allied() then
+   if chara:is_in_player_party() then
       scope = "ally"
    end
 
@@ -588,7 +588,6 @@ function Map.travel_to(map, params)
    -- player) and persistable (remains in the map even after it is
    -- deleted and the map is exited).
    local player = Chara.player()
-   local allies = save.base.allies
    -- TODO: items
 
    -- Transfer each to the new map.
@@ -599,13 +598,11 @@ function Map.travel_to(map, params)
    local success = Map.try_place_chara(player, x, y, map)
    assert(success, "Could not place player in map")
 
-   for _, uid in ipairs(allies) do
+   for _, ally in player:iter_other_party_members(current) do
       -- TODO: try to find a place to put the ally. If they can't fit,
       -- then delay adding them to the map until the player moves. If
       -- the player moves back before the allies have a chance to
       -- spawn, be sure they are still preserved.
-      local ally = current:get_object_of_type("base.chara", uid)
-      assert(ally ~= nil)
 
       ally:remove_activity()
       ally:reset_ai()

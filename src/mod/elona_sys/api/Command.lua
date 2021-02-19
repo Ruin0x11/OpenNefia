@@ -302,11 +302,13 @@ function Command.target(player)
    local x, y, can_see = Input.query_position()
 
    if x then
-      if not can_see or not Map.is_floor(x, y) then
+      -- >>>>>>>> shade2/command.hsp:323 			if (canSee=false)or(tAttb(map(tlocX,tlocY,0))&c ...
+      local map = player:current_map()
+      if not can_see or not Map.is_floor(x, y, map) then
          Gui.mes("action.which_direction.cannot_see_location")
       else
          Gui.play_sound("base.ok1")
-         local chara = Chara.at(x, y)
+         local chara = Chara.at(x, y, map)
          if chara and not chara:is_player() then
             player:set_target(chara)
             Gui.mes("action.look.target", chara)
@@ -315,6 +317,7 @@ function Command.target(player)
             Gui.mes("action.look.target_ground")
          end
       end
+      -- <<<<<<<< shade2/command.hsp:336 		return canSee ..
    end
 
    return "player_turn_query"

@@ -1,6 +1,6 @@
 local Draw = require("api.Draw")
 local InstancedMap = require("api.InstancedMap")
-local Color = require("mod.elona_sys.api.Color")
+local Color = require("mod.extlibs.api.Color")
 local Map = require("api.Map")
 
 -- A simple module for extracting a map's tiles into a serialized format, and
@@ -39,7 +39,7 @@ function Layout.to_image_data(layout)
       local b = i
       tile_to_pixel[k] = { r, g, b }
 
-      local number = Color.to_number(Draw.color_to_bytes(r, g, b, 1))
+      local number = Color:new_rgb_float(r, g, b, 1):to_number()
       color_to_tile[number] = layout.tileset[k]
    end
 

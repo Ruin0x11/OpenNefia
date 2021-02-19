@@ -66,6 +66,7 @@ end
 
 function field_layer:init_global_data()
    self.player = nil
+   self.map = nil
 
    Event.trigger("base.on_init_save")
 end

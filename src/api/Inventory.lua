@@ -1,11 +1,15 @@
-local Map = require("api.Map")
 local ILocation = require("api.ILocation")
 local pool = require("internal.pool")
 local save = require("internal.global.save")
+local IOwned = require("api.IOwned")
 
 local Inventory = class.class("Inventory", ILocation)
 
-function Inventory:init(max_size, type_id)
+function Inventory:init(max_size, type_id, owner)
+   if owner then
+      assert(class.is_an(IOwned, owner))
+      self._parent = owner
+   end
    self.max_size = max_size or 200
    self.type_id = type_id or "base.item"
    self.max_weight = nil

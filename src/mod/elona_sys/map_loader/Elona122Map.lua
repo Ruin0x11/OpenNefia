@@ -6,18 +6,9 @@ local Log = require("api.Log")
 local InstancedMap = require("api.InstancedMap")
 local Compat = require("mod.elona_sys.api.Compat")
 local struct = require("mod.extlibs.api.struct")
+local Enum = require("api.Enum")
 
 local Elona122Map = {}
-
-local own_states = {
-   [-2] = "inherited",
-   [0]  = "none",
-   [1]  = "not_owned",
-   [2]  = "shop",
-   [3]  = "shelter",
-   [4]  = "quest",
-   [5]  = "unobtainable",
-}
 
 -- Map chips which are exactly the same in image and parameters between atlases 1 and 2.
 local same = {
@@ -189,10 +180,10 @@ function Elona122Map.generate(name)
 
             local x = data[2]
             local y = data[3]
-            local own_state = own_states[data[4]]
+            local own_state = data[4]
             Log.trace("item: %s %d %d %d", id, x, y, data[4])
 
-            assert(own_state == "none" or own_state == "not_owned")
+            assert(own_state == Enum.OwnState.None or own_state == Enum.OwnState.NotOwned)
 
             local item, err = Item.create(id, x, y, {}, result)
             if not item then

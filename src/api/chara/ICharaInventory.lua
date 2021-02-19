@@ -15,12 +15,11 @@ ICharaInventory:delegate("inv",
                            "is_in_bounds",
                            "objects_at_pos",
                            "get_object",
-                           "has_object",
-                           "iter"
+                           "has_object"
                         })
 
 function ICharaInventory:init()
-   self.inv = Inventory:new(200)
+   self.inv = Inventory:new(200, "base.item", self)
 end
 
 function ICharaInventory:take_object(obj)
@@ -32,7 +31,6 @@ function ICharaInventory:take_object(obj)
       return nil
    end
 
-   obj.location = self
    self:refresh_weight()
 
    return obj

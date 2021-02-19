@@ -2,6 +2,10 @@ local Item = require("api.Item")
 local utils = require("mod.test_room.data.map_archetype.utils")
 local Filters = require("mod.elona.api.Filters")
 
+local deed = {
+   _id = "deed"
+}
+
 local function make_deeds(x, y, map)
    local ix = x
    local iy = y
@@ -41,7 +45,7 @@ local function make_seeds(x, y, map)
    return 2, iy + 2
 end
 
-local function generate_map(area, floor)
+function deed.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
@@ -56,6 +60,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   deed = generate_map
-}
+return deed

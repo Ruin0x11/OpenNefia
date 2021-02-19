@@ -24,7 +24,7 @@ function Magic.drink_potion(magic_id, power, item, params)
    -- function even.
    local chara = params.chara
    local triggered_by = params.triggered_by or "potion"
-   local curse_state = params.curse_state or item:calc("curse_state") or "none"
+   local curse_state = params.curse_state or (item and item:calc("curse_state")) or Enum.CurseState.Normal
 
    if triggered_by == "potion_thrown" then
       local throw_power = params.throw_power or 100
@@ -36,6 +36,8 @@ function Magic.drink_potion(magic_id, power, item, params)
          Gui.play_sound("base.drink1", chara.x, chara.y)
          Gui.mes("action.drink.potion", chara, item)
       end
+   elseif triggered_by == "potion_spilt" then
+      -- pass
    end
    local magic_params = {
       source = chara,
@@ -46,9 +48,9 @@ function Magic.drink_potion(magic_id, power, item, params)
       curse_state = curse_state,
       triggered_by = triggered_by
    }
-   local did_something, result = Magic.cast(magic_id, magic_params)
+   local did_something, result = elona_sys_Magic.cast(magic_id, magic_params)
 
-   if result and chara:is_player() and result.obvious then
+   if result and item and chara:is_player() and result.obvious then
       Effect.identify_item(item, Enum.IdentifyState.Name)
    end
    -- Event will be triggered globally if potion is consumed
@@ -59,7 +61,7 @@ function Magic.drink_potion(magic_id, power, item, params)
 
    chara.nutrition = chara.nutrition + 150
 
-   if chara:is_allied() and chara.nutrition > 12000 and Rand.one_in(5) then
+   if chara:is_in_player_party() and chara.nutrition > 12000 and Rand.one_in(5) then
       Effect.vomit(chara)
    end
 
@@ -214,8 +216,8 @@ function Magic.zap_wand(item, magic_id, power, params)
    end
 
    local curse_state = item:calc("curse_state")
-   if curse_state == "blessed" then
-      curse_state = "none"
+   if curse_state == Enum.CurseState.Blessed then
+      curse_state = Enum.CurseState.Normal
    end
 
    local magic_pos
@@ -400,9 +402,8 @@ function Magic.try_to_read_spellbook(chara, difficulty, skill_level)
          local level = Calc.calc_object_level(player_level * 3 / 2 + 3, map)
          local quality = Calc.calc_object_quality(Enum.Quality.Normal)
          local spawned = Charagen.create(player.x, player.y, { level = level, quality = quality })
-         -- TODO faction
-         if spawned and chara:reaction_towards(player) <= -3 then
-            spawned:set_reaction_at(player, -1)
+         if spawned and chara:relation_towards(player) <= Enum.Relation.Enemy then
+            spawned:set_relation_towards(player, Enum.Relation.Dislike)
          end
       end
       return false
@@ -517,7 +518,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
          elona_sys_Magic.cast(skill_data.effect_id, params)
          if not Chara.is_alive(params.target) then
             local target = Action.find_target(caster)
-            if target == nil or caster:reaction_towards(target) > 0 then
+            if target == nil or caster:relation_towards(target) > Enum.Relation.Enemy then
                break
             else
                params.target = target
@@ -552,21 +553,19 @@ function Magic.cast_spell(skill_id, caster, use_mp)
    return false
 end
 
-local function damage_sp_action(chara, skill_data)
-   if not chara:is_player() then
-      return
-   end
-
-
-end
-
 function Magic.do_action(skill_id, caster)
    -- TODO: action: death word
    --
    local skill_data = data["base.skill"]:ensure(skill_id)
+   local params = {
+      triggered_by = "action",
+      curse_state = "normal",
+      power = Skill.calc_spell_power(skill_id, caster),
+      range = skill_data.range
+   }
 
    local target = caster:get_target()
-   local success, params = elona_sys_Magic.get_magic_location(skill_data.target_type,
+   local success, result = elona_sys_Magic.get_magic_location(skill_data.target_type,
                                                               skill_data.range,
                                                               caster,
                                                               "action",
@@ -577,6 +576,8 @@ function Magic.do_action(skill_id, caster)
    if not success then
       return false
    end
+
+   params = table.merge(params, result)
 
    if skill_data.target_type ~= "self_or_nearby" and skill_data.target_type ~= "self" then
       if caster:has_effect("elona.confusion") or caster:has_effect("elona.blindness") then

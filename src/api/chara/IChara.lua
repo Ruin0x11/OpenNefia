@@ -19,6 +19,7 @@ local ICharaSkills = require("api.chara.ICharaSkills")
 local ICharaTraits = require("api.chara.ICharaTraits")
 local ICharaBuffs = require("api.chara.ICharaBuffs")
 local ICharaRoles = require("api.chara.ICharaRoles")
+local ICharaAi = require("api.chara.ICharaAi")
 local IObject = require("api.IObject")
 local ILocalizable = require("api.ILocalizable")
 local ICharaTalk = require("api.chara.ICharaTalk")
@@ -46,7 +47,8 @@ local IChara = class.interface("IChara",
                             ICharaEffects,
                             ICharaActivity,
                             ICharaBuffs,
-                            ICharaRoles
+                            ICharaRoles,
+                            ICharaAi
                          })
 
 IChara._type = "base.chara"
@@ -187,7 +189,7 @@ local Effect
 --- @overrides IMapObject:produce_memory
 function IChara:produce_memory()
    local hp_bar = "hp_bar_other"
-   if self:is_allied() then
+   if self:is_in_player_party() then
       hp_bar = "hp_bar_ally"
    end
 
@@ -288,31 +290,41 @@ function IChara:is_player()
    return field.player and field.player.uid == self.uid
 end
 
---- Returns true if this character is an ally of the player.
+--- Attempts to recruit a character as an ally of this character.
 ---
---- @treturn bool
-function IChara:is_ally()
-   return fun.iter(save.base.allies):index(self.uid) ~= nil
-end
-
---- Attempts to recruit this character as an ally.
----
---- @tparam bool no_message
+--- @tparam IChara ally
+--- @tparam[opt] bool no_message
 --- @treturn bool true on success.
-function IChara:recruit_as_ally(no_message)
-   if self:is_ally() then
+function IChara:recruit_as_ally(target, no_message)
+   assert(class.is_an(IChara, target))
+
+   if not self:get_party() then
+      local party_id = save.base.parties:add_party()
+      save.base.parties:add_member(party_id, self)
+   end
+
+   if self == target then
       return false
    end
-   save.base.allies[#save.base.allies+1] = self.uid
 
-   self.faction = "base.friendly"
-   self:refresh()
+   if self:is_party_leader_of(target) then
+      return false
+   end
 
-   if not no_message then
-      Gui.mes_c("action.ally_joins.success", "Yellow", self)
+   if not self:can_recruit_allies() then
+      return false
+   end
+
+   save.base.parties:add_member(self:get_party(), target)
+
+   target.relation = self.relation
+   target:refresh()
+
+   if self:is_player() and not no_message then
+      Gui.mes_c("action.ally_joins.success", "Yellow", target)
       Gui.play_sound("base.pray1");
    end
-   self:emit("base.on_recruited_as_ally", { no_message = no_message })
+   target:emit("base.on_recruited_as_ally", { no_message = no_message })
    return true
 end
 
@@ -514,6 +526,11 @@ function IChara:kill(source)
 
    self:refresh_cell_on_map()
 
+   local map = self:current_map()
+   if map then
+      map.crowd_density = map.crowd_density - 1
+   end
+
    self:emit("base.on_chara_killed", {source=source})
    -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
@@ -529,8 +546,9 @@ function IChara:vanquish()
 
    self:refresh_cell_on_map()
 
-   if self:is_ally() then
-      table.iremove_value(save.base.allies, self.uid)
+   local party = self:get_party()
+   if party then
+      assert(save.base.parties:remove_member(party.uid, self))
    end
 
    self:emit("base.on_chara_vanquished")
@@ -553,7 +571,8 @@ function IChara:revive()
    self:reset("is_anorexic", false)
    self.insanity = 0
    self.nutrition = 8000
-   self.personal_reactions = {}
+   self.personal_relations = {}
+   self:set_target(nil)
 
    self:renew_status()
 
@@ -571,7 +590,7 @@ function IChara:renew_status()
    self.emotion_icon = nil
    self.emotion_icon_turns = 0
    self.stat_adjusts = {}
-   self.ai_state.hate = 0
+   self.aggro = 0
 
    self:refresh()
 
@@ -600,43 +619,12 @@ function IChara:revive_and_place(map)
    return true
 end
 
---- Sets or clears the AI target of this character.
----
---- @tparam[opt] IChara target
-function IChara:set_target(target)
-   self.target = target
-end
-
---- Resets the AI state of this character.
-function IChara:reset_ai()
-   self.target = nil
-
-   self.ai_state = {
-      hate = 0,
-      leader_attacker = nil,
-      item_to_be_used = nil,
-      wants_movement = 0,
-      last_target_x = 0,
-      last_target_y = 0,
-      anchor_x = nil,
-      anchor_y = nil,
-      is_anchored = false,
-   }
-
-   self:reset_all_reactions()
-end
-
---- @treturn[opt] IChara
-function IChara:get_target()
-   return self.target
-end
-
 --- Clears all status effects, stat adjustments, activities and AI
 --- targets, and refreshes the character,
 function IChara:clear_status_effects()
    self.effects = {}
    self.stat_adjusts = {}
-   self.ai_state.hate = 0
+   self.aggro = 0
    self.target = nil
    self:remove_activity()
 
@@ -655,6 +643,10 @@ end
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
    self.emotion_icon_turns = duration or 2
+end
+
+function IChara:iter()
+   return self:iter_items()
 end
 
 return IChara

@@ -7,6 +7,7 @@ local SaveFs = require("api.SaveFs")
 local Log = require("api.Log")
 local CircularBuffer = require("api.CircularBuffer")
 local Queue = require("api.Queue")
+local config = require("internal.config")
 
 local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
@@ -180,7 +181,10 @@ function ReplLayer:make_keymap()
 
          if not self.completion then
             local cp = ReplCompletion:new()
-            self.completion = cp:complete(self.text, self.env)
+            local ok, completion = xpcall(cp.complete, debug.traceback, cp, self.text, self.env)
+            if ok then
+               self.completion = completion
+            end
             if self.completion then
                local complete_single = true
                if #self.completion.candidates == 1 and complete_single then
@@ -466,9 +470,16 @@ local function remove_all_metatables(item, path)
   if path[#path] ~= inspect.METATABLE then return item end
 end
 
-local inspect_opts = {process=remove_all_metatables}
+local function try(f)
+   local ok, result = pcall(f)
+   return ok and result
+end
 
 function ReplLayer.format_repl_result(result, show_metatables)
+   local inspect_opts = {max_length=config.base.max_inspect_length}
+   if not show_metatables then
+      inspect_opts.process = remove_all_metatables
+   end
    local result_text
    local stop = false
 
@@ -477,9 +488,9 @@ function ReplLayer.format_repl_result(result, show_metatables)
       -- `inspect` should be modified to account for this.
       local mt = getmetatable(result)
 
-      if pcall(function() return result.__enum end) then
-         result_text = inspect(result)
-      elseif pcall(function() return result._type and result._id end) then
+      if try(function() return result.__enum end) then
+         result_text = inspect(result, inspect_opts)
+      elseif try(function() return result._type and result._id end) then
          result_text = inspect(Object.make_prototype(result), inspect_opts)
       elseif tostring(result) == "<generator>" then
          -- Wrap in a protected function in case running the generator
@@ -505,11 +516,7 @@ function ReplLayer.format_repl_result(result, show_metatables)
          result_text = rest
          stop = true
       else
-         local opts
-         if show_metatables then
-            opts = inspect_opts
-         end
-         result_text = inspect(result, opts)
+         result_text = inspect(result, inspect_opts)
       end
    elseif type(result) == "string" then
       result_text = ("\"%s\""):format(result)

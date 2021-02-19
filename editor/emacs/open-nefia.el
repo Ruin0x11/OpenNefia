@@ -824,15 +824,25 @@ removed.  Return the new string.  If STRING is nil, return nil."
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1 open-nefia--repl-entrypoint "test"))
+  (apply
+   #'open-nefia--start-repl-1
+   (append
+    (list open-nefia--repl-entrypoint
+          "test"
+          )
+    (when arg '("-d")))))
 
 (defun open-nefia-run-tests-this-file (&optional arg)
   (interactive "P")
   (if-let ((repl-buffer (open-nefia--repl-buffer)))
       (kill-buffer repl-buffer))
-  (open-nefia--start-repl-1
-   open-nefia--test-entrypoint
-   (format "%s:%s" (file-name-base (buffer-file-name)) ".*")))
+  (apply
+   #'open-nefia--start-repl-1
+   (append (list open-nefia--repl-entrypoint ;
+                 "test"
+                 "-f"
+                 (format "%s:%s" (file-name-base (buffer-file-name)) ".*"))
+           (when arg '("-d")))))
 
 (defun open-nefia-insert-template ()
   (interactive)
@@ -859,6 +869,16 @@ removed.  Return the new string.  If STRING is nil, return nil."
                 (string-join (list (projectile-project-root) "src"))))
          (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
          (cmd (format "%s exec %s" script path))
+         (default-directory (projectile-project-root)))
+    (compile cmd)))
+
+(defun open-nefia-run-headlessly-repl ()
+  (interactive)
+  (let* ((path (file-relative-name
+                (buffer-file-name)
+                (string-join (list (projectile-project-root) "src"))))
+         (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
+         (cmd (format "%s exec %s -r" script path))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 

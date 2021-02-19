@@ -56,13 +56,13 @@ function Tools.spawn_equipped_foes(count)
    end
 end
 
-function Tools.spawn_allies(count)
+function Tools.spawn_allies(count, id)
    count = count or 4
    for _=1,count do
       local x, y = Map.find_position_for_chara()
       if x then
-         local c = Chara.create("elona.putit", x, y)
-         if not c:recruit_as_ally() then
+         local c = Chara.create(id or "elona.wizard_of_elea", x, y)
+         if not Chara.player():recruit_as_ally(c) then
             return
          end
       end
@@ -86,29 +86,29 @@ function Tools.item()
 end
 
 function Tools.ally()
-   return Rand.choice(Chara.iter_allies())
+   return Rand.choice(Chara.player():iter_other_party_members())
 end
 
 function Tools.other()
    return Rand.choice(Chara.iter_others())
 end
 
-local function gen_faction_pred(faction)
+local function gen_relation_pred(relation)
    return function ()
       local pred = function(c)
-         return c.faction == faction
+         return c:relation_towards(Chara.player()) == relation
       end
       return Chara.iter():filter(pred)
    end
 end
 
-Tools.enemies = gen_faction_pred("base.enemy")
+Tools.enemies = gen_relation_pred(Enum.Relation.Enemy)
 
 function Tools.enemy()
    return Rand.choice(Tools.enemies())
 end
 
-Tools.citizens = gen_faction_pred("base.citizen")
+Tools.citizens = gen_relation_pred(Enum.Relation.Neutral)
 
 function Tools.citizen()
    return Rand.choice(Tools.citizens())
@@ -331,7 +331,7 @@ function Tools.partition(tbl, key, extract)
 end
 
 function Tools.mkplayer(id)
-   return Chara.create(id or "content.player", nil, nil, {ownerless=true})
+   return Chara.create(id or "base.player", nil, nil, {ownerless=true})
 end
 
 function Tools.print_map(map)
@@ -604,7 +604,7 @@ end
 
 function Tools.restart_scenario()
    local scenario = data["base.scenario"]:ensure(save.base.scenario)
-   local player = Chara.create("content.player", nil, nil, {ownerless=true})
+   local player = Chara.create("base.player", nil, nil, {ownerless=true})
 
    local params = scenario:on_game_start(player)
    Chara.set_player(player)
@@ -650,7 +650,7 @@ function Tools.make_foods(x, y)
    for _, i, _id in foods:enumerate() do
       for quality=0, 9 do
          local food = Item.create(_id, x + i, y + quality - 1, {})
-         elona_Item.make_dish(food, quality)
+         Effect.make_dish(food, quality)
       end
    end
 end
@@ -1001,27 +1001,31 @@ function Tools.end_quest()
    end
 end
 
-function Tools.learn_all_skills()
-   local player = Chara.player()
-   player:mod_base_skill_level("elona.stat_magic", 10000)
-   player:mod_base_skill_level("elona.stat_mana", 10000)
+function Tools.powerup(chara, levels)
+   for _= 1, levels or 50 do
+      Skill.gain_level(chara)
+      Skill.grow_primary_skills(chara)
+   end
+
+   chara:mod_base_skill_level("elona.stat_magic", 10000)
+   chara:mod_base_skill_level("elona.stat_mana", 10000)
 
    Skill.iter_skills()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
    Skill.iter_spells()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
    Skill.iter_actions()
       :each(function(m)
-            Skill.gain_skill(player, m._id, 2000, 1000)
+            Skill.gain_skill(chara, m._id, 2000, 1000)
            end)
 
-   player:heal_to_max()
+   chara:heal_to_max()
 end
 
 local function visit_quest_giver(quest)

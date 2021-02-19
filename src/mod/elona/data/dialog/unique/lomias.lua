@@ -23,7 +23,7 @@ Event.register("elona.on_dig_success", "Digging in tutorial", function(map, para
                   if Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
                      Map.force_clear_pos(params.dig_x, params.dig_y, map)
                      local item = Item.create("elona.worthless_fake_gold_bar", params.dig_x, params.dig_y, {}, map)
-                     item.curse_state = "cursed"
+                     item.curse_state = Enum.CurseState.Cursed
                      Sidequest.set_progress("elona.tutorial", 3)
                   end
 end)
@@ -340,14 +340,14 @@ data:add {
          },
          on_finish = function()
             local item = Item.create("elona.long_bow", Chara.player().x, Chara.player().y)
-            item.curse_state = "cursed"
+            item.curse_state = Enum.CurseState.Cursed
 
             item = Item.create("elona.arrow", Chara.player().x, Chara.player().y)
-            item.curse_state = "none"
+            item.curse_state = Enum.CurseState.Normal
 
             item = Item.create("elona.scroll_of_vanish_curse", Chara.player().x, Chara.player().y)
             item.identify_state = Enum.IdentifyState.Full
-            item.curse_state = "blessed"
+            item.curse_state = Enum.CurseState.Blessed
 
             Gui.mes("common.something_is_put_on_the_ground")
 

@@ -52,6 +52,7 @@ local SANDBOX_GLOBALS = {
    "string",
    "utf8",
    "math",
+   "coroutine",
 
    -- LuaJIT stdlib
    "bit",

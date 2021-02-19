@@ -155,6 +155,7 @@ data:add {
    animation_wait = 100,
 
    on_interrupt = "prompt",
+   interrupt_on_displace = true,
 
    events = {
       {
@@ -166,7 +167,7 @@ data:add {
             local chara = params.chara
             if chara:is_in_fov() then
                Gui.play_sound("base.eat1")
-               if self.food.own_state == "not_owned" and chara:is_ally() then
+               if self.food.own_state == Enum.OwnState.NotOwned and chara:is_ally() then
                   Gui.mes("activity.eat.start.in_secret", chara, self.food)
                else
                   Gui.mes("activity.eat.start.normal", chara, self.food)
@@ -557,7 +558,7 @@ data:add {
                      if Rand.one_in(3) and not params.chara:is_player() then
                         Gui.mes("activity.sex.gets_furious", params.chara)
                         params.chara:set_target(self.partner)
-                        params.chara.ai_state.hate = 20
+                        params.chara.aggro = 20
                      end
                   end
                   self.partner.gold = math.max(self.partner.gold, 1)
@@ -690,7 +691,7 @@ end
 local function update_quest_score(audience)
    local quest = Quest.get_immediate_quest()
    if quest and quest._id == "elona.party" then
-      if not audience:is_allied() then
+      if not audience:is_in_player_party() then
          audience.impression = audience.impression + Rand.rnd(3)
          local score = elona_Quest.calc_party_score(audience:current_map())
          -- >>>>>>>> shade2/calculation.hsp:1346 	if p>qParam2(gQuestRef) : txtEf coBlue: txt "(+"+ ..
@@ -781,11 +782,11 @@ local function performance_apply(chara, instrument, audience, activity)
       return
    end
 
-   if audience:reaction_towards(chara) <= 0 then -- TODO == -3
-      if audience:get_hate_at(chara) == 0 then
+   if audience:relation_towards(chara) <= Enum.Relation.Enemy then
+      if audience:get_aggro(chara) <= 0 then
          Gui.mes_visible("activity.perform.gets_angry", audience.x, audience.y, audience)
       end
-      audience.ai_state.hate = 30
+      audience:set_aggro(chara, 30)
       return
    end
 
@@ -984,7 +985,7 @@ data:add {
 
             local from_enemy = false
             local owner = self.item:current_owner()
-            if owner and owner:reaction_towards(chara) < 0 then -- TODO == -3
+            if owner and owner:relation_towards(chara) <= Enum.Relation.Enemy then
                from_enemy = true
             end
 
@@ -1116,7 +1117,7 @@ data:add {
          callback = function(self, params)
             -- >>>>>>>> shade2/proc.hsp:574 	if gRowAct=rowActSteal{ ..
             local chara = params.chara
-            local owner = self.item:get_owner()
+            local owner = self.item:get_owning_chara()
             if (owner and not Chara.is_alive(owner)) or not Item.is_alive(self.item) then
                Gui.mes("you stop stealing")
                chara:remove_activity()

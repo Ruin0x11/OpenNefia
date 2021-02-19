@@ -127,7 +127,6 @@ function startup.run(mods)
 
    -- Initialize the config and load it from disk, if possible,
    config_store.clear()
-   config_store.initialize()
    local ok = config_store.load()
    if not ok then
       Log.warn("Saving the config for the first time.")

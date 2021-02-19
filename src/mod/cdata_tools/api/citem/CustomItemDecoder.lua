@@ -1,7 +1,7 @@
 local Enum = require("api.Enum")
 local Fs = require("api.Fs")
 local Util = require("mod.cdata_tools.api.Util")
-local Sjis = require("mod.sjis.api.Sjis")
+local Sjis = require("mod.extlibs.api.Sjis")
 local Compat = require("mod.elona_sys.api.Compat")
 local CodeGenerator = require("api.CodeGenerator")
 

@@ -73,13 +73,13 @@ Enum.TileRole = enum("TileRole", {
 })
 
 Enum.OwnState = enum("OwnState", {
-    Inherited    = "inherited",    -- -2
-    None         = "none",         -- 0
-    NotOwned     = "not_owned",    -- 1
-    Shop         = "shop",         -- 2
-    Shelter      = "shelter",      -- 3
-    Quest        = "quest",        -- 4
-    Unobtainable = "unobtainable", -- 5
+    Inherited    = -2,
+    None         = 0,
+    NotOwned     = 1,
+    Shop         = 2,
+    Shelter      = 3,
+    Quest        = 4,
+    Unobtainable = 5
 })
 
 Enum.IdentifyState = enum("IdentifyState", {
@@ -90,10 +90,10 @@ Enum.IdentifyState = enum("IdentifyState", {
 })
 
 Enum.CurseState = enum("CurseState", {
-	Doomed  = "doomed",  -- -1
-	Cursed  = "cursed",  -- -2
-	Normal  = "none",    -- 0
-	Blessed = "blessed", -- 1
+	Doomed  = -2,
+	Cursed  = -1,
+	Normal  = 0,
+	Blessed = 1
 })
 
 Enum.Color = enum("Color", {
@@ -170,5 +170,15 @@ Enum.FltSelect = enum("FltSelect", {
 	TownSp = 9,
 })
 -- <<<<<<<< shade2/init.hsp:823 	#enum global fltTownSp ..
+
+-- >>>>>>>> shade2/init.hsp:366 	#define global cAlly		10 ...
+Enum.Relation = enum("Relation", {
+    Ally = 10,
+    Neutral = 0,
+    Dislike = -1,
+    Hate = -2,
+    Enemy = -3
+})
+-- <<<<<<<< shade2/init.hsp:370 	#define global cEnemy		-3 ..
 
 return Enum

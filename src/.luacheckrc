@@ -48,6 +48,9 @@ files["scratch/**/*.lua"].globals = files["mod/**/*.lua"].globals
 files["scratch/**/*.lua"].ignore = {
    "111", -- setting non-standard global variable 'X'
 }
+files["test/unit/**/*.lua"].ignore = {
+   "111", -- setting non-standard global variable 'X'
+}
 
 files["**/locale/**/*.lua"] = {ignore = {"212"}}
 
@@ -110,6 +113,7 @@ stds.i18n_en = {
       "trim_job",
       "name_nojob",
       "capitalize",
+      "plural"
    }
 }
 

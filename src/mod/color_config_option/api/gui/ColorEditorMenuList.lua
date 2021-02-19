@@ -25,9 +25,9 @@ function ColorEditorMenuList:make_keymap()
          self:select_next()
          Gui.play_sound("base.cursor1")
       end,
-      enter = function() self.chosen = true end,
       west = function() self:change(self.model:selected_index(), -1) end,
       east = function() self:change(self.model:selected_index(), 1) end,
+      enter = function() self.chosen = true end,
       escape = function() self.canceled = true end,
       cancel = function() self.canceled = true end,
    }

@@ -22,6 +22,9 @@ local event = {
    { _id = "on_item_created_from_wish" },
    { _id = "on_deed_use" },
    { _id = "on_harvest_plant" },
+   { _id = "on_ai_dir_check" },
+   { _id = "before_default_ai_action" },
+   { _id = "on_default_ai_action" },
 }
 
 data:add_multi("base.event", event)

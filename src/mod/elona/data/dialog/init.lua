@@ -59,7 +59,7 @@ local function talk_text(t)
       params.ref = I18N.get("talk.random.params.maid", save.elona.waiting_guests)
    elseif speaker:calc("interest") <= 0 then
       id = "talk.random.bored"
-   elseif speaker:is_allied() then
+   elseif speaker:is_in_player_party() then
       id = "talk.random.ally_default"
    elseif speaker._id == "elona.prostitute" then
       id = "talk.random.prostitute"
@@ -91,7 +91,7 @@ end
 
 local function modify_impress_and_interest(speaker)
    -- >>>>>>>> elona122/shade2/chat.hsp:2203 		if cInterest(tc)>0 : if cRelation(tc)!cAlly : if ..
-   if speaker.interest > 0 and not speaker:is_allied() then
+   if speaker.interest > 0 and not speaker:is_in_player_party() then
       if Rand.one_in(3) and speaker.impression < Const.IMPRESSION_FRIEND then
          local charisma = Chara.player():skill_level("elona.stat_charisma")
          if Rand.rnd(charisma + 1) > 10 then

@@ -13,11 +13,12 @@ local config_data = {}
 local config_store = {}
 
 function config_store.for_mod(mod_id)
-   -- if not mod.is_mod_loaded(mod_id) then
-   --    error(string.format("Mod %s is not loaded.", mod_id))
-   -- end
    if not config_data[mod_id] then
-      return nil
+      local mod = require("internal.mod")
+      if not mod.is_loaded(mod_id) then
+         error(string.format("Mod %s is not loaded.", mod_id))
+      end
+      config_data[mod_id] = config_holder:new(mod_id)
    end
 
    return config_data[mod_id]
@@ -57,13 +58,6 @@ function config_store.load()
    end
 
    return true, from_disk
-end
-
-function config_store.initialize()
-   local mod = require("internal.mod")
-   for _, mod in mod.iter_loaded() do
-      config_data[mod.id] = config_holder:new(mod.id)
-   end
 end
 
 function config_store.proxy()

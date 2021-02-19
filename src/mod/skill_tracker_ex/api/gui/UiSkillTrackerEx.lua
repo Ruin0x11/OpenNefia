@@ -100,7 +100,7 @@ function UiSkillTrackerEx:on_gain_skill_exp(skill_id, base_amount, actual_amount
       sign = ""
    end
    local skill_name = I18N.get("ability." .. skill_id .. ".name")
-   self.log_widget:print_raw(("%s    %s%d (%s%d)"):format(skill_name, sign, base_amount, sign, actual_amount), color)
+   self.log_widget:print_raw(("%s    %s%d (%d)"):format(skill_name, sign, base_amount, actual_amount), color)
 end
 
 local Map

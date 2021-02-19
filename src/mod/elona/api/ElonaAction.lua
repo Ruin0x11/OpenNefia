@@ -12,6 +12,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Anim = require("mod.elona_sys.api.Anim")
 local Action = require("api.Action")
 local Effect = require("mod.elona.api.Effect")
+local Pos = require("api.Pos")
 
 local ElonaAction = {}
 
@@ -62,6 +63,7 @@ function ElonaAction.melee_attack(chara, target)
 end
 
 function ElonaAction.get_ranged_weapon_and_ammo(chara)
+   -- >>>>>>>> shade2/command.hsp:4290 *FindRangeWeapon ...
    local pred = body_part_where_equipped "is_ranged_weapon"
    local ranged = chara:iter_body_parts():filter(pred):extract("equipped"):nth(1)
 
@@ -82,6 +84,7 @@ function ElonaAction.get_ranged_weapon_and_ammo(chara)
    end
 
    return ranged, ammo
+   -- <<<<<<<< shade2/command.hsp:4302 	return true ..
 end
 
 function ElonaAction.ranged_attack(chara, target, weapon, ammo)
@@ -349,7 +352,7 @@ function ElonaAction.bash(chara, x, y)
    local target = Chara.at(x, y)
    if target then
       if not target:has_effect("elona.sleep") then
-         if chara:is_player() and target:reaction_towards(chara) > 0 then
+         if chara:is_player() and target:relation_towards(chara) >= Enum.Relation.Neutral then
             if not ElonaAction.prompt_really_attack(chara, target) then
                return "player_turn_query"
             end
@@ -446,9 +449,35 @@ function ElonaAction.dip(chara, item)
    return "player_turn_query"
 end
 
-function ElonaAction.throw(chara, item)
-   Gui.mes("common.nothing_happens")
-   return "player_turn_query"
+function ElonaAction.throw(chara, item, tx, ty)
+   -- >>>>>>>> shade2/action.hsp:3 *act_throw ...
+   Gui.mes_visible("action.throw.execute", chara.x, chara.y, chara, item:build_name(1))
+   local map = chara:current_map()
+
+   if (Pos.dist(chara.x, chara.y, tx, ty) * 4 > Rand.rnd(chara:skill_level("elona.throwing") + 10) + chara:skill_level("elona.throwing") / 4)
+      or Rand.one_in(10)
+   then
+      local x = tx + Rand.rnd(2) - Rand.rnd(2)
+      local y = ty + Rand.rnd(2) - Rand.rnd(2)
+      if Map.can_access(x, y, map) then
+         tx = x
+         ty = y
+      end
+   end
+
+   local anim = Anim.ranged_attack(chara.x, chara.y, tx, ty, item:calc("image"), item:calc("color"))
+   Gui.start_draw_callback(anim)
+
+   item:remove(1)
+   chara:refresh_weight()
+
+   anim = Anim.breaking(tx, ty)
+   Gui.start_draw_callback(anim)
+
+   item:emit("elona_sys.on_item_throw", {chara=chara,x=tx,y=ty})
+   -- <<<<<<<< shade2/action.hsp:24 	call anime,(animeId=aniCrush,x=tlocX,y=tlocY) ...
+
+   return "turn_end"
 end
 
 function ElonaAction.trade(player, target)

@@ -17,7 +17,7 @@ function pool:init(type_id, width, height)
    self.width = width
    self.height = height
 
-   self.positional = table.of(function() return {} end, self.width * self.height)
+   self.positional = {}
 end
 
 function pool:get_object(uid)
@@ -56,7 +56,11 @@ function pool:take_object(obj, x, y)
 
    table.insert(self.uids, obj.uid)
    self.content[obj.uid] = entry
-   table.insert(self.positional[y*self.width+x+1], obj)
+   local idx = y*self.width+x+1
+   if self.positional[idx] == nil then
+      self.positional[idx] = {}
+   end
+   table.insert(self.positional[idx], obj)
 
    return self:get_object(obj.uid)
 end
@@ -66,8 +70,16 @@ function pool:move_object(obj, x, y)
    assert(x >= 0 and x < self.width)
    assert(y >= 0 and y < self.height)
 
-   table.iremove_value(self.positional[obj.y*self.width+obj.x+1], obj)
-   table.insert(self.positional[y*self.width+x+1], obj)
+   local prev_idx = obj.y*self.width+obj.x+1
+   table.iremove_value(self.positional[prev_idx], obj)
+   if #self.positional[prev_idx] == 0 then
+      self.positional[prev_idx] = nil
+   end
+   local new_idx = y*self.width+x+1
+   if self.positional[new_idx] == nil then
+      self.positional[new_idx] = {}
+   end
+   table.insert(self.positional[new_idx], obj)
 
    obj.x = x
    obj.y = y
@@ -105,7 +117,11 @@ function pool:remove_object(obj)
 
    self.content[obj_.uid] = nil
 
-   table.iremove_value(self.positional[obj_.y*self.width+obj_.x+1], obj_)
+   local idx = obj_.y*self.width+obj_.x+1
+   table.iremove_value(self.positional[idx], obj_)
+   if #self.positional[idx] == 0 then
+      self.positional[idx] = nil
+   end
 
    obj_.location = nil
 
@@ -118,7 +134,7 @@ function pool:objects_at_pos(x, y)
    if not self:is_in_bounds(x, y) then
       return fun.iter({})
    end
-   return fun.iter(self.positional[y*self.width+x+1])
+   return fun.iter(table.shallow_copy(self.positional[y*self.width+x+1] or {}))
 end
 
 function pool:is_in_bounds(x, y)

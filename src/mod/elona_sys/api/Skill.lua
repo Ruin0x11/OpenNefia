@@ -6,10 +6,9 @@ local Chara = require("api.Chara")
 local Event = require("api.Event")
 local I18N = require("api.I18N")
 local Gui = require("api.Gui")
-local Input = require("api.Input")
-local Action = require("api.Action")
 local Anim = require("mod.elona_sys.api.Anim")
 local ICharaEquip = require("api.chara.ICharaEquip")
+local Enum = require("api.Enum")
 
 local Skill = {}
 
@@ -211,7 +210,7 @@ local function proc_leveling(chara, skill, new_exp, level)
       chara:set_base_skill(skill, level, potential, new_exp)
       if Map.is_in_fov(chara.x, chara.y) then
          local color = "White"
-         if chara:is_allied() then
+         if chara:is_in_player_party() then
             Gui.play_sound("base.ding3")
             Gui.mes_alert()
             color = "Green"
@@ -478,7 +477,7 @@ function Skill.gain_level(chara, show_message)
       chara.max_level = chara.level
    end
 
-   if not chara:is_allied() then
+   if not chara:is_in_player_party() then
       Skill.grow_primary_skills(chara, show_message)
    end
 
@@ -538,7 +537,7 @@ function Skill.modify_impression(chara, delta)
    local new_level = Skill.impression_level(chara.impression)
    if level > new_level then
       Gui.mes_c("chara.impression.lose", "Purple", chara, "ui.impression._" .. new_level)
-   elseif new_level > level and chara:reaction_towards(Chara.player()) > 0 then
+   elseif new_level > level and chara:relation_towards(Chara.player()) > Enum.Relation.Enemy then
       Gui.mes_c("chara.impression.gain", "Green", chara, "ui.impression._" .. new_level)
    end
 end
@@ -657,11 +656,22 @@ function Skill.calc_spell_success_chance(skill_id, chara)
 end
 
 function Skill.calc_spell_power(skill_id, chara)
+   -- >>>>>>>> shade2/calculation.hsp:867 #defcfunc calcSpellPower int id,int c ...
    local skill_entry = data["base.skill"]:ensure(skill_id)
    if skill_entry.type ~= "spell" then
-      if chara:has_skill(skill_id) then
+      -- NOTE: In vanilla, power was calculated by multipying the enum
+      -- value of the skill's type (bolt, arrow, ball, etc.) and
+      -- adding 10. This means bolt spells were the least powerful and
+      -- ball spells were more powerful. This is changed here (and in
+      -- omake overhaul) to be the skill level of the action or the
+      -- character's level.
+      if not chara:is_player() then
+         return chara:calc("level") * 6 + 10
+      end
+      if chara:is_player() and chara:has_skill(skill_id) then
          return chara:skill_level(skill_id) * 6 + 10
       end
+
       return 100
    end
 
@@ -669,11 +679,13 @@ function Skill.calc_spell_power(skill_id, chara)
       return chara:skill_level(skill_id) * 10 + 50
    end
 
+   -- TODO customize AI spell power
    if not chara:has_skill("elona.casting") and not chara:is_ally() then
       return chara:calc("level") * 6 + 10
    end
 
    return chara:skill_level("elona.casting") * 6 + 10
+   -- <<<<<<<< shade2/calculation.hsp:874 	return sCasting(c)*6+10 ..
 end
 
 function Skill.get_dice(skill_id, chara, power)

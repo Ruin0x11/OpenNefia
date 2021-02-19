@@ -86,7 +86,7 @@ local function cook(chara, item, cooking_tool)
    end
    food_quality = math.clamp(math.floor(food_quality + cooking_tool.params.cooking_quality/100), 1, 9)
 
-   elona_Item.make_dish(item, food_quality)
+   Effect.make_dish(item, food_quality)
 
    Gui.mes("food.cook", name, cooking_tool:build_name(1), item:build_name(1))
    if item.params.food_quality > 2 then

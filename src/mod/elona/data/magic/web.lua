@@ -120,7 +120,7 @@ make_web {
    mef_id = "elona.fire",
    mef_turns = function(p) return Rand.rnd(10) + 5 end,
    mef_power = function(p) return p end,
-   on_success = function(x, y, chara) Effect.damage_map_fire(x, y, chara) end
+   on_success = function(x, y, chara) Effect.damage_map_fire(x, y, chara, chara:current_map()) end
 }
 
 make_web {

@@ -586,6 +586,18 @@ data:add_multi(
 
          type = "boolean",
          default = false
+      },
+      {
+         _id = "debug_no_spell_failure",
+
+         type = "boolean",
+         default = false
+      },
+      {
+         _id = "max_inspect_length",
+
+         type = "integer",
+         default = 10000
       }
    }
 )

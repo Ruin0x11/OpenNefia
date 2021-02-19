@@ -24,12 +24,12 @@ local Const = require("api.Const")
 local Quest = require("mod.elona.api.Quest")
 
 local function per_curse_state(curse_state, doomed, cursed, none, blessed)
-   assert(type(curse_state) == "string")
-   if curse_state == "doomed" then
+   assert(type(curse_state) == "number")
+   if curse_state == Enum.CurseState.Doomed then
       return doomed
-   elseif curse_state == "cursed" then
+   elseif curse_state == Enum.CurseState.Cursed then
       return cursed
-   elseif curse_state == "blessed" then
+   elseif curse_state == Enum.CurseState.Blessed then
       return blessed
    end
 
@@ -63,7 +63,7 @@ data:add {
          end
       end
 
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          Effect.modify_height(target, Rand.rnd(5) + 1)
       elseif Effect.is_cursed(params.curse_state) then
          Effect.modify_height(target, (Rand.rnd(5) + 1) * -1)
@@ -562,7 +562,7 @@ data:add {
       end
 
       local times = 1
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          times = times + 1
       end
 
@@ -695,7 +695,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      if Effect.is_cursed(params.curse_state) or params.curse_state == "none" then
+      if Effect.is_cursed(params.curse_state) or params.curse_state == Enum.CurseState.Normal then
          if target.level <= 1 then
             Gui.mes("common.nothing_happens")
             return true, { obvious = false }
@@ -779,7 +779,7 @@ data:add {
       target.prayer_charge = target.prayer_charge + 500
       God.modify_piety(target, 75)
       local exp = 1000
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          exp = exp + 750
       end
       Skill.gain_skill_exp(target, "elona.faith", exp, 6, 1000)
@@ -804,7 +804,7 @@ data:add {
       local target = params.target
 
       local times = 1
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          times = times + 1
       end
 
@@ -893,7 +893,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          for _, stat in Skill.iter_base_stats() do
             local amount = Rand.rnd(target:skill_potential(stat._id) / 20 + 3) + 1
             Skill.modify_potential(target, stat._id, amount)
@@ -905,7 +905,7 @@ data:add {
       else
          local stat = Rand.choice(Skill.iter_base_stats())
          local stat_name = "ability." .. stat._id .. ".name"
-         if params.curse_state == "none" then
+         if params.curse_state == Enum.CurseState.Normal then
             Gui.mes("magic.gain_potential.increases", target, stat_name)
             local amount = Rand.rnd(target:skill_potential(stat._id) / 10 + 10) + 1
             Skill.modify_potential(target, stat._id, -amount)
@@ -940,7 +940,7 @@ data:add {
       Gui.mes("magic.troll_blood.apply", target)
       local amount = per_curse_state(params.curse_state, -4000, -1000, 8000, 12000)
       Skill.gain_skill_exp(target, "elona.stat_speed", amount)
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          Skill.modify_potential(target, "elona.stat_speed", 15)
          Gui.mes_c("magic.troll_blood.blessed", "Green")
       end
@@ -1412,13 +1412,13 @@ data:add {
       local target = params.target
       local item = params.item
 
-      if not target:is_allied() then
+      if not target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
 
       local mes
-      if params.curse_state == "none" or params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Normal or params.curse_state == Enum.CurseState.Blessed then
          mes = "magic.create_material.junks"
       else
          mes = "magic.create_material.materials"
@@ -1430,7 +1430,7 @@ data:add {
       Save.autosave()
 
       local times = Rand.rnd(3) + 3
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          times = times + 6
       end
 
@@ -1711,7 +1711,7 @@ data:add {
 
       Gui.play_sound("base.pray1", source.x, source.y)
 
-      if params.curse_state == "none" or params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Normal or params.curse_state == Enum.CurseState.Blessed then
          Gui.mes_c("magic.cure_corruption.apply", "Green")
          Effect.modify_corruption(source, params.power * -10)
       else
@@ -1739,11 +1739,12 @@ data:add {
       -- >>>>>>>> shade2/proc.hsp:3406 	case efMorotov ..
       local source = params.source
       local target = params.target
+      local map = target:current_map()
 
       Gui.mes_visible("magic.molotov", target)
-      Mef.create("elona.fire", target.x, target.y, { duration = Rand.rnd(15) + 25, params.power, origin = source })
+      Mef.create("elona.fire", target.x, target.y, { duration = Rand.rnd(15) + 25, params.power, origin = source }, map)
 
-      Effect.damage_map_fire(target.x, target.y, source)
+      Effect.damage_map_fire(target.x, target.y, source, map)
 
       return true
       -- <<<<<<<< shade2/proc.hsp:3409 	swbreak ..

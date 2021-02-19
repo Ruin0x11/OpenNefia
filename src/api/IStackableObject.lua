@@ -1,4 +1,5 @@
 --- @classmod IStackableObject
+local Gui = require("api.Gui")
 
 local IOwned = require("api.IOwned")
 local IMapObject = require("api.IMapObject")
@@ -69,7 +70,7 @@ end
 --- stacked with another is controlled by
 --- IStackableObject:can_stack_with().
 -- @treturn bool
-function IStackableObject:stack()
+function IStackableObject:stack(show_message)
    if not self.location then
       return false
    end
@@ -91,6 +92,10 @@ function IStackableObject:stack()
          self:stack_with(other)
          did_stack = true
       end
+   end
+
+   if did_stack and show_message then
+      Gui.mes("item.stacked", self:build_name(1), self.amount)
    end
 
    return did_stack

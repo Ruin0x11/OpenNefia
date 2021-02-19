@@ -47,29 +47,18 @@ Relative strength of this character.
 ]]
          },
          {
-            name = "ai_move",
+            name = "ai_move_chance",
             default = 100,
             doc = [[
 Chance this unit will take an idle action if they have no target.
 ]]
          },
          {
-            name = "ai_dist",
+            name = "ai_distance",
             default = 1,
             doc = [[
 Minimum distance before this unit starts moving toward their target.
 ]]
-         },
-         {
-            name = "ai_calm",
-            default = 1,
-            doc = [[
-Controls the default AI's idle behavior.
-]]
-         },
-         {
-            name = "ai_act_sub_freq",
-            default = 0,
          },
          {
             name = "portrait",
@@ -84,6 +73,7 @@ Remove this to use the character's sprite instead.
          {
             name = "resistances",
             default = {},
+            no_fallback = true
          },
          {
             name = "item_type",
@@ -107,18 +97,14 @@ If true, you can talk to this character by bumping into them.
 ]]
          },
          {
-            name = "faction",
-            default = "base.enemy",
+            name = "relation",
+            default = CodeGenerator.gen_literal [[ Enum.Relation.Enemy ]],
             template = true,
-            type = "id:base.faction",
+            type = "integer",
             doc = [[
 What alignment this character has.
 
 This determines if it will act hostile toward the player on first sight.
-- base.enemy: hostile towards the player
-- base.citizen: shopkeepers, etc.
-- base.neutral: ignores the player, can swap places with them
-- base.friendly: acts like an ally
 ]]
          },
          {
@@ -281,6 +267,15 @@ AI callback to run on this character's turn.
             doc = [[
 A damage reaction to trigger if this character is melee attacked.
 ]]
+         },
+         {
+            name = "skills",
+            default = nil,
+            type = "table?",
+            no_fallback = true,
+            doc = [[
+Skills this character will already know on creation.
+]]
          }
       },
       fallbacks = {
@@ -321,8 +316,6 @@ A damage reaction to trigger if this character is melee attacked.
             on_low_hp = nil,
             on_idle_action = nil
          },
-
-         known_abilities = {},
 
          hp = 1,
          mp = 1,
@@ -407,6 +400,9 @@ A damage reaction to trigger if this character is melee attacked.
          damage_resistance = 0,
          damage_immunity_rate = 0,
          damage_reflection = 0,
+         aggro = 0,
+         noise = 0,
+         relation = 0,
 
          splits = nil,
          splits2 = nil,
@@ -701,8 +697,8 @@ If false, this item cannot be wished for.
       },
       fallbacks = {
          amount = 1,
-         ownership = "none",
-         curse_state = "none",
+         own_state = Enum.OwnState.None,
+         curse_state = Enum.CurseState.Normal,
          identify_state = Enum.IdentifyState.None,
          bonus = 0,
          name = "item",
@@ -766,6 +762,7 @@ data:add_type(
       fields = {
       },
       fallbacks = {
+         params = {},
       }
    },
    { interface = IMef }
@@ -1179,13 +1176,6 @@ data:add_type {
    schema = schema.Record {
       target = schema.String,
    }
-}
-
-data:add_type {
-   name = "faction",
-   schema = schema.Record {
-      reactions = schema.Table,
-   },
 }
 
 data:add_type {

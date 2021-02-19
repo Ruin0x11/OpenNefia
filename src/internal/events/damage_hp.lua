@@ -1,6 +1,7 @@
 local Gui = require("api.Gui")
 local Rand = require("api.Rand")
 local Event = require("api.Event")
+local Enum = require("api.Enum")
 
 Event.register("base.on_damage_chara", "Interrupt activity", function(chara) chara:interrupt_activity() end)
 
@@ -43,11 +44,7 @@ local function on_kill_chara(victim, params)
       if attacker:is_player() then
          attacker.sleep_experience = attacker.sleep_experience + gained_exp
       end
-      if attacker:is_in_party() then
-         attacker:set_target(nil)
-         attacker:get_party_leader():set_target(nil)
-      end
-      attacker.ai_state.hate = 0
+      attacker:set_target(nil)
    end
    -- <<<<<<<< shade2/chara_func.hsp:1695 			} ..
 end
@@ -61,35 +58,35 @@ local function apply_hostile_action(victim, params)
       return
    end
 
-   local apply_hate = false
-   if victim:reaction_towards(attacker) < 0 then
-      if victim:base_reaction_towards(attacker) >= 0 then
-         if (victim.ai_state.hate == 0 or Rand.one_in(4)) then
-            apply_hate = true
+   local apply_aggro = false
+   if victim:relation_towards(attacker) <= Enum.Relation.Enemy then
+      if victim:base_relation_towards(attacker) > Enum.Relation.Enemy then
+         if (victim:get_aggro(attacker) <= 0 or Rand.one_in(4)) then
+            apply_aggro = true
          end
       end
    else
-      if victim:base_reaction_towards(attacker) < 0 then
-         if (victim.ai_state.hate == 0 or Rand.one_in(4)) then
-            apply_hate = true
+      if victim:base_relation_towards(attacker) <= Enum.Relation.Enemy then
+         if (victim:get_aggro(attacker) <= 0 or Rand.one_in(4)) then
+            apply_aggro = true
          end
       end
    end
 
    if not attacker:is_player() and attacker:get_target() == victim and Rand.one_in(3) then
-      apply_hate = true
+      apply_aggro = true
    end
 
-   if apply_hate then
+   if apply_aggro then
       if not victim:is_player() then
          victim:set_target(attacker)
       end
 
-      if victim.ai_state.hate == 0 then
+      if victim.aggro <= 0 then
          victim:set_emotion_icon("elona.angry", 2)
-         victim.ai_state.hate = 20
+         victim.aggro = 20
       else
-         victim.ai_state.hate = victim.ai_state.hate + 2
+         victim.aggro = victim.aggro + 2
       end
    end
    -- <<<<<<<< shade2/chara_func.hsp:1593 		} ..

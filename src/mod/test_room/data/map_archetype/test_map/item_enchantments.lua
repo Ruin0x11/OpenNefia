@@ -6,6 +6,10 @@ local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Item = require("api.Item")
 local Rand = require("api.Rand")
 
+local item_enchantments = {
+   _id = "item_enchantments"
+}
+
 local function items_in_category(cat)
    local filter = function(i)
       if i.enchantments ~= nil then
@@ -126,7 +130,7 @@ local function make_fixed_enchantments(x, y, map)
    return 2, iy + 2
 end
 
-local function generate_map(area, floor)
+function item_enchantments.on_generate_map(area, floor)
    local map = utils.create_map(20, 30)
    utils.create_stairs(2, 2, area, map)
 
@@ -145,6 +149,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   item_enchantments = generate_map
-}
+return item_enchantments

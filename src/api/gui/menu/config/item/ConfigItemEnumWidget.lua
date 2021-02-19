@@ -42,11 +42,19 @@ function ConfigItemEnumWidget:can_change()
 end
 
 function ConfigItemEnumWidget:set_value(value)
+   if #self.choices == 0 then
+      self.value = "none"
+      self.text = "<none>"
+      return
+   end
+
    self.value = value
    if self.item.formatter then
       self.text = self.item.formatter(self.item._id, self.value)
-   else
+   elseif self.item._id then
       self.text = I18N.get_optional("config.option." .. self.item._id .. ".variants." .. self.value) or tostring(self.value)
+   else
+      self.text = tostring(self.value)
    end
 end
 
@@ -58,6 +66,10 @@ function ConfigItemEnumWidget:on_choose()
 end
 
 function ConfigItemEnumWidget:on_change(delta)
+   if #self.choices == 0 then
+      return
+   end
+
    local cur_pos = table.index_of(self.choices, self.value)
    local new_pos = math.clamp(cur_pos + delta, 1, #self.choices)
    self:set_value(self.choices[new_pos])

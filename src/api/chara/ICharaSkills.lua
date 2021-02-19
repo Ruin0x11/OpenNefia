@@ -6,7 +6,16 @@ local ICharaSkills = class.interface("ICharaSkills")
 local data = require("internal.data")
 
 function ICharaSkills:init()
-   self.skills = self.skills or {}
+   self.skills = {}
+
+   if self.proto.skills then
+      for _, skill_id in ipairs(self.proto.skills) do
+         assert(type(skill_id) == "string")
+         local level = 1
+         local potential = 100
+         self:set_base_skill(skill_id, level, potential, 0)
+      end
+   end
 
    self.stat_adjusts = self.stat_adjusts or {}
 end

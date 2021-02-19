@@ -24,9 +24,9 @@ end
 local function can_take(item)
    if item.own_state == Enum.OwnState.NotOwned or item.own_state == Enum.OwnState.Shop then
       Gui.play_sound("base.fail1")
-      if item.own_state == "not_owned" then
+      if item.own_state == Enum.OwnState.NotOwned then
          Gui.mes("action.get.not_owned")
-      elseif item.own_state == "shop" then
+      elseif item.own_state == Enum.OwnState.Shop then
          Gui.mes("action.get.cannot_carry")
       end
       return false
@@ -362,7 +362,7 @@ local inv_sell = {
       ctxt.target.gold = ctxt.target.gold - cost
       ctxt.chara.gold = ctxt.chara.gold + cost
 
-      separated.own_state = "none"
+      separated.own_state = Enum.OwnState.None
       separated.identify_state = Enum.IdentifyState.Full
 
       return "inventory_continue"
@@ -521,7 +521,7 @@ local inv_present = {
 
       elona_Item.convert_artifact(trade_item)
       Equipment.equip_all_optimally(ctxt.target)
-      if not ctxt.target:is_allied() then
+      if not ctxt.target:is_in_player_party() then
          Equipment.generate_and_equip(ctxt.target)
       end
       elona_Item.ensure_free_item_slot(ctxt.target)
@@ -549,7 +549,16 @@ local inv_throw = {
       return item:calc("can_throw")
    end,
    on_select = function(ctxt, item, amount, rest)
-      return ElonaAction.throw(ctxt.chara, item)
+      local x, y, can_see = Input.query_position()
+      if not can_see then
+         Gui.mes("action.which_direction.cannot_see_location")
+         return "player_turn_query"
+      end
+      if not Map.is_floor(x, y, ctxt.chara:current_map()) then
+         Gui.mes("ui.inv.throw.location_is_blocked")
+         return "player_turn_query"
+      end
+      return ElonaAction.throw(ctxt.chara, item, x, y)
    end
 }
 data:add(inv_throw)

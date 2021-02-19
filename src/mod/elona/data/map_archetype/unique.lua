@@ -9,6 +9,7 @@ local I18N = require("api.I18N")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Gui = require("api.Gui")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 do
    local lumiest_graveyard = {
@@ -223,16 +224,16 @@ local function on_generate_border(map)
    chara:add_role("elona.caravan_master", {dest=""})
 
    for _=1,2 do
-      chara = Chara.create("elona.beggar", nil, nil, nil, map)
+      Chara.create("elona.beggar", nil, nil, nil, map)
 
       chara = Chara.create("elona.mercenary_warrior", nil, nil, nil, map)
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Dislike
 
       chara = Chara.create("elona.mercenary_archer", nil, nil, nil, map)
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Dislike
 
       chara = Chara.create("elona.mercenary_wizard", nil, nil, nil, map)
-      chara.faction = "base.citizen"
+      chara.relation = Enum.Relation.Dislike
    end
 
    chara = Chara.create("elona.guard", 5, 7, nil, map)
@@ -483,10 +484,10 @@ do
          Chara.create("elona.beggar", nil, nil, nil, map)
 
          chara = Chara.create("elona.mercenary_warrior", nil, nil, nil, map)
-         chara.faction = "base.citizen"
+         chara.relation = Enum.Relation.Dislike
 
          chara = Chara.create("elona.old_person", nil, nil, nil, map)
-         chara.faction = "base.citizen"
+         chara.relation = Enum.Relation.Dislike
 
          Chara.create("elona.mercenary", nil, nil, nil, map)
          Chara.create("elona.tourist", nil, nil, nil, map)
@@ -596,7 +597,7 @@ do
          is_indoor = false,
          has_anchored_npcs = true,
          default_ai_calm = 1,
-         villagers_make_snowmen = true,
+         has_snow = true,
          max_crowd_density = 0,
          is_hidden_in_world_map = true
       }
@@ -686,7 +687,7 @@ do
 
       local item = Item.create("elona.altar", 19, 5, {}, map)
       item.params.god_id = "elona.mani"
-      item.own_state = "not_owned"
+      item.own_state = Enum.OwnState.NotOwned
 
       local chara = Chara.create("elona.sales_person", 9, 16, nil, map)
       chara:add_role("elona.shopkeeper", {inventory_id="elona.cyber_dome"})

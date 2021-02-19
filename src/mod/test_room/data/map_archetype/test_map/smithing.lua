@@ -3,7 +3,11 @@ local Item = require("api.Item")
 local Charagen = require("mod.tools.api.Charagen")
 local Itemgen = require("mod.tools.api.Itemgen")
 
-local function generate_map(area, floor)
+local smithing = {
+   _id = "smithing"
+}
+
+function smithing.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
@@ -28,6 +32,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   smithing = generate_map
-}
+return smithing

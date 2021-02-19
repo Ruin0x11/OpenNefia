@@ -8,28 +8,32 @@ local function require_all_in(dir)
       :map(require)
 end
 
-local function add_test_maps(maps)
-   -- maps["test_room"] = function() return InstancedMap:new(50, 50) end
-   for _id, _ in pairs(maps) do
-      data:add {
-         _type = "base.map_archetype",
-         _id = _id,
+local function add_test_maps(proto)
+   local map = {
+      _type = "base.map_archetype",
+      _id = proto._id,
 
-         starting_pos = MapEntrance.stairs_up,
+      starting_pos = MapEntrance.stairs_up,
 
-         on_generate_map = function(...)
-            return maps[_id](...)
-         end,
-
-         properties = {
-            name = _id,
-            is_temporary = true,
-            is_renewable = false,
-            types = { "guild" }
-         }
+      properties = {
+         name = proto._id,
+         is_temporary = true,
+         is_renewable = false,
+         types = { "guild" }
       }
-      state.is_test_map[_MOD_NAME .. "." .. _id] = true
+   }
+   table.merge(map, proto)
+   assert(proto.on_generate_map)
+
+   -- hotloading support
+   for k, v in pairs(map) do
+      if type(v) == "function" and type(proto[k]) == "function" then
+         map[k] = function(...) return proto[k](...) end
+      end
    end
+
+   data:add(map)
+   state.is_test_map[_MOD_NAME .. "." .. proto._id] = true
 end
 
 local path = "mod/test_room/data/map_archetype/test_map/"

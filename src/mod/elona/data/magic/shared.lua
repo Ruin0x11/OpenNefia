@@ -225,6 +225,7 @@ local function make_arrow(opts)
    data:add {
       _id = "spell_" .. id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = "spell",
       effect_id = "elona." .. id,
@@ -462,7 +463,7 @@ local function ball_cb_elemental(self, x, y, tx, ty, source, target, element, pa
    local damage = Rand.roll_dice(dice.x, dice.y, dice.bonus) * 100 / (75 + Pos.dist(tx, ty, x, y) * 25)
 
    local passed_through
-   if source:is_allied_with(target) then
+   if source:is_in_same_party(target) then
       passed_through, damage = SkillCheck.handle_control_magic(source, target, damage)
    else
       passed_through = false
@@ -579,13 +580,15 @@ make_ball{
 }
 
 local function ball_cb_healing_rain(self, x, y, tx, ty, source, target, element, params)
-   if source:reaction_towards(target) >= 0 then
+   -- >>>>>>>> shade2/proc.hsp:1744 		if (cc=pc)or(cRelation(cc)>=cNeutral){ ...
+   if source:relation_towards(target) >= Enum.Relation.Neutral then
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("damage.is_healed", target.x, target.y, target)
       local dice = self:dice(params)
       Effect.heal(target, dice.x, dice.y, dice.bonus)
    end
+   -- <<<<<<<< shade2/proc.hsp:1753 			} ..
 end
 
 make_ball {
@@ -603,13 +606,15 @@ make_ball {
 }
 
 local function ball_cb_rain_of_sanity(self, x, y, tx, ty, source, target, element, params)
-   if source:reaction_towards(target) >= 0 then
+   -- >>>>>>>> shade2/proc.hsp:1758 		if (cc=pc)or(cRelation(cc)>=cNeutral){ ...
+   if source:relation_towards(target) >= Enum.Relation.Neutral then
       local cb = Anim.heal(tx, ty, "base.heal_effect", "base.heal1", 5)
       Gui.start_draw_callback(cb)
       Gui.mes_visible("magic.rain_of_sanity", target.x, target.y, target)
       Effect.heal_insanity(target, params.power / 10)
       target:heal_effect("elona.insanity", 9999)
    end
+   -- <<<<<<<< shade2/proc.hsp:1768 			} ..
 end
 
 make_ball {
@@ -638,6 +643,7 @@ end
 data:add {
    _id = "action_suicide_attack",
    _type = "base.skill",
+   elona_id = 644,
 
    type = "action",
    effect_id = "elona.suicide_attack",
@@ -658,10 +664,9 @@ data:add {
    },
 
    dice = function(self, params)
-      local level = params.source:skill_level("elona.action_suicide_attack")
       return {
-         x = 1 + level / 25,
-         y = 15 + level / 5 + 1,
+         x = 1 + params.power / 25,
+         y = 15 + params.power / 5 + 1,
          bonus = 0
       }
    end,
@@ -749,7 +754,7 @@ data:add {
 local function do_heal(target, curse_state, dice)
    Effect.heal(target, dice.x, dice.y, dice.bonus)
 
-   if curse_state == "blessed" then
+   if curse_state == Enum.CurseState.Blessed then
       target:heal_effect("elona.sick", 5 + Rand.rnd(5))
    else
       if Rand.one_in(3) then
@@ -769,6 +774,7 @@ local function make_heal(opts)
    data:add {
       _id = "spell_" .. opts._id,
       _type = "base.skill",
+      elona_id = opts.elona_id,
 
       type = "spell",
       effect_id = "elona." .. opts._id,
@@ -891,10 +897,9 @@ data:add {
    },
 
    dice = function(self, params)
-      local level = params.source:skill_level("elona.action_prayer_of_jure")
       local piety = params.source:calc("piety")
       return {
-         x = 1 + level / 10,
+         x = 1 + params.power / 10,
          y = piety / 70 + 1 + 1,
          bonus = 0
       }
@@ -1266,6 +1271,7 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
    data:add {
       _id = "action_" .. id,
       _type = "base.skill",
+      elona_id = elona_id,
 
       type = "action",
       effect_id = "elona." .. id,
@@ -1287,11 +1293,10 @@ local function make_breath(element_id, elona_id, dice_x, dice_y, bonus, cost)
       },
 
       dice = function(self, params)
-         local level = params.source:skill_level("elona.action_" .. id)
          return {
-            x = 1 + level / dice_x,
+            x = 1 + params.power / dice_x,
             y = dice_y + 1,
-            bonus = level / bonus
+            bonus = params.power / bonus
          }
       end,
 
@@ -1703,7 +1708,7 @@ local function do_mutation(source, target, curse_state, times, no_negative_trait
             end
          else
             if delta < 0 then
-               if curse_state == "blessed" and Rand.one_in(3) or no_negative_traits then
+               if curse_state == Enum.CurseState.Blessed and Rand.one_in(3) or no_negative_traits then
                   proceed = false
                end
             end
@@ -1760,7 +1765,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       Gui.mes_visible("magic.mutation.spell", source, target)
@@ -1803,7 +1808,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       local times = 1
@@ -1836,7 +1841,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       local times = 2 + Rand.rnd(3)
@@ -1868,9 +1873,9 @@ data:add {
       end
 
       local times = 1 + Rand.rnd(2)
-      if params.curse_state == "none" then
+      if params.curse_state == Enum.CurseState.Normal then
          times = times + 1
-      elseif params.curse_state == "blessed" then
+      elseif params.curse_state == Enum.CurseState.Blessed then
          times = times + 2
       end
 
@@ -1948,7 +1953,7 @@ local function make_gain_ally(opts)
          end
 
          local chara = Charagen.create(source.x, source.y, { level = level, quality = quality, id = chara_id, tag_filters = tag_filters, level_scaling = "fixed" }, map)
-         chara:recruit_as_ally()
+         source:recruit_as_ally(chara)
 
          return true
       end

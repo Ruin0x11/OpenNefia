@@ -47,7 +47,7 @@ function DeferredEvents.ragnarok(chara)
       end
 
       Mef.create("elona.fire", x, y, { duration = Rand.rnd(15) + 20, power = 50, origin = chara }, map)
-      Effect.damage_map_fire(x, y)
+      Effect.damage_map_fire(x, y, chara, map)
 
       if (i - 1) % 4 == 0 then
          local level = 100
@@ -103,7 +103,7 @@ function DeferredEvents.first_ally()
 
    local player = Chara.player()
    local ally = Chara.create(id, player.x, player.y, { level = player:calc("level") * 2 / 3 + 1 }, player:current_map())
-   ally:recruit_as_ally()
+   player:recruit_as_ally(ally)
 end
 
 return DeferredEvents

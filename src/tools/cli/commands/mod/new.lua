@@ -37,6 +37,7 @@ return {
 local Log = require("api.Log")
 
 require("mod.%s.data.init")
+require("mod.%s.event.init")
 
 Log.info("Hello from %%s!", _MOD_NAME)
 ]]):format(mod_id, mod_id)
@@ -57,6 +58,7 @@ require("mod.%s.event.save")
    local tmpl_event_save_lua = ([[
 -- Initialize save data for a new save game here, or remove this file if it's
 -- unnecessary.
+local Event = require("api.Event")
 
 local function init_save()
    local s = save.%s

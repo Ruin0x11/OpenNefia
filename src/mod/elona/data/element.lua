@@ -30,14 +30,16 @@ local element = {
          -- <<<<<<<< shade2/chara_func.hsp:1459 		if (ele=rsResFire)or(dmgSource=dmgFromFire):dmg= ..
       end,
 
-      on_damage_tile = function(self, x, y, chara)
-         Effect.damage_map_fire(x, y, chara)
+      on_damage_tile = function(self, x, y, source)
+         -- >>>>>>>> shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ...
+         Effect.damage_map_fire(x, y, source, source:current_map())
+         -- <<<<<<<< shade2/proc.hsp:1774 	if ele=rsResFire:mapitem_fire dx,dy ..
       end,
 
       on_damage = function(chara, params)
-         if not chara:has_effect("elona.wet") then
-            Gui.mes("Mef add fire")
-         end
+         -- >>>>>>>> shade2/chara_func.hsp:1560 		if (ele=rsResFire)or(dmgSource=dmgFromFire): ite ...
+         Effect.damage_chara_items_fire(chara)
+         -- <<<<<<<< shade2/chara_func.hsp:1560 		if (ele=rsResFire)or(dmgSource=dmgFromFire): ite ..
       end,
 
       on_kill = function(chara, params)
@@ -46,7 +48,7 @@ local element = {
          if class.is_an(IMapObject, params.source) then
             origin = params.source
          end
-         Mef.create("elona.fire", chara.x, chara.y, { duration = Rand.rnd(10) + 5, power = 100, origin = origin })
+         Mef.create("elona.fire", chara.x, chara.y, { duration = Rand.rnd(10) + 5, power = 100, origin = origin }, chara:current_map())
          -- <<<<<<<< shade2/chara_func.hsp:1645 			} ..
       end
    },
@@ -59,9 +61,16 @@ local element = {
       death_anim = "base.anim_elem_cold",
       rarity = 1,
 
-      on_damage_tile = function(self, x, y, chara)
--- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
-         Effect.damage_map_ice(x, y, chara)
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ...
+         Effect.damage_chara_items_cold(chara)
+         -- <<<<<<<< shade2/chara_func.hsp:1561 		if (ele=rsResCold): item_cold tc,-1 ..
+      end,
+
+      on_damage_tile = function(self, x, y, source)
+         -- >>>>>>>> shade2/proc.hsp:1706 	if ele=rsResCold:mapitem_cold dx,dy ...
+         Effect.damage_map_cold(x, y, source, source:current_map())
+         -- <<<<<<<< shade2/proc.hsp:1706 	if ele=rsResCold:mapitem_cold dx,dy ..
       end,
    },
    {
@@ -294,6 +303,14 @@ local element = {
       elona_id = 63,
       sound = "base.atk_poison",
       death_anim = "base.anim_elem_poison",
+
+      on_damage = function(chara, params)
+         -- >>>>>>>> shade2/chara_func.hsp:1557 			if ele=rsResAcid	: if (tc=pc)or(rnd(3)=0):item_ ...
+         if chara:is_player() or Rand.one_in(3) then
+            Effect.damage_chara_item_acid(chara)
+         end
+         -- <<<<<<<< shade2/chara_func.hsp:1557 			if ele=rsResAcid	: if (tc=pc)or(rnd(3)=0):item_ ..
+      end
    },
    {
       _id = "hunger",

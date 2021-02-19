@@ -51,6 +51,7 @@ function God.modify_piety(chara, amount, params)
 end
 
 function God.make_skill_blessing(skill, coefficient, add)
+   -- data["base.skill"]:ensure(skill) TODO
    return function(chara)
       if chara:has_skill(skill) then
          local amount = math.clamp((chara:calc("piety") or 0) / coefficient, 1, add + chara:skill_level("elona.faith") / 10)

@@ -8,7 +8,6 @@ local ItemMemory = require("mod.elona_sys.api.ItemMemory")
 local Calc = require("mod.elona.api.Calc")
 local ExHelp = require("mod.elona.api.ExHelp")
 local Event = require("api.Event")
-local Map = require("api.Map")
 local Input = require("api.Input")
 local Enum = require("api.Enum")
 local IChara = require("api.chara.IChara")
@@ -16,12 +15,13 @@ local Area = require("api.Area")
 local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
+local Mef = require("api.Mef")
 
 local Effect = {}
 
 --- @tparam curse_state curse_state
 function Effect.is_cursed(curse_state)
-   return curse_state == "cursed" or curse_state == "doomed"
+   return curse_state == Enum.CurseState.Cursed or curse_state == Enum.CurseState.Doomed
 end
 
 --- @tparam IChara chara
@@ -168,7 +168,7 @@ function Effect.apply_food_curse_state(chara, curse_state)
          Gui.mes("food.eat_status.bad", chara)
       end
       Effect.vomit(chara)
-   elseif curse_state == "blessed" then
+   elseif curse_state == Enum.CurseState.Blessed then
       if chara:is_in_fov() then
          Gui.mes("food.eat_status.good", chara)
       end
@@ -217,8 +217,8 @@ function Effect.vomit(chara)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_constitution", -75)
       Skill.gain_fixed_skill_exp(chara, "elona.stat_charisma", -100)
    else
-      if (chara:is_allied() and chara.anorexia_count > 10)
-         or (not chara:is_allied() and Rand.one_in(4))
+      if (chara:is_in_player_party() and chara.anorexia_count > 10)
+         or (not chara:is_in_player_party() and Rand.one_in(4))
       then
          if Rand.one_in(5) then
             chara.has_anorexia = true
@@ -304,7 +304,7 @@ function Effect.eat_food(chara, food)
             Gui.mes_c("food.passed_rotten", "SkyBlue")
             chara:damage_hp(999, "elona.rotten_food")
             local player = Chara.player()
-            if not Chara.is_alive(chara) and chara:reaction_towards() > 0 then
+            if not Chara.is_alive(chara) and chara:relation_towards() > Enum.Relation.Neutral then
                Effect.modify_karma(player, -5)
             else
                Effect.modify_karma(player, -1)
@@ -394,6 +394,136 @@ function Effect.try_to_identify_item(item, power)
    return Effect.identify_item(item, level)
 end
 
+-- <<<<<<<< shade2/item.hsp:695 	} ..
+local FOOD_CHIPS = {
+   ["elona.bread"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_sweet_5",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_sweet_5",
+      [5] = "elona.item_dish_bread_5",
+      [6] = "elona.item_dish_bread_6",
+      [7] = "elona.item_dish_bread_7",
+      [8] = "elona.item_dish_bread_8",
+      [9] = "elona.item_dish_bread_9"
+   },
+   ["elona.egg"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_egg_3",
+      [4] = "elona.item_dish_meat_8",
+      [5] = "elona.item_dish_egg_3",
+      [6] = "elona.item_dish_vegetable_4",
+      [7] = "elona.item_hero_cheese",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_meat_7"
+   },
+   ["elona.fish"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_fish_3",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_vegetable_4",
+      [6] = "elona.item_dish_fish_3",
+      [7] = "elona.item_dish_fish_7",
+      [8] = "elona.item_dish_fish_3",
+      [9] = "elona.item_dish_fish_3"
+   },
+   ["elona.fruit"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_fruit_4",
+      [6] = "elona.item_dish_fruit_6",
+      [7] = "elona.item_dish_fruit_6",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_fruit_4"
+   },
+   ["elona.meat"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_3",
+      [4] = "elona.item_dish_meat_4",
+      [5] = "elona.item_dish_meat_5",
+      [6] = "elona.item_dish_meat_5",
+      [7] = "elona.item_dish_meat_7",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_4"
+   },
+   ["elona.pasta"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_meat_8",
+      [3] = "elona.item_dish_pasta_3",
+      [4] = "elona.item_dish_pasta_4",
+      [5] = "elona.item_dish_pasta_4",
+      [6] = "elona.item_dish_pasta_3",
+      [7] = "elona.item_dish_pasta_3",
+      [8] = "elona.item_dish_pasta_4",
+      [9] = "elona.item_dish_pasta_3"
+   },
+   ["elona.sweet"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_sweet_3",
+      [4] = "elona.item_dish_fruit_4",
+      [5] = "elona.item_dish_sweet_5",
+      [6] = "elona.item_dish_fruit_4",
+      [7] = "elona.item_dish_egg_8",
+      [8] = "elona.item_dish_egg_8",
+      [9] = "elona.item_dish_egg_8"
+   },
+   ["elona.vegetable"] = {
+      [0] = "elona.item_dish_charred",
+      [1] = "elona.item_dish_charred",
+      [2] = "elona.item_dish_charred",
+      [3] = "elona.item_dish_meat_8",
+      [4] = "elona.item_dish_vegetable_4",
+      [5] = "elona.item_dish_meat_7",
+      [6] = "elona.item_dish_meat_8",
+      [7] = "elona.item_dish_vegetable_4",
+      [8] = "elona.item_dish_meat_8",
+      [9] = "elona.item_dish_meat_7"
+   }
+}
+
+-- >>>>>>>> shade2/text.hsp:645 *item_foodInit ..
+function Item.get_food_image(food_type, food_quality)
+   local t = FOOD_CHIPS[food_type]
+   if not t then
+      return "elona.item_dish_charred"
+   end
+
+   local image = t[food_quality]
+
+   return image or "elona.item_dish_charred"
+end
+-- <<<<<<<< shade2/text.hsp:655 	return ...
+
+
+-- >>>>>>>> shade2/item_func.hsp:705 #deffunc make_dish int ci,int p ..
+function Effect.make_dish(item, quality)
+   local food_type = item.params and item.params.food_type
+   assert(food_type, ("'%s' isn't a cookable food."):format(item._id))
+
+   item.image = Item.get_food_image(food_type, quality)
+   item.weight = 500
+   if item.spoilage_date and item.spoilage_date >= 0 then
+      item.spoilage_date = 72 + World.date_hours()
+   end
+   item.params.food_quality = quality
+
+   return item
+end
+-- <<<<<<<< shade2/item_func.hsp:709 	return ..
+
 function Effect.damage_insanity(chara, delta)
    if chara:calc("quality") >= 4 then
       return
@@ -405,7 +535,7 @@ function Effect.damage_insanity(chara, delta)
    end
 
    delta = math.floor(delta / resistance)
-   if chara:is_allied() and chara:has_trait("elona.god_heal") then
+   if chara:is_in_player_party() and chara:has_trait("elona.god_heal") then
       delta = delta - Rand.rnd(4)
    end
 
@@ -590,6 +720,10 @@ function Effect.decrement_fame(chara, fraction)
 end
 
 function Effect.do_stamina_check(source, base_cost, related_skill_id)
+   if not source:is_player() then
+      return true
+   end
+
    local sp_cost = base_cost / 2 + 1
    if source.stamina < 50 and source.stamina < Rand.rnd(75) then
       source:damage_sp(sp_cost)
@@ -602,8 +736,9 @@ function Effect.do_stamina_check(source, base_cost, related_skill_id)
    return true
 end
 
-function Effect.is_visible(chara)
-   local is_invisible = chara:calc("is_invisible") and not (Chara.player():calc("can_see_invisible") or chara:has_effect("elona.wet"))
+function Effect.is_visible(chara, viewer)
+   viewer = viewer or Chara.player()
+   local is_invisible = chara:calc("is_invisible") and not (viewer:calc("can_see_invisible") or chara:has_effect("elona.wet"))
    return not is_invisible
 end
 
@@ -611,25 +746,317 @@ end
 function Effect.get_wet(chara, amount)
    chara:apply_effect("elona.wet", amount)
    if chara:is_in_fov() then
-      Gui.mes("misc.wet.gets_wet")
+      Gui.mes("misc.wet.gets_wet", chara)
       if chara:calc("is_invisible") then
-         Gui.mes("misc.wet.is_revealed")
+         Gui.mes("misc.wet.is_revealed", chara)
       end
    end
 end
 
-function Effect.damage_map_fire(x, y, origin)
-   -- TODO
+function Effect.create_potion_puddle(x, y, item, chara)
+   -- >>>>>>>> shade2/action.hsp:111 		efP=50+sThrow(cc)*10 ...
+   local map = chara:current_map()
+   local power = 50 + chara:skill_level("elona.throwing") * 10
+   if item.proto.on_create_potion_puddle then
+      item.proto.on_create_potion_puddle(item, x, y, chara)
+   else
+      local puddle = Mef.create("elona.potion", x, y, { origin = chara, duration = -1, power = power }, map)
+      if puddle then
+         puddle.color = item:calc("color")
+         puddle.params.item_id = item._id
+         puddle.params.curse_state = item:calc("curse_state")
+      end
+   end
+   -- <<<<<<<< shade2/action.hsp:114 		addMef tlocX,tlocY,mefPotion,27,-1,efP,cc,iId(ci ..
 end
 
-function Effect.damage_map_ice(x, y, origin)
-   -- TODO
+local FLAMMABLE_CATEGORIES = {
+   "elona.rod",
+   "elona.tree",
+   "elona.book",
+   "elona.scroll",
+   "elona.spellbook",
+}
+
+function Effect.damage_item_acid(item)
+   local owner = item:get_owning_chara()
+
+   if not item:calc("is_acidproof") then
+      Gui.mes("item.acid.damaged", owner, item:build_name(nil, true))
+      item.bonus = item.bonus - 1
+      return true
+   else
+      Gui.mes("item.acid.immune", owner, item:build_name(nil, true))
+      return false
+   end
+end
+
+function Effect.damage_chara_item_acid(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1152 	if ciRef!-1:ci=ciRef:else{ ...
+   local elona_Item = require("mod.elona.api.Item")
+
+   local pred = function(item) return Rand.one_in(math.clamp(30, 1, 30)) and item:calc("bonus") > -4 end
+   local target = chara:iter_equipment():filter(pred):nth(1)
+   if target == nil or not elona_Item.is_equipment(target) then
+      return false
+   end
+
+   return Effect.damage_item_acid(target)
+   -- <<<<<<<< shade2/chara_func.hsp:1161 	if iType(ci)>=fltHeadItem : return ...
+
+end
+
+function Effect.damage_item_fire(item, fireproof_blanket)
+   -- >>>>>>>> shade2/chara_func.hsp:1195 	rowAct_item ci ...
+   if not Item.is_alive(item) then
+      return false
+   end
+
+   local owner = item:get_owning_chara()
+
+   item:remove_activity()
+
+   if item:calc("is_fireproof") or item:calc("is_precious") then
+      return false
+   end
+
+   if item:has_category("elona.food") and item.params.food_quality == 0 then
+      if owner then
+         Gui.mes_c_visible("item.someones_item.get_broiled", owner, "Orange", item, owner)
+      else
+         Gui.mes_c_visible("item.item_on_the_ground.get_broiled", item, "Orange", item)
+      end
+      Effect.make_dish(item, Rand.rnd(5) + 1)
+      return true
+   end
+
+   if item:has_category("elona.container")
+      or item:has_category("elona.misc_item")
+      or item:has_category("elona.gold")
+   then
+      return false
+   end
+
+   if item:is_equipped() and Rand.one_in(2) then
+      return false
+   end
+
+   local is_flammable = fun.iter(FLAMMABLE_CATEGORIES):any(function(cat) return item:has_category(cat) end)
+
+   if not is_flammable then
+      if not Rand.one_in(4) then
+         return false
+      end
+      if owner == nil and not Rand.one_in(4) then
+         return false
+      end
+   end
+
+   if fireproof_blanket and Item.is_alive(fireproof_blanket) then
+      if owner then
+         Gui.mes_visible("item.fireproof_blanket.protects_item", owner.x, owner.y, fireproof_blanket:build_name(1), owner)
+      end
+      if fireproof_blanket.charges > 0 then
+         fireproof_blanket.charges = fireproof_blanket.charges - 1
+      else
+         if Rand.one_in(20) then
+            fireproof_blanket.amount = fireproof_blanket.amount - 1
+            if owner then
+               Gui.mes_visible("item.fireproof_blanket.turns_to_dust", owner.x, owner.y, fireproof_blanket:build_name(1))
+            end
+            return true
+         end
+      end
+      return false
+   end
+
+   local lost_amount = math.floor(Rand.rnd(item.amount) / 2 + 1)
+
+   if owner then
+      if item:is_equipped() then
+         Gui.mes_c_visible("item.someones_item.equipment_turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount), lost_amount, owner)
+         item:unequip()
+         item:remove_ownership()
+         owner:refresh()
+      else
+         Gui.mes_c_visible("item.someones_item.turns_to_dust", owner.x, owner.y, "Purple", item:build_name(lost_amount, true), lost_amount, owner)
+      end
+   else
+      Gui.mes_c_visible("item.item_on_the_ground.turns_to_dust", item.x, item.y, "Purple", item:build_name(lost_amount), lost_amount)
+   end
+
+   item.amount = item.amount - lost_amount
+   item:refresh_cell_on_map()
+   if owner then
+      owner:refresh_weight()
+   end
+
+   return true
+   -- <<<<<<<< shade2/chara_func.hsp:1233 	return f ..
+end
+
+function Effect.damage_chara_items_fire(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1174 #deffunc item_fire int tc,int ciRef ...
+   if chara:resist_level("elona.fire") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+      return false
+   end
+
+   local targets = {}
+   local fireproof_blanket
+   for _, item in chara:iter_items() do
+      if Item.is_alive(item) then
+         if item._id == "elona.fireproof_blanket" and not fireproof_blanket then
+            fireproof_blanket = item:separate()
+         else
+            targets[#targets+1] = item
+         end
+      end
+   end
+
+   if #targets == 0 then
+      return false
+   end
+
+   local did_something = false
+   for _ = 1, 3 do
+      local target = Rand.choice(targets)
+
+      did_something = Effect.damage_item_fire(target, fireproof_blanket) or did_something
+   end
+
+   return did_something
+   -- <<<<<<<< shade2/chara_func.hsp:1233 	return f ..
+end
+
+function Effect.damage_map_fire(x, y, origin, map)
+   -- >>>>>>>> shade2/chara_func.hsp:1235 #deffunc mapitem_fire int x,int y ...
+   local item = Item.at(x, y, map):nth(1)
+   if item then
+      local did_something = Effect.damage_item_fire(item)
+      if did_something then
+         local mef = Mef.at(x, y, map)
+         if mef then
+            mef:remove_ownership()
+         end
+         Mef.create("elona.fire", x, y, { duration = Rand.rnd(10) + 5, 100, origin = origin }, map)
+      end
+      map:refresh_tile(x, y)
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1246 	return ..
+end
+
+function Effect.damage_item_ice(item, coldproof_blanket)
+   -- >>>>>>>> shade2/chara_func.hsp:1265 	if max=0:return false ...
+   if not Item.is_alive(item) then
+      return false
+   end
+
+   local owner = item:get_owning_chara()
+
+   item:remove_activity()
+
+   if item:calc("is_precious") then
+      return false
+   end
+
+   if item:has_category("elona.container")
+      or item:has_category("elona.misc_item")
+      or item:has_category("elona.gold")
+   then
+      return false
+   end
+
+   if item:calc("quality") >= Enum.Quality.Great or item:is_equipped() then
+      return false
+   end
+
+   if not item:has_category("elona.drink") and not Rand.one_in(30) then
+      return false
+   end
+
+   if coldproof_blanket and Item.is_alive(coldproof_blanket) then
+      if owner then
+         Gui.mes_visible("item.coldproof_blanket.protects_item", owner.x, owner.y, coldproof_blanket:build_name(1), owner)
+      end
+      if coldproof_blanket.charges > 0 then
+         coldproof_blanket.charges = coldproof_blanket.charges - 1
+      else
+         if Rand.one_in(20) then
+            coldproof_blanket.amount = coldproof_blanket.amount - 1
+            if owner then
+               Gui.mes_visible("item.coldproof_blanket.is_broken_to_pieces", owner.x, owner.y, coldproof_blanket:build_name(1))
+            end
+            return true
+         end
+      end
+      return false
+   end
+
+   local lost_amount = math.floor(Rand.rnd(item.amount) / 2 + 1)
+
+   if owner then
+      Gui.mes_c_visible("item.someones_item.breaks_to_pieces", owner.x, owner.y, "Purple", item:build_name(lost_amount, true), lost_amount, owner)
+   else
+      Gui.mes_c_visible("item.item_on_the_ground.breaks_to_pieces", item.x, item.y, "Purple", item:build_name(lost_amount), lost_amount)
+   end
+
+   item.amount = item.amount - lost_amount
+   item:refresh_cell_on_map()
+   if owner then
+      owner:refresh_weight()
+   end
+
+   return true
+   -- <<<<<<<< shade2/chara_func.hsp:1289 	return f ..
+end
+
+function Effect.damage_chara_items_cold(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1252 	if tc!-1{ ...
+   if chara:resist_level("elona.cold") >= 6 or chara:calc("quality") >= Enum.Quality.Great then
+      return false
+   end
+
+   local targets = {}
+   local coldproof_blanket
+   for _, item in chara:iter_items() do
+      if Item.is_alive(item) then
+         if item._id == "elona.coldproof_blanket" and not coldproof_blanket then
+            coldproof_blanket = item:separate()
+         else
+            targets[#targets+1] = item
+         end
+      end
+   end
+
+   if #targets == 0 then
+      return false
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1263 		} ..
+
+   local did_something = false
+   for _ = 1, 3 do
+      local target = Rand.choice(targets)
+
+      did_something = Effect.damage_item_ice(target, coldproof_blanket) or did_something
+   end
+
+   return did_something
+end
+
+function Effect.damage_map_cold(x, y, origin, map)
+   -- >>>>>>>> shade2/chara_func.hsp:1291 #deffunc mapitem_cold int x,int y ...
+   local item = Item.at(x, y, map):nth(1)
+   if item then
+      Effect.damage_item_ice(item)
+      map:refresh_tile(x, y)
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1302 	return ..
 end
 
 function Effect.start_incognito(source)
    local filter = function(chara)
       local is_wandering_merchant = chara:iter_roles("elona.shopkeeper")
-          :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
+      :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
       if is_wandering_merchant then
          return false
       end
@@ -638,13 +1065,13 @@ function Effect.start_incognito(source)
          return false
       end
 
-      return chara:base_reaction_towards(source) >= 0
-         and chara:reaction_towards(source) < 0
+      return chara:base_relation_towards(source) >= Enum.Relation.Hate
+         and chara:relation_towards(source) <= Enum.Relation.Hate
    end
 
    local apply = function(chara)
-      chara.ai_state.hate = 0
-      chara:reset_reaction_at(source)
+      chara.aggro = 0
+      chara:reset_relation_towards(source)
       chara:set_emotion_icon("elona.question", 2)
    end
 
@@ -657,56 +1084,12 @@ function Effect.end_incognito(source)
    end
 
    local apply = function(chara)
-      chara:mod_reaction_at(source, -100)
-      chara.ai_state.hate = 80
+      chara:set_relation_towards(source, Enum.Relation.Enemy)
+      chara:set_aggro(source, 80)
       chara:set_emotion_icon("elona.angry", 2)
-      require("api.Log").info("%s", chara.name)
    end
 
    Chara.iter():filter(filter):each(apply)
-end
-
-function Effect.act_hostile_towards(source, target)
-   if not source:is_allied() or target:is_player() then
-      return
-   end
-
-   if target:reaction_towards(source) >= 0 then
-      target:set_emotion_icon("elona.angry", 4)
-   end
-
-   if target:reaction_towards(source) >= 1000 then
-      Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
-   else
-      if target:reaction_towards(source) >= 100 then
-         Effect.modify_karma(source, -2)
-      end
-      -- TODO fire giant
-      if target:reaction_towards(source) > 0 then
-         Gui.mes_c("misc.hostile_action.glares_at_you", "Purple", target)
-         target:set_reaction_at(source, 0) -- reaction towards "base.friendly" is 100
-      else
-         if target:reaction_towards(source) >= 0 then
-            Gui.mes_c("misc.hostile_action.gets_furious", "Purple", target)
-         end
-         target:set_reaction_at(source, -100)
-         target.ai_state.hate = 80
-         target:set_target(source)
-      end
-   end
-
-   if target.is_livestock and Rand.one_in(50) then
-      Gui.mes_c("misc.hostile_action.get_excited", "Red")
-      local anger = function(chara)
-         chara:set_reaction_at(source, -100)
-         chara:set_target(source)
-         chara.ai_state.hate = 20
-         if target:reaction_towards(source) >= 0 then
-            target:set_emotion_icon("elona.angry", 3)
-         end
-      end
-      Chara.iter():filter(function(c) return target.is_livestock end):each(anger)
-   end
 end
 
 function Effect.create_new_building(deed)
@@ -810,7 +1193,7 @@ function Effect.on_kill(attacker, victim)
    -- TODO arena
 
    if class.is_an(IChara, attacker) then
-      if attacker:is_allied() then
+      if attacker:is_in_player_party() then
          save.base.total_killed = save.base.total_killed + 1
       end
    end

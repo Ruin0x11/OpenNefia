@@ -97,14 +97,15 @@ end
 --- @treturn[opt] IChara
 function IItem:get_owning_chara()
    local IChara = require("api.chara.IChara")
+   local location = self.location
 
-   if class.is_an(IChara, self.location) then
-      if self.location:has_item(self) then
-         return self.location
+   while location ~= nil do
+      if class.is_an(IChara, location) then
+         if location:has_item(self) then
+            return location
+         end
       end
-   elseif class.is_an(EquipSlots, self.location) then
-      -- HACK
-      return self.location.owner
+      location = location._parent or nil
    end
 
    return nil
@@ -151,13 +152,13 @@ end
 
 --- @treturn bool
 function IItem:is_blessed()
-   return self:calc("curse_state") == "blessed"
+   return self:calc("curse_state") == Enum.CurseState.Blessed
 end
 
 --- @treturn bool
 function IItem:is_cursed()
    local curse_state = self:calc("curse_state")
-   return curse_state == "cursed" or curse_state == "doomed"
+   return curse_state == Enum.CurseState.Cursed or curse_state == Enum.CurseState.Doomed
 end
 
 --- @treturn[opt] InstancedMap
@@ -312,10 +313,10 @@ function IItem:calc_ui_color()
 
    if self:calc("identify_state") == Enum.IdentifyState.Full then
       local curse_state = self:calc("curse_state")
-      if     curse_state == "doomed"  then return {100, 10, 100}
-      elseif curse_state == "cursed"  then return {150, 10, 10}
-      elseif curse_state == "none"    then return {10, 40, 120}
-      elseif curse_state == "blessed" then return {10, 110, 30}
+      if     curse_state == Enum.CurseState.Doomed  then return {100, 10, 100}
+      elseif curse_state == Enum.CurseState.Cursed  then return {150, 10, 10}
+      elseif curse_state == Enum.CurseState.Normal    then return {10, 40, 120}
+      elseif curse_state == Enum.CurseState.Blessed then return {10, 110, 30}
       end
    end
 

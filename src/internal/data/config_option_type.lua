@@ -43,19 +43,17 @@ data:add_multi(
                return false, err
             end
 
-            if option.min_value or option.max_value then
-               if not (option.min_value and option.max_value) then
-                  return false, ("Both 'min_value' and 'max_value' must be specified if one is declared (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if type(option.min_value) ~= "number" or type(option.max_value) ~= "number" then
-                  return false, ("'min_value' and 'max_value' must both be numbers (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if option.min_value > option.max_value then
-                  return false, ("'min_value' must be less than max_value (got: %d, %d)")
-                     :format(option.min_value, option.max_value)
-               end
+            if option.min_value and type(option.min_value) ~= "number" then
+               return false, ("'min_value' must be a number (got: %s)")
+                  :format(option.min_value)
+            end
+            if option.max_value and type(option.max_value) ~= "number" then
+               return false, ("'max_value' must be a number (got: %s)")
+                  :format(option.max_value)
+            end
+            if option.min_value and option.max_value and option.min_value > option.max_value then
+               return false, ("'min_value' must be less than max_value (got: %d, %d)")
+                  :format(option.min_value, option.max_value)
             end
 
             return true
@@ -76,19 +74,17 @@ data:add_multi(
                return false, ("expected integer, got %s"):format(math.type(value))
             end
 
-            if option.min_value or option.max_value then
-               if not (option.min_value and option.max_value) then
-                  return false, ("Both 'min_value' and 'max_value' must be specified if one is declared (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if math.type(option.min_value) ~= "integer" or math.type(option.max_value) ~= "integer" then
-                  return false, ("'min_value' and 'max_value' must both be integers (got: %s, %s)")
-                     :format(option.min_value, option.max_value)
-               end
-               if option.min_value > option.max_value then
-                  return false, ("'min_value' must be less than max_value (got: %d, %d)")
-                     :format(option.min_value, option.max_value)
-               end
+            if option.min_value and math.type(option.min_value) ~= "integer" then
+               return false, ("'min_value' must be an integer (got: %s)")
+                  :format(option.min_value)
+            end
+            if option.max_value and math.type(option.max_value) ~= "integer" then
+               return false, ("'max_value' must be an integer (got: %s)")
+                  :format(option.max_value)
+            end
+            if option.min_value and option.max_value and option.min_value > option.max_value then
+               return false, ("'min_value' must be less than max_value (got: %d, %d)")
+                  :format(option.min_value, option.max_value)
             end
 
             return true
@@ -109,7 +105,6 @@ data:add_multi(
                   error(("Choices returned from callback must be table, got: %s"):format(tostring(choices)))
                end
             end
-            print(inspect(choices))
             return choices[1]
          end,
 
@@ -160,29 +155,38 @@ data:add_multi(
       {
          _id = "data_id",
 
-         fields = {},
          widget = function(proto)
             local ConfigItemEnumWidget = require("api.gui.menu.config.item.ConfigItemEnumWidget")
             local I18N = require("api.I18N")
+            local filter = proto.filter or function(i) return i end
+            local formatter = proto.formatter or function(_id, value) return I18N.get("ui.language." .. value) end
             local sort = function(a, b) return a < b end
+            local choices = data[proto.data_type]:iter():extract("_id"):filter(filter):into_sorted(sort):to_list()
+            if #choices == 0 then
+               choices = { "none" }
+            end
             local proto = {
                _id = proto._id,
-               formatter = function(_id, value)
-                  return I18N.get("ui.language." .. value)
-               end,
-               choices = data[proto.data_type]:iter():extract("_id"):into_sorted(sort):to_list()
+               formatter = formatter,
+               choices = choices
             }
             return ConfigItemEnumWidget:new(proto)
          end,
 
          default = function(option)
-            return data[option.data_type]:iter():nth(1)._id
+            local filter = option.filter or function(i) return i end
+            local result = data[option.data_type]:iter():extract("_id"):filter(filter):nth(1)
+            return result or "none"
          end,
 
          validate = function(option, value)
             local ok, err = typecheck(value, "string")
             if not ok then
                return false, err
+            end
+
+            if value == "none" then
+               return true
             end
 
             local proxy = data[option.data_type]

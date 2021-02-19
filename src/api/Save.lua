@@ -15,9 +15,10 @@ local save_store = require("internal.save_store")
 local Save = {}
 
 --- Saves the game.
-function Save.save_game()
-   local save_id = config.base._save_id
-   assert(save_id)
+function Save.save_game(save_id)
+   local save_id = save_id or config.base._save_id
+   assert(type(save_id) == "string")
+   config.base._save_id = save_id
 
    local map = Map.current()
 
@@ -53,7 +54,7 @@ end
 --- Loads the current save.
 function Save.load_game(save_id)
    save_id = save_id or config.base._save_id
-   assert(save_id)
+   assert(type(save_id) == "string")
    config.base._save_id = save_id
 
    local success, map

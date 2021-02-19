@@ -43,6 +43,7 @@ local function iter(a, i)
    end
 
    local d = a.map:get_object_of_type("base.chara", a.uids[i])
+   assert(d ~= nil, a.uids[i])
    i = i + 1
 
    return i, d
@@ -64,21 +65,14 @@ function Chara.iter(map)
    return Chara.iter_all(map):filter(Chara.is_alive)
 end
 
---- Iterates the characters in the player's party, including the
---- player themselves.
----
---- @treturn Iterator(IChara)
-function Chara.iter_party(map)
-   local party = table.append({ Chara.player().uid }, save.base.allies)
-   return fun.wrap(iter, {map = map or field.map, uids = party}, 1)
-end
-
 --- Iterates the characters in the player's party, not including the
 --- player.
 ---
 --- @treturn Iterator(IChara)
 function Chara.iter_allies(map)
-   return fun.wrap(iter, {map = map or field.map, uids = save.base.allies}, 1)
+   local party = Chara.player():get_party()
+   local members = save.base.parties:get(party).members
+   return fun.wrap(iter, {map = map or field.map, uids = table.shallow_copy(members)}, 1)
 end
 
 --- Iterates all characters that are not allied (the player or a pet).
@@ -86,7 +80,7 @@ end
 --- @treturn Iterator(IChara)
 function Chara.iter_others(map)
    map = map or field.map
-   return map:iter_charas():filter(function(c) return not c:is_allied() end)
+   return map:iter_charas():filter(function(c) return not c:is_in_player_party() end)
 end
 
 --- Looks for a character with the given UID or base.chara ID in the
@@ -120,7 +114,7 @@ function Chara.find(id, kind, map)
    end
 
    local pred = function(chara)
-      return Chara.is_alive(chara, map) and chara[compare_field] == id
+      return Chara.is_alive(chara) and chara[compare_field] == id
    end
 
    return iter:filter(pred):nth(1)
@@ -155,13 +149,20 @@ function Chara.set_player(chara)
 
    chara:emit("base.on_set_player", {previous_player=field.player})
 
+   local party_id = chara:get_party()
+   if not party_id then
+      party_id = save.base.parties:add_party()
+      save.base.parties:add_member(party_id, chara)
+   end
+   save.base.parties:set_leader(party_id, chara)
+
    field.player = chara
 
    local c = Chara.player()
 
-   c.faction = "base.friendly"
+   c.relation = Enum.Relation.Ally
 
-   c:reset_all_reactions()
+   c:reset_all_relations()
    c:heal_to_max()
    c:refresh()
 
@@ -248,18 +249,18 @@ function Chara.create(id, x, y, params, where)
       MapObject.finalize(chara, gen_params)
    end
 
-   if where then
-      -- TODO: may want to return status
-      local Map = require("api.Map")
-      Map.try_place_chara(chara, x, y, where)
-   end
-
    if chara and not params.no_build then
       chara:refresh()
    end
 
    chara:instantiate()
    chara:emit("base.on_chara_generated")
+
+   if where then
+      -- TODO: may want to return status
+      local Map = require("api.Map")
+      Map.try_place_chara(chara, x, y, where)
+   end
 
    return chara
 end

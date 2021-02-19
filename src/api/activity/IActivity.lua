@@ -37,6 +37,8 @@ local function interrupt_prompt(activity, _, should_stop)
          Gui.mes("Should we stop the activity? ")
          return Input.yes_no()
       end
+   else
+      return true
    end
 
    return should_stop

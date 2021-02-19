@@ -191,7 +191,7 @@ function QuestMap.generate_party(difficulty)
          local chara = Charagen.create(x, y, filter, map)
          if chara then
             chara:add_role("elona.special")
-            chara.faction = "base.citizen" -- TODO faction
+            chara.relation = Enum.Relation.Dislike
             chara.gold = chara.level * (20 + Rand.rnd(20))
          end
       end
@@ -208,7 +208,7 @@ function QuestMap.generate_party(difficulty)
    local function special_chara(id)
       local chara = Chara.create(id, nil, nil, {}, map)
       chara:add_role("elona.special")
-      chara.faction = "base.citizen" -- TODO faction
+      chara.relation = Enum.Relation.Dislike
    end
 
    special_chara("elona.loyter")
@@ -315,7 +315,7 @@ function QuestMap.generate_huntex(map_archetype_id, chara_id, enemy_level, diffi
             id = chara_id
          }
          local chara = Charagen.create(nil, nil, filter, map)
-         chara.faction = "base.enemy"
+         chara.relation = Enum.Relation.Enemy
       end
    end
    -- <<<<<<<< shade2/map_rand.hsp:726 		} ..
@@ -341,7 +341,7 @@ function QuestMap.generate_conquer(map_archetype_id, quest)
          id = chara_id
       }
       local chara = Charagen.create(nil, nil, filter, map)
-      chara.faction = "base.enemy"
+      chara.relation = Enum.Relation.Enemy
       quest.params.target_chara_uid = chara.uid
    end
    -- <<<<<<<< shade2/map_rand.hsp:721 		} ..

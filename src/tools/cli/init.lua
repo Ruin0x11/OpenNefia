@@ -23,6 +23,7 @@ local function build_app()
 
    local verify_command = parser:command("verify", "Ensures the environment can initialize properly.")
    verify_command:flag("-l --load-game", "Load the full game when verifying.")
+   verify_command:flag("-m --load-all-mods", "Load all mods when verifying.")
 
    local repl_command = parser:command("repl", "Starts the REPL.")
    repl_command:flag("-l --load-game", "Load the full game on startup.")
@@ -34,6 +35,7 @@ local function build_app()
        :argname("<filter>")
    test_command:flag("-d --debug-on-error", "Starts a REPL on test failure.")
    test_command:flag("-s --seed", "Seed for random number generators.")
+   test_command:flag("-m --load-all-mods", "Load all mods when testing.")
 
    do
       local mod_command = parser:command("mod", "Operate on mods.")
@@ -47,7 +49,9 @@ local function build_app()
 
    local exec_command = parser:command("exec", "Execute a Lua script using the OpenNefia runtime.")
    exec_command:flag("-l --load-game", "Load the full game before executing.")
+   exec_command:flag("-r --repl-env", "Execute the script using a REPL env instead of a mod env.")
    exec_command:option("-e --exec-code", "A string containing Lua code to execute.")
+   exec_command:flag("-m --load-all-mods", "Load all mods when executing.")
    exec_command:argument("lua_file", "The Lua script to execute. Defaults to standard input.", "-")
 
    return parser

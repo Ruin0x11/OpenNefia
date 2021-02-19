@@ -38,6 +38,9 @@ function MouseHandler:focus()
 end
 
 function MouseHandler:halt_input()
+   -- for _, forward in ipairs(self.forwards) do
+   --    forward:halt_input()
+   -- end
 end
 
 function MouseHandler:update_repeats()

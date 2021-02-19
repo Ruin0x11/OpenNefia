@@ -156,7 +156,7 @@ local function make_fallbacks(fallbacks, fields)
                if mt.__codegen_type == "block_string" then
                   default = field.default[1]
                elseif mt.__codegen_type == "literal" then
-                  default = nil
+                  default = fallbacks[field.name]
                end
             end
          end

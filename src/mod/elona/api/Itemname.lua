@@ -611,7 +611,7 @@ function itemname.en(item, amount, no_article)
       local chara_id = item.params.monster_ball_captured_chara_id
       if chara_id then
          local chara_name = I18N.get("chara." .. chara_id .. ".name")
-         s = s .. ("(%s)"):format(chara_name)
+         s = s .. (" (%s)"):format(chara_name)
       else
          s = s .. I18N.get("item.info." .. _id .. ".level", item.params.monster_ball_max_level)
       end

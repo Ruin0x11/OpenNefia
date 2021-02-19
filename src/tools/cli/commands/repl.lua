@@ -11,41 +11,6 @@ local Repl = require("api.Repl")
 local elona_repl = require("internal.elona_repl")
 local util = require("tools.cli.util")
 
-local function pass_one_turn(turns)
-   if not field.player then
-      error("field not active")
-   end
-
-   turns = turns or 1
-   local ev = "turn_begin"
-   local target_chara, going
-
-   local cb = function()
-      for i=1,turns do
-         Gui.mes(string.format("==== turn %d ====", i))
-         repeat
-            going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
-         until ev == "player_turn_query"
-
-         ev = "turn_end"
-
-         repeat
-            going, ev, target_chara = field_logic.run_one_event(ev, target_chara)
-         until ev == "turn_begin"
-      end
-
-      return going, ev, target_chara
-   end
-
-   local co = coroutine.create(cb)
-   local ok, err = coroutine.resume(co, 0)
-   if not ok or err ~= nil then
-      if type(err) == "string" then
-         error("\n\t" .. (err or "Unknown error."))
-      end
-   end
-end
-
 local function register_thirdparty_module(name)
    local paths = string.format("./thirdparty/%s/?.lua;./thirdparty/%s/?/init.lua", name, name)
    package.path = package.path .. ";" .. paths
@@ -71,8 +36,8 @@ return function(args)
 
    rawset(repl_env, "_PROMPT", "> ")
    rawset(repl_env, "_PROMPT2", ">> ")
-   rawset(repl_env, "pass_turn", pass_one_turn)
-   rawset(repl_env, "lo", util.load_game)
+   rawset(repl_env, "pass_turn", util.pass_turn)
+   rawset(repl_env, "load_game", util.load_game)
 
    local startup_file = fs.to_relative(args["startup_file"], args.working_dir)
    if fs.exists(startup_file) then

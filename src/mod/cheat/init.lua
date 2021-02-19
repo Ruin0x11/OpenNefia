@@ -7,31 +7,31 @@ local Env = require("api.Env")
 local function level_up()
    local player = Chara.player()
 
-   --local levels = 100
-   --for _= 1, levels do
+   -- local levels = 100
+   -- for _= 1, levels do
    --   Skill.gain_level(player)
    --   Skill.grow_primary_skills(player)
-   --end
+   -- end
 
-   -- player:mod_base_skill_level("elona.stat_magic", 10000)
-   -- player:mod_base_skill_level("elona.stat_mana", 10000)
+   player:mod_base_skill_level("elona.stat_magic", 10000)
+   player:mod_base_skill_level("elona.stat_mana", 10000)
 
-   -- Skill.iter_stats()
-   --    :each(function(m)
-   --          player:mod_base_skill_level(m._id, 100, "set")
-   --         end)
+   Skill.iter_stats()
+      :each(function(m)
+            player:mod_base_skill_level(m._id, 100, "set")
+           end)
 
-   -- Skill.iter_skills()
-   --    :each(function(m)
-   --          Skill.gain_skill(player, m._id, 2000, 1000)
-   --         end)
+   Skill.iter_skills()
+      :each(function(m)
+            Skill.gain_skill(player, m._id, 2000, 1000)
+           end)
 
-   -- Skill.gain_skill(player, "elona.mining", 10000)
-   -- player:mod_base_skill_level("elona.healing", 100, "set")
-   -- player:mod_base_skill_level("elona.meditation", 100, "set")
+   Skill.gain_skill(player, "elona.mining", 10000)
+   player:mod_base_skill_level("elona.healing", 100, "set")
+   player:mod_base_skill_level("elona.meditation", 100, "set")
 
-   -- player.gold = 10000000
-   -- player.platinum = 10000
+   player.gold = 10000000
+   player.platinum = 10000
 
    player:refresh()
    player:heal_to_max()

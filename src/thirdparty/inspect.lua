@@ -198,6 +198,11 @@ function Inspector:puts(...)
     len = len + 1
     buffer[len] = args[i]
   end
+  if self.max_length and #buffer >= self.max_length then
+     len = len + 1
+     buffer[len] = "< ... >"
+     error("over length")
+  end
 end
 
 function Inspector:down(f)
@@ -320,6 +325,7 @@ function inspect.inspect(root, options)
   local process       = options.process
   local override_mt   = options.override_mt
   local always_tabify = options.always_tabify
+  local max_length    = options.max_length
 
   if process then
     root = processRecursive(process, root, {}, {})
@@ -335,10 +341,14 @@ function inspect.inspect(root, options)
     indent           = indent,
     always_tabify    = always_tabify,
     override_mt      = override_mt,
+    max_length       = max_length,
     tableAppearances = countTableAppearances(root)
   }, Inspector_mt)
 
-  inspector:putValue(root)
+  local ok, err = pcall(inspector.putValue, inspector, root)
+  if not ok and not err:match(": over length$") then
+     error(err)
+  end
 
   return table.concat(inspector.buffer)
 end

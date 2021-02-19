@@ -4,6 +4,7 @@ local DateTime = require("api.DateTime")
 local UidTracker = require("api.UidTracker")
 local Rand = require("api.Rand")
 local save = require("internal.global.save")
+local parties = require("internal.parties")
 
 local function init_save()
    local s = save.base
@@ -12,7 +13,7 @@ local function init_save()
    s.play_turns = 0
    s.play_days = 0
    s.player = nil
-   s.allies = {}
+   s.parties = parties:new()
    s.uids = UidTracker:new()
    s.map_uids = UidTracker:new()
    s.area_uids = UidTracker:new()

@@ -35,7 +35,7 @@ local function load_image_region(proto)
       return crop(proto)
    end
 
-   error("invalid image asset: must contain {image} or {source,x,y,width,height}")
+   error(("invalid image asset (%s): must contain {image} or {source,x,y,width,height}"):format(proto._id))
 end
 
 function asset_drawable:init(proto)

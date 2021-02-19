@@ -1,7 +1,7 @@
 local IModel = require("mod.wfc.api.model.IModel")
 local Model = require("mod.wfc.api.model.Model")
 local Draw = require("api.Draw")
-local Color = require("mod.elona_sys.api.Color")
+local Color = require("mod.extlibs.api.Color")
 
 local OverlappingModel = class.class("OverlappingModel", IModel)
 
@@ -56,7 +56,7 @@ function OverlappingModel:init(image, N, width, height, periodic_input, periodic
    self.colors = {}
 
    image:mapPixel(function(x, y, r, g, b, a)
-      local color = Color.to_number(Draw.color_to_bytes(r, g, b, a))
+      local color = Color:new_rgb_float(r, g, b, a):to_number()
       local found = 0
 
       for i, v in ipairs(self.colors) do
@@ -176,7 +176,7 @@ function OverlappingModel:to_image_data(image)
          local dx = x < self.model.width - self.N + 1 and 0 or self.N - 1
 
          local c = self.colors[self.patterns[self.model.observed[(y - dy) * self.model.width + x - dx + 1]][dy * self.N + dx + 1] + 1]
-         return Draw.color_from_bytes(Color.from_number(c))
+         return {Color:from_number(c):to_rgb_float()}
       end
    end
 
@@ -197,7 +197,7 @@ function OverlappingModel:to_image_data(image)
                   if self.model.wave[s + 1][t] then
                      contrib = contrib + 1
                      local c = assert(self.colors[self.patterns[t][dy * self.N + dx + 1] + 1])
-                     local ar, ag, ab = Draw.color_from_bytes(Color.from_number(c))
+                     local ar, ag, ab = {Color:from_number(c):to_rgb_float()}
                      r = r + ar
                      g = g + ag
                      b = b + ab

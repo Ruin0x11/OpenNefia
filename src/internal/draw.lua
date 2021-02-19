@@ -387,6 +387,7 @@ function draw.draw_error(err)
    if handler then
       handler:halt_input()
    end
+   love.graphics.setScissor()
    draw.draw_start(error_canvas)
    love.graphics.draw(canvas)
    love.graphics.setColor(0, 0, 0, 128/256)

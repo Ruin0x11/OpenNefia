@@ -93,7 +93,7 @@ data:add {
       local target = params.target
       local map = params.source:current_map()
 
-      if not source:is_player() or target:is_allied() then
+      if not source:is_player() or target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true, { obvious = false }
       end
@@ -113,7 +113,7 @@ data:add {
       if target:calc("quality") >= Enum.Quality.Good then
          Gui.mes("magic.domination.cannot_be_charmed")
       elseif success then
-         target:recruit_as_ally()
+         source:recruit_as_ally(target)
       else
          Gui.mes("magic.common.resists")
       end
@@ -141,7 +141,7 @@ local function do_curse(self, params)
       return true
    end
 
-   if target:is_allied() then
+   if target:is_in_player_party() then
       if target:has_trait("elona.res_curse") and Rand.one_in(3) then
          Gui.mes("magic.curse.no_effect")
          return true
@@ -152,7 +152,7 @@ local function do_curse(self, params)
       if not Item.is_alive(item) then
          return false
       end
-      if item:calc("curse_state") == "blessed" and Rand.one_in(10) then
+      if item:calc("curse_state") == Enum.CurseState.Blessed and Rand.one_in(10) then
          return false
       end
       return true
@@ -179,10 +179,10 @@ local function do_curse(self, params)
    local item = Rand.choice(considering)
 
    Gui.mes_visible("magic.curse.apply", target.x, target.y, target, item)
-   if item.curse_state == "cursed" then
-      item.curse_state = "doomed"
+   if item.curse_state == Enum.CurseState.Cursed then
+      item.curse_state = Enum.CurseState.Doomed
    else
-      item.curse_state = "cursed"
+      item.curse_state = Enum.CurseState.Cursed
    end
    target:refresh()
    Gui.play_sound("base.curse3")
@@ -342,7 +342,7 @@ local function do_sense(self, params, passes, reveal_cb, forget_cb, message)
    local power = params.power
    local map = params.source:current_map()
 
-   if not source:is_allied() then
+   if not source:is_in_player_party() then
       Gui.mes("common.nothing_happens")
       return false, { obvious = false }
    end
@@ -353,7 +353,7 @@ local function do_sense(self, params, passes, reveal_cb, forget_cb, message)
             forget_cb(x, y, map)
          else
             local dist = Pos.dist(source.x, source.y, x, y)
-            if dist < 7 or Rand.rnd(power+1) > Rand.rnd(dist*8+1) or params.curse_state == "blessed" then
+            if dist < 7 or Rand.rnd(power+1) > Rand.rnd(dist*8+1) or params.curse_state == Enum.CurseState.Blessed then
                reveal_cb(x, y, map)
             end
          end
@@ -548,9 +548,9 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      if params.curse_state == "none" then
+      if params.curse_state == Enum.CurseState.Normal then
          Gui.mes_visible("magic.uncurse.apply", target.x, target.y, target)
-      elseif params.curse_state == "blessed" then
+      elseif params.curse_state == Enum.CurseState.Blessed then
          Gui.mes_visible("magic.uncurse.blessed", target.x, target.y, target)
       elseif Effect.is_cursed(params.curse_state) then
          Gui.mes_visible("magic.common.cursed", target.x, target.y, target)
@@ -558,11 +558,11 @@ data:add {
       end
 
       local filter = function(item)
-         if not Item.is_alive(item) or item.curse_state == "none" or item.curse_state == "blessed" then
+         if not Item.is_alive(item) or item.curse_state == Enum.CurseState.Normal or item.curse_state == Enum.CurseState.Blessed then
             return false
          end
 
-         if params.curse_state ~= "blessed" then
+         if params.curse_state ~= Enum.CurseState.Blessed then
             if not item:is_equipped() then
                return false
             end
@@ -577,19 +577,19 @@ data:add {
       for _, item in target:iter_items():filter(filter) do
          local chance = 0
 
-         if item.curse_state == "cursed" then
+         if item.curse_state == Enum.CurseState.Cursed then
             chance = Rand.rnd(200) + 1
-         elseif item.curse_state == "doomed" then
+         elseif item.curse_state == Enum.CurseState.Doomed then
             chance = Rand.rnd(1000) + 1
          end
 
-         if params.curse_state == "blessed" then
+         if params.curse_state == Enum.CurseState.Blessed then
             chance = chance / 2 + 1
          end
 
          if chance > 0 and params.power >= chance then
             total_uncursed = total_uncursed + 1
-            item.curse_state = "none"
+            item.curse_state = Enum.CurseState.Normal
             item:stack()
          else
             total_resisted = total_resisted + 1
@@ -597,7 +597,7 @@ data:add {
       end
 
       if total_uncursed > 0 then
-         if params.curse_state == "blessed" then
+         if params.curse_state == Enum.CurseState.Blessed then
             Gui.mes_visible("magic.uncurse.item", target.x, target.y, target)
          else
             Gui.mes_visible("magic.uncurse.equipment", target.x, target.y, target)
@@ -649,7 +649,7 @@ data:add {
    cast = function(self, params)
       local target = params.target
 
-      if not target:is_allied() then
+      if not target:is_in_player_party() then
          Gui.mes("common.nothing_happens")
          return true
       end
@@ -848,7 +848,7 @@ local function do_restore(chara, attrs, curse_state)
          end
       else
          adj = math.max(adj, 0)
-         if curse_state == "blessed" then
+         if curse_state == Enum.CurseState.Blessed then
             adj = chara:base_skill_level(skill_id) / 10 + 5
          end
       end
@@ -896,7 +896,7 @@ data:add {
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          Gui.mes_visible("magic.restore.body.blessed", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
@@ -952,7 +952,7 @@ data:add {
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
       end
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          Gui.mes_visible("magic.restore.mind.blessed", target)
          local cb = Anim.load("elona.anim_sparkle", target.x, target.y)
          Gui.start_draw_callback(cb)
@@ -1089,7 +1089,7 @@ data:add {
 
       if source:is_player() then
          Skill.modify_impression(ally, 15)
-         if not ally:is_allied() then
+         if not ally:is_in_player_party() then
             Effect.modify_karma(source, 2)
          end
       end

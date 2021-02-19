@@ -856,7 +856,7 @@ end
     throw = {
       execute = function(_1, _2)
   return ("%sは%sを投げた。")
-  :format(name(_1), itemname(_2, 1))
+  :format(name(_1), _2)
 end,
       hits = function(_1)
   return ("%sに見事に命中した！")
@@ -877,7 +877,7 @@ end,
         dialog = { "「いてー！」", "「やったな」", " *クスクス* ", "「キャハハ」", "「こやつめ」", "「むむっ」" },
         hits_snowman = function(_1)
   return ("%sに命中して、雪だるまは崩れた。")
-  :format(itemname(_1, 1))
+  :format(_1)
 end,
         melts = "それは地面に落ちて溶けた。"
       },

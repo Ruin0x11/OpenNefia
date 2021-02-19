@@ -1,5 +1,6 @@
 local Chara = require("api.Chara")
 local Map = require("api.Map")
+local Enum = require("api.Enum")
 
 local Util = {}
 
@@ -8,7 +9,7 @@ function Util.chara_blocks(pos)
    return chara
       and not Chara.is_player(chara)
       and chara:is_in_fov()
-      and chara:reaction_towards(Chara.player()) < 0
+      and chara:relation_towards(Chara.player()) <= Enum.Relation.Enemy
 end
 
 function Util.mef_blocks(pos)

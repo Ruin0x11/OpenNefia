@@ -319,7 +319,7 @@ data:add {
             Gui.mes_visible("action.cast.other", source, "ui.cast_style." .. cast_style)
          end
       else
-         if target:is_allied() then
+         if target:is_in_player_party() then
             Gui.mes_visible("magic.sucks_blood.ally", source, target)
          else
             tense = "ally"
@@ -426,7 +426,7 @@ local function make_touch(opts)
             local element_adj = I18N.get("element.damage.name." .. element)
             local melee_style = source:calc("melee_style") or "default"
             local melee_text
-            if target:is_allied() then
+            if target:is_in_player_party() then
                melee_text = I18N.get("damage.melee." .. melee_style .. ".ally")
                Gui.mes_visible("magic.touch.ally", source, target, element_adj, melee_text)
             else
@@ -699,7 +699,7 @@ data:add {
       local tense = "enemy"
       local is_third_person = true
 
-      if target:is_allied() then
+      if target:is_in_player_party() then
          tense = "ally"
          is_third_person = false
       end
@@ -903,7 +903,7 @@ data:add {
       local source = params.source
       local target = params.target
 
-      if target:is_allied() or target:calc("quality") >= Enum.Quality.Great then
+      if target:is_in_player_party() or target:calc("quality") >= Enum.Quality.Great then
          return true
       end
 
@@ -982,7 +982,7 @@ data:add {
    cast = function(self, params)
       local source = params.source
       local target = params.target
-      local map = params.source:current_map()
+      local map = source:current_map()
 
       if target:is_player() then
          Gui.mes("common.nothing_happens")
@@ -998,7 +998,7 @@ data:add {
       if target:calc("quality") >= Enum.Quality.Great or target:has_any_roles() or target:calc("is_not_changeable") then
          success = "impossible"
       end
-      if target:is_allied() then
+      if target:is_in_player_party() then
          success = false
       end
 
@@ -1241,7 +1241,7 @@ data:add {
       Gui.mes_c("magic.swarm", "Blue")
 
       local filter = function(chara)
-         if not Chara.is_alive(chara) or chara:is_allied_with(source) then
+         if not Chara.is_alive(chara) or chara:is_in_same_party(source) then
             return false
          end
 
@@ -1297,7 +1297,7 @@ data:add {
       Gui.mes_visible("magic.cheer.apply", source)
 
       local filter = function(chara)
-         if chara:is_player() or not chara:is_allied() or not chara:is_in_same_faction(source) then
+         if chara:is_player() or not chara:is_in_player_party() or not chara:is_in_same_party(source) then
             return false
          end
 

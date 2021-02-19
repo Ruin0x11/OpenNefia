@@ -4,6 +4,7 @@
 -- indicating if the action was successful and a string indicating any
 -- errors.
 -- @module Action
+local Enum = require("api.Enum")
 
 local Chara = require("api.Chara")
 local Event = require("api.Event")
@@ -37,9 +38,9 @@ local function item_on_cell_text(x, y)
    end
 
    local own_state = items[1].own_state
-   if own_state == "none" then
+   if own_state == Enum.OwnState.None then
       return I18N.get("action.move.item_on_cell.item", mes)
-   elseif own_state == "shelter" then
+   elseif own_state == Enum.OwnState.Shelter then
       return I18N.get("action.move.item_on_cell.building", mes)
    else
       return I18N.get("action.move.item_on_cell.not_owned", mes)
@@ -256,15 +257,6 @@ function Action.equip(chara, item)
    return true
 end
 
---- @tparam IChara chara
---- @tparam IChara target
---- @treturn bool success
---- @treturn[opt] string error
-function Action.melee(chara, target)
-   target:damage_hp(Rand.rnd(10), chara, {})
-   return true
-end
-
 function Action.target_level_text(chara, target)
    local clvl = chara:calc("level")
    local tlvl = target:calc("level")
@@ -330,7 +322,7 @@ function Action.build_target_list(chara)
 
    local filter = function(other)
       if chara ~= other and other:is_in_fov() then
-         if chara:is_allied() then
+         if chara:is_in_player_party() then
             if other:is_player() then
                return false
             end
@@ -371,7 +363,7 @@ function Action.find_target(chara)
    if target == nil then
       local targets = Action.build_target_list(chara)
       local filter = function(other)
-         return chara:reaction_towards(other) < 0
+         return chara:relation_towards(other) <= Enum.Relation.Enemy
       end
       target = fun.iter(targets):filter(filter):nth(1)
       if target then

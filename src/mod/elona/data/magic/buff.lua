@@ -5,6 +5,7 @@ local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Magic = require("mod.elona.api.Magic")
 local I18N = require("api.I18N")
+local Enum = require("api.Enum")
 
 local RANGE_BOLT = 6 + 1
 
@@ -246,7 +247,7 @@ data:add {
 
    on_add = function(self, params)
       local target = params.target
-      if params.curse_state == "blessed" then
+      if params.curse_state == Enum.CurseState.Blessed then
          target.age = math.min(target.age + Rand.rnd(3) + 1, save.base.date.year - 12)
          Gui.mes_c_visible("magic.slow", target, "Green")
       end

@@ -66,6 +66,7 @@ end
 
 function InstancedMap:init(width, height, uids, tile)
    IModdable.init(self)
+   IModDataHolder.init(self)
    IEventEmitter.init(self)
 
    self.uid = save.base.map_uids:get_next_and_increment()
@@ -93,11 +94,11 @@ function InstancedMap:init(width, height, uids, tile)
 
    -- Locations that are treated as solid. Can be changed by mods to
    -- make objects that act solid, like map features.
-   self._solid = t(table.of(false, width * height))
+   self._solid = t(table.of(nil, width * height))
 
    -- Locations that are treated as opaque. Can be changed by mods to
    -- make objects that act opaque.
-   self._opaque = t(table.of(false, width * height))
+   self._opaque = t(table.of(nil, width * height))
 
    -- Memory data produced by map objects. These are expected to be
    -- interpreted by each rendering layer.
@@ -119,8 +120,6 @@ function InstancedMap:init(width, height, uids, tile)
    -- Map to travel to when exiting this map from the edge. Set when entering a
    -- map from the world map or similar.
    self._previous_map = nil
-
-   self._mod_data = ModExtTable:new()
 
    self.default_tile = "base.floor"
    self.name = I18N.get("map.default_name")
@@ -575,6 +574,12 @@ function InstancedMap:refresh_tile(x, y)
          self._light[ind] = tile_light
       end
    end
+   if solid == false then
+      solid = nil
+   end
+   if opaque == false then
+      opaque = nil
+   end
    self._solid[ind] = solid
    self._opaque[ind] = opaque
 end
@@ -716,8 +721,5 @@ end
 function InstancedMap:can_take_object(obj)
    return true
 end
-
-
-InstancedMap:delegate("_mod_data", IModDataHolder)
 
 return InstancedMap

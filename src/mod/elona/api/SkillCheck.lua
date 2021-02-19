@@ -1,6 +1,7 @@
 local Gui = require("api.Gui")
 local Skill = require("mod.elona_sys.api.Skill")
 local Rand = require("api.Rand")
+local Pos = require("api.Pos")
 
 local SkillCheck = {}
 
@@ -11,7 +12,7 @@ function SkillCheck.try_to_reveal(chara)
 end
 
 function SkillCheck.proc_control_magic(source, target, damage)
-   if source:has_skill("elona.control_magic") and source:is_in_same_faction(target) then
+   if source:has_skill("elona.control_magic") and source:is_in_same_party(target) then
       local level = source:skill_level("elona.control_magic")
       if level * 5 > Rand.rnd(damage+1) then
          damage = 0
@@ -46,6 +47,31 @@ end
 
 function SkillCheck.is_floating(chara)
    return chara:calc("is_floating") and not chara:has_effect("elona.gravity")
+end
+
+local function is_in_square(cx, cy, tx, ty, radius)
+   return cx > tx - radius and cx < tx + radius and cy > ty - radius and cy < ty + radius
+end
+
+function SkillCheck.try_to_perceive(target, perceiver)
+   -- >>>>>>>> shade2/calculation.hsp:1141 *calcStealth ...
+   local radius = 8
+   if is_in_square(target.x, target.y, perceiver.x, perceiver.y, radius) then
+      if perceiver:get_aggro(target) > 0 then
+         return true
+      end
+      local chance = Pos.dist(target.x, target.y, perceiver.x, perceiver.y) * 150 + target:skill_level("elona.stealth") + 100 + 150 + 1
+      if Rand.rnd(chance) < Rand.rnd(perceiver:skill_level("elona.stat_perception") * 60 + 150) then
+         return true
+      end
+   end
+
+   if target.noise and target.noise > 0 and Rand.rnd(150) < target.noise then
+      return true
+   end
+
+   return false
+   -- <<<<<<<< shade2/calculation.hsp:1149 	return false ..
 end
 
 return SkillCheck

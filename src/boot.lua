@@ -10,7 +10,7 @@ local is_windows = dir_sep == "\\"
 
 if is_windows then
    package.path = package.path .. ";..\\lib\\luasocket\\?.lua;..\\lib\\lua-vips\\?.lua"
-   package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll"
+   package.cpath = package.cpath .. ";..\\lib\\luautf8\\?.dll;..\\lib\\luasocket\\?.dll;..\\lib\\luafilesystem\\?.dll;..\\lib\\lua-zlib\\?.dll"
 else
    package.cpath = package.cpath .. ";../lib/?.so"
 end

@@ -265,7 +265,7 @@ function Pos.iter_circle(ox, oy, diameter)
 end
 
 local function iter_line(state, index)
-   if index.x == state.end_x and index.y == state.end_y then
+   if index.x == state.end_x and index.y == state.end_y and not state.infinite then
       return nil
    end
 
@@ -288,8 +288,9 @@ end
 --- @tparam int start_y
 --- @tparam int end_x
 --- @tparam int end_y
+--- @tparam boolean infinite
 --- @treturn Iterator(int,int)
-function Pos.iter_line(start_x, start_y, end_x, end_y)
+function Pos.iter_line(start_x, start_y, end_x, end_y, infinite)
    local delta_x, delta_y, bound_x, bound_y
 
    if start_x < end_x then
@@ -308,7 +309,7 @@ function Pos.iter_line(start_x, start_y, end_x, end_y)
       bound_y = start_y - end_y
    end
 
-   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y }
+   local state = { delta_x = delta_x, delta_y = delta_y, bound_x = bound_x, bound_y = bound_y, end_x = end_x, end_y = end_y, infinite = infinite }
    local index = { x = start_x, y = start_y, err = bound_x - bound_y }
 
    return fun.wrap(iter_line, state, index)

@@ -2,6 +2,10 @@ local Item = require("api.Item")
 local Enchantment = require("mod.elona.api.Enchantment")
 local utils = require("mod.test_room.data.map_archetype.utils")
 
+local ammo = {
+   _id = "ammo"
+}
+
 local function make_ammo_enchantments(x, y, map)
    local ix = x
    local iy = y
@@ -24,7 +28,7 @@ local function make_ammo_enchantments(x, y, map)
    return 2, iy + 2
 end
 
-local function generate_map(area, floor)
+function ammo.on_generate_map(area, floor)
    local map = utils.create_map(20, 20)
    utils.create_stairs(2, 2, area, map)
 
@@ -42,6 +46,4 @@ local function generate_map(area, floor)
    return map
 end
 
-return {
-   ammo = generate_map
-}
+return ammo

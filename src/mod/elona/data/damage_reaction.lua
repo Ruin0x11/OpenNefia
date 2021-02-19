@@ -1,5 +1,7 @@
 local Magic = require("mod.elona_sys.api.Magic")
 local Gui = require("api.Gui")
+local Rand = require("api.Rand")
+local Effect = require("mod.elona.api.Effect")
 
 data:add {
    _type = "base.damage_reaction",
@@ -31,7 +33,9 @@ data:add {
 
    on_damage = function(chara, power, params)
       -- >>>>>>>> elona122/shade2/action.hsp:1338                 if p=rsResAcid :if attackSkill!rsM ..
-      -- TODO item acid
+      if params.attack_skill ~= "elona.martial_arts" and Rand.one_in(5) then
+         Effect.damage_item_acid(params.weapon)
+      end
       -- <<<<<<<< elona122/shade2/action.hsp:1338                 if p=rsResAcid :if attackSkill!rsM ..
 
       -- >>>>>>>> elona122/shade2/action.hsp:1342             if dmg>cMHP(tc)/10{ ..

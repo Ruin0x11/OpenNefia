@@ -204,7 +204,7 @@ function CodeGenerator:write_table(t)
                if self.always_tabify then
                   self:tabify()
                else
-                  self:puts(' ')
+                  self:write(' ')
                end
                self:write_value(t[i])
                count = count + 1

@@ -1102,7 +1102,7 @@ function Dungeon.gen_type_hunt(floor, params)
    for _=1, 10 + Rand.rnd(6) do
       local chara = Charagen.create(nil, nil, chara_filter(map), map)
       if chara then
-         chara.faction = "base.enemy"
+         chara.relation = Enum.Relation.Enemy
       end
    end
 
@@ -1111,7 +1111,7 @@ function Dungeon.gen_type_hunt(floor, params)
                                   {categories = {"elona.tree"}},
                                   map)
       if item then
-         item.own_state = "not_owned"
+         item.own_state = Enum.OwnState.NotOwned
       end
    end
 

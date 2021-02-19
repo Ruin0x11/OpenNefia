@@ -2,6 +2,7 @@ local Event = require("api.Event")
 local EquipSlots = require("api.EquipSlots")
 local ICharaInventory = require("api.chara.ICharaInventory")
 local data = require("internal.data")
+local Enum = require("api.Enum")
 
 local ICharaEquip = class.interface("ICharaEquip", {}, ICharaInventory)
 
@@ -42,9 +43,9 @@ local function apply_item_stats(chara, item)
    end
 
    local curse_state = item:calc("curse_state")
-   if curse_state == "cursed" then
+   if curse_state == Enum.CurseState.Cursed then
       chara:mod("curse_power", 20, "add")
-   elseif curse_state == "cursed" then
+   elseif curse_state == Enum.CurseState.Cursed then
       chara:mod("curse_power", 100, "add")
    end
 
@@ -174,7 +175,7 @@ end
 -- Adds a new body part to this character.
 -- @tparam base.body_part _type
 function ICharaEquip:add_body_part(_type)
-   -- TODO
+   self.equip:add_body_part(_type)
 end
 
 -- Attempts to remove a body part. If something is equipped there,

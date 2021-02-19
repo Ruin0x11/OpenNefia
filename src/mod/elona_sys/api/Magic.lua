@@ -8,18 +8,20 @@ local Gui = require("api.Gui")
 local Pos = require("api.Pos")
 local Action = require("api.Action")
 local ElonaAction = require("mod.elona.api.ElonaAction")
+local Enum = require("api.Enum")
+local Log = require("api.Log")
 
 local Magic = {}
 
 local function calc_adjusted_power(magic, power, curse_state)
    if magic.alignment == "negative" then
-      if curse_state == "blessed" then
+      if curse_state == Enum.CurseState.Blessed then
          return 50
       elseif Effect.is_cursed(curse_state) then
          return power * 150 / 100
       end
    else
-      if curse_state == "blessed" then
+      if curse_state == Enum.CurseState.Blessed then
          return power * 150 / 100
       elseif Effect.is_cursed(curse_state) then
          return 50
@@ -98,8 +100,6 @@ function Magic.get_ai_location(target_type, range, caster, triggered_by, ai_targ
 
    if target_type == "enemy" or target_type == "other" or target_type == "target_or_location" then
       if Pos.dist(caster.x, caster.y, ai_target.x, ai_target.y) > range then
-         Gui.mes_duplicate()
-         Gui.mes("action.which_direction.out_of_range")
          return false, {}
       end
 
@@ -128,6 +128,7 @@ end
 --- @tparam[opt] string triggered_by
 --- @treturn table
 function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
+   -- >>>>>>>> shade2/proc.hsp:1561 *effect_selectTg ..
    assert(target_type, "Skill does not support targeting")
 
    local source = caster
@@ -209,7 +210,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
          }
       end
 
-      if target_type == "enemy" and caster:reaction_towards(target) >= 0 then
+      if target_type == "enemy" and caster:relation_towards(target) >= Enum.Relation.Neutral then
          if not ElonaAction.prompt_really_attack(caster, target) then
             return false, {
                obvious = false
@@ -261,6 +262,7 @@ function Magic.prompt_magic_location(target_type, range, caster, triggered_by)
    error(("Unknown skill target_type '%s'"):format(target_type))
 
    return false, {}
+   -- <<<<<<<< shade2/proc.hsp:1640 	return true ..
 end
 
 function Magic.get_magic_location(target_type, range, caster, triggered_by, ai_target, check_ranged_if_self, on_choose_cb)
@@ -308,17 +310,7 @@ end
 --  - element (id:base.element): Element the spell uses.
 function Magic.cast(id, params)
    local magic = data["elona_sys.magic"]:ensure(id)
-   params = params or {
-      power = 0,
-      source = nil,
-      target = nil,
-      item = nil,
-      triggered_by = nil,
-      curse_state = nil,
-      x = nil,
-      y = nil,
-      range = nil
-   }
+   assert(type(params) == "table", "'params' table must be provided")
    params.power = params.power or 0
    params.range = params.range or 1
 
@@ -333,14 +325,23 @@ function Magic.cast(id, params)
       params.y = params.y or params.source.y
    end
 
-   local curse_state = "none"
+   local curse_state = Enum.CurseState.Normal
 
    if class.is_an(IItem, params.item) then
       params.curse_state = params.curse_state or params.item:calc("curse_state")
    end
-   params.curse_state = params.curse_state or "none"
+   params.curse_state = params.curse_state or Enum.CurseState.Normal
 
    params.power = calc_adjusted_power(magic, params.power, curse_state)
+
+   if magic.params then
+      for _, key in ipairs(magic.params) do
+         if params[key] == nil then
+            Log.error("Magic %s requires parameter '%s', got: %s", magic._id, key, inspect(table.keys(params)))
+            return false
+         end
+      end
+   end
 
    local did_something, result = magic:cast(params)
 

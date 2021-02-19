@@ -23,6 +23,9 @@ function OEffect:on_add(obj)
 end
 
 function OEffect:on_remove(obj)
+   if self.proto.on_remove then
+      self.proto.on_remove(self, obj)
+   end
 end
 
 function OEffect:on_refresh()

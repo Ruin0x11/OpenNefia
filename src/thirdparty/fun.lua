@@ -78,6 +78,14 @@ local unwrap = function(self)
 end
 methods.unwrap = unwrap
 
+--- Like `unwrap`, but preserves self. Use when you want to return an iterator
+--- that can *both* be used like `pairs` and also potentially with luafun
+--- methods.
+local unwrap_with_self = function(self)
+    return self, self.param, self.state
+end
+methods.unwrap_with_self = unwrap_with_self
+
 --------------------------------------------------------------------------------
 -- Basic Functions
 --------------------------------------------------------------------------------

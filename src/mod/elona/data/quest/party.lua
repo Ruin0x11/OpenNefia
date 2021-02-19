@@ -10,6 +10,8 @@ local elona_Quest = require("mod.elona.api.Quest")
 local I18N = require("api.I18N")
 local Item = require("api.Item")
 local Const = require("api.Const")
+local Enum = require("api.Enum")
+local Itemgen = require("mod.tools.api.Itemgen")
 
 local map_party = {
    _type = "base.map_archetype",
@@ -188,7 +190,7 @@ Event.register("elona_sys.on_quest_completed", "Add music tickets if perform que
 
 local function set_party_emotion_icon(chara)
    -- >>>>>>>> shade2/calculation.hsp:1295 	if gQuest=qPerform{ ..
-   if not chara:is_allied() then
+   if not chara:is_in_player_party() then
       local quest = Quest.get_immediate_quest()
       if quest and quest._id == "elona.party" then
          if chara.impression >= Const.IMPRESSION_PARTY then
@@ -209,3 +211,34 @@ local function display_quest_message_party(map)
    -- <<<<<<<< shade2/map.hsp:2160 			} ..
 end
 Event.register("base.on_map_entered_events", "Display quest message (party)", display_quest_message_party)
+
+local function ai_drink_in_party(chara, _, result)
+   if result then
+      return result -- TODO implement in event system
+   end
+
+   if chara.item_to_use or chara:relation_towards(Chara.player()) >= Enum.Relation.Ally then
+      return result
+   end
+
+   -- >>>>>>>> shade2/map.hsp:2158 		if gQuest=qPerform{ ...
+   local quest = Quest.get_immediate_quest()
+   if quest and quest._id == "elona.party" and Rand.one_in(30) then
+      local level = 20
+      local category
+      if Rand.one_in(4) then
+         category = "elona.food"
+      else
+         category = "elona.drink"
+      end
+      if not Rand.one_in(8) then
+         category = "elona.drink_alcohol"
+      end
+      local item = Itemgen.create(nil, nil, { level = level, categories = category }, chara)
+      if item then
+         chara.item_to_use = item
+      end
+   end
+   -- <<<<<<<< shade2/map.hsp:2160 			} ..
+end
+Event.register("elona.on_ai_calm_action", "Drink if idle in party", ai_drink_in_party, { priority = 60000 })

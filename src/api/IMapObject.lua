@@ -101,15 +101,7 @@ function IMapObject:containing_map()
          return location, containing
       end
       containing = location
-      -- TODO: have to think this over more carefully.
-      --
-      -- This doesn't handle items being equipped on an EquipSlots, because
-      -- EquipSlots has no `location` field - the "location" is its character,
-      -- but there is no interface for getting at this location in a standard
-      -- way. IOwned doesn't work since EquipSlots isn't a game object, so it
-      -- doesn't have a `uid` field (it's required for IOwned). Maybe `uid`
-      -- should be removed from IOwned then.
-      location = location.location
+      location = location.location or location._parent
    end
 
    return nil

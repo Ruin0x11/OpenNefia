@@ -36,7 +36,8 @@ local function escort_for_quest_died(quest, map)
    end
 
    local dead = Chara.iter_allies(map):filter(pred):nth(1)
-   local not_in_party = not fun.iter(save.base.allies):any(function(uid) return uid == quest.params.escort_chara_uid end)
+   local party = Chara.player():get_party()
+   local not_in_party = not fun.iter(save.base.parties:get(party).members):any(function(uid) return uid == quest.params.escort_chara_uid end)
 
    return dead or not_in_party
    -- <<<<<<<< shade2/map.hsp:2107 			} ..
@@ -135,7 +136,8 @@ function escort.on_failure(self)
       end
       chara.state = "Dead"
       if chara:is_ally() then
-         table.iremove_value(save.base.allies, chara.uid)
+         local party = Chara.player():get_party()
+         save.base.parties:remove_member(party, chara)
       end
    end
    Effect.modify_karma(Chara.player(), -10)
@@ -177,7 +179,7 @@ data:add {
          local player = Chara.player()
          assert(Map.try_place_chara(target, player.x, player.y, map))
 
-         target:recruit_as_ally()
+         player:recruit_as_ally(target)
          target.is_being_escorted = true
          target.is_not_changeable = true
          quest.params.escort_chara_uid = target.uid
@@ -234,7 +236,7 @@ end
 
 local function check_escort_killed(chara)
    -- >>>>>>>> shade2/chara_func.hsp:1674 		if tc!pc :if tc<maxFollower { ..
-   if chara:is_player() or not chara:is_allied() then
+   if chara:is_player() or not chara:is_in_player_party() then
       return
    end
 
@@ -243,7 +245,8 @@ local function check_escort_killed(chara)
    if chara.is_being_escorted then
       chara.state = "Dead"
       if chara:is_ally() then
-         table.iremove_value(save.base.allies, chara.uid)
+         local party = Chara.player():get_party()
+         save.base.parties:remove_member(party, chara)
       end
       DeferredEvent.add(event_client_dead(chara))
    end

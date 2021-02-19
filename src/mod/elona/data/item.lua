@@ -19,6 +19,10 @@ local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
 local Input = require("api.Input")
 local Log = require("api.Log")
+local Chara = require("api.Chara")
+local Pos = require("api.Pos")
+local Anim = require("mod.elona_sys.api.Anim")
+local World = require("api.World")
 
 -- >>>>>>>> shade2/calculation.hsp:854 #defcfunc calcInitGold int c ..
 local function calc_initial_gold(_, params, result)
@@ -217,6 +221,10 @@ local light = {
 
 -- TODO: Some fields should not be stored on the prototype as
 -- defaults, but instead copied on generation.
+
+-- IMPORTANT: Fields like "on_throw", "on_drink", "on_use" and similar are tied
+-- to event handlers that are dynamically generated in elona_sys.events. See the
+-- "Connect item events" handler there for details.
 
 local item =
    {
@@ -827,7 +835,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1130, item, params)
+            return Magic.drink_potion("elona.effect_dirty_water", item, params)
          end,
          categories = {
             "elona.drink",
@@ -846,7 +854,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1111, 200, item, params)
+            return Magic.drink_potion("elona.effect_blind", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -869,7 +877,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1109, 150, item, params)
+            return Magic.drink_potion("elona.effect_confuse", 150, item, params)
          end,
 
          tags = { "neg" },
@@ -892,7 +900,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1110, 200, item, params)
+            return Magic.drink_potion("elona.effect_paralyze", 200, item, params)
          end,
 
          tags = { "neg" },
@@ -914,7 +922,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1112, 200, item, params)
+            return Magic.drink_potion("elona.effect_sleep", 200, item, params)
          end,
 
          tags = { "nogive" },
@@ -936,7 +944,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 300, item, params)
+            return Magic.drink_potion("elona.effect_ale", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1808,7 +1816,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(400, 100, item, params)
+            return Magic.drink_potion("elona.heal_light", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1831,7 +1839,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(400, 300, item, params)
+            return Magic.drink_potion("elona.heal_light", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1854,7 +1862,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 100, item, params)
+            return Magic.drink_potion("elona.heal_critical", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1878,7 +1886,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 300, item, params)
+            return Magic.drink_potion("elona.heal_critical", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1902,7 +1910,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(401, 400, item, params)
+            return Magic.drink_potion("elona.heal_critical", 400, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1966,7 +1974,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(402, 100, item, params)
+            return Magic.drink_potion("elona.cure_of_eris", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -1990,7 +1998,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(402, 300, item, params)
+            return Magic.drink_potion("elona.cure_of_eris", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -2014,7 +2022,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(403, 100, item, params)
+            return Magic.drink_potion("elona.cure_of_jure", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -4381,7 +4389,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 500, item, params)
+            return Magic.drink_potion("elona.effect_ale", 500, item, params)
          end,
          categories = {
             "elona.drink",
@@ -5492,7 +5500,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1102, 200, item, params)
+            return Magic.drink_potion("elona.effect_ale", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -5678,7 +5686,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1108, 200, item, params)
+            return Magic.drink_potion("elona.effect_poison", 200, item, params)
          end,
 
          tags = { "nogive" },
@@ -6155,7 +6163,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(439, 100, item, params)
+            return Magic.drink_potion("elona.restore_body", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6177,7 +6185,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(440, 100, item, params)
+            return Magic.drink_potion("elona.restore_spirit", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -6199,7 +6207,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1113, 100, item, params)
+            return Magic.drink_potion("elona.effect_gain_potential", 100, item, params)
          end,
 
          tags = { "spshop" },
@@ -7730,7 +7738,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(442, 200, item, params)
+            return Magic.drink_potion("elona.buff_holy_shield", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -7833,7 +7841,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(443, 400, item, params)
+            return Magic.drink_potion("elona.buff_mist_of_silence", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -7887,7 +7895,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(444, 300, item, params)
+            return Magic.drink_potion("elona.buff_regeneration", 300, item, params)
          end,
          categories = {
             "elona.drink",
@@ -7937,7 +7945,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(445, 250, item, params)
+            return Magic.drink_potion("elona.buff_elemental_shield", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8016,7 +8024,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(446, 250, item, params)
+            return Magic.drink_potion("elona.buff_speed", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8035,7 +8043,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(447, 400, item, params)
+            return Magic.drink_potion("elona.buff_slow", 400, item, params)
          end,
 
          tags = { "neg" },
@@ -8114,7 +8122,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(448, 250, item, params)
+            return Magic.drink_potion("elona.buff_hero", 250, item, params)
          end,
          categories = {
             "elona.drink",
@@ -8190,7 +8198,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(449, 250, item, params)
+            return Magic.drink_potion("elona.buff_mist_of_frailness", 250, item, params)
          end,
 
          tags = { "neg" },
@@ -8445,7 +8453,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 100, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -9065,8 +9073,8 @@ local item =
                name = "morgia effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(10, 2)
-                  params.chara:mod_skill_potential(11, 2)
+                  params.chara:mod_skill_potential("elona.stat_strength", 2)
+                  params.chara:mod_skill_potential("elona.stat_constitution", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: morgia")
                   end
@@ -9110,8 +9118,8 @@ local item =
                name = "marelion effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(16, 2)
-                  params.chara:mod_skill_potential(15, 2)
+                  params.chara:mod_skill_potential("elona.stat_magic", 2)
+                  params.chara:mod_skill_potential("elona.stat_will", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: marelion")
                   end
@@ -9155,8 +9163,8 @@ local item =
                name = "spenseweed effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(12, 2)
-                  params.chara:mod_skill_potential(13, 2)
+                  params.chara:mod_skill_potential("elona.stat_dexterity", 2)
+                  params.chara:mod_skill_potential("elona.stat_perception", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: spenseweed")
                   end
@@ -9241,8 +9249,8 @@ local item =
                name = "alraunia effects",
 
                callback = function(self, params)
-                  params.chara:mod_skill_potential(17, 2)
-                  params.chara:mod_skill_potential(14, 2)
+                  params.chara:mod_skill_potential("elona.stat_charisma", 2)
+                  params.chara:mod_skill_potential("elona.stat_learning", 2)
                   if params.chara:is_player() then
                      Gui.mes("food special: alarunia")
                   end
@@ -9314,7 +9322,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1118, 100, item, params)
+            return Magic.drink_potion("elona.effect_weaken_resistance", 100, item, params)
          end,
 
          tags = { "neg" },
@@ -9393,7 +9401,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(454, 100, item, params)
+            return Magic.drink_potion("elona.mutation", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -9419,7 +9427,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1121, 200, item, params)
+            return Magic.drink_potion("elona.effect_cure_mutation", 200, item, params)
          end,
          categories = {
             "elona.drink",
@@ -11242,7 +11250,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1103, 100, item, params)
+            return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
          medal_value = 3,
          categories = {
@@ -11319,7 +11327,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(self, params)
-            return Magic.drink_potion(1108, 150, self, params)
+            return Magic.drink_potion("elona.effect_poison", 150, self, params)
          end,
 
          on_init_params = function(self, params)
@@ -12267,7 +12275,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1131, 200, item, params)
+            return Magic.drink_potion("elona.effect_cure_corruption", 200, item, params)
          end,
          medal_value = 10,
          categories = {
@@ -12448,7 +12456,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 250, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -12685,7 +12693,7 @@ local item =
          params = { chara_id = nil },
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1101, 100, item, params)
+            return Magic.drink_potion("elona.milk", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -12739,7 +12747,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1133, 100, item, params)
+            return Magic.drink_potion("elona.effect_molotov", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -12966,8 +12974,53 @@ local item =
          elona_function = 14,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1103, 100, item, params)
+            return Magic.drink_potion("elona.effect_water", 100, item, params)
          end,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
+            local chara = params.chara
+            local map = chara:current_map()
+            if map:is_in_fov(params.x, params.y) then
+               Gui.play_sound("base.snow", params.x, params.y)
+            end
+
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+               Effect.get_wet(target, 25)
+               target:interrupt_activity()
+               if not target:is_player() then
+                  Gui.mes_c_visible("action.throw.snow.dialog", target.x, target.y, "SkyBlue")
+               end
+               return "turn_end"
+            end
+            -- <<<<<<<< shade2/action.hsp:69 			} ..
+
+            -- >>>>>>>> shade2/action.hsp:86 		if iId(ci)=idSnow:if map(tlocX,tlocY,4)!0{ ...
+            local snowman = Item.at(params.x, params.y, map):filter(function(i) return i._id == "elona.snow_man" end):nth(1)
+            if snowman then
+               if snowman:is_in_fov() then
+                  Gui.mes("action.throw.snow.hits_snowman", snowman:build_name(1))
+               end
+               snowman:remove(1)
+               return "turn_end"
+            end
+            -- <<<<<<<< shade2/action.hsp:98 			} ..
+
+            -- >>>>>>>> shade2/action.hsp:100 		if iId(ci)=idSnow{ ...
+            if map:tile(params.x, params.y).kind == Enum.TileRole.Snow then
+               return "turn_end"
+            end
+            if map:is_in_fov(params.x, params.y) then
+               Gui.mes("action.throw.snow.melts")
+            end
+
+            Effect.create_potion_puddle(params.x, params.y, self, chara)
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:102 			if sync(tlocX,tlocY) :txtMore:txt lang("それは地面に落 ...         end,
+         end,
+
          categories = {
             "elona.drink",
          },
@@ -13178,6 +13231,26 @@ local item =
 
          is_precious = true,
 
+         on_open = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:899 		snd seLocked : txt lang("足枷を外した。","You unlock th ...
+            Gui.play_sound("base.locked1")
+            Gui.mes("action.open.shackle.text")
+            local map = params.chara:current_map()
+            if map and map._archetype == "elona.noyel" and not save.elona.is_fire_giant_released then
+               local fire_giant = map:get_object_of_type("base.chara", save.elona.fire_giant_uid)
+               if Chara.is_alive(fire_giant) then
+                  local moyer = Chara.find("elona.moyer_the_crooked")
+                  if Chara.is_alive(moyer) then
+                     Gui.mes_c("action.open.shackle.dialog", "SkyBlue")
+                     fire_giant:set_target(moyer, 1000)
+                  end
+               end
+               save.elona.is_fire_giant_released = true
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:908 		goto *turn_end ..
+         end,
+
          categories = {
             "elona.container",
             "elona.no_generate"
@@ -13194,6 +13267,15 @@ local item =
          category = 52000,
          rarity = 800000,
          coefficient = 100,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:118 	if sync(tlocX,tlocY) : txt lang("それは地面に落ちて砕けた。"," ...
+            Gui.mes("action.throw.shatters")
+            Gui.play_sound("base.crush2", params.x, params.y)
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:120 	goto *turn_end ..
+         end,
+
          categories = {
             "elona.drink",
          }
@@ -13566,7 +13648,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1135, 100, item, params)
+            return Magic.drink_potion("elona.effect_love_potion", 100, item, params)
          end,
 
          tags = { "nogive" },
@@ -13722,7 +13804,7 @@ local item =
          is_precious = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1139, 500, item, params)
+            return Magic.drink_potion("elona.effect_troll_blood", 500, item, params)
          end,
 
          tags = { "spshop" },
@@ -13939,12 +14021,56 @@ local item =
          image = "elona.item_leash",
          value = 1200,
          weight = 1200,
-         on_use = function() end,
          category = 59000,
          rarity = 500000,
          coefficient = 0,
 
          elona_function = 23,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:1872 	case effLeash ...
+            local chara = params.chara
+            Gui.mes("action.use.leash.prompt")
+            local dir, canceled = Input.query_direction()
+            if canceled then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            local x, y = Pos.add_direction(dir, chara.x, chara.y)
+            local target = Chara.at(x, y)
+            if target == nil then
+               Gui.mes("common.it_is_impossible")
+               return "player_turn_query"
+            end
+
+            if target:is_player() then
+               Gui.mes("action.use.leash.self")
+            else
+               if target.leashed_to == nil then
+                  if not target:is_in_player_party() and Rand.one_in(5) then
+                     Gui.mes("action.use.leash.other.start.resists", target)
+                     self.amount = self.amount - 1
+                     self:refresh_cell_on_map()
+                     chara:refresh_weight()
+                     return "turn_end"
+                  end
+
+                  target.leashed_to = chara.uid
+                  Gui.mes("action.use.leash.other.start.text", target)
+                  Gui.mes_c("action.use.leash.other.start.dialog", "SkyBlue", target)
+               else
+                  target.leashed_to = nil
+                  Gui.mes("action.use.leash.other.stop.text", target)
+                  Gui.mes_c("action.use.leash.other.stop.dialog", "SkyBlue", target)
+               end
+            end
+
+            local anim = Anim.load("elona.anim_smoke", target.x, target.y)
+            Gui.start_draw_callback(anim)
+
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:1894 	swbreak ..
+         end,
 
          categories = {
             "elona.misc_item"
@@ -15134,7 +15260,6 @@ local item =
          image = "elona.item_monster_ball",
          value = 4500,
          weight = 1400,
-         on_use = function() end,
          category = 59000,
          rarity = 400000,
          coefficient = 100,
@@ -15143,6 +15268,7 @@ local item =
 
          params = {
             monster_ball_captured_chara_id = nil,
+            monster_ball_captured_chara_level = 0,
             monster_ball_max_level = 0
          },
 
@@ -15152,6 +15278,84 @@ local item =
             self.value = 2000 + self.params.monster_ball_max_level * self.params.monster_ball_max_level
                + self.params.monster_ball_max_level * 100
             -- <<<<<<<< shade2/item.hsp:668 		} ..
+         end,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:17 	if iId(ci)=idMonsterBall{ ...
+            local map = params.chara:current_map()
+            local clone = self:clone()
+            if map and map:can_take_object(clone) then
+               assert(map:take_object(clone, params.x, params.y))
+               clone.amount = 1
+            end
+            -- <<<<<<<< shade2/action.hsp:21 		} ..
+
+            -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
+            Gui.play_sound("base.throw2", params.x, params.y)
+            map:refresh_tile(params.x, params.y)
+            local target = Chara.at(params.x, params.y, map)
+            if target then
+               Gui.mes("action.throw.hits", target)
+
+               -- >>>>>>>> shade2/action.hsp:32 			if iId(ci)=idMonsterBall{ ...
+               if not config.base.development_mode then
+                  if target:is_ally() or target:has_any_roles() or target:calc("quality") == Enum.Quality.Unique or target:calc("is_precious") then
+                     Gui.mes("action.throw.monster_ball.cannot_be_captured")
+                     return "turn_end"
+                  end
+
+                  if target:calc("level") > clone.params.monster_ball_max_level then
+                     Gui.mes("action.throw.monster_ball.not_enough_power")
+                     return "turn_end"
+                  end
+
+                  if target.hp > target:calc("max_hp") / 10 then
+                     Gui.mes("action.throw.monster_ball.not_weak_enough")
+                     return "turn_end"
+                  end
+               end
+
+               Gui.mes_c("action.throw.monster_ball.capture", "Green", target)
+               local anim = Anim.load("elona.anim_smoke", params.x, params.y)
+               Gui.start_draw_callback(anim)
+
+               clone.params.monster_ball_captured_chara_id = target._id
+               clone.params.monster_ball_captured_chara_level = target.level
+               clone.weight = math.clamp(target.weight, 10000, 100000)
+               clone.value = 1000
+               clone.can_throw = false
+               -- <<<<<<<< shade2/action.hsp:43 				 ..
+
+               -- >>>>>>>> shade2/action.hsp:49 			chara_vanquish tc ...
+               target:vanquish() -- triggers "elona_sys.on_quest_check" via "base.on_chara_vanquished"
+               -- <<<<<<<< shade2/action.hsp:50 			check_quest ..
+            end
+            -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
+
+            return "turn_end"
+         end,
+
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:2082 	case effMonsterBall ...
+            local source = params.chara
+            if self.params.monster_ball_captured_chara_id == nil then
+               Gui.mes("action.use.monster_ball.empty")
+               return "player_turn_query"
+            end
+
+            if not source:can_recruit_allies() then
+               Gui.mes("action.use.monster_ball.party_is_full")
+               return "player_turn_query"
+            end
+
+            Gui.mes("action.use.monster_ball.use", self:build_name(1))
+            self.amount = self.amount - 1
+            self:refresh_cell_on_map()
+
+            -- TODO void
+            local chara = Chara.create(self.params.monster_ball_captured_chara_id, source.x, source.y, {}, source:current_map())
+            source:recruit_as_ally(chara)
+            -- <<<<<<<< shade2/action.hsp:2089 	swbreak ..
          end,
 
          categories = {
@@ -15478,7 +15682,7 @@ local item =
          originalnameref2 = "potion",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1142, 100, item, params)
+            return Magic.drink_potion("elona.effect_salt", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15502,7 +15706,37 @@ local item =
             "elona.misc_item"
          },
 
-         light = light.item
+         light = light.item,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:27 		snd seThrow2 ...
+            local map = params.chara:current_map()
+
+            Gui.play_sound("base.throw2", params.x, params.y)
+            map:refresh_tile(params.x, params.y)
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+
+               -- >>>>>>>> shade2/action.hsp:45 				if (cId(tc)!319)or(tc<maxFollower):txtNothingH ...
+               if target._id ~= "elona.little_sister" or target:is_ally() then
+                  Gui.mes("common.nothing_happens")
+                  return "turn_end"
+               end
+
+               -- TODO arena
+               -- TODO pet arena
+               -- TODO show house
+
+               Chara.player():recruit_as_ally(target)
+               -- <<<<<<<< shade2/action.hsp:47 				rc=tc:gosub *add_ally ..
+
+               map:emit("elona_sys.on_quest_check") -- TODO move to IChara:recruit_as_ally()
+            end
+            -- <<<<<<<< shade2/action.hsp:31 			txtMore:txt lang(name(tc)+"に見事に命中した！","It hits  ..
+
+            return "turn_end"
+         end
       },
       {
          _id = "town_book",
@@ -15585,7 +15819,7 @@ local item =
          coefficient = 0,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1130, 100, item, params)
+            return Magic.drink_potion("elona.effect_dirty_water", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15638,7 +15872,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1143, 100, item, params)
+            return Magic.drink_potion("elona.effect_descent", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -15785,7 +16019,7 @@ local item =
          color = "Random",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1144, 100, item, params)
+            return Magic.drink_potion("elona.evolution", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -16515,7 +16749,7 @@ local item =
          has_random_name = true,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1116, 250, item, params)
+            return Magic.drink_potion("elona.effect_sulfuric", 250, item, params)
          end,
 
          tags = { "nogive" },
@@ -17360,7 +17594,7 @@ local item =
          originalnameref2 = "bottle",
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1146, 100, item, params)
+            return Magic.drink_potion("elona.effect_soda", 100, item, params)
          end,
 
          tags = { "fest" },
@@ -17385,7 +17619,7 @@ local item =
          quality = Enum.Quality.Unique,
 
          on_drink = function(item, params)
-            return Magic.drink_potion(1147, 100, item, params)
+            return Magic.drink_potion("elona.effect_cupsule", 100, item, params)
          end,
          categories = {
             "elona.drink",
@@ -17405,6 +17639,37 @@ local item =
 
          params = { food_type = "elona.vegetable" },
          spoilage_hours = 32,
+
+         on_throw = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:57 		if sync(tlocX,tlocY) : if iId(ci)=idSnow{ ...
+            local map = params.chara:current_map()
+            if map:is_in_fov(params.x, params.y) then
+               Gui.play_sound("base.crush2", params.x, params.y)
+            end
+
+            local target = Chara.at(params.x, params.y)
+            if target then
+               Gui.mes("action.throw.hits", target)
+               -- <<<<<<<< shade2/action.hsp:69 			} ..
+               -- >>>>>>>> shade2/action.hsp:70 			if iId(ci)=idTomato{ ...
+               if map:is_in_fov(params.x, params.y) then
+                  Gui.mes_c("action.throw.tomato", "Blue")
+               end
+               if self.spoilage_date >= World.date_hours() then
+                  Gui.mes_c_visible("damage.is_engulfed_in_fury", target, "Blue")
+                  target:add_effect_turns("elona.fury", Rand.rnd(10) + 5)
+               end
+               return "turn_end"
+               -- <<<<<<<< shade2/action.hsp:77 			}	 ...               return "turn_end"
+            end
+
+            -- >>>>>>>> shade2/action.hsp:106 		if iId(ci)=idTomato{ ...
+            if map:is_in_fov(params.x, params.y) then
+               Gui.mes_c("action.throw.tomato", "Blue")
+            end
+            return "turn_end"
+            -- <<<<<<<< shade2/action.hsp:109 		} ...            return "turn_end"
+         end,
 
          categories = {
             "elona.food_fruit",
