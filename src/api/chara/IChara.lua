@@ -187,7 +187,7 @@ local Effect
 
 --- @treturn[opt] table
 --- @overrides IMapObject:produce_memory
-function IChara:produce_memory()
+function IChara:produce_memory(memory)
    local hp_bar = "hp_bar_other"
    if self:is_in_player_party() then
       hp_bar = "hp_bar_ally"
@@ -212,18 +212,16 @@ function IChara:produce_memory()
    Effect = Effect or require("mod.elona.api.Effect")
    local show = Chara.is_alive(self, self:current_map()) and Effect.is_visible(self)
 
-   return {
-      uid = self.uid,
-      show = show,
-      image = image,
-      color = self:calc("color"),
-      x_offset = x_offset or nil,
-      y_offset = y_offset or nil,
-      hp_bar = hp_bar,
-      hp_ratio = self.hp / self:calc("max_hp"),
-      shadow_type = "normal",
-      drawables = self.drawables
-   }
+   memory.uid = self.uid
+   memory.show = show
+   memory.image = image
+   memory.color = self:calc("color")
+   memory.x_offset = x_offset or nil
+   memory.y_offset = y_offset or nil
+   memory.hp_bar = hp_bar
+   memory.hp_ratio = self.hp / self:calc("max_hp")
+   memory.shadow_type = "normal"
+   memory.drawables = self.drawables
 end
 
 --- @treturn table

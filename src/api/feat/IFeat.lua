@@ -34,14 +34,12 @@ function IFeat:refresh()
    end
 end
 
-function IFeat:produce_memory()
-   return {
-      uid = self.uid,
-      show = not self:calc("is_invisible"),
-      image = (self:calc("image") or ""),
-      color = self:calc("color"),
-      shadow_type = self:calc("shadow_type")
-   }
+function IFeat:produce_memory(memory)
+   memory.uid = self.uid
+   memory.show = not self:calc("is_invisible")
+   memory.image = (self:calc("image") or "")
+   memory.color = self:calc("color")
+   memory.shadow_type = self:calc("shadow_type")
 end
 
 return IFeat

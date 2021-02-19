@@ -248,7 +248,7 @@ function InstancedMap:set_tile(x, y, id)
 
    self:refresh_tile(x, y)
 
-   self._tiles_dirty[#self._tiles_dirty] = {x, y}
+   self._tiles_dirty[#self._tiles_dirty] = y * self._width + x + 1
 end
 
 function InstancedMap:tile(x, y)
@@ -325,8 +325,6 @@ end
 -- @tparam int player_y
 -- @tparam int fov_radius
 function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
-   local total = require("api.MemoryProfiler"):new()
-   local mp = require("api.MemoryProfiler"):new()
    local stw = math.min(Draw.get_tiled_width(), self._width)
    local sth = math.min(Draw.get_tiled_height(), self._height)
 
@@ -345,7 +343,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
          end
       end
    end
-   mp:p("alloc")
 
    local fov_radius = gen_fov_radius(fov_size)
    local radius = math.floor((fov_size + 2) / 2)
@@ -442,7 +439,6 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       ly = ly + 1
    end
 
-   total:p("TOTAL")
    return self._shadow_map, start_x, start_y
 end
 
@@ -453,20 +449,34 @@ function InstancedMap:memorize_tile(x, y)
 
    local memory = self._memory
    for m, _ in pairs(memory) do
-      memory[m][ind] = nil
+      if m ~= "base.map_tile" then
+         if memory[m][ind] then
+            for i = 1, #memory[m][ind] do
+               local t = memory[m][ind][i]
+               for k, _ in pairs(t) do
+                  t[k] = nil
+               end
+            end
+         end
+      end
    end
 
    memory["base.map_tile"] = memory["base.map_tile"] or {}
-   memory["base.map_tile"][ind] = { self:tile(x, y) }
+   memory["base.map_tile"][ind] = memory["base.map_tile"][ind] or {}
+   memory["base.map_tile"][ind][1] = self:tile(x, y)
 
-   for _, obj in self._multi_pool:objects_at_pos(x, y) do
-      local m = obj:produce_memory()
-      memory[obj._type] = memory[obj._type] or {}
-      memory[obj._type][ind] = memory[obj._type][ind] or {}
-      table.insert(memory[obj._type][ind], m)
+   local objs = self._multi_pool.positional[ind]
+   if objs then
+      for _, obj in ipairs(objs) do
+         local m = {}
+         obj:produce_memory(m)
+         memory[obj._type] = memory[obj._type] or {}
+         memory[obj._type][ind] = memory[obj._type][ind] or {}
+         table.insert(memory[obj._type][ind], m)
+      end
    end
 
-   self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+   self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    self._memorized[ind] = true
 end
 
@@ -488,7 +498,7 @@ end
 
 function InstancedMap:reveal_tile(x, y, tile_id)
    local memory = self._memory
-   local ind = y * self._width + x + 1;
+   local ind = y * self._width + x + 1
 
    local tile
    if tile_id then
@@ -498,7 +508,7 @@ function InstancedMap:reveal_tile(x, y, tile_id)
    memory["base.map_tile"] = memory["base.map_tile"] or {}
    memory["base.map_tile"][ind] = { tile or self:tile(x, y) }
 
-   self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+   self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    self._memorized[ind] = nil
 end
 
@@ -507,7 +517,8 @@ function InstancedMap:reveal_objects(x, y)
    local ind = y * self._width + x + 1;
 
    for _, obj in self._multi_pool:objects_at_pos(x, y) do
-      local m = obj:produce_memory()
+      local m = {}
+      obj:produce_memory(m)
       memory[obj._type] = memory[obj._type] or {}
       memory[obj._type][ind] = memory[obj._type][ind] or {}
       table.insert(memory[obj._type][ind], m)
@@ -615,11 +626,16 @@ function InstancedMap:refresh_tile(x, y)
       opaque = opaque or obj:calc("is_opaque")
 
       local tile_light = obj:calc("light")
-      if tile_light and obj:produce_memory().show then
-         tile_light.offset_y = tile_light.offset_y or 0
-         tile_light.brightness = tile_light.brightness or 0
-         tile_light.power = tile_light.power or 0
-         tile_light.flicker = tile_light.flicker or 0
+      if tile_light then
+         local m = {}
+         obj:produce_memory(m)
+
+         if m.show then
+            tile_light.offset_y = tile_light.offset_y or 0
+            tile_light.brightness = tile_light.brightness or 0
+            tile_light.power = tile_light.power or 0
+            tile_light.flicker = tile_light.flicker or 0
+         end
 
          self._light[ind] = tile_light
       end
@@ -636,7 +652,7 @@ end
 
 function InstancedMap:redraw_all_tiles()
    for _, x, y in Pos.iter_rect(0, 0, self:width()-1, self:height()-1)  do
-      self._tiles_dirty[#self._tiles_dirty+1] = {x, y}
+      self._tiles_dirty[#self._tiles_dirty+1] = y * self._width + x + 1
    end
 end
 

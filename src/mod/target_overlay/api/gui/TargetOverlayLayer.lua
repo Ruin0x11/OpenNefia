@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local IDrawLayer = require("api.gui.IDrawLayer")
 local Chara = require("api.Chara")
 local Map = require("api.Map")
+local Log = require("api.Log")
 
 local TargetOverlayLayer = class.class("TargetOverlayLayer", IDrawLayer)
 
@@ -27,6 +28,12 @@ function TargetOverlayLayer:reset()
    self.lines = {}
 end
 
+local COLORS = {
+   player = {0, 255, 0},
+   ally = {0, 0, 255},
+   enemy = {255, 0 ,0 }
+}
+
 function TargetOverlayLayer:update(dt, screen_updated)
    self.frame = self.frame + dt
    if not screen_updated then
@@ -35,34 +42,38 @@ function TargetOverlayLayer:update(dt, screen_updated)
 
    local map = Map.current()
 
-   self.lines = {}
+   local i = 1
 
    for _, chara in Chara.iter(map) do
       local target = chara:get_target()
       if target and (self.see_all or chara:is_in_fov()) then
          local offset = 0
-         local color = { 255, 0, 0 }
+         local color = COLORS.enemy
          if chara:is_player() then
-            color = { 0, 255, 0 }
+            color = COLORS.player
             offset = 2
          elseif chara:is_in_player_party() then
-            color = { 0, 0, 255 }
+            color = COLORS.ally
             offset = 4
          end
 
          local sx, sy = self.coords:tile_to_screen(chara.x + 1, chara.y + 1)
          local tx, ty = self.coords:tile_to_screen(target.x + 1, target.y + 1)
 
-         local line = {
-            sx = sx + offset,
-            sy = sy + offset,
-            tx = tx + offset,
-            ty = ty + offset,
-            color = color
-         }
-         self.lines[#self.lines+1] = line
+         local line = self.lines[i]
+         if not line then
+            self.lines[i] = {}
+            line = self.lines[i]
+         end
+         line.sx = sx + offset
+         line.sy = sy + offset
+         line.tx = tx + offset
+         line.ty = ty + offset
+         line.color = color
+         i = i + 1
       end
    end
+   self.lines[i] = nil
 end
 
 function TargetOverlayLayer:draw(draw_x, draw_y)
