@@ -1053,11 +1053,13 @@ function Effect.damage_map_cold(x, y, origin, map)
    -- <<<<<<<< shade2/chara_func.hsp:1302 	return ..
 end
 
+local function is_wandering_merchant(chara)
+   return chara:iter_roles("elona.shopkeeper"):any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
+end
+
 function Effect.start_incognito(source)
    local filter = function(chara)
-      local is_wandering_merchant = chara:iter_roles("elona.shopkeeper")
-      :any(function(role) return role.inventory_id == "elona.wandering_merchant" end)
-      if is_wandering_merchant then
+      if is_wandering_merchant(chara) then
          return false
       end
 
@@ -1090,6 +1092,26 @@ function Effect.end_incognito(source)
    end
 
    Chara.iter():filter(filter):each(apply)
+end
+
+function Effect.turn_hostile(map, target)
+   target = target or Chara.player()
+
+   -- >>>>>>>> shade2/module.hsp:125 	#module ...
+   local filter = function(chara)
+      return not chara:is_in_player_party() and (chara:find_role("elona.guard")
+                                                    or chara:find_role("elona.shop_guard")
+                                                    or is_wandering_merchant(chara))
+   end
+
+   local apply = function(chara)
+      chara:set_relation_towards(target, Enum.Relation.Enemy)
+      chara:set_aggro(target, 80)
+      chara:set_emotion_icon("elona.angry", 2)
+   end
+
+   Chara.iter(map):filter(filter):each(apply)
+   -- <<<<<<<< shade2/module.hsp:133 	return ..
 end
 
 function Effect.create_new_building(deed)

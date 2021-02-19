@@ -108,10 +108,6 @@ ICharaParty.iter_party_members = mkiter(true)
 ICharaParty.iter_other_party_members = mkiter(false)
 
 function ICharaParty:act_hostile_towards(other)
-   if not self:is_in_player_party() or other:is_player() then
-      return
-   end
-
    self:emit("base.on_act_hostile_towards", {target=other})
 end
 

@@ -481,22 +481,20 @@ end
         }
       },
       global = {
-        ambush = {
-          distance_from_nearest_town = function(_1)
-  return ("最も近い街までの距離:%s")
-  :format(_1)
-end,
-          enemy_strength = "敵勢力:",
-          rank = {
-            dragon = "ドラゴン級",
-            drake = "ドレイク級",
-            grizzly_bear = "グリズリー級",
-            lich = "リッチ級",
-            orc = "オーク級",
-            putit = "プチ級"
-          },
-          text = "襲撃だ！"
-        },
+         ambush = {
+            message = function(_1, _2)
+               return ("襲撃だ！ (最も近い街までの距離:%s 敵勢力:%s)")
+                  :format(_1, _2)
+            end,
+            rank = {
+               dragon = "ドラゴン級",
+               drake = "ドレイク級",
+               grizzly_bear = "グリズリー級",
+               lich = "リッチ級",
+               orc = "オーク級",
+               putit = "プチ級"
+            },
+         },
         diastrophism = "この大陸に大きな地殻変動が起こった。",
         nap = "仮眠をとった。",
         weather = {

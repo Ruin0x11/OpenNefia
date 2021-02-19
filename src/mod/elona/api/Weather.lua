@@ -2,6 +2,7 @@ local Draw = require("api.Draw")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
 local Rand = require("api.Rand")
+local Log = require("api.Log")
 
 local Weather = {}
 
@@ -94,6 +95,11 @@ end
 
 function Weather.stop()
    Gui.stop_draw_callback("elona.weather")
+end
+
+function Weather.is(weather_id)
+   Log.error("TODO")
+   return false
 end
 
 return Weather

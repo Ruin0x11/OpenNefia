@@ -13,8 +13,7 @@ local Map = require("api.Map")
 local Effect = require("mod.elona.api.Effect")
 local Skill = require("mod.elona_sys.api.Skill")
 
--- if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0:return:else:txtMore:txt lang("あなたはクライアントを置き去りにした。","You left
--- your client.")
+local global = require("mod.elona.internal.global")
 
 local function escort_for_quest(quest, map)
    -- >>>>>>>> shade2/map.hsp:2104 			repeat maxFollower ..
@@ -56,14 +55,14 @@ local escort = {
    min_fame = 0,
    chance = 11,
 
-   params = { escort_difficulty = "number", destination_map_uid = "number" },
+   params = { escort_type = "string", destination_map_uid = "number", encounters_seen = "number" },
 
    difficulty = 0,
 
    expiration_hours = function() return (Rand.rnd(6) + 2) * 24 end,
 
    locale_data = function(self)
-      return {map = self.params.destination_map_name}, "difficulty._" .. self.params.escort_difficulty
+      return {map = self.params.destination_map_name}, "type." .. self.params.escort_type
    end,
 
    prevents_return = true
@@ -75,21 +74,21 @@ function escort.generate(self, client, start)
       return false, "No destinations to escort to."
    end
 
-   local escort_difficulty = Rand.rnd(3)
+   local escort_type = Rand.choice { "assassin", "poison", "deadline" }
    local dist = Pos.dist(start.world_map_x, start.world_map_y, dest.world_map_x, dest.world_map_y)
 
-   if escort_difficulty == 0 then
+   if escort_type == "assassin" then
       self.reward_fix = 140 + dist * 2
       self.deadline_days = Rand.rnd(8) + 6
       self.difficulty = math.clamp(Rand.rnd(Chara.player():calc("level") + 10)
                                       + Rand.rnd(Chara.player():calc("fame") / 500 + 1)
                                       + 1,
                                    1, 80)
-   elseif escort_difficulty == 1 then
+   elseif escort_type == "poison" then
       self.reward_fix = 130 + dist * 2
       self.deadline_days = Rand.rnd(5) + 2
       self.difficulty = math.clamp(math.floor(self.reward_fix / 10 + 1), 1, 40)
-   elseif escort_difficulty == 2 then
+   elseif escort_type == "deadline" then
       self.reward_fix = 80 + dist * 2
       self.deadline_days = Rand.rnd(8) + 6
       self.difficulty = math.clamp(math.floor(self.reward_fix / 20) + 1, 1, 40)
@@ -100,9 +99,10 @@ function escort.generate(self, client, start)
    end
 
    self.params = {
-      escort_difficulty = escort_difficulty,
+      escort_type = escort_type,
       destination_map_uid = dest.uid,
-      destination_map_name = dest.name
+      destination_map_name = dest.name,
+      encounters_seen = 0
    }
 
    return true
@@ -120,19 +120,19 @@ function escort.on_failure(self)
    if chara then
       chara.is_being_escorted = nil
       if Chara.is_alive(chara) then
-         local difficulty = self.params.escort_difficulty
+         local escort_type = self.params.escort_type
          local damage_source
-         if difficulty == 0 then
+         if escort_type == "assassin" then
             Gui.mes_c("quest.escort.failed.assassin", "SkyBlue", chara)
             damage_source = "elona.unknown"
-         elseif difficulty == 1 then
+         elseif escort_type == "poison" then
             Gui.mes_c("quest.escort.failed.poison", "SkyBlue", chara)
             damage_source = "elona.from_poison"
-         elseif difficulty == 2 then
+         elseif escort_type == "deadline" then
             Gui.mes_c("quest.escort.failed.deadline", "SkyBlue", chara)
             damage_source = "elona.from_fire"
          end
-         chara:damage_hp(999999, damage_source)
+         chara:damage_hp(math.max(999999, chara.hp), damage_source)
       end
       chara.state = "Dead"
       if chara:is_ally() then
@@ -259,13 +259,16 @@ local function check_escort_left_behind(_, params)
    -- >>>>>>>> shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
    local quest = params.quest
 
-   if quest.state == "completed" then
-      return
-   end
-
-   if quest._id == "elona.escort" and quest.state ~= "accepted" then
+   -- TODO create a temporary "sub quest" for the random encounter, preserve the
+   -- state of the overarching escort quest
+   if quest._id == "elona.escort" and quest.state == "completed" then
+      quest.state = "accepted"
       save.elona_sys.immediate_quest_uid = nil
       return true
+   end
+
+   if quest.state == "completed" then
+      return
    end
 
    Gui.mes("quest.escort.you_left_your_client")
@@ -273,3 +276,22 @@ local function check_escort_left_behind(_, params)
    -- <<<<<<<< shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
 end
 Event.register("elona_sys.on_quest_map_leave", "Check if escort was left behind", check_escort_left_behind)
+
+local function proc_assassin_encounter(map, params, encounter_id)
+   -- >>>>>>>> shade2/action.hsp:664 			if rnd(20)=0{ ...
+   if Rand.one_in(20) then
+      local filter = function(quest)
+         return quest._id == "elona.escort" and quest.params.escort_type == "protect" and quest.params.encounters_seen < 2
+      end
+      local escort_quest = Quest.iter_accepted():filter(filter):nth(1)
+      if escort_quest then
+         encounter_id = "elona.assassin"
+         escort_quest.params.encounters_seen = escort_quest.params.encounters_seen + 1
+         global.encounter_quest_uid = escort_quest.uid
+      end
+   end
+
+   return encounter_id
+   -- <<<<<<<< shade2/action.hsp:670 			} ..
+end
+Event.register("elona.on_generate_random_encounter_id", "Chance to encounter assassins in world map for escort quests", proc_assassin_encounter)

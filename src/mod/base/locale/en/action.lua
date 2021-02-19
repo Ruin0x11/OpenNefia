@@ -479,11 +479,10 @@ return {
          },
          global = {
             ambush = {
-               distance_from_nearest_town = function(_1)
-                  return ("Distance from nearest town:%s")
-                     :format(_1)
+               message = function(_1, _2)
+                  return ("Ambush! (Distance from nearest town:%s Enemy strength:%s)")
+                     :format(_1, _2)
                end,
-               enemy_strength = "Enemy strength:",
                rank = {
                   dragon = "Dragon Rank",
                   drake = "Drake Rank",
@@ -492,7 +491,6 @@ return {
                   orc = "Orc Rank",
                   putit = "Putit Rank"
                },
-               text = "Ambush!"
             },
             diastrophism = "A sudden diastrophism hits the continent.",
             nap = "You take a nap.",

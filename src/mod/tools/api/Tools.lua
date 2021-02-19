@@ -25,6 +25,7 @@ local Skill = require("mod.elona_sys.api.Skill")
 local Magic = require("mod.elona_sys.api.Magic")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 local World = require("api.World")
+local Encounter = require("mod.elona.api.Encounter")
 
 local Tools = {}
 
@@ -1059,6 +1060,12 @@ function Tools.quick_quest(quest_id)
    end
 
    visit_quest_giver(new_quest)
+end
+
+function Tools.quick_encounter(id, level)
+   local player = Chara.player()
+   local outer_map = player:current_map()
+   Encounter.start(id, outer_map, player.x, player.y, level)
 end
 
 return Tools

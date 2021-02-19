@@ -42,18 +42,6 @@ function FieldMap.generate(stood_tile, width, height, outer_map)
    map.default_ai_calm = 0
    map.default_tile = field.fog
 
-   -- TODO
-   -- map:set_outer_map(params.outer_map or Map.current(), params.stood_x, params.stood_y)
-
-   -- TODO encounter
-   -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
-   if true then
-      for _ = 1, map:calc("max_crowd_density") do
-        MapgenUtils.generate_chara(map)
-      end
-   end
-   -- <<<<<<<< shade2/map.hsp:1591 			} ..
-
    return map
 end
 

@@ -25,6 +25,7 @@ local event = {
    { _id = "on_ai_dir_check" },
    { _id = "before_default_ai_action" },
    { _id = "on_default_ai_action" },
+   { _id = "on_generate_random_encounter_id" },
 }
 
 data:add_multi("base.event", event)

@@ -16,6 +16,7 @@ local Enum = require("api.Enum")
 local Log = require("api.Log")
 local Command = require("mod.elona_sys.api.Command")
 local FieldMap = require("mod.elona.api.FieldMap")
+local MapgenUtils = require("mod.elona.api.MapgenUtils")
 
 local ElonaCommand = {}
 
@@ -507,6 +508,13 @@ function ElonaCommand.enter_action(player)
    if is_world_map then
       local stood_tile = Map.tile(player.x, player.y)
       local map = FieldMap.generate(stood_tile, 34, 22, Map.current())
+
+      -- >>>>>>>> shade2/map.hsp:1586 		if encounter=0{ ...
+      for _ = 1, map:calc("max_crowd_density") do
+         MapgenUtils.generate_chara(map)
+      end
+      -- <<<<<<<< shade2/map.hsp:1591 			} ..
+
       map:set_previous_map_and_location(Map.current(), player.x, player.y)
 
       Gui.play_sound("base.exitmap1")

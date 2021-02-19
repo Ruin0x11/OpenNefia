@@ -189,8 +189,8 @@ local quest = {
       }
    },
    escort = {
-      difficulty = {
-         _0 = {
+      type = {
+         protect = {
             _1 = {
                title = "使者の護衛",
                desc = function(player, speaker, params)
@@ -213,7 +213,7 @@ local quest = {
                end
             },
          },
-         _1 = {
+         poison = {
             _1 = {
                title = "急ぎの護衛",
                desc = function(player, speaker, params)
@@ -236,7 +236,7 @@ local quest = {
                end
             },
          },
-         _2 = {
+         deadline = {
             _1 = {
                title = "護衛求む！",
                desc = function(player, speaker, params)
