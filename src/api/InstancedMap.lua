@@ -272,13 +272,51 @@ end
 --- @tparam int x2
 --- @tparam int y2
 --- @treturn bool
-function InstancedMap:has_los(x1, y1, x2, y2)
-   local cb = function(x, y)
-      return self:can_see_through(x, y)
-      -- in Elona, the final tile is visible even if it is solid.
-         or (x == x2 and y == y2)
+function InstancedMap:has_los(start_x, start_y, end_x, end_y)
+
+   -- inlined from Pos.iter_line() to prevent allocations
+   local delta_x, delta_y, bound_x, bound_y
+
+   if start_x < end_x then
+      delta_x = 1
+      bound_x = end_x - start_x
+   else
+      delta_x = -1
+      bound_x = start_x - end_x
    end
-   return Pos.iter_line(x1, y1, x2, y2):all(cb)
+
+   if start_y < end_y then
+      delta_y = 1
+      bound_y = end_y - start_y
+   else
+      delta_y = -1
+      bound_y = start_y - end_y
+   end
+
+   local err = bound_x - bound_y
+   local x = start_x
+   local y = start_y
+
+   while x ~= end_x or y ~= end_y do
+      if not (self:can_see_through(x, y)
+      -- in Elona, the final tile is visible even if it is solid.
+              or (x == end_x and y == end_y))
+      then
+         return false
+      end
+
+      local e = err + err
+      if e > -bound_y then
+         err = err - bound_y
+         x = x + delta_x
+      end
+      if e < bound_x then
+         err = err + bound_x
+         y = y + delta_y
+      end
+   end
+
+   return true
 end
 
 --- Calculates the positions that can be seen by the player and are
@@ -287,16 +325,27 @@ end
 -- @tparam int player_y
 -- @tparam int fov_radius
 function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
+   local total = require("api.MemoryProfiler"):new()
+   local mp = require("api.MemoryProfiler"):new()
    local stw = math.min(Draw.get_tiled_width(), self._width)
    local sth = math.min(Draw.get_tiled_height(), self._height)
 
-   self._shadow_map = t()
    for i=0,stw + 4 do
-      self._shadow_map[i] = {}
-      for j=0,sth + 4 do
-         self._shadow_map[i][j] = 0
+      if self._shadow_map[i] then
+         for j=0, #self._shadow_map[i]+1 do
+            self._shadow_map[i][j] = 0
+         end
+         for j=#self._shadow_map[i]+2,sth+4 do
+            self._shadow_map[i][j] = nil
+         end
+      else
+         self._shadow_map[i] = {}
+         for j=0,sth + 4 do
+            self._shadow_map[i][j] = 0
+         end
       end
    end
+   mp:p("alloc")
 
    local fov_radius = gen_fov_radius(fov_size)
    local radius = math.floor((fov_size + 2) / 2)
@@ -393,6 +442,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
       ly = ly + 1
    end
 
+   total:p("TOTAL")
    return self._shadow_map, start_x, start_y
 end
 
