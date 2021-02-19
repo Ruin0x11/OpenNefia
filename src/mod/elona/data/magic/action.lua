@@ -982,7 +982,7 @@ data:add {
    cast = function(self, params)
       local source = params.source
       local target = params.target
-      local map = params.source:current_map()
+      local map = source:current_map()
 
       if target:is_player() then
          Gui.mes("common.nothing_happens")

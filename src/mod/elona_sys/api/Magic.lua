@@ -9,6 +9,7 @@ local Pos = require("api.Pos")
 local Action = require("api.Action")
 local ElonaAction = require("mod.elona.api.ElonaAction")
 local Enum = require("api.Enum")
+local Log = require("api.Log")
 
 local Magic = {}
 
@@ -99,8 +100,6 @@ function Magic.get_ai_location(target_type, range, caster, triggered_by, ai_targ
 
    if target_type == "enemy" or target_type == "other" or target_type == "target_or_location" then
       if Pos.dist(caster.x, caster.y, ai_target.x, ai_target.y) > range then
-         Gui.mes_duplicate()
-         Gui.mes("action.which_direction.out_of_range")
          return false, {}
       end
 
@@ -311,17 +310,7 @@ end
 --  - element (id:base.element): Element the spell uses.
 function Magic.cast(id, params)
    local magic = data["elona_sys.magic"]:ensure(id)
-   params = params or {
-      power = 0,
-      source = nil,
-      target = nil,
-      item = nil,
-      triggered_by = nil,
-      curse_state = nil,
-      x = nil,
-      y = nil,
-      range = nil
-   }
+   assert(type(params) == "table", "'params' table must be provided")
    params.power = params.power or 0
    params.range = params.range or 1
 
@@ -344,6 +333,15 @@ function Magic.cast(id, params)
    params.curse_state = params.curse_state or Enum.CurseState.Normal
 
    params.power = calc_adjusted_power(magic, params.power, curse_state)
+
+   if magic.params then
+      for _, key in ipairs(magic.params) do
+         if params[key] == nil then
+            Log.error("Magic %s requires parameter '%s', got: %s", magic._id, key, inspect(table.keys(params)))
+            return false
+         end
+      end
+   end
 
    local did_something, result = magic:cast(params)
 

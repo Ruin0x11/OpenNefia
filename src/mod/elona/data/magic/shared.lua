@@ -1765,7 +1765,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       Gui.mes_visible("magic.mutation.spell", source, target)
@@ -1808,7 +1808,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       local times = 1
@@ -1841,7 +1841,7 @@ data:add {
       local target = params.target
 
       if not target:is_player() then
-         return Magic.cast("elona.change")
+         return Magic.cast("elona.change", params)
       end
 
       local times = 2 + Rand.rnd(3)

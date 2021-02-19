@@ -557,9 +557,15 @@ function Magic.do_action(skill_id, caster)
    -- TODO: action: death word
    --
    local skill_data = data["base.skill"]:ensure(skill_id)
+   local params = {
+      triggered_by = "action",
+      curse_state = "normal",
+      power = Skill.calc_spell_power(skill_id, caster),
+      range = skill_data.range
+   }
 
    local target = caster:get_target()
-   local success, params = elona_sys_Magic.get_magic_location(skill_data.target_type,
+   local success, result = elona_sys_Magic.get_magic_location(skill_data.target_type,
                                                               skill_data.range,
                                                               caster,
                                                               "action",
@@ -570,6 +576,8 @@ function Magic.do_action(skill_id, caster)
    if not success then
       return false
    end
+
+   params = table.merge(params, result)
 
    if skill_data.target_type ~= "self_or_nearby" and skill_data.target_type ~= "self" then
       if caster:has_effect("elona.confusion") or caster:has_effect("elona.blindness") then
