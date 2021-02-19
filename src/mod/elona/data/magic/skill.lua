@@ -27,7 +27,6 @@ data:add {
    type = "skill",
    params = {
       "source",
-      "target",
    },
    cost = 25,
 

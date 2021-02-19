@@ -3,6 +3,7 @@ local TopicWindow = require("api.gui.TopicWindow")
 local VisualAIPlanGrid = require("mod.visual_ai.api.gui.VisualAIPlanGrid")
 local Draw = require("api.Draw")
 local Color = require("mod.extlibs.api.Color")
+local UiShadowedText = require("api.gui.UiShadowedText")
 
 local VisualAIBlockCard = class.class("VisualAIBlockCard", IUiElement)
 
@@ -29,7 +30,7 @@ function VisualAIBlockCard:_rewrap_text()
       offset_x = 20
    end
    local _, wrapped = Draw.wrap_text(self.text, self.width - 40 - 100 - offset_x)
-   self.wrapped = wrapped
+   self.wrapped = fun.iter(wrapped):map(function(i) return UiShadowedText:new(i, 14) end):to_list()
 end
 
 function VisualAIBlockCard:set_text(text)
@@ -62,8 +63,9 @@ function VisualAIBlockCard:draw()
                               self.x + 20 + offset_x, self.y + self.height / 2 - self.tile_size_px / 2, self.tile_size_px, 8)
 
    Draw.set_font(14)
-   for i, line in ipairs(self.wrapped) do
-      Draw.text_shadowed(line, self.x + 24 + offset_x + self.tile_size_px + 5, self.y + 5 + i * Draw.text_height())
+   for i, text in ipairs(self.wrapped) do
+      text:relayout(self.x + 24 + offset_x + self.tile_size_px + 5, self.y + 5 + i * Draw.text_height())
+      text:draw()
    end
 
    if not self.selected then

@@ -153,6 +153,9 @@ function startup.run(mods)
 
    Event.trigger("base.on_engine_init")
 
+   collectgarbage("setpause", config.base.gc_pause)
+   collectgarbage("setstepmul", config.base.gc_step_multiplier)
+
    load_keybinds()
 
    progress("Finished.")

@@ -47,8 +47,8 @@ function tile_overhang_layer:update(dt, screen_updated)
    assert(map ~= nil)
 
    for _, p in ipairs(map._tiles_dirty) do
-      local x = p[1]
-      local y = p[2]
+      local x = (p - 1) % map:width()
+      local y = math.floor((p - 1) / map:width())
       local m = map:memory(x, y, "base.map_tile")
 
       if m then

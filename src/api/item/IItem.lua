@@ -113,7 +113,7 @@ end
 
 local Item = nil
 
-function IItem:produce_memory()
+function IItem:produce_memory(memory)
    local shadow_angle
    local stack_height = 8
    local is_tall = false
@@ -128,17 +128,15 @@ function IItem:produce_memory()
 
    Item = Item or require("api.Item")
 
-   return {
-      uid = self.uid,
-      show = Item.is_alive(self),
-      image = (self.image or ""),
-      color = self:calc("color"),
-      x_offset = x_offset,
-      y_offset = y_offset,
-      shadow_type = "drop_shadow",
-      shadow = shadow_angle,
-      stack_height = stack_height
-   }
+   memory.uid = self.uid
+   memory.show = self.amount > 0
+   memory.image = (self.image or "")
+   memory.color = self:calc("color")
+   memory.x_offset = x_offset
+   memory.y_offset = y_offset
+   memory.shadow_type = "drop_shadow"
+   memory.shadow = shadow_angle
+   memory.stack_height = stack_height
 end
 
 function IItem:produce_locale_data()

@@ -109,6 +109,9 @@ end
 function KeyHandler:halt_input()
    self.repeat_delays = {}
    self.pressed = {}
+   -- TODO maybe modifiers should be preserved in some cases (repeated ctrl-key
+   -- presses) and not in others (switching contexts between different UI
+   -- layers)
    self.modifiers = {}
    self.halted = true
    self.stop_halt = false

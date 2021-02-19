@@ -36,6 +36,8 @@ end
 
 local Map
 
+local SUBTRACT_COLOR = { 155, 155, 155 }
+
 function UiMinimap:refresh_visible(map)
    if not self.tile_batch then
       return
@@ -53,7 +55,6 @@ function UiMinimap:refresh_visible(map)
    self.tile_batch:clear()
 
    -- >>>>>>>> shade2/screen.hsp:1270 *rader_preDraw ..
-   local sub = { 155, 155, 155 }
    for _, x, y, tile in map:iter_tiles() do
       if map:is_memorized(x, y) then
          local color
@@ -65,7 +66,7 @@ function UiMinimap:refresh_visible(map)
             -- the sprite batch with alpha blending, turn on subtractive
             -- blending, then draw the blending sprite batch on top of the first
             -- sprite batch.
-            color = sub
+            color = SUBTRACT_COLOR
          end
          self.tile_batch:add(tile._id, math.ceil(x * self.tw), math.ceil(y * self.th), self.tw, self.th, color)
       end
@@ -75,7 +76,8 @@ end
 
 function UiMinimap:draw()
    -- TODO correct offsets
-   self.t.base.hud_minimap:draw(self.x, self.y+1, nil, nil, {255, 255, 255})
+   Draw.set_color(255, 255, 255)
+   self.t.base.hud_minimap:draw(self.x, self.y+1)
    self.tile_batch:draw(self.x, self.y+3, self.width, self.height)
    Draw.set_blend_mode("add")
    Draw.set_color(10, 10, 10)

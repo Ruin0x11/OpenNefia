@@ -235,7 +235,6 @@ function Command.quit_game()
    if res.index == 1 then
       local can_save = true -- TODO showroom
       if can_save then
-         Gui.play_sound("base.write1")
          Save.save_game()
          Gui.mes("action.exit.saved")
          Gui.mes("action.exit.you_close_your_eyes")

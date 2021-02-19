@@ -203,15 +203,17 @@ function chip_layer:draw_normal(ind, map, stack, chip_type, found)
    local y = math.floor((ind-1) / map:width())
 
    for _, i in ipairs(stack) do
-      found[i.uid] = true
+      if i.uid then
+         found[i.uid] = true
 
-      local show = i.show
-      if not map:is_in_fov(x, y) then
-         show = show and CONFIG[chip_type].show_memory
-      end
+         local show = i.show
+         if not map:is_in_fov(x, y) then
+            show = show and CONFIG[chip_type].show_memory
+         end
 
-      if show then
-         self:draw_one(ind, x, y, i, chip_type)
+         if show then
+            self:draw_one(ind, x, y, i, chip_type)
+         end
       end
    end
 end
@@ -223,12 +225,14 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
    local show_count = 0
    local to_show = {}
    for _, i in ipairs(stack) do
-      local show = i.show
-      if not map:is_in_fov(x, y) then
-         show = show and CONFIG[chip_type].show_memory
+      if i.uid then
+         local show = i.show
+         if not map:is_in_fov(x, y) then
+            show = show and CONFIG[chip_type].show_memory
+         end
+         to_show[i] = show
+         show_count = show_count + 1
       end
-      to_show[i] = show
-      show_count = show_count + 1
    end
 
    if show_count > 3 then
@@ -246,11 +250,13 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
    else
       local stack_height = 0
       for _, i in ipairs(stack) do
-         found[i.uid] = true
+         if i.uid then
+            found[i.uid] = true
 
-         if to_show[i] then
-            self:draw_one(ind, x, y, i, chip_type, stack_height)
-            stack_height = stack_height + i.stack_height
+            if to_show[i] then
+               self:draw_one(ind, x, y, i, chip_type, stack_height)
+               stack_height = stack_height + i.stack_height
+            end
          end
       end
    end

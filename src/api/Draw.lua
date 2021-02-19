@@ -348,15 +348,22 @@ Draw.yield = coroutine.yield
 --- @tparam[opt] color color
 --- @tparam[opt] color shadow_color
 function Draw.text_shadowed(str, x, y, color, shadow_color)
-   color = color or {255, 255, 255}
-   shadow_color = shadow_color or {0, 0, 0}
-   Draw.set_color(shadow_color[1], shadow_color[2], shadow_color[3], shadow_color[4])
+   local cr, cg, cb, ca = 255, 255, 255, 255
+   if color then
+      cr, cg, cb, ca = color[1], color[2], color[3], color[4]
+   end
+   local scr, scg, scb, sca = 0, 0, 0, 255
+   if shadow_color then
+      scr, scg, scb, sca = shadow_color[1], shadow_color[2], shadow_color[3], shadow_color[4]
+   end
+   Draw.set_color(scr, scg, scb, sca)
    for dx=-1,1 do
       for dy=-1,1 do
          Draw.text(str, x + dx, y + dy)
       end
    end
-   Draw.text(str, x, y, color)
+   Draw.set_color(cr, cg, cb, ca)
+   Draw.text(str, x, y)
 end
 
 -- HACK: Needs to be replaced with resource system.

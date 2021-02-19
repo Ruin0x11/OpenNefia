@@ -67,29 +67,32 @@ function TopicWindow:draw()
    local width = self.width
    local height = self.height
    local fill_style = self.fill_style
-   local color = {255, 255, 255}
 
    if fill_style == 6 then
-      Draw.image(self.batch, x + width / 2, y + height / 2, width - 4, height - 4, {255, 255, 255, 180})
+      Draw.set_color(255, 255, 255, 180)
+      Draw.image(self.batch, x + width / 2, y + height / 2, width - 4, height - 4)
    elseif fill_style < 5 then
       local rect = true
       if fill_style == 0 then
+         Draw.set_color(255, 255, 255)
          rect = false
       elseif fill_style == 1 then
-         color = {255-195, 255-205, 255-195}
+         Draw.set_color(255-195, 255-205, 255-195)
       elseif fill_style == 2 then
-         color = {255-210, 255-215, 255-205}
+         Draw.set_color(255-210, 255-215, 255-205)
       elseif fill_style == 3 then
-         color = {255-10, 255-13, 255-16}
+         Draw.set_color(255-10, 255-13, 255-16)
       elseif fill_style == 4 then
-         color = {255-195, 255-205, 255-195}
+         Draw.set_color(255-195, 255-205, 255-195)
+      else
+         Draw.set_color(255, 255, 255)
       end
       -- if rect then
       --    Draw.filled_rect(x + 4, y + 4, width - 4, height - 4, )
       -- end
    end
 
-   self.i_window:draw_region("fill", x + 4, y + 4, width - 6, height - 8, color)
+   self.i_window:draw_region("fill", x + 4, y + 4, width - 6, height - 8)
 
    Draw.set_color(255, 255, 255, 255)
    Draw.image(self.batch, x, y)
@@ -98,7 +101,8 @@ function TopicWindow:draw()
       Draw.image(self.batch, x + 2, x + 2, width - 4, height - 5, {255-195, 255-205, 255-195})
 
       Draw.set_blend_mode("subtract")
-      Draw.filled_rect(x + 2, y + 2, width - 4, height - 5, {195, 205, 195})
+      Draw.set_color(195, 205, 195)
+      Draw.filled_rect(x + 2, y + 2, width - 4, height - 5)
       Draw.set_blend_mode("alpha")
    end
 end

@@ -6,13 +6,11 @@ local UiTheme = require("api.gui.UiTheme")
 local UiLevel = class.class("UiLevel", {IUiWidget, ISettable})
 
 function UiLevel:init()
-   self.level = 1
-   self.exp = 0
+   self.text = ""
 end
 
 function UiLevel:set_data(level, exp)
-   self.level = level or -1
-   self.exp = exp or -1
+   self.text = string.format("Lv%s/%d", level or -1, exp or -1)
 end
 
 function UiLevel:default_widget_position(x, y, width, height)
@@ -37,7 +35,7 @@ function UiLevel:draw()
    Draw.set_font(13) -- 13 - en * 2
    Draw.set_color(255, 255, 255)
    self.t.base.character_level_icon:draw(self.x + 4, self.y)
-   Draw.text_shadowed(string.format("Lv%s/%d", self.level, self.exp),
+   Draw.text_shadowed(self.text,
                       self.x + 32,
                       self.y + 2,
                       self.t.base.text_color_light,

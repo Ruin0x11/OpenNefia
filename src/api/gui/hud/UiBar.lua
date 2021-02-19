@@ -49,7 +49,8 @@ end
 
 function UiBar:draw()
    Draw.set_font(12, "bold") -- 12 - en * 2
-   self.t.base.hp_bar_frame:draw(self.x, self.y, 104, 15, {255, 255, 255})
+   Draw.set_color(255, 255, 255)
+   self.t.base.hp_bar_frame:draw(self.x, self.y, 104, 15)
 
    if self.inner_width > 0 then
       Draw.set_color(255, 255, 255)

@@ -88,26 +88,24 @@ function UiWindow:draw()
 
    self.t.base.tip_icons:draw_region(1, x + 30 + x_offset, y + height - 47 - height % 8)
 
+   Draw.set_color(194, 170, 146)
    Draw.line(x + 50 + x_offset,
              y + height - 48 - self.height % 8,
              x + width - 40,
-             y + height - 48 - height % 8,
-             {194, 170, 146})
+             y + height - 48 - height % 8)
 
+   Draw.set_color(234, 220, 188)
    Draw.line(x + 50 + x_offset,
              y + height - 49 - self.height % 8,
              x + width - 40,
-             y + height - 49 - height % 8,
-             {234, 220, 188})
+             y + height - 49 - height % 8)
 
    Draw.set_font(15) -- 15 + en - en * 2
 
    Draw.text_shadowed(title,
                       x + 45 * width / 200 + 34 - (Draw.text_width(title) / 2)
-                         + math.clamp(Draw.text_width(title) - 120, 0, 200) / 2,
-   y + 4, -- y + 4 + vfix
-   {255, 255, 255},
-   {20, 10, 0})
+                      + math.clamp(Draw.text_width(title) - 120, 0, 200) / 2,
+                      y + 4) -- y + 4 + vfix
 
    Draw.set_color(0, 0, 0)
    Draw.set_font(12) -- 12 + sizefix - en * 2

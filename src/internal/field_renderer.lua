@@ -133,6 +133,10 @@ function field_renderer:update(dt)
       if result then -- not nil or false
          going = true
       end
+      if self.screen_updated then
+      end
+   end
+   if self.screen_updated then
    end
 
    if not going then

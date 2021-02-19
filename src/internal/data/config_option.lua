@@ -598,6 +598,24 @@ data:add_multi(
 
          type = "integer",
          default = 10000
+      },
+      {
+         _id = "gc_pause",
+
+         type = "integer",
+         default = 100,
+         on_changed = function(v)
+            collectgarbage("setpause", v)
+         end
+      },
+      {
+         _id = "gc_step_multiplier",
+
+         type = "integer",
+         default = 800,
+         on_changed = function(v)
+            collectgarbage("setstepmul", v)
+         end
       }
    }
 )

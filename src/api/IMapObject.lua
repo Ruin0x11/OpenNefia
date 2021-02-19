@@ -131,9 +131,8 @@ end
 --- Each draw layer is intended to interpret this data differently
 --- depending on what drawing logic is needed.
 ---
---- @treturn[opt] table
-function IMapObject:produce_memory()
-   return nil
+--- @tparam table memory
+function IMapObject:produce_memory(memory)
 end
 
 function IMapObject:replace_with(other)
