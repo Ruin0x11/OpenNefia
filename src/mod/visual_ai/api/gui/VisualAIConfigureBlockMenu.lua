@@ -8,6 +8,7 @@ local UiWindow = require("api.gui.UiWindow")
 local VisualAIConfigureBlockList = require("mod.visual_ai.api.gui.VisualAIConfigureBlockList")
 local utils = require("mod.visual_ai.internal.utils")
 local VisualAIBlockCard = require("mod.visual_ai.api.gui.VisualAIBlockCard")
+local Gui = require("api.Gui")
 
 local VisualAIConfigureBlockMenu = class.class("VisualAIConfigureBlockMenu", IUiLayer)
 
@@ -81,6 +82,7 @@ function VisualAIConfigureBlockMenu:update(dt)
    end
 
    if self.chosen then
+      Gui.play_sound("base.ok1")
       return self.list:get_vars(), nil
    end
 

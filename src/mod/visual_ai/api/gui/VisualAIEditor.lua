@@ -9,6 +9,7 @@ local VisualAIPlanGrid = require("mod.visual_ai.api.gui.VisualAIPlanGrid")
 local VisualAIInsertMenu = require("mod.visual_ai.api.gui.VisualAIInsertMenu")
 local VisualAIPlan = require("mod.visual_ai.api.plan.VisualAIPlan")
 local utils = require("mod.visual_ai.internal.utils")
+local Gui = require("api.Gui")
 
 local VisualAIEditor = class.class("VisualAIEditor", IUiLayer)
 
@@ -48,6 +49,7 @@ function VisualAIEditor:make_keymap()
 end
 
 function VisualAIEditor:on_query()
+   Gui.play_sound("base.pop2")
    self.canceled = false
 end
 
@@ -61,6 +63,8 @@ function VisualAIEditor:add()
    if tile == nil then
       return
    end
+
+   Gui.play_sound("base.ok1")
 
    if tile.type == "empty" then
       print(self.last_category)
@@ -110,6 +114,8 @@ function VisualAIEditor:delete(merge_type)
       return
    end
 
+   Gui.play_sound("base.ok1")
+
    tile.plan:remove_block(tile.block, merge_type)
    self:refresh_grid()
 end
@@ -120,6 +126,8 @@ function VisualAIEditor:delete_to_right()
       return
    end
 
+   Gui.play_sound("base.ok1")
+
    tile.plan:remove_block_and_rest(tile.block)
    self:refresh_grid()
 end
@@ -129,6 +137,8 @@ function VisualAIEditor:swap_branches()
    if tile == nil or tile.type ~= "block" then
       return
    end
+
+   Gui.play_sound("base.ok1")
 
    tile.plan:swap_branches(tile.block)
    self:refresh_grid()

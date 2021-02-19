@@ -1286,6 +1286,16 @@ local assets = {
       type = "color",
       color = {0, 0, 0, 128}
    },
+   {
+      _id = "text_list_key_name",
+      type = "color",
+      color = {250, 240, 230},
+   },
+   {
+      _id = "text_list_key_name_shadow",
+      type = "color",
+      color = {50, 60, 80},
+   },
 
    {
       _id = "stat_penalty_color",

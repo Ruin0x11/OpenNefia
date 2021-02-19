@@ -125,7 +125,6 @@ end
 
 function field_layer:update_screen(scroll, dt)
    if not self.is_active or not self.renderer then return end
-   local sw = require("api.Stopwatch"):new()
 
    if scroll == nil or self.no_scroll then
       scroll = false

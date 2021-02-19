@@ -10,6 +10,7 @@ local Draw = require("api.Draw")
 local I18N = require("api.I18N")
 local utils = require("mod.visual_ai.internal.utils")
 local VisualAIConfigureBlockMenu = require("mod.visual_ai.api.gui.VisualAIConfigureBlockMenu")
+local Gui = require("api.Gui")
 
 local VisualAIInsertMenu = class.class("VisualAIInsertMenu", IUiLayer)
 
@@ -40,6 +41,7 @@ function VisualAIInsertMenu:make_keymap()
 end
 
 function VisualAIInsertMenu:on_query()
+   Gui.play_sound("base.pop2")
    self.canceled = false
 end
 
@@ -92,6 +94,7 @@ function VisualAIInsertMenu:update(dt)
    self.category_win:update(dt)
 
    if chosen then
+      Gui.play_sound("base.ok1")
       local block = utils.make_block(chosen.block_id)
       if next(block.proto.vars) then
          local var_defs = make_var_defs(block)

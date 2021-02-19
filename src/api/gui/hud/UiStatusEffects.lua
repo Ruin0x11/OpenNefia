@@ -84,12 +84,14 @@ function UiStatusEffects:draw()
    Draw.set_font(self.t.base.status_indicator_font)
    local y = self.y
    for _, indicator in ipairs(self.indicators) do
-      Draw.set_color({255, 255, 255})
+      Draw.set_color(255, 255, 255)
       self.t.base.status_effect_bar:draw(self.x, y, self.max_width, nil, nil)
-      Draw.text(indicator.text,
-                self.x + 6,
-                y + 1, -- y + vfix + 1
-                indicator.color or {0, 0, 0})
+      if indicator.color then
+         Draw.set_color(indicator.color)
+      else
+         Draw.set_color(0, 0, 0)
+      end
+      Draw.text(indicator.text, self.x + 6, y + 1) -- y + vfix + 1
       y = y + 20
    end
 end

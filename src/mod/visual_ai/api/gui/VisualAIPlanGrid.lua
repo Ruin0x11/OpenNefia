@@ -5,6 +5,7 @@ local IUiElement = require("api.gui.IUiElement")
 local Draw = require("api.Draw")
 local Color = require("mod.extlibs.api.Color")
 local utils = require("mod.visual_ai.internal.utils")
+local Gui = require("api.Gui")
 
 local VisualAIPlanGrid = class.class("VisualAIPlanGrid", {IUiElement, IInput})
 
@@ -43,6 +44,7 @@ function VisualAIPlanGrid:make_keymap()
 end
 
 function VisualAIPlanGrid:move_cursor(dx, dy)
+   Gui.play_sound("base.cursor1")
    self.cursor_x = math.wrap(self.cursor_x + dx, 1, self.tile_count_x + 1)
    self.cursor_y = math.wrap(self.cursor_y + dy, 1, self.tile_count_y + 1)
    self:_recalc_offsets()
