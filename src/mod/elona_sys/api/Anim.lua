@@ -55,7 +55,7 @@ function Anim.load(anim_id, tx, ty)
    assert(asset.count_x)
 
    local map = Map.current()
-   if not map or not map:is_in_fov(tx, ty) or config.base.anime_wait == 0 then
+   if not map or not map:is_in_fov(tx, ty) then
       return function() end
    end
 
@@ -63,6 +63,14 @@ function Anim.load(anim_id, tx, ty)
    local sound = anim.sound or nil
    local wait = anim.wait or 3.5
    local rotation = anim.rotation or 0
+
+   if config.base.anime_wait == 0 then
+      return function()
+         if sound then
+            Gui.play_sound(sound)
+         end
+      end
+   end
 
    return function(draw_x, draw_y)
       sx = draw_x + sx
@@ -83,14 +91,26 @@ function Anim.load(anim_id, tx, ty)
    -- <<<<<<<< shade2/chara_func.hsp:642 	return ..
 end
 
-function Anim.make_animation(scx, scy, asset_id, duration, draw_cb)
+function Anim.make_animation(scx, scy, asset_id, duration, draw_cb, sound_cb)
    local t = UiTheme.load()
    local asset = t[asset_id]
    assert(asset, ("Asset not found: %s"):format(asset_id))
 
+   if config.base.anime_wait == 0 then
+      return function()
+         if sound_cb then
+            sound_cb()
+         end
+      end
+   end
+
    return function(draw_x, draw_y)
       scx = scx + draw_x
       scy = scy + draw_y
+
+      if sound_cb then
+         sound_cb()
+      end
 
       local frame = 0
       while frame <= duration - 1 do
@@ -106,6 +126,10 @@ function Anim.make_particle_animation(scx, scy, asset_id, duration, max_particle
    local t = UiTheme.load()
    local asset = t[asset_id]
    assert(asset, ("Asset not found: %s"):format(asset_id))
+
+   if config.base.anime_wait == 0 then
+      return function() end
+   end
 
    return function(draw_x, draw_y)
       scx = scx + draw_x
@@ -132,11 +156,13 @@ end
 
 function Anim.failure_to_cast(tx, ty)
    -- >>>>>>>> shade2/screen.hsp:478:DONE 	case aniFizzle ..
+   local sound_cb = function()
+      Gui.play_sound("base.fizzle", tx, ty)
+   end
+
    if not Map.is_in_fov(tx, ty) then
       return function() end
    end
-
-   Gui.play_sound("base.fizzle", tx, ty)
 
    local scx, scy = pos_centered(tx, ty)
    local tw, th = Draw.get_coords():get_size()
@@ -148,12 +174,20 @@ function Anim.failure_to_cast(tx, ty)
       asset:draw(x, y - th / 6, w, h, {255, 255, 255}, true, 75 * frame)
    end
 
-   return Anim.make_animation(scx, scy, "base.failure_to_cast_effect", 12, draw)
+   return Anim.make_animation(scx, scy, "base.failure_to_cast_effect", 12, draw, sound_cb)
    -- <<<<<<<< shade2/screen.hsp:495 	swbreak ..
 end
 
 function Anim.heal(tx, ty, asset, sound, rot_delta, wait)
    -- >>>>>>>> shade2/screen.hsp:497:DONE 	case aniCurse ..
+   if config.base.anime_wait == 0 then
+      return function()
+         if sound then
+            Gui.play_sound(sound, tx, ty)
+         end
+      end
+   end
+
    rot_delta = rot_delta or -1
    wait = wait or config.base.anime_wait
 
@@ -193,6 +227,12 @@ end
 
 function Anim.bolt(positions, color, sound, chara_x, chara_y, target_x, target_y, range, map)
    -- >>>>>>>> shade2/screen.hsp:588:DONE 	case aniBolt ...
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.bolt1", chara_x, chara_y)
+      end
+   end
+
    color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
 
@@ -276,13 +316,23 @@ Event.register("base.on_hotload_end", "hotload chip batch (Anim)",
 end)
 
 function Anim.ranged_attack(start_x, start_y, end_x, end_y, chip, color, sound, impact_sound)
+   if (not Map.is_in_fov(start_x, start_y) and not Map.is_in_fov(end_x, end_y))
+      or config.base.anime_wait == 0
+   then
+      return function()
+         if sound then
+            Gui.play_sound(sound, start_x, start_y)
+         end
+
+         if impact_sound then
+            Gui.play_sound(impact_sound, end_x, end_y)
+         end
+      end
+   end
+
    -- >>>>>>>> shade2/screen.hsp:644:DONE 	case rsThrow ...
    return function(draw_x, draw_y)
       chip_batch = chip_batch or Draw.make_chip_batch("chip")
-
-      if not Map.is_in_fov(start_x, start_y) and not Map.is_in_fov(end_x, end_y) then
-         return
-      end
 
       if sound then
          Gui.play_sound(sound, start_x, start_y)
@@ -326,11 +376,14 @@ end
 
 function Anim.swarm(tx, ty)
    -- >>>>>>>> shade2/screen.hsp:686:DONE 	case aniAttack ...
+   local sound_cb = function()
+      Gui.play_sound("base.atk1", tx, ty)
+   end
+
    local scx, scy = pos_centered(tx, ty)
    local tw, _ = Draw.get_coords():get_size()
 
    local draw = function(asset, x, y, frame)
-      Gui.play_sound("base.atk1", tx, ty)
       local scaling = (frame * 8 + 18) / tw
       local w = math.floor(asset:get_width() * scaling)
       local h = math.floor(asset:get_height() * scaling)
@@ -338,11 +391,15 @@ function Anim.swarm(tx, ty)
    end
    -- <<<<<<<< shade2/screen.hsp:698 	loop ...
 
-   return Anim.make_animation(scx, scy, "base.swarm_effect", 4, draw)
+   return Anim.make_animation(scx, scy, "base.swarm_effect", 4, draw, sound_cb)
 end
 
 function Anim.melee_attack(tx, ty, debris, kind, damage_percent, is_critical)
    -- >>>>>>>> shade2/screen.hsp:701:DONE 	case aniNormalAttack ...
+   if config.base.anime_wait == 0 then
+      return function() end
+   end
+
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -425,6 +482,12 @@ end
 
 function Anim.gene_engineering(tx, ty)
    -- >>>>>>>> shade2/screen.hsp:751:DONE 	case aniGene ...
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.atk_elec", tx, ty)
+      end
+   end
+
    local t = UiTheme.load()
 
    return function(draw_x, draw_y)
@@ -460,6 +523,12 @@ end
 function Anim.miracle(positions, sound)
    -- >>>>>>>> shade2/screen.hsp:775:DONE 	case aniHoly ...
    sound = sound or "base.heal1"
+
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound(sound)
+      end
+   end
 
    local t = UiTheme.load()
 
@@ -554,6 +623,12 @@ end
 
 function Anim.meteor()
    -- >>>>>>>> shade2/screen.hsp:829 	case aniMeteor ...
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.atk_fire")
+      end
+   end
+
    local t = UiTheme.load()
 
    local asset_meteor = t.base.anim_meteor
@@ -620,6 +695,12 @@ function Anim.meteor()
 end
 
 function Anim.ragnarok()
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.atk_fire")
+      end
+   end
+
    local make_flame = function()
       return {
          x = Rand.rnd(Draw.get_width()),
@@ -705,6 +786,16 @@ end
 
 function Anim.breath(positions, color, sound, chara_x, chara_y, target_x, target_y, map)
    -- >>>>>>>> shade2/screen.hsp:532:DONE 	case aniBreath ..
+   if config.base.anime_wait == 0 then
+      return function()
+         Gui.play_sound("base.breath1", chara_x, chara_y)
+
+         if sound then
+            Gui.play_sound(sound, chara_x, chara_y)
+         end
+      end
+   end
+
    color = color or {255, 255, 255}
    local rotation = math.deg(math.atan2(target_x - chara_x, chara_y - target_y))
 

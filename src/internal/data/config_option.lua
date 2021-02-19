@@ -190,9 +190,22 @@ data:add_multi(
 
          on_changed = function(value)
             local Gui = require("api.Gui")
+            local game = require("game.init")
+            local field = require("game.field")
 
             if not value then
                Gui.stop_music()
+            else
+               if game.in_game then
+                  if field.map then
+                     local music_id = field.map:emit("elona_sys.calc_map_music", {}, field.map.music)
+                     if music_id and data["base.music"][music_id] then
+                        Gui.play_music(music_id)
+                     end
+                  end
+               else
+                  Gui.play_music("elona.opening")
+               end
             end
          end
       },
