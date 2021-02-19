@@ -224,8 +224,10 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
 
    local show_count = 0
    local to_show = {}
+   local first
    for _, i in ipairs(stack) do
       if i.uid then
+         first = first or i
          local show = i.show
          if not map:is_in_fov(x, y) then
             show = show and CONFIG[chip_type].show_memory
@@ -238,7 +240,7 @@ function chip_layer:draw_stacking(ind, map, stack, chip_type, found)
    if show_count > 3 then
       -- HACK
       local i = {
-         uid = stack[1].uid,
+         uid = first.uid,
          show = true,
          image = "elona.item_stack",
          color = {255, 255, 255},
