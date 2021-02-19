@@ -172,7 +172,7 @@ function AiUtil.move_towards_target(chara, target, retreat)
 
       local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
 
-      if retreat or chara.ai_dist > dist then
+      if retreat or chara.ai_distance > dist then
          -- Move away from target.
          chara.ai_state.last_target_x = chara.x + (chara.x - target.x)
          chara.ai_state.last_target_y = chara.y + (chara.y - target.y)

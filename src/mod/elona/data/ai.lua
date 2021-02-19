@@ -606,7 +606,7 @@ local function decide_targeted_action(chara, params)
 
    local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
-   if dist ~= chara.ai_dist then
+   if dist ~= chara.ai_distance then
       if Rand.percent_chance(chara.ai_move) then
          return Ai.run("elona.move_towards_target", chara)
       end
@@ -758,7 +758,7 @@ data:add {
          end
       end
 
-      if chara.ai_dist <= dist then
+      if chara.ai_distance <= dist then
          if Rand.one_in(3) then
             return true
          end
