@@ -64,6 +64,7 @@ function QuestMap.generate_party(difficulty)
    map.tileset = "elona.castle"
    map.music = "elona.casino"
    map.name = I18N.get("map.quest.party_room")
+   map.is_indoor = true
 
    local room_count = 80
 

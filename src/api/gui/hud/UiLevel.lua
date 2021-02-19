@@ -10,7 +10,7 @@ function UiLevel:init()
 end
 
 function UiLevel:set_data(level, exp)
-   self.text = string.format("Lv%s/%d", self.level or -1, self.exp or -1)
+   self.text = string.format("Lv%s/%d", level or -1, exp or -1)
 end
 
 function UiLevel:default_widget_position(x, y, width, height)
