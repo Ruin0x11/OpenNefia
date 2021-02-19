@@ -17,7 +17,7 @@ pushd src
             pause
             exit /b 1
         )
-        love .
+        "%programfiles%\love\love.exe" .
     ) else (
         luajit opennefia.lua --working-dir "src/" %*
     )
