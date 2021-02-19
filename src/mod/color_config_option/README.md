@@ -1,3 +1,3 @@
 # color_config_option
 
-Describe your mod here.
+An example of adding a custom config option type, and corresponding display widget.
