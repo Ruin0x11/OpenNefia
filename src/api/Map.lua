@@ -57,7 +57,7 @@ function Map.save(map)
    local path = Fs.join("map", tostring(map.uid))
    Log.debug("Saving map %d to %s", map.uid, path)
 
-   local ok, err = SaveFs.write(path, map)
+   local ok, err = SaveFs.write(path, map, "temp")
    if not ok then
       return ok, err
    end
@@ -85,7 +85,7 @@ function Map.exists(map_or_uid)
    end
    assert(type(uid) == "number")
    local path = Fs.join("map", tostring(uid))
-   return SaveFs.exists(path)
+   return SaveFs.exists(path, "temp")
 end
 
 --- Loads a map from the current save. If you modify it be sure to
@@ -100,7 +100,7 @@ function Map.load(uid)
 
    local path = Fs.join("map", tostring(uid))
    Log.debug("Loading map %d from %s", uid, path)
-   local success, map = SaveFs.read(path)
+   local success, map = SaveFs.read(path, "temp")
    if not success then
       return false, map
    end

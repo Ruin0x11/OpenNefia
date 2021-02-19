@@ -41,7 +41,7 @@ function Save.save_game(save_id)
 
    local player = Chara.player()
    local player_header = ("%s Lv:%d %s"):format(player.name, player.level, map.name)
-   SaveFs.write("header", { header = player_header })
+   SaveFs.write("header", { header = player_header }, "temp")
 
    -- This will commit all the changes to the save.
    -- Everything that writes files using SaveFs should finish above.

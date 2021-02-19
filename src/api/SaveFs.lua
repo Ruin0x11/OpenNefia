@@ -31,34 +31,40 @@ end
 local touched_paths = {}
 local current_save
 
-function SaveFs.save_path(child_path, save_name)
+function SaveFs.save_path(child_path, kind, save_name)
    -- when using love.filesystem.write, all paths are already relative to the save directory.
    -- passing absolute paths will result in errors.
    local dir = ""
 
-   if save_name == nil then
+   if kind == "temp" then
       return fs.join(dir, "temp", child_path)
+   elseif kind == "save" then
+      assert(type(save_name) == "string")
+      return fs.join(dir, "save", save_name, child_path)
+   elseif kind == "global" then
+      return fs.join(dir, "global", child_path)
+   else
+      error("unknown save path kind " .. tostring(kind))
    end
-
-   return fs.join(dir, "save", save_name, child_path)
 end
 
-local function load_path(child_path, save_name)
-   if save_name == nil then
+local function load_path(child_path, kind, save_name)
+   if kind == "temp" then
       if current_save and not touched_paths[child_path] then
-         local path = SaveFs.save_path(child_path, current_save)
+         local path = SaveFs.save_path(child_path, "save", current_save)
          if fs.exists(path) then
-            Log.debug("Save cache hit: %s/%s", current_save, child_path)
+            Log.debug("Save cache hit: %s", path)
             return path
          end
       end
    end
 
-   return SaveFs.save_path(child_path, save_name)
+   return SaveFs.save_path(child_path, kind, save_name)
 end
 
-function SaveFs.write(path, obj, save)
-   local full_path = SaveFs.save_path(path, save)
+function SaveFs.write(path, obj, kind, save_name)
+   assert(type(kind) == "string")
+   local full_path = SaveFs.save_path(path, kind, save_name)
 
    local str = SaveFs.serialize(obj)
    local dirs = fs.parent(full_path)
@@ -69,13 +75,15 @@ function SaveFs.write(path, obj, save)
 
    local ok, err = fs.write(full_path, str)
 
-   touched_paths[path] = true
+   if kind ~= "global" then
+      touched_paths[path] = true
+   end
 
    return ok, err
 end
 
-function SaveFs.read(path, save)
-   local full_path = load_path(path, save)
+function SaveFs.read(path, kind, save)
+   local full_path = load_path(path, kind, save)
 
    if not fs.exists(full_path) then
       return false, ("file does not exist: %s"):format(full_path)
@@ -91,8 +99,8 @@ function SaveFs.read(path, save)
    return true, result
 end
 
-function SaveFs.exists(path, save)
-   local full_path = load_path(path, save)
+function SaveFs.exists(path, kind, save)
+   local full_path = load_path(path, kind, save)
    return fs.exists(full_path)
 end
 
@@ -122,8 +130,8 @@ function SaveFs.save_game(save)
    Log.info("Copying save to %s", save)
 
    for path, _ in pairs(touched_paths) do
-      local temp_path = SaveFs.save_path(path, nil)
-      local full_path = SaveFs.save_path(path, save)
+      local temp_path = SaveFs.save_path(path, "temp")
+      local full_path = SaveFs.save_path(path, "save", save)
       assert(fs.copy(temp_path, full_path))
    end
 end
@@ -144,6 +152,8 @@ function SaveFs.clear()
 
    current_save = nil
    touched_paths = {}
+
+   fs.remove(SaveFs.save_path("", "temp"))
 end
 
 return SaveFs

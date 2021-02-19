@@ -49,6 +49,17 @@ local function start(self, player)
    Map.set_map(your_home)
    save.base.home_map_uid = your_home.uid
 
+   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+   Save.save_game()
+   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
+
+   -- Load all towns.
+   load_towns(north_tyris)
+
+   -- Save the world map since we created new entrance feats in it. It also
+   -- needs to be saved in order to be used as the previous map, set below.
+   Map.save(north_tyris)
+
    -- NOTE: We have to update the outer map parameters here, or we won't know
    -- what map to travel to when exiting from the edge. This normally gets set
    -- when traveling into a map using stairs, but here we have to do it manually
@@ -59,16 +70,6 @@ local function start(self, player)
    -- >>>>>>>> shade2/main.hsp:458 		gWorldX		=22 ..
    your_home:set_previous_map_and_location(north_tyris, 22, 21)
    -- <<<<<<<< shade2/main.hsp:461 		gWorld		=areaNorthTyris ..
-
-   -- >>>>>>>> shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
-   Save.save_game()
-   -- <<<<<<<< shade2/economy.hsp:20 	snd seSave:gosub *game_save ..
-
-   -- Load all towns.
-   load_towns(north_tyris)
-
-   -- Save the world map since we created new entrance feats in it.
-   Map.save(north_tyris)
 
    local pos = MapEntrance.center(your_home, player)
    assert(your_home:take_object(player, pos.x, pos.y))
