@@ -607,7 +607,7 @@ local function decide_targeted_action(chara, params)
    local target = chara:get_target()
    local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
    if dist ~= chara.ai_distance then
-      if Rand.percent_chance(chara.ai_move) then
+      if Rand.percent_chance(chara.ai_move_chance) then
          return Ai.run("elona.move_towards_target", chara)
       end
    end
@@ -768,7 +768,7 @@ data:add {
          chara:set_aggro(chara:get_target(), chara:get_aggro() - 1)
       end
 
-      if Rand.percent_chance(chara.ai_move) then
+      if Rand.percent_chance(chara.ai_move_chance) then
          return Ai.run("elona.idle_action", chara)
       end
 
