@@ -1220,64 +1220,10 @@ data:add_type {
 }
 
 data:add_type {
-   name = "config_option_boolean",
-   schema = schema.Record {
-      default = schema.Boolean,
-      on_generate = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
-   name = "config_option_choice",
-   schema = schema.Record {
-      choices = schema.Table,
-      default = schema.String,
-      on_generate = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
-   name = "config_option_number",
-   schema = schema.Record {
-      max = schema.Number,
-      min = schema.Number,
-      default = schema.Number,
-      on_generate = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
-   name = "config_option_string",
-   schema = schema.Record {
-      max_length = schema.Number,
-      min_length = schema.Number,
-      default = schema.String,
-      on_generate = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
-   name = "config_option_file",
-   schema = schema.Record {
-      default = schema.Optional(schema.String),
-      on_generate = schema.Optional(schema.Function),
-      on_validate_file = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
    name = "config_menu",
    schema = schema.Record {
       options = schema.Table,
       on_generate = schema.Optional(schema.Function),
-   }
-}
-
-data:add_type {
-   name = "config_custom_menu",
-   schema = schema.Record {
-      require_path = schema.String,
-      options = schema.Table
    }
 }
 

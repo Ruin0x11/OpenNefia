@@ -16,7 +16,6 @@ local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
 local Mef = require("api.Mef")
-local elona_Item = require("mod.elona.api.Item")
 local Pos = require("api.Pos")
 local Dialog = require("mod.elona_sys.dialog.api.Dialog")
 
@@ -1255,6 +1254,8 @@ function Effect.sense_quality(chara)
    then
       return
    end
+
+   local elona_Item = require("mod.elona.api.Item")
 
    local filter = function(i)
       return Item.is_alive(i)

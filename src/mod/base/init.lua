@@ -16,11 +16,6 @@ data:add_multi(
    }
 )
 
-data:add {
-   _type = "base.config_option_boolean",
-   _id = "exchange_crawl_up_and_buried",
-}
-
 local Fs = require("api.Fs")
 
 local function load_with_root(base, add, opts)

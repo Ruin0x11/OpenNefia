@@ -529,7 +529,7 @@ function data_table:make_template(_type, opts)
 end
 
 function data_table:iter()
-   return fun.iter(table.keys(self.schemas)):map(function(ty) return ty, data[ty] end)
+   return fun.iter(table.keys(self.schemas)):map(function(ty) return ty, self[ty] end)
 end
 
 function data_table:add_multi(_type, list)
