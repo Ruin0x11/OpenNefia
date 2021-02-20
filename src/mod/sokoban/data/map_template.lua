@@ -5,6 +5,8 @@ local Input = require("api.Input")
 local Quest = require("mod.elona_sys.api.Quest")
 local elona_Quest = require("mod.elona.api.Quest")
 local Event = require("api.Event")
+local Chara = require("api.Chara")
+local Rand = require("api.Rand")
 
 data:add {
    _type = "base.feat",
@@ -25,6 +27,14 @@ data:add {
       local new_y = self.y + dy
 
       local map = self:current_map()
+      local on_cell = Chara.at(new_x, new_y, map)
+      if on_cell and on_cell:is_in_player_party() then
+         local x, y = Map.find_position_for_chara(Rand.rnd(map:width()), Rand.rnd(map:height()), nil, map)
+         if x then
+            on_cell:set_pos(x, y)
+         end
+      end
+
       if Map.can_access(new_x, new_y, map) then
          self:set_pos(new_x, new_y)
       end

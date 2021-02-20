@@ -85,25 +85,6 @@ function SokobanMap.generate(board_id)
    }
    map:set_archetype("sokoban.quest_sokoban", { set_properties = true })
 
-   print(require("mod.tools.api.Tools").print_map_detailed(map))
-
-   -- local map = InstancedMap:new(40, 40)
-   -- map:clear("elona.cobble")
-   -- for _, x, y in Pos.iter_border(0, 0, map:width() - 1, map:height() - 1) do
-   --    map:set_tile(x, y, "elona.wall_brick_top")
-   -- end
-
-   -- -- NOTE: we'd want to ensure there's a clear path to kitten, so the player doesn't get blocked.
-   -- local count = math.floor(map:width() * map:height() / 40)
-   -- for _=1, count do
-   --    local object = Feat.create("sokoban.object", nil, nil, {}, map)
-   --    if object then
-   --       object.description = I18N.get("sokoban.nki")
-   --       object.color = {Color:new_hsl(Rand.rnd(360), 0.5, 0.5):to_rgb()}
-   --    end
-   -- end
-   -- Rand.choice(Feat.iter(map):filter(function(i) return i._id == "sokoban.object" end)).is_kitten = true
-
    return map
 end
 

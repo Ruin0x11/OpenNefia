@@ -27,6 +27,8 @@ local EXP_COLORS = {
 function UiSkillTrackerEx:init()
    self.tracked_skill_ids = {}
    self.log_widget = LogWidget:new(4.0, 1.0)
+   self.gradient = ColorBand:new(COLORS)
+   self.exp_gradient = ColorBand:new(EXP_COLORS)
 end
 
 function UiSkillTrackerEx:default_widget_refresh(player)
