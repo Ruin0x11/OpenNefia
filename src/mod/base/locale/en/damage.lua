@@ -108,7 +108,7 @@ return {
          "Ugggg"
       },
       sleep_is_disturbed = function(_1)
-         return ("%s%s sleep %s disturbed")
+         return ("%s%s sleep %s disturbed.")
             :format(name(_1), his_owned(_1), is(_1))
       end,
       splits = function(_1)

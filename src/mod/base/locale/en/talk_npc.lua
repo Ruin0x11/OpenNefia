@@ -5,11 +5,11 @@ return {
   :format(he(_1))
 end,
     is_busy = function(_1)
-  return ("%s is in the middle of something.")
+  return ("(%s is in the middle of something.)")
   :format(name(_1))
 end,
     is_sleeping = function(_1)
-  return ("%s is sleeping.")
+  return ("(%s is sleeping.)")
   :format(name(_1))
 end,
     npc = {

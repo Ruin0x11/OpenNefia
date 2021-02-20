@@ -14,7 +14,6 @@ local field = require("game.field")
 local config = require("internal.config")
 local data = require("internal.data")
 local save = require("internal.global.save")
-local Area = require("api.Area")
 
 local DeathMenu = require("api.gui.menu.DeathMenu")
 

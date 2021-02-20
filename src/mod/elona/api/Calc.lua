@@ -102,10 +102,6 @@ function Calc.round_margin(a, b)
    end
 end
 
-function Calc.make_sound(chara, map)
-   -- TODO
-end
-
 function Calc.make_guards_hostile(map)
    -- TODO
 end

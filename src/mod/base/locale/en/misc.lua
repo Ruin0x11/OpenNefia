@@ -233,7 +233,7 @@ return {
          end,
          waken = function(_1)
             return ("%s notice%s the sound and wake%s up.")
-               :format(name(_1), _s(_1), _s(_1))
+               :format(name(_1), s(_1), s(_1))
          end
       },
       spell_passes_through = function(_1)

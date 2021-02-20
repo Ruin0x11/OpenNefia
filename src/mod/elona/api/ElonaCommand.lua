@@ -17,6 +17,7 @@ local Log = require("api.Log")
 local Command = require("mod.elona_sys.api.Command")
 local FieldMap = require("mod.elona.api.FieldMap")
 local MapgenUtils = require("mod.elona.api.MapgenUtils")
+local Effect = require("mod.elona.api.Effect")
 
 local ElonaCommand = {}
 
@@ -292,7 +293,7 @@ function ElonaCommand.do_sleep(player, bed, params)
       end)
    end
 
-   ElonaCommand.wake_up_everyone()
+   Effect.wake_up_everyone()
 
    local adj = 1
    if player:has_trait("elona.perm_slow_food") then
@@ -326,20 +327,6 @@ function ElonaCommand.do_sleep(player, bed, params)
 
    -- TODO autosave
    -- TODO shop
-end
-
-function ElonaCommand.wake_up_everyone(map)
-   map = map or Map.current()
-   local hour = save.base.date.hour
-   if hour >= 7 or hour <= 22 then
-      for _, chara in Chara.iter(map) do
-         if not chara:is_ally() and chara:has_effect("elona.sleep") then
-            if Rand.one_in(10) then
-               chara:remove_effect("elona.sleep")
-            end
-         end
-      end
-   end
 end
 
 local function get_ammo_enchantments(ammo)
