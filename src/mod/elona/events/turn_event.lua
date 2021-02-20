@@ -6,6 +6,9 @@ local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
 local Chara = require("api.Chara")
 local elona_Chara = require("mod.elona.api.Chara")
+local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
+local Feat = require("api.Feat")
+local Encounter = require("mod.elona.api.Encounter")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -69,6 +72,30 @@ local function leave_footsteps(_, params, result)
 end
 
 Event.register("elona_sys.hook_player_move", "Leave footsteps", leave_footsteps)
+
+local function proc_random_encounter(chara, params, result)
+   -- >>>>>>>> shade2/action.hsp:647 	if mType=mTypeWorld:if cc=pc{ ...
+   if not chara:is_player() then
+      return result
+   end
+
+   local map = chara:current_map()
+   local x, y = chara.x, chara.y
+   if not (map:has_type("world_map") and Feat.at(x, y, map):length() == 0) then
+      return result
+   end
+
+   local encounter_id = Encounter.random_encounter_id(map, x, y)
+   if encounter_id ~= nil then
+      Gui.update_screen()
+      Encounter.start(encounter_id, map, x, y)
+      return true
+   end
+   -- <<<<<<<< shade2/action.hsp:670 			} ..
+   return result
+end
+
+Event.register("base.on_chara_moved", "Proc random encounters", proc_random_encounter)
 
 local function respawn_mobs()
    if save.base.play_turns % 20 == 0 then

@@ -48,17 +48,17 @@ function Area.iter()
    return fun.iter_pairs(save.base.areas)
 end
 
-function Area.iter_in_parent(parent_map)
-   local is_area_entrance = function(feat)
-      -- TODO: this might be too permissive of a filter, but that's
-      -- what I get for using a dynamic language...
-      return feat.params.area_uid and feat.params.area_floor
+function Area.is_area_entrance(feat)
+   -- TODO: this might be too permissive of a filter, but that's
+   -- what I get for using a dynamic language...
+   return feat.params and feat.params.area_uid and feat.params.area_floor
+end
 
-   end
+function Area.iter_in_parent(parent_map)
    local to_area = function(feat)
       return Area.get(feat.params.area_uid)
    end
-   return parent_map:iter_feats():filter(is_area_entrance):map(to_area)
+   return parent_map:iter_feats():filter(Area.is_area_entrance):map(to_area)
 end
 
 function Area.metadata(map)

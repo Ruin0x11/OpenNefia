@@ -779,6 +779,32 @@ data:add {
 
 data:add {
    _type = "base.ai_action",
+   _id = "ranged",
+
+   act = function(chara, params)
+      -- >>>>>>>> shade2/ai.hsp:496 	if act=actRange{ ...
+      local target = chara:get_target()
+      if not Chara.is_alive(target) then
+         return false
+      end
+
+      local dist = Pos.dist(target.x, target.y, chara.x, chara.y)
+
+      if dist < Const.AI_RANGED_ATTACK_THRESHOLD and chara:has_los(target.x, target.y) then
+         local ranged, ammo = ElonaAction.get_ranged_weapon_and_ammo(chara)
+         if ranged then
+            ElonaAction.ranged_attack(chara, target, ranged, ammo)
+            return true
+         end
+      end
+
+      return true
+      -- <<<<<<<< shade2/ai.hsp:498 	} ...      local target = chara:get_target()
+   end
+}
+
+data:add {
+   _type = "base.ai_action",
    _id = "wait_melee",
 
    act = function(chara, params)

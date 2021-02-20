@@ -105,8 +105,8 @@ local quest = {
       },
    },
    escort = {
-      difficulty = {
-         _0 = {
+      type = {
+         protect = {
             _1 = {
                title = "Beauty and the beast",
                desc = function(player, speaker, params)
@@ -115,7 +115,7 @@ local quest = {
                end,
             },
          },
-         _1 = {
+         poison = {
             _1 = {
                title = "Before it's too late.",
                desc = function(player, speaker, params)
@@ -124,7 +124,7 @@ local quest = {
                end,
             },
          },
-         _2 = {
+         deadline = {
             _1 = {
                title = "Escort needed.",
                desc = function(player, speaker, params)

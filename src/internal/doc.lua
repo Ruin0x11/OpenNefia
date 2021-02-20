@@ -709,7 +709,7 @@ function doc.save()
    end
 
    Log.info("Saving documentation.")
-   SaveFs.write("data/doc", doc_store)
+   SaveFs.write("data/doc", doc_store, "global")
 
    for _, key in ipairs(remove) do
       doc_store.aliases[key] = remove[key]
@@ -717,12 +717,12 @@ function doc.save()
 end
 
 function doc.load()
-   if not SaveFs.exists("data/doc") then
+   if not SaveFs.exists("data/doc", "global") then
       return
    end
 
    Log.info("Loading documentation.")
-   local ok, new_doc_store = SaveFs.read("data/doc")
+   local ok, new_doc_store = SaveFs.read("data/doc", "global")
    if not ok then
       error(new_doc_store)
    end

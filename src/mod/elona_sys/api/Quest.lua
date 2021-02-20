@@ -86,9 +86,11 @@ function Quest.generate_from_proto(proto_id, chara, map)
 
    Log.debug("generate quest ID: '%s'", proto_id)
 
+   local proto = data["elona_sys.quest"]:ensure(proto_id)
+
    local quest = {
       uid = save.elona_sys.quest_uids:get_next_and_increment(),
-      _id = "",
+      _id = proto._id,
       client_chara_type = 0,
       difficulty = 0,
       -- not_accepted, accepted, failed, completed
@@ -97,10 +99,13 @@ function Quest.generate_from_proto(proto_id, chara, map)
       deadline_days = nil,
       reward = nil,
       reward_fix = 0,
-      params = {}
+      client_uid = nil,
+      client_name = nil,
+      originating_map_uid = nil,
+      reward_gold = nil,
+      map_name = nil,
+      params = {},
    }
-
-   local proto = data["elona_sys.quest"]:ensure(proto_id)
 
    local add_field = function(proto, quest, field)
       if proto[field] then
@@ -129,9 +134,9 @@ function Quest.generate_from_proto(proto_id, chara, map)
    end
 
    if proto.generate then
-      local success = proto.generate(quest, client, town, map)
+      local success, err = proto.generate(quest, client, town, map)
       if not success then
-         local mes = ("Tried to generate quest '%s' but did not succeed"):format(proto_id)
+         local mes = ("Tried to generate quest '%s' but did not succeed: %s"):format(proto_id, err)
          Log.warn(mes)
          return nil, mes
       end
@@ -168,7 +173,6 @@ function Quest.generate_from_proto(proto_id, chara, map)
    if expiration_hours ~= nil then
       quest.expiration_date = expiration_hours + World.date_hours()
    end
-   quest._id = proto._id
    quest.map_name = town.name
 
    Log.debug("Successfully generated quest: %s", inspect(quest))
@@ -532,6 +536,10 @@ function Quest.fail(quest)
    Gui.mes_c("quest.lose_fame", "Red", fame_delta)
 
    table.iremove_value(save.elona_sys.quest.quests, quest)
+
+   if save.elona_sys.immediate_quest_uid == quest.uid then
+      save.elona_sys.immediate_quest_uid = nil
+   end
 end
 
 local function calc_reward_gold(quest)
@@ -604,6 +612,7 @@ end
 
 function Quest.set_immediate_quest(quest)
    assert(type(quest) == "table")
+   assert(quest.state == "accepted")
    save.elona_sys.immediate_quest_uid = quest.uid
 end
 
@@ -625,8 +634,9 @@ function Quest.is_immediate_quest_active()
       return false
    end
 
-   local uid = save.elona_sys.instanced_quest_uid
-   return Quest.get_immediate_quest().state == "accepted"
+   local quest = Quest.get_immediate_quest()
+
+   return quest and quest.state == "accepted"
 end
 
 function Quest.get_immediate_quest()

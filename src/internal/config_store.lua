@@ -43,12 +43,12 @@ end
 
 function config_store.save()
    Log.info("Saving config.")
-   return SaveFs.write("config", config_data)
+   return SaveFs.write("config", config_data, "global")
 end
 
 function config_store.load()
    Log.info("Loading config.")
-   local success, from_disk = SaveFs.read("config")
+   local success, from_disk = SaveFs.read("config", "global")
    if not success then
       return false, from_disk
    end

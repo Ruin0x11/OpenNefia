@@ -597,7 +597,7 @@ end
 
 function ReplLayer:save_history()
    if self.history_file then
-      SaveFs.write(self.history_file, self.history)
+      SaveFs.write(self.history_file, self.history, "global")
    end
 end
 

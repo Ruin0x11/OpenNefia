@@ -11331,7 +11331,7 @@ local item =
          end,
 
          on_init_params = function(self, params)
-            self.color = Rand.choice(table.values(Enum.Color))
+            self.color = Rand.choice(Enum.Color:values())
          end,
 
          tags = { "nogive" },

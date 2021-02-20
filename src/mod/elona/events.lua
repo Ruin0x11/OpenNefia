@@ -15,6 +15,7 @@ local function init_save()
    s.total_skills_learned = 0
    s.waiting_guests = 0
    s.player_owned_buildings = {}
+   s.is_lomias_easter_egg_enabled = false
    s.ranks = {
       ["elona.arena"] = 0,
       ["elona.pet_arena"] = 0,

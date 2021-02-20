@@ -478,7 +478,7 @@ make_touch {
 
    on_damage = function(self, params, dice)
       local target = params.target
-      local attribute_id = Skill.random_attribute()
+      local attribute_id = Skill.random_stat()
 
       local sustain_enc = Effect.has_sustain_enchantment(target, attribute_id)
 

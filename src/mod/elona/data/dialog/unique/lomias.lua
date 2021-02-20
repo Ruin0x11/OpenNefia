@@ -3,7 +3,6 @@ local Chara = require("api.Chara")
 local Event = require("api.Event")
 local Gui = require("api.Gui")
 local Map = require("api.Map")
-local I18N = require("api.I18N")
 local Item = require("api.Item")
 local Itemgen = require("mod.tools.api.Itemgen")
 local Sidequest = require("mod.elona_sys.sidequest.api.Sidequest")
@@ -11,8 +10,13 @@ local Enum = require("api.Enum")
 
 local common = require("mod.elona.data.dialog.common")
 
+local function is_digging_tutorial_step(map)
+   return Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2
+end
+
+
 Event.register("elona.hook_calc_dig_success", "Digging in tutorial", function(map, _, result)
-                  if Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
+                  if is_digging_tutorial_step(map) then
                      return true
                   end
 
@@ -20,7 +24,7 @@ Event.register("elona.hook_calc_dig_success", "Digging in tutorial", function(ma
 end)
 
 Event.register("elona.on_dig_success", "Digging in tutorial", function(map, params)
-                  if Area.current()._archetype == "elona.your_home" and Sidequest.progress("elona.tutorial") == 2 then
+                  if is_digging_tutorial_step(map) then
                      Map.force_clear_pos(params.dig_x, params.dig_y, map)
                      local item = Item.create("elona.worthless_fake_gold_bar", params.dig_x, params.dig_y, {}, map)
                      item.curse_state = Enum.CurseState.Cursed
@@ -32,11 +36,9 @@ data:add {
    _type = "elona_sys.dialog",
    _id = "lomias_game_begin",
 
-   root = "talk.unique.lomias",
    nodes = {
       __start = function()
-         local easter_egg = false
-         if easter_egg then
+         if save.elona.is_lomias_easter_egg_enabled then
             return "easter_egg"
          else
             Gui.mes_newline()
@@ -228,8 +230,8 @@ data:add {
             {"talk.unique.lomias.tutorial.chests.dialog._1"},
             function()
                local chest = Item.create("elona.chest", Chara.player().x, Chara.player().y)
-               chest.param1 = 35
-               chest.param2 = 25
+               chest.params.chest_item_level = 35
+               chest.params.chest_lockpick_difficulty = 25
                Item.create("elona.lockpick", Chara.player().x, Chara.player().y, {amount=2})
                Gui.mes("common.something_is_put_on_the_ground")
             end,

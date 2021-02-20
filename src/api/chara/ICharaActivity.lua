@@ -50,16 +50,18 @@ function ICharaActivity:_proc_activity_interrupted()
 end
 
 function ICharaActivity:pass_activity_turn()
-   -- TODO the performance of Gui.update_screen() is terrible, so this causes a
-   -- lot of lag. There has to be some amount of optimization we can do.
-   local auto_turn = config.base.auto_turn_speed
+   if self:is_player() then
+      -- TODO the performance of Gui.update_screen() is terrible, so this causes a
+      -- lot of lag. There has to be some amount of optimization we can do.
+      local auto_turn = config.base.auto_turn_speed
 
-   if auto_turn == "high" then
-      Gui.wait(self.activity.animation_wait, true)
-   elseif auto_turn == "normal" then
-      Gui.wait(self.activity.animation_wait)
-   elseif auto_turn == "highest" then
-      -- don't wait at all
+      if auto_turn == "high" then
+         Gui.wait(self.activity.animation_wait, true)
+      elseif auto_turn == "normal" then
+         Gui.wait(self.activity.animation_wait)
+      elseif auto_turn == "highest" then
+         -- don't wait at all
+      end
    end
 
    if self.activity and (self.activity.turns or 0) <= 0 then

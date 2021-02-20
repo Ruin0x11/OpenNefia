@@ -33,8 +33,7 @@ local function try_to_chat(chara, player)
    end
    -- <<<<<<<< elona122/shade2/chat.hsp:75 	if tc=pc:goto *chat_end ..
 
-   local dialog_id = chara:calc("dialog") or "elona.default"
-   Dialog.start(chara, dialog_id)
+   Dialog.start(chara)
 end
 
 local function bump_into_chara(player, params, result)
