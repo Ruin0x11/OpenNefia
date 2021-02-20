@@ -23,6 +23,26 @@ local function wrap(cb)
    return function(path, ...) return cb(fs.to_relative(path), ...) end
 end
 
+
+local function gen_recursive_delete(rm_fn)
+   return function(path)
+      local function recursively_delete(item)
+         if fs.is_directory(item) then
+            for _, child in pairs(fs.get_directory_items(item)) do
+               local child_path = fs.join(item, child)
+               recursively_delete(child_path)
+               rm_fn(child_path)
+            end
+         elseif fs.get_info(item) then
+            rm_fn(item)
+         end
+         rm_fn(item)
+      end
+      recursively_delete(fs.to_relative(path))
+      return true
+   end
+end
+
 if not love or love.getVersion() == "lovemock" then
    local ok, lfs = pcall(require, "lfs")
    assert(ok, "luafilesystem not installed")
@@ -99,10 +119,7 @@ if not love or love.getVersion() == "lovemock" then
       f:close()
       return true, nil
    end
-   fs.remove = function(name)
-      name = fs.to_relative(name)
-      return os.remove(name)
-   end
+   fs.remove = gen_recursive_delete(os.remove)
    fs.get_working_directory = lfs.currentdir
 
    fs.attributes = lfs.attributes
@@ -128,22 +145,7 @@ else
    fs.create_directory = wrap(love.filesystem.createDirectory)
    fs.write = wrap(love.filesystem.write)
    fs.read = wrap(love.filesystem.read)
-   fs.remove = function(path)
-      local function recursively_delete(item)
-         if fs.is_directory(item) then
-            for _, child in pairs(fs.get_directory_items(item)) do
-               local child_path = fs.join(item, child)
-               recursively_delete(child_path)
-               love.filesystem.remove(child_path)
-            end
-         elseif fs.get_info(item) then
-            love.filesystem.remove(item)
-         end
-         love.filesystem.remove(item)
-      end
-      recursively_delete(fs.to_relative(path))
-      return true
-   end
+   fs.remove = gen_recursive_delete(love.filesystem.remove)
    fs.get_working_directory = love.filesystem.getWorkingDirectory
 
    fs.attributes = function(filepath, aname, atable)

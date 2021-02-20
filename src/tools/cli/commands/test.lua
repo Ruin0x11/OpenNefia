@@ -12,6 +12,7 @@ local ansicolors = require("thirdparty.ansicolors")
 local Log = require("api.Log")
 local config_store = require("internal.config_store")
 local save_store = require("internal.save_store")
+local SaveFs = require("api.SaveFs")
 
 -- Make an environment rejecting the setting of global variables except
 -- functions that are named "test_*".
@@ -50,6 +51,9 @@ end
 local function cleanup_globals()
    config_store.clear()
    save_store.clear()
+   fs.remove(fs.parent(SaveFs.save_path("", "save", "__test__")))
+   fs.remove(SaveFs.save_path("", "temp"))
+   fs.remove(SaveFs.save_path("", "global"))
    field:init_global_data()
 end
 
@@ -190,6 +194,8 @@ return function(args)
          end
       end
    end
+
+   cleanup_globals()
 
    print()
    if total == 0 then
