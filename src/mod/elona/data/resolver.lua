@@ -50,21 +50,3 @@ data:add {
       return data["base.portrait"]:ensure(id)._id
    end
 }
-
-data:add {
-   _type = "base.resolver",
-   _id = "random_name",
-
-   ordering = 200000,
-   method = "merge",
-   invariants = { },
-   params = { },
-
-   resolve = function(self, params)
-      local chara = params.object
-      return {
-         name = I18N.get("chara.job.own_name", chara.name, Text.random_name()),
-         has_own_name = true
-      }
-   end
-}

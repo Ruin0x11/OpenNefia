@@ -54,7 +54,7 @@ function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, t
 
    if sampler == nil then
       local pred = function(chara)
-         if (chara.level or 0) > objlv then
+         if objlv > 0 and (chara.level or 0) > objlv then
             return false
          end
 
@@ -78,6 +78,10 @@ function Charagen.random_chara_id_raw(objlv, fltselect, category, race_filter, t
             if not table.index_of(chara.tags or {}, tag) then
                return false
             end
+         end
+
+         if chara.rarity <= 0 then
+            return false
          end
 
          return true
@@ -131,7 +135,7 @@ function Charagen.create(x, y, params, where)
    params = params or {}
 
    params.quality = params.quality or Enum.Quality.Bad
-   params.level = params.level or 1
+   params.level = params.level or 0
    params.fltselect = params.fltselect or nil
    params.category = params.category or nil
    params.create_params = params.create_params or {}
