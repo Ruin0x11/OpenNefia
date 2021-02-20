@@ -88,12 +88,12 @@ return {
                :format(name(_1), s(_1))
          end,
          other = function(_1, _2)
-            return ("%s %s.")
+            return ("%s%s")
                :format(name(_1), _2)
          end,
          overcast_warning = "You are going to over-cast the spell. Are you sure?",
          self = function(_1, _2)
-            return ("%s cast %s.")
+            return ("%s cast%s")
                :format(name(_1), _2)
          end,
          silenced = "The mist of silence interrupts a spell."

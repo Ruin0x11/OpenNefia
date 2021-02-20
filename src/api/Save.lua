@@ -57,9 +57,12 @@ function Save.load_game(save_id)
    assert(type(save_id) == "string")
    config.base._save_id = save_id
 
-   local success, map
+   local success, map, err
 
-   SaveFs.load_game(save_id)
+   success, err = SaveFs.load_game(save_id)
+   if not success then
+      error(err)
+   end
 
    assert(save_store.load())
 

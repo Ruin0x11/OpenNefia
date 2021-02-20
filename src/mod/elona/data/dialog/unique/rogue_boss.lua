@@ -1,56 +1,58 @@
-local Chara = require("game.Chara")
-local GUI = require("game.GUI")
-local I18N = require("game.I18N")
-local Internal = require("game.Internal")
-local Item = require("game.Item")
-local World = require("game.World")
+local global = require("mod.elona.internal.global")
+local Chara = require("api.Chara")
+local Gui = require("api.Gui")
+local Quest = require("mod.elona.api.Quest")
 
-local common = require_relative("data/dialog/common")
-
+-- >>>>>>>> shade2/chat.hsp:1973 		snd sePayGold ...
 local function surrender_cost()
    return Chara.player().gold / 5
 end
 
 local function surrender()
-   GUI.play_sound("core.paygold1")
-   Chara.player().gold = Chara.player().gold - surrender_cost()
+   local player = Chara.player()
+   Gui.play_sound("base.paygold1")
+   player.gold = player.gold - surrender_cost()
 
-   for _, item in Item.iter(0, 200) do
-      if item.amount > 0 and item.is_cargo then
-         GUI.txt(I18N.get("core.talk.npc.common.hand_over", item))
-         item:remove()
+   for _, item in player:iter_inventory() do
+      if item.amount > 0 and item:calc("is_cargo") then
+         Gui.mes("talk.npc.common.hand_over", item)
+         item:remove_ownership()
       end
    end
 
    Chara.player():refresh_weight()
 end
+-- <<<<<<<< shade2/chat.hsp:1980 		call calcBurdenPc ..
 
-return {
-   id = "rogue_boss",
-   root = "core.talk.unique.rogue_boss",
+data:add {
+   _type = "elona_sys.dialog",
+   _id = "rogue_boss",
+
    nodes = {
       __start = function()
+         -- >>>>>>>> shade2/chat.hsp:1964 	if cGold(pc)<=10{ ...
          if Chara.player().gold <= 10 then
             return "too_poor"
          end
+         -- <<<<<<<< shade2/chat.hsp:1967 	} ..
 
          return "ambush"
       end,
       too_poor = {
          text = {
-            {"too_poor", args = common.args_speaker}
+            {"talk.unique.rogue_boss.too_poor", args = function(t) return {t.speaker} end},
          },
-         choices = {
-            {"__END__", "__MORE__"}
-         },
+         on_finish = function()
+            Quest.travel_to_previous_map()
+         end
       },
       ambush = {
          text = {
             {
-               "ambush.dialog",
+               "talk.unique.rogue_boss.ambush.dialog",
                args = function(t)
                   return {
-                     World.random_title("Party"),
+                     global.rogue_party_name,
                      surrender_cost(),
                      t.speaker
                   }
@@ -58,23 +60,22 @@ return {
             },
          },
          choices = {
-            {"try_me", "ambush.choices.try_me"},
-            {"surrender", "ambush.choices.surrender"},
+            {"try_me", "talk.unique.rogue_boss.ambush.choices.try_me"},
+            {"surrender", "talk.unique.rogue_boss.ambush.choices.surrender"},
          }
       },
       try_me = {
          text = {
-            {"ambush.try_me", args = common.args_speaker},
+            {"talk.unique.rogue_boss.ambush.try_me", args = function(t) return {t.speaker} end},
          },
       },
       surrender = {
          text = {
             surrender,
-            {"ambush.surrender", args = common.args_speaker},
+            {"talk.unique.rogue_boss.ambush.surrender", args = function(t) return {t.speaker} end},
          },
          on_finish = function()
-            Internal.leave_map()
-            GUI.play_sound("core.exitmap1")
+            Quest.travel_to_previous_map()
          end
       },
    }

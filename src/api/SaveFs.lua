@@ -141,10 +141,16 @@ end
 function SaveFs.load_game(save)
    assert(type(save) == "string")
 
+   if not fs.exists(load_path("", "save", save)) then
+      return false, ("Save '%s' does not exist yet."):format(save)
+   end
+
    Log.info("Setting save cache to %s", save)
 
    current_save = save
    touched_paths = {}
+
+   return true
 end
 
 function SaveFs.clear()

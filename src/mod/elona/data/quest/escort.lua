@@ -74,10 +74,10 @@ function escort.generate(self, client, start)
       return false, "No destinations to escort to."
    end
 
-   local escort_type = Rand.choice { "assassin", "poison", "deadline" }
+   local escort_type = Rand.choice { "protect", "poison", "deadline" }
    local dist = Pos.dist(start.world_map_x, start.world_map_y, dest.world_map_x, dest.world_map_y)
 
-   if escort_type == "assassin" then
+   if escort_type == "protect" then
       self.reward_fix = 140 + dist * 2
       self.deadline_days = Rand.rnd(8) + 6
       self.difficulty = math.clamp(Rand.rnd(Chara.player():calc("level") + 10)
@@ -122,8 +122,8 @@ function escort.on_failure(self)
       if Chara.is_alive(chara) then
          local escort_type = self.params.escort_type
          local damage_source
-         if escort_type == "assassin" then
-            Gui.mes_c("quest.escort.failed.assassin", "SkyBlue", chara)
+         if escort_type == "protect" then
+            Gui.mes_c("quest.escort.failed.protect", "SkyBlue", chara)
             damage_source = "elona.unknown"
          elseif escort_type == "poison" then
             Gui.mes_c("quest.escort.failed.poison", "SkyBlue", chara)

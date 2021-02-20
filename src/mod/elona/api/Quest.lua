@@ -68,6 +68,7 @@ end
 
 local function event_quest_eliminate_escort(quest)
    return function()
+      quest.state = "completed"
       Gui.play_music("elona.fanfare", true)
       Gui.mes_c("quest.hunt.complete", "Green")
    end

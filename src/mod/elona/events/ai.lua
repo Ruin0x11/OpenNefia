@@ -11,12 +11,6 @@ local Magic = require("mod.elona_sys.api.Magic")
 local function on_act_hostile_towards(chara, params)
    local other = params.target
 
-   if other:is_in_player_party() then
-      other:set_relation_towards(chara, Enum.Relation.Enemy)
-      other:set_target(chara)
-      return
-   end
-
    if other:relation_towards(chara) > Enum.Relation.Enemy then
       other:set_emotion_icon("elona.angry", 4)
    end

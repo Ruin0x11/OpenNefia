@@ -25,7 +25,7 @@ end,
     escort = {
       complete = "あなたは無事に護衛の任務を終えた。",
       failed = {
-        assassin = "「おい、暗殺者が私の後ろにいるぞ」",
+        protect = "「おい、暗殺者が私の後ろにいるぞ」",
         deadline = function(_1)
   return ("「時間切れだ。こうなったら…」%sは火をかぶった。")
   :format(name(_1))

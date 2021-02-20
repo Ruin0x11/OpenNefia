@@ -536,6 +536,10 @@ function Quest.fail(quest)
    Gui.mes_c("quest.lose_fame", "Red", fame_delta)
 
    table.iremove_value(save.elona_sys.quest.quests, quest)
+
+   if save.elona_sys.immediate_quest_uid == quest.uid then
+      save.elona_sys.immediate_quest_uid = nil
+   end
 end
 
 local function calc_reward_gold(quest)
@@ -630,7 +634,9 @@ function Quest.is_immediate_quest_active()
       return false
    end
 
-   return Quest.get_immediate_quest().state == "accepted"
+   local quest = Quest.get_immediate_quest()
+
+   return quest and quest.state == "accepted"
 end
 
 function Quest.get_immediate_quest()

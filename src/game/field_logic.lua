@@ -50,6 +50,7 @@ function field_logic.quickstart()
 
    local me = Chara.create("base.player", nil, nil, {ownerless=true})
    me:emit("base.on_finalize_player")
+   me:emit("base.on_initialize_player")
    field_logic.setup_new_game(me)
 
    Gui.mes("Quickstarted game.")

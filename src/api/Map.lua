@@ -503,6 +503,7 @@ function Map.try_place_chara(chara, x, y, map)
    if real_x ~= nil then
       assert(can_place_chara_at(real_x, real_y, map))
 
+      Log.debug("Place %s %d,%d --> %d,%d", chara._id, x, y, real_x, real_y)
       chara.initial_x = real_x
       chara.initial_y = real_y
 

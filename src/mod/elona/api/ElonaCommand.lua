@@ -224,7 +224,7 @@ function ElonaCommand.increment_sleep_potential(player)
       elseif grown_count ~= 0 then
          break
       end
-      local skill = Skill.random_attribute()
+      local skill = Skill.random_stat()
       player:mod_skill_potential(skill, 1)
       grown_count = grown_count + 1
       if grown_count > 6 then

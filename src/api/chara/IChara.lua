@@ -235,7 +235,7 @@ function IChara:produce_locale_data()
       gender = self:calc("gender"),
       is_player = self:is_player(),
       is_visible = self:is_in_fov() and show,
-      has_own_name = self:calc("has_own_name"),
+      has_own_name = self.has_own_name,
       talk_type = self:calc("talk_type")
    }
 end
@@ -544,9 +544,9 @@ function IChara:vanquish()
 
    self:refresh_cell_on_map()
 
-   local party = self:get_party()
-   if party then
-      assert(save.base.parties:remove_member(party.uid, self))
+   local party_uid = self:get_party()
+   if party_uid then
+      save.base.parties:remove_member(party_uid, self)
    end
 
    self:emit("base.on_chara_vanquished")

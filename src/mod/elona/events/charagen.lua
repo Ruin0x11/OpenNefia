@@ -10,12 +10,38 @@ local Resolver = require("api.Resolver")
 local Const = require("api.Const")
 
 local function fix_name_gender_age(chara)
-   if chara.proto.has_random_name then
-      chara.name = Text.random_name()
+   if chara.proto.has_own_name then
+      chara.name = I18N.get("chara.job.own_name", chara.name, Text.random_name())
    end
 end
 
 Event.register("base.on_build_chara", "Fix character name, age, gender", fix_name_gender_age)
+
+local function random_portrait(chara)
+   local ind = 1 + Rand.rnd(32)
+   local prefix
+   if chara:calc("gender") == "male" then
+      prefix = "man"
+   else
+      prefix = "woman"
+   end
+   local id = ("elona.%s%d"):format(prefix, ind)
+   return data["base.portrait"]:ensure(id)._id
+end
+
+local function fix_portrait(chara)
+   -- >>>>>>>> shade2/chara.hsp:523 	if cPortrait(rc)=0:cPortrait(rc)=rnd(rangePortrai ...
+   if chara.proto.portrait then
+      if chara.proto.portrait == "random" then
+         chara.portrait = random_portrait(chara)
+      else
+         data["base.portrait"]:ensure(chara.proto.portrait)
+      end
+   end
+   -- <<<<<<<< shade2/chara.hsp:523 	if cPortrait(rc)=0:cPortrait(rc)=rnd(rangePortrai ..
+end
+
+Event.register("base.on_build_chara", "Fix portrait", fix_portrait)
 
 local function fix_level_and_quality(chara)
    -- >>>>>>>> shade2/chara.hsp:492 *chara_fix ..
@@ -137,11 +163,7 @@ local function init_chara_defaults(chara)
    -- <<<<<<<< shade2/chara.hsp:511 	cFov(rc)=14 ..
 
    -- >>>>>>>> shade2/chara.hsp:516 	if rc=pc:cHunger(rc)=9000:else:cHunger(rc)=defAll ..
-   if chara:is_player() then
-      chara.nutrition = 9000
-   else
-      chara.nutrition = 5000 + Rand.rnd(4000)
-   end
+   chara.nutrition = Const.ALLY_HUNGER_THRESHOLD - 1000 + Rand.rnd(4000)
 
    chara.height = chara.height + Rand.rnd(chara.height / 5 + 1) - Rand.rnd(chara.height / 5 + 1)
    chara.weight = math.floor(chara.height * chara.height * (Rand.rnd(6) + 18) / 10000)
@@ -152,17 +174,23 @@ local function init_chara_defaults(chara)
    -- See mod/elona/locale/en/talk_random.lua (talk.random.personality.<n>)
    chara.personality = Rand.rnd(4)
    -- <<<<<<<< shade2/chara.hsp:524 	cPersonality(rc)=rnd(rangePS) ..
-
-   -- >>>>>>>> shade2/chara.hsp:532 	if rc=pc{ ..
-   if chara:is_player() then
-      chara.initial_max_cargo_weight = 80000
-      chara.max_cargo_weight = chara.initial_max_cargo_weight
-   end
-   -- <<<<<<<< shade2/chara.hsp:534 		} ..
 end
 
 Event.register("base.on_build_chara",
                "Init chara_defaults", init_chara_defaults)
+
+local function init_player_defaults(player)
+   -- >>>>>>>> shade2/chara.hsp:516 	if rc=pc:cHunger(rc)=9000:else:cHunger(rc)=defAll ...
+   player.nutrition = 9000
+   -- <<<<<<<< shade2/chara.hsp:516 	if rc=pc:cHunger(rc)=9000:else:cHunger(rc)=defAll ..
+
+   -- >>>>>>>> shade2/chara.hsp:532 	if rc=pc{ ..
+   player.initial_max_cargo_weight = 80000
+   player.max_cargo_weight = player.initial_max_cargo_weight
+   -- <<<<<<<< shade2/chara.hsp:534 		} ..
+end
+
+Event.register("base.on_initialize_player", "Init player defaults", init_player_defaults)
 
 local function init_chara_image(chara)
    if chara.male_image and chara.gender == "male" then
