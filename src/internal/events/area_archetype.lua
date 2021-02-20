@@ -46,7 +46,7 @@ local function generate_entrances_of_area_children(parent_map, params)
             local y = assert(child_area.parent_area.y)
             local area_floor = assert(child_area.parent_area.starting_floor)
 
-            Log.info("Autogenerating area entrance of '%s' (floor %d) in parent '%s' at (%d, %d)", child_area._id, area_floor, area._archetype, x, y)
+            Log.debug("Autogenerating area entrance of '%s' (floor %d) in parent '%s' at (%d, %d)", child_area._id, area_floor, area._archetype, x, y)
 
             local feat, err = Area.create_entrance(area, area_floor, x, y, {}, parent_map)
             if feat then

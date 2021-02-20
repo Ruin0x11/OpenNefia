@@ -115,13 +115,19 @@ function Layout.to_map(layout)
    for y = 0, height - 1 do
       for x = 0, width - 1 do
          local tile_id = layout.tileset[tiles[i]]
+         assert(tile_id, "No map tile for symbol " .. tostring(tiles[i]))
          map:set_tile(x, y, tile_id)
+         if layout.callbacks and layout.callbacks[tiles[i]] then
+            layout.callbacks[tiles[i]](map, x, y)
+         end
          i = i + 1
       end
    end
 
-   local start_x, start_y = Map.find_free_position(math.floor(width/2), math.floor(height/2), {}, map)
-   map.player_start_pos = { x = start_x, y = start_y }
+   if map.player_start_pos == nil then
+      local start_x, start_y = Map.find_free_position(math.floor(width/2), math.floor(height/2), {}, map)
+      map.player_start_pos = { x = start_x, y = start_y }
+   end
 
    return map
 end

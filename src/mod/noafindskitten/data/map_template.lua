@@ -70,11 +70,12 @@ local quest_noafindskitten = {
 
    properties = {
       music = "elona.ruin",
-      types = { "temporary", "quest" },
+      types = { "quest" },
       level = 1,
       is_indoor = true,
       max_crowd_density = 0,
-      reveals_fog = true
+      reveals_fog = true,
+      is_temporary = true
    },
 }
 
@@ -91,7 +92,7 @@ function quest_noafindskitten.on_generate_map(area, floor, params)
       local object = Feat.create("noafindskitten.object", nil, nil, {}, map)
       if object then
          object.description = I18N.get("noafindskitten.nki")
-         object.color = {Color:new_hsl(Rand.rnd(360), 0.5, 0.5):to_rgb()}
+         object.color = {Color:new_hsl(Rand.rnd(360), 1, 0.8):to_rgb()}
       end
    end
    Rand.choice(Feat.iter(map):filter(function(i) return i._id == "noafindskitten.object" end)).is_kitten = true

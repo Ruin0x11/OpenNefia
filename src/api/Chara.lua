@@ -163,7 +163,6 @@ function Chara.set_player(chara)
    c.relation = Enum.Relation.Ally
 
    c:reset_all_relations()
-   c:heal_to_max()
    c:refresh()
 
    field.hud:refresh(c)

@@ -63,7 +63,7 @@ function Map.save(map)
    end
 
    if map.area_uid == nil then
-      Log.warn("Autogenerating new area for map '%d'", map.uid)
+      Log.debug("Autogenerating new area for map '%d'", map.uid)
       local area = InstancedArea:new()
       area:add_floor(map)
       Area.register(area)
@@ -569,7 +569,7 @@ function Map.travel_to(map, params)
    y = math.floor(y)
 
    if map.area_uid == nil then
-      Log.warn("Autogenerating new area for map '%d'", map.uid)
+      Log.debug("Autogenerating new area for map '%d'", map.uid)
       local player = Chara.player()
       local area = InstancedArea:new()
       local floor = Area.floor_number(current)

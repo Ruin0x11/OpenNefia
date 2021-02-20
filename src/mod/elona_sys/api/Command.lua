@@ -243,8 +243,10 @@ function Command.quit_game()
       Gui.wait(300)
       return "quit"
    elseif res.index == 3 then
+      Gui.play_sound("base.ok1")
       ConfigMenuWrapper:new():query()
    elseif res.index == 4 then
+      Gui.play_sound("base.ok1")
       return "title_screen"
    end
    return "player_turn_query"

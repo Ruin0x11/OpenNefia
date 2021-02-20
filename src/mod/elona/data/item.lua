@@ -4725,7 +4725,19 @@ local item =
             color = Resolver.make("elona.furniture_color"),
          },
 
-         elona_function = 46,
+         on_use = function(self, params)
+            -- >>>>>>>> shade2/action.hsp:2074 	case effRope ...
+            local chara = params.chara
+            if chara:is_player() then
+               Gui.mes("action.use.rope.prompt")
+               if not Input.yes_no() then
+                  return "turn_end"
+               end
+            end
+
+            chara:damage_hp(math.max(chara.hp + 1, 99999), "elona.tight_rope")
+            -- <<<<<<<< shade2/action.hsp:2079 	swbreak ..
+         end,
 
          categories = {
             "elona.junk_in_field",

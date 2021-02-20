@@ -22,13 +22,10 @@ local main_state = require("internal.global.main_state")
 -- coroutine. Would be better to just put game.loop() into a
 -- standalone function.
 local game = {}
-game.in_game = false
 
 local function main_title()
    -- enable on low power mode
    main_state.is_main_title_reached = true
-
-   game.in_game = false
 
    local title = require("api.gui.menu.MainTitleMenu"):new()
 
