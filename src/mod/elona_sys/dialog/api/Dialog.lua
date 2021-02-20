@@ -436,7 +436,7 @@ function Dialog.start(chara, dialog_id)
       return
    end
 
-   dialog_id = dialog_id or "elona_sys.ignores_you"
+   dialog_id = dialog_id or chara:calc("dialog") or "elona.default"
 
    local start_node
    local colon_pos = string.find(dialog_id, ":")

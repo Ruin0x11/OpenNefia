@@ -57,7 +57,7 @@ function Map.save(map)
    local path = Fs.join("map", tostring(map.uid))
    Log.debug("Saving map %d to %s", map.uid, path)
 
-   local ok, err = SaveFs.write(path, map)
+   local ok, err = SaveFs.write(path, map, "temp")
    if not ok then
       return ok, err
    end
@@ -85,7 +85,7 @@ function Map.exists(map_or_uid)
    end
    assert(type(uid) == "number")
    local path = Fs.join("map", tostring(uid))
-   return SaveFs.exists(path)
+   return SaveFs.exists(path, "temp")
 end
 
 --- Loads a map from the current save. If you modify it be sure to
@@ -100,7 +100,7 @@ function Map.load(uid)
 
    local path = Fs.join("map", tostring(uid))
    Log.debug("Loading map %d from %s", uid, path)
-   local success, map = SaveFs.read(path)
+   local success, map = SaveFs.read(path, "temp")
    if not success then
       return false, map
    end
@@ -503,6 +503,7 @@ function Map.try_place_chara(chara, x, y, map)
    if real_x ~= nil then
       assert(can_place_chara_at(real_x, real_y, map))
 
+      Log.debug("Place %s %d,%d --> %d,%d", chara._id, x, y, real_x, real_y)
       chara.initial_x = real_x
       chara.initial_y = real_y
 

@@ -175,7 +175,7 @@ function CharaMakeWrapper:initialize_player(chara)
    assert(chara.race, "Character must have race set")
    assert(chara.class, "Character must have class set")
 
-   Event.trigger("base.on_initialize_player", {chara=chara})
+   chara:emit("base.on_initialize_player")
    config.base._save_id = chara.name
 end
 

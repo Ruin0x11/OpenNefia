@@ -116,7 +116,9 @@ function Draw.text(str, x, y, color, size)
       size = size or love.graphics.getFont():getHeight()
       text_cache[str] = text_cache[str] or setmetatable({}, { __mode = "kv" })
       local text = text_cache[str][size] or Draw.make_text(str)
-      text_cache[str][size] = text
+      if text_cache[str] then
+         text_cache[str][size] = text
+      end
       love.graphics.draw(text, x, y)
    end
 end

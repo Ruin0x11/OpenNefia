@@ -26,11 +26,11 @@ function save_store.clear()
 end
 
 function save_store.save()
-   return SaveFs.write("global", save_data)
+   return SaveFs.write("global", save_data, "temp")
 end
 
 function save_store.load()
-   local success, from_disk = SaveFs.read("global")
+   local success, from_disk = SaveFs.read("global", "temp")
    if not success then
       return false, from_disk
    end

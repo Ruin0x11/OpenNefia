@@ -386,7 +386,7 @@ function InstancedMap:calc_screen_sight(player_x, player_y, fov_size)
    -- 0x100000000
    --
    local function set_shadow_border(x, y, v)
-      self._shadow_map[x][y] = bit.bor(self._shadow_map[x][y], v)
+      self._shadow_map[x][y] = bit.bor(self._shadow_map[x][y] or 0, v)
    end
 
    local function mark_shadow(lx, ly)
@@ -714,6 +714,7 @@ function InstancedMap:set_previous_map_and_location(map, x, y)
    assert(class.is_an("api.InstancedMap", map))
    assert(type(x) == "number")
    assert(type(y) == "number")
+   assert(not map.is_temporary, "Previous map can't be temporary, or there will be no saved map to return to")
 
    self._previous_map = {
       map_uid = map.uid,

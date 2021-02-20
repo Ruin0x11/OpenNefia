@@ -1,6 +1,7 @@
 local Enum = {}
 
-local function try_get(self, k)
+
+function Enum.try_get(self, k)
    local v = rawget(self, k)
    if v == nil then
       return nil, ("Unknown enum variant '%s.%s'"):format(self.__name, k)
@@ -8,7 +9,7 @@ local function try_get(self, k)
    return v, nil
 end
 
-local function has_value(self, v)
+function Enum.has_value(self, v)
    for k, o in pairs(self) do
       if v == o then
          return true
@@ -17,13 +18,21 @@ local function has_value(self, v)
    return false
 end
 
-local function to_string(self, v)
+function Enum.to_string(self, v)
    for k, o in pairs(self) do
       if v == o then
          return k
       end
    end
    error(("Unknown enum value '%s.%s'"):format(self.__name, v))
+end
+
+function Enum.values(self, v)
+   local res = {}
+   for _, o in pairs(self) do
+      res[#res+1] = o
+   end
+   return res
 end
 
 local function enum_index(name)
@@ -34,7 +43,10 @@ local function enum_index(name)
       if k == "__name" then
          return name
       end
-      local v, err = try_get(t, k)
+      if Enum[k] then
+         return Enum[k]
+      end
+      local v, err = Enum.try_get(t, k)
       if not v then
          error(err)
       end
@@ -43,9 +55,6 @@ local function enum_index(name)
 end
 
 local function enum(name, tbl)
-   tbl.try_get = try_get
-   tbl.has_value = has_value
-   tbl.to_string = to_string
    return setmetatable(tbl, { __index = enum_index(name) })
 end
 

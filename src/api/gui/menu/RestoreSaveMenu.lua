@@ -46,7 +46,7 @@ local UiListExt = function()
 end
 
 local function read_header(save_id)
-   local full_path = SaveFs.save_path("header", save_id)
+   local full_path = SaveFs.save_path("header", "save", save_id)
    local content, err = fs.read(full_path)
    if not content then
       return "er"
@@ -84,7 +84,7 @@ function RestoreSaveMenu:query_deletion()
    if Input.yes_no() then
       self.caption:set_data(I18N.get("main_menu.continue.delete2", id))
       if Input.yes_no() then
-         fs.remove(SaveFs.save_path("", id))
+         fs.remove(SaveFs.save_path("", "save", id))
          self.pages:set_data(read_saves())
       end
    end

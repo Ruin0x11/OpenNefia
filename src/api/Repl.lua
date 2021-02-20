@@ -96,9 +96,9 @@ function Repl.generate_env(locals)
    repl_env._traceback = debug.traceback("", nil, 2)
 
    local history = {}
-   if SaveFs.exists("data/repl_history") then
+   if SaveFs.exists("data/repl_history", "global") then
       local ok
-      ok, history = SaveFs.read("data/repl_history")
+      ok, history = SaveFs.read("data/repl_history", "global")
       if not ok then
          error(history)
       end

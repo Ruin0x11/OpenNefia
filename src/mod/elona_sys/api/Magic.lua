@@ -114,7 +114,10 @@ function Magic.get_ai_location(target_type, range, caster, triggered_by, ai_targ
    end
 
    if target_type == "direction" then
-      return true, {}
+      return true, {
+         source = caster,
+         target = ai_target
+      }
    end
 
    error(("Unknown skill target_type '%s'"):format(target_type))

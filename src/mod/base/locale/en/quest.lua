@@ -25,7 +25,7 @@ end,
     escort = {
       complete = "You complete the escort.",
       failed = {
-        assassin = "Hey, the assassins are killing me.",
+        protect = "Hey, the assassins are killing me.",
         deadline = function(_1)
   return ("\"I missed the deadline. I don't have a right to live anymore.\" %s pours a bottole of molotov cocktail over %s.")
   :format(name(_1), himself(_1))

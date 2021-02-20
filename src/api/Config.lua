@@ -35,7 +35,7 @@ function Config.get_default_option(option)
       if type(default) == "function" then
          default = default(option)
       end
-      assert(default)
+      assert(default ~= nil)
    end
 
    local ok, err = Config.verify_option(default, option)
