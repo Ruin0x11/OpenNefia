@@ -3,7 +3,7 @@ local Chara = require("api.Chara")
 local Calc = require("mod.elona.api.Calc")
 local Quest = require("mod.elona_sys.api.Quest")
 local Map = require("api.Map")
-local MapArchetype = require("api.MapArchetype")
+local SokobanMap = require("mod.sokoban.api.SokobanMap")
 
 
 data:add {
@@ -23,7 +23,7 @@ data:add {
    difficulty = function()
       local difficulty = math.clamp(Rand.rnd(Chara.player():calc("level") + 10) +
                                         Rand.rnd(Chara.player():calc("fame") / 500 + 1) + 1,
-                                     1, 80)
+                                     1, 90)
       return Calc.round_margin(difficulty, Chara.player():calc("level"))
    end,
 
@@ -57,7 +57,7 @@ data:add {
          assert(quest)
 
          local current_map = t.speaker:current_map()
-         local quest_map = MapArchetype.generate_map_and_area("sokoban.quest_sokoban")
+         local quest_map = SokobanMap.generate(("sokoban.builtin_%d"):format(quest.difficulty))
          local player = Chara.player()
          quest_map:set_previous_map_and_location(current_map, player.x, player.y)
 

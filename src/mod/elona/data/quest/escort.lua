@@ -132,7 +132,7 @@ function escort.on_failure(self)
             Gui.mes_c("quest.escort.failed.deadline", "SkyBlue", chara)
             damage_source = "elona.from_fire"
          end
-         chara:damage_hp(math.max(999999, chara.hp), damage_source)
+         chara:damage_hp(math.max(chara.hp + 1, 999999), damage_source)
       end
       chara.state = "Dead"
       if chara:is_ally() then
@@ -271,7 +271,9 @@ local function check_escort_left_behind(_, params)
       return
    end
 
-   Gui.mes("quest.escort.you_left_your_client")
+   if quest._id == "elona.escort" then
+      Gui.mes("quest.escort.you_left_your_client")
+   end
    return nil
    -- <<<<<<<< shade2/quest.hsp:324 		if gQuest=qGuard:if qStatus(rq)=0:gQuest=0,0,0,0 ..
 end

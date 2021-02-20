@@ -731,6 +731,7 @@ local function quest_create_rewards(_, params)
    Gui.mes_c("quest.gain_fame", "Green", fame_gained)
    player.fame = player.fame + fame_gained
    Gui.mes("common.something_is_put_on_the_ground")
+   Gui.play_sound("base.complete1")
 end
 Event.register("elona_sys.on_quest_completed", "Create default quest rewards", quest_create_rewards, 200000)
 

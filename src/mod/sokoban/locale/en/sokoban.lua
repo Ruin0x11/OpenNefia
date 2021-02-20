@@ -1,8 +1,6 @@
 return {
    sokoban = {
-      greeting = "Hello, world!",
-      greeting_custom = function(_1)
-         return ("Hello, %s!"):format(_1)
-      end
+      no_diagonal_movement = "Sorry, but you can't move diagonally here.",
+      solved = "Congratulations! You've completed this map."
    }
 }

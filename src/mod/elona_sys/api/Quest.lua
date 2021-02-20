@@ -519,8 +519,6 @@ function Quest.complete(quest, client)
    Event.trigger("elona_sys.on_quest_completed", {quest=quest, client=client})
 
    table.iremove_value(save.elona_sys.quest.quests, quest)
-
-   Gui.play_sound("base.complete1")
    Gui.update_screen()
 
    Save.autosave()

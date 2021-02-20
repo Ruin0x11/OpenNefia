@@ -862,23 +862,23 @@ removed.  Return the new string.  If STRING is nil, return nil."
     (add-file-local-variable 'open-nefia-always-send-to-repl t)
     (beginning-of-buffer)))
 
-(defun open-nefia-run-headlessly ()
-  (interactive)
+(defun open-nefia-run-headlessly (arg)
+  (interactive "P")
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
          (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
-         (cmd (format "%s exec %s" script path))
+         (cmd (format "%s exec %s %s" script path (if arg "-m" "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 
-(defun open-nefia-run-headlessly-repl ()
-  (interactive)
+(defun open-nefia-run-headlessly-repl (arg)
+  (interactive "P")
   (let* ((path (file-relative-name
                 (buffer-file-name)
                 (string-join (list (projectile-project-root) "src"))))
          (script (if (eq system-type 'windows-nt) "./OpenNefia.bat" "./OpenNefia"))
-         (cmd (format "%s exec %s -r" script path))
+         (cmd (format "%s exec %s -r %s" script path (if arg "-m" "")))
          (default-directory (projectile-project-root)))
     (compile cmd)))
 

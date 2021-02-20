@@ -70,11 +70,12 @@ local quest_noafindskitten = {
 
    properties = {
       music = "elona.ruin",
-      types = { "temporary", "quest" },
+      types = { "quest" },
       level = 1,
       is_indoor = true,
       max_crowd_density = 0,
-      reveals_fog = true
+      reveals_fog = true,
+      is_temporary = true
    },
 }
 
