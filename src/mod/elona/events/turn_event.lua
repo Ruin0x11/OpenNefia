@@ -9,6 +9,7 @@ local elona_Chara = require("mod.elona.api.Chara")
 local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 local Feat = require("api.Feat")
 local Encounter = require("mod.elona.api.Encounter")
+local Effect = require("mod.elona.api.Effect")
 
 local function refresh_hp_mp_stamina(chara, params, result)
    local mp_factor = chara:skill_level("elona.stat_magic") * 2
@@ -98,12 +99,24 @@ end
 Event.register("base.on_chara_moved", "Proc random encounters", proc_random_encounter)
 
 local function respawn_mobs()
+   -- >>>>>>>> shade2/main.hsp:545 		if gTurn¥20=0 : call chara_spawn ...
    if save.base.play_turns % 20 == 0 then
       elona_Chara.spawn_mobs()
    end
+   -- <<<<<<<< shade2/main.hsp:545 		if gTurn¥20=0 : call chara_spawn ..
 end
 
 Event.register("base.on_minute_passed", "Respawn mobs", respawn_mobs)
+
+local function proc_sense_quality()
+   -- >>>>>>>> shade2/main.hsp:546 		if gTurn¥10=1 : call item_senseQuality ...
+   if save.base.play_turns % 10 == 0 then
+      Effect.sense_quality(Chara.player())
+   end
+   -- <<<<<<<< shade2/main.hsp:546 		if gTurn¥10=1 : call item_senseQuality ..
+end
+
+Event.register("base.on_minute_passed", "Proc sense quality", proc_sense_quality)
 
 local function on_regenerate(chara)
    if Rand.one_in(6) then

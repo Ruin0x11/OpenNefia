@@ -115,9 +115,11 @@ local effect = {
       stops_activity = true,
 
       on_turn_end = function(chara)
+         -- >>>>>>>> shade2/calculation.hsp:1182 	if cPoison(r1)>0{ ...
          chara:set_emotion_icon("elona.skull")
          chara:damage_hp(Rand.rnd(2 + chara:skill_level("elona.stat_constitution") / 10), "elona.poison")
          return { regeneration = false }
+         -- <<<<<<<< shade2/calculation.hsp:1186 	} ..
       end,
 
       indicator = function(chara)
@@ -162,9 +164,11 @@ local effect = {
       end,
 
       on_turn_end = function(chara)
+         -- >>>>>>>> shade2/calculation.hsp:1176 	if cSleep(r1)>0{ ...
          chara:set_emotion_icon("elona.sleep")
          chara:heal_hp(1, true)
          chara:heal_mp(1, true)
+         -- <<<<<<<< shade2/calculation.hsp:1180 		} ..
       end,
    },
    {
@@ -353,6 +357,7 @@ local effect = {
       stops_activity = true,
 
       on_turn_end = function(chara)
+         -- >>>>>>>> shade2/calculation.hsp:1253 		if sync(r1) : if rnd(3)=0{ ...
          if Rand.one_in(3) then
             if chara:is_in_fov() then
                Gui.mes("misc.status_ailment.insane", chara)
@@ -370,6 +375,7 @@ local effect = {
          if Rand.one_in(5) then
             chara:add_effect_turns("elona.fear", Rand.rnd(10))
          end
+         -- <<<<<<<< shade2/calculation.hsp:1272 		if rnd(5)=0:cFear(r1)+=rnd(10) ..
       end
    },
    {

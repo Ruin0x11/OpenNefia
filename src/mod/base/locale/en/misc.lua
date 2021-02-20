@@ -3,16 +3,16 @@ return {
       ["and"] = " and ",
       artifact_regeneration = function(_1, _2)
          return ("%s turns its shape into %s.")
-            :format(_1, itemname(_2))
+            :format(_1, _2)
       end,
       black_cat_licks = function(_1, _2)
          return ("%s licks %s.")
-            :format(name(_1), itemname(_2))
+            :format(name(_1), _2)
       end,
       caught_by_assassins = "You are caught by assassins. You have to protect your client.",
       corpse_is_dried_up = function(_1)
          return ("%s %s dried up in the sun.")
-            :format(itemname(_1), is(_1))
+            :format(_1, is(_1))
       end,
       curse = {
          blood_sucked = function(_1)
@@ -75,7 +75,7 @@ return {
       dungeon_level = function(_1, _2) return ("%s %s Lv"):format(_1, ordinal(_2)) end,
       extract_seed = function(_1)
          return ("You extract plant seeds from %s.")
-            :format(itemname(_1))
+            :format(_1)
       end,
       fail_to_cast = {
          creatures_are_summoned = "Several creatures are summoned from a vortex of magic.",
@@ -99,7 +99,7 @@ return {
       end,
       get_rotten = function(_1)
          return ("%s rot%s.")
-            :format(itemname(_1), s(_1))
+            :format(_1, s(_1))
       end,
       hostile_action = {
          get_excited = "Animals get excited!",
@@ -115,11 +115,11 @@ return {
       identify = {
          almost_identified = function(_1, _2)
             return ("You sense the quality of %s is %s.")
-               :format(itemname(_1), _2)
+               :format(_1, _2)
          end,
          fully_identified = function(_1, _2)
             return ("You appraise %s as %s.")
-               :format(_1, itemname(_2))
+               :format(_1, _2)
          end
       },
       income = {
@@ -134,7 +134,7 @@ return {
       },
       living_weapon_taste_blood = function(_1)
          return ("%s has tasted enough blood!")
-            :format(itemname(_1))
+            :format(_1)
       end,
       love_miracle = {
          uh = "Uh...!"

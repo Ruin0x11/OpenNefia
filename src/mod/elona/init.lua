@@ -11,6 +11,7 @@ data:add_multi(
    "base.config_option",
    {
       { _id = "hide_shop_results", type = "enum", choices = {"none", "could_not_sell", "all"}, default = "none" },
+      { _id = "hide_autoidentify", type = "enum", choices = {"none", "quality", "all"}, default = "none" },
    }
 )
 

@@ -591,8 +591,6 @@ function IChara:renew_status()
    self.aggro = 0
 
    self:refresh()
-
-   self:emit("base.on_chara_revived")
    -- >>>>>>>> shade2/chara.hsp:637 	return ..
 end
 

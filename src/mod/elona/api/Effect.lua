@@ -16,6 +16,7 @@ local World = require("api.World")
 local Const = require("api.Const")
 local I18N = require("api.I18N")
 local Mef = require("api.Mef")
+local elona_Item = require("mod.elona.api.Item")
 
 local Effect = {}
 
@@ -386,7 +387,7 @@ end
 
 function Effect.try_to_identify_item(item, power)
    local level
-   if power >= item:calc("difficulty_of_identification") then
+   if power >= item:calc("identify_difficulty") then
       level = Enum.IdentifyState.Full
    else
       level = Enum.IdentifyState.None
@@ -1241,6 +1242,46 @@ function Effect.generate_money(chara)
       chara.gold = gold
    end
    -- <<<<<<<< shade2/calculation.hsp:707 	return ..
+end
+
+function Effect.sense_quality(chara)
+   -- >>>>>>>> shade2/item.hsp:496 *item_senseQuality ...
+   if chara:has_effect("elona.confusion") or
+      chara:has_effect("elona.sleep") or
+      chara:has_effect("elona.paralysis") or
+      chara:has_effect("elona.choking")
+   then
+      return false
+   end
+
+   local filter = function(i)
+      return Item.is_alive(i)
+         and i.identify_state < Enum.IdentifyState.Full
+         and elona_Item.is_equipment(i)
+   end
+
+   for _, item in chara:iter_items():filter(filter) do
+      local power = chara:skill_level("elona.stat_perception") + chara:skill_level("elona.sense_quality") * 5
+      local proc = 1500 + item:calc("identify_difficulty")
+
+      if power > Rand.rnd(proc * 5) then
+         local unidentified_name = item:build_name()
+         Effect.identify_item(item, Enum.IdentifyState.Full)
+         ItemMemory.set_known(item._id, true)
+         if config.elona.hide_autoidentify ~= "all" then
+            Gui.mes("misc.identify.fully_identified", unidentified_name, item:build_name())
+         end
+         Skill.gain_skill_exp(chara, "elona.sense_quality", 50)
+      end
+      if item.identify_state < Enum.IdentifyState.Quality and power > Rand.rnd(proc) then
+         if config.elona.hide_autoidentify == "none" then
+            Gui.mes("misc.identify.almost_identified", item:build_name(), "ui.quality._" .. item.quality)
+         end
+         Effect.identify_item(item, Enum.IdentifyState.Quality)
+         Skill.gain_skill_exp(chara, "elona.sense_quality", 50)
+      end
+   end
+   -- <<<<<<<< shade2/item.hsp:516 	return ..
 end
 
 return Effect
