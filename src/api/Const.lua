@@ -60,4 +60,23 @@ Const.ALLY_HUNGER_THRESHOLD = 6000
 Const.AI_RANGED_ATTACK_THRESHOLD = 6
 Const.AI_THROWING_ATTACK_THRESHOLD = 8
 
+-- >>>>>>>> shade2/init.hsp:124 	#define global conSickHeavy	30 ...
+Const.CON_SICK_HEAVY      = 30
+Const.CON_POISON_HEAVY    = 30
+Const.CON_SLEEP_HEAVY     = 30
+
+Const.CON_DIM_HEAVY       = 60
+Const.CON_DIM_MODERATE    = 30
+
+Const.CON_ANGRY_HEAVY     = 30
+
+Const.CON_BLEED_HEAVY     = 20
+Const.CON_BLEED_MODERATE  = 10
+
+Const.CON_INSANE_HEAVY    = 50
+Const.CON_INSANE_MODERATE = 25
+
+Const.CON_DRUNK_HEAVY     = 45
+-- <<<<<<<< shade2/init.hsp:139 	#define global conDrunkHeavy	45 ...
+
 return Const

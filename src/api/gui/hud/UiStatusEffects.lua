@@ -4,12 +4,14 @@ local Event = require("api.Event")
 local ISettable = require("api.gui.ISettable")
 local IUiWidget = require("api.gui.IUiWidget")
 local UiTheme = require("api.gui.UiTheme")
+local I18N = require("api.I18N")
 
 local UiStatusEffects = class.class("UiStatusEffects", {ISettable, IUiWidget})
 
 function UiStatusEffects:init()
    self.indicators = {}
    self.max_width = 50
+   self.base_y = 0
 end
 
 local function make_status_indicators(_, params, result)
@@ -20,6 +22,7 @@ local function make_status_indicators(_, params, result)
       if v.indicator then
          local raw = v.indicator(chara)
          if type(raw) == "table" then
+            raw.text = I18N.get_optional(raw.text) or raw.text
             raw.ordering = v.ordering
             result[#result+1] = raw
          end
@@ -53,6 +56,9 @@ function UiStatusEffects:set_data(player)
    end
 
    table.sort(raw, function(a, b) return a.ordering < b.ordering end)
+   if self.t then
+      self:calc_max_width()
+   end
 end
 
 function UiStatusEffects:calc_max_width()

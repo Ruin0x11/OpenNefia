@@ -84,7 +84,7 @@ return {
                return ("%s come%s to %s again.")
                   :format(name(_1), s(_1), himself(_1))
             end,
-            insane = {
+            indicator = {
                _0 = "Unsteady",
                _1 = "Insane",
                _2 = "Paranoia"

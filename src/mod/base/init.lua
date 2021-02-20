@@ -74,32 +74,38 @@ require("mod.base.resolver")
 
 data["base.effect"]:edit("register status effect indicator",
    function(dat)
-      local f = dat.indicator
-      if f == nil then
-         f = { text = dat._id }
-      end
-      if type(f) == "table" and type(f.text) == "string" then
-         -- Create a basic indicator that appears if the effect turns
-         -- are above zero.
-         local indicator = f
-         f = function(player)
-            if player:has_effect(dat._id) then
-               return indicator
-            end
+      if type(dat.indicator) == "string" then
+        data:add {
+           _type = "base.ui_indicator",
+           _id = "effect_" .. string.split(dat._id, ".")[2],
+            -- Create a basic indicator that appears if the effect turns
+            -- are above zero.
+            indicator = function(player)
+               if player:has_effect(dat._id) then
+                  local raw = { text = dat.indicator }
+                  raw.color = dat.color or nil
+                  return raw
+               end
 
-            return nil
-         end
-      end
-      if type(f) == "function" then
+               return nil
+            end
+        }
+      elseif type(dat.indicator) == "function" then
         data:add {
            _type = "base.ui_indicator",
            _id = "effect_" .. string.split(dat._id, ".")[2],
 
-           indicator = f,
+           indicator = function(chara)
+              if chara:has_effect(dat._id) then
+                 local raw = dat.indicator(chara)
+                 raw.color = dat.color or nil
+                 return raw
+              end
+           end,
            ordering = dat.ordering
         }
         end
       return dat
-                             end)
+end)
 
 require("mod.base.data")
