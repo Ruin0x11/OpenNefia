@@ -8,6 +8,7 @@ local Util = require("mod.elona_sys.api.Util")
 local Resolver = require("api.Resolver")
 local Area = require("api.Area")
 local Const = require("api.Const")
+local I18N = require("api.I18N")
 
 local Calc = {}
 
@@ -351,6 +352,16 @@ function Calc.will_chara_take_item(target, item, amount)
 
    return true
    -- <<<<<<<< shade2/command.hsp:3815 			} ..
+end
+
+function Calc.will_chara_give_item_back(target, item, amount)
+   -- >>>>>>>> shade2/command.hsp:3922 			f=0 ...
+   if item:has_category("elona.ore") then
+      return false, "ui.inv.take_ally.refuse_dialog"
+   end
+
+   return true
+   -- <<<<<<<< shade2/command.hsp:3928  ..
 end
 
 return Calc

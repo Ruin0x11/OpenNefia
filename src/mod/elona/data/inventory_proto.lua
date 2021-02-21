@@ -996,12 +996,70 @@ local inv_take = {
    icon = 17,
    show_money = true,
    query_amount = false,
+   -- >>>>>>>> shade2/command.hsp:3943 			if iId(ci)=idGold:in=iNum(ci):else:in=1 ...
+   default_amount = 1,
+   -- <<<<<<<< shade2/command.hsp:3943 			if iId(ci)=idGold:in=iNum(ci):else:in=1 ..
    window_title = "ui.inventory_command.give",
    query_text = "ui.inv.title.give",
 }
 
 function inv_take.on_select(ctxt, item, amount)
-   return "player_turn_query"
+   -- >>>>>>>> shade2/command.hsp:3919 		if invCtrl=25{ ...
+   local chara = ctxt.chara
+   local target = ctxt.target
+
+   if chara:is_inventory_full() then
+      Gui.mes("ui.inv.common.inventory_full")
+      return "inventory_continue"
+   end
+
+   local will_give, complaint = Calc.will_chara_give_item_back(target, item, amount)
+   if not will_give then
+      Gui.play_sound("base.fail1")
+      complaint = complaint or "ui.inv.take_ally.refuse_dialog"
+      Gui.mes_c(complaint, "Blue", target, item:build_name(amount))
+      return "inventory_continue"
+   end
+
+   if item:is_equipped() then
+      if item:calc("curse_state") <= Enum.CurseState.Cursed then
+         Gui.mes("ui.inv.take_ally.cursed", item:build_name())
+         return "inventory_continue"
+      end
+      item:unequip()
+   end
+
+   local result = item:emit("elona.on_item_taken", {chara=chara, target=target, amount=amount}, nil)
+   if result then
+      return result
+   end
+
+   Gui.play_sound("base.equip1")
+   item.always_drop = false
+
+   if item._id == "elona.gold_piece" then
+      amount = item.amount
+   end
+
+   Gui.mes("ui.inv.take_ally.you_take", item:build_name(amount))
+
+   -- TODO maybe make less special-casey
+   if item._id == "elona.gold_piece" then
+      chara.gold = chara.gold + amount
+      item:remove(amount)
+   else
+      local sep = item:separate(amount)
+      sep:remove_ownership()
+      assert(chara:take_item(sep))
+      elona_Item.convert_artifact(sep)
+   end
+
+   Equipment.equip_all_optimally(target)
+   target:refresh()
+   target:refresh_weight()
+
+   return "inventory_continue"
+   -- <<<<<<<< shade2/command.hsp:3955 			} ..
 end
 
 data:add(inv_take)

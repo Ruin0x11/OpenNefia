@@ -10280,6 +10280,24 @@ local item =
                   -- <<<<<<<< shade2/command.hsp:3825 				} ..
                end
             },
+            {
+               id = "elona.on_item_taken",
+               name = "Swallow engagement item",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/command.hsp:3935 			if (iId(ci)=idRingEngage)or(iId(ci)=idAmuEngage ...
+                  local target = params.target
+
+                  Gui.mes_c("ui.inv.take_ally.swallows_ring", "Purple", target, self:build_name(1))
+                  Gui.play_sound("base.offer1")
+                  Skill.modify_impression(target, -20)
+                  target:set_emotion_icon("elona.angry", 3)
+                  self:remove(1)
+
+                  return "inventory_continue"
+                  -- <<<<<<<< shade2/command.hsp:3939 				} ..
+               end
+            },
          },
       },
       {
@@ -10373,6 +10391,24 @@ local item =
                   Skill.modify_impression(target, 15)
                   target:set_emotion_icon("elona.heart", 3)
                   -- <<<<<<<< shade2/command.hsp:3825 				} ..
+               end
+            },
+            {
+               id = "elona.on_item_taken",
+               name = "Swallow engagement item",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/command.hsp:3935 			if (iId(ci)=idRingEngage)or(iId(ci)=idAmuEngage ...
+                  local target = params.target
+
+                  Gui.mes_c("ui.inv.take_ally.swallows_ring", "Purple", target, self:build_name(1))
+                  Gui.play_sound("base.offer1")
+                  Skill.modify_impression(target, -20)
+                  target:set_emotion_icon("elona.angry", 3)
+                  self:remove(1)
+
+                  return "inventory_continue"
+                  -- <<<<<<<< shade2/command.hsp:3939 				} ..
                end
             },
          },
