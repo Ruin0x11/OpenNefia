@@ -1,5 +1,4 @@
 local IObject = require("api.IObject")
-local data = require("internal.data")
 local Const = require("api.Const")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
 
@@ -66,19 +65,6 @@ function IItemEnchantments:init()
    self:add_enchantments_from_proto()
 end
 
-local function sort_enchantments(a, b)
-   -- >>>>>>>> shade2/item_data.hsp:496 	#deffunc sortEnc int id ..
-   local enc_data_a = data["base.enchantment"]:ensure(a._id)
-   local enc_data_b = data["base.enchantment"]:ensure(b._id)
-
-   -- TODO ordering
-   local ord_a = enc_data_a.elona_id or 0
-   local ord_b = enc_data_b.elona_id or 0
-
-   return ord_a < ord_b
-   -- <<<<<<<< shade2/item_data.hsp:510 	return ..
-end
-
 function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
    assert(type(power_delta) == "number", "power delta must be number")
 
@@ -115,6 +101,37 @@ function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
    return true
 end
 
+--- For all enchantments in iter, combines the powers between the ones with
+--- similar parameters.
+function IItemEnchantments.calc_total_enchantment_powers(iter)
+   local unique_encs_found = {}
+
+   -- We don't have a Set class that can check equivalence with a custom
+   -- comparator, so this will have to do...
+   for _, enc in iter:unwrap() do
+      local found = false
+      for unique_enc, power in pairs(unique_encs_found) do
+         print(enc._id, inspect(table.deepcompare(unique_enc.params, enc.params)), inspect(unique_enc:can_merge_with(enc)))
+         if unique_enc:can_merge_with(enc) then
+            unique_encs_found[unique_enc] = power + enc.power
+            found = true
+            break
+         end
+      end
+      if not found then
+         unique_encs_found[enc] = enc.power
+      end
+   end
+
+   local result = {}
+
+   for enc, power in pairs(unique_encs_found) do
+      result[#result+1] = { _id = enc._id, params = table.deepcopy(enc.params), total_power = power }
+   end
+
+   return result
+end
+
 function IItemEnchantments:add_enchantment(enc, power, params, curse_power, source)
    -- >>>>>>>> shade2/item_data.hsp:603  ..
    if type(enc) == "string" then
@@ -127,32 +144,20 @@ function IItemEnchantments:add_enchantment(enc, power, params, curse_power, sour
       class.assert_is_an(InstancedEnchantment, enc)
    end
 
-   -- We want at most MAX_ENCHANTMENTS enchantments of differing types/params,
-   -- but you can have unlimited enchantments of the same type and params (they
-   -- all get combined together). This is an artificial restriction at this
-   -- point; we might want to remove it later.
-   local unique_encs_found = table.set {}
-
-   -- We don't have a Set class that can check equivalence with a custom
-   -- comparator, so this will have to do...
    for _, existing_enc in ipairs(self.enchantments) do
       if enc == existing_enc then
          return nil, "item already has enchantment"
       end
-      local found = false
-      for unique_enc, count in pairs(unique_encs_found) do
-         if unique_enc:can_merge_with(existing_enc) then
-            unique_encs_found[unique_enc] = count + 1
-            found = true
-            break
-         end
-      end
-      if not found then
-         unique_encs_found[existing_enc] = 1
-      end
    end
 
-   if table.count(unique_encs_found) >= Const.MAX_ENCHANTMENTS then
+   -- We want at most MAX_ENCHANTMENTS enchantments of differing types/params,
+   -- but you can have unlimited enchantments of the same type and params (they
+   -- all get combined together). This is an artificial restriction at this
+   -- point; we might want to remove it later.
+   local base_encs = fun.wrap(ipairs(self.enchantments))
+   local unique_encs_count = #IItemEnchantments.calc_total_enchantment_powers(base_encs)
+
+   if unique_encs_count >= Const.MAX_ENCHANTMENTS then
       return nil, "max_enchantments"
    end
 
@@ -163,7 +168,7 @@ function IItemEnchantments:add_enchantment(enc, power, params, curse_power, sour
       self.value = adjusted_value
    end
 
-   table.insertion_sort(self.enchantments, sort_enchantments)
+   table.insertion_sort(self.enchantments, InstancedEnchantment.__lt)
 
    self:emit("base.on_item_add_enchantment", {enchantment=enc})
    self:refresh()
@@ -242,7 +247,7 @@ function IItemEnchantments:remove_enchantment(enc, params, source)
 
    assert(table.iremove_value(self.enchantments, enc))
 
-   table.insertion_sort(self.enchantments, sort_enchantments)
+   table.insertion_sort(self.enchantments, InstancedEnchantment.__Lt)
    self:emit("base.on_item_remove_enchantment", {index=idx, enchantment=enc})
    self:refresh()
 
@@ -277,7 +282,7 @@ local function refresh_temporary_enchantments(item)
    -- like in _ext, then copy its reference to temp.enchantments each refresh.
    item.temp["enchantments"] = table.shallow_copy(item.enchantments)
 
-   table.insertion_sort(item.temp["enchantments"], sort_enchantments)
+   table.insertion_sort(item.temp["enchantments"], InstancedEnchantment.__lt)
 end
 
 function IItemEnchantments:on_refresh()

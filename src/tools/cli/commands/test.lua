@@ -86,7 +86,7 @@ local function run_test(name, test_fn, seed, debug_on_error)
    local StringIO = require("mod.extlibs.api.StringIO")
    local _print = print
    local redir_out = StringIO.create()
-   print = function(...) for _, i in ipairs({...}) do redir_out:write(i .. "\n") end end
+   print = function(...) for _, i in ipairs({...}) do redir_out:write(tostring(i) .. " "); redir_out:write("\n") end end
 
    local ok, err = xpcall(test_fn, capture)
 

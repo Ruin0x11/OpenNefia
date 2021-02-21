@@ -97,7 +97,7 @@ function InstancedEnchantment:compare_params(other_params)
       cmp = self.proto.compare
    end
 
-   return cmp(self.params, other_params)
+   return not not cmp(self.params, other_params)
 end
 
 function InstancedEnchantment:is_same_as(other)
@@ -105,7 +105,7 @@ function InstancedEnchantment:is_same_as(other)
       return false
    end
 
-   self:compare_params(other.params)
+   return self:compare_params(other.params)
 end
 
 function InstancedEnchantment:can_merge_with(other)
@@ -114,6 +114,14 @@ function InstancedEnchantment:can_merge_with(other)
    end
 
    return self:is_same_as(other)
+end
+
+function InstancedEnchantment:__lt(other)
+   -- >>>>>>>> shade2/item_data.hsp:496 	#deffunc sortEnc int id ...
+   local my_ordering = self.ordering or (self.proto.elona_id and self.proto.elona_id * 10000) or 0
+   local their_ordering = other.ordering or (other.proto.elona_id and other.proto.elona_id * 10000) or 0
+   return my_ordering < their_ordering
+   -- <<<<<<<< shade2/item_data.hsp:513 	#global  ..
 end
 
 return InstancedEnchantment

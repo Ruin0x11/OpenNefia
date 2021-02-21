@@ -59,6 +59,7 @@ function test_IItemEnchantment_remove_enchantment__source()
    Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
 
    Assert.is_falsy(item:remove_enchantment("elona.absorb_mana"))
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
 
    Assert.is_truthy(item:remove_enchantment("elona.absorb_mana", nil, "item"))
    Assert.eq(5, IItemEnchantments.iter_enchantments(item):length())
@@ -315,4 +316,28 @@ function test_IItemEnchantment_find_enchantment__among_multiple()
    Assert.eq(enc_item, IItemEnchantments.find_enchantment(item, "elona.absorb_mana"))
    Assert.eq(nil, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "generated"))
    Assert.eq(enc_item, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "item"))
+end
+
+function test_IItemEnchantment_calc_total_enchantment_powers()
+   local item = enchantless_item("elona.long_bow")
+
+   item:add_enchantment("elona.absorb_mana", 20, "randomized")
+   item:add_enchantment("elona.absorb_mana", 50, "randomized")
+   item:add_enchantment("elona.absorb_mana", 10, "randomized")
+
+   item:add_enchantment("elona.modify_skill", 20, {skill_id="elona.weight_lifting"})
+   item:add_enchantment("elona.modify_skill", 15, {skill_id="elona.weight_lifting"})
+
+   item:add_enchantment("elona.modify_skill", 10, {skill_id="elona.sense_quality"})
+
+   local result = IItemEnchantments.calc_total_enchantment_powers(item:iter_enchantments())
+
+   -- TODO order
+   local is_found = function(_id, power, params)
+      local filter = function(r) return r._id == _id and r.total_power == power and table.deepcompare(r.params, params) end
+      return fun.iter(result):filter(filter):length() == 1
+   end
+   Assert.eq(true, is_found("elona.absorb_mana", 80, {}))
+   Assert.eq(true, is_found("elona.modify_skill", 35, {skill_id="elona.weight_lifting"}))
+   Assert.eq(true, is_found("elona.modify_skill", 10, {skill_id="elona.sense_quality"}))
 end
