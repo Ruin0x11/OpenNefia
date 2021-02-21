@@ -178,6 +178,8 @@ function InventoryContext:init(proto, params)
    self.shop = params.shop or nil
    self.params = {}
 
+   local passed_params = params.params or {}
+
    self.icon = (self.proto.icon or 0) + 1
 
    if self.proto.keybinds then
@@ -186,7 +188,7 @@ function InventoryContext:init(proto, params)
 
    if self.proto.params then
       for name, required_type in pairs(self.proto.params) do
-         local val = params.params[name]
+         local val = passed_params[name]
 
          local ok = type(val) == required_type
 
