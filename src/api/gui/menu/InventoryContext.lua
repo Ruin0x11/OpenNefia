@@ -176,7 +176,7 @@ function InventoryContext:init(proto, params)
    self.container = params.container or nil
    self.map = params.map or nil
    self.shop = params.shop or nil
-   self.params = params.params or nil
+   self.params = {}
 
    self.icon = (self.proto.icon or 0) + 1
 
@@ -186,7 +186,7 @@ function InventoryContext:init(proto, params)
 
    if self.proto.params then
       for name, required_type in pairs(self.proto.params) do
-         local val = params[name]
+         local val = params.params[name]
 
          local ok = type(val) == required_type
 
@@ -204,8 +204,7 @@ function InventoryContext:init(proto, params)
             error(string.format("Inventory context parameter has a name conflict: %s", name))
          end
 
-         -- TODO move to ctxt.params
-         self[name] = val
+         self.params[name] = val
       end
    end
 end
@@ -265,7 +264,7 @@ function InventoryContext:after_filter(filtered)
 end
 
 function InventoryContext:query_item_amount(item)
-   local amount = item.amount
+   local amount = math.clamp(self.proto.default_amount or item.amount, 1, item.amount)
    local can_query = false
 
    if self.chara and self.chara:is_player() then

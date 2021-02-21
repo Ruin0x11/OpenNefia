@@ -1,6 +1,8 @@
 local Fs = require("api.Fs")
 local MapEntrance = require("mod.elona_sys.api.MapEntrance")
 local state = require("mod.test_room.internal.global.state")
+local Event = require("api.Event")
+local Log = require("api.Log")
 
 local function require_all_in(dir)
    return Fs.iter_directory_items(dir, "full_path")

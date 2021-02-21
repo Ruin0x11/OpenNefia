@@ -8,7 +8,7 @@ function ICharaAi:reset_ai()
    self.aggro = 0
 
    self.ai_state = {
-      item_to_be_used = nil,
+      item_to_use = nil,
       wants_movement = 0,
       last_target_x = 0,
       last_target_y = 0,

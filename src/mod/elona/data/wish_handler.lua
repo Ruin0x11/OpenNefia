@@ -355,7 +355,7 @@ local function extract_chara_id(wish)
 end
 
 local function adjust_potion_scroll_amount(item)
-   if item:has_category("elona.drink") or item:has_category("elona.potion") then
+   if item:has_category("elona.drink") or item:has_category("elona.drink_potion") then
       item.amount = 3 + Rand.rnd(2)
       if item.value >= 5000 then
          item.amount = 3

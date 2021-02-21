@@ -111,17 +111,7 @@ local effect = {
 
       ordering = 30000,
       color = { 0, 150, 0 },
-
-      stops_activity = true,
-
-      on_turn_end = function(chara)
-         -- >>>>>>>> shade2/calculation.hsp:1182 	if cPoison(r1)>0{ ...
-         chara:set_emotion_icon("elona.skull")
-         chara:damage_hp(Rand.rnd(2 + chara:skill_level("elona.stat_constitution") / 10), "elona.poison")
-         return { regeneration = false }
-         -- <<<<<<<< shade2/calculation.hsp:1186 	} ..
-      end,
-
+      emotion_icon = "elona.skull",
       indicator = function(chara)
          local turns = chara:effect_turns("elona.poison")
          if turns >= Const.CON_POISON_HEAVY then
@@ -133,13 +123,24 @@ local effect = {
                text = "effect.elona.poison.indicator._0"
             }
          end
-      end
+      end,
+
+      stops_activity = true,
+
+      on_turn_end = function(chara)
+         -- >>>>>>>> shade2/calculation.hsp:1182 	if cPoison(r1)>0{ ...
+         chara:set_emotion_icon("elona.skull")
+         chara:damage_hp(Rand.rnd(2 + chara:skill_level("elona.stat_constitution") / 10), "elona.poison")
+         return { regeneration = false }
+         -- <<<<<<<< shade2/calculation.hsp:1186 	} ..
+      end,
    },
    {
       _id = "sleep",
 
       ordering = 40000,
       color = {0, 50, 50},
+      emotion_icon = "elona.sleep",
       indicator = function(chara)
          local turns = chara:effect_turns("elona.sleep")
          if turns >= Const.CON_SLEEP_HEAVY then
@@ -176,6 +177,7 @@ local effect = {
       ordering = 50000,
       color = {100, 100, 0},
       indicator = "effect.elona.blindness.indicator",
+      emotion_icon = "elona.blind",
 
       stops_activity = true,
 
@@ -195,6 +197,7 @@ local effect = {
       ordering = 60000,
       color = {0, 100, 100},
       indicator = "effect.elona.paralysis.indicator",
+      emotion_icon = "elona.paralyze",
 
       on_turn_start = function(chara)
          local result = { blocked = true }
@@ -241,6 +244,7 @@ local effect = {
       ordering = 80000,
       color = {100, 0, 100},
       indicator = "effect.elona.confusion.indicator",
+      emotion_icon = "elona.confuse",
 
       stops_activity = true,
    },
@@ -249,11 +253,14 @@ local effect = {
       ordering = 90000,
       color = {100, 0, 100},
       indicator = "effect.elona.fear.indicator",
+      emotion_icon = "elona.fear"
    },
    {
       _id = "dimming",
       ordering = 100000,
       color = {0, 100, 100},
+      emotion_icon = "elona.dim",
+
       indicator = function(chara)
          local turns = chara:effect_turns("elona.dimming")
          if turns >= Const.CON_DIM_HEAVY then
@@ -304,6 +311,7 @@ local effect = {
       _id = "bleeding",
       ordering = 120000,
       color = {150, 0, 0},
+      emotion_icon = "elona.bleed",
       indicator = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
          if turns >= Const.CON_BLEED_HEAVY then
@@ -337,6 +345,7 @@ local effect = {
       _id = "insanity",
       ordering = 130000,
       color = {150, 100, 0},
+      emotion_icon = "elona.insane",
       indicator = function(chara)
          local turns = chara:effect_turns("elona.bleeding")
          if turns >= Const.CON_INSANE_HEAVY then
@@ -382,7 +391,8 @@ local effect = {
       _id = "drunk",
       ordering = 140000,
       color = {100, 0, 100},
-      indicator = "effect.elona.drunk.indicator"
+      indicator = "effect.elona.drunk.indicator",
+      emotion_icon = "elona.happy",
    },
    {
       _id = "wet",

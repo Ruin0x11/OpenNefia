@@ -9,6 +9,8 @@ local Equipment = {}
 
 --- Equips the items in the character's inventory with the highest value.
 --- Ignores curse state, intended to be used by the AI.
+---
+--- @hsp gosub *chara_equipFull@
 function Equipment.equip_all_optimally(chara)
    -- >>>>>>>> shade2/adv.hsp:167 *chara_equipFull ..
    local pred = function(i) return Item.is_alive(i) and not i:is_equipped() end

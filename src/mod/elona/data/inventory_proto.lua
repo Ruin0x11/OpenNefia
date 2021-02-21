@@ -13,6 +13,7 @@ local Quest = require("mod.elona_sys.api.Quest")
 local Ui = require("api.Ui")
 local I18N = require("api.I18N")
 local Equipment = require("mod.elona.api.Equipment")
+local Skill = require("mod.elona_sys.api.Skill")
 
 local function fail_in_world_map(ctxt)
    if ctxt.chara:current_map():has_type("world_map") then
@@ -186,7 +187,7 @@ local inv_equip = {
    window_title = "ui.inventory_command.equip",
    query_text = "ui.inv.title.equip",
    filter = function(ctxt, item)
-      return item:can_equip_at(ctxt.body_part_id)
+      return item:can_equip_at(ctxt.params.body_part_id)
    end,
    can_select = function(ctxt, item)
       if ctxt.chara:has_trait("elona.perm_weak") and item:calc("weight") >= 1000 then
@@ -262,6 +263,102 @@ local inv_zap = {
    end
 }
 data:add(inv_zap)
+
+local inv_give = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_give",
+   elona_id = 10,
+
+   sources = { "chara" },
+   params = { is_giving_to_ally = "boolean" },
+   icon = 17,
+   show_money = false,
+   query_amount = false,
+   default_amount = 1,
+   window_title = "ui.inventory_command.give",
+   query_text = "ui.inv.title.give",
+}
+
+function inv_give.on_select(ctxt, item, amount)
+   -- >>>>>>>> shade2/command.hsp:3756 			ifnodrop ci:goto *com_inventory_loop ...
+   if item:calc("is_no_drop") then
+      Gui.mes("ui.inv.common.set_as_no_drop")
+      Gui.play_sound("base.fail1")
+      return "inventory_continue"
+   end
+
+   local chara = ctxt.chara
+   local target = ctxt.target
+
+   if target:has_effect("elona.sleep") then
+      Gui.mes("ui.inv.give.is_sleeping", target)
+      Gui.play_sound("base.fail1")
+      return "inventory_continue"
+   end
+   if target:is_inventory_full() then
+      Gui.mes("ui.inv.give.inventory_is_full", target)
+      Gui.play_sound("base.fail1")
+      return "inventory_continue"
+   end
+
+   if item._id == "elona.gift" then
+      Gui.mes("ui.inv.give.present.text", target, item:build_name(amount))
+      item:remove(1)
+      Gui.mes("ui.inv.give.present.dialog", target)
+
+      local gift_value = item.params.gift_value
+      Skill.modify_impression(target, gift_value)
+      target:set_emotion_icon("elona.heart", 3)
+
+      Gui.update_screen()
+
+      return "player_turn_query"
+   end
+
+   local will_carry, complaint = Calc.will_chara_take_item(target, item, amount)
+   if not will_carry then
+      Gui.play_sound("base.fail1")
+      complaint = complaint or "ui.inv.give.refuses"
+      Gui.mes(complaint, target, item:build_name(amount))
+      return "inventory_continue"
+   end
+
+   -- TODO move
+   -- >>>>>>>> shade2/command.hsp:3813 					if cBit(cPregnant,tc):if (iId(ci)=262)or(iId( ...
+   if target:calc("is_pregnant") and item:has_tag("elona.is_acid") then
+      Gui.mes("ui.inv.give.abortion")
+   end
+   -- <<<<<<<< shade2/command.hsp:3813 					if cBit(cPregnant,tc):if (iId(ci)=262)or(iId( ..
+
+   Gui.play_sound("base.equip1")
+
+   Gui.mes("ui.inv.give.you_hand", item:build_name(amount), target)
+
+   local result = item:emit("elona.on_item_given", {chara=chara, target=target, amount=amount}, nil)
+   if result then
+      return result
+   end
+
+   local sep = item:separate(1)
+   sep:remove_ownership()
+   assert(target:take_item(sep))
+   sep:stack(true)
+
+   Effect.try_to_set_ai_item(target, sep)
+   Equipment.equip_all_optimally(target)
+   target:refresh()
+   target:refresh_weight()
+
+   if ctxt.params.is_giving_to_ally then
+      return "inventory_continue"
+   end
+
+   Gui.update_screen()
+   return "turn_end"
+   -- <<<<<<<< shade2/command.hsp:3842 			goto *com_inventory_loop ...
+end
+
+data:add(inv_give)
 
 local inv_buy = {
    _type = "elona_sys.inventory_proto",
@@ -481,7 +578,9 @@ local inv_present = {
    elona_id = 20,
 
    sources = { "chara" },
+   params = { trade_item = "api.item.IItem" },
    window_title = "ui.inventory_command.present",
+
    query_text = function(ctxt)
       return I18N.get("ui.inv.title.present", ctxt.params.trade_item:build_name())
    end,
@@ -887,3 +986,22 @@ local inv_garoks_hammer = {
    end
 }
 data:add(inv_garoks_hammer)
+
+local inv_take = {
+   _type = "elona_sys.inventory_proto",
+   _id = "inv_take",
+   elona_id = 25,
+
+   sources = { "target", "target_equipment" },
+   icon = 17,
+   show_money = true,
+   query_amount = false,
+   window_title = "ui.inventory_command.give",
+   query_text = "ui.inv.title.give",
+}
+
+function inv_take.on_select(ctxt, item, amount)
+   return "player_turn_query"
+end
+
+data:add(inv_take)

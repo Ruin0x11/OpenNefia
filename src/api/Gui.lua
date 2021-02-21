@@ -286,7 +286,7 @@ end
 --- @tparam string|color color
 --- @param ...
 function Gui.mes_c(text, color, ...)
-   local t = I18N.get_optional(text, ...) or text
+   local t = I18N.get_optional(text, ...) or text or tostring(text)
    if t then text = t end
 
    if color == nil and string.find(text, I18N.quote_character()) then

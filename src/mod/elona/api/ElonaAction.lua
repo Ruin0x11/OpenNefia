@@ -418,6 +418,7 @@ function ElonaAction.eat(chara, item)
       end
    end
 
+   chara:set_emotion_icon("elona.eat")
    chara:start_activity("elona.eating", {food=item})
 
    return "turn_end"

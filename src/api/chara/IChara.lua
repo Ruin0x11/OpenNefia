@@ -631,11 +631,12 @@ function IChara:has_tag(tag)
    return table.set(self.tags)[tag]
 end
 
-
 function IChara:calc_initial_gold()
    return Rand.rnd(self:calc("level") * 25 + 10) + 1
 end
 
+--- @example tc:set_emotion_icon("elona.heart", 3)
+--- @hsp cEmoIcon(tc)=emoHeart+extEmo*3
 function IChara:set_emotion_icon(icon, duration)
    self.emotion_icon = icon
    self.emotion_icon_turns = duration or 2

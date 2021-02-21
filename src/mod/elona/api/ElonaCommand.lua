@@ -522,7 +522,7 @@ function ElonaCommand.do_give_ally(player, target)
       return "player_turn_query"
    end
 
-   local result, canceled = Input.query_inventory(target, "elona.inv_ally_give", nil, nil)
+   local result, canceled = Input.query_inventory(player, "elona.inv_give", {target=target,params={is_giving_to_ally=true}}, "elona.ally")
    if canceled then
       return "player_turn_query"
    end
@@ -531,7 +531,7 @@ function ElonaCommand.do_give_ally(player, target)
 end
 
 function ElonaCommand.do_give_other(player, target)
-   local result, canceled = Input.query_inventory(target, "elona.inv_give", nil, nil)
+   local result, canceled = Input.query_inventory(player, "elona.inv_give", {target=target,params={is_giving_to_ally=false}}, nil)
    if canceled then
       return "player_turn_query"
    end
@@ -540,12 +540,36 @@ end
 
 function ElonaCommand.do_give(player, target)
    -- >>>>>>>> shade2/command.hsp:1832 	if tc=pc : if gRider!0 : tc=gRider   ...
-   if target:is_in_player_party() then
+   if target:is_in_player_party() and not target.is_being_escorted then
       return ElonaCommand.do_give_ally(player, target)
    else
       return ElonaCommand.do_give_other(player, target)
    end
    -- <<<<<<<< shade2/command.hsp:1836 		} ..
+end
+
+function ElonaCommand.give(player)
+   -- >>>>>>>> shade2/command.hsp:1825 *com_give ...
+   Gui.mes("action.which_direction.ask")
+
+   local dir, canceled = Input.query_direction(player)
+   if not dir or canceled then
+      Gui.mes("ui.invalid_target")
+      return "player_turn_query"
+   end
+
+   local x, y = Pos.add_direction(dir, player.x, player.y)
+   local target = Chara.at(x, y, player:current_map())
+
+   if target == nil or target:is_player() then
+      Gui.mes("ui.invalid_target")
+      return "player_turn_query"
+   end
+
+   -- TODO riding
+
+   return ElonaCommand.do_give(player, target)
+   -- <<<<<<<< shade2/command.hsp:1837 	txt strInteractFail:gosub *screen_draw :goto *pc_ ..
 end
 
 function ElonaCommand.name(player, target)

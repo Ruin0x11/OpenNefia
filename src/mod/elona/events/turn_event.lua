@@ -184,7 +184,7 @@ local function update_emotion_icon(chara)
    end
 end
 
-Event.register("base.before_chara_turn_start", "Update emotion icon", update_emotion_icon)
+Event.register("base.before_chara_turn_start", "Update emotion icon", update_emotion_icon, {priority = 50000})
 
 local function proc_enough_exp_for_level(chara)
    while chara.experience >= chara.required_experience do

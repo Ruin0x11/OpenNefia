@@ -577,6 +577,8 @@ local item =
          has_random_name = true,
          color = "Random",
 
+         tags = { "nogive" },
+
          elona_type = "scroll",
          categories = {
             "elona.scroll",
@@ -5295,6 +5297,8 @@ local item =
          has_random_name = true,
          color = "Random",
 
+         tags = { "nogive" },
+
          elona_type = "scroll",
          categories = {
             "elona.scroll",
@@ -5701,7 +5705,7 @@ local item =
             return Magic.drink_potion("elona.effect_poison", 200, item, params)
          end,
 
-         tags = { "nogive" },
+         tags = { "nogive", "elona.is_acid" },
          color = "Random",
          categories = {
             "elona.drink",
@@ -8468,7 +8472,7 @@ local item =
             return Magic.drink_potion("elona.effect_sulfuric", 100, item, params)
          end,
 
-         tags = { "nogive" },
+         tags = { "nogive", "elona.is_acid" },
 
          categories = {
             "elona.drink",
@@ -10260,7 +10264,23 @@ local item =
          categories = {
             "elona.equip_neck_armor",
             "elona.equip_neck"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_given",
+               name = "Engagement item effects",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/command.hsp:3821 				if (iId(ci)=idRingEngage)or(iId(ci)=idAmuEngag ...
+                  local target = params.target
+                  Gui.mes_c("ui.inv.give.engagement", "Green", target)
+                  Skill.modify_impression(target, 15)
+                  target:set_emotion_icon("elona.heart", 3)
+                  -- <<<<<<<< shade2/command.hsp:3825 				} ..
+               end
+            },
+         },
       },
       {
          _id = "composite_ring",
@@ -10338,7 +10358,24 @@ local item =
          categories = {
             "elona.equip_ring_ring",
             "elona.equip_ring"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_given",
+               name = "Engagement item effects",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/command.hsp:3821 				if (iId(ci)=idRingEngage)or(iId(ci)=idAmuEngag ...
+                  -- TODO dedup
+                  local target = params.target
+                  Gui.mes_c("ui.inv.give.engagement", "Green", target)
+                  Skill.modify_impression(target, 15)
+                  target:set_emotion_icon("elona.heart", 3)
+                  -- <<<<<<<< shade2/command.hsp:3825 				} ..
+               end
+            },
+         },
       },
       {
          _id = "stethoscope",
@@ -11346,7 +11383,7 @@ local item =
             self.color = Rand.choice(Enum.Color:values())
          end,
 
-         tags = { "nogive" },
+         tags = { "nogive", "elona.is_acid" },
          categories = {
             "elona.drink",
             "elona.tag_nogive"
@@ -13668,7 +13705,28 @@ local item =
          categories = {
             "elona.drink",
             "elona.tag_nogive"
-         }
+         },
+
+         events = {
+            {
+               id = "elona.on_item_given",
+               name = "Love potion give effect",
+
+               callback = function(self, params)
+                  -- >>>>>>>> shade2/command.hsp:3826 				if (iId(ci)=idLovePotion){ ...
+                  local target = params.target
+
+                  Gui.mes_c("ui.inv.give.love_potion.text", "Purple", target)
+                  Gui.mes_c("ui.inv.give.love_potion.dialog", "SkyBlue", target)
+                  Skill.modify_impression(target, -20)
+                  target:set_emotion_icon("elona.angry", 3)
+                  self:remove(1)
+
+                  return "inventory_continue"
+                  -- <<<<<<<< shade2/command.hsp:3831 				} ..
+               end
+            },
+         },
       },
       {
          _id = "treasure_map",

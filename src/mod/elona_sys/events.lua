@@ -41,9 +41,16 @@ Event.register("base.before_chara_turn_start", "Proc effect on_turn_start", proc
 local function proc_effects_turn_end(chara, params, result)
    for effect_id, _ in pairs(chara.effects) do
       local effect = data["base.effect"]:ensure(effect_id)
+      -- >>>>>>>> shade2/calculation.hsp:1172 #define global emoCon(%1,%2) if %1>0: cEmoIcon(r1) ...
+      if effect.emotion_icon then
+         chara:set_emotion_icon(effect.emotion_icon)
+      end
+      -- <<<<<<<< shade2/calculation.hsp:1172 #define global emoCon(%1,%2) if %1>0: cEmoIcon(r1) ..
+      -- >>>>>>>> shade2/calculation.hsp:1174 *calcCondition ...
       if effect.on_turn_end then
          result = effect.on_turn_end(chara, params, result) or result
       end
+      -- <<<<<<<< shade2/calculation.hsp:1174 *calcCondition ..
    end
    for effect_id, _ in pairs(chara.effects) do
       chara:add_effect_turns(effect_id, -1)

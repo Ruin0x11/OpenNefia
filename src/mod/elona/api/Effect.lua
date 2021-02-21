@@ -294,10 +294,10 @@ function Effect.eat_food(chara, food)
    if chara:is_player() then
       Effect.show_eating_message(chara)
    else
-      if chara.item_to_be_used
-         and chara.item_to_be_used.uid == food
+      if chara.item_to_use
+         and chara.item_to_use == food
       then
-         chara.item_to_be_used = nil
+         chara.item_to_use = nil
       end
 
       if chara.is_eating_traded_item then
@@ -1372,6 +1372,17 @@ function Effect.try_to_chat(chara, player)
    -- <<<<<<<< elona122/shade2/chat.hsp:75 	if tc=pc:goto *chat_end ..
 
    Dialog.start(chara)
+end
+
+function Effect.try_to_set_ai_item(chara, item)
+   -- >>>>>>>> shade2/adv.hsp:116 *chara_item ...
+   if item:has_category("elona.food") or item:has_category("elona.drink") or item:has_category("elona.scroll") then
+      chara.item_to_use = item
+      return true
+   end
+
+   return false
+   -- <<<<<<<< shade2/adv.hsp:119 	return ..
 end
 
 return Effect

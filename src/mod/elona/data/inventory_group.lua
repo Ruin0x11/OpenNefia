@@ -35,7 +35,7 @@ data:add {
 
    protos = {
       "elona.inv_give",
-      "elona.inv_ally"
+      "elona.inv_take"
    }
 }
 

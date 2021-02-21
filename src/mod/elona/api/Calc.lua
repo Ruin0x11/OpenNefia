@@ -288,4 +288,69 @@ function Calc.calc_living_weapon_required_exp(level)
    return level * 100
 end
 
+function Calc.calc_give_carry_weight(chara)
+   -- >>>>>>>> shade2/command.hsp:3773 			p=(sSTR(tc)*500+sEND(tc)*500+sWeightLifting(tc) ...
+   local weight = chara:skill_level("elona.stat_strength") * 500
+      + chara:skill_level("elona.stat_constitution")* 500
+      + chara:skill_level("elona.weight_lifting")* 2500
+      + 25000
+
+   if chara._id == "elona.golden_knight" then
+      weight = weight * 5
+   end
+
+   return weight
+   -- <<<<<<<< shade2/command.hsp:3774 			if cId(tc)=265:p*=5 ..
+end
+
+function Calc.will_chara_take_item(target, item, amount)
+   -- >>>>>>>> shade2/command.hsp:3772 			f=false ...
+   local carry_weight = Calc.calc_give_carry_weight(target)
+
+   if target.inventory_weight + item.weight * amount > carry_weight then
+      return false, "ui.inv.give.refuse_dialog.too_heavy"
+   end
+
+   if target._id ~= "elona.golden_knight" then
+      if item:has_category("elona.furniture") then
+         return false, "ui.inv.give.refuse_dialog.is_furniture"
+      end
+      if item:has_category("elona.junk") then
+         return false, "ui.inv.give.refuse_dialog.is_junk"
+      end
+   end
+
+   if item:calc("cargo_weight") > 0 then
+      return false, "ui.inv.give.refuse_dialog.is_cargo"
+   end
+
+   -- <<<<<<<< shade2/command.hsp:3784 			} ..
+
+   -- >>>>>>>> shade2/command.hsp:3786 			f=false ...
+   if target:is_ally() then
+      return true
+   end
+
+   if item:calc("identify_state") < Enum.IdentifyState.Quality then
+      return false, "ui.inv.give.too_creepy"
+   end
+
+   if item:calc("curse_state") <= Enum.CurseState.Cursed then
+      return false, "ui.inv.give.cursed"
+   end
+
+   if item:has_tag("neg") or item:has_tag("nogive") then
+      return false
+   end
+
+   if item:has_category("elona.drink") then
+      if item:has_category("elona.drink_alcohol") and target:has_effect("elona.drunk") then
+         return false, "ui.inv.give.no_more_drink"
+      end
+   end
+
+   return true
+   -- <<<<<<<< shade2/command.hsp:3815 			} ..
+end
+
 return Calc
