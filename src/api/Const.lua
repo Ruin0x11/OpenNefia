@@ -79,4 +79,9 @@ Const.CON_INSANE_MODERATE = 25
 Const.CON_DRUNK_HEAVY     = 45
 -- <<<<<<<< shade2/init.hsp:139 	#define global conDrunkHeavy	45 ...
 
+-- >>>>>>>> shade2/init.hsp:39 	#define global defArmorHeavy	35000 ...
+Const.ARMOR_WEIGHT_CLASS_HEAVY = 35000
+Const.ARMOR_WEIGHT_CLASS_MEDIUM = 15000
+-- <<<<<<<< shade2/init.hsp:40 	#define global defArmorMedium	15000 ..
+
 return Const

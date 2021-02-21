@@ -648,6 +648,7 @@ local inv_throw = {
       return item:calc("can_throw")
    end,
    on_select = function(ctxt, item, amount, rest)
+      -- >>>>>>>> shade2/command.hsp:3957 		if invCtrl=26{	 ...
       local x, y, can_see = Input.query_position()
       if not can_see then
          Gui.mes("action.which_direction.cannot_see_location")
@@ -658,6 +659,7 @@ local inv_throw = {
          return "player_turn_query"
       end
       return ElonaAction.throw(ctxt.chara, item, x, y)
+      -- <<<<<<<< shade2/command.hsp:3966 			} ..
    end
 }
 data:add(inv_throw)
@@ -999,6 +1001,12 @@ local inv_take = {
    -- >>>>>>>> shade2/command.hsp:3943 			if iId(ci)=idGold:in=iNum(ci):else:in=1 ...
    default_amount = 1,
    -- <<<<<<<< shade2/command.hsp:3943 			if iId(ci)=idGold:in=iNum(ci):else:in=1 ..
+   -- >>>>>>>> shade2/command.hsp:3565 	if invCtrl=25:s="" ...
+   show_weight_text = false,
+   -- <<<<<<<< shade2/command.hsp:3565 	if invCtrl=25:s="" ..
+   -- >>>>>>>> shade2/command.hsp:3568 	if invCtrl=25{ ...
+   show_target_equip = true,
+   -- <<<<<<<< shade2/command.hsp:3568 	if invCtrl=25{ ..
    window_title = "ui.inventory_command.give",
    query_text = "ui.inv.title.give",
 }

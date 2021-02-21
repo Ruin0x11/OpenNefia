@@ -167,6 +167,7 @@ function InventoryContext:init(proto, params)
 
    self.query_amount = self.proto.query_amount
    self.show_money = self.proto.show_money
+   self.show_target_equip = self.proto.show_target_equip
    self.shortcuts = self.proto.shortcuts
    self.stack = {}
 

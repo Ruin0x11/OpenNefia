@@ -156,9 +156,9 @@ function IChara:refresh()
 
    local total_weight = self:calc("equipment_weight")
    local armor_class
-   if total_weight >= 35000 then
+   if total_weight >= Const.ARMOR_WEIGHT_CLASS_HEAVY then
       armor_class = "elona.heavy_armor"
-   elseif total_weight >= 15000 then
+   elseif total_weight >= Const.ARMOR_WEIGHT_CLASS_MEDIUM then
       armor_class = "elona.medium_armor"
    else
       armor_class = "elona.light_armor"

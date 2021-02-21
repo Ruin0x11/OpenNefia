@@ -182,7 +182,16 @@ data:add_type {
 
 data:add_type {
    name = "inventory_proto",
-   schema = schema.Record {
+   fields = {
+      {
+         name = "show_weight_text",
+         default = true,
+         template = true,
+         type = "boolean",
+         doc = [[
+If true, show weight text at the bottom of the inventory menu. Defaults to true.
+]]
+      },
    }
 }
 

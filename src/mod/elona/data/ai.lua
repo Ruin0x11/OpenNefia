@@ -510,7 +510,7 @@ end
 
 local function try_to_use_item(chara, params, result)
    -- >>>>>>>> shade2/ai.hsp:134 	if a=fltFood:if (cRelation(cc)=cAlly)&(cHunger(cc ...
-   if not Item.is_alive(chara.item_to_use) then
+   if not Item.is_alive(chara.item_to_use) or not chara:has_item(chara.item_to_use) then
       chara.item_to_use = nil
       return result
    end

@@ -196,8 +196,10 @@ end,
   :format(name(_1), _2)
 end,
         window = {
-          equip = "Equip",
-          equip_weight = "EquipWt"
+          equip = "Equip:",
+          equip_weight = function(_1, _2)
+             return ("EquipWt: %s%s"):format(_1, _2)
+          end
         },
         you_take = function(_1)
   return ("You take %s.")

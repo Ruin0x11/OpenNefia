@@ -241,8 +241,10 @@ end,
   :format(name(_1), _2)
 end,
         window = {
-          equip = "装備箇所",
-          equip_weight = "装備重量"
+          equip = "装備箇所:",
+          equip_weight = function(_1, _2)
+             return ("装備重量: %s%s"):format(_1, _2)
+          end
         },
         you_take = function(_1)
   return ("%sを受け取った。")
