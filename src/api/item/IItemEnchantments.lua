@@ -3,6 +3,61 @@ local data = require("internal.data")
 local Const = require("api.Const")
 local InstancedEnchantment = require("api.item.InstancedEnchantment")
 
+--- How enchantments work in vanilla:
+---
+--- - Each item has a list of enchantments, iEnc(enc_id, item_id). This is an
+---   array of integers, one for each enchantment. The type and - parameters get
+---   added together like: (type*10000+param). `param` is - something like a
+---   skill or magic ID, which are integers in vanilla.
+---
+--- - Each item may only ever have one enchantment of a given type. If the item
+---   already has an enchantment with the exact same ID *and* special parameters
+---   (modified skill/attribute ID, etc.), then it is merged with the one that
+---   exists already. If the enchantment to merge does not come from the item's
+---   material, its power is halved. Ammo enchantments do not get merged.
+---
+--- - There are certain "special" enchantment types that correspond to another
+---   enchantment type. For example, when an the enchantment of type
+---   `encModAttb` gets added, a "modify attribute" enchantment of a random type
+---   will get added instead.
+---
+--- - iAmmo(ci) holds the index into iEnc(enc_id, ci) for the item's current
+---   ammo enchantment.
+---
+--- How enchantments work in OpenNefia:
+---
+--- - Enchantment ID and parameters are separate. ID is a string, parameters is
+---   a table.
+---
+--- - Enchantments are never merged. Instead, you are able to iterate through
+---   each unmerged enchantment and see the individual power contribution of
+---   each. To get the combined total power for an enchantment ID, you call
+---   IItemEnchantments:enchantment_power(_id). This is useful to, for example,
+---   calculate an item's enchantment power excluding the power contributed by
+---   the item's material (oomSEST's smithing mechanic does this in a hackish
+---   way, checking the hardcoded list of enchantments of the item's material,
+---   and subtracting the power of those from the power totals saved on the
+---   item).
+---
+--- - To determine which enchantments are the same as one another for the
+---   purpose of summing their power levels together, you can define a
+---   ":compare()" callback on the "base.enchantment" data entry. Otherwise,
+---   a `deepcompare` function is used.
+---
+--- - If an enchantment's parameters table is nil when the enchantment is
+---   created, that means "generate a random version of this enchantment." If a
+---   table of any kind is passed to :add_enchantment(id, power, params)
+---   instead, then that params table will be used.
+---
+--- - It is possible to have temporary enchantments on items, which can be added
+---   to after the item is refreshed. This is tracked by the temporary values
+---   system (`IModdable`).
+---
+--- - iAmmo(ci) is now `ci.params.ammo_loaded`. This is a reference to an
+---   InstancedEnchantment object in the item's enchantment list. See
+---   ElonaCommand.ammo() for more information about how ammo enchantments work
+---   with temporary enchantments.
+---
 local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 
 function IItemEnchantments:init()
@@ -24,32 +79,48 @@ local function sort_enchantments(a, b)
    -- <<<<<<<< shade2/item_data.hsp:510 	return ..
 end
 
-function IItemEnchantments:add_enchantment(enc)
+function IItemEnchantments:add_enchantment(enc, power, params, curse_power, source)
    -- >>>>>>>> shade2/item_data.hsp:603  ..
-   assert(class.is_an(InstancedEnchantment, enc))
-   assert(type(enc.power) == "number")
+   if type(enc) == "string" then
+      local _id = enc
+      curse_power = curse_power or 0
+      source = source or "generated"
 
-   local idx
-   for i, v in ipairs(self.enchantments) do
-      if v._id == enc._id then
-         idx = i
+      enc = InstancedEnchantment:new(_id, power, params, curse_power, source)
+   else
+      class.assert_is_an(InstancedEnchantment, enc)
+   end
+
+   -- We want at most MAX_ENCHANTMENTS enchantments of differing types/params,
+   -- but you can have unlimited enchantments of the same type and params (they
+   -- all get combined together). This is an artificial restriction at this
+   -- point; we might want to remove it later.
+   local unique_encs_found = table.set {}
+
+   -- We don't have a Set class that can check equivalence with a custom
+   -- comparator, so this will have to do...
+   for _, existing_enc in ipairs(self.enchantments) do
+      if enc == existing_enc then
+         return nil, "item already has enchantment"
+      end
+      local found = false
+      for unique_enc, count in pairs(unique_encs_found) do
+         if unique_enc:can_merge_with(existing_enc) then
+            unique_encs_found[unique_enc] = count + 1
+            found = true
+            break
+         end
+      end
+      if not found then
+         unique_encs_found[existing_enc] = 1
       end
    end
 
-   if idx == nil then
-      if #self.enchantments >= Const.MAX_ENCHANTMENTS then
-         return false
-      end
-
-      idx = #self.enchantments + 1
+   if table.count(unique_encs_found) >= Const.MAX_ENCHANTMENTS then
+      return nil, "max_enchantments"
    end
 
-   if self.enchantments[idx] then
-      enc.power = enc.power + self.enchantments[idx].power
-   end
-
-   enc.is_temporary = false
-   self.enchantments[idx] = enc
+   table.insert(self.enchantments, enc)
 
    local adjusted_value = math.floor(self.value * enc.proto.value / 100)
    if adjusted_value > 0 then
@@ -58,37 +129,70 @@ function IItemEnchantments:add_enchantment(enc)
 
    table.insertion_sort(self.enchantments, sort_enchantments)
 
-   self:emit("base.on_item_add_enchantment", {index=idx, enchantment=enc})
+   self:emit("base.on_item_add_enchantment", {enchantment=enc})
    self:refresh()
 
-   return true
+   return enc
    -- <<<<<<<< shade2/item_data.hsp:627 	return true ..
 end
 
-function IItemEnchantments:remove_enchantment(_id, power)
-   -- >>>>>>>> shade2/item_data.hsp:518 	#deffunc encRemove int id,int EncOrg,int encPorg ..
-   local idx = nil
-
-   for i, enc in ipairs(self.enchantments) do
-      if enc._id == _id then
-         enc.power = enc.power - power
-         if enc.power <= 0 then
-            idx = i
+local function gen_filter(_id, params, source)
+   return function(enc)
+      if _id then
+         if enc._id ~= _id then
+            return false
          end
-         break
+         if params and not enc:compare_params(params) then
+            return false
+         end
+      end
+
+      if source and enc.source ~= source then
+         return false
+      end
+
+      return true
+   end
+end
+
+function IItemEnchantments:iter_base_enchantments(_id, params, source)
+   return fun.iter(self.enchantments):filter(gen_filter(_id, params, source))
+end
+
+function IItemEnchantments:iter_enchantments(_id, params, source)
+   return fun.iter(self.temp["enchantments"]):filter(gen_filter(_id, params, source))
+end
+
+function IItemEnchantments:enchantment_power(_id, params, source)
+   return self:iter_enchantments(_id, params, source):extract("power"):sum()
+end
+
+function IItemEnchantments:find_enchantment(_id, params, source)
+   return self:iter_enchantments(_id, params, source):nth(1)
+end
+
+function IItemEnchantments:remove_enchantment(enc, params, source)
+   -- >>>>>>>> shade2/item_data.hsp:518 	#deffunc encRemove int id,int EncOrg,int encPorg ..
+   if type(enc) == "string" then
+      local _id = enc
+      enc = self:iter_base_enchantments(_id, params, source)
+      if enc == nil then
+         return nil, "no matching enchantment found"
       end
    end
 
-   local enc
-   if idx then
-      enc = table.remove(self.enchantments, idx)
+   local idx = table.index_of(self.enchantments, enc)
+   if idx == nil then
+      return nil, "item does not have enchantment"
    end
 
-   if enc then
-      table.insertion_sort(self.enchantments, sort_enchantments)
-      self:emit("base.on_item_remove_enchantment", {index=idx, enchantment=enc})
-      self:refresh()
-   end
+   assert(table.iremove_value(self.enchantments, enc))
+
+   table.insertion_sort(self.enchantments, sort_enchantments)
+   self:emit("base.on_item_remove_enchantment", {index=idx, enchantment=enc})
+   self:refresh()
+
+   return enc
    -- <<<<<<<< shade2/item_data.hsp:536 	return ..
 end
 
@@ -104,38 +208,26 @@ function IItemEnchantments:rebuild_enchantments_from_proto()
    table.remove_indices(self.enchantments, remove)
 
    for _, fixed_enc in ipairs(self.proto.enchantments or {}) do
-      local enc = InstancedEnchantment:new(
-         fixed_enc._id,
-         fixed_enc.power,
-         table.deepcopy(fixed_enc.params or {}),
-         "item"
-      )
-      self:add_enchantment(enc)
+      local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or nil
+      self:add_enchantment(fixed_enc._id, fixed_enc.power, params, "item")
    end
 end
 
 local function refresh_temporary_enchantments(item)
    -- Temporary enchantments will be references to their original copies in
    -- item.enchantments if available.
+   --
+   -- WARNING: when adding a temporary enchantment, you must not allocate a new
+   -- table every time, because some comparisons are done by reference (ammo
+   -- enchantment). Instead, you need to save the enchantment somewhere else,
+   -- like in _ext, then copy its reference to temp.enchantments each refresh.
    item.temp["enchantments"] = table.shallow_copy(item.enchantments)
 
    table.insertion_sort(item.temp["enchantments"], sort_enchantments)
 end
 
-function IItemEnchantments:find_enchantment(_id)
-   return self:iter_enchantments():filter(function(enc) return enc._id == _id end):nth(1)
-end
-
 function IItemEnchantments:on_refresh()
    refresh_temporary_enchantments(self)
-end
-
-function IItemEnchantments:iter_enchantments()
-   if self.temp["enchantments"] == nil then
-      self:refresh()
-   end
-
-   return fun.iter(self.temp["enchantments"])
 end
 
 return IItemEnchantments

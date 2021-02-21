@@ -343,14 +343,12 @@ local function get_ammo_enchantments(ammo)
    --- temporary values system. Consider the following.
    ---
    ---    local ammo = Item.create("elona.bullet")
-   ---    local enc = InstancedEnchantment:new("elona.ammo",  100,  { ... })
-   ---    ammo:add_temporary_enchantment(enc)
+   ---    local enc = ammo:add_temporary_enchantment("elona.ammo", 100, { ... })
    ---    ammo.params.ammo_loaded = #ammo.temp["enchantments"] -- set by reference to enchantment table
    ---    -- ...
    ---    local prev = ammo.params.ammo_loaded
    ---    ammo:refresh() -- clears ammo.temp
-   ---    local enc = InstancedEnchantment:new("elona.ammo",  100,  { ... })
-   ---    ammo:add_temporary_enchantment(enc)
+   ---    local enc = ammo:add_temporary_enchantment("elona.ammo", 100, { ... })
    ---    ammo.params.ammo_loaded = #ammo.temp["enchantments"]
    ---    assert(ammo.params.ammo_loaded == prev) -- fails
    ---

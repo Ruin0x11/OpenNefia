@@ -15,13 +15,13 @@ do
       starting_pos = MapEntrance.south,
 
       properties = {
-         types = { "temporary" },
          level = 1,
          is_indoor = true,
          default_ai_calm = 1,
          tileset = "elona.home",
          reveals_fog = true,
-         prevents_monster_ball = true
+         prevents_monster_ball = true,
+         is_temporary = true
       }
    }
    data:add(show_house)
@@ -52,13 +52,13 @@ do
 
       properties = {
          music = "elona.arena",
-         types = { "temporary" },
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = true,
          default_ai_calm = 0,
          max_crowd_density = 0,
          reveals_fog = true,
+         is_temporary = true,
          prevents_domination = true,
          prevents_monster_ball = true
       }
@@ -86,13 +86,13 @@ do
 
       properties = {
          music = "elona.arena",
-         types = { "temporary" },
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = true,
          default_ai_calm = 0,
          max_crowd_density = 0,
          reveals_fog = true,
+         is_temporary = true,
          prevents_teleport = true,
          prevents_domination = true,
          prevents_monster_ball = true
@@ -120,10 +120,11 @@ do
       starting_pos = MapEntrance.center,
 
       properties = {
-         types = { "temporary", "quest" },
+         types = { "quest" },
          tileset = "elona.tower_1",
          level = 1,
          is_indoor = false,
+         is_temporary = true,
          max_crowd_density = 0,
          default_ai_calm = 0,
          shows_floor_count_in_name = true,

@@ -104,7 +104,7 @@ local function interact_release(chara, params)
    Gui.play_sound("base.build1", chara.x, chara.y)
    chara.is_hung_on_sandbag = false
    Gui.mes("action.interact.release", chara)
-   Item.create("elona.sandbag", chara.x, chara.y, nil, chara:current_map())
+   Item.create("elona.sand_bag", chara.x, chara.y, nil, chara:current_map())
 
    return "player_turn_query"
    -- <<<<<<<< shade2/command.hsp:1909 		} ..

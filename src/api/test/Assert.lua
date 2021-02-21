@@ -1,12 +1,22 @@
 local Assert = {}
 
-function Assert.is_true(actual, msg)
+function Assert.is_truthy(actual, msg)
    assert(actual, msg)
+end
+
+function Assert.is_falsy(actual, msg)
+   assert(not actual, msg)
 end
 
 function Assert.eq(expected, actual)
    if expected ~= actual then
       error(("expected '%s', got '%s'"):format(expected, actual))
+   end
+end
+
+function Assert.not_eq(lhs, rhs)
+   if lhs == rhs then
+      error(("expected '%s' ~= '%s', but both were equal"):format(lhs, rhs))
    end
 end
 

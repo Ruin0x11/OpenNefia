@@ -134,13 +134,8 @@ function ItemMaterial.apply_material_enchantments(item, material)
 
    local material_data = data["elona.item_material"]:ensure(material)
    for _, fixed_enc in ipairs(material_data.enchantments or {}) do
-      local enc = InstancedEnchantment:new(
-         fixed_enc._id,
-         fixed_enc.power,
-         table.deepcopy(fixed_enc.params or {}),
-         "material"
-      )
-      item:add_enchantment(enc)
+      local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or nil
+      item:add_enchantment(fixed_enc._id, fixed_enc.power, params, 0, "material")
    end
 end
 

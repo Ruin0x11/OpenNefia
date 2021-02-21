@@ -896,6 +896,47 @@ How to adjust the power when applying the enchantment.
 }
 
 data:add_type {
+   name = "ego_enchantment",
+   fields = {
+      {
+         name = "level",
+         type = "integer",
+         default = 0,
+         template = true,
+         doc = [[
+Level of this ego enchantment. Typically between 0-3.
+]]
+      },
+      {
+         name = "filter",
+         type = "function",
+         default = CodeGenerator.gen_literal [[
+function(item)
+   return true
+end
+]],
+         template = true,
+         doc = [[
+A function to filter which items this ego can get applied to.
+]]
+      },
+      {
+         name = "enchantments",
+         default = {},
+         template = true,
+         doc = [[
+List of enchantments and their powers to apply.
+]]
+      },
+   }
+}
+
+data:add_type {
+   name = "ego_minor_enchantment",
+   fields = {}
+}
+
+data:add_type {
    name = "enchantment_skill",
    fields = {
       {

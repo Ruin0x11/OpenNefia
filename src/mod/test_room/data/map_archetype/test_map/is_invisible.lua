@@ -1,4 +1,3 @@
-local Rand = require("api.Rand")
 local Chara = require("api.Chara")
 local utils = require("mod.test_room.data.map_archetype.utils")
 
@@ -12,8 +11,7 @@ function is_invisible.on_generate_map(area, floor)
 
    local ids = data["base.chara"]:iter():filter(function(c) return c.is_invisible end):to_list()
 
-   for _ = 1, 20 do
-      local _id = Rand.choice(ids)
+   for _, _id in ids:unwrap() do
       Chara.create(_id, nil, nil, {}, map)
    end
 

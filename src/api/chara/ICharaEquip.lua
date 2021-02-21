@@ -110,7 +110,7 @@ function ICharaEquip:on_refresh()
    -- <<<<<<<< shade2/calculation.hsp:534 		} ..
 end
 
-function ICharaEquip:equip_item(item, force)
+function ICharaEquip:equip_item(item, force, slot)
    if not self:has_item(item) then
       if force then
          if not self:take_item(item) then
@@ -121,7 +121,7 @@ function ICharaEquip:equip_item(item, force)
       end
    end
 
-   local result, err = self.equip:equip(item)
+   local result, err = self.equip:equip(item, slot)
    item:refresh()
 
    return result, err

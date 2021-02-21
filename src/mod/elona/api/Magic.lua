@@ -470,7 +470,7 @@ function Magic.do_cast_spell(skill_id, caster, use_mp)
 
    if caster:has_effect("elona.confusion") or caster:has_effect("elona.dimming") then
       Gui.mes_visible("action.cast.confused", caster.x, caster.y, caster)
-      local success = Magic.calc_spellbook_success()
+      local success = Magic.calc_spellbook_success(caster)
       if not success then
          return true
       end

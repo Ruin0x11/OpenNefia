@@ -8,6 +8,7 @@ local main_state = require("internal.global.main_state")
 local UiTheme = require("api.gui.UiTheme")
 local bmp_convert = require("internal.bmp_convert")
 local config = require("internal.config")
+local Gui = require("api.Gui")
 
 local theme = {}
 
@@ -301,6 +302,8 @@ function theme.reload_all(log_cb)
 
       -- Update each draw layer with the new tile/chip atlases.
       field:on_theme_switched()
+
+      Gui.update_screen()
    end
 end
 

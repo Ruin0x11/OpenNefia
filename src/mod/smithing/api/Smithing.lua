@@ -370,6 +370,13 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    return filter, item_material
 end
 
+--- Returns an enchantment with a total power greater than zero, not including
+--- power from enchantments added by the item's material.
+function Smithing.extendable_enchantment(item, enc_id)
+   -- TODO enchantment
+   return nil
+end
+
 function Smithing.create_equipment(hammer, chara, target_item, material, categories, extend)
    -- >>>>>>>> oomSEST/src/southtyris.hsp:98549 		quality = 0 ..
    local quality = 0
@@ -419,11 +426,17 @@ function Smithing.create_equipment(hammer, chara, target_item, material, categor
    then
       if Rand.one_in(40 / math.min(extend, 40)) then
          Gui.mes("smithing.blacksmith_hammer.create.masterpiece")
-         -- TODO enchantment
+         local enc, power = Smithing.extendable_enchantment(created)
+         if enc then
+            enc.power = enc.power + power * 3 / 2
+         end
          created.is_handmade = true
       elseif Rand.one_in(40 / math.min(extend, 20)) then
          Gui.mes("smithing.blacksmith_hammer.create.superior")
-         -- TODO enchantment
+         local enc, power = Smithing.extendable_enchantment(created)
+         if enc then
+            enc.power = enc.power + power / 2
+         end
          created.is_handmade = true
       end
    end

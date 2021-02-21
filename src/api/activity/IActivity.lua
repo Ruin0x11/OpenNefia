@@ -8,7 +8,6 @@ local IActivity = class.interface("IActivity", {}, { IObject, IEventEmitter })
 IActivity._type = "base.activity"
 
 function IActivity:build()
-   print("initact")
    IObject.init(self)
    IEventEmitter.init(self)
    self.turns = 0

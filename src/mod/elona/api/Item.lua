@@ -11,6 +11,7 @@ local World = require("api.World")
 local Inventory = require("api.Inventory")
 local Effect = require("mod.elona.api.Effect")
 local Util = require("mod.elona_sys.api.Util")
+local Enchantment = require("mod.elona.api.Enchantment")
 
 local Item = {}
 
@@ -85,6 +86,13 @@ local ARMOR_CATEGORIES = {
 }
 -- <<<<<<<< shade2/command.hsp:3400 		if invCtrl(1)=2: if (refType<fltHeadArmor)or(ref ...
 
+-- >>>>>>>> shade2/init.hsp:812 	#define global ctype range_fltAccessory(%%1)	((%%1> ...
+local ACCESSORY_CATEGORIES = {
+   "elona.equip_ring",
+   "elona.equip_neck",
+}
+-- <<<<<<<< shade2/init.hsp:812 	#define global ctype range_fltAccessory(%%1)	((%%1> ...
+
 -- >>>>>>>> shade2/item.hsp:520 	if refType<fltFurniture{ ..
 -- TODO add "elona.non_usable" instead
 local NON_USEABLE_CATEGORIES = {
@@ -119,18 +127,17 @@ function Item.is_armor(item)
 end
 
 -- TODO remove
+function Item.is_accessory(item)
+   return has_any_category(item, ACCESSORY_CATEGORIES)
+end
+
+-- TODO remove
 function Item.is_non_useable(item)
    return has_any_category(item, NON_USEABLE_CATEGORIES)
 end
 
 local function is_randomized_material(material)
    return material == "elona.metal" or material == "elona.soft"
-end
-
-local function apply_enchantments(item)
-  -- >>>>>>>> shade2/item_data.hsp:754 *item_enc ...)
-  -- TODO
-  -- <<<<<<<< shade2/item_data.hsp:815 	return ...
 end
 
 local function fix_item_2(item, params)
@@ -176,8 +183,7 @@ local function fix_item_2(item, params)
 
    -- NOTE: fltPotion instead of fltHeadItem
    if Item.is_equipment(item) then
-      -- TODO random enchantments
-      apply_enchantments(item)
+      Enchantment.add_random_enchantments(item)
    else
       if item.quality ~= Enum.Quality.Unique then
          item.quality = Enum.Quality.Normal

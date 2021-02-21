@@ -2,20 +2,31 @@ local I18N = require("api.I18N")
 local data = require("internal.data")
 local InstancedEnchantment = class.class("InstancedEnchantment")
 
-local SOURCES = table.set { "item", "material", "generated" }
+local SOURCES = table.set { "item", "material", "generated", "ego", "ego_minor", "special" }
 
-function InstancedEnchantment:init(_id, power, params, source)
+function InstancedEnchantment:init(_id, power, params, curse_power, source)
    assert(type(power) == "number", "Enchantment power must be number")
+   assert(params == "randomized" or type(params) == "table")
+   curse_power = curse_power or 0
+   assert(type(curse_power) == "number", "Curse power must be number")
+   source = source or "generated"
    assert(SOURCES[source], "Must include source")
    self._id = _id
    self.power = power
-   self.params = params or {}
+
    self.proto = data["base.enchantment"]:ensure(_id)
    self.source = source
-   self.is_temporary = false
 
    -- NOTE: unused in vanilla
    self.is_inheritable = true
+
+   if params == "randomized" then
+      self.params = {}
+      self:on_generate(self, {curse_power=curse_power})
+   else
+      self.params = params
+   end
+   self:on_initialize(self, {curse_power=curse_power})
 end
 
 function InstancedEnchantment:serialize()
@@ -29,6 +40,12 @@ end
 function InstancedEnchantment:on_generate(item, params)
    if self.proto.on_generate then
       return self.proto.on_generate(self, item, params)
+   end
+end
+
+function InstancedEnchantment:on_initialize(item, params)
+   if self.proto.on_initialize then
+      return self.proto.on_initialize(self, item, params)
    end
 end
 
@@ -72,6 +89,31 @@ function InstancedEnchantment:localize(item)
    end
 
    return I18N.get("_.base.enchantment." .. self._id .. ".description")
+end
+
+function InstancedEnchantment:compare_params(other_params)
+   local cmp = table.deepcompare
+   if self.proto.compare then
+      cmp = self.proto.compare
+   end
+
+   return cmp(self.params, other_params)
+end
+
+function InstancedEnchantment:is_same_as(other)
+   if self.proto._id ~= other.proto._id then
+      return false
+   end
+
+   self:compare_params(other.params)
+end
+
+function InstancedEnchantment:can_merge_with(other)
+   if self.proto.no_merge then
+      return false
+   end
+
+   return self:is_same_as(other)
 end
 
 return InstancedEnchantment

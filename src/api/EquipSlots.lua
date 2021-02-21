@@ -30,6 +30,10 @@ function EquipSlots:init(body_parts, owner)
    self.equipped = {}
 end
 
+function EquipSlots:get(slot_index)
+   return self.body_parts[slot_index]
+end
+
 -- Returns true if there is a compatible slot for an item, even if
 -- something is already equipped at the slot.
 -- @tparam IItem item
@@ -86,6 +90,10 @@ function EquipSlots:equip(obj, slot)
 
    if slot <= 0 or slot > #self.body_parts then
       return nil, "slot_out_of_range"
+   end
+
+   if self.body_parts[slot].equipped then
+      return nil, "slot_is_occupied"
    end
 
    if self.equipped[obj.uid] then

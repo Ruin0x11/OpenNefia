@@ -1,14 +1,9 @@
 local DeferredEvents = require("mod.elona.api.DeferredEvents")
-local ItemFunction = require("mod.elona.api.ItemFunction")
-local Effect = require("mod.elona.api.Effect")
-local Mef = require("api.Mef")
 local Enum = require("api.Enum")
 local Charagen = require("mod.tools.api.Charagen")
 local Calc = require("mod.elona.api.Calc")
 local Map = require("api.Map")
 local Magic = require("mod.elona_sys.api.Magic")
-local Anim = require("mod.elona_sys.api.Anim")
-local Input = require("api.Input")
 local Enchantment = require("mod.elona.api.Enchantment")
 local Rand = require("api.Rand")
 local Skill = require("mod.elona_sys.api.Skill")
@@ -27,6 +22,12 @@ local DeferredEvent = require("mod.elona_sys.api.DeferredEvent")
 ---
 --- Parameterized enchantments
 ---
+
+local function filter_categories(cats)
+   return function(item)
+      return fun.iter(cats):all(function(cat) return item:has_category(cat) end)
+   end
+end
 
 data:add {
    _type = "base.enchantment",
@@ -254,7 +255,7 @@ data:add {
    level = 1,
    value = 120,
    rarity = 300,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
 
    params = { element_id = "id:base.element" },
    on_generate = function(self, item, params)
@@ -386,13 +387,18 @@ data:add {
    level = 1,
    value = 120,
    rarity = 50000,
-   categories = { "elona.equip_ammo" },
+   filter = filter_categories { "elona.equip_ammo" },
+
+   no_merge = true,
 
    params = {
       ammo_enchantment_id = "id:base.ammo_enchantment",
       ammo_max = "number",
       ammo_current = "number"
    },
+   compare = function(my_params, other_params)
+      return my_params.ammo_enchantment_id == other_params.ammo_enchantment_id
+   end,
    on_generate = function(self, item, params)
       -- >>>>>>>> shade2/item_data.hsp:578 		if enc=encProc{ ..
       if not item:has_category("elona.equip_ammo") then
@@ -408,11 +414,13 @@ data:add {
       local idx = Rand.rnd(Rand.rnd(#cands) + 1) + 1
 
       self.params.ammo_enchantment_id = cands[idx]._id
+      -- <<<<<<<< shade2/item_data.hsp:594 			} ..
+   end,
+   on_initialize = function(self, item, params)
       local ammo_enc_data = data["base.ammo_enchantment"]:ensure(self.params.ammo_enchantment_id)
 
       self.params.ammo_current = math.floor(math.clamp(self.power, 0, 500) * ammo_enc_data.ammo_factor / 500) + ammo_enc_data.ammo_amount
       self.params.ammo_max = self.params.ammo_current
-      -- <<<<<<<< shade2/item_data.hsp:594 			} ..
    end,
 
    alignment = "positive",
@@ -699,7 +707,7 @@ data:add {
    level = 3,
    value = 200,
    rarity = 25,
-   categories = { "elona.equip_leg" },
+   filter = filter_categories { "elona.equip_leg" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
       return self.power / 100
@@ -719,7 +727,7 @@ data:add {
    level = 3,
    value = 200,
    rarity = 25,
-   categories = { "elona.equip_back" },
+   filter = filter_categories { "elona.equip_back" },
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -735,7 +743,7 @@ data:add {
    level = 2,
    value = 200,
    rarity = 40,
-   categories = { "elona.equip_ring" },
+   filter = filter_categories { "elona.equip_ring" },
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -788,7 +796,7 @@ data:add {
    level = 3,
    value = 170,
    rarity = 250,
-   categories = { "elona.equip_melee" },
+   filter = filter_categories { "elona.equip_melee" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -803,7 +811,7 @@ data:add {
    level = 2,
    value = 170,
    rarity = 100,
-   categories = { "elona.equip_head", "elona.equip_ring" },
+   filter = filter_categories { "elona.equip_head", "elona.equip_ring" },
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -819,7 +827,7 @@ data:add {
    level = 99,
    value = 450,
    rarity = 1000,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -843,7 +851,7 @@ data:add {
    level = 99,
    value = 100,
    rarity = 1000,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
 
    on_attack_hit = function (self, chara, params)
@@ -866,7 +874,7 @@ data:add {
    level = 99,
    value = 450,
    rarity = 1000,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -892,7 +900,7 @@ data:add {
    level = 99,
    value = 500,
    rarity = 500,
-   categories = { "elona.equip_melee", "elona.equip_wrist" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_wrist" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -911,7 +919,7 @@ data:add {
    level = 99,
    value = 300,
    rarity = 10000,
-   categories = { "elona.equip_melee" },"elona.equip_neck",
+   filter = filter_categories { "elona.equip_melee" },"elona.equip_neck",
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -930,7 +938,7 @@ data:add {
    level = 3,
    value = 180,
    rarity = 150,
-   categories = { "elona.equip_ring", "elona.equip_neck" },
+   filter = filter_categories { "elona.equip_ring", "elona.equip_neck" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -949,7 +957,7 @@ data:add {
    level = 3,
    value = 180,
    rarity = 150,
-   categories = { "elona.equip_ring", "elona.equip_neck" },
+   filter = filter_categories { "elona.equip_ring", "elona.equip_neck" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -968,7 +976,7 @@ data:add {
    level = 99,
    value = 550,
    rarity = 500,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
       return self.power
@@ -1006,7 +1014,7 @@ data:add {
    level = 100,
    value = 120,
    rarity = 300,
-   categories = { "elona.furniture" },
+   filter = filter_categories { "elona.furniture" },
    alignment = "positive",
 }
 
@@ -1018,7 +1026,7 @@ data:add {
    level = 1,
    value = 140,
    rarity = 750,
-   categories = { "elona.equip_shield" },
+   filter = filter_categories { "elona.equip_shield" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -1037,7 +1045,7 @@ data:add {
    level = 2,
    value = 160,
    rarity = 500,
-   categories = { "elona.equip_shield" },
+   filter = filter_categories { "elona.equip_shield" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -1056,7 +1064,7 @@ data:add {
    level = 3,
    value = 180,
    rarity = 250,
-   categories = { "elona.equip_shield", "elona.equip_body" },
+   filter = filter_categories { "elona.equip_shield", "elona.equip_body" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -1075,7 +1083,7 @@ data:add {
    level = 3,
    value = 130,
    rarity = 40,
-   categories = { "elona.equip_cloak", "elona.equip_neck" },
+   filter = filter_categories { "elona.equip_cloak", "elona.equip_neck" },
    alignment = "positive",
 
    on_refresh = function(self, item, chara)
@@ -1106,7 +1114,7 @@ data:add {
    level = 2,
    value = 170,
    rarity = 200,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -1131,7 +1139,7 @@ data:add {
    level = 2,
    value = 170,
    rarity = 200,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)
@@ -1171,7 +1179,7 @@ data:add {
    level = 100,
    value = 120,
    rarity = 300,
-   categories = { "elona.furniture" },
+   filter = filter_categories { "elona.furniture" },
    alignment = "positive",
 }
 
@@ -1183,7 +1191,7 @@ data:add {
    level = 2,
    value = 170,
    rarity = 150,
-   categories = { "elona.equip_melee", "elona.equip_ranged" },
+   filter = filter_categories { "elona.equip_melee", "elona.equip_ranged" },
    alignment = "positive",
    adjusted_power = function(self, item, wearer)
        return math.floor(self.power / 50)

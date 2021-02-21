@@ -279,11 +279,11 @@ function InventoryMenu:update_filtering()
       local map = function(slot)
          return {
             text = I18N.get("ui.body_part." .. slot.body_part._id),
-            has_equipment = not not slot.equipped
+            has_equipment = slot.equipped ~= nil
          }
       end
 
-      self.text_equip_slots = self.ctxt.target:iter_body_parts():map(map):to_list()
+      self.text_equip_slots = self.ctxt.target:iter_body_parts(true):map(map):to_list()
    end
 
    -- Run after filter actions that can return a turn result, like

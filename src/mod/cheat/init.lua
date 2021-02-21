@@ -1,7 +1,6 @@
 local Event = require("api.Event")
 local Chara = require("api.Chara")
 local Skill = require("mod.elona_sys.api.Skill")
-local Item = require("api.Item")
 local Env = require("api.Env")
 
 local function level_up()
@@ -66,3 +65,11 @@ local function enable_themes()
 end
 
 Event.register("base.before_engine_init", "Enable non-redistributable themes if available", enable_themes)
+
+local function setup_dev_config()
+   config.base.auto_turn_speed = "highest"
+   config.base.anime_wait = 5
+   config.base.development_mode = true
+   config.base.quickstart_chara_id = "elona.the_leopard_warrior"
+end
+Event.register("base.on_engine_init", "Set some useful config options", setup_dev_config)

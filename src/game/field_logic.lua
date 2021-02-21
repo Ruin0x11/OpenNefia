@@ -47,7 +47,7 @@ function field_logic.quickstart()
    assert(config.base.quickstart_scenario)
    assert(save.base.scenario)
 
-   local me = Chara.create("base.player", nil, nil, {ownerless=true})
+   local me = Chara.create(config.base.quickstart_chara_id, nil, nil, {ownerless=true})
    me:emit("base.on_finalize_player")
    me:emit("base.on_initialize_player")
    field_logic.setup_new_game(me)

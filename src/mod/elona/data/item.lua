@@ -10,10 +10,7 @@ local Enum = require("api.Enum")
 local ItemMaterial = require("mod.elona.api.ItemMaterial")
 local Skill = require("mod.elona_sys.api.Skill")
 local ItemFunction = require("mod.elona.api.ItemFunction")
-local InstancedEnchantment = require("api.item.InstancedEnchantment")
 local Calc = require("mod.elona.api.Calc")
-local InstancedArea = require("api.InstancedArea")
-local Area = require("api.Area")
 local Building = require("mod.elona.api.Building")
 local I18N = require("api.I18N")
 local elona_sys_Magic = require("mod.elona_sys.api.Magic")
@@ -14752,8 +14749,7 @@ local item =
 
          on_init_params = function(self)
             local power = Rand.rnd(Rand.rnd(1000) + 1)
-            local enc = InstancedEnchantment:new("elona.modify_attribute", power, { skill_id = "elona.stat_speed" })
-            assert(self:add_enchantment(enc))
+            assert(self:add_enchantment("elona.modify_attribute", power, { skill_id = "elona.stat_speed" }, 0, "special"))
          end,
 
          before_wish = function(filter, chara)

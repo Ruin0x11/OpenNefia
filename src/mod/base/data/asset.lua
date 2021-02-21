@@ -1299,16 +1299,16 @@ local assets = {
    {
       _id = "equip_slot_text_color_empty",
       type = "color",
-      -- >>>>>>>> shade2/command.hsp:3585 			color 50,50,200 ...
-      color = {50, 50, 200}
-      -- <<<<<<<< shade2/command.hsp:3585 			color 50,50,200 ..
+      -- >>>>>>>> shade2/command.hsp:3587 			color 100,100,100 ...
+      color = {100, 100, 100}
+      -- <<<<<<<< shade2/command.hsp:3587 			color 100,100,100 ..
    },
    {
       _id = "equip_slot_text_color_occupied",
       type = "color",
-      -- >>>>>>>> shade2/command.hsp:3587 			color 100,100,100 ...
-      color = {100, 100, 100}
-      -- <<<<<<<< shade2/command.hsp:3587 			color 100,100,100 ..
+      -- >>>>>>>> shade2/command.hsp:3585 			color 50,50,200 ...
+      color = {50, 50, 200}
+      -- <<<<<<<< shade2/command.hsp:3585 			color 50,50,200 ..
    },
 
    {

@@ -28,13 +28,14 @@ local quest_harvest = {
    end,
 
    properties = {
-      types = { "temporary", "quest" },
+      types = { "quest" },
       tileset = "elona.wilderness",
       -- >>>>>>>> shade2/sound.hsp:413 			if gQuest=qHarvest	:music=mcVillage1 ...
       music = "elona.village1",
       -- <<<<<<<< shade2/sound.hsp:412 			if gQuest=qHunt		:music=mcBattle1 ..
       level = 1,
       is_indoor = false,
+      is_temporary = true,
       max_crowd_density = 15,
       default_ai_calm = 0,
       shows_floor_count_in_name = true,
