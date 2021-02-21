@@ -393,14 +393,8 @@ local function basic_action(chara, params)
    local choice
 
    if choosing_sub_act then
-      if chara:is_ally() then
-         Log.info("Sub act")
-      end
       choice = Rand.choice(chara.ai_actions.sub or {})
    else
-      if chara:is_ally() then
-         Log.info("Main act")
-      end
       choice = Rand.choice(chara.ai_actions.main or {})
    end
 
@@ -616,6 +610,13 @@ local function decide_targeted_action(chara, params)
 end
 
 local function ai_talk(chara, params)
+   if chara.taught_words ~= nil then
+      if Rand.one_in(30) then
+         Gui.mes_c(chara.taught_words, "SkyBlue")
+         return false
+      end
+   end
+
    if not chara:calc("is_talk_silenced") then
       if chara.turns_alive % 5 == 0 then
          if Rand.one_in(4) then

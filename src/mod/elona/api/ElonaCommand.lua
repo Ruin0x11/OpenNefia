@@ -515,4 +515,57 @@ function ElonaCommand.enter_action(player)
    return command(player)
 end
 
+function ElonaCommand.do_give_ally(player, target)
+   -- >>>>>>>> shade2/command.hsp:3243 *com_allyInventory ...
+   if target:has_activity() then
+      Gui.mes("action.npc.is_busy_now", target)
+      return "player_turn_query"
+   end
+
+   local result, canceled = Input.query_inventory(target, "elona.inv_ally_give", nil, nil)
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
+   -- <<<<<<<< shade2/command.hsp:3246  ..
+end
+
+function ElonaCommand.do_give_other(player, target)
+   local result, canceled = Input.query_inventory(target, "elona.inv_give", nil, nil)
+   if canceled then
+      return "player_turn_query"
+   end
+   return result.result
+end
+
+function ElonaCommand.do_give(player, target)
+   -- >>>>>>>> shade2/command.hsp:1832 	if tc=pc : if gRider!0 : tc=gRider   ...
+   if target:is_in_player_party() then
+      return ElonaCommand.do_give_ally(player, target)
+   else
+      return ElonaCommand.do_give_other(player, target)
+   end
+   -- <<<<<<<< shade2/command.hsp:1836 		} ..
+end
+
+function ElonaCommand.name(player, target)
+   -- >>>>>>>> shade2/command.hsp:1916 *com_name ...
+   Gui.mes("action.interact.name.prompt", target)
+
+   local name, canceled = Input.query_text(12, true)
+   if canceled or name == "" then
+      Gui.mes("action.interact.name.cancel")
+      return "player_turn_query"
+   end
+
+   target.name = name
+   target.has_own_name = true
+   Gui.mes("action.interact.name.you_named", target)
+
+   Gui.update_screen()
+
+   return "player_turn_query"
+   -- <<<<<<<< shade2/command.hsp:1926 	gosub *screen_refresh :goto *pc_turn ..
+end
+
 return ElonaCommand

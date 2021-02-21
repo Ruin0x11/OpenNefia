@@ -292,6 +292,9 @@ Gui.bind_keys {
    look = function(_, me)
       return Command.look(me)
    end,
+   interact = function(_, me)
+      return Command.interact(me)
+   end,
    quick_menu = function(_, me)
       return Command.quick_menu(me)
    end

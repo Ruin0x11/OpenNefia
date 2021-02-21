@@ -8,12 +8,11 @@ local Map = require("api.Map")
 local Pos = require("api.Pos")
 local EquipmentMenu = require("api.gui.menu.EquipmentMenu")
 local Save = require("api.Save")
-local FieldMap = require("mod.elona.api.FieldMap")
 local elona_Magic = require("mod.elona.api.Magic")
 local QuickMenuPrompt = require("api.gui.QuickMenuPrompt")
 local Log = require("api.Log")
-local Area = require("api.Area")
 local ConfigMenuWrapper = require("api.gui.menu.config.ConfigMenuWrapper")
+local Prompt = require("api.gui.Prompt")
 
 --- Game logic intended for the player only.
 local Command = {}
@@ -355,5 +354,60 @@ function Command.quick_menu(player)
    return "player_turn_query"
 end
 
+function Command.interact(player)
+   -- >>>>>>>> shade2/command.hsp:1840 	txt lang("操作する対象の方向は？","Choose the direction of t ...
+   Gui.mes("action.interact.choose")
+   local dir = Input.query_direction(player)
+   if dir == nil then
+      Gui.mes("ui.invalid_target")
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+   local x, y = Pos.add_direction(dir, player.x, player.y)
+   local target = Chara.at(x, y)
+   if target == nil then
+      Gui.mes("ui.invalid_target")
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+
+   local actions = {}
+   target:emit("elona_sys.on_build_interact_actions", {player=player}, actions)
+
+   if #actions > 0 then
+   else
+      Log.error("No interact actions returned from `elona_sys.on_build_interact_actions`.")
+      Gui.mes("common.it_is_impossible")
+      return "player_turn_query"
+   end
+
+   --[[
+   actions = {
+      { text = "action.interact.choices.talk", key = "a", callback = function(chara) ... end }
+   }
+   --]]
+
+   local map = function(t)
+      assert(type(t.text) == "string", "Action must have 'text' defined")
+      assert(type(t.callback) == "function", "Action must have 'callback' defined")
+      return { text = t.text or "", key = t.key or nil }
+   end
+
+   local items = fun.iter(actions):map(map):to_list()
+   local result, canceled = Prompt:new(items):query()
+
+   if canceled then
+      Gui.update_screen()
+      return "player_turn_query"
+   end
+
+   local choice = assert(actions[result.index])
+
+   local params = {player=player}
+   local turn_result = choice.callback(target, params) or "player_turn_query"
+
+   return turn_result
+   -- <<<<<<<< shade2/command.hsp:1867 	if (develop)or(gWizard):promptAdd lang("情報","Info ..
+end
 
 return Command

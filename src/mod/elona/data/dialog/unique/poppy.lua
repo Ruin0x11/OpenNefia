@@ -33,7 +33,7 @@ data:add {
       take = function(t)
          Gui.mes("talk.unique.poppy.find.you_must_return", t.speaker)
          Chara.player():recruit_as_ally(t.speaker)
-         t.speaker.is_being_escorted = true
+         t.speaker.is_being_escorted_poppy = true
          t.speaker:refresh()
 
          return "__END__"
@@ -45,3 +45,15 @@ data:add {
       }
    }
 }
+
+local function check_poppy_killed(chara)
+   -- >>>>>>>> shade2/chara_func.hsp:1680 			if cBit(cGuardTemp,tc)=true{ ...
+   if chara:is_player() or not chara:is_in_player_party() then
+      return
+   end
+
+   if chara.is_being_escorted_poppy then
+      chara.state = "Dead"
+   end
+   -- <<<<<<<< shade2/chara_func.hsp:1682 				} ..
+end

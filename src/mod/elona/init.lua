@@ -2,7 +2,7 @@ require("mod.elona.init.god")
 
 require("mod.elona.data")
 
-require("mod.elona.events")
+require("mod.elona.events.init")
 
 local Gui = require("api.Gui")
 local ElonaCommand = require("mod.elona.api.ElonaCommand")
