@@ -178,7 +178,7 @@ function Enchantment.add_major_ego_enchantments(item, ego_level)
    for _, enc in ipairs(ego.enchantments or {}) do
       item:add_enchantment(enc._id,
          Enchantment.random_enc_power(item, enc.power),
-         enc.params and table.deepcopy(enc.params) or nil,
+         enc.params and table.deepcopy(enc.params) or "randomized",
          8,
          "ego"
       )

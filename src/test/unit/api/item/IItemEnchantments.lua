@@ -2,13 +2,24 @@ local Item = require("api.Item")
 local IItemEnchantments = require("api.item.IItemEnchantments")
 local Assert = require("api.test.Assert")
 local data = require("internal.data")
+local InstancedEnchantment = require("api.item.InstancedEnchantment")
 
 local function enchantless_item(id)
    local item = Item.create(id, nil, nil, {ownerless=true})
-   IItemEnchantments.init(item)
+
+   local filter = function(enc) return enc.source ~= "item" end
+   item:iter_enchantments():filter(filter):each(function(enc) assert(item:remove_enchantment(enc)) end)
+
    item:refresh()
    Assert.eq(0, item:iter_enchantments(item):length())
    return item
+end
+
+function test_IItemEnchantment_init__fixed_enchantments()
+   local item = enchantless_item("elona.blood_moon")
+
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item, nil, nil, "item"):length())
 end
 
 function test_IItemEnchantment_add_enchantment_maximum()
@@ -31,6 +42,26 @@ function test_IItemEnchantment_remove_enchantment()
 
    Assert.is_truthy(item:remove_enchantment(enc))
    Assert.eq(0, IItemEnchantments.iter_enchantments(item):length())
+
+   local other_enc = InstancedEnchantment:new("elona.res_curse", 20, "randomized")
+   Assert.is_falsy(item:remove_enchantment(other_enc))
+end
+
+function test_IItemEnchantment_remove_enchantment__source()
+   local item = enchantless_item("elona.blood_moon")
+
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
+
+   item:add_enchantment("elona.absorb_mana", 20, "randomized")
+   Assert.eq(7, IItemEnchantments.iter_enchantments(item):length())
+
+   Assert.is_truthy(item:remove_enchantment("elona.absorb_mana"))
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
+
+   Assert.is_falsy(item:remove_enchantment("elona.absorb_mana"))
+
+   Assert.is_truthy(item:remove_enchantment("elona.absorb_mana", nil, "item"))
+   Assert.eq(5, IItemEnchantments.iter_enchantments(item):length())
 end
 
 function test_IItemEnchantment_iter_enchantments()
@@ -207,4 +238,81 @@ function test_IItemEnchantment_enchantment_power__merging()
    Assert.is_truthy(item:remove_enchantment(enc3))
    Assert.eq(0, IItemEnchantments.enchantment_power(item, "elona.modify_attribute", {skill_id="elona.stat_strength"}))
    Assert.eq(0, IItemEnchantments.enchantment_power(item, "elona.res_curse"))
+end
+
+function test_IItemEnchantment__mod_base_enchantment_power__no_preexisting()
+   local item = enchantless_item("elona.long_bow")
+
+   Assert.eq(0, IItemEnchantments.enchantment_power(item, "elona.res_curse"))
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   Assert.eq(true, IItemEnchantments.mod_base_enchantment_power(item, "elona.res_curse", {}, 150))
+   Assert.eq(150, IItemEnchantments.enchantment_power(item, "elona.res_curse"))
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   Assert.eq(true, IItemEnchantments.mod_base_enchantment_power(item, "elona.res_curse", {}, 200))
+   Assert.eq(350, IItemEnchantments.enchantment_power(item, "elona.res_curse"))
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   item:remove_enchantment("elona.res_curse")
+   Assert.eq(0, IItemEnchantments.enchantment_power(item, "elona.res_curse"))
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+end
+
+function test_IItemEnchantment__mod_base_enchantment_power__with_preexisting()
+   local item = enchantless_item("elona.blood_moon")
+
+   Assert.eq(300, IItemEnchantments.enchantment_power(item, "elona.absorb_mana"))
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item, nil, nil, "item"):length())
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   Assert.eq(true, IItemEnchantments.mod_base_enchantment_power(item, "elona.absorb_mana", {}, 150))
+   Assert.eq(450, IItemEnchantments.enchantment_power(item, "elona.absorb_mana"))
+   Assert.eq(7, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item, nil, nil, "item"):length())
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   Assert.eq(true, IItemEnchantments.mod_base_enchantment_power(item, "elona.absorb_mana", {}, 200))
+   Assert.eq(650, IItemEnchantments.enchantment_power(item, "elona.absorb_mana"))
+   Assert.eq(7, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item, nil, nil, "item"):length())
+   Assert.eq(1, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+
+   item:remove_enchantment("elona.absorb_mana")
+   Assert.eq(300, IItemEnchantments.enchantment_power(item, "elona.absorb_mana"))
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item):length())
+   Assert.eq(6, IItemEnchantments.iter_enchantments(item, nil, nil, "item"):length())
+   Assert.eq(0, IItemEnchantments.iter_enchantments(item, nil, nil, "generated"):length())
+end
+
+function test_IItemEnchantment_find_enchantment()
+   local item = enchantless_item("elona.long_bow")
+
+   local enc = item:add_enchantment("elona.res_curse", 20, "randomized")
+   Assert.eq(enc, IItemEnchantments.find_enchantment(item, "elona.res_curse"))
+
+   Assert.is_truthy(item:remove_enchantment(enc))
+   Assert.eq(nil, IItemEnchantments.find_enchantment(item, "elona.res_curse"))
+end
+
+function test_IItemEnchantment_find_enchantment__among_multiple()
+   local item = enchantless_item("elona.blood_moon")
+
+   local enc_item = IItemEnchantments.find_enchantment(item, "elona.absorb_mana")
+   Assert.is_truthy(enc_item)
+
+   local enc_generated = item:add_enchantment("elona.absorb_mana", 20, "randomized")
+   Assert.eq(enc_generated, IItemEnchantments.find_enchantment(item, "elona.absorb_mana"))
+   Assert.eq(enc_generated, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "generated"))
+   Assert.eq(enc_item, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "item"))
+
+   Assert.is_truthy(item:remove_enchantment(enc_generated))
+   Assert.eq(enc_item, IItemEnchantments.find_enchantment(item, "elona.absorb_mana"))
+   Assert.eq(nil, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "generated"))
+   Assert.eq(enc_item, IItemEnchantments.find_enchantment(item, "elona.absorb_mana", nil, "item"))
 end

@@ -370,6 +370,29 @@ function Smithing.random_item_filter_and_material(hammer, material, categories, 
    return filter, item_material
 end
 
+local function non_material_positive_enchantments(item)
+   -- copied from IItemEnchantments:add_enchantment()
+   local unique_encs_found = table.set {}
+
+   local filter = function(enc)
+      return enc.source ~= "material"
+   end
+
+   for _, existing_enc in item:iter_base_enchantments():filter(filter) do
+      local found = false
+      for unique_enc, count in pairs(unique_encs_found) do
+         if unique_enc:can_merge_with(existing_enc) then
+            unique_encs_found[unique_enc] = count + 1
+            found = true
+            break
+         end
+      end
+      if not found then
+         unique_encs_found[existing_enc] = 1
+      end
+   end
+end
+
 --- Returns an enchantment with a total power greater than zero, not including
 --- power from enchantments added by the item's material.
 function Smithing.extendable_enchantment(item, enc_id)

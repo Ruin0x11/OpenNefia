@@ -6,7 +6,7 @@ local SOURCES = table.set { "item", "material", "generated", "ego", "ego_minor",
 
 function InstancedEnchantment:init(_id, power, params, curse_power, source)
    assert(type(power) == "number", "Enchantment power must be number")
-   assert(params == "randomized" or type(params) == "table")
+   assert(params == "randomized" or type(params) == "table", "Params must be 'randomized' or table")
    curse_power = curse_power or 0
    assert(type(curse_power) == "number", "Curse power must be number")
    source = source or "generated"

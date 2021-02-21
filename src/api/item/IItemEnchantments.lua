@@ -63,7 +63,7 @@ local IItemEnchantments = class.interface("IItemEnchantments", {}, IObject)
 function IItemEnchantments:init()
    self.enchantments = {}
 
-   self:rebuild_enchantments_from_proto()
+   self:add_enchantments_from_proto()
 end
 
 local function sort_enchantments(a, b)
@@ -77,6 +77,42 @@ local function sort_enchantments(a, b)
 
    return ord_a < ord_b
    -- <<<<<<<< shade2/item_data.hsp:510 	return ..
+end
+
+function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
+   assert(type(power_delta) == "number", "power delta must be number")
+
+   if type(enc) == "string" then
+      assert(type(params) == "table", "specify the enchantment ID with params to modify")
+
+      local _id = enc
+      -- We want to make sure we don't try to modify an enchantment that comes
+      -- from the item or the material, as those can get overwritten.
+      -- "generated" enchantments are always optionally created, so we can pick
+      -- one and add the power delta there.
+      enc = self:find_base_enchantment(_id, params, "generated")
+      if enc == nil then
+         -- For convenience, create a new enchantment. All we really want is the
+         -- enchantment's power to increase by a set level, regardless of what's
+         -- under the hood.
+         local err
+         enc, err = self:add_enchantment(_id, 0, params, 0, "generated")
+         if not enc then
+            return false, err
+         end
+      end
+   else
+      class.assert_is_an(InstancedEnchantment, enc)
+   end
+
+   local idx = table.index_of(self.enchantments, enc)
+   if idx == nil then
+      return false, "item does not have enchantment"
+   end
+
+   enc.power = enc.power + power_delta
+
+   return true
 end
 
 function IItemEnchantments:add_enchantment(enc, power, params, curse_power, source)
@@ -168,17 +204,35 @@ function IItemEnchantments:enchantment_power(_id, params, source)
 end
 
 function IItemEnchantments:find_enchantment(_id, params, source)
+   if source == nil then
+      local generated = self:iter_enchantments(_id, params, "generated"):nth(1)
+      if generated then
+         return generated
+      end
+   end
    return self:iter_enchantments(_id, params, source):nth(1)
+end
+
+function IItemEnchantments:find_base_enchantment(_id, params, source)
+   if source == nil then
+      local generated = self:iter_base_enchantments(_id, params, "generated"):nth(1)
+      if generated then
+         return generated
+      end
+   end
+   return self:iter_base_enchantments(_id, params, source):nth(1)
 end
 
 function IItemEnchantments:remove_enchantment(enc, params, source)
    -- >>>>>>>> shade2/item_data.hsp:518 	#deffunc encRemove int id,int EncOrg,int encPorg ..
    if type(enc) == "string" then
       local _id = enc
-      enc = self:iter_base_enchantments(_id, params, source)
+      enc = self:find_base_enchantment(_id, params, source or "generated")
       if enc == nil then
          return nil, "no matching enchantment found"
       end
+   else
+      class.assert_is_an(InstancedEnchantment, enc)
    end
 
    local idx = table.index_of(self.enchantments, enc)
@@ -198,7 +252,7 @@ end
 
 -- NOTE: Only call this if the item's prototype has changed, to preserve the
 -- state of things like ammo.
-function IItemEnchantments:rebuild_enchantments_from_proto()
+function IItemEnchantments:add_enchantments_from_proto()
    local remove = {}
    for i, enc in ipairs(self.enchantments) do
       if enc.source == "item" then
@@ -208,8 +262,8 @@ function IItemEnchantments:rebuild_enchantments_from_proto()
    table.remove_indices(self.enchantments, remove)
 
    for _, fixed_enc in ipairs(self.proto.enchantments or {}) do
-      local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or nil
-      self:add_enchantment(fixed_enc._id, fixed_enc.power, params, "item")
+      local params = fixed_enc.params and table.deepcopy(fixed_enc.params) or "randomized"
+      self:add_enchantment(fixed_enc._id, fixed_enc.power, params, 0, "item")
    end
 end
 
