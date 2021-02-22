@@ -613,6 +613,12 @@ data:add_multi(
          default = false
       },
       {
+         _id = "debug_hp_always_full",
+
+         type = "boolean",
+         default = false
+      },
+      {
          _id = "max_inspect_length",
 
          type = "integer",
