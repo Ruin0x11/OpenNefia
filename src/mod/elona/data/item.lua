@@ -4481,7 +4481,7 @@ local item =
          light = light.item,
 
          enchantments = {
-            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.draw_charge" } },
+            { _id = "elona.invoke_skill", power = 100, params = { enchantment_skill_id = "elona.draw_shadow" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_dexterity" } },
             { _id = "elona.sustain_attribute", power = 100, params = { skill_id = "elona.stat_perception" } },
             { _id = "elona.modify_attribute", power = 450, params = { skill_id = "elona.stat_dexterity" } },

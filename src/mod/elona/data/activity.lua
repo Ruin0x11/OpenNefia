@@ -625,7 +625,7 @@ local function get_thrown_item_filter(chara, instrument, audience, activity)
    local level, quality
    local map = chara:current_map()
 
-   if instrument:find_enchantment("elona.strad") then
+   if instrument:find_merged_enchantment("elona.strad") then
       level = Calc.calc_object_level(activity.performance_quality / 8, map)
       quality = Enum.Quality.Good
       if Rand.one_in(4) then
@@ -720,7 +720,7 @@ local function performance_good(chara, instrument, audience, activity)
       end
    end
 
-   if instrument:find_enchantment("elona.gould") and Rand.one_in(15) then
+   if instrument:find_merged_enchantment("elona.gould") and Rand.one_in(15) then
       audience:apply_effect("elona.drunk", 500)
    end
 

@@ -101,18 +101,21 @@ function IItemEnchantments:mod_base_enchantment_power(enc, params, power_delta)
       return false, "item does not have enchantment"
    end
 
-   enc.power = enc.power + power_delta
+   enc.power = math.floor(enc.power + power_delta)
    self._merged_enchantments = nil
 
    return true
 end
 
---- For all enchantments in iter, sums the powers between the ones with similar
---- parameters.
+--- For all enchantments in `iter`, sums the powers between the ones with
+--- similar parameters.
 ---
---- iter should iterate in the order the enchantments were added. The first
---- enchantment in the iterator gets full power, the rest that get merged with
+--- `iter` should iterate in the order the enchantments were added. The first
+--- enchantment in the iterator gets full power; the rest that get merged with
 --- it will have half power (or full power if they're from the item's material).
+---
+--- @tparam Iterator(InstancedEnchantment) iter
+--- @treturn {{_id=id:base.enchantment,proto=data:base.enchantment,params=table=total_power=number,is_inheritable=boolean},...}
 function IItemEnchantments.calc_total_enchantment_powers(iter)
    local unique_encs_found = {}
 
@@ -128,7 +131,11 @@ function IItemEnchantments.calc_total_enchantment_powers(iter)
                merged_power = math.floor(merged_power / 2)
             end
             -- <<<<<<<< shade2/item_data.hsp:613 		if mat:else:encP/=2 ..
+
+            -- >>>>>>>> shade2/item_data.hsp:618 	if iEnc(i,id)=Enc{ ...
             unique_encs_found[unique_enc] = power + merged_power
+            -- <<<<<<<< shade2/item_data.hsp:620 		} ..
+
             found = true
             break
          end
@@ -168,6 +175,11 @@ function IItemEnchantments:add_enchantment(enc, power, params, curse_power, sour
    else
       class.assert_is_an(InstancedEnchantment, enc)
    end
+
+   if enc.params == "randomized" then
+      enc:on_generate(self)
+   end
+   enc:on_initialize(self)
 
    for _, existing_enc in ipairs(self.enchantments) do
       if enc == existing_enc then

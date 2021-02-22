@@ -60,7 +60,7 @@ local function make_enchantments(x, y, map)
          break
       end
 
-      local categories = enc.categories or { "elona.equip_body" }
+      local categories = { "elona.equip_body" }
       for _, cat in ipairs(categories) do
          if ids[cat] == nil then
             ids[cat] = items_in_category(cat)

@@ -28,7 +28,7 @@ end
 
 --- @tparam IChara chara
 function Effect.impregnate(chara)
-   if chara:find_enchantment("elona.res_pregnancy") then
+   if chara:find_merged_enchantment("elona.res_pregnancy") then
       Gui.mes("misc.pregnant.pukes_out", chara)
       return false
    end

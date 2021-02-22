@@ -13,20 +13,14 @@ function InstancedEnchantment:init(_id, power, params, curse_power, source)
    assert(SOURCES[source], "Must include source")
    self._id = _id
    self.power = power
+   self.params = params
+   self.curse_power = curse_power
 
    self.proto = data["base.enchantment"]:ensure(_id)
    self.source = source
 
    -- NOTE: unused in vanilla
    self.is_inheritable = true
-
-   if params == "randomized" then
-      self.params = {}
-      self:on_generate(self, {curse_power=curse_power})
-   else
-      self.params = params
-   end
-   self:on_initialize(self, {curse_power=curse_power})
 end
 
 function InstancedEnchantment:serialize()
@@ -37,15 +31,16 @@ function InstancedEnchantment:deserialize()
    self.proto = data["base.enchantment"]:ensure(self._id)
 end
 
-function InstancedEnchantment:on_generate(item, params)
+function InstancedEnchantment:on_generate(item)
+   self.params = {}
    if self.proto.on_generate then
-      return self.proto.on_generate(self, item, params)
+      return self.proto.on_generate(self, item, {curse_power=self.curse_power})
    end
 end
 
-function InstancedEnchantment:on_initialize(item, params)
+function InstancedEnchantment:on_initialize(item)
    if self.proto.on_initialize then
-      return self.proto.on_initialize(self, item, params)
+      return self.proto.on_initialize(self, item, {curse_power=self.curse_power})
    end
 end
 

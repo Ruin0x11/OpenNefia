@@ -94,7 +94,7 @@ local function add_great_god_enchantments(item, params)
    end
 
    for _ = 1, enchantment_count do
-      local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(params.ego_level))
+      local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(item, params.ego_level))
       local power = Enchantment.random_enc_power(item)
       if quality == Enum.Quality.God then
          power = power + 100
@@ -136,7 +136,7 @@ local function add_cursed_doomed_enchantments(item, params)
    local curse_state = item:calc("curse_state")
    if curse_state <= Enum.CurseState.Cursed then
       do
-         local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(params.ego_level))
+         local _id = Enchantment.random_enc_id(Enchantment.random_enc_id(item, params.ego_level))
          local power = Enchantment.random_enc_power(item)
          power = math.clamp(power, 250, 10000) * (125 + (curse_state == Enum.CurseState.Doomed and 25 or 0)) / 100
          item:add_enchantment(_id, power, "randomized")

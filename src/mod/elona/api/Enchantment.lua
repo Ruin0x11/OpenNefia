@@ -133,7 +133,7 @@ function Enchantment.generate(item, ego_level, power_level, curse_power, source)
 end
 
 function Enchantment.generate_fixed_level(item, level, power_level, curse_power, source)
-   local _id = Enchantment.random_enc_id(level)
+   local _id = Enchantment.random_enc_id(item, level)
    if _id then
       local power = Enchantment.random_enc_power(item, power_level)
       return InstancedEnchantment:new(_id, power, "randomized", curse_power or 0, source or "generated")
@@ -163,7 +163,7 @@ function Enchantment.ego_enchantments_for(item, ego_level)
       return ego.level == ego_level and (not ego.filter or ego.filter(item))
    end
 
-   return data["base.ego_enchantment"]:iter():filter(item)
+   return data["base.ego_enchantment"]:iter():filter(filter)
    -- <<<<<<<< shade2/item_data.hsp:739 	loop ..
 end
 
@@ -171,6 +171,10 @@ end
 function Enchantment.add_major_ego_enchantments(item, ego_level)
    -- >>>>>>>> shade2/item_data.hsp:732 *item_ego ...
    local ego = Rand.choice(Enchantment.ego_enchantments_for(item, ego_level))
+
+   if ego == nil then
+      return
+   end
 
    item.ego_enchantment = ego._id
 

@@ -1036,7 +1036,7 @@ data:add {
          return true, { obvious = false }
       end
 
-      if source:find_enchantment("elona.prevent_tele") then
+      if source:find_merged_enchantment("elona.prevent_tele") then
          Gui.mes("magic.teleport.prevented")
          return true
       end
@@ -1096,7 +1096,7 @@ data:add {
          source.y + (3 - attempt / 70 + Rand.rnd(5)) * (Rand.one_in(2) and -1 or 1)
       end
 
-      if source:find_enchantment("elona.prevent_tele") then
+      if source:find_merged_enchantment("elona.prevent_tele") then
          Gui.mes("magic.teleport.prevented")
          return true
       end
@@ -1138,7 +1138,7 @@ data:add {
          y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
       end
 
-      if target:find_enchantment("elona.prevent_tele") then
+      if target:find_merged_enchantment("elona.prevent_tele") then
          Gui.mes("magic.teleport.prevented")
          return true
       end
@@ -1180,7 +1180,7 @@ data:add {
          y + Rand.rnd(attempt / 8 + 2) - Rand.rnd(attempt / 8 + 2)
       end
 
-      if source:find_enchantment("elona.prevent_tele") then
+      if source:find_merged_enchantment("elona.prevent_tele") then
          Gui.mes("magic.teleport.prevented")
          return true
       end
@@ -1676,7 +1676,7 @@ make_summon {
 
 
 local function do_mutation(source, target, curse_state, times, no_negative_traits)
-   if target:find_enchantment("elona.res_mutation") and not Rand.one_in(5) then
+   if target:find_merged_enchantment("elona.res_mutation") and not Rand.one_in(5) then
       Gui.mes("magic.mutation.resist")
       return true
    end

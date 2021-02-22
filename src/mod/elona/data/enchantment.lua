@@ -401,7 +401,9 @@ data:add {
    rarity = 50000,
    filter = filter_categories { "elona.equip_ammo" },
 
+   -- >>>>>>>> shade2/item_data.hsp:612 		if refType@=fltAmmo:return ...
    no_merge = true,
+   -- <<<<<<<< shade2/item_data.hsp:612 		if refType@=fltAmmo:return ..
 
    params = {
       ammo_enchantment_id = "id:base.ammo_enchantment",
