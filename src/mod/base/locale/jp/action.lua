@@ -611,7 +611,7 @@ end, function(_1)
   :format(yo(_1))
 end, function(_1)
   return ("何をする%s")
-  :format(nda(_1, 2))
+  :format(noda(_1, 2))
 end }
     },
     offer = {

@@ -5,7 +5,7 @@ return {
         conversation = {
           dialog = function(_1, _2)
   return ("やあ。特に用はない%s、なんだか暇を持てましていたら、%sと話がしたくなって%s、寄ってみた%s")
-  :format(ga(_2, 3), kimi(_2, 3), na(_2, 3), nda(_2))
+  :format(ga(_2, 3), kimi(_2, 3), na(_2, 3), noda(_2))
 end,
           hold = function(_1)
   return ("あなたと%sは愉快に語り合った！")
@@ -65,7 +65,7 @@ end,
         materials = {
           dialog = function(_1)
   return ("旅の途中にこんなものを拾った%s%sの役に立つと思って持ってきた%s")
-  :format(nda(_1), kimi(_1, 3), yo(_1))
+  :format(noda(_1), kimi(_1, 3), yo(_1))
 end,
           receive = function(_1)
   return ("%sは色々なものが詰まった袋を、あなたに手渡した。")
@@ -89,7 +89,7 @@ end
         souvenir = {
           dialog = function(_1)
   return ("近くまで来たので寄ってみた%sついでだから、土産にこれをあげ%s")
-  :format(nda(_1), ru(_1))
+  :format(noda(_1), ru(_1))
 end,
           inventory_is_full = "所持品が一杯で受け取れなかった…",
           receive = function(_1)
@@ -137,7 +137,7 @@ end,
         cheap = "ケチ！",
         dialog = function(_1)
   return ("パンを買う金さえない%s恵んで%s、おねがい%s")
-  :format(nda(_1), kure(_1, 3), da(_1, 2))
+  :format(noda(_1), kure(_1, 3), da(_1, 2))
 end,
         spare = function(_1)
   return ("あなたは%sgoldを乞食に渡した。")
